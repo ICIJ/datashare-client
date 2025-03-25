@@ -36,17 +36,18 @@ function isRunning(item) {
 
 <template>
   <task-page
-    v-slot="{ tasks, sort, order, updateSort, updateOrder, empty }"
+    v-slot="{ tasks, sort, order, updateSort, updateOrder, loading }"
     :task-filter="[TASK_NAME.INDEX, TASK_NAME.SCAN]"
     page-name="documents"
     show-add
   >
     <page-table-generic
-      v-if="!empty"
+      v-if="loading || !empty"
       :items="tasks"
       :fields="propertiesModelValueOptions"
       :sort="sort"
       :order="order"
+      :loading="loading"
       @update:sort="updateSort"
       @update:order="updateOrder"
     >

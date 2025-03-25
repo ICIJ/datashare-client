@@ -4,7 +4,6 @@ import { useI18n } from 'vue-i18n'
 
 import appBuilding from '@/assets/images/illustrations/app-building.svg'
 import appBuildingDark from '@/assets/images/illustrations/app-building-dark.svg'
-import AppOverlay from '@/components/AppOverlay/AppOverlay'
 import DismissableAlert from '@/components/Dismissable/DismissableAlert'
 import EmptyState from '@/components/EmptyState/EmptyState'
 import PageContainer from '@/components/PageContainer/PageContainer'
@@ -99,26 +98,25 @@ function refresh() {
       <dismissable-alert variant="info" persist :name="`task.${pageName}.list.info`">
         {{ t(`task.${pageName}.list.info`) }}
       </dismissable-alert>
-      <app-overlay rounded :show="isLoading">
-        <template v-if="!isLoading && noTasks">
-          <slot name="empty" :empty="noTasks">
-            <empty-state label="Empty" :image="appBuilding" :image-dark="appBuildingDark">
-              <template #label>
-                <span v-html="t(`task.${pageName}.list.empty`)"></span>
-              </template>
-            </empty-state>
-          </slot>
-        </template>
-        <slot
-          :tasks="tasks"
-          :sort="sort"
-          :order="order"
-          :update-order="setOrder"
-          :update-sort="setSort"
-          :empty="noTasks"
-          :refresh="refresh"
-        />
-      </app-overlay>
+      <template v-if="!isLoading && noTasks">
+        <slot name="empty" :empty="noTasks">
+          <empty-state label="Empty" :image="appBuilding" :image-dark="appBuildingDark">
+            <template #label>
+              <span v-html="t(`task.${pageName}.list.empty`)"></span>
+            </template>
+          </empty-state>
+        </slot>
+      </template>
+      <slot
+        :tasks="tasks"
+        :sort="sort"
+        :order="order"
+        :update-order="setOrder"
+        :update-sort="setSort"
+        :empty="noTasks"
+        :refresh="refresh"
+        :loading="isLoading"
+      />
     </div>
   </page-container>
 </template>
