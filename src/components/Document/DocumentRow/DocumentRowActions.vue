@@ -10,7 +10,7 @@ defineProps({
 </script>
 
 <template>
-  <td class="document-row-actions">
-    <document-actions-group :document="document" class="ms-auto" />
+  <td class="document-row-actions text-end">
+    <document-actions-group :document="document" class="d-inline-flex" />
   </td>
 </template>
