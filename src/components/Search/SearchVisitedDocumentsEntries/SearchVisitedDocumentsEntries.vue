@@ -85,6 +85,9 @@ function buildEventsBody() {
 }
 
 const fetch = wait(async () => {
+  if (!eventsIds.value.length) {
+    return
+  }
   const preference = 'search-visited-documents'
   const body = buildEventsBody()
   const indices = uniq(events.map(eventParams).map(property('index')))
