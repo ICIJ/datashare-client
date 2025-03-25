@@ -3,6 +3,7 @@ import { PhFilePdf } from '@phosphor-icons/vue'
 import { vueRouter } from 'storybook-vue3-router'
 
 import { withMurmur } from '~storybook/decorators/murmur'
+import { withPinia } from '~storybook/decorators/pinia'
 import PageTable from '@/components/PageTable/PageTable'
 import DocumentRow from '@/components/Document/DocumentRow/DocumentRow'
 
@@ -10,6 +11,10 @@ const routes = [
   {
     path: '/',
     name: 'document'
+  },
+  {
+    path: '/ds',
+    name: 'document-standalone'
   },
   {
     path: '/project/:name',
@@ -20,6 +25,7 @@ const routes = [
 export default {
   title: 'Components/Document/DocumentRow/DocumentRow',
   decorators: [
+    withPinia(),
     withMurmur({ previewHost: null }),
     vueRouter(routes),
     () => ({
