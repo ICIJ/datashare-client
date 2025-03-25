@@ -89,7 +89,7 @@ const { show: showDocumentViewerModal } = useDocumentViewerModal(props.document)
       :is-download-allowed="isDownloadAllowed"
       :select-mode="selectMode"
       name="checkbox"
-      class="ms-auto flex-shrink-0 py-3 px-1"
+      class="ms-auto flex-shrink-0 p-3"
       tooltip-placement="right"
       vertical
     />
