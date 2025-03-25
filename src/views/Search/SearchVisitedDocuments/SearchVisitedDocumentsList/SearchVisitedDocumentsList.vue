@@ -67,7 +67,6 @@ const order = computed({
 const orderDesc = computed(() => order.value === 'desc')
 
 const fetch = wait(async () => {
-  await new Promise((resolve) => setTimeout(resolve, 1000))
   const result = await api.getHistoryEvents('DOCUMENT', offset.value, perPage.value, sort.value, orderDesc.value)
   events.value = result?.items.map((item) => ({ ...item })) ?? []
   pagination.value = result.pagination
