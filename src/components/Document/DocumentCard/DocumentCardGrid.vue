@@ -65,19 +65,19 @@ const { show: showDocumentViewerModal } = useDocumentViewerModal(props.document)
     @mouseenter="hover = true"
     @mouseleave="hover = false"
   >
-    <div class="d-flex flex-column gap-3 flex-grow-1">
+    <div class="document-card-grid__wrapper d-flex flex-column gap-3 p-3">
       <document-thumbnail
         v-if="showThumbnail"
         :document="document"
-        size="md"
+        fit
         crop
-        clickable
+        clickable        
         :active="hover"
         class="mx-auto"
         @click="showDocumentViewerModal"
       />
-      <div class="document-card-grid__properties">
-        <router-link v-if="showTitle" class="document-card-grid__properties__title" :to="to" :target="target">
+      <div class="document-card-grid__wrapper__properties">
+        <router-link v-if="showTitle" class="document-card-grid__wrapper__properties__title" :to="to" :target="target">
           {{ document.title }}
         </router-link>
         <document-card-properties :document="document" :properties="properties" />
@@ -89,7 +89,7 @@ const { show: showDocumentViewerModal } = useDocumentViewerModal(props.document)
       :is-download-allowed="isDownloadAllowed"
       :select-mode="selectMode"
       name="checkbox"
-      class="flex-shrink-0 ms-auto"
+      class="ms-auto flex-shrink-0 py-3 px-1"
       tooltip-placement="right"
       vertical
     />
@@ -98,7 +98,6 @@ const { show: showDocumentViewerModal } = useDocumentViewerModal(props.document)
 
 <style lang="scss">
 .document-card-grid {
-  padding: $spacer;
   border-radius: var(--bs-border-radius);
 
   &:hover,
@@ -114,20 +113,26 @@ const { show: showDocumentViewerModal } = useDocumentViewerModal(props.document)
     box-shadow: 0 0 0 1px var(--bs-primary) inset;
   }
 
-  &--selected &__properties__title,
-  &--active &__properties__title {
+  &--selected &__wrapper__properties__title,
+  &--active &__wrapper__properties__title {
     font-weight: 700;
   }
 
-  &__properties {
-    flex: 1;
-
-    &__title {
-      display: block;
-      font-weight: 500;
-      margin-bottom: $spacer;
-      color: inherit;
-      word-break: break-all;
+    &__wrapper {
+    flex: 1 1 auto;
+    min-width: 0;
+    
+    &__properties {
+      flex: 1 1 auto;
+      min-width: 0;
+  
+      &__title {
+        display: block;
+        font-weight: 500;
+        margin-bottom: $spacer;
+        color: inherit;
+        word-break: break-all;
+      }
     }
   }
 }

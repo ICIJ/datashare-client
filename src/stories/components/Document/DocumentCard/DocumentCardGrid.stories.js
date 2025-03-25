@@ -28,7 +28,7 @@ export default {
     withPinia(),
     vueRouter(routes),
     () => ({
-      template: '<div style="max-width: 230px"><story /></div>'
+      template: '<div style="max-width: 260px"><story /></div>'
     })
   ],
   component: DocumentCardGrid,
