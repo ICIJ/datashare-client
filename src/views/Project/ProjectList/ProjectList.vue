@@ -12,11 +12,13 @@ import { useUrlParam } from '@/composables/useUrlParam'
 import { useUrlParamWithStore } from '@/composables/useUrlParamWithStore'
 import { useUrlParamsWithStore } from '@/composables/useUrlParamsWithStore'
 import { useCore } from '@/composables/useCore'
+import { useWait } from '@/composables/useWait'
 import { useAppStore } from '@/store/modules'
 import useMode from '@/composables/useMode'
 
 const { core } = useCore()
 const { isServer } = useMode()
+const { wait, isLoading } = useWait()
 const appStore = useAppStore()
 const searchQuery = useUrlParam('q', '')
 
@@ -53,8 +55,13 @@ const fetchMaxExtractionDateByProject = async () => {
   buckets.forEach(({ key, maxExtractionDate }) => (maxExtractionDateByProject.value[key] = maxExtractionDate.value))
 }
 
-onBeforeMount(fetchDocumentsCountByProject)
-onBeforeMount(fetchMaxExtractionDateByProject)
+const fetch = wait(async () => {
+  await fetchDocumentsCountByProject()
+  await fetchMaxExtractionDateByProject()
+  await new Promise((resolve) => setTimeout(resolve, 10000))
+})
+
+onBeforeMount(fetch)
 
 const extendedProjects = computed(() => {
   return core.projects.map(({ name, ...project }) => {
@@ -128,6 +135,12 @@ const toAddRoute = computed(() => {
         <row-pagination-projects v-model="page" :total-rows="totalRows" :per-page="perPage" />
       </template>
     </page-toolbar>
-    <project-entries v-model:sort="sort" v-model:order="order" :projects="projects" :layout="layout" />
+    <project-entries
+      v-model:sort="sort"
+      v-model:order="order"
+      :loading="isLoading"
+      :projects="projects"
+      :layout="layout"
+    />
   </page-container>
 </template>

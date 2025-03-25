@@ -18,6 +18,10 @@ const props = defineProps({
     type: String,
     validator: layoutValidator,
     default: LAYOUTS.GRID
+  },
+  loading: {
+    type: Boolean,
+    default: false
   }
 })
 
