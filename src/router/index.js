@@ -20,7 +20,7 @@ export const routes = [
         path: '',
         meta: {
           title: 'search.title',
-          icon: 'magnifying-glass',
+          icon: PhMagnifyingGlass,
           docs: [
             {
               title: 'Search documents',
@@ -98,7 +98,7 @@ export const routes = [
         name: 'search.saved.list',
         path: 'search/saved',
         meta: {
-          icon: 'list-checks',
+          icon: PhListChecks,
           title: 'searchSavedList.title'
         },
         components: {
@@ -110,7 +110,7 @@ export const routes = [
         name: 'search.visited-documents.list',
         path: 'search/visited-documents',
         meta: {
-          icon: 'clock-counter-clockwise',
+          icon: PhClockCounterClockwise,
           title: 'searchVisitedDocumentsList.title'
         },
         components: {
@@ -131,7 +131,7 @@ export const routes = [
         },
         meta: {
           title: 'task.title',
-          icon: 'rocket-launch'
+          icon: PhRocketLaunch,
         },
         children: [
           {
@@ -144,7 +144,7 @@ export const routes = [
             path: 'task-board',
             meta: {
               title: 'task.task-board.title',
-              icon: 'dots-nine',
+              icon: PhDotsNine,
               settings: false
             },
             component: () => import('@/views/Task/TaskBoard/TaskBoard')
@@ -154,7 +154,7 @@ export const routes = [
             path: 'entities',
             meta: {
               title: 'task.entities.title',
-              icon: 'users-three'
+              icon: PhUsersThree
             },
             children: [
               {
@@ -172,7 +172,7 @@ export const routes = [
                 component: () => import('@/views/Task/TaskEntities/TaskEntitiesNew'),
                 meta: {
                   title: 'task.entities.new.title',
-                  icon: 'plus'
+                  icon: PhPlus
                 }
               }
             ]
@@ -182,7 +182,7 @@ export const routes = [
             path: 'documents',
             meta: {
               title: 'task.documents.title',
-              icon: 'files',
+              icon: PhFiles,
               allowedModes: [MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]
             },
             children: [
@@ -201,7 +201,7 @@ export const routes = [
                 props: ({ query }) => ({ project: query.project }),
                 meta: {
                   title: 'task.documents.new.title',
-                  icon: 'plus'
+                  icon: PhPlus
                 }
               }
             ]
@@ -211,7 +211,7 @@ export const routes = [
             path: 'batch-download',
             meta: {
               title: 'task.batch-download.title',
-              icon: 'download-simple'
+              icon: PhDownloadSimple
             },
             children: [
               {
@@ -229,7 +229,7 @@ export const routes = [
             path: 'batch-search',
             meta: {
               title: 'task.batch-search.title',
-              icon: 'list-magnifying-glass'
+              icon: PhListMagnifyingGlass
             },
             children: [
               {
@@ -238,7 +238,7 @@ export const routes = [
                 component: () => import('@/views/Task/TaskBatchSearch/TaskBatchSearchList'),
                 meta: {
                   breadcrumb: false,
-                  icon: 'list-magnifying-glass'
+                  icon: PhListMagnifyingGlass
                 }
               },
               {
@@ -247,7 +247,7 @@ export const routes = [
                 component: () => import('@/views/Task/TaskBatchSearch/TaskBatchSearchNew'),
                 meta: {
                   title: 'taskBatchSearchNew.title',
-                  icon: 'plus',
+                  icon: PhPlus,
                   docs: [
                     {
                       title: 'How to use batch searches',
@@ -300,7 +300,7 @@ export const routes = [
         path: 'projects',
         name: 'project',
         meta: {
-          icon: 'circles-three-plus',
+          icon: PhCirclesThreePlus,
           title: 'projects.title'
         },
         components: {
@@ -315,7 +315,7 @@ export const routes = [
               default: () => import('@/views/Project/ProjectList/ProjectList')
             },
             meta: {
-              icon: 'dots-nine',
+              icon: PhDotsNine,
               title: 'appSidebar.allProjects'
             }
           },
@@ -326,7 +326,7 @@ export const routes = [
               default: () => import('@/views/Project/ProjectNew')
             },
             meta: {
-              icon: 'plus',
+              icon: PhPlus,
               title: 'Create project',
               allowedModes: [MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]
             }
@@ -363,7 +363,7 @@ export const routes = [
                     component: () =>
                       import('@/views/Project/ProjectView/ProjectViewOverview/ProjectViewOverviewInsights'),
                     meta: {
-                      icon: 'chart-bar',
+                      icon: PhChartBar,
                       title() {
                         return 'Insights'
                       }
@@ -375,7 +375,7 @@ export const routes = [
                     props: true,
                     component: () => import('@/views/Project/ProjectView/ProjectViewOverview/ProjectViewOverviewPaths'),
                     meta: {
-                      icon: 'tree-structure',
+                      icon: PhTreeStructure,
                       title() {
                         return 'Paths'
                       }
@@ -387,7 +387,7 @@ export const routes = [
                     props: true,
                     component: () => import('@/views/Project/ProjectView/ProjectViewOverview/ProjectViewOverviewGraph'),
                     meta: {
-                      icon: 'polygon',
+                      icon: PhPolygon,
                       title() {
                         return 'Graph'
                       }
@@ -400,7 +400,7 @@ export const routes = [
                     component: () =>
                       import('@/views/Project/ProjectView/ProjectViewOverview/ProjectViewOverviewDetails'),
                     meta: {
-                      icon: 'info',
+                      icon: PhInfo,
                       title() {
                         return 'Details'
                       }
@@ -413,7 +413,7 @@ export const routes = [
                     component: () =>
                       import('@/views/Project/ProjectView/ProjectViewOverview/ProjectViewOverviewHistory'),
                     meta: {
-                      icon: 'clock-counter-clockwise',
+                      icon: PhClockCounterClockwise,
                       title() {
                         return 'History'
                       }
@@ -427,7 +427,7 @@ export const routes = [
                 props: true,
                 component: () => import('@/views/Project/ProjectView/ProjectViewEdit'),
                 meta: {
-                  icon: 'pencil-simple',
+                  icon: PhPencilSimple,
                   title: 'Edit project',
                   allowedModes: [MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]
                 }
@@ -441,7 +441,7 @@ export const routes = [
         path: '/settings',
         meta: {
           title: 'settings.title',
-          icon: 'gear'
+          icon: PhGear
         },
         component: () => import('@/views/Settings/SettingsView/SettingsView'),
         children: [
@@ -517,7 +517,7 @@ export const routes = [
         component: () => import('@/views/Shortcuts/ShortcutsView/ShortcutsView'),
         meta: {
           title: 'shortcutsView.title',
-          icon: 'keyboard'
+          icon: PhKeyboard
         }
       },
       {
