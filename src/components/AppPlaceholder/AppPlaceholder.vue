@@ -60,7 +60,8 @@ const classList = computed(() => {
   return {
     'app-placeholder--squared': props.squared,
     'app-placeholder--whitespace': props.whitespace,
-    [`bg-${props.variant}`]: props.variant !== null,
+    [`bg-${props.variant}-subtle`]: props.variant !== null,
+    [`bg-default`]: props.variant === null,
     [`col-${colsString.value}`]: colsString.value !== undefined && widthString.value === undefined,
     [`placeholder-${props.size}`]: props.size !== 'md'
   }
@@ -83,6 +84,13 @@ const style = computed(() => {
   background: var(--bs-tertiary-bg-subtle);
   animation: placeholder-glow 2s ease-in-out infinite;
   opacity: 1;
+
+  .table-striped > tbody > tr:nth-of-type(2n + 1) > td &.bg-default,
+  .table-striped > tbody > tr:hover > td &.bg-default,
+  .table-striped > tbody > tr:nth-of-type(2n + 1) > td &.bg-tertiary-subtle,
+  .table-striped > tbody > tr:hover > td &.bg-tertiary-subtle {
+    background: var(--bs-body-bg);
+  }
 
   &--squared {
     min-height: 0;
