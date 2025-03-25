@@ -1,12 +1,23 @@
 <script setup>
+import { computed } from 'vue'
 import { random } from 'lodash'
 
 import AppPlaceholder from '@/components/AppPlaceholder/AppPlaceholder'
 
-defineProps({
+const { verticalActions } = defineProps({
   properties: {
     type: Number,
     default: 4
+  },
+  verticalActions: {
+    type: Boolean,
+    default: false
+  }
+})
+
+const actionsClassList = computed(() => {
+  return {
+    'document-card-placeholder__actions--vertical': verticalActions
   }
 })
 </script>
@@ -23,11 +34,8 @@ defineProps({
         <app-placeholder :width="random(5, 20)" />
       </div>
     </div>
-    <div class="document-card-placeholder__actions d-flex flex-column gap-1">
-      <app-placeholder squared />
-      <app-placeholder squared />
-      <app-placeholder squared />
-      <app-placeholder squared />
+    <div class="document-card-placeholder__actions" :class="actionsClassList">
+      <app-placeholder width="1.5rem" height="1.5rem" :repeat="4" />
     </div>
   </div>
 </template>
@@ -52,8 +60,13 @@ defineProps({
   }
 
   &__actions {
-    max-width: 1.75rem;
-    width: 100%;
+    gap: 0.25rem;
+    display: flex;
+    flex-direction: row;
+  }
+
+  &__actions--vertical {
+    flex-direction: column;
   }
 }
 </style>
