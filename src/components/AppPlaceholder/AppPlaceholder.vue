@@ -80,8 +80,9 @@ const style = computed(() => {
 
 <style lang="scss">
 .app-placeholder {
-  opacity: 0.25;
+  background: var(--bs-tertiary-bg-subtle);
   animation: placeholder-glow 2s ease-in-out infinite;
+  opacity: 1;
 
   &--squared {
     min-height: 0;
