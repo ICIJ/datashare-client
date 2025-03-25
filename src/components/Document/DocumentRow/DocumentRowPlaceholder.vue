@@ -28,7 +28,9 @@ const hasThumbnail = computed(() => props.properties.includes('thumbnail'))
       <app-placeholder :width="random(60, 100)" variant="tertiary" />
     </td>
     <td class="text-end">
-      <app-placeholder width="2rem" height="1.75rem" :repeat="4" whitespace variant="tertiary" />
+      <div class="d-inline-flex gap-3 py-2">
+        <app-placeholder width="30px" height="30px" :repeat="4" variant="tertiary" />
+      </div>
     </td>
   </page-table-tr>
 </template>
