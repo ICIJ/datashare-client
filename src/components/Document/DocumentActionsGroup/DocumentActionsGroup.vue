@@ -1,6 +1,6 @@
 <template>
   <div class="document-actions-group" :class="classList">
-    <div class="document-actions-group__checkbox" v-if="selectMode">
+    <div v-if="selectMode" class="document-actions-group__checkbox">
       <b-form-checkbox v-model="selected" aria-label="Select this document" name="checkbox">
         <span class="visually-hidden">Select this document</span>
       </b-form-checkbox>

@@ -19,7 +19,7 @@ defineProps({
       </div>
       <div class="document-card-grid-placeholder__wrapper__properties d-flex flex-column gap-2 h-100 w-100">
         <app-placeholder :width="random(70, 95)" />
-        <div class="d-flex flex-grow-1 gap-1" v-for="i in properties" :key="i">
+        <div v-for="i in properties" :key="i" class="d-flex flex-grow-1 gap-1">
           <app-placeholder width="1em" />
           <app-placeholder :width="random(30, 70)" />
         </div>

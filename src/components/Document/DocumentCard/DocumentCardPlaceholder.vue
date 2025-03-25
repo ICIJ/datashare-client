@@ -18,7 +18,7 @@ defineProps({
     </div>
     <div class="document-card-placeholder__properties d-flex flex-column gap-2 h-100 w-100">
       <app-placeholder :width="random(40, 70)" />
-      <div class="d-flex flex-grow-1 gap-1" v-for="i in properties" :key="i">
+      <div v-for="i in properties" :key="i" class="d-flex flex-grow-1 gap-1">
         <app-placeholder width="1em" />
         <app-placeholder :width="random(5, 20)" />
       </div>
@@ -36,7 +36,7 @@ defineProps({
 .document-card-placeholder {
   background: var(--bs-body);
   border-radius: var(--bs-border-radius);
-  
+
   &__thumbnail {
     max-width: 50px;
     width: 100%;

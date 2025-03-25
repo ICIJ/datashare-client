@@ -36,16 +36,16 @@ const widthString = computed(() => {
   return props.width === undefined
     ? undefined
     : typeof props.width === 'number'
-      ? props.width.toString() + '%'
-      : props.width
+    ? props.width.toString() + '%'
+    : props.width
 })
 
 const heightString = computed(() => {
   return props.height === undefined
     ? undefined
     : typeof props.height === 'number'
-      ? props.height.toString() + '%'
-      : props.height
+    ? props.height.toString() + '%'
+    : props.height
 })
 
 const colsString = computed(() => {

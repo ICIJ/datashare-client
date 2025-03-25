@@ -2,13 +2,12 @@
 import { computed, onBeforeMount, useTemplateRef } from 'vue'
 import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router'
 
-import DocumentPlaceholder from '@/components/Document/DocumentPlaceholder'
-
 import DocumentViewActions from './DocumentViewActions'
 import DocumentViewTabs from './DocumentViewTabs/DocumentViewTabs'
 import DocumentViewTitle from './DocumentViewTitle'
 import DocumentViewUserActions from './DocumentViewUserActions'
 
+import DocumentPlaceholder from '@/components/Document/DocumentPlaceholder'
 import { useSearchNav } from '@/composables/useSearchNav'
 import { useDocument } from '@/composables/useDocument'
 import { useAppStore } from '@/store/modules'
