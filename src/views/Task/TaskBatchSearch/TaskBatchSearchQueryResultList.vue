@@ -21,6 +21,7 @@ import { useUrlParam } from '@/composables/useUrlParam'
 import { useUrlParamWithStore } from '@/composables/useUrlParamWithStore'
 import { useUrlParamsWithStore } from '@/composables/useUrlParamsWithStore'
 import { useCore } from '@/composables/useCore'
+import { useWait } from '@/composables/useWait'
 import { useAppStore } from '@/store/modules'
 
 const props = defineProps({
@@ -41,6 +42,7 @@ const appStore = useAppStore()
 const route = useRoute()
 const { core } = useCore()
 const { fields } = useBatchSearchResultProperties()
+const { wait, isLoading } = useWait()
 const settingsView = 'batchSearchResults'
 const hits = ref(null)
 const batchSearch = ref(null)
@@ -83,7 +85,8 @@ const visibleFields = computed(() => {
 
 const batchSearchName = computed(() => batchSearch.value?.name)
 
-async function fetchBatchSearchResults() {
+const fetchBatchSearchResults = wait(async () => {
+  await new Promise((resolve) => setTimeout(resolve, 1000))
   hits.value = await core.api.getBatchSearchResults(
     props.uuid,
     from.value,
@@ -92,7 +95,7 @@ async function fetchBatchSearchResults() {
     sort.value,
     order.value
   )
-}
+})
 
 async function fetchBatchSearch() {
   batchSearch.value = await core.api.getBatchSearch(props.uuid)
@@ -132,11 +135,11 @@ watch(toRef(route, 'query'), fetchBatchSearchResults, { deep: true, immediate: t
   </page-container>
   <page-container fluid>
     <page-table-generic
-      v-if="hits?.items"
       v-model:sort="sort"
       v-model:order="order"
-      :items="hits.items"
+      :items="hits?.items"
       :fields="visibleFields"
+      :loading="isLoading"
     >
       <template #cell(query)="{ item }">
         <cite class="text-secondary fst-normal text-nowrap">
