@@ -18,6 +18,10 @@ const props = defineProps({
   compactBreakpoint: {
     type: String,
     default: 'md'
+  },
+  loading: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -36,7 +40,7 @@ const compact = computed(() => {
       <template #thead>
         <project-entries-table-head :compact-breakpoint="compactBreakpoint" />
       </template>
-      <project-entries-table-body :compact-breakpoint="compactBreakpoint" :projects="projects" />
+      <project-entries-table-body :compact-breakpoint="compactBreakpoint" :projects="projects" :loading="loading" />
     </page-table>
   </div>
 </template>
