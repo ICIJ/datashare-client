@@ -27,7 +27,7 @@ const actionsClassList = computed(() => {
 </script>
 
 <template>
-  <div class="document-card-placeholder p-3 d-flex gap-3" v-for="i in repeat" :key="i">
+  <div v-for="i in repeat" :key="i" class="document-card-placeholder p-3 d-flex gap-3">
     <div class="document-card-placeholder__thumbnail flex-grow-1">
       <app-placeholder squared />
     </div>

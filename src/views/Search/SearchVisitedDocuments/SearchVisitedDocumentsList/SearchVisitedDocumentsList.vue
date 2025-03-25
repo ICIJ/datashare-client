@@ -30,7 +30,7 @@ const { t } = useI18n()
 const { toast } = useCore()
 const { confirm: showConfirmModal } = useConfirmModal()
 const { removeAll } = useHistoryEvents('DOCUMENT')
-const { isLoading, loaderId, waitFor } = useWait()
+const { isLoading, wait } = useWait()
 const view = 'searchVisitedDocumentsList'
 
 const perPage = useUrlParamWithStore('perPage', {
@@ -66,7 +66,7 @@ const order = computed({
 
 const orderDesc = computed(() => order.value === 'desc')
 
-const fetch = waitFor(loaderId, async () => {
+const fetch = wait(async () => {
   await new Promise((resolve) => setTimeout(resolve, 1000))
   const result = await api.getHistoryEvents('DOCUMENT', offset.value, perPage.value, sort.value, orderDesc.value)
   events.value = result?.items.map((item) => ({ ...item })) ?? []

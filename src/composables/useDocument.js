@@ -13,10 +13,9 @@ export const useDocument = function (element) {
   const route = useRoute()
   const router = useRouter()
   const { core } = useCore()
-  const { waitFor } = useWait()
-  const loaderId = useId()
+  const { wait, loaderId } = useWait()
 
-  const fetchDocument = waitFor(loaderId, async function ({ index, id, routing } = {}) {
+  const fetchDocument = wait(async function ({ index, id, routing } = {}) {
     await documentStore.getDocument({ index, id, routing })
     await documentStore.getParentDocument()
     await documentStore.getRootDocument()

@@ -71,7 +71,7 @@ const props = defineProps({
 const pages = ref([])
 const hits = ref([])
 const { core } = useCore()
-const { waitFor, loaderId } = useWait()
+const { wait, loaderId } = useWait()
 const infiniteScrollId = uniqueId('infinite-scroll-')
 
 const items = computed(() => flatten(pages.value).map(recordToItem))
@@ -98,7 +98,7 @@ async function loadPage() {
   hits.value.push(pageHits)
 }
 
-const loadPageWithLoader = waitFor(loaderId, loadPage)
+const loadPageWithLoader = wait(loadPage)
 
 async function loadNextPage($infiniteLoadingState) {
   await loadPage()

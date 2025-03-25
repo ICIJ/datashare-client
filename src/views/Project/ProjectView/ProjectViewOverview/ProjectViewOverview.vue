@@ -23,7 +23,7 @@ const props = defineProps({
 })
 
 const { core } = useCore()
-const { waitFor, loaderId } = useWait()
+const { wait, loaderId } = useWait()
 
 const params = computed(() => {
   return { name: props.name }
@@ -50,7 +50,7 @@ const fetchLastIndexingDate = async () => {
   return get(aggregations, 'index.buckets.0.maxExtractionDate.value', null)
 }
 
-const fetch = waitFor(loaderId, async () => {
+const fetch = wait(async () => {
   hasDocuments.value = !!(await fetchDocumentsCount())
   lastIndexingDate.value = await fetchLastIndexingDate()
 })
