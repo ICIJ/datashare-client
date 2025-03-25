@@ -31,7 +31,7 @@ defineProps({
 
 <template>
   <template v-if="loading">
-    <document-row-placeholder :repeat="5" />
+    <document-row-placeholder :properties="properties" :repeat="5" />
   </template>
   <template v-else>
     <document-row
