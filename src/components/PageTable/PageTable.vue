@@ -7,6 +7,9 @@ const order = defineModel('order', { type: String, default: 'desc' })
 const props = defineProps({
   selectMode: {
     type: Boolean
+  },
+  loading: {
+    type: Boolean
   }
 })
 
@@ -55,9 +58,16 @@ provide('orderBy', orderBy)
         <slot v-bind="{ selectMode, sortBy, orderBy }" name="thead" />
       </tr>
     </thead>
-    <tbody v-if="hasTbody">
-      <slot v-bind="{ selectMode, sortBy, orderBy }" />
-    </tbody>
+    <template v-if="loading">
+      <tbody>
+        <slot name="waiting" />
+      </tbody>
+    </template>
+    <template v-else>
+      <tbody v-if="hasTbody">
+        <slot v-bind="{ selectMode, sortBy, orderBy }" />
+      </tbody>
+    </template>
     <tfoot v-if="hasTfoot">
       <slot v-bind="{ selectMode, sortBy, orderBy }" name="tfoot" />
     </tfoot>
