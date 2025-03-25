@@ -131,7 +131,7 @@ export const routes = [
         },
         meta: {
           title: 'task.title',
-          icon: PhRocketLaunch,
+          icon: PhRocketLaunch
         },
         children: [
           {
