@@ -58,13 +58,14 @@ onBeforeMount(fetchMe)
         @update:modelValue="setPage"
       />
     </template>
-    <template #default="{ tasks, sort, order, updateSort, updateOrder, refresh, empty }">
+    <template #default="{ tasks, sort, order, updateSort, updateOrder, refresh, empty, loading }">
       <page-table-generic
-        v-if="!empty"
+        v-if="loading || !empty"
         :items="tasks"
         :fields="propertiesModelValueOptions"
         :sort="sort"
         :order="order"
+        :loading="loading"
         @update:sort="updateSort"
         @update:order="updateOrder"
       >

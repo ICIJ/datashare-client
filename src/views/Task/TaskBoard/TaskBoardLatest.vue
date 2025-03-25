@@ -2,7 +2,6 @@
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import AppOverlay from '@/components/AppOverlay/AppOverlay'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
 import DisplayProgress from '@/components/Display/DisplayProgress'
@@ -127,8 +126,8 @@ function getTaskIcon(item) {
       <phosphor-icon name="rocket-launch" />
       {{ t('task.task-board.latest.title') }}
     </b-card-title>
-    <app-overlay rounded :show="isLoading" class="d-flex flex-column justify-content-center">
-      <page-table-generic :items="tasks" :fields="fields">
+    <div class="d-flex flex-column justify-content-center">
+      <page-table-generic :items="tasks" :fields="fields" :loading="isLoading">
         <template #cell(taskType)="{ item }">
           <button-icon
             :icon-left="getTaskIcon(item)"
@@ -162,6 +161,6 @@ function getTaskIcon(item) {
         </template>
       </page-table-generic>
       <b-button v-if="!hideShowMore" variant="outline-secondary mx-auto" @click="showMore">Show more</b-button>
-    </app-overlay>
+    </div>
   </b-card-body>
 </template>
