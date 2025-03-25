@@ -15,7 +15,7 @@ import AppPlaceholder from '@/components/AppPlaceholder/AppPlaceholder'
           <app-placeholder :width="random(30, 60)" />
         </h3>
         <p>
-          <app-placeholder v-for="i in 4" :key="i" :cols="random(6, 6)" whitespace />
+          <app-placeholder v-for="i in 2" :key="i" :cols="random(7, 9)" whitespace />
         </p>
       </div>
       <div class="d-flex flex-column gap-2">
