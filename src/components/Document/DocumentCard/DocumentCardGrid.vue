@@ -44,11 +44,11 @@ const classList = computed(() => {
 })
 
 const showThumbnail = computed(() => {
-  return props.properties.includes('thumbnail')
+  return props.properties?.includes('thumbnail')
 })
 
 const showTitle = computed(() => {
-  return props.properties.includes('title')
+  return props.properties?.includes('title')
 })
 
 const to = computed(() => {

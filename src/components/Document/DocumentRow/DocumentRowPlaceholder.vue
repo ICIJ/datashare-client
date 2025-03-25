@@ -16,7 +16,7 @@ const props = defineProps({
   }
 })
 
-const hasThumbnail = computed(() => props.properties.includes('thumbnail'))
+const hasThumbnail = computed(() => props.properties?.includes('thumbnail'))
 </script>
 
 <template>

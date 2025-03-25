@@ -19,7 +19,7 @@ const props = defineProps({
   }
 })
 
-const hasThumbnail = computed(() => props.properties.includes('thumbnail'))
+const hasThumbnail = computed(() => props.properties?.includes('thumbnail'))
 
 const actionsClassList = computed(() => {
   return {
