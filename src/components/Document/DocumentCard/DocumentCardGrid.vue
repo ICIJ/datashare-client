@@ -65,7 +65,7 @@ const { show: showDocumentViewerModal } = useDocumentViewerModal(props.document)
     @mouseenter="hover = true"
     @mouseleave="hover = false"
   >
-    <div class="document-card-grid__wrapper d-flex flex-column gap-3 p-3">
+    <div class="document-card-grid__wrapper d-flex flex-column gap-3 p-3 pe-0">
       <document-thumbnail
         v-if="showThumbnail"
         :document="document"
