@@ -24,17 +24,18 @@ function getProject(item) {
 
 <template>
   <task-page
-    v-slot="{ tasks, sort, order, updateSort, updateOrder, empty }"
+    v-slot="{ tasks, sort, order, updateSort, updateOrder, empty, loading }"
     :task-filter="[TASK_NAME.EXTRACT_NLP, TASK_NAME.ENQUEUE_FROM_INDEX]"
     page-name="entities"
     show-add
   >
     <page-table-generic
-      v-if="!empty"
+      v-if="loading || !empty"
       :items="tasks"
       :fields="propertiesModelValueOptions"
       :sort="sort"
       :order="order"
+      :loading="loading"
       @update:sort="updateSort"
       @update:order="updateOrder"
     >
