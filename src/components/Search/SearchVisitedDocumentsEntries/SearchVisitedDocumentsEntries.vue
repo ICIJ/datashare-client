@@ -102,7 +102,7 @@ watch(() => eventsIds.value, fetch, { deep: true, immediate: true })
     <div class="text-center">
       <app-placeholder height="2.375rem" width="9rem" />
     </div>
-    <document-card-placeholder :repeat="3" :properties="2" />
+    <document-card-placeholder :repeat="3" />
   </div>
   <b-collapse v-for="(entry, key) of groupedEntries" v-else :key="key" visible>
     <template #header="{ visible, toggle }">
