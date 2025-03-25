@@ -1,5 +1,6 @@
 <script setup>
 import DocumentCardGrid from '@/components/Document/DocumentCard/DocumentCardGrid'
+import DocumentCardGridPlaceholder from '@/components/Document/DocumentCard/DocumentCardGridPlaceholder'
 import { useSelection } from '@/composables/useSelection'
 
 const selection = defineModel('selection', { type: Array, default: () => [] })
@@ -16,6 +17,9 @@ defineProps({
   properties: {
     type: Array,
     default: () => ['title', 'thumbnail']
+  },
+  loading: {
+    type: Boolean
   }
 })
 </script>
@@ -26,15 +30,20 @@ defineProps({
       <slot name="header" />
     </div>
     <div class="document-entries-grid__list">
-      <div v-for="entry in entries" :key="entry.id" class="document-entries-grid__list__item">
-        <document-card-grid
-          v-model:selected="selectionValues[entry.id]"
-          class="h-100"
-          :document="entry"
-          :select-mode="selectMode"
-          :properties="properties"
-        />
-      </div>
+      <template v-if="loading">
+        <document-card-grid-placeholder :properties="properties" :repeat="5" />
+      </template>
+      <template v-else>
+        <div v-for="entry in entries" :key="entry.id" class="document-entries-grid__list__item">
+          <document-card-grid
+            v-model:selected="selectionValues[entry.id]"
+            class="h-100"
+            :document="entry"
+            :select-mode="selectMode"
+            :properties="properties"
+          />
+        </div>
+      </template>
     </div>
     <slot />
   </div>

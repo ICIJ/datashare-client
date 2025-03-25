@@ -2,6 +2,7 @@
 import { toValue, useTemplateRef } from 'vue'
 
 import DocumentCard from '@/components/Document/DocumentCard/DocumentCard'
+import DocumentCardPlaceholder from '@/components/Document/DocumentCard/DocumentCardPlaceholder'
 import DocumentFloating from '@/components/Document/DocumentFloating'
 import { useSelection } from '@/composables/useSelection'
 import { useDocument } from '@/composables/useDocument'
@@ -17,6 +18,9 @@ defineProps({
   properties: {
     type: Array,
     default: () => ['title', 'thumbnail']
+  },
+  loading: {
+    type: Boolean
   }
 })
 
@@ -58,17 +62,22 @@ defineExpose({
           <slot name="header" />
         </div>
         <div class="document-entries-list__start__list">
-          <document-card
-            v-for="entry in entries"
-            :key="entry.id"
-            v-model:selected="selectionValues[entry.id]"
-            :active="isRouteActive(entry)"
-            :document="entry"
-            :select-mode="selectMode"
-            :properties="properties"
-            :data-entry-id="entry.id"
-            :data-entry-index="entry.index"
-          />
+          <template v-if="loading">
+            <document-card-placeholder :properties="properties" :repeat="5" vertical-actions />
+          </template>
+          <template v-else>
+            <document-card
+              v-for="entry in entries"
+              :key="entry.id"
+              v-model:selected="selectionValues[entry.id]"
+              :active="isRouteActive(entry)"
+              :document="entry"
+              :select-mode="selectMode"
+              :properties="properties"
+              :data-entry-id="entry.id"
+              :data-entry-index="entry.index"
+            />
+          </template>
         </div>
       </div>
     </template>
