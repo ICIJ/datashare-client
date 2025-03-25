@@ -41,7 +41,7 @@ import TabGroupNavigationEntry from '@/components/TabGroup/TabGroupNavigation/Ta
       </tab-group-navigation-entry>
     </tab-group-navigation>
     <div class="d-flex flex-column gap-3 mt-3">
-      <app-placeholder height="2.875rem" variant="body-secondary" />
+      <app-placeholder height="2.875rem" />
       <app-placeholder v-for="i in 10" :key="i" :width="random(30, 70)" />
     </div>
   </div>
