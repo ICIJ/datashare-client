@@ -58,7 +58,6 @@ const fetchMaxExtractionDateByProject = async () => {
 const fetch = wait(async () => {
   await fetchDocumentsCountByProject()
   await fetchMaxExtractionDateByProject()
-  await new Promise((resolve) => setTimeout(resolve, 10000))
 })
 
 onBeforeMount(fetch)
