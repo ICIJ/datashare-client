@@ -7,3 +7,9 @@ export default {
 }
 
 export const Default = {}
+
+export const VerticalActions = {
+  args: {
+    verticalActions: true
+  }
+}
