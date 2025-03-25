@@ -24,9 +24,7 @@ const props = defineProps({
   }
 })
 
-const compact = computed(() => {
-  return breakpointDown.value[props.compactBreakpoint]
-})
+const compact = computed(() => breakpointDown.value[props.compactBreakpoint])
 </script>
 
 <template>
