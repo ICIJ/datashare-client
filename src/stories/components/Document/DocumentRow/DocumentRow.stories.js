@@ -43,6 +43,7 @@ export default {
     properties: {
       control: 'check',
       options: [
+        'thumbnail',
         'title',
         'path',
         'author',
