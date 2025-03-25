@@ -24,7 +24,7 @@ import TabGroupNavigationEntry from '@/components/TabGroup/TabGroupNavigation/Ta
       </div>
     </div>
     <h3>
-      <app-placeholder :width="random(40, 60)"  />
+      <app-placeholder :width="random(40, 60)" />
     </h3>
     <tab-group-navigation>
       <tab-group-navigation-entry active @click.prevent>

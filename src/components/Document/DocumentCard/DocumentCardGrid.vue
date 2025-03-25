@@ -71,7 +71,7 @@ const { show: showDocumentViewerModal } = useDocumentViewerModal(props.document)
         :document="document"
         fit
         crop
-        clickable        
+        clickable
         :active="hover"
         class="mx-auto"
         @click="showDocumentViewerModal"
@@ -118,14 +118,14 @@ const { show: showDocumentViewerModal } = useDocumentViewerModal(props.document)
     font-weight: 700;
   }
 
-    &__wrapper {
+  &__wrapper {
     flex: 1 1 auto;
     min-width: 0;
-    
+
     &__properties {
       flex: 1 1 auto;
       min-width: 0;
-  
+
       &__title {
         display: block;
         font-weight: 500;
