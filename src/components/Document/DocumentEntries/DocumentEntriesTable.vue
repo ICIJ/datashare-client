@@ -27,6 +27,10 @@ const props = defineProps({
   properties: {
     type: Array,
     default: () => ['title']
+  },
+  loading: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -63,6 +67,7 @@ const visibleFieldsKeys = computed(() => visibleFields.value.map(property('key')
         :entries="entries"
         :properties="visibleFieldsKeys"
         :select-mode="selectMode"
+        :loading="loading"
       />
     </page-table>
     <slot />

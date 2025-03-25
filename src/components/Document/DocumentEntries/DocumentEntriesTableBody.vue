@@ -1,6 +1,7 @@
 <script setup>
 import { useSelection } from '@/composables/useSelection'
 import DocumentRow from '@/components/Document/DocumentRow/DocumentRow'
+import DocumentRowPlaceholder from '@/components/Document/DocumentRow/DocumentRowPlaceholder'
 
 const selection = defineModel('selection', { type: Array, default: () => [] })
 const { selectionValues } = useSelection(selection)
@@ -20,17 +21,26 @@ defineProps({
   properties: {
     type: Array,
     default: () => ['title', 'thumbnail']
+  },
+  loading: {
+    type: Boolean,
+    default: false
   }
 })
 </script>
 
 <template>
-  <document-row
-    v-for="entry in entries"
-    :key="entry.id"
-    v-model:selected="selectionValues[entry.id]"
-    :document="entry"
-    :properties="properties"
-    :select-mode="selectMode"
-  />
+  <template v-if="loading">
+    <document-row-placeholder :repeat="5" />
+  </template>
+  <template v-else>
+    <document-row
+      v-for="entry in entries"
+      :key="entry.id"
+      v-model:selected="selectionValues[entry.id]"
+      :document="entry"
+      :properties="properties"
+      :select-mode="selectMode"
+    />
+  </template>
 </template>
