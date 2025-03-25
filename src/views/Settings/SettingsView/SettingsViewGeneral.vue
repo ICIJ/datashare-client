@@ -78,7 +78,7 @@ onBeforeMount(loadSettings)
     <template #noResult>{{ noResultsLabel }}</template>
     <v-wait v-if="!noResults" :for="loaderId">
       <template #waiting>
-        <phosphor-icon name="circle" spin size="lg" class="ms-auto" />
+        <phosphor-icon :name="PhCircleNotch" spin size="lg" class="ms-auto" />
       </template>
       <settings-general :settings="filteredSettings" class="card border-0" @submit.prevent="onSubmit" />
     </v-wait>

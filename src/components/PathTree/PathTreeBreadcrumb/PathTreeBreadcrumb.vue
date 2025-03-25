@@ -71,7 +71,7 @@ const tree = computed(() => (props.noDatadir || props.datadirLabel ? treeWithout
       {{ $t('treeView.datadir') }}
     </path-tree-breadcrumb-entry>
     <path-tree-breadcrumb-entry v-if="treeWithoutDataDir.length > maxDirectories" abbr>
-      <phosphor-icon name="dots-three" />
+      <phosphor-icon :name="PhDotsThree" />
     </path-tree-breadcrumb-entry>
     <path-tree-breadcrumb-entry
       v-for="directory in tree.slice(-maxDirectories)"

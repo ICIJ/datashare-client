@@ -43,7 +43,7 @@ const dropdownItemClass = (key) => {
       <b-button class="i18n-locale-dropdown" href="#" :variant="null" @click.prevent>
         <span class="i18n-locale-dropdown__button">
           <slot v-bind="{ currentLocale, locales }">
-            <phosphor-icon name="globe-hemisphere-west" class="me-1" />
+            <phosphor-icon :name="PhGlobeHemisphereWest" class="me-1" />
             {{ currentLocale.label }}
           </slot>
         </span>

@@ -1,7 +1,7 @@
 <template>
   <div class="widget widget--recommended-by">
     <div class="widget__header d-flex align-items-center">
-      <phosphor-icon name="users-three" class="me-2" size="2em" />
+      <phosphor-icon :name="PhUsersThree" class="me-2" size="2em" />
       <h3 class="m-0 p-0 widget__header__title">{{ $t('widget.recommendedBy.title') }}</h3>
     </div>
     <v-wait :for="loaderId" transition="fade">

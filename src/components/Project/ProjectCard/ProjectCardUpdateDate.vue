@@ -17,7 +17,7 @@ defineProps({
     class="project-card-update-date text-secondary-emphasis d-inline-flex gap-1 align-items-center flex-wrap"
   >
     <slot>
-      <phosphor-icon name="calendar-blank" />
+      <phosphor-icon :name="PhCalendarBlank" />
       {{ $t('projectCardUpdateDate.label') }}
       <display-datetime-short :value="project.updateDate" />
     </slot>

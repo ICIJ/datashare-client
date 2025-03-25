@@ -94,12 +94,12 @@ const promptProjectDeletion = async () => {
         <footer class="project-jumbotron__content__footer d-md-flex gap-3 mt-auto">
           <div class="d-flex flex-wrap gap-3 text-secondary">
             <span v-if="creationDate" class="text-nowrap">
-              <phosphor-icon name="calendar-blank" />
+              <phosphor-icon :name="PhCalendarBlank" />
               {{ $t('projectJumbotron.creationDate') }}
               <display-datetime :value="creationDate" />
             </span>
             <span v-if="updateDate" class="text-nowrap">
-              <phosphor-icon name="calendar-check" />
+              <phosphor-icon :name="PhCalendarCheck" />
               {{ $t('projectJumbotron.updateDate') }}
               <display-datetime :value="updateDate" />
             </span>

@@ -105,7 +105,7 @@ const filteredAddons = computed(() => {
     <b-alert v-if="error" variant="danger" model-value>{{ errorLabel }}</b-alert>
     <v-wait :for="loaderId" class="row g-4">
       <template #waiting>
-        <phosphor-icon name="circle" spin size="lg" class="ms-auto"></phosphor-icon>
+        <phosphor-icon :name="PhCircleNotch" spin size="lg" class="ms-auto" />
       </template>
       <div v-for="addon in filteredAddons" :key="addon.id" class="col-12 col-xl-6 d-flex">
         <addon-card

@@ -84,7 +84,7 @@ if (props.scrollToRecent) {
   <section class="document-user-comments-list">
     <header class="d-flex justify-content-between align-items-center">
       <span class="d-inline-flex align-items-center text-nowrap">
-        <phosphor-icon name="sortAscending" class="me-1" />
+        <phosphor-icon :name="PhSortAscending" class="me-1" />
         {{ sortingText }}
       </span>
       <span
@@ -92,7 +92,7 @@ if (props.scrollToRecent) {
         @click="open = !open"
       >
         <span v-b-tooltip.body.hover="{ customClass: 'd-sm-none', delay: tooltipDelay }" :title="displayComments">
-          <phosphor-icon name="eyeClosed" :weight="closedEye" class="me-2" />
+          <phosphor-icon :name="PhEyeClosed" :weight="closedEye" class="me-2" />
         </span>
         <span class="d-none d-sm-inline">{{ displayComments }}</span>
       </span>

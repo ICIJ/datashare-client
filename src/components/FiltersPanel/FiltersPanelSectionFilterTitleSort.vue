@@ -51,7 +51,7 @@ const isOptionActive = ({ sortBy, orderBy }) => {
     no-caret
   >
     <template #button-content>
-      <phosphor-icon name="sort-ascending" height="1em" />
+      <phosphor-icon :name="PhSortAscending" height="1em" />
       <span class="visually-hidden">Sort</span>
     </template>
     <b-dropdown-item
