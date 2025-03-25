@@ -33,7 +33,7 @@ const actionsClassList = computed(() => {
     </div>
     <div class="document-card-placeholder__properties d-flex flex-column gap-2 h-100 w-100">
       <app-placeholder :width="random(40, 70)" />
-      <div v-for="i in properties" :key="i" class="d-flex flex-grow-1 gap-1">
+      <div v-for="j in properties" :key="j" class="d-flex flex-grow-1 gap-1">
         <app-placeholder width="1em" />
         <app-placeholder :width="random(5, 20)" />
       </div>
