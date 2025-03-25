@@ -59,7 +59,7 @@ const style = computed(() => {
 </script>
 
 <template>
-  <div class="app-placeholder placeholder" :class="classList" :style="style" />
+  <div class="app-placeholder placeholder rounded" :class="classList" :style="style" />
 </template>
 
 <style lang="scss">
@@ -75,7 +75,7 @@ const style = computed(() => {
   }
 
   &--whitespace {
-    clip-path: rect(0 calc(100% - #{$spacer-xxs}) 100% 0);
+    clip-path: rect(0 calc(100% - #{$spacer-xxs}) 100% 0 round var(--bs-border-radius));
   }
 }
 </style>
