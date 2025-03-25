@@ -10,14 +10,14 @@ import EntitySection from '@/components/Entity/EntitySection/EntitySection'
 import { useDocumentStore } from '@/store/modules'
 
 const { document, documentRoute } = useDocument()
-const { wait, waitFor, loaderId } = useWait()
+const { isLoading, wait } = useWait()
 const { core } = useCore()
 const documentStore = useDocumentStore()
 const filterToken = ref(null)
 
 const mustExtractEntities = computed(() => canManageDocuments.value && !hasNerTags.value)
 const canManageDocuments = computed(() => core.config.is('manageDocuments'))
-const loadingNamedEntities = computed(() => wait.is(loaderId))
+const loadingNamedEntities = computed(() => isLoading.value)
 const hasNerTags = computed(() => document.value.hasNerTags)
 const hasEntities = computed(() => sumBy(categories.value, getCategoryTotal))
 
@@ -59,7 +59,7 @@ const getNextPageInCategory = async (category) => {
   }
 }
 
-const getFirstPageInAllCategories = waitFor(loaderId, async () => {
+const getFirstPageInAllCategories = wait(async () => {
   await documentStore.getFirstPageForNamedEntityInAllCategories({ filterToken: filterToken.value })
 })
 
@@ -80,7 +80,7 @@ onMounted(getFirstPageInAllCategories)
     <div class="document-view-tabs-entities__search bg-body sticky-top py-3">
       <form-control-search
         v-model="filterToken"
-        :loading="$wait.is(loaderId)"
+        :loading="isLoading"
         :placeholder="$t('document.namedEntityFilter')"
         clear-text
         shadow

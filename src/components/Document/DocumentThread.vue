@@ -29,7 +29,7 @@ const props = defineProps({
 const elementRef = useTemplateRef('element')
 const documentStore = useDocumentStore()
 const { core } = useCore()
-const { waitFor, loaderId } = useWait()
+const { wait, loaderId } = useWait()
 
 const thread = ref({ hits: [] })
 
@@ -95,7 +95,7 @@ async function scrollToActive() {
   core.emit('scroll-tracker:request', { element, container })
 }
 
-const init = waitFor(loaderId, async function () {
+const init = wait(async function () {
   // Load its thread (if any)
   thread.value = await getThread()
   thread.value.push('hits.hits', props.document.raw)

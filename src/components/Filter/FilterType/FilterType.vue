@@ -30,15 +30,12 @@ const emit = defineEmits(['aggregate', 'update', 'update:filter-value'])
 const pages = reactive([])
 const expand = ref(false)
 
-const { wait } = useWait()
+const { wait, isLoading } = useWait()
 const searchStore = useSearchStore.inject('searchStoreSuffix')
 
-const aggregateWithLoading = async ({ clearPages = false } = {}) => {
-  wait.start(loaderId.value)
-  const page = await aggregate({ clearPages })
-  wait.end(loaderId.value)
-  return page
-}
+const aggregateWithLoading = wait(({ clearPages = false } = {}) => {
+  return aggregate({ clearPages })
+})
 
 const aggregateOverWithLoading = () => {
   return aggregateWithLoading({ clearPages: true })
@@ -187,8 +184,6 @@ const entries = computed(() => {
   })
 })
 
-const loaderId = computed(() => uniqueId('loader-search-filter-'))
-
 const infiniteId = ref(uniqueId('infinite-search-filter-'))
 const reachedBucketsEnd = computed(() => pages.length && lastPageBuckets.value.length < size.value)
 
@@ -248,7 +243,7 @@ onBeforeMount(async () => {
     :title="$t(`filter.${filter.name}`)"
     :icon="filter.icon"
     :count="count"
-    :loading="wait.is(loaderId)"
+    :loading="isLoading"
     :modal="modal"
   >
     <slot name="all" v-bind="{ entries, filter }">

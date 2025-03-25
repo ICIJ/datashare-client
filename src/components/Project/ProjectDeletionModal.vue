@@ -25,7 +25,7 @@ const documentsCount = ref(0)
 const tagsCount = ref(0)
 const recommendationsCount = ref(0)
 
-const { waitFor, loaderId } = useWait()
+const { wait, loaderId } = useWait()
 const { core, toast } = useCore()
 const { fetchDocumentsCount, fetchTagsCount, fetchRecommendationsCount } = useProjectMetrics(props.project)
 
@@ -44,7 +44,7 @@ async function confirmDeletion() {
 const hasSomething = computed(() => documentsCount.value + tagsCount.value + recommendationsCount.value > 0)
 
 onBeforeMount(
-  waitFor(loaderId, async () => {
+  wait(async () => {
     documentsCount.value = await fetchDocumentsCount()
     tagsCount.value = await fetchTagsCount()
     recommendationsCount.value = await fetchRecommendationsCount()

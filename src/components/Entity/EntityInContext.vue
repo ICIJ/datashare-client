@@ -29,12 +29,12 @@ const props = defineProps({
 })
 
 const documentStore = useDocumentStore()
-const { waitFor, loaderId } = useWait()
+const { wait } = useWait()
 
 const hasBigContentTextLength = computed(() => props.document.hasBigContentTextLength)
 const isContentLoaded = computed(() => documentStore.isContentLoaded)
 
-const fetch = waitFor(loaderId, async () => {
+const fetch = wait(async () => {
   if (!isContentLoaded.value && !hasBigContentTextLength.value) {
     await documentStore.getContent()
   }
