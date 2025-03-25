@@ -7,7 +7,7 @@ import AppPlaceholder from '@/components/AppPlaceholder/AppPlaceholder'
 <template>
   <div class="project-card-placeholder border rounded p-4 d-flex gap-3">
     <div class="flex-grow-1 project-card-placeholder__thumbnail">
-      <app-placeholder squared class="rounded" />
+      <app-placeholder squared />
     </div>
     <div class="d-flex flex-column gap-4 h-100 w-100 flex-truncate">
       <div>
