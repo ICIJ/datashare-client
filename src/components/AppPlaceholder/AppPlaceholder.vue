@@ -29,6 +29,10 @@ const props = defineProps({
   },
   squared: {
     type: Boolean
+  },
+  repeat: {
+    type: Number,
+    default: 1
   }
 })
 
@@ -71,7 +75,7 @@ const style = computed(() => {
 </script>
 
 <template>
-  <div class="app-placeholder placeholder rounded" :class="classList" :style="style" />
+  <div v-for="i in repeat" :key="i" class="app-placeholder placeholder rounded" :class="classList" :style="style" />
 </template>
 
 <style lang="scss">
