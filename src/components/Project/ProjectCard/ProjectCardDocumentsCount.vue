@@ -18,7 +18,7 @@ const hasDocuments = computed(() => isNumber(project.documentsCount) && project.
 <template>
   <div class="project-card-documents-count text-secondary-emphasis d-inline-flex gap-1 align-items-center flex-wrap">
     <slot>
-      <phosphor-icon name="files" />
+      <phosphor-icon :name="PhFiles" />
       <display-number v-if="hasDocuments" :value="project.documentsCount" />
       <span v-else>{{ $t('projectCardDocumentsCount.noDocuments') }}</span>
     </slot>

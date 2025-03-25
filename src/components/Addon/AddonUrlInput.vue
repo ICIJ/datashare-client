@@ -1,7 +1,7 @@
 <template>
   <div role="group" class="input-group mb-3">
     <span class="input-group-text">
-      <phosphor-icon name="link" />
+      <phosphor-icon :name="PhLink" />
     </span>
     <b-form-input
       :model-value="url"
@@ -11,7 +11,8 @@
       :disabled="loading"
       type="url"
       @update:model-value="(newValue) => (url = newValue)"
-    /><button-icon
+    />
+    <button-icon
       variant="tertiary"
       :icon-left="PhCloudArrowDown"
       class="ms-2 text-nowrap rounded-1"

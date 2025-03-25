@@ -123,7 +123,7 @@ function getTaskIcon(item) {
 <template>
   <b-card-body no-border class="task-all__latest no-border">
     <b-card-title class="pb-4">
-      <phosphor-icon name="rocket-launch" />
+      <phosphor-icon :name="PhRocketLaunch" />
       {{ t('task.task-board.latest.title') }}
     </b-card-title>
     <div class="d-flex flex-column justify-content-center">

@@ -24,7 +24,7 @@
         </span>
       </slot>
       <template v-if="!noCaret">
-        <phosphor-icon name="caret-down" class="ms-2" />
+        <phosphor-icon :name="PhCaretDown" class="ms-2" />
       </template>
     </template>
     <!-- @slot Area to insert content above the dropdown -->
