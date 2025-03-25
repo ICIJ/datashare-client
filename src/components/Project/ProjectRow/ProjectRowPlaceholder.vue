@@ -4,7 +4,7 @@ import { random } from 'lodash'
 import AppPlaceholder from '@/components/AppPlaceholder/AppPlaceholder'
 import PageTableTr from '@/components/PageTable/PageTableTr'
 
-const props = defineProps({
+defineProps({
   properties: {
     type: Array,
     default: () => ['label', 'description', 'documentsCount', 'updateDate']
@@ -21,7 +21,7 @@ const props = defineProps({
     <td v-for="p in properties" :key="p">
       <div class="d-flex gap-3 align-items-center">
         <template v-if="p === 'label'">
-          <div class="flex-shrink-0" >
+          <div class="flex-shrink-0">
             <app-placeholder width="50px" height="50px" variant="tertiary" />
           </div>
         </template>

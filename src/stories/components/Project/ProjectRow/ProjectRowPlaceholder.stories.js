@@ -18,9 +18,7 @@ export default {
   argTypes: {
     properties: {
       control: 'check',
-      options: [
-        'name'
-      ]
+      options: ['name']
     }
   },
   args: {
