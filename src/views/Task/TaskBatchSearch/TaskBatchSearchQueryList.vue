@@ -14,6 +14,7 @@ import { useCore } from '@/composables/useCore'
 import { useBatchSearchQueryProperties } from '@/composables/useBatchSearchQueryProperties'
 import { useUrlParam } from '@/composables/useUrlParam'
 import { useUrlParamWithStore } from '@/composables/useUrlParamWithStore'
+import { useWait } from '@/composables/useWait'
 import { useAppStore, useTaskStore } from '@/store/modules'
 
 const props = defineProps({
@@ -31,6 +32,7 @@ const route = useRoute()
 const appStore = useAppStore()
 const taskStore = useTaskStore()
 const { core } = useCore()
+const { wait, isLoading } = useWait()
 const { fields } = useBatchSearchQueryProperties()
 
 const settingsView = 'batchSearchQueries'
@@ -68,11 +70,11 @@ async function fetchBatchSearch() {
   batchSearch.value = await core.api.getBatchSearch(props.uuid)
 }
 
-async function fetchBatchSearchQueries() {
+const fetchBatchSearchQueries = wait(async () => {
   const records = await core.api.getBatchSearchQueries(props.uuid, from.value, perPage.value, searchQuery.value)
   // The queries are returned in an object
   queries.value = Object.entries(records).map(([query, count]) => ({ query, count }))
-}
+})
 
 onBeforeMount(fetchBatchSearch)
 watch(toRef(route, 'query'), fetchBatchSearchQueries, { deep: true, immediate: true })
@@ -101,7 +103,7 @@ watch(toRef(route, 'query'), fetchBatchSearchQueries, { deep: true, immediate: t
             <row-pagination-queries v-model="page" :total-rows="totalRows" :per-page="perPage" />
           </template>
         </page-toolbar>
-        <page-table-generic v-if="!empty" :items="queries" :fields="visibleFields">
+        <page-table-generic :items="queries" :fields="visibleFields" :loading="isLoading">
           <template #cell(query)="{ item }">
             <router-link :to="{ name: 'task.batch-search-queries.show', params: { query: item.query } }">
               {{ item.query }}
