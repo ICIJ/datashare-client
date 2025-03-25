@@ -1,29 +1,40 @@
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, ref, toValue, watch } from 'vue'
 import bodybuilder from 'bodybuilder'
 import { groupBy, property, trimStart, uniq } from 'lodash'
 import { match } from 'path-to-regexp'
 
 import { useCore } from '@/composables/useCore'
+import { useWait } from '@/composables/useWait'
+import AppPlaceholder from '@/components/AppPlaceholder/AppPlaceholder'
 import ButtonToggleDay from '@/components/Button/ButtonToggleDay'
 import DocumentCard from '@/components/Document/DocumentCard/DocumentCard'
+import DocumentCardPlaceholder from '@/components/Document/DocumentCard/DocumentCardPlaceholder'
 import DocumentActionsGroup from '@/components/Document/DocumentActionsGroup/DocumentActionsGroup'
 import DisplayTime from '@/components/Display/DisplayTime'
 import EsDocList from '@/api/resources/EsDocList'
 import { useStarredStore } from '@/store/modules'
 
-const { events } = defineProps({
+const { events, loadingEvents } = defineProps({
   events: {
     type: Array
+  },
+  loadingEvents: {
+    type: Boolean,
+    default: false
   }
 })
 
 const { core } = useCore()
+const { waitFor, loaderId, isLoading: loadingDocuments } = useWait()
 const starredStore = useStarredStore()
 
 const hits = ref([])
 // This is a list of the ids of the events.
 const eventsIds = computed(() => events.map(eventParams).map(property('id')))
+
+// Either we are loading the documents or the events.
+const loading = computed(() => toValue(loadingDocuments) || toValue(loadingEvents))
 
 const entries = computed(() => {
   return (
@@ -73,7 +84,7 @@ function buildEventsBody() {
     .build()
 }
 
-async function fetch() {
+const fetch = waitFor(loaderId, async () => {
   const preference = 'search-visited-documents'
   const body = buildEventsBody()
   const indices = uniq(events.map(eventParams).map(property('index')))
@@ -81,13 +92,19 @@ async function fetch() {
   const response = await core.api.elasticsearch.search({ index, body, preference })
   await starredStore.fetchIndicesStarredDocuments(indices)
   hits.value = new EsDocList(response).hits
-}
+})
 
 watch(() => eventsIds.value, fetch, { deep: true, immediate: true })
 </script>
 
 <template>
-  <b-collapse v-for="(entry, key) of groupedEntries" :key="key" visible>
+  <div v-if="loading" class="d-flex flex-column gap-3 mb-3">
+    <div class="text-center">
+      <app-placeholder height="2.375rem" width="9rem" />
+    </div>
+    <document-card-placeholder :repeat="3" :properties="2" />
+  </div>
+  <b-collapse v-for="(entry, key) of groupedEntries" v-else :key="key" visible>
     <template #header="{ visible, toggle }">
       <div class="text-center mb-3 sticky-top">
         <button-toggle-day :date="key" :active="visible" @click="toggle" />
@@ -103,7 +120,7 @@ watch(() => eventsIds.value, fetch, { deep: true, immediate: true })
       >
         <template #actions>
           <div class="d-flex align-items-center">
-            <document-actions-group tooltip-placement="right" :document="document" class="gap-1 me-3" />
+            <document-actions-group horizontal tooltip-placement="right" :document="document" class="gap-1 me-3" />
             <display-time :value="event.modificationDate" class="text-secondary" />
           </div>
         </template>
