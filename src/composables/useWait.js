@@ -1,4 +1,4 @@
-import { getCurrentInstance, useId, toRef } from 'vue'
+import { computed, getCurrentInstance, useId, toRef } from 'vue'
 
 export function useWait() {
   const instance = getCurrentInstance()
@@ -26,6 +26,7 @@ export function useWait() {
   }
 
   const loaderId = useId()
+  const isLoading = computed(() => wait.is(loaderId))
 
-  return { wait, waitFor, loaderId }
+  return { isLoading, wait, waitFor, loaderId }
 }
