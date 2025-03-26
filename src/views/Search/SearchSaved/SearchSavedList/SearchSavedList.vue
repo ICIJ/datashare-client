@@ -10,12 +10,13 @@ import PageHeader from '@/components/PageHeader/PageHeader'
 import PageToolbar from '@/components/PageToolbar/PageToolbar'
 import RowPaginationSearches from '@/components/RowPagination/RowPaginationSearches'
 import SearchSavedEntries from '@/components/Search/SearchSavedEntries/SearchSavedEntries'
-import { useCore } from '@/composables/useCore'
 import { useConfirmModal } from '@/composables/useConfirmModal'
+import { useCore } from '@/composables/useCore'
 import { useHistoryEvents } from '@/composables/useHistoryEvents'
-import { useUrlParamWithStore } from '@/composables/useUrlParamWithStore'
-import { useUrlParamsWithStore } from '@/composables/useUrlParamsWithStore'
+import { useSearchNav } from '@/composables/useSearchNav'
 import { useUrlPageParam } from '@/composables/useUrlPageParam'
+import { useUrlParamsWithStore } from '@/composables/useUrlParamsWithStore'
+import { useUrlParamWithStore } from '@/composables/useUrlParamWithStore'
 import { useAppStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
 
@@ -29,6 +30,8 @@ const { t } = useI18n()
 const { toast } = useCore()
 const { confirm: showConfirmModal } = useConfirmModal()
 const { removeAll } = useHistoryEvents('SEARCH')
+const { searchRoute } = useSearchNav()
+
 const view = 'searchSavedList'
 const perPage = useUrlParamWithStore('perPage', {
   transform: (value) => Math.max(10, parseInt(value)),
@@ -85,7 +88,7 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
     <page-container fluid deck>
       <page-header>
         <template #breadcrumb>
-          <navigation-breadcrumb-link :to="{ name: 'search' }" title="Search" />
+          <navigation-breadcrumb-link :to="searchRoute" title="Search" />
           <navigation-breadcrumb-link :to="{ name: 'search.saved.list' }" no-caret />
         </template>
         <template #actions>

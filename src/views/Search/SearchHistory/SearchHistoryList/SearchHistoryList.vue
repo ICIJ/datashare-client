@@ -17,6 +17,7 @@ import { useUrlParamWithStore } from '@/composables/useUrlParamWithStore'
 import { useUrlParamsWithStore } from '@/composables/useUrlParamsWithStore'
 import { useUrlPageParam } from '@/composables/useUrlPageParam'
 import { useWait } from '@/composables/useWait'
+import { useSearchNav } from '@/composables/useSearchNav'
 import { useAppStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
 
@@ -31,6 +32,7 @@ const { toast } = useCore()
 const { confirm: showConfirmModal } = useConfirmModal()
 const { removeAll } = useHistoryEvents('DOCUMENT')
 const { isLoading, wait } = useWait()
+const { searchRoute } = useSearchNav()
 const view = 'searchHistoryList'
 
 const perPage = useUrlParamWithStore('perPage', {
@@ -88,7 +90,7 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
     <page-container fluid deck>
       <page-header>
         <template #breadcrumb>
-          <navigation-breadcrumb-link :to="{ name: 'search' }" title="Search" />
+          <navigation-breadcrumb-link :to="searchRoute" title="Search" />
           <navigation-breadcrumb-link :to="{ name: 'search.history.list' }" no-caret />
         </template>
         <template #actions>
