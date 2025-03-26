@@ -18,7 +18,7 @@ const to = computed(() => {
     name: 'task.batch-search-queries.list',
     params: {
       uuid: getRecord('uuid'),
-      indices: getRecord('projects').join(',')
+      indices: getRecord('projects', []).join(',')
     }
   }
 })
