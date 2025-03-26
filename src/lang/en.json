@@ -270,7 +270,7 @@
   },
   "searchSavedEntries": {
     "fields": {
-      "creationDate": "Creation date",
+      "creationDate": "Created on",
       "name": "Name of the saved search",
       "author": "Author"
     },
@@ -661,7 +661,7 @@
     "dirname": "Document directory",
     "id": "Document ID",
     "project": "Project",
-    "creationDate": "Creation date",
+    "creationDate": "Created on",
     "size": "File size",
     "downloadMaxRootSizeAlert": "You cannot download this document because its parent is bigger than {humanMaxRootSize}.",
     "contentLanguage": "Content language",
@@ -927,7 +927,7 @@
     "description": "Some tasks must be run in the background. Use this panel to manage them.",
     "noResults": "No search results. Try adjusting the query or filters.",
     "settings": {
-      "createdAt": "Created at",
+      "createdAt": "Created on",
       "name": "Name",
       "state": "State"
     },
@@ -948,7 +948,7 @@
           "state": "State",
           "projects": "Projects",
           "author": "Author",
-          "createdAt": "Created at",
+          "createdAt": "Created on",
           "progress": "Progress"
         }
       },
@@ -990,7 +990,7 @@
           "entitiesToFind": "Entities to find",
           "pipeline": "Model",
           "project": "Project",
-          "createdAt": "Creation date",
+          "createdAt": "Created on",
           "progress":"Progress",
           "result": "Result",
           "state":"State"
@@ -1041,7 +1041,7 @@
           "name":"Name",
           "documents":"Documents",
           "project":"Project",
-          "createdAt": "Creation date",
+          "createdAt": "Created on",
           "progress":"Progress",
           "result": "Result",
           "state":"State"
@@ -1077,7 +1077,7 @@
         "empty": "You have not yet started any tasks. <a href=\"{howToLink}\" target=\"_blank\">Read more.</a>",
         "properties": {
           "name":"Name",
-          "createdAt": "Creation date",
+          "createdAt": "Created on",
           "projects":"Projects",
           "progress":"Progress",
           "size": "Size",
@@ -1100,7 +1100,7 @@
           "projects":"Projects",
           "author":"Author",
           "name":"Name",
-          "createdAt": "Creation date",
+          "createdAt": "Created on",
           "progress":"Progress",
           "state":"State"
         }
@@ -1185,7 +1185,7 @@
           "contentType": "Type",
           "contentLength": "Size",
           "documentPath": "Path",
-          "creationDate": "Creation date"
+          "creationDate": "Created on"
         }
       }
     }
@@ -1205,7 +1205,7 @@
   },
   "batchSearchCardDetails": {
     "status": "Status",
-    "date": "Creation date",
+    "date": "Created on",
     "author": "Author",
     "visibilityPrivate": "Private",
     "visibilityShared": "Shared",
@@ -1499,7 +1499,7 @@
     },
     "options": {
       "name": "Name",
-      "creationDate": "Creation date",
+      "creationDate": "Created on",
       "updateDate": "Latest update",
       "visitDate": "Last visit",
       "documentsCount": "Documents count",
@@ -1817,7 +1817,7 @@
       "contentLength": "File size",
       "contentTextLength": "Text length",
       "contentType": "File type",
-      "creationDate": "Created at",
+      "creationDate": "Created on",
       "extractionLevel": "Extraction level",
       "extractionDate": "Indexing date",
       "language": "Language",
