@@ -53,7 +53,6 @@ const classList = computed(() => {
     display: flex;
     flex-direction: column;
     gap: $spacer-lg;
-    padding-bottom: $spacer-lg;
   }
 
   &--sticky {
