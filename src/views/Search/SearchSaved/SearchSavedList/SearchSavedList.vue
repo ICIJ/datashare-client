@@ -6,8 +6,7 @@ import { useI18n } from 'vue-i18n'
 import ButtonClearSavedSearches from '@/components/Button/ButtonClearSavedSearches'
 import NavigationBreadcrumbLink from '@/components/NavigationBreadcrumb/NavigationBreadcrumbLink'
 import PageContainer from '@/components/PageContainer/PageContainer'
-import PageHeaderNav from '@/components/PageHeader/PageHeaderNav'
-import PageHeaderToolbar from '@/components/PageHeader/PageHeaderToolbar'
+import PageHeader from '@/components/PageHeader/PageHeader'
 import RowPaginationSearches from '@/components/RowPagination/RowPaginationSearches'
 import SearchSavedEntries from '@/components/Search/SearchSavedEntries/SearchSavedEntries'
 import { useConfirmModal } from '@/composables/useConfirmModal'
@@ -85,28 +84,24 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
 
 <template>
   <div class="search-saved-list">
-    <page-container fluid deck>
-      <page-header-nav>
-        <template #breadcrumb>
-          <navigation-breadcrumb-link :to="searchRoute" title="Search" />
-          <navigation-breadcrumb-link :to="{ name: 'search.saved.list' }" no-caret />
-        </template>
-        <template #actions>
-          <button-clear-saved-searches @click="showRemoveAllModal" />
-        </template>
-      </page-header-nav>
-      <page-header-toolbar
-        :key="pagination?.total"
-        v-model:page="page"
-        paginable
-        :per-page="perPage"
-        :total-rows="pagination?.total ?? 0"
-      >
-        <template #pagination="{ totalRows }">
-          <row-pagination-searches v-model="page" :total-rows="totalRows" :per-page="perPage" />
-        </template>
-      </page-header-toolbar>
-    </page-container>
+    <page-header
+      :key="pagination?.total"
+      v-model:page="page"
+      paginable
+      :per-page="perPage"
+      :total-rows="pagination?.total ?? 0"
+    >
+      <template #breadcrumb>
+        <navigation-breadcrumb-link :to="searchRoute" title="Search" />
+        <navigation-breadcrumb-link :to="{ name: 'search.saved.list' }" no-caret />
+      </template>
+      <template #actions>
+        <button-clear-saved-searches @click="showRemoveAllModal" />
+      </template>
+      <template #pagination="{ totalRows }">
+        <row-pagination-searches v-model="page" :total-rows="totalRows" :per-page="perPage" />
+      </template>
+    </page-header>
     <page-container fluid>
       <search-saved-entries v-model:sort="sort" v-model:order="order" :events="events" @reload="fetch" />
     </page-container>
