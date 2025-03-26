@@ -1,7 +1,7 @@
 <script setup>
 import Fuse from 'fuse.js'
 import { computed, onBeforeMount } from 'vue'
-import { sortBy } from 'lodash'
+import { property, sortBy } from 'lodash'
 
 import { useCore } from '@/composables/useCore'
 import { useSearchFilter } from '@/composables/useSearchFilter'
@@ -46,7 +46,7 @@ const entries = computed(() => {
   if (!query.value) {
     return recommendations.value
   }
-  return fuse.value.search(query.value).map(({ item }) => item)
+  return fuse.value.search(query.value).map(property('item'))
 })
 
 function fetch() {
