@@ -2,7 +2,7 @@
 import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
 
-import PageHeader from '@/components/PageHeader/PageHeader'
+import PageHeaderNav from '@/components/PageHeader/PageHeaderNav'
 import TabGroupNavigation from '@/components/TabGroup/TabGroupNavigation/TabGroupNavigation'
 import TabGroupNavigationEntry from '@/components/TabGroup/TabGroupNavigation/TabGroupNavigationEntry'
 import PageContainer from '@/components/PageContainer/PageContainer'
@@ -56,7 +56,7 @@ const displayTabs = computed(() => tabs.value.filter((tab) => tab.modes.some(isM
 
 <template>
   <page-container fluid deck class="settings-view">
-    <page-header no-toggle-settings />
+    <page-header-nav no-toggle-settings />
     <div class="bg-tertiary-subtle rounded-1 py-4 px-5">
       <tab-group-navigation class="mx-3" nowrap>
         <tab-group-navigation-entry

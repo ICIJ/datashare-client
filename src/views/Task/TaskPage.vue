@@ -7,8 +7,8 @@ import appBuildingDark from '@/assets/images/illustrations/app-building-dark.svg
 import DismissableAlert from '@/components/Dismissable/DismissableAlert'
 import EmptyState from '@/components/EmptyState/EmptyState'
 import PageContainer from '@/components/PageContainer/PageContainer'
-import PageHeader from '@/components/PageHeader/PageHeader'
-import PageToolbar from '@/components/PageToolbar/PageToolbar'
+import PageHeaderNav from '@/components/PageHeader/PageHeaderNav'
+import PageHeaderToolbar from '@/components/PageHeader/PageHeaderToolbar'
 import TaskActions from '@/components/Task/TaskActions'
 import RowPaginationTasks from '@/components/RowPagination/RowPaginationTasks'
 import { useTaskHeader } from '@/composables/useTaskHeader'
@@ -67,8 +67,8 @@ function refresh() {
 
 <template>
   <page-container fluid deck class="task-page">
-    <page-header :to-add="showAdd ? toAddRoute : null" />
-    <page-toolbar
+    <page-header-nav :to-add="showAdd ? toAddRoute : null" />
+    <page-header-toolbar
       :key="totalRows"
       v-model:searchQuery="searchQuery"
       v-model:page="page"
@@ -93,7 +93,7 @@ function refresh() {
           <row-pagination-tasks v-model="page" :per-page="perPage" :total-rows="totalRows" />
         </slot>
       </template>
-    </page-toolbar>
+    </page-header-toolbar>
     <div>
       <dismissable-alert variant="info" persist :name="`task.${pageName}.list.info`">
         {{ t(`task.${pageName}.list.info`) }}

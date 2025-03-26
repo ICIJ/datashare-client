@@ -38,14 +38,14 @@ const showToggleSidebar = computed(() => {
 </script>
 
 <template>
-  <div class="page-header d-flex justify-content-between gap-4 pt-3">
+  <div class="page-header-nav d-flex justify-content-between gap-4 pt-3">
     <slot name="toggle-sidebar">
       <button-toggle-sidebar v-if="showToggleSidebar" v-model:active="toggleSidebar" class="flex-shrink-0" />
     </slot>
-    <navigation-breadcrumb v-if="!noBreadcrumb" class="page-header__breadcrumb me-auto">
+    <navigation-breadcrumb v-if="!noBreadcrumb" class="page-header-nav__breadcrumb me-auto">
       <slot name="breadcrumb" />
     </navigation-breadcrumb>
-    <div class="page-header__actions d-flex gap-4 ms-4 align-items-center">
+    <div class="page-header-nav__actions d-flex gap-4 ms-4 align-items-center">
       <slot name="actions" />
       <button-add v-if="toAdd" :to="toAdd" />
       <button-toggle-settings v-if="!noToggleSettings" v-model:active="toggleSettings" />

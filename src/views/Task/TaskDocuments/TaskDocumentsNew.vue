@@ -1,6 +1,6 @@
 <script setup>
 import PageContainer from '@/components/PageContainer/PageContainer'
-import PageHeader from '@/components/PageHeader/PageHeader'
+import PageHeaderNav from '@/components/PageHeader/PageHeaderNav'
 import TaskDocumentsForm from '@/components/Task/TaskDocuments/TaskDocumentsForm'
 
 defineProps({
@@ -13,7 +13,7 @@ defineProps({
 
 <template>
   <page-container fluid deck class="task-documents-new">
-    <page-header no-toggle-settings />
+    <page-header-nav no-toggle-settings />
     <task-documents-form :project="project" />
   </page-container>
 </template>

@@ -41,17 +41,17 @@ const setPage = (value) => (page.value = value)
 </script>
 
 <template>
-  <div class="page-toolbar d-flex justify-content-between flex-wrap gap-3">
+  <div class="page-header-toolbar d-flex justify-content-between flex-wrap gap-3">
     <slot name="toggle-filters">
       <button-toggle-filters
         v-if="filterable"
-        class="page-toolbar__toggle-filters"
+        class="page-header-toolbar__toggle-filters"
         :active="activeFilters"
         @toggle="emit('toggleFilters', $event)"
       />
     </slot>
     <slot name="pagination" v-bind="{ page, setPage, paginable, perPage, totalRows }">
-      <div v-if="paginable" class="page-toolbar__pagination">
+      <div v-if="paginable" class="page-header-toolbar__pagination">
         <row-pagination :key="totalRows" v-model="page" :total-rows="totalRows" :per-page="perPage" />
       </div>
     </slot>
@@ -61,7 +61,7 @@ const setPage = (value) => (page.value = value)
         v-model="searchQuery"
         autofocus
         :placeholder="searchPlaceholder ?? $t('pageHeader.searchPlaceholder')"
-        class="page-toolbar__search ms-auto"
+        class="page-header-toolbar__search ms-auto"
       />
     </slot>
     <slot name="end" />
@@ -69,7 +69,7 @@ const setPage = (value) => (page.value = value)
 </template>
 
 <style scoped lang="scss">
-.page-toolbar {
+.page-header-toolbar {
   @include media-breakpoint-down(md) {
     &__pagination {
       order: 1;

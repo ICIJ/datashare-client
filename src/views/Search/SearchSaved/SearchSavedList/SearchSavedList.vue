@@ -6,8 +6,8 @@ import { useI18n } from 'vue-i18n'
 import ButtonClearSavedSearches from '@/components/Button/ButtonClearSavedSearches'
 import NavigationBreadcrumbLink from '@/components/NavigationBreadcrumb/NavigationBreadcrumbLink'
 import PageContainer from '@/components/PageContainer/PageContainer'
-import PageHeader from '@/components/PageHeader/PageHeader'
-import PageToolbar from '@/components/PageToolbar/PageToolbar'
+import PageHeaderNav from '@/components/PageHeader/PageHeaderNav'
+import PageHeaderToolbar from '@/components/PageHeader/PageHeaderToolbar'
 import RowPaginationSearches from '@/components/RowPagination/RowPaginationSearches'
 import SearchSavedEntries from '@/components/Search/SearchSavedEntries/SearchSavedEntries'
 import { useConfirmModal } from '@/composables/useConfirmModal'
@@ -86,7 +86,7 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
 <template>
   <div class="search-saved-list">
     <page-container fluid deck>
-      <page-header>
+      <page-header-nav>
         <template #breadcrumb>
           <navigation-breadcrumb-link :to="searchRoute" title="Search" />
           <navigation-breadcrumb-link :to="{ name: 'search.saved.list' }" no-caret />
@@ -94,8 +94,8 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
         <template #actions>
           <button-clear-saved-searches @click="showRemoveAllModal" />
         </template>
-      </page-header>
-      <page-toolbar
+      </page-header-nav>
+      <page-header-toolbar
         :key="pagination?.total"
         v-model:page="page"
         paginable
@@ -105,7 +105,7 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
         <template #pagination="{ totalRows }">
           <row-pagination-searches v-model="page" :total-rows="totalRows" :per-page="perPage" />
         </template>
-      </page-toolbar>
+      </page-header-toolbar>
     </page-container>
     <page-container fluid>
       <search-saved-entries v-model:sort="sort" v-model:order="order" :events="events" @reload="fetch" />
