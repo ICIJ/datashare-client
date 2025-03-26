@@ -109,13 +109,18 @@ watch(toRef(route, 'query'), fetchBatchSearchResults, { deep: true, immediate: t
   <page-container fluid deck>
     <page-header>
       <template #breadcrumb>
-        <navigation-breadcrumb-link route-name="task" />
-        <navigation-breadcrumb-link route-name="task.batch-search.list" />
-        <navigation-breadcrumb-link route-name="task.batch-search-queries.list" :title="batchSearchName" />
-        <navigation-breadcrumb-link v-if="query" route-name="task.batch-search-queries.show" :title="query" no-icon />
+        <navigation-breadcrumb-link :to="{ name: 'task' }" />
+        <navigation-breadcrumb-link :to="{ name: 'task.batch-search.list' }" />
+        <navigation-breadcrumb-link :to="{ name: 'task.batch-search-queries.list' }" :title="batchSearchName" />
+        <navigation-breadcrumb-link
+          v-if="query"
+          :to="{ name: 'task.batch-search-queries.show' }"
+          :title="query"
+          no-icon
+        />
         <navigation-breadcrumb-link
           v-else
-          route-name="task.batch-search-results.list"
+          :to="{ name: 'task.batch-search-results.list' }"
           :title="$t('task.batch-search-results.list.title')"
           no-icon
         />

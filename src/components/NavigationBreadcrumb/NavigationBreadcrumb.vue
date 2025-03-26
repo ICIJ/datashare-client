@@ -3,6 +3,7 @@ import { computed, useSlots } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import NavigationBreadcrumbLink from '@/components/NavigationBreadcrumb/NavigationBreadcrumbLink'
+import { active } from 'd3'
 
 const props = defineProps({
   currentRouteName: {
@@ -34,7 +35,7 @@ const visibleRoutes = computed(() => {
 })
 
 const isActiveRoute = (name) => {
-  return name === currentRoute.value?.name
+  return visibleRoutes.value[visibleRoutes.value.length - 1].name === name
 }
 
 const showActiveSlot = (name) => {
@@ -52,9 +53,10 @@ const hasActiveSlot = computed(() => {
       <navigation-breadcrumb-link
         v-for="{ name } in visibleRoutes"
         :key="name"
-        :route-name="name"
+        :to="{ name }"
         :current-route-name="currentRouteName"
         :no-caret="name === currentRouteName"
+        :active="isActiveRoute(name)"
       >
         <template v-if="showActiveSlot(name)">
           <slot name="active" />

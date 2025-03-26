@@ -88,8 +88,8 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
     <page-container fluid deck>
       <page-header>
         <template #breadcrumb>
-          <navigation-breadcrumb-link route-name="search" title="Search" />
-          <navigation-breadcrumb-link route-name="search.history.list" no-caret />
+          <navigation-breadcrumb-link :to="{ name: 'search' }" title="Search" />
+          <navigation-breadcrumb-link :to="{ name: 'search.history.list' }" no-caret />
         </template>
         <template #actions>
           <button-clear-history @click="showRemoveAllModal" />

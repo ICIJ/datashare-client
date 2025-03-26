@@ -46,7 +46,7 @@ const groupedShortcuts = computed(() => groupBy(filteredShotcuts.value, 'route')
   <page-container fluid deck>
     <page-header no-toggle-settings>
       <template #breadcrumb>
-        <navigation-breadcrumb-link route-name="shortcuts" :active="false" />
+        <navigation-breadcrumb-link :to="{ name: 'shortcuts' }" :active="false" />
       </template>
     </page-header>
   </page-container>

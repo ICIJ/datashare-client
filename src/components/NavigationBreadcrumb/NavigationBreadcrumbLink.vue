@@ -7,8 +7,8 @@ import { PhCaretRight } from '@phosphor-icons/vue'
 import DisplayRoute from '@/components/Display/DisplayRoute'
 
 const props = defineProps({
-  routeName: {
-    type: String
+  to: {
+    type: Object
   },
   currentRouteName: {
     type: String
@@ -44,8 +44,7 @@ const currentRoute = computed(() => {
 
 const resolved = computed(() => {
   try {
-    const name = props.routeName
-    return router.resolve({ name })
+    return router.resolve(props.to)
   } catch {
     return null
   }
@@ -86,7 +85,9 @@ const classList = computed(() => {
     <span class="navigation-breadcrumb-link__label">
       <phosphor-icon v-if="!noIcon && icon" class="navigation-breadcrumb-link__label__icon me-2" :name="icon" />
       <span class="navigation-breadcrumb-link__label__content">
-        <slot><display-route :value="routeName" :title="title" /></slot>
+        <slot>
+          <display-route :value="to.name" :title="title" />
+        </slot>
       </span>
     </span>
   </a>
