@@ -6,8 +6,8 @@ import { useI18n } from 'vue-i18n'
 import ButtonClearHistory from '@/components/Button/ButtonClearHistory'
 import NavigationBreadcrumbLink from '@/components/NavigationBreadcrumb/NavigationBreadcrumbLink'
 import PageContainer from '@/components/PageContainer/PageContainer'
-import PageHeader from '@/components/PageHeader/PageHeader'
-import PageToolbar from '@/components/PageToolbar/PageToolbar'
+import PageHeaderNav from '@/components/PageHeader/PageHeaderNav'
+import PageHeaderToolbar from '@/components/PageHeader/PageHeaderToolbar'
 import RowPaginationDocuments from '@/components/RowPagination/RowPaginationDocuments'
 import SearchHistoryEntries from '@/components/Search/SearchHistoryEntries/SearchHistoryEntries'
 import { useConfirmModal } from '@/composables/useConfirmModal'
@@ -88,7 +88,7 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
 <template>
   <div class="search-history-list d-flex flex-column">
     <page-container fluid deck>
-      <page-header>
+      <page-header-nav>
         <template #breadcrumb>
           <navigation-breadcrumb-link :to="searchRoute" title="Search" />
           <navigation-breadcrumb-link :to="{ name: 'search.history.list' }" no-caret />
@@ -96,8 +96,8 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
         <template #actions>
           <button-clear-history @click="showRemoveAllModal" />
         </template>
-      </page-header>
-      <page-toolbar
+      </page-header-nav>
+      <page-header-toolbar
         :key="pagination?.total"
         v-model:page="page"
         paginable
@@ -107,7 +107,7 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
         <template #pagination="{ totalRows }">
           <row-pagination-documents v-model="page" :total-rows="totalRows" :per-page="perPage" />
         </template>
-      </page-toolbar>
+      </page-header-toolbar>
     </page-container>
     <page-container fluid class="flex-grow-1 overflow-auto">
       <search-history-entries :events="events" :loading-events="isLoading" />

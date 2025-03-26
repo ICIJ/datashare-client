@@ -6,9 +6,9 @@ import ButtonRowActionSearch from '@/components/Button/ButtonRowAction/ButtonRow
 import BatchSearchCard from '@/components/BatchSearch/BatchSeachCard/BatchSearchCard'
 import NavigationBreadcrumbLink from '@/components/NavigationBreadcrumb/NavigationBreadcrumbLink'
 import PageContainer from '@/components/PageContainer/PageContainer'
-import PageHeader from '@/components/PageHeader/PageHeader'
+import PageHeaderNav from '@/components/PageHeader/PageHeaderNav'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
-import PageToolbar from '@/components/PageToolbar/PageToolbar'
+import PageHeaderToolbar from '@/components/PageHeader/PageHeaderToolbar'
 import RowPaginationQueries from '@/components/RowPagination/RowPaginationQueries'
 import { useCore } from '@/composables/useCore'
 import { useBatchSearchQueryProperties } from '@/composables/useBatchSearchQueryProperties'
@@ -81,16 +81,16 @@ watch(toRef(route, 'query'), fetchBatchSearchQueries, { deep: true, immediate: t
 
 <template>
   <page-container fluid deck class="task-batch-search-query-list">
-    <page-header>
+    <page-header-nav>
       <template #breadcrumb>
         <navigation-breadcrumb-link :to="{ name: 'task' }" />
         <navigation-breadcrumb-link :to="{ name: 'task.batch-search.list' }" />
         <navigation-breadcrumb-link :to="{ name: 'task.batch-search-queries.list' }" :title="batchSearchName" />
       </template>
-    </page-header>
+    </page-header-nav>
     <b-row>
       <b-col lg="8" cols="12">
-        <page-toolbar
+        <page-header-toolbar
           v-model:searchQuery="searchQuery"
           v-model:page="page"
           :per-page="perPage"
@@ -101,7 +101,7 @@ watch(toRef(route, 'query'), fetchBatchSearchQueries, { deep: true, immediate: t
           <template #pagination="{ totalRows }">
             <row-pagination-queries v-model="page" :total-rows="totalRows" :per-page="perPage" />
           </template>
-        </page-toolbar>
+        </page-header-toolbar>
         <page-table-generic :items="queries" :fields="visibleFields" :loading="isLoading">
           <template #cell(query)="{ item }">
             <router-link :to="{ name: 'task.batch-search-queries.show', params: { query: item.query } }">

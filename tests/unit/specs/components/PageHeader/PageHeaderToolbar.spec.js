@@ -1,14 +1,14 @@
 import { shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
-import PageToolbar from '@/components/PageToolbar/PageToolbar'
+import PageHeaderToolbar from '@/components/PageHeader/PageHeaderToolbar'
 
-describe('PageToolbar.vue', () => {
+describe('PageHeaderToolbar.vue', () => {
   const { plugins } = CoreSetup.init().useAll()
   let wrapper = null
 
   beforeEach(() => {
-    wrapper = shallowMount(PageToolbar, {
+    wrapper = shallowMount(PageHeaderToolbar, {
       global: {
         plugins,
         renderStubDefaultSlot: true

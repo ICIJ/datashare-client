@@ -5,7 +5,7 @@ import { useI18n } from 'vue-i18n'
 import Fuse from 'fuse.js'
 
 import DisplayRoute from '@/components/Display/DisplayRoute'
-import PageHeader from '@/components/PageHeader/PageHeader'
+import PageHeaderNav from '@/components/PageHeader/PageHeaderNav'
 import PageContainer from '@/components/PageContainer/PageContainer'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 import KeyboardShortcutsSection from '@/components/KeyboardShortcuts/KeyboardShortcutsSection/KeyboardShortcutsSection'
@@ -44,11 +44,11 @@ const groupedShortcuts = computed(() => groupBy(filteredShotcuts.value, 'route')
 
 <template>
   <page-container fluid deck>
-    <page-header no-toggle-settings>
+    <page-header-nav no-toggle-settings>
       <template #breadcrumb>
         <navigation-breadcrumb-link :to="{ name: 'shortcuts' }" :active="false" />
       </template>
-    </page-header>
+    </page-header-nav>
   </page-container>
   <page-container fluid>
     <div class="bg-tertiary-subtle rounded-1 pt-4 pb-5 px-5 d-flex flex-column gap-4">

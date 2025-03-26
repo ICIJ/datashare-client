@@ -1,7 +1,7 @@
 <script setup>
 import ModeLocalOnly from '@/components/Mode/ModeLocalOnly'
 import PageContainer from '@/components/PageContainer/PageContainer'
-import PageHeader from '@/components/PageHeader/PageHeader'
+import PageHeaderNav from '@/components/PageHeader/PageHeaderNav'
 import TaskBoardList from '@/components/Task/TaskBoard/TaskBoardList'
 import TaskBoardListEntry from '@/components/Task/TaskBoard/TaskBoardListEntry'
 import TaskBoardLatest from '@/views/Task/TaskBoard/TaskBoardLatest'
@@ -10,7 +10,7 @@ import { TASK_NAME, TASK_NAME_ICON } from '@/enums/taskNames'
 
 <template>
   <page-container fluid deck class="task-board">
-    <page-header no-toggle-settings />
+    <page-header-nav no-toggle-settings />
     <task-board-latest />
     <task-board-list class="px-5">
       <task-board-list-entry

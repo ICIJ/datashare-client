@@ -11,8 +11,8 @@ import DisplayContentType from '@/components/Display/DisplayContentType'
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
 import NavigationBreadcrumbLink from '@/components/NavigationBreadcrumb/NavigationBreadcrumbLink'
 import PageContainer from '@/components/PageContainer/PageContainer'
-import PageHeader from '@/components/PageHeader/PageHeader'
-import PageToolbar from '@/components/PageToolbar/PageToolbar'
+import PageHeaderNav from '@/components/PageHeader/PageHeaderNav'
+import PageHeaderToolbar from '@/components/PageHeader/PageHeaderToolbar'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import ProjectLabel from '@/components/Project/ProjectLabel'
 import RouterLinkDocument from '@/components/RouterLink/RouterLinkDocument'
@@ -107,7 +107,7 @@ watch(toRef(route, 'query'), fetchBatchSearchResults, { deep: true, immediate: t
 
 <template>
   <page-container fluid deck>
-    <page-header>
+    <page-header-nav>
       <template #breadcrumb>
         <navigation-breadcrumb-link :to="{ name: 'task' }" />
         <navigation-breadcrumb-link :to="{ name: 'task.batch-search.list' }" />
@@ -125,8 +125,8 @@ watch(toRef(route, 'query'), fetchBatchSearchResults, { deep: true, immediate: t
           no-icon
         />
       </template>
-    </page-header>
-    <page-toolbar
+    </page-header-nav>
+    <page-header-toolbar
       v-model:searchQuery="searchQuery"
       v-model:page="page"
       :per-page="perPage"
@@ -136,7 +136,7 @@ watch(toRef(route, 'query'), fetchBatchSearchResults, { deep: true, immediate: t
       <template #pagination="{ totalRows }">
         <row-pagination-documents v-model="page" :total-rows="totalRows" :per-page="perPage" />
       </template>
-    </page-toolbar>
+    </page-header-toolbar>
   </page-container>
   <page-container fluid>
     <page-table-generic

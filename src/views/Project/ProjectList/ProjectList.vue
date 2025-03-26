@@ -4,8 +4,8 @@ import { orderBy as orderArrayBy, property } from 'lodash'
 import { computed, ref, onBeforeMount } from 'vue'
 
 import PageContainer from '@/components/PageContainer/PageContainer'
-import PageHeader from '@/components/PageHeader/PageHeader'
-import PageToolbar from '@/components/PageToolbar/PageToolbar'
+import PageHeaderNav from '@/components/PageHeader/PageHeaderNav'
+import PageHeaderToolbar from '@/components/PageHeader/PageHeaderToolbar'
 import ProjectEntries from '@/components/Project/ProjectEntries/ProjectEntries'
 import RowPaginationProjects from '@/components/RowPagination/RowPaginationProjects'
 import { useUrlParam } from '@/composables/useUrlParam'
@@ -120,8 +120,8 @@ const toAddRoute = computed(() => {
 
 <template>
   <page-container fluid deck class="project-list">
-    <page-header :to-add="toAddRoute" />
-    <page-toolbar
+    <page-header-nav :to-add="toAddRoute" />
+    <page-header-toolbar
       v-model:searchQuery="searchQuery"
       v-model:page="page"
       :per-page="perPage"
@@ -133,7 +133,7 @@ const toAddRoute = computed(() => {
       <template #pagination="{ totalRows }">
         <row-pagination-projects v-model="page" :total-rows="totalRows" :per-page="perPage" />
       </template>
-    </page-toolbar>
+    </page-header-toolbar>
     <project-entries
       v-model:sort="sort"
       v-model:order="order"
