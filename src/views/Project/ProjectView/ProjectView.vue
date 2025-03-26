@@ -1,5 +1,5 @@
 <script setup>
-import PageHeaderNav from '@/components/PageHeader/PageHeaderNav'
+import PageHeader from '@/components/PageHeader/PageHeader'
 import PageContainer from '@/components/PageContainer/PageContainer'
 
 defineProps({
@@ -10,8 +10,10 @@ defineProps({
 </script>
 
 <template>
-  <page-container fluid deck class="project-view">
-    <page-header-nav no-toggle-settings />
-    <router-view />
-  </page-container>
+  <div class="project-view">
+    <page-header no-toggle-settings />
+    <page-container fluid>
+      <router-view />
+    </page-container>
+  </div>
 </template>
