@@ -21,6 +21,8 @@ export function useSearchNav(currentDocument = null) {
   const perPage = computed(() => searchStore.perPage)
   const hits = computed(() => searchStore.hits)
 
+  // Route to the search page with the current search query
+  const searchRoute = computed(() => ({ name: 'search', query: searchStore.toRouteQuery }))
   // Position of the document in the hits array
   const documentPagePosition = computed(() => (document.value ? hits.value.findIndex(document.value.eq) : -1))
   // Position of the document in the total documents
@@ -131,6 +133,7 @@ export function useSearchNav(currentDocument = null) {
   }
 
   return {
+    searchRoute,
     disabledNext,
     disabledPrevious,
     documentPagePosition,

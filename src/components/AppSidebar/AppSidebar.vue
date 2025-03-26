@@ -10,18 +10,19 @@ import AppSidebarToggler from './AppSidebarToggler'
 import AppSidebarClose from './AppSidebarClose'
 
 import { Api } from '@/api'
-import { useBreakpoints } from '@/composables/useBreakpoints'
-import { useCore } from '@/composables/useCore'
 import ProjectLabel from '@/components/Project/ProjectLabel'
 import VersionNumber from '@/components/VersionNumber'
 import { SIZE } from '@/enums/sizes'
-import { useAppStore, useSearchStore } from '@/store/modules'
+import { useAppStore } from '@/store/modules'
 import settings from '@/utils/settings'
-import useMode from '@/composables/useMode'
+import { useBreakpoints } from '@/composables/useBreakpoints'
+import { useCore } from '@/composables/useCore'
+import { useMode } from '@/composables/useMode'
+import { useSearchNav } from '@/composables/useSearchNav'
 
 const { core } = useCore()
 const appStore = useAppStore()
-const searchStore = useSearchStore()
+const { searchRoute } = useSearchNav()
 const { isServer } = useMode()
 const { breakpointDown } = useBreakpoints()
 const { t } = useI18n()
@@ -70,11 +71,6 @@ const classList = computed(() => {
 
 const toAddProject = computed(() => {
   return isServer.value ? null : { name: 'project.new' }
-})
-
-const searchRoute = computed(() => {
-  const { toRouteQuery: query } = searchStore
-  return { name: 'search', query }
 })
 
 const signOutLink = computed(() => {
