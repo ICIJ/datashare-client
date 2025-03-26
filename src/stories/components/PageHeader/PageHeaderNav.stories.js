@@ -39,7 +39,7 @@ export default {
   title: 'Components/PageHeader/PageHeaderNav',
   tags: ['autodocs'],
   decorators: [vueRouter(routes, { initialRoute: '/tasks/batch-searches' })],
-  component: PageHeader,
+  component: PageHeaderNav,
   args: {
     noBreadcrumb: false,
     noToggleSidebar: false,
