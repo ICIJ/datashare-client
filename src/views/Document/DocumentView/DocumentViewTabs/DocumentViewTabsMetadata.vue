@@ -79,7 +79,7 @@ const canonicalItems = computed(() => [
   {
     name: 'contentLength',
     label: t('document.size'),
-    icon: 'file',
+    icon: 'floppy-disk-back',
     value: document.value.contentLength,
     component: DisplayContentLength
   },

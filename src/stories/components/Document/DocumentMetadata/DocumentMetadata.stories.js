@@ -54,7 +54,7 @@ export const WithContentLength = {
   args: {
     label: 'File size',
     value: 123456,
-    icon: 'file'
+    icon: 'floppy-disk-back'
   },
   render: (args) => ({
     components: {

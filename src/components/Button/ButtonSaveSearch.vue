@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { PhFloppyDisk, PhCheck } from '@phosphor-icons/vue'
+import { PhFloppyDiskBack, PhCheck } from '@phosphor-icons/vue'
 import { useI18n } from 'vue-i18n'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
@@ -22,7 +22,7 @@ const props = defineProps({
 })
 
 const iconLeft = computed(() => {
-  return props.saved ? PhCheck : PhFloppyDisk
+  return props.saved ? PhCheck : PhFloppyDiskBack
 })
 
 const { breakpointDown } = useBreakpoints()

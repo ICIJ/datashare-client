@@ -115,7 +115,7 @@ export function useTaskProperties(pageName) {
   })
 
   const size = propertyItem({
-    icon: 'hard-drives',
+    icon: 'floppy-disk-back',
     key: 'size',
     type: SORT_TYPE_KEY.NUMBER,
     sortable: false,
