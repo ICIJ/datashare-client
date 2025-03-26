@@ -14,7 +14,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['select'])
-const modal = inject('modal', false)
+const modal = inject('modal', undefined)
 
 const classList = computed(() => {
   return {

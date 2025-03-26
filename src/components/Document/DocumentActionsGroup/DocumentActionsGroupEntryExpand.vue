@@ -33,7 +33,7 @@ const { document } = defineProps({
 const route = useRoute()
 const { t } = useI18n()
 const { isRouteActive, documentParentRoute } = useDocument()
-const modal = inject('modal', false)
+const modal = inject('modal', undefined)
 
 const isSearchRoute = computed(() => route?.matched.some(matchesProperty('name', 'search')))
 

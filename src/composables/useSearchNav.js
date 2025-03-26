@@ -14,7 +14,7 @@ export function useSearchNav(currentDocument = null) {
   const searchStore = useSearchStore.inject('searchStoreSuffix')
   const currentDocumentRef = toRef(currentDocument)
   const document = computed(() => currentDocumentRef.value || viewDocument.value)
-  const modal = inject('modal', false)
+  const modal = inject('modal', undefined)
 
   const total = computed(() => searchStore.total)
   const page = computed(() => searchStore.page)
