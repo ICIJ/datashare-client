@@ -4,8 +4,7 @@ import { orderBy as orderArrayBy, property } from 'lodash'
 import { computed, ref, onBeforeMount } from 'vue'
 
 import PageContainer from '@/components/PageContainer/PageContainer'
-import PageHeaderNav from '@/components/PageHeader/PageHeaderNav'
-import PageHeaderToolbar from '@/components/PageHeader/PageHeaderToolbar'
+import PageHeader from '@/components/PageHeader/PageHeader'
 import ProjectEntries from '@/components/Project/ProjectEntries/ProjectEntries'
 import RowPaginationProjects from '@/components/RowPagination/RowPaginationProjects'
 import { useUrlParam } from '@/composables/useUrlParam'
@@ -119,11 +118,11 @@ const toAddRoute = computed(() => {
 </script>
 
 <template>
-  <page-container fluid deck class="project-list">
-    <page-header-nav :to-add="toAddRoute" />
-    <page-header-toolbar
+  <div class="project-list">
+    <page-header
       v-model:searchQuery="searchQuery"
       v-model:page="page"
+      :to-add="toAddRoute"
       :per-page="perPage"
       :total-rows="filteredProjects.length"
       searchable
@@ -133,13 +132,15 @@ const toAddRoute = computed(() => {
       <template #pagination="{ totalRows }">
         <row-pagination-projects v-model="page" :total-rows="totalRows" :per-page="perPage" />
       </template>
-    </page-header-toolbar>
-    <project-entries
-      v-model:sort="sort"
-      v-model:order="order"
-      :loading="isLoading"
-      :projects="projects"
-      :layout="layout"
-    />
-  </page-container>
+    </page-header>
+    <page-container fluid>
+      <project-entries
+        v-model:sort="sort"
+        v-model:order="order"
+        :loading="isLoading"
+        :projects="projects"
+        :layout="layout"
+      />
+    </page-container>
+  </div>
 </template>
