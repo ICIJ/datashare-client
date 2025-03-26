@@ -7,8 +7,7 @@ import appBuildingDark from '@/assets/images/illustrations/app-building-dark.svg
 import DismissableAlert from '@/components/Dismissable/DismissableAlert'
 import EmptyState from '@/components/EmptyState/EmptyState'
 import PageContainer from '@/components/PageContainer/PageContainer'
-import PageHeaderNav from '@/components/PageHeader/PageHeaderNav'
-import PageHeaderToolbar from '@/components/PageHeader/PageHeaderToolbar'
+import PageHeader from '@/components/PageHeader/PageHeader'
 import TaskActions from '@/components/Task/TaskActions'
 import RowPaginationTasks from '@/components/RowPagination/RowPaginationTasks'
 import { useTaskHeader } from '@/composables/useTaskHeader'
@@ -66,19 +65,19 @@ function refresh() {
 </script>
 
 <template>
-  <page-container fluid deck class="task-page">
-    <page-header-nav :to-add="showAdd ? toAddRoute : null" />
-    <page-header-toolbar
+  <div class="task-page">
+    <page-header
       :key="totalRows"
       v-model:searchQuery="searchQuery"
       v-model:page="page"
+      :to-add="showAdd ? toAddRoute : null"
       :per-page="perPage"
       :search-placeholder="searchPlaceholder"
       :total-rows="totalRows"
       paginable
       searchable
     >
-      <template #end>
+      <template #toolbar-end>
         <task-actions
           :has-done-tasks="hasDoneTasks"
           :has-pending-tasks="hasPendingTasks"
@@ -93,30 +92,32 @@ function refresh() {
           <row-pagination-tasks v-model="page" :per-page="perPage" :total-rows="totalRows" />
         </slot>
       </template>
-    </page-header-toolbar>
-    <div>
-      <dismissable-alert variant="info" persist :name="`task.${pageName}.list.info`">
-        {{ t(`task.${pageName}.list.info`) }}
-      </dismissable-alert>
-      <template v-if="!isLoading && noTasks">
-        <slot name="empty" :empty="noTasks">
-          <empty-state label="Empty" :image="appBuilding" :image-dark="appBuildingDark">
-            <template #label>
-              <span v-html="t(`task.${pageName}.list.empty`)"></span>
-            </template>
-          </empty-state>
-        </slot>
-      </template>
-      <slot
-        :tasks="tasks"
-        :sort="sort"
-        :order="order"
-        :update-order="setOrder"
-        :update-sort="setSort"
-        :empty="noTasks"
-        :refresh="refresh"
-        :loading="isLoading"
-      />
-    </div>
-  </page-container>
+    </page-header>
+    <page-container fluid>
+      <div>
+        <dismissable-alert variant="info" persist :name="`task.${pageName}.list.info`">
+          {{ t(`task.${pageName}.list.info`) }}
+        </dismissable-alert>
+        <template v-if="!isLoading && noTasks">
+          <slot name="empty" :empty="noTasks">
+            <empty-state label="Empty" :image="appBuilding" :image-dark="appBuildingDark">
+              <template #label>
+                <span v-html="t(`task.${pageName}.list.empty`)"></span>
+              </template>
+            </empty-state>
+          </slot>
+        </template>
+        <slot
+          :tasks="tasks"
+          :sort="sort"
+          :order="order"
+          :update-order="setOrder"
+          :update-sort="setSort"
+          :empty="noTasks"
+          :refresh="refresh"
+          :loading="isLoading"
+        />
+      </div>
+    </page-container>
+  </div>
 </template>
