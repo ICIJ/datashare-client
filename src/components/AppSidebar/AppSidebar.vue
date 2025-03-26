@@ -143,8 +143,8 @@ onBeforeRouteLeave(autoClose)
           <app-sidebar-section-entry :icon="PhFileMagnifyingGlass" :to="searchRoute" exact-match>
             {{ t('appSidebar.search') }}
           </app-sidebar-section-entry>
-          <app-sidebar-section-entry :icon="PhClockCounterClockwise" :to="{ name: 'search.visited-documents.list' }">
-            {{ t('appSidebar.visitedDocuments') }}
+          <app-sidebar-section-entry :icon="PhClockCounterClockwise" :to="{ name: 'search.history.list' }">
+            {{ t('appSidebar.history') }}
           </app-sidebar-section-entry>
           <app-sidebar-section-entry :icon="PhListChecks" :to="{ name: 'search.saved.list' }">
             {{ t('appSidebar.savedSearches') }}

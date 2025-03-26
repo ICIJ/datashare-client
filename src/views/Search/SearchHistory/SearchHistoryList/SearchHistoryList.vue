@@ -9,7 +9,7 @@ import PageContainer from '@/components/PageContainer/PageContainer'
 import PageHeader from '@/components/PageHeader/PageHeader'
 import PageToolbar from '@/components/PageToolbar/PageToolbar'
 import RowPaginationDocuments from '@/components/RowPagination/RowPaginationDocuments'
-import SearchVisitedDocumentsEntries from '@/components/Search/SearchVisitedDocumentsEntries/SearchVisitedDocumentsEntries'
+import SearchHistoryEntries from '@/components/Search/SearchHistoryEntries/SearchHistoryEntries'
 import { useConfirmModal } from '@/composables/useConfirmModal'
 import { useCore } from '@/composables/useCore'
 import { useHistoryEvents } from '@/composables/useHistoryEvents'
@@ -31,7 +31,7 @@ const { toast } = useCore()
 const { confirm: showConfirmModal } = useConfirmModal()
 const { removeAll } = useHistoryEvents('DOCUMENT')
 const { isLoading, wait } = useWait()
-const view = 'searchVisitedDocumentsList'
+const view = 'searchHistoryList'
 
 const perPage = useUrlParamWithStore('perPage', {
   transform: (value) => Math.max(10, parseInt(value)),
@@ -76,7 +76,7 @@ async function showRemoveAllModal() {
   if (await showConfirmModal()) {
     await removeAll()
     await fetch()
-    toast.success(t('searchVisitedDocumentsList.allRemoved'))
+    toast.success(t('searchHistoryList.allRemoved'))
   }
 }
 
@@ -84,12 +84,12 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
 </script>
 
 <template>
-  <div class="search-visited-documents-list d-flex flex-column">
+  <div class="search-history-list d-flex flex-column">
     <page-container fluid deck>
       <page-header>
         <template #breadcrumb>
           <navigation-breadcrumb-link route-name="search" title="Search" />
-          <navigation-breadcrumb-link route-name="search.visited-documents.list" no-caret />
+          <navigation-breadcrumb-link route-name="search.history.list" no-caret />
         </template>
         <template #actions>
           <button-clear-history @click="showRemoveAllModal" />
@@ -108,16 +108,16 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
       </page-toolbar>
     </page-container>
     <page-container fluid class="flex-grow-1 overflow-auto">
-      <search-visited-documents-entries :events="events" :loading-events="isLoading" />
+      <search-history-entries :events="events" :loading-events="isLoading" />
       <div v-if="!events.length && !isLoading" class="text-center text-secondary">
-        {{ t('searchVisitedDocumentsList.empty') }}
+        {{ t('searchHistoryList.empty') }}
       </div>
     </page-container>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.search-visited-documents-list {
+.search-history-list {
   max-height: 100vh;
 }
 </style>
