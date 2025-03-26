@@ -1,9 +1,9 @@
 <script setup>
 import { computed, useSlots } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { active } from 'd3'
 
 import NavigationBreadcrumbLink from '@/components/NavigationBreadcrumb/NavigationBreadcrumbLink'
-import { active } from 'd3'
 
 const props = defineProps({
   currentRouteName: {
