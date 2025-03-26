@@ -25,6 +25,9 @@ const valueNormalized = computed(() => {
 })
 
 const valueTitle = computed(() => {
+  if (props.title) {
+    return props.title
+  }
   if (te(`displayStatus.${valueNormalized.value}`)) {
     return t(`displayStatus.${valueNormalized.value}`)
   }
