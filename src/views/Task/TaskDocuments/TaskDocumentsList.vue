@@ -36,7 +36,7 @@ function isRunning(item) {
 
 <template>
   <task-page
-    v-slot="{ tasks, sort, order, updateSort, updateOrder, loading }"
+    v-slot="{ tasks, sort, order, updateSort, updateOrder, empty, loading }"
     :task-filter="[TASK_NAME.INDEX, TASK_NAME.SCAN]"
     page-name="documents"
     show-add

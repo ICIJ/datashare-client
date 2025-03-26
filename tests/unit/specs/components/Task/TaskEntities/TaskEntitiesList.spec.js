@@ -14,9 +14,9 @@ describe('TaskEntitiesList.vue', () => {
   let plugins
 
   beforeEach(() => {
-    api.getTasks.mockImplementation((name) => {
-      return [
-        {
+    api.getTasks.mockImplementation(({ name: names }) => {
+      return names.split('|').map((name) => {
+        return {
           name,
           id: '6a32bb59-8a23-491c-a441-8447ff7517dc',
           state: 'RUNNING',
@@ -27,7 +27,7 @@ describe('TaskEntitiesList.vue', () => {
           },
           createdAt: new Date()
         }
-      ]
+      })
     })
 
     const core = CoreSetup.init().useAll().useRouterWithoutGuards()
@@ -45,15 +45,10 @@ describe('TaskEntitiesList.vue', () => {
   it('renders correctly', () => {
     const wrapper = mount(TaskEntitiesList, { global: { plugins } })
     expect(wrapper.exists()).toBe(true)
-    expect(api.getTasks).toBeCalledTimes(2) // 1 for each task type filter
+    expect(api.getTasks).toBeCalled()
     expect(api.getTasks).toBeCalledWith(
       expect.objectContaining({
-        name: 'org.icij.datashare.tasks.ExtractNlpTask'
-      })
-    )
-    expect(api.getTasks).toBeCalledWith(
-      expect.objectContaining({
-        name: 'org.icij.datashare.tasks.EnqueueFromIndexTask'
+        name: 'org.icij.datashare.tasks.ExtractNlpTask|org.icij.datashare.tasks.EnqueueFromIndexTask'
       })
     )
   })
