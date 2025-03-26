@@ -80,12 +80,9 @@ export const useTaskStore = defineStore('task', () => {
   }
 
   const getTasks = async ({ names = [], ...params } = {}) => {
-    if (names.length) {
-      const all = await Promise.all(names.map((name) => api.getTasks({ name, ...params })))
-      return setTasks(all.flat())
-    }
-
-    return setTasks(await api.getTasks(params))
+    const name = names.join('|')
+    const tasks = await api.getTasks({ name, ...params })
+    return setTasks(tasks)
   }
 
   const setTasks = (value = []) => {
