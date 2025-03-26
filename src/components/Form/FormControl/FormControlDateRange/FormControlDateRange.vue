@@ -69,7 +69,7 @@ const isDark = computed(() => ['dark', 'black'].includes(colorMode.value))
         <slot v-bind="{ inputValue, inputEvents, masks, size }">
           <div class="d-flex gap-3 align-items-center">
             <b-form-input :placeholder="masks" :value="inputValue.start" :size="size" v-on="inputEvents.start" />
-            <phosphor-icon :name="PhArrowRright" />
+            <phosphor-icon :name="PhArrowRight" />
             <b-form-input :placeholder="masks" :value="inputValue.end" :size="size" v-on="inputEvents.end" />
           </div>
         </slot>
