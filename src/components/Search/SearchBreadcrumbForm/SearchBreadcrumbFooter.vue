@@ -34,7 +34,7 @@ const emit = defineEmits(['clear:filters', 'clear:query', 'clear:all', 'save:sea
     <button-icon v-if="!hideClearFiltersAndQuery" icon-left="arrow-counter-clockwise" @click="emit('clear:all')">
       {{ $t('searchBreadcrumbFormFooter.clearFiltersAndQuery') }}
     </button-icon>
-    <button-icon v-if="!hideSaveSearch" variant="outline-dark" icon-left="floppy-disk" @click="emit('save:search')">
+    <button-icon v-if="!hideSaveSearch" variant="outline-dark" icon-left="floppy-disk-back" @click="emit('save:search')">
       {{ $t('searchBreadcrumbFormFooter.saveSearch') }}
     </button-icon>
     <button-icon v-if="!hideCreateAlert" variant="outline-dark" icon-left="siren" @click="emit('create:alert')">
