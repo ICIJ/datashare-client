@@ -23,12 +23,14 @@
     </div>
   </b-form>
 </template>
+
 <script setup>
 import { computed, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { isEqual } from 'lodash'
 
 import SettingsGeneralLabel from '@/components/Settings/SettingsGeneral/SettingsGeneralLabel'
+
 const props = defineProps({
   settings: {
     type: Object,
@@ -38,8 +40,11 @@ const props = defineProps({
 
 const replica = reactive({ ...props.settings })
 const { t } = useI18n()
+
 const submitLabel = computed(() => t('global.submit'))
 const resetLabel = computed(() => t('global.reset'))
+const hasNotChanged = computed(() => isEqual(props.settings, replica))
+
 function fieldChanged(field) {
   return props.settings[field] !== replica[field]
 }
@@ -47,10 +52,8 @@ function fieldChanged(field) {
 function restore(field) {
   replica[field] = props.settings[field]
 }
+
 function reset() {
   Object.assign(replica, props.settings)
 }
-const hasNotChanged = computed(() => {
-  return isEqual(props.settings, replica)
-})
 </script>
