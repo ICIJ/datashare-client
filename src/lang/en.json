@@ -279,8 +279,8 @@
   "searchSavedEntriesRowActions": {
     "removeTitle": "Are you sure you want to delete the saved search \"{name}\"?"
   },
-  "searchVisitedDocumentsList": {
-    "title": "Visited documents",
+  "searchHistoryList": {
+    "title": "History",
     "empty": "No visited documents found.",
     "allRemoved": "History of all visited documents have been removed."
   },
@@ -871,7 +871,7 @@
     "allProjects": "All projects",
     "explore": "Explore",
     "search": "Documents",
-    "visitedDocuments": "Visited documents",
+    "history": "History",
     "savedSearches": "Saved searches",
     "tasks": "Tasks",
     "analyseAction": "Add documents",

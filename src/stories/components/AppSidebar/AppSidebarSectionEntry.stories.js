@@ -22,7 +22,7 @@ export default {
   },
   args: {
     icon: 'clock-counter-clockwise',
-    content: 'Visited documents',
+    content: 'History',
     active: false
   },
   render: (args) => ({

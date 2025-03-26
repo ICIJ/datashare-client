@@ -3,7 +3,7 @@ import { mount, flushPromises } from '@vue/test-utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import ButtonToggleDay from '@/components/Button/ButtonToggleDay'
 import DocumentCard from '@/components/Document/DocumentCard/DocumentCard'
-import SearchVisitedDocumentsList from '@/views/Search/SearchVisitedDocuments/SearchVisitedDocumentsList/SearchVisitedDocumentsList'
+import SearchHistoryList from '@/views/Search/SearchHistory/SearchHistoryList/SearchHistoryList'
 import { apiInstance as api } from '@/api/apiInstance'
 
 vi.mock('@/api/apiInstance', () => {
@@ -26,7 +26,7 @@ vi.mock('@/api/apiInstance', () => {
   }
 })
 
-describe('SearchVisitedDocumentsList.vue', () => {
+describe('SearchHistoryList.vue', () => {
   let core
 
   beforeEach(async () => {
@@ -103,14 +103,14 @@ describe('SearchVisitedDocumentsList.vue', () => {
   })
 
   it('should display a list of two documents', async () => {
-    const wrapper = mount(SearchVisitedDocumentsList, { global: { plugins: core.plugins } })
+    const wrapper = mount(SearchHistoryList, { global: { plugins: core.plugins } })
     await flushPromises()
     const cards = wrapper.findAllComponents(DocumentCard)
     expect(cards).toHaveLength(2)
   })
 
   it('should display a button for each day', async () => {
-    const wrapper = mount(SearchVisitedDocumentsList, { global: { plugins: core.plugins } })
+    const wrapper = mount(SearchHistoryList, { global: { plugins: core.plugins } })
     await flushPromises()
     const cards = wrapper.findAllComponents(ButtonToggleDay)
     expect(cards).toHaveLength(2)

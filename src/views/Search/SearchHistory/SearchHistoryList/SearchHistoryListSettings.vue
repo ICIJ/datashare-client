@@ -14,12 +14,12 @@ import { useAppStore } from '@/store/modules'
 const { t } = useI18n()
 const { sortByLabel, tSortByOption, perPageLabel } = useViewSettings(t)
 const appStore = useAppStore()
-const view = 'searchVisitedDocumentsList'
+const view = 'searchHistoryList'
 
 const page = useUrlPageParam()
 
 const perPage = ref({
-  label: perPageLabel('searchVisitedDocumentsList.title'),
+  label: perPageLabel('searchHistoryList.title'),
   type: INPUT_RADIO,
   open: true,
   modelValue: useUrlParamWithStore('perPage', {

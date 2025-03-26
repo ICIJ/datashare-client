@@ -107,19 +107,15 @@ export const routes = [
         }
       },
       {
-        name: 'search.visited-documents.list',
-        path: 'search/visited-documents',
+        name: 'search.history.list',
+        path: 'search/history',
         meta: {
           icon: PhClockCounterClockwise,
-          title: 'searchVisitedDocumentsList.title'
+          title: 'searchHistoryList.title'
         },
         components: {
-          default: () =>
-            import('@/views/Search/SearchVisitedDocuments/SearchVisitedDocumentsList/SearchVisitedDocumentsList'),
-          settings: () =>
-            import(
-              '@/views/Search/SearchVisitedDocuments/SearchVisitedDocumentsList/SearchVisitedDocumentsListSettings'
-            )
+          default: () => import('@/views/Search/SearchHistory/SearchHistoryList/SearchHistoryList'),
+          settings: () => import('@/views/Search/SearchHistory/SearchHistoryList/SearchHistoryListSettings')
         }
       },
       {
