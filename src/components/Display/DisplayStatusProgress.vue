@@ -45,7 +45,7 @@ const classList = computed(() => {
 
 <template>
   <span class="display-status-progress" :class="classList">
-    <display-status :value="status" :icon="statusIcon" :title="statusTitle" :variant="statusVariant" />
+    <display-status v-if="status" :value="status" :icon="statusIcon" :title="statusTitle" :variant="statusVariant" />
     <span class="display-status-progress__title">{{ title }}</span>
     <display-progress :value="progress" :variant="progressVariant" />
   </span>
