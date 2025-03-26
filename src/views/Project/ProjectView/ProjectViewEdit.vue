@@ -4,7 +4,6 @@ import { get, uniqueId } from 'lodash'
 import { useI18n } from 'vue-i18n'
 
 import AppOverlay from '@/components/AppOverlay/AppOverlay'
-import PageContainer from '@/components/PageContainer/PageContainer'
 import ProjectForm from '@/components/Project/ProjectForm'
 import { useCore } from '@/composables/useCore'
 
