@@ -11,7 +11,7 @@ import DisplayContentType from '@/components/Display/DisplayContentType'
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
 import NavigationBreadcrumbLink from '@/components/NavigationBreadcrumb/NavigationBreadcrumbLink'
 import PageContainer from '@/components/PageContainer/PageContainer'
-import PageHeaderNav from '@/components/PageHeader/PageHeaderNav'
+import PageHeader from '@/components/PageHeader/PageHeader'
 import PageHeaderToolbar from '@/components/PageHeader/PageHeaderToolbar'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import ProjectLabel from '@/components/Project/ProjectLabel'
@@ -106,26 +106,26 @@ watch(toRef(route, 'query'), fetchBatchSearchResults, { deep: true, immediate: t
 </script>
 
 <template>
+  <page-header>
+    <template #breadcrumb>
+      <navigation-breadcrumb-link :to="{ name: 'task' }" />
+      <navigation-breadcrumb-link :to="{ name: 'task.batch-search.list' }" />
+      <navigation-breadcrumb-link :to="{ name: 'task.batch-search-queries.list' }" :title="batchSearchName" />
+      <navigation-breadcrumb-link
+        v-if="query"
+        :to="{ name: 'task.batch-search-queries.show' }"
+        :title="query"
+        no-icon
+      />
+      <navigation-breadcrumb-link
+        v-else
+        :to="{ name: 'task.batch-search-results.list' }"
+        :title="$t('task.batch-search-results.list.title')"
+        no-icon
+      />
+    </template>
+  </page-header>
   <page-container fluid deck>
-    <page-header-nav>
-      <template #breadcrumb>
-        <navigation-breadcrumb-link :to="{ name: 'task' }" />
-        <navigation-breadcrumb-link :to="{ name: 'task.batch-search.list' }" />
-        <navigation-breadcrumb-link :to="{ name: 'task.batch-search-queries.list' }" :title="batchSearchName" />
-        <navigation-breadcrumb-link
-          v-if="query"
-          :to="{ name: 'task.batch-search-queries.show' }"
-          :title="query"
-          no-icon
-        />
-        <navigation-breadcrumb-link
-          v-else
-          :to="{ name: 'task.batch-search-results.list' }"
-          :title="$t('task.batch-search-results.list.title')"
-          no-icon
-        />
-      </template>
-    </page-header-nav>
     <page-header-toolbar
       v-model:searchQuery="searchQuery"
       v-model:page="page"
