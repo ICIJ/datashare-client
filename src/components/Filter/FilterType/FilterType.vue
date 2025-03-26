@@ -249,6 +249,9 @@ onBeforeMount(async () => {
     <slot name="all" v-bind="{ entries, filter }">
       <filter-type-all v-if="!filter.hideAll" :filter="filter" />
     </slot>
+    <template #search="{ search, searchPlaceholder }">
+      <slot name="search" v-bind="{ search, searchPlaceholder }" />
+    </template>
     <slot v-bind="{ entries, filter }">
       <filters-panel-section-filter-entry
         v-for="{ item, label } in entries"

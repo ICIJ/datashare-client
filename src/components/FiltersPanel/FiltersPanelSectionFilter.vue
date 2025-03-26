@@ -107,13 +107,15 @@ const classList = computed(() => {
     </filters-panel-section-filter-title>
     <b-collapse :model-value="modal || !collapse">
       <div class="filters-panel-section-filter__content" :class="contentClass">
-        <form-control-search
-          v-if="!hideSearch"
-          v-model="search"
-          :placeholder="searchPlaceholder"
-          clear-text
-          class="filters-panel-section-filter__content__search mb-3"
-        />
+        <slot name="search" v-bind="{ search, searchPlaceholder }">
+          <form-control-search
+            v-if="!hideSearch"
+            v-model="search"
+            :placeholder="searchPlaceholder"
+            clear-text
+            class="filters-panel-section-filter__content__search mb-3"
+          />
+        </slot>
         <div :class="flush ? '' : 'ps-4 pe-2'">
           <slot />
         </div>
