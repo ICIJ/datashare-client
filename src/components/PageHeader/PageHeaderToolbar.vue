@@ -42,6 +42,7 @@ const setPage = (value) => (page.value = value)
 
 <template>
   <div class="page-header-toolbar d-flex justify-content-between flex-wrap gap-3">
+    <slot name="start" />
     <slot name="toggle-filters">
       <button-toggle-filters
         v-if="filterable"
