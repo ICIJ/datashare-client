@@ -6,7 +6,7 @@ import ButtonRowActionSearch from '@/components/Button/ButtonRowAction/ButtonRow
 import BatchSearchCard from '@/components/BatchSearch/BatchSeachCard/BatchSearchCard'
 import NavigationBreadcrumbLink from '@/components/NavigationBreadcrumb/NavigationBreadcrumbLink'
 import PageContainer from '@/components/PageContainer/PageContainer'
-import PageHeaderNav from '@/components/PageHeader/PageHeaderNav'
+import PageHeader from '@/components/PageHeader/PageHeader'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import PageHeaderToolbar from '@/components/PageHeader/PageHeaderToolbar'
 import RowPaginationQueries from '@/components/RowPagination/RowPaginationQueries'
@@ -80,14 +80,14 @@ watch(toRef(route, 'query'), fetchBatchSearchQueries, { deep: true, immediate: t
 </script>
 
 <template>
-  <page-container fluid deck class="task-batch-search-query-list">
-    <page-header-nav>
-      <template #breadcrumb>
-        <navigation-breadcrumb-link :to="{ name: 'task' }" />
-        <navigation-breadcrumb-link :to="{ name: 'task.batch-search.list' }" />
-        <navigation-breadcrumb-link :to="{ name: 'task.batch-search-queries.list' }" :title="batchSearchName" />
-      </template>
-    </page-header-nav>
+  <page-header>
+    <template #breadcrumb>
+      <navigation-breadcrumb-link :to="{ name: 'task' }" />
+      <navigation-breadcrumb-link :to="{ name: 'task.batch-search.list' }" />
+      <navigation-breadcrumb-link :to="{ name: 'task.batch-search-queries.list' }" :title="batchSearchName" />
+    </template>
+  </page-header>
+  <page-container fluid>
     <b-row>
       <b-col lg="8" cols="12">
         <page-header-toolbar
