@@ -78,13 +78,7 @@ defineExpose({
   <component :is="component" v-bind="componentProps" ref="element" v-model:selection="selection">
     <slot />
     <template v-if="!hideHeader" #header>
-      <document-entries-header
-        v-model:select-mode="selectMode"
-        v-model:page="page"
-        :total="total"
-        :per-page="perPage"
-        :loading="loading"
-      >
+      <document-entries-header v-model:select-mode="selectMode" v-model:page="page" :total="total" :per-page="perPage">
         <template #default="{ compact }">
           <slot name="header" v-bind="{ compact }" />
         </template>
