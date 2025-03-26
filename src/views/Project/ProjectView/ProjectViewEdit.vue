@@ -55,14 +55,12 @@ function redirectToProject({ name }) {
 
 <template>
   <div class="project-view-edit">
-    <page-container fluid>
-      <app-overlay rounded="sm" :show="$wait.is('creating')">
-        <project-form class="my-4" edit card :disabled="$wait.is(loaderId)" :values="project" @submit="submit">
-          <template #submit-text>
-            {{ $t('projectViewEdit.submit') }}
-          </template>
-        </project-form>
-      </app-overlay>
-    </page-container>
+    <app-overlay rounded="sm" :show="$wait.is('creating')">
+      <project-form edit card :disabled="$wait.is(loaderId)" :values="project" @submit="submit">
+        <template #submit-text>
+          {{ $t('projectViewEdit.submit') }}
+        </template>
+      </project-form>
+    </app-overlay>
   </div>
 </template>
