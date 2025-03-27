@@ -935,6 +935,7 @@
       "title": "Task board",
       "latest": {
         "title": "Latest tasks",
+        "showMore": "Show more",
         "linkTitle": {
           "batchSearch": "Batch search task",
           "batchDownload": "Batch download task",
