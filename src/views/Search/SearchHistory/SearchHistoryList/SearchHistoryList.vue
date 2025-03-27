@@ -104,7 +104,7 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
         <row-pagination-documents v-model="page" :total-rows="totalRows" :per-page="perPage" />
       </template>
     </page-header>
-    <page-container fluid class="flex-grow-1 overflow-auto">
+    <page-container fluid class="search-history-list__content flex-grow-1 overflow-auto">
       <search-history-entries :events="events" :loading-events="isLoading" />
       <div v-if="!events.length && !isLoading" class="text-center text-secondary">
         {{ t('searchHistoryList.empty') }}
@@ -115,6 +115,8 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
 
 <style lang="scss" scoped>
 .search-history-list {
+  display: flex;
+  flex-direction: column;
   max-height: 100vh;
 }
 </style>
