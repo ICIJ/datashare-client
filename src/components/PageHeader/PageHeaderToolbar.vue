@@ -2,6 +2,7 @@
 import ButtonToggleFilters from '@/components/Button/ButtonToggleFilters'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 import RowPagination from '@/components/RowPagination/RowPagination'
+import PageContainer from '@/components/PageContainer/PageContainer'
 
 const searchQuery = defineModel('searchQuery', { type: String })
 const page = defineModel('page', { type: Number, default: 1 })
@@ -32,6 +33,10 @@ defineProps({
   },
   activeFilters: {
     type: Boolean
+  },
+  sticky: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -41,7 +46,7 @@ const setPage = (value) => (page.value = value)
 </script>
 
 <template>
-  <div class="page-header-toolbar d-flex justify-content-between flex-wrap gap-3">
+  <page-container fluid :sticky="sticky" class="page-header-toolbar d-flex justify-content-between flex-wrap gap-3">
     <slot name="start" />
     <slot name="toggle-filters">
       <button-toggle-filters
@@ -66,11 +71,14 @@ const setPage = (value) => (page.value = value)
       />
     </slot>
     <slot name="end" />
-  </div>
+  </page-container>
 </template>
 
 <style scoped lang="scss">
 .page-header-toolbar {
+  padding-block: $spacer;
+  background: var(--bs-body-bg);
+
   @include media-breakpoint-down(md) {
     &__pagination {
       order: 1;

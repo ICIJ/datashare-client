@@ -5,6 +5,7 @@ import ButtonAdd from '@/components/Button/ButtonAdd'
 import ButtonToggleSidebar from '@/components/Button/ButtonToggleSidebar'
 import ButtonToggleSettings from '@/components/Button/ButtonToggleSettings'
 import NavigationBreadcrumb from '@/components/NavigationBreadcrumb/NavigationBreadcrumb'
+import PageContainer from '@/components/PageContainer/PageContainer'
 import { useViews } from '@/composables/useViews'
 import { useBreakpoints } from '@/composables/useBreakpoints'
 import { breakpointSizeValidator, SIZE } from '@/enums/sizes'
@@ -38,7 +39,7 @@ const showToggleSidebar = computed(() => {
 </script>
 
 <template>
-  <div class="page-header-nav d-flex justify-content-between gap-4 pt-3">
+  <page-container fluid class="page-header-nav d-flex justify-content-between gap-4">
     <slot name="toggle-sidebar">
       <button-toggle-sidebar v-if="showToggleSidebar" v-model:active="toggleSidebar" class="flex-shrink-0" />
     </slot>
@@ -50,5 +51,15 @@ const showToggleSidebar = computed(() => {
       <button-add v-if="toAdd" :to="toAdd" />
       <button-toggle-settings v-if="!noToggleSettings" v-model:active="toggleSettings" />
     </div>
-  </div>
+  </page-container>
 </template>
+
+<style lang="scss" scoped>
+.page-header-nav {
+  padding-block: $spacer;
+
+  &:has(+ .page-header-toolbar) {
+    padding-bottom: 0;
+  }
+}
+</style>
