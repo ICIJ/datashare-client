@@ -1,10 +1,11 @@
 <script setup>
+import { computed } from 'vue'
+
 import { breakpointSizeValidator, SIZE } from '@/enums/sizes'
-import PageContainer from '@/components/PageContainer/PageContainer'
 import PageHeaderNav from '@/components/PageHeader/PageHeaderNav'
 import PageHeaderToolbar from '@/components/PageHeader/PageHeaderToolbar'
 
-defineProps({
+const props = defineProps({
   noBreadcrumb: {
     type: Boolean
   },
@@ -45,53 +46,61 @@ defineProps({
   },
   activeFilters: {
     type: Boolean
+  },
+  sticky: {
+    type: Boolean,
+    default: false
   }
+})
+
+const hasToolbar = computed(() => {
+  return props.filterable || props.searchable || props.paginable
 })
 </script>
 
 <template>
-  <page-container deck fluid>
-    <page-header-nav
-      :no-breadcrumb="noBreadcrumb"
-      :no-toggle-sidebar="noToggleSidebar"
-      :no-toggle-settings="noToggleSettings"
-      :to-add="toAdd"
-      :sidebar-toggler-breakpoint="sidebarTogglerBreakpoint"
-    >
-      <template #toggle-sidebar>
-        <slot name="toggle-sidebar" />
-      </template>
-      <template #breadcrumb>
-        <slot name="breadcrumb" />
-      </template>
-      <template #actions>
-        <slot name="actions" />
-      </template>
-    </page-header-nav>
-    <page-header-toolbar
-      :filterable="filterable"
-      :searchable="searchable"
-      :search-placeholder="searchPlaceholder"
-      :paginable="paginable"
-      :per-page="perPage"
-      :total-rows="totalRows"
-      :active-filters="activeFilters"
-    >
-      <template #start>
-        <slot name="toolbar-start" />
-      </template>
-      <template #end>
-        <slot name="toolbar-end" />
-      </template>
-      <template #toggle-filters>
-        <slot name="toggle-filters>" />
-      </template>
-      <template #pagination>
-        <slot name="pagination" />
-      </template>
-      <template #search>
-        <slot name="search" />
-      </template>
-    </page-header-toolbar>
-  </page-container>
+  <page-header-nav
+    :no-breadcrumb="noBreadcrumb"
+    :no-toggle-sidebar="noToggleSidebar"
+    :no-toggle-settings="noToggleSettings"
+    :to-add="toAdd"
+    :sidebar-toggler-breakpoint="sidebarTogglerBreakpoint"
+  >
+    <template #toggle-sidebar>
+      <slot name="toggle-sidebar" />
+    </template>
+    <template #breadcrumb>
+      <slot name="breadcrumb" />
+    </template>
+    <template #actions>
+      <slot name="actions" />
+    </template>
+  </page-header-nav>
+  <page-header-toolbar
+    v-if="hasToolbar" 
+    :filterable="filterable"
+    :searchable="searchable"
+    :search-placeholder="searchPlaceholder"
+    :paginable="paginable"
+    :per-page="perPage"
+    :total-rows="totalRows"
+    :active-filters="activeFilters"
+    :sticky="sticky"
+  >
+    <template #start>
+      <slot name="toolbar-start" />
+    </template>
+    <template #end>
+      <slot name="toolbar-end" />
+    </template>
+    <template #toggle-filters>
+      <slot name="toggle-filters>" />
+    </template>
+    <template #pagination>
+      <slot name="pagination" />
+    </template>
+    <template #search>
+      <slot name="search" />
+    </template>
+  </page-header-toolbar>
 </template>
