@@ -12,6 +12,12 @@ const props = defineProps({
   active: {
     type: Boolean
   },
+  noReduce: {
+    type: Boolean
+  },
+  noExpand: {
+    type: Boolean
+  },
   reduceDisabled: {
     type: Boolean
   },
@@ -50,8 +56,8 @@ const { state: targetState } = useResizeObserver(target)
 
 const emit = defineEmits(['reduce', 'expand', 'drag', 'dragstart', 'dragend'])
 const getMax = () => target.value.parentNode.getBoundingClientRect().width - targetState.offsetWidth
-const reduce = () => emit('reduce', 0)
-const expand = () => emit('expand', getMax())
+const reduce = () => !props.noReduce && emit('reduce', 0)
+const expand = () => !props.noExpand && emit('expand', getMax())
 
 const drag = ({ detail }) => {
   dragging.value = true
@@ -82,8 +88,8 @@ const dragEnd = ({ detail }) => {
       @dragend="dragEnd"
     />
     <div class="separator-line__buttons">
-      <separator-line-reduce :disabled="reduceDisabled" @click="reduce" />
-      <separator-line-expand :disabled="expandDisabled" @click="expand" />
+      <separator-line-reduce v-if="!noReduce" :disabled="reduceDisabled" @click="reduce" />
+      <separator-line-expand v-if="!noExpand" :disabled="expandDisabled" @click="expand" />
     </div>
   </div>
 </template>
@@ -154,6 +160,10 @@ const dragEnd = ({ detail }) => {
     justify-content: center;
     gap: 75px;
     pointer-events: none;
+
+    &:empty {
+      display: none;
+    }
 
     &:deep(.button-icon) {
       pointer-events: all;
