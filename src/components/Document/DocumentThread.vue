@@ -139,7 +139,7 @@ onBeforeRouteUpdate(init)
     <template #waiting>
       <app-spinner class="d-flex mx-auto my-5" />
     </template>
-    <div class="document-thread">
+    <div class="document-thread py-3">
       <ul class="list-unstyled document-thread__list m-0">
         <li
           v-for="email in thread.hits"
