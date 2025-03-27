@@ -127,6 +127,7 @@ const toAddRoute = computed(() => {
       :total-rows="filteredProjects.length"
       searchable
       paginable
+      sticky
       :search-placeholder="$t('projectList.searchPlaceholder')"
     >
       <template #pagination="{ totalRows }">
