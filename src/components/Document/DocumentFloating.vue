@@ -19,7 +19,7 @@ const props = defineProps({
     type: Number,
     default: 100
   },
-  expendThreshold: {
+  expandThreshold: {
     type: Number,
     default: 100
   }
@@ -139,7 +139,7 @@ defineExpose({ resetSize, resetStartSize, resetEndSize })
       :style="separatorLineStyle"
       :reduce-threshold="reduceThreshold"
       :reduce-disabled="reachedZeroWidth"
-      :expand-threshold="expendThreshold"
+      :expand-threshold="expandThreshold"
       :expand-disabled="reachedFullWidth"
       :min-start="minStartWidth"
       :min-end="minEndWidth"
