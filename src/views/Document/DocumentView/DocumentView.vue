@@ -81,12 +81,12 @@ onBeforeRouteUpdate(fetchRouteDocument)
 </script>
 
 <template>
-  <v-wait ref="element" class="document-view d-flex flex-column gap-3" :for="loaderId">
+  <v-wait ref="element" class="document-view d-flex flex-column" :for="loaderId">
     <template #waiting>
       <document-placeholder />
     </template>
 
-    <div class="document-view__header d-flex justify-content-between align-items-center gap-2">
+    <div class="document-view__header mb-3 d-flex justify-content-between align-items-center gap-2">
       <slot name="header-start" v-bind="{ document }" />
       <document-view-user-actions />
       <document-view-actions :document="document" class="ms-auto" />
@@ -96,7 +96,7 @@ onBeforeRouteUpdate(fetchRouteDocument)
       <slot name="header-end" v-bind="{ document }" />
     </div>
 
-    <document-view-title :document="document" />
+    <document-view-title class="mb-3" :document="document" />
     <document-view-tabs :document-route="documentRoute" />
 
     <router-view v-slot="{ Component }">
