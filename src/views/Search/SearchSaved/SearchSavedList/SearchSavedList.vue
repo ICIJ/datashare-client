@@ -88,6 +88,7 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
       :key="pagination?.total"
       v-model:page="page"
       paginable
+      sticky
       :per-page="perPage"
       :total-rows="pagination?.total ?? 0"
     >
