@@ -163,7 +163,7 @@ watchIndices(refreshRoute)
                 lazy
                 @hide="refreshRoute"
               >
-                <document-floating class="my-3">
+                <document-floating class="my-3" no-reduce no-expand>
                   <search-carousel />
                   <component :is="Component">
                     <template v-if="isListLayout" #nav>
