@@ -195,7 +195,6 @@ defineExpose({ resetSize, resetStartSize, resetEndSize })
     &__floating {
       position: sticky;
       z-index: 100;
-      top: $spacer;
       left: 0;
       right: 0;
       height: 100%;
