@@ -22,6 +22,12 @@ const props = defineProps({
   expandThreshold: {
     type: Number,
     default: 100
+  },
+  noReduce: {
+    type: Boolean
+  },
+  noExpand: {
+    type: Boolean
   }
 })
 
@@ -137,6 +143,8 @@ defineExpose({ resetSize, resetStartSize, resetEndSize })
     <separator-line
       class="document-floating__separator-line"
       :style="separatorLineStyle"
+      :no-reduce="noReduce"
+      :no-expand="noExpand"
       :reduce-threshold="reduceThreshold"
       :reduce-disabled="reachedZeroWidth"
       :expand-threshold="expandThreshold"
