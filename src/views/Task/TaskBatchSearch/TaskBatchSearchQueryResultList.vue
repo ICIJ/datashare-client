@@ -106,7 +106,13 @@ watch(toRef(route, 'query'), fetchBatchSearchResults, { deep: true, immediate: t
 </script>
 
 <template>
-  <page-header>
+  <page-header
+    v-model:searchQuery="searchQuery"
+    v-model:page="page"
+    :per-page="perPage"
+    :total-rows="hits?.pagination?.total ?? 0"
+    paginable
+   >
     <template #breadcrumb>
       <navigation-breadcrumb-link :to="{ name: 'task' }" />
       <navigation-breadcrumb-link :to="{ name: 'task.batch-search.list' }" />
@@ -124,20 +130,10 @@ watch(toRef(route, 'query'), fetchBatchSearchResults, { deep: true, immediate: t
         no-icon
       />
     </template>
+    <template #pagination="{ totalRows }">
+      <row-pagination-documents v-model="page" :total-rows="totalRows" :per-page="perPage" />
+    </template>
   </page-header>
-  <page-container fluid deck>
-    <page-header-toolbar
-      v-model:searchQuery="searchQuery"
-      v-model:page="page"
-      :per-page="perPage"
-      :total-rows="hits?.pagination?.total ?? 0"
-      paginable
-    >
-      <template #pagination="{ totalRows }">
-        <row-pagination-documents v-model="page" :total-rows="totalRows" :per-page="perPage" />
-      </template>
-    </page-header-toolbar>
-  </page-container>
   <page-container fluid>
     <page-table-generic
       v-model:sort="sort"
