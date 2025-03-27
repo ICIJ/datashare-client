@@ -1,6 +1,6 @@
 <template>
   <b-card
-    class="video-viewer align-self-center w-100 overflow-hidden"
+    class="video-viewer align-self-center w-100 overflow-hidden my-3"
     :footer-bg-variant="cardVariant"
     :border-variant="cardVariant"
     no-body

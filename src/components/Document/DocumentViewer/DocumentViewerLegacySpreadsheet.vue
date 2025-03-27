@@ -1,5 +1,5 @@
 <template>
-  <div class="legacy-spreadsheet-viewer w-100">
+  <div class="legacy-spreadsheet-viewer w-100 py-3">
     <app-overlay :show="$wait.is(loaderId)" spinner-small class="sticky-top" rounded>
       <div class="legacy-spreadsheet-viewer__header bg-tertiary-subtle p-3 rounded">
         <b-form-select

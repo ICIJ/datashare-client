@@ -1,5 +1,5 @@
 <template>
-  <v-wait :for="loader" class="w-100 d-flex flex-column">
+  <v-wait :for="loader" class="w-100 d-flex flex-column py-3">
     <template #waiting>
       <div class="p-3 w-100 text-muted">
         {{ $t('document.fetching') }}
@@ -13,7 +13,7 @@
         height="100%"
         frameborder="0"
         allowfullscreen
-      ></iframe>
+      />
     </div>
     <div v-else-if="isPreviewable" class="paginated-viewer paginated-viewer--previewable d-flex flex-grow-1">
       <div class="paginated-viewer__thumbnails bg-tertiary-subtle">

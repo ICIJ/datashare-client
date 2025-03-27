@@ -1,11 +1,11 @@
 <template>
-  <v-wait for="load spreadsheet" class="w-100">
+  <v-wait for="load spreadsheet" class="w-100 py-3">
     <template #waiting>
-      <div class="p-3 text-muted">
+      <div class="text-muted">
         {{ $t('document.fetching') }}
       </div>
     </template>
-    <div v-if="!isPreviewable" class="p-3">
+    <div v-if="!isPreviewable">
       {{ $t('document.notAvailable') }}
     </div>
     <div v-else class="spreadsheet-viewer__content d-flex flex-column h-100">
