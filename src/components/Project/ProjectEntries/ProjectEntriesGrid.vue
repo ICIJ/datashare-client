@@ -14,7 +14,7 @@ defineProps({
 
 <template>
   <div class="project-entries-grid">
-    <div class="row g-4 py-4">
+    <div class="row g-4">
       <template v-if="loading">
         <div v-for="i in Math.max(1, projects.length)" :key="i" class="col-12 col-xl-6">
           <project-card-placeholder />
