@@ -1,5 +1,5 @@
 <template>
-  <div class="tiff-viewer w-100">
+  <div class="tiff-viewer w-100 py-3">
     <app-overlay :show="isLoading" rounded spinner-small>
       <div class="tiff-viewer__header bg-tertiary-subtle d-flex algin-items-center rounded p-3">
         <div v-if="hasPages" class="tiff-viewer__header__pagination text-muted">
