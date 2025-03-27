@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 
 import FiltersPanelToggler from '@/components/FiltersPanel/FiltersPanelToggler'
 import FiltersPanelSearch from '@/components/FiltersPanel/FiltersPanelSearch'
@@ -34,13 +34,20 @@ const closed = computed({
   set: (value) => (appStore.filters.closed = value)
 })
 
+const fullWidth = computed(() => {
+  return breakpointDown.value[SIZE.MD]
+})
+
 const classList = computed(() => {
   return {
     'filters-panel--sticky': sticky,
     'filters-panel--closed': closed.value,
-    'filters-panel--full-width': breakpointDown.value[SIZE.MD]
+    'filters-panel--full-width': fullWidth.value
   }
 })
+
+// This ensure that when passing in full width, the panel is closed
+watch(fullWidth, (value) => value && (closed.value = true), { immediate: true })
 </script>
 
 <template>
