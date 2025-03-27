@@ -95,6 +95,7 @@ watch(toRef(route, 'query'), fetchBatchSearchQueries, { deep: true, immediate: t
           v-model:page="page"
           :per-page="perPage"
           :total-rows="batchSearch?.nbQueries ?? 0"
+          class="p-0"
           paginable
           searchable
         >
