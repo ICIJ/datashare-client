@@ -176,6 +176,7 @@ defineExpose({ resetSize, resetStartSize, resetEndSize })
     max-height: 100vh;
     position: sticky;
     top: 0;
+    overflow: hidden;
 
     .document-floating--has-floating-children &,
     .document-floating--has-floating-children &__floating,
