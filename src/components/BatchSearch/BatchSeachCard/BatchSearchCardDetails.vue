@@ -60,7 +60,9 @@ const noResultsQueries = computed(() => {
 })
 const noResultsQueriesDownload = computed(() => t('batchSearchCard.noResultsQueriesDownload'))
 const noResultsQueriesLabel = computed(() => {
-  return isNaN(props.nbQueriesWithoutResults) ? noResultsQueriesDownload.value : noResultsQueries.value
+  return isNaN(props.nbQueriesWithoutResults) || props.nbQueriesWithoutResults < 0
+    ? noResultsQueriesDownload.value
+    : noResultsQueries.value
 })
 
 const visibilityIcon = computed(() => (props.visibility ? PhEye : PhEyeSlash))
