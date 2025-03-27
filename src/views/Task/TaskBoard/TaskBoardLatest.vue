@@ -160,7 +160,9 @@ function getTaskIcon(item) {
           <display-progress :value="item.progress" />
         </template>
       </page-table-generic>
-      <b-button v-if="!hideShowMore" variant="outline-secondary mx-auto" @click="showMore">Show more</b-button>
+      <b-button v-if="!hideShowMore" variant="outline-secondary mx-auto mb-3" @click="showMore">
+        {{ t('task.task-board.latest.showMore') }}
+      </b-button>
     </div>
   </b-card-body>
 </template>
