@@ -112,7 +112,8 @@ watch(toRef(route, 'query'), fetchBatchSearchResults, { deep: true, immediate: t
     :per-page="perPage"
     :total-rows="hits?.pagination?.total ?? 0"
     paginable
-   >
+    sticky
+  >
     <template #breadcrumb>
       <navigation-breadcrumb-link :to="{ name: 'task' }" />
       <navigation-breadcrumb-link :to="{ name: 'task.batch-search.list' }" />
