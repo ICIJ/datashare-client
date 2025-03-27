@@ -77,7 +77,7 @@ const hasToolbar = computed(() => {
     </template>
   </page-header-nav>
   <page-header-toolbar
-    v-if="hasToolbar" 
+    v-if="hasToolbar"
     :filterable="filterable"
     :searchable="searchable"
     :search-placeholder="searchPlaceholder"
