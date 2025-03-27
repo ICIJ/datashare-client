@@ -86,12 +86,11 @@ onMounted(getFirstPageInAllCategories)
         shadow
       />
     </div>
-
     <i18n-t
       v-if="mustExtractEntities"
       tag="div"
       keypath="document.namedEntitiesNotSearched"
-      class="document-view-tabs-entities__not-searched text-center"
+      class="document-view-tabs-entities__not-searched py-3 text-center"
     >
       <template #link>
         <router-link :to="{ name: 'task.entities.new' }">
@@ -103,7 +102,7 @@ onMounted(getFirstPageInAllCategories)
       v-else-if="!hasEntities && !loadingNamedEntities"
       tag="div"
       keypath="document.namedEntitiesNotFound"
-      class="document-view-tabs-entities__not-found text-center"
+      class="document-view-tabs-entities__not-found py-3 text-center"
     />
     <entity-section
       v-for="(hits, category) in namedEntitiesByCategories"
