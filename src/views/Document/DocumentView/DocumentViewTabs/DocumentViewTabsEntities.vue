@@ -1,6 +1,6 @@
 <script setup>
 import { computed, onMounted, ref, inject, watch } from 'vue'
-import { flatten, get, mapValues, pickBy, sumBy, throttle } from 'lodash'
+import { flatten, get, mapValues, property, pickBy, sumBy, throttle } from 'lodash'
 
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 import { useCore } from '@/composables/useCore'
@@ -45,6 +45,11 @@ const downloadHitsAsCsv = (hits = [], category) => {
   a.href = URL.createObjectURL(new Blob([content], { type: 'text/csv;charset=UTF-8' }))
   a.download = `${documentStore.document.title} - ${category}.csv`
   a.click()
+}
+
+const copyHits = (hits = []) => {
+  const content = hits.map(property('source.mentionNorm')).join('\n')
+  navigator.clipboard.writeText(content)
 }
 
 const hitsWithRoute = (hits) => {
@@ -121,6 +126,7 @@ onMounted(getFirstPageInAllCategories)
       :entries="hitsWithRoute(hits)"
       :has-more="categoryHasNextPage(category)"
       @download="downloadHitsAsCsv(hits, category)"
+      @copy="copyHits(hits)"
       @more="getNextPageInCategory(category)"
     />
   </div>
