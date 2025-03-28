@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, inject, watch } from 'vue'
 import { flatten, get, mapValues, pickBy, sumBy, throttle } from 'lodash'
 
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
@@ -39,11 +39,20 @@ const hitsAsCsv = (hits = []) => {
   return [csvHeader, csvBody].join('\n')
 }
 
+const downloadHitsAsCsv = (hits = [], category) => {
+  const content = hitsAsCsv(hits)
+  const a = window.document.createElement('a')
+  a.href = URL.createObjectURL(new Blob([content], { type: 'text/csv;charset=UTF-8' }))
+  a.download = `${documentStore.document.title} - ${category}.csv`
+  a.click()
+}
+
 const hitsWithRoute = (hits) => {
-  return hits.map(({ source, mention }) => ({
-    ...source,
-    to: { name: `${documentRoute.value.name}.text`, query: { q: mention } }
-  }))
+  return hits.map(({ source, mention: q }) => {
+    const modal = inject('modal', undefined)
+    const to = { name: `${documentRoute.value.name}.text`, query: { q, modal } }
+    return { ...source, to }
+  })
 }
 
 const categories = computed(() => documentStore.categories)
@@ -111,7 +120,7 @@ onMounted(getFirstPageInAllCategories)
       :count="getCategoryTotal(category)"
       :entries="hitsWithRoute(hits)"
       :has-more="categoryHasNextPage(category)"
-      @download="hitsAsCsv(hits)"
+      @download="downloadHitsAsCsv(hits, category)"
       @more="getNextPageInCategory(category)"
     />
   </div>
