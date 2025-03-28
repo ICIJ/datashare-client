@@ -2,7 +2,7 @@ import { computed, toRef } from 'vue'
 import { useRoute } from 'vue-router'
 import { compact } from 'lodash'
 
-import allShortcuts from '@/utils/keyboard-shortcuts.json'
+import allShortcuts from '@/utils/keyboardShortcuts.json'
 
 export const useKeyboardShortcuts = () => {
   const route = useRoute()
