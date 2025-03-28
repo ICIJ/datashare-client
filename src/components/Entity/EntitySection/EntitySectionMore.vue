@@ -1,21 +1,11 @@
 <script setup>
-import { computed } from 'vue'
-import { useI18n } from 'vue-i18n'
-
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
-const props = defineProps({
+defineProps({
   category: {
     type: String,
     required: true
   }
-})
-
-const { t } = useI18n()
-
-const label = computed(() => {
-  const category = t(`entitySectionMore.category.${props.category}`)
-  return t(`entitySectionMore.label`, { category })
 })
 </script>
 
@@ -26,6 +16,10 @@ const label = computed(() => {
     :icon-right="PhCaretRight"
     icon-right-variant="secondary"
   >
-    {{ label }}
+    <i18n-t keypath="entitySectionMore.label">
+      <template #category>
+        {{ $t(`entitySectionMore.category.${category.toLowerCase()}`) }}
+      </template>
+    </i18n-t>
   </button-icon>
 </template>
