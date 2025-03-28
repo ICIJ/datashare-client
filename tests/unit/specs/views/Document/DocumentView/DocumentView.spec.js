@@ -1,7 +1,6 @@
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount, flushPromises } from '@vue/test-utils'
 
 import { apiInstance as api } from '@/api/apiInstance'
-import { flushPromises } from '~tests/unit/tests_utils'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'

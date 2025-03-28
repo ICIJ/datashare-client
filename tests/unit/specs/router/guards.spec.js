@@ -1,8 +1,7 @@
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount, flushPromises } from '@vue/test-utils'
 import { setCookie, removeCookie } from 'tiny-cookie'
 import { expect } from 'vitest'
 
-import { flushPromises } from '~tests/unit/tests_utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import { apiInstance as api } from '@/api/apiInstance'
 
