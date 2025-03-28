@@ -137,6 +137,7 @@ defineExpose({ focus })
         @keydown.esc="$event.target.blur()"
         @update:modelValue="setInput"
         @blur="emit('blur', $event)"
+        @focus="emit('focus', $event)"
       />
       <span class="form-control-search__end input-group-text px-1 py-0 border-start-0">
         <button-icon
@@ -148,7 +149,7 @@ defineExpose({ focus })
           class="form-control-search__clear__icon p-1 mx-1 border-0"
           @click="clearInput()"
         />
-        <slot name="input-end" v-bind="{ loading, clearText }"></slot>
+        <slot name="input-end" v-bind="{ loading, clearText }" />
       </span>
     </div>
   </form>
