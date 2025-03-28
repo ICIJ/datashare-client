@@ -1,6 +1,6 @@
-import { mount } from '@vue/test-utils'
+import { flushPromises, mount } from '@vue/test-utils'
 
-import { flushPromises, responseWithArrayBuffer as mockArrayBuffer } from '~tests/unit/tests_utils'
+import { responseWithArrayBuffer as mockArrayBuffer } from '~tests/unit/tests_utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import DocumentViewerLegacySpreadsheet from '@/components/Document/DocumentViewer/DocumentViewerLegacySpreadsheet'
 

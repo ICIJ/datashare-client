@@ -1,6 +1,5 @@
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount, flushPromises } from '@vue/test-utils'
 
-import { flushPromises } from '~tests/unit/tests_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
 import * as widgets from '@/store/widgets'

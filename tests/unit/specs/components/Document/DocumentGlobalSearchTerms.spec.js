@@ -1,8 +1,7 @@
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount, flushPromises } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import { IndexedDocument } from '~tests/unit/es_utils'
-import { flushPromises } from '~tests/unit/tests_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import DocumentGlobalSearchTerms from '@/components/Document/DocumentGlobalSearchTerms/DocumentGlobalSearchTerms'
 import DocumentGlobalSearchTermsEntry from '@/components/Document/DocumentGlobalSearchTerms/DocumentGlobalSearchTermsEntry'

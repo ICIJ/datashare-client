@@ -1,6 +1,5 @@
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount, flushPromises } from '@vue/test-utils'
 
-import { flushPromises } from '~tests/unit/tests_utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import DocumentViewerJson from '@/components/Document/DocumentViewer/DocumentViewerJson'
 import JsonFormatter from '@/components/JsonFormatter'

@@ -1,6 +1,6 @@
-import { shallowMount } from '@vue/test-utils'
+import { flushPromises, shallowMount } from '@vue/test-utils'
 
-import { flushPromises, responseWithArrayBuffer as mockArrayBuffer } from '~tests/unit/tests_utils'
+import { responseWithArrayBuffer as mockArrayBuffer } from '~tests/unit/tests_utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import DocumentViewerTiff from '@/components/Document/DocumentViewer/DocumentViewerTiff'
 import { apiInstance as api } from '@/api/apiInstance'

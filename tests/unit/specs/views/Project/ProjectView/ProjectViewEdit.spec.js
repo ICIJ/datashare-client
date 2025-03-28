@@ -1,6 +1,5 @@
-import { shallowMount, mount } from '@vue/test-utils'
+import { shallowMount, mount, flushPromises } from '@vue/test-utils'
 
-import { flushPromises } from '~tests/unit/tests_utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import ProjectViewEdit from '@/views/Project/ProjectView/ProjectViewEdit'
 import { apiInstance as api } from '@/api/apiInstance'
