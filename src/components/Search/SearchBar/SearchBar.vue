@@ -37,7 +37,7 @@
           <selectable-dropdown
             ref="suggestions"
             class="search-bar__suggestions dropdown-menu shadow-lg bg-action-subtle border-action-subtle"
-            :hide="!suggestions.length"
+            :hide="hiddenSuggestions"
             :items="suggestions"
             :active-items="activeSuggestions"
             @update:modelValue="selectTerm"
@@ -151,6 +151,7 @@ export default {
 
     return {
       field: searchStore.field,
+      pristine: true,
       focused: false,
       query: searchStore.q,
       suggestions: [],
@@ -182,6 +183,9 @@ export default {
     },
     localizedPlaceholder() {
       return this.placeholder ?? this.$t('search.placeholder')
+    },
+    hiddenSuggestions() {
+      return this.suggestions.length === 0 || this.pristine || this.query.length < 4
     }
   },
   methods: {
@@ -285,6 +289,7 @@ export default {
       this.submit()
     },
     onInput() {
+      this.pristine = false
       this.searchTerms()
     },
     onFocus() {
