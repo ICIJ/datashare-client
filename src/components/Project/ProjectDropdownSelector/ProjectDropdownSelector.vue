@@ -19,8 +19,8 @@
   >
     <template #above="{ visible }">
       <project-dropdown-selector-search
-        v-if="visible"
         v-model="query"
+        :autofocus="visible"
         :has-matches="hasMatches"
         @blur="resetFocus"
         @up="moveFocusUp"
