@@ -9,7 +9,7 @@
 </template>
 
 <script setup>
-import { findContentTypeIcon } from '@/utils/phosphor-icon-files'
+import { findContentTypeIcon } from '@/utils/phosphorIconFiles'
 
 defineOptions({
   name: 'LinkedDocumentListEntry'
