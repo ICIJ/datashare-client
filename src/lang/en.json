@@ -141,7 +141,7 @@
     "label": "{extractor} in {language}"
   },
   "entityPopoverMention": {
-    "noExcerpt": "This entity is not available for preview because the document is too big."
+    "noExcerpt": "This entity was extracted from the metadata."
   },
   "entityPopoverMentionOccurrences": {
     "occurrences":  "This mention appears {offsets} times | This mention appears {offsets} time | This mention appears {offsets} times",
