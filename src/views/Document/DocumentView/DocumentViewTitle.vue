@@ -15,7 +15,7 @@ defineProps({
     <h2 class="document-view-title__title m-0 flex-grow-1">
       <document-sliced-name interactive-root :document="document" />
     </h2>
-    <project-button :project="document.project" />
+    <project-button :project="document.project" class="flex-shrink-0" />
   </div>
 </template>
 
