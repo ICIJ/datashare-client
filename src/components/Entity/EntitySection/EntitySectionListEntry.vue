@@ -1,5 +1,6 @@
 <script setup>
 import EntityButton from '@/components/Entity/EntityButton'
+import EntityInContext from '@/components/Entity/EntityInContext'
 
 defineOptions({
   name: 'EntitySectionListEntry'
@@ -13,5 +14,9 @@ defineProps({
 </script>
 
 <template>
-  <entity-button :entity="entity" />
+  <entity-in-context lazy :click="false" :entity="entity">
+    <template #target>
+      <entity-button :entity="entity" />
+    </template>
+  </entity-in-context>
 </template>
