@@ -1,7 +1,7 @@
 import { createMemoryHistory, createRouter } from 'vue-router'
 import { createApp } from 'vue'
 
-import allShortcuts from '@/utils/keyboard-shortcuts.json'
+import allShortcuts from '@/utils/keyboardShortcuts.json'
 import { useKeyboardShortcuts } from '@/composables/useKeyboardShortcuts'
 
 describe('useKeyboardShortcuts', () => {
