@@ -8,22 +8,6 @@ const modelValue = defineModel({ type: Boolean })
 const offset = defineModel('offset', { type: Number, default: 0 })
 
 const props = defineProps({
-  target: {
-    type: [String, Object, Function]
-  },
-  manual: {
-    type: Boolean
-  },
-  noAutoClose: {
-    type: Boolean
-  },
-  placement: {
-    type: String
-  },
-  teleportTo: {
-    type: String,
-    default: 'body'
-  },
   mention: {
     type: String
   },
@@ -45,6 +29,18 @@ const props = defineProps({
   },
   noExcerpt: {
     type: Boolean
+  },
+  teleportTo: {
+    type: String,
+    default: 'body'
+  },
+  delay: {
+    type: Object,
+    default: () => ({ show: 0, hide: 0 })
+  },
+  customClass: {
+    type: String,
+    default: 'entity-popover'
   }
 })
 
@@ -54,15 +50,10 @@ const tabsBinding = computed(() => {
 </script>
 
 <template>
-  <b-popover
-    v-model="modelValue"
-    :teleport-to="teleportTo"
-    :target="target"
-    :manual="manual"
-    :no-auto-close="noAutoClose"
-    :placement="placement"
-    custom-class="entity-popover"
-  >
+  <b-popover v-model="modelValue" :teleport-to="teleportTo" :custom-class="customClass" :delay="delay">
     <entity-popover-tab-group v-bind="tabsBinding" v-model:offset="offset" />
+    <template #target="bindings">
+      <slot name="target" v-bind="bindings" />
+    </template>
   </b-popover>
 </template>
