@@ -1,6 +1,5 @@
 <script setup>
-import { trim } from 'lodash'
-import { computed, onBeforeMount } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 import { useWait } from '@/composables/useWait'
 import EntityPopover from '@/components/Entity/EntityPopover/EntityPopover'
@@ -8,6 +7,7 @@ import { useDocumentStore } from '@/store/modules'
 import { Highlight } from '@/utils/highlight'
 
 const offset = defineModel('offset', { type: Number, default: 0 })
+const visiblePopover = defineModel('visiblePopover', { type: Boolean, default: false })
 
 const props = defineProps({
   entity: {
@@ -24,13 +24,13 @@ const documentStore = useDocumentStore()
 const { wait } = useWait()
 
 const document = computed(() => documentStore.document)
-const hasBigContentTextLength = computed(() => document.value.hasBigContentTextLength)
-const isContentLoaded = computed(() => documentStore.isContentLoaded)
+const content = ref('')
 
 const fetch = wait(async () => {
-  if (!isContentLoaded.value && !hasBigContentTextLength.value) {
-    await documentStore.getContent()
-  }
+  const offset = excerptOffsetStart.value
+  const limit = excerptOffsetEnd.value - excerptOffsetStart.value
+  const response = await documentStore.getContentSlice({ offset, limit })
+  content.value = response.content
 })
 
 const highlight = (content) => {
@@ -40,13 +40,8 @@ const highlight = (content) => {
   return Highlight.create({ content }).ranges(ranges)
 }
 
-const content = computed(() => {
-  return isContentLoaded.value ? document.value.content : ''
-})
-
 const excerpt = computed(() => {
-  const substring = content.value.substring(excerptOffsetStart.value, excerptOffsetEnd.value)
-  return [excerptPrefix.value, trim(substring), excerptSuffix.value].join('')
+  return [excerptPrefix.value, content.value, excerptSuffix.value].join('')
 })
 
 const highlightedExcerpt = computed(() => {
@@ -74,13 +69,14 @@ const excerptSuffix = computed(() => {
   return excerptOffsetEnd.value < content.value.length ? '...' : ''
 })
 
-onBeforeMount(fetch)
+watch(offset, fetch)
+watch(visiblePopover, fetch)
 </script>
 
 <template>
   <entity-popover
+    v-model="visiblePopover"
     v-model:offset="offset"
-    :no-excerpt="hasBigContentTextLength"
     :excerpt="highlightedExcerpt"
     :language="document.language"
     :mention="entity.mention"
