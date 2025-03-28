@@ -14,14 +14,6 @@ const props = defineProps({
     type: Object,
     required: true
   },
-  document: {
-    type: Object,
-    required: true
-  },
-  target: {
-    type: [String, Object, Function],
-    required: true
-  },
   excerptLength: {
     type: Number,
     default: 180
@@ -31,7 +23,8 @@ const props = defineProps({
 const documentStore = useDocumentStore()
 const { wait } = useWait()
 
-const hasBigContentTextLength = computed(() => props.document.hasBigContentTextLength)
+const document = computed(() => documentStore.document)
+const hasBigContentTextLength = computed(() => document.value.hasBigContentTextLength)
 const isContentLoaded = computed(() => documentStore.isContentLoaded)
 
 const fetch = wait(async () => {
@@ -48,7 +41,7 @@ const highlight = (content) => {
 }
 
 const content = computed(() => {
-  return isContentLoaded.value ? props.document.content : ''
+  return isContentLoaded.value ? document.value.content : ''
 })
 
 const excerpt = computed(() => {
@@ -87,13 +80,15 @@ onBeforeMount(fetch)
 <template>
   <entity-popover
     v-model:offset="offset"
-    lazy
     :no-excerpt="hasBigContentTextLength"
     :excerpt="highlightedExcerpt"
     :language="document.language"
     :mention="entity.mention"
     :extractor="entity.extractor"
     :offsets="entity.offsets.length"
-    :target="target"
-  />
+  >
+    <template #target>
+      <slot name="target" />
+    </template>
+  </entity-popover>
 </template>
