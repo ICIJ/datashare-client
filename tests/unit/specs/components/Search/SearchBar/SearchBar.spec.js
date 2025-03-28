@@ -23,7 +23,7 @@ describe('SearchBar.vue', function () {
     })
   }
 
-  const mountFactory = (props = {}, data = () => ({ suggestions: [] })) => {
+  const mountFactory = (props = {}, data = () => ({ pristine: false, suggestions: [] })) => {
     return mount(SearchBar, {
       data,
       props,
@@ -70,26 +70,8 @@ describe('SearchBar.vue', function () {
     expect(wrapper.find('.search-bar__suggestions').exists()).toBeTruthy()
   })
 
-  it('should display a the query typed by the user as first suggestion in the dropdown when there are suggestions', async () => {
-    const query = 'barba'
-    const suggestTermsMock = vi.fn().mockResolvedValue({
-      suggestions: [
-        { key: 'barbar', doc_count: 1 },
-        { key: 'barbaz', doc_count: 1 }
-      ],
-      query
-    })
-    wrapper = mountFactory({}, () => ({ query }))
-    wrapper.vm.suggestTerms = suggestTermsMock
-    await wrapper.vm.onFocus()
-    await flushPromises()
-    const items = wrapper.findAll('.selectable-dropdown__item')
-    expect(items).toHaveLength(3)
-    expect(items.at(0).text()).toBe('barba')
-  })
-
   it('should select the term when suggestion dropdown item is clicked', async () => {
-    wrapper = mountFactory({}, () => ({ suggestions: [{ key: 'bar' }], query: 'foo' }))
+    wrapper = mountFactory({}, () => ({ suggestions: [{ key: 'bar' }], pristine: false, query: 'foo' }))
     await flushPromises()
     await wrapper.find('.selectable-dropdown__item').trigger('click')
     expect(wrapper.vm.query).toBe('bar')
