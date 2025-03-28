@@ -1,16 +1,18 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, toRef, useTemplateRef, watch } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 import { PhCircleNotch, PhMagnifyingGlass } from '@phosphor-icons/vue'
 
 import { buttonSizeValidator, SIZE } from '@/enums/sizes'
 import ButtonIcon from '@/components/Button/ButtonIcon'
+
 /**
  * A search input with pill layout.
  */
 defineOptions({
   name: 'FormControlSearch'
 })
+
 /**
  * Input value
  * @model
@@ -53,13 +55,6 @@ const props = defineProps({
     default: false
   },
   /**
-   * Round the border of the input
-   */
-  rounded: {
-    type: Boolean,
-    default: false
-  },
-  /**
    * Change the state of the input to "loading" (with a spinner)
    */
   loading: {
@@ -90,79 +85,60 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['submit', 'up', 'down', 'update:modelValue', 'input', 'enter', 'blur'])
+const emit = defineEmits(['submit', 'up', 'down', 'input', 'enter', 'blur'])
 
-const showClearText = computed(() => {
-  return props.modelValue?.length > 0
-})
+const hideClearInput = computed(() => !modelValue.value)
+const icon = computed(() => (props.loading ? PhCircleNotch : props.iconName))
+const target = useTemplateRef('target')
+const focus = () => target.value?.focus()
 
-function input(value) {
+function setInput(value = '') {
   modelValue.value = value
   emit('input', value)
 }
 
-const target = ref(null)
-
-function focus() {
-  target.value?.querySelector('.form-control-search__input').focus()
-}
-
-function clearInputText() {
+function clearInput() {
   focus()
-  input('')
+  setInput()
 }
-
-const icon = computed(() => {
-  return props.loading ? PhCircleNotch : props.iconName
-})
 
 const classList = computed(() => {
   return {
     'form-control-search--shadow': props.shadow,
-    [`form-control-search--${props.size}`]: true
+    'form-control-search--hide-clear': hideClearInput.value,
+    [`form-control-search--${props.size}`]: !!props.size
   }
 })
 
-defineExpose({
-  focus
-})
+watch(toRef(props, 'autofocus'), (autofocus) => autofocus && focus())
+
+defineExpose({ focus })
 </script>
 
 <template>
   <form class="form-control-search" :class="classList" @submit.prevent="emit('submit', modelValue)">
     <div class="form-control-search__input-group input-group">
-      <span
-        class="form-control-search__start input-group-text border-end-0"
-        :class="{ 'form-control-search--rounded--start': rounded }"
-      >
+      <span class="form-control-search__start input-group-text border-end-0">
         <slot name="input-start" v-bind="{ loading, icon, noIcon }">
           <phosphor-icon v-if="!noIcon" :name="icon" square :spin="loading" />
         </slot>
       </span>
       <b-form-input
+        ref="target"
         :size="size"
         :model-value="modelValue"
         :autocomplete="autocomplete"
         :autofocus="autofocus"
         class="form-control-search__input border-start-0 border-end-0 mx-0 px-0"
-        :class="{
-          'form-control-search__input--no-icon': noIcon,
-          'form-control-search__input--no-clear-text': noIcon,
-          'form-control-search--rounded--start': rounded && noIcon,
-          'form-control-search--rounded--end': rounded && !clearText
-        }"
         :placeholder="placeholder"
         @keydown.up="emit('up', $event)"
         @keydown.down="emit('down', $event)"
         @keydown.enter="emit('enter', $event)"
         @keydown.esc="$event.target.blur()"
-        @update:modelValue="input"
+        @update:modelValue="setInput"
         @blur="emit('blur', $event)"
       />
-      <span
-        class="form-control-search__end input-group-text px-1 py-0 border-start-0"
-        :class="{ 'form-control-search--rounded--end': rounded }"
-      >
+      <span class="form-control-search__end input-group-text px-1 py-0 border-start-0">
         <button-icon
           v-if="clearText"
           icon-left="x"
@@ -170,10 +146,7 @@ defineExpose({
           variant="outline-secondary"
           :size="size"
           class="form-control-search__clear__icon p-1 mx-1 border-0"
-          :class="{
-            'form-control-search__clear__icon--hide': !showClearText
-          }"
-          @click="clearInputText()"
+          @click="clearInput()"
         />
         <slot name="input-end" v-bind="{ loading, clearText }"></slot>
       </span>
@@ -191,17 +164,6 @@ defineExpose({
     color: $secondary;
     transition: $input-transition;
     min-width: var(--bs-border-radius);
-  }
-
-  &--rounded {
-    &--start {
-      border-bottom-left-radius: $border-radius-pill;
-      border-top-left-radius: $border-radius-pill;
-    }
-    &--end {
-      border-bottom-right-radius: $border-radius-pill;
-      border-top-right-radius: $border-radius-pill;
-    }
   }
 
   &__input:focus,
@@ -230,14 +192,8 @@ defineExpose({
     }
   }
 
-  &__clear__icon {
-    &--hide {
-      visibility: hidden;
-    }
-  }
-
-  .form-control-lg {
-    padding: 1em;
+  &--hide-clear &__clear__icon {
+    visibility: hidden;
   }
 
   &--shadow {
@@ -246,6 +202,10 @@ defineExpose({
 
   &--shadow.form-control-search--sm {
     box-shadow: var(--bs-box-shadow);
+  }
+
+  .form-control-lg {
+    padding: 1em;
   }
 }
 </style>
