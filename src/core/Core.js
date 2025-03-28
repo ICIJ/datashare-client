@@ -23,7 +23,7 @@ import ProjectsMixin from './ProjectsMixin'
 import WidgetsMixin from './WidgetsMixin'
 
 import { apiInstance } from '@/api/apiInstance'
-import { dispatch, EventBus } from '@/utils/event-bus'
+import { dispatch, EventBus } from '@/utils/eventBus'
 import { getMode, MODE_NAME } from '@/mode'
 import { routes } from '@/router'
 import { pinia } from '@/store/pinia'
