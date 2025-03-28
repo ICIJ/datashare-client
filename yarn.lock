@@ -1027,10 +1027,10 @@
     eslint-plugin-vue "^9.9.0"
     prettier "^2.8.4"
 
-"@icij/murmur-next@4.5.0":
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/@icij/murmur-next/-/murmur-next-4.5.0.tgz#fdbe4cce6328eeddbc8a8408b59b3f56a9c7153d"
-  integrity sha512-lJFKjaBP6G9pTlZ+XYzCNxCYl/8X4bb1igMzSKreLlJkF2E1WeNRxJFJACiBqxGNjQNdipQ4QdQOscx6MLJ3FQ==
+"@icij/murmur-next@4.5.1":
+  version "4.5.1"
+  resolved "https://registry.yarnpkg.com/@icij/murmur-next/-/murmur-next-4.5.1.tgz#7239923fb245c3f76f859b6286ede8b63d73a8c1"
+  integrity sha512-bTlF3jtSC845eeHknmGzuRBpxH8zwWXTVy9nHFl54o1MZartRyHBzHUGkN181JR4eQtWHuYMAB2Ec458LFEivw==
   dependencies:
     "@phosphor-icons/vue" "^2.2.1"
     "@storybook/preset-scss" "^1.0.3"
