@@ -55,6 +55,7 @@ export const Default = {
     rounded: false
   }
 }
+
 export const Large = {
   args: {
     placeholder: 'Type queries, use operators or type regex...',
@@ -65,6 +66,7 @@ export const Large = {
     shadow: false
   }
 }
+
 export const LargeShadow = {
   args: {
     placeholder: 'Type queries, use operators or type regex...',
@@ -75,6 +77,7 @@ export const LargeShadow = {
     shadow: true
   }
 }
+
 export const Small = {
   args: {
     placeholder: 'Type queries, use operators or type regex...',
@@ -95,6 +98,7 @@ export const FilterIcon = {
     shadow: false
   }
 }
+
 export const NoIcon = {
   args: {
     placeholder: 'Type queries, use operators or type regex...',
