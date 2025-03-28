@@ -24,9 +24,11 @@ const documentStore = useDocumentStore()
 const { wait } = useWait()
 
 const document = computed(() => documentStore.document)
+const noExcerpt = computed(() => !!props.entity.metadata)
 const content = ref('')
 
 const fetch = wait(async () => {
+  if (noExcerpt.value) return
   const offset = excerptOffsetStart.value
   const limit = excerptOffsetEnd.value - excerptOffsetStart.value
   const response = await documentStore.getContentSlice({ offset, limit })
@@ -58,7 +60,8 @@ const excerptOffsetStart = computed(() => {
 
 const excerptOffsetEnd = computed(() => {
   const extraLength = Math.max(0, Math.floor(props.excerptLength / 2) - excerptOffsetStart.value)
-  return offsetStart.value + extraLength + Math.floor(props.excerptLength / 2)
+  const maxLenght = document.value.contentTextLength - 1
+  return Math.min(maxLenght, offsetStart.value + extraLength + Math.floor(props.excerptLength / 2))
 })
 
 const excerptPrefix = computed(() => {
@@ -78,6 +81,7 @@ watch(visiblePopover, fetch)
     v-model="visiblePopover"
     v-model:offset="offset"
     :excerpt="highlightedExcerpt"
+    :no-excerpt="noExcerpt"
     :language="document.language"
     :mention="entity.mention"
     :extractor="entity.extractor"
