@@ -185,7 +185,7 @@ export default {
       return this.placeholder ?? this.$t('search.placeholder')
     },
     hiddenSuggestions() {
-      return this.suggestions.length === 0 || this.pristine || this.query.length < 4
+      return !this.suggestions.length || this.pristine
     }
   },
   methods: {
