@@ -40,6 +40,10 @@ const { t, tm, n } = useI18n()
 const searchStore = useSearchStore.inject('searchStoreSuffix')
 const router = useRouter()
 
+// We limit pagination bellow 10,000 results
+const noNextPage = computed(() => props.perPage * page.value >= 1e4)
+const noLastPage = computed(() => props.total >= 1e4)
+
 const batchDownloadDocumentsLabel = computed(() => {
   const maxFiles = parseInt(core.config.get('batchDownloadMaxNbFiles'))
   const maxSize = core.config.get('batchDownloadMaxSize')
@@ -88,7 +92,14 @@ watch(toRef(props, 'total'), (total) => (selectMode.value = selectMode.value && 
     <button-toggle-batch-mode v-model:active="selectMode" :loading="loading" :disabled="total === 0" />
     <slot v-bind="{ compact }">
       <div>
-        <row-pagination-documents v-model="page" :total-rows="total" :per-page="perPage" :compact="compact" />
+        <row-pagination-documents
+          v-model="page"
+          :no-next="noNextPage"
+          :no-last="noLastPage"
+          :total-rows="total"
+          :per-page="perPage"
+          :compact="compact"
+        />
         <button-download-documents :label="batchDownloadDocumentsLabel" @click="runBatchDownload" />
       </div>
     </slot>
