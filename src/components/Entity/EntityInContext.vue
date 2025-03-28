@@ -20,18 +20,17 @@ const props = defineProps({
   }
 })
 
-const documentStore = useDocumentStore()
+const { getContentSlice, document } = useDocumentStore()
 const { wait } = useWait()
 
-const document = computed(() => documentStore.document)
 const noExcerpt = computed(() => !!props.entity.metadata)
 const content = ref('')
 
 const fetch = wait(async () => {
-  if (noExcerpt.value) return
+  if (noExcerpt.value || !visiblePopover.value) return
   const offset = excerptOffsetStart.value
   const limit = excerptOffsetEnd.value - excerptOffsetStart.value
-  const response = await documentStore.getContentSlice({ offset, limit })
+  const response = await getContentSlice({ offset, limit })
   content.value = response.content
 })
 
@@ -60,7 +59,7 @@ const excerptOffsetStart = computed(() => {
 
 const excerptOffsetEnd = computed(() => {
   const extraLength = Math.max(0, Math.floor(props.excerptLength / 2) - excerptOffsetStart.value)
-  const maxLenght = document.value.contentTextLength - 1
+  const maxLenght = document.contentTextLength
   return Math.min(maxLenght, offsetStart.value + extraLength + Math.floor(props.excerptLength / 2))
 })
 
@@ -73,7 +72,7 @@ const excerptSuffix = computed(() => {
 })
 
 watch(offset, fetch)
-watch(visiblePopover, fetch)
+watch(visiblePopover, fetch, { immediate: true })
 </script>
 
 <template>
