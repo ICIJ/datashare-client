@@ -2,7 +2,7 @@ import { isEqual, replace } from 'lodash'
 import bodybuilder from 'bodybuilder'
 import es from 'elasticsearch-browser'
 
-import { EventBus } from '@/utils/event-bus'
+import { EventBus } from '@/utils/eventBus'
 import settings from '@/utils/settings'
 
 // Custom API for datashare
