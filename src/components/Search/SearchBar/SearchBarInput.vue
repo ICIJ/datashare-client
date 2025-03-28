@@ -13,7 +13,7 @@
   >
     <template #input-end>
       <div v-if="!compact" class="d-flex flew-nowrap gap-1">
-        <slot name="addons"></slot>
+        <slot name="addons" />
       </div>
       <b-button
         v-if="showSubmit"
@@ -24,7 +24,7 @@
       >
         {{ $t('search.buttonLabel') }}
       </b-button>
-      <slot name="suggestions"></slot>
+      <slot name="suggestions" />
     </template>
   </form-control-search>
 </template>
