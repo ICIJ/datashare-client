@@ -5,15 +5,15 @@
         ref="searchInput"
         v-model="query"
         class="search-bar__input w-100"
-        :placeholder="localizedPlaceholder"
-        :size="size"
-        :compact="compact"
-        :show-submit="showSubmit"
         autofocus
+        :compact="compact"
+        :placeholder="localizedPlaceholder"
+        :show-submit="showSubmit"
+        :size="size"
         @blur="onBlur"
-        @submit="onSubmit"
-        @input="onInput"
         @focus="onFocus"
+        @input="onInput"
+        @submit="onSubmit"
       >
         <template #addons>
           <search-bar-input-dropdown-for-field
@@ -36,19 +36,17 @@
         <template #suggestions>
           <selectable-dropdown
             ref="suggestions"
-            class="search-bar__suggestions dropdown-menu"
+            class="search-bar__suggestions dropdown-menu shadow-lg bg-action-subtle border-action-subtle"
             :hide="!suggestions.length"
             :items="suggestions"
+            :active-items="activeSuggestions"
             @update:modelValue="selectTerm"
             @click="submit"
           >
             <template #item-label="{ item }">
               <div class="d-flex">
                 <div class="flex-grow-1 text-truncate">
-                  <template v-if="item.current">
-                    <span v-html="item.key" />
-                  </template>
-                  <span v-else v-html="injectTermInQuery(item.key, null, true)"></span>
+                  {{ item.key }}
                 </div>
               </div>
             </template>
@@ -60,7 +58,7 @@
 </template>
 
 <script>
-import { castArray, concat, escapeRegExp, each, get, iteratee, last, orderBy, some, throttle, uniqueId } from 'lodash'
+import { castArray, escapeRegExp, get, iteratee, last, orderBy, some, throttle, uniqueId } from 'lodash'
 import bodybuilder from 'bodybuilder'
 import lucene from 'lucene'
 import { mapStores } from 'pinia'
@@ -156,7 +154,7 @@ export default {
       focused: false,
       query: searchStore.q,
       suggestions: [],
-      currentQuery: { key: '', current: true }
+      activeSuggestions: []
     }
   },
   computed: {
@@ -182,9 +180,6 @@ export default {
       const lastTerm = last(terms) || ''
       return ['all', settings.suggestedImplicitFields].indexOf(this.field) > -1 && lastTerm.length > 4
     },
-    uri() {
-      return window.location.hash.substr(2)
-    },
     localizedPlaceholder() {
       return this.placeholder ?? this.$t('search.placeholder')
     }
@@ -207,17 +202,11 @@ export default {
       const fields = castArray(candidate.field === '<implicit>' ? settings.suggestedImplicitFields : candidate.field)
       const include = `.*${escapeRegExp(candidate.term).toLowerCase()}.*`
       const body = bodybuilder().size(0)
-      each(fields, (field) => {
-        body.aggregation('terms', field, { include }, field)
-      })
+      fields.forEach((field) => body.aggregation('terms', field, { include }, field))
       const preference = 'search-bar-suggestions'
       const response = await this.$core.api.elasticsearch.search({ index, body: body.build(), preference })
-
-      let suggestions = []
-      each(fields, (field) => {
-        suggestions = concat(suggestions, get(response, `aggregations.${field}.buckets`, []))
-      })
-      suggestions = orderBy(suggestions, ['doc_count'], ['desc'])
+      const suggestionsPerField = fields.map((f) => get(response, `aggregations.${f}.buckets`, []))
+      const suggestions = orderBy(suggestionsPerField.flat(), ['doc_count'], ['desc'])
       // Return an object to check later if the promise result is still applicable
       return { query, suggestions }
     },
@@ -238,22 +227,20 @@ export default {
         return []
       }
     },
-    replaceLastTermCandidate(term, ast = null, highlight = true) {
+    replaceLastTermCandidate(term, ast = null) {
       // Parse the query by default
       ast = ast === null ? lucene.parse(this.query) : ast
       // Use recursive call for branches
-      if (ast.right) this.replaceLastTermCandidate(term, ast.right, highlight)
-      else if (ast.left) this.replaceLastTermCandidate(term, ast.left, highlight)
-      // Only <implicit> and tag fields are can be read
-      else if (settings.suggestedFields.indexOf(ast.field) > -1 && ast.term === last(this.termCandidates()).term) {
+      if (ast.right) this.replaceLastTermCandidate(term, ast.right)
+      else if (ast.left) this.replaceLastTermCandidate(term, ast.left)
+      else if (ast.term === this.termCandidates().pop().term) {
         ast.term = ast.quoted ? term : escapeLuceneChars(term)
-        ast.term = highlight ? `<strong>${ast.term}</strong>` : ast.term
       }
       return ast
     },
-    injectTermInQuery(term, ast = null, highlight = true) {
+    injectTermInQuery(term, ast = null) {
       try {
-        ast = this.replaceLastTermCandidate(term, ast, highlight)
+        ast = this.replaceLastTermCandidate(term, ast)
         return lucene.toString(ast)
       } catch (_) {
         return this.query
@@ -261,20 +248,18 @@ export default {
     },
     selectTerm(term) {
       if (term) {
-        this.query = term.current ? term.key : this.injectTermInQuery(term.key, null, false)
+        this.query = this.injectTermInQuery(term.key, null)
       }
     },
     searchTerms: throttle(async function () {
       try {
         if (this.suggestionsAllowed) {
-          this.currentQuery = { key: this.query, current: true }
           const { suggestions, query } = await this.suggestTerms(this.termCandidates())
           // Avoid setting suggestions if user lost the focus on the input
           if (this.focused) {
             // Is the query still valid
-            const suggestionList = suggestions.length ? [this.currentQuery, ...suggestions] : suggestions
-            this.suggestions = query === this.query ? suggestionList : []
-            this.$refs.suggestions.activeItems = []
+            this.suggestions = query === this.query ? suggestions : []
+            this.activeSuggestions = []
           }
         } else {
           this.suggestions = []
