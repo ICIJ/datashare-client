@@ -18,7 +18,10 @@ const props = defineProps({
   noToggleSettings: {
     type: Boolean
   },
-  toAdd: {
+  addLabel: {
+    type: String
+  },
+  addTo: {
     type: Object
   },
   sidebarTogglerBreakpoint: {
@@ -66,7 +69,8 @@ const hasToolbar = computed(() => {
     :no-breadcrumb="noBreadcrumb"
     :no-toggle-sidebar="noToggleSidebar"
     :no-toggle-settings="noToggleSettings"
-    :to-add="toAdd"
+    :add-to="addTo"
+    :add-label="addLabel"
     :sidebar-toggler-breakpoint="sidebarTogglerBreakpoint"
   >
     <template #toggle-sidebar>

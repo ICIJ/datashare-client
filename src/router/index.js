@@ -242,7 +242,7 @@ export const routes = [
                 path: 'new',
                 component: () => import('@/views/Task/TaskBatchSearch/TaskBatchSearchNew'),
                 meta: {
-                  title: 'taskBatchSearchNew.title',
+                  title: 'task.batch-search.new.title',
                   icon: PhPlus,
                   docs: [
                     {
@@ -323,7 +323,7 @@ export const routes = [
             },
             meta: {
               icon: PhPlus,
-              title: 'Create project',
+              title: 'projectNew.title',
               allowedModes: [MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]
             }
           },
@@ -410,9 +410,7 @@ export const routes = [
                       import('@/views/Project/ProjectView/ProjectViewOverview/ProjectViewOverviewHistory'),
                     meta: {
                       icon: PhClockCounterClockwise,
-                      title() {
-                        return 'History'
-                      }
+                      title: 'projectViewOverview.nav.history'
                     }
                   }
                 ]
@@ -424,7 +422,7 @@ export const routes = [
                 component: () => import('@/views/Project/ProjectView/ProjectViewEdit'),
                 meta: {
                   icon: PhPencilSimple,
-                  title: 'Edit project',
+                  title: 'projectViewEdit.title',
                   allowedModes: [MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]
                 }
               }
@@ -557,7 +555,7 @@ export const routes = [
     component: () => import('@/views/Login/Login'),
     meta: {
       skipsAuth: true,
-      title: 'Login'
+      title: 'login.title'
     }
   },
   {
@@ -567,7 +565,7 @@ export const routes = [
     props: true,
     meta: {
       skipsAuth: true,
-      title: 'Something went wrong'
+      title: 'error.title'
     }
   }
 ]

@@ -10,10 +10,10 @@ export function useTaskHeader(pageName) {
   const { perPage, sortBy } = useTaskSettings(pageName)
   const taskStore = useTaskStore()
 
-  const toAddRoute = computed(() => {
+  const addToRoute = computed(() => {
     return { name: `task.${pageName}.new` }
   })
-
+  const addLabel = computed(() => t(`task.${pageName}.new.title`))
   const searchQuery = useUrlParam('q', '')
 
   const page = useUrlParam('page', {
@@ -34,7 +34,8 @@ export function useTaskHeader(pageName) {
   })
 
   return {
-    toAddRoute,
+    addToRoute,
+    addLabel,
     searchQuery,
     searchPlaceholder,
     tasks,

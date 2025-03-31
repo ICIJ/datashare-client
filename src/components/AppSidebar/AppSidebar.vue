@@ -48,8 +48,8 @@ const closed = computed({
 
 const fullWith = computed(() => breakpointDown.value[SIZE.MD])
 
-// Watch the current breadpoint state to
-// automaticaly close the sidebar if it's
+// Watch the current breakpoint state to
+// automatically close the sidebar if it's
 // not closed already on screens smaller than MD
 watch(
   () => breakpointDown.value[SIZE.MD],
@@ -69,7 +69,7 @@ const classList = computed(() => {
   }
 })
 
-const toAddProject = computed(() => {
+const addToProject = computed(() => {
   return isServer.value ? null : { name: 'project.new' }
 })
 
@@ -121,8 +121,8 @@ onBeforeRouteLeave(autoClose)
             :icon="PhDotsNine"
             exact-match
             :to="{ name: 'project.list' }"
-            :action-to="toAddProject"
-            action-title="Add project"
+            :action-to="addToProject"
+            :action-title="$t('projectNew.title')"
           >
             {{ t('appSidebar.allProjects') }}
           </app-sidebar-section-entry>
@@ -147,24 +147,24 @@ onBeforeRouteLeave(autoClose)
           </app-sidebar-section-entry>
         </app-sidebar-section>
         <app-sidebar-section
-          :title="t('appSidebar.tasks')"
+          :title="t('task.title')"
           :icon="PhRocketLaunch"
           :to="{ name: 'task.task-board' }"
           :compact="compact"
         >
           <app-sidebar-section-entry :icon="PhDotsNine" :to="{ name: 'task.task-board' }">
-            {{ t('appSidebar.task-board') }}
+            {{ t('task.task-board.title') }}
           </app-sidebar-section-entry>
           <app-sidebar-section-entry
             :icon="PhListMagnifyingGlass"
             :to="{ name: 'task.batch-search.list' }"
             :action-to="{ name: 'task.batch-search.new' }"
-            :action-title="t('appSidebar.batchSearchesAction')"
+            :action-title="t('task.batch-search.new.title')"
           >
-            {{ t('appSidebar.batchSearches') }}
+            {{ t('task.batch-search.title') }}
           </app-sidebar-section-entry>
           <app-sidebar-section-entry :icon="PhDownloadSimple" :to="{ name: 'task.batch-download.list' }">
-            {{ t('appSidebar.batchDownloads') }}
+            {{ t('task.batch-download.title') }}
           </app-sidebar-section-entry>
           <app-sidebar-section-entry
             v-if="!noAnalysis"
@@ -173,7 +173,7 @@ onBeforeRouteLeave(autoClose)
             :action-to="{ name: 'task.documents.new' }"
             :action-title="t('task.documents.new.title')"
           >
-            {{ t('appSidebar.documents') }}
+            {{ t('task.documents.title') }}
           </app-sidebar-section-entry>
           <app-sidebar-section-entry
             v-if="!noAnalysis"
@@ -182,7 +182,7 @@ onBeforeRouteLeave(autoClose)
             :action-to="{ name: 'task.entities.new' }"
             :action-title="t('task.entities.new.title')"
           >
-            {{ t('appSidebar.entities') }}
+            {{ t('task.entities.title') }}
           </app-sidebar-section-entry>
         </app-sidebar-section>
       </div>
