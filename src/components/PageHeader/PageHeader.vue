@@ -5,6 +5,9 @@ import { breakpointSizeValidator, SIZE } from '@/enums/sizes'
 import PageHeaderNav from '@/components/PageHeader/PageHeaderNav'
 import PageHeaderToolbar from '@/components/PageHeader/PageHeaderToolbar'
 
+const searchQuery = defineModel('searchQuery', { type: String })
+const page = defineModel('page', { type: Number, default: 1 })
+
 const props = defineProps({
   noBreadcrumb: {
     type: Boolean
@@ -78,6 +81,8 @@ const hasToolbar = computed(() => {
   </page-header-nav>
   <page-header-toolbar
     v-if="hasToolbar"
+    v-model:search-query="searchQuery"
+    v-model:page="page"
     :filterable="filterable"
     :searchable="searchable"
     :search-placeholder="searchPlaceholder"
