@@ -1,4 +1,4 @@
-import findPath from '@/utils/find-path'
+import findPath from '@/utils/findPath'
 
 describe('findPath', () => {
   const nestedObject = {

@@ -4,7 +4,7 @@ import lucene from 'lucene'
 
 import { useSearchFilter } from '@/composables/useSearchFilter'
 import { useSearchBreadcrumbStore, useSearchStore } from '@/store/modules'
-import findPath from '@/utils/find-path'
+import findPath from '@/utils/findPath'
 
 export function useSearchBreadcrumb() {
   const searchStore = useSearchStore.inject('searchStoreSuffix')
