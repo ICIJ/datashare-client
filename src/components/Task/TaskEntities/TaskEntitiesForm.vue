@@ -93,7 +93,7 @@ const pipelineOptions = computed(() => {
       if (pip === defaultPipeline) {
         const defaultLabel = t('task.entities.form.defaultPipeline')
         const html = `${text} <span class="font-italic small">- ${defaultLabel}</span>`
-        return { html, value, isDefault: true }
+        return { text: html, value, isDefault: true }
       }
       return { text, value, isDefault: false }
     }),
@@ -148,7 +148,9 @@ async function submit() {
       </form-fieldset-i18n>
       <form-fieldset-i18n v-if="isPipelineNamedEntities" name="pipeline" translation-key="task.entities.form.pipeline">
         <b-alert v-if="error" model-value variant="danger">{{ error }}</b-alert>
-        <b-form-radio-group v-else v-model="pipeline" :options="pipelineOptions" name="pipeline" stacked />
+        <b-form-radio-group v-else v-model="pipeline" :options="pipelineOptions" name="pipeline" stacked>
+          <template #option="val"> <div v-html="val.text" /> </template>
+        </b-form-radio-group>
       </form-fieldset-i18n>
       <form-fieldset-i18n name="offline" translation-key="task.entities.form.offline">
         <b-form-radio-group v-model="offline" name="offline" :options="offlineOptions" stacked />
