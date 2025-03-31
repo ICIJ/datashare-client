@@ -112,7 +112,7 @@ const order = computed({
   set: (value) => (orderBy.value = [sort.value, value])
 })
 
-const toAddRoute = computed(() => {
+const addToRoute = computed(() => {
   return isServer.value ? null : { name: 'project.new' }
 })
 </script>
@@ -122,7 +122,8 @@ const toAddRoute = computed(() => {
     <page-header
       v-model:searchQuery="searchQuery"
       v-model:page="page"
-      :to-add="toAddRoute"
+      :add-to="addToRoute"
+      :add-label="$t('projectNew.title')"
       :per-page="perPage"
       :total-rows="filteredProjects.length"
       searchable

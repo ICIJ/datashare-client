@@ -152,7 +152,7 @@
     "info": "Info"
   },
   "error": {
-    "title": "Something's wrong here",
+    "title": "Something went wrong",
     "description": "An error has occurred. Please try again later or contact your administrator if the problem persists.",
     "noProjects": "Your project list is empty. Please contact your administrator.",
     "notFound": "Page not found.",
@@ -869,18 +869,9 @@
   "appSidebar": {
     "projects": "Projects",
     "allProjects": "All projects",
-    "explore": "Explore",
     "search": "Documents",
     "history": "History",
-    "savedSearches": "Saved searches",
-    "tasks": "Tasks",
-    "analyseAction": "Add documents",
-    "task-board": "Task board",
-    "batchSearches": "Batch searches",
-    "batchSearchesAction": "Start a new batch search",
-    "batchDownloads": "Batch downloads",
-    "documents": "Documents",
-    "entities": "Entities"
+    "savedSearches": "Saved searches"
   },
   "appSidebarFooter": {
     "removeAll": {
@@ -903,6 +894,7 @@
     "askHelp": "Ask for help",
     "logout": "You have been logged out from Datashare.",
     "login": "Login",
+    "title": "Login",
     "switchLanguage": "Switch language",
     "tagline": "ICIJ search and discovery platform"
   },
@@ -1160,7 +1152,7 @@
         "submitSuccess": "Batch search created successfully."
       },
       "new": {
-        "title":"Start a new batch search"
+        "title":"Create new batch search"
       }
     },
     "batch-search-queries": {
@@ -1246,9 +1238,6 @@
     "description": "Description",
     "deleteAfterRelaunch": "Delete current batch search after relaunch"
   },
-  "taskBatchSearchNew": {
-    "title": "Start a new batch search"
-  },
   "buttonRowAction": {
     "relaunch":"Relaunch",
     "stop":"Stop",
@@ -1302,7 +1291,6 @@
   },
   "projectList": {
     "title": "Projects",
-    "newProject": "New project",
     "searchPlaceholder": "Search projects",
     "fields": {
       "label": "Label",
@@ -1310,15 +1298,14 @@
     }
   },
   "projectNew": {
-    "title": "New project",
+    "title": "Create new project",
     "description": "A project is a separated set of documents to explore.",
     "notify": {
       "succeed": "The project was created",
       "succeedBody": "Now, you can add documents to this project.",
       "failed": "Unable to create the project",
       "failedBody": "Something happened when trying to create this project."
-    },
-    "submit": "Create project"
+    }
   },
   "projectViewOverview": {
     "emptyStateLabel": "Oh, it’s lonely in here...\nYour project has no documents! Want to add some?",

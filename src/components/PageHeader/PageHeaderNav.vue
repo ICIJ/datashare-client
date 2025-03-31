@@ -23,7 +23,10 @@ const props = defineProps({
   noToggleSettings: {
     type: Boolean
   },
-  toAdd: {
+  addLabel: {
+    type: String
+  },
+  addTo: {
     type: Object
   },
   sidebarTogglerBreakpoint: {
@@ -48,7 +51,7 @@ const showToggleSidebar = computed(() => {
     </navigation-breadcrumb>
     <div class="page-header-nav__actions d-flex gap-4 ms-4 align-items-center">
       <slot name="actions" />
-      <button-add v-if="toAdd" :to="toAdd" />
+      <button-add v-if="addTo" :to="addTo" :label="addLabel" />
       <button-toggle-settings v-if="!noToggleSettings" v-model:active="toggleSettings" />
     </div>
   </page-container>

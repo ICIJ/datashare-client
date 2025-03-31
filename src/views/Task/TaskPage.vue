@@ -38,7 +38,7 @@ const props = defineProps({
 
 const { t } = useI18n()
 
-const { toAddRoute, searchQuery, page, perPage, sortBy, searchPlaceholder, tasks, totalRows } = useTaskHeader(
+const { addToRoute, addLabel, searchQuery, page, perPage, sortBy, searchPlaceholder, tasks, totalRows } = useTaskHeader(
   props.pageName
 )
 
@@ -70,7 +70,8 @@ function refresh() {
       :key="totalRows"
       v-model:searchQuery="searchQuery"
       v-model:page="page"
-      :to-add="showAdd ? toAddRoute : null"
+      :add-to="showAdd ? addToRoute : null"
+      :add-label="showAdd ? addLabel : null"
       :per-page="perPage"
       :search-placeholder="searchPlaceholder"
       :total-rows="totalRows"
