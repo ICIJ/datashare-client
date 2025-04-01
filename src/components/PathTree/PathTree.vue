@@ -1,14 +1,15 @@
 <script setup>
-import { onBeforeMount, computed, ref, reactive, watch } from 'vue'
-import { flatten, filter, get, matches, identity, includes, property, trim, trimEnd, uniqueId, uniqBy } from 'lodash'
+import { onBeforeMount, computed, ref, reactive, toRef, watch } from 'vue'
+import { flatten, filter, get, matches, identity, includes, property, trim, trimEnd, uniqBy } from 'lodash'
 import bodybuilder from 'bodybuilder'
 
 import PathTreeView from '@/components/PathTree/PathTreeView/PathTreeView'
 import PathTreeViewEntry from '@/components/PathTree/PathTreeView/PathTreeViewEntry'
 import PathTreeViewEntryMore from '@/components/PathTree/PathTreeView/PathTreeViewEntryMore'
 import { useCore } from '@/composables/useCore'
+import { useMode } from '@/composables/useMode'
+import { useWait } from '@/composables/useWait'
 import { wildcardRegExpPattern, iwildcardMatch } from '@/utils/strings'
-import useMode from '@/composables/useMode'
 
 const query = defineModel('query', { type: String })
 const selectedPaths = defineModel('selectedPaths', { type: Array, default: () => [] })
@@ -98,16 +99,12 @@ const props = defineProps({
   level: { type: Number, default: 0 }
 })
 
-const { core, wait } = useCore()
-const pathSeparator = computed(() => {
-  return core.config.get('pathSeparator', '/')
-})
+const { core } = useCore()
+const { wait, isLoading } = useWait()
 
 const pages = ref([])
 const directoriesRefs = reactive({})
 const tree = ref({ contents: [] })
-const loaderId = uniqueId()
-const isLoading = computed(() => wait.is(loaderId))
 const perPage = 50
 
 const isCollapsedDirectory = (directory) => {
@@ -146,15 +143,8 @@ const hasQuery = computed(() => {
 
 watch(query, () => loadDataWithSpinner({ clearPages: true }))
 watch(order, () => loadDataWithSpinner({ clearPages: true }))
-watch(
-  () => props.path,
-  () => loadDataWithSpinner({ clearPages: true })
-)
-
-watch(
-  () => props.projects.join(','),
-  () => loadDataWithSpinner({ clearPages: true })
-)
+watch(toRef(props, 'path'), () => loadDataWithSpinner({ clearPages: true }))
+watch(toRef(props, 'projects'), () => loadDataWithSpinner({ clearPages: true, deep: true }))
 
 const normalizePath = (path) => {
   return usesWindowsSeparator.value ? path.split('\\').join('\\\\') : path
@@ -175,6 +165,10 @@ const reachedTheEnd = computed(() => {
 
 const treeChildren = computed(() => {
   return filter(tree.value?.contents ?? [], { type: 'directory' })
+})
+
+const pathSeparator = computed(() => {
+  return core.config.get('pathSeparator', '/')
 })
 
 const wildcardQuery = computed(() => {
@@ -358,26 +352,9 @@ const loadData = async ({ clearPages = false } = {}) => {
   }
 }
 
-const toggleLoader = (start = true) => {
-  const method = start ? 'start' : 'end'
-  wait[method](loaderId)
-}
-
-const loadDataWithSpinner = async (...args) => {
-  try {
-    toggleLoader(true)
-    await loadData(...args)
-  } finally {
-    toggleLoader(false)
-  }
-}
-
-const reloadDataWithSpinner = async () => {
-  for (const key in directoriesRefs) {
-    await directoriesRefs[key]?.reloadDataWithSpinner()
-  }
-  await loadDataWithSpinner({ clearPages: true })
-}
+const loadDataWithSpinner = wait(async (...args) => {
+  await loadData(...args)
+})
 
 const reloadData = async () => {
   for (const key in directoriesRefs) {
@@ -441,7 +418,7 @@ onBeforeMount(() => {
   return loadDataWithSpinner({ clearPages: true })
 })
 
-defineExpose({ loadData, loadDataWithSpinner, reloadData, reloadDataWithSpinner, isLoading })
+defineExpose({ loadData, loadDataWithSpinner, reloadData, isLoading })
 </script>
 
 <template>
