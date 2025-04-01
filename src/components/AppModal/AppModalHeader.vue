@@ -13,6 +13,9 @@ defineProps({
   },
   imageWidth: {
     type: [Number, String]
+  },
+  headerCloseClass: {
+    type: [String, Array, Object]
   }
 })
 </script>
@@ -27,6 +30,7 @@ defineProps({
         tooltip-placement="right"
         variant="outline-secondary"
         class="app-modal-header__close ms-auto"
+        :class="headerCloseClass"
         :label="$t('appModalHeader.close')"
         @click="$emit('close')"
       />
