@@ -1,6 +1,6 @@
 <script setup>
 import { onBeforeMount, computed, ref, reactive, watch } from 'vue'
-import { flatten, filter, get, identity, includes, trim, trimEnd, uniqueId, uniqBy } from 'lodash'
+import { flatten, filter, get, matches, identity, includes, property, trim, trimEnd, uniqueId, uniqBy } from 'lodash'
 import bodybuilder from 'bodybuilder'
 
 import PathTreeView from '@/components/PathTree/PathTreeView/PathTreeView'
@@ -143,15 +143,6 @@ const order = computed(() => {
 const hasQuery = computed(() => {
   return query.value && trim(query.value)
 })
-const wildcardQuery = computed(() => {
-  return hasQuery.value ? '*' + trim(query.value, '*') + '*' : '*'
-})
-const wildcardPath = computed(() => {
-  return [props.path, wildcardQuery.value].join(pathSeparator.value)
-})
-const usesWindowsSeparator = computed(() => {
-  return pathSeparator.value === '\\'
-})
 
 watch(query, () => loadDataWithSpinner({ clearPages: true }))
 watch(order, () => loadDataWithSpinner({ clearPages: true }))
@@ -165,24 +156,11 @@ watch(
   () => loadDataWithSpinner({ clearPages: true })
 )
 
-const subPath = computed(() => {
-  return [props.path, '.*', '.*'].join(pathSeparator.value)
-})
-
 const normalizePath = (path) => {
   return usesWindowsSeparator.value ? path.split('\\').join('\\\\') : path
 }
 
-const includeOption = computed(() => {
-  // Convert the path with a wildcard to regex
-  return wildcardRegExpPattern(wildcardPath.value)
-})
-
-const excludeOption = computed(() => {
-  return normalizePath(subPath.value)
-})
-
-const aggregationOptions = computed(() => {
+const dirnameTreeAggOptions = computed(() => {
   return {
     include: includeOption.value,
     exclude: excludeOption.value,
@@ -197,6 +175,31 @@ const reachedTheEnd = computed(() => {
 
 const treeChildren = computed(() => {
   return filter(tree.value?.contents ?? [], { type: 'directory' })
+})
+
+const wildcardQuery = computed(() => {
+  return hasQuery.value ? '*' + query.value.toLowerCase() + '*' : '*'
+})
+
+const wildcardPath = computed(() => {
+  return [normalizePath(props.path), '*'].join(pathSeparator.value)
+})
+
+const wildcardSubPath = computed(() => {
+  return [normalizePath(wildcardPath.value), '*'].join(pathSeparator.value)
+})
+
+const usesWindowsSeparator = computed(() => {
+  return pathSeparator.value === '\\'
+})
+
+const includeOption = computed(() => {
+  // Convert the path with a wildcard to regex
+  return wildcardRegExpPattern(wildcardPath.value)
+})
+
+const excludeOption = computed(() => {
+  return wildcardRegExpPattern(wildcardSubPath.value)
 })
 
 const treeAsPagesBuckets = computed(() => {
@@ -216,7 +219,7 @@ const treeAsPagesBuckets = computed(() => {
       })
       // Transform it to match with the ES aggregation format
       .map(({ name: key }) => {
-        return { key, size: 0, doc_count: 0, directories: { value: 0 } }
+        return { key, size: 0, doc_count: 0, directories: { value: null } }
       })
   )
 })
@@ -231,25 +234,35 @@ const toDirectory = (path) => {
   return trimEnd(path, pathSeparator.value) + pathSeparator.value
 }
 
-const isSelectedDirectory = (directory) => {
-  return selectedPaths.value.map(toDirectory).includes(toDirectory(directory))
+const isSelectedDirectory = (key) => {
+  return selectedPaths.value.map(toDirectory).includes(toDirectory(key))
 }
 
-const isIndeterminateDirectory = (directory) => {
+const isIndeterminateDirectory = (key) => {
   return selectedPaths.value.some((path) => {
-    return toDirectory(path).startsWith(toDirectory(directory)) && !isSelectedDirectory(directory)
+    return toDirectory(path).startsWith(toDirectory(key)) && !isSelectedDirectory(key)
   })
 }
 
-const selectDirectory = (directory) => {
-  const dir = toDirectory(directory)
-  if (isSelectedDirectory(directory)) {
+const selectDirectory = (key) => {
+  const dir = toDirectory(key)
+  if (isSelectedDirectory(key)) {
     selectedPaths.value = selectedPaths.value.toSpliced(selectedPaths.value.indexOf(dir), 1)
   } else if (props.multiple) {
     selectedPaths.value = [...selectedPaths.value, dir]
   } else {
     selectedPaths.value = selectedPaths.value.toSpliced(0, selectedPaths.value.length, dir)
   }
+}
+
+const getDirectoryCount = (key) => {
+  const directory = directories.value.find(matches({ key }))
+  if (directory) {
+    // If the directory is empty, we need to return the number of directories
+    // minus the number of the current directory.
+    return Math.max(0, directory.directories.value - (directoryIsEmpty.value[key] ?? 0))
+  }
+  return 0
 }
 
 const getBasename = (value) => {
@@ -263,9 +276,13 @@ const bodybuilderBase = ({ from = 0, size = 100 } = {}) => {
     body.andQuery('match', 'extractionLevel', 0)
   }
   return body
+    .andQuery('wildcard', 'dirname', {
+      value: wildcardQuery.value,
+      case_insensitive: true
+    })
     .andQuery('term', 'dirname.tree', props.path)
     .andQuery('match', 'type', 'Document')
-    .agg('terms', 'dirname.tree', aggregationOptions.value, 'dirname', (b) => {
+    .agg('terms', 'dirname.tree', dirnameTreeAggOptions.value, 'dirname', (b) => {
       return b
         .agg('sum', 'contentLength', 'size')
         .agg('bucket_sort', { size, from }, 'bucket_truncate')
@@ -275,6 +292,45 @@ const bodybuilderBase = ({ from = 0, size = 100 } = {}) => {
     .agg('cardinality', 'dirname', 'total_directories')
 }
 
+const directoryIsEmpty = ref({})
+
+// This function will check if the directories are empty or not
+// and will save the result in the directoryIsEmpty object. We need
+// to check if the directory is empty to adjust the directory count
+// in the tree view to not count the current directory when it doesn't
+// have any documents.
+const fetchEmptyDirectory = async (dirs = []) => {
+  if (!dirs.length) return
+
+  const index = props.projects.join(',')
+  const preference = 'tree-view-paths-count'
+  const body = bodybuilder()
+    .size(0)
+    .andQuery('match', 'type', 'Document')
+    .andQuery('match', 'extractionLevel', 0)
+    .rawOption('aggregations', {
+      doc_count_by_dirname: {
+        filters: {
+          filters: {
+            // This is a bit tricky, but we need to use the "dirname" field to
+            // filter the directories and not the "dirname.tree" field. Then we create
+            // a filter for each directory to check if it has documents or not.
+            ...dirs.reduce((acc, dirname) => {
+              const term = { dirname: normalizePath(dirname) }
+              return { ...acc, [dirname]: { term } }
+            }, {})
+          }
+        }
+      }
+    })
+    .build()
+
+  const res = await core.api.elasticsearch.search({ index, body, preference })
+  const buckets = get(res, 'aggregations.doc_count_by_dirname.buckets', {})
+  // Save a document count for each directory
+  Object.entries(buckets).forEach(([key, { doc_count: count }]) => (directoryIsEmpty.value[key] = !!count))
+}
+
 const loadData = async ({ clearPages = false } = {}) => {
   // Only load data if there are any projects
   if (props.projects.length) {
@@ -282,8 +338,15 @@ const loadData = async ({ clearPages = false } = {}) => {
     const from = clearPages ? 0 : offset.value
     const size = perPage
     const body = props.preBodyBuild(bodybuilderBase({ from, size })).build()
-    const preference = 'tree-view-paths'
-    const res = await core.api.elasticsearch.search({ index, body, preference, size: 0 })
+    const preference = 'tree-view-paths-terms'
+    const res = await core.api.elasticsearch.search({ index, body, preference })
+    // Count the number of direct child documents per directory
+    const dirs = res.aggregations.dirname.buckets.map(property('key'))
+    // We need to fetch the empty directories to adjust the
+    // directory count in the tree view. Unfortunely, this cannot
+    // be done in the same request as the aggregation because
+    // we need the list of directories to check if they are empty or not.
+    await fetchEmptyDirectory(dirs)
     // Clear the list of pages (to start over!)
     if (clearPages) await clearPagesAndLoadTree()
     // Add the result as a page
@@ -337,7 +400,9 @@ const clearPages = () => {
 
 const loadTree = async () => {
   try {
-    tree.value = await core.api.tree(props.path)
+    if (shouldLoadTree.value) {
+      tree.value = await core.api.tree(props.path)
+    }
   } catch {
     tree.value = { contents: [] }
   }
@@ -357,9 +422,7 @@ const shouldLoadTree = computed(() => {
 
 const clearPagesAndLoadTree = async () => {
   clearPages()
-  if (shouldLoadTree.value) {
-    await loadTree()
-  }
+  await loadTree()
 }
 
 const totalDocuments = computed(() => {
@@ -415,7 +478,7 @@ defineExpose({ loadData, loadDataWithSpinner, reloadData, reloadDataWithSpinner,
           :path="directory.key"
           :projects="projects"
           :documents="directory.doc_count"
-          :directories="Math.max(0, directory.directories.value - 1)"
+          :directories="getDirectoryCount(directory.key)"
           :size="directory.size.value"
           :selected="isSelectedDirectory(directory.key)"
           :collapse="isCollapsedDirectory(directory.key)"
