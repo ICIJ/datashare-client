@@ -508,6 +508,8 @@ defineExpose({ loadData, loadDataWithSpinner, reloadData, reloadDataWithSpinner,
               :pre-body-build="preBodyBuild"
               :sort-by="sortBy"
               :order-by="orderBy"
+              :elasticsearch-only="elasticsearchOnly"
+              :include-children-documents="includeChildrenDocuments"
             />
           </template>
         </path-tree-view-entry>
