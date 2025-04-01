@@ -54,6 +54,9 @@ defineProps({
     type: String,
     default: SIZE.MD,
     validator: breakpointSizeValidator
+  },
+  headerCloseClass: {
+    type: [String, Array, Object]
   }
 })
 </script>
@@ -62,7 +65,14 @@ defineProps({
   <b-modal :button-size="buttonSize" :model-value="modelValue" :size="size" :title="title" class="app-modal">
     <template #header="{ cancel, close, hide, ok, visible }">
       <slot name="header" v-bind="{ cancel, close, hide, ok, visible }">
-        <app-modal-header :image="image" :image-alt="imageAlt" :image-width="imageWidth" :title="title" @close="close">
+        <app-modal-header
+          :image="image"
+          :image-alt="imageAlt"
+          :image-width="imageWidth"
+          :title="title"
+          :header-close-class="headerCloseClass"
+          @close="close"
+        >
           <template #close>
             <slot name="header-close" />
           </template>
