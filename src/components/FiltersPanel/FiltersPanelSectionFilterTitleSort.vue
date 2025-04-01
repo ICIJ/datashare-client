@@ -69,7 +69,6 @@ const isOptionActive = ({ sortBy, orderBy }) => {
 .filters-panel-section-filter-title-sort {
   &:deep(.dropdown-toggle) {
     padding: 0 $spacer-xs;
-    margin-right: $spacer-xs;
     line-height: 1;
     display: inline-flex;
     align-items: center;
