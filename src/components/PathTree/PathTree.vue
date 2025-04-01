@@ -107,36 +107,30 @@ const directoriesRefs = reactive({})
 const tree = ref({ contents: [] })
 const perPage = 50
 
-const isCollapsedDirectory = (directory) => {
-  return !openPaths.value.includes(directory)
-}
-
-const collapseDirectory = (directory) => {
-  if (isCollapsedDirectory(directory)) {
-    openPaths.value = [...openPaths.value, directory]
-  } else {
-    openPaths.value = openPaths.value.toSpliced(openPaths.value.indexOf(directory), 1)
-  }
-}
-
 const lastPage = computed(() => {
   return pages.value[pages.value.length - 1] || {}
 })
+
 const lastPageDirectories = computed(() => {
   return get(lastPage.value, 'aggregations.dirname.buckets', [])
 })
+
 const offset = computed(() => {
   return directories.value.length || 0
 })
+
 const nextOffset = computed(() => {
   return offset.value + perPage
 })
+
 const page = computed(() => {
   return Math.floor(offset.value / perPage)
 })
+
 const order = computed(() => {
   return { [props.sortBy]: props.orderBy }
 })
+
 const hasQuery = computed(() => {
   return query.value && trim(query.value)
 })
@@ -145,10 +139,6 @@ watch(query, () => loadDataWithSpinner({ clearPages: true }))
 watch(order, () => loadDataWithSpinner({ clearPages: true }))
 watch(toRef(props, 'path'), () => loadDataWithSpinner({ clearPages: true }))
 watch(toRef(props, 'projects'), () => loadDataWithSpinner({ clearPages: true, deep: true }))
-
-const normalizePath = (path) => {
-  return usesWindowsSeparator.value ? path.split('\\').join('\\\\') : path
-}
 
 const dirnameTreeAggOptions = computed(() => {
   return {
@@ -176,15 +166,11 @@ const wildcardQuery = computed(() => {
 })
 
 const wildcardPath = computed(() => {
-  return [normalizePath(props.path), '*'].join(pathSeparator.value)
+  return [props.path, '*'].join(pathSeparator.value)
 })
 
 const wildcardSubPath = computed(() => {
-  return [normalizePath(wildcardPath.value), '*'].join(pathSeparator.value)
-})
-
-const usesWindowsSeparator = computed(() => {
-  return pathSeparator.value === '\\'
+  return [props.path, '*', '*'].join(pathSeparator.value)
 })
 
 const includeOption = computed(() => {
@@ -223,6 +209,18 @@ const directories = computed(() => {
   const allDirectories = uniqBy([...buckets, ...treeAsPagesBuckets.value], 'key')
   return props.hideEmpty ? allDirectories.filter((dir) => dir.doc_count > 0) : allDirectories
 })
+
+const isCollapsedDirectory = (key) => {
+  return !openPaths.value.includes(key)
+}
+
+const collapseDirectory = (key) => {
+  if (isCollapsedDirectory(key)) {
+    openPaths.value = [...openPaths.value, key]
+  } else {
+    openPaths.value = openPaths.value.toSpliced(openPaths.value.indexOf(key), 1)
+  }
+}
 
 const toDirectory = (path) => {
   return trimEnd(path, pathSeparator.value) + pathSeparator.value
@@ -310,7 +308,7 @@ const fetchEmptyDirectory = async (dirs = []) => {
             // filter the directories and not the "dirname.tree" field. Then we create
             // a filter for each directory to check if it has documents or not.
             ...dirs.reduce((acc, dirname) => {
-              const term = { dirname: normalizePath(dirname) }
+              const term = { dirname }
               return { ...acc, [dirname]: { term } }
             }, {})
           }
