@@ -39,7 +39,7 @@ const classList = computed(() => {
 </script>
 
 <template>
-  <h3 class="filters-panel-section-filter-title" :class="classList">
+  <h3 class="filters-panel-section-filter-title gap-1" :class="classList">
     <slot>
       <span
         v-ellipsis-tooltip="{ title, placement: 'right' }"
