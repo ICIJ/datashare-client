@@ -38,7 +38,7 @@ const classList = computed(() => {
 
 <template>
   <div class="filters-panel-section-filter-actions" :class="classList">
-    <span class="d-flex">
+    <span class="d-flex gap-2">
       <b-form-checkbox v-if="!hideContextualize" v-model="contextualize">Contextualize</b-form-checkbox>
       <b-form-checkbox v-if="!hideExclude" v-model="exclude">Exclude</b-form-checkbox>
     </span>
@@ -61,6 +61,7 @@ const classList = computed(() => {
   justify-content: space-between;
   align-items: center;
   overflow: auto;
+
   &--empty {
     display: none;
   }
@@ -78,7 +79,6 @@ const classList = computed(() => {
     display: flex;
     align-items: center;
     min-width: 0;
-    margin-right: $spacer-xs;
   }
 
   &:deep(.form-check-input) {
