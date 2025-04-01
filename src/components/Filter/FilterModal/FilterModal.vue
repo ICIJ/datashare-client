@@ -31,6 +31,7 @@ const hasExpandModal = computed(() => !modal && !filter.hideExpand)
     lazy
     size="lg"
     no-footer
+    header-close-class="d-none"
     title-class="flex-grow-1"
     body-class="py-0"
   >
