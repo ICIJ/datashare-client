@@ -7,7 +7,7 @@
       'search-bar__field--disabled': disabled
     }"
     :disabled="disabled"
-    :end="end"
+    placement="bottom-end"
     no-caret
     class="search-bar-input-dropdown"
     menu-class="search-bar-input-dropdown__menu"
@@ -92,12 +92,6 @@ export default {
      * The dropdown toggler must be disabled.
      */
     disabled: {
-      type: Boolean
-    },
-    /**
-     * Align dropdown to the end
-     */
-    end: {
       type: Boolean
     },
     /**
