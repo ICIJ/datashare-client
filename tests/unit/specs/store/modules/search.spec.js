@@ -971,7 +971,7 @@ describe('SearchStore', () => {
       expect(typeof filter).toBe('object')
       expect(filter.key).toBe('byMentions')
       expect(filter.category).toBe('PERSON')
-      expect(filter.constructor.name).toBe('FilterNamedEntity')
+      expect(filter.constructor.name).toBe('FilterEntity')
     })
 
     it('should aggregate only the not hidden named entities for PERSON category', async () => {

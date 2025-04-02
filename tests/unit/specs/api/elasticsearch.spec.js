@@ -4,7 +4,7 @@ import { setActivePinia, createPinia } from 'pinia'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import { elasticsearch } from '@/api/elasticsearch'
-import { FilterText, FilterNamedEntity } from '@/store/filters'
+import { FilterText, FilterEntity } from '@/store/filters'
 import { EventBus } from '@/utils/eventBus'
 
 describe('elasticsearch', () => {
@@ -158,7 +158,7 @@ describe('elasticsearch', () => {
       .have(new IndexedDocument('document_03', index).withContent('this is another document').withNer('another'))
       .commit()
 
-    const filter = new FilterNamedEntity({ name: 'namedEntityPerson', key: 'byMentions', category: 'PERSON' })
+    const filter = new FilterEntity({ name: 'namedEntityPerson', key: 'byMentions', category: 'PERSON' })
     const response = await elasticsearch.searchFilter(index, filter, 'document')
 
     expect(response.aggregations.byMentions.buckets).toHaveLength(1)
