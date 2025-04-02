@@ -1,5 +1,5 @@
 import { computed } from 'vue'
-import { castArray, compact, map, omit, orderBy, unset } from 'lodash'
+import { castArray, compact, map, omit, orderBy, trimStart, unset } from 'lodash'
 import lucene from 'lucene'
 
 import { useSearchFilter } from '@/composables/useSearchFilter'
@@ -75,7 +75,7 @@ export function useSearchBreadcrumb() {
     if (filter === 'project') {
       removeIndex(value)
     } else if (filter) {
-      removeFilterValue(filter, value)
+      removeFilterValue(trimStart(filter, '-'), value)
     }
 
     return refreshRoute()
