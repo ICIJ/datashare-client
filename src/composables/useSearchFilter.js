@@ -47,8 +47,7 @@ export function useSearchFilter() {
     } else if (te('filter.' + label)) {
       return t('filter.' + label)
     }
-
-    return last(String(label).split('.'))
+    return label
   }
 
   function castFilter(filterRef) {
