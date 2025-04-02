@@ -11,7 +11,7 @@ export const namedEntityCategoryTranslation = {
   namedEntityEmail: ENTITY_CATEGORY.EMAIL
 }
 
-export default class FilterNamedEntity extends FilterType {
+export default class FilterEntity extends FilterType {
   constructor(options) {
     super(options)
     this.category = (options.category || ENTITY_CATEGORY.PERSON).toUpperCase()

@@ -27,7 +27,7 @@ describe('FiltersMixin', () => {
 
   it('register an email mixin', () => {
     core.registerFilter({
-      type: 'FilterNamedEntity',
+      type: 'FilterEntity',
       options: {
         order: 65,
         name: 'namedEntityEmail',
@@ -46,7 +46,7 @@ describe('FiltersMixin', () => {
     return new Promise((resolve) => {
       const ready = ({ detail }) => {
         detail.core.registerFilter({
-          type: 'FilterNamedEntity',
+          type: 'FilterEntity',
           options: {
             order: 65,
             name: 'namedEntityEmail',

@@ -1,12 +1,12 @@
 import { MODE_NAME } from '@/mode/index'
-import { namedEntityCategoryTranslation } from '@/store/filters/FilterNamedEntity'
+import { namedEntityCategoryTranslation } from '@/store/filters/FilterEntity'
 
 export { default as FilterContentType } from './FilterContentType'
 export { default as FilterDate } from './FilterDate'
 export { default as FilterDateRange } from './FilterDateRange'
 export { default as FilterExtractionLevel } from './FilterExtractionLevel'
 export { default as FilterLanguage } from './FilterLanguage'
-export { default as FilterNamedEntity } from './FilterNamedEntity'
+export { default as FilterEntity } from './FilterEntity'
 export { default as FilterProject } from './FilterProject'
 export { default as FilterPath } from './FilterPath'
 export { default as FilterRecommendedBy } from './FilterRecommendedBy'
@@ -131,7 +131,7 @@ export default [
     }
   },
   {
-    type: 'FilterNamedEntity',
+    type: 'FilterEntity',
     options: {
       name: 'namedEntityPerson',
       key: 'byMentions',
@@ -144,7 +144,7 @@ export default [
     }
   },
   {
-    type: 'FilterNamedEntity',
+    type: 'FilterEntity',
     options: {
       name: 'namedEntityOrganization',
       key: 'byMentions',
@@ -157,7 +157,7 @@ export default [
     }
   },
   {
-    type: 'FilterNamedEntity',
+    type: 'FilterEntity',
     options: {
       name: 'namedEntityLocation',
       key: 'byMentions',
