@@ -382,7 +382,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   }
 
   function excludeFilter(name) {
-    if (excludeFilters.value.includes(name)) {
+    if (!isFilterExcluded(name)) {
       excludeFilters.value.push(name)
     }
   }
@@ -394,8 +394,11 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     }
   }
 
-  function toggleFilter(name) {
-    return isFilterExcluded(name) ? includeFilter(name) : excludeFilter(name)
+  function toggleFilter(name, toggler = null) {
+    if (toggler ?? !isFilterExcluded(name)) {
+      return excludeFilter(name)
+    }
+    return includeFilter(name)
   }
 
   async function refresh() {
