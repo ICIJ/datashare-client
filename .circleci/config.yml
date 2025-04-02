@@ -72,7 +72,7 @@ jobs:
         environment:
           # This is required to run the tests
           NODE_OPTIONS: --max_old_space_size=4096
-      - image: docker.elastic.co/elasticsearch/elasticsearch:7.9.1
+      - image: docker.elastic.co/elasticsearch/elasticsearch:7.17.7
         environment:
           ES_JAVA_OPTS: -Xms256m -Xmx256m
           discovery.type: single-node
