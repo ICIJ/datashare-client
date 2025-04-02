@@ -121,7 +121,8 @@ const showOperator = computed(() => {
     text-transform: uppercase;
   }
 
-  &--negative &__value {
+  &--negative &__value,
+  &--negative &__value > * {
     text-decoration: line-through;
   }
 
