@@ -5,6 +5,7 @@
     class="project-dropdown-selector"
     :multiple="multiple"
     flush-items
+    end
     :class="{
       'project-dropdown-selector--multiple': hasMultipleProjects
     }"
