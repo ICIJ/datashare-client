@@ -37,19 +37,6 @@ export function datasharePlugin(Client) {
     )
   }
 
-  Client.prototype.getDocumentNamedEntities = async function (index, docId, routing = null, from = 0, size = 200) {
-    const body = bodybuilder()
-      .size(size)
-      .from(from)
-      .query('parent_id', {
-        type: 'NamedEntity',
-        id: docId
-      })
-      .filter('term', 'isHidden', 'false')
-      .build()
-    return this._search({ index, routing, body })
-  }
-
   Client.prototype.countDocuments = async function (index) {
     const query = 'type:Document'
     const body = { query: { query_string: { query } } }
