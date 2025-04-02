@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, reactive, onBeforeMount, watch } from 'vue'
+import { computed, nextTick, ref, reactive, onBeforeMount, watch } from 'vue'
 import { concat, compact, escapeRegExp, flatten, get, noop, uniqueId, setWith } from 'lodash'
 import InfiniteLoading from 'v3-infinite-loading'
 
@@ -194,15 +194,18 @@ const count = computed(() => filter.values.length)
 const offset = computed(() => buckets.value?.length ?? 0)
 const size = computed(() => settings.filter.bucketSize)
 
-const update = () => {
-  /**
-   * Triggered when a filter must be updated
-   */
-  emit('update', filter)
-  // We must aggregate the data only if the filter is visible (not collapsed) to
-  // avoid unnecessary requests.
-  return aggregateIfVisible()
-}
+const debouncedCollapse = computed({
+  get: () => collapse.value,
+  set: async (value) => {
+    if (value) {
+      collapse.value = true
+    } else {
+      await aggregateOverWithLoading()
+      await nextTick()
+      collapse.value = false
+    }
+  }
+})
 
 onBeforeMount(async () => {
   // Show the filter by default if it has a value
@@ -210,20 +213,20 @@ onBeforeMount(async () => {
   // Only load data on mount if the filter is visible (not collapsed)
   await aggregateIfVisible()
   // Collapsing/Expanding the filter will trigger an update of the data
-  watch(collapse, update)
+  watch(collapse, aggregateIfVisible)
   // Query value (in the search field) that trigger an update of the data
-  watch(query, update)
+  watch(query, aggregateIfVisible)
   // General values that might trigger an update of the data
-  watchIndices(update)
+  watchIndices(aggregateIfVisible)
   // Filter values that trigger an update of the data
-  watchFilterSort(filter, update)
-  watchFilterContextualized(filter, update)
+  watchFilterSort(filter, aggregateIfVisible)
+  watchFilterContextualized(filter, aggregateIfVisible)
   // Filter values that trigger an update of the data only if the filter is contextualized
-  watchFilterValues(filter, whenFilterContextualized(filter, update))
-  watchFilterExcluded(filter, whenFilterContextualized(filter, update))
+  watchFilterValues(filter, whenFilterContextualized(filter, aggregateIfVisible))
+  watchFilterExcluded(filter, whenFilterContextualized(filter, aggregateIfVisible))
   // Values from all filters that trigger an update of the data only if the filter is contextualized
-  watchValues(whenFilterContextualized(filter, update))
-  watchQuery(whenFilterContextualized(filter, update))
+  watchValues(whenFilterContextualized(filter, aggregateIfVisible))
+  watchQuery(whenFilterContextualized(filter, aggregateIfVisible))
 })
 </script>
 
@@ -231,7 +234,7 @@ onBeforeMount(async () => {
   <filters-panel-section-filter
     v-model:exclude="exclude"
     v-model:contextualize="contextualize"
-    v-model:collapse="collapse"
+    v-model:collapse="debouncedCollapse"
     v-model:search="query"
     v-model:sort="sort"
     v-model:expand="expand"
