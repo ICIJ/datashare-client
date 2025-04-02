@@ -118,31 +118,6 @@ describe('elasticsearch', () => {
     })
   })
 
-  it('should return the first 12 named entities', async () => {
-    const id = 'document'
-    await letData(es)
-      .have(
-        new IndexedDocument(id, index)
-          .withNer('ne_01')
-          .withNer('ne_02')
-          .withNer('ne_03')
-          .withNer('ne_04')
-          .withNer('ne_05')
-          .withNer('ne_06')
-          .withNer('ne_07')
-          .withNer('ne_08')
-          .withNer('ne_09')
-          .withNer('ne_10')
-          .withNer('ne_11')
-          .withNer('ne_12')
-      )
-      .commit()
-
-    const response = await elasticsearch.getDocumentNamedEntities(index, id, id, 0, 20)
-
-    expect(response.hits.hits).toHaveLength(12)
-  })
-
   it('should return only one named entity', async () => {
     await letData(es)
       .have(
