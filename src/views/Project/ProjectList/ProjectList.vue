@@ -15,7 +15,7 @@ import { useWait } from '@/composables/useWait'
 import { useAppStore } from '@/store/modules'
 import useMode from '@/composables/useMode'
 
-const { core } = useCore()
+const { core, toast } = useCore()
 const { isServer } = useMode()
 const { wait, isLoading } = useWait()
 const appStore = useAppStore()
@@ -55,8 +55,12 @@ const fetchMaxExtractionDateByProject = async () => {
 }
 
 const fetch = wait(async () => {
-  await fetchDocumentsCountByProject()
-  await fetchMaxExtractionDateByProject()
+  try {
+    await fetchDocumentsCountByProject()
+    await fetchMaxExtractionDateByProject()
+  } catch {
+    toast.error('Unable to fetch projects details.')
+  }
 })
 
 onBeforeMount(fetch)
