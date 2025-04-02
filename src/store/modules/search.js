@@ -307,15 +307,11 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   }
 
   function isFilterContextualized(name) {
-    return !!instantiatedFilters.value.find((filter) => {
-      return filter.name === name && filter.contextualized
-    })
+    return contextualizeFilters.value.includes(name)
   }
 
   function isFilterExcluded(name) {
-    return !!find(instantiatedFilters.value, (filter) => {
-      return filter.name === name && filter.excluded
-    })
+    return excludeFilters.value.includes(name)
   }
 
   function filterSortedBy(name) {
@@ -377,7 +373,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   }
 
   function contextualizeFilter(name) {
-    if (contextualizeFilters.value.indexOf(name) === -1) {
+    if (contextualizeFilters.value.includes(name)) {
       contextualizeFilters.value.push(name)
     }
   }
@@ -388,7 +384,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   }
 
   function excludeFilter(name) {
-    if (excludeFilters.value.indexOf(name) === -1) {
+    if (excludeFilters.value.includes(name)) {
       excludeFilters.value.push(name)
     }
   }
