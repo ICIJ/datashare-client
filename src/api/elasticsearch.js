@@ -71,6 +71,15 @@ export function datasharePlugin(Client) {
         type: 'NamedEntity',
         id: docId
       })
+      .rawOption('runtime_mappings', {
+        frequency: {
+          type: 'long',
+          script: {
+            source: 'emit(doc.offsets.length)'
+          }
+        }
+      })
+      .sort([{ frequency: 'desc' }, { mentionNorm: 'asc' }])
       .addQuery('bool', (bool) => {
         if (filterToken) {
           const fields = ['mentionNorm', 'mention']
