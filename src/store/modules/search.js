@@ -216,7 +216,6 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     isReady.value = true
     q.value = ''
     excludeFilters.value = []
-    sortFilters.value = {}
     values.value = {}
   }
 
