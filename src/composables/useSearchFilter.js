@@ -235,10 +235,7 @@ export function useSearchFilter() {
   }
 
   function toggleExcludeFilter({ name }, checked) {
-    if (checked) {
-      return searchStore.excludeFilter(name)
-    }
-    return searchStore.includeFilter(name)
+    return searchStore.toggleFilter(name, checked)
   }
 
   function isFilterExcluded({ name }) {
