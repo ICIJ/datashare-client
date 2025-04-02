@@ -1,6 +1,5 @@
 <script setup>
 import { computed, watch } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router'
 
 import AppSidebarFooter from './AppSidebarFooter'
@@ -25,7 +24,6 @@ const appStore = useAppStore()
 const { searchRoute } = useSearchNav()
 const { isServer } = useMode()
 const { breakpointDown } = useBreakpoints()
-const { t } = useI18n()
 
 const projects = computed(() => {
   return core.projects
@@ -112,7 +110,7 @@ onBeforeRouteLeave(autoClose)
       </div>
       <div class="py-4 d-flex flex-column gap-3">
         <app-sidebar-section
-          :title="t('appSidebar.projects')"
+          :title="$t('appSidebar.projects')"
           :icon="PhCirclesThreePlus"
           :to="{ name: 'project.list' }"
           :compact="compact"
@@ -124,7 +122,7 @@ onBeforeRouteLeave(autoClose)
             :action-to="addToProject"
             :action-title="$t('projectNew.title')"
           >
-            {{ t('appSidebar.allProjects') }}
+            {{ $t('appSidebar.allProjects') }}
           </app-sidebar-section-entry>
           <app-sidebar-section-entry
             v-for="project in pinnedProjects"
@@ -137,52 +135,52 @@ onBeforeRouteLeave(autoClose)
         </app-sidebar-section>
         <app-sidebar-section title="Search" :icon="PhMagnifyingGlass" :to="searchRoute" :compact="compact">
           <app-sidebar-section-entry :icon="PhFileMagnifyingGlass" :to="searchRoute" exact-match>
-            {{ t('appSidebar.search') }}
+            {{ $t('appSidebar.search') }}
           </app-sidebar-section-entry>
           <app-sidebar-section-entry :icon="PhClockCounterClockwise" :to="{ name: 'search.history.list' }">
-            {{ t('appSidebar.history') }}
+            {{ $t('appSidebar.history') }}
           </app-sidebar-section-entry>
           <app-sidebar-section-entry :icon="PhListChecks" :to="{ name: 'search.saved.list' }">
-            {{ t('appSidebar.savedSearches') }}
+            {{ $t('appSidebar.savedSearches') }}
           </app-sidebar-section-entry>
         </app-sidebar-section>
         <app-sidebar-section
-          :title="t('task.title')"
+          :title="$t('task.title')"
           :icon="PhRocketLaunch"
           :to="{ name: 'task.task-board' }"
           :compact="compact"
         >
           <app-sidebar-section-entry :icon="PhDotsNine" :to="{ name: 'task.task-board' }">
-            {{ t('task.task-board.title') }}
+            {{ $t('task.task-board.title') }}
           </app-sidebar-section-entry>
           <app-sidebar-section-entry
             :icon="PhListMagnifyingGlass"
             :to="{ name: 'task.batch-search.list' }"
             :action-to="{ name: 'task.batch-search.new' }"
-            :action-title="t('task.batch-search.new.title')"
+            :action-title="$t('task.batch-search.new.title')"
           >
-            {{ t('task.batch-search.title') }}
+            {{ $t('task.batch-search.title') }}
           </app-sidebar-section-entry>
           <app-sidebar-section-entry :icon="PhDownloadSimple" :to="{ name: 'task.batch-download.list' }">
-            {{ t('task.batch-download.title') }}
+            {{ $t('task.batch-download.title') }}
           </app-sidebar-section-entry>
           <app-sidebar-section-entry
             v-if="!noAnalysis"
             :icon="PhFiles"
             :to="{ name: 'task.documents.list' }"
             :action-to="{ name: 'task.documents.new' }"
-            :action-title="t('task.documents.new.title')"
+            :action-title="$t('task.documents.new.title')"
           >
-            {{ t('task.documents.title') }}
+            {{ $t('task.documents.title') }}
           </app-sidebar-section-entry>
           <app-sidebar-section-entry
             v-if="!noAnalysis"
             :icon="PhUsersThree"
             :to="{ name: 'task.entities.list' }"
             :action-to="{ name: 'task.entities.new' }"
-            :action-title="t('task.entities.new.title')"
+            :action-title="$t('task.entities.new.title')"
           >
-            {{ t('task.entities.title') }}
+            {{ $t('task.entities.title') }}
           </app-sidebar-section-entry>
         </app-sidebar-section>
       </div>
