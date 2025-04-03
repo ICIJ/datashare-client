@@ -1,4 +1,6 @@
 <script setup>
+import { useTemplateRef } from 'vue'
+
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 
 const modelValue = defineModel({ type: String, default: '' })
@@ -8,10 +10,19 @@ defineProps({
     type: Boolean
   }
 })
+
+const input = useTemplateRef('input')
+
+defineExpose({
+  focus: () => {
+    input.value.focus()
+  }
+})
 </script>
 
 <template>
   <form-control-search
+    ref="input"
     v-model="modelValue"
     :loading="loading"
     class="document-local-search-input"
