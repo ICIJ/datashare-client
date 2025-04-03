@@ -21,7 +21,7 @@
       </div>
     </div>
     <div class="widget__content">
-      <v-wait :for="loader">
+      <app-wait :for="loaderId">
         <template #waiting>
           <div class="widget__content_spinner text-secondary text-center p-5">
             <app-spinner size="2em" />
@@ -60,16 +60,18 @@
             {{ $t('widget.creationDate.missing', missings, { total: $n(missings) }) }}
           </p>
         </div>
-      </v-wait>
+      </app-wait>
     </div>
   </div>
 </template>
 
 <script>
 import bodybuilder from 'bodybuilder'
-import { clamp, get, uniqueId } from 'lodash'
+import { clamp, get } from 'lodash'
 import * as d3 from 'd3'
 
+import { useWait } from '@/composables/useWait'
+import AppWait from '@/components/AppWait/AppWait'
 import AppSpinner from '@/components/AppSpinner/AppSpinner'
 import ColumnChartPicker from '@/components/ColumnChartPicker'
 import FilterDate from '@/store/filters/FilterDate'
@@ -81,6 +83,7 @@ export default {
   name: 'WidgetDocumentsByCreationDate',
   components: {
     AppSpinner,
+    AppWait,
     ColumnChartPicker
   },
   props: {
@@ -104,6 +107,9 @@ export default {
       type: String,
       required: true
     }
+  },
+  setup() {
+    return { wait: useWait() }
   },
   data() {
     return {
@@ -215,8 +221,8 @@ export default {
     selectedPathTokens() {
       return this.selectedPath !== this.dataDir ? [this.selectedPath] : []
     },
-    loader() {
-      return uniqueId('loading-creation-date-buckets')
+    loaderId() {
+      return this.wait.loaderId
     },
     cleanData() {
       return this.data.filter(this.isBucketValid).map((bucket) => {
@@ -298,12 +304,12 @@ export default {
         )
     },
     async loadData() {
-      this.$wait.start(this.loader)
+      this.wait.start(this.loaderId)
       const body = this.bodybuilderBase().build()
       const preference = 'widget-documents-by-creation-date'
       const res = await this.$core.api.elasticsearch.search({ index: this.project, size: 0, body, preference })
       this.data = get(res, 'aggregations.agg_by_creation_date.buckets', [])
-      this.$wait.end(this.loader)
+      this.wait.end(this.loaderId)
     },
     setSelectedPath(path) {
       this.mounted = false
