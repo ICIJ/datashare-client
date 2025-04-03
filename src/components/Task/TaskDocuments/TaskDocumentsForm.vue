@@ -2,9 +2,9 @@
 import { ref, computed, onMounted, reactive, watch, toRef } from 'vue'
 import { castArray } from 'lodash'
 import { useI18n } from 'vue-i18n'
-import uniqueId from 'lodash/uniqueId'
 
 import { useCore } from '@/composables/useCore'
+import { useWait } from '@/composables/useWait'
 import FormCreation from '@/components/Form/FormCreation'
 import FormControlExtractingLanguage from '@/components/Form/FormControl/FormControlExtractingLanguage'
 import FormControlPath from '@/components/Form/FormControl/FormControlPath'
@@ -21,7 +21,8 @@ const props = defineProps({
   }
 })
 
-const { toastedPromise, core, wait } = useCore()
+const { toastedPromise, core } = useCore()
+const { waitFor, isLoading } = useWait()
 const { t } = useI18n()
 
 const submitLabel = computed(() => t(`task.documents.form.submit`))
@@ -89,13 +90,9 @@ async function submit() {
   await core.router.push({ name: 'task.documents.list' })
 }
 
-const showOcrMessage = computed(() => {
-  return !hasTesseract.value || !!extractOcr.value
-})
+const isReady = computed(() => !isLoading.value)
 
-const waitOcrIdentifier = uniqueId('documents-form-extract-ocr-control-')
-
-const isReady = computed(() => !wait.is(waitOcrIdentifier))
+const showOcrMessage = computed(() => !hasTesseract.value || !!extractOcr.value)
 
 const ocrOptions = computed(() => [
   { text: t('task.documents.form.extractOcr.options.yes'), value: true },
@@ -120,13 +117,11 @@ async function retrieveLanguages() {
   }
 }
 
-async function loadLanguages() {
-  wait.start(waitOcrIdentifier)
-  await toastedPromise(retrieveLanguages(), {
+const loadLanguages = waitFor(() => {
+  return toastedPromise(retrieveLanguages(), {
     errorMessage: t('formControlExtractingLanguage.failedToRetrieveLanguages')
   })
-  wait.end(waitOcrIdentifier)
-}
+})
 
 onMounted(loadLanguages)
 watch(toRef(props, 'project'), () => (selectedProject.value = currentProject.value))
