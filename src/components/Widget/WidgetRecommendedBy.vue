@@ -4,7 +4,7 @@
       <phosphor-icon :name="PhUsersThree" class="me-2" size="2em" />
       <h3 class="m-0 p-0 widget__header__title">{{ $t('widget.recommendedBy.title') }}</h3>
     </div>
-    <v-wait :for="loaderId" transition="fade">
+    <app-wait :for="loaderId" transition="fade">
       <template #waiting>
         <div class="widget__spinner text-center p-4">
           <phosphor-icon :name="PhCircleNotch" spin size="2em" />
@@ -35,7 +35,7 @@
           <span v-else>{{ $t('widget.noRecommendations') }}</span>
         </div>
       </div>
-    </v-wait>
+    </app-wait>
   </div>
 </template>
 
@@ -49,6 +49,7 @@ import { PhosphorIcon } from '@icij/murmur-next'
 import { useCore } from '@/composables/useCore'
 import { useWait } from '@/composables/useWait'
 import EsDocList from '@/api/resources/EsDocList'
+import AppWait from '@/components/AppWait/AppWait'
 import DocumentCard from '@/components/Document/DocumentCard/DocumentCard'
 import DisplayUser from '@/components/Display/DisplayUser'
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
@@ -71,7 +72,7 @@ const props = defineProps({
 const pages = ref([])
 const hits = ref([])
 const { core } = useCore()
-const { wait, loaderId } = useWait()
+const { waitFor, loaderId } = useWait()
 const infiniteScrollId = uniqueId('infinite-scroll-')
 
 const items = computed(() => flatten(pages.value).map(recordToItem))
@@ -98,7 +99,7 @@ async function loadPage() {
   hits.value.push(pageHits)
 }
 
-const loadPageWithLoader = wait(loadPage)
+const loadPageWithLoader = waitFor(loadPage)
 
 async function loadNextPage($infiniteLoadingState) {
   await loadPage()
