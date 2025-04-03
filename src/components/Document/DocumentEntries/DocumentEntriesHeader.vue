@@ -117,7 +117,6 @@ watch(toRef(props, 'total'), (total) => (selectMode.value = selectMode.value && 
   height: calc(2.875rem + #{$spacer * 2});
 
   &--compact {
-    flex-direction: row-reverse;
     justify-content: space-between;
   }
 
