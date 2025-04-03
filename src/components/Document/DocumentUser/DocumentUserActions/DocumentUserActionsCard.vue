@@ -56,7 +56,13 @@ defineProps({
 </script>
 
 <template>
-  <card-panel v-model="modelValue" :title="title" :icon="icon" :icon-weight="iconWeight">
+  <card-panel
+    v-model="modelValue"
+    :title="title"
+    :icon="icon"
+    :icon-weight="iconWeight"
+    class="document-user-actions-card"
+  >
     <header v-if="actionStart">
       <document-user-actions-card-info v-if="showWarning">
         <slot name="action-warning" />
