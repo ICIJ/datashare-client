@@ -100,7 +100,7 @@ const props = defineProps({
 })
 
 const { core } = useCore()
-const { wait, isLoading } = useWait()
+const { waitFor, isLoading } = useWait()
 
 const pages = ref([])
 const directoriesRefs = reactive({})
@@ -350,7 +350,7 @@ const loadData = async ({ clearPages = false } = {}) => {
   }
 }
 
-const loadDataWithSpinner = wait(async (...args) => {
+const loadDataWithSpinner = waitFor(async (...args) => {
   await loadData(...args)
 })
 
