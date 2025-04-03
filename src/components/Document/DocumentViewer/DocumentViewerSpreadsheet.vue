@@ -19,7 +19,6 @@
         >
           <div class="input-group justify-content-end">
             <input
-              v-shortkey.focus="getShortcut"
               type="search"
               class="form-control"
               :placeholder="$t('document.spreadsheet.findInSpreadsheet')"
@@ -84,7 +83,6 @@ import { DynamicScroller, DynamicScrollerItem } from 'vue-virtual-scroller'
 
 import { useWait } from '@/composables/useWait'
 import AppWait from '@/components/AppWait/AppWait'
-import { getShortkeyOS } from '@/utils/utils'
 
 /**
  * Display a spreadsheet preview of a document
@@ -184,13 +182,6 @@ export default {
       const keys = range(this.firstItem.length).map(String)
       const options = { distance: 100, keys, shouldSort: true, threshold: 0.1 }
       return new Fuse(this.items, options)
-    },
-    getShortcut() {
-      if (getShortkeyOS() === 'mac') {
-        return ['meta', 'f']
-      } else {
-        return ['ctrl', 'f']
-      }
     }
   },
   async mounted() {
