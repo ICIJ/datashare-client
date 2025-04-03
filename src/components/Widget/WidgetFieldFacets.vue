@@ -4,7 +4,7 @@
       <phosphor-icon v-if="widget.icon" :name="widget.icon" class="me-2" size="2em" />
       <h3 class="m-0 p-0 h5" v-html="title"></h3>
     </div>
-    <v-wait :for="loader" transition="fade">
+    <app-wait :for="loaderId" transition="fade">
       <template #waiting>
         <div class="widget__spinner text-center p-4">
           <phosphor-icon :name="PhCircleNotch" spin size="2em" />
@@ -29,7 +29,7 @@
           <span v-else>{{ $t('widget.noData') }}</span>
         </div>
       </div>
-    </v-wait>
+    </app-wait>
   </div>
 </template>
 
@@ -41,12 +41,16 @@ import { PhosphorIcon } from '@icij/murmur-next'
 
 import WidgetFieldFacetsEntry from './WidgetFieldFacetsEntry'
 
+import { useWait } from '@/composables/useWait'
+import AppWait from '@/components/AppWait/AppWait'
+
 /**
  * Widget to display a list of facets on the insights page.
  */
 export default {
   name: 'WidgetListGroup',
   components: {
+    AppWait,
     InfiniteLoading,
     PhosphorIcon,
     WidgetFieldFacetsEntry
@@ -73,6 +77,9 @@ export default {
       type: Number,
       default: 50
     }
+  },
+  setup() {
+    return { wait: useWait() }
   },
   data() {
     return {
@@ -107,8 +114,8 @@ export default {
     titleTranslationKey() {
       return `widget.${camelCase(this.widget.title)}.title`
     },
-    loader() {
-      return uniqueId('loading-field-facets-')
+    loaderId() {
+      return this.wait.loaderId
     },
     offset() {
       return this.pages.length * this.bucketsSize
@@ -138,9 +145,9 @@ export default {
       await this.loadPageWithLoader()
     },
     async loadPageWithLoader() {
-      this.$wait.start(this.loader)
+      this.wait.start(this.loaderId)
       await this.loadPage()
-      this.$wait.end(this.loader)
+      this.wait.end(this.loaderId)
     },
     async loadPage() {
       const body = this.bodybuilderBase().build()
