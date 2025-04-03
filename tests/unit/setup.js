@@ -1,8 +1,8 @@
 import 'whatwg-fetch'
 
 // This is a temporary workaround to avoid the following console.log
-// that are printed during the tests by vue-wait and vue3-shortkey.
-const SILENCED_LOGS = ['installing...', 'doing fixed mapping']
+// that are printed during the tests by vue3-shortkey.
+const SILENCED_LOGS = ['installing...']
 // Save the original log method for later use
 const log = global.console.log
 
