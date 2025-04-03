@@ -303,7 +303,7 @@ const buttonProps = computed(() => ({
   --button-icon-square-size: calc(
     #{$btn-line-height * $btn-font-size} + #{$btn-padding-y * 2} + #{$btn-border-width} * 2
   );
-
+  flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   min-width: 0;
