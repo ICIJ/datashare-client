@@ -24,6 +24,7 @@ import { PhosphorIcon } from '@icij/murmur-next'
 import { flatten, get, sum } from 'lodash'
 
 import EsDocList from '@/api/resources/EsDocList'
+import { useWait } from '@/composables/useWait'
 
 /**
  * A list of attachments for a document (usually, it's child documents)
@@ -40,6 +41,9 @@ export default {
     document: {
       type: Object
     }
+  },
+  setup() {
+    return { wait: useWait() }
   },
   data() {
     return {
@@ -58,7 +62,7 @@ export default {
       return sum(this.pages.map((page) => page.hits.length))
     },
     isReady() {
-      return !this.$wait.is('document-attachement')
+      return !this.wait.waiting('document-attachement')
     },
     hasAttachments() {
       return !!this.attachments.length
@@ -69,12 +73,12 @@ export default {
   },
   methods: {
     async loadMore() {
-      this.$wait.start('document-attachement')
+      this.wait.start('document-attachement')
       const { index } = this.document
       const body = this.searchBody().build()
       const response = await this.$core.api.elasticsearch.search({ index, body })
       this.pages.push(new EsDocList(response))
-      this.$wait.end('document-attachement')
+      this.wait.end('document-attachement')
     },
     searchBody() {
       return bodybuilder()
