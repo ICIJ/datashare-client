@@ -1787,7 +1787,12 @@
     "count": "No selected documents | 1 selected document | {count} selected documents",
     "star": "Star",
     "unstar": "Unstar",
-    "tag": "Tag"
+    "tag": "Tag",
+    "successTag": "{nbTags} tags added to {nbDocs} documents."
+  },
+  "searchSelectionAddTagsModal": {
+    "title": "Tag selected document | Tag selected document | Tag {n} selected documents",
+    "description": "Add {n} tag to selected documents ?  | Add {n} tags to selected documents ?"
   },
   "documentCarousel": {
     "next": "Next",
