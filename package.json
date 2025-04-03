@@ -63,7 +63,6 @@
     "vue-scrollto": "^2.20.0",
     "vue-sticky-directive": "^0.0.10",
     "vue-virtual-scroller": "^2.0.0-beta.8",
-    "vue-wait": "^1.5.3",
     "vue3-perfect-scrollbar": "^2.0.0",
     "vue3-shortkey": "^4.0.0",
     "vue3-toastify": "^0.2.2",
