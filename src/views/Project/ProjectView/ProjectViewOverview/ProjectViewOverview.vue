@@ -6,6 +6,7 @@ import { useCore } from '@/composables/useCore'
 import { useWait } from '@/composables/useWait'
 import { useProjectPinned } from '@/composables/useProjectPinned'
 import AppSpinner from '@/components/AppSpinner/AppSpinner'
+import AppWait from '@/components/AppWait/AppWait'
 import EmptyState from '@/components/EmptyState/EmptyState'
 import ProjectJumbotron from '@/components/Project/ProjectJumbotron/ProjectJumbotron'
 import SearchBar from '@/components/Search/SearchBar/SearchBar'
@@ -23,7 +24,7 @@ const props = defineProps({
 })
 
 const { core } = useCore()
-const { wait, loaderId } = useWait()
+const { waitFor, loaderId } = useWait()
 
 const params = computed(() => {
   return { name: props.name }
@@ -50,7 +51,7 @@ const fetchLastIndexingDate = async () => {
   return get(aggregations, 'index.buckets.0.maxExtractionDate.value', null)
 }
 
-const fetch = wait(async () => {
+const fetch = waitFor(async () => {
   hasDocuments.value = !!(await fetchDocumentsCount())
   lastIndexingDate.value = await fetchLastIndexingDate()
 })
@@ -60,7 +61,7 @@ watch(toRef(props, 'name'), fetch, { immediate: true })
 
 <template>
   <div class="project-view-overview">
-    <v-wait class="bg-tertiary-subtle rounded-1 p-4" :for="loaderId">
+    <app-wait class="bg-tertiary-subtle rounded-1 p-4" :for="loaderId">
       <template #waiting>
         <div class="text-center py-5">
           <app-spinner size="2em" />
@@ -109,6 +110,6 @@ watch(toRef(props, 'name'), fetch, { immediate: true })
         :action-label="$t('projectViewOverview.emptyStateAction')"
         :action-to="{ name: 'task.documents.new', query: { project: project.name } }"
       />
-    </v-wait>
+    </app-wait>
   </div>
 </template>
