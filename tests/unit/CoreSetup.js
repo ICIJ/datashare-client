@@ -2,7 +2,6 @@ import Murmur from '@icij/murmur-next'
 import VCalendar from 'v-calendar'
 import VueScrollTo from 'vue-scrollto'
 import VueShortkey from 'vue3-shortkey'
-import { createVueWait } from 'vue-wait'
 import { createWebHashHistory, createRouter } from 'vue-router'
 
 import { Core } from '@/core/Core'
@@ -21,7 +20,6 @@ class CoreSetup extends Core {
       this.vueScrollTo,
       this.vueEllipseProgress,
       this.vCalendar,
-      this.wait,
       this.router
     ]
   }
@@ -36,9 +34,6 @@ class CoreSetup extends Core {
   }
   get vCalendar() {
     return VCalendar
-  }
-  get wait() {
-    return createVueWait()
   }
   useAll() {
     this.usePinia()

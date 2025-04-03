@@ -8,7 +8,6 @@ import VueScrollTo from 'vue-scrollto'
 import VueShortkey from 'vue3-shortkey'
 import Vue3Toastify, { toast } from 'vue3-toastify'
 import { createBootstrap } from 'bootstrap-vue-next'
-import { createVueWait } from 'vue-wait'
 import { createApp, defineComponent, h } from 'vue'
 import { createI18n } from 'vue-i18n'
 import { createWebHashHistory, createRouter } from 'vue-router'
@@ -105,7 +104,6 @@ class Core extends Behaviors {
       }
     })
     this.useCommons()
-    this.useWait()
     this.useCore()
     return this
   }
@@ -192,15 +190,6 @@ class Core extends Behaviors {
     // dynamic chunk import with third party modules.
     // @see https://github.com/nathanreyes/v-calendar/issues/413#issuecomment-530633437
     this.use(VCalendar, { componentPrefix: 'vc' })
-    return this
-  }
-  /**
-   * Configure vue-wait plugin
-   * @returns {Core} the current instance of Core
-   */
-  useWait() {
-    this._wait = createVueWait()
-    this.use(this.wait)
     return this
   }
   /**
@@ -492,13 +481,6 @@ class Core extends Behaviors {
    */
   get vue() {
     return this._vue
-  }
-  /**
-   * The VueWait
-   * @type {VueWait}
-   */
-  get wait() {
-    return this._wait
   }
   /**
    * Get current Datashare mode
