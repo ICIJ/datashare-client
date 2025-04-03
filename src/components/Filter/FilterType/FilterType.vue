@@ -30,12 +30,8 @@ const emit = defineEmits(['aggregate', 'update', 'update:filter-value'])
 const pages = reactive([])
 const expand = ref(false)
 
-const { waitFor, isLoading } = useWait()
+const { waitFor, isLoading } = useWait({ throttle: 500 })
 const searchStore = useSearchStore.inject('searchStoreSuffix')
-
-const aggregateWithLoading = waitFor(({ clearPages = false } = {}) => {
-  return aggregate({ clearPages })
-})
 
 const aggregateOverWithLoading = () => {
   return aggregateWithLoading({ clearPages: true })
@@ -71,6 +67,8 @@ const aggregate = async ({ clearPages = false } = {}) => {
 
   return page
 }
+
+const aggregateWithLoading = waitFor(aggregate)
 
 const queryTokens = computed(() => [escapeRegExp(query.value.toLowerCase())])
 
