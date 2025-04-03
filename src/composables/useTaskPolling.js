@@ -1,26 +1,19 @@
-import { computed, toValue, watch, useId, onBeforeUnmount } from 'vue'
+import { computed, toValue, watch, onBeforeUnmount } from 'vue'
 import { random } from 'lodash'
 
 import { usePolling } from '@/composables/usePolling'
-import { useCore } from '@/composables/useCore'
+import { useWait } from '@/composables/useWait'
 import { useTaskStore } from '@/store/modules'
 
 export function useTaskPolling({ names = [], sortBy = [], perPage = null, page = 1, searchQuery = null } = {}) {
   const taskStore = useTaskStore()
-  const loaderId = useId()
-  const { wait } = useCore()
+  const { waitFor, isLoading } = useWait()
   const { unregisteredPoll, registerPollOnce } = usePolling()
 
-  async function startPollingTasksWithLoader() {
-    try {
-      wait.start(loaderId)
-      await startPollingTasks()
-    } finally {
-      wait.end(loaderId)
-    }
-  }
+  const startPollingTasksWithLoader = waitFor(() => {
+    return startPollingTasks()
+  })
 
-  const isLoading = computed(() => wait.waiting(loaderId))
   const hasDoneTasks = computed(() => taskStore.hasDoneTasks)
   const hasPendingTasks = computed(() => taskStore.hasPendingTasks)
   const tasks = computed(() => taskStore.tasks)
