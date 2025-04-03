@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 
 import image from '@/assets/images/illustrations/app-modal-default-light.svg'
 import imageDark from '@/assets/images/illustrations/app-modal-default-dark.svg'
+import AppWait from '@/components/AppWait/AppWait'
 import AppModal from '@/components/AppModal/AppModal'
 import DisplayNumber from '@/components/Display/DisplayNumber'
 import ProjectLabel from '@/components/Project/ProjectLabel'
@@ -25,7 +26,7 @@ const documentsCount = ref(0)
 const tagsCount = ref(0)
 const recommendationsCount = ref(0)
 
-const { wait, loaderId } = useWait()
+const { waitFor, loaderId } = useWait()
 const { core, toast } = useCore()
 const { fetchDocumentsCount, fetchTagsCount, fetchRecommendationsCount } = useProjectMetrics(props.project)
 
@@ -44,7 +45,7 @@ async function confirmDeletion() {
 const hasSomething = computed(() => documentsCount.value + tagsCount.value + recommendationsCount.value > 0)
 
 onBeforeMount(
-  wait(async () => {
+  waitFor(async () => {
     documentsCount.value = await fetchDocumentsCount()
     tagsCount.value = await fetchTagsCount()
     recommendationsCount.value = await fetchRecommendationsCount()
@@ -61,7 +62,7 @@ onBeforeMount(
         </template>
       </i18n-t>
     </template>
-    <v-wait :for="loaderId">
+    <app-wait :for="loaderId">
       <i18n-t v-show="hasSomething" keypath="projectDeletionModal.body.all" tag="p">
         <template #documents>
           <i18n-t keypath="projectDeletionModal.body.documents" tag="span" :plural="documentsCount">
@@ -85,6 +86,6 @@ onBeforeMount(
           </i18n-t>
         </template>
       </i18n-t>
-    </v-wait>
+    </app-wait>
   </app-modal>
 </template>
