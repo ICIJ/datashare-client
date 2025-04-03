@@ -45,8 +45,9 @@ const classList = computed(() => {
     <b-button-group class="form-actions-compact__group" :size="size">
       <slot />
       <form-actions-compact-dropdown :variant="variant" :size="size" :dropdown-icon="dropdownIcon">
-        <slot name="dropdown" /> </form-actions-compact-dropdown
-    ></b-button-group>
+        <slot name="dropdown" />
+      </form-actions-compact-dropdown>
+    </b-button-group>
   </div>
 </template>
 
