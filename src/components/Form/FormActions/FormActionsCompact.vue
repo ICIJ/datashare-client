@@ -44,10 +44,9 @@ const classList = computed(() => {
   <div class="form-actions-compact" :class="classList">
     <b-button-group class="form-actions-compact__group" :size="size">
       <slot />
-    </b-button-group>
-    <form-actions-compact-dropdown :variant="variant" :size="size" :dropdown-icon="dropdownIcon">
-      <slot name="dropdown" />
-    </form-actions-compact-dropdown>
+      <form-actions-compact-dropdown :variant="variant" :size="size" :dropdown-icon="dropdownIcon">
+        <slot name="dropdown" /> </form-actions-compact-dropdown
+    ></b-button-group>
   </div>
 </template>
 
@@ -68,29 +67,6 @@ const classList = computed(() => {
   border-radius: var(--bs-border-radius);
   background: var(--form-actions-compact-bg);
   color: var(--form-actions-compact-color);
-
-  &__group {
-    position: relative;
-    display: none;
-    border: 0;
-
-    &:has(*) {
-      display: inline-flex;
-      margin-right: $spacer-xxs;
-
-      &:after {
-        content: '';
-        width: 1px;
-        position: absolute;
-        left: calc(100% + #{$spacer-xxs});
-        top: 50%;
-        height: 65%;
-        transform: translateY(-50%);
-        display: flex;
-        background: var(--form-actions-compact-color);
-      }
-    }
-  }
 
   @each $variant, $value in $theme-colors {
     &--#{$variant} {
