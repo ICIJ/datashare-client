@@ -49,23 +49,23 @@ const menuClassList = computed(() => {
       <slot />
     </li>
     <template #button-content>
-      <phosphor-icon :name="dropdownIcon" />
+      <phosphor-icon :name="dropdownIcon" weight="fill" />
     </template>
   </b-dropdown>
 </template>
 
 <style lang="scss">
 .form-actions-compact-dropdown {
-  &__toggle {
+  /*  &__toggle {
     border: 0;
-  }
+  }*/
 
   &__menu {
     --bs-form-actions-compact-dropdown-bg: var(--bs-body-bg);
     --bs-form-actions-compact-dropdown-border-color: var(--bs-border-color);
     --bs-form-actions-compact-dropdown-color: var(--bs-body-color);
 
-    --bs-form-actions-compact-dropdown-btn-color: var(--bs-link-color);
+    --bs-form-actions-compact-dropdown-btn-color: var(--bs-body-color);
     --bs-form-actions-compact-dropdown-btn-hover-bg: transparent;
     --bs-form-actions-compact-dropdown-btn-hover-color: var(--bs-link-hover-color);
 
@@ -92,7 +92,6 @@ const menuClassList = computed(() => {
       &.button-icon--use-injected-variant {
         --bs-btn-border-width: 0;
         --bs-btn-bg: transparent;
-        --bs-btn-color: var(--bs-form-actions-compact-dropdown-btn-color);
         --bs-btn-hover-bg: var(--bs-form-actions-compact-dropdown-btn-hover-bg);
         --bs-btn-hover-color: var(--bs-form-actions-compact-dropdown-btn-hover-color);
       }
