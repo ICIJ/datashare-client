@@ -1,9 +1,11 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 import { computed, inject } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 
 import TabGroupNavigation from '@/components/TabGroup/TabGroupNavigation/TabGroupNavigation'
 import TabGroupNavigationEntry from '@/components/TabGroup/TabGroupNavigation/TabGroupNavigationEntry'
+import { useKeyboardShortcuts } from '@/composables/useKeyboardShortcuts'
 
 const props = defineProps({
   documentRoute: {
@@ -11,9 +13,22 @@ const props = defineProps({
   }
 })
 
-const { t } = useI18n()
-
 const modal = inject('modal', undefined)
+
+const { t } = useI18n()
+const router = useRouter()
+const route = useRoute()
+const { wheneverActionShortcut } = useKeyboardShortcuts()
+
+const currentTabIndex = computed(() => entries.value.findIndex(({ to: { name } }) => name === route.name))
+
+const previousTabIndex = computed(() => (currentTabIndex.value || entries.value.length) - (1 % entries.value.length))
+const previousTabRoute = computed(() => entries.value[previousTabIndex.value].to)
+wheneverActionShortcut('goToPreviousTab', () => router.push(previousTabRoute.value))
+
+const nextTabIndex = computed(() => (currentTabIndex.value + 1) % entries.value.length)
+const nextTabRoute = computed(() => entries.value[nextTabIndex.value].to)
+wheneverActionShortcut('goToNextTab', () => router.push(nextTabRoute.value))
 
 const entries = computed(() => {
   const query = { modal }
