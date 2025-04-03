@@ -85,7 +85,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['submit', 'up', 'down', 'input', 'enter', 'blur'])
+const emit = defineEmits(['submit', 'focus', 'up', 'down', 'input', 'enter', 'blur'])
 
 const hideClearInput = computed(() => !modelValue.value)
 const icon = computed(() => (props.loading ? PhCircleNotch : props.iconName))
