@@ -1,5 +1,5 @@
 <template>
-  <v-wait :for="loader" class="w-100 d-flex flex-column py-3">
+  <app-wait :for="loaderId" class="w-100 d-flex flex-column py-3">
     <template #waiting>
       <div class="p-3 w-100 text-muted">
         {{ $t('document.fetching') }}
@@ -61,15 +61,17 @@
     <div v-else class="paginated-viewer paginated-viewer--not-available p-3 text-center">
       {{ $t('document.notAvailable') }}
     </div>
-  </v-wait>
+  </app-wait>
 </template>
 
 <script>
-import { get, range, uniqueId } from 'lodash'
+import { get, range } from 'lodash'
 import axios from 'axios'
 
-import preview from '@/mixins/preview'
+import { useWait } from '@/composables/useWait'
+import AppWait from '@/components/AppWait/AppWait'
 import DocumentThumbnail from '@/components/Document/DocumentThumbnail'
+import preview from '@/mixins/preview'
 
 /**
  * Display a paginated preview of a document using the preview server.
@@ -77,6 +79,7 @@ import DocumentThumbnail from '@/components/Document/DocumentThumbnail'
 export default {
   name: 'DocumentViewerPaginated',
   components: {
+    AppWait,
     DocumentThumbnail
   },
   mixins: [preview],
@@ -87,6 +90,9 @@ export default {
     document: {
       type: Object
     }
+  },
+  setup() {
+    return { wait: useWait() }
   },
   data() {
     return {
@@ -124,8 +130,8 @@ export default {
         }
       }
     },
-    loader() {
-      return uniqueId('paginated-viewer-load-data-')
+    loaderId() {
+      return this.wait.loaderId
     },
     isPreviewable() {
       return this.hasPreviewHost && get(this, 'meta.previewable', false) && !this.errored
@@ -146,10 +152,10 @@ export default {
   methods: {
     async waitFor(callback) {
       try {
-        this.$wait.start(this.loader)
+        this.wait.start(this.loaderId)
         await callback()
       } finally {
-        this.$wait.end(this.loader)
+        this.wait.end(this.loaderId)
       }
     },
     async fetchSize() {
