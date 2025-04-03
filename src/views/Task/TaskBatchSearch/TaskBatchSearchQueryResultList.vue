@@ -41,7 +41,7 @@ const appStore = useAppStore()
 const route = useRoute()
 const { core } = useCore()
 const { fields } = useBatchSearchResultProperties()
-const { wait, isLoading } = useWait()
+const { waitFor, isLoading } = useWait()
 const settingsView = 'batchSearchResults'
 const hits = ref(null)
 const batchSearch = ref(null)
@@ -84,7 +84,7 @@ const visibleFields = computed(() => {
 
 const batchSearchName = computed(() => batchSearch.value?.name)
 
-const fetchBatchSearchResults = wait(async () => {
+const fetchBatchSearchResults = waitFor(async () => {
   await new Promise((resolve) => setTimeout(resolve, 1000))
   hits.value = await core.api.getBatchSearchResults(
     props.uuid,
