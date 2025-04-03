@@ -5,9 +5,17 @@ import { computed } from 'vue'
 import TextTruncate from '@/components/Text/TextTruncate'
 
 defineProps({
-  title: { type: String, required: true },
-  description: { type: String, required: true },
-  url: { type: String }
+  title: {
+    type: String,
+    required: true
+  },
+  description: {
+    type: String,
+    required: true
+  },
+  url: {
+    type: String
+  }
 })
 
 const { t } = useI18n()
