@@ -10,7 +10,7 @@ import EntitySection from '@/components/Entity/EntitySection/EntitySection'
 import { useDocumentStore } from '@/store/modules'
 
 const { document, documentRoute } = useDocument()
-const { isLoading, wait } = useWait()
+const { isLoading, waitFor } = useWait()
 const { core } = useCore()
 const documentStore = useDocumentStore()
 const filterToken = ref(null)
@@ -73,7 +73,7 @@ const getNextPageInCategory = async (category) => {
   }
 }
 
-const getFirstPageInAllCategories = wait(async () => {
+const getFirstPageInAllCategories = waitFor(async () => {
   await documentStore.getFirstPageForNamedEntityInAllCategories({ filterToken: filterToken.value })
 })
 
