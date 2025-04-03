@@ -1,7 +1,9 @@
 <script setup>
 import DocumentSearchNavItem from './DocumentSearchNavItem'
 
-defineProps({
+import { useKeyboardShortcuts } from '@/composables/useKeyboardShortcuts'
+
+const { disabledNext, disabledPrevious } = defineProps({
   disabledPrevious: {
     type: Boolean
   },
@@ -11,6 +13,22 @@ defineProps({
   tooltipPlacement: {
     type: String,
     default: 'top'
+  }
+})
+
+const emit = defineEmits(['previous', 'next'])
+
+const { wheneverRouteActionShortcut } = useKeyboardShortcuts()
+
+wheneverRouteActionShortcut('goToPreviousDocument', () => {
+  if (!disabledPrevious) {
+    emit('previous')
+  }
+})
+
+wheneverRouteActionShortcut('goToNextDocument', () => {
+  if (!disabledNext) {
+    emit('next')
   }
 })
 </script>
