@@ -1,10 +1,11 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { camelCase, startCase } from 'lodash'
 import { useI18n } from 'vue-i18n'
 
 import AddonCardView from '@/components/Addon/AddonCardView/AddonCardView'
 import { useCore } from '@/composables/useCore'
+import { useWait } from '@/composables/useWait'
 import { ADDON_TYPE, addonTypeValidator } from '@/enums/addons'
 
 const props = defineProps({
@@ -20,7 +21,7 @@ const props = defineProps({
 const emit = defineEmits(['installed', 'uninstalled'])
 const { t } = useI18n()
 const { toastedPromise, core } = useCore()
-const isLoading = ref(false)
+const { waitFor, isLoading } = useWait()
 const deleteSuccess = computed(() => t(`${props.addonType}.deleteSuccess`))
 const deleteError = computed(() => t(`${props.addonType}.deleteError`))
 const submitSuccess = computed(() => t(`${props.addonType}.submitSuccess`))
@@ -50,40 +51,28 @@ const homepage = computed(() => props.deliverableFromRegistry?.homepage ?? null)
 const addonInstallFn = computed(() => {
   return props.addonType === ADDON_TYPE.EXTENSION ? core.api.installExtensionFromId : core.api.installPluginFromId
 })
+
 const addonUninstallFn = computed(() => {
   return props.addonType === ADDON_TYPE.EXTENSION ? core.api.uninstallExtension : core.api.uninstallPlugin
 })
 
-async function install() {
-  const toast = {
-    successMessage: submitSuccess.value,
-    errorMessage: submitError.value
-  }
-  isLoading.value = true
-  try {
-    const promise = addonInstallFn.value(props.id)
-    await toastedPromise(promise, toast)
-    emit('installed')
-  } catch (e) {
-  } finally {
-    isLoading.value = false
-  }
-}
-async function uninstall() {
-  const toast = {
-    successMessage: deleteSuccess.value,
-    errorMessage: deleteError.value
-  }
-  isLoading.value = true
-  try {
-    const promise = addonUninstallFn.value(props.id)
-    await toastedPromise(promise, toast)
-    emit('uninstalled')
-  } catch (e) {
-  } finally {
-    isLoading.value = false
-  }
-}
+const install = waitFor(async () => {
+  const successMessage = submitSuccess.value
+  const errorMessage = submitError.value
+  const toast = { successMessage, errorMessage }
+  const promise = addonInstallFn.value(props.id)
+  await toastedPromise(promise, toast)
+  emit('installed')
+})
+
+const uninstall = waitFor(async () => {
+  const successMessage = deleteSuccess.value
+  const errorMessage = deleteError.value
+  const toast = { successMessage, errorMessage }
+  const promise = addonUninstallFn.value(props.id)
+  await toastedPromise(promise, toast)
+  emit('uninstalled')
+})
 </script>
 
 <template>
