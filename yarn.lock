@@ -8237,11 +8237,6 @@ vue-virtual-scroller@^2.0.0-beta.8:
     vue-observe-visibility "^2.0.0-alpha.1"
     vue-resize "^2.0.0-alpha.1"
 
-vue-wait@^1.5.3:
-  version "1.5.3"
-  resolved "https://registry.yarnpkg.com/vue-wait/-/vue-wait-1.5.3.tgz#3d4c994a4a522485cbfae36c57a356139f6333d9"
-  integrity sha512-R33p0wljvjOC1OoqZffPS7pjstn5dAOdML5TdhHky3PqlO98qntMcJceGaeHxKTOXcjh50XNFOBQfGVzqGixCA==
-
 vue3-perfect-scrollbar@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/vue3-perfect-scrollbar/-/vue3-perfect-scrollbar-2.0.0.tgz#51cedf1090d731ec7cc8163067e348867de0aa69"
