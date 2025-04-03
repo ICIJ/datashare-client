@@ -4,6 +4,7 @@ import { filter, orderBy, values } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import includes from 'lodash/includes'
 
+import AppWait from '@/components/AppWait/AppWait'
 import FormCreation from '@/components/Form/FormCreation'
 import FormFieldsetI18n from '@/components/Form/FormFieldset/FormFieldsetI18n'
 import SearchBarInputDropdownForProjects from '@/components/Search/SearchBar/SearchBarInputDropdownForProjects'
@@ -20,10 +21,10 @@ const props = defineProps({
   }
 })
 
-const { core, toastedPromise, wait } = useCore()
+const { core, toastedPromise } = useCore()
 
 const { t } = useI18n()
-const { waitFor } = useWait()
+const { waitFor, waiting } = useWait()
 const defaultProject = core.getDefaultProject()
 const defaultPipeline = 'CORENLP'
 const emailPipeline = 'EMAIL'
@@ -107,7 +108,7 @@ const successMessage = computed(() => t('task.entities.form.success'))
 const errorMessage = (error) => t(`task.entities.form.error`, { error })
 
 const valid = computed(() => {
-  return !wait?.waiting(loaderPipelineId) && !wait?.waiting(loaderLaunchTask) && !error.value
+  return !waiting(loaderPipelineId) && !waiting(loaderLaunchTask) && !error.value
 })
 
 function reset() {
@@ -132,7 +133,7 @@ async function submit() {
 </script>
 
 <template>
-  <v-wait :for="loaderPipelineId">
+  <app-wait :for="loaderPipelineId">
     <form-creation
       class="task-entities-form"
       :submit-label="submitLabel"
@@ -156,5 +157,5 @@ async function submit() {
         <b-form-radio-group v-model="offline" name="offline" :options="offlineOptions" stacked />
       </form-fieldset-i18n>
     </form-creation>
-  </v-wait>
+  </app-wait>
 </template>
