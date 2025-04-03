@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { groupBy, property } from 'lodash'
+import { castArray, groupBy, property } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import Fuse from 'fuse.js'
 
@@ -38,7 +38,11 @@ const filteredShotcuts = computed(() => {
   return extendedShortcuts.value
 })
 
-const groupedShortcuts = computed(() => groupBy(filteredShotcuts.value, 'route'))
+const groupedShortcuts = computed(() => {
+  return groupBy(filteredShotcuts.value, ({ route }) => {
+    return castArray(route).shift()
+  })
+})
 </script>
 
 <template>
