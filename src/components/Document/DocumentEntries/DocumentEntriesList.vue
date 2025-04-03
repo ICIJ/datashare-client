@@ -32,7 +32,7 @@ const elementRef = useTemplateRef('element')
 
 const scrollDocumentCardIntoView = function ({ id, index } = {}) {
   const selector = `.document-card[data-entry-id="${id}"][data-entry-index="${index}"]`
-  const card = toValue(elementRef)?.querySelector?.(selector)
+  const card = toValue(elementRef)?.$el?.querySelector?.(selector)
   if (card) {
     // Use nullish coalescing operator to prevent error when document card is not found
     card?.scrollIntoView({ behavior: 'auto', block: 'center' })
