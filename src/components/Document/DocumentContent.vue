@@ -30,7 +30,7 @@ const documentStore = useDocumentStore()
 const pipelinesStore = usePipelinesStore()
 const searchStore = useSearchStore.inject('searchStoreSuffix')
 const elementRef = useTemplateRef('element')
-const { waitFor } = useWait()
+const { waitFor, isLoading } = useWait()
 
 const contentSlices = reactive({})
 const currentContentPage = ref('')
@@ -149,7 +149,7 @@ onMounted(async () => {
   }
 })
 
-const loadMaxOffset = waitFor('document-content-max-offset', async function (targetLanguage = props.targetLanguage) {
+const loadMaxOffset = waitFor(async function (targetLanguage = props.targetLanguage) {
   const key = targetLanguage ?? 'original'
   const offset = await documentStore.getContentMaxOffset({ targetLanguage })
   maxOffsetTranslations.value[key] = offset
@@ -249,7 +249,7 @@ async function activateContentSliceAround(desiredOffset = activeTermOffset.value
   return activateContentSlice({ offset })
 }
 
-const activateContentSlice = waitFor('document-content-slice', async function ({ offset = 0 } = {}) {
+const activateContentSlice = waitFor(async function ({ offset = 0 } = {}) {
   await loadContentSliceOnce({ offset })
   await cookAllContentSlices()
   activeContentSliceOffset.value = offset
@@ -300,7 +300,7 @@ async function loadContentSliceAround(desiredOffset) {
         <document-local-search
           v-model="localSearchTerm"
           v-model:active-index="localSearchIndex"
-          :loading="$wait.is('document-content-*')"
+          :loading="isLoading"
           :disabled="!hasExtractedContent"
           :occurrences="localSearchOccurrences"
           class="flex-grow-1"
