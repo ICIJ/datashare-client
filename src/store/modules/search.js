@@ -371,7 +371,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   }
 
   function contextualizeFilter(name) {
-    if (contextualizeFilters.value.includes(name)) {
+    if (!contextualizeFilters.value.includes(name)) {
       contextualizeFilters.value.push(name)
     }
   }
