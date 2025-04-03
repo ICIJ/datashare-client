@@ -7,6 +7,7 @@ import DocumentViewTabs from './DocumentViewTabs/DocumentViewTabs'
 import DocumentViewTitle from './DocumentViewTitle'
 import DocumentViewUserActions from './DocumentViewUserActions'
 
+import AppWait from '@/components/AppWait/AppWait'
 import DocumentPlaceholder from '@/components/Document/DocumentPlaceholder'
 import { useSearchNav } from '@/composables/useSearchNav'
 import { useDocument } from '@/composables/useDocument'
@@ -81,7 +82,7 @@ onBeforeRouteUpdate(fetchRouteDocument)
 </script>
 
 <template>
-  <v-wait ref="element" class="document-view d-flex flex-column" :for="loaderId">
+  <app-wait ref="element" class="document-view d-flex flex-column" :for="loaderId">
     <template #waiting>
       <document-placeholder />
     </template>
@@ -104,7 +105,7 @@ onBeforeRouteUpdate(fetchRouteDocument)
         <component :is="Component" />
       </keep-alive>
     </router-view>
-  </v-wait>
+  </app-wait>
 </template>
 
 <style lang="scss" scoped>
