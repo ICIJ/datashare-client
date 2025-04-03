@@ -11,11 +11,20 @@ import DismissableAlert from '@/components/Dismissable/DismissableAlert'
 defineOptions({ name: 'SettingsViewLayout' })
 
 const props = defineProps({
-  infoName: { type: String },
-  infoLabel: { type: String },
-  infoDismissLabel: { type: String },
-  noResults: { type: Boolean, default: false }
+  infoName: { 
+    type: String 
+  },
+  infoLabel: { 
+    type: String 
+  },
+  infoDismissLabel: { 
+    type: String 
+  },
+  noResults: { 
+    type: Boolean, default: false
+  }
 })
+
 const { t } = useI18n()
 
 const dismissLabel = computed(() => props.infoDismissLabel ?? t('settings.layout.infoDismiss'))
