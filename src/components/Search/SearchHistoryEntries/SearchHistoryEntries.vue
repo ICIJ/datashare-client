@@ -26,7 +26,7 @@ const { events, loadingEvents } = defineProps({
 })
 
 const { core } = useCore()
-const { wait, isLoading: loadingDocuments } = useWait()
+const { waitFor, isLoading: loadingDocuments } = useWait()
 const starredStore = useStarredStore()
 
 const hits = ref([])
@@ -84,7 +84,7 @@ function buildEventsBody() {
     .build()
 }
 
-const fetch = wait(async () => {
+const fetch = waitFor(async () => {
   if (!eventsIds.value.length) {
     return
   }
