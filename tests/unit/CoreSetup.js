@@ -40,7 +40,6 @@ class CoreSetup extends Core {
     this.useI18n()
     this.useBootstrapVue()
     this.useCommons()
-    this.useWait()
     this.useCore()
     return this
   }
