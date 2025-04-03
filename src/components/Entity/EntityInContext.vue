@@ -21,12 +21,12 @@ const props = defineProps({
 })
 
 const { getContentSlice, document } = useDocumentStore()
-const { wait } = useWait()
+const { waitFor } = useWait()
 
 const noExcerpt = computed(() => !!props.entity.metadata)
 const content = ref('')
 
-const fetch = wait(async () => {
+const fetch = waitFor(async () => {
   if (noExcerpt.value || !visiblePopover.value) return
   const offset = excerptOffsetStart.value
   const limit = excerptOffsetEnd.value - excerptOffsetStart.value
