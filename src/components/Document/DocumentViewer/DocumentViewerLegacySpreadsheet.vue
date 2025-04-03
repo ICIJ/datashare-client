@@ -1,6 +1,6 @@
 <template>
   <div class="legacy-spreadsheet-viewer w-100 py-3">
-    <app-overlay :show="$wait.is(loaderId)" spinner-small class="sticky-top" rounded>
+    <app-overlay :show="wait.waiting(loaderId)" spinner-small class="sticky-top" rounded>
       <div class="legacy-spreadsheet-viewer__header bg-tertiary-subtle p-3 rounded">
         <b-form-select
           v-model="activeSheetName"
@@ -20,8 +20,8 @@
 
 <script>
 import { read, utils } from 'xlsx'
-import { uniqueId } from 'lodash'
 
+import { useWait } from '@/composables/useWait'
 import AppOverlay from '@/components/AppOverlay/AppOverlay'
 import datashareSourceMixin from '@/mixins/datashareSourceMixin'
 
@@ -42,6 +42,9 @@ export default {
       type: Object,
       default: () => ({})
     }
+  },
+  setup() {
+    return { wait: useWait() }
   },
   data() {
     return {
@@ -68,7 +71,7 @@ export default {
       return null
     },
     loaderId() {
-      return uniqueId('legacy-spreadsheet-viewer-')
+      return this.wait.loaderId
     }
   },
   async mounted() {
@@ -85,9 +88,9 @@ export default {
       }
     },
     async generateWorkbookWithLoader() {
-      this.$wait.start(this.loaderId)
+      this.wait.start(this.loaderId)
       await this.generateWorkbook()
-      this.$wait.end(this.loaderId)
+      this.wait.end(this.loaderId)
     }
   }
 }
