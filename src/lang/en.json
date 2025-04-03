@@ -1147,7 +1147,7 @@
             "no": "No - Apply operators (AND, OR, NOT, etc.) in the queries"
           }
         },
-        "submit": "Start",
+        "submit": "Create",
         "submitError": "Something went wrong, unable to run the batch search.",
         "submitSuccess": "Batch search created successfully."
       },
