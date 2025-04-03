@@ -1,7 +1,6 @@
 <script>
-import { uniqueId } from 'lodash'
-
 import AppOverlay from '@/components/AppOverlay/AppOverlay'
+import { useWait } from '@/composables/useWait'
 
 /**
  * A form-control to select the extracting language.
@@ -21,6 +20,9 @@ export default {
     }
   },
   emits: ['update:modelValue'],
+  setup() {
+    return { wait: useWait() }
+  },
   data() {
     return {
       textLanguages: []
@@ -35,11 +37,11 @@ export default {
         return { value: language.iso6392, text: this.$t(`filter.lang.${language.name}`) }
       })
     },
-    waitIdentifier() {
-      return uniqueId('form-control-extracting-language-')
+    loaderId() {
+      return this.wait.loaderId
     },
     isReady() {
-      return !this.$wait.is(this.waitIdentifier)
+      return !this.wait.waiting(this.loaderId)
     },
     hasTextLanguages() {
       return !this.textLanguages.length
@@ -50,13 +52,13 @@ export default {
   },
   methods: {
     async loadLanguages() {
-      this.$wait.start(this.waitIdentifier)
+      this.wait.start(this.loaderId)
       try {
         this.textLanguages = await this.$core.api.textLanguages()
       } catch (e) {
         this.$toast.error(this.$t('formControlExtractingLanguage.failedToRetrieveLanguages'))
       }
-      this.$wait.end(this.waitIdentifier)
+      this.wait.end(this.loaderId)
     }
   }
 }
