@@ -17,7 +17,7 @@ import useMode from '@/composables/useMode'
 
 const { core, toast } = useCore()
 const { isServer } = useMode()
-const { wait, isLoading } = useWait()
+const { waitFor, isLoading } = useWait()
 const appStore = useAppStore()
 const searchQuery = useUrlParam('q', '')
 
@@ -54,7 +54,7 @@ const fetchMaxExtractionDateByProject = async () => {
   buckets.forEach(({ key, maxExtractionDate }) => (maxExtractionDateByProject.value[key] = maxExtractionDate.value))
 }
 
-const fetch = wait(async () => {
+const fetch = waitFor(async () => {
   try {
     await fetchDocumentsCountByProject()
     await fetchMaxExtractionDateByProject()
