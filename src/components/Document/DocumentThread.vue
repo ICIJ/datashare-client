@@ -7,6 +7,7 @@ import bodybuilder from 'bodybuilder'
 import { useCore } from '@/composables/useCore'
 import { useWait } from '@/composables/useWait'
 import EsDocList from '@/api/resources/EsDocList'
+import AppWait from '@/components/AppWait/AppWait'
 import AppSpinner from '@/components/AppSpinner/AppSpinner'
 import DocumentTranslation from '@/components/Document/DocumentTranslation/DocumentTranslation'
 import DisplayEmail from '@/components/Display/DisplayEmail'
@@ -29,7 +30,7 @@ const props = defineProps({
 const elementRef = useTemplateRef('element')
 const documentStore = useDocumentStore()
 const { core } = useCore()
-const { wait, loaderId } = useWait()
+const { waitFor, loaderId } = useWait()
 
 const thread = ref({ hits: [] })
 
@@ -95,7 +96,7 @@ async function scrollToActive() {
   core.emit('scroll-tracker:request', { element, container })
 }
 
-const init = wait(async function () {
+const init = waitFor(async function () {
   // Load its thread (if any)
   thread.value = await getThread()
   thread.value.push('hits.hits', props.document.raw)
@@ -135,7 +136,7 @@ onBeforeRouteUpdate(init)
 </script>
 
 <template>
-  <v-wait ref="element" :for="loaderId">
+  <app-wait ref="element" :for="loaderId">
     <template #waiting>
       <app-spinner class="d-flex mx-auto my-5" />
     </template>
@@ -179,7 +180,7 @@ onBeforeRouteUpdate(init)
         </li>
       </ul>
     </div>
-  </v-wait>
+  </app-wait>
 </template>
 
 <style lang="scss" scoped>
