@@ -48,7 +48,7 @@ describe('FilterType.vue', () => {
     })
 
     it('should display no items for the contentType filter', async () => {
-      await wrapper.vm.aggregate({ clearPages: true })
+      await wrapper.vm.aggregateOver()
 
       expect(wrapper.findAllComponents(FiltersPanelSectionFilterEntry)).toHaveLength(0)
       expect(wrapper.vm.lastPage.total).toBe(0)
@@ -61,7 +61,7 @@ describe('FilterType.vue', () => {
       await letData(es).have(new IndexedDocument('document_04', index).withContentType('text/html')).commit()
       await letData(es).have(new IndexedDocument('document_05', index).withContentType('text/html')).commit()
 
-      await wrapper.vm.aggregate({ clearPages: true })
+      await wrapper.vm.aggregateOver()
 
       expect(wrapper.findAllComponents(FiltersPanelSectionFilterEntry)).toHaveLength(2)
       expect(wrapper.vm.lastPage.total).toBe(5)
@@ -77,7 +77,7 @@ describe('FilterType.vue', () => {
 
       searchStore.contextualizeFilter('contentType')
       searchStore.setFilterValue({ name: 'language', value: 'ENGLISH' })
-      await wrapper.vm.aggregate({ clearPages: true })
+      await wrapper.vm.aggregateOver()
       const findAllComponents = wrapper.findAllComponents(FiltersPanelSectionFilterEntry)
       expect(findAllComponents).toHaveLength(1)
       expect(wrapper.vm.lastPage.total).toBe(1)
@@ -92,7 +92,7 @@ describe('FilterType.vue', () => {
       await letData(es).have(new IndexedDocument('document_06', index).withContentType('text/stylesheet')).commit()
       await letData(es).have(new IndexedDocument('document_07', index).withContentType('text/stylesheet')).commit()
 
-      await wrapper.vm.aggregate({ clearPages: true })
+      await wrapper.vm.aggregateOver()
 
       expect(wrapper.findAllComponents(FiltersPanelSectionFilterEntry)).toHaveLength(3)
       expect(wrapper.vm.lastPage.total).toBe(7)
@@ -104,7 +104,7 @@ describe('FilterType.vue', () => {
       await letData(es).have(new IndexedDocument('document_06', index).withContentType('text/stylesheet')).commit()
 
       searchStore.sortFilter({ name, sortBy: '_key', orderBy: 'asc' })
-      await wrapper.vm.aggregate({ clearPages: true })
+      await wrapper.vm.aggregateOver()
 
       const entries = wrapper.findAllComponents(FiltersPanelSectionFilterEntry)
       expect(entries).toHaveLength(3)
@@ -136,16 +136,16 @@ describe('FilterType.vue', () => {
 
       searchStore.setQuery('SHOW')
       searchStore.decontextualizeFilter('contentType')
-      await wrapper.vm.aggregate({ clearPages: true })
+      await wrapper.vm.aggregateOver()
       expect(wrapper.vm.lastPage.total).toBe(6)
       expect(wrapper.findAllComponents(FiltersPanelSectionFilterEntry)).toHaveLength(3)
 
       searchStore.contextualizeFilter('contentType')
-      await wrapper.vm.aggregate({ clearPages: true })
+      await wrapper.vm.aggregateOver()
       expect(wrapper.findAllComponents(FiltersPanelSectionFilterEntry)).toHaveLength(1)
 
       searchStore.setQuery('INDEX')
-      await wrapper.vm.aggregate({ clearPages: true })
+      await wrapper.vm.aggregateOver()
       expect(wrapper.findAllComponents(FiltersPanelSectionFilterEntry)).toHaveLength(2)
     })
 
@@ -159,16 +159,16 @@ describe('FilterType.vue', () => {
 
       searchStore.setQuery('Lorem')
       searchStore.decontextualizeFilter('contentType')
-      await wrapper.vm.aggregate({ clearPages: true })
+      await wrapper.vm.aggregateOver()
       expect(wrapper.findAllComponents(FiltersPanelSectionFilterEntry)).toHaveLength(2)
       expect(wrapper.vm.lastPage.total).toBe(2)
 
       searchStore.contextualizeFilter('contentType')
-      await wrapper.vm.aggregate({ clearPages: true })
+      await wrapper.vm.aggregateOver()
       expect(wrapper.findAllComponents(FiltersPanelSectionFilterEntry)).toHaveLength(1)
 
       searchStore.decontextualizeFilter('contentType')
-      await wrapper.vm.aggregate({ clearPages: true })
+      await wrapper.vm.aggregateOver()
       expect(wrapper.findAllComponents(FiltersPanelSectionFilterEntry)).toHaveLength(2)
     })
 
@@ -180,7 +180,7 @@ describe('FilterType.vue', () => {
       searchStore.addFilterValue({ name: 'contentType', value: 'text/javascript' })
       searchStore.excludeFilter('contentType')
 
-      await wrapper.vm.aggregate({ clearPages: true })
+      await wrapper.vm.aggregateOver()
 
       expect(wrapper.findComponent(FiltersPanelSectionFilterEntry).attributes('count')).toBe('2')
       expect(wrapper.vm.lastPage.total).toBe(3)
@@ -195,7 +195,7 @@ describe('FilterType.vue', () => {
 
       wrapper.vm.query = 'text/type_0'
 
-      await wrapper.vm.aggregate({ clearPages: true })
+      await wrapper.vm.aggregateOver()
 
       expect(wrapper.vm.entries).toHaveLength(3)
       expect(wrapper.vm.lastPage.total).toBe(5)
@@ -211,7 +211,7 @@ describe('FilterType.vue', () => {
 
       wrapper.vm.query = 'yolo'
 
-      await wrapper.vm.aggregate({ clearPages: true })
+      await wrapper.vm.aggregateOver()
 
       expect(wrapper.vm.entries).toHaveLength(0)
       expect(wrapper.vm.lastPage.total).toBe(6)
@@ -223,7 +223,7 @@ describe('FilterType.vue', () => {
 
       wrapper.vm.query = 'TEX'
 
-      await wrapper.vm.aggregate({ clearPages: true })
+      await wrapper.vm.aggregateOver()
 
       expect(wrapper.vm.entries).toHaveLength(2)
       expect(wrapper.vm.lastPage.total).toBe(2)
@@ -243,7 +243,7 @@ describe('FilterType.vue', () => {
 
       wrapper.vm.query = 'image'
 
-      await wrapper.vm.aggregate({ clearPages: true })
+      await wrapper.vm.aggregateOver()
 
       expect(wrapper.vm.entries).toHaveLength(2)
       expect(wrapper.vm.lastPage.total).toBe(4)
@@ -256,7 +256,7 @@ describe('FilterType.vue', () => {
 
       wrapper.vm.query = 'Internet'
 
-      await wrapper.vm.aggregate({ clearPages: true })
+      await wrapper.vm.aggregateOver()
 
       expect(wrapper.vm.entries).toHaveLength(1)
       expect(wrapper.vm.entries[0].item.doc_count).toBe(2)
@@ -270,7 +270,7 @@ describe('FilterType.vue', () => {
 
       wrapper.vm.query = 'EMAIL'
 
-      await wrapper.vm.aggregate({ clearPages: true })
+      await wrapper.vm.aggregateOver()
 
       expect(wrapper.vm.entries).toHaveLength(1)
       expect(wrapper.vm.entries[0].item.doc_count).toBe(2)
@@ -281,13 +281,13 @@ describe('FilterType.vue', () => {
       await letData(es).have(new IndexedDocument('doc_01', index).withContentType('text/javascript')).commit()
       await letData(es).have(new IndexedDocument('doc_02', index).withContentType('text/html')).commit()
       await letData(es).have(new IndexedDocument('doc_03', anotherIndex).withContentType('text/javascript')).commit()
-      await wrapper.vm.aggregate({ clearPages: true })
+      await wrapper.vm.aggregateOver()
 
       expect(wrapper.findAllComponents(FiltersPanelSectionFilterEntry)).toHaveLength(2)
       expect(wrapper.vm.lastPage.total).toBe(2)
 
       searchStore.setIndex(anotherIndex)
-      await wrapper.vm.aggregate({ clearPages: true })
+      await wrapper.vm.aggregateOver()
 
       expect(wrapper.findAllComponents(FiltersPanelSectionFilterEntry)).toHaveLength(1)
       expect(wrapper.vm.lastPage.total).toBe(1)
@@ -317,7 +317,7 @@ describe('FilterType.vue', () => {
     it('should display the language filter in French', async () => {
       await core.loadI18Locale('fr')
       await letData(es).have(new IndexedDocument('document_01', index).withLanguage('ENGLISH')).commit()
-      await wrapper.vm.aggregate({ clearPages: true })
+      await wrapper.vm.aggregateOver()
       const entries = wrapper.findAllComponents(FiltersPanelSectionFilterEntry)
       expect(entries).toHaveLength(1)
       expect(entries.at(0).attributes('label')).toBe('Anglais')
@@ -328,7 +328,7 @@ describe('FilterType.vue', () => {
       await wrapper.setProps({ filter: searchStore.getFilter({ name: 'language' }) })
 
       await letData(es).have(new IndexedDocument('document_01', index).withLanguage('WELSH')).commit()
-      await wrapper.vm.aggregate({ clearPages: true })
+      await wrapper.vm.aggregateOver()
 
       const entries = wrapper.findAllComponents(FiltersPanelSectionFilterEntry)
       expect(entries).toHaveLength(1)
@@ -362,7 +362,7 @@ describe('FilterType.vue', () => {
 
       await letData(es).have(new IndexedDocument('document_01', index)).commit()
       await letData(es).have(new IndexedDocument('document_02', index).withParent('document_01')).commit()
-      await wrapper.vm.aggregate({ clearPages: true })
+      await wrapper.vm.aggregateOver()
 
       const entries = wrapper.findAllComponents(FiltersPanelSectionFilterEntry)
       expect(entries).toHaveLength(2)
@@ -377,7 +377,7 @@ describe('FilterType.vue', () => {
 
       await letData(es).have(new IndexedDocument('document_01', index)).commit()
       await letData(es).have(new IndexedDocument('document_02', index).withParent('document_01')).commit()
-      await wrapper.vm.aggregate({ clearPages: true })
+      await wrapper.vm.aggregateOver()
 
       const entries = wrapper.findAllComponents(FiltersPanelSectionFilterEntry)
       expect(entries).toHaveLength(2)
