@@ -25,8 +25,6 @@ const { filter, modal } = defineProps({
 const query = defineModel('query', { type: String, default: '' })
 const collapse = defineModel('collapse', { type: Boolean, default: null })
 
-const emit = defineEmits(['aggregate', 'update', 'update:filter-value'])
-
 const pages = reactive([])
 const expand = ref(false)
 
@@ -44,11 +42,6 @@ const aggregateIfVisible = () => {
 }
 
 const aggregate = async ({ clearPages = false } = {}) => {
-  /**
-   * Triggered when a filter received instruction to be load data
-   */
-  emit('aggregate', filter)
-
   if (!fromElasticSearch.value || (!clearPages && reachedBucketsEnd.value)) {
     return false
   }
