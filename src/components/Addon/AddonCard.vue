@@ -28,14 +28,11 @@ const submitSuccess = computed(() => t(`${props.addonType}.submitSuccess`))
 const submitError = computed(() => t(`${props.addonType}.submitError`))
 
 const isFromRegistry = computed(() => {
-  return !!props.deliverableFromRegistry ?? false
+  return !!props.deliverableFromRegistry
 })
 
 const formattedName = computed(() => {
-  if (isFromRegistry.value) {
-    return props.deliverableFromRegistry?.name
-  }
-  return startCase(camelCase(props.name))
+  return props.deliverableFromRegistry?.name ?? startCase(camelCase(props.name))
 })
 
 const addonDescription = computed(() =>
