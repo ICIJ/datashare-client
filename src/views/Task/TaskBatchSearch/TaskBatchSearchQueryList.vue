@@ -32,7 +32,7 @@ const route = useRoute()
 const appStore = useAppStore()
 const taskStore = useTaskStore()
 const { core } = useCore()
-const { wait, isLoading } = useWait()
+const { waitFor, isLoading } = useWait()
 const { fields } = useBatchSearchQueryProperties()
 
 const settingsView = 'batchSearchQueries'
@@ -69,7 +69,7 @@ async function fetchBatchSearch() {
   batchSearch.value = await core.api.getBatchSearch(props.uuid)
 }
 
-const fetchBatchSearchQueries = wait(async () => {
+const fetchBatchSearchQueries = waitFor(async () => {
   const records = await core.api.getBatchSearchQueries(props.uuid, from.value, perPage.value, searchQuery.value)
   // The queries are returned in an object
   queries.value = Object.entries(records).map(([query, count]) => ({ query, count }))
