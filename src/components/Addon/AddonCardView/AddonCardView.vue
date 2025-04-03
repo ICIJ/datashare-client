@@ -5,13 +5,30 @@ import AddonCardViewActions from '@/components/Addon/AddonCardView/AddonCardView
 import AddonCardViewDetails from '@/components/Addon/AddonCardView/AddonCardViewDetails'
 
 const props = defineProps({
-  title: { type: String, required: true },
-  version: { type: String },
-  installed: { type: Boolean },
-  recommendedVersion: { type: String, required: true },
-  description: { type: String, required: true },
-  url: { type: String },
-  loading: { type: Boolean }
+  title: {
+    type: String,
+    required: true
+  },
+  version: {
+    type: String
+  },
+  installed: {
+    type: Boolean
+  },
+  recommendedVersion: {
+    type: String,
+    required: true
+  },
+  description: {
+    type: String,
+    required: true
+  },
+  url: {
+    type: String
+  },
+  loading: {
+    type: Boolean
+  }
 })
 
 const hasAvailableUpdate = computed(() => {
