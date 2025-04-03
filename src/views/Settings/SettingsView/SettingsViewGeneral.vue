@@ -4,9 +4,11 @@ import { PhosphorIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 import Fuse from 'fuse.js'
 
+import AppWait from '@/components/AppWait/AppWait'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 import SettingsGeneral from '@/components/Settings/SettingsGeneral/SettingsGeneral'
 import { useCore } from '@/composables/useCore'
+import { useWait } from '@/composables/useWait'
 import SettingsViewLayout from '@/views/Settings/SettingsView/SettingsViewLayout'
 
 /**
@@ -14,7 +16,8 @@ import SettingsViewLayout from '@/views/Settings/SettingsView/SettingsViewLayout
  */
 defineOptions({ name: 'SettingsViewGeneral' })
 
-const { core, toastedPromise, wait } = useCore()
+const { core, toastedPromise } = useCore()
+const { waitFor, loaderId } = useWait()
 const { t } = useI18n()
 
 const settings = reactive({})
@@ -24,13 +27,9 @@ const infoLabel = computed(() => t(`settings.general.info`))
 const searchPlaceholder = computed(() => t(`settings.general.searchPlaceholder`))
 const noResultsLabel = computed(() => t('settings.layout.noResults', { query: filterTerm.value }))
 
-const loaderId = 'load server settings'
-
-async function loadSettings() {
-  wait.start(loaderId)
+const loadSettings = waitFor(async () => {
   Object.assign(settings, await core.api.getSettings())
-  wait.end(loaderId)
-}
+})
 
 const settingsArray = computed(() => {
   return Object.entries(settings).map(([key, value]) => ({ key, value }))
@@ -76,11 +75,11 @@ onBeforeMount(loadSettings)
       <form-control-search v-model="filterTerm" autofocus clear-text shadow :placeholder="searchPlaceholder" />
     </template>
     <template #noResult>{{ noResultsLabel }}</template>
-    <v-wait v-if="!noResults" :for="loaderId">
+    <app-wait v-if="!noResults" :for="loaderId">
       <template #waiting>
         <phosphor-icon :name="PhCircleNotch" spin size="lg" class="ms-auto" />
       </template>
       <settings-general :settings="filteredSettings" class="card border-0" @submit.prevent="onSubmit" />
-    </v-wait>
+    </app-wait>
   </settings-view-layout>
 </template>
