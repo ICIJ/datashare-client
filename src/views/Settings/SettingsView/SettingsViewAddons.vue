@@ -100,7 +100,7 @@ const filteredAddons = computed(() => {
         <addon-card
           :id="addon.id"
           addon-type="extension"
-          :name="addon.name"
+          :name="addon.name ?? addon.id"
           :version="addon.version"
           :description="addon.description"
           :installed="addon.installed"
