@@ -7,23 +7,22 @@ import PageHeader from '@/components/PageHeader/PageHeader'
 import PageContainer from '@/components/PageContainer/PageContainer'
 import ProjectForm from '@/components/Project/ProjectForm'
 import { useCore } from '@/composables/useCore'
+import { useWait } from '@/composables/useWait'
 
-const { core, toast, wait } = useCore()
+const { core, toast } = useCore()
+const { waitFor, isLoading } = useWait()
 const { t } = useI18n()
 
-async function submit(project) {
+const submit = waitFor(async (project) => {
   try {
-    wait.start('creating')
     await core.api.createProject(project)
     await core.setProject(project)
     notifyCreationSucceed()
     redirectToProject(project)
   } catch (error) {
     notifyCreationFailed(error)
-  } finally {
-    wait.end('creating')
   }
-}
+})
 
 function notifyCreationSucceed() {
   const title = t('projectNew.notify.succeed')
@@ -47,8 +46,8 @@ function redirectToProject({ name }) {
   <div class="project-new">
     <page-header no-toggle-settings />
     <page-container fluid>
-      <app-overlay rounded="sm" :show="$wait.is('creating')">
-        <project-form class="mb-4" card :disabled="$wait.is('creating')" @submit="submit" />
+      <app-overlay rounded="sm" :show="isLoading">
+        <project-form class="mb-4" card :disabled="isLoading" @submit="submit" />
       </app-overlay>
     </page-container>
   </div>
