@@ -11,17 +11,18 @@ import DismissableAlert from '@/components/Dismissable/DismissableAlert'
 defineOptions({ name: 'SettingsViewLayout' })
 
 const props = defineProps({
-  infoName: { 
-    type: String 
+  infoName: {
+    type: String
   },
-  infoLabel: { 
-    type: String 
+  infoLabel: {
+    type: String
   },
-  infoDismissLabel: { 
-    type: String 
+  infoDismissLabel: {
+    type: String
   },
-  noResults: { 
-    type: Boolean, default: false
+  noResults: {
+    type: Boolean,
+    default: false
   }
 })
 
