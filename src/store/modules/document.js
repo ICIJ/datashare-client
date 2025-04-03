@@ -10,7 +10,7 @@ import { apiInstance as api } from '@/api/apiInstance'
  * and recommendations.
  */
 export const useDocumentStore = defineStore(
-  'documentStore',
+  'document',
   () => {
     // The current document.
     const document = ref(null)
