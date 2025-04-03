@@ -30,10 +30,10 @@ const emit = defineEmits(['aggregate', 'update', 'update:filter-value'])
 const pages = reactive([])
 const expand = ref(false)
 
-const { wait, isLoading } = useWait()
+const { waitFor, isLoading } = useWait()
 const searchStore = useSearchStore.inject('searchStoreSuffix')
 
-const aggregateWithLoading = wait(({ clearPages = false } = {}) => {
+const aggregateWithLoading = waitFor(({ clearPages = false } = {}) => {
   return aggregate({ clearPages })
 })
 
