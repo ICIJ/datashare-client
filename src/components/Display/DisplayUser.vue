@@ -2,6 +2,8 @@
 import { mapState } from 'pinia'
 import { PhosphorIcon } from '@icij/murmur-next'
 
+import AppWait from '@/components/AppWait/AppWait'
+import { useWait } from '@/composables/useWait'
 import { usePipelinesStore } from '@/store/modules/pipelines'
 
 /**
@@ -10,6 +12,7 @@ import { usePipelinesStore } from '@/store/modules/pipelines'
 export default {
   name: 'DisplayUser',
   components: {
+    AppWait,
     PhosphorIcon
   },
   props: {
@@ -81,6 +84,9 @@ export default {
       default: false
     }
   },
+  setup() {
+    return { wait: useWait() }
+  },
   data() {
     return {
       transformedAvatar: null,
@@ -142,9 +148,9 @@ export default {
   },
   methods: {
     async applyPipelinesWithLoader() {
-      this.$wait.start(this.loader)
+      this.wait.start(this.loader)
       await this.applyPipelines()
-      this.$wait.end(this.loader)
+      this.wait.end(this.loader)
     },
     async applyPipelines() {
       this.transformedAvatar = await this.applyAvatarPipeline()
@@ -193,17 +199,17 @@ export default {
       :is="usernameTag"
       :href="transformedLink"
       class="display-user__username"
-      :class="{ 'display-user__username--loading': $wait.is(loader) }"
+      :class="{ 'display-user__username--loading': wait.waiting(loader) }"
       aria-label="username"
     >
-      <v-wait :for="loader" class="d-inline">
+      <app-wait :for="loader" class="d-inline">
         <template #waiting>
           {{ value }}
         </template>
         <template #default>
           {{ transformedUsername }}
         </template>
-      </v-wait>
+      </app-wait>
     </component>
   </component>
 </template>
