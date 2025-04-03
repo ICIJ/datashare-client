@@ -31,17 +31,17 @@ const expand = ref(false)
 const { waitFor, isLoading } = useWait({ throttle: 500 })
 const searchStore = useSearchStore.inject('searchStoreSuffix')
 
-const aggregateOverWithLoading = () => {
-  return aggregateWithLoading({ clearPages: true })
+const aggregateOver = () => {
+  return aggregate({ clearPages: true })
 }
 
 const aggregateIfVisible = () => {
   if (modal || !collapse.value) {
-    return aggregateOverWithLoading()
+    return aggregateOver()
   }
 }
 
-const aggregate = async ({ clearPages = false } = {}) => {
+const aggregate = waitFor(async ({ clearPages = false } = {}) => {
   if (!fromElasticSearch.value || (!clearPages && reachedBucketsEnd.value)) {
     return false
   }
@@ -59,9 +59,7 @@ const aggregate = async ({ clearPages = false } = {}) => {
   pages.push(page)
 
   return page
-}
-
-const aggregateWithLoading = waitFor(aggregate)
+})
 
 const queryTokens = computed(() => [escapeRegExp(query.value.toLowerCase())])
 
@@ -96,7 +94,7 @@ const aggregationOptions = computed(() => {
 })
 
 const nextAggregate = async ($infiniteLoadingState) => {
-  await aggregateWithLoading()
+  await aggregate()
   // Did we reach the end?
   const method = reachedBucketsEnd.value ? 'complete' : 'loaded'
   // Call the right method (with "noop" as safety net in case the method can't be found)
@@ -140,7 +138,7 @@ const hasAnyValue = computed(() => {
 const toggleValue = async (item, checked) => {
   await toggleFilterValue(filter, item, checked)
   if (contextualize.value) {
-    await aggregateOverWithLoading()
+    await aggregateOver()
   }
 }
 
@@ -191,7 +189,7 @@ const debouncedCollapse = computed({
     if (value) {
       collapse.value = true
     } else {
-      await aggregateOverWithLoading()
+      await aggregateOver()
       await nextTick()
       collapse.value = false
     }
