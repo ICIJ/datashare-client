@@ -1,47 +1,37 @@
 <script setup>
-import { computed, onBeforeMount, ref } from 'vue'
-import { uniqueId } from 'lodash'
+import { computed, watch, toRef, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { ary } from 'lodash'
 import Fuse from 'fuse.js'
 import { PhosphorIcon } from '@icij/murmur-next'
 
 import AddonUrlInput from '@/components/Addon/AddonUrlInput'
 import AddonCard from '@/components/Addon/AddonCard'
+import AppWait from '@/components/AppWait/AppWait'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 import { useCore } from '@/composables/useCore'
+import { useWait } from '@/composables/useWait'
 import { ADDONS_TYPE, addonsTypeValidator } from '@/enums/addons'
 import SettingsViewLayout from '@/views/Settings/SettingsView/SettingsViewLayout'
 
 const props = defineProps({ addonsType: { type: String, validator: addonsTypeValidator } })
 
-const { toastedPromise, core, wait } = useCore()
+const { toastedPromise, core } = useCore()
+const { waitFor, isLoading, loaderId } = useWait()
 const { t } = useI18n()
-
-const loaderId = uniqueId(`${props.addonType}-loader-`)
 
 const addons = ref([])
 const url = ref('')
-const isLoading = ref(false)
 const error = ref(true)
 const filterTerm = ref('')
 
-onBeforeMount(loadAddons)
-
-async function installFromUrl(urlToInstall) {
-  isLoading.value = true
-  try {
-    const toast = {
-      successMessage: t(`${props.addonType}.submitSuccess`),
-      errorMessage: t(`${props.addonType}.submitError`)
-    }
-    const promise = installAddonFromUrlFn.value(urlToInstall)
-    await toastedPromise(promise, toast)
-  } catch (e) {
-  } finally {
-    isLoading.value = false
-    url.value = ''
-  }
-}
+const installFromUrl = waitFor(async (urlToInstall) => {
+  const successMessage = t(`${props.addonType}.submitSuccess`)
+  const errorMessage = t(`${props.addonType}.submitError`)
+  const promise = installAddonFromUrlFn.value(urlToInstall)
+  await toastedPromise(promise, { successMessage, errorMessage })
+  url.value = ''
+})
 
 const infoLabel = computed(() => t(`settings.addons.${props.addonsType}.info`))
 const errorLabel = computed(() => t(`settings.addons.${props.addonsType}.errorLabel`))
@@ -60,17 +50,16 @@ const retrieveAddonsFn = computed(() =>
     : core.api.getPlugins.bind(core.api)
 )
 
-async function loadAddons(searchTerm) {
-  wait.start(loaderId)
+const loadAddons = waitFor(async (searchTerm) => {
   error.value = false
   try {
     addons.value = await retrieveAddonsFn.value(searchTerm)
   } catch (e) {
     error.value = true
-  } finally {
-    wait.end(loaderId)
   }
-}
+})
+
+watch(toRef(props, 'addonsType'), ary(loadAddons, 0), { immediate: true })
 
 const fuse = computed(() => {
   const options = {
@@ -103,7 +92,7 @@ const filteredAddons = computed(() => {
       <addon-url-input v-model="url" :loading="isLoading" @install="installFromUrl" />
     </div>
     <b-alert v-if="error" variant="danger" model-value>{{ errorLabel }}</b-alert>
-    <v-wait :for="loaderId" class="row g-4">
+    <app-wait :for="loaderId" class="row g-4">
       <template #waiting>
         <phosphor-icon :name="PhCircleNotch" spin size="lg" class="ms-auto" />
       </template>
@@ -120,7 +109,7 @@ const filteredAddons = computed(() => {
           @uninstalled="addon.installed = false"
         />
       </div>
-    </v-wait>
+    </app-wait>
   </settings-view-layout>
 </template>
 
