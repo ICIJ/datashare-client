@@ -19,7 +19,7 @@
     },
     "label": "shortkeys.goToNextDocument",
     "link": "https://icij.gitbook.io/datashare/usage/use-keyboard-shortcuts#go-to-the-next-previous-document",
-    "route": ["search"]
+    "route": "search"
   },
   {
     "component": "DocumentViewerModalNav",
