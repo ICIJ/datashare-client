@@ -1,5 +1,5 @@
 <template>
-  <v-wait :for="loader" transition="fade">
+  <app-wait :for="loaderId" transition="fade">
     <template #waiting>
       <div class="m-5 text-center h-100">
         <app-spinner size="2em" />
@@ -29,16 +29,18 @@
         />
       </div>
     </div>
-  </v-wait>
+  </app-wait>
 </template>
 
 <script>
-import { sum, uniqueId, values } from 'lodash'
+import { sum, values } from 'lodash'
 import bodybuilder from 'bodybuilder'
 
 import WidgetBarometer from './WidgetBarometer'
 
+import { useWait } from '@/composables/useWait'
 import AppSpinner from '@/components/AppSpinner/AppSpinner'
+import AppWait from '@/components/AppWait/AppWait'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 import { MODE_NAME } from '@/mode'
 import { getCategoryIcon, getCategoryVariant } from '@/utils/entity'
@@ -51,6 +53,7 @@ export default {
   name: 'WidgetEntities',
   components: {
     AppSpinner,
+    AppWait,
     ButtonIcon,
     WidgetBarometer
   },
@@ -69,6 +72,9 @@ export default {
       required: true
     }
   },
+  setup() {
+    return { wait: useWait() }
+  },
   data() {
     return {
       entities: {
@@ -86,8 +92,8 @@ export default {
     categories() {
       return Object.keys(this.entities)
     },
-    loader() {
-      return uniqueId('loading-entities-count-')
+    loaderId() {
+      return this.wait.loaderId
     },
     isServer() {
       return this.$config?.get('mode') === MODE_NAME.SERVER
@@ -105,7 +111,7 @@ export default {
     getCategoryIcon,
     getCategoryVariant,
     async loadData() {
-      this.$wait.start(this.loader)
+      this.wait.start(this.loaderId)
       const [email, location, organization, person] = await Promise.all([
         this.handleCountForPromise(ENTITY_CATEGORY.EMAIL),
         this.handleCountForPromise(ENTITY_CATEGORY.LOCATION),
@@ -113,7 +119,7 @@ export default {
         this.handleCountForPromise(ENTITY_CATEGORY.PERSON)
       ])
       this.entities = { person, location, organization, email }
-      this.$wait.end(this.loader)
+      this.wait.end(this.loaderId)
     },
     handleCountForPromise(category) {
       return this.countFor(category).catch((error) => {
