@@ -1,5 +1,5 @@
 <template>
-  <v-wait for="load spreadsheet" class="w-100 py-3">
+  <app-wait for="load spreadsheet" class="w-100 py-3">
     <template #waiting>
       <div class="text-muted">
         {{ $t('document.fetching') }}
@@ -73,7 +73,7 @@
         <b-tab v-for="(sheet, i) in nonEmptySheets" :key="i" :title="sheet"></b-tab>
       </b-tabs>
     </div>
-  </v-wait>
+  </app-wait>
 </template>
 
 <script>
@@ -82,6 +82,8 @@ import Fuse from 'fuse.js'
 import { getCookie } from 'tiny-cookie'
 import { DynamicScroller, DynamicScrollerItem } from 'vue-virtual-scroller'
 
+import { useWait } from '@/composables/useWait'
+import AppWait from '@/components/AppWait/AppWait'
 import { getShortkeyOS } from '@/utils/utils'
 
 /**
@@ -90,6 +92,7 @@ import { getShortkeyOS } from '@/utils/utils'
 export default {
   name: 'DocumentViewerSpreadsheet',
   components: {
+    AppWait,
     DynamicScroller,
     DynamicScrollerItem
   },
@@ -100,6 +103,9 @@ export default {
     document: {
       type: Object
     }
+  },
+  setup() {
+    return { wait: useWait() }
   },
   data() {
     return {
@@ -188,12 +194,12 @@ export default {
     }
   },
   async mounted() {
-    this.$wait.start('load spreadsheet')
+    this.wait.start('load spreadsheet')
     const response = await fetch(this.contentUrl, this.contentOptions)
     const meta = await response.json()
     this.meta = meta
     this.activeSheetIndex = 0
-    this.$wait.end('load spreadsheet')
+    this.wait.end('load spreadsheet')
   },
   methods: {
     debounceFilterInput: debounce(function ({ target: { value } }) {
