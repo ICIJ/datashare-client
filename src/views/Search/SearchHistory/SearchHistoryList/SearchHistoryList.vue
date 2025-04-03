@@ -30,7 +30,7 @@ const { t } = useI18n()
 const { toast } = useCore()
 const { confirm: showConfirmModal } = useConfirmModal()
 const { removeAll } = useHistoryEvents('DOCUMENT')
-const { isLoading, wait } = useWait()
+const { isLoading, waitFor } = useWait()
 const { searchRoute } = useSearchNav()
 const view = 'searchHistoryList'
 
@@ -67,7 +67,7 @@ const order = computed({
 
 const orderDesc = computed(() => order.value === 'desc')
 
-const fetch = wait(async () => {
+const fetch = waitFor(async () => {
   const result = await api.getHistoryEvents('DOCUMENT', offset.value, perPage.value, sort.value, orderDesc.value)
   events.value = result?.items.map((item) => ({ ...item })) ?? []
   pagination.value = result.pagination
