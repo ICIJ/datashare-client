@@ -6,6 +6,7 @@ defineOptions({ name: 'DocumentUserTagsAction' })
 const modelValue = defineModel({ type: Array, required: true })
 
 defineProps({
+  disabled: { type: Boolean },
   options: {
     type: Array,
     default: () => []
@@ -16,8 +17,9 @@ defineProps({
 <template>
   <form-control-tag
     v-model="modelValue"
+    :disabled="disabled"
     :options="options"
-    class="w-100"
+    class="document-user-tags-actions w-100"
     no-duplicates
     no-tags
     no-clear
