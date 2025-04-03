@@ -1,5 +1,5 @@
 <template>
-  <project-dropdown-selector v-model="selectedProjects" :projects="projects" />
+  <project-dropdown-selector v-model="selectedProjects" placement="bottom-end" :projects="projects" />
 </template>
 
 <script setup>

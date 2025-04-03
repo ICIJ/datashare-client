@@ -7,7 +7,7 @@
       'search-bar__field--disabled': disabled
     }"
     :disabled="disabled"
-    placement="bottom-end"
+    :placement="placement"
     no-caret
     class="search-bar-input-dropdown"
     menu-class="search-bar-input-dropdown__menu"
@@ -105,6 +105,12 @@ export default {
      */
     flushItems: {
       type: Boolean
+    },
+    /**
+     * The dropdown placement (bottom, top, left, right, bottom-start, bottom-end, etc).
+     */
+    placement: {
+      type: String
     },
     /**
      * Teleport the dropdown to a different element.
