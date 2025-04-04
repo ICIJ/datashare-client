@@ -1,12 +1,12 @@
 <script setup>
-import { computed, inject } from 'vue'
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { matchesProperty } from 'lodash'
 
 import DocumentActionsGroupEntry from './DocumentActionsGroupEntry'
 
-import { useDocument } from '@/composables/useDocument'
+import { useDocumentModal } from '@/composables/useDocumentModal'
 
 const { document } = defineProps({
   /**
@@ -31,44 +31,40 @@ const { document } = defineProps({
 })
 
 const route = useRoute()
+const router = useRouter()
 const { t } = useI18n()
-const { isRouteActive, documentParentRoute } = useDocument()
-const modal = inject('modal', undefined)
+const { show: showDocumentModal } = useDocumentModal()
 
 const isSearchRoute = computed(() => route?.matched.some(matchesProperty('name', 'search')))
 
-const documentRoute = computed(() => {
+const to = computed(() => {
   const params = document.routerParams
   const query = { modal: true }
   const name = isSearchRoute.value ? 'document' : 'document-standalone'
   return { name, params, query }
 })
 
-const activeDocumentParentRoute = computed(() => {
-  const { name } = documentParentRoute.value
-  return { name }
+const href = computed(() => {
+  const { href } = router.resolve(to.value)
+  return href
 })
 
-const to = computed(() => {
-  if (active.value) {
-    return activeDocumentParentRoute.value
+function handleClick(event) {
+  if (!isSearchRoute.value) {
+    event.preventDefault()
+    showDocumentModal(document.index, document.id, document.routing, route.query.q)
   }
-
-  return documentRoute.value
-})
-
-const active = computed(() => modal && isRouteActive(document))
-const icon = computed(() => (active.value ? 'x' : 'arrows-out-simple'))
-const label = computed(() => (active.value ? t('documentActionsGroup.close') : t('documentActionsGroup.expand')))
+}
 </script>
 
 <template>
   <document-actions-group-entry
-    :icon="icon"
-    :to="to"
-    :label="label"
+    :icon="PhArrowsOutSimple"
+    :href="href"
+    :label="t('documentActionsGroup.expand')"
     :tooltip-placement="tooltipPlacement"
     :vertical="vertical"
     hide-tooltip
+    @click.exact="handleClick"
   />
 </template>
