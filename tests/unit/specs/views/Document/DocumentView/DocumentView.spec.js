@@ -51,11 +51,7 @@ describe('DocumentView.vue', () => {
       { path: '/', name: 'index' },
       { path: '/error', name: 'error' },
       { path: '/document', name: 'document' },
-      { path: '/document/text', name: 'document.text' },
-      { path: '/document/viewer', name: 'document.viewer' },
-      { path: '/document/entities', name: 'document.entities' },
-      { path: '/error', name: 'error' },
-      { path: '/document/metadata', name: 'document.metadata' }
+      { path: '/document-standalone', name: 'document-standalone' }
     ]
 
     core = CoreSetup.init().useAll().useRouter(routes)
