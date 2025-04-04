@@ -263,6 +263,10 @@ export default {
     background: $primary;
   }
 
+  &--clickable {
+    cursor: pointer;
+  }
+
   &--clickable:hover,
   &--hover {
     .document-thumbnail__placeholder {
@@ -271,11 +275,6 @@ export default {
 
     .document-thumbnail__overlay {
       display: flex;
-      cursor: pointer;
-    }
-
-    .document-thumbnail__placeholder + .document-thumbnail__overlay {
-      cursor: auto;
     }
   }
 
