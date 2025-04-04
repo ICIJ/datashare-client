@@ -297,6 +297,9 @@
     "expand": "Expand",
     "close": "Close"
   },
+  "documentCardCheckbox":{
+    "selectDocument": "Select this document"
+  },
   "documentLocalSearchOccurrences": {
     "label": "{activeIndex} on {occurrences}"
   },
@@ -872,12 +875,17 @@
   "appSidebar": {
     "projects": "Projects",
     "allProjects": "All projects",
-    "search": "Documents",
+    "search": "Search",
+    "searchDocuments": "Documents",
     "history": "History",
     "savedSearches": "Saved searches"
   },
   "appSidebarFooter": {
+    "signOut": "Sign out",
+    "keyboardShortcuts": "Keyboard Shortcuts",
+    "settings": "Settings",
     "removeAll": {
+      "link": "Remove all",
       "title": "Are you sure you want to delete all your projects?",
       "description": "This action cannot be undone. It will remove all your projects and their documents from Datashare.",
       "success": "All your projects and documents were removed from Datashare.",

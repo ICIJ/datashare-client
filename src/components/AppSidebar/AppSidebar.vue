@@ -133,9 +133,14 @@ onBeforeRouteLeave(autoClose)
             <project-label :project="project" hide-thumbnail />
           </app-sidebar-section-entry>
         </app-sidebar-section>
-        <app-sidebar-section title="Search" :icon="PhMagnifyingGlass" :to="searchRoute" :compact="compact">
+        <app-sidebar-section
+          :title="$t('appSidebar.searchDocuments')"
+          :icon="PhMagnifyingGlass"
+          :to="searchRoute"
+          :compact="compact"
+        >
           <app-sidebar-section-entry :icon="PhFileMagnifyingGlass" :to="searchRoute" exact-match>
-            {{ $t('appSidebar.search') }}
+            {{ $t('appSidebar.searchDocuments') }}
           </app-sidebar-section-entry>
           <app-sidebar-section-entry :icon="PhClockCounterClockwise" :to="{ name: 'search.history.list' }">
             {{ $t('appSidebar.history') }}
