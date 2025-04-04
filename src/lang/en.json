@@ -1788,11 +1788,15 @@
     "star": "Star",
     "unstar": "Unstar",
     "tag": "Tag",
-    "successTag": "{nbTags} tags added to {nbDocs} documents."
+    "tagSuccess": "{nbDocs} documents have been tagged with {nbTags} tags.",
+    "tagFailed": "Error: {nbDocs} documents have not been tagged with {nbTags} tags."
   },
   "searchSelectionAddTagsModal": {
     "title": "Tag selected document | Tag selected document | Tag {n} selected documents",
-    "description": "Add {n} tag to selected documents ?  | Add {n} tags to selected documents ?"
+    "description": "You can select multiple tags to add by separating them with semicolon.",
+    "question": "Add {n} tag to selected documents ?  | Add {n} tags to selected documents ?",
+    "okTitle": "Add",
+    "placeholder": "Tag1, Tag2"
   },
   "documentCarousel": {
     "next": "Next",

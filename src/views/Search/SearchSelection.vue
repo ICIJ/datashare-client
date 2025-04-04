@@ -71,7 +71,8 @@ async function addTagsModal() {
   // Only a valid submit returns value. Cancel or modal hide returns null.
   if (result?.tags) {
     await toastedPromise(tagSelection(selectionEntries.value, result.tags), {
-      successMessage: t('searchSelection.successTag', { nbTags: result.tags.length, nbDocs: nbSelection.value })
+      successMessage: t('searchSelection.tagSuccess', { nbTags: result.tags.length, nbDocs: nbSelection.value }),
+      errorMessage: t('searchSelection.tagFailed', { nbTags: result.tags.length, nbDocs: nbSelection.value })
     })
   }
 }
