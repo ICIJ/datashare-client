@@ -1,12 +1,15 @@
-import { reactive, watchEffect, onBeforeUnmount } from 'vue'
+import { reactive, watchEffect, onBeforeUnmount, toValue } from 'vue'
 import ResizeObserver from 'resize-observer-polyfill'
 
+const toElement = (ref) => toValue(ref)?.$el ?? toValue(ref)
+
 export const useResizeObserver = (resizableRef) => {
-  const state = reactive({
-    contentRect: {},
-    offsetWidth: 0,
-    offsetHeight: 0
-  })
+  const contentRect = toElement(resizableRef)?.getBoundingClientRect() ?? {}
+  const { offsetWidth, offsetHeight } = toElement(resizableRef) ?? { offsetWidth: 0, offsetHeight: 0 }
+  const initialValue = { contentRect, offsetWidth, offsetHeight }
+  // To avoid flaky behavior, we initilize the state as soon as possible
+  // and then we update it when the observer is triggered.
+  const state = reactive(initialValue)
 
   const observer = new ResizeObserver((entries) => {
     entries.forEach((entry) => {
@@ -18,7 +21,7 @@ export const useResizeObserver = (resizableRef) => {
 
   watchEffect(() => {
     if (resizableRef.value) {
-      const element = resizableRef.value?.$el ?? resizableRef.value
+      const element = toElement(resizableRef)
       // Initial values of the state
       state.contentRect = element.getBoundingClientRect()
       state.offsetWidth = element.offsetWidth
@@ -30,7 +33,7 @@ export const useResizeObserver = (resizableRef) => {
 
   onBeforeUnmount(() => {
     if (resizableRef.value) {
-      observer.unobserve(resizableRef.value?.$el ?? resizableRef.value)
+      observer.unobserve(toElement(resizableRef))
     }
   })
 
