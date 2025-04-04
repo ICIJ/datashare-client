@@ -5,6 +5,10 @@ import { useRouter } from 'vue-router'
 import { useDocumentModal } from '@/composables/useDocumentModal'
 
 const props = defineProps({
+  name: {
+    type: String,
+    default: 'document-standalone'
+  },
   index: {
     type: String,
     required: true
@@ -29,7 +33,7 @@ const router = useRouter()
 const { show: showDocumentModal } = useDocumentModal()
 
 const to = computed(() => ({
-  name: 'document-standalone',
+  name: props.name,
   params: {
     index: props.index,
     id: props.id,
