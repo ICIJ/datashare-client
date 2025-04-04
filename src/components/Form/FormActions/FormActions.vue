@@ -104,12 +104,16 @@ watch(
 .form-actions {
   display: flex;
   align-items: center;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   column-gap: $spacer;
   row-gap: $spacer-sm;
 
   &--end {
     justify-content: flex-end;
+  }
+
+  &--compact {
+    flex-wrap: nowrap;;
   }
 
   @include media-breakpoint-down(md) {
