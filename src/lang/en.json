@@ -300,6 +300,9 @@
   "documentCardCheckbox":{
     "selectDocument": "Select this document"
   },
+  "documentLocalSearchInput": {
+    "placeholder": "Search in document"
+  },
   "documentLocalSearchOccurrences": {
     "label": "{activeIndex} on {occurrences}"
   },
