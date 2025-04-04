@@ -49,7 +49,7 @@ const classList = computed(() => {
       tooltip-placement="right"
       icon-left="arrows-out-simple"
       hide-label
-      label="Expand"
+      :label="$t('filtersPanelSectionFilterActions.expand')"
       @click="expand = !expand"
     />
   </div>

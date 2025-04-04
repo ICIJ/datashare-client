@@ -9,7 +9,7 @@ import ButtonIcon from '@/components/Button/ButtonIcon'
     hide-label
     icon-left="arrow-line-right"
     icon-left-hover-weight="bold"
-    label="Expand"
+    :label="$t('separatorLineExpand.expand')"
     size="sm"
     variant="outline-dark"
     class="separator-line-expand"

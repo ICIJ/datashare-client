@@ -118,11 +118,11 @@ const classList = computed(() => {
         v-b-tooltip.body="{ delay: tooltipDelay }"
         :href="helpLink"
         target="_blank"
-        title="Help"
+        :title="t('appSidebarFooter.help')"
         class="app-sidebar-footer__links__item"
       >
         <phosphor-icon class="app-sidebar-footer__links__item__icon" name="question" hover-weight="bold" />
-        <span class="visually-hidden">Help</span>
+        <span class="visually-hidden">{{ t('appSidebarFooter.help') }}</span>
       </a>
       <a
         v-if="!noRemoveAll"

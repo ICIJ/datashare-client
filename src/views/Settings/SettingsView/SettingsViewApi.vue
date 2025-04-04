@@ -122,7 +122,7 @@ onMounted(getHashedApiKey)
       <p>{{ $t('settings.api.key.warning') }}</p>
       <div class="input-group">
         <input class="form-control font-monospace." readonly :value="apiKey" />
-        <haptic-copy :text="apiKey" class="btn-outline-action" label="Copy" />
+        <haptic-copy :text="apiKey" class="btn-outline-action" :label="$t('settings.api.key.copy')" />
       </div>
     </app-modal>
   </settings-view-layout>
