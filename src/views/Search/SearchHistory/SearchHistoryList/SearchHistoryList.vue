@@ -30,7 +30,7 @@ const { t } = useI18n()
 const { toast } = useCore()
 const { confirm: showConfirmModal } = useConfirmModal()
 const { removeAll } = useHistoryEvents('DOCUMENT')
-const { isLoading, waitFor } = useWait()
+const { isLoading, isReady, waitFor } = useWait()
 const { searchRoute } = useSearchNav()
 const view = 'searchHistoryList'
 
@@ -106,7 +106,7 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
     </page-header>
     <page-container fluid class="search-history-list__content flex-grow-1 overflow-auto">
       <search-history-entries :events="events" :loading-events="isLoading" />
-      <div v-if="!events.length && !isLoading" class="text-center text-secondary">
+      <div v-if="!events.length && isReady" class="text-center text-secondary">
         {{ t('searchHistoryList.empty') }}
       </div>
     </page-container>
