@@ -41,12 +41,15 @@ const router = useRouter()
 const route = useRoute()
 const appStore = useAppStore()
 
-const tab = useUrlParamWithStore('tab', {
-  initialValue: 'text',
-  get: () => appStore.getSettings('documentView', 'tab'),
-  set: (tab) => appStore.setSettings({ view: 'documentView', tab })
-})
+// We cannot use a <router-view> to display the tabs because the document view must be independent of the router.
+// This independence is crucial to allow the document view to be used in various contexts, such as displaying a document
+// in a modal on the batch search results page or embedding it in other parts of the application where the router may
+// not be involved.
 
+// Instead of relying on <router-view>, we use a custom list of tabs defined in the `tabs` computed property.
+// Each tab is associated with a component that is dynamically imported when the tab is activated.
+// The "tab" route query parameter is used to determine which tab is currently active.
+// This approach allows us to maintain the active tab state in the URL, enabling deep linking and bookmarking of specific tabs.
 const tabs = computed(() => {
   return [
     {
@@ -74,6 +77,16 @@ const tabs = computed(() => {
       tab: 'entities'
     }
   ]
+})
+
+// Additionally, the "tab" route query parameter is kept in sync with the `appStore`.
+// This synchronization ensures that when switching from one document to another, the active tab remains consistent.
+// For example, if the user is viewing the "metadata" tab of one document and navigates to another document,
+// the application will automatically display the "metadata" tab for the new document as well.
+const tab = useUrlParamWithStore('tab', {
+  initialValue: 'text',
+  get: () => appStore.getSettings('documentView', 'tab'),
+  set: (tab) => appStore.setSettings({ view: 'documentView', tab })
 })
 
 const component = ref(null)
