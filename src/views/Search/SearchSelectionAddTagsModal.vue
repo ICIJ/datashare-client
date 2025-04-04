@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onBeforeMount, watch, useTemplateRef } from 'vue'
+import { ref, computed, onBeforeMount } from 'vue'
 import bodybuilder from 'bodybuilder'
 import { flatten, get, map } from 'lodash'
 import { useI18n } from 'vue-i18n'
@@ -9,7 +9,7 @@ import { useCore } from '@/composables/useCore'
 import imageLight from '@/assets/images/illustrations/app-modal-tag-add-light.svg'
 import imageDark from '@/assets/images/illustrations/app-modal-tag-add-dark.svg'
 import ImageModeSource from '@/components/ImageMode/ImageModeSource'
-import AppModal from '@/components/AppModal/AppModal'
+import AppModalPrompt from '@/components/AppModal/AppModalPrompt'
 const props = defineProps({
   indices: { type: Array, default: () => [] },
   nbDocs: { type: Number }
@@ -51,7 +51,7 @@ onBeforeMount(fetchAllTags)
 </script>
 
 <template>
-  <app-modal
+  <app-modal-prompt
     class="search-selection-add-tags-modal"
     :image="imageHeaderLight"
     :title="t('searchSelectionAddTagsModal.title', nbDocs)"
@@ -79,7 +79,7 @@ onBeforeMount(fetchAllTags)
         {{ t('searchSelectionAddTagsModal.question', tags.length) }}
       </p>
     </div>
-  </app-modal>
+  </app-modal-prompt>
 </template>
 <style lang="scss">
 .search-selection-add-tags-modal {
