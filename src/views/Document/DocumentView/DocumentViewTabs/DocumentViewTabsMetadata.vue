@@ -192,7 +192,7 @@ const classList = computed(() => {
 <template>
   <div class="document-view-tabs-metadata w-100 d-flex flex-column gap-3" :class="classList">
     <div class="bg-body sticky-top py-3">
-      <form-control-search v-model="q" placeholder="Search in metadata" clear-text shadow />
+      <form-control-search v-model="q" :placeholder="t('documentViewTabsMetadata.search')" clear-text shadow />
     </div>
     <transition-group tag="div" name="list">
       <document-metadata
