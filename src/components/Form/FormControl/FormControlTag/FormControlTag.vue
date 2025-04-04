@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, watch, useTemplateRef, toRef } from 'vue'
+import { computed, ref, watch, useTemplateRef } from 'vue'
 import { compact, every, identity, isFunction, escapeRegExp, get, trim } from 'lodash'
 
 import FormControlTagInput from './FormControlTagInput'
