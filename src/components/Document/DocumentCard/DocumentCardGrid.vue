@@ -6,7 +6,7 @@ import DocumentCardProperties from './DocumentCardProperties'
 import DocumentThumbnail from '@/components/Document/DocumentThumbnail'
 import DocumentActionsGroup from '@/components/Document/DocumentActionsGroup/DocumentActionsGroup'
 import RouterLinkDocument from '@/components/RouterLink/RouterLinkDocument'
-import { useDocumentViewerModal } from '@/composables/useDocument'
+import { useDocumentModal } from '@/composables/useDocument'
 
 const selected = defineModel('selected', { type: Boolean })
 
@@ -41,7 +41,7 @@ const props = defineProps({
   }
 })
 
-const { show: showDocumentViewerModal } = useDocumentViewerModal(props.document)
+const { show: showDocumentViewerModal } = useDocumentModal(props.document)
 const hover = ref(false)
 
 const classList = computed(() => {

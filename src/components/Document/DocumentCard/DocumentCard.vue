@@ -7,7 +7,7 @@ import DocumentCardCheckbox from './DocumentCardCheckbox'
 import DocumentThumbnail from '@/components/Document/DocumentThumbnail'
 import DocumentActionsGroup from '@/components/Document/DocumentActionsGroup/DocumentActionsGroup'
 import RouterLinkDocument from '@/components/RouterLink/RouterLinkDocument'
-import { useDocumentViewerModal } from '@/composables/useDocument'
+import { useDocumentModal } from '@/composables/useDocument'
 
 const props = defineProps({
   document: {
@@ -46,7 +46,7 @@ const props = defineProps({
 
 const emit = defineEmits(['preview', 'update:selected'])
 
-const { show: showDocumentViewerModal } = useDocumentViewerModal(props.document)
+const { show: showDocumentViewerModal } = useDocumentModal(props.document)
 const hover = ref(false)
 
 const classList = computed(() => {
