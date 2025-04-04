@@ -55,7 +55,7 @@ const separatorLineLeft = ref(props.minStartWidth)
 const enoughtStartSpace = computed(() => separatorLineLeft.value >= props.minStartWidth)
 const enoughtEndSpace = computed(() => separatorLineRight.value >= props.minEndWidth)
 const enoughtSpace = computed(() => enoughtStartSpace.value && enoughtEndSpace.value)
-watch(enoughtSpace, (value) => emit('update:enoughtSpace', value), { immediate: true })
+watch(enoughtSpace, (value) => emit('update:enoughtSpace', value), { immediate: !!elementRef?.value?.$el })
 
 const reachedZeroWidth = computed(() => separatorLineLeft.value === 0)
 const reachedMinWidth = computed(() => separatorLineLeft.value <= props.minStartWidth)
