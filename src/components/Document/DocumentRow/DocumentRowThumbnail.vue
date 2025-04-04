@@ -1,6 +1,6 @@
 <script setup>
 import DocumentThumbnail from '@/components/Document/DocumentThumbnail'
-import { useDocumentViewerModal } from '@/composables/useDocument'
+import { useDocumentModal } from '@/composables/useDocument'
 
 const props = defineProps({
   document: {
@@ -8,7 +8,7 @@ const props = defineProps({
   }
 })
 
-const { show: showDocumentViewerModal } = useDocumentViewerModal(props.document)
+const { show: showDocumentViewerModal } = useDocumentModal(props.document)
 </script>
 
 <template>

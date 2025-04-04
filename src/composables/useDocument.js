@@ -123,7 +123,7 @@ export const useDocument = function (element) {
   }
 }
 
-export const useDocumentViewerModal = function (document) {
+export const useDocumentModal = function (document) {
   const modalController = useModalController()
   const props = { document }
 
