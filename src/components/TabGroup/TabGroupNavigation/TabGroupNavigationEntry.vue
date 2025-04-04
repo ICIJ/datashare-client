@@ -1,7 +1,12 @@
 <script setup>
+import { computed } from 'vue'
+
 import TabGroupTitle from '@/components/TabGroup/TabGroupTitle'
 
-defineProps({
+const props = defineProps({
+  manual: {
+    type: Boolean
+  },
   active: {
     type: Boolean
   },
@@ -34,11 +39,19 @@ defineProps({
     type: Object
   }
 })
+
+const classList = computed(() => {
+  return {
+    'tab-group-navigation-entry--active': props.active,
+    'tab-group-navigation-entry--manual': props.manual
+  }
+})
 </script>
 
 <template>
   <b-nav-item
     class="tab-group-navigation-entry"
+    :class="classList"
     :active="active"
     :active-class="activeClass"
     :exact-active-class="exactActiveClass"

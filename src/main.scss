@@ -279,26 +279,28 @@ html[data-bs-theme] body .Toastify {
 }
 
 .tab-group-navigation-entry {
+    
+  &:not(&--manual) > .nav-link.router-link-active,
+  &:not(&--manual) > .nav-link.router-link-exact-active,
+  &:not(&--manual) > .nav-link.active,
+  &--manual.tab-group-navigation-entry--active > .nav-link {
 
-   & .nav-link {
+    --color: var(--bs-emphasis-color);
+    background: transparent;
+    border-bottom: 2px solid var(--bs-primary);
+    font-weight: 500;
+
+    .nav-tabs.flex-column>& {
+      border-left: 2px solid var(--bs-primary);
+    }
+  }
+
+   .nav-link {
      --color: var(--bs-secondary-text-emphasis);
 
      color: var(--color);
      padding: 10px $spacer-xs;
-
-     &.active,
-     &.router-link-active,
-     &.router-link-exact-active {
-
-       --color: var(--bs-emphasis-color);
-       background: transparent;
-       border-bottom: 2px solid var(--bs-primary);
-       font-weight: 500;
-
-       .nav-tabs.flex-column > & {
-         border-left: 2px solid var(--bs-primary);
-       }
-     }
+     border-color: transparent;
 
      &.nav-link:hover {
        --color: var(--bs-emphasis-color);
