@@ -17,7 +17,7 @@ import { batchQueryParamUpdate } from '@/composables/useUrlParam'
  * @param {Function} [options.set] - Setter function to update the value
  * @param {Function} [options.transform] - Function to transform the value before setting it
  * @param {any} [options.initialValue] - Initial value to set if the query parameter is not present
- * 
+ *
  * @returns {ComputedRef} - A computed reference to the synchronized value.
  */
 
