@@ -9,7 +9,7 @@ import { useWait } from '@/composables/useWait'
 import EntitySection from '@/components/Entity/EntitySection/EntitySection'
 import { useDocumentStore } from '@/store/modules'
 
-const { document, documentRoute } = useDocument()
+const { document } = useDocument()
 const { isLoading, waitFor } = useWait()
 const { core } = useCore()
 const documentStore = useDocumentStore()
@@ -55,17 +55,17 @@ const copyHits = (hits = []) => {
 const hitsWithRoute = (hits) => {
   return hits.map(({ source, mention: q }) => {
     const modal = inject('modal', undefined)
-    const to = { name: `${documentRoute.value.name}.text`, query: { q, modal } }
+    const tab = 'text'
+    const to = { query: { q, modal, tab } }
     return { ...source, to }
   })
 }
 
 const categories = computed(() => documentStore.categories)
 const getCategoryTotal = (category) => get(namedEntitiesPaginatedByCategories.value, [category, 0, 'total'], 0)
+const getCategoryCount = (category) => documentStore.countNamedEntitiesInCategory(category)
 const categoryIsNotEmpty = (category) => !!getCategoryTotal(category)
-const categoryHasNextPage = (category) => {
-  return getCategoryTotal(category) > documentStore.countNamedEntitiesInCategory(category)
-}
+const categoryHasNextPage = (category) => getCategoryTotal(category) > getCategoryCount(category)
 
 const getNextPageInCategory = async (category) => {
   if (!loadingNamedEntities.value) {

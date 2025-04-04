@@ -25,7 +25,6 @@ describe('DocumentViewTabsEntities.vue', () => {
 
   beforeEach(() => {
     const routes = [
-      { name: 'document.text', path: '/text' },
       { name: 'document', path: '/' },
       { name: 'task.entities.new', path: '/task/entities/new' }
     ]
