@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, onBeforeMount, useTemplateRef, markRaw, watch } from 'vue'
-import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router'
+import { useRouter, useRoute, onBeforeRouteUpdate, useLink } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { matches, property } from 'lodash'
 
@@ -107,7 +107,7 @@ const fetchTabComponent = async (tab) => {
 }
 
 const redirectToDocumentStandalone = () => {
-  if (route.name.startsWith('document.')) {
+  if (route.name === 'document') {
     return router.replace({ name: 'document-standalone' })
   }
 }
