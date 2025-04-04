@@ -50,7 +50,6 @@ export default {
       default: 'https://icij.gitbook.io/datashare/usage/search-with-operators'
     }
   },
-  hotKeyPrevented: ['.search-bar__input'],
   locales: [
     {
       key: 'en',

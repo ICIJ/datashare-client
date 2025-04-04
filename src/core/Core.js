@@ -5,7 +5,6 @@ import compose from 'lodash/fp/compose'
 import Murmur from '@icij/murmur-next'
 import VCalendar from 'v-calendar'
 import VueScrollTo from 'vue-scrollto'
-import VueShortkey from 'vue3-shortkey'
 import Vue3Toastify, { toast } from 'vue3-toastify'
 import { createBootstrap } from 'bootstrap-vue-next'
 import { createApp, defineComponent, h } from 'vue'
@@ -175,7 +174,7 @@ class Core extends Behaviors {
     return this
   }
   /**
-   * Configure most common Vue plugins (Murmur, VueShortkey, VueScrollTo and VueCalendar)
+   * Configure most common Vue plugins (Murmur, VueScrollTo and VueCalendar)
    * @returns {Core} the current instance of Core
    */
   useCommons() {
@@ -184,7 +183,6 @@ class Core extends Behaviors {
     this.use(Murmur, { useI18n: false, useBootstrap: false })
     // Common plugins
     this.use(Vue3Toastify, { clearOnUrlChange: false, hideProgressBar: true, autoClose: 5000 })
-    this.use(VueShortkey, { prevent: settings.hotKeyPrevented })
     this.use(VueScrollTo)
     // Setup VCalendar manually since Webpack is not compatible with
     // dynamic chunk import with third party modules.

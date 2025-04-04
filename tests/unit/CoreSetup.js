@@ -1,7 +1,6 @@
 import Murmur from '@icij/murmur-next'
 import VCalendar from 'v-calendar'
 import VueScrollTo from 'vue-scrollto'
-import VueShortkey from 'vue3-shortkey'
 import { createWebHashHistory, createRouter } from 'vue-router'
 
 import { Core } from '@/core/Core'
@@ -16,7 +15,6 @@ class CoreSetup extends Core {
       [this.murmur, { useI18n: false, useBootstrap: false }],
       this.pinia,
       this.store,
-      this.vueShortkey,
       this.vueScrollTo,
       this.vueEllipseProgress,
       this.vCalendar,
@@ -25,9 +23,6 @@ class CoreSetup extends Core {
   }
   get murmur() {
     return Murmur
-  }
-  get vueShortkey() {
-    return VueShortkey
   }
   get vueScrollTo() {
     return VueScrollTo
