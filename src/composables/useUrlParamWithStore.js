@@ -5,7 +5,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { batchQueryParamUpdate } from '@/composables/useUrlParam'
 
 /**
- * Synchronizes a single URL query parameter with Vuex store or a custom getter/setter.
+ * Synchronizes a single URL query parameter with store or a custom getter/setter.
  *
  * This function is designed for handling a single URL query parameter and keeping it
  * in sync with the store or custom getter/setter. It ensures bidirectional synchronization
@@ -15,6 +15,9 @@ import { batchQueryParamUpdate } from '@/composables/useUrlParam'
  * @param {Object} [options={}] - Configurations, e.g., a transform function to process the value.
  * @param {Function} [options.get] - Getter function to retreive the value
  * @param {Function} [options.set] - Setter function to update the value
+ * @param {Function} [options.transform] - Function to transform the value before setting it
+ * @param {any} [options.initialValue] - Initial value to set if the query parameter is not present
+ * 
  * @returns {ComputedRef} - A computed reference to the synchronized value.
  */
 
@@ -22,10 +25,12 @@ export function useUrlParamWithStore(queryParam, options = {}) {
   const route = useRoute()
   const router = useRouter()
 
-  const getValue = options.get || noop
-  const setValue = options.set || noop
+  const getStoreValue = options.get || noop
+  const setStoreValue = options.set || noop
   const transform = options.transform || identity
+  const initialValue = options.initialValue || null
   const to = options.to || null
+  const correctRoute = computed(() => !to || route.name === to)
 
   // Get and transform the route value
   const getRouteValue = () => {
@@ -33,29 +38,41 @@ export function useUrlParamWithStore(queryParam, options = {}) {
     return value !== undefined ? transform(value) : null
   }
 
-  // Create a computed property that synchronizes the query parameter with the Vuex store
+  // Create a computed property that synchronizes the query parameter with the store
   const param = computed({
     get() {
       // If the query parameter exists in the URL, transform and return it, else return the value from the store
-      return getRouteValue() ?? getValue()
+      return getRouteValue() ?? getStoreValue()
     },
     set(value) {
-      setValue(value)
+      setStoreValue(value)
       // Batch the update to the query parameter in the URL
       batchQueryParamUpdate(router, route, to, [queryParam], [value])
     }
   })
 
-  // Watch the Vuex store value directly and update the URL when it changes
-  watch(getValue, (newValue) => {
-    if ((!to || route.name === to) && newValue !== getRouteValue()) {
+  // Watch the store value directly and update the URL when it changes
+  watch(getStoreValue, (newValue) => {
+    if (correctRoute.value && newValue !== getRouteValue()) {
       batchQueryParamUpdate(router, route, to, [queryParam], [newValue])
     }
   })
 
+  // Watch the route value and update the store when it changes
+  watch(getRouteValue, (newValue) => {
+    if (newValue && correctRoute.value && newValue !== getStoreValue()) {
+      setStoreValue(newValue)
+    }
+  })
+
   // Initialize the store value with the URL value if they are different
-  if (getRouteValue() && !isEqual(getRouteValue(), getValue())) {
-    setValue(getRouteValue())
+  if (getRouteValue() && !isEqual(getRouteValue(), getStoreValue())) {
+    setStoreValue(getRouteValue())
+  }
+
+  // If the route value is not set and the store value is not set, set the initial value
+  if (!getRouteValue() && !getStoreValue() && initialValue) {
+    param.value = initialValue
   }
 
   return param
