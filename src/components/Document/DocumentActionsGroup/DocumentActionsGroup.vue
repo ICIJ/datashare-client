@@ -1,10 +1,6 @@
 <template>
   <div class="document-actions-group" :class="classList">
-    <div v-if="selectMode" class="document-actions-group__checkbox">
-      <b-form-checkbox v-model="selected" aria-label="Select this document" name="checkbox">
-        <span class="visually-hidden">Select this document</span>
-      </b-form-checkbox>
-    </div>
+    <document-card-checkbox v-if="selectMode" v-model="selected" class="document-actions-group__checkbox" />
     <slot name="actions" v-bind="{ document, tooltipPlacement, vertical }">
       <document-actions-group-entry-star
         :document="document"
@@ -39,6 +35,7 @@ import DocumentActionsGroupEntryShare from './DocumentActionsGroupEntryShare'
 import DocumentActionsGroupEntryStar from './DocumentActionsGroupEntryStar'
 
 import { PLACEMENT, placementValidator } from '@/enums/placements'
+import DocumentCardCheckbox from '@/components/Document/DocumentCard/DocumentCardCheckbox'
 
 /**
  * True if checkbox is selected
