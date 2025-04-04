@@ -827,6 +827,9 @@
   "formControlPath": {
     "browse": "Browse"
   },
+  "formControlSearch": {
+    "placeholder": "Search..."
+  },
   "formStepHeadingToggler": {
     "label": "Toggle"
   },

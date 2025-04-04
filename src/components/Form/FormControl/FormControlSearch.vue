@@ -2,6 +2,7 @@
 import { computed, toRef, useTemplateRef, watch } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 import { PhCircleNotch, PhMagnifyingGlass } from '@phosphor-icons/vue'
+import { useI18n } from 'vue-i18n'
 
 import { buttonSizeValidator, SIZE } from '@/enums/sizes'
 import ButtonIcon from '@/components/Button/ButtonIcon'
@@ -20,7 +21,7 @@ defineOptions({
 const modelValue = defineModel({
   type: [String, Number]
 })
-
+const { t } = useI18n()
 const props = defineProps({
   /**
    * Optional placeholder text
@@ -109,7 +110,7 @@ const classList = computed(() => {
     [`form-control-search--${props.size}`]: !!props.size
   }
 })
-
+const placeholder = computed(() => props.placeholder ?? t('formControlSearch.placeholder'))
 watch(toRef(props, 'autofocus'), (autofocus) => autofocus && focus())
 
 defineExpose({ focus })
