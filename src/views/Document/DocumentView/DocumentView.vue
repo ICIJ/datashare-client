@@ -142,7 +142,7 @@ onBeforeRouteUpdate(fetchRouteDocument)
     <document-view-title class="mb-3" :document="document" />
     <document-view-tabs :tabs="tabs" />
 
-    <component :is="component" v-if="component" />
+    <component :is="component" v-if="component" :q="q ?? route.query.q" />
   </app-wait>
 </template>
 

@@ -1,15 +1,17 @@
 <script setup>
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
-
 import { useDocument } from '@/composables/useDocument'
 import DocumentNotes from '@/components/Document/DocumentNotes'
 import DocumentThread from '@/components/Document/DocumentThread'
 import DocumentTranslation from '@/components/Document/DocumentTranslation/DocumentTranslation'
 
+defineProps({
+  q: {
+    type: String,
+    default: ''
+  }
+})
+
 const { document } = useDocument()
-const route = useRoute()
-const q = computed(() => route.query.q)
 </script>
 
 <template>
