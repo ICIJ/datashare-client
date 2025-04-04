@@ -35,7 +35,7 @@ const props = defineProps({
 
 const to = computed(() => {
   const name = props.project.name ?? props.project
-  return props.noLink ? undefined : { name: 'project.view', params: { name } }
+  return props.noLink ? undefined : { name: 'project.view.overview.insights', params: { name } }
 })
 </script>
 
