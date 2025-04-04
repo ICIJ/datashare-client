@@ -117,6 +117,7 @@ watch(() => eventsIds.value, fetch, { deep: true, immediate: true })
       <document-card
         v-for="([document, event], i) in entry"
         :key="i"
+        modal
         route-name="document-standalone"
         :document="document"
         :properties="['title', 'thumbnail', 'path', 'creationDate']"
