@@ -22,7 +22,7 @@ const props = defineProps({
 })
 
 const { toastedPromise, core } = useCore()
-const { waitFor, isLoading } = useWait()
+const { waitFor, isReady } = useWait()
 const { t } = useI18n()
 
 const submitLabel = computed(() => t(`task.documents.form.submit`))
@@ -89,8 +89,6 @@ async function submit() {
   } catch (error) {}
   await core.router.push({ name: 'task.documents.list' })
 }
-
-const isReady = computed(() => !isLoading.value)
 
 const showOcrMessage = computed(() => !hasTesseract.value || !!extractOcr.value)
 
