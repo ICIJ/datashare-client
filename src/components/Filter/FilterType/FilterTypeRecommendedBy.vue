@@ -60,12 +60,7 @@ watchIndices(fetch)
 <template>
   <filter-type :filter="filter">
     <template #search>
-      <form-control-search
-        v-model="query"
-        placeholder="Search..."
-        clear-text
-        class="filters-panel-section-filter__content__search mb-3"
-      />
+      <form-control-search v-model="query" clear-text class="filters-panel-section-filter__content__search mb-3" />
     </template>
     <b-form-checkbox-group v-model="selected">
       <template v-for="{ count, user } in entries" :key="user">

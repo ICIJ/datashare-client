@@ -66,12 +66,7 @@ const isProjectSelected = (id) => {
       <filter-type-project-all />
     </template>
     <template #search>
-      <form-control-search
-        v-model="query"
-        placeholder="Search..."
-        clear-text
-        class="filters-panel-section-filter__content__search mb-3"
-      />
+      <form-control-search v-model="query" clear-text class="filters-panel-section-filter__content__search mb-3" />
     </template>
     <template #default="{ entries }">
       <b-form-checkbox-group v-model="selected">
