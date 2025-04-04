@@ -386,6 +386,9 @@
     "metadata": "Metadata",
     "entities": "Entities"
   },
+  "documentViewTabsMetadata": {
+    "search": "Search in metadata"
+  },
   "filterTypeAll": {
     "label": "All"
   },
