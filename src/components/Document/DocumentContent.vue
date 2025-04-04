@@ -332,7 +332,7 @@ async function loadContentSliceAround(desiredOffset) {
       <hook name="document.content.body:after" />
       <slot name="after-content" />
     </div>
-    <document-attachments :document="document" />
+    <document-attachments v-show="loadedOnce" :document="document" />
     <hook name="document.content:after" />
   </div>
 </template>
