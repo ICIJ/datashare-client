@@ -1,10 +1,19 @@
 import { shallowMount } from '@vue/test-utils'
 
 import DismissableToastBody from '@/components/Dismissable/DismissableToastBody'
+import CoreSetup from '~tests/unit/CoreSetup'
 
 describe('DismissableToastBody', () => {
+  let global
+
+  beforeEach(() => {
+    const core = CoreSetup.init().useAll()
+    global = { plugins: core.plugins }
+  })
+
   it('renders with default variant when toastProps type is not provided', () => {
     const wrapper = shallowMount(DismissableToastBody, {
+      global,
       props: {
         toastProps: {},
         body: 'Test body'
@@ -15,6 +24,7 @@ describe('DismissableToastBody', () => {
 
   it('renders with error variant when toastProps type is error', () => {
     const wrapper = shallowMount(DismissableToastBody, {
+      global,
       props: {
         toastProps: { type: 'error' },
         body: 'Test body'
@@ -25,6 +35,7 @@ describe('DismissableToastBody', () => {
 
   it('applies close-on-click class when toastProps.closeOnClick is true', () => {
     const wrapper = shallowMount(DismissableToastBody, {
+      global,
       props: {
         toastProps: { closeOnClick: true },
         body: 'Test body'
@@ -35,6 +46,7 @@ describe('DismissableToastBody', () => {
 
   it('shows link section if href is provided', () => {
     const wrapper = shallowMount(DismissableToastBody, {
+      global,
       props: {
         toastProps: {},
         body: 'Test body',
@@ -46,6 +58,7 @@ describe('DismissableToastBody', () => {
 
   it('uses default link label if linkLabel is not provided', () => {
     const wrapper = shallowMount(DismissableToastBody, {
+      global,
       props: {
         toastProps: {},
         body: 'Test body',
@@ -57,6 +70,7 @@ describe('DismissableToastBody', () => {
 
   it('uses provided link label if linkLabel is specified', () => {
     const wrapper = shallowMount(DismissableToastBody, {
+      global,
       props: {
         toastProps: {},
         body: 'Test body',
@@ -69,6 +83,7 @@ describe('DismissableToastBody', () => {
 
   it('applies the correct class to the link based on the variant', () => {
     const wrapper = shallowMount(DismissableToastBody, {
+      global,
       props: {
         toastProps: { type: 'default' },
         body: 'Test body',
@@ -80,6 +95,7 @@ describe('DismissableToastBody', () => {
 
   it('renders title if provided', () => {
     const wrapper = shallowMount(DismissableToastBody, {
+      global,
       props: {
         toastProps: {},
         body: 'Test body',
@@ -91,6 +107,7 @@ describe('DismissableToastBody', () => {
 
   it('renders the body content correctly', () => {
     const wrapper = shallowMount(DismissableToastBody, {
+      global,
       props: {
         toastProps: {},
         body: 'Test body'
