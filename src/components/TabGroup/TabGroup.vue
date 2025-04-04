@@ -42,7 +42,7 @@ const navClassList = computed(() => {
     'tab-group-navigation': true,
     'tab-group-navigation--nowrap': props.nowrap,
     'tab-group-navigation--flush': props.flush,
-    [props.navClass]: true
+    [props.navClass]: !!props.navClass
   }
 })
 </script>
