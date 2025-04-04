@@ -151,7 +151,7 @@ watch(toRef(route, 'query'), fetchBatchSearchResults, { deep: true, immediate: t
         <display-number :value="item.documentNumber" />
       </template>
       <template #cell(documentName)="{ item }">
-        <router-link-batch-search-result :item="item" />
+        <router-link-batch-search-result :item="item" class="text-nowrap" />
       </template>
       <template #cell(project)="{ item }">
         <project-label :project="item.project" hide-thumbnail />
