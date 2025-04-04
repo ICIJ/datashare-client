@@ -2,10 +2,19 @@ import { mount } from '@vue/test-utils'
 
 import DismissableAlert from '@/components/Dismissable/DismissableAlert'
 import ToastBody from '@/components/Dismissable/DismissableToastBody'
+import CoreSetup from '~tests/unit/CoreSetup'
 
 describe('DismissableAlert', () => {
+  let global
+
+  beforeEach(() => {
+    const core = CoreSetup.init().useAll()
+    global = { plugins: core.plugins }
+  })
+
   it('renders with default warning variant', () => {
     const wrapper = mount(DismissableAlert, {
+      global,
       props: {
         name: 'test-alert',
         persist: false
@@ -16,6 +25,7 @@ describe('DismissableAlert', () => {
 
   it('renders with provided variant', () => {
     const wrapper = mount(DismissableAlert, {
+      global,
       props: {
         name: 'test-alert',
         persist: false,
@@ -28,6 +38,7 @@ describe('DismissableAlert', () => {
   it('does not show if dismissed is true', () => {
     localStorage.setItem('dismissed-alert-test-alert', 'true')
     const wrapper = mount(DismissableAlert, {
+      global,
       props: {
         name: 'test-alert',
         persist: true
@@ -40,6 +51,7 @@ describe('DismissableAlert', () => {
   it('shows if dismissed is false', () => {
     localStorage.setItem('dismissed-alert-test-alert', 'false')
     const wrapper = mount(DismissableAlert, {
+      global,
       props: {
         name: 'test-alert',
         persist: true
@@ -51,6 +63,7 @@ describe('DismissableAlert', () => {
 
   it('dismisses the alert when button is clicked', async () => {
     const wrapper = mount(DismissableAlert, {
+      global,
       props: {
         name: 'test-alert',
         persist: true
@@ -62,6 +75,7 @@ describe('DismissableAlert', () => {
 
   it('applies the correct class to the link based on the variant', () => {
     const wrapper = mount(DismissableAlert, {
+      global,
       props: {
         name: 'test-alert',
         persist: false,
@@ -73,6 +87,7 @@ describe('DismissableAlert', () => {
 
   it('renders with default link label', () => {
     const wrapper = mount(DismissableAlert, {
+      global,
       props: {
         name: 'test-alert',
         persist: false
@@ -83,6 +98,7 @@ describe('DismissableAlert', () => {
 
   it('renders with provided link label', () => {
     const wrapper = mount(DismissableAlert, {
+      global,
       props: {
         name: 'test-alert',
         persist: false,
@@ -94,6 +110,7 @@ describe('DismissableAlert', () => {
 
   it('does not render the button if noButton is true', () => {
     const wrapper = mount(DismissableAlert, {
+      global,
       props: {
         name: 'test-alert',
         persist: false,
@@ -105,6 +122,7 @@ describe('DismissableAlert', () => {
 
   it('renders the icon if noIcon is false', () => {
     const wrapper = mount(DismissableAlert, {
+      global,
       props: {
         name: 'test-alert',
         persist: false,
@@ -118,6 +136,7 @@ describe('DismissableAlert', () => {
 
   it('does not render the icon if noIcon is true', () => {
     const wrapper = mount(DismissableAlert, {
+      global,
       props: {
         name: 'test-alert',
         persist: false,
