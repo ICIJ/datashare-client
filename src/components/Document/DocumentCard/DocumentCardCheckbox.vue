@@ -32,7 +32,7 @@ const { t } = useI18n()
     margin: 0;
 
     .form-check-input {
-      margin: $spacer-xxs $spacer $spacer;
+      margin: $spacer-xxs auto $spacer;
       float: none;
     }
 
