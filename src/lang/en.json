@@ -94,7 +94,8 @@
     "open": "Open anyway"
   },
   "dismissableAlert": {
-    "close": "Close"
+    "close": "Close",
+    "dontShow": "Don't show this again"
   },
   "dismissableToastBody": {
     "close": "Close"
@@ -169,6 +170,9 @@
   },
   "filtersPanelSectionFilterActions": {
     "expand": "Expand"
+  },
+  "filtersPanelSectionFilterTitleToggler": {
+    "toggle": "Toggle filter"
   },
   "searchResultsActions": {
     "deselectAll": "Unselect {count} documents",
@@ -273,6 +277,9 @@
   "searchFormControl": {
     "submitLabel": "Search"
   },
+  "searchParameterQuery": {
+    "title": "Unable to parse the query"
+  },
   "searchSavedList": {
     "title": "Saved searches",
     "allRemoved": "All saved searches have been removed."
@@ -295,8 +302,9 @@
     "empty": "No visited documents found.",
     "allRemoved": "History of all visited documents have been removed."
   },
-  "separatorLineExpand": {
-    "expand": "Expand"
+  "separatorLine": {
+    "expand": "Expand",
+    "reduce": "Reduce"
   },
   "pagination": {
     "firstPage": "Go to first page",
@@ -356,6 +364,9 @@
   },
   "documentUserComments": {
     "warning":"Comments are public to project’s members."
+  },
+  "documentUserCommentsActions": {
+    "placeholder":"Write your text"
   },
   "documentUserCommentsListEntry": {
     "goToComment": "Go to comment (external link)"
@@ -951,6 +962,7 @@
   },
   "task": {
     "settingTitle":"{page} settings",
+    "settingDefaultTitle":"Page settings",
     "title": "Tasks",
     "description": "Some tasks must be run in the background. Use this panel to manage them.",
     "noResults": "No search results. Try adjusting the query or filters.",
@@ -1286,6 +1298,9 @@
     "seeLess": "See less",
     "seeMore":"See more"
   },
+  "pageSettings": {
+    "title": "Page settings"
+  },
   "pageSettingsSectionGroupAll": {
     "label": "All"
   },
@@ -1458,8 +1473,12 @@
     "description": {"title": "Don't change these settings if you don't know what you're doing."},
     "general":{
       "title": "General" ,
+
       "info": "Don’t change these settings if you don’t know what you are doing.",
       "searchPlaceholder": "Search settings"
+    },
+    "generalLabel": {
+      "restore": "Restore original setting"
     },
     "appearance": {
       "title": "Appearance"
@@ -1835,6 +1854,9 @@
     "question": "Add {n} tag to selected documents ?  | Add {n} tags to selected documents ?",
     "okTitle": "Add",
     "placeholder": "Tag1, Tag2"
+  },
+  "searchSettings": {
+    "title": "Results settings"
   },
   "documentCarousel": {
     "next": "Next",

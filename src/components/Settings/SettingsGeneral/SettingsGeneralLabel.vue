@@ -6,7 +6,7 @@
     <span>
       <button-icon
         v-if="fieldChanged"
-        aria-label="Restore original setting"
+        :aria-label="$t('settings.generalLabel.restore')"
         icon-left="arrow-counter-clockwise"
         variant="link"
         size="sm"

@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
 import ToastBody from '@/components/Dismissable/DismissableToastBody'
@@ -17,9 +18,7 @@ const props = defineProps({
     default: 'warning'
   },
   linkLabel: {
-    type: String,
-    required: false,
-    default: "Don't show this again"
+    type: String
   },
   icon: {
     type: String,
@@ -50,10 +49,15 @@ const props = defineProps({
     default: ''
   }
 })
+const { t } = useI18n()
 
 const localStorageKey = `dismissed-alert-${props.name}`
 const dismissed = ref(props.persist && localStorage.getItem(localStorageKey) === 'true')
 const show = computed(() => dismissed.value === false)
+const linkLabel = computed(() => {
+  return props.linkLabel ?? t('dismissableAlert.dontShow')
+})
+
 const dismiss = (persist) => {
   dismissed.value = true
   // Ensure that the state is persisted in local storage
@@ -104,7 +108,7 @@ const classList = {
             :class="closeClass"
             class="dismissable-alert__close p-2 align-self-md-center align-self-start"
             variant="link"
-            :label="$t('dismissableAlert.close')"
+            :label="t('dismissableAlert.close')"
             hide-label
             icon-left="x"
             @click="dismiss(false)"

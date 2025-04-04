@@ -9,7 +9,7 @@ import ButtonIcon from '@/components/Button/ButtonIcon'
     hide-label
     icon-left="arrow-line-left"
     icon-left-hover-weight="bold"
-    label="Reduce"
+    :label="$t('separatorLine.reduce')"
     size="sm"
     variant="outline-dark"
     class="separator-line-reduce"
