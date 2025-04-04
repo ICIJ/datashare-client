@@ -113,7 +113,7 @@ watch(
   }
 
   &--compact {
-    flex-wrap: nowrap;;
+    flex-wrap: nowrap;
   }
 
   @include media-breakpoint-down(md) {
