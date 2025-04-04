@@ -2,8 +2,7 @@
 import { computed, ref, watch, toValue, useTemplateRef } from 'vue'
 import { useRoute } from 'vue-router'
 
-import AppModal from '@/components/AppModal/AppModal'
-import DocumentFloating from '@/components/Document/DocumentFloating'
+import DocumentModal from '@/components/Document/DocumentModal'
 import PageContainer from '@/components/PageContainer/PageContainer'
 import SearchToolbar from '@/components/Search/SearchToolbar/SearchToolbar'
 import SearchBreadcrumb from '@/views/Search/SearchBreadcrumb'
@@ -152,28 +151,12 @@ watchIndices(refreshRoute)
               <div :id="documentViewFloatingId"></div>
             </template>
             <router-view v-slot="{ Component }">
-              <app-modal
-                v-if="renderDocumentInModal"
-                :model-value="Component !== undefined"
-                body-class="py-0 px-5"
-                no-footer
-                no-header
-                no-header-close
-                fullscreen
-                lazy
-                @hide="refreshRoute"
-              >
-                <document-floating class="my-3" no-reduce no-expand>
-                  <search-carousel />
-                  <component :is="Component">
-                    <template v-if="isListLayout" #nav>
-                      <search-nav />
-                    </template>
-                  </component>
-                </document-floating>
-              </app-modal>
+              <document-modal v-if="renderDocumentInModal" :model-value="!!Component" @hide="refreshRoute">
+                <search-carousel />
+                <component :is="Component" />
+              </document-modal>
               <component :is="Component" v-else>
-                <template v-if="isListLayout" #nav>
+                <template #nav>
                   <search-nav />
                 </template>
               </component>
