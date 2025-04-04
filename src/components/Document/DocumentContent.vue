@@ -313,6 +313,7 @@ async function loadContentSliceAround(desiredOffset) {
       <hook name="document.content.toolbox:after" />
     </div>
     <document-global-search-terms
+      v-if="false /** Deactivated until it gets a proper make up */"
       :document="document"
       :target-language="targetLanguage"
       class="pb-3"
