@@ -42,11 +42,14 @@ defineProps({
     title-item-class="tab-group-navigation-entry"
     :title-link-attrs="titleLinkAttrs"
     :title-link-class="titleLinkClass"
-    ><template #title>
-      <tab-group-title :icon="icon" :count="count"
-        ><slot name="title">{{ title }}</slot></tab-group-title
-      ></template
-    >
+  >
+    <template #title>
+      <tab-group-title :icon="icon" :count="count">
+        <slot name="title">
+          {{ title }}
+        </slot>
+      </tab-group-title>
+    </template>
     <slot />
   </b-tab>
 </template>
