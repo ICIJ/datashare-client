@@ -5,6 +5,7 @@ import DocumentCardProperties from './DocumentCardProperties'
 
 import DocumentThumbnail from '@/components/Document/DocumentThumbnail'
 import DocumentActionsGroup from '@/components/Document/DocumentActionsGroup/DocumentActionsGroup'
+import RouterLinkDocument from '@/components/RouterLink/RouterLinkDocument'
 import { useDocumentViewerModal } from '@/composables/useDocument'
 
 const selected = defineModel('selected', { type: Boolean })
@@ -29,9 +30,18 @@ const props = defineProps({
   },
   isDownloadAllowed: {
     type: Boolean
+  },
+  routeName: {
+    type: String,
+    default: 'document'
+  },
+  modal: {
+    type: Boolean,
+    default: false
   }
 })
 
+const { show: showDocumentViewerModal } = useDocumentViewerModal(props.document)
 const hover = ref(false)
 
 const classList = computed(() => {
@@ -43,19 +53,8 @@ const classList = computed(() => {
   }
 })
 
-const showThumbnail = computed(() => {
-  return props.properties?.includes('thumbnail')
-})
-
-const showTitle = computed(() => {
-  return props.properties?.includes('title')
-})
-
-const to = computed(() => {
-  return { name: 'document', params: props.document.routerParams }
-})
-
-const { show: showDocumentViewerModal } = useDocumentViewerModal(props.document)
+const showThumbnail = computed(() => props.properties?.includes('thumbnail'))
+const showTitle = computed(() => props.properties?.includes('title'))
 </script>
 
 <template>
@@ -77,9 +76,18 @@ const { show: showDocumentViewerModal } = useDocumentViewerModal(props.document)
         @click="showDocumentViewerModal"
       />
       <div class="document-card-grid__wrapper__properties">
-        <router-link v-if="showTitle" class="document-card-grid__wrapper__properties__title" :to="to" :target="target">
+        <router-link-document
+          v-if="showTitle"
+          :id="document.id"
+          :index="document.index"
+          :routing="document.routing"
+          :name="routeName"
+          :modal="modal"
+          :target="target"
+          class="document-card-grid__wrapper__properties__title"
+        >
           {{ document.title }}
-        </router-link>
+        </router-link-document>
         <document-card-properties :document="document" :properties="properties" />
       </div>
     </div>
