@@ -55,16 +55,16 @@ const searchStore = useSearchStore()
 const documentStore = useDocumentStore()
 const { toastedPromise } = useCore()
 const { t } = useI18n()
-const nbSelection = computed(() => {
-  return selectionEntries.value.length
-})
-const noSelection = computed(() => {
-  return nbSelection.value === 0
-})
+
+const nbSelection = computed(() => selectionEntries.value.length)
+const noSelection = computed(() => !nbSelection.value)
+
 const starSelection = async () => {
   return toastedPromise(starredStore.starDocuments(selectionEntries.value), { successMessage: t('document.starred') })
 }
+
 const { prompt: showAddTagsModal } = usePromptModal(SearchSelectionAddTagsModal)
+
 async function addTagsModal() {
   const indices = searchStore.indices
   const result = await showAddTagsModal({ indices, nbDocs: nbSelection.value })
@@ -101,16 +101,16 @@ const tagSelection = async (documents, labels) => {
     </template>
     <template #compact>
       <button-icon
-        :label="$t('searchSelection.star')"
-        icon-left="star"
         class="flex-shrink-0"
+        :label="$t('searchSelection.star')"
+        :icon-left="PhStar"
         :disabled="noSelection"
         :hide-label="isCompact"
         :square="isCompact"
         @click="starSelection"
       />
     </template>
-    <button-icon :label="$t('searchSelection.tag')" icon-left="hash" :disabled="noSelection" @click="addTagsModal" />
+    <button-icon :label="$t('searchSelection.tag')" :icon-left="PhHash" :disabled="noSelection" @click="addTagsModal" />
   </form-actions>
 </template>
 
