@@ -1,29 +1,38 @@
 <script setup>
 import { computed } from 'vue'
-import { basename } from 'path'
 
 const props = defineProps({
-  value: {
-    type: [Object]
+  index: {
+    type: String,
+    required: true
+  },
+  id: {
+    type: String,
+    required: true
+  },
+  routing: {
+    type: String
+  },
+  q: {
+    type: String
   }
 })
 
-const project = computed(() => props.value.project.name ?? props.value.project)
-
 const to = computed(() => ({
-  name: 'document',
+  name: 'document-standalone',
   params: {
-    index: project.value,
-    id: props.value.documentId,
-    routing: props.value.rootId
+    index: props.index,
+    id: props.id,
+    routing: props.routing
+  },
+  query: {
+    q: props.q
   }
 }))
-
-const display = computed(() => basename(props.value.documentPath))
 </script>
 
 <template>
-  <router-link :to="to" class="text-nowrap">
-    {{ display }}
+  <router-link :to="to">
+    <slot />
   </router-link>
 </template>
