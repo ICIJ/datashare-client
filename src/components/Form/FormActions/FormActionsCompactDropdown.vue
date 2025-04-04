@@ -88,6 +88,7 @@ const menuClassList = computed(() => {
       &.button-icon--use-injected-variant {
         --bs-btn-border-width: 0;
         --bs-btn-bg: transparent;
+        --bs-btn-color: var(--bs-link-color);
         --bs-btn-hover-bg: var(--bs-form-actions-compact-dropdown-btn-hover-bg);
         --bs-btn-hover-color: var(--bs-form-actions-compact-dropdown-btn-hover-color);
       }
