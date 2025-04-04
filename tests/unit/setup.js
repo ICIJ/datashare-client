@@ -1,19 +1,12 @@
 import 'whatwg-fetch'
 
-// This is a temporary workaround to avoid the following console.log
-// that are printed during the tests by vue3-shortkey.
-const SILENCED_LOGS = ['installing...']
 // Save the original log method for later use
 const log = global.console.log
 
 global.console = Object.assign(global.console, {
   warn: vi.fn(),
   info: vi.fn(),
-  log: vi.fn().mockImplementation((message, ...args) => {
-    if (!SILENCED_LOGS.includes(message)) {
-      log(message, ...args)
-    }
-  })
+  log
 })
 
 global.ResizeObserver = class {

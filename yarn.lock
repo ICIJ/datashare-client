@@ -3195,11 +3195,6 @@ csstype@^3.1.0, csstype@^3.1.3:
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.1.3.tgz#d80ff294d114fb0e6ac500fbf85b60137d7eff81"
   integrity sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==
 
-custom-event-polyfill@^1.0.7:
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/custom-event-polyfill/-/custom-event-polyfill-1.0.7.tgz#9bc993ddda937c1a30ccd335614c6c58c4f87aee"
-  integrity sha512-TDDkd5DkaZxZFM8p+1I3yAlvM3rSr1wbrOliG4yJiwinMZN8z/iGL7BTlDkrJcYTmgUSb4ywVCc3ZaUtOtC76w==
-
 "d3-array@1 - 3", "d3-array@2 - 3", "d3-array@2.10.0 - 3", "d3-array@2.5.0 - 3", d3-array@3, d3-array@^3.2.0:
   version "3.2.4"
   resolved "https://registry.yarnpkg.com/d3-array/-/d3-array-3.2.4.tgz#15fec33b237f97ac5d7c986dc77da273a8ed0bb5"
@@ -3736,11 +3731,6 @@ electron-to-chromium@^1.5.73:
   version "1.5.97"
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.97.tgz#5c4a4744c79e7c85b187adf5160264ac130c776f"
   integrity sha512-HKLtaH02augM7ZOdYRuO19rWDeY+QSJ1VxnXFa/XDFLf07HvM90pALIJFgrO+UVaajI3+aJMMpojoUTLZyQ7JQ==
-
-element-matches@^0.1.2:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/element-matches/-/element-matches-0.1.2.tgz#7345cb71e965bd2b12f725e524591c102198361a"
-  integrity sha512-yWh1otcs3OKUWDvu/IxyI36ZI3WNaRZlI0uG/DK6fu0pap0VYZ0J5pEGTk1zakme+hT0OKHwhlHc0N5TJhY6yQ==
 
 emoji-regex@^8.0.0:
   version "8.0.0"
@@ -8292,14 +8282,6 @@ vue3-perfect-scrollbar@^2.0.0:
   integrity sha512-nSWVcRyViCgt0Pe3RhU3w/BllLcFSrEzYOGlRBjSyhVmiZlERHHziffW+9P8L0IMEWouC5t+uYrgNJGSAElqMA==
   dependencies:
     perfect-scrollbar "^1.5.5"
-
-vue3-shortkey@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/vue3-shortkey/-/vue3-shortkey-4.0.0.tgz#63ab7bfbe6f0f80158ae8a22b44c16e566b7bd83"
-  integrity sha512-pXb/K7aw3ViqzWL9jz/IL4wOk7M7FQ87ekYxk5J7uKTNEfOVBYtILGjvCBJD3/zEUipcLQJEg7TjE1xYnVYV/w==
-  dependencies:
-    custom-event-polyfill "^1.0.7"
-    element-matches "^0.1.2"
 
 vue3-toastify@^0.2.2:
   version "0.2.2"
