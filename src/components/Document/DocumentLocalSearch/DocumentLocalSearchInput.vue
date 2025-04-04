@@ -26,7 +26,7 @@ defineExpose({
     v-model="modelValue"
     :loading="loading"
     class="document-local-search-input"
-    placeholder="Search in document"
+    :placeholder="$t('documentLocalSearchInput.placeholder')"
     clear-text
   />
 </template>
