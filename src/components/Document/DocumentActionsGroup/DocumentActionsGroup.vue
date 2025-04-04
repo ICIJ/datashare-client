@@ -17,7 +17,14 @@
         :tooltip-placement="tooltipPlacement"
         :vertical="vertical"
       />
+      <document-actions-group-entry-close
+        v-if="modal"
+        :document="document"
+        :tooltip-placement="tooltipPlacement"
+        :vertical="vertical"
+      />
       <document-actions-group-entry-expand
+        v-else
         :document="document"
         :tooltip-placement="tooltipPlacement"
         :vertical="vertical"
@@ -27,8 +34,9 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
 
+import DocumentActionsGroupEntryClose from './DocumentActionsGroupEntryClose'
 import DocumentActionsGroupEntryDownload from './DocumentActionsGroupEntryDownload'
 import DocumentActionsGroupEntryExpand from './DocumentActionsGroupEntryExpand'
 import DocumentActionsGroupEntryShare from './DocumentActionsGroupEntryShare'
@@ -71,6 +79,8 @@ const { vertical } = defineProps({
     type: Boolean
   }
 })
+
+const modal = inject('modal', undefined)
 
 const classList = computed(() => {
   return {
