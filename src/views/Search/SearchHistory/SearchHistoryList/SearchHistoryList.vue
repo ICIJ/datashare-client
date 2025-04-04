@@ -94,7 +94,7 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
       :total-rows="pagination.total"
     >
       <template #breadcrumb>
-        <navigation-breadcrumb-link :to="searchRoute" title="Search" />
+        <navigation-breadcrumb-link :to="searchRoute" :title="t('appSidebar.search')" />
         <navigation-breadcrumb-link :to="{ name: 'search.history.list' }" no-caret />
       </template>
       <template #actions>

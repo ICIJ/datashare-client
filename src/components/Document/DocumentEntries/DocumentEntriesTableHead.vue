@@ -30,5 +30,5 @@ const visibleFields = computed(() => {
 
 <template>
   <page-table-th v-for="field in visibleFields" :key="field" :label="toValue(field.text)" :icon="field.icon" />
-  <page-table-th label="Action" hide-label />
+  <page-table-th :label="$t('documentEntriesTableHead.action')" hide-label />
 </template>

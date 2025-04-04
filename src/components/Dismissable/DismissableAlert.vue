@@ -104,7 +104,7 @@ const classList = {
             :class="closeClass"
             class="dismissable-alert__close p-2 align-self-md-center align-self-start"
             variant="link"
-            label="Close"
+            :label="$t('dismissableAlert.close')"
             hide-label
             icon-left="x"
             @click="dismiss(false)"

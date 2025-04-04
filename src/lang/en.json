@@ -93,6 +93,12 @@
     "download": "The search within this document can be long. Please consider downloading it if your environment is secure.",
     "open": "Open anyway"
   },
+  "dismissableAlert": {
+    "close": "Close"
+  },
+  "dismissableToastBody": {
+    "close": "Close"
+  },
   "displayBoolean": {
     "yes": "Yes",
     "no": "No"
@@ -160,6 +166,9 @@
     "faq": "FAQ",
     "userGuides": "User guides",
     "help": "Ask for help"
+  },
+  "filtersPanelSectionFilterActions": {
+    "expand": "Expand"
   },
   "searchResultsActions": {
     "deselectAll": "Unselect {count} documents",
@@ -277,12 +286,17 @@
     "empty": "No saved searches found."
   },
   "searchSavedEntriesRowActions": {
-    "removeTitle": "Are you sure you want to delete the saved search \"{name}\"?"
+    "removeTitle": "Are you sure you want to delete the saved search \"{name}\"?",
+    "edit": "Edit",
+    "delete": "Delete"
   },
   "searchHistoryList": {
     "title": "History",
     "empty": "No visited documents found.",
     "allRemoved": "History of all visited documents have been removed."
+  },
+  "separatorLineExpand": {
+    "expand": "Expand"
   },
   "pagination": {
     "firstPage": "Go to first page",
@@ -299,6 +313,10 @@
   },
   "documentCardCheckbox":{
     "selectDocument": "Select this document"
+  },
+  "documentLocalSearchNav": {
+    "previous": "Find the previous occurrence",
+    "next": "Find the next occurrence"
   },
   "documentLocalSearchInput": {
     "placeholder": "Search in document"
@@ -890,6 +908,7 @@
     "signOut": "Sign out",
     "keyboardShortcuts": "Keyboard Shortcuts",
     "settings": "Settings",
+    "help": "Help",
     "removeAll": {
       "link": "Remove all",
       "title": "Are you sure you want to delete all your projects?",
@@ -935,6 +954,7 @@
     "title": "Tasks",
     "description": "Some tasks must be run in the background. Use this panel to manage them.",
     "noResults": "No search results. Try adjusting the query or filters.",
+    "empty": "Empty",
     "settings": {
       "createdAt": "Created on",
       "name": "Name",
@@ -1472,6 +1492,7 @@
       "description": "An API key allows you interact with Datashare <a href=\"https://icij.gitbook.io/datashare/developers/backend/api\" target=\"_blank\">through the API</a>, using tools like <a href=\"https://github.com/ICIJ/datashare-tarentula\" target=\"_blank\">Tarentula</a> or your own scripts.",
       "key": {
         "badge": "Key",
+        "copy": "Copy",
         "hash": "Hash: {hash}",
         "created": "API key created",
         "warning": "Please copy this key in a safe place, you won't be able to access it again on Datashare.",
@@ -1837,6 +1858,9 @@
       "language": "Language",
       "project": "Project"
     }
+  },
+  "documentEntriesTableHead": {
+  "action": "Action"
   },
   "documentEntriesHeader": {
     "batchDownloadDocuments": "Downloading multiple files is limited to {maxSize}.",

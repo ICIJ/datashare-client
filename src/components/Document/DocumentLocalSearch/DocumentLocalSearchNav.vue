@@ -16,13 +16,13 @@ defineProps({
     <document-local-search-nav-item
       :disabled="disabledPrevious"
       :icon="PhCaretUp"
-      label="Find the previous occurrence"
+      :label="$t('documentLocalSearchNav.previous')"
       @click="$emit('previous')"
     />
     <document-local-search-nav-item
       :disabled="disabledNext"
       :icon="PhCaretDown"
-      label="Find the next occurrence"
+      :label="$t('documentLocalSearchNav.next')"
       @click="$emit('next')"
     />
   </b-button-group>

@@ -101,7 +101,7 @@ function refresh() {
         </dismissable-alert>
         <template v-if="!isLoading && noTasks">
           <slot name="empty" :empty="noTasks">
-            <empty-state label="Empty" :image="appBuilding" :image-dark="appBuildingDark">
+            <empty-state :label="t(`task.empty`)" :image="appBuilding" :image-dark="appBuildingDark">
               <template #label>
                 <span v-html="t(`task.${pageName}.list.empty`)"></span>
               </template>
