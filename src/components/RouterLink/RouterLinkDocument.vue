@@ -1,5 +1,8 @@
 <script setup>
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
+
+import { useDocumentModal } from '@/composables/useDocumentModal'
 
 const props = defineProps({
   index: {
@@ -15,8 +18,15 @@ const props = defineProps({
   },
   q: {
     type: String
+  },
+  modal: {
+    type: Boolean,
+    default: false
   }
 })
+
+const router = useRouter()
+const { show: showDocumentModal } = useDocumentModal()
 
 const to = computed(() => ({
   name: 'document-standalone',
@@ -29,10 +39,22 @@ const to = computed(() => ({
     q: props.q
   }
 }))
+
+const href = computed(() => {
+  const { href } = router.resolve(to.value)
+  return href
+})
+
+const handleClick = (event) => {
+  if (props.modal) {
+    event.preventDefault()
+    showDocumentModal(props.index, props.id, props.routing, props.q)
+  }
+}
 </script>
 
 <template>
-  <router-link :to="to">
+  <a :href="href" @click.exact="handleClick">
     <slot />
-  </router-link>
+  </a>
 </template>
