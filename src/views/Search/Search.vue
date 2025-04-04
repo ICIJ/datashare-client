@@ -61,12 +61,12 @@ const selectMode = ref(false)
 // The modal is displayed only if there is enough space to display the document view.
 // In this function, it's important we refresh the route before assigning the value to the
 // enoughtFloatingSpace ref in order to avoid a brief flicker of the document view in the modal.
-const toggleDocumentModal = async (value) => {
-  if (documentRoute.value && (!value || !isListLayout.value || route.query.modal)) {
+const toggleDocumentModal = async (enoughSpace) => {
+  if (documentRoute.value && (!enoughSpace || !isListLayout.value || route.query.modal)) {
     await refreshRoute()
   }
 
-  enoughtFloatingSpace.value = value
+  enoughtFloatingSpace.value = enoughSpace
 }
 
 // The "floating space" is the right side of the list layout, which display the document view.
