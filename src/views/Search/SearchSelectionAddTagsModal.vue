@@ -1,12 +1,15 @@
 <script setup>
-import { ref, computed, onBeforeMount } from 'vue'
+import { ref, computed, onBeforeMount, watch, useTemplateRef } from 'vue'
 import bodybuilder from 'bodybuilder'
 import { flatten, get, map } from 'lodash'
 import { useI18n } from 'vue-i18n'
 
-import AppModalPrompt from '@/components/AppModal/AppModalPrompt'
 import FormControlTag from '@/components/Form/FormControl/FormControlTag/FormControlTag'
 import { useCore } from '@/composables/useCore'
+import imageLight from '@/assets/images/illustrations/app-modal-tag-add-light.svg'
+import imageDark from '@/assets/images/illustrations/app-modal-tag-add-dark.svg'
+import ImageModeSource from '@/components/ImageMode/ImageModeSource'
+import AppModal from '@/components/AppModal/AppModal'
 const props = defineProps({
   indices: { type: Array, default: () => [] },
   nbDocs: { type: Number }
@@ -16,7 +19,8 @@ const { core } = useCore()
 const { t } = useI18n()
 const tags = ref([])
 const allTags = ref([])
-
+const imageHeaderLight = imageLight
+const imageHeaderDark = imageDark
 const submit = () => {
   emit('submit', {
     trigger: 'submit',
@@ -35,16 +39,52 @@ async function fetchAllTags() {
   const results = await Promise.all(map(props.indices, (index) => fetchAllTagsByIndex(index)))
   allTags.value = flatten(results)
 }
+const closeAllowed = ref(true)
+const preventFn = (e) => {
+  if (!closeAllowed.value) {
+    closeAllowed.value = true
+    e.preventDefault()
+  }
+}
+
 onBeforeMount(fetchAllTags)
 </script>
 
 <template>
-  <app-modal-prompt :title="t('searchSelectionAddTagsModal.title', nbDocs)" :ok-disabled="!hasTags" @submit="submit">
+  <app-modal
+    class="search-selection-add-tags-modal"
+    :image="imageHeaderLight"
+    :title="t('searchSelectionAddTagsModal.title', nbDocs)"
+    :ok-disabled="!hasTags"
+    :ok-title="t('searchSelectionAddTagsModal.okTitle')"
+    @esc="preventFn"
+    @submit="submit"
+  >
+    <template #header-image-source>
+      <image-mode-source :src="imageHeaderDark" color-mode="dark" />
+    </template>
     <div class="d-flex flex-column gap-3">
-      <form-control-tag v-model="tags" :options="allTags" class="document-user-tags-actions w-100" no-duplicate />
+      <form-control-tag
+        v-model="tags"
+        :placeholder="t('searchSelectionAddTagsModal.placeholder')"
+        :options="allTags"
+        class="document-user-tags-ac tions w-100"
+        no-duplicates
+        no-clear
+        @focus="closeAllowed = false"
+        @blur="closeAllowed = false"
+      />
+      {{ t('searchSelectionAddTagsModal.description') }}
       <p v-if="hasTags" class="mt-2">
-        {{ t('searchSelectionAddTagsModal.description', tags.length) }}
+        {{ t('searchSelectionAddTagsModal.question', tags.length) }}
       </p>
     </div>
-  </app-modal-prompt>
+  </app-modal>
 </template>
+<style lang="scss">
+.search-selection-add-tags-modal {
+  & .modal-body {
+    z-index: 1;
+  }
+}
+</style>

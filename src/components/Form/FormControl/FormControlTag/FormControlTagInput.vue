@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { PhosphorIcon } from '@icij/murmur-next'
 
@@ -49,9 +49,9 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
-const inputElement = ref(null)
+const inputElement = useTemplateRef('form-control-tag-input')
 const focus = ref(false)
-const emit = defineEmits(['blur', 'focus', 'clear', 'removeLastTag', 'addTag', 'update:inputValue'])
+const emit = defineEmits(['blur', 'focus', 'clear', 'removeLastTag', 'removeTag', 'addTag', 'update:inputValue'])
 
 const placeholderIfEmpty = computed(() => {
   if (!props.noTags && props.modelValue.length > 0) {
@@ -64,14 +64,14 @@ const showPlaceholderIcon = computed(() => {
   return props.noTags || (!props.noPlaceholderIcon && props.modelValue.length === 0)
 })
 
-const onBlur = () => {
+const onBlur = (e) => {
   focus.value = false
-  emit('blur')
+  emit('blur', e)
 }
 
-const onFocus = () => {
+const onFocus = (e) => {
   focus.value = true
-  emit('focus')
+  emit('focus', e)
 }
 
 const onInput = (event) => {
@@ -94,6 +94,9 @@ const tags = computed(() => {
 defineExpose({
   focus() {
     inputElement.value.focus()
+  },
+  blur() {
+    inputElement.value.blur()
   }
 })
 </script>
@@ -112,7 +115,7 @@ defineExpose({
         class="form-control-tag-input__form__icon text-secondary ms-2 me-1"
       />
       <input
-        ref="inputElement"
+        ref="form-control-tag-input"
         class="form-control form-control-tag-input__form__field"
         :placeholder="placeholderIfEmpty"
         :value="inputValue"

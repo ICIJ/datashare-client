@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, useTemplateRef, toRef } from 'vue'
 import { compact, every, identity, isFunction, escapeRegExp, get, trim } from 'lodash'
 
 import FormControlTagInput from './FormControlTagInput'
@@ -74,7 +74,7 @@ const props = defineProps({
 
 // Those two variables are refs to the DOM elements
 const element = ref(null)
-const inputElement = ref(null)
+const inputElement = useTemplateRef('inputElement')
 
 const inputValueTrigger = ref('')
 const showDropdown = ref(false)
@@ -100,6 +100,7 @@ const separatorsPattern = computed(() => {
 const endWithSeparator = (tag) => {
   return separators.value.some((separator) => tag.endsWith(separator))
 }
+const focus = () => inputElement.value.focus()
 
 const inputTag = (tag) => {
   focusIndex.value = -1
@@ -118,7 +119,7 @@ const addTag = (tag) => {
   }
   emit('update:modelValue', [...props.modelValue, ...tags])
   inputValueTrigger.value = ''
-  inputElement.value.focus()
+  focus()
 }
 
 const tagValidator = (tag) => {
@@ -136,7 +137,7 @@ const tagCreateValidator = (tag) => {
 const removeTag = (tag) => {
   const modelValue = props.modelValue.filter((t) => t !== tag)
   emit('update:modelValue', modelValue)
-  inputElement.value.focus()
+  focus()
 }
 
 const removeLastTag = () => {
@@ -155,7 +156,7 @@ const getValue = (option) => {
 
 const clear = () => {
   emit('update:modelValue', [])
-  inputElement.value.focus()
+  focus()
 }
 
 const classList = computed(() => {
@@ -163,10 +164,17 @@ const classList = computed(() => {
     'form-control-tag--show-dropdown': showDropdown.value
   }
 })
-
+function onEsc() {
+  if (showDropdown.value === true) {
+    showDropdown.value = false
+  } else {
+    inputElement.value.blur()
+  }
+}
 const inputValue = () => props.inputValue
 watch(inputValue, (value) => (inputValueTrigger.value = value), { immediate: true })
 watch(inputValueTrigger, (value) => emit('update:inputValue', value))
+defineExpose({ focus })
 
 watch(useActiveElement(), async (activeElement) => {
   showDropdown.value = showDropdown.value && element.value.contains(activeElement)
@@ -174,7 +182,7 @@ watch(useActiveElement(), async (activeElement) => {
 
 watch(focusIndex, (value) => {
   if (value === -1) {
-    inputElement.value.focus()
+    focus()
   } else {
     showDropdown.value = !!inputValueTrigger.value
   }
@@ -204,7 +212,9 @@ watch(focusIndex, (value) => {
       @remove-tag="removeTag($event)"
       @remove-last-tag="removeLastTag()"
       @keydown.down.prevent="focusIndex = 0"
-      @keydown.esc="showDropdown = false"
+      @keydown.esc="onEsc"
+      @focus="$emit('focus', $event)"
+      @blur="$emit('blur', $event)"
     >
       <!-- eslint-disable-next-line vue/no-template-shadow -->
       <template #tag="{ tag }">
@@ -225,7 +235,7 @@ watch(focusIndex, (value) => {
       @update:focusIndex="focusIndex = $event"
       @update:show="showDropdown = $event"
       @add-tag="addTag($event)"
-      @keydown.esc="showDropdown = false"
+      @keydown.esc="onEsc"
     />
   </div>
 </template>
