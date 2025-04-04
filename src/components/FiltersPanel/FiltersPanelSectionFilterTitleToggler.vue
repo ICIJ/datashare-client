@@ -25,7 +25,7 @@ const icon = computed(() => (props.collapse ? PhCaretDown : PhCaretUp))
     :loading="loading"
     :icon-left="icon"
     icon-left-weight="bold"
-    label="Toggle filter"
+    :label="$t('filtersPanelSectionFilterTitleToggler.toggle')"
     hide-label
     hide-tooltip
     @click="emit('toggle', !collapse)"

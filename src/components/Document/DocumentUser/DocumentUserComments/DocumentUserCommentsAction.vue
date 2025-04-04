@@ -25,7 +25,11 @@ function onSubmit() {
 
 <template>
   <b-form class="document-user-comments-action d-flex flex-column gap-2" @submit.prevent="onSubmit" @reset="onReset">
-    <b-form-textarea v-model="comment" placeholder="Write your text" class="border-action"></b-form-textarea>
+    <b-form-textarea
+      v-model="comment"
+      :placeholder="$t('documentUserCommentsActions.placeholder')"
+      class="border-action"
+    ></b-form-textarea>
     <div class="d-flex justify-content-end gap-2">
       <b-button type="reset" variant="outline-action">Clear</b-button>
       <b-button type="submit" variant="action">Comment</b-button>

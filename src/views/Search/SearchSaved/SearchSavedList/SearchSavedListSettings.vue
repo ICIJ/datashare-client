@@ -92,7 +92,7 @@ defineProps({
 </script>
 
 <template>
-  <page-settings title="Page settings" :hide="hide" :visible="visible" :placement="placement">
+  <page-settings :hide="hide" :visible="visible" :placement="placement">
     <page-settings-section
       v-model="sortBy.modelValue"
       v-model:open="sortBy.open"

@@ -46,7 +46,7 @@ const ast = computed(() => {
     :no-icon="noIcon"
     :no-x-icon="noXIcon"
     :size="size"
-    title="Unable to parse the query"
+    :title="$t('searchParameterQuery.title')"
     color="var(--bs-danger)"
     prefix="-"
     icon="warning"
