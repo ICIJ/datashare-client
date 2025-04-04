@@ -68,29 +68,7 @@ export const routes = [
                   path: 'usage/use-keyboard-shortcuts'
                 }
               ]
-            },
-            children: [
-              {
-                name: 'document.text',
-                path: 'text',
-                component: () => import('@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsText')
-              },
-              {
-                name: 'document.viewer',
-                path: 'viewer',
-                component: () => import('@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsViewer')
-              },
-              {
-                name: 'document.metadata',
-                path: 'metadata',
-                component: () => import('@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsMetadata')
-              },
-              {
-                name: 'document.entities',
-                path: 'entities',
-                component: () => import('@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsEntities')
-              }
-            ]
+            }
           }
         ]
       },
@@ -523,29 +501,7 @@ export const routes = [
         },
         meta: {
           title: 'document.title'
-        },
-        children: [
-          {
-            name: 'document-standalone.text',
-            path: 'text',
-            component: () => import('@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsText')
-          },
-          {
-            name: 'document-standalone.viewer',
-            path: 'viewer',
-            component: () => import('@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsViewer')
-          },
-          {
-            name: 'document-standalone.metadata',
-            path: 'metadata',
-            component: () => import('@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsMetadata')
-          },
-          {
-            name: 'document-standalone.entities',
-            path: 'entities',
-            component: () => import('@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsEntities')
-          }
-        ]
+        }
       }
     ]
   },

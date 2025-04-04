@@ -1,6 +1,8 @@
 <script setup>
-import { computed, onBeforeMount, useTemplateRef } from 'vue'
+import { computed, ref, onBeforeMount, useTemplateRef, markRaw, watch } from 'vue'
 import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+import { matches, property } from 'lodash'
 
 import DocumentViewActions from './DocumentViewActions'
 import DocumentViewTabs from './DocumentViewTabs/DocumentViewTabs'
@@ -11,11 +13,13 @@ import AppWait from '@/components/AppWait/AppWait'
 import DocumentPlaceholder from '@/components/Document/DocumentPlaceholder'
 import { useSearchNav } from '@/composables/useSearchNav'
 import { useDocument } from '@/composables/useDocument'
+import { useUrlParamWithStore } from '@/composables/useUrlParamWithStore'
 import { useAppStore } from '@/store/modules'
 
 const elementRef = useTemplateRef('element')
+const { t } = useI18n()
 const { whenNoSearchEntries } = useSearchNav()
-const { document, documentRoute, fetchDocumentOnce, loaderId } = useDocument(elementRef)
+const { document, fetchDocumentOnce, loaderId } = useDocument(elementRef)
 
 const props = defineProps({
   id: {
@@ -37,21 +41,42 @@ const router = useRouter()
 const route = useRoute()
 const appStore = useAppStore()
 
-const tab = computed({
+const tab = useUrlParamWithStore('tab', {
+  initialValue: 'text',
   get: () => appStore.getSettings('documentView', 'tab'),
   set: (tab) => appStore.setSettings({ view: 'documentView', tab })
 })
 
-const selectRouteTab = async ({ name, params, query } = route) => {
-  if (name === 'error') {
-    return
-  }
-  if (name === documentRoute.value.name) {
-    await router.replace({ name: `${documentRoute.value.name}.${tab.value}`, params, query })
-  } else {
-    tab.value = name?.split('.').pop() ?? 'text'
-  }
-}
+const tabs = computed(() => {
+  return [
+    {
+      title: t('documentViewTabs.text'),
+      component: () => import('@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsText.vue'),
+      icon: 'text-align-left',
+      tab: 'text'
+    },
+    {
+      title: t('documentViewTabs.viewer'),
+      component: () => import('@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsViewer.vue'),
+      icon: 'file',
+      tab: 'viewer'
+    },
+    {
+      title: t('documentViewTabs.metadata'),
+      component: () => import('@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsMetadata.vue'),
+      icon: 'info',
+      tab: 'metadata'
+    },
+    {
+      title: t('documentViewTabs.entities'),
+      component: () => import('@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsEntities.vue'),
+      icon: 'users-three',
+      tab: 'entities'
+    }
+  ]
+})
+
+const component = ref(null)
 
 const fetchRouteDocument = async ({ params } = route) => {
   const { index = props.index, id = props.id, routing = props.routing } = params ?? {}
@@ -63,18 +88,22 @@ const fetchRouteDocument = async ({ params } = route) => {
   }
 }
 
+const fetchTabComponent = async (tab) => {
+  const entry = tabs.value.find(matches({ tab }))
+  component.value = await entry?.component().then(property('default')).then(markRaw)
+}
+
 const redirectToDocumentStandalone = () => {
   if (route.name.startsWith('document.')) {
     return router.replace({ name: 'document-standalone' })
   }
 }
 
+// Ensure the selected tab's component is loaded and in sync with the route
+watch(tab, fetchTabComponent, { immediate: true })
+
 // Ensure we do not display the document in the context of the search, when there is actually no search
 onBeforeMount(whenNoSearchEntries(redirectToDocumentStandalone))
-
-// Ensure the selected tab is always in sync with the route
-onBeforeMount(selectRouteTab)
-onBeforeRouteUpdate(selectRouteTab)
 
 // Ensure the document is always in sync with the route
 onBeforeMount(fetchRouteDocument)
@@ -98,13 +127,9 @@ onBeforeRouteUpdate(fetchRouteDocument)
     </div>
 
     <document-view-title class="mb-3" :document="document" />
-    <document-view-tabs :document-route="documentRoute" />
+    <document-view-tabs :tabs="tabs" />
 
-    <router-view v-slot="{ Component }">
-      <keep-alive>
-        <component :is="Component" />
-      </keep-alive>
-    </router-view>
+    <component :is="component" v-if="component" />
   </app-wait>
 </template>
 
