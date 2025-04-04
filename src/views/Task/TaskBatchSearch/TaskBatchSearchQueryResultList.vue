@@ -14,7 +14,7 @@ import PageContainer from '@/components/PageContainer/PageContainer'
 import PageHeader from '@/components/PageHeader/PageHeader'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import ProjectLabel from '@/components/Project/ProjectLabel'
-import RouterLinkDocument from '@/components/RouterLink/RouterLinkDocument'
+import RouterLinkBatchSearchResult from '@/components/RouterLink/RouterLinkBatchSearchResult'
 import RowPaginationDocuments from '@/components/RowPagination/RowPaginationDocuments'
 import { useUrlParam } from '@/composables/useUrlParam'
 import { useUrlParamWithStore } from '@/composables/useUrlParamWithStore'
@@ -151,7 +151,7 @@ watch(toRef(route, 'query'), fetchBatchSearchResults, { deep: true, immediate: t
         <display-number :value="item.documentNumber" />
       </template>
       <template #cell(documentName)="{ item }">
-        <router-link-document :value="item" />
+        <router-link-batch-search-result :item="item" />
       </template>
       <template #cell(project)="{ item }">
         <project-label :project="item.project" hide-thumbnail />
