@@ -7,6 +7,7 @@ export function useWait({ throttle = 0, scoped = false } = {}) {
   const waitStore = useWaitStore()
   const loaderId = useId()
   const isLoading = computed(() => waiting(loaderId))
+  const isReady = computed(() => !isLoading.value)
   const { uid } = getCurrentInstance()
 
   /**
@@ -116,5 +117,5 @@ export function useWait({ throttle = 0, scoped = false } = {}) {
     throw new Error('The first argument must be a function or a string')
   }
 
-  return { waitFor, isLoading, loaderId, start, end, waiting }
+  return { waitFor, isLoading, isReady, loaderId, start, end, waiting }
 }
