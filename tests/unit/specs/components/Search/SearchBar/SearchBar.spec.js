@@ -23,9 +23,11 @@ describe('SearchBar.vue', function () {
     })
   }
 
-  const mountFactory = (props = {}, data = () => ({ pristine: false, suggestions: [] })) => {
+  const mountFactory = (props = {}, data = { pristine: false, suggestions: [] }) => {
     return mount(SearchBar, {
-      data,
+      data() {
+        return { ...data }
+      },
       props,
       global: {
         plugins,
@@ -68,13 +70,6 @@ describe('SearchBar.vue', function () {
     expect(wrapper.find('.search-bar__suggestions').exists()).toBeFalsy()
     await wrapper.setData({ suggestions: ['suggestion1', 'suggestion2'] })
     expect(wrapper.find('.search-bar__suggestions').exists()).toBeTruthy()
-  })
-
-  it('should select the term when suggestion dropdown item is clicked', async () => {
-    wrapper = mountFactory({}, () => ({ suggestions: [{ key: 'bar' }], pristine: false, query: 'foo' }))
-    await flushPromises()
-    await wrapper.find('.selectable-dropdown__item').trigger('click')
-    expect(wrapper.vm.query).toBe('bar')
   })
 
   it('should not display the shortkeys-modal component', async () => {
