@@ -3,7 +3,8 @@ import DocumentSearchNav from '@/components/Document/DocumentSearchNav/DocumentS
 import { useSearchNav } from '@/composables/useSearchNav'
 
 const document = defineModel('document', { type: Object, required: true })
-const { fetchNextDocument, fetchPreviousDocument, isDocumentInPage, disabledPrevious, disabledNext } = useSearchNav(document)
+const { fetchNextDocument, fetchPreviousDocument, isDocumentInPage, disabledPrevious, disabledNext } =
+  useSearchNav(document)
 
 const previous = async () => {
   document.value = await fetchPreviousDocument()
