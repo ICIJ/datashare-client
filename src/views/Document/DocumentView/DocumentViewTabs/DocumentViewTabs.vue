@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
 import TabGroupNavigation from '@/components/TabGroup/TabGroupNavigation/TabGroupNavigation'
@@ -19,6 +19,7 @@ const router = useRouter()
 const route = useRoute()
 const { wheneverActionShortcut } = useKeyboardShortcuts()
 
+const modal = inject('modal', undefined)
 const tab = computed(() => route?.query?.tab || appStore.getSettings('documentView', 'tab'))
 
 const currentTabIndex = computed(() => {
@@ -42,7 +43,7 @@ wheneverActionShortcut('goToNextTab', () => router.push(nextTabRoute.value))
       v-for="entry in tabs"
       :key="entry.title"
       :icon="entry.icon"
-      :to="{ query: { tab: entry.tab } }"
+      :to="{ query: { tab: entry.tab, modal } }"
       :active="entry.tab === tab"
       manual
     >
