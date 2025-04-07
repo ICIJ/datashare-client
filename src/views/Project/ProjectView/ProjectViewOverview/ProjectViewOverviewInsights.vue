@@ -6,11 +6,11 @@ import { useInsightsStore } from '@/store/modules'
 
 const props = defineProps({ name: String })
 const insightsStore = useInsightsStore()
-const { mode } = useMode()
+const { modeName } = useMode()
 
 const widgets = computed(() => {
   return insightsStore.instantiatedWidgets.filter(({ modes }) => {
-    return !modes || modes.includes(mode.value)
+    return !modes || modes.includes(modeName.value)
   })
 })
 
