@@ -3,7 +3,9 @@ import { computed } from 'vue'
 
 import FormStepHeading from '@/components/Form/FormStep/FormStepHeading'
 import FormStepContent from '@/components/Form/FormStep/FormStepContent'
+
 const collapse = defineModel('collapse', { type: Boolean, default: false })
+
 defineProps({
   title: {
     type: String,
