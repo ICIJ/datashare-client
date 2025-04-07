@@ -257,6 +257,7 @@ export default {
   &__menu {
     max-height: 50vh;
     overflow: auto;
+    z-index: $zindex-sticky;
   }
 }
 </style>
