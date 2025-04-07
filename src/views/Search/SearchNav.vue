@@ -5,12 +5,12 @@ import DocumentSearchNav from '@/components/Document/DocumentSearchNav/DocumentS
 import { useSearchNav } from '@/composables/useSearchNav'
 
 const modal = inject('modal', false)
-const { hasEntries, disabledPrevious, disabledNext, previous, next } = useSearchNav()
+const { isDocumentInPage, disabledPrevious, disabledNext, previous, next } = useSearchNav()
 </script>
 
 <template>
   <document-search-nav
-    v-if="hasEntries && !modal"
+    v-if="isDocumentInPage && !modal"
     :disabled-previous="disabledPrevious"
     :disabled-next="disabledNext"
     @previous="previous"

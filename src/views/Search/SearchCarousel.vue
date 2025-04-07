@@ -15,7 +15,7 @@ const { size } = defineProps({
 })
 
 const {
-  hasEntries,
+  isDocumentInPage,
   documentPosition,
   goToPosition,
   fetchCarouselEntries,
@@ -32,7 +32,7 @@ const carouselEntries = ref([])
 const backward = ref(false)
 
 const fetch = async () => {
-  if (document.value && hasEntries.value && documentPosition.value !== null) {
+  if (document.value && isDocumentInPage.value && documentPosition.value !== null) {
     carouselEntries.value = await fetchCarouselEntries(documentPosition.value, size)
   }
 }
@@ -77,7 +77,7 @@ watchSearchEntries(fetch, { immediate: true })
 
 <template>
   <document-carousel
-    v-if="hasEntries"
+    v-if="isDocumentInPage"
     v-model:position="position"
     class="search-carousel"
     :total="total"

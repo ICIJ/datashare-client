@@ -28,7 +28,9 @@ export function useSearchNav(currentDocument = null) {
   // Position of the document in the total documents
   const documentPosition = computed(() => perPage.value * (page.value - 1) + documentPagePosition.value)
   // Check if there are any hits in which the document is present
-  const hasEntries = computed(() => documentPagePosition.value > -1)
+  const isDocumentInPage = computed(() => documentPagePosition.value > -1)
+  // Check if there are any hits
+  const hasEntries = computed(() => !!hits.value.length)
   // Check if the document is the first or last in the current page based on its position in the hits array
   const isFirstInPage = computed(() => documentPagePosition.value === 0)
   const isLastInPage = computed(() => documentPagePosition.value === perPage.value - 1)
@@ -140,6 +142,7 @@ export function useSearchNav(currentDocument = null) {
     documentPosition,
     goToPosition,
     fetchCarouselEntries,
+    isDocumentInPage,
     hasEntries,
     isFirstInPage,
     isLastInPage,
