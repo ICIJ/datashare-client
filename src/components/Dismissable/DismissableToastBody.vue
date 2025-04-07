@@ -102,7 +102,7 @@ const linkClassList = computed(() => [`btn-outline-${variant.value}`])
         class="toast-body__close py-1"
         :class="closeClass"
         variant="link"
-        :label="$t('dismissableToastBody.close')"
+        label="Close"
         hide-label
         icon-left="x"
         @click="closeToast"
