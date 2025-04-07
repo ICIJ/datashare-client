@@ -8,7 +8,7 @@ defineProps({
   },
   iconWeight: {
     type: String,
-    default: 'normal'
+    default: 'regular'
   },
   iconHoverWeight: {
     type: String,
