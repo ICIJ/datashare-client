@@ -39,7 +39,7 @@ export class Api {
   }
   stopPendingTasks({ name = null, ...filters } = {}) {
     const params = { ...filters, name }
-    return this.sendAction('/api/task/stopAll', { method: Method.PUT, params })
+    return this.sendAction('/api/task/stop', { method: Method.PUT, params })
   }
   stopTask(name) {
     return this.sendActionAsText(`/api/task/stop/${encodeURIComponent(name)}`, { method: Method.PUT })
