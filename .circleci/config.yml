@@ -30,7 +30,7 @@ jobs:
   # This job will build the client environment with the correct dependencies
   build:
     docker:
-      - image: cimg/node:18.19
+      - image: cimg/node:20
     working_directory: ~/datashare-client
     steps:
       - checkout
@@ -54,7 +54,7 @@ jobs:
   # This job will run linters on the vue and js code
   lint:
     docker:
-      - image: cimg/node:18.19
+      - image: cimg/node:20
     working_directory: ~/datashare-client
     steps:
       - restore_cache:
@@ -68,7 +68,7 @@ jobs:
   test:
     resource_class: large
     docker:
-      - image: cimg/node:18.19
+      - image: cimg/node:20
         environment:
           # This is required to run the tests
           NODE_OPTIONS: --max_old_space_size=4096
@@ -97,7 +97,7 @@ jobs:
   # This job will generate the API documentation
   generate_doc:
     docker:
-      - image: cimg/node:18.19
+      - image: cimg/node:20
     working_directory: ~/datashare-client
     steps:
       - restore_cache:
@@ -115,7 +115,7 @@ jobs:
   # This job wll publish the doc to Datashare central Wiki
   publish_doc:
     docker:
-      - image: cimg/node:18.19
+      - image: cimg/node:20
     working_directory: ~/datashare-client
     steps:
       - restore_cache:
