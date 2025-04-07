@@ -9,6 +9,14 @@ global.console = Object.assign(global.console, {
   log
 })
 
+// We globally mock toastify toast function because toaster components are not mounted
+// with the app plugins in test, causing flaky tests and unecessary errors
+vi.mock('vue3-toastify', async (importOrifinal) => {
+  const actual = await importOrifinal()
+  const toast = vi.fn()
+  return { ...actual, toast }
+})
+
 global.ResizeObserver = class {
   observe() {}
   unobserve() {}
