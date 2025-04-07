@@ -108,7 +108,6 @@ async function submit() {
     :submit-icon="PhRocketLaunch"
     @reset="reset"
     @submit="submit"
-    @keydown.enter.prevent
   >
     <task-batch-search-form-details
       v-model:name="name"
