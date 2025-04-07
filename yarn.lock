@@ -8283,10 +8283,10 @@ vue3-perfect-scrollbar@^2.0.0:
   dependencies:
     perfect-scrollbar "^1.5.5"
 
-vue3-toastify@^0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/vue3-toastify/-/vue3-toastify-0.2.2.tgz#13884ab3ac4b797b9d751a303378fd0ead539024"
-  integrity sha512-D8pmIp2UeU8MU1OY7GktA70HviZ38b1RagN82P7tFu3abUD86w+PjfmbdRch4QVtjVxK+eqKLvi5cXJRndwJfw==
+vue3-toastify@^0.2.8:
+  version "0.2.8"
+  resolved "https://registry.yarnpkg.com/vue3-toastify/-/vue3-toastify-0.2.8.tgz#0bb447b39f390ca9a1cb43c3c15ef3eede552b23"
+  integrity sha512-8jDOqsJaBZEbGpCbhWDETJc11D1lZefvgFPq/IPdM+U7+qyXoVPDvK6uq/FIgyV7qV0NcNzvGBMEzjsLQqGROw==
 
 vue@^2.5.16:
   version "2.7.16"
