@@ -33,7 +33,8 @@ const allProjects = computed(() => core.projects)
       <b-form-textarea
         v-model="description"
         name="description"
-        type="text"
+        :rows="2"
+        :max-rows="8"
         :placeholder="$t('task.batch-search.form.description.placeholder')"
       />
     </form-fieldset-i18n>
