@@ -20,12 +20,12 @@ export function useTaskPolling({ names = [], sortBy = [], perPage = null, page =
   const noTasks = computed(() => !toValue(tasks).length)
 
   async function stopPendingTasks() {
-    await taskStore.stopPendingTasks()
+    await taskStore.stopPendingTasks({ names: toValue(names) })
     await getTasks()
   }
 
   async function removeDoneTasks() {
-    await taskStore.removeDoneTasks()
+    await taskStore.removeDoneTasks({ names: toValue(names) })
     await getTasks()
   }
 
