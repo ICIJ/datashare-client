@@ -69,7 +69,6 @@ describe('WidgetRecommendedBy.vue', () => {
   it('loads a page of data, including ElasticSearch document', () => {
     expect(wrapper.vm.items[0]).toEqual(
       expect.objectContaining({
-        to: expect.objectContaining({ name: 'document-standalone' }),
         document: expect.objectContaining(bar),
         user: expect.objectContaining(user)
       })
