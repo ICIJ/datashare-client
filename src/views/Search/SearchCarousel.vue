@@ -33,50 +33,43 @@ const total = computed(() => searchStore.total)
 const carouselEntries = ref([])
 const backward = ref(false)
 
-const fetch = async () => {
+async function fetch() {
   if (document.value && isDocumentInPage.value && documentPosition.value !== null) {
     carouselEntries.value = await fetchCarouselEntries(documentPosition.value, size)
   }
 }
-const disabledPrevious = computed(() => firstCarouselEntry.value?.position === 0)
 
+const disabledPrevious = computed(() => firstCarouselEntry.value?.position === 0)
 const disabledNext = computed(() => lastCarouselEntry.value?.position === total.value - 1)
 
-const firstCarouselEntry = computed(() => {
-  return carouselEntries.value[0]
-})
+const firstCarouselEntry = computed(() => carouselEntries.value[0])
+const lastCarouselEntry = computed(() => carouselEntries.value[carouselEntries.value.length - 1])
 
-const lastCarouselEntry = computed(() => {
-  return carouselEntries.value[carouselEntries.value.length - 1]
-})
-
-const previous = async () => {
+async function previous() {
   const position = Math.max(0, firstCarouselEntry.value.position - size)
   carouselEntries.value = await fetchCarouselEntries(position, size)
 }
 
-const next = async () => {
+async function next() {
   const position = Math.min(lastCarouselEntry.value.position + size, total.value - 1)
   carouselEntries.value = await fetchCarouselEntries(position, size)
 }
 
-const searchFromPositionAndFetch = async (position) => {
+async function searchFromPositionAndFetch(position) {
   await searchFromPosition(position)
   await fetch()
 }
 
 const position = computed({
-  get() {
-    return documentPosition.value
-  },
+  get: () => documentPosition.value,
   set: goToPosition
 })
 
-const previousDocument = () => {
+function previousDocument() {
   position.value = Math.max(0, position.value - 1)
 }
 
-const nextDocument = () => {
+function nextDocument() {
   position.value = Math.min(total.value - 1, position.value + 1)
 }
 
