@@ -147,13 +147,11 @@ export default {
   },
   emits: ['submit'],
   data() {
-    const searchStore = useSearchStore.create(this.searchStoreSuffix)
-
     return {
-      field: searchStore.field,
+      field: null,
       pristine: true,
       focused: false,
-      query: searchStore.q,
+      query: null,
       suggestions: [],
       activeSuggestions: []
     }
@@ -186,6 +184,20 @@ export default {
     },
     hiddenSuggestions() {
       return !this.suggestions.length || this.pristine
+    }
+  },
+  watch: {
+    'searchStore.q': {
+      immediate: true,
+      handler(value) {
+        this.query = value
+      }
+    },
+    'searchStore.field': {
+      immediate: true,
+      handler(value) {
+        this.field = value
+      }
     }
   },
   methods: {
