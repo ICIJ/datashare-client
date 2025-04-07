@@ -3,7 +3,7 @@ import DocumentSearchNav from '@/components/Document/DocumentSearchNav/DocumentS
 import { useSearchNav } from '@/composables/useSearchNav'
 
 const document = defineModel('document', { type: Object, required: true })
-const { fetchNextDocument, fetchPreviousDocument, hasEntries, disabledPrevious, disabledNext } = useSearchNav(document)
+const { fetchNextDocument, fetchPreviousDocument, isDocumentInPage, disabledPrevious, disabledNext } = useSearchNav(document)
 
 const previous = async () => {
   document.value = await fetchPreviousDocument()
@@ -17,7 +17,7 @@ const next = async () => {
 <template>
   <div class="document-viewer-modal-nav text-center">
     <document-search-nav
-      v-if="hasEntries"
+      v-if="isDocumentInPage"
       class="border"
       :disabled-previous="disabledPrevious"
       :disabled-next="disabledNext"
