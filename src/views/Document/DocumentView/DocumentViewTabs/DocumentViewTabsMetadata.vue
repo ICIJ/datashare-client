@@ -198,7 +198,8 @@ const classList = computed(() => {
       <document-metadata
         v-for="item in items"
         :key="item.name"
-        :name="item.label"
+        :name="item.name"
+        :index="document.index"
         :icon="item.icon"
         :label="item.label"
         :value="item.value"
