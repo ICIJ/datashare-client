@@ -14,9 +14,7 @@ class CoreSetup extends Core {
       this.i18n,
       [this.murmur, { useI18n: false, useBootstrap: false }],
       this.pinia,
-      this.store,
       this.vueScrollTo,
-      this.vueEllipseProgress,
       this.vCalendar,
       this.router
     ]
