@@ -195,10 +195,10 @@ defineExpose({ resetSize, resetStartSize, resetEndSize })
     &__floating {
       position: sticky;
       z-index: 100;
+      top: 0;
       left: 0;
       right: 0;
       height: 100%;
-      max-height: calc(100vh - #{$spacer * 2});
       padding: $spacer;
       margin-right: $spacer;
       box-shadow: 0 $spacer 0 0 var(--bs-body-bg);
