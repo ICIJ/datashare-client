@@ -12,12 +12,13 @@
       </template>
       <div class="list-group widget__list" :class="{ 'list-group-flush': widget.card }">
         <document-card
-          v-for="({ document, to, user, creationDate }, i) in items"
+          v-for="({ document, user, creationDate }, i) in items"
           :key="i"
-          :to="to"
           class="list-group-item list-group-item-action widget__list__item py-3"
           :document="document"
           :properties="['title', 'thumbnail', 'path', 'creationDate']"
+          modal
+          route-name="document-standalone"
         >
           <template #actions>
             <div class="d-flex flew-nowrap gap-3">
@@ -42,7 +43,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import bodybuilder from 'bodybuilder'
-import { get, property, find, flatten, noop, uniqueId } from 'lodash'
+import { compact, get, property, find, flatten, noop, uniqueId } from 'lodash'
 import InfiniteLoading from 'v3-infinite-loading'
 import { PhosphorIcon } from '@icij/murmur-next'
 
@@ -75,7 +76,7 @@ const { core } = useCore()
 const { waitFor, loaderId } = useWait()
 const infiniteScrollId = uniqueId('infinite-scroll-')
 
-const items = computed(() => flatten(pages.value).map(recordToItem))
+const items = computed(() => compact(flatten(pages.value).map(recordToItem)))
 const documents = computed(() => flatten(hits.value.map(property('hits'))))
 const offset = computed(() => pages.value.length * props.pageSize)
 const lastPage = computed(() => pages.value[pages.value.length - 1])
@@ -109,9 +110,7 @@ async function loadNextPage($infiniteLoadingState) {
 
 function recordToItem({ user, document: { id }, creationDate }) {
   const document = findDocument(id)
-  const params = document.routerParams
-  const to = { name: 'document-standalone', params }
-  return { document, to, user, creationDate }
+  return document ? { document, user, creationDate } : null
 }
 
 async function getPageHits(page) {
