@@ -6,8 +6,12 @@ import DocumentMetadataActionsEntry from './DocumentMetadataActionsEntry'
 
 const pinned = defineModel('pinned', { type: Boolean })
 
-defineProps({
+const props = defineProps({
   name: {
+    type: String,
+    required: true
+  },
+  index: {
     type: String,
     required: true
   },
@@ -19,8 +23,8 @@ defineProps({
 
 const pinIconWeight = computed(() => (pinned.value ? 'fill' : null))
 const pinIconHoverWeight = computed(() => (pinned.value ? 'fill' : 'bold'))
-const q = ''
-const indices = ''
+const q = computed(() => `${props.name}:"${props.value}"`)
+const indices = computed(() => props.index)
 </script>
 
 <template>

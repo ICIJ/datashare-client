@@ -14,6 +14,10 @@ defineProps({
     type: String,
     required: true
   },
+  index: {
+    type: String,
+    required: true
+  },
   label: {
     type: String,
     required: true
@@ -45,7 +49,13 @@ defineProps({
         </slot>
       </div>
     </div>
-    <document-metadata-actions v-model:pinned="pinned" :name="name" :value="value" class="document-metadata__actions" />
+    <document-metadata-actions
+      v-model:pinned="pinned"
+      :name="name"
+      :index="index"
+      :value="value"
+      class="document-metadata__actions"
+    />
   </div>
 </template>
 
