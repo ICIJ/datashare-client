@@ -52,6 +52,8 @@
 body {
   font-size: 1rem;
   overflow: auto;
+  // This is not ideal but it prevents some weird display issues with Chrome
+  overflow-x: hidden;
 
   // Disable overflow scrollbar when the sidebar or the filters panel are in full width and not closed
   &:has(.app-sidebar--full-width:not(.app-sidebar--closed)),
