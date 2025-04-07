@@ -105,8 +105,8 @@ const hasToolbar = computed(() => {
     <template #toggle-filters>
       <slot name="toggle-filters>" />
     </template>
-    <template #pagination>
-      <slot name="pagination" />
+    <template #pagination="bindings">
+      <slot name="pagination" v-bind="bindings" />
     </template>
     <template #search>
       <slot name="search" />
