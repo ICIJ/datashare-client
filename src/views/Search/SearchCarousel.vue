@@ -4,6 +4,7 @@ import { computed, ref } from 'vue'
 import DocumentCarousel from '@/components/Document/DocumentCarousel/DocumentCarousel'
 import DocumentCarouselEntry from '@/components/Document/DocumentCarousel/DocumentCarouselEntry'
 import { useDocument } from '@/composables/useDocument'
+import { useKeyboardShortcuts } from '@/composables/useKeyboardShortcuts'
 import { useSearchNav } from '@/composables/useSearchNav'
 import { useSearchStore } from '@/store/modules'
 
@@ -25,6 +26,7 @@ const {
 } = useSearchNav()
 
 const { isActive, document, watchDocument } = useDocument()
+const { wheneverRouteActionShortcut } = useKeyboardShortcuts()
 
 const searchStore = useSearchStore.inject('searchStoreSuffix')
 const total = computed(() => searchStore.total)
@@ -69,6 +71,17 @@ const position = computed({
   },
   set: goToPosition
 })
+
+const previousDocument = () => {
+  position.value = Math.max(0, position.value - 1)
+}
+
+const nextDocument = () => {
+  position.value = Math.min(total.value - 1, position.value + 1)
+}
+
+wheneverRouteActionShortcut('goToPreviousDocument', previousDocument)
+wheneverRouteActionShortcut('goToNextDocument', nextDocument)
 
 watchPosition((newPosition, oldPosition) => (backward.value = newPosition < oldPosition))
 watchDocument(fetch)
