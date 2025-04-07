@@ -37,8 +37,9 @@ export class Api {
     const data = { options }
     return this.sendActionAsText(`/api/task/findNames/${pipeline}`, { method: Method.POST, data })
   }
-  stopPendingTasks() {
-    return this.sendAction('/api/task/stopAll', { method: Method.PUT })
+  stopPendingTasks({ name = null, ...filters } = {}) {
+    const params = { ...filters, name }
+    return this.sendAction('/api/task/stopAll', { method: Method.PUT, params })
   }
   stopTask(name) {
     return this.sendActionAsText(`/api/task/stop/${encodeURIComponent(name)}`, { method: Method.PUT })
@@ -46,8 +47,9 @@ export class Api {
   removeTask(name) {
     return this.sendAction(`/api/task/clean/${encodeURIComponent(name)}`, { method: Method.DELETE })
   }
-  removeDoneTasks() {
-    return this.sendAction('/api/task/clean', { method: Method.POST })
+  removeDoneTasks({ name = null, ...filters } = {}) {
+    const params = { ...filters, name }
+    return this.sendAction('/api/task/clean', { method: Method.POST, params })
   }
   getTasks({ name = null, from = 0, size = 10, order = 'asc', sort, ...filters } = {}) {
     const params = { ...filters, name, from, size, order, sort }
