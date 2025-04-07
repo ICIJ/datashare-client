@@ -140,6 +140,10 @@ defineProps({
       height: var(--bs-modal-margin);
     }
 
+    .modal-body {
+      overflow-y: visible;
+    }
+
     .modal-content {
       height: auto;
       min-height: calc(100vh - var(--bs-modal-margin) * 2);
