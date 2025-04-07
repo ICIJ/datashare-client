@@ -186,8 +186,8 @@ class Core extends Behaviors {
     // Murmur is loaded without installing Vue i18n and Bootstrap Vue
     // to avoid adding them twice to the Vue instance.
     this.use(Murmur, { useI18n: false, useBootstrap: false })
-    // Vue Toastify uses as separated vue instances so we must install vue-i18n
-    // separately to ensure the i18n instance is available in the toastify plugin.
+    // Vue Toastify uses as separated vue instance so we must install vue-i18n
+    // separately to ensure vue-i18n's methods and components are available in the toastify plugin.
     this.use(Vue3Toastify, {
       clearOnUrlChange: false,
       hideProgressBar: true,
