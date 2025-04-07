@@ -20,8 +20,7 @@ vi.mock('lodash', async (importOriginal) => {
 
 describe('DocumentViewTabsEntities.vue', () => {
   const { index, es: elasticsearch } = esConnectionHelper.build()
-  const id = uniqueId('document-')
-  let core, documentStore, wrapper, spy
+  let core, documentStore, id, wrapper, spy
 
   beforeEach(() => {
     const routes = [
@@ -29,6 +28,7 @@ describe('DocumentViewTabsEntities.vue', () => {
       { name: 'task.entities.new', path: '/task/entities/new' }
     ]
 
+    id = uniqueId('document-')
     spy = vi.spyOn(api.elasticsearch, 'getDocumentNamedEntitiesInCategory')
     core = CoreSetup.init().useAll().useRouter(routes)
     core.config.set('manageDocuments', true)
@@ -64,6 +64,7 @@ describe('DocumentViewTabsEntities.vue', () => {
 
     expect(wrapper.findAllComponents(EntityButton)).toHaveLength(3)
     await documentStore.getFirstPageForNamedEntityInAllCategories({ filterToken: 'lou' })
+    await flushPromises()
     const people = wrapper.findAllComponents(EntityButton)
     expect(people).toHaveLength(1)
   })
