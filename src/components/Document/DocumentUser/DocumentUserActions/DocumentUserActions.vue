@@ -20,6 +20,7 @@
     <hook name="document-user-actions:after" />
   </form-actions>
 </template>
+
 <script setup>
 import { useI18n } from 'vue-i18n'
 import { computed, toRef, useTemplateRef } from 'vue'
