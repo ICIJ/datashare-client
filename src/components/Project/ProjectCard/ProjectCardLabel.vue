@@ -1,4 +1,5 @@
 <script setup>
+import Hook from '@/components/Hook/Hook'
 import ProjectLink from '@/components/Project/ProjectLink'
 
 defineProps({
@@ -11,7 +12,9 @@ defineProps({
 
 <template>
   <h3 class="project-card-label text-dark-emphasis">
+    <hook name="project-card-label:before" :bind="{ project }" />
     <project-link :project="project" hide-thumbnail />
+    <hook name="project-card-label:after" :bind="{ project }" />
   </h3>
 </template>
 

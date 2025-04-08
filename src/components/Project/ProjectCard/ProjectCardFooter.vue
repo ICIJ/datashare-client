@@ -5,6 +5,7 @@ import ProjectCardUpdateDate from './ProjectCardUpdateDate'
 import ProjectCardDocumentsCount from './ProjectCardDocumentsCount'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
+import Hook from '@/components/Hook/Hook'
 
 const props = defineProps({
   project: {
@@ -23,6 +24,7 @@ const toProjectSearch = computed(() => ({
 
 <template>
   <div class="project-card-footer d-flex flex-column flex-xl-row gap-3">
+    <hook name="project-card-footer:before" :bind="{ project }" />
     <slot>
       <div class="d-flex flex-column lh-lg-1 mt-auto flex-grow-1 align-items-start">
         <project-card-update-date :project="project">
@@ -41,6 +43,7 @@ const toProjectSearch = computed(() => ({
         :label="$t('projectCardFooter.search')"
       />
     </slot>
+    <hook name="project-card-footer:after" :bind="{ project }" />
   </div>
 </template>
 
