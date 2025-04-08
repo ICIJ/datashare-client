@@ -339,8 +339,8 @@ describe('Datashare backend client', () => {
     expect(json).toEqual({})
   })
 
-  it('should return backend response to uninstallPlugin', async () => {
-    json = await api.uninstallPlugin()
+  it('should return backend response to uninstallPluginFromId', async () => {
+    json = await api.uninstallPluginFromId()
     expect(json).toEqual({})
   })
 
@@ -359,8 +359,8 @@ describe('Datashare backend client', () => {
     expect(json).toEqual({})
   })
 
-  it('should return backend response to uninstallExtension', async () => {
-    json = await api.uninstallExtension()
+  it('should return backend response to uninstallExtensionFromId', async () => {
+    json = await api.uninstallExtensionFromId()
     expect(json).toEqual({})
   })
 
