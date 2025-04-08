@@ -2,6 +2,7 @@ import types from '@/utils/types'
 import { MODE_NAME } from '@/mode'
 
 export { default as WidgetDiskUsage } from './WidgetDiskUsage'
+export { default as WidgetDetails } from './WidgetDetails'
 export { default as WidgetDocuments } from './WidgetDocuments'
 export { default as WidgetDocumentsByCreationDateByPath } from './WidgetDocumentsByCreationDateByPath'
 export { default as WidgetEmpty } from './WidgetEmpty'
@@ -89,6 +90,13 @@ const widgets = [
     cols: 12,
     type: 'WidgetRecommendedBy',
     modes: [MODE_NAME.SERVER]
+  },
+  {
+    name: 'details',
+    section: 'details',
+    card: true,
+    cols: 12,
+    type: 'WidgetDetails'
   }
 ]
 
