@@ -99,7 +99,7 @@ const filteredAddons = computed(() => {
       <div v-for="addon in filteredAddons" :key="addon.id" class="col-12 col-xl-6 d-flex">
         <addon-card
           :id="addon.id"
-          addon-type="extension"
+          :addon-type="addonsType"
           :name="addon.name ?? addon.id"
           :version="addon.version"
           :description="addon.description"
