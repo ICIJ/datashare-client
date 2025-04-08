@@ -1,8 +1,10 @@
 import DocumentUserActions from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActions'
+import { withPinia } from '~storybook/decorators/pinia'
 
 export default {
   title: 'Components/Document/DocumentUser/DocumentUserActions/DocumentUserActions',
   tags: ['autodocs'],
+  decorators: [withPinia()],
   component: DocumentUserActions,
   args: {
     compact: false,
@@ -22,7 +24,12 @@ export default {
 export const Default = {
   args: {
     showTags: true,
-    tags: 3
+    tags: 3,
+    showComments: true,
+    showRecommended: true,
+    showFolders: true,
+    showNotes: true,
+    showRecommendations: true
   }
 }
 

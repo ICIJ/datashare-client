@@ -1,30 +1,59 @@
 <template>
-  <form-actions
-    ref="element"
-    end
-    compact-auto
-    :compact-auto-breakpoint="compactAutoBreakpoint"
-    dropdown-icon="dots-three-vertical"
-    variant="action"
-    compact-variant="outline-action"
-    class="document-user-actions d-inline-flex justify-content-start bg-action-subtle flex-grow-0 rounded-1"
-  >
-    <hook name="document-user-actions:before" />
-    <document-user-actions-entry
-      v-for="action in visibleActions"
-      :key="action.name"
-      v-bind="action"
-      class="m-1"
-      @click="emit('action', action)"
-    />
-    <hook name="document-user-actions:after" />
-  </form-actions>
+  <div class="document-user-actions bg-action-subtle p-1 rounded-1 d-inline-block">
+    <form-actions
+      ref="element"
+      end
+      compact-auto
+      :compact-auto-breakpoint="compactAutoBreakpoint"
+      dropdown-icon="dots-three-vertical"
+      variant="action"
+      compact-variant="outline-action"
+      class="d-inline-flex justify-content-start flex-grow-0 gap-1"
+    >
+      <hook name="document-user-actions:before" />
+      <document-user-actions-entry
+        v-if="showTags"
+        :label="$t(`documentUserActions.tags`, { n: props.tags })"
+        :value="String(props.tags)"
+        :icon="PhHash"
+        :hide-tooltip="!shorterLabels"
+        :shorter-label="shorterLabels"
+        @click="emit('action', 'tags')"
+      />
+      <document-user-actions-entry
+        v-if="showRecommendations"
+        :label="$t(`documentUserActions.recommendations`, { n: props.recommendations })"
+        :value="String(props.recommendations)"
+        :icon="[PhEyes, 'fill']"
+        :hide-tooltip="!shorterLabels"
+        :shorter-label="shorterLabels"
+        @click="emit('action', 'recommendations')"
+      />
+      <document-user-actions-entry
+        v-if="showNotes"
+        :label="$t(`documentUserActions.notes`, { n: props.notes })"
+        :value="String(props.notes)"
+        :icon="PhNoteBlank"
+        :hide-tooltip="!shorterLabels"
+        :shorter-label="shorterLabels"
+        @click="emit('action', 'notes')"
+      />
+      <document-user-actions-entry
+        v-if="showFolders"
+        :label="$t(`documentUserActions.folders`, { n: props.folders })"
+        :value="String(props.folders)"
+        :icon="PhFolder"
+        :hide-tooltip="!shorterLabels"
+        :shorter-label="shorterLabels"
+        @click="emit('action', 'folders')"
+      />
+      <hook name="document-user-actions:after" />
+    </form-actions>
+  </div>
 </template>
 
 <script setup>
-import { useI18n } from 'vue-i18n'
-import { computed, toRef, useTemplateRef } from 'vue'
-import { capitalize, property } from 'lodash'
+import { toRef, useTemplateRef } from 'vue'
 
 import DocumentUserActionsEntry from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsEntry'
 import FormActions from '@/components/Form/FormActions/FormActions'
@@ -39,10 +68,6 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
-  showComments: {
-    type: Boolean,
-    default: false
-  },
   showRecommendations: {
     type: Boolean,
     default: false
@@ -56,10 +81,6 @@ const props = defineProps({
     default: false
   },
   tags: {
-    type: Number,
-    default: 0
-  },
-  comments: {
     type: Number,
     default: 0
   },
@@ -90,37 +111,6 @@ const elementRef = useTemplateRef('element')
 const { compact: shorterLabels } = useCompact(elementRef, { threshold: toRef(props, 'shorterLabelsThreshold') })
 
 const emit = defineEmits(['action'])
-const { t } = useI18n()
-
-const USER_ACTIONS = {
-  TAGS: 'tags',
-  COMMENTS: 'comments',
-  RECOMMENDATIONS: 'recommendations',
-  FOLDERS: 'folders',
-  NOTES: 'notes'
-}
-
-const icons = {
-  [USER_ACTIONS.TAGS]: 'hash',
-  [USER_ACTIONS.COMMENTS]: 'chats-teardrop',
-  [USER_ACTIONS.RECOMMENDATIONS]: ['eyes', 'fill'],
-  [USER_ACTIONS.FOLDERS]: 'folder',
-  [USER_ACTIONS.NOTES]: 'note-blank'
-}
-
-const actions = computed(() => {
-  return Object.values(USER_ACTIONS).map((action) => ({
-    name: action,
-    show: props[`show${capitalize(action)}`],
-    icon: icons[action],
-    label: t(`documentUserActions.${action}`, { n: props[action] }),
-    value: props[action].toString(),
-    hideTooltip: !shorterLabels.value,
-    shorterLabel: shorterLabels.value
-  }))
-})
-
-const visibleActions = computed(() => actions.value.filter(property('show')))
 </script>
 
 <style lang="scss" scoped>
