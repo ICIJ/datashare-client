@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
+import Hook from '@/components/Hook/Hook'
 import { useBreakpoints } from '@/composables/useBreakpoints'
 
 const { breakpointDown } = useBreakpoints()
@@ -31,6 +32,7 @@ const compact = computed(() => {
 
 <template>
   <td class="project-row-links">
+    <hook name="project-row-links:before" :bind="{ project }" />
     <div class="d-flex gap-3">
       <slot>
         <button-icon
@@ -44,6 +46,7 @@ const compact = computed(() => {
         />
       </slot>
     </div>
+    <hook name="project-row-links:after" :bind="{ project }" />
   </td>
 </template>
 
