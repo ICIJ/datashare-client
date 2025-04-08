@@ -9,6 +9,7 @@ import AddonUrlInput from '@/components/Addon/AddonUrlInput'
 import AddonCard from '@/components/Addon/AddonCard'
 import AppWait from '@/components/AppWait/AppWait'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
+import { apiInstance as api } from '@/api/apiInstance'
 import { useCore } from '@/composables/useCore'
 import { useWait } from '@/composables/useWait'
 import { ADDONS_TYPE, addonsTypeValidator } from '@/enums/addons'
@@ -16,7 +17,7 @@ import SettingsViewLayout from '@/views/Settings/SettingsView/SettingsViewLayout
 
 const props = defineProps({ addonsType: { type: String, validator: addonsTypeValidator } })
 
-const { toastedPromise, core } = useCore()
+const { toastedPromise } = useCore()
 const { waitFor, isLoading, loaderId } = useWait()
 const { t } = useI18n()
 
@@ -40,14 +41,12 @@ const noResultsLabel = computed(() => t('settings.layout.noResults', { query: fi
 
 const installAddonFromUrlFn = computed(() =>
   props.addonType === ADDONS_TYPE.EXTENSIONS
-    ? core.api.installExtensionFromUrl.bind(core.api)
-    : core.api.installPluginFromUrl.bind(core.api)
+    ? api.installExtensionFromUrl.bind(api)
+    : api.installPluginFromUrl.bind(api)
 )
 
 const retrieveAddonsFn = computed(() =>
-  props.addonsType === ADDONS_TYPE.EXTENSIONS
-    ? core.api.getExtensions.bind(core.api)
-    : core.api.getPlugins.bind(core.api)
+  props.addonsType === ADDONS_TYPE.EXTENSIONS ? api.getExtensions.bind(api) : api.getPlugins.bind(api)
 )
 
 const loadAddons = waitFor(async (searchTerm) => {
