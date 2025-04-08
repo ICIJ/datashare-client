@@ -29,7 +29,7 @@ const documentViewFloatingElement = querySelector(documentViewFloatingSelector)
 const showRecommendationsCard = ref(false)
 const showTagsCard = ref(false)
 
-const actionHandler = ({ name }) => {
+const actionHandler = (name) => {
   showTagsCard.value = name === 'tags' && !showTagsCard.value
   showRecommendationsCard.value = name === 'recommendations' && !showRecommendationsCard.value
 }
