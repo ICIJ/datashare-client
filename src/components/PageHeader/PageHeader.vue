@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 
 import { breakpointSizeValidator, SIZE } from '@/enums/sizes'
+import Hook from '@/components/Hook/Hook'
 import PageHeaderNav from '@/components/PageHeader/PageHeaderNav'
 import PageHeaderToolbar from '@/components/PageHeader/PageHeaderToolbar'
 
@@ -65,6 +66,7 @@ const hasToolbar = computed(() => {
 </script>
 
 <template>
+  <hook name="page-header:before" />
   <page-header-nav
     :no-breadcrumb="noBreadcrumb"
     :no-toggle-sidebar="noToggleSidebar"
@@ -112,4 +114,5 @@ const hasToolbar = computed(() => {
       <slot name="search" />
     </template>
   </page-header-toolbar>
+  <hook name="page-header:after" />
 </template>

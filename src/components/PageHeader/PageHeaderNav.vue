@@ -4,6 +4,7 @@ import { computed } from 'vue'
 import ButtonAdd from '@/components/Button/ButtonAdd'
 import ButtonToggleSidebar from '@/components/Button/ButtonToggleSidebar'
 import ButtonToggleSettings from '@/components/Button/ButtonToggleSettings'
+import Hook from '@/components/Hook/Hook'
 import NavigationBreadcrumb from '@/components/NavigationBreadcrumb/NavigationBreadcrumb'
 import PageContainer from '@/components/PageContainer/PageContainer'
 import { useViews } from '@/composables/useViews'
@@ -43,6 +44,7 @@ const showToggleSidebar = computed(() => {
 
 <template>
   <page-container fluid class="page-header-nav d-flex justify-content-between gap-4">
+    <hook name="page-header-nav:before" />
     <slot name="toggle-sidebar">
       <button-toggle-sidebar v-if="showToggleSidebar" v-model:active="toggleSidebar" class="flex-shrink-0" />
     </slot>
@@ -54,6 +56,7 @@ const showToggleSidebar = computed(() => {
       <button-add v-if="addTo" :to="addTo" :label="addLabel" />
       <button-toggle-settings v-if="!noToggleSettings" v-model:active="toggleSettings" />
     </div>
+    <hook name="page-header-nav:before" />
   </page-container>
 </template>
 
