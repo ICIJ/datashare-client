@@ -9,18 +9,19 @@ import AppSidebarToggler from './AppSidebarToggler'
 import AppSidebarClose from './AppSidebarClose'
 
 import { Api } from '@/api'
+import Hook from '@/components/Hook/Hook'
 import ProjectLabel from '@/components/Project/ProjectLabel'
 import VersionNumber from '@/components/VersionNumber'
-import { SIZE } from '@/enums/sizes'
-import { useAppStore } from '@/store/modules'
-import settings from '@/utils/settings'
 import { useBreakpoints } from '@/composables/useBreakpoints'
 import { useCore } from '@/composables/useCore'
 import { useMode } from '@/composables/useMode'
 import { useSearchNav } from '@/composables/useSearchNav'
+import { SIZE } from '@/enums/sizes'
+import { useAppStore } from '@/store/modules'
+import settings from '@/utils/settings'
 
-const { core } = useCore()
 const appStore = useAppStore()
+const { core } = useCore()
 const { searchRoute } = useSearchNav()
 const { isServer } = useMode()
 const { breakpointDown } = useBreakpoints()
@@ -103,6 +104,7 @@ onBeforeRouteLeave(autoClose)
 
 <template>
   <div class="app-sidebar" :class="classList">
+    <hook name="app-sidebar:before" />
     <div class="flex-grow-1 p-3">
       <div class="d-flex justify-content-between">
         <app-sidebar-toggler v-model:active="compact" class="d-none d-md-block" />
@@ -200,6 +202,7 @@ onBeforeRouteLeave(autoClose)
     >
       <version-number />
     </app-sidebar-footer>
+    <hook name="app-sidebar:after" />
   </div>
 </template>
 
