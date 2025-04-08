@@ -2,6 +2,7 @@
 import { computed, inject } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
+import Hook from '@/components/Hook/Hook'
 import TabGroupNavigation from '@/components/TabGroup/TabGroupNavigation/TabGroupNavigation'
 import TabGroupNavigationEntry from '@/components/TabGroup/TabGroupNavigation/TabGroupNavigationEntry'
 import { useKeyboardShortcuts } from '@/composables/useKeyboardShortcuts'
@@ -47,6 +48,7 @@ wheneverActionShortcut('goToNextTab', () => router.push(nextTabRoute.value))
 
 <template>
   <tab-group-navigation nowrap>
+    <hook name="document-view-tabs:before" :bind="{ tab, tabs }" />
     <tab-group-navigation-entry
       v-for="entry in tabs"
       :key="entry.title"
@@ -57,5 +59,6 @@ wheneverActionShortcut('goToNextTab', () => router.push(nextTabRoute.value))
     >
       {{ entry.title }}
     </tab-group-navigation-entry>
+    <hook name="document-view-tabs:after" :bind="{ tab, tabs }" />
   </tab-group-navigation>
 </template>
