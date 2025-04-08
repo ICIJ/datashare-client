@@ -150,6 +150,7 @@ onBeforeRouteUpdate(fetchRouteDocument)
 .document-view {
   width: 0;
   min-width: 100%;
+  min-height: calc(70vh);
   flex-basis: 100%;
 }
 </style>
