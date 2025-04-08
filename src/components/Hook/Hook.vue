@@ -36,30 +36,52 @@ const { name } = defineProps({
 const { core } = useCore()
 const hooksStore = useHooksStore()
 const components = computed(() => hooksStore.filterComponentsByTarget(name))
+const title = computed(() => `${name} (${components.value.length})`)
 const isDebug = computed(() => core.config.is('hooksDebug'))
 </script>
 
 <template>
-  <component :is="debugTag" v-if="isDebug" class="hook-debug" :aria-hook="name" :aria-count="components.length" />
+  <component :is="debugTag" v-if="isDebug" class="hook-debug" :title="title" />
   <component :is="component" v-for="({ component }, i) of components" :key="i" v-bind="bind" :class="xClass" />
 </template>
 
 <style lang="scss">
 .hook-debug {
+  z-index: $zindex-tooltip - 1;
   position: relative;
   white-space: nowrap;
+  display: inline;
   height: 0;
   width: 0;
+  flex: 0;
+  color: var(--bs-emphasis-color);
+  filter: drop-shadow(0 0 0.5rem var(--bs-body-bg));
+
+  &:hover {
+    color: var(--bs-primary);
+    cursor: help;
+  }
+
+  &:before,
+  &:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 0.5rem;
+    width: 0.5rem;
+  }
 
   &:before {
-    content: attr(aria-hook) ' → ' attr(aria-count);
-    font-size: 0.8rem;
-    font-weight: bold;
-    color: var(--bs-body-bg);
-    text-shadow: 0 0 0.5em var(--bs-body-color-rgb);
-    background: rgba(var(--bs-body-color-rgb), 0.7);
-    font-family: $font-family-monospace;
-    padding: 0.1em 0.3em;
+    border-bottom: 1px solid currentColor;
+    border-right: 1px solid currentColor;
+    transform: translate(-100%, -100%);
+  }
+
+  &:after {
+    border-top: 1px solid currentColor;
+    border-left: 1px solid currentColor;
+    transform: translate(-1px, -1px);
   }
 }
 </style>
