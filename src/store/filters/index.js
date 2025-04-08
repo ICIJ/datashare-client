@@ -170,6 +170,18 @@ export default [
     }
   },
   {
+    type: 'FilterEntity',
+    options: {
+      name: 'namedEntityEmail',
+      key: 'byMentions',
+      icon: 'envelope',
+      category: namedEntityCategoryTranslation.namedEntityEmail,
+      order: 100,
+      section: 'entities',
+      preference: 'filter-named-entity-email'
+    }
+  },
+  {
     type: 'FilterExtractionLevel',
     options: {
       name: 'extractionLevel',
