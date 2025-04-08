@@ -5,6 +5,8 @@ import ProjectCardFooter from './ProjectCardFooter'
 import ProjectCardLabel from './ProjectCardLabel'
 import ProjectCardThumbnail from './ProjectCardThumbnail'
 
+import Hook from '@/components/Hook/Hook'
+
 defineProps({
   project: {
     type: Object,
@@ -15,6 +17,7 @@ defineProps({
 
 <template>
   <div class="project-card border rounded p-4 d-flex gap-3">
+    <hook name="project-card:before" :bind="{ project }" />
     <project-card-thumbnail :project="project" class="flex-grow-1">
       <slot name="thumbnail" />
     </project-card-thumbnail>
@@ -34,5 +37,6 @@ defineProps({
         <slot name="footer" />
       </project-card-footer>
     </div>
+    <hook name="project-card:after" :bind="{ project }" />
   </div>
 </template>

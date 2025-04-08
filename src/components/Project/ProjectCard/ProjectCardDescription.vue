@@ -1,4 +1,6 @@
 <script setup>
+import Hook from '@/components/Hook/Hook'
+
 defineProps({
   project: {
     type: Object,
@@ -8,7 +10,11 @@ defineProps({
 </script>
 
 <template>
-  <div class="project-card-description">{{ project.description }}</div>
+  <div class="project-card-description">
+    <hook name="project-card-description:before" :bind="{ project }" />
+    {{ project.description }}
+    <hook name="project-card-description:after" :bind="{ project }" />
+  </div>
 </template>
 
 <style scoped>
