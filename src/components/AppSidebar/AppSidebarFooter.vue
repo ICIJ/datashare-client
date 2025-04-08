@@ -4,10 +4,11 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { PhosphorIcon } from '@icij/murmur-next'
 
+import AppSidebarKeyboardShortcutsPopover from '@/components/AppSidebar/AppSidebarKeyboardShortcutsPopover'
+import Hook from '@/components/Hook/Hook'
 import { useConfirmModal } from '@/composables/useConfirmModal'
 import { useRemoveAll } from '@/composables/useRemoveAll'
 import { useCore } from '@/composables/useCore'
-import AppSidebarKeyboardShortcutsPopover from '@/components/AppSidebar/AppSidebarKeyboardShortcutsPopover'
 
 const props = defineProps({
   compact: {
@@ -70,6 +71,7 @@ const classList = computed(() => {
 
 <template>
   <footer class="app-sidebar-footer" :class="classList">
+    <hook name="app-sidebar-footer:before" />
     <div class="app-sidebar-footer__lead">
       <div class="app-sidebar-footer__lead__logo">
         <img src="@/assets/images/logo-color-symbol.svg" alt="Datashare" class="img-fluid" />
@@ -145,6 +147,7 @@ const classList = computed(() => {
         <span class="visually-hidden">{{ t('appSidebarFooter.signOut') }}</span>
       </a>
     </div>
+    <hook name="app-sidebar-footer:after" />
   </footer>
 </template>
 
