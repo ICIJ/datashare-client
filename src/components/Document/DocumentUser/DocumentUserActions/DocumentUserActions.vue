@@ -1,23 +1,22 @@
 <template>
-  <div ref="element" class="document-user-actions">
-    <form-actions
-      end
-      compact-auto
-      :compact-auto-breakpoint="compactAutoBreakpoint"
-      dropdown-icon="dots-three-vertical"
-      variant="action"
-      compact-variant="outline-action"
-      class="d-inline-flex justify-content-start bg-action-subtle flex-grow-0 rounded-1"
-    >
-      <document-user-actions-entry
-        v-for="action in visibleActions"
-        :key="action.name"
-        v-bind="action"
-        class="m-1"
-        @click="emit('action', action)"
-      />
-    </form-actions>
-  </div>
+  <form-actions
+    ref="element"
+    end
+    compact-auto
+    :compact-auto-breakpoint="compactAutoBreakpoint"
+    dropdown-icon="dots-three-vertical"
+    variant="action"
+    compact-variant="outline-action"
+    class="document-user-actions d-inline-flex justify-content-start bg-action-subtle flex-grow-0 rounded-1"
+  >
+    <document-user-actions-entry
+      v-for="action in visibleActions"
+      :key="action.name"
+      v-bind="action"
+      class="m-1"
+      @click="emit('action', action)"
+    />
+  </form-actions>
 </template>
 <script setup>
 import { useI18n } from 'vue-i18n'
@@ -122,8 +121,6 @@ const visibleActions = computed(() => actions.value.filter(property('show')))
 
 <style lang="scss" scoped>
 .document-user-actions {
-  width: 100%;
-
   &:deep(.form-actions-compact-dropdown__toggle) {
     --bs-btn-bg: var(--bs-btn-action-bg);
     --bs-btn-color: var(--bs-btn-action-text);
