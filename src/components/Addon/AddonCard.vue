@@ -4,6 +4,7 @@ import { camelCase, startCase } from 'lodash'
 import { useI18n } from 'vue-i18n'
 
 import AddonCardView from '@/components/Addon/AddonCardView/AddonCardView'
+import { apiInstance as api } from '@/api/apiInstance'
 import { useCore } from '@/composables/useCore'
 import { useWait } from '@/composables/useWait'
 import { ADDON_TYPE, addonTypeValidator } from '@/enums/addons'
@@ -20,7 +21,7 @@ const props = defineProps({
 
 const emit = defineEmits(['installed', 'uninstalled'])
 const { t } = useI18n()
-const { toastedPromise, core } = useCore()
+const { toastedPromise } = useCore()
 const { waitFor, isLoading } = useWait()
 const deleteSuccess = computed(() => t(`${props.addonType}.deleteSuccess`))
 const deleteError = computed(() => t(`${props.addonType}.deleteError`))
@@ -46,18 +47,18 @@ const recommendedVersion = computed(() => {
 const homepage = computed(() => props.deliverableFromRegistry?.homepage ?? null)
 
 const addonInstallFn = computed(() => {
-  return props.addonType === ADDON_TYPE.EXTENSION ? core.api.installExtensionFromId : core.api.installPluginFromId
+  return props.addonType === ADDON_TYPE.EXTENSION ? api.installExtensionFromId : api.installPluginFromId
 })
 
 const addonUninstallFn = computed(() => {
-  return props.addonType === ADDON_TYPE.EXTENSION ? core.api.uninstallExtension : core.api.uninstallPlugin
+  return props.addonType === ADDON_TYPE.EXTENSION ? api.uninstallExtension : api.uninstallPlugin
 })
 
 const install = waitFor(async () => {
   const successMessage = submitSuccess.value
   const errorMessage = submitError.value
   const toast = { successMessage, errorMessage }
-  const promise = addonInstallFn.value(props.id)
+  const promise = addonInstallFn.value.call(api, props.id)
   await toastedPromise(promise, toast)
   emit('installed')
 })
@@ -66,7 +67,7 @@ const uninstall = waitFor(async () => {
   const successMessage = deleteSuccess.value
   const errorMessage = deleteError.value
   const toast = { successMessage, errorMessage }
-  const promise = addonUninstallFn.value(props.id)
+  const promise = addonUninstallFn.value.call(api, props.id)
   await toastedPromise(promise, toast)
   emit('uninstalled')
 })
