@@ -78,6 +78,7 @@ onBeforeMount(fetchAllTags)
   />
   <hook name="document:user-actions:after" :bind="{ document }" />
   <teleport v-if="documentViewFloatingElement" :to="documentViewFloatingSelector">
+    <hook name="document:user-actions-cards:before" :bind="{ document }" />
     <document-user-recommendations
       v-model="showRecommendationsCard"
       v-model:recommended="recommended"
@@ -92,5 +93,6 @@ onBeforeMount(fetchAllTags)
       @delete="deleteTag"
       @add="addTags"
     />
+    <hook name="document:user-actions-cards:after" :bind="{ document }" />
   </teleport>
 </template>
