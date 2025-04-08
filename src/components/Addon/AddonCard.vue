@@ -47,18 +47,22 @@ const recommendedVersion = computed(() => {
 const homepage = computed(() => props.deliverableFromRegistry?.homepage ?? null)
 
 const addonInstallFn = computed(() => {
-  return props.addonType === ADDON_TYPE.EXTENSION ? api.installExtensionFromId : api.installPluginFromId
+  return props.addonType === ADDON_TYPE.EXTENSION
+    ? api.installExtensionFromId.bind(api)
+    : api.installPluginFromId.bind(api)
 })
 
 const addonUninstallFn = computed(() => {
-  return props.addonType === ADDON_TYPE.EXTENSION ? api.uninstallExtension : api.uninstallPlugin
+  return props.addonType === ADDON_TYPE.EXTENSION
+    ? api.uninstallExtensionFromId.bind(api)
+    : api.uninstallPluginFromId.bind(api)
 })
 
 const install = waitFor(async () => {
   const successMessage = submitSuccess.value
   const errorMessage = submitError.value
   const toast = { successMessage, errorMessage }
-  const promise = addonInstallFn.value.call(api, props.id)
+  const promise = addonInstallFn.value(props.id)
   await toastedPromise(promise, toast)
   emit('installed')
 })
@@ -67,7 +71,7 @@ const uninstall = waitFor(async () => {
   const successMessage = deleteSuccess.value
   const errorMessage = deleteError.value
   const toast = { successMessage, errorMessage }
-  const promise = addonUninstallFn.value.call(api, props.id)
+  const promise = addonUninstallFn.value(props.id)
   await toastedPromise(promise, toast)
   emit('uninstalled')
 })
