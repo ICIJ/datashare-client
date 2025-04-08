@@ -47,7 +47,6 @@ const isDebug = computed(() => core.config.is('hooksDebug'))
 
 <style lang="scss">
 .hook-debug {
-  z-index: $zindex-tooltip - 1;
   position: relative;
   white-space: nowrap;
   display: inline;
