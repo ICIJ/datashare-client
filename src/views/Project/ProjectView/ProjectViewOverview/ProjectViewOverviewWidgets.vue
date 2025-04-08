@@ -1,6 +1,9 @@
 <script setup>
 import { computed, watch, onBeforeMount, toRef } from 'vue'
 
+import appBuilding from '@/assets/images/illustrations/app-building.svg'
+import appBuildingDark from '@/assets/images/illustrations/app-building-dark.svg'
+import EmptyState from '@/components/EmptyState/EmptyState'
 import { useMode } from '@/composables/useMode'
 import { useInsightsStore } from '@/store/modules'
 
@@ -38,7 +41,9 @@ onBeforeMount(() => insightsStore.setProject(props.name))
         </b-col>
       </b-row>
     </div>
-    <slot v-else name="empty" />
+    <slot v-else name="empty">
+      <empty-state :label="$t('global.building')" :image="appBuilding" :image-dark="appBuildingDark" />
+    </slot>
   </div>
 </template>
 
