@@ -11,6 +11,7 @@ import { useQueryObserver } from '@/composables/useQueryObserver'
 import DocumentUserActions from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActions'
 import DocumentUserRecommendations from '@/components/Document/DocumentUser/DocumentUserRecommendations/DocumentUserRecommendations'
 import DocumentUserTags from '@/components/Document/DocumentUser/DocumentUserTags/DocumentUserTags'
+import Hook from '@/components/Hook/Hook'
 import { useRecommendedStore, useDocumentStore } from '@/store/modules'
 
 const recommendedStore = useRecommendedStore()
@@ -67,6 +68,7 @@ onBeforeMount(fetchAllTags)
 </script>
 
 <template>
+  <hook name="document:user-actions:before" :bind="{ document }" />
   <document-user-actions
     :show-recommendations="isServer"
     show-tags
@@ -74,6 +76,7 @@ onBeforeMount(fetchAllTags)
     :recommendations="recommendedBy.length"
     @action="actionHandler"
   />
+  <hook name="document:user-actions:after" :bind="{ document }" />
   <teleport v-if="documentViewFloatingElement" :to="documentViewFloatingSelector">
     <document-user-recommendations
       v-model="showRecommendationsCard"
