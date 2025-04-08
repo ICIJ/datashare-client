@@ -90,9 +90,8 @@ export function useWait({ throttle = 0, scoped = false } = {}) {
 
     return async (...args) => {
       start(idRef)
-      const promise = await fn(...args)
-      end(idRef)
-      return promise
+      // We need to wrap the function in a promise to it can be used as a promise
+      return Promise.resolve(fn(...args)).finally(() => end(idRef))
     }
   }
 
