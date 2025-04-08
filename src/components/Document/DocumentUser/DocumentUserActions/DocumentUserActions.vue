@@ -9,6 +9,7 @@
     compact-variant="outline-action"
     class="document-user-actions d-inline-flex justify-content-start bg-action-subtle flex-grow-0 rounded-1"
   >
+    <hook name="document-user-actions:before" />
     <document-user-actions-entry
       v-for="action in visibleActions"
       :key="action.name"
@@ -16,6 +17,7 @@
       class="m-1"
       @click="emit('action', action)"
     />
+    <hook name="document-user-actions:after" />
   </form-actions>
 </template>
 <script setup>
@@ -23,8 +25,9 @@ import { useI18n } from 'vue-i18n'
 import { computed, toRef, useTemplateRef } from 'vue'
 import { capitalize, property } from 'lodash'
 
-import FormActions from '@/components/Form/FormActions/FormActions'
 import DocumentUserActionsEntry from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsEntry'
+import FormActions from '@/components/Form/FormActions/FormActions'
+import Hook from '@/components/Hook/Hook'
 import { useCompact } from '@/composables/useCompact'
 import { SIZE } from '@/enums/sizes'
 
