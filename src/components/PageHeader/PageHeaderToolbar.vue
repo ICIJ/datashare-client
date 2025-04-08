@@ -1,6 +1,7 @@
 <script setup>
 import ButtonToggleFilters from '@/components/Button/ButtonToggleFilters'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
+import Hook from '@/components/Hook/Hook'
 import RowPagination from '@/components/RowPagination/RowPagination'
 import PageContainer from '@/components/PageContainer/PageContainer'
 
@@ -47,6 +48,7 @@ const setPage = (value) => (page.value = value)
 
 <template>
   <page-container fluid :sticky="sticky" class="page-header-toolbar d-flex justify-content-between flex-wrap gap-3">
+    <hook name="page-header-toolbar:before" />
     <slot name="start" />
     <slot name="toggle-filters">
       <button-toggle-filters
@@ -71,6 +73,7 @@ const setPage = (value) => (page.value = value)
       />
     </slot>
     <slot name="end" />
+    <hook name="page-header-toolbar:after" />
   </page-container>
 </template>
 
