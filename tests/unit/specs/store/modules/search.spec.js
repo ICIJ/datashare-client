@@ -67,10 +67,10 @@ describe('SearchStore', () => {
       expect(searchStore.q).toBeDefined()
     })
 
-    it('should instantiate the default 13 filters, with order', () => {
+    it('should instantiate the default 14 filters, with order', () => {
       const filters = searchStore.instantiatedFilters
 
-      expect(filters).toHaveLength(13)
+      expect(filters).toHaveLength(14)
       expect(find(filters, { name: 'contentType' }).order).toBe(40)
     })
   })
