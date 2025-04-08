@@ -55,9 +55,9 @@ const isDebug = computed(() => core.config.is('hooksDebug'))
     content: attr(aria-hook) ' → ' attr(aria-count);
     font-size: 0.8rem;
     font-weight: bold;
-    color: $secondary;
-    text-shadow: 0 0 0.5em black;
-    background: rgba(black, 0.7);
+    color: var(--bs-body-bg);
+    text-shadow: 0 0 0.5em var(--bs-body-color-rgb);
+    background: rgba(var(--bs-body-color-rgb), 0.7);
     font-family: $font-family-monospace;
     padding: 0.1em 0.3em;
   }
