@@ -296,7 +296,7 @@ export class Api {
   installPluginFromUrl(pluginUrl) {
     return this.sendAction(`/api/plugins/install?url=${pluginUrl}`, { method: Method.PUT })
   }
-  uninstallPlugin(pluginId) {
+  uninstallPluginFromId(pluginId) {
     return this.sendAction(`/api/plugins/uninstall?id=${pluginId}`, { method: Method.DELETE })
   }
   getExtensions(query = '') {
@@ -308,7 +308,7 @@ export class Api {
   installExtensionFromUrl(extensionUrl) {
     return this.sendAction(`/api/extensions/install?url=${extensionUrl}`, { method: Method.PUT })
   }
-  uninstallExtension(extensionId) {
+  uninstallExtensionFromId(extensionId) {
     return this.sendAction(`/api/extensions/uninstall?id=${extensionId}`, { method: Method.DELETE })
   }
   ocrLanguages() {
