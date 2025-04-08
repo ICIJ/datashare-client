@@ -104,13 +104,14 @@ onBeforeRouteLeave(autoClose)
 
 <template>
   <div class="app-sidebar" :class="classList">
-    <hook name="app-sidebar:before" />
+    <hook name="app-sidebar:before" :bind="{ compact, closed }" />
     <div class="flex-grow-1 p-3">
       <div class="d-flex justify-content-between">
         <app-sidebar-toggler v-model:active="compact" class="d-none d-md-block" />
         <app-sidebar-close v-if="!compact" v-model:active="closed" />
       </div>
       <div class="py-4 d-flex flex-column gap-3">
+        <hook name="app-sidebar-sections:before" :bind="{ compact, closed }" />
         <app-sidebar-section
           :title="$t('appSidebar.projects')"
           :icon="PhCirclesThreePlus"
@@ -190,6 +191,7 @@ onBeforeRouteLeave(autoClose)
             {{ $t('task.entities.title') }}
           </app-sidebar-section-entry>
         </app-sidebar-section>
+        <hook name="app-sidebar-sections:after" :bind="{ compact, closed }" />
       </div>
     </div>
     <app-sidebar-footer
