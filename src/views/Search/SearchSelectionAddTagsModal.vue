@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed,nextTick, onBeforeMount,useTemplateRef } from 'vue'
+import { ref, computed, nextTick, onBeforeMount, useTemplateRef } from 'vue'
 import bodybuilder from 'bodybuilder'
 import { flatten, get, map } from 'lodash'
 import { useI18n } from 'vue-i18n'
@@ -46,8 +46,8 @@ const preventFn = (e) => {
     e.preventDefault()
   }
 }
-const formControlTagRef = useTemplateRef("formControlTagRef")
-async function onShown(){
+const formControlTagRef = useTemplateRef('formControlTagRef')
+async function onShown() {
   await nextTick(formControlTagRef.value.focus)
 }
 onBeforeMount(fetchAllTags)
@@ -55,12 +55,12 @@ onBeforeMount(fetchAllTags)
 
 <template>
   <app-modal-prompt
-    @shown="onShown"
     class="search-selection-add-tags-modal"
     :image="imageHeaderLight"
     :title="t('searchSelectionAddTagsModal.title', nbDocs)"
     :ok-disabled="!hasTags"
     :ok-title="t('searchSelectionAddTagsModal.okTitle')"
+    @shown="onShown"
     @esc="preventFn"
     @submit="submit"
   >
