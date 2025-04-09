@@ -100,7 +100,9 @@ const separatorsPattern = computed(() => {
 const endWithSeparator = (tag) => {
   return separators.value.some((separator) => tag.endsWith(separator))
 }
-const focus = () => inputElement.value.focus()
+function focus() {
+  inputElement.value.focus()
+}
 
 const inputTag = (tag) => {
   focusIndex.value = -1
@@ -174,7 +176,6 @@ function onEsc() {
 const inputValue = () => props.inputValue
 watch(inputValue, (value) => (inputValueTrigger.value = value), { immediate: true })
 watch(inputValueTrigger, (value) => emit('update:inputValue', value))
-defineExpose({ focus })
 
 watch(useActiveElement(), async (activeElement) => {
   showDropdown.value = showDropdown.value && element.value.contains(activeElement)
@@ -187,6 +188,7 @@ watch(focusIndex, (value) => {
     showDropdown.value = !!inputValueTrigger.value
   }
 })
+defineExpose({ focus })
 </script>
 
 <template>

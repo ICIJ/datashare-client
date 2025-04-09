@@ -114,7 +114,7 @@ defineExpose({
         :name="placeholderIcon"
         class="form-control-tag-input__form__icon text-secondary ms-2 me-1"
       />
-      <input
+      <b-input
         ref="form-control-tag-input"
         class="form-control form-control-tag-input__form__field"
         :placeholder="placeholderIfEmpty"
