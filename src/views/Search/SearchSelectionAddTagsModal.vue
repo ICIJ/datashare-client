@@ -46,9 +46,9 @@ const preventFn = (e) => {
     e.preventDefault()
   }
 }
-const formControlTag = useTemplateRef("formControlTag")
+const formControlTagRef = useTemplateRef("formControlTagRef")
 async function onShown(){
-  await nextTick(() => formControlTag.value.focus())
+  await nextTick(formControlTagRef.value.focus)
 }
 onBeforeMount(fetchAllTags)
 </script>
@@ -69,7 +69,7 @@ onBeforeMount(fetchAllTags)
     </template>
     <div class="d-flex flex-column gap-3">
       <form-control-tag
-        ref="formControlTag"
+        ref="formControlTagRef"
         v-model="tags"
         :placeholder="t('searchSelectionAddTagsModal.placeholder')"
         :options="allTags"
