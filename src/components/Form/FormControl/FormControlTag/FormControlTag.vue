@@ -129,7 +129,7 @@ const tagValidator = (tag) => {
 }
 
 const tagDuplicatesValidator = (tag) => {
-  return !props.noDuplicates || !props.modelValue.includes(tag)
+  return !props.noDuplicates || !props.modelValue.includes(tag.toLowerCase())
 }
 
 const tagCreateValidator = (tag) => {
