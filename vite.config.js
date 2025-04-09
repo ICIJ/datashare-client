@@ -14,8 +14,10 @@ export default ({ mode }) => {
   const VITE_GIT_HASH = childProcess.execSync('git rev-parse HEAD').toString()
   process.env = Object.assign(process.env, { VITE_GIT_HASH, ...loadEnv(mode, process.cwd(), '') })
 
+  console.log(process.env.VITE_BASE)
+
   return defineConfig({
-    base: mode === 'production' ? '/next/' :  '/',
+    base: process.env.VITE_BASE,
     plugins: [
       vue(),
       vueDevTools(),
