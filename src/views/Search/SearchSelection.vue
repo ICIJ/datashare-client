@@ -65,7 +65,7 @@ const starSelection = async () => {
 
 const { prompt: showAddTagsModal } = usePromptModal(SearchSelectionAddTagsModal)
 
-const nbDocs = computed(()=>{
+const nbDocs = computed(() => {
   return t('searchSelection.nbDocs', { count: nbSelection.value })
 })
 
@@ -76,8 +76,8 @@ async function addTagsModal() {
   if (result?.tags) {
     const nbTags = t('searchSelection.nbTags', { count: result.tags.length })
     await toastedPromise(tagSelection(selectionEntries.value, result.tags), {
-      successMessage: t('searchSelection.tagSuccess', { nbTags,nbDocs: nbDocs.value }),
-      errorMessage: t('searchSelection.tagFailed', { nbTags ,nbDocs: nbDocs.value })
+      successMessage: t('searchSelection.tagSuccess', { nbTags, nbDocs: nbDocs.value }),
+      errorMessage: t('searchSelection.tagFailed', { nbTags, nbDocs: nbDocs.value })
     })
   }
 }
