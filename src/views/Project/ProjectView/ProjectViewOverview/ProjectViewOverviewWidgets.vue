@@ -36,7 +36,9 @@ onBeforeMount(() => insightsStore.setProject(props.name))
       <b-row class="align-items-stretch">
         <b-col v-for="(widget, index) in widgets" :key="index" :lg="widget.cols">
           <div class="project-view-overview-widgets__container__widget" :class="{ card: widget.card }">
-            <component :is="widget.component" :widget="widget" :project="name" class="flex-grow-1" />
+            <suspense>
+              <component :is="widget.component" :widget="widget" :project="name" class="flex-grow-1" />
+            </suspense>
           </div>
         </b-col>
       </b-row>

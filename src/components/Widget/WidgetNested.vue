@@ -4,7 +4,9 @@
       <b-row class="align-items-stretch flex-grow-1">
         <b-col v-for="(w, index) in instantiatedWidgets" :key="index" :xl="w.cols">
           <div class="widget__container__widget" :class="{ card: w.card }">
-            <component :is="w.component" :project="project" :widget="w" class="flex-grow-1" />
+            <suspense>
+              <component :is="w.component" :project="project" :widget="w" class="flex-grow-1" />
+            </suspense>
           </div>
         </b-col>
       </b-row>
