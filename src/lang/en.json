@@ -1852,7 +1852,7 @@
   },
   "searchSelectionAddTagsModal": {
     "title": "Tag selected document | Tag selected document | Tag {n} selected documents",
-    "description": "You can select multiple tags to add by separating them with semicolon.",
+    "description": "You can add multiple tags by separating them with comma.",
     "question": "Add {n} tag to selected documents ?  | Add {n} tags to selected documents ?",
     "okTitle": "Add",
     "placeholder": "Tag1, Tag2"
