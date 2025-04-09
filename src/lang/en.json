@@ -1845,8 +1845,10 @@
     "star": "Star",
     "unstar": "Unstar",
     "tag": "Tag",
-    "tagSuccess": "{nbDocs} documents have been tagged with {nbTags} tags.",
-    "tagFailed": "Error: {nbDocs} documents have not been tagged with {nbTags} tags."
+    "nbDocs": "No documents | 1 document | {count} documents",
+    "nbTags": "no tags | 1 tag | {count} tags",
+    "tagSuccess": "{nbDocs} have been tagged with {nbTags}.",
+    "tagFailed": "Error: {nbDocs} have not been tagged with {nbTags}."
   },
   "searchSelectionAddTagsModal": {
     "title": "Tag selected document | Tag selected document | Tag {n} selected documents",
