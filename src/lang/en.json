@@ -1885,8 +1885,8 @@
   "action": "Action"
   },
   "documentEntriesHeader": {
-    "batchDownloadDocuments": "Downloading multiple files is limited to {maxSize}.",
-    "batchDownloadDocumentsWarning": "Downloading multiple files is limited to the first {maxFiles} files and {maxSize}.",
+    "batchDownloadDocuments": "Batch download: downloading multiple files is limited to {maxSize}.",
+    "batchDownloadDocumentsWarning": "Batch download: downloading multiple files is limited to the first {maxFiles} files and {maxSize}.",
     "batchDownloadError": "Something went wrong when attempt to download the files.",
     "batchDownloadCreated": "Your download is being prepared",
     "batchDownloadLink": "See all"
