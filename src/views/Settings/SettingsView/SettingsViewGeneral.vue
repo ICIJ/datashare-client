@@ -79,7 +79,7 @@ onBeforeMount(loadSettings)
       <template #waiting>
         <phosphor-icon :name="PhCircleNotch" spin size="lg" class="ms-auto" />
       </template>
-      <settings-general :settings="filteredSettings" class="card border-0" @submit.prevent="onSubmit" />
+      <settings-general :settings="filteredSettings" class="card border-0" @save="onSubmit" />
     </app-wait>
   </settings-view-layout>
 </template>

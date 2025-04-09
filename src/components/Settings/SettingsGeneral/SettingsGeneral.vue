@@ -1,5 +1,5 @@
 <template>
-  <b-form class="d-flex flex-column gap-1">
+  <b-form class="d-flex flex-column gap-1" @submit.prevent="save">
     <b-form-group
       v-for="(_, name) in settings"
       :key="name"
@@ -25,7 +25,7 @@
 </template>
 
 <script setup>
-import { computed, reactive } from 'vue'
+import { computed, toRaw, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { isEqual } from 'lodash'
 
@@ -45,6 +45,8 @@ const submitLabel = computed(() => t('global.submit'))
 const resetLabel = computed(() => t('global.reset'))
 const hasNotChanged = computed(() => isEqual(props.settings, replica))
 
+const emit = defineEmits(['save'])
+
 function fieldChanged(field) {
   return props.settings[field] !== replica[field]
 }
@@ -55,5 +57,9 @@ function restore(field) {
 
 function reset() {
   Object.assign(replica, props.settings)
+}
+
+function save() {
+  emit('save', toRaw(replica))
 }
 </script>
