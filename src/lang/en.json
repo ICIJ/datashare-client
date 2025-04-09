@@ -43,8 +43,8 @@
     "label": "Settings"
   },
   "buttonToggleSidebar": {
-    "expand": "Expand the sidebar",
-    "reduce": "Reduce the sidebar"
+    "expand": "Expand sidebar",
+    "reduce": "Reduce sidebar"
   },
   "buttonClearSearch": {
     "label": "Clear search"
