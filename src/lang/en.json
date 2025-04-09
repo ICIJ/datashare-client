@@ -1350,7 +1350,7 @@
     }
   },
   "projectNew": {
-    "title": "Create new project",
+    "title": "Create project",
     "description": "A project is a separated set of documents to explore.",
     "notify": {
       "succeed": "The project was created",
