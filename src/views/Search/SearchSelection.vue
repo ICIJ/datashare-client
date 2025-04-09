@@ -65,14 +65,19 @@ const starSelection = async () => {
 
 const { prompt: showAddTagsModal } = usePromptModal(SearchSelectionAddTagsModal)
 
+const nbDocs = computed(()=>{
+  return t('searchSelection.nbDocs', { count: nbSelection.value })
+})
+
 async function addTagsModal() {
   const indices = searchStore.indices
   const result = await showAddTagsModal({ indices, nbDocs: nbSelection.value })
   // Only a valid submit returns value. Cancel or modal hide returns null.
   if (result?.tags) {
+    const nbTags = t('searchSelection.nbTags', { count: result.tags.length })
     await toastedPromise(tagSelection(selectionEntries.value, result.tags), {
-      successMessage: t('searchSelection.tagSuccess', { nbTags: result.tags.length, nbDocs: nbSelection.value }),
-      errorMessage: t('searchSelection.tagFailed', { nbTags: result.tags.length, nbDocs: nbSelection.value })
+      successMessage: t('searchSelection.tagSuccess', { nbTags,nbDocs: nbDocs.value }),
+      errorMessage: t('searchSelection.tagFailed', { nbTags ,nbDocs: nbDocs.value })
     })
   }
 }
@@ -96,7 +101,7 @@ const tagSelection = async (documents, labels) => {
         v-model:indeterminate="indeterminate"
         :wrapper-attrs="{ class: 'search-selection__form-checkbox' }"
       >
-        {{ $tc('searchSelection.count', count, { count: $n(count) }) }}
+        {{ t('searchSelection.count', count, { count: $n(count) }) }}
       </b-form-checkbox>
     </template>
     <template #compact>
@@ -110,7 +115,7 @@ const tagSelection = async (documents, labels) => {
         @click="starSelection"
       />
     </template>
-    <button-icon :label="$t('searchSelection.tag')" :icon-left="PhHash" :disabled="noSelection" @click="addTagsModal" />
+    <button-icon :label="t('searchSelection.tag')" :icon-left="PhHash" :disabled="noSelection" @click="addTagsModal" />
   </form-actions>
 </template>
 
