@@ -1,7 +1,7 @@
 <template>
   <ul class="linked-document-list list-unstyled" :style="style">
-    <li v-for="document in documents" :key="document.id">
-      <linked-document-list-entry :content-type="document.contentType" :url="document.url" :name="document.name" />
+    <li v-for="{ contentType, index, id, routing, name } in documents" :key="id">
+      <linked-document-list-entry :id="id" :content-type="contentType" :routing="routing" :index="index" :name="name" />
     </li>
   </ul>
 </template>
