@@ -12,6 +12,7 @@ import ButtonIcon from '@/components/Button/ButtonIcon'
 import FormActions from '@/components/Form/FormActions/FormActions'
 import { usePromptModal } from '@/composables/usePromptModal'
 import SearchSelectionAddTagsModal from '@/views/Search/SearchSelectionAddTagsModal'
+import { ICON_WEIGHT } from '@/enums/iconWeights.js'
 
 const selection = defineModel('selection', { type: Array, default: () => [] })
 
@@ -62,7 +63,11 @@ const noSelection = computed(() => !nbSelection.value)
 const starSelection = async () => {
   return toastedPromise(starredStore.starDocuments(selectionEntries.value), { successMessage: t('document.starred') })
 }
-
+const unstarSelection = async () => {
+  return toastedPromise(starredStore.unstarDocuments(selectionEntries.value), {
+    successMessage: t('document.unstarred')
+  })
+}
 const { prompt: showAddTagsModal } = usePromptModal(SearchSelectionAddTagsModal)
 
 const nbDocs = computed(() => {
@@ -109,10 +114,20 @@ const tagSelection = async (documents, labels) => {
         class="flex-shrink-0"
         :label="$t('searchSelection.star')"
         :icon-left="PhStar"
+        :icon-left-weight="ICON_WEIGHT.FILL"
         :disabled="noSelection"
         :hide-label="isCompact"
         :square="isCompact"
         @click="starSelection"
+      />
+      <button-icon
+        class="flex-shrink-0"
+        :label="$t('searchSelection.unstar')"
+        :icon-left="PhStar"
+        :disabled="noSelection"
+        :hide-label="isCompact"
+        :square="isCompact"
+        @click="unstarSelection"
       />
     </template>
     <button-icon :label="t('searchSelection.tag')" :icon-left="PhHash" :disabled="noSelection" @click="addTagsModal" />
