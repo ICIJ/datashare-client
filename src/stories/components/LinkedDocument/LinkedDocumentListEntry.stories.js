@@ -11,7 +11,9 @@ export default {
   args: {
     contentType: 'application/pdf',
     name: 'This is my document',
-    url: '/'
+    id: '',
+    routing: '',
+    index: ''
   }
 }
 

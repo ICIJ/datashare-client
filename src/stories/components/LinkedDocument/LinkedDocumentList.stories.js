@@ -10,12 +10,12 @@ export default {
   component: LinkedDocumentList,
   args: {
     documents: [
-      { contentType: 'application/pdf', name: 'This is my document', url: '/' },
-      { contentType: 'text/html', name: 'This is my document', url: '/' },
-      { contentType: 'image/png', name: 'This is my document', url: '/' },
-      { contentType: 'application/msword', name: 'This is my document', url: '/' },
-      { contentType: 'application/msword', name: 'This is my document', url: '/' },
-      { contentType: 'application/vnd.ms-excel', name: 'This is my document', url: '/' }
+      { contentType: 'application/pdf', name: 'This is my document', id: '', routing: '', index: '' },
+      { contentType: 'text/html', name: 'This is my document', id: '', routing: '', index: '' },
+      { contentType: 'image/png', name: 'This is my document', id: '', routing: '', index: '' },
+      { contentType: 'application/msword', name: 'This is my document', id: '', routing: '', index: '' },
+      { contentType: 'application/msword', name: 'This is my document', id: '', routing: '', index: '' },
+      { contentType: 'application/vnd.ms-excel', name: 'This is my document', id: '', routing: '', index: '' }
     ],
     height: '150px'
   }
