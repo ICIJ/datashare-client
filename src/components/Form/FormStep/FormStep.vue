@@ -32,7 +32,7 @@ const classList = computed(() => ({
         <slot name="title" />
       </template>
     </form-step-heading>
-    <form-step-content :collapse="collapse" class="ms-md-5" :class="contentClass">
+    <form-step-content :collapse="collapse" class="ms-md-5" :content-class="contentClass">
       <slot />
     </form-step-content>
   </div>

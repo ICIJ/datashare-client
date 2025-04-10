@@ -18,6 +18,7 @@ const filterLanguage = formSearchStore.getFilter({ name: 'language' })
     :title="$t('task.batch-search.form.sections.filters')"
     :index="4"
     class="task-batch-search-form-filters"
+    content-class="bg-transparent rounded-0 d-flex flex-column gap-3 px-0 m-0"
     collapse
   >
     <filter-type-path :filter="filterPath" actions-position-title hide-contextualize class="p-3" content-class="pb-0" />
@@ -33,18 +34,10 @@ const filterLanguage = formSearchStore.getFilter({ name: 'language' })
   </form-step>
 </template>
 
+
+
 <style lang="scss" scoped>
 .task-batch-search-form-filters {
-  &:deep(.form-step-content) {
-    background: none;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    margin: 0;
-    padding-inline: 0;
-    padding-bottom: 0;
-  }
-
   &:deep(.filters-panel-section-filter) {
     background: var(--bs-body-bg);
     margin: 0;

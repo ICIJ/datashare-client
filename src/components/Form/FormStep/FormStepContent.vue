@@ -2,13 +2,16 @@
 defineProps({
   collapse: {
     type: Boolean
+  },
+  contentClass: {
+    type: [String, Array, Object]
   }
 })
 </script>
 
 <template>
   <b-collapse :model-value="!collapse">
-    <div class="form-step-content rounded-4">
+    <div class="form-step-content" :class="contentClass">
       <slot />
     </div>
   </b-collapse>
@@ -19,5 +22,6 @@ defineProps({
   background-color: var(--bs-body-bg);
   padding: $spacer;
   margin-top: $spacer;
+  border-radius: var(--bs-border-radius-lg);
 }
 </style>
