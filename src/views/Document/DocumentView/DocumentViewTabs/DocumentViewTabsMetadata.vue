@@ -10,13 +10,13 @@ import DisplayDatetime from '@/components/Display/DisplayDatetime'
 import DisplayExtractionLevel from '@/components/Display/DisplayExtractionLevel'
 import DisplayLanguage from '@/components/Display/DisplayLanguage'
 import DisplayNumber from '@/components/Display/DisplayNumber'
-import ProjectLink from '@/components/Project/ProjectLink'
 import DocumentMetadata from '@/components/Document/DocumentMetadata/DocumentMetadata'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
+import ProjectLink from '@/components/Project/ProjectLink'
+import DocumentViewTabsMetadataLinkedDocumentsCard from '@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsMetadataLinkedDocumentsCard.vue'
 import { useDocument } from '@/composables/useDocument'
 import { useDebouncedRef } from '@/composables/useDebouncedRef'
 import { useAppStore } from '@/store/modules'
-
 const { document, documentPath, documentDirname, parentDocument } = useDocument()
 const { t } = useI18n()
 const q = useDebouncedRef('')
@@ -191,7 +191,8 @@ const classList = computed(() => {
 
 <template>
   <div class="document-view-tabs-metadata w-100 d-flex flex-column gap-3" :class="classList">
-    <div class="bg-body sticky-top py-3">
+    <document-view-tabs-metadata-linked-documents-card class="my-3" />
+    <div class="bg-body sticky-top">
       <form-control-search v-model="q" :placeholder="t('documentViewTabsMetadata.search')" clear-text shadow />
     </div>
     <transition-group tag="div" name="list">
