@@ -104,6 +104,7 @@ const tagSelection = async (documents, labels) => {
       <b-form-checkbox
         v-model="selected"
         v-model:indeterminate="indeterminate"
+        class="flex-shrink-0"
         :wrapper-attrs="{ class: 'search-selection__form-checkbox' }"
       >
         {{ t('searchSelection.count', count, { count: $n(count) }) }}
@@ -120,16 +121,14 @@ const tagSelection = async (documents, labels) => {
         :square="isCompact"
         @click="starSelection"
       />
-      <button-icon
-        class="flex-shrink-0"
-        :label="$t('searchSelection.unstar')"
-        :icon-left="PhStar"
-        :disabled="noSelection"
-        :hide-label="isCompact"
-        :square="isCompact"
-        @click="unstarSelection"
-      />
     </template>
+    <button-icon
+      class="flex-shrink-0"
+      :label="$t('searchSelection.unstar')"
+      :icon-left="PhStar"
+      :disabled="noSelection"
+      @click="unstarSelection"
+    />
     <button-icon :label="t('searchSelection.tag')" :icon-left="PhHash" :disabled="noSelection" @click="addTagsModal" />
   </form-actions>
 </template>
