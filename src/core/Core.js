@@ -31,7 +31,7 @@ import guards from '@/router/guards'
 import messages from '@/lang/en'
 import settings from '@/utils/settings'
 import { useTheme } from '@/composables/useTheme'
-import { useSearchStore } from '@/store/modules'
+import * as stores from '@/store/modules'
 
 class Base {}
 const Behaviors = compose(
@@ -264,7 +264,7 @@ class Core extends Behaviors {
       }
       this._auth = new Auth(this.mode)
       // Instantiate the search store
-      const searchStore = useSearchStore()
+      const searchStore = this.stores.useSearchStore()
       // Set the default project only if none is already selected
       if (!searchStore.indices.length) {
         searchStore.setIndex(this.getDefaultProject())
@@ -450,6 +450,12 @@ class Core extends Behaviors {
    */
   get pinia() {
     return pinia
+  }
+  /**
+   * All Pinia stores available in the application
+   */
+  get stores() {
+    return stores
   }
   /**
    * The CorePlugin instance
