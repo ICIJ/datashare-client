@@ -9,14 +9,16 @@
         icon="files"
         :description="t('linkedDocumentCard.siblings.description')"
         :documents="siblings"
-        class="col-12 col-sm-6 p-4"
+        class="col-12 col-sm-6 p-4 d-flex flex-column flex-grow-1"
+        :to-search="toSiblings"
       />
       <linked-document-section
         :title="t('linkedDocumentCard.children.title')"
         icon="paperclip"
         :description="t('linkedDocumentCard.children.description')"
         :documents="children"
-        class="col-12 col-sm-6 p-4"
+        class="col-12 col-sm-6 p-4 d-flex flex-column flex-grow-1"
+        :to-search="toChildren"
       />
     </div>
     <span class="linked-document-card__toggle m-2 d-flex justify-content-center" @click="toggle">
@@ -43,9 +45,15 @@ defineProps({
     type: Array,
     required: true
   },
+  toSiblings: {
+    type: [Object, String]
+  },
   children: {
     type: Array,
     required: true
+  },
+  toChildren: {
+    type: [Object, String]
   }
 })
 const { t } = useI18n()
@@ -56,6 +64,7 @@ function toggle() {
   modelValue.value = !modelValue.value
 }
 </script>
+
 <style lang="scss" scoped>
 .linked-document-card {
   &--collapse {

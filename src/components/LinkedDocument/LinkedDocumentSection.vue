@@ -1,19 +1,21 @@
 <template>
   <section class="linked-document-section">
-    <p class="linked-document-section__title d-inline-flex gap-1 text-body-emphasis">
+    <p class="linked-document-section__title d-inline-flex gap-2 text-body-emphasis">
       <phosphor-icon :name="icon" />
       <slot name="title"> {{ documents.length }} {{ title }} </slot>
     </p>
-    <div class="ms-4">
-      <p>
+    <div class="ms-4 d-flex flex-column flex-grow-1">
+      <p class="linked-document-section__description">
         <slot name="description">{{ description }}</slot>
       </p>
-      <div>
+      <div class="d-flex flex-column flex-grow-1">
         <slot name="document-list" v-bind="{ documents }">
           <linked-document-list :documents="documents" />
         </slot>
-        <button-icon :icon-right="PhMagnifyingGlass" :label="searchLabel" @click="emitSearch" />
       </div>
+      <p>
+        <button-icon :icon-right="PhMagnifyingGlass" :label="t('linkedDocumentList.searchAll')" :to="toSearch" />
+      </p>
     </div>
   </section>
 </template>
@@ -42,21 +44,21 @@ defineProps({
   },
   documents: {
     type: Array
+  },
+  toSearch: {
+    type: [Object, String]
   }
 })
-const emit = defineEmits(['search-all'])
 const { t } = useI18n()
-
-const searchLabel = t('linkedDocumentList.searchAll')
-
-function emitSearch() {
-  emit('search-all')
-}
 </script>
 <style lang="scss" scoped>
 .linked-document-section {
   &__title {
     font-weight: 500;
+    text-wrap: pretty;
+  }
+  &__description {
+    text-wrap: pretty;
   }
 }
 </style>
