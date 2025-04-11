@@ -7,16 +7,17 @@ import PageSettings from '@/components/PageSettings/PageSettings'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
 import { useBatchSearchQueryProperties } from '@/composables/useBatchSearchQueryProperties'
 import { useUrlParamWithStore } from '@/composables/useUrlParamWithStore'
-import { INPUT_CHECKBOX, INPUT_RADIO } from '@/composables/useViewSettings'
+import { INPUT_CHECKBOX, INPUT_RADIO, useViewSettings } from '@/composables/useViewSettings'
 import { useAppStore } from '@/store/modules'
 
 const { t } = useI18n()
 const appStore = useAppStore()
 const settingsView = 'batchSearchQueries'
 const { propertiesOptions } = useBatchSearchQueryProperties()
+const { perPageLabel } = useViewSettings()
 
 const perPage = ref({
-  label: computed(() => t('search.settings.resultsPerPage')),
+  label: perPageLabel('task.batch-search-queries.list.title'),
   type: INPUT_RADIO,
   open: true,
   modelValue: useUrlParamWithStore('perPage', {

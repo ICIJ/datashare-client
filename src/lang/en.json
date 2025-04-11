@@ -1218,7 +1218,7 @@
         "title": "All documents"
       },
       "show": {
-        "title": "Results",
+        "title": "Query results",
         "fields": {
           "query": "Query",
           "documentNumber": "Rank",
