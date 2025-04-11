@@ -32,7 +32,7 @@ const pages = reactive([])
 const expand = ref(false)
 
 const { waitFor, isLoading } = useWait({ throttle: 500 })
-const searchStore = useSearchStore.inject('searchStoreSuffix')
+const searchStore = useSearchStore.inject()
 
 const aggregateOver = () => {
   return aggregate({ clearPages: true })
