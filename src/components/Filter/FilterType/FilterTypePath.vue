@@ -8,7 +8,7 @@ import PathTree from '@/components/PathTree/PathTree'
 import { useSearchStore } from '@/store/modules'
 
 const { core } = useCore()
-const searchStore = useSearchStore.inject('searchStoreSuffix')
+const searchStore = useSearchStore.inject()
 const {
   computedFilterValues,
   whenFilterContextualized,

@@ -31,7 +31,7 @@ const nameOrRawEmail = computed(() => {
   return nameWithoutEmail.value || props.value
 })
 
-const searchStore = useSearchStore.inject('searchStoreSuffix')
+const searchStore = useSearchStore.inject()
 
 const indices = computed(() => searchStore.indices)
 

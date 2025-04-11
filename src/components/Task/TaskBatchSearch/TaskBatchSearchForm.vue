@@ -20,7 +20,7 @@ const router = useRouter()
 // The store created with disposable will be automatically disposed when the component is unmounted.
 // Additionaly, the id of the store is provided with `searchStoreSuffix` key so children
 // components can access it.
-const formSearchStore = useSearchStore.disposable('searchStoreSuffix')
+const formSearchStore = useSearchStore.disposable()
 // Use all the available projects as indices
 formSearchStore.setIndices(core.projectIds)
 

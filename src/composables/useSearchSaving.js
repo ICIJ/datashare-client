@@ -5,7 +5,7 @@ import { useSearchStore } from '@/store/modules'
 import { useHistoryEvents } from '@/composables/useHistoryEvents'
 
 export function useSearchSaving() {
-  const searchStore = useSearchStore.inject('searchStoreSuffix')
+  const searchStore = useSearchStore.inject()
   const { save: saveSearchEvent, removeAll: removeAllSearchEvents } = useHistoryEvents('SEARCH')
   const { resolve } = useRouter()
 

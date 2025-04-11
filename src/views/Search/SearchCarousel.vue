@@ -28,7 +28,7 @@ const {
 const { isActive, document, watchDocument } = useDocument()
 const { wheneverRouteActionShortcut } = useKeyboardShortcuts()
 
-const searchStore = useSearchStore.inject('searchStoreSuffix')
+const searchStore = useSearchStore.inject()
 const total = computed(() => searchStore.total)
 const carouselEntries = ref([])
 const backward = ref(false)

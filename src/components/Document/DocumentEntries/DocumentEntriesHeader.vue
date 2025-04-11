@@ -37,7 +37,7 @@ const elementRef = useTemplateRef('element')
 const { compact } = useCompact(elementRef, { threshold: toRef(props, 'compactThreshold') })
 const { core, toast } = useCore()
 const { t, tm, n } = useI18n()
-const searchStore = useSearchStore.inject('searchStoreSuffix')
+const searchStore = useSearchStore.inject()
 const router = useRouter()
 
 // We limit pagination bellow 10,000 results

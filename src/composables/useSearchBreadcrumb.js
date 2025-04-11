@@ -7,7 +7,7 @@ import { useSearchBreadcrumbStore, useSearchStore } from '@/store/modules'
 import findPath from '@/utils/findPath'
 
 export function useSearchBreadcrumb() {
-  const searchStore = useSearchStore.inject('searchStoreSuffix')
+  const searchStore = useSearchStore.inject()
   const searchBreadcrumbStore = useSearchBreadcrumbStore()
   const { setQuery, removeIndex, removeFilterValue, refreshRoute } = useSearchFilter()
 
