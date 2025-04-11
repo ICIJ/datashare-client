@@ -104,7 +104,6 @@ const tagSelection = async (documents, labels) => {
       <b-form-checkbox
         v-model="selected"
         v-model:indeterminate="indeterminate"
-        class="flex-shrink-0"
         :wrapper-attrs="{ class: 'search-selection__form-checkbox' }"
       >
         {{ t('searchSelection.count', count, { count: $n(count) }) }}
