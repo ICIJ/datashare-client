@@ -1,6 +1,6 @@
 <script setup>
 import { noop } from 'lodash'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { useUrlParamWithStore } from '@/composables/useUrlParamWithStore'
@@ -8,8 +8,15 @@ import { useUrlParamsWithStore } from '@/composables/useUrlParamsWithStore'
 import { useUrlPageParam } from '@/composables/useUrlPageParam'
 import PageSettings from '@/components/PageSettings/PageSettings'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
-import { useViewSettings, SORT_ORDER_KEY, SORT_TYPE_KEY, INPUT_RADIO } from '@/composables/useViewSettings'
+import {
+  useViewSettings,
+  SORT_ORDER_KEY,
+  SORT_TYPE_KEY,
+  INPUT_RADIO,
+  INPUT_CHECKBOX
+} from '@/composables/useViewSettings'
 import { useAppStore } from '@/store/modules'
+import { useSearchHistoryProperties } from '@/composables/useSearchHistoryProperties.js'
 
 const { t } = useI18n()
 const { sortByLabel, tSortByOption, perPageLabel } = useViewSettings(t)
@@ -18,6 +25,7 @@ const view = 'searchHistoryList'
 
 const page = useUrlPageParam()
 
+const { propertiesOptions } = useSearchHistoryProperties()
 const perPage = ref({
   label: perPageLabel('searchHistoryList.title'),
   type: INPUT_RADIO,
@@ -76,7 +84,16 @@ const sortBy = ref({
     }
   ]
 })
-
+const properties = ref({
+  label: computed(() => t('viewSettings.properties')),
+  type: INPUT_CHECKBOX,
+  open: true,
+  options: propertiesOptions,
+  modelValue: computed({
+    get: () => appStore.getSettings('searchHistoryList', 'properties'),
+    set: (properties) => appStore.setSettings({ view: 'searchHistoryList', properties })
+  })
+})
 defineProps({
   hide: {
     type: Function,
@@ -106,6 +123,13 @@ defineProps({
       :type="perPage.type"
       :options="perPage.options"
       :label="perPage.label"
+    />
+    <page-settings-section
+      v-model="properties.modelValue"
+      v-model:open="properties.open"
+      :type="properties.type"
+      :options="properties.options"
+      :label="properties.label"
     />
   </page-settings>
 </template>

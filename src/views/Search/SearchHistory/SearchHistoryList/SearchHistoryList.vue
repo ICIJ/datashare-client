@@ -67,6 +67,8 @@ const order = computed({
 
 const orderDesc = computed(() => order.value === 'desc')
 
+const properties = computed(() => appStore.getSettings('searchHistoryList', 'properties'))
+
 const fetch = waitFor(async () => {
   const result = await api.getHistoryEvents('DOCUMENT', offset.value, perPage.value, sort.value, orderDesc.value)
   events.value = result?.items.map((item) => ({ ...item })) ?? []
@@ -105,7 +107,7 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
       </template>
     </page-header>
     <page-container fluid class="search-history-list__content flex-grow-1 overflow-auto">
-      <search-history-entries :events="events" :loading-events="isLoading" />
+      <search-history-entries :events="events" :loading-events="isLoading" :properties="properties" />
       <div v-if="!events.length && isReady" class="text-center text-secondary">
         {{ t('searchHistoryList.empty') }}
       </div>

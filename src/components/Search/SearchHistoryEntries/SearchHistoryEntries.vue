@@ -22,6 +22,10 @@ const { events, loadingEvents } = defineProps({
   loadingEvents: {
     type: Boolean,
     default: false
+  },
+  properties: {
+    type: Array,
+    default: () => ['title', 'thumbnail', 'path', 'creationDate']
   }
 })
 
@@ -120,7 +124,7 @@ watch(() => eventsIds.value, fetch, { deep: true, immediate: true })
         modal
         route-name="document-standalone"
         :document="document"
-        :properties="['title', 'thumbnail', 'path', 'creationDate']"
+        :properties="properties"
       >
         <template #actions>
           <div class="d-flex align-items-center">
