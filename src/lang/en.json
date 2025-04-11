@@ -404,11 +404,11 @@
   },
   "linkedDocumentCard" : {
     "siblings": {
-      "title": "documents in the same folder",
+      "title": "{n} documents in the same folder | {n} document in the same folder | {n} documents in the same folder",
       "description": "Same extraction level as this document"
     },
     "children": {
-      "title": "children documents",
+      "title": "{n} children documents | {n} children document | {n} children documents",
       "description": "One extraction level below this document"
     }
   },
