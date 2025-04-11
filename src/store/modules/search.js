@@ -115,11 +115,9 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   })
 
   const stringifyBaseRouteQuery = computed(() => {
-    const { href } = router.resolve({
-      name: 'search',
-      query: toBaseRouteQuery.value
-    })
-
+    const name = 'search'
+    const query = toBaseRouteQuery.value
+    const { href = null } = router?.resolve({ name, query }) ?? {}
     return href
   })
 
