@@ -8,13 +8,14 @@ import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
 import { useBatchSearchResultProperties } from '@/composables/useBatchSearchResultProperties'
 import { useUrlParamWithStore } from '@/composables/useUrlParamWithStore'
 import { useUrlParamsWithStore } from '@/composables/useUrlParamsWithStore'
-import { INPUT_CHECKBOX, INPUT_RADIO } from '@/composables/useViewSettings'
+import { INPUT_CHECKBOX, INPUT_RADIO, useViewSettings } from '@/composables/useViewSettings'
 import { useAppStore } from '@/store/modules'
 
 const { t } = useI18n()
 const appStore = useAppStore()
 const settingsView = 'batchSearchResults'
 const { propertiesOptions, sortByOptions } = useBatchSearchResultProperties()
+const { perPageLabel } = useViewSettings()
 
 const sortBy = ref({
   label: computed(() => t('viewSettings.sortBy.label')),
@@ -28,7 +29,7 @@ const sortBy = ref({
 })
 
 const perPage = ref({
-  label: computed(() => t('search.settings.resultsPerPage')),
+  label: perPageLabel('task.batch-search-results.show.title'),
   type: INPUT_RADIO,
   open: true,
   modelValue: useUrlParamWithStore('perPage', {
