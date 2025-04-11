@@ -3,8 +3,7 @@ import { castArray, compact } from 'lodash'
 import { computed, onBeforeMount, ref, toRef, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { useBatchSearchResultProperties } from '../../../composables/useBatchSearchResultProperties'
-
+import { useBatchSearchResultProperties } from '@/composables/useBatchSearchResultProperties'
 import DisplayNumber from '@/components/Display/DisplayNumber'
 import DisplayContentLength from '@/components/Display/DisplayContentLength'
 import DisplayContentType from '@/components/Display/DisplayContentType'
