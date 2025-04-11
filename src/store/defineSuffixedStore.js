@@ -43,15 +43,20 @@ export const defineSuffixedStore = (id, storeSetup, options) => {
   // Create the default store with the given id.
   const useSuffixedStore = createSuffixedStore()
 
+  // Create a unique provide key for this store
+  const defaultProvideKey = camelCase(`${id}Suffix`)
+
   /**
    * Add a closure function to create a new store with the same id
    * and the given suffix. This is useful when you want to pass the
    * store as a function.
    *
    * @param {string} suffix - The suffix to append to the store id.
+   * @param {string} provideKey - The key to provide the suffix in the component.
    * @returns {function} - A function that creates a new store with the given suffix.
    */
-  useSuffixedStore.withSuffix = (suffix) => {
+  useSuffixedStore.withSuffix = (suffix, provideKey = defaultProvideKey) => {
+    provide(provideKey, suffix)
     const suffixedId = storeSuffix(useSuffixedStore.$id, suffix)
     const useStore = createSuffixedStore(suffix)
     return Object.assign(useStore, { $id: suffixedId })
@@ -62,10 +67,11 @@ export const defineSuffixedStore = (id, storeSetup, options) => {
    * the default store is used instead.
    *
    * @param {string} suffix - The suffix to append to the store id.
+   * @param {string} provideKey - The key to provide the suffix in the component.
    * @returns {Store} - The unique store instance.
    */
-  useSuffixedStore.create = (suffix) => {
-    return useSuffixedStore.withSuffix(suffix).call()
+  useSuffixedStore.create = (suffix, provideKey = defaultProvideKey) => {
+    return useSuffixedStore.withSuffix(suffix, provideKey).call()
   }
 
   /**
@@ -74,7 +80,7 @@ export const defineSuffixedStore = (id, storeSetup, options) => {
    * @param provideKey - The key to provide the suffix in the component.
    * @returns {Store} - The unique store instance.
    */
-  useSuffixedStore.inject = (provideKey) => {
+  useSuffixedStore.inject = (provideKey = defaultProvideKey) => {
     const suffix = inject(provideKey, null)
     return suffix ? useSuffixedStore.create(suffix) : useSuffixedStore()
   }
@@ -87,16 +93,14 @@ export const defineSuffixedStore = (id, storeSetup, options) => {
    * @param {string} provideKey - The optional key to provide the suffix in the component.
    * @returns {Store} - The unique store instance.
    */
-  useSuffixedStore.disposable = (provideKey = null) => {
+  useSuffixedStore.disposable = (provideKey = defaultProvideKey) => {
     const suffix = uniqueId('disposable')
     const store = useSuffixedStore.create(suffix)
     // Dispose the store when the component is unmounted.
     onUnmounted(store.$dispose)
     // Provide the suffix in the component to allow other components
     // to use the same store instance.
-    if (provideKey) {
-      provide(provideKey, suffix)
-    }
+    provide(provideKey, suffix)
     return store
   }
 
