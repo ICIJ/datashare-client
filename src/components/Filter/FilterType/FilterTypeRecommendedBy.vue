@@ -15,6 +15,9 @@ const props = defineProps({
   filter: {
     type: Object,
     required: true
+  },
+  hideCount: {
+    type: Boolean
   }
 })
 
@@ -64,7 +67,7 @@ watchIndices(fetch)
     </template>
     <b-form-checkbox-group v-model="selected">
       <template v-for="{ count, user } in entries" :key="user">
-        <filters-panel-section-filter-entry :label="user" :value="user" :count="count">
+        <filters-panel-section-filter-entry :label="user" :value="user" :count="count" :hide-count="hideCount">
           <display-user :value="user" hide-avatar hide-link />
         </filters-panel-section-filter-entry>
       </template>

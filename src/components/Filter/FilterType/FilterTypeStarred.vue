@@ -11,6 +11,9 @@ const props = defineProps({
   filter: {
     type: Object,
     required: true
+  },
+  hideCount: {
+    type: Boolean
   }
 })
 
@@ -50,12 +53,14 @@ watchIndices(fetch)
         name="starred"
         :label="$t('filter.starred')"
         :count="starredDocumentsCount"
+        :hide-count="hideCount"
         :value="true"
       />
       <filters-panel-section-filter-entry
         name="starred"
         :label="$t('filter.notStarred')"
         :count="notStarredDocumentsCount"
+        :hide-count="hideCount"
         :value="false"
       />
     </b-form-checkbox-group>
