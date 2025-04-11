@@ -11,10 +11,6 @@ const props = defineProps({
   uri: {
     type: String,
     required: true
-  },
-  noLabel: {
-    type: Boolean,
-    default: false
   }
 })
 
@@ -34,7 +30,10 @@ searchStore.updateFromRouteQuery(breadcrumbRouteQuery.value)
 </script>
 
 <template>
-  <search-breadcrumb-form-list :no-label="noLabel">
+  <search-breadcrumb-form-list>
+    <template #label>
+      <slot name="label" />
+    </template>
     <search-breadcrumb-form-entry v-for="(entry, i) in entries" :key="i" v-bind="entry" no-x-icon />
   </search-breadcrumb-form-list>
 </template>
