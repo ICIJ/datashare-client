@@ -1,7 +1,7 @@
 <script setup>
 import { property } from 'lodash'
 import { useI18n } from 'vue-i18n'
-import { useRouter, stringifyQuery } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { computed, ref, toValue } from 'vue'
 
 import FormCreation from '@/components/Form/FormCreation'
@@ -66,7 +66,7 @@ const queryTemplate = computed(() => {
   return JSON.stringify(query)
 })
 
-const uri = computed(() => `/?${stringifyQuery(formSearchStore.toBaseRouteQuery)}`)
+const uri = computed(() => formSearchStore.stringifyBaseRouteQuery)
 
 const isValid = computed(() => name.value.trim(' ').length > 0 && csvFile.value !== null)
 

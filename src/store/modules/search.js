@@ -16,6 +16,7 @@ import {
 } from 'lodash'
 import lucene from 'lucene'
 import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 
 import EsDocList from '@/api/resources/EsDocList'
 import filterDefs, * as filterTypes from '@/store/filters'
@@ -41,6 +42,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   const values = ref({})
 
   const appStore = useAppStore()
+  const router = useRouter()
   const searchBreadcrumbStore = useSearchBreadcrumbStore()
 
   const fields = computed(() => {
@@ -110,6 +112,15 @@ export const useSearchStore = defineSuffixedStore('search', () => {
       sort: sort.value,
       fields: fields.value
     }
+  })
+
+  const stringifyBaseRouteQuery = computed(() => {
+    const { href } = router.resolve({
+      name: 'search',
+      query: toBaseRouteQuery.value
+    })
+
+    return href
   })
 
   const retrieveQueryTerms = computed(() => {
@@ -561,6 +572,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     toRouteQuery,
     toRouteQueryWithStamp,
     toSearchParams,
+    stringifyBaseRouteQuery,
     retrieveQueryTerms,
     retrieveContentQueryTerms,
     page,

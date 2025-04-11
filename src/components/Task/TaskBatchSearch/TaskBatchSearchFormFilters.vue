@@ -34,8 +34,6 @@ const filterLanguage = formSearchStore.getFilter({ name: 'language' })
   </form-step>
 </template>
 
-
-
 <style lang="scss" scoped>
 .task-batch-search-form-filters {
   &:deep(.filters-panel-section-filter) {
