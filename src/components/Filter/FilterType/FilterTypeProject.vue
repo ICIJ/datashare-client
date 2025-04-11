@@ -14,6 +14,9 @@ defineProps({
   filter: {
     type: Object,
     required: true
+  },
+  hideCount: {
+    type: Boolean
   }
 })
 
@@ -75,7 +78,7 @@ const isProjectSelected = (id) => {
           :key="id"
           :value="id"
           :count="count"
-          :hide-count="!isProjectSelected(id)"
+          :hide-count="hideCount || !isProjectSelected(id)"
         >
           <project-label :project="id" hide-thumbnail />
         </filters-panel-section-filter-entry>

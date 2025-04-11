@@ -25,6 +25,9 @@ const props = defineProps({
   },
   modal: {
     type: Boolean
+  },
+  hideCount: {
+    type: Boolean
   }
 })
 
@@ -65,11 +68,12 @@ watchIndices(reset)
       :pre-body-build="preBodyBuild"
       :sort-by="filter.sortBy"
       :order-by="filter.orderBy"
+      :no-stats="hideCount"
+      no-label
+      no-link
       elasticsearch-only
       select-mode
       multiple
-      no-label
-      no-link
     />
   </filter-type>
 </template>

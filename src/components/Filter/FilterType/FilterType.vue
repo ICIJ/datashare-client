@@ -19,6 +19,9 @@ const { filter, modal } = defineProps({
   },
   modal: {
     type: Boolean
+  },
+  hideCount: {
+    type: Boolean
   }
 })
 
@@ -250,6 +253,7 @@ onBeforeMount(async () => {
         :key="item.key"
         :label="label"
         :count="item.doc_count"
+        :hide-count="hideCount"
         :model-value="hasValue(item)"
         @update:model-value="toggleValue(item, $event)"
       >
