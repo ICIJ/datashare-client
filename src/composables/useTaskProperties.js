@@ -42,7 +42,7 @@ export function useTaskProperties(pageName) {
   })
 
   const state = propertyItem({
-    icon: null,
+    icon: 'clock-countdown',
     key: 'state',
     type: SORT_TYPE_KEY.NUMBER,
     sortable: false,
@@ -91,7 +91,7 @@ export function useTaskProperties(pageName) {
   })
 
   const privacy = propertyItem({
-    icon: null,
+    icon: 'eye-slash',
     key: 'privacy',
     type: SORT_TYPE_KEY.ALPHA,
     sortable: false,
