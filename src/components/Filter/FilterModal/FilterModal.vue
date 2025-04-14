@@ -18,6 +18,9 @@ const { filter, modal } = defineProps({
   },
   modal: {
     type: Boolean
+  },
+  hideCount: {
+    type: Boolean
   }
 })
 
@@ -38,6 +41,6 @@ const hasExpandModal = computed(() => !modal && !filter.hideExpand)
     <template #title>
       <filter-modal-title v-model:sort="sort" :filter="filter" />
     </template>
-    <component :is="getFilterComponent(filter)" :filter="filter" modal />
+    <component :is="getFilterComponent(filter)" :filter="filter" :hide-count="hideCount" modal />
   </app-modal>
 </template>
