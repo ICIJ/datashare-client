@@ -129,7 +129,7 @@ const hasRowDetailsSlot = computed(() => 'row-details' in slots)
     </template>
 
     <page-table-tr v-if="!items?.length">
-      <td :colspan="fields.length" class="page-table-generic__no-result text-center">
+      <td :colspan="fields.length + 1" class="page-table-generic__no-result text-center">
         <slot name="empty">{{ $t('task.noResults') }}</slot>
       </td>
     </page-table-tr>
