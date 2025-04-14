@@ -13,7 +13,7 @@ export function useBatchSearchResultProperties() {
     icon: 'magnifying-glass',
     key: 'query',
     text: computed(() => t('task.batch-search-results.show.fields.query')),
-    sortable: false,
+    sortable: true,
     required: true,
     emphasis: true
   })
