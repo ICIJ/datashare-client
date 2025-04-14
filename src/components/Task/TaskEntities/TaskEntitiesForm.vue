@@ -144,16 +144,33 @@ async function submit() {
       <form-fieldset-i18n name="project-selector" translation-key="task.entities.form.projectSelector">
         <search-bar-input-dropdown-for-projects v-model="selectedProject" />
       </form-fieldset-i18n>
-      <form-fieldset-i18n name="findEntities" translation-key="task.entities.form.findEntities" with-description>
+      <form-fieldset-i18n
+        name="findEntities"
+        translation-key="task.entities.form.findEntities"
+        with-description
+        label-class="pt-md-0"
+        description-class="pt-md-0"
+      >
         <b-form-radio-group v-model="findEntities" name="findEntities" :options="findEntitiesOptions" stacked />
       </form-fieldset-i18n>
-      <form-fieldset-i18n v-if="isPipelineNamedEntities" name="pipeline" translation-key="task.entities.form.pipeline">
+      <form-fieldset-i18n
+        v-if="isPipelineNamedEntities"
+        name="pipeline"
+        translation-key="task.entities.form.pipeline"
+        label-class="pt-md-0"
+        description-class="pt-md-0"
+      >
         <b-alert v-if="error" model-value variant="danger">{{ error }}</b-alert>
         <b-form-radio-group v-else v-model="pipeline" :options="pipelineOptions" name="pipeline" stacked>
           <template #option="val"> <div v-html="val.text" /> </template>
         </b-form-radio-group>
       </form-fieldset-i18n>
-      <form-fieldset-i18n name="offline" translation-key="task.entities.form.offline">
+      <form-fieldset-i18n
+        name="offline"
+        translation-key="task.entities.form.offline"
+        label-class="pt-md-0"
+        description-class="pt-md-0"
+      >
         <b-form-radio-group v-model="offline" name="offline" :options="offlineOptions" stacked />
       </form-fieldset-i18n>
     </form-creation>
