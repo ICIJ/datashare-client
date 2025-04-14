@@ -192,6 +192,10 @@ export default class Document extends EsDoc {
   get fullRootUrl() {
     return Api.getFullUrl(this.rootUrl)
   }
+  get numberOfPages() {
+    const raw = this.meta('xmptpg_npages', null)
+    return raw ? parseInt(raw, 10) : null
+  }
   get contentType() {
     return this.source.contentType || 'unknown'
   }
