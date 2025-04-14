@@ -1835,6 +1835,7 @@
     "title": "Name your saved search",
     "okTitle": "Save search",
     "success": "Your search has been saved.",
+    "seeAll": "See all",
     "error": "Something went wrong, unable to save your search.",
     "form": {
       "name": "Name",
