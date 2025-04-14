@@ -32,7 +32,7 @@ const tag = computed(() => {
 })
 
 const icon = computed(() => {
-  return exists.value ? 'download' : 'x'
+  return exists.value ? 'download-simple' : 'x'
 })
 </script>
 
