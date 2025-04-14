@@ -110,6 +110,7 @@ const classList = {
             variant="link"
             :label="t('dismissableAlert.close')"
             hide-label
+            hide-tooltip
             icon-left="x"
             @click="dismiss(false)"
           />
