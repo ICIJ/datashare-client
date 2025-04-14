@@ -257,7 +257,7 @@ export const routes = [
               {
                 path: ':indices/:uuid/:query',
                 props: true,
-                name: 'task.batch-search-results.list',
+                name: 'task.batch-search-queries.show',
                 components: {
                   default: () => import('@/views/Task/TaskBatchSearch/TaskBatchSearchQueryResultList'),
                   settings: () => import('@/views/Task/TaskBatchSearch/TaskBatchSearchQueryResultListSettings')
