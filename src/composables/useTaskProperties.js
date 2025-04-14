@@ -63,7 +63,7 @@ export function useTaskProperties(pageName) {
     type: SORT_TYPE_KEY.ALPHA,
     sortable: false,
     required: false,
-    colStyle: { minWidth: 'min(400px, 100vw)' }
+    colStyle: { minWidth: 'min(250px, 100vw)' }
   })
 
   const entitiesToFind = propertyItem({
