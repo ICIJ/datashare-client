@@ -35,7 +35,7 @@ async function removeDoneTasks() {
 </script>
 
 <template>
-  <b-button-group class="task-actions me-2">
+  <div class="task-actions d-flex gap-3 flex-wrap">
     <button-icon
       v-if="!hideStopPending"
       icon-left="hand"
@@ -56,5 +56,5 @@ async function removeDoneTasks() {
     >
       {{ $t('indexing.removeDoneTasks') }}
     </button-icon>
-  </b-button-group>
+  </div>
 </template>
