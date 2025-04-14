@@ -26,9 +26,6 @@ defineProps({
     type: [String, Number],
     required: true
   },
-  description: {
-    type: String
-  },
   tooltipDelay: {
     type: Object,
     default: () => ({ show: 0, hide: 0 })
@@ -39,12 +36,14 @@ defineProps({
 <template>
   <div class="document-metadata">
     <phosphor-icon class="document-metadata__icon" :name="icon" />
-    <div v-b-tooltip.body="{ delay: tooltipDelay }" class="document-metadata__label" :title="description">
-      {{ label }}
+    <div class="document-metadata__label">
+      <span v-b-tooltip.body="{ delay: tooltipDelay }" :title="label">
+        {{ label }}
+      </span>
     </div>
     <div class="document-metadata__value">
       <div v-ellipsis-tooltip="{ title: value }" class="text-truncate">
-        <slot v-bind="{ icon, label, value, description }">
+        <slot v-bind="{ icon, label, value }">
           {{ value }}
         </slot>
       </div>
