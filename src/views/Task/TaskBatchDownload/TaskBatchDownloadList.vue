@@ -73,7 +73,7 @@ function getBatchDownloadRecord(item, key, defaultValue) {
           />
         </template>
         <template #row-details="{ item }">
-          <search-breadcrumb-uri :uri="getBatchDownloadRecord(item).uri" no-label />
+          <search-breadcrumb-uri :uri="getBatchDownloadRecord(item).uri" no-label class="ps-5" />
         </template>
       </page-table-generic>
     </template>
