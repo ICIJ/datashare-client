@@ -36,7 +36,7 @@ const props = defineProps({
     type: String
   },
   descriptionClass: {
-    type: [String, Array, Object],
+    type: [String, Array, Object]
   },
   required: {
     type: Boolean
