@@ -86,12 +86,13 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['submit', 'focus', 'up', 'down', 'input', 'enter', 'blur'])
+const emit = defineEmits(['submit', 'focus', 'up', 'down', 'input', 'enter', 'blur', 'clear'])
 
 const hideClearInput = computed(() => !modelValue.value)
 const icon = computed(() => (props.loading ? PhCircleNotch : props.iconName))
 const target = useTemplateRef('target')
 const focus = () => target.value?.focus()
+const blur = () => target.value?.blur()
 
 function setInput(value = '') {
   modelValue.value = value
@@ -101,6 +102,7 @@ function setInput(value = '') {
 function clearInput() {
   focus()
   setInput()
+  emit('clear')
 }
 
 const classList = computed(() => {
@@ -113,7 +115,7 @@ const classList = computed(() => {
 const placeholder = computed(() => props.placeholder ?? t('formControlSearch.placeholder'))
 watch(toRef(props, 'autofocus'), (autofocus) => autofocus && focus())
 
-defineExpose({ focus })
+defineExpose({ focus, blur, clear: clearInput })
 </script>
 
 <template>
@@ -135,7 +137,7 @@ defineExpose({ focus })
         @keydown.up="emit('up', $event)"
         @keydown.down="emit('down', $event)"
         @keydown.enter="emit('enter', $event)"
-        @keydown.esc="$event.target.blur()"
+        @keydown.esc="blur"
         @update:modelValue="setInput"
         @blur="emit('blur', $event)"
         @focus="emit('focus', $event)"
