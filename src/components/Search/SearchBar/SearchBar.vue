@@ -13,6 +13,7 @@
         @blur="onBlur"
         @focus="onFocus"
         @input="onInput"
+        @clear="onClear"
         @submit="onSubmit"
       >
         <template #addons>
@@ -307,6 +308,9 @@ export default {
     onFocus() {
       this.focused = true
       this.searchTerms()
+    },
+    onClear() {
+      this.onSubmit()
     },
     async focusOnSearchInput() {
       await this.$nextTick()
