@@ -251,7 +251,8 @@ export const routes = [
                   settings: () => import('@/views/Task/TaskBatchSearch/TaskBatchSearchQueryListSettings')
                 },
                 meta: {
-                  title: 'task.batch-search-queries.list.title'
+                  title: 'task.batch-search-queries.list.title',
+                  icon: null
                 }
               },
               {
