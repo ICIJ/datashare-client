@@ -14,6 +14,7 @@ import { useCore } from '@/composables/useCore'
 import { useBatchSearchQueryProperties } from '@/composables/useBatchSearchQueryProperties'
 import { useUrlParam } from '@/composables/useUrlParam'
 import { useUrlParamWithStore } from '@/composables/useUrlParamWithStore'
+import { useUrlParamsWithStore } from '@/composables/useUrlParamsWithStore'
 import { useWait } from '@/composables/useWait'
 import { useAppStore, useTaskStore } from '@/store/modules'
 
@@ -52,6 +53,21 @@ const perPage = useUrlParamWithStore('perPage', {
   set: (value) => appStore.setSettings({ view: settingsView, perPage: parseInt(value) })
 })
 
+const orderBy = useUrlParamsWithStore(['sort', 'order'], {
+  get: () => appStore.getSettings(settingsView, 'orderBy'),
+  set: (sort, order) => appStore.setSettings({ view: settingsView, orderBy: [sort, order] })
+})
+
+const sort = computed({
+  get: () => orderBy.value?.[0],
+  set: (value) => (orderBy.value = [value, order.value])
+})
+
+const order = computed({
+  get: () => orderBy.value?.[1],
+  set: (value) => (orderBy.value = [sort.value, value])
+})
+
 const from = computed(() => (page.value - 1) * perPage.value)
 
 const visibleFields = computed(() => {
@@ -70,7 +86,14 @@ async function fetchBatchSearch() {
 }
 
 const fetchBatchSearchQueries = waitFor(async () => {
-  const records = await core.api.getBatchSearchQueries(props.uuid, from.value, perPage.value, searchQuery.value)
+  const records = await core.api.getBatchSearchQueries(
+    props.uuid,
+    from.value,
+    perPage.value,
+    searchQuery.value,
+    sort.value,
+    order.value
+  )
   // The queries are returned in an object
   queries.value = Object.entries(records).map(([query, count]) => ({ query, count }))
 })
@@ -87,7 +110,7 @@ watch(toRef(route, 'query'), fetchBatchSearchQueries, { deep: true, immediate: t
       <navigation-breadcrumb-link :to="{ name: 'task.batch-search-queries.list' }" :title="batchSearchName" />
     </template>
   </page-header>
-  <page-container fluid>
+  <page-container fluid class="pb-3">
     <b-row>
       <b-col lg="8" cols="12">
         <page-header-toolbar
@@ -103,7 +126,13 @@ watch(toRef(route, 'query'), fetchBatchSearchQueries, { deep: true, immediate: t
             <row-pagination-queries v-model="page" :total-rows="totalRows" :per-page="perPage" />
           </template>
         </page-header-toolbar>
-        <page-table-generic :items="queries" :fields="visibleFields" :loading="isLoading">
+        <page-table-generic
+          v-model:sort="sort"
+          v-model:order="order"
+          :items="queries"
+          :fields="visibleFields"
+          :loading="isLoading"
+        >
           <template #cell(query)="{ item }">
             <router-link :to="{ name: 'task.batch-search-queries.show', params: { query: item.query } }">
               {{ item.query }}

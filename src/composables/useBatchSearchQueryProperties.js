@@ -9,26 +9,36 @@ export function useBatchSearchQueryProperties() {
   const { propertyItem } = useViewProperties()
   const { fieldsToSortByOptions, fieldsToPropertiesOptions } = useViewSettings()
 
+  const queryNumber = propertyItem({
+    key: 'queryNumber',
+    sortingKey: 'query_number',
+    text: computed(() => t('task.batch-search-queries.list.fields.queryNumber')),
+    type: SORT_TYPE_KEY.NUMBER,
+    sortable: true,
+    emphasis: true
+  })
+
   const query = propertyItem({
     icon: 'magnifying-glass',
     key: 'query',
     text: computed(() => t('task.batch-search-queries.list.fields.query')),
     required: true,
-    sortable: false, // Disabled until the API supports `sort` and `order` params
+    sortable: true,
     emphasis: true
   })
 
   const count = propertyItem({
     icon: 'files',
     key: 'count',
-    sortingKey: 'doc_nb',
+    sortingKey: 'query_results',
     text: computed(() => t('task.batch-search-queries.list.fields.count')),
     type: SORT_TYPE_KEY.NUMBER,
-    sortable: false, // Disabled until the API supports `sort` and `order` params
+    sortable: true,
     emphasis: true
   })
 
   const items = {
+    queryNumber,
     query,
     count
   }

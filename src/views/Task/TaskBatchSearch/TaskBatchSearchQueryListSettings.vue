@@ -7,14 +7,26 @@ import PageSettings from '@/components/PageSettings/PageSettings'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
 import { useBatchSearchQueryProperties } from '@/composables/useBatchSearchQueryProperties'
 import { useUrlParamWithStore } from '@/composables/useUrlParamWithStore'
+import { useUrlParamsWithStore } from '@/composables/useUrlParamsWithStore'
 import { INPUT_CHECKBOX, INPUT_RADIO, useViewSettings } from '@/composables/useViewSettings'
 import { useAppStore } from '@/store/modules'
 
 const { t } = useI18n()
 const appStore = useAppStore()
 const settingsView = 'batchSearchQueries'
-const { propertiesOptions } = useBatchSearchQueryProperties()
+const { propertiesOptions, sortByOptions } = useBatchSearchQueryProperties()
 const { perPageLabel } = useViewSettings()
+
+const sortBy = ref({
+  label: computed(() => t('viewSettings.sortBy.label')),
+  type: INPUT_RADIO,
+  open: true,
+  options: sortByOptions,
+  modelValue: useUrlParamsWithStore(['sort', 'order'], {
+    get: () => appStore.getSettings(settingsView, 'orderBy'),
+    set: (sort, order) => appStore.setSettings({ view: settingsView, orderBy: [sort, order] })
+  })
+})
 
 const perPage = ref({
   label: perPageLabel('task.batch-search-queries.list.title'),
@@ -68,6 +80,13 @@ defineProps({
 
 <template>
   <page-settings :hide="hide" :visible="visible" :placement="placement">
+    <page-settings-section
+      v-model="sortBy.modelValue"
+      v-model:open="sortBy.open"
+      :type="sortBy.type"
+      :options="sortBy.options"
+      :label="sortBy.label"
+    />
     <page-settings-section
       v-model="perPage.modelValue"
       v-model:open="perPage.open"

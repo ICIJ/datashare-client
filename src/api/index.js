@@ -153,8 +153,8 @@ export class Api {
   getBatchSearch(batchId) {
     return this.sendAction(`/api/batch/search/${batchId}`)
   }
-  getBatchSearchQueries(batchId, from = 0, size = 100, search = null, orderBy = 'query_number') {
-    const params = { from, size, search, orderBy }
+  getBatchSearchQueries(batchId, from = 0, size = 100, search = null, sort = 'query_number', order = 'asc') {
+    const params = { from, size, search, sort, order }
     return this.sendAction(`/api/batch/search/${batchId}/queries`, { method: Method.GET, params })
   }
   getBatchSearches(
