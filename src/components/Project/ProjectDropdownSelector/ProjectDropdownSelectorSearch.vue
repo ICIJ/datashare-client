@@ -1,4 +1,6 @@
 <script setup>
+import { useI18n } from 'vue-i18n'
+
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 
 defineProps({
@@ -14,7 +16,7 @@ defineProps({
     type: Boolean
   }
 })
-
+const { t } = useI18n()
 const emit = defineEmits(['update:model-value', 'blur', 'up', 'down', 'enter'])
 </script>
 
@@ -26,7 +28,7 @@ const emit = defineEmits(['update:model-value', 'blur', 'up', 'down', 'enter'])
         :model-value="query"
         :autofocus="autofocus"
         shadow
-        :placeholder="$t('projectDropdownSelectorSearch.placeholder')"
+        :placeholder="t('projectDropdownSelectorSearch.placeholder')"
         @update:model-value="emit('update:model-value', $event)"
         @blur="emit('blur', $event)"
         @up="emit('up', $event)"
@@ -35,7 +37,7 @@ const emit = defineEmits(['update:model-value', 'blur', 'up', 'down', 'enter'])
       />
     </div>
     <div v-if="!hasMatches" class="text-center small text-muted pb-2">
-      {{ $t('projectDropdownSelectorSearch.noMatches') }}
+      {{ t('projectDropdownSelectorSearch.noMatches') }}
     </div>
   </li>
 </template>
