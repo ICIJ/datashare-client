@@ -1210,7 +1210,8 @@
         "title": "Queries",
         "fields": {
           "query": "Query",
-          "count":"Documents"
+          "count":"Documents",
+          "queryNumber": "Query position"
         }
       }
     },
