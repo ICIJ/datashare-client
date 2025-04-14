@@ -267,6 +267,6 @@ onBeforeMount(async () => {
         <template #complete><span></span></template>
       </infinite-loading>
     </slot>
-    <filter-modal v-model="expand" v-model:sort="sort" :filter="filter" :modal="modal" />
+    <filter-modal v-model="expand" v-model:sort="sort" :filter="filter" :hide-count="hideCount" :modal="modal" />
   </filters-panel-section-filter>
 </template>
