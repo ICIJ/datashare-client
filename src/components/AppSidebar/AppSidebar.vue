@@ -137,7 +137,7 @@ onBeforeRouteLeave(autoClose)
           </app-sidebar-section-entry>
         </app-sidebar-section>
         <app-sidebar-section
-          :title="$t('appSidebar.searchDocuments')"
+          :title="$t('appSidebar.search')"
           :icon="PhMagnifyingGlass"
           :to="searchRoute"
           :compact="compact"
