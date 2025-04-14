@@ -35,6 +35,9 @@ const props = defineProps({
   description: {
     type: String
   },
+  descriptionClass: {
+    type: [String, Array, Object],
+  },
   required: {
     type: Boolean
   },
@@ -92,11 +95,11 @@ const labelColsLg = computed(() => {
       </div>
     </template>
     <template v-if="!compact && (withDescription || description)">
-      <div class="d-flex align-items-center gap-3">
+      <div class="d-flex align-items-start gap-3">
         <div class="form-fieldset__content">
           <slot v-bind="{ compact }" />
         </div>
-        <div class="form-fieldset__description text-secondary-emphasis">
+        <div class="form-fieldset__description text-secondary-emphasis" :class="descriptionClass">
           {{ description }}
         </div>
       </div>
@@ -119,6 +122,10 @@ const labelColsLg = computed(() => {
 
   &__content {
     flex: 300px 0 0;
+  }
+
+  &__description {
+    padding-block: calc(0.75em + var(--bs-border-width));
   }
 
   .form-text {
