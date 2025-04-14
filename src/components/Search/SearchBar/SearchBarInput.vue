@@ -1,15 +1,93 @@
+<script setup>
+import { useTemplateRef, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
+
+/**
+ * The general search input group with field options.
+ */
+defineOptions({ name: 'SearchBarInput' })
+
+/**
+ * Search input query
+ */
+const modelValue = defineModel({ type: String })
+
+const props = defineProps({
+  /**
+   * Placeholder in the search bar.
+   */
+  placeholder: {
+    type: String,
+    default: ''
+  },
+  /**
+   * Search input size
+   * @values sm, md, lg
+   */
+  size: {
+    type: String,
+    default: 'md'
+  },
+  /**
+   * Disable submit button
+   */
+  disableSubmit: {
+    type: Boolean,
+    default: false
+  },
+  /**
+   * Show submit button
+   */
+  showSubmit: {
+    type: Boolean,
+    default: false
+  },
+  /**
+   * Search input is compact (addons are hidden)
+   */
+  compact: {
+    type: Boolean,
+    default: false
+  }
+})
+
+const emit = defineEmits(['blur', 'input', 'focus', 'clear'])
+
+const { t } = useI18n()
+
+const localizedPlaceholder = computed(() => {
+  return props.placeholder ?? t('search.placeholder')
+})
+
+const inputRef = useTemplateRef('input')
+function focus() {
+  inputRef.value.focus()
+}
+function blur() {
+  inputRef.value.blur()
+}
+function clear() {
+  inputRef.value.clear()
+}
+
+defineExpose({ focus, blur, clear })
+</script>
+
 <template>
   <form-control-search
     ref="input"
-    v-model="value"
+    v-model="modelValue"
     class="search-bar-input"
     :placeholder="localizedPlaceholder"
     :size="size"
     :clear-text="true"
     shadow
-    @blur="onBlur"
-    @input="onInput"
-    @focus="onFocus"
+    @blur="emit('blur', $event)"
+    @input="emit('input', $event)"
+    @focus="emit('focus', $event)"
+    @clear="emit('clear')"
   >
     <template #input-end>
       <div v-if="!compact" class="d-flex flew-nowrap gap-1">
@@ -28,94 +106,6 @@
     </template>
   </form-control-search>
 </template>
-
-<script>
-import settings from '@/utils/settings'
-import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
-
-/**
- * The general search input group with field options.
- */
-export default {
-  name: 'SearchBarInput',
-  components: { FormControlSearch },
-  props: {
-    /**
-     * Placeholder in the search bar.
-     */
-    placeholder: {
-      type: String,
-      default: ''
-    },
-    /**
-     * Search input query
-     */
-    modelValue: {
-      type: String
-    },
-    /**
-     * Search input size
-     * @values sm, md, lg
-     */
-    size: {
-      type: String,
-      default: 'md'
-    },
-    /**
-     * Disable submit button
-     */
-    disableSubmit: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Show submit button
-     */
-    showSubmit: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * Search input is compact (addons are hidden)
-     */
-    compact: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: ['blur', 'input', 'focus', 'update:modelValue'],
-  computed: {
-    operatorLink() {
-      return settings.documentationLinks.operators.default
-    },
-    value: {
-      get() {
-        return this.modelValue
-      },
-      set(value) {
-        this.$emit('update:modelValue', value)
-      }
-    },
-    localizedPlaceholder() {
-      return this.placeholder ?? this.$t('search.placeholder')
-    }
-  },
-  methods: {
-    onBlur(e) {
-      this.$emit('blur', e)
-    },
-    onInput(e) {
-      this.$emit('input', e)
-    },
-    onFocus(e) {
-      this.$emit('focus', e)
-    },
-    focus() {
-      this.$refs.input.focus()
-    }
-  }
-}
-</script>
 
 <style lang="scss" scoped>
 .search-bar-input:deep(.form-control-lg) {
