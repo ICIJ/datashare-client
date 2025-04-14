@@ -1115,7 +1115,7 @@
     "batch-download": {
       "title": "Batch downloads",
       "list": {
-        "info": "Batch downloads are password-protected zip files containing all the documents from one of your specific search.",
+        "info": "Batch downloads are password-protected zip files containing all the documents from one of your searches.",
         "searchPlaceholder": "Search batch downloads",
         "empty": "You have not yet started any tasks. <a href=\"{howToLink}\" target=\"_blank\">Read more.</a>",
         "properties": {
@@ -1602,13 +1602,13 @@
     "title": "Batch downloads",
     "empty": "You have not yet started any download tasks.",
     "noFile": "The archive has expired.",
-    "created": "Your download is being prepared",
+    "created": "Your batch download is being prepared",
     "warning": "This feature is currently being developed by the Datashare team.",
     "seeAll": "See all",
     "errorMessage": "The system encountered an issue. Please refer to these details when contacting support.",
     "errorTitle": "Batch download task <code class=\"fw-bold\">{taskId}</code> is in error.",
     "relaunch": {
-      "succeed": "Your download is being prepared",
+      "succeed": "Your batch download is being prepared",
       "succeedBody": "The download should be available soon.",
       "failed": "Unable to relaunch",
       "failedBody": "Something happened when trying to relaunch this batch download."
@@ -1892,7 +1892,7 @@
     "batchDownloadDocuments": "Batch download: downloading multiple files is limited to {maxSize}.",
     "batchDownloadDocumentsWarning": "Batch download: downloading multiple files is limited to the first {maxFiles} files and {maxSize}.",
     "batchDownloadError": "Something went wrong when attempt to download the files.",
-    "batchDownloadCreated": "Your download is being prepared",
+    "batchDownloadCreated": "Your batch download is being prepared",
     "batchDownloadLink": "See all"
   },
   "shortcutsView": {
