@@ -128,7 +128,12 @@ watch(() => eventsIds.value, fetch, { deep: true, immediate: true })
       >
         <template #actions>
           <div class="d-flex align-items-center">
-            <document-actions-group horizontal tooltip-placement="right" :document="document" class="gap-1 me-3" />
+            <document-actions-group
+              horizontal
+              tooltip-placement="right-start"
+              :document="document"
+              class="gap-1 me-3"
+            />
             <display-time :value="event.modificationDate" class="text-secondary" />
           </div>
         </template>
