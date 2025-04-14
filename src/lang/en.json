@@ -904,7 +904,7 @@
     "syncModels": "Check this box if you are working without internet connection.",
     "stopTask": "Stop this task",
     "stopPendingTasks": "Stop all pending tasks",
-    "removeDoneTasks": "Clear done tasks",
+    "removeDoneTasks": "Delete done tasks",
     "removeBatchSearchSuccess": "The batch searches are now removed from Datashare.",
     "removeBatchSearchFailure": "Something went wrong, unable to remove the batch searches."
   },
