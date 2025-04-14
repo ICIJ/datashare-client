@@ -16,13 +16,14 @@ import { useSearchStore } from '@/store/modules/search'
 const { core, toast } = useCore()
 const { t } = useI18n()
 const router = useRouter()
+const searchSearch = useSearchStore()
 
 // The store created with disposable will be automatically disposed when the component is unmounted.
 // Additionaly, the id of the store is provided with `searchStoreSuffix` key so children
 // components can access it.
 const formSearchStore = useSearchStore.disposable()
 // Use all the available projects as indices
-formSearchStore.setIndices(core.projectIds)
+formSearchStore.setIndices(searchSearch.indices)
 
 const selectedProjects = computed({
   get: () => formSearchStore.indices.map((name) => ({ name })),
