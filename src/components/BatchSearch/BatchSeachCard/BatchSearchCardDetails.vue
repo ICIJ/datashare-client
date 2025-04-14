@@ -201,7 +201,9 @@ const uriWithoutIndices = computed(() => {
       </li>
       <li>
         <batch-search-card-details-entry :label="t('batchSearchCardDetails.projects')" :icon="PhCirclesThreePlus">
-          <project-button v-for="(project, index) in projects" :key="index" :project="project" />
+          <div>
+            <project-button v-for="(project, index) in projects" :key="index" :project="project" />
+          </div>
         </batch-search-card-details-entry>
       </li>
       <li v-if="uri">
