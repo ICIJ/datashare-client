@@ -142,7 +142,12 @@ watch(
     <form-fieldset-i18n name="extracting-language" translation-key="task.documents.form.extractingLanguage">
       <form-control-extracting-language v-model="language" />
     </form-fieldset-i18n>
-    <form-fieldset-i18n name="extract-extract-ocr" translation-key="task.documents.form.extractOcr">
+    <form-fieldset-i18n
+      name="extract-extract-ocr"
+      translation-key="task.documents.form.extractOcr"
+      label-class="pt-md-0"
+      description-class="pt-md-0"
+    >
       <b-form-radio-group
         v-model="extractOcr"
         name="extract-ocr"
@@ -159,7 +164,12 @@ watch(
       :has-tesseract="hasTesseract"
       :is-ready="isReady"
     />
-    <form-fieldset-i18n name="skip-indexed-documents" translation-key="task.documents.form.skipIndexedDocuments">
+    <form-fieldset-i18n
+      name="skip-indexed-documents"
+      translation-key="task.documents.form.skipIndexedDocuments"
+      label-class="pt-md-0"
+      description-class="pt-md-0"
+    >
       <b-form-radio-group v-model="skipIndexedDocuments" name="skip-indexed-documents" :options="skipOptions" stacked />
     </form-fieldset-i18n>
   </form-creation>
