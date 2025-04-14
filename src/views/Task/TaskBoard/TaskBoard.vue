@@ -31,20 +31,20 @@ import { TASK_NAME, TASK_NAME_ICON } from '@/enums/taskNames'
         />
         <mode-local-only>
           <task-board-list-entry
-            :icon="TASK_NAME_ICON[TASK_NAME.EXTRACT_NLP]"
-            :title="$t('task.task-board.entries.entity-recognition.title')"
-            :description="$t('task.task-board.entries.entity-recognition.description')"
-            :list-link="{ name: 'task.entities.list' }"
-            :action-link="{ name: 'task.entities.new' }"
-            :action-text="$t('task.task-board.entries.entity-recognition.actionText')"
-          />
-          <task-board-list-entry
             :icon="TASK_NAME_ICON[TASK_NAME.INDEX]"
             :title="$t('task.task-board.entries.document-addition.title')"
             :description="$t('task.task-board.entries.document-addition.description')"
             :list-link="{ name: 'task.documents.list' }"
             :action-link="{ name: 'task.documents.new' }"
             :action-text="$t('task.task-board.entries.document-addition.actionText')"
+          />
+          <task-board-list-entry
+            :icon="TASK_NAME_ICON[TASK_NAME.EXTRACT_NLP]"
+            :title="$t('task.task-board.entries.entity-recognition.title')"
+            :description="$t('task.task-board.entries.entity-recognition.description')"
+            :list-link="{ name: 'task.entities.list' }"
+            :action-link="{ name: 'task.entities.new' }"
+            :action-text="$t('task.task-board.entries.entity-recognition.actionText')"
           />
         </mode-local-only>
       </task-board-list>
