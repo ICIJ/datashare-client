@@ -310,7 +310,9 @@ export default {
       this.searchTerms()
     },
     onClear() {
-      this.onSubmit()
+      if (this.searchStore.q) {
+        this.onSubmit()
+      }
     },
     async focusOnSearchInput() {
       await this.$nextTick()
