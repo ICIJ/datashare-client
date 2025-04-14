@@ -93,6 +93,7 @@ const canonicalItems = computed(() => [
   {
     name: 'metadata.tika_metadata_content_type',
     label: t('document.contentType'),
+    icon: 'file',
     value: document.value.source.contentType,
     component: DisplayContentType
   },
