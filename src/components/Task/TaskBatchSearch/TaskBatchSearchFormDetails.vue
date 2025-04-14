@@ -43,6 +43,7 @@ const allProjects = computed(() => core.projects)
         name="visibility"
         force-compact
         translation-key="task.batch-search.form.visibility"
+        label-class="pt-md-0"
         :icon="PhQuotes"
       >
         <b-form-radio-group v-model="visibility" stacked>

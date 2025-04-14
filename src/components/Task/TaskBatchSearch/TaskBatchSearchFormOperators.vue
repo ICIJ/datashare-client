@@ -10,7 +10,12 @@ const spellingChanges = defineModel('spellingChanges', { type: Number, default: 
 
 <template>
   <form-step :title="$t('task.batch-search.form.sections.operators')" :index="3" collapse>
-    <form-fieldset-i18n name="phraseMatch" translation-key="task.batch-search.form.phraseMatch" :icon="PhQuotes">
+    <form-fieldset-i18n
+      name="phraseMatch"
+      translation-key="task.batch-search.form.phraseMatch"
+      :icon="PhQuotes"
+      label-class="pt-md-0"
+    >
       <b-form-radio-group v-model="phraseMatch" stacked>
         <b-form-radio name="phraseMatch" :value="false">
           {{ $t('task.batch-search.form.phraseMatch.options.no') }}
@@ -24,6 +29,7 @@ const spellingChanges = defineModel('spellingChanges', { type: Number, default: 
       v-if="phraseMatch"
       name="phraseChanges"
       translation-key="task.batch-search.form.phraseChanges"
+      label-class="pt-md-0"
       force-compact
       :icon="PhTextAa"
     >
@@ -33,6 +39,7 @@ const spellingChanges = defineModel('spellingChanges', { type: Number, default: 
       v-else
       name="spellingChanges"
       translation-key="task.batch-search.form.spellingChanges"
+      label-class="pt-md-0"
       force-compact
       :icon="PhTextAa"
     >
