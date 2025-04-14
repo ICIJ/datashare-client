@@ -758,6 +758,7 @@
     "detailsInfo": "These information are extracted from the document's metadata.",
     "author": "Author",
     "extractionDate": "Indexing date",
+    "numberOfPages": "Number of pages",
     "parent": "Parent",
     "inMetadata": "in metadata",
     "inTags": "in tags",

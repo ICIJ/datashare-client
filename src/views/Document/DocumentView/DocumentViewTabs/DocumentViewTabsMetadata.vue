@@ -84,6 +84,13 @@ const canonicalItems = computed(() => [
     component: DisplayContentLength
   },
   {
+    name: 'metadata.tika_metadata_xmptpg_npages',
+    label: t('document.numberOfPages'),
+    icon: 'files',
+    value: document.value.numberOfPages,
+    component: DisplayNumber
+  },
+  {
     name: 'language',
     label: t('document.contentLanguage'),
     icon: 'globe-hemisphere-west',
