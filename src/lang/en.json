@@ -1104,7 +1104,7 @@
         },
         "skipIndexedDocuments":{
           "label": "Skip already indexed documents",
-          "description":"If yes, Datashare will only extract text from documents that are not searchable yet.",
+          "description":"If yes, Datashare will only extract text from documents that are not indexed yet.",
           "options": {"yes": "Yes", "no": "No"}
         },
         "submit": "Add",
