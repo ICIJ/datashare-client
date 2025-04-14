@@ -12,7 +12,7 @@ import NavigationBreadcrumbLink from '@/components/NavigationBreadcrumb/Navigati
 import PageContainer from '@/components/PageContainer/PageContainer'
 import PageHeader from '@/components/PageHeader/PageHeader'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
-import ProjectLabel from '@/components/Project/ProjectLabel'
+import ProjectButton from '@/components/Project/ProjectButton'
 import RouterLinkBatchSearchResult from '@/components/RouterLink/RouterLinkBatchSearchResult'
 import RowPaginationDocuments from '@/components/RowPagination/RowPaginationDocuments'
 import { useUrlParam } from '@/composables/useUrlParam'
@@ -153,7 +153,7 @@ watch(toRef(route, 'query'), fetchBatchSearchResults, { deep: true, immediate: t
         <router-link-batch-search-result :item="item" class="text-nowrap" modal />
       </template>
       <template #cell(project)="{ item }">
-        <project-label :project="item.project" hide-thumbnail />
+        <project-button :project="item.project" />
       </template>
       <template #cell(contentType)="{ item }">
         <display-content-type :value="item.contentType" class="text-nowrap" />
