@@ -103,7 +103,9 @@ export default {
       return get(types, [this.document.contentType, 'extensions'], [])[0]
     },
     rootParams() {
-      return { id: this.document.source.rootDocument || this.document.id }
+      const id = this.document.source.rootDocument || this.document.id
+      const index = this.document.index
+      return { id, index }
     },
     baseComponent() {
       return this.hasActiveTextTruncate ? ActiveTextTruncate : 'span'
