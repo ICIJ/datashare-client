@@ -5,6 +5,7 @@ import { useTaskSettings } from '@/composables/useTaskSettings'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
+import DisplayContentLength from '@/components/Display/DisplayContentLength'
 import DisplayProjectList from '@/components/Display/DisplayProjectList'
 import RouterLinkBatchDownload from '@/components/RouterLink/RouterLinkBatchDownload'
 import BatchDownloadActions from '@/components/BatchDownload/BatchDownloadActions'
@@ -14,6 +15,10 @@ import { TASK_NAME } from '@/enums/taskNames'
 import TaskPage from '@/views/Task/TaskPage'
 
 const { propertiesModelValueOptions } = useTaskSettings('batch-download')
+
+function hasZipSize(item) {
+  return item.state !== 'ERROR' && item.result?.value.size !== undefined
+}
 
 function getBatchDownloadRecord(item, key, defaultValue) {
   return get(item, key ? `args.batchDownload.${key}` : 'args.batchDownload', defaultValue)
@@ -53,6 +58,9 @@ function getBatchDownloadRecord(item, key, defaultValue) {
         </template>
         <template #cell(createdAt)="{ item }">
           <display-datetime-from-now :value="item.createdAt" />
+        </template>
+        <template #cell(size)="{ item }">
+          <display-content-length v-if="hasZipSize(item)" :value="item.result?.value?.size" class="text-nowrap" />
         </template>
         <template #row-actions="{ item, detailsShowing, toggleDetails }">
           <batch-download-actions
