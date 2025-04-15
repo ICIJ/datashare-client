@@ -399,8 +399,9 @@
     "viewOriginal": "View original text",
     "viewTranslated": "View translated text"
   },
-  "linkedDocumentList": {
-    "searchAll": "Search all"
+  "linkedDocumentSectionList": {
+    "search": "Search all",
+    "empty": "No documents found."
   },
   "linkedDocumentCard" : {
     "siblings": {

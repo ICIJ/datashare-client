@@ -23,6 +23,6 @@ const style = {
 <style lang="scss" scoped>
 .linked-document-list {
   height: var(--linked-document-list--height);
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 </style>

@@ -1,9 +1,9 @@
 <template>
   <header class="linked-document-section-header d-inline-flex gap-2 text-body-emphasis">
     <phosphor-icon :name="icon" />
-    <router-link :to="toSearch">
-      <slot name="title"> {{ title }} </slot></router-link
-    >
+    <span>
+      <slot name="title"> {{ title }} </slot>
+    </span>
   </header>
 </template>
 
@@ -21,9 +21,6 @@ defineProps({
   icon: {
     type: [String, Object, Array],
     required: true
-  },
-  toSearch: {
-    type: [Object, String]
   }
 })
 </script>

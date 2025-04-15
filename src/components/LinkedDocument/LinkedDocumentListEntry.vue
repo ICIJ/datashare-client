@@ -1,8 +1,13 @@
 <template>
-  <span class="linked-document-list-entry d-inline-flex align-items-center gap-2"
-    ><phosphor-icon :name="findContentTypeIcon(contentType)" class="tertiary" />
-    <router-link-document :id="id" :index="index" :routing="routing">{{ name }}</router-link-document>
-  </span>
+  <div class="linked-document-list-entry d-flex">
+    <div class="col-12 text-truncate">
+      <router-link-document :id="id" :index="index" :routing="routing" :title="name"
+        ><phosphor-icon :name="findContentTypeIcon(contentType)" class="tertiary me-2" />{{
+          name
+        }}</router-link-document
+      >
+    </div>
+  </div>
 </template>
 
 <script setup>
