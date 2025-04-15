@@ -32,7 +32,7 @@ const currentTabIndex = computed(() => {
 const previousTabIndex = computed(() => (currentTabIndex.value || tabs.length) - (1 % tabs.length))
 const previousTabRoute = computed(() => {
   const { tab } = tabs[previousTabIndex.value]
-  const query = { tab }
+  const query = { tab, modal }
   return { query }
 })
 wheneverActionShortcut('goToPreviousTab', () => router.push(previousTabRoute.value))
@@ -40,7 +40,7 @@ wheneverActionShortcut('goToPreviousTab', () => router.push(previousTabRoute.val
 const nextTabIndex = computed(() => (currentTabIndex.value + 1) % tabs.length)
 const nextTabRoute = computed(() => {
   const { tab } = tabs[nextTabIndex.value]
-  const query = { tab }
+  const query = { tab, modal }
   return { query }
 })
 wheneverActionShortcut('goToNextTab', () => router.push(nextTabRoute.value))
