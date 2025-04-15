@@ -22,9 +22,11 @@ describe('TaskBatchDownloadList.vue', () => {
         state: 'DONE',
         progress: 1.0,
         result: {
-          '@type': 'UriResult',
-          uri: 'file:///home/dev/.local/share/datashare/tmp/archive_local_2025-01-31T13_58_33.396Z%5BGMT%5D.zip',
-          size: 78398589
+          value: {
+            '@type': 'UriResult',
+            uri: 'file:///home/dev/.local/share/datashare/tmp/archive_local_2025-01-31T13_58_33.396Z%5BGMT%5D.zip',
+            size: 78398589
+          }
         },
         args: {
           batchDownload: {
