@@ -1,84 +1,77 @@
 <script setup>
-import { onBeforeMount, ref, computed } from 'vue'
-import bodybuilder from 'bodybuilder'
+import { computed, onBeforeMount, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import LinkedDocumentCard from '@/components/LinkedDocument/LinkedDocumentCard'
 import { useDocument } from '@/composables/useDocument'
-import { useCore } from '@/composables/useCore.js'
-import Document from '@/api/resources/Document.js'
+import { useSearchStore } from '@/store/modules/search.js'
+import LinkedDocumentSection from '@/components/LinkedDocument/LinkedDocumentSection.vue'
 
 const { document, documentDirname } = useDocument()
-
-const { core } = useCore()
-const show = ref(false)
+const { t } = useI18n()
 const siblings = ref([])
 const children = ref([])
-const searchChildrenRoute = computed(() => {
-  const index = document.value.index
-  const q = `_routing:${document.value.id}`
-  const query = { q, index }
-  return { name: 'search', query }
+
+const searchStoreSiblings = useSearchStore.disposable()
+searchStoreSiblings.addFilterValue({ name: 'path', value: documentDirname.value })
+searchStoreSiblings.setIndex(document.value.index)
+searchStoreSiblings.addFilterValue({ name: 'extractionLevel', value: document.value.extractionLevel })
+const toSiblings = computed(() => {
+  return { name: 'search', query: searchStoreSiblings.toBaseRouteQuery }
 })
-const pathSeparator = computed(() => core.config.get('pathSeparator', '/'))
-const isWindowsPath = computed(() => pathSeparator.value === '\\')
-function escapeBackslashes(path) {
-  return path.replace(/\\/g, '\\\\')
-}
-const escapedDirname = computed(() => {
-  return isWindowsPath.value ? escapeBackslashes(documentDirname.value) : documentDirname.value
+
+const searchStoreChildren = useSearchStore.disposable()
+searchStoreChildren.addFilterValue({ name: 'path', value: documentDirname.value })
+searchStoreChildren.setQuery(`_routing:${document.value.routing}`)
+searchStoreChildren.setIndex(document.value.index)
+searchStoreChildren.addFilterValue({ name: 'extractionLevel', value: document.value.extractionLevel + 1 })
+const toChildren = computed(() => {
+  return { name: 'search', query: searchStoreChildren.toBaseRouteQuery }
 })
-const searchSiblingsRoute = computed(() => {
-  const index = document.value.index
-  const q = `dirname:"${escapedDirname.value}"`
-  const query = { q, index }
-  return { name: 'search', query }
-})
-function fromExtractionLevel(extractionLevel, routing) {
-  return bodybuilder()
-    .query('match', 'type', 'Document')
-    .query('match', 'extractionLevel', extractionLevel)
-    .query('match', '_routing', routing)
-    .rawOption('_source', { includes: ['*'], excludes: ['content'] })
-}
-function getChildren() {
-  return fromExtractionLevel(document.value.extractionLevel + 1, document.value.routing)
-}
-function getSiblings() {
-  return fromExtractionLevel(document.value.extractionLevel, document.value.routing)
-}
-async function loadChildren() {
-  const body = getChildren().build()
-  return core.api.elasticsearch.search({ index: document.value.index, body })
-}
-async function loadSiblings() {
-  const body = getSiblings().build()
-  return core.api.elasticsearch.search({ index: document.value.index, body })
-}
-function dtoDocumentEntryResults(response) {
-  return response.hits.hits.map((item) => {
-    const doc = new Document(item)
+
+function dtoDocumentEntryResults(hits) {
+  return hits.map((item) => {
     return {
-      contentType: doc.contentType,
-      id: doc.id,
-      index: doc.index,
-      routing: doc.routing,
-      name: doc.title
+      contentType: item.contentType,
+      id: item.id,
+      index: item.index,
+      routing: item.routing,
+      name: item.title
     }
   })
 }
 onBeforeMount(async () => {
-  const [responseChildren, responseSiblings] = await Promise.all([loadChildren(), loadSiblings()])
-  children.value = dtoDocumentEntryResults(responseChildren)
-  siblings.value = dtoDocumentEntryResults(responseSiblings)
+  await Promise.all([searchStoreSiblings.query(), searchStoreChildren.query()])
+  siblings.value = dtoDocumentEntryResults(searchStoreSiblings.hits)
+  children.value = dtoDocumentEntryResults(searchStoreChildren.hits)
 })
 </script>
 
 <template>
-  <linked-document-card
-    v-model="show"
-    :siblings="siblings"
-    :children="children"
-    :to-siblings="searchSiblingsRoute"
-    :to-children="searchChildrenRoute"
-  />
+  <linked-document-card>
+    <template #siblings="{ modelValue, onUpdateModelValue }">
+      <linked-document-section
+        :model-value="modelValue"
+        header-class="rounded-start"
+        icon="files"
+        :title="t('linkedDocumentCard.siblings.title', { n: searchStoreSiblings.total })"
+        :description="t('linkedDocumentCard.siblings.description')"
+        :documents="siblings"
+        :to-search="toSiblings"
+        @update:model-value="onUpdateModelValue"
+      />
+    </template>
+    <template #children="{ modelValue, onUpdateModelValue }">
+      <linked-document-section
+        :model-value="modelValue"
+        header-class="rounded-end"
+        icon="paperclip"
+        :title="t('linkedDocumentCard.children.title', { n: searchStoreChildren.total })"
+        :description="t('linkedDocumentCard.children.description')"
+        :documents="children"
+        :to-search="toChildren"
+        @update:model-value="onUpdateModelValue"
+      />
+    </template>
+  </linked-document-card>
 </template>

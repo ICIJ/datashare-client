@@ -1,20 +1,19 @@
 <template>
-  <section class="linked-document-section">
-    <div class="ms-3 d-flex flex-column flex-grow-1">
-      <p class="linked-document-section__description">
-        <slot name="description">{{ description }}</slot>
-      </p>
-      <div class="d-flex flex-column flex-grow-1">
-        <slot name="document-list" v-bind="{ documents }">
-          <linked-document-list :documents="documents" />
-        </slot>
-      </div>
-    </div>
-  </section>
+  <b-accordion flush class="linked-document-section rounded-end col-12 col-lg-6 m-0 pe-1">
+    <b-accordion-item v-model="open" :header-class="headerClass" button-class="rounded btn btn-tertiary">
+      <template #title>
+        <slot name="title"> <linked-document-section-header :title="title" :icon="icon" /> </slot>
+      </template>
+      <linked-document-section-list :description="description" :documents="documents" :to-search="toSearch" />
+    </b-accordion-item>
+  </b-accordion>
 </template>
 
 <script setup>
-import LinkedDocumentList from '@/components/LinkedDocument/LinkedDocumentList'
+import LinkedDocumentSectionList from '@/components/LinkedDocument/LinkedDocumentSectionList.vue'
+import LinkedDocumentSectionHeader from '@/components/LinkedDocument/LinkedDocumentSectionHeader.vue'
+
+const open = defineModel({ type: Boolean, default: false })
 defineOptions({
   name: 'LinkedDocumentSection'
 })
@@ -23,15 +22,38 @@ defineProps({
     type: String,
     required: true
   },
+  title: {
+    type: String
+  },
+  icon: {
+    type: String
+  },
+  headerClass: {
+    type: String
+  },
   documents: {
     type: Array
+  },
+  toSearch: {
+    type: Object
   }
 })
 </script>
 <style lang="scss" scoped>
 .linked-document-section {
-  &__description {
-    text-wrap: pretty;
+  &.accordion {
+    --bs-accordion-border-width: 0;
+    --bs-accordion-bg: transparent; // or any color you want
+    --bs-accordion-btn-bg: #{$tertiary-bg-subtle};
+    --bs-accordion-active-bg: #{$tertiary-bg-subtle};
+    --bs-accordion-active-color: #{$tertiary-text-emphasis};
+
+    [data-bs-theme='dark'] & {
+      --bs-accordion-active-bg: #{$tertiary-bg-subtle-dark};
+      --bs-accordion-bg: transparent;
+      --bs-accordion-btn-bg: #{$tertiary-bg-subtle-dark};
+      --bs-accordion-active-color: #{$tertiary-text-emphasis-dark};
+    }
   }
 }
 </style>
