@@ -4,7 +4,7 @@
     "action": "goToPreviousDocument",
     "keys": {
       "mac": ["meta", "arrowleft"],
-      "default": ["ctrl", "arrowleft"]
+      "default": ["d", "arrowleft"]
     },
     "label": "shortkeys.goToPreviousDocument",
     "link": "https://icij.gitbook.io/datashare/usage/use-keyboard-shortcuts#go-to-the-next-previous-document",
@@ -15,7 +15,7 @@
     "action": "goToNextDocument",
     "keys": {
       "mac": ["meta","arrowright"],
-      "default": ["ctrl", "arrowright"]
+      "default": ["d", "arrowright"]
     },
     "label": "shortkeys.goToNextDocument",
     "link": "https://icij.gitbook.io/datashare/usage/use-keyboard-shortcuts#go-to-the-next-previous-document",
