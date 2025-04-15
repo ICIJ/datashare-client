@@ -59,7 +59,9 @@ const order = defineModel('order', { type: String, default: 'desc' })
 const slots = useSlots()
 
 // If a primary key is provided, use a Map with the primary key as the key.
-// Otherwise, use a WeakMap which can use Object as key.
+// Otherwise, use a WeakMap which can use Object as key. This Map is
+// used to ensure that the details state is persisted even if the item
+// reference changes.
 const DetailsMapType = props.primaryKey ? Map : WeakMap
 const detailsMap = ref(new DetailsMapType())
 
@@ -68,9 +70,9 @@ watch(toRef(props, 'items'), setupDetailsMap, { deep: true, immediate: true })
 
 function setupDetailsMap() {
   // Set initial state for each item in the details map.
-  props.items.filter(isTableItem).forEach((item) => {
+  props.items.forEach((item) => {
     if (!detailsMap.value.has(itemPrimaryKey(item))) {
-      detailsMap.value.set(itemPrimaryKey(item), props.showRowDetails)
+      toggleRowDetails(item, item._showDetails ?? props.showRowDetails)
     }
   })
 }
@@ -92,7 +94,8 @@ function rowDetailsShowing(item) {
 
 function toggleRowDetails(item, toggler) {
   if (isTableItem(item)) {
-    detailsMap.value.set(itemPrimaryKey(item), toggler ?? !rowDetailsShowing(item))
+    item._showDetails = toggler ?? !rowDetailsShowing(item)
+    detailsMap.value.set(itemPrimaryKey(item), item._showDetails)
   }
 }
 
