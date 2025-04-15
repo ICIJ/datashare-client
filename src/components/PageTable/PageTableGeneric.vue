@@ -8,7 +8,7 @@ import PageTableTrPlaceholder from '@/components/PageTable/PageTableTrPlaceholde
 import PageTableTh from '@/components/PageTable/PageTableTh'
 import PageTableTdActions from '@/components/PageTable/PageTableTdActions'
 
-defineOptions({ name: 'GenericTable' })
+defineOptions({ name: 'PageTableGeneric' })
 
 const props = defineProps({
   /**
@@ -58,40 +58,48 @@ const order = defineModel('order', { type: String, default: 'desc' })
 
 const slots = useSlots()
 
-const detailsMap = ref(new WeakMap())
+// If a primary key is provided, use a Map with the primary key as the key.
+// Otherwise, use a WeakMap which can use Object as key.
+const DetailsMapType = props.primaryKey ? Map : WeakMap
+const detailsMap = ref(new DetailsMapType())
 
 // Initialize and sync the item details map
-watch(
-  toRef(props, 'items'),
-  (items) => {
-    items.filter(isTableItem).forEach((item) => {
-      detailsMap.value.set(item, item._showDetails ?? props.showRowDetails)
-    })
-  },
-  { deep: true, immediate: true }
-)
+watch(toRef(props, 'items'), setupDetailsMap, { deep: true, immediate: true })
+
+function setupDetailsMap() {
+  // Set initial state for each item in the details map.
+  props.items.filter(isTableItem).forEach((item) => {
+    if (!detailsMap.value.has(itemPrimaryKey(item))) {
+      detailsMap.value.set(itemPrimaryKey(item), props.showRowDetails)
+    }
+  })
+}
 
 function isTableItem(value) {
   return typeof value === 'object' && value !== null
 }
 
+function itemPrimaryKey(item) {
+  if (props.primaryKey && props.primaryKey in item) {
+    return item[props.primaryKey]
+  }
+  return item
+}
+
 function rowDetailsShowing(item) {
-  return isTableItem(item) && !!detailsMap.value.get(item)
+  return isTableItem(item) && !!detailsMap.value.get(itemPrimaryKey(item))
 }
 
 function toggleRowDetails(item, toggler) {
   if (isTableItem(item)) {
-    item._showDetails = toggler ?? !rowDetailsShowing(item)
+    detailsMap.value.set(itemPrimaryKey(item), toggler ?? !rowDetailsShowing(item))
   }
 }
 
 function callItemBinding(item, slotName) {
-  return {
-    item,
-    slotName,
-    detailsShowing: rowDetailsShowing(item),
-    toggleDetails: () => toggleRowDetails(item)
-  }
+  const detailsShowing = rowDetailsShowing(item)
+  const toggleDetails = () => toggleRowDetails(item)
+  return { item, slotName, detailsShowing, toggleDetails }
 }
 
 const hasRowDetailsSlot = computed(() => 'row-details' in slots)
