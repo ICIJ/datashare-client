@@ -58,7 +58,7 @@ function isRunning(item) {
         {{ t(getHumanTaskName(item.name)) }}
       </template>
       <template #cell(documents)="{ item }">
-        <display-number v-if="item.result && item.result[1]" :value="item.result[1]" />
+        <display-number v-if="item?.result?.value && item.result.value[1]" :value="item.result.value[1]" />
       </template>
       <template #cell(project)="{ item }">
         <display-project-list :values="getProject(item)" />
