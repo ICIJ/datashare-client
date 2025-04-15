@@ -1,5 +1,5 @@
 <script setup>
-import DocumentSlicedName from '@/components/DocumentSlicedName'
+import DocumentSlicedName from '@/components/Document/DocumentSlicedName'
 import Hook from '@/components/Hook/Hook'
 import ProjectButton from '@/components/Project/ProjectButton'
 
