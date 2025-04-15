@@ -1452,8 +1452,8 @@
   },
   "shortkeys": {
     "title": "Search shortcuts",
-    "goToPreviousDocument": "Go to the previous document",
-    "goToNextDocument": "Go to the next document",
+    "goToPreviousDocument": "Go to previous document",
+    "goToNextDocument": "Go to next document",
     "backToSearchResults": "Go back to the search results",
     "goToPreviousTab": "Go to previous document tab",
     "goToNextTab": "Go to next document tab",
