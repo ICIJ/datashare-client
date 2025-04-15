@@ -43,6 +43,7 @@ function getBatchDownloadRecord(item, key, defaultValue) {
         :sort="sort"
         :order="order"
         :loading="loading"
+        primary-key="id"
         @update:sort="updateSort"
         @update:order="updateOrder"
       >
