@@ -51,7 +51,6 @@ async function confirmSaving() {
     :image-dark="imageDark"
     :image-width="110"
     :title="$t('searchSavingModal.title')"
-    size="410px"
     @ok="confirmSaving"
   >
     <template #default="{ close }">
