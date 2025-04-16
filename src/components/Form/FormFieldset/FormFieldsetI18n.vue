@@ -1,7 +1,7 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 import uniqueId from 'lodash/uniqueId'
-import { computed, useAttrs } from 'vue'
+import { computed } from 'vue'
 
 import FormFieldset from '@/components/Form/FormFieldset/FormFieldset'
 
@@ -19,7 +19,7 @@ const props = defineProps({
     type: Boolean
   }
 })
-const { required, 'label-visually-hidden': labelVisuallyHidden, 'with-description': withDescription } = useAttrs()
+
 const { te, t } = useI18n()
 const id = uniqueId(props.name)
 const labelFor = `input-${props.name}`
@@ -38,9 +38,6 @@ const description = computed(() => (te(descriptionKey) ? t(descriptionKey) : nul
     :label-for="labelFor"
     :description="description"
     :compact-threshold="forceCompact ? 10000 : 0"
-    :with-description="withDescription"
-    :label-visually-hidden="labelVisuallyHidden"
-    :required="required"
   >
     <slot v-bind="{ name: labelFor, ...slotProps }" />
   </form-fieldset>
