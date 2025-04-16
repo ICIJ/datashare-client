@@ -301,8 +301,9 @@
   },
   "searchHistoryList": {
     "title": "History",
-    "empty": "No visited documents.",
-    "allRemoved": "History of all visited documents have been removed."
+    "allRemoved": "History of all visited documents have been removed.",
+    "emptyStateLabel": "There is no history of visited documents.\nWant to read documents?",
+    "emptyStateAction": "Go to search"
   },
   "separatorLine": {
     "expand": "Expand",
