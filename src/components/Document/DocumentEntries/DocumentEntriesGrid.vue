@@ -1,4 +1,6 @@
 <script setup>
+import { computed } from 'vue'
+
 import DocumentCardGrid from '@/components/Document/DocumentCard/DocumentCardGrid'
 import DocumentCardGridPlaceholder from '@/components/Document/DocumentCard/DocumentCardGridPlaceholder'
 import { useSelection } from '@/composables/useSelection'
@@ -6,7 +8,7 @@ import { useSelection } from '@/composables/useSelection'
 const selection = defineModel('selection', { type: Array, default: () => [] })
 const { selectionValues } = useSelection(selection)
 
-defineProps({
+const { loading, entries } = defineProps({
   entries: {
     type: Array
   },
@@ -22,6 +24,8 @@ defineProps({
     type: Boolean
   }
 })
+
+const noMatches = computed(() => !loading && !entries.length)
 </script>
 
 <template>
@@ -45,7 +49,7 @@ defineProps({
         </div>
       </template>
     </div>
-    <div v-if="!loading && !entries.length" class="p-3 text-secondary text-center">
+    <div v-if="noMatches" class="p-3 text-secondary text-center">
       {{ $t('documentEntries.noMatches') }}
     </div>
     <slot />
