@@ -30,7 +30,6 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   const field = ref(settings.defaultSearchField)
   const filters = ref([...filterDefs])
   const from = ref(0)
-  const index = ref('')
   const indices = ref([])
   const isReady = ref(true)
   const q = ref('')
@@ -44,6 +43,13 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   const appStore = useAppStore()
   const router = useRouter()
   const searchBreadcrumbStore = useSearchBreadcrumbStore()
+
+  const index = computed({
+    get: () => indices.value[0],
+    set: (value) => {
+      indices.value = [value]
+    }
+  })
 
   const fields = computed(() => {
     return find(settings.searchFields, { key: field.value }).fields
@@ -262,7 +268,6 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   }
 
   function setIndex(value) {
-    index.value = value
     indices.value = [value]
   }
 
@@ -274,7 +279,6 @@ export const useSearchStore = defineSuffixedStore('search', () => {
       .map((str) => str.split(','))
       .flat()
     indices.value = cleaned
-    index.value = cleaned[0]
   }
 
   function setField(value) {
