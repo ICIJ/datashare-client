@@ -3,11 +3,12 @@ import { castArray, compact } from 'lodash'
 import { computed, onBeforeMount, ref, toRef, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { useBatchSearchResultProperties } from '@/composables/useBatchSearchResultProperties'
+import batchSearchResultsEmpty from '@/assets/images/illustrations/batch-search-results-empty.svg'
 import DisplayNumber from '@/components/Display/DisplayNumber'
 import DisplayContentLength from '@/components/Display/DisplayContentLength'
 import DisplayContentType from '@/components/Display/DisplayContentType'
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
+import EmptyState from '@/components/EmptyState/EmptyState'
 import NavigationBreadcrumbLink from '@/components/NavigationBreadcrumb/NavigationBreadcrumbLink'
 import PageContainer from '@/components/PageContainer/PageContainer'
 import PageHeader from '@/components/PageHeader/PageHeader'
@@ -15,12 +16,13 @@ import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import ProjectButton from '@/components/Project/ProjectButton'
 import RouterLinkBatchSearchResult from '@/components/RouterLink/RouterLinkBatchSearchResult'
 import RowPaginationDocuments from '@/components/RowPagination/RowPaginationDocuments'
-import { useUrlParam } from '@/composables/useUrlParam'
-import { useUrlParamWithStore } from '@/composables/useUrlParamWithStore'
-import { useUrlParamsWithStore } from '@/composables/useUrlParamsWithStore'
-import { useCore } from '@/composables/useCore'
-import { useWait } from '@/composables/useWait'
 import { useAppStore } from '@/store/modules'
+import { useBatchSearchResultProperties } from '@/composables/useBatchSearchResultProperties'
+import { useCore } from '@/composables/useCore'
+import { useUrlParam } from '@/composables/useUrlParam'
+import { useUrlParamsWithStore } from '@/composables/useUrlParamsWithStore'
+import { useUrlParamWithStore } from '@/composables/useUrlParamWithStore'
+import { useWait } from '@/composables/useWait'
 
 const props = defineProps({
   uuid: {
@@ -83,6 +85,8 @@ const visibleFields = computed(() => {
 
 const batchSearchName = computed(() => batchSearch.value?.name)
 
+const isEmpty = computed(() => !isLoading.value && !hits.value.items?.length)
+
 const fetchBatchSearchResults = waitFor(async () => {
   await new Promise((resolve) => setTimeout(resolve, 1000))
   hits.value = await core.api.getBatchSearchResults(
@@ -134,7 +138,11 @@ watch(toRef(route, 'query'), fetchBatchSearchResults, { deep: true, immediate: t
     </template>
   </page-header>
   <page-container fluid>
+    <slot v-if="isEmpty" name="empty">
+      <empty-state :label="$t('task.batch-search-results.show.emptyStateLabel')" :image="batchSearchResultsEmpty" />
+    </slot>
     <page-table-generic
+      v-else
       v-model:sort="sort"
       v-model:order="order"
       :items="hits?.items"
