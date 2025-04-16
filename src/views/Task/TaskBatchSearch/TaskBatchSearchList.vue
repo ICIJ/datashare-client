@@ -2,6 +2,7 @@
 import get from 'lodash/get'
 import { ref, onBeforeMount } from 'vue'
 
+import tasksBatchSearchesEmpty from '@/assets/images/illustrations/tasks-batch-searches-empty.svg'
 import BatchSearchActions from '@/components/BatchSearch/BatchSearchActions/BatchSearchActions'
 import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
 import DisplayNumber from '@/components/Display/DisplayNumber'
@@ -10,6 +11,7 @@ import DisplayProjectList from '@/components/Display/DisplayProjectList'
 import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayUser from '@/components/Display/DisplayUser'
 import DisplayVisibility from '@/components/Display/DisplayVisibility'
+import EmptyState from '@/components/EmptyState/EmptyState'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import RouterLinkBatchSearch from '@/components/RouterLink/RouterLinkBatchSearch'
 import RowPaginationBatchSearches from '@/components/RowPagination/RowPaginationBatchSearches'
@@ -50,6 +52,15 @@ onBeforeMount(fetchMe)
     hide-clear-done
     hide-stop-pending
   >
+    <template #empty>
+      <empty-state
+        image-max-width="195px"
+        :image="tasksBatchSearchesEmpty"
+        :label="$t('task.batch-search.list.emptyStateLabel')"
+        :action-label="$t('task.batch-search.list.emptyStateAction')"
+        :action-to="{ name: 'task.batch-search.new' }"
+      />
+    </template>
     <template #pagination="{ page, setPage, perPage, totalRows }">
       <row-pagination-batch-searches
         :per-page="perPage"
