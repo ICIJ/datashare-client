@@ -184,6 +184,8 @@
   },
   "search": {
     "title": "Search documents",
+    "emptyStateLabel": "It’s lonely in here.\nWant to add documents?",
+    "emptyStateAction": "Add documents",
     "errors": {
       "badRequest": "Your search query is wrong",
       "internalError": "The server encountered a problem",
