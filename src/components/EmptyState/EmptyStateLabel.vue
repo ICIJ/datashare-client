@@ -4,7 +4,8 @@ import { compact, trim } from 'lodash'
 
 const props = defineProps({
   label: {
-    type: String
+    type: String,
+    default: ''
   }
 })
 
