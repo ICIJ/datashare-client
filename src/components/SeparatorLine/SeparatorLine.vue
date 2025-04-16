@@ -98,7 +98,7 @@ const dragEnd = ({ detail }) => {
 .separator-line {
   width: 2rem;
   height: 100%;
-  min-height: 440px;
+  min-height: 5rem;
   top: 0;
   position: absolute;
 
