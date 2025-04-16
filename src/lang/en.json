@@ -875,42 +875,8 @@
     "expand": "Expand all steps"
   },
   "indexing": {
-    "title": "Analyze your documents",
-    "description": "Please <a href=\"{howToLink}\" target=\"_blank\">read the documentation</a> about adding documents.",
-    "go": "Launch",
-    "tasks": "Tasks",
-    "empty": "You have not yet started any tasks. <a href=\"{howToLink}\" target=\"_blank\">Read more.</a>",
-    "extractText": "Add documents",
-    "extractWithOcrLabel": "Do you want to extract text also from images and PDFs?",
-    "extractWithOcrHelp": "If yes, Datashare will run OCR (Optical Character Recognition). It can take up to 10 times longer.",
-    "extractOnlyNewLabel": "Do you want to skip already indexed files?",
-    "extractOnlyNewHelp": "If yes, Datashare will only extract text from files that are not yet searchable in Datashare.",
-    "extractLanguage": "In which language are your documents?",
-    "findNamedEntities": "Find people, organizations, locations and emails",
-    "findNamedEntitiesProjectSelection": "In which project do you want to find named entities?",
-    "findNamedEntitiesHeader": "What would you like to do?",
-    "findNamedEntitiesSubheader": "Datashare uses Natural Language Processing models.",
-    "findNamedEntitiesTooltip": "Texts must be extracted before finding named entities",
-    "pipelines": "Pipelines",
-    "pipelineOptions": {
-      "email": "Find email",
-      "corenlp": "Find people, organizations and locations with CoreNLP",
-      "opennlp": "Find people, organizations and locations with OpenNLP",
-      "mitie": "Find people, organizations and locations with MITIE",
-      "ixapipe": "Find people, organizations and locations with IXA Pipe",
-      "gatenlp": "Find people, organizations and locations with GateNLP"
-    },
-    "projectIndexationSelection": "In which project do you want to add documents?",
-    "folderSelection": "Which folder do you want to index?",
-    "folderSelectionDescription": "By default, the entire project folder is selected.",
-    "default": "By default - Offers the highest probability of working in most documents",
-    "syncModelsLabel": "Do you want to work offline?",
-    "syncModels": "Check this box if you are working without internet connection.",
-    "stopTask": "Stop this task",
     "stopPendingTasks": "Stop all pending tasks",
-    "removeDoneTasks": "Delete done tasks",
-    "removeBatchSearchSuccess": "The batch searches are now removed from Datashare.",
-    "removeBatchSearchFailure": "Something went wrong, unable to remove the batch searches."
+    "removeDoneTasks": "Delete done tasks"
   },
   "appSidebar": {
     "projects": "Projects",
@@ -971,7 +937,8 @@
     "title": "Tasks",
     "description": "Some tasks must be run in the background. Use this panel to manage them.",
     "noResults": "No results.",
-    "empty": "Empty",
+    "emptyStateLabel": "You have not yet started any tasks. {link}",
+    "emptyStateLabelLink": "Read more.",
     "settings": {
       "createdAt": "Created on",
       "name": "Name",
@@ -1027,9 +994,10 @@
     "entities": {
       "title": "Entities",
       "list": {
+        "emptyStateLabel": "There is no entity recognitions.\nWant to find entities?",
+        "emptyStateAction": "Find entities",
         "info":"Entity recognitions are tasks that you run in order to recognize and to list the entities in your documents.",
         "searchPlaceholder": "Search tasks",
-        "empty": "You have not yet started any tasks. <a href=\"{howToLink}\" target=\"_blank\">Read more.</a>",
         "noResults": "No results.",
         "properties": {
           "id": "Id",
@@ -1081,7 +1049,6 @@
       "list": {
         "info": "Document additions are tasks that you run to ask Datashare to add new documents.",
         "searchPlaceholder": "Search tasks",
-        "empty": "You have not yet started any tasks. <a href=\"{howToLink}\" target=\"_blank\">Read more.</a>",
         "noResults": "No results.",
         "properties": {
           "id": "Id",
@@ -1121,7 +1088,6 @@
       "list": {
         "info": "Batch downloads are password-protected zip files containing all the documents from one of your searches.",
         "searchPlaceholder": "Search batch downloads",
-        "empty": "You have not yet started any tasks. <a href=\"{howToLink}\" target=\"_blank\">Read more.</a>",
         "properties": {
           "name":"Name",
           "createdAt": "Created on",
@@ -1138,7 +1104,6 @@
       "list": {
         "info": "Batch searches allow to get the results of each query of a list, but all at once.",
         "searchPlaceholder": "Search batch searches",
-        "empty": "You have not yet started any tasks. <a href=\"{howToLink}\" target=\"_blank\">Read more.</a>",
         "noResults": "No results.",
         "properties": {
           "privacy":"Privacy",
