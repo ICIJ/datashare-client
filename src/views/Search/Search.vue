@@ -2,7 +2,10 @@
 import { computed, ref, watch, toValue, useTemplateRef } from 'vue'
 import { useRoute } from 'vue-router'
 
+import searchEmpty from '@/assets/images/illustrations/search-empty-light.svg'
+import searchEmptyDark from '@/assets/images/illustrations/search-empty-dark.svg'
 import DocumentModal from '@/components/Document/DocumentModal'
+import EmptyState from '@/components/EmptyState/EmptyState'
 import PageContainer from '@/components/PageContainer/PageContainer'
 import SearchToolbar from '@/components/Search/SearchToolbar/SearchToolbar'
 import SearchBreadcrumb from '@/views/Search/SearchBreadcrumb'
@@ -50,7 +53,7 @@ replaceUrlParam({
 const entries = computed(() => searchStore.response.hits)
 const properties = computed(() => appStore.getSettings('search', 'properties'))
 const layout = computed(() => appStore.getSettings('search', 'layout'))
-const loading = computed(() => !searchStore.isReady)
+const isLoading = computed(() => !searchStore.isReady)
 const isListLayout = computed(() => toValue(layout) === LAYOUTS.LIST)
 
 const selection = ref([])
@@ -74,6 +77,7 @@ const enoughtFloatingSpace = ref(false)
 // User can also force the document view to be displayed in a modal by adding the "modal" query parameter.
 const renderDocumentInModal = computed(() => !enoughtFloatingSpace.value || !isListLayout.value || route.query.modal)
 
+const isEmpty = computed(() => !isLoading.value && !total.value)
 const total = computed(() => parseInt(searchStore.response.total))
 const perPage = computed(() => parseInt(appStore.getSettings('search', 'perPage')))
 const page = useUrlPageFromWithStore({
@@ -125,7 +129,16 @@ watchIndices(refreshRoute)
         />
         <search-breadcrumb v-model:visible="toggleSearchBreadcrumb" />
         <div class="search__main__results">
+          <empty-state
+            v-if="isEmpty"
+            :image="searchEmpty"
+            :image-dark="searchEmptyDark"
+            :label="$t('search.emptyStateLabel')"
+            :action-label="$t('search.emptyStateAction')"
+            :action-to="{ name: 'task.documents.new' }"
+          />
           <document-entries
+            v-else
             ref="entries"
             v-model:page="page"
             v-model:select-mode="selectMode"
@@ -135,7 +148,7 @@ watchIndices(refreshRoute)
             :layout="layout"
             :total="total"
             :per-page="perPage"
-            :loading="loading"
+            :loading="isLoading"
             @update:enoughtSpace="toggleDocumentModal"
           >
             <template #header="{ compact }">
