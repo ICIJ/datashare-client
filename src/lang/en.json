@@ -1373,6 +1373,12 @@
       "history": "History"
     }
   },
+  "projectViewOverviewGraph": {
+    "emptyStateLabel": "You haven't installed the graph extension yet.",
+    "emptyStateLabelWithLink": "You can read ICIJ's {articleLink} about it.",
+    "emptyStateLabelArticleLink": "article",
+    "emptyStateAction": "Install"
+  },
   "projectViewEdit":{
     "title": "Edit project",
     "notify": {
