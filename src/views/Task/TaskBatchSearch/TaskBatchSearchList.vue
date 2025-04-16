@@ -49,6 +49,7 @@ onBeforeMount(fetchMe)
     :task-filter="[TASK_NAME.BATCH_SEARCH]"
     page-name="batch-search"
     show-add
+    searchable
     hide-clear-done
     hide-stop-pending
   >

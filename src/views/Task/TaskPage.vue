@@ -23,6 +23,10 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  searchable: {
+    type: Boolean,
+    default: false
+  },
   hideStopPending: {
     type: Boolean,
     default: false
@@ -72,8 +76,8 @@ function refresh() {
       :per-page="perPage"
       :search-placeholder="searchPlaceholder"
       :total-rows="totalRows"
+      :searchable="searchable"
       paginable
-      searchable
     >
       <template #toolbar-end>
         <task-actions
