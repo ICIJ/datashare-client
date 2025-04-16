@@ -3,7 +3,10 @@ import { computed, ref, toRef, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
+import searchHistoryEmpty from '@/assets/images/illustrations/search-history-empty-light.svg'
+import searchHistoryEmptyDark from '@/assets/images/illustrations/search-history-empty-dark.svg'
 import ButtonClearHistory from '@/components/Button/ButtonClearHistory'
+import EmptyState from '@/components/EmptyState/EmptyState'
 import NavigationBreadcrumbLink from '@/components/NavigationBreadcrumb/NavigationBreadcrumbLink'
 import PageContainer from '@/components/PageContainer/PageContainer'
 import PageHeader from '@/components/PageHeader/PageHeader'
@@ -108,9 +111,15 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
     </page-header>
     <page-container fluid class="search-history-list__content flex-grow-1 overflow-auto">
       <search-history-entries :events="events" :loading-events="isLoading" :properties="properties" />
-      <div v-if="!events.length && isReady" class="text-center text-secondary">
-        {{ t('searchHistoryList.empty') }}
-      </div>
+      <empty-state
+        v-if="!events.length && isReady"
+        image-max-width="220px"
+        :image="searchHistoryEmpty"
+        :image-dark="searchHistoryEmptyDark"
+        :label="$t('searchHistoryList.emptyStateLabel')"
+        :action-label="$t('searchHistoryList.emptyStateAction')"
+        :action-to="searchRoute"
+      />
     </page-container>
   </div>
 </template>
