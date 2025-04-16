@@ -1865,6 +1865,7 @@
     "title": "Results settings"
   },
   "documentCarousel": {
+    "page": "Document",
     "next": "Next",
     "previous": "Previous"
   },
