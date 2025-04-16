@@ -50,15 +50,10 @@ const hasAction = computed(() => {
 </script>
 
 <template>
-  <div class="empty-state d-flex flex-column align-items-center text-center gap-5 py-4">
+  <div class="empty-state d-flex flex-column align-items-center text-center gap-4 py-4">
     <empty-state-label :label="label">
       <slot name="label" />
     </empty-state-label>
-    <empty-state-image v-if="image" :image="image" :image-dark="imageDark" :max-width="imageMaxWidth" :alt="imageAlt">
-      <template #source>
-        <slot name="image-source" />
-      </template>
-    </empty-state-image>
     <empty-state-action
       v-if="hasAction"
       :label="actionLabel"
@@ -70,6 +65,11 @@ const hasAction = computed(() => {
     >
       <slot name="action" />
     </empty-state-action>
+    <empty-state-image v-if="image" :image="image" :image-dark="imageDark" :max-width="imageMaxWidth" :alt="imageAlt">
+      <template #source>
+        <slot name="image-source" />
+      </template>
+    </empty-state-image>
   </div>
 </template>
 
