@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 import DocumentCarousel from '@/components/Document/DocumentCarousel/DocumentCarousel'
 import DocumentCarouselEntry from '@/components/Document/DocumentCarousel/DocumentCarouselEntry'
@@ -58,10 +58,9 @@ async function searchFromPositionAndFetch(position) {
   await fetch()
 }
 
-const position = computed({
-  get: () => documentPosition.value,
-  set: goToPosition
-})
+const position = ref(documentPosition.value)
+watch(position, goToPosition)
+watchDocument(() => (position.value = documentPosition.value))
 
 function previousDocument() {
   position.value = Math.max(0, position.value - 1)
