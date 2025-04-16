@@ -101,7 +101,7 @@ const classList = computed(() => {
 const style = computed(() => {
   return {
     '--document-floating-top': `${top.value}px`,
-    '--document-floating-left': `${left.value}px`,
+    '--document-floating-left': `${left.value}px`
   }
 })
 
