@@ -282,7 +282,9 @@
   },
   "searchSavedList": {
     "title": "Saved searches",
-    "allRemoved": "All saved searches have been removed."
+    "allRemoved": "All saved searches have been removed.",
+    "emptyStateLabel": "You haven't saved any searches.\nGo to search and save your important searches.",
+    "emptyStateAction": "Go to search"
   },
   "searchSavedEntries": {
     "fields": {

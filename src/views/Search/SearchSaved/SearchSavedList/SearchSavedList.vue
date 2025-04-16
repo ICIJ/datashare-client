@@ -3,7 +3,10 @@ import { computed, ref, toRef, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
+import searchSavedEmpty from '@/assets/images/illustrations/search-saved-empty-light.svg'
+import searchSavedEmptyDark from '@/assets/images/illustrations/search-saved-empty-dark.svg'
 import ButtonClearSavedSearches from '@/components/Button/ButtonClearSavedSearches'
+import EmptyState from '@/components/EmptyState/EmptyState'
 import NavigationBreadcrumbLink from '@/components/NavigationBreadcrumb/NavigationBreadcrumbLink'
 import PageContainer from '@/components/PageContainer/PageContainer'
 import PageHeader from '@/components/PageHeader/PageHeader'
@@ -16,6 +19,7 @@ import { useSearchNav } from '@/composables/useSearchNav'
 import { useUrlPageParam } from '@/composables/useUrlPageParam'
 import { useUrlParamsWithStore } from '@/composables/useUrlParamsWithStore'
 import { useUrlParamWithStore } from '@/composables/useUrlParamWithStore'
+import { useWait } from '@/composables/useWait'
 import { useAppStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
 
@@ -30,6 +34,7 @@ const { toast } = useCore()
 const { confirm: showConfirmModal } = useConfirmModal()
 const { removeAll } = useHistoryEvents('SEARCH')
 const { searchRoute } = useSearchNav()
+const { isLoading, waitFor } = useWait()
 
 const view = 'searchSavedList'
 const perPage = useUrlParamWithStore('perPage', {
@@ -65,11 +70,13 @@ const order = computed({
 
 const orderDesc = computed(() => order.value === 'desc')
 
-async function fetch() {
+const isEmpty = computed(() => !isLoading.value && !events.value.length)
+
+const fetch = waitFor(async () => {
   const result = await api.getHistoryEvents('search', offset.value, perPage.value, sort.value, orderDesc.value)
   events.value = result?.items?.map((item) => ({ ...item })) ?? []
   pagination.value = result?.pagination
-}
+})
 
 async function showRemoveAllModal() {
   if (await showConfirmModal()) {
@@ -104,7 +111,16 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
       </template>
     </page-header>
     <page-container fluid>
-      <search-saved-entries v-model:sort="sort" v-model:order="order" :events="events" @reload="fetch" />
+      <empty-state
+        v-if="isEmpty"
+        image-max-width="350px"
+        :image="searchSavedEmpty"
+        :image-dark="searchSavedEmptyDark"
+        :label="$t('searchSavedList.emptyStateLabel')"
+        :action-label="$t('searchSavedList.emptyStateAction')"
+        :action-to="searchRoute"
+      />
+      <search-saved-entries v-else v-model:sort="sort" v-model:order="order" :events="events" @reload="fetch" />
     </page-container>
   </div>
 </template>
