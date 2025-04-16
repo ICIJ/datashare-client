@@ -75,7 +75,7 @@ const hasAction = computed(() => {
 
 <style lang="scss" scoped>
 .empty-state {
-  max-width: 400px;
+  max-width: 550px;
   margin: 0 auto;
   gap: 2rem;
 }
