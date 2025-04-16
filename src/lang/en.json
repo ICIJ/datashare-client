@@ -738,7 +738,7 @@
     "tagged": "Documents have been tagged.",
     "starFile": "Star document",
     "notFound": "Document not found.",
-    "notAvailable": "Preview is not available for this document.",
+    "notAvailable": "Preview is not available for this file type.",
     "copyAsCsv": "Copy as CSV",
     "namedEntitiesNotFound": "No named entities found.",
     "namedEntitiesNotSearched": "Document not analyzed. To find named entities, {link}.",
