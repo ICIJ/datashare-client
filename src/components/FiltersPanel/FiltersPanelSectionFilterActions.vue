@@ -61,6 +61,7 @@ const classList = computed(() => {
   justify-content: space-between;
   align-items: center;
   overflow: auto;
+  gap: $spacer;
 
   &--empty {
     display: none;
