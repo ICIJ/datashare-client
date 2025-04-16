@@ -52,8 +52,12 @@ onBeforeMount(fetchMe)
     hide-clear-done
     hide-stop-pending
   >
-    <template #empty>
+    <template #empty="{ searchQuery }">
+      <p v-if="searchQuery" class="p-3 text-secondary text-center">
+        {{ $t('task.batch-search.list.noMatches') }}
+      </p>
       <empty-state
+        v-else
         image-max-width="195px"
         :image="tasksBatchSearchesEmpty"
         :label="$t('task.batch-search.list.emptyStateLabel')"
