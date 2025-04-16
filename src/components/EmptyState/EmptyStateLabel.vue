@@ -25,5 +25,6 @@ const rows = computed(() => {
 <style lang="scss" scoped>
 .empty-state-label {
   color: var(--bs-body-color);
+  text-wrap: balance;
 }
 </style>
