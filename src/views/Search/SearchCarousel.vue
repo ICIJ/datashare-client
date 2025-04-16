@@ -21,7 +21,6 @@ const {
   goToPosition,
   fetchCarouselEntries,
   watchSearchEntries,
-  watchPosition,
   searchFromPosition
 } = useSearchNav()
 
@@ -31,7 +30,6 @@ const { wheneverRouteActionShortcut } = useKeyboardShortcuts()
 const searchStore = useSearchStore.inject()
 const total = computed(() => searchStore.total)
 const carouselEntries = ref([])
-const backward = ref(false)
 
 async function fetch() {
   if (document.value && isDocumentInPage.value && documentPosition.value !== null) {
@@ -76,7 +74,6 @@ function nextDocument() {
 wheneverRouteActionShortcut('goToPreviousDocument', previousDocument)
 wheneverRouteActionShortcut('goToNextDocument', nextDocument)
 
-watchPosition((newPosition, oldPosition) => (backward.value = newPosition < oldPosition))
 watchDocument(fetch)
 watchSearchEntries(fetch, { immediate: true })
 </script>
@@ -87,7 +84,6 @@ watchSearchEntries(fetch, { immediate: true })
     v-model:position="position"
     class="search-carousel"
     :total="total"
-    :backward="backward"
     :disabled-previous="disabledPrevious"
     :disabled-next="disabledNext"
     @previous="previous"
