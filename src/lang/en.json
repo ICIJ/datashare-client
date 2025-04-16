@@ -184,7 +184,7 @@
   },
   "search": {
     "title": "Search documents",
-    "emptyStateLabel": "It’s lonely in here.\nWant to add documents?",
+    "emptyStateLabel": "It’s lonely in here.Do you want to add documents?",
     "emptyStateAction": "Add documents",
     "errors": {
       "badRequest": "Your search query is wrong",
@@ -285,7 +285,7 @@
   "searchSavedList": {
     "title": "Saved searches",
     "allRemoved": "All saved searches have been removed.",
-    "emptyStateLabel": "You haven't saved any searches.\nGo to search and save your important searches.",
+    "emptyStateLabel": "You haven't saved any searches. Go to search and save your important searches.",
     "emptyStateAction": "Go to search"
   },
   "searchSavedEntries": {
@@ -304,7 +304,7 @@
   "searchHistoryList": {
     "title": "History",
     "allRemoved": "History of all visited documents have been removed.",
-    "emptyStateLabel": "There is no history of visited documents.\nWant to read documents?",
+    "emptyStateLabel": "There is no history of visited documents. Do you want to read documents?",
     "emptyStateAction": "Go to search"
   },
   "separatorLine": {
@@ -996,7 +996,7 @@
     "entities": {
       "title": "Entities",
       "list": {
-        "emptyStateLabel": "There is no entity recognitions.\nWant to find entities?",
+        "emptyStateLabel": "There is no entity recognitions. Do you want to find entities?",
         "emptyStateAction": "Find entities",
         "info":"Entity recognitions are tasks that you run in order to recognize and to list the entities in your documents.",
         "searchPlaceholder": "Search tasks",
@@ -1049,7 +1049,7 @@
     "documents": {
       "title": "Documents",
       "list": {
-        "emptyStateLabel": "You haven’t added documents yet.\nWant to add documents?",
+        "emptyStateLabel": "You haven’t added documents yet. Do you want to add documents?",
         "emptyStateAction": "Add documents",
         "info": "Document additions are tasks that you run to ask Datashare to add new documents.",
         "searchPlaceholder": "Search tasks",
@@ -1090,7 +1090,7 @@
     "batch-download": {
       "title": "Batch downloads",
       "list": {
-        "emptyStateLabel": "You have no batch downloads.\nGo to search to batch download all the documents of a search.",
+        "emptyStateLabel": "There is no batch downloads. Go to search to batch download all the documents of a search.",
         "emptyStateAction": "Go to search",
         "info": "Batch downloads are password-protected zip files containing all the documents from one of your searches.",
         "searchPlaceholder": "Search batch downloads",
@@ -1108,7 +1108,7 @@
     "batch-search": {
       "title": "Batch searches",
       "list": {
-        "emptyStateLabel": "You haven’t started any batch search yet.\nWant to search a bunch of queries at once?",
+        "emptyStateLabel": "There are no batch searches. Do you want to search a bunch of queries at once?",
         "emptyStateAction": "Create new batch search",
         "info": "Batch searches allow to get the results of each query of a list, but all at once.",
         "searchPlaceholder": "Search batch searches",
@@ -1195,7 +1195,7 @@
     "batch-search-results": {
       "list": {
         "title": "All documents",
-        "emptyStateLabel": "Queries had no matches."
+        "emptyStateLabel": "None of the queries had matches."
       },
       "show": {
         "title": "Query results",
@@ -1341,7 +1341,7 @@
     }
   },
   "projectViewOverview": {
-    "emptyStateLabel": "Oh, it’s lonely in here...\nYour project has no documents! Want to add some?",
+    "emptyStateLabel": "Oh, it’s lonely in here... This project has no documents. Do you want to add some?",
     "emptyStateAction": "Add your first documents",
     "nav": {
       "insights": "Insights",
@@ -1352,8 +1352,7 @@
     }
   },
   "projectViewOverviewGraph": {
-    "emptyStateLabel": "You haven't installed the graph extension yet.",
-    "emptyStateLabelWithLink": "You can read ICIJ's {articleLink} about it.",
+    "emptyStateLabel": "Graph extension has not been installed yet. Read ICIJ’s {articleLink} to learn more about this feature.",
     "emptyStateLabelArticleLink": "article",
     "emptyStateAction": "Install"
   },

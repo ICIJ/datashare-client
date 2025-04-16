@@ -24,8 +24,7 @@ defineProps({
           :action-to="{ name: 'settings.extensions' }"
         >
           <template #label>
-            <i18n-t keypath="projectViewOverviewGraph.emptyStateLabel" /><br />
-            <i18n-t keypath="projectViewOverviewGraph.emptyStateLabelWithLink">
+            <i18n-t keypath="projectViewOverviewGraph.emptyStateLabel">
               <template #articleLink>
                 <i18n-t
                   keypath="projectViewOverviewGraph.emptyStateLabelArticleLink"
