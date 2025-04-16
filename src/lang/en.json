@@ -1047,6 +1047,8 @@
     "documents": {
       "title": "Documents",
       "list": {
+        "emptyStateLabel": "You haven’t added documents yet.\nWant to add documents?",
+        "emptyStateAction": "Add documents",
         "info": "Document additions are tasks that you run to ask Datashare to add new documents.",
         "searchPlaceholder": "Search tasks",
         "noResults": "No results.",
