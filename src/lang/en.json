@@ -1088,6 +1088,8 @@
     "batch-download": {
       "title": "Batch downloads",
       "list": {
+        "emptyStateLabel": "You have no batch downloads.\nGo to search to batch download all the documents of a search.",
+        "emptyStateAction": "Go to search",
         "info": "Batch downloads are password-protected zip files containing all the documents from one of your searches.",
         "searchPlaceholder": "Search batch downloads",
         "properties": {
