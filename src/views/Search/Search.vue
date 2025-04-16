@@ -28,7 +28,7 @@ import { useAppStore, useSearchStore } from '@/store/modules'
 const { toggleSettings, toggleFilters, toggleSidebar, isFiltersClosed } = useViews()
 const { provideDocumentViewFloatingId, documentRoute } = useDocument()
 const { refreshRoute, refreshSearchFromRoute, resetSearchResponse, watchIndices, watchFilters } = useSearchFilter()
-const { count: searchBreadcrumbCounter } = useSearchBreadcrumb()
+const { count: searchBreadcrumbCounter, anyFilters } = useSearchBreadcrumb()
 
 const entriesRef = useTemplateRef('entries')
 const appStore = useAppStore()
@@ -77,7 +77,7 @@ const enoughtFloatingSpace = ref(false)
 // User can also force the document view to be displayed in a modal by adding the "modal" query parameter.
 const renderDocumentInModal = computed(() => !enoughtFloatingSpace.value || !isListLayout.value || route.query.modal)
 
-const isEmpty = computed(() => !isLoading.value && !total.value)
+const isEmpty = computed(() => !isLoading.value && !total.value && !anyFilters.value)
 const total = computed(() => parseInt(searchStore.response.total))
 const perPage = computed(() => parseInt(appStore.getSettings('search', 'perPage')))
 const page = useUrlPageFromWithStore({
@@ -135,7 +135,7 @@ watchIndices(refreshRoute)
             :image-dark="searchEmptyDark"
             :label="$t('search.emptyStateLabel')"
             :action-label="$t('search.emptyStateAction')"
-            :action-to="{ name: 'task.documents.new' }"
+            :action-to="{ name: 'task.documents.new', query: { project: searchStore.index } }"
           />
           <document-entries
             v-else
