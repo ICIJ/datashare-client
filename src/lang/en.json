@@ -1872,8 +1872,11 @@
       "project": "Project"
     }
   },
+  "documentEntries": {
+    "noMatches": "No documents matched your search. Try using different filters."
+  },
   "documentEntriesTableHead": {
-  "action": "Action"
+    "action": "Action"
   },
   "documentEntriesHeader": {
     "batchDownloadDocuments": "Batch download: downloading multiple files is limited to {maxSize}.",

@@ -33,7 +33,7 @@ defineProps({
   <template v-if="loading">
     <document-row-placeholder :properties="properties" :repeat="5" />
   </template>
-  <template v-else>
+  <template v-else-if="entries.length">
     <document-row
       v-for="entry in entries"
       :key="entry.id"
@@ -42,5 +42,12 @@ defineProps({
       :properties="properties"
       :select-mode="selectMode"
     />
+  </template>
+  <template v-else>
+    <tr>
+      <td class="p-3 text-secondary text-center" :colspan="properties.length + 1">
+        {{ $t('documentEntries.noMatches') }}
+      </td>
+    </tr>
   </template>
 </template>

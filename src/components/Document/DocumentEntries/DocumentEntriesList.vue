@@ -79,7 +79,9 @@ defineExpose({
             />
           </template>
           <template v-else>
-            <p class="p-5 text-secondary text-center">No documents found.</p>
+            <p class="p-3 text-secondary text-center">
+              {{ $t('documentEntries.noMatches') }}
+            </p>
           </template>
         </div>
       </div>
