@@ -41,6 +41,7 @@ const isTerm = computed(() => !!props.ast.term && !isFilter.value)
       :ast="ast.left"
       :operator="operator"
       :no-icon="noIcon"
+      :no-x-icon="noXIcon"
       :size="size"
       @click:x="emit('click:x', ast.left)"
     />
@@ -50,6 +51,7 @@ const isTerm = computed(() => !!props.ast.term && !isFilter.value)
       :operator="operator"
       :prefix="ast.prefix"
       :no-icon="noIcon"
+      :no-x-icon="noXIcon"
       :size="size"
       @click:x="emit('click:x', ast)"
     />
@@ -60,6 +62,7 @@ const isTerm = computed(() => !!props.ast.term && !isFilter.value)
       :prefix="ast.prefix"
       :value="ast.term"
       :no-icon="noIcon"
+      :no-x-icon="noXIcon"
       :size="size"
       @click:x="emit('click:x', ast)"
     />
@@ -68,6 +71,7 @@ const isTerm = computed(() => !!props.ast.term && !isFilter.value)
       :ast="ast.right"
       :operator="ast.operator"
       :no-icon="noIcon"
+      :no-x-icon="noXIcon"
       :size="size"
       @click:x="emit('click:x', $event)"
     />
