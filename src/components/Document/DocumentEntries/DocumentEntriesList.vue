@@ -55,7 +55,7 @@ defineExpose({
 </script>
 
 <template>
-  <document-floating ref="element" class="document-entries-list">
+  <document-floating ref="element" class="document-entries-list" fill>
     <template #start>
       <div class="document-entries-list__start">
         <div class="document-entries-list__start__header">
@@ -65,7 +65,7 @@ defineExpose({
           <template v-if="loading">
             <document-card-placeholder :properties="properties" :repeat="5" vertical-actions />
           </template>
-          <template v-else>
+          <template v-else-if="entries.length">
             <document-card
               v-for="entry in entries"
               :key="entry.id"
@@ -77,6 +77,9 @@ defineExpose({
               :data-entry-id="entry.id"
               :data-entry-index="entry.index"
             />
+          </template>
+          <template v-else>
+            <p class="p-5 text-secondary text-center">No documents found.</p>
           </template>
         </div>
       </div>
