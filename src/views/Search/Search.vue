@@ -55,6 +55,7 @@ const properties = computed(() => appStore.getSettings('search', 'properties'))
 const layout = computed(() => appStore.getSettings('search', 'layout'))
 const isLoading = computed(() => !searchStore.isReady)
 const isListLayout = computed(() => toValue(layout) === LAYOUTS.LIST)
+const isEmpty = computed(() => route.name === 'search' && !isLoading.value && !total.value && !anyFilters.value)
 
 const selection = ref([])
 const toggleSearchBreadcrumb = ref(false)
@@ -77,7 +78,6 @@ const enoughtFloatingSpace = ref(false)
 // User can also force the document view to be displayed in a modal by adding the "modal" query parameter.
 const renderDocumentInModal = computed(() => !enoughtFloatingSpace.value || !isListLayout.value || route.query.modal)
 
-const isEmpty = computed(() => !isLoading.value && !total.value && !anyFilters.value)
 const total = computed(() => parseInt(searchStore.response.total))
 const perPage = computed(() => parseInt(appStore.getSettings('search', 'perPage')))
 const page = useUrlPageFromWithStore({
@@ -97,12 +97,10 @@ const resetEntriesListSize = () => toValue(entriesRef)?.resetListSize?.()
 // The user might have resized the entries list or the document view. When the search is updated
 // or a new document is loaded, we need to reset original size to ensure that they are displayed.
 watch(() => route.query, whenIsRoute('search', resetEntriesListSize), { deep: true, immediate: true })
-
 // Reset the search response when the component is mounted to ensure that the displayed search result
 // are always up-to-date with the current route query. This is important because the search response
 // can still be populated with the previous search results.
 resetSearchResponse()
-
 // Refresh search when route query changes. Among all the watcher of this view, it probably
 // the most important one. It will trigger the search API call when the route query changes
 // which mean that only route change can trigger a search.
