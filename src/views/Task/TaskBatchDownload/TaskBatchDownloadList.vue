@@ -1,12 +1,15 @@
 <script setup>
 import get from 'lodash/get'
 
+import tasksBatchDownloadEmpty from '@/assets/images/illustrations/tasks-batch-downloads-empty.svg'
 import { useTaskSettings } from '@/composables/useTaskSettings'
+import { useSearchNav } from '@/composables/useSearchNav'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
 import DisplayContentLength from '@/components/Display/DisplayContentLength'
 import DisplayProjectList from '@/components/Display/DisplayProjectList'
+import EmptyState from '@/components/EmptyState/EmptyState'
 import RouterLinkBatchDownload from '@/components/RouterLink/RouterLinkBatchDownload'
 import BatchDownloadActions from '@/components/BatchDownload/BatchDownloadActions'
 import SearchBreadcrumbUri from '@/components/Search/SearchBreadcrumbUri/SearchBreadcrumbUri'
@@ -15,6 +18,7 @@ import { TASK_NAME } from '@/enums/taskNames'
 import TaskPage from '@/views/Task/TaskPage'
 
 const { propertiesModelValueOptions } = useTaskSettings('batch-download')
+const { searchRoute } = useSearchNav()
 
 function hasZipSize(item) {
   return item.state !== 'ERROR' && item.result?.value.size !== undefined
@@ -27,6 +31,15 @@ function getBatchDownloadRecord(item, key, defaultValue) {
 
 <template>
   <task-page :task-filter="[TASK_NAME.BATCH_DOWNLOAD]" page-name="batch-download" hide-clear-done hide-stop-pending>
+    <template #empty>
+      <empty-state
+        image-max-width="235px"
+        :image="tasksBatchDownloadEmpty"
+        :label="$t('task.batch-download.list.emptyStateLabel')"
+        :action-label="$t('task.batch-download.list.emptyStateAction')"
+        :action-to="searchRoute"
+      />
+    </template>
     <template #pagination="{ page, setPage, perPage, totalRows }">
       <row-pagination-batch-downloads
         :per-page="perPage"
