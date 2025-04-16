@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref, useTemplateRef, watch } from 'vue'
+import { useElementBounding } from '@vueuse/core'
 
 import { useDocument } from '@/composables/useDocument'
 import { useQueryObserver } from '@/composables/useQueryObserver'
@@ -28,6 +29,9 @@ const props = defineProps({
   },
   noExpand: {
     type: Boolean
+  },
+  fill: {
+    type: Boolean
   }
 })
 
@@ -36,6 +40,7 @@ const emit = defineEmits(['update:enoughtSpace'])
 const elementRef = useTemplateRef('element')
 const { querySelectorAll } = useQueryObserver(elementRef)
 const { state: elementState } = useResizeObserver(elementRef)
+const { top, left } = useElementBounding(elementRef)
 const { provideDocumentViewFloatingId } = useDocument()
 const documentViewFloatingId = provideDocumentViewFloatingId()
 
@@ -83,12 +88,20 @@ const startStyle = computed(() => {
 const classList = computed(() => {
   return {
     'document-floating--enought-space': enoughtSpace.value,
+    'document-floating--fill': props.fill,
     'document-floating--reached-zero-width': reachedZeroWidth.value,
     'document-floating--reached-min-width': reachedMinWidth.value,
     'document-floating--reached-full-width': reachedFullWidth.value,
     'document-floating--has-floating-children': hasFloatingChildren.value,
     'document-floating--has-floating-siblings': hasFloatingSiblings.value,
     'document-floating--has-floating': hasFloatingSiblings.value || hasFloatingChildren.value
+  }
+})
+
+const style = computed(() => {
+  return {
+    '--document-floating-top': `${top.value}px`,
+    '--document-floating-left': `${left.value}px`,
   }
 })
 
@@ -133,7 +146,7 @@ defineExpose({ resetSize, resetStartSize, resetEndSize })
 </script>
 
 <template>
-  <div ref="element" class="document-floating" :class="classList">
+  <div ref="element" class="document-floating" :class="classList" :style="style">
     <div class="document-floating__start" :style="startStyle">
       <slot name="floating" v-bind="{ documentViewFloatingId, enoughtSpace }">
         <div :id="documentViewFloatingId" class="document-floating__start__floating"></div>
@@ -165,6 +178,10 @@ defineExpose({ resetSize, resetStartSize, resetEndSize })
 .document-floating {
   position: relative;
   display: flex;
+
+  &--fill {
+    min-height: calc(100vh - var(--document-floating-top));
+  }
 
   &--reached-zero-width &__start {
     visibility: hidden;
