@@ -1,7 +1,7 @@
 <script setup>
 import get from 'lodash/get'
 
-import tasksBatchDownloadEmpty from '@/assets/images/illustrations/tasks-batch-downloads-empty.svg'
+import tasksBatchDownloadsEmpty from '@/assets/images/illustrations/tasks-batch-downloads-empty.svg'
 import { useTaskSettings } from '@/composables/useTaskSettings'
 import { useSearchNav } from '@/composables/useSearchNav'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
@@ -34,7 +34,7 @@ function getBatchDownloadRecord(item, key, defaultValue) {
     <template #empty>
       <empty-state
         image-max-width="235px"
-        :image="tasksBatchDownloadEmpty"
+        :image="tasksBatchDownloadsEmpty"
         :label="$t('task.batch-download.list.emptyStateLabel')"
         :action-label="$t('task.batch-download.list.emptyStateAction')"
         :action-to="searchRoute"
