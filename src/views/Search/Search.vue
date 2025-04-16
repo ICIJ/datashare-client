@@ -23,6 +23,7 @@ import { useSearchFilter } from '@/composables/useSearchFilter'
 import { useSearchBreadcrumb } from '@/composables/useSearchBreadcrumb'
 import { useViews } from '@/composables/useViews'
 import { LAYOUTS } from '@/enums/layouts'
+import { MODE_NAME } from '@/mode'
 import { useAppStore, useSearchStore } from '@/store/modules'
 
 const { toggleSettings, toggleFilters, toggleSidebar, isFiltersClosed } = useViews()
@@ -134,6 +135,7 @@ watchIndices(refreshRoute)
             :label="$t('search.emptyStateLabel')"
             :action-label="$t('search.emptyStateAction')"
             :action-to="{ name: 'task.documents.new', query: { project: searchStore.index } }"
+            :action-modes="[MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]"
           />
           <document-entries
             v-else
