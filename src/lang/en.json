@@ -184,7 +184,7 @@
   },
   "search": {
     "title": "Search documents",
-    "emptyStateLabel": "It’s lonely in here.Do you want to add documents?",
+    "emptyStateLabel": "Oh, it’s lonely in here... This project has no documents yet.",
     "emptyStateAction": "Add documents",
     "errors": {
       "badRequest": "Your search query is wrong",
@@ -1341,7 +1341,7 @@
     }
   },
   "projectViewOverview": {
-    "emptyStateLabel": "Oh, it’s lonely in here... This project has no documents. Do you want to add some?",
+    "emptyStateLabel": "Oh, it’s lonely in here... This project has no documents yet.",
     "emptyStateAction": "Add your first documents",
     "nav": {
       "insights": "Insights",
