@@ -2,7 +2,7 @@
 import { computed, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { isEmpty } from 'lodash'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 import image from '@/assets/images/illustrations/app-modal-saved-search-naming-light.svg'
 import imageDark from '@/assets/images/illustrations/app-modal-saved-search-naming-dark.svg'
@@ -20,6 +20,7 @@ const { event } = defineProps({
 
 const emit = defineEmits(['success', 'error'])
 const form = reactive({ name: event?.name ?? '' })
+const route = useRoute()
 const router = useRouter()
 const { toast } = useCore()
 const { save } = useSearchSaving()
@@ -32,12 +33,13 @@ async function confirmSaving() {
   try {
     await save({ ...event, ...form })
     const { href } = router.resolve({ name: 'search.saved.list' })
-    const body = t('searchSavingModal.success')
     const linkLabel = t('searchSavingModal.seeAll')
-    toast.success(body, { href, linkLabel })
+    const body = t('searchSavingModal.success')
+    const hasLink = route.name !== 'search.saved.list'
+    toast.success(body, hasLink ? { href, linkLabel } : null)
     emit('success')
   } catch (_) {
-    toast.error(t('searchSavingModal.danger'))
+    toast.error(t('searchSavingModal.error'))
     emit('error')
   }
 }
