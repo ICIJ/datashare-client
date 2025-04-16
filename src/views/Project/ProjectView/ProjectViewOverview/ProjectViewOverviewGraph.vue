@@ -17,6 +17,7 @@ defineProps({
     <project-view-overview-widgets :name="name" section="graph">
       <template #empty>
         <empty-state
+          image-max-width="265px"
           :image="projectsGraphEmpty"
           :image-dark="projectsGraphEmptyDark"
           :action-label="$t('projectViewOverviewGraph.emptyStateAction')"
