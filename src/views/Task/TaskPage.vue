@@ -100,7 +100,18 @@ function refresh() {
           {{ t(`task.${pageName}.list.info`) }}
         </dismissable-alert>
         <template v-if="!isLoading && noTasks">
-          <slot name="empty" :empty="noTasks">
+          <slot
+            name="empty"
+            :empty="noTasks"
+            :loading="isLoading"
+            :order="order"
+            :refresh="refresh"
+            :search-query="searchQuery"
+            :sort="sort"
+            :tasks="tasks"
+            :update-order="setOrder"
+            :update-sort="setSort"
+          >
             <empty-state :image="appBuilding" :image-dark="appBuildingDark">
               <template #label>
                 <i18n-t keypath="task.emptyStateLabel">
@@ -118,14 +129,15 @@ function refresh() {
           </slot>
         </template>
         <slot
-          :tasks="tasks"
-          :sort="sort"
+          :empty="noTasks"
+          :loading="isLoading"
           :order="order"
+          :refresh="refresh"
+          :search-query="searchQuery"
+          :sort="sort"
+          :tasks="tasks"
           :update-order="setOrder"
           :update-sort="setSort"
-          :empty="noTasks"
-          :refresh="refresh"
-          :loading="isLoading"
         />
       </div>
     </page-container>
