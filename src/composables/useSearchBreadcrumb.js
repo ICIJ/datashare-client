@@ -13,6 +13,8 @@ export function useSearchBreadcrumb() {
 
   const count = computed(() => entries.value.length)
 
+  const anyFilters = computed(() => count.value - indicesEntries.value.length > 0)
+
   function parseIndicesEntries(routeQuery) {
     const indices = compact(routeQuery.indices.split(','))
     const noXIcon = indices.length === 1
@@ -98,6 +100,7 @@ export function useSearchBreadcrumb() {
   }
 
   return {
+    anyFilters,
     entries,
     parseEntries,
     clearEntry,
