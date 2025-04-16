@@ -15,10 +15,10 @@
   },
   "addonCard": {
     "version": "Version: {v}",
-    "homepage":"Homepage:",
+    "homepage": "Homepage:",
     "install": "Install {v}",
-    "update":"Update to {v}",
-    "uninstall":"Uninstall"
+    "update": "Update to {v}",
+    "uninstall": "Uninstall"
   },
   "appModalConfirm": {
     "title": "Are you sure?",
@@ -151,8 +151,8 @@
     "noExcerpt": "This entity was extracted from the metadata."
   },
   "entityPopoverMentionOccurrences": {
-    "occurrences":  "This mention appears {offsets} times | This mention appears {offsets} time | This mention appears {offsets} times",
-    "projects":  "in {n} projects | in {n} project | in {n} projects:"
+    "occurrences": "This mention appears {offsets} times | This mention appears {offsets} time | This mention appears {offsets} times",
+    "projects": "in {n} projects | in {n} project | in {n} projects:"
   },
   "entityPopoverTabGroup": {
     "mentions": "Mentions",
@@ -324,7 +324,7 @@
     "expand": "Expand",
     "close": "Close"
   },
-  "documentCardCheckbox":{
+  "documentCardCheckbox": {
     "selectDocument": "Select this document"
   },
   "documentLocalSearchNav": {
@@ -342,11 +342,11 @@
     "next": "Next document"
   },
   "documentUserActions": {
-    "tags":"0 tags | 1 tag | {n} tags",
-    "comments":"0 comments | 1 comment | {n} comments",
-    "recommendations":"0 recommendations | 1 recommendation | {n} recommendations",
-    "folders":"in 0 folders | in 1 folder | in {n} folders",
-    "notes":"0 notes | 1 note | {n} notes"
+    "tags": "0 tags | 1 tag | {n} tags",
+    "comments": "0 comments | 1 comment | {n} comments",
+    "recommendations": "0 recommendations | 1 recommendation | {n} recommendations",
+    "folders": "in 0 folders | in 1 folder | in {n} folders",
+    "notes": "0 notes | 1 note | {n} notes"
   },
   "documentUserActionsCard": {
     "close": "Close"
@@ -360,33 +360,33 @@
     "info": "Tags are public to all project’s members."
   },
   "documentUserCommentsList": {
-    "hideComments":"Hide comments",
-    "showComments":"Show comments",
-    "noComments":"No comments on this document yet.",
-    "sortingText":"Oldest to newest",
-    "goToOldest":"Go to oldest",
-    "goToRecent":"Go to newest"
+    "hideComments": "Hide comments",
+    "showComments": "Show comments",
+    "noComments": "No comments on this document yet.",
+    "sortingText": "Oldest to newest",
+    "goToOldest": "Go to oldest",
+    "goToRecent": "Go to newest"
   },
   "documentUserComments": {
-    "warning":"Comments are public to project’s members."
+    "warning": "Comments are public to project’s members."
   },
   "documentUserCommentsActions": {
-    "placeholder":"Write your text"
+    "placeholder": "Write your text"
   },
   "documentUserCommentsListEntry": {
     "goToComment": "Go to comment (external link)"
   },
   "documentUserRecommendations": {
-    "warning":"Recommendations are public to all project’s members",
-    "noRecommendations":"No recommendations yet.",
+    "warning": "Recommendations are public to all project’s members",
+    "noRecommendations": "No recommendations yet.",
     "markAsRecommended": "Mark as recommended",
     "unmarkAsRecommended": "Unmark as recommended"
   },
   "documentUserTags": {
-    "tagListOthers":"Added by others",
-    "tagListYours":"Added by you",
+    "tagListOthers": "Added by others",
+    "tagListYours": "Added by you",
     "tagWarning": "Tags are public to project members",
-    "noTags":"No tags added yet."
+    "noTags": "No tags added yet."
   },
   "documentUserTagsAction": {
     "placeholder": "Add tags"
@@ -408,7 +408,7 @@
     "search": "Search all",
     "empty": "No documents found."
   },
-  "linkedDocumentCard" : {
+  "linkedDocumentCard": {
     "siblings": {
       "title": "{n} documents in the same folder | {n} document in the same folder | {n} documents in the same folder",
       "description": "Same extraction level as this document"
@@ -851,7 +851,7 @@
   },
   "taskDocumentsFormOcrAlert": {
     "useDefault": "Default OCR language is used.",
-    "isMissing": " OCR for '{language}' is not installed.",
+    "isMissing": "OCR for \"{language}\" is not installed.",
     "installOcrLanguage": "Choose among {availableLanguages} languages to install.",
     "tesseractNotInstalled": "Tesseract OCR is not installed."
   },
@@ -934,8 +934,8 @@
     "unknown": "Unknown task"
   },
   "task": {
-    "settingTitle":"{page} settings",
-    "settingDefaultTitle":"Page settings",
+    "settingTitle": "{page} settings",
+    "settingDefaultTitle": "Page settings",
     "title": "Tasks",
     "description": "Some tasks must be run in the background. Use this panel to manage them.",
     "noResults": "No results.",
@@ -998,26 +998,28 @@
       "list": {
         "emptyStateLabel": "There is no entity recognitions. Do you want to find entities?",
         "emptyStateAction": "Find entities",
-        "info":"Entity recognitions are tasks that you run in order to recognize and to list the entities in your documents.",
+        "info": "Entity recognitions are tasks that you run in order to recognize and to list the entities in your documents.",
         "searchPlaceholder": "Search tasks",
         "noResults": "No results.",
         "properties": {
           "id": "Id",
-          "name":"Name",
+          "name": "Name",
           "entitiesToFind": "Entities to find",
           "pipeline": "Model",
           "project": "Project",
           "createdAt": "Created on",
-          "progress":"Progress",
+          "progress": "Progress",
           "result": "Result",
-          "state":"State"
+          "state": "State"
         }
       },
       "new": {
-        "title":"Find entities"
+        "title": "Find entities"
       },
       "form": {
-        "projectSelector": {"label": "Select a project"},
+        "projectSelector": {
+          "label": "Select a project"
+        },
         "submit": "Go",
         "failedPipelines": "Failed to retrieve pipelines",
         "defaultPipeline": "recommended",
@@ -1035,15 +1037,21 @@
         },
         "findEntities": {
           "label": "Find",
-          "options": {"emails": "Emails", "named-entities": "People, organisations and locations"}
+          "options": {
+            "emails": "Emails",
+            "named-entities": "People, organisations and locations"
+          }
         },
         "offline": {
           "label": "Do you want to work offline?",
           "description": "Select 'No' if you want to sync latest models.",
-          "options": {"yes": "Yes", "no": "No"}
+          "options": {
+            "yes": "Yes",
+            "no": "No"
+          }
         },
-        "success":"Find entities task is launched",
-        "error":"An error occurred when creating the task: {error}"
+        "success": "Find entities task is launched",
+        "error": "An error occurred when creating the task: {error}"
       }
     },
     "documents": {
@@ -1056,35 +1064,49 @@
         "noResults": "No results.",
         "properties": {
           "id": "Id",
-          "name":"Name",
-          "documents":"Documents",
-          "project":"Project",
+          "name": "Name",
+          "documents": "Documents",
+          "project": "Project",
           "createdAt": "Created on",
-          "progress":"Progress",
+          "progress": "Progress",
           "result": "Result",
-          "state":"State"
+          "state": "State"
         }
       },
       "new": {
-        "title":"Add documents"
+        "title": "Add documents"
       },
       "form": {
-        "projectSelector": {"label": "Select a project"},
-        "path":{"label": "Select the folder or subfolder to analyze","description":"The entire Datashare home will be indexed by default."},
-        "extractingLanguage": {"label": "Choose the language to extract","description":"Missing yours? Choose among 187 languages to install."},
+        "projectSelector": {
+          "label": "Select a project"
+        },
+        "path": {
+          "label": "Select the folder or subfolder to analyze",
+          "description": "The entire Datashare home will be indexed by default."
+        },
+        "extractingLanguage": {
+          "label": "Choose the language to extract",
+          "description": "Missing yours? Choose among 187 languages to install."
+        },
         "extractOcr": {
           "label": "Extract text from images and PDFs (OCR)",
-          "description":"If yes, Datashare will run OCR (Optical Character Recognition). It can take up to 10 times longer.",
-          "options": {"yes": "Yes", "no": "No"}
+          "description": "If yes, Datashare will run OCR (Optical Character Recognition). It can take up to 10 times longer.",
+          "options": {
+            "yes": "Yes",
+            "no": "No"
+          }
         },
-        "skipIndexedDocuments":{
+        "skipIndexedDocuments": {
           "label": "Skip already indexed documents",
-          "description":"If yes, Datashare will only extract text from documents that are not indexed yet.",
-          "options": {"yes": "Yes", "no": "No"}
+          "description": "If yes, Datashare will only extract text from documents that are not indexed yet.",
+          "options": {
+            "yes": "Yes",
+            "no": "No"
+          }
         },
         "submit": "Add",
-        "success":"Add document task is launched",
-        "error":"An error occurred when creating the task: {error}"
+        "success": "Add document task is launched",
+        "error": "An error occurred when creating the task: {error}"
       }
     },
     "batch-download": {
@@ -1095,13 +1117,13 @@
         "info": "Batch downloads are password-protected zip files containing all the documents from one of your searches.",
         "searchPlaceholder": "Search batch downloads",
         "properties": {
-          "name":"Name",
+          "name": "Name",
           "createdAt": "Created on",
-          "projects":"Projects",
-          "progress":"Progress",
+          "projects": "Projects",
+          "progress": "Progress",
           "size": "Size",
-          "state":"State",
-          "id":"Id"
+          "state": "State",
+          "id": "Id"
         }
       }
     },
@@ -1115,15 +1137,15 @@
         "searchPlaceholder": "Search batch searches",
         "noResults": "No results.",
         "properties": {
-          "privacy":"Privacy",
-          "queries":"Queries",
-          "documents":"Documents",
-          "projects":"Projects",
-          "author":"Author",
-          "name":"Name",
+          "privacy": "Privacy",
+          "queries": "Queries",
+          "documents": "Documents",
+          "projects": "Projects",
+          "author": "Author",
+          "name": "Name",
           "createdAt": "Created on",
-          "progress":"Progress",
-          "state":"State"
+          "progress": "Progress",
+          "state": "State"
         }
       },
       "form": {
@@ -1180,16 +1202,16 @@
         "submitSuccess": "Batch search created successfully."
       },
       "new": {
-        "title":"Create new batch search"
+        "title": "Create new batch search"
       }
     },
     "batch-search-queries": {
       "list": {
         "title": "Queries",
-        "noMatches":"No queries matches your search.",
+        "noMatches": "No queries matches your search.",
         "fields": {
           "query": "Query",
-          "count":"Documents",
+          "count": "Documents",
           "queryNumber": "Query position"
         }
       }
@@ -1271,15 +1293,15 @@
     "deleteAfterRelaunch": "Delete current batch search after relaunch"
   },
   "buttonRowAction": {
-    "relaunch":"Relaunch",
-    "stop":"Stop",
-    "delete":"Delete",
-    "edit":"Edit",
+    "relaunch": "Relaunch",
+    "stop": "Stop",
+    "delete": "Delete",
+    "edit": "Edit",
     "search": "Search"
   },
   "textTruncate": {
     "seeLess": "See less",
-    "seeMore":"See more"
+    "seeMore": "See more"
   },
   "pageSettings": {
     "title": "Page settings"
@@ -1287,7 +1309,7 @@
   "pageSettingsSectionGroupAll": {
     "label": "All"
   },
-  "pageTable":{
+  "pageTable": {
     "toggleDetails": "Toggle details"
   },
   "projects": {
@@ -1308,8 +1330,8 @@
   },
   "projectEntriesTableHead": {
     "name": "Name of the project",
-    "description": "Description" ,
-    "documents": "Documents" ,
+    "description": "Description",
+    "documents": "Documents",
     "updatedOn": "Updated on",
     "links": "Links",
     "actions": "Actions"
@@ -1358,10 +1380,10 @@
     "emptyStateLabelArticleLink": "article",
     "emptyStateAction": "Install"
   },
-  "projectViewEdit":{
+  "projectViewEdit": {
     "title": "Edit project",
     "notify": {
-      "update":{
+      "update": {
         "succeed": "The project was saved",
         "succeedBody": "Project saved.",
         "failed": "Unable to edit the project",
@@ -1458,10 +1480,11 @@
       "noResults": "No matching result for the query '{query}'"
     },
     "title": "Settings",
-    "description": {"title": "Don't change these settings if you don't know what you're doing."},
-    "general":{
-      "title": "General" ,
-
+    "description": {
+      "title": "Don't change these settings if you don't know what you're doing."
+    },
+    "general": {
+      "title": "General",
       "info": "Don’t change these settings if you don’t know what you are doing.",
       "searchPlaceholder": "Search settings"
     },
@@ -1478,13 +1501,13 @@
     "addons": {
       "installFromUrl": "Install from a URL",
       "install": "Install",
-      "plugins":{
+      "plugins": {
         "title": "Plugins",
         "info": "Plugins are front-end modules to add new features in Datashare's user interface.",
         "searchPlaceholder": "Search plugins",
         "errorLabel": "An error occurred while retrieving the plugins. Refresh the page or contact the support."
       },
-      "extensions":{
+      "extensions": {
         "title": "Extensions",
         "info": "Extensions are back-end modules to add new features to store and manipulate data with Datashare.",
         "searchPlaceholder": "Search extensions",
@@ -1519,16 +1542,16 @@
   },
   "viewSettings": {
     "perPage": "{title} per page",
-    "properties":"Properties",
-    "layout" : {
-      "label":"Layout",
-      "grid" : "Grid",
-      "table" : "Table",
-      "list" : "List"
+    "properties": "Properties",
+    "layout": {
+      "label": "Layout",
+      "grid": "Grid",
+      "table": "Table",
+      "list": "List"
     },
-    "sortBy" : {
-      "label":"Sort by",
-      "format" : "{name} ({order})"
+    "sortBy": {
+      "label": "Sort by",
+      "format": "{name} ({order})"
     },
     "options": {
       "name": "Name",
@@ -1549,23 +1572,23 @@
     },
     "order": {
       "default": {
-        "asc":"ascending",
+        "asc": "ascending",
         "desc": "descending"
       },
       "alpha": {
-        "asc":"A to Z",
+        "asc": "A to Z",
         "desc": "Z to A"
       },
       "number": {
-        "asc":"increasing",
+        "asc": "increasing",
         "desc": "decreasing"
       },
       "quantity": {
-        "asc":"low",
+        "asc": "low",
         "desc": "high"
       },
       "date": {
-        "asc":"old first",
+        "asc": "old first",
         "desc": "recent first"
       }
     }
