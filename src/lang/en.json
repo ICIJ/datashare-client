@@ -1192,10 +1192,12 @@
     },
     "batch-search-results": {
       "list": {
-        "title": "All documents"
+        "title": "All documents",
+        "emptyStateLabel": "Queries had no matches."
       },
       "show": {
         "title": "Query results",
+        "emptyStateLabel": "This query had no matches.",
         "fields": {
           "query": "Query",
           "documentNumber": "Rank",
