@@ -2,10 +2,7 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import appBuilding from '@/assets/images/illustrations/app-building.svg'
-import appBuildingDark from '@/assets/images/illustrations/app-building-dark.svg'
 import DismissableAlert from '@/components/Dismissable/DismissableAlert'
-import EmptyState from '@/components/EmptyState/EmptyState'
 import PageContainer from '@/components/PageContainer/PageContainer'
 import PageHeader from '@/components/PageHeader/PageHeader'
 import TaskActions from '@/components/Task/TaskActions'
@@ -111,22 +108,7 @@ function refresh() {
             :tasks="tasks"
             :update-order="setOrder"
             :update-sort="setSort"
-          >
-            <empty-state :image="appBuilding" :image-dark="appBuildingDark">
-              <template #label>
-                <i18n-t keypath="task.emptyStateLabel">
-                  <template #link>
-                    <i18n-t
-                      keypath="task.emptyStateLabelLink"
-                      target="_blank"
-                      href="https://icij.gitbook.io/datashare/local-mode/"
-                      tag="a"
-                    />
-                  </template>
-                </i18n-t>
-              </template>
-            </empty-state>
-          </slot>
+          />
         </template>
         <slot
           :empty="noTasks"
