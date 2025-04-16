@@ -1186,6 +1186,7 @@
     "batch-search-queries": {
       "list": {
         "title": "Queries",
+        "noMatches":"No queries matches your search.",
         "fields": {
           "query": "Query",
           "count":"Documents",
