@@ -45,6 +45,9 @@ defineProps({
         </div>
       </template>
     </div>
+    <div v-if="!loading && !entries.length" class="p-3 text-secondary text-center">
+      {{ $t('documentEntries.noMatches') }}
+    </div>
     <slot />
   </div>
 </template>
