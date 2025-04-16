@@ -101,10 +101,8 @@ export const useSearchStore = defineSuffixedStore('search', () => {
 
   const toRouteQueryWithStamp = computed(() => {
     // A random string of 6 chars
-    const stamp = String.fromCharCode.apply(
-      null,
-      range(6).map(() => random(97, 122))
-    )
+    const seed = range(6).map(() => random(97, 122))
+    const stamp = String.fromCharCode.apply(null, seed)
     return { ...toRouteQuery.value, stamp }
   })
 
