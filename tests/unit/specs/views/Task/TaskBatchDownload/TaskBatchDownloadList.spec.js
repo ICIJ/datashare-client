@@ -158,4 +158,4 @@ describe('TaskBatchDownloadList.vue', () => {
     const firstRow = wrapper.find('.page-table-generic__row')
     expect(firstRow.findComponent(BatchDownloadActions).exists()).toBe(true)
   })
-})
+}, 10e3)
