@@ -144,6 +144,9 @@ watch(toRef(route, 'query'), fetchBatchSearchQueries, { deep: true, immediate: t
           <template #row-actions="{ item }">
             <button-row-action-search :to="{ name: 'search', query: { indices, q: item.query } }" />
           </template>
+          <template #empty>
+            {{ $t('task.batch-search-queries.list.noMatches') }}
+          </template>
         </page-table-generic>
       </b-col>
       <b-col lg="4" cols="12">
