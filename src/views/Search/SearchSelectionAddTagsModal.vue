@@ -4,59 +4,69 @@ import bodybuilder from 'bodybuilder'
 import { flatten, get, map } from 'lodash'
 import { useI18n } from 'vue-i18n'
 
-import FormControlTag from '@/components/Form/FormControl/FormControlTag/FormControlTag'
-import { useCore } from '@/composables/useCore'
 import imageLight from '@/assets/images/illustrations/app-modal-tag-add-light.svg'
 import imageDark from '@/assets/images/illustrations/app-modal-tag-add-dark.svg'
 import ImageModeSource from '@/components/ImageMode/ImageModeSource'
 import AppModalPrompt from '@/components/AppModal/AppModalPrompt'
+import FormControlTag from '@/components/Form/FormControl/FormControlTag/FormControlTag'
+import { useCore } from '@/composables/useCore'
+
 const props = defineProps({
   indices: { type: Array, default: () => [] },
   nbDocs: { type: Number }
 })
+
 const emit = defineEmits(['submit'])
+
 const { core } = useCore()
 const { t } = useI18n()
+
 const tags = ref([])
 const allTags = ref([])
-const imageHeaderLight = imageLight
-const imageHeaderDark = imageDark
+
 const submit = () => {
   emit('submit', {
     trigger: 'submit',
     tags: tags.value
   })
 }
+
 const fetchAllTagsByIndex = async (index) => {
   const body = bodybuilder().size(0).agg('terms', 'tags').build()
   const response = await core.api.elasticsearch.search({ index, body })
   const buckets = get(response, 'aggregations.agg_terms_tags.buckets', [])
   return buckets.map(({ key: label }) => label)
 }
+
 const hasTags = computed(() => tags.value.length > 0)
 
 async function fetchAllTags() {
   const results = await Promise.all(map(props.indices, (index) => fetchAllTagsByIndex(index)))
   allTags.value = flatten(results)
 }
+
 const closeAllowed = ref(true)
+
 const preventFn = (e) => {
   if (!closeAllowed.value) {
     closeAllowed.value = true
     e.preventDefault()
   }
 }
+
 const formControlTagRef = useTemplateRef('formControlTagRef')
+
 async function onShown() {
   await nextTick(formControlTagRef.value.focus)
 }
+
 onBeforeMount(fetchAllTags)
 </script>
 
 <template>
   <app-modal-prompt
     class="search-selection-add-tags-modal"
-    :image="imageHeaderLight"
+    :image="imageLight"
     :title="t('searchSelectionAddTagsModal.title', nbDocs)"
     :ok-disabled="!hasTags"
     :ok-title="t('searchSelectionAddTagsModal.okTitle')"
@@ -65,7 +75,7 @@ onBeforeMount(fetchAllTags)
     @submit="submit"
   >
     <template #header-image-source>
-      <image-mode-source :src="imageHeaderDark" color-mode="dark" />
+      <image-mode-source :src="imageDark" color-mode="dark" />
     </template>
     <div class="d-flex flex-column gap-3">
       <form-control-tag
@@ -86,6 +96,7 @@ onBeforeMount(fetchAllTags)
     </div>
   </app-modal-prompt>
 </template>
+
 <style lang="scss">
 .search-selection-add-tags-modal {
   & .modal-body {
