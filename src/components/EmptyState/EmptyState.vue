@@ -50,7 +50,7 @@ const hasAction = computed(() => {
 </script>
 
 <template>
-  <div class="empty-state d-flex flex-column align-items-center text-center gap-4 py-4">
+  <div class="empty-state d-flex flex-column align-items-center text-center py-4">
     <empty-state-label :label="label">
       <slot name="label" />
     </empty-state-label>
@@ -77,5 +77,6 @@ const hasAction = computed(() => {
 .empty-state {
   max-width: 400px;
   margin: 0 auto;
+  gap: 2rem;
 }
 </style>
