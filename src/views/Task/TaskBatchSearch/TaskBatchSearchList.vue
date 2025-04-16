@@ -53,11 +53,8 @@ onBeforeMount(fetchMe)
     hide-stop-pending
   >
     <template #empty="{ searchQuery }">
-      <p v-if="searchQuery" class="p-3 text-secondary text-center">
-        {{ $t('task.batch-search.list.noMatches') }}
-      </p>
       <empty-state
-        v-else
+        v-if="!searchQuery"
         image-max-width="195px"
         :image="tasksBatchSearchesEmpty"
         :label="$t('task.batch-search.list.emptyStateLabel')"
@@ -73,9 +70,9 @@ onBeforeMount(fetchMe)
         @update:modelValue="setPage"
       />
     </template>
-    <template #default="{ tasks, sort, order, updateSort, updateOrder, refresh, empty, loading }">
+    <template #default="{ tasks, sort, order, updateSort, updateOrder, refresh, searchQuery, empty, loading }">
       <page-table-generic
-        v-if="loading || !empty"
+        v-if="!loadding && (!empty || searchQuery)"
         :items="tasks"
         :fields="propertiesModelValueOptions"
         :sort="sort"
@@ -84,6 +81,11 @@ onBeforeMount(fetchMe)
         @update:sort="updateSort"
         @update:order="updateOrder"
       >
+        <template #empty>
+          <p class="text-secondary text-center m-3">
+            {{ $t('task.batch-search.list.noMatches') }}
+          </p>
+        </template>
         <template #cell(state)="{ item }">
           <display-status :value="item.state" />
         </template>
