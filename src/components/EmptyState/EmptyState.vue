@@ -5,6 +5,9 @@ import EmptyStateLabel from './EmptyStateLabel'
 import EmptyStateAction from './EmptyStateAction'
 import EmptyStateImage from './EmptyStateImage'
 
+import { MODE_NAME } from '@/mode'
+import { useMode } from '@/composables/useMode'
+
 const props = defineProps({
   label: {
     type: String
@@ -38,14 +41,20 @@ const props = defineProps({
   actionTo: {
     type: Object
   },
+  actionModes: {
+    type: Array,
+    default: () => [MODE_NAME.SERVER, MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]
+  },
   actionVariant: {
     type: String,
     default: 'action'
   }
 })
 
+const { modeName } = useMode()
+
 const hasAction = computed(() => {
-  return props.actionLabel && (props.actionHref || props.actionTo)
+  return props.actionModes.includes(modeName.value) && props.actionLabel && (props.actionHref || props.actionTo)
 })
 </script>
 
@@ -75,7 +84,7 @@ const hasAction = computed(() => {
 
 <style lang="scss" scoped>
 .empty-state {
-  max-width: 550px;
+  max-width: 500px;
   margin: 0 auto;
   gap: 2rem;
 }
