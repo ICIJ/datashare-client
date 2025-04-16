@@ -4,6 +4,7 @@ import ProjectViewOverviewWidgets from './ProjectViewOverviewWidgets'
 import projectsGraphEmpty from '@/assets/images/illustrations/projects-graph-empty-light.svg'
 import projectsGraphEmptyDark from '@/assets/images/illustrations/projects-graph-empty-dark.svg'
 import EmptyState from '@/components/EmptyState/EmptyState'
+import { MODE_NAME } from '@/mode'
 
 defineProps({
   name: {
@@ -22,6 +23,7 @@ defineProps({
           :image-dark="projectsGraphEmptyDark"
           :action-label="$t('projectViewOverviewGraph.emptyStateAction')"
           :action-to="{ name: 'settings.extensions' }"
+          :action-modes="[MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]"
         >
           <template #label>
             <i18n-t keypath="projectViewOverviewGraph.emptyStateLabel">

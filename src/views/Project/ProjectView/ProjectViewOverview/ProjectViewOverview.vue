@@ -12,6 +12,7 @@ import ProjectJumbotron from '@/components/Project/ProjectJumbotron/ProjectJumbo
 import SearchBar from '@/components/Search/SearchBar/SearchBar'
 import TabGroupNavigation from '@/components/TabGroup/TabGroupNavigation/TabGroupNavigation'
 import TabGroupNavigationEntry from '@/components/TabGroup/TabGroupNavigation/TabGroupNavigationEntry'
+import { MODE_NAME } from '@/mode'
 
 const indices = computed(() => {
   return [props.name]
@@ -109,6 +110,7 @@ watch(toRef(props, 'name'), fetch, { immediate: true })
         action-icon="plus"
         :action-label="$t('projectViewOverview.emptyStateAction')"
         :action-to="{ name: 'task.documents.new', query: { project: project.name } }"
+        :action-modes="[MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]"
       />
     </app-wait>
   </div>
