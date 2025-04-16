@@ -1085,8 +1085,7 @@
           "description": "The entire Datashare home will be indexed by default."
         },
         "extractingLanguage": {
-          "label": "Choose the language to extract",
-          "description": "Missing yours? Choose among 187 languages to install."
+          "label": "Choose the language to extract"
         },
         "extractOcr": {
           "label": "Extract text from images and PDFs (OCR)",

@@ -139,7 +139,11 @@ watch(
     <form-fieldset-i18n name="source-path" translation-key="task.documents.form.path">
       <form-control-path v-model="path" :path="sourcePath" hide-folder-icon />
     </form-fieldset-i18n>
-    <form-fieldset-i18n name="extracting-language" translation-key="task.documents.form.extractingLanguage">
+    <form-fieldset-i18n
+      name="extracting-language"
+      translation-key="task.documents.form.extractingLanguage"
+      with-description
+    >
       <form-control-extracting-language v-model="language" />
     </form-fieldset-i18n>
     <form-fieldset-i18n
