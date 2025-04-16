@@ -101,9 +101,18 @@ function refresh() {
         </dismissable-alert>
         <template v-if="!isLoading && noTasks">
           <slot name="empty" :empty="noTasks">
-            <empty-state :label="t(`task.empty`)" :image="appBuilding" :image-dark="appBuildingDark">
+            <empty-state :image="appBuilding" :image-dark="appBuildingDark">
               <template #label>
-                <span v-html="t(`task.${pageName}.list.empty`)"></span>
+                <i18n-t keypath="task.emptyStateLabel">
+                  <template #link>
+                    <i18n-t
+                      keypath="task.emptyStateLabelLink"
+                      target="_blank"
+                      href="https://icij.gitbook.io/datashare/local-mode/"
+                      tag="a"
+                    />
+                  </template>
+                </i18n-t>
               </template>
             </empty-state>
           </slot>
