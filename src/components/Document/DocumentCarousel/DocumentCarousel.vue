@@ -1,9 +1,8 @@
 <script setup>
 import { computed } from 'vue'
+import { TinyPagination } from '@icij/murmur-next'
 
 import DocumentCarouselNav from './DocumentCarouselNav'
-
-import RowPaginationDocuments from '@/components/RowPagination/RowPaginationDocuments'
 
 const position = defineModel('position', {
   type: Number,
@@ -16,9 +15,6 @@ defineProps({
   total: {
     type: Number,
     default: 0
-  },
-  backward: {
-    type: Boolean
   },
   disabledPrevious: {
     type: Boolean
@@ -40,12 +36,16 @@ const adjustedPosition = computed({
 
 <template>
   <div class="document-carousel">
-    <row-pagination-documents
+    <tiny-pagination
       v-model="adjustedPosition"
       :per-page="1"
       :total-rows="total"
       class="document-carousel__pagination mx-auto py-1"
-    />
+    >
+      <template #page>
+        {{ $t('documentCarousel.page') }}
+      </template>
+    </tiny-pagination>
     <div class="document-carousel__content p-3">
       <document-carousel-nav
         :icon="PhCaretLeft"
@@ -122,28 +122,6 @@ const adjustedPosition = computed({
       &:deep(.document-carousel-entry) {
         padding-inline: $spacer-xxs;
         margin-inline: $spacer-xxs;
-
-        &.sliding-backward,
-        &.sliding-forward {
-          &-move,
-          &-enter-active,
-          &-move-active {
-            transition: all 2s;
-          }
-
-          &-leave-active {
-            position: absolute;
-            visibility: hidden;
-          }
-        }
-
-        &.sliding-backward-enter-from {
-          transform: translateX(-100%);
-        }
-
-        &.sliding-forward-enter-from {
-          transform: translateX(100%);
-        }
       }
     }
   }
