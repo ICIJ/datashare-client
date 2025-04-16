@@ -45,6 +45,7 @@ const blur = () => nextTick(() => window.document?.activeElement.blur())
     :vertical="vertical"
     :disabled="!isDownloadAllowed"
     :href="href"
+    @click.exact.prevent
     @focus="blur"
   />
   <document-download-popover
