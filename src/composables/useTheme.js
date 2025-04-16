@@ -1,8 +1,8 @@
 import { reactive } from 'vue'
 
-import themeAuto from '@/assets/images/illustrations/theme-auto.png'
-import themeLight from '@/assets/images/illustrations/theme-light.png'
-import themeDark from '@/assets/images/illustrations/theme-dark.png'
+import themeAuto from '@/assets/images/theme-auto.png'
+import themeLight from '@/assets/images/theme-light.png'
+import themeDark from '@/assets/images/theme-dark.png'
 
 let eventAdded = false
 
