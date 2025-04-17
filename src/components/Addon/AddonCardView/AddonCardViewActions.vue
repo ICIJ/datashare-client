@@ -5,25 +5,40 @@ import { computed } from 'vue'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
 const props = defineProps({
-  shouldInstall: { type: Boolean },
-  shouldUpdate: { type: Boolean },
-  version: { type: String },
-  recommendedVersion: { type: String, required: true },
-  loading: { type: Boolean }
+  shouldInstall: {
+    type: Boolean
+  },
+  shouldUpdate: {
+    type: Boolean
+  },
+  version: {
+    type: String
+  },
+  recommendedVersion: {
+    type: String,
+    required: true
+  },
+  loading: {
+    type: Boolean
+  }
 })
+
 const emit = defineEmits(['install', 'update', 'uninstall'])
 const { t } = useI18n()
 
-const versionLabel = computed(() => t('addonCard.version', { v: props.version }))
-const installLabel = computed(() => t('addonCard.install', { v: props.recommendedVersion }))
-const updateLabel = computed(() => t('addonCard.update', { v: props.recommendedVersion }))
-const uninstallLabel = computed(() => t('addonCard.uninstall'))
+const versionLabel = computed(() => t('addonCardView.version', { v: props.version }))
+const installLabel = computed(() => t('addonCardView.install', { v: props.recommendedVersion }))
+const updateLabel = computed(() => t('addonCardView.update', { v: props.recommendedVersion }))
+const uninstallLabel = computed(() => t('addonCardView.uninstall'))
+
 const installAddon = () => {
   emit('install')
 }
+
 const updateAddon = () => {
   emit('update')
 }
+
 const uninstallAddon = () => {
   emit('uninstall')
 }
@@ -40,8 +55,9 @@ const uninstallAddon = () => {
       variant="action"
       class="flex-grow-0"
       @click="installAddon"
-      >{{ installLabel }}</button-icon
     >
+      {{ installLabel }}
+    </button-icon>
     <template v-else>
       <button-icon
         v-if="shouldUpdate"
@@ -51,11 +67,12 @@ const uninstallAddon = () => {
         variant="action"
         class="flex-grow-0"
         @click="updateAddon"
-        >{{ updateLabel }}</button-icon
       >
-      <span v-if="version" class="addon-card-view-actions__text text-secondary-emphasis text-nowrap">{{
-        versionLabel
-      }}</span>
+        {{ updateLabel }}
+      </button-icon>
+      <span v-if="version" class="addon-card-view-actions__text text-secondary-emphasis text-nowrap">
+        {{ versionLabel }}
+      </span>
       <button-icon
         :loading="loading"
         :disabled="loading"
@@ -63,8 +80,9 @@ const uninstallAddon = () => {
         variant="outline-secondary"
         class="addon-card__uninstall"
         @click="uninstallAddon"
-        >{{ uninstallLabel }}</button-icon
       >
+        {{ uninstallLabel }}
+      </button-icon>
     </template>
   </div>
 </template>

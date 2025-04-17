@@ -14,11 +14,27 @@
     "building": "Our team is still crafting something awesome for this page. Stay tuned!"
   },
   "addonCard": {
+    "plugin": {
+      "submitSuccess": "Extension successfully installed, please restart Datashare.",
+      "submitError": "Error while installing the extension.",
+      "deleteSuccess": "Plugin successfully deleted.",
+      "deleteError": "Error while deleting the plugin."
+    },
+    "extension": {
+      "submitSuccess": "Plugin successfully installed.",
+      "submitError": "Error while installing the plugin.",
+      "deleteSuccess": "Extension successfully deleted.",
+      "deleteError": "Error while deleting the extension."
+    }
+  },
+  "addonCardViewActions": {
     "version": "Version: {v}",
-    "homepage": "Homepage:",
     "install": "Install {v}",
     "update": "Update to {v}",
     "uninstall": "Uninstall"
+  },
+  "addonCardViewDetails": {
+    "homepage": "Homepage:"
   },
   "appModalConfirm": {
     "title": "Are you sure?",
@@ -1503,12 +1519,16 @@
       "plugins": {
         "title": "Plugins",
         "info": "Plugins are front-end modules to add new features in Datashare's user interface.",
+        "submitSuccess": "Plugin successfully installed.",
+        "submitError": "Error while installing the plugin.",
         "searchPlaceholder": "Search plugins",
         "errorLabel": "An error occurred while retrieving the plugins. Refresh the page or contact the support."
       },
       "extensions": {
         "title": "Extensions",
         "info": "Extensions are back-end modules to add new features to store and manipulate data with Datashare.",
+        "submitSuccess": "Extension successfully installed, please restart Datashare.",
+        "submitError": "Error while installing the extension.",
         "searchPlaceholder": "Search extensions",
         "errorLabel": "An error occurred while retrieving the extensions. Refresh the page or contact the support."
       }
@@ -1641,26 +1661,6 @@
       "label": "See search results"
     }
   },
-  "tasksList": {
-    "empty": "You have not yet started any tasks.",
-    "stop": "Stop this task",
-    "encrypted": "This file is encrypted. The password has been sent to you by email."
-  },
-  "insights": {
-    "title": "Insights",
-    "selectProject": "Select a project"
-  },
-  "inlineDirectoryPicker": {
-    "header": {
-      "browseBtn": {
-        "browse": "Browse",
-        "close": "Close"
-      }
-    },
-    "browser": {
-      "empty": "No sub-folders"
-    }
-  },
   "widget": {
     "noData": "No data",
     "noRecommendations": "No recommendations",
@@ -1734,51 +1734,8 @@
     "organization": "organization | organizations",
     "email": "email | emails"
   },
-  "plugin": {
-    "submitSuccess": "Plugin successfully installed.",
-    "submitError": "Error while installing the plugin.",
-    "deleteSuccess": "Plugin successfully deleted.",
-    "deleteError": "Error while deleting the plugin.",
-    "version": "Version {version}",
-    "officialVersion": "Official version",
-    "homePage": "Home page",
-    "install": "Install",
-    "uninstall": "Uninstall",
-    "update": "Update",
-    "installFromUrl": "Install plugin from URL"
-  },
-  "extension": {
-    "submitSuccess": "Extension successfully installed, please restart Datashare.",
-    "submitError": "Error while installing the extension.",
-    "deleteSuccess": "Extension successfully deleted.",
-    "deleteError": "Error while deleting the extension.",
-    "version": "Version {version}",
-    "officialVersion": "Official version",
-    "homePage": "Home page",
-    "install": "Install now",
-    "uninstall": "Uninstall",
-    "update": "Update",
-    "installFromUrl": "Install extension from URL"
-  },
-  "treeView": {
-    "hits": "no documents | 1 document | {hits} documents",
-    "docs": "doc | docs",
-    "datadir": "Home",
-    "all": "All",
-    "searchPath": "Search in this directory",
-    "includingIndividualDocuments": "including individual documents"
-  },
-  "quickItemNav": {
-    "previous": {
-      "label": "Previous",
-      "tooltipMac": "Previous document (<kbd>⌘</kbd> + <kbd>←</kbd>)",
-      "tooltipOthers": "Previous document (<kbd>ctrl</kbd> + <kbd>←</kbd>)"
-    },
-    "next": {
-      "label": "Next",
-      "tooltipMac": "Next document (<kbd>⌘</kbd> + <kbd>→</kbd>)",
-      "tooltipOthers": "Next document (<kbd>ctrl</kbd> + <kbd>→</kbd>)"
-    }
+  "pathTreeBreadcrumb": {
+    "datadir": "Home"
   },
   "projectCardUpdateDate": {
     "label": "Updated:"

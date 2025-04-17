@@ -27,8 +27,8 @@ const error = ref(true)
 const filterTerm = ref('')
 
 const installFromUrl = waitFor(async (urlToInstall) => {
-  const successMessage = t(`${props.addonType}.submitSuccess`)
-  const errorMessage = t(`${props.addonType}.submitError`)
+  const successMessage = t(`settings.addons.${props.addonType}.submitSuccess`)
+  const errorMessage = t(`settings.addons.${props.addonType}.submitError`)
   const promise = installAddonFromUrlFn.value(urlToInstall)
   await toastedPromise(promise, { successMessage, errorMessage })
   url.value = ''

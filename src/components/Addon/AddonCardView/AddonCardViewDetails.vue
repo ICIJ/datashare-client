@@ -20,7 +20,7 @@ defineProps({
 
 const { t } = useI18n()
 
-const homepageLabel = computed(() => t('addonCard.homepage'))
+const homepageLabel = computed(() => t('addonCardViewDetails.homepage'))
 </script>
 
 <template>
