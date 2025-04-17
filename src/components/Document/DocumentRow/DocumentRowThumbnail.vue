@@ -1,5 +1,5 @@
 <script setup>
-import DocumentThumbnail from '@/components/Document/DocumentThumbnail'
+import DocumentThumbnail from '@/components/Document/DocumentThumbnail/DocumentThumbnail'
 import { useDocumentModal } from '@/composables/useDocument'
 
 const props = defineProps({

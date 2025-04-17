@@ -5,7 +5,7 @@ import DocumentViewerModalTitle from './DocumentViewerModalTitle'
 import DocumentViewerModalNav from './DocumentViewerModalNav'
 
 import AppModal from '@/components/AppModal/AppModal'
-import DocumentThumbnail from '@/components/Document/DocumentThumbnail'
+import DocumentThumbnail from '@/components/Document/DocumentThumbnail/DocumentThumbnail'
 import useContrastVariant from '@/composables/useContrastVariant'
 
 const props = defineProps({

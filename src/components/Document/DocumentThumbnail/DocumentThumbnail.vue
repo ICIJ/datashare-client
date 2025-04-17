@@ -2,24 +2,38 @@
   <div
     v-b-tooltip.body.right="{ delay: tooltipDelay }"
     class="document-thumbnail"
-    :class="thumbnailClass"
-    :style="thumbnailStyle"
+    :class="classList"
+    :style="style"
     :title="title"
   >
-    <img v-if="isActivated" :alt="thumbnailAlt" class="document-thumbnail__image" :src="thumbnailSrc" />
-    <span v-if="!loaded && document.contentTypeIcon" class="document-thumbnail__placeholder">
-      <phosphor-icon :name="document.contentTypeIcon" :size="String(size)" />
-    </span>
-    <span class="document-thumbnail__overlay">
-      <phosphor-icon :name="overlayIcon" :size="String(size)" />
-    </span>
+    <document-thumbnail-image
+      v-if="showImage"
+      class="document-thumbnail__image"
+      :alt="thumbnailAlt"
+      :src="thumbnailSrc"
+      :crop="crop"
+      :fit="fit"
+    />
+    <document-thumbnail-placeholder
+      v-if="showPlaceholder"
+      class="document-thumbnail__placeholder"
+      :document="document"
+      :size="String(size)"
+    />
+    <document-thumbnail-overlay
+      v-if="showOverlay"
+      class="document-thumbnail__overlay"
+      :icon="overlayIcon"
+      :size="String(size)"
+    />
   </div>
 </template>
 
 <script>
-import { PhosphorIcon } from '@icij/murmur-next'
-
 import preview from '@/mixins/preview'
+import DocumentThumbnailImage from '@/components/Document/DocumentThumbnail/DocumentThumbnailImage'
+import DocumentThumbnailPlaceholder from '@/components/Document/DocumentThumbnail/DocumentThumbnailPlaceholder'
+import DocumentThumbnailOverlay from '@/components/Document/DocumentThumbnail/DocumentThumbnailOverlay'
 
 /**
  * The document's thumbnail (using the preview) server
@@ -27,78 +41,49 @@ import preview from '@/mixins/preview'
 export default {
   name: 'DocumentThumbnail',
   components: {
-    PhosphorIcon
+    DocumentThumbnailImage,
+    DocumentThumbnailPlaceholder,
+    DocumentThumbnailOverlay
   },
   mixins: [preview],
   props: {
-    /**
-     * The selected document
-     */
     document: {
       type: Object
     },
-    /**
-     * The page to display
-     */
     page: {
       type: Number,
       default: 0
     },
-    /**
-     * Size of the thumbnail
-     * @values xs, sm, md, lg, xl, xxl
-     */
     size: {
       type: [Number, String],
       default: 'sm'
     },
-    /**
-     * The image is clickable and can have a hover effect
-     */
     clickable: {
       type: Boolean
     },
-    /**
-     * The image has an active effect
-     */
     active: {
       type: Boolean
     },
-    /**
-     * The image has a hover effect
-     */
     hover: {
       type: Boolean
     },
-    /**
-     * Crop the image to have fixed squared size
-     */
     crop: {
       type: Boolean
     },
-    /**
-     * Fit the image to its container
-     */
     fit: {
       type: Boolean
     },
-    /**
-     * Load the thumbnail only when it enters the viewport
-     */
     lazy: {
       type: Boolean
     },
-    /**
-     * Optional ratio information to estimate thumbnail width
-     */
     ratio: {
       type: Number,
       default: null
     },
-    /**
-     * Make sure the placeholder is never visible
-     */
-    hidePlaceholder: {
+    noPlaceholder: {
+      type: Boolean
+    },
+    noOverlay: {
       type: Boolean
     },
     tooltipDelay: {
@@ -115,7 +100,7 @@ export default {
     }
   },
   computed: {
-    thumbnailClass() {
+    classList() {
       return {
         'document-thumbnail--hide-placeholder': this.hidePlaceholder,
         'document-thumbnail--active': this.active,
@@ -129,7 +114,7 @@ export default {
         [`document-thumbnail--${this.size}`]: isNaN(this.size)
       }
     },
-    thumbnailStyle() {
+    style() {
       return {
         '--estimated-ratio': this.ratio,
         '--estimated-height': isNaN(this.size) ? null : `${this.size}px`
@@ -143,9 +128,6 @@ export default {
     thumbnailAlt() {
       return `${this.document.basename} preview`
     },
-    isActivated() {
-      return !!this.$config.get('previewHost') || this.canPreviewRaw(this.document)
-    },
     lazyLoadable() {
       return window && 'IntersectionObserver' in window
     },
@@ -154,11 +136,20 @@ export default {
     },
     title() {
       return this.errored ? this.$t('documentThumbnail.noPreview') : ''
+    },
+    showImage() {
+      return !!this.$config.get('previewHost') || this.canPreviewRaw(this.document)
+    },
+    showPlaceholder() {
+      return !this.noPlaceholder && !this.loaded && this.document.contentTypeIcon
+    },
+    showOverlay() {
+      return !this.noOverlay
     }
   },
   async mounted() {
     // This component can be deactivated globally
-    if (!this.isActivated) return
+    if (!this.showImage) return
     // This component can be lazy loaded
     if (this.lazy && this.lazyLoadable) return this.bindObserver()
     // Fetch directly
@@ -298,18 +289,6 @@ export default {
         padding-bottom: 100%;
         display: block;
       }
-
-      .document-thumbnail__image {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        top: 50%;
-        left: 50%;
-        right: auto;
-        bottom: auto;
-        transform: translate(-50%, -50%);
-      }
     }
   }
 
@@ -339,58 +318,18 @@ export default {
   }
 
   &__image {
-    display: inline-block;
-    position: relative;
     z-index: $zindex-image;
-    margin: auto;
-    opacity: 0;
-    transition: opacity 300ms;
-    max-height: 100%;
-    max-width: 100%;
-  }
-
-  &--crop &__image {
-    left: 50%;
-    min-height: 100%;
-    min-width: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 100%;
-    object-fit: center top;
   }
 
   &__placeholder {
-    position: absolute;
-    z-index: $zindex-placeholder;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--bs-tertiary-bg-subtle);
-  }
-
-  &--hide-placeholder &__placeholder {
-    display: none;
+    $zindex-placeholder: 0;
   }
 
   &__overlay {
-    position: absolute;
-    z-index: $zindex-overlay;
-    left: 1px;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(var(--bs-light-rgb), 0.5);
-    color: var(--bs-secondary);
+    $zindex-overlay: 30;
+  }
+
+  &--hide-placeholder &__placeholder {
     display: none;
   }
 
