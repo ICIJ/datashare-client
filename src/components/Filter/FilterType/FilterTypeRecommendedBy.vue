@@ -3,7 +3,7 @@ import Fuse from 'fuse.js'
 import { computed, onBeforeMount } from 'vue'
 import { property, sortBy } from 'lodash'
 
-import { useCore } from '@/composables/useCore'
+import { useConfig } from '@/composables/useConfig'
 import { useSearchFilter } from '@/composables/useSearchFilter'
 import { useRecommendedStore } from '@/store/modules'
 import DisplayUser from '@/components/Display/DisplayUser'
@@ -24,11 +24,11 @@ const props = defineProps({
 const query = defineModel('query', { type: String, default: '' })
 
 const recommendedStore = useRecommendedStore()
-const { core } = useCore()
+const config = useConfig()
 const { computedFilterValues, watchIndices, indices } = useSearchFilter()
 
 const selected = computedFilterValues(props.filter)
-const currentUserId = computed(() => core.config.get('uid', 'local'))
+const currentUserId = computed(() => config.get('uid', 'local'))
 
 const recommendations = computed(() => {
   // We ensure that the current user is always first

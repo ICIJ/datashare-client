@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 
-import { useCore } from '@/composables/useCore'
+import { useConfig } from '@/composables/useConfig'
 import { useHooksStore } from '@/store/modules'
 
 const { name } = defineProps({
@@ -33,11 +33,11 @@ const { name } = defineProps({
   }
 })
 
-const { core } = useCore()
+const config = useConfig()
 const hooksStore = useHooksStore()
 const components = computed(() => hooksStore.filterComponentsByTarget(name))
 const title = computed(() => `${name} (${components.value.length})`)
-const isDebug = computed(() => core.config.is('hooksDebug'))
+const isDebug = computed(() => config.is('hooksDebug'))
 </script>
 
 <template>

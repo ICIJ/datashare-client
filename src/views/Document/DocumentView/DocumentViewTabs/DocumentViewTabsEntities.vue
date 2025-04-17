@@ -3,7 +3,7 @@ import { computed, onMounted, ref, inject, watch } from 'vue'
 import { flatten, get, mapValues, property, pickBy, sumBy, throttle } from 'lodash'
 
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
-import { useCore } from '@/composables/useCore'
+import { useConfig } from '@/composables/useConfig'
 import { useDocument } from '@/composables/useDocument'
 import { useWait } from '@/composables/useWait'
 import EntitySection from '@/components/Entity/EntitySection/EntitySection'
@@ -11,12 +11,12 @@ import { useDocumentStore } from '@/store/modules'
 
 const { document } = useDocument()
 const { isLoading, waitFor } = useWait()
-const { core } = useCore()
+const config = useConfig()
 const documentStore = useDocumentStore()
 const filterToken = ref(null)
 
 const mustExtractEntities = computed(() => canManageDocuments.value && !hasNerTags.value)
-const canManageDocuments = computed(() => core.config.is('manageDocuments'))
+const canManageDocuments = computed(() => config.is('manageDocuments'))
 const loadingNamedEntities = computed(() => isLoading.value)
 const hasNerTags = computed(() => document.value.hasNerTags)
 const hasEntities = computed(() => sumBy(categories.value, getCategoryTotal))
