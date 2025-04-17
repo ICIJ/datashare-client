@@ -23,10 +23,10 @@ const emit = defineEmits(['installed', 'uninstalled'])
 const { t } = useI18n()
 const { toastedPromise } = useCore()
 const { waitFor, isLoading } = useWait()
-const deleteSuccess = computed(() => t(`${props.addonType}.deleteSuccess`))
-const deleteError = computed(() => t(`${props.addonType}.deleteError`))
-const submitSuccess = computed(() => t(`${props.addonType}.submitSuccess`))
-const submitError = computed(() => t(`${props.addonType}.submitError`))
+const deleteSuccess = computed(() => t(`addonCard.${props.addonType}.deleteSuccess`))
+const deleteError = computed(() => t(`addonCard.${props.addonType}.deleteError`))
+const submitSuccess = computed(() => t(`addonCard.${props.addonType}.submitSuccess`))
+const submitError = computed(() => t(`addonCard.${props.addonType}.submitError`))
 
 const isFromRegistry = computed(() => {
   return !!props.deliverableFromRegistry

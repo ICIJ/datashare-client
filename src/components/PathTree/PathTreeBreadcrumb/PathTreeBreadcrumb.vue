@@ -68,7 +68,7 @@ const tree = computed(() => (props.noDatadir || props.datadirLabel ? treeWithout
 <template>
   <ul class="path-tree-breadcrumb list-inline flex-grow-1 m-0 text-truncate">
     <path-tree-breadcrumb-entry v-if="datadirLabel && !noDatadir" root :no-link="noLink" @select="modelValue = dataDir">
-      {{ $t('treeView.datadir') }}
+      {{ $t('pathTreeBreadcrumb.datadir') }}
     </path-tree-breadcrumb-entry>
     <path-tree-breadcrumb-entry v-if="treeWithoutDataDir.length > maxDirectories" abbr>
       <phosphor-icon :name="PhDotsThree" />
