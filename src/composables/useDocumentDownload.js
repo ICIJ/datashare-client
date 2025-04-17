@@ -1,4 +1,4 @@
-import { computed, toRef } from 'vue'
+import { computed, toRef, watchEffect } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { useCore } from '@/composables/useCore'
@@ -75,7 +75,16 @@ export function useDocumentDownload(document) {
     return byteSize(embeddedDocumentDownloadMaxSize.value)
   })
 
-  const downloadTextContent = async function () {
+  async function fetchStatus() {
+    const { index = null } = documentRef.value
+    // If the index is null, this means the document is not loaded yet
+    // and therefore, we should not fetch the status
+    if (index) {
+      await downloadsStore.fetchIndexStatus(index)
+    }
+  }
+
+  async function downloadTextContent() {
     if (!documentRef.value.content) {
       await documentStore.getContent()
     }
@@ -86,6 +95,8 @@ export function useDocumentDownload(document) {
     a.download = `${title}.txt`
     a.click()
   }
+
+  watchEffect(fetchStatus)
 
   return {
     extensionWarning,
