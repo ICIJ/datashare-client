@@ -1213,7 +1213,8 @@
   "projectDeletionModal": {
     "title": "Are you sure you want to delete the {project} project?",
     "body": {
-      "all": "It will remove {documents} from your index, {tags} and {recommendations}.",
+      "all": "It will remove {documents} from your index, {tags} and {recommendations}. {default}",
+      "default": "A new empty Default project will be created immediately.",
       "documents": "0 documents | 1 document | {count} documents",
       "tags": "0 tags | 1 tag | {count} tags",
       "recommendations": "0 recommendations | 1 recommendation | {count} recommendations"
