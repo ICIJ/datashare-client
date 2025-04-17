@@ -1,5 +1,153 @@
+<script setup>
+import { computed, ref, onBeforeMount, useTemplateRef } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useIntersectionObserver } from '@vueuse/core'
+
+import DocumentThumbnailImage from '@/components/Document/DocumentThumbnail/DocumentThumbnailImage'
+import DocumentThumbnailPlaceholder from '@/components/Document/DocumentThumbnail/DocumentThumbnailPlaceholder'
+import DocumentThumbnailOverlay from '@/components/Document/DocumentThumbnail/DocumentThumbnailOverlay'
+import { useDocumentPreview } from '@/composables/useDocumentPreview'
+
+const props = defineProps({
+  document: {
+    type: Object,
+    required: true
+  },
+  page: {
+    type: Number,
+    default: 0
+  },
+  size: {
+    type: [Number, String],
+    default: 'sm'
+  },
+  clickable: {
+    type: Boolean,
+    default: false
+  },
+  active: {
+    type: Boolean,
+    default: false
+  },
+  hover: {
+    type: Boolean,
+    default: false
+  },
+  crop: {
+    type: Boolean,
+    default: false
+  },
+  fit: {
+    type: Boolean,
+    default: false
+  },
+  lazy: {
+    type: Boolean,
+    default: false
+  },
+  ratio: {
+    type: Number,
+    default: null
+  },
+  noPlaceholder: {
+    type: Boolean,
+    default: false
+  },
+  noOverlay: {
+    type: Boolean,
+    default: false
+  },
+  tooltipDelay: {
+    type: Object,
+    default() {
+      return { show: 0, hide: 0 }
+    }
+  }
+})
+
+const emit = defineEmits(['loaded', 'errored', 'enter'])
+
+const errored = ref(false)
+const thumbnailSrc = ref(null)
+
+const { isPreviewActivated, getPreviewUrl, fetchImageAsBase64, canPreviewRaw } = useDocumentPreview()
+const { t } = useI18n()
+const element = useTemplateRef('element')
+
+const classList = computed(() => {
+  return {
+    'document-thumbnail--hide-placeholder': props.noPlaceholder,
+    'document-thumbnail--active': props.active,
+    'document-thumbnail--crop': props.crop,
+    'document-thumbnail--fit': props.fit,
+    'document-thumbnail--errored': errored.value,
+    'document-thumbnail--loaded': !!thumbnailSrc.value,
+    'document-thumbnail--clickable': props.clickable,
+    'document-thumbnail--hover': props.hover,
+    [`document-thumbnail--${props.size}`]: isNaN(props.size)
+  }
+})
+
+const style = computed(() => {
+  return {
+    '--estimated-ratio': props.ratio,
+    '--estimated-height': isNaN(props.size) ? null : `${props.size}px`
+  }
+})
+
+const thumbnailUrl = computed(() => {
+  const { index, id, routing } = props.document
+  const { page, size } = props
+  return getPreviewUrl({ index, id, routing }, { page, size })
+})
+
+const thumbnailAlt = computed(() => `${props.document.basename} preview`)
+const lazyLoadable = computed(() => window && 'IntersectionObserver' in window)
+const overlayIcon = computed(() => (errored.value ? 'eye-slash' : 'eye'))
+const title = computed(() => (errored.value ? t('documentThumbnail.noPreview') : ''))
+
+const showImage = computed(() => isPreviewActivated.value || canPreviewRaw(props.document))
+const showPlaceholder = computed(() => !props.noPlaceholder && !thumbnailSrc.value && props.document.contentTypeIcon)
+const showOverlay = computed(() => !props.noOverlay)
+
+function fetchAsBase64() {
+  const url = canPreviewRaw(props.document) ? props.document.inlineFullUrl : thumbnailUrl.value
+  return fetchImageAsBase64(url)
+}
+
+async function fetchAndLoad() {
+  try {
+    if (!thumbnailSrc.value && !errored.value) {
+      thumbnailSrc.value = await fetchAsBase64()
+      emit('loaded')
+    }
+  } catch (_) {
+    errored.value = true
+    emit('errored')
+  }
+}
+
+useIntersectionObserver(element, async ([entry]) => {
+  if (entry.isIntersecting) {
+    emit('enter', entry)
+    // Fetch the thumbnail
+    await fetchAndLoad()
+  }
+})
+
+onBeforeMount(() => {
+  // This component can be deactivated globally
+  if (!showImage.value) return
+  // This component can be lazy loaded
+  if (props.lazy && lazyLoadable.value) return
+  // Fetch directly
+  fetchAndLoad()
+})
+</script>
+
 <template>
   <div
+    ref="element"
     v-b-tooltip.body.right="{ delay: tooltipDelay }"
     class="document-thumbnail"
     :class="classList"
@@ -28,181 +176,6 @@
     />
   </div>
 </template>
-
-<script>
-import preview from '@/mixins/preview'
-import DocumentThumbnailImage from '@/components/Document/DocumentThumbnail/DocumentThumbnailImage'
-import DocumentThumbnailPlaceholder from '@/components/Document/DocumentThumbnail/DocumentThumbnailPlaceholder'
-import DocumentThumbnailOverlay from '@/components/Document/DocumentThumbnail/DocumentThumbnailOverlay'
-
-/**
- * The document's thumbnail (using the preview) server
- */
-export default {
-  name: 'DocumentThumbnail',
-  components: {
-    DocumentThumbnailImage,
-    DocumentThumbnailPlaceholder,
-    DocumentThumbnailOverlay
-  },
-  mixins: [preview],
-  props: {
-    document: {
-      type: Object
-    },
-    page: {
-      type: Number,
-      default: 0
-    },
-    size: {
-      type: [Number, String],
-      default: 'sm'
-    },
-    clickable: {
-      type: Boolean
-    },
-    active: {
-      type: Boolean
-    },
-    hover: {
-      type: Boolean
-    },
-    crop: {
-      type: Boolean
-    },
-    fit: {
-      type: Boolean
-    },
-    lazy: {
-      type: Boolean
-    },
-    ratio: {
-      type: Number,
-      default: null
-    },
-    noPlaceholder: {
-      type: Boolean
-    },
-    noOverlay: {
-      type: Boolean
-    },
-    tooltipDelay: {
-      type: Object,
-      default: () => ({ show: 0, hide: 0 })
-    }
-  },
-  data() {
-    return {
-      loaded: false,
-      errored: false,
-      thumbnailSrc: null,
-      observer: null
-    }
-  },
-  computed: {
-    classList() {
-      return {
-        'document-thumbnail--hide-placeholder': this.hidePlaceholder,
-        'document-thumbnail--active': this.active,
-        'document-thumbnail--crop': this.crop,
-        'document-thumbnail--fit': this.fit,
-        'document-thumbnail--errored': this.errored,
-        'document-thumbnail--loaded': this.loaded,
-        'document-thumbnail--clickable': this.clickable,
-        'document-thumbnail--hover': this.hover,
-        'document-thumbnail--estimated-size': this.ratio !== null,
-        [`document-thumbnail--${this.size}`]: isNaN(this.size)
-      }
-    },
-    style() {
-      return {
-        '--estimated-ratio': this.ratio,
-        '--estimated-height': isNaN(this.size) ? null : `${this.size}px`
-      }
-    },
-    thumbnailUrl() {
-      const { index, id, routing } = this.document
-      const { page, size } = this
-      return this.getPreviewUrl({ index, id, routing }, { page, size })
-    },
-    thumbnailAlt() {
-      return `${this.document.basename} preview`
-    },
-    lazyLoadable() {
-      return window && 'IntersectionObserver' in window
-    },
-    overlayIcon() {
-      return this.errored ? 'eye-slash' : 'eye'
-    },
-    title() {
-      return this.errored ? this.$t('documentThumbnail.noPreview') : ''
-    },
-    showImage() {
-      return !!this.$config.get('previewHost') || this.canPreviewRaw(this.document)
-    },
-    showPlaceholder() {
-      return !this.noPlaceholder && !this.loaded && this.document.contentTypeIcon
-    },
-    showOverlay() {
-      return !this.noOverlay
-    }
-  },
-  async mounted() {
-    // This component can be deactivated globally
-    if (!this.showImage) return
-    // This component can be lazy loaded
-    if (this.lazy && this.lazyLoadable) return this.bindObserver()
-    // Fetch directly
-    await this.fetchAndLoad()
-  },
-  methods: {
-    async fetchAsBase64() {
-      if (this.canPreviewRaw(this.document)) {
-        return this.fetchImageAsBase64(this.document.inlineFullUrl)
-      }
-      return this.fetchImageAsBase64(this.thumbnailUrl)
-    },
-    async fetchAndLoad() {
-      try {
-        if (!this.loaded && !this.errored) {
-          this.thumbnailSrc = await this.fetchAsBase64()
-          this.loaded = true
-          /**
-           * The thumbnail is loaded
-           *
-           * @event enter
-           */
-          this.$emit('loaded')
-        }
-      } catch (_) {
-        this.errored = true
-        /**
-         * The thumbnail could not be loaded
-         *
-         * @event enter
-         */
-        this.$emit('errored')
-      }
-    },
-    bindObserver() {
-      this.observer = new IntersectionObserver(async (entries) => {
-        if (entries[0].isIntersecting) {
-          /**
-           * The thumbnail enters the viewport.
-           *
-           * @event enter
-           */
-          this.$emit('enter', entries[0])
-          // Fetch the thumbnail
-          await this.fetchAndLoad()
-        }
-      })
-      // Observe the component element
-      this.observer.observe(this.$el)
-    }
-  }
-}
-</script>
 
 <style lang="scss" scoped>
 .document-thumbnail {
