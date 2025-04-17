@@ -1,10 +1,10 @@
-import { has, flatten } from 'lodash'
+import { flatten } from 'lodash'
 import { reactive, computed } from 'vue'
 import { defineStore } from 'pinia'
 
 import { apiInstance as api } from '@/api/apiInstance'
 
-export const useDownloadsStore = defineStore('downloads', () => {
+export const useDocumentDownloadStore = defineStore('documentDownload', () => {
   const allowedFor = reactive({})
   const fetchPromises = {} // this doesnt need to be reactive
 

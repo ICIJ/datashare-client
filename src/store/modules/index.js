@@ -2,7 +2,7 @@ export { useSearchStore } from './search' // Must be at the top to avoid circula
 export { useAppStore } from './app'
 export { useDocumentStore } from './document'
 export { useDocumentNotesStore } from './documentNotes'
-export { useDownloadsStore } from './downloads'
+export { useDocumentDownloadStore } from './documentDownload'
 export { useHooksStore } from './hooks'
 export { useInsightsStore } from './insights'
 export { useRecommendedStore } from './recommended'
