@@ -47,11 +47,6 @@
     "cancelTitle": "Cancel",
     "okTitle": "Yes"
   },
-  "aggregations": {
-    "more": "Explore more",
-    "placeholder": "Search for people, organizations, locations...",
-    "relative": "Relative to the search"
-  },
   "buttonAdd": {
     "label": "Add new"
   },
@@ -266,30 +261,6 @@
         "default": "default",
         "count": "frequency"
       }
-    },
-    "filtersTitle": "Filters",
-    "clearFilters": "Clear all",
-    "clearFiltersDescription": "Clear query and selected filters from the search.",
-    "back": "Back to search results",
-    "try": "You may try to",
-    "nav": {
-      "share": "Share a link to this document",
-      "previous": {
-        "label": "Previous",
-        "tooltipMac": "Previous document (<kbd>⌘</kbd> + <kbd>←</kbd>)",
-        "tooltipOthers": "Previous document (<kbd>ctrl</kbd> + <kbd>←</kbd>)"
-      },
-      "next": {
-        "label": "Next",
-        "tooltipMac": "Next document (<kbd>⌘</kbd> + <kbd>→</kbd>)",
-        "tooltipOthers": "Next document (<kbd>ctrl</kbd> + <kbd>→</kbd>)"
-      },
-      "document": {
-        "extensionWarning": "This document has the wrong file extension for its type. You might need to add the extension <code>{extension}</code> before you can open it."
-      },
-      "markAsRecommended": "Mark as recommended",
-      "unmarkAsRecommended": "Unmark as recommended",
-      "markAsRecommendedBy": "Marked as recommended by nobody | Marked as recommended by 1 user: | Marked as recommended by {count} users:"
     }
   },
   "searchFormControl": {
@@ -326,12 +297,6 @@
   "separatorLine": {
     "expand": "Expand",
     "reduce": "Reduce"
-  },
-  "pagination": {
-    "firstPage": "Go to first page",
-    "previousPage": "Go to previous page",
-    "nextPage": "Go to next page",
-    "lastPage": "Go to last page"
   },
   "documentActionsGroup": {
     "star": "Star",
@@ -450,12 +415,6 @@
     "label": "All"
   },
   "filter": {
-    "none": "No values",
-    "noMatches": "No matches.<br />Hit <kbd>Enter</kbd> to search in every documents",
-    "noResults": "No results",
-    "noSubdirectories": "No subdirectories",
-    "invert": "Exclude",
-    "contextualize": "Contextualize",
     "project": "Projects",
     "contentType": "File types",
     "language": "Languages",
@@ -467,15 +426,10 @@
     "indexingDate": "Indexing dates",
     "extractionLevel": "Extraction levels",
     "creationDate": "Creation dates",
-    "index": "Project",
     "projects": "Projects",
-    "deleteNamedEntity": "Delete this Named Entity",
-    "showMore": "Expand",
-    "missing": "Missing date",
     "starred": "Starred",
     "notStarred": "Not starred",
     "recommendedBy": "Recommended by",
-    "searchTerm": "Term",
     "sections": {
       "documentsInfo": "Documents info",
       "userData": "User data",
@@ -703,15 +657,7 @@
       "level09": "9th",
       "level10": "10th"
     },
-    "tags": "Tags",
-    "tags-excluded": "Tags to exclude",
-    "dateRange": {
-      "from": "From {dateFormat}",
-      "to": "To {dateFormat}",
-      "startingDate": "Starting date",
-      "endingDate": "Ending date"
-    },
-    "selectDateRange": "Select a date range"
+    "tags": "Tags"
   },
   "document": {
     "title": "Document",
@@ -723,83 +669,32 @@
     "project": "Project",
     "creationDate": "Created on",
     "size": "File size",
-    "downloadMaxRootSizeAlert": "You cannot download this document because its parent is bigger than {humanMaxRootSize}.",
     "contentLanguage": "Content language",
     "contentType": "Content type",
     "contentEncoding": "Content encoding",
     "contentTextLength": "Content text length",
-    "tabDetails": "Tags & Details",
-    "namedEntities": "Named Entities",
     "namedEntityFilter": "Search in entities",
-    "namedEntitiesOccurences": "0 occurences | One occurence | {count} occurences",
-    "extractedText": "Text",
-    "translations": "Translations",
-    "preview": "Preview",
-    "downloadButton": "Download",
-    "downloadRootButton": "Parent file",
-    "downloadRootWithoutMetadataButton": "Parent file without metadata",
-    "downloadWithoutMetadata": "Without metadata",
-    "downloadExtractedText": "Extracted text",
-    "externalWindow": "Open in a new window",
-    "copyLink": "Copy link",
-    "selectAll": "Select all",
-    "unselectAll": "Unselect all",
-    "starButton": "Star",
-    "unstarButton": "Unstar",
     "starred": "Documents have been starred.",
-    "starringError": "Unable to star the document.",
     "unstarred": "Documents have been unstarred.",
-    "selected": "All the documents of this page have been selected",
-    "unselected": "All the documents of this page have been unselected",
-    "tagged": "Documents have been tagged.",
-    "starFile": "Star document",
-    "notFound": "Document not found.",
     "notAvailable": "Preview is not available for this file type.",
-    "copyAsCsv": "Copy as CSV",
     "namedEntitiesNotFound": "No named entities found.",
     "namedEntitiesNotSearched": "Document not analyzed. To find named entities, {link}.",
     "namedEntitiesNotSearchedLink": "start a new task",
-    "generatingPreview": "Generating preview...",
-    "sheet": "Sheet",
-    "searchDirectory": "Search within this directory",
-    "tiffLimitations": "The browser preview of this TIFF file may not show all the images. We suggest you download it in your computer to view all the contents.",
     "threadIndex": "Thread ID",
-    "showNamedEntities": "Show named entities",
-    "highlightsCaution": "Warning! the named entities will be highlighted and may replace text underneath. This does not impact your search results.",
     "errorNotFound": "Your file was indexed in Datashare but the original is no longer in your Datashare folder on your computer. Preview is thus not available.",
-    "search": "Search",
-    "find": "Find in document",
-    "of": "of",
-    "researchedTerms": "In this document:",
-    "fetching": "Fetching preview...",
-    "tags": "Tags",
-    "tag": "Tag",
-    "tagsVisibility": "These tags are visible for all users. Tags should be separated by space.",
-    "tagsNew": "Add a new tag",
-    "details": "Details",
-    "detailsInfo": "These information are extracted from the document's metadata.",
+    "fetching": "Fetching preview.",
     "author": "Author",
     "extractionDate": "Indexing date",
     "numberOfPages": "Number of pages",
     "parent": "Parent",
     "inMetadata": "in metadata",
     "inTags": "in tags",
-    "shortcuts": "Shortcuts",
-    "searchChildrenDocument": "See children documents",
-    "searchDirnameDocument": "See folder's documents",
-    "tagConfirmation": "Are you sure you want to delete this tag?",
-    "createdBy": "Created by",
-    "on": "on",
     "spreadsheet": {
       "fieldsInFirstItem": "Headers in the first row",
       "findInSpreadsheet": "Find in spreadsheet",
       "filtered": {
         "rows": "No matches | One row | {count} rows"
       }
-    },
-    "pdf": {
-      "preview": "Preview of the PDF active page",
-      "thumbnail": "Thumbnail of the PDF page"
     },
     "player": {
       "autoplay": "Play automatically",
@@ -814,19 +709,7 @@
     "attachments": {
       "heading": "No attachments | One attachment | {total} attachments",
       "more": "More attachments..."
-    },
-    "namedEntitiesShowMore": {
-      "showMorePerson": "Show more people",
-      "showMoreOrganization": "Show more organizations",
-      "showMoreLocation": "Show more locations",
-      "showMoreEmail": "Show more emails"
-    },
-    "unknown": "Unknown"
-  },
-  "namedEntityInContext": {
-    "title": "Extracted using <code>{extractor}</code> in <code>{extractorLanguage}</code>",
-    "meta": "This was extracted from metadata.",
-    "none": "Entities preview not available, the document is too big."
+    }
   },
   "entitySection": {
     "person": {
@@ -855,9 +738,10 @@
       "email": "emails"
     }
   },
-  "email": {
-    "detail": "See detail",
-    "to": "To",
+  "documentThread": {
+    "to": "To"
+  },
+  "displayEmail": {
     "receivedLink": "Emails received",
     "sentLink": "Emails sent"
   },
@@ -892,7 +776,7 @@
     "collapse": "Collapse all steps",
     "expand": "Expand all steps"
   },
-  "indexing": {
+  "taskActions": {
     "stopPendingTasks": "Stop all pending tasks",
     "removeDoneTasks": "Delete done tasks"
   },
@@ -923,10 +807,7 @@
   },
   "login": {
     "welcome": "Welcome to Datashare",
-    "sumUp": "<a href=\"https://www.icij.org\">ICIJ</a> search and discovery platform.",
-    "authenticationPlatform": "Login with your account to start exploring documents:",
     "account": "Login",
-    "supportDesk": "If you need any help, please visit our support desk:",
     "askHelp": "Ask for help",
     "logout": "You have been logged out from Datashare.",
     "login": "Login",
@@ -1253,7 +1134,6 @@
     }
   },
   "batchSearchCard": {
-    "status": "Status",
     "seeAllDocuments": "See all documents",
     "downloadResultsLabel": "Download results (CSV)",
     "nbDocuments": "Batch search document results",
@@ -1473,7 +1353,6 @@
     "label": "Keyboard shortcuts"
   },
   "shortkeys": {
-    "title": "Search shortcuts",
     "goToPreviousDocument": "Go to previous document",
     "goToNextDocument": "Go to next document",
     "backToSearchResults": "Go back to the search results",
@@ -1483,10 +1362,6 @@
     "deactivateSearchBar": "Close search in document",
     "findPreviousOccurrence": "Previous occurrence in the document",
     "findNextOccurrence": "Next occurrence in the document"
-  },
-  "server": {
-    "title": "Settings",
-    "description": "Don't change these settings if you don't know what you're doing."
   },
   "settings": {
     "layout": {
@@ -1662,29 +1537,17 @@
   "widget": {
     "noData": "No data",
     "noRecommendations": "No recommendations",
-    "noFolders": "No folders",
-    "noEntities": "No named entities",
     "noEntitiesFindSome": "There are no entities found yet.",
     "findEntities": "Find entities",
-    "languages": {
-      "title": "Languages"
-    },
     "recommendedBy": {
       "title": "Latest recommended documents"
-    },
-    "contentTypes": {
-      "title": "File types"
-    },
-    "authors": {
-      "title": "Authors"
     },
     "barometer": {
       "document": "no documents | {n} document | {n} documents",
       "amongWhichOnDisk": "among which {n} on disk"
     },
     "diskUsage": {
-      "details": "See disk usage",
-      "warning": "The number of documents only counts parent documents here (files on disk), not attachments (embedded documents)."
+      "details": "See disk usage"
     },
     "creationDate": {
       "filterPath": "Select path",
@@ -1697,15 +1560,6 @@
       "document": "no documents | 1 document | {total} documents",
       "missing": "No documents have no or wrong creation date.| 1 document has no or wrong creation date.| {total} documents have no or wrong creation date.",
       "missingTooltip": "There are multiple reasons why a document is not here in the barchart:\n    - The document has no creation date at all\n    - The creation date of the document is prior to January 1. 1970\n    - The creation date of the document is posterior to the current date"
-    },
-    "duplicates": {
-      "duplicated": "* Duplicated documents are not indexed in Datashare to ease search and avoid creating unnecessary noise."
-    },
-    "entities": {
-      "people": "0 people | one person | <strong>{count}</strong> people",
-      "locations": "0 locations | one location | <strong>{count}</strong> locations",
-      "organizations": "0 organizations | one organization | <strong>{count}</strong> organizations",
-      "emails": "0 emails | one email address | <strong>{count}</strong> emails"
     },
     "names": {
       "total": "0 names | one name | <strong>{humanTotal}</strong> names"

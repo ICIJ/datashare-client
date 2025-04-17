@@ -44,7 +44,7 @@ async function removeDoneTasks() {
       :disabled="!hasPendingTasks"
       @click="stopPendingTasks"
     >
-      {{ $t('indexing.stopPendingTasks') }}
+      {{ $t('taskActions.stopPendingTasks') }}
     </button-icon>
     <button-icon
       v-if="!hideClearDone"
@@ -54,7 +54,7 @@ async function removeDoneTasks() {
       :disabled="!hasDoneTasks"
       @click="removeDoneTasks"
     >
-      {{ $t('indexing.removeDoneTasks') }}
+      {{ $t('taskActions.removeDoneTasks') }}
     </button-icon>
   </div>
 </template>

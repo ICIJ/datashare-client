@@ -164,7 +164,7 @@ onBeforeRouteUpdate(init)
             </div>
             <div class="d-flex gap-3">
               <span v-if="isActive(email) && email.messageTo" class="document-thread__list__email__to text-secondary">
-                {{ $t('email.to') }}
+                {{ $t('documentThread.to') }}
                 <ul class="list-inline d-inline">
                   <li v-for="to in email.messageTo.split(',')" :key="to" class="list-inline-item">
                     <display-email :value="to" />
