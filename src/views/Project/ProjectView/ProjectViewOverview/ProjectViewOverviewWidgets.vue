@@ -52,7 +52,7 @@ onBeforeMount(() => insightsStore.setProject(props.name))
 <style lang="scss" scoped>
 .project-view-overview-widgets {
   &__container {
-    margin: $spacer-xl auto;
+    margin: $spacer-xl auto 0;
 
     .row {
       margin-right: 0;
