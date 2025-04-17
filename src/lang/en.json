@@ -1,15 +1,10 @@
 {
   "global": {
-    "all": "All",
     "cancel": "Cancel",
-    "enterCorrectUrl": "Please enter a correct URL.",
     "yes": "Yes",
     "no": "No",
     "submit": "Submit",
     "reset": "Reset",
-    "delete": "Delete",
-    "confirmLabel": "Are you sure?",
-    "emptyTextTable": "There are no records to show",
     "you": "{username} (you)",
     "building": "Our team is still crafting something awesome for this page. Stay tuned!"
   },
@@ -26,6 +21,11 @@
       "deleteSuccess": "Extension successfully deleted.",
       "deleteError": "Error while deleting the extension."
     }
+  },
+  "addonUrlInput": {
+    "installFromUrl": "Install from a URL",
+    "install": "Install",
+    "enterCorrectUrl": "Please enter a correct URL."
   },
   "addonCardViewActions": {
     "version": "Version: {v}",
@@ -1514,8 +1514,6 @@
       "info": "Translations are <a href='{href}' class='alert-link'>maintained on Crowdin</a>."
     },
     "addons": {
-      "installFromUrl": "Install from a URL",
-      "install": "Install",
       "plugins": {
         "title": "Plugins",
         "info": "Plugins are front-end modules to add new features in Datashare's user interface.",

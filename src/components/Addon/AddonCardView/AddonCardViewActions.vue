@@ -26,10 +26,10 @@ const props = defineProps({
 const emit = defineEmits(['install', 'update', 'uninstall'])
 const { t } = useI18n()
 
-const versionLabel = computed(() => t('addonCardView.version', { v: props.version }))
-const installLabel = computed(() => t('addonCardView.install', { v: props.recommendedVersion }))
-const updateLabel = computed(() => t('addonCardView.update', { v: props.recommendedVersion }))
-const uninstallLabel = computed(() => t('addonCardView.uninstall'))
+const versionLabel = computed(() => t('addonCardViewActions.version', { v: props.version }))
+const installLabel = computed(() => t('addonCardViewActions.install', { v: props.recommendedVersion }))
+const updateLabel = computed(() => t('addonCardViewActions.update', { v: props.recommendedVersion }))
+const uninstallLabel = computed(() => t('addonCardViewActions.uninstall'))
 
 const installAddon = () => {
   emit('install')
