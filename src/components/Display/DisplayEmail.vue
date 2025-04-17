@@ -59,11 +59,11 @@ const qSent = computed(() => {
       <div class="d-flex flex-wrap gap-3">
         <router-link :to="{ name: 'search', query: { q: qReceived, indices } }" class="btn btn-action">
           <phosphor-icon :name="PhTrayArrowDown" class="display-email__popover__content__icon" />
-          {{ $t('email.receivedLink') }}
+          {{ $t('displayEmail.receivedLink') }}
         </router-link>
         <router-link :to="{ name: 'search', query: { q: qSent, indices } }" class="btn btn-action">
           <phosphor-icon :name="PhTrayArrowUp" class="display-email__popover__content__icon" />
-          {{ $t('email.sentLink') }}
+          {{ $t('displayEmail.sentLink') }}
         </router-link>
       </div>
     </div>
