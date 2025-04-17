@@ -34,12 +34,10 @@ import PageOffcanvas from '@/components/PageOffcanvas/PageOffcanvas'
 import ScrollTracker from '@/components/ScrollTracker'
 import { useCore } from '@/composables/useCore'
 import { useResizeObserver } from '@/composables/useResizeObserver'
-import { useAppStore, useDownloadsStore, useSearchStore } from '@/store/modules'
+import { useAppStore } from '@/store/modules'
 
 const { core } = useCore()
 const appStore = useAppStore()
-const downloadsStore = useDownloadsStore()
-const searchStore = useSearchStore()
 const { t } = useI18n()
 const route = useRoute()
 
@@ -87,9 +85,7 @@ const style = computed(() => {
 })
 
 onMounted(async () => {
-  core.on('http::error', handleHttpError)
-  // Check if "download" functionality is available for all the available indices
-  await downloadsStore.fetchIndicesStatus(searchStore.indices)
+  core?.on('http::error', handleHttpError)
 })
 
 onBeforeUnmount(() => {
