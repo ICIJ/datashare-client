@@ -15,7 +15,7 @@ defineProps({
 
 <template>
   <span class="document-thumbnail-placeholder">
-    <phosphor-icon :name="document.contentTypeIcon" :size="String(size)" />
+    <phosphor-icon :name="document.contentTypeIcon" />
   </span>
 </template>
 
