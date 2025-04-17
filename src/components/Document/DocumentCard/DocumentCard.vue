@@ -4,7 +4,7 @@ import { computed, ref } from 'vue'
 import DocumentCardProperties from './DocumentCardProperties'
 import DocumentCardCheckbox from './DocumentCardCheckbox'
 
-import DocumentThumbnail from '@/components/Document/DocumentThumbnail'
+import DocumentThumbnail from '@/components/Document/DocumentThumbnail/DocumentThumbnail'
 import DocumentActionsGroup from '@/components/Document/DocumentActionsGroup/DocumentActionsGroup'
 import Hook from '@/components/Hook/Hook'
 import RouterLinkDocument from '@/components/RouterLink/RouterLinkDocument'

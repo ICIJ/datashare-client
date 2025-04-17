@@ -1,7 +1,7 @@
 <script setup>
 import { computed, inject } from 'vue'
 
-import DocumentThumbnail from '@/components/Document/DocumentThumbnail'
+import DocumentThumbnail from '@/components/Document/DocumentThumbnail/DocumentThumbnail'
 
 const props = defineProps({
   active: {
@@ -40,7 +40,7 @@ const title = computed(() => {
 
 <template>
   <router-link class="document-carousel-entry" :to="to" :class="classList" @click="emit('select', document)">
-    <document-thumbnail :size="thumbnailSize" :document="document" crop hide-placeholder class="mb-2" />
+    <document-thumbnail :size="thumbnailSize" :document="document" crop no-placeholder class="mb-2" />
     <component :is="document.contentTypeIcon" size="1.25em" class="mb-2" />
     <div class="document-carousel-entry__title">
       {{ title }}

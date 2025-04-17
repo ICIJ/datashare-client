@@ -2,12 +2,12 @@ import { markRaw } from 'vue'
 import { PhFilePdf } from '@phosphor-icons/vue'
 
 import { withMurmur } from '~storybook/decorators/murmur'
-import DocumentThumbnail from '@/components/Document/DocumentThumbnail'
+import DocumentThumbnail from '@/components/Document/DocumentThumbnail/DocumentThumbnail'
 import { breakpointSizeArgType } from '~storybook/utils'
 import { SIZE } from '@/enums/sizes'
 
 export default {
-  title: 'Components/Document/DocumentThumbnail',
+  title: 'Components/Document/DocumentThumbnail/DocumentThumbnail',
   decorators: [withMurmur({ previewHost: null })],
   component: DocumentThumbnail,
   tags: ['autodocs'],

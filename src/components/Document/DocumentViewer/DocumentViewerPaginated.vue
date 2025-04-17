@@ -70,7 +70,7 @@ import axios from 'axios'
 
 import { useWait } from '@/composables/useWait'
 import AppWait from '@/components/AppWait/AppWait'
-import DocumentThumbnail from '@/components/Document/DocumentThumbnail'
+import DocumentThumbnail from '@/components/Document/DocumentThumbnail/DocumentThumbnail'
 import preview from '@/mixins/preview'
 
 /**
