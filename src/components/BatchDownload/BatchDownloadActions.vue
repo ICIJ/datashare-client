@@ -82,11 +82,11 @@ async function relaunch() {
       tag="router-link"
       :disabled="!uri"
       :to="{ hash: uri, name: 'search' }"
-      :label="t('batchDownloadActions.delete.label')"
+      :label="t('batchDownloadActions.search.label')"
     />
     <button-row-action-delete
       :disabled="isTaskRunning"
-      :label="t('batchDownloadActions.search.label')"
+      :label="t('batchDownloadActions.remove.label')"
       @click="afterConfirmation(remove)"
     />
     <page-table-toggle-details-button v-model="toggleDetails" />
