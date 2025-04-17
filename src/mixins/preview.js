@@ -1,13 +1,8 @@
 import { getCookie } from 'tiny-cookie'
 import { kebabCase, startCase } from 'lodash'
 
-import settings from '@/utils/settings'
-
 export default {
   computed: {
-    isPreviewActivated() {
-      return !!this.$config.get('previewHost')
-    },
     sessionIdHeaderValue() {
       return getCookie(import.meta.env.VITE_DS_COOKIE_NAME)
     },
@@ -25,9 +20,6 @@ export default {
     getPreviewUrl({ index, id, routing } = {}, { page = 0, size = 'sm' } = {}) {
       const host = this.$config.get('previewHost')
       return `${host}/api/v1/thumbnail/${index}/${id}?routing=${routing}&page=${page}&size=${size}`
-    },
-    canPreviewRaw({ extractionLevel = -1, contentLength = 0, isSupportedImage = false } = {}) {
-      return extractionLevel === 0 && isSupportedImage && contentLength < settings.previewRawMaxContentLength
     },
     async fetchPreview(url) {
       return new Promise((resolve, reject) => {
