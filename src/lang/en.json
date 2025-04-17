@@ -1561,9 +1561,6 @@
       "missing": "No documents have no or wrong creation date.| 1 document has no or wrong creation date.| {total} documents have no or wrong creation date.",
       "missingTooltip": "There are multiple reasons why a document is not here in the barchart:\n    - The document has no creation date at all\n    - The creation date of the document is prior to January 1. 1970\n    - The creation date of the document is posterior to the current date"
     },
-    "names": {
-      "total": "0 names | one name | <strong>{humanTotal}</strong> names"
-    },
     "project": {
       "fields": {
         "name": "ID",
@@ -1574,10 +1571,6 @@
         "creationDate": "Created",
         "updateDate": "Updated"
       }
-    },
-    "treemap": {
-      "seeDocuments": "See documents in Datashare",
-      "others": "Others"
     }
   },
   "widgetEntities": {
