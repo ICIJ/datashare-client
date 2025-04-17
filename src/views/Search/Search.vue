@@ -21,6 +21,7 @@ import { useUrlPageFromWithStore } from '@/composables/useUrlPageFromWithStore'
 import { replaceUrlParam } from '@/composables/replaceUrlParam'
 import { useSearchFilter } from '@/composables/useSearchFilter'
 import { useSearchBreadcrumb } from '@/composables/useSearchBreadcrumb'
+import { useSearchNav } from '@/composables/useSearchNav'
 import { useViews } from '@/composables/useViews'
 import { LAYOUTS } from '@/enums/layouts'
 import { MODE_NAME } from '@/mode'
@@ -30,6 +31,7 @@ const { toggleSettings, toggleFilters, toggleSidebar, isFiltersClosed } = useVie
 const { provideDocumentViewFloatingId, documentRoute } = useDocument()
 const { refreshRoute, refreshSearchFromRoute, resetSearchResponse, watchIndices, watchFilters } = useSearchFilter()
 const { count: searchBreadcrumbCounter, anyFilters } = useSearchBreadcrumb()
+const { hasEntries: hasSearchEntries } = useSearchNav()
 
 const entriesRef = useTemplateRef('entries')
 const appStore = useAppStore()
@@ -66,7 +68,7 @@ const selectMode = ref(false)
 // In this function, it's important we refresh the route before assigning the value to the
 // enoughtFloatingSpace ref in order to avoid a brief flicker of the document view in the modal.
 const toggleDocumentModal = async (enoughSpace) => {
-  if (documentRoute.value && (!enoughSpace || !isListLayout.value || route.query.modal)) {
+  if (documentRoute.value && hasSearchEntries.value && (!enoughSpace || !isListLayout.value || route.query.modal)) {
     await refreshRoute()
   }
 
