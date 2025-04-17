@@ -285,7 +285,7 @@
   "searchSavedList": {
     "title": "Saved searches",
     "allRemoved": "All saved searches have been removed.",
-    "emptyStateLabel": "You haven't saved any searches. Go to search and save your important searches.",
+    "emptyStateLabel": "There are no saved searches. Go to search to save important searches",
     "emptyStateAction": "Go to search"
   },
   "searchSavedEntries": {
@@ -996,7 +996,7 @@
     "entities": {
       "title": "Entities",
       "list": {
-        "emptyStateLabel": "There is no entity recognitions. Do you want to find entities?",
+        "emptyStateLabel": "There are no entity recognitions. Do you want to find entities?",
         "emptyStateAction": "Find entities",
         "info": "Entity recognitions are tasks that you run in order to recognize and to list the entities in your documents.",
         "searchPlaceholder": "Search tasks",
@@ -1057,7 +1057,7 @@
     "documents": {
       "title": "Documents",
       "list": {
-        "emptyStateLabel": "You haven’t added documents yet. Do you want to add documents?",
+        "emptyStateLabel": "Do you want to add documents?",
         "emptyStateAction": "Add documents",
         "info": "Document additions are tasks that you run to ask Datashare to add new documents.",
         "searchPlaceholder": "Search tasks",
@@ -1111,7 +1111,7 @@
     "batch-download": {
       "title": "Batch downloads",
       "list": {
-        "emptyStateLabel": "There is no batch downloads. Go to search to batch download all the documents of a search.",
+        "emptyStateLabel": "There are no batch downloads. Go to search to batch download all the documents of a search.",
         "emptyStateAction": "Go to search",
         "info": "Batch downloads are password-protected zip files containing all the documents from one of your searches.",
         "searchPlaceholder": "Search batch downloads",
@@ -1365,7 +1365,7 @@
   },
   "projectViewOverview": {
     "emptyStateLabel": "Oh, it’s lonely in here... This project has no documents yet.",
-    "emptyStateAction": "Add your first documents",
+    "emptyStateAction": "Add first documents",
     "nav": {
       "insights": "Insights",
       "paths": "Paths",
@@ -1608,7 +1608,6 @@
   },
   "batchDownload": {
     "title": "Batch downloads",
-    "empty": "You have not yet started any download tasks.",
     "noFile": "The archive has expired.",
     "created": "Your batch download is being prepared",
     "warning": "This feature is currently being developed by the Datashare team.",
@@ -1667,7 +1666,7 @@
     "noRecommendations": "No recommendations",
     "noFolders": "No folders",
     "noEntities": "No named entities",
-    "noEntitiesFindSome": "You have not found entities yet. Want to identify some?",
+    "noEntitiesFindSome": "There are no entities found yet.",
     "findEntities": "Find entities",
     "languages": {
       "title": "Languages"
