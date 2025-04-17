@@ -6,6 +6,7 @@ import { apiInstance as api } from '@/api/apiInstance'
 
 export const useDownloadsStore = defineStore('downloads', () => {
   const allowedFor = reactive({})
+  const fetchPromises = {} // this doesnt need to be reactive
 
   /**
    * Allow download for a given index
@@ -19,31 +20,16 @@ export const useDownloadsStore = defineStore('downloads', () => {
   }
 
   /**
-   * Get the download status for a given index
-   *
-   * @param {number} index - The index to check
-   * @returns {boolean} The download status
-   */
-  const getIndexStatus = async (index) => {
-    try {
-      if (!has(allowedFor, index)) {
-        // Not allowed index will throw an error
-        await api.isDownloadAllowed(index)
-      }
-      return true
-    } catch (_) {
-      return false
-    }
-  }
-
-  /**
    * Fetch the download status for a given index
    *
    * @param {number} index - The index to fetch
    * @returns {void}
    */
   const fetchIndexStatus = async (index) => {
-    const allowed = await getIndexStatus(index)
+    fetchPromises[index] ??= api.isDownloadAllowed(index)
+    const castTrue = () => true
+    const castFalse = () => false
+    const allowed = await fetchPromises[index].then(castTrue, castFalse)
     allow({ index, allowed })
   }
 
@@ -64,12 +50,10 @@ export const useDownloadsStore = defineStore('downloads', () => {
    * @returns {Function<boolean>} The function to check if download is allowed
    */
   const isAllowed = computed(() => {
-    return (index) => {
-      // Stricktly equal to true so download is allowed by default
-      // even if the index' status is not loaded.
-      return allowedFor[index] === true
-    }
+    // Stricktly equal to true so download is not allowed by default
+    // even if the index' status is not loaded.
+    return (index) => allowedFor[index] === true
   })
 
-  return { allow, getIndexStatus, fetchIndexStatus, fetchIndicesStatus, isAllowed }
+  return { allow, fetchIndexStatus, fetchIndicesStatus, isAllowed }
 })
