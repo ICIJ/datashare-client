@@ -1523,13 +1523,13 @@
   "batchDownloadActions": {
     "remove": {
       "label": "Delete",
-      "success": "The batch search was removed",
-      "error": "Unable to remove the batch search"
+      "success": "The batch download was removed",
+      "error": "Unable to remove the batch download"
     },
     "relaunch": {
       "label": "Relaunch",
-      "success": "The batch search was relaunched",
-      "error": "Unable to relaunch the batch search"
+      "success": "The batch download was relaunched",
+      "error": "Unable to relaunch the batch download"
     },
     "search": {
       "label": "See search results"
