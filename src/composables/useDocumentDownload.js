@@ -2,13 +2,13 @@ import { computed, toRef, watchEffect } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { useCore } from '@/composables/useCore'
-import { useDownloadsStore, useDocumentStore } from '@/store/modules'
+import { useDocumentDownloadStore, useDocumentStore } from '@/store/modules'
 import settings from '@/utils/settings'
 import byteSize from '@/utils/byteSize'
 
 export function useDocumentDownload(document) {
   const documentStore = useDocumentStore()
-  const downloadsStore = useDownloadsStore()
+  const documentDownloadStore = useDocumentDownloadStore()
   const { core } = useCore()
   const { locale, t } = useI18n()
 
@@ -64,7 +64,7 @@ export function useDocumentDownload(document) {
 
   const isDownloadAllowed = computed(() => {
     // Use nullish coalescing operator to allow download if the store/getter is undefined
-    return downloadsStore.isAllowed(documentRef.value.index) ?? true
+    return documentDownloadStore.isAllowed(documentRef.value.index) ?? true
   })
 
   const rootContentLength = computed(() => {
@@ -80,7 +80,7 @@ export function useDocumentDownload(document) {
     // If the index is null, this means the document is not loaded yet
     // and therefore, we should not fetch the status
     if (index) {
-      await downloadsStore.fetchIndexStatus(index)
+      await documentDownloadStore.fetchIndexStatus(index)
     }
   }
 
