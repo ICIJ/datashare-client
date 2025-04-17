@@ -43,6 +43,7 @@ async function confirmDeletion() {
 }
 
 const hasSomething = computed(() => documentsCount.value + tagsCount.value + recommendationsCount.value > 0)
+const isDefaultProject = computed(() => props.project.name === core.defaultProject)
 
 onBeforeMount(
   waitFor(async () => {
@@ -63,7 +64,7 @@ onBeforeMount(
       </i18n-t>
     </template>
     <app-wait :for="loaderId">
-      <i18n-t v-show="hasSomething" keypath="projectDeletionModal.body.all" tag="p">
+      <i18n-t v-if="hasSomething" keypath="projectDeletionModal.body.all">
         <template #documents>
           <i18n-t keypath="projectDeletionModal.body.documents" tag="span" :plural="documentsCount">
             <template #count>
@@ -84,6 +85,9 @@ onBeforeMount(
               <display-number :value="recommendationsCount" />
             </template>
           </i18n-t>
+        </template>
+        <template v-if="isDefaultProject" #default>
+          <i18n-t keypath="projectDeletionModal.body.default" />
         </template>
       </i18n-t>
     </app-wait>
