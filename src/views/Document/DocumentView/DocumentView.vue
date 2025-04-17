@@ -18,7 +18,7 @@ import { useAppStore } from '@/store/modules'
 
 const elementRef = useTemplateRef('element')
 const { t } = useI18n()
-const { whenNoSearchEntries } = useSearchNav()
+const { whenSearchHasNoEntries } = useSearchNav()
 const { document, fetchDocumentOnce, loaderId } = useDocument(elementRef)
 
 const props = defineProps({
@@ -116,7 +116,7 @@ const redirectToDocumentStandalone = () => {
 watch(tab, fetchTabComponent, { immediate: true })
 
 // Ensure we do not display the document in the context of the search, when there is actually no search
-onBeforeMount(whenNoSearchEntries(redirectToDocumentStandalone))
+onBeforeMount(whenSearchHasNoEntries(redirectToDocumentStandalone))
 
 // Ensure the document is always in sync with the route
 onBeforeMount(fetchRouteDocument)

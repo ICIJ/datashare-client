@@ -126,10 +126,10 @@ export function useSearchNav(currentDocument = null) {
     return watch(getSearchPosition, callback, options)
   }
 
-  function whenNoSearchEntries(callback) {
-    return () => {
+  function whenSearchHasNoEntries(callback) {
+    return (...args) => {
       if (!hasEntries.value) {
-        return callback()
+        return callback.apply(null, args)
       }
     }
   }
@@ -154,7 +154,7 @@ export function useSearchNav(currentDocument = null) {
     searchAndGetFromPosition,
     watchPosition,
     watchSearchEntries,
-    whenNoSearchEntries
+    whenSearchHasNoEntries
   }
 }
 
