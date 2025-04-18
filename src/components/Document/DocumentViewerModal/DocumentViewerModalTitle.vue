@@ -8,11 +8,14 @@ const { document } = defineProps({
   }
 })
 
-const to = computed(() => ({ name: 'document-standalone', params: document.routerParams }))
+const to = computed(() => {
+  const params = { ...document.routerParams }
+  return { name: 'document', params }
+})
 </script>
 
 <template>
-  <router-link class="document-viewer-modal-title" :to="to" target="_blank">
+  <router-link class="document-viewer-modal-title" :to="to">
     {{ document.title }}
   </router-link>
 </template>
