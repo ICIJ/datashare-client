@@ -1,6 +1,5 @@
 <script setup>
 import { computed, ref, onBeforeMount, useTemplateRef } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { useIntersectionObserver } from '@vueuse/core'
 
 import DocumentThumbnailImage from '@/components/Document/DocumentThumbnail/DocumentThumbnailImage'
