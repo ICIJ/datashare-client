@@ -1,5 +1,4 @@
 import { markRaw } from 'vue'
-import { PhFilePdf, PhTextAlignLeft, PhImage } from '@phosphor-icons/vue'
 
 import { withMurmur } from '~storybook/decorators/murmur'
 import DocumentThumbnail from '@/components/Document/DocumentThumbnail/DocumentThumbnail'
@@ -26,8 +25,7 @@ export default {
       inlineFullUrl: 'https://i.imgur.com/ns9ThQx.jpeg',
       contentLength: 0,
       contentType: 'image/jpeg',
-      isSupportedImage: true,
-      contentTypeIcon: [markRaw(PhFilePdf), 'fill']
+      isSupportedImage: true
     }
   }
 }
