@@ -8,10 +8,6 @@ const { document } = defineProps({
   document: {
     type: Object,
     required: true
-  },
-  size: {
-    type: [Number, String],
-    default: 'sm'
   }
 })
 
