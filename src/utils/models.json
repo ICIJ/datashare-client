@@ -65,5 +65,11 @@
       "PlainText",
       "HyperText"
     ]
+  },
+  "Package": {
+    "label": "Package",
+    "extends": [
+      "Folder"
+    ]
   }
 }

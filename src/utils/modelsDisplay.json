@@ -34,9 +34,19 @@
     "background": "var(--bs-warning-bg-subtle)",
     "foreground": "var(--bs-warning)"
   },
+  "HyperText": {
+    "icon": "text-align-left",
+    "background": "var(--bs-primary-bg-subtle)",
+    "foreground": "var(--bs-primary)"
+  },
   "Email": {
     "icon": ["at", "fill"],
     "background": "var(--bs-primary-bg-subtle)",
     "foreground": "var(--bs-primary)"
+  },
+  "Package": {
+    "icon": ["archive", "fill"],
+    "background": "var(--bs-secondary-bg-subtle)",
+    "foreground": "var(--bs-secondary)"
   }
 }

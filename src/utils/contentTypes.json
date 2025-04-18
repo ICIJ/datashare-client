@@ -472,7 +472,8 @@
     },
     "warning": {
       "en": "This file contains executable code. Ensure you have Javascript disabled before opening it in you browser."
-    }
+    },
+    "model": "PlainText"
   },
   "text/plain": {
     "label": "Plain text document",
@@ -615,7 +616,8 @@
     "description": {
       "en": "vCard format electronic business card."
     },
-    "preview": "yes"
+    "preview": "yes",
+    "model": "HyperText"
   },
   "text/x-sql": {
     "label": "SQL script",
@@ -823,7 +825,8 @@
     ],
     "description": {
       "en": "Open using 7-Zip on Windows. Opens natively on Mac."
-    }
+    },
+    "model": "Package"
   },
   "application/zip": {
     "label": "ZIP archive",
@@ -833,7 +836,8 @@
     ],
     "description": {
       "en": "Opens natively on Windows and Mac."
-    }
+    },
+    "model": "Package"
   },
   "application/gzip": {
     "label": "GZIP archive",
@@ -843,7 +847,8 @@
     ],
     "description": {
       "en": "Opens natively on Windows and Mac."
-    }
+    },
+    "model": "Package"
   },
   "application/x-rar-compressed": {
     "label": "RAR archive",
@@ -853,7 +858,8 @@
     ],
     "description": {
       "en": "Open using WinRar on Windows and UnRarX on Mac."
-    }
+    },
+    "model": "Package"
   },
   "application/x-7z-compressed": {
     "label": "7-Zip archive",
@@ -863,7 +869,8 @@
     ],
     "description": {
       "en": "Open using 7zip on Windows or Keka on Mac."
-    }
+    },
+    "model": "Package"
   },
   "application/x-msdownload": {
     "label": "Windows executable",
