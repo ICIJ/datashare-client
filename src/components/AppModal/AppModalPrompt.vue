@@ -47,33 +47,35 @@ const submit = () => emit('submit', { value: inputValue.value, trigger: 'submit'
 
 <template>
   <app-modal v-bind="attrs" v-model="modelValue" @ok="submit">
-    <div v-for="(fn, name) in otherSlots" :slot="name" :key="name">
-      <component :is="fn" />
-    </div>
-    <slot>
-      <div class="d-flex flex-column gap-3">
-        <b-form-group
-          :label="inputHiddenLabel"
-          label-for="input-1"
-          label-class="visually-hidden"
-          :invalid-feedback="inputInvalidFeedback"
-          :state="inputState"
-        >
-          <b-form-input
-            id="input-1"
-            ref="inputModal"
-            v-model="inputValue"
-            :type="inputType"
-            :autofocus="inputAutofocus"
-            :placeholder="inputPlaceholder"
-          />
-        </b-form-group>
-        <p class="text-secondary-emphasis">
-          <slot name="description">
-            {{ description }}
-          </slot>
-        </p>
+    <template #default="{ cancel, close, hide, ok, visible }">
+      <div v-for="(fn, name) in otherSlots" :slot="name" :key="name">
+        <component :is="fn" />
       </div>
-    </slot>
+      <slot v-bind="{ cancel, close, hide, ok, visible }">
+        <div class="d-flex flex-column gap-3">
+          <b-form-group
+            :label="inputHiddenLabel"
+            label-for="input-1"
+            label-class="visually-hidden"
+            :invalid-feedback="inputInvalidFeedback"
+            :state="inputState"
+          >
+            <b-form-input
+              id="input-1"
+              ref="inputModal"
+              v-model="inputValue"
+              :type="inputType"
+              :autofocus="inputAutofocus"
+              :placeholder="inputPlaceholder"
+            />
+          </b-form-group>
+          <p class="text-secondary-emphasis">
+            <slot name="description">
+              {{ description }}
+            </slot>
+          </p>
+        </div>
+      </slot>
+    </template>
   </app-modal>
 </template>
