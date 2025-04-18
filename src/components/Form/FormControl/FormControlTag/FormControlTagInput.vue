@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, useTemplateRef } from 'vue'
+import { computed, ref, useTemplateRef, onMounted, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { PhosphorIcon } from '@icij/murmur-next'
 
@@ -93,6 +93,12 @@ const classList = computed(() => {
 
 const tags = computed(() => {
   return props.noTags ? [] : props.modelValue
+})
+
+onMounted(() => {
+  if (props.autofocus && inputElement.value) {
+    nextTick(inputElement.value.focus)
+  }
 })
 
 defineExpose({
