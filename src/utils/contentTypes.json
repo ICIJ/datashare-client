@@ -1032,6 +1032,18 @@
     },
     "model": "Video"
   },
+  "video/mp4": {
+    "label": "MP4 audio/video",
+    "icon": "video",
+    "extensions": [
+      ".mp4",
+      ".mov"
+    ],
+    "description": {
+      "en": "MPEG-4 Part 14 audio/video file. Open using VLC."
+    },
+    "model": "Video"
+  },
   "application/octet-stream": {
     "label": "Unknown file",
     "description": {
