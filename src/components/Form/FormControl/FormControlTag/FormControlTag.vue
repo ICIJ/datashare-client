@@ -16,6 +16,10 @@ const props = defineProps({
     type: String,
     default: ''
   },
+  autofocus: {
+    type: Boolean,
+    default: false
+  },
   addButtonText: {
     type: String,
     default: null
@@ -188,6 +192,7 @@ watch(focusIndex, (value) => {
     showDropdown.value = !!inputValueTrigger.value
   }
 })
+
 defineExpose({ focus })
 </script>
 
@@ -196,6 +201,7 @@ defineExpose({ focus })
     <form-control-tag-input
       ref="inputElement"
       class="form-control-tag__input"
+      :autofocus="autofocus"
       :no-tags="noTags"
       :no-clear="noClear"
       :no-placeholder-icon="noPlaceholderIcon"
