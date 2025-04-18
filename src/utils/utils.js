@@ -2,7 +2,7 @@ import { get } from 'lodash'
 
 import settings from '@/utils/settings'
 import { slugger } from '@/utils/strings'
-import types from '@/utils/types.json'
+import types from '@/utils/content-types.json'
 
 function getDocumentTypeLabel(key) {
   if (key === undefined) return ''

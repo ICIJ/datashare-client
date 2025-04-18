@@ -17,7 +17,7 @@ import {
   PhFileZip
 } from '@phosphor-icons/vue'
 
-import types from '@/utils/types.json'
+import types from '@/utils/content-types.json'
 
 export const icons = [
   PhFileArchive,

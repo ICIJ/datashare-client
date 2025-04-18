@@ -1,4 +1,4 @@
-import types from '@/utils/types'
+import types from '@/utils/content-types.json'
 import { MODE_NAME } from '@/mode'
 
 export { default as WidgetDiskUsage } from './WidgetDiskUsage'
