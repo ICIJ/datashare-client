@@ -17,13 +17,6 @@ vi.mock('lodash', async (importOriginal) => {
   }
 })
 
-vi.mock('@/utils/style', () => {
-  return {
-    hasOverflow: vi.fn().mockReturnValue(false),
-    getTranslateValues: vi.fn().mockReturnValue({ y: 0, x: 0, z: 0 })
-  }
-})
-
 vi.mock('@/api/apiInstance', async (importOriginal) => {
   const { apiInstance } = await importOriginal()
 
