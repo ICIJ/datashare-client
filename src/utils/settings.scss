@@ -260,9 +260,8 @@ $dropdown-link-active-bg: var(--bs-dropdown-bg);
 // Our custom map to add our theme colors to classes utilities and CSS variables
 @import './maps.scss';
 
-// We also defines a few functions and mixins internally
+// We also defines a few functions internally
 @import './functions.scss';
-@import './mixins.scss';
 
 $app-nav-height: 4.5rem;
 $app-nav-brand-height: $app-nav-height - ($spacer * 2);
