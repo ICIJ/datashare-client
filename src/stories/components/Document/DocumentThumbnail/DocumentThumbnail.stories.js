@@ -34,6 +34,21 @@ export default {
 
 export const Default = {}
 
+export const WithPlaceholderDefault = {
+  args: {
+    size: SIZE.XS,
+    crop: true,
+    fit: false,
+    hidePlaceholder: false,
+    document: {
+      extractionLevel: 0,
+      inlineFullUrl: null,
+      contentLength: 0,
+      contentType: 'application/unknown'
+    }
+  }
+}
+
 export const WithPlaceholderPDF = {
   args: {
     size: SIZE.XS,
@@ -44,9 +59,7 @@ export const WithPlaceholderPDF = {
       extractionLevel: 0,
       inlineFullUrl: null,
       contentLength: 0,
-      contentType: 'application/pdf',
-      isSupportedImage: true,
-      contentTypeIcon: [markRaw(PhFilePdf), 'fill']
+      contentType: 'application/pdf'
     }
   }
 }
@@ -61,9 +74,22 @@ export const WithPlaceholderText = {
       extractionLevel: 0,
       inlineFullUrl: null,
       contentLength: 0,
-      contentType: 'text/plain',
-      isSupportedImage: true,
-      contentTypeIcon: markRaw(PhTextAlignLeft)
+      contentType: 'text/plain'
+    }
+  }
+}
+
+export const WithPlaceholderVideo = {
+  args: {
+    size: SIZE.XS,
+    crop: true,
+    fit: false,
+    hidePlaceholder: false,
+    document: {
+      extractionLevel: 0,
+      inlineFullUrl: null,
+      contentLength: 0,
+      contentType: 'application/mp4'
     }
   }
 }
@@ -78,9 +104,22 @@ export const WithPlaceholderImage = {
       extractionLevel: 0,
       inlineFullUrl: null,
       contentLength: 0,
-      contentType: 'video/mp4',
-      isSupportedImage: true,
-      contentTypeIcon: [markRaw(PhImage), 'fill']
+      contentType: 'image/jpeg'
+    }
+  }
+}
+
+export const WithPlaceholderEmail = {
+  args: {
+    size: SIZE.XS,
+    crop: true,
+    fit: false,
+    hidePlaceholder: false,
+    document: {
+      extractionLevel: 0,
+      inlineFullUrl: null,
+      contentLength: 0,
+      contentType: 'application/vnd.ms-outlook'
     }
   }
 }
