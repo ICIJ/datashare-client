@@ -77,7 +77,7 @@ onBeforeMount(fetchAllTags)
     @action="actionHandler"
   />
   <hook name="document:user-actions:after" :bind="{ document }" />
-  <teleport v-if="documentViewFloatingElement" :to="documentViewFloatingSelector">
+  <teleport :disabled="!documentViewFloatingElement" :to="documentViewFloatingSelector">
     <hook name="document:user-actions-cards:before" :bind="{ document }" />
     <document-user-recommendations
       v-model="showRecommendationsCard"
