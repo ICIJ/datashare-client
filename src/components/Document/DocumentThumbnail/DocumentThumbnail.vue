@@ -56,12 +56,6 @@ const props = defineProps({
   noOverlay: {
     type: Boolean,
     default: false
-  },
-  tooltipDelay: {
-    type: Object,
-    default() {
-      return { show: 0, hide: 0 }
-    }
   }
 })
 
@@ -96,7 +90,6 @@ const thumbnailUrl = computed(() => {
 const alt = computed(() => `${props.document.basename} preview`)
 const lazyLoadable = computed(() => window && 'IntersectionObserver' in window)
 const overlayIcon = computed(() => (errored.value ? 'eye-slash' : 'eye'))
-const title = computed(() => (errored.value ? t('documentThumbnail.noPreview') : ''))
 
 const showImage = computed(() => !!thumbnail.value && (isPreviewActivated.value || canPreviewRaw(props.document)))
 const showPlaceholder = computed(() => !props.noPlaceholder && !thumbnail.value)
@@ -147,14 +140,7 @@ onBeforeMount(() => {
 </script>
 
 <template>
-  <div
-    ref="element"
-    v-b-tooltip.body.right="{ delay: tooltipDelay }"
-    class="document-thumbnail"
-    :class="classList"
-    :style="style"
-    :title="title"
-  >
+  <div ref="element" class="document-thumbnail" :class="classList" :style="style">
     <document-thumbnail-image
       v-if="showImage"
       class="document-thumbnail__image"
