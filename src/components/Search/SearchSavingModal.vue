@@ -49,17 +49,18 @@ async function confirmSaving() {
   <app-modal
     :ok-title="$t('searchSavingModal.okTitle')"
     :ok-disabled="!valid"
+    :autofocus="false"
     :image="image"
     :image-dark="imageDark"
     :image-width="110"
     :title="$t('searchSavingModal.title')"
     @ok="confirmSaving"
   >
-    <template #default="{ close }">
+    <template #default="{ close, visible }">
       <form @submit.prevent="confirmSaving().then(close)">
         <form-fieldset :label="$t('searchSavingModal.form.name')" :icon="PhTextAa" label-visually-hidden>
           <div class="col">
-            <b-form-input v-model="form.name" name="name" type="text" autofocus required class="mb-3" />
+            <b-form-input v-if="visible" v-model="form.name" name="name" type="text" autofocus required class="mb-3" />
             <i18n-t keypath="searchSavingModal.form.description" tag="p">
               <template #link>
                 <router-link :to="{ name: 'search.saved.list' }">
