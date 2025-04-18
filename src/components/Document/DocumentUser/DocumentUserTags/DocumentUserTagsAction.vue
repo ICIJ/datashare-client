@@ -6,7 +6,9 @@ defineOptions({ name: 'DocumentUserTagsAction' })
 const modelValue = defineModel({ type: Array, required: true })
 
 defineProps({
-  disabled: { type: Boolean },
+  disabled: {
+    type: Boolean
+  },
   options: {
     type: Array,
     default: () => []
@@ -20,6 +22,7 @@ defineProps({
     :disabled="disabled"
     :options="options"
     class="document-user-tags-actions w-100"
+    autofocus
     no-duplicates
     no-tags
     no-clear
