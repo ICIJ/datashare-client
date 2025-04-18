@@ -461,6 +461,16 @@
     },
     "model": "Email"
   },
+  "application/json": {
+    "label": "JSON document",
+    "extensions": [
+      ".json"
+    ],
+    "description": {
+      "en": "JavaScript Object Notation (JSON) file. Open using a plain text editor."
+    },
+    "model": "PlainText"
+  },
   "text/html": {
     "label": "HTML document",
     "extensions": [
@@ -984,6 +994,17 @@
     ],
     "description": {
       "en": "Most video players should be able to play this file. If not, try VLC."
+    },
+    "model": "Video"
+  },
+  "video/quicktime": {
+    "label": "QuickTime video",
+    "icon": "video",
+    "extensions": [
+      ".mov"
+    ],
+    "description": {
+      "en": "Open using QuickTime Player on a Mac or VLC on Windows."
     },
     "model": "Video"
   },
