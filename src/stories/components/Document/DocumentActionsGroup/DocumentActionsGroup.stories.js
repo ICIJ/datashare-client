@@ -1,7 +1,7 @@
 import { markRaw } from 'vue'
 import { PhFilePdf } from '@phosphor-icons/vue'
 
-import types from '@/utils/types.json'
+import types from '@/utils/content-types.json'
 import DocumentActionsGroup from '@/components/Document/DocumentActionsGroup/DocumentActionsGroup'
 import { PLACEMENT } from '@/enums/placements'
 
