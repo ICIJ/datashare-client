@@ -65,7 +65,6 @@ const errored = ref(false)
 const thumbnail = ref(null)
 
 const { isPreviewActivated, getPreviewUrl, fetchImageAsBase64, canPreviewRaw } = useDocumentPreview()
-const { t } = useI18n()
 const element = useTemplateRef('element')
 
 const classList = computed(() => {
