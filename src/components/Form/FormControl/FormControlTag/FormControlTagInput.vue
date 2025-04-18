@@ -14,6 +14,10 @@ const props = defineProps({
   inputValue: {
     type: String
   },
+  autofocus: {
+    type: Boolean,
+    default: false
+  },
   addButtonText: {
     type: String,
     default: null
@@ -117,6 +121,7 @@ defineExpose({
       <b-input
         ref="form-control-tag-input"
         class="form-control form-control-tag-input__form__field"
+        :autofocus="autofocus"
         :placeholder="placeholderIfEmpty"
         :value="inputValue"
         @input="onInput"
