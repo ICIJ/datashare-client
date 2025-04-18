@@ -13,6 +13,6 @@ const { show: showDocumentViewerModal } = useDocumentModal(props.document)
 
 <template>
   <td>
-    <document-thumbnail :document="document" crop lazy clickable :size="32" @click="showDocumentViewerModal" />
+    <document-thumbnail :document="document" crop lazy clickable size="xs" @click="showDocumentViewerModal" />
   </td>
 </template>

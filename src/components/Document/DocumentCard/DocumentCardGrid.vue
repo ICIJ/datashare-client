@@ -70,7 +70,7 @@ const showTitle = computed(() => props.properties?.includes('title'))
       <document-thumbnail
         v-if="showThumbnail"
         :document="document"
-        fit
+        size="md"
         crop
         clickable
         :active="hover"

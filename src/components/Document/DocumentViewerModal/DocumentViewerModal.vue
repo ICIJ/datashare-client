@@ -38,6 +38,6 @@ const key = computed(() => [document.value.index, document.value.id])
       <document-viewer-modal-title :document="document" />
     </template>
     <document-viewer-modal-nav v-model:document="document" class="mb-3" />
-    <document-thumbnail :key="key" :document="document" fit class="d-inline-flex mx-auto" />
+    <document-thumbnail :key="key" :document="document" fit size="md" class="mx-auto" />
   </app-modal>
 </template>
