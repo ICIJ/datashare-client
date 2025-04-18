@@ -1,0 +1,42 @@
+{
+  "Document": {
+    "icon": "file",
+    "background": "var(--bs-secondary-bg-subtle)",
+    "foreground": "var(--bs-secondary)"
+  },
+  "Pages": {
+    "icon": ["files", "fill"],
+    "background": "var(--bs-success-bg-subtle)",
+    "foreground": "var(--bs-success)"
+  },
+  "Image": {
+    "icon": ["image", "fill"],
+    "background": "var(--bs-danger-bg-subtle)",
+    "foreground": "var(--bs-danger)"
+  },
+  "Video": {
+    "icon": ["play", "fill"],
+    "background": "var(--bs-danger-bg-subtle)",
+    "foreground": "var(--bs-danger)"
+  },
+  "Audio": {
+    "icon": ["headphones", "fill"],
+    "background": "var(--bs-danger-bg-subtle)",
+    "foreground": "var(--bs-danger)"
+  },
+  "PlainText": {
+    "icon": "text-align-left",
+    "background": "var(--bs-info-bg-subtle)",
+    "foreground": "var(--bs-info)"
+  },
+  "Table": {
+    "icon": ["grid-four", "fill"],
+    "background": "var(--bs-warning-bg-subtle)",
+    "foreground": "var(--bs-warning)"
+  },
+  "Email": {
+    "icon": ["at", "fill"],
+    "background": "var(--bs-primary-bg-subtle)",
+    "foreground": "var(--bs-primary)"
+  }
+}
