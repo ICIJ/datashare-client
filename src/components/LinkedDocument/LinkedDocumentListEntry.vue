@@ -13,7 +13,7 @@
 <script setup>
 import { PhosphorIcon } from '@icij/murmur-next'
 
-import { findContentTypeIcon } from '@/utils/phosphorIconFiles'
+import { findContentTypeIcon } from '@/utils/iconFiles'
 import RouterLinkDocument from '@/components/RouterLink/RouterLinkDocument'
 
 defineOptions({

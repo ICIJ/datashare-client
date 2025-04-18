@@ -7,7 +7,7 @@ import { extname } from 'path'
 import { Api } from '@/api'
 import EsDoc from '@/api/resources/EsDoc'
 import humanSize from '@/utils/humanSize'
-import { findContentTypeIcon } from '@/utils/phosphorIconFiles'
+import { findContentTypeIcon } from '@/utils/iconFiles'
 import types from '@/utils/contentTypes.json'
 
 const _parent = '_PARENT'
