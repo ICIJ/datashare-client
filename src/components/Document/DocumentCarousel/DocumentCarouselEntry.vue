@@ -29,8 +29,8 @@ const to = computed(() => {
   return { name, params, query }
 })
 
-const thumbnailSize = computed(() => {
-  return props.active ? 100 : 'sm'
+const size = computed(() => {
+  return props.active ? 'md' : 'sm'
 })
 
 const title = computed(() => {
@@ -40,8 +40,7 @@ const title = computed(() => {
 
 <template>
   <router-link class="document-carousel-entry" :to="to" :class="classList" @click="emit('select', document)">
-    <document-thumbnail :size="thumbnailSize" :document="document" crop no-placeholder class="mb-2" />
-    <component :is="document.contentTypeIcon" size="1.25em" class="mb-2" />
+    <document-thumbnail :size="size" :document="document" crop class="mb-2" />
     <div class="document-carousel-entry__title">
       {{ title }}
     </div>
