@@ -8,7 +8,7 @@ import { Api } from '@/api'
 import EsDoc from '@/api/resources/EsDoc'
 import humanSize from '@/utils/humanSize'
 import { findContentTypeIcon } from '@/utils/phosphorIconFiles'
-import types from '@/utils/content-types.json'
+import types from '@/utils/contentTypes.json'
 
 const _parent = '_PARENT'
 const _root = '_ROOT'

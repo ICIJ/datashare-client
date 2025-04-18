@@ -1,4 +1,4 @@
-import types from '@/utils/content-types.json'
+import types from '@/utils/contentTypes.json'
 import FormControlTag from '@/components/Form/FormControl/FormControlTag/FormControlTag'
 import { buttonSizesArgType } from '~storybook/utils'
 import { SIZE } from '@/enums/sizes'
