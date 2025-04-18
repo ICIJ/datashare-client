@@ -4,9 +4,9 @@
     "yes": "Oui",
     "no": "Non",
     "submit": "Valider",
-    "reset": "Reset",
+    "reset": "Réinitialiser",
     "you": "Vous",
-    "building": "Our team is still crafting something awesome for this page. Stay tuned!"
+    "building": "Notre équipe prépare de nouvelles fonctionnalités pour cette page. À suivre !"
   },
   "addonCard": {
     "plugin": {
@@ -23,12 +23,12 @@
     }
   },
   "addonUrlInput": {
-    "installFromUrl": "Install from a URL",
-    "install": "Install",
+    "installFromUrl": "Installer depuis une URL",
+    "install": "Installer",
     "enterCorrectUrl": "Veuillez saisir une URL valide."
   },
   "addonCardViewActions": {
-    "version": "Version: {v}",
+    "version": "Version : {v}",
     "install": "Install {v}",
     "update": "Update to {v}",
     "uninstall": "Désinstaller"
