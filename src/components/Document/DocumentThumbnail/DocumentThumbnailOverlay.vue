@@ -3,7 +3,7 @@ import { PhosphorIcon } from '@icij/murmur-next'
 
 defineProps({
   size: {
-    type: [Number, String],
+    type: String,
     default: 'sm'
   },
   icon: {
@@ -15,7 +15,7 @@ defineProps({
 
 <template>
   <span class="document-thumbnail-overlay">
-    <phosphor-icon :name="icon" :size="String(size)" />
+    <phosphor-icon :name="icon" :size="size" />
   </span>
 </template>
 

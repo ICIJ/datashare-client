@@ -18,7 +18,7 @@ const props = defineProps({
     default: 0
   },
   size: {
-    type: [Number, String],
+    type: String,
     default: 'sm'
   },
   clickable: {
@@ -45,9 +45,9 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  ratio: {
+  aspectRatio: {
     type: Number,
-    default: null
+    default: 1
   },
   noPlaceholder: {
     type: Boolean,
@@ -68,7 +68,7 @@ const props = defineProps({
 const emit = defineEmits(['loaded', 'errored', 'enter'])
 
 const errored = ref(false)
-const thumbnailSrc = ref(null)
+const thumbnail = ref(null)
 
 const { isPreviewActivated, getPreviewUrl, fetchImageAsBase64, canPreviewRaw } = useDocumentPreview()
 const { t } = useI18n()
@@ -76,22 +76,14 @@ const element = useTemplateRef('element')
 
 const classList = computed(() => {
   return {
-    'document-thumbnail--hide-placeholder': props.noPlaceholder,
     'document-thumbnail--active': props.active,
     'document-thumbnail--crop': props.crop,
     'document-thumbnail--fit': props.fit,
     'document-thumbnail--errored': errored.value,
-    'document-thumbnail--loaded': !!thumbnailSrc.value,
+    'document-thumbnail--loaded': !!thumbnail.value,
     'document-thumbnail--clickable': props.clickable,
     'document-thumbnail--hover': props.hover,
     [`document-thumbnail--${props.size}`]: isNaN(props.size)
-  }
-})
-
-const style = computed(() => {
-  return {
-    '--estimated-ratio': props.ratio,
-    '--estimated-height': isNaN(props.size) ? null : `${props.size}px`
   }
 })
 
@@ -101,14 +93,23 @@ const thumbnailUrl = computed(() => {
   return getPreviewUrl({ index, id, routing }, { page, size })
 })
 
-const thumbnailAlt = computed(() => `${props.document.basename} preview`)
+const alt = computed(() => `${props.document.basename} preview`)
 const lazyLoadable = computed(() => window && 'IntersectionObserver' in window)
 const overlayIcon = computed(() => (errored.value ? 'eye-slash' : 'eye'))
 const title = computed(() => (errored.value ? t('documentThumbnail.noPreview') : ''))
 
-const showImage = computed(() => isPreviewActivated.value || canPreviewRaw(props.document))
-const showPlaceholder = computed(() => !props.noPlaceholder && !thumbnailSrc.value)
+const showImage = computed(() => !!thumbnail.value && (isPreviewActivated.value || canPreviewRaw(props.document)))
+const showPlaceholder = computed(() => !props.noPlaceholder && !thumbnail.value)
 const showOverlay = computed(() => !props.noOverlay)
+
+const style = computed(() => {
+  return {
+    '--document-thumbnail-width': thumbnail.value?.width ?? null,
+    '--document-thumbnail-aspect-ratio': thumbnail.value
+      ? thumbnail.value.width / thumbnail.value.height
+      : props.aspectRatio
+  }
+})
 
 function fetchAsBase64() {
   const url = canPreviewRaw(props.document) ? props.document.inlineFullUrl : thumbnailUrl.value
@@ -117,8 +118,8 @@ function fetchAsBase64() {
 
 async function fetchAndLoad() {
   try {
-    if (!thumbnailSrc.value && !errored.value) {
-      thumbnailSrc.value = await fetchAsBase64()
+    if (!thumbnail.value && !errored.value) {
+      thumbnail.value = await fetchAsBase64()
       emit('loaded')
     }
   } catch (_) {
@@ -157,10 +158,11 @@ onBeforeMount(() => {
     <document-thumbnail-image
       v-if="showImage"
       class="document-thumbnail__image"
-      :alt="thumbnailAlt"
-      :src="thumbnailSrc"
+      :alt="alt"
+      :src="thumbnail.src"
+      :height="thumbnail.height"
+      :width="thumbnail.width"
       :crop="crop"
-      :fit="fit"
     />
     <document-thumbnail-placeholder
       v-if="showPlaceholder"
@@ -193,20 +195,35 @@ onBeforeMount(() => {
     xxl: 960px
   );
 
-  --height: var(--estimated-height, 0);
-  --width: var(--height);
+  $fontSizes: (
+    xs: 1.5rem,
+    sm: 2rem,
+    md: 2.5rem,
+    lg: 3rem,
+    xl: 3.5rem,
+    xxl: 4rem
+  );
 
   color: var(--bs-secondary-color);
-  min-width: var(--width);
-  max-width: var(--width);
-  min-height: var(--height);
   overflow: hidden;
   position: relative;
 
   @each $name, $value in $heights {
     &--#{$name} {
-      --height: #{$value};
+      font-size: map-get($fontSizes, $name);
+      width: $value;
+      max-width: 100%;
+      aspect-ratio: var(--document-thumbnail-aspect-ratio, 1);
     }
+  }
+
+  &--crop {
+    aspect-ratio: 1;
+  }
+
+  &--fit:not(&--errored).document-thumbnail--loaded {
+    width: 100%;
+    max-width: calc(var(--document-thumbnail-width) * 1px);
   }
 
   &:after {
@@ -242,56 +259,17 @@ onBeforeMount(() => {
     }
   }
 
-  &--crop {
-    height: var(--height);
-    width: var(--width);
-  }
-
-  &--fit {
-    width: 100%;
-    max-width: 100%;
-    min-width: auto;
-
-    &.document-thumbnail--crop {
-      position: relative;
-      min-height: auto;
-      height: auto;
-
-      &:before {
-        content: '';
-        padding-bottom: 100%;
-        display: block;
-      }
-    }
-  }
-
   &--loaded:not(&--errored) &__image {
     opacity: 1;
   }
 
-  &--estimated-size:not(&--loaded):not(&--errored) {
-    &:before {
-      content: '';
-      display: inline-block;
-      max-width: calc(var(--estimated-height) / var(--estimated-ratio));
-      padding-top: calc(100% * var(--estimated-ratio));
-      width: 100%;
-    }
-
-    .document-thumbnail__image {
-      position: absolute;
-    }
-  }
-
-  @each $name, $value in $heights {
-    &--estimated-size:not(&--loaded):not(&--errored).document-thumbnail--#{$name} &__image {
-      height: $value;
-      width: calc(#{$value} / var(--estimated-ratio));
-    }
-  }
-
   &__image {
     z-index: $zindex-image;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
   }
 
   &__placeholder {
@@ -300,10 +278,6 @@ onBeforeMount(() => {
 
   &__overlay {
     $zindex-overlay: 30;
-  }
-
-  &--hide-placeholder &__placeholder {
-    display: none;
   }
 
   &__placeholder + &__overlay {
