@@ -76,7 +76,7 @@ export const useDocumentPreview = () => {
    * @returns {boolean} True if the document can be previewed in raw format, false otherwise.
    */
   function canPreviewRaw({ extractionLevel = -1, contentLength = 0, isSupportedImage = false } = {}) {
-    return extractionLevel === 0 && isSupportedImage && contentLength < settings.previewRawMaxContentLength
+    return extractionLevel < 2 && isSupportedImage && contentLength < settings.previewRawMaxContentLength
   }
 
   /**
