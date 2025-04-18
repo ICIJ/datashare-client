@@ -7,7 +7,8 @@
         "description": {
       "en": "Open directly in Chrome. Otherwise open using Preview on a Mac or Acrobat Reader on Windows."
     },
-    "preview": "yes"
+    "preview": "yes",
+    "model": "Pages"
   },
   "application/vnd.ibm.modcap": {
     "label": "AFP document",
@@ -25,7 +26,8 @@
       ],
         "description": {
       "en": "Open using MailRaider on a Mac or MailViewer on Windows. Outlook also works for Windows."
-    }
+    },
+    "model": "Email"
   },
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document": {
     "label": "Word 2007 document",
@@ -35,7 +37,8 @@
         ],
           "description": {
       "en": "Open using OpenOffice, LibreOffice or Word."
-    }
+    },
+    "model": "Pages"
   },
   "application/vnd.openxmlformats-officedocument.wordprocessingml.template": {
     "label": "Word 2007 template",
@@ -45,7 +48,8 @@
         ],
           "description": {
       "en": "Open using OpenOffice, LibreOffice or Word."
-    }
+    },
+    "model": "Pages"
   },
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
     "label": "Excel 2007 Workbook",
@@ -55,7 +59,8 @@
         ],
           "description": {
       "en": "Open using Excel, OpenOffice or LibreOffice."
-    }
+    },
+    "model": "Table"
   },
   "application/vnd.openxmlformats-officedocument.presentationml.presentation": {
     "label": "PowerPoint 2007 presentation",
@@ -65,7 +70,8 @@
         ],
           "description": {
       "en": "Open using PowerPoint on Mac or Windows."
-    }
+    },
+    "model": "Pages"
   },
   "application/vnd.openxmlformats-officedocument.presentationml.slideshow": {
     "label": "PowerPoint 2007 slideshow",
@@ -75,7 +81,8 @@
         ],
           "description": {
       "en": "Open using PowerPoint on Mac or Windows."
-    }
+    },
+    "model": "Pages"
   },
   "application/vnd.ms-spreadsheetml": {
     "label": "Excel 2003 XML spreadsheet",
@@ -85,7 +92,8 @@
         ],
           "description": {
       "en": "An Excel spreadsheet saved in WordML (XML) format. Can be opened using Excel 2003 or later, OpenOffice or LibreOffice."
-    }
+    },
+    "model": "Table"
   },
   "application/vnd.ms-wordml": {
     "label": "Word 2003 XML document",
@@ -95,7 +103,8 @@
         ],
           "description": {
       "en": "A Word document saved in WordML (XML) format. Can be opened using Word 2003 or later, OpenOffice or LibreOffice."
-    }
+    },
+    "model": "Pages"
   },
   "application/msword": {
     "label": "Word 97-2003 document",
@@ -106,7 +115,8 @@
         ],
           "description": {
       "en": "Open using OpenOffice, LibreOffice or Word."
-    }
+    },
+    "model": "Pages"
   },
   "application/vnd.ms-word.document.macroenabled.12": {
     "label": "Word document (with macros)",
@@ -119,7 +129,8 @@
     },
     "warning": {
       "en": "This file contains executable code. Ensure you have macros disabled before opening it."
-    }
+    },
+    "model": "Pages"
   },
   "application/vnd.ms-word.template.macroenabled.12": {
     "label": "Word template (with macros)",
@@ -132,7 +143,8 @@
     },
     "warning": {
       "en": "This file contains executable code. Ensure you have macros disabled before opening it."
-    }
+    },
+    "model": "Pages"
   },
   "application/x-msaccess": {
     "label": "Access database",
@@ -150,7 +162,8 @@
       ],
         "description": {
       "en": "Open using Microsoft Publisher."
-    }
+    },
+    "model": "Pages"
   },
   "application/vnd.ms-project": {
     "label": "Microsoft Project document",
@@ -171,7 +184,8 @@
       ],
         "description": {
       "en": "Microsoft Works was discontinued several years ago and you may only be able to open this file using one of the official converters from Microsoft."
-    }
+    },
+    "model": "Pages"
   },
   "application/vnd.ms-xpsdocument": {
     "label": "XML Paper document",
@@ -189,7 +203,8 @@
       ],
         "description": {
       "en": "An embedded graph drawing typically found in Microsoft Office documents."
-    }
+    },
+    "model": "Image"
   },
   "application/vnd.visio": {
     "label": "Visio document",
@@ -204,7 +219,8 @@
     },
     "warning": {
       "en": "Visio files may contain VBA macro code. Ensure macros are disabled in Visio before opening this file or it's possible that your system will be compromised."
-    }
+    },
+    "model": "Image"
   },
   "application/vnd.wordperfect": {
     "label": "Wordperfect document",
@@ -223,7 +239,8 @@
         ],
           "description": {
       "en": "Open using TextEdit on a Mac or Word, OpenOffice or LibreOffice on Windows."
-    }
+    },
+    "model": "Pages"
   },
   "application/vnd.ms-excel": {
     "label": "Excel 95-2003 spreadsheet",
@@ -235,7 +252,8 @@
         ],
           "description": {
       "en": "Open using Excel, OpenOffice or LibreOffice."
-    }
+    },
+    "model": "Table"
   },
   "application/vnd.ms-excel.sheet.macroenabled.12": {
     "label": "Excel spreadsheet (with macros)",
@@ -247,7 +265,8 @@
     },
     "warning": {
       "en": "This file contains executable code. Ensure you have macros disabled before opening it."
-    }
+    },
+    "model": "Table"
   },
   "application/vnd.ms-excel.sheet.binary.macroenabled.12": {
     "label": "Excel Binary Workbook",
@@ -260,7 +279,8 @@
     },
     "warning": {
       "en": "This file contains executable code. Ensure you have macros disabled before opening it."
-    }
+    },
+    "model": "Table"
   },
   "application/vnd.ms-excel.sheet.4": {
     "label": "Excel 4.0 spreadsheet",
@@ -270,7 +290,8 @@
         ],
           "description": {
       "en": "An old Excel spreadsheet file. Open using Excel, OpenOffice or LibreOffice."
-    }
+    },
+    "model": "Table"
   },
   "application/vnd.ms-excel.sheet.3": {
     "label": "Excel 3.0 spreadsheet",
@@ -280,7 +301,8 @@
         ],
           "description": {
       "en": "An ancient Excel spreadsheet file. Open using Excel, OpenOffice or LibreOffice."
-    }
+    },
+    "model": "Table"
   },
   "application/vnd.ms-powerpoint": {
     "label": "PowerPoint 95-2003 presentation",
@@ -290,13 +312,15 @@
         ],
           "description": {
       "en": "Open using PowerPoint on Mac or Windows."
-    }
+    },
+    "model": "Pages"
   },
   "application/x-tika-msoffice": {
     "label": "Other Office file",
       "description": {
       "en": "Open using the associated Office application."
-    }
+    },
+    "model": "Pages"
   },
   "application/x-tika-msoffice-embedded": {
     "label": "Office embedded file"
@@ -309,12 +333,23 @@
   },
   "application/vnd.oasis.opendocument.text": {
     "label": "OpenDocument Text document",
-      "extensions": [
-        ".odt"
-      ],
-        "description": {
+    "extensions": [
+      ".odt"
+    ],
+    "description": {
       "en": "Open using OpenOffice or LibreOffice on Windows or Mac."
-    }
+    },
+    "model": "Pages"
+  },
+  "application/vnd.oasis.opendocument.spreadsheet": {
+    "label": "OpenDocument Spreadsheet document",
+    "extensions": [
+      ".ods"
+    ],
+    "description": {
+      "en": "Open using OpenOffice or LibreOffice on Windows or Mac."
+    },
+    "model": "Table"
   },
   "application/vnd.stardivision.writer": {
     "label": "StarWriter 5 document",
@@ -323,7 +358,8 @@
       ],
         "description": {
       "en": "Open using OpenOffice or LibreOffice on Windows or Mac."
-    }
+    },
+    "model": "Pages"
   },
   "application/vnd.ms-htmlhelp": {
     "label": "Compiled HTML Help",
@@ -333,7 +369,8 @@
         ],
           "description": {
       "en": "Microsoft Compiled HTML Help file, typically used to contain software documentation."
-    }
+    },
+    "model": "PlainText"
   },
   "application/xhtml+xml": {
     "label": "XHTML document",
@@ -347,7 +384,8 @@
     },
     "warning": {
       "en": "This file contains executable code. Ensure you have Javascript disabled before opening it in you browser."
-    }
+    },
+    "model": "PlainText"
   },
   "application/xml": {
     "label": "XML document",
@@ -357,7 +395,8 @@
         ],
           "description": {
       "en": "Open using whatever browser your normally use."
-    }
+    },
+    "model": "PlainText"
   },
   "application/xslt+xml": {
     "label": "XSL transform",
@@ -367,7 +406,8 @@
       ],
         "description": {
       "en": "An Extensible Stylesheet Language (XSL) file used for styling or transforming XML documents."
-    }
+    },
+    "model": "PlainText"
   },
   "application/rsd+xml": {
     "label": "RSD file",
@@ -418,7 +458,8 @@
       ],
         "description": {
       "en": "Open using MailRaider on a Mac or MailViewer on Windows. Outlook also works for Windows."
-    }
+    },
+    "model": "Email"
   },
   "text/html": {
     "label": "HTML document",
@@ -442,7 +483,8 @@
           "description": {
       "en": "Open using TextEdit on a Mac or Notepad on Windows."
     },
-    "preview": "yes"
+    "preview": "yes",
+    "model": "PlainText"
   },
   "text/csv": {
     "label": "CSV file",
@@ -452,7 +494,8 @@
         ],
           "description": {
       "en": "Comma-separated values - open using any spreadsheet editor."
-    }
+    },
+    "model": "Table"
   },
   "text/css": {
     "label": "Cascading Style Sheet (CSS)",
@@ -462,7 +505,8 @@
         "description": {
       "en": "A style sheet for describing the presentation of an HTML or XML document. This file can be opened using a text editor but is unlikely to contain any useful information."
     },
-    "preview": "yes"
+    "preview": "yes",
+    "model": "PlainText"
   },
   "text/aspdotnet": {
     "label": "ASP.NET Web Form markup",
@@ -472,7 +516,8 @@
         "description": {
       "en": "(X)HTML-based markup for dynamically rendering a Web page using Microsoft ASP.NET 2. Open using a plain text editor."
     },
-    "preview": "yes"
+    "preview": "yes",
+    "model": "PlainText"
   },
   "text/asp": {
     "label": "ASP markup",
@@ -482,7 +527,8 @@
         "description": {
       "en": "Active Server Pages use (X)HTML-based markup to dynamically render Web pages. Open using a plain text editor."
     },
-    "preview": "yes"
+    "preview": "yes",
+    "model": "PlainText"
   },
   "text/x-ini": {
     "label": "INI configuration file",
@@ -492,7 +538,8 @@
         "description": {
       "en": "Simple text-based configuration file. Open using a plain text editor."
     },
-    "preview": "yes"
+    "preview": "yes",
+    "model": "PlainText"
   },
   "text/x-php": {
     "label": "PHP source file",
@@ -505,7 +552,8 @@
     "warning": {
       "en": "For safety reasons, do not execute this file."
     },
-    "preview": "yes"
+    "preview": "yes",
+    "model": "PlainText"
   },
   "text/x-vbasic": {
     "label": "Visual Basic for Applications",
@@ -515,7 +563,8 @@
     "warning": {
       "en": "For safety reasons, do not execute this script."
     },
-    "preview": "yes"
+    "preview": "yes",
+    "model": "PlainText"
   },
   "text/x-vbscript": {
     "label": "VBScript source file",
@@ -528,7 +577,8 @@
     "warning": {
       "en": "For safety reasons, do not execute this script."
     },
-    "preview": "yes"
+    "preview": "yes",
+    "model": "PlainText"
   },
   "text/x-jsp": {
     "label": "JSP or ASP markup",
@@ -539,7 +589,8 @@
         "description": {
       "en": "Java Server Pages (JSP) or Active Server Pages (ASP) markup for a dynamic Web page. Open using a plain text editor."
     },
-    "preview": "yes"
+    "preview": "yes",
+    "model": "PlainText"
   },
   "text/x-vbdotnet": {
     "label": "Visual Basic source file",
@@ -553,7 +604,8 @@
     "warning": {
       "en": "Do not run this program."
     },
-    "preview": "yes"
+    "preview": "yes",
+    "model": "PlainText"
   },
   "text/x-vcard": {
     "label": "vCard",
@@ -573,7 +625,8 @@
         "description": {
       "en": "SQL database script file. Open using a text editor. While this file may contain useful data, understanding it will require some technical knowledge."
     },
-    "preview": "yes"
+    "preview": "yes",
+    "model": "PlainText"
   },
   "text/calendar": {
     "label": "iCalendar file",
@@ -595,7 +648,8 @@
       ],
         "description": {
       "en": "A log file. Normally contains a record of diagnostic output from an application or service."
-    }
+    },
+    "model": "PlainText"
   },
   "image/tiff": {
     "label": "TIFF image",
@@ -606,7 +660,8 @@
         ],
           "description": {
       "en": "Open using Preview on a Mac and Very Large Image Viewer or IrfanView on Windows."
-    }
+    },
+    "model": "Image"
   },
   "image/jpeg": {
     "label": "JPEG image",
@@ -618,7 +673,8 @@
           "description": {
       "en": "Open using Preview on a Mac and Windows Picture Viewer on Windows."
     },
-    "preview": "yes"
+    "preview": "yes",
+    "model": "Image"
   },
   "image/x-ms-bmp": {
     "label": "Bitmap image",
@@ -627,7 +683,8 @@
           ".bmp"
         ],
           "description": {
-      "en": "Open using Preview on a Mac and Windows Picture Viewer or Paint on Windows."
+      "en": "Open using Preview on a Mac and Windows Picture Viewer or Paint on Windows.",
+      "model": "Image"
     }
   },
   "image/gif": {
@@ -639,7 +696,8 @@
           "description": {
       "en": "Open using Preview on a Mac and Windows Picture Viewer on Windows."
     },
-    "preview": "yes"
+    "preview": "yes",
+    "model": "Image"
   },
   "image/png": {
     "label": "PNG image",
@@ -650,7 +708,8 @@
           "description": {
       "en": "Open using Preview on a Mac and Windows Picture Viewer on Windows."
     },
-    "preview": "yes"
+    "preview": "yes",
+    "model": "Image"
   },
   "image/vnd.adobe.photoshop": {
     "label": "Photoshop PSD",
@@ -663,7 +722,8 @@
         ],
           "description": {
       "en": "Open using Preview or Photoshop on a Mac or Photoshop on Windows."
-    }
+    },
+    "model": "Image"
   },
   "image/wmf": {
     "label": "Windows Metafile image",
@@ -673,7 +733,8 @@
         ],
           "description": {
       "en": "Open using OpenOffice, LibreOffice or Word."
-    }
+    },
+    "model": "Image"
   },
   "image/emf": {
     "label": "Windows Enhanced Metafile image",
@@ -683,7 +744,8 @@
         ],
           "description": {
       "en": "Open using OpenOffice, LibreOffice or Word."
-    }
+    },
+    "model": "Image"
   },
   "image/vnd.microsoft.icon": {
     "label": "Favicon",
@@ -694,7 +756,8 @@
           "description": {
       "en": "Windows-format icon file."
     },
-    "preview": "yes"
+    "preview": "yes",
+    "model": "Image"
   },
   "image/svg+xml": {
     "label": "SVG image",
@@ -705,7 +768,8 @@
           "description": {
       "en": "A Scalable Vector Graphics (SVG image). Typically used for logos and icons."
     },
-    "preview": "yes"
+    "preview": "yes",
+    "model": "Image"
   },
   "image/vnd.dwg": {
     "label": "AutoCAD drawing",
@@ -715,7 +779,8 @@
         ],
           "description": {
       "en": "An AutoCAD drawing containing 2D and 3D design data and metadata."
-    }
+    },
+    "model": "Image"
   },
   "image/icns": {
     "label": "Apple Icon Image",
@@ -725,7 +790,8 @@
         ],
           "description": {
       "en": "An icon format used with Apple applications."
-    }
+    },
+    "model": "Image"
   },
   "application/x-ms-installer": {
     "label": "Windows Installer (MSI)",
@@ -867,7 +933,8 @@
     },
     "warning": {
       "en": "Do not open this file using Flash player or in your browser unless you've disabled local file access."
-    }
+    },
+    "model": "Video"
   },
   "audio/x-wav": {
     "label": "WAV audio",
@@ -877,7 +944,8 @@
         ],
           "description": {
       "en": "Open using your usual audio player."
-    }
+    },
+    "model": "Audio"
   },
   "audio/mpeg": {
     "label": "MPEG audio",
@@ -887,7 +955,8 @@
         ],
           "description": {
       "en": "Open using your usual audio player."
-    }
+    },
+    "model": "Audio"
   },
   "audio/x-ms-wma": {
     "label": "Windows Media Audio",
@@ -897,7 +966,8 @@
         ],
           "description": {
       "en": "Open using Windows Media Player or VLC."
-    }
+    },
+    "model": "Audio"
   },
   "video/mpeg": {
     "label": "MPEG video",
@@ -905,9 +975,10 @@
         "extensions": [
           ".mpeg"
         ],
-          "description": {
+    "description": {
       "en": "Most video players should be able to play this file. If not, try VLC."
-    }
+    },
+    "model": "Video"
   },
   "video/x-ms-wmv": {
     "label": "Windows Media Video",
@@ -917,7 +988,8 @@
         ],
           "description": {
       "en": "Open using Windows Media Player or VLC."
-    }
+    },
+    "model": "Video"
   },
   "video/x-ms-asf": {
     "label": "ASF video",
@@ -927,7 +999,8 @@
         ],
           "description": {
       "en": "Advanced Systems Format video. Open using Windows Media Player or VLC."
-    }
+    },
+    "model": "Video"
   },
   "video/x-msvideo": {
     "label": "AVI video",
@@ -937,7 +1010,8 @@
         ],
           "description": {
       "en": "Open using VLC or Windows Media Player."
-    }
+    },
+    "model": "Video"
   },
   "application/mp4": {
     "label": "MP4 audio/video",
@@ -948,7 +1022,8 @@
         ],
           "description": {
       "en": "MPEG-4 Part 14 audio/video file. Open using VLC."
-    }
+    },
+    "model": "Video"
   },
   "application/octet-stream": {
     "label": "Unknown file",
@@ -963,13 +1038,15 @@
       ],
         "description": {
       "en": "An Outlook PST mailbox archive that may contain multiple emails."
-    }
+    },
+    "model": "Email"
   },
   "application/mbox": {
     "label": "Mbox database",
       "description": {
       "en": "A database containing a collection of email messages in plain text."
-    }
+    },
+    "model": "Email"
   },
   "application/postscript": {
     "label": "PostScript file",
