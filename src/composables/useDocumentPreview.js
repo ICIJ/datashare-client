@@ -100,7 +100,7 @@ export const useDocumentPreview = () => {
    * Fetch the preview image as a base64 string.
    *
    * @param {string} url - The URL of the preview image.
-   * @returns {Promise<string>} A promise that resolves to the base64 string.
+   * @returns {Promise<object>} A promise that resolves to an object containing the base64 string and image dimensions.
    */
   async function fetchImageAsBase64(url) {
     try {
@@ -111,7 +111,8 @@ export const useDocumentPreview = () => {
       const ctx = canvas.getContext('2d')
       ctx.drawImage(img, 0, 0)
       const base64data = canvas.toDataURL('image/jpeg').replace(/^data:image\/jpeg;base64,/, '')
-      return `data:image/jpeg;base64,${base64data}`
+      const src = `data:image/jpeg;base64,${base64data}`
+      return { src, width: img.width, height: img.height }
     } catch (error) {
       throw new Error('Unable to fetch the image as base64')
     }
