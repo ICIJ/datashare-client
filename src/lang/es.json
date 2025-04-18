@@ -1,19 +1,102 @@
 {
   "global": {
-    "all": "Todos",
     "cancel": "Cancelar",
-    "enterCorrectUrl": "Por favor introduzca una URL correcta.",
     "yes": "Sí",
     "no": "No",
     "submit": "Guardar",
-    "confirmLabel": "¿Estás seguro/a?",
-    "emptyTextTable": "No hay nada para mostrar",
-    "you": "Tú"
+    "reset": "Reset",
+    "you": "Tú",
+    "building": "Our team is still crafting something awesome for this page. Stay tuned!"
   },
-  "aggregations": {
-    "more": "Explora más",
-    "placeholder": "Búsqueda de personas, organizaciones, localizaciones...",
-    "relative": "Relacionado a la búsqueda"
+  "addonCard": {
+    "plugin": {
+      "submitSuccess": "Extensión instalada con éxito, por favor reinicie Datashare.",
+      "submitError": "Error mientras se instalaba la extensión.",
+      "deleteSuccess": "Plugin eliminado correctamente.",
+      "deleteError": "Error mientras se eliminaba el plugin."
+    },
+    "extension": {
+      "submitSuccess": "El plugin se ha instalado correctamente.",
+      "submitError": "Error mientras se instalaba el plugin.",
+      "deleteSuccess": "Extensión desinstalada correctamente.",
+      "deleteError": "Error mientras se desinstalaba la extensión."
+    }
+  },
+  "addonUrlInput": {
+    "installFromUrl": "Install from a URL",
+    "install": "Install",
+    "enterCorrectUrl": "Por favor introduzca una URL correcta."
+  },
+  "addonCardViewActions": {
+    "version": "Version: {v}",
+    "install": "Install {v}",
+    "update": "Update to {v}",
+    "uninstall": "Desinstalar"
+  },
+  "addonCardViewDetails": {
+    "homepage": "Homepage:"
+  },
+  "appModalConfirm": {
+    "title": "¿Estás seguro/a?",
+    "description": "This action cannot be undone."
+  },
+  "appModalHeader": {
+    "close": "Close"
+  },
+  "appModalFooter": {
+    "cancelTitle": "Cancelar",
+    "okTitle": "Sí"
+  },
+  "buttonAdd": {
+    "label": "Add new"
+  },
+  "buttonToggleSettings": {
+    "label": "Configuración"
+  },
+  "buttonToggleSidebar": {
+    "expand": "Expand sidebar",
+    "reduce": "Reduce sidebar"
+  },
+  "buttonClearSearch": {
+    "label": "Clear search"
+  },
+  "buttonClearHistory": {
+    "label": "Borrar historia"
+  },
+  "buttonClearSavedSearches": {
+    "label": "Clear saved searches"
+  },
+  "buttonDownloadDocuments": {
+    "label": "Download documents"
+  },
+  "buttonTogglePin": {
+    "pin": "Pin to menu",
+    "unpin": "Unpin"
+  },
+  "buttonToggleBatchMode": {
+    "labelBatchMode": "Selection mode",
+    "labelSingleFlow": "Close selection mode"
+  },
+  "buttonSaveSearch": {
+    "label": "Save",
+    "labelSaving": "Saving",
+    "labelSaved": "Search saved"
+  },
+  "buttonToggleAdvancedSearch": {
+    "label": "Advanced"
+  },
+  "buttonToggleFilters": {
+    "label": "Filter"
+  },
+  "buttonToggleSearchBreadcrumb": {
+    "label": "Toggle search breadcrumb"
+  },
+  "buttonToggleRecommendation": {
+    "mark": "Marcar como recomendado",
+    "unmark": "Desmarcar como recomendado"
+  },
+  "buttonToTop": {
+    "label": "Back to top"
   },
   "contentTextLengthWarning": {
     "title": "Este archivo es voluminoso",
@@ -21,19 +104,99 @@
     "download": "La búsqueda dentro de este documento puede ser larga. Considere descargarle si su entorno está seguro.",
     "open": "Abrir de todos modos"
   },
+  "dismissableAlert": {
+    "close": "Close",
+    "dontShow": "Don't show this again"
+  },
+  "dismissableToastBody": {
+    "close": "Close"
+  },
+  "displayBoolean": {
+    "yes": "Sí",
+    "no": "No"
+  },
+  "displayStarred": {
+    "yes": "Favoritos",
+    "no": "No favoritos"
+  },
+  "displayDatetimeRange": {
+    "title": "From {start} to {end}"
+  },
+  "displayStatus": {
+    "success": "Success",
+    "error": "Failure",
+    "failure": "Failure",
+    "danger": "Failure",
+    "warning": "Warning",
+    "info": "Information",
+    "running": "Running",
+    "queued": "Queued",
+    "draft": "Draft"
+  },
+  "displayVisibility": {
+    "private": "Private to you",
+    "public": "Public to project members"
+  },
+  "documentTranslationAlertToggler": {
+    "viewOriginal": "View original",
+    "viewTranslation": "View translation"
+  },
+  "documentTranslationAlertSource": {
+    "detected": "Idioma detectado"
+  },
+  "documentDownloadPopover": {
+    "extensionWarning": "This document has the wrong file extension for its type. You might need to <strong>add the extension {extension}</strong> before you can open it.",
+    "download": "Descargar",
+    "downloadWithoutMetadata": "Download without metadata",
+    "downloadExtractText": "Download text",
+    "downloadRoot": "Download root",
+    "sectionTitle": "What's the document's title?",
+    "sectionContentType": "What's the document's type?",
+    "sectionDescription": "Once downloaded, how do I open it?"
+  },
+  "entityPopoverInfo": {
+    "content": "This entity was extracted with:",
+    "label": "{extractor} in {language}"
+  },
+  "entityPopoverMention": {
+    "noExcerpt": "This entity was extracted from the metadata."
+  },
+  "entityPopoverMentionOccurrences": {
+    "occurrences": "This mention appears {offsets} times | This mention appears {offsets} time | This mention appears {offsets} times",
+    "projects": "in {n} projects | in {n} project | in {n} projects:"
+  },
+  "entityPopoverTabGroup": {
+    "mentions": "Mentions",
+    "info": "Info"
+  },
   "error": {
-    "title": "Hay algo mal",
+    "title": "Error",
     "description": "Ha ocurrido un error. Por favor, inténtelo de nuevo más tarde o póngase en contacto con su administrador si el problema persiste.",
     "noProjects": "Your project list is empty. Please contact your administrator.",
-    "notFound": "Page not found."
+    "notFound": "Page not found.",
+    "logout": "Log out",
+    "faq": "Preguntas frecuentes (FAQ)",
+    "userGuides": "Guía del Usuario",
+    "help": "Pedir ayuda"
+  },
+  "filtersPanelSectionFilterActions": {
+    "expand": "Ampliar"
+  },
+  "filtersPanelSectionFilterTitleToggler": {
+    "toggle": "Toggle filter"
+  },
+  "searchResultsActions": {
+    "deselectAll": "Unselect {count} documents",
+    "selectAll": "Select all {count}",
+    "tag": "Etiqueta",
+    "star": "Marcar como favorito",
+    "recommend": "Recommend",
+    "download": "Descargar"
   },
   "search": {
     "title": "Buscar",
-    "layout": {
-      "grid": "Vista cuadrícula",
-      "list": "Vista lista",
-      "table": "Vista tabla"
-    },
+    "emptyStateLabel": "Oh, it’s lonely in here... This project has no documents yet.",
+    "emptyStateAction": "Add documents",
     "errors": {
       "badRequest": "Tu término de búsqueda es incorrecto",
       "internalError": "El servidor ha encontrado un problema",
@@ -58,7 +221,7 @@
     "placeholder": "Buscar en documentos...",
     "buttonLabel": "Buscar",
     "searchIn": "Buscar en {plural}...",
-    "searchInProjects": "Buscar en proyectos",
+    "searchInProjects": "Filter projects...",
     "hideFilters": "Ocultar los filtros",
     "showFilters": "Mostrar los filtros",
     "contextualizeFiltersLabel": "Contextualizar filtros",
@@ -66,8 +229,7 @@
     "tips": "Consejos para mejorar la búsqueda",
     "settings": {
       "title": "Configuración de búsqueda",
-      "resultsPerPage": "Números de resultados por página",
-      "sortBy": "Ordenar resultados por"
+      "resultsPerPage": "Números de resultados por página"
     },
     "results": {
       "match": "coincidir en doc",
@@ -99,56 +261,161 @@
         "default": "por defecto",
         "count": "frecuencia"
       }
-    },
-    "filtersTitle": "Filtros",
-    "clearFilters": "Limpiar todo",
-    "clearFiltersDescription": "Limpiar la consulta y los filtros seleccionados de la búsqueda.",
-    "back": "Regresar a resultados de búsqueda",
-    "try": "Usted puede intentar a",
-    "nav": {
-      "share": "Comparte un enlace a este archivo",
-      "previous": {
-        "label": "Anterior",
-        "tooltipMac": "Documento anterior (<kbd>⌘</kbd> + <kbd>←</kbd>)",
-        "tooltipOthers": "Documento anterior (<kbd>ctrl</kbd> + <kbd>←</kbd>)"
-      },
-      "next": {
-        "label": "Siguiente",
-        "tooltipMac": "Documento siguiente (<kbd>⌘</kbd> + <kbd>→</kbd>)",
-        "tooltipOthers": "Documento siguiente (<kbd>ctrl</kbd> + <kbd>→</kbd>)"
-      },
-      "document": {
-        "extensionWarning": "Este documento tiene una extensión incorrecta para su tipo. Puede que necesite añadir la extensión <code>{extension}</code> antes de poder abrirlo."
-      },
-      "markAsRecommended": "Marcar como recomendado",
-      "unmarkAsRecommended": "Desmarcar como recomendado",
-      "markAsRecommendedBy": "Marcado como recomendado por nadie: | Marcado como recomendado por 1 usuario: | Marcado como recomendado por {count} usuarios:"
     }
   },
   "searchFormControl": {
     "submitLabel": "Buscar"
   },
-  "pagination": {
-    "firstPage": "Ir a primera página",
-    "previousPage": "Ir a página anterior",
-    "nextPage": "Ir a página siguiente",
-    "lastPage": "Ir a última página"
+  "searchParameterQuery": {
+    "title": "Unable to parse the query"
+  },
+  "searchSavedList": {
+    "title": "Saved searches",
+    "allRemoved": "All saved searches have been removed.",
+    "emptyStateLabel": "There are no saved searches. Go to search to save important searches",
+    "emptyStateAction": "Go to search"
+  },
+  "searchSavedEntries": {
+    "fields": {
+      "creationDate": "Created on",
+      "name": "Name of the saved search",
+      "author": "Autor"
+    },
+    "empty": "No saved searches."
+  },
+  "searchSavedEntriesRowActions": {
+    "removeTitle": "Are you sure you want to delete the saved search \"{name}\"?",
+    "edit": "Edit",
+    "delete": "Eliminar"
+  },
+  "searchHistoryList": {
+    "title": "Histórico",
+    "allRemoved": "History of all visited documents have been removed.",
+    "emptyStateLabel": "There is no history of visited documents. Do you want to read documents?",
+    "emptyStateAction": "Go to search"
+  },
+  "separatorLine": {
+    "expand": "Ampliar",
+    "reduce": "Reduce"
+  },
+  "documentActionsGroup": {
+    "star": "Marcar como favorito",
+    "download": "Descargar",
+    "share": "Share",
+    "expand": "Ampliar",
+    "close": "Close"
+  },
+  "documentCardCheckbox": {
+    "selectDocument": "Select this document"
+  },
+  "documentLocalSearchNav": {
+    "previous": "Find the previous occurrence",
+    "next": "Find the next occurrence"
+  },
+  "documentLocalSearchInput": {
+    "placeholder": "Search in document"
+  },
+  "documentLocalSearchOccurrences": {
+    "label": "{activeIndex} on {occurrences}"
+  },
+  "documentSearchNavItem": {
+    "previous": "Previous document",
+    "next": "Next document"
+  },
+  "documentUserActions": {
+    "tags": "0 tags | 1 tag | {n} tags",
+    "comments": "0 comments | 1 comment | {n} comments",
+    "recommendations": "0 recommendations | 1 recommendation | {n} recommendations",
+    "folders": "in 0 folders | in 1 folder | in {n} folders",
+    "notes": "0 notes | 1 note | {n} notes"
+  },
+  "documentUserActionsCard": {
+    "close": "Close"
+  },
+  "documentUserActionsCardRecommendations": {
+    "title": "0 recommendations | 1 recommendation | {count} recommendations",
+    "info": "Recommendations are public to all project’s members."
+  },
+  "documentUserActionsCardTags": {
+    "title": "0 tags | 1 tag | {count} tags",
+    "info": "Tags are public to all project’s members."
+  },
+  "documentUserCommentsList": {
+    "hideComments": "Hide comments",
+    "showComments": "Show comments",
+    "noComments": "No comments on this document yet.",
+    "sortingText": "Oldest to newest",
+    "goToOldest": "Go to oldest",
+    "goToRecent": "Go to newest"
+  },
+  "documentUserComments": {
+    "warning": "Comments are public to project’s members."
+  },
+  "documentUserCommentsActions": {
+    "placeholder": "Write your text"
+  },
+  "documentUserCommentsListEntry": {
+    "goToComment": "Go to comment (external link)"
+  },
+  "documentUserRecommendations": {
+    "warning": "Recommendations are public to all project’s members",
+    "noRecommendations": "No recommendations yet.",
+    "markAsRecommended": "Marcar como recomendado",
+    "unmarkAsRecommended": "Desmarcar como recomendado"
+  },
+  "documentUserTags": {
+    "tagListOthers": "Added by others",
+    "tagListYours": "Added by you",
+    "tagWarning": "Tags are public to project members",
+    "noTags": "No tags added yet."
+  },
+  "documentUserTagsAction": {
+    "placeholder": "Add tags"
+  },
+  "documentMetadataActions": {
+    "copy": "Copy this metadata value",
+    "search": "Search this metadata value",
+    "pin": "Pin this metadata"
+  },
+  "documentThumbnail": {
+    "noPreview": "No preview available"
   },
   "documentTranslatedContent": {
     "detected": "Idioma detectado",
     "viewOriginal": "Mostrar el texto original",
     "viewTranslated": "Mostrar el texto traducido"
   },
+  "linkedDocumentSectionList": {
+    "search": "Search all",
+    "empty": "No documents found."
+  },
+  "linkedDocumentCard": {
+    "siblings": {
+      "title": "{n} documents in the same folder | {n} document in the same folder | {n} documents in the same folder",
+      "description": "Same extraction level as this document"
+    },
+    "children": {
+      "title": "{n} children documents | {n} children document | {n} children documents",
+      "description": "One extraction level below this document"
+    }
+  },
   "documentContent": {
     "noContent": "No content extracted for this document"
   },
+  "documentViewTabs": {
+    "text": "Text",
+    "viewer": "View",
+    "metadata": "Metadata",
+    "entities": "Entities"
+  },
+  "documentViewTabsMetadata": {
+    "search": "Search in metadata"
+  },
+  "filterTypeAll": {
+    "label": "Todos"
+  },
   "filter": {
-    "none": "No hay valores",
-    "noMatches": "No hay coincidencias. <br /> Presione <kbd> Ingrese </kbd> para buscar en cada de los documentos",
-    "noResults": "No hay resultados",
-    "noSubdirectories": "No hay subdirectorios",
-    "invert": "Excluir",
-    "contextualize": "Contextualizar",
+    "project": "Proyectos",
     "contentType": "Tipo de archivo",
     "language": "Idiomas",
     "namedEntityPerson": "Persona",
@@ -159,15 +426,15 @@
     "indexingDate": "Fechas de indexación",
     "extractionLevel": "Niveles de extracción",
     "creationDate": "Fechas de creación",
-    "index": "Proyecto",
     "projects": "Proyectos",
-    "deleteNamedEntity": "Eliminar esta Entidad Identificada",
-    "showMore": "Ampliar",
-    "missing": "Fecha faltante",
     "starred": "Favoritos",
     "notStarred": "No favoritos",
     "recommendedBy": "Recomendado por",
-    "searchTerm": "Término",
+    "sections": {
+      "documentsInfo": "Documents info",
+      "userData": "User data",
+      "entities": "Entities"
+    },
     "sortByDropdown": {
       "toggler": "Ordenar",
       "options": {
@@ -295,6 +562,7 @@
       "MARATHI": "Maratí",
       "MARSHALLESE": "Marshalés",
       "MONGOLIAN": "Mongol",
+      "MOLDOVAN": "Moldovan",
       "NAURU": "Nauru",
       "NAVAJO": "Navajo",
       "NORTHNDEBELE": "Ndebele norte",
@@ -389,14 +657,7 @@
       "level09": "9°",
       "level10": "10°"
     },
-    "tags": "Etiquetas",
-    "dateRange": {
-      "from": "From {dateFormat}",
-      "to": "To {dateFormat}",
-      "startingDate": "Starting date",
-      "endingDate": "Ending date"
-    },
-    "selectDateRange": "Selecciona un intervalo de fechas"
+    "tags": "Etiquetas"
   },
   "document": {
     "title": "Document",
@@ -408,81 +669,32 @@
     "project": "Proyecto",
     "creationDate": "Fecha de creación",
     "size": "Tamaño del archivo",
-    "downloadMaxRootSizeAlert": "You cannot download this document because its parent is bigger than {humanMaxRootSize}.",
     "contentLanguage": "Idioma del contenido",
     "contentType": "Tipo de contenido",
     "contentEncoding": "Codificación de contenido",
     "contentTextLength": "Longitud del texto del contenido",
-    "tabDetails": "Etiquetas y Detalles",
-    "namedEntities": "Entidades Identificadas",
     "namedEntityFilter": "Filtrar entidades identificadas",
-    "namedEntitiesOccurences": "no hay ocurrencias | una ocurrencia | {count} ocurrencias",
-    "extractedText": "Text",
-    "translations": "Traducciones",
-    "preview": "Vista previa",
-    "downloadButton": "Descargar",
-    "downloadRootButton": "Parent file",
-    "downloadRootWithoutMetadataButton": "Parent file without metadata",
-    "downloadWithoutMetadata": "Without metadata",
-    "downloadExtractedText": "Extracted text",
-    "externalWindow": "Abrir en una nueva ventana",
-    "copyLink": "Copy link",
-    "selectAll": "Seleccionar todo",
-    "unselectAll": "Deseleccionar todo",
-    "starButton": "Marcar como favorito",
-    "unstarButton": "Eliminar de favoritos",
     "starred": "Documentos han sido agregados como favoritos.",
-    "starringError": "No se puede marcar el documento como favorito.",
     "unstarred": "Documentos han sido removidos de favoritos.",
-    "selected": "Todos los documentos de esta página han sido seleccionados",
-    "unselected": "Todos los documentos de esta página han sido deseleccionados",
-    "tagged": "Documentos han sido etiquetados.",
-    "starFile": "Marcar como favorito",
-    "notFound": "Documento no encontrado",
     "notAvailable": "La vista previa no está disponible para este archivo.",
-    "copyAsCsv": "Copy as CSV",
     "namedEntitiesNotFound": "No se han encontrado entidades identificadas",
     "namedEntitiesNotSearched": "<p>Documento no analizado. Para buscar entidades identificadas, vaya a <a class=\\\"fw-bold\\\" href=\\\"{indexingLink}\\\">@:{'menu.analyse'}</a> y comience una nueva tarea \\\"@:{'indexing.findNamedEntities'}\\\".</p>",
-    "generatingPreview": "Generando visualización previa...",
-    "sheet": "Hoja",
-    "searchDirectory": "Buscar dentro de este directorio",
-    "tiffLimitations": "La vista previa del navegador de este archivo TIFF puede no mostrar todas las imágenes. Le sugerimos que lo descargue en su computadora para ver todos los contenidos.",
+    "namedEntitiesNotSearchedLink": "start a new task",
     "threadIndex": "Índice de hilo",
-    "showNamedEntities": "Mostrar entidades identificadas",
-    "highlightsCaution": "¡Advertencia! Las entidades identificadas se resaltarán y pueden reemplazar el texto debajo. Esto no afecta los resultados de su búsqueda.",
     "errorNotFound": "Su archivo se ha indexado en Datashare, pero el archivo ya no está presente en su archivo Datashare en su computadora. La vista previa no está disponible.",
-    "search": "Buscar",
-    "find": "Buscar dentro de este archivo",
-    "of": "de",
-    "researchedTerms": "En este archivo:",
     "fetching": "Cargando vista previa...",
-    "tags": "Etiquetas",
-    "tag": "Etiqueta",
-    "tagsVisibility": "Estas etiquetas son visibles para todos los usuarios. Las etiquetas deben estar separadas por espacios.",
-    "tagsNew": "Añadir una nueva etiqueta",
-    "details": "Etiqueta & Detalles",
-    "detailsInfo": "Esta información se extrae de los metadatos del documento.",
     "author": "Autor",
     "extractionDate": "Fecha de índice",
+    "numberOfPages": "Number of pages",
     "parent": "Archivo de base",
     "inMetadata": "en los metadatos",
     "inTags": "en etiquetas",
-    "shortcuts": "Accesos directos",
-    "searchChildrenDocument": "Mostrar documentos relacionados",
-    "searchDirnameDocument": "Mostrar archivos en esta carpeta",
-    "tagConfirmation": "Estás seguro de borrar estas etiquetas?",
-    "createdBy": "Creado por",
-    "on": "el",
     "spreadsheet": {
       "fieldsInFirstItem": "Cabeceras en la primera línea",
       "findInSpreadsheet": "Buscar en hoja de cálculos",
       "filtered": {
         "rows": "Sin coincidencias | Una fila | {count} filas"
       }
-    },
-    "pdf": {
-      "preview": "Vista previa de la página activa de PDF",
-      "thumbnail": "Miniatura de la página PDF"
     },
     "player": {
       "autoplay": "Play automatically",
@@ -497,23 +709,39 @@
     "attachments": {
       "heading": "No hay adjuntos | Un adjunto | {total} adjuntos",
       "more": "Más adjuntos..."
-    },
-    "namedEntitiesShowMore": {
-      "showMorePerson": "Mostrar más personas",
-      "showMoreOrganization": "Mostrar más organizaciones",
-      "showMoreLocation": "Mostrar más ubicaciones",
-      "showMoreEmail": "Mostrar más correos electrónicos"
-    },
-    "unknown": "Desconocido"
+    }
   },
-  "namedEntityInContext": {
-    "title": "Extraído usando <code>{extractor}</code> en <code>{extractorLanguage}</code>",
-    "meta": "Esto fue extraído de los metadatos.",
-    "none": "La vista previa de entidades no está disponible, el documento es demasiado grande."
+  "entitySection": {
+    "person": {
+      "title": "Persona"
+    },
+    "location": {
+      "title": "Ubicaciones"
+    },
+    "organization": {
+      "title": "Organizaciones"
+    },
+    "email": {
+      "title": "Email"
+    }
   },
-  "email": {
-    "detail": "Más detalles",
-    "to": "Para",
+  "entitySectionActions": {
+    "copy": "Copy",
+    "download": "Descargar"
+  },
+  "entitySectionMore": {
+    "label": "Show more {category}",
+    "category": {
+      "person": "people",
+      "location": "locations",
+      "organization": "organizations",
+      "email": "emails"
+    }
+  },
+  "documentThread": {
+    "to": "Para"
+  },
+  "displayEmail": {
     "receivedLink": "Correos electrónicos recibidos",
     "sentLink": "Correos electrónicos enviados"
   },
@@ -527,237 +755,530 @@
     "installOcrLanguage": "Choose among {availableLanguages} languages to install.",
     "tesseractNotInstalled": "Tesseract OCR is not installed."
   },
-  "indexing": {
-    "title": "Analiza tus documentos",
-    "description": "Por favor, <a href=\"{howToLink}\" target=\"_blank\">lea la documentación</a> sobre cómo añadir documentos.",
-    "go": "Launch",
-    "tasks": "Tareas",
-    "empty": "Aún no has iniciado ninguna tarea. <a href=\"{howToLink}\" target=\"_blank\">Lee más.</a>",
-    "extractText": "Add documents",
-    "extractWithOcrLabel": "¿Deseas extraer también el texto de imágenes y archivos PDF?",
-    "extractWithOcrHelp": "En caso afirmativo, Datashare ejecutará el proceso de OCR (reconocimiento óptico de caracteres). El proceso puede tardar hasta 10 veces más.",
-    "extractOnlyNewLabel": "¿Desea omitir archivos ya indexados?",
-    "extractOnlyNewHelp": "Si es así, Datashare sólo extraerá texto de archivos que aún no se pueden buscar en Datashare.",
-    "extractLanguage": "In which language are your documents?",
-    "findNamedEntities": "Find people, organizations, locations and emails",
-    "findNamedEntitiesProjectSelection": "In which project do you want to find named entities?",
-    "findNamedEntitiesHeader": "¿Qué te gustaría hacer?",
-    "findNamedEntitiesSubheader": "Datashare utiliza modelos de Programación Neuro-Lingüística (Natural Language Processing).",
-    "findNamedEntitiesTooltip": "Los textos deben ser extraídos antes de iniciar el proceso para encontrar entidades identificadas",
-    "pipelines": "Canales",
-    "pipelineOptions": {
-      "email": "Find email",
-      "corenlp": "Encuentra nombres de personas, organizaciones y lugares con CoreNLP",
-      "opennlp": "Find people, organizations and locations with OpenNLP",
-      "mitie": "Find people, organizations and locations with MITIE",
-      "ixapipe": "Find people, organizations and locations with IXA Pipe",
-      "gatenlp": "Find people, organizations and locations with GateNLP"
-    },
-    "projectIndexationSelection": "In which project do you want to add documents?",
-    "folderSelection": "Which folder do you want to index?",
-    "folderSelectionDescription": "By default, the entire project folder is selected.",
-    "default": "Por defecto - Ofrece la mayor probabilidad de trabajar en la mayoría de los documentos",
-    "syncModelsLabel": "Do you want to work offline?",
-    "syncModels": "Check this box if you are working without internet connection.",
-    "stopTask": "Detener esta tarea",
+  "formControlTagInput": {
+    "placeholder": "Add tag",
+    "addButtonText": "Add"
+  },
+  "formControlTerm": {
+    "placeholder": "Add term",
+    "addButtonText": "Add"
+  },
+  "formControlPath": {
+    "browse": "Browse"
+  },
+  "formControlSearch": {
+    "placeholder": "Search..."
+  },
+  "formStepHeadingToggler": {
+    "label": "Toggle"
+  },
+  "formStepGroupToggler": {
+    "collapse": "Collapse all steps",
+    "expand": "Expand all steps"
+  },
+  "taskActions": {
     "stopPendingTasks": "Detener todas las tareas pendientes",
-    "removeDoneTasks": "Borrar tareas completadas",
-    "deleteIndexLabel": "Elimina todos tus documentos de Datashare",
-    "deleteIndexDescription": "Para estar 100% seguro, elimine sus documentos de la carpeta Datashare de su computadora. ¡No olvide vaciar su papelera de todos los documentos de Datashare! Asegúrese de tener una copia de ellos en otro lugar seguro de antemano.",
-    "deleteSuccess": "Sus archivos han sido eliminados de Datashare.",
-    "deleteFailure": "Something went wrong, unable to remove your documents.",
-    "removeBatchSearchSuccess": "The batch searches are now removed from Datashare.",
-    "removeBatchSearchFailure": "Something went wrong, unable to remove the batch searches."
+    "removeDoneTasks": "Delete done tasks"
   },
-  "menu": {
-    "help": "Pedir ayuda",
-    "helpShort": "Ayuda",
-    "analyse": "Analiza tus documentos",
-    "analyseShort": "Analizar",
-    "batch": "Búsquedas masivas",
-    "batchShort": "Búsquedas masivas",
-    "tasks": "Tareas",
-    "tasksShort": "Tareas",
-    "search": "Buscar en documentos",
-    "searchShort": "Buscar",
-    "history": "Tu historial",
-    "historyShort": "Histórico",
-    "projects": "Projects",
-    "projectsShort": "Projects",
+  "appSidebar": {
+    "projects": "Proyectos",
+    "allProjects": "All projects",
+    "search": "Buscar",
+    "searchDocuments": "Archivos",
+    "history": "Histórico",
+    "savedSearches": "Saved searches"
+  },
+  "appSidebarFooter": {
+    "signOut": "Sign out",
+    "keyboardShortcuts": "Keyboard Shortcuts",
     "settings": "Configuración",
-    "settingsShort": "Configuración",
-    "logout": "Cerrar sesión",
-    "logoutShort": "Cerrar sesión",
-    "logoutModal": "This session will remain open until you close this browser or clear your browser's site data. Until then you won't be logged out.",
-    "addDocuments": "Cómo añadir documentos",
-    "faq": "Preguntas frecuentes (FAQ)",
-    "faqShort": "FAQ",
-    "userGuides": "Guía del Usuario",
-    "userGuidesShort": "Guía del usuario",
-    "devWiki": "Wiki de desarrolladores",
-    "connectedAs": "Estás conectado como <strong>{username}</strong>"
+    "help": "Ayuda",
+    "removeAll": {
+      "link": "Remove all",
+      "title": "Are you sure you want to delete all your projects?",
+      "description": "This action cannot be undone. It will remove all your projects and their documents from Datashare.",
+      "success": "All your projects and documents were removed from Datashare.",
+      "error": "Something went wrong, unable to remove your documents."
+    }
   },
-  "footer": {
-    "homedir": "Mueve archivos a este directorio para analizarlos",
-    "clientVersion": "Cliente",
-    "serverVersion": "Servidor"
+  "versionNumber": {
+    "client": "Cliente",
+    "server": "Servidor"
   },
   "login": {
     "welcome": "Bienvenido a Datashare",
-    "sumUp": "<a href=\"https://www.icij.org\">ICIJ</a> plataforma de búsqueda y descubrimiento.",
-    "authenticationPlatform": "Inicie sesión con su cuenta para comenzar a explorar documentos:",
     "account": "Ingresar",
-    "supportDesk": "Si necesita ayuda, por favor visite nuestro servicio de asistencia:",
     "askHelp": "Pedir ayuda",
     "logout": "Se ha cerrado su sesión de Datashare.",
-    "login": "Inicia sesión para continuar"
+    "login": "Inicia sesión para continuar",
+    "title": "Login",
+    "switchLanguage": "Switch language",
+    "tagline": "ICIJ search and discovery platform"
   },
-  "userHistory": {
-    "heading": "Tu historial de navegación",
-    "description": "On this page you can retrieve the documents you opened and the searches you saved.",
-    "empty": "Tu historia está vacía",
-    "clear": "Borrar historia",
-    "document": "Archivos",
-    "search": "Saved searches",
-    "name": "Nombre",
-    "saveSearch": "Guardar esta búsqueda",
-    "submitSuccess": "Your search has been saved.",
-    "submitError": "Something went wrong, unable to save your search.",
-    "delete": "Eliminar",
-    "deleted": "The saved search have been deleted.",
-    "confirmDelete": "¿Estás seguro que quieres eliminar esta búsqueda guardada?",
-    "deleteError": "Something went wrong, unable to delete the record.",
-    "renameHistoryEvent": "Rename saved search"
+  "loginLocaleDropdownSelector": {
+    "label": "Switch language:"
   },
-  "userHistorySaveSearchForm": {
-    "description": "You can retrieve all your saved searches in <a href=\"{searchHistoryPath}\">History › Searches</a>.",
-    "save": "Save"
+  "pageHeader": {
+    "searchPlaceholder": "Search in this page"
   },
-  "tasks": {
+  "taskNames": {
+    "batchSearch": "Batch search",
+    "batchDownload": "Batch download",
+    "scan": "Scan folders",
+    "index": "Index documents",
+    "extractNLP": "Find entities",
+    "enqueueFromIndex": "Enqueue from index",
+    "unknown": "Unknown task"
+  },
+  "task": {
+    "settingTitle": "{page} settings",
+    "settingDefaultTitle": "Page settings",
     "title": "Tareas",
-    "description": "Algunas tareas deben ejecutarse en segundo plano. Utilice este página para administrarlas."
+    "description": "Algunas tareas deben ejecutarse en segundo plano. Utilice este página para administrarlas.",
+    "noResults": "No results.",
+    "emptyStateLabel": "You have not yet started any tasks. {link}",
+    "emptyStateLabelLink": "Read more.",
+    "settings": {
+      "createdAt": "Created on",
+      "name": "Nombre",
+      "state": "Estado"
+    },
+    "task-board": {
+      "title": "Task board",
+      "latest": {
+        "title": "Latest tasks",
+        "showMore": "Show more",
+        "linkTitle": {
+          "batchSearch": "Batch search task",
+          "batchDownload": "Batch download task",
+          "documentTask": "Document task",
+          "entityTask": "Entity task",
+          "unknownTask": "Unknown task"
+        },
+        "properties": {
+          "taskType": "Task",
+          "name": "Nombre",
+          "state": "Estado",
+          "projects": "Proyectos",
+          "author": "Autor",
+          "createdAt": "Created on",
+          "progress": "Progress"
+        }
+      },
+      "entries": {
+        "seeAll": "See all",
+        "batch-search": {
+          "title": "Batch search",
+          "description": "Get the results of each query of a list, all at once. For instance, instead of searching for all the politicians of your country one after the other, just upload the list and see the results for each one.",
+          "nbPublic": "No shared batch searches | 1 shared batch search | {n} shared batch searches",
+          "nbPrivate": "no private batch searches | 1 shared batch search | {n} private batch search",
+          "actionText": "Create a batch search"
+        },
+        "batch-download": {
+          "title": "Batch download",
+          "description": "When your query has results, you can download all of them in a password-protected file."
+        },
+        "entity-recognition": {
+          "title": "Entity recognition",
+          "description": "Know quickly what’s in your files by asking Datashare to automatically recognize names of people, locations and organizations in your documents, as well as email addresses. ",
+          "actionText": "Find entities"
+        },
+        "document-addition": {
+          "title": "Document addition",
+          "description": "Index documents that are on your computer or on a drive so you can search them in Datashare. Datashare can index all type of documents.",
+          "actionText": "Add documents"
+        }
+      }
+    },
+    "entities": {
+      "title": "Entities",
+      "list": {
+        "emptyStateLabel": "There are no entity recognitions. Do you want to find entities?",
+        "emptyStateAction": "Find entities",
+        "info": "Entity recognitions are tasks that you run in order to recognize and to list the entities in your documents.",
+        "searchPlaceholder": "Search tasks",
+        "noResults": "No results.",
+        "properties": {
+          "id": "Id",
+          "name": "Nombre",
+          "entitiesToFind": "Entities to find",
+          "pipeline": "Model",
+          "project": "Proyecto",
+          "createdAt": "Created on",
+          "progress": "Progress",
+          "result": "Result",
+          "state": "Estado"
+        }
+      },
+      "new": {
+        "title": "Find entities"
+      },
+      "form": {
+        "projectSelector": {
+          "label": "Seleccione un proyecto"
+        },
+        "submit": "Go",
+        "failedPipelines": "Failed to retrieve pipelines",
+        "defaultPipeline": "recommended",
+        "findEntitiesType": "Find",
+        "pipelineOptions": {
+          "corenlp": "CoreNLP",
+          "opennlp": "OpenNLP",
+          "mitie": "MITIE",
+          "ixapipe": "IXA Pipe",
+          "gatenlp": "GateNLP"
+        },
+        "pipeline": {
+          "label": "Choose a model",
+          "description": "Datashare utiliza modelos de Programación Neuro-Lingüística (Natural Language Processing)."
+        },
+        "findEntities": {
+          "label": "Find",
+          "options": {
+            "emails": "Correos electrónicos",
+            "named-entities": "People, organisations and locations"
+          }
+        },
+        "offline": {
+          "label": "Do you want to work offline?",
+          "description": "Select 'No' if you want to sync latest models.",
+          "options": {
+            "yes": "Sí",
+            "no": "No"
+          }
+        },
+        "success": "Find entities task is launched",
+        "error": "An error occurred when creating the task: {error}"
+      }
+    },
+    "documents": {
+      "title": "Archivos",
+      "list": {
+        "emptyStateLabel": "Do you want to add documents?",
+        "emptyStateAction": "Add documents",
+        "info": "Document additions are tasks that you run to ask Datashare to add new documents.",
+        "searchPlaceholder": "Search tasks",
+        "noResults": "No results.",
+        "properties": {
+          "id": "Id",
+          "name": "Nombre",
+          "documents": "Archivos",
+          "project": "Proyecto",
+          "createdAt": "Created on",
+          "progress": "Progress",
+          "result": "Result",
+          "state": "Estado"
+        }
+      },
+      "new": {
+        "title": "Add documents"
+      },
+      "form": {
+        "projectSelector": {
+          "label": "Seleccione un proyecto"
+        },
+        "path": {
+          "label": "Select the folder or subfolder to analyze",
+          "description": "The entire Datashare home will be indexed by default."
+        },
+        "extractingLanguage": {
+          "label": "Choose the language to extract"
+        },
+        "extractOcr": {
+          "label": "Extract text from images and PDFs (OCR)",
+          "description": "En caso afirmativo, Datashare ejecutará el proceso de OCR (reconocimiento óptico de caracteres). El proceso puede tardar hasta 10 veces más.",
+          "options": {
+            "yes": "Sí",
+            "no": "No"
+          }
+        },
+        "skipIndexedDocuments": {
+          "label": "Skip already indexed documents",
+          "description": "If yes, Datashare will only extract text from documents that are not indexed yet.",
+          "options": {
+            "yes": "Sí",
+            "no": "No"
+          }
+        },
+        "submit": "Add",
+        "success": "Add document task is launched",
+        "error": "An error occurred when creating the task: {error}"
+      }
+    },
+    "batch-download": {
+      "title": "Descarga en lotes",
+      "list": {
+        "emptyStateLabel": "There are no batch downloads. Go to search to batch download all the documents of a search.",
+        "emptyStateAction": "Go to search",
+        "info": "Batch downloads are password-protected zip files containing all the documents from one of your searches.",
+        "searchPlaceholder": "Search batch downloads",
+        "properties": {
+          "name": "Nombre",
+          "createdAt": "Created on",
+          "projects": "Proyectos",
+          "progress": "Progress",
+          "size": "Tamaño",
+          "state": "Estado",
+          "id": "Id"
+        }
+      }
+    },
+    "batch-search": {
+      "title": "Búsquedas masivas",
+      "list": {
+        "emptyStateLabel": "There are no batch searches. Do you want to search a bunch of queries at once?",
+        "emptyStateAction": "Create new batch search",
+        "noMatches": "No batch searches matched. Try removing the search filter.",
+        "info": "Batch searches allow to get the results of each query of a list, but all at once.",
+        "searchPlaceholder": "Search batch searches",
+        "noResults": "No results.",
+        "properties": {
+          "privacy": "Privacy",
+          "queries": "Consultas",
+          "documents": "Archivos",
+          "projects": "Proyectos",
+          "author": "Autor",
+          "name": "Nombre",
+          "createdAt": "Created on",
+          "progress": "Progress",
+          "state": "Estado"
+        }
+      },
+      "form": {
+        "sections": {
+          "general": "Name, project(s) and description",
+          "queries": "Consultas",
+          "operators": "Search operators",
+          "filters": "Filtros"
+        },
+        "name": {
+          "label": "Nombre",
+          "placeholder": "Type the name of your batch search"
+        },
+        "projects": {
+          "label": "Project(s)"
+        },
+        "description": {
+          "label": "Descripción",
+          "placeholder": ""
+        },
+        "visibility": {
+          "label": "Visibility",
+          "options": {
+            "private": "Private - Only you will see your batch search",
+            "shared": "Shared - Only members of all the selected project(s) will see your batch search"
+          },
+          "description": "This option can be changed later (either way)"
+        },
+        "csvFile": {
+          "label": "Use a CSV",
+          "placeholder": "Drop your CSV"
+        },
+        "listQueries": {
+          "label": "Or type your queries",
+          "placeholder": "New feature coming soon!"
+        },
+        "phraseChanges": {
+          "label": "Sentence changes",
+          "description": "Also called proximity searches. Maximum number of operations (insertions, deletions, substitutions and transpositions) on terms needed to make one phrase match the other."
+        },
+        "spellingChanges": {
+          "label": "Spelling changes",
+          "description": "Also called fuzziness. Number of change(s) in the characters in the words: insertions, deletions or substitutions of a single character, or transposition of 2 adjacent characters."
+        },
+        "phraseMatch": {
+          "label": "Hacer la frase coincide exactamente",
+          "options": {
+            "yes": "Yes - Queries searched within double quotes",
+            "no": "No - Apply operators (AND, OR, NOT, etc.) in the queries"
+          }
+        },
+        "submit": "Create",
+        "submitError": "Something went wrong, unable to run the batch search.",
+        "submitSuccess": "Batch search created successfully."
+      },
+      "new": {
+        "title": "Create new batch search"
+      }
+    },
+    "batch-search-queries": {
+      "list": {
+        "title": "Consultas",
+        "noMatches": "No queries matches your search.",
+        "fields": {
+          "query": "Consulta",
+          "count": "Archivos",
+          "queryNumber": "Query position"
+        }
+      }
+    },
+    "batch-search-results": {
+      "list": {
+        "title": "All documents",
+        "emptyStateLabel": "None of the queries had matches."
+      },
+      "show": {
+        "title": "Query results",
+        "emptyStateLabel": "This query had no matches.",
+        "fields": {
+          "query": "Consulta",
+          "documentNumber": "Rango",
+          "documentName": "Nombre del archivo",
+          "project": "Proyecto",
+          "contentType": "Type",
+          "contentLength": "Tamaño",
+          "documentPath": "Ruta",
+          "creationDate": "Created on"
+        }
+      }
+    }
   },
-  "batchSearch": {
-    "lead": "Buscar múltiples términos y documentos a la vez.",
-    "title": "Búsquedas masivas",
-    "empty": "Aún no ha iniciado una búsqueda masiva. <a href=\"{howToLink}\">Leer más.</a>",
-    "emptyWithFilter": "The filtered search doesn't have results",
-    "heading": "Nueva búsqueda masiva",
-    "fileLabel": "Archivo CSV",
-    "fileDescription": "Exportar su hoja de cálculo como CSV usando la codificación UTF-8. <ul><li>Solo el formato CSV aceptado.</li> <li>El archivo CSV no debe contener más de 60 000 consultas.</li> <li>La primera y única columna debe contener los términos a buscar.</li> <li>No saltos de línea en las células.</li> <li>Solamente cuando 'Hacer la frase coincide exactamente' no esta marcado, puede utilizar operadores (AND OR NOT * ? ! + - etc), y las Regex entre 2 barras.</li></ul>",
-    "filePlaceholder": "Selecciona un archivo...",
-    "submit": "Launch",
-    "success": "Tu búsqueda masiva está ejecutándose.",
-    "error": "Error, no se puede iniciar la búsqueda masiva.",
-    "submitSuccess": "La búsqueda masiva ha sido añadida.",
-    "submitError": "Error, no se puede añadir la búsqueda masiva.",
-    "submitQueryLimitError": "Error en CSV, su CSV excede 60 000 líneas.",
+  "batchSearchCard": {
+    "seeAllDocuments": "See all documents",
+    "downloadResultsLabel": "Download results (CSV)",
+    "nbDocuments": "Batch search document results",
+    "nbDocumentsLabel": "{n} documents | {n} document | {n} documents",
+    "nbQueries": "Batch search queries",
+    "nbQueriesLabel": "{n} queries | {n} query | {n} queries",
+    "downloadQueriesLabel": "Descargar consultas",
+    "noResultsQueriesLabel": "No-match queries",
+    "noResultsQueriesDownload": "Download no-match queries",
+    "noResultsQueries": "{n} no-match queries | {n} no-match query | {n} no-match queries"
+  },
+  "batchSearchCardDetails": {
+    "status": "Status",
+    "date": "Created on",
+    "author": "Autor",
+    "visibilityPrivate": "Private",
+    "visibilityShared": "Shared",
+    "visibility": "Visibility",
+    "phraseMatchOn": "Do phrase match: yes",
+    "phraseMatchOff": "Do phrase match: no",
+    "phraseMatch": "Phrase match",
+    "proximity": "Proximity - Sentence changes",
+    "proximityValue": "Sentence changes: {n} | Sentence change: {n} | Sentence changes: {n}",
+    "fuzziness": "Fuzziness - Spelling changes",
+    "fuzzinessValue": "Spelling changes: {n} | Spelling change: {n} | Spelling changes: {n}",
     "projects": "Proyectos",
+    "description": "Descripción"
+  },
+  "batchSearchActions": {
+    "remove": {
+      "success": "The batch search was removed",
+      "error": "Unable to remove the batch search"
+    },
+    "stop": {
+      "success": "The batch search was stopped",
+      "error": "Unable to stop the batch search"
+    },
+    "relaunch": {
+      "success": "The batch search was relaunched",
+      "error": "Unable to relaunch the batch search"
+    }
+  },
+  "batchSearchActionsEditModal": {
+    "title": "Edit batch search",
+    "name": "Nombre",
+    "description": "Descripción"
+  },
+  "batchSearchActionsRelaunchModal": {
+    "title": "Reiniciar la búsqueda masiva",
     "name": "Nombre",
     "description": "Descripción",
-    "fuzziness": "Fuzziness",
-    "fuzzinessDescription": "Número máximo de operaciones sobre los caracteres (inserciones, eliminaciones, sustitución y transposición) necesario para hacer que un término coincida con el otro.",
-    "proximitySearches": "Búsquedas aproximadas",
-    "proximitySearchesDescription": "Número máximo de operaciones sobre los términos (inserciones, eliminaciones, sustitución y transposición) necesario para hacer que una frase coincida con la otra.",
-    "fileTypes": "Tipos de archivo",
-    "tags": "Tags",
-    "path": "Ruta",
-    "queries": "Consultas",
-    "state": "Estado",
-    "seeError": "Ver error",
-    "date": "Fecha",
-    "nbResults": "Results",
-    "query": "no hay consultas | 1 consulta | {count} consultas",
-    "clearFilters": "Clear filters",
-    "delete": "Eliminar búsqueda masiva",
-    "deleted": "La búsqueda masiva ha sido eliminado.",
-    "deleteError": "Something went wrong, unable to delete the batch search.",
-    "published": "Publicado",
-    "notPublished": "Not published",
-    "publishedDescription": "Dar a otros miembros del proyecto acceso a esta búsqueda masiva. Puedes cambiar esto más tarde.",
-    "phraseMatch": "Hacer la frase coincide exactamente",
-    "excludeTags": "Exclude Tags",
-    "phraseMatchDescription": "Te permite buscar en documentos que contengan la oración exacta o frase más allá de comparar un conjunto de palabras de manera aleatoria.",
-    "phraseMatchDescriptionOperators": "No inserte operadores en sus consultas",
-    "learnMore": "Leer más",
-    "author": "Autor·a",
-    "advancedFilters": "Filtros avanzados",
-    "selectPath": "Seleccionar directorio",
-    "errorTitle": "Error en la consulta",
-    "errorQuery": "Tiene un error en su consulta <code>{query}</code>.",
-    "errorMessage": "El sistema encontró un error. Puede ser un error de sintaxis que hayas escribido en tu CSV u otro error. Por favor, consulte esta <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">página de ayuda</a> donde se describen los errores más comunes.",
-    "unableToRetrieveFileTypes": "Unable to retrieve file types from selected project | Failed to retrieve file types from selected projects",
-    "placeholder": "Buscar en las búsquedas masivas...",
-    "status": {
-      "failure": "failure",
-      "queued": "queued",
-      "running": "running",
-      "success": "success"
-    },
-    "field": {
-      "all": "Todos los campos",
-      "name": "Nombre",
-      "user_id": "Autora",
-      "description": "Descripción"
-    }
+    "deleteAfterRelaunch": "Eliminar la búsqueda masiva actual"
   },
-  "taskBatchSearchNew": {
-    "title": "Start a new batch search"
-  },
-  "batchSearchResults": {
-    "title": "Batch search results",
-    "rank": "Rango",
-    "query": "Consulta",
-    "documentPath": "Ruta del archivo",
-    "creationDate": "Fecha de creación",
-    "project": "Proyecto",
-    "contentType": "Tipo de contenido",
-    "size": "Tamaño",
-    "downloadResults": "Descargar los resultados",
-    "downloadQueries": "Descargar consultas",
-    "downloadQueriesWithoutResults": "Download queries without results",
-    "downloadQueriesTooltip": "Descargar como CSV",
+  "buttonRowAction": {
     "relaunch": "Reiniciar",
-    "relaunchTitle": "Reiniciar la búsqueda masiva",
-    "deleteAfterRelaunch": "Eliminar la búsqueda masiva actual",
-    "backToResults": "Back to results",
-    "empty": "Sin resultados",
-    "queriesFilter": "1 query | {n} queries"
+    "stop": "Stop",
+    "delete": "Eliminar",
+    "edit": "Edit",
+    "search": "Buscar"
   },
-  "batchSearchResultsFilters": {
-    "filterQueries": "Filtrar por consultas...",
-    "queries": {
-      "heading": "Filtrar por consultas"
+  "textTruncate": {
+    "seeLess": "See less",
+    "seeMore": "See more"
+  },
+  "pageSettings": {
+    "title": "Page settings"
+  },
+  "pageSettingsSectionGroupAll": {
+    "label": "Todos"
+  },
+  "pageTable": {
+    "toggleDetails": "Toggle details"
+  },
+  "projects": {
+    "title": "Proyectos"
+  },
+  "projectDeletionModal": {
+    "title": "Are you sure you want to delete the {project} project?",
+    "body": {
+      "all": "It will remove {documents} from your index, {tags} and {recommendations}. {default}",
+      "default": "A new empty Default project will be created immediately.",
+      "documents": "0 documents | 1 document | {count} documents",
+      "tags": "0 tags | 1 tag | {count} tags",
+      "recommendations": "0 recommendations | 1 recommendation | {count} recommendations"
+    },
+    "notify": {
+      "succeed": "The project was deleted",
+      "failed": "Unable to delete the project"
     }
+  },
+  "projectEntriesTableHead": {
+    "name": "Name of the project",
+    "description": "Descripción",
+    "documents": "Archivos",
+    "updatedOn": "Updated on",
+    "links": "Links",
+    "actions": "Actions"
+  },
+  "projectRowActions": {
+    "edit": "Edit project",
+    "delete": "Delete project"
+  },
+  "projectJumbotron": {
+    "delete": "Eliminar",
+    "edit": "Edit",
+    "creationDate": "Created:",
+    "updateDate": "Updated:"
   },
   "projectList": {
     "title": "Projects",
-    "newProject": "New project",
+    "searchPlaceholder": "Search projects",
     "fields": {
       "label": "Label",
       "updateDate": "Updated"
     }
   },
   "projectNew": {
-    "title": "New project",
+    "title": "Create project",
     "description": "A project is a separated set of documents to explore.",
     "notify": {
       "succeed": "The project was created",
       "succeedBody": "Now, you can add documents to this project.",
       "failed": "Unable to create the project",
       "failedBody": "Something happened when trying to create this project."
-    },
-    "submit": "Create project"
+    }
+  },
+  "projectViewOverview": {
+    "emptyStateLabel": "Oh, it’s lonely in here... This project has no documents yet.",
+    "emptyStateAction": "Add first documents",
+    "nav": {
+      "insights": "Estadísticas",
+      "paths": "Rutas",
+      "graph": "Graph",
+      "details": "Etiqueta & Detalles",
+      "history": "Histórico"
+    }
+  },
+  "projectViewOverviewGraph": {
+    "emptyStateLabel": "Graph extension has not been installed yet. Read ICIJ’s {articleLink} to learn more about this feature.",
+    "emptyStateLabelArticleLink": "article",
+    "emptyStateAction": "Install"
   },
   "projectViewEdit": {
     "title": "Edit project",
     "notify": {
-      "delete": {
-        "succeed": "The project was deleted",
-        "succeedBody": "The documents in this project have been removed from Datashare.",
-        "failed": "Unable to delete the project",
-        "failedBody": "Something happened when trying to delete this project."
-      },
       "update": {
         "succeed": "The project was saved",
         "succeedBody": "Project saved.",
@@ -771,7 +1292,6 @@
     "title": "Add documents to project",
     "notify": {
       "succeed": "Add document task launched",
-      "succeedBody": "Indexing task to add documents has been launched.",
       "seeTasks": "See tasks",
       "failed": "Add document task failed",
       "failedBody": "An error occurred when launching indexing task to add documents."
@@ -781,7 +1301,6 @@
     "title": "Find named entities",
     "notify": {
       "succeed": "Find named entities task launched",
-      "succeedBody": "Finding named entities has been launched.",
       "seeTasks": "See tasks",
       "failed": "Find named entities task failed",
       "failedBody": "An error occurred when launching indexing task to add documents."
@@ -791,46 +1310,50 @@
     "form": {
       "name": {
         "label": "ID",
-        "description": "The internal project identifier."
+        "placeholder": ""
       },
       "label": {
         "label": "Label",
-        "description": "",
+        "placeholder": "The label of your project",
         "invalidFeedback": "The label \"{label}\" is a reserved word."
       },
       "description": {
         "label": "Description",
-        "description": ""
+        "placeholder": ""
       },
       "sourcePath": {
         "label": "Project folder",
-        "description": "The folder where the project's files are located."
+        "placeholder": "Select the folder where the project's documents are located."
       },
       "logoUrl": {
         "label": "Logo URL",
-        "description": ""
+        "placeholder": "http://"
       },
       "sourceUrl": {
         "label": "Source URL",
-        "description": ""
+        "placeholder": "http://"
       },
       "publisherName": {
         "label": "Publisher name",
-        "description": "The people or organization who published the files in this project."
+        "placeholder": "The name of the people or organization who published the files in this project"
       },
       "maintainerName": {
         "label": "Maintainer name",
-        "description": "The people or organization who will be in charge of maintaining this project on Datashare."
+        "placeholder": "The name of the people or organization who will maintain the project on Datashare"
       }
     },
     "reset": "Cancel",
-    "resetConfirmation": "Are you sure you want to reset the form to its initial values?",
     "submit": "Submit",
     "deleteConfirmation": "Are you sure you want to delete the project?",
     "delete": "Delete"
   },
+  "keyboardShortcutsPopoverLink": {
+    "label": "See all shortcuts"
+  },
+  "keyboardShortcutsPopoverTitle": {
+    "label": "Keyboard shortcuts"
+  },
   "shortkeys": {
-    "title": "Atajos de búsqueda",
     "goToPreviousDocument": "Ir al documento previo",
     "goToNextDocument": "Ir al siguiente documento",
     "backToSearchResults": "Volver a la búsqueda de resultados",
@@ -839,19 +1362,129 @@
     "activateSearchBar": "Buscar dentro de este documento",
     "deactivateSearchBar": "Terminar la búsqueda en el documento",
     "findPreviousOccurrence": "Encontrar la ocurrencia previa en el documento",
-    "findPreviousOccurrenceAlt": "Encontrar la ocurrencia previa en el documento",
-    "findNextOccurrence": "Encontrar la próxima ocurrencia en el documento",
-    "findNextOccurrenceAlt": "Encontrar la siguiente ocurrencia en el documento"
+    "findNextOccurrence": "Encontrar la próxima ocurrencia en el documento"
   },
-  "server": {
+  "settings": {
+    "layout": {
+      "infoDismiss": "Got it, don't show again",
+      "searchPlaceholder": "Filter the list",
+      "noResults": "No matching result for the query '{query}'"
+    },
     "title": "Configuración",
-    "description": "No cambie esta configuración si no sabe lo que está haciendo."
+    "description": {
+      "title": "No cambie esta configuración si no sabe lo que está haciendo."
+    },
+    "general": {
+      "title": "General",
+      "info": "Don’t change these settings if you don’t know what you are doing.",
+      "searchPlaceholder": "Configuración de búsqueda"
+    },
+    "generalLabel": {
+      "restore": "Restore original setting"
+    },
+    "appearance": {
+      "title": "Appearance"
+    },
+    "languages": {
+      "title": "Idiomas",
+      "info": "Translations are <a href='{href}' class='alert-link'>maintained on Crowdin</a>."
+    },
+    "addons": {
+      "plugins": {
+        "title": "Plugins",
+        "info": "Plugins are front-end modules to add new features in Datashare's user interface.",
+        "submitSuccess": "El plugin se ha instalado correctamente.",
+        "submitError": "Error mientras se instalaba el plugin.",
+        "searchPlaceholder": "Buscar plugins",
+        "errorLabel": "An error occurred while retrieving the plugins. Refresh the page or contact the support."
+      },
+      "extensions": {
+        "title": "Extensiones",
+        "info": "Extensions are back-end modules to add new features to store and manipulate data with Datashare.",
+        "submitSuccess": "Extensión instalada con éxito, por favor reinicie Datashare.",
+        "submitError": "Error mientras se instalaba la extensión.",
+        "searchPlaceholder": "Buscar en las extensiones",
+        "errorLabel": "An error occurred while retrieving the extensions. Refresh the page or contact the support."
+      }
+    },
+    "api": {
+      "title": "API",
+      "newApiKey": "Crear una clave API",
+      "apiKey": "Clave API",
+      "noAccess": "No tiene acceso a esa página en modo local.",
+      "description": "An API key allows you interact with Datashare <a href=\"https://icij.gitbook.io/datashare/developers/backend/api\" target=\"_blank\">through the API</a>, using tools like <a href=\"https://github.com/ICIJ/datashare-tarentula\" target=\"_blank\">Tarentula</a> or your own scripts.",
+      "key": {
+        "badge": "Key",
+        "copy": "Copy",
+        "hash": "Hash: {hash}",
+        "created": "Se ha creado la clave API",
+        "warning": "Por favor, copie esta clave en un lugar seguro, no podrá volver a acceder a ella en Datashare.",
+        "unavailable": "You can only access a key when creating it.",
+        "regenerate": "Regenerar",
+        "delete": {
+          "button": "Eliminar",
+          "description": "Cualquier aplicación o script que utilicen esta clave ya no podrá acceder a la API de Datashare. No puede deshacer esta acción."
+        }
+      }
+    }
   },
   "serverSettings": {
     "title": "Configuración del servidor",
     "submitSuccess": "Modificaciones enviadas.",
-    "submitError": "No se puede actualizar la configuración.",
-    "noAccess": "No tienes acceso a esa página en modo servidor."
+    "submitError": "No se puede actualizar la configuración."
+  },
+  "viewSettings": {
+    "perPage": "{title} per page",
+    "properties": "Properties",
+    "layout": {
+      "label": "Layout",
+      "grid": "Grid",
+      "table": "Table",
+      "list": "List"
+    },
+    "sortBy": {
+      "label": "Ordenar por",
+      "format": "{name} ({order})"
+    },
+    "options": {
+      "name": "Nombre",
+      "creationDate": "Created on",
+      "updateDate": "Latest update",
+      "visitDate": "Last visit",
+      "documentsCount": "Documents count",
+      "taskStatus": "Task status",
+      "progress": "Progress",
+      "project": "Proyecto",
+      "privacy": "Privacy",
+      "pipeline": "Model",
+      "entitiesToFind": "Entities to find",
+      "queries": "Consultas",
+      "documents": "Archivos",
+      "size": "Tamaño",
+      "id": "Id"
+    },
+    "order": {
+      "default": {
+        "asc": "ascending",
+        "desc": "descending"
+      },
+      "alpha": {
+        "asc": "A to Z",
+        "desc": "Z to A"
+      },
+      "number": {
+        "asc": "increasing",
+        "desc": "decreasing"
+      },
+      "quantity": {
+        "asc": "low",
+        "desc": "high"
+      },
+      "date": {
+        "asc": "old first",
+        "desc": "recent first"
+      }
+    }
   },
   "human": {
     "number": {
@@ -869,11 +1502,10 @@
   },
   "batchDownload": {
     "title": "Descarga en lotes",
-    "empty": "Aún no has iniciado ninguna tarea de descarga.",
     "noFile": "The archive has expired.",
     "created": "Tu descarga está siendo procesada",
     "warning": "This feature is currently being developed by the Datashare team.",
-    "inProgress": "Ver todas las descargas pendientes",
+    "seeAll": "See all",
     "errorMessage": "The system encountered an issue. Please refer to these details when contacting support.",
     "errorTitle": "Batch download task <code class=\"fw-bold\">{taskId}</code> is in error.",
     "relaunch": {
@@ -889,56 +1521,34 @@
     "limitations": "Batch downloads are limited to {maxNbFiles} files and {maxSize}B."
   },
   "batchDownloadActions": {
-    "relaunch": "Relaunch",
-    "search": "See search results",
-    "delete": "Delete"
-  },
-  "tasksList": {
-    "empty": "Aún no has iniciado ninguna tarea.",
-    "stop": "Detener esta tarea",
-    "encrypted": "Este archivo está cifrado. La contraseña se le ha enviado por correo electrónico."
-  },
-  "insights": {
-    "title": "Estadísticas",
-    "selectProject": "Seleccione un proyecto"
-  },
-  "inlineDirectoryPicker": {
-    "header": {
-      "browseBtn": {
-        "browse": "Browse",
-        "close": "Close"
-      }
+    "remove": {
+      "label": "Eliminar",
+      "success": "The batch download was removed",
+      "error": "Unable to remove the batch download"
     },
-    "browser": {
-      "empty": "No sub-folders"
+    "relaunch": {
+      "label": "Reiniciar",
+      "success": "The batch download was relaunched",
+      "error": "Unable to relaunch the batch download"
+    },
+    "search": {
+      "label": "See search results"
     }
   },
   "widget": {
     "noData": "No hay datos",
     "noRecommendations": "No recommendations",
-    "noFolders": "Sin carpetas",
-    "noEntities": "No named entities",
-    "languages": {
-      "title": "Languages"
-    },
+    "noEntitiesFindSome": "There are no entities found yet.",
+    "findEntities": "Find entities",
     "recommendedBy": {
       "title": "Latest recommended documents"
     },
-    "contentTypes": {
-      "title": "File types"
-    },
-    "authors": {
-      "title": "Authors"
-    },
     "barometer": {
       "document": "no hay archivos | 1 archivo | {total} archivos",
-      "amongWhich": "entre los cuales",
-      "onDisk": "en el disco"
+      "amongWhichOnDisk": "among which {n} on disk"
     },
     "diskUsage": {
-      "details": "Ver el uso del disco",
-      "queryPlaceholder": "Filter directories...",
-      "warning": "El número de documentos sólo cuenta documentos padre aquí (archivos en disco), no archivos adjuntos (documentos incrustados)."
+      "details": "Ver el uso del disco"
     },
     "creationDate": {
       "filterPath": "Filtrar por carpeta",
@@ -952,18 +1562,6 @@
       "missing": "Ningún documento tiene una fecha de creación faltante o incorrecta.| 1 documento tiene una fecha de creación faltante o incorrecta.| {total} documentos tienen una fecha de creación faltante o incorrecta.",
       "missingTooltip": "Hay varias razones por las que un documento no está en el gráfico de barras:\n    - El documento no tiene ninguna fecha de creación\n    - La fecha de creación del documento es anterior al 1 de enero 1970\n    - La fecha de creación del documento es posterior a la fecha de hoy"
     },
-    "duplicates": {
-      "duplicated": "* Los archivos duplicados no se indexan en Datashare para facilitar la búsqueda y evitar crear archivos innecesarios."
-    },
-    "entities": {
-      "people": "0 persona | una persona | <strong>{count}</strong> personas",
-      "locations": "0 ubicación | una ubicación | <strong>{count}</strong> ubicaciones",
-      "organizations": "0 organización | una organización | <strong>{count}</strong> organizaciones",
-      "emails": "0 emails | one email address | <strong>{count}</strong> emails"
-    },
-    "names": {
-      "total": "0 names | one name | <strong>{humanTotal}</strong> names"
-    },
     "project": {
       "fields": {
         "name": "ID",
@@ -974,79 +1572,26 @@
         "creationDate": "Created",
         "updateDate": "Updated"
       }
-    },
-    "treemap": {
-      "seeDocuments": "Ver archivos en Datashare",
-      "others": "Otros"
     }
   },
-  "api": {
-    "title": "API",
-    "newApiKey": "Crear una clave API",
-    "apiKey": "Clave API",
-    "noAccess": "No tiene acceso a esa página en modo local.",
-    "key": {
-      "why": "Crear una clave le permitirá interactuar con Datashare <a href=\"https://github.com/ICIJ/datashare/wiki/Backend-%E2%80%BA-API\" target=\"_blank\">a través de la API</a>, usando herramientas como <a href=\"https://github.com/ICIJ/datashare-tarentula\" target=\"_blank\">Tarentula</a> o sus propios scripts.",
-      "created": "Se ha creado la clave API",
-      "warning": "Por favor, copie esta clave en un lugar seguro, no podrá volver a acceder a ella en Datashare.",
-      "unavailable": "Sólo puede acceder a una clave al crearla",
-      "regenerate": "Regenerar",
-      "description": "La clave que ha creado puede utilizarse para acceder a la <a href=\"https://github.com/ICIJ/datashare/wiki/Backend-%E2%80%BA-API\" target=\"_blank\">API de Datashare</a>.",
-      "delete": {
-        "button": "Eliminar",
-        "description": "Cualquier aplicación o script que utilicen esta clave ya no podrá acceder a la API de Datashare. No puede deshacer esta acción."
-      }
-    }
+  "widgetEntities": {
+    "person": "person | people",
+    "location": "location | locations",
+    "organization": "organization | organizations",
+    "email": "email | emails"
   },
-  "plugins": {
-    "title": "Plugins",
-    "search": "Buscar plugins",
-    "submitSuccess": "El plugin se ha instalado correctamente.",
-    "submitError": "Error mientras se instalaba el plugin.",
-    "deleteSuccess": "Plugin eliminado correctamente.",
-    "deleteError": "Error mientras se eliminaba el plugin.",
-    "version": "Versión {version}",
-    "officialVersion": "Versión oficial",
-    "homePage": "Página de inicio",
-    "install": "Instalar",
-    "uninstall": "Desinstalar",
-    "update": "Actualizar",
-    "installFromUrl": "Instalar plugin desde URL"
+  "pathTreeBreadcrumb": {
+    "datadir": "Inicio"
   },
-  "extensions": {
-    "title": "Extensiones",
-    "search": "Buscar en las extensiones",
-    "submitSuccess": "Extensión instalada con éxito, por favor reinicie Datashare.",
-    "submitError": "Error mientras se instalaba la extensión.",
-    "deleteSuccess": "Extensión desinstalada correctamente.",
-    "deleteError": "Error mientras se desinstalaba la extensión.",
-    "version": "Versión {version}",
-    "officialVersion": "Versión oficial",
-    "homePage": "Página de inicio",
-    "install": "Instalar",
-    "uninstall": "Desinstalar",
-    "update": "Actualizar",
-    "installFromUrl": "Instalar extensión desde URL"
+  "projectCardUpdateDate": {
+    "label": "Updated:"
   },
-  "treeView": {
-    "hits": "no hay archivos | 1 archivo | {hits} archivos",
-    "docs": "archivo | archivos",
-    "datadir": "Inicio",
-    "all": "Todos",
-    "searchPath": "Search in this directory",
-    "includingIndividualDocuments": "incluyendo documentos individuales"
+  "projectCardDocumentsCount": {
+    "noDocuments": "No documents"
   },
-  "quickItemNav": {
-    "previous": {
-      "label": "Anterior",
-      "tooltipMac": "Archivo anterior (<kbd>⌘</kbd> + <kbd>←</kbd>)",
-      "tooltipOthers": "Archivo anterior (<kbd>ctrl</kbd> + <kbd>←</kbd>)"
-    },
-    "next": {
-      "label": "Siguiente",
-      "tooltipMac": "Archivo siguiente (<kbd>⌘</kbd> + <kbd>→</kbd>)",
-      "tooltipOthers": "Archivo siguiente (<kbd>ctrl</kbd> + <kbd>→</kbd>)"
-    }
+  "projectCardFooter": {
+    "insights": "See insights",
+    "search": "Buscar"
   },
   "projectCards": {
     "documentsCount": "No documents | 1 document | {count} documents",
@@ -1056,8 +1601,162 @@
   "projectSelector": {
     "noMatches": "No matches"
   },
+  "projectDropdownSelectorSearch": {
+    "placeholder": "Search projects",
+    "noMatches": "No matches"
+  },
+  "projectDropdownSelectorAll": {
+    "label": "All projects"
+  },
+  "pathViewEntryMore": {
+    "label": "No more directories | Show 1 more directory | Show {nextPageSize} of {directoriesLeft} more directories"
+  },
+  "pathViewSearch": {
+    "placeholder": "Search paths"
+  },
+  "pathViewLabel": {
+    "label": "Rutas"
+  },
   "searchBarInputDropdownForProjects": {
     "projectsCount": "{count} projects",
     "noMatches": "No matches"
+  },
+  "searchBreadcrumbFormList": {
+    "label": "Your search:"
+  },
+  "searchBreadcrumbFormEmpty": {
+    "label": "Your search has not started. Use the search bar or add filters."
+  },
+  "searchBreadcrumbFormEntryOccurences": {
+    "label": "0 documents | 1 document | {occurrences} documents",
+    "title": "No less documents with this filter | 1 less document with this filter | {lessOccurrences} less documents with this filter"
+  },
+  "searchBreadcrumbFormFooter": {
+    "clearFilters": "Clear filters",
+    "clearQuery": "Clear query",
+    "clearFiltersAndQuery": "Clear  filters and query",
+    "saveSearch": "Save search",
+    "createAlert": "Create alert"
+  },
+  "searchBreadcrumbFormToggler": {
+    "close": "Close"
+  },
+  "searchSavingModal": {
+    "title": "Name your saved search",
+    "okTitle": "Save search",
+    "success": "Your search has been saved.",
+    "seeAll": "See all",
+    "error": "Something went wrong, unable to save your search.",
+    "form": {
+      "name": "Nombre",
+      "description": "You can retrieve all your saved searches in {link}.",
+      "link": "Saved searches"
+    }
+  },
+  "searchSelection": {
+    "count": "No selected documents | 1 selected document | {count} selected documents",
+    "star": "Marcar como favorito",
+    "unstar": "Eliminar de favoritos",
+    "tag": "Etiqueta",
+    "nbDocs": "No documents | 1 document | {count} documents",
+    "nbTags": "no tags | 1 tag | {count} tags",
+    "tagSuccess": "{nbDocs} have been tagged with {nbTags}.",
+    "tagFailed": "Error: {nbDocs} have not been tagged with {nbTags}."
+  },
+  "searchSelectionAddTagsModal": {
+    "title": "Tag selected document | Tag selected document | Tag {n} selected documents",
+    "description": "You can add multiple tags by separating them with comma.",
+    "question": "Add {n} tag to selected documents ?  | Add {n} tags to selected documents ?",
+    "okTitle": "Add",
+    "placeholder": "Tag1, Tag2"
+  },
+  "searchSettings": {
+    "title": "Results settings"
+  },
+  "documentCarousel": {
+    "page": "Archivo",
+    "next": "Siguiente",
+    "previous": "Anterior"
+  },
+  "documentRow": {
+    "properties": {
+      "relevance": "Relevancia",
+      "thumbnail": "Thumbnail ",
+      "title": "Nombre del archivo",
+      "highlights": "Highlights",
+      "author": "Autor",
+      "path": "Ruta",
+      "tags": "Etiquetas",
+      "contentLength": "Tamaño del archivo",
+      "contentTextLength": "Text length",
+      "contentType": "File type",
+      "creationDate": "Created on",
+      "extractionLevel": "Extraction level",
+      "extractionDate": "Fecha de índice",
+      "language": "Language",
+      "project": "Proyecto"
+    }
+  },
+  "documentEntries": {
+    "noMatches": "No documents matched your search. Try using different filters."
+  },
+  "documentEntriesTableHead": {
+    "action": "Action"
+  },
+  "documentEntriesHeader": {
+    "batchDownloadDocuments": "Batch download: downloading multiple files is limited to {maxSize}.",
+    "batchDownloadDocumentsWarning": "Batch download: downloading multiple files is limited to the first {maxFiles} files and {maxSize}.",
+    "batchDownloadError": "Something went wrong when attempt to download the files.",
+    "batchDownloadCreated": "Your batch download is being prepared",
+    "batchDownloadLink": "See all"
+  },
+  "shortcutsView": {
+    "title": "Keyboard shortcuts",
+    "searchPlaceholder": "Search keyboard shortcuts"
+  },
+  "rowPagination": {
+    "rowRange": "to {to} of 0 | to {to} of 1 | to {to} of {total}",
+    "rowRangeFewer": "of 0 | of 1 | to {total}",
+    "rowRangeCompact": "of 0 | of 1 | of {total}"
+  },
+  "rowPaginationBatchSearches": {
+    "rowRange": "to {to} of 0 batch searches | to {to} of 1 batch search | to {to} of {total} batch searches",
+    "rowRangeFewer": "of 0 batch searches | of 1 batch search | to {total} batch searches",
+    "rowRangeCompact": "of 0 batch searches | of 1 batch search | of {total} batch searches"
+  },
+  "rowPaginationBatchDownloads": {
+    "rowRange": "to {to} of 0 batch downloads | to {to} of 1 batch download | to {to} of {total} batch downloads",
+    "rowRangeFewer": "of 0 batch downloads | of 1 batch download | to {total} batch downloads",
+    "rowRangeCompact": "of 0 batch downloads | of 1 batch download | of {total} batch downloads"
+  },
+  "rowPaginationDocuments": {
+    "rowRange": "to {to} of 0 documents | to {to} of 1 document | to {to} of {total} documents",
+    "rowRangeFewer": "of 0 documents | of 1 document | to {total} documents",
+    "rowRangeCompact": "of 0 documents | of 1 document | of {total} documents"
+  },
+  "rowPaginationProjects": {
+    "rowRange": "to {to} of 0 projects | to {to} of 1 project | to {to} of {total} projects",
+    "rowRangeFewer": "of 0 projects | of 1 project | to {total} projects",
+    "rowRangeCompact": "of 0 projects | of 1 project | of {total} projects"
+  },
+  "rowPaginationQueries": {
+    "rowRange": "to {to} of 0 queries | to {to} of 1 query | to {to} of {total} queries",
+    "rowRangeFewer": "of 0 queries | of 1 query | to {total} queries",
+    "rowRangeCompact": "of 0 queries | of 1 query | of {total} queries"
+  },
+  "rowPaginationResults": {
+    "rowRange": "to {to} of 0 results | to {to} of 1 result | to {to} of {total} results",
+    "rowRangeFewer": "of 0 results | of 1 result | to {total} results",
+    "rowRangeCompact": "of 0 results | of 1 result | of {total} results"
+  },
+  "rowPaginationSearches": {
+    "rowRange": "to {to} of 0 searches | to {to} of 1 search | to {to} of {total} searches",
+    "rowRangeFewer": "of 0 searches | of 1 search | to {total} searches",
+    "rowRangeCompact": "of 0 searches | of 1 search | of {total} searches"
+  },
+  "rowPaginationTasks": {
+    "rowRange": "to {to} of 0 tasks | to {to} of 1 task | to {to} of {total} tasks",
+    "rowRangeFewer": "of 0 tasks | of 1 task | to {total} tasks",
+    "rowRangeCompact": "of 0 tasks | of 1 task | of {total} tasks"
   }
 }
