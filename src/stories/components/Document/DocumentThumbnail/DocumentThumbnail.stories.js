@@ -1,5 +1,3 @@
-import { markRaw } from 'vue'
-
 import { withMurmur } from '~storybook/decorators/murmur'
 import DocumentThumbnail from '@/components/Document/DocumentThumbnail/DocumentThumbnail'
 import { breakpointSizeArgType } from '~storybook/utils'
