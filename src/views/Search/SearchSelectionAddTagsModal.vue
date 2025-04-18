@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, nextTick, onBeforeMount, useTemplateRef } from 'vue'
+import { ref, computed, onBeforeMount } from 'vue'
 import bodybuilder from 'bodybuilder'
 import { flatten, get, map } from 'lodash'
 import { useI18n } from 'vue-i18n'
@@ -54,46 +54,44 @@ const preventFn = (e) => {
   }
 }
 
-const formControlTagRef = useTemplateRef('formControlTagRef')
-
-async function onShown() {
-  await nextTick(formControlTagRef.value.focus)
-}
-
 onBeforeMount(fetchAllTags)
 </script>
 
 <template>
   <app-modal-prompt
     class="search-selection-add-tags-modal"
+    :autofocus="false"
     :image="imageLight"
     :title="t('searchSelectionAddTagsModal.title', nbDocs)"
     :ok-disabled="!hasTags"
     :ok-title="t('searchSelectionAddTagsModal.okTitle')"
-    @shown="onShown"
     @esc="preventFn"
     @submit="submit"
   >
     <template #header-image-source>
       <image-mode-source :src="imageDark" color-mode="dark" />
     </template>
-    <div class="d-flex flex-column gap-3">
-      <form-control-tag
-        ref="formControlTagRef"
-        v-model="tags"
-        :placeholder="t('searchSelectionAddTagsModal.placeholder')"
-        :options="allTags"
-        class="document-user-tags-ac tions w-100"
-        no-duplicates
-        no-clear
-        @focus="closeAllowed = false"
-        @blur="closeAllowed = false"
-      />
-      {{ t('searchSelectionAddTagsModal.description') }}
-      <p v-if="hasTags" class="mt-2">
-        {{ t('searchSelectionAddTagsModal.question', tags.length) }}
-      </p>
-    </div>
+    <template #default="{ visible }">
+      <div class="d-flex flex-column gap-3">
+        <form-control-tag
+          v-if="visible"
+          ref="formControlTagRef"
+          v-model="tags"
+          autofocus
+          :placeholder="t('searchSelectionAddTagsModal.placeholder')"
+          :options="allTags"
+          class="document-user-tags-ac tions w-100"
+          no-duplicates
+          no-clear
+          @focus="closeAllowed = false"
+          @blur="closeAllowed = false"
+        />
+        {{ t('searchSelectionAddTagsModal.description') }}
+        <p v-if="hasTags" class="mt-2">
+          {{ t('searchSelectionAddTagsModal.question', tags.length) }}
+        </p>
+      </div>
+    </template>
   </app-modal-prompt>
 </template>
 
