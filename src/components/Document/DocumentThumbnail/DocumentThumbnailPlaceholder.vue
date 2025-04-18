@@ -1,7 +1,10 @@
 <script setup>
-import { PhosphorIcon } from '@icij/murmur-next'
+import { computed } from 'vue'
 
-defineProps({
+import { useSchema } from '@/composables/useSchema'
+import DisplayContentTypeIcon from '@/components/Display/DisplayContentTypeIcon'
+
+const { document } = defineProps({
   document: {
     type: Object,
     required: true
@@ -11,11 +14,19 @@ defineProps({
     default: 'sm'
   }
 })
+
+const { getContentTypeDisplay } = useSchema()
+
+const display = computed(() => getContentTypeDisplay(document.contentType))
+const style = computed(() => {
+  const background = display.value.background
+  return { background }
+})
 </script>
 
 <template>
-  <span class="document-thumbnail-placeholder">
-    <phosphor-icon :name="document.contentTypeIcon" />
+  <span class="document-thumbnail-placeholder" :style="style">
+    <display-content-type-icon :value="document.contentType" colorize />
   </span>
 </template>
 

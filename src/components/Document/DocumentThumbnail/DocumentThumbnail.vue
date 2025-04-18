@@ -107,7 +107,7 @@ const overlayIcon = computed(() => (errored.value ? 'eye-slash' : 'eye'))
 const title = computed(() => (errored.value ? t('documentThumbnail.noPreview') : ''))
 
 const showImage = computed(() => isPreviewActivated.value || canPreviewRaw(props.document))
-const showPlaceholder = computed(() => !props.noPlaceholder && !thumbnailSrc.value && props.document.contentTypeIcon)
+const showPlaceholder = computed(() => !props.noPlaceholder && !thumbnailSrc.value)
 const showOverlay = computed(() => !props.noOverlay)
 
 function fetchAsBase64() {
