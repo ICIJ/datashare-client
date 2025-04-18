@@ -166,17 +166,6 @@ body {
   min-width: 0;
 }
 
-@each $variant,
-$value in $theme-colors {
-  .popover-magnified-#{$variant} {
-    @include popover-magnified-variant($value);
-  }
-
-  .popover-#{$variant} {
-    @include popover-variant($value);
-  }
-}
-
 .table.card > tbody > tr:last-of-type > td,
 .table-responsive.card > .table > tbody > tr:last-of-type > td {
   border-bottom-width: 0;
