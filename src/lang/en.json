@@ -377,9 +377,6 @@
     "search": "Search this metadata value",
     "pin": "Pin this metadata"
   },
-  "documentThumbnail": {
-    "noPreview": "No preview available"
-  },
   "documentTranslatedContent": {
     "detected": "Detected language",
     "viewOriginal": "View original text",
