@@ -68,7 +68,6 @@ onBeforeMount(fetchAllTags)
 </script>
 
 <template>
-  <hook name="document:user-actions:before" :bind="{ document }" />
   <document-user-actions
     :show-recommendations="isServer"
     show-tags
@@ -76,9 +75,8 @@ onBeforeMount(fetchAllTags)
     :recommendations="recommendedBy.length"
     @action="actionHandler"
   />
-  <hook name="document:user-actions:after" :bind="{ document }" />
   <teleport :disabled="!documentViewFloatingElement" :to="documentViewFloatingSelector">
-    <hook name="document:user-actions-cards:before" :bind="{ document }" />
+    <hook name="document-user-actions-cards:before" :bind="{ document }" />
     <document-user-recommendations
       v-model="showRecommendationsCard"
       v-model:recommended="recommended"
@@ -93,6 +91,6 @@ onBeforeMount(fetchAllTags)
       @delete="deleteTag"
       @add="addTags"
     />
-    <hook name="document:user-actions-cards:after" :bind="{ document }" />
+    <hook name="document-user-actions-cards:after" :bind="{ document }" />
   </teleport>
 </template>
