@@ -11,7 +11,7 @@ defineProps({
   },
   description: {
     type: String,
-    required: true
+    default: ''
   },
   url: {
     type: String
@@ -28,8 +28,10 @@ const homepageLabel = computed(() => t('addonCardViewDetails.homepage'))
     <div class="d-inline-flex align-items-center gap-2">
       <a class="fw-bold h4 text-action-emphasis">{{ title }}</a>
     </div>
-    <p>
-      <slot><text-truncate :text="description" :truncate-length="250" /></slot>
+    <p v-if="description">
+      <slot>
+        <text-truncate :text="description" :truncate-length="250" />
+      </slot>
     </p>
     <span v-if="url" class="text-secondary-emphasis flex-grow-0 gap-2">
       {{ homepageLabel }} <a :href="url">{{ url }}</a>

@@ -12,10 +12,10 @@ import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 import { apiInstance as api } from '@/api/apiInstance'
 import { useCore } from '@/composables/useCore'
 import { useWait } from '@/composables/useWait'
-import { ADDONS_TYPE, addonsTypeValidator } from '@/enums/addons'
+import { ADDON_TYPE, addonTypeValidator } from '@/enums/addons'
 import SettingsViewLayout from '@/views/Settings/SettingsView/SettingsViewLayout'
 
-const props = defineProps({ addonsType: { type: String, validator: addonsTypeValidator } })
+const props = defineProps({ addonsType: { type: String, validator: addonTypeValidator } })
 
 const { toastedPromise } = useCore()
 const { waitFor, isLoading, loaderId } = useWait()
@@ -40,13 +40,11 @@ const searchPlaceholder = computed(() => t(`settings.addons.${props.addonsType}.
 const noResultsLabel = computed(() => t('settings.layout.noResults', { query: filterTerm.value }))
 
 const installAddonFromUrlFn = computed(() =>
-  props.addonType === ADDONS_TYPE.EXTENSIONS
-    ? api.installExtensionFromUrl.bind(api)
-    : api.installPluginFromUrl.bind(api)
+  props.addonType === ADDON_TYPE.EXTENSION ? api.installExtensionFromUrl.bind(api) : api.installPluginFromUrl.bind(api)
 )
 
 const retrieveAddonsFn = computed(() =>
-  props.addonsType === ADDONS_TYPE.EXTENSIONS ? api.getExtensions.bind(api) : api.getPlugins.bind(api)
+  props.addonsType === ADDON_TYPE.EXTENSION ? api.getExtensions.bind(api) : api.getPlugins.bind(api)
 )
 
 const loadAddons = waitFor(async (searchTerm) => {

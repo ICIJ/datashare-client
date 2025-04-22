@@ -454,9 +454,11 @@ export const routes = [
             name: 'settings.plugins',
             path: 'plugins',
             component: () => import('@/views/Settings/SettingsView/SettingsViewAddons'),
-            props: { addonsType: 'plugins' },
+            props: {
+              addonsType: 'plugin'
+            },
             meta: {
-              title: 'settings.addons.extensions.title',
+              title: 'settings.addons.extension.title',
               breadcrumb: false,
               allowedModes: [MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]
             }
@@ -465,9 +467,11 @@ export const routes = [
             name: 'settings.extensions',
             path: 'extensions',
             component: () => import('@/views/Settings/SettingsView/SettingsViewAddons'),
-            props: { addonsType: 'extensions' },
+            props: {
+              addonsType: 'extension'
+            },
             meta: {
-              title: 'settings.addons.plugins.title',
+              title: 'settings.addons.plugin.title',
               breadcrumb: false,
               allowedModes: [MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]
             }

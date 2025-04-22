@@ -33,13 +33,13 @@ const tabs = computed(() => [
   },
   {
     icon: 'monitor',
-    title: t('settings.addons.plugins.title'),
+    title: t('settings.addons.plugin.title'),
     name: 'settings.plugins',
     modes: [MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]
   },
   {
     icon: 'database',
-    title: t('settings.addons.extensions.title'),
+    title: t('settings.addons.extension.title'),
     name: 'settings.extensions',
     modes: [MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]
   },
