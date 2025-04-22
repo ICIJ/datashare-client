@@ -66,7 +66,7 @@ defineProps({
 </script>
 
 <template>
-  <b-modal :button-size="buttonSize" :model-value="modelValue" :size="size" :title="title" class="app-modal">
+  <b-modal v-model="modelValue" :button-size="buttonSize" :size="size" :title="title" class="app-modal">
     <template #header="{ cancel, close, hide, ok, visible }">
       <slot name="header" v-bind="{ cancel, close, hide, ok, visible }">
         <app-modal-header
