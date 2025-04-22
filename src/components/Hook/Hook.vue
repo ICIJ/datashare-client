@@ -42,7 +42,9 @@ const isDebug = computed(() => config.is('hooksDebug'))
 
 <template>
   <component :is="debugTag" v-if="isDebug" class="hook-debug" :title="title" />
-  <component :is="component" v-for="({ component }, i) of components" :key="i" v-bind="bind" :class="xClass" />
+  <suspense>
+    <component :is="component" v-for="({ component }, i) of components" :key="i" v-bind="bind" :class="xClass" />
+  </suspense>
 </template>
 
 <style lang="scss">
