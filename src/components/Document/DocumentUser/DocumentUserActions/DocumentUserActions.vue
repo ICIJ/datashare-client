@@ -13,8 +13,8 @@
       <hook name="document-user-actions:before" />
       <document-user-actions-entry
         v-if="showTags"
-        :label="$t(`documentUserActions.tags`, { n: props.tags })"
-        :value="String(props.tags)"
+        :label="$t(`documentUserActions.tags`, { n: tags })"
+        :value="String(tags)"
         :icon="PhHash"
         :hide-tooltip="!shorterLabels"
         :shorter-label="shorterLabels"
@@ -22,8 +22,8 @@
       />
       <document-user-actions-entry
         v-if="showRecommendations"
-        :label="$t(`documentUserActions.recommendations`, { n: props.recommendations })"
-        :value="String(props.recommendations)"
+        :label="$t(`documentUserActions.recommendations`, { n: recommendations })"
+        :value="String(recommendations)"
         :icon="[PhEyes, 'fill']"
         :hide-tooltip="!shorterLabels"
         :shorter-label="shorterLabels"
@@ -31,8 +31,8 @@
       />
       <document-user-actions-entry
         v-if="showNotes"
-        :label="$t(`documentUserActions.notes`, { n: props.notes })"
-        :value="String(props.notes)"
+        :label="$t(`documentUserActions.notes`, { n: notes })"
+        :value="String(notes)"
         :icon="PhNoteBlank"
         :hide-tooltip="!shorterLabels"
         :shorter-label="shorterLabels"
@@ -40,14 +40,14 @@
       />
       <document-user-actions-entry
         v-if="showFolders"
-        :label="$t(`documentUserActions.folders`, { n: props.folders })"
-        :value="String(props.folders)"
+        :label="$t(`documentUserActions.folders`, { n: folders })"
+        :value="String(folders)"
         :icon="PhFolder"
         :hide-tooltip="!shorterLabels"
         :shorter-label="shorterLabels"
         @click="emit('action', 'folders')"
       />
-      <hook name="document-user-actions:after" />
+      <hook name="document-user-actions:after" :bind="{ shorterLabels }" />
     </form-actions>
   </div>
 </template>
