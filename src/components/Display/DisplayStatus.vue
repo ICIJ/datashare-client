@@ -7,6 +7,10 @@ import { buttonSizeValidator, SIZE } from '@/enums/sizes'
 import { toVariant, toVariantIcon } from '@/utils/utils'
 
 const props = defineProps({
+  tag: {
+    type: [String, Object],
+    default: 'span'
+  },
   value: {
     type: String
   },
@@ -50,7 +54,7 @@ const valueIcon = computed(() => {
 </script>
 
 <template>
-  <span ref="element" class="display-status" :class="classList">
+  <component :is="tag" ref="element" :attrs="$attrs" class="display-status" :class="classList">
     <phosphor-icon :name="icon ?? valueIcon" />
     <span class="visually-hidden">
       <display-status-label :value="value" :title="title" />
@@ -58,7 +62,7 @@ const valueIcon = computed(() => {
     <b-tooltip teleport-to="body" :manual="noTooltip" :delay="tooltipDelay" :target="element">
       <display-status-label :value="value" :title="title" />
     </b-tooltip>
-  </span>
+  </component>
 </template>
 
 <style lang="scss" scoped>
