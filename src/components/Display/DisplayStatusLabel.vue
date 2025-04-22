@@ -36,5 +36,5 @@ const valueTitle = computed(() => {
 </script>
 
 <template>
-  {{ valueTitle }}
+  <span>{{ valueTitle }}</span>
 </template>
