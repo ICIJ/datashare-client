@@ -10,14 +10,14 @@
   },
   "addonCard": {
     "plugin": {
-      "submitSuccess": "Extension successfully installed, please restart Datashare.",
-      "submitError": "Error while installing the extension.",
-      "deleteSuccess": "Plugin successfully deleted.",
+      "submitSuccess": "Plugin successfully installed.",
+      "submitError": "Error while installing the plugin.",
+      "deleteSuccess": "Extension successfully deleted.",
       "deleteError": "Error while deleting the plugin."
     },
     "extension": {
-      "submitSuccess": "Plugin successfully installed.",
-      "submitError": "Error while installing the plugin.",
+      "submitSuccess": "Extension successfully installed, please restart Datashare.",
+      "submitError": "Error while installing the extension.",
       "deleteSuccess": "Extension successfully deleted.",
       "deleteError": "Error while deleting the extension."
     }
@@ -1387,7 +1387,7 @@
       "info": "Translations are <a href='{href}' class='alert-link'>maintained on Crowdin</a>."
     },
     "addons": {
-      "plugins": {
+      "plugin": {
         "title": "Plugins",
         "info": "Plugins are front-end modules to add new features in Datashare's user interface.",
         "submitSuccess": "Plugin successfully installed.",
@@ -1395,7 +1395,7 @@
         "searchPlaceholder": "Search plugins",
         "errorLabel": "An error occurred while retrieving the plugins. Refresh the page or contact the support."
       },
-      "extensions": {
+      "extension": {
         "title": "Extensions",
         "info": "Extensions are back-end modules to add new features to store and manipulate data with Datashare.",
         "submitSuccess": "Extension successfully installed, please restart Datashare.",
