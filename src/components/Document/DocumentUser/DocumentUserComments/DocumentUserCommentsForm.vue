@@ -7,8 +7,7 @@ const comment = defineModel({ type: String, default: '' })
 const emit = defineEmits(['submit'])
 
 function onSubmit() {
-  const text = comment.value
-  emit('submit', { text })
+  emit('submit', comment.value)
   comment.value = ''
 }
 </script>
