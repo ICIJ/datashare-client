@@ -1,143 +1,79 @@
 <script setup>
-import { PhosphorIcon } from '@icij/murmur-next'
-import { computed, nextTick, ref, watch } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { noop } from 'lodash'
 
 import DocumentUserCommentsListEntry from '@/components/Document/DocumentUser/DocumentUserComments/DocumentUserCommentsListEntry'
+import DocumentUserCommentsListNewest from '@/components/Document/DocumentUser/DocumentUserComments/DocumentUserCommentsListNewest'
+import DocumentUserCommentsListOldest from '@/components/Document/DocumentUser/DocumentUserComments/DocumentUserCommentsListOldest'
 
 defineOptions({ name: 'DocumentUserCommentsList' })
 
-const open = defineModel('open', {
+const visible = defineModel('visible', {
   type: Boolean,
   default: true
 })
 
-const props = defineProps({
+defineProps({
   comments: {
     type: Array,
     default: () => []
   },
   to: {
     type: String,
-    default: ''
-  },
-  height: {
-    type: String,
-    default: '250px'
-  },
-  scrollToRecent: {
-    type: Boolean,
-    default: true
+    default: noop
   },
   tooltipDelay: {
     type: Object,
     default: () => ({ show: 0, hide: 0 })
+  },
+  hasOldest: {
+    type: Boolean,
+    default: false
+  },
+  hasNewest: {
+    type: Boolean,
+    default: false
   }
 })
 
-const { t } = useI18n()
-
-const style = {
-  '--document-user-comments-list__comments__list--height': props.height
-}
-
-const firstComment = '#comment-0'
-const lastComment = props.comments.length ? `#comment-${props.comments.length - 1}` : ''
-
-const hideComments = t('documentUserCommentsList.hideComments')
-const showComments = t('documentUserCommentsList.showComments')
-const noComments = t('documentUserCommentsList.noComments')
-const sortingText = t('documentUserCommentsList.sortingText')
-const goToOldest = t('documentUserCommentsList.goToOldest')
-const goToRecent = t('documentUserCommentsList.goToRecent')
-
-const goToOldestIcon = 'caret-up'
-const goToRecentIcon = 'caret-down'
-
-const displayComments = computed(() => (open.value ? hideComments : showComments))
-
-const closedEye = computed(() => {
-  return open.value ? 'regular' : 'fill'
-})
-const sortedComments = computed(() => [...props.comments].sort((a, b) => a.date - b.date))
-
-function generateToUrl(toComment) {
-  return `${props.to}${toComment}`
-}
-
-const container = ref(null)
-if (props.scrollToRecent) {
-  watch(
-    () => props.comments,
-    async () => {
-      const anchor = `#comment-${props.comments.length - 1}`
-      await nextTick() // can't scroll before the element is added to the DOM
-      const lastElement = container.value?.querySelector(anchor)
-      lastElement?.scrollIntoView(false)
-    },
-    { deep: true, immediate: true }
-  )
-}
+defineEmits(['goToNewest', 'goToOldest'])
 </script>
 
 <template>
-  <section class="document-user-comments-list">
-    <header class="d-flex justify-content-between align-items-center">
-      <span class="d-inline-flex align-items-center text-nowrap">
-        <phosphor-icon :name="PhSortAscending" class="me-1" />
-        {{ sortingText }}
-      </span>
-      <span
-        class="document-user-comments-list__display-comments btn btn-outline-link d-inline-flex justify-content-between text-nowrap"
-        @click="open = !open"
-      >
-        <span v-b-tooltip.body.hover="{ customClass: 'd-sm-none', delay: tooltipDelay }" :title="displayComments">
-          <phosphor-icon :name="PhEyeClosed" :weight="closedEye" class="me-2" />
-        </span>
-        <span class="d-none d-sm-inline">{{ displayComments }}</span>
-      </span>
-    </header>
-    <section v-if="open" class="document-user-comments-list__comments py-2">
-      <template v-if="comments.length">
-        <header class="text-center py-2">
-          <a :href="firstComment" class="d-inline-flex align-items-center">
-            <phosphor-icon :name="goToOldestIcon" class="me-1" />
-            {{ goToOldest }}
-          </a>
-        </header>
-        <article
-          ref="container"
-          class="document-user-comments-list__comments__list d-block overflow-y-scroll"
-          :style="style"
-        >
-          <document-user-comments-list-entry
-            v-for="(comment, index) in sortedComments"
-            :id="`comment-${index}`"
-            :key="index"
-            :text="comment.text"
-            :to="generateToUrl(comment.to)"
-            :date="comment.date"
-            :username="comment.username"
-          />
-        </article>
-        <footer class="text-center py-2">
-          <a :href="lastComment" class="d-inline-flex align-items-center">
-            <phosphor-icon :name="goToRecentIcon" class="me-1" />
-            {{ goToRecent }}
-          </a>
-        </footer>
-      </template>
-      <template v-else>
-        <div class="text-center py-2">{{ noComments }}</div>
-      </template>
-    </section>
-  </section>
+  <div class="document-user-comments-list">
+    <b-collapse v-model="visible" tag="section">
+      <div class="d-flex flex-column gap-1 align-items-center">
+        <document-user-comments-list-oldest v-if="hasOldest" @click="$emit('goToOldest')" />
+        <div v-if="comments.length" class="document-user-comments-list__entries">
+          <slot name="default" v-bind="{ visible, comments }">
+            <document-user-comments-list-entry
+              v-for="(comment, index) in comments"
+              :id="`comment-${index}`"
+              :key="index"
+              :text="comment.text"
+              :href="to(comment)"
+              :date="comment.date"
+              :username="comment.username"
+            />
+          </slot>
+        </div>
+        <div v-else class="document-user-comments-list__empty">
+          <slot name="empty" v-bind="{ visible, comments }">
+            <div class="text-center py-2">
+              {{ $t('documentUserCommentsList.empty') }}
+            </div>
+          </slot>
+        </div>
+        <document-user-comments-list-newest v-if="hasNewest" @click="$emit('goToNewest')" />
+      </div>
+    </b-collapse>
+  </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .document-user-comments-list {
-  &__comments__list {
-    height: var(--document-user-comments-list__comments__list--height);
+  &__entries {
+    max-height: 390px;
+    overflow: auto;
   }
 }
 </style>
