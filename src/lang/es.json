@@ -79,17 +79,17 @@
   },
   "buttonSaveSearch": {
     "label": "Save",
-    "labelSaving": "Saving",
-    "labelSaved": "Search saved"
+    "labelSaving": "Guardando",
+    "labelSaved": "Búsqueda guardada"
   },
   "buttonToggleAdvancedSearch": {
-    "label": "Advanced"
+    "label": "Avanzado"
   },
   "buttonToggleFilters": {
-    "label": "Filter"
+    "label": "Filtro"
   },
   "buttonToggleSearchBreadcrumb": {
-    "label": "Toggle search breadcrumb"
+    "label": "Cambiar a la búsqueda por migas de pan"
   },
   "buttonToggleRecommendation": {
     "mark": "Marcar como recomendado",
@@ -106,7 +106,7 @@
   },
   "dismissableAlert": {
     "close": "Close",
-    "dontShow": "Don't show this again"
+    "dontShow": "No volver a mostrar"
   },
   "dismissableToastBody": {
     "close": "Close"
@@ -120,46 +120,46 @@
     "no": "No favoritos"
   },
   "displayDatetimeRange": {
-    "title": "From {start} to {end}"
+    "title": "De {start} a {end}"
   },
   "displayStatus": {
-    "success": "Success",
-    "error": "Failure",
-    "failure": "Failure",
-    "danger": "Failure",
-    "warning": "Warning",
-    "info": "Information",
-    "running": "Running",
-    "queued": "Queued",
-    "draft": "Draft"
+    "success": "Listo",
+    "error": "Fallo",
+    "failure": "Fallo",
+    "danger": "Fallo",
+    "warning": "Cuidado",
+    "info": "Información",
+    "running": "En ejecución",
+    "queued": "En cola",
+    "draft": "Borrador"
   },
   "displayVisibility": {
-    "private": "Private to you",
-    "public": "Public to project members"
+    "private": "Privado para ti",
+    "public": "Publicar para participantes del proyecto"
   },
   "documentTranslationAlertToggler": {
-    "viewOriginal": "View original",
-    "viewTranslation": "View translation"
+    "viewOriginal": "Ver original",
+    "viewTranslation": "Ver traducción"
   },
   "documentTranslationAlertSource": {
     "detected": "Idioma detectado"
   },
   "documentDownloadPopover": {
-    "extensionWarning": "This document has the wrong file extension for its type. You might need to <strong>add the extension {extension}</strong> before you can open it.",
+    "extensionWarning": "Este documento tiene una extensión incorrecta para su tipo. Puede que necesite añadir la extensión <strong>{extension}</strong> antes de poder abrirlo.",
     "download": "Descargar",
-    "downloadWithoutMetadata": "Download without metadata",
-    "downloadExtractText": "Download text",
-    "downloadRoot": "Download root",
-    "sectionTitle": "What's the document's title?",
-    "sectionContentType": "What's the document's type?",
-    "sectionDescription": "Once downloaded, how do I open it?"
+    "downloadWithoutMetadata": "Descargar sin metadatos",
+    "downloadExtractText": "Descargar el texto",
+    "downloadRoot": "Descargar raíz",
+    "sectionTitle": "¿Cuál es el título del documento?",
+    "sectionContentType": "¿Cuál es el tipo del documento?",
+    "sectionDescription": "Una vez descargado, ¿cómo puedo abrirlo?"
   },
   "entityPopoverInfo": {
-    "content": "This entity was extracted with:",
-    "label": "{extractor} in {language}"
+    "content": "Esta entidad fue extraída con:",
+    "label": "{extractor} en {language}"
   },
   "entityPopoverMention": {
-    "noExcerpt": "This entity was extracted from the metadata."
+    "noExcerpt": "Esta entidad fue extraída de los metadatos."
   },
   "entityPopoverMentionOccurrences": {
     "occurrences": "This mention appears {offsets} times | This mention appears {offsets} time | This mention appears {offsets} times",
@@ -358,27 +358,27 @@
     "goToComment": "Go to comment (external link)"
   },
   "documentUserRecommendations": {
-    "warning": "Recommendations are public to all project’s members",
-    "noRecommendations": "No recommendations yet.",
+    "warning": "Las recomendaciones son públicas para todos los partícipes del proyecto",
+    "noRecommendations": "Aún no hay recomendaciones.",
     "markAsRecommended": "Marcar como recomendado",
     "unmarkAsRecommended": "Desmarcar como recomendado"
   },
   "documentUserTags": {
-    "tagListOthers": "Added by others",
-    "tagListYours": "Added by you",
-    "tagWarning": "Tags are public to project members",
-    "noTags": "No tags added yet."
+    "tagListOthers": "Añadido por otras personas",
+    "tagListYours": "Añadido por ti",
+    "tagWarning": "Publicar para participantes del proyecto",
+    "noTags": "Aún no se han añadido etiquetas."
   },
   "documentUserTagsAction": {
-    "placeholder": "Add tags"
+    "placeholder": "Añadir etiquetas"
   },
   "documentMetadataActions": {
-    "copy": "Copy this metadata value",
-    "search": "Search this metadata value",
-    "pin": "Pin this metadata"
+    "copy": "Copiar este valor de metadatos",
+    "search": "Buscar este valor de metadatos",
+    "pin": "Anclar estos metadatos"
   },
   "documentThumbnail": {
-    "noPreview": "No preview available"
+    "noPreview": "Vista previa no disponible"
   },
   "documentTranslatedContent": {
     "detected": "Idioma detectado",
@@ -386,17 +386,17 @@
     "viewTranslated": "Mostrar el texto traducido"
   },
   "linkedDocumentSectionList": {
-    "search": "Search all",
-    "empty": "No documents found."
+    "search": "Buscar todo",
+    "empty": "No se han encontrado documentos."
   },
   "linkedDocumentCard": {
     "siblings": {
-      "title": "{n} documents in the same folder | {n} document in the same folder | {n} documents in the same folder",
-      "description": "Same extraction level as this document"
+      "title": "{n} documentos en la misma carpeta | {n} documento en la misma carpeta | {n} documentos en la misma carpeta",
+      "description": "El mismo nivel de extracción que este documento"
     },
     "children": {
-      "title": "{n} children documents | {n} children document | {n} children documents",
-      "description": "One extraction level below this document"
+      "title": "{n} documentos derivados | {n} documento derivado | {n} documentos derivados",
+      "description": "Un nivel de extracción por debajo de este documento"
     }
   },
   "documentContent": {
@@ -405,11 +405,11 @@
   "documentViewTabs": {
     "text": "Text",
     "viewer": "View",
-    "metadata": "Metadata",
-    "entities": "Entities"
+    "metadata": "Metadatos",
+    "entities": "Entidades"
   },
   "documentViewTabsMetadata": {
-    "search": "Search in metadata"
+    "search": "Buscar en metadatos"
   },
   "filterTypeAll": {
     "label": "Todos"
@@ -431,9 +431,9 @@
     "notStarred": "No favoritos",
     "recommendedBy": "Recomendado por",
     "sections": {
-      "documentsInfo": "Documents info",
-      "userData": "User data",
-      "entities": "Entities"
+      "documentsInfo": "Información de los documentos",
+      "userData": "Datos de usuario/a",
+      "entities": "Entidades"
     },
     "sortByDropdown": {
       "toggler": "Ordenar",
@@ -679,13 +679,13 @@
     "notAvailable": "La vista previa no está disponible para este archivo.",
     "namedEntitiesNotFound": "No se han encontrado entidades identificadas",
     "namedEntitiesNotSearched": "<p>Documento no analizado. Para buscar entidades identificadas, vaya a <a class=\\\"fw-bold\\\" href=\\\"{indexingLink}\\\">@:{'menu.analyse'}</a> y comience una nueva tarea \\\"@:{'indexing.findNamedEntities'}\\\".</p>",
-    "namedEntitiesNotSearchedLink": "start a new task",
+    "namedEntitiesNotSearchedLink": "iniciar una nueva tarea",
     "threadIndex": "Índice de hilo",
     "errorNotFound": "Su archivo se ha indexado en Datashare, pero el archivo ya no está presente en su archivo Datashare en su computadora. La vista previa no está disponible.",
     "fetching": "Cargando vista previa...",
     "author": "Autor",
     "extractionDate": "Fecha de índice",
-    "numberOfPages": "Number of pages",
+    "numberOfPages": "Número de páginas",
     "parent": "Archivo de base",
     "inMetadata": "en los metadatos",
     "inTags": "en etiquetas",
@@ -722,20 +722,20 @@
       "title": "Organizaciones"
     },
     "email": {
-      "title": "Email"
+      "title": "Correo electrónico"
     }
   },
   "entitySectionActions": {
-    "copy": "Copy",
+    "copy": "Copiar",
     "download": "Descargar"
   },
   "entitySectionMore": {
-    "label": "Show more {category}",
+    "label": "Mostrar más {category}",
     "category": {
-      "person": "people",
-      "location": "locations",
-      "organization": "organizations",
-      "email": "emails"
+      "person": "personas",
+      "location": "ubicaciones",
+      "organization": "organizaciones",
+      "email": "correos electrónicos"
     }
   },
   "documentThread": {
@@ -756,48 +756,48 @@
     "tesseractNotInstalled": "Tesseract OCR is not installed."
   },
   "formControlTagInput": {
-    "placeholder": "Add tag",
-    "addButtonText": "Add"
+    "placeholder": "Añadir Etiqueta",
+    "addButtonText": "Añadir"
   },
   "formControlTerm": {
-    "placeholder": "Add term",
-    "addButtonText": "Add"
+    "placeholder": "Añadir término",
+    "addButtonText": "Añadir"
   },
   "formControlPath": {
     "browse": "Browse"
   },
   "formControlSearch": {
-    "placeholder": "Search..."
+    "placeholder": "Buscar..."
   },
   "formStepHeadingToggler": {
-    "label": "Toggle"
+    "label": "Cambiar"
   },
   "formStepGroupToggler": {
-    "collapse": "Collapse all steps",
-    "expand": "Expand all steps"
+    "collapse": "Contraer todos los pasos",
+    "expand": "Expandir todos los pasos"
   },
   "taskActions": {
     "stopPendingTasks": "Detener todas las tareas pendientes",
-    "removeDoneTasks": "Delete done tasks"
+    "removeDoneTasks": "Borrar tareas completadas"
   },
   "appSidebar": {
     "projects": "Proyectos",
-    "allProjects": "All projects",
+    "allProjects": "Todos los proyectos",
     "search": "Buscar",
     "searchDocuments": "Archivos",
     "history": "Histórico",
     "savedSearches": "Saved searches"
   },
   "appSidebarFooter": {
-    "signOut": "Sign out",
-    "keyboardShortcuts": "Keyboard Shortcuts",
+    "signOut": "Cerrar sesión",
+    "keyboardShortcuts": "Atajos de teclado",
     "settings": "Configuración",
     "help": "Ayuda",
     "removeAll": {
-      "link": "Remove all",
-      "title": "Are you sure you want to delete all your projects?",
-      "description": "This action cannot be undone. It will remove all your projects and their documents from Datashare.",
-      "success": "All your projects and documents were removed from Datashare.",
+      "link": "Eliminar todo",
+      "title": "¿Estás seguro de que deseas eliminar todos tus proyectos?",
+      "description": "Esta acción no se puede deshacer. Eliminará todos tus proyectos y tus documentos de Datashare.",
+      "success": "Todos tus proyectos y documentos fueron eliminados de Datashare.",
       "error": "Something went wrong, unable to remove your documents."
     }
   },
@@ -811,7 +811,7 @@
     "askHelp": "Pedir ayuda",
     "logout": "Se ha cerrado su sesión de Datashare.",
     "login": "Inicia sesión para continuar",
-    "title": "Login",
+    "title": "Iniciar sesión",
     "switchLanguage": "Switch language",
     "tagline": "ICIJ search and discovery platform"
   },
@@ -902,16 +902,16 @@
           "id": "Id",
           "name": "Nombre",
           "entitiesToFind": "Entities to find",
-          "pipeline": "Model",
+          "pipeline": "Modelo",
           "project": "Proyecto",
-          "createdAt": "Created on",
-          "progress": "Progress",
-          "result": "Result",
+          "createdAt": "Creado el",
+          "progress": "Progreso",
+          "result": "Resultado",
           "state": "Estado"
         }
       },
       "new": {
-        "title": "Find entities"
+        "title": "Encontrar entidades"
       },
       "form": {
         "projectSelector": {
@@ -919,8 +919,8 @@
         },
         "submit": "Go",
         "failedPipelines": "Failed to retrieve pipelines",
-        "defaultPipeline": "recommended",
-        "findEntitiesType": "Find",
+        "defaultPipeline": "recomendado",
+        "findEntitiesType": "Buscar",
         "pipelineOptions": {
           "corenlp": "CoreNLP",
           "opennlp": "OpenNLP",
