@@ -1,44 +1,80 @@
 <script setup>
-import { computed } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { noop } from 'lodash'
 
+import DocumentUserCommentsHeader from '@/components/Document/DocumentUser/DocumentUserComments/DocumentUserCommentsHeader'
 import DocumentUserCommentsList from '@/components/Document/DocumentUser/DocumentUserComments/DocumentUserCommentsList'
-import DocumentUserCommentsAction from '@/components/Document/DocumentUser/DocumentUserComments/DocumentUserCommentsAction'
+import DocumentUserCommentsForm from '@/components/Document/DocumentUser/DocumentUserComments/DocumentUserCommentsForm'
 import DocumentUserActionsCard from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsCard'
 
 defineOptions({ name: 'DocumentUserComments' })
-const comments = defineModel({
-  type: Array,
-  default: () => []
-})
-const props = defineProps({
-  comment: { type: String, default: '' },
-  to: { type: String, default: '' },
-  username: { type: String, default: '' }
+
+const visible = defineModel('visible', {
+  type: Boolean,
+  default: true
 })
 
-const { t } = useI18n()
-const title = computed(() => t('documentUserActions.comments', comments.value.length))
-const warning = t('documentUserComments.warning')
-const commentsIcon = PhChatsTeardrop
+defineProps({
+  comment: {
+    type: String,
+    default: ''
+  },
+  comments: {
+    type: Array,
+    default: () => []
+  },
+  count: {
+    type: Number,
+    default: null
+  },
+  to: {
+    type: String,
+    default: noop
+  },
+  username: {
+    type: String,
+    default: ''
+  },
+  hasOldest: {
+    type: Boolean,
+    default: false
+  },
+  hasNewest: {
+    type: Boolean,
+    default: false
+  }
+})
 
-function addComment(comment) {
-  // TODO CD retrieve real url here
-  const newComment = { username: props.username, date: comment.date, to: props.to, text: comment.text }
-  comments.value = [...comments.value, newComment]
-}
+defineEmits(['goToNewest', 'goToOldest', 'submit'])
 </script>
 
 <template>
-  <document-user-actions-card :icon="commentsIcon" :title="title" show-warning action-end>
-    <template #content>
-      <document-user-comments-list :comments="comments" :to="to" />
+  <document-user-actions-card
+    :icon="PhChatsTeardrop"
+    :title="$t('documentUserActions.comments', count ?? comments.length)"
+    show-warning
+    action-end
+  >
+    <slot name="header">
+      <document-user-comments-header v-model:visible="visible" />
+    </slot>
+    <slot name="comments">
+      <document-user-comments-list
+        v-model:visible="visible"
+        :comments="comments"
+        :to="to"
+        :has-newest="hasNewest"
+        :has-oldest="hasOldest"
+        @goToNewest="$emit('goToNewest')"
+        @goToOldest="$emit('goToOldest')"
+      />
+    </slot>
+    <template #action-warning>
+      <slot name="warning">
+        {{ $t('documentUserComments.warning') }}
+      </slot>
     </template>
-    <template #action-warning>{{ warning }}</template>
     <template #action>
-      <document-user-comments-action :model-value="comment" :to="to" :username="username" @submit="addComment" />
+      <document-user-comments-form :model-value="comment" @submit="$emit('submit', $event)" />
     </template>
   </document-user-actions-card>
 </template>
-
-<style scoped lang="scss"></style>
