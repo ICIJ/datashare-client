@@ -7,7 +7,9 @@ export default {
   decorators: [withPinia()],
   component: DocumentUserComments,
   args: {
-    modelValue: []
+    comments: [],
+    hasNewest: false,
+    hasOldest: false
   }
 }
 export const Default = {}
@@ -15,9 +17,11 @@ export const Default = {}
 export const WithComments = {
   args: {
     comment: '',
-    to: 'http://example.com',
+    to: () => 'http://example.com',
     username: 'jsmith',
-    modelValue: [
+    hasOldest: true,
+    hasNewest: false,
+    comments: [
       {
         username: 'bfett',
         date: Date.now() - 150000000000,
