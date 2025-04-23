@@ -50,7 +50,7 @@ defineEmits(['goToNewest', 'goToOldest', 'submit'])
 <template>
   <document-user-actions-card
     :icon="PhChatsTeardrop"
-    :title="$t('documentUserActions.comments', count ?? comments.length)"
+    :title="$tc('documentUserActions.comments', count ?? comments.length)"
     show-warning
     action-end
   >
