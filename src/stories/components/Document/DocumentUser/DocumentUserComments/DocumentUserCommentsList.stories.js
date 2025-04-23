@@ -7,12 +7,19 @@ export default {
   component: DocumentUserCommentsList,
   decorators: [withPinia()],
   args: {
-    comments: []
+    comments: [],
+    to: () => 'http://example.com',
+    hasNewest: false,
+    hasOldest: false
   }
 }
+
 export const Default = {}
+
 export const WithComments = {
   args: {
+    hasNewest: false,
+    hasOldest: true,
     comments: [
       {
         username: 'bfett',
