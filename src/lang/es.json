@@ -4,9 +4,9 @@
     "yes": "Sí",
     "no": "No",
     "submit": "Guardar",
-    "reset": "Reset",
+    "reset": "Reiniciar",
     "you": "Tú",
-    "building": "Our team is still crafting something awesome for this page. Stay tuned!"
+    "building": "Nuestro equipo todavía está fabricando algo impresionante para esta página. ¡Vuelve más tarde!"
   },
   "addonCard": {
     "plugin": {
@@ -23,22 +23,22 @@
     }
   },
   "addonUrlInput": {
-    "installFromUrl": "Install from a URL",
-    "install": "Install",
+    "installFromUrl": "Instalar desde una URL",
+    "install": "Instalar",
     "enterCorrectUrl": "Por favor introduzca una URL correcta."
   },
   "addonCardViewActions": {
-    "version": "Version: {v}",
-    "install": "Install {v}",
-    "update": "Update to {v}",
+    "version": "Versión: {v}",
+    "install": "Instalar {v}",
+    "update": "Actualizar a {v}",
     "uninstall": "Desinstalar"
   },
   "addonCardViewDetails": {
-    "homepage": "Homepage:"
+    "homepage": "Página de inicio:"
   },
   "appModalConfirm": {
     "title": "¿Estás seguro/a?",
-    "description": "This action cannot be undone."
+    "description": "Esta acción no se puede deshacer."
   },
   "appModalHeader": {
     "close": "Close"
@@ -48,34 +48,34 @@
     "okTitle": "Sí"
   },
   "buttonAdd": {
-    "label": "Add new"
+    "label": "Agregar nueva"
   },
   "buttonToggleSettings": {
     "label": "Configuración"
   },
   "buttonToggleSidebar": {
-    "expand": "Expand sidebar",
-    "reduce": "Reduce sidebar"
+    "expand": "Expandir el panel lateral",
+    "reduce": "Reducir panel lateral"
   },
   "buttonClearSearch": {
-    "label": "Clear search"
+    "label": "Borrar la búsqueda"
   },
   "buttonClearHistory": {
     "label": "Borrar historia"
   },
   "buttonClearSavedSearches": {
-    "label": "Clear saved searches"
+    "label": "Borrar búsquedas guardadas"
   },
   "buttonDownloadDocuments": {
-    "label": "Download documents"
+    "label": "Descargar los documentos"
   },
   "buttonTogglePin": {
-    "pin": "Pin to menu",
-    "unpin": "Unpin"
+    "pin": "Anclar al menú",
+    "unpin": "Desanclar"
   },
   "buttonToggleBatchMode": {
-    "labelBatchMode": "Selection mode",
-    "labelSingleFlow": "Close selection mode"
+    "labelBatchMode": "Modo de selección",
+    "labelSingleFlow": "Cerrar el modo de selección"
   },
   "buttonSaveSearch": {
     "label": "Save",
