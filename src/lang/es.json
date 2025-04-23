@@ -929,44 +929,44 @@
           "gatenlp": "GateNLP"
         },
         "pipeline": {
-          "label": "Choose a model",
+          "label": "Selecciona un modelo",
           "description": "Datashare utiliza modelos de Programación Neuro-Lingüística (Natural Language Processing)."
         },
         "findEntities": {
-          "label": "Find",
+          "label": "Encontrar",
           "options": {
             "emails": "Correos electrónicos",
-            "named-entities": "People, organisations and locations"
+            "named-entities": "Personas, organizaciones y lugares"
           }
         },
         "offline": {
           "label": "Do you want to work offline?",
-          "description": "Select 'No' if you want to sync latest models.",
+          "description": "Selecciona 'No' si quieres sincronizar los últimos modelos.",
           "options": {
             "yes": "Sí",
             "no": "No"
           }
         },
-        "success": "Find entities task is launched",
-        "error": "An error occurred when creating the task: {error}"
+        "success": "La tarea de búsqueda de entidades ha sido lanzada",
+        "error": "Se ha producido un error al crear la tarea: {error}"
       }
     },
     "documents": {
       "title": "Archivos",
       "list": {
-        "emptyStateLabel": "Do you want to add documents?",
+        "emptyStateLabel": "¿Quieres añadir documentos?",
         "emptyStateAction": "Add documents",
-        "info": "Document additions are tasks that you run to ask Datashare to add new documents.",
-        "searchPlaceholder": "Search tasks",
-        "noResults": "No results.",
+        "info": "Las adiciones de documentos son tareas que ejecutas para solicitar a Datashare que añada nuevos documentos.",
+        "searchPlaceholder": "Buscar tareas",
+        "noResults": "Sin resultados.",
         "properties": {
           "id": "Id",
           "name": "Nombre",
           "documents": "Archivos",
           "project": "Proyecto",
-          "createdAt": "Created on",
-          "progress": "Progress",
-          "result": "Result",
+          "createdAt": "Creado el",
+          "progress": "Progreso",
+          "result": "Resultado",
           "state": "Estado"
         }
       },
@@ -978,14 +978,14 @@
           "label": "Seleccione un proyecto"
         },
         "path": {
-          "label": "Select the folder or subfolder to analyze",
-          "description": "The entire Datashare home will be indexed by default."
+          "label": "Seleccione la carpeta o subcarpeta para analizar",
+          "description": "Todo el directorio principal de Datashare se indexará por defecto."
         },
         "extractingLanguage": {
-          "label": "Choose the language to extract"
+          "label": "Elija el idioma a extraer"
         },
         "extractOcr": {
-          "label": "Extract text from images and PDFs (OCR)",
+          "label": "Extraer texto de imágenes y PDFs (OCR)",
           "description": "En caso afirmativo, Datashare ejecutará el proceso de OCR (reconocimiento óptico de caracteres). El proceso puede tardar hasta 10 veces más.",
           "options": {
             "yes": "Sí",
@@ -993,30 +993,30 @@
           }
         },
         "skipIndexedDocuments": {
-          "label": "Skip already indexed documents",
-          "description": "If yes, Datashare will only extract text from documents that are not indexed yet.",
+          "label": "Omitir documentos ya indexados",
+          "description": "En caso afirmativo, Datashare sólo extraerá texto de documentos que no estén indexados todavía.",
           "options": {
             "yes": "Sí",
             "no": "No"
           }
         },
-        "submit": "Add",
-        "success": "Add document task is launched",
-        "error": "An error occurred when creating the task: {error}"
+        "submit": "Añadir",
+        "success": "Se ha lanzado la tarea de añadir documento",
+        "error": "Se ha producido un error al crear la tarea: {error}"
       }
     },
     "batch-download": {
       "title": "Descarga en lotes",
       "list": {
-        "emptyStateLabel": "There are no batch downloads. Go to search to batch download all the documents of a search.",
-        "emptyStateAction": "Go to search",
-        "info": "Batch downloads are password-protected zip files containing all the documents from one of your searches.",
-        "searchPlaceholder": "Search batch downloads",
+        "emptyStateLabel": "No hay descargas por lotes. Ve a buscar para descargar por lotes todos los documentos de una búsqueda.",
+        "emptyStateAction": "Ir a la búsqueda",
+        "info": "Las descargas por lotes son archivos zip protegidos por contraseña que contienen todos los documentos de una de tus búsquedas.",
+        "searchPlaceholder": "Buscar descargas por lotes",
         "properties": {
           "name": "Nombre",
-          "createdAt": "Created on",
+          "createdAt": "Creado el",
           "projects": "Proyectos",
-          "progress": "Progress",
+          "progress": "Progreso",
           "size": "Tamaño",
           "state": "Estado",
           "id": "Id"
@@ -1026,12 +1026,12 @@
     "batch-search": {
       "title": "Búsquedas masivas",
       "list": {
-        "emptyStateLabel": "There are no batch searches. Do you want to search a bunch of queries at once?",
-        "emptyStateAction": "Create new batch search",
-        "noMatches": "No batch searches matched. Try removing the search filter.",
-        "info": "Batch searches allow to get the results of each query of a list, but all at once.",
-        "searchPlaceholder": "Search batch searches",
-        "noResults": "No results.",
+        "emptyStateLabel": "No hay búsquedas por lotes. ¿Quieres buscar un montón de consultas a la vez?",
+        "emptyStateAction": "Crear nueva búsqueda por lotes",
+        "noMatches": "No hay búsquedas por lotes que coincidan. Intente eliminar el filtro de búsqueda.",
+        "info": "Las búsquedas por lotes permiten obtener los resultados de cada consulta de una lista, pero todos a la vez.",
+        "searchPlaceholder": "Buscar búsquedas por lotes",
+        "noResults": "Sin resultados.",
         "properties": {
           "privacy": "Privacy",
           "queries": "Consultas",
@@ -1147,37 +1147,37 @@
   },
   "batchSearchCardDetails": {
     "status": "Status",
-    "date": "Created on",
+    "date": "Creado el",
     "author": "Autor",
-    "visibilityPrivate": "Private",
-    "visibilityShared": "Shared",
-    "visibility": "Visibility",
-    "phraseMatchOn": "Do phrase match: yes",
-    "phraseMatchOff": "Do phrase match: no",
-    "phraseMatch": "Phrase match",
-    "proximity": "Proximity - Sentence changes",
-    "proximityValue": "Sentence changes: {n} | Sentence change: {n} | Sentence changes: {n}",
-    "fuzziness": "Fuzziness - Spelling changes",
-    "fuzzinessValue": "Spelling changes: {n} | Spelling change: {n} | Spelling changes: {n}",
+    "visibilityPrivate": "Privado",
+    "visibilityShared": "Compartido",
+    "visibility": "Visibilidad",
+    "phraseMatchOn": "¿Concuerda la frase?: sí",
+    "phraseMatchOff": "¿Concuerda la frase?: no",
+    "phraseMatch": "Coincidencia de frase",
+    "proximity": "Proximidad - Cambios en la oración",
+    "proximityValue": "Cambios en la oración: {n} | Cambio en la oración: {n} | Cambios en la oración: {n}",
+    "fuzziness": "Fuzziness - Cambios ortográficos",
+    "fuzzinessValue": "Cambios ortográficos: {n} | Cambio de ortografía: {n} | Cambios ortográficos: {n}",
     "projects": "Proyectos",
     "description": "Descripción"
   },
   "batchSearchActions": {
     "remove": {
-      "success": "The batch search was removed",
-      "error": "Unable to remove the batch search"
+      "success": "La búsqueda por lotes fue eliminada",
+      "error": "No se puede eliminar la búsqueda por lotes"
     },
     "stop": {
-      "success": "The batch search was stopped",
-      "error": "Unable to stop the batch search"
+      "success": "La búsqueda por lotes fue detenida",
+      "error": "No se puede detener la búsqueda por lotes"
     },
     "relaunch": {
-      "success": "The batch search was relaunched",
-      "error": "Unable to relaunch the batch search"
+      "success": "La búsqueda por lotes fue relanzada",
+      "error": "No se puede relanzar la búsqueda por lotes"
     }
   },
   "batchSearchActionsEditModal": {
-    "title": "Edit batch search",
+    "title": "Editar búsqueda por lotes",
     "name": "Nombre",
     "description": "Descripción"
   },
@@ -1189,35 +1189,35 @@
   },
   "buttonRowAction": {
     "relaunch": "Reiniciar",
-    "stop": "Stop",
+    "stop": "Detener",
     "delete": "Eliminar",
-    "edit": "Edit",
+    "edit": "Editar",
     "search": "Buscar"
   },
   "textTruncate": {
-    "seeLess": "See less",
-    "seeMore": "See more"
+    "seeLess": "Ver menos",
+    "seeMore": "Ver más"
   },
   "pageSettings": {
-    "title": "Page settings"
+    "title": "Configuración de página"
   },
   "pageSettingsSectionGroupAll": {
     "label": "Todos"
   },
   "pageTable": {
-    "toggleDetails": "Toggle details"
+    "toggleDetails": "Activar/desactivar los detalles"
   },
   "projects": {
     "title": "Proyectos"
   },
   "projectDeletionModal": {
-    "title": "Are you sure you want to delete the {project} project?",
+    "title": "¿Seguro que deseas eliminar el proyecto {project}?",
     "body": {
       "all": "It will remove {documents} from your index, {tags} and {recommendations}. {default}",
-      "default": "A new empty Default project will be created immediately.",
-      "documents": "0 documents | 1 document | {count} documents",
-      "tags": "0 tags | 1 tag | {count} tags",
-      "recommendations": "0 recommendations | 1 recommendation | {count} recommendations"
+      "default": "Un nuevo proyecto por defecto vacío será creado inmediatamente.",
+      "documents": "0 documentos | 1 documento | {count} documentos",
+      "tags": "0 etiquetas | 1 etiqueta | {count} etiquetas",
+      "recommendations": "0 recomendaciones | 1 recomendación | {count} recomendaciones"
     },
     "notify": {
       "succeed": "The project was deleted",
@@ -1225,26 +1225,26 @@
     }
   },
   "projectEntriesTableHead": {
-    "name": "Name of the project",
+    "name": "Nombre del proyecto",
     "description": "Descripción",
     "documents": "Archivos",
-    "updatedOn": "Updated on",
-    "links": "Links",
-    "actions": "Actions"
+    "updatedOn": "Actualizado el",
+    "links": "Enlaces",
+    "actions": "Acciones"
   },
   "projectRowActions": {
     "edit": "Edit project",
-    "delete": "Delete project"
+    "delete": "Eliminar proyecto"
   },
   "projectJumbotron": {
     "delete": "Eliminar",
-    "edit": "Edit",
-    "creationDate": "Created:",
-    "updateDate": "Updated:"
+    "edit": "Editar",
+    "creationDate": "Creado:",
+    "updateDate": "Actualizado:"
   },
   "projectList": {
     "title": "Projects",
-    "searchPlaceholder": "Search projects",
+    "searchPlaceholder": "Buscar proyectos",
     "fields": {
       "label": "Label",
       "updateDate": "Updated"
@@ -1261,20 +1261,20 @@
     }
   },
   "projectViewOverview": {
-    "emptyStateLabel": "Oh, it’s lonely in here... This project has no documents yet.",
-    "emptyStateAction": "Add first documents",
+    "emptyStateLabel": "Oh, está solitario por aquí... Este proyecto aún no tiene documentos.",
+    "emptyStateAction": "Añadir primeros documentos",
     "nav": {
       "insights": "Estadísticas",
       "paths": "Rutas",
-      "graph": "Graph",
+      "graph": "Grafo",
       "details": "Etiqueta & Detalles",
       "history": "Histórico"
     }
   },
   "projectViewOverviewGraph": {
-    "emptyStateLabel": "Graph extension has not been installed yet. Read ICIJ’s {articleLink} to learn more about this feature.",
-    "emptyStateLabelArticleLink": "article",
-    "emptyStateAction": "Install"
+    "emptyStateLabel": "La extensión de grafos aún no ha sido instalada. Lee {articleLink} de ICIJ para obtener más información sobre esta función.",
+    "emptyStateLabelArticleLink": "artículo",
+    "emptyStateAction": "Instalar"
   },
   "projectViewEdit": {
     "title": "Edit project",
@@ -1314,7 +1314,7 @@
       },
       "label": {
         "label": "Label",
-        "placeholder": "The label of your project",
+        "placeholder": "La etiqueta de tu proyecto",
         "invalidFeedback": "The label \"{label}\" is a reserved word."
       },
       "description": {
@@ -1323,7 +1323,7 @@
       },
       "sourcePath": {
         "label": "Project folder",
-        "placeholder": "Select the folder where the project's documents are located."
+        "placeholder": "Seleccione la carpeta donde se encuentran los documentos del proyecto."
       },
       "logoUrl": {
         "label": "Logo URL",
@@ -1335,7 +1335,7 @@
       },
       "publisherName": {
         "label": "Publisher name",
-        "placeholder": "The name of the people or organization who published the files in this project"
+        "placeholder": "El nombre de las personas u organización que han publicado los archivos en este proyecto"
       },
       "maintainerName": {
         "label": "Maintainer name",
