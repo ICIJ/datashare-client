@@ -822,8 +822,8 @@
     "searchPlaceholder": "Buscar en esta página"
   },
   "taskNames": {
-    "batchSearch": "Búsqueda en lote",
-    "batchDownload": "Descarga en lote",
+    "batchSearch": "Búsqueda por lotes",
+    "batchDownload": "Descarga por lotes",
     "scan": "Escanear carpetas",
     "index": "Indexar documentos",
     "extractNLP": "Encontrar entidades",
@@ -849,8 +849,8 @@
         "title": "Últimas tareas",
         "showMore": "Ver más",
         "linkTitle": {
-          "batchSearch": "Tarea de búsqueda en lotes",
-          "batchDownload": "Tarea de descarga en lote",
+          "batchSearch": "Tarea de búsqueda por lotes",
+          "batchDownload": "Tarea de descarga por lotes",
           "documentTask": "Tarea del documento",
           "entityTask": "Tarea de entidad",
           "unknownTask": "Tarea desconocida"
@@ -868,10 +868,10 @@
       "entries": {
         "seeAll": "Ver todo",
         "batch-search": {
-          "title": "Búsqueda en lote",
+          "title": "Búsqueda por lotes",
           "description": "Obtener los resultados de cada consulta de una lista, todos a la vez. Por ejemplo, en lugar de buscar a todos los políticos de tu país uno tras otro, simplemente sube la lista y ve los resultados para cada uno.",
           "nbPublic": "Sin búsquedas por lotes compartidos | 1 búsqueda por lotes compartidos | {n} búsquedas por lotes compartidos",
-          "nbPrivate": "sin búsquedas privadas por lote | 1 búsqueda por lote compartida | {n} búsqueda por lote privada",
+          "nbPrivate": "sin búsquedas privadas por lotes | 1 búsqueda por lotes compartida | {n} búsqueda por lotes privada",
           "actionText": "Crear una búsqueda por lotes"
         },
         "batch-download": {
@@ -936,7 +936,7 @@
           "label": "Encontrar",
           "options": {
             "emails": "Correos electrónicos",
-            "named-entities": "Personas, organizaciones y lugares"
+            "named-entities": "Personas, organizaciones y ubicaciones"
           }
         },
         "offline": {
@@ -1400,11 +1400,11 @@
       },
       "extensions": {
         "title": "Extensiones",
-        "info": "Extensions are back-end modules to add new features to store and manipulate data with Datashare.",
+        "info": "Las extensiones son módulos de back-end para agregar nuevas características para almacenar y manipular datos con Datashare.",
         "submitSuccess": "Extensión instalada con éxito, por favor reinicie Datashare.",
         "submitError": "Error mientras se instalaba la extensión.",
         "searchPlaceholder": "Buscar en las extensiones",
-        "errorLabel": "An error occurred while retrieving the extensions. Refresh the page or contact the support."
+        "errorLabel": "Se ha producido un error al recuperar las extensiones. Actualice la página o póngase en contacto con el soporte."
       }
     },
     "api": {
@@ -1412,14 +1412,14 @@
       "newApiKey": "Crear una clave API",
       "apiKey": "Clave API",
       "noAccess": "No tiene acceso a esa página en modo local.",
-      "description": "An API key allows you interact with Datashare <a href=\"https://icij.gitbook.io/datashare/developers/backend/api\" target=\"_blank\">through the API</a>, using tools like <a href=\"https://github.com/ICIJ/datashare-tarentula\" target=\"_blank\">Tarentula</a> or your own scripts.",
+      "description": "Una clave API le permite interactuar con Datashare <a href=\"https://icij.gitbook.io/datashare/developers/backend/api\" target=\"_blank\">a través de la API</a>, usando herramientas como <a href=\"https://github.com/ICIJ/datashare-tarentula\" target=\"_blank\">Tarentula</a> o sus propios scripts.",
       "key": {
         "badge": "Key",
-        "copy": "Copy",
+        "copy": "Copiar",
         "hash": "Hash: {hash}",
         "created": "Se ha creado la clave API",
         "warning": "Por favor, copie esta clave en un lugar seguro, no podrá volver a acceder a ella en Datashare.",
-        "unavailable": "You can only access a key when creating it.",
+        "unavailable": "Sólo puede acceder a una key al crearla.",
         "regenerate": "Regenerar",
         "delete": {
           "button": "Eliminar",
@@ -1434,13 +1434,13 @@
     "submitError": "No se puede actualizar la configuración."
   },
   "viewSettings": {
-    "perPage": "{title} per page",
-    "properties": "Properties",
+    "perPage": "{title} por página",
+    "properties": "Propiedades",
     "layout": {
-      "label": "Layout",
-      "grid": "Grid",
-      "table": "Table",
-      "list": "List"
+      "label": "Disposición",
+      "grid": "Rejilla",
+      "table": "Tabla",
+      "list": "Lista"
     },
     "sortBy": {
       "label": "Ordenar por",
@@ -1448,16 +1448,16 @@
     },
     "options": {
       "name": "Nombre",
-      "creationDate": "Created on",
-      "updateDate": "Latest update",
-      "visitDate": "Last visit",
-      "documentsCount": "Documents count",
-      "taskStatus": "Task status",
-      "progress": "Progress",
+      "creationDate": "Creado el",
+      "updateDate": "Última actualización",
+      "visitDate": "Ultima visita",
+      "documentsCount": "Número de documentos",
+      "taskStatus": "Estado de la tarea",
+      "progress": "Progreso",
       "project": "Proyecto",
-      "privacy": "Privacy",
-      "pipeline": "Model",
-      "entitiesToFind": "Entities to find",
+      "privacy": "Privacidad",
+      "pipeline": "Modelo",
+      "entitiesToFind": "Entidades a encontrar",
       "queries": "Consultas",
       "documents": "Archivos",
       "size": "Tamaño",
@@ -1465,24 +1465,24 @@
     },
     "order": {
       "default": {
-        "asc": "ascending",
-        "desc": "descending"
+        "asc": "ascendente",
+        "desc": "descendente"
       },
       "alpha": {
-        "asc": "A to Z",
-        "desc": "Z to A"
+        "asc": "A a Z",
+        "desc": "Z a la A"
       },
       "number": {
-        "asc": "increasing",
-        "desc": "decreasing"
+        "asc": "ascendente",
+        "desc": "descendiente"
       },
       "quantity": {
-        "asc": "low",
-        "desc": "high"
+        "asc": "bajo",
+        "desc": "alto"
       },
       "date": {
-        "asc": "old first",
-        "desc": "recent first"
+        "asc": "antiguos primero",
+        "desc": "recientes primero"
       }
     }
   },
@@ -1505,9 +1505,9 @@
     "noFile": "The archive has expired.",
     "created": "Tu descarga está siendo procesada",
     "warning": "This feature is currently being developed by the Datashare team.",
-    "seeAll": "See all",
+    "seeAll": "Ver todo",
     "errorMessage": "The system encountered an issue. Please refer to these details when contacting support.",
-    "errorTitle": "Batch download task <code class=\"fw-bold\">{taskId}</code> is in error.",
+    "errorTitle": "La tarea de descarga por lotes <code class=\"fw-bold\">{taskId}</code> está en error.",
     "relaunch": {
       "succeed": "Your download is being prepared",
       "succeedBody": "The download should be available soon.",
@@ -1518,7 +1518,7 @@
       "failed": "Unable to delete",
       "failedBody": "Something happened when trying to delete this batch download."
     },
-    "limitations": "Las descargas en lote están limitadas a archivos {maxNbFiles} y {maxSize}B."
+    "limitations": "Las descargas por lotes están limitadas a archivos {maxNbFiles} y {maxSize}B."
   },
   "batchDownloadActions": {
     "remove": {
@@ -1698,7 +1698,7 @@
     }
   },
   "documentEntries": {
-    "noMatches": "No documents matched your search. Try using different filters."
+    "noMatches": "No hay documentos que coincidan con tu búsqueda. Intenta usar filtros diferentes."
   },
   "documentEntriesTableHead": {
     "action": "Acción"
