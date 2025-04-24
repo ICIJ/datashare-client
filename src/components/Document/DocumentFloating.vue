@@ -32,6 +32,12 @@ const props = defineProps({
   },
   fill: {
     type: Boolean
+  },
+  startClass: {
+    type: [String, Object, Array]
+  },
+  endClass: {
+    type: [String, Object, Array]
   }
 })
 
@@ -147,7 +153,7 @@ defineExpose({ resetSize, resetStartSize, resetEndSize })
 
 <template>
   <div ref="element" class="document-floating" :class="classList" :style="style">
-    <div class="document-floating__start" :style="startStyle">
+    <div class="document-floating__start" :style="startStyle" :class="startClass">
       <slot name="floating" v-bind="{ documentViewFloatingId, enoughtSpace }">
         <div :id="documentViewFloatingId" class="document-floating__start__floating"></div>
       </slot>
@@ -168,7 +174,7 @@ defineExpose({ resetSize, resetStartSize, resetEndSize })
       @reduce="reduce"
       @expand="expand"
     />
-    <div class="document-floating__end">
+    <div class="document-floating__end" :class="endClass">
       <slot v-bind="{ enoughtSpace }" />
     </div>
   </div>
@@ -204,9 +210,12 @@ defineExpose({ resetSize, resetStartSize, resetEndSize })
     overflow: hidden;
 
     .document-floating--has-floating-children &,
-    .document-floating--has-floating-children &__floating,
     .document-floating--has-floating-siblings & {
       display: block;
+    }
+
+    .document-floating--has-floating-children &__floating {
+      display: flex;
     }
 
     &__floating {
@@ -222,6 +231,8 @@ defineExpose({ resetSize, resetStartSize, resetEndSize })
       background: var(--bs-action-bg-subtle);
       border-radius: var(--bs-border-radius);
       display: none;
+      flex-direction: column;
+      gap: $spacer;
       overflow: auto;
     }
   }
