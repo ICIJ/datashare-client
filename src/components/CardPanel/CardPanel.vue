@@ -25,9 +25,6 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  width: {
-    type: String
-  },
   contentClass: {
     type: [String, Object, Array],
     default: 'gap-3'
@@ -40,7 +37,6 @@ const props = defineProps({
 
 const emit = defineEmits(['close'])
 
-const panelWidth = computed(() => `--card-panel-width : ${props.width}`)
 const classList = computed(() => ({ 'card-panel--borderless': !props.border }))
 
 const close = () => {
@@ -50,7 +46,7 @@ const close = () => {
 </script>
 
 <template>
-  <b-card v-if="modelValue" class="card-panel shadow-sm py-4" :class="classList" :style="panelWidth">
+  <b-card v-if="modelValue" class="card-panel shadow-sm py-4" :class="classList">
     <b-card-title class="card-panel__title d-flex justify-content-between align-items-center fw-bold">
       <span>
         <phosphor-icon v-if="icon" :name="icon" :weight="iconWeight" class="me-2" />
@@ -76,8 +72,6 @@ const close = () => {
 
 <style lang="scss" scoped>
 .card-panel {
-  width: var(--card-panel-width, auto);
-
   &--borderless {
     border: 0;
   }
