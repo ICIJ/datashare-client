@@ -1,5 +1,4 @@
 <script setup>
-import { computed } from 'vue'
 import { noop } from 'lodash'
 
 import DocumentUserCommentsListEntry from '@/components/Document/DocumentUser/DocumentUserComments/DocumentUserCommentsListEntry'
