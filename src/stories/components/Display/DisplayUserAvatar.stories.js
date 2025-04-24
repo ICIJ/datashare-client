@@ -8,7 +8,8 @@ export default {
   component: DisplayUserAvatar,
   args: {
     value: 'batman',
-    avatarHeight: 50
+    avatarHeight: 50,
+    showPlaceholder: false
   }
 }
 
