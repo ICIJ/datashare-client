@@ -47,6 +47,9 @@
     "cancelTitle": "Cancel",
     "okTitle": "Yes"
   },
+  "appPopoverHeader": {
+    "close": "Close"
+  },
   "buttonAdd": {
     "label": "Add new"
   },
