@@ -57,6 +57,10 @@ defineProps({
   },
   headerCloseClass: {
     type: [String, Array, Object]
+  },
+  noHeaderClose: {
+    type: Boolean,
+    default: false
   }
 })
 </script>
@@ -71,6 +75,7 @@ defineProps({
           :image-width="imageWidth"
           :title="title"
           :header-close-class="headerCloseClass"
+          :no-header-close="noHeaderClose"
           @close="close"
         >
           <template #close>
