@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from 'vue'
 import { noop } from 'lodash'
 
 import DocumentUserCommentsListEntry from '@/components/Document/DocumentUser/DocumentUserComments/DocumentUserCommentsListEntry'
@@ -54,13 +55,6 @@ defineEmits(['goToNewest', 'goToOldest'])
               :date="comment.date"
               :username="comment.username"
             />
-          </slot>
-        </div>
-        <div v-else class="document-user-comments-list__empty">
-          <slot name="empty" v-bind="{ visible, comments }">
-            <div class="text-center py-2">
-              {{ $t('documentUserCommentsList.empty') }}
-            </div>
           </slot>
         </div>
         <document-user-comments-list-newest v-if="hasNewest" @click="$emit('goToNewest')" />
