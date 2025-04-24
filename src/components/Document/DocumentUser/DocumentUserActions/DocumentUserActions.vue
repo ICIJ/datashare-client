@@ -18,7 +18,7 @@
         :icon="PhHash"
         :hide-tooltip="!shorterLabels"
         :shorter-label="shorterLabels"
-        @click="emit('action', 'tags')"
+        @click="emit('action', DOCUMENT_USER_ACTIONS.TAGS)"
       />
       <document-user-actions-entry
         v-if="showRecommendations"
@@ -27,7 +27,7 @@
         :icon="[PhEyes, 'fill']"
         :hide-tooltip="!shorterLabels"
         :shorter-label="shorterLabels"
-        @click="emit('action', 'recommendations')"
+        @click="emit('action', DOCUMENT_USER_ACTIONS.RECOMMENDATIONS)"
       />
       <document-user-actions-entry
         v-if="showNotes"
@@ -36,7 +36,7 @@
         :icon="PhNoteBlank"
         :hide-tooltip="!shorterLabels"
         :shorter-label="shorterLabels"
-        @click="emit('action', 'notes')"
+        @click="emit('action', DOCUMENT_USER_ACTIONS.TAGS.NOTES)"
       />
       <document-user-actions-entry
         v-if="showFolders"
@@ -45,7 +45,7 @@
         :icon="PhFolder"
         :hide-tooltip="!shorterLabels"
         :shorter-label="shorterLabels"
-        @click="emit('action', 'folders')"
+        @click="emit('action', DOCUMENT_USER_ACTIONS.FOLDERS)"
       />
       <hook name="document-user-actions:after" :bind="{ shorterLabels }" />
     </form-actions>
@@ -55,6 +55,7 @@
 <script setup>
 import { toRef, useTemplateRef } from 'vue'
 
+import { DOCUMENT_USER_ACTIONS } from '@/enums/documentUserActions'
 import DocumentUserActionsEntry from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsEntry'
 import FormActions from '@/components/Form/FormActions/FormActions'
 import Hook from '@/components/Hook/Hook'
