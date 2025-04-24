@@ -60,8 +60,8 @@ async function applyPipeline() {
   src.value = await pipeline(props.value)
 }
 
-watch(toRef(props, 'value'), () => applyPipeline)
-watch(toRef(pipelinesStore, 'registered'), () => applyPipeline, { deep: true })
+watch(toRef(props, 'value'), applyPipeline, { immediate: true })
+watch(pipelinesStore.registered, applyPipeline, { deep: true })
 </script>
 
 <template>
