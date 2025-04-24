@@ -29,8 +29,8 @@ const props = defineProps({
     type: String
   },
   contentClass: {
-    type: String,
-    default: 'gap-4'
+    type: [String, Object, Array],
+    default: 'gap-3'
   },
   border: {
     type: Boolean,
@@ -68,7 +68,7 @@ const close = () => {
         @click="close()"
       />
     </b-card-title>
-    <b-card-text class="card-panel__content d-flex flex-column" :class="contentClass">
+    <b-card-text class="card-panel__content d-flex flex-column" :class="contentClass" tag="div">
       <slot />
     </b-card-text>
   </b-card>
