@@ -12,10 +12,18 @@ const visible = defineModel('visible', {
   default: true
 })
 
-defineProps({
+const { noSort, noToggler } = defineProps({
   tooltipDelay: {
     type: Object,
     default: () => ({ show: 0, hide: 0 })
+  },
+  noToggler: {
+    type: Boolean,
+    default: false
+  },
+  noSort: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -25,16 +33,18 @@ const hideComments = 'documentUserCommentsList.hideComments'
 const showComments = 'documentUserCommentsList.showComments'
 const displayComments = computed(() => t(visible.value ? hideComments : showComments))
 const iconWeight = computed(() => (visible.value ? 'regular' : 'fill'))
+const noHeader = computed(() => noToggler && noSort)
 </script>
 
 <template>
-  <header class="d-flex justify-content-between align-items-center">
-    <span class="d-inline-flex align-items-center gap-1 text-nowrap text-body-secondary">
+  <header v-if="!noHeader" class="d-flex justify-content-between align-items-center">
+    <span v-if="!noSort" class="d-inline-flex align-items-center gap-1 text-nowrap text-body-secondary">
       <phosphor-icon :name="PhSortDescending" />
       {{ $t('documentUserCommentsList.sortingText') }}
     </span>
     <button-icon
-      class="text-nowrap"
+      v-if="!noToggler"
+      class="text-nowrap ms-auto p-0"
       variant="outline-link"
       :icon-left="PhEyeClosed"
       :icon-left-weight="iconWeight"

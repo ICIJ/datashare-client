@@ -45,6 +45,14 @@ defineProps({
   hasNewest: {
     type: Boolean,
     default: false
+  },
+  noToggler: {
+    type: Boolean,
+    default: false
+  },
+  noSort: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -59,19 +67,25 @@ defineEmits(['goToNewest', 'goToOldest', 'submit'])
     action-end
   >
     <slot name="header">
-      <document-user-comments-header v-model:visible="visible" />
-    </slot>
-    <slot name="comments">
-      <document-user-comments-list
+      <document-user-comments-header
+        v-if="comments.length"
         v-model:visible="visible"
-        :comments="comments"
-        :to="to"
-        :has-newest="hasNewest"
-        :has-oldest="hasOldest"
-        @goToNewest="$emit('goToNewest')"
-        @goToOldest="$emit('goToOldest')"
+        :no-toggler="noToggler"
+        :no-sort="noSort"
       />
     </slot>
+    <document-user-comments-list
+      v-model:visible="visible"
+      :comments="comments"
+      :to="to"
+      :has-comments="hasComments"
+      :has-newest="hasNewest"
+      :has-oldest="hasOldest"
+      @goToNewest="$emit('goToNewest')"
+      @goToOldest="$emit('goToOldest')"
+    >
+      <slot name="comments" />
+    </document-user-comments-list>
     <template #action-warning>
       <slot name="warning">
         {{ $t('documentUserComments.warning') }}

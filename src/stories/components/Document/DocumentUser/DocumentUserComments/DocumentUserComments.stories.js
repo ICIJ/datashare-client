@@ -9,7 +9,9 @@ export default {
   args: {
     comments: [],
     hasNewest: false,
-    hasOldest: false
+    hasOldest: false,
+    noToggler: false,
+    noSort: false
   }
 }
 export const Default = {}
