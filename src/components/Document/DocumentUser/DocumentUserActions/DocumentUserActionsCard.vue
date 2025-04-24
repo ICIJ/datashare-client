@@ -69,7 +69,7 @@ defineProps({
       </document-user-actions-card-info>
       <slot name="action" />
     </header>
-    <section class="d-flex flex-column gap-4">
+    <section class="d-flex flex-column gap-3">
       <slot>
         <template v-if="isSplit">
           <document-user-actions-card-list :title="listNameYours" :body-class="listBodyClassYours">
@@ -87,7 +87,7 @@ defineProps({
       </slot>
     </section>
     <footer v-if="actionEnd" class="d-flex flex-column">
-      <document-user-actions-card-info if="showWarning" class="text-light-emphasis">
+      <document-user-actions-card-info v-if="showWarning" class="text-light-emphasis">
         <slot name="action-warning" />
       </document-user-actions-card-info>
       <slot name="action" />
