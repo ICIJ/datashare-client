@@ -29,7 +29,7 @@ defineProps({
   <section class="document-user-comments-list-entry py-2">
     <div class="d-flex align-items-center text-nowrap gap-2">
       <slot name="avatar">
-        <display-user-avatar :value="username" avatar-height="38" />
+        <display-user-avatar :value="username" height="38px" />
       </slot>
       <slot name="header">
         <display-user :value="username" class="fw-bold text-body-emphasis" hide-avatar />
