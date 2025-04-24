@@ -3,6 +3,7 @@ import { mapState } from 'pinia'
 import { PhosphorIcon } from '@icij/murmur-next'
 
 import AppWait from '@/components/AppWait/AppWait'
+import DisplayUserAvatar from '@/components/Display/DisplayUserAvatar'
 import { useWait } from '@/composables/useWait'
 import { usePipelinesStore } from '@/store/modules/pipelines'
 
@@ -13,6 +14,7 @@ export default {
   name: 'DisplayUser',
   components: {
     AppWait,
+    DisplayUserAvatar,
     PhosphorIcon
   },
   props: {
@@ -177,24 +179,13 @@ export default {
     :style="userDisplayStyle"
     :class="userDisplayClass"
   >
-    <template v-if="showAvatar">
-      <img
-        v-if="isAvatarSrcValid"
-        aria-label="avatar"
-        class="display-user__avatar rounded-circle"
-        :height="avatarHeight"
-        :src="avatarSrc"
-        :alt="avatarAlt"
-      />
-      <phosphor-icon
-        v-else
-        aria-label="avatar-icon"
-        class="display-user__avatar rounded-circle"
-        name="user"
-        weight="regular"
-        :size="avatarHeight"
-      />
-    </template>
+    <display-user-avatar
+      v-if="showAvatar"
+      :value="value"
+      :avatar-height="avatarHeight"
+      :avatar-pipeline="avatarPipeline"
+      class="display-user__avatar"
+    />
     <component
       :is="usernameTag"
       :href="transformedLink"
@@ -216,8 +207,6 @@ export default {
 
 <style lang="scss">
 .display-user {
-  --avatar-height: 1.25em;
-
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -232,9 +221,7 @@ export default {
   }
 
   &__avatar {
-    height: var(--avatar-height);
     margin-right: $spacer-xxs;
-    overflow: hidden;
   }
 
   &--flip &__avatar {
