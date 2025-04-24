@@ -181,6 +181,7 @@ export default {
   >
     <display-user-avatar
       v-if="showAvatar"
+      show-placeholder
       :value="value"
       :avatar-height="avatarHeight"
       :avatar-pipeline="avatarPipeline"
