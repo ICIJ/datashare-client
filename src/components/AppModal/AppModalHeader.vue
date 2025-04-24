@@ -16,6 +16,10 @@ defineProps({
   },
   headerCloseClass: {
     type: [String, Array, Object]
+  },
+  noHeaderClose: {
+    type: Boolean,
+    default: false
   }
 })
 </script>
@@ -24,6 +28,7 @@ defineProps({
   <div class="app-modal-header w-100">
     <slot name="close">
       <button-icon
+        v-if="!noHeaderClose"
         icon-left="x"
         hide-label
         hide-tooltip
