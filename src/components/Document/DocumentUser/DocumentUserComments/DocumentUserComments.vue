@@ -30,6 +30,10 @@ defineProps({
     type: String,
     default: noop
   },
+  disabled: {
+    type: Boolean,
+    default: false
+  },
   username: {
     type: String,
     default: ''
@@ -74,7 +78,7 @@ defineEmits(['goToNewest', 'goToOldest', 'submit'])
       </slot>
     </template>
     <template #action>
-      <document-user-comments-form :model-value="comment" @submit="$emit('submit', $event)" />
+      <document-user-comments-form :model-value="comment" :disabled="disabled" @submit="$emit('submit', $event)" />
     </template>
   </document-user-actions-card>
 </template>

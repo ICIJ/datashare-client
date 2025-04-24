@@ -5,7 +5,8 @@ export default {
   tags: ['autodocs'],
   component: DocumentUserCommentsForm,
   args: {
-    comment: 'Hello @cdesprat!'
+    comment: 'Hello @cdesprat!',
+    disabled: false
   }
 }
 export const Default = {}
