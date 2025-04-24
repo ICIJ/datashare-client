@@ -35,10 +35,20 @@ describe('DisplayUserAvatar.vue', () => {
     vi.resetAllMocks()
   })
 
+  it('should not display an avatar with an URL', async () => {
+    await flushPromises()
+    expect(wrapper.attributes('src')).toBeFalsy()
+  })
+
+  it('should display an icon with a data-abbr attribute', async () => {
+    await flushPromises()
+    expect(wrapper.attributes('data-abbr')).toBe('FO')
+  })
+
   it('should display an avatar with an URL based on the username', async () => {
     core.registerPipeline({
       name: 'avatar-from-username',
-      category: wrapper.vm.avatarPipeline,
+      category: wrapper.vm.pipeline,
       type: (username) => `http://datashare.icij.org/${username}.png`
     })
     await flushPromises()
