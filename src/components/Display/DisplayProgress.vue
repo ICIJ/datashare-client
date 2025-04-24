@@ -8,6 +8,10 @@ const props = defineProps({
   variant: {
     type: String,
     default: 'primary'
+  },
+  noLabel: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -30,7 +34,7 @@ const classList = computed(() => {
 
 <template>
   <span class="display-progress" :class="classList">
-    <span class="display-progress__label">
+    <span v-if="!noLabel" class="display-progress__label">
       {{ $n(clampValue, { useGrouping: false, style: 'percent' }) }}
     </span>
     <span class="display-progress__value" aria-hidden>
