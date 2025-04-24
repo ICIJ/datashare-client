@@ -37,7 +37,6 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   const excludeFilters = ref([])
   const contextualizeFilters = ref([])
   const sortFilters = ref({})
-  const showFilters = ref(true)
   const values = ref({})
 
   const appStore = useAppStore()
@@ -216,7 +215,6 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     isReady.value = true
     q.value = ''
     response.value = EsDocList.none()
-    showFilters.value = true
     excludeFilters.value = []
     sortFilters.value = {}
     contextualizeFilters.value = []
@@ -561,7 +559,6 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     excludeFilters,
     contextualizeFilters,
     sortFilters,
-    showFilters,
     values,
     // Getters
     instantiatedFilters,
