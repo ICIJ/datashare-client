@@ -19,9 +19,13 @@ defineProps({
 
 <template>
   <p class="document-user-actions-card-info text-light-emphasis d-flex gap-1 align-items-start">
-    <phosphor-icon :name="PhInfo" />
-    <span>
-      <slot />
-    </span>
+    <phosphor-icon :name="PhInfo" class="document-user-actions-card-info__icon" />
+    <slot />
   </p>
 </template>
+
+<style scoped>
+.document-user-actions-card-info__icon {
+  margin-top: 0.125rem;
+}
+</style>
