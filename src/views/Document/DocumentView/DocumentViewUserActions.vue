@@ -3,6 +3,7 @@ import { computed, ref, onBeforeMount } from 'vue'
 import { get } from 'lodash'
 import bodybuilder from 'bodybuilder'
 
+import { DOCUMENT_USER_ACTIONS } from '@/enums/documentUserActions'
 import { useCore } from '@/composables/useCore'
 import { useMode } from '@/composables/useMode'
 import { useDocument } from '@/composables/useDocument'
@@ -30,8 +31,14 @@ const showRecommendationsCard = ref(false)
 const showTagsCard = ref(false)
 
 const actionHandler = (name) => {
-  showTagsCard.value = name === 'tags' && !showTagsCard.value
-  showRecommendationsCard.value = name === 'recommendations' && !showRecommendationsCard.value
+  const toggles = {
+    [DOCUMENT_USER_ACTIONS.TAGS]: showTagsCard,
+    [DOCUMENT_USER_ACTIONS.RECOMMENDATIONS]: showRecommendationsCard
+  }
+
+  if (toggles[name]) {
+    toggles[name].value = !toggles[name].value
+  }
 }
 
 const tags = computed(() => documentStore.tags)
@@ -77,11 +84,6 @@ onBeforeMount(fetchAllTags)
   />
   <teleport :disabled="!documentViewFloatingElement" :to="documentViewFloatingSelector">
     <hook name="document-user-actions-cards:before" :bind="{ document }" />
-    <document-user-recommendations
-      v-model="showRecommendationsCard"
-      v-model:recommended="recommended"
-      :recommended-by="recommendedBy"
-    />
     <document-user-tags
       v-model="showTagsCard"
       :is-server="isServer"
@@ -90,6 +92,11 @@ onBeforeMount(fetchAllTags)
       :all-tags="allTags"
       @delete="deleteTag"
       @add="addTags"
+    />
+    <document-user-recommendations
+      v-model="showRecommendationsCard"
+      v-model:recommended="recommended"
+      :recommended-by="recommendedBy"
     />
     <hook name="document-user-actions-cards:after" :bind="{ document }" />
   </teleport>
