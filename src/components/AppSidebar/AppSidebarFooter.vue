@@ -73,6 +73,7 @@ const classList = computed(() => {
   <footer class="app-sidebar-footer" :class="classList">
     <hook name="app-sidebar-footer:before" />
     <div class="app-sidebar-footer__lead">
+      <hook name="app-sidebar-footer-lead:before" />
       <div class="app-sidebar-footer__lead__logo">
         <img src="@/assets/images/logo-color-symbol.svg" alt="Datashare" class="img-fluid" />
       </div>
@@ -84,21 +85,23 @@ const classList = computed(() => {
           <a
             v-b-tooltip.body="{ delay: tooltipDelay }"
             :title="t('appSidebarFooter.keyboardShortcuts')"
-            class="app-sidebar-footer__links__item ms-auto"
+            class="app-sidebar-footer__links__item app-sidebar-footer__links__item--keyboard-shortcuts ms-auto"
           >
             <phosphor-icon class="app-sidebar-footer__links__item__icon" name="keyboard" hover-weight="bold" />
             <span class="visually-hidden">{{ t('appSidebarFooter.keyboardShortcuts') }}</span>
           </a>
         </template>
       </app-sidebar-keyboard-shortcuts-popover>
+      <hook name="app-sidebar-footer-lead:after" />
     </div>
     <div class="app-sidebar-footer__links">
+      <hook name="app-sidebar-footer-links:before" />
       <app-sidebar-keyboard-shortcuts-popover v-if="!noKeyboardShortcuts && compact" :offset="48">
         <template #target>
           <a
             v-b-tooltip.body="{ delay: tooltipDelay }"
             :title="t('appSidebarFooter.keyboardShortcuts')"
-            class="app-sidebar-footer__links__item"
+            class="app-sidebar-footer__links__item app-sidebar-footer__links__item--keyboard-shortcuts"
           >
             <phosphor-icon class="app-sidebar-footer__links__item__icon" name="keyboard" hover-weight="bold" />
             <span class="visually-hidden">{{ t('appSidebarFooter.keyboardShortcuts') }}</span>
@@ -110,7 +113,7 @@ const classList = computed(() => {
         v-b-tooltip.body="{ delay: tooltipDelay }"
         :to="{ name: 'settings.appearance' }"
         :title="t('appSidebarFooter.settings')"
-        class="app-sidebar-footer__links__item"
+        class="app-sidebar-footer__links__item app-sidebar-footer__links__item--settings"
       >
         <phosphor-icon class="app-sidebar-footer__links__item__icon" name="gear" hover-weight="bold" />
         <span class="visually-hidden">{{ t('appSidebarFooter.settings') }}</span>
@@ -121,7 +124,7 @@ const classList = computed(() => {
         :href="helpLink"
         target="_blank"
         :title="t('appSidebarFooter.help')"
-        class="app-sidebar-footer__links__item"
+        class="app-sidebar-footer__links__item app-sidebar-footer__links__item--help"
       >
         <phosphor-icon class="app-sidebar-footer__links__item__icon" name="question" hover-weight="bold" />
         <span class="visually-hidden">{{ t('appSidebarFooter.help') }}</span>
@@ -130,7 +133,7 @@ const classList = computed(() => {
         v-if="!noRemoveAll"
         v-b-tooltip.body="{ delay: tooltipDelay }"
         :title="t('appSidebarFooter.removeAll.link')"
-        class="app-sidebar-footer__links__item"
+        class="app-sidebar-footer__links__item app-sidebar-footer__links__item--remove-all"
         @click="confirmRemoveAll"
       >
         <phosphor-icon class="app-sidebar-footer__links__item__icon" name="trash" hover-weight="bold" />
@@ -141,11 +144,12 @@ const classList = computed(() => {
         v-b-tooltip.body="{ delay: tooltipDelay }"
         :href="signOutLink"
         :title="t('appSidebarFooter.signOut')"
-        class="app-sidebar-footer__links__item"
+        class="app-sidebar-footer__links__item app-sidebar-footer__links__item--sign-out"
       >
         <phosphor-icon class="app-sidebar-footer__links__item__icon" name="sign-out" hover-weight="bold" />
         <span class="visually-hidden">{{ t('appSidebarFooter.signOut') }}</span>
       </a>
+      <hook name="app-sidebar-footer-links:after" />
     </div>
     <hook name="app-sidebar-footer:after" />
   </footer>
