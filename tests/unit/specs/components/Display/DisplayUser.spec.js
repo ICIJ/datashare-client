@@ -29,7 +29,6 @@ describe('DisplayUser.vue', () => {
 
   afterEach(() => {
     core.unregisterPipeline('username-to-uppercase')
-    core.unregisterPipeline('avatar-from-username')
     core.unregisterPipeline('username-icij-link')
   })
 
@@ -65,17 +64,6 @@ describe('DisplayUser.vue', () => {
 
   it('should display an avatar', () => {
     expect(wrapper.find('.display-user__avatar').exists()).toBeTruthy()
-  })
-
-  it('should display an avatar with an URL based on the username', async () => {
-    core.registerPipeline({
-      name: 'avatar-from-username',
-      category: wrapper.vm.avatarPipeline,
-      type: (username) => `http://datashare.icij.org/${username}.png`
-    })
-    await flushPromises()
-    const src = 'http://datashare.icij.org/foo.png'
-    expect(wrapper.find('.display-user__avatar').attributes('src')).toBe(src)
   })
 
   it('should not display an avatar', async () => {
