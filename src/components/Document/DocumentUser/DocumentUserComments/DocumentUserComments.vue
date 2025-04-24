@@ -13,11 +13,12 @@ const visible = defineModel('visible', {
   default: true
 })
 
+const comment = defineModel('comment', {
+  type: String,
+  default: ''
+})
+
 defineProps({
-  comment: {
-    type: String,
-    default: ''
-  },
   comments: {
     type: Array,
     default: () => []
@@ -92,7 +93,7 @@ defineEmits(['goToNewest', 'goToOldest', 'submit'])
       </slot>
     </template>
     <template #action>
-      <document-user-comments-form :model-value="comment" :disabled="disabled" @submit="$emit('submit', $event)" />
+      <document-user-comments-form v-model="comment" :disabled="disabled" @submit="$emit('submit', $event)" />
     </template>
   </document-user-actions-card>
 </template>
