@@ -88,7 +88,7 @@ export const useAppStore = defineStore(
     })
 
     const redirectAfterLogin = ref(null)
-    const filters = reactive({ close: true })
+    const filters = reactive({ closed: true })
     const pins = reactive({ projects: [] })
     const sidebar = reactive({ compact: false, closed: false })
     const settings = reactive(cloneDeep(SETTINGS))
