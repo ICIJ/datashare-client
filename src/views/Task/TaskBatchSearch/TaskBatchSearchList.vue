@@ -73,7 +73,7 @@ onBeforeMount(fetchMe)
     </template>
     <template #default="{ tasks, sort, order, updateSort, updateOrder, refresh, searchQuery, empty, loading }">
       <page-table-generic
-        v-if="!loadding && (!empty || searchQuery)"
+        v-if="!loading && (!empty || searchQuery)"
         :items="tasks"
         :fields="propertiesModelValueOptions"
         :sort="sort"
