@@ -183,8 +183,8 @@ export default {
       v-if="showAvatar"
       show-placeholder
       :value="value"
-      :avatar-height="avatarHeight"
-      :avatar-pipeline="avatarPipeline"
+      :height="avatarHeight"
+      :pipeline="avatarPipeline"
       class="display-user__avatar"
     />
     <component

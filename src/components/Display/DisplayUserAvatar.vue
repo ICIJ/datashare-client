@@ -14,14 +14,14 @@ const props = defineProps({
   /**
    * Default height of the avatar
    */
-  avatarHeight: {
+  height: {
     type: String,
     default: '1.25em'
   },
   /**
    * Pipeline name to transform the avatar src
    */
-  avatarPipeline: {
+  pipeline: {
     type: String,
     default: 'user-display-avatar'
   },
@@ -34,24 +34,20 @@ const props = defineProps({
   }
 })
 
-const avatarSrc = ref(null)
+const src = ref(null)
+const alt = computed(() => `${props.value} avatar`)
+const abbr = computed(() => props.value.slice(0, 2).toUpperCase())
+const heightWithUnit = computed(() => (isNaN(props.height) ? props.height : `${props.height}px`))
 
-const avatarAlt = computed(() => `${props.value} avatar`)
-
-const avatarHeightWithUnit = computed(() => {
-  const height = props.avatarHeight
-  return isNaN(height) ? height : `${height}px`
-})
-
-const avatarStyle = computed(() => {
+const style = computed(() => {
   return {
-    '--display-user-avatar-height': avatarHeightWithUnit.value
+    '--display-user-avatar-height': heightWithUnit.value
   }
 })
 
-const isAvatarSrcValid = computed(() => {
+const isSrcValid = computed(() => {
   try {
-    return Boolean(new URL(avatarSrc.value))
+    return Boolean(new URL(src.value))
   } catch (_) {
     return false
   }
@@ -60,8 +56,8 @@ const isAvatarSrcValid = computed(() => {
 const pipelinesStore = usePipelinesStore()
 
 async function applyPipeline() {
-  const pipeline = pipelinesStore.applyPipelineChainByCategory(props.avatarPipeline)
-  avatarSrc.value = await pipeline(props.value)
+  const pipeline = pipelinesStore.applyPipelineChainByCategory(props.pipeline)
+  src.value = await pipeline(props.value)
 }
 
 watch(toRef(props, 'value'), () => applyPipeline)
@@ -70,24 +66,24 @@ watch(toRef(pipelinesStore, 'registered'), () => applyPipeline, { deep: true })
 
 <template>
   <img
-    v-if="isAvatarSrcValid"
+    v-if="isSrcValid"
     aria-label="avatar"
     class="display-user-avatar display-user-avatar--image rounded-circle bg-action-subtle"
-    :style="avatarStyle"
-    :src="avatarSrc"
-    :alt="avatarAlt"
+    :style="style"
+    :src="src"
+    :alt="alt"
   />
   <span
     v-else
     aria-label="avatar-icon"
     class="display-user-avatar display-user-avatar--icon rounded-circle bg-action-subtle text-action-emphasis"
-    :data-abbr="value.slice(0, 2)"
-    :style="avatarStyle"
+    :data-abbr="abbr"
+    :style="style"
   >
     <phosphor-icon
       v-if="showPlaceholder"
       :name="PhUser"
-      :size="avatarHeightWithUnit"
+      :size="heightWithUnit"
       class="display-user-avatar__placeholder"
     />
   </span>
