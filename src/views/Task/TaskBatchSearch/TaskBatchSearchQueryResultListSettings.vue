@@ -24,7 +24,7 @@ const sortBy = ref({
   options: sortByOptions,
   modelValue: useUrlParamsWithStore(['sort', 'order'], {
     get: () => appStore.getSettings(settingsView, 'orderBy'),
-    set: (sort, order) => appStore.setSettings({ view: settingsView, orderBy: [sort, order] })
+    set: (sort, order) => appStore.setSettings(settingsView, { orderBy: [sort, order] })
   })
 })
 
@@ -35,7 +35,7 @@ const perPage = ref({
   modelValue: useUrlParamWithStore('perPage', {
     transform: (value) => Math.max(10, parseInt(value)),
     get: () => appStore.getSettings(settingsView, 'perPage'),
-    set: (perPage) => appStore.setSettings({ view: settingsView, perPage })
+    set: (perPage) => appStore.setSettings(settingsView, { perPage })
   }),
   options: [
     {
@@ -59,7 +59,7 @@ const properties = ref({
   open: true,
   modelValue: computed({
     get: () => appStore.getSettings(settingsView, 'properties'),
-    set: (properties) => appStore.setSettings({ view: settingsView, properties })
+    set: (properties) => appStore.setSettings(settingsView, { properties })
   }),
   options: propertiesOptions
 })

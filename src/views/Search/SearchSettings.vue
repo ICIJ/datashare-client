@@ -23,7 +23,7 @@ const layout = ref({
   open: true,
   modelValue: computed({
     get: () => appStore.getSettings('search', 'layout'),
-    set: (layout) => appStore.setSettings({ view: 'search', layout })
+    set: (layout) => appStore.setSettings('search', { layout })
   }),
   options: [
     {
@@ -52,7 +52,7 @@ const perPage = ref({
     to: 'search',
     transform: (value) => Math.max(10, parseInt(value)),
     get: () => appStore.getSettings('search', 'perPage'),
-    set: (perPage) => appStore.setSettings({ view: 'search', perPage })
+    set: (perPage) => appStore.setSettings('search', { perPage })
   }),
   options: [
     {
@@ -78,7 +78,7 @@ const sortBy = ref({
   modelValue: useUrlParamsWithStore(['sort', 'order'], {
     to: 'search',
     get: () => appStore.getSettings('search', 'orderBy'),
-    set: (sort, order) => appStore.setSettings({ view: 'search', orderBy: [sort, order] })
+    set: (sort, order) => appStore.setSettings('search', { orderBy: [sort, order] })
   })
 })
 
@@ -89,7 +89,7 @@ const properties = ref({
   options: propertiesOptions,
   modelValue: computed({
     get: () => appStore.getSettings('search', 'properties'),
-    set: (properties) => appStore.setSettings({ view: 'search', properties })
+    set: (properties) => appStore.setSettings('search', { properties })
   })
 })
 

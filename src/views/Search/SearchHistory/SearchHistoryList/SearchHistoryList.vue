@@ -41,7 +41,7 @@ const perPage = useUrlParamWithStore('perPage', {
   transform: (value) => Math.max(10, parseInt(value)),
   get: () => appStore.getSettings(view, 'perPage'),
   set: (value) => {
-    appStore.setSettings({ view, perPage: parseInt(value) })
+    appStore.setSettings(view, { perPage: parseInt(value) })
     page.value = 1
   }
 })
@@ -53,7 +53,7 @@ const offset = computed(() => {
 const orderBy = useUrlParamsWithStore(['sort', 'order'], {
   get: () => appStore.getSettings(view, 'orderBy'),
   set: (sort, order) => {
-    appStore.setSettings({ view, orderBy: [sort, order] })
+    appStore.setSettings(view, { orderBy: [sort, order] })
     page.value = 1
   }
 })

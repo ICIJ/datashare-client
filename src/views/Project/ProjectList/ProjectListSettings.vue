@@ -21,7 +21,7 @@ const layout = ref({
   open: true,
   modelValue: useUrlParamWithStore('layout', {
     get: () => appStore.getSettings('projectList', 'layout'),
-    set: (layout) => appStore.setSettings({ view: 'projectList', layout })
+    set: (layout) => appStore.setSettings('projectList', { layout })
   }),
   options: [
     {
@@ -44,7 +44,7 @@ const perPage = ref({
   modelValue: useUrlParamWithStore('perPage', {
     transform: (value) => Math.max(10, parseInt(value)),
     get: () => appStore.getSettings('projectList', 'perPage'),
-    set: (perPage) => appStore.setSettings({ view: 'projectList', perPage })
+    set: (perPage) => appStore.setSettings('projectList', { perPage })
   }),
   options: [
     {
@@ -68,7 +68,7 @@ const sortBy = ref({
   open: true,
   modelValue: useUrlParamsWithStore(['sort', 'order'], {
     get: () => appStore.getSettings('projectList', 'orderBy'),
-    set: (sort, order) => appStore.setSettings({ view: 'projectList', orderBy: [sort, order] })
+    set: (sort, order) => appStore.setSettings('projectList', { orderBy: [sort, order] })
   }),
   options: [
     {

@@ -187,7 +187,7 @@ describe('useUrlParamWithStore', () => {
 
       return useUrlParamWithStore('perPage', {
         get: () => appStore.getSettings('search', 'perPage'),
-        set: (perPage) => appStore.setSettings({ view: 'search', perPage })
+        set: (perPage) => appStore.setSettings('search', { perPage })
       })
     }
   })
@@ -227,7 +227,7 @@ describe('useUrlParamWithStore', () => {
     const [, router] = withSetup({ composable })
     const appStore = useAppStore()
 
-    appStore.setSettings({ view: 'search', perPage: '66' })
+    appStore.setSettings('search', { perPage: '66' })
     await flushPromises()
 
     expect(router.currentRoute.value.query.perPage).toBe('66')
@@ -243,7 +243,7 @@ describe('useUrlParamsWithStore', () => {
 
       return useUrlParamsWithStore(['sort', 'order'], {
         get: () => appStore.getSettings('search', 'orderBy'),
-        set: (sort, order) => appStore.setSettings({ view: 'search', orderBy: [sort, order] })
+        set: (sort, order) => appStore.setSettings('search', { orderBy: [sort, order] })
       })
     }
   })

@@ -19,8 +19,8 @@ describe('SearchStore', () => {
     appStore = useAppStore()
     searchStore = useSearchStore()
     searchStore.setIndex(index)
-    appStore.setSettings({ view: 'search', perPage: 25 })
-    appStore.setSettings({ view: 'search', orderBy: ['_score', 'desc'] })
+    appStore.setSettings('search', { perPage: 25 })
+    appStore.setSettings('search', { orderBy: ['_score', 'desc'] })
   })
 
   describe('Suffixed store', () => {
@@ -77,8 +77,8 @@ describe('SearchStore', () => {
 
   describe('Reset state', () => {
     it('should reset to initial state', async () => {
-      appStore.setSettings({ view: 'search', perPage: 12 })
-      appStore.setSettings({ view: 'search', orderBy: ['randomOrder', 'asc'] })
+      appStore.setSettings('search', { perPage: 12 })
+      appStore.setSettings('search', { orderBy: ['randomOrder', 'asc'] })
 
       searchStore.setIndices([anotherIndex])
       searchStore.setQuery('datashare')
@@ -89,7 +89,7 @@ describe('SearchStore', () => {
       expect(searchStore.isReady).toBeTruthy()
       expect(find(searchStore.instantiatedFilters, { name: 'contentType' }).values).toHaveLength(0)
 
-      appStore.setSettings({ view: 'search', perPage: 25 })
+      appStore.setSettings('search', { perPage: 25 })
     })
 
     it('should change the state after "query" mutation', async () => {
@@ -300,10 +300,10 @@ describe('SearchStore', () => {
         .have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').withIndex(index).count(4))
         .commit()
 
-      appStore.setSettings({ view: 'search', perPage: 2 })
+      appStore.setSettings('search', { perPage: 2 })
       await searchStore.query({ query: 'document', from: 0 })
       expect(searchStore.response.hits).toHaveLength(2)
-      appStore.setSettings({ view: 'search', perPage: 25 })
+      appStore.setSettings('search', { perPage: 25 })
     })
 
     it('should return 3 documents', async () => {
@@ -311,7 +311,7 @@ describe('SearchStore', () => {
         .have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').withIndex(index).count(4))
         .commit()
 
-      appStore.setSettings({ view: 'search', perPage: 3 })
+      appStore.setSettings('search', { perPage: 3 })
       await searchStore.query({ query: 'document', from: 0 })
       expect(searchStore.response.hits).toHaveLength(3)
     })
@@ -321,7 +321,7 @@ describe('SearchStore', () => {
         .have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').withIndex(index).count(4))
         .commit()
 
-      appStore.setSettings({ view: 'search', perPage: 3 })
+      appStore.setSettings('search', { perPage: 3 })
       await searchStore.query({ query: 'document', from: 3 })
       expect(searchStore.response.hits).toHaveLength(1)
     })
@@ -338,7 +338,7 @@ describe('SearchStore', () => {
 
       await searchStore.query({ query: 'document', from: 0, perPage: 2 })
       expect(searchStore.response.total).toBe(5)
-      appStore.setSettings({ view: 'search', perPage: 25 })
+      appStore.setSettings('search', { perPage: 25 })
     })
   })
 
@@ -354,8 +354,8 @@ describe('SearchStore', () => {
     })
 
     it('should return an advanced and filtered query parameters', () => {
-      appStore.setSettings({ view: 'search', orderBy: ['randomOrder', 'asc'] })
-      appStore.setSettings({ view: 'search', perPage: 12 })
+      appStore.setSettings('search', { orderBy: ['randomOrder', 'asc'] })
+      appStore.setSettings('search', { perPage: 12 })
 
       searchStore.setIndices([index])
       searchStore.setQuery('datashare')
@@ -370,7 +370,7 @@ describe('SearchStore', () => {
         'f[contentType]': ['TXT']
       })
 
-      appStore.setSettings({ view: 'search', perPage: 25 })
+      appStore.setSettings('search', { perPage: 25 })
     })
 
     it('should reset the values of a filter', async () => {
