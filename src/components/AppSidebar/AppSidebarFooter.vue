@@ -84,11 +84,11 @@ const classList = computed(() => {
         <template #target>
           <a
             v-b-tooltip.body="{ delay: tooltipDelay }"
-            :title="t('appSidebarFooter.keyboardShortcuts')"
+            :title="$t('appSidebarFooter.keyboardShortcuts')"
             class="app-sidebar-footer__links__item app-sidebar-footer__links__item--keyboard-shortcuts ms-auto"
           >
             <phosphor-icon class="app-sidebar-footer__links__item__icon" name="keyboard" hover-weight="bold" />
-            <span class="visually-hidden">{{ t('appSidebarFooter.keyboardShortcuts') }}</span>
+            <span class="visually-hidden">{{ $t('appSidebarFooter.keyboardShortcuts') }}</span>
           </a>
         </template>
       </app-sidebar-keyboard-shortcuts-popover>
@@ -100,11 +100,11 @@ const classList = computed(() => {
         <template #target>
           <a
             v-b-tooltip.body="{ delay: tooltipDelay }"
-            :title="t('appSidebarFooter.keyboardShortcuts')"
+            :title="$t('appSidebarFooter.keyboardShortcuts')"
             class="app-sidebar-footer__links__item app-sidebar-footer__links__item--keyboard-shortcuts"
           >
             <phosphor-icon class="app-sidebar-footer__links__item__icon" name="keyboard" hover-weight="bold" />
-            <span class="visually-hidden">{{ t('appSidebarFooter.keyboardShortcuts') }}</span>
+            <span class="visually-hidden">{{ $t('appSidebarFooter.keyboardShortcuts') }}</span>
           </a>
         </template>
       </app-sidebar-keyboard-shortcuts-popover>
@@ -112,42 +112,42 @@ const classList = computed(() => {
         v-if="!noSettings"
         v-b-tooltip.body="{ delay: tooltipDelay }"
         :to="{ name: 'settings.appearance' }"
-        :title="t('appSidebarFooter.settings')"
+        :title="$t('appSidebarFooter.settings')"
         class="app-sidebar-footer__links__item app-sidebar-footer__links__item--settings"
       >
         <phosphor-icon class="app-sidebar-footer__links__item__icon" name="gear" hover-weight="bold" />
-        <span class="visually-hidden">{{ t('appSidebarFooter.settings') }}</span>
+        <span class="visually-hidden">{{ $t('appSidebarFooter.settings') }}</span>
       </router-link>
       <a
         v-if="!noHelp"
         v-b-tooltip.body="{ delay: tooltipDelay }"
         :href="helpLink"
         target="_blank"
-        :title="t('appSidebarFooter.help')"
+        :title="$t('appSidebarFooter.help')"
         class="app-sidebar-footer__links__item app-sidebar-footer__links__item--help"
       >
         <phosphor-icon class="app-sidebar-footer__links__item__icon" name="question" hover-weight="bold" />
-        <span class="visually-hidden">{{ t('appSidebarFooter.help') }}</span>
+        <span class="visually-hidden">{{ $t('appSidebarFooter.help') }}</span>
       </a>
       <a
         v-if="!noRemoveAll"
         v-b-tooltip.body="{ delay: tooltipDelay }"
-        :title="t('appSidebarFooter.removeAll.link')"
+        :title="$t('appSidebarFooter.removeAll.link')"
         class="app-sidebar-footer__links__item app-sidebar-footer__links__item--remove-all"
         @click="confirmRemoveAll"
       >
         <phosphor-icon class="app-sidebar-footer__links__item__icon" name="trash" hover-weight="bold" />
-        <span class="visually-hidden">{{ t('appSidebarFooter.removeAll.link') }}</span>
+        <span class="visually-hidden">{{ $t('appSidebarFooter.removeAll.link') }}</span>
       </a>
       <a
         v-if="!noSignOut"
         v-b-tooltip.body="{ delay: tooltipDelay }"
         :href="signOutLink"
-        :title="t('appSidebarFooter.signOut')"
+        :title="$t('appSidebarFooter.signOut')"
         class="app-sidebar-footer__links__item app-sidebar-footer__links__item--sign-out"
       >
         <phosphor-icon class="app-sidebar-footer__links__item__icon" name="sign-out" hover-weight="bold" />
-        <span class="visually-hidden">{{ t('appSidebarFooter.signOut') }}</span>
+        <span class="visually-hidden">{{ $t('appSidebarFooter.signOut') }}</span>
       </a>
       <hook name="app-sidebar-footer-links:after" />
     </div>

@@ -1,11 +1,15 @@
 import { vueRouter } from 'storybook-vue3-router'
 
+import { withPinia } from '~storybook/decorators/pinia'
 import AppSidebarFooter from '@/components/AppSidebar/AppSidebarFooter'
 
-const routes = [{ path: '/settings', name: 'settings' }]
+const routes = [
+  { path: '/projects', name: 'project.list' },
+  { path: '/settings/appearance', name: 'settings.appearance' }
+]
 
 export default {
-  decorators: [vueRouter(routes)],
+  decorators: [vueRouter(routes), withPinia()],
   title: 'Components/AppSidebar/AppSidebarFooter',
   tags: ['autodocs'],
   component: AppSidebarFooter,
