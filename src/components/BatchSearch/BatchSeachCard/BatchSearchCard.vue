@@ -37,6 +37,8 @@ defineProps({
       :projects="batchSearch.projects"
       :description="batchSearch.description"
       :uri="batchSearch.uri"
+      :error-message="batchSearch.errorMessage"
+      :error-query="batchSearch.errorQuery"
     />
   </card-panel>
 </template>

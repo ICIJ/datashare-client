@@ -31,12 +31,7 @@ const tag = computed(() => {
 })
 const onClick = () => {
   if (isFailed.value) {
-    console.log('hello')
-    emit('error', {
-      errorMessage: `SearchException: query='caroline;^' message='org.icij.datashare.batch.SearchException: org.icij.datashare.tasks.ElasticSearchAdapterException: Failed to parse query [caroline;^]'`,
-      errorQuery: 'caroline;^'
-    })
-    // emit('error', { errorMessage: props.errorMessage, errorQuery: props.errorQuery })
+    emit('error', { errorMessage: props.errorMessage, errorQuery: props.errorQuery })
   }
 }
 </script>
