@@ -205,7 +205,9 @@ onBeforeRouteLeave(autoClose)
       :sign-out-link="signOutLink"
       :help-link="helpLink"
     >
-      <version-number />
+      <template #version>
+        <version-number />
+      </template>
     </app-sidebar-footer>
     <hook name="app-sidebar:after" />
   </div>
