@@ -54,7 +54,10 @@ const classList = computed(() => {
     flex-direction: column;
     gap: $spacer-xl;
 
-    & > * {
+    & > *,
+    & > *:first-of-type,
+    & > *:last-of-type,
+    & > *:first-of-type:last-of-type {
       text-align: center;
     }
   }
