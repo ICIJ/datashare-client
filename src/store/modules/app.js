@@ -105,10 +105,8 @@ export const useAppStore = defineStore(
       }
     })
 
-    const setSettings = ({ view, ...values }) => {
-      if (view in settings.views) {
-        settings.views[view] = { ...settings.views[view], ...values }
-      }
+    const setSettings = (view, values) => {
+      settings.views[view] = { ...settings.views[view], ...values }
     }
 
     const setRedirectAfterLogin = (path = null) => {
