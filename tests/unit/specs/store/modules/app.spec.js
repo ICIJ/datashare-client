@@ -45,4 +45,14 @@ describe('AppStore', () => {
   it('isProjectPinned should return false if the project is not pinned', () => {
     expect(store.isProjectPinned('project-2')).toBe(false)
   })
+
+  it('should set settings using an object', () => {
+    store.setSettings('view1', { name: 'value' })
+    expect(store.getSettings('view1', 'name')).toBe('value')
+  })
+
+  it('should set settings using a string and value', () => {
+    store.setSettings('view1', 'name', 'value')
+    expect(store.getSettings('view1', 'name')).toBe('value')
+  })
 })
