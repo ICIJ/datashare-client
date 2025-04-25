@@ -17,7 +17,7 @@ import { useUrlParam } from '@/composables/useUrlParam'
 import { useUrlParamWithStore } from '@/composables/useUrlParamWithStore'
 import { useUrlParamsWithStore } from '@/composables/useUrlParamsWithStore'
 import { useWait } from '@/composables/useWait'
-import { useAppStore, useTaskStore } from '@/store/modules'
+import { useAppStore } from '@/store/modules'
 
 const props = defineProps({
   uuid: {
@@ -32,7 +32,6 @@ const props = defineProps({
 
 const route = useRoute()
 const appStore = useAppStore()
-const taskStore = useTaskStore()
 const { core } = useCore()
 const { waitFor, isLoading } = useWait()
 const { fields } = useBatchSearchQueryProperties()
@@ -85,11 +84,7 @@ function getBatchSearchUser(item) {
   return get(item, ['args', 'user'].join('.'))
 }
 async function fetchBatchSearch() {
-  // eslint-disable-next-line no-unused-vars
-  const [taskBatchSearch, _oldBatchSearch] = await Promise.all([
-    core.api.getTask(props.uuid),
-    core.api.getBatchSearch(props.uuid)
-  ])
+  const taskBatchSearch = await core.api.getTask(props.uuid)
   const batchSearchRecord = getBatchSearchRecord(taskBatchSearch)
   const batchSearchUser = getBatchSearchUser(taskBatchSearch)
   // Then fetch the batch search record
