@@ -40,6 +40,7 @@ const toggleStar = () => {
 
 <template>
   <document-actions-group-entry
+    class="document-actions-group-entry-star"
     icon="star"
     :label="$t('documentActionsGroup.star')"
     :tooltip-placement="tooltipPlacement"

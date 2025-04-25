@@ -38,6 +38,7 @@ const blur = () => nextTick(() => window.document?.activeElement.blur())
 <template>
   <document-actions-group-entry
     ref="element"
+    class="document-actions-group-entry-download"
     icon="download-simple"
     download
     hide-tooltip

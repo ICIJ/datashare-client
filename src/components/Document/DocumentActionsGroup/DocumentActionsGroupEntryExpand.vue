@@ -59,6 +59,7 @@ function handleClick(event) {
 
 <template>
   <document-actions-group-entry
+    class="document-actions-group-entry-expand"
     :icon="PhArrowsOutSimple"
     :href="href"
     :label="t('documentActionsGroup.expand')"

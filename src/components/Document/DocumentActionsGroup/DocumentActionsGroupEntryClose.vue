@@ -30,6 +30,7 @@ const modalController = useModalController()
 
 <template>
   <document-actions-group-entry
+    class="document-actions-group-entry-close"
     :icon="PhX"
     :label="$t('documentActionsGroup.close')"
     :tooltip-placement="tooltipPlacement"

@@ -35,6 +35,7 @@ const blur = () => nextTick(() => window.document?.activeElement.blur())
 <template>
   <document-actions-group-entry
     ref="element"
+    class="document-actions-group-entry-share"
     icon="share-network"
     hide-tooltip
     :label="$t('documentActionsGroup.share')"
