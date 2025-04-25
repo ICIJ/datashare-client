@@ -27,12 +27,10 @@ const classList = computed(() => {
 
 <style lang="scss" scoped>
 .app-sidebar-footer-logo {
-  height: calc(#{$line-height-base * 1em} + #{$spacer-xxs * 2});
-  line-height: $line-height-base * 1em;
-  margin-right: $spacer-xxs;
   display: flex;
   flex-direction: row;
   gap: $spacer-xs;
+  padding-left: $spacer-xxs;
   align-items: center;
 
   img {
@@ -42,6 +40,7 @@ const classList = computed(() => {
   &--compact {
     flex-direction: column;
     gap: $spacer;
+    padding-left: 0;
   }
 }
 </style>
