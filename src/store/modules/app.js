@@ -1,4 +1,4 @@
-import { cloneDeep, get } from 'lodash'
+import { cloneDeep, get, isObject, isString } from 'lodash'
 import { computed, ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
 
@@ -105,8 +105,13 @@ export const useAppStore = defineStore(
       }
     })
 
-    const setSettings = (view, values) => {
-      settings.views[view] = { ...settings.views[view], ...values }
+    const setSettings = (view, nameOrvalues = {}, value = null) => {
+      if (isObject(nameOrvalues)) {
+        settings.views[view] = { ...settings.views[view], ...nameOrvalues }
+      } else if (isString(nameOrvalues)) {
+        settings.views[view] ||= {}
+        settings.views[view][nameOrvalues] = value
+      }
     }
 
     const setRedirectAfterLogin = (path = null) => {
