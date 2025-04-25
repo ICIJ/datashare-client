@@ -22,13 +22,12 @@ const props = defineProps({
     type: String
   }
 })
-const slots = useSlots()
 const attrs = useAttrs()
 const imageHeaderLight = imageLight
 const imageHeaderDark = imageDark
 const errorMessageAsJson = computed(() => {
   const re = /{"error":.+}/gm
-  const match = props.errorMessage.match(re)
+  const match = props.errorMessage?.match(re)
   try {
     return JSON.parse(match)
   } catch (_) {
@@ -49,29 +48,29 @@ const errorMessageAsJson = computed(() => {
     <template #header-image-source>
       <image-mode-source :src="imageHeaderDark" color-mode="dark" />
     </template>
-    <template v-if="slots.default">
-      <div class="d-flex flex-column gap-2 mt-0 pt-0">
-        <div class="d-flex justify-content-center pb-2">
-          <span class="bg-tertiary-subtle rounded-1 p-2 text-center fw-medium">{{ query }}</span>
-        </div>
-        <p class="text-center fw-medium">{{ errorTitle }}</p>
-        <template v-if="errorMessageAsJson">
-          <json-formatter
-            class="batch-search-error-modal__error-message"
-            :json="errorMessageAsJson"
-            :open="4"
-            :config="{ theme: 'dark' }"
-          />
-        </template>
-        <template v-else>
-          <code class="bg-tertiary-subtle text-body-emphasis p-2 rounded-1">
-            {{ errorMessage }}
-          </code>
-        </template>
-
-        <p v-html="description" />
+    <div class="d-flex flex-column gap-2 mt-0 pt-0">
+      <div class="d-flex justify-content-center pb-2">
+        <span class="bg-tertiary-subtle rounded-1 p-2 text-center fw-medium">{{ query }}</span>
       </div>
-    </template>
+      <p class="text-center fw-medium">
+        {{ errorTitle }}
+      </p>
+      <template v-if="errorMessageAsJson">
+        <json-formatter
+          class="batch-search-error-modal__error-message"
+          :json="errorMessageAsJson"
+          :open="4"
+          :config="{ theme: 'dark' }"
+        />
+      </template>
+      <template v-else>
+        <code class="bg-tertiary-subtle text-body-emphasis p-2 rounded-1">
+          {{ errorMessage }}
+        </code>
+      </template>
+
+      <p v-html="description" />
+    </div>
   </app-modal>
 </template>
 
