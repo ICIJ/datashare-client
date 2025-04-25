@@ -1,6 +1,7 @@
 <script setup>
 import { computed, toRef, ref, onBeforeMount, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import get from 'lodash/get.js'
 
 import ButtonRowActionSearch from '@/components/Button/ButtonRowAction/ButtonRowActionSearch'
 import BatchSearchCard from '@/components/BatchSearch/BatchSeachCard/BatchSearchCard'
@@ -77,12 +78,37 @@ const visibleFields = computed(() => {
 })
 
 const batchSearchName = computed(() => batchSearch.value?.name)
-
+function getBatchSearchRecord(item) {
+  return get(item, ['args', 'batchRecord'].join('.'))
+}
+function getBatchSearchUser(item) {
+  return get(item, ['args', 'user'].join('.'))
+}
 async function fetchBatchSearch() {
-  // Fetch the task for this batch search
-  taskStore.tasks.push(await core.api.getTask(props.uuid))
+  // eslint-disable-next-line no-unused-vars
+  const [taskBatchSearch, _oldBatchSearch] = await Promise.all([
+    core.api.getTask(props.uuid),
+    core.api.getBatchSearch(props.uuid)
+  ])
+  const batchSearchRecord = getBatchSearchRecord(taskBatchSearch)
+  const batchSearchUser = getBatchSearchUser(taskBatchSearch)
   // Then fetch the batch search record
-  batchSearch.value = await core.api.getBatchSearch(props.uuid)
+  batchSearch.value = {
+    uuid: batchSearchRecord.uuid,
+    name: batchSearchRecord.name,
+    nbResults: batchSearchRecord.nbResults,
+    nbQueriesWithoutResults: batchSearchRecord.nbQueriesWithoutResults,
+    nbQueries: batchSearchRecord.nbQueries,
+    state: batchSearchRecord.state,
+    date: batchSearchRecord.date,
+    userId: batchSearchUser.id,
+    published: batchSearchRecord.published,
+    phraseMatches: batchSearchRecord.phraseMatches,
+    fuzziness: batchSearchRecord.fuzziness,
+    projects: batchSearchRecord.projects,
+    description: batchSearchRecord.description,
+    uri: batchSearchRecord.uri
+  }
 }
 
 const fetchBatchSearchQueries = waitFor(async () => {
