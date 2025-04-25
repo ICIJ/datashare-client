@@ -1,11 +1,12 @@
 <script setup>
-import { computed, useAttrs, useSlots } from 'vue'
+import { computed, useAttrs } from 'vue'
 
 import AppModal from '@/components/AppModal/AppModal'
 import JsonFormatter from '@/components/JsonFormatter'
 import imageLight from '@/assets/images/illustrations/app-modal-error-light.svg'
 import imageDark from '@/assets/images/illustrations/app-modal-error-dark.svg'
 import ImageModeSource from '@/components/ImageMode/ImageModeSource'
+
 const modelValue = defineModel({ type: Boolean, required: true })
 
 const props = defineProps({

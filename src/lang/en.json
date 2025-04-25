@@ -1144,6 +1144,12 @@
       }
     }
   },
+  "batchSearchErrorModal": {
+    "okTitle": "Ok",
+    "errorTitle": "The error is",
+    "text":"how to fix the most common errors",
+    "description": "The system encountered a problem. Syntax errors in the CSV are the usual suspects (see {link})."
+  },
   "batchSearchCard": {
     "seeAllDocuments": "See all documents",
     "downloadResultsLabel": "Download results (CSV)",
