@@ -11,6 +11,7 @@ import ButtonIcon from '@/components/Button/ButtonIcon'
 import SearchBreadcrumbUri from '@/components/Search/SearchBreadcrumbUri/SearchBreadcrumbUri'
 import humanNumber from '@/utils/humanNumber'
 import TaskStatus from '@/views/Task/TaskStatus.vue'
+import BatchSearchErrorModal from '@/components/BatchSearch/BatchSearchErrorModal.vue'
 
 defineOptions({ name: 'BatchSearchCardDetails' })
 
@@ -81,7 +82,19 @@ const uriWithoutIndices = computed(() => {
   delete uri.indices
   return stringifyQuery(uri)
 })
+const show = ref(false)
+
+const batchSearchError = reactive({
+  okTitle: 'Ok',
+  errorTitle: 'The error is',
+  description: `The system encountered a problem. It can be a syntax error that you made in your CSV or another error. Please refer to <a href="/">this help page</a> where most common errors are described.`,
+  errorMessage: '',
+  query: ''
+})
 function showError({ errorMessage, errorQuery }) {
+  batchSearchError.errorMessage = errorMessage
+  batchSearchError.query = errorQuery
+  show.value = true
 }
 </script>
 
@@ -90,9 +103,8 @@ function showError({ errorMessage, errorQuery }) {
     <ul class="batch-search-card-details__list list-unstyled">
       <li>
         <batch-search-card-details-entry :label="t('batchSearchCardDetails.status')">
-          <display-status class="display-status" size="sm" :value="state" no-tooltip />
-          <display-status-label :value="state" />
           <task-status :status="state" with-label @error="showError" />
+          <batch-search-error-modal v-model="show" v-bind="batchSearchError" />
         </batch-search-card-details-entry>
       </li>
       <li>
