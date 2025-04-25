@@ -29,7 +29,7 @@ defineProps({
       :nb-queries="batchSearch.nbQueries"
       :state="batchSearch.state"
       :date="batchSearch.date"
-      :author="batchSearch.user.id"
+      :author="batchSearch.userId"
       :visibility="batchSearch.published"
       :phrase-match="batchSearch.phraseMatches"
       :proximity="batchSearch.fuzziness"
