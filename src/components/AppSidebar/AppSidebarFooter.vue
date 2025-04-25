@@ -91,7 +91,7 @@ const classList = computed(() => {
     <!-- Second links row -->
     <app-sidebar-footer-links name="second" :compact="compact">
       <app-sidebar-footer-links-entry v-if="!noKeyboardShortcuts && compact" name="keyboard-shortcuts">
-        <app-sidebar-footer-links-keyboard-shortcuts />
+        <app-sidebar-footer-keyboard-shortcuts />
       </app-sidebar-footer-links-entry>
       <app-sidebar-footer-links-entry v-if="!noSettings" :compact="compact" name="settings">
         <button-icon
@@ -150,12 +150,13 @@ const classList = computed(() => {
   display: flex;
   flex-direction: column;
   width: 100%;
-  gap: $spacer;
+  gap: $spacer-lg;
   padding: $spacer;
 
   &--compact {
     flex-direction: column-reverse;
     align-items: center;
+    gap: $spacer-xl;
   }
 }
 </style>

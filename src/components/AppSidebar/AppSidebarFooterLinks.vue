@@ -52,7 +52,7 @@ const classList = computed(() => {
 
   &--compact {
     flex-direction: column;
-    gap: $spacer;
+    gap: $spacer-xl;
 
     & > * {
       text-align: center;
