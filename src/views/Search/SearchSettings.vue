@@ -109,6 +109,7 @@ defineProps({
 
 <template>
   <page-settings
+    class="search-settings"
     :title="t('searchSettings.title')"
     :hide="hide"
     :visible="visible"
@@ -118,6 +119,7 @@ defineProps({
     <page-settings-section
       v-model="sortBy.modelValue"
       v-model:open="sortBy.open"
+      class="search-settings__section search-settings__section--sort-by"
       :type="sortBy.type"
       :options="sortBy.options"
       :label="sortBy.label"
@@ -125,6 +127,7 @@ defineProps({
     <page-settings-section
       v-model="perPage.modelValue"
       v-model:open="perPage.open"
+      class="search-settings__section search-settings__section--per-page"
       :type="perPage.type"
       :options="perPage.options"
       :label="perPage.label"
@@ -132,6 +135,7 @@ defineProps({
     <page-settings-section
       v-model="layout.modelValue"
       v-model:open="layout.open"
+      class="search-settings__section search-settings__section--layout"
       :type="layout.type"
       :options="layout.options"
       :label="layout.label"
@@ -139,6 +143,7 @@ defineProps({
     <page-settings-section
       v-model="properties.modelValue"
       v-model:open="properties.open"
+      class="search-settings__section search-settings__section--properties"
       :type="properties.type"
       :options="properties.options"
       :label="properties.label"
