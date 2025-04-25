@@ -113,6 +113,7 @@ onBeforeRouteLeave(autoClose)
       <div class="py-4 d-flex flex-column gap-3">
         <hook name="app-sidebar-sections:before" :bind="{ compact, closed }" />
         <app-sidebar-section
+          class="app-sidebar__section app-sidebar__section--projects"
           :title="$t('appSidebar.projects')"
           :icon="PhCirclesThreePlus"
           :to="{ name: 'project.list' }"
@@ -137,6 +138,7 @@ onBeforeRouteLeave(autoClose)
           </app-sidebar-section-entry>
         </app-sidebar-section>
         <app-sidebar-section
+          class="app-sidebar__section app-sidebar__section--search"
           :title="$t('appSidebar.search')"
           :icon="PhMagnifyingGlass"
           :to="searchRoute"
@@ -153,6 +155,7 @@ onBeforeRouteLeave(autoClose)
           </app-sidebar-section-entry>
         </app-sidebar-section>
         <app-sidebar-section
+          class="app-sidebar__section app-sidebar__section--task"
           :title="$t('task.title')"
           :icon="PhRocketLaunch"
           :to="{ name: 'task.task-board' }"
