@@ -57,12 +57,12 @@ const page = useUrlParam('page', {
 const perPage = useUrlParamWithStore('perPage', {
   transform: (value) => Math.max(10, parseInt(value)),
   get: () => appStore.getSettings(settingsView, 'perPage'),
-  set: (value) => appStore.setSettings({ view: settingsView, perPage: parseInt(value) })
+  set: (value) => appStore.setSettings(settingsView, { perPage: parseInt(value) })
 })
 
 const orderBy = useUrlParamsWithStore(['sort', 'order'], {
   get: () => appStore.getSettings(settingsView, 'orderBy'),
-  set: (sort, order) => appStore.setSettings({ view: settingsView, orderBy: [sort, order] })
+  set: (sort, order) => appStore.setSettings(settingsView, { orderBy: [sort, order] })
 })
 
 const sort = computed({

@@ -177,7 +177,7 @@ const pinning = ref(0)
 
 const pinned = computed({
   get: () => appStore.getSettings('documentViewMetadata', 'pinned'),
-  set: (pinned) => appStore.setSettings({ view: 'documentViewMetadata', pinned })
+  set: (pinned) => appStore.setSettings('documentViewMetadata', { pinned })
 })
 
 const pin = async (name, value) => {

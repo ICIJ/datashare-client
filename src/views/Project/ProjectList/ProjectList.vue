@@ -29,7 +29,7 @@ const page = useUrlParam('page', {
 const perPage = useUrlParamWithStore('perPage', {
   transform: (value) => Math.max(10, parseInt(value)),
   get: () => appStore.getSettings('projectList', 'perPage'),
-  set: (value) => appStore.setSettings({ view: 'projectList', perPage: parseInt(value) })
+  set: (value) => appStore.setSettings('projectList', { perPage: parseInt(value) })
 })
 
 const documentsCountByProject = ref({})
@@ -98,12 +98,12 @@ const projects = computed(() => {
 
 const layout = useUrlParamWithStore('layout', {
   get: () => appStore.getSettings('projectList', 'layout'),
-  set: (layout) => appStore.setSettings({ view: 'projectList', layout })
+  set: (layout) => appStore.setSettings('projectList', { layout })
 })
 
 const orderBy = useUrlParamsWithStore(['sort', 'order'], {
   get: () => appStore.getSettings('projectList', 'orderBy'),
-  set: (sort, order) => appStore.setSettings({ view: 'projectList', orderBy: [sort, order] })
+  set: (sort, order) => appStore.setSettings('projectList', { orderBy: [sort, order] })
 })
 
 const sort = computed({

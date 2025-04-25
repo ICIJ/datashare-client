@@ -217,7 +217,7 @@ export function useSearchFilter() {
   function refreshSearchFromRoute() {
     // Extract the query parameters that must be saved in the app state
     const { perPage = getPerPage(), sort = getSort(), order = getOrder() } = route.query
-    appStore.setSettings({ view: 'search', perPage, orderBy: [sort, order] })
+    appStore.setSettings('search', { perPage, orderBy: [sort, order] })
     // Update the search store using the route query
     searchStore.updateFromRouteQuery(route.query)
     // And finally, refresh the search if t

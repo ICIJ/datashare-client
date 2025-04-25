@@ -34,7 +34,7 @@ const perPage = ref({
     transform: (value) => Math.max(10, parseInt(value)),
     get: () => appStore.getSettings(view, 'perPage'),
     set: (perPage) => {
-      appStore.setSettings({ view, perPage })
+      appStore.setSettings(view, { perPage })
       page.value = 1
     }
   }),
@@ -61,7 +61,7 @@ const sortBy = ref({
   modelValue: useUrlParamsWithStore(['sort', 'order'], {
     get: () => appStore.getSettings(view, 'orderBy'),
     set: (sort, order) => {
-      appStore.setSettings({ view, orderBy: [sort, order] })
+      appStore.setSettings(view, { orderBy: [sort, order] })
       page.value = 1
     }
   }),
@@ -91,7 +91,7 @@ const properties = ref({
   options: propertiesOptions,
   modelValue: computed({
     get: () => appStore.getSettings('searchHistoryList', 'properties'),
-    set: (properties) => appStore.setSettings({ view: 'searchHistoryList', properties })
+    set: (properties) => appStore.setSettings('searchHistoryList', { properties })
   })
 })
 defineProps({

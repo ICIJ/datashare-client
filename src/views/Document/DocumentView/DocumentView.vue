@@ -86,7 +86,7 @@ const tabs = computed(() => {
 const tab = useUrlParamWithStore('tab', {
   initialValue: 'text',
   get: () => appStore.getSettings('documentView', 'tab'),
-  set: (tab) => appStore.setSettings({ view: 'documentView', tab })
+  set: (tab) => appStore.setSettings('documentView', { tab })
 })
 
 const component = ref(null)
