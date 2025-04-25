@@ -23,10 +23,7 @@ export default {
         <button class="btn btn-action" @click="args.modelValue = !args.modelValue">
           Toggle modal
         </button>
-        <batch-search-error-modal v-bind="args" :model-value="args.modelValue" @update:modelValue="args.modelValue = $event" >
-          {{ args.default }}
-        </batch-search-error-modal>
-      `,
+        <batch-search-error-modal v-bind="args" :model-value="args.modelValue" @update:modelValue="args.modelValue = $event" />`,
       data() {
         return { args }
       }
