@@ -1,10 +1,8 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { stringifyQuery, parseQuery } from 'vue-router'
 
-import DisplayStatus from '@/components/Display/DisplayStatus'
-import DisplayStatusLabel from '@/components/Display/DisplayStatusLabel'
 import BatchSearchCardDetailsEntry from '@/components/BatchSearch/BatchSeachCard/BatchSearchCardDetailsEntry'
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
 import DisplayUser from '@/components/Display/DisplayUser'
@@ -12,6 +10,7 @@ import ProjectButton from '@/components/Project/ProjectButton'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 import SearchBreadcrumbUri from '@/components/Search/SearchBreadcrumbUri/SearchBreadcrumbUri'
 import humanNumber from '@/utils/humanNumber'
+import TaskStatus from '@/views/Task/TaskStatus.vue'
 
 defineOptions({ name: 'BatchSearchCardDetails' })
 
@@ -82,6 +81,8 @@ const uriWithoutIndices = computed(() => {
   delete uri.indices
   return stringifyQuery(uri)
 })
+function showError({ errorMessage, errorQuery }) {
+}
 </script>
 
 <template>
@@ -91,6 +92,7 @@ const uriWithoutIndices = computed(() => {
         <batch-search-card-details-entry :label="t('batchSearchCardDetails.status')">
           <display-status class="display-status" size="sm" :value="state" no-tooltip />
           <display-status-label :value="state" />
+          <task-status :status="state" with-label @error="showError" />
         </batch-search-card-details-entry>
       </li>
       <li>

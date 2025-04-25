@@ -88,7 +88,7 @@ onBeforeMount(fetchMe)
           </p>
         </template>
         <template #cell(state)="{ item }">
-          <display-status :value="item.state" />
+          <task-status :status="item.state" @error="showError" />
         </template>
         <template #cell(privacy)="{ item }">
           <display-visibility :value="getBatchSearchRecord(item, 'published')" />
