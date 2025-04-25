@@ -2,9 +2,12 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
-import { PhosphorIcon } from '@icij/murmur-next'
 
-import AppSidebarKeyboardShortcutsPopover from '@/components/AppSidebar/AppSidebarKeyboardShortcutsPopover'
+import AppSidebarFooterKeyboardShortcuts from '@/components/AppSidebar/AppSidebarFooterKeyboardShortcuts'
+import AppSidebarFooterLinks from '@/components/AppSidebar/AppSidebarFooterLinks'
+import AppSidebarFooterLinksEntry from '@/components/AppSidebar/AppSidebarFooterLinksEntry'
+import AppSidebarFooterLogo from '@/components/AppSidebar/AppSidebarFooterLogo'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 import Hook from '@/components/Hook/Hook'
 import { useConfirmModal } from '@/composables/useConfirmModal'
 import { useRemoveAll } from '@/composables/useRemoveAll'
@@ -71,87 +74,72 @@ const classList = computed(() => {
 
 <template>
   <footer class="app-sidebar-footer" :class="classList">
-    <hook name="app-sidebar-footer:before" />
-    <div class="app-sidebar-footer__lead">
-      <hook name="app-sidebar-footer-lead:before" />
-      <div class="app-sidebar-footer__lead__logo">
-        <img src="@/assets/images/logo-color-symbol.svg" alt="Datashare" class="img-fluid" />
-      </div>
-      <div class="app-sidebar-footer__lead__version">
-        <slot />
-      </div>
-      <app-sidebar-keyboard-shortcuts-popover v-if="!noKeyboardShortcuts && !compact" :offset="36">
-        <template #target>
-          <a
-            v-b-tooltip.body="{ delay: tooltipDelay }"
-            :title="$t('appSidebarFooter.keyboardShortcuts')"
-            class="app-sidebar-footer__links__item app-sidebar-footer__links__item--keyboard-shortcuts ms-auto"
-          >
-            <phosphor-icon class="app-sidebar-footer__links__item__icon" name="keyboard" hover-weight="bold" />
-            <span class="visually-hidden">{{ $t('appSidebarFooter.keyboardShortcuts') }}</span>
-          </a>
-        </template>
-      </app-sidebar-keyboard-shortcuts-popover>
-      <hook name="app-sidebar-footer-lead:after" />
-    </div>
-    <div class="app-sidebar-footer__links">
-      <hook name="app-sidebar-footer-links:before" />
-      <app-sidebar-keyboard-shortcuts-popover v-if="!noKeyboardShortcuts && compact" :offset="48">
-        <template #target>
-          <a
-            v-b-tooltip.body="{ delay: tooltipDelay }"
-            :title="$t('appSidebarFooter.keyboardShortcuts')"
-            class="app-sidebar-footer__links__item app-sidebar-footer__links__item--keyboard-shortcuts"
-          >
-            <phosphor-icon class="app-sidebar-footer__links__item__icon" name="keyboard" hover-weight="bold" />
-            <span class="visually-hidden">{{ $t('appSidebarFooter.keyboardShortcuts') }}</span>
-          </a>
-        </template>
-      </app-sidebar-keyboard-shortcuts-popover>
-      <router-link
-        v-if="!noSettings"
-        v-b-tooltip.body="{ delay: tooltipDelay }"
-        :to="{ name: 'settings.appearance' }"
-        :title="$t('appSidebarFooter.settings')"
-        class="app-sidebar-footer__links__item app-sidebar-footer__links__item--settings"
-      >
-        <phosphor-icon class="app-sidebar-footer__links__item__icon" name="gear" hover-weight="bold" />
-        <span class="visually-hidden">{{ $t('appSidebarFooter.settings') }}</span>
-      </router-link>
-      <a
-        v-if="!noHelp"
-        v-b-tooltip.body="{ delay: tooltipDelay }"
-        :href="helpLink"
-        target="_blank"
-        :title="$t('appSidebarFooter.help')"
-        class="app-sidebar-footer__links__item app-sidebar-footer__links__item--help"
-      >
-        <phosphor-icon class="app-sidebar-footer__links__item__icon" name="question" hover-weight="bold" />
-        <span class="visually-hidden">{{ $t('appSidebarFooter.help') }}</span>
-      </a>
-      <a
-        v-if="!noRemoveAll"
-        v-b-tooltip.body="{ delay: tooltipDelay }"
-        :title="$t('appSidebarFooter.removeAll.link')"
-        class="app-sidebar-footer__links__item app-sidebar-footer__links__item--remove-all"
-        @click="confirmRemoveAll"
-      >
-        <phosphor-icon class="app-sidebar-footer__links__item__icon" name="trash" hover-weight="bold" />
-        <span class="visually-hidden">{{ $t('appSidebarFooter.removeAll.link') }}</span>
-      </a>
-      <a
-        v-if="!noSignOut"
-        v-b-tooltip.body="{ delay: tooltipDelay }"
-        :href="signOutLink"
-        :title="$t('appSidebarFooter.signOut')"
-        class="app-sidebar-footer__links__item app-sidebar-footer__links__item--sign-out"
-      >
-        <phosphor-icon class="app-sidebar-footer__links__item__icon" name="sign-out" hover-weight="bold" />
-        <span class="visually-hidden">{{ $t('appSidebarFooter.signOut') }}</span>
-      </a>
-      <hook name="app-sidebar-footer-links:after" />
-    </div>
-    <hook name="app-sidebar-footer:after" />
+    <hook name="app-sidebar-footer:before" v-bind="{ compact, name }" />
+    <!-- First links row -->
+    <app-sidebar-footer-links name="first" :compact="compact">
+      <app-sidebar-footer-links-entry name="logo" :compact="compact">
+        <app-sidebar-footer-logo :compact="compact">
+          <template #version>
+            <slot name="version" />
+          </template>
+        </app-sidebar-footer-logo>
+      </app-sidebar-footer-links-entry>
+      <app-sidebar-footer-links-entry v-if="!noKeyboardShortcuts && !compact" name="keyboard-shortcuts">
+        <app-sidebar-footer-keyboard-shortcuts />
+      </app-sidebar-footer-links-entry>
+    </app-sidebar-footer-links>
+    <!-- Second links row -->
+    <app-sidebar-footer-links name="second" :compact="compact">
+      <app-sidebar-footer-links-entry v-if="!noKeyboardShortcuts && compact" name="keyboard-shortcuts">
+        <app-sidebar-footer-links-keyboard-shortcuts />
+      </app-sidebar-footer-links-entry>
+      <app-sidebar-footer-links-entry v-if="!noSettings" :compact="compact" name="settings">
+        <button-icon
+          :to="{ name: 'settings.appearance' }"
+          hide-label
+          variant="link"
+          class="p-0 text-body"
+          icon-left="gear"
+          icon-left-hover-weight="bold"
+          :label="$t('appSidebarFooter.settings')"
+        />
+      </app-sidebar-footer-links-entry>
+      <app-sidebar-footer-links-entry v-if="!noHelp" :compact="compact" name="help">
+        <button-icon
+          :href="helpLink"
+          target="_blank"
+          hide-label
+          variant="link"
+          class="p-0 text-body"
+          icon-left="question"
+          icon-left-hover-weight="bold"
+          :label="$t('appSidebarFooter.help')"
+        />
+      </app-sidebar-footer-links-entry>
+      <app-sidebar-footer-links-entry v-if="!noRemoveAll" :compact="compact" name="remove-all">
+        <button-icon
+          hide-label
+          variant="link"
+          class="p-0 text-body"
+          icon-left="trash"
+          icon-left-hover-weight="bold"
+          :label="$t('appSidebarFooter.removeAll.link')"
+          @click="confirmRemoveAll"
+        />
+      </app-sidebar-footer-links-entry>
+      <app-sidebar-footer-links-entry v-if="!noSignOut" :compact="compact" name="sign-out">
+        <button-icon
+          :href="signOutLink"
+          hide-label
+          variant="link"
+          class="p-0 text-body"
+          icon-left="sign-out"
+          icon-left-hover-weight="bold"
+          :label="$t('appSidebarFooter.signOut')"
+        />
+      </app-sidebar-footer-links-entry>
+    </app-sidebar-footer-links>
+    <hook name="app-sidebar-footer:after" v-bind="{ compact, name }" />
   </footer>
 </template>
 
@@ -166,74 +154,8 @@ const classList = computed(() => {
   padding: $spacer;
 
   &--compact {
-    flex-direction: column;
-
-    .app-sidebar-footer__links__item,
-    .app-sidebar-footer__lead__version,
-    .app-sidebar-footer__lead__logo {
-      margin: 0;
-    }
-
-    .app-sidebar-footer__links {
-      order: -1;
-      flex-direction: column;
-
-      &__item {
-        padding: 8px 0;
-        margin-bottom: $spacer;
-      }
-    }
-
-    .app-sidebar-footer__lead {
-      display: block;
-      margin: auto;
-
-      &__version {
-        width: 100%;
-        margin-top: $spacer;
-      }
-    }
-  }
-
-  &__lead {
-    display: flex;
-    text-align: center;
-
-    &__logo {
-      height: calc(#{$line-height-base * 1em} + #{$spacer-xxs * 2});
-      line-height: $line-height-base * 1em;
-      margin-right: $spacer-xxs;
-
-      img {
-        height: 100%;
-      }
-    }
-
-    &__version {
-      font-weight: 400;
-      padding: $spacer-xxs;
-      margin-right: $spacer;
-    }
-  }
-
-  &__links {
-    flex-grow: 1;
-    display: flex;
+    flex-direction: column-reverse;
     align-items: center;
-    justify-content: space-between;
-
-    &__item {
-      display: flex;
-      align-items: center;
-      text-align: center;
-      color: inherit;
-      cursor: pointer;
-      margin: $spacer-xxs;
-
-      &__icon:hover {
-        color: rgba(var(--bs-link-color-rgb), var(--bs-link-opacity, 1));
-      }
-    }
   }
 }
 </style>

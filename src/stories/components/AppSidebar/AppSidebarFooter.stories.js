@@ -47,7 +47,9 @@ export default {
     setup: () => ({ args }),
     template: `
       <app-sidebar-footer v-bind="args">
-        v17.1.0
+        <template #version>
+          v17.1.0
+        </template>
       </app-sidebar-footer>
     `
   })
@@ -60,7 +62,7 @@ export const Default = {
     noRemoveAll: false,
     noSignOut: true,
     noSettings: false,
-    noKeyboardShortcuts: false
+    noKeyboardShortcuts: true
   }
 }
 
