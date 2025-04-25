@@ -96,7 +96,6 @@ function showError() {
     <ul class="batch-search-card-details__list list-unstyled">
       <li>
         <batch-search-card-details-entry :label="t('batchSearchCardDetails.status')">
-          <task-status status="failure" with-label @error="showError" />
           <task-status :status="state" with-label @error="showError" />
         </batch-search-card-details-entry>
       </li>
