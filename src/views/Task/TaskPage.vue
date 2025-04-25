@@ -100,6 +100,7 @@ function refresh() {
         <dismissable-alert variant="info" persist :name="`task.${pageName}.list.info`">
           {{ t(`task.${pageName}.list.info`) }}
         </dismissable-alert>
+        <slot name="taskFailedModal"></slot>
         <template v-if="!isLoading && noTasks">
           <slot
             name="empty"

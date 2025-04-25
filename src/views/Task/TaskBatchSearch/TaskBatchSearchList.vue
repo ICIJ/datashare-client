@@ -1,6 +1,6 @@
 <script setup>
 import get from 'lodash/get'
-import { ref, onBeforeMount } from 'vue'
+import { ref, reactive, onBeforeMount } from 'vue'
 
 import tasksBatchSearchesEmpty from '@/assets/images/illustrations/tasks-batch-searches-empty.svg'
 import BatchSearchActions from '@/components/BatchSearch/BatchSearchActions/BatchSearchActions'
@@ -19,6 +19,8 @@ import { useTaskSettings } from '@/composables/useTaskSettings'
 import { useCore } from '@/composables/useCore'
 import { TASK_NAME } from '@/enums/taskNames'
 import TaskPage from '@/views/Task/TaskPage'
+import BatchSearchErrorModal from '@/components/BatchSearch/BatchSearchErrorModal.vue'
+import TaskStatus from '@/views/Task/TaskStatus.vue'
 
 const { propertiesModelValueOptions } = useTaskSettings('batch-search')
 const { core } = useCore()
@@ -41,6 +43,19 @@ async function fetchMe() {
   me.value = await core.auth.getUsername()
 }
 
+const show = ref(false)
+const batchSearchError = reactive({
+  okTitle: 'Ok',
+  errorTitle: 'The error is',
+  description: `The system encountered a problem. It can be a syntax error that you made in your CSV or another error. Please refer to <a href="/">this help page</a> where most common errors are described.`,
+  errorMessage: '',
+  query: ''
+})
+function showError({ errorMessage, errorQuery }) {
+  batchSearchError.errorMessage = errorMessage
+  batchSearchError.query = errorQuery
+  show.value = true
+}
 onBeforeMount(fetchMe)
 </script>
 
@@ -53,6 +68,7 @@ onBeforeMount(fetchMe)
     hide-clear-done
     hide-stop-pending
   >
+    <template #taskFailedModal><batch-search-error-modal v-model="show" v-bind="batchSearchError" /></template>
     <template #empty="{ searchQuery }">
       <empty-state
         v-if="!searchQuery"
