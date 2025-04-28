@@ -62,7 +62,7 @@ watch(toRef(props, 'name'), fetch, { immediate: true })
 
 <template>
   <div class="project-view-overview">
-    <app-wait class="bg-tertiary-subtle rounded-1 p-4 mb-3" :for="loaderId">
+    <app-wait class="bg-tertiary-subtle rounded-1 p-1 px-md-4 py-4 mb-3" :for="loaderId">
       <template #waiting>
         <div class="text-center py-5">
           <app-spinner size="2em" />

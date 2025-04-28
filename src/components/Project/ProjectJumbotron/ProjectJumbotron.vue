@@ -69,7 +69,7 @@ const promptProjectDeletion = async () => {
   <section class="project-jumbotron">
     <hook name="project-jumbotron:before" :bind="{ project }" />
     <div class="project-jumbotron__header d-md-flex align-items-center justify-content-between flex-truncate gap-1">
-      <h3 class="project-jumbotron__header__title">
+      <h3 class="project-jumbotron__header__title mb-3 mb-md-0">
         <hook name="project-jumbotron-label:before" :bind="{ project }" />
         <project-label :project="project" :hide-thumbnail="!compact" />
         <hook name="project-jumbotron-label:after" :bind="{ project }" />
