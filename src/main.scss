@@ -67,12 +67,6 @@ body {
   background-color: rgba(var(--bs-body-bg-rgb), var(--bs-bg-opacity)) !important;
 }
 
-@keyframes rotateLogo {
-  100% {
-    transform: translate(-50%, -50%) rotate(1turn);
-  }
-}
-
 .text-special {
   font-family: $special-font-family;
 }
