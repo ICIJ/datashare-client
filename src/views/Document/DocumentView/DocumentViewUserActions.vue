@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, onBeforeMount } from 'vue'
+import { computed, ref, onBeforeMount, watch } from 'vue'
 import { get } from 'lodash'
 import bodybuilder from 'bodybuilder'
 
@@ -8,7 +8,7 @@ import { useCore } from '@/composables/useCore'
 import { useMode } from '@/composables/useMode'
 import { useDocument } from '@/composables/useDocument'
 import { useAuth } from '@/composables/useAuth'
-import { useQueryObserver } from '@/composables/useQueryObserver'
+import { useElementObserver } from '@/composables/useElementObserver'
 import DocumentUserActions from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActions'
 import DocumentUserRecommendations from '@/components/Document/DocumentUser/DocumentUserRecommendations/DocumentUserRecommendations'
 import DocumentUserTags from '@/components/Document/DocumentUser/DocumentUserTags/DocumentUserTags'
@@ -19,16 +19,13 @@ const recommendedStore = useRecommendedStore()
 const documentStore = useDocumentStore()
 const { core } = useCore()
 const { isServer } = useMode()
-const { document, injectDocumentViewFloatingId } = useDocument()
+const { document, documentViewFloatingSelector } = useDocument()
 const { username } = useAuth()
-const { querySelector } = useQueryObserver()
-
-const documentViewFloatingId = injectDocumentViewFloatingId()
-const documentViewFloatingSelector = `#${documentViewFloatingId}`
-const documentViewFloatingElement = querySelector(documentViewFloatingSelector)
+const { waitForElementCreated } = useElementObserver()
 
 const showRecommendationsCard = ref(false)
 const showTagsCard = ref(false)
+const hasFloatingElement = ref(false)
 
 const actionHandler = (name) => {
   const toggles = {
@@ -71,6 +68,15 @@ const fetchAllTags = async () => {
   allTags.value = buckets.map(({ key: label }) => ({ label }))
 }
 
+const waitForFloatingElement = async () => {
+  hasFloatingElement.value = false
+  if (documentViewFloatingSelector.value) {
+    hasFloatingElement.value = !!(await waitForElementCreated(documentViewFloatingSelector.value))
+  }
+}
+
+watch(documentViewFloatingSelector, waitForFloatingElement, { immediate: true })
+
 onBeforeMount(fetchAllTags)
 </script>
 
@@ -82,7 +88,7 @@ onBeforeMount(fetchAllTags)
     :recommendations="recommendedBy.length"
     @action="actionHandler"
   />
-  <teleport :disabled="!documentViewFloatingElement" :to="documentViewFloatingSelector">
+  <teleport v-if="hasFloatingElement" :to="documentViewFloatingSelector">
     <hook name="document-user-actions-cards:before" :bind="{ document }" />
     <document-user-tags
       v-model="showTagsCard"
