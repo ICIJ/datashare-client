@@ -73,67 +73,6 @@ body {
   }
 }
 
-.splashscreen {
-  align-items: center;
-  background: color.adjust($action, $lightness: -10%);
-  bottom: 0;
-  color: white;
-  display: flex;
-  justify-content: center;
-  left: 0;
-  position: fixed;
-  right: 0;
-  top: 0;
-
-  &__panel {
-    font-weight: bolder;
-    margin: $spacer;
-    max-width: 330px;
-    text-align: center;
-
-    &__spinner {
-      border-radius: $spacer;
-      display: inline-flex;
-      height: 130px;
-      margin-bottom: $spacer;
-      overflow: hidden;
-      position: relative;
-      width: 130px;
-
-      &:before {
-        animation: rotateLogo 1s linear infinite;
-        background-image: linear-gradient(#48C2FC, #48C2FC),
-          linear-gradient($primary, $primary),
-          linear-gradient(#48C2FC, #48C2FC),
-          linear-gradient($primary, $primary);
-        background-position: 0 0, 100% 0, 100% 100%, 0 100%;
-        background-repeat: no-repeat;
-        background-size: 50% 50%, 50% 50%;
-        border-radius: inherit;
-        content: "";
-        height: 200%;
-        left: 50%;
-        position: absolute;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        width: 200%;
-        z-index: -1;
-      }
-
-      &:after {
-        background: white url('@/assets/images/logo-color-symbol.svg') no-repeat center center;
-        background-size: 80% 80%;
-        border-radius: inherit;
-        content: "";
-        display: block;
-        height: 95%;
-        margin: auto;
-        width: 95%;
-      }
-    }
-  }
-}
-
 .text-special {
   font-family: $special-font-family;
 }
