@@ -2,7 +2,7 @@
   <div class="app d-flex" :style="style">
     <hook name="app:before" />
     <app-sidebar ref="app-sidebar" />
-    <div class="flex-grow-1">
+    <div class="app__view flex-grow-1">
       <router-view v-slot="{ Component }">
         <component :is="Component">
           <template v-if="hasFilters" #filters>
@@ -100,7 +100,7 @@ onBeforeUnmount(() => {
 
   min-height: 100vh;
 
-  &:has(.table-responsive) {
+  &__view:has(.table-responsive) {
     max-width: 100vw;
     overflow-x: hidden;
   }
