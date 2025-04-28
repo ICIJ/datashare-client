@@ -135,17 +135,18 @@ defineProps({
   }
 
   .modal-fullscreen {
-    max-width: calc(100vw - var(--bs-modal-margin) * 2);
-    padding-block: var(--bs-modal-margin);
-    margin: auto;
-    width: 100%;
-
-    // This is a clearfix to ensure the modal has a a
-    &:after {
-      content: '';
-      display: block;
-      width: 1px;
-      height: var(--bs-modal-margin);
+    @include media-breakpoint-up(md) {
+      max-width: calc(100vw - var(--bs-modal-margin) * 2);
+      padding-block: var(--bs-modal-margin);
+      margin: auto;
+      width: 100%;
+      // This is a clearfix to ensure the modal has a small margin
+      &:after {
+        content: '';
+        display: block;
+        width: 1px;
+        height: var(--bs-modal-margin);
+      }
     }
 
     .modal-body {
