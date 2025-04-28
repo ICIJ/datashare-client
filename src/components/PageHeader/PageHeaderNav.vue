@@ -63,6 +63,9 @@ const showToggleSidebar = computed(() => {
 <style lang="scss" scoped>
 .page-header-nav {
   padding-block: $spacer;
+  background: var(--bs-body-bg);
+  max-width: 100vw;
+  overflow: auto;
 
   &:has(+ .page-header-toolbar) {
     padding-bottom: 0;

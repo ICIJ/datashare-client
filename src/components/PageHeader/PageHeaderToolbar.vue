@@ -81,6 +81,8 @@ const setPage = (value) => (page.value = value)
 .page-header-toolbar {
   padding-block: $spacer;
   background: var(--bs-body-bg);
+  max-width: 100vw;
+  overflow: auto;
 
   @include media-breakpoint-down(md) {
     &__pagination {
