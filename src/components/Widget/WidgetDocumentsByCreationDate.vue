@@ -1,8 +1,8 @@
 <template>
   <div class="widget">
-    <div v-if="widget.title" class="widget__header d-md-flex align-items-center">
-      <h3 class="widget__header__title m-0 flex-grow-1" v-html="widget.title"></h3>
-      <div class="widget__header__selectors d-flex align-items-center">
+    <div v-if="widget.title" class="widget__header d-md-flex align-items-start gap-2">
+      <h3 class="widget__header__title flex-grow-1 my-2" v-html="widget.title"></h3>
+      <div class="widget__header__selectors d-flex align-items-center my-2">
         <slot name="selector" :selected-path="selectedPath" :set-selected-path="setSelectedPath" />
         <div class="btn-group">
           <button
@@ -351,9 +351,13 @@ export default {
     },
     binToQuery(bin) {
       const indices = [this.project]
-      const routeQueryField = 'f[creationDate]'
+      const creationDateField = 'f[creationDate]'
       const values = this.binToQueryValues(bin)
-      return { [routeQueryField]: values.slice(0, 2).join(':'), indices }
+      const query = { [creationDateField]: values.slice(0, 2).join(':'), indices }
+      if (this.selectedPath !== this.dataDir) {
+        query['f[path]'] = this.selectedPath
+      }
+      return query
     }
   }
 }
@@ -374,6 +378,7 @@ export default {
       font-weight: 500;
       font-size: 1rem;
       line-height: 1.5rem;
+      text-wrap: pretty;
     }
 
     &__selectors {
