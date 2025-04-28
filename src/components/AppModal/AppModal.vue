@@ -147,17 +147,20 @@ defineProps({
         width: 1px;
         height: var(--bs-modal-margin);
       }
-    }
 
-    .modal-body {
-      overflow-y: visible;
+      .modal-body {
+        overflow-y: visible;
+      }
+
+      .modal-content {
+        border: var(--bs-modal-border-width) solid var(--bs-modal-border-color);
+        border-radius: var(--bs-modal-border-radius);
+      }
     }
 
     .modal-content {
       height: auto;
       min-height: calc(100vh - var(--bs-modal-margin) * 2);
-      border: var(--bs-modal-border-width) solid var(--bs-modal-border-color);
-      border-radius: var(--bs-modal-border-radius);
     }
   }
 }
