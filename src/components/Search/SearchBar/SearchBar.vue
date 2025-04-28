@@ -5,7 +5,7 @@
         ref="searchInput"
         v-model="query"
         class="search-bar__input w-100"
-        autofocus
+        :autofocus="autofocus"
         :compact="compact"
         :placeholder="localizedPlaceholder"
         :show-submit="showSubmit"
@@ -64,6 +64,7 @@ import bodybuilder from 'bodybuilder'
 import lucene from 'lucene'
 import { mapStores } from 'pinia'
 
+import { useMobileDetect } from '@/composables/useMobileDetect'
 import SearchBarInput from '@/components/Search/SearchBar/SearchBarInput'
 import SearchBarInputDropdownForField from '@/components/Search/SearchBar/SearchBarInputDropdownForField'
 import SearchBarInputDropdownForProjects from '@/components/Search/SearchBar/SearchBarInputDropdownForProjects'
@@ -147,6 +148,11 @@ export default {
     }
   },
   emits: ['submit'],
+  setup() {
+    const { isMobile } = useMobileDetect()
+    const autofocus = !isMobile
+    return { autofocus, isMobile }
+  },
   data() {
     return {
       field: null,
