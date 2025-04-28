@@ -119,8 +119,11 @@ defineProps({
   .modal-header,
   .modal-body,
   .modal-footer {
-    padding-left: $spacer-xxl;
-    padding-right: $spacer-xxl;
+    padding-inline: $spacer-xxl;
+
+    @include media-breakpoint-down(lg) {
+      padding-inline: $spacer;
+    }
   }
 
   .modal-header + .modal-body {
