@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, onBeforeMount, useTemplateRef } from 'vue'
-import { useIntersectionObserver } from '@vueuse/core'
+import { useElementVisibility, whenever } from '@vueuse/core'
 
 import DocumentThumbnailImage from '@/components/Document/DocumentThumbnail/DocumentThumbnailImage'
 import DocumentThumbnailPlaceholder from '@/components/Document/DocumentThumbnail/DocumentThumbnailPlaceholder'
@@ -86,7 +86,6 @@ const thumbnailUrl = computed(() => {
 })
 
 const alt = computed(() => `${props.document.basename} preview`)
-const lazyLoadable = computed(() => window && 'IntersectionObserver' in window)
 const overlayIcon = computed(() => (errored.value ? 'eye-slash' : 'eye'))
 
 const showImage = computed(() => !!thumbnail.value && (isPreviewActivated.value || canPreviewRaw(props.document)))
@@ -119,21 +118,22 @@ async function fetchAndLoad() {
   }
 }
 
-useIntersectionObserver(element, async ([entry]) => {
-  if (entry.isIntersecting) {
-    emit('enter', entry)
-    // Fetch the thumbnail
-    await fetchAndLoad()
-  }
-})
+async function enter() {
+  emit('enter', element.value)
+  await fetchAndLoad()
+}
 
-onBeforeMount(() => {
+const isVisible = useElementVisibility(element)
+// Fetch the image when the element is visible but only once (and immediately if lazy is true)
+whenever(isVisible, enter, { immediate: props.lazy, once: true })
+
+onBeforeMount(async () => {
   // This component can be deactivated globally
   if (!showImage.value) return
   // This component can be lazy loaded
-  if (props.lazy && lazyLoadable.value) return
+  if (props.lazy) return
   // Fetch directly
-  fetchAndLoad()
+  await fetchAndLoad()
 })
 </script>
 
