@@ -62,6 +62,10 @@ const fullTree = computed(() =>
 
 const treeWithoutDataDir = computed(() => fullTree.value.filter((d) => d.length > dataDir.length))
 
+function safeBasename(path) {
+  return isWindowsPath.value ? basename(path.replace(/\\/g, '/')) : basename(path)
+}
+
 const tree = computed(() => (props.noDatadir || props.datadirLabel ? treeWithoutDataDir.value : fullTree.value))
 </script>
 
@@ -79,7 +83,7 @@ const tree = computed(() => (props.noDatadir || props.datadirLabel ? treeWithout
       :no-link="noLink"
       @select="modelValue = directory"
     >
-      {{ basename(directory) }}
+      {{ safeBasename(directory) }}
     </path-tree-breadcrumb-entry>
   </ul>
 </template>
