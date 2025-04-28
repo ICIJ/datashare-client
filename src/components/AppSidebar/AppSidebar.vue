@@ -1,5 +1,5 @@
 <script setup>
-import { computed, watch } from 'vue'
+import { computed, watch, onBeforeMount } from 'vue'
 import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router'
 
 import AppSidebarFooter from './AppSidebarFooter'
@@ -98,8 +98,11 @@ function autoClose() {
   }
 }
 
+// Ensure the sidebar is closed on route change
 onBeforeRouteUpdate(autoClose)
 onBeforeRouteLeave(autoClose)
+// Ensure the sidebar is closed by default on mobile devices
+onBeforeMount(() => (appStore.sidebar.closed = appStore.sidebar.closed || fullWith.value))
 </script>
 
 <template>
