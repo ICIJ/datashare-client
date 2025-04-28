@@ -212,6 +212,8 @@ export const useAppStore = defineStore(
     }
   },
   {
-    persist: true
+    persist: {
+      pick: ['redirectAfterLogin', 'pins', 'filters', 'sidebar', 'settings.views']
+    }
   }
 )
