@@ -1,5 +1,5 @@
 <template>
-  <div class="task-board-list container-fluid bg-tertiary-subtle py-4">
+  <div class="task-board-list container-fluid bg-tertiary-subtle p-3 py-md-4 px-md-5">
     <slot />
   </div>
 </template>
@@ -12,6 +12,10 @@
 
   @media (min-width: 1000px) {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include media-breakpoint-down(md) {
+    display: block;
   }
 }
 </style>
