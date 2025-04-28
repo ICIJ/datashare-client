@@ -46,7 +46,7 @@ const close = () => {
 </script>
 
 <template>
-  <b-card v-if="modelValue" class="card-panel shadow-sm py-4" :class="classList">
+  <b-card v-if="modelValue" class="card-panel shadow-sm" :class="classList">
     <b-card-title class="card-panel__title d-flex justify-content-between align-items-center fw-bold">
       <span>
         <phosphor-icon v-if="icon" :name="icon" :weight="iconWeight" class="me-2" />
@@ -90,6 +90,10 @@ const close = () => {
     flex-direction: column;
     gap: $spacer-xl;
     padding: $spacer-sm $spacer-xl;
+
+    @include media-breakpoint-down(sm) {
+      padding: $spacer-sm;
+    }
   }
 }
 </style>
