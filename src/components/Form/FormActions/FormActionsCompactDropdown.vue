@@ -49,7 +49,7 @@ const menuClassList = computed(() => {
       <slot />
     </li>
     <template #button-content>
-      <phosphor-icon :name="dropdownIcon" weight="fill" />
+      <phosphor-icon :name="dropdownIcon" />
     </template>
   </b-dropdown>
 </template>
@@ -89,6 +89,7 @@ $toggle-padding-y: calc(var(--bs-btn-padding-y) - 0.1em);
     & > li > .btn {
       display: flex;
       min-width: 100%;
+
       &.button-icon--use-injected-variant {
         --bs-btn-border-width: 0;
         --bs-btn-bg: transparent;

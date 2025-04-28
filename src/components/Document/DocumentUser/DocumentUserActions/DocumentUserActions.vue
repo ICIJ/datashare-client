@@ -5,7 +5,6 @@
       end
       compact-auto
       :compact-auto-breakpoint="compactAutoBreakpoint"
-      dropdown-icon="dots-three-vertical"
       variant="action"
       compact-variant="outline-action"
       class="d-inline-flex justify-content-start flex-grow-0 gap-1"
