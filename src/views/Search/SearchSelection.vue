@@ -94,7 +94,7 @@ const tagSelection = async (documents, labels) => {
 
 <template>
   <form-actions
-    class="search-selection px-3 flex-shrink-1 flex-nowrap"
+    class="search-selection flex-shrink-1 flex-nowrap"
     variant="outline-tertiary"
     compact-variant="outline-tertiary"
     :compact="compact"
