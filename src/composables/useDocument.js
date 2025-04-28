@@ -1,4 +1,5 @@
 import { computed, inject, provide, useId, watch, h } from 'vue'
+import { computedInject } from '@vueuse/core'
 import { useRoute, useRouter } from 'vue-router'
 import { find, matches, overSome } from 'lodash'
 import { useModalController } from 'bootstrap-vue-next'
@@ -9,6 +10,8 @@ import DocumentViewerModal from '@/components/Document/DocumentViewerModal/Docum
 import { useDocumentStore } from '@/store/modules'
 
 export const useDocument = function (element) {
+  const DOCUMENT_VIEW_FLOATING_ID_KEY = 'documentViewFloatingId'
+
   const documentStore = useDocumentStore()
   const route = useRoute()
   const router = useRouter()
@@ -89,13 +92,15 @@ export const useDocument = function (element) {
 
   const provideDocumentViewFloatingId = () => {
     const id = useId()
-    provide('documentViewFloatingId', id)
+    provide(DOCUMENT_VIEW_FLOATING_ID_KEY, id)
     return id
   }
 
   const injectDocumentViewFloatingId = () => {
-    return inject('documentViewFloatingId')
+    return inject(DOCUMENT_VIEW_FLOATING_ID_KEY)
   }
+
+  const documentViewFloatingSelector = computedInject(DOCUMENT_VIEW_FLOATING_ID_KEY, (id) => `#${id}`)
 
   const watchDocument = function (callback, options) {
     // We watch the document's router params as string to avoid deep watching the object
@@ -119,6 +124,7 @@ export const useDocument = function (element) {
     isRouteActive,
     provideDocumentViewFloatingId,
     injectDocumentViewFloatingId,
+    documentViewFloatingSelector,
     watchDocument
   }
 }
