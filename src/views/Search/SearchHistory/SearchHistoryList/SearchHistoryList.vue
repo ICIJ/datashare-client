@@ -129,5 +129,9 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
   display: flex;
   flex-direction: column;
   max-height: 100vh;
+  
+  & >  * {
+    flex-shrink: 0
+  }
 }
 </style>
