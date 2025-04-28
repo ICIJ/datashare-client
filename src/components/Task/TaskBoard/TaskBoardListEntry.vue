@@ -30,7 +30,7 @@ const compact = computed(() => {
         </router-link>
       </b-col>
       <b-col md="10" class="d-flex">
-        <b-card-body class="d-flex flex-column overflow-auto p-0">
+        <b-card-body class="d-flex flex-column p-0">
           <template #title>
             <h3 class="h4">
               <router-link :to="listLink">
@@ -43,7 +43,7 @@ const compact = computed(() => {
               <p>{{ description }}</p>
             </slot>
           </b-card-text>
-          <b-card-text class="d-flex justify-content-end gap-2 flex-row row-wrap">
+          <b-card-text class="d-flex justify-content-end gap-2 flex-md-row row-wrap">
             <slot name="actions" v-bind="{ listLink, actionLink }">
               <button-icon
                 v-if="actionLink"

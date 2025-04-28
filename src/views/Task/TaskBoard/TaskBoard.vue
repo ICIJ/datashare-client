@@ -13,7 +13,7 @@ import { TASK_NAME, TASK_NAME_ICON } from '@/enums/taskNames'
     <page-header no-toggle-settings />
     <page-container fluid>
       <task-board-latest />
-      <task-board-list class="px-5">
+      <task-board-list>
         <task-board-list-entry
           :icon="TASK_NAME_ICON[TASK_NAME.BATCH_SEARCH]"
           :title="$t('task.task-board.entries.batch-search.title')"
