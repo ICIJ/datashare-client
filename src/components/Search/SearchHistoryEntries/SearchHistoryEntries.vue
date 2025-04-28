@@ -6,6 +6,8 @@ import { match } from 'path-to-regexp'
 
 import { useCore } from '@/composables/useCore'
 import { useWait } from '@/composables/useWait'
+import { useBreakpoints } from '@/composables/useBreakpoints'
+import { SIZE } from '@/enums/sizes'
 import AppPlaceholder from '@/components/AppPlaceholder/AppPlaceholder'
 import ButtonToggleDay from '@/components/Button/ButtonToggleDay'
 import DocumentCard from '@/components/Document/DocumentCard/DocumentCard'
@@ -32,10 +34,12 @@ const { events, loadingEvents } = defineProps({
 const { core } = useCore()
 const { waitFor, isLoading: loadingDocuments } = useWait()
 const starredStore = useStarredStore()
+const { breakpointDown } = useBreakpoints()
 
 const hits = ref([])
 // This is a list of the ids of the events.
 const eventsIds = computed(() => events.map(eventParams).map(property('id')))
+const verticalDocumentActions = computed(() => breakpointDown.value[SIZE.LG])
 
 // Either we are loading the documents or the events.
 const loading = computed(() => toValue(loadingDocuments) || toValue(loadingEvents))
@@ -127,14 +131,16 @@ watch(() => eventsIds.value, fetch, { deep: true, immediate: true })
         :properties="properties"
       >
         <template #actions>
-          <div class="d-flex align-items-center">
+          <div
+            class="d-flex flex-column flex-lg-row-reverse align-items-end align-items-lg-center text-right gap-1 gap-lg-3"
+          >
+            <display-time :value="event.modificationDate" class="text-secondary" />
             <document-actions-group
-              horizontal
+              :vertical="verticalDocumentActions"
               tooltip-placement="right-start"
               :document="document"
-              class="gap-1 me-3"
+              class="gap-1"
             />
-            <display-time :value="event.modificationDate" class="text-secondary" />
           </div>
         </template>
       </document-card>
