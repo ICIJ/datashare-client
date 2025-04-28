@@ -39,11 +39,11 @@ defineProps({
       </slot>
       <slot name="link">
         <button-icon
+          class="px-1"
           variant="link"
           icon-left="arrowSquareOut"
           hide-label
           hide-tooltip
-          square
           target="_blank"
           :href="href"
           :label="$t('documentUserCommentsListEntry.goToComment')"
