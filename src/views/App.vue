@@ -99,5 +99,10 @@ onBeforeUnmount(() => {
   --app-sidebar-width: #{$app-sidebar-width};
 
   min-height: 100vh;
+
+  &:has(.table-responsive) {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
 }
 </style>
