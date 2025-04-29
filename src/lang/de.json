@@ -10,14 +10,14 @@
   },
   "addonCard": {
     "plugin": {
-      "submitSuccess": "Erweiterung erfolgreich installiert. Bitte Datashare neu starten.",
-      "submitError": "Fehler beim Installieren der Erweiterung.",
-      "deleteSuccess": "Plugin erfolgreich gelöscht.",
+      "submitSuccess": "Das Plugin wurde erfolgreich installiert.",
+      "submitError": "Fehler beim Installieren des Plugins.",
+      "deleteSuccess": "Erweiterung erfolgreich gelöscht.",
       "deleteError": "Fehler beim Löschen des Plugins."
     },
     "extension": {
-      "submitSuccess": "Das Plugin wurde erfolgreich installiert.",
-      "submitError": "Fehler beim Installieren des Plugins.",
+      "submitSuccess": "Erweiterung erfolgreich installiert. Bitte Datashare neu starten.",
+      "submitError": "Fehler beim Installieren der Erweiterung.",
       "deleteSuccess": "Erweiterung erfolgreich gelöscht.",
       "deleteError": "Fehler beim Löschen der Erweiterung."
     }
@@ -46,6 +46,9 @@
   "appModalFooter": {
     "cancelTitle": "Abbrechen",
     "okTitle": "Ja"
+  },
+  "appPopoverHeader": {
+    "close": "Schließen"
   },
   "buttonAdd": {
     "label": "Add new"
@@ -343,16 +346,27 @@
   "documentUserCommentsList": {
     "hideComments": "Hide comments",
     "showComments": "Show comments",
-    "noComments": "No comments on this document yet.",
     "sortingText": "Oldest to newest",
     "goToOldest": "Go to oldest",
     "goToRecent": "Go to newest"
   },
+  "documentUserCommentsListNewest": {
+    "label": "Go to newest"
+  },
+  "documentUserCommentsListOldest": {
+    "label": "Go to oldest"
+  },
+  "documentUserCommentsHeader": {
+    "hideComments": "Hide comments",
+    "showComments": "Show comments",
+    "sortingText": "Oldest to newest"
+  },
   "documentUserComments": {
     "warning": "Comments are public to project’s members."
   },
-  "documentUserCommentsActions": {
-    "placeholder": "Write your text"
+  "documentUserCommentsForm": {
+    "placeholder": "Write your comment here.",
+    "submit": "Comment"
   },
   "documentUserCommentsListEntry": {
     "goToComment": "Go to comment (external link)"
@@ -376,9 +390,6 @@
     "copy": "Copy this metadata value",
     "search": "Search this metadata value",
     "pin": "Pin this metadata"
-  },
-  "documentThumbnail": {
-    "noPreview": "No preview available"
   },
   "documentTranslatedContent": {
     "detected": "Erkannte Sprache",
@@ -1133,6 +1144,12 @@
       }
     }
   },
+  "batchSearchErrorModal": {
+    "okTitle": "Ok",
+    "errorTitle": "The error is",
+    "text": "how to fix the most common errors",
+    "description": "The system encountered a problem. Syntax errors in the CSV are the usual suspects (see {link})."
+  },
   "batchSearchCard": {
     "seeAllDocuments": "See all documents",
     "downloadResultsLabel": "Download results (CSV)",
@@ -1390,7 +1407,7 @@
       "info": "Translations are <a href='{href}' class='alert-link'>maintained on Crowdin</a>."
     },
     "addons": {
-      "plugins": {
+      "plugin": {
         "title": "Plug-ins",
         "info": "Plugins are front-end modules to add new features in Datashare's user interface.",
         "submitSuccess": "Das Plugin wurde erfolgreich installiert.",
@@ -1398,7 +1415,7 @@
         "searchPlaceholder": "Plugins durchsuchen",
         "errorLabel": "An error occurred while retrieving the plugins. Refresh the page or contact the support."
       },
-      "extensions": {
+      "extension": {
         "title": "Erweiterungen",
         "info": "Extensions are back-end modules to add new features to store and manipulate data with Datashare.",
         "submitSuccess": "Erweiterung erfolgreich installiert. Bitte Datashare neu starten.",
