@@ -170,14 +170,14 @@
   },
   "entityPopoverTabGroup": {
     "mentions": "Mentions",
-    "info": "Info"
+    "info": "Information"
   },
   "error": {
     "title": "Une erreur s'est produite",
     "description": "Une erreur s'est produite. Merci de réessayer plus tard ou contacter votre administrateur•rice si le problème persiste.",
     "noProjects": "La liste de projet est vide. Merci de contacter votre administrateur•rice.",
     "notFound": "Page non trouvée.",
-    "logout": "Log out",
+    "logout": "Se déconnecter",
     "faq": "FAQ",
     "userGuides": "Guide utilisateur",
     "help": "Demander de l'aide"
@@ -378,18 +378,18 @@
     "unmarkAsRecommended": "Ne plus marquer comme recommandé"
   },
   "documentUserTags": {
-    "tagListOthers": "Added by others",
-    "tagListYours": "Added by you",
-    "tagWarning": "Tags are public to project members",
-    "noTags": "No tags added yet."
+    "tagListOthers": "Ajouté par d'autres",
+    "tagListYours": "Ajouté par vous",
+    "tagWarning": "Les tags sont visibles pour tous les membres du projet",
+    "noTags": "Aucun tag n'a encore été ajouté."
   },
   "documentUserTagsAction": {
-    "placeholder": "Add tags"
+    "placeholder": "Ajouter des tags"
   },
   "documentMetadataActions": {
-    "copy": "Copy this metadata value",
-    "search": "Search this metadata value",
-    "pin": "Pin this metadata"
+    "copy": "Copier la valeur de cette métadonnée",
+    "search": "Rechercher dans la valeur de cette métadonnée",
+    "pin": "Épingler cette métadonnée"
   },
   "documentTranslatedContent": {
     "detected": "Langue détectée",
@@ -397,17 +397,17 @@
     "viewTranslated": "Voir le texte traduit"
   },
   "linkedDocumentSectionList": {
-    "search": "Search all",
-    "empty": "No documents found."
+    "search": "Rechercher tout",
+    "empty": "Aucun document trouvé."
   },
   "linkedDocumentCard": {
     "siblings": {
-      "title": "{n} documents in the same folder | {n} document in the same folder | {n} documents in the same folder",
-      "description": "Same extraction level as this document"
+      "title": "Aucun document dans le même dossier | {n} document dans le même dossier | {n} documents dans le même dossier",
+      "description": "Même niveau d'extraction que ce document"
     },
     "children": {
-      "title": "{n} children documents | {n} children document | {n} children documents",
-      "description": "One extraction level below this document"
+      "title": "Aucun document enfant | 1 document enfant | {n} documents enfants",
+      "description": "Un niveau d'extraction en dessous de ce document"
     }
   },
   "documentContent": {
@@ -415,12 +415,12 @@
   },
   "documentViewTabs": {
     "text": "Text",
-    "viewer": "View",
-    "metadata": "Metadata",
-    "entities": "Entities"
+    "viewer": "Consulter",
+    "metadata": "Métadonnées",
+    "entities": "Entités"
   },
   "documentViewTabsMetadata": {
-    "search": "Search in metadata"
+    "search": "Rechercher dans les métadonnées"
   },
   "filterTypeAll": {
     "label": "Tous"
@@ -442,9 +442,9 @@
     "notStarred": "Non favoris",
     "recommendedBy": "Recommandé par",
     "sections": {
-      "documentsInfo": "Documents info",
-      "userData": "User data",
-      "entities": "Entities"
+      "documentsInfo": "Caractéristiques",
+      "userData": "Utilisateurs",
+      "entities": "Entités"
     },
     "sortByDropdown": {
       "toggler": "Trier par",
@@ -690,13 +690,13 @@
     "notAvailable": "L'aperçu n'est pas disponible pour ce document.",
     "namedEntitiesNotFound": "Aucune entité nommée trouvée.",
     "namedEntitiesNotSearched": "Document non analysé. Pour trouver les entités nommées, {link}.",
-    "namedEntitiesNotSearchedLink": "start a new task",
+    "namedEntitiesNotSearchedLink": "démarrer une nouvelle tâche",
     "threadIndex": "ID du fil de discussion",
     "errorNotFound": "Votre fichier a été indexé dans Datashare mais le fichier n'est plus présent dans votre dossier Datashare sur votre ordinateur. La prévisualisation n'est donc pas disponible.",
     "fetching": "Chargement de l'aperçu.",
     "author": "Auteur·e",
     "extractionDate": "Date d'indexation",
-    "numberOfPages": "Number of pages",
+    "numberOfPages": "Nombre de pages",
     "parent": "Parent",
     "inMetadata": "dans les métadonnées",
     "inTags": "dans les tags",
@@ -737,11 +737,11 @@
     }
   },
   "entitySectionActions": {
-    "copy": "Copy",
+    "copy": "Copier",
     "download": "Télécharger"
   },
   "entitySectionMore": {
-    "label": "Show more {category}",
+    "label": "Afficher plus de \"{category}\"",
     "category": {
       "person": "people",
       "location": "locations",
