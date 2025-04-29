@@ -216,7 +216,6 @@
     "placeholder": "Type queries, use operators or type regex...",
     "buttonLabel": "Search",
     "searchIn": "Filter {plural}...",
-    "searchInProjects": "Filter projects...",
     "hideFilters": "Hide filters",
     "showFilters": "Show filters",
     "contextualizeFiltersLabel": "Contextualize filters",
