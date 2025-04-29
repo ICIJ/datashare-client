@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "target": "es6",
+    "paths": {
+      "@/*": ["./src/*"],
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    "storybook-static"
+  ]
+}

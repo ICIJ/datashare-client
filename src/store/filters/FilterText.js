@@ -1,42 +1,55 @@
 import compact from 'lodash/compact'
-import get from 'lodash/get'
 import includes from 'lodash/includes'
 import some from 'lodash/some'
 
 // Private properties keys
 const _VALUES = typeof Symbol === 'function' ? Symbol('_values') : '_values'
-const _ROOT_STATE = typeof Symbol === 'function' ? Symbol('_ROOT_state') : '_ROOT_state'
+const _STORE = typeof Symbol === 'function' ? Symbol('_store') : '_store'
 
 export default class FilterText {
   constructor({
     name,
     key,
     icon = null,
-    isSearchable = false,
+    hideAll = false,
+    hideContextualize = false,
+    hideExclude = false,
+    hideExpand = false,
+    hideSearch = false,
+    hideSort = false,
     alternativeSearch = () => {},
     order = null,
+    section = null,
     fromElasticSearch = true,
     preference = '_local',
-    forceExclude = false
+    forceExclude = false,
+    modes = null
   } = {}) {
     this.name = name
     this.key = key
     this.icon = icon
-    this.isSearchable = isSearchable
-    this.component = 'FilterText'
+    this.hideAll = hideAll
+    this.hideContextualize = hideContextualize
+    this.hideExclude = hideExclude
+    this.hideExpand = hideExpand
+    this.hideSearch = hideSearch
+    this.hideSort = hideSort
+    this.component = 'FilterType'
     this.alternativeSearch = alternativeSearch
     this.order = order
+    this.section = section
     this.fromElasticSearch = fromElasticSearch
     this.preference = preference
     this.forceExclude = forceExclude
+    this.modes = modes
   }
 
-  itemParam(item) {
-    return { name: this.name, value: item.key }
+  itemParam({ key }) {
+    return { name: this.name, value: key }
   }
 
-  itemLabel(item) {
-    return item.key || item.value
+  itemLabel({ key = null, value = null } = {}) {
+    return key || value
   }
 
   addChildIncludeFilter(body, param) {
@@ -77,9 +90,9 @@ export default class FilterText {
   addFilter(body) {
     if (this.hasValues()) {
       const filterType = this.isNamedEntityAggregation(body) ? 'Parent' : 'Child'
-      const exclude = this.reverse || this.forceExclude
+      const exclude = this.excluded || this.forceExclude
       const filterName = exclude ? 'Exclude' : 'Include'
-      const options = { name: this.name, values: this.values, reverse: exclude }
+      const options = { name: this.name, values: this.values, exclude }
       const method = `add${filterType}${filterName}Filter`
       return this[method] ? this[method](body, options) : null
     }
@@ -96,23 +109,20 @@ export default class FilterText {
   }
 
   applyTo(body) {
-    this.addFilter(body)
+    return this.addFilter(body)
   }
 
-  bindRootState(rootState) {
-    this[_ROOT_STATE] = this[_ROOT_STATE] || rootState
+  bindStore({ values, excludeFilters, contextualizeFilters, sortFilters }) {
+    this[_STORE] = { values, excludeFilters, contextualizeFilters, sortFilters }
+    return this
   }
 
-  get rootState() {
-    return this[_ROOT_STATE]
-  }
-
-  get state() {
-    return this?.rootState?.search
+  get store() {
+    return this[_STORE] ?? null
   }
 
   get values() {
-    return compact(this[_VALUES] || get(this, ['state', 'values', this.name], []))
+    return compact(this[_VALUES] || this.store.values[this.name] || [])
   }
 
   set values(values) {
@@ -124,19 +134,23 @@ export default class FilterText {
     return this
   }
 
-  get reverse() {
-    return get(this, ['state', 'reversedFilters'], []).indexOf(this.name) > -1
+  get excluded() {
+    return this.store?.excludeFilters.indexOf(this.name) > -1
   }
 
   get contextualized() {
-    return get(this, ['state', 'contextualizedFilters'], []).indexOf(this.name) > -1
+    return this.store?.contextualizeFilters.indexOf(this.name) > -1
+  }
+
+  get sort() {
+    return this.store?.sortFilters[this.name]
   }
 
   get sortBy() {
-    return get(this, ['state', 'sortedFilters', this.name, 'sortBy'], '_count')
+    return this.sort?.sortBy ?? '_count'
   }
 
-  get sortByOrder() {
-    return get(this, ['state', 'sortedFilters', this.name, 'sortByOrder'], 'desc')
+  get orderBy() {
+    return this.sort?.orderBy ?? 'desc'
   }
 }

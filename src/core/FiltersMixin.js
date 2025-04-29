@@ -2,6 +2,8 @@ import cloneDeep from 'lodash/cloneDeep'
 import findIndex from 'lodash/findIndex'
 import uniqueId from 'lodash/uniqueId'
 
+import { useSearchStore } from '@/store/modules'
+
 /**
   Mixin class extending the core to add helpers for filters.
   @mixin FiltersMixin
@@ -9,6 +11,14 @@ import uniqueId from 'lodash/uniqueId'
 */
 const FiltersMixin = (superclass) =>
   class extends superclass {
+    /**
+     * Get the search store
+     * @memberof FiltersMixin.prototype
+     * @type {Object}
+     */
+    get searchStore() {
+      return useSearchStore()
+    }
     /**
      * Register a filter
      * @memberof FiltersMixin.prototype
@@ -18,12 +28,12 @@ const FiltersMixin = (superclass) =>
      * @param {String} args.options.name - Name of the filter.
      * @param {String} args.options.key - Key of the filter. Typically ElasticSearch field name.
      * @param {String} [args.options.icon=null] - Icon of the filter.
-     * @param {Boolean} [args.options.isSearchable=false] - Set if this filter should be searchable or not.
+     * @param {Boolean} [args.options.hideSearch=false] - Set if this filter should be searchable or not.
      * @param {function} [args.options.alternativeSearch=()=>{})] - Set a function about how to transform query term before searching for it.
      * @param {Number} [args.options.order=null] - Order of the filter. Will be added as last filter by default.
      */
     registerFilter(...args) {
-      this.store.commit('search/addFilter', ...args)
+      this.searchStore.addFilter(...args)
     }
     /**
      * Unregister a filter
@@ -31,7 +41,7 @@ const FiltersMixin = (superclass) =>
      * @param {String} name - Name of the filter to unregister
      */
     unregisterFilter(name) {
-      this.store.commit('search/removeFilter', name)
+      this.searchStore.removeFilter(name)
     }
     /**
      * Register a filter only for a specific project
@@ -60,7 +70,7 @@ const FiltersMixin = (superclass) =>
      * @param {String} name - Name of the filter
      */
     unregisterFilterForProject(project, name) {
-      const filters = this.store.state.search.filters
+      const filters = this.searchStore.filters
       const position = findIndex(filters, ({ options }) => options.name === name)
       const { type, options } = filters[position]
       // Watch store mutations

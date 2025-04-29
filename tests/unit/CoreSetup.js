@@ -1,10 +1,6 @@
 import Murmur from '@icij/murmur-next'
 import VCalendar from 'v-calendar'
-import VueEllipseProgress from 'vue-ellipse-progress'
 import VueScrollTo from 'vue-scrollto'
-import VueShortkey from 'vue3-shortkey'
-import { createVueWait } from 'vue-wait'
-import { createStore } from 'vuex'
 import { createWebHashHistory, createRouter } from 'vue-router'
 
 import { Core } from '@/core/Core'
@@ -16,50 +12,29 @@ class CoreSetup extends Core {
       this.plugin,
       this.bootstrapVue,
       this.i18n,
-      this.murmur,
-      this.store,
-      this.vueShortkey,
+      [this.murmur, { useI18n: false, useBootstrap: false }],
+      this.pinia,
       this.vueScrollTo,
-      this.vueEllipseProgress,
       this.vCalendar,
-      this.wait,
       this.router
     ]
   }
   get murmur() {
     return Murmur
   }
-  get vueShortkey() {
-    return VueShortkey
-  }
   get vueScrollTo() {
     return VueScrollTo
-  }
-  get vueEllipseProgress() {
-    return VueEllipseProgress
   }
   get vCalendar() {
     return VCalendar
   }
-  get wait() {
-    return createVueWait({ useVuex: true })
-  }
-  useAll(store = null) {
-    this.useVuex(store)
+  useAll() {
+    this.usePinia()
     this.useI18n()
     this.useBootstrapVue()
     this.useCommons()
-    this.useWait()
     this.useCore()
     return this
-  }
-  useVuex(options = null) {
-    if (options) {
-      this._store = createStore(options)
-      this.use(this.store)
-      return this
-    }
-    return super.useVuex()
   }
   useRouter(routes = null) {
     if (routes) {

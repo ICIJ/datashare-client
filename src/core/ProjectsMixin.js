@@ -1,4 +1,6 @@
-import { castArray, find, findIndex, get, iteratee, noop, sortBy } from 'lodash'
+import { castArray, find, findIndex, iteratee, noop, sortBy } from 'lodash'
+
+import { useSearchStore } from '@/store/modules'
 
 /**
   Mixin class extending the core to add helpers for projects.
@@ -8,6 +10,14 @@ import { castArray, find, findIndex, get, iteratee, noop, sortBy } from 'lodash'
 const ProjectsMixin = (superclass) =>
   class extends superclass {
     /**
+     * Get the search store
+     * @memberof FiltersMixin.prototype
+     * @type {Object}
+     */
+    get searchStore() {
+      return useSearchStore()
+    }
+    /**
      * Call a function when a project is selected
      * @param {String} name - Name of the project
      * @param {Function} withFn - Function to call when the project is selected
@@ -16,30 +26,13 @@ const ProjectsMixin = (superclass) =>
      * @param {String} storePath - Path to the project in the store
      * @memberof ProjectsMixin.prototype
      */
-    toggleForProject(
-      {
-        project = null,
-        withFn = noop,
-        withoutFn = noop,
-        mutationType = 'search/indices',
-        storePath = 'search.indices'
-      } = {},
-      ...args
-    ) {
-      const toggle = (projects) => {
-        if (castArray(projects).includes(project)) {
-          return withFn(...args)
-        }
-        return withoutFn(...args)
-      }
+    toggleForProject({ project = null, withFn = noop, withoutFn = noop } = {}) {
+      const toggle = (values) => (castArray(values).includes(project) ? withFn() : withoutFn())
       // Toggle once
-      toggle(get(this.store.state, storePath))
-      // Watch store mutations
-      return this.store.subscribe(({ type, payload }) => {
-        if (type === mutationType) {
-          // The payload contains the name of the selected project
-          toggle(payload)
-        }
+      toggle(this.searchStore.index)
+      // Watch store actions
+      return this.searchStore.$onAction(({ name, args, after }) => {
+        return (name === 'setIndices' || name === 'setIndex') && after(() => toggle(args[0]))
       })
     }
     /**
@@ -80,7 +73,7 @@ const ProjectsMixin = (superclass) =>
      * @param {String} name Name of the project to retrieve
      * @returns {Promise:Integer} Index of the project deleted or -1 if project does not exist
      */
-    async deleteProject(name) {
+    async removeProject(name) {
       // Create a new projects list so we avoid mutating object
       const projects = [...this.projects]
       const index = findIndex(projects, { name })
@@ -96,7 +89,7 @@ const ProjectsMixin = (superclass) =>
       }
 
       // Ensure there is no conflict with existing search
-      this.deleteProjectFromSearch(name)
+      this.removeProjectFromSearch(name)
 
       return index
     }
@@ -104,14 +97,14 @@ const ProjectsMixin = (superclass) =>
      * Delete a project from the search store
      * @param {String} name Name of the project to delete fropm the store
      */
-    deleteProjectFromSearch(name) {
+    removeProjectFromSearch(name) {
       // Delete the project only if it's already
       // used by the search store. We use a safe accessor
       // to ensure this method won't throw an error when
       // the search store is not initialized yet.
-      if (get(this, 'store.state.search.indices', []).includes(name)) {
-        this.store.commit('search/index', this.defaultProject)
-        this.store.commit('search/reset')
+      if (this.searchStore.indices.includes(name)) {
+        this.searchStore.setIndex(this.defaultProject)
+        this.searchStore.reset()
       }
     }
     /**

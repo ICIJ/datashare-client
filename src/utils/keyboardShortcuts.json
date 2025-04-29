@@ -1,0 +1,90 @@
+[
+  {
+    "component": "DocumentSearchNav",
+    "action": "goToPreviousDocument",
+    "keys": {
+      "mac": ["meta", "arrowleft"],
+      "default": ["d", "arrowleft"]
+    },
+    "label": "shortkeys.goToPreviousDocument",
+    "link": "https://icij.gitbook.io/datashare/usage/use-keyboard-shortcuts#go-to-the-next-previous-document",
+    "route": "search"
+  },
+  {
+    "component": "DocumentSearchNav",
+    "action": "goToNextDocument",
+    "keys": {
+      "mac": ["meta","arrowright"],
+      "default": ["d", "arrowright"]
+    },
+    "label": "shortkeys.goToNextDocument",
+    "link": "https://icij.gitbook.io/datashare/usage/use-keyboard-shortcuts#go-to-the-next-previous-document",
+    "route": "search"
+  },
+  {
+    "component": "DocumentViewerModalNav",
+    "action": "back",
+    "keys": {
+        "mac": ["esc"],
+        "default": ["esc"]
+    },
+    "label": "shortkeys.backToSearchResults",
+    "link": "https://icij.gitbook.io/datashare/usage/use-keyboard-shortcuts#go-back-to-search-results",
+    "route": ["search", "document", "document-standalone"]
+  },
+  {
+    "component": "DocumentView",
+    "action": "goToPreviousTab",
+    "keys": {
+      "mac": ["t", "arrowleft"],
+      "default": ["t", "arrowleft"]
+    },
+    "label": "shortkeys.goToPreviousTab",
+    "link": "https://icij.gitbook.io/datashare/usage/use-keyboard-shortcuts#navigate-a-documents-tabs",
+    "route": ["search", "document", "document-standalone"]
+  },
+  {
+    "component": "DocumentView",
+    "action": "goToNextTab",
+    "keys": {
+      "mac": ["t", "arrowright"],
+      "default": ["t", "arrowright"]
+    },
+    "label": "shortkeys.goToNextTab",
+    "link": "https://icij.gitbook.io/datashare/usage/use-keyboard-shortcuts#navigate-a-documents-tabs",
+    "route": ["search", "document", "document-standalone"]
+  },
+  { 
+    "component": "DocumentLocalSearch",
+    "action": "findInDocument",
+    "keys": {
+      "mac": ["meta", "f"],
+      "default": ["ctrl", "f"]
+    },
+    "label": "shortkeys.activateSearchBar",
+    "link": "https://icij.gitbook.io/datashare/usage/use-keyboard-shortcuts#find-in-document",
+    "route": ["search", "document", "document-standalone"]
+  },
+  { 
+    "component": "DocumentLocalSearch",
+    "action": "findPreviousOccurrence",
+    "keys": {
+      "mac": ["shift", "enter"],
+      "default": ["shift", "enter"]
+    },
+    "label": "shortkeys.findPreviousOccurrence",
+    "link": "https://icij.gitbook.io/datashare/usage/use-keyboard-shortcuts#find-in-document",
+    "route": ["search", "document", "document-standalone"]
+  },
+  { 
+    "component": "DocumentLocalSearch",
+    "action": "findNextOccurrence",
+    "keys": {
+      "mac": ["enter"],
+      "default": ["enter"]
+    },
+    "label": "shortkeys.findNextOccurrence",
+    "link": "https://icij.gitbook.io/datashare/usage/use-keyboard-shortcuts#find-in-document",
+    "route": ["search", "document", "document-standalone"]
+  }
+]

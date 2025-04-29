@@ -1,6 +1,6 @@
 import WidgetEmpty from './WidgetEmpty'
 
-import Component from '@/components/widget/WidgetSearchBar'
+import Component from '@/components/Widget/WidgetSearchBar'
 
 /**
  * Widget to to display a search bar

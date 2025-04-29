@@ -1,4 +1,4 @@
-import { get, isNull, join, map, omitBy, replace, toLower, trim } from 'lodash'
+import { get, isNull, join, omitBy, replace, toLower, trim } from 'lodash'
 
 import settings from '@/utils/settings'
 
@@ -37,35 +37,41 @@ export class Api {
     const data = { options }
     return this.sendActionAsText(`/api/task/findNames/${pipeline}`, { method: Method.POST, data })
   }
-  stopPendingTasks() {
-    return this.sendAction('/api/task/stopAll', { method: Method.PUT })
+  stopPendingTasks({ name = null, ...filters } = {}) {
+    const params = { ...filters, name }
+    return this.sendAction('/api/task/stop', { method: Method.PUT, params })
   }
   stopTask(name) {
     return this.sendActionAsText(`/api/task/stop/${encodeURIComponent(name)}`, { method: Method.PUT })
   }
-  deleteTask(name) {
+  removeTask(name) {
     return this.sendAction(`/api/task/clean/${encodeURIComponent(name)}`, { method: Method.DELETE })
   }
-  deleteDoneTasks() {
-    return this.sendAction('/api/task/clean', { method: Method.POST })
+  removeDoneTasks({ name = null, ...filters } = {}) {
+    const params = { ...filters, name }
+    return this.sendAction('/api/task/clean', { method: Method.POST, params })
   }
-  getTasks(name) {
-    return this.sendAction('/api/task/all', { params: { name } })
+  getTasks({ name = null, from = 0, size = 10, order = 'asc', sort, ...filters } = {}) {
+    const params = { ...filters, name, from, size, order, sort }
+    return this.sendAction('/api/task/all', { params })
+  }
+  getTask(id) {
+    return this.sendAction(`/api/task/${id}`)
   }
   createIndex(index) {
     return this.sendActionAsText(`/api/index/${index}`, { method: Method.PUT })
   }
   createProject(data) {
-    return this.sendActionAsText(`/api/project/`, { method: Method.POST, data })
+    return this.sendAction(`/api/project/`, { method: Method.POST, data })
   }
   updateProject(data) {
     const { name } = data
     return this.sendActionAsText(`/api/project/${name}`, { method: Method.PUT, data })
   }
-  deleteProject(name) {
+  removeProject(name) {
     return this.sendActionAsText(`/api/project/${name}`, { method: Method.DELETE })
   }
-  deleteAll() {
+  removeProjects() {
     return this.sendActionAsText(`/api/project/`, { method: Method.DELETE })
   }
   getProject(project) {
@@ -82,7 +88,7 @@ export class Api {
     const responseType = 'text'
     return this.sendAction('/api/settings', { method: 'PATCH', data: { data: settings }, headers, responseType })
   }
-  deleteNamedEntitiesByMentionNorm(project, mentionNorm) {
+  removeNamedEntitiesByMentionNorm(project, mentionNorm) {
     return this.sendActionAsText(`/api/${project}/namedEntities/hide/${mentionNorm}`, { method: Method.PUT })
   }
   getSource(document, config = {}) {
@@ -132,24 +138,24 @@ export class Api {
     const params = { query, routing, targetLanguage }
     return this.sendAction(`/api/${project}/documents/searchContent/${documentId}`, { method: Method.GET, params })
   }
-  batchSearch(name, csvFile, description, project, phraseMatch, fuzziness, fileTypes, paths, published, queryTemplate) {
+  batchSearch(name, csvFile, description, project, phraseMatch, fuzziness, published, queryTemplate, uri) {
     const data = new FormData()
     data.append('name', name)
     data.append('csvFile', csvFile)
     data.append('description', description)
     data.append('phrase_matches', phraseMatch)
     data.append('fuzziness', fuzziness)
-    map(fileTypes, (fileType) => data.append('fileTypes', fileType.mime))
-    map(paths, (path) => data.append('paths', path))
     data.append('published', published)
     data.append('query_template', queryTemplate)
+    data.append('uri', uri)
     return this.sendActionAsText(`/api/task/batchSearch/${project}`, { method: Method.POST, data })
   }
   getBatchSearch(batchId) {
     return this.sendAction(`/api/batch/search/${batchId}`)
   }
-  getBatchSearchQueries(batchId) {
-    return this.sendAction(`/api/batch/search/${batchId}/queries`)
+  getBatchSearchQueries(batchId, from = 0, size = 100, search = null, sort = 'query_number', order = 'asc') {
+    const params = { from, size, search, sort, order }
+    return this.sendAction(`/api/batch/search/${batchId}/queries`, { method: Method.GET, params })
   }
   getBatchSearches(
     from = 0,
@@ -177,14 +183,15 @@ export class Api {
       batchDate,
       publishState
     }
+
     for (const q in queryData) {
       if (queryData[q]) {
         searchParams.append(q, queryData[q])
       }
     }
+
     return this.sendAction('/api/batch/search?' + searchParams, { method: Method.GET })
   }
-
   getBatchSearchResults(
     batchId,
     from = 0,
@@ -198,18 +205,19 @@ export class Api {
     const data = { from, size, queries, sort, order, contentTypes, queriesExcluded }
     return this.sendAction(`/api/batch/search/result/${batchId}`, { method: Method.POST, data })
   }
-  copyBatchSearch(batchId, name, description) {
+  relaunchBatchSearch(batchId, name, description) {
     const data = { name, description }
     return this.sendActionAsText(`/api/task/batchSearch/copy/${batchId}`, { method: Method.POST, data })
   }
-  deleteBatchSearch(batchId) {
+  removeBatchSearch(batchId) {
     return this.sendActionAsText(`/api/batch/search/${batchId}`, { method: Method.DELETE })
   }
-  deleteBatchSearches() {
+  removeBatchSearches() {
     return this.sendActionAsText('/api/batch/search', { method: Method.DELETE })
   }
   updateBatchSearch(batchId, published) {
-    return this.sendAction(`/api/batch/search/${batchId}`, { method: 'PATCH', data: { data: { published } } })
+    const data = { published }
+    return this.sendAction(`/api/batch/search/${batchId}`, { method: 'PATCH', data: { data } })
   }
   static getFullUrl(path) {
     const base = import.meta.env.VITE_DS_HOST || `${window.location.protocol}//${window.location.host}`
@@ -225,26 +233,26 @@ export class Api {
   getUser() {
     return this.sendAction('/api/users/me')
   }
-  getUserHistory(type, from, size, sort, desc, projects) {
+  getHistoryEvents(type, from, size, sort, desc, projects) {
     sort = sort ?? 'modification_date'
     desc = desc ?? true
     const params = { type, from, size, sort, desc, projects }
     return this.sendAction('/api/users/me/history', { method: Method.GET, params })
   }
-  addUserHistoryEvent(projectIds, type, name, uri) {
+  addHistoryEvent(projectIds, type, name, uri) {
     const data = { projectIds, type, name, uri }
     return this.sendActionAsText('/api/users/me/history', { method: Method.PUT, data })
   }
-  renameSavedSearch(eventId, newName) {
+  renameHistoryEvent(eventId, name, type = 'SEARCH') {
     return this.sendAction('/api/users/me/history', {
       method: Method.PUT,
-      data: { eventId, name: newName, type: 'SEARCH' }
+      data: { eventId, name, type }
     })
   }
-  deleteUserHistory(type) {
+  removeHistoryEvents(type) {
     return this.sendAction('/api/users/me/history', { method: Method.DELETE, params: { type } })
   }
-  deleteUserHistoryEvent(id) {
+  removeHistoryEvent(id) {
     return this.sendAction('/api/users/me/history/event', { method: Method.DELETE, params: { id } })
   }
   setMarkAsRecommended(project, data) {
@@ -276,7 +284,7 @@ export class Api {
   createApiKey(userId) {
     return this.sendAction(`/api/key/${userId}`, { method: Method.PUT })
   }
-  deleteApiKey(userId) {
+  removeApiKey(userId) {
     return this.sendActionAsText(`/api/key/${userId}`, { method: Method.DELETE })
   }
   getPlugins(query = '') {
@@ -288,7 +296,7 @@ export class Api {
   installPluginFromUrl(pluginUrl) {
     return this.sendAction(`/api/plugins/install?url=${pluginUrl}`, { method: Method.PUT })
   }
-  uninstallPlugin(pluginId) {
+  uninstallPluginFromId(pluginId) {
     return this.sendAction(`/api/plugins/uninstall?id=${pluginId}`, { method: Method.DELETE })
   }
   getExtensions(query = '') {
@@ -300,7 +308,7 @@ export class Api {
   installExtensionFromUrl(extensionUrl) {
     return this.sendAction(`/api/extensions/install?url=${extensionUrl}`, { method: Method.PUT })
   }
-  uninstallExtension(extensionId) {
+  uninstallExtensionFromId(extensionId) {
     return this.sendAction(`/api/extensions/uninstall?id=${extensionId}`, { method: Method.DELETE })
   }
   ocrLanguages() {

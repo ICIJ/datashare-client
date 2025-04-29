@@ -1,30 +1,38 @@
+import { setActivePinia, createPinia } from 'pinia'
+
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
-import { storeBuilder } from '@/store/storeBuilder'
+import { useStarredStore, useSearchStore } from '@/store/modules'
+import { apiInstance as api } from '@/api/apiInstance'
 
-describe('StarredStore', () => {
-  const { index, es } = esConnectionHelper.build()
-  let store, filter, api
-  beforeAll(() => {
-    api = {
+vi.mock('@/api/apiInstance', () => {
+  return {
+    apiInstance: {
       getStarredDocuments: vi.fn(),
       starDocuments: vi.fn(),
       unstarDocuments: vi.fn()
     }
-    store = storeBuilder(api)
-    filter = store.getters['search/getFilter']({ name: 'starred' })
-  })
+  }
+})
+
+describe('StarredStore', () => {
+  const { index, es } = esConnectionHelper.build()
+  let starredStore, searchStore, filter
+
   beforeEach(() => {
-    store.commit('search/index', index)
-    store.commit('starred/documents', [])
+    setActivePinia(createPinia())
+    starredStore = useStarredStore()
+    searchStore = useSearchStore()
+    // Get the starred filter from the search store to test the interaction between the two stores
+    filter = searchStore.getFilter({ name: 'starred' })
   })
 
-  it('should define a store module', () => {
-    expect(store.state.starred).toBeDefined()
+  afterAll(() => {
+    vi.resetAllMocks()
   })
 
   it('should not reset the starredDocuments from the filter', async () => {
-    store.commit('starred/documents', [
+    starredStore.setDocuments([
       { index, id: 'document_01' },
       { index, id: 'document_02' }
     ])
@@ -35,23 +43,23 @@ describe('StarredStore', () => {
   })
 
   it('should not reset the starredDocuments', async () => {
-    store.commit('starred/documents', [
+    starredStore.setDocuments([
       { index, id: 'document_01' },
       { index, id: 'document_02' }
     ])
-    expect(store.state.starred.documents).toEqual([
+    expect(starredStore.documents).toEqual([
       { index, id: 'document_01' },
       { index, id: 'document_02' }
     ])
   })
 
   it('should not change the starredDocuments on updateFromRouteQuery', async () => {
-    store.commit('starred/documents', [
+    starredStore.setDocuments([
       { index, id: 'document_01' },
       { index, id: 'document_02' }
     ])
-    store.dispatch('search/updateFromRouteQuery', {})
-    expect(store.state.starred.documents).toEqual([
+    searchStore.updateFromRouteQuery({})
+    expect(starredStore.documents).toEqual([
       { index, id: 'document_01' },
       { index, id: 'document_02' }
     ])
@@ -59,39 +67,37 @@ describe('StarredStore', () => {
 
   it('should return the list of the starredDocuments', async () => {
     api.getStarredDocuments.mockResolvedValue([12])
-    await store.dispatch('starred/fetchIndicesStarredDocuments')
-    expect(store.state.starred.documents).toEqual([{ index, id: 12 }])
+    await starredStore.fetchIndicesStarredDocuments(index)
+    expect(starredStore.documents).toEqual([{ index, id: 12 }])
     expect(filter.starredDocuments).toEqual([{ index, id: 12 }])
     api.getStarredDocuments.mockClear()
   })
 
   it('should remove a documentId from the list of the starredDocuments', () => {
-    store.commit('starred/documents', [
+    starredStore.setDocuments([
       { index, id: 12 },
       { index, id: 42 }
     ])
-    store.commit('starred/removeDocuments', [{ index, id: 42 }])
-
-    expect(store.state.starred.documents).toEqual([{ index, id: 12 }])
+    starredStore.removeDocuments([{ index, id: 42 }])
+    expect(starredStore.documents).toEqual([{ index, id: 12 }])
   })
 
   it('should push a documentId from the list of the starredDocuments', () => {
-    store.commit('starred/documents', [{ index, id: 12 }])
-    store.commit('starred/pushDocuments', [{ index, id: 42 }])
-
-    expect(store.state.starred.documents).toEqual([
+    starredStore.setDocuments([{ index, id: 12 }])
+    starredStore.pushDocuments([{ index, id: 42 }])
+    expect(starredStore.documents).toEqual([
       { index, id: 12 },
       { index, id: 42 }
     ])
   })
 
   it('should push a documentId from the list of the starredDocuments only if it does not exist', () => {
-    store.commit('starred/pushDocuments', [{ index, id: 12 }])
-    store.commit('starred/pushDocuments', [{ index, id: 42 }])
-    store.commit('starred/pushDocuments', [{ index, id: 42 }])
-    store.commit('starred/pushDocuments', [{ index, id: 42 }])
+    starredStore.pushDocuments([{ index, id: 12 }])
+    starredStore.pushDocuments([{ index, id: 42 }])
+    starredStore.pushDocuments([{ index, id: 42 }])
+    starredStore.pushDocuments([{ index, id: 42 }])
 
-    expect(store.state.starred.documents).toEqual([
+    expect(starredStore.documents).toEqual([
       { index, id: 12 },
       { index, id: 42 }
     ])
@@ -99,24 +105,24 @@ describe('StarredStore', () => {
 
   it('should toggle a starred documentId, push it if it is not starred', async () => {
     const document = { index, id: 45 }
-    store.commit('starred/documents', [])
-    await store.dispatch('starred/toggleStarDocument', document)
+    starredStore.reset()
+    await starredStore.toggleStarDocument(document)
 
-    expect(store.state.starred.documents).toEqual([document])
+    expect(starredStore.documents).toEqual([document])
     expect(filter.starredDocuments).toEqual([document])
   })
 
   it('should toggle a starred documentId, remove it if it is starred', async () => {
     const document = { index, id: 48 }
-    store.commit('starred/documents', [document])
-    await store.dispatch('starred/toggleStarDocument', document)
+    starredStore.setDocuments([document])
+    await starredStore.toggleStarDocument(document)
 
-    expect(store.state.starred.documents).toEqual([])
+    expect(starredStore.documents).toEqual([])
     expect(filter.starredDocuments).toEqual([])
   })
 
   it('should set the starredDocuments property of the filter', () => {
-    store.commit('starred/documents', [
+    starredStore.setDocuments([
       { index, id: 'doc_01' },
       { index, id: 'doc_02' }
     ])
@@ -131,12 +137,11 @@ describe('StarredStore', () => {
     await letData(es).have(new IndexedDocument('doc_02', index).withNer('ner_02')).commit()
     await letData(es).have(new IndexedDocument('doc_03', index).withNer('test')).commit()
 
-    await store.dispatch('starred/starDocuments', [
+    await starredStore.starDocuments([
       { index, id: 'doc_01' },
       { index, id: 'doc_03' }
     ])
-
-    expect(store.state.starred.documents).toEqual([
+    expect(starredStore.documents).toEqual([
       { index, id: 'doc_01' },
       { index, id: 'doc_03' }
     ])
@@ -147,13 +152,12 @@ describe('StarredStore', () => {
     await letData(es).have(new IndexedDocument('doc_02', index).withNer('ner_02')).commit()
     await letData(es).have(new IndexedDocument('doc_03', index).withNer('test')).commit()
 
-    await store.dispatch('starred/starDocuments', [
+    await starredStore.starDocuments([
       { index, id: 'doc_01' },
       { index, id: 'doc_03' }
     ])
+    await starredStore.unstarDocuments([{ index, id: 'doc_01' }])
 
-    await store.dispatch('starred/unstarDocuments', [{ index, id: 'doc_01' }])
-
-    expect(store.state.starred.documents).toEqual([{ index, id: 'doc_03' }])
+    expect(starredStore.documents).toEqual([{ index, id: 'doc_03' }])
   })
 })

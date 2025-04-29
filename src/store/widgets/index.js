@@ -1,68 +1,46 @@
-import types from '@/utils/types'
+import types from '@/utils/contentTypes.json'
+import { MODE_NAME } from '@/mode'
 
 export { default as WidgetDiskUsage } from './WidgetDiskUsage'
+export { default as WidgetDetails } from './WidgetDetails'
+export { default as WidgetDocuments } from './WidgetDocuments'
 export { default as WidgetDocumentsByCreationDateByPath } from './WidgetDocumentsByCreationDateByPath'
-export { default as WidgetDuplicates } from './WidgetDuplicates'
 export { default as WidgetEmpty } from './WidgetEmpty'
 export { default as WidgetEntities } from './WidgetEntities'
-export { default as WidgetFileBarometer } from './WidgetFileBarometer'
-export { default as WidgetListGroup } from './WidgetListGroup'
-export { default as WidgetNames } from './WidgetNames'
 export { default as WidgetProject } from './WidgetProject'
 export { default as WidgetSearchBar } from './WidgetSearchBar'
 export { default as WidgetText } from './WidgetText'
-export { default as WidgetTreeMap } from './WidgetTreeMap'
 export { default as WidgetFieldFacets } from './WidgetFieldFacets'
 export { default as WidgetRecommendedBy } from './WidgetRecommendedBy'
 export { default as WidgetNested } from './WidgetNested'
 
 const widgets = [
   {
-    name: 'search-bar',
-    order: 5,
-    card: true,
-    cols: 12,
-    type: 'WidgetSearchBar'
-  },
-  {
-    name: 'project-and-files',
-    order: 15,
+    name: 'docuents-and-disk-usage',
+    order: 20,
     card: false,
-    cols: 6,
+    cols: 5,
     type: 'WidgetNested',
     widgets: [
       {
-        name: 'project',
-        card: true,
-        cols: 12,
-        type: 'WidgetProject'
-      },
-      {
         name: 'file-barometer',
-        card: true,
-        cols: 6,
-        type: 'WidgetFileBarometer'
+        card: false,
+        cols: 8,
+        type: 'WidgetDocuments'
       },
       {
         name: 'disk-usage',
-        card: true,
-        cols: 6,
+        card: false,
+        cols: 4,
         type: 'WidgetDiskUsage'
       }
     ]
   },
   {
-    name: 'recommended-by',
-    order: 25,
-    card: true,
-    cols: 6,
-    type: 'WidgetRecommendedBy'
-  },
-  {
     name: 'entities',
-    order: 35,
-    card: true,
-    cols: 12,
+    order: 30,
+    card: false,
+    cols: 7,
     type: 'WidgetEntities'
   },
   {
@@ -75,8 +53,8 @@ const widgets = [
   },
   {
     name: 'languages',
-    order: 60,
-    icon: 'language',
+    order: 40,
+    icon: 'globe-hemisphere-west',
     card: true,
     cols: 4,
     field: 'language',
@@ -86,7 +64,7 @@ const widgets = [
   },
   {
     name: 'content-types',
-    order: 60,
+    order: 50,
     icon: 'file',
     card: true,
     cols: 4,
@@ -98,12 +76,27 @@ const widgets = [
   {
     name: 'authors',
     order: 60,
-    icon: 'file-signature',
+    icon: 'user-circle',
     card: true,
     cols: 4,
     field: 'metadata.tika_metadata_dc_creator.keyword',
     routeQueryField: null,
     type: 'WidgetFieldFacets'
+  },
+  {
+    name: 'recommended-by',
+    order: 70,
+    card: true,
+    cols: 12,
+    type: 'WidgetRecommendedBy',
+    modes: [MODE_NAME.SERVER]
+  },
+  {
+    name: 'details',
+    section: 'details',
+    card: true,
+    cols: 12,
+    type: 'WidgetDetails'
   }
 ]
 

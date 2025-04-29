@@ -1,72 +1,67 @@
-import toLower from 'lodash/toLower'
+import { setActivePinia, createPinia } from 'pinia'
+import uniqueId from 'lodash/uniqueId'
 
-import store from '@/store'
-import { initialState } from '@/store/modules/insights'
-import { WidgetEmpty, WidgetText } from '@/store/widgets'
+import { useInsightsStore } from '@/store/modules'
+import widgetsDefs, { WidgetEmpty, WidgetText } from '@/store/widgets'
 
 describe('InsightsStore', () => {
-  const project = toLower('InsightsStore')
+  let store
+  const project = uniqueId('insights-store-')
 
-  beforeAll(() => store.commit('insights/project', project))
-
-  it('should define a store module', () => {
-    expect(store.state.insights).toBeDefined()
+  beforeEach(() => {
+    setActivePinia(createPinia())
+    store = useInsightsStore()
+    store.setProject(project)
   })
 
   it('should return a list of widget', () => {
-    expect(store.state.insights.widgets).toHaveLength(initialState().widgets.length)
+    expect(store.widgets).toHaveLength(widgetsDefs.length)
   })
 
   it('should have a first widget with `card` and `cols` attributes', () => {
-    expect(store.state.insights.widgets[0]).toHaveProperty('card')
-    expect(store.state.insights.widgets[0]).toHaveProperty('cols')
+    expect(store.widgets[0]).toHaveProperty('card')
+    expect(store.widgets[0]).toHaveProperty('cols')
   })
 
   it('should clear the list of widgets', () => {
-    expect(store.state.insights.widgets.length).toBeGreaterThan(0)
-    store.commit('insights/clearWidgets')
-    expect(store.state.insights.widgets).toHaveLength(0)
+    expect(store.widgets.length).toBeGreaterThan(0)
+    store.clearWidgets()
+    expect(store.widgets).toHaveLength(0)
   })
 
   it('should restore the state, including the list of widgets', () => {
-    store.commit('insights/clearWidgets')
-    expect(store.state.insights.widgets).toHaveLength(0)
-    store.commit('insights/reset')
-    expect(store.state.insights.widgets.length).toBeGreaterThan(0)
+    store.clearWidgets()
+    expect(store.widgets).toHaveLength(0)
+    store.reset()
+    expect(store.widgets.length).toBeGreaterThan(0)
   })
 
   it('should register a new widget', () => {
-    const initialLength = store.state.insights.widgets.length
-    store.commit('insights/addWidget', { name: 'test-widget', type: 'WidgetText' })
-    expect(store.state.insights.widgets).toHaveLength(initialLength + 1)
-    expect(store.state.insights.widgets[initialLength]).toHaveProperty('type')
+    const initialLength = store.widgets.length
+    store.addWidget({ name: 'test-widget', type: 'WidgetText' })
+    expect(store.widgets).toHaveLength(initialLength + 1)
+    expect(store.widgets[initialLength]).toHaveProperty('type')
   })
 
   it('should return a list of instantiated widgets', () => {
-    expect(store.getters['insights/instantiatedWidgets']).toBeInstanceOf(Array)
-    for (const widget of store.getters['insights/instantiatedWidgets']) {
+    expect(store.instantiatedWidgets).toBeInstanceOf(Array)
+    for (const widget of store.instantiatedWidgets) {
       expect(widget).toBeInstanceOf(WidgetEmpty)
     }
   })
 
   it('should register a new widget with a default type', () => {
-    store.commit('insights/addWidget', { name: 'test-widget' })
-    expect(store.getters['insights/instantiatedWidgets'].pop()).toBeInstanceOf(WidgetEmpty)
+    store.addWidget({ name: 'test-widget' })
+    expect(store.instantiatedWidgets.pop()).toBeInstanceOf(WidgetEmpty)
   })
 
   it('should instantiate a widget of type WidgetText', () => {
     const widget = { name: 'test-text-widget-instance', type: 'WidgetText' }
-    expect(store.getters['insights/instantiateWidget'](widget)).toBeInstanceOf(WidgetText)
+    expect(store.instantiateWidget(widget)).toBeInstanceOf(WidgetText)
   })
 
   it('should register a new widget of type WidgetText', () => {
-    store.commit('insights/addWidget', { name: 'test-text-widget-register', type: 'WidgetText', order: 1000 })
-    expect(store.getters['insights/instantiatedWidgets'].pop()).toBeInstanceOf(WidgetText)
-  })
-
-  it('should create an empty project by default', () => {
-    store.commit('insights/reset')
-    expect(store.state.insights.project).toBe('')
-    store.commit('insights/project', project)
+    store.addWidget({ name: 'test-text-widget-register', type: 'WidgetText', order: 1000 })
+    expect(store.instantiatedWidgets.pop()).toBeInstanceOf(WidgetText)
   })
 })

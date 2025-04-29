@@ -1,219 +1,155 @@
 import {
   castArray,
-  concat,
   compact,
-  cloneDeep,
-  each,
   endsWith,
-  flatten,
-  filter as filterCollection,
   find,
-  findIndex,
   get,
   has,
-  includes,
   isString,
-  join,
-  keys,
-  map,
-  omit,
-  orderBy,
-  range,
+  method,
+  orderBy as orderArray,
+  property,
   random,
-  reduce,
+  range,
   toString,
   uniq
 } from 'lodash'
 import lucene from 'lucene'
+import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 
 import EsDocList from '@/api/resources/EsDocList'
-import filters from '@/store/filters'
-import * as filterTypes from '@/store/filters'
-import { isNarrowScreen } from '@/utils/screen'
+import filterDefs, * as filterTypes from '@/store/filters'
+import { useAppStore, useSearchBreadcrumbStore } from '@/store/modules'
+import { apiInstance as api } from '@/api/apiInstance'
+import { defineSuffixedStore } from '@/store/defineSuffixedStore'
 import settings from '@/utils/settings'
 
-export const TAB_NAME = {
-  EXTRACTED_TEXT: 'extracted-text',
-  PREVIEW: 'preview',
-  DETAILS: 'details',
-  NAMED_ENTITIES: 'named-entities'
-}
+export const useSearchStore = defineSuffixedStore('search', () => {
+  const error = ref(null)
+  const field = ref(settings.defaultSearchField)
+  const filters = ref([...filterDefs])
+  const from = ref(0)
+  const indices = ref([])
+  const isReady = ref(true)
+  const q = ref('')
+  const response = ref(EsDocList.none())
+  const excludeFilters = ref([])
+  const contextualizeFilters = ref([])
+  const sortFilters = ref({})
+  const values = ref({})
 
-export const RESET_KEYS = [
-  'error',
-  'field',
-  'from',
-  'index',
-  'indices',
-  'isReady',
-  'layout',
-  'query',
-  'response',
-  'showFilters',
-  'reversedFilters',
-  'sortedFilters',
-  'contextualizedFilters',
-  'size',
-  'sort',
-  'tab',
-  'values'
-]
+  const appStore = useAppStore()
+  const router = useRouter()
+  const searchBreadcrumbStore = useSearchBreadcrumbStore()
 
-export function initialState() {
-  return cloneDeep({
-    error: null,
-    field: settings.defaultSearchField,
-    filters,
-    from: 0,
-    index: '',
-    indices: [],
-    isReady: true,
-    // Different default layout for narrow screen
-    layout: isNarrowScreen() ? 'table' : 'list',
-    query: '',
-    response: EsDocList.none(),
-    reversedFilters: [],
-    contextualizedFilters: [],
-    sortedFilters: {},
-    showFilters: true,
-    size: 25,
-    sort: settings.defaultSearchSort,
-    values: {},
-    tab: TAB_NAME.EXTRACTED_TEXT
+  const index = computed({
+    get: () => indices.value[0],
+    set: (value) => {
+      indices.value = [value]
+    }
   })
-}
 
-export const state = initialState()
+  const fields = computed(() => {
+    return find(settings.searchFields, { key: field.value }).fields
+  })
 
-export const getters = {
-  instantiateFilter(state, getters, rootState) {
-    return ({ type = 'FilterText', options } = {}) => {
-      const Type = filterTypes[type]
-      const filter = new Type(options)
-      // Bind current state to be able to retrieve its values
-      filter.bindRootState(rootState)
-      // Return the instance
-      return filter
+  const instantiatedFilters = computed(() => {
+    return orderArray(filters.value.map(instantiateFilter), 'order', 'asc')
+  })
+
+  const activeFilters = computed(() => {
+    return instantiatedFilters.value.filter(method('hasValues'))
+  })
+
+  const filterValuesAsRouteQuery = computed(() => {
+    return Object.keys(values.value).reduce((memo, name) => {
+      // We need to look for the filter's definition in order to us its `id`
+      // as key for the URL params. This was we track configured filter instead
+      // of arbitrary values provided by the user. This allow to retrieve special
+      // behaviors depending on the filter definition.
+      const filter = find(instantiatedFilters.value, { name })
+      // We don't add filterValue that match with any existing filters
+      // defined in the `aggregation` store.
+      if (filter && filter.values.length > 0) {
+        const key = filter.excluded ? `f[-${filter.name}]` : `f[${filter.name}]`
+        memo[key] = compact(filter.values)
+      }
+      return memo
+    }, {})
+  })
+
+  const toBaseRouteQuery = computed(() => {
+    return {
+      q: q.value,
+      indices: indices.value.join(','),
+      field: field.value,
+      ...filterValuesAsRouteQuery.value
     }
-  },
-  instantiatedFilters(state, getters) {
-    return orderBy(
-      state.filters.map((filter) => getters.instantiateFilter(filter)),
-      'order',
-      'asc'
-    )
-  },
-  getFilter(state, getters) {
-    return (predicate) => find(getters.instantiatedFilters, predicate)
-  },
-  getFields(state) {
-    return () => find(settings.searchFields, { key: state.field }).fields
-  },
-  hasFilterValue(state, getters) {
-    return (item) =>
-      !!find(getters.instantiatedFilters, ({ name, values }) => {
-        return name === item.name && values.indexOf(item.value) > -1
-      })
-  },
-  hasFilterValues(state, getters) {
-    return (name) => !!find(getters.instantiatedFilters, (filter) => filter.name === name && filter.values.length > 0)
-  },
-  isFilterContextualized(state, getters) {
-    return (name) => {
-      return !!find(getters.instantiatedFilters, (filter) => {
-        return filter.name === name && filter.contextualized
-      })
+  })
+
+  const toRouteQuery = computed(() => {
+    return {
+      from: `${from.value}`,
+      perPage: `${perPage.value}`,
+      sort: sortBy.value,
+      order: orderBy.value,
+      ...toBaseRouteQuery.value
     }
-  },
-  isFilterExcluded(state, getters) {
-    return (name) => {
-      return !!find(getters.instantiatedFilters, (filter) => {
-        return filter.name === name && filter.reverse
-      })
+  })
+
+  const toRouteQueryWithStamp = computed(() => {
+    // A random string of 6 chars
+    const seed = range(6).map(() => random(97, 122))
+    const stamp = String.fromCharCode.apply(null, seed)
+    return { ...toRouteQuery.value, stamp }
+  })
+
+  const toSearchParams = computed(() => {
+    return {
+      index: indices.value.join(','),
+      query: q.value,
+      filters: instantiatedFilters.value,
+      from: from.value,
+      perPage: perPage.value,
+      sort: sort.value,
+      fields: fields.value
     }
-  },
-  filterSorted(state, getters) {
-    return (name) => {
-      return getters.getFilter({ name })
-    }
-  },
-  filterSortedBy(state, getters) {
-    return (name) => {
-      return getters.filterSorted(name).sortBy
-    }
-  },
-  filterSortedByOrder(state, getters) {
-    return (name) => {
-      return getters.filterSorted(name).sortByOrder
-    }
-  },
-  activeFilters(state, getters) {
-    return filterCollection(getters.instantiatedFilters, (f) => f.hasValues())
-  },
-  filterValuesAsRouteQuery(state, getters) {
-    return () => {
-      return reduce(
-        keys(state.values),
-        (memo, name) => {
-          // We need to look for the filter's definition in order to us its `id`
-          // as key for the URL params. This was we track configured filter instead
-          // of arbitrary values provided by the user. This allow to retrieve special
-          // behaviors depending on the filter definition.
-          const filter = find(getters.instantiatedFilters, { name })
-          // We don't add filterValue that match with any existing filters
-          // defined in the `aggregation` store.
-          if (filter && filter.values.length > 0) {
-            const key = filter.reverse ? `f[-${filter.name}]` : `f[${filter.name}]`
-            memo[key] = compact(filter.values)
-          }
-          return memo
-        },
-        {}
-      )
-    }
-  },
-  toRouteQuery(state, getters) {
-    return () => ({
-      q: state.query,
-      from: `${state.from}`,
-      size: `${state.size}`,
-      sort: state.sort,
-      indices: state.indices.join(','),
-      field: state.field,
-      tab: state.tab,
-      ...getters.filterValuesAsRouteQuery()
-    })
-  },
-  toRouteQueryWithStamp(state, getters) {
-    return () => ({
-      ...getters.toRouteQuery(),
-      // A random string of 6 chars
-      stamp: String.fromCharCode.apply(
-        null,
-        range(6).map(() => random(97, 122))
-      )
-    })
-  },
-  retrieveQueryTerms(state) {
-    let terms = []
+  })
+
+  const stringifyBaseRouteQuery = computed(() => {
+    const name = 'search'
+    const query = toBaseRouteQuery.value
+    const { href = null } = router?.resolve({ name, query }) ?? {}
+    return href
+  })
+
+  const retrieveQueryTerms = computed(() => {
+    const terms = []
+
     function getTerm(query, path, start, operator, isFuzzyNumber = false) {
-      const term = get(query, join([path, 'term'], '.'), '')
-      const field = get(query, join([path, 'field'], '.'), '')
-      const prefix = get(query, join([path, 'prefix'], '.'), '')
-      const regex = get(query, join([path, 'regex'], '.'), false)
-      const negation = ['-', '!'].includes(prefix) || start === 'NOT' || endsWith(operator, 'NOT')
-      if (term !== '*' && term !== '' && !includes(map(terms, 'label'), term) && !isFuzzyNumber) {
-        terms = concat(terms, {
-          field: field === '<implicit>' ? '' : field,
-          label: term.replace('\\', ''),
-          negation,
-          regex
-        })
+      const term = get(query, `${path}.term`, '')
+      const labels = terms.map(property('label'))
+      const isWildcard = term === '*'
+      const isEmpty = term === ''
+
+      if (!isWildcard && !isEmpty && !isFuzzyNumber && !labels.includes(term)) {
+        const label = term.replace('\\', '')
+        const prefix = get(query, `${path}.prefix`, '')
+        const hasNegativePrefix = ['-', '!'].includes(prefix)
+        const negation = hasNegativePrefix || start === 'NOT' || endsWith(operator, 'NOT')
+        const regex = get(query, `${path}.regex`, false)
+        const field = get(query, `${path}.field`, '')
+        const isFieldImplicit = field === '<implicit>'
+
+        terms.push({ field: isFieldImplicit ? '' : field, label, negation, regex })
       }
-      if (term === '' && has(query, join([path, 'left'], '.'))) {
-        retTerms(get(query, 'left'))
+
+      if (term === '' && has(query, `${path}.left`)) {
+        retTerms(query.left)
       }
     }
+
     function retTerms(query, operator = null, isLeftFuzzyNumber = false) {
       getTerm(query, 'left', get(query, 'start', null), operator, isLeftFuzzyNumber)
       const isRightFuzzyNumber = get(query, 'left.similarity', null) !== null
@@ -223,342 +159,471 @@ export const getters = {
         retTerms(get(query, 'right'), get(query, 'operator', null), isRightFuzzyNumber)
       }
     }
+
     try {
-      retTerms(lucene.parse(state.query.replace('\\@', '@')))
+      retTerms(lucene.parse(q.value.replace('\\@', '@')))
       return terms
     } catch (_) {
       return []
     }
-  },
-  retrieveContentQueryTerms(state, getters) {
-    const fields = ['', 'content']
-    return filterCollection(getters.retrieveQueryTerms, (item) => fields.includes(item.field))
-  },
-  sortBy(state) {
-    return find(settings.searchSortFields, { name: state.sort })
-  }
-}
+  })
 
-export const mutations = {
-  reset(state, excludedKeys = ['index', 'indices', 'showFilters', 'layout', 'size', 'sort']) {
-    const s = initialState()
-    RESET_KEYS.forEach((key) => {
-      if (excludedKeys.indexOf(key) === -1) {
-        state[key] = s[key]
+  const retrieveContentQueryTerms = computed(() => {
+    const fields = ['', 'content']
+    return retrieveQueryTerms.value.filter((item) => fields.includes(item.field))
+  })
+
+  const page = computed(() => {
+    return Math.floor(from.value / perPage.value) + 1
+  })
+
+  const total = computed(() => {
+    return response.value?.total ?? 0
+  })
+
+  const perPage = computed(() => {
+    return parseInt(appStore.getSettings('search', 'perPage'))
+  })
+
+  const sort = computed(() => {
+    const [sort, order] = appStore.getSettings('search', 'orderBy') ?? ['_score', 'desc']
+    // Find optional extra params
+    const extraParams = settings.searchSortFieldParams[sort] ?? null
+    // We add a secondary path filter is the current sort is not the path itself
+    const secondarySort = sort === 'path' ? [] : [{ path: { order: 'asc' } }]
+    return [{ [sort]: { order, ...extraParams } }, ...secondarySort]
+  })
+
+  const sortBy = computed(() => {
+    const [sort] = appStore.getSettings('search', 'orderBy') ?? ['_score']
+    return sort
+  })
+
+  const orderBy = computed(() => {
+    const [, order] = appStore.getSettings('search', 'orderBy') ?? [null, 'desc']
+    return order
+  })
+
+  const hits = computed(() => {
+    return response.value?.hits ?? []
+  })
+
+  function reset() {
+    error.value = null
+    field.value = settings.defaultSearchField
+    from.value = 0
+    isReady.value = true
+    q.value = ''
+    response.value = EsDocList.none()
+    excludeFilters.value = []
+    sortFilters.value = {}
+    contextualizeFilters.value = []
+    values.value = {}
+  }
+
+  function resetForRouteChange() {
+    error.value = null
+    from.value = 0
+    isReady.value = true
+    q.value = ''
+    excludeFilters.value = []
+    values.value = {}
+  }
+
+  function resetFilters() {
+    filters.value = [...filterDefs]
+    values.value = {}
+    from.value = 0
+  }
+
+  function resetFilterValues() {
+    values.value = {}
+    from.value = 0
+  }
+
+  function resetQuery() {
+    q.value = ''
+    field.value = settings.defaultSearchField
+    from.value = 0
+  }
+
+  function setQuery(value) {
+    q.value = value
+  }
+
+  function setFrom(value) {
+    from.value = Number(value)
+  }
+
+  function setIsReady(value = !isReady.value) {
+    isReady.value = value
+  }
+
+  function setError(value = null) {
+    error.value = value
+  }
+
+  function setIndex(value) {
+    indices.value = [value]
+  }
+
+  function setIndices(value) {
+    // Clean indices list to ensure we received an array. This means
+    // this action can also receive a string with a comma separated
+    // list of indices.
+    const cleaned = compact(castArray(value))
+      .map((str) => str.split(','))
+      .flat()
+    indices.value = cleaned
+  }
+
+  function setField(value) {
+    const keys = settings.searchFields.map(property('key'))
+    field.value = keys.indexOf(value) > -1 ? value : settings.defaultSearchField
+  }
+
+  function setResponse({ raw, parents = null, roots = null } = {}) {
+    response.value = new EsDocList(raw, parents, roots, from.value)
+  }
+
+  function instantiateFilter({ type = 'FilterText', options } = {}) {
+    const Type = filterTypes[type]
+    const filter = new Type(options)
+    // Bind current state to the filter be able to retrieve its values. Here we wrap
+    // the state in a getters to ensure the filter can access those values transparently.
+    return filter.bindStore({
+      get values() {
+        return values.value
+      },
+      get excludeFilters() {
+        return excludeFilters.value
+      },
+      get contextualizeFilters() {
+        return contextualizeFilters.value
+      },
+      get sortFilters() {
+        return sortFilters.value
       }
     })
-  },
-  resetFilters(state) {
-    const { filters } = initialState()
-    state.filters = filters
-  },
-  resetFiltersAndValues(state) {
-    const { filters } = initialState()
-    state.filters = filters
-    state.values = {}
-    state.from = 0
-  },
-  resetFilterValues(state) {
-    state.values = {}
-    state.from = 0
-  },
-  resetQuery(state) {
-    state.query = ''
-    state.field = settings.defaultSearchField
-    state.from = 0
-  },
-  query(state, query) {
-    state.query = query
-  },
-  q(state, query) {
-    state.query = query
-  },
-  from(state, from) {
-    state.from = Number(from)
-  },
-  size(state, size) {
-    state.size = Number(size)
-  },
-  sort(state, sort) {
-    state.sort = sort
-  },
-  isReady(state, isReady = !state.isReady) {
-    state.isReady = isReady
-  },
-  error(state, error = null) {
-    state.error = error
-  },
-  index(state, index) {
-    state.index = index
-    state.indices = [index]
-  },
-  indices(state, indices) {
-    // Clean indices list to ensure we received an array. This means
-    // this mutation can also receive a string with a comma separated
-    // list of indices.
-    const cleaned = flatten(castArray(indices).map((str) => str.split(',')))
-    state.indices = cleaned
-    state.index = cleaned[0]
-  },
-  layout(state, layout) {
-    state.layout = layout
-  },
-  field(state, field) {
-    const fields = settings.searchFields.map((field) => field.key)
-    state.field = fields.indexOf(field) > -1 ? field : settings.defaultSearchField
-  },
-  buildResponse(state, raw) {
-    state.response = new EsDocList(raw)
-  },
-  addFilterValue(state, filter) {
+  }
+
+  function hasFilterValue(item) {
+    return !!instantiatedFilters.value.find(({ name, values }) => {
+      return name === item.name && values.indexOf(item.value) > -1
+    })
+  }
+
+  function isFilterContextualized(name) {
+    return contextualizeFilters.value.includes(name)
+  }
+
+  function isFilterExcluded(name) {
+    return excludeFilters.value.includes(name)
+  }
+
+  function filterSortedBy(name) {
+    return getFilter({ name }).sortBy
+  }
+
+  function filterSortedByOrder(name) {
+    return getFilter({ name }).orderBy
+  }
+
+  function addFilterValue({ name, value }) {
     // We cast the new filter values to allow several new values at the same time
-    const values = castArray(filter.value)
+    const newValues = castArray(value)
     // Look for existing values for this name
-    const existingValues = get(state, ['values', filter.name], [])
-    const existingValuesAsString = map(existingValues, (value) => toString(value))
-    state.values[filter.name] = uniq(existingValuesAsString.concat(values))
-  },
-  setFilterValue(state, filter) {
-    const values = castArray(filter.value)
-    state.values[filter.name] = values
-  },
-  addFilterValues(state, { filter, values }) {
-    const existingValues = get(state, ['values', filter.name], [])
-    state.values[filter.name] = uniq(existingValues.concat(castArray(values)))
-  },
-  removeFilterValue(state, filter) {
+    const filterValues = values.value?.[name] ?? []
+    const filterValuesAsString = filterValues.map(toString)
+    values.value[name] = uniq(filterValuesAsString.concat(newValues))
+  }
+
+  function setFilterValue({ name, value }) {
+    values.value[name] = castArray(value)
+  }
+
+  function getFilter(predicate) {
+    return find(instantiatedFilters.value, predicate)
+  }
+
+  function removeFilterValue({ name, value }) {
     // Look for existing values for this name
-    const existingValues = get(state, ['values', filter.name], [])
+    const existingValues = values.value?.[name] ?? []
     // Filter the values for this name to remove the given value
-    state.values[filter.name] = filterCollection(existingValues, (value) => value !== filter.value)
-  },
-  removeFilter(state, name) {
-    const i = findIndex(state.filters, ({ options }) => options.name === name)
-    delete state.filters[i]
-    if (name in state.values) {
-      delete state.values[name]
+    values.value[name] = existingValues.filter((existingValue) => existingValue !== value)
+  }
+
+  function removeFilter(name) {
+    const i = filters.value.findIndex(({ options }) => options.name === name)
+    delete filters.value[i]
+    if (name in values.value) {
+      delete values.value[name]
     }
-  },
-  addFilter(state, { type = 'FilterText', options = {}, position = null } = {}) {
-    if (!find(state.filters, (filter) => filter.options.name === options.name)) {
+  }
+
+  function addFilter({ type = 'FilterText', options = {}, position = null } = {}) {
+    if (!filters.value.find((filter) => filter.options.name === options.name)) {
       if (position === null) {
-        state.filters.push({ type, options })
+        filters.value.push({ type, options })
       } else {
-        state.filters.splice(position, 0, { type, options })
+        filters.value.splice(position, 0, { type, options })
       }
     }
-  },
-  sortFilter(state, { name, sortBy = '_count', sortByOrder = 'desc' } = {}) {
-    state.sortedFilters[name] = { sortBy, sortByOrder }
-  },
-  unsortFilter(state, name) {
-    delete state.sortedFilters[name]
-  },
-  contextualizeFilter(state, name) {
-    if (state.contextualizedFilters.indexOf(name) === -1) {
-      state.contextualizedFilters.push(name)
+  }
+
+  function sortFilter({ name, sortBy = '_count', orderBy = 'desc' } = {}) {
+    sortFilters.value[name] = { sortBy, orderBy }
+  }
+
+  function unsortFilter(name) {
+    delete sortFilters.value[name]
+  }
+
+  function contextualizeFilter(name) {
+    if (!contextualizeFilters.value.includes(name)) {
+      contextualizeFilters.value.push(name)
     }
-  },
-  decontextualizeFilter(state, name) {
-    delete state.contextualizedFilters[state.contextualizedFilters.indexOf(name)]
-  },
-  toggleContextualizedFilter(state, name) {
-    const i = state.contextualizedFilters.indexOf(name)
-    if (i === -1) {
-      state.contextualizedFilters.push(name)
+  }
+
+  function decontextualizeFilter(name) {
+    const i = contextualizeFilters.value.indexOf(name)
+    contextualizeFilters.value.splice(i, 1)
+  }
+
+  function excludeFilter(name) {
+    if (!isFilterExcluded(name)) {
+      excludeFilters.value.push(name)
+    }
+  }
+
+  function includeFilter(name) {
+    const i = excludeFilters.value.indexOf(name)
+    if (i > -1) {
+      excludeFilters.value.splice(i, 1)
+    }
+  }
+
+  function toggleFilter(name, toggler = null) {
+    if (toggler ?? !isFilterExcluded(name)) {
+      return excludeFilter(name)
+    }
+    return includeFilter(name)
+  }
+
+  async function refresh() {
+    setIsReady(false)
+    setError(null)
+
+    try {
+      const raw = await searchDocuments()
+      const roots = await searchRootDocuments(raw)
+      searchBreadcrumbStore.pushSearchQuery(toBaseRouteQuery.value)
+      setResponse({ raw, roots })
+    } catch (error) {
+      setError(error)
+    } finally {
+      setIsReady(true)
+    }
+  }
+
+  function searchDocuments(searchParams = toSearchParams.value) {
+    return api.elasticsearch.searchDocs(searchParams)
+  }
+
+  function searchRootDocuments(raw) {
+    const embedded = get(raw, 'hits.hits', []).filter((hit) => hit._source.extractionLevel > 0)
+    const ids = embedded.map((hit) => hit._source.rootDocument)
+    const source = ['contentType', 'contentLength', 'title', 'path']
+    return api.elasticsearch.ids(indices.value.join(','), ids, source)
+  }
+
+  function updateFromRouteQuery(routeQuery) {
+    // Reset the state except for the given keys
+    resetForRouteChange()
+    // Create a helper function that call the setter only if the key exists in the routeQuery
+    const withRouteQuery = (key, setter) => key in routeQuery && setter(routeQuery[key])
+    // This is all the key that can be found in the URL (apart from filters keys)
+    withRouteQuery('index', setIndex)
+    withRouteQuery('indices', setIndices)
+    withRouteQuery('q', setQuery)
+    withRouteQuery('from', setFrom)
+    withRouteQuery('field', setField)
+    // Iterate over the list of filter
+    instantiatedFilters.value.forEach((filter) => {
+      // The filter key are formatted in the URL as follow: f[filterName] or f[-filterName] for excluded filters
+      withRouteQuery(`f[${filter.name}]`, (key) => addFilterValue(filter.itemParam({ key })))
+      withRouteQuery(`f[-${filter.name}]`, (key) => addFilterValue(filter.itemParam({ key })))
+      withRouteQuery(`f[-${filter.name}]`, () => excludeFilter(filter.name))
+    })
+  }
+
+  function query(value = {}) {
+    // The query can be a string
+    if (isString(value)) {
+      setQuery(value)
     } else {
-      delete state.contextualizedFilters[i]
+      // Create a helper function that call the setter only if the key exists `q`
+      const withKey = (key, setter) => key in value && setter(value[key])
+      // Then we list of the keys that can be update
+      withKey('index', setIndex)
+      withKey('indices', setIndices)
+      withKey('query', setQuery)
+      withKey('from', setFrom)
+      withKey('field', setField)
     }
-  },
-  excludeFilter(state, name) {
-    if (state.reversedFilters.indexOf(name) === -1) {
-      state.reversedFilters.push(name)
-    }
-  },
-  includeFilter(state, name) {
-    delete state.reversedFilters[state.reversedFilters.indexOf(name)]
-  },
-  toggleFilter(state, name) {
-    const i = state.reversedFilters.indexOf(name)
-    if (i === -1) {
-      state.reversedFilters.push(name)
-    } else if (i > -1) {
-      delete state.reversedFilters[i]
-    }
-  },
-  toggleFilters(state, toggler = !state.showFilters) {
-    state.showFilters = toggler
-  },
-  updateTab(state, tab) {
-    state.tab = tab
+    return refresh()
   }
-}
 
-function actionsBuilder(api) {
+  async function queryFilter({ name, options, from, size }) {
+    const raw = await api.elasticsearch.searchFilter(
+      indices.value.join(','),
+      getFilter({ name }),
+      q.value,
+      instantiatedFilters.value,
+      isFilterContextualized(name),
+      options,
+      fields.value,
+      from,
+      size
+    )
+    return new EsDocList(raw)
+  }
+
+  function querySetFilterValue(filter) {
+    setFilterValue(filter)
+    return query()
+  }
+
+  function queryAddFilterValue(filter) {
+    addFilterValue(filter)
+    return query()
+  }
+
+  function queryRemoveFilterValue(filter) {
+    removeFilterValue(filter)
+    return query()
+  }
+
+  function queryToggleFilter(name) {
+    toggleFilter(name)
+    return query()
+  }
+
+  function queryPreviousPage() {
+    setFrom(from.value - perPage.value)
+    return query()
+  }
+
+  function queryNextPage() {
+    setFrom(from.value + perPage.value)
+    return query()
+  }
+
+  function deleteTermFromLuceneQuery(query, term = '') {
+    const hasQuery = (key) => has(query, key)
+    const hasntQuery = (key) => !hasQuery(key)
+    if (get(query, 'left.term', '') === term) delete query.left
+    if (get(query, 'right.term', '') === term) delete query.right
+    if (hasQuery('left.left')) query.left = deleteTermFromLuceneQuery(query.left, term)
+    if (hasQuery('right.left')) query.right = deleteTermFromLuceneQuery(query.right, term)
+    if (hasQuery('right.right') && hasntQuery('right.left') && get(query, 'operator', '').includes('NOT'))
+      query.operator = '<implicit>'
+    if (hasQuery('start') && hasntQuery('left')) delete query.start
+    if (hasQuery('operator') && (hasntQuery('left') || hasntQuery('right'))) delete query.operator
+    if (hasQuery('parenthesized') && (hasntQuery('left') || hasntQuery('right'))) delete query.parenthesized
+    return query
+  }
+
+  function queryDeleteQueryTerm(term = '') {
+    const luceneQuery = deleteTermFromLuceneQuery(lucene.parse(q.value), term)
+    setQuery(lucene.toString(luceneQuery))
+    return query()
+  }
+
+  function runBatchDownload(uri = null) {
+    const batchDownloadQuery = ['', null, undefined].indexOf(q.value) === -1 ? q.value : '*'
+    const { query } = api.elasticsearch.rootSearch(instantiatedFilters.value, batchDownloadQuery).build()
+    return api.runBatchDownload({ projectIds: indices.value, query, uri })
+  }
+
   return {
-    async refresh({ state, commit, getters }, updateIsReady = true) {
-      commit('isReady', !updateIsReady)
-      commit('error', null)
-      try {
-        const indices = state.indices.join(',')
-        const raw = await api.elasticsearch.searchDocs(
-          indices,
-          state.query,
-          getters.instantiatedFilters,
-          state.from,
-          state.size,
-          state.sort,
-          getters.getFields()
-        )
-        commit('buildResponse', raw)
-        commit('isReady', true)
-        return raw
-      } catch (error) {
-        commit('isReady', true)
-        commit('error', error)
-        throw error
-      }
-    },
-    updateFromRouteQuery({ commit, getters }, query) {
-      const excludedKeys = ['index', 'indices', 'showFilters', 'field', 'layout', 'tab']
-      const updatedKeys = ['q', 'index', 'indices', 'from', 'size', 'sort', 'field']
-      commit('reset', excludedKeys)
-      // Add the query to the state with a mutation to avoid triggering a search
-      updatedKeys.forEach((key) => (key in query ? commit(key, query[key]) : null))
-      // Iterate over the list of filter
-      each(getters.instantiatedFilters, (filter) => {
-        // The filter key are formatted in the URL as follow.
-        // See `query-string` for more info about query string format.
-        each([`f[${filter.name}]`, `f[-${filter.name}]`], (key, isReverse) => {
-          // Add the data if the value exist
-          if (key in query) {
-            // Because the values are grouped for each query parameter and because
-            // the `addFilterValue` also accept an array of value, we can directly
-            // use the query values.
-            commit('addFilterValue', filter.itemParam({ key: query[key] }))
-            // Invert the filter if we are using the second key (for reverse filter)
-            if (isReverse) {
-              commit('excludeFilter', filter.name)
-            }
-          }
-        })
-      })
-    },
-    query(
-      { state, commit, dispatch },
-      q = {
-        index: state.index,
-        indices: state.indices,
-        query: state.query,
-        from: state.from,
-        size: state.size,
-        sort: state.sort,
-        field: state.field
-      }
-    ) {
-      // Only the "query" parameter must be treaten differently
-      if (has(q, 'query')) {
-        commit('query', q.query)
-      } else if (isString(q)) {
-        commit('query', q)
-      }
-      // Then mutates all values if they are in queryOrParams. The mutation
-      // for "indices" must be after "index" since the two mutations are
-      // updating concurent values.
-      ;['index', 'indices', 'from', 'size', 'sort', 'field'].forEach((key) => {
-        if (has(q, key)) {
-          commit(key, q[key])
-        }
-      })
-      return dispatch('refresh', true)
-    },
-    queryFilter({ state, getters }, params) {
-      return api.elasticsearch
-        .searchFilter(
-          state.indices.join(','),
-          getters.getFilter({ name: params.name }),
-          state.query,
-          getters.instantiatedFilters,
-          !getters.isFilterContextualized(params.name),
-          params.options,
-          getters.getFields(),
-          params.from,
-          params.size
-        )
-        .then((raw) => new EsDocList(raw))
-    },
-    setFilterValue({ commit, dispatch }, filter) {
-      commit('setFilterValue', filter)
-      return dispatch('query')
-    },
-    addFilterValue({ commit, dispatch }, filter) {
-      commit('addFilterValue', filter)
-      return dispatch('query')
-    },
-    removeFilterValue({ commit, dispatch }, filter) {
-      commit('removeFilterValue', filter)
-      return dispatch('query')
-    },
-    resetFilterValues({ commit, dispatch }, name) {
-      commit('resetFilterValues', name)
-      return dispatch('query')
-    },
-    toggleFilter({ commit, dispatch }, name) {
-      commit('toggleFilter', name)
-      return dispatch('query')
-    },
-    previousPage({ state, commit, dispatch }, name) {
-      commit('from', state.from - state.size)
-      return dispatch('query')
-    },
-    nextPage({ state, commit, dispatch }, name) {
-      commit('from', state.from + state.size)
-      return dispatch('query')
-    },
-    deleteQueryTerm({ state, commit, dispatch }, term) {
-      function deleteQueryTermFromSimpleQuery(query) {
-        if (get(query, 'left.term', '') === term) query = omit(query, 'left')
-        if (get(query, 'right.term', '') === term) query = omit(query, 'right')
-        if (has(query, 'left.left')) query.left = deleteQueryTermFromSimpleQuery(get(query, 'left', null))
-        if (has(query, 'right.left')) query.right = deleteQueryTermFromSimpleQuery(get(query, 'right', null))
-        if (has(query, 'right.right') && !has(query, 'right.left') && get(query, 'operator', '').includes('NOT'))
-          query.operator = '<implicit>'
-        if (has(query, 'start') && !has(query, 'left')) query = omit(query, 'start')
-        if (has(query, 'operator') && (!has(query, 'left') || !has(query, 'right'))) query = omit(query, 'operator')
-        if (has(query, 'parenthesized') && (!has(query, 'left') || !has(query, 'right')))
-          query = omit(query, 'parenthesized')
-        return query
-      }
-
-      const query = deleteQueryTermFromSimpleQuery(lucene.parse(state.query))
-      commit('query', lucene.toString(query))
-      return dispatch('query')
-    },
-    async runBatchDownload({ state, getters }, uri = null) {
-      // CD TODO: untested function
-      const q = ['', null, undefined].indexOf(state.query) === -1 ? state.query : '*'
-      const { indices: projectIds } = state
-      const { query } = api.elasticsearch.rootSearch(getters.instantiatedFilters, q).build()
-      return api.runBatchDownload({
-        projectIds,
-        query,
-        uri
-      })
-    },
-    setTab({ state, commit }, tab) {
-      if (state.tab !== tab) {
-        commit('updateTab', tab)
-      }
-    }
+    error,
+    field,
+    filters,
+    from,
+    index,
+    indices,
+    isReady,
+    q,
+    response,
+    excludeFilters,
+    contextualizeFilters,
+    sortFilters,
+    values,
+    // Getters
+    instantiatedFilters,
+    activeFilters,
+    fields,
+    filterValuesAsRouteQuery,
+    toBaseRouteQuery,
+    toRouteQuery,
+    toRouteQueryWithStamp,
+    toSearchParams,
+    stringifyBaseRouteQuery,
+    retrieveQueryTerms,
+    retrieveContentQueryTerms,
+    page,
+    total,
+    perPage,
+    sort,
+    sortBy,
+    orderBy,
+    hits,
+    // Actions
+    reset,
+    resetForRouteChange,
+    resetFilters,
+    resetFilterValues,
+    resetQuery,
+    hasFilterValue,
+    isFilterContextualized,
+    isFilterExcluded,
+    filterSortedBy,
+    filterSortedByOrder,
+    getFilter,
+    setQuery,
+    setFrom,
+    setIsReady,
+    setError,
+    setIndex,
+    setIndices,
+    setField,
+    setResponse,
+    addFilterValue,
+    setFilterValue,
+    removeFilterValue,
+    removeFilter,
+    addFilter,
+    sortFilter,
+    unsortFilter,
+    contextualizeFilter,
+    decontextualizeFilter,
+    excludeFilter,
+    includeFilter,
+    toggleFilter,
+    refresh,
+    searchDocuments,
+    searchRootDocuments,
+    updateFromRouteQuery,
+    query,
+    queryFilter,
+    querySetFilterValue,
+    queryAddFilterValue,
+    queryRemoveFilterValue,
+    queryToggleFilter,
+    queryPreviousPage,
+    queryNextPage,
+    queryDeleteQueryTerm,
+    runBatchDownload
   }
-}
-
-export function searchStoreBuilder(api) {
-  return {
-    namespaced: true,
-    state,
-    getters,
-    mutations,
-    actions: actionsBuilder(api)
-  }
-}
+})

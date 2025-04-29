@@ -1,33 +1,40 @@
 $prefix: bs-;
 
-$saddle-red: #FA4070;
-$primary: #193D87;
-$secondary: #FA4070;
-$tertiary: #FFBF57;
+$action: #112A5C;
+$primary: #FA4070;
+$secondary: #6F6F6F;
+$tertiary: #C7C7C7;
+
 $danger: #dc3545;
-
 $warning: #FFBF57;
-$success: #00bb84;
+$success: #00BB84;
 $info: #45C4FF;
-$light: #F0F0F0;
-$lighter: #F4F4F6;
-$dark: #292930;
-$darker: darken($dark, 20);
-$darkest: darken($dark, 30);
+$white: #fff;
 
-$link-color: $primary;
+$light: #F3F3F3;
+$black: #000;
+$dark: #212529;
+$darker: #0F0F10;
+
+$link-color: $action;
+$link-color-dark: $white;
+$link-hover-color: mix($black, $primary, 20%);
+$link-hover-color-dark: $primary;
 $link-decoration: none;
 
-$body-color: #000;
+$body-color: #212529;
 $body-bg: #fff;
+$body-color-dark: #C7C9CD;
+$body-bg-dark: #151518;
 $body-secondary-bg: #F2F0F0;
 
-$card-bg: var(--#{$prefix}body-bg);
-$card-cap-bg: rgba(var(--#{$prefix}body-color-rgb), .03);
+$card-bg: var(--bs-body-bg);
+$card-cap-bg: rgba(var(--bs-body-color-rgb), .03);
 $translation-bg: #fcf8e3;
 
 $theme-colors: (
-  icij: #852308,
+  icij: #F00,
+  action: $action,
   primary: $primary,
   secondary: $secondary,
   tertiary: $tertiary,
@@ -36,22 +43,66 @@ $theme-colors: (
   warning: $warning,
   danger: $danger,
   light: $light,
-  lighter: $lighter,
   dark: $dark,
-  darker: $darker,
-  darkest: $darkest,
   mark: #fff5bd,
   category-ban: $secondary,
   category-person: #ff6699,
-  category-organization: darken($warning, 5),
+  category-organization: #FFB53E,
   category-location: #4cd9aa,
   category-email: #33beff
 );
 
+$action-bg-subtle: #F3F5F8;
+$action-color-subtle: $action;
+$action-text-emphasis: $action;
+
+$action-bg-subtle-dark: #232634;
+$action-border-subtle: mix($white, $action, 60%);
+$action-border-subtle-dark: mix($white, $action, 80%);
+$action-color-subtle-dark: $white;
+$action-text-emphasis-dark: $white;
+
+$primary-bg-subtle: #FFECF1;
+$success-bg-subtle: #E5F8F3;
+$info-bg-subtle: #ECF9FF;
+$warning-bg-subtle: #FFF9EE;
+$danger-bg-subtle:#FBEBEC;
+
+$secondary-bg-subtle: mix($white, $secondary, 80%);
+$secondary-color-subtle: $secondary;
+$secondary-border-subtle: $secondary;
+$secondary-text-emphasis: $secondary;
+
+$secondary-bg-subtle-dark: #232634;
+$secondary-border-subtle-dark: #BFC1C4;
+$secondary-color-subtle-dark: #BFC1C4;
+$secondary-text-emphasis-dark: $white;
+
+$tertiary-bg-subtle: $light;
+$tertiary-bg-subtle-dark: $darker;
+$tertiary-border-subtle: $tertiary;
+$tertiary-border-subtle-dark: #3E3F3F;
+$tertiary-text-emphasis: $tertiary;
+$tertiary-text-emphasis-dark: #3E3F3F;
+
+$dark-bg-subtle: $darker;
+$dark-text-emphasis: $black;
+$dark-text-emphasis-dark: $white;
+$dark-bg-subtle-dark: $light;
+
 $enable-shadows: true;
 $enable-rounded: true;
 
-$font-family-sans-serif:  -apple-system, BlinkMacSystemFont, "Lato", "Source Sans Pro", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+$spacer: 1rem;
+$spacer-xxs: $spacer * 0.25;
+$spacer-xs: $spacer * 0.5;
+$spacer-sm: $spacer * 0.75;
+$spacer-md: $spacer;
+$spacer-lg: $spacer * 1.5;
+$spacer-xl: $spacer * 2;
+$spacer-xxl: $spacer * 3;
+
+$font-family-sans-serif: "Inter", -apple-system, BlinkMacSystemFont, "Lato", "Source Sans Pro", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 $font-family-serif: "Merriweather", Georgia, "Times New Roman", Times, serif;
 
 $headings-font-family: $font-family-sans-serif;
@@ -61,38 +112,104 @@ $special-font-family: "Medel", $headings-font-family;
 
 $text-muted: #717171;
 
-$border-radius: .25rem;
+$font-size-base: 1rem;
+$font-size-sm: math.div(14, 16) * 1rem;
+$font-size-lg: math.div(20, 16) * 1rem;
+$line-height-sm: 1.7;
+
+$border-radius: 6px;
 $border-radius-sm: .2rem;
 $border-radius-lg: .375rem;
 $border-radius-xl: 0.5rem;
 $border-radius-xxl: 1rem;
 $border-radius-pill: 50rem;
 
-$input-bg:  var(--#{$prefix}body-bg);
-$input-focus-border-color: map-get($theme-colors, 'secondary');
-$custom-control-indicator-checked-bg: $tertiary;
+$box-shadow: 1px 1px 8px 5px rgba($black, .05);
+$box-shadow-lg: 1px 1px 20px 5px rgba($black, .05);
+
+$placeholder-opacity-max: 1;
+$placeholder-opacity-min: .6;
+
+$alert-border-width: 0;
+$alert-border-scale: 100%;
+
+$badge-padding-x: 0.45em;
+
+$input-bg:  var(--bs-body-bg);
+$input-focus-border-color: var(--bs-primary);
+$input-hover-border-color: $input-focus-border-color;
+$custom-control-indicator-checked-bg: $action;
 
 $btn-box-shadow: 0 0 0 0 transparent;
+$btn-hover-bg-shade-amount: 25%;
+$btn-hover-bg-tint-amount: 25%;
+$btn-disabled-opacity: 0.75;
 
-$popover-max-width: 480px;
-$popover-box-shadow: 0 20px 40px 10px rgba(black, .2);
-$popover-bg: #fff;
-$popover-border-width: 0.1px;
-$popover-border-color: #fff;
-$popover-header-color: $body-color;
+$input-btn-padding-y: 0.75em;
+$input-btn-padding-x: 1em;
+$input-btn-line-height: 1.25;
 
-$mark-bg: map-get($theme-colors, 'mark');
+$form-check-input-border: var(--bs-border-width) solid var(--bs-action-text-emphasis);
+$form-check-input-border-radius: 2px;
+$form-check-input-checked-border-color: var(--bs-action-text-emphasis);
+$form-check-input-checked-bg-color: $action;
+$form-check-input-indeterminate-bg-color: $form-check-input-checked-bg-color;
 
-$modal-content-border-width: 0;
-$modal-content-box-shadow-xs: 0 1px 3px 0 rgba(black, .15);
-$modal-content-box-shadow-sm-up: 0 2px 6px 0 rgba(black, .25);
-$modal-backdrop-bg: #292930;
+$form-radio-input-border: var(--bs-border-width) solid $action;
+$form-radio-input-checked-border-color: $form-check-input-checked-border-color;
+$form-radio-input-checked-bg-color: $action;
+
+$popover-bg: var(--bs-action-bg-subtle);
+$popover-box-shadow: none;
+$popover-font-size: $font-size-base;
+$popover-max-width: 375px;
+$popover-border-width: 1px;
+$popover-border-color: var(--bs-action-border-subtle);
+$popover-body-padding-y: $spacer-lg;
+$popover-body-padding-x: $spacer-xl;
+$popover-arrow-width: $spacer-xl;
+$popover-arrow-height: $spacer;
+
+$mark-bg: var(--bs-mark);
+
+$modal-inner-padding: $spacer-xl;
+
+$modal-content-color: null;
+$modal-content-border-width: 1px;
+$modal-content-border-radius: var(--bs-border-radius);
+$modal-content-inner-border-radius: subtract($modal-content-border-radius, $modal-content-border-width);
+$modal-content-box-shadow-xs:  1px 1px 8px 5px rgba($black, 0.1);
+$modal-content-box-shadow-sm-up: 1px 1px 8px 5px rgba($black, 0.1);
+
+$modal-backdrop-bg: $secondary;
 $modal-backdrop-opacity: .5;
-$modal-inner-padding: 1.5rem;
 
-$kbd-padding-y: .2em;
-$kbd-padding-x: .4em;
-$kbd-bg: rgba(#222, .7);
+$modal-header-border-color: transparent;
+$modal-header-border-width: $modal-content-border-width;
+$modal-header-padding-y: $modal-inner-padding;
+$modal-header-padding-x: $modal-inner-padding;
+$modal-header-padding: $modal-header-padding-y $modal-header-padding-x 0;
+
+$modal-footer-bg: transparent;
+$modal-footer-border-color: $modal-header-border-color;
+$modal-footer-border-width: $modal-header-border-width;
+
+$modal-sm: 300px;
+$modal-md: 500px;
+$modal-lg: 800px;
+$modal-xl: 1140px;
+
+$offcanvas-box-shadow: none;
+$offcanvas-border-color: var(--bs-tertiary);
+$offcanvas-width: 300px;
+$offcanvas-padding-y: $spacer;
+$offcanvas-padding-x: $spacer-xl;
+
+$kbd-padding-y: $spacer-xxs;
+$kbd-padding-x: $spacer-xs;
+$kbd-font-size: 1rem;
+$kbd-color: var(--bs-body-bg);
+$kbd-bg: var(--bs-body-color);
 
 $tooltip-max-width: 260px;
 $tooltip-opacity: 1;
@@ -100,42 +217,60 @@ $tooltip-opacity: 1;
 $input-box-shadow: 0 0 0 0 transparent;
 $b-toast-background-opacity: $tooltip-opacity;
 
-$font-size-sm: .9rem;
-$font-size-lg: 1.2rem;
-$line-height-sm: 1.7;
+$table-cell-padding-y: $spacer;
+$table-cell-padding-x: $spacer;
 
-$table-striped-bg: #f9f8f8;
-$table-hover-bg: mix($secondary, #fff, 5%);
+$table-th-font-weight: normal;
 
-$nav-tabs-link-active-bg: #fff;
+$table-color: var(--bs-secondary-text-emphasis);
+$table-bg: var(--bs-body-bg);
+$table-accent-bg: transparent;
+$table-hover-bg: var(--bs-action-bg-subtle);
+$table-striped-bg: var(--bs-tertiary-bg-subtle);
 
-$dropdown-padding-y: 0.25rem;
-$dropdown-item-padding-y: 0.5rem;
+$nav-tabs-border-color: transparent;
+$nav-tabs-border-width: 0;
+$nav-tabs-border-radius: 0;
+$nav-tabs-link-hover-border-color: transparent transparent var(--bs-primary) transparent;
+$nav-tabs-link-active-color: var(--bs-body-color);
+$nav-tabs-link-active: transparent;
+$nav-tabs-link-active-border-color: transparent transparent var(--bs-primary) transparent;
+
+$nav-underline-gap: $spacer;
+$nav-underline-border-width: 2px;
+$nav-underline-link-active-color:  var(--bs-body-color);
+
+$dropdown-box-shadow: none;
+$dropdown-border-color: var(--bs-tertiary-border-subtle);
+$dropdown-padding-x: math.div(12, 16) * 1rem;
+$dropdown-padding-y: math.div(12, 16) * 1rem;
+$dropdown-item-padding-y: $spacer-xs;
+$dropdown-item-padding-x: $spacer-sm;
+$dropdown-link-hover-bg: var(--bs-action-bg-subtle);
+$dropdown-link-hover-color: var(--bs-action-text-emphasis);
+$dropdown-link-active-color: var(--bs-action-text-emphasis);
+$dropdown-link-active-bg: var(--bs-dropdown-bg);
 
 // Bootstrap variables and mixins must be available everywhere
-@import '~node_modules/bootstrap/scss/_functions.scss';
-@import '~node_modules/bootstrap/scss/_variables.scss';
-@import '~node_modules/bootstrap/scss/_mixins.scss';
-// We also defines a few functions and mixins internally
-@import './functions.scss';
-@import './mixins.scss';
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/variables-dark";
+@import "bootstrap/scss/maps";
+@import "bootstrap/scss/mixins";
+// Our custom map to add our theme colors to classes utilities and CSS variables
+@import './maps.scss';
 
-$spacer-xxs: $spacer * 0.25;
-$spacer-xs: $spacer * 0.5;
-$spacer-sm: $spacer * 0.75;
-$spacer-md: $spacer;
-$spacer-lg: $spacer * 1.5;
-$spacer-xl: $spacer * 2;
-$spacer-xxl: $spacer * 4;
+// We also defines a few functions internally
+@import './functions.scss';
 
 $app-nav-height: 4.5rem;
 $app-nav-brand-height: $app-nav-height - ($spacer * 2);
 
-$app-sidebar-bg: darken(#31313a, 10%);
+$app-sidebar-bg: color.adjust(#31313a, $lightness: -10%);
 $app-sidebar-color: #fff;
 $app-sidebar-border-color: mix($app-sidebar-color, $app-sidebar-bg, 5%);
-$app-sidebar-width: 290px;
-$app-sidebar-reduced-width: 100px;
+$app-sidebar-width: 310px;
+$app-sidebar-compact-width: 85px;
 $app-sidebar-link-color: mix($app-sidebar-bg, $app-sidebar-color, 40%);
 
 $app-context-sidebar-bg: mix(#fff, $app-sidebar-bg, 5%);
@@ -146,3 +281,5 @@ $search-results-list-width: 600px;
 
 $document-max-width: 980px;
 $document-float-breakpoint-width:  1700px;
+$color-mode-type: data;
+

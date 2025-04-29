@@ -8,7 +8,7 @@ export default class FilterPath extends FilterDocument {
   constructor(options) {
     super(options)
     this.prefix = true
-    this.component = 'FilterPath'
+    this.component = 'FilterTypePath'
   }
 
   queryBuilder(body, param, func) {

@@ -6,11 +6,11 @@ export default class FilterType extends FilterText {
     this.component = 'FilterType'
   }
 
-  addChildIncludeFilter(body, param, func) {
+  addChildIncludeFilter(body, param) {
     return this.queryBuilder(body, param, 'orQuery')
   }
 
-  addChildExcludeFilter(body, param, func) {
+  addChildExcludeFilter(body, param) {
     return this.queryBuilder(body, param, 'notQuery')
   }
 }

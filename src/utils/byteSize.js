@@ -4,5 +4,5 @@ export default function byteSize(humanSize) {
 
   const res = regex.exec(humanSize)
 
-  return res[1] * Math.pow(1024, powers[res[2].toLowerCase()])
+  return res ? res[1] * Math.pow(1024, powers[res[2].toLowerCase()]) : Infinity
 }

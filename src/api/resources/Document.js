@@ -1,4 +1,5 @@
 import { compact, endsWith, filter, find, get, keys, last, pick, startsWith, trim } from 'lodash'
+import { markRaw } from 'vue'
 import Murmur from '@icij/murmur-next'
 import moment from 'moment'
 import { extname } from 'path'
@@ -6,18 +7,20 @@ import { extname } from 'path'
 import { Api } from '@/api'
 import EsDoc from '@/api/resources/EsDoc'
 import humanSize from '@/utils/humanSize'
-import { findContentTypeIcon } from '@/utils/font-awesome-files'
-import types from '@/utils/types.json'
+import { findContentTypeIcon } from '@/utils/iconFiles'
+import types from '@/utils/contentTypes.json'
 
 const _parent = '_PARENT'
 const _root = '_ROOT'
+const _position = '_POSITION'
 const _separator = '/'
 
 export default class Document extends EsDoc {
-  constructor(raw, parent = null, root = null) {
+  constructor(raw, parent = null, root = null, position = 0) {
     super(raw)
     this.parent = parent
     this.root = root
+    this.position = position
   }
   nl2br(str) {
     return trim(str)
@@ -48,6 +51,12 @@ export default class Document extends EsDoc {
   shortMetaName(name) {
     return name.replace('tika_metadata_', '')
   }
+  set position(position) {
+    this[_position] = isNaN(position) ? null : position
+  }
+  get position() {
+    return this[_position]
+  }
   set parent(parent) {
     this[_parent] = parent ? new Document(parent) : null
   }
@@ -66,7 +75,7 @@ export default class Document extends EsDoc {
   set content(content) {
     this.set('_source.content', content)
   }
-  get metas() {
+  get metadata() {
     return keys(this.source.metadata || {})
   }
   get shortId() {
@@ -144,8 +153,19 @@ export default class Document extends EsDoc {
   get slicedNameToString() {
     return this.slicedName.join(' › ')
   }
+  get language() {
+    return this.get('_source.language')
+  }
+  get author() {
+    return this.get('_source.metadata.tika_metadata_dc_creator', null)
+  }
   get highlight() {
     return this.raw.highlight
+  }
+  get excerpt() {
+    const content = this.get(['highlight', 'content', 0], '')
+    const contentTranslated = this.get(['highlight', 'content_translated.content', 0], '')
+    return trim(content || contentTranslated)
   }
   get highlights() {
     const content = this.get(['highlight', 'content'], [])
@@ -172,6 +192,10 @@ export default class Document extends EsDoc {
   get fullRootUrl() {
     return Api.getFullUrl(this.rootUrl)
   }
+  get numberOfPages() {
+    const raw = this.meta('xmptpg_npages', null)
+    return raw ? parseInt(raw, 10) : null
+  }
   get contentType() {
     return this.source.contentType || 'unknown'
   }
@@ -185,7 +209,7 @@ export default class Document extends EsDoc {
     return get(types, [this.contentType, 'warning'], {})
   }
   get contentTypeIcon() {
-    return findContentTypeIcon(this.contentType)
+    return markRaw(findContentTypeIcon(this.contentType))
   }
   get rootContentType() {
     return this.root ? this.root.source.contentType : 'unknown'
@@ -215,7 +239,7 @@ export default class Document extends EsDoc {
     return this.subject && this.subject !== this.title
   }
   get creationDate() {
-    const creationDate = this.source.metadata.tika_metadata_dcterms_created
+    const creationDate = this.source?.metadata?.tika_metadata_dcterms_created
     if (creationDate && !isNaN(Date.parse(creationDate))) {
       return new Date(creationDate)
     } else {
@@ -239,9 +263,6 @@ export default class Document extends EsDoc {
   }
   get humanSize() {
     return humanSize(this.contentLength, true)
-  }
-  get index() {
-    return this.raw._index
   }
   get routerParams() {
     return pick(this, ['index', 'id', 'routing'])
@@ -272,11 +293,6 @@ export default class Document extends EsDoc {
   }
   get messageTo() {
     return this.get('_source.metadata.tika_metadata_message_to', null)
-  }
-  get excerpt() {
-    const content = this.get(['highlight', 'content', 0], '')
-    const contentTranslated = this.get(['highlight', 'content_translated.content', 0], '')
-    return trim(content || contentTranslated)
   }
   set translations(translations) {
     this.set('_source.content_translated', translations)
@@ -339,8 +355,8 @@ export default class Document extends EsDoc {
     return this.get('_source.nerTags', []).length > 0
   }
   get hasBigContentTextLength() {
-    // 25,000 characters
-    return this.contentTextLength === undefined || this.contentTextLength === 0 || this.contentTextLength > 25e3
+    // 50,000 characters
+    return this.contentTextLength === undefined || this.contentTextLength === 0 || this.contentTextLength > 5e4
   }
   static get esName() {
     return 'Document'

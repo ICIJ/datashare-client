@@ -1,6 +1,6 @@
 <script>
-import { faArrowDown } from '@fortawesome/free-solid-svg-icons/faArrowDown'
-import { faArrowUp } from '@fortawesome/free-solid-svg-icons/faArrowUp'
+import { toRef, markRaw } from 'vue'
+import { PhosphorIcon } from '@icij/murmur-next'
 import VueScrollTo from 'vue-scrollto'
 
 /**
@@ -8,6 +8,9 @@ import VueScrollTo from 'vue-scrollto'
  */
 export default {
   name: 'ScrollTracker',
+  components: {
+    PhosphorIcon
+  },
   props: {
     /**
      * Hide the scroll tracker after this delay.
@@ -19,7 +22,7 @@ export default {
   },
   data() {
     return {
-      icon: faArrowUp,
+      icon: markRaw(PhArrowFatUp),
       offset: 0,
       timeoutHolder: null,
       target: null,
@@ -33,20 +36,23 @@ export default {
   },
   methods: {
     request({ element, offset = 0, container = this.container } = {}) {
-      this.target = element
+      const elementRef = toRef(element)
+      this.target = elementRef?.value?.$el ?? elementRef.value
       this.offset = offset
       this.container = container
       this.toggle(this.shouldBeVisible())
     },
     scrollToTarget() {
       this.hide()
-      VueScrollTo.scrollTo(this.target, 200, { offset: this.offset, container: this.container })
+      if (this.target) {
+        VueScrollTo.scrollTo(this.target, 200, { offset: this.offset, container: this.container })
+      }
     },
     toggle(toggler = !this.visible) {
       return toggler ? this.show() : this.hide()
     },
     show() {
-      this.icon = this.isTargetAbove() ? faArrowDown : faArrowUp
+      this.icon = markRaw(this.isTargetAbove() ? PhArrowFatDown : PhArrowFatUp)
       this.visible = true
       this.setTimeout()
       // Hide the tracker on scroll
@@ -77,11 +83,13 @@ export default {
       return top > (window.innerHeight || document.documentElement.clientHeight)
     },
     targetBoundingClientRect() {
+      if (!this.target) {
+        return { top: 0, left: 0, bottom: 0, right: 0 }
+      }
       if (this.target.nodeType > 0) {
         return this.target.getBoundingClientRect()
-      } else {
-        return { top: this.target.y, left: this.target.x, bottom: 0, right: 0 }
       }
+      return { top: this.target.y, left: this.target.x, bottom: 0, right: 0 }
     }
   }
 }
@@ -90,7 +98,7 @@ export default {
 <template>
   <transition name="fade">
     <a v-show="visible" class="scroll-tracker" tabindex="0" @click="scrollToTarget">
-      <fa :icon="icon"></fa>
+      <phosphor-icon :name="icon" weight="fill" />
     </a>
   </transition>
 </template>
@@ -120,16 +128,6 @@ a.scroll-tracker {
   &:active {
     background: $darker;
     color: white;
-  }
-
-  &.fade-enter-active,
-  &.fade-leave-active {
-    transition: 0.3s;
-  }
-
-  &.fade-enter-from,
-  &.fade-leave-to {
-    opacity: 0;
   }
 }
 </style>

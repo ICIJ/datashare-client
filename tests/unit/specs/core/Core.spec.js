@@ -1,28 +1,34 @@
 import Murmur from '@icij/murmur-next'
-import Vuex from 'vuex'
 
 import { Core } from '@/core'
+import { apiInstance as api } from '@/api/apiInstance'
 
-describe('Core', () => {
-  let api, core
-
-  beforeAll(() => {
-    api = {
+vi.mock('@/api/apiInstance', () => {
+  return {
+    apiInstance: {
       createProject: vi.fn(),
       isDownloadAllowed: vi.fn(),
       getUser: vi.fn(),
       getSettings: vi.fn(),
       getProject: vi.fn()
     }
-  })
+  }
+})
+
+describe('Core', () => {
+  let core
 
   beforeEach(() => {
     vi.clearAllMocks()
-    core = Core.init(api)
+    core = Core.init()
 
     const app = document.createElement('div')
     app.setAttribute('id', 'core')
     document.body.appendChild(app)
+  })
+
+  afterAll(() => {
+    vi.resetAllMocks()
   })
 
   it('should instantiate the Core class using a static method', () => {
@@ -51,10 +57,6 @@ describe('Core', () => {
 
     it('should expose the VueI18n', () => {
       expect(core.i18n).toBeInstanceOf(Object)
-    })
-
-    it('should expose the store', () => {
-      expect(core.store).toBeInstanceOf(Vuex.Store)
     })
 
     it('should expose the config from Murmur', () => {
@@ -92,21 +94,11 @@ describe('Core', () => {
       await expect(core.ready).resolves.toBe(core)
     })
 
-    it('should call isDownloadAllowed API endpoint', async () => {
-      const project = 'my-project'
-      api.getSettings.mockResolvedValueOnce({})
-      api.createProject.mockResolvedValueOnce({ name: project, label: 'MyProject' })
-      core.store.commit('search/index', project)
-      await core.configure()
-
-      expect(api.isDownloadAllowed).toBeCalledTimes(1)
-      expect(api.isDownloadAllowed).toBeCalledWith(project)
-    })
-
     it('should return empty string if user has no projects', () => {
       core.config.set('defaultProject', 'my_project')
       expect(core.getDefaultProject()).toEqual('')
     })
+
     it('should install the internal `VueCore` plugin', () => {
       // Create and configure the core
       const vm = core.mount('#core')

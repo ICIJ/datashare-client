@@ -1,4 +1,5 @@
 export default {
+  cleanableContentTypes: ['application/pdf', 'application/msword'],
   contentPlaceholder: {
     rows: [
       {
@@ -49,7 +50,6 @@ export default {
       default: 'https://icij.gitbook.io/datashare/usage/search-with-operators'
     }
   },
-  hotKeyPrevented: ['.search-bar__input'],
   locales: [
     {
       key: 'en',
@@ -118,62 +118,21 @@ export default {
       fields: ['metadata.tika_metadata_message_raw_header_thread_index']
     }
   ],
-  searchSortFields: [
-    {
-      name: 'relevance',
-      field: '_score',
-      desc: true
-    },
-    {
-      name: 'creationDateNewest',
-      field: 'metadata.tika_metadata_dcterms_created',
-      desc: true
-    },
-    {
-      name: 'creationDateOldest',
-      field: 'metadata.tika_metadata_dcterms_created',
-      desc: false
-    },
-    {
-      name: 'dateNewest',
-      field: 'extractionDate',
-      desc: true
-    },
-    {
-      name: 'dateOldest',
-      field: 'extractionDate',
-      desc: false
-    },
-    {
-      name: 'sizeLargest',
-      field: 'contentLength',
-      desc: true
-    },
-    {
-      name: 'sizeSmallest',
-      field: 'contentLength',
-      desc: false
-    },
-    {
-      name: 'path',
-      field: 'path',
-      desc: false
-    },
-    {
-      name: 'pathReverse',
-      field: 'path',
-      desc: true
-    },
-    {
-      name: 'titleNorm',
-      field: 'titleNorm',
-      desc: false
-    },
-    {
-      name: 'titleNormReverse',
-      field: 'titleNorm',
-      desc: true
-    }
+  searchSortFieldParams: {
+    'metadata.tika_metadata_dcterms_created': { unmapped_type: 'date' }
+  },
+  legacySearchSortFields: [
+    { name: 'relevance', property: 'relevance', desc: true },
+    { name: 'creationDateNewest', property: 'creationDate', desc: true },
+    { name: 'creationDateOldest', property: 'creationDate', desc: false },
+    { name: 'dateNewest', property: 'extractionDate', desc: true },
+    { name: 'dateOldest', property: 'extractionDate', desc: false },
+    { name: 'sizeLargest', property: 'contentLength', desc: true },
+    { name: 'sizeSmallest', property: 'contentLength', desc: false },
+    { name: 'path', property: 'path', desc: false },
+    { name: 'pathReverse', property: 'path', desc: true },
+    { name: 'titleNorm', property: 'title', desc: false },
+    { name: 'titleNormReverse', property: 'title', desc: true }
   ],
   suggestedFields: ['<implicit>', 'tags', 'contentType', 'path', 'mentionNorm'],
   suggestedImplicitFields: ['mentionNorm', 'tags'],
@@ -208,6 +167,7 @@ export default {
     info: 'info',
     pending: 'info',
     queued: 'info',
+    draft: 'warning',
     running: 'info',
     warning: 'warning',
     cancelled: 'warning',
@@ -220,12 +180,12 @@ export default {
   filter: {
     bucketSize: 25,
     sortBy: '_count',
-    sortByOrder: 'desc',
+    orderBy: 'desc',
     sortByOptions: [
-      { sortBy: '_count', sortByOrder: 'asc' },
-      { sortBy: '_count', sortByOrder: 'desc' },
-      { sortBy: '_key', sortByOrder: 'asc' },
-      { sortBy: '_key', sortByOrder: 'desc' }
+      { sortBy: '_count', orderBy: 'asc' },
+      { sortBy: '_count', orderBy: 'desc' },
+      { sortBy: '_key', orderBy: 'asc' },
+      { sortBy: '_key', orderBy: 'desc' }
     ]
   },
   helpLink: 'https://icij.gitbook.io/datashare/ask-for-help',

@@ -1,91 +1,175 @@
+import { defineStore } from 'pinia'
+import { reactive } from 'vue'
 import { castArray, groupBy, findIndex, map } from 'lodash'
 
-export const state = {
-  // A collection of `{ index, id }` documents
-  documents: []
-}
+import { apiInstance as api } from '@/api/apiInstance'
 
-export const mutations = {
-  documents(state, documents = []) {
-    state.documents.splice(0, state.documents.length)
-    mutations.pushDocuments(state, documents)
-  },
-  pushDocument(state, { index, id } = {}) {
-    const i = findIndex(state.documents, { index, id })
-    // Document doesnt exist yet in the state
+export const useStarredStore = defineStore('starred', () => {
+  // An array of documents with shape { index, id }
+  const documents = reactive([])
+
+  /**
+   * Resets the state by clearing all documents.
+   */
+  function reset() {
+    setDocuments([])
+  }
+
+  /**
+   * Replace all documents with a new list (clearing then adding new docs).
+   *
+   * @param {Array<Object>} [newDocuments=[]] - The new list of documents.
+   */
+  function setDocuments(newDocuments = []) {
+    documents.splice(0, documents.length)
+    pushDocuments(newDocuments)
+  }
+
+  /**
+   * Add a single document if it doesn't exist yet.
+   *
+   * @param {Object} document - The document to add.
+   * @param {string|number} document.index - The index of the document.
+   * @param {string|number} document.id - The id of the document.
+   */
+  function pushDocument({ index, id } = {}) {
+    const i = findIndex(documents, { index, id })
     if (i === -1) {
-      state.documents.push({ index, id })
+      documents.push({ index, id })
     }
-  },
-  pushDocuments(state, documents = []) {
-    for (const document of castArray(documents)) {
-      mutations.pushDocument(state, document)
+  }
+
+  /**
+   * Add one or more documents (using castArray so a single object works too).
+   *
+   * @param {Array<Object>|Object} docs - One or more document objects.
+   */
+  function pushDocuments(docs = []) {
+    for (const doc of castArray(docs)) {
+      pushDocument(doc)
     }
-  },
-  removeDocument(state, { index, id } = {}) {
-    const i = findIndex(state.documents, { index, id })
-    // Document exist, we can remove it
+  }
+
+  /**
+   * Remove a single document if it exists.
+   *
+   * @param {Object} document - The document to remove.
+   * @param {string|number} document.index - The index of the document.
+   * @param {string|number} document.id - The id of the document.
+   */
+  function removeDocument({ index, id } = {}) {
+    const i = findIndex(documents, { index, id })
     if (i > -1) {
-      state.documents.splice(i, 1)
-    }
-  },
-  removeDocuments(state, documents = []) {
-    for (const document of castArray(documents)) {
-      mutations.removeDocument(state, document)
+      documents.splice(i, 1)
     }
   }
-}
 
-function prepareDocumentIds(documents) {
-  const documentsByIndex = groupBy(castArray(documents), 'index')
-  const indexWithDocIds = []
-  for (const [index, documents] of Object.entries(documentsByIndex)) {
-    indexWithDocIds.push({ index, documentIds: map(documents, 'id') })
+  /**
+   * Remove one or more documents.
+   *
+   * @param {Array<Object>|Object} docs - One or more document objects to remove.
+   */
+  function removeDocuments(docs = []) {
+    for (const doc of castArray(docs)) {
+      removeDocument(doc)
+    }
   }
-  return indexWithDocIds
-}
 
-function actionsBuilder(api) {
+  /**
+   * Group documents by index and extract an array of IDs for each group.
+   *
+   * @param {Array<Object>|Object} docs - One or more document objects.
+   * @returns {Array<Object>} An array of objects, each containing an index and its associated documentIds.
+   */
+  function prepareDocumentIds(docs) {
+    const docsByIndex = groupBy(castArray(docs), 'index')
+    const indexWithDocIds = []
+    for (const [index, docs] of Object.entries(docsByIndex)) {
+      indexWithDocIds.push({ index, documentIds: map(docs, 'id') })
+    }
+    return indexWithDocIds
+  }
+
+  /**
+   * Stars one or more documents: calls the API then updates state.
+   *
+   * @param {Array<Object>|Object} docs - One or more document objects to star.
+   * @returns {Promise<void>}
+   */
+  async function starDocuments(docs = []) {
+    for (const { index, documentIds } of prepareDocumentIds(docs)) {
+      await api.starDocuments(index, documentIds)
+    }
+    pushDocuments(docs)
+  }
+
+  /**
+   * Unstars one or more documents: calls the API then updates state.
+   *
+   * @param {Array<Object>|Object} docs - One or more document objects to unstar.
+   * @returns {Promise<void>}
+   */
+  async function unstarDocuments(docs = []) {
+    for (const { index, documentIds } of prepareDocumentIds(docs)) {
+      await api.unstarDocuments(index, documentIds)
+    }
+    removeDocuments(docs)
+  }
+
+  /**
+   * Toggle the star status of a single document.
+   *
+   * @param {Object} document - The document to toggle.
+   * @param {string|number} document.index - The index of the document.
+   * @param {string|number} document.id - The id of the document.
+   * @returns {Promise<void>}
+   */
+  async function toggleStarDocument({ index, id } = {}) {
+    const i = findIndex(documents, { index, id })
+    if (i > -1) {
+      // If the document is starred, unstar it
+      return unstarDocuments({ index, id })
+    } else {
+      // Otherwise, star it
+      return starDocuments({ index, id })
+    }
+  }
+
+  // Fetch starred documents for one or more indices.
+  async function fetchIndicesStarredDocuments(indices = []) {
+    const docs = []
+    for (const index of castArray(indices)) {
+      const ids = await api.getStarredDocuments(index)
+      const items = castArray(ids).map((id) => ({ id, index }))
+      docs.push(...items)
+    }
+    setDocuments(docs)
+  }
+
+  /**
+   * Fetch starred documents for one or more indices.
+   * Note: since there is no "rootState" in Pinia, pass in a fallback list if needed.
+   *
+   * @param {Array<string|number>|null} [indices=null] - Array of indices to fetch starred documents for.
+   * @param {Array<string|number>} [fallbackIndices=[]] - Fallback array of indices if none provided.
+   * @returns {Promise<void>}
+   */
+  function isStarred({ index, id } = {}) {
+    return findIndex(documents, { index, id }) > -1
+  }
+
   return {
-    async starDocuments({ commit }, documents = []) {
-      const starDocs = prepareDocumentIds(documents).map(function ({ index, documentIds }) {
-        return api.starDocuments(index, documentIds)
-      })
-      await Promise.all(starDocs)
-      commit('pushDocuments', documents)
-    },
-    async unstarDocuments({ commit }, documents = []) {
-      const unstarDocs = prepareDocumentIds(documents).map(function ({ index, documentIds }) {
-        return api.unstarDocuments(index, documentIds)
-      })
-      await Promise.all(unstarDocs)
-      commit('removeDocuments', documents)
-    },
-    toggleStarDocument({ state, dispatch }, { index, id } = {}) {
-      const i = findIndex(state.documents, { index, id })
-      if (i > -1) {
-        return dispatch('unstarDocuments', { index, id })
-      } else {
-        return dispatch('starDocuments', { index, id })
-      }
-    },
-    async fetchIndicesStarredDocuments({ commit, rootState }, indices = null) {
-      const docs = []
-      for (const index of castArray(indices || rootState.search.indices)) {
-        const ids = await api.getStarredDocuments(index)
-        const items = castArray(ids).map((id) => ({ id, index }))
-        docs.push(...items)
-      }
-      commit('documents', docs)
-    }
+    documents,
+    reset,
+    setDocuments,
+    pushDocument,
+    pushDocuments,
+    removeDocument,
+    removeDocuments,
+    starDocuments,
+    unstarDocuments,
+    toggleStarDocument,
+    fetchIndicesStarredDocuments,
+    isStarred
   }
-}
-
-export function starredStoreBuilder(api) {
-  return {
-    namespaced: true,
-    state,
-    mutations,
-    actions: actionsBuilder(api)
-  }
-}
+})

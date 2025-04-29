@@ -1,3 +1,5 @@
+import { defineStore } from 'pinia'
+import { computed, ref } from 'vue'
 import cloneDeep from 'lodash/cloneDeep'
 import find from 'lodash/find'
 import findIndex from 'lodash/findIndex'
@@ -5,81 +7,129 @@ import isString from 'lodash/isString'
 import isFunction from 'lodash/isFunction'
 import sortBy from 'lodash/sortBy'
 
-import widgets from '@/store/widgets'
+import widgetsDefs from '@/store/widgets'
 import * as widgetTypes from '@/store/widgets'
 
-export function initialState() {
+export const useInsightsStore = defineStore('insights', () => {
+  const project = ref('')
+  const widgets = ref(cloneDeep(widgetsDefs))
+
+  /**
+   * Sets the current project. This is particularly useful when
+   * subscribing to the store actions.
+   *
+   * @param {string} value - The name of the project.
+   */
+  function setProject(value) {
+    project.value = value
+  }
+
+  /**
+   * Resets the state to its initial values.
+   */
+  function reset() {
+    project.value = ''
+    widgets.value = cloneDeep(widgetsDefs)
+  }
+
+  /**
+   * Removes a widget from the state by its name.
+   *
+   * @param {string} name - The name of the widget to remove.
+   */
+  function removeWidget(name) {
+    const index = findIndex(widgets.value, (options) => options.name === name)
+    if (index !== -1) {
+      widgets.value.splice(index, 1)
+    }
+  }
+
+  /**
+   * Adds a widget to the state if it does not already exist.
+   *
+   * @param {Object} options - The widget options.
+   * @param {string} options.name - The name of the widget.
+   */
+  function addWidget(options) {
+    if (!options.name || !find(widgets.value, { name: options.name })) {
+      widgets.value.push(options)
+    }
+  }
+
+  /**
+   * Clears all widgets from the state.
+   */
+  function clearWidgets() {
+    widgets.value = []
+  }
+
+  /**
+   * Returns a widget class based on the provided type.
+   *
+   * @param {string|Function|Object} type - The widget type.
+   * @returns {Function} The widget class.
+   * @throws {Error} Throws an error if the widget type is not valid.
+   */
+  function getWidgetClass(type) {
+    if (isString(type) && type in widgetTypes) {
+      return widgetTypes[type]
+    }
+
+    if (type?.prototype instanceof widgetTypes.WidgetEmpty) {
+      return type
+    }
+
+    if (isFunction(type)) {
+      return type(widgetTypes.WidgetEmpty)
+    }
+
+    throw new Error(`Cannot find widget type '${type}'`)
+  }
+
+  /**
+   * Finds a widget in the state that satisfies the provided predicate.
+   *
+   * @param {Function} predicate - A function that tests each widget.
+   * @returns {Object|undefined} The found widget, or undefined if not found.
+   */
+  function getWidget(predicate) {
+    return find(widgets.value, predicate)
+  }
+
+  /**
+   * Instantiates a widget using its type and options.
+   *
+   * Binds the current state to the widget instance.
+   *
+   * @param {Object} [options={}] - The options for instantiating the widget.
+   * @param {string|Function|Object} [options.type='WidgetEmpty'] - The widget type.
+   * @returns {Object} The instantiated widget.
+   */
+  function instantiateWidget({ type = 'WidgetEmpty', ...options } = {}) {
+    const Type = getWidgetClass(type)
+    return new Type(options)
+  }
+
+  /**
+   * Returns the list of instantiated widgets, sorted by their 'order' property.
+   *
+   * @returns {Array<Object>} The sorted list of widget instances.
+   */
+  const instantiatedWidgets = computed(() => {
+    return sortBy(widgets.value.map(instantiateWidget), ['order'])
+  })
+
   return {
-    project: '',
-    widgets: cloneDeep({ widgets }).widgets
+    project,
+    reset,
+    setProject,
+    removeWidget,
+    addWidget,
+    clearWidgets,
+    getWidgetClass,
+    getWidget,
+    instantiateWidget,
+    instantiatedWidgets,
+    widgets
   }
-}
-
-const state = initialState()
-
-const mutations = {
-  reset(state) {
-    const s = initialState()
-    Object.keys(s).forEach((key) => {
-      state[key] = s[key]
-    })
-  },
-  removeWidget(state, name) {
-    const index = findIndex(state.widgets, (options) => options.name === name)
-    state.widgets.splice(index, 1)
-  },
-  addWidget(state, options) {
-    if (!options.name || !find(state.widgets, { name: options.name })) {
-      state.widgets.push(options)
-    }
-  },
-  clearWidgets(state) {
-    state.widgets = []
-  },
-  project(state, project) {
-    state.project = project
-  }
-}
-
-export const getters = {
-  getWidgetClass() {
-    return (type) => {
-      // Check if the provided 'type' is a string and exists in the 'widgetTypes' object
-      if (isString(type) && type in widgetTypes) {
-        // Return the corresponding widget class from 'widgetTypes'
-        return widgetTypes[type]
-      }
-      // Check if the 'type' is an object and an instance of the 'WidgetEmpty' class
-      if (type?.prototype instanceof widgetTypes.WidgetEmpty) {
-        // Return the 'type' itself as it is a valid widget class
-        return type
-      }
-      // Check if the 'type' is a function
-      if (isFunction(type)) {
-        // Call the 'type' function with 'WidgetEmpty' as an argument and return the result
-        return type(widgetTypes.WidgetEmpty)
-      }
-      // If none of the above conditions are met, throw an error as the provided 'type' is not valid
-      throw new Error(`Cannot find widget type '${type}'`)
-    }
-  },
-  getWidget(state, getters) {
-    return (predicate) => find(state.widgets, predicate)
-  },
-  instantiateWidget(state, getters) {
-    return ({ type = 'WidgetEmpty', ...options } = {}) => {
-      const Type = getters.getWidgetClass(type)
-      const widget = new Type(options)
-      // Bind current state to be able to retrieve its values
-      widget.bindState(state)
-      // Return the instance
-      return widget
-    }
-  },
-  instantiatedWidgets(state, getters) {
-    const widgets = state.widgets.map(getters.instantiateWidget)
-    return sortBy(widgets, ['order'])
-  }
-}
-
-export default { state, getters, mutations, namespaced: true }
+})

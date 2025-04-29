@@ -1,11 +1,8 @@
 import { get } from 'lodash'
-import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck'
-import { faExclamation } from '@fortawesome/free-solid-svg-icons/faExclamation'
-import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes'
 
 import settings from '@/utils/settings'
 import { slugger } from '@/utils/strings'
-import types from '@/utils/types.json'
+import types from '@/utils/contentTypes.json'
 
 function getDocumentTypeLabel(key) {
   if (key === undefined) return ''
@@ -49,21 +46,24 @@ function objectIncludes(object, text) {
   return Object.values(object).some((object) => objectIncludes(object, text))
 }
 
-function toVariant(string = '', defaultVariant = 'darker', prefix = '') {
+function toVariant(string = '', defaultVariant = 'dark', prefix = '') {
   return prefix + settings.variantsMap[slugger(string).toLowerCase()] || defaultVariant
 }
 
-function toVariantIcon(string = '', defaultVariant = 'darker') {
+function toVariantIcon(string = '', defaultVariant = 'dark') {
   const variant = toVariant(string, defaultVariant)
   const icons = {
-    success: faCheck,
-    danger: faTimes,
-    warning: faExclamation
+    danger: 'x',
+    draft: 'floppy-disk-back',
+    queued: 'clock-countdown',
+    info: 'info',
+    success: 'check',
+    warning: 'warning'
   }
-  return icons[variant]
+  return icons[string] ?? icons[variant]
 }
 
-function toVariantColor(string = '', defaultVariant = 'darker') {
+function toVariantColor(string = '', defaultVariant = 'dark') {
   const variant = toVariant(string, defaultVariant)
   const style = getComputedStyle(document.body)
   return style.getPropertyValue(`--${variant}`) || '#eee'
@@ -81,7 +81,7 @@ export {
   getShortkeyOS,
   objectIncludes,
   toVariant,
-  toVariantIcon,
   toVariantColor,
+  toVariantIcon,
   SORT_ORDER
 }

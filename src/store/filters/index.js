@@ -1,17 +1,38 @@
-import { namedEntityCategoryTranslation } from '@/store/filters/FilterNamedEntity'
+import { MODE_NAME } from '@/mode/index'
+import { namedEntityCategoryTranslation } from '@/store/filters/FilterEntity'
 
 export { default as FilterContentType } from './FilterContentType'
 export { default as FilterDate } from './FilterDate'
 export { default as FilterDateRange } from './FilterDateRange'
 export { default as FilterExtractionLevel } from './FilterExtractionLevel'
 export { default as FilterLanguage } from './FilterLanguage'
-export { default as FilterNamedEntity } from './FilterNamedEntity'
+export { default as FilterEntity } from './FilterEntity'
+export { default as FilterProject } from './FilterProject'
 export { default as FilterPath } from './FilterPath'
 export { default as FilterRecommendedBy } from './FilterRecommendedBy'
 export { default as FilterStarred } from './FilterStarred'
+export { default as FilterTag } from './FilterTag'
 export { default as FilterText } from './FilterText'
 
 export default [
+  {
+    type: 'FilterProject',
+    options: {
+      name: 'project',
+      key: '_index',
+      icon: 'circles-three-plus',
+      order: 0,
+      section: 'documentsInfo',
+      preference: 'filter-project',
+      hideAll: true,
+      hideSearch: true,
+      hideSort: true,
+      hideContextualize: false,
+      hideExclude: true,
+      hideExpand: true,
+      fromElasticSearch: true
+    }
+  },
   {
     type: 'FilterStarred',
     options: {
@@ -19,17 +40,24 @@ export default [
       key: '_id',
       icon: 'star',
       order: 10,
-      preference: 'filter-starred'
+      section: 'userData',
+      preference: 'filter-starred',
+      hideSearch: true,
+      hideSort: true,
+      hideContextualize: true,
+      hideExclude: true,
+      hideExpand: true,
+      fromElasticSearch: false
     }
   },
   {
-    type: 'FilterText',
+    type: 'FilterTag',
     options: {
       name: 'tags',
       key: 'tags',
-      icon: 'tags',
-      isSearchable: true,
+      icon: 'hash',
       order: 20,
+      section: 'userData',
       preference: 'filter-tags'
     }
   },
@@ -39,8 +67,15 @@ export default [
       name: 'recommendedBy',
       key: '_id',
       icon: 'users',
+      modes: [MODE_NAME.SERVER],
       order: 30,
-      fromElasticSearch: false
+      section: 'userData',
+      hideSearch: true,
+      hideSort: true,
+      hideContextualize: true,
+      hideExclude: true,
+      hideExpand: true,
+      fromElasticSearch: true
     }
   },
   {
@@ -48,9 +83,11 @@ export default [
     options: {
       name: 'path',
       key: 'byDirname',
-      icon: 'hdd',
+      icon: 'tree-structure',
       order: 35,
-      isSearchable: true,
+      section: 'documentsInfo',
+      hideAll: true,
+      hideSearch: true,
       fromElasticSearch: false,
       preference: 'filter-path'
     }
@@ -61,8 +98,8 @@ export default [
       name: 'contentType',
       key: 'contentType',
       icon: 'file',
-      isSearchable: true,
       order: 40,
+      section: 'documentsInfo',
       preference: 'filter-content-type'
     }
   },
@@ -71,8 +108,15 @@ export default [
     options: {
       name: 'creationDate',
       key: 'metadata.tika_metadata_dcterms_created',
-      icon: 'calendar-alt',
-      order: 50
+      icon: 'calendar-blank',
+      order: 50,
+      hideAll: true,
+      hideSearch: true,
+      hideSort: true,
+      hideContextualize: true,
+      hideExclude: false,
+      hideExpand: true,
+      section: 'documentsInfo'
     }
   },
   {
@@ -80,42 +124,58 @@ export default [
     options: {
       name: 'language',
       key: 'language',
-      icon: 'language',
+      icon: 'globe',
       order: 60,
+      section: 'documentsInfo',
       preference: 'filter-language'
     }
   },
   {
-    type: 'FilterNamedEntity',
+    type: 'FilterEntity',
     options: {
       name: 'namedEntityPerson',
       key: 'byMentions',
-      isSearchable: true,
+      icon: 'user-square',
       category: namedEntityCategoryTranslation.namedEntityPerson,
       order: 70,
+      section: 'entities',
       preference: 'filter-named-entity-person'
     }
   },
   {
-    type: 'FilterNamedEntity',
+    type: 'FilterEntity',
     options: {
       name: 'namedEntityOrganization',
       key: 'byMentions',
-      isSearchable: true,
+      icon: 'buildings',
       category: namedEntityCategoryTranslation.namedEntityOrganization,
       order: 80,
+      section: 'entities',
       preference: 'filter-named-entity-organization'
     }
   },
   {
-    type: 'FilterNamedEntity',
+    type: 'FilterEntity',
     options: {
       name: 'namedEntityLocation',
       key: 'byMentions',
-      isSearchable: true,
+      icon: 'map-pin',
       category: namedEntityCategoryTranslation.namedEntityLocation,
       order: 90,
+      section: 'entities',
       preference: 'filter-named-entity-location'
+    }
+  },
+  {
+    type: 'FilterEntity',
+    options: {
+      name: 'namedEntityEmail',
+      key: 'byMentions',
+      icon: 'envelope',
+      category: namedEntityCategoryTranslation.namedEntityEmail,
+      order: 100,
+      section: 'entities',
+      preference: 'filter-named-entity-email'
     }
   },
   {
@@ -124,7 +184,9 @@ export default [
       name: 'extractionLevel',
       key: 'extractionLevel',
       icon: 'paperclip',
+      hideSearch: true,
       order: 110,
+      section: 'documentsInfo',
       preference: 'filter-extraction-level'
     }
   },
@@ -134,7 +196,9 @@ export default [
       name: 'indexingDate',
       key: 'extractionDate',
       icon: 'calendar-plus',
-      order: 120
+      hideSearch: true,
+      order: 120,
+      section: 'documentsInfo'
     }
   }
 ]

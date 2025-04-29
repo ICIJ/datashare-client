@@ -1,8 +1,6 @@
 import uniqueId from 'lodash/uniqueId'
 
-import Component from '@/components/widget/WidgetEmpty'
-
-const _STATE = typeof Symbol === 'function' ? Symbol('_state') : '_state'
+import Component from '@/components/Widget/WidgetEmpty'
 
 /**
  * Class representing the Empty widget. This widget is not intended to be used directly.
@@ -16,17 +14,13 @@ class WidgetEmpty {
    * [Bootstrap's grid system](https://bootstrap-vue.org/docs/components/layout#layout-and-grid-system)
    * @param order=0 {number} - Order to display among the others widgets
    */
-  constructor({ name = uniqueId('widget-'), card = true, cols = 12, order = 0 } = {}) {
+  constructor({ name = uniqueId('widget-'), card = true, cols = 12, order = 0, modes = null, section = null } = {}) {
     this.name = name
     this.card = card
     this.cols = cols
     this.order = order
-  }
-  bindState(state) {
-    this[_STATE] = this[_STATE] || state
-  }
-  get state() {
-    return this[_STATE]
+    this.modes = modes
+    this.section = section
   }
   get component() {
     return Component

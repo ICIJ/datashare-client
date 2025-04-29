@@ -1,8 +1,12 @@
 import get from 'lodash/get'
 import isFunction from 'lodash/isFunction'
 
-export default ({ router, auth, store, config, i18n, setPageTitle }) => {
+import { useAppStore } from '@/store/modules'
+import { useNProgress } from '@/composables/useNProgress'
+
+export default ({ router, auth, config, i18n, setPageTitle }) => {
   async function checkUserAuthentication(to, from, next) {
+    const appStore = useAppStore()
     try {
       const username = await auth.getUsername()
       const skipsAuth = to.matched.some((r) => get(r, 'meta.skipsAuth', false))
@@ -10,7 +14,7 @@ export default ({ router, auth, store, config, i18n, setPageTitle }) => {
         next()
         // The user is authenticated
       } else if (username) {
-        const path = await store.dispatch('app/popRedirectAfterLogin')
+        const path = appStore.popRedirectAfterLogin()
         if (to.path !== path && path !== null) {
           next({ path })
         } else {
@@ -18,7 +22,7 @@ export default ({ router, auth, store, config, i18n, setPageTitle }) => {
         }
         // The user isn't authenticated
       } else if (from.name !== 'login' && to.name !== 'login') {
-        store.commit('app/setRedirectAfterLogin', to.path)
+        appStore.setRedirectAfterLogin(to.path)
         next({ name: 'login' })
       } else {
         next()
@@ -39,14 +43,12 @@ export default ({ router, auth, store, config, i18n, setPageTitle }) => {
     }
   }
 
-  function reduceAppSideBar(_to, _from, next) {
-    store.dispatch('app/toggleSidebar', true)
-    next()
-  }
-
   async function setPageTitleFromMeta({ meta }, _from, next) {
-    const params = { router, auth, store, config, i18n }
-    const title = isFunction(meta.title) ? await meta.title(params) : meta.title
+    const params = { router, auth, config, i18n }
+    let title
+    if (meta.title) {
+      title = isFunction(meta.title) ? await meta.title(params) : i18n.global.t(meta.title)
+    }
     setPageTitle(title)
     next()
   }
@@ -62,9 +64,20 @@ export default ({ router, auth, store, config, i18n, setPageTitle }) => {
     }
   }
 
+  function startProgress() {
+    const { start } = useNProgress()
+    start()
+  }
+
+  function endProgress() {
+    const { done } = useNProgress()
+    setTimeout(done, 200)
+  }
+
   router.beforeEach(checkMode)
   router.beforeEach(checkUserAuthentication)
   router.beforeEach(checkUserProjects)
-  router.beforeEach(reduceAppSideBar)
   router.beforeEach(setPageTitleFromMeta)
+  router.beforeEach(startProgress)
+  router.afterEach(endProgress)
 }

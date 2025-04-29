@@ -62,7 +62,7 @@ export default {
      */
     variant: {
       type: String,
-      default: 'warning'
+      default: 'secondary'
     }
   },
   emits: ['update:modelValue'],
@@ -260,11 +260,27 @@ export default {
 <style scoped lang="scss">
 .column-chart-picker {
   &__range {
+    &:deep(.range-picker__bounds__overlay) {
+      border: 0;
+    }
+
+    &:deep(.range-picker__bounds__start),
+    &:deep(.range-picker__bounds__end) {
+      border: 1px solid var(--bs-primary);
+      color: var(--bs-primary);
+      background: var(--bs-body-bg);
+    }
+
     &__chart {
       fill: currentColor;
 
       &:deep(.column-chart__columns__item) {
         cursor: pointer;
+        fill: var(--bs-secondary-bg-subtle);
+      }
+
+      &:deep(.column-chart__axis .tick line) {
+        stroke: var(--bs-tertiary-bg-subtle);
       }
     }
   }

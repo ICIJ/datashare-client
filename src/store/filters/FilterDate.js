@@ -1,9 +1,11 @@
 import FilterDocument from './FilterDocument'
 
+import DisplayDatetimeMonth from '@/components/Display/DisplayDatetimeMonth'
+
 export default class FilterDate extends FilterDocument {
   constructor(options) {
     super(options)
-    this.component = 'FilterDate'
+    this.component = 'FilterType'
   }
 
   itemLabel(item) {
@@ -53,5 +55,9 @@ export default class FilterDate extends FilterDocument {
       default:
         return { interval: '1y', format: 'yyyy', missing: '1970' }
     }
+  }
+
+  static get display() {
+    return DisplayDatetimeMonth
   }
 }

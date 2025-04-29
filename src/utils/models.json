@@ -1,0 +1,75 @@
+{
+  "Thing": {
+    "label": "Thing",
+    "abstract": true,
+    "extends": []
+  },
+  "Analyzable": {
+    "label": "Analyzable",
+    "abstract": true,
+    "extends": []
+  },
+  "Document": {
+    "label": "Document",
+    "extends": [
+      "Thing",
+      "Analyzable"
+    ]
+  },
+  "Folder": {
+    "label": "Folder",
+    "extends": [
+      "Document"
+    ]
+  },
+  "Image": {
+    "label": "Image",
+    "extends": [
+      "Document"
+    ]
+  },
+  "Video": {
+    "label": "Video",
+    "extends": [
+      "Document"
+    ]
+  },
+  "Audio": {
+    "label": "Audio",
+    "extends": [
+      "Document"
+    ]
+  },
+  "PlainText": {
+    "label": "PlainText",
+    "extends": [
+      "Document"
+    ]
+  },
+  "Table": {
+    "label": "Table",
+    "extends": [
+      "Document"
+    ]
+  },
+  "HyperText": {
+    "label": "HyperText",
+    "extends": [
+      "Document"
+    ]
+  },
+  "Email": {
+    "label": "Email",
+    "extends": [
+      "Folder",
+      "PlainText",
+      "HyperText"
+    ]
+  },
+  "Package": {
+    "label": "Package",
+    "extends": [
+      "Folder"
+    ]
+  }
+}

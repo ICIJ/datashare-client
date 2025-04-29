@@ -1,29 +1,20 @@
-import { storeBuilder } from '@/store/storeBuilder'
+import { setActivePinia, createPinia } from 'pinia'
+
+import { usePlayerStore } from '@/store/modules'
 
 describe('PlayerStore', () => {
   let store
 
-  beforeAll(() => {
-    store = storeBuilder()
+  beforeEach(() => {
+    setActivePinia(createPinia())
+    store = usePlayerStore()
   })
 
-  it('should change the autoplay value to true', () => {
-    store.commit('player/autoplay', true)
-    expect(store.state.player.autoplay).toBeTruthy()
+  it('should set autoplay to false by default', () => {
+    expect(store.autoplay).toBe(false)
   })
 
-  it('should change the loop value to true', () => {
-    store.commit('player/loop', true)
-    expect(store.state.player.loop).toBeTruthy()
-  })
-
-  it('should change the autoplay value to false', () => {
-    store.commit('player/autoplay', false)
-    expect(store.state.player.autoplay).toBeFalsy()
-  })
-
-  it('should change the loop value to false', () => {
-    store.commit('player/loop', false)
-    expect(store.state.player.loop).toBeFalsy()
+  it('should set loop to true by default', () => {
+    expect(store.loop).toBe(true)
   })
 })

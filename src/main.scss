@@ -1,9 +1,8 @@
 @import './utils/settings.scss';
 @import './utils/animations.scss';
-@import './utils/multiselect.scss';
 @import './utils/toastify.scss';
-@import './assets/fonts/Lato/stylesheet.css';
-@import './assets/fonts/Medel/stylesheet.css';
+@import '@/assets/fonts/Inter/stylesheet.css';
+@import '@/assets/fonts/Medel/stylesheet.css';
 
 @import '~node_modules/vue3-perfect-scrollbar/dist/style.css';
 @import '~node_modules/v-calendar/dist/style.css';
@@ -14,81 +13,58 @@
 // @TODO bundle Murmur so the import is easier
 @import '~node_modules/@icij/murmur-next/dist/lib/murmur.css';
 
+// Must be after bootstrap
+@import './utils/alerts.scss';
+@import './utils/buttons.scss';
+@import './utils/nprogress.scss';
 
-html {
-  font-size: 14px;
+.dropdown-item {
+  border-radius: var(--bs-border-radius);
+
+  &.active {
+    font-weight: 500;
+
+    &:hover {
+      background: var(--bs-dropdown-link-hover-bg);
+    }
+  }
+}
+
+.form-check .form-check-input:checked + .form-check-label {
+  font-weight: 500;
+  color: var(--bs-action-text-emphasis);
+}
+
+.form-check .form-check-input:not(:checked) {
+  border: var(--bs-border-width) solid var(--bs-secondary-text-emphasis);
+  & + .form-check-label {
+    color:  var(--bs-secondary-text-emphasis);
+  }
+}
+
+.form-control:hover,
+.form-control.pseudo-hover,
+.pseudo-hover-all .form-control {
+  border-color: $input-hover-border-color;
 }
 
 body {
+  font-size: 1rem;
+  overflow: auto;
+  // This is not ideal but it prevents some weird display issues with Chrome
   overflow-x: hidden;
-  max-width: 100vw;
-}
 
-@keyframes rotateLogo {
-  100% {
-    transform: translate(-50%, -50%) rotate(1turn);
+  // Disable overflow scrollbar when the sidebar or the filters panel are in full width and not closed
+  &:has(.app-sidebar--full-width:not(.app-sidebar--closed)),
+  &:has(.filters-panel--full-width:not(.filters-panel--closed)) {
+    overflow: hidden;
   }
 }
 
-.splashscreen {
-  align-items: center;
-  background: darken($primary, 10%);
-  bottom: 0;
-  color: white;
-  display: flex;
-  justify-content: center;
-  left: 0;
-  position: fixed;
-  right: 0;
-  top: 0;
-
-  &__panel {
-    font-weight: bolder;
-    margin: $spacer;
-    max-width: 330px;
-    text-align: center;
-
-    &__spinner {
-      border-radius: $spacer;
-      display: flex;
-      height: 130px;
-      margin-bottom: $spacer;
-      overflow: hidden;
-      position: relative;
-      width: 130px;
-
-      &:before {
-        animation: rotateLogo 4s linear infinite;
-        background-image: linear-gradient(#48C2FC, #48C2FC),
-          linear-gradient($secondary, $secondary),
-          linear-gradient(#48C2FC, #48C2FC),
-          linear-gradient($secondary, $secondary);
-        background-position: 0 0, 100% 0, 100% 100%, 0 100%;
-        background-repeat: no-repeat;
-        background-size: 50% 50%, 50% 50%;
-        border-radius: inherit;
-        content: "";
-        height: 200%;
-        left: 50%;
-        position: absolute;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        width: 200%;
-        z-index: -1;
-      }
-
-      &:after {
-        background: white url('@/assets/images/logo-color-symbol.svg') no-repeat center center;
-        background-size: 80% 80%;
-        border-radius: inherit;
-        content: "";
-        display: block;
-        height: 95%;
-        margin: auto;
-        width: 95%;
-      }
-    }
-  }
+// This class should be provided by default in Bootstrap 5 but for some reasong it's not working.
+.bg-body {
+  --bs-bg-opacity: 1;
+  background-color: rgba(var(--bs-body-bg-rgb), var(--bs-bg-opacity)) !important;
 }
 
 .text-special {
@@ -122,17 +98,6 @@ body {
   min-width: 0;
 }
 
-@each $variant,
-$value in $theme-colors {
-  .popover-magnified-#{$variant} {
-    @include popover-magnified-variant($value);
-  }
-
-  .popover-#{$variant} {
-    @include popover-variant($value);
-  }
-}
-
 .table.card > tbody > tr:last-of-type > td,
 .table-responsive.card > .table > tbody > tr:last-of-type > td {
   border-bottom-width: 0;
@@ -151,7 +116,7 @@ $value in $theme-colors {
         color: inherit;
 
         &:hover {
-          background: rgba(white, 0.1);
+          background: rgba(var(--bs-body-bg-rgb), 0.7);
         }
       }
     }
@@ -193,113 +158,96 @@ $value in $theme-colors {
     border-radius: inherit;
     overflow: hidden;
   }
-
-  &.bs-popover-bottom > .popover-arrow::after,
-  &.bs-popover-auto[data-popper-placement^="bottom"] > .popover-arrow::after {
-    border-bottom-color: $popover-header-bg;
-  }
 }
 
-#b-toaster-top-right.b-toaster .b-toaster-slot,
-#b-toaster-top-left.b-toaster .b-toaster-slot,
-#b-toaster-bottom-right.b-toaster .b-toaster-slot,
-#b-toaster-bottom-left.b-toaster .b-toaster-slot {
+html[data-bs-theme] body .Toastify {
+  --toastify-toast-width: 470px;
 
-  &,
-  .b-toast,
-  .b-toast .toast {
-    max-width: 460px;
-  }
-
-  .b-toast {
-    .toast, .toast-header {
-      font-size: 1rem;
-      padding-right: 2.5rem;
+  &__toast {
+    &-body {
+      padding: 0;
     }
 
-    .toast-header {
-      background-color: transparent;
-      border: 0;
+    &--error {
+      background: var(--bs-danger-text-emphasis);
+      color: var(--bs-danger-bg-subtle);
     }
 
-    .toast {
-      box-shadow: $box-shadow-sm;
-    }
-    .close {
-      position: absolute;
-      right: $spacer-xs;
-      padding: 0 $spacer-xs;
-      top: $spacer-xs;
-      bottom: $spacer-xs;
-      color: inherit;
-      border-left: 1px solid currentColor;
-      font-weight: lighter;
-      font-size: 1.5rem;
-    }
-
-    @each $color, $value in $theme-colors {
-      &.b-toast-#{$color} .close {
-        border-color: theme-color-level($color, 40%);
+    @each $state in map-keys($theme-colors) {
+      &--#{$state} {
+        background: var(--bs-#{$state}-bg-subtle);
+        color: var(--bs-#{$state}-text-emphasis);
       }
     }
   }
 }
 
-.vc-popover-content-wrapper {
-  z-index: $zindex-tooltip !important;
-
-  .vc-popover-content.direction-top {
-    filter: drop-shadow(0 0.25rem 0.5rem rgba(black, .4));
+.tab-group-navigation {
+  &--nowrap:not(.flex-column) {
+    overflow: auto;
+    flex-wrap: nowrap;
+    padding-bottom: $spacer-xxs;
+    white-space: nowrap;
   }
-  .vc-popover-content.direction-bottom {
-    filter: drop-shadow(0 -0.25rem 0.5rem rgba(black, .4));
+
+  &--flush {
+    & .nav-item:first-of-type a,& .nav-item:first-of-type button {
+      padding-left: 0;
+    }
+
+    & .nav-item:last-of-type a,& .nav-item:last-of-type button {
+      padding-right: 0;
+    }
   }
 }
 
-.vc-container, .vc-popover-content {
+.tab-group-navigation-entry {
+    
+  &:not(&--manual) > .nav-link.router-link-active,
+  &:not(&--manual) > .nav-link.router-link-exact-active,
+  &:not(&--manual) > .nav-link.active,
+  &--manual.tab-group-navigation-entry--active > .nav-link {
 
-  &.vc-yellow {
-    --vc-accent-500: #{$tertiary};
-    --vc-accent-400: #{lighten($tertiary, 5)};
-    --vc-accent-300: #{lighten($tertiary, 10)};
-    --vc-accent-200: #{lighten($tertiary, 15)};
-    --vc-accent-100: #{lighten($tertiary, 20)};
-  }
+    --color: var(--bs-emphasis-color);
+    background: transparent;
+    border-bottom: 2px solid var(--bs-primary);
+    font-weight: 500;
 
-  --vc-gray-900: #{darken($app-context-sidebar-bg, 5%)};
-  --vc-gray-800: #{$app-context-sidebar-bg};
-  --vc-border: #{$border-color};
-  --vc-popover-content-border: #{$border-color};
-
-  font-size: 0.8rem;
-  color: inherit;
-  padding: 0;
-  margin: 0;
-  font-family: $font-family-base;
-
-  &.vc-dark {
-    --vc-bg: var(--vc-gray-900);
-    --vc-border: var(--vc-gray-800);
-    --vc-popover-content-border: var(--vc-gray-800);
-    --vc-weekday-color: var(--vc-accent-500);
-
-    [type=button] {
-      background: transparent;
+    .nav-tabs.flex-column>& {
+      border-left: 2px solid var(--bs-primary);
     }
   }
 
-  .vc-highlights {
-    .vc-day-layer {
+   .nav-link {
+     --color: var(--bs-secondary-text-emphasis);
 
-      .vc-highlight-base-start,
-      .vc-highlight-base-middle,
-      .vc-highlight-base-end {
-        background-color: rgba($tertiary, 0.4) !important;
-      }
-    }
-  }
+     color: var(--color);
+     padding: 10px $spacer-xs;
+     border-color: transparent;
 
-  .vc-day-content:hover {
-    background-color: rgba($tertiary, 0.1) !important;
-  }
+     &.nav-link:hover {
+       --color: var(--bs-emphasis-color);
+       border-color: var(--bs-primary);
+
+       .nav-tabs.flex-column > & {
+         border-left: 2px solid var(--bs-primary);
+       }
+     }
+
+     .nav-tabs.flex-column > & {
+       border-bottom: 0;
+       padding: 0 $spacer;
+       border-left: 2px solid transparent;
+     }
+   }
+
+   & .badge {
+     background: var(--color);
+     color: var(--bs-body-bg);
+     transition: $transition-base;
+   }
+ }
+
+.phosphor-icon {
+  min-width: 1em;
 }

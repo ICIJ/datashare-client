@@ -5,11 +5,8 @@ import compose from 'lodash/fp/compose'
 import Murmur from '@icij/murmur-next'
 import VCalendar from 'v-calendar'
 import VueScrollTo from 'vue-scrollto'
-import VueShortkey from 'vue3-shortkey'
-import VueEllipseProgress from 'vue-ellipse-progress'
 import Vue3Toastify, { toast } from 'vue3-toastify'
 import { createBootstrap } from 'bootstrap-vue-next'
-import { createVueWait } from 'vue-wait'
 import { createApp, defineComponent, h } from 'vue'
 import { createI18n } from 'vue-i18n'
 import { createWebHashHistory, createRouter } from 'vue-router'
@@ -23,15 +20,18 @@ import PipelinesMixin from './PipelinesMixin'
 import ProjectsMixin from './ProjectsMixin'
 import WidgetsMixin from './WidgetsMixin'
 
-import { dispatch, EventBus } from '@/utils/event-bus'
+import { apiInstance } from '@/api/apiInstance'
+import { dispatch, EventBus } from '@/utils/eventBus'
 import { getMode, MODE_NAME } from '@/mode'
 import { routes } from '@/router'
-import { storeBuilder } from '@/store/storeBuilder'
+import { pinia } from '@/store/pinia'
 import Auth from '@/api/resources/Auth'
-import ToastBody from '@/components/ToastBody'
+import ToastBody from '@/components/Dismissable/DismissableToastBody'
 import guards from '@/router/guards'
 import messages from '@/lang/en'
 import settings from '@/utils/settings'
+import { useTheme } from '@/composables/useTheme'
+import * as stores from '@/store/modules'
 
 class Base {}
 const Behaviors = compose(
@@ -61,12 +61,11 @@ class Core extends Behaviors {
    * @param api - Datashare api interface
    * @param mode - mode of authentication ('local' or 'server'
    */
-  constructor(api = null, mode = getMode(MODE_NAME.LOCAL)) {
+  constructor(api = apiInstance, mode = getMode(MODE_NAME.LOCAL)) {
     super()
-    const Root = defineComponent({ name: 'Root', template: '<router-view></router-view>' })
+    const Root = defineComponent({ name: 'Datashare', template: '<router-view></router-view>' })
     this._vue = createApp(Root)
     this._api = api
-    this._store = storeBuilder(api)
     this._auth = new Auth(mode, this._api)
     // Setup deferred state
     this.defer()
@@ -86,11 +85,24 @@ class Core extends Behaviors {
    * @returns {Core} the current instance of Core
    */
   useAll() {
-    this.useVuex()
+    this.usePinia()
     this.useI18n()
-    this.useBootstrapVue()
+    this.useBootstrapVue({
+      directives: true,
+      components: {
+        BPopover: {
+          offset: '16px'
+        },
+        BTooltip: {
+          offset: '6px',
+          delay: {
+            show: 0,
+            hide: 0
+          }
+        }
+      }
+    })
     this.useCommons()
-    this.useWait()
     this.useCore()
     return this
   }
@@ -99,16 +111,36 @@ class Core extends Behaviors {
    * @returns {Core} the current instance of Core
    */
   useI18n() {
+    const numberFormats = {
+      'en-US': {
+        currency: {
+          style: 'currency',
+          currency: 'USD',
+          notation: 'standard'
+        },
+        decimal: {
+          style: 'decimal',
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        },
+        percent: {
+          style: 'percent',
+          useGrouping: false
+        }
+      }
+    }
     this._i18n = createI18n({
       warnHtmlInMessage: 'off',
       warnHtmlMessage: 'off',
       globalInjection: true,
+      allowComposition: true,
       legacy: true,
       locale: settings.defaultLocale,
       fallbackLocale: settings.defaultLocale,
       messages: {
         [settings.defaultLocale]: messages
-      }
+      },
+      numberFormats
     })
     this.use(this._i18n)
     return this
@@ -134,39 +166,34 @@ class Core extends Behaviors {
     return this
   }
   /**
-   * Configure vuex plugin
+   * Configure pinia
    * @returns {Core} the current instance of Core
    */
-  useVuex() {
-    this.use(this.store)
+  usePinia() {
+    this.use(this.pinia)
     return this
   }
   /**
-   * Configure most common Vue plugins (Murmur, VueShortkey, VueScrollTo and VueCalendar)
+   * Configure most common Vue plugins (Murmur, VueScrollTo and VueCalendar)
    * @returns {Core} the current instance of Core
    */
   useCommons() {
-    // Murmur is loaded without installing Vue i18n and Bootstrap Vue
-    // to avoid adding them twice to the Vue instance.
-    this.use(Murmur, { useI18n: false, useBootstrap: false })
-    // Common plugins
-    this.use(Vue3Toastify, { clearOnUrlChange: false, hideProgressBar: false, autoClose: 5000 })
-    this.use(VueShortkey, { prevent: settings.hotKeyPrevented })
     this.use(VueScrollTo)
-    this.use(VueEllipseProgress)
     // Setup VCalendar manually since Webpack is not compatible with
     // dynamic chunk import with third party modules.
     // @see https://github.com/nathanreyes/v-calendar/issues/413#issuecomment-530633437
     this.use(VCalendar, { componentPrefix: 'vc' })
-    return this
-  }
-  /**
-   * Configure vue-wait plugin
-   * @returns {Core} the current instance of Core
-   */
-  useWait() {
-    this._wait = createVueWait({ useVuex: true })
-    this.use(this.wait)
+    // Murmur is loaded without installing Vue i18n and Bootstrap Vue
+    // to avoid adding them twice to the Vue instance.
+    this.use(Murmur, { useI18n: false, useBootstrap: false })
+    // Vue Toastify uses as separated vue instance so we must install vue-i18n
+    // separately to ensure vue-i18n's methods and components are available in the toastify plugin.
+    this.use(Vue3Toastify, {
+      clearOnUrlChange: false,
+      hideProgressBar: true,
+      autoClose: 5000,
+      useHandler: (app) => app.use(this.i18n)
+    })
     return this
   }
   /**
@@ -194,7 +221,7 @@ class Core extends Behaviors {
           toast(body, { title = null, href = null, linkLabel = null, ...options } = {}) {
             const closeOnClick = options.closeOnClick ?? !href
             const props = { title, body, href, linkLabel }
-            const toastProps = { closeOnClick, ...options }
+            const toastProps = { closeOnClick, ...options, icon: false, closeButton: false }
             toast?.(({ closeToast, toastProps }) => h(ToastBody, { closeToast, toastProps, ...props }), toastProps)
           },
           error(body, options) {
@@ -230,21 +257,22 @@ class Core extends Behaviors {
       // Get the config object
       await this.loadSettings()
       // Create the default project for the current user or redirect to login
-      if (this.mode.modeName !== 'server') {
+      if (this.mode.modeName !== MODE_NAME.SERVER) {
         if (!(await this.defaultProjectExists())) {
           await this.createDefaultProject()
         }
       }
       this._auth = new Auth(this.mode)
-      // Set the default project
-      if (!this.store.state.search.indices.length) {
-        this.store.commit('search/indices', [this.getDefaultProject()])
+      // Instantiate the search store
+      const searchStore = this.stores.useSearchStore()
+      // Set the default project only if none is already selected
+      if (!searchStore.indices.length) {
+        searchStore.setIndex(this.getDefaultProject())
       }
-      // Check if "Download" functionality is available for the selected project
-      // Because otherwise, if the FilterPanel is closed, it is never called
-      await this.store.dispatch('downloads/fetchIndicesStatus')
       // Initialize current locale
       await this.initializeI18n()
+      // Load theme
+      this.loadTheme()
       // Hold a promise that is resolved when the core is configured
       return this.ready && this._readyResolve(this)
     } catch (error) {
@@ -259,6 +287,10 @@ class Core extends Behaviors {
     }
     const defaultProject = this.config.get('defaultProject', '')
     return userProjects.indexOf(defaultProject) === -1 ? userProjects[0] : defaultProject
+  }
+
+  getDefaultDataDir() {
+    return this.config.get('mountedDataDir') || this.config.get('dataDir')
   }
 
   /**
@@ -325,6 +357,11 @@ class Core extends Behaviors {
     this.config.merge(getMode(serverSettings.mode))
     // The backend can yet override some configuration
     this.config.merge(serverSettings)
+  }
+
+  loadTheme() {
+    const { getTheme, setTheme } = useTheme()
+    setTheme(getTheme())
   }
   /**
    * Append the given title to the page title
@@ -408,11 +445,17 @@ class Core extends Behaviors {
     return this._router
   }
   /**
-   * The Vuex instance
-   * @type {Vuex.Store}
+   * The Pinia instance
+   * @type {Pinia}
    */
-  get store() {
-    return this._store
+  get pinia() {
+    return pinia
+  }
+  /**
+   * All Pinia stores available in the application
+   */
+  get stores() {
+    return stores
   }
   /**
    * The CorePlugin instance
@@ -448,13 +491,6 @@ class Core extends Behaviors {
    */
   get vue() {
     return this._vue
-  }
-  /**
-   * The VueWait
-   * @type {VueWait}
-   */
-  get wait() {
-    return this._wait
   }
   /**
    * Get current Datashare mode
