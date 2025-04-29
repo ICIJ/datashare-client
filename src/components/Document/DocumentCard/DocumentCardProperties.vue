@@ -12,6 +12,7 @@ import DocumentCardPropertiesEntryLanguage from './DocumentCardPropertiesEntryLa
 import DocumentCardPropertiesEntryPath from './DocumentCardPropertiesEntryPath'
 import DocumentCardPropertiesEntryProject from './DocumentCardPropertiesEntryProject'
 import DocumentCardPropertiesEntryTags from './DocumentCardPropertiesEntryTags'
+import DocumentCardPropertiesEntryNumberOfPages from './DocumentCardPropertiesEntryNumberOfPages'
 
 import { useSearchProperties } from '@/composables/useSearchProperties'
 
@@ -26,7 +27,8 @@ const entryComponents = {
   language: DocumentCardPropertiesEntryLanguage,
   path: DocumentCardPropertiesEntryPath,
   project: DocumentCardPropertiesEntryProject,
-  tags: DocumentCardPropertiesEntryTags
+  tags: DocumentCardPropertiesEntryTags,
+  numberOfPages: DocumentCardPropertiesEntryNumberOfPages
 }
 
 const props = defineProps({

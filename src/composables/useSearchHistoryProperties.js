@@ -1,5 +1,6 @@
 import { useViewSettings } from '@/composables/useViewSettings'
 import { useSearchProperties } from '@/composables/useSearchProperties.js'
+
 export function useSearchHistoryProperties() {
   const { items: searchItems } = useSearchProperties()
   const { fieldsToSortByOptions, fieldsToPropertiesOptions } = useViewSettings()
@@ -15,7 +16,8 @@ export function useSearchHistoryProperties() {
     creationDate,
     extractionLevel,
     language,
-    project
+    project,
+    numberOfPages
   } = searchItems
   const items = {
     thumbnail,
@@ -29,7 +31,8 @@ export function useSearchHistoryProperties() {
     creationDate,
     extractionLevel,
     language,
-    project
+    project,
+    numberOfPages
   }
   const fields = Object.values(items)
   const sortByOptions = fieldsToSortByOptions(fields)

@@ -2,7 +2,7 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { useViewProperties } from '@/composables/useViewProperties'
-import { useViewSettings, SORT_TYPE_KEY } from '@/composables/useViewSettings'
+import { SORT_TYPE_KEY, useViewSettings } from '@/composables/useViewSettings'
 
 export function useSearchProperties() {
   const { t } = useI18n()
@@ -117,6 +117,12 @@ export function useSearchProperties() {
     text: computed(() => t('documentRow.properties.project'))
   })
 
+  const numberOfPages = propertyItem({
+    icon: 'files',
+    key: 'numberOfPages',
+    text: computed(() => t('document.numberOfPages'))
+  })
+
   const items = {
     thumbnail,
     title,
@@ -130,7 +136,8 @@ export function useSearchProperties() {
     creationDate,
     extractionLevel,
     language,
-    project
+    project,
+    numberOfPages
   }
 
   const fields = Object.values(items)
