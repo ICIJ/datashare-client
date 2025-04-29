@@ -10,14 +10,14 @@
   },
   "addonCard": {
     "plugin": {
-      "submitSuccess": "Extension successfully installed, please restart Datashare.",
-      "submitError": "Error while installing the extension.",
-      "deleteSuccess": "Plugin successfully deleted.",
+      "submitSuccess": "Plugin successfully installed.",
+      "submitError": "Error while installing the plugin.",
+      "deleteSuccess": "Extension successfully deleted.",
       "deleteError": "Error while deleting the plugin."
     },
     "extension": {
-      "submitSuccess": "Plugin successfully installed.",
-      "submitError": "Error while installing the plugin.",
+      "submitSuccess": "Extension successfully installed, please restart Datashare.",
+      "submitError": "Error while installing the extension.",
       "deleteSuccess": "Extension successfully deleted.",
       "deleteError": "Error while deleting the extension."
     }
@@ -46,6 +46,9 @@
   "appModalFooter": {
     "cancelTitle": "Cancel",
     "okTitle": "Yes"
+  },
+  "appPopoverHeader": {
+    "close": "Close"
   },
   "buttonAdd": {
     "label": "crwdns3034:0crwdne3034:0"
@@ -343,16 +346,27 @@
   "documentUserCommentsList": {
     "hideComments": "crwdns3388:0crwdne3388:0",
     "showComments": "crwdns3390:0crwdne3390:0",
-    "noComments": "crwdns3392:0crwdne3392:0",
     "sortingText": "crwdns3394:0crwdne3394:0",
     "goToOldest": "crwdns3396:0crwdne3396:0",
     "goToRecent": "crwdns3398:0crwdne3398:0"
   },
-  "documentUserComments": {
-    "warning": "crwdns3400:0crwdne3400:0"
+  "documentUserCommentsListNewest": {
+    "label": "crwdns5234:0crwdne5234:0"
   },
-  "documentUserCommentsActions": {
-    "placeholder": "crwdns3402:0crwdne3402:0"
+  "documentUserCommentsListOldest": {
+    "label": "crwdns5236:0crwdne5236:0"
+  },
+  "documentUserCommentsHeader": {
+    "hideComments": "crwdns5238:0crwdne5238:0",
+    "showComments": "crwdns5240:0crwdne5240:0",
+    "sortingText": "crwdns5242:0crwdne5242:0"
+  },
+  "documentUserComments": {
+    "warning": "crwdns5244:0crwdne5244:0"
+  },
+  "documentUserCommentsForm": {
+    "placeholder": "crwdns5246:0crwdne5246:0",
+    "submit": "crwdns5248:0crwdne5248:0"
   },
   "documentUserCommentsListEntry": {
     "goToComment": "crwdns3404:0crwdne3404:0"
@@ -376,9 +390,6 @@
     "copy": "crwdns3424:0crwdne3424:0",
     "search": "crwdns3426:0crwdne3426:0",
     "pin": "crwdns3428:0crwdne3428:0"
-  },
-  "documentThumbnail": {
-    "noPreview": "crwdns3430:0crwdne3430:0"
   },
   "documentTranslatedContent": {
     "detected": "Detected language",
@@ -1133,6 +1144,12 @@
       }
     }
   },
+  "batchSearchErrorModal": {
+    "okTitle": "crwdns5250:0crwdne5250:0",
+    "errorTitle": "crwdns5252:0crwdne5252:0",
+    "text": "crwdns5254:0crwdne5254:0",
+    "description": "crwdns5256:0{link}crwdne5256:0"
+  },
   "batchSearchCard": {
     "seeAllDocuments": "crwdns4482:0crwdne4482:0",
     "downloadResultsLabel": "crwdns4484:0crwdne4484:0",
@@ -1390,21 +1407,21 @@
       "info": "crwdns4778:0{href}crwdne4778:0"
     },
     "addons": {
-      "plugins": {
+      "plugin": {
         "title": "Plugins",
-        "info": "crwdns4782:0crwdne4782:0",
+        "info": "crwdns5260:0crwdne5260:0",
         "submitSuccess": "Plugin successfully installed.",
         "submitError": "Error while installing the plugin.",
         "searchPlaceholder": "Search plugins",
-        "errorLabel": "crwdns4790:0crwdne4790:0"
+        "errorLabel": "crwdns5268:0crwdne5268:0"
       },
-      "extensions": {
+      "extension": {
         "title": "Extensions",
-        "info": "crwdns4794:0crwdne4794:0",
+        "info": "crwdns5272:0crwdne5272:0",
         "submitSuccess": "Extension successfully installed, please restart Datashare.",
         "submitError": "Error while installing the extension.",
         "searchPlaceholder": "Search extensions",
-        "errorLabel": "crwdns4802:0crwdne4802:0"
+        "errorLabel": "crwdns5280:0crwdne5280:0"
       }
     },
     "api": {
