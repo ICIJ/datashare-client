@@ -4,9 +4,9 @@
     "yes": "Yes",
     "no": "No",
     "submit": "Submit",
-    "reset": "crwdns2986:0crwdne2986:0",
-    "you": "crwdns2988:0{username}crwdne2988:0",
-    "building": "crwdns2990:0crwdne2990:0"
+    "reset": "Reset",
+    "you": "{username} (you)",
+    "building": "Our team is still crafting something awesome for this page. Stay tuned!"
   },
   "addonCard": {
     "plugin": {
@@ -23,22 +23,22 @@
     }
   },
   "addonUrlInput": {
-    "installFromUrl": "crwdns3008:0crwdne3008:0",
-    "install": "crwdns3010:0crwdne3010:0",
+    "installFromUrl": "Install from a URL",
+    "install": "Install",
     "enterCorrectUrl": "Please enter a correct URL."
   },
   "addonCardViewActions": {
-    "version": "crwdns3014:0{v}crwdne3014:0",
-    "install": "crwdns3016:0{v}crwdne3016:0",
-    "update": "crwdns3018:0{v}crwdne3018:0",
+    "version": "Version: {v}",
+    "install": "Install {v}",
+    "update": "Update to {v}",
     "uninstall": "Uninstall"
   },
   "addonCardViewDetails": {
-    "homepage": "crwdns3022:0crwdne3022:0"
+    "homepage": "Homepage:"
   },
   "appModalConfirm": {
     "title": "Are you sure?",
-    "description": "crwdns3026:0crwdne3026:0"
+    "description": "This action cannot be undone."
   },
   "appModalHeader": {
     "close": "Close"
@@ -51,55 +51,55 @@
     "close": "Close"
   },
   "buttonAdd": {
-    "label": "crwdns3034:0crwdne3034:0"
+    "label": "Add new"
   },
   "buttonToggleSettings": {
     "label": "Settings"
   },
   "buttonToggleSidebar": {
-    "expand": "crwdns3038:0crwdne3038:0",
-    "reduce": "crwdns3040:0crwdne3040:0"
+    "expand": "Expand sidebar",
+    "reduce": "Reduce sidebar"
   },
   "buttonClearSearch": {
-    "label": "crwdns3042:0crwdne3042:0"
+    "label": "Clear search"
   },
   "buttonClearHistory": {
     "label": "Clear history"
   },
   "buttonClearSavedSearches": {
-    "label": "crwdns3046:0crwdne3046:0"
+    "label": "Clear saved searches"
   },
   "buttonDownloadDocuments": {
-    "label": "crwdns3048:0crwdne3048:0"
+    "label": "Download documents"
   },
   "buttonTogglePin": {
-    "pin": "crwdns3050:0crwdne3050:0",
-    "unpin": "crwdns3052:0crwdne3052:0"
+    "pin": "Pin to menu",
+    "unpin": "Unpin"
   },
   "buttonToggleBatchMode": {
-    "labelBatchMode": "crwdns3054:0crwdne3054:0",
-    "labelSingleFlow": "crwdns3056:0crwdne3056:0"
+    "labelBatchMode": "Selection mode",
+    "labelSingleFlow": "Close selection mode"
   },
   "buttonSaveSearch": {
     "label": "Save",
-    "labelSaving": "crwdns3060:0crwdne3060:0",
-    "labelSaved": "crwdns3062:0crwdne3062:0"
+    "labelSaving": "Saving",
+    "labelSaved": "Search saved"
   },
   "buttonToggleAdvancedSearch": {
-    "label": "crwdns3064:0crwdne3064:0"
+    "label": "Advanced"
   },
   "buttonToggleFilters": {
-    "label": "crwdns3066:0crwdne3066:0"
+    "label": "Filter"
   },
   "buttonToggleSearchBreadcrumb": {
-    "label": "crwdns3068:0crwdne3068:0"
+    "label": "Toggle search breadcrumb"
   },
   "buttonToggleRecommendation": {
     "mark": "Mark as recommended",
     "unmark": "Unmark as recommended"
   },
   "buttonToTop": {
-    "label": "crwdns3074:0crwdne3074:0"
+    "label": "Back to top"
   },
   "contentTextLengthWarning": {
     "title": "This document is huge",
@@ -109,7 +109,7 @@
   },
   "dismissableAlert": {
     "close": "Close",
-    "dontShow": "crwdns3086:0crwdne3086:0"
+    "dontShow": "Don't show this again"
   },
   "dismissableToastBody": {
     "close": "Close"
@@ -123,61 +123,61 @@
     "no": "Not starred"
   },
   "displayDatetimeRange": {
-    "title": "crwdns3098:0{start}crwdnd3098:0{end}crwdne3098:0"
+    "title": "From {start} to {end}"
   },
   "displayStatus": {
-    "success": "crwdns3100:0crwdne3100:0",
-    "error": "crwdns3102:0crwdne3102:0",
-    "failure": "crwdns3104:0crwdne3104:0",
-    "danger": "crwdns3106:0crwdne3106:0",
-    "warning": "crwdns3108:0crwdne3108:0",
-    "info": "crwdns3110:0crwdne3110:0",
-    "running": "crwdns3112:0crwdne3112:0",
-    "queued": "crwdns3114:0crwdne3114:0",
-    "draft": "crwdns3116:0crwdne3116:0"
+    "success": "Success",
+    "error": "Failure",
+    "failure": "Failure",
+    "danger": "Failure",
+    "warning": "Warning",
+    "info": "Information",
+    "running": "Running",
+    "queued": "Queued",
+    "draft": "Draft"
   },
   "displayVisibility": {
-    "private": "crwdns3118:0crwdne3118:0",
-    "public": "crwdns3120:0crwdne3120:0"
+    "private": "Private to you",
+    "public": "Public to project members"
   },
   "documentTranslationAlertToggler": {
-    "viewOriginal": "crwdns3122:0crwdne3122:0",
-    "viewTranslation": "crwdns3124:0crwdne3124:0"
+    "viewOriginal": "View original",
+    "viewTranslation": "View translation"
   },
   "documentTranslationAlertSource": {
     "detected": "Detected language"
   },
   "documentDownloadPopover": {
-    "extensionWarning": "crwdns3128:0{extension}crwdne3128:0",
+    "extensionWarning": "This document has the wrong file extension for its type. You might need to <strong>add the extension {extension}</strong> before you can open it.",
     "download": "Download",
-    "downloadWithoutMetadata": "crwdns3132:0crwdne3132:0",
-    "downloadExtractText": "crwdns3134:0crwdne3134:0",
-    "downloadRoot": "crwdns3136:0crwdne3136:0",
-    "sectionTitle": "crwdns3138:0crwdne3138:0",
-    "sectionContentType": "crwdns3140:0crwdne3140:0",
-    "sectionDescription": "crwdns3142:0crwdne3142:0"
+    "downloadWithoutMetadata": "Download without metadata",
+    "downloadExtractText": "Download text",
+    "downloadRoot": "Download root",
+    "sectionTitle": "What's the document's title?",
+    "sectionContentType": "What's the document's type?",
+    "sectionDescription": "Once downloaded, how do I open it?"
   },
   "entityPopoverInfo": {
-    "content": "crwdns3144:0crwdne3144:0",
-    "label": "crwdns3146:0{extractor}crwdnd3146:0{language}crwdne3146:0"
+    "content": "This entity was extracted with:",
+    "label": "{extractor} in {language}"
   },
   "entityPopoverMention": {
-    "noExcerpt": "crwdns3148:0crwdne3148:0"
+    "noExcerpt": "This entity was extracted from the metadata."
   },
   "entityPopoverMentionOccurrences": {
-    "occurrences": "crwdns3150:0{offsets}crwdnd3150:0{offsets}crwdnd3150:0{offsets}crwdne3150:0",
-    "projects": "crwdns3152:0{n}crwdnd3152:0{n}crwdnd3152:0{n}crwdne3152:0"
+    "occurrences": "This mention appears {offsets} times | This mention appears {offsets} time | This mention appears {offsets} times",
+    "projects": "in {n} projects | in {n} project | in {n} projects:"
   },
   "entityPopoverTabGroup": {
-    "mentions": "crwdns3154:0crwdne3154:0",
-    "info": "crwdns3156:0crwdne3156:0"
+    "mentions": "Mentions",
+    "info": "Info"
   },
   "error": {
     "title": "Something went wrong",
     "description": "An error has occurred. Please try again later or contact your administrator if the problem persists.",
     "noProjects": "Your project list is empty. Please contact your administrator.",
     "notFound": "Page not found.",
-    "logout": "crwdns3166:0crwdne3166:0",
+    "logout": "Log out",
     "faq": "FAQ",
     "userGuides": "User guides",
     "help": "Ask for help"
@@ -186,19 +186,19 @@
     "expand": "Expand"
   },
   "filtersPanelSectionFilterTitleToggler": {
-    "toggle": "crwdns3176:0crwdne3176:0"
+    "toggle": "Toggle filter"
   },
   "searchResultsActions": {
-    "deselectAll": "crwdns3178:0{count}crwdne3178:0",
-    "selectAll": "crwdns3180:0{count}crwdne3180:0",
+    "deselectAll": "Unselect {count} documents",
+    "selectAll": "Select all {count}",
     "tag": "Tag",
     "star": "Star",
-    "recommend": "crwdns3186:0crwdne3186:0",
+    "recommend": "Recommend",
     "download": "Download"
   },
   "search": {
-    "title": "crwdns3190:0crwdne3190:0",
-    "emptyStateLabel": "crwdns3192:0crwdne3192:0",
+    "title": "Search documents",
+    "emptyStateLabel": "Oh, it’s lonely in here... This project has no documents yet.",
     "emptyStateAction": "Add documents",
     "errors": {
       "badRequest": "Your search query is wrong",
@@ -221,9 +221,9 @@
       "thread": "Thread ID",
       "description": "Description"
     },
-    "placeholder": "crwdns3230:0crwdne3230:0",
+    "placeholder": "Type queries, use operators or type regex...",
     "buttonLabel": "Search",
-    "searchIn": "crwdns3234:0{plural}crwdne3234:0",
+    "searchIn": "Filter {plural}...",
     "searchInProjects": "Filter projects...",
     "hideFilters": "Hide filters",
     "showFilters": "Show filters",
@@ -231,30 +231,30 @@
     "contextualizeFiltersDescription": "Filters on the left panel will be updated according to the search results.",
     "tips": "Tips to improve searching",
     "settings": {
-      "title": "crwdns3248:0crwdne3248:0",
-      "resultsPerPage": "crwdns3250:0crwdne3250:0"
+      "title": "Results settings",
+      "resultsPerPage": "Documents per page"
     },
     "results": {
       "match": "match in doc",
       "entities": "nb entities",
-      "results": "crwdns3256:0{total}crwdne3256:0",
+      "results": "on 1 document | on {total} documents",
       "noResults": "No documents found",
       "perPage": "per page",
       "sortedByPath": "sorted by path",
       "batchDownloadNotAllowed": "Batch downloads are not allowed on multiple projects.",
       "batchDownload": "Download results",
-      "batchDownloadSubmit": "crwdns3268:0{total}crwdne3268:0",
-      "warningNumber": "crwdns3270:0{number}crwdne3270:0",
-      "warningSize": "crwdns3272:0{size}crwdne3272:0",
+      "batchDownloadSubmit": "You are about to download 1 document. | You are about to download {total} documents.",
+      "warningNumber": "You cannot download more than {number} documents.",
+      "warningSize": "You cannot download more than {size}B.",
       "warningConfirm": "Do you still want to download the first documents of this search?",
       "sort": {
         "sortLabel": "Sort",
         "sort": "Sort by",
         "relevance": "Relevance",
-        "dateNewest": "crwdns3282:0crwdne3282:0",
-        "dateOldest": "crwdns3284:0crwdne3284:0",
-        "creationDateNewest": "crwdns3286:0crwdne3286:0",
-        "creationDateOldest": "crwdns3288:0crwdne3288:0",
+        "dateNewest": "Indexing date (recent first)",
+        "dateOldest": "Indexing date (old first)",
+        "creationDateNewest": "Creation date (recent first)",
+        "creationDateOldest": "Creation date (old first)",
         "sizeLargest": "Size (decreasing)",
         "sizeSmallest": "Size (increasing)",
         "path": "File path (A to Z)",
@@ -270,126 +270,126 @@
     "submitLabel": "Search"
   },
   "searchParameterQuery": {
-    "title": "crwdns3308:0crwdne3308:0"
+    "title": "Unable to parse the query"
   },
   "searchSavedList": {
     "title": "Saved searches",
-    "allRemoved": "crwdns3312:0crwdne3312:0",
-    "emptyStateLabel": "crwdns3314:0crwdne3314:0",
-    "emptyStateAction": "crwdns3316:0crwdne3316:0"
+    "allRemoved": "All saved searches have been removed.",
+    "emptyStateLabel": "There are no saved searches. Go to search to save important searches",
+    "emptyStateAction": "Go to search"
   },
   "searchSavedEntries": {
     "fields": {
-      "creationDate": "crwdns3318:0crwdne3318:0",
-      "name": "crwdns3320:0crwdne3320:0",
+      "creationDate": "Created on",
+      "name": "Name of the saved search",
       "author": "Author"
     },
-    "empty": "crwdns3324:0crwdne3324:0"
+    "empty": "No saved searches."
   },
   "searchSavedEntriesRowActions": {
-    "removeTitle": "crwdns3326:0{name}crwdne3326:0",
-    "edit": "crwdns3328:0crwdne3328:0",
+    "removeTitle": "Are you sure you want to delete the saved search \"{name}\"?",
+    "edit": "Edit",
     "delete": "Delete"
   },
   "searchHistoryList": {
     "title": "History",
-    "allRemoved": "crwdns3334:0crwdne3334:0",
-    "emptyStateLabel": "crwdns3336:0crwdne3336:0",
-    "emptyStateAction": "crwdns3338:0crwdne3338:0"
+    "allRemoved": "History of all visited documents have been removed.",
+    "emptyStateLabel": "There is no history of visited documents. Do you want to read documents?",
+    "emptyStateAction": "Go to search"
   },
   "separatorLine": {
     "expand": "Expand",
-    "reduce": "crwdns3342:0crwdne3342:0"
+    "reduce": "Reduce"
   },
   "documentActionsGroup": {
     "star": "Star",
     "download": "Download",
-    "share": "crwdns3348:0crwdne3348:0",
+    "share": "Share",
     "expand": "Expand",
     "close": "Close"
   },
   "documentCardCheckbox": {
-    "selectDocument": "crwdns3354:0crwdne3354:0"
+    "selectDocument": "Select this document"
   },
   "documentLocalSearchNav": {
-    "previous": "crwdns3356:0crwdne3356:0",
-    "next": "crwdns3358:0crwdne3358:0"
+    "previous": "Find the previous occurrence",
+    "next": "Find the next occurrence"
   },
   "documentLocalSearchInput": {
-    "placeholder": "crwdns3360:0crwdne3360:0"
+    "placeholder": "Search in document"
   },
   "documentLocalSearchOccurrences": {
-    "label": "crwdns3362:0{activeIndex}crwdnd3362:0{occurrences}crwdne3362:0"
+    "label": "{activeIndex} on {occurrences}"
   },
   "documentSearchNavItem": {
-    "previous": "crwdns3364:0crwdne3364:0",
-    "next": "crwdns3366:0crwdne3366:0"
+    "previous": "Previous document",
+    "next": "Next document"
   },
   "documentUserActions": {
-    "tags": "crwdns3368:0{n}crwdne3368:0",
-    "comments": "crwdns3370:0{n}crwdne3370:0",
-    "recommendations": "crwdns3372:0{n}crwdne3372:0",
-    "folders": "crwdns3374:0{n}crwdne3374:0",
-    "notes": "crwdns3376:0{n}crwdne3376:0"
+    "tags": "0 tags | 1 tag | {n} tags",
+    "comments": "0 comments | 1 comment | {n} comments",
+    "recommendations": "0 recommendations | 1 recommendation | {n} recommendations",
+    "folders": "in 0 folders | in 1 folder | in {n} folders",
+    "notes": "0 notes | 1 note | {n} notes"
   },
   "documentUserActionsCard": {
     "close": "Close"
   },
   "documentUserActionsCardRecommendations": {
-    "title": "crwdns3380:0{count}crwdne3380:0",
-    "info": "crwdns3382:0crwdne3382:0"
+    "title": "0 recommendations | 1 recommendation | {count} recommendations",
+    "info": "Recommendations are public to all project’s members."
   },
   "documentUserActionsCardTags": {
-    "title": "crwdns3384:0{count}crwdne3384:0",
-    "info": "crwdns3386:0crwdne3386:0"
+    "title": "0 tags | 1 tag | {count} tags",
+    "info": "Tags are public to all project’s members."
   },
   "documentUserCommentsList": {
-    "hideComments": "crwdns3388:0crwdne3388:0",
-    "showComments": "crwdns3390:0crwdne3390:0",
-    "sortingText": "crwdns3394:0crwdne3394:0",
-    "goToOldest": "crwdns3396:0crwdne3396:0",
-    "goToRecent": "crwdns3398:0crwdne3398:0"
+    "hideComments": "Hide comments",
+    "showComments": "Show comments",
+    "sortingText": "Oldest to newest",
+    "goToOldest": "Go to oldest",
+    "goToRecent": "Go to newest"
   },
   "documentUserCommentsListNewest": {
-    "label": "crwdns5234:0crwdne5234:0"
+    "label": "Go to newest"
   },
   "documentUserCommentsListOldest": {
-    "label": "crwdns5236:0crwdne5236:0"
+    "label": "Go to oldest"
   },
   "documentUserCommentsHeader": {
-    "hideComments": "crwdns5238:0crwdne5238:0",
-    "showComments": "crwdns5240:0crwdne5240:0",
-    "sortingText": "crwdns5242:0crwdne5242:0"
+    "hideComments": "Hide comments",
+    "showComments": "Show comments",
+    "sortingText": "Oldest to newest"
   },
   "documentUserComments": {
-    "warning": "crwdns5244:0crwdne5244:0"
+    "warning": "Your comments are public to project’s members."
   },
   "documentUserCommentsForm": {
-    "placeholder": "crwdns5246:0crwdne5246:0",
-    "submit": "crwdns5248:0crwdne5248:0"
+    "placeholder": "Write your comment here.",
+    "submit": "Comment"
   },
   "documentUserCommentsListEntry": {
-    "goToComment": "crwdns3404:0crwdne3404:0"
+    "goToComment": "Go to comment (external link)"
   },
   "documentUserRecommendations": {
-    "warning": "crwdns3406:0crwdne3406:0",
-    "noRecommendations": "crwdns3408:0crwdne3408:0",
+    "warning": "Recommendations are public to all project’s members",
+    "noRecommendations": "No recommendations yet.",
     "markAsRecommended": "Mark as recommended",
     "unmarkAsRecommended": "Unmark as recommended"
   },
   "documentUserTags": {
-    "tagListOthers": "crwdns3414:0crwdne3414:0",
-    "tagListYours": "crwdns3416:0crwdne3416:0",
-    "tagWarning": "crwdns3418:0crwdne3418:0",
-    "noTags": "crwdns3420:0crwdne3420:0"
+    "tagListOthers": "Added by others",
+    "tagListYours": "Added by you",
+    "tagWarning": "Tags are public to project members",
+    "noTags": "No tags added yet."
   },
   "documentUserTagsAction": {
-    "placeholder": "crwdns3422:0crwdne3422:0"
+    "placeholder": "Add tags"
   },
   "documentMetadataActions": {
-    "copy": "crwdns3424:0crwdne3424:0",
-    "search": "crwdns3426:0crwdne3426:0",
-    "pin": "crwdns3428:0crwdne3428:0"
+    "copy": "Copy this metadata value",
+    "search": "Search this metadata value",
+    "pin": "Pin this metadata"
   },
   "documentTranslatedContent": {
     "detected": "Detected language",
@@ -397,17 +397,17 @@
     "viewTranslated": "View translated text"
   },
   "linkedDocumentSectionList": {
-    "search": "crwdns3438:0crwdne3438:0",
-    "empty": "crwdns3440:0crwdne3440:0"
+    "search": "Search all",
+    "empty": "No documents found."
   },
   "linkedDocumentCard": {
     "siblings": {
-      "title": "crwdns3442:0{n}crwdnd3442:0{n}crwdnd3442:0{n}crwdne3442:0",
-      "description": "crwdns3444:0crwdne3444:0"
+      "title": "{n} documents in the same folder | {n} document in the same folder | {n} documents in the same folder",
+      "description": "Same extraction level as this document"
     },
     "children": {
-      "title": "crwdns3446:0{n}crwdnd3446:0{n}crwdnd3446:0{n}crwdne3446:0",
-      "description": "crwdns3448:0crwdne3448:0"
+      "title": "{n} children documents | {n} children document | {n} children documents",
+      "description": "One extraction level below this document"
     }
   },
   "documentContent": {
@@ -415,12 +415,12 @@
   },
   "documentViewTabs": {
     "text": "Text",
-    "viewer": "crwdns3454:0crwdne3454:0",
-    "metadata": "crwdns3456:0crwdne3456:0",
-    "entities": "crwdns3458:0crwdne3458:0"
+    "viewer": "View",
+    "metadata": "Metadata",
+    "entities": "Entities"
   },
   "documentViewTabsMetadata": {
-    "search": "crwdns3460:0crwdne3460:0"
+    "search": "Search in metadata"
   },
   "filterTypeAll": {
     "label": "All"
@@ -442,9 +442,9 @@
     "notStarred": "Not starred",
     "recommendedBy": "Recommended by",
     "sections": {
-      "documentsInfo": "crwdns3494:0crwdne3494:0",
-      "userData": "crwdns3496:0crwdne3496:0",
-      "entities": "crwdns3498:0crwdne3498:0"
+      "documentsInfo": "Documents info",
+      "userData": "User data",
+      "entities": "Entities"
     },
     "sortByDropdown": {
       "toggler": "Sort",
@@ -678,25 +678,25 @@
     "dirname": "Document directory",
     "id": "Document ID",
     "project": "Project",
-    "creationDate": "crwdns3932:0crwdne3932:0",
+    "creationDate": "Created on",
     "size": "File size",
     "contentLanguage": "Content language",
     "contentType": "Content type",
     "contentEncoding": "Content encoding",
     "contentTextLength": "Content text length",
-    "namedEntityFilter": "crwdns3944:0crwdne3944:0",
+    "namedEntityFilter": "Search in entities",
     "starred": "Documents have been starred.",
     "unstarred": "Documents have been unstarred.",
-    "notAvailable": "crwdns3950:0crwdne3950:0",
-    "namedEntitiesNotFound": "crwdns3952:0crwdne3952:0",
-    "namedEntitiesNotSearched": "crwdns3954:0{link}crwdne3954:0",
-    "namedEntitiesNotSearchedLink": "crwdns3956:0crwdne3956:0",
+    "notAvailable": "Preview is not available for this file type.",
+    "namedEntitiesNotFound": "No named entities found.",
+    "namedEntitiesNotSearched": "Document not analyzed. To find named entities, {link}.",
+    "namedEntitiesNotSearchedLink": "start a new task",
     "threadIndex": "Thread ID",
     "errorNotFound": "Your file was indexed in Datashare but the original is no longer in your Datashare folder on your computer. Preview is thus not available.",
-    "fetching": "crwdns3962:0crwdne3962:0",
+    "fetching": "Fetching preview.",
     "author": "Author",
     "extractionDate": "Indexing date",
-    "numberOfPages": "crwdns3968:0crwdne3968:0",
+    "numberOfPages": "Number of pages",
     "parent": "Parent",
     "inMetadata": "in metadata",
     "inTags": "in tags",
@@ -733,20 +733,20 @@
       "title": "Organizations"
     },
     "email": {
-      "title": "crwdns4000:0crwdne4000:0"
+      "title": "Email"
     }
   },
   "entitySectionActions": {
-    "copy": "crwdns4002:0crwdne4002:0",
+    "copy": "Copy",
     "download": "Download"
   },
   "entitySectionMore": {
-    "label": "crwdns4006:0{category}crwdne4006:0",
+    "label": "Show more {category}",
     "category": {
-      "person": "crwdns4008:0crwdne4008:0",
-      "location": "crwdns4010:0crwdne4010:0",
-      "organization": "crwdns4012:0crwdne4012:0",
-      "email": "crwdns4014:0crwdne4014:0"
+      "person": "people",
+      "location": "locations",
+      "organization": "organizations",
+      "email": "emails"
     }
   },
   "documentThread": {
@@ -762,53 +762,53 @@
   },
   "taskDocumentsFormOcrAlert": {
     "useDefault": "Default OCR language is used.",
-    "isMissing": "crwdns4028:0{language}crwdne4028:0",
+    "isMissing": "OCR for \"{language}\" is not installed.",
     "installOcrLanguage": "Choose among {availableLanguages} languages to install.",
     "tesseractNotInstalled": "Tesseract OCR is not installed."
   },
   "formControlTagInput": {
-    "placeholder": "crwdns4034:0crwdne4034:0",
-    "addButtonText": "crwdns4036:0crwdne4036:0"
+    "placeholder": "Add tag",
+    "addButtonText": "Add"
   },
   "formControlTerm": {
-    "placeholder": "crwdns4038:0crwdne4038:0",
-    "addButtonText": "crwdns4040:0crwdne4040:0"
+    "placeholder": "Add term",
+    "addButtonText": "Add"
   },
   "formControlPath": {
     "browse": "Browse"
   },
   "formControlSearch": {
-    "placeholder": "crwdns4044:0crwdne4044:0"
+    "placeholder": "Search..."
   },
   "formStepHeadingToggler": {
-    "label": "crwdns4046:0crwdne4046:0"
+    "label": "Toggle"
   },
   "formStepGroupToggler": {
-    "collapse": "crwdns4048:0crwdne4048:0",
-    "expand": "crwdns4050:0crwdne4050:0"
+    "collapse": "Collapse all steps",
+    "expand": "Expand all steps"
   },
   "taskActions": {
     "stopPendingTasks": "Stop all pending tasks",
-    "removeDoneTasks": "crwdns4054:0crwdne4054:0"
+    "removeDoneTasks": "Delete done tasks"
   },
   "appSidebar": {
     "projects": "Projects",
-    "allProjects": "crwdns4058:0crwdne4058:0",
+    "allProjects": "All projects",
     "search": "Search",
     "searchDocuments": "Documents",
     "history": "History",
     "savedSearches": "Saved searches"
   },
   "appSidebarFooter": {
-    "signOut": "crwdns4068:0crwdne4068:0",
-    "keyboardShortcuts": "crwdns4070:0crwdne4070:0",
+    "signOut": "Sign out",
+    "keyboardShortcuts": "Keyboard Shortcuts",
     "settings": "Settings",
     "help": "Help",
     "removeAll": {
-      "link": "crwdns4076:0crwdne4076:0",
-      "title": "crwdns4078:0crwdne4078:0",
-      "description": "crwdns4080:0crwdne4080:0",
-      "success": "crwdns4082:0crwdne4082:0",
+      "link": "Remove all",
+      "title": "Are you sure you want to delete all your projects?",
+      "description": "This action cannot be undone. It will remove all your projects and their documents from Datashare.",
+      "success": "All your projects and documents were removed from Datashare.",
       "error": "Something went wrong, unable to remove your documents."
     }
   },
@@ -818,166 +818,166 @@
   },
   "login": {
     "welcome": "Welcome to Datashare",
-    "account": "crwdns4092:0crwdne4092:0",
+    "account": "Login",
     "askHelp": "Ask for help",
     "logout": "You have been logged out from Datashare.",
-    "login": "crwdns4098:0crwdne4098:0",
-    "title": "crwdns4100:0crwdne4100:0",
-    "switchLanguage": "crwdns4102:0crwdne4102:0",
-    "tagline": "crwdns4104:0crwdne4104:0"
+    "login": "Login",
+    "title": "Login",
+    "switchLanguage": "Switch language",
+    "tagline": "ICIJ search and discovery platform"
   },
   "loginLocaleDropdownSelector": {
-    "label": "crwdns4106:0crwdne4106:0"
+    "label": "Switch language:"
   },
   "pageHeader": {
-    "searchPlaceholder": "crwdns4108:0crwdne4108:0"
+    "searchPlaceholder": "Search in this page"
   },
   "taskNames": {
-    "batchSearch": "crwdns4110:0crwdne4110:0",
-    "batchDownload": "crwdns4112:0crwdne4112:0",
-    "scan": "crwdns4114:0crwdne4114:0",
-    "index": "crwdns4116:0crwdne4116:0",
-    "extractNLP": "crwdns4118:0crwdne4118:0",
-    "enqueueFromIndex": "crwdns4120:0crwdne4120:0",
-    "unknown": "crwdns4122:0crwdne4122:0"
+    "batchSearch": "Batch search",
+    "batchDownload": "Batch download",
+    "scan": "Scan folders",
+    "index": "Index documents",
+    "extractNLP": "Find entities",
+    "enqueueFromIndex": "Enqueue from index",
+    "unknown": "Unknown task"
   },
   "task": {
-    "settingTitle": "crwdns4124:0{page}crwdne4124:0",
-    "settingDefaultTitle": "crwdns4126:0crwdne4126:0",
+    "settingTitle": "{page} settings",
+    "settingDefaultTitle": "Page settings",
     "title": "Tasks",
     "description": "Some tasks must be run in the background. Use this panel to manage them.",
-    "noResults": "crwdns4132:0crwdne4132:0",
-    "emptyStateLabel": "crwdns4134:0{link}crwdne4134:0",
-    "emptyStateLabelLink": "crwdns4136:0crwdne4136:0",
+    "noResults": "No results.",
+    "emptyStateLabel": "You have not yet started any tasks. {link}",
+    "emptyStateLabelLink": "Read more.",
     "settings": {
-      "createdAt": "crwdns4138:0crwdne4138:0",
+      "createdAt": "Created on",
       "name": "Name",
       "state": "State"
     },
     "task-board": {
-      "title": "crwdns4144:0crwdne4144:0",
+      "title": "Task board",
       "latest": {
-        "title": "crwdns4146:0crwdne4146:0",
-        "showMore": "crwdns4148:0crwdne4148:0",
+        "title": "Latest tasks",
+        "showMore": "Show more",
         "linkTitle": {
-          "batchSearch": "crwdns4150:0crwdne4150:0",
-          "batchDownload": "crwdns4152:0crwdne4152:0",
-          "documentTask": "crwdns4154:0crwdne4154:0",
-          "entityTask": "crwdns4156:0crwdne4156:0",
-          "unknownTask": "crwdns4158:0crwdne4158:0"
+          "batchSearch": "Batch search task",
+          "batchDownload": "Batch download task",
+          "documentTask": "Document task",
+          "entityTask": "Entity task",
+          "unknownTask": "Unknown task"
         },
         "properties": {
-          "taskType": "crwdns4160:0crwdne4160:0",
+          "taskType": "Task",
           "name": "Name",
           "state": "State",
           "projects": "Projects",
           "author": "Author",
-          "createdAt": "crwdns4170:0crwdne4170:0",
-          "progress": "crwdns4172:0crwdne4172:0"
+          "createdAt": "Created on",
+          "progress": "Progress"
         }
       },
       "entries": {
-        "seeAll": "crwdns4174:0crwdne4174:0",
+        "seeAll": "See all",
         "batch-search": {
-          "title": "crwdns4176:0crwdne4176:0",
-          "description": "crwdns4178:0crwdne4178:0",
-          "nbPublic": "crwdns4180:0{n}crwdne4180:0",
-          "nbPrivate": "crwdns4182:0{n}crwdne4182:0",
-          "actionText": "crwdns4184:0crwdne4184:0"
+          "title": "Batch search",
+          "description": "Get the results of each query of a list, all at once. For instance, instead of searching for all the politicians of your country one after the other, just upload the list and see the results for each one.",
+          "nbPublic": "No shared batch searches | 1 shared batch search | {n} shared batch searches",
+          "nbPrivate": "no private batch searches | 1 shared batch search | {n} private batch search",
+          "actionText": "Create a batch search"
         },
         "batch-download": {
-          "title": "crwdns4186:0crwdne4186:0",
-          "description": "crwdns4188:0crwdne4188:0"
+          "title": "Batch download",
+          "description": "When your query has results, you can download all of them in a password-protected file."
         },
         "entity-recognition": {
-          "title": "crwdns4190:0crwdne4190:0",
-          "description": "crwdns4192:0crwdne4192:0",
-          "actionText": "crwdns4194:0crwdne4194:0"
+          "title": "Entity recognition",
+          "description": "Know quickly what’s in your files by asking Datashare to automatically recognize names of people, locations and organizations in your documents, as well as email addresses. ",
+          "actionText": "Find entities"
         },
         "document-addition": {
-          "title": "crwdns4196:0crwdne4196:0",
-          "description": "crwdns4198:0crwdne4198:0",
+          "title": "Document addition",
+          "description": "Index documents that are on your computer or on a drive so you can search them in Datashare. Datashare can index all type of documents.",
           "actionText": "Add documents"
         }
       }
     },
     "entities": {
-      "title": "crwdns4202:0crwdne4202:0",
+      "title": "Entities",
       "list": {
-        "emptyStateLabel": "crwdns4204:0crwdne4204:0",
-        "emptyStateAction": "crwdns4206:0crwdne4206:0",
-        "info": "crwdns4208:0crwdne4208:0",
-        "searchPlaceholder": "crwdns4210:0crwdne4210:0",
-        "noResults": "crwdns4212:0crwdne4212:0",
+        "emptyStateLabel": "There are no entity recognitions. Do you want to find entities?",
+        "emptyStateAction": "Find entities",
+        "info": "Entity recognitions are tasks that you run in order to recognize and to list the entities in your documents.",
+        "searchPlaceholder": "Search tasks",
+        "noResults": "No results.",
         "properties": {
-          "id": "crwdns4214:0crwdne4214:0",
+          "id": "Id",
           "name": "Name",
-          "entitiesToFind": "crwdns4218:0crwdne4218:0",
-          "pipeline": "crwdns4220:0crwdne4220:0",
+          "entitiesToFind": "Entities to find",
+          "pipeline": "Model",
           "project": "Project",
-          "createdAt": "crwdns4224:0crwdne4224:0",
-          "progress": "crwdns4226:0crwdne4226:0",
-          "result": "crwdns4228:0crwdne4228:0",
+          "createdAt": "Created on",
+          "progress": "Progress",
+          "result": "Result",
           "state": "State"
         }
       },
       "new": {
-        "title": "crwdns4232:0crwdne4232:0"
+        "title": "Find entities"
       },
       "form": {
         "projectSelector": {
           "label": "Select a project"
         },
-        "submit": "crwdns4236:0crwdne4236:0",
-        "failedPipelines": "crwdns4238:0crwdne4238:0",
-        "defaultPipeline": "crwdns4240:0crwdne4240:0",
-        "findEntitiesType": "crwdns4242:0crwdne4242:0",
+        "submit": "Go",
+        "failedPipelines": "Failed to retrieve pipelines",
+        "defaultPipeline": "recommended",
+        "findEntitiesType": "Find",
         "pipelineOptions": {
-          "corenlp": "crwdns4244:0crwdne4244:0",
-          "opennlp": "crwdns4246:0crwdne4246:0",
-          "mitie": "crwdns4248:0crwdne4248:0",
-          "ixapipe": "crwdns4250:0crwdne4250:0",
-          "gatenlp": "crwdns4252:0crwdne4252:0"
+          "corenlp": "CoreNLP",
+          "opennlp": "OpenNLP",
+          "mitie": "MITIE",
+          "ixapipe": "IXA Pipe",
+          "gatenlp": "GateNLP"
         },
         "pipeline": {
-          "label": "crwdns4254:0crwdne4254:0",
+          "label": "Choose a model",
           "description": "Datashare uses Natural Language Processing models."
         },
         "findEntities": {
-          "label": "crwdns4258:0crwdne4258:0",
+          "label": "Find",
           "options": {
             "emails": "Emails",
-            "named-entities": "crwdns4262:0crwdne4262:0"
+            "named-entities": "People, organisations and locations"
           }
         },
         "offline": {
           "label": "Do you want to work offline?",
-          "description": "crwdns4266:0crwdne4266:0",
+          "description": "Select 'No' if you want to sync latest models.",
           "options": {
             "yes": "Yes",
             "no": "No"
           }
         },
-        "success": "crwdns4272:0crwdne4272:0",
-        "error": "crwdns4274:0{error}crwdne4274:0"
+        "success": "Find entities task is launched",
+        "error": "An error occurred when creating the task: {error}"
       }
     },
     "documents": {
       "title": "Documents",
       "list": {
-        "emptyStateLabel": "crwdns4278:0crwdne4278:0",
+        "emptyStateLabel": "Do you want to add documents?",
         "emptyStateAction": "Add documents",
-        "info": "crwdns4282:0crwdne4282:0",
-        "searchPlaceholder": "crwdns4284:0crwdne4284:0",
-        "noResults": "crwdns4286:0crwdne4286:0",
+        "info": "Document additions are tasks that you run to ask Datashare to add new documents.",
+        "searchPlaceholder": "Search tasks",
+        "noResults": "No results.",
         "properties": {
-          "id": "crwdns4288:0crwdne4288:0",
+          "id": "Id",
           "name": "Name",
           "documents": "Documents",
           "project": "Project",
-          "createdAt": "crwdns4296:0crwdne4296:0",
-          "progress": "crwdns4298:0crwdne4298:0",
-          "result": "crwdns4300:0crwdne4300:0",
+          "createdAt": "Created on",
+          "progress": "Progress",
+          "result": "Result",
           "state": "State"
         }
       },
@@ -989,14 +989,14 @@
           "label": "Select a project"
         },
         "path": {
-          "label": "crwdns4308:0crwdne4308:0",
-          "description": "crwdns4310:0crwdne4310:0"
+          "label": "Select the folder or subfolder to analyze",
+          "description": "The entire Datashare home will be indexed by default."
         },
         "extractingLanguage": {
-          "label": "crwdns4312:0crwdne4312:0"
+          "label": "Choose the language to extract"
         },
         "extractOcr": {
-          "label": "crwdns4314:0crwdne4314:0",
+          "label": "Extract text from images and PDFs (OCR)",
           "description": "If yes, Datashare will run OCR (Optical Character Recognition). It can take up to 10 times longer.",
           "options": {
             "yes": "Yes",
@@ -1004,197 +1004,197 @@
           }
         },
         "skipIndexedDocuments": {
-          "label": "crwdns4322:0crwdne4322:0",
-          "description": "crwdns4324:0crwdne4324:0",
+          "label": "Skip already indexed documents",
+          "description": "If yes, Datashare will only extract text from documents that are not indexed yet.",
           "options": {
             "yes": "Yes",
             "no": "No"
           }
         },
-        "submit": "crwdns4330:0crwdne4330:0",
-        "success": "crwdns4332:0crwdne4332:0",
-        "error": "crwdns4334:0{error}crwdne4334:0"
+        "submit": "Add",
+        "success": "Add document task is launched",
+        "error": "An error occurred when creating the task: {error}"
       }
     },
     "batch-download": {
       "title": "Batch downloads",
       "list": {
-        "emptyStateLabel": "crwdns4338:0crwdne4338:0",
-        "emptyStateAction": "crwdns4340:0crwdne4340:0",
-        "info": "crwdns4342:0crwdne4342:0",
-        "searchPlaceholder": "crwdns4344:0crwdne4344:0",
+        "emptyStateLabel": "There are no batch downloads. Go to search to batch download all the documents of a search.",
+        "emptyStateAction": "Go to search",
+        "info": "Batch downloads are password-protected zip files containing all the documents from one of your searches.",
+        "searchPlaceholder": "Search batch downloads",
         "properties": {
           "name": "Name",
-          "createdAt": "crwdns4348:0crwdne4348:0",
+          "createdAt": "Created on",
           "projects": "Projects",
-          "progress": "crwdns4352:0crwdne4352:0",
+          "progress": "Progress",
           "size": "Size",
           "state": "State",
-          "id": "crwdns4358:0crwdne4358:0"
+          "id": "Id"
         }
       }
     },
     "batch-search": {
       "title": "Batch searches",
       "list": {
-        "emptyStateLabel": "crwdns4362:0crwdne4362:0",
-        "emptyStateAction": "crwdns4364:0crwdne4364:0",
-        "noMatches": "crwdns4366:0crwdne4366:0",
-        "info": "crwdns4368:0crwdne4368:0",
-        "searchPlaceholder": "crwdns4370:0crwdne4370:0",
-        "noResults": "crwdns4372:0crwdne4372:0",
+        "emptyStateLabel": "There are no batch searches. Do you want to search a bunch of queries at once?",
+        "emptyStateAction": "Create new batch search",
+        "noMatches": "No batch searches matched. Try removing the search filter.",
+        "info": "Batch searches allow to get the results of each query of a list, but all at once.",
+        "searchPlaceholder": "Search batch searches",
+        "noResults": "No results.",
         "properties": {
-          "privacy": "crwdns4374:0crwdne4374:0",
+          "privacy": "Privacy",
           "queries": "Queries",
           "documents": "Documents",
           "projects": "Projects",
           "author": "Author",
           "name": "Name",
-          "createdAt": "crwdns4386:0crwdne4386:0",
-          "progress": "crwdns4388:0crwdne4388:0",
+          "createdAt": "Created on",
+          "progress": "Progress",
           "state": "State"
         }
       },
       "form": {
         "sections": {
-          "general": "crwdns4392:0crwdne4392:0",
+          "general": "Name, project(s) and description",
           "queries": "Queries",
-          "operators": "crwdns4396:0crwdne4396:0",
+          "operators": "Search operators",
           "filters": "Filters"
         },
         "name": {
           "label": "Name",
-          "placeholder": "crwdns4402:0crwdne4402:0"
+          "placeholder": "Type the name of your batch search"
         },
         "projects": {
-          "label": "crwdns4404:0crwdne4404:0"
+          "label": "Project(s)"
         },
         "description": {
           "label": "Description",
           "placeholder": ""
         },
         "visibility": {
-          "label": "crwdns4410:0crwdne4410:0",
+          "label": "Visibility",
           "options": {
-            "private": "crwdns4412:0crwdne4412:0",
-            "shared": "crwdns4414:0crwdne4414:0"
+            "private": "Private - Only you will see your batch search",
+            "shared": "Shared - Only members of all the selected project(s) will see your batch search"
           },
-          "description": "crwdns4416:0crwdne4416:0"
+          "description": "This option can be changed later (either way)"
         },
         "csvFile": {
-          "label": "crwdns4418:0crwdne4418:0",
-          "placeholder": "crwdns4420:0crwdne4420:0"
+          "label": "Use a CSV",
+          "placeholder": "Drop your CSV"
         },
         "listQueries": {
-          "label": "crwdns4422:0crwdne4422:0",
-          "placeholder": "crwdns4424:0crwdne4424:0"
+          "label": "Or type your queries",
+          "placeholder": "New feature coming soon!"
         },
         "phraseChanges": {
-          "label": "crwdns4426:0crwdne4426:0",
-          "description": "crwdns4428:0crwdne4428:0"
+          "label": "Sentence changes",
+          "description": "Also called proximity searches. Maximum number of operations (insertions, deletions, substitutions and transpositions) on terms needed to make one phrase match the other."
         },
         "spellingChanges": {
-          "label": "crwdns4430:0crwdne4430:0",
-          "description": "crwdns4432:0crwdne4432:0"
+          "label": "Spelling changes",
+          "description": "Also called fuzziness. Number of change(s) in the characters in the words: insertions, deletions or substitutions of a single character, or transposition of 2 adjacent characters."
         },
         "phraseMatch": {
           "label": "Do phrase matches",
           "options": {
-            "yes": "crwdns4436:0crwdne4436:0",
-            "no": "crwdns4438:0crwdne4438:0"
+            "yes": "Yes - Queries searched within double quotes",
+            "no": "No - Apply operators (AND, OR, NOT, etc.) in the queries"
           }
         },
-        "submit": "crwdns4440:0crwdne4440:0",
-        "submitError": "crwdns4442:0crwdne4442:0",
-        "submitSuccess": "crwdns4444:0crwdne4444:0"
+        "submit": "Create",
+        "submitError": "Something went wrong, unable to run the batch search.",
+        "submitSuccess": "Batch search created successfully."
       },
       "new": {
-        "title": "crwdns4446:0crwdne4446:0"
+        "title": "Create new batch search"
       }
     },
     "batch-search-queries": {
       "list": {
         "title": "Queries",
-        "noMatches": "crwdns4450:0crwdne4450:0",
+        "noMatches": "No queries matches your search.",
         "fields": {
           "query": "Query",
           "count": "Documents",
-          "queryNumber": "crwdns4456:0crwdne4456:0"
+          "queryNumber": "Query position"
         }
       }
     },
     "batch-search-results": {
       "list": {
-        "title": "crwdns4458:0crwdne4458:0",
-        "emptyStateLabel": "crwdns4460:0crwdne4460:0"
+        "title": "All documents",
+        "emptyStateLabel": "None of the queries had matches."
       },
       "show": {
-        "title": "crwdns4462:0crwdne4462:0",
-        "emptyStateLabel": "crwdns4464:0crwdne4464:0",
+        "title": "Query results",
+        "emptyStateLabel": "This query had no matches.",
         "fields": {
           "query": "Query",
           "documentNumber": "Rank",
           "documentName": "Document name",
           "project": "Project",
-          "contentType": "crwdns4474:0crwdne4474:0",
+          "contentType": "Type",
           "contentLength": "Size",
           "documentPath": "Path",
-          "creationDate": "crwdns4480:0crwdne4480:0"
+          "creationDate": "Created on"
         }
       }
     }
   },
   "batchSearchErrorModal": {
-    "okTitle": "crwdns5250:0crwdne5250:0",
-    "errorTitle": "crwdns5252:0crwdne5252:0",
-    "text": "crwdns5254:0crwdne5254:0",
-    "description": "crwdns5256:0{link}crwdne5256:0"
+    "okTitle": "Ok",
+    "errorTitle": "The error is",
+    "text": "how to fix the most common errors",
+    "description": "The system encountered a problem. Syntax errors in the CSV are the usual suspects (see {link})."
   },
   "batchSearchCard": {
-    "seeAllDocuments": "crwdns4482:0crwdne4482:0",
-    "downloadResultsLabel": "crwdns4484:0crwdne4484:0",
-    "nbDocuments": "crwdns4486:0crwdne4486:0",
-    "nbDocumentsLabel": "crwdns4488:0{n}crwdnd4488:0{n}crwdnd4488:0{n}crwdne4488:0",
-    "nbQueries": "crwdns4490:0crwdne4490:0",
-    "nbQueriesLabel": "crwdns4492:0{n}crwdnd4492:0{n}crwdnd4492:0{n}crwdne4492:0",
+    "seeAllDocuments": "See all documents",
+    "downloadResultsLabel": "Download results (CSV)",
+    "nbDocuments": "Batch search document results",
+    "nbDocumentsLabel": "{n} documents | {n} document | {n} documents",
+    "nbQueries": "Batch search queries",
+    "nbQueriesLabel": "{n} queries | {n} query | {n} queries",
     "downloadQueriesLabel": "Download queries",
-    "noResultsQueriesLabel": "crwdns4496:0crwdne4496:0",
-    "noResultsQueriesDownload": "crwdns4498:0crwdne4498:0",
-    "noResultsQueries": "crwdns4500:0{n}crwdnd4500:0{n}crwdnd4500:0{n}crwdne4500:0"
+    "noResultsQueriesLabel": "No-match queries",
+    "noResultsQueriesDownload": "Download no-match queries",
+    "noResultsQueries": "{n} no-match queries | {n} no-match query | {n} no-match queries"
   },
   "batchSearchCardDetails": {
-    "status": "crwdns4502:0crwdne4502:0",
-    "date": "crwdns4504:0crwdne4504:0",
+    "status": "Status",
+    "date": "Created on",
     "author": "Author",
-    "visibilityPrivate": "crwdns4508:0crwdne4508:0",
-    "visibilityShared": "crwdns4510:0crwdne4510:0",
-    "visibility": "crwdns4512:0crwdne4512:0",
-    "phraseMatchOn": "crwdns4514:0crwdne4514:0",
-    "phraseMatchOff": "crwdns4516:0crwdne4516:0",
-    "phraseMatch": "crwdns4518:0crwdne4518:0",
-    "proximity": "crwdns4520:0crwdne4520:0",
-    "proximityValue": "crwdns4522:0{n}crwdnd4522:0{n}crwdnd4522:0{n}crwdne4522:0",
-    "fuzziness": "crwdns4524:0crwdne4524:0",
-    "fuzzinessValue": "crwdns4526:0{n}crwdnd4526:0{n}crwdnd4526:0{n}crwdne4526:0",
+    "visibilityPrivate": "Private",
+    "visibilityShared": "Shared",
+    "visibility": "Visibility",
+    "phraseMatchOn": "Do phrase match: yes",
+    "phraseMatchOff": "Do phrase match: no",
+    "phraseMatch": "Phrase match",
+    "proximity": "Proximity - Sentence changes",
+    "proximityValue": "Sentence changes: {n} | Sentence change: {n} | Sentence changes: {n}",
+    "fuzziness": "Fuzziness - Spelling changes",
+    "fuzzinessValue": "Spelling changes: {n} | Spelling change: {n} | Spelling changes: {n}",
     "projects": "Projects",
     "description": "Description"
   },
   "batchSearchActions": {
     "remove": {
-      "success": "crwdns4532:0crwdne4532:0",
-      "error": "crwdns4534:0crwdne4534:0"
+      "success": "The batch search was removed",
+      "error": "Unable to remove the batch search"
     },
     "stop": {
-      "success": "crwdns4536:0crwdne4536:0",
-      "error": "crwdns4538:0crwdne4538:0"
+      "success": "The batch search was stopped",
+      "error": "Unable to stop the batch search"
     },
     "relaunch": {
-      "success": "crwdns4540:0crwdne4540:0",
-      "error": "crwdns4542:0crwdne4542:0"
+      "success": "The batch search was relaunched",
+      "error": "Unable to relaunch the batch search"
     }
   },
   "batchSearchActionsEditModal": {
-    "title": "crwdns4544:0crwdne4544:0",
+    "title": "Edit batch search",
     "name": "Name",
     "description": "Description"
   },
@@ -1206,35 +1206,35 @@
   },
   "buttonRowAction": {
     "relaunch": "Relaunch",
-    "stop": "crwdns4560:0crwdne4560:0",
+    "stop": "Stop",
     "delete": "Delete",
-    "edit": "crwdns4564:0crwdne4564:0",
+    "edit": "Edit",
     "search": "Search"
   },
   "textTruncate": {
-    "seeLess": "crwdns4568:0crwdne4568:0",
-    "seeMore": "crwdns4570:0crwdne4570:0"
+    "seeLess": "See less",
+    "seeMore": "See more"
   },
   "pageSettings": {
-    "title": "crwdns4572:0crwdne4572:0"
+    "title": "Page settings"
   },
   "pageSettingsSectionGroupAll": {
     "label": "All"
   },
   "pageTable": {
-    "toggleDetails": "crwdns4576:0crwdne4576:0"
+    "toggleDetails": "Toggle details"
   },
   "projects": {
     "title": "Projects"
   },
   "projectDeletionModal": {
-    "title": "crwdns4580:0{project}crwdne4580:0",
+    "title": "Are you sure you want to delete the {project} project?",
     "body": {
-      "all": "crwdns4582:0{documents}crwdnd4582:0{tags}crwdnd4582:0{recommendations}crwdnd4582:0{default}crwdne4582:0",
-      "default": "crwdns4584:0crwdne4584:0",
-      "documents": "crwdns4586:0{count}crwdne4586:0",
-      "tags": "crwdns4588:0{count}crwdne4588:0",
-      "recommendations": "crwdns4590:0{count}crwdne4590:0"
+      "all": "It will remove {documents} from your index, {tags} and {recommendations}. {default}",
+      "default": "A new empty Default project will be created immediately.",
+      "documents": "0 documents | 1 document | {count} documents",
+      "tags": "0 tags | 1 tag | {count} tags",
+      "recommendations": "0 recommendations | 1 recommendation | {count} recommendations"
     },
     "notify": {
       "succeed": "The project was deleted",
@@ -1242,26 +1242,26 @@
     }
   },
   "projectEntriesTableHead": {
-    "name": "crwdns4596:0crwdne4596:0",
+    "name": "Name of the project",
     "description": "Description",
     "documents": "Documents",
-    "updatedOn": "crwdns4602:0crwdne4602:0",
-    "links": "crwdns4604:0crwdne4604:0",
-    "actions": "crwdns4606:0crwdne4606:0"
+    "updatedOn": "Updated on",
+    "links": "Links",
+    "actions": "Actions"
   },
   "projectRowActions": {
     "edit": "Edit project",
-    "delete": "crwdns4610:0crwdne4610:0"
+    "delete": "Delete project"
   },
   "projectJumbotron": {
     "delete": "Delete",
-    "edit": "crwdns4614:0crwdne4614:0",
-    "creationDate": "crwdns4616:0crwdne4616:0",
-    "updateDate": "crwdns4618:0crwdne4618:0"
+    "edit": "Edit",
+    "creationDate": "Created:",
+    "updateDate": "Updated:"
   },
   "projectList": {
     "title": "Projects",
-    "searchPlaceholder": "crwdns4622:0crwdne4622:0",
+    "searchPlaceholder": "Search projects",
     "fields": {
       "label": "Label",
       "updateDate": "Updated"
@@ -1278,20 +1278,20 @@
     }
   },
   "projectViewOverview": {
-    "emptyStateLabel": "crwdns4640:0crwdne4640:0",
-    "emptyStateAction": "crwdns4642:0crwdne4642:0",
+    "emptyStateLabel": "Oh, it’s lonely in here... This project has no documents yet.",
+    "emptyStateAction": "Add first documents",
     "nav": {
       "insights": "Insights",
       "paths": "Paths",
-      "graph": "crwdns4648:0crwdne4648:0",
+      "graph": "Graph",
       "details": "Details",
       "history": "History"
     }
   },
   "projectViewOverviewGraph": {
-    "emptyStateLabel": "crwdns4654:0{articleLink}crwdne4654:0",
-    "emptyStateLabelArticleLink": "crwdns4656:0crwdne4656:0",
-    "emptyStateAction": "crwdns4658:0crwdne4658:0"
+    "emptyStateLabel": "Graph extension has not been installed yet. Read ICIJ’s {articleLink} to learn more about this feature.",
+    "emptyStateLabelArticleLink": "article",
+    "emptyStateAction": "Install"
   },
   "projectViewEdit": {
     "title": "Edit project",
@@ -1308,7 +1308,7 @@
   "projectViewAddDocuments": {
     "title": "Add documents to project",
     "notify": {
-      "succeed": "crwdns4674:0crwdne4674:0",
+      "succeed": "Indexing task to add documents launched.",
       "seeTasks": "See tasks",
       "failed": "Add document task failed",
       "failedBody": "An error occurred when launching indexing task to add documents."
@@ -1317,7 +1317,7 @@
   "projectViewFindNamedEntities": {
     "title": "Find named entities",
     "notify": {
-      "succeed": "crwdns4684:0crwdne4684:0",
+      "succeed": "Finding named entities task launched",
       "seeTasks": "See tasks",
       "failed": "Find named entities task failed",
       "failedBody": "An error occurred when launching indexing task to add documents."
@@ -1326,12 +1326,12 @@
   "projectForm": {
     "form": {
       "name": {
-        "label": "crwdns4692:0crwdne4692:0",
+        "label": "Autogenerated ID",
         "placeholder": ""
       },
       "label": {
         "label": "Label",
-        "placeholder": "crwdns4698:0crwdne4698:0",
+        "placeholder": "The label of your project",
         "invalidFeedback": "The label \"{label}\" is a reserved word."
       },
       "description": {
@@ -1340,88 +1340,88 @@
       },
       "sourcePath": {
         "label": "Project folder",
-        "placeholder": "crwdns4708:0crwdne4708:0"
+        "placeholder": "Select the folder where the project's documents are located."
       },
       "logoUrl": {
         "label": "Logo URL",
-        "placeholder": "crwdns4712:0crwdne4712:0"
+        "placeholder": "http://"
       },
       "sourceUrl": {
         "label": "Source URL",
-        "placeholder": "crwdns4716:0crwdne4716:0"
+        "placeholder": "http://"
       },
       "publisherName": {
         "label": "Publisher name",
-        "placeholder": "crwdns4720:0crwdne4720:0"
+        "placeholder": "The name of the people or organization who published the files in this project"
       },
       "maintainerName": {
         "label": "Maintainer name",
-        "placeholder": "crwdns4724:0crwdne4724:0"
+        "placeholder": "The name of the people or organization who will maintain the project on Datashare"
       }
     },
-    "reset": "crwdns4726:0crwdne4726:0",
-    "submit": "crwdns4728:0crwdne4728:0",
+    "reset": "Reset",
+    "submit": "Create",
     "deleteConfirmation": "Are you sure you want to delete the project?",
     "delete": "Delete"
   },
   "keyboardShortcutsPopoverLink": {
-    "label": "crwdns4734:0crwdne4734:0"
+    "label": "See all shortcuts"
   },
   "keyboardShortcutsPopoverTitle": {
-    "label": "crwdns4736:0crwdne4736:0"
+    "label": "Keyboard shortcuts"
   },
   "shortkeys": {
-    "goToPreviousDocument": "crwdns4738:0crwdne4738:0",
-    "goToNextDocument": "crwdns4740:0crwdne4740:0",
+    "goToPreviousDocument": "Go to previous document",
+    "goToNextDocument": "Go to next document",
     "backToSearchResults": "Go back to the search results",
     "goToPreviousTab": "Go to previous document tab",
     "goToNextTab": "Go to next document tab",
     "activateSearchBar": "Find in document",
     "deactivateSearchBar": "Close search in document",
-    "findPreviousOccurrence": "crwdns4752:0crwdne4752:0",
-    "findNextOccurrence": "crwdns4754:0crwdne4754:0"
+    "findPreviousOccurrence": "Previous occurrence in the document",
+    "findNextOccurrence": "Next occurrence in the document"
   },
   "settings": {
     "layout": {
-      "infoDismiss": "crwdns4756:0crwdne4756:0",
-      "searchPlaceholder": "crwdns4758:0crwdne4758:0",
-      "noResults": "crwdns4760:0{query}crwdne4760:0"
+      "infoDismiss": "Got it, don't show again",
+      "searchPlaceholder": "Filter the list",
+      "noResults": "No matching result for the query '{query}'"
     },
     "title": "Settings",
     "description": {
       "title": "Don't change these settings if you don't know what you're doing."
     },
     "general": {
-      "title": "crwdns4766:0crwdne4766:0",
-      "info": "crwdns4768:0crwdne4768:0",
+      "title": "General",
+      "info": "Don’t change these settings if you don’t know what you are doing.",
       "searchPlaceholder": "Search settings"
     },
     "generalLabel": {
-      "restore": "crwdns4772:0crwdne4772:0"
+      "restore": "Restore original setting"
     },
     "appearance": {
-      "title": "crwdns4774:0crwdne4774:0"
+      "title": "Appearance"
     },
     "languages": {
       "title": "Languages",
-      "info": "crwdns4778:0{href}crwdne4778:0"
+      "info": "Translations are <a href='{href}' class='alert-link'>maintained on Crowdin</a>."
     },
     "addons": {
       "plugin": {
         "title": "Plugins",
-        "info": "crwdns5260:0crwdne5260:0",
+        "info": "Plugins are front-end modules to add new features in Datashare's user interface.",
         "submitSuccess": "Plugin successfully installed.",
         "submitError": "Error while installing the plugin.",
         "searchPlaceholder": "Search plugins",
-        "errorLabel": "crwdns5268:0crwdne5268:0"
+        "errorLabel": "An error occurred while retrieving the plugins. Refresh the page or contact the support."
       },
       "extension": {
         "title": "Extensions",
-        "info": "crwdns5272:0crwdne5272:0",
+        "info": "Extensions are back-end modules to add new features to store and manipulate data with Datashare.",
         "submitSuccess": "Extension successfully installed, please restart Datashare.",
         "submitError": "Error while installing the extension.",
         "searchPlaceholder": "Search extensions",
-        "errorLabel": "crwdns5280:0crwdne5280:0"
+        "errorLabel": "An error occurred while retrieving the extensions. Refresh the page or contact the support."
       }
     },
     "api": {
@@ -1429,14 +1429,14 @@
       "newApiKey": "Create API key",
       "apiKey": "API key",
       "noAccess": "You do not have access to that page in local mode.",
-      "description": "crwdns4812:0crwdne4812:0",
+      "description": "An API key allows you interact with Datashare <a href=\"https://icij.gitbook.io/datashare/developers/backend/api\" target=\"_blank\">through the API</a>, using tools like <a href=\"https://github.com/ICIJ/datashare-tarentula\" target=\"_blank\">Tarentula</a> or your own scripts.",
       "key": {
-        "badge": "crwdns4814:0crwdne4814:0",
-        "copy": "crwdns4816:0crwdne4816:0",
-        "hash": "crwdns4818:0{hash}crwdne4818:0",
+        "badge": "Key",
+        "copy": "Copy",
+        "hash": "Hash: {hash}",
         "created": "API key created",
         "warning": "Please copy this key in a safe place, you won't be able to access it again on Datashare.",
-        "unavailable": "crwdns4824:0crwdne4824:0",
+        "unavailable": "You can only access a key when creating it.",
         "regenerate": "Regenerate",
         "delete": {
           "button": "Delete",
@@ -1451,55 +1451,55 @@
     "submitError": "Unable to submit the settings."
   },
   "viewSettings": {
-    "perPage": "crwdns4838:0{title}crwdne4838:0",
-    "properties": "crwdns4840:0crwdne4840:0",
+    "perPage": "{title} per page",
+    "properties": "Properties",
     "layout": {
-      "label": "crwdns4842:0crwdne4842:0",
-      "grid": "crwdns4844:0crwdne4844:0",
-      "table": "crwdns4846:0crwdne4846:0",
-      "list": "crwdns4848:0crwdne4848:0"
+      "label": "Layout",
+      "grid": "Grid",
+      "table": "Table",
+      "list": "List"
     },
     "sortBy": {
       "label": "Sort by",
-      "format": "crwdns4852:0{name}crwdnd4852:0{order}crwdne4852:0"
+      "format": "{name} ({order})"
     },
     "options": {
       "name": "Name",
-      "creationDate": "crwdns4856:0crwdne4856:0",
-      "updateDate": "crwdns4858:0crwdne4858:0",
-      "visitDate": "crwdns4860:0crwdne4860:0",
-      "documentsCount": "crwdns4862:0crwdne4862:0",
-      "taskStatus": "crwdns4864:0crwdne4864:0",
-      "progress": "crwdns4866:0crwdne4866:0",
+      "creationDate": "Created on",
+      "updateDate": "Latest update",
+      "visitDate": "Last visit",
+      "documentsCount": "Documents count",
+      "taskStatus": "Task status",
+      "progress": "Progress",
       "project": "Project",
-      "privacy": "crwdns4870:0crwdne4870:0",
-      "pipeline": "crwdns4872:0crwdne4872:0",
-      "entitiesToFind": "crwdns4874:0crwdne4874:0",
+      "privacy": "Privacy",
+      "pipeline": "Model",
+      "entitiesToFind": "Entities to find",
       "queries": "Queries",
       "documents": "Documents",
       "size": "Size",
-      "id": "crwdns4882:0crwdne4882:0"
+      "id": "Id"
     },
     "order": {
       "default": {
-        "asc": "crwdns4884:0crwdne4884:0",
-        "desc": "crwdns4886:0crwdne4886:0"
+        "asc": "ascending",
+        "desc": "descending"
       },
       "alpha": {
-        "asc": "crwdns4888:0crwdne4888:0",
-        "desc": "crwdns4890:0crwdne4890:0"
+        "asc": "A to Z",
+        "desc": "Z to A"
       },
       "number": {
-        "asc": "crwdns4892:0crwdne4892:0",
-        "desc": "crwdns4894:0crwdne4894:0"
+        "asc": "increasing",
+        "desc": "decreasing"
       },
       "quantity": {
-        "asc": "crwdns4896:0crwdne4896:0",
-        "desc": "crwdns4898:0crwdne4898:0"
+        "asc": "low",
+        "desc": "high"
       },
       "date": {
-        "asc": "crwdns4900:0crwdne4900:0",
-        "desc": "crwdns4902:0crwdne4902:0"
+        "asc": "old first",
+        "desc": "recent first"
       }
     }
   },
@@ -1514,19 +1514,19 @@
       "KB": "% KB",
       "MB": "% MB",
       "GB": "% GB",
-      "TB": "crwdns4918:0crwdne4918:0"
+      "TB": "% TB"
     }
   },
   "batchDownload": {
     "title": "Batch downloads",
     "noFile": "The archive has expired.",
-    "created": "crwdns4924:0crwdne4924:0",
+    "created": "Your batch download is being prepared",
     "warning": "This feature is currently being developed by the Datashare team.",
-    "seeAll": "crwdns4928:0crwdne4928:0",
+    "seeAll": "See all",
     "errorMessage": "The system encountered an issue. Please refer to these details when contacting support.",
-    "errorTitle": "crwdns4932:0{taskId}crwdne4932:0",
+    "errorTitle": "Batch download task <code class=\"fw-bold\">{taskId}</code> is in error.",
     "relaunch": {
-      "succeed": "crwdns4934:0crwdne4934:0",
+      "succeed": "Your batch download is being prepared",
       "succeedBody": "The download should be available soon.",
       "failed": "Unable to relaunch",
       "failedBody": "Something happened when trying to relaunch this batch download."
@@ -1535,18 +1535,18 @@
       "failed": "Unable to delete",
       "failedBody": "Something happened when trying to delete this batch download."
     },
-    "limitations": "crwdns4946:0{maxNbFiles}crwdnd4946:0{maxSize}crwdne4946:0"
+    "limitations": "Batch downloads are limited to {maxNbFiles} files and {maxSize}B."
   },
   "batchDownloadActions": {
     "remove": {
       "label": "Delete",
-      "success": "crwdns4950:0crwdne4950:0",
-      "error": "crwdns4952:0crwdne4952:0"
+      "success": "The batch download was removed",
+      "error": "Unable to remove the batch download"
     },
     "relaunch": {
       "label": "Relaunch",
-      "success": "crwdns4956:0crwdne4956:0",
-      "error": "crwdns4958:0crwdne4958:0"
+      "success": "The batch download was relaunched",
+      "error": "Unable to relaunch the batch download"
     },
     "search": {
       "label": "See search results"
@@ -1555,28 +1555,28 @@
   "widget": {
     "noData": "No data",
     "noRecommendations": "No recommendations",
-    "noEntitiesFindSome": "crwdns4966:0crwdne4966:0",
-    "findEntities": "crwdns4968:0crwdne4968:0",
+    "noEntitiesFindSome": "There are no entities found yet.",
+    "findEntities": "Find entities",
     "recommendedBy": {
       "title": "Latest recommended documents"
     },
     "barometer": {
-      "document": "crwdns4972:0{n}crwdnd4972:0{n}crwdne4972:0",
-      "amongWhichOnDisk": "crwdns4974:0{n}crwdne4974:0"
+      "document": "no documents | {n} document | {n} documents",
+      "amongWhichOnDisk": "among which {n} on disk"
     },
     "diskUsage": {
       "details": "See disk usage"
     },
     "creationDate": {
-      "filterPath": "crwdns4978:0crwdne4978:0",
-      "selectPath": "crwdns4980:0crwdne4980:0",
+      "filterPath": "Select path",
+      "selectPath": "Select path",
       "intervals": {
         "year": "Year",
         "month": "Month",
         "day": "Day"
       },
-      "document": "crwdns4988:0{total}crwdne4988:0",
-      "missing": "crwdns4990:0{total}crwdne4990:0",
+      "document": "no documents | 1 document | {total} documents",
+      "missing": "No documents have no or wrong creation date.| 1 document has no or wrong creation date.| {total} documents have no or wrong creation date.",
       "missingTooltip": "There are multiple reasons why a document is not here in the barchart:\n    - The document has no creation date at all\n    - The creation date of the document is prior to January 1. 1970\n    - The creation date of the document is posterior to the current date"
     },
     "project": {
@@ -1592,26 +1592,26 @@
     }
   },
   "widgetEntities": {
-    "person": "crwdns5008:0crwdne5008:0",
-    "location": "crwdns5010:0crwdne5010:0",
-    "organization": "crwdns5012:0crwdne5012:0",
-    "email": "crwdns5014:0crwdne5014:0"
+    "person": "person | people",
+    "location": "location | locations",
+    "organization": "organization | organizations",
+    "email": "email | emails"
   },
   "pathTreeBreadcrumb": {
     "datadir": "Home"
   },
   "projectCardUpdateDate": {
-    "label": "crwdns5018:0crwdne5018:0"
+    "label": "Updated:"
   },
   "projectCardDocumentsCount": {
-    "noDocuments": "crwdns5020:0crwdne5020:0"
+    "noDocuments": "No documents"
   },
   "projectCardFooter": {
-    "insights": "crwdns5022:0crwdne5022:0",
+    "insights": "See insights",
     "search": "Search"
   },
   "projectCards": {
-    "documentsCount": "crwdns5026:0{count}crwdne5026:0",
+    "documentsCount": "No documents | 1 document | {count} documents",
     "about": "About",
     "search": "Search"
   },
@@ -1619,76 +1619,76 @@
     "noMatches": "No matches"
   },
   "projectDropdownSelectorSearch": {
-    "placeholder": "crwdns5034:0crwdne5034:0",
+    "placeholder": "Search projects",
     "noMatches": "No matches"
   },
   "projectDropdownSelectorAll": {
-    "label": "crwdns5038:0crwdne5038:0"
+    "label": "All projects"
   },
   "pathViewEntryMore": {
-    "label": "crwdns5040:0{nextPageSize}crwdnd5040:0{directoriesLeft}crwdne5040:0"
+    "label": "No more directories | Show 1 more directory | Show {nextPageSize} of {directoriesLeft} more directories"
   },
   "pathViewSearch": {
-    "placeholder": "crwdns5042:0crwdne5042:0"
+    "placeholder": "Search paths"
   },
   "pathViewLabel": {
     "label": "Paths"
   },
   "searchBarInputDropdownForProjects": {
-    "projectsCount": "crwdns5046:0{count}crwdne5046:0",
+    "projectsCount": "No projects | 1 project | {count} projects",
     "noMatches": "No matches"
   },
   "searchBreadcrumbFormList": {
-    "label": "crwdns5050:0crwdne5050:0"
+    "label": "Your search:"
   },
   "searchBreadcrumbFormEmpty": {
-    "label": "crwdns5052:0crwdne5052:0"
+    "label": "Your search has not started. Use the search bar or add filters."
   },
   "searchBreadcrumbFormEntryOccurences": {
-    "label": "crwdns5054:0{occurrences}crwdne5054:0",
-    "title": "crwdns5056:0{lessOccurrences}crwdne5056:0"
+    "label": "0 documents | 1 document | {occurrences} documents",
+    "title": "No less documents with this filter | 1 less document with this filter | {lessOccurrences} less documents with this filter"
   },
   "searchBreadcrumbFormFooter": {
     "clearFilters": "Clear filters",
-    "clearQuery": "crwdns5060:0crwdne5060:0",
-    "clearFiltersAndQuery": "crwdns5062:0crwdne5062:0",
-    "saveSearch": "crwdns5064:0crwdne5064:0",
-    "createAlert": "crwdns5066:0crwdne5066:0"
+    "clearQuery": "Clear query",
+    "clearFiltersAndQuery": "Clear  filters and query",
+    "saveSearch": "Save search",
+    "createAlert": "Create alert"
   },
   "searchBreadcrumbFormToggler": {
     "close": "Close"
   },
   "searchSavingModal": {
-    "title": "crwdns5070:0crwdne5070:0",
-    "okTitle": "crwdns5072:0crwdne5072:0",
+    "title": "Name your saved search",
+    "okTitle": "Save search",
     "success": "Your search has been saved.",
-    "seeAll": "crwdns5076:0crwdne5076:0",
+    "seeAll": "See all",
     "error": "Something went wrong, unable to save your search.",
     "form": {
       "name": "Name",
-      "description": "crwdns5082:0{link}crwdne5082:0",
+      "description": "You can retrieve all your saved searches in {link}.",
       "link": "Saved searches"
     }
   },
   "searchSelection": {
-    "count": "crwdns5086:0{count}crwdne5086:0",
+    "count": "No selected documents | 1 selected document | {count} selected documents",
     "star": "Star",
     "unstar": "Unstar",
     "tag": "Tag",
-    "nbDocs": "crwdns5094:0{count}crwdne5094:0",
-    "nbTags": "crwdns5096:0{count}crwdne5096:0",
-    "tagSuccess": "crwdns5098:0{nbDocs}crwdnd5098:0{nbTags}crwdne5098:0",
-    "tagFailed": "crwdns5100:0{nbDocs}crwdnd5100:0{nbTags}crwdne5100:0"
+    "nbDocs": "No documents | 1 document | {count} documents",
+    "nbTags": "no tags | 1 tag | {count} tags",
+    "tagSuccess": "{nbDocs} have been tagged with {nbTags}.",
+    "tagFailed": "Error: {nbDocs} have not been tagged with {nbTags}."
   },
   "searchSelectionAddTagsModal": {
-    "title": "crwdns5102:0{n}crwdne5102:0",
-    "description": "crwdns5104:0crwdne5104:0",
-    "question": "crwdns5106:0{n}crwdnd5106:0{n}crwdne5106:0",
-    "okTitle": "crwdns5108:0crwdne5108:0",
-    "placeholder": "crwdns5110:0crwdne5110:0"
+    "title": "Tag selected document | Tag selected document | Tag {n} selected documents",
+    "description": "You can add multiple tags by separating them with comma.",
+    "question": "Add {n} tag to selected documents ?  | Add {n} tags to selected documents ?",
+    "okTitle": "Add",
+    "placeholder": "Tag1, Tag2"
   },
   "searchSettings": {
-    "title": "crwdns5112:0crwdne5112:0"
+    "title": "Results settings"
   },
   "documentCarousel": {
     "page": "Document",
@@ -1698,82 +1698,82 @@
   "documentRow": {
     "properties": {
       "relevance": "Relevance",
-      "thumbnail": "crwdns5122:0crwdne5122:0",
+      "thumbnail": "Thumbnail ",
       "title": "Document name",
-      "highlights": "crwdns5126:0crwdne5126:0",
+      "highlights": "Highlights",
       "author": "Author",
       "path": "Path",
       "tags": "Tags",
       "contentLength": "File size",
-      "contentTextLength": "crwdns5136:0crwdne5136:0",
-      "contentType": "crwdns5138:0crwdne5138:0",
-      "creationDate": "crwdns5140:0crwdne5140:0",
-      "extractionLevel": "crwdns5142:0crwdne5142:0",
+      "contentTextLength": "Text length",
+      "contentType": "File type",
+      "creationDate": "Created on",
+      "extractionLevel": "Extraction level",
       "extractionDate": "Indexing date",
-      "language": "crwdns5146:0crwdne5146:0",
+      "language": "Language",
       "project": "Project"
     }
   },
   "documentEntries": {
-    "noMatches": "crwdns5150:0crwdne5150:0"
+    "noMatches": "No documents matched your search. Try using different filters."
   },
   "documentEntriesTableHead": {
-    "action": "crwdns5152:0crwdne5152:0"
+    "action": "Action"
   },
   "documentEntriesHeader": {
-    "batchDownloadDocuments": "crwdns5154:0{maxSize}crwdne5154:0",
-    "batchDownloadDocumentsWarning": "crwdns5156:0{maxFiles}crwdnd5156:0{maxSize}crwdne5156:0",
-    "batchDownloadError": "crwdns5158:0crwdne5158:0",
-    "batchDownloadCreated": "crwdns5160:0crwdne5160:0",
-    "batchDownloadLink": "crwdns5162:0crwdne5162:0"
+    "batchDownloadDocuments": "Batch download: downloading multiple files is limited to {maxSize}.",
+    "batchDownloadDocumentsWarning": "Batch download: downloading multiple files is limited to the first {maxFiles} files and {maxSize}.",
+    "batchDownloadError": "Something went wrong when attempt to download the files.",
+    "batchDownloadCreated": "Your batch download is being prepared",
+    "batchDownloadLink": "See all"
   },
   "shortcutsView": {
-    "title": "crwdns5164:0crwdne5164:0",
-    "searchPlaceholder": "crwdns5166:0crwdne5166:0"
+    "title": "Keyboard shortcuts",
+    "searchPlaceholder": "Search keyboard shortcuts"
   },
   "rowPagination": {
-    "rowRange": "crwdns5168:0{to}crwdnd5168:0{to}crwdnd5168:0{to}crwdnd5168:0{total}crwdne5168:0",
-    "rowRangeFewer": "crwdns5170:0{total}crwdne5170:0",
-    "rowRangeCompact": "crwdns5172:0{total}crwdne5172:0"
+    "rowRange": "to {to} of 0 | to {to} of 1 | to {to} of {total}",
+    "rowRangeFewer": "of 0 | of 1 | to {total}",
+    "rowRangeCompact": "of 0 | of 1 | of {total}"
   },
   "rowPaginationBatchSearches": {
-    "rowRange": "crwdns5174:0{to}crwdnd5174:0{to}crwdnd5174:0{to}crwdnd5174:0{total}crwdne5174:0",
-    "rowRangeFewer": "crwdns5176:0{total}crwdne5176:0",
-    "rowRangeCompact": "crwdns5178:0{total}crwdne5178:0"
+    "rowRange": "to {to} of 0 batch searches | to {to} of 1 batch search | to {to} of {total} batch searches",
+    "rowRangeFewer": "of 0 batch searches | of 1 batch search | to {total} batch searches",
+    "rowRangeCompact": "of 0 batch searches | of 1 batch search | of {total} batch searches"
   },
   "rowPaginationBatchDownloads": {
-    "rowRange": "crwdns5180:0{to}crwdnd5180:0{to}crwdnd5180:0{to}crwdnd5180:0{total}crwdne5180:0",
-    "rowRangeFewer": "crwdns5182:0{total}crwdne5182:0",
-    "rowRangeCompact": "crwdns5184:0{total}crwdne5184:0"
+    "rowRange": "to {to} of 0 batch downloads | to {to} of 1 batch download | to {to} of {total} batch downloads",
+    "rowRangeFewer": "of 0 batch downloads | of 1 batch download | to {total} batch downloads",
+    "rowRangeCompact": "of 0 batch downloads | of 1 batch download | of {total} batch downloads"
   },
   "rowPaginationDocuments": {
-    "rowRange": "crwdns5186:0{to}crwdnd5186:0{to}crwdnd5186:0{to}crwdnd5186:0{total}crwdne5186:0",
-    "rowRangeFewer": "crwdns5188:0{total}crwdne5188:0",
-    "rowRangeCompact": "crwdns5190:0{total}crwdne5190:0"
+    "rowRange": "to {to} of 0 documents | to {to} of 1 document | to {to} of {total} documents",
+    "rowRangeFewer": "of 0 documents | of 1 document | to {total} documents",
+    "rowRangeCompact": "of 0 documents | of 1 document | of {total} documents"
   },
   "rowPaginationProjects": {
-    "rowRange": "crwdns5192:0{to}crwdnd5192:0{to}crwdnd5192:0{to}crwdnd5192:0{total}crwdne5192:0",
-    "rowRangeFewer": "crwdns5194:0{total}crwdne5194:0",
-    "rowRangeCompact": "crwdns5196:0{total}crwdne5196:0"
+    "rowRange": "to {to} of 0 projects | to {to} of 1 project | to {to} of {total} projects",
+    "rowRangeFewer": "of 0 projects | of 1 project | to {total} projects",
+    "rowRangeCompact": "of 0 projects | of 1 project | of {total} projects"
   },
   "rowPaginationQueries": {
-    "rowRange": "crwdns5198:0{to}crwdnd5198:0{to}crwdnd5198:0{to}crwdnd5198:0{total}crwdne5198:0",
-    "rowRangeFewer": "crwdns5200:0{total}crwdne5200:0",
-    "rowRangeCompact": "crwdns5202:0{total}crwdne5202:0"
+    "rowRange": "to {to} of 0 queries | to {to} of 1 query | to {to} of {total} queries",
+    "rowRangeFewer": "of 0 queries | of 1 query | to {total} queries",
+    "rowRangeCompact": "of 0 queries | of 1 query | of {total} queries"
   },
   "rowPaginationResults": {
-    "rowRange": "crwdns5204:0{to}crwdnd5204:0{to}crwdnd5204:0{to}crwdnd5204:0{total}crwdne5204:0",
-    "rowRangeFewer": "crwdns5206:0{total}crwdne5206:0",
-    "rowRangeCompact": "crwdns5208:0{total}crwdne5208:0"
+    "rowRange": "to {to} of 0 results | to {to} of 1 result | to {to} of {total} results",
+    "rowRangeFewer": "of 0 results | of 1 result | to {total} results",
+    "rowRangeCompact": "of 0 results | of 1 result | of {total} results"
   },
   "rowPaginationSearches": {
-    "rowRange": "crwdns5210:0{to}crwdnd5210:0{to}crwdnd5210:0{to}crwdnd5210:0{total}crwdne5210:0",
-    "rowRangeFewer": "crwdns5212:0{total}crwdne5212:0",
-    "rowRangeCompact": "crwdns5214:0{total}crwdne5214:0"
+    "rowRange": "to {to} of 0 searches | to {to} of 1 search | to {to} of {total} searches",
+    "rowRangeFewer": "of 0 searches | of 1 search | to {total} searches",
+    "rowRangeCompact": "of 0 searches | of 1 search | of {total} searches"
   },
   "rowPaginationTasks": {
-    "rowRange": "crwdns5216:0{to}crwdnd5216:0{to}crwdnd5216:0{to}crwdnd5216:0{total}crwdne5216:0",
-    "rowRangeFewer": "crwdns5218:0{total}crwdne5218:0",
-    "rowRangeCompact": "crwdns5220:0{total}crwdne5220:0"
+    "rowRange": "to {to} of 0 tasks | to {to} of 1 task | to {to} of {total} tasks",
+    "rowRangeFewer": "of 0 tasks | of 1 task | to {total} tasks",
+    "rowRangeCompact": "of 0 tasks | of 1 task | of {total} tasks"
   }
 }
