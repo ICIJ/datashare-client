@@ -10,14 +10,14 @@
   },
   "addonCard": {
     "plugin": {
-      "submitSuccess": "Extensión instalada con éxito, por favor reinicie Datashare.",
-      "submitError": "Error mientras se instalaba la extensión.",
-      "deleteSuccess": "Plugin eliminado correctamente.",
+      "submitSuccess": "El plugin se ha instalado correctamente.",
+      "submitError": "Error mientras se instalaba el plugin.",
+      "deleteSuccess": "Extensión desinstalada correctamente.",
       "deleteError": "Error mientras se eliminaba el plugin."
     },
     "extension": {
-      "submitSuccess": "El plugin se ha instalado correctamente.",
-      "submitError": "Error mientras se instalaba el plugin.",
+      "submitSuccess": "Extensión instalada con éxito, por favor reinicie Datashare.",
+      "submitError": "Error mientras se instalaba la extensión.",
       "deleteSuccess": "Extensión desinstalada correctamente.",
       "deleteError": "Error mientras se desinstalaba la extensión."
     }
@@ -46,6 +46,9 @@
   "appModalFooter": {
     "cancelTitle": "Cancelar",
     "okTitle": "Sí"
+  },
+  "appPopoverHeader": {
+    "close": "Close"
   },
   "buttonAdd": {
     "label": "Agregar nueva"
@@ -343,16 +346,27 @@
   "documentUserCommentsList": {
     "hideComments": "Ocultar comentarios",
     "showComments": "Mostrar comentarios",
-    "noComments": "Aún no hay comentarios sobre este documento.",
     "sortingText": "De más antigua a más reciente",
     "goToOldest": "Ir a la más antigua",
     "goToRecent": "Ir al más reciente"
   },
+  "documentUserCommentsListNewest": {
+    "label": "Go to newest"
+  },
+  "documentUserCommentsListOldest": {
+    "label": "Go to oldest"
+  },
+  "documentUserCommentsHeader": {
+    "hideComments": "Hide comments",
+    "showComments": "Show comments",
+    "sortingText": "Oldest to newest"
+  },
   "documentUserComments": {
     "warning": "Los comentarios son públicos para todos los/las participantes del proyecto."
   },
-  "documentUserCommentsActions": {
-    "placeholder": "Escribe tu texto"
+  "documentUserCommentsForm": {
+    "placeholder": "Write your comment here.",
+    "submit": "Comment"
   },
   "documentUserCommentsListEntry": {
     "goToComment": "Ir al comentario (enlace externo)"
@@ -376,9 +390,6 @@
     "copy": "Copiar este valor de metadatos",
     "search": "Buscar este valor de metadatos",
     "pin": "Anclar estos metadatos"
-  },
-  "documentThumbnail": {
-    "noPreview": "Vista previa no disponible"
   },
   "documentTranslatedContent": {
     "detected": "Idioma detectado",
@@ -1133,6 +1144,12 @@
       }
     }
   },
+  "batchSearchErrorModal": {
+    "okTitle": "Ok",
+    "errorTitle": "The error is",
+    "text": "how to fix the most common errors",
+    "description": "The system encountered a problem. Syntax errors in the CSV are the usual suspects (see {link})."
+  },
   "batchSearchCard": {
     "seeAllDocuments": "Ver todos los documentos",
     "downloadResultsLabel": "Descargar los resultados (CSV)",
@@ -1390,21 +1407,21 @@
       "info": "Las traducciones son <a href='{href}' class='alert-link'>mantenidas en Crowdin</a>."
     },
     "addons": {
-      "plugins": {
+      "plugin": {
         "title": "Plugins",
-        "info": "Los plugins son módulos de front-end para añadir nuevas características en la interfaz de uso de Datashare.",
+        "info": "Plugins are front-end modules to add new features in Datashare's user interface.",
         "submitSuccess": "El plugin se ha instalado correctamente.",
         "submitError": "Error mientras se instalaba el plugin.",
         "searchPlaceholder": "Buscar plugins",
-        "errorLabel": "Se ha producido un error al recuperar los plugins. Actualice la página o póngase en contacto con el soporte."
+        "errorLabel": "An error occurred while retrieving the plugins. Refresh the page or contact the support."
       },
-      "extensions": {
+      "extension": {
         "title": "Extensiones",
-        "info": "Las extensiones son módulos de back-end para agregar nuevas características para almacenar y manipular datos con Datashare.",
+        "info": "Extensions are back-end modules to add new features to store and manipulate data with Datashare.",
         "submitSuccess": "Extensión instalada con éxito, por favor reinicie Datashare.",
         "submitError": "Error mientras se instalaba la extensión.",
         "searchPlaceholder": "Buscar en las extensiones",
-        "errorLabel": "Se ha producido un error al recuperar las extensiones. Actualice la página o póngase en contacto con el soporte."
+        "errorLabel": "An error occurred while retrieving the extensions. Refresh the page or contact the support."
       }
     },
     "api": {
