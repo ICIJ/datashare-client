@@ -29,16 +29,16 @@
   },
   "addonCardViewActions": {
     "version": "Version : {v}",
-    "install": "Install {v}",
-    "update": "Update to {v}",
+    "install": "Installer {v}",
+    "update": "Mettre à jour vers {v}",
     "uninstall": "Désinstaller"
   },
   "addonCardViewDetails": {
-    "homepage": "Homepage:"
+    "homepage": "Page d'accueil :"
   },
   "appModalConfirm": {
     "title": "Êtes-vous sûr•e ?",
-    "description": "This action cannot be undone."
+    "description": "Cette action ne peut être annulée."
   },
   "appModalHeader": {
     "close": "Fermer"
@@ -51,55 +51,55 @@
     "close": "Fermer"
   },
   "buttonAdd": {
-    "label": "Add new"
+    "label": "Ajouter"
   },
   "buttonToggleSettings": {
     "label": "Paramètres"
   },
   "buttonToggleSidebar": {
-    "expand": "Expand sidebar",
-    "reduce": "Reduce sidebar"
+    "expand": "Agrandir le menu",
+    "reduce": "Réduire le menu"
   },
   "buttonClearSearch": {
-    "label": "Clear search"
+    "label": "Effacer la recherche"
   },
   "buttonClearHistory": {
     "label": "Vider l'historique"
   },
   "buttonClearSavedSearches": {
-    "label": "Clear saved searches"
+    "label": "Effacer les recherches enregistrées"
   },
   "buttonDownloadDocuments": {
-    "label": "Download documents"
+    "label": "Télécharger les documents"
   },
   "buttonTogglePin": {
-    "pin": "Pin to menu",
-    "unpin": "Unpin"
+    "pin": "Épingler dans le menu",
+    "unpin": "Désépingler"
   },
   "buttonToggleBatchMode": {
-    "labelBatchMode": "Selection mode",
-    "labelSingleFlow": "Close selection mode"
+    "labelBatchMode": "Mode sélection",
+    "labelSingleFlow": "Fermer le mode sélection"
   },
   "buttonSaveSearch": {
     "label": "Mettre à jour",
-    "labelSaving": "Saving",
-    "labelSaved": "Search saved"
+    "labelSaving": "Enregistrement en cours",
+    "labelSaved": "Recherche enregistrée"
   },
   "buttonToggleAdvancedSearch": {
-    "label": "Advanced"
+    "label": "Avancé"
   },
   "buttonToggleFilters": {
-    "label": "Filter"
+    "label": "Filtres"
   },
   "buttonToggleSearchBreadcrumb": {
-    "label": "Toggle search breadcrumb"
+    "label": "Afficher/masquer le fil d'Ariane de recherche"
   },
   "buttonToggleRecommendation": {
     "mark": "Marquer comme recommandé",
     "unmark": "Ne plus marquer comme recommandé"
   },
   "buttonToTop": {
-    "label": "Back to top"
+    "label": "Retour en haut"
   },
   "contentTextLengthWarning": {
     "title": "Ce document est volumineux",
@@ -109,7 +109,7 @@
   },
   "dismissableAlert": {
     "close": "Fermer",
-    "dontShow": "Don't show this again"
+    "dontShow": "Ne plus afficher"
   },
   "dismissableToastBody": {
     "close": "Fermer"
@@ -123,50 +123,50 @@
     "no": "Non favoris"
   },
   "displayDatetimeRange": {
-    "title": "From {start} to {end}"
+    "title": "De {start} à {end}"
   },
   "displayStatus": {
-    "success": "Success",
-    "error": "Failure",
-    "failure": "Failure",
-    "danger": "Failure",
-    "warning": "Warning",
+    "success": "Succès",
+    "error": "Échec",
+    "failure": "Échec",
+    "danger": "Échec",
+    "warning": "Avertissement",
     "info": "Information",
-    "running": "Running",
-    "queued": "Queued",
-    "draft": "Draft"
+    "running": "En cours",
+    "queued": "En attente",
+    "draft": "Brouillon"
   },
   "displayVisibility": {
-    "private": "Private to you",
-    "public": "Public to project members"
+    "private": "Privé",
+    "public": "Visible pour tous les membres du projet"
   },
   "documentTranslationAlertToggler": {
-    "viewOriginal": "View original",
-    "viewTranslation": "View translation"
+    "viewOriginal": "Voir l'original",
+    "viewTranslation": "Afficher la traduction"
   },
   "documentTranslationAlertSource": {
     "detected": "Langue détectée"
   },
   "documentDownloadPopover": {
-    "extensionWarning": "This document has the wrong file extension for its type. You might need to <strong>add the extension {extension}</strong> before you can open it.",
+    "extensionWarning": "Ce document a une extension de fichier qui ne correspond pas à son type. Vous aurez peut-être besoin d'ajouter l'extension <strong>{extension}</strong> avant de l'ouvrir.",
     "download": "Télécharger",
-    "downloadWithoutMetadata": "Download without metadata",
-    "downloadExtractText": "Download text",
-    "downloadRoot": "Download root",
-    "sectionTitle": "What's the document's title?",
-    "sectionContentType": "What's the document's type?",
-    "sectionDescription": "Once downloaded, how do I open it?"
+    "downloadWithoutMetadata": "Télécharger sans les métadonnées",
+    "downloadExtractText": "Télécharger le texte",
+    "downloadRoot": "Télécharger le document à la racine",
+    "sectionTitle": "Quel est le titre du document ?",
+    "sectionContentType": "Quel est le type du document ?",
+    "sectionDescription": "Une fois téléchargé, comment puis-je l'ouvrir ?"
   },
   "entityPopoverInfo": {
-    "content": "This entity was extracted with:",
-    "label": "{extractor} in {language}"
+    "content": "Cette entité a été extraite avec :",
+    "label": "{extractor} dans {language}"
   },
   "entityPopoverMention": {
-    "noExcerpt": "This entity was extracted from the metadata."
+    "noExcerpt": "Cette entité a été extraite des métadonnées."
   },
   "entityPopoverMentionOccurrences": {
-    "occurrences": "This mention appears {offsets} times | This mention appears {offsets} time | This mention appears {offsets} times",
-    "projects": "in {n} projects | in {n} project | in {n} projects:"
+    "occurrences": "Cette mention n'apparaît pas | Cette mention apparaît une fois | Cette mention apparaît {offsets} fois",
+    "projects": "dans aucun projet | dans 1 projet : | dans {n} projets :"
   },
   "entityPopoverTabGroup": {
     "mentions": "Mentions",
@@ -197,7 +197,7 @@
     "download": "Télécharger"
   },
   "search": {
-    "title": "Rechercher",
+    "title": "Rechercher des documents",
     "emptyStateLabel": "Oh, it’s lonely in here... This project has no documents yet.",
     "emptyStateAction": "Ajouter des documents",
     "errors": {
@@ -221,9 +221,9 @@
       "thread": "ID du fil de discussion",
       "description": "Description"
     },
-    "placeholder": "Rechercher dans les documents...",
+    "placeholder": "Entrez mots clés, utilisez des opérateurs ou des expressions régulières...",
     "buttonLabel": "Rechercher",
-    "searchIn": "Filtrer les {plural}...",
+    "searchIn": "Filtrer par {plural}...",
     "searchInProjects": "Filter projects...",
     "hideFilters": "Cacher les filtres",
     "showFilters": "Afficher les filtres",
@@ -232,12 +232,12 @@
     "tips": "Conseils pour améliorer la recherche",
     "settings": {
       "title": "Paramètres de recherche",
-      "resultsPerPage": "Nombre de résultats par page"
+      "resultsPerPage": "Documents par page"
     },
     "results": {
       "match": "dans le doc",
       "entities": "nb entités",
-      "results": "sur 1 document | sur {total} documents",
+      "results": "0 document | 1 document | {total} documents",
       "noResults": "Aucun document",
       "perPage": "par page",
       "sortedByPath": "tri par chemin",
@@ -245,16 +245,16 @@
       "batchDownload": "Télécharger les résultats",
       "batchDownloadSubmit": "Vous êtes sur le point de télécharger 1 document. | Vous êtes sur le point de télécharger {total} documents.",
       "warningNumber": "Vous ne pouvez pas télécharger plus de {number} documents.",
-      "warningSize": "Vous ne pouvez pas télécharger plus de {size}B.",
+      "warningSize": "Vous ne pouvez pas télécharger plus de {size} o.",
       "warningConfirm": "Voulez-vous toujours télécharger les premiers documents de cette recherche ?",
       "sort": {
         "sortLabel": "Trier",
         "sort": "Tri par",
         "relevance": "Pertinence",
-        "dateNewest": "Date d'ajout (décroissante)",
-        "dateOldest": "Date d'ajout (croissante)",
-        "creationDateNewest": "Date de création (décroissante)",
-        "creationDateOldest": "Date de création (croissante)",
+        "dateNewest": "Date d'ajout (du plus récent au plus ancien)",
+        "dateOldest": "Date d'ajout (du plus ancien au plus récent)",
+        "creationDateNewest": "Date de création (du plus récent au plus ancien)",
+        "creationDateOldest": "Date de création (du plus vieux au plus récent)",
         "sizeLargest": "Taille (décroissante)",
         "sizeSmallest": "Taille (croissante)",
         "path": "Chemin du fichier (A à Z)",
@@ -362,7 +362,7 @@
     "sortingText": "Oldest to newest"
   },
   "documentUserComments": {
-    "warning": "Comments are public to project’s members."
+    "warning": "Les commentaires sont visibles par tous les membres d'un projet."
   },
   "documentUserCommentsForm": {
     "placeholder": "Write your comment here.",
@@ -688,12 +688,12 @@
     "starred": "Les documents ont été placés dans les favoris.",
     "unstarred": "Les documents ont été enlevés des favoris.",
     "notAvailable": "L'aperçu n'est pas disponible pour ce document.",
-    "namedEntitiesNotFound": "Pas d'entités nommées trouvées",
-    "namedEntitiesNotSearched": "<p>Document non analysé. Afin de lancer la recherche d'entités nommées, allez dans <a class=\\\"fw-bold\\\" href=\\\"{indexingLink}\\\">@:{'menu.analyse'}</a> et lancez une nouvelle tâche \\\"@:{'indexing.findNamedEntities'}\\\".</p>",
+    "namedEntitiesNotFound": "Aucune entité nommée trouvée.",
+    "namedEntitiesNotSearched": "Document non analysé. Pour trouver les entités nommées, {link}.",
     "namedEntitiesNotSearchedLink": "start a new task",
     "threadIndex": "ID du fil de discussion",
     "errorNotFound": "Votre fichier a été indexé dans Datashare mais le fichier n'est plus présent dans votre dossier Datashare sur votre ordinateur. La prévisualisation n'est donc pas disponible.",
-    "fetching": "Chargement de la prévisualisation...",
+    "fetching": "Chargement de l'aperçu.",
     "author": "Auteur·e",
     "extractionDate": "Date d'indexation",
     "numberOfPages": "Number of pages",
@@ -762,7 +762,7 @@
   },
   "taskDocumentsFormOcrAlert": {
     "useDefault": "La langue OCR par défaut est utilisée.",
-    "isMissing": " L'OCR pour '{language}' n'est pas installé.",
+    "isMissing": "Le pack de langue OCR pour \"{language}\" n'est pas installé.",
     "installOcrLanguage": "Choisissez parmi les {availableLanguages} langues à installer.",
     "tesseractNotInstalled": "Tesseract OCR n'est pas installé."
   },
@@ -821,7 +821,7 @@
     "account": "Se connecter",
     "askHelp": "Aide",
     "logout": "Vous avez été déconnecté•e de Datashare.",
-    "login": "Identifiez-vous pour continuer",
+    "login": "Se connecter",
     "title": "Login",
     "switchLanguage": "Switch language",
     "tagline": "ICIJ search and discovery platform"
@@ -1308,7 +1308,7 @@
   "projectViewAddDocuments": {
     "title": "Add documents to project",
     "notify": {
-      "succeed": "Add document task launched",
+      "succeed": "Les documents sont en cours d'indexation.",
       "seeTasks": "See tasks",
       "failed": "Add document task failed",
       "failedBody": "An error occurred when launching indexing task to add documents."
@@ -1317,7 +1317,7 @@
   "projectViewFindNamedEntities": {
     "title": "Find named entities",
     "notify": {
-      "succeed": "Find named entities task launched",
+      "succeed": "La détection d'entités est en cours.",
       "seeTasks": "See tasks",
       "failed": "Find named entities task failed",
       "failedBody": "An error occurred when launching indexing task to add documents."
@@ -1326,7 +1326,7 @@
   "projectForm": {
     "form": {
       "name": {
-        "label": "ID",
+        "label": "Identifiant automatique",
         "placeholder": ""
       },
       "label": {
@@ -1359,7 +1359,7 @@
         "placeholder": "The name of the people or organization who will maintain the project on Datashare"
       }
     },
-    "reset": "Annuler",
+    "reset": "Réinitialiser",
     "submit": "Valider",
     "deleteConfirmation": "Êtes-vous sûr de vouloir supprimer ce projet?",
     "delete": "Supprimer"
@@ -1514,7 +1514,7 @@
       "KB": "% KB",
       "MB": "% MB",
       "GB": "% GB",
-      "TB": "% T"
+      "TB": "% TO"
     }
   },
   "batchDownload": {
@@ -1524,7 +1524,7 @@
     "warning": "Cette fonctionnalité est actuellement en cours de développement par l'équipe de Datashare.",
     "seeAll": "See all",
     "errorMessage": "Le système a rencontré un problème. Veuillez vous référer à ces informations lorsque vous contactez le support.",
-    "errorTitle": "La tâche de téléchargement de lots <code class=\"fw-bold\">{taskId}</code> est en erreur.",
+    "errorTitle": "La préparation du téléchargement <code class=\"fw-bold\">{taskId}</code> a échoué.",
     "relaunch": {
       "succeed": "Votre téléchargement est en cours de préparation",
       "succeedBody": "Le téléchargement sera bientôt disponible.",
@@ -1535,7 +1535,7 @@
       "failed": "Impossible de supprimer",
       "failedBody": "Une erreur est survenue lorsquela recherche en lot a été supprimée."
     },
-    "limitations": "Les téléchargements en lots sont limités à {maxNbFiles} fichiers et {maxSize}B."
+    "limitations": "Les téléchargements sont limités à {maxNbFiles} fichiers et {maxSize} o."
   },
   "batchDownloadActions": {
     "remove": {
@@ -1569,7 +1569,7 @@
     },
     "creationDate": {
       "filterPath": "Filtrer par dossier",
-      "selectPath": "Sélectionner un dossier",
+      "selectPath": "Filtrer par dossier",
       "intervals": {
         "year": "Année",
         "month": "Mois",
@@ -1635,7 +1635,7 @@
     "label": "Chemins du fichier"
   },
   "searchBarInputDropdownForProjects": {
-    "projectsCount": "{count} projects",
+    "projectsCount": "Aucun projet | 1 projet | {count} projets",
     "noMatches": "No matches"
   },
   "searchBreadcrumbFormList": {
