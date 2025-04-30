@@ -188,14 +188,6 @@
   "filtersPanelSectionFilterTitleToggler": {
     "toggle": "Conmutar filtro"
   },
-  "searchResultsActions": {
-    "deselectAll": "Deseleccionar {count} documentos",
-    "selectAll": "Seleccionar todo {count}",
-    "tag": "Etiqueta",
-    "star": "Marcar como favorito",
-    "recommend": "Recomendar",
-    "download": "Descargar"
-  },
   "search": {
     "title": "Buscar",
     "emptyStateLabel": "Oh, está solitario por aquí... Este proyecto aún no tiene documentos.",
@@ -224,7 +216,6 @@
     "placeholder": "Buscar en documentos...",
     "buttonLabel": "Buscar",
     "searchIn": "Buscar en {plural}...",
-    "searchInProjects": "Filter projects...",
     "hideFilters": "Ocultar los filtros",
     "showFilters": "Mostrar los filtros",
     "contextualizeFiltersLabel": "Contextualizar filtros",

@@ -188,14 +188,6 @@
   "filtersPanelSectionFilterTitleToggler": {
     "toggle": "Filtres"
   },
-  "searchResultsActions": {
-    "deselectAll": "Désélectionner {count} documents",
-    "selectAll": "Select all {count}",
-    "tag": "Tag",
-    "star": "Mettre en favoris",
-    "recommend": "Recommander",
-    "download": "Télécharger"
-  },
   "search": {
     "title": "Rechercher des documents",
     "emptyStateLabel": "Oh, it’s lonely in here... This project has no documents yet.",
@@ -224,7 +216,6 @@
     "placeholder": "Entrez mots clés, utilisez des opérateurs ou des expressions régulières...",
     "buttonLabel": "Rechercher",
     "searchIn": "Filtrer par {plural}...",
-    "searchInProjects": "Filter projects...",
     "hideFilters": "Cacher les filtres",
     "showFilters": "Afficher les filtres",
     "contextualizeFiltersLabel": "Contextualiser les filtres",
