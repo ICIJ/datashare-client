@@ -57,8 +57,8 @@
     "label": "Settings"
   },
   "buttonToggleSidebar": {
-    "expand": "Expand sidebar",
-    "reduce": "Reduce sidebar"
+    "expand": "Expand menu",
+    "reduce": "Reduce menu"
   },
   "buttonClearSearch": {
     "label": "Clear search"
@@ -89,7 +89,7 @@
     "label": "Advanced"
   },
   "buttonToggleFilters": {
-    "label": "Filter"
+    "label": "Filters"
   },
   "buttonToggleSearchBreadcrumb": {
     "label": "Toggle search breadcrumb"

@@ -186,14 +186,14 @@
     "expand": "Agrandir"
   },
   "filtersPanelSectionFilterTitleToggler": {
-    "toggle": "Toggle filter"
+    "toggle": "Filtres"
   },
   "searchResultsActions": {
-    "deselectAll": "Unselect {count} documents",
+    "deselectAll": "Désélectionner {count} documents",
     "selectAll": "Select all {count}",
     "tag": "Tag",
     "star": "Mettre en favoris",
-    "recommend": "Recommend",
+    "recommend": "Recommander",
     "download": "Télécharger"
   },
   "search": {

@@ -57,8 +57,8 @@
     "label": "Settings"
   },
   "buttonToggleSidebar": {
-    "expand": "Expand sidebar",
-    "reduce": "Reduce sidebar"
+    "expand": "Expand menu",
+    "reduce": "Reduce menu"
   },
   "buttonClearSearch": {
     "label": "Clear search"
@@ -89,7 +89,7 @@
     "label": "Advanced"
   },
   "buttonToggleFilters": {
-    "label": "Filter"
+    "label": "Filters"
   },
   "buttonToggleSearchBreadcrumb": {
     "label": "Toggle search breadcrumb"
@@ -1147,7 +1147,7 @@
   "batchSearchErrorModal": {
     "okTitle": "Ok",
     "errorTitle": "The error is",
-    "text":"how to fix the most common errors",
+    "text": "how to fix the most common errors",
     "description": "The system encountered a problem. Syntax errors in the CSV are the usual suspects (see {link})."
   },
   "batchSearchCard": {
