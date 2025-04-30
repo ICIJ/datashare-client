@@ -188,14 +188,6 @@
   "filtersPanelSectionFilterTitleToggler": {
     "toggle": "Toggle filter"
   },
-  "searchResultsActions": {
-    "deselectAll": "Unselect {count} documents",
-    "selectAll": "Select all {count}",
-    "tag": "Tag",
-    "star": "Zu Favoriten hinzufügen",
-    "recommend": "Recommend",
-    "download": "Download"
-  },
   "search": {
     "title": "Suche",
     "emptyStateLabel": "Oh, it’s lonely in here... This project has no documents yet.",
@@ -224,7 +216,6 @@
     "placeholder": "Dokumente durchsuchen...",
     "buttonLabel": "Suche",
     "searchIn": "Suche in {plural}...",
-    "searchInProjects": "Projekte filtern...",
     "hideFilters": "Filter ausblenden",
     "showFilters": "Filter anzeigen",
     "contextualizeFiltersLabel": "Mit Kontext filtern",
