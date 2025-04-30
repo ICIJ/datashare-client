@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { matchesProperty, negate, property } from 'lodash'
+import { useI18n } from 'vue-i18n'
 
 import ButtonTag from '@/components/Button/ButtonTag'
 import DocumentUserActionsCard from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsCard'
@@ -26,7 +27,8 @@ const { tags, allTags, username } = defineProps({
 })
 
 const emit = defineEmits(['delete', 'add'])
-const tagslabels = computed(() => tags.map(property('label')))
+const { t } = useI18n()
+const tagsLabels = computed(() => tags.map(property('label')))
 const allTagsLabels = computed(() => allTags.map(property('label')))
 const matchesUsername = computed(() => matchesProperty('user.id', username))
 const yourTags = computed(() => tags.filter(matchesUsername.value))
@@ -38,12 +40,12 @@ const count = computed(() => tags.length)
   <document-user-actions-card
     action-start
     icon="hash"
-    :title="$tc('documentUserActions.tags', count)"
+    :title="t('documentUserActions.tags', count)"
     :is-split="isServer"
     :show-warning="isServer"
-    :list-name-others="$t('documentUserTags.tagListOthers')"
+    :list-name-others="t('documentUserTags.tagListOthers')"
     list-body-class-others="d-flex flex-row flex-wrap gap-2"
-    :list-name-yours="$t('documentUserTags.tagListYours')"
+    :list-name-yours="t('documentUserTags.tagListYours')"
     list-body-class-yours="d-flex flex-row flex-wrap gap-2"
   >
     <template #yours>
@@ -53,11 +55,11 @@ const count = computed(() => tags.length)
       <button-tag v-for="{ label } in othersTags" :key="label" :label="label" @delete="emit('delete', label)" />
     </template>
     <template #action-warning>
-      {{ $t('documentUserTags.tagWarning') }}
+      {{ t('documentUserTags.tagWarning') }}
     </template>
     <template #action>
       <document-user-tags-action
-        :model-value="tagslabels"
+        :model-value="tagsLabels"
         :options="allTagsLabels"
         class="d-inline-flex"
         @update:model-value="emit('add', $event)"

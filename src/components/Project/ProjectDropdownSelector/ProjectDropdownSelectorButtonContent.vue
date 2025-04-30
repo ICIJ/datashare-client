@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import ProjectThumbnail from '@/components/Project/ProjectThumbnail'
 
@@ -15,6 +16,8 @@ const props = defineProps({
     default: 3
   }
 })
+
+const { t } = useI18n()
 
 const slicedProjects = computed(() => {
   return props.selectedProjects.slice(0, props.sliceSize + 1)
@@ -49,7 +52,7 @@ const isLastProjectSlice = (p) => {
           {{ project?.label || project?.name }}
         </template>
         <template v-else-if="isLastProjectSlice(p)">
-          {{ $tc('searchBarInputDropdownForProjects.projectsCount', selectedProjects.length) }}
+          {{ t('searchBarInputDropdownForProjects.projectsCount', selectedProjects.length) }}
         </template>
       </span>
     </span>

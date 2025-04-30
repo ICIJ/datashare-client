@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
   occurrences: {
@@ -15,7 +16,7 @@ const props = defineProps({
     default: () => ({ show: 0, hide: 0 })
   }
 })
-
+const { t, n } = useI18n()
 const lessOccurrences = computed(() => {
   return Math.max(0, props.previousOccurrences - props.occurrences)
 })
@@ -25,9 +26,9 @@ const lessOccurrences = computed(() => {
   <div
     v-b-tooltip.body.top="{ offset: '0', delay: tooltipDelay }"
     class="search-breadcrumb-form-entry-occurrences d-inline-flex px-2"
-    :title="$tc('searchBreadcrumbFormEntryOccurences.title', lessOccurrences, { lessOccurrences: $n(lessOccurrences) })"
+    :title="t('searchBreadcrumbFormEntryOccurrences.title', lessOccurrences, { lessOccurrences: n(lessOccurrences) })"
   >
-    {{ $tc('searchBreadcrumbFormEntryOccurences.label', occurrences, { occurrences: $n(occurrences) }) }}
+    {{ t('searchBreadcrumbFormEntryOccurrences.label', occurrences, { occurrences: n(occurrences) }) }}
   </div>
 </template>
 
