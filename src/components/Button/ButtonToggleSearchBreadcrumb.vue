@@ -1,7 +1,10 @@
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
+import { VARIANT } from '@/enums/variants.js'
+import { ICON_WEIGHT } from '@/enums/iconWeights.js'
 
 const props = defineProps({
   counter: {
@@ -15,6 +18,7 @@ const props = defineProps({
     type: Boolean
   }
 })
+const { t } = useI18n()
 
 const active = defineModel('active', { type: Boolean })
 
@@ -27,15 +31,15 @@ const nonzeroCounter = computed(() => {
 })
 
 const variant = computed(() => {
-  return active.value ? 'action' : 'outline-tertiary'
+  return active.value ? VARIANT.ACTION : VARIANT.OUTLINE_TERTIARY
 })
 
 const counterVariant = computed(() => {
-  return props.disabled ? 'dark' : 'action'
+  return props.disabled ? VARIANT.DARK : VARIANT.ACTION
 })
 
 const iconLeftWeight = computed(() => {
-  return props.loading ? 'regular' : 'fill'
+  return props.loading ? ICON_WEIGHT.REGULAR : ICON_WEIGHT.FILL
 })
 </script>
 
@@ -46,7 +50,7 @@ const iconLeftWeight = computed(() => {
     :disabled="disabled"
     :icon-left-weight="iconLeftWeight"
     :icon-left="PhPath"
-    :label="$t('buttonToggleSearchBreadcrumb.label')"
+    :label="t('buttonToggleSearchBreadcrumb.label')"
     :loading="loading"
     :variant="variant"
     class="button-toggle-search-breadcrumb flex-shrink-0"

@@ -1,8 +1,12 @@
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
 import { useBreakpoints } from '@/composables/useBreakpoints'
+import { VARIANT } from '@/enums/variants.js'
+
+const active = defineModel('active', { type: Boolean })
 
 const props = defineProps({
   saved: {
@@ -17,14 +21,14 @@ const props = defineProps({
   }
 })
 
-const active = defineModel('active', { type: Boolean })
+const { t } = useI18n()
 
 const toggle = () => {
   active.value = !active.value
 }
 
 const variant = computed(() => {
-  return active.value ? 'action' : 'outline-tertiary'
+  return active.value ? VARIANT.ACTION : VARIANT.OUTLINE_TERTIARY
 })
 
 const { breakpointDown } = useBreakpoints()
@@ -37,7 +41,7 @@ const compact = computed(() => {
 <template>
   <button-icon
     :hide-label="compact"
-    :label="$t('buttonToggleAdvancedSearch.label')"
+    :label="t('buttonToggleAdvancedSearch.label')"
     :loading="loading"
     :square="compact"
     :variant="variant"

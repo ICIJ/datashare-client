@@ -1,10 +1,12 @@
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import KeyboardShortcutsPopover from '@/components/KeyboardShortcuts/KeyboardShortcutsPopover/KeyboardShortcutsPopover'
 import KeyboardShortcutsSectionEntry from '@/components/KeyboardShortcuts/KeyboardShortcutsSection/KeyboardShortcutsSectionEntry'
 import { useKeyboardShortcuts } from '@/composables/useKeyboardShortcuts'
 
+const { t } = useI18n()
 const { routeShortcuts } = useKeyboardShortcuts()
 const isVisible = computed(() => !!routeShortcuts.value.length)
 </script>
@@ -17,7 +19,7 @@ const isVisible = computed(() => !!routeShortcuts.value.length)
         :key="i"
         :keys="shortcut.keys.default"
         :mac-keys="shortcut.keys.mac"
-        :label="$t(shortcut.label)"
+        :label="t(shortcut.label)"
       />
     </slot>
     <template #target="{ show, hide, toggle, visible }">

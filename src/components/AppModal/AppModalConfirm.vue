@@ -1,5 +1,6 @@
 <script setup>
 import { useAttrs } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import image from '@/assets/images/illustrations/app-modal-default-light.svg'
 import imageDark from '@/assets/images/illustrations/app-modal-default-dark.svg'
@@ -11,6 +12,7 @@ defineProps({
     default: null
   }
 })
+const { t } = useI18n()
 
 const attrs = useAttrs()
 </script>
@@ -26,7 +28,7 @@ const attrs = useAttrs()
   >
     <slot>
       <div class="text-center text-secondary">
-        {{ description || $t('appModalConfirm.description') }}
+        {{ description || t('appModalConfirm.description') }}
       </div>
     </slot>
   </app-modal>
