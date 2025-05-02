@@ -7,7 +7,7 @@
       <div class="d-flex align-items-baseline version-number__tooltip__client py-2">
         <div class="flex-grow-1 pe-5">
           <phosphor-icon :name="PhDesktop" class="me-1" />
-          {{ $t('versionNumber.client') }}
+          {{ t('versionNumber.client') }}
         </div>
         <div class="font-monospace version-number__tooltip__client__value">
           {{ shortClientHash }}
@@ -16,7 +16,7 @@
       <div class="d-flex align-items-baseline version-number__tooltip__server py-2">
         <div class="flex-grow-1 pe-5">
           <phosphor-icon :name="PhHardDrives" class="me-1" />
-          {{ $t('versionNumber.server') }}
+          {{ t('versionNumber.server') }}
         </div>
         <div class="font-monospace version-number__tooltip__server__value">
           {{ serverHash }}
@@ -27,8 +27,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
+import { useI18n } from 'vue-i18n'
 
 import { useCore } from '@/composables/useCore'
 
@@ -49,7 +50,7 @@ defineProps({
     default: () => ({ show: 0, hide: 0 })
   }
 })
-
+const { t } = useI18n()
 const serverHash = ref(null)
 const serverVersion = ref(null)
 
