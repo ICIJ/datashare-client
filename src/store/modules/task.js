@@ -80,11 +80,11 @@ export const useTaskStore = defineStore('task', () => {
   }
 
   const getBatchSearchRecord = (id) => {
-    return getTask(id)?.args?.batchRecord
+    return getTask(id)?.args?.batchRecord ?? {}
   }
 
   const getBatchDownloadRecord = (id) => {
-    return getTask(id)?.args?.batchDownload
+    return getTask(id)?.args?.batchDownload ?? {}
   }
 
   const getTasks = async ({ names = [], ...params } = {}) => {
