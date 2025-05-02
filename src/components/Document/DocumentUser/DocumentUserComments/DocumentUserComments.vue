@@ -91,7 +91,7 @@ const { t } = useI18n()
     </document-user-comments-list>
     <template #action-warning>
       <slot name="warning">
-        {{ $t('documentUserComments.warning') }}
+        {{ t('documentUserComments.warning') }}
       </slot>
     </template>
     <template #action>
