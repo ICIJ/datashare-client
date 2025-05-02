@@ -35,9 +35,10 @@
 
 <script>
 import bodybuilder from 'bodybuilder'
-import { get, flatten, camelCase, iteratee, noop, uniqueId } from 'lodash'
+import { camelCase, flatten, get, iteratee, noop, uniqueId } from 'lodash'
 import InfiniteLoading from 'v3-infinite-loading'
 import { PhosphorIcon } from '@icij/murmur-next'
+import { useI18n } from 'vue-i18n'
 
 import WidgetFieldFacetsEntry from './WidgetFieldFacetsEntry'
 
@@ -79,7 +80,8 @@ export default {
     }
   },
   setup() {
-    return { wait: useWait() }
+    const { t, te } = useI18n()
+    return { wait: useWait(), te, t }
   },
   data() {
     return {
@@ -105,8 +107,8 @@ export default {
       return get(this.pages, '0.hits.total.value', 0)
     },
     title() {
-      if (this.$te(this.titleTranslationKey)) {
-        return this.$t(this.titleTranslationKey)
+      if (this.te(this.titleTranslationKey)) {
+        return this.t(this.titleTranslationKey)
       }
 
       return this.widget.title
