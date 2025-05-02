@@ -17,7 +17,7 @@ export const useTaskStore = defineStore('task', () => {
   }
 
   const stopTask = async (id) => {
-    await stopTask(id)
+    await api.stopTask(id)
   }
 
   const stopPendingTasks = async ({ names = [], ...params } = {}) => {
