@@ -53,6 +53,7 @@ function getProjects(item) {
     case TASK_NAME.BATCH_DOWNLOAD:
       return item.args?.batchDownload.projects
     case TASK_NAME.BATCH_SEARCH:
+    case TASK_NAME.BATCH_SEARCH_PROXY:
       return item.args?.batchRecord?.projects
     case TASK_NAME.EXTRACT_NLP:
     case TASK_NAME.ENQUEUE_FROM_INDEX:
@@ -68,6 +69,7 @@ function getProjects(item) {
 function getTitle(item) {
   switch (item.name) {
     case TASK_NAME.BATCH_SEARCH:
+    case TASK_NAME.BATCH_SEARCH_PROXY:
       return item.args?.batchRecord?.name
     case TASK_NAME.BATCH_DOWNLOAD:
       return item.args?.batchDownload?.filename
@@ -84,6 +86,7 @@ function getTaskLinkTitle(item) {
   const path = 'task.task-board.latest.linkTitle'
   switch (item.name) {
     case TASK_NAME.BATCH_SEARCH:
+    case TASK_NAME.BATCH_SEARCH_PROXY:
       return `${path}.batchSearch`
     case TASK_NAME.BATCH_DOWNLOAD:
       return `${path}.batchDownload`
@@ -101,6 +104,7 @@ function getTaskLinkTitle(item) {
 function getTaskLinkRoute(item) {
   switch (item.name) {
     case TASK_NAME.BATCH_SEARCH:
+    case TASK_NAME.BATCH_SEARCH_PROXY:
       return { name: 'task.batch-search.list' }
     case TASK_NAME.BATCH_DOWNLOAD:
       return { name: 'task.batch-download.list' }
@@ -144,7 +148,10 @@ function getTaskIcon(item) {
         </template>
         <template #cell(name)="{ item }">
           <router-link-batch-download v-if="item.name === TASK_NAME.BATCH_DOWNLOAD" :item="item" />
-          <router-link-batch-search v-else-if="item.name === TASK_NAME.BATCH_SEARCH" :item="item" />
+          <router-link-batch-search
+            v-else-if="item.name === TASK_NAME.BATCH_SEARCH || item.name === TASK_NAME.BATCH_SEARCH_PROXY"
+            :item="item"
+          />
           <span v-else> {{ t(getTitle(item)) }}</span>
         </template>
         <template #cell(createdAt)="{ item }">
