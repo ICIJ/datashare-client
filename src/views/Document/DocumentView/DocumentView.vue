@@ -1,6 +1,6 @@
 <script setup>
-import { computed, ref, onBeforeMount, useTemplateRef, markRaw, watch } from 'vue'
-import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router'
+import { computed, markRaw, onBeforeMount, ref, useTemplateRef, watch } from 'vue'
+import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { matches, property } from 'lodash'
 
@@ -15,11 +15,6 @@ import { useSearchNav } from '@/composables/useSearchNav'
 import { useDocument } from '@/composables/useDocument'
 import { useUrlParamWithStore } from '@/composables/useUrlParamWithStore'
 import { useAppStore } from '@/store/modules'
-
-const elementRef = useTemplateRef('element')
-const { t } = useI18n()
-const { whenSearchHasNoEntries } = useSearchNav()
-const { document, fetchDocumentOnce, loaderId } = useDocument(elementRef)
 
 const props = defineProps({
   id: {
@@ -40,6 +35,10 @@ const props = defineProps({
 const router = useRouter()
 const route = useRoute()
 const appStore = useAppStore()
+const { t, n } = useI18n()
+const elementRef = useTemplateRef('element')
+const { whenSearchHasNoEntries } = useSearchNav()
+const { document, fetchDocumentOnce, loaderId } = useDocument(elementRef)
 
 // We cannot use a <router-view> to display the tabs because the document view must be independent of the router.
 // This independence is crucial to allow the document view to be used in various contexts, such as displaying a document
