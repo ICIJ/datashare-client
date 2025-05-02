@@ -1,6 +1,7 @@
 <script setup>
 import { PhosphorIcon } from '@icij/murmur-next'
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
 import { isUrl } from '@/utils/strings'
@@ -10,6 +11,7 @@ const url = defineModel({ type: String })
 defineProps({
   loading: { type: Boolean, default: false }
 })
+const { t } = useI18n()
 
 const emit = defineEmits(['install'])
 
@@ -29,7 +31,7 @@ function installPluginFromUrl() {
       :model-value="url"
       :state="isFormValid"
       class="b-form-control"
-      :placeholder="$t('addonUrlInput.installFromUrl')"
+      :placeholder="t('addonUrlInput.installFromUrl')"
       :disabled="loading"
       type="url"
       @update:model-value="(newValue) => (url = newValue)"
@@ -42,10 +44,10 @@ function installPluginFromUrl() {
       :loading="loading"
       @click="installPluginFromUrl"
     >
-      {{ $t('addonUrlInput.install') }}
+      {{ t(('addonUrlInput.install') }}
     </button-icon>
     <b-form-invalid-feedback class="text-primary" :state="isFormValid">
-      {{ $t('addonUrlInput.enterCorrectUrl') }}
+      {{ t(('addonUrlInput.enterCorrectUrl') }}
     </b-form-invalid-feedback>
   </div>
 </template>
