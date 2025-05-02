@@ -196,7 +196,7 @@ export default {
     },
     bucketToTranslation(bucket) {
       const translationKey = this.widget.bucketTranslation(bucket)
-      return this.$te(translationKey) ? this.$t(translationKey) : translationKey
+      return this.te(translationKey) ? this.t(translationKey) : translationKey
     }
   }
 }
