@@ -21,16 +21,16 @@ export function useTaskPolling({ names = [], sortBy = [], perPage = null, page =
 
   async function stopPendingTasks() {
     await taskStore.stopPendingTasks({ names: toValue(names) })
-    await getTasks()
+    await fetchTasks()
   }
 
   async function removeDoneTasks() {
     await taskStore.removeDoneTasks({ names: toValue(names) })
-    await getTasks()
+    await fetchTasks()
   }
 
-  async function getTasks() {
-    await taskStore.getTasks({
+  async function fetchTasks() {
+    await taskStore.fetchTasks({
       names: toValue(names),
       sort: toValue(sortBy)?.[0],
       order: toValue(sortBy)?.[1] ?? 'asc',
@@ -45,11 +45,11 @@ export function useTaskPolling({ names = [], sortBy = [], perPage = null, page =
   }
 
   async function startPollingTasks() {
-    const fn = getTasks
+    const fn = fetchTasks
     const timeout = () => random(1000, 4000)
     // Ensure the polling is registered before firing the first poll
     unregisteredPoll({ fn })
-    // Execute the `getTasks` method immediately
+    // Execute the `fetchTasks` method immediately
     // and if it's true, register a poll
     return (await fn()) && registerPollOnce({ fn, timeout })
   }
@@ -57,5 +57,5 @@ export function useTaskPolling({ names = [], sortBy = [], perPage = null, page =
   watch(() => [names, sortBy, searchQuery, page, perPage], startPollingTasksWithLoader, { immediate: true, deep: true })
   onBeforeUnmount(taskStore.reset)
 
-  return { tasks, noTasks, getTasks, hasPendingTasks, hasDoneTasks, stopPendingTasks, removeDoneTasks, isLoading }
+  return { tasks, noTasks, fetchTasks, hasPendingTasks, hasDoneTasks, stopPendingTasks, removeDoneTasks, isLoading }
 }

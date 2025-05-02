@@ -41,7 +41,7 @@ describe('TaskStore', () => {
   beforeEach(async () => {
     vi.clearAllMocks()
     store = useTaskStore()
-    await store.getTasks()
+    await store.fetchTasks()
   })
 
   afterAll(() => {

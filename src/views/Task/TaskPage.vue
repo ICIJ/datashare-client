@@ -43,7 +43,7 @@ const { addToRoute, addLabel, searchQuery, page, perPage, sortBy, searchPlacehol
   props.pageName
 )
 
-const { noTasks, getTasks, hasPendingTasks, hasDoneTasks, stopPendingTasks, removeDoneTasks, isLoading } =
+const { noTasks, fetchTasks, hasPendingTasks, hasDoneTasks, stopPendingTasks, removeDoneTasks, isLoading } =
   useTaskPolling({ names: props.taskFilter, searchQuery, sortBy })
 
 const setSort = (value) => (sort.value = value)
@@ -61,7 +61,7 @@ const order = computed({
 })
 
 function refresh() {
-  return getTasks()
+  return fetchTasks()
 }
 </script>
 

@@ -31,7 +31,7 @@ describe('BatchSearchActions.vue', () => {
     const core = CoreSetup.init().useAll().useRouterWithoutGuards()
     const taskStore = useTaskStore()
     plugins = core.plugins
-    await taskStore.getTasks()
+    await taskStore.fetchTasks()
   })
 
   afterAll(() => {

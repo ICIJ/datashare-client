@@ -17,7 +17,7 @@ export const useTaskStore = defineStore('task', () => {
   }
 
   const stopTask = async (id) => {
-    await api.stopTask(id)
+    await gstopTask(id)
   }
 
   const stopPendingTasks = async ({ names = [], ...params } = {}) => {
@@ -87,7 +87,7 @@ export const useTaskStore = defineStore('task', () => {
     return getTask(id)?.args?.batchDownload ?? {}
   }
 
-  const getTasks = async ({ names = [], ...params } = {}) => {
+  const fetchTasks = async ({ names = [], ...params } = {}) => {
     const name = names.join('|')
     const tasks = await api.getTasks({ name, ...params })
     return setTasks(tasks)
@@ -112,7 +112,7 @@ export const useTaskStore = defineStore('task', () => {
     getTask,
     getBatchSearchRecord,
     getBatchDownloadRecord,
-    getTasks,
+    fetchTasks,
     setTasks,
     stopPendingTasks,
     stopTask,
