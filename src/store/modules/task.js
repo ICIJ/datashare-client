@@ -37,7 +37,12 @@ export const useTaskStore = defineStore('task', () => {
 
   const removeBatchSearch = async (id) => {
     await api.removeBatchSearch(id)
-    await api.removeTask(id)
+    // For retrocompatibility, batch search tasks can be proxified as TASK_STATUS.BATCH_SEARCH_PROXY
+    // which create task on the fly in the backend so legacy batch search tasks are available in the
+    // same API endpoint. Therefore those "proxy" batch search has no real task.
+    if (getTask(id)?.name === TASK_STATUS.BATCH_SEARCH) {
+      await api.removeTask(id)
+    }
   }
 
   const removeDoneTasks = async ({ names = [], ...params } = {}) => {
