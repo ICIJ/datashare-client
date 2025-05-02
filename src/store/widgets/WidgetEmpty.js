@@ -1,4 +1,5 @@
 import uniqueId from 'lodash/uniqueId'
+import { useI18n } from 'vue-i18n'
 
 import Component from '@/components/Widget/WidgetEmpty'
 
@@ -15,6 +16,8 @@ class WidgetEmpty {
    * @param order=0 {number} - Order to display among the others widgets
    */
   constructor({ name = uniqueId('widget-'), card = true, cols = 12, order = 0, modes = null, section = null } = {}) {
+    const { t } = useI18n()
+    this.t = t
     this.name = name
     this.card = card
     this.cols = cols
