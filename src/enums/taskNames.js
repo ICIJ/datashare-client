@@ -1,5 +1,6 @@
 const prefix = 'org.icij.datashare.tasks'
 const BATCH_SEARCH = `${prefix}.BatchSearchRunner`
+const BATCH_SEARCH_PROXY = `${prefix}.BatchSearchRunnerProxy`
 const BATCH_DOWNLOAD = `${prefix}.BatchDownloadRunner`
 const SCAN = `${prefix}.ScanTask`
 const INDEX = `${prefix}.IndexTask`
@@ -8,6 +9,7 @@ const ENQUEUE_FROM_INDEX = `${prefix}.EnqueueFromIndexTask`
 
 export const TASK_NAME = Object.freeze({
   BATCH_SEARCH,
+  BATCH_SEARCH_PROXY,
   BATCH_DOWNLOAD,
   SCAN,
   INDEX,
@@ -17,6 +19,7 @@ export const TASK_NAME = Object.freeze({
 
 export const TASK_NAME_ICON = Object.freeze({
   [BATCH_SEARCH]: 'list-magnifying-glass',
+  [BATCH_SEARCH_PROXY]: 'list-magnifying-glass',
   [BATCH_DOWNLOAD]: 'download-simple',
   [SCAN]: 'files',
   [INDEX]: 'files',
@@ -25,6 +28,7 @@ export const TASK_NAME_ICON = Object.freeze({
 })
 export const HUMAN_TASK_NAME = Object.freeze({
   [BATCH_SEARCH]: 'taskNames.batchSearch',
+  [BATCH_SEARCH_PROXY]: 'taskNames.batchSearch',
   [BATCH_DOWNLOAD]: 'taskNames.batchDownload',
   [SCAN]: 'taskNames.scan',
   [INDEX]: 'taskNames.index',

@@ -52,7 +52,7 @@ onBeforeMount(fetchMe)
 
 <template>
   <task-page
-    :task-filter="[TASK_NAME.BATCH_SEARCH]"
+    :task-filter="[TASK_NAME.BATCH_SEARCH, TASK_NAME.BATCH_SEARCH_PROXY]"
     page-name="batch-search"
     show-add
     searchable
