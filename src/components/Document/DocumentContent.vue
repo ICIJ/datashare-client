@@ -1,6 +1,7 @@
 <script setup>
-import { toRef, ref, reactive, computed, watch, onMounted, nextTick, useTemplateRef } from 'vue'
-import { clamp, findLastIndex, entries, isEmpty, get, range, throttle } from 'lodash'
+import { computed, nextTick, onMounted, reactive, ref, toRef, useTemplateRef, watch } from 'vue'
+import { clamp, entries, findLastIndex, get, isEmpty, range, throttle } from 'lodash'
+import { useI18n } from 'vue-i18n'
 
 import { addLocalSearchMarksClassByOffsets } from '@/utils/strings'
 import { useWait } from '@/composables/useWait'
@@ -8,7 +9,7 @@ import DocumentAttachments from '@/components/Document/DocumentAttachments'
 import DocumentGlobalSearchTerms from '@/components/Document/DocumentGlobalSearchTerms/DocumentGlobalSearchTerms'
 import DocumentLocalSearch from '@/components/Document/DocumentLocalSearch/DocumentLocalSearch'
 import Hook from '@/components/Hook/Hook'
-import { usePipelinesStore, useDocumentStore, useSearchStore } from '@/store/modules'
+import { useDocumentStore, usePipelinesStore, useSearchStore } from '@/store/modules'
 
 const props = defineProps({
   document: Object,
@@ -25,6 +26,7 @@ const props = defineProps({
     default: 1e4
   }
 })
+const { t } = useI18n()
 
 const documentStore = useDocumentStore()
 const pipelinesStore = usePipelinesStore()
@@ -328,7 +330,7 @@ async function loadContentSliceAround(desiredOffset) {
       <hook name="document.content.body:before" />
       <div v-if="hasExtractedContent" class="document-content__body" v-html="currentContentPage"></div>
       <div v-else-if="loadedOnce" class="document-content__body document-content__body--no-content text-center p-3">
-        {{ $t('documentContent.noContent') }}
+        {{ t('documentContent.noContent') }}
       </div>
       <hook name="document.content.body:after" />
       <slot name="after-content" />

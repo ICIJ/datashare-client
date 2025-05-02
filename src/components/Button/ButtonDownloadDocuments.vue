@@ -1,15 +1,18 @@
 <script setup>
+import { useI18n } from 'vue-i18n'
+
 import ButtonIcon from '@/components/Button/ButtonIcon'
 import { ICON_WEIGHT } from '@/enums/iconWeights'
 
 const iconLeftHoverWeight = ICON_WEIGHT.BOLD
+const { t } = useI18n()
 </script>
 
 <template>
   <button-icon
     class="button-download-documents"
     variant="link"
-    :label="$t('buttonDownloadDocuments.label')"
+    :label="t('buttonDownloadDocuments.label')"
     hide-label
     :icon-left="PhDownloadSimple"
     :icon-left-hover-weight="iconLeftHoverWeight"

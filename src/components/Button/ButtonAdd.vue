@@ -1,4 +1,6 @@
 <script setup>
+import { useI18n } from 'vue-i18n'
+
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
 defineProps({
@@ -6,11 +8,12 @@ defineProps({
     type: String
   }
 })
+const { t } = useI18n()
 </script>
 
 <template>
   <button-icon
-    :label="label ?? $t('buttonAdd.label')"
+    :label="label ?? t('buttonAdd.label')"
     class="button-add"
     hide-label
     :icon-left="PhPlus"

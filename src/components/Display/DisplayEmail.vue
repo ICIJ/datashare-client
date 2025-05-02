@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 import trim from 'lodash/trim'
+import { useI18n } from 'vue-i18n'
 
 import { useSearchStore } from '@/store/modules'
 
@@ -16,6 +17,7 @@ const props = defineProps({
     default: 'span'
   }
 })
+const { t } = useI18n()
 
 const nameWithoutEmail = computed(() => {
   const matches = String(props.value).match(EMAIL_REGEX)
@@ -59,11 +61,11 @@ const qSent = computed(() => {
       <div class="d-flex flex-wrap gap-3">
         <router-link :to="{ name: 'search', query: { q: qReceived, indices } }" class="btn btn-action">
           <phosphor-icon :name="PhTrayArrowDown" class="display-email__popover__content__icon" />
-          {{ $t('displayEmail.receivedLink') }}
+          {{ t('displayEmail.receivedLink') }}
         </router-link>
         <router-link :to="{ name: 'search', query: { q: qSent, indices } }" class="btn btn-action">
           <phosphor-icon :name="PhTrayArrowUp" class="display-email__popover__content__icon" />
-          {{ $t('displayEmail.sentLink') }}
+          {{ t('displayEmail.sentLink') }}
         </router-link>
       </div>
     </div>
