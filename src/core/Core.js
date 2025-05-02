@@ -9,7 +9,7 @@ import Vue3Toastify, { toast } from 'vue3-toastify'
 import { createBootstrap } from 'bootstrap-vue-next'
 import { createApp, defineComponent, h } from 'vue'
 import { createI18n } from 'vue-i18n'
-import { createWebHashHistory, createRouter } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import { iteratee } from 'lodash'
 
 import ComponentsMixin from './ComponentsMixin'
@@ -133,7 +133,6 @@ class Core extends Behaviors {
       warnHtmlInMessage: 'off',
       warnHtmlMessage: 'off',
       globalInjection: true,
-      allowComposition: true,
       legacy: true,
       locale: settings.defaultLocale,
       fallbackLocale: settings.defaultLocale,
