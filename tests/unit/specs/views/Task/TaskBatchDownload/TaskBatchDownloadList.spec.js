@@ -8,7 +8,7 @@ import BatchDownloadActions from '@/components/BatchDownload/BatchDownloadAction
 vi.mock('@/api/apiInstance', {
   apiInstance: {
     isDownloadAllowed: vi.fn().mockResolvedValue(),
-    getTasks: vi.fn().mockResolvedValue([])
+    getTasks: vi.fn().mockResolvedValue({ items: [] })
   }
 })
 

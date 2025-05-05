@@ -12,7 +12,7 @@ vi.mock('@/api/apiInstance', {
     findNames: vi.fn(),
     stopPendingTasks: vi.fn(),
     stopTask: vi.fn(),
-    getTasks: vi.fn().mockResolvedValue([]),
+    getTasks: vi.fn().mockResolvedValue({ items: [] }),
     removeDoneTasks: vi.fn(),
     getNerPipelines: vi.fn()
   }

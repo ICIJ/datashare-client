@@ -6,7 +6,7 @@ import { apiInstance as api } from '@/api/apiInstance'
 
 vi.mock('@/api/apiInstance', {
   apiInstance: {
-    getTasks: vi.fn().mockResolvedValue([])
+    getTasks: vi.fn().mockResolvedValue({ items: [] })
   }
 })
 

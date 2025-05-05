@@ -93,7 +93,7 @@ export const useTaskStore = defineStore('task', () => {
 
   const fetchTasks = async ({ names = [], ...params } = {}) => {
     const name = names.join('|')
-    const { items, pagination } = await api.getTasks({ name, ...params })
+    const { items = [], pagination = DEFAULT_PAGINATION } = await api.getTasks({ name, ...params })
     return setTasks(items, pagination)
   }
 
