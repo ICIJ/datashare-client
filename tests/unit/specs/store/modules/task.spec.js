@@ -13,20 +13,27 @@ vi.mock('@/api/apiInstance', () => {
       stopTask: vi.fn(),
       removeDoneTasks: vi.fn(),
       getNerPipelines: vi.fn(),
-      getTasks: vi.fn().mockResolvedValue([
-        {
-          id: '12',
-          state: 'SUCCESS'
+      getTasks: vi.fn().mockResolvedValue({
+        pagination: {
+          total: 3,
+          from: 0,
+          size: 10
         },
-        {
-          id: '46',
-          state: 'QUEUED'
-        },
-        {
-          id: '57',
-          state: 'RUNNING'
-        }
-      ])
+        items: [
+          {
+            id: '12',
+            state: 'SUCCESS'
+          },
+          {
+            id: '46',
+            state: 'QUEUED'
+          },
+          {
+            id: '57',
+            state: 'RUNNING'
+          }
+        ]
+      })
     }
   }
 })
