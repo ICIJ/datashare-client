@@ -55,7 +55,7 @@ const starredStore = useStarredStore()
 const searchStore = useSearchStore()
 const documentStore = useDocumentStore()
 const { toastedPromise } = useCore()
-const { t } = useI18n()
+const { t, n } = useI18n()
 
 const nbSelection = computed(() => selectionEntries.value.length)
 const noSelection = computed(() => !nbSelection.value)
@@ -106,7 +106,7 @@ const tagSelection = async (documents, labels) => {
         v-model:indeterminate="indeterminate"
         :wrapper-attrs="{ class: 'search-selection__form-checkbox' }"
       >
-        {{ t('searchSelection.count', count, { count: $n(count) }) }}
+        {{ t('searchSelection.count', count, { count: n(count) }) }}
       </b-form-checkbox>
     </template>
     <template #compact>
