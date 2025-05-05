@@ -1,5 +1,6 @@
 <script setup>
 import { computed, watch, onBeforeMount, toRef } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import appBuilding from '@/assets/images/illustrations/app-building.svg'
 import appBuildingDark from '@/assets/images/illustrations/app-building-dark.svg'
@@ -17,6 +18,7 @@ const props = defineProps({
   }
 })
 
+const { t } = useI18n()
 const insightsStore = useInsightsStore()
 const { modeName } = useMode()
 
@@ -44,7 +46,7 @@ onBeforeMount(() => insightsStore.setProject(props.name))
       </b-row>
     </div>
     <slot v-else name="empty">
-      <empty-state :label="$t('global.building')" :image="appBuilding" :image-dark="appBuildingDark" />
+      <empty-state :label="t('global.building')" :image="appBuilding" :image-dark="appBuildingDark" />
     </slot>
   </div>
 </template>

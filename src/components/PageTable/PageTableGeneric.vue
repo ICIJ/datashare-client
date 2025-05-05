@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref, toRef, toValue, useSlots, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import AppPlaceholder from '@/components/AppPlaceholder/AppPlaceholder'
 import PageTable from '@/components/PageTable/PageTable'
@@ -56,6 +57,7 @@ const props = defineProps({
 const sort = defineModel('sort', { type: String, default: null })
 const order = defineModel('order', { type: String, default: 'desc' })
 
+const { t } = useI18n()
 const slots = useSlots()
 
 // If a primary key is provided, use a Map with the primary key as the key.
@@ -141,7 +143,7 @@ const hasRowDetailsSlot = computed(() => 'row-details' in slots)
 
     <page-table-tr v-if="!items?.length">
       <td :colspan="fields.length + 1" class="page-table-generic__no-result text-center">
-        <slot name="empty">{{ $t('task.noResults') }}</slot>
+        <slot name="empty">{{ t('task.noResults') }}</slot>
       </td>
     </page-table-tr>
 

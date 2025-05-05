@@ -1,9 +1,11 @@
 <script setup>
 import { computed, defineAsyncComponent } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import { useFeatures } from '@/composables/useFeatures'
 import { useDocument } from '@/composables/useDocument'
 
+const { t } = useI18n()
 const { document } = useDocument()
 const { hasFeature } = useFeatures()
 
@@ -63,7 +65,7 @@ const asyncPreviewComponent = computed(() => {
     </template>
     <template v-else>
       <div class="p-3 text-center flex-grow-1">
-        {{ $t('document.notAvailable') }}
+        {{ t('document.notAvailable') }}
       </div>
     </template>
   </div>

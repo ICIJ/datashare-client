@@ -20,7 +20,7 @@
     <template #button-content>
       <slot name="button-content" :dropdown="dropdown">
         <span v-for="v in modelValues" :key="v">
-          {{ $t(optionsPathValue + v) }}
+          {{ t(optionsPathValue + v) }}
         </span>
       </slot>
       <template v-if="!noCaret">
@@ -38,7 +38,7 @@
     >
       <slot name="dropdown-item" v-bind="{ option, index, modelValues, hasValue, toggleValue, toggleUniqueValue }">
         <span class="px-3 d-block" @click="toggleValue($event, option)">
-          {{ $t(optionsPathValue + option) }}
+          {{ t(optionsPathValue + option) }}
         </span>
       </slot>
     </b-dropdown-item>
@@ -50,6 +50,7 @@
 <script>
 import { castArray, cloneDeep, includes, isEqual, without } from 'lodash'
 import { PhosphorIcon } from '@icij/murmur-next'
+import { useI18n } from 'vue-i18n'
 
 /**
  * The general search input dropdown.
@@ -127,6 +128,10 @@ export default {
     }
   },
   emits: ['hide', 'changed', 'selected', 'update:modelValue'],
+  setup() {
+    const { t } = useI18n()
+    return { t }
+  },
   data() {
     return {
       visible: false,

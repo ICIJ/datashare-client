@@ -1,6 +1,7 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { computed, ref } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
+import { useI18n } from 'vue-i18n'
 
 import settings from '@/utils/settings'
 
@@ -18,6 +19,8 @@ const props = defineProps({
     default: 'body'
   }
 })
+
+const { t } = useI18n()
 
 const emit = defineEmits(['update:modelValue'])
 const showDropdown = ref(false)
@@ -60,7 +63,7 @@ const isOptionActive = ({ sortBy, orderBy }) => {
       :active="isOptionActive(option)"
       @click="applySort(option)"
     >
-      {{ $t(option.label) }}
+      {{ t(option.label) }}
     </b-dropdown-item>
   </b-dropdown>
 </template>

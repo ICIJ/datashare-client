@@ -60,18 +60,18 @@ onMounted(getHashedApiKey)
       <div class="mb-3">
         <phosphor-icon :name="PhKey" size="3em" />
       </div>
-      <p v-html="$t('settings.api.description')" />
+      <p v-html="t('settings.api.description')" />
       <button-icon variant="action" :icon-left="PhPlus" class="settings-view-api__create__button" @click="createApiKey">
-        {{ $t('settings.api.newApiKey') }}
+        {{ t('settings.api.newApiKey') }}
       </button-icon>
     </div>
     <div v-else class="settings-view-api__show">
-      <p v-html="$t('settings.api.description')" />
+      <p v-html="t('settings.api.description')" />
       <div class="d-flex border rounded align-items-center">
         <div class="d-inline-flex flex-column align-items-center gap-1 p-3">
           <phosphor-icon :name="PhKey" />
           <b-badge variant="dark">
-            {{ $t('settings.api.key.badge') }}
+            {{ t('settings.api.key.badge') }}
           </b-badge>
         </div>
         <div class="flex-grow-1 p-3">
@@ -81,7 +81,7 @@ onMounted(getHashedApiKey)
             </template>
           </i18n-t>
           <p class="text-secondary-emphasis m-0">
-            {{ $t('settings.api.key.unavailable') }}
+            {{ t('settings.api.key.unavailable') }}
           </p>
         </div>
         <div class="d-flex justify-content-end gap-1 p-3">
@@ -93,7 +93,7 @@ onMounted(getHashedApiKey)
             size="sm"
             variant="outline-secondary"
             class="border-0"
-            :label="$t('settings.api.key.regenerate')"
+            :label="t('settings.api.key.regenerate')"
             @click="createApiKey"
           />
           <button-icon
@@ -104,7 +104,7 @@ onMounted(getHashedApiKey)
             size="sm"
             variant="outline-secondary"
             class="settings-view-api__show__delete border-0"
-            :label="$t('settings.api.key.delete.button')"
+            :label="t('settings.api.key.delete.button')"
             @click="confirmDeleteApiKey"
           />
         </div>
@@ -112,17 +112,17 @@ onMounted(getHashedApiKey)
     </div>
     <app-modal
       size="md"
-      :title="$t('settings.api.key.created')"
+      :title="t('settings.api.key.created')"
       :model-value="showModal"
       lazy
       ok-only
       ok-variant="action"
       @hidden="apiKey = null"
     >
-      <p>{{ $t('settings.api.key.warning') }}</p>
+      <p>{{ t('settings.api.key.warning') }}</p>
       <div class="input-group">
         <input class="form-control font-monospace." readonly :value="apiKey" />
-        <haptic-copy :text="apiKey" class="btn-outline-action" :label="$t('settings.api.key.copy')" />
+        <haptic-copy :text="apiKey" class="btn-outline-action" :label="t('settings.api.key.copy')" />
       </div>
     </app-modal>
   </settings-view-layout>

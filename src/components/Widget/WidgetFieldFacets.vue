@@ -26,7 +26,7 @@
         </infinite-loading>
         <div v-if="reachedTheEnd" class="text-tertiary p-3 text-center">
           <span v-if="items.length">•</span>
-          <span v-else>{{ $t('widget.noData') }}</span>
+          <span v-else>{{ t('widget.noData') }}</span>
         </div>
       </div>
     </app-wait>

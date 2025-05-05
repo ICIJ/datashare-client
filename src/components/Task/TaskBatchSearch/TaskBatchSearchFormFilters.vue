@@ -1,9 +1,12 @@
 <script setup>
+import { useI18n } from 'vue-i18n'
+
 import FormStep from '@/components/Form/FormStep/FormStep'
 import FilterTypePath from '@/components/Filter/FilterType/FilterTypePath'
 import FilterType from '@/components/Filter/FilterType/FilterType'
 import { useSearchStore } from '@/store/modules/search'
 
+const { t } = useI18n()
 const formSearchStore = useSearchStore.inject()
 const filterPath = formSearchStore.getFilter({ name: 'path' })
 const filterTags = formSearchStore.getFilter({ name: 'tags' })
@@ -13,7 +16,7 @@ const filterLanguage = formSearchStore.getFilter({ name: 'language' })
 
 <template>
   <form-step
-    :title="$t('task.batch-search.form.sections.filters')"
+    :title="t('task.batch-search.form.sections.filters')"
     :index="4"
     class="task-batch-search-form-filters"
     content-class="bg-transparent rounded-0 d-flex flex-column gap-3 px-0 m-0"

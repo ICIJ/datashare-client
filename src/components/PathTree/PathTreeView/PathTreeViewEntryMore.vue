@@ -1,5 +1,6 @@
 <script setup>
 import { computed, inject } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
@@ -22,6 +23,7 @@ const props = defineProps({
   }
 })
 
+const { t } = useI18n()
 const nextPageSize = computed(() => {
   return Math.min(props.perPage, props.total - props.page * props.perPage)
 })
@@ -44,7 +46,7 @@ const size = computed(() => (compactOrInjected.value ? 'sm' : 'md'))
     :size="size"
   >
     <slot>
-      {{ $t('pathViewEntryMore.label', { nextPageSize, directoriesLeft }, directoriesLeft) }}
+      {{ t('pathViewEntryMore.label', { nextPageSize, directoriesLeft }, directoriesLeft) }}
     </slot>
   </button-icon>
 </template>

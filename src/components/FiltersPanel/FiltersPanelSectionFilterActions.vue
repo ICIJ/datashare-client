@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
@@ -21,6 +22,8 @@ const props = defineProps({
     type: Object
   }
 })
+
+const { t } = useI18n()
 
 const isEmpty = computed(() => {
   return props.hideContextualize && props.hideExclude && props.hideExpand
@@ -49,7 +52,7 @@ const classList = computed(() => {
       tooltip-placement="right"
       icon-left="arrows-out-simple"
       hide-label
-      :label="$t('filtersPanelSectionFilterActions.expand')"
+      :label="t('filtersPanelSectionFilterActions.expand')"
       @click="expand = !expand"
     />
   </div>

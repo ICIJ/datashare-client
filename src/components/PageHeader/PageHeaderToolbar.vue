@@ -1,4 +1,6 @@
 <script setup>
+import { useI18n } from 'vue-i18n'
+
 import ButtonToggleFilters from '@/components/Button/ButtonToggleFilters'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 import Hook from '@/components/Hook/Hook'
@@ -41,6 +43,7 @@ defineProps({
   }
 })
 
+const { t } = useI18n()
 // We need to expose the setPage function to v-slot variables
 // and we cannot pass the model directly to the slot
 const setPage = (value) => (page.value = value)
@@ -68,7 +71,7 @@ const setPage = (value) => (page.value = value)
         v-if="searchable"
         v-model="searchQuery"
         autofocus
-        :placeholder="searchPlaceholder ?? $t('pageHeader.searchPlaceholder')"
+        :placeholder="searchPlaceholder ?? t('pageHeader.searchPlaceholder')"
         class="page-header-toolbar__search ms-auto"
       />
     </slot>

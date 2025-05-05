@@ -1,6 +1,12 @@
 <script setup>
 import { matchesProperty, property } from 'lodash'
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const modelValue = defineModel({
+  type: Array,
+  default: () => []
+})
 
 const { options } = defineProps({
   options: {
@@ -9,10 +15,7 @@ const { options } = defineProps({
   }
 })
 
-const modelValue = defineModel({
-  type: Array,
-  default: () => []
-})
+const { t } = useI18n()
 
 const indeterminate = computed(() => !!modelValue.value.length && modelValue.value.length < options.length)
 
@@ -30,6 +33,6 @@ const all = computed({
 
 <template>
   <b-form-checkbox v-model="all" :indeterminate="indeterminate">
-    {{ $t('pageSettingsSectionGroupAll.label') }}
+    {{ t('pageSettingsSectionGroupAll.label') }}
   </b-form-checkbox>
 </template>

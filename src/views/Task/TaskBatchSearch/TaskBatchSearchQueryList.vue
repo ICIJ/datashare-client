@@ -2,6 +2,7 @@
 import { computed, toRef, ref, onBeforeMount, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import get from 'lodash/get.js'
+import { useI18n } from 'vue-i18n'
 
 import ButtonRowActionSearch from '@/components/Button/ButtonRowAction/ButtonRowActionSearch'
 import BatchSearchCard from '@/components/BatchSearch/BatchSeachCard/BatchSearchCard'
@@ -30,6 +31,7 @@ const props = defineProps({
   }
 })
 
+const { t } = useI18n()
 const route = useRoute()
 const appStore = useAppStore()
 const taskStore = useTaskStore()
@@ -170,7 +172,7 @@ watch(toRef(route, 'query'), fetchBatchSearchQueries, { deep: true, immediate: t
             <button-row-action-search :to="{ name: 'search', query: { indices, q: item.query } }" />
           </template>
           <template #empty>
-            {{ $t('task.batch-search-queries.list.noMatches') }}
+            {{ t('task.batch-search-queries.list.noMatches') }}
           </template>
         </page-table-generic>
       </b-col>

@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, useTemplateRef, onMounted, nextTick } from 'vue'
+import { computed, nextTick, onMounted, ref, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { PhosphorIcon } from '@icij/murmur-next'
 
@@ -153,7 +153,7 @@ defineExpose({
         variant="action"
         @click="$emit('addTag', inputValue)"
       >
-        {{ addButtonText ?? $t('formControlTagInput.addButtonText') }}
+        {{ addButtonText ?? t('formControlTagInput.addButtonText') }}
       </b-button>
     </div>
   </div>

@@ -1,4 +1,6 @@
 <script setup>
+import { useI18n } from 'vue-i18n'
+
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
 const props = defineProps({
@@ -20,6 +22,8 @@ const props = defineProps({
   }
 })
 const emit = defineEmits(['stop-pending', 'delete-done'])
+
+const { t } = useI18n()
 
 async function stopPendingTasks() {
   if (props.hasPendingTasks) {
@@ -44,7 +48,7 @@ async function removeDoneTasks() {
       :disabled="!hasPendingTasks"
       @click="stopPendingTasks"
     >
-      {{ $t('taskActions.stopPendingTasks') }}
+      {{ t('taskActions.stopPendingTasks') }}
     </button-icon>
     <button-icon
       v-if="!hideClearDone"
@@ -54,7 +58,7 @@ async function removeDoneTasks() {
       :disabled="!hasDoneTasks"
       @click="removeDoneTasks"
     >
-      {{ $t('taskActions.removeDoneTasks') }}
+      {{ t('taskActions.removeDoneTasks') }}
     </button-icon>
   </div>
 </template>

@@ -1,4 +1,6 @@
 <script setup>
+import { useI18n } from 'vue-i18n'
+
 import tasksEntitiesEmpty from '@/assets/images/illustrations/tasks-entities-empty.svg'
 import { useTaskSettings } from '@/composables/useTaskSettings'
 import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
@@ -15,6 +17,7 @@ import TaskPage from '@/views/Task/TaskPage'
 const settingName = 'entities'
 const { propertiesModelValueOptions } = useTaskSettings(settingName)
 
+const { t } = useI18n()
 function isPipelineEmail(item) {
   return item.args.nlpPipeline === 'EMAIL'
 }
@@ -29,8 +32,8 @@ function getProject(item) {
     <template #empty>
       <empty-state
         :image="tasksEntitiesEmpty"
-        :label="$t('task.entities.list.emptyStateLabel')"
-        :action-label="$t('task.entities.list.emptyStateAction')"
+        :label="t('task.entities.list.emptyStateLabel')"
+        :action-label="t('task.entities.list.emptyStateAction')"
         :action-to="{ name: 'task.entities.new' }"
       />
     </template>

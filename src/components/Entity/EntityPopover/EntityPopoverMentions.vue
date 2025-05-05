@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { TinyPagination } from '@icij/murmur-next'
+import { useI18n } from 'vue-i18n'
 
 import EntityPopoverMentionOccurrences from './EntityPopoverMentionOccurrences'
 import EntityPopoverMentionExcerpt from './EntityPopoverMentionExcerpt'
@@ -29,13 +30,14 @@ defineProps({
     type: Number
   }
 })
+const { t } = useI18n()
 </script>
 
 <template>
   <div class="d-flex flex-column align-items-center gap-3">
     <template v-if="noExcerpt">
       <div class="alert alert-warning m-0">
-        {{ $t('entityPopoverMention.noExcerpt') }}
+        {{ t('entityPopoverMention.noExcerpt') }}
       </div>
     </template>
     <template v-else>

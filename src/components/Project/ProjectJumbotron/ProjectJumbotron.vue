@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { PhosphorIcon } from '@icij/murmur-next'
+import { useI18n } from 'vue-i18n'
 
 import ProjectJumbotronPin from './ProjectJumbotronPin'
 
@@ -34,6 +35,7 @@ const props = defineProps({
   }
 })
 
+const { t } = useI18n()
 const { show: showProjectDeletionModal } = useProjectDeletionModal(props.project)
 
 const toEdit = computed(() => ({
@@ -79,14 +81,14 @@ const promptProjectDeletion = async () => {
           class="ms-auto"
           icon-left="trash"
           variant="outline-secondary"
-          :label="$t('projectJumbotron.delete')"
+          :label="t('projectJumbotron.delete')"
           @click="promptProjectDeletion"
         />
         <button-icon
           icon-left="pencil-simple"
           variant="outline-secondary"
           :to="toEdit"
-          :label="$t('projectJumbotron.edit')"
+          :label="t('projectJumbotron.edit')"
         />
       </mode-local-only>
       <project-jumbotron-pin v-model:pinned="pinned" />
@@ -101,12 +103,12 @@ const promptProjectDeletion = async () => {
           <div class="d-flex flex-wrap gap-3 text-body-secondary">
             <span v-if="creationDate" class="text-nowrap">
               <phosphor-icon :name="PhCalendarBlank" />
-              {{ $t('projectJumbotron.creationDate') }}
+              {{ t('projectJumbotron.creationDate') }}
               <display-datetime :value="creationDate" />
             </span>
             <span v-if="updateDate" class="text-nowrap">
               <phosphor-icon :name="PhCalendarCheck" />
-              {{ $t('projectJumbotron.updateDate') }}
+              {{ t('projectJumbotron.updateDate') }}
               <display-datetime :value="updateDate" />
             </span>
           </div>

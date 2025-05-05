@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import { useProjectDeletionModal } from '@/composables/useProjectDeletionModal'
 import { useProjectPinned } from '@/composables/useProjectPinned'
@@ -14,6 +15,7 @@ const { project } = defineProps({
   }
 })
 
+const { t } = useI18n()
 const { show: showProjectDeletionModal } = useProjectDeletionModal(project)
 const { pinned } = useProjectPinned(project)
 
@@ -38,7 +40,7 @@ const toProjectEdit = computed(() => ({
           size="sm"
           variant="outline-secondary"
           class="border-0"
-          :label="$t('projectRowActions.edit')"
+          :label="t('projectRowActions.edit')"
         />
         <button-icon
           icon-left="trash"
@@ -48,7 +50,7 @@ const toProjectEdit = computed(() => ({
           size="sm"
           variant="outline-secondary"
           class="border-0"
-          :label="$t('projectRowActions.delete')"
+          :label="t('projectRowActions.delete')"
           @click="showProjectDeletionModal"
         />
       </mode-local-only>

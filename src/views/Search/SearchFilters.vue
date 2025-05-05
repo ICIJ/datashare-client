@@ -42,7 +42,7 @@ const closeFilters = () => (toggleFilters.value = false)
     sticky
     @close="closeFilters"
   >
-    <filters-panel-section v-for="section in sections" :key="section" :title="$t(`filter.sections.${section}`)">
+    <filters-panel-section v-for="section in sections" :key="section" :title="t(`filter.sections.${section}`)">
       <component
         :is="getFilterComponent(filter)"
         v-for="filter in filtersBySection[section]"

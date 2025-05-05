@@ -10,18 +10,21 @@
         </slot>
         <div class="pt-2">
           <button-icon icon-right="magnifying-glass" variant="action" :to="toSearch">{{
-            $t('linkedDocumentSectionList.search')
+            t('linkedDocumentSectionList.search')
           }}</button-icon>
         </div>
       </div>
-      <div v-else class="text-secondary-emphasis">{{ $t('linkedDocumentSectionList.empty') }}</div>
+      <div v-else class="text-secondary-emphasis">{{ t('linkedDocumentSectionList.empty') }}</div>
     </div>
   </section>
 </template>
 
 <script setup>
+import { useI18n } from 'vue-i18n'
+
 import LinkedDocumentList from '@/components/LinkedDocument/LinkedDocumentList'
 import ButtonIcon from '@/components/Button/ButtonIcon.vue'
+
 defineOptions({
   name: 'LinkedDocumentSection'
 })
@@ -37,6 +40,7 @@ defineProps({
     type: Object
   }
 })
+const { t } = useI18n()
 </script>
 <style lang="scss" scoped>
 .linked-document-section-list {

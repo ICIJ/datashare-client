@@ -1,6 +1,7 @@
 <script setup>
-import { computed, onMounted, ref, inject, watch } from 'vue'
-import { flatten, get, mapValues, property, pickBy, sumBy, throttle } from 'lodash'
+import { computed, inject, onMounted, ref, watch } from 'vue'
+import { flatten, get, mapValues, pickBy, property, sumBy, throttle } from 'lodash'
+import { useI18n } from 'vue-i18n'
 
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 import { useConfig } from '@/composables/useConfig'
@@ -9,6 +10,7 @@ import { useWait } from '@/composables/useWait'
 import EntitySection from '@/components/Entity/EntitySection/EntitySection'
 import { useDocumentStore } from '@/store/modules'
 
+const { t } = useI18n()
 const { document } = useDocument()
 const { isLoading, waitFor } = useWait()
 const config = useConfig()
@@ -95,7 +97,7 @@ onMounted(getFirstPageInAllCategories)
       <form-control-search
         v-model="filterToken"
         :loading="isLoading"
-        :placeholder="$t('document.namedEntityFilter')"
+        :placeholder="t('document.namedEntityFilter')"
         clear-text
         shadow
       />
@@ -108,7 +110,7 @@ onMounted(getFirstPageInAllCategories)
     >
       <template #link>
         <router-link :to="{ name: 'task.entities.new' }">
-          {{ $t('document.namedEntitiesNotSearchedLink') }}
+          {{ t('document.namedEntitiesNotSearchedLink') }}
         </router-link>
       </template>
     </i18n-t>

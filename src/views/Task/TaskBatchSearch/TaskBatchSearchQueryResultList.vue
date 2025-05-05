@@ -2,6 +2,7 @@
 import { castArray, compact } from 'lodash'
 import { computed, onBeforeMount, ref, toRef, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
 import batchSearchResultsEmpty from '@/assets/images/illustrations/batch-search-results-empty.svg'
 import DisplayNumber from '@/components/Display/DisplayNumber'
@@ -38,6 +39,7 @@ const props = defineProps({
   }
 })
 
+const { t } = useI18n()
 const appStore = useAppStore()
 const route = useRoute()
 const { core } = useCore()
@@ -129,7 +131,7 @@ watch(toRef(route, 'query'), fetchBatchSearchResults, { deep: true, immediate: t
       <navigation-breadcrumb-link
         v-else
         :to="{ name: 'task.batch-search-results.list' }"
-        :title="$t('task.batch-search-results.list.title')"
+        :title="t('task.batch-search-results.list.title')"
         no-icon
       />
     </template>
@@ -139,7 +141,7 @@ watch(toRef(route, 'query'), fetchBatchSearchResults, { deep: true, immediate: t
   </page-header>
   <page-container fluid>
     <slot v-if="isEmpty" name="empty">
-      <empty-state :label="$t('task.batch-search-results.show.emptyStateLabel')" :image="batchSearchResultsEmpty" />
+      <empty-state :label="t('task.batch-search-results.show.emptyStateLabel')" :image="batchSearchResultsEmpty" />
     </slot>
     <page-table-generic
       v-else

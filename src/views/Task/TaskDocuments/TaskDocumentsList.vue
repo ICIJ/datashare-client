@@ -42,8 +42,8 @@ function isRunning(item) {
       <empty-state
         image-max-width="345px"
         :image="tasksDocumentsEmpty"
-        :label="$t('task.documents.list.emptyStateLabel')"
-        :action-label="$t('task.documents.list.emptyStateAction')"
+        :label="t('task.documents.list.emptyStateLabel')"
+        :action-label="t('task.documents.list.emptyStateAction')"
         :action-to="{ name: 'task.documents.new' }"
       />
     </template>
