@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 const { term } = defineProps({
   term: {
@@ -11,6 +12,7 @@ const { term } = defineProps({
     required: true
   }
 })
+const { t } = useI18n()
 
 const counter = computed(() => term.count || null)
 const label = computed(() => term.label)
@@ -24,10 +26,10 @@ const isInTags = computed(() => term.count === 0 && term.tags > 0)
       {{ label }}
     </span>
     <b-badge v-if="isInMetadata" class="document-global-search-terms-entry__metadata" variant="light">
-      {{ $t('document.inMetadata') }}
+      {{ t('document.inMetadata') }}
     </b-badge>
     <b-badge v-else-if="isInTags" class="document-global-search-terms-entry__tags" variant="light">
-      {{ $t('document.inTags') }}
+      {{ t('document.inTags') }}
     </b-badge>
   </button-icon>
 </template>

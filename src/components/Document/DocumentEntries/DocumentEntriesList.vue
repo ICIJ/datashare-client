@@ -1,5 +1,6 @@
 <script setup>
 import { toValue, useTemplateRef } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import DocumentCard from '@/components/Document/DocumentCard/DocumentCard'
 import DocumentCardPlaceholder from '@/components/Document/DocumentCard/DocumentCardPlaceholder'
@@ -23,6 +24,7 @@ defineProps({
     type: Boolean
   }
 })
+const { t } = useI18n()
 
 const selection = defineModel('selection', { type: Array, default: () => [] })
 
@@ -80,7 +82,7 @@ defineExpose({
           </template>
           <template v-else>
             <p class="p-3 text-secondary text-center">
-              {{ $t('documentEntries.noMatches') }}
+              {{ t('documentEntries.noMatches') }}
             </p>
           </template>
         </div>

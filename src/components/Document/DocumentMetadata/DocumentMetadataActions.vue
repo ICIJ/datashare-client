@@ -1,6 +1,7 @@
 <script setup>
 import { HapticCopy } from '@icij/murmur-next'
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import DocumentMetadataActionsEntry from './DocumentMetadataActionsEntry'
 
@@ -20,6 +21,7 @@ const props = defineProps({
     required: true
   }
 })
+const { t } = useI18n()
 
 const pinIconWeight = computed(() => (pinned.value ? 'fill' : null))
 const pinIconHoverWeight = computed(() => (pinned.value ? 'fill' : 'bold'))
@@ -31,20 +33,20 @@ const indices = computed(() => props.index)
   <div class="document-metdata-actions">
     <slot>
       <document-metadata-actions-entry
-        :label="$t('documentMetadataActions.search')"
+        :label="t('documentMetadataActions.search')"
         :to="{ name: 'search', query: { q, indices } }"
         icon="magnifying-glass"
         @click="$emit('search')"
       />
       <haptic-copy
-        :label="$t('documentMetadataActions.copy')"
+        :label="t('documentMetadataActions.copy')"
         :text="value"
         hide-label
         class="border-0"
         variant="outline-secondary"
       />
       <document-metadata-actions-entry
-        :label="$t('documentMetadataActions.pin')"
+        :label="t('documentMetadataActions.pin')"
         icon="push-pin"
         :icon-weight="pinIconWeight"
         :icon-hover-weight="pinIconHoverWeight"

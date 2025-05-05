@@ -1,4 +1,6 @@
 <script setup>
+import { useI18n } from 'vue-i18n'
+
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
 defineOptions({ name: 'DocumentUserCommentsAction' })
@@ -9,6 +11,7 @@ defineProps({
     default: false
   }
 })
+const { t } = useI18n()
 
 const comment = defineModel({ type: String, default: '' })
 
@@ -26,12 +29,12 @@ const emit = defineEmits({
       :disabled="disabled"
       :rows="3"
       :max-rows="8"
-      :placeholder="$t('documentUserCommentsForm.placeholder')"
+      :placeholder="t('documentUserCommentsForm.placeholder')"
       @keydown.enter.ctrl="emit('submit', comment)"
     />
     <div class="d-flex justify-content-end gap-2">
       <button-icon type="submit" variant="action" :disabled="disabled">
-        {{ $t('documentUserCommentsForm.submit') }}
+        {{ t('documentUserCommentsForm.submit') }}
       </button-icon>
     </div>
   </b-form>
