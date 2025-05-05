@@ -48,7 +48,8 @@ describe('TaskBatchDownloadList.vue', () => {
                   updateDate: null
                 }
               ],
-              filename: 'file:///home/dev/.local/share/datashare/tmp/archive_local_2025-01-31T13_58_33.396Z%5BGMT%5D.zip',
+              filename:
+                'file:///home/dev/.local/share/datashare/tmp/archive_local_2025-01-31T13_58_33.396Z%5BGMT%5D.zip',
               query: {
                 query:
                   '{"bool":{"must":[{"match_all":{}},{"bool":{"should":[{"query_string":{"query":"*"}}]}},{"match":{"type":"Document"}}]}}'
@@ -93,7 +94,8 @@ describe('TaskBatchDownloadList.vue', () => {
                   updateDate: null
                 }
               ],
-              filename: 'file:///home/dev/.local/share/datashare/tmp/archive_local_2025-01-31T14_01_02.092Z%5BGMT%5D.zip',
+              filename:
+                'file:///home/dev/.local/share/datashare/tmp/archive_local_2025-01-31T14_01_02.092Z%5BGMT%5D.zip',
               query: {
                 query:
                   '{"bool":{"must":[{"match_all":{}},{"bool":{"should":[{"query_string":{"query":"*"}}]}},{"match":{"type":"Document"}}]}}'
