@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { isNumber } from 'lodash'
 import { PhosphorIcon } from '@icij/murmur-next'
+import { useI18n } from 'vue-i18n'
 
 import DisplayNumber from '@/components/Display/DisplayNumber.vue'
 
@@ -12,6 +13,7 @@ const { project } = defineProps({
   }
 })
 
+const { t } = useI18n()
 const hasDocuments = computed(() => isNumber(project.documentsCount) && project.documentsCount > 0)
 </script>
 
@@ -20,7 +22,7 @@ const hasDocuments = computed(() => isNumber(project.documentsCount) && project.
     <slot>
       <phosphor-icon :name="PhFiles" />
       <display-number v-if="hasDocuments" :value="project.documentsCount" />
-      <span v-else>{{ $t('projectCardDocumentsCount.noDocuments') }}</span>
+      <span v-else>{{ t('projectCardDocumentsCount.noDocuments') }}</span>
     </slot>
   </div>
 </template>

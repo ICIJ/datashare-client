@@ -2,7 +2,7 @@
   <div class="widget widget--recommended-by">
     <div class="widget__header d-flex align-items-center">
       <phosphor-icon :name="PhUsersThree" class="me-2" size="2em" />
-      <h3 class="m-0 p-0 widget__header__title">{{ $t('widget.recommendedBy.title') }}</h3>
+      <h3 class="m-0 p-0 widget__header__title">{{ t('widget.recommendedBy.title') }}</h3>
     </div>
     <app-wait :for="loaderId" transition="fade">
       <template #waiting>
@@ -33,7 +33,7 @@
         </infinite-loading>
         <div v-if="reachedTheEnd" class="text-muted p-3 text-center">
           <span v-if="items.length">•</span>
-          <span v-else>{{ $t('widget.noRecommendations') }}</span>
+          <span v-else>{{ t('widget.noRecommendations') }}</span>
         </div>
       </div>
     </app-wait>
@@ -46,6 +46,7 @@ import bodybuilder from 'bodybuilder'
 import { compact, get, property, find, flatten, noop, uniqueId } from 'lodash'
 import InfiniteLoading from 'v3-infinite-loading'
 import { PhosphorIcon } from '@icij/murmur-next'
+import { useI18n } from 'vue-i18n'
 
 import { useCore } from '@/composables/useCore'
 import { useWait } from '@/composables/useWait'
@@ -72,6 +73,8 @@ const props = defineProps({
 
 const pages = ref([])
 const hits = ref([])
+
+const { t } = useI18n()
 const { core } = useCore()
 const { waitFor, loaderId } = useWait()
 const infiniteScrollId = uniqueId('infinite-scroll-')

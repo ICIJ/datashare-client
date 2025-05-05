@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { PhCaretDown, PhCaretUp } from '@phosphor-icons/vue'
+import { useI18n } from 'vue-i18n'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
@@ -13,6 +14,7 @@ const props = defineProps({
   }
 })
 
+const { t } = useI18n()
 const emit = defineEmits(['toggle'])
 const icon = computed(() => (props.collapse ? PhCaretDown : PhCaretUp))
 </script>
@@ -25,7 +27,7 @@ const icon = computed(() => (props.collapse ? PhCaretDown : PhCaretUp))
     :loading="loading"
     :icon-left="icon"
     icon-left-weight="bold"
-    :label="$t('filtersPanelSectionFilterTitleToggler.toggle')"
+    :label="t('filtersPanelSectionFilterTitleToggler.toggle')"
     hide-label
     hide-tooltip
     @click="emit('toggle', !collapse)"

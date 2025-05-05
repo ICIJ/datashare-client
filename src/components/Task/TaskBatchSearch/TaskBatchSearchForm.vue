@@ -105,7 +105,7 @@ async function submit() {
     class="task-batch-search-form d-flex flex-column gap-4"
     content-class-list="d-flex flex-column gap-3"
     :valid="isValid"
-    :submit-label="$t('task.batch-search.form.submit')"
+    :submit-label="t('task.batch-search.form.submit')"
     :submit-icon="PhRocketLaunch"
     @reset="reset"
     @submit="submit"

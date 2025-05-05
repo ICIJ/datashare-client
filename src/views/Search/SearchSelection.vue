@@ -112,7 +112,7 @@ const tagSelection = async (documents, labels) => {
     <template #compact>
       <button-icon
         class="flex-shrink-0"
-        :label="$t('searchSelection.star')"
+        :label="t('searchSelection.star')"
         :icon-left="PhStar"
         :icon-left-weight="ICON_WEIGHT.FILL"
         :disabled="noSelection"
@@ -123,7 +123,7 @@ const tagSelection = async (documents, labels) => {
     </template>
     <button-icon
       class="flex-shrink-0"
-      :label="$t('searchSelection.unstar')"
+      :label="t('searchSelection.unstar')"
       :icon-left="PhStar"
       :disabled="noSelection"
       @click="unstarSelection"

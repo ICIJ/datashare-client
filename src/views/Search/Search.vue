@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref, watch, toValue, useTemplateRef } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
 import searchEmpty from '@/assets/images/illustrations/search-empty-light.svg'
 import searchEmptyDark from '@/assets/images/illustrations/search-empty-dark.svg'
@@ -33,6 +34,7 @@ const { refreshRoute, refreshSearchFromRoute, resetSearchResponse, watchIndices,
 const { count: searchBreadcrumbCounter, anyFilters } = useSearchBreadcrumb()
 const { hasEntries: hasSearchEntries } = useSearchNav()
 
+const { t } = useI18n()
 const entriesRef = useTemplateRef('entries')
 const appStore = useAppStore()
 const searchStore = useSearchStore()
@@ -134,8 +136,8 @@ watchIndices(refreshRoute)
             v-if="isEmpty"
             :image="searchEmpty"
             :image-dark="searchEmptyDark"
-            :label="$t('search.emptyStateLabel')"
-            :action-label="$t('search.emptyStateAction')"
+            :label="t('search.emptyStateLabel')"
+            :action-label="t('search.emptyStateAction')"
             :action-to="{ name: 'task.documents.new', query: { project: searchStore.index } }"
             :action-modes="[MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]"
           />

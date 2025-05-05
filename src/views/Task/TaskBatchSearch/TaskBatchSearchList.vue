@@ -1,6 +1,7 @@
 <script setup>
 import get from 'lodash/get'
 import { ref, onBeforeMount } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import tasksBatchSearchesEmpty from '@/assets/images/illustrations/tasks-batch-searches-empty.svg'
 import BatchSearchActions from '@/components/BatchSearch/BatchSearchActions/BatchSearchActions'
@@ -21,6 +22,7 @@ import TaskPage from '@/views/Task/TaskPage'
 import TaskStatus from '@/views/Task/TaskStatus.vue'
 import { useBatchSearchErrorModal } from '@/composables/useBatchSearchErrorModal.js'
 
+const { t } = useI18n()
 const { propertiesModelValueOptions } = useTaskSettings('batch-search')
 const { core } = useCore()
 
@@ -64,8 +66,8 @@ onBeforeMount(fetchMe)
         v-if="!searchQuery"
         image-max-width="195px"
         :image="tasksBatchSearchesEmpty"
-        :label="$t('task.batch-search.list.emptyStateLabel')"
-        :action-label="$t('task.batch-search.list.emptyStateAction')"
+        :label="t('task.batch-search.list.emptyStateLabel')"
+        :action-label="t('task.batch-search.list.emptyStateAction')"
         :action-to="{ name: 'task.batch-search.new' }"
       />
     </template>
@@ -90,7 +92,7 @@ onBeforeMount(fetchMe)
       >
         <template #empty>
           <p class="text-secondary text-center m-3">
-            {{ $t('task.batch-search.list.noMatches') }}
+            {{ t('task.batch-search.list.noMatches') }}
           </p>
         </template>
         <template #cell(state)="{ item }">

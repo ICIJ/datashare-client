@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
 import Hook from '@/components/Hook/Hook'
@@ -17,6 +18,8 @@ const props = defineProps({
     default: 'sm'
   }
 })
+
+const { t } = useI18n()
 
 const toProjectSearch = computed(() => ({
   name: 'search',
@@ -42,7 +45,7 @@ const compact = computed(() => {
           truncate
           :hide-label="compact"
           class="project-row-links__search"
-          :label="$t('projectCardFooter.search')"
+          :label="t('projectCardFooter.search')"
         />
       </slot>
     </div>

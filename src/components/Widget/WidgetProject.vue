@@ -28,6 +28,7 @@
 <script>
 import moment from 'moment'
 import { isFunction, kebabCase } from 'lodash'
+import { useI18n } from 'vue-i18n'
 
 /**
  * A placeholder widget for the insights page. This widget is not intended to be used directly.
@@ -49,6 +50,10 @@ export default {
       type: String,
       required: true
     }
+  },
+  setup() {
+    const { t } = useI18n()
+    return { t }
   },
   data() {
     return {
@@ -100,7 +105,7 @@ export default {
         const rawValue = project[field.key]
         const value = isFunction(field.formatter) ? field.formatter({ ...field, rawValue }) : rawValue
         const href = isFunction(field.href) ? field.href({ ...field, rawValue, value }) : null
-        const label = this.$t(`widget.project.fields.${field.key}`)
+        const label = this.t(`widget.project.fields.${field.key}`)
         const key = kebabCase(field.key)
         return { ...field, key, label, href, rawValue, value }
       })

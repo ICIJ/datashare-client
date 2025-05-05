@@ -1,5 +1,9 @@
 <script setup>
+import { useI18n } from 'vue-i18n'
+
 import ButtonIcon from '@/components/Button/ButtonIcon'
+
+const { t } = useI18n()
 </script>
 
 <template>
@@ -11,6 +15,6 @@ import ButtonIcon from '@/components/Button/ButtonIcon'
     :to="{ name: 'shortcuts' }"
     icon-right-variant="secondary"
   >
-    {{ $t('keyboardShortcutsPopoverLink.label') }}
+    {{ t('keyboardShortcutsPopoverLink.label') }}
   </button-icon>
 </template>

@@ -1,12 +1,12 @@
 <script setup>
-import { ref, watch, computed } from 'vue'
-import { every, cloneDeep, kebabCase } from 'lodash'
+import { computed, ref, watch } from 'vue'
+import { cloneDeep, every, kebabCase } from 'lodash'
 import { useI18n } from 'vue-i18n'
 
 import FormCreation from '@/components/Form/FormCreation'
 import FormControlPath from '@/components/Form/FormControl/FormControlPath'
 import FormFieldset from '@/components/Form/FormFieldset/FormFieldset'
-import { slugger, isUrl } from '@/utils/strings'
+import { isUrl, slugger } from '@/utils/strings'
 import { useCore } from '@/composables/useCore'
 
 const props = defineProps({
@@ -24,6 +24,7 @@ const props = defineProps({
 
 const emit = defineEmits(['submit'])
 
+const { t } = useI18n()
 const { core } = useCore()
 
 const form = ref(initialFormValues())
@@ -97,8 +98,8 @@ const submitLabel = computed(() => t('projectForm.submit'))
         class="project-form__group project-form__group--label"
         icon="text-aa"
         required
-        :label="$t('projectForm.form.label.label')"
-        :invalid-feedback="$t('projectForm.form.label.invalidFeedback', { label: form.label })"
+        :label="t('projectForm.form.label.label')"
+        :invalid-feedback="t('projectForm.form.label.invalidFeedback', { label: form.label })"
         :disabled="disabled"
         :validated="isPresent(form.label) && !isReservedWord(form.label)"
       >
@@ -107,21 +108,21 @@ const submitLabel = computed(() => t('projectForm.submit'))
           name="label"
           type="text"
           required
-          :placeholder="$t('projectForm.form.label.placeholder')"
+          :placeholder="t('projectForm.form.label.placeholder')"
           :state="isBlank(form.label) ? null : !isReservedWord(form.label)"
         />
       </form-fieldset>
       <form-fieldset
         class="project-form__group project-form__group--name"
         icon="text-aa"
-        :label="$t('projectForm.form.name.label')"
+        :label="t('projectForm.form.name.label')"
         :disabled="disabled"
       >
         <b-form-input
           v-model="form.name"
           name="name"
           type="text"
-          :placeholder="$t('projectForm.form.name.placeholder')"
+          :placeholder="t('projectForm.form.name.placeholder')"
           required
           disabled
           readonly
@@ -130,14 +131,14 @@ const submitLabel = computed(() => t('projectForm.submit'))
       <form-fieldset
         class="project-form__group project-form__group--description"
         icon="text-align-left"
-        :label="$t('projectForm.form.description.label')"
+        :label="t('projectForm.form.description.label')"
         :disabled="disabled"
         :validated="isPresent(form.description)"
       >
         <b-form-textarea
           v-model="form.description"
           name="description"
-          :placeholder="$t('projectForm.form.description.placeholder')"
+          :placeholder="t('projectForm.form.description.placeholder')"
           rows="3"
           max-rows="8"
         />
@@ -147,7 +148,7 @@ const submitLabel = computed(() => t('projectForm.submit'))
         class="project-form__group project-form__group--source-path"
         required
         icon="folder-open"
-        :label="$t('projectForm.form.sourcePath.label')"
+        :label="t('projectForm.form.sourcePath.label')"
         :disabled="disabled"
         :validated="isPresent(form.sourcePath)"
       >
@@ -156,7 +157,7 @@ const submitLabel = computed(() => t('projectForm.submit'))
       <form-fieldset
         class="project-form__group project-form__group--logo-url"
         icon="image"
-        :label="$t('projectForm.form.logoUrl.label')"
+        :label="t('projectForm.form.logoUrl.label')"
         :disabled="disabled"
         :validated="isUrl(form.logoUrl)"
       >
@@ -165,13 +166,13 @@ const submitLabel = computed(() => t('projectForm.submit'))
           :state="isBlank(form.logoUrl) ? null : isUrl(form.logoUrl)"
           name="logoUrl"
           type="url"
-          :placeholder="$t('projectForm.form.logoUrl.placeholder')"
+          :placeholder="t('projectForm.form.logoUrl.placeholder')"
         />
       </form-fieldset>
       <form-fieldset
         class="project-form__group project-form__group--maintainer-name"
         icon="user-square"
-        :label="$t('projectForm.form.maintainerName.label')"
+        :label="t('projectForm.form.maintainerName.label')"
         :disabled="disabled"
         :validated="isPresent(form.maintainerName)"
       >
@@ -179,13 +180,13 @@ const submitLabel = computed(() => t('projectForm.submit'))
           v-model="form.maintainerName"
           name="maintainerName"
           type="text"
-          :placeholder="$t('projectForm.form.maintainerName.placeholder')"
+          :placeholder="t('projectForm.form.maintainerName.placeholder')"
         />
       </form-fieldset>
       <form-fieldset
         class="project-form__group project-form__group--publisher-name"
         icon="user-square"
-        :label="$t('projectForm.form.publisherName.label')"
+        :label="t('projectForm.form.publisherName.label')"
         :disabled="disabled"
         :validated="isPresent(form.publisherName)"
       >
@@ -193,13 +194,13 @@ const submitLabel = computed(() => t('projectForm.submit'))
           v-model="form.publisherName"
           name="publisherName"
           type="text"
-          :placeholder="$t('projectForm.form.publisherName.placeholder')"
+          :placeholder="t('projectForm.form.publisherName.placeholder')"
         />
       </form-fieldset>
       <form-fieldset
         class="project-form__group project-form__group--source-url"
         icon="link"
-        :label="$t('projectForm.form.sourceUrl.label')"
+        :label="t('projectForm.form.sourceUrl.label')"
         :disabled="disabled"
         :validated="isUrl(form.sourceUrl)"
       >
@@ -207,7 +208,7 @@ const submitLabel = computed(() => t('projectForm.submit'))
           v-model="form.sourceUrl"
           name="sourceUrl"
           type="url"
-          :placeholder="$t('projectForm.form.sourceUrl.placeholder')"
+          :placeholder="t('projectForm.form.sourceUrl.placeholder')"
           :state="isBlank(form.sourceUrl) ? null : isUrl(form.sourceUrl)"
         />
       </form-fieldset>
