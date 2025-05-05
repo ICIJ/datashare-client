@@ -47,11 +47,22 @@
           padding: 0;
           font-size: 16px;
           font-family: Inter, "Inter", -apple-system, BlinkMacSystemFont, "Lato", "Source Sans Pro", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-          box-sizing: border-box
+          box-sizing: border-box;
+        }
+
+        body {
+          background-color: #fff;
+          color: #212529;
+        }
+
+        @media (prefers-color-scheme: dark) {
+          body {
+            background-color: #151518;
+            color: #C7C9CD;
+          }
         }
 
         .splashscreen {
-          color: #212529;
           font-size: 24px;
           line-height: 20px;
           font-weight: 700;
@@ -107,8 +118,16 @@
         <div class="splashscreen__progress-bar"></div>
         <div class="splashscreen__panel">
           <div class="splashscreen__panel__logo">
-            <img class="splashscreen__panel__logo__documents" src="/splashscreen-documents.svg" />
-            <img class="splashscreen__panel__logo__circle" src="/splashscreen-circles.svg" />
+            <picture class="splashscreen__panel__logo__documents">
+              <source srcset="splashscreen-documents.svg" media="(prefers-color-scheme: light)" />
+              <source srcset="splashscreen-documents-dark.svg" media="(prefers-color-scheme: dark)" />
+              <img src="splashscreen-documents.svg" />
+            </picture>
+            <picture class="splashscreen__panel__logo__circle">
+              <source srcset="splashscreen-circles.svg" media="(prefers-color-scheme: light)" />
+              <source srcset="splashscreen-circles-dark.svg" media="(prefers-color-scheme: dark)" />
+              <img src="splashscreen-circles.svg" />
+            </picture>
           </div>
           <div>Datashare is starting....</div>
         </div>
