@@ -93,8 +93,8 @@ export const useTaskStore = defineStore('task', () => {
 
   const fetchTasks = async ({ names = [], ...params } = {}) => {
     const name = names.join('|')
-    const { items: tasks, pagination } = await api.getTasks({ name, ...params })
-    return setTasks(tasks, pagination)
+    const { items, pagination } = await api.getTasks({ name, ...params })
+    return setTasks(items, pagination)
   }
 
   const fetchTask = async (id) => {

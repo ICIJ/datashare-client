@@ -10,16 +10,18 @@ import { useTaskStore } from '@/store/modules/task'
 vi.mock('@/api/apiInstance', () => {
   return {
     apiInstance: {
-      getTasks: vi.fn().mockResolvedValue([
-        {
-          id: '12',
-          state: 'SUCCESS'
-        },
-        {
-          id: '46',
-          state: 'QUEUED'
-        }
-      ])
+      getTasks: vi.fn().mockResolvedValue({
+        items: [
+          {
+            id: '12',
+            state: 'SUCCESS'
+          },
+          {
+            id: '46',
+            state: 'QUEUED'
+          }
+        ]
+      })
     }
   }
 })

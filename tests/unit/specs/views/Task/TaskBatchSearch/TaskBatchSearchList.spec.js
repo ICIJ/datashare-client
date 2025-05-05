@@ -7,76 +7,78 @@ import TaskBatchSearchList from '@/views/Task/TaskBatchSearch/TaskBatchSearchLis
 vi.mock('@/api/apiInstance', () => {
   return {
     apiInstance: {
-      getTasks: vi.fn().mockResolvedValue([
-        {
-          id: 'e0fd5476-fa48-4a1f-ba61-b959ec8ed6fb',
-          name: 'org.icij.datashare.tasks.BatchSearchRunner',
-          state: 'DONE',
-          progress: 1.0,
-          createdAt: '2025-03-06T06:47:19.857+00:00',
-          retriesLeft: 3,
-          completedAt: '2025-03-06T06:47:20.333+00:00',
-          args: {
-            batchRecord: {
-              '@type': 'org.icij.datashare.batch.BatchSearchRecord',
-              uuid: 'e0fd5476-fa48-4a1f-ba61-b959ec8ed6fb',
-              projects: ['local-datashare'],
-              name: 'qsdf',
-              description: '',
-              nbQueries: 3,
-              date: '2025-03-06T06:47:19.820+00:00',
-              state: 'QUEUED',
-              user: { id: 'local', name: null, email: null, provider: 'local' },
-              nbResults: 0,
-              published: false,
-              errorMessage: null,
-              errorQuery: null
+      getTasks: vi.fn().mockResolvedValue({
+        items: [
+          {
+            id: 'e0fd5476-fa48-4a1f-ba61-b959ec8ed6fb',
+            name: 'org.icij.datashare.tasks.BatchSearchRunner',
+            state: 'DONE',
+            progress: 1.0,
+            createdAt: '2025-03-06T06:47:19.857+00:00',
+            retriesLeft: 3,
+            completedAt: '2025-03-06T06:47:20.333+00:00',
+            args: {
+              batchRecord: {
+                '@type': 'org.icij.datashare.batch.BatchSearchRecord',
+                uuid: 'e0fd5476-fa48-4a1f-ba61-b959ec8ed6fb',
+                projects: ['local-datashare'],
+                name: 'qsdf',
+                description: '',
+                nbQueries: 3,
+                date: '2025-03-06T06:47:19.820+00:00',
+                state: 'QUEUED',
+                user: { id: 'local', name: null, email: null, provider: 'local' },
+                nbResults: 0,
+                published: false,
+                errorMessage: null,
+                errorQuery: null
+              },
+              user: {
+                '@type': 'org.icij.datashare.session.DatashareUser',
+                id: 'local',
+                name: null,
+                email: null,
+                provider: 'local'
+              }
             },
-            user: {
-              '@type': 'org.icij.datashare.session.DatashareUser',
-              id: 'local',
-              name: null,
-              email: null,
-              provider: 'local'
-            }
+            result: { value: 1 }
           },
-          result: { value: 1 }
-        },
-        {
-          id: 'abcdefgh-fa48-4a1f-ba61-b959ec8ed6fb',
-          name: 'org.icij.datashare.tasks.BatchSearchRunner',
-          state: 'DONE',
-          progress: 1.0,
-          createdAt: '2025-03-06T06:47:19.857+00:00',
-          retriesLeft: 3,
-          completedAt: '2025-03-06T06:47:20.333+00:00',
-          args: {
-            batchRecord: {
-              '@type': 'org.icij.datashare.batch.BatchSearchRecord',
-              uuid: 'abcdefgh-fa48-4a1f-ba61-b959ec8ed6fb',
-              projects: ['local-datashare'],
-              name: 'qsdf',
-              description: '',
-              nbQueries: 3,
-              date: '2025-03-06T06:47:19.820+00:00',
-              state: 'QUEUED',
-              user: { id: 'other', name: null, email: null, provider: 'local' },
-              nbResults: 0,
-              published: false,
-              errorMessage: null,
-              errorQuery: null
+          {
+            id: 'abcdefgh-fa48-4a1f-ba61-b959ec8ed6fb',
+            name: 'org.icij.datashare.tasks.BatchSearchRunner',
+            state: 'DONE',
+            progress: 1.0,
+            createdAt: '2025-03-06T06:47:19.857+00:00',
+            retriesLeft: 3,
+            completedAt: '2025-03-06T06:47:20.333+00:00',
+            args: {
+              batchRecord: {
+                '@type': 'org.icij.datashare.batch.BatchSearchRecord',
+                uuid: 'abcdefgh-fa48-4a1f-ba61-b959ec8ed6fb',
+                projects: ['local-datashare'],
+                name: 'qsdf',
+                description: '',
+                nbQueries: 3,
+                date: '2025-03-06T06:47:19.820+00:00',
+                state: 'QUEUED',
+                user: { id: 'other', name: null, email: null, provider: 'local' },
+                nbResults: 0,
+                published: false,
+                errorMessage: null,
+                errorQuery: null
+              },
+              user: {
+                '@type': 'org.icij.datashare.session.DatashareUser',
+                id: 'other',
+                name: null,
+                email: null,
+                provider: 'local'
+              }
             },
-            user: {
-              '@type': 'org.icij.datashare.session.DatashareUser',
-              id: 'other',
-              name: null,
-              email: null,
-              provider: 'local'
-            }
-          },
-          result: { value: 1 }
-        }
-      ]),
+            result: { value: 1 }
+          }
+        ]
+      }),
       getUser: vi.fn().mockResolvedValue({
         uid: 'local',
         projects: [

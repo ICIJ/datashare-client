@@ -15,7 +15,7 @@ describe('TaskEntitiesList.vue', () => {
 
   beforeEach(() => {
     api.getTasks.mockImplementation(({ name: names }) => {
-      return names.split('|').map((name) => {
+      const items = names.split('|').map((name) => {
         return {
           name,
           id: '6a32bb59-8a23-491c-a441-8447ff7517dc',
@@ -28,6 +28,8 @@ describe('TaskEntitiesList.vue', () => {
           createdAt: new Date()
         }
       })
+
+      return { items }
     })
 
     const core = CoreSetup.init().useAll().useRouterWithoutGuards()
