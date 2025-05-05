@@ -5,16 +5,18 @@ import TaskActions from '@/components/Task/TaskActions'
 import TaskPage from '@/views/Task/TaskPage'
 import { apiInstance as api } from '@/api/apiInstance'
 
-vi.mock('@/api/apiInstance', {
-  apiInstance: {
-    index: vi.fn(),
-    indexPath: vi.fn(),
-    findNames: vi.fn(),
-    stopPendingTasks: vi.fn(),
-    stopTask: vi.fn(),
-    getTasks: vi.fn().mockResolvedValue({ items: [] }),
-    removeDoneTasks: vi.fn(),
-    getNerPipelines: vi.fn()
+vi.mock('@/api/apiInstance', () => {
+  return {
+    apiInstance: {
+      index: vi.fn(),
+      indexPath: vi.fn(),
+      findNames: vi.fn(),
+      stopPendingTasks: vi.fn(),
+      stopTask: vi.fn(),
+      getTasks: vi.fn().mockResolvedValue({ items: [] }),
+      removeDoneTasks: vi.fn(),
+      getNerPipelines: vi.fn()
+    }
   }
 })
 
@@ -45,7 +47,7 @@ describe('Task.vue', () => {
   })
 
   it('should fetch tasks on mount', async () => {
-    api.getTasks.mockResolvedValue([{ state: 'DONE' }])
+    api.getTasks.mockResolvedValue({ items: [{ state: 'DONE' }] })
     const { plugins } = CoreSetup.init().useAll().useRouterWithoutGuards()
     shallowMount(TaskPage, { global: { plugins }, props })
     await flushPromises()
