@@ -1,4 +1,4 @@
-import { computed, toValue } from 'vue'
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { useUrlParam } from '@/composables/useUrlParam'
