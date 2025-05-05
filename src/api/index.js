@@ -53,7 +53,7 @@ export class Api {
   }
   getTasks({ name = null, from = 0, size = 10, order = 'asc', sort, ...filters } = {}) {
     const params = { ...filters, name, from, size, order, sort }
-    return this.sendAction('/api/task/all', { params })
+    return this.sendAction('/api/task', { params })
   }
   getTask(id) {
     return this.sendAction(`/api/task/${id}`)

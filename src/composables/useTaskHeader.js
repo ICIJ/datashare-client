@@ -10,28 +10,19 @@ export function useTaskHeader(pageName) {
   const { perPage, sortBy } = useTaskSettings(pageName)
   const taskStore = useTaskStore()
 
-  const addToRoute = computed(() => {
-    return { name: `task.${pageName}.new` }
-  })
+  const addToRoute = computed(() => ({ name: `task.${pageName}.new` }))
   const addLabel = computed(() => t(`task.${pageName}.new.title`))
+
   const searchQuery = useUrlParam('q', '')
+  const searchPlaceholder = computed(() => t(`task.${pageName}.list.searchPlaceholder`))
 
   const page = useUrlParam('page', {
     transform: (value) => parseInt(value),
     initialValue: 1
   })
 
-  const searchPlaceholder = computed(() => t(`task.${pageName}.list.searchPlaceholder`))
-
-  const totalRows = computed(() => {
-    return toValue(taskStore.tasks ?? []).length
-  })
-
-  const tasks = computed(() => {
-    const from = (page.value - 1) * toValue(perPage).modelValue
-    const to = +toValue(perPage).modelValue + from
-    return toValue(taskStore.tasks).slice(from, to)
-  })
+  const totalRows = computed(() => taskStore?.pagination?.total ?? 0)
+  const tasks = computed(() => taskStore.tasks)
 
   return {
     addToRoute,

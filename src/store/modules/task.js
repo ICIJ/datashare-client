@@ -7,7 +7,10 @@ import { TASK_STATUS } from '@/enums/taskStatus'
 import { TASK_NAME } from '@/enums/taskNames'
 
 export const useTaskStore = defineStore('task', () => {
+  const DEFAULT_PAGINATION = { count: 0, size: 0, from: 0, total: 0 }
+
   const tasks = ref([])
+  const pagination = ref(DEFAULT_PAGINATION)
 
   const pendingTasks = computed(() => tasks.value.map(property('id')).filter(isPending))
   const hasPendingTasks = computed(() => pendingTasks.value.length > 0)
@@ -90,8 +93,8 @@ export const useTaskStore = defineStore('task', () => {
 
   const fetchTasks = async ({ names = [], ...params } = {}) => {
     const name = names.join('|')
-    const tasks = await api.getTasks({ name, ...params })
-    return setTasks(tasks)
+    const { items: tasks, pagination } = await api.getTasks({ name, ...params })    
+    return setTasks(tasks, pagination)
   }
 
   const fetchTask = async (id) => {
@@ -100,13 +103,15 @@ export const useTaskStore = defineStore('task', () => {
     return task
   }
 
-  const setTasks = (value = []) => {
-    tasks.value = value
+  const setTasks = (items = [], itemsPagination = DEFAULT_PAGINATION) => {
+    tasks.value = items
+    pagination.value = { ...DEFAULT_PAGINATION, ...itemsPagination }
     return tasks.value
   }
 
   return {
     tasks,
+    pagination,
     pendingTasks,
     hasPendingTasks,
     hasDoneTasks,
