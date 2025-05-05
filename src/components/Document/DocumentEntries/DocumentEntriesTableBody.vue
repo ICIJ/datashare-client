@@ -1,4 +1,6 @@
 <script setup>
+import { useI18n } from 'vue-i18n'
+
 import { useSelection } from '@/composables/useSelection'
 import DocumentRow from '@/components/Document/DocumentRow/DocumentRow'
 import DocumentRowPlaceholder from '@/components/Document/DocumentRow/DocumentRowPlaceholder'
@@ -27,6 +29,7 @@ defineProps({
     default: false
   }
 })
+const { t } = useI18n()
 </script>
 
 <template>
@@ -46,7 +49,7 @@ defineProps({
   <template v-else>
     <tr>
       <td class="p-3 text-secondary text-center" :colspan="properties.length + 1">
-        {{ $t('documentEntries.noMatches') }}
+        {{ t('documentEntries.noMatches') }}
       </td>
     </tr>
   </template>

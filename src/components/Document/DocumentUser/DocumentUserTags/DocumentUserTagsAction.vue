@@ -1,4 +1,6 @@
 <script setup>
+import { useI18n } from 'vue-i18n'
+
 import FormControlTag from '@/components/Form/FormControl/FormControlTag/FormControlTag'
 
 defineOptions({ name: 'DocumentUserTagsAction' })
@@ -14,6 +16,7 @@ defineProps({
     default: () => []
   }
 })
+const { t } = useI18n()
 </script>
 
 <template>
@@ -26,6 +29,6 @@ defineProps({
     no-duplicates
     no-tags
     no-clear
-    :placeholder="$t('documentUserTagsAction.placeholder')"
+    :placeholder="t('documentUserTagsAction.placeholder')"
   />
 </template>

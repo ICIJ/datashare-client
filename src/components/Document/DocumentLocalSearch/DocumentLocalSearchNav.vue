@@ -1,4 +1,6 @@
 <script setup>
+import { useI18n } from 'vue-i18n'
+
 import DocumentLocalSearchNavItem from './DocumentLocalSearchNavItem'
 
 defineProps({
@@ -9,6 +11,7 @@ defineProps({
     type: Boolean
   }
 })
+const { t } = useI18n()
 </script>
 
 <template>
@@ -16,13 +19,13 @@ defineProps({
     <document-local-search-nav-item
       :disabled="disabledPrevious"
       :icon="PhCaretUp"
-      :label="$t('documentLocalSearchNav.previous')"
+      :label="t('documentLocalSearchNav.previous')"
       @click="$emit('previous')"
     />
     <document-local-search-nav-item
       :disabled="disabledNext"
       :icon="PhCaretDown"
-      :label="$t('documentLocalSearchNav.next')"
+      :label="t('documentLocalSearchNav.next')"
       @click="$emit('next')"
     />
   </b-button-group>

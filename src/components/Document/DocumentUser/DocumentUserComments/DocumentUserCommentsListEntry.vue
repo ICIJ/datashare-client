@@ -1,4 +1,6 @@
 <script setup>
+import { useI18n } from 'vue-i18n'
+
 import DisplayUser from '@/components/Display/DisplayUser'
 import DisplayUserAvatar from '@/components/Display/DisplayUserAvatar'
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
@@ -23,6 +25,8 @@ defineProps({
     required: true
   }
 })
+
+const { t } = useI18n()
 </script>
 
 <template>
@@ -46,7 +50,7 @@ defineProps({
           hide-tooltip
           target="_blank"
           :href="href"
-          :label="$t('documentUserCommentsListEntry.goToComment')"
+          :label="t('documentUserCommentsListEntry.goToComment')"
         />
       </slot>
     </div>
