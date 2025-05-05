@@ -4,6 +4,7 @@ import { find, property } from 'lodash'
 
 import { apiInstance as api } from '@/api/apiInstance'
 import { TASK_STATUS } from '@/enums/taskStatus'
+import { TASK_NAME } from '@/enums/taskNames'
 
 export const useTaskStore = defineStore('task', () => {
   const tasks = ref([])
@@ -40,7 +41,7 @@ export const useTaskStore = defineStore('task', () => {
     // For retrocompatibility, batch search tasks can be proxified as TASK_STATUS.BATCH_SEARCH_PROXY
     // which create task on the fly in the backend so legacy batch search tasks are available in the
     // same API endpoint. Therefore those "proxy" batch search has no real task.
-    if (getTask(id)?.name === TASK_STATUS.BATCH_SEARCH) {
+    if (getTask(id)?.name === TASK_NAME.BATCH_SEARCH) {
       await api.removeTask(id)
     }
   }
