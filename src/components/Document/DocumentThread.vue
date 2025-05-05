@@ -1,8 +1,9 @@
 <script setup>
-import { reactive, ref, computed, onMounted, nextTick, useTemplateRef } from 'vue'
+import { computed, nextTick, onMounted, reactive, ref, useTemplateRef } from 'vue'
 import { onBeforeRouteUpdate } from 'vue-router'
 import { findIndex, reduce } from 'lodash'
 import bodybuilder from 'bodybuilder'
+import { useI18n } from 'vue-i18n'
 
 import { useCore } from '@/composables/useCore'
 import { useWait } from '@/composables/useWait'
@@ -26,6 +27,7 @@ const props = defineProps({
     default: () => ({ show: 0, hide: 0 })
   }
 })
+const { t, d } = useI18n()
 
 const elementRef = useTemplateRef('element')
 const documentStore = useDocumentStore()
@@ -159,12 +161,12 @@ onBeforeRouteUpdate(init)
                 class="document-thread__list__email__date"
                 :title="email.creationDateHuman"
               >
-                {{ $d(email.creationDate) }}
+                {{ d(email.creationDate) }}
               </abbr>
             </div>
             <div class="d-flex gap-3">
               <span v-if="isActive(email) && email.messageTo" class="document-thread__list__email__to text-secondary">
-                {{ $t('documentThread.to') }}
+                {{ t('documentThread.to') }}
                 <ul class="list-inline d-inline">
                   <li v-for="to in email.messageTo.split(',')" :key="to" class="list-inline-item">
                     <display-email :value="to" />

@@ -1,6 +1,7 @@
 <script setup>
 import { useTemplateRef } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
+import { useI18n } from 'vue-i18n'
 
 import DocumentDownloadPopoverSection from './DocumentDownloadPopoverSection'
 
@@ -22,6 +23,7 @@ const props = defineProps({
     type: Object
   }
 })
+const { t } = useI18n()
 
 const {
   description,
@@ -54,7 +56,7 @@ defineExpose({
       <button-icon
         :disabled="isRootTooBig"
         :href="documentFullUrl"
-        :label="$t('documentDownloadPopover.download')"
+        :label="t('documentDownloadPopover.download')"
         icon-left="download-simple"
         class="document-download-popover__body__button"
         download
@@ -63,14 +65,14 @@ defineExpose({
         v-if="hasCleanableContentType"
         icon-left="download-simple"
         :href="documentFullUrlWithoutMetadata"
-        :label="$t('documentDownloadPopover.downloadWithoutMetadata')"
+        :label="t('documentDownloadPopover.downloadWithoutMetadata')"
         variant="outline-action"
         class="document-download-popover__body__button"
         download
       />
       <button-icon
         icon-left="download-simple"
-        :label="$t('documentDownloadPopover.downloadExtractText')"
+        :label="t('documentDownloadPopover.downloadExtractText')"
         variant="outline-action"
         class="document-download-popover__body__button"
         @click="downloadTextContent"
@@ -79,17 +81,14 @@ defineExpose({
         v-if="hasRoot"
         icon-left="download-simple"
         :href="rootDocumentFullUrl"
-        :label="$t('documentDownloadPopover.downloadRoot')"
+        :label="t('documentDownloadPopover.downloadRoot')"
         variant="outline-action"
         class="document-download-popover__body__button"
         download
       />
       <div class="document-download-popover__body__sections">
-        <document-download-popover-section
-          :title="$t('documentDownloadPopover.sectionTitle')"
-          :value="document.title"
-        />
-        <document-download-popover-section :title="$t('documentDownloadPopover.sectionContentType')">
+        <document-download-popover-section :title="t('documentDownloadPopover.sectionTitle')" :value="document.title" />
+        <document-download-popover-section :title="t('documentDownloadPopover.sectionContentType')">
           <phosphor-icon :name="document.contentTypeIcon" class="me-2" />
           <display-content-type :value="document.contentType" />
         </document-download-popover-section>
@@ -100,7 +99,7 @@ defineExpose({
         </document-download-popover-section>
         <document-download-popover-section
           v-if="description"
-          :title="$t('documentDownloadPopover.sectionDescription')"
+          :title="t('documentDownloadPopover.sectionDescription')"
           :value="description"
         />
       </div>
