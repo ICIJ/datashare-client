@@ -54,7 +54,7 @@ const groupedShortcuts = computed(() => {
         autofocus
         clear-text
         shadow
-        :placeholder="$t('shortcutsView.searchPlaceholder')"
+        :placeholder="t('shortcutsView.searchPlaceholder')"
       />
       <keyboard-shortcuts-section
         v-for="(sectionShortcuts, route) in groupedShortcuts"
@@ -69,7 +69,7 @@ const groupedShortcuts = computed(() => {
           :key="i"
           :keys="shortcut.keys.default"
           :mac-keys="shortcut.keys.mac"
-          :label="$t(shortcut.label)"
+          :label="t(shortcut.label)"
         />
       </keyboard-shortcuts-section>
     </div>

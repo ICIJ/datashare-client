@@ -1,5 +1,6 @@
 <script setup>
 import { computed, toValue } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import PageTableTh from '@/components/PageTable/PageTableTh'
 import { useSearchProperties } from '@/composables/useSearchProperties'
@@ -18,6 +19,7 @@ const props = defineProps({
     default: () => ['title', 'thumbnail']
   }
 })
+const { t } = useI18n()
 
 const { fields } = useSearchProperties()
 
@@ -30,5 +32,5 @@ const visibleFields = computed(() => {
 
 <template>
   <page-table-th v-for="field in visibleFields" :key="field" :label="toValue(field.text)" :icon="field.icon" />
-  <page-table-th :label="$t('documentEntriesTableHead.action')" hide-label />
+  <page-table-th :label="t('documentEntriesTableHead.action')" hide-label />
 </template>

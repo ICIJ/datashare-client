@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import ProjectCardUpdateDate from './ProjectCardUpdateDate'
 import ProjectCardDocumentsCount from './ProjectCardDocumentsCount'
@@ -14,6 +15,7 @@ const props = defineProps({
   }
 })
 
+const { t } = useI18n()
 const toProjectSearch = computed(() => ({
   name: 'search',
   query: {
@@ -40,7 +42,7 @@ const toProjectSearch = computed(() => ({
         variant="outline-primary"
         truncate
         class="project-card-footer__search align-self-start"
-        :label="$t('projectCardFooter.search')"
+        :label="t('projectCardFooter.search')"
       />
     </slot>
     <hook name="project-card-footer:after" :bind="{ project }" />

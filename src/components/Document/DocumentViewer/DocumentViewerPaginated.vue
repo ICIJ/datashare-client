@@ -2,7 +2,7 @@
   <app-wait :for="loaderId" class="w-100 d-flex flex-column py-3">
     <template #waiting>
       <div class="p-3 w-100 text-muted">
-        {{ $t('document.fetching') }}
+        {{ t('document.fetching') }}
       </div>
     </template>
     <div v-if="document.isPdf" class="paginated-viewer paginated-viewer--pdf flex-grow-1">
@@ -59,7 +59,7 @@
       </div>
     </div>
     <div v-else class="paginated-viewer paginated-viewer--not-available p-3 text-center">
-      {{ $t('document.notAvailable') }}
+      {{ t('document.notAvailable') }}
     </div>
   </app-wait>
 </template>
@@ -67,6 +67,7 @@
 <script>
 import { get, range } from 'lodash'
 import axios from 'axios'
+import { useI18n } from 'vue-i18n'
 
 import { useWait } from '@/composables/useWait'
 import AppWait from '@/components/AppWait/AppWait'
@@ -92,7 +93,8 @@ export default {
     }
   },
   setup() {
-    return { wait: useWait() }
+    const { t } = useI18n()
+    return { wait: useWait(), t }
   },
   data() {
     return {

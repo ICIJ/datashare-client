@@ -1,12 +1,14 @@
 <script setup>
 import { computed, useSlots } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
+import { useI18n } from 'vue-i18n'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
+import { VARIANT } from '@/enums/variants.js'
 
 const VARIANTS = {
-  default: 'action',
-  error: 'danger'
+  default: VARIANT.ACTION,
+  error: VARIANT.DANGER
 }
 
 const ICONS = {
@@ -60,6 +62,7 @@ const props = defineProps({
     default: ''
   }
 })
+const { t } = useI18n()
 
 const slots = useSlots()
 
@@ -102,7 +105,7 @@ const linkClassList = computed(() => [`btn-outline-${variant.value}`])
         class="toast-body__close py-1"
         :class="closeClass"
         variant="link"
-        :label="$t('dismissableToastBody.close')"
+        :label="t('dismissableToastBody.close')"
         hide-label
         icon-left="x"
         @click="closeToast"

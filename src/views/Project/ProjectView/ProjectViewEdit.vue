@@ -54,7 +54,7 @@ function redirectToProject({ name }) {
     <app-overlay rounded="sm" :show="isLoading">
       <project-form edit card :disabled="isLoading" :values="project" @submit="submit">
         <template #submit-text>
-          {{ $t('projectViewEdit.submit') }}
+          {{ t('projectViewEdit.submit') }}
         </template>
       </project-form>
     </app-overlay>

@@ -17,17 +17,17 @@
           no-link
         />
         <span v-if="isDataDir(selectedPath)">
-          {{ $t('widget.creationDate.filterPath') }}
+          {{ t('widget.creationDate.filterPath') }}
         </span>
       </button-icon>
       <app-modal
         id="modal-widget-select-path"
         cancel-variant="outline-action"
-        :cancel-title="$t('global.cancel')"
+        :cancel-title="t('global.cancel')"
         no-header
         lazy
         ok-variant="action"
-        :ok-title="$t('widget.creationDate.selectPath')"
+        :ok-title="t('widget.creationDate.selectPath')"
         :ok-disabled="!pathTreeValues.length"
         scrollable
         size="lg"
@@ -47,6 +47,7 @@
 
 <script>
 import { castArray, trimEnd } from 'lodash'
+import { useI18n } from 'vue-i18n'
 
 import AppModal from '@/components/AppModal/AppModal'
 import PathTreeBreadcrumb from '@/components/PathTree/PathTreeBreadcrumb/PathTreeBreadcrumb'
@@ -80,6 +81,10 @@ export default {
       type: String,
       required: true
     }
+  },
+  setup() {
+    const { t } = useI18n()
+    return { t }
   },
   data() {
     return {

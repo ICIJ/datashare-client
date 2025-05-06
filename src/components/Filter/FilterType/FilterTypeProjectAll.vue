@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref, toRef, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPanelSectionFilterEntry'
 import { useCore } from '@/composables/useCore'
@@ -8,6 +9,7 @@ import { useSearchFilter } from '@/composables/useSearchFilter'
 const { core } = useCore()
 const { allProjectsSelected, searchStore } = useSearchFilter()
 
+const { t } = useI18n()
 const all = computed({
   get() {
     return allProjectsSelected.value
@@ -35,6 +37,6 @@ watch(toRef(searchStore, 'isReady'), (value) => (hadTotal.value = value && allPr
     :count="total"
     :disabled="all"
     :hide-count="hideTotal"
-    :label="$t('filterTypeAll.label')"
+    :label="t('filterTypeAll.label')"
   />
 </template>

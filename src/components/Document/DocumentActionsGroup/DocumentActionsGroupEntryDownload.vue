@@ -1,5 +1,6 @@
 <script setup>
-import { computed, useTemplateRef, nextTick } from 'vue'
+import { computed, nextTick, useTemplateRef } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import DocumentActionsGroupEntry from './DocumentActionsGroupEntry'
 
@@ -27,6 +28,7 @@ const { document } = defineProps({
     type: Boolean
   }
 })
+const { t } = useI18n()
 
 const { isDownloadAllowed, isRootTooBig, documentFullUrl } = useDocumentDownload(document)
 const elementRef = useTemplateRef('element')
@@ -42,7 +44,7 @@ const blur = () => nextTick(() => window.document?.activeElement.blur())
     icon="download-simple"
     download
     hide-tooltip
-    :label="$t('documentActionsGroup.download')"
+    :label="t('documentActionsGroup.download')"
     :vertical="vertical"
     :disabled="!isDownloadAllowed"
     :href="href"

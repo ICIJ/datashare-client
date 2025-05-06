@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
@@ -10,6 +11,9 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['update:collapse'])
+
+const { t } = useI18n()
+
 const toggle = () => emit('update:collapse', !props.collapse)
 const icon = computed(() => (props.collapse ? 'caret-down' : 'caret-up'))
 </script>
@@ -21,7 +25,7 @@ const icon = computed(() => (props.collapse ? 'caret-down' : 'caret-up'))
     hide-tooltip
     hide-label
     :icon-left="icon"
-    :label="$t('formStepHeadingToggler.label')"
+    :label="t('formStepHeadingToggler.label')"
     variant="outline-secondary"
     @click="toggle"
   />

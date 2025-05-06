@@ -1,7 +1,8 @@
 <script setup>
-import { computed, nextTick, ref, reactive, onBeforeMount, watch } from 'vue'
-import { concat, compact, escapeRegExp, flatten, get, noop, uniqueId, setWith } from 'lodash'
+import { computed, nextTick, onBeforeMount, reactive, ref, watch } from 'vue'
+import { compact, concat, escapeRegExp, flatten, get, noop, setWith, uniqueId } from 'lodash'
 import InfiniteLoading from 'v3-infinite-loading'
+import { useI18n } from 'vue-i18n'
 
 import { useWait } from '@/composables/useWait'
 import { useSearchFilter } from '@/composables/useSearchFilter'
@@ -11,6 +12,9 @@ import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPan
 import FilterTypeAll from '@/components/Filter/FilterType/FilterTypeAll'
 import settings from '@/utils/settings'
 import { useSearchStore } from '@/store/modules'
+
+const query = defineModel('query', { type: String, default: '' })
+const collapse = defineModel('collapse', { type: Boolean, default: null })
 
 const { filter, modal } = defineProps({
   filter: {
@@ -25,8 +29,7 @@ const { filter, modal } = defineProps({
   }
 })
 
-const query = defineModel('query', { type: String, default: '' })
-const collapse = defineModel('collapse', { type: Boolean, default: null })
+const { t } = useI18n()
 
 const pages = reactive([])
 const expand = ref(false)
@@ -235,7 +238,7 @@ onBeforeMount(async () => {
     :hide-contextualize="filter.hideContextualize"
     :hide-exclude="filter.hideExclude"
     :hide-expand="filter.hideExpand"
-    :title="$t(`filter.${filter.name}`)"
+    :title="t(`filter.${filter.name}`)"
     :icon="filter.icon"
     :count="count"
     :loading="isLoading"

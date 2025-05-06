@@ -1,6 +1,9 @@
 <script setup>
+import { useI18n } from 'vue-i18n'
+
 import ButtonIcon from '@/components/Button/ButtonIcon'
 import ImageMode from '@/components/ImageMode/ImageMode'
+
 defineProps({
   title: {
     type: String
@@ -22,6 +25,7 @@ defineProps({
     default: false
   }
 })
+const { t } = useI18n()
 </script>
 
 <template>
@@ -36,7 +40,7 @@ defineProps({
         variant="outline-secondary"
         class="app-modal-header__close ms-auto"
         :class="headerCloseClass"
-        :label="$t('appModalHeader.close')"
+        :label="t('appModalHeader.close')"
         @click="$emit('close')"
       />
     </slot>

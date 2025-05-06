@@ -1,4 +1,6 @@
 <script setup>
+import { useI18n } from 'vue-i18n'
+
 import FormControlTag from './FormControlTag/FormControlTag'
 
 defineProps({
@@ -34,16 +36,17 @@ defineProps({
     default: null
   }
 })
+const { t } = useI18n()
 </script>
 
 <template>
   <form-control-tag
     class="form-control-term"
     :separator="separator"
-    :placeholder="placeholder ?? $t('formControlTerm.placeholder')"
-    :add-button-text="addButtonText ?? $t('formControlTerm.addButtonText')"
-    :invalid-tag-text="invalidTagText ?? $t('formControlTerm.invalidTagText')"
-    :duplicate-tag-text="duplicateTagText ?? $t('formControlTerm.duplicateTagText')"
+    :placeholder="placeholder ?? t('formControlTerm.placeholder')"
+    :add-button-text="addButtonText ?? t('formControlTerm.addButtonText')"
+    :invalid-tag-text="invalidTagText ?? t('formControlTerm.invalidTagText')"
+    :duplicate-tag-text="duplicateTagText ?? t('formControlTerm.duplicateTagText')"
     :model-value="modelValue"
     :size="size"
     :state="state"

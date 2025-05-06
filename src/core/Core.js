@@ -9,7 +9,7 @@ import Vue3Toastify, { toast } from 'vue3-toastify'
 import { createBootstrap } from 'bootstrap-vue-next'
 import { createApp, defineComponent, h } from 'vue'
 import { createI18n } from 'vue-i18n'
-import { createWebHashHistory, createRouter } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import { iteratee } from 'lodash'
 
 import ComponentsMixin from './ComponentsMixin'
@@ -133,8 +133,7 @@ class Core extends Behaviors {
       warnHtmlInMessage: 'off',
       warnHtmlMessage: 'off',
       globalInjection: true,
-      allowComposition: true,
-      legacy: true,
+      legacy: false,
       locale: settings.defaultLocale,
       fallbackLocale: settings.defaultLocale,
       messages: {
@@ -179,7 +178,7 @@ class Core extends Behaviors {
    */
   useCommons() {
     this.use(VueScrollTo)
-    // Setup VCalendar manually since Webpack is not compatible with
+    // Set up VCalendar manually since Webpack is not compatible with
     // dynamic chunk import with third party modules.
     // @see https://github.com/nathanreyes/v-calendar/issues/413#issuecomment-530633437
     this.use(VCalendar, { componentPrefix: 'vc' })
@@ -207,7 +206,7 @@ class Core extends Behaviors {
   }
   /**
    * Build a VueCore instance with the current Core instance
-   * as parameter of the global properties.
+   * as a parameter of the global properties.
    * @returns {VueCore}
    */
   buildCorePlugin() {
@@ -244,7 +243,7 @@ class Core extends Behaviors {
     }
   }
   /**
-   * Load settings from the server and instantiate most the application configuration.
+   * Load settings from the server and instantiate most of the application configuration.
    * @async
    * @fullfil {Core} - The instance of the core application
    * @reject {Object} - The Error object

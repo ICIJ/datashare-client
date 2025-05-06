@@ -1,4 +1,6 @@
 <script>
+import { useI18n } from 'vue-i18n'
+
 import AppOverlay from '@/components/AppOverlay/AppOverlay'
 import { useWait } from '@/composables/useWait'
 
@@ -21,7 +23,8 @@ export default {
   },
   emits: ['update:modelValue'],
   setup() {
-    return { wait: useWait() }
+    const { t } = useI18n()
+    return { wait: useWait(), t }
   },
   data() {
     return {
@@ -30,11 +33,11 @@ export default {
   },
   computed: {
     nullOption() {
-      return { value: null, text: this.$t('formControlExtractingLanguage.nullOption') }
+      return { value: null, text: this.t('formControlExtractingLanguage.nullOption') }
     },
     options() {
       return this.textLanguages.map((language) => {
-        return { value: language.iso6392, text: this.$t(`filter.lang.${language.name}`) }
+        return { value: language.iso6392, text: this.t(`filter.lang.${language.name}`) }
       })
     },
     loaderId() {
@@ -56,7 +59,7 @@ export default {
       try {
         this.textLanguages = await this.$core.api.textLanguages()
       } catch (e) {
-        this.$toast.error(this.$t('formControlExtractingLanguage.failedToRetrieveLanguages'))
+        this.$toast.error(this.t('formControlExtractingLanguage.failedToRetrieveLanguages'))
       }
       this.wait.end(this.loaderId)
     }
@@ -72,7 +75,7 @@ export default {
       variant="danger"
       class="form-control-extracting-language--no-language m-0"
     >
-      {{ $t('formControlExtractingLanguage.failedToRetrieveLanguages') }}
+      {{ t('formControlExtractingLanguage.failedToRetrieveLanguages') }}
     </b-alert>
     <b-form-group v-else>
       <b-form-select

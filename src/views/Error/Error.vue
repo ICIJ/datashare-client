@@ -1,6 +1,7 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
+import { useI18n } from 'vue-i18n'
 
 import { Api } from '@/api'
 import ModeServerOnly from '@/components/Mode/ModeServerOnly'
@@ -40,6 +41,7 @@ const props = defineProps({
     default: null
   }
 })
+const { t } = useI18n()
 
 const username = ref(null)
 
@@ -71,28 +73,28 @@ onMounted(async () => (username.value = await core.auth.getUsername()))
               {{ code }}
             </span>
           </span>
-          {{ titleAsString || $t('error.title') }}
+          {{ titleAsString || t('error.title') }}
         </h1>
         <p class="error__container__description lead">
-          {{ description || $t('error.description') }}
+          {{ description || t('error.description') }}
         </p>
         <ul class="error__container__links list-inline text-capitalize">
           <li class="list-inline-item error__container__links__item">
             <a :href="faqLink" target="_blank">
               <phosphor-icon weight="duotone" :name="PhQuestion" class="error__container__links__item__icon me-1" />
-              {{ $t('error.faq') }}
+              {{ t('error.faq') }}
             </a>
           </li>
           <li class="list-inline-item error__container__links__item">
             <a :href="documentationLink" target="_blank">
               <phosphor-icon weight="duotone" :name="PhBook" class="error__container__links__item__icon me-1" />
-              {{ $t('error.userGuides') }}
+              {{ t('error.userGuides') }}
             </a>
           </li>
           <li class="list-inline-item error__container__links__item">
             <a :href="helpLink" target="_blank">
               <phosphor-icon weight="duotone" :name="PhAmbulance" class="error__container__links__item__icon me-1" />
-              {{ $t('error.help') }}
+              {{ t('error.help') }}
             </a>
           </li>
           <li class="list-inline-item error__container__links__item">
@@ -102,7 +104,7 @@ onMounted(async () => (username.value = await core.auth.getUsername()))
             <li class="list-inline-item error__container__links__item error__container__links__item--logout">
               <a :href="logoutLink" target="_blank">
                 <phosphor-icon weight="duotone" :name="PhSignOut" class="error__container__links__item__icon me-1" />
-                {{ $t('error.logout') }}
+                {{ t('error.logout') }}
               </a>
             </li>
           </mode-server-only>

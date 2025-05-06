@@ -1,5 +1,6 @@
 <script setup>
 import { computed, useSlots } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
@@ -14,6 +15,7 @@ const props = defineProps({
     default: 'h3'
   }
 })
+const { t } = useI18n()
 
 const emit = defineEmits(['hide'])
 const slots = useSlots()
@@ -34,7 +36,7 @@ const showHeader = computed(() => props.title || slots.title || slots.close)
         hide-tooltip
         variant="outline-secondary"
         class="app-popover-header__close ms-auto p-0"
-        :label="$t('appPopoverHeader.close')"
+        :label="t('appPopoverHeader.close')"
         @click="emit('hide')"
       />
     </slot>

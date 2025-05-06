@@ -1,6 +1,7 @@
 <script setup>
 import { PhosphorIcon } from '@icij/murmur-next'
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
 import { ICON_WEIGHTS } from '@/enums/iconWeights'
@@ -34,6 +35,7 @@ const props = defineProps({
     default: false
   }
 })
+const { t } = useI18n()
 
 const emit = defineEmits(['close'])
 
@@ -60,7 +62,7 @@ const close = () => {
         hide-label
         hide-tooltip
         square
-        :label="$t('documentUserActionsCard.close')"
+        :label="t('documentUserActionsCard.close')"
         @click="close()"
       />
     </b-card-title>

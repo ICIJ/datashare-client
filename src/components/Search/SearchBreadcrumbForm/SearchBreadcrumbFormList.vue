@@ -1,5 +1,6 @@
 <script setup>
 import { PhosphorIcon } from '@icij/murmur-next'
+import { useI18n } from 'vue-i18n'
 
 defineProps({
   icon: {
@@ -14,6 +15,7 @@ defineProps({
     type: [String, Array, Object]
   }
 })
+const { t } = useI18n()
 </script>
 
 <template>
@@ -21,7 +23,7 @@ defineProps({
     <div v-if="!noLabel" class="fw-medium text-action-emphasis text-nowrap" :class="labelClass">
       <phosphor-icon :name="icon" class="me-2" />
       <slot name="label">
-        {{ $t('searchBreadcrumbFormList.label') }}
+        {{ t('searchBreadcrumbFormList.label') }}
       </slot>
     </div>
     <div class="search-breadcrumb-form__entries d-flex flex-wrap row-gap-2 column-gap-2 align-items-baseline">

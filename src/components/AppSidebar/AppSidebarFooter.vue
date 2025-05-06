@@ -101,7 +101,7 @@ const classList = computed(() => {
           class="p-0 text-body"
           icon-left="gear"
           icon-left-hover-weight="bold"
-          :label="$t('appSidebarFooter.settings')"
+          :label="t('appSidebarFooter.settings')"
         />
       </app-sidebar-footer-links-entry>
       <app-sidebar-footer-links-entry v-if="!noHelp" :compact="compact" name="help">
@@ -113,7 +113,7 @@ const classList = computed(() => {
           class="p-0 text-body"
           icon-left="question"
           icon-left-hover-weight="bold"
-          :label="$t('appSidebarFooter.help')"
+          :label="t('appSidebarFooter.help')"
         />
       </app-sidebar-footer-links-entry>
       <app-sidebar-footer-links-entry v-if="!noRemoveAll" :compact="compact" name="remove-all">
@@ -123,7 +123,7 @@ const classList = computed(() => {
           class="p-0 text-body"
           icon-left="trash"
           icon-left-hover-weight="bold"
-          :label="$t('appSidebarFooter.removeAll.link')"
+          :label="t('appSidebarFooter.removeAll.link')"
           @click="confirmRemoveAll"
         />
       </app-sidebar-footer-links-entry>
@@ -135,7 +135,7 @@ const classList = computed(() => {
           class="p-0 text-body"
           icon-left="sign-out"
           icon-left-hover-weight="bold"
-          :label="$t('appSidebarFooter.signOut')"
+          :label="t('appSidebarFooter.signOut')"
         />
       </app-sidebar-footer-links-entry>
     </app-sidebar-footer-links>

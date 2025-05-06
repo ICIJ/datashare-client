@@ -1,4 +1,6 @@
 <script setup>
+import { useI18n } from 'vue-i18n'
+
 import ProjectDropdownSelectorCheckbox from './ProjectDropdownSelectorCheckbox'
 
 defineProps({
@@ -6,6 +8,8 @@ defineProps({
     type: Boolean
   }
 })
+
+const { t } = useI18n()
 </script>
 
 <template>
@@ -14,7 +18,7 @@ defineProps({
       :model-value="modelValue"
       @update:model-value="$emit('update:modelValue', $event)"
     >
-      {{ $t('projectDropdownSelectorAll.label') }}
+      {{ t('projectDropdownSelectorAll.label') }}
     </project-dropdown-selector-checkbox>
   </li>
 </template>

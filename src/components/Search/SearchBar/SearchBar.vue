@@ -63,6 +63,7 @@ import { castArray, escapeRegExp, get, iteratee, last, orderBy, some, throttle, 
 import bodybuilder from 'bodybuilder'
 import lucene from 'lucene'
 import { mapStores } from 'pinia'
+import { useI18n } from 'vue-i18n'
 
 import { useMobileDetect } from '@/composables/useMobileDetect'
 import SearchBarInput from '@/components/Search/SearchBar/SearchBarInput'
@@ -150,8 +151,9 @@ export default {
   emits: ['submit'],
   setup() {
     const { isMobile } = useMobileDetect()
+    const { t } = useI18n()
     const autofocus = !isMobile
-    return { autofocus, isMobile }
+    return { autofocus, isMobile, t }
   },
   data() {
     return {
@@ -187,7 +189,7 @@ export default {
       return ['all', settings.suggestedImplicitFields].indexOf(this.field) > -1 && lastTerm.length > 4
     },
     localizedPlaceholder() {
-      return this.placeholder ?? this.$t('search.placeholder')
+      return this.placeholder ?? this.t('search.placeholder')
     },
     hiddenSuggestions() {
       return !this.suggestions.length || this.pristine

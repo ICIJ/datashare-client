@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import ButtonRecommendation from '@/components/Button/ButtonRecommendation'
 import ButtonToggleRecommendation from '@/components/Button/ButtonToggleRecommendation'
@@ -18,12 +19,13 @@ const { recommendedBy } = defineProps({
 })
 
 const count = computed(() => recommendedBy.length)
+const { t } = useI18n()
 </script>
 
 <template>
   <document-user-actions-card
     v-model="modelValue"
-    :title="$tc('documentUserActions.recommendations', count)"
+    :title="t('documentUserActions.recommendations', count)"
     icon="eyes"
     icon-weight="fill"
     show-warning
@@ -33,7 +35,7 @@ const count = computed(() => recommendedBy.length)
       <button-recommendation v-for="user in recommendedBy" :key="user" :label="user" />
     </div>
     <template #action-warning>
-      {{ $t('documentUserRecommendations.warning') }}
+      {{ t('documentUserRecommendations.warning') }}
     </template>
     <template #action>
       <button-toggle-recommendation v-model:active="recommended" class="align-self-end" />

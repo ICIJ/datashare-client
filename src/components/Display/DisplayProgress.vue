@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
   value: {
@@ -14,6 +15,7 @@ const props = defineProps({
     default: false
   }
 })
+const { n } = useI18n()
 
 const clampValue = computed(() => {
   return Math.max(0, Math.min(1, props.value))
@@ -35,7 +37,7 @@ const classList = computed(() => {
 <template>
   <span class="display-progress" :class="classList">
     <span v-if="!noLabel" class="display-progress__label">
-      {{ $n(clampValue, { useGrouping: false, style: 'percent' }) }}
+      {{ n(clampValue, { useGrouping: false, style: 'percent' }) }}
     </span>
     <span class="display-progress__value" aria-hidden>
       <span class="display-progress__value__bar" :style="barStyle"></span>

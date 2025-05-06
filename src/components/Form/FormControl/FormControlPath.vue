@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref, toRef, watch } from 'vue'
 import { isArray } from 'lodash'
+import { useI18n } from 'vue-i18n'
 
 import AppModal from '@/components/AppModal/AppModal'
 import ButtonIcon from '@/components/Button/ButtonIcon'
@@ -27,6 +28,7 @@ const props = defineProps({
     default: () => []
   }
 })
+const { t } = useI18n()
 const { core } = useCore()
 const selectedPaths = ref([])
 const sourcePath = computed(() => props.path ?? core.getDefaultDataDir())
@@ -54,7 +56,7 @@ function onOk() {
 <template>
   <div class="form-control-path d-flex no-wrap gap-3">
     <button-icon v-b-modal.modal-form-control-path :icon-right="PhMagnifyingGlass" variant="action">
-      {{ $t('formControlPath.browse') }}
+      {{ t('formControlPath.browse') }}
     </button-icon>
     <button-icon v-b-modal.modal-form-control-path :icon-left="PhFolderOpen" variant="outline-tertiary">
       <path-tree-breadcrumb :model-value="display" datadir-label no-link />

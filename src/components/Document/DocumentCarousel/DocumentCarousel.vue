@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { TinyPagination } from '@icij/murmur-next'
+import { useI18n } from 'vue-i18n'
 
 import DocumentCarouselNav from './DocumentCarouselNav'
 
@@ -23,6 +24,7 @@ defineProps({
     type: Boolean
   }
 })
+const { t } = useI18n()
 
 const adjustedPosition = computed({
   get() {
@@ -43,7 +45,7 @@ const adjustedPosition = computed({
       class="document-carousel__pagination mx-auto py-1"
     >
       <template #page>
-        {{ $t('documentCarousel.page') }}
+        {{ t('documentCarousel.page') }}
       </template>
     </tiny-pagination>
     <div class="document-carousel__content p-3">
@@ -51,7 +53,7 @@ const adjustedPosition = computed({
         :icon="PhCaretLeft"
         class="document-carousel__content__nav"
         :disabled="disabledPrevious"
-        :label="$t('documentCarousel.previous')"
+        :label="t('documentCarousel.previous')"
         @click="emit('previous')"
       />
       <div class="document-carousel__content__entries">
@@ -61,7 +63,7 @@ const adjustedPosition = computed({
         :icon="PhCaretRight"
         class="document-carousel__content__nav"
         :disabled="disabledNext"
-        :label="$t('documentCarousel.next')"
+        :label="t('documentCarousel.next')"
         @click="emit('next')"
       />
     </div>

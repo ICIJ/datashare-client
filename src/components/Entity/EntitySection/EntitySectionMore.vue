@@ -1,4 +1,6 @@
 <script setup>
+import { useI18n } from 'vue-i18n'
+
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
 defineProps({
@@ -7,6 +9,7 @@ defineProps({
     required: true
   }
 })
+const { t } = useI18n()
 </script>
 
 <template>
@@ -18,7 +21,7 @@ defineProps({
   >
     <i18n-t keypath="entitySectionMore.label">
       <template #category>
-        {{ $t(`entitySectionMore.category.${category.toLowerCase()}`) }}
+        {{ t(`entitySectionMore.category.${category.toLowerCase()}`) }}
       </template>
     </i18n-t>
   </button-icon>

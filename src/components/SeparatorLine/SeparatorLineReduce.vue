@@ -1,5 +1,8 @@
 <script setup>
+import { useI18n } from 'vue-i18n'
+
 import ButtonIcon from '@/components/Button/ButtonIcon'
+const { t } = useI18n()
 </script>
 
 <template>
@@ -9,7 +12,7 @@ import ButtonIcon from '@/components/Button/ButtonIcon'
     hide-label
     icon-left="arrow-line-left"
     icon-left-hover-weight="bold"
-    :label="$t('separatorLine.reduce')"
+    :label="t('separatorLine.reduce')"
     size="sm"
     variant="outline-dark"
     class="separator-line-reduce"

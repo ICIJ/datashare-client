@@ -19,8 +19,8 @@ describe('I18nMixin', () => {
     })
 
     it('should use "en" as default language', () => {
-      expect(core.i18n.global.locale).toBe('en')
-      expect(core.i18n.global.fallbackLocale).toBe('en')
+      expect(core.i18n.global.locale.value).toBe('en')
+      expect(core.i18n.global.fallbackLocale.value).toBe('en')
     })
 
     it('should have "en" messages', () => {
@@ -37,7 +37,7 @@ describe('I18nMixin', () => {
 
     it('should switch to Spanish (es)', async () => {
       await core.loadI18Locale('es')
-      expect(core.i18n.global.locale).toBe('es')
+      expect(core.i18n.global.locale.value).toBe('es')
     })
 
     it('should have "es" message', async () => {
@@ -63,7 +63,7 @@ describe('I18nMixin', () => {
     })
 
     it('should use "de" as default language', () => {
-      expect(core.i18n.global.locale).toBe('de')
+      expect(core.i18n.global.locale.value).toBe('de')
     })
 
     it('should have "de" messages', () => {
@@ -72,7 +72,7 @@ describe('I18nMixin', () => {
 
     it('should switch to Japanese (ja)', async () => {
       await core.loadI18Locale('ja')
-      expect(core.i18n.global.locale).toBe('ja')
+      expect(core.i18n.global.locale.value).toBe('ja')
     })
 
     it('should have "ja" messages', async () => {

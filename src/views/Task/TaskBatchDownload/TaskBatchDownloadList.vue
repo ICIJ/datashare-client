@@ -1,5 +1,6 @@
 <script setup>
 import get from 'lodash/get'
+import { useI18n } from 'vue-i18n'
 
 import tasksBatchDownloadsEmpty from '@/assets/images/illustrations/tasks-batch-downloads-empty.svg'
 import { useTaskSettings } from '@/composables/useTaskSettings'
@@ -17,6 +18,7 @@ import RowPaginationBatchDownloads from '@/components/RowPagination/RowPaginatio
 import { TASK_NAME } from '@/enums/taskNames'
 import TaskPage from '@/views/Task/TaskPage'
 
+const { t } = useI18n()
 const { propertiesModelValueOptions } = useTaskSettings('batch-download')
 const { searchRoute } = useSearchNav()
 
@@ -35,8 +37,8 @@ function getBatchDownloadRecord(item, key, defaultValue) {
       <empty-state
         image-max-width="235px"
         :image="tasksBatchDownloadsEmpty"
-        :label="$t('task.batch-download.list.emptyStateLabel')"
-        :action-label="$t('task.batch-download.list.emptyStateAction')"
+        :label="t('task.batch-download.list.emptyStateLabel')"
+        :action-label="t('task.batch-download.list.emptyStateAction')"
         :action-to="searchRoute"
       />
     </template>

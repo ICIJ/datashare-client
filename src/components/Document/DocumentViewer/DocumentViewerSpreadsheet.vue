@@ -2,16 +2,16 @@
   <app-wait for="load spreadsheet" class="w-100 py-3">
     <template #waiting>
       <div class="text-muted">
-        {{ $t('document.fetching') }}
+        {{ t('document.fetching') }}
       </div>
     </template>
     <div v-if="!isPreviewable">
-      {{ $t('document.notAvailable') }}
+      {{ t('document.notAvailable') }}
     </div>
     <div v-else class="spreadsheet-viewer__content d-flex flex-column h-100">
       <div class="spreadsheet-viewer__content__toolbox bg-tertiary-subtle d-flex align-items-center p-2">
         <b-form-checkbox v-model="fieldsInFirstItem" switch class="ms-3">
-          {{ $t('document.spreadsheet.fieldsInFirstItem') }}
+          {{ t('document.spreadsheet.fieldsInFirstItem') }}
         </b-form-checkbox>
         <div
           class="spreadsheet-viewer__content__toolbox__filter ps-3 text-end flex-grow-1"
@@ -21,12 +21,12 @@
             <input
               type="search"
               class="form-control"
-              :placeholder="$t('document.spreadsheet.findInSpreadsheet')"
+              :placeholder="t('document.spreadsheet.findInSpreadsheet')"
               @input="debounceFilterInput"
             />
             <div v-if="filter" class="input-group-append">
               <div class="input-group-text">
-                {{ $t('document.spreadsheet.filtered.rows', filteredItems.length) }}
+                {{ t('document.spreadsheet.filtered.rows', filteredItems.length) }}
               </div>
             </div>
           </div>
@@ -80,6 +80,7 @@ import { debounce, filter, first, get, kebabCase, range, sortBy, startCase } fro
 import Fuse from 'fuse.js'
 import { getCookie } from 'tiny-cookie'
 import { DynamicScroller, DynamicScrollerItem } from 'vue-virtual-scroller'
+import { useI18n } from 'vue-i18n'
 
 import { useWait } from '@/composables/useWait'
 import AppWait from '@/components/AppWait/AppWait'
@@ -103,7 +104,9 @@ export default {
     }
   },
   setup() {
-    return { wait: useWait() }
+    const { t } = useI18n()
+
+    return { wait: useWait(), t }
   },
   data() {
     return {

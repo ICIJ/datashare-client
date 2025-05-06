@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import lucene from 'lucene'
+import { useI18n } from 'vue-i18n'
 
 import SearchParameterQueryAst from './SearchParameterQueryAst'
 import SearchParameterQueryTerm from './SearchParameterQueryTerm'
@@ -19,6 +20,8 @@ const props = defineProps({
     type: Boolean
   }
 })
+
+const { t } = useI18n()
 
 const emit = defineEmits(['click:x'])
 
@@ -46,7 +49,7 @@ const ast = computed(() => {
     :no-icon="noIcon"
     :no-x-icon="noXIcon"
     :size="size"
-    :title="$t('searchParameterQuery.title')"
+    :title="t('searchParameterQuery.title')"
     color="var(--bs-danger)"
     prefix="-"
     icon="warning"

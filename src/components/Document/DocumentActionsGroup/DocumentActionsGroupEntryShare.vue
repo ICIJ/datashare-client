@@ -1,5 +1,6 @@
 <script setup>
-import { useTemplateRef, nextTick } from 'vue'
+import { nextTick, useTemplateRef } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import DocumentActionsGroupEntry from './DocumentActionsGroupEntry'
 
@@ -26,6 +27,7 @@ defineProps({
     type: Boolean
   }
 })
+const { t } = useI18n()
 
 const elementRef = useTemplateRef('element')
 
@@ -38,7 +40,7 @@ const blur = () => nextTick(() => window.document?.activeElement.blur())
     class="document-actions-group-entry-share"
     icon="share-network"
     hide-tooltip
-    :label="$t('documentActionsGroup.share')"
+    :label="t('documentActionsGroup.share')"
     :vertical="vertical"
     @focus="blur"
   />

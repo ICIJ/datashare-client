@@ -5,8 +5,6 @@ import { PhosphorIcon } from '@icij/murmur-next'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
-const { t } = useI18n()
-
 const visible = defineModel('visible', {
   type: Boolean,
   default: true
@@ -27,6 +25,8 @@ const { noSort, noToggler } = defineProps({
   }
 })
 
+const { t } = useI18n()
+
 const toggle = () => (visible.value = !visible.value)
 
 const hideComments = 'documentUserCommentsList.hideComments'
@@ -40,7 +40,7 @@ const noHeader = computed(() => noToggler && noSort)
   <header v-if="!noHeader" class="d-flex justify-content-between align-items-center">
     <span v-if="!noSort" class="d-inline-flex align-items-center gap-1 text-nowrap text-body-secondary">
       <phosphor-icon :name="PhSortDescending" />
-      {{ $t('documentUserCommentsList.sortingText') }}
+      {{ t('documentUserCommentsList.sortingText') }}
     </span>
     <button-icon
       v-if="!noToggler"

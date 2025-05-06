@@ -12,15 +12,15 @@
       <div class="d-lg-flex">
         <div switches class="my-auto d-flex">
           <b-form-checkbox v-model="autoplay" switch class="my-2 me-3">
-            {{ $t('document.player.autoplay') }}
+            {{ t('document.player.autoplay') }}
           </b-form-checkbox>
           <b-form-checkbox v-model="loop" switch class="my-2 me-3">
-            {{ $t('document.player.loop') }}
+            {{ t('document.player.loop') }}
           </b-form-checkbox>
         </div>
         <b-alert :model-value="cannotPlayVideoFormat" variant="warning" class="ms-auto mt-3 mb-0 my-lg-auto">
           <phosphor-icon :name="PhWarning" class="me-2" />
-          {{ $t('document.player.video.unknownFormat') }}
+          {{ t('document.player.video.unknownFormat') }}
         </b-alert>
       </div>
     </template>
@@ -30,6 +30,7 @@
 <script>
 import { mapWritableState } from 'pinia'
 import { PhosphorIcon } from '@icij/murmur-next'
+import { useI18n } from 'vue-i18n'
 
 import { usePlayerStore } from '@/store/modules'
 
@@ -48,6 +49,11 @@ export default {
     document: {
       type: Object
     }
+  },
+  setup() {
+    const { t } = useI18n()
+
+    return { t }
   },
   computed: {
     cannotPlayVideoFormat() {

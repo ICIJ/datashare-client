@@ -1,9 +1,10 @@
 <script setup>
-import { computed, ref, onBeforeMount } from 'vue'
+import { computed, onBeforeMount, ref } from 'vue'
 import { castArray } from 'lodash'
+import { useI18n } from 'vue-i18n'
 
 import { useSearchFilter } from '@/composables/useSearchFilter'
-import { useStarredStore, useSearchStore } from '@/store/modules'
+import { useSearchStore, useStarredStore } from '@/store/modules'
 import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPanelSectionFilterEntry'
 import FilterType from '@/components/Filter/FilterType/FilterType'
 
@@ -17,6 +18,7 @@ const props = defineProps({
   }
 })
 
+const { t } = useI18n()
 const starredStore = useStarredStore()
 const searchStore = useSearchStore.inject()
 const { getTotal, getFilterValues, setFilterValue, watchIndices } = useSearchFilter()
@@ -51,14 +53,14 @@ watchIndices(fetch)
     <b-form-checkbox-group v-model="selected">
       <filters-panel-section-filter-entry
         name="starred"
-        :label="$t('filter.starred')"
+        :label="t('filter.starred')"
         :count="starredDocumentsCount"
         :hide-count="hideCount"
         :value="true"
       />
       <filters-panel-section-filter-entry
         name="starred"
-        :label="$t('filter.notStarred')"
+        :label="t('filter.notStarred')"
         :count="notStarredDocumentsCount"
         :hide-count="hideCount"
         :value="false"

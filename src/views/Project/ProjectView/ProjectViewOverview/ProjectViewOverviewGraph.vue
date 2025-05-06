@@ -1,4 +1,6 @@
 <script setup>
+import { useI18n } from 'vue-i18n'
+
 import ProjectViewOverviewWidgets from './ProjectViewOverviewWidgets'
 
 import projectsGraphEmpty from '@/assets/images/illustrations/projects-graph-empty-light.svg'
@@ -11,6 +13,8 @@ defineProps({
     type: String
   }
 })
+
+const { t } = useI18n()
 </script>
 
 <template>
@@ -21,7 +25,7 @@ defineProps({
           image-max-width="265px"
           :image="projectsGraphEmpty"
           :image-dark="projectsGraphEmptyDark"
-          :action-label="$t('projectViewOverviewGraph.emptyStateAction')"
+          :action-label="t('projectViewOverviewGraph.emptyStateAction')"
           :action-to="{ name: 'settings.extensions' }"
           :action-modes="[MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]"
         >

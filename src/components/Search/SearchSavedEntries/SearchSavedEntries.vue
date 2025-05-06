@@ -79,7 +79,7 @@ function searchParamsQuery(uri) {
       <search-breadcrumb-uri :uri="item.uri" no-label class="ps-5" />
     </template>
     <template #empty>
-      {{ $t('searchSavedEntries.empty') }}
+      {{ t('searchSavedEntries.empty') }}
     </template>
   </page-table-generic>
 </template>

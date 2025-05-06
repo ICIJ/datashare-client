@@ -2,6 +2,7 @@
 import Fuse from 'fuse.js'
 import { orderBy as orderArrayBy, property } from 'lodash'
 import { computed, ref, onBeforeMount } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import PageContainer from '@/components/PageContainer/PageContainer'
 import PageHeader from '@/components/PageHeader/PageHeader'
@@ -15,6 +16,7 @@ import { useWait } from '@/composables/useWait'
 import { useAppStore } from '@/store/modules'
 import useMode from '@/composables/useMode'
 
+const { t } = useI18n()
 const { core, toast } = useCore()
 const { isServer } = useMode()
 const { waitFor, isLoading } = useWait()
@@ -127,13 +129,13 @@ const addToRoute = computed(() => {
       v-model:searchQuery="searchQuery"
       v-model:page="page"
       :add-to="addToRoute"
-      :add-label="$t('projectNew.title')"
+      :add-label="t('projectNew.title')"
       :per-page="perPage"
       :total-rows="filteredProjects.length"
       searchable
       paginable
       sticky
-      :search-placeholder="$t('projectList.searchPlaceholder')"
+      :search-placeholder="t('projectList.searchPlaceholder')"
     >
       <template #pagination="{ totalRows }">
         <row-pagination-projects v-model="page" :total-rows="totalRows" :per-page="perPage" />

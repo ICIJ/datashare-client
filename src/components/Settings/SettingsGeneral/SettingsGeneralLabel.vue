@@ -6,7 +6,7 @@
     <span>
       <button-icon
         v-if="fieldChanged"
-        :aria-label="$t('settings.generalLabel.restore')"
+        :aria-label="t('settings.generalLabel.restore')"
         icon-left="arrow-counter-clockwise"
         variant="link"
         size="sm"
@@ -18,6 +18,8 @@
 </template>
 
 <script setup>
+import { useI18n } from 'vue-i18n'
+
 import ButtonIcon from '@/components/Button/ButtonIcon'
 defineProps({
   fieldChanged: {
@@ -31,6 +33,9 @@ defineProps({
 })
 
 const emits = defineEmits(['restore'])
+
+const { t } = useI18n()
+
 const KNOWN_ACRONYMS = ['URI', 'URL', 'NLP', 'OCR', 'TCP', 'API', 'TTL', 'OAuth', 'CORS']
 
 function capitalizeKnownAcronyms(str) {

@@ -1,4 +1,6 @@
 <script setup>
+import { useI18n } from 'vue-i18n'
+
 import CardPanel from '@/components/CardPanel/CardPanel'
 import BatchSearchActions from '@/components/BatchSearch/BatchSearchActions/BatchSearchActions'
 import BatchSearchCardDetails from '@/components/BatchSearch/BatchSeachCard/BatchSearchCardDetails'
@@ -10,6 +12,7 @@ defineProps({
     required: true
   }
 })
+const { t } = useI18n()
 </script>
 
 <template>
@@ -18,7 +21,7 @@ defineProps({
       v-if="batchSearch.description"
       class="text-secondary-emphasis"
       :text="batchSearch.description"
-      :aria-label="$t('batchSearchCardDetails.description')"
+      :aria-label="t('batchSearchCardDetails.description')"
     />
     <batch-search-actions :uuid="batchSearch.uuid" />
     <batch-search-card-details

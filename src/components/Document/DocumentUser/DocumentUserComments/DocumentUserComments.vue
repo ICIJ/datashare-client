@@ -1,5 +1,6 @@
 <script setup>
 import { noop } from 'lodash'
+import { useI18n } from 'vue-i18n'
 
 import DocumentUserCommentsHeader from '@/components/Document/DocumentUser/DocumentUserComments/DocumentUserCommentsHeader'
 import DocumentUserCommentsList from '@/components/Document/DocumentUser/DocumentUserComments/DocumentUserCommentsList'
@@ -58,12 +59,13 @@ defineProps({
 })
 
 defineEmits(['goToNewest', 'goToOldest', 'submit'])
+const { t } = useI18n()
 </script>
 
 <template>
   <document-user-actions-card
     :icon="PhChatsTeardrop"
-    :title="$tc('documentUserActions.comments', count ?? comments.length)"
+    :title="t('documentUserActions.comments', count ?? comments.length)"
     show-warning
     action-end
   >
@@ -89,7 +91,7 @@ defineEmits(['goToNewest', 'goToOldest', 'submit'])
     </document-user-comments-list>
     <template #action-warning>
       <slot name="warning">
-        {{ $t('documentUserComments.warning') }}
+        {{ t('documentUserComments.warning') }}
       </slot>
     </template>
     <template #action>

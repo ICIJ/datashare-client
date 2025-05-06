@@ -14,18 +14,18 @@
               :variant="getCategoryVariant(category)"
               :border-variant="getCategoryVariant(category)"
               :value="entities[category]"
-              :label="$tc(`widgetEntities.${category}`, entities[category])"
+              :label="t(`widgetEntities.${category}`, entities[category])"
             />
           </div>
         </div>
       </template>
       <div v-else class="text-center w-100 align-self-center">
-        <p>{{ $t('widget.noEntitiesFindSome') }}</p>
+        <p>{{ t('widget.noEntitiesFindSome') }}</p>
         <button-icon
           :to="{ name: 'task.entities.new', query: { project } }"
           icon-left="plus"
           variant="outline-action"
-          :label="$t('widget.findEntities')"
+          :label="t('widget.findEntities')"
         />
       </div>
     </div>
@@ -35,6 +35,7 @@
 <script>
 import { sum, values } from 'lodash'
 import bodybuilder from 'bodybuilder'
+import { useI18n } from 'vue-i18n'
 
 import WidgetBarometer from './WidgetBarometer'
 
@@ -73,7 +74,7 @@ export default {
     }
   },
   setup() {
-    return { wait: useWait() }
+    return { wait: useWait(), t: useI18n().t }
   },
   data() {
     return {

@@ -2,7 +2,6 @@ import { isEmpty } from 'lodash'
 import Murmur from '@icij/murmur-next'
 
 import settings from '@/utils/settings'
-
 /**
   Mixin class extending the core to add helpers for i18n.
   @mixin I18nMixin
@@ -17,19 +16,19 @@ const I18nMixin = (superclass) =>
      * @returns {Promise}
      */
     initializeI18n() {
-      const locale = localStorage.getItem('locale') ?? this.i18n.global.locale
+      const locale = localStorage.getItem('locale') ?? this.i18n.global.locale.value
       return this.loadI18Locale(locale)
     }
 
     /**
-     * Set the active locale both in local stoage and VueI18n.
+     * Set the active locale both in local storage and VueI18n.
      * @memberof I18nMixin.prototype
      * @param {String} locale - Key of the local (fr, de, en, ja, ...)
      * @returns {String}
      */
     setI18nLocale(locale = settings.defaultLocale) {
       localStorage.setItem('locale', locale)
-      this.i18n.global.locale = locale
+      this.i18n.global.locale.value = locale
       return locale
     }
 

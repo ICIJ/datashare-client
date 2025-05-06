@@ -116,8 +116,8 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
         image-max-width="220px"
         :image="searchHistoryEmpty"
         :image-dark="searchHistoryEmptyDark"
-        :label="$t('searchHistoryList.emptyStateLabel')"
-        :action-label="$t('searchHistoryList.emptyStateAction')"
+        :label="t('searchHistoryList.emptyStateLabel')"
+        :action-label="t('searchHistoryList.emptyStateAction')"
         :action-to="searchRoute"
       />
     </page-container>

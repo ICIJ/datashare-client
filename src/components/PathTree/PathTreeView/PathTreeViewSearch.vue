@@ -1,4 +1,6 @@
 <script setup>
+import { useI18n } from 'vue-i18n'
+
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 
 const modelValue = defineModel({ type: String })
@@ -9,6 +11,8 @@ defineProps({
     default: true
   }
 })
+
+const { t } = useI18n()
 </script>
 
 <template>
@@ -16,7 +20,7 @@ defineProps({
     <form-control-search
       v-model="modelValue"
       class="path-tree-view-search__control"
-      :placeholder="$t('pathViewSearch.placeholder')"
+      :placeholder="t('pathViewSearch.placeholder')"
       clear-text
       :shadow="shadow"
     />

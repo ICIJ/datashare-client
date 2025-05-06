@@ -1,5 +1,6 @@
 <script setup>
 import { useTemplateRef } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 
@@ -10,6 +11,7 @@ defineProps({
     type: Boolean
   }
 })
+const { t } = useI18n()
 
 const input = useTemplateRef('input')
 
@@ -26,7 +28,7 @@ defineExpose({
     v-model="modelValue"
     :loading="loading"
     class="document-local-search-input"
-    :placeholder="$t('documentLocalSearchInput.placeholder')"
+    :placeholder="t('documentLocalSearchInput.placeholder')"
     clear-text
   />
 </template>

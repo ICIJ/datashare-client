@@ -12,7 +12,7 @@
       <hook name="document-user-actions:before" />
       <document-user-actions-entry
         v-if="showTags"
-        :label="$t(`documentUserActions.tags`, { n: tags })"
+        :label="t(`documentUserActions.tags`, { n: tags })"
         :value="String(tags)"
         :icon="PhHash"
         :hide-tooltip="!shorterLabels"
@@ -21,7 +21,7 @@
       />
       <document-user-actions-entry
         v-if="showRecommendations"
-        :label="$t(`documentUserActions.recommendations`, { n: recommendations })"
+        :label="t(`documentUserActions.recommendations`, { n: recommendations })"
         :value="String(recommendations)"
         :icon="[PhEyes, 'fill']"
         :hide-tooltip="!shorterLabels"
@@ -30,7 +30,7 @@
       />
       <document-user-actions-entry
         v-if="showNotes"
-        :label="$t(`documentUserActions.notes`, { n: notes })"
+        :label="t(`documentUserActions.notes`, { n: notes })"
         :value="String(notes)"
         :icon="PhNoteBlank"
         :hide-tooltip="!shorterLabels"
@@ -39,7 +39,7 @@
       />
       <document-user-actions-entry
         v-if="showFolders"
-        :label="$t(`documentUserActions.folders`, { n: folders })"
+        :label="t(`documentUserActions.folders`, { n: folders })"
         :value="String(folders)"
         :icon="PhFolder"
         :hide-tooltip="!shorterLabels"
@@ -53,6 +53,7 @@
 
 <script setup>
 import { toRef, useTemplateRef } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import { DOCUMENT_USER_ACTIONS } from '@/enums/documentUserActions'
 import DocumentUserActionsEntry from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsEntry'
@@ -105,6 +106,7 @@ const props = defineProps({
     default: 660
   }
 })
+const { t } = useI18n()
 
 const elementRef = useTemplateRef('element')
 // We short labels based on the width of the element.

@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import round from 'lodash/round'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
   value: {
@@ -12,6 +13,7 @@ const props = defineProps({
     default: null
   }
 })
+const { n } = useI18n()
 
 const roundedValue = computed(() => {
   if (props.precision === null) {
@@ -22,5 +24,5 @@ const roundedValue = computed(() => {
 </script>
 
 <template>
-  <span v-if="!isNaN(value)">{{ $n(roundedValue) }}</span>
+  <span v-if="!isNaN(value)">{{ n(roundedValue) }}</span>
 </template>

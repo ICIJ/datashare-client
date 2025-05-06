@@ -1,4 +1,6 @@
 <script setup>
+import { useI18n } from 'vue-i18n'
+
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
 const active = defineModel('active', { type: Boolean })
@@ -8,6 +10,7 @@ defineProps({
     type: Boolean
   }
 })
+const { t } = useI18n()
 
 const toggle = () => {
   active.value = !active.value
@@ -17,7 +20,7 @@ const toggle = () => {
 <template>
   <button-icon
     :icon-left="PhSlidersHorizontal"
-    :label="$t('buttonToggleSettings.label')"
+    :label="t('buttonToggleSettings.label')"
     class="button-toggle-settings border-0 flex-shrink-0"
     hide-label
     hide-tooltip

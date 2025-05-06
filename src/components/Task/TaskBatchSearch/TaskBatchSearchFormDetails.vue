@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import FormFieldsetI18n from '@/components/Form/FormFieldset/FormFieldsetI18n'
 import FormStep from '@/components/Form/FormStep/FormStep'
@@ -12,18 +13,19 @@ const description = defineModel('description', { type: String, required: false }
 const visibility = defineModel('visibility', { type: Boolean, required: true })
 const selectedProjects = defineModel('selectedProjects', { type: Array, required: true })
 
+const { t } = useI18n()
 const { core } = useCore()
 const allProjects = computed(() => core.projects)
 </script>
 
 <template>
-  <form-step :title="$t('task.batch-search.form.sections.general')" :index="1">
+  <form-step :title="t('task.batch-search.form.sections.general')" :index="1">
     <form-fieldset-i18n required name="name" translation-key="task.batch-search.form.name" :icon="PhTextAa">
       <b-form-input
         v-model="name"
         type="text"
         name="name"
-        :placeholder="$t('task.batch-search.form.name.placeholder')"
+        :placeholder="t('task.batch-search.form.name.placeholder')"
       />
     </form-fieldset-i18n>
     <form-fieldset-i18n name="projects" translation-key="task.batch-search.form.projects" :icon="PhCirclesThreePlus">
@@ -35,7 +37,7 @@ const allProjects = computed(() => core.projects)
         name="description"
         :rows="2"
         :max-rows="8"
-        :placeholder="$t('task.batch-search.form.description.placeholder')"
+        :placeholder="t('task.batch-search.form.description.placeholder')"
       />
     </form-fieldset-i18n>
     <mode-server-only>
@@ -48,10 +50,10 @@ const allProjects = computed(() => core.projects)
       >
         <b-form-radio-group v-model="visibility" stacked>
           <b-form-radio name="visibility" :value="false">
-            {{ $t('task.batch-search.form.visibility.options.private') }}
+            {{ t('task.batch-search.form.visibility.options.private') }}
           </b-form-radio>
           <b-form-radio name="visibility" :value="true">
-            {{ $t('task.batch-search.form.visibility.options.shared') }}
+            {{ t('task.batch-search.form.visibility.options.shared') }}
           </b-form-radio>
         </b-form-radio-group>
       </form-fieldset-i18n>

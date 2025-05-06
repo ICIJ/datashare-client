@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref, watch, toRef } from 'vue'
 import { get } from 'lodash'
+import { useI18n } from 'vue-i18n'
 
 import { useCore } from '@/composables/useCore'
 import { useWait } from '@/composables/useWait'
@@ -24,6 +25,7 @@ const props = defineProps({
   }
 })
 
+const { t } = useI18n()
 const { core } = useCore()
 const { waitFor, loaderId } = useWait()
 
@@ -84,31 +86,31 @@ watch(toRef(props, 'name'), fetch, { immediate: true })
       />
       <tab-group-navigation class="mx-3" nowrap>
         <tab-group-navigation-entry icon="chart-bar" :to="{ name: 'project.view.overview.insights', params }">
-          {{ $t('projectViewOverview.nav.insights') }}
+          {{ t('projectViewOverview.nav.insights') }}
         </tab-group-navigation-entry>
         <tab-group-navigation-entry icon="tree-structure" :to="{ name: 'project.view.overview.paths', params }">
-          {{ $t('projectViewOverview.nav.paths') }}
+          {{ t('projectViewOverview.nav.paths') }}
         </tab-group-navigation-entry>
         <tab-group-navigation-entry icon="polygon" :to="{ name: 'project.view.overview.graph', params }">
-          {{ $t('projectViewOverview.nav.graph') }}
+          {{ t('projectViewOverview.nav.graph') }}
         </tab-group-navigation-entry>
         <tab-group-navigation-entry icon="info" :to="{ name: 'project.view.overview.details', params }">
-          {{ $t('projectViewOverview.nav.details') }}
+          {{ t('projectViewOverview.nav.details') }}
         </tab-group-navigation-entry>
         <tab-group-navigation-entry
           icon="clock-counter-clockwise"
           :to="{ name: 'project.view.overview.history', params }"
         >
-          {{ $t('projectViewOverview.nav.history') }}
+          {{ t('projectViewOverview.nav.history') }}
         </tab-group-navigation-entry>
       </tab-group-navigation>
       <router-view v-if="hasDocuments" :key="name" />
       <empty-state
         v-else
-        :label="$t('projectViewOverview.emptyStateLabel')"
+        :label="t('projectViewOverview.emptyStateLabel')"
         class="my-5"
         action-icon="plus"
-        :action-label="$t('projectViewOverview.emptyStateAction')"
+        :action-label="t('projectViewOverview.emptyStateAction')"
         :action-to="{ name: 'task.documents.new', query: { project: project.name } }"
         :action-modes="[MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]"
       />

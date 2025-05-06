@@ -100,7 +100,7 @@ defineExpose({ focus, blur, clear })
         type="submit"
         :disabled="disableSubmit"
       >
-        {{ $t('search.buttonLabel') }}
+        {{ t('search.buttonLabel') }}
       </b-button>
       <slot name="suggestions" />
     </template>

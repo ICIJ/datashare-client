@@ -1,5 +1,6 @@
 <script setup>
 import { PhosphorIcon } from '@icij/murmur-next'
+import { useI18n } from 'vue-i18n'
 
 import DisplayDatetimeShort from '@/components/Display/DisplayDatetimeShort'
 
@@ -9,6 +10,8 @@ defineProps({
     required: true
   }
 })
+
+const { t } = useI18n()
 </script>
 
 <template>
@@ -18,7 +21,7 @@ defineProps({
   >
     <slot>
       <phosphor-icon :name="PhCalendarBlank" />
-      {{ $t('projectCardUpdateDate.label') }}
+      {{ t('projectCardUpdateDate.label') }}
       <display-datetime-short :value="project.updateDate" />
     </slot>
   </div>

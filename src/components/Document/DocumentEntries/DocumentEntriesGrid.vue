@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import DocumentCardGrid from '@/components/Document/DocumentCard/DocumentCardGrid'
 import DocumentCardGridPlaceholder from '@/components/Document/DocumentCard/DocumentCardGridPlaceholder'
@@ -24,6 +25,7 @@ const { loading, entries } = defineProps({
     type: Boolean
   }
 })
+const { t } = useI18n()
 
 const noMatches = computed(() => !loading && !entries.length)
 </script>
@@ -50,7 +52,7 @@ const noMatches = computed(() => !loading && !entries.length)
       </template>
     </div>
     <div v-if="noMatches" class="p-3 text-secondary text-center">
-      {{ $t('documentEntries.noMatches') }}
+      {{ t('documentEntries.noMatches') }}
     </div>
     <slot />
   </div>

@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import DocumentActionsGroupEntry from './DocumentActionsGroupEntry'
 
@@ -27,6 +28,8 @@ const { document } = defineProps({
   }
 })
 
+const { t } = useI18n()
+
 const starredStore = useStarredStore()
 
 const isStarred = computed(() => {
@@ -42,7 +45,7 @@ const toggleStar = () => {
   <document-actions-group-entry
     class="document-actions-group-entry-star"
     icon="star"
-    :label="$t('documentActionsGroup.star')"
+    :label="t('documentActionsGroup.star')"
     :tooltip-placement="tooltipPlacement"
     :vertical="vertical"
     :fill="isStarred"

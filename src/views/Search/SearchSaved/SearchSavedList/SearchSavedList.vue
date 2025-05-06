@@ -116,8 +116,8 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
         image-max-width="350px"
         :image="searchSavedEmpty"
         :image-dark="searchSavedEmptyDark"
-        :label="$t('searchSavedList.emptyStateLabel')"
-        :action-label="$t('searchSavedList.emptyStateAction')"
+        :label="t('searchSavedList.emptyStateLabel')"
+        :action-label="t('searchSavedList.emptyStateAction')"
         :action-to="searchRoute"
       />
       <search-saved-entries v-else v-model:sort="sort" v-model:order="order" :events="events" @reload="fetch" />
