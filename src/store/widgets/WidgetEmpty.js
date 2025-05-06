@@ -1,5 +1,4 @@
 import uniqueId from 'lodash/uniqueId'
-import { useI18n } from 'vue-i18n'
 
 import Component from '@/components/Widget/WidgetEmpty'
 
