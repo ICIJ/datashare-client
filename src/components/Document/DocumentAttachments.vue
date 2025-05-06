@@ -22,6 +22,7 @@
 import bodybuilder from 'bodybuilder'
 import { PhosphorIcon } from '@icij/murmur-next'
 import { flatten, get, sum } from 'lodash'
+import { useI18n } from 'vue-i18n'
 
 import EsDocList from '@/api/resources/EsDocList'
 import { useWait } from '@/composables/useWait'
