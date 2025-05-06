@@ -1,11 +1,9 @@
 <script setup>
-import {computed} from 'vue'
-import {useI18n} from 'vue-i18n'
-import {PhosphorIcon} from '@icij/murmur-next'
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { PhosphorIcon } from '@icij/murmur-next'
 
 import ButtonIcon from '@/components/Button/ButtonIcon'
-
-const { t } = useI18n()
 
 const visible = defineModel('visible', {
   type: Boolean,

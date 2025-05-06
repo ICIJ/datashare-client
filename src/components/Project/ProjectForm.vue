@@ -86,7 +86,6 @@ watch(
     }
   }
 )
-const { t } = useI18n()
 const resetLabel = computed(() => t('projectForm.reset'))
 const submitLabel = computed(() => t('projectForm.submit'))
 </script>
