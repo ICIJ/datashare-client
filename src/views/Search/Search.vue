@@ -68,20 +68,20 @@ const selectMode = ref(false)
 
 // The modal is displayed only if there is enough space to display the document view.
 // In this function, it's important we refresh the route before assigning the value to the
-// enoughtFloatingSpace ref in order to avoid a brief flicker of the document view in the modal.
+// enoughFloatingSpace ref in order to avoid a brief flicker of the document view in the modal.
 const toggleDocumentModal = async (enoughSpace) => {
   if (documentRoute.value && hasSearchEntries.value && (!enoughSpace || !isListLayout.value || route.query.modal)) {
     await refreshRoute()
   }
 
-  enoughtFloatingSpace.value = enoughSpace
+  enoughFloatingSpace.value = enoughSpace
 }
 
 // The "floating space" is the right side of the list layout, which display the document view.
-const enoughtFloatingSpace = ref(false)
+const enoughFloatingSpace = ref(false)
 // In list view, if the floating space is not enough, the document view is displayed in a modal.
 // User can also force the document view to be displayed in a modal by adding the "modal" query parameter.
-const renderDocumentInModal = computed(() => !enoughtFloatingSpace.value || !isListLayout.value || route.query.modal)
+const renderDocumentInModal = computed(() => !enoughFloatingSpace.value || !isListLayout.value || route.query.modal)
 
 const total = computed(() => parseInt(searchStore.response.total))
 const perPage = computed(() => parseInt(appStore.getSettings('search', 'perPage')))
@@ -153,7 +153,7 @@ watchIndices(refreshRoute)
             :total="total"
             :per-page="perPage"
             :loading="isLoading"
-            @update:enoughtSpace="toggleDocumentModal"
+            @update:enoughSpace="toggleDocumentModal"
           >
             <template #header="{ compact }">
               <search-selection
