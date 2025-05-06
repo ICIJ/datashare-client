@@ -147,7 +147,7 @@ const maxValue = computed(() => {
   return d3.max(cleanData.value, ({ doc_count: value = 0 }) => value)
 })
 const dataDir = computed(() => {
-  return core.config.get('mountedDataDir') || core.config.get('dataDir')
+  return core.getDefaultDataDir()
 })
 const selectedIntervalTime = computed(() => {
   return intervals[selectedInterval.value].time
