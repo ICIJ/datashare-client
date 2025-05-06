@@ -143,9 +143,7 @@ const chartRef = useTemplateRef('widget__content__chart')
 const chartWidth = computed(() => {
   return chartRef.value?.offsetWidth || 0
 })
-const maxValue = computed(() => {
-  return d3.max(cleanData.value, ({ doc_count: value = 0 }) => value)
-})
+
 const dataDir = computed(() => {
   return core.getDefaultDataDir()
 })
@@ -202,11 +200,7 @@ const startTick = computed(() => {
 const endTick = computed(() => {
   return ticksScale.value(sliceRange.value?.end)
 })
-const aggregatedData = computed(() => {
-  return datesHistogram.value.map((bin) => {
-    return { date: bin.x0, value: d3.sum(bin, (d) => d.doc_count) }
-  })
-})
+
 const aggregatedDataSlice = computed(() => {
   return datesHistogramSlice.value.map((bin) => {
     return { date: bin.x0, value: d3.sum(bin, (d) => d.doc_count) }
