@@ -1,5 +1,6 @@
 import { isEmpty } from 'lodash'
 import Murmur from '@icij/murmur-next'
+import { ref } from 'vue'
 
 import settings from '@/utils/settings'
 
@@ -22,14 +23,14 @@ const I18nMixin = (superclass) =>
     }
 
     /**
-     * Set the active locale both in local stoage and VueI18n.
+     * Set the active locale both in local storage and VueI18n.
      * @memberof I18nMixin.prototype
      * @param {String} locale - Key of the local (fr, de, en, ja, ...)
      * @returns {String}
      */
     setI18nLocale(locale = settings.defaultLocale) {
       localStorage.setItem('locale', locale)
-      this.i18n.global.locale = locale
+      this.i18n.global.locale = ref(locale)
       return locale
     }
 
