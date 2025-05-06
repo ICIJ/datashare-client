@@ -44,10 +44,10 @@ function installPluginFromUrl() {
       :loading="loading"
       @click="installPluginFromUrl"
     >
-      {{ t(('addonUrlInput.install') }}
+      {{ t('addonUrlInput.install') }}
     </button-icon>
     <b-form-invalid-feedback class="text-primary" :state="isFormValid">
-      {{ t(('addonUrlInput.enterCorrectUrl') }}
+      {{ t('addonUrlInput.enterCorrectUrl') }}
     </b-form-invalid-feedback>
   </div>
 </template>
