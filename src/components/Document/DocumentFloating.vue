@@ -41,7 +41,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['update:enoughtSpace'])
+const emit = defineEmits(['update:enoughSpace'])
 
 const elementRef = useTemplateRef('element')
 const { querySelectorAll } = useQueryObserver(elementRef)
@@ -63,10 +63,10 @@ const separatorLineRight = computed({
 
 const separatorLineLeft = ref(props.minStartWidth)
 
-const enoughtStartSpace = computed(() => separatorLineLeft.value >= props.minStartWidth)
-const enoughtEndSpace = computed(() => separatorLineRight.value >= props.minEndWidth)
-const enoughtSpace = computed(() => enoughtStartSpace.value && enoughtEndSpace.value)
-watch(enoughtSpace, (value) => emit('update:enoughtSpace', value), { immediate: !!elementRef?.value?.$el })
+const enoughStartSpace = computed(() => separatorLineLeft.value >= props.minStartWidth)
+const enoughEndSpace = computed(() => separatorLineRight.value >= props.minEndWidth)
+const enoughSpace = computed(() => enoughStartSpace.value && enoughEndSpace.value)
+watch(enoughSpace, (value) => emit('update:enoughSpace', value), { immediate: !!elementRef?.value?.$el })
 
 const reachedZeroWidth = computed(() => separatorLineLeft.value === 0)
 const reachedMinWidth = computed(() => separatorLineLeft.value <= props.minStartWidth)
@@ -93,7 +93,7 @@ const startStyle = computed(() => {
 
 const classList = computed(() => {
   return {
-    'document-floating--enought-space': enoughtSpace.value,
+    'document-floating--enough-space': enoughSpace.value,
     'document-floating--fill': props.fill,
     'document-floating--reached-zero-width': reachedZeroWidth.value,
     'document-floating--reached-min-width': reachedMinWidth.value,
@@ -154,10 +154,10 @@ defineExpose({ resetSize, resetStartSize, resetEndSize })
 <template>
   <div ref="element" class="document-floating" :class="classList" :style="style">
     <div class="document-floating__start" :style="startStyle" :class="startClass">
-      <slot name="floating" v-bind="{ documentViewFloatingId, enoughtSpace }">
+      <slot name="floating" v-bind="{ documentViewFloatingId, enoughSpace }">
         <div :id="documentViewFloatingId" class="document-floating__start__floating"></div>
       </slot>
-      <slot name="start" v-bind="{ enoughtSpace }" />
+      <slot name="start" v-bind="{ enoughSpace }" />
     </div>
     <separator-line
       class="document-floating__separator-line"
@@ -175,7 +175,7 @@ defineExpose({ resetSize, resetStartSize, resetEndSize })
       @expand="expand"
     />
     <div class="document-floating__end" :class="endClass">
-      <slot v-bind="{ enoughtSpace }" />
+      <slot v-bind="{ enoughSpace }" />
     </div>
   </div>
 </template>
@@ -197,8 +197,8 @@ defineExpose({ resetSize, resetStartSize, resetEndSize })
     visibility: hidden;
   }
 
-  &:not(.document-floating--enought-space) &__start,
-  &:not(.document-floating--enought-space) &__end {
+  &:not(.document-floating--enough-space) &__start,
+  &:not(.document-floating--enough-space) &__end {
     overflow: hidden;
   }
 
