@@ -1,12 +1,12 @@
+import CoreSetup from '~tests/unit/CoreSetup'
 import WidgetEmpty from '@/store/widgets/WidgetEmpty'
-import { Core } from '@/core'
 import { useInsightsStore } from '@/store/modules'
 
 describe('WidgetsMixin', () => {
   let core, store
 
   beforeEach(async () => {
-    core = Core.init().useAll()
+    core = CoreSetup.init().useAll()
     core.clearWidgets()
     store = useInsightsStore()
     store.setProject('local-project')
