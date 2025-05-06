@@ -3,7 +3,6 @@ import Murmur from '@icij/murmur-next'
 import { ref } from 'vue'
 
 import settings from '@/utils/settings'
-
 /**
   Mixin class extending the core to add helpers for i18n.
   @mixin I18nMixin
@@ -18,7 +17,7 @@ const I18nMixin = (superclass) =>
      * @returns {Promise}
      */
     initializeI18n() {
-      const locale = localStorage.getItem('locale') ?? this.i18n.global.locale
+      const locale = localStorage.getItem('locale') ?? this.i18n.global.locale.value
       return this.loadI18Locale(locale)
     }
 
@@ -30,7 +29,7 @@ const I18nMixin = (superclass) =>
      */
     setI18nLocale(locale = settings.defaultLocale) {
       localStorage.setItem('locale', locale)
-      this.i18n.global.locale = ref(locale)
+      this.i18n.global.locale.value = locale
       return locale
     }
 
