@@ -1,13 +1,13 @@
 import { shallowMount } from '@vue/test-utils'
 
+import esConnectionHelper from '../../utils/esConnectionHelper.js'
+
 import CoreSetup from '~tests/unit/CoreSetup'
 import WidgetDocumentsByCreationDate from '@/components/Widget/WidgetDocumentsByCreationDate'
 
 describe('WidgetDocumentsByCreationDate.vue', () => {
-  /*  const { index: project } = esConnectionHelper.build()
-  const { index: anotherProject } = esConnectionHelper.build() */
-  const project = 'local-datashare'
-  const anotherProject = 'anotherProject'
+  const { index: project } = esConnectionHelper.build()
+  const { index: anotherProject } = esConnectionHelper.build()
   const props = { project, widget: { title: 'Hello world' } }
   let wrapper
 
