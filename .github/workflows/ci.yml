@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches:
-      - main
+      - ci/migrate-to-gh-actions
   pull_request:
 
 jobs:
