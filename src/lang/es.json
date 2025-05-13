@@ -1635,9 +1635,9 @@
   "searchBreadcrumbFormEmpty": {
     "label": "Su búsqueda no ha comenzado. Utilice el panel de búsqueda o añada filtros."
   },
-  "searchBreadcrumbFormEntryOccurences": {
-    "label": "0 documentos | 1 documento | {occurrences} documentos",
-    "title": "Mismos documentos con este filtro | 1 documento menos con este filtro | {lessOccurrences} menos documentos con este filtro"
+  "searchBreadcrumbFormEntryOccurrences": {
+    "label": "0 documents | 1 document | {occurrences} documents",
+    "title": "No less documents with this filter | 1 less document with this filter | {lessOccurrences} less documents with this filter"
   },
   "searchBreadcrumbFormFooter": {
     "clearFilters": "Clear filters",
