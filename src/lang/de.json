@@ -188,14 +188,6 @@
   "filtersPanelSectionFilterTitleToggler": {
     "toggle": "Toggle filter"
   },
-  "searchResultsActions": {
-    "deselectAll": "Unselect {count} documents",
-    "selectAll": "Select all {count}",
-    "tag": "Tag",
-    "star": "Zu Favoriten hinzufügen",
-    "recommend": "Recommend",
-    "download": "Download"
-  },
   "search": {
     "title": "Suche",
     "emptyStateLabel": "Oh, it’s lonely in here... This project has no documents yet.",
@@ -224,7 +216,6 @@
     "placeholder": "Dokumente durchsuchen...",
     "buttonLabel": "Suche",
     "searchIn": "Suche in {plural}...",
-    "searchInProjects": "Projekte filtern...",
     "hideFilters": "Filter ausblenden",
     "showFilters": "Filter anzeigen",
     "contextualizeFiltersLabel": "Mit Kontext filtern",
@@ -1644,7 +1635,7 @@
   "searchBreadcrumbFormEmpty": {
     "label": "Your search has not started. Use the search bar or add filters."
   },
-  "searchBreadcrumbFormEntryOccurences": {
+  "searchBreadcrumbFormEntryOccurrences": {
     "label": "0 documents | 1 document | {occurrences} documents",
     "title": "No less documents with this filter | 1 less document with this filter | {lessOccurrences} less documents with this filter"
   },
