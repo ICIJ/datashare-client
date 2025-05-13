@@ -1635,7 +1635,7 @@
   "searchBreadcrumbFormEmpty": {
     "label": "Your search has not started. Use the search bar or add filters."
   },
-  "searchBreadcrumbFormEntryOccurences": {
+  "searchBreadcrumbFormEntryOccurrences": {
     "label": "0 documents | 1 document | {occurrences} documents",
     "title": "No less documents with this filter | 1 less document with this filter | {lessOccurrences} less documents with this filter"
   },
