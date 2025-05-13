@@ -66,6 +66,9 @@ jobs:
           --health-timeout 5s
           --health-retries 5
     steps:
+      - name: Check Elasticsearch status
+        run: curl -f http://localhost:9200
+
       - uses: actions/checkout@v3
 
       - name: Restore app bundle
