@@ -66,10 +66,12 @@ jobs:
           --health-timeout 5s
           --health-retries 5
     steps:
-      - name: Check Elasticsearch status
-        run: curl -f http://localhost:9200
-
       - uses: actions/checkout@v3
+
+      - name: Check Elasticsearch status
+        env:
+          VITE_ES_HOST: http://elasticsearch:9200
+        run: curl -f http://elasticsearch:9200
 
       - name: Restore app bundle
         uses: actions/cache@v3
