@@ -17,7 +17,7 @@ jobs:
       - name: Restore node_modules cache
         uses: actions/cache@v3
         with:
-          path: ./node_modules
+          path: node_modules
           key: dependencies-cache-${{ hashFiles('yarn.lock') }}
 
       - name: Install dependencies
@@ -26,15 +26,14 @@ jobs:
       - name: Save dependencies cache for future builds
         uses: actions/cache@v3
         with:
-          path: ./node_modules
-          key: bundle-cache-${{ github.sha }}
+          path: node_modules
+          key: dependencies-cache-${{ hashFiles('yarn.lock') }}
 
       - name: Save app bundle (repo + dependencies) for downstream jobs
         uses: actions/cache@v3
         with:
           path: .
           key: bundle-cache-${{ github.sha }}
-
 
   test:
     runs-on: ubuntu-latest
@@ -46,7 +45,6 @@ jobs:
         env:
           discovery.type: single-node
           ES_JAVA_OPTS: -Xms256m -Xmx256m
-          # CORS
           http.cors.enabled: "true"
           http.cors.allow-origin: "*"
           http.cors.allow-methods: OPTIONS, HEAD, GET, POST, PUT, DELETE
@@ -73,4 +71,3 @@ jobs:
 
       - name: Make distribution
         run: make dist
-
