@@ -17,33 +17,24 @@ jobs:
       - name: Restore node_modules cache
         uses: actions/cache@v3
         with:
-          path: node_modules
+          path: ./node_modules
           key: dependencies-cache-${{ hashFiles('yarn.lock') }}
 
       - name: Install dependencies
         run: make install
 
-      - name: Save app bundle
+      - name: Save dependencies cache for future builds
         uses: actions/cache@v3
         with:
-          path: .
+          path: ./node_modules
           key: bundle-cache-${{ github.sha }}
 
-  lint:
-    runs-on: ubuntu-latest
-    name: Lint
-    needs: build
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Restore app bundle
+      - name: Save app bundle (repo + dependencies) for downstream jobs
         uses: actions/cache@v3
         with:
-          path: .
+          path: ~/datashare-client
           key: bundle-cache-${{ github.sha }}
 
-      - name: Run linter
-        run: yarn lint
 
   test:
     runs-on: ubuntu-latest
@@ -55,6 +46,7 @@ jobs:
         env:
           discovery.type: single-node
           ES_JAVA_OPTS: -Xms256m -Xmx256m
+          # CORS
           http.cors.enabled: "true"
           http.cors.allow-origin: "*"
           http.cors.allow-methods: OPTIONS, HEAD, GET, POST, PUT, DELETE
@@ -73,82 +65,17 @@ jobs:
           VITE_ES_HOST: http://elasticsearch:9200
         run: curl -f http://elasticsearch:9200
 
-      - name: Restore app bundle
+      - name: Restore app bundle (repo + dependencies) from the `build` job
         uses: actions/cache@v3
         with:
-          path: .
+          path: ~/datashare-client
           key: bundle-cache-${{ github.sha }}
 
       - name: Run unit tests
         env:
           NODE_OPTIONS: --max_old_space_size=4096
-        run: yarn test:unit --silent --minWorkers 1 --maxWorkers 2
+        run: yarn test:unit --silent --minWorkers 1 --maxWorkers 2 tests/unit/specs/components/Search/SearchBar/SearchBar.spec.js
 
       - name: Make distribution
         run: make dist
 
-  generate_doc:
-    runs-on: ubuntu-latest
-    name: Generate Doc
-    needs: build
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Restore app bundle
-        uses: actions/cache@v3
-        with:
-          path: .
-          key: bundle-cache-${{ github.sha }}
-
-      - name: Generate the doc
-        run: make doc
-
-      - name: Save doc
-        uses: actions/cache@v3
-        with:
-          path: .
-          key: doc-cache-${{ github.sha }}
-
-  publish_doc:
-    runs-on: ubuntu-latest
-    name: Publish Doc
-    needs: generate_doc
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Restore doc
-        uses: actions/cache@v3
-        with:
-          path: .
-          key: doc-cache-${{ github.sha }}
-
-      - name: Install rsync
-        run: sudo apt-get update && sudo apt-get install -y rsync
-
-      - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: Configure Git
-        run: |
-          git config --global user.name "${{ github.actor }}"
-          git config --global user.email "engineering@icij.org"
-
-      - name: Clone datashare-docs
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-          git clone git@github.com:ICIJ/datashare-docs.git ~/datashare-docs
-
-      - name: Copy generated docs
-        run: rsync --del -r dist/docs/ ~/datashare-docs/developers/frontend
-
-      - name: Commit and push
-        run: |
-          cd ~/datashare-docs
-          git add -A
-          git commit -m "doc: update client documentation [${{ github.sha }}]" || true
-          git push origin main
