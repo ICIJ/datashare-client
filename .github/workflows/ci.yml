@@ -32,7 +32,7 @@ jobs:
       - name: Save app bundle (repo + dependencies) for downstream jobs
         uses: actions/cache@v3
         with:
-          path: ~/datashare-client
+          path: .
           key: bundle-cache-${{ github.sha }}
 
 
@@ -63,7 +63,7 @@ jobs:
       - name: Restore app bundle (repo + dependencies) from the `build` job
         uses: actions/cache@v3
         with:
-          path: ~/datashare-client
+          path: .
           key: bundle-cache-${{ github.sha }}
 
       - name: Run unit tests
