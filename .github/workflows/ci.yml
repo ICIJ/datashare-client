@@ -60,11 +60,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Check Elasticsearch status
-        env:
-          VITE_ES_HOST: http://elasticsearch:9200
-        run: curl -f http://elasticsearch:9200
-
       - name: Restore app bundle (repo + dependencies) from the `build` job
         uses: actions/cache@v3
         with:
