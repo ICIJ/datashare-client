@@ -48,6 +48,13 @@ jobs:
           path: .
           key: bundle-cache-${{ github.sha }}
 
+      - name: Restore dependencies cache from previous builds
+        uses: actions/cache@v3
+        with:
+          path: |
+            node_modules
+          key: dependencies-cache-${{ hashFiles('yarn.lock') }}
+
       - name: Run linter
         run: yarn lint
 
