@@ -42,19 +42,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Restore app bundle cache (repo + dependencies) from the `build` job
-        uses: actions/cache/restore@v3
-        with:
-          path: .
-          key: bundle-cache-${{ github.sha }}
 
-      - name: Restore dependencies cache from previous builds
-        uses: actions/cache/restore@v3
-        with:
-          path: |
-            node_modules
-          key: dependencies-cache-${{ hashFiles('package.json') }}
-
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
       - name: Run linter
         run: yarn lint
 
@@ -88,7 +78,6 @@ jobs:
         with:
           path: .
           key: bundle-cache-${{ github.sha }}
-
       - name: Run unit tests
         run: yarn test:unit --silent --minWorkers 1 --maxWorkers 2
         env:
