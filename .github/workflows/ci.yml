@@ -42,12 +42,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Restore dependencies cache from previous builds
+      - name: Restore app bundle cache (repo + dependencies) from the `build` job
         uses: actions/cache@v3
         with:
-          path: |
-            node_modules
-          key: dependencies-cache-${{ hashFiles('yarn.lock') }}
+          path: .
+          key: bundle-cache-${{ github.sha }}
 
       - name: Run linter
         run: yarn lint
