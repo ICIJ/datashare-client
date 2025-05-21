@@ -12,7 +12,6 @@ describe('SearchBar.vue', function () {
   const { plugins, config } = CoreSetup.init().useAll().useRouterWithoutGuards()
 
   let wrapper, searchStore
-
   const shallowMountFactory = (props = {}) => {
     return shallowMount(SearchBar, {
       props,
@@ -54,6 +53,8 @@ describe('SearchBar.vue', function () {
   })
 
   it('should display search bar', () => {
+    console.log('import.meta.env.VITE_ES_HOST', import.meta.env.VITE_ES_HOST)
+
     wrapper = shallowMountFactory()
     expect(wrapper.find('.search-bar').element).toBeTruthy()
     expect(wrapper.find('search-bar-input-stub').element).toBeTruthy()

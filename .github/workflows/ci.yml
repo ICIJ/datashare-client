@@ -31,7 +31,7 @@ jobs:
       - name: Save app bundle cache
         uses: actions/cache/save@v3
         with:
-          path: ~/datashare-client
+          path: .
           key: bundle-cache-${{ github.sha }}
 
   test:
@@ -48,20 +48,21 @@ jobs:
           http.cors.enabled: "true"
           http.cors.allow-origin: "*"
           http.cors.allow-methods: OPTIONS, HEAD, GET, POST, PUT, DELETE
+          ports:
+            - 9200:9200
+          options: >-
+            --health-cmd "curl -f http://localhost:9200/_cluster/health || exit 1"
+            --health-interval 10s
+            --health-timeout 5s
+            --health-retries 5
     steps:
       - uses: actions/checkout@v4
 
       - name: Restore app bundle cache
         uses: actions/cache@v3
         with:
-          path: ~/datashare-client
+          path: .
           key: bundle-cache-${{ github.sha }}
-
-      - name: Wait for Elasticsearch to be ready
-        run: |
-          until curl -s http://localhost:9200; do
-            sleep 1
-          done
 
       - name: Run unit tests
         run: yarn test:unit --silent --minWorkers 1 --maxWorkers 2 tests/unit/specs/components/Search/SearchBar/SearchBar.spec.js
