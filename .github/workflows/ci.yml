@@ -27,7 +27,7 @@ jobs:
         with:
           path: |
             node_modules
-          key: dependencies-cache-${{ hashFiles('yarn.lock') }}
+          key: dependencies-cache-${{ hashFiles('package.json') }}
 
       - name: Save app bundle (repo + dependencies) for downstream jobs
         uses: actions/cache/save@v3
@@ -53,7 +53,7 @@ jobs:
         with:
           path: |
             node_modules
-          key: dependencies-cache-${{ hashFiles('yarn.lock') }}
+          key: dependencies-cache-${{ hashFiles('package.json') }}
 
       - name: Run linter
         run: yarn lint
