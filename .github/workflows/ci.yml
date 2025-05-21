@@ -13,7 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-
       - name: Install dependencies
         run: make install
 
@@ -28,24 +27,6 @@ jobs:
         with:
           path: .
           key: bundle-cache-${{ github.sha }}
-
-      # Making it a step failed when restoring the cache.
-      # Putting it here prevent from installing the deps twice.
-      - name: Run linter
-        run: yarn lint
-  lint:
-    runs-on: ubuntu-latest
-    name: Lint
-    needs: build
-    steps:
-      - uses: actions/checkout@v4
-      - name: Restore app bundle cache (repo + dependencies) from the `build` job
-        uses: actions/cache/restore@v3
-        with:
-          path: .
-          key: bundle-cache-${{ github.sha }}
-      - name: Run linter
-        run: yarn lint
 
   test:
     name: Unit tests
@@ -84,6 +65,22 @@ jobs:
 
       - name: Make distribution
         run: make dist
+
+  lint:
+    runs-on: ubuntu-latest
+    name: Lint
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Restore app bundle cache (repo + dependencies) from the `build` job
+        uses: actions/cache/restore@v3
+        with:
+          path: .
+          key: bundle-cache-${{ github.sha }}
+
+      - name: Run linter
+        run: yarn lint
 
   generate_doc:
     runs-on: ubuntu-latest
