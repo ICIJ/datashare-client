@@ -2,7 +2,7 @@ name: Datashare build, tests and docs
 
 on:
   push:
-    branches: [ main, ci/migrate-to-gh-actions ]
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 jobs:
