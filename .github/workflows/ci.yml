@@ -6,35 +6,37 @@ on:
 
 jobs:
   build:
+    name: Build
     runs-on: ubuntu-latest
     container: cimg/node:20.18
     steps:
       - uses: actions/checkout@v4
 
-      - name: Restore dependencies cache
+      - name: Restore dependencies cache from previous builds
         uses: actions/cache@v3
         with:
           path: |
             node_modules
-          key: dependencies-cache-${{ hashFiles('package.json') }}
+          key: dependencies-cache-${{ hashFiles('yarn.lock') }}
 
       - name: Install dependencies
         run: make install
 
-      - name: Save dependencies cache
+      - name: Save dependencies cache for future builds
         uses: actions/cache/save@v3
         with:
           path: |
             node_modules
-          key: dependencies-cache-${{ hashFiles('package.json') }}
+          key: dependencies-cache-${{ hashFiles('yarn.lock') }}
 
-      - name: Save app bundle cache
+      - name: Save app bundle (repo + dependencies) for downstream jobs
         uses: actions/cache/save@v3
         with:
           path: .
           key: bundle-cache-${{ github.sha }}
 
   test:
+    name: Unit tests
     needs: build
     runs-on: ubuntu-latest
     container: cimg/node:20.18
@@ -58,14 +60,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Restore app bundle cache
+      - name: Restore app bundle cache (repo + dependencies) from the `build` job
         uses: actions/cache@v3
         with:
           path: .
           key: bundle-cache-${{ github.sha }}
 
       - name: Run unit tests
-        run: yarn test:unit --silent --minWorkers 1 --maxWorkers 2 tests/unit/specs/components/Search/SearchBar/SearchBar.spec.js
+        run: yarn test:unit --silent --minWorkers 1 --maxWorkers 2
         env:
           NODE_OPTIONS: --max_old_space_size=4096
 
