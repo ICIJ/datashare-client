@@ -12,12 +12,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Restore dependencies cache from previous builds
-        uses: actions/cache/restore@v3
-        with:
-          path: |
-            node_modules
-          key: dependencies-cache-${{ hashFiles('package.json') }}
 
       - name: Install dependencies
         run: make install
@@ -25,8 +19,7 @@ jobs:
       - name: Save dependencies cache for future builds
         uses: actions/cache/save@v3
         with:
-          path: |
-            node_modules
+          path: node_modules
           key: dependencies-cache-${{ hashFiles('package.json') }}
 
       - name: Save app bundle (repo + dependencies) for downstream jobs
@@ -41,10 +34,12 @@ jobs:
     needs: build
     steps:
       - uses: actions/checkout@v4
+      - name: Restore dependencies cache from previous builds
+        uses: actions/cache/restore@v3
+        with:
+          path: node_modules
+          key: dependencies-cache-${{ hashFiles('package.json') }}
 
-
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
       - name: Run linter
         run: yarn lint
 
