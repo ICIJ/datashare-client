@@ -3,6 +3,8 @@ name: Datashare build, tests and docs
 on:
   push:
     branches: [ main, ci/migrate-to-gh-actions ]
+  pull_request:
+    branches: [ main ]
 jobs:
   build:
     name: Build
@@ -61,6 +63,7 @@ jobs:
         with:
           path: .
           key: bundle-cache-${{ github.sha }}
+
       - name: Run unit tests
         run: yarn test:unit --silent --minWorkers 1 --maxWorkers 2
         env:
@@ -71,6 +74,7 @@ jobs:
 
   lint:
     runs-on: ubuntu-latest
+    container: cimg/node:20.18
     name: Lint
     needs: build
     steps:
@@ -87,6 +91,7 @@ jobs:
 
   generate_doc:
     runs-on: ubuntu-latest
+    container: cimg/node:20.18
     name: Generate Doc
     needs: build
     if: github.ref == 'refs/heads/main'
@@ -110,6 +115,7 @@ jobs:
 
   publish_doc:
     runs-on: ubuntu-latest
+    container: cimg/node:20.18
     name: Publish Doc
     needs: generate_doc
     if: github.ref == 'refs/heads/main'
