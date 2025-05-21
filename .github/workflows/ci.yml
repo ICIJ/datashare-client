@@ -1,9 +1,10 @@
-name: CI
+name: Datashare build, tests and docs
 
 on:
   push:
-    branches: [ ci/migrate-to-gh-actions ]
-
+    branches: [ main, ci/migrate-to-gh-actions ]
+  pull_request:
+    branches: [ main ]
 jobs:
   build:
     name: Build
@@ -27,6 +28,9 @@ jobs:
         with:
           path: .
           key: bundle-cache-${{ github.sha }}
+
+      # Making it a step failed when restoring the cache.
+      # Putting it here prevent from installing the deps twice.
       - name: Run linter
         run: yarn lint
 
@@ -67,3 +71,69 @@ jobs:
 
       - name: Make distribution
         run: make dist
+
+  generate_doc:
+    runs-on: ubuntu-latest
+    name: Generate Doc
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Restore app bundle
+        uses: actions/cache/restore@v3
+        with:
+          path: .
+          key: bundle-cache-${{ github.sha }}
+
+      - name: Generate the doc
+        run: make doc
+
+      - name: Save doc
+        uses: actions/cache/save@v3
+        with:
+          path: .
+          key: doc-cache-${{ github.sha }}
+
+  publish_doc:
+    runs-on: ubuntu-latest
+    name: Publish Doc
+    needs: generate_doc
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Restore doc
+        uses: actions/cache/restore@v3
+        with:
+          path: .
+          key: doc-cache-${{ github.sha }}
+
+      - name: Install rsync
+        run: sudo apt-get update && sudo apt-get install -y rsync
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "engineering@icij.org"
+
+      - name: Clone datashare-docs
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          git clone git@github.com:ICIJ/datashare-docs.git ~/datashare-docs
+
+      - name: Copy generated docs
+        run: rsync --del -r dist/docs/ ~/datashare-docs/developers/frontend
+
+      - name: Commit and push
+        run: |
+          cd ~/datashare-docs
+          git add -A
+          git commit -m "doc: update client documentation [${{ github.sha }}]" || true
+          git push origin main
