@@ -27,19 +27,6 @@ jobs:
         with:
           path: .
           key: bundle-cache-${{ github.sha }}
-
-  lint:
-    runs-on: ubuntu-latest
-    name: Lint
-    needs: build
-    steps:
-      - uses: actions/checkout@v4
-      - name: Restore dependencies cache from previous builds
-        uses: actions/cache/restore@v3
-        with:
-          path: node_modules
-          key: dependencies-cache-${{ hashFiles('package.json') }}
-
       - name: Run linter
         run: yarn lint
 
