@@ -11,7 +11,7 @@ dist: clean
 		yarn build
 
 install:
-		yarn
+		yarn install --frozen-lockfile
 
 release:
 		sed -i 's/"version": .*/"version": "'"${NEW_VERSION}"'",/' package.json

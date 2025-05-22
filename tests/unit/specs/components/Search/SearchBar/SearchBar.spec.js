@@ -12,7 +12,6 @@ describe('SearchBar.vue', function () {
   const { plugins, config } = CoreSetup.init().useAll().useRouterWithoutGuards()
 
   let wrapper, searchStore
-
   const shallowMountFactory = (props = {}) => {
     return shallowMount(SearchBar, {
       props,
