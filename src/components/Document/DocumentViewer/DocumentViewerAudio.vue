@@ -1,8 +1,13 @@
 <template>
   <b-card class="audio-viewer my-3 w-100" overflow-hidden :border-variant="cardVariant">
-    <audio controls :autoplay="autoplay" :loop="loop" class="audio-viewer__player w-100 d-inline-block">
-      <source :src="document.inlineFullUrl" :type="document.contentType" />
-    </audio>
+    <audio
+      controls
+      :autoplay="autoplay"
+      :loop="loop"
+      :src="document.inlineFullUrl"
+      :type="document.contentType"
+      class="audio-viewer__player w-100 d-inline-block"
+    />
     <template #footer>
       <div class="d-lg-flex">
         <div switches class="my-auto d-flex">
