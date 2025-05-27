@@ -919,10 +919,10 @@
         "projectSelector": {
           "label": "Sélectionner un projet"
         },
-        "submit": "Go",
-        "failedPipelines": "Failed to retrieve pipelines",
-        "defaultPipeline": "recommended",
-        "findEntitiesType": "Find",
+        "submit": "Valider",
+        "failedPipelines": "Échec de la récupération des modèles",
+        "defaultPipeline": "recommandé",
+        "findEntitiesType": "Valider",
         "pipelineOptions": {
           "corenlp": "CoreNLP",
           "opennlp": "OpenNLP",
@@ -931,96 +931,96 @@
           "gatenlp": "GateNLP"
         },
         "pipeline": {
-          "label": "Choose a model",
-          "description": "Datashare utilise des modèles de Traitement du Language Naturel (Natural Language Processing)."
+          "label": "Sélectionnez un modèle",
+          "description": "Datashare utilise des modèles de Traitement Automatique des Langues (NLP, Natural Language Processing)."
         },
         "findEntities": {
-          "label": "Find",
+          "label": "Valider",
           "options": {
-            "emails": "Emails",
-            "named-entities": "People, organisations and locations"
+            "emails": "Adresses e-mails",
+            "named-entities": "Personnes, organisations et lieux"
           }
         },
         "offline": {
           "label": "Voulez-vous travailler hors ligne ?",
-          "description": "Select 'No' if you want to sync latest models.",
+          "description": "Sélectionnez 'Non' si vous souhaitez synchroniser les derniers modèles.",
           "options": {
             "yes": "Oui",
             "no": "Non"
           }
         },
-        "success": "Find entities task is launched",
-        "error": "An error occurred when creating the task: {error}"
+        "success": "L'identification des entités est lancée",
+        "error": "Une erreur s'est produite lors de la création de la tâche : {error}"
       }
     },
     "documents": {
       "title": "Documents",
       "list": {
-        "emptyStateLabel": "Do you want to add documents?",
+        "emptyStateLabel": "Voulez-vous ajouter des documents ?",
         "emptyStateAction": "Ajouter des documents",
-        "info": "Document additions are tasks that you run to ask Datashare to add new documents.",
-        "searchPlaceholder": "Search tasks",
-        "noResults": "No results.",
+        "info": "L'ajout de documents consiste à demander à Datashare d'indexer de nouveaux documents.",
+        "searchPlaceholder": "Rechercher dans les tâches",
+        "noResults": "Pas de résultat.",
         "properties": {
           "id": "Id",
           "name": "Nom",
           "documents": "Documents",
           "project": "Projet",
           "createdAt": "Créé•e le",
-          "progress": "Progress",
-          "result": "Result",
-          "state": "Status"
+          "progress": "Progression",
+          "result": "Résultat",
+          "state": "Statut"
         }
       },
       "new": {
-        "title": "Ajouter des documents"
+        "title": "Ajoutez des documents"
       },
       "form": {
         "projectSelector": {
-          "label": "Sélectionner un projet"
+          "label": "Sélectionnez un projet"
         },
         "path": {
-          "label": "Select the folder or subfolder to analyze",
-          "description": "The entire Datashare home will be indexed by default."
+          "label": "Sélectionnez le dossier ou le sous-dossier à analyser",
+          "description": "Par défaut, le dossier \"Datashare\" dans son entier sera indexé."
         },
         "extractingLanguage": {
-          "label": "Choose the language to extract"
+          "label": "Choisissez la langue à utiliser pour extraire le texte"
         },
         "extractOcr": {
-          "label": "Extract text from images and PDFs (OCR)",
-          "description": "Si oui, Datashare exécutera l'OCR (Optical Character Recognition - la reconnaissance de caractère optique). Cela peut prendre jusqu'à 10 fois plus de temps.",
+          "label": "Extraire du texte des images et des PDF (OCR)",
+          "description": "Si oui, Datashare exécutera la reconnaissance optique de caractères (OCR, Optical Character Recognition). Cela peut prendre jusqu'à 10 fois plus de temps.",
           "options": {
             "yes": "Oui",
             "no": "Non"
           }
         },
         "skipIndexedDocuments": {
-          "label": "Skip already indexed documents",
-          "description": "If yes, Datashare will only extract text from documents that are not indexed yet.",
+          "label": "Ignorer les documents déjà indexés",
+          "description": "Si oui, Datashare n'extraira que les textes des documents qui n'ont pas encore été indexés.",
           "options": {
             "yes": "Oui",
             "no": "Non"
           }
         },
-        "submit": "Add",
-        "success": "Add document task is launched",
-        "error": "An error occurred when creating the task: {error}"
+        "submit": "Valider",
+        "success": "L'ajout de documents a été lancé",
+        "error": "Une erreur s'est produite lors de la création de la tâche : {error}"
       }
     },
     "batch-download": {
       "title": "Téléchargements en lot",
       "list": {
-        "emptyStateLabel": "There are no batch downloads. Go to search to batch download all the documents of a search.",
-        "emptyStateAction": "Go to search",
-        "info": "Batch downloads are password-protected zip files containing all the documents from one of your searches.",
-        "searchPlaceholder": "Search batch downloads",
+        "emptyStateLabel": "Aucun téléchargement en lot n'a été lancé. Allez à la page de recherches pour télécharger en lot tous les documents d'une recherche.",
+        "emptyStateAction": "Rechercher",
+        "info": "Les téléchargements en lot sont des fichiers protégés par un mot de passe contenant tous les documents d'une de vos recherches.",
+        "searchPlaceholder": "Chercher dans les téléchargements en lot",
         "properties": {
           "name": "Nom",
           "createdAt": "Créé•e le",
           "projects": "Projets",
-          "progress": "Progress",
+          "progress": "Progression",
           "size": "Taille",
-          "state": "Status",
+          "state": "Statut",
           "id": "Id"
         }
       }
@@ -1028,61 +1028,61 @@
     "batch-search": {
       "title": "Recherches en lot",
       "list": {
-        "emptyStateLabel": "There are no batch searches. Do you want to search a bunch of queries at once?",
-        "emptyStateAction": "Create new batch search",
-        "noMatches": "No batch searches matched. Try removing the search filter.",
-        "info": "Batch searches allow to get the results of each query of a list, but all at once.",
-        "searchPlaceholder": "Search batch searches",
-        "noResults": "No results.",
+        "emptyStateLabel": "Aucune recherche en lot n'a été lancée. Voulez-vous rechercher une liste de noms en une fois ?",
+        "emptyStateAction": "Créer une recherche en lot",
+        "noMatches": "Aucune recherche en lot ne correspond. Essayez de modifier votre recherche.",
+        "info": "Les recherches en lot permettent d'obtenir tous les résultats d'une liste de noms, en une seule requête.",
+        "searchPlaceholder": "Chercher dans les recherches en lot",
+        "noResults": "Pas de résultat.",
         "properties": {
-          "privacy": "Privacy",
-          "queries": "Recherches",
+          "privacy": "Visibilité",
+          "queries": "Requêtes",
           "documents": "Documents",
           "projects": "Projets",
-          "author": "Auteur·e",
+          "author": "Auteur·ice",
           "name": "Nom",
           "createdAt": "Créé•e le",
-          "progress": "Progress",
-          "state": "Status"
+          "progress": "Progression",
+          "state": "Statut"
         }
       },
       "form": {
         "sections": {
-          "general": "Name, project(s) and description",
-          "queries": "Recherches",
-          "operators": "Search operators",
+          "general": "Nom, projet(s) et description",
+          "queries": "Requêtes",
+          "operators": "Opérateurs de recherche",
           "filters": "Filtres"
         },
         "name": {
           "label": "Nom",
-          "placeholder": "Type the name of your batch search"
+          "placeholder": "Tapez le nom de votre recherche en lot"
         },
         "projects": {
-          "label": "Project(s)"
+          "label": "Projet(s)"
         },
         "description": {
           "label": "Description",
-          "placeholder": ""
+          "placeholder": "Vide"
         },
         "visibility": {
-          "label": "Visibility",
+          "label": "Visibilité",
           "options": {
-            "private": "Private - Only you will see your batch search",
-            "shared": "Shared - Only members of all the selected project(s) will see your batch search"
+            "private": "Privé - Vous seul•e verrez votre recherche en lot",
+            "shared": "Partagé - Les membres des projets sélectionnés verront votre recherche en lot"
           },
-          "description": "This option can be changed later (either way)"
+          "description": "Cette option pourra être modifiée plus tard"
         },
         "csvFile": {
-          "label": "Use a CSV",
-          "placeholder": "Drop your CSV"
+          "label": "Téléchargez un CSV",
+          "placeholder": "Déposez votre CSV"
         },
         "listQueries": {
-          "label": "Or type your queries",
-          "placeholder": "New feature coming soon!"
+          "label": "Ou tapez vos requêtes",
+          "placeholder": "Nouvelle fonctionnalité à venir bientôt !"
         },
         "phraseChanges": {
-          "label": "Sentence changes",
-          "description": "Also called proximity searches. Maximum number of operations (insertions, deletions, substitutions and transpositions) on terms needed to make one phrase match the other."
+          "label": "Changements de phrase",
+          "description": "Nombre maximum d'opérations sur les termes (insertions, suppressions, substitutions ou transpositions) nécessaire pour qu'une expression recherchée corresponde à une expression trouvée."
         },
         "spellingChanges": {
           "label": "Spelling changes",
