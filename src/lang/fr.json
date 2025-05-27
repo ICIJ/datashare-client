@@ -104,7 +104,7 @@
   "contentTextLengthWarning": {
     "title": "Ce document est volumineux",
     "description": "L'ouvrir <strong>pourrait bloquer votre navigateur Web</strong>.",
-    "download": "La recherche dans ce document peut être longue. Envisagez de le télécharger si votre environnement est sécurisé.",
+    "download": "La recherche dans ce document peut être longue. Vous pouvez le télécharger si votre environnement est sécurisé.",
     "open": "Ouvrir quand même"
   },
   "dismissableAlert": {
@@ -174,12 +174,12 @@
   },
   "error": {
     "title": "Une erreur s'est produite",
-    "description": "Une erreur s'est produite. Merci de réessayer plus tard ou contacter votre administrateur•rice si le problème persiste.",
+    "description": "Une erreur s'est produite. Merci de réessayer plus tard ou de contacter votre administrateur•rice si le problème persiste.",
     "noProjects": "La liste de projet est vide. Merci de contacter votre administrateur•rice.",
     "notFound": "Page non trouvée.",
     "logout": "Se déconnecter",
     "faq": "FAQ",
-    "userGuides": "Guide utilisateur",
+    "userGuides": "Guide utilisateur•ice",
     "help": "Demander de l'aide"
   },
   "filtersPanelSectionFilterActions": {
@@ -190,14 +190,14 @@
   },
   "search": {
     "title": "Rechercher des documents",
-    "emptyStateLabel": "Oh, it’s lonely in here... This project has no documents yet.",
+    "emptyStateLabel": "Il n'y a aucun document dans ce projet pour le moment...",
     "emptyStateAction": "Ajouter des documents",
     "errors": {
       "badRequest": "Votre recherche contient une erreur",
       "internalError": "Le serveur a rencontré un problème",
       "noConnections": "Le serveur n'est pas connecté",
       "notFound": "Aucun résultat",
-      "requestTimeout": "Votre requête n'a pas abouti en raison d'un délai d'attente de connexion écoulé",
+      "requestTimeout": "Votre requête n'a pas abouti en raison d'un délai d'attente",
       "serviceUnavailable": "Le serveur ne peut répondre à votre requête",
       "somethingWrong": "Une erreur s'est produite",
       "tryAgain": "Réessayez"
@@ -206,23 +206,23 @@
       "all": "Tous les champs",
       "tags": "Tags",
       "title": "Nom",
-      "author": "Auteur·e",
+      "author": "Auteur·ice",
       "recipients": "Destinataires",
       "content": "Contenu",
       "path": "Chemin",
       "thread": "ID du fil de discussion",
       "description": "Description"
     },
-    "placeholder": "Entrez mots clés, utilisez des opérateurs ou des expressions régulières...",
+    "placeholder": "Chercher des mots-clés, utiliser des opérateurs ou des regex...",
     "buttonLabel": "Rechercher",
     "searchIn": "Filtrer par {plural}...",
-    "hideFilters": "Cacher les filtres",
+    "hideFilters": "Masquer les filtres",
     "showFilters": "Afficher les filtres",
     "contextualizeFiltersLabel": "Contextualiser les filtres",
     "contextualizeFiltersDescription": "Les filtres dans la colonne de gauche seront mis à jour en fonction des résultats de recherche",
     "tips": "Conseils pour améliorer la recherche",
     "settings": {
-      "title": "Paramètres de recherche",
+      "title": "Paramètres de la page",
       "resultsPerPage": "Documents par page"
     },
     "results": {
@@ -231,7 +231,7 @@
       "results": "0 document | 1 document | {total} documents",
       "noResults": "Aucun document",
       "perPage": "par page",
-      "sortedByPath": "tri par chemin",
+      "sortedByPath": "trié par chemin",
       "batchDownloadNotAllowed": "Les téléchargements en lots ne sont pas autorisés sur plusieurs projets.",
       "batchDownload": "Télécharger les résultats",
       "batchDownloadSubmit": "Vous êtes sur le point de télécharger 1 document. | Vous êtes sur le point de télécharger {total} documents.",
@@ -240,18 +240,18 @@
       "warningConfirm": "Voulez-vous toujours télécharger les premiers documents de cette recherche ?",
       "sort": {
         "sortLabel": "Trier",
-        "sort": "Tri par",
+        "sort": "Trier par",
         "relevance": "Pertinence",
         "dateNewest": "Date d'ajout (du plus récent au plus ancien)",
         "dateOldest": "Date d'ajout (du plus ancien au plus récent)",
         "creationDateNewest": "Date de création (du plus récent au plus ancien)",
-        "creationDateOldest": "Date de création (du plus vieux au plus récent)",
+        "creationDateOldest": "Date de création (du plus ancien au plus récent)",
         "sizeLargest": "Taille (décroissante)",
         "sizeSmallest": "Taille (croissante)",
         "path": "Chemin du fichier (A à Z)",
         "pathReverse": "Chemin du fichier (Z à A)",
-        "titleNorm": "File name (A to Z)",
-        "titleNormReverse": "File name (Z to A)",
+        "titleNorm": "Nom du document (A à Z)",
+        "titleNormReverse": "Nom du document (Z à A)",
         "default": "par défaut",
         "count": "fréquence"
       }
@@ -261,117 +261,117 @@
     "submitLabel": "Rechercher"
   },
   "searchParameterQuery": {
-    "title": "Unable to parse the query"
+    "title": "Impossible d'analyser la requête"
   },
   "searchSavedList": {
     "title": "Recherches sauvegardées",
-    "allRemoved": "All saved searches have been removed.",
-    "emptyStateLabel": "There are no saved searches. Go to search to save important searches",
-    "emptyStateAction": "Go to search"
+    "allRemoved": "Toutes les recherches sauvegardées ont été supprimées.",
+    "emptyStateLabel": "Aucune recherche n'a été sauvegardée. Allez à la page de recherches pour en sauvegarder.",
+    "emptyStateAction": "Aller à la page de recherches"
   },
   "searchSavedEntries": {
     "fields": {
-      "creationDate": "Created on",
-      "name": "Name of the saved search",
-      "author": "Auteur·e"
+      "creationDate": "Créé•e le",
+      "name": "Nom de la recherche sauvegardée",
+      "author": "Auteur·ice"
     },
-    "empty": "No saved searches."
+    "empty": "Il n'y a pas de recherche sauvegardée."
   },
   "searchSavedEntriesRowActions": {
-    "removeTitle": "Are you sure you want to delete the saved search \"{name}\"?",
-    "edit": "Edit",
+    "removeTitle": "Êtes-vous sûr•e de vouloir supprimer la recherche sauvegardée \"{name} \" ?",
+    "edit": "Modifier",
     "delete": "Supprimer"
   },
   "searchHistoryList": {
     "title": "Historique",
-    "allRemoved": "History of all visited documents have been removed.",
-    "emptyStateLabel": "There is no history of visited documents. Do you want to read documents?",
-    "emptyStateAction": "Go to search"
+    "allRemoved": "L'historique de tous les documents ouverts a été supprimé.",
+    "emptyStateLabel": "Aucun document n'a été consulté pour le moment. Voulez-vous explorer les documents ?",
+    "emptyStateAction": "Aller à la page de recherches"
   },
   "separatorLine": {
     "expand": "Agrandir",
-    "reduce": "Reduce"
+    "reduce": "Réduire"
   },
   "documentActionsGroup": {
     "star": "Mettre en favoris",
     "download": "Télécharger",
-    "share": "Share",
+    "share": "Partager",
     "expand": "Agrandir",
     "close": "Fermer"
   },
   "documentCardCheckbox": {
-    "selectDocument": "Select this document"
+    "selectDocument": "Sélectionner ce document"
   },
   "documentLocalSearchNav": {
-    "previous": "Find the previous occurrence",
-    "next": "Find the next occurrence"
+    "previous": "Trouver l'occurrence précédente",
+    "next": "Trouver l'occurrence suivante"
   },
   "documentLocalSearchInput": {
-    "placeholder": "Search in document"
+    "placeholder": "Rechercher dans le document"
   },
   "documentLocalSearchOccurrences": {
-    "label": "{activeIndex} on {occurrences}"
+    "label": "{activeIndex} sur {occurrences}"
   },
   "documentSearchNavItem": {
-    "previous": "Previous document",
-    "next": "Next document"
+    "previous": "Document précédent",
+    "next": "Document suivant"
   },
   "documentUserActions": {
-    "tags": "0 tags | 1 tag | {n} tags",
-    "comments": "0 comments | 1 comment | {n} comments",
-    "recommendations": "0 recommendations | 1 recommendation | {n} recommendations",
-    "folders": "in 0 folders | in 1 folder | in {n} folders",
-    "notes": "0 notes | 1 note | {n} notes"
+    "tags": "0 tag | 1 tag | {n} tags",
+    "comments": "0 commentaire | 1 commentaire | {n} commentaires",
+    "recommendations": "0 recommandation | 1 recommandation | {n} recommandations",
+    "folders": "dans 0 dossier | dans 1 dossier | dans {n} dossiers",
+    "notes": "0 note | 1 note | {n} notes"
   },
   "documentUserActionsCard": {
     "close": "Fermer"
   },
   "documentUserActionsCardRecommendations": {
-    "title": "0 recommendations | 1 recommendation | {count} recommendations",
-    "info": "Recommendations are public to all project’s members."
+    "title": "0 recommandation | 1 recommandation | {count} recommandations",
+    "info": "Les recommandations sont visibles par tous les membres d'un projet."
   },
   "documentUserActionsCardTags": {
-    "title": "0 tags | 1 tag | {count} tags",
-    "info": "Tags are public to all project’s members."
+    "title": "0 tag | 1 tag | {count} tags",
+    "info": "Les tags sont visibles par tous les membres d'un projet."
   },
   "documentUserCommentsList": {
-    "hideComments": "Hide comments",
-    "showComments": "Show comments",
-    "sortingText": "Oldest to newest",
-    "goToOldest": "Go to oldest",
-    "goToRecent": "Go to newest"
+    "hideComments": "Masquer les commentaires",
+    "showComments": "Afficher les commentaires",
+    "sortingText": "Du plus ancien au plus récent",
+    "goToOldest": "Aller au plus ancien",
+    "goToRecent": "Aller au plus récent"
   },
   "documentUserCommentsListNewest": {
-    "label": "Go to newest"
+    "label": "Aller au plus récent"
   },
   "documentUserCommentsListOldest": {
-    "label": "Go to oldest"
+    "label": "Aller au plus ancien"
   },
   "documentUserCommentsHeader": {
-    "hideComments": "Hide comments",
-    "showComments": "Show comments",
-    "sortingText": "Oldest to newest"
+    "hideComments": "Masquer les commentaires",
+    "showComments": "Afficher les commentaires",
+    "sortingText": "Du plus ancien au plus récent"
   },
   "documentUserComments": {
     "warning": "Les commentaires sont visibles par tous les membres d'un projet."
   },
   "documentUserCommentsForm": {
-    "placeholder": "Write your comment here.",
-    "submit": "Comment"
+    "placeholder": "Écrivez votre commentaire ici.",
+    "submit": "Commenter"
   },
   "documentUserCommentsListEntry": {
-    "goToComment": "Go to comment (external link)"
+    "goToComment": "Aller au commentaire (lien externe)"
   },
   "documentUserRecommendations": {
-    "warning": "Recommendations are public to all project’s members",
-    "noRecommendations": "No recommendations yet.",
+    "warning": "Les recommandations sont visibles par tous les membres d'un projet",
+    "noRecommendations": "Il n'y a pas encore de recommandation.",
     "markAsRecommended": "Marquer comme recommandé",
     "unmarkAsRecommended": "Ne plus marquer comme recommandé"
   },
   "documentUserTags": {
     "tagListOthers": "Ajouté par d'autres",
     "tagListYours": "Ajouté par vous",
-    "tagWarning": "Les tags sont visibles pour tous les membres du projet",
+    "tagWarning": "Les tags sont visibles par tous les membres d'un projet",
     "noTags": "Aucun tag n'a encore été ajouté."
   },
   "documentUserTagsAction": {
@@ -379,7 +379,7 @@
   },
   "documentMetadataActions": {
     "copy": "Copier la valeur de cette métadonnée",
-    "search": "Rechercher dans la valeur de cette métadonnée",
+    "search": "Rechercher la valeur de cette métadonnée",
     "pin": "Épingler cette métadonnée"
   },
   "documentTranslatedContent": {
@@ -405,8 +405,8 @@
     "noContent": "Aucun contenu extrait pour ce document"
   },
   "documentViewTabs": {
-    "text": "Text",
-    "viewer": "Consulter",
+    "text": "Texte",
+    "viewer": "Aperçu",
     "metadata": "Métadonnées",
     "entities": "Entités"
   },
@@ -423,7 +423,7 @@
     "namedEntityPerson": "Personnes",
     "namedEntityLocation": "Lieux",
     "namedEntityOrganization": "Organisations",
-    "namedEntityEmail": "Emails",
+    "namedEntityEmail": "Adresses e-mails",
     "path": "Chemins du fichier",
     "indexingDate": "Dates d'indexation",
     "extractionLevel": "Niveaux d'extraction",
