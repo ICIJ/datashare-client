@@ -449,8 +449,8 @@
           "desc": "Occurrences (+ au -)"
         },
         "_key": {
-          "asc": "Ordre alphab. : A à Z",
-          "desc": "Ordre alphab. : Z à A"
+          "asc": "Ordre alphabétique (A à Z)",
+          "desc": "Ordre alphabétique (Z à A)"
         }
       }
     },
@@ -669,7 +669,7 @@
     "dirname": "Dossier du document",
     "id": "ID du document",
     "project": "Projet",
-    "creationDate": "Date de création",
+    "creationDate": "Créé•e le",
     "size": "Taille du ficher",
     "contentLanguage": "Langue",
     "contentType": "Type de contenu",
@@ -700,7 +700,7 @@
     },
     "player": {
       "autoplay": "Lecture automatique",
-      "loop": "Lecutre en boucle",
+      "loop": "Lecture en boucle",
       "audio": {
         "unknownFormat": "Format audio non pris en charge"
       },
@@ -709,7 +709,7 @@
       }
     },
     "attachments": {
-      "heading": "Pas de pièces jointes | Une pièce jointe | {total} pièces jointes",
+      "heading": "Pas de pièce jointe | Une pièce jointe | {total} pièces jointes",
       "more": "Plus de pièces jointes..."
     }
   },
@@ -734,10 +734,10 @@
   "entitySectionMore": {
     "label": "Afficher plus de \"{category}\"",
     "category": {
-      "person": "people",
-      "location": "locations",
-      "organization": "organizations",
-      "email": "emails"
+      "person": "personnes",
+      "location": "lieux",
+      "organization": "organisations",
+      "email": "adresses e-mails"
     }
   },
   "documentThread": {
@@ -758,48 +758,48 @@
     "tesseractNotInstalled": "Tesseract OCR n'est pas installé."
   },
   "formControlTagInput": {
-    "placeholder": "Add tag",
-    "addButtonText": "Add"
+    "placeholder": "Ajouter un tag",
+    "addButtonText": "Ajouter"
   },
   "formControlTerm": {
-    "placeholder": "Add term",
-    "addButtonText": "Add"
+    "placeholder": "Ajouter un terme",
+    "addButtonText": "Ajouter"
   },
   "formControlPath": {
     "browse": "Parcourir"
   },
   "formControlSearch": {
-    "placeholder": "Search..."
+    "placeholder": "Rechercher..."
   },
   "formStepHeadingToggler": {
-    "label": "Toggle"
+    "label": "Afficher / Masquer"
   },
   "formStepGroupToggler": {
-    "collapse": "Collapse all steps",
-    "expand": "Expand all steps"
+    "collapse": "Fermer tout",
+    "expand": "Ouvrir tout"
   },
   "taskActions": {
     "stopPendingTasks": "Arrêter toutes les tâches en cours",
-    "removeDoneTasks": "Delete done tasks"
+    "removeDoneTasks": "Supprimer les tâches terminées"
   },
   "appSidebar": {
     "projects": "Projets",
-    "allProjects": "All projects",
+    "allProjects": "Tous les projets",
     "search": "Rechercher",
     "searchDocuments": "Documents",
     "history": "Historique",
     "savedSearches": "Recherches sauvegardées"
   },
   "appSidebarFooter": {
-    "signOut": "Sign out",
-    "keyboardShortcuts": "Keyboard Shortcuts",
+    "signOut": "Se déconnecter",
+    "keyboardShortcuts": "Raccourcis clavier",
     "settings": "Paramètres",
     "help": "Aide",
     "removeAll": {
-      "link": "Remove all",
-      "title": "Are you sure you want to delete all your projects?",
-      "description": "This action cannot be undone. It will remove all your projects and their documents from Datashare.",
-      "success": "All your projects and documents were removed from Datashare.",
+      "link": "Supprimer toutes les données",
+      "title": "Êtes-vous sûr•e de vouloir supprimer tous vos projets ?",
+      "description": "Cette action ne pourra pas être annulée. Vous supprimerez de Datashare tous vos projets et tous vos documents.",
+      "success": "Tous vos projets et vos documents ont été supprimés de Datashare.",
       "error": "Une erreur est survenue, impossible de supprimer vos documents."
     }
   },
@@ -813,107 +813,107 @@
     "askHelp": "Aide",
     "logout": "Vous avez été déconnecté•e de Datashare.",
     "login": "Se connecter",
-    "title": "Login",
-    "switchLanguage": "Switch language",
-    "tagline": "ICIJ search and discovery platform"
+    "title": "Se connecter",
+    "switchLanguage": "Changer de langue",
+    "tagline": "Le logiciel de recherche et d'analyse de données de l'ICIJ"
   },
   "loginLocaleDropdownSelector": {
-    "label": "Switch language:"
+    "label": "Changer de langue :"
   },
   "pageHeader": {
-    "searchPlaceholder": "Search in this page"
+    "searchPlaceholder": "Rechercher dans cette page"
   },
   "taskNames": {
-    "batchSearch": "Batch search",
-    "batchDownload": "Batch download",
-    "scan": "Scan folders",
-    "index": "Index documents",
-    "extractNLP": "Find entities",
-    "enqueueFromIndex": "Enqueue from index",
-    "unknown": "Unknown task"
+    "batchSearch": "Recherche en lot",
+    "batchDownload": "Téléchargement en lot",
+    "scan": "Scan des dossiers",
+    "index": "Indexation des documents",
+    "extractNLP": "Recherche d'entités",
+    "enqueueFromIndex": "File d'attente de l'index",
+    "unknown": "Tâche inconnue"
   },
   "task": {
-    "settingTitle": "{page} settings",
-    "settingDefaultTitle": "Page settings",
+    "settingTitle": "Paramètres de la page",
+    "settingDefaultTitle": "Paramètres de la page",
     "title": "Tâches",
-    "description": "Certaines tâches doivent être exécutées en arrière-plan. Utilisez cette page pour les gérer.",
-    "noResults": "No results.",
-    "emptyStateLabel": "You have not yet started any tasks. {link}",
-    "emptyStateLabelLink": "Read more.",
+    "description": "Certaines tâches sont exécutées en arrière-plan. Cette page vous permet de les suivre.",
+    "noResults": "Pas de résultat.",
+    "emptyStateLabel": "Vous n'avez pas encore lancé de tâche. {link}",
+    "emptyStateLabelLink": "En savoir plus.",
     "settings": {
-      "createdAt": "Created on",
+      "createdAt": "Créé•e le",
       "name": "Nom",
-      "state": "Status"
+      "state": "Statut"
     },
     "task-board": {
-      "title": "Task board",
+      "title": "Tableau de bord",
       "latest": {
-        "title": "Latest tasks",
-        "showMore": "Show more",
+        "title": "Dernières tâches",
+        "showMore": "Voir plus",
         "linkTitle": {
-          "batchSearch": "Batch search task",
-          "batchDownload": "Batch download task",
-          "documentTask": "Document task",
-          "entityTask": "Entity task",
-          "unknownTask": "Unknown task"
+          "batchSearch": "Recherche en lot",
+          "batchDownload": "Téléchargement en lot",
+          "documentTask": "Tâche liée aux documents",
+          "entityTask": "Tâche liée aux entités",
+          "unknownTask": "Tâche inconnue"
         },
         "properties": {
-          "taskType": "Task",
+          "taskType": "Tâche",
           "name": "Nom",
-          "state": "Status",
+          "state": "Statut",
           "projects": "Projets",
-          "author": "Auteur·e",
-          "createdAt": "Created on",
-          "progress": "Progress"
+          "author": "Auteur·ice",
+          "createdAt": "Créé•e le",
+          "progress": "Progression"
         }
       },
       "entries": {
-        "seeAll": "See all",
+        "seeAll": "Voir tout",
         "batch-search": {
-          "title": "Batch search",
-          "description": "Get the results of each query of a list, all at once. For instance, instead of searching for all the politicians of your country one after the other, just upload the list and see the results for each one.",
-          "nbPublic": "No shared batch searches | 1 shared batch search | {n} shared batch searches",
-          "nbPrivate": "no private batch searches | 1 shared batch search | {n} private batch search",
-          "actionText": "Create a batch search"
+          "title": "Recherche en lot",
+          "description": "Obtenez tous les résultats d'une liste, en une seule requête : par exemple, au lieu de rechercher une à une toutes les personnalités politiques d'un pays, téléchargez la liste de tous les noms et obtenez les résultats pour chaque nom.",
+          "nbPublic": "aucune recherche en lot partagée | 1 recherche en lot partagée | {n} recherches en lots partagées",
+          "nbPrivate": "aucune recherche en lot privée | 1 recherche en lot privée | {n} recherches en lot privées",
+          "actionText": "Créer une recherche en lot"
         },
         "batch-download": {
-          "title": "Batch download",
-          "description": "When your query has results, you can download all of them in a password-protected file."
+          "title": "Téléchargement en lot",
+          "description": "Lorsque votre requête a des résultats, vous pouvez tous les télécharger dans un fichier protégé par un mot de passe."
         },
         "entity-recognition": {
-          "title": "Entity recognition",
-          "description": "Know quickly what’s in your files by asking Datashare to automatically recognize names of people, locations and organizations in your documents, as well as email addresses. ",
-          "actionText": "Find entities"
+          "title": "Identification d'entités",
+          "description": "Sachez rapidement ce qui se trouve dans vos documents en demandant à Datashare d'identifier automatiquement les noms des personnes, de lieux, d'organisations ainsi que les adresses e-mails qui y sont mentionnés.",
+          "actionText": "Identifier des entités"
         },
         "document-addition": {
-          "title": "Document addition",
-          "description": "Index documents that are on your computer or on a drive so you can search them in Datashare. Datashare can index all type of documents.",
+          "title": "Ajout de documents",
+          "description": "Indexez les documents qui se trouvent sur votre ordinateur ou sur un disque pour que vous puissiez les chercher et les analyser dans Datashare. Datashare peut indexer tous les types de documents.",
           "actionText": "Ajouter des documents"
         }
       }
     },
     "entities": {
-      "title": "Entities",
+      "title": "Entités",
       "list": {
-        "emptyStateLabel": "There are no entity recognitions. Do you want to find entities?",
-        "emptyStateAction": "Find entities",
-        "info": "Entity recognitions are tasks that you run in order to recognize and to list the entities in your documents.",
-        "searchPlaceholder": "Search tasks",
-        "noResults": "No results.",
+        "emptyStateLabel": "Aucune tâche d'identification d'entités n'a été lancée. Souhaitez-vous identifier des entités ?",
+        "emptyStateAction": "Identifier des entités",
+        "info": "Identifier des entités consiste à demander à Datashare d'automatiquement repérer et lister les entités mentionnées dans vos documents.",
+        "searchPlaceholder": "Rechercher dans les tâches",
+        "noResults": "Pas de résultat.",
         "properties": {
           "id": "Id",
           "name": "Nom",
-          "entitiesToFind": "Entities to find",
-          "pipeline": "Model",
+          "entitiesToFind": "Entités recherchées",
+          "pipeline": "Modèle",
           "project": "Projet",
-          "createdAt": "Created on",
-          "progress": "Progress",
-          "result": "Result",
-          "state": "Status"
+          "createdAt": "Créé•e le",
+          "progress": "Progression",
+          "result": "Résultat",
+          "state": "Statut"
         }
       },
       "new": {
-        "title": "Find entities"
+        "title": "Identifier des entités"
       },
       "form": {
         "projectSelector": {
@@ -966,7 +966,7 @@
           "name": "Nom",
           "documents": "Documents",
           "project": "Projet",
-          "createdAt": "Created on",
+          "createdAt": "Créé•e le",
           "progress": "Progress",
           "result": "Result",
           "state": "Status"
@@ -1016,7 +1016,7 @@
         "searchPlaceholder": "Search batch downloads",
         "properties": {
           "name": "Nom",
-          "createdAt": "Created on",
+          "createdAt": "Créé•e le",
           "projects": "Projets",
           "progress": "Progress",
           "size": "Taille",
@@ -1041,7 +1041,7 @@
           "projects": "Projets",
           "author": "Auteur·e",
           "name": "Nom",
-          "createdAt": "Created on",
+          "createdAt": "Créé•e le",
           "progress": "Progress",
           "state": "Status"
         }
@@ -1130,7 +1130,7 @@
           "contentType": "Type",
           "contentLength": "Taille",
           "documentPath": "Chemin",
-          "creationDate": "Created on"
+          "creationDate": "Créé•e le"
         }
       }
     }
@@ -1155,7 +1155,7 @@
   },
   "batchSearchCardDetails": {
     "status": "Status",
-    "date": "Created on",
+    "date": "Créé•e le",
     "author": "Auteur·e",
     "visibilityPrivate": "Private",
     "visibilityShared": "Shared",
@@ -1222,7 +1222,7 @@
     "title": "Are you sure you want to delete the {project} project?",
     "body": {
       "all": "It will remove {documents} from your index, {tags} and {recommendations}. {default}",
-      "default": "A new empty Default project will be created immediately.",
+      "default": "Un nouveau projet vide intitulé \"Défaut\" sera immédiatement créé.",
       "documents": "0 documents | 1 document | {count} documents",
       "tags": "0 tags | 1 tag | {count} tags",
       "recommendations": "0 recommendations | 1 recommendation | {count} recommendations"
@@ -1247,7 +1247,7 @@
   "projectJumbotron": {
     "delete": "Supprimer",
     "edit": "Edit",
-    "creationDate": "Created:",
+    "creationDate": "Créé•e le:",
     "updateDate": "Updated:"
   },
   "projectList": {
@@ -1456,7 +1456,7 @@
     },
     "options": {
       "name": "Nom",
-      "creationDate": "Created on",
+      "creationDate": "Créé•e le",
       "updateDate": "Latest update",
       "visitDate": "Last visit",
       "documentsCount": "Documents count",
@@ -1511,7 +1511,7 @@
   "batchDownload": {
     "title": "Téléchargements en lot",
     "noFile": "L'archive a expiré.",
-    "created": "Votre téléchargement est en cours de préparation",
+    "created": "Votre téléchargement en lot est en cours de préparation",
     "warning": "Cette fonctionnalité est actuellement en cours de développement par l'équipe de Datashare.",
     "seeAll": "See all",
     "errorMessage": "Le système a rencontré un problème. Veuillez vous référer à ces informations lorsque vous contactez le support.",
@@ -1577,7 +1577,7 @@
         "maintainerName": "Maintenu par",
         "publisherName": "Publié par",
         "sourceUrl": "Source",
-        "creationDate": "Créé",
+        "creationDate": "Créé•e le",
         "updateDate": "Mis à jour"
       }
     }
@@ -1698,7 +1698,7 @@
       "contentLength": "Taille du ficher",
       "contentTextLength": "Text length",
       "contentType": "File type",
-      "creationDate": "Created on",
+      "creationDate": "Créé•e le",
       "extractionLevel": "Extraction level",
       "extractionDate": "Date d'indexation",
       "language": "Language",
