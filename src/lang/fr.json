@@ -92,7 +92,7 @@
     "label": "Filtres"
   },
   "buttonToggleSearchBreadcrumb": {
-    "label": "Afficher/masquer le fil de recherches"
+    "label": "Afficher/Masquer le fil de recherches"
   },
   "buttonToggleRecommendation": {
     "mark": "Marquer comme recommandé",
@@ -772,7 +772,7 @@
     "placeholder": "Rechercher..."
   },
   "formStepHeadingToggler": {
-    "label": "Afficher / Masquer"
+    "label": "Afficher/Masquer"
   },
   "formStepGroupToggler": {
     "collapse": "Fermer tout",
@@ -1086,44 +1086,44 @@
         },
         "spellingChanges": {
           "label": "Variation orthographique",
-          "description": "Also called fuzziness. Number of change(s) in the characters in the words: insertions, deletions or substitutions of a single character, or transposition of 2 adjacent characters."
+          "description": "Nombre maximum de changements des caractères dans les mots : insertions, suppressions ou substitutions d'un seul caractère, ou transposition de 2 caractères adjacents. "
         },
         "phraseMatch": {
           "label": "Rechercher les termes exacts",
           "options": {
-            "yes": "Yes - Queries searched within double quotes",
-            "no": "No - Apply operators (AND, OR, NOT, etc.) in the queries"
+            "yes": "Oui - Les requêtes seront cherchées sans guillemets",
+            "no": "Non - Cela appliquera les éventuels opérateurs (AND, OR, NOT, etc) dans les requêtes"
           }
         },
-        "submit": "Create",
-        "submitError": "Something went wrong, unable to run the batch search.",
-        "submitSuccess": "Batch search created successfully."
+        "submit": "Valider",
+        "submitError": "Une erreur s'est produite, impossible d'exécuter la recherche en lot.",
+        "submitSuccess": "La recherche en lot a été créée."
       },
       "new": {
-        "title": "Create new batch search"
+        "title": "Créer une recherche en lot"
       }
     },
     "batch-search-queries": {
       "list": {
-        "title": "Recherches",
-        "noMatches": "No queries matches your search.",
+        "title": "Requêtes",
+        "noMatches": "Aucune requête ne correspond à votre recherche.",
         "fields": {
-          "query": "Recherche",
+          "query": "Requête",
           "count": "Documents",
-          "queryNumber": "Query position"
+          "queryNumber": "Position de la requête"
         }
       }
     },
     "batch-search-results": {
       "list": {
-        "title": "All documents",
-        "emptyStateLabel": "None of the queries had matches."
+        "title": "Tous les documents",
+        "emptyStateLabel": "Aucune requête n'a de résultat."
       },
       "show": {
-        "title": "Query results",
-        "emptyStateLabel": "This query had no matches.",
+        "title": "Résultats de la requête",
+        "emptyStateLabel": "Cette requête n'a pas de résultat.",
         "fields": {
-          "query": "Recherche",
+          "query": "Requête",
           "documentNumber": "Rang",
           "documentName": "Nom du document",
           "project": "Projet",
@@ -1136,56 +1136,56 @@
     }
   },
   "batchSearchErrorModal": {
-    "okTitle": "Ok",
-    "errorTitle": "The error is",
-    "text": "how to fix the most common errors",
-    "description": "The system encountered a problem. Syntax errors in the CSV are the usual suspects (see {link})."
+    "okTitle": "OK",
+    "errorTitle": "L'erreur est",
+    "text": "comment corriger les erreurs les plus courantes",
+    "description": "Le système a rencontré un problème. Il s'agit souvent d'erreurs de syntaxe dans le CSV (voir {link})."
   },
   "batchSearchCard": {
-    "seeAllDocuments": "See all documents",
-    "downloadResultsLabel": "Download results (CSV)",
-    "nbDocuments": "Batch search document results",
-    "nbDocumentsLabel": "{n} documents | {n} document | {n} documents",
-    "nbQueries": "Batch search queries",
-    "nbQueriesLabel": "{n} queries | {n} query | {n} queries",
+    "seeAllDocuments": "Voir tous les documents",
+    "downloadResultsLabel": "Télécharger les résultats (CSV)",
+    "nbDocuments": "Résultats de la recherche en lot",
+    "nbDocumentsLabel": "{n} document | {n} document | {n} documents",
+    "nbQueries": "Requêtes de la recherche en lot",
+    "nbQueriesLabel": "{n} requête | {n} requête | {n} requêtes",
     "downloadQueriesLabel": "Télécharger les requêtes",
-    "noResultsQueriesLabel": "No-match queries",
-    "noResultsQueriesDownload": "Download no-match queries",
-    "noResultsQueries": "{n} no-match queries | {n} no-match query | {n} no-match queries"
+    "noResultsQueriesLabel": "Requêtes sans résultat",
+    "noResultsQueriesDownload": "Télécharger les requêtes sans résultat",
+    "noResultsQueries": "{n} requête sans résultat | {n} requête sans résultat  | {n} requêtes sans résultat"
   },
   "batchSearchCardDetails": {
-    "status": "Status",
+    "status": "Statut",
     "date": "Créé•e le",
-    "author": "Auteur·e",
-    "visibilityPrivate": "Private",
-    "visibilityShared": "Shared",
-    "visibility": "Visibility",
-    "phraseMatchOn": "Do phrase match: yes",
-    "phraseMatchOff": "Do phrase match: no",
-    "phraseMatch": "Phrase match",
-    "proximity": "Proximity - Sentence changes",
-    "proximityValue": "Sentence changes: {n} | Sentence change: {n} | Sentence changes: {n}",
-    "fuzziness": "Fuzziness - Spelling changes",
-    "fuzzinessValue": "Spelling changes: {n} | Spelling change: {n} | Spelling changes: {n}",
+    "author": "Auteur·ice",
+    "visibilityPrivate": "Privée",
+    "visibilityShared": "Partagée",
+    "visibility": "Visibilité",
+    "phraseMatchOn": "Rechercher les termes exacts : oui",
+    "phraseMatchOff": "Rechercher les termes exacts : non",
+    "phraseMatch": "Recherche des termes exacts",
+    "proximity": "Proximité - Changements de phrase",
+    "proximityValue": "Changement de phrase : {n} | Changement de phrase : {n} | Changements de phrase : {n}",
+    "fuzziness": "Variation orthographique",
+    "fuzzinessValue": "Variation orthographique : {n} | Variation orthographique : {n} | Variations orthographique : {n}",
     "projects": "Projets",
     "description": "Description"
   },
   "batchSearchActions": {
     "remove": {
-      "success": "The batch search was removed",
-      "error": "Unable to remove the batch search"
+      "success": "La recherche en lot a été supprimée",
+      "error": "Impossible de supprimer la recherche en lot"
     },
     "stop": {
-      "success": "The batch search was stopped",
-      "error": "Unable to stop the batch search"
+      "success": "La recherche en lot a été arrêtée",
+      "error": "Impossible d'arrêter la recherche en lot"
     },
     "relaunch": {
-      "success": "The batch search was relaunched",
-      "error": "Unable to relaunch the batch search"
+      "success": "La recherche en lot a été relancée",
+      "error": "Impossible de relancer la recherche en lot"
     }
   },
   "batchSearchActionsEditModal": {
-    "title": "Edit batch search",
+    "title": "Modifier la recherche en lot",
     "name": "Nom",
     "description": "Description"
   },
@@ -1197,35 +1197,35 @@
   },
   "buttonRowAction": {
     "relaunch": "Relancer",
-    "stop": "Stop",
+    "stop": "Arrêter",
     "delete": "Supprimer",
-    "edit": "Edit",
+    "edit": "Modifier",
     "search": "Rechercher"
   },
   "textTruncate": {
-    "seeLess": "See less",
-    "seeMore": "See more"
+    "seeLess": "Voir moins",
+    "seeMore": "Voir plus"
   },
   "pageSettings": {
-    "title": "Page settings"
+    "title": "Paramètres de la page"
   },
   "pageSettingsSectionGroupAll": {
-    "label": "Tous"
+    "label": "Tout"
   },
   "pageTable": {
-    "toggleDetails": "Toggle details"
+    "toggleDetails": "Afficher/masquer les détails"
   },
   "projects": {
     "title": "Projets"
   },
   "projectDeletionModal": {
-    "title": "Are you sure you want to delete the {project} project?",
+    "title": "Êtes-vous sûr•e de vouloir supprimer le projet {project} ?",
     "body": {
-      "all": "It will remove {documents} from your index, {tags} and {recommendations}. {default}",
+      "all": "Ceci supprimera les {documents} de votre index, les {tags} et les {recommendations}. {default}",
       "default": "Un nouveau projet vide intitulé \"Défaut\" sera immédiatement créé.",
-      "documents": "0 documents | 1 document | {count} documents",
-      "tags": "0 tags | 1 tag | {count} tags",
-      "recommendations": "0 recommendations | 1 recommendation | {count} recommendations"
+      "documents": "0 document | 1 document | {count} documents",
+      "tags": "0 tag | 1 tag | {count} tags",
+      "recommendations": "0 recommandation | 1 recommandation | {count} recommandations"
     },
     "notify": {
       "succeed": "Le projet a été supprimé",
