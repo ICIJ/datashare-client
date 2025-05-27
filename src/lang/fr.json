@@ -38,7 +38,7 @@
   },
   "appModalConfirm": {
     "title": "Êtes-vous sûr•e ?",
-    "description": "Cette action ne peut être annulée."
+    "description": "Cette action ne peut pas être annulée."
   },
   "appModalHeader": {
     "close": "Fermer"
@@ -64,7 +64,7 @@
     "label": "Effacer la recherche"
   },
   "buttonClearHistory": {
-    "label": "Vider l'historique"
+    "label": "Effacer l'historique"
   },
   "buttonClearSavedSearches": {
     "label": "Effacer les recherches enregistrées"
@@ -92,7 +92,7 @@
     "label": "Filtres"
   },
   "buttonToggleSearchBreadcrumb": {
-    "label": "Afficher/masquer le fil d'Ariane de recherche"
+    "label": "Afficher/masquer le fil de recherches"
   },
   "buttonToggleRecommendation": {
     "mark": "Marquer comme recommandé",
