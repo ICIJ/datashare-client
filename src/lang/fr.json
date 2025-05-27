@@ -1082,10 +1082,10 @@
         },
         "phraseChanges": {
           "label": "Changements de phrase",
-          "description": "Nombre maximum d'opérations sur les termes (insertions, suppressions, substitutions ou transpositions) nécessaire pour qu'une expression recherchée corresponde à une expression trouvée."
+          "description": "Nombre maximum de changements sur les mots pour que l'expression recherchée corresponde aux expressions trouvées (insertions, suppressions, substitutions et/ou transpositions)."
         },
         "spellingChanges": {
-          "label": "Spelling changes",
+          "label": "Variation orthographique",
           "description": "Also called fuzziness. Number of change(s) in the characters in the words: insertions, deletions or substitutions of a single character, or transposition of 2 adjacent characters."
         },
         "phraseMatch": {
