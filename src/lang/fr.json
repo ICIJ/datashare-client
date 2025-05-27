@@ -433,8 +433,8 @@
     "notStarred": "Non favoris",
     "recommendedBy": "Recommandé par",
     "sections": {
-      "documentsInfo": "Caractéristiques",
-      "userData": "Utilisateurs",
+      "documentsInfo": "Propriétés des documents",
+      "userData": "Données ajoutées",
       "entities": "Entités"
     },
     "sortByDropdown": {
