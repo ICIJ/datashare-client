@@ -675,11 +675,11 @@
     "contentType": "Type de contenu",
     "contentEncoding": "Encodage",
     "contentTextLength": "Longueur du texte du contenu",
-    "namedEntityFilter": "Filtrer les entités nommées",
+    "namedEntityFilter": "Rechercher des entités",
     "starred": "Les documents ont été placés dans les favoris.",
     "unstarred": "Les documents ont été enlevés des favoris.",
     "notAvailable": "L'aperçu n'est pas disponible pour ce document.",
-    "namedEntitiesNotFound": "Aucune entité nommée trouvée.",
+    "namedEntitiesNotFound": "Aucune entité trouvée.",
     "namedEntitiesNotSearched": "Document non analysé. Pour trouver les entités nommées, {link}.",
     "namedEntitiesNotSearchedLink": "démarrer une nouvelle tâche",
     "threadIndex": "ID du fil de discussion",
@@ -695,7 +695,7 @@
       "fieldsInFirstItem": "Titres de colonne sur la première ligne",
       "findInSpreadsheet": "Rechercher dans la feuille de calcul",
       "filtered": {
-        "rows": "Pas de correspondance | Une ligne | {count} lignes"
+        "rows": "Pas de résultat | Une ligne | {count} lignes"
       }
     },
     "player": {
@@ -828,7 +828,7 @@
     "batchDownload": "Téléchargement en lot",
     "scan": "Scan des dossiers",
     "index": "Indexation des documents",
-    "extractNLP": "Recherche d'entités",
+    "extractNLP": "Détecter des entités",
     "enqueueFromIndex": "File d'attente de l'index",
     "unknown": "Tâche inconnue"
   },
@@ -836,7 +836,7 @@
     "settingTitle": "Paramètres de la page",
     "settingDefaultTitle": "Paramètres de la page",
     "title": "Tâches",
-    "description": "Certaines tâches sont exécutées en arrière-plan. Cette page vous permet de les suivre.",
+    "description": "Certaines tâches sont exécutées en arrière-plan. Cette page vous permet de les gérer.",
     "noResults": "Pas de résultat.",
     "emptyStateLabel": "Vous n'avez pas encore lancé de tâche. {link}",
     "emptyStateLabelLink": "En savoir plus.",
@@ -872,7 +872,7 @@
         "batch-search": {
           "title": "Recherche en lot",
           "description": "Obtenez tous les résultats d'une liste, en une seule requête : par exemple, au lieu de rechercher une à une toutes les personnalités politiques d'un pays, téléchargez la liste de tous les noms et obtenez les résultats pour chaque nom.",
-          "nbPublic": "aucune recherche en lot partagée | 1 recherche en lot partagée | {n} recherches en lots partagées",
+          "nbPublic": "Aucune recherche en lot partagée | 1 recherche en lot partagée | {n} recherches en lot partagées",
           "nbPrivate": "aucune recherche en lot privée | 1 recherche en lot privée | {n} recherches en lot privées",
           "actionText": "Créer une recherche en lot"
         },
@@ -881,7 +881,7 @@
           "description": "Lorsque votre requête a des résultats, vous pouvez tous les télécharger dans un fichier protégé par un mot de passe."
         },
         "entity-recognition": {
-          "title": "Identification d'entités",
+          "title": "Détection d'entités",
           "description": "Sachez rapidement ce qui se trouve dans vos documents en demandant à Datashare d'identifier automatiquement les noms des personnes, de lieux, d'organisations ainsi que les adresses e-mails qui y sont mentionnés.",
           "actionText": "Détecter des entités"
         },
@@ -901,9 +901,9 @@
         "searchPlaceholder": "Rechercher des tâches",
         "noResults": "Pas de résultat.",
         "properties": {
-          "id": "Id",
+          "id": "ID",
           "name": "Nom",
-          "entitiesToFind": "Entités recherchées",
+          "entitiesToFind": "Entités à détecter",
           "pipeline": "Modèle",
           "project": "Projet",
           "createdAt": "Créé•e le",
@@ -949,7 +949,7 @@
             "no": "Non"
           }
         },
-        "success": "L'identification des entités est lancée",
+        "success": "La détection des entités est lancée",
         "error": "Une erreur s'est produite lors de la création de la tâche : {error}"
       }
     },
@@ -962,7 +962,7 @@
         "searchPlaceholder": "Rechercher des tâches",
         "noResults": "Pas de résultat.",
         "properties": {
-          "id": "Id",
+          "id": "ID",
           "name": "Nom",
           "documents": "Documents",
           "project": "Projet",
@@ -1021,7 +1021,7 @@
           "progress": "Progression",
           "size": "Taille",
           "state": "Statut",
-          "id": "Id"
+          "id": "ID"
         }
       }
     },
@@ -1166,7 +1166,7 @@
     "proximity": "Proximité - Changements de phrase",
     "proximityValue": "Changement de phrase : {n} | Changement de phrase : {n} | Changements de phrase : {n}",
     "fuzziness": "\"Fuzziness\" - Variation orthographique",
-    "fuzzinessValue": "Variation orthographique : {n} | Variation orthographique : {n} | Variations orthographique : {n}",
+    "fuzzinessValue": "Variation orthographique : {n} | Variation orthographique : {n} | Variations orthographiques : {n}",
     "projects": "Projets",
     "description": "Description"
   },
@@ -1247,7 +1247,7 @@
   "projectJumbotron": {
     "delete": "Supprimer",
     "edit": "Modifier",
-    "creationDate": "Créé•e le:",
+    "creationDate": "Créé•e le",
     "updateDate": "Modifié le"
   },
   "projectList": {
@@ -1294,7 +1294,7 @@
         "failedBody": "Une erreur est survenue lors de la modification du projet."
       }
     },
-    "submit": "Mettre à jour"
+    "submit": "Enregistrer"
   },
   "projectViewAddDocuments": {
     "title": "Ajouter des documents au projet",
@@ -1317,7 +1317,7 @@
   "projectForm": {
     "form": {
       "name": {
-        "label": "Identifiant automatique",
+        "label": "Identifiant automatiquement généré",
         "placeholder": "Vide"
       },
       "label": {
