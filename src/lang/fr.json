@@ -5,7 +5,7 @@
     "no": "Non",
     "submit": "Valider",
     "reset": "Réinitialiser",
-    "you": "Vous",
+    "you": "{username} (vous)",
     "building": "Notre équipe prépare de nouvelles fonctionnalités pour cette page. À suivre !"
   },
   "addonCard": {
@@ -16,7 +16,7 @@
       "deleteError": "Erreur lors de la désinstallation du plugin."
     },
     "extension": {
-      "submitSuccess": "Extension installée avec succès, veuillez redémarrer Datashare.",
+      "submitSuccess": "L'extension a été installée avec succès, veuillez redémarrer Datashare.",
       "submitError": "Erreur lors de l'installation de l'extension.",
       "deleteSuccess": "L'extension a été désinstallée avec succès.",
       "deleteError": "Erreur lors de la désinstallation de l'extension."
@@ -67,7 +67,7 @@
     "label": "Effacer l'historique"
   },
   "buttonClearSavedSearches": {
-    "label": "Effacer les recherches enregistrées"
+    "label": "Effacer les recherches sauvegardées"
   },
   "buttonDownloadDocuments": {
     "label": "Télécharger les documents"
@@ -81,9 +81,9 @@
     "labelSingleFlow": "Fermer le mode sélection"
   },
   "buttonSaveSearch": {
-    "label": "Mettre à jour",
+    "label": "Sauvegarder",
     "labelSaving": "Enregistrement en cours",
-    "labelSaved": "Recherche enregistrée"
+    "labelSaved": "Recherche sauvegardée"
   },
   "buttonToggleAdvancedSearch": {
     "label": "Avancé"
@@ -92,7 +92,7 @@
     "label": "Filtres"
   },
   "buttonToggleSearchBreadcrumb": {
-    "label": "Afficher/Masquer le fil de recherches"
+    "label": "Afficher / Masquer le fil de recherches"
   },
   "buttonToggleRecommendation": {
     "mark": "Marquer comme recommandé",
@@ -166,7 +166,7 @@
   },
   "entityPopoverMentionOccurrences": {
     "occurrences": "Cette mention n'apparaît pas | Cette mention apparaît une fois | Cette mention apparaît {offsets} fois",
-    "projects": "dans aucun projet | dans 1 projet : | dans {n} projets :"
+    "projects": "dans aucun projet | dans 1 projet | dans {n} projets :"
   },
   "entityPopoverTabGroup": {
     "mentions": "Mentions",
@@ -174,8 +174,8 @@
   },
   "error": {
     "title": "Une erreur s'est produite",
-    "description": "Une erreur s'est produite. Merci de réessayer plus tard ou de contacter votre administrateur•rice si le problème persiste.",
-    "noProjects": "La liste de projet est vide. Merci de contacter votre administrateur•rice.",
+    "description": "Une erreur s'est produite. Merci de réessayer plus tard ou de contacter votre administrateur•ice si le problème persiste.",
+    "noProjects": "La liste de projet est vide. Merci de contacter votre administrateur•ice.",
     "notFound": "Page non trouvée.",
     "logout": "Se déconnecter",
     "faq": "FAQ",
@@ -213,7 +213,7 @@
       "thread": "ID du fil de discussion",
       "description": "Description"
     },
-    "placeholder": "Chercher des mots-clés, utiliser des opérateurs ou des regex...",
+    "placeholder": "Chercher des mots, utiliser des opérateurs ou des regex...",
     "buttonLabel": "Rechercher",
     "searchIn": "Filtrer par {plural}...",
     "hideFilters": "Masquer les filtres",
@@ -411,7 +411,7 @@
     "entities": "Entités"
   },
   "documentViewTabsMetadata": {
-    "search": "Rechercher dans les métadonnées"
+    "search": "Rechercher des métadonnées"
   },
   "filterTypeAll": {
     "label": "Tous"
@@ -564,7 +564,7 @@
       "MARATHI": "Marathi",
       "MARSHALLESE": "Marshallais",
       "MONGOLIAN": "Mongol",
-      "MOLDOVAN": "Moldovan",
+      "MOLDOVAN": "Moldave",
       "NAURU": "Nauru",
       "NAVAJO": "Navajo",
       "NORTHNDEBELE": "Ndébélé du nord",
@@ -724,7 +724,7 @@
       "title": "Organisations"
     },
     "email": {
-      "title": "Email"
+      "title": "Adresse e-mail"
     }
   },
   "entitySectionActions": {
@@ -744,8 +744,8 @@
     "to": "À"
   },
   "displayEmail": {
-    "receivedLink": "Emails reçus",
-    "sentLink": "Emails envoyés"
+    "receivedLink": "E-mails reçus",
+    "sentLink": "E-mails envoyés"
   },
   "formControlExtractingLanguage": {
     "failedToRetrieveLanguages": "Impossible de récupérer les langues",
@@ -772,7 +772,7 @@
     "placeholder": "Rechercher..."
   },
   "formStepHeadingToggler": {
-    "label": "Afficher/Masquer"
+    "label": "Afficher / Masquer"
   },
   "formStepGroupToggler": {
     "collapse": "Fermer tout",
@@ -898,7 +898,7 @@
         "emptyStateLabel": "Aucune tâche de détection d'entités n'a été lancée. Souhaitez-vous détecter des entités ?",
         "emptyStateAction": "Détecter des entités",
         "info": "Détecter des entités consiste à demander à Datashare d'automatiquement identifier et lister les entités mentionnées dans vos documents.",
-        "searchPlaceholder": "Rechercher dans les tâches",
+        "searchPlaceholder": "Rechercher des tâches",
         "noResults": "Pas de résultat.",
         "properties": {
           "id": "Id",
@@ -959,7 +959,7 @@
         "emptyStateLabel": "Voulez-vous ajouter des documents ?",
         "emptyStateAction": "Ajouter des documents",
         "info": "L'ajout de documents consiste à demander à Datashare d'indexer de nouveaux documents.",
-        "searchPlaceholder": "Rechercher dans les tâches",
+        "searchPlaceholder": "Rechercher des tâches",
         "noResults": "Pas de résultat.",
         "properties": {
           "id": "Id",
@@ -1013,7 +1013,7 @@
         "emptyStateLabel": "Aucun téléchargement en lot n'a été lancé. Allez à la page de recherches pour télécharger en lot tous les documents d'une recherche.",
         "emptyStateAction": "Rechercher",
         "info": "Les téléchargements en lot sont des fichiers protégés par un mot de passe contenant tous les documents d'une de vos recherches.",
-        "searchPlaceholder": "Chercher dans les téléchargements en lot",
+        "searchPlaceholder": "Rechercher des téléchargements en lot",
         "properties": {
           "name": "Nom",
           "createdAt": "Créé•e le",
@@ -1032,7 +1032,7 @@
         "emptyStateAction": "Créer une recherche en lot",
         "noMatches": "Aucune recherche en lot ne correspond. Essayez de modifier votre recherche.",
         "info": "Les recherches en lot permettent d'obtenir tous les résultats d'une liste de noms, en une seule requête.",
-        "searchPlaceholder": "Chercher dans les recherches en lot",
+        "searchPlaceholder": "Rechercher des recherches en lot",
         "noResults": "Pas de résultat.",
         "properties": {
           "privacy": "Visibilité",
@@ -1165,7 +1165,7 @@
     "phraseMatch": "Recherche des termes exacts",
     "proximity": "Proximité - Changements de phrase",
     "proximityValue": "Changement de phrase : {n} | Changement de phrase : {n} | Changements de phrase : {n}",
-    "fuzziness": "Variation orthographique",
+    "fuzziness": "\"Fuzziness\" - Variation orthographique",
     "fuzzinessValue": "Variation orthographique : {n} | Variation orthographique : {n} | Variations orthographique : {n}",
     "projects": "Projets",
     "description": "Description"
@@ -1213,7 +1213,7 @@
     "label": "Tout"
   },
   "pageTable": {
-    "toggleDetails": "Afficher/masquer les détails"
+    "toggleDetails": "Afficher / Masquer les détails"
   },
   "projects": {
     "title": "Projets"
@@ -1248,14 +1248,14 @@
     "delete": "Supprimer",
     "edit": "Modifier",
     "creationDate": "Créé•e le:",
-    "updateDate": "Modifié le :"
+    "updateDate": "Modifié le"
   },
   "projectList": {
     "title": "Projets",
     "searchPlaceholder": "Rechercher des projets",
     "fields": {
       "label": "Libellé",
-      "updateDate": "Modifié le :"
+      "updateDate": "Modifié le"
     }
   },
   "projectNew": {
@@ -1280,7 +1280,7 @@
     }
   },
   "projectViewOverviewGraph": {
-    "emptyStateLabel": "L’extension pour le graphe n’a pas encore été installée. Lisez l’{articleLink} de l’ICIJ pour en savoir plus sur cette fonctionnalité.",
+    "emptyStateLabel": "L’extension graphe n’a pas encore été installée. Lisez l’{articleLink} de l’ICIJ pour en savoir plus sur cette fonctionnalité.",
     "emptyStateLabelArticleLink": "article",
     "emptyStateAction": "Installer"
   },
@@ -1327,7 +1327,7 @@
       },
       "description": {
         "label": "Description",
-        "placeholder": ""
+        "placeholder": "Vide"
       },
       "sourcePath": {
         "label": "Dossier du projet",
@@ -1346,7 +1346,7 @@
         "placeholder": "Le nom des personnes ou de l'organisation qui ont publié les fichiers dans ce projet"
       },
       "maintainerName": {
-        "label": "Nom du mainteneur•se",
+        "label": "Nom du responsable",
         "placeholder": "Le nom des personnes ou de l'organisation qui maintiendront le projet sur Datashare"
       }
     },
@@ -1367,7 +1367,7 @@
     "backToSearchResults": "Retourner aux résultats de recherche",
     "goToPreviousTab": "Aller à l'onglet précédent",
     "goToNextTab": "Aller à l'onglet suivant",
-    "activateSearchBar": "Chercher dans le document",
+    "activateSearchBar": "Rechercher dans le document",
     "deactivateSearchBar": "Fermer la recherche dans le document",
     "findPreviousOccurrence": "Aller à l'occurrence précédente dans le document",
     "findNextOccurrence": "Aller à l'occurrence suivante dans le document"
@@ -1400,10 +1400,10 @@
     "addons": {
       "plugin": {
         "title": "Plugins",
-        "info": "Les plugins sont des modules front-end pour ajouter de nouvelles fonctionnalités dans l'interface de Datashare.",
+        "info": "Les plugins sont des modules front-end qui ajoutent de nouvelles fonctionnalités dans l'interface de Datashare.",
         "submitSuccess": "Le plugin a été installé avec succès.",
         "submitError": "Erreur lors de l'installation du plugin.",
-        "searchPlaceholder": "Rechercher dans les plugins",
+        "searchPlaceholder": "Rechercher des plugins",
         "errorLabel": "Une erreur s'est produite lors de la récupération des plugins. Rafraîchissez la page ou contactez le support."
       },
       "extension": {
@@ -1411,7 +1411,7 @@
         "info": "Les extensions sont des modules back-end qui ajoutent de nouvelles fonctionnalités pour stocker et manipuler des données dans Datashare.",
         "submitSuccess": "Extension installée avec succès, veuillez redémarrer Datashare.",
         "submitError": "Erreur lors de l'installation de l'extension.",
-        "searchPlaceholder": "Rechercher dans les extensions",
+        "searchPlaceholder": "Rechercher des extensions",
         "errorLabel": "Une erreur s'est produite lors de la récupération des plugins. Rafraîchissez la page ou contactez le support."
       }
     },
@@ -1469,7 +1469,7 @@
       "queries": "Requêtes",
       "documents": "Documents",
       "size": "Taille",
-      "id": "Id"
+      "id": "ID"
     },
     "order": {
       "default": {
@@ -1514,7 +1514,7 @@
     "created": "Votre téléchargement en lot est en cours de préparation",
     "warning": "Cette fonctionnalité est actuellement en cours de développement par l'équipe de Datashare.",
     "seeAll": "Voir tout",
-    "errorMessage": "Le système a rencontré un problème. Veuillez transférer ces informations lorsque vous contactez le support.",
+    "errorMessage": "Le système a rencontré un problème. Veillez à transférer ces informations si vous contactez le support.",
     "errorTitle": "Le téléchargement en lot <code class=\"fw-bold\">{taskId}</code> a échoué.",
     "relaunch": {
       "succeed": "Votre téléchargement en lot est en cours de préparation",
@@ -1578,7 +1578,7 @@
         "publisherName": "Publié par",
         "sourceUrl": "Source",
         "creationDate": "Créé•e le",
-        "updateDate": "Modifié le :"
+        "updateDate": "Modifié le"
       }
     }
   },
@@ -1592,7 +1592,7 @@
     "datadir": "Accueil"
   },
   "projectCardUpdateDate": {
-    "label": "Modifié le :"
+    "label": "Modifié le"
   },
   "projectCardDocumentsCount": {
     "noDocuments": "Aucun document"
@@ -1620,7 +1620,7 @@
     "label": "Pas plus de dossiers | Afficher 1 dossier en plus | Afficher {nextPageSize} des {directoriesLeft} dossiers en plus"
   },
   "pathViewSearch": {
-    "placeholder": "Chercher dans les dossiers"
+    "placeholder": "Rechercher des dossiers"
   },
   "pathViewLabel": {
     "label": "Chemins du fichier"
@@ -1720,7 +1720,7 @@
   },
   "shortcutsView": {
     "title": "Raccourcis clavier",
-    "searchPlaceholder": "Rechercher dans les raccourcis clavier"
+    "searchPlaceholder": "Rechercher des raccourcis clavier"
   },
   "rowPagination": {
     "rowRange": "à {to} de 0 | à {to} de 1 | à {to} de {total}",
