@@ -5,7 +5,7 @@
     "no": "Non",
     "submit": "Valider",
     "reset": "Réinitialiser",
-    "you": "Vous",
+    "you": "{username} (vous)",
     "building": "Notre équipe prépare de nouvelles fonctionnalités pour cette page. À suivre !"
   },
   "addonCard": {
@@ -16,7 +16,7 @@
       "deleteError": "Erreur lors de la désinstallation du plugin."
     },
     "extension": {
-      "submitSuccess": "Extension installée avec succès, veuillez redémarrer Datashare.",
+      "submitSuccess": "L'extension a été installée avec succès, veuillez redémarrer Datashare.",
       "submitError": "Erreur lors de l'installation de l'extension.",
       "deleteSuccess": "L'extension a été désinstallée avec succès.",
       "deleteError": "Erreur lors de la désinstallation de l'extension."
@@ -38,7 +38,7 @@
   },
   "appModalConfirm": {
     "title": "Êtes-vous sûr•e ?",
-    "description": "Cette action ne peut être annulée."
+    "description": "Cette action ne peut pas être annulée."
   },
   "appModalHeader": {
     "close": "Fermer"
@@ -64,10 +64,10 @@
     "label": "Effacer la recherche"
   },
   "buttonClearHistory": {
-    "label": "Vider l'historique"
+    "label": "Effacer l'historique"
   },
   "buttonClearSavedSearches": {
-    "label": "Effacer les recherches enregistrées"
+    "label": "Effacer les recherches sauvegardées"
   },
   "buttonDownloadDocuments": {
     "label": "Télécharger les documents"
@@ -81,9 +81,9 @@
     "labelSingleFlow": "Fermer le mode sélection"
   },
   "buttonSaveSearch": {
-    "label": "Mettre à jour",
+    "label": "Sauvegarder",
     "labelSaving": "Enregistrement en cours",
-    "labelSaved": "Recherche enregistrée"
+    "labelSaved": "Recherche sauvegardée"
   },
   "buttonToggleAdvancedSearch": {
     "label": "Avancé"
@@ -92,7 +92,7 @@
     "label": "Filtres"
   },
   "buttonToggleSearchBreadcrumb": {
-    "label": "Afficher/masquer le fil d'Ariane de recherche"
+    "label": "Afficher / Masquer le fil de recherches"
   },
   "buttonToggleRecommendation": {
     "mark": "Marquer comme recommandé",
@@ -104,7 +104,7 @@
   "contentTextLengthWarning": {
     "title": "Ce document est volumineux",
     "description": "L'ouvrir <strong>pourrait bloquer votre navigateur Web</strong>.",
-    "download": "La recherche dans ce document peut être longue. Envisagez de le télécharger si votre environnement est sécurisé.",
+    "download": "La recherche dans ce document peut être longue. Vous pouvez le télécharger si votre environnement est sécurisé.",
     "open": "Ouvrir quand même"
   },
   "dismissableAlert": {
@@ -166,7 +166,7 @@
   },
   "entityPopoverMentionOccurrences": {
     "occurrences": "Cette mention n'apparaît pas | Cette mention apparaît une fois | Cette mention apparaît {offsets} fois",
-    "projects": "dans aucun projet | dans 1 projet : | dans {n} projets :"
+    "projects": "dans aucun projet | dans 1 projet | dans {n} projets :"
   },
   "entityPopoverTabGroup": {
     "mentions": "Mentions",
@@ -174,12 +174,12 @@
   },
   "error": {
     "title": "Une erreur s'est produite",
-    "description": "Une erreur s'est produite. Merci de réessayer plus tard ou contacter votre administrateur•rice si le problème persiste.",
-    "noProjects": "La liste de projet est vide. Merci de contacter votre administrateur•rice.",
+    "description": "Une erreur s'est produite. Merci de réessayer plus tard ou de contacter votre administrateur•ice si le problème persiste.",
+    "noProjects": "La liste de projet est vide. Merci de contacter votre administrateur•ice.",
     "notFound": "Page non trouvée.",
     "logout": "Se déconnecter",
     "faq": "FAQ",
-    "userGuides": "Guide utilisateur",
+    "userGuides": "Guide utilisateur•ice",
     "help": "Demander de l'aide"
   },
   "filtersPanelSectionFilterActions": {
@@ -188,24 +188,16 @@
   "filtersPanelSectionFilterTitleToggler": {
     "toggle": "Filtres"
   },
-  "searchResultsActions": {
-    "deselectAll": "Désélectionner {count} documents",
-    "selectAll": "Select all {count}",
-    "tag": "Tag",
-    "star": "Mettre en favoris",
-    "recommend": "Recommander",
-    "download": "Télécharger"
-  },
   "search": {
     "title": "Rechercher des documents",
-    "emptyStateLabel": "Oh, it’s lonely in here... This project has no documents yet.",
+    "emptyStateLabel": "Il n'y a aucun document dans ce projet pour le moment...",
     "emptyStateAction": "Ajouter des documents",
     "errors": {
       "badRequest": "Votre recherche contient une erreur",
       "internalError": "Le serveur a rencontré un problème",
       "noConnections": "Le serveur n'est pas connecté",
       "notFound": "Aucun résultat",
-      "requestTimeout": "Votre requête n'a pas abouti en raison d'un délai d'attente de connexion écoulé",
+      "requestTimeout": "Votre requête n'a pas abouti en raison d'un délai d'attente",
       "serviceUnavailable": "Le serveur ne peut répondre à votre requête",
       "somethingWrong": "Une erreur s'est produite",
       "tryAgain": "Réessayez"
@@ -214,24 +206,23 @@
       "all": "Tous les champs",
       "tags": "Tags",
       "title": "Nom",
-      "author": "Auteur·e",
+      "author": "Auteur·ice",
       "recipients": "Destinataires",
       "content": "Contenu",
       "path": "Chemin",
       "thread": "ID du fil de discussion",
       "description": "Description"
     },
-    "placeholder": "Entrez mots clés, utilisez des opérateurs ou des expressions régulières...",
+    "placeholder": "Chercher des mots, utiliser des opérateurs ou des regex...",
     "buttonLabel": "Rechercher",
     "searchIn": "Filtrer par {plural}...",
-    "searchInProjects": "Filter projects...",
-    "hideFilters": "Cacher les filtres",
+    "hideFilters": "Masquer les filtres",
     "showFilters": "Afficher les filtres",
     "contextualizeFiltersLabel": "Contextualiser les filtres",
     "contextualizeFiltersDescription": "Les filtres dans la colonne de gauche seront mis à jour en fonction des résultats de recherche",
     "tips": "Conseils pour améliorer la recherche",
     "settings": {
-      "title": "Paramètres de recherche",
+      "title": "Paramètres de la page",
       "resultsPerPage": "Documents par page"
     },
     "results": {
@@ -240,7 +231,7 @@
       "results": "0 document | 1 document | {total} documents",
       "noResults": "Aucun document",
       "perPage": "par page",
-      "sortedByPath": "tri par chemin",
+      "sortedByPath": "trié par chemin",
       "batchDownloadNotAllowed": "Les téléchargements en lots ne sont pas autorisés sur plusieurs projets.",
       "batchDownload": "Télécharger les résultats",
       "batchDownloadSubmit": "Vous êtes sur le point de télécharger 1 document. | Vous êtes sur le point de télécharger {total} documents.",
@@ -249,18 +240,18 @@
       "warningConfirm": "Voulez-vous toujours télécharger les premiers documents de cette recherche ?",
       "sort": {
         "sortLabel": "Trier",
-        "sort": "Tri par",
+        "sort": "Trier par",
         "relevance": "Pertinence",
         "dateNewest": "Date d'ajout (du plus récent au plus ancien)",
         "dateOldest": "Date d'ajout (du plus ancien au plus récent)",
         "creationDateNewest": "Date de création (du plus récent au plus ancien)",
-        "creationDateOldest": "Date de création (du plus vieux au plus récent)",
+        "creationDateOldest": "Date de création (du plus ancien au plus récent)",
         "sizeLargest": "Taille (décroissante)",
         "sizeSmallest": "Taille (croissante)",
         "path": "Chemin du fichier (A à Z)",
         "pathReverse": "Chemin du fichier (Z à A)",
-        "titleNorm": "File name (A to Z)",
-        "titleNormReverse": "File name (Z to A)",
+        "titleNorm": "Nom du document (A à Z)",
+        "titleNormReverse": "Nom du document (Z à A)",
         "default": "par défaut",
         "count": "fréquence"
       }
@@ -270,117 +261,117 @@
     "submitLabel": "Rechercher"
   },
   "searchParameterQuery": {
-    "title": "Unable to parse the query"
+    "title": "Impossible d'analyser la requête"
   },
   "searchSavedList": {
     "title": "Recherches sauvegardées",
-    "allRemoved": "All saved searches have been removed.",
-    "emptyStateLabel": "There are no saved searches. Go to search to save important searches",
-    "emptyStateAction": "Go to search"
+    "allRemoved": "Toutes les recherches sauvegardées ont été supprimées.",
+    "emptyStateLabel": "Aucune recherche n'a été sauvegardée. Allez à la page de recherches pour en sauvegarder.",
+    "emptyStateAction": "Aller à la page de recherches"
   },
   "searchSavedEntries": {
     "fields": {
-      "creationDate": "Created on",
-      "name": "Name of the saved search",
-      "author": "Auteur·e"
+      "creationDate": "Créé•e le",
+      "name": "Nom de la recherche sauvegardée",
+      "author": "Auteur·ice"
     },
-    "empty": "No saved searches."
+    "empty": "Il n'y a pas de recherche sauvegardée."
   },
   "searchSavedEntriesRowActions": {
-    "removeTitle": "Are you sure you want to delete the saved search \"{name}\"?",
-    "edit": "Edit",
+    "removeTitle": "Êtes-vous sûr•e de vouloir supprimer la recherche sauvegardée \"{name} \" ?",
+    "edit": "Modifier",
     "delete": "Supprimer"
   },
   "searchHistoryList": {
     "title": "Historique",
-    "allRemoved": "History of all visited documents have been removed.",
-    "emptyStateLabel": "There is no history of visited documents. Do you want to read documents?",
-    "emptyStateAction": "Go to search"
+    "allRemoved": "L'historique de tous les documents ouverts a été supprimé.",
+    "emptyStateLabel": "Aucun document n'a été consulté pour le moment. Voulez-vous explorer les documents ?",
+    "emptyStateAction": "Aller à la page de recherches"
   },
   "separatorLine": {
     "expand": "Agrandir",
-    "reduce": "Reduce"
+    "reduce": "Réduire"
   },
   "documentActionsGroup": {
     "star": "Mettre en favoris",
     "download": "Télécharger",
-    "share": "Share",
+    "share": "Partager",
     "expand": "Agrandir",
     "close": "Fermer"
   },
   "documentCardCheckbox": {
-    "selectDocument": "Select this document"
+    "selectDocument": "Sélectionner ce document"
   },
   "documentLocalSearchNav": {
-    "previous": "Find the previous occurrence",
-    "next": "Find the next occurrence"
+    "previous": "Trouver l'occurrence précédente",
+    "next": "Trouver l'occurrence suivante"
   },
   "documentLocalSearchInput": {
-    "placeholder": "Search in document"
+    "placeholder": "Rechercher dans le document"
   },
   "documentLocalSearchOccurrences": {
-    "label": "{activeIndex} on {occurrences}"
+    "label": "{activeIndex} sur {occurrences}"
   },
   "documentSearchNavItem": {
-    "previous": "Previous document",
-    "next": "Next document"
+    "previous": "Document précédent",
+    "next": "Document suivant"
   },
   "documentUserActions": {
-    "tags": "0 tags | 1 tag | {n} tags",
-    "comments": "0 comments | 1 comment | {n} comments",
-    "recommendations": "0 recommendations | 1 recommendation | {n} recommendations",
-    "folders": "in 0 folders | in 1 folder | in {n} folders",
-    "notes": "0 notes | 1 note | {n} notes"
+    "tags": "0 tag | 1 tag | {n} tags",
+    "comments": "0 commentaire | 1 commentaire | {n} commentaires",
+    "recommendations": "0 recommandation | 1 recommandation | {n} recommandations",
+    "folders": "dans 0 dossier | dans 1 dossier | dans {n} dossiers",
+    "notes": "0 note | 1 note | {n} notes"
   },
   "documentUserActionsCard": {
     "close": "Fermer"
   },
   "documentUserActionsCardRecommendations": {
-    "title": "0 recommendations | 1 recommendation | {count} recommendations",
-    "info": "Recommendations are public to all project’s members."
+    "title": "0 recommandation | 1 recommandation | {count} recommandations",
+    "info": "Les recommandations sont visibles par tous les membres d'un projet."
   },
   "documentUserActionsCardTags": {
-    "title": "0 tags | 1 tag | {count} tags",
-    "info": "Tags are public to all project’s members."
+    "title": "0 tag | 1 tag | {count} tags",
+    "info": "Les tags sont visibles par tous les membres d'un projet."
   },
   "documentUserCommentsList": {
-    "hideComments": "Hide comments",
-    "showComments": "Show comments",
-    "sortingText": "Oldest to newest",
-    "goToOldest": "Go to oldest",
-    "goToRecent": "Go to newest"
+    "hideComments": "Masquer les commentaires",
+    "showComments": "Afficher les commentaires",
+    "sortingText": "Du plus ancien au plus récent",
+    "goToOldest": "Aller au plus ancien",
+    "goToRecent": "Aller au plus récent"
   },
   "documentUserCommentsListNewest": {
-    "label": "Go to newest"
+    "label": "Aller au plus récent"
   },
   "documentUserCommentsListOldest": {
-    "label": "Go to oldest"
+    "label": "Aller au plus ancien"
   },
   "documentUserCommentsHeader": {
-    "hideComments": "Hide comments",
-    "showComments": "Show comments",
-    "sortingText": "Oldest to newest"
+    "hideComments": "Masquer les commentaires",
+    "showComments": "Afficher les commentaires",
+    "sortingText": "Du plus ancien au plus récent"
   },
   "documentUserComments": {
     "warning": "Les commentaires sont visibles par tous les membres d'un projet."
   },
   "documentUserCommentsForm": {
-    "placeholder": "Write your comment here.",
-    "submit": "Comment"
+    "placeholder": "Écrivez votre commentaire ici.",
+    "submit": "Commenter"
   },
   "documentUserCommentsListEntry": {
-    "goToComment": "Go to comment (external link)"
+    "goToComment": "Aller au commentaire (lien externe)"
   },
   "documentUserRecommendations": {
-    "warning": "Recommendations are public to all project’s members",
-    "noRecommendations": "No recommendations yet.",
+    "warning": "Les recommandations sont visibles par tous les membres d'un projet",
+    "noRecommendations": "Il n'y a pas encore de recommandation.",
     "markAsRecommended": "Marquer comme recommandé",
     "unmarkAsRecommended": "Ne plus marquer comme recommandé"
   },
   "documentUserTags": {
     "tagListOthers": "Ajouté par d'autres",
     "tagListYours": "Ajouté par vous",
-    "tagWarning": "Les tags sont visibles pour tous les membres du projet",
+    "tagWarning": "Les tags sont visibles par tous les membres d'un projet",
     "noTags": "Aucun tag n'a encore été ajouté."
   },
   "documentUserTagsAction": {
@@ -388,7 +379,7 @@
   },
   "documentMetadataActions": {
     "copy": "Copier la valeur de cette métadonnée",
-    "search": "Rechercher dans la valeur de cette métadonnée",
+    "search": "Rechercher la valeur de cette métadonnée",
     "pin": "Épingler cette métadonnée"
   },
   "documentTranslatedContent": {
@@ -414,13 +405,13 @@
     "noContent": "Aucun contenu extrait pour ce document"
   },
   "documentViewTabs": {
-    "text": "Text",
-    "viewer": "Consulter",
+    "text": "Texte",
+    "viewer": "Aperçu",
     "metadata": "Métadonnées",
     "entities": "Entités"
   },
   "documentViewTabsMetadata": {
-    "search": "Rechercher dans les métadonnées"
+    "search": "Rechercher des métadonnées"
   },
   "filterTypeAll": {
     "label": "Tous"
@@ -432,7 +423,7 @@
     "namedEntityPerson": "Personnes",
     "namedEntityLocation": "Lieux",
     "namedEntityOrganization": "Organisations",
-    "namedEntityEmail": "Emails",
+    "namedEntityEmail": "Adresses e-mails",
     "path": "Chemins du fichier",
     "indexingDate": "Dates d'indexation",
     "extractionLevel": "Niveaux d'extraction",
@@ -442,8 +433,8 @@
     "notStarred": "Non favoris",
     "recommendedBy": "Recommandé par",
     "sections": {
-      "documentsInfo": "Caractéristiques",
-      "userData": "Utilisateurs",
+      "documentsInfo": "Propriétés des documents",
+      "userData": "Données ajoutées",
       "entities": "Entités"
     },
     "sortByDropdown": {
@@ -458,8 +449,8 @@
           "desc": "Occurrences (+ au -)"
         },
         "_key": {
-          "asc": "Ordre alphab. : A à Z",
-          "desc": "Ordre alphab. : Z à A"
+          "asc": "Ordre alphabétique (A à Z)",
+          "desc": "Ordre alphabétique (Z à A)"
         }
       }
     },
@@ -573,7 +564,7 @@
       "MARATHI": "Marathi",
       "MARSHALLESE": "Marshallais",
       "MONGOLIAN": "Mongol",
-      "MOLDOVAN": "Moldovan",
+      "MOLDOVAN": "Moldave",
       "NAURU": "Nauru",
       "NAVAJO": "Navajo",
       "NORTHNDEBELE": "Ndébélé du nord",
@@ -678,17 +669,17 @@
     "dirname": "Dossier du document",
     "id": "ID du document",
     "project": "Projet",
-    "creationDate": "Date de création",
+    "creationDate": "Créé•e le",
     "size": "Taille du ficher",
     "contentLanguage": "Langue",
     "contentType": "Type de contenu",
     "contentEncoding": "Encodage",
     "contentTextLength": "Longueur du texte du contenu",
-    "namedEntityFilter": "Filtrer les entités nommées",
+    "namedEntityFilter": "Rechercher des entités",
     "starred": "Les documents ont été placés dans les favoris.",
     "unstarred": "Les documents ont été enlevés des favoris.",
     "notAvailable": "L'aperçu n'est pas disponible pour ce document.",
-    "namedEntitiesNotFound": "Aucune entité nommée trouvée.",
+    "namedEntitiesNotFound": "Aucune entité trouvée.",
     "namedEntitiesNotSearched": "Document non analysé. Pour trouver les entités nommées, {link}.",
     "namedEntitiesNotSearchedLink": "démarrer une nouvelle tâche",
     "threadIndex": "ID du fil de discussion",
@@ -704,12 +695,12 @@
       "fieldsInFirstItem": "Titres de colonne sur la première ligne",
       "findInSpreadsheet": "Rechercher dans la feuille de calcul",
       "filtered": {
-        "rows": "Pas de correspondance | Une ligne | {count} lignes"
+        "rows": "Pas de résultat | Une ligne | {count} lignes"
       }
     },
     "player": {
       "autoplay": "Lecture automatique",
-      "loop": "Lecutre en boucle",
+      "loop": "Lecture en boucle",
       "audio": {
         "unknownFormat": "Format audio non pris en charge"
       },
@@ -718,7 +709,7 @@
       }
     },
     "attachments": {
-      "heading": "Pas de pièces jointes | Une pièce jointe | {total} pièces jointes",
+      "heading": "Pas de pièce jointe | Une pièce jointe | {total} pièces jointes",
       "more": "Plus de pièces jointes..."
     }
   },
@@ -733,7 +724,7 @@
       "title": "Organisations"
     },
     "email": {
-      "title": "Email"
+      "title": "Adresse e-mail"
     }
   },
   "entitySectionActions": {
@@ -743,18 +734,18 @@
   "entitySectionMore": {
     "label": "Afficher plus de \"{category}\"",
     "category": {
-      "person": "people",
-      "location": "locations",
-      "organization": "organizations",
-      "email": "emails"
+      "person": "personnes",
+      "location": "lieux",
+      "organization": "organisations",
+      "email": "adresses e-mails"
     }
   },
   "documentThread": {
     "to": "À"
   },
   "displayEmail": {
-    "receivedLink": "Emails reçus",
-    "sentLink": "Emails envoyés"
+    "receivedLink": "E-mails reçus",
+    "sentLink": "E-mails envoyés"
   },
   "formControlExtractingLanguage": {
     "failedToRetrieveLanguages": "Impossible de récupérer les langues",
@@ -767,48 +758,48 @@
     "tesseractNotInstalled": "Tesseract OCR n'est pas installé."
   },
   "formControlTagInput": {
-    "placeholder": "Add tag",
-    "addButtonText": "Add"
+    "placeholder": "Ajouter un tag",
+    "addButtonText": "Ajouter"
   },
   "formControlTerm": {
-    "placeholder": "Add term",
-    "addButtonText": "Add"
+    "placeholder": "Ajouter un terme",
+    "addButtonText": "Ajouter"
   },
   "formControlPath": {
     "browse": "Parcourir"
   },
   "formControlSearch": {
-    "placeholder": "Search..."
+    "placeholder": "Rechercher..."
   },
   "formStepHeadingToggler": {
-    "label": "Toggle"
+    "label": "Afficher / Masquer"
   },
   "formStepGroupToggler": {
-    "collapse": "Collapse all steps",
-    "expand": "Expand all steps"
+    "collapse": "Fermer tout",
+    "expand": "Ouvrir tout"
   },
   "taskActions": {
     "stopPendingTasks": "Arrêter toutes les tâches en cours",
-    "removeDoneTasks": "Delete done tasks"
+    "removeDoneTasks": "Supprimer les tâches terminées"
   },
   "appSidebar": {
     "projects": "Projets",
-    "allProjects": "All projects",
+    "allProjects": "Tous les projets",
     "search": "Rechercher",
     "searchDocuments": "Documents",
     "history": "Historique",
     "savedSearches": "Recherches sauvegardées"
   },
   "appSidebarFooter": {
-    "signOut": "Sign out",
-    "keyboardShortcuts": "Keyboard Shortcuts",
+    "signOut": "Se déconnecter",
+    "keyboardShortcuts": "Raccourcis clavier",
     "settings": "Paramètres",
     "help": "Aide",
     "removeAll": {
-      "link": "Remove all",
-      "title": "Are you sure you want to delete all your projects?",
-      "description": "This action cannot be undone. It will remove all your projects and their documents from Datashare.",
-      "success": "All your projects and documents were removed from Datashare.",
+      "link": "Supprimer toutes les données",
+      "title": "Êtes-vous sûr•e de vouloir supprimer tous vos projets ?",
+      "description": "Cette action ne pourra pas être annulée. Vous supprimerez de Datashare tous vos projets et tous vos documents.",
+      "success": "Tous vos projets et vos documents ont été supprimés de Datashare.",
       "error": "Une erreur est survenue, impossible de supprimer vos documents."
     }
   },
@@ -822,116 +813,116 @@
     "askHelp": "Aide",
     "logout": "Vous avez été déconnecté•e de Datashare.",
     "login": "Se connecter",
-    "title": "Login",
-    "switchLanguage": "Switch language",
-    "tagline": "ICIJ search and discovery platform"
+    "title": "Se connecter",
+    "switchLanguage": "Changer de langue",
+    "tagline": "Le logiciel de recherche et d'analyse de données de l'ICIJ"
   },
   "loginLocaleDropdownSelector": {
-    "label": "Switch language:"
+    "label": "Changer de langue :"
   },
   "pageHeader": {
-    "searchPlaceholder": "Search in this page"
+    "searchPlaceholder": "Rechercher dans cette page"
   },
   "taskNames": {
-    "batchSearch": "Batch search",
-    "batchDownload": "Batch download",
-    "scan": "Scan folders",
-    "index": "Index documents",
-    "extractNLP": "Find entities",
-    "enqueueFromIndex": "Enqueue from index",
-    "unknown": "Unknown task"
+    "batchSearch": "Recherche en lot",
+    "batchDownload": "Téléchargement en lot",
+    "scan": "Scan des dossiers",
+    "index": "Indexation des documents",
+    "extractNLP": "Détecter des entités",
+    "enqueueFromIndex": "File d'attente de l'index",
+    "unknown": "Tâche inconnue"
   },
   "task": {
-    "settingTitle": "{page} settings",
-    "settingDefaultTitle": "Page settings",
+    "settingTitle": "Paramètres de la page",
+    "settingDefaultTitle": "Paramètres de la page",
     "title": "Tâches",
-    "description": "Certaines tâches doivent être exécutées en arrière-plan. Utilisez cette page pour les gérer.",
-    "noResults": "No results.",
-    "emptyStateLabel": "You have not yet started any tasks. {link}",
-    "emptyStateLabelLink": "Read more.",
+    "description": "Certaines tâches sont exécutées en arrière-plan. Cette page vous permet de les gérer.",
+    "noResults": "Pas de résultat.",
+    "emptyStateLabel": "Vous n'avez pas encore lancé de tâche. {link}",
+    "emptyStateLabelLink": "En savoir plus.",
     "settings": {
-      "createdAt": "Created on",
+      "createdAt": "Créé•e le",
       "name": "Nom",
-      "state": "Status"
+      "state": "Statut"
     },
     "task-board": {
-      "title": "Task board",
+      "title": "Tableau de bord",
       "latest": {
-        "title": "Latest tasks",
-        "showMore": "Show more",
+        "title": "Dernières tâches",
+        "showMore": "Voir plus",
         "linkTitle": {
-          "batchSearch": "Batch search task",
-          "batchDownload": "Batch download task",
-          "documentTask": "Document task",
-          "entityTask": "Entity task",
-          "unknownTask": "Unknown task"
+          "batchSearch": "Recherche en lot",
+          "batchDownload": "Téléchargement en lot",
+          "documentTask": "Tâche liée aux documents",
+          "entityTask": "Tâche liée aux entités",
+          "unknownTask": "Tâche inconnue"
         },
         "properties": {
-          "taskType": "Task",
+          "taskType": "Tâche",
           "name": "Nom",
-          "state": "Status",
+          "state": "Statut",
           "projects": "Projets",
-          "author": "Auteur·e",
-          "createdAt": "Created on",
-          "progress": "Progress"
+          "author": "Auteur·ice",
+          "createdAt": "Créé•e le",
+          "progress": "Progression"
         }
       },
       "entries": {
-        "seeAll": "See all",
+        "seeAll": "Voir tout",
         "batch-search": {
-          "title": "Batch search",
-          "description": "Get the results of each query of a list, all at once. For instance, instead of searching for all the politicians of your country one after the other, just upload the list and see the results for each one.",
-          "nbPublic": "No shared batch searches | 1 shared batch search | {n} shared batch searches",
-          "nbPrivate": "no private batch searches | 1 shared batch search | {n} private batch search",
-          "actionText": "Create a batch search"
+          "title": "Recherche en lot",
+          "description": "Obtenez tous les résultats d'une liste, en une seule requête : par exemple, au lieu de rechercher une à une toutes les personnalités politiques d'un pays, téléchargez la liste de tous les noms et obtenez les résultats pour chaque nom.",
+          "nbPublic": "Aucune recherche en lot partagée | 1 recherche en lot partagée | {n} recherches en lot partagées",
+          "nbPrivate": "aucune recherche en lot privée | 1 recherche en lot privée | {n} recherches en lot privées",
+          "actionText": "Créer une recherche en lot"
         },
         "batch-download": {
-          "title": "Batch download",
-          "description": "When your query has results, you can download all of them in a password-protected file."
+          "title": "Téléchargement en lot",
+          "description": "Lorsque votre requête a des résultats, vous pouvez tous les télécharger dans un fichier protégé par un mot de passe."
         },
         "entity-recognition": {
-          "title": "Entity recognition",
-          "description": "Know quickly what’s in your files by asking Datashare to automatically recognize names of people, locations and organizations in your documents, as well as email addresses. ",
-          "actionText": "Find entities"
+          "title": "Détection d'entités",
+          "description": "Sachez rapidement ce qui se trouve dans vos documents en demandant à Datashare d'identifier automatiquement les noms des personnes, de lieux, d'organisations ainsi que les adresses e-mails qui y sont mentionnés.",
+          "actionText": "Détecter des entités"
         },
         "document-addition": {
-          "title": "Document addition",
-          "description": "Index documents that are on your computer or on a drive so you can search them in Datashare. Datashare can index all type of documents.",
+          "title": "Ajout de documents",
+          "description": "Indexez les documents qui se trouvent sur votre ordinateur ou sur un disque pour que vous puissiez les chercher et les analyser dans Datashare. Datashare peut indexer tous les types de documents.",
           "actionText": "Ajouter des documents"
         }
       }
     },
     "entities": {
-      "title": "Entities",
+      "title": "Entités",
       "list": {
-        "emptyStateLabel": "There are no entity recognitions. Do you want to find entities?",
-        "emptyStateAction": "Find entities",
-        "info": "Entity recognitions are tasks that you run in order to recognize and to list the entities in your documents.",
-        "searchPlaceholder": "Search tasks",
-        "noResults": "No results.",
+        "emptyStateLabel": "Aucune tâche de détection d'entités n'a été lancée. Souhaitez-vous détecter des entités ?",
+        "emptyStateAction": "Détecter des entités",
+        "info": "Détecter des entités consiste à demander à Datashare d'automatiquement identifier et lister les entités mentionnées dans vos documents.",
+        "searchPlaceholder": "Rechercher des tâches",
+        "noResults": "Pas de résultat.",
         "properties": {
-          "id": "Id",
+          "id": "ID",
           "name": "Nom",
-          "entitiesToFind": "Entities to find",
-          "pipeline": "Model",
+          "entitiesToFind": "Entités à détecter",
+          "pipeline": "Modèle",
           "project": "Projet",
-          "createdAt": "Created on",
-          "progress": "Progress",
-          "result": "Result",
-          "state": "Status"
+          "createdAt": "Créé•e le",
+          "progress": "Progression",
+          "result": "Résultat",
+          "state": "Statut"
         }
       },
       "new": {
-        "title": "Find entities"
+        "title": "Détecter des entités"
       },
       "form": {
         "projectSelector": {
           "label": "Sélectionner un projet"
         },
-        "submit": "Go",
-        "failedPipelines": "Failed to retrieve pipelines",
-        "defaultPipeline": "recommended",
-        "findEntitiesType": "Find",
+        "submit": "Valider",
+        "failedPipelines": "Échec de la récupération des modèles",
+        "defaultPipeline": "recommandé",
+        "findEntitiesType": "Valider",
         "pipelineOptions": {
           "corenlp": "CoreNLP",
           "opennlp": "OpenNLP",
@@ -940,261 +931,261 @@
           "gatenlp": "GateNLP"
         },
         "pipeline": {
-          "label": "Choose a model",
-          "description": "Datashare utilise des modèles de Traitement du Language Naturel (Natural Language Processing)."
+          "label": "Sélectionnez un modèle",
+          "description": "Datashare utilise des modèles de Traitement Automatique des Langues (NLP, Natural Language Processing)."
         },
         "findEntities": {
-          "label": "Find",
+          "label": "Valider",
           "options": {
-            "emails": "Emails",
-            "named-entities": "People, organisations and locations"
+            "emails": "Adresses e-mails",
+            "named-entities": "Personnes, organisations et lieux"
           }
         },
         "offline": {
           "label": "Voulez-vous travailler hors ligne ?",
-          "description": "Select 'No' if you want to sync latest models.",
+          "description": "Sélectionnez 'Non' si vous souhaitez synchroniser les derniers modèles.",
           "options": {
             "yes": "Oui",
             "no": "Non"
           }
         },
-        "success": "Find entities task is launched",
-        "error": "An error occurred when creating the task: {error}"
+        "success": "La détection des entités est lancée",
+        "error": "Une erreur s'est produite lors de la création de la tâche : {error}"
       }
     },
     "documents": {
       "title": "Documents",
       "list": {
-        "emptyStateLabel": "Do you want to add documents?",
+        "emptyStateLabel": "Voulez-vous ajouter des documents ?",
         "emptyStateAction": "Ajouter des documents",
-        "info": "Document additions are tasks that you run to ask Datashare to add new documents.",
-        "searchPlaceholder": "Search tasks",
-        "noResults": "No results.",
+        "info": "L'ajout de documents consiste à demander à Datashare d'indexer de nouveaux documents.",
+        "searchPlaceholder": "Rechercher des tâches",
+        "noResults": "Pas de résultat.",
         "properties": {
-          "id": "Id",
+          "id": "ID",
           "name": "Nom",
           "documents": "Documents",
           "project": "Projet",
-          "createdAt": "Created on",
-          "progress": "Progress",
-          "result": "Result",
-          "state": "Status"
+          "createdAt": "Créé•e le",
+          "progress": "Progression",
+          "result": "Résultat",
+          "state": "Statut"
         }
       },
       "new": {
-        "title": "Ajouter des documents"
+        "title": "Ajoutez des documents"
       },
       "form": {
         "projectSelector": {
-          "label": "Sélectionner un projet"
+          "label": "Sélectionnez un projet"
         },
         "path": {
-          "label": "Select the folder or subfolder to analyze",
-          "description": "The entire Datashare home will be indexed by default."
+          "label": "Sélectionnez le dossier ou le sous-dossier à analyser",
+          "description": "Par défaut, le dossier \"Datashare\" dans son entier sera indexé."
         },
         "extractingLanguage": {
-          "label": "Choose the language to extract"
+          "label": "Choisissez la langue à utiliser pour extraire le texte"
         },
         "extractOcr": {
-          "label": "Extract text from images and PDFs (OCR)",
-          "description": "Si oui, Datashare exécutera l'OCR (Optical Character Recognition - la reconnaissance de caractère optique). Cela peut prendre jusqu'à 10 fois plus de temps.",
+          "label": "Extraire du texte des images et des PDF (OCR)",
+          "description": "Si oui, Datashare exécutera la reconnaissance optique de caractères (OCR, Optical Character Recognition). Cela peut prendre jusqu'à 10 fois plus de temps.",
           "options": {
             "yes": "Oui",
             "no": "Non"
           }
         },
         "skipIndexedDocuments": {
-          "label": "Skip already indexed documents",
-          "description": "If yes, Datashare will only extract text from documents that are not indexed yet.",
+          "label": "Ignorer les documents déjà indexés",
+          "description": "Si oui, Datashare n'extraira que les textes des documents qui n'ont pas encore été indexés.",
           "options": {
             "yes": "Oui",
             "no": "Non"
           }
         },
-        "submit": "Add",
-        "success": "Add document task is launched",
-        "error": "An error occurred when creating the task: {error}"
+        "submit": "Valider",
+        "success": "L'ajout de documents a été lancé",
+        "error": "Une erreur s'est produite lors de la création de la tâche : {error}"
       }
     },
     "batch-download": {
       "title": "Téléchargements en lot",
       "list": {
-        "emptyStateLabel": "There are no batch downloads. Go to search to batch download all the documents of a search.",
-        "emptyStateAction": "Go to search",
-        "info": "Batch downloads are password-protected zip files containing all the documents from one of your searches.",
-        "searchPlaceholder": "Search batch downloads",
+        "emptyStateLabel": "Aucun téléchargement en lot n'a été lancé. Allez à la page de recherches pour télécharger en lot tous les documents d'une recherche.",
+        "emptyStateAction": "Rechercher",
+        "info": "Les téléchargements en lot sont des fichiers protégés par un mot de passe contenant tous les documents d'une de vos recherches.",
+        "searchPlaceholder": "Rechercher des téléchargements en lot",
         "properties": {
           "name": "Nom",
-          "createdAt": "Created on",
+          "createdAt": "Créé•e le",
           "projects": "Projets",
-          "progress": "Progress",
+          "progress": "Progression",
           "size": "Taille",
-          "state": "Status",
-          "id": "Id"
+          "state": "Statut",
+          "id": "ID"
         }
       }
     },
     "batch-search": {
       "title": "Recherches en lot",
       "list": {
-        "emptyStateLabel": "There are no batch searches. Do you want to search a bunch of queries at once?",
-        "emptyStateAction": "Create new batch search",
-        "noMatches": "No batch searches matched. Try removing the search filter.",
-        "info": "Batch searches allow to get the results of each query of a list, but all at once.",
-        "searchPlaceholder": "Search batch searches",
-        "noResults": "No results.",
+        "emptyStateLabel": "Aucune recherche en lot n'a été lancée. Voulez-vous rechercher une liste de noms en une fois ?",
+        "emptyStateAction": "Créer une recherche en lot",
+        "noMatches": "Aucune recherche en lot ne correspond. Essayez de modifier votre recherche.",
+        "info": "Les recherches en lot permettent d'obtenir tous les résultats d'une liste de noms, en une seule requête.",
+        "searchPlaceholder": "Rechercher des recherches en lot",
+        "noResults": "Pas de résultat.",
         "properties": {
-          "privacy": "Privacy",
-          "queries": "Recherches",
+          "privacy": "Visibilité",
+          "queries": "Requêtes",
           "documents": "Documents",
           "projects": "Projets",
-          "author": "Auteur·e",
+          "author": "Auteur·ice",
           "name": "Nom",
-          "createdAt": "Created on",
-          "progress": "Progress",
-          "state": "Status"
+          "createdAt": "Créé•e le",
+          "progress": "Progression",
+          "state": "Statut"
         }
       },
       "form": {
         "sections": {
-          "general": "Name, project(s) and description",
-          "queries": "Recherches",
-          "operators": "Search operators",
+          "general": "Nom, projet(s) et description",
+          "queries": "Requêtes",
+          "operators": "Opérateurs de recherche",
           "filters": "Filtres"
         },
         "name": {
           "label": "Nom",
-          "placeholder": "Type the name of your batch search"
+          "placeholder": "Tapez le nom de votre recherche en lot"
         },
         "projects": {
-          "label": "Project(s)"
+          "label": "Projet(s)"
         },
         "description": {
           "label": "Description",
-          "placeholder": ""
+          "placeholder": "Vide"
         },
         "visibility": {
-          "label": "Visibility",
+          "label": "Visibilité",
           "options": {
-            "private": "Private - Only you will see your batch search",
-            "shared": "Shared - Only members of all the selected project(s) will see your batch search"
+            "private": "Privé - Vous seul•e verrez votre recherche en lot",
+            "shared": "Partagé - Les membres des projets sélectionnés verront votre recherche en lot"
           },
-          "description": "This option can be changed later (either way)"
+          "description": "Cette option pourra être modifiée plus tard"
         },
         "csvFile": {
-          "label": "Use a CSV",
-          "placeholder": "Drop your CSV"
+          "label": "Téléchargez un CSV",
+          "placeholder": "Déposez votre CSV"
         },
         "listQueries": {
-          "label": "Or type your queries",
-          "placeholder": "New feature coming soon!"
+          "label": "Ou tapez vos requêtes",
+          "placeholder": "Nouvelle fonctionnalité à venir bientôt !"
         },
         "phraseChanges": {
-          "label": "Sentence changes",
-          "description": "Also called proximity searches. Maximum number of operations (insertions, deletions, substitutions and transpositions) on terms needed to make one phrase match the other."
+          "label": "Changements de phrase",
+          "description": "Nombre maximum de changements sur les mots pour que l'expression recherchée corresponde aux expressions trouvées (insertions, suppressions, substitutions et/ou transpositions)."
         },
         "spellingChanges": {
-          "label": "Spelling changes",
-          "description": "Also called fuzziness. Number of change(s) in the characters in the words: insertions, deletions or substitutions of a single character, or transposition of 2 adjacent characters."
+          "label": "Variation orthographique",
+          "description": "Nombre maximum de changements des caractères dans les mots : insertions, suppressions ou substitutions d'un seul caractère, ou transposition de 2 caractères adjacents. "
         },
         "phraseMatch": {
           "label": "Rechercher les termes exacts",
           "options": {
-            "yes": "Yes - Queries searched within double quotes",
-            "no": "No - Apply operators (AND, OR, NOT, etc.) in the queries"
+            "yes": "Oui - Les requêtes seront cherchées sans guillemets",
+            "no": "Non - Cela appliquera les éventuels opérateurs (AND, OR, NOT, etc) dans les requêtes"
           }
         },
-        "submit": "Create",
-        "submitError": "Something went wrong, unable to run the batch search.",
-        "submitSuccess": "Batch search created successfully."
+        "submit": "Valider",
+        "submitError": "Une erreur s'est produite, impossible d'exécuter la recherche en lot.",
+        "submitSuccess": "La recherche en lot a été créée."
       },
       "new": {
-        "title": "Create new batch search"
+        "title": "Créer une recherche en lot"
       }
     },
     "batch-search-queries": {
       "list": {
-        "title": "Recherches",
-        "noMatches": "No queries matches your search.",
+        "title": "Requêtes",
+        "noMatches": "Aucune requête ne correspond à votre recherche.",
         "fields": {
-          "query": "Recherche",
+          "query": "Requête",
           "count": "Documents",
-          "queryNumber": "Query position"
+          "queryNumber": "Position de la requête"
         }
       }
     },
     "batch-search-results": {
       "list": {
-        "title": "All documents",
-        "emptyStateLabel": "None of the queries had matches."
+        "title": "Tous les documents",
+        "emptyStateLabel": "Aucune requête n'a de résultat."
       },
       "show": {
-        "title": "Query results",
-        "emptyStateLabel": "This query had no matches.",
+        "title": "Résultats de la requête",
+        "emptyStateLabel": "Cette requête n'a pas de résultat.",
         "fields": {
-          "query": "Recherche",
+          "query": "Requête",
           "documentNumber": "Rang",
           "documentName": "Nom du document",
           "project": "Projet",
           "contentType": "Type",
           "contentLength": "Taille",
           "documentPath": "Chemin",
-          "creationDate": "Created on"
+          "creationDate": "Créé•e le"
         }
       }
     }
   },
   "batchSearchErrorModal": {
-    "okTitle": "Ok",
-    "errorTitle": "The error is",
-    "text": "how to fix the most common errors",
-    "description": "The system encountered a problem. Syntax errors in the CSV are the usual suspects (see {link})."
+    "okTitle": "OK",
+    "errorTitle": "L'erreur est",
+    "text": "comment corriger les erreurs les plus courantes",
+    "description": "Le système a rencontré un problème. Il s'agit souvent d'erreurs de syntaxe dans le CSV (voir {link})."
   },
   "batchSearchCard": {
-    "seeAllDocuments": "See all documents",
-    "downloadResultsLabel": "Download results (CSV)",
-    "nbDocuments": "Batch search document results",
-    "nbDocumentsLabel": "{n} documents | {n} document | {n} documents",
-    "nbQueries": "Batch search queries",
-    "nbQueriesLabel": "{n} queries | {n} query | {n} queries",
+    "seeAllDocuments": "Voir tous les documents",
+    "downloadResultsLabel": "Télécharger les résultats (CSV)",
+    "nbDocuments": "Résultats de la recherche en lot",
+    "nbDocumentsLabel": "{n} document | {n} document | {n} documents",
+    "nbQueries": "Requêtes de la recherche en lot",
+    "nbQueriesLabel": "{n} requête | {n} requête | {n} requêtes",
     "downloadQueriesLabel": "Télécharger les requêtes",
-    "noResultsQueriesLabel": "No-match queries",
-    "noResultsQueriesDownload": "Download no-match queries",
-    "noResultsQueries": "{n} no-match queries | {n} no-match query | {n} no-match queries"
+    "noResultsQueriesLabel": "Requêtes sans résultat",
+    "noResultsQueriesDownload": "Télécharger les requêtes sans résultat",
+    "noResultsQueries": "{n} requête sans résultat | {n} requête sans résultat  | {n} requêtes sans résultat"
   },
   "batchSearchCardDetails": {
-    "status": "Status",
-    "date": "Created on",
-    "author": "Auteur·e",
-    "visibilityPrivate": "Private",
-    "visibilityShared": "Shared",
-    "visibility": "Visibility",
-    "phraseMatchOn": "Do phrase match: yes",
-    "phraseMatchOff": "Do phrase match: no",
-    "phraseMatch": "Phrase match",
-    "proximity": "Proximity - Sentence changes",
-    "proximityValue": "Sentence changes: {n} | Sentence change: {n} | Sentence changes: {n}",
-    "fuzziness": "Fuzziness - Spelling changes",
-    "fuzzinessValue": "Spelling changes: {n} | Spelling change: {n} | Spelling changes: {n}",
+    "status": "Statut",
+    "date": "Créé•e le",
+    "author": "Auteur·ice",
+    "visibilityPrivate": "Privée",
+    "visibilityShared": "Partagée",
+    "visibility": "Visibilité",
+    "phraseMatchOn": "Rechercher les termes exacts : oui",
+    "phraseMatchOff": "Rechercher les termes exacts : non",
+    "phraseMatch": "Recherche des termes exacts",
+    "proximity": "Proximité - Changements de phrase",
+    "proximityValue": "Changement de phrase : {n} | Changement de phrase : {n} | Changements de phrase : {n}",
+    "fuzziness": "\"Fuzziness\" - Variation orthographique",
+    "fuzzinessValue": "Variation orthographique : {n} | Variation orthographique : {n} | Variations orthographiques : {n}",
     "projects": "Projets",
     "description": "Description"
   },
   "batchSearchActions": {
     "remove": {
-      "success": "The batch search was removed",
-      "error": "Unable to remove the batch search"
+      "success": "La recherche en lot a été supprimée",
+      "error": "Impossible de supprimer la recherche en lot"
     },
     "stop": {
-      "success": "The batch search was stopped",
-      "error": "Unable to stop the batch search"
+      "success": "La recherche en lot a été arrêtée",
+      "error": "Impossible d'arrêter la recherche en lot"
     },
     "relaunch": {
-      "success": "The batch search was relaunched",
-      "error": "Unable to relaunch the batch search"
+      "success": "La recherche en lot a été relancée",
+      "error": "Impossible de relancer la recherche en lot"
     }
   },
   "batchSearchActionsEditModal": {
-    "title": "Edit batch search",
+    "title": "Modifier la recherche en lot",
     "name": "Nom",
     "description": "Description"
   },
@@ -1206,35 +1197,35 @@
   },
   "buttonRowAction": {
     "relaunch": "Relancer",
-    "stop": "Stop",
+    "stop": "Arrêter",
     "delete": "Supprimer",
-    "edit": "Edit",
+    "edit": "Modifier",
     "search": "Rechercher"
   },
   "textTruncate": {
-    "seeLess": "See less",
-    "seeMore": "See more"
+    "seeLess": "Voir moins",
+    "seeMore": "Voir plus"
   },
   "pageSettings": {
-    "title": "Page settings"
+    "title": "Paramètres de la page"
   },
   "pageSettingsSectionGroupAll": {
-    "label": "Tous"
+    "label": "Tout"
   },
   "pageTable": {
-    "toggleDetails": "Toggle details"
+    "toggleDetails": "Afficher / Masquer les détails"
   },
   "projects": {
     "title": "Projets"
   },
   "projectDeletionModal": {
-    "title": "Are you sure you want to delete the {project} project?",
+    "title": "Êtes-vous sûr•e de vouloir supprimer le projet {project} ?",
     "body": {
-      "all": "It will remove {documents} from your index, {tags} and {recommendations}. {default}",
-      "default": "A new empty Default project will be created immediately.",
-      "documents": "0 documents | 1 document | {count} documents",
-      "tags": "0 tags | 1 tag | {count} tags",
-      "recommendations": "0 recommendations | 1 recommendation | {count} recommendations"
+      "all": "Ceci supprimera les {documents} de votre index, les {tags} et les {recommendations}. {default}",
+      "default": "Un nouveau projet vide intitulé \"Défaut\" sera immédiatement créé.",
+      "documents": "0 document | 1 document | {count} documents",
+      "tags": "0 tag | 1 tag | {count} tags",
+      "recommendations": "0 recommandation | 1 recommandation | {count} recommandations"
     },
     "notify": {
       "succeed": "Le projet a été supprimé",
@@ -1242,105 +1233,105 @@
     }
   },
   "projectEntriesTableHead": {
-    "name": "Name of the project",
+    "name": "Nom du projet",
     "description": "Description",
     "documents": "Documents",
-    "updatedOn": "Updated on",
-    "links": "Links",
+    "updatedOn": "Modifié le",
+    "links": "Liens",
     "actions": "Actions"
   },
   "projectRowActions": {
     "edit": "Modifier le projet",
-    "delete": "Delete project"
+    "delete": "Supprimer le projet"
   },
   "projectJumbotron": {
     "delete": "Supprimer",
-    "edit": "Edit",
-    "creationDate": "Created:",
-    "updateDate": "Updated:"
+    "edit": "Modifier",
+    "creationDate": "Créé•e le",
+    "updateDate": "Modifié le"
   },
   "projectList": {
-    "title": "Projects",
-    "searchPlaceholder": "Search projects",
+    "title": "Projets",
+    "searchPlaceholder": "Rechercher des projets",
     "fields": {
       "label": "Libellé",
-      "updateDate": "Mis à jour"
+      "updateDate": "Modifié le"
     }
   },
   "projectNew": {
     "title": "Créer un projet",
     "description": "Un projet est un ensemble de documents à explorer.",
     "notify": {
-      "succeed": "Le projet est créé",
+      "succeed": "Le projet a été créé",
       "succeedBody": "Maintenant, vous pouvez ajouter des documents à ce projet.",
       "failed": "Impossible de créer le projet",
-      "failedBody": "Une erreur est survenue pendant la création du projet."
+      "failedBody": "Une erreur est survenue lors de la création du projet."
     }
   },
   "projectViewOverview": {
-    "emptyStateLabel": "Oh, it’s lonely in here... This project has no documents yet.",
-    "emptyStateAction": "Add first documents",
+    "emptyStateLabel": "Il n'y a aucun document dans ce projet pour le moment...",
+    "emptyStateAction": "Ajouter les premiers documents",
     "nav": {
       "insights": "Aperçu",
-      "paths": "Chemins du fichier",
-      "graph": "Graph",
+      "paths": "Chemins des fichiers",
+      "graph": "Graphe",
       "details": "Détails",
       "history": "Historique"
     }
   },
   "projectViewOverviewGraph": {
-    "emptyStateLabel": "Graph extension has not been installed yet. Read ICIJ’s {articleLink} to learn more about this feature.",
+    "emptyStateLabel": "L’extension graphe n’a pas encore été installée. Lisez l’{articleLink} de l’ICIJ pour en savoir plus sur cette fonctionnalité.",
     "emptyStateLabelArticleLink": "article",
-    "emptyStateAction": "Install"
+    "emptyStateAction": "Installer"
   },
   "projectViewEdit": {
     "title": "Modifier le projet",
     "notify": {
       "update": {
         "succeed": "Le projet a été enregistré",
-        "succeedBody": "Projet sauvegardé.",
+        "succeedBody": "Projet enregistré.",
         "failed": "Impossible de modifier le projet",
-        "failedBody": "Une erreur est survenue pendant la modification du projet."
+        "failedBody": "Une erreur est survenue lors de la modification du projet."
       }
     },
-    "submit": "Mettre à jour"
+    "submit": "Enregistrer"
   },
   "projectViewAddDocuments": {
-    "title": "Add documents to project",
+    "title": "Ajouter des documents au projet",
     "notify": {
       "succeed": "Les documents sont en cours d'indexation.",
-      "seeTasks": "See tasks",
-      "failed": "Add document task failed",
-      "failedBody": "An error occurred when launching indexing task to add documents."
+      "seeTasks": "Voir les tâches",
+      "failed": "L'ajout de documents a échoué",
+      "failedBody": "Une erreur s'est produite lors de l'indexation pour ajouter des documents."
     }
   },
   "projectViewFindNamedEntities": {
-    "title": "Find named entities",
+    "title": "Détecter des entités",
     "notify": {
       "succeed": "La détection d'entités est en cours.",
-      "seeTasks": "See tasks",
-      "failed": "Find named entities task failed",
-      "failedBody": "An error occurred when launching indexing task to add documents."
+      "seeTasks": "Voir les tâches",
+      "failed": "La détection d'entités a échoué",
+      "failedBody": "Une erreur s'est produite lors de l'indexation pour ajouter des documents."
     }
   },
   "projectForm": {
     "form": {
       "name": {
-        "label": "Identifiant automatique",
-        "placeholder": ""
+        "label": "Identifiant automatiquement généré",
+        "placeholder": "Vide"
       },
       "label": {
         "label": "Libellé",
-        "placeholder": "The label of your project",
-        "invalidFeedback": "Le libellé \"{label}\" est un mot réservé."
+        "placeholder": "Le nom de votre projet",
+        "invalidFeedback": "Le nom \"{label}\" est un mot réservé."
       },
       "description": {
         "label": "Description",
-        "placeholder": ""
+        "placeholder": "Vide"
       },
       "sourcePath": {
         "label": "Dossier du projet",
-        "placeholder": "Select the folder where the project's documents are located."
+        "placeholder": "Sélectionnez le dossier où se trouvent les documents du projet."
       },
       "logoUrl": {
         "label": "URL du logo",
@@ -1352,40 +1343,40 @@
       },
       "publisherName": {
         "label": "Nom de l'éditeur·ice",
-        "placeholder": "The name of the people or organization who published the files in this project"
+        "placeholder": "Le nom des personnes ou de l'organisation qui ont publié les fichiers dans ce projet"
       },
       "maintainerName": {
-        "label": "Nom du mainteneur",
-        "placeholder": "The name of the people or organization who will maintain the project on Datashare"
+        "label": "Nom du responsable",
+        "placeholder": "Le nom des personnes ou de l'organisation qui maintiendront le projet sur Datashare"
       }
     },
     "reset": "Réinitialiser",
     "submit": "Valider",
-    "deleteConfirmation": "Êtes-vous sûr de vouloir supprimer ce projet?",
+    "deleteConfirmation": "Êtes-vous sûr•e de vouloir supprimer ce projet?",
     "delete": "Supprimer"
   },
   "keyboardShortcutsPopoverLink": {
-    "label": "See all shortcuts"
+    "label": "Voir tous les raccourcis"
   },
   "keyboardShortcutsPopoverTitle": {
-    "label": "Keyboard shortcuts"
+    "label": "Raccourcis clavier"
   },
   "shortkeys": {
     "goToPreviousDocument": "Aller au document précédent",
     "goToNextDocument": "Aller au document suivant",
-    "backToSearchResults": "Retourner à la recherche",
+    "backToSearchResults": "Retourner aux résultats de recherche",
     "goToPreviousTab": "Aller à l'onglet précédent",
     "goToNextTab": "Aller à l'onglet suivant",
-    "activateSearchBar": "Chercher dans le document",
-    "deactivateSearchBar": "Quitter la recherche dans le document",
+    "activateSearchBar": "Rechercher dans le document",
+    "deactivateSearchBar": "Fermer la recherche dans le document",
     "findPreviousOccurrence": "Aller à l'occurrence précédente dans le document",
     "findNextOccurrence": "Aller à l'occurrence suivante dans le document"
   },
   "settings": {
     "layout": {
-      "infoDismiss": "Got it, don't show again",
-      "searchPlaceholder": "Filter the list",
-      "noResults": "No matching result for the query '{query}'"
+      "infoDismiss": "J'ai compris, ne plus afficher",
+      "searchPlaceholder": "Filtrer la liste",
+      "noResults": "Aucun résultat correspondant à la requête '{query}'"
     },
     "title": "Paramètres",
     "description": {
@@ -1393,50 +1384,50 @@
     },
     "general": {
       "title": "Général",
-      "info": "Don’t change these settings if you don’t know what you are doing.",
+      "info": "Ne modifiez pas ces paramètres si vous ne savez pas ce que vous faites.",
       "searchPlaceholder": "Paramètres de recherche"
     },
     "generalLabel": {
-      "restore": "Restore original setting"
+      "restore": "Revenir aux paramètres d'origine"
     },
     "appearance": {
       "title": "Apparence"
     },
     "languages": {
       "title": "Langues",
-      "info": "Translations are <a href='{href}' class='alert-link'>maintained on Crowdin</a>."
+      "info": "Les traductions sont <a href='{href}' class='alert-link'>maintenues sur Crowdin</a>."
     },
     "addons": {
       "plugin": {
         "title": "Plugins",
-        "info": "Plugins are front-end modules to add new features in Datashare's user interface.",
+        "info": "Les plugins sont des modules front-end qui ajoutent de nouvelles fonctionnalités dans l'interface de Datashare.",
         "submitSuccess": "Le plugin a été installé avec succès.",
         "submitError": "Erreur lors de l'installation du plugin.",
-        "searchPlaceholder": "Rechercher dans les plugins",
-        "errorLabel": "An error occurred while retrieving the plugins. Refresh the page or contact the support."
+        "searchPlaceholder": "Rechercher des plugins",
+        "errorLabel": "Une erreur s'est produite lors de la récupération des plugins. Rafraîchissez la page ou contactez le support."
       },
       "extension": {
         "title": "Extensions",
-        "info": "Extensions are back-end modules to add new features to store and manipulate data with Datashare.",
+        "info": "Les extensions sont des modules back-end qui ajoutent de nouvelles fonctionnalités pour stocker et manipuler des données dans Datashare.",
         "submitSuccess": "Extension installée avec succès, veuillez redémarrer Datashare.",
         "submitError": "Erreur lors de l'installation de l'extension.",
-        "searchPlaceholder": "Rechercher dans les extensions",
-        "errorLabel": "An error occurred while retrieving the extensions. Refresh the page or contact the support."
+        "searchPlaceholder": "Rechercher des extensions",
+        "errorLabel": "Une erreur s'est produite lors de la récupération des plugins. Rafraîchissez la page ou contactez le support."
       }
     },
     "api": {
       "title": "API",
       "newApiKey": "Créer une clé API",
-      "apiKey": "Clé d'API",
+      "apiKey": "Clé API",
       "noAccess": "Vous n'avez pas accès à cette page en mode local.",
-      "description": "An API key allows you interact with Datashare <a href=\"https://icij.gitbook.io/datashare/developers/backend/api\" target=\"_blank\">through the API</a>, using tools like <a href=\"https://github.com/ICIJ/datashare-tarentula\" target=\"_blank\">Tarentula</a> or your own scripts.",
+      "description": "Une clé API vous permet d'interagir avec Datashare <a href=\"https://icij.gitbook.io/datashare/developers/backend/api\" target=\"_blank\">via l'API</a>, en utilisant des outils comme <a href=\"https://github.com/ICIJ/datashare-tarentula\" target=\"_blank\">Tarentula</a> ou vos propres scripts.",
       "key": {
-        "badge": "Key",
-        "copy": "Copy",
-        "hash": "Hash: {hash}",
+        "badge": "Clé",
+        "copy": "Copier",
+        "hash": "Hachage : {hash}",
         "created": "La clé API a été créée",
         "warning": "Veuillez copier cette clé dans un endroit sûr, vous ne pourrez plus la consulter ensuite sur Datashare.",
-        "unavailable": "You can only access a key when creating it.",
+        "unavailable": "Vous ne pouvez consulter une clé qu'au moment de sa création.",
         "regenerate": "Regénérer",
         "delete": {
           "button": "Supprimer",
@@ -1451,55 +1442,55 @@
     "submitError": "Impossible d'enregistrer ces paramètres."
   },
   "viewSettings": {
-    "perPage": "{title} per page",
-    "properties": "Properties",
+    "perPage": "{title} par page",
+    "properties": "Propriétés",
     "layout": {
-      "label": "Layout",
-      "grid": "Grid",
-      "table": "Table",
-      "list": "List"
+      "label": "Présentation",
+      "grid": "Grille",
+      "table": "Tableau",
+      "list": "Liste"
     },
     "sortBy": {
-      "label": "Tri par",
+      "label": "Trier par",
       "format": "{name} ({order})"
     },
     "options": {
       "name": "Nom",
-      "creationDate": "Created on",
-      "updateDate": "Latest update",
-      "visitDate": "Last visit",
-      "documentsCount": "Documents count",
-      "taskStatus": "Task status",
-      "progress": "Progress",
+      "creationDate": "Créé•e le",
+      "updateDate": "Dernière modification",
+      "visitDate": "Dernière visite",
+      "documentsCount": "Nombre de documents",
+      "taskStatus": "Statut de la tâche",
+      "progress": "Progression",
       "project": "Projet",
-      "privacy": "Privacy",
-      "pipeline": "Model",
-      "entitiesToFind": "Entities to find",
-      "queries": "Recherches",
+      "privacy": "Visibilité",
+      "pipeline": "Modèle",
+      "entitiesToFind": "Entités à détecter",
+      "queries": "Requêtes",
       "documents": "Documents",
       "size": "Taille",
-      "id": "Id"
+      "id": "ID"
     },
     "order": {
       "default": {
-        "asc": "ascending",
-        "desc": "descending"
+        "asc": "croissant",
+        "desc": "décroissant"
       },
       "alpha": {
-        "asc": "A to Z",
-        "desc": "Z to A"
+        "asc": "A à Z",
+        "desc": "Z à A"
       },
       "number": {
-        "asc": "increasing",
-        "desc": "decreasing"
+        "asc": "croissant",
+        "desc": "décroissant"
       },
       "quantity": {
-        "asc": "low",
-        "desc": "high"
+        "asc": "basse",
+        "desc": "haute"
       },
       "date": {
-        "asc": "old first",
-        "desc": "recent first"
+        "asc": "Du plus ancien au plus récent",
+        "desc": "Du plus récent au plus ancien"
       }
     }
   },
@@ -1520,33 +1511,33 @@
   "batchDownload": {
     "title": "Téléchargements en lot",
     "noFile": "L'archive a expiré.",
-    "created": "Votre téléchargement est en cours de préparation",
+    "created": "Votre téléchargement en lot est en cours de préparation",
     "warning": "Cette fonctionnalité est actuellement en cours de développement par l'équipe de Datashare.",
-    "seeAll": "See all",
-    "errorMessage": "Le système a rencontré un problème. Veuillez vous référer à ces informations lorsque vous contactez le support.",
-    "errorTitle": "La préparation du téléchargement <code class=\"fw-bold\">{taskId}</code> a échoué.",
+    "seeAll": "Voir tout",
+    "errorMessage": "Le système a rencontré un problème. Veillez à transférer ces informations si vous contactez le support.",
+    "errorTitle": "Le téléchargement en lot <code class=\"fw-bold\">{taskId}</code> a échoué.",
     "relaunch": {
-      "succeed": "Votre téléchargement est en cours de préparation",
+      "succeed": "Votre téléchargement en lot est en cours de préparation",
       "succeedBody": "Le téléchargement sera bientôt disponible.",
       "failed": "Impossible de relancer",
-      "failedBody": "Une erreur est survenue lorsque la recherche en lot a été relancée."
+      "failedBody": "Une erreur est survenue lorsque le téléchargement en lot a été relancé."
     },
     "delete": {
       "failed": "Impossible de supprimer",
-      "failedBody": "Une erreur est survenue lorsquela recherche en lot a été supprimée."
+      "failedBody": "Une erreur est survenue lorsque le téléchargement en lot a été supprimé."
     },
-    "limitations": "Les téléchargements sont limités à {maxNbFiles} fichiers et {maxSize} o."
+    "limitations": "Les téléchargements en lot sont limités à {maxNbFiles} fichiers et {maxSize} o."
   },
   "batchDownloadActions": {
     "remove": {
       "label": "Supprimer",
-      "success": "The batch download was removed",
-      "error": "Unable to remove the batch download"
+      "success": "Le téléchargement en lot a été supprimé",
+      "error": "Impossible de supprimer le téléchargement en lot"
     },
     "relaunch": {
       "label": "Relancer",
-      "success": "The batch download was relaunched",
-      "error": "Unable to relaunch the batch download"
+      "success": "Le téléchargement en lot a été relancé",
+      "error": "Impossible de relancer le téléchargement en lot"
     },
     "search": {
       "label": "Voir les résultats de la recherche"
@@ -1554,15 +1545,15 @@
   },
   "widget": {
     "noData": "Pas de données",
-    "noRecommendations": "No recommendations",
-    "noEntitiesFindSome": "There are no entities found yet.",
-    "findEntities": "Find entities",
+    "noRecommendations": "Pas de recommandation",
+    "noEntitiesFindSome": "Aucune entité n'a été détectée pour le moment.",
+    "findEntities": "Détecter des entités",
     "recommendedBy": {
-      "title": "Latest recommended documents"
+      "title": "Derniers documents recommandés"
     },
     "barometer": {
       "document": "aucun document | 1 document | {total} documents",
-      "amongWhichOnDisk": "among which {n} on disk"
+      "amongWhichOnDisk": "dont {n} sur le disque"
     },
     "diskUsage": {
       "details": "Voir l'utilisation du disque"
@@ -1586,109 +1577,109 @@
         "maintainerName": "Maintenu par",
         "publisherName": "Publié par",
         "sourceUrl": "Source",
-        "creationDate": "Créé",
-        "updateDate": "Mis à jour"
+        "creationDate": "Créé•e le",
+        "updateDate": "Modifié le"
       }
     }
   },
   "widgetEntities": {
-    "person": "person | people",
-    "location": "location | locations",
-    "organization": "organization | organizations",
-    "email": "email | emails"
+    "person": "personne | personnes",
+    "location": "lieu | lieux",
+    "organization": "organisation | organisations",
+    "email": "adresse e-mail | adresses e-mails"
   },
   "pathTreeBreadcrumb": {
     "datadir": "Accueil"
   },
   "projectCardUpdateDate": {
-    "label": "Updated:"
+    "label": "Modifié le"
   },
   "projectCardDocumentsCount": {
-    "noDocuments": "No documents"
+    "noDocuments": "Aucun document"
   },
   "projectCardFooter": {
-    "insights": "See insights",
+    "insights": "Voir l'aperçu",
     "search": "Rechercher"
   },
   "projectCards": {
     "documentsCount": "Aucun document | 1 document | {count} documents",
-    "about": "A propos",
+    "about": "À propos",
     "search": "Rechercher"
   },
   "projectSelector": {
-    "noMatches": "No matches"
+    "noMatches": "Aucun résultat"
   },
   "projectDropdownSelectorSearch": {
-    "placeholder": "Search projects",
-    "noMatches": "No matches"
+    "placeholder": "Rechercher des projets",
+    "noMatches": "Aucun résultat"
   },
   "projectDropdownSelectorAll": {
-    "label": "All projects"
+    "label": "Tous les projets"
   },
   "pathViewEntryMore": {
-    "label": "No more directories | Show 1 more directory | Show {nextPageSize} of {directoriesLeft} more directories"
+    "label": "Pas plus de dossiers | Afficher 1 dossier en plus | Afficher {nextPageSize} des {directoriesLeft} dossiers en plus"
   },
   "pathViewSearch": {
-    "placeholder": "Search paths"
+    "placeholder": "Rechercher des dossiers"
   },
   "pathViewLabel": {
     "label": "Chemins du fichier"
   },
   "searchBarInputDropdownForProjects": {
     "projectsCount": "Aucun projet | 1 projet | {count} projets",
-    "noMatches": "No matches"
+    "noMatches": "Aucun résultat"
   },
   "searchBreadcrumbFormList": {
-    "label": "Your search:"
+    "label": "Votre recherche :"
   },
   "searchBreadcrumbFormEmpty": {
-    "label": "Your search has not started. Use the search bar or add filters."
+    "label": "Votre recherche n'a pas commencé. Utilisez la barre de recherche ou ajoutez des filtres."
   },
-  "searchBreadcrumbFormEntryOccurences": {
-    "label": "0 documents | 1 document | {occurrences} documents",
-    "title": "No less documents with this filter | 1 less document with this filter | {lessOccurrences} less documents with this filter"
+  "searchBreadcrumbFormEntryOccurrences": {
+    "label": "0 document | 1 document | {occurrences} documents",
+    "title": "Pas moins de documents avec ce filtre | 1 document de moins avec ce filtre | {lessOccurrences} documents de moins avec ce filtre"
   },
   "searchBreadcrumbFormFooter": {
     "clearFilters": "Effacer les filtres",
-    "clearQuery": "Clear query",
-    "clearFiltersAndQuery": "Clear  filters and query",
-    "saveSearch": "Save search",
-    "createAlert": "Create alert"
+    "clearQuery": "Effacer la requête",
+    "clearFiltersAndQuery": "Effacer les filtres et les requêtes",
+    "saveSearch": "Sauvegarder la recherche",
+    "createAlert": "Créer une alerte"
   },
   "searchBreadcrumbFormToggler": {
     "close": "Fermer"
   },
   "searchSavingModal": {
-    "title": "Name your saved search",
-    "okTitle": "Save search",
+    "title": "Nommez votre recherche sauvegardée",
+    "okTitle": "Sauvegarder la recherche",
     "success": "Votre recherche a été sauvegardée.",
-    "seeAll": "See all",
+    "seeAll": "Voir tout",
     "error": "Erreur, votre recherche n'a pas pu être sauvegardée.",
     "form": {
       "name": "Nom",
-      "description": "You can retrieve all your saved searches in {link}.",
+      "description": "Vous pouvez voir toutes vos recherches sauvegardées dans {link}.",
       "link": "Recherches sauvegardées"
     }
   },
   "searchSelection": {
-    "count": "No selected documents | 1 selected document | {count} selected documents",
+    "count": "Aucun document sélectionné | 1 document sélectionné | {count} documents sélectionnés",
     "star": "Mettre en favoris",
     "unstar": "Enlever des favoris",
     "tag": "Tag",
-    "nbDocs": "No documents | 1 document | {count} documents",
-    "nbTags": "no tags | 1 tag | {count} tags",
-    "tagSuccess": "{nbDocs} have been tagged with {nbTags}.",
-    "tagFailed": "Error: {nbDocs} have not been tagged with {nbTags}."
+    "nbDocs": "Aucun document | 1 document | {count} documents",
+    "nbTags": "Aucun tag | 1 tag | {count} tags",
+    "tagSuccess": "{nbDocs} ont été tagués avec {nbTags}.",
+    "tagFailed": "Erreur : {nbDocs} n'ont pas été tagués avec {nbTags}."
   },
   "searchSelectionAddTagsModal": {
-    "title": "Tag selected document | Tag selected document | Tag {n} selected documents",
-    "description": "You can add multiple tags by separating them with comma.",
-    "question": "Add {n} tag to selected documents ?  | Add {n} tags to selected documents ?",
-    "okTitle": "Add",
+    "title": "Taguer le document sélectionné | Taguer le document sélectionné | Taguer les {n} documents sélectionnés",
+    "description": "Vous pouvez ajouter plusieurs tags en les séparant par des virgules.",
+    "question": "Ajouter {n} tag aux documents sélectionnés ? | Ajouter {n} tags aux documents sélectionnés ?",
+    "okTitle": "Ajouter",
     "placeholder": "Tag1, Tag2"
   },
   "searchSettings": {
-    "title": "Results settings"
+    "title": "Paramètres de la page"
   },
   "documentCarousel": {
     "page": "Document",
@@ -1698,82 +1689,82 @@
   "documentRow": {
     "properties": {
       "relevance": "Pertinence",
-      "thumbnail": "Thumbnail ",
+      "thumbnail": "Vignette",
       "title": "Nom du document",
-      "highlights": "Highlights",
-      "author": "Auteur·e",
+      "highlights": "Mentions",
+      "author": "Auteur·ice",
       "path": "Chemin",
       "tags": "Tags",
       "contentLength": "Taille du ficher",
-      "contentTextLength": "Text length",
-      "contentType": "File type",
-      "creationDate": "Created on",
-      "extractionLevel": "Extraction level",
+      "contentTextLength": "Longueur du texte",
+      "contentType": "Type de fichier",
+      "creationDate": "Créé•e le",
+      "extractionLevel": "Niveau d'extraction",
       "extractionDate": "Date d'indexation",
-      "language": "Language",
+      "language": "Langue",
       "project": "Projet"
     }
   },
   "documentEntries": {
-    "noMatches": "No documents matched your search. Try using different filters."
+    "noMatches": "Aucun document ne correspond à votre recherche. Essayez d'utiliser différents filtres."
   },
   "documentEntriesTableHead": {
     "action": "Action"
   },
   "documentEntriesHeader": {
-    "batchDownloadDocuments": "Batch download: downloading multiple files is limited to {maxSize}.",
-    "batchDownloadDocumentsWarning": "Batch download: downloading multiple files is limited to the first {maxFiles} files and {maxSize}.",
-    "batchDownloadError": "Something went wrong when attempt to download the files.",
-    "batchDownloadCreated": "Your batch download is being prepared",
-    "batchDownloadLink": "See all"
+    "batchDownloadDocuments": "Téléchargement en lot : le téléchargement de plusieurs fichiers est limité à {maxSize}.",
+    "batchDownloadDocumentsWarning": "Téléchargement en lot : le téléchargement de plusieurs fichiers est limité aux {maxFiles} premiers fichiers et à {maxSize}.",
+    "batchDownloadError": "Une erreur s'est produite lors du téléchargement des fichiers.",
+    "batchDownloadCreated": "Votre téléchargement en lot est en cours de préparation",
+    "batchDownloadLink": "Voir tout"
   },
   "shortcutsView": {
-    "title": "Keyboard shortcuts",
-    "searchPlaceholder": "Search keyboard shortcuts"
+    "title": "Raccourcis clavier",
+    "searchPlaceholder": "Rechercher des raccourcis clavier"
   },
   "rowPagination": {
-    "rowRange": "to {to} of 0 | to {to} of 1 | to {to} of {total}",
-    "rowRangeFewer": "of 0 | of 1 | to {total}",
-    "rowRangeCompact": "of 0 | of 1 | of {total}"
+    "rowRange": "à {to} de 0 | à {to} de 1 | à {to} de {total}",
+    "rowRangeFewer": "sur 0 | sur 1 | sur {total}",
+    "rowRangeCompact": "sur 0 | sur 1 | sur {total}"
   },
   "rowPaginationBatchSearches": {
-    "rowRange": "to {to} of 0 batch searches | to {to} of 1 batch search | to {to} of {total} batch searches",
-    "rowRangeFewer": "of 0 batch searches | of 1 batch search | to {total} batch searches",
-    "rowRangeCompact": "of 0 batch searches | of 1 batch search | of {total} batch searches"
+    "rowRange": "à {to} sur 0 recherche en lot | à {to} sur 1 recherche en lot | à {to} sur {total} recherches en lot",
+    "rowRangeFewer": "sur 0 recherche en lot | sur 1 recherche en lot | sur {total} recherches en lot",
+    "rowRangeCompact": "sur 0 recherche en lot | sur 1 recherche en lot | sur {total} recherches en lot"
   },
   "rowPaginationBatchDownloads": {
-    "rowRange": "to {to} of 0 batch downloads | to {to} of 1 batch download | to {to} of {total} batch downloads",
-    "rowRangeFewer": "of 0 batch downloads | of 1 batch download | to {total} batch downloads",
-    "rowRangeCompact": "of 0 batch downloads | of 1 batch download | of {total} batch downloads"
+    "rowRange": "à {to} sur 0 téléchargement en lot | à {to} sur 1 téléchargement en lot | à {to} sur {total} téléchargements en lot",
+    "rowRangeFewer": "sur 0 téléchargement en lot | sur 1 téléchargement en lot | sur {total} téléchargements en lot",
+    "rowRangeCompact": "sur 0 téléchargement en lot | sur 1 téléchargement en lot | sur {total} téléchargements en lot"
   },
   "rowPaginationDocuments": {
-    "rowRange": "to {to} of 0 documents | to {to} of 1 document | to {to} of {total} documents",
-    "rowRangeFewer": "of 0 documents | of 1 document | to {total} documents",
-    "rowRangeCompact": "of 0 documents | of 1 document | of {total} documents"
+    "rowRange": "à {to} sur 0 document | à {to} sur 1 document | à {to} sur {total} documents",
+    "rowRangeFewer": "sur 0 document | sur 1 document | sur {total} documents",
+    "rowRangeCompact": "sur 0 document | sur 1 document | sur {total} documents"
   },
   "rowPaginationProjects": {
-    "rowRange": "to {to} of 0 projects | to {to} of 1 project | to {to} of {total} projects",
-    "rowRangeFewer": "of 0 projects | of 1 project | to {total} projects",
-    "rowRangeCompact": "of 0 projects | of 1 project | of {total} projects"
+    "rowRange": "à {to} sur 0 projet | à {to} sur 1 projet | à {to} sur {total} projets",
+    "rowRangeFewer": "sur 0 projet | sur 1 projet | sur {total} projets",
+    "rowRangeCompact": "sur 0 projet | sur 1 projet | sur {total} projets"
   },
   "rowPaginationQueries": {
-    "rowRange": "to {to} of 0 queries | to {to} of 1 query | to {to} of {total} queries",
-    "rowRangeFewer": "of 0 queries | of 1 query | to {total} queries",
-    "rowRangeCompact": "of 0 queries | of 1 query | of {total} queries"
+    "rowRange": "à {to} sur 0 requête | à {to} sur 1 requête | à {to} sur {total} requêtes",
+    "rowRangeFewer": "sur 0 requête | sur 1 requête | sur {total} requêtes",
+    "rowRangeCompact": "sur 0 requête | sur 1 requête | sur {total} requêtes"
   },
   "rowPaginationResults": {
-    "rowRange": "to {to} of 0 results | to {to} of 1 result | to {to} of {total} results",
-    "rowRangeFewer": "of 0 results | of 1 result | to {total} results",
-    "rowRangeCompact": "of 0 results | of 1 result | of {total} results"
+    "rowRange": "à {to} sur 0 résultat | à {to} sur 1 résultat | à {to} sur {total} résultats",
+    "rowRangeFewer": "sur 0 résultat | sur 1 résultat | sur {total} résultats",
+    "rowRangeCompact": "sur 0 résultat | sur 1 résultat | sur {total} résultats"
   },
   "rowPaginationSearches": {
-    "rowRange": "to {to} of 0 searches | to {to} of 1 search | to {to} of {total} searches",
-    "rowRangeFewer": "of 0 searches | of 1 search | to {total} searches",
-    "rowRangeCompact": "of 0 searches | of 1 search | of {total} searches"
+    "rowRange": "à {to} sur 0 recherche | à {to} sur 1 recherche | à {to} sur {total} recherches",
+    "rowRangeFewer": "sur 0 recherche | sur 1 recherche | sur {total} recherches",
+    "rowRangeCompact": "sur 0 recherche | sur 1 recherche | sur {total} recherches"
   },
   "rowPaginationTasks": {
-    "rowRange": "to {to} of 0 tasks | to {to} of 1 task | to {to} of {total} tasks",
-    "rowRangeFewer": "of 0 tasks | of 1 task | to {total} tasks",
-    "rowRangeCompact": "of 0 tasks | of 1 task | of {total} tasks"
+    "rowRange": "à {to} sur 0 tâche | à {to} sur 1 tâche | à {to} sur {total} tâches",
+    "rowRangeFewer": "sur 0 tâche | sur 1 tâche | sur {total} tâches",
+    "rowRangeCompact": "sur 0 tâche | sur 1 tâche | sur {total} tâches"
   }
 }
