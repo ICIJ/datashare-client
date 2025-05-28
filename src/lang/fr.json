@@ -1724,47 +1724,47 @@
   },
   "rowPagination": {
     "rowRange": "à {to} de 0 | à {to} de 1 | à {to} de {total}",
-    "rowRangeFewer": "de 0 | de 1 | à {total}",
-    "rowRangeCompact": "de 0 | de 1 | à {total}"
+    "rowRangeFewer": "sur 0 | sur 1 | sur {total}",
+    "rowRangeCompact": "sur 0 | sur 1 | sur {total}"
   },
   "rowPaginationBatchSearches": {
-    "rowRange": "to {to} of 0 batch searches | to {to} of 1 batch search | to {to} of {total} batch searches",
-    "rowRangeFewer": "of 0 batch searches | of 1 batch search | to {total} batch searches",
-    "rowRangeCompact": "of 0 batch searches | of 1 batch search | of {total} batch searches"
+    "rowRange": "à {to} sur 0 recherche en lot | à {to} sur 1 recherche en lot | à {to} sur {total} recherches en lot",
+    "rowRangeFewer": "sur 0 recherche en lot | sur 1 recherche en lot | sur {total} recherches en lot",
+    "rowRangeCompact": "sur 0 recherche en lot | sur 1 recherche en lot | sur {total} recherches en lot"
   },
   "rowPaginationBatchDownloads": {
-    "rowRange": "to {to} of 0 batch downloads | to {to} of 1 batch download | to {to} of {total} batch downloads",
-    "rowRangeFewer": "of 0 batch downloads | of 1 batch download | to {total} batch downloads",
-    "rowRangeCompact": "of 0 batch downloads | of 1 batch download | of {total} batch downloads"
+    "rowRange": "à {to} sur 0 téléchargement en lot | à {to} sur 1 téléchargement en lot | à {to} sur {total} téléchargements en lot",
+    "rowRangeFewer": "sur 0 téléchargement en lot | sur 1 téléchargement en lot | sur {total} téléchargements en lot",
+    "rowRangeCompact": "sur 0 téléchargement en lot | sur 1 téléchargement en lot | sur {total} téléchargements en lot"
   },
   "rowPaginationDocuments": {
-    "rowRange": "to {to} of 0 documents | to {to} of 1 document | to {to} of {total} documents",
-    "rowRangeFewer": "of 0 documents | of 1 document | to {total} documents",
-    "rowRangeCompact": "of 0 documents | of 1 document | of {total} documents"
+    "rowRange": "à {to} sur 0 document | à {to} sur 1 document | à {to} sur {total} documents",
+    "rowRangeFewer": "sur 0 document | sur 1 document | sur {total} documents",
+    "rowRangeCompact": "sur 0 document | sur 1 document | sur {total} documents"
   },
   "rowPaginationProjects": {
-    "rowRange": "to {to} of 0 projects | to {to} of 1 project | to {to} of {total} projects",
-    "rowRangeFewer": "of 0 projects | of 1 project | to {total} projects",
-    "rowRangeCompact": "of 0 projects | of 1 project | of {total} projects"
+    "rowRange": "à {to} sur 0 projet | à {to} sur 1 projet | à {to} sur {total} projets",
+    "rowRangeFewer": "sur 0 projet | sur 1 projet | sur {total} projets",
+    "rowRangeCompact": "sur 0 projet | sur 1 projet | sur {total} projets"
   },
   "rowPaginationQueries": {
-    "rowRange": "to {to} of 0 queries | to {to} of 1 query | to {to} of {total} queries",
-    "rowRangeFewer": "of 0 queries | of 1 query | to {total} queries",
-    "rowRangeCompact": "of 0 queries | of 1 query | of {total} queries"
+    "rowRange": "à {to} sur 0 requête | à {to} sur 1 requête | à {to} sur {total} requêtes",
+    "rowRangeFewer": "sur 0 requête | sur 1 requête | sur {total} requêtes",
+    "rowRangeCompact": "sur 0 requête | sur 1 requête | sur {total} requêtes"
   },
   "rowPaginationResults": {
-    "rowRange": "to {to} of 0 results | to {to} of 1 result | to {to} of {total} results",
-    "rowRangeFewer": "of 0 results | of 1 result | to {total} results",
-    "rowRangeCompact": "of 0 results | of 1 result | of {total} results"
+    "rowRange": "à {to} sur 0 résultat | à {to} sur 1 résultat | à {to} sur {total} résultats",
+    "rowRangeFewer": "sur 0 résultat | sur 1 résultat | sur {total} résultats",
+    "rowRangeCompact": "sur 0 résultat | sur 1 résultat | sur {total} résultats"
   },
   "rowPaginationSearches": {
-    "rowRange": "to {to} of 0 searches | to {to} of 1 search | to {to} of {total} searches",
-    "rowRangeFewer": "of 0 searches | of 1 search | to {total} searches",
-    "rowRangeCompact": "of 0 searches | of 1 search | of {total} searches"
+    "rowRange": "à {to} sur 0 recherche | à {to} sur 1 recherche | à {to} sur {total} recherches",
+    "rowRangeFewer": "sur 0 recherche | sur 1 recherche | sur {total} recherches",
+    "rowRangeCompact": "sur 0 recherche | sur 1 recherche | sur {total} recherches"
   },
   "rowPaginationTasks": {
-    "rowRange": "to {to} of 0 tasks | to {to} of 1 task | to {to} of {total} tasks",
-    "rowRangeFewer": "of 0 tasks | of 1 task | to {total} tasks",
-    "rowRangeCompact": "of 0 tasks | of 1 task | of {total} tasks"
+    "rowRange": "à {to} sur 0 tâche | à {to} sur 1 tâche | à {to} sur {total} tâches",
+    "rowRangeFewer": "sur 0 tâche | sur 1 tâche | sur {total} tâches",
+    "rowRangeCompact": "sur 0 tâche | sur 1 tâche | sur {total} tâches"
   }
 }
