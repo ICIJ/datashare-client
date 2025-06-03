@@ -332,13 +332,15 @@ const loadData = async ({ clearPages = false } = {}) => {
     const body = props.preBodyBuild(bodybuilderBase({ from, size })).build()
     const preference = 'tree-view-paths-terms'
     const res = await core.api.elasticsearch.search({ index, body, preference })
-    // Count the number of direct child documents per directory
-    const dirs = res.aggregations.dirname.buckets.map(property('key'))
-    // We need to fetch the empty directories to adjust the
+    // When the number of directories is displayed,
+    // we need to fetch the number of empty directories to adjust the
     // directory count in the tree view. Unfortunely, this cannot
     // be done in the same request as the aggregation because
     // we need the list of directories to check if they are empty or not.
-    await fetchEmptyDirectory(dirs)
+    if (!props.compact) {
+      const dirs = res.aggregations.dirname.buckets.map(property('key'))
+      await fetchEmptyDirectory(dirs)
+    }
     // Clear the list of pages (to start over!)
     if (clearPages) await clearPagesAndLoadTree()
     // Add the result as a page
