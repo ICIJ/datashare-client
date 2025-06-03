@@ -93,7 +93,7 @@ const showTitle = computed(() => props.properties?.includes('title'))
         :name="routeName"
         :modal="modal"
         :target="target"
-        class="document-card__properties__title"
+        class="document-card__properties__title link-visitable"
       >
         {{ document.title }}
       </router-link-document>
