@@ -30,7 +30,17 @@ import { useAppStore, useSearchStore } from '@/store/modules'
 
 const { toggleSettings, toggleFilters, toggleSidebar, isFiltersClosed } = useViews()
 const { provideDocumentViewFloatingId, documentRoute } = useDocument()
-const { refreshRoute, refreshSearchFromRoute, resetSearchResponse, watchIndices, watchFilters } = useSearchFilter()
+const {
+  refreshRoute,
+  refreshRouteFromStart,
+  refreshSearchFromRoute,
+  refreshSearchFromRouteStart,
+  resetSearchResponse,
+  watchIndices,
+  watchFilters,
+  watchFrom,
+  watchRouteQuery
+} = useSearchFilter()
 const { count: searchBreadcrumbCounter, anyFilters } = useSearchBreadcrumb()
 const { hasEntries: hasSearchEntries } = useSearchNav()
 
@@ -106,14 +116,16 @@ watch(() => route.query, whenIsRoute('search', resetEntriesListSize), { deep: tr
 // are always up-to-date with the current route query. This is important because the search response
 // can still be populated with the previous search results.
 resetSearchResponse()
+refreshSearchFromRoute()
 // Refresh search when route query changes. Among all the watcher of this view, it probably
 // the most important one. It will trigger the search API call when the route query changes
 // which mean that only route change can trigger a search.
-watch(() => JSON.stringify(route.query), whenIsRoute('search', refreshSearchFromRoute), { immediate: true })
+watchRouteQuery(whenIsRoute('search', refreshSearchFromRouteStart))
+watchFrom(whenIsRoute('search', refreshSearchFromRoute))
 // Refresh route query when a filter changes (either their values or if they are excluded)
-watchFilters(refreshRoute)
+watchFilters(refreshRouteFromStart)
 // Refresh route query when projects change
-watchIndices(refreshRoute)
+watchIndices(refreshRouteFromStart)
 </script>
 
 <template>

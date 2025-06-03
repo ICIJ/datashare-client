@@ -1,5 +1,5 @@
 import { computed, toValue, nextTick, watch } from 'vue'
-import { get, identity, isObject, toString, without } from 'lodash'
+import { get, identity, isObject, omit, toString, without } from 'lodash'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
@@ -214,12 +214,28 @@ export function useSearchFilter() {
     return router.push({ name, query })
   }
 
+  function refreshRouteFromStart() {
+    const name = 'search'
+    const query = { ...searchStore.toRouteQuery, from: 0 }
+    return router.push({ name, query })
+  }
+
   function refreshSearchFromRoute() {
     // Extract the query parameters that must be saved in the app state
     const { perPage = getPerPage(), sort = getSort(), order = getOrder() } = route.query
     appStore.setSettings('search', { perPage, orderBy: [sort, order] })
     // Update the search store using the route query
     searchStore.updateFromRouteQuery(route.query)
+    // And finally, refresh the search if t
+    return nextTick(refreshSearch)
+  }
+
+  function refreshSearchFromRouteStart() {
+    // Extract the query parameters that must be saved in the app state
+    const { perPage = getPerPage(), sort = getSort(), order = getOrder() } = route.query
+    appStore.setSettings('search', { perPage, orderBy: [sort, order] })
+    // Update the search store using the route query and reset the `from` parameter
+    searchStore.updateFromRouteQuery({ ...route.query, from: 0 })
     // And finally, refresh the search if t
     return nextTick(refreshSearch)
   }
@@ -303,8 +319,12 @@ export function useSearchFilter() {
     return watch(() => searchStore.query, callback, options)
   }
 
+  function watchRouteQuery(callback, options) {
+    return watch(() => JSON.stringify(omit(route.query, ['from'])), callback, options)
+  }
+
   function watchFrom(callback, options) {
-    return watch(() => searchStore.from, callback, options)
+    return watch(() => route.query.from, callback, options)
   }
 
   function watchIndices(callback, options = { deep: false }) {
@@ -337,7 +357,9 @@ export function useSearchFilter() {
     labelToHuman,
     resetSearchResponse,
     refreshRoute,
+    refreshRouteFromStart,
     refreshSearchFromRoute,
+    refreshSearchFromRouteStart,
     setFilterValue,
     setQuery,
     setIndices,
@@ -360,6 +382,7 @@ export function useSearchFilter() {
     watchFrom,
     watchQuery,
     watchIndices,
+    watchRouteQuery,
     watchValues,
     whenFilterContextualized
   }
