@@ -18,6 +18,16 @@
 @import './utils/buttons.scss';
 @import './utils/nprogress.scss';
 
+.link-visitable:visited {
+  color: mix($purple, white, 80%);
+}
+
+@include color-mode(dark) {
+  .link-visitable:visited {
+    color: mix($purple, $body-color-dark, 50%);
+  }
+}
+
 .dropdown-item {
   border-radius: var(--bs-border-radius);
 
