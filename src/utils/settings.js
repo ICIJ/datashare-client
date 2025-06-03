@@ -62,10 +62,6 @@ export default {
     {
       key: 'es',
       label: 'Español'
-    },
-    {
-      key: 'ja',
-      label: '日本語'
     }
   ],
   previewRawMaxContentLength: 5e6,
