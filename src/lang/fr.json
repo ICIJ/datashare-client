@@ -431,7 +431,7 @@
     "projects": "Projets",
     "starred": "Favoris",
     "notStarred": "Non favoris",
-    "recommendedBy": "Recommandé par",
+    "recommendedBy": "Recommandés par",
     "sections": {
       "documentsInfo": "Propriétés des documents",
       "userData": "Données ajoutées",
@@ -1213,7 +1213,7 @@
     "label": "Tout"
   },
   "pageTable": {
-    "toggleDetails": "Afficher / Masquer les détails"
+    "toggleDetails": "Détails"
   },
   "projects": {
     "title": "Projets"
