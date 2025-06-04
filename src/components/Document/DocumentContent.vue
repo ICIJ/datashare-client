@@ -81,7 +81,7 @@ const hasLocalSearchTerms = computed(() => {
 })
 
 const isRightToLeft = computed(() => {
-  const language = get(props.document, 'source.language', null)
+  const language = props.targetLanguage ?? get(props.document, 'source.language', null)
   return rightToLeftLanguages.includes(language)
 })
 
