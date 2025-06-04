@@ -362,7 +362,6 @@ async function loadContentSliceAround(desiredOffset) {
 
   &--rtl &__body {
     direction: rtl;
-    text-align: right;
   }
 
   :deep(mark) {
