@@ -9,8 +9,8 @@ permissions:
   id-token: write
 
 jobs:
-  build:
-    name: Build
+  prepare:
+    name: Prepare
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -26,7 +26,7 @@ jobs:
 
   storybook:
     name: Publish Storybook
-    needs: build
+    needs: prepare
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
@@ -54,7 +54,7 @@ jobs:
 
   test:
     name: Unit tests
-    needs: build
+    needs: prepare
     runs-on: ubuntu-latest
     services:
       elasticsearch:
@@ -63,10 +63,12 @@ jobs:
           ES_JAVA_OPTS: -Xms256m -Xmx256m
           discovery.type: single-node
           cluster.name: datashare
-          http.cors.enabled: "true"
+          http.compression: false
+          http.cors.enabled: true
           http.cors.allow-origin: "*"
           http.cors.allow-methods: OPTIONS, HEAD, GET, POST, PUT, DELETE
-          options: >-
+          indices.query.bool.max_clause_count: 20000
+        options: >-
             --health-cmd "curl -f http://localhost:9200/_cluster/health || exit 1"
             --health-interval 10s
             --health-timeout 5s
@@ -96,7 +98,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     name: Lint
-    needs: build
+    needs: prepare
     steps:
       - uses: actions/checkout@v4
 
@@ -115,7 +117,7 @@ jobs:
   generate_doc:
     runs-on: ubuntu-latest
     name: Generate Doc
-    needs: build
+    needs: prepare
     if: github.ref == 'refs/heads/doc'
     steps:
       - uses: actions/checkout@v4
