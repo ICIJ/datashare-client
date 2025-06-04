@@ -1,10 +1,11 @@
 import { computed, toValue, nextTick, watch } from 'vue'
-import { get, identity, isObject, omit, toString, without } from 'lodash'
+import { get, identity, isEqual, isObject, omit, toString, without } from 'lodash'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
 import settings from '@/utils/settings'
 import { useCore } from '@/composables/useCore'
+import { onAfterRouteUpdate } from '@/composables/onAfterRouteUpdate'
 import FilterType from '@/components/Filter/FilterType/FilterType'
 import FilterTypeDateRange from '@/components/Filter/FilterType/FilterTypeDateRange'
 import FilterTypePath from '@/components/Filter/FilterType/FilterTypePath'
@@ -319,20 +320,42 @@ export function useSearchFilter() {
     return watch(() => searchStore.query, callback, options)
   }
 
-  function watchRouteQuery(callback, options) {
-    return watch(() => JSON.stringify(omit(route.query, ['from'])), callback, options)
-  }
-
-  function watchFrom(callback, options) {
-    return watch(() => route.query.from, callback, options)
-  }
-
   function watchIndices(callback, options = { deep: false }) {
     return watch(() => indices.value.join(','), callback, options)
   }
 
   function watchValues(callback, options = { deep: false }) {
     return watch(() => JSON.stringify(searchStore.values), callback, options)
+  }
+
+  function onAfterRouteQueryUpdate(callback, options) {
+    return onAfterRouteUpdate((to, from) => {
+      if (
+        // We don't want to trigger the callback when the route is not "search" or when the previous
+        // route is not "search" (for instance, when the user navigates from a child route).
+        to.name === 'search' &&
+        from.name === 'search' &&
+        // or when the query is not changed (except for the `from` parameter)
+        !isEqual(omit(to.query, ['from']), omit(from.query, ['from']))
+      ) {
+        callback(to, from)
+      }
+    }, options)
+  }
+
+  function onAfterRouteQueryFromUpdate(callback, options) {
+    return onAfterRouteUpdate((to, from) => {
+      if (
+        // We don't want to trigger the callback when the route is not "search" or when the previous
+        // route is not "search" (for instance, when the user navigates from a child route).
+        to.name === 'search' &&
+        from.name === 'search' &&
+        // or when the `from` query parameter is changed
+        to.query.from !== from.query.from
+      ) {
+        callback(to, from)
+      }
+    }, options)
   }
 
   return {
@@ -379,10 +402,10 @@ export function useSearchFilter() {
     watchFilterValues,
     watchFilterExcluded,
     watchFilters,
-    watchFrom,
     watchQuery,
     watchIndices,
-    watchRouteQuery,
+    onAfterRouteQueryUpdate,
+    onAfterRouteQueryFromUpdate,
     watchValues,
     whenFilterContextualized
   }

@@ -38,8 +38,8 @@ const {
   resetSearchResponse,
   watchIndices,
   watchFilters,
-  watchFrom,
-  watchRouteQuery
+  onAfterRouteQueryUpdate,
+  onAfterRouteQueryFromUpdate
 } = useSearchFilter()
 const { count: searchBreadcrumbCounter, anyFilters } = useSearchBreadcrumb()
 const { hasEntries: hasSearchEntries } = useSearchNav()
@@ -117,15 +117,19 @@ watch(() => route.query, whenIsRoute('search', resetEntriesListSize), { deep: tr
 // can still be populated with the previous search results.
 resetSearchResponse()
 refreshSearchFromRoute()
-// Refresh search when route query changes. Among all the watcher of this view, it probably
-// the most important one. It will trigger the search API call when the route query changes
-// which mean that only route change can trigger a search.
-watchRouteQuery(whenIsRoute('search', refreshSearchFromRouteStart))
-watchFrom(whenIsRoute('search', refreshSearchFromRoute))
 // Refresh route query when a filter changes (either their values or if they are excluded)
 watchFilters(refreshRouteFromStart)
 // Refresh route query when projects change
 watchIndices(refreshRouteFromStart)
+// Refresh search when route query changes. Among all the "watcher" (it's a post-navigation filter)
+// of this view, it probably the most important one. It will trigger the search API call
+// when the route query changes which mean that **only route changes** can trigger a search. This
+// particular one will also change the "from" query parameter to the first page.
+onAfterRouteQueryUpdate(refreshSearchFromRouteStart)
+// Refresh search when route query "from" parameter changes. This is different from the previous watcher
+// because it will only trigger the search API call when the "from" parameter changes and therefore, will not
+// change the "from" query parameter to the first page.
+onAfterRouteQueryFromUpdate(refreshSearchFromRoute)
 </script>
 
 <template>
