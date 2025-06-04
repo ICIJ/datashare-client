@@ -12,9 +12,14 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    container: cimg/node:20.18
     steps:
       - uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+          cache: 'yarn'
 
       - name: Restore dependencies cache
         uses: actions/cache/restore@v4
@@ -44,6 +49,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+          cache: 'yarn'
 
       - name: Restore app bundle cache (repo + dependencies) from the `build` job
         uses: actions/cache/restore@v4
@@ -86,6 +97,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup Node 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+          cache: 'yarn'
+
       - name: Restore app bundle cache (repo + dependencies) from the `build` job
         uses: actions/cache/restore@v4
         with:
@@ -107,6 +124,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup Node 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+          cache: 'yarn'
+
       - name: Restore app bundle cache (repo + dependencies) from the `build` job
         uses: actions/cache/restore@v4
         with:
@@ -123,6 +146,12 @@ jobs:
     if: github.ref == 'refs/heads/doc'
     steps:
       - uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+          cache: 'yarn'
 
       - name: Restore app bundle
         uses: actions/cache/restore@v4
@@ -147,6 +176,12 @@ jobs:
     if: github.ref == 'refs/heads/doc'
     steps:
       - uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+          cache: 'yarn'
 
       - name: Restore doc
         uses: actions/cache/restore@v4
