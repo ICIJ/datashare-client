@@ -2,9 +2,12 @@ name: Datashare build, tests and docs
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   build:
     name: Build
@@ -12,6 +15,7 @@ jobs:
     container: cimg/node:20.18
     steps:
       - uses: actions/checkout@v4
+
       - name: Restore dependencies cache
         uses: actions/cache/restore@v4
         with:
@@ -33,11 +37,35 @@ jobs:
           path: .
           key: bundle-cache-${{ github.sha }}
 
+  storybook:
+    name: Build and Publish Storybook to GitHub Pages
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Restore app bundle cache (repo + dependencies) from the `build` job
+        uses: actions/cache/restore@v4
+        with:
+          path: .
+          key: bundle-cache-${{ github.sha }}
+
+      - name: Build storybook artifacts
+        run: yarn build:storybook
+
+      - name: Upload storybook artifacts
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: storybook-static
+
+      - name: Deploy artifact to Github Pages
+        uses: actions/deploy-pages@v4
+
   test:
     name: Unit tests
     needs: build
     runs-on: ubuntu-latest
-    container: cimg/node:20.18
     services:
       elasticsearch:
         image: docker.elastic.co/elasticsearch/elasticsearch:7.17.7
@@ -74,7 +102,6 @@ jobs:
 
   lint:
     runs-on: ubuntu-latest
-    container: cimg/node:20.18
     name: Lint
     needs: build
     steps:
@@ -91,7 +118,6 @@ jobs:
 
   generate_doc:
     runs-on: ubuntu-latest
-    container: cimg/node:20.18
     name: Generate Doc
     needs: build
     if: github.ref == 'refs/heads/doc'
