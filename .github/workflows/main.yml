@@ -38,6 +38,9 @@ jobs:
           node-version: '20.x'
           cache: 'yarn'
 
+      - name: Install dependencies
+        run: make install
+
       - name: Build storybook artifacts
         run: yarn build:storybook
 
@@ -79,6 +82,9 @@ jobs:
           node-version: '20.x'
           cache: 'yarn'
 
+      - name: Install dependencies
+        run: make install
+
       - name: Run unit tests
         run: yarn test:unit --silent --minWorkers 1 --maxWorkers 2
         env:
@@ -100,6 +106,9 @@ jobs:
           node-version: '20.x'
           cache: 'yarn'
 
+      - name: Install dependencies
+        run: make install
+
       - name: Run linter
         run: yarn lint
 
@@ -116,6 +125,9 @@ jobs:
         with:
           node-version: '20.x'
           cache: 'yarn'
+
+      - name: Install dependencies
+        run: make install
 
       - name: Generate the doc
         run: make doc
@@ -140,6 +152,9 @@ jobs:
         with:
           node-version: '20.x'
           cache: 'yarn'
+
+      - name: Install dependencies
+        run: make install
 
       - name: Restore doc
         uses: actions/cache/restore@v4
