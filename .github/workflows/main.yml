@@ -38,7 +38,7 @@ jobs:
           key: bundle-cache-${{ github.sha }}
 
   storybook:
-    name: Build and Publish Storybook to GitHub Pages
+    name: Publish Storybook
     needs: build
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
