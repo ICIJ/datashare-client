@@ -90,6 +90,7 @@ jobs:
       - name: Run unit tests
         run: yarn test:unit --silent --minWorkers 1 --maxWorkers 2
         env:
+          VITE_ES_HOST: http://localhost:9200
           NODE_OPTIONS: --max_old_space_size=4096
 
       - name: Make distribution
