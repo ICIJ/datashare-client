@@ -61,6 +61,7 @@ const noMatches = computed(() => !loading && !entries.length)
 <style lang="scss" scoped>
 .document-entries-grid {
   position: relative;
+  padding-bottom: $spacer;
 
   &__header {
     background: var(--bs-body-bg);
