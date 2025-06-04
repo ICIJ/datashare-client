@@ -90,6 +90,7 @@ onBeforeMount(
           <i18n-t keypath="projectDeletionModal.body.default" />
         </template>
       </i18n-t>
+      <i18n-t v-else-if="isDefaultProject" keypath="projectDeletionModal.body.default" />
     </app-wait>
   </app-modal>
 </template>
