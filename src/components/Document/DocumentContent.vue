@@ -41,7 +41,7 @@ const localSearchIndex = ref(0)
 const localSearchIndexes = ref([])
 const localSearchOccurrences = ref(0)
 const localSearchTerm = ref(props.q)
-const rightToLeftLanguages = ['ARABIC', 'HEBREW', 'PERSIAN']
+const rightToLeftLanguages = ['ARABIC', 'HEBREW', 'PERSIAN', 'KURDISH', 'URDU', 'FULAH', 'AZERBAIJANI']
 const maxOffsetTranslations = ref({})
 
 const globalSearchTerms = computed(() => searchStore.retrieveContentQueryTerms)
