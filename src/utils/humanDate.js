@@ -1,4 +1,11 @@
-import moment from 'moment'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+
+import 'dayjs/locale/fr'
+import 'dayjs/locale/es'
+import 'dayjs/locale/ja'
+
+dayjs.extend(relativeTime)
 
 export const FORMAT_SHORT = 'short'
 export const FORMAT_MONTH = 'month'
@@ -13,7 +20,7 @@ export const FORMAT_FROM_NOW = 'fromNow'
  * @returns {string} The formatted date.
  */
 export function humanDate(date, locale) {
-  return moment(date).locale(locale).format('Y/MM/DD')
+  return dayjs(date).locale(locale).format('Y/MM/DD')
 }
 
 /**
@@ -24,7 +31,7 @@ export function humanDate(date, locale) {
  * @returns {string} The formatted date.
  */
 export function humanMonthDate(date, locale) {
-  return moment(date).locale(locale).format('MMM YYYY')
+  return dayjs(date).locale(locale).format('MMM YYYY')
 }
 
 /**
@@ -35,7 +42,7 @@ export function humanMonthDate(date, locale) {
  * @returns {string} The formatted date.
  */
 export function humanLongDate(date, locale) {
-  return moment(date).locale(locale).format('LLL')
+  return dayjs(date).locale(locale).format('LLL')
 }
 
 /**
@@ -46,7 +53,7 @@ export function humanLongDate(date, locale) {
  * @returns {string} The formatted date.
  */
 export function humanShortDate(date, locale) {
-  return moment(date).locale(locale).format('ll')
+  return dayjs(date).locale(locale).format('ll')
 }
 
 /**
@@ -56,7 +63,7 @@ export function humanShortDate(date, locale) {
  * @returns {boolean} True if the date is valid, false otherwise.
  */
 export function isDateValid(date) {
-  return moment(date).isValid()
+  return dayjs(date).isValid()
 }
 
 /**
@@ -68,5 +75,5 @@ export function isDateValid(date) {
  * @returns {string} The formatted string representing the time from now to the given date.
  */
 export function fromNow(date, locale, ago = false) {
-  return moment(date).locale(locale).fromNow(ago)
+  return dayjs(date).locale(locale).fromNow(ago)
 }

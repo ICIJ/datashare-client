@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import moment from 'moment'
+import dayjs from 'dayjs'
 import { isFunction, kebabCase } from 'lodash'
 import { useI18n } from 'vue-i18n'
 
@@ -86,13 +86,13 @@ export default {
         {
           key: 'creationDate',
           formatter: ({ rawValue }) => {
-            return moment(rawValue).locale(this.$i18n.locale).format('LL')
+            return dayjs(rawValue).locale(this.$i18n.locale).format('LL')
           }
         },
         {
           key: 'updateDate',
           formatter: ({ rawValue }) => {
-            return moment(rawValue).locale(this.$i18n.locale).format('LL')
+            return dayjs(rawValue).locale(this.$i18n.locale).format('LL')
           }
         }
       ]

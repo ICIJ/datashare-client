@@ -1,4 +1,4 @@
-import moment from 'moment'
+import dayjs from 'dayjs'
 
 /**
  * Formats a date to a human-readable form: LT.
@@ -8,5 +8,5 @@ import moment from 'moment'
  * @returns {string} The formatted date.
  */
 export function humanTime(date, locale) {
-  return moment(date).locale(locale).format('LT')
+  return dayjs(date).locale(locale).format('LT')
 }

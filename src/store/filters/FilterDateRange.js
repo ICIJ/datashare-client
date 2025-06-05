@@ -1,5 +1,5 @@
 import { isInteger } from 'lodash'
-import moment from 'moment'
+import dayjs from 'dayjs'
 
 import FilterDate from './FilterDate'
 
@@ -16,7 +16,7 @@ export default class FilterDateRange extends FilterDate {
     if (isInteger(item.key)) {
       const timestamp = item.key + new Date().getTimezoneOffset() * 60 * 1000
       const locale = localStorage.getItem('locale')
-      return moment(timestamp).locale(locale).format('L')
+      return dayjs(timestamp).locale(locale).format('L')
     } else {
       return item.key
     }
