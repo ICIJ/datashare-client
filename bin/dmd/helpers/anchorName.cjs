@@ -1,4 +1,7 @@
-const { anchorName: dmdAnchorName } = require('dmd/helpers/ddata')
+const path = require('path')
+const dmdPath = require.resolve('dmd')
+const dmdDir = path.dirname(dmdPath)
+const { anchorName: dmdAnchorName } = require(path.join(dmdDir, 'helpers', 'ddata.js'))
 
 /**
  * Retrieves the anchor name from the 'dmdAnchorName' helper and converts it to lowercase.
