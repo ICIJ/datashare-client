@@ -1788,5 +1788,10 @@
     "rowRange": "to {to} of 0 tasks | to {to} of 1 task | to {to} of {total} tasks",
     "rowRangeFewer": "of 0 tasks | of 1 task | to {total} tasks",
     "rowRangeCompact": "of 0 tasks | of 1 task | of {total} tasks"
+  },
+  "themes": {
+    "dark": "Dark mode",
+    "light": "Light mode",
+    "automatic": "Automatic"
   }
 }

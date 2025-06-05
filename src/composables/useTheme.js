@@ -1,4 +1,5 @@
 import { reactive } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import themeAuto from '@/assets/images/theme-auto.png'
 import themeLight from '@/assets/images/theme-light.png'
@@ -14,6 +15,8 @@ export function useTheme() {
     DARK: 'dark',
     AUTOMATIC: 'automatic'
   })
+
+  const { t } = useI18n()
 
   function getTheme() {
     return localStorage.getItem(LOCAL_STORAGE_KEY) ?? THEMES.AUTOMATIC
@@ -42,19 +45,19 @@ export function useTheme() {
     {
       icon: 'paint-roller',
       name: THEMES.AUTOMATIC,
-      label: `Automatic`,
+      label: t('themes.automatic'),
       thumbnail: themeAuto
     },
     {
       icon: 'sun',
       name: THEMES.LIGHT,
-      label: 'Light mode',
+      label: t('themes.light'),
       thumbnail: themeLight
     },
     {
       icon: 'moon',
       name: THEMES.DARK,
-      label: 'Dark mode',
+      label: t('themes.dark'),
       thumbnail: themeDark
     }
   ])
