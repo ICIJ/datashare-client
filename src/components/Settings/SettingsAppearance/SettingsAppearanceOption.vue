@@ -15,7 +15,7 @@ defineProps({
 </script>
 
 <template>
-  <div class="settings-appearance-theme d-flex justify-content-between align-items-md-center gap-2 px-3">
+  <div class="settings-appearance-option d-flex justify-content-between align-items-md-center gap-2 px-3">
     <span class="d-inline-flex gap-2">
       <phosphor-icon :name="icon" />
       <span class="text-nowrap">

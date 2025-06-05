@@ -5,6 +5,7 @@ import themeLight from '@/assets/images/theme-light.png'
 import themeDark from '@/assets/images/theme-dark.png'
 
 let eventAdded = false
+
 export function useTheme() {
   const LOCAL_STORAGE_KEY = 'data-bs-theme'
 

@@ -1,26 +1,20 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, toRef } from 'vue'
 
-import SettingsAppearanceRadioGroup from '@/components/Settings/SettingsAppearance/SettingsAppearanceRadioGroup'
-import SettingsViewLayout from '@/views/Settings/SettingsView/SettingsViewLayout'
 import { useTheme } from '@/composables/useTheme'
+import SettingsAppearance from '@/components/Settings/SettingsAppearance/SettingsAppearance'
+import SettingsViewLayout from '@/views/Settings/SettingsView/SettingsViewLayout'
 
 defineOptions({ name: 'SettingsViewAppearance' })
 
 const { getTheme, setTheme, themes } = useTheme()
 const selectedTheme = ref(getTheme())
 
-watch(
-  () => selectedTheme.value,
-  (theme) => {
-    setTheme(theme)
-  },
-  { immediate: true }
-)
+watch(toRef(selectedTheme, 'value'), setTheme, { immediate: true })
 </script>
 
 <template>
   <settings-view-layout>
-    <settings-appearance-radio-group v-model="selectedTheme" :options="themes" />
+    <settings-appearance v-model="selectedTheme" :options="themes" />
   </settings-view-layout>
 </template>
