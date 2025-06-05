@@ -48,8 +48,7 @@ const widgets = [
     order: 40,
     card: true,
     cols: 12,
-    type: 'WidgetDocumentsByCreationDateByPath',
-    title: 'Number of documents by creation date'
+    type: 'WidgetDocumentsByCreationDateByPath'
   },
   {
     name: 'languages',

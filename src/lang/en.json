@@ -1599,6 +1599,9 @@
       "title": "Authors"
     }
   },
+  "widgetDocumentsByCreationDateByPath": {
+    "title": "Number of documents by creation date"
+  },
   "pathTreeBreadcrumb": {
     "datadir": "Home"
   },

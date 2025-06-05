@@ -1,7 +1,9 @@
 <template>
   <div class="widget">
-    <div v-if="widget.title" class="widget__header d-md-flex align-items-start gap-2">
-      <h3 class="widget__header__title flex-grow-1 my-2" v-html="widget.title"></h3>
+    <div class="widget__header d-md-flex align-items-start gap-2">
+      <h3 class="widget__header__title flex-grow-1 my-2">
+        {{ t('widgetDocumentsByCreationDateByPath.title') }}
+      </h3>
       <div class="widget__header__selectors d-flex align-items-center my-2">
         <slot name="selector" :selected-path="selectedPath" :set-selected-path="setSelectedPath" />
         <div class="btn-group">
