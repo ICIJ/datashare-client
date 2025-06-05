@@ -4,8 +4,8 @@ import { useI18n } from 'vue-i18n'
 import FormStep from '@/components/Form/FormStep/FormStep'
 import TabGroupEntry from '@/components/TabGroup/TabGroupEntry'
 import TabGroup from '@/components/TabGroup/TabGroup'
-const csvFile = defineModel('csvFile', { type: File })
 
+const csvFile = defineModel('csvFile', { type: File })
 const { t } = useI18n()
 </script>
 
