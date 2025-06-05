@@ -1,11 +1,13 @@
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import localizedFormat from 'dayjs/plugin/localizedFormat'
 
 import 'dayjs/locale/fr'
 import 'dayjs/locale/es'
 import 'dayjs/locale/ja'
 
 dayjs.extend(relativeTime)
+dayjs.extend(localizedFormat)
 
 export const FORMAT_SHORT = 'short'
 export const FORMAT_MONTH = 'month'
@@ -54,6 +56,17 @@ export function humanLongDate(date, locale) {
  */
 export function humanShortDate(date, locale) {
   return dayjs(date).locale(locale).format('ll')
+}
+
+/**
+ * Formats a date to a human-readable form: LT.
+ *
+ * @param {string|Date} date - The date to be formatted.
+ * @param {string} locale - The locale code for formatting the date.
+ * @returns {string} The formatted date.
+ */
+export function humanTime(date, locale) {
+  return dayjs(date).locale(locale).format('LT')
 }
 
 /**

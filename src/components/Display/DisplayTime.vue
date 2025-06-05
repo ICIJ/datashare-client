@@ -2,8 +2,7 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import { humanLongDate } from '@/utils/humanDate'
-import { humanTime } from '@/utils/humanTime'
+import { humanLongDate, humanTime } from '@/utils/humanDate'
 
 const { locale } = useI18n()
 
