@@ -182,11 +182,19 @@
     "userGuides": "Guide utilisateur•ice",
     "help": "Demander de l'aide"
   },
+  "filtersPanelToggler": {
+    "label": "Close filters"
+  },
   "filtersPanelSectionFilterActions": {
-    "expand": "Agrandir"
+    "expand": "Agrandir",
+    "contextualize": "Contextualize",
+    "exclude": "Exclude"
   },
   "filtersPanelSectionFilterTitleToggler": {
     "toggle": "Filtres"
+  },
+  "filtersPanelSearch": {
+    "placeholder": "Search in filters"
   },
   "search": {
     "title": "Rechercher des documents",
@@ -1047,6 +1055,14 @@
         }
       },
       "form": {
+        "queries": {
+          "onlyCSV": "Only CSV format is accepted.",
+          "onlyUTF8": "Export your spreadsheet as a CSV using encoding UTF-8",
+          "queriesLimist": "Your CSV file should not contain more than 60,000 queries",
+          "firstColumn": "The first and only column should contain the terms to search",
+          "lineBreaks": "No line break(s) in cells",
+          "operators": "Selecting 'do phrase matches' prevent from using operators like <code>AND</code>, <code>OR</code>, <code>NOT</code>, <code>*</code>, <code>?</code>, <code>!</code>, <code>+</code>, <code>-</code> or Regexes between 2 slashes."
+        },
         "sections": {
           "general": "Nom, projet(s) et description",
           "queries": "Requêtes",
@@ -1588,6 +1604,20 @@
     "organization": "organisation | organisations",
     "email": "adresse e-mail | adresses e-mails"
   },
+  "widgetFieldFacets": {
+    "languages": {
+      "title": "Languages"
+    },
+    "contentTypes": {
+      "title": "File types"
+    },
+    "authors": {
+      "title": "Authors"
+    }
+  },
+  "widgetDocumentsByCreationDateByPath": {
+    "title": "Number of documents by creation date"
+  },
   "pathTreeBreadcrumb": {
     "datadir": "Accueil"
   },
@@ -1766,5 +1796,10 @@
     "rowRange": "à {to} sur 0 tâche | à {to} sur 1 tâche | à {to} sur {total} tâches",
     "rowRangeFewer": "sur 0 tâche | sur 1 tâche | sur {total} tâches",
     "rowRangeCompact": "sur 0 tâche | sur 1 tâche | sur {total} tâches"
+  },
+  "themes": {
+    "dark": "Dark mode",
+    "light": "Light mode",
+    "automatic": "Automatic"
   }
 }
