@@ -41,6 +41,7 @@ const menuClassList = computed(() => {
     :menu-class="menuClassList"
     toggle-class="form-actions-compact-dropdown__toggle"
     boundary="viewport"
+    teleport-to="body"
     no-caret
     end
   >
