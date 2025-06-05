@@ -1588,6 +1588,17 @@
     "organization": "organization | organizations",
     "email": "email | emails"
   },
+  "widgetFieldFacets": {
+    "languages": {
+      "title": "Languages"
+    },
+    "contentTypes": {
+      "title": "File types"
+    },
+    "authors": {
+      "title": "Authors"
+    }
+  },
   "pathTreeBreadcrumb": {
     "datadir": "Home"
   },

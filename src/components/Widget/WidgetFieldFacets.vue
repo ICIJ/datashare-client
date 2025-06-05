@@ -114,7 +114,7 @@ export default {
       return this.widget.title
     },
     titleTranslationKey() {
-      return `widget.${camelCase(this.widget.title)}.title`
+      return `widgetFieldFacets.${camelCase(this.widget.title)}.title`
     },
     loaderId() {
       return this.wait.loaderId
