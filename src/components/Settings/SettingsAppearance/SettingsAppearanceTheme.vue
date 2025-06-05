@@ -1,11 +1,7 @@
 <script setup>
 import { PhosphorIcon } from '@icij/murmur-next'
-import { computed } from 'vue'
 
-import ImageMode from '@/components/ImageMode/ImageMode'
-import ImageModeSource from '@/components/ImageMode/ImageModeSource'
-
-const props = defineProps({
+defineProps({
   icon: {
     type: [String, Object, Array]
   },
@@ -14,33 +10,18 @@ const props = defineProps({
   },
   thumbnail: {
     type: String
-  },
-  active: {
-    type: Boolean
-  }
-})
-
-const imageClassList = computed(() => {
-  return {
-    'rounded-1 img-fluid': true,
-    'shadow-sm ': props.active
   }
 })
 </script>
 
 <template>
-  <div
-    class="settings-appearance-theme d-flex flex-shrink-0 flex-grow-1 justify-content-between align-items-center gap-2 px-3"
-    style="height: 95px"
-  >
+  <div class="settings-appearance-theme d-flex justify-content-between align-items-md-center gap-2 px-3">
     <span class="d-inline-flex gap-2">
       <phosphor-icon :name="icon" />
       <span class="text-nowrap">
         {{ label }}
       </span>
     </span>
-    <image-mode :image-class="imageClassList">
-      <image-mode-source :src="thumbnail" />
-    </image-mode>
+    <img :src="thumbnail" class="rounded-1 img-fluid d-none d-lg-block" />
   </div>
 </template>

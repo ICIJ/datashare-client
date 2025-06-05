@@ -1,25 +1,25 @@
 <script setup>
-import { ref } from 'vue'
-
 import SettingsAppearanceTheme from '@/components/Settings/SettingsAppearance/SettingsAppearanceTheme'
-defineModel({ type: String, required: true })
-defineProps({
-  options: { type: Array, required: true }
-})
 
-const selected = ref('light')
+const modelValue = defineModel({ type: String, required: true })
+
+defineProps({
+  options: {
+    type: Array,
+    required: true
+  }
+})
 </script>
 
 <template>
   <b-form-group v-slot="{ ariaDescribedby }" class="settings-appearance-radio-group m-auto">
     <b-form-radio-group
       id="radio-group-theme"
-      :model-value="modelValue"
+      v-model="modelValue"
       class="settings-appearance-radio-group__radio-group d-flex flex-column gap-1"
       :aria-describedby="ariaDescribedby"
       name="radio-options"
       stacked
-      @update:model-value="$emit('update:modelValue', $event)"
     >
       <b-form-radio
         v-for="option in options"
@@ -28,7 +28,7 @@ const selected = ref('light')
         :aria-describedby="ariaDescribedby"
         :name="option.name"
       >
-        <settings-appearance-theme v-bind="option" :active="selected === option.name" />
+        <settings-appearance-theme v-bind="option" />
       </b-form-radio>
     </b-form-radio-group>
   </b-form-group>
