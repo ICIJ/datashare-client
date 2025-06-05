@@ -4,11 +4,17 @@ import { Meta } from '@storybook/addon-docs/blocks'
 
 # Core API
 
-This documentation is intended to help you create plugins for Datashare client.
-All methods currently exposed in the [Core](#Core) class are available to a
-global variable called `datashare`.
+This API provides access to a wide range of methods that allow plugins to interact with the Datashare client. It is
+exposed as an instance of the Core class, available globally via `window.datashare` (or simply `datashare`). This API is
+primarily intended for use in plugin development, offering convenient ways to manipulate widgets, respond to route
+changes, access project data, register hooks, and more. 
+
+This page is auto-generated from JSDoc and is intended as a reference for developers building Datashare plugins. 
+You'll find detailed information about each method and property, including parameters, return types, and usage
+notes.
 
 **Example**
+
 ```js
 datashare.replaceWidget('default-text', {
   card: true,
