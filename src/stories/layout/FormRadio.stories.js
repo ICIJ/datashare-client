@@ -2,7 +2,7 @@ import { BFormRadioGroup, BFormGroup } from 'bootstrap-vue-next'
 import { ref } from 'vue'
 
 export default {
-  title: 'Layout/Form/Radio',
+  title: 'Layout/FormRadio',
   render: (args) => ({
     // Components used in your story `template` are defined in the `components` object
     components: { BFormGroup, BFormRadioGroup },
