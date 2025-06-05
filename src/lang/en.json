@@ -193,6 +193,9 @@
   "filtersPanelSectionFilterTitleToggler": {
     "toggle": "Toggle filter"
   },
+  "filtersPanelSearch": {
+    "placeholder": "Search in filters"
+  },
   "search": {
     "title": "Search documents",
     "emptyStateLabel": "Oh, it’s lonely in here... This project has no documents yet.",
