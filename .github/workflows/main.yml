@@ -143,7 +143,6 @@ jobs:
 
   publish_doc:
     runs-on: ubuntu-latest
-    container: cimg/node:20.18
     name: Publish Doc
     needs: generate_doc
     if: github.ref == 'refs/heads/doc'
