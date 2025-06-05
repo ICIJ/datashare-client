@@ -16,6 +16,11 @@ yarn-error.log*
 selenium-debug.log
 package-lock.json
 
+# Generated files
+src/stories/01-api.mdx 
+src/stories/02-hooks.mdx 
+src/stories/03-widgets.mdx
+
 # Editor directories and files
 .idea
 .vscode
