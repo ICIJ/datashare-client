@@ -52,7 +52,7 @@ function toggleSection() {
 
   &:deep(.form-check) {
     line-height: 1.5em;
-    height: 1.5em;
+    min-height: 1.5em;
     vertical-align: baseline;
   }
 }
