@@ -1,10 +1,10 @@
-import SettingsAppearanceRadioGroup from '@/components/Settings/SettingsAppearance/SettingsAppearanceRadioGroup'
+import SettingsAppearance from '@/components/Settings/SettingsAppearance/SettingsAppearance'
 
 export default {
   decorators: [],
-  title: 'Components/Settings/SettingsAppearance/SettingsAppearanceRadioGroup',
+  title: 'Components/Settings/SettingsAppearance/SettingsAppearance',
   tags: ['autodocs'],
-  component: SettingsAppearanceRadioGroup,
+  component: SettingsAppearance,
   args: {
     modelValue: 'light',
     options: [
@@ -28,4 +28,5 @@ export default {
     ]
   }
 }
+
 export const Default = {}
