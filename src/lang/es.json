@@ -182,11 +182,19 @@
     "userGuides": "Guía del Usuario",
     "help": "Pedir ayuda"
   },
+  "filtersPanelToggler": {
+    "label": "Close filters"
+  },
   "filtersPanelSectionFilterActions": {
-    "expand": "Ampliar"
+    "expand": "Ampliar",
+    "contextualize": "Contextualize",
+    "exclude": "Exclude"
   },
   "filtersPanelSectionFilterTitleToggler": {
     "toggle": "Conmutar filtro"
+  },
+  "filtersPanelSearch": {
+    "placeholder": "Search in filters"
   },
   "search": {
     "title": "Buscar",
@@ -1047,6 +1055,14 @@
         }
       },
       "form": {
+        "queries": {
+          "onlyCSV": "Only CSV format is accepted.",
+          "onlyUTF8": "Export your spreadsheet as a CSV using encoding UTF-8",
+          "queriesLimist": "Your CSV file should not contain more than 60,000 queries",
+          "firstColumn": "The first and only column should contain the terms to search",
+          "lineBreaks": "No line break(s) in cells",
+          "operators": "Selecting 'do phrase matches' prevent from using operators like <code>AND</code>, <code>OR</code>, <code>NOT</code>, <code>*</code>, <code>?</code>, <code>!</code>, <code>+</code>, <code>-</code> or Regexes between 2 slashes."
+        },
         "sections": {
           "general": "Nombre, proyecto(s) y descripción",
           "queries": "Consultas",
@@ -1588,6 +1604,20 @@
     "organization": "organización | organizaciones",
     "email": "correo electrónico | correos electrónicos"
   },
+  "widgetFieldFacets": {
+    "languages": {
+      "title": "Languages"
+    },
+    "contentTypes": {
+      "title": "File types"
+    },
+    "authors": {
+      "title": "Authors"
+    }
+  },
+  "widgetDocumentsByCreationDateByPath": {
+    "title": "Number of documents by creation date"
+  },
   "pathTreeBreadcrumb": {
     "datadir": "Inicio"
   },
@@ -1766,5 +1796,10 @@
     "rowRange": "a {to} de 0 tareas | a {to} de 1 tarea | a {to} de {total} tareas",
     "rowRangeFewer": "de 0 tareas | de 1 tarea | a {total} tareas",
     "rowRangeCompact": "de 0 tareas | de 1 tarea | de {total} tareas"
+  },
+  "themes": {
+    "dark": "Dark mode",
+    "light": "Light mode",
+    "automatic": "Automatic"
   }
 }
