@@ -1642,7 +1642,7 @@
   "searchBreadcrumbFormFooter": {
     "clearFilters": "Effacer les filtres",
     "clearQuery": "Effacer la requête",
-    "clearFiltersAndQuery": "Effacer les filtres et les requêtes",
+    "clearFiltersAndQuery": "Effacer filtres et requête",
     "saveSearch": "Sauvegarder la recherche",
     "createAlert": "Créer une alerte"
   },
