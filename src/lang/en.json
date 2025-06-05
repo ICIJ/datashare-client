@@ -182,6 +182,9 @@
     "userGuides": "User guides",
     "help": "Ask for help"
   },
+  "filtersPanelToggler": {
+    "label": "Close filters"
+  },
   "filtersPanelSectionFilterActions": {
     "expand": "Expand",
     "contextualize": "Contextualize",
