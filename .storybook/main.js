@@ -1,3 +1,5 @@
+import remarkGfm from 'remark-gfm'
+
 /** @type { import('@storybook/vue3-vite').StorybookConfig } */
 const config = {
   core: {
@@ -10,7 +12,17 @@ const config = {
     "@storybook/addon-interactions",
     '@storybook/addon-themes',
     'storybook-addon-vue-slots',
-    "storybook-addon-pseudo-states"
+    "storybook-addon-pseudo-states",
+    {
+      name: '@storybook/addon-docs',
+      options: {
+        mdxPluginOptions: {
+          mdxCompileOptions: {
+            remarkPlugins: [remarkGfm]
+          }
+        }
+      }
+    }
   ],
   framework: {
     name: "@storybook/vue3-vite",
