@@ -1,12 +1,9 @@
 const Handlebars = require('handlebars')
 const { execSync } = require('child_process')
-const { readFileSync, writeFileSync } = require('fs')
-const { join } = require('path')
+const { readFileSync } = require('fs')
 const { compact } = require('lodash')
 
 const { repository } = require('../package.json')
-
-const DOC_PATH = join('dist', 'docs')
 
 /**
  * Compiles the Handlebars template.
@@ -16,15 +13,6 @@ const DOC_PATH = join('dist', 'docs')
 function compileTemplate(templatePath) {
   const templateContent = readFileSync(templatePath, 'UTF-8')
   return Handlebars.compile(templateContent)
-}
-
-/**
- * Joins a path segment to the documentation path.
- * @param {string} pathSegment - The path segment to be joined.
- * @returns {string} The joined path.
- */
-function joinToDoc(pathSegment) {
-  return join(DOC_PATH, pathSegment)
 }
 
 /**
@@ -53,20 +41,12 @@ function buildContent(template, hooks) {
   return template({ hooks })
 }
 
-/**
- * Writes the content to a file.
- * @param {string} filePath - The path to the file.
- * @param {string} content - The content to be written.
- */
-function writeContentToFile(filePath, content) {
-  writeFileSync(filePath, content)
-}
-
 // Compile the Handlebars template
 const template = compileTemplate('bin/dmd/hooks.hbs')
 // Collect hook occurrences
 const hooks = collectHookOccurrences()
 // Build content using the template and hook collection
 const content = buildContent(template, hooks)
-// Write the content to a file
-writeContentToFile(joinToDoc('hooks.md'), content)
+// Output hooks document to stdout
+
+console.log(content)
