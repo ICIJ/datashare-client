@@ -25,16 +25,12 @@ const { t } = useI18n()
         />
         <div class="bg-tertiary-subtle rounded-2 mt-3 p-3">
           <ul class="m-0">
-            <li>Only CSV format is accepted.</li>
-            <li>Export your spreadsheet as a CSV using encoding UTF-8</li>
-            <li>Your CSV file should not contain more than 60,000 queries</li>
-            <li>The first and only column should contain the terms to search</li>
-            <li>No line break(s) in cells</li>
-            <li>
-              Selecting 'do phrase matches' prevent from using operators like <code>AND</code>, <code>OR</code>,
-              <code>NOT</code>, <code>*</code>, <code>?</code>, <code>!</code>, <code>+</code>, <code>-</code> or
-              Regexes between 2 slashes.
-            </li>
+            <li v-html="t('task.batch-search.form.queries.onlyCSV')" />
+            <li v-html="t('task.batch-search.form.queries.onlyUTF8')" />
+            <li v-html="t('task.batch-search.form.queries.queriesLimist')" />
+            <li v-html="t('task.batch-search.form.queries.firstColumn')" />
+            <li v-html="t('task.batch-search.form.queries.lineBreaks')" />
+            <li v-html="t('task.batch-search.form.queries.operators')" />
           </ul>
         </div>
       </tab-group-entry>
