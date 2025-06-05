@@ -30,7 +30,7 @@ import ToastBody from '@/components/Dismissable/DismissableToastBody'
 import guards from '@/router/guards'
 import messages from '@/lang/en'
 import settings from '@/utils/settings'
-import { useTheme } from '@/composables/useTheme'
+import { getTheme, setTheme } from '@/composables/useTheme'
 import * as stores from '@/store/modules'
 
 class Base {}
@@ -270,8 +270,8 @@ class Core extends Behaviors {
       }
       // Initialize current locale
       await this.initializeI18n()
-      // Load theme
-      this.loadTheme()
+      // Set initial value of the theme
+      setTheme(getTheme())
       // Hold a promise that is resolved when the core is configured
       return this.ready && this._readyResolve(this)
     } catch (error) {
@@ -356,11 +356,6 @@ class Core extends Behaviors {
     this.config.merge(getMode(serverSettings.mode))
     // The backend can yet override some configuration
     this.config.merge(serverSettings)
-  }
-
-  loadTheme() {
-    const { getTheme, setTheme } = useTheme()
-    setTheme(getTheme())
   }
   /**
    * Append the given title to the page title

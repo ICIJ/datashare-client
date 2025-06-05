@@ -7,29 +7,29 @@ import themeDark from '@/assets/images/theme-dark.png'
 
 let eventAdded = false
 
+const LOCAL_STORAGE_KEY = 'data-bs-theme'
+
+const THEMES = Object.freeze({
+  LIGHT: 'light',
+  DARK: 'dark',
+  AUTOMATIC: 'automatic'
+})
+
+export function getAutomaticTheme() {
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? THEMES.DARK : THEMES.LIGHT
+}
+
+export function getTheme() {
+  return localStorage.getItem(LOCAL_STORAGE_KEY) ?? THEMES.AUTOMATIC
+}
+
+export function setTheme(theme) {
+  document.body?.setAttribute('data-bs-theme', theme === THEMES.AUTOMATIC ? getAutomaticTheme() : theme)
+  localStorage.setItem(LOCAL_STORAGE_KEY, theme)
+}
+
 export function useTheme() {
-  const LOCAL_STORAGE_KEY = 'data-bs-theme'
-
-  const THEMES = Object.freeze({
-    LIGHT: 'light',
-    DARK: 'dark',
-    AUTOMATIC: 'automatic'
-  })
-
   const { t } = useI18n()
-
-  function getTheme() {
-    return localStorage.getItem(LOCAL_STORAGE_KEY) ?? THEMES.AUTOMATIC
-  }
-
-  function getAutomaticTheme() {
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? THEMES.DARK : THEMES.LIGHT
-  }
-
-  function setTheme(theme) {
-    document.body?.setAttribute('data-bs-theme', theme === THEMES.AUTOMATIC ? getAutomaticTheme() : theme)
-    localStorage.setItem(LOCAL_STORAGE_KEY, theme)
-  }
 
   if (!eventAdded) {
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
