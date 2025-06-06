@@ -198,6 +198,7 @@
   },
   "search": {
     "title": "Search",
+    "errorStateLabel": "We were unable to perform your search. This might be due to a server error or a bad request.",
     "emptyStateLabel": "Oh, it’s lonely in here... This project has no documents yet.",
     "emptyStateAction": "Add documents",
     "errors": {
