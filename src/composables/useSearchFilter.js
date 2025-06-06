@@ -1,5 +1,5 @@
 import { computed, toValue, nextTick, watch } from 'vue'
-import { get, identity, isEqual, isObject, omit, toString, without } from 'lodash'
+import { get, identity, isObject, toString, without } from 'lodash'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
