@@ -198,6 +198,7 @@
   },
   "search": {
     "title": "crwdns7758:0crwdne7758:0",
+    "errorStateLabel": "crwdns9844:0crwdne9844:0",
     "emptyStateLabel": "crwdns7760:0crwdne7760:0",
     "emptyStateAction": "crwdns7762:0crwdne7762:0",
     "errors": {
