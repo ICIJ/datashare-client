@@ -33,7 +33,7 @@ const carouselEntries = ref([])
 
 async function fetch() {
   if (document.value && isDocumentInPage.value && documentPosition.value !== null) {
-    carouselEntries.value = await fetchCarouselEntries(documentPosition.value, size)
+    carouselEntries.value = await fetchCarouselEntries(Math.max(0, documentPosition.value), size)
   }
 }
 
@@ -44,12 +44,14 @@ const firstCarouselEntry = computed(() => carouselEntries.value[0])
 const lastCarouselEntry = computed(() => carouselEntries.value[carouselEntries.value.length - 1])
 
 async function previous() {
-  const position = Math.max(0, firstCarouselEntry.value.position - size)
+  const firstEntryPosition = firstCarouselEntry.value?.position ?? 0
+  const position = Math.max(0, firstEntryPosition - size)
   carouselEntries.value = await fetchCarouselEntries(position, size)
 }
 
 async function next() {
-  const position = Math.min(lastCarouselEntry.value.position + size, total.value - 1)
+  const lastEntryPosition = lastCarouselEntry.value?.position ?? 0
+  const position = Math.min(lastEntryPosition + size, total.value - 1)
   carouselEntries.value = await fetchCarouselEntries(position, size)
 }
 
@@ -67,7 +69,7 @@ function previousDocument() {
 }
 
 function nextDocument() {
-  position.value = Math.min(total.value - 1, position.value + 1)
+  position.value = Math.max(0, Math.min(total.value - 1, position.value + 1))
 }
 
 wheneverRouteActionShortcut('goToPreviousDocument', previousDocument)

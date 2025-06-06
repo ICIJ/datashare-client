@@ -1,6 +1,6 @@
 import { computed, inject, toRef, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { matches } from 'lodash'
+import { clamp, matches } from 'lodash'
 
 import EsDocList from '@/api/resources/EsDocList'
 import { useCore } from '@/composables/useCore'
@@ -89,7 +89,9 @@ export function useSearchNav(currentDocument = null) {
 
   async function fetchCarouselEntries(position, carouselSize = 5) {
     const params = searchStore.toSearchParams
-    const from = Math.min(Math.max(0, position - Math.floor(carouselSize / 2)), total.value - carouselSize)
+    const halfCarousel = Math.floor(carouselSize / 2)
+    const maxStart = Math.max(0, total.value - carouselSize)
+    const from = clamp(position - halfCarousel, 0, maxStart)
     const raw = await core.api.elasticsearch.searchDocs({ ...params, from, perPage: carouselSize })
     const response = new EsDocList(raw, null, null, from)
     return response.hits
