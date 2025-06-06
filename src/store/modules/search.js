@@ -209,7 +209,6 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   })
 
   function reset() {
-    error.value = null
     field.value = settings.defaultSearchField
     from.value = 0
     isReady.value = true
@@ -222,7 +221,6 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   }
 
   function resetForRouteChange() {
-    error.value = null
     from.value = 0
     isReady.value = true
     q.value = ''
@@ -412,7 +410,8 @@ export const useSearchStore = defineSuffixedStore('search', () => {
 
   async function refresh() {
     setIsReady(false)
-    setError(null)
+    setError()
+    setResponse()
 
     try {
       const raw = await searchDocuments()
@@ -420,7 +419,6 @@ export const useSearchStore = defineSuffixedStore('search', () => {
       searchBreadcrumbStore.pushSearchQuery(toBaseRouteQuery.value)
       setResponse({ raw, roots })
     } catch (error) {
-      setResponse()
       setError(error)
     } finally {
       setIsReady(true)
