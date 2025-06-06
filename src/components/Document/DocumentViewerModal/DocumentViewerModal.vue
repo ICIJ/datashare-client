@@ -27,9 +27,10 @@ const key = computed(() => [document.value.index, document.value.id])
 
 const modalId = useId()
 const { hide } = useModal(modalId)
-// Auto-hide the modal when we leave or update the route
+// Auto-hide the modal when we leave the route
 onBeforeRouteLeave(() => hide())
-onBeforeRouteUpdate(() => hide())
+// Auto-hide the modal when we update the route to a child route that is not 'search'
+onBeforeRouteUpdate(({ name }) => name !== 'search' && hide())
 </script>
 
 <template>
