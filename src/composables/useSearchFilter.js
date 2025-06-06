@@ -330,14 +330,7 @@ export function useSearchFilter() {
 
   function onAfterRouteQueryUpdate(callback, options) {
     return onAfterRouteUpdate((to, from) => {
-      if (
-        // We don't want to trigger the callback when the route is not "search" or when the previous
-        // route is not "search" (for instance, when the user navigates from a child route).
-        to.name === 'search' &&
-        from.name === 'search' &&
-        // or when the query is not changed (except for the `from` parameter)
-        !isEqual(omit(to.query, ['from']), omit(from.query, ['from']))
-      ) {
+      if (to.name === 'search' && !searchStore.sameRouteQuery(to.query, ['from'])) {
         callback(to, from)
       }
     }, options)
@@ -346,11 +339,12 @@ export function useSearchFilter() {
   function onAfterRouteQueryFromUpdate(callback, options) {
     return onAfterRouteUpdate((to, from) => {
       if (
-        // We don't want to trigger the callback when the route is not "search" or when the previous
-        // route is not "search" (for instance, when the user navigates from a child route).
+        // We don't want to trigger the callback when the route is not "search"
         to.name === 'search' &&
-        from.name === 'search' &&
-        // or when the `from` query parameter is changed
+        // or when the previous route is not a document in a modal (for instance,
+        // when the user navigates from a document in grid view)
+        !(from.name === 'document' && from.query.modal) &&
+        // or when the `from` query parameter is not changed.
         to.query.from !== from.query.from
       ) {
         callback(to, from)

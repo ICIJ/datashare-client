@@ -545,6 +545,12 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     return api.runBatchDownload({ projectIds: indices.value, query, uri })
   }
 
+  function sameRouteQuery(query = {}, omit = []) {
+    return Object.keys(query).every((key) => {
+      return omit.includes(key) || query[key] === toRouteQuery.value[key]
+    })
+  }
+
   return {
     error,
     field,
@@ -623,6 +629,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     queryPreviousPage,
     queryNextPage,
     queryDeleteQueryTerm,
-    runBatchDownload
+    runBatchDownload,
+    sameRouteQuery
   }
 })
