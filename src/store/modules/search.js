@@ -282,7 +282,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     field.value = keys.indexOf(value) > -1 ? value : settings.defaultSearchField
   }
 
-  function setResponse({ raw, parents = null, roots = null } = {}) {
+  function setResponse({ raw = null, parents = null, roots = null } = {}) {
     response.value = new EsDocList(raw, parents, roots, from.value)
   }
 
@@ -420,6 +420,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
       searchBreadcrumbStore.pushSearchQuery(toBaseRouteQuery.value)
       setResponse({ raw, roots })
     } catch (error) {
+      setResponse()
       setError(error)
     } finally {
       setIsReady(true)

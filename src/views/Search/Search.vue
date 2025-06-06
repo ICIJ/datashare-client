@@ -5,6 +5,8 @@ import { useI18n } from 'vue-i18n'
 
 import searchEmpty from '@/assets/images/illustrations/search-empty-light.svg'
 import searchEmptyDark from '@/assets/images/illustrations/search-empty-dark.svg'
+import searchError from '@/assets/images/illustrations/app-modal-alert-naming-light.svg'
+import searchErrorDark from '@/assets/images/illustrations/app-modal-alert-naming-dark.svg'
 import DocumentModal from '@/components/Document/DocumentModal'
 import EmptyState from '@/components/EmptyState/EmptyState'
 import PageContainer from '@/components/PageContainer/PageContainer'
@@ -71,6 +73,7 @@ const layout = computed(() => appStore.getSettings('search', 'layout'))
 const isLoading = computed(() => !searchStore.isReady)
 const isListLayout = computed(() => toValue(layout) === LAYOUTS.LIST)
 const isEmpty = computed(() => route.name === 'search' && !isLoading.value && !total.value && !anyFilters.value)
+const isErroed = computed(() => isEmpty.value && !!searchStore.error)
 
 const selection = ref([])
 const toggleSearchBreadcrumb = ref(false)
@@ -149,7 +152,13 @@ onAfterRouteQueryFromUpdate(refreshSearchFromRoute)
         <search-breadcrumb v-model:visible="toggleSearchBreadcrumb" />
         <div class="search__main__results">
           <empty-state
-            v-if="isEmpty"
+            v-if="isErroed"
+            :image="searchError"
+            :image-dark="searchErrorDark"
+            :label="t('search.errorStateLabel')"
+          />
+          <empty-state
+            v-else-if="isEmpty"
             :image="searchEmpty"
             :image-dark="searchEmptyDark"
             :label="t('search.emptyStateLabel')"
