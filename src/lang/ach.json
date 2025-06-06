@@ -182,14 +182,23 @@
     "userGuides": "crwdns7738:0crwdne7738:0",
     "help": "crwdns7740:0crwdne7740:0"
   },
+  "filtersPanelToggler": {
+    "label": "crwdns9810:0crwdne9810:0"
+  },
   "filtersPanelSectionFilterActions": {
-    "expand": "crwdns7742:0crwdne7742:0"
+    "expand": "crwdns7742:0crwdne7742:0",
+    "contextualize": "crwdns9812:0crwdne9812:0",
+    "exclude": "crwdns9814:0crwdne9814:0"
   },
   "filtersPanelSectionFilterTitleToggler": {
     "toggle": "crwdns7744:0crwdne7744:0"
   },
+  "filtersPanelSearch": {
+    "placeholder": "crwdns9816:0crwdne9816:0"
+  },
   "search": {
     "title": "crwdns7758:0crwdne7758:0",
+    "errorStateLabel": "crwdns9844:0crwdne9844:0",
     "emptyStateLabel": "crwdns7760:0crwdne7760:0",
     "emptyStateAction": "crwdns7762:0crwdne7762:0",
     "errors": {
@@ -1047,6 +1056,14 @@
         }
       },
       "form": {
+        "queries": {
+          "onlyCSV": "crwdns9818:0crwdne9818:0",
+          "onlyUTF8": "crwdns9820:0crwdne9820:0",
+          "queriesLimist": "crwdns9822:0crwdne9822:0",
+          "firstColumn": "crwdns9824:0crwdne9824:0",
+          "lineBreaks": "crwdns9826:0crwdne9826:0",
+          "operators": "crwdns9828:0crwdne9828:0"
+        },
         "sections": {
           "general": "crwdns8968:0crwdne8968:0",
           "queries": "crwdns8970:0crwdne8970:0",
@@ -1588,6 +1605,20 @@
     "organization": "crwdns9596:0crwdne9596:0",
     "email": "crwdns9598:0crwdne9598:0"
   },
+  "widgetFieldFacets": {
+    "languages": {
+      "title": "crwdns9830:0crwdne9830:0"
+    },
+    "contentTypes": {
+      "title": "crwdns9832:0crwdne9832:0"
+    },
+    "authors": {
+      "title": "crwdns9834:0crwdne9834:0"
+    }
+  },
+  "widgetDocumentsByCreationDateByPath": {
+    "title": "crwdns9836:0crwdne9836:0"
+  },
   "pathTreeBreadcrumb": {
     "datadir": "crwdns9600:0crwdne9600:0"
   },
@@ -1766,5 +1797,10 @@
     "rowRange": "crwdns9800:0{to}crwdnd9800:0{to}crwdnd9800:0{to}crwdnd9800:0{total}crwdne9800:0",
     "rowRangeFewer": "crwdns9802:0{total}crwdne9802:0",
     "rowRangeCompact": "crwdns9804:0{total}crwdne9804:0"
+  },
+  "themes": {
+    "dark": "crwdns9838:0crwdne9838:0",
+    "light": "crwdns9840:0crwdne9840:0",
+    "automatic": "crwdns9842:0crwdne9842:0"
   }
 }
