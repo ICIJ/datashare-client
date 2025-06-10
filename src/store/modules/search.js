@@ -877,7 +877,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    */
   function sameRouteQuery(query = {}, omit = []) {
     return Object.keys(query).every((key) => {
-      return omit.includes(key) || query[key] === toRouteQuery.value[key]
+      return omit.includes(key) || query[key] === toRouteQueryWithStamp.value[key]
     })
   }
 

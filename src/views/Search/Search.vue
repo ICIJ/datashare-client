@@ -33,7 +33,6 @@ import { useAppStore, useSearchStore } from '@/store/modules'
 const { toggleSettings, toggleFilters, toggleSidebar, isFiltersClosed } = useViews()
 const { provideDocumentViewFloatingId, documentRoute } = useDocument()
 const {
-  applyRefreshRouteFromStart,
   refreshRoute,
   refreshRouteFromStart,
   refreshSearchFromRoute,
@@ -124,8 +123,8 @@ resetSearchResponse()
 refreshSearchFromRoute()
 // Refresh route query when a filter changes (either their values or if they are excluded)
 watchFilters(refreshRouteFromStart)
-// Refresh route query when projects change and apply the search
-watchIndices(applyRefreshRouteFromStart)
+// Refresh route query when projects change
+watchIndices(refreshRouteFromStart)
 // Refresh search when route query changes. Among all the "watcher" (it's a post-navigation filter)
 // of this view, it probably the most important one. It will trigger the search API call
 // when the route query changes which mean that **only route changes** can trigger a search. This

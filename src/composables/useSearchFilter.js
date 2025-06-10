@@ -1,5 +1,5 @@
 import { computed, toValue, nextTick, watch } from 'vue'
-import { get, identity, isObject, toString, without } from 'lodash'
+import { get, identity, isObject, range, random, toString, without } from 'lodash'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
@@ -217,7 +217,9 @@ export function useSearchFilter() {
 
   function refreshRouteFromStart() {
     const name = 'search'
-    const query = { ...searchStore.toRouteQuery, from: 0 }
+    const seed = range(6).map(() => random(97, 122))
+    const stamp = String.fromCharCode.apply(null, seed)
+    const query = { ...searchStore.toRouteQuery, stamp, from: 0 }
     return router.push({ name, query })
   }
 
@@ -249,11 +251,6 @@ export function useSearchFilter() {
   async function refreshSearch() {
     await refreshRecommendedBy()
     return searchStore.query()
-  }
-
-  async function applyRefreshRouteFromStart() {
-    await refreshRouteFromStart()
-    await nextTick(refreshSearch)
   }
 
   function toggleExcludeFilter({ name }, checked) {
@@ -382,7 +379,6 @@ export function useSearchFilter() {
     refreshRouteFromStart,
     refreshSearchFromRoute,
     refreshSearchFromRouteStart,
-    applyRefreshRouteFromStart,
     setFilterValue,
     setQuery,
     setIndices,
