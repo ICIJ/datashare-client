@@ -192,7 +192,7 @@ onBeforeRouteUpdate(init)
     padding: 0;
 
     &__email {
-      border: 1px solid $border-color;
+      border: 1px solid var(--bs-border-color);
 
       &:not(:last-of-type) {
         margin-bottom: -1px;
@@ -209,7 +209,7 @@ onBeforeRouteUpdate(init)
       }
 
       & > a {
-        color: $body-color;
+        color: var(--bs-secondary-color);
 
         &:hover {
           text-decoration: none;
@@ -218,7 +218,7 @@ onBeforeRouteUpdate(init)
 
       &--active {
         position: relative;
-        border-color: $primary;
+        border-color: var(--bs-primary);
       }
 
       &__to {
