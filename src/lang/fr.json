@@ -182,14 +182,23 @@
     "userGuides": "Guide utilisateur•ice",
     "help": "Demander de l'aide"
   },
+  "filtersPanelToggler": {
+    "label": "Fermer les filtres"
+  },
   "filtersPanelSectionFilterActions": {
-    "expand": "Agrandir"
+    "expand": "Agrandir",
+    "contextualize": "Contextualiser",
+    "exclude": "Exclure"
   },
   "filtersPanelSectionFilterTitleToggler": {
     "toggle": "Filtres"
   },
+  "filtersPanelSearch": {
+    "placeholder": "Chercher dans les filtres"
+  },
   "search": {
     "title": "Rechercher des documents",
+    "errorStateLabel": "La recherche n'a pas pu être effectuée. Cela peut être dû à une erreur du serveur ou à une erreur de syntaxe dans la requête.",
     "emptyStateLabel": "Il n'y a aucun document dans ce projet pour le moment...",
     "emptyStateAction": "Ajouter des documents",
     "errors": {
@@ -242,10 +251,10 @@
         "sortLabel": "Trier",
         "sort": "Trier par",
         "relevance": "Pertinence",
-        "dateNewest": "Date d'ajout (du plus récent au plus ancien)",
-        "dateOldest": "Date d'ajout (du plus ancien au plus récent)",
-        "creationDateNewest": "Date de création (du plus récent au plus ancien)",
-        "creationDateOldest": "Date de création (du plus ancien au plus récent)",
+        "dateNewest": "Date d'ajout (plus récent)",
+        "dateOldest": "Date d'ajout (plus ancien)",
+        "creationDateNewest": "Date de création (plus récent)",
+        "creationDateOldest": "Date de création (plus ancien)",
         "sizeLargest": "Taille (décroissante)",
         "sizeSmallest": "Taille (croissante)",
         "path": "Chemin du fichier (A à Z)",
@@ -431,7 +440,7 @@
     "projects": "Projets",
     "starred": "Favoris",
     "notStarred": "Non favoris",
-    "recommendedBy": "Recommandé par",
+    "recommendedBy": "Recommandés par",
     "sections": {
       "documentsInfo": "Propriétés des documents",
       "userData": "Données ajoutées",
@@ -1047,6 +1056,14 @@
         }
       },
       "form": {
+        "queries": {
+          "onlyCSV": "Seul le format CSV est accepté.",
+          "onlyUTF8": "Exporter votre feuille de calcul au format CSV en utilisant l'encodage UTF-8",
+          "queriesLimist": "Votre fichier CSV ne peut pas contenir plus de 60 000 requêtes",
+          "firstColumn": "Seule la première colonne doit contenir les termes à rechercher",
+          "lineBreaks": "Aucun saut de ligne dans les cellules",
+          "operators": "Si vous optez pour 'Phrase exacte', les opérateurs comme <code>AND</code>, <code>OR</code>, <code>NOT</code>, <code>*</code>, <code>?</code>, <code>!</code>, <code>+</code>, <code>-</code> ou les regex (expressions régulières) ne seront pas prises en compte."
+        },
         "sections": {
           "general": "Nom, projet(s) et description",
           "queries": "Requêtes",
@@ -1213,7 +1230,7 @@
     "label": "Tout"
   },
   "pageTable": {
-    "toggleDetails": "Afficher / Masquer les détails"
+    "toggleDetails": "Détails"
   },
   "projects": {
     "title": "Projets"
@@ -1588,6 +1605,20 @@
     "organization": "organisation | organisations",
     "email": "adresse e-mail | adresses e-mails"
   },
+  "widgetFieldFacets": {
+    "languages": {
+      "title": "Langues"
+    },
+    "contentTypes": {
+      "title": "Type de fichiers"
+    },
+    "authors": {
+      "title": "Auteur•ices"
+    }
+  },
+  "widgetDocumentsByCreationDateByPath": {
+    "title": "Nombre de documents par date de création"
+  },
   "pathTreeBreadcrumb": {
     "datadir": "Accueil"
   },
@@ -1642,7 +1673,7 @@
   "searchBreadcrumbFormFooter": {
     "clearFilters": "Effacer les filtres",
     "clearQuery": "Effacer la requête",
-    "clearFiltersAndQuery": "Effacer les filtres et les requêtes",
+    "clearFiltersAndQuery": "Effacer filtres et requête",
     "saveSearch": "Sauvegarder la recherche",
     "createAlert": "Créer une alerte"
   },
@@ -1766,5 +1797,10 @@
     "rowRange": "à {to} sur 0 tâche | à {to} sur 1 tâche | à {to} sur {total} tâches",
     "rowRangeFewer": "sur 0 tâche | sur 1 tâche | sur {total} tâches",
     "rowRangeCompact": "sur 0 tâche | sur 1 tâche | sur {total} tâches"
+  },
+  "themes": {
+    "dark": "Mode sombre",
+    "light": "Mode clair",
+    "automatic": "Automatique"
   }
 }
