@@ -194,7 +194,7 @@
     "toggle": "Toggle filter"
   },
   "filtersPanelSearch": {
-    "placeholder": "Search in filters"
+    "placeholder": "Search filters"
   },
   "search": {
     "title": "Search",
@@ -420,7 +420,7 @@
     "entities": "Entities"
   },
   "documentViewTabsMetadata": {
-    "search": "Search in metadata"
+    "search": "Search metadata"
   },
   "filterTypeAll": {
     "label": "All"
@@ -684,7 +684,7 @@
     "contentType": "Content type",
     "contentEncoding": "Content encoding",
     "contentTextLength": "Content text length",
-    "namedEntityFilter": "Search in entities",
+    "namedEntityFilter": "Search entities",
     "starred": "Documents have been starred.",
     "unstarred": "Documents have been unstarred.",
     "notAvailable": "Preview is not available for this document.",
@@ -1062,7 +1062,7 @@
           "queriesLimist": "Your CSV file should not contain more than 60,000 queries",
           "firstColumn": "The first and only column should contain the terms to search",
           "lineBreaks": "No line break(s) in cells",
-          "operators": "Selecting 'do phrase matches' prevent from using operators like <code>AND</code>, <code>OR</code>, <code>NOT</code>, <code>*</code>, <code>?</code>, <code>!</code>, <code>+</code>, <code>-</code> or Regexes between 2 slashes."
+          "operators": "Selecting 'do phrase matches' prevent from using operators like <code>AND</code>, <code>OR</code>, <code>NOT</code>, <code>*</code>, <code>?</code>, <code>!</code>, <code>+</code>, <code>-</code> or Regexes between 2 slashes in the queries."
         },
         "sections": {
           "general": "Name, project(s) and description",
@@ -1384,7 +1384,7 @@
     "backToSearchResults": "Go back to the search results",
     "goToPreviousTab": "Go to previous document tab",
     "goToNextTab": "Go to next document tab",
-    "activateSearchBar": "Find in document",
+    "activateSearchBar": "Search in document",
     "deactivateSearchBar": "Close search in document",
     "findPreviousOccurrence": "Find the previous occurrence in the document",
     "findNextOccurrence": "Find the next occurrence in the document"
@@ -1437,7 +1437,7 @@
       "newApiKey": "Create API key",
       "apiKey": "API key",
       "noAccess": "You do not have access to that page in local mode.",
-      "description": "An API key allows you interact with Datashare <a href=\"https://icij.gitbook.io/datashare/developers/backend/api\" target=\"_blank\">through the API</a>, using tools like <a href=\"https://github.com/ICIJ/datashare-tarentula\" target=\"_blank\">Tarentula</a> or your own scripts.",
+      "description": "An API key allows you to interact with Datashare <a href=\"https://icij.gitbook.io/datashare/developers/backend/api\" target=\"_blank\">through the API</a>, using tools like <a href=\"https://github.com/ICIJ/datashare-tarentula\" target=\"_blank\">Tarentula</a> or your own scripts.",
       "key": {
         "badge": "Key",
         "copy": "Copy",
