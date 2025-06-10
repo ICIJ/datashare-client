@@ -251,6 +251,11 @@ export function useSearchFilter() {
     return searchStore.query()
   }
 
+  async function applyRefreshRouteFromStart() {
+    await refreshRouteFromStart()
+    await nextTick(refreshSearch)
+  }
+
   function toggleExcludeFilter({ name }, checked) {
     return searchStore.toggleFilter(name, checked)
   }
@@ -377,6 +382,7 @@ export function useSearchFilter() {
     refreshRouteFromStart,
     refreshSearchFromRoute,
     refreshSearchFromRouteStart,
+    applyRefreshRouteFromStart,
     setFilterValue,
     setQuery,
     setIndices,
