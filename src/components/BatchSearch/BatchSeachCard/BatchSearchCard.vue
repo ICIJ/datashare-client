@@ -10,8 +10,13 @@ defineProps({
   batchSearch: {
     type: Object,
     required: true
+  },
+  task: {
+    type: Object,
+    required: false
   }
 })
+
 const { t } = useI18n()
 </script>
 

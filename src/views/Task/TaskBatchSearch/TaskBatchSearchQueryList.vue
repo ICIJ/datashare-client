@@ -90,25 +90,16 @@ function getBatchSearchUser(item) {
 }
 
 async function fetchBatchSearch() {
-  const taskBatchSearch = await taskStore.fetchTask(props.uuid)
-  const batchSearchRecord = getBatchSearchRecord(taskBatchSearch)
-  const batchSearchUser = getBatchSearchUser(taskBatchSearch)
+  const task = await taskStore.fetchTask(props.uuid)
+  const batchSearchRecord = getBatchSearchRecord(task)
+  const batchSearchUser = getBatchSearchUser(task)
   // Then fetch the batch search record
   batchSearch.value = {
-    uuid: batchSearchRecord.uuid,
-    name: batchSearchRecord.name,
-    nbResults: batchSearchRecord.nbResults,
-    nbQueriesWithoutResults: batchSearchRecord.nbQueriesWithoutResults,
-    nbQueries: batchSearchRecord.nbQueries,
-    state: batchSearchRecord.state,
-    date: batchSearchRecord.date,
+    ...batchSearchRecord,
     userId: batchSearchUser.id,
-    published: batchSearchRecord.published,
-    phraseMatches: batchSearchRecord.phraseMatches,
-    fuzziness: batchSearchRecord.fuzziness,
-    projects: batchSearchRecord.projects,
-    description: batchSearchRecord.description,
-    uri: batchSearchRecord.uri
+    state: task.state,
+    errorMessage: batchSearchRecord.errorMessage ?? task.error.message ?? null,
+    errorQuery: batchSearchRecord.errorQuery ?? null
   }
 }
 

@@ -20,7 +20,6 @@ import { useCore } from '@/composables/useCore'
 import { TASK_NAME } from '@/enums/taskNames'
 import TaskPage from '@/views/Task/TaskPage'
 import TaskStatus from '@/views/Task/TaskStatus.vue'
-import { useBatchSearchErrorModal } from '@/composables/useBatchSearchErrorModal.js'
 
 const { t } = useI18n()
 const { propertiesModelValueOptions } = useTaskSettings('batch-search')
@@ -44,11 +43,6 @@ async function fetchMe() {
   me.value = await core.auth.getUsername()
 }
 
-const { show: showBatchSearchErrorModal } = useBatchSearchErrorModal()
-
-function showError({ errorMessage, errorQuery }) {
-  showBatchSearchErrorModal(errorMessage, errorQuery)
-}
 onBeforeMount(fetchMe)
 </script>
 

@@ -1,30 +1,13 @@
-import { h, computed } from 'vue'
+import { h } from 'vue'
 import { useModalController } from 'bootstrap-vue-next'
-import { useI18n } from 'vue-i18n'
 
 import BatchSearchErrorModal from '@/components/BatchSearch/BatchSearchErrorModal'
 
 export function useBatchSearchErrorModal() {
   const modalController = useModalController()
-  const { t } = useI18n()
-  const okTitle = computed(() => t('batchSearchErrorModal.okTitle'))
-  const errorTitle = computed(() => t('batchSearchErrorModal.errorTitle'))
-  const href = '#'
-  const text = computed(() => t('batchSearchErrorModal.text'))
-  const description = computed(() =>
-    t('batchSearchErrorModal.description', {
-      link: `<a href="${href}" target="_blank" rel="noopener">${text.value}</a>`
-    })
-  )
 
-  function show(errorMessage, query) {
-    const props = {
-      okTitle,
-      errorTitle,
-      errorMessage,
-      query,
-      description
-    }
+  function show({ errorMessage, errorQuery } = {}) {
+    const props = { errorMessage, errorQuery }
 
     return new Promise((resolve) => {
       const component = h(BatchSearchErrorModal, {

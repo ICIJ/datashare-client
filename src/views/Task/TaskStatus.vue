@@ -11,29 +11,20 @@ const props = defineProps({
     type: String,
     validator: taskStatusValidator
   },
-  errorMessage: {
-    type: String,
-    required: false
-  },
-  errorQuery: {
-    type: String,
-    required: false
-  },
   withLabel: {
+    type: Boolean,
+    default: false
+  },
+  withClick: {
     type: Boolean,
     default: false
   }
 })
+
 const emit = defineEmits(['error'])
-const isFailed = computed(() => props.status === TASK_STATUS.FAILURE)
-const tag = computed(() => {
-  return isFailed.value ? BButton : 'span'
-})
-const onClick = () => {
-  if (isFailed.value) {
-    emit('error', { errorMessage: props.errorMessage, errorQuery: props.errorQuery })
-  }
-}
+const isFailed = computed(() => [TASK_STATUS.FAILURE, TASK_STATUS.ERROR].includes(props.status.toLowerCase()))
+const tag = computed(() => (isFailed.value && props.withClick ? BButton : 'span'))
+const onClick = () => isFailed.value && props.withClick && emit('error')
 </script>
 
 <template>

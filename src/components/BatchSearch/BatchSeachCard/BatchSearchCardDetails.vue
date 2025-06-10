@@ -103,10 +103,7 @@ const uriWithoutIndices = computed(() => {
 const hasUriWithFilters = computed(() => !!uriFiltersEntries.value.length)
 
 const { show: showBatchSearchErrorModal } = useBatchSearchErrorModal()
-
-function showError() {
-  showBatchSearchErrorModal(props.errorMessage, props.errorQuery)
-}
+const showError = () => showBatchSearchErrorModal(props)
 </script>
 
 <template>
@@ -114,7 +111,7 @@ function showError() {
     <ul class="batch-search-card-details__list list-unstyled">
       <li>
         <batch-search-card-details-entry :label="t('batchSearchCardDetails.status')">
-          <task-status :status="state" with-label @error="showError" />
+          <task-status :status="state" with-label with-click @error="showError" />
         </batch-search-card-details-entry>
       </li>
       <li>
