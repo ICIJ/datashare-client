@@ -211,7 +211,7 @@ function showError() {
           :icon="PhCirclesThreePlus"
           buttons
         >
-          <div>
+          <div class="d-flex flex-wrap gap-2">
             <project-button v-for="(project, index) in projects" :key="index" :project="project" />
           </div>
         </batch-search-card-details-entry>
