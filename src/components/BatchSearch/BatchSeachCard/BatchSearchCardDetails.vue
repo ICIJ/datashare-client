@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { stringifyQuery, parseQuery } from 'vue-router'
+import { omit } from 'lodash'
 
 import BatchSearchCardDetailsEntry from '@/components/BatchSearch/BatchSeachCard/BatchSearchCardDetailsEntry'
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
@@ -12,6 +13,7 @@ import SearchBreadcrumbUri from '@/components/Search/SearchBreadcrumbUri/SearchB
 import humanNumber from '@/utils/humanNumber'
 import TaskStatus from '@/views/Task/TaskStatus.vue'
 import { useBatchSearchErrorModal } from '@/composables/useBatchSearchErrorModal.js'
+import { useSearchBreadcrumb } from '@/composables/useSearchBreadcrumb'
 
 defineOptions({ name: 'BatchSearchCardDetails' })
 
@@ -79,11 +81,27 @@ const phraseMatchValue = computed(() => (props.phraseMatch ? phraseMatchOn.value
 const fuzzinessValue = computed(() => t('batchSearchCardDetails.fuzzinessValue', { n: props.fuzziness }))
 const proximityValue = computed(() => t('batchSearchCardDetails.proximityValue', { n: props.proximity }))
 
-const uriWithoutIndices = computed(() => {
-  const uri = parseQuery(props.uri)
-  delete uri.indices
-  return stringifyQuery(uri)
+const { parseFiltersEntries } = useSearchBreadcrumb()
+
+const uriFiltersEntries = computed(() => {
+  try {
+    const uri = props.uri.split('#/?').pop()
+    return parseFiltersEntries(parseQuery(uri))
+  } catch {
+    return []
+  }
 })
+
+const uriWithoutIndices = computed(() => {
+  try {
+    return stringifyQuery(omit(parseQuery(props.uri), ['indices']))
+  } catch {
+    return ''
+  }
+})
+
+const hasUriWithFilters = computed(() => !!uriFiltersEntries.value.length)
+
 const { show: showBatchSearchErrorModal } = useBatchSearchErrorModal()
 
 function showError() {
@@ -216,7 +234,7 @@ function showError() {
           </div>
         </batch-search-card-details-entry>
       </li>
-      <li v-if="uri">
+      <li v-if="hasUriWithFilters">
         <batch-search-card-details-entry :label="t('batchSearchCardDetails.filters')" :icon="PhFunnel" buttons>
           <search-breadcrumb-uri :uri="uriWithoutIndices" no-label />
         </batch-search-card-details-entry>
