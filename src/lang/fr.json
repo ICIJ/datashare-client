@@ -280,7 +280,7 @@
   },
   "searchSavedEntries": {
     "fields": {
-      "creationDate": "Créé•e le",
+      "creationDate": "Créée le",
       "name": "Nom de la recherche sauvegardée",
       "author": "Auteur·ice"
     },
@@ -678,7 +678,7 @@
     "dirname": "Dossier du document",
     "id": "ID du document",
     "project": "Projet",
-    "creationDate": "Créé•e le",
+    "creationDate": "Créé le",
     "size": "Taille du ficher",
     "contentLanguage": "Langue",
     "contentType": "Type de contenu",
@@ -850,7 +850,7 @@
     "emptyStateLabel": "Vous n'avez pas encore lancé de tâche. {link}",
     "emptyStateLabelLink": "En savoir plus.",
     "settings": {
-      "createdAt": "Créé•e le",
+      "createdAt": "Créé le",
       "name": "Nom",
       "state": "Statut"
     },
@@ -872,7 +872,7 @@
           "state": "Statut",
           "projects": "Projets",
           "author": "Auteur·ice",
-          "createdAt": "Créé•e le",
+          "createdAt": "Créé le",
           "progress": "Progression"
         }
       },
@@ -915,7 +915,7 @@
           "entitiesToFind": "Entités à détecter",
           "pipeline": "Modèle",
           "project": "Projet",
-          "createdAt": "Créé•e le",
+          "createdAt": "Créé le",
           "progress": "Progression",
           "result": "Résultat",
           "state": "Statut"
@@ -975,7 +975,7 @@
           "name": "Nom",
           "documents": "Documents",
           "project": "Projet",
-          "createdAt": "Créé•e le",
+          "createdAt": "Créé le",
           "progress": "Progression",
           "result": "Résultat",
           "state": "Statut"
@@ -1025,7 +1025,7 @@
         "searchPlaceholder": "Rechercher des téléchargements en lot",
         "properties": {
           "name": "Nom",
-          "createdAt": "Créé•e le",
+          "createdAt": "Créé le",
           "projects": "Projets",
           "progress": "Progression",
           "size": "Taille",
@@ -1050,7 +1050,7 @@
           "projects": "Projets",
           "author": "Auteur·ice",
           "name": "Nom",
-          "createdAt": "Créé•e le",
+          "createdAt": "Créée le",
           "progress": "Progression",
           "state": "Statut"
         }
@@ -1147,7 +1147,7 @@
           "contentType": "Type",
           "contentLength": "Taille",
           "documentPath": "Chemin",
-          "creationDate": "Créé•e le"
+          "creationDate": "Créé le"
         }
       }
     }
@@ -1172,7 +1172,7 @@
   },
   "batchSearchCardDetails": {
     "status": "Statut",
-    "date": "Créé•e le",
+    "date": "Créée le",
     "author": "Auteur·ice",
     "visibilityPrivate": "Privée",
     "visibilityShared": "Partagée",
@@ -1264,7 +1264,7 @@
   "projectJumbotron": {
     "delete": "Supprimer",
     "edit": "Modifier",
-    "creationDate": "Créé•e le",
+    "creationDate": "Créé le",
     "updateDate": "Modifié le"
   },
   "projectList": {
@@ -1594,7 +1594,7 @@
         "maintainerName": "Maintenu par",
         "publisherName": "Publié par",
         "sourceUrl": "Source",
-        "creationDate": "Créé•e le",
+        "creationDate": "Créé le",
         "updateDate": "Modifié le"
       }
     }
@@ -1729,7 +1729,7 @@
       "contentLength": "Taille du ficher",
       "contentTextLength": "Longueur du texte",
       "contentType": "Type de fichier",
-      "creationDate": "Créé•e le",
+      "creationDate": "Créé le",
       "extractionLevel": "Niveau d'extraction",
       "extractionDate": "Date d'indexation",
       "language": "Langue",
