@@ -90,46 +90,26 @@
 
         .splashscreen__panel {
           padding: 4rem 0;
-          gap: 4rem;
-          width: 1400px;
-          max-width: 100%;
+          height: 100vh;
+          display: flex;
         }
 
         .splashscreen__panel__logo {
           position: relative;
-          width: 100%;
-          max-height: calc(80vh - 12rem);
-          aspect-ratio: 1400 / 780;
+          width: auto;
+          max-height: 200px;
+          margin-top: auto;
         }
 
-        .splashscreen__panel__logo * {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-        }
-
-        .splashscreen__panel__logo__documents {
-          animation: splashscreen-floating 5s ease-in-out infinite;
+        .splashscreen__panel__label {
+          margin-top: auto;
         }
       </style>
       <div class="splashscreen">
         <div class="splashscreen__progress-bar"></div>
         <div class="splashscreen__panel">
-          <div class="splashscreen__panel__logo">
-            <picture class="splashscreen__panel__logo__documents">
-              <source srcset="splashscreen-documents.svg" media="(prefers-color-scheme: light)" />
-              <source srcset="splashscreen-documents-dark.svg" media="(prefers-color-scheme: dark)" />
-              <img src="splashscreen-documents.svg" />
-            </picture>
-            <picture class="splashscreen__panel__logo__circle">
-              <source srcset="splashscreen-circles.svg" media="(prefers-color-scheme: light)" />
-              <source srcset="splashscreen-circles-dark.svg" media="(prefers-color-scheme: dark)" />
-              <img src="splashscreen-circles.svg" />
-            </picture>
-          </div>
-          <div>Datashare is starting....</div>
+          <img class="splashscreen__panel__logo" src="splashscreen.png" />          
+          <div class="splashscreen__panel__label">Datashare is starting....</div>
         </div>
       </div>
     </div>
