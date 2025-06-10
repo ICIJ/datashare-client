@@ -11,19 +11,19 @@ const slots = useSlots()
 const isEmpty = computed(() => !slots.default)
 
 defineProps({
-  hideClearFilters: {
+  disabledClearFilters: {
     type: Boolean
   },
-  hideClearQuery: {
+  disabledClearQuery: {
     type: Boolean
   },
-  hideClearFiltersAndQuery: {
+  disabledClearFiltersAndQuery: {
     type: Boolean
   },
-  hideSaveSearch: {
+  disabledSaveSearch: {
     type: Boolean
   },
-  hideCreateAlert: {
+  disabledCreateAlert: {
     type: Boolean,
     default: true
   }
@@ -49,11 +49,11 @@ const emit = defineEmits(['clear:filters', 'clear:query', 'clear:all', 'save:sea
           </search-breadcrumb-form-list>
         </div>
         <search-breadcrumb-form-footer
-          :hide-clear-filters="hideClearFilters"
-          :hide-clear-query="hideClearQuery"
-          :hide-clear-filters-and-query="hideClearFiltersAndQuery"
-          :hide-save-search="hideSaveSearch"
-          :hide-create-alert="hideCreateAlert"
+          :disabled-clear-filters="disabledClearFilters"
+          :disabled-clear-query="disabledClearQuery"
+          :disabled-clear-filters-and-query="disabledClearFiltersAndQuery"
+          :disabled-save-search="disabledSaveSearch"
+          :disabled-create-alert="disabledCreateAlert"
           @clear:filters="emit('clear:filters')"
           @clear:query="emit('clear:query')"
           @clear:all="emit('clear:all')"

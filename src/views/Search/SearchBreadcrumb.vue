@@ -23,9 +23,9 @@ const { show: showSearchSavingModal } = useSearchSavingModal()
 <template>
   <search-breadcrumb-form
     v-model:visible="visible"
-    :hide-clear-query="!hasQueryEntries"
-    :hide-clear-filters="!hasFiltersEntries"
-    :hide-clear-filters-and-query="!hasQueryAndFiltersEntries"
+    :disabled-clear-query="!hasQueryEntries"
+    :disabled-clear-filters="!hasFiltersEntries"
+    :disabled-clear-filters-and-query="!hasQueryAndFiltersEntries"
     @clear:filters="clearFiltersEntries"
     @clear:query="clearQueryEntries"
     @clear:all="clearAll"

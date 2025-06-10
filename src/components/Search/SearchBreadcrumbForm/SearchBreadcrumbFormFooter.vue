@@ -5,19 +5,19 @@ import FormActions from '@/components/Form/FormActions/FormActions'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
 defineProps({
-  hideClearFilters: {
+  disabledClearFilters: {
     type: Boolean
   },
-  hideClearQuery: {
+  disabledClearQuery: {
     type: Boolean
   },
-  hideClearFiltersAndQuery: {
+  disabledClearFiltersAndQuery: {
     type: Boolean
   },
-  hideSaveSearch: {
+  disabledSaveSearch: {
     type: Boolean
   },
-  hideCreateAlert: {
+  disabledCreateAlert: {
     type: Boolean
   }
 })
@@ -27,24 +27,34 @@ const emit = defineEmits(['clear:filters', 'clear:query', 'clear:all', 'save:sea
 
 <template>
   <form-actions class="search-breadcrumb-form-footer" variant="link" end>
-    <button-icon v-if="!hideClearFilters" icon-left="eraser" @click="emit('clear:filters')">
+    <button-icon :disabled="disabledClearFilters" icon-left="eraser" @click="emit('clear:filters')">
       {{ t('searchBreadcrumbFormFooter.clearFilters') }}
     </button-icon>
-    <button-icon v-if="!hideClearQuery" icon-left="x-circle" @click="emit('clear:query')">
+    <button-icon :disabled="disabledClearQuery" icon-left="x-circle" @click="emit('clear:query')">
       {{ t('searchBreadcrumbFormFooter.clearQuery') }}
     </button-icon>
-    <button-icon v-if="!hideClearFiltersAndQuery" icon-left="arrow-counter-clockwise" @click="emit('clear:all')">
+    <button-icon
+      :disabled="disabledClearFiltersAndQuery"
+      icon-left="arrow-counter-clockwise"
+      @click="emit('clear:all')"
+    >
       {{ t('searchBreadcrumbFormFooter.clearFiltersAndQuery') }}
     </button-icon>
     <button-icon
-      v-if="!hideSaveSearch"
+      :disabled="disabledSaveSearch"
       variant="outline-dark"
       icon-left="floppy-disk-back"
       @click="emit('save:search')"
     >
       {{ t('searchBreadcrumbFormFooter.saveSearch') }}
     </button-icon>
-    <button-icon v-if="!hideCreateAlert" variant="outline-dark" icon-left="siren" @click="emit('create:alert')">
+    <button-icon
+      v-if="false /* Disabled until the feature is implemented */"
+      :disabled="!disabledCreateAlert"
+      variant="outline-dark"
+      icon-left="siren"
+      @click="emit('create:alert')"
+    >
       {{ t('searchBreadcrumbFormFooter.createAlert') }}
     </button-icon>
   </form-actions>
