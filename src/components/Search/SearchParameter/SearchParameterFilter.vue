@@ -79,7 +79,7 @@ const color = computed(() => {
 })
 
 const display = computed(() => {
-  return filter.value ? types[filter.value.type].display ?? null : null
+  return filter.value && types[filter.value.type].display ? types[filter.value.type].display : null
 })
 </script>
 
