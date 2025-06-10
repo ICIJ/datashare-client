@@ -688,7 +688,7 @@
     "starred": "Documents have been starred.",
     "unstarred": "Documents have been unstarred.",
     "notAvailable": "Preview is not available for this file type.",
-    "namedEntitiesNotFound": "No named entities found.",
+    "namedEntitiesNotFound": "No entities found.",
     "namedEntitiesNotSearched": "Document not analyzed. To find named entities, {link}.",
     "namedEntitiesNotSearchedLink": "start a new task",
     "threadIndex": "Thread ID",
