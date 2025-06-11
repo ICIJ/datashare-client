@@ -78,7 +78,11 @@ const errorMessageAsJson = computed(() => {
       </div>
       <i18n-t keypath="batchSearchErrorModal.description" tag="p" class="m-0">
         <template #link>
-          <a href="#" target="_blank" rel="noopener">
+          <a
+            href="https://icij.gitbook.io/datashare/usage/faq/common-errors/list-of-common-errors-leading-to-failure-in-batch-searches"
+            target="_blank"
+            rel="noopener"
+          >
             <i18n-t keypath="batchSearchErrorModal.text" />
           </a>
         </template>
