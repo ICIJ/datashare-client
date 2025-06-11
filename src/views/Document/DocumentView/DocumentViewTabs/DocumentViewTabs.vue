@@ -42,7 +42,6 @@ wheneverRouteActionShortcut('goToPreviousTab', () => router.push(previousTabRout
 const nextTabIndex = computed(() => (currentTabIndex.value + 1) % tabs.length)
 const nextTabRoute = computed(() => tabRoute(tabs[nextTabIndex.value]))
 wheneverRouteActionShortcut('goToNextTab', () => router.push(nextTabRoute.value))
-
 </script>
 
 <template>
