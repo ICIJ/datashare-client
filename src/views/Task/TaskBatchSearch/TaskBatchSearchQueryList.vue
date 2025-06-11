@@ -98,7 +98,7 @@ async function fetchBatchSearch() {
     ...batchSearchRecord,
     userId: batchSearchUser.id,
     state: task.state,
-    errorMessage: batchSearchRecord.errorMessage ?? task.error.message ?? null,
+    errorMessage: batchSearchRecord.errorMessage ?? task.error?.message ?? null,
     errorQuery: batchSearchRecord.errorQuery ?? null
   }
 }
