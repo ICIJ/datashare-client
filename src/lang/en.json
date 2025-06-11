@@ -1084,7 +1084,8 @@
         "visibility": {
           "label": "Visibility",
           "options": {
-            "private": "Private - Only you will see your batch search"
+            "private": "Private - Only you will see your batch search",
+            "shared": "Shared - Only members of all the selected project(s) will see your batch search"
           },
           "description": "This option can be changed later (either way)"
         },
