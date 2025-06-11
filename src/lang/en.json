@@ -275,7 +275,7 @@
   "searchSavedList": {
     "title": "Saved searches",
     "allRemoved": "All saved searches have been removed.",
-    "emptyStateLabel": "There are no saved searches. Go to search to save important searches",
+    "emptyStateLabel": "There are no saved searches. Go to search to save important searches.",
     "emptyStateAction": "Go to search"
   },
   "searchSavedEntries": {
@@ -312,8 +312,8 @@
     "selectDocument": "Select this document"
   },
   "documentLocalSearchNav": {
-    "previous": "Find the previous occurrence",
-    "next": "Find the next occurrence"
+    "previous": "Find the previous mention",
+    "next": "Find the next mention"
   },
   "documentLocalSearchInput": {
     "placeholder": "Search in document"
@@ -337,11 +337,11 @@
   },
   "documentUserActionsCardRecommendations": {
     "title": "0 recommendations | 1 recommendation | {count} recommendations",
-    "info": "Recommendations are public to all project’s members."
+    "info": "Recommendations are public to project members."
   },
   "documentUserActionsCardTags": {
     "title": "0 tags | 1 tag | {count} tags",
-    "info": "Tags are public to all project’s members."
+    "info": "Tags are public to project members."
   },
   "documentUserCommentsList": {
     "hideComments": "Hide comments",
@@ -362,7 +362,7 @@
     "sortingText": "Oldest to newest"
   },
   "documentUserComments": {
-    "warning": "Your comments are public to project’s members."
+    "warning": "Your comments are public to project members."
   },
   "documentUserCommentsForm": {
     "placeholder": "Write your comment here.",
@@ -372,7 +372,7 @@
     "goToComment": "Go to comment (external link)"
   },
   "documentUserRecommendations": {
-    "warning": "Recommendations are public to all project’s members",
+    "warning": "Recommendations are public to project members.",
     "noRecommendations": "No recommendations yet.",
     "markAsRecommended": "Mark as recommended",
     "unmarkAsRecommended": "Unmark as recommended"
@@ -380,7 +380,7 @@
   "documentUserTags": {
     "tagListOthers": "Added by others",
     "tagListYours": "Added by you",
-    "tagWarning": "Tags are public to project members",
+    "tagWarning": "Tags are public to project members.",
     "noTags": "No tags added yet."
   },
   "documentUserTagsAction": {
@@ -450,12 +450,12 @@
       "toggler": "Sort",
       "options": {
         "_count": {
-          "asc": "Occurrences (increasing)",
-          "desc": "Occurrences (decreasing)"
+          "asc": "Mentions (increasing)",
+          "desc": "Mentions (decreasing)"
         },
         "parent_doc_count": {
-          "asc": "Occurrences (increasing)",
-          "desc": "Occurrences (decreasing)"
+          "asc": "Mentions (increasing)",
+          "desc": "Mentions (decreasing)"
         },
         "_key": {
           "asc": "Alphabetical (A to Z)",
@@ -881,8 +881,8 @@
         "batch-search": {
           "title": "Batch search",
           "description": "Get the results of each query of a list, all at once. For instance, instead of searching for all the politicians of your country one after the other, just upload the list and see the results for each one.",
-          "nbPublic": "No shared batch searches | 1 shared batch search | {n} shared batch searches",
-          "nbPrivate": "no private batch searches | 1 shared batch search | {n} private batch search",
+          "nbPublic": "no shared batch searches | 1 shared batch search | {n} shared batch searches",
+          "nbPrivate": "no private batch searches | 1 private batch search | {n} private batch search",
           "actionText": "Create a batch search"
         },
         "batch-download": {
@@ -1084,8 +1084,7 @@
         "visibility": {
           "label": "Visibility",
           "options": {
-            "private": "Private - Only you will see your batch search",
-            "shared": "Shared - Only members of all the selected project(s) will see your batch search"
+            "private": "Private - Only you will see your batch search"
           },
           "description": "This option can be changed later (either way)"
         },
@@ -1154,7 +1153,6 @@
   },
   "batchSearchErrorModal": {
     "okTitle": "Ok",
-    "errorQuery": "There is an error on the following query",
     "errorTitle": "The error is",
     "text": "how to fix the most common errors",
     "description": "The system encountered a problem. Syntax errors in the CSV are the usual suspects (see {link})."
@@ -1266,7 +1264,7 @@
     "delete": "Delete",
     "edit": "Edit",
     "creationDate": "Created",
-    "updateDate": "Updated:"
+    "updateDate": "Updated"
   },
   "projectList": {
     "title": "Projects",
@@ -1387,8 +1385,8 @@
     "goToNextTab": "Go to next document tab",
     "activateSearchBar": "Search in document",
     "deactivateSearchBar": "Close search in document",
-    "findPreviousOccurrence": "Previous occurrence in the document",
-    "findNextOccurrence": "Next occurrence in the document"
+    "findPreviousOccurrence": "Previous mention in the document",
+    "findNextOccurrence": "Next mention in the document"
   },
   "settings": {
     "layout": {
@@ -1624,7 +1622,7 @@
     "datadir": "Home"
   },
   "projectCardUpdateDate": {
-    "label": "Updated:"
+    "label": "Updated"
   },
   "projectCardDocumentsCount": {
     "noDocuments": "No documents"
@@ -1634,7 +1632,7 @@
     "search": "Search"
   },
   "projectCards": {
-    "documentsCount": "No documents | 1 document | {count} documents",
+    "documentsCount": "no documents | 1 document | {count} documents",
     "about": "About",
     "search": "Search"
   },
@@ -1658,7 +1656,7 @@
     "label": "Paths"
   },
   "searchBarInputDropdownForProjects": {
-    "projectsCount": "No projects | 1 project | {count} projects",
+    "projectsCount": "no projects | 1 project | {count} projects",
     "noMatches": "No matches"
   },
   "searchBreadcrumbFormList": {
@@ -1694,11 +1692,11 @@
     }
   },
   "searchSelection": {
-    "count": "No selected documents | 1 selected document | {count} selected documents",
+    "count": "no selected documents | 1 selected document | {count} selected documents",
     "star": "Star",
     "unstar": "Unstar",
     "tag": "Tag",
-    "nbDocs": "No documents | 1 document | {count} documents",
+    "nbDocs": "no documents | 1 document | {count} documents",
     "nbTags": "no tags | 1 tag | {count} tags",
     "tagSuccess": "{nbDocs} have been tagged with {nbTags}.",
     "tagFailed": "Error: {nbDocs} have not been tagged with {nbTags}."
