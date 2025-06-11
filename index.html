@@ -23,10 +23,9 @@
   <body>
     <div id="app">
       <style>      
-        @keyframes splashscreen-floating {
-          50% {
-            opacity: 0.10;
-            transform: translateY(-5%);
+        @keyframes splashscreen-pulse {
+          100% {
+            opacity: 0.5;
           }
         }
 
@@ -99,6 +98,7 @@
           width: auto;
           max-height: 200px;
           margin-top: auto;
+          animation: splashscreen-pulse 1s alternate ease-in-out infinite;
         }
 
         .splashscreen__panel__label {
