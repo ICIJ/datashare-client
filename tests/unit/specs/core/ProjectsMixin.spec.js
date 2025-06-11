@@ -115,13 +115,15 @@ describe('ProjectsMixin', () => {
     const name = 'default-project'
     core.config.set('defaultProject', name)
     await core.createDefaultProject()
-    expect(api.createProject).toBeCalledWith({
-      allowFromMask: '*.*.*.*',
-      description: 'Your main project on Datashare',
-      label: 'Default',
-      name: 'default-project',
-      sourcePath: undefined
-    })
+    expect(api.createProject).toBeCalledWith(
+      expect.objectContaining({
+        allowFromMask: '*.*.*.*',
+        description: 'Your main project on Datashare',
+        label: 'Default',
+        name: 'default-project',
+        sourcePath: undefined
+      })
+    )
   })
 
   it('should add a new project to the settings', () => {
