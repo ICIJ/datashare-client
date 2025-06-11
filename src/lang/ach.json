@@ -275,7 +275,7 @@
   "searchSavedList": {
     "title": "crwdns7878:0crwdne7878:0",
     "allRemoved": "crwdns7880:0crwdne7880:0",
-    "emptyStateLabel": "crwdns9846:0crwdne9846:0",
+    "emptyStateLabel": "crwdns9894:0crwdne9894:0",
     "emptyStateAction": "crwdns7884:0crwdne7884:0"
   },
   "searchSavedEntries": {
@@ -312,8 +312,8 @@
     "selectDocument": "crwdns7922:0crwdne7922:0"
   },
   "documentLocalSearchNav": {
-    "previous": "crwdns9848:0crwdne9848:0",
-    "next": "crwdns9850:0crwdne9850:0"
+    "previous": "crwdns9896:0crwdne9896:0",
+    "next": "crwdns9898:0crwdne9898:0"
   },
   "documentLocalSearchInput": {
     "placeholder": "crwdns7928:0crwdne7928:0"
@@ -337,11 +337,11 @@
   },
   "documentUserActionsCardRecommendations": {
     "title": "crwdns7948:0{count}crwdne7948:0",
-    "info": "crwdns9852:0crwdne9852:0"
+    "info": "crwdns9900:0crwdne9900:0"
   },
   "documentUserActionsCardTags": {
     "title": "crwdns7952:0{count}crwdne7952:0",
-    "info": "crwdns9854:0crwdne9854:0"
+    "info": "crwdns9902:0crwdne9902:0"
   },
   "documentUserCommentsList": {
     "hideComments": "crwdns7956:0crwdne7956:0",
@@ -362,7 +362,7 @@
     "sortingText": "crwdns7974:0crwdne7974:0"
   },
   "documentUserComments": {
-    "warning": "crwdns9856:0crwdne9856:0"
+    "warning": "crwdns9904:0crwdne9904:0"
   },
   "documentUserCommentsForm": {
     "placeholder": "crwdns7978:0crwdne7978:0",
@@ -372,7 +372,7 @@
     "goToComment": "crwdns7982:0crwdne7982:0"
   },
   "documentUserRecommendations": {
-    "warning": "crwdns9858:0crwdne9858:0",
+    "warning": "crwdns9906:0crwdne9906:0",
     "noRecommendations": "crwdns7986:0crwdne7986:0",
     "markAsRecommended": "crwdns7988:0crwdne7988:0",
     "unmarkAsRecommended": "crwdns7990:0crwdne7990:0"
@@ -380,7 +380,7 @@
   "documentUserTags": {
     "tagListOthers": "crwdns7992:0crwdne7992:0",
     "tagListYours": "crwdns7994:0crwdne7994:0",
-    "tagWarning": "crwdns9860:0crwdne9860:0",
+    "tagWarning": "crwdns9908:0crwdne9908:0",
     "noTags": "crwdns7998:0crwdne7998:0"
   },
   "documentUserTagsAction": {
@@ -450,12 +450,12 @@
       "toggler": "crwdns8076:0crwdne8076:0",
       "options": {
         "_count": {
-          "asc": "crwdns9862:0crwdne9862:0",
-          "desc": "crwdns9864:0crwdne9864:0"
+          "asc": "crwdns9910:0crwdne9910:0",
+          "desc": "crwdns9912:0crwdne9912:0"
         },
         "parent_doc_count": {
-          "asc": "crwdns9866:0crwdne9866:0",
-          "desc": "crwdns9868:0crwdne9868:0"
+          "asc": "crwdns9914:0crwdne9914:0",
+          "desc": "crwdns9916:0crwdne9916:0"
         },
         "_key": {
           "asc": "crwdns8086:0crwdne8086:0",
@@ -881,8 +881,8 @@
         "batch-search": {
           "title": "crwdns8752:0crwdne8752:0",
           "description": "crwdns8754:0crwdne8754:0",
-          "nbPublic": "crwdns9870:0{n}crwdne9870:0",
-          "nbPrivate": "crwdns9872:0{n}crwdne9872:0",
+          "nbPublic": "crwdns9918:0{n}crwdne9918:0",
+          "nbPrivate": "crwdns9920:0{n}crwdne9920:0",
           "actionText": "crwdns8760:0crwdne8760:0"
         },
         "batch-download": {
@@ -1085,7 +1085,7 @@
           "label": "crwdns8986:0crwdne8986:0",
           "options": {
             "private": "crwdns8988:0crwdne8988:0",
-            "shared": "crwdns9874:0crwdne9874:0"
+            "shared": "crwdns9938:0crwdne9938:0"
           },
           "description": "crwdns8992:0crwdne8992:0"
         },
@@ -1154,7 +1154,6 @@
   },
   "batchSearchErrorModal": {
     "okTitle": "crwdns9058:0crwdne9058:0",
-    "errorQuery": "crwdns9876:0crwdne9876:0",
     "errorTitle": "crwdns9060:0crwdne9060:0",
     "text": "crwdns9062:0crwdne9062:0",
     "description": "crwdns9064:0{link}crwdne9064:0"
@@ -1266,7 +1265,7 @@
     "delete": "crwdns9196:0crwdne9196:0",
     "edit": "crwdns9198:0crwdne9198:0",
     "creationDate": "crwdns9200:0crwdne9200:0",
-    "updateDate": "crwdns9878:0crwdne9878:0"
+    "updateDate": "crwdns9922:0crwdne9922:0"
   },
   "projectList": {
     "title": "crwdns9204:0crwdne9204:0",
@@ -1387,8 +1386,8 @@
     "goToNextTab": "crwdns9330:0crwdne9330:0",
     "activateSearchBar": "crwdns9332:0crwdne9332:0",
     "deactivateSearchBar": "crwdns9334:0crwdne9334:0",
-    "findPreviousOccurrence": "crwdns9880:0crwdne9880:0",
-    "findNextOccurrence": "crwdns9882:0crwdne9882:0"
+    "findPreviousOccurrence": "crwdns9924:0crwdne9924:0",
+    "findNextOccurrence": "crwdns9926:0crwdne9926:0"
   },
   "settings": {
     "layout": {
@@ -1624,7 +1623,7 @@
     "datadir": "crwdns9600:0crwdne9600:0"
   },
   "projectCardUpdateDate": {
-    "label": "crwdns9884:0crwdne9884:0"
+    "label": "crwdns9928:0crwdne9928:0"
   },
   "projectCardDocumentsCount": {
     "noDocuments": "crwdns9604:0crwdne9604:0"
@@ -1634,7 +1633,7 @@
     "search": "crwdns9608:0crwdne9608:0"
   },
   "projectCards": {
-    "documentsCount": "crwdns9886:0{count}crwdne9886:0",
+    "documentsCount": "crwdns9930:0{count}crwdne9930:0",
     "about": "crwdns9612:0crwdne9612:0",
     "search": "crwdns9614:0crwdne9614:0"
   },
@@ -1658,7 +1657,7 @@
     "label": "crwdns9628:0crwdne9628:0"
   },
   "searchBarInputDropdownForProjects": {
-    "projectsCount": "crwdns9888:0{count}crwdne9888:0",
+    "projectsCount": "crwdns9932:0{count}crwdne9932:0",
     "noMatches": "crwdns9632:0crwdne9632:0"
   },
   "searchBreadcrumbFormList": {
@@ -1694,11 +1693,11 @@
     }
   },
   "searchSelection": {
-    "count": "crwdns9890:0{count}crwdne9890:0",
+    "count": "crwdns9934:0{count}crwdne9934:0",
     "star": "crwdns9672:0crwdne9672:0",
     "unstar": "crwdns9674:0crwdne9674:0",
     "tag": "crwdns9676:0crwdne9676:0",
-    "nbDocs": "crwdns9892:0{count}crwdne9892:0",
+    "nbDocs": "crwdns9936:0{count}crwdne9936:0",
     "nbTags": "crwdns9680:0{count}crwdne9680:0",
     "tagSuccess": "crwdns9682:0{nbDocs}crwdnd9682:0{nbTags}crwdne9682:0",
     "tagFailed": "crwdns9684:0{nbDocs}crwdnd9684:0{nbTags}crwdne9684:0"

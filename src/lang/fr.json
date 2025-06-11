@@ -1085,7 +1085,7 @@
           "label": "Visibilité",
           "options": {
             "private": "Privé - Vous seul•e verrez votre recherche en lot",
-            "shared": "Partagé - Les membres des projets sélectionnés verront votre recherche en lot"
+            "shared": "Shared - Only members of all the selected project(s) will see your batch search"
           },
           "description": "Cette option pourra être modifiée plus tard"
         },
@@ -1154,7 +1154,6 @@
   },
   "batchSearchErrorModal": {
     "okTitle": "OK",
-    "errorQuery": "There is an error on the following query",
     "errorTitle": "L'erreur est",
     "text": "comment corriger les erreurs les plus courantes",
     "description": "Le système a rencontré un problème. Il s'agit souvent d'erreurs de syntaxe dans le CSV (voir {link})."

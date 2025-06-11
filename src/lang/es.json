@@ -1085,7 +1085,7 @@
           "label": "Visibilidad",
           "options": {
             "private": "Privado - Solo tú verás tus búsquedas por lotes",
-            "shared": "Compartido - Solo participes de todos los proyecto(s) seleccionados verán su búsqueda por lotes"
+            "shared": "Shared - Only members of all the selected project(s) will see your batch search"
           },
           "description": "Esta opción se puede cambiar más tarde (de cualquier caso)"
         },
@@ -1154,7 +1154,6 @@
   },
   "batchSearchErrorModal": {
     "okTitle": "Ok",
-    "errorQuery": "There is an error on the following query",
     "errorTitle": "The error is",
     "text": "how to fix the most common errors",
     "description": "The system encountered a problem. Syntax errors in the CSV are the usual suspects (see {link})."
