@@ -194,7 +194,7 @@
     "toggle": "Conmutar filtro"
   },
   "filtersPanelSearch": {
-    "placeholder": "Search in filters"
+    "placeholder": "Search filters"
   },
   "search": {
     "title": "Buscar",
@@ -1062,7 +1062,7 @@
           "queriesLimist": "Your CSV file should not contain more than 60,000 queries",
           "firstColumn": "The first and only column should contain the terms to search",
           "lineBreaks": "No line break(s) in cells",
-          "operators": "Selecting 'do phrase matches' prevent from using operators like <code>AND</code>, <code>OR</code>, <code>NOT</code>, <code>*</code>, <code>?</code>, <code>!</code>, <code>+</code>, <code>-</code> or Regexes between 2 slashes."
+          "operators": "Selecting 'do phrase matches' prevent from using operators like <code>AND</code>, <code>OR</code>, <code>NOT</code>, <code>*</code>, <code>?</code>, <code>!</code>, <code>+</code>, <code>-</code> or Regexes between 2 slashes in the queries."
         },
         "sections": {
           "general": "Nombre, proyecto(s) y descripción",
