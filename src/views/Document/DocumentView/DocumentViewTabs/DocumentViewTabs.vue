@@ -24,10 +24,7 @@ const { wheneverRouteActionShortcut } = useKeyboardShortcuts()
 
 const modal = inject('modal', undefined)
 const tab = computed(() => route?.query?.tab || appStore.getSettings('documentView', 'tab'))
-const tabRoute = ({ tab }) => { 
-  const query = { tab, modal }
-  return { query }
-}
+const tabRoute = ({ tab }) => ({ query: { tab, modal } })
 
 const currentTabIndex = computed(() => {
   return tabs.findIndex((entry) => {
