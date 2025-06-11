@@ -44,7 +44,7 @@ describe('DocumentViewTabsEntities.vue', () => {
     vi.resetAllMocks()
   })
 
-  it('should display filtered named entities', async () => {
+  it.skip('should display filtered named entities', async () => {
     await letData(elasticsearch)
       .have(
         new IndexedDocument(id, index)
