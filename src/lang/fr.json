@@ -138,7 +138,7 @@
   },
   "displayVisibility": {
     "private": "Privé",
-    "public": "Visible pour tous les membres du projet"
+    "public": "Visible par les membres du projet"
   },
   "documentTranslationAlertToggler": {
     "viewOriginal": "Voir l'original",
@@ -228,7 +228,7 @@
     "hideFilters": "Masquer les filtres",
     "showFilters": "Afficher les filtres",
     "contextualizeFiltersLabel": "Contextualiser les filtres",
-    "contextualizeFiltersDescription": "Les filtres dans la colonne de gauche seront mis à jour en fonction des résultats de recherche",
+    "contextualizeFiltersDescription": "Les filtres dans la colonne de gauche seront modifiés en fonction des résultats de recherche",
     "tips": "Conseils pour améliorer la recherche",
     "settings": {
       "title": "Paramètres de la page",
@@ -402,11 +402,11 @@
   },
   "linkedDocumentCard": {
     "siblings": {
-      "title": "Aucun document dans le même dossier | {n} document dans le même dossier | {n} documents dans le même dossier",
+      "title": "aucun document dans le même dossier | {n} document dans le même dossier | {n} documents dans le même dossier",
       "description": "Même niveau d'extraction que ce document"
     },
     "children": {
-      "title": "Aucun document enfant | 1 document enfant | {n} documents enfants",
+      "title": "aucun document enfant | 1 document enfant | {n} documents enfants",
       "description": "Un niveau d'extraction en dessous de ce document"
     }
   },
@@ -1154,6 +1154,7 @@
   },
   "batchSearchErrorModal": {
     "okTitle": "OK",
+    "errorQuery": "There is an error on the following query",
     "errorTitle": "L'erreur est",
     "text": "comment corriger les erreurs les plus courantes",
     "description": "Le système a rencontré un problème. Il s'agit souvent d'erreurs de syntaxe dans le CSV (voir {link})."
@@ -1698,7 +1699,7 @@
     "unstar": "Enlever des favoris",
     "tag": "Tag",
     "nbDocs": "Aucun document | 1 document | {count} documents",
-    "nbTags": "Aucun tag | 1 tag | {count} tags",
+    "nbTags": "aucun tag | 1 tag | {count} tags",
     "tagSuccess": "{nbDocs} ont été tagués avec {nbTags}.",
     "tagFailed": "Erreur : {nbDocs} n'ont pas été tagués avec {nbTags}."
   },
