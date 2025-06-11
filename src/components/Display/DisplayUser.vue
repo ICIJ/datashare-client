@@ -1,175 +1,90 @@
-<script>
-import { mapState } from 'pinia'
-import { PhosphorIcon } from '@icij/murmur-next'
+<script setup>
+import { computed, onBeforeMount, toRef, ref, watch } from 'vue'
 
 import AppWait from '@/components/AppWait/AppWait'
 import DisplayUserAvatar from '@/components/Display/DisplayUserAvatar'
+import { useCore } from '@/composables/useCore'
 import { useWait } from '@/composables/useWait'
 import { usePipelinesStore } from '@/store/modules/pipelines'
 
-/**
- * A component to display usernames.
- */
-export default {
-  name: 'DisplayUser',
-  components: {
-    AppWait,
-    DisplayUserAvatar,
-    PhosphorIcon
+const props = defineProps({
+  avatarHeight: {
+    type: String,
+    default: '1.25em'
   },
-  props: {
-    /**
-     * Default height of the avatar
-     */
-    avatarHeight: {
-      type: String,
-      default: '1.25em'
-    },
-    /**
-     * Pipeline name to transform the avatar src
-     */
-    avatarPipeline: {
-      type: String,
-      default: 'user-display-avatar'
-    },
-    /**
-     * Fallback of the user link
-     */
-    linkFallback: {
-      type: String,
-      default: null
-    },
-    /**
-     * Pipeline name to transform the user link
-     */
-    linkPipeline: {
-      type: String,
-      default: 'user-display-link'
-    },
-    /**
-     * Hide the avatar
-     */
-    hideAvatar: {
-      type: Boolean
-    },
-    /**
-     * Hide the user link
-     */
-    hideLink: {
-      type: Boolean
-    },
-    /**
-     * Root tag to use for this component
-     */
-    tag: {
-      type: [String, Object],
-      default: 'span'
-    },
-    /**
-     * Username to display
-     */
-    value: {
-      type: String
-    },
-    /**
-     * Pipeline name to transform the username
-     */
-    usernamePipeline: {
-      type: String,
-      default: 'user-display-username'
-    },
-    /**
-     * Move the avatar after the username
-     */
-    flip: {
-      type: Boolean,
-      default: false
-    }
+  avatarPipeline: {
+    type: String,
+    default: 'user-display-avatar'
   },
-  setup() {
-    return { wait: useWait() }
+  linkFallback: {
+    type: String,
+    default: null
   },
-  data() {
-    return {
-      transformedAvatar: null,
-      transformedLink: null,
-      transformedUsername: null
-    }
+  linkPipeline: {
+    type: String,
+    default: 'user-display-link'
   },
-  computed: {
-    ...mapState(usePipelinesStore, {
-      registeredPipelines: 'registered',
-      applyPipelineChain: 'applyPipelineChainByCategory'
-    }),
-    avatarAlt() {
-      return `${this.value} avatar`
-    },
-    avatarSrc() {
-      return this.transformedAvatar
-    },
-    isAvatarSrcValid() {
-      try {
-        return Boolean(new URL(this.avatarSrc))
-      } catch (_) {
-        return false
-      }
-    },
-    userDisplayStyle() {
-      return {
-        '--avatar-height': this.avatarHeight
-      }
-    },
-    userDisplayClass() {
-      return {
-        'display-user--flip': this.flip
-      }
-    },
-    usernameTag() {
-      return !this.hideLink && this.transformedLink !== null ? 'a' : 'span'
-    },
-    showAvatar() {
-      return !this.hideAvatar && this.avatarSrc
-    },
-    loader() {
-      return `load-username-${this.value}`
-    }
+  hideAvatar: {
+    type: Boolean
   },
-  watch: {
-    value() {
-      return this.applyPipelines()
-    },
-    registeredPipelines: {
-      deep: true,
-      handler() {
-        return this.applyPipelines()
-      }
-    }
+  hideLink: {
+    type: Boolean
   },
-  created() {
-    return this.applyPipelinesWithLoader()
+  tag: {
+    type: [String, Object],
+    default: 'span'
   },
-  methods: {
-    async applyPipelinesWithLoader() {
-      this.wait.start(this.loader)
-      await this.applyPipelines()
-      this.wait.end(this.loader)
-    },
-    async applyPipelines() {
-      this.transformedAvatar = await this.applyAvatarPipeline()
-      this.transformedLink = await this.applyLinkPipeline()
-      this.transformedUsername = await this.applyUsernamePipeline()
-    },
-    applyAvatarPipeline() {
-      return this.applyPipelineChain(this.avatarPipeline)(this.value)
-    },
-    applyUsernamePipeline() {
-      return this.applyPipelineChain(this.usernamePipeline)(this.value, this.$core?.auth)
-    },
-    applyLinkPipeline() {
-      return this.applyPipelineChain(this.linkPipeline)(this.linkFallback, this.value)
-    }
+  value: {
+    type: String
+  },
+  usernamePipeline: {
+    type: String,
+    default: 'user-display-username'
+  },
+  flip: {
+    type: Boolean,
+    default: false
   }
+})
+
+const transformedAvatar = ref(null)
+const transformedLink = ref(null)
+const transformedUsername = ref(null)
+
+const { waitFor, isLoading, loaderId } = useWait()
+const { core } = useCore()
+const pipelinesStore = usePipelinesStore()
+
+const applyAvatarPipeline = () => {
+  return pipelinesStore.applyPipelineChainByCategory(props.avatarPipeline)(props.value)
 }
+
+const applyUsernamePipeline = () => {
+  return pipelinesStore.applyPipelineChainByCategory(props.usernamePipeline)(props.value, core.auth)
+}
+
+const applyLinkPipeline = () => {
+  return pipelinesStore.applyPipelineChainByCategory(props.linkPipeline)(props.linkFallback, props.value)
+}
+
+const applyPipelines = async () => {
+  transformedAvatar.value = await applyAvatarPipeline()
+  transformedLink.value = await applyLinkPipeline()
+  transformedUsername.value = await applyUsernamePipeline()
+}
+
+const applyPipelinesWithLoader = waitFor(applyPipelines)
+
+const avatarSrc = computed(() => transformedAvatar.value)
+const userDisplayStyle = computed(() => ({ '--avatar-height': props.avatarHeight }))
+const userDisplayClass = computed(() => ({ 'display-user--flip': props.flip }))
+const usernameTag = computed(() => (!props.hideLink && transformedLink.value !== null ? 'a' : 'span'))
+const showAvatar = computed(() => !props.hideAvatar && avatarSrc.value)
+
+watch(pipelinesStore.registered, applyPipelines, { deep: true })
+watch(toRef(props, 'value'), applyPipelines, { deep: true })
+
+onBeforeMount(applyPipelinesWithLoader)
 </script>
 
 <template>
@@ -191,10 +106,10 @@ export default {
       :is="usernameTag"
       :href="transformedLink"
       class="display-user__username"
-      :class="{ 'display-user__username--loading': wait.waiting(loader) }"
+      :class="{ 'display-user__username--loading': isLoading }"
       aria-label="username"
     >
-      <app-wait :for="loader" class="d-inline">
+      <app-wait :for="loaderId" class="d-inline">
         <template #waiting>
           {{ value }}
         </template>
