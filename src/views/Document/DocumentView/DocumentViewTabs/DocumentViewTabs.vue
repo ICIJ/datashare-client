@@ -6,6 +6,7 @@ import Hook from '@/components/Hook/Hook'
 import TabGroupNavigation from '@/components/TabGroup/TabGroupNavigation/TabGroupNavigation'
 import TabGroupNavigationEntry from '@/components/TabGroup/TabGroupNavigation/TabGroupNavigationEntry'
 import { useKeyboardShortcuts } from '@/composables/useKeyboardShortcuts'
+import { useSearchNav } from '@/composables/useSearchNav'
 import { useAppStore } from '@/store/modules'
 
 const { tabs } = defineProps({
@@ -18,10 +19,15 @@ const { tabs } = defineProps({
 const appStore = useAppStore()
 const router = useRouter()
 const route = useRoute()
-const { wheneverActionShortcut } = useKeyboardShortcuts()
+const { searchRoute } = useSearchNav()
+const { wheneverRouteActionShortcut } = useKeyboardShortcuts()
 
 const modal = inject('modal', undefined)
 const tab = computed(() => route?.query?.tab || appStore.getSettings('documentView', 'tab'))
+const tabRoute = ({ tab }) => { 
+  const query = { tab, modal }
+  return { query }
+}
 
 const currentTabIndex = computed(() => {
   return tabs.findIndex((entry) => {
@@ -29,21 +35,17 @@ const currentTabIndex = computed(() => {
   })
 })
 
+// We must close the current document on "escape" key press only if we are in list view (ie. not in a modal)
+wheneverRouteActionShortcut('back', () => !modal && router.push(searchRoute.value))
+
 const previousTabIndex = computed(() => (currentTabIndex.value || tabs.length) - (1 % tabs.length))
-const previousTabRoute = computed(() => {
-  const { tab } = tabs[previousTabIndex.value]
-  const query = { tab, modal }
-  return { query }
-})
-wheneverActionShortcut('goToPreviousTab', () => router.push(previousTabRoute.value))
+const previousTabRoute = computed(() => tabRoute(tabs[previousTabIndex.value]))
+wheneverRouteActionShortcut('goToPreviousTab', () => router.push(previousTabRoute.value))
 
 const nextTabIndex = computed(() => (currentTabIndex.value + 1) % tabs.length)
-const nextTabRoute = computed(() => {
-  const { tab } = tabs[nextTabIndex.value]
-  const query = { tab, modal }
-  return { query }
-})
-wheneverActionShortcut('goToNextTab', () => router.push(nextTabRoute.value))
+const nextTabRoute = computed(() => tabRoute(tabs[nextTabIndex.value]))
+wheneverRouteActionShortcut('goToNextTab', () => router.push(nextTabRoute.value))
+
 </script>
 
 <template>
