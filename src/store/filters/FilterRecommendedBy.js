@@ -1,6 +1,6 @@
 import FilterText from './FilterText'
 
-import DisplayUser from '@/components/Display/DisplayUser'
+import DisplayRecommendedBy from '@/components/Display/DisplayRecommendedBy'
 import { useRecommendedStore } from '@/store/modules/recommended'
 
 export default class FilterRecommendedBy extends FilterText {
@@ -22,13 +22,6 @@ export default class FilterRecommendedBy extends FilterText {
   }
 
   static get display() {
-    return {
-      extends: DisplayUser,
-      props: {
-        hideAvatar: {
-          default: true
-        }
-      }
-    }
+    return DisplayRecommendedBy
   }
 }
