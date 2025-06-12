@@ -10,7 +10,7 @@ Web Client for Datashare
 
 | | Status |
 | --: | :-- |
-| **CI checks** | [![Github Actions](https://img.shields.io/github/actions/workflow/status/icij/datashare-client/main.yml?style=shield)](https://circleci.com/gh/ICIJ/datashare-client) |
+| **CI checks** | [![Github Actions](https://img.shields.io/github/actions/workflow/status/icij/datashare-client/main.yml?style=shield)](https://github.com/ICIJ/datashare-client/actions/workflows/main.yml) |
 | **Code Climate** | [![Code Climate](https://api.codeclimate.com/v1/badges/0437a49c2dfcbf7d0af7/maintainability)](https://codeclimate.com/github/ICIJ/datashare-client/maintainability) |
 | **Latest version** | [![Latest version](https://img.shields.io/github/v/tag/icij/datashare-client?style=shield)](https://github.com/ICIJ/datashare-client/releases/latest) |
 | **Release date** | [![Release date](https://img.shields.io/github/release-date/icij/datashare-client?style=shield)](https://github.com/ICIJ/datashare-client/releases/latest) |
