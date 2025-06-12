@@ -41,14 +41,14 @@
     "description": "Esta acción no se puede deshacer."
   },
   "appModalHeader": {
-    "close": "Close"
+    "close": "Cerrar"
   },
   "appModalFooter": {
     "cancelTitle": "Cancelar",
     "okTitle": "Sí"
   },
   "appPopoverHeader": {
-    "close": "Close"
+    "close": "Cerrar"
   },
   "buttonAdd": {
     "label": "Agregar nueva"
@@ -81,7 +81,7 @@
     "labelSingleFlow": "Cerrar el modo de selección"
   },
   "buttonSaveSearch": {
-    "label": "Save",
+    "label": "Guardar",
     "labelSaving": "Guardando",
     "labelSaved": "Búsqueda guardada"
   },
@@ -108,11 +108,11 @@
     "open": "Abrir de todos modos"
   },
   "dismissableAlert": {
-    "close": "Close",
+    "close": "Cerrar",
     "dontShow": "No volver a mostrar"
   },
   "dismissableToastBody": {
-    "close": "Close"
+    "close": "Cerrar"
   },
   "displayBoolean": {
     "yes": "Sí",
@@ -175,32 +175,32 @@
   "error": {
     "title": "Error",
     "description": "Ha ocurrido un error. Por favor, inténtelo de nuevo más tarde o póngase en contacto con su administrador si el problema persiste.",
-    "noProjects": "Your project list is empty. Please contact your administrator.",
-    "notFound": "Page not found.",
+    "noProjects": "Tu lista de proyectos está vacía. Por favor, contacta con administración.",
+    "notFound": "Página no encontrada.",
     "logout": "Cerrar sesión",
     "faq": "Preguntas frecuentes (FAQ)",
     "userGuides": "Guía del Usuario",
     "help": "Pedir ayuda"
   },
   "filtersPanelToggler": {
-    "label": "Close filters"
+    "label": "Cerrar filtros"
   },
   "filtersPanelSectionFilterActions": {
     "expand": "Ampliar",
-    "contextualize": "Contextualize",
-    "exclude": "Exclude"
+    "contextualize": "Contextualizar",
+    "exclude": "Excluir"
   },
   "filtersPanelSectionFilterTitleToggler": {
     "toggle": "Conmutar filtro"
   },
   "filtersPanelSearch": {
-    "placeholder": "Search filters"
+    "placeholder": "Filtros de búsqueda"
   },
   "search": {
     "title": "Buscar",
-    "errorStateLabel": "We were unable to perform your search. This might be due to a server error or a bad request.",
+    "errorStateLabel": "No hemos podido realizar su búsqueda. Esto puede deberse a un error del servidor o a una petición errónea.",
     "emptyStateLabel": "Oh, está solitario por aquí... Este proyecto aún no tiene documentos.",
-    "emptyStateAction": "Add documents",
+    "emptyStateAction": "Añadir documentos",
     "errors": {
       "badRequest": "Tu término de búsqueda es incorrecto",
       "internalError": "El servidor ha encontrado un problema",
@@ -259,8 +259,8 @@
         "sizeSmallest": "Tamaño (aumentado)",
         "path": "Ruta del archivo (de A a Z)",
         "pathReverse": "Ruta del archivo (de A a Z)",
-        "titleNorm": "File name (A to Z)",
-        "titleNormReverse": "File name (Z to A)",
+        "titleNorm": "Nombre de archivo (A‑Z)",
+        "titleNormReverse": "Nombre de archivo (Z‑A)",
         "default": "por defecto",
         "count": "frecuencia"
       }
@@ -273,7 +273,7 @@
     "title": "No se puede analizar la consulta"
   },
   "searchSavedList": {
-    "title": "Saved searches",
+    "title": "Búsquedas guardadas",
     "allRemoved": "Todas las búsquedas guardadas han sido eliminadas.",
     "emptyStateLabel": "No hay búsquedas guardadas. Ve a buscar para guardar búsquedas importantes",
     "emptyStateAction": "Ir a la búsqueda"
@@ -306,7 +306,7 @@
     "download": "Descargar",
     "share": "Compartir",
     "expand": "Ampliar",
-    "close": "Close"
+    "close": "Cerrar"
   },
   "documentCardCheckbox": {
     "selectDocument": "Seleccionar este documento"
@@ -333,7 +333,7 @@
     "notes": "0 notas | 1 nota | {n} notas"
   },
   "documentUserActionsCard": {
-    "close": "Close"
+    "close": "Cerrar"
   },
   "documentUserActionsCardRecommendations": {
     "title": "0 recomendaciones | 1 recomendación | {count} recomendaciones",
@@ -351,22 +351,22 @@
     "goToRecent": "Ir al más reciente"
   },
   "documentUserCommentsListNewest": {
-    "label": "Go to newest"
+    "label": "Ir a la más reciente"
   },
   "documentUserCommentsListOldest": {
-    "label": "Go to oldest"
+    "label": "Ir a la más antigua"
   },
   "documentUserCommentsHeader": {
-    "hideComments": "Hide comments",
-    "showComments": "Show comments",
-    "sortingText": "Oldest to newest"
+    "hideComments": "Ocultar comentarios",
+    "showComments": "Mostrar comentarios",
+    "sortingText": "De más antiguos a más recientes"
   },
   "documentUserComments": {
     "warning": "Los comentarios son públicos para todos los/las participantes del proyecto."
   },
   "documentUserCommentsForm": {
-    "placeholder": "Write your comment here.",
-    "submit": "Comment"
+    "placeholder": "Escribe aquí tu comentario.",
+    "submit": "Comentar"
   },
   "documentUserCommentsListEntry": {
     "goToComment": "Ir al comentario (enlace externo)"
@@ -411,10 +411,10 @@
     }
   },
   "documentContent": {
-    "noContent": "No content extracted for this document"
+    "noContent": "No se extrajo contenido de este documento"
   },
   "documentViewTabs": {
-    "text": "Text",
+    "text": "Texto",
     "viewer": "Ver",
     "metadata": "Metadatos",
     "entities": "Entidades"
@@ -518,7 +518,7 @@
       "GEORGIAN": "Georgiano",
       "GERMAN": "Alemán",
       "GREEK": "Griego",
-      "MODERN GREEK (1453-)": "Greek",
+      "MODERN GREEK (1453-)": "Griego",
       "GUARANI": "Guaraní",
       "GUJARATI": "Guyaratí",
       "HAITIAN": "Haitiano",
@@ -573,7 +573,7 @@
       "MARATHI": "Maratí",
       "MARSHALLESE": "Marshalés",
       "MONGOLIAN": "Mongol",
-      "MOLDOVAN": "Moldovan",
+      "MOLDOVAN": "Moldavo",
       "NAURU": "Nauru",
       "NAVAJO": "Navajo",
       "NORTHNDEBELE": "Ndebele norte",
@@ -671,7 +671,7 @@
     "tags": "Etiquetas"
   },
   "document": {
-    "title": "Document",
+    "title": "Documento",
     "document": "Archivo",
     "name": "Nombre del archivo",
     "path": "Ruta del archivo",
@@ -708,13 +708,13 @@
       }
     },
     "player": {
-      "autoplay": "Play automatically",
-      "loop": "Play in loop",
+      "autoplay": "Reproducir automáticamente",
+      "loop": "Reproducir en bucle",
       "audio": {
-        "unknownFormat": "Unsupported audio format"
+        "unknownFormat": "Formato de audio no soportado"
       },
       "video": {
-        "unknownFormat": "Unsupported video format"
+        "unknownFormat": "Formato de video no soportado"
       }
     },
     "attachments": {
@@ -757,14 +757,14 @@
     "sentLink": "Correos electrónicos enviados"
   },
   "formControlExtractingLanguage": {
-    "failedToRetrieveLanguages": "Failed to retrieve languages",
-    "nullOption": "Detect automatically (default)"
+    "failedToRetrieveLanguages": "Error al recuperar idiomas",
+    "nullOption": "Detectar automáticamente (por defecto)"
   },
   "taskDocumentsFormOcrAlert": {
-    "useDefault": "Default OCR language is used.",
+    "useDefault": "Se utiliza el idioma OCR por defecto.",
     "isMissing": " OCR for '{language}' is not installed.",
-    "installOcrLanguage": "Choose among {availableLanguages} languages to install.",
-    "tesseractNotInstalled": "Tesseract OCR is not installed."
+    "installOcrLanguage": "Elija entre los idiomas {availableLanguages} para instalar.",
+    "tesseractNotInstalled": "Tesseract OCR no está instalado."
   },
   "formControlTagInput": {
     "placeholder": "Añadir Etiqueta",
@@ -775,7 +775,7 @@
     "addButtonText": "Añadir"
   },
   "formControlPath": {
-    "browse": "Browse"
+    "browse": "Explorar"
   },
   "formControlSearch": {
     "placeholder": "Buscar..."
@@ -797,7 +797,7 @@
     "search": "Buscar",
     "searchDocuments": "Archivos",
     "history": "Histórico",
-    "savedSearches": "Saved searches"
+    "savedSearches": "Búsquedas guardadas"
   },
   "appSidebarFooter": {
     "signOut": "Cerrar sesión",
@@ -809,7 +809,7 @@
       "title": "¿Estás seguro de que deseas eliminar todos tus proyectos?",
       "description": "Esta acción no se puede deshacer. Eliminará todos tus proyectos y tus documentos de Datashare.",
       "success": "Todos tus proyectos y documentos fueron eliminados de Datashare.",
-      "error": "Something went wrong, unable to remove your documents."
+      "error": "Algo salió mal, no se pudieron eliminar tus documentos."
     }
   },
   "versionNumber": {
@@ -897,7 +897,7 @@
         "document-addition": {
           "title": "Añadir documento",
           "description": "Indexar documentos que están en su ordenador o en una unidad para que pueda buscarlos en Datashare. Datashare puede indexar todo tipo de documentos.",
-          "actionText": "Add documents"
+          "actionText": "Añadir documentos"
         }
       }
     },
@@ -951,7 +951,7 @@
           }
         },
         "offline": {
-          "label": "Do you want to work offline?",
+          "label": "¿Quieres trabajar sin conexión?",
           "description": "Selecciona 'No' si quieres sincronizar los últimos modelos.",
           "options": {
             "yes": "Sí",
@@ -966,7 +966,7 @@
       "title": "Archivos",
       "list": {
         "emptyStateLabel": "¿Quieres añadir documentos?",
-        "emptyStateAction": "Add documents",
+        "emptyStateAction": "Añadir documentos",
         "info": "Las adiciones de documentos son tareas que ejecutas para solicitar a Datashare que añada nuevos documentos.",
         "searchPlaceholder": "Buscar tareas",
         "noResults": "Sin resultados.",
@@ -982,7 +982,7 @@
         }
       },
       "new": {
-        "title": "Add documents"
+        "title": "Añadir documentos"
       },
       "form": {
         "projectSelector": {
@@ -1057,12 +1057,12 @@
       },
       "form": {
         "queries": {
-          "onlyCSV": "Only CSV format is accepted.",
-          "onlyUTF8": "Export your spreadsheet as a CSV using encoding UTF-8",
-          "queriesLimist": "Your CSV file should not contain more than 60,000 queries",
-          "firstColumn": "The first and only column should contain the terms to search",
-          "lineBreaks": "No line break(s) in cells",
-          "operators": "Selecting 'do phrase matches' prevent from using operators like <code>AND</code>, <code>OR</code>, <code>NOT</code>, <code>*</code>, <code>?</code>, <code>!</code>, <code>+</code>, <code>-</code> or Regexes between 2 slashes in the queries."
+          "onlyCSV": "Solo se acepta el formato CSV.",
+          "onlyUTF8": "Exportar su hoja de cálculo como CSV usando la codificación UTF-8",
+          "queriesLimist": "El archivo CSV no debe contener más de 60.000 consultas",
+          "firstColumn": "La primera y única columna debe contener los términos de búsqueda",
+          "lineBreaks": "No hay salto(s) de línea en celdas",
+          "operators": "Al seleccionar 'hacer frases coincidentes' se evita el uso de operadores como <code>AND</code>, <code>OR</code>, <code>NOT</code>, <code>*</code>, <code>?</code>, <code>!</code>, <code>+</code>, <code>-</code> o expresiones regulares entre 2 barras en las consultas."
         },
         "sections": {
           "general": "Nombre, proyecto(s) y descripción",
@@ -1085,7 +1085,7 @@
           "label": "Visibilidad",
           "options": {
             "private": "Privado - Solo tú verás tus búsquedas por lotes",
-            "shared": "Shared - Only members of all the selected project(s) will see your batch search"
+            "shared": "Compartido - Solo participes de todos los proyecto(s) seleccionados verán su búsqueda por lotes"
           },
           "description": "Esta opción se puede cambiar más tarde (de cualquier caso)"
         },
@@ -1153,10 +1153,10 @@
     }
   },
   "batchSearchErrorModal": {
-    "okTitle": "Ok",
-    "errorTitle": "The error is",
-    "text": "how to fix the most common errors",
-    "description": "The system encountered a problem. Syntax errors in the CSV are the usual suspects (see {link})."
+    "okTitle": "Aceptar",
+    "errorTitle": "El error es",
+    "text": "cómo corregir los errores más comunes",
+    "description": "El sistema encontró un problema. Los errores de sintaxis en el CSV son los sospechosos habituales (ver {link})."
   },
   "batchSearchCard": {
     "seeAllDocuments": "Ver todos los documentos",
@@ -1245,8 +1245,8 @@
       "recommendations": "0 recomendaciones | 1 recomendación | {count} recomendaciones"
     },
     "notify": {
-      "succeed": "The project was deleted",
-      "failed": "Unable to delete the project"
+      "succeed": "El proyecto fue eliminado",
+      "failed": "No se puedo eliminar el proyecto"
     }
   },
   "projectEntriesTableHead": {
@@ -1258,7 +1258,7 @@
     "actions": "Acciones"
   },
   "projectRowActions": {
-    "edit": "Edit project",
+    "edit": "Editar proyecto",
     "delete": "Eliminar proyecto"
   },
   "projectJumbotron": {
@@ -1268,21 +1268,21 @@
     "updateDate": "Actualizado:"
   },
   "projectList": {
-    "title": "Projects",
+    "title": "Proyectos",
     "searchPlaceholder": "Buscar proyectos",
     "fields": {
-      "label": "Label",
-      "updateDate": "Updated"
+      "label": "Etiqueta",
+      "updateDate": "Actualizado"
     }
   },
   "projectNew": {
-    "title": "Create project",
-    "description": "A project is a separated set of documents to explore.",
+    "title": "Crear proyecto",
+    "description": "Un proyecto es un conjunto separado de documentos para explorar.",
     "notify": {
-      "succeed": "The project was created",
-      "succeedBody": "Now, you can add documents to this project.",
-      "failed": "Unable to create the project",
-      "failedBody": "Something happened when trying to create this project."
+      "succeed": "El proyecto fue creado",
+      "succeedBody": "Ahora, puede agregar documentos a este proyecto.",
+      "failed": "No se puede crear el proyecto",
+      "failedBody": "Algo sucedió al intentar crear este proyecto."
     }
   },
   "projectViewOverview": {
@@ -1302,33 +1302,33 @@
     "emptyStateAction": "Instalar"
   },
   "projectViewEdit": {
-    "title": "Edit project",
+    "title": "Editar proyecto",
     "notify": {
       "update": {
-        "succeed": "The project was saved",
-        "succeedBody": "Project saved.",
-        "failed": "Unable to edit the project",
-        "failedBody": "Something happened when trying to edit this project."
+        "succeed": "El proyecto ha sido guardado",
+        "succeedBody": "Proyecto guardado.",
+        "failed": "No se pudo editar el proyecto",
+        "failedBody": "Algo ocurrió al intentar editar este proyecto."
       }
     },
-    "submit": "Save"
+    "submit": "Guardar"
   },
   "projectViewAddDocuments": {
-    "title": "Add documents to project",
+    "title": "Añadir documentos al proyecto",
     "notify": {
       "succeed": "Add document task launched",
-      "seeTasks": "See tasks",
-      "failed": "Add document task failed",
-      "failedBody": "An error occurred when launching indexing task to add documents."
+      "seeTasks": "Ver tareas",
+      "failed": "Error al añadir tarea de documento",
+      "failedBody": "Se ha producido un error al iniciar la tarea de indexación para añadir documentos."
     }
   },
   "projectViewFindNamedEntities": {
-    "title": "Find named entities",
+    "title": "Encontrar entidades nombradas",
     "notify": {
       "succeed": "Find named entities task launched",
-      "seeTasks": "See tasks",
-      "failed": "Find named entities task failed",
-      "failedBody": "An error occurred when launching indexing task to add documents."
+      "seeTasks": "Ver tareas",
+      "failed": "Encontrar entidades nombradas",
+      "failedBody": "Se ha producido un error al iniciar la tarea de indexación para añadir documentos."
     }
   },
   "projectForm": {
@@ -1338,39 +1338,39 @@
         "placeholder": ""
       },
       "label": {
-        "label": "Label",
+        "label": "Etiqueta",
         "placeholder": "La etiqueta de tu proyecto",
-        "invalidFeedback": "The label \"{label}\" is a reserved word."
+        "invalidFeedback": "La etiqueta \"{label}\" es una palabra reservada."
       },
       "description": {
-        "label": "Description",
+        "label": "Descripción",
         "placeholder": ""
       },
       "sourcePath": {
-        "label": "Project folder",
+        "label": "Carpeta del proyecto",
         "placeholder": "Seleccione la carpeta donde se encuentran los documentos del proyecto."
       },
       "logoUrl": {
-        "label": "Logo URL",
+        "label": "URL del logotipo",
         "placeholder": "http://"
       },
       "sourceUrl": {
-        "label": "Source URL",
+        "label": "URL de la fuente",
         "placeholder": "http://"
       },
       "publisherName": {
-        "label": "Publisher name",
+        "label": "Nombre del editor",
         "placeholder": "El nombre de las personas u organización que han publicado los archivos en este proyecto"
       },
       "maintainerName": {
-        "label": "Maintainer name",
+        "label": "Nombre del mantenedor",
         "placeholder": "El nombre de las personas u organización que mantendrán el proyecto en Datashare"
       }
     },
     "reset": "Cancel",
     "submit": "Submit",
-    "deleteConfirmation": "Are you sure you want to delete the project?",
-    "delete": "Delete"
+    "deleteConfirmation": "¿Seguro que quieres borrar el proyecto?",
+    "delete": "Borrar"
   },
   "keyboardShortcutsPopoverLink": {
     "label": "Ver todos los accesos directos"
@@ -1417,19 +1417,19 @@
     "addons": {
       "plugin": {
         "title": "Plugins",
-        "info": "Plugins are front-end modules to add new features in Datashare's user interface.",
+        "info": "Los plugins son módulos de front-end para añadir nuevas características en la interfaz de uso de Datashare.",
         "submitSuccess": "El plugin se ha instalado correctamente.",
         "submitError": "Error mientras se instalaba el plugin.",
         "searchPlaceholder": "Buscar plugins",
-        "errorLabel": "An error occurred while retrieving the plugins. Refresh the page or contact the support."
+        "errorLabel": "Se ha producido un error al recuperar los plugins. Actualice la página o póngase en contacto con el soporte."
       },
       "extension": {
         "title": "Extensiones",
-        "info": "Extensions are back-end modules to add new features to store and manipulate data with Datashare.",
+        "info": "Las extensiones son módulos de back-end para agregar nuevas características para almacenar y manipular datos con Datashare.",
         "submitSuccess": "Extensión instalada con éxito, por favor reinicie Datashare.",
         "submitError": "Error mientras se instalaba la extensión.",
         "searchPlaceholder": "Buscar en las extensiones",
-        "errorLabel": "An error occurred while retrieving the extensions. Refresh the page or contact the support."
+        "errorLabel": "Se ha producido un error al recuperar las extensiones. Actualice la página o póngase en contacto con el soporte."
       }
     },
     "api": {
@@ -1527,21 +1527,21 @@
   },
   "batchDownload": {
     "title": "Descarga en lotes",
-    "noFile": "The archive has expired.",
+    "noFile": "El archivo ha caducado.",
     "created": "Tu descarga está siendo procesada",
-    "warning": "This feature is currently being developed by the Datashare team.",
+    "warning": "Esta página está siendo desarrollada actualmente por el equipo de Datashare.",
     "seeAll": "Ver todo",
-    "errorMessage": "The system encountered an issue. Please refer to these details when contacting support.",
+    "errorMessage": "El sistema ha encontrado un problema. Por favor, consulte estos detalles al contactar con el soporte.",
     "errorTitle": "La tarea de descarga por lotes <code class=\"fw-bold\">{taskId}</code> está en error.",
     "relaunch": {
       "succeed": "Your download is being prepared",
-      "succeedBody": "The download should be available soon.",
-      "failed": "Unable to relaunch",
-      "failedBody": "Something happened when trying to relaunch this batch download."
+      "succeedBody": "La descarga estará disponible pronto.",
+      "failed": "No se puedo reiniciar",
+      "failedBody": "Algo pasó al intentar reiniciar esta descarga por lotes."
     },
     "delete": {
-      "failed": "Unable to delete",
-      "failedBody": "Something happened when trying to delete this batch download."
+      "failed": "No se pudo borrar",
+      "failedBody": "Algo ocurrió al intentar eliminar esta descarga por lotes."
     },
     "limitations": "Las descargas por lotes están limitadas a archivos {maxNbFiles} y {maxSize}B."
   },
@@ -1557,16 +1557,16 @@
       "error": "No se puede relanzar la descarga por lotes"
     },
     "search": {
-      "label": "See search results"
+      "label": "Ver resultados de búsqueda"
     }
   },
   "widget": {
     "noData": "No hay datos",
-    "noRecommendations": "No recommendations",
+    "noRecommendations": "Sin recomendaciones",
     "noEntitiesFindSome": "No se han encontrado entidades aún.",
     "findEntities": "Encontrar entidades",
     "recommendedBy": {
-      "title": "Latest recommended documents"
+      "title": "Últimos documentos recomendados"
     },
     "barometer": {
       "document": "no hay archivos | 1 archivo | {total} archivos",
@@ -1590,12 +1590,12 @@
     "project": {
       "fields": {
         "name": "ID",
-        "sourcePath": "Folder",
-        "maintainerName": "Maintained by",
-        "publisherName": "Published by",
-        "sourceUrl": "Source",
-        "creationDate": "Created",
-        "updateDate": "Updated"
+        "sourcePath": "Carpeta",
+        "maintainerName": "Mantenido por",
+        "publisherName": "Publicado por",
+        "sourceUrl": "Fuente",
+        "creationDate": "Creado",
+        "updateDate": "Actualizado"
       }
     }
   },
@@ -1607,17 +1607,17 @@
   },
   "widgetFieldFacets": {
     "languages": {
-      "title": "Languages"
+      "title": "Idiomas"
     },
     "contentTypes": {
-      "title": "File types"
+      "title": "Tipos de archivo"
     },
     "authors": {
-      "title": "Authors"
+      "title": "Autores"
     }
   },
   "widgetDocumentsByCreationDateByPath": {
-    "title": "Number of documents by creation date"
+    "title": "Número de documentos por fecha de creación"
   },
   "pathTreeBreadcrumb": {
     "datadir": "Inicio"
@@ -1634,15 +1634,15 @@
   },
   "projectCards": {
     "documentsCount": "Sin documentos | 1 documento | {count} documentos",
-    "about": "About",
-    "search": "Search"
+    "about": "Acerca de",
+    "search": "Buscar"
   },
   "projectSelector": {
-    "noMatches": "No matches"
+    "noMatches": "No hay coincidencias"
   },
   "projectDropdownSelectorSearch": {
     "placeholder": "Buscar proyectos",
-    "noMatches": "No matches"
+    "noMatches": "No hay coincidencias"
   },
   "projectDropdownSelectorAll": {
     "label": "Todos los proyectos"
@@ -1658,7 +1658,7 @@
   },
   "searchBarInputDropdownForProjects": {
     "projectsCount": "{count} projects",
-    "noMatches": "No matches"
+    "noMatches": "No hay coincidencias"
   },
   "searchBreadcrumbFormList": {
     "label": "Tu búsqueda:"
@@ -1667,29 +1667,29 @@
     "label": "Su búsqueda no ha comenzado. Utilice el panel de búsqueda o añada filtros."
   },
   "searchBreadcrumbFormEntryOccurrences": {
-    "label": "0 documents | 1 document | {occurrences} documents",
-    "title": "No less documents with this filter | 1 less document with this filter | {lessOccurrences} less documents with this filter"
+    "label": "0 documentos | 1 documento | {occurrences} documentos",
+    "title": "No menos documentos con este filtro | 1 documento menos con este filtro | {lessOccurrences} menos documentos con este filtro"
   },
   "searchBreadcrumbFormFooter": {
-    "clearFilters": "Clear filters",
+    "clearFilters": "Limpiar filtros",
     "clearQuery": "Borrar consulta",
     "clearFiltersAndQuery": "Borrar filtros y consulta",
     "saveSearch": "Guardar búsqueda",
     "createAlert": "Crear alerta"
   },
   "searchBreadcrumbFormToggler": {
-    "close": "Close"
+    "close": "Cerrar"
   },
   "searchSavingModal": {
     "title": "Nombre de la búsqueda guardada",
     "okTitle": "Guardar búsqueda",
-    "success": "Your search has been saved.",
+    "success": "Su búsqueda ha sido guardada.",
     "seeAll": "Ver todo",
-    "error": "Something went wrong, unable to save your search.",
+    "error": "Algo salió mal, no se puede guardar la búsqueda.",
     "form": {
       "name": "Nombre",
       "description": "Puedes recuperar todas tus búsquedas guardadas en {link}.",
-      "link": "Saved searches"
+      "link": "Búsquedas guardadas"
     }
   },
   "searchSelection": {
@@ -1799,8 +1799,8 @@
     "rowRangeCompact": "de 0 tareas | de 1 tarea | de {total} tareas"
   },
   "themes": {
-    "dark": "Dark mode",
-    "light": "Light mode",
-    "automatic": "Automatic"
+    "dark": "Modo oscuro",
+    "light": "Modo claro",
+    "automatic": "Automático"
   }
 }
