@@ -4,7 +4,8 @@ import { useI18n } from 'vue-i18n'
 
 import { useProjectDeletionModal } from '@/composables/useProjectDeletionModal'
 import { useProjectPinned } from '@/composables/useProjectPinned'
-import ButtonIcon from '@/components/Button/ButtonIcon'
+import ButtonRowActionEdit from '@/components/Button/ButtonRowAction/ButtonRowActionEdit'
+import ButtonRowActionDelete from '@/components/Button/ButtonRowAction/ButtonRowActionDelete'
 import ButtonTogglePin from '@/components/Button/ButtonTogglePin'
 import ModeLocalOnly from '@/components/Mode/ModeLocalOnly'
 
@@ -31,30 +32,10 @@ const toProjectEdit = computed(() => ({
   <div class="project-actions d-flex gap-2">
     <slot>
       <mode-local-only>
-        <button-icon
-          :to="toProjectEdit"
-          icon-left="pencil"
-          icon-left-hover-weight="bold"
-          hide-label
-          square
-          size="sm"
-          variant="outline-secondary"
-          class="border-0"
-          :label="t('projectRowActions.edit')"
-        />
-        <button-icon
-          icon-left="trash"
-          icon-left-hover-weight="bold"
-          hide-label
-          square
-          size="sm"
-          variant="outline-secondary"
-          class="border-0"
-          :label="t('projectRowActions.delete')"
-          @click="showProjectDeletionModal"
-        />
+        <button-row-action-edit :label="t('projectRowActions.edit')" :to="toProjectEdit" />
+        <button-row-action-delete :label="t('projectRowActions.delete')" @click="showProjectDeletionModal" />
       </mode-local-only>
-      <button-toggle-pin v-model:active="pinned" hide-label square size="sm" />
+      <button-toggle-pin v-model:active="pinned" />
     </slot>
   </div>
 </template>
