@@ -6,6 +6,7 @@ import DocumentActionsGroupEntry from './DocumentActionsGroupEntry'
 
 import { useDocumentDownload } from '@/composables/useDocumentDownload'
 import DocumentDownloadPopover from '@/components/Document/DocumentDownloadPopover/DocumentDownloadPopover'
+import { breakpointSizeValidator, SIZE } from '@/enums/sizes'
 
 const { document } = defineProps({
   /**
@@ -22,12 +23,16 @@ const { document } = defineProps({
     default: 'bottom'
   },
   /**
-   * Use vertical layout for the button
+   * Size of the actions group
+   * @values 'xs', 'sm', 'md', 'lg', 'xl'
    */
-  vertical: {
-    type: Boolean
+  size: {
+    type: String,
+    default: SIZE.MD,
+    validator: breakpointSizeValidator
   }
 })
+
 const { t } = useI18n()
 
 const { isDownloadAllowed, isRootTooBig, documentFullUrl } = useDocumentDownload(document)
@@ -44,8 +49,8 @@ const blur = () => nextTick(() => window.document?.activeElement.blur())
     icon="download-simple"
     download
     hide-tooltip
+    :size="size"
     :label="t('documentActionsGroup.download')"
-    :vertical="vertical"
     :disabled="!isDownloadAllowed"
     :href="href"
     @click.exact.prevent

@@ -3,11 +3,21 @@
     <hook name="document-actions-group:before" :bind="{ document }" />
     <document-card-checkbox v-if="selectMode" v-model="selected" class="document-actions-group__checkbox" />
     <slot name="actions" v-bind="{ document, tooltipPlacement, vertical }">
-      <document-actions-group-entry-star :document="document" :tooltip-placement="tooltipPlacement" />
-      <document-actions-group-entry-share :document="document" :tooltip-placement="tooltipPlacement" />
-      <document-actions-group-entry-download :document="document" :tooltip-placement="tooltipPlacement" />
-      <document-actions-group-entry-close v-if="modal" :document="document" :tooltip-placement="tooltipPlacement" />
-      <document-actions-group-entry-expand v-else :document="document" :tooltip-placement="tooltipPlacement" />
+      <document-actions-group-entry-star :document="document" :size="size" :tooltip-placement="tooltipPlacement" />
+      <document-actions-group-entry-share :document="document" :size="size" :tooltip-placement="tooltipPlacement" />
+      <document-actions-group-entry-download :document="document" :size="size" :tooltip-placement="tooltipPlacement" />
+      <document-actions-group-entry-close
+        v-if="modal"
+        :document="document"
+        :size="size"
+        :tooltip-placement="tooltipPlacement"
+      />
+      <document-actions-group-entry-expand
+        v-else
+        :document="document"
+        :size="size"
+        :tooltip-placement="tooltipPlacement"
+      />
     </slot>
     <hook name="document-actions-group:after" :bind="{ document }" />
   </div>
@@ -25,6 +35,7 @@ import DocumentActionsGroupEntryStar from './DocumentActionsGroupEntryStar'
 import DocumentCardCheckbox from '@/components/Document/DocumentCard/DocumentCardCheckbox'
 import Hook from '@/components/Hook/Hook'
 import { PLACEMENT, placementValidator } from '@/enums/placements'
+import { breakpointSizeValidator, SIZE } from '@/enums/sizes'
 
 /**
  * True if checkbox is selected
@@ -58,6 +69,15 @@ const { vertical } = defineProps({
    */
   selectMode: {
     type: Boolean
+  },
+  /**
+   * Size of the actions group
+   * @values 'xs', 'sm', 'md', 'lg', 'xl'
+   */
+  size: {
+    type: String,
+    default: SIZE.MD,
+    validator: breakpointSizeValidator
   }
 })
 

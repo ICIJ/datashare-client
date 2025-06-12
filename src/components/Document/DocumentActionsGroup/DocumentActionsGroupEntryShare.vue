@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n'
 import DocumentActionsGroupEntry from './DocumentActionsGroupEntry'
 
 import DocumentSharePopover from '@/components/Document/DocumentSharePopover/DocumentSharePopover'
+import { breakpointSizeValidator, SIZE } from '@/enums/sizes'
 
 defineProps({
   /**
@@ -21,10 +22,13 @@ defineProps({
     default: 'bottom'
   },
   /**
-   * Use vertical layout for the button
+   * Size of the actions group
+   * @values 'xs', 'sm', 'md', 'lg', 'xl'
    */
-  vertical: {
-    type: Boolean
+  size: {
+    type: String,
+    default: SIZE.MD,
+    validator: breakpointSizeValidator
   }
 })
 const { t } = useI18n()
@@ -41,7 +45,7 @@ const blur = () => nextTick(() => window.document?.activeElement.blur())
     icon="share-network"
     hide-tooltip
     :label="t('documentActionsGroup.share')"
-    :vertical="vertical"
+    :size="size"
     @focus="blur"
   />
   <document-share-popover

@@ -10,5 +10,5 @@ defineProps({
 </script>
 
 <template>
-  <document-actions-group class="document-view-actions" :document="document" />
+  <document-actions-group class="document-view-actions" :document="document" size="md" />
 </template>
