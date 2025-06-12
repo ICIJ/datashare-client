@@ -76,7 +76,7 @@ const { vertical } = defineProps({
    */
   size: {
     type: String,
-    default: SIZE.MD,
+    default: SIZE.SM,
     validator: breakpointSizeValidator
   }
 })
