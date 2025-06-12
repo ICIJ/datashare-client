@@ -8,6 +8,7 @@ import PageContainer from '@/components/PageContainer/PageContainer'
 import PageHeader from '@/components/PageHeader/PageHeader'
 import ProjectEntries from '@/components/Project/ProjectEntries/ProjectEntries'
 import RowPaginationProjects from '@/components/RowPagination/RowPaginationProjects'
+import { awaitWhenever } from '@/composables/awaitWhenever'
 import { useUrlParam } from '@/composables/useUrlParam'
 import { useUrlParamWithStore } from '@/composables/useUrlParamWithStore'
 import { useUrlParamsWithStore } from '@/composables/useUrlParamsWithStore'
@@ -15,6 +16,9 @@ import { useCore } from '@/composables/useCore'
 import { useWait } from '@/composables/useWait'
 import { useAppStore } from '@/store/modules'
 import useMode from '@/composables/useMode'
+
+const DOCUMENTS_COUNT_FIELD = 'documentsCount'
+const MAX_EXTRACTION_DATE_FIELD = 'updateDate'
 
 const { t } = useI18n()
 const { core, toast } = useCore()
@@ -35,6 +39,8 @@ const perPage = useUrlParamWithStore('perPage', {
 })
 
 const documentsCountByProject = ref({})
+const isSortedByCount = computed(() => orderBy.value[0] === DOCUMENTS_COUNT_FIELD)
+const isSortedByMaxExtractionDate = computed(() => orderBy.value[0] === MAX_EXTRACTION_DATE_FIELD)
 
 const fetchDocumentsCountByProject = async () => {
   const query = { match: { type: 'Document' } }
@@ -58,8 +64,8 @@ const fetchMaxExtractionDateByProject = async () => {
 
 const fetch = waitFor(async () => {
   try {
-    await fetchDocumentsCountByProject()
-    await fetchMaxExtractionDateByProject()
+    await awaitWhenever(fetchDocumentsCountByProject, isSortedByCount)
+    await awaitWhenever(fetchMaxExtractionDateByProject, isSortedByMaxExtractionDate)
   } catch {
     toast.error('Unable to fetch projects details.')
   }
@@ -71,7 +77,7 @@ const extendedProjects = computed(() => {
   return core.projects.map(({ name, ...project }) => {
     const documentsCount = documentsCountByProject.value?.[name] ?? 0
     const updateDate = new Date(maxExtractionDateByProject.value?.[name] ?? project.updateDate ?? project.creationDate)
-    return { ...project, name, documentsCount, updateDate }
+    return { ...project, name, [DOCUMENTS_COUNT_FIELD]: documentsCount, [MAX_EXTRACTION_DATE_FIELD]: updateDate }
   })
 })
 
