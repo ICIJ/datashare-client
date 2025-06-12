@@ -1,7 +1,8 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 
-import ButtonIcon from '@/components/Button/ButtonIcon'
+import ButtonRowActionDelete from '@/components/Button/ButtonRowAction/ButtonRowActionDelete'
+import ButtonRowActionStop from '@/components/Button/ButtonRowAction/ButtonRowActionStop'
 
 const props = defineProps({
   hasPendingTasks: {
@@ -40,25 +41,19 @@ async function removeDoneTasks() {
 
 <template>
   <div class="task-actions d-flex gap-3 flex-wrap">
-    <button-icon
+    <button-row-action-stop
       v-if="!hideStopPending"
-      icon-left="hand"
       class="task-actions__stop-pending-tasks"
-      variant="outline-primary"
       :disabled="!hasPendingTasks"
+      :label="t('taskActions.stopPendingTasks')"
       @click="stopPendingTasks"
-    >
-      {{ t('taskActions.stopPendingTasks') }}
-    </button-icon>
-    <button-icon
+    />
+    <button-row-action-delete
       v-if="!hideClearDone"
-      icon-left="trash"
       class="task-actions__delete-done-tasks"
-      variant="outline-primary"
       :disabled="!hasDoneTasks"
+      :label="t('taskActions.removeDoneTasks')"
       @click="removeDoneTasks"
-    >
-      {{ t('taskActions.removeDoneTasks') }}
-    </button-icon>
+    />
   </div>
 </template>
