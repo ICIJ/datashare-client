@@ -1,5 +1,5 @@
 <template>
-  <button-icon
+  <button-row-action
     :class="classList"
     :disabled="disabled"
     :hide-tooltip="hideTooltip"
@@ -10,17 +10,14 @@
     :label="label"
     :size="size"
     :tooltip-placement="tooltipPlacement"
-    class="document-actions-entry border-0 flex-shrink-0"
-    hide-label
-    square
-    variant="outline-secondary"
+    class="document-actions-entry flex-shrink-0"
   />
 </template>
 
 <script setup>
 import { computed } from 'vue'
 
-import ButtonIcon from '@/components/Button/ButtonIcon'
+import ButtonRowAction from '@/components/Button/ButtonRowAction/ButtonRowAction'
 import { SIZE } from '@/enums/sizes'
 import { PLACEMENT, placementValidator } from '@/enums/placements'
 
@@ -85,8 +82,6 @@ const classList = computed(() => ({ 'document-actions-entry--fill': props.fill }
 
 <style lang="scss" scoped>
 .document-actions-entry {
-  --bs-btn-hover-color: var(--bs-action-text-emphasis);
-
   &--fill {
     --bs-btn-color: var(--bs-action-text-emphasis);
   }
