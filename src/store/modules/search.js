@@ -38,6 +38,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   const contextualizeFilters = ref([])
   const sortFilters = ref({})
   const values = ref({})
+  const lastAppliedQuery = ref({})
 
   const appStore = useAppStore()
   const router = useRouter()
@@ -620,11 +621,17 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * @returns {Promise<void>} - A promise that resolves when the search is complete.
    */
   async function refresh() {
+    // This check is to avoid unnecessary searches when the query has not changed.
+    // We compare the current route query with the last applied query, which is stored
+    // in the `lastAppliedQuery` ref. If they are the same, we skip the refresh.
+    if (sameAppliedQuery(toRouteQueryWithStamp.value)) return
+
     setIsReady(false)
     setError()
     setResponse()
 
     try {
+      saveAppliedQuery()
       const raw = await searchDocuments()
       const roots = await searchRootDocuments(raw)
       searchBreadcrumbStore.pushSearchQuery(toBaseRouteQuery.value)
@@ -869,16 +876,26 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   }
 
   /**
-   * Check if the current route query is the same as the given query,
+   * Check if the current route query is the same as the last applied query,
    * ignoring the keys in the `omit` array.
+   *
    * @param {Object} query - The query to compare with the current route query.
    * @param {Array} omit - The keys to ignore in the comparison.
    * @returns {boolean} - Returns true if the queries are the same, false otherwise.
    */
-  function sameRouteQuery(query = {}, omit = []) {
+  function sameAppliedQuery(query = {}, omit = []) {
     return Object.keys(query).every((key) => {
-      return omit.includes(key) || query[key] === toRouteQueryWithStamp.value[key]
+      return omit.includes(key) || query[key] === lastAppliedQuery.value[key]
     })
+  }
+
+  /**
+   * Save the current applied query to the lastAppliedQuery ref.
+   * This function is used to store the current state of the search query
+   * so that it can be compared later to determine if the query has changed.
+   */
+  function saveAppliedQuery() {
+    lastAppliedQuery.value = { ...toRouteQueryWithStamp.value }
   }
 
   return {
@@ -960,6 +977,6 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     queryNextPage,
     queryDeleteQueryTerm,
     runBatchDownload,
-    sameRouteQuery
+    sameAppliedQuery
   }
 })

@@ -332,7 +332,7 @@ export function useSearchFilter() {
 
   function onAfterRouteQueryUpdate(callback, options) {
     return onAfterRouteUpdate((to, from) => {
-      if (to.name === 'search' && !searchStore.sameRouteQuery(to.query, ['from'])) {
+      if (to.name === 'search' && !searchStore.sameAppliedQuery(to.query, ['from'])) {
         callback(to, from)
       }
     }, options)
