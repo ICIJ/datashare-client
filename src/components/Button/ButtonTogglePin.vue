@@ -26,21 +26,32 @@ const label = computed(() => {
   return t(active.value ? 'buttonTogglePin.unpin' : 'buttonTogglePin.pin')
 })
 
-const variant = computed(() => {
-  return active.value ? 'link' : 'outline-secondary'
-})
-
 const togglePin = () => {
   active.value = !active.value
 }
+
+const classList = computed(() => {
+  return {
+    'button-toggle-pin--active': active.value
+  }
+})
 </script>
 
 <template>
   <button-row-action
+    class="button-toggle-pin"
+    :class="classList"
     :icon-left="icon"
     :icon-left-weight="weight"
-    :variant="variant"
     :label="label"
     @click="togglePin"
   />
 </template>
+
+<style lang="scss" scoped>
+.button-toggle-pin {
+  &--active {
+    color: var(--bs-link-color);
+  }
+}
+</style>
