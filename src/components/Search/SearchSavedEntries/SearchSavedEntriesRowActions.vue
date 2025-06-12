@@ -5,7 +5,7 @@ import { useRemoveSavedSearchModal } from '@/composables/useRemoveSavedSearchMod
 import { useSearchSavingModal } from '@/composables/useSearchSavingModal'
 import PageTableToggleDetailsButton from '@/components/PageTable/PageTableToggleDetailsButton'
 import ButtonRowAction from '@/components/Button/ButtonRowAction/ButtonRowAction'
-const detailsShowing = defineModel('toggle', { type: Boolean })
+
 const { event } = defineProps({
   event: {
     type: Object,
@@ -13,6 +13,7 @@ const { event } = defineProps({
   }
 })
 
+const detailsShowing = defineModel('toggle', { type: Boolean })
 const emit = defineEmits(['edited', 'removed'])
 
 const { t } = useI18n()
