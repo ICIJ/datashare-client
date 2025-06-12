@@ -3,33 +3,11 @@
     <hook name="document-actions-group:before" :bind="{ document }" />
     <document-card-checkbox v-if="selectMode" v-model="selected" class="document-actions-group__checkbox" />
     <slot name="actions" v-bind="{ document, tooltipPlacement, vertical }">
-      <document-actions-group-entry-star
-        :document="document"
-        :tooltip-placement="tooltipPlacement"
-        :vertical="vertical"
-      />
-      <document-actions-group-entry-share
-        :document="document"
-        :tooltip-placement="tooltipPlacement"
-        :vertical="vertical"
-      />
-      <document-actions-group-entry-download
-        :document="document"
-        :tooltip-placement="tooltipPlacement"
-        :vertical="vertical"
-      />
-      <document-actions-group-entry-close
-        v-if="modal"
-        :document="document"
-        :tooltip-placement="tooltipPlacement"
-        :vertical="vertical"
-      />
-      <document-actions-group-entry-expand
-        v-else
-        :document="document"
-        :tooltip-placement="tooltipPlacement"
-        :vertical="vertical"
-      />
+      <document-actions-group-entry-star :document="document" :tooltip-placement="tooltipPlacement" />
+      <document-actions-group-entry-share :document="document" :tooltip-placement="tooltipPlacement" />
+      <document-actions-group-entry-download :document="document" :tooltip-placement="tooltipPlacement" />
+      <document-actions-group-entry-close v-if="modal" :document="document" :tooltip-placement="tooltipPlacement" />
+      <document-actions-group-entry-expand v-else :document="document" :tooltip-placement="tooltipPlacement" />
     </slot>
     <hook name="document-actions-group:after" :bind="{ document }" />
   </div>
