@@ -3,5 +3,5 @@ import ButtonRowActionStop from '@/components/Button/ButtonRowAction/ButtonRowAc
 </script>
 
 <template>
-  <button-row-action-stop />
+  <button-row-action-stop :hide-tooltip="false" />
 </template>

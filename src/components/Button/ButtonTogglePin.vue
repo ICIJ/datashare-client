@@ -40,6 +40,7 @@ const classList = computed(() => {
 <template>
   <button-row-action
     class="button-toggle-pin"
+    :hide-tooltip="false"
     :class="classList"
     :icon-left="icon"
     :icon-left-weight="weight"
