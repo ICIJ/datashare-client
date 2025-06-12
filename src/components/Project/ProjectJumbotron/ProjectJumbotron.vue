@@ -9,7 +9,8 @@ import ProjectJumbotronPin from './ProjectJumbotronPin'
 import { useBreakpoints } from '@/composables/useBreakpoints'
 import { useProjectDeletionModal } from '@/composables/useProjectDeletionModal'
 import { SIZE } from '@/enums/sizes'
-import ButtonIcon from '@/components/Button/ButtonIcon'
+import ButtonRowActionEdit from '@/components/Button/ButtonRowAction/ButtonRowActionEdit'
+import ButtonRowActionDelete from '@/components/Button/ButtonRowAction/ButtonRowActionDelete'
 import Hook from '@/components/Hook/Hook'
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
 import ProjectLabel from '@/components/Project/ProjectLabel'
@@ -77,16 +78,18 @@ const promptProjectDeletion = async () => {
         <hook name="project-jumbotron-label:after" :bind="{ project }" />
       </h3>
       <mode-local-only>
-        <button-icon
+        <button-row-action-delete
           class="ms-auto"
-          icon-left="trash"
-          variant="outline-secondary"
+          size="md"
+          :hide-label="false"
+          :square="false"
           :label="t('projectJumbotron.delete')"
           @click="promptProjectDeletion"
         />
-        <button-icon
-          icon-left="pencil-simple"
-          variant="outline-secondary"
+        <button-row-action-edit
+          size="md"
+          :hide-label="false"
+          :square="false"
           :to="toEdit"
           :label="t('projectJumbotron.edit')"
         />
