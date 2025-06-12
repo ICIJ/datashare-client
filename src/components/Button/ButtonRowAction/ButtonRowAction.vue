@@ -27,6 +27,7 @@ defineProps({
     :icon-left-hover-weight="iconWeight"
     :size="size"
     hide-label
+    hide-tooltip
     square
     variant="outline-secondary"
     class="border-0"
