@@ -500,6 +500,7 @@ export const routes = [
       {
         name: 'document-standalone',
         path: '/ds/:index/:id/:routing?',
+        alias: '/dm/:index/:id/:routing?',
         component: () => import('@/views/Document/DocumentStandalone'),
         props(route) {
           return { ...route.params, ...route.query }
