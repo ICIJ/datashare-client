@@ -8,5 +8,5 @@ const pinned = defineModel('pinned', {
 </script>
 
 <template>
-  <button-toggle-pin v-model:active="pinned" />
+  <button-toggle-pin v-model:active="pinned" size="md" />
 </template>
