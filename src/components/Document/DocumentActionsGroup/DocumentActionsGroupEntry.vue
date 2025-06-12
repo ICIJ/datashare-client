@@ -4,11 +4,9 @@
     :disabled="disabled"
     :hide-tooltip="hideTooltip"
     :icon-left-hover-weight="iconHoverWeight"
-    :icon-left-size="iconSize"
     :icon-left-weight="iconWeight"
     :icon-left="icon"
     :label="label"
-    :size="size"
     :tooltip-placement="tooltipPlacement"
     class="document-actions-entry flex-shrink-0"
   />
@@ -18,7 +16,6 @@
 import { computed } from 'vue'
 
 import ButtonRowAction from '@/components/Button/ButtonRowAction/ButtonRowAction'
-import { SIZE } from '@/enums/sizes'
 import { PLACEMENT, placementValidator } from '@/enums/placements'
 
 defineOptions({ name: 'DocumentActionsEntry' })
@@ -64,17 +61,9 @@ const props = defineProps({
    */
   disabled: {
     type: Boolean
-  },
-  /**
-   * Use vertical layout for the button
-   */
-  vertical: {
-    type: Boolean
   }
 })
 
-const size = computed(() => (props.vertical ? SIZE.SM : SIZE.MD))
-const iconSize = computed(() => (props.vertical ? SIZE.LG : SIZE.MD))
 const iconWeight = computed(() => (props.fill ? 'fill' : 'regular'))
 const iconHoverWeight = computed(() => (props.fill ? 'fill' : 'bold'))
 const classList = computed(() => ({ 'document-actions-entry--fill': props.fill }))
