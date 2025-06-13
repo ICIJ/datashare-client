@@ -212,7 +212,12 @@ html[data-bs-theme] body .Toastify {
 }
 
 .tab-group-navigation-entry {
-    
+  
+  .nav-underline & > .nav-link {
+    font-weight: normal;
+    border-bottom-color: transparent;
+  }
+
   &:not(&--manual) > .nav-link.router-link-active,
   &:not(&--manual) > .nav-link.router-link-exact-active,
   &:not(&--manual) > .nav-link.active,
@@ -228,7 +233,7 @@ html[data-bs-theme] body .Toastify {
     }
   }
 
-   .nav-link {
+  .nav-link {
      --color: var(--bs-secondary-text-emphasis);
 
      color: var(--color);
