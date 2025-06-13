@@ -212,57 +212,61 @@ html[data-bs-theme] body .Toastify {
 }
 
 .tab-group-navigation-entry {
-  
-  .nav-underline & > .nav-link {
+
+  .nav-underline &--manual:not(&--active) > .nav-link {
     font-weight: normal;
     border-bottom-color: transparent;
-  }
 
+    &.active {
+      color: var(--bs-secondary-text-emphasis);
+    }
+  }
+  
   &:not(&--manual) > .nav-link.router-link-active,
   &:not(&--manual) > .nav-link.router-link-exact-active,
   &:not(&--manual) > .nav-link.active,
   &--manual.tab-group-navigation-entry--active > .nav-link {
-
+  
     --color: var(--bs-emphasis-color);
     background: transparent;
     border-bottom: 2px solid var(--bs-primary);
     font-weight: 500;
-
+  
     .nav-tabs.flex-column>& {
       border-left: 2px solid var(--bs-primary);
     }
   }
 
   .nav-link {
-     --color: var(--bs-secondary-text-emphasis);
+    --color: var(--bs-secondary-text-emphasis);
 
-     color: var(--color);
-     padding: 10px $spacer-xs;
-     border-color: transparent;
+    color: var(--color);
+    padding: 10px $spacer-xs;
+    border-color: transparent;
 
-     &.nav-link:hover {
-       --color: var(--bs-emphasis-color);
-       border-color: var(--bs-primary);
+    &.nav-link:hover {
+      --color: var(--bs-emphasis-color);
+      border-color: var(--bs-primary);
 
-       .nav-tabs.flex-column > & {
-         border-left: 2px solid var(--bs-primary);
-       }
-     }
+      .nav-tabs.flex-column > & {
+        border-left: 2px solid var(--bs-primary);
+      }
+    }
 
-     .nav-tabs.flex-column > & {
-       border-bottom: 0;
-       padding: 0 $spacer;
-       border-left: 2px solid transparent;
-     }
-   }
+    .nav-tabs.flex-column > & {
+      border-bottom: 0;
+      padding: 0 $spacer;
+      border-left: 2px solid transparent;
+    }
+  }
 
-   & .badge {
-     background: var(--color);
-     color: var(--bs-body-bg);
-     transition: $transition-base;
-   }
- }
+  & .badge {
+    background: var(--color);
+    color: var(--bs-body-bg);
+    transition: $transition-base;
+  }
+}
 
 .phosphor-icon {
-  min-width: 1em;
+min-width: 1em;
 }
