@@ -34,7 +34,7 @@ describe('BatchDownloadActions.vue', () => {
 
   beforeAll(() => {
     const core = CoreSetup.init().useAll()
-    plugins = [core.plugin, core.i18n]
+    plugins = core.plugins
   })
 
   beforeEach(async () => {
