@@ -95,10 +95,10 @@ const classList = computed(() => {
   display: flex;
   align-items: center;
   min-width: auto;
+  gap: $spacer-xs;
 
   &--vertical {
     flex-direction: column;
-    gap: $spacer-xs;
   }
 
   &__checkbox {

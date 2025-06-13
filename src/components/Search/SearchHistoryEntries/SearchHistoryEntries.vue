@@ -139,7 +139,6 @@ watch(() => eventsIds.value, fetch, { deep: true, immediate: true })
               :vertical="verticalDocumentActions"
               tooltip-placement="right-start"
               :document="document"
-              class="gap-1"
             />
           </div>
         </template>
