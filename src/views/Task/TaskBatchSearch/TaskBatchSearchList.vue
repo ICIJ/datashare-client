@@ -1,6 +1,5 @@
 <script setup>
 import get from 'lodash/get'
-import { ref, onBeforeMount } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import tasksBatchSearchesEmpty from '@/assets/images/illustrations/tasks-batch-searches-empty.svg'
@@ -16,14 +15,14 @@ import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import RouterLinkBatchSearch from '@/components/RouterLink/RouterLinkBatchSearch'
 import RowPaginationBatchSearches from '@/components/RowPagination/RowPaginationBatchSearches'
 import { useTaskSettings } from '@/composables/useTaskSettings'
-import { useCore } from '@/composables/useCore'
+import { useAuth } from '@/composables/useAuth'
 import { TASK_NAME } from '@/enums/taskNames'
 import TaskPage from '@/views/Task/TaskPage'
 import TaskStatus from '@/views/Task/TaskStatus.vue'
 
 const { t } = useI18n()
 const { propertiesModelValueOptions } = useTaskSettings('batch-search')
-const { core } = useCore()
+const { username } = useAuth()
 
 function getBatchSearchRecord(item, key) {
   return get(item, ['args', 'batchRecord', key].join('.'))
@@ -34,16 +33,8 @@ function getBatchSearchProjects(item) {
 }
 
 function canManageBatchSearch(item) {
-  return getBatchSearchRecord(item, 'user.id') === me.value
+  return getBatchSearchRecord(item, 'user.id') === username.value
 }
-
-const me = ref('')
-
-async function fetchMe() {
-  me.value = await core.auth.getUsername()
-}
-
-onBeforeMount(fetchMe)
 </script>
 
 <template>
