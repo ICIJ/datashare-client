@@ -1,22 +1,23 @@
 import get from 'lodash/get'
+import { ref } from 'vue'
 import { getCookie } from 'tiny-cookie'
 
 export default class Auth {
   constructor(mode, api) {
     this.mode = mode
     this.api = api
-    this.cachedUsername = null
+    this.me = ref(null)
   }
 
   async getUsername() {
-    if (!this.cachedUsername) {
-      this.cachedUsername = await this._checkAuthentication()
+    if (!this.me.value) {
+      this.me.value = await this._checkAuthentication()
     }
-    return this.cachedUsername
+    return this.me.value
   }
 
   reset() {
-    this.cachedUsername = null
+    this.me.value = null
   }
 
   async _checkAuthentication() {
