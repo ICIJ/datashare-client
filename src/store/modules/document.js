@@ -547,9 +547,9 @@ export const useDocumentStore = defineStore(
      *
      * @param {string} name - The name of the user action.
      */
-    function toggleUserAction(name) {
+    function toggleUserAction(name, value = null) {
       for (const key in userActions) {
-        userActions[key] = name && key === name && !userActions[key]
+        userActions[key] = name && key === name && (value ?? !userActions[key])
       }
     }
 

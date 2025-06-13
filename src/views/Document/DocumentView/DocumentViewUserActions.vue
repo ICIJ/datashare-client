@@ -23,8 +23,16 @@ const { document, documentViewFloatingSelector } = useDocument()
 const { username } = useAuth()
 const { waitForElementCreated } = useElementObserver()
 
-const showRecommendationsCard = computed(() => documentStore.isUserActionVisible(DOCUMENT_USER_ACTIONS.RECOMMENDATIONS))
-const showTagsCard = computed(() => documentStore.isUserActionVisible(DOCUMENT_USER_ACTIONS.TAGS))
+const showRecommendationsCard = computed({
+  get: () => documentStore.isUserActionVisible(DOCUMENT_USER_ACTIONS.RECOMMENDATIONS),
+  set: (value) => documentStore.toggleUserAction(DOCUMENT_USER_ACTIONS.RECOMMENDATIONS, value)
+})
+
+const showTagsCard = computed({
+  get: () => documentStore.isUserActionVisible(DOCUMENT_USER_ACTIONS.TAGS),
+  set: (value) => documentStore.toggleUserAction(DOCUMENT_USER_ACTIONS.TAGS, value)
+})
+
 const hasFloatingElement = ref(false)
 
 const tags = computed(() => documentStore.tags)
