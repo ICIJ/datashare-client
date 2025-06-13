@@ -47,7 +47,7 @@ const recommended = computed({
     return documentStore.isRecommended
   },
   async set() {
-    await documentStore.toggleAsRecommended(await core.auth.getUsername())
+    await documentStore.toggleAsRecommended(username.value)
     await recommendedStore.fetchIndexRecommendations(documentStore.document.index)
   }
 })
