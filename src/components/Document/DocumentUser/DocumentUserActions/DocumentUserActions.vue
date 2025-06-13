@@ -12,6 +12,7 @@
       <hook name="document-user-actions:before" />
       <document-user-actions-entry
         v-if="showTags"
+        :active="activeTags"
         :label="t(`documentUserActions.tags`, { n: tags })"
         :value="String(tags)"
         :icon="PhHash"
@@ -21,6 +22,7 @@
       />
       <document-user-actions-entry
         v-if="showRecommendations"
+        :active="activeRecommendations"
         :label="t(`documentUserActions.recommendations`, { n: recommendations })"
         :value="String(recommendations)"
         :icon="[PhEyes, 'fill']"
@@ -30,6 +32,7 @@
       />
       <document-user-actions-entry
         v-if="showNotes"
+        :active="activeNotes"
         :label="t(`documentUserActions.notes`, { n: notes })"
         :value="String(notes)"
         :icon="PhNoteBlank"
@@ -39,6 +42,7 @@
       />
       <document-user-actions-entry
         v-if="showFolders"
+        :active="activeFolders"
         :label="t(`documentUserActions.folders`, { n: folders })"
         :value="String(folders)"
         :icon="PhFolder"
@@ -78,6 +82,22 @@ const props = defineProps({
     default: false
   },
   showNotes: {
+    type: Boolean,
+    default: false
+  },
+  activeRecommendations: {
+    type: Boolean,
+    default: false
+  },
+  activeTags: {
+    type: Boolean,
+    default: false
+  },
+  activeFolders: {
+    type: Boolean,
+    default: false
+  },
+  activeNotes: {
     type: Boolean,
     default: false
   },

@@ -71,8 +71,10 @@ onBeforeMount(fetchAllTags)
 
 <template>
   <document-user-actions
-    :show-recommendations="isServer"
     show-tags
+    :show-recommendations="isServer"
+    :active-recommendations="showRecommendationsCard"
+    :active-tags="showTagsCard"
     :tags="tags.length"
     :recommendations="recommendedBy.length"
     @action="documentStore.toggleUserAction"
