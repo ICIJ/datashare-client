@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 
@@ -7,9 +7,8 @@ import { Api } from '@/api'
 import ModeServerOnly from '@/components/Mode/ModeServerOnly'
 import VersionNumber from '@/components/VersionNumber'
 import settings from '@/utils/settings'
+import { useAuth } from '@/composables/useAuth'
 import { useCore } from '@/composables/useCore'
-
-const { core } = useCore()
 
 const props = defineProps({
   /**
@@ -41,9 +40,10 @@ const props = defineProps({
     default: null
   }
 })
-const { t } = useI18n()
 
-const username = ref(null)
+const { t } = useI18n()
+const { core } = useCore()
+const { isAuthenticated } = useAuth()
 
 const titleAsString = computed(() => {
   if (!props.title) {
@@ -55,11 +55,7 @@ const titleAsString = computed(() => {
 const helpLink = computed(() => core.config.get('helpLink', settings.helpLink))
 const faqLink = computed(() => core.config.get('faqLink', settings.faqLink))
 const documentationLink = computed(() => core.config.get('documentationLink', settings.documentationLink))
-
-const isAuthenticated = computed(() => !!username.value)
 const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SIGNOUT))
-
-onMounted(async () => (username.value = await core.auth.getUsername()))
 </script>
 
 <template>
