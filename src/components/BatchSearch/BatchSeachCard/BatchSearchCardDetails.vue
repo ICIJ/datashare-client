@@ -242,13 +242,15 @@ const showError = () => showBatchSearchErrorModal(props)
 
 <style scoped lang="scss">
 .batch-search-card-details {
-  ul {
-    margin: 0;
-  }
-
   &__list {
-    & li {
+    margin: 0;
+
+    li {
       margin: $spacer-md 0;
+
+      &:first-of-type {
+        margin-top: 0;
+      }
     }
   }
 }

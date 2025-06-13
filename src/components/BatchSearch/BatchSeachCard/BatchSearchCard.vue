@@ -25,10 +25,18 @@ const canManageBatchSearch = computed(() => batchSearch.user.id === username.val
 </script>
 
 <template>
-  <card-panel class="batch-search-card" border content-class="gap-2" :title="batchSearch.name" no-x-icon>
+  <card-panel
+    border
+    class="batch-search-card"
+    body-class="p-4 gap-3"
+    content-class="batch-search-card__content gap-3"
+    title-class="batch-search-card__title"
+    :title="batchSearch.name"
+    no-x-icon
+  >
     <text-truncate
       v-if="batchSearch.description"
-      class="text-secondary-emphasis"
+      class="batch-search-card__content__description text-secondary-emphasis"
       :text="batchSearch.description"
       :aria-label="t('batchSearchCardDetails.description')"
     />
@@ -54,3 +62,11 @@ const canManageBatchSearch = computed(() => batchSearch.user.id === username.val
     />
   </card-panel>
 </template>
+
+<style lang="scss" scoped>
+.batch-search-card {
+  &:deep(.batch-search-card__title) {
+    padding: $spacer-xxs 0;
+  }
+}
+</style>

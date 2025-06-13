@@ -30,6 +30,13 @@ const props = defineProps({
     type: [String, Object, Array],
     default: 'gap-3'
   },
+  titleTag: {
+    type: String,
+    default: 'h4'
+  },
+  titleClass: {
+    type: [String, Object, Array]
+  },
   border: {
     type: Boolean,
     default: false
@@ -49,7 +56,7 @@ const close = () => {
 
 <template>
   <b-card v-if="modelValue" class="card-panel shadow-sm" :class="classList">
-    <b-card-title class="card-panel__title d-flex justify-content-between align-items-center fw-bold">
+    <b-card-title class="card-panel__title" :class="titleClass" :tag="titleTag">
       <span>
         <phosphor-icon v-if="icon" :name="icon" :weight="iconWeight" class="me-2" />
         <slot name="title">{{ title }}</slot>
@@ -81,6 +88,10 @@ const close = () => {
   &__title {
     font-size: $font-size-lg;
     margin: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
   }
 
   &__close {
