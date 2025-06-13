@@ -1,12 +1,14 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
+import { computed } from 'vue'
 
 import CardPanel from '@/components/CardPanel/CardPanel'
 import BatchSearchActions from '@/components/BatchSearch/BatchSearchActions/BatchSearchActions'
 import BatchSearchCardDetails from '@/components/BatchSearch/BatchSeachCard/BatchSearchCardDetails'
 import TextTruncate from '@/components/Text/TextTruncate'
+import { useAuth } from '@/composables/useAuth'
 
-defineProps({
+const { batchSearch } = defineProps({
   batchSearch: {
     type: Object,
     required: true
@@ -18,6 +20,8 @@ defineProps({
 })
 
 const { t } = useI18n()
+const { username } = useAuth()
+const canManageBatchSearch = computed(() => batchSearch.user.id === username.value)
 </script>
 
 <template>
@@ -28,7 +32,7 @@ const { t } = useI18n()
       :text="batchSearch.description"
       :aria-label="t('batchSearchCardDetails.description')"
     />
-    <batch-search-actions :uuid="batchSearch.uuid" />
+    <batch-search-actions v-if="canManageBatchSearch" :uuid="batchSearch.uuid" />
     <batch-search-card-details
       :uuid="batchSearch.uuid"
       :name="batchSearch.name"
