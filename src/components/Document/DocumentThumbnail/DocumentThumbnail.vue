@@ -88,7 +88,8 @@ const thumbnailUrl = computed(() => {
 const alt = computed(() => `${props.document.basename} preview`)
 const overlayIcon = computed(() => (errored.value ? 'eye-slash' : 'eye'))
 
-const showImage = computed(() => !!thumbnail.value && (isPreviewActivated.value || canPreviewRaw(props.document)))
+const activated = computed(() => isPreviewActivated.value || canPreviewRaw(props.document))
+const showImage = computed(() => !!thumbnail.value)
 const showPlaceholder = computed(() => !props.noPlaceholder && !thumbnail.value)
 const showOverlay = computed(() => !props.noOverlay)
 
@@ -108,7 +109,7 @@ function fetchAsBase64() {
 
 async function fetchAndLoad() {
   try {
-    if (!thumbnail.value && !errored.value) {
+    if (!thumbnail.value && !errored.value && activated.value) {
       thumbnail.value = await fetchAsBase64()
       emit('loaded')
     }
