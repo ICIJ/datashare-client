@@ -7,7 +7,9 @@ import settings from '@/utils/settings'
 import AppOverlay from '@/components/AppOverlay/AppOverlay'
 
 const props = defineProps({
-  isoLang: String,
+  isoLang: {
+    type: String
+  },
   textLanguages: {
     type: Array,
     default: () => []
@@ -20,7 +22,9 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
-  isReady: Boolean
+  isReady: {
+    type: Boolean
+  }
 })
 
 const { t } = useI18n()
@@ -60,6 +64,7 @@ function sameLanguage(nameOrIso6392) {
   <app-overlay :show="!isReady" class="task-documents-form-ocr-alert" spinner-small>
     <b-alert
       :model-value="!hasTesseract"
+      lazy
       variant="warning"
       class="task-documents-form-ocr-alert__tesseract_not_installed mt-3"
     >
@@ -67,6 +72,7 @@ function sameLanguage(nameOrIso6392) {
     </b-alert>
     <b-alert
       :model-value="shouldDisplayLanguageMessage"
+      lazy
       variant="warning"
       class="task-documents-form-ocr-alert__install_ocr_language mt-3"
     >
