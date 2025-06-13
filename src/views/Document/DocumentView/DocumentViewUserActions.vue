@@ -23,20 +23,9 @@ const { document, documentViewFloatingSelector } = useDocument()
 const { username } = useAuth()
 const { waitForElementCreated } = useElementObserver()
 
-const showRecommendationsCard = ref(false)
-const showTagsCard = ref(false)
+const showRecommendationsCard = computed(() => documentStore.isUserActionVisible(DOCUMENT_USER_ACTIONS.RECOMMENDATIONS))
+const showTagsCard = computed(() => documentStore.isUserActionVisible(DOCUMENT_USER_ACTIONS.TAGS))
 const hasFloatingElement = ref(false)
-
-const actionHandler = (name) => {
-  const toggles = {
-    [DOCUMENT_USER_ACTIONS.TAGS]: showTagsCard,
-    [DOCUMENT_USER_ACTIONS.RECOMMENDATIONS]: showRecommendationsCard
-  }
-
-  if (toggles[name]) {
-    toggles[name].value = !toggles[name].value
-  }
-}
 
 const tags = computed(() => documentStore.tags)
 const allTags = ref([])
@@ -86,7 +75,7 @@ onBeforeMount(fetchAllTags)
     show-tags
     :tags="tags.length"
     :recommendations="recommendedBy.length"
-    @action="actionHandler"
+    @action="documentStore.toggleUserAction"
   />
   <teleport v-if="hasFloatingElement" :to="documentViewFloatingSelector">
     <hook name="document-user-actions-cards:before" :bind="{ document }" />

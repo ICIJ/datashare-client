@@ -4,6 +4,7 @@ import { compact, findIndex, flattenDeep, get, map, groupBy, sortBy, sumBy, uniq
 
 import EsDocList from '@/api/resources/EsDocList'
 import { apiInstance as api } from '@/api/apiInstance'
+import { DOCUMENT_USER_ACTIONS } from '@/enums/documentUserActions'
 
 /**
  * Document store for managing document data, content, tags, named entities,
@@ -37,6 +38,11 @@ export const useDocumentStore = defineStore(
     const showTranslatedContent = ref(true)
     // Array of tags.
     const tags = ref([])
+    // List user's actions states
+    const userActions = reactive({
+      [DOCUMENT_USER_ACTIONS.TAGS]: false,
+      [DOCUMENT_USER_ACTIONS.RECOMMENDATIONS]: false
+    })
 
     /**
      * Returns the total count of named entities in a given category.
@@ -271,6 +277,8 @@ export const useDocumentStore = defineStore(
         setDocument(fetchedDoc)
       } catch (error) {
         setDocument(null)
+      } finally {
+        toggleUserAction()
       }
       return document.value
     }
@@ -531,6 +539,30 @@ export const useDocumentStore = defineStore(
       return recommendedBy.value
     }
 
+    /**
+     * Toggles the state of the specified user action.
+     *
+     * If the action is already active, it will be deactivated; otherwise, it will be activated.
+     * This function ensures that only one user action can be active at a time.
+     *
+     * @param {string} name - The name of the user action.
+     */
+    function toggleUserAction(name) {
+      for (const key in userActions) {
+        userActions[key] = name && key === name && !userActions[key]
+      }
+    }
+
+    /**
+     * Checks if a user action is currently visible.
+     *
+     * @param {string} name - The name of the user action.
+     * @returns {boolean} True if the user action is visible, false otherwise.
+     */
+    function isUserActionVisible(name) {
+      return userActions[name] ?? false
+    }
+
     return {
       // Expose state variables
       document,
@@ -581,7 +613,9 @@ export const useDocumentStore = defineStore(
       addTags,
       deleteTag,
       toggleAsRecommended,
-      getRecommendationsByDocuments
+      getRecommendationsByDocuments,
+      toggleUserAction,
+      isUserActionVisible
     }
   },
   {
