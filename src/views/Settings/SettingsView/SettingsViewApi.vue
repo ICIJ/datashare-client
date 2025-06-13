@@ -1,5 +1,6 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { whenever } from '@vueuse/core'
+import { ref, computed } from 'vue'
 import { PhosphorIcon, HapticCopy } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 
@@ -8,6 +9,7 @@ import ButtonIcon from '@/components/Button/ButtonIcon'
 import DisplayHash from '@/components/Display/DisplayHash'
 import SettingsViewLayout from '@/views/Settings/SettingsView/SettingsViewLayout'
 import { useCore } from '@/composables/useCore'
+import { useAuth } from '@/composables/useAuth'
 import { useConfirmModal } from '@/composables/useConfirmModal'
 
 /**
@@ -18,6 +20,7 @@ defineOptions({ name: 'SettingsViewApi' })
 const hashedKey = ref(null)
 const apiKey = ref(null)
 const { core } = useCore()
+const { username } = useAuth()
 const { confirm } = useConfirmModal()
 const { t } = useI18n()
 
@@ -25,21 +28,18 @@ const hasHashedKey = computed(() => !!hashedKey.value)
 const showModal = computed(() => !!apiKey.value)
 
 async function getHashedApiKey() {
-  const username = await core.auth.getUsername()
-  const result = await core.api.getApiKey(username)
+  const result = await core.api.getApiKey(username.value)
   hashedKey.value = result.hashedKey
 }
 
 async function createApiKey() {
-  const username = await core.auth.getUsername()
-  const result = await core.api.createApiKey(username)
+  const result = await core.api.createApiKey(username.value)
   apiKey.value = result.apiKey
   await getHashedApiKey()
 }
 
 async function removeApiKey() {
-  const username = await core.auth.getUsername()
-  await core.api.removeApiKey(username)
+  await core.api.removeApiKey(username.value)
   hashedKey.value = null
 }
 
@@ -51,7 +51,7 @@ async function confirmDeleteApiKey() {
   }
 }
 
-onMounted(getHashedApiKey)
+whenever(username, getHashedApiKey, { immediate: true })
 </script>
 
 <template>

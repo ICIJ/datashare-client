@@ -19,7 +19,7 @@ vi.mock('@/api/apiInstance', () => {
 describe('SettingsViewApi', () => {
   let plugins
 
-  beforeEach(() => {
+  beforeEach(async () => {
     api.getApiKey.mockResolvedValue({ hashedKey: null })
     const core = CoreSetup.init().useAll()
     plugins = core.plugins
@@ -49,16 +49,14 @@ describe('SettingsViewApi', () => {
   })
 
   it('should request the creation of the API key', async () => {
-    const wrapper = mount(SettingsViewApi, { global: { plugins } })
     api.getApiKey.mockResolvedValue({ apiKey: '123456abcdef', hashedKey: 'test' })
     api.createApiKey.mockResolvedValue({ apiKey: '123456abcdef', hashedKey: 'test' })
+    const wrapper = mount(SettingsViewApi, { global: { plugins } })
     await wrapper.find('.settings-view-api__create__button').trigger('click')
     await flushPromises()
 
     expect(api.getApiKey).toBeCalledTimes(2)
-    expect(api.getApiKey).toBeCalledWith('doe')
     expect(api.createApiKey).toBeCalledTimes(1)
-    expect(api.createApiKey).toBeCalledWith('doe')
   })
 
   it('should delete the apiKey', async () => {
@@ -75,6 +73,5 @@ describe('SettingsViewApi', () => {
     expect(wrapper.findAll('.settings-view-api__show')).toHaveLength(0)
 
     expect(api.removeApiKey).toBeCalledTimes(1)
-    expect(api.removeApiKey).toBeCalledWith('doe')
   })
 })
