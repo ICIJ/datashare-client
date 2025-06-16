@@ -68,9 +68,9 @@ import axios from 'axios'
 import { useI18n } from 'vue-i18n'
 
 import { useWait } from '@/composables/useWait'
+import { useDocumentPreview } from '@/composables/useDocumentPreview'
 import AppWait from '@/components/AppWait/AppWait'
 import DocumentThumbnail from '@/components/Document/DocumentThumbnail/DocumentThumbnail'
-import preview from '@/mixins/preview'
 
 /**
  * Display a paginated preview of a document using the preview server.
@@ -84,7 +84,6 @@ export default {
   directives: {
     IntersectionObserver: vIntersectionObserver
   },
-  mixins: [preview],
   props: {
     /**
      * The selected document
@@ -95,7 +94,8 @@ export default {
   },
   setup() {
     const { t } = useI18n()
-    return { wait: useWait(), t }
+    const { getPreviewMetaUrl } = useDocumentPreview()
+    return { wait: useWait(), t, getPreviewMetaUrl }
   },
   data() {
     return {
