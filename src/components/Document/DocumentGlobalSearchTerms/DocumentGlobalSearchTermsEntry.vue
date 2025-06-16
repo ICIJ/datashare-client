@@ -2,6 +2,8 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+import SearchParameterQueryTerm from '@/components/Search/SearchParameter/SearchParameterQueryTerm'
+
 const { term } = defineProps({
   term: {
     type: Object,
@@ -21,7 +23,14 @@ const isInTags = computed(() => term.count === 0 && term.tags > 0)
 </script>
 
 <template>
-  <button-icon class="document-global-search-terms-entry" variant="outline-light" :counter="counter">
+  <search-parameter-query-term
+    class="document-global-search-terms-entry"
+    no-icon
+    no-x-icon
+    :counter="counter"
+    :query="label"
+    color="var(--bs-primary)"
+  >
     <span class="document-global-search-terms-entry__label">
       {{ label }}
     </span>
@@ -31,11 +40,16 @@ const isInTags = computed(() => term.count === 0 && term.tags > 0)
     <b-badge v-else-if="isInTags" class="document-global-search-terms-entry__tags" variant="light">
       {{ t('document.inTags') }}
     </b-badge>
-  </button-icon>
+  </search-parameter-query-term>
 </template>
 
 <style lang="scss" scoped>
 .document-global-search-terms-entry {
+
+  &:deep(.button-icon) {
+    cursor: pointer;
+  }
+
   &__metadata,
   &__tags {
     margin-left: $spacer-xs;
