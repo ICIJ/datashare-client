@@ -63,7 +63,7 @@ const emit = defineEmits(['loaded', 'errored', 'enter'])
 const errored = ref(false)
 const thumbnail = ref(null)
 
-const { isPreviewActivated, getPreviewUrl, fetchImageAsBase64, canPreviewRaw } = useDocumentPreview()
+const { isPreviewActivated, getPreviewUrl, fetchImageDimensions, canPreviewRaw } = useDocumentPreview()
 const element = useTemplateRef('element')
 
 const classList = computed(() => {
@@ -102,15 +102,11 @@ const style = computed(() => {
   }
 })
 
-function fetchAsBase64() {
-  const url = canPreviewRaw(props.document) ? props.document.inlineFullUrl : thumbnailUrl.value
-  return fetchImageAsBase64(url)
-}
-
-async function fetchAndLoad() {
+async function fetchThumbnail() {
   try {
     if (!thumbnail.value && !errored.value && activated.value) {
-      thumbnail.value = await fetchAsBase64()
+      const url = canPreviewRaw(props.document) ? props.document.inlineFullUrl : thumbnailUrl.value
+      thumbnail.value = await fetchImageDimensions(url)
       emit('loaded')
     }
   } catch (_) {
@@ -121,7 +117,7 @@ async function fetchAndLoad() {
 
 async function enter() {
   emit('enter', element.value)
-  await fetchAndLoad()
+  await fetchThumbnail()
 }
 
 const isVisible = useElementVisibility(element)
@@ -134,7 +130,7 @@ onBeforeMount(async () => {
   // This component can be lazy loaded
   if (props.lazy) return
   // Fetch directly
-  await fetchAndLoad()
+  await fetchThumbnail()
 })
 </script>
 
@@ -144,7 +140,7 @@ onBeforeMount(async () => {
       v-if="showImage"
       class="document-thumbnail__image"
       :alt="alt"
-      :src="thumbnail.src"
+      :src="thumbnail.base64"
       :height="thumbnail.height"
       :width="thumbnail.width"
       :crop="crop"
