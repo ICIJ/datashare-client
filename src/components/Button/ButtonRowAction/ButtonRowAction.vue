@@ -5,8 +5,7 @@ import { ICON_WEIGHT, iconWeightValidator } from '@/enums/iconWeights'
 
 defineProps({
   icon: {
-    type: [String, Object, Array],
-    required: true
+    type: [String, Object, Array]
   },
   iconWeight: {
     type: String,
