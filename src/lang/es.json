@@ -5,7 +5,7 @@
     "no": "No",
     "submit": "Guardar",
     "reset": "Reiniciar",
-    "you": "Tú",
+    "you": "{username} (tú)",
     "building": "Nuestro equipo todavía está fabricando algo impresionante para esta página. ¡Vuelve más tarde!"
   },
   "addonCard": {
@@ -337,7 +337,7 @@
   },
   "documentUserActionsCardRecommendations": {
     "title": "0 recomendaciones | 1 recomendación | {count} recomendaciones",
-    "info": "Las recomendaciones son públicas para todos los partícipes del proyecto."
+    "info": "Las recomendaciones son públicas para todos los/las participantes del proyecto."
   },
   "documentUserActionsCardTags": {
     "title": "0 etiquetas | 1 etiqueta | {count} etiquetas",
@@ -372,7 +372,7 @@
     "goToComment": "Ir al comentario (enlace externo)"
   },
   "documentUserRecommendations": {
-    "warning": "Las recomendaciones son públicas para todos los partícipes del proyecto",
+    "warning": "Las recomendaciones son públicas para todos los/las participantes del proyecto",
     "noRecommendations": "Aún no hay recomendaciones.",
     "markAsRecommended": "Marcar como recomendado",
     "unmarkAsRecommended": "Desmarcar como recomendado"
@@ -881,7 +881,7 @@
         "batch-search": {
           "title": "Búsqueda por lotes",
           "description": "Obtener los resultados de cada consulta de una lista, todos a la vez. Por ejemplo, en lugar de buscar a todos los políticos de tu país uno tras otro, simplemente sube la lista y ve los resultados para cada uno.",
-          "nbPublic": "Sin búsquedas por lotes compartidos | 1 búsqueda por lotes compartidos | {n} búsquedas por lotes compartidos",
+          "nbPublic": "sin búsquedas por lotes compartidos | 1 búsqueda por lotes compartidos | {n} búsquedas por lotes compartidos",
           "nbPrivate": "sin búsquedas privadas por lotes | 1 búsqueda por lotes compartida | {n} búsqueda por lotes privada",
           "actionText": "Crear una búsqueda por lotes"
         },
@@ -1323,11 +1323,11 @@
     }
   },
   "projectViewFindNamedEntities": {
-    "title": "Encontrar entidades nombradas",
+    "title": "Encontrar entidades",
     "notify": {
       "succeed": "Find named entities task launched",
       "seeTasks": "Ver tareas",
-      "failed": "Encontrar entidades nombradas",
+      "failed": "Error al encontrar entidades",
       "failedBody": "Se ha producido un error al iniciar la tarea de indexación para añadir documentos."
     }
   },
@@ -1633,7 +1633,7 @@
     "search": "Buscar"
   },
   "projectCards": {
-    "documentsCount": "Sin documentos | 1 documento | {count} documentos",
+    "documentsCount": "sin documentos | 1 documento | {count} documentos",
     "about": "Acerca de",
     "search": "Buscar"
   },
@@ -1657,7 +1657,7 @@
     "label": "Rutas"
   },
   "searchBarInputDropdownForProjects": {
-    "projectsCount": "{count} projects",
+    "projectsCount": "sin proyectos | 1 proyecto | {count} proyectos",
     "noMatches": "No hay coincidencias"
   },
   "searchBreadcrumbFormList": {
@@ -1693,11 +1693,11 @@
     }
   },
   "searchSelection": {
-    "count": "No hay documentos seleccionados | 1 documento seleccionado | {count} documentos seleccionados",
+    "count": "no hay documentos seleccionados | 1 documento seleccionado | {count} documentos seleccionados",
     "star": "Marcar como favorito",
     "unstar": "Eliminar de favoritos",
     "tag": "Etiqueta",
-    "nbDocs": "Sin documentos | 1 documento | {count} documentos",
+    "nbDocs": "sin documentos | 1 documento | {count} documentos",
     "nbTags": "sin etiquetas | 1 etiqueta | {count} etiquetas",
     "tagSuccess": "{nbDocs} han sido etiquetados con {nbTags}.",
     "tagFailed": "Error: {nbDocs} no han sido etiquetados con {nbTags}."

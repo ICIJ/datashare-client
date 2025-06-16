@@ -198,7 +198,7 @@
   },
   "search": {
     "title": "Suche",
-    "errorStateLabel": "We were unable to perform your search. This might be due to a server error or a bad request.",
+    "errorStateLabel": "We were unable to perform your search. This might be due to a server error or a syntax error in your query.",
     "emptyStateLabel": "Oh, it’s lonely in here... This project has no documents yet.",
     "emptyStateAction": "Dokumente hinzufügen",
     "errors": {
@@ -1327,7 +1327,7 @@
     "notify": {
       "succeed": "Die Suche nach benannten Entitäten wurde gestartet",
       "seeTasks": "Aufgaben ansehen",
-      "failed": "Find named entities task failed",
+      "failed": "Find entities task failed",
       "failedBody": "An error occurred when launching indexing task to add documents."
     }
   },
