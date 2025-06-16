@@ -45,6 +45,7 @@ const isInTags = computed(() => term.count === 0 && term.tags > 0)
 
 <style lang="scss" scoped>
 .document-global-search-terms-entry {
+  padding-block: 9px;
 
   &:deep(.button-icon) {
     cursor: pointer;
