@@ -1,21 +1,14 @@
 <template>
-  <app-wait :for="loaderId" class="w-100 d-flex flex-column py-3">
+  <app-wait :for="loaderId" class="w-100 d-flex flex-column py-3 paginated-viewer">
     <template #waiting>
       <div class="p-3 w-100 text-muted">
         {{ t('document.fetching') }}
       </div>
     </template>
-    <div v-if="document.isPdf" class="paginated-viewer paginated-viewer--pdf flex-grow-1">
-      <iframe
-        class="paginated-viewer__iframe border"
-        :src="document.inlineFullUrl"
-        width="100%"
-        height="100%"
-        frameborder="0"
-        allowfullscreen
-      />
+    <div v-if="false && document.isPdf" class="flex-grow-1">
+      <iframe :src="document.inlineFullUrl" width="100%" height="100%" frameborder="0" allowfullscreen />
     </div>
-    <div v-else-if="isPreviewable" class="paginated-viewer paginated-viewer--previewable d-flex flex-grow-1">
+    <div v-else-if="isPreviewable" class="d-flex flex-grow-1">
       <div class="paginated-viewer__thumbnails bg-tertiary-subtle">
         <div class="text-center p-2 d-flex align-items-center paginated-viewer__thumbnails__select">
           <select
@@ -37,34 +30,39 @@
             :class="{ 'paginated-viewer__thumbnails__items__item--active': active === page }"
             @click="setActiveAndScrollToPage(page)"
           >
-            <document-thumbnail class="border-0" :document="document" :page="page" :ratio="ratio" size="150" />
+            <document-thumbnail :document="document" :page="page" size="md" fit />
             <span class="paginated-viewer__thumbnails__items__item__page">
               {{ page + 1 }}
             </span>
           </div>
         </div>
       </div>
-      <div class="paginated-viewer__preview flex-grow-1 p-2">
-        <div v-for="page in pagesRange" :key="page" class="paginated-viewer__preview__page m-3" :data-page="page + 1">
+      <div
+        class="paginated-viewer__preview flex-grow-1 text-center d-flex flex-column flex-wrap align-items-center gap-5"
+      >
+        <div v-for="page in pagesRange" :key="page" class="paginated-viewer__preview__page w-100 text-center px-3">
           <document-thumbnail
+            v-intersection-observer="[onPageIntersectionObserver, { threshold: 0.5 }]"
+            class="border d-inline-block"
+            :data-page="page + 1"
             :document="document"
             lazy
+            fit
             :page="page"
-            :ratio="ratio"
-            :size="1200"
-            @enter="setActiveAndScrollToThumbnail(page)"
-            @errored.once="errored = true"
+            size="xl"
+            @errored.once="errored = page === 0"
           />
         </div>
       </div>
     </div>
-    <div v-else class="paginated-viewer paginated-viewer--not-available p-3 text-center">
+    <div v-else class="p-3 text-center">
       {{ t('document.notAvailable') }}
     </div>
   </app-wait>
 </template>
 
 <script>
+import { vIntersectionObserver } from '@vueuse/components'
 import { get, range } from 'lodash'
 import axios from 'axios'
 import { useI18n } from 'vue-i18n'
@@ -82,6 +80,9 @@ export default {
   components: {
     AppWait,
     DocumentThumbnail
+  },
+  directives: {
+    IntersectionObserver: vIntersectionObserver
   },
   mixins: [preview],
   props: {
@@ -102,23 +103,12 @@ export default {
       errored: false,
       meta: {
         pages: 1
-      },
-      size: {
-        width: 0,
-        height: 0
       }
     }
   },
   computed: {
     hasPreviewHost() {
       return !!this.$config.get('previewHost')
-    },
-    ratio() {
-      try {
-        return this.size.height / this.size.width
-      } catch (_) {
-        return 1
-      }
     },
     pagesRange() {
       return range(this.meta.pages)
@@ -144,7 +134,6 @@ export default {
       await this.waitFor(async () => {
         try {
           this.meta = await this.fetchMeta()
-          this.size = await this.fetchSize()
         } catch (e) {
           throw Error('Unable to fetch the thumbnail informations')
         }
@@ -160,20 +149,18 @@ export default {
         this.wait.end(this.loaderId)
       }
     },
-    async fetchSize() {
-      const url = this.getPreviewUrl(this.document, { size: 150 })
-      const { src } = await this.fetchImageAsBase64(url)
-      return new Promise((resolve, reject) => {
-        const image = new Image()
-        image.onerror = reject
-        image.onload = () => resolve({ width: image.width, height: image.height })
-        image.src = src
-      })
-    },
     async fetchMeta() {
       const url = this.getPreviewMetaUrl(this.document)
       const { data } = await axios({ url, ...this.metaOptions })
       return data
+    },
+    onPageIntersectionObserver([entry]) {
+      if (entry.isIntersecting) {
+        const page = parseInt(entry.target.getAttribute('data-page'), 10) - 1
+        if (this.active !== page) {
+          this.setActiveAndScrollToThumbnail(page)
+        }
+      }
     },
     setActiveAndScrollToThumbnail(page) {
       this.active = page
@@ -211,11 +198,7 @@ export default {
     top: 0;
     display: flex;
     flex-direction: column;
-    max-height: calc(100vh - var(--search-document-navbar-height));
-
-    .document-standalone & {
-      max-height: 100vh;
-    }
+    max-height: 100vh;
 
     &__items {
       height: 100%;
@@ -225,11 +208,7 @@ export default {
         border: 1px solid $border-color;
         cursor: pointer;
         position: relative;
-
-        .document-thumbnail__image {
-          max-width: 100%;
-          width: 100%;
-        }
+        display: flex;
 
         &:hover {
           border-color: $action;
@@ -248,11 +227,8 @@ export default {
 
         &__page {
           background: $tertiary;
-          border: 1px solid $border-color;
-          border-bottom: 0;
-          border-right: 0;
           bottom: 0;
-          font-size: 0.8em;
+          font-size: 0.8rem;
           font-weight: bold;
           padding: 0.2em 0.4em;
           position: absolute;
@@ -262,34 +238,17 @@ export default {
     }
   }
 
-  &__preview {
-    text-align: center;
-
-    &__page {
-      position: relative;
-
-      &:after {
-        content: attr(data-page);
-        background: var(--bs-tertiary-bg-subtle);
-        border: 1px solid $border-color;
-        bottom: 0;
-        font-size: 0.8rem;
-        font-weight: bold;
-        padding: 0.2em 0.4em;
-        position: absolute;
-        right: 0;
-      }
-
-      .document-thumbnail {
-        background: transparent;
-
-        &__image,
-        &:before {
-          border: $border-color 1px solid;
-          background: $body-bg;
-        }
-      }
-    }
+  &__preview__page > .document-thumbnail:before {
+    content: attr(data-page);
+    position: absolute;
+    background: $tertiary;
+    bottom: 0;
+    font-size: 0.8rem;
+    font-weight: bold;
+    padding: 0.2em 0.4em;
+    bottom: 0;
+    right: 0;
+    z-index: 100;
   }
 }
 </style>
