@@ -309,7 +309,7 @@ const buttonProps = computed(() => ({
   min-width: 0;
 
   .button-icon-counter {
-    margin-left: $spacer-xs;
+    margin: -0.5em 0 -0.5em $spacer-xs;
   }
 
   &--truncate {
