@@ -312,8 +312,8 @@
     "selectDocument": "Sélectionner ce document"
   },
   "documentLocalSearchNav": {
-    "previous": "Trouver l'occurrence précédente",
-    "next": "Trouver l'occurrence suivante"
+    "previous": "Trouver la mention précédente",
+    "next": "Trouver la mention suivante"
   },
   "documentLocalSearchInput": {
     "placeholder": "Rechercher dans le document"
@@ -372,7 +372,7 @@
     "goToComment": "Aller au commentaire (lien externe)"
   },
   "documentUserRecommendations": {
-    "warning": "Les recommandations sont visibles par tous les membres d'un projet",
+    "warning": "Les recommandations sont visibles par tous les membres d'un projet.",
     "noRecommendations": "Il n'y a pas encore de recommandation.",
     "markAsRecommended": "Marquer comme recommandé",
     "unmarkAsRecommended": "Ne plus marquer comme recommandé"
@@ -380,7 +380,7 @@
   "documentUserTags": {
     "tagListOthers": "Ajouté par d'autres",
     "tagListYours": "Ajouté par vous",
-    "tagWarning": "Les tags sont visibles par tous les membres d'un projet",
+    "tagWarning": "Les tags sont visibles par tous les membres d'un projet.",
     "noTags": "Aucun tag n'a encore été ajouté."
   },
   "documentUserTagsAction": {
@@ -450,12 +450,12 @@
       "toggler": "Trier par",
       "options": {
         "_count": {
-          "asc": "Occurrences (- au +)",
-          "desc": "Occurrences (+ au -)"
+          "asc": "Mentions (- au +)",
+          "desc": "Mentions (+ au -)"
         },
         "parent_doc_count": {
-          "asc": "Occurrences (- au +)",
-          "desc": "Occurrences (+ au -)"
+          "asc": "Mentions (- au +)",
+          "desc": "Mentions (+ au -)"
         },
         "_key": {
           "asc": "Ordre alphabétique (A à Z)",
@@ -881,7 +881,7 @@
         "batch-search": {
           "title": "Recherche en lot",
           "description": "Obtenez tous les résultats d'une liste, en une seule requête : par exemple, au lieu de rechercher une à une toutes les personnalités politiques d'un pays, téléchargez la liste de tous les noms et obtenez les résultats pour chaque nom.",
-          "nbPublic": "Aucune recherche en lot partagée | 1 recherche en lot partagée | {n} recherches en lot partagées",
+          "nbPublic": "aucune recherche en lot partagée | 1 recherche en lot partagée | {n} recherches en lot partagées",
           "nbPrivate": "aucune recherche en lot privée | 1 recherche en lot privée | {n} recherches en lot privées",
           "actionText": "Créer une recherche en lot"
         },
@@ -1085,7 +1085,7 @@
           "label": "Visibilité",
           "options": {
             "private": "Privé - Vous seul•e verrez votre recherche en lot",
-            "shared": "Shared - Only members of all the selected project(s) will see your batch search"
+            "shared": "Partagé - Les membres des projets sélectionnés verront votre recherche en lot"
           },
           "description": "Cette option pourra être modifiée plus tard"
         },
@@ -1386,8 +1386,8 @@
     "goToNextTab": "Aller à l'onglet suivant",
     "activateSearchBar": "Rechercher dans le document",
     "deactivateSearchBar": "Fermer la recherche dans le document",
-    "findPreviousOccurrence": "Aller à l'occurrence précédente dans le document",
-    "findNextOccurrence": "Aller à l'occurrence suivante dans le document"
+    "findPreviousOccurrence": "Aller à la mention précédente dans le document",
+    "findNextOccurrence": "Aller à la mention suivante dans le document"
   },
   "settings": {
     "layout": {
@@ -1633,7 +1633,7 @@
     "search": "Rechercher"
   },
   "projectCards": {
-    "documentsCount": "Aucun document | 1 document | {count} documents",
+    "documentsCount": "aucun document | 1 document | {count} documents",
     "about": "À propos",
     "search": "Rechercher"
   },
@@ -1657,7 +1657,7 @@
     "label": "Chemins du fichier"
   },
   "searchBarInputDropdownForProjects": {
-    "projectsCount": "Aucun projet | 1 projet | {count} projets",
+    "projectsCount": "aucun projet | 1 projet | {count} projets",
     "noMatches": "Aucun résultat"
   },
   "searchBreadcrumbFormList": {
@@ -1693,11 +1693,11 @@
     }
   },
   "searchSelection": {
-    "count": "Aucun document sélectionné | 1 document sélectionné | {count} documents sélectionnés",
+    "count": "aucun document sélectionné | 1 document sélectionné | {count} documents sélectionnés",
     "star": "Mettre en favoris",
     "unstar": "Enlever des favoris",
     "tag": "Tag",
-    "nbDocs": "Aucun document | 1 document | {count} documents",
+    "nbDocs": "aucun document | 1 document | {count} documents",
     "nbTags": "aucun tag | 1 tag | {count} tags",
     "tagSuccess": "{nbDocs} ont été tagués avec {nbTags}.",
     "tagFailed": "Erreur : {nbDocs} n'ont pas été tagués avec {nbTags}."
