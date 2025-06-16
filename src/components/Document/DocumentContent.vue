@@ -295,7 +295,7 @@ async function loadContentSliceAround(desiredOffset) {
 <template>
   <div ref="element" class="document-content" :class="classList">
     <hook name="document.content:before" />
-    <div class="document-content__toolbox">
+    <div class="document-content__toolbox d-flex flex-column gap-3">
       <hook name="document.content.toolbox:before" />
       <div class="d-flex align-items-center gap-3">
         <hook name="document.content.toolbox.local-search:before" />
@@ -312,15 +312,13 @@ async function loadContentSliceAround(desiredOffset) {
         <tiny-pagination v-if="showPagination" v-model="page" :per-page="1" :total-rows="nbPages" />
         <hook name="document.content.toolbox.pagination:after" />
       </div>
+      <document-global-search-terms
+        :document="document"
+        :target-language="targetLanguage"
+        @select="localSearchTerm = $event"
+      />
       <hook name="document.content.toolbox:after" />
     </div>
-    <document-global-search-terms
-      v-if="false /** Deactivated until it gets a proper make up */"
-      :document="document"
-      :target-language="targetLanguage"
-      class="pb-3"
-      @select="localSearchTerm = $event"
-    />
     <div class="document-content__togglers">
       <hook name="document.content.togglers:before" x-class="d-flex flex-row justify-content-end align-items-center" />
       <hook name="document.content.togglers:after" x-class="d-flex flex-row justify-content-end align-items-center" />
