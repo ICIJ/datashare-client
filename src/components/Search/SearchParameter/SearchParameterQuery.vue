@@ -6,6 +6,8 @@ import { useI18n } from 'vue-i18n'
 import SearchParameterQueryAst from './SearchParameterQueryAst'
 import SearchParameterQueryTerm from './SearchParameterQueryTerm'
 
+import { VARIANT, variantValidator } from '@/enums/variants'
+
 const props = defineProps({
   query: {
     type: String
@@ -26,7 +28,16 @@ const props = defineProps({
   counter: {
     type: Number,
     default: null
-  }
+  },
+  counterVariant: {
+    type: String,
+    default: VARIANT.LIGHT,
+    validator: variantValidator
+  },
+  counterStyle: {
+    type: [String, Object],
+    default: null
+  },
 })
 
 const { t } = useI18n()

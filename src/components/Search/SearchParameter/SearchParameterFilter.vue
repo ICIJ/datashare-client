@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n'
 
 import SearchParameterQueryTerm from './SearchParameterQueryTerm'
 
+import { VARIANT, variantValidator } from '@/enums/variants'
 import * as types from '@/store/filters'
 import filtersDefs from '@/store/filters'
 
@@ -15,6 +16,15 @@ const props = defineProps({
   },
   counter: {
     type: Number,
+    default: null
+  },
+  counterVariant: {
+    type: String,
+    default: VARIANT.LIGHT,
+    validator: variantValidator
+  },
+  counterStyle: {
+    type: [String, Object],
     default: null
   },
   label: {

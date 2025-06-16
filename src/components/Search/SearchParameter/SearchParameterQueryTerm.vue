@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 
+import { VARIANT, variantValidator } from '@/enums/variants'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 
 defineOptions({
@@ -13,6 +14,15 @@ const props = defineProps({
   },
   counter: {
     type: Number,
+    default: null
+  },
+  counterVariant: {
+    type: String,
+    default: VARIANT.LIGHT,
+    validator: variantValidator
+  },
+  counterStyle: {
+    type: [String, Object],
     default: null
   },
   prefix: {
@@ -69,6 +79,7 @@ const showOperator = computed(() => {
     variant="outline-secondary"
     class="search-parameter-query-term"
     :counter="counter"
+    :counter-variant="counterVariant"
     :class="classList"
     :size="size"
     :style="style"

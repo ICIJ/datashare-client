@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { pick } from 'lodash'
 
+import { VARIANT, variantValidator } from '@/enums/variants'
 import SearchParameterQuery from '@/components/Search/SearchParameter/SearchParameterQuery'
 import SearchParameterFilter from '@/components/Search/SearchParameter/SearchParameterFilter'
 
@@ -17,6 +18,19 @@ const props = defineProps({
   },
   color: {
     type: String,
+    default: null
+  },
+  counter: {
+    type: Number,
+    default: null
+  },
+  counterVariant: {
+    type: String,
+    default: VARIANT.LIGHT,
+    validator: variantValidator
+  },
+  counterStyle: {
+    type: [String, Object],
     default: null
   },
   icon: {
@@ -43,11 +57,14 @@ const componentProps = computed(() => {
 })
 
 const filterComponentProps = computed(() => {
-  return { name: props.filter, ...pick(props, ['value', 'icon', 'color', 'noIcon', 'noXIcon', 'size']) }
+  return {
+    name: props.filter,
+    ...pick(props, ['value', 'icon', 'color', 'counter', 'counterVariant', 'counterStyle', 'noIcon', 'noXIcon', 'size'])
+  }
 })
 
 const queryComponentProps = computed(() => {
-  return pick(props, ['query', 'noIcon', 'noXIcon', 'size'])
+  return pick(props, ['query', 'noIcon', 'noXIcon', 'size', 'counter', 'counterVariant', 'counterStyle'])
 })
 </script>
 

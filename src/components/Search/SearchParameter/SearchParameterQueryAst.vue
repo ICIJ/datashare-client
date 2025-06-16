@@ -4,6 +4,8 @@ import { computed } from 'vue'
 import SearchParameterFilter from './SearchParameterFilter'
 import SearchParameterQueryTerm from './SearchParameterQueryTerm'
 
+import { VARIANT, variantValidator } from '@/enums/variants'
+
 defineOptions({
   name: 'SearchParameterQueryAst'
 })
@@ -18,6 +20,15 @@ const props = defineProps({
   },
   counter: {
     type: Number,
+    default: null
+  },
+  counterVariant: {
+    type: String,
+    default: VARIANT.LIGHT,
+    validator: variantValidator
+  },
+  counterStyle: {
+    type: [String, Object],
     default: null
   },
   operator: {
