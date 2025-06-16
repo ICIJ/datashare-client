@@ -37,7 +37,7 @@ const props = defineProps({
   counterStyle: {
     type: [String, Object],
     default: null
-  },
+  }
 })
 
 const { t } = useI18n()

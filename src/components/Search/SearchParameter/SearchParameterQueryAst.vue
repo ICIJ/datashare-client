@@ -64,7 +64,8 @@ const isTerm = computed(() => !!props.ast.term && !isFilter.value)
       :no-icon="noIcon"
       :no-x-icon="noXIcon"
       :size="size"
-      @click:x="emit('click:x', ast.left)">
+      @click:x="emit('click:x', ast.left)"
+    >
       <slot />
     </search-parameter-query-ast>
     <search-parameter-query-term
