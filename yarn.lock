@@ -3010,10 +3010,10 @@ bootstrap-vue-next@0.22.1:
     "@floating-ui/vue" "^1.0.6"
     "@vueuse/core" "^10.10.0"
 
-bootstrap-vue-next@0.30.0:
-  version "0.30.0"
-  resolved "https://registry.yarnpkg.com/bootstrap-vue-next/-/bootstrap-vue-next-0.30.0.tgz#db271581c3488bdec8223598f200efcbce1302aa"
-  integrity sha512-xsBZ8LyWyAImAziYp6U6b1nmX9Vja+vM92DfCuG7giDboRRhBvShekM6F06HnsnoRnWKewvLF1xepgTWrfH0iw==
+bootstrap-vue-next@0.30.2:
+  version "0.30.2"
+  resolved "https://registry.yarnpkg.com/bootstrap-vue-next/-/bootstrap-vue-next-0.30.2.tgz#14677b4a974ba810197294858a2a750469998f00"
+  integrity sha512-JOp/85QsjL2/2P9m6eI03AGjBz2A2L8UubiwL8Tzl3tsDMaJdtTLS2hRWiY1ofNrOgBMvPqB87x1cSQsQuy41g==
 
 bootstrap@^5.3.3:
   version "5.3.3"
