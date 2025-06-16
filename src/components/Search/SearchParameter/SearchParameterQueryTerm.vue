@@ -11,6 +11,10 @@ const props = defineProps({
   term: {
     type: String
   },
+  counter: {
+    type: Number,
+    default: null
+  },
   prefix: {
     type: String,
     default: null
@@ -64,6 +68,7 @@ const showOperator = computed(() => {
   <button-icon
     variant="outline-secondary"
     class="search-parameter-query-term"
+    :counter="counter"
     :class="classList"
     :size="size"
     :style="style"

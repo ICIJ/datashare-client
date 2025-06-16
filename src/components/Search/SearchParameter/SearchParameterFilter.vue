@@ -13,6 +13,10 @@ const props = defineProps({
     type: String,
     required: true
   },
+  counter: {
+    type: Number,
+    default: null
+  },
   label: {
     type: String
   },
@@ -86,6 +90,7 @@ const display = computed(() => {
 <template>
   <search-parameter-query-term
     :term="term"
+    :counter="counter"
     :operator="operator"
     :prefix="prefix"
     :size="size"

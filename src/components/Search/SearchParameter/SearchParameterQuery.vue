@@ -18,6 +18,14 @@ const props = defineProps({
   },
   noXIcon: {
     type: Boolean
+  },
+  color: {
+    type: String,
+    default: null
+  },
+  counter: {
+    type: Number,
+    default: null
   }
 })
 
@@ -38,6 +46,8 @@ const ast = computed(() => {
   <search-parameter-query-ast
     v-if="ast"
     :ast="ast"
+    :color="color"
+    :counter="counter"
     :no-icon="noIcon"
     :no-x-icon="noXIcon"
     :size="size"
@@ -46,6 +56,7 @@ const ast = computed(() => {
   <search-parameter-query-term
     v-else
     :term="query"
+    :counter="counter"
     :no-icon="noIcon"
     :no-x-icon="noXIcon"
     :size="size"

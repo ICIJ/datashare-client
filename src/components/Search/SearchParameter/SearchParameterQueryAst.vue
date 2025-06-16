@@ -12,6 +12,14 @@ const props = defineProps({
   ast: {
     type: Object
   },
+  color: {
+    type: String,
+    default: null
+  },
+  counter: {
+    type: Number,
+    default: null
+  },
   operator: {
     type: String
   },
@@ -39,6 +47,8 @@ const isTerm = computed(() => !!props.ast.term && !isFilter.value)
     <search-parameter-query-ast
       v-if="isLeft"
       :ast="ast.left"
+      :color="color"
+      :counter="counter"
       :operator="operator"
       :no-icon="noIcon"
       :no-x-icon="noXIcon"
@@ -48,6 +58,8 @@ const isTerm = computed(() => !!props.ast.term && !isFilter.value)
     <search-parameter-query-term
       v-if="isTerm"
       :term="ast.term"
+      :color="color"
+      :counter="counter"
       :operator="operator"
       :prefix="ast.prefix"
       :no-icon="noIcon"
@@ -58,6 +70,8 @@ const isTerm = computed(() => !!props.ast.term && !isFilter.value)
     <search-parameter-filter
       v-if="isFilter"
       :name="ast.field"
+      :color="color"
+      :counter="counter"
       :operator="operator"
       :prefix="ast.prefix"
       :value="ast.term"
@@ -69,6 +83,7 @@ const isTerm = computed(() => !!props.ast.term && !isFilter.value)
     <search-parameter-query-ast
       v-if="isRight"
       :ast="ast.right"
+      :counter="counter"
       :operator="ast.operator"
       :no-icon="noIcon"
       :no-x-icon="noXIcon"
