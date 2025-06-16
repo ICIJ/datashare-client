@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 
-const { src, width } = defineProps({
+const { src } = defineProps({
   src: {
     type: String,
     required: true
@@ -20,9 +20,7 @@ const style = computed(() => {
 </script>
 
 <template>
-  <span class="document-thumbnail-image" :style="style">
-    <span class="visually-hidden">{{ width }}</span>
-  </span>
+  <span class="document-thumbnail-image" :style="style" />
 </template>
 
 <style lang="scss" scoped>
