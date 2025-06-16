@@ -1323,11 +1323,11 @@
     }
   },
   "projectViewFindNamedEntities": {
-    "title": "Find named entities",
+    "title": "Find entities",
     "notify": {
       "succeed": "Finding named entities task launched",
       "seeTasks": "See tasks",
-      "failed": "Find named entities task failed",
+      "failed": "Find entities task failed",
       "failedBody": "An error occurred when launching indexing task to add documents."
     }
   },
