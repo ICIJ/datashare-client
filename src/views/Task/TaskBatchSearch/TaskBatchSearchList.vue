@@ -81,7 +81,7 @@ function canManageBatchSearch(item) {
           </p>
         </template>
         <template #cell(state)="{ item }">
-          <task-status :status="item.state" @error="showError" />
+          <task-status :status="item.state" />
         </template>
         <template #cell(privacy)="{ item }">
           <display-visibility :value="getBatchSearchRecord(item, 'published')" />
