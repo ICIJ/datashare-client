@@ -1327,7 +1327,7 @@
     "notify": {
       "succeed": "Die Suche nach benannten Entitäten wurde gestartet",
       "seeTasks": "Aufgaben ansehen",
-      "failed": "Find named entities task failed",
+      "failed": "Find entities task failed",
       "failedBody": "An error occurred when launching indexing task to add documents."
     }
   },
