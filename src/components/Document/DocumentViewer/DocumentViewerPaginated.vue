@@ -5,7 +5,7 @@
         {{ t('document.fetching') }}
       </div>
     </template>
-    <div v-if="false && document.isPdf" class="flex-grow-1">
+    <div v-if="document.isPdf" class="flex-grow-1">
       <iframe :src="document.inlineFullUrl" width="100%" height="100%" frameborder="0" allowfullscreen />
     </div>
     <div v-else-if="isPreviewable" class="d-flex flex-grow-1">
