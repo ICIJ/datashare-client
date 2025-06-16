@@ -26,7 +26,7 @@ const compact = computed(() => {
     <b-row class="d-flex flex-grow-1 g-3">
       <b-col md="2">
         <router-link :to="listLink" class="d-block">
-          <phosphor-icon :name="icon" size="100%" class="task-board-list-entry__icon bg-action-subtle" />
+          <phosphor-icon :name="icon" size="100%" class="task-board-list-entry__icon" />
         </router-link>
       </b-col>
       <b-col md="10" class="d-flex">
