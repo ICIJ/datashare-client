@@ -198,11 +198,11 @@
   },
   "search": {
     "title": "Search",
-    "errorStateLabel": "We were unable to perform your search. This might be due to a server error or a bad request.",
+    "errorStateLabel": "We were unable to perform your search. This might be due to a server error or a syntax error in your query.",
     "emptyStateLabel": "Oh, it’s lonely in here... This project has no documents yet.",
     "emptyStateAction": "Add documents",
     "errors": {
-      "badRequest": "Your search query is wrong",
+      "badRequest": "Your search query contains an error",
       "internalError": "The server encountered a problem",
       "noConnections": "The server is not connected",
       "notFound": "Nothing was found",
