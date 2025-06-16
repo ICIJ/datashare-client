@@ -44,6 +44,9 @@ async function removeDoneTasks() {
     <button-row-action-stop
       v-if="!hideStopPending"
       class="task-actions__stop-pending-tasks"
+      size="md"
+      :square="false"
+      :hide-label="false"
       :disabled="!hasPendingTasks"
       :label="t('taskActions.stopPendingTasks')"
       @click="stopPendingTasks"
@@ -51,6 +54,9 @@ async function removeDoneTasks() {
     <button-row-action-delete
       v-if="!hideClearDone"
       class="task-actions__delete-done-tasks"
+      size="md"
+      :square="false"
+      :hide-label="false"
       :disabled="!hasDoneTasks"
       :label="t('taskActions.removeDoneTasks')"
       @click="removeDoneTasks"
