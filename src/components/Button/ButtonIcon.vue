@@ -333,7 +333,7 @@ const buttonProps = computed(() => ({
     flex-shrink: 0;
 
     .button-icon-counter {
-      margin-left: 0;
+      margin: 0;
       position: absolute;
       bottom: auto;
       left: auto;
