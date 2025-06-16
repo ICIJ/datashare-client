@@ -337,7 +337,7 @@
   },
   "documentUserActionsCardRecommendations": {
     "title": "0 recomendaciones | 1 recomendación | {count} recomendaciones",
-    "info": "Las recomendaciones son públicas para todos los partícipes del proyecto."
+    "info": "Las recomendaciones son públicas para todos los/las participantes del proyecto."
   },
   "documentUserActionsCardTags": {
     "title": "0 etiquetas | 1 etiqueta | {count} etiquetas",
@@ -372,7 +372,7 @@
     "goToComment": "Ir al comentario (enlace externo)"
   },
   "documentUserRecommendations": {
-    "warning": "Las recomendaciones son públicas para todos los partícipes del proyecto",
+    "warning": "Las recomendaciones son públicas para todos los/las participantes del proyecto",
     "noRecommendations": "Aún no hay recomendaciones.",
     "markAsRecommended": "Marcar como recomendado",
     "unmarkAsRecommended": "Desmarcar como recomendado"
