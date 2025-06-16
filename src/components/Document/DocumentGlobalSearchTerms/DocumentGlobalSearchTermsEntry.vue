@@ -47,7 +47,7 @@ const isInTags = computed(() => term.count === 0 && term.tags > 0)
 .document-global-search-terms-entry {
   padding-block: 9px;
 
-  &:deep(.button-icon) {
+  &:hover {
     cursor: pointer;
   }
 
