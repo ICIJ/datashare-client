@@ -53,8 +53,9 @@ const isTerm = computed(() => !!props.ast.term && !isFilter.value)
       :no-icon="noIcon"
       :no-x-icon="noXIcon"
       :size="size"
-      @click:x="emit('click:x', ast.left)"
-    />
+      @click:x="emit('click:x', ast.left)">
+      <slot />
+    </search-parameter-query-ast>
     <search-parameter-query-term
       v-if="isTerm"
       :term="ast.term"
@@ -66,9 +67,12 @@ const isTerm = computed(() => !!props.ast.term && !isFilter.value)
       :no-x-icon="noXIcon"
       :size="size"
       @click:x="emit('click:x', ast)"
-    />
+    >
+      <slot />
+    </search-parameter-query-term>
     <search-parameter-filter
       v-if="isFilter"
+      v-bind="$attrs"
       :name="ast.field"
       :color="color"
       :counter="counter"
@@ -79,9 +83,12 @@ const isTerm = computed(() => !!props.ast.term && !isFilter.value)
       :no-x-icon="noXIcon"
       :size="size"
       @click:x="emit('click:x', ast)"
-    />
+    >
+      <slot />
+    </search-parameter-filter>
     <search-parameter-query-ast
       v-if="isRight"
+      v-bind="$attrs"
       :ast="ast.right"
       :counter="counter"
       :operator="ast.operator"
@@ -89,6 +96,8 @@ const isTerm = computed(() => !!props.ast.term && !isFilter.value)
       :no-x-icon="noXIcon"
       :size="size"
       @click:x="emit('click:x', $event)"
-    />
+    >
+      <slot />
+    </search-parameter-query-ast>
   </span>
 </template>

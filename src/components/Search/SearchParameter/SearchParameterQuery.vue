@@ -52,7 +52,9 @@ const ast = computed(() => {
     :no-x-icon="noXIcon"
     :size="size"
     @click:x="emit('click:x', $event)"
-  />
+  >
+    <slot />
+  </search-parameter-query-ast>
   <search-parameter-query-term
     v-else
     :term="query"
@@ -65,5 +67,7 @@ const ast = computed(() => {
     prefix="-"
     icon="warning"
     @click:x="emit('click:x', $event)"
-  />
+  >
+    <slot />
+  </search-parameter-query-term>
 </template>

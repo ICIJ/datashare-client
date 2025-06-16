@@ -101,5 +101,6 @@ const display = computed(() => {
     :no-x-icon="noXIcon"
   >
     <component :is="display" v-if="display" :value="term" />
+    <slot v-else />
   </search-parameter-query-term>
 </template>
