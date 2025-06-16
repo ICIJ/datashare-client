@@ -74,7 +74,7 @@ const classList = computed(() => {
 
 <template>
   <footer class="app-sidebar-footer" :class="classList">
-    <hook name="app-sidebar-footer:before" :bind="{ compact, name }" />
+    <hook name="app-sidebar-footer:before" :bind="{ compact }" />
     <!-- First links row -->
     <app-sidebar-footer-links name="first" :compact="compact">
       <app-sidebar-footer-links-entry name="logo" :compact="compact">
@@ -139,7 +139,7 @@ const classList = computed(() => {
         />
       </app-sidebar-footer-links-entry>
     </app-sidebar-footer-links>
-    <hook name="app-sidebar-footer:after" :bind="{ compact, name }" />
+    <hook name="app-sidebar-footer:after" :bind="{ compact }" />
   </footer>
 </template>
 
