@@ -3,7 +3,6 @@ import { kebabCase, startCase } from 'lodash'
 import { computed } from 'vue'
 
 import { apiInstance as api } from '@/api/apiInstance'
-
 import settings from '@/utils/settings'
 import { useConfig } from '@/composables/useConfig'
 
