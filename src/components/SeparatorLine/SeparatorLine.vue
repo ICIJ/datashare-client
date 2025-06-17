@@ -96,7 +96,7 @@ const dragEnd = ({ detail }) => {
 
 <style lang="scss" scoped>
 .separator-line {
-  width: 2rem;
+  width: 3px;
   height: 100%;
   min-height: 5rem;
   top: 0;
