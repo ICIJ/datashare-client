@@ -107,7 +107,11 @@ const fetchTabComponent = async (tab) => {
 
 const redirectToDocumentStandalone = () => {
   if (route.name === 'document') {
-    return router.replace({ name: 'document-standalone' })
+    const { index, id, routing } = route.params
+    const { tab } = route.query
+    const params = { index, id, routing }
+    const query = { tab }
+    return router.replace({ name: 'document-standalone', params, query })
   }
 }
 
