@@ -1344,7 +1344,7 @@
       },
       "description": {
         "label": "Description",
-        "placeholder": "Vide"
+        "placeholder": ""
       },
       "sourcePath": {
         "label": "Dossier du projet",
@@ -1693,7 +1693,7 @@
     }
   },
   "searchSelection": {
-    "count": "aucun document sélectionné | 1 document sélectionné | {count} documents sélectionnés",
+    "count": "0 document sélectionné | 1 document sélectionné | {count} documents sélectionnés",
     "star": "Mettre en favoris",
     "unstar": "Enlever des favoris",
     "tag": "Tag",

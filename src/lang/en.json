@@ -1693,7 +1693,7 @@
     }
   },
   "searchSelection": {
-    "count": "no selected documents | 1 selected document | {count} selected documents",
+    "count": "No selected documents | 1 selected document | {count} selected documents",
     "star": "Star",
     "unstar": "Unstar",
     "tag": "Tag",
