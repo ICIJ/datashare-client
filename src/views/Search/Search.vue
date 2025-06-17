@@ -37,7 +37,6 @@ const {
   refreshRouteFromStart,
   refreshSearchFromRoute,
   refreshSearchFromRouteStart,
-  resetSearchResponse,
   watchIndices,
   watchFilters,
   onAfterRouteQueryUpdate,
@@ -116,11 +115,7 @@ const resetEntriesListSize = () => toValue(entriesRef)?.resetListSize?.()
 // The user might have resized the entries list or the document view. When the search is updated
 // or a new document is loaded, we need to reset original size to ensure that they are displayed.
 watch(() => route.query, whenIsRoute('search', resetEntriesListSize), { deep: true, immediate: true })
-// Reset the search response when the component is mounted to ensure that the displayed search result
-// are always up-to-date with the current route query. This is important because the search response
-// can still be populated with the previous search results.
-resetSearchResponse()
-refreshSearchFromRoute()
+
 // Refresh route query when a filter changes (either their values or if they are excluded)
 watchFilters(refreshRouteFromStart)
 // Refresh route query when projects change
@@ -132,8 +127,9 @@ watchIndices(refreshRouteFromStart)
 onAfterRouteQueryUpdate(refreshSearchFromRouteStart)
 // Refresh search when route query "from" parameter changes. This is different from the previous watcher
 // because it will only trigger the search API call when the "from" parameter changes and therefore, will not
-// change the "from" query parameter to the first page.
-onAfterRouteQueryFromUpdate(refreshSearchFromRoute)
+// change the "from" query parameter to the first page. If the current route is the search route, it
+// will also trigger the search API call immediately.
+onAfterRouteQueryFromUpdate(refreshSearchFromRoute, { immediate: route.name === 'search' })
 </script>
 
 <template>
