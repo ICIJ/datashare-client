@@ -8,12 +8,13 @@ import { useUrlParamWithStore } from '@/composables/useUrlParamWithStore'
 import { useUrlParamsWithStore } from '@/composables/useUrlParamsWithStore'
 import PageSettings from '@/components/PageSettings/PageSettings'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
-import { useAppStore } from '@/store/modules'
+import { useAppStore, useSearchStore } from '@/store/modules'
 import { useSearchProperties } from '@/composables/useSearchProperties'
 import { useViewSettings, INPUT_CHECKBOX, INPUT_RADIO } from '@/composables/useViewSettings'
 
 const { t } = useI18n()
 const appStore = useAppStore()
+const searchStore = useSearchStore()
 const { tLayout } = useViewSettings(t)
 const { propertiesOptions, sortByOptions } = useSearchProperties()
 
@@ -49,7 +50,11 @@ const perPage = ref({
   type: INPUT_RADIO,
   open: true,
   modelValue: useUrlParamWithStore('perPage', {
-    to: 'search',
+    to: computed(() => {
+      const name = 'search'
+      const { toRouteQuery: query } = searchStore
+      return { name, query }
+    }),
     transform: (value) => Math.max(10, parseInt(value)),
     get: () => appStore.getSettings('search', 'perPage'),
     set: (perPage) => appStore.setSettings('search', { perPage })
@@ -76,7 +81,11 @@ const sortBy = ref({
   open: true,
   options: sortByOptions,
   modelValue: useUrlParamsWithStore(['sort', 'order'], {
-    to: 'search',
+    to: computed(() => {
+      const name = 'search'
+      const { toRouteQuery: query } = searchStore
+      return { name, query }
+    }),
     get: () => appStore.getSettings('search', 'orderBy'),
     set: (sort, order) => appStore.setSettings('search', { orderBy: [sort, order] })
   })

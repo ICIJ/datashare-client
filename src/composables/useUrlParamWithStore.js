@@ -3,6 +3,7 @@ import { computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import { batchQueryParamUpdate } from '@/composables/useUrlParam'
+import { whenIsRoute } from '@/composables/whenIsRoute'
 
 /**
  * Synchronizes a single URL query parameter with store or a custom getter/setter.
@@ -30,7 +31,6 @@ export function useUrlParamWithStore(queryParam, options = {}) {
   const transform = options.transform || identity
   const initialValue = options.initialValue || null
   const to = options.to || null
-  const correctRoute = computed(() => !to || route.name === to)
 
   // Get and transform the route value
   const getRouteValue = () => {
@@ -52,18 +52,24 @@ export function useUrlParamWithStore(queryParam, options = {}) {
   })
 
   // Watch the store value directly and update the URL when it changes
-  watch(getStoreValue, (newValue) => {
-    if (correctRoute.value && newValue !== getRouteValue()) {
-      batchQueryParamUpdate(router, route, to, [queryParam], [newValue])
-    }
-  })
+  watch(
+    getStoreValue,
+    whenIsRoute(to, (newValue) => {
+      if (newValue !== getRouteValue()) {
+        batchQueryParamUpdate(router, route, to, [queryParam], [newValue])
+      }
+    })
+  )
 
   // Watch the route value and update the store when it changes
-  watch(getRouteValue, (newValue) => {
-    if (newValue && correctRoute.value && newValue !== getStoreValue()) {
-      setStoreValue(newValue)
-    }
-  })
+  watch(
+    getRouteValue,
+    whenIsRoute(to, (newValue) => {
+      if (newValue && newValue !== getStoreValue()) {
+        setStoreValue(newValue)
+      }
+    })
+  )
 
   // Initialize the store value with the URL value if they are different
   if (getRouteValue() && !isEqual(getRouteValue(), getStoreValue())) {

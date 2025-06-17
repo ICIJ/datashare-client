@@ -3,6 +3,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { debounce, identity, isObject, toNumber } from 'lodash'
 
 import { whenIsRoute } from '@/composables/whenIsRoute'
+import { toRoute } from '@/utils/toRoute'
 
 /**
  * Global object to store batched updates
@@ -16,16 +17,17 @@ let batchedUpdates = {}
  *
  * @param {Object} router - The Vue Router instance
  * @param {Object} route - The current Vue Router route instance
- * @param {String} to - The name of the target route
+ * @param {String} to - The target route
  */
 const applyBatchedUpdates = debounce((router, route, to) => {
   if (Object.keys(batchedUpdates).length > 0) {
-    const newQuery = { ...route.query, ...batchedUpdates }
+    const { name, query, params } = toRoute(to)
+    const newQuery = { ...query, ...route.query, ...batchedUpdates }
     // Apply the batched updates to the query
-    if (!to || route.name === to) {
-      router.push({ query: newQuery })
+    if (!name || route.name === name) {
+      router.push({ params, query: newQuery })
     } else {
-      router.push({ name: to, query: newQuery })
+      router.push({ params, name, query: newQuery })
     }
     // Reset the batch after applying
     batchedUpdates = {}
@@ -38,7 +40,7 @@ const applyBatchedUpdates = debounce((router, route, to) => {
  *
  * @param {Object} router - The Vue Router instance
  * @param {Object} route - The current Vue Router route instance
- * @param {String} to - The name of the target route
+ * @param {String} to - The target route
  * @param {String[]} queryParams - The query parameters to update
  * @param {*} value - The new values for each query parameter
  */
