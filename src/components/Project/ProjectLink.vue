@@ -1,6 +1,8 @@
 <template>
   <component :is="is" :to="to" class="project-link">
-    <project-label :project="project" :hide-thumbnail="hideThumbnail" />
+    <slot>
+      <project-label :project="project" :hide-thumbnail="hideThumbnail" />
+    </slot>
   </component>
 </template>
 

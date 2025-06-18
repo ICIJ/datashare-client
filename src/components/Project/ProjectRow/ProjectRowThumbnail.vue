@@ -1,4 +1,5 @@
 <script setup>
+import ProjectLink from '@/components/Project/ProjectLink'
 import ProjectThumbnail from '@/components/Project/ProjectThumbnail'
 
 defineProps({
@@ -10,9 +11,9 @@ defineProps({
 </script>
 
 <template>
-  <div class="project-row-thumbnail">
+  <project-link class="project-row-thumbnail d-block" :project="project">
     <project-thumbnail width="100%" :project="project" rounded />
-  </div>
+  </project-link>
 </template>
 
 <style lang="scss">
