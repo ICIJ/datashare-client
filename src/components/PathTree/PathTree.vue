@@ -452,6 +452,7 @@ defineExpose({ loadData, loadDataWithSpinner, reloadData, isLoading })
         :no-stats="noStats"
         :no-link="noLink"
         :nested="nested"
+        :level="level"
         @update:selected="selectDirectory(path)"
       >
         <template v-if="!nested" #name>
@@ -479,6 +480,7 @@ defineExpose({ loadData, loadDataWithSpinner, reloadData, isLoading })
           :data="JSON.stringify(directory)"
           :indeterminate="isIndeterminateDirectory(directory.key)"
           :nested="nested"
+          :level="level + 1"
           @update:selected="selectDirectory(directory.key)"
           @update:collapse="collapseDirectory(directory.key)"
         >
@@ -495,6 +497,7 @@ defineExpose({ loadData, loadDataWithSpinner, reloadData, isLoading })
               :projects="projects"
               :select-mode="selectMode"
               :multiple="multiple"
+              :no-link="noLink"
               :no-stats="noStats"
               :compact="compact"
               :pre-body-build="preBodyBuild"

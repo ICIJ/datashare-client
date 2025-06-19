@@ -26,6 +26,10 @@ const props = defineProps({
   },
   nested: {
     type: Boolean
+  },
+  level: {
+    type: Number,
+    default: 0
   }
 })
 
@@ -37,6 +41,10 @@ const classList = computed(() => ({
   'path-tree-view-entry-name--selected': selected.value
 }))
 
+const style = computed(() => ({
+  '--level-indent-factor': props.level
+}))
+
 const selectModeOrInjected = computed(() => props.selectMode ?? inject('selectMode', false))
 const compactOrInjected = computed(() => props.compact ?? inject('compact', false))
 
@@ -46,7 +54,11 @@ const toggle = () => {
 </script>
 
 <template>
-  <div class="path-tree-view-entry-name d-flex gap-1 align-items-center flex-truncate w-100" :class="classList">
+  <div
+    class="path-tree-view-entry-name d-flex gap-1 align-items-center flex-truncate w-100"
+    :class="classList"
+    :style="style"
+  >
     <path-tree-view-entry-name-caret
       v-if="nested"
       :collapse="collapse"
@@ -58,10 +70,10 @@ const toggle = () => {
       v-if="selectModeOrInjected"
       v-model="selected"
       v-model:indeterminate="indeterminate"
-      class="flex-shrink-0"
+      class="flex-shrink-0 above-stretched-link"
     />
     <slot v-bind="{ toggle, icon, name, compactOrInjected }">
-      <div class="path-tree-view-entry-name__value text-truncate" @click="toggle">
+      <div class="path-tree-view-entry-name__value text-truncate stretched-link" @click="toggle">
         <phosphor-icon v-if="!compactOrInjected" :name="icon" />
         {{ name }}
       </div>
@@ -71,6 +83,15 @@ const toggle = () => {
 
 <style lang="scss" scoped>
 .path-tree-view-entry-name {
+  --level-indent-width: #{$spacer};
+  --level-indent-factor: 0;
+
+  margin-left: calc(var(--level-indent-width) * var(--level-indent-factor));
+
+  &--compact {
+    --level-indent-width: #{$spacer-xs};
+  }
+
   &--compact.path-tree-view-entry-name--selected {
     font-weight: 500;
     color: var(--bs-action-text-emphasis);

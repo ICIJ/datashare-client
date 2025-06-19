@@ -54,6 +54,10 @@ const props = defineProps({
   },
   nested: {
     type: Boolean
+  },
+  level: {
+    type: Number,
+    default: 0
   }
 })
 
@@ -75,7 +79,7 @@ const compactOrInjected = computed(() => props.compact ?? inject('compact', fals
   <div class="path-tree-view-entry" :class="classList">
     <div
       v-if="!noHeader"
-      class="d-flex align-items-center path-tree-view-entry__header"
+      class="path-tree-view-entry__header d-flex align-items-center position-relative"
       @mouseenter="active = true"
       @mouseleave="active = false"
     >
@@ -88,6 +92,7 @@ const compactOrInjected = computed(() => props.compact ?? inject('compact', fals
         :loading="loading"
         :select-mode="selectModeOrInjected"
         :nested="nested"
+        :level="level"
       >
         <slot name="name" />
       </path-tree-view-entry-name>
@@ -126,14 +131,6 @@ const compactOrInjected = computed(() => props.compact ?? inject('compact', fals
     .path-tree-view-entry--compact & {
       padding: 2px 0;
     }
-  }
-
-  &:deep(.path-tree-view-entry__subdirectories) {
-    padding-left: $spacer;
-  }
-
-  &--compact:deep(.path-tree-view-entry__subdirectories) {
-    padding-left: $spacer-xs;
   }
 
   &--active:not(&--compact) > &__header {
