@@ -11,6 +11,6 @@ defineProps({
 
 <template>
   <td class="document-row-actions text-end">
-    <document-actions-group :document="document" class="d-inline-flex" />
+    <document-actions-group :document="document" class="d-inline-flex above-stretched-link" />
   </td>
 </template>
