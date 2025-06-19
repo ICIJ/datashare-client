@@ -250,6 +250,9 @@ onBeforeMount(async () => {
     <template #search="{ search, searchPlaceholder }">
       <slot name="search" v-bind="{ search, searchPlaceholder }" />
     </template>
+    <template #actions>
+      <slot name="actions" />
+    </template>
     <slot v-bind="{ entries, filter }">
       <filters-panel-section-filter-entry
         v-for="{ item, label } in entries"

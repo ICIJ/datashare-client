@@ -17,7 +17,7 @@ const title = computed(() => {
 })
 
 const icon = computed(() => {
-  return active.value ? PhListBullets : PhTreeView
+  return active.value ? PhRows : PhTreeView
 })
 </script>
 

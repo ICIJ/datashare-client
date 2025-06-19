@@ -95,6 +95,7 @@ const isVisible = computed(() => props.modal || !collapse.value)
       class="mx-2"
     >
       <template #actions>
+        <slot name="actions" />
         <filters-panel-section-filter-actions
           v-if="actionsPositionTitle"
           v-model:contextualize="contextualize"

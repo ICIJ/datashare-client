@@ -55,17 +55,17 @@ describe('FilterTypePath.vue', () => {
     const key = ['/data/foo', '/data/bar']
     searchStore.setFilterValue(wrapper.vm.filter.itemParam({ key }))
     await flushPromises()
-    expect(wrapper.vm.selected).toContain('/data/foo')
-    expect(wrapper.vm.selected).toContain('/data/bar')
+    expect(wrapper.vm.selectedPaths).toContain('/data/foo')
+    expect(wrapper.vm.selectedPaths).toContain('/data/bar')
   })
 
   it('should reset the selected paths when project change', async () => {
     const key = ['/data/foo', '/data/bar']
     searchStore.setFilterValue(wrapper.vm.filter.itemParam({ key }))
     await flushPromises()
-    expect(wrapper.vm.selected).toHaveLength(2)
+    expect(wrapper.vm.selectedPaths).toHaveLength(2)
     searchStore.setIndex(otherIndex)
     await flushPromises()
-    expect(wrapper.vm.selected).toHaveLength(0)
+    expect(wrapper.vm.selectedPaths).toHaveLength(0)
   })
 })

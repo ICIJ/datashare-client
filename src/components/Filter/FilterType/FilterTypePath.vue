@@ -1,10 +1,11 @@
 <script setup>
-import { computed, useTemplateRef } from 'vue'
+import { computed, ref, useTemplateRef, watch } from 'vue'
 
-import { useSearchFilter } from '@/composables/useSearchFilter'
-import { useCore } from '@/composables/useCore'
+import ButtonTogglePathTreeView from '@/components/Button/ButtonTogglePathTreeView'
 import FilterType from '@/components/Filter/FilterType/FilterType'
 import PathTree from '@/components/PathTree/PathTree'
+import { useSearchFilter } from '@/composables/useSearchFilter'
+import { useCore } from '@/composables/useCore'
 import { useSearchStore } from '@/store/modules'
 
 const { core } = useCore()
@@ -32,9 +33,11 @@ const props = defineProps({
 })
 
 const tree = useTemplateRef('tree')
-const path = core.getDefaultDataDir()
 const projects = computed(() => searchStore.indices)
-const selected = computedFilterValues(props.filter)
+const nested = ref(true)
+const path = ref(core.getDefaultDataDir())
+const openPaths = ref([])
+const selectedPaths = computedFilterValues(props.filter)
 
 const preBodyBuild = whenFilterContextualized(props.filter, (body) => {
   // Add every filter to the search body
@@ -45,7 +48,7 @@ const preBodyBuild = whenFilterContextualized(props.filter, (body) => {
 })
 
 const reloadData = () => tree.value.reloadData()
-const reset = () => (selected.value = [])
+const reset = () => (selectedPaths.value = [])
 
 watchFilterContextualized(props.filter, reloadData)
 // When the filter is excluded/included and it's contextualized then reload the data with a spinner
@@ -54,27 +57,36 @@ watchFilterExcluded(props.filter, whenFilterContextualized(props.filter, reloadD
 watchValues(whenFilterContextualized(props.filter, reloadData))
 // When project changes, we reset the filter to avoid filtering by unknown paths
 watchIndices(reset)
+// When nested value change, we restore the path
+watch(nested, () => {
+  path.value = core.getDefaultDataDir()
+  openPaths.value = []
+})
 </script>
 
 <template>
   <filter-type :filter="filter" :modal="modal" flush>
     <path-tree
       ref="tree"
-      v-model:selected-paths="selected"
+      v-model:selected-paths="selectedPaths"
+      v-model:open-paths="openPaths"
+      v-model:path="path"
       include-children-documents
       :compact="!modal"
-      :path="path"
       :projects="projects"
       :pre-body-build="preBodyBuild"
       :sort-by="filter.sortBy"
       :order-by="filter.orderBy"
       :no-stats="hideCount"
+      :nested="nested"
       no-label
       no-link
-      nested
       elasticsearch-only
       select-mode
       multiple
     />
+    <template #actions>
+      <button-toggle-path-tree-view v-model:active="nested" />
+    </template>
   </filter-type>
 </template>
