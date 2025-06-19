@@ -70,8 +70,9 @@ function onOk() {
         :path="sourcePath"
         :projects="projects"
         :multiple="multiple"
-        select-mode
+        nested
         no-stats
+        select-mode
         :elasticsearch-only="elasticsearchOnly"
       />
     </app-modal>

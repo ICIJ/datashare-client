@@ -2,7 +2,7 @@
   <div class="widget widget--disk-usage">
     <widget-barometer-disk-usage v-b-modal.modal-disk-usage clickable :size="size" />
     <app-modal id="modal-disk-usage" lazy scrollable no-header no-footer size="lg">
-      <path-tree v-model:path="path" :projects="[project]" elasticsearch-only />
+      <path-tree v-model:path="path" :projects="[project]" nested elasticsearch-only />
     </app-modal>
   </div>
 </template>
