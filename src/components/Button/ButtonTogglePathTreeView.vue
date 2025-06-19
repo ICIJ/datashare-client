@@ -13,11 +13,11 @@ const toggle = () => {
 }
 
 const title = computed(() => {
-  return active.value ? t('buttonTogglePathTreeView.nested') : t('buttonTogglePathTreeView.list')
+  return active.value ? t('buttonTogglePathTreeView.list') : t('buttonTogglePathTreeView.nested')
 })
 
 const icon = computed(() => {
-  return active.value ? PhTreeView : PhListBullets
+  return active.value ? PhListBullets : PhTreeView
 })
 </script>
 
