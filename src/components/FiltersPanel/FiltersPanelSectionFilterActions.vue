@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import ButtonIcon from '@/components/Button/ButtonIcon'
+import ButtonSubtleAction from '@/components/Button/ButtonSubtleAction'
 
 const contextualize = defineModel('contextualize', { type: Boolean })
 const exclude = defineModel('exclude', { type: Boolean })
@@ -49,13 +49,11 @@ const classList = computed(() => {
         {{ t('filtersPanelSectionFilterActions.exclude') }}
       </b-form-checkbox>
     </span>
-    <button-icon
+    <button-subtle-action
       v-if="!hideExpand"
-      variant="link"
-      class="bg-action-subtle text-action-emphasis-subtle p-1 ms-auto"
+      class="ms-auto"
       tooltip-placement="right"
       icon-left="arrows-out-simple"
-      hide-label
       :label="t('filtersPanelSectionFilterActions.expand')"
       @click="expand = !expand"
     />
