@@ -53,6 +53,10 @@
   "buttonAdd": {
     "label": "Agregar nueva"
   },
+  "buttonTogglePathTreeView": {
+    "list": "List view",
+    "tree": "Tree view"
+  },
   "buttonToggleSettings": {
     "label": "Configuración"
   },
