@@ -113,6 +113,12 @@ const compactOrInjected = computed(() => props.compact ?? inject('compact', fals
 
 <style lang="scss" scoped>
 .path-tree-view-entry {
+  margin-top: 1px;
+
+  &--compact {
+    margin-top: 0;
+  }
+
   &__header {
     border-radius: var(--bs-border-radius);
     padding: $spacer-sm $spacer;
