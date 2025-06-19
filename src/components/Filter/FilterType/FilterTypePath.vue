@@ -71,6 +71,7 @@ watchIndices(reset)
       :no-stats="hideCount"
       no-label
       no-link
+      nested
       elasticsearch-only
       select-mode
       multiple

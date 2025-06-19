@@ -66,6 +66,7 @@ describe('PathTree.vue', () => {
           selectedPaths: ['path_01', 'path_02'],
           size: true,
           count: true,
+          nested: true,
           infiniteScroll: false
         },
         global: {
@@ -163,6 +164,7 @@ describe('PathTree.vue', () => {
           path: 'C:\\home\\foo',
           size: true,
           count: true,
+          nested: true,
           infiniteScroll: false
         },
         global: {

@@ -5,6 +5,7 @@ import bodybuilder from 'bodybuilder'
 
 import PathTreeView from '@/components/PathTree/PathTreeView/PathTreeView'
 import PathTreeViewEntry from '@/components/PathTree/PathTreeView/PathTreeViewEntry'
+import PathTreeViewEntryBreadcrumb from '@/components/PathTree/PathTreeView/PathTreeViewEntryBreadcrumb'
 import PathTreeViewEntryMore from '@/components/PathTree/PathTreeView/PathTreeViewEntryMore'
 import { useCore } from '@/composables/useCore'
 import { useMode } from '@/composables/useMode'
@@ -14,6 +15,7 @@ import { wildcardRegExpPattern, iwildcardMatch } from '@/utils/strings'
 const query = defineModel('query', { type: String })
 const selectedPaths = defineModel('selectedPaths', { type: Array, default: () => [] })
 const openPaths = defineModel('openPaths', { type: Array, default: () => [] })
+const path = defineModel('path', { type: String })
 
 const props = defineProps({
   /**
@@ -35,10 +37,6 @@ const props = defineProps({
     type: Array,
     default: () => []
   },
-  /**
-   * Root path of the tree
-   */
-  path: { type: String },
   /**
    * Deactivate the header label
    */
@@ -96,7 +94,11 @@ const props = defineProps({
   /**
    * The level of the tree (for recursive rendering of this component)
    */
-  level: { type: Number, default: 0 }
+  level: { type: Number, default: 0 },
+  /**
+   * If true, the tree show nested directories in the tree view.
+   */
+  nested: { type: Boolean }
 })
 
 const { core } = useCore()
@@ -137,7 +139,7 @@ const hasQuery = computed(() => {
 
 watch(query, () => loadDataWithSpinner({ clearPages: true }))
 watch(order, () => loadDataWithSpinner({ clearPages: true }))
-watch(toRef(props, 'path'), () => loadDataWithSpinner({ clearPages: true }))
+watch(path, () => loadDataWithSpinner({ clearPages: true }))
 watch(toRef(props, 'projects'), () => loadDataWithSpinner({ clearPages: true, deep: true }))
 
 const dirnameTreeAggOptions = computed(() => {
@@ -166,11 +168,11 @@ const wildcardQuery = computed(() => {
 })
 
 const wildcardPath = computed(() => {
-  return [props.path, '*'].join(pathSeparator.value)
+  return [path.value, '*'].join(pathSeparator.value)
 })
 
 const wildcardSubPath = computed(() => {
-  return [props.path, '*', '*'].join(pathSeparator.value)
+  return [path.value, '*', '*'].join(pathSeparator.value)
 })
 
 const includeOption = computed(() => {
@@ -215,10 +217,14 @@ const isCollapsedDirectory = (key) => {
 }
 
 const collapseDirectory = (key) => {
-  if (isCollapsedDirectory(key)) {
-    openPaths.value = [...openPaths.value, key]
+  if (props.nested) {
+    if (isCollapsedDirectory(key)) {
+      openPaths.value = [...openPaths.value, key]
+    } else {
+      openPaths.value = openPaths.value.toSpliced(openPaths.value.indexOf(key), 1)
+    }
   } else {
-    openPaths.value = openPaths.value.toSpliced(openPaths.value.indexOf(key), 1)
+    path.value = key
   }
 }
 
@@ -272,7 +278,7 @@ const bodybuilderBase = ({ from = 0, size = 100 } = {}) => {
       value: wildcardQuery.value,
       case_insensitive: true
     })
-    .andQuery('term', 'dirname.tree', props.path)
+    .andQuery('term', 'dirname.tree', path.value)
     .andQuery('match', 'type', 'Document')
     .agg('terms', 'dirname.tree', dirnameTreeAggOptions.value, 'dirname', (b) => {
       return b
@@ -378,7 +384,7 @@ const clearPages = () => {
 const loadTree = async () => {
   try {
     if (shouldLoadTree.value) {
-      tree.value = await core.api.tree(props.path)
+      tree.value = await core.api.tree(path.value)
     }
   } catch {
     tree.value = { contents: [] }
@@ -445,8 +451,16 @@ defineExpose({ loadData, loadDataWithSpinner, reloadData, isLoading })
         :no-header="level > 0"
         :no-stats="noStats"
         :no-link="noLink"
+        :nested="nested"
         @update:selected="selectDirectory(path)"
       >
+        <template v-if="!nested" #name>
+          <path-tree-view-entry-breadcrumb
+            :compact="compact"
+            :model-value="path"
+            @update:model-value="collapseDirectory($event)"
+          />
+        </template>
         <path-tree-view-entry
           v-for="directory in directories"
           :key="directory"
@@ -464,10 +478,11 @@ defineExpose({ loadData, loadDataWithSpinner, reloadData, isLoading })
           :no-link="noLink"
           :data="JSON.stringify(directory)"
           :indeterminate="isIndeterminateDirectory(directory.key)"
+          :nested="nested"
           @update:selected="selectDirectory(directory.key)"
           @update:collapse="collapseDirectory(directory.key)"
         >
-          <template #default="{ collapse }">
+          <template v-if="nested" #default="{ collapse }">
             <path-tree
               v-if="!collapse"
               :ref="(el) => (directoriesRefs[directory.key] = el)"
@@ -487,6 +502,7 @@ defineExpose({ loadData, loadDataWithSpinner, reloadData, isLoading })
               :order-by="orderBy"
               :elasticsearch-only="elasticsearchOnly"
               :include-children-documents="includeChildrenDocuments"
+              :nested="nested"
             />
           </template>
         </path-tree-view-entry>

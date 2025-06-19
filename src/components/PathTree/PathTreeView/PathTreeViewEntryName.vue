@@ -23,6 +23,9 @@ const props = defineProps({
   },
   loading: {
     type: Boolean
+  },
+  nested: {
+    type: Boolean
   }
 })
 
@@ -44,7 +47,13 @@ const toggle = () => {
 
 <template>
   <div class="path-tree-view-entry-name d-flex gap-2 align-items-center flex-truncate w-100" :class="classList">
-    <path-tree-view-entry-name-caret :collapse="collapse" :loading="loading" class="flex-shrink-0" @click="toggle" />
+    <path-tree-view-entry-name-caret
+      v-if="nested"
+      :collapse="collapse"
+      :loading="loading"
+      class="flex-shrink-0"
+      @click="toggle"
+    />
     <path-tree-view-entry-name-checkbox
       v-if="selectModeOrInjected"
       v-model="selected"

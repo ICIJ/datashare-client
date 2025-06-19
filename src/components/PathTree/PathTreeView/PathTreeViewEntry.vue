@@ -51,6 +51,9 @@ const props = defineProps({
   },
   noLink: {
     type: Boolean
+  },
+  nested: {
+    type: Boolean
   }
 })
 
@@ -84,6 +87,7 @@ const compactOrInjected = computed(() => props.compact ?? inject('compact', fals
         :name="name"
         :loading="loading"
         :select-mode="selectModeOrInjected"
+        :nested="nested"
       >
         <slot name="name" />
       </path-tree-view-entry-name>
