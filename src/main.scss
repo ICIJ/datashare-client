@@ -28,6 +28,11 @@
   }
 }
 
+.above-stretched-link {
+  position: relative;
+  z-index: $stretched-link-z-index + 10;
+}
+
 .dropdown-item {
   border-radius: var(--bs-border-radius);
 
@@ -268,5 +273,5 @@ html[data-bs-theme] body .Toastify {
 }
 
 .phosphor-icon {
-min-width: 1em;
+  min-width: 1em;
 }

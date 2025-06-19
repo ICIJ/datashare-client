@@ -34,7 +34,7 @@ const display = computed(() => {
     <div
       v-if="!hideIcon"
       v-b-tooltip.body
-      class="document-card-properties-entry__icon pe-2 flex-shrink-0"
+      class="document-card-properties-entry__icon above-stretched-link pe-2 flex-shrink-0"
       :title="display"
     >
       <phosphor-icon :name="icon ?? items[property].icon ?? property" />

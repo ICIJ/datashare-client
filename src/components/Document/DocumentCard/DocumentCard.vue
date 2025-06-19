@@ -66,7 +66,7 @@ const showTitle = computed(() => props.properties?.includes('title'))
 <template>
   <div class="document-card" :class="classList" @mouseenter="hover = true" @mouseleave="hover = false">
     <hook name="document-card:before" :bind="{ document }" />
-    <div class="d-flex flex-column align-items-center">
+    <div class="d-flex flex-column align-items-center above-stretched-link">
       <document-card-checkbox
         v-if="selectMode"
         :model-value="selected"
@@ -93,14 +93,14 @@ const showTitle = computed(() => props.properties?.includes('title'))
         :name="routeName"
         :modal="modal"
         :target="target"
-        class="document-card__properties__title link-visitable"
+        class="document-card__properties__title link-visitable stretched-link"
       >
         {{ document.title }}
       </router-link-document>
       <document-card-properties :document="document" :properties="properties" />
       <hook name="document-card-properties:after" :bind="{ document }" />
     </div>
-    <div class="document-card__actions">
+    <div class="document-card__actions above-stretched-link">
       <slot name="actions">
         <document-actions-group
           tooltip-placement="right-start"
@@ -121,6 +121,7 @@ const showTitle = computed(() => props.properties?.includes('title'))
   padding: $spacer;
   background: var(--bs-body);
   border-radius: var(--bs-border-radius);
+  position: relative;
 
   &:hover,
   &--hover {
