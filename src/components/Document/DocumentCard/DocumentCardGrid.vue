@@ -60,7 +60,7 @@ const showTitle = computed(() => props.properties?.includes('title'))
 
 <template>
   <div
-    class="document-card-grid border d-flex"
+    class="document-card-grid border d-flex position-relative"
     :class="classList"
     @mouseenter="hover = true"
     @mouseleave="hover = false"
@@ -74,7 +74,7 @@ const showTitle = computed(() => props.properties?.includes('title'))
         crop
         clickable
         :active="hover"
-        class="mx-auto"
+        class="mx-auto above-stretched-link"
         @click="showDocumentViewerModal"
       />
       <div class="document-card-grid__wrapper__properties">
@@ -87,7 +87,7 @@ const showTitle = computed(() => props.properties?.includes('title'))
           :name="routeName"
           :modal="modal"
           :target="target"
-          class="document-card-grid__wrapper__properties__title"
+          class="document-card-grid__wrapper__properties__title stretched-link"
         >
           {{ document.title }}
         </router-link-document>
@@ -101,7 +101,7 @@ const showTitle = computed(() => props.properties?.includes('title'))
       :is-download-allowed="isDownloadAllowed"
       :select-mode="selectMode"
       name="checkbox"
-      class="ms-auto flex-shrink-0 p-3"
+      class="ms-auto flex-shrink-0 p-3 above-stretched-link"
       tooltip-placement="right"
       vertical
     />
