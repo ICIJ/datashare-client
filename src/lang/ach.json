@@ -53,6 +53,10 @@
   "buttonAdd": {
     "label": "crwdns7602:0crwdne7602:0"
   },
+  "buttonTogglePathTreeView": {
+    "list": "crwdns9940:0crwdne9940:0",
+    "tree": "crwdns9942:0crwdne9942:0"
+  },
   "buttonToggleSettings": {
     "label": "crwdns7604:0crwdne7604:0"
   },
