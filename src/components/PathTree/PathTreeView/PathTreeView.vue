@@ -5,6 +5,7 @@ import PathTreeViewLabel from './PathTreeViewLabel'
 import PathTreeViewSearch from './PathTreeViewSearch'
 
 const query = defineModel('query', { type: String })
+const nested = defineModel('nested', { type: Boolean })
 
 const props = defineProps({
   label: {
@@ -52,7 +53,7 @@ const classList = computed(() => {
 
 <template>
   <div class="path-tree-view d-flex flex-column" :class="classList">
-    <path-tree-view-label v-if="!noLabel" :label="label" :icon="icon" />
+    <path-tree-view-label v-if="!noLabel" v-model:nested="nested" :label="label" :icon="icon" />
     <path-tree-view-search v-if="!noSearch" v-model="query" :shadow="!compact" />
     <div>
       <slot v-bind="{ selectMode }" />

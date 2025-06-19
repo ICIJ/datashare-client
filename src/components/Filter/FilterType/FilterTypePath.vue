@@ -57,11 +57,6 @@ watchFilterExcluded(props.filter, whenFilterContextualized(props.filter, reloadD
 watchValues(whenFilterContextualized(props.filter, reloadData))
 // When project changes, we reset the filter to avoid filtering by unknown paths
 watchIndices(reset)
-// When nested value change, we restore the path
-watch(nested, () => {
-  path.value = core.getDefaultDataDir()
-  openPaths.value = []
-})
 </script>
 
 <template>

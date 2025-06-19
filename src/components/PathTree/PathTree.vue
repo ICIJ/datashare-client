@@ -16,6 +16,7 @@ const query = defineModel('query', { type: String })
 const selectedPaths = defineModel('selectedPaths', { type: Array, default: () => [] })
 const openPaths = defineModel('openPaths', { type: Array, default: () => [] })
 const path = defineModel('path', { type: String })
+const nested = defineModel('nested', { type: Boolean })
 
 const props = defineProps({
   /**
@@ -94,11 +95,7 @@ const props = defineProps({
   /**
    * The level of the tree (for recursive rendering of this component)
    */
-  level: { type: Number, default: 0 },
-  /**
-   * If true, the tree show nested directories in the tree view.
-   */
-  nested: { type: Boolean }
+  level: { type: Number, default: 0 }
 })
 
 const { core } = useCore()
@@ -141,6 +138,11 @@ watch(query, () => loadDataWithSpinner({ clearPages: true }))
 watch(order, () => loadDataWithSpinner({ clearPages: true }))
 watch(path, () => loadDataWithSpinner({ clearPages: true }))
 watch(toRef(props, 'projects'), () => loadDataWithSpinner({ clearPages: true, deep: true }))
+// When nested value change, we restore the path
+watch(nested, () => {
+  path.value = core.getDefaultDataDir()
+  openPaths.value = []
+})
 
 const dirnameTreeAggOptions = computed(() => {
   return {
@@ -217,7 +219,7 @@ const isCollapsedDirectory = (key) => {
 }
 
 const collapseDirectory = (key) => {
-  if (props.nested) {
+  if (nested.value) {
     if (isCollapsedDirectory(key)) {
       openPaths.value = [...openPaths.value, key]
     } else {
@@ -431,6 +433,7 @@ defineExpose({ loadData, loadDataWithSpinner, reloadData, isLoading })
   <div class="path-tree">
     <path-tree-view
       v-model:query="query"
+      v-model:nested="nested"
       :no-label="noLabel"
       :no-search="noSearch"
       :select-mode="selectMode"
@@ -490,6 +493,7 @@ defineExpose({ loadData, loadDataWithSpinner, reloadData, isLoading })
               :ref="(el) => (directoriesRefs[directory.key] = el)"
               v-model:selected-paths="selectedPaths"
               v-model:open-paths="openPaths"
+              v-model:nested="nested"
               no-label
               no-search
               :level="level + 1"
@@ -505,7 +509,6 @@ defineExpose({ loadData, loadDataWithSpinner, reloadData, isLoading })
               :order-by="orderBy"
               :elasticsearch-only="elasticsearchOnly"
               :include-children-documents="includeChildrenDocuments"
-              :nested="nested"
             />
           </template>
         </path-tree-view-entry>
