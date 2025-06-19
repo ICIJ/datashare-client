@@ -46,7 +46,7 @@ const toggle = () => {
 </script>
 
 <template>
-  <div class="path-tree-view-entry-name d-flex gap-2 align-items-center flex-truncate w-100" :class="classList">
+  <div class="path-tree-view-entry-name d-flex gap-1 align-items-center flex-truncate w-100" :class="classList">
     <path-tree-view-entry-name-caret
       v-if="nested"
       :collapse="collapse"
