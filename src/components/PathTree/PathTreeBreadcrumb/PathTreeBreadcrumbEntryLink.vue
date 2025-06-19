@@ -7,3 +7,10 @@ const emit = defineEmits(['select'])
     <slot />
   </a>
 </template>
+
+<style lang="scss" scoped>
+.path-tree-breadcrumb-entry-link {
+  color: inherit;
+  cursor: pointer;
+}
+</style>

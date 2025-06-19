@@ -16,13 +16,13 @@ describe('PathTreeBreadcrumb.vue', () => {
     expect(wrapper).toBeTruthy()
   })
 
-  it('should display 2 directories', async () => {
+  it('should display 2 entries', async () => {
     const props = { modelValue: '/home/foo/bar', datadirLabel: true }
     const wrapper = mount(PathTreeBreadcrumb, { global: { plugins }, props })
     expect(wrapper.findAll('.path-tree-breadcrumb-entry')).toHaveLength(2)
   })
 
-  it('should display 3 directories', async () => {
+  it('should display 3 entries', async () => {
     const props = { modelValue: '/home/foo/bar/baz', datadirLabel: true }
     const wrapper = mount(PathTreeBreadcrumb, { global: { plugins }, props })
     const items = wrapper.findAll('.path-tree-breadcrumb-entry')
@@ -30,22 +30,21 @@ describe('PathTreeBreadcrumb.vue', () => {
     expect(items.at(0).text()).toBe('Home')
     expect(items.at(1).text()).toBe('bar')
     expect(items.at(2).text()).toBe('baz')
-    // One for the root link
-    expect(wrapper.find('.path-tree-breadcrumb-entry--root').exists()).toBeTruthy()
+    // The first entry is the data dir with a custom label
+    expect(wrapper.find('.path-tree-breadcrumb-entry').exists()).toBeTruthy()
+    expect(wrapper.find('.path-tree-breadcrumb-entry').text()).toBe('Home')
     // But no abbreviation
-    expect(wrapper.find('.path-tree-breadcrumb-entry--abbr').exists()).toBeFalsy()
+    expect(wrapper.find('.path-tree-breadcrumb-dropdown').exists()).toBeFalsy()
   })
 
-  it('should display 4 directories (including the root and the abbreviation)', async () => {
+  it('should display 3 entries (including the abbreviation)', async () => {
     const props = { modelValue: '/home/foo/bar/baz/lo/rem', maxDirectories: 2, datadirLabel: true }
     const wrapper = mount(PathTreeBreadcrumb, { global: { plugins }, props })
-    expect(wrapper.findAll('.path-tree-breadcrumb-entry')).toHaveLength(4)
-    // One for the root link and one for the abbreviation
-    expect(wrapper.find('.path-tree-breadcrumb-entry--root').exists()).toBeTruthy()
-    expect(wrapper.find('.path-tree-breadcrumb-entry--abbr').exists()).toBeTruthy()
+    expect(wrapper.findAll('.path-tree-breadcrumb-entry')).toHaveLength(3)
+    expect(wrapper.find('.path-tree-breadcrumb-dropdown').exists()).toBeTruthy()
   })
 
-  it('should display 3 directories with Windows pathSeparator', async () => {
+  it('should display 3 entries with Windows pathSeparator', async () => {
     config.set('dataDir', 'C:\\Users\\dev\\AppData\\Roaming\\Datashare\\foo')
     config.set('pathSeparator', '\\')
     const props = { modelValue: 'C:\\Users\\dev\\AppData\\Roaming\\Datashare\\foo\\bar\\baz', datadirLabel: true }
@@ -55,13 +54,9 @@ describe('PathTreeBreadcrumb.vue', () => {
     expect(items.at(0).text()).toBe('Home')
     expect(items.at(1).text()).toBe('bar')
     expect(items.at(2).text()).toBe('baz')
-    // One for the root link
-    expect(wrapper.find('.path-tree-breadcrumb-entry--root').exists()).toBeTruthy()
-    // But no abbreviation
-    expect(wrapper.find('.path-tree-breadcrumb-entry--abbr').exists()).toBeFalsy()
   })
 
-  it('should display 4 directories (including the root and the abbreviation) with Windows pathSeparator', async () => {
+  it('should display 3 entries (including the abbreviation) with Windows pathSeparator', async () => {
     config.set('dataDir', 'C:\\Users\\dev\\AppData\\Roaming\\Datashare\\foo')
     config.set('pathSeparator', '\\')
     const props = {
@@ -70,9 +65,8 @@ describe('PathTreeBreadcrumb.vue', () => {
       datadirLabel: true
     }
     const wrapper = mount(PathTreeBreadcrumb, { global: { plugins }, props })
-    expect(wrapper.findAll('.path-tree-breadcrumb-entry')).toHaveLength(4)
+    expect(wrapper.findAll('.path-tree-breadcrumb-entry')).toHaveLength(3)
     // One for the root link and one for the abbreviation
-    expect(wrapper.find('.path-tree-breadcrumb-entry--root').exists()).toBeTruthy()
-    expect(wrapper.find('.path-tree-breadcrumb-entry--abbr').exists()).toBeTruthy()
+    expect(wrapper.find('.path-tree-breadcrumb-dropdown').exists()).toBeTruthy()
   })
 })

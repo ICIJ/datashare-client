@@ -13,6 +13,10 @@ const props = defineProps({
   },
   noLink: {
     type: Boolean
+  },
+  compact: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -20,6 +24,7 @@ const emit = defineEmits(['select'])
 
 const classList = computed(() => {
   return {
+    'path-tree-breadcrumb-entry--compact': props.compact,
     'path-tree-breadcrumb-entry--root': props.root,
     'path-tree-breadcrumb-entry--abbr': props.abbr
   }
@@ -40,14 +45,27 @@ const component = computed(() => {
 
 <style lang="scss" scoped>
 .path-tree-breadcrumb-entry {
-  margin-right: $spacer-xxs;
+  --margin-x: #{$spacer-xs};
+
+  &--compact {
+    --margin-x: #{$spacer-xxs};
+  }
+
+  margin-right: var(--margin-x);
   padding: 0;
   display: inline-flex;
+  line-height: 1;
+  display: inline-block;
+
+  &:last-child {
+    font-weight: bold;
+  }
 
   &:not(:last-child):after {
-    content: '/';
-    color: $text-muted;
-    margin-left: $spacer-xxs;
+    content: '›';
+    font-weight: bold;
+    opacity: $hr-opacity;
+    margin-left: var(--margin-x);
   }
 }
 </style>

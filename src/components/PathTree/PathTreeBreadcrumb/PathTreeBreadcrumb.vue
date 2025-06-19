@@ -1,10 +1,10 @@
 <script setup>
-import { PhosphorIcon } from '@icij/murmur-next'
 import { basename } from 'path'
 import { computed } from 'vue'
 import { isArray } from 'lodash'
 import { useI18n } from 'vue-i18n'
 
+import PathTreeBreadcrumbDropdown from './PathTreeBreadcrumbDropdown.vue'
 import PathTreeBreadcrumbEntry from './PathTreeBreadcrumbEntry.vue'
 
 import { useCore } from '@/composables/useCore'
@@ -14,6 +14,10 @@ const { core } = useCore()
 const modelValue = defineModel({ type: String })
 
 const props = defineProps({
+  compact: {
+    type: Boolean,
+    default: false
+  },
   maxDirectories: {
     type: Number,
     default: 5
@@ -26,11 +30,16 @@ const props = defineProps({
   },
   noLink: {
     type: Boolean
+  },
+  dropdownDisabled: {
+    type: Boolean,
+    default: false
   }
 })
 
 const { t } = useI18n()
-const getNextTreeEntry = (tree, directory) => {
+
+function getNextTreeEntry(tree, directory) {
   const previous = tree.length > 0 ? tree[tree.length - 1] : ''
   const sep = isWindowsPath.value ? '\\' : '/'
   const root = isWindowsPath.value ? '' : sep
@@ -39,7 +48,17 @@ const getNextTreeEntry = (tree, directory) => {
   return tree
 }
 
-const isRootEntry = (tree) => tree.length === 0
+function isRootEntry(tree) {
+  return tree.length === 0
+}
+
+function safeBasename(path) {
+  return isWindowsPath.value ? basename(path.replace(/\\/g, '/')) : basename(path)
+}
+
+function pathOption(value) {
+  return { text: safeBasename(value), value }
+}
 
 const isWindowsPath = computed(() => pathSeparator.value === '\\')
 
@@ -54,7 +73,7 @@ const treeDirectories = computed(() => {
   return modelValue.value?.split(pathSeparator.value) ?? []
 })
 
-const fullTree = computed(() =>
+const tree = computed(() =>
   treeDirectories.value
     // Filter out empty directories
     .filter((directory) => directory !== '')
@@ -62,30 +81,35 @@ const fullTree = computed(() =>
     .reduce(getNextTreeEntry, [])
 )
 
-const treeWithoutDataDir = computed(() => fullTree.value.filter((d) => d.length > dataDir.length))
+const treeWithoutDataDir = computed(() => tree.value.filter((d) => d.length > dataDir.length))
 
-function safeBasename(path) {
-  return isWindowsPath.value ? basename(path.replace(/\\/g, '/')) : basename(path)
-}
+const treeOptions = computed(() => {
+  const options = treeWithoutDataDir.value.map(pathOption)
+  const dataDirOption = { text: t('pathTreeBreadcrumb.datadir'), value: dataDir }
+  return props.noDatadir ? options : [dataDirOption, ...options]
+})
 
-const tree = computed(() => (props.noDatadir || props.datadirLabel ? treeWithoutDataDir.value : fullTree.value))
+const hasDropdown = computed(() => treeOptions.value.length > props.maxDirectories)
 </script>
 
 <template>
-  <ul class="path-tree-breadcrumb list-inline flex-grow-1 m-0 text-truncate">
-    <path-tree-breadcrumb-entry v-if="datadirLabel && !noDatadir" root :no-link="noLink" @select="modelValue = dataDir">
-      {{ t('pathTreeBreadcrumb.datadir') }}
-    </path-tree-breadcrumb-entry>
-    <path-tree-breadcrumb-entry v-if="treeWithoutDataDir.length > maxDirectories" abbr>
-      <phosphor-icon :name="PhDotsThree" />
+  <ul class="path-tree-breadcrumb list-inline flex-grow-1 m-0 text-truncate lh-1">
+    <path-tree-breadcrumb-entry v-if="hasDropdown" :compact="compact" abbr>
+      <path-tree-breadcrumb-dropdown
+        :compact="compact"
+        :disabled="dropdownDisabled"
+        :options="treeOptions.slice(0, -maxDirectories)"
+        @select="modelValue = $event"
+      />
     </path-tree-breadcrumb-entry>
     <path-tree-breadcrumb-entry
-      v-for="directory in tree.slice(-maxDirectories)"
-      :key="directory"
+      v-for="{ text, value } in treeOptions.slice(-maxDirectories)"
+      :key="value"
+      :compact="compact"
       :no-link="noLink"
-      @select="modelValue = directory"
+      @select="modelValue = value"
     >
-      {{ safeBasename(directory) }}
+      {{ text }}
     </path-tree-breadcrumb-entry>
   </ul>
 </template>
