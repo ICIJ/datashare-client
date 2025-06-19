@@ -28,11 +28,13 @@ const props = defineProps({
     default: () => []
   }
 })
+
 const { t } = useI18n()
 const { core } = useCore()
 const selectedPaths = ref([])
 const sourcePath = computed(() => props.path ?? core.getDefaultDataDir())
 const display = computed(() => modelValue.value ?? sourcePath.value)
+
 watch(toRef(props, 'projects'), () => {
   selectedPaths.value = []
 })
@@ -44,6 +46,7 @@ watch(toRef(props, 'path'), (value) => {
     selectedPaths.value = [value]
   }
 })
+
 function onOk() {
   if (props.multiple) {
     modelValue.value = selectedPaths.value
