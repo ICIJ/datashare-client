@@ -11,15 +11,23 @@ import LinkedDocumentListEntry from '@/components/LinkedDocument/LinkedDocumentL
 defineOptions({
   name: 'LinkedDocumentList'
 })
+
 const props = defineProps({
-  documents: { type: Array, required: true },
-  height: { type: String, default: '120px' }
+  documents: {
+    type: Array,
+    required: true
+  },
+  height: {
+    type: String,
+    default: '120px'
+  }
 })
 
 const style = {
   '--linked-document-list--height': props.height
 }
 </script>
+
 <style lang="scss" scoped>
 .linked-document-list {
   height: var(--linked-document-list--height);

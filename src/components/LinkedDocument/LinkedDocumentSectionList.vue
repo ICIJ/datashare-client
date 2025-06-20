@@ -9,9 +9,9 @@
           <linked-document-list :documents="documents" />
         </slot>
         <div class="pt-2">
-          <button-icon icon-right="magnifying-glass" variant="action" :to="toSearch">{{
-            t('linkedDocumentSectionList.search')
-          }}</button-icon>
+          <button-icon icon-right="magnifying-glass" variant="action" :to="toSearch">
+            {{ t('linkedDocumentSectionList.search') }}
+          </button-icon>
         </div>
       </div>
       <div v-else class="text-secondary-emphasis">{{ t('linkedDocumentSectionList.empty') }}</div>
@@ -28,6 +28,7 @@ import ButtonIcon from '@/components/Button/ButtonIcon.vue'
 defineOptions({
   name: 'LinkedDocumentSection'
 })
+
 defineProps({
   description: {
     type: String,
@@ -40,8 +41,10 @@ defineProps({
     type: Object
   }
 })
+
 const { t } = useI18n()
 </script>
+
 <style lang="scss" scoped>
 .linked-document-section-list {
   &__description {

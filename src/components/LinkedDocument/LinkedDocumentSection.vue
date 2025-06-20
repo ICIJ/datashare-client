@@ -13,10 +13,12 @@
 import LinkedDocumentSectionList from '@/components/LinkedDocument/LinkedDocumentSectionList.vue'
 import LinkedDocumentSectionHeader from '@/components/LinkedDocument/LinkedDocumentSectionHeader.vue'
 
-const open = defineModel({ type: Boolean, default: false })
 defineOptions({
   name: 'LinkedDocumentSection'
 })
+
+const open = defineModel({ type: Boolean, default: false })
+
 defineProps({
   description: {
     type: String,
@@ -39,21 +41,15 @@ defineProps({
   }
 })
 </script>
+
 <style lang="scss" scoped>
 .linked-document-section {
   &.accordion {
     --bs-accordion-border-width: 0;
     --bs-accordion-bg: transparent; // or any color you want
-    --bs-accordion-btn-bg: #{$tertiary-bg-subtle};
-    --bs-accordion-active-bg: #{$tertiary-bg-subtle};
-    --bs-accordion-active-color: #{$tertiary-text-emphasis};
-
-    [data-bs-theme='dark'] & {
-      --bs-accordion-active-bg: #{$tertiary-bg-subtle-dark};
-      --bs-accordion-bg: transparent;
-      --bs-accordion-btn-bg: #{$tertiary-bg-subtle-dark};
-      --bs-accordion-active-color: #{$tertiary-text-emphasis-dark};
-    }
+    --bs-accordion-btn-bg: var(--bs-tertiary-bg-subtle);
+    --bs-accordion-active-bg: var(--bs-tertiary-bg-subtle);
+    --bs-accordion-active-color: var(--bs-tertiary-emphasis-text);
   }
 }
 </style>

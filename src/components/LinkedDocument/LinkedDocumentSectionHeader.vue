@@ -10,9 +10,8 @@
 <script setup>
 import { PhosphorIcon } from '@icij/murmur-next'
 
-defineOptions({
-  name: 'LinkedDocumentSection'
-})
+defineOptions({ name: 'LinkedDocumentSection' })
+
 defineProps({
   title: {
     type: String,
@@ -24,6 +23,7 @@ defineProps({
   }
 })
 </script>
+
 <style lang="scss" scoped>
 .linked-document-section-header {
   font-weight: 500;
