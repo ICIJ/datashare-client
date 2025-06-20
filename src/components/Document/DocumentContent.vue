@@ -1,7 +1,7 @@
 <script setup>
 import { computed, inject, nextTick, onMounted, reactive, ref, toRef, useTemplateRef, watch } from 'vue'
 import { clamp, entries, findLastIndex, get, isEmpty, range, throttle } from 'lodash'
-import { useScroll } from '@vueuse/core'
+import { useScroll, useElementSize, useWindowSize } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 
 import { addLocalSearchMarksClassByOffsets } from '@/utils/strings'
@@ -36,6 +36,8 @@ const documentStore = useDocumentStore()
 const pipelinesStore = usePipelinesStore()
 const searchStore = useSearchStore.inject()
 const elementRef = useTemplateRef('element')
+const { height: elementHeight } = useElementSize(elementRef)
+const { height: windowHeight } = useWindowSize()
 const { y: scrollY } = useScroll(modal ? document.querySelector('.modal') : window)
 const { waitFor, isLoading } = useWait()
 
@@ -79,7 +81,14 @@ const activeTermOffset = computed(() => {
   return localSearchIndexes.value[localSearchIndex.value - 1]
 })
 
-const showPagination = computed(() => nbPages.value > 1 && loadedOnce.value)
+const showPagination = computed(() => {
+  return nbPages.value > 1 && loadedOnce.value
+})
+
+const showButtonToTop = computed(() => {
+  const heightThreshold = windowHeight.value * 0.2
+  return scrollY.value > heightThreshold && elementHeight.value > windowHeight.value && loadedOnce.value
+})
 
 const hasLocalSearchTerms = computed(() => {
   return localSearchTerm.value && localSearchTerm.value.length > 0
@@ -106,8 +115,6 @@ const page = computed({
     activeContentSliceOffset.value = (value - 1) * props.pageSize
   }
 })
-
-const showButtonToTop = computed(() => scrollY.value > 0)
 
 const hasExtractedContent = computed(() => maxOffset.value > 0)
 
@@ -342,9 +349,7 @@ async function loadContentSliceAround(desiredOffset) {
         {{ t('documentContent.noContent') }}
       </div>
       <transition name="fade">
-        <div v-if="showButtonToTop" class="document-content__wrapper__to-top">
-          <button-to-top @click="scrollToTop" />
-        </div>
+        <button-to-top v-if="showButtonToTop" class="document-content__wrapper__to-top" @click="scrollToTop" />
       </transition>
       <hook name="document.content.body:after" />
       <slot name="after-content" />
@@ -376,16 +381,12 @@ async function loadContentSliceAround(desiredOffset) {
 
   &__wrapper {
     &__to-top {
-      height: 1px;
-      width: 100%;
-      display: inline-block;
-      position: sticky;
+      position: fixed;
       bottom: $spacer;
-      right: 0;
-      text-align: right;
+      right: $spacer;
 
-      &:deep(.button-to-top) {
-        transform: translateY(-100%);
+      .modal-fullscreen & {
+        right: calc(var(--bs-modal-margin) + var(--bs-modal-padding));
       }
 
       &.fade-enter-active,
