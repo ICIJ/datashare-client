@@ -1,6 +1,6 @@
 <template>
   <b-accordion flush class="linked-document-section rounded-end col-12 col-lg-6 m-0 pe-1">
-    <b-accordion-item v-model="open" :header-class="headerClass" button-class="rounded btn btn-tertiary">
+    <b-accordion-item v-model="open" :header-class="headerClass" button-class="rounded">
       <template #title>
         <slot name="title"> <linked-document-section-header :title="title" :icon="icon" /> </slot>
       </template>
@@ -44,12 +44,10 @@ defineProps({
 
 <style lang="scss" scoped>
 .linked-document-section {
-  &.accordion {
-    --bs-accordion-border-width: 0;
-    --bs-accordion-bg: transparent; // or any color you want
-    --bs-accordion-btn-bg: var(--bs-tertiary-bg-subtle);
-    --bs-accordion-active-bg: var(--bs-tertiary-bg-subtle);
-    --bs-accordion-active-color: var(--bs-tertiary-emphasis-text);
-  }
+  --bs-accordion-border-width: 0;
+  --bs-accordion-bg: transparent; // or any color you want
+  --bs-accordion-btn-bg: var(--bs-tertiary-bg-subtle);
+  --bs-accordion-active-bg: var(--bs-tertiary-bg-subtle);
+  --bs-accordion-active-color: var(--bs-tertiary-emphasis-text);
 }
 </style>
