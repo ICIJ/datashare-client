@@ -1,7 +1,7 @@
 <script setup>
-import { computed, nextTick, onMounted, reactive, ref, toRef, useTemplateRef, watch } from 'vue'
+import { computed, inject, nextTick, onMounted, reactive, ref, toRef, useTemplateRef, watch } from 'vue'
 import { clamp, entries, findLastIndex, get, isEmpty, range, throttle } from 'lodash'
-import { useWindowScroll } from '@vueuse/core'
+import { useScroll } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 
 import { addLocalSearchMarksClassByOffsets } from '@/utils/strings'
@@ -28,13 +28,15 @@ const props = defineProps({
     default: 1e4
   }
 })
+
 const { t } = useI18n()
+const modal = inject('modal', false)
 
 const documentStore = useDocumentStore()
 const pipelinesStore = usePipelinesStore()
 const searchStore = useSearchStore.inject()
 const elementRef = useTemplateRef('element')
-const { y: windowScrollY } = useWindowScroll()
+const { y: scrollY } = useScroll(modal ? document.querySelector('.modal') : window)
 const { waitFor, isLoading } = useWait()
 
 const contentSlices = reactive({})
@@ -105,7 +107,7 @@ const page = computed({
   }
 })
 
-const showButtonToTop = computed(() => windowScrollY.value > 0)
+const showButtonToTop = computed(() => scrollY.value > 0)
 
 const hasExtractedContent = computed(() => maxOffset.value > 0)
 
@@ -276,7 +278,7 @@ function scrollToDocumentStart() {
 }
 
 function scrollToTop() {
-  windowScrollY.value = 0
+  scrollY.value = 0
 }
 
 async function jumpToActiveLocalSearchTerm() {
@@ -340,7 +342,9 @@ async function loadContentSliceAround(desiredOffset) {
         {{ t('documentContent.noContent') }}
       </div>
       <transition name="fade">
-        <button-to-top v-if="showButtonToTop" class="document-content__wrapper__to-top" @click="scrollToTop" />
+        <div v-if="showButtonToTop" class="document-content__wrapper__to-top">
+          <button-to-top @click="scrollToTop" />
+        </div>
       </transition>
       <hook name="document.content.body:after" />
       <slot name="after-content" />
@@ -372,20 +376,26 @@ async function loadContentSliceAround(desiredOffset) {
 
   &__wrapper {
     &__to-top {
+      height: 1px;
+      width: 100%;
+      display: inline-block;
       position: sticky;
       bottom: $spacer;
-      left: 100%;
-      transform-origin: center;
+      right: 0;
+      text-align: right;
+
+      &:deep(.button-to-top) {
+        transform: translateY(-100%);
+      }
 
       &.fade-enter-active,
       &.fade-leave-active {
-        transition: opacity 0.3s, transform 0.3s;
+        transition: opacity 0.3s;
       }
 
       &.fade-enter-from,
       &.fade-leave-to {
         opacity: 0;
-        transform: scale(0.8);
       }
     }
   }
