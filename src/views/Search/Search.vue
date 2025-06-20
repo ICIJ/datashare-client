@@ -17,7 +17,6 @@ import SearchSelection from '@/views/Search/SearchSelection'
 import SearchNav from '@/views/Search/SearchNav'
 import DocumentEntries from '@/components/Document/DocumentEntries/DocumentEntries'
 import Hook from '@/components/Hook/Hook'
-import settings from '@/utils/settings'
 import { useDocument } from '@/composables/useDocument'
 import { whenIsRoute } from '@/composables/whenIsRoute'
 import { useUrlPageFromWithStore } from '@/composables/useUrlPageFromWithStore'
@@ -53,18 +52,6 @@ const route = useRoute()
 
 // The size query parameter is replaced by the perPage query parameter
 replaceUrlParam({ from: 'size', to: 'perPage' })
-// This function replaces a unique sort query parameter with a pair of sort and order query parameters
-// based on the search properties. This way we can ensure retro-compatibility with
-// the former sort query parameter which used to contain both the sort field and the order.
-replaceUrlParam({
-  from: 'sort',
-  to: (name) => {
-    const { property: sort = null, desc } = find(settings.legacySearchSortFields, { name }) ?? {}
-    const order = desc ? 'desc' : 'asc'
-    // Only redirect if the sort field is found
-    return sort ? { sort, order } : null
-  }
-})
 
 const entries = computed(() => searchStore.response.hits)
 const properties = computed(() => appStore.getSettings('search', 'properties'))
