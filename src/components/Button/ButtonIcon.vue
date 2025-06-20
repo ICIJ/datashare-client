@@ -303,6 +303,13 @@ const buttonProps = computed(() => ({
   --button-icon-square-size: calc(
     #{$btn-line-height * $btn-font-size} + #{$btn-padding-y * 2} + #{$btn-border-width} * 2
   );
+  --button-icon-square-size-sm: calc(
+    #{$btn-line-height * $btn-font-size-sm} + #{$btn-padding-y-sm * 2} + #{$btn-border-width} * 2
+  );
+  --button-icon-square-size-lg: calc(
+    #{$btn-line-height * $btn-font-size-lg} + #{$btn-padding-y-lg * 2} + #{$btn-border-width} * 2
+  );
+
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
@@ -344,31 +351,18 @@ const buttonProps = computed(() => ({
   }
 
   &--square.btn-sm {
-    width: calc(#{$btn-line-height * $btn-font-size-sm} + #{$btn-padding-y-sm * 2} + #{$btn-border-width} * 2);
-    height: calc(#{$btn-line-height * $btn-font-size-sm} + #{$btn-padding-y-sm * 2} + #{$btn-border-width} * 2);
+    width: var(--button-icon-square-size-sm);
+    height: var(--button-icon-square-size-sm);
   }
 
   &--square.btn-lg {
-    width: calc(#{$btn-line-height * $btn-font-size-lg} + #{$btn-padding-y-lg * 2} + #{$btn-border-width} * 2);
-    height: calc(#{$btn-line-height * $btn-font-size-lg} + #{$btn-padding-y-lg * 2} + #{$btn-border-width} * 2);
+    width: var(--button-icon-square-size-lg);
+    height: var(--button-icon-square-size-lg);
   }
 
   &__icon-left ~ &__label,
   &__label ~ &__icon-right {
     margin-left: $spacer-xs;
-  }
-
-  &__icon-left,
-  &__icon-right {
-    --phosphor-icon-size: #{$line-height-base * $btn-font-size};
-
-    .btn-sm & {
-      --phosphor-icon-size: #{$line-height-base * $btn-font-size-sm};
-    }
-
-    .btn-lg & {
-      --phosphor-icon-size: #{$line-height-base * $btn-font-size-lg};
-    }
   }
 }
 </style>
