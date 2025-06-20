@@ -27,6 +27,9 @@ const { t } = useI18n()
   --bs-btn-active-color: var(--bs-btn-color);
   --bs-btn-hover-bg: var(--bs-btn-bg);
   --bs-btn-box-shadow: var(--bs-box-shadow-lg);
+  --button-icon-square-size-lg: 3.75rem;
+  --bs-btn-line-height: 1;
+  --bs-btn-font-size: 2rem;
 
   opacity: var(--bs-btn-opacity);
 
