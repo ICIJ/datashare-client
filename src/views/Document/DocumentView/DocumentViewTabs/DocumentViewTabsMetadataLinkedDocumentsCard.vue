@@ -16,20 +16,17 @@ const searchStoreSiblings = useSearchStore.disposable()
 searchStoreSiblings.addFilterValue({ name: 'path', value: documentDirname.value })
 searchStoreSiblings.setIndex(document.value.index)
 searchStoreSiblings.addFilterValue({ name: 'extractionLevel', value: document.value.extractionLevel })
-const toSiblings = computed(() => {
-  return { name: 'search', query: searchStoreSiblings.toBaseRouteQuery }
-})
 
 const searchStoreChildren = useSearchStore.disposable()
 searchStoreChildren.addFilterValue({ name: 'path', value: documentDirname.value })
 searchStoreChildren.setQuery(`_routing:${document.value.routing}`)
 searchStoreChildren.setIndex(document.value.index)
 searchStoreChildren.addFilterValue({ name: 'extractionLevel', value: document.value.extractionLevel + 1 })
-const toChildren = computed(() => {
-  return { name: 'search', query: searchStoreChildren.toBaseRouteQuery }
-})
 
-function dtoDocumentEntryResults(hits) {
+const toSiblings = computed(() => ({ name: 'search', query: searchStoreSiblings.toBaseRouteQuery }))
+const toChildren = computed(() => ({ name: 'search', query: searchStoreChildren.toBaseRouteQuery }))
+
+function toDocumentEntryResults(hits) {
   return hits.map((item) => {
     return {
       contentType: item.contentType,
@@ -40,10 +37,12 @@ function dtoDocumentEntryResults(hits) {
     }
   })
 }
+
 onBeforeMount(async () => {
-  await Promise.all([searchStoreSiblings.query(), searchStoreChildren.query()])
-  siblings.value = dtoDocumentEntryResults(searchStoreSiblings.hits)
-  children.value = dtoDocumentEntryResults(searchStoreChildren.hits)
+  await searchStoreSiblings.query({}, false)
+  await searchStoreChildren.query({}, false)
+  siblings.value = toDocumentEntryResults(searchStoreSiblings.hits)
+  children.value = toDocumentEntryResults(searchStoreChildren.hits)
 })
 </script>
 

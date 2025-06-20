@@ -618,9 +618,11 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * This function resets the state, clears any previous errors,
    * and performs a search using the current search parameters.
    * It updates the response with the search results and handles any errors that may occur.
+   *
+   * @param {boolean} [save=true] - Whether to save the current query state in the search breadcrumb store.
    * @returns {Promise<void>} - A promise that resolves when the search is complete.
    */
-  async function refresh() {
+  async function refresh(save = true) {
     // This check is to avoid unnecessary searches when the query has not changed.
     // We compare the current route query with the last applied query, which is stored
     // in the `lastAppliedQuery` ref. If they are the same, we skip the refresh.
@@ -634,7 +636,9 @@ export const useSearchStore = defineSuffixedStore('search', () => {
       saveAppliedQuery()
       const raw = await searchDocuments()
       const roots = await searchRootDocuments(raw)
-      searchBreadcrumbStore.pushSearchQuery(toBaseRouteQuery.value)
+      if (save) {
+        searchBreadcrumbStore.pushSearchQuery(toBaseRouteQuery.value)
+      }
       setResponse({ raw, roots })
     } catch (error) {
       setError(error)
@@ -704,10 +708,12 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * This function updates the search parameters based on the provided value,
    * which can be a string or an object. If it's a string, it sets the query directly.
    * If it's an object, it updates the relevant parameters based on the keys present in the object.
+   *
    * @param {Object|string} value - The search parameters or query string to set.
+   * @param {boolean} [save=true] - Whether to save the current query state in the search breadcrumb store.
    * @returns {Promise} - A promise that resolves when the search is refreshed.
    */
-  function query(value = {}) {
+  function query(value = {}, save = true) {
     // The query can be a string
     if (isString(value)) {
       setQuery(value)
@@ -721,7 +727,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
       withKey('from', setFrom)
       withKey('field', setField)
     }
-    return refresh()
+    return refresh(save)
   }
 
   /**
