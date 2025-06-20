@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import { castArray, escapeRegExp, get, iteratee, last, orderBy, some, throttle, uniqueId } from 'lodash'
+import { castArray, isEqual, escapeRegExp, get, iteratee, last, orderBy, some, sortBy, throttle, uniqueId } from 'lodash'
 import bodybuilder from 'bodybuilder'
 import lucene from 'lucene'
 import { mapStores } from 'pinia'
@@ -148,7 +148,7 @@ export default {
       default: false
     },
     /**
-     * Submit the search form clear filters
+     * Submit the search form clear filters if the project is changed.
      */
     clearFilters: {
       type: Boolean,
@@ -187,6 +187,9 @@ export default {
     formIndices() {
       return this.selectedProjects.map(iteratee('name'))
     },
+    sameIndices() {
+      return isEqual(sortBy(this.searchStore.indices), sortBy(this.indices))
+    },
     uniqueId() {
       return uniqueId('search-bar-')
     },
@@ -200,6 +203,9 @@ export default {
     },
     hiddenSuggestions() {
       return !this.suggestions.length || this.pristine
+    },
+    mustClearFilters() {
+      return this.clearFilters && !this.sameIndices
     }
   },
   watch: {
@@ -220,7 +226,7 @@ export default {
     submit() {
       this.hideSuggestions()
       // Clear filters if needed
-      if (this.clearFilters) this.searchStore.resetFilterValues()
+      if (this.mustClearFilters) this.searchStore.resetFilterValues()
       // Change the route after update the store with the new query
       this.searchStore.setIndices(this.formIndices)
       this.searchStore.setField(this.field)
