@@ -47,15 +47,15 @@ const component = computed(() => {
 .path-tree-breadcrumb-entry {
   --margin-x: #{$spacer-xs};
 
-  &--compact {
-    --margin-x: #{$spacer-xxs};
-  }
-
   margin-right: var(--margin-x);
   padding: 0;
   display: inline-flex;
   line-height: 1;
   display: inline-block;
+
+  &--compact {
+    --margin-x: #{$spacer-xxs};
+  }
 
   &:last-child {
     font-weight: bold;
