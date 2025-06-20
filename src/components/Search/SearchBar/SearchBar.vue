@@ -146,6 +146,13 @@ export default {
     compact: {
       type: Boolean,
       default: false
+    },
+    /**
+     * Submit the search form clear filters
+     */
+    clearFilters: {
+      type: Boolean,
+      default: false
     }
   },
   emits: ['submit'],
@@ -212,6 +219,8 @@ export default {
   methods: {
     submit() {
       this.hideSuggestions()
+      // Clear filters if needed
+      if (this.clearFilters) this.searchStore.resetFilterValues()
       // Change the route after update the store with the new query
       this.searchStore.setIndices(this.formIndices)
       this.searchStore.setField(this.field)

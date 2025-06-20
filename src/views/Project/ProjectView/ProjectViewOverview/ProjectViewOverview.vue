@@ -79,6 +79,7 @@ watch(toRef(props, 'name'), fetch, { immediate: true })
       <search-bar
         :indices="indices"
         class="my-4 py-3 mx-3"
+        clear-filters
         hide-field-dropdown
         hide-projects-dropdown
         show-submit
