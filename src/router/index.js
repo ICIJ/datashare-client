@@ -1,4 +1,5 @@
 import { MODE_NAME } from '@/mode'
+import { checkSearchOrder } from '@/router/guards/checkSearchOrder'
 
 export const routes = [
   {
@@ -45,6 +46,7 @@ export const routes = [
           filters: () => import('@/views/Search/SearchFilters'),
           settings: () => import('@/views/Search/SearchSettings')
         },
+        beforeEnter: [checkSearchOrder],
         children: [
           {
             name: 'document',
