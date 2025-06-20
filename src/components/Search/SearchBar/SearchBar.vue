@@ -59,7 +59,19 @@
 </template>
 
 <script>
-import { castArray, isEqual, escapeRegExp, get, iteratee, last, orderBy, some, sortBy, throttle, uniqueId } from 'lodash'
+import {
+  castArray,
+  isEqual,
+  escapeRegExp,
+  get,
+  iteratee,
+  last,
+  orderBy,
+  some,
+  sortBy,
+  throttle,
+  uniqueId
+} from 'lodash'
 import bodybuilder from 'bodybuilder'
 import lucene from 'lucene'
 import { mapStores } from 'pinia'
