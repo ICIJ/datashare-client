@@ -20,7 +20,6 @@ import Hook from '@/components/Hook/Hook'
 import { useDocument } from '@/composables/useDocument'
 import { whenIsRoute } from '@/composables/whenIsRoute'
 import { useUrlPageFromWithStore } from '@/composables/useUrlPageFromWithStore'
-import { replaceUrlParam } from '@/composables/replaceUrlParam'
 import { useSearchFilter } from '@/composables/useSearchFilter'
 import { useSearchBreadcrumb } from '@/composables/useSearchBreadcrumb'
 import { useSearchNav } from '@/composables/useSearchNav'
@@ -49,9 +48,6 @@ const entriesRef = useTemplateRef('entries')
 const appStore = useAppStore()
 const searchStore = useSearchStore()
 const route = useRoute()
-
-// The size query parameter is replaced by the perPage query parameter
-replaceUrlParam({ from: 'size', to: 'perPage' })
 
 const entries = computed(() => searchStore.response.hits)
 const properties = computed(() => appStore.getSettings('search', 'properties'))
