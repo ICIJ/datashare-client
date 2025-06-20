@@ -33,7 +33,7 @@ export function useUrlParamsWithStore(queryParams, options = {}) {
   const getRouteValues = () => {
     const values = queryParams.map((param) => route.query[param])
     // If all query parameters exist in the URL, transform and return them, else return the values from the store
-    return values.every(isUndefined) ? null : compact(values).map(transform)
+    return values.every(isUndefined) ? null : values.map(transform)
   }
 
   // Create a computed property that synchronizes the query parameters with the Vuex store

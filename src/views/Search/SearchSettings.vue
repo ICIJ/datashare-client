@@ -87,7 +87,7 @@ const sortBy = ref({
       return { name, query }
     }),
     get: () => appStore.getSettings('search', 'orderBy'),
-    set: (sort, order) => appStore.setSettings('search', { orderBy: [sort, order] })
+    set: (sort = '_score', order = 'desc') => appStore.setSettings('search', { orderBy: [sort, order] })
   })
 })
 
