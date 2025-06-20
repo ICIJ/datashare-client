@@ -1,10 +1,12 @@
 <script setup>
 import { computed, nextTick, onMounted, reactive, ref, toRef, useTemplateRef, watch } from 'vue'
 import { clamp, entries, findLastIndex, get, isEmpty, range, throttle } from 'lodash'
+import { useWindowScroll } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 
 import { addLocalSearchMarksClassByOffsets } from '@/utils/strings'
 import { useWait } from '@/composables/useWait'
+import ButtonToTop from '@/components/Button/ButtonToTop'
 import DocumentAttachments from '@/components/Document/DocumentAttachments'
 import DocumentGlobalSearchTerms from '@/components/Document/DocumentGlobalSearchTerms/DocumentGlobalSearchTerms'
 import DocumentLocalSearch from '@/components/Document/DocumentLocalSearch/DocumentLocalSearch'
@@ -32,6 +34,7 @@ const documentStore = useDocumentStore()
 const pipelinesStore = usePipelinesStore()
 const searchStore = useSearchStore.inject()
 const elementRef = useTemplateRef('element')
+const { y: windowScrollY } = useWindowScroll()
 const { waitFor, isLoading } = useWait()
 
 const contentSlices = reactive({})
@@ -97,10 +100,12 @@ const page = computed({
     return Math.floor(activeContentSliceOffset.value / props.pageSize) + 1
   },
   set(value) {
-    scrollUp()
+    scrollToDocumentStart()
     activeContentSliceOffset.value = (value - 1) * props.pageSize
   }
 })
+
+const showButtonToTop = computed(() => windowScrollY.value > 0)
 
 const hasExtractedContent = computed(() => maxOffset.value > 0)
 
@@ -264,10 +269,14 @@ function clearActiveLocalSearchTerm() {
   activeTerms.forEach((term) => term.classList.remove('local-search-term--active'))
 }
 
-function scrollUp() {
+function scrollToDocumentStart() {
   if (elementRef.value && elementRef.value.getBoundingClientRect().top < 0) {
     elementRef.value.scrollIntoView({ block: 'start', inline: 'nearest', behavior: 'instant' })
   }
+}
+
+function scrollToTop() {
+  windowScrollY.value = 0
 }
 
 async function jumpToActiveLocalSearchTerm() {
@@ -330,6 +339,9 @@ async function loadContentSliceAround(desiredOffset) {
       <div v-else-if="loadedOnce" class="document-content__body document-content__body--no-content text-center p-3">
         {{ t('documentContent.noContent') }}
       </div>
+      <transition name="fade">
+        <button-to-top v-if="showButtonToTop" class="document-content__wrapper__to-top" @click="scrollToTop" />
+      </transition>
       <hook name="document.content.body:after" />
       <slot name="after-content" />
     </div>
@@ -355,6 +367,26 @@ async function loadContentSliceAround(desiredOffset) {
 
     &:empty {
       display: none;
+    }
+  }
+
+  &__wrapper {
+    &__to-top {
+      position: sticky;
+      bottom: $spacer;
+      left: 100%;
+      transform-origin: center;
+
+      &.fade-enter-active,
+      &.fade-leave-active {
+        transition: opacity 0.3s, transform 0.3s;
+      }
+
+      &.fade-enter-from,
+      &.fade-leave-to {
+        opacity: 0;
+        transform: scale(0.8);
+      }
     }
   }
 
