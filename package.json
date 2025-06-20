@@ -62,7 +62,6 @@
     "vue-sticky-directive": "^0.0.10",
     "vue-use": "^0.2.0",
     "vue-virtual-scroller": "^2.0.0-beta.8",
-    "vue3-perfect-scrollbar": "^2.0.0",
     "vue3-toastify": "^0.2.8",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.2/xlsx-0.20.2.tgz",
     "xss": "^1.0.15"
