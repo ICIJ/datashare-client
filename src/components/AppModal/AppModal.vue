@@ -119,15 +119,15 @@ defineProps({
   .modal-header,
   .modal-body,
   .modal-footer {
-    padding-inline: $spacer-xxl;
+    --bs-modal-padding: #{$spacer-xxl};
 
     @include media-breakpoint-down(lg) {
-      padding-inline: $spacer;
+      --bs-modal-padding: #{$spacer};
     }
   }
 
   .modal-header + .modal-body {
-    padding-top: $spacer;
+    padding-top: var(--bs-modal-padding);
   }
 
   .modal-body + .modal-footer {
@@ -135,7 +135,11 @@ defineProps({
   }
 
   .modal-fullscreen {
+    --bs-modal-margin: 0px;
+
     @include media-breakpoint-up(md) {
+      --bs-modal-margin: #{$spacer-xl};
+
       max-width: calc(100vw - var(--bs-modal-margin) * 2);
       padding-block: var(--bs-modal-margin);
       margin: auto;
