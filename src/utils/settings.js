@@ -118,7 +118,7 @@ export default {
     'metadata.tika_metadata_dcterms_created': { unmapped_type: 'date' }
   },
   legacySearchSortFields: [
-    { name: 'relevance', property: 'relevance', desc: true },
+    { name: 'relevance', property: '_score', desc: true },
     { name: 'creationDateNewest', property: 'creationDate', desc: true },
     { name: 'creationDateOldest', property: 'creationDate', desc: false },
     { name: 'dateNewest', property: 'extractionDate', desc: true },
