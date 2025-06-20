@@ -1,6 +1,7 @@
 <script setup>
 import { toValue, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
+import VueScrollTo from 'vue-scrollto'
 
 import DocumentCard from '@/components/Document/DocumentCard/DocumentCard'
 import DocumentCardPlaceholder from '@/components/Document/DocumentCard/DocumentCardPlaceholder'
@@ -34,10 +35,13 @@ const elementRef = useTemplateRef('element')
 
 const scrollDocumentCardIntoView = function ({ id, index } = {}) {
   const selector = `.document-card[data-entry-id="${id}"][data-entry-index="${index}"]`
-  const card = toValue(elementRef)?.$el?.querySelector?.(selector)
-  if (card) {
-    // Use nullish coalescing operator to prevent error when document card is not found
-    card?.scrollIntoView({ behavior: 'auto', block: 'center' })
+  const target = toValue(elementRef)?.$el?.querySelector?.(selector)
+  const container = target?.closest('.document-entries-list__start__list')
+  if (target && container) {
+    const offset = -200
+    const reducedMotion = !!window.matchMedia('(prefers-reduced-motion: reduce)')?.matches
+    const duration = reducedMotion ? 0 : 500
+    VueScrollTo.scrollTo(target, duration, { container, offset })
   }
 }
 

@@ -45,7 +45,9 @@ export default {
     scrollToTarget() {
       this.hide()
       if (this.target) {
-        VueScrollTo.scrollTo(this.target, 200, { offset: this.offset, container: this.container })
+        const reducedMotion = !!window.matchMedia('(prefers-reduced-motion: reduce)')?.matches
+        const duration = reducedMotion ? 0 : 500
+        VueScrollTo.scrollTo(this.target, duration, { offset: this.offset, container: this.container })
       }
     },
     toggle(toggler = !this.visible) {
