@@ -38,7 +38,6 @@ const blur = () => nextTick(() => window.document?.activeElement.blur())
 
 <template>
   <document-share-popover
-    :target="elementRef"
     :offset="16"
     :boundary-padding="32"
     close-on-hide
