@@ -14,6 +14,9 @@ defineProps({
   },
   title: {
     type: String
+  },
+  hideHeader: {
+    type: Boolean
   }
 })
 
@@ -26,7 +29,7 @@ const toggle = () => (modelValue.value = !modelValue.value)
 <template>
   <b-popover ref="popover" v-model="modelValue" class="app-popover" :teleport-to="teleportTo">
     <template #default>
-      <app-popover-header :title="title" class="mb-3" @hide="hide">
+      <app-popover-header v-if="!hideHeader" :title="title" class="mb-3" @hide="hide">
         <slot name="title" v-bind="{ show, hide, toggle, visible }" />
         <template #close>
           <slot name="close" v-bind="{ show, hide, toggle, visible }" />
