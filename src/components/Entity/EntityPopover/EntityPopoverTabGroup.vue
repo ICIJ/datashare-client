@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { pick } from 'lodash'
 
@@ -35,7 +35,6 @@ const props = defineProps({
 })
 
 const offset = defineModel('offset', { type: Number, default: 0 })
-const tabIndex = ref(props.noExcerpt ? 1 : 0)
 
 const mentionsBinding = computed(() => {
   return pick(props, ['mention', 'excerpt', 'noExcerpt', 'projects', 'offsets', 'language', 'extractor'])
@@ -51,11 +50,11 @@ const mentionsLabel = computed(() => t('entityPopoverTabGroup.mentions'))
 </script>
 
 <template>
-  <tab-group v-model="tabIndex" class="entity-popover-tab-group">
-    <tab-group-entry :icon="PhListMagnifyingGlass" :count="props.offsets" :title="mentionsLabel">
+  <tab-group class="entity-popover-tab-group">
+    <tab-group-entry :active="!noExcerpt" :icon="PhListMagnifyingGlass" :count="props.offsets" :title="mentionsLabel">
       <entity-popover-mentions v-bind="mentionsBinding" v-model:offset="offset" />
     </tab-group-entry>
-    <tab-group-entry :icon="PhInfo" :title="infoLabel">
+    <tab-group-entry :active="noExcerpt" :icon="PhInfo" :title="infoLabel">
       <entity-popover-info v-bind="infoBinding" />
     </tab-group-entry>
   </tab-group>
