@@ -50,7 +50,7 @@ const tabsBinding = computed(() => {
 </script>
 
 <template>
-  <b-popover v-model="modelValue" :teleport-to="teleportTo" :custom-class="customClass" :delay="delay">
+  <b-popover v-model="modelValue" :teleport-to="teleportTo" :class="customClass" :delay="delay">
     <entity-popover-tab-group v-bind="tabsBinding" v-model:offset="offset" />
     <template #target="bindings">
       <slot name="target" v-bind="bindings" />

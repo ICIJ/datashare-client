@@ -3,6 +3,9 @@ import { useTemplateRef } from 'vue'
 
 import DocumentSharePopoverForm from './DocumentSharePopoverForm'
 
+import AppPopover from '@/components/AppPopover/AppPopover'
+
+
 /**
  * Toggle value when the popover is open
  */
@@ -31,9 +34,9 @@ defineExpose({
 </script>
 
 <template>
-  <b-popover ref="popover" v-model="modelValue" lazy custom-class="document-share-popover" teleport-to="body">
+  <app-popover ref="popover" v-model="modelValue" hide-header class="document-share-popover">
     <document-share-popover-form :document="document" />
-  </b-popover>
+  </app-popover>
 </template>
 
 <style lang="scss">

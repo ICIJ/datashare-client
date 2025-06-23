@@ -49,7 +49,7 @@ const qSent = computed(() => {
 </script>
 
 <template>
-  <b-popover teleport-to="body" custom-class="display-email__popover" placement="bottom" :boundary-padding="16">
+  <b-popover teleport-to="body" class="display-email__popover" placement="bottom" :boundary-padding="16">
     <template #target>
       <component :is="tag" class="display-email">
         {{ nameOrRawEmail }}

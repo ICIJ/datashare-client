@@ -37,7 +37,7 @@ const dropdownItemClass = (key) => {
     click
     :placement="popoverPlacement"
     teleport-to="body"
-    custom-class="i18n-locale-dropdown__list popover-body-p-0"
+    class="i18n-locale-dropdown__list popover-body-p-0"
   >
     <template #target>
       <b-button class="i18n-locale-dropdown" href="#" :variant="null" @click.prevent>
