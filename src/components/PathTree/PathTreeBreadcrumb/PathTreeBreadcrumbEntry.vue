@@ -5,12 +5,6 @@ import PathTreeBreadcrumbEntryLabel from './PathTreeBreadcrumbEntryLabel.vue'
 import PathTreeBreadcrumbEntryLink from './PathTreeBreadcrumbEntryLink.vue'
 
 const props = defineProps({
-  root: {
-    type: Boolean
-  },
-  abbr: {
-    type: Boolean
-  },
   noLink: {
     type: Boolean
   },
@@ -24,9 +18,7 @@ const emit = defineEmits(['select'])
 
 const classList = computed(() => {
   return {
-    'path-tree-breadcrumb-entry--compact': props.compact,
-    'path-tree-breadcrumb-entry--root': props.root,
-    'path-tree-breadcrumb-entry--abbr': props.abbr
+    'path-tree-breadcrumb-entry--compact': props.compact
   }
 })
 
