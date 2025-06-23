@@ -96,6 +96,7 @@ async function fetchBatchSearch() {
   // Then fetch the batch search record
   batchSearch.value = {
     ...batchSearchRecord,
+    nbResults: task.result?.value ?? 0,
     userId: batchSearchUser.id,
     state: task.state,
     errorMessage: batchSearchRecord.errorMessage ?? task.error?.message ?? null,

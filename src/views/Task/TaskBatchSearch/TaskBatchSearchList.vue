@@ -24,8 +24,8 @@ const { t } = useI18n()
 const { propertiesModelValueOptions } = useTaskSettings('batch-search')
 const { username } = useAuth()
 
-function getBatchSearchRecord(item, key) {
-  return get(item, ['args', 'batchRecord', key].join('.'))
+function getBatchSearchRecord(item, key, defaultValue = null) {
+  return get(item, ['args', 'batchRecord', key].join('.'), defaultValue)
 }
 
 function getBatchSearchProjects(item) {
@@ -93,7 +93,7 @@ function canManageBatchSearch(item) {
           <display-number :value="getBatchSearchRecord(item, 'nbQueries')" />
         </template>
         <template #cell(documents)="{ item }">
-          <display-number :value="getBatchSearchRecord(item, 'nbResults')" />
+          <display-number :value="item.result.value ?? 0" />
         </template>
         <template #cell(projects)="{ item }">
           <display-project-list :values="getBatchSearchProjects(item)" />

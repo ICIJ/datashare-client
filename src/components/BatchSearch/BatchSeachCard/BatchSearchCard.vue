@@ -12,10 +12,6 @@ const { batchSearch } = defineProps({
   batchSearch: {
     type: Object,
     required: true
-  },
-  task: {
-    type: Object,
-    required: false
   }
 })
 
