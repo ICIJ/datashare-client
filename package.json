@@ -9,18 +9,19 @@
   },
   "scripts": {
     "serve": "vite serve",
+    "storybook": "storybook dev -p 6006 --ci",
     "build": "vite build",
     "test": "yarn test:unit",
     "test:unit": "vitest --run",
     "test:unit:watch": "vitest",
     "lint": "eslint .",
     "lint:fix": "yarn lint --fix",
-    "doc": "yarn doc:api && yarn doc:hooks && yarn doc:widgets",
+    "doc": "yarn doc:api && yarn doc:hooks && yarn doc:widgets && yarn doc:storybook && doc:title",
     "doc:api": "npx jsdoc-to-markdown --plugin bin/dmd/plugin.cjs --separators --template bin/dmd/api.hbs src/core/*.js > src/stories/01-api.mdx",
     "doc:hooks": "node bin/generateHook.cjs > src/stories/02-hooks.mdx",
     "doc:widgets": "npx jsdoc-to-markdown --plugin bin/dmd/plugin.cjs --separators --template bin/dmd/widgets.hbs src/store/widgets/*.js > src/stories/03-widgets.mdx",
-    "storybook": "storybook dev -p 6006 --ci",
-    "build:storybook": "storybook build"
+    "doc:storybook": "storybook build",
+    "doc:title": "sed -i 's|@storybook/core - Storybook|Design System - Datashare|' storybook-static/index.html"
   },
   "dependencies": {
     "@floating-ui/vue": "^1.1.6",

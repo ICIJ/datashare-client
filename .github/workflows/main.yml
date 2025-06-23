@@ -41,11 +41,8 @@ jobs:
       - name: Install dependencies
         run: make install
 
-      - name: Generate storybook pages
+      - name: Generate doc pages
         run: yarn doc
-
-      - name: Build storybook artifacts
-        run: yarn build:storybook
 
       - name: Upload storybook artifacts
         uses: actions/upload-pages-artifact@v3
