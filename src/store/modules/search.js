@@ -667,11 +667,11 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * @param {Object} raw - The raw search results from Elasticsearch.
    * @returns {Promise} - A promise that resolves to the root documents.
    */
-  function searchRootDocuments(raw) {
+  async function searchRootDocuments(raw) {
     const embedded = get(raw, 'hits.hits', []).filter((hit) => hit._source.extractionLevel > 0)
-    const ids = embedded.map((hit) => hit._source.rootDocument)
+    const ids = compact(embedded.map((hit) => hit._source.rootDocument))
     const source = ['contentType', 'contentLength', 'title', 'path']
-    return api.elasticsearch.ids(indices.value.join(','), ids, source)
+    return ids.length ? api.elasticsearch.ids(indices.value.join(','), ids, source) : EsDocList.none()
   }
 
   /**
