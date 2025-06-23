@@ -30,9 +30,21 @@ describe('DocumentDownloadStore', () => {
     vi.resetAllMocks()
   })
 
+  describe('initial state', () => {
+    beforeEach(() => {
+      api.isDownloadAllowed.mockResolvedValue()
+    })
+
+    it('should be allowed by default', async () => {
+      expect(documentDownloadStore.isAllowed(index)).toBe(true)
+    })
+  })
+
   describe('allowed download', () => {
     beforeEach(() => {
       api.isDownloadAllowed.mockResolvedValue()
+      documentDownloadStore.allow({ index, allowed: false })
+      documentDownloadStore.allow({ index: anotherIndex, allowed: false })
     })
 
     it('should set the download status for the given index', async () => {
@@ -92,6 +104,8 @@ describe('DocumentDownloadStore', () => {
   describe('not allowed download', () => {
     beforeEach(() => {
       api.isDownloadAllowed.mockRejectedValue()
+      documentDownloadStore.allow({ index, allowed: false })
+      documentDownloadStore.allow({ index: anotherIndex, allowed: false })
     })
 
     it('should set the download status for the given index', async () => {
