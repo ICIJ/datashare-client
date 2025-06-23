@@ -6,6 +6,7 @@ import { useI18n } from 'vue-i18n'
 
 import { addLocalSearchMarksClassByOffsets } from '@/utils/strings'
 import { useWait } from '@/composables/useWait'
+import { useQueryObserver } from '@/composables/useQueryObserver'
 import ButtonToTop from '@/components/Button/ButtonToTop'
 import DocumentAttachments from '@/components/Document/DocumentAttachments'
 import DocumentGlobalSearchTerms from '@/components/Document/DocumentGlobalSearchTerms/DocumentGlobalSearchTerms'
@@ -30,15 +31,17 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
+const { querySelector } = useQueryObserver()
 const modal = inject('modal', false)
 
 const documentStore = useDocumentStore()
 const pipelinesStore = usePipelinesStore()
 const searchStore = useSearchStore.inject()
 const elementRef = useTemplateRef('element')
+const containerRef = modal ? querySelector('.document-modal') : window
 const { height: elementHeight } = useElementSize(elementRef)
 const { height: windowHeight } = useWindowSize()
-const { y: scrollY } = useScroll(modal ? document.querySelector('.modal') : window)
+const { y: scrollY } = useScroll(containerRef)
 const { waitFor, isLoading } = useWait()
 
 const contentSlices = reactive({})
