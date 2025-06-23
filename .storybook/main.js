@@ -1,11 +1,13 @@
 import remarkGfm from 'remark-gfm'
 
+
 /** @type { import('@storybook/vue3-vite').StorybookConfig } */
 const config = {
   core: {
     disableTelemetry: true
   },
   stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
+  staticDirs: ['./static'],
   addons: [
     "@storybook/addon-links",
     "@storybook/addon-essentials",
@@ -27,7 +29,7 @@ const config = {
   framework: {
     name: "@storybook/vue3-vite",
     options: {},
-  },
+  }
 }
 
 export default config
