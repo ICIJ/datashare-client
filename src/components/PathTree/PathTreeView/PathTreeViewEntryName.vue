@@ -38,7 +38,8 @@ const icon = computed(() => (collapse.value ? PhFolder : PhFolderOpen))
 const classList = computed(() => ({
   'path-tree-view-entry-name--collapse': collapse.value,
   'path-tree-view-entry-name--compact': compactOrInjected.value,
-  'path-tree-view-entry-name--selected': selected.value
+  'path-tree-view-entry-name--selected': selected.value,
+  'path-tree-view-entry-name--nested': props.nested,
 }))
 
 const style = computed(() => ({
@@ -95,6 +96,15 @@ const toggle = () => {
   &--compact.path-tree-view-entry-name--selected {
     font-weight: 500;
     color: var(--bs-action-text-emphasis);
+  }
+
+  &:not(&--nested) &__value {
+    cursor: pointer;
+    color: var(--bs-link-color);
+
+    &:hover {
+      color: var(--bs-link-hover-color);
+    }
   }
 }
 </style>
