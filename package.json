@@ -16,7 +16,7 @@
     "test:unit:watch": "vitest",
     "lint": "eslint .",
     "lint:fix": "yarn lint --fix",
-    "doc": "yarn doc:api && yarn doc:hooks && yarn doc:widgets && yarn doc:storybook && doc:title",
+    "doc": "yarn doc:api && yarn doc:hooks && yarn doc:widgets && yarn doc:storybook && yarn doc:title",
     "doc:api": "npx jsdoc-to-markdown --plugin bin/dmd/plugin.cjs --separators --template bin/dmd/api.hbs src/core/*.js > src/stories/01-api.mdx",
     "doc:hooks": "node bin/generateHook.cjs > src/stories/02-hooks.mdx",
     "doc:widgets": "npx jsdoc-to-markdown --plugin bin/dmd/plugin.cjs --separators --template bin/dmd/widgets.hbs src/store/widgets/*.js > src/stories/03-widgets.mdx",
