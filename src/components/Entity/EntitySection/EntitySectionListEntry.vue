@@ -16,7 +16,7 @@ defineProps({
 <template>
   <entity-in-context lazy :click="false" :entity="entity">
     <template #target>
-      <entity-button :entity="entity" />
+      <entity-button :entity="entity" clickable />
     </template>
   </entity-in-context>
 </template>
