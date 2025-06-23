@@ -39,7 +39,7 @@ const classList = computed(() => ({
   'path-tree-view-entry-name--collapse': collapse.value,
   'path-tree-view-entry-name--compact': compactOrInjected.value,
   'path-tree-view-entry-name--selected': selected.value,
-  'path-tree-view-entry-name--nested': props.nested,
+  'path-tree-view-entry-name--nested': props.nested
 }))
 
 const style = computed(() => ({
