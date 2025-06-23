@@ -5,7 +5,6 @@ import DocumentSharePopoverForm from './DocumentSharePopoverForm'
 
 import AppPopover from '@/components/AppPopover/AppPopover'
 
-
 /**
  * Toggle value when the popover is open
  */
@@ -35,6 +34,9 @@ defineExpose({
 
 <template>
   <app-popover ref="popover" v-model="modelValue" hide-header class="document-share-popover">
+    <template #target="binding">
+      <slot name="target" v-bind="binding" />
+    </template>
     <document-share-popover-form :document="document" />
   </app-popover>
 </template>

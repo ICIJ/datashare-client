@@ -1,5 +1,5 @@
 <script setup>
-import { nextTick, useTemplateRef } from 'vue'
+import { nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import DocumentActionsGroupEntry from './DocumentActionsGroupEntry'
@@ -33,21 +33,10 @@ defineProps({
 })
 const { t } = useI18n()
 
-const elementRef = useTemplateRef('element')
-
 const blur = () => nextTick(() => window.document?.activeElement.blur())
 </script>
 
 <template>
-  <document-actions-group-entry
-    ref="element"
-    class="document-actions-group-entry-share"
-    icon="share-network"
-    hide-tooltip
-    :label="t('documentActionsGroup.share')"
-    :size="size"
-    @focus="blur"
-  />
   <document-share-popover
     :target="elementRef"
     :offset="16"
@@ -55,5 +44,16 @@ const blur = () => nextTick(() => window.document?.activeElement.blur())
     close-on-hide
     :document="document"
     :placement="tooltipPlacement"
-  />
+  >
+    <template #target>
+      <document-actions-group-entry
+        class="document-actions-group-entry-share"
+        icon="share-network"
+        hide-tooltip
+        :label="t('documentActionsGroup.share')"
+        :size="size"
+        @focus="blur"
+      />
+    </template>
+  </document-share-popover>
 </template>

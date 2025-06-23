@@ -53,6 +53,9 @@ defineExpose({
 
 <template>
   <app-popover ref="popover" v-model="modelValue" hide-header class="document-download-popover">
+    <template #target="binding">
+      <slot name="target" v-bind="binding" />
+    </template>
     <div class="document-download-popover__body">
       <button-icon
         :disabled="isRootTooBig"

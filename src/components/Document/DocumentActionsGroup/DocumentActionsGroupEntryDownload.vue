@@ -1,5 +1,5 @@
 <script setup>
-import { computed, nextTick, useTemplateRef } from 'vue'
+import { computed, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import DocumentActionsGroupEntry from './DocumentActionsGroupEntry'
@@ -36,32 +36,33 @@ const { document } = defineProps({
 const { t } = useI18n()
 
 const { isDownloadAllowed, isRootTooBig, documentFullUrl } = useDocumentDownload(document)
-const elementRef = useTemplateRef('element')
 const hasDownload = computed(() => isDownloadAllowed.value && !isRootTooBig.value)
 const href = computed(() => (hasDownload.value ? documentFullUrl.value : null))
 const blur = () => nextTick(() => window.document?.activeElement.blur())
 </script>
 
 <template>
-  <document-actions-group-entry
-    ref="element"
-    class="document-actions-group-entry-download"
-    icon="download-simple"
-    download
-    hide-tooltip
-    :size="size"
-    :label="t('documentActionsGroup.download')"
-    :disabled="!isDownloadAllowed"
-    :href="href"
-    @click.exact.prevent
-    @focus="blur"
-  />
   <document-download-popover
-    :target="elementRef"
+    close-on-hide
     :offset="16"
     :boundary-padding="32"
-    close-on-hide
     :document="document"
     :placement="tooltipPlacement"
-  />
+  >
+    <template #target>
+      <document-actions-group-entry
+        ref="element"
+        class="document-actions-group-entry-download"
+        icon="download-simple"
+        download
+        hide-tooltip
+        :size="size"
+        :label="t('documentActionsGroup.download')"
+        :disabled="!isDownloadAllowed"
+        :href="href"
+        @click.exact.prevent
+        @focus="blur"
+      />
+    </template>
+  </document-download-popover>
 </template>
