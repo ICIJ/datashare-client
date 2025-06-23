@@ -6,6 +6,7 @@ import { useI18n } from 'vue-i18n'
 import DocumentDownloadPopoverSection from './DocumentDownloadPopoverSection'
 
 import { useDocumentDownload } from '@/composables/useDocumentDownload'
+import AppPopover from '@/components/AppPopover/AppPopover'
 import DisplayContentType from '@/components/Display/DisplayContentType'
 import DismissableAlert from '@/components/Dismissable/DismissableAlert'
 import ButtonIcon from '@/components/Button/ButtonIcon'
@@ -51,7 +52,7 @@ defineExpose({
 </script>
 
 <template>
-  <b-popover ref="popover" v-model="modelValue" lazy teleport-to="body" custom-class="document-download-popover">
+  <app-popover ref="popover" v-model="modelValue" hide-header class="document-download-popover">
     <div class="document-download-popover__body">
       <button-icon
         :disabled="isRootTooBig"
@@ -104,7 +105,7 @@ defineExpose({
         />
       </div>
     </div>
-  </b-popover>
+  </app-popover>
 </template>
 
 <style lang="scss">
