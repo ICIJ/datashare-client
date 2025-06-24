@@ -5,6 +5,13 @@ import { defineStore } from 'pinia'
 import { LAYOUTS } from '@/enums/layouts'
 
 /**
+ * Version of the settings schema. Increment this value when making changes to the settings structure which
+ * will require resetting user settings to defaults. This is useful if for instance you add new settings
+ * or change the structure of existing settings and want to ensure users get the latest defaults.
+ */
+const SETTINGS_VERSION = 0
+
+/**
  * Defines the application-wide store for managing UI state and user preferences.
  */
 export const useAppStore = defineStore(
@@ -12,6 +19,7 @@ export const useAppStore = defineStore(
   () => {
     /** Default settings object, immutable. */
     const SETTINGS = Object.freeze({
+      version: SETTINGS_VERSION,
       closed: true,
       views: {
         projectList: {
@@ -145,6 +153,15 @@ export const useAppStore = defineStore(
     }
 
     /**
+     * Resets the settings to their default values.
+     *
+     * @returns {void}
+     */
+    const resetSettings = () => {
+      Object.assign(settings, cloneDeep(SETTINGS))
+    }
+
+    /**
      * Sets the redirect path to be used after login.
      *
      * @param {string|null} [path=null] - Redirect path.
@@ -202,6 +219,7 @@ export const useAppStore = defineStore(
       sidebar,
       getSettingsInit,
       settings,
+      resetSettings,
       setSettings,
       getSettings,
       setRedirectAfterLogin,
@@ -213,7 +231,12 @@ export const useAppStore = defineStore(
   },
   {
     persist: {
-      pick: ['redirectAfterLogin', 'pins', 'filters', 'sidebar', 'settings.views']
+      pick: ['redirectAfterLogin', 'pins', 'filters', 'sidebar', 'settings.version', 'settings.views'],
+      afterHydrate: (context) => {
+        if (context.store.settings.version !== SETTINGS_VERSION) {
+          context.store.resetSettings()
+        } 
+      }
     }
   }
 )
