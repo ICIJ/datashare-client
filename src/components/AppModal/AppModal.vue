@@ -119,7 +119,7 @@ defineProps({
   .modal-header,
   .modal-body,
   .modal-footer {
-    --bs-modal-padding: #{$spacer-xxl};
+    --bs-modal-padding: #{$spacer-xl};
 
     @include media-breakpoint-down(lg) {
       --bs-modal-padding: #{$spacer};
@@ -127,7 +127,7 @@ defineProps({
   }
 
   .modal-header + .modal-body {
-    padding-top: var(--bs-modal-padding);
+    padding-top: $spacer;
   }
 
   .modal-body + .modal-footer {
