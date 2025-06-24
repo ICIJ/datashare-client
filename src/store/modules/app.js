@@ -1,5 +1,5 @@
 import { cloneDeep, get, isObject, isString } from 'lodash'
-import { computed, ref, reactive } from 'vue'
+import { ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
 
 import { LAYOUTS } from '@/enums/layouts'
@@ -119,22 +119,18 @@ export const useAppStore = defineStore(
      *
      * @returns {(view: string, name: string) => any}
      */
-    const getSettingsInit = computed(() => {
-      return (view, name) => {
-        return get(SETTINGS.views, [view, name].join('.'))
-      }
-    })
+    const getSettingsInit = (view, name) => {
+      return get(SETTINGS.views, [view, name].join('.'))
+    }
 
     /**
      * Gets the current setting value for a given view and setting name.
      *
      * @returns {(view: string, name: string) => any}
      */
-    const getSettings = computed(() => {
-      return (view, name) => {
-        return get(settings.views, [view, name].join('.'))
-      }
-    })
+    const getSettings = (view, name) => {
+      return get(settings.views, [view, name].join('.'))
+    }
 
     /**
      * Sets settings for a given view either by passing an object or key-value pair.
