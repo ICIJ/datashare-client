@@ -53,6 +53,10 @@
   "buttonAdd": {
     "label": "Ajouter"
   },
+  "buttonTogglePathTreeView": {
+    "list": "List view",
+    "tree": "Tree view"
+  },
   "buttonToggleSettings": {
     "label": "Paramètres"
   },
@@ -1154,6 +1158,7 @@
   },
   "batchSearchErrorModal": {
     "okTitle": "OK",
+    "errorQuery": "There is an error on the following query",
     "errorTitle": "L'erreur est",
     "text": "comment corriger les erreurs les plus courantes",
     "description": "Le système a rencontré un problème. Il s'agit souvent d'erreurs de syntaxe dans le CSV (voir {link})."
