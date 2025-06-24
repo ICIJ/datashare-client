@@ -91,7 +91,7 @@ function getBatchSearchUser(item) {
 
 async function fetchBatchSearch() {
   const task = await taskStore.fetchTask(props.uuid)
-  const batchSearchRecord = getBatchSearchRecord(task)
+  const batchSearchRecord = await core.api.getBatchSearch(props.uuid)
   const batchSearchUser = getBatchSearchUser(task)
   // Then fetch the batch search record
   batchSearch.value = {
