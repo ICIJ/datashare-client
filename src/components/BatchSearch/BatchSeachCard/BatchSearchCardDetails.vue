@@ -17,76 +17,68 @@ import { useSearchBreadcrumb } from '@/composables/useSearchBreadcrumb'
 
 defineOptions({ name: 'BatchSearchCardDetails' })
 
-const props = defineProps({
-  uuid: { type: String },
-  name: { type: String },
-  nbResults: { type: Number },
-  nbQueriesWithoutResults: { type: Number },
-  nbQueries: { type: Number },
-  state: { type: String },
-  date: { type: [Date, String] },
-  author: { type: String },
-  visibility: { type: Boolean },
-  phraseMatch: { type: Boolean },
-  proximity: { type: Number },
-  fuzziness: { type: Number },
-  projects: { type: Array },
-  description: { type: String },
-  uri: { type: String },
-  errorMessage: { type: String },
-  errorQuery: { type: String }
-})
-
-const { t } = useI18n()
-
-const toAllDocuments = computed(() => {
-  const indices = props.projects.join(',')
-
-  return {
-    name: 'task.batch-search-results.list',
-    params: { indices, uuid: props.uuid }
+const { batchSearch } = defineProps({
+  batchSearch: {
+    type: Object,
+    required: true
   }
 })
 
-const downloadDocumentsHref = computed(() => `/api/batch/search/result/csv/${props.uuid}`)
-const downloadQueriesWithoutResultsHref = computed(
-  () => `/api/batch/search/${props.uuid}/queries?format=csv&maxResults=0`
-)
-const downloadQueriesHref = computed(() => `/api/batch/search/${props.uuid}/queries?format=csv`)
+const {
+  uuid,
+  nbResults,
+  nbQueries,
+  nbQueriesWithoutResults,
+  phraseMatches,
+  proximity,
+  fuzziness,
+  date,
+  user,
+  projects,
+  state,
+  visibility,
+  uri
+} = batchSearch
 
-const noDocuments = computed(() => props.nbResults === 0)
-const noQueries = computed(() => props.nbQueries === 0)
-const noQueriesWithoutResults = computed(() => props.nbQueriesWithoutResults === 0)
+const { t } = useI18n()
+const indices = projects.join(',')
+
+const toAllDocuments = { name: 'task.batch-search-results.list', params: { indices, uuid } }
+
+const downloadDocumentsHref = `/api/batch/search/result/csv/${uuid}`
+const downloadQueriesWithoutResultsHref = `/api/batch/search/${uuid}/queries?format=csv&maxResults=0`
+const downloadQueriesHref = `/api/batch/search/${uuid}/queries?format=csv`
+
+const hasNoResults = nbResults === 0
+const hasNoQueries = nbQueries === 0
+const hasNoQueriesWithoutResults = nbQueriesWithoutResults === 0
+const hasQueriesWithoutResultsNumber = !isNaN(nbQueriesWithoutResults) && nbQueriesWithoutResults > 0
 
 const noResultsQueries = computed(() => {
-  const n = humanNumber(props.nbQueriesWithoutResults)
-  return t('batchSearchCard.noResultsQueries', { n }, props.nbQueriesWithoutResults)
+  const n = humanNumber(nbQueriesWithoutResults)
+  return t('batchSearchCard.noResultsQueries', { n }, nbQueriesWithoutResults)
 })
 const noResultsQueriesDownload = computed(() => t('batchSearchCard.noResultsQueriesDownload'))
-const noResultsQueriesLabel = computed(() => {
-  return isNaN(props.nbQueriesWithoutResults) || props.nbQueriesWithoutResults < 0
-    ? noResultsQueriesDownload.value
-    : noResultsQueries.value
-})
+const noResultsQueriesLabel = hasQueriesWithoutResultsNumber ? noResultsQueries : noResultsQueriesDownload
 
-const visibilityIcon = computed(() => (props.visibility ? PhEye : PhEyeSlash))
+const visibilityIcon = visibility ? PhEye : PhEyeSlash
 const visibilityPrivate = computed(() => t('batchSearchCardDetails.visibilityPrivate'))
 const visibilityShared = computed(() => t('batchSearchCardDetails.visibilityShared'))
-const visibilityValue = computed(() => (props.visibility ? visibilityShared.value : visibilityPrivate.value))
+const visibilityValue = visibility ? visibilityShared : visibilityPrivate
 
 const phraseMatchOn = computed(() => t('batchSearchCardDetails.phraseMatchOn'))
 const phraseMatchOff = computed(() => t('batchSearchCardDetails.phraseMatchOff'))
-const phraseMatchValue = computed(() => (props.phraseMatch ? phraseMatchOn.value : phraseMatchOff.value))
+const phraseMatchValue = phraseMatches ? phraseMatchOn : phraseMatchOff
 
-const fuzzinessValue = computed(() => t('batchSearchCardDetails.fuzzinessValue', { n: props.fuzziness }))
-const proximityValue = computed(() => t('batchSearchCardDetails.proximityValue', { n: props.proximity }))
+const fuzzinessValue = computed(() => t('batchSearchCardDetails.fuzzinessValue', { n: fuzziness }))
+const proximityValue = computed(() => t('batchSearchCardDetails.proximityValue', { n: proximity }))
 
 const { parseFiltersEntries } = useSearchBreadcrumb()
 
 const uriFiltersEntries = computed(() => {
   try {
-    const uri = props.uri.split('#/?').pop()
-    return parseFiltersEntries(parseQuery(uri))
+    const path = uri.split('#/?').pop()
+    return parseFiltersEntries(parseQuery(path))
   } catch {
     return []
   }
@@ -94,7 +86,7 @@ const uriFiltersEntries = computed(() => {
 
 const uriWithoutIndices = computed(() => {
   try {
-    return stringifyQuery(omit(parseQuery(props.uri), ['indices']))
+    return stringifyQuery(omit(parseQuery(uri), ['indices']))
   } catch {
     return ''
   }
@@ -103,7 +95,7 @@ const uriWithoutIndices = computed(() => {
 const hasUriWithFilters = computed(() => !!uriFiltersEntries.value.length)
 
 const { show: showBatchSearchErrorModal } = useBatchSearchErrorModal()
-const showError = () => showBatchSearchErrorModal(props)
+const showError = () => showBatchSearchErrorModal(batchSearch)
 </script>
 
 <template>
@@ -133,7 +125,7 @@ const showError = () => showBatchSearchErrorModal(props)
       </li>
       <li>
         <button-icon
-          :disabled="noDocuments"
+          :disabled="hasNoResults"
           :href="downloadDocumentsHref"
           :label="t('batchSearchCard.downloadResultsLabel')"
           class="batch-search-card-actions__download text-nowrap"
@@ -149,7 +141,7 @@ const showError = () => showBatchSearchErrorModal(props)
         >
           <template #end>
             <button-icon
-              :disabled="noQueriesWithoutResults"
+              :disabled="hasNoQueriesWithoutResults"
               icon-left="download-simple"
               variant="link"
               square
@@ -171,7 +163,7 @@ const showError = () => showBatchSearchErrorModal(props)
         >
           <template #end>
             <button-icon
-              :disabled="noQueries"
+              :disabled="hasNoQueries"
               icon-left="download-simple"
               variant="link"
               square
@@ -189,7 +181,7 @@ const showError = () => showBatchSearchErrorModal(props)
       </li>
       <li>
         <batch-search-card-details-entry :label="t('batchSearchCardDetails.author')" :icon="PhUser">
-          <display-user hide-avatar :value="author" />
+          <display-user hide-avatar :value="user.id" />
         </batch-search-card-details-entry>
       </li>
       <li>

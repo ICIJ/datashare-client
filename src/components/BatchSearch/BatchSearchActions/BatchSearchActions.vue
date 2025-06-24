@@ -15,9 +15,9 @@ import { useTaskStore } from '@/store/modules'
 
 defineOptions({ name: 'BatchSearchActions' })
 
-const { uuid } = defineProps({
-  uuid: {
-    type: String,
+const { batchSearch } = defineProps({
+  batchSearch: {
+    type: Object,
     required: true
   },
   hideLabels: {
@@ -35,20 +35,20 @@ const { prompt: showRelaunchModal } = usePromptModal(BatchSearchActionsRelaunchM
 
 const { toastedPromise } = useCore()
 const taskStore = useTaskStore()
-const batchSearch = computed(() => taskStore.getBatchSearchRecord(uuid))
-const isOver = computed(() => taskStore.isOver(uuid))
-const isRunning = computed(() => taskStore.isRunning(uuid))
+const isOver = computed(() => taskStore.isOver(batchSearch.uuid))
+const isRunning = computed(() => taskStore.isRunning(batchSearch.uuid))
 
 async function remove() {
   const successMessage = t('batchSearchActions.remove.success')
   const errorMessage = t('batchSearchActions.remove.error')
-  await toastedPromise(taskStore.removeBatchSearch(uuid), { successMessage, errorMessage })
+  await toastedPromise(taskStore.removeBatchSearch(batchSearch.uuid), { successMessage, errorMessage })
   emit('refresh')
 }
 
 async function stop() {
   const successMessage = t('batchSearchActions.stop.success')
   const errorMessage = t('batchSearchActions.stop.error')
+  const { uuid } = batchSearch
   await toastedPromise(taskStore.stopTask(uuid), { successMessage, errorMessage })
   emit('refresh')
 }
@@ -56,6 +56,7 @@ async function stop() {
 async function relaunch({ name, description, deleteAfterRelaunch }) {
   const successMessage = t('batchSearchActions.relaunch.success')
   const errorMessage = t('batchSearchActions.relaunch.error')
+  const { uuid } = batchSearch
   await toastedPromise(taskStore.relaunchBatchSearch(uuid, name, description), { successMessage, errorMessage })
   // Remove the current batch search if the user has selected the option.
   if (deleteAfterRelaunch) {
@@ -69,7 +70,7 @@ async function edit() {
 }
 
 async function relaunchPromptModal() {
-  const { name, description } = batchSearch.value
+  const { name, description } = batchSearch
   const values = await showRelaunchModal({ name, description })
   // Only a valid submit returns value. Cancel or modal hide returns null.
   if (values) {
@@ -78,7 +79,7 @@ async function relaunchPromptModal() {
 }
 
 async function editPromptModal() {
-  const { name, description } = batchSearch.value
+  const { name, description } = batchSearch
   const values = await showEditModal({ name, description })
   // Only a valid submit returns value. Cancel or modal hide returns null.
   if (values) {

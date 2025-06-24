@@ -36,26 +36,8 @@ const canManageBatchSearch = computed(() => batchSearch.user.id === username.val
       :text="batchSearch.description"
       :aria-label="t('batchSearchCardDetails.description')"
     />
-    <batch-search-actions v-if="canManageBatchSearch" :uuid="batchSearch.uuid" />
-    <batch-search-card-details
-      :uuid="batchSearch.uuid"
-      :name="batchSearch.name"
-      :nb-results="batchSearch.nbResults"
-      :nb-queries-without-results="batchSearch.nbQueriesWithoutResults"
-      :nb-queries="batchSearch.nbQueries"
-      :state="batchSearch.state"
-      :date="batchSearch.date"
-      :author="batchSearch.userId"
-      :visibility="batchSearch.published"
-      :phrase-match="batchSearch.phraseMatches"
-      :proximity="batchSearch.fuzziness"
-      :fuzziness="batchSearch.fuzziness"
-      :projects="batchSearch.projects"
-      :description="batchSearch.description"
-      :uri="batchSearch.uri"
-      :error-message="batchSearch.errorMessage"
-      :error-query="batchSearch.errorQuery"
-    />
+    <batch-search-actions v-if="canManageBatchSearch" :batch-search="batchSearch" />
+    <batch-search-card-details :batch-search="batchSearch" />
   </card-panel>
 </template>
 
