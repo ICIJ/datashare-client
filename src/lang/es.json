@@ -1158,6 +1158,7 @@
   },
   "batchSearchErrorModal": {
     "okTitle": "Aceptar",
+    "errorQuery": "There is an error on the following query",
     "errorTitle": "El error es",
     "text": "cómo corregir los errores más comunes",
     "description": "El sistema encontró un problema. Los errores de sintaxis en el CSV son los sospechosos habituales (ver {link})."
