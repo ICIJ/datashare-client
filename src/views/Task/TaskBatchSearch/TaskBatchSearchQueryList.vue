@@ -81,10 +81,6 @@ const visibleFields = computed(() => {
 
 const batchSearchName = computed(() => batchSearch.value?.name)
 
-function getBatchSearchRecord(item) {
-  return get(item, ['args', 'batchRecord'].join('.'))
-}
-
 function getBatchSearchUser(item) {
   return get(item, ['args', 'user'].join('.'))
 }
