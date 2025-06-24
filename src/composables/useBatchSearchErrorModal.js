@@ -16,7 +16,7 @@ export function useBatchSearchErrorModal() {
         onCancel: resolve
       })
 
-      modalController.show({ component, props })
+      modalController.create({ component, props })
     })
   }
 

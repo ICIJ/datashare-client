@@ -15,7 +15,7 @@ export const useConfirmModal = (Component = AppModalConfirm) => {
         onCancel: resolve
       })
 
-      modalController.show({ component, props })
+      modalController.create({ component, props })
     })
   }
 

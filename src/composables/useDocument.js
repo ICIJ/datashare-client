@@ -141,7 +141,7 @@ export const useDocumentModal = function (document) {
         onCancel: resolve
       })
 
-      modalController.show({ component, props })
+      modalController.create({ component, props })
     })
   }
 

@@ -15,7 +15,7 @@ export function useProjectDeletionModal(project) {
         onCancel: resolve
       })
 
-      modalController.show({ component, props })
+      modalController.create({ component, props })
     })
   }
 

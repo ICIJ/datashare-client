@@ -15,7 +15,7 @@ export const usePromptModal = (Component = AppModalPrompt) => {
         onSubmit: resolve
       })
 
-      modalController.show({ component, props })
+      modalController.create({ component, props })
     })
   }
 
