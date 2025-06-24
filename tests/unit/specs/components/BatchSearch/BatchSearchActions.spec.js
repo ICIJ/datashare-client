@@ -44,7 +44,7 @@ describe('BatchSearchActions.vue', () => {
     let wrapper
 
     beforeEach(() => {
-      const props = { uuid: '12' }
+      const props = { batchSearch: { uuid: '12' } }
       wrapper = shallowMount(BatchSearchActions, { props, global: { plugins } })
     })
 
@@ -66,7 +66,7 @@ describe('BatchSearchActions.vue', () => {
     let wrapper
 
     beforeEach(() => {
-      const props = { uuid: '46' }
+      const props = { batchSearch: { uuid: '46' } }
       wrapper = shallowMount(BatchSearchActions, { props, global: { plugins } })
     })
 
