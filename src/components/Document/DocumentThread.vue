@@ -92,10 +92,8 @@ async function scrollToActive() {
   const element = elementRef.value.$el.querySelector(activeElementSelector)
   // Do not scroll if the active element is not found
   if (!element) return
-  // We assume the closest container is the one with overflow-auto class
-  const container = element.closest('.overflow-auto') ?? window.document.body
   // Use the scroll-tracker component
-  core.emit('scroll-tracker:request', { element, container })
+  core.emit('scroll-tracker:request', { element })
 }
 
 const init = waitFor(async function () {
@@ -122,7 +120,7 @@ async function getThread() {
   }
 }
 
-onMounted(() => {
+onMounted(async () => {
   documentStore.$onAction(({ name, after }) => {
     if (name === 'getContentSlice') {
       after(({ content }) => {
@@ -131,7 +129,8 @@ onMounted(() => {
     }
   })
 
-  init().then(scrollToActive)
+  await init()
+  await scrollToActive()
 })
 
 onBeforeRouteUpdate(init)

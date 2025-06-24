@@ -1,7 +1,6 @@
 <script>
-import { toRef, markRaw } from 'vue'
+import { toValue, markRaw } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
-import VueScrollTo from 'vue-scrollto'
 
 /**
  * An contextual link to the "right" scroll position.
@@ -23,10 +22,8 @@ export default {
   data() {
     return {
       icon: markRaw(PhArrowFatUp),
-      offset: 0,
       timeoutHolder: null,
       target: null,
-      container: 'body',
       visible: false
     }
   },
@@ -35,20 +32,13 @@ export default {
     this.$core.on('scroll-tracker:request', this.request)
   },
   methods: {
-    request({ element, offset = 0, container = this.container } = {}) {
-      const elementRef = toRef(element)
-      this.target = elementRef?.value?.$el ?? elementRef.value
-      this.offset = offset
-      this.container = container
+    request({ element } = {}) {
+      this.target = toValue(element).$el ?? toValue(element)
       this.toggle(this.shouldBeVisible())
     },
     scrollToTarget() {
       this.hide()
-      if (this.target) {
-        const reducedMotion = !!window.matchMedia('(prefers-reduced-motion: reduce)')?.matches
-        const duration = reducedMotion ? 0 : 500
-        VueScrollTo.scrollTo(this.target, duration, { offset: this.offset, container: this.container })
-      }
+      this.target?.scrollIntoView?.({ block: 'start', inline: 'nearest', behavior: 'auto' })
     },
     toggle(toggler = !this.visible) {
       return toggler ? this.show() : this.hide()
