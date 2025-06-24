@@ -1158,6 +1158,7 @@
   },
   "batchSearchErrorModal": {
     "okTitle": "crwdns9058:0crwdne9058:0",
+    "errorQuery": "crwdns9944:0crwdne9944:0",
     "errorTitle": "crwdns9060:0crwdne9060:0",
     "text": "crwdns9062:0crwdne9062:0",
     "description": "crwdns9064:0{link}crwdne9064:0"
