@@ -6,6 +6,7 @@ import tasksBatchDownloadsEmpty from '@/assets/images/illustrations/tasks-batch-
 import { useTaskSettings } from '@/composables/useTaskSettings'
 import { useSearchNav } from '@/composables/useSearchNav'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
+import DisplayProgress from '@/components/Display/DisplayProgress'
 import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
 import DisplayContentLength from '@/components/Display/DisplayContentLength'
@@ -76,6 +77,9 @@ function getBatchDownloadRecord(item, key, defaultValue) {
         </template>
         <template #cell(size)="{ item }">
           <display-content-length v-if="hasZipSize(item)" :value="item.result?.value?.size" class="text-nowrap" />
+        </template>
+        <template #cell(progress)="{ item }">
+          <display-progress :value="item.progress" />
         </template>
         <template #row-actions="{ item, detailsShowing, toggleDetails }">
           <batch-download-actions

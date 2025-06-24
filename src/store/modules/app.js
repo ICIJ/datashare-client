@@ -55,7 +55,7 @@ export const useAppStore = defineStore(
         batchDownload: {
           orderBy: ['createdAt', 'desc'],
           perPage: '10',
-          properties: ['state', 'name', 'size', 'projects', 'createdAt']
+          properties: ['state', 'name', 'size', 'projects', 'createdAt', 'progress']
         },
         batchSearch: {
           orderBy: ['createdAt', 'desc'],
