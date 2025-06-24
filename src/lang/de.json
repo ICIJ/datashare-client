@@ -1158,6 +1158,7 @@
   },
   "batchSearchErrorModal": {
     "okTitle": "Ok",
+    "errorQuery": "There is an error on the following query",
     "errorTitle": "The error is",
     "text": "how to fix the most common errors",
     "description": "The system encountered a problem. Syntax errors in the CSV are the usual suspects (see {link})."
