@@ -154,7 +154,8 @@ describe('TaskBatchDownloadList.vue', () => {
     expect(columns.at(1).text()).toBe('archive_local_2025-01-31T13_58_33.396Z[GMT].zip')
     expect(columns.at(2).text()).toBe('74.77 MB')
     expect(columns.at(3).text()).toContain('notnot')
-    expect(columns.at(4).text()).toBe('a few seconds ago')
+    expect(columns.at(4).text()).toBe('100%')
+    expect(columns.at(5).text()).toBe('a few seconds ago')
   })
 
   it('should display batch download actions', async () => {
