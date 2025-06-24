@@ -1,5 +1,5 @@
 import { computed, inject, toRef, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { clamp, matches } from 'lodash'
 
 import EsDocList from '@/api/resources/EsDocList'
@@ -10,6 +10,7 @@ import { useSearchStore } from '@/store/modules'
 export function useSearchNav(currentDocument = null) {
   const { core } = useCore()
   const { document: viewDocument } = useDocument()
+  const route = useRoute()
   const router = useRouter()
   const searchStore = useSearchStore.inject()
   const currentDocumentRef = toRef(currentDocument)
@@ -23,6 +24,8 @@ export function useSearchNav(currentDocument = null) {
 
   // Route to the search page with the current search query
   const searchRoute = computed(() => ({ name: 'search', query: searchStore.toRouteQuery }))
+  // Check if the current route is a child of the search route (or the search route itself)
+  const isSearchChildRoute = computed(() => route.matched.some((route) => route.name === 'search'))
   // Position of the document in the hits array
   const documentPagePosition = computed(() => (document.value ? hits.value.findIndex(document.value.eq) : -1))
   // Position of the document in the total documents
@@ -138,6 +141,7 @@ export function useSearchNav(currentDocument = null) {
 
   return {
     searchRoute,
+    isSearchChildRoute,
     disabledNext,
     disabledPrevious,
     documentPagePosition,

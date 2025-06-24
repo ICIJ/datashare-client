@@ -23,7 +23,7 @@ import settings from '@/utils/settings'
 
 const appStore = useAppStore()
 const { core } = useCore()
-const { searchRoute } = useSearchNav()
+const { searchRoute, isSearchChildRoute } = useSearchNav()
 const { isServer } = useMode()
 const { breakpointDown } = useBreakpoints()
 const { t } = useI18n()
@@ -149,7 +149,7 @@ onBeforeMount(() => (appStore.sidebar.closed = appStore.sidebar.closed || fullWi
           :to="searchRoute"
           :compact="compact"
         >
-          <app-sidebar-section-entry :icon="PhFileMagnifyingGlass" :to="searchRoute" exact-match>
+          <app-sidebar-section-entry :icon="PhFileMagnifyingGlass" :to="searchRoute" :exact-match="!isSearchChildRoute">
             {{ t('appSidebar.searchDocuments') }}
           </app-sidebar-section-entry>
           <app-sidebar-section-entry :icon="PhClockCounterClockwise" :to="{ name: 'search.history.list' }">
