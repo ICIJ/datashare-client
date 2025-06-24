@@ -6,6 +6,7 @@ export default {
   component: PathTreeViewEntryName,
   args: {
     collapse: true,
+    nested: true,
     name: 'Contracts',
     selectMode: false
   },

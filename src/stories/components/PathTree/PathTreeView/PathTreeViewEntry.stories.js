@@ -6,6 +6,7 @@ export default {
   component: PathTreeViewEntry,
   args: {
     collapse: true,
+    nested: true,
     compact: false,
     selected: false,
     indeterminate: false,

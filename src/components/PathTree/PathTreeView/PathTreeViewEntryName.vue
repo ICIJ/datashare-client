@@ -98,7 +98,7 @@ const toggle = () => {
     color: var(--bs-action-text-emphasis);
   }
 
-  &:not(&--nested) &__value {
+  &:not(&--nested):not(&--selected) &__value {
     cursor: pointer;
     color: var(--bs-link-color);
 
