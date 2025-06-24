@@ -11,36 +11,26 @@ const props = defineProps({
   }
 })
 
-function getRecord(key, defaultValue = undefined) {
-  return get(props.item, `args.batchDownload.${key}`, defaultValue)
-}
-
-const text = computed(() => {
-  return decodeURI(basename(getRecord('filename')))
-})
-
-const href = computed(() => {
-  return `/api/task/${props.item.id}/result`
-})
-
-const exists = computed(() => {
-  return getRecord('exists', false)
-})
-
-const tag = computed(() => {
-  return exists.value ? 'a' : 'span'
-})
-
-const icon = computed(() => {
-  return exists.value ? 'download-simple' : 'x'
-})
+const filename = computed(() => get(props, 'item.args.batchDownload.filename', ''))
+const text = computed(() => decodeURI(basename(filename.value)))
+const href = computed(() => `/api/task/${props.item.id}/result`)
+const exists = computed(() => get(props, 'item.result.value.uri', false))
+const tag = computed(() => (exists.value ? 'a' : 'span'))
+const attrs = computed(() => (exists.value ? { href: href.value, target: '_blank' } : {}))
+const classList = computed(() => ({ 'router-link-batch-download--disabled': !exists.value }))
 </script>
 
 <template>
-  <component :is="tag" :href="href" target="_blank" class="text-nowrap">
-    <phosphor-icon :name="icon" />
+  <component :is="tag" v-bind="attrs" class="router-link-batch-download text-nowrap" :class="classList">
+    <phosphor-icon :name="PhDownloadSimple" />
     {{ text }}
   </component>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.router-link-batch-download {
+  &--disabled {
+    color: var(--bs-secondary-color);
+  }
+}
+</style>
