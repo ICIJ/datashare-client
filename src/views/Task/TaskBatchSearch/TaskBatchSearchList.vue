@@ -93,7 +93,7 @@ function canManageBatchSearch(item) {
           <display-number :value="getBatchSearchRecord(item, 'nbQueries')" />
         </template>
         <template #cell(documents)="{ item }">
-          <display-number :value="item.result.value ?? 0" />
+          <display-number :value="item.result?.value ?? 0" />
         </template>
         <template #cell(projects)="{ item }">
           <display-project-list :values="getBatchSearchProjects(item)" />
@@ -108,7 +108,12 @@ function canManageBatchSearch(item) {
           <display-progress :value="item.progress" />
         </template>
         <template #row-actions="{ item }">
-          <batch-search-actions v-if="canManageBatchSearch(item)" :uuid="item.id" hide-labels @refresh="refresh" />
+          <batch-search-actions
+            v-if="canManageBatchSearch(item)"
+            :batch-search="item.args.batchRecord"
+            hide-labels
+            @refresh="refresh"
+          />
         </template>
       </page-table-generic>
     </template>
