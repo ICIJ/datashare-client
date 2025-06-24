@@ -119,7 +119,7 @@ export const useAppStore = defineStore(
      *
      * @returns {(view: string, name: string) => any}
      */
-    const getSettingsInit = (view, name) => {
+    const getDefaultSettings = (view, name) => {
       return get(SETTINGS.views, [view, name].join('.'))
     }
 
@@ -213,7 +213,7 @@ export const useAppStore = defineStore(
       filters,
       pins,
       sidebar,
-      getSettingsInit,
+      getDefaultSettings,
       settings,
       resetSettings,
       setSettings,
@@ -231,7 +231,7 @@ export const useAppStore = defineStore(
       afterHydrate: (context) => {
         if (context.store.settings.version !== SETTINGS_VERSION) {
           context.store.resetSettings()
-        } 
+        }
       }
     }
   }

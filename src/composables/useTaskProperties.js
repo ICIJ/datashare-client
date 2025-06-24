@@ -7,7 +7,7 @@ import { useAppStore } from '@/store/modules'
 export function useTaskProperties(pageName) {
   const appStore = useAppStore()
   const settingsView = camelCase(pageName)
-  const propertyList = appStore.getSettingsInit(settingsView, 'properties') ?? []
+  const propertyList = appStore.getDefaultSettings(settingsView, 'properties') ?? []
   const { propertyItem } = useViewProperties()
 
   const id = propertyItem({
