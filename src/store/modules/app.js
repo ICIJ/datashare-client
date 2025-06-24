@@ -37,10 +37,10 @@ export const useAppStore = defineStore(
         task: {
           orderBy: ['createdAt', 'desc'],
           perPage: '10',
-          properties: ['id', 'name', 'createdAt', 'progress', 'state']
+          properties: ['state', 'id', 'name', 'progress', 'createdAt']
         },
         taskBoardLatest: {
-          properties: ['taskType', 'state', 'name', 'projects', 'author', 'createdAt', 'progress']
+          properties: ['taskType', 'state', 'name', 'projects', 'author', 'progress', 'createdAt']
         },
         entities: {
           orderBy: ['createdAt', 'desc'],
@@ -55,7 +55,7 @@ export const useAppStore = defineStore(
         batchDownload: {
           orderBy: ['createdAt', 'desc'],
           perPage: '10',
-          properties: ['state', 'name', 'size', 'projects', 'createdAt', 'progress']
+          properties: ['state', 'name', 'size', 'projects', 'progress', 'createdAt']
         },
         batchSearch: {
           orderBy: ['createdAt', 'desc'],
@@ -68,8 +68,8 @@ export const useAppStore = defineStore(
             'documents',
             'projects',
             'author',
-            'createdAt',
-            'progress'
+            'progress',
+            'createdAt'
           ]
         },
         batchSearchQueries: {
