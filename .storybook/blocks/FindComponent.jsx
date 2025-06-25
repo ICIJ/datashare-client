@@ -16,9 +16,7 @@ function findComponentImportPath(storyKind) {
   const modules = import.meta.glob('/src/components/**/*.vue', { eager: false })
   const match = Object.keys(modules).find(path => path.toLowerCase().endsWith(token))
   // If no match found, return null
-  if (!match) return null
-  const rel = relative('/src/components', match)
-  return rel.split('.').shift()
+  return match ? relative('/src/components', match).split('.').shift() : null
 }
 
 /**
