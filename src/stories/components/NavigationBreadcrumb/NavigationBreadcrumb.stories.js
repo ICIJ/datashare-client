@@ -39,7 +39,7 @@ const routes = [
 
 export default {
   decorators: [vueRouter(routes)],
-  title: 'Components/NavigationBreadcrumb',
+  title: 'Components/NavigationBreadcrumb/NavigationBreadcrumb',
   tags: ['autodocs'],
   component: NavigationBreadcrumb,
   render: () => ({

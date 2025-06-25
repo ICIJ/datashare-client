@@ -11,13 +11,10 @@ const routes = [
 
 export default {
   decorators: [vueRouter(routes)],
-  title: 'Components/NavigationBreadcrumb/Link',
+  title: 'Components/NavigationBreadcrumb/NavigationBreadcrumbLink',
   tags: ['autodocs'],
   component: NavigationBreadcrumbLink,
   argTypes: {
-    routeName: {
-      control: { type: 'string' }
-    },
     currentRouteName: {
       control: { type: 'string' }
     },
@@ -35,23 +32,12 @@ export default {
     }
   },
   args: {
-    routeName: 'projects',
+    to: { name: 'projects' },
     icon: 'dots-nine',
     title: 'All projects',
     noCaret: true,
     active: true
-  },
-  render: (args) => ({
-    setup() {
-      return { args }
-    },
-    components: {
-      NavigationBreadcrumbLink
-    },
-    template: `
-      <navigation-breadcrumb-link v-bind="args" />
-    `
-  })
+  }
 }
 
 export const Default = {}
