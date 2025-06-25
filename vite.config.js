@@ -1,4 +1,4 @@
-import { defineConfig, loadEnv } from 'vite'
+import { defineConfig } from 'vite'
 import { resolve } from 'path'
 import * as childProcess from 'child_process'
 import Components from 'unplugin-vue-components/vite'
@@ -12,7 +12,8 @@ import { BootstrapVueNextResolver } from 'unplugin-vue-components/resolvers'
 
 export default ({ mode }) => {
   const VITE_GIT_HASH = childProcess.execSync('git rev-parse HEAD').toString()
-  process.env = Object.assign(process.env, { VITE_GIT_HASH, ...loadEnv(mode, process.cwd(), '') })
+  const VITE_CWD  = process.cwd()
+  Object.assign(process.env, { ...process.env, VITE_GIT_HASH, VITE_CWD })
   
   return defineConfig({
     base: process.env.VITE_BASE,

@@ -9,6 +9,7 @@ import Vue3Toastify from 'vue3-toastify'
 
 import messages from '@/lang/en'
 import settings from '@/utils/settings'
+import AutodocsTemplate from '~storybook/templates/AutodocsTemplate.mdx'
 
 import './preview.scss'
 
@@ -80,7 +81,7 @@ const decorators = [
 
 const style = {
   fontFamily: 'var(--bs-font-sans-serif) !important',
-  fontSize: '1rem',
+  fontSize: '1em',
 }
 
 const headingsStyle = {
@@ -105,6 +106,7 @@ const preview = {
   decorators,
   parameters: {
     docs: {
+      page: AutodocsTemplate,
       components: {
         h1: styled.h1(() => h1Style),
         h2: styled.h2(() => headingsStyle),
