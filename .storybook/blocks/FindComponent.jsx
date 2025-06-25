@@ -26,7 +26,7 @@ document.addEventListener('datashare:ready', async () => {
     },
     template: \`
       <div>
-        This is a custom component that will be mounted in the app sidebar.
+        This is a custom component that will be mounted bellow the page header.
         <${componentName} />
       </div>
     \`

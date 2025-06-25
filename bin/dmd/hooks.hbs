@@ -9,6 +9,36 @@ in the UI. These hooks act as strategic markers placed throughout the applicatio
 functionality or visuals. This page provides a comprehensive list of available hooks, along with their locations, making
 it easier for you to integrate your own components seamlessly into the Datashare experience.
 
+## How to use hooks
+
+```js
+// It's usualy safer to wait for the app to be ready
+document.addEventListener('datashare:ready', async () => {
+
+  // Load the component from Datashare core
+  const ButtonAdd = await datashare.findComponent("Button/ButtonAdd")
+
+  // Create a custom Vue 3 component
+  const definition = {
+    name: "ButtonAddWrapper",
+    components: {
+      // Register the component we loaded from Datashare core
+      ButtonAdd
+    },
+    template: `
+      <div>
+        This is a custom component that will be mounted bellow the page header.
+        <ButtonAdd />
+      </div>
+    `
+  }
+
+  // Register the component with Datashare's plugin system
+  // This will mount the component bellow the page header
+  datashare.registerHook({ target: 'page-header:after', definition })
+})
+```
+
 ## Hooks locations
 
 | Component | Name |
