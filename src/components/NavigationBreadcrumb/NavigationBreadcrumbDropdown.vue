@@ -68,6 +68,7 @@ defineProps({
   }
 
   &__menu {
+    --bs-dropdown-zindex: #{$zindex-sticky};
     --bs-dropdown-bg: var(--bs-action-bg-subtle);
     --bs-dropdown-border-color: var(--bs-action);
     --bs-dropdown-color: var(--bs-action-text-emphasis);
