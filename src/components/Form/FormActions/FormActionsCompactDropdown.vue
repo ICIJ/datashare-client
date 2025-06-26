@@ -55,12 +55,14 @@ const menuClassList = computed(() => {
 </template>
 
 <style lang="scss">
-$toggle-padding-y: calc(var(--bs-btn-padding-y) - 0.1em);
 .form-actions-compact-dropdown {
+  --form-actions-compact-dropdown-toggle-padding-y: calc(var(--bs-btn-padding-y) - 0.1em);
+
   &__toggle {
-    padding-top: $toggle-padding-y;
-    padding-bottom: $toggle-padding-y;
+    padding-top: var(--form-actions-compact-dropdown-toggle-padding-y);
+    padding-bottom: var(--form-actions-compact-dropdown-toggle-padding-y);
   }
+
   &__menu {
     --bs-form-actions-compact-dropdown-bg: var(--bs-body-bg);
     --bs-form-actions-compact-dropdown-border-color: var(--bs-border-color);
