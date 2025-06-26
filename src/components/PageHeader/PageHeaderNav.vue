@@ -39,6 +39,9 @@ const props = defineProps({
     type: String,
     default: SIZE.MD,
     validator: breakpointSizeValidator
+  },
+  breadcrumbRoutes: {
+    type: Array
   }
 })
 
@@ -61,8 +64,13 @@ const breadcrumbMaxLevel = computed(() => {
       v-if="!noBreadcrumb"
       class="page-header-nav__breadcrumb me-auto"
       :max-level="breadcrumbMaxLevel"
+      :routes="breadcrumbRoutes"
     >
       <slot name="breadcrumb" />
+      <!-- This forwards all the given slots to navgiation breadcrumb -->
+      <template v-for="(_slot, name) of $slots" :key="name" #[name]="binding">
+        <slot :name="name" v-bind="binding" />
+      </template>
     </navigation-breadcrumb>
     <div class="page-header-nav__actions d-flex gap-4 ms-4 align-items-center">
       <slot name="actions" />

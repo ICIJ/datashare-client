@@ -57,6 +57,9 @@ const props = defineProps({
   sticky: {
     type: Boolean,
     default: false
+  },
+  breadcrumbRoutes: {
+    type: Array
   }
 })
 
@@ -74,15 +77,11 @@ const hasToolbar = computed(() => {
     :add-to="addTo"
     :add-label="addLabel"
     :sidebar-toggler-breakpoint="sidebarTogglerBreakpoint"
+    :breadcrumb-routes="breadcrumbRoutes"
   >
-    <template #toggle-sidebar>
-      <slot name="toggle-sidebar" />
-    </template>
-    <template #breadcrumb>
-      <slot name="breadcrumb" />
-    </template>
-    <template #actions>
-      <slot name="actions" />
+    <!-- This forwards all the given slots to page-header-nav -->
+    <template v-for="(_slot, name) of $slots" :key="name" #[name]="binding">
+      <slot :name="name" v-bind="binding" />
     </template>
   </page-header-nav>
   <page-header-toolbar
