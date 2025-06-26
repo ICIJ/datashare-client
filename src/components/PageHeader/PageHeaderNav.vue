@@ -34,11 +34,20 @@ const props = defineProps({
     type: String,
     default: SIZE.MD,
     validator: breakpointSizeValidator
+  },
+  breadcrumMaxLevelBreakpoint: {
+    type: String,
+    default: SIZE.MD,
+    validator: breakpointSizeValidator
   }
 })
 
 const showToggleSidebar = computed(() => {
   return !props.noToggleSidebar && (!toggleSidebar.value || breakpointDown.value[props.sidebarTogglerBreakpoint])
+})
+
+const breadcrumbMaxLevel = computed(() => {
+  return breakpointDown.value[props.breadcrumMaxLevelBreakpoint] ? 1 : 3
 })
 </script>
 
@@ -48,7 +57,11 @@ const showToggleSidebar = computed(() => {
     <slot name="toggle-sidebar">
       <button-toggle-sidebar v-if="showToggleSidebar" v-model:active="toggleSidebar" class="flex-shrink-0" />
     </slot>
-    <navigation-breadcrumb v-if="!noBreadcrumb" class="page-header-nav__breadcrumb me-auto">
+    <navigation-breadcrumb
+      v-if="!noBreadcrumb"
+      class="page-header-nav__breadcrumb me-auto"
+      :max-level="breadcrumbMaxLevel"
+    >
       <slot name="breadcrumb" />
     </navigation-breadcrumb>
     <div class="page-header-nav__actions d-flex gap-4 ms-4 align-items-center">
