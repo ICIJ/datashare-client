@@ -54,8 +54,8 @@
     "label": "Agregar nueva"
   },
   "buttonTogglePathTreeView": {
-    "list": "List view",
-    "tree": "Tree view"
+    "list": "Vista de lista",
+    "tree": "Vista de árbol"
   },
   "buttonToggleSettings": {
     "label": "Configuración"
@@ -419,7 +419,7 @@
   },
   "documentViewTabs": {
     "text": "Texto",
-    "viewer": "Ver",
+    "viewer": "Vista previa",
     "metadata": "Metadatos",
     "entities": "Entidades"
   },
@@ -1158,7 +1158,7 @@
   },
   "batchSearchErrorModal": {
     "okTitle": "Aceptar",
-    "errorQuery": "There is an error on the following query",
+    "errorQuery": "Hay un error en la siguiente consulta",
     "errorTitle": "El error es",
     "text": "cómo corregir los errores más comunes",
     "description": "El sistema encontró un problema. Los errores de sintaxis en el CSV son los sospechosos habituales (ver {link})."
