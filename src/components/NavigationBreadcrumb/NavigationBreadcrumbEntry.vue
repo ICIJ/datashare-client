@@ -21,7 +21,7 @@ const classList = computed(() => {
 
 <template>
   <div class="navigation-breadcrumb-entry" :class="classList">
-    <slot></slot>
+    <slot />
     <phosphor-icon
       v-if="!noCaret"
       role="separator"

@@ -1,4 +1,5 @@
 <script setup>
+import { isString } from 'lodash'
 import { computed, useSlots } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -12,6 +13,9 @@ const props = defineProps({
   maxLevel: {
     type: Number,
     default: 3
+  },
+  routes: {
+    type: Array
   }
 })
 
@@ -29,10 +33,10 @@ const currentRoute = computed(() => {
 
 const matchedRoutes = computed(() => {
   // We get all matching routes, including parent routes
-  return currentRoute?.value?.matched ?? []
+  return (props.routes ?? currentRoute?.value?.matched ?? []).map(castRoute)
 })
 
-const routes = computed(() => {
+const allRoutes = computed(() => {
   return matchedRoutes.value.filter((route) => {
     return route.meta?.breadcrumb !== false && (route.name || route.meta?.title)
   })
@@ -40,12 +44,12 @@ const routes = computed(() => {
 
 const visibleRoutes = computed(() => {
   // We only show the last `maxLevel` routes
-  return routes.value.slice(-props.maxLevel)
+  return allRoutes.value.slice(-props.maxLevel)
 })
 
 const hiddenRoutes = computed(() => {
   // We hide the first `maxLevel` routes
-  return routes.value.slice(0, Math.max(0, routes.value.length - props.maxLevel))
+  return allRoutes.value.slice(0, Math.max(0, allRoutes.value.length - props.maxLevel))
 })
 
 const isActiveRoute = (name) => {
@@ -56,6 +60,13 @@ const showActiveSlot = (name) => {
   return hasActiveSlot.value && isActiveRoute(name)
 }
 
+const castRoute = (nameOrRoute) => {
+  if (isString(nameOrRoute)) {
+    return { name: nameOrRoute }
+  }
+  return nameOrRoute
+}
+
 const hasActiveSlot = computed(() => 'active' in useSlots())
 const hasHiddenRoutes = computed(() => hiddenRoutes.value.length > 0)
 </script>
@@ -63,21 +74,25 @@ const hasHiddenRoutes = computed(() => hiddenRoutes.value.length > 0)
 <template>
   <div class="navigation-breadcrumb">
     <slot v-bind="{ currentRoute, matchedRoutes, routes, visibleRoutes }">
-      <navigation-breadcrumb-dropdown v-if="hasHiddenRoutes" :routes="hiddenRoutes" />
+      <navigation-breadcrumb-dropdown v-if="hasHiddenRoutes" :routes="hiddenRoutes">
+        <template v-for="{ name } in hiddenRoutes" #[`entry-label(${name})`]="binding" :key="name">
+          <slot :name="`entry-label(${name})`" v-bind="binding" />
+        </template>
+      </navigation-breadcrumb-dropdown>
       <navigation-breadcrumb-link
         v-for="{ name } in visibleRoutes"
         :key="name"
         :to="{ name }"
         :current-route-name="currentRouteName"
-        :no-caret="name === currentRouteName"
         :active="isActiveRoute(name)"
       >
+        <slot :name="`entry-label(${name})`" />
         <template v-if="showActiveSlot(name)">
           <slot name="active" />
         </template>
       </navigation-breadcrumb-link>
     </slot>
-    <slot name="addon"></slot>
+    <slot name="addon" />
   </div>
 </template>
 

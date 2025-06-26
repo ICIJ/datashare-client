@@ -5,18 +5,17 @@ import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
 import batchSearchResultsEmpty from '@/assets/images/illustrations/batch-search-results-empty.svg'
+import AppSpinner from '@/components/AppSpinner/AppSpinner'
 import DisplayNumber from '@/components/Display/DisplayNumber'
 import DisplayContentLength from '@/components/Display/DisplayContentLength'
 import DisplayContentType from '@/components/Display/DisplayContentType'
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
 import EmptyState from '@/components/EmptyState/EmptyState'
-import NavigationBreadcrumbLink from '@/components/NavigationBreadcrumb/NavigationBreadcrumbLink'
 import PageContainer from '@/components/PageContainer/PageContainer'
 import PageHeader from '@/components/PageHeader/PageHeader'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import ProjectButton from '@/components/Project/ProjectButton'
 import RouterLinkBatchSearchResult from '@/components/RouterLink/RouterLinkBatchSearchResult'
-import RowPaginationDocuments from '@/components/RowPagination/RowPaginationDocuments'
 import { useAppStore } from '@/store/modules'
 import { useBatchSearchResultProperties } from '@/composables/useBatchSearchResultProperties'
 import { useCore } from '@/composables/useCore'
@@ -45,9 +44,9 @@ const route = useRoute()
 const { core } = useCore()
 const { fields } = useBatchSearchResultProperties()
 const { waitFor, isLoading } = useWait()
+const batchSearch = ref(null)
 const settingsView = 'batchSearchResults'
 const hits = ref(null)
-const batchSearch = ref(null)
 
 const searchQuery = useUrlParam('q', '')
 
@@ -79,18 +78,32 @@ const order = computed({
 
 const from = computed(() => (page.value - 1) * perPage.value)
 
+const breadcrumbRoutes = computed(() => {
+  return [
+    {
+      name: 'task'
+    },
+    {
+      name: 'task.batch-search.list'
+    },
+    {
+      name: 'task.batch-search-queries.list'
+    },
+    {
+      name: props.query ? 'task.batch-search-queries.show' : 'task.batch-search-results.list'
+    }
+  ]
+})
+
 const visibleFields = computed(() => {
   return fields.filter((field) => {
     return appStore.getSettings(settingsView, 'properties').includes(field.key)
   })
 })
 
-const batchSearchName = computed(() => batchSearch.value?.name)
-
 const isEmpty = computed(() => !isLoading.value && !hits.value.items?.length)
 
 const fetchBatchSearchResults = waitFor(async () => {
-  await new Promise((resolve) => setTimeout(resolve, 1000))
   hits.value = await core.api.getBatchSearchResults(
     props.uuid,
     from.value,
@@ -113,30 +126,23 @@ watch(toRef(route, 'query'), fetchBatchSearchResults, { deep: true, immediate: t
   <page-header
     v-model:searchQuery="searchQuery"
     v-model:page="page"
+    :breadcrumb-routes="breadcrumbRoutes"
     :per-page="perPage"
     :total-rows="hits?.pagination?.total ?? 0"
     paginable
     sticky
   >
-    <template #breadcrumb>
-      <navigation-breadcrumb-link :to="{ name: 'task' }" />
-      <navigation-breadcrumb-link :to="{ name: 'task.batch-search.list' }" />
-      <navigation-breadcrumb-link :to="{ name: 'task.batch-search-queries.list' }" :title="batchSearchName" />
-      <navigation-breadcrumb-link
-        v-if="query"
-        :to="{ name: 'task.batch-search-queries.show' }"
-        :title="query"
-        no-icon
-      />
-      <navigation-breadcrumb-link
-        v-else
-        :to="{ name: 'task.batch-search-results.list' }"
-        :title="t('task.batch-search-results.list.title')"
-        no-icon
-      />
+    <template #entry-label(task.batch-search-queries.list)>
+      <template v-if="batchSearch">
+        {{ batchSearch.name }}
+      </template>
+      <app-spinner v-else />
     </template>
-    <template #pagination="{ totalRows }">
-      <row-pagination-documents v-model="page" :total-rows="totalRows" :per-page="perPage" />
+    <template #entry-label(task.batch-search-queries.show)>
+      {{ query }}
+    </template>
+    <template #entry-label(task.batch-search-results.list)>
+      {{ t('task.batch-search-results.list.title') }}
     </template>
   </page-header>
   <page-container fluid>

@@ -34,7 +34,9 @@ defineProps({
         </slot>
       </template>
       <slot>
-        <navigation-breadcrumb-dropdown-entry v-for="route in routes" :key="route.name" :to="route" :no-icon="noIcon" />
+        <navigation-breadcrumb-dropdown-entry v-for="route in routes" :key="route.name" :to="route" :no-icon="noIcon">
+          <slot :name="`entry-label(${route.name})`" />
+        </navigation-breadcrumb-dropdown-entry>
       </slot>
     </b-dropdown>
     <phosphor-icon

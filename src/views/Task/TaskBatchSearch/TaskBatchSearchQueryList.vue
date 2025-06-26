@@ -1,12 +1,11 @@
 <script setup>
 import { computed, toRef, ref, onBeforeMount, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import get from 'lodash/get.js'
 import { useI18n } from 'vue-i18n'
 
+import AppSpinner from '@/components/AppSpinner/AppSpinner'
 import ButtonRowActionSearch from '@/components/Button/ButtonRowAction/ButtonRowActionSearch'
 import BatchSearchCard from '@/components/BatchSearch/BatchSeachCard/BatchSearchCard'
-import NavigationBreadcrumbLink from '@/components/NavigationBreadcrumb/NavigationBreadcrumbLink'
 import PageContainer from '@/components/PageContainer/PageContainer'
 import PageHeader from '@/components/PageHeader/PageHeader'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
@@ -79,21 +78,20 @@ const visibleFields = computed(() => {
   })
 })
 
-const batchSearchName = computed(() => batchSearch.value?.name)
-
-function getBatchSearchUser(item) {
-  return get(item, ['args', 'user'].join('.'))
-}
-
 async function fetchBatchSearch() {
+  // First fetch the task
   const task = await taskStore.fetchTask(props.uuid)
-  const batchSearchRecord = await core.api.getBatchSearch(props.uuid)
-  const batchSearchUser = getBatchSearchUser(task)
   // Then fetch the batch search record
+  const batchSearchRecord = await core.api.getBatchSearch(props.uuid)
+  // Set the page title according to the batch search name
+  core.pageTitle = batchSearchRecord.name
+  // Finally, we set and extend the batchSearch reactive object
+  // with the task information and the batch search record to make
+  // sure we have up to date information.
   batchSearch.value = {
     ...batchSearchRecord,
     nbResults: task.result?.value ?? 0,
-    userId: batchSearchUser.id,
+    userId: task?.args?.user?.id,
     state: task.state,
     errorMessage: batchSearchRecord.errorMessage ?? task.error?.message ?? null,
     errorQuery: batchSearchRecord.errorQuery ?? null
@@ -119,10 +117,11 @@ watch(toRef(route, 'query'), fetchBatchSearchQueries, { deep: true, immediate: t
 
 <template>
   <page-header>
-    <template #breadcrumb>
-      <navigation-breadcrumb-link :to="{ name: 'task' }" />
-      <navigation-breadcrumb-link :to="{ name: 'task.batch-search.list' }" />
-      <navigation-breadcrumb-link :to="{ name: 'task.batch-search-queries.list' }" :title="batchSearchName" />
+    <template #entry-label(task.batch-search-queries.list)>
+      <template v-if="batchSearch">
+        {{ batchSearch.name }}
+      </template>
+      <app-spinner v-else />
     </template>
   </page-header>
   <page-container fluid class="pb-3">

@@ -92,7 +92,7 @@ const classList = computed(() => {
     </span>
   </a>
   <phosphor-icon
-    v-if="!noCaret"
+    v-if="route && !noCaret"
     role="separator"
     aria-hidden="true"
     class="navigation-breadcrumb-link__caret mx-2"

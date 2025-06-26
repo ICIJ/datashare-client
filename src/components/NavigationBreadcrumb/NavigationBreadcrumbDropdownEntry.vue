@@ -38,7 +38,7 @@ const icon = computed(() => {
   <b-dropdown-item :href="resolved.href">
     <phosphor-icon v-if="!noIcon && icon" class="me-2" :name="icon" />
     <phosphor-icon v-else class="opacity-25 me-2" :name="PhCaretRight" />
-    <slot name="item" :route="to">
+    <slot :route="to">
       <display-route :value="to" />
     </slot>
   </b-dropdown-item>
