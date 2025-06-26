@@ -111,12 +111,6 @@ const classList = computed(() => {
   &__label {
     padding: $spacer-xxs 0;
     border-bottom: 1px solid transparent;
-
-    .navigation-breadcrumb-link:not(.navigation-breadcrumb-link--active) &__icon + &__content {
-      @include media-breakpoint-down(md) {
-        display: none;
-      }
-    }
   }
 
   &--active,

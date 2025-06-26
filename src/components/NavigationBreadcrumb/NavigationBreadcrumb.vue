@@ -2,11 +2,16 @@
 import { computed, useSlots } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
+import NavigationBreadcrumbDropdown from '@/components/NavigationBreadcrumb/NavigationBreadcrumbDropdown'
 import NavigationBreadcrumbLink from '@/components/NavigationBreadcrumb/NavigationBreadcrumbLink'
 
 const props = defineProps({
   currentRouteName: {
     type: String
+  },
+  maxLevel: {
+    type: Number,
+    default: 3
   }
 })
 
@@ -27,10 +32,20 @@ const matchedRoutes = computed(() => {
   return currentRoute?.value?.matched ?? []
 })
 
-const visibleRoutes = computed(() => {
+const routes = computed(() => {
   return matchedRoutes.value.filter((route) => {
     return route.meta?.breadcrumb !== false && (route.name || route.meta?.title)
   })
+})
+
+const visibleRoutes = computed(() => {
+  // We only show the last `maxLevel` routes
+  return routes.value.slice(-props.maxLevel)
+})
+
+const hiddenRoutes = computed(() => {
+  // We hide the first `maxLevel` routes
+  return routes.value.slice(0, Math.max(0, routes.value.length - props.maxLevel))
 })
 
 const isActiveRoute = (name) => {
@@ -41,14 +56,14 @@ const showActiveSlot = (name) => {
   return hasActiveSlot.value && isActiveRoute(name)
 }
 
-const hasActiveSlot = computed(() => {
-  return 'active' in useSlots()
-})
+const hasActiveSlot = computed(() => 'active' in useSlots())
+const hasHiddenRoutes = computed(() => hiddenRoutes.value.length > 0)
 </script>
 
 <template>
   <div class="navigation-breadcrumb">
-    <slot v-bind="{ currentRoute, matchedRoutes, visibleRoutes }">
+    <slot v-bind="{ currentRoute, matchedRoutes, routes, visibleRoutes }">
+      <navigation-breadcrumb-dropdown v-if="hasHiddenRoutes" :routes="hiddenRoutes" />
       <navigation-breadcrumb-link
         v-for="{ name } in visibleRoutes"
         :key="name"

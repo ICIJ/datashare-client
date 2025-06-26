@@ -1,9 +1,14 @@
 <script setup>
 import { computed } from 'vue'
+import { PhosphorIcon } from '@icij/murmur-next'
 
 const props = defineProps({
   flush: {
     type: Boolean
+  },
+  noCaret: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -17,6 +22,14 @@ const classList = computed(() => {
 <template>
   <div class="navigation-breadcrumb-entry" :class="classList">
     <slot></slot>
+    <phosphor-icon
+      v-if="!noCaret"
+      role="separator"
+      aria-hidden="true"
+      class="navigation-breadcrumb-entry__caret mx-2"
+      size="1em"
+      :name="PhCaretRight"
+    />
   </div>
 </template>
 

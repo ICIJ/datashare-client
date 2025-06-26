@@ -27,7 +27,34 @@ const routes = [
                 name: 'tasks.batch-searches.view',
                 meta: {
                   icon: null
-                }
+                },
+                children: [
+                  {
+                    path: '/tasks/batch-searches/view/queries',
+                    name: 'tasks.batch-searches.view.queries',
+                    meta: {
+                      icon: null
+                    },
+                    children: [
+                      {
+                        path: '/tasks/batch-searches/view/queries/foo',
+                        name: 'tasks.batch-searches.view.queries.foo',
+                        meta: {
+                          icon: null
+                        },
+                        children: [
+                          {
+                            path: '/tasks/batch-searches/view/queries/foo/results',
+                            name: 'tasks.batch-searches.view.queries.foo.results',
+                            meta: {
+                              icon: null
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
               }
             ]
           }
@@ -42,17 +69,20 @@ export default {
   title: 'Components/NavigationBreadcrumb/NavigationBreadcrumb',
   tags: ['autodocs'],
   component: NavigationBreadcrumb,
-  render: () => ({
-    components: {
-      NavigationBreadcrumb
-    },
-    template: `
-      <navigation-breadcrumb current-route-name="tasks.batch-searches.view" />
-    `
-  })
+  args: {
+    maxLevel: 5,
+    currentRouteName: 'tasks.batch-searches.view'
+  }
 }
 
 export const Default = {}
+
+export const MaxLevel = {
+  args: {
+    maxLevel: 3,
+    currentRouteName: 'tasks.batch-searches.view.queries.foo.results'
+  }
+}
 
 export const ActiveSlot = {
   render: () => ({
