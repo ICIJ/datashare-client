@@ -7,10 +7,10 @@ import VCalendar from 'v-calendar'
 import VueScrollTo from 'vue-scrollto'
 import Vue3Toastify, { toast } from 'vue3-toastify'
 import { createBootstrap } from 'bootstrap-vue-next'
-import { createApp, defineComponent, h } from 'vue'
+import { createApp, defineComponent, toValue, reactive, watchEffect, h } from 'vue'
 import { createI18n } from 'vue-i18n'
 import { createRouter, createWebHashHistory } from 'vue-router'
-import { iteratee } from 'lodash'
+import { iteratee, get } from 'lodash'
 
 import ComponentsMixin from './ComponentsMixin'
 import FiltersMixin from './FiltersMixin'
@@ -67,8 +67,11 @@ class Core extends Behaviors {
     this._vue = createApp(Root)
     this._api = api
     this._auth = new Auth(mode, this._api)
+    this._pageContext = reactive({ title: null })
     // Setup deferred state
     this.defer()
+    // This watcher will update the page title whenever the _pageContext ref changes.
+    watchEffect(this.applyPageTitle.bind(this))
   }
   /**
    * Add a Vue plugin to the app
@@ -360,12 +363,43 @@ class Core extends Behaviors {
   /**
    * Append the given title to the page title
    * @param {String} title - Title to append to the page
-   * @param {String} [suffix=Datashare] - Suffix to the title
+   * @returns {Core} the current instance of Core
    */
-  setPageTitle(title = null, suffix = 'Datashare') {
-    if (document && document.title) {
-      document.title = title ? `${title} - ${suffix}` : suffix
+  applyPageTitle() {
+    document.title = this.pageTitle ? `${this.pageTitle} - Datashare` : 'Datashare'
+    return this
+  }
+  /**
+   * Get the page context, which is used to set the page title or other page-related data.
+   * @param {String} [path] - Optional path to a specific property in the page context object.
+   * @returns {Object} the page context object or a specific property if a path is provided.
+   */
+  getPageContext(path) {
+    if (path) {
+      return get(this._pageContext, path)
     }
+    return this._pageContext
+  }
+  /**
+   * Set the page context, which is used to set the page title or other page-related data.
+   * @param {Object} context - The context object to set, which can include a title or other properties.
+   * @returns {Core} the current instance of Core
+   */
+  setPageContext(context = {}) {
+    Object.assign(this._pageContext, context)
+    return this
+  }
+  /**
+   * Clear the page context, removing all properties from it.
+   * @returns {Core} the current instance of Core
+   */
+  clearPageContext() {
+    for (const key in this._pageContext) {
+      if (Object.prototype.hasOwnProperty.call(this._pageContext, key)) {
+        delete this._pageContext[key]
+      }
+    }
+    return this
   }
   /**
    * Register a callback to an event using the EventBus singleton.
@@ -439,6 +473,13 @@ class Core extends Behaviors {
     return this._router
   }
   /**
+   * The current route object
+   * @type {Route}
+   */
+  get route() {
+    return toValue(this._router.currentRoute)
+  }
+  /**
    * The Pinia instance
    * @type {Pinia}
    */
@@ -492,6 +533,27 @@ class Core extends Behaviors {
    */
   get mode() {
     return getMode(this.config.get('mode'))
+  }
+  /**
+   * Get the current page context
+   * @type {Object}
+   */
+  get pageContext() {
+    return this._pageContext
+  }
+  /**
+   * Get the current page title
+   * @type {String}
+   */
+  get pageTitle() {
+    return this._pageContext.title
+  }
+  /**
+   * Append the given title to the page title
+   * @param {String} title - Title to append to the page
+   */
+  set pageTitle(title = null) {
+    this._pageContext.title = title
   }
   /**
    * instantiate a Core class (useful for chaining usage or mapping)

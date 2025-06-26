@@ -1,6 +1,6 @@
 <script setup>
-import { computed } from 'vue'
-import { capitalize, isFunction, isString } from 'lodash'
+import { computed, watchEffect, ref } from 'vue'
+import { isFunction, isString } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 
@@ -31,18 +31,28 @@ const route = computed(() => {
   }
 })
 
-const display = computed(() => {
-  return (
-    // Use the provided title from props
-    props.title ||
-    // Or use the title from the route meta as a function
-    (isFunction(route.value?.meta?.title) && route.value.meta.title({ route: route.value, core })) ||
-    // Or use the title from the route meta as a translation key
-    (isString(route.value?.meta?.title) && t(route.value.meta.title)) ||
-    // Or use the last part of the route name
-    capitalize(route.value?.name.split('.').pop())
-  )
-})
+const display = ref(null)
+
+function applyDisplay() {
+  // Always reset the display value so we can have an incremental population
+  // of the display value based on the available data. This is why every condition
+  // checks if `display.value` is still null before setting it.
+  display.value = null
+  // Use the provided title from props
+  if (props.title) {
+    display.value = props.title
+  }
+  // Or use the title from the route meta as a function
+  if (!display.value && isFunction(route.value?.meta?.title)) {
+    display.value = route.value.meta.title(core)
+  }
+  // Or use the title from the route meta as a translation key
+  if (!display.value && isString(route.value?.meta?.title)) {
+    display.value = t(route.value.meta.title)
+  }
+}
+
+watchEffect(applyDisplay)
 </script>
 
 <template>
