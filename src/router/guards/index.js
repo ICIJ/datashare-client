@@ -1,10 +1,11 @@
-import get from 'lodash/get'
-import isFunction from 'lodash/isFunction'
+import { get, isString, isFunction } from 'lodash'
 
 import { useAppStore } from '@/store/modules'
 import { useNProgress } from '@/composables/useNProgress'
 
-export default ({ router, auth, config, i18n, setPageTitle }) => {
+export default (core) => {
+  const { router, auth, config, i18n } = core
+
   async function checkUserAuthentication(to, from, next) {
     const appStore = useAppStore()
     try {
@@ -43,13 +44,16 @@ export default ({ router, auth, config, i18n, setPageTitle }) => {
     }
   }
 
-  async function setPageTitleFromMeta({ meta }, _from, next) {
-    const params = { router, auth, config, i18n }
-    let title
-    if (meta.title) {
-      title = isFunction(meta.title) ? await meta.title(params) : i18n.global.t(meta.title)
+  async function preparePageContext({ meta }, _from, next) {
+    core.clearPageContext()
+    // Use title from the route meta as a function
+    if (isFunction(meta?.title)) {
+      core.pageTitle = await meta.title(core)
     }
-    setPageTitle(title)
+    // Or use the title from the route meta as a translation key
+    else if (isString(meta?.title)) {
+      core.pageTitle = i18n.global.t(meta.title)
+    }
     next()
   }
 
@@ -77,7 +81,7 @@ export default ({ router, auth, config, i18n, setPageTitle }) => {
   router.beforeEach(checkMode)
   router.beforeEach(checkUserAuthentication)
   router.beforeEach(checkUserProjects)
-  router.beforeEach(setPageTitleFromMeta)
+  router.beforeEach(preparePageContext)
   router.beforeEach(startProgress)
   router.afterEach(endProgress)
 }

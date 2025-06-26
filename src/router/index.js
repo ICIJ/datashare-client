@@ -318,9 +318,9 @@ export const routes = [
             component: () => import('@/views/Project/ProjectView/ProjectView'),
             meta: {
               icon: null,
-              title({ route, core }) {
+              title(core) {
                 try {
-                  return core?.findProject(route.params.name).label
+                  return core?.findProject(core.route.params.name).label
                 } catch (_) {
                   return null
                 }
