@@ -60,13 +60,20 @@ defineProps({
     --bs-btn-color: var(--bs-body-color);
     --bs-btn-border-color: transparent;
     --bs-btn-hover-border-color: var(--bs-primary);
+    --bs-btn-hover-bg: var(--bs-tertiary-bg-subtle);
     --bs-btn-border-radius: 0;
     --bs-btn-border-width: 0;
     --bs-btn-padding-x: 0;
-    --bs-btn-padding-y: #{$spacer-xxs};
-    --bs-btn-line-height: var(--bs-body-line-height);
+    --bs-btn-padding-y: 0;
+    --bs-btn-border-radius: 1rem;
+    --bs-btn-line-height: 2rem;
 
-    border-bottom: 1px solid var(--bs-btn-border-color);
+    height: var(--bs-btn-line-height);
+    width: var(--bs-btn-line-height);
+
+    & > .phosphor-icon {
+      vertical-align: -0.32em;
+    }
   }
 
   &__menu {
