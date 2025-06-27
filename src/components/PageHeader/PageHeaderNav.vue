@@ -1,5 +1,6 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, useTemplateRef } from 'vue'
+import { useElementSize } from '@vueuse/core'
 
 import ButtonAdd from '@/components/Button/ButtonAdd'
 import ButtonToggleSidebar from '@/components/Button/ButtonToggleSidebar'
@@ -13,6 +14,8 @@ import { breakpointSizeValidator, SIZE } from '@/enums/sizes'
 
 const { breakpointDown } = useBreakpoints()
 const { toggleSettings, toggleSidebar } = useViews()
+const element = useTemplateRef('element')
+const { width: elementWidth } = useElementSize(element)
 
 const props = defineProps({
   noBreadcrumb: {
@@ -35,11 +38,6 @@ const props = defineProps({
     default: SIZE.MD,
     validator: breakpointSizeValidator
   },
-  breadcrumMaxLevelBreakpoint: {
-    type: String,
-    default: SIZE.MD,
-    validator: breakpointSizeValidator
-  },
   breadcrumbRoutes: {
     type: Array
   }
@@ -50,12 +48,12 @@ const showToggleSidebar = computed(() => {
 })
 
 const breadcrumbMaxLevel = computed(() => {
-  return breakpointDown.value[props.breadcrumMaxLevelBreakpoint] ? 1 : 3
+  return Math.max(1, Math.round(elementWidth.value / 250))
 })
 </script>
 
 <template>
-  <page-container fluid class="page-header-nav d-flex justify-content-between gap-4">
+  <page-container ref="element" fluid class="page-header-nav d-flex justify-content-between gap-4">
     <hook name="page-header-nav:before" />
     <slot name="toggle-sidebar">
       <button-toggle-sidebar v-if="showToggleSidebar" v-model:active="toggleSidebar" class="flex-shrink-0" />
