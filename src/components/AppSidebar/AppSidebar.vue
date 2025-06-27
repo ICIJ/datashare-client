@@ -55,7 +55,7 @@ const fullWith = computed(() => breakpointDown.value[SIZE.MD])
 watch(
   () => breakpointDown.value[SIZE.MD],
   (downMd) => {
-    closed.value = !closed.value && downMd
+    closed.value = closed.value || downMd
   },
   // Eager watcher to trigger the callback immediately
   // when the component is mounted.
