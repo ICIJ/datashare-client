@@ -5,6 +5,7 @@ import {
   find,
   get,
   has,
+  isEqual,
   isString,
   method,
   orderBy as orderArray,
@@ -15,7 +16,7 @@ import {
   uniq
 } from 'lodash'
 import lucene from 'lucene'
-import { ref, computed } from 'vue'
+import { ref, computed, toRaw } from 'vue'
 import { useRouter } from 'vue-router'
 
 import EsDocList from '@/api/resources/EsDocList'
@@ -891,7 +892,11 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    */
   function sameAppliedQuery(query = {}, omit = []) {
     return Object.keys(query).every((key) => {
-      return omit.includes(key) || query[key] === lastAppliedQuery.value[key]
+      // The last applied query value can be an array, so we use isEqual to compare
+      // it with the current query value. Lodash's isEqual will handle the comparison
+      // correctly, regardless of the type of the value (string or array of strings).
+      // In addition, we use toRaw to ensure we are not comparing a reactive proxy.
+      return omit.includes(key) || isEqual(query[key], toRaw(lastAppliedQuery.value[key]))
     })
   }
 
