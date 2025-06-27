@@ -83,7 +83,11 @@ const classList = computed(() => {
 <template>
   <a v-if="route" :href="resolved.href" class="navigation-breadcrumb-link" :class="classList">
     <span class="navigation-breadcrumb-link__label">
-      <phosphor-icon v-if="!noIcon && icon" class="navigation-breadcrumb-link__label__icon me-2" :name="icon" />
+      <phosphor-icon
+        v-if="!noIcon && icon"
+        class="navigation-breadcrumb-link__label__icon me-2 d-none d-sm-inline-flex"
+        :name="icon"
+      />
       <span class="navigation-breadcrumb-link__label__content">
         <slot>
           <display-route :value="to.name" :title="title" />

@@ -53,7 +53,7 @@ const breadcrumbMaxLevel = computed(() => {
 </script>
 
 <template>
-  <page-container ref="element" fluid class="page-header-nav d-flex justify-content-between gap-4">
+  <page-container ref="element" fluid class="page-header-nav d-flex justify-content-between gap-3">
     <hook name="page-header-nav:before" />
     <slot name="toggle-sidebar">
       <button-toggle-sidebar v-if="showToggleSidebar" v-model:active="toggleSidebar" class="flex-shrink-0" />
@@ -70,7 +70,7 @@ const breadcrumbMaxLevel = computed(() => {
         <slot :name="name" v-bind="binding" />
       </template>
     </navigation-breadcrumb>
-    <div class="page-header-nav__actions d-flex gap-4 ms-4 align-items-center">
+    <div class="page-header-nav__actions d-flex gap-1 gap-md-3 align-items-center">
       <slot name="actions" />
       <button-add v-if="addTo" :to="addTo" :label="addLabel" />
       <button-toggle-settings v-if="!noToggleSettings" v-model:active="toggleSettings" />
@@ -84,7 +84,11 @@ const breadcrumbMaxLevel = computed(() => {
   padding-block: $spacer;
   background: var(--bs-body-bg);
   max-width: 100vw;
-  overflow: auto;
+
+  &__breadcrumb {
+    flex-shrink: 1;
+    overflow: auto;
+  }
 
   &:has(+ .page-header-toolbar) {
     padding-bottom: 0;
