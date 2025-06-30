@@ -552,8 +552,8 @@ class Core extends Behaviors {
    * Append the given title to the page title
    * @param {String} title - Title to append to the page
    */
-  set pageTitle(title = null) {
-    this._pageContext.title = title
+  set pageTitle(title) {
+    this._pageContext.title = title ?? null
   }
   /**
    * instantiate a Core class (useful for chaining usage or mapping)
