@@ -1229,7 +1229,8 @@
     "seeMore": "See more"
   },
   "pageSettings": {
-    "title": "Page settings"
+    "title": "Page settings",
+    "reset": "Reset settings"
   },
   "pageSettingsSectionGroupAll": {
     "label": "All"
