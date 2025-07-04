@@ -11,5 +11,5 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <button-icon icon-left="arrow-counter-clockwise" :variant="variant">{{ t(labelKey) }}</button-icon>
+  <button-icon :icon-left="PhArrowCounterClockwise" :variant="variant">{{ t(labelKey) }}</button-icon>
 </template>
