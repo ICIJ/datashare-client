@@ -63,7 +63,7 @@ const emit = defineEmits(['loaded', 'errored', 'enter'])
 const errored = ref(false)
 const thumbnail = ref(null)
 
-const { isPreviewActivated, getPreviewUrl, fetchImageDimensions, canPreviewRaw } = useDocumentPreview()
+const { isPreviewActivated, getPreviewUrl, fetchImageDimensionsWithAuth, canPreviewRaw } = useDocumentPreview()
 const element = useTemplateRef('element')
 
 const classList = computed(() => {
@@ -106,7 +106,7 @@ async function fetchThumbnail() {
   try {
     if (!thumbnail.value && !errored.value && activated.value) {
       const url = canPreviewRaw(props.document) ? props.document.inlineFullUrl : thumbnailUrl.value
-      thumbnail.value = await fetchImageDimensions(url)
+      thumbnail.value = await fetchImageDimensionsWithAuth(url)
       emit('loaded')
     }
   } catch (_) {
