@@ -25,12 +25,12 @@ const route = useRoute()
 const pageName = ref(route.name.split('.').slice(1).shift())
 const pageTitleKey = computed(() => route.meta.title)
 const { t } = useI18n()
-const { perPage, sortBy, properties } = useTaskSettings(pageName.value)
+const { perPage, sortBy, properties, reset } = useTaskSettings(pageName.value)
 const title = computed(() => t(`task.settingTitle`, { page: t(pageTitleKey.value) }))
 </script>
 
 <template>
-  <page-settings :title="title" :hide="hide" :visible="visible" :placement="placement">
+  <page-settings :title="title" :hide="hide" :visible="visible" :placement="placement" @reset="reset">
     <page-settings-section
       v-model="sortBy.modelValue"
       v-model:open="sortBy.open"

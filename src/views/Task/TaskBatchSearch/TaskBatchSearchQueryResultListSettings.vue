@@ -11,9 +11,23 @@ import { useUrlParamsWithStore } from '@/composables/useUrlParamsWithStore'
 import { INPUT_CHECKBOX, INPUT_RADIO, useViewSettings } from '@/composables/useViewSettings'
 import { useAppStore } from '@/store/modules'
 
+defineProps({
+  hide: {
+    type: Function,
+    default: noop
+  },
+  visible: {
+    type: Boolean
+  },
+  placement: {
+    type: String
+  }
+})
+
+const VIEW = 'batchSearchResults'
+
 const { t } = useI18n()
 const appStore = useAppStore()
-const settingsView = 'batchSearchResults'
 const { propertiesOptions, sortByOptions } = useBatchSearchResultProperties()
 const { perPageLabel } = useViewSettings()
 
@@ -23,8 +37,8 @@ const sortBy = ref({
   open: true,
   options: sortByOptions,
   modelValue: useUrlParamsWithStore(['sort', 'order'], {
-    get: () => appStore.getSettings(settingsView, 'orderBy'),
-    set: (sort, order) => appStore.setSettings(settingsView, { orderBy: [sort, order] })
+    get: () => appStore.getSettings(VIEW, 'orderBy'),
+    set: (sort, order) => appStore.setSettings(VIEW, { orderBy: [sort, order] })
   })
 })
 
@@ -34,8 +48,8 @@ const perPage = ref({
   open: true,
   modelValue: useUrlParamWithStore('perPage', {
     transform: (value) => Math.max(10, parseInt(value)),
-    get: () => appStore.getSettings(settingsView, 'perPage'),
-    set: (perPage) => appStore.setSettings(settingsView, { perPage })
+    get: () => appStore.getSettings(VIEW, 'perPage'),
+    set: (perPage) => appStore.setSettings(VIEW, { perPage })
   }),
   options: [
     {
@@ -58,28 +72,19 @@ const properties = ref({
   type: INPUT_CHECKBOX,
   open: true,
   modelValue: computed({
-    get: () => appStore.getSettings(settingsView, 'properties'),
-    set: (properties) => appStore.setSettings(settingsView, { properties })
+    get: () => appStore.getSettings(VIEW, 'properties'),
+    set: (properties) => appStore.setSettings(VIEW, { properties })
   }),
   options: propertiesOptions
 })
 
-defineProps({
-  hide: {
-    type: Function,
-    default: noop
-  },
-  visible: {
-    type: Boolean
-  },
-  placement: {
-    type: String
-  }
-})
+function reset() {
+  appStore.resetSettings(VIEW)
+}
 </script>
 
 <template>
-  <page-settings :hide="hide" :visible="visible" :placement="placement">
+  <page-settings :hide="hide" :visible="visible" :placement="placement" @reset="reset">
     <page-settings-section
       v-model="sortBy.modelValue"
       v-model:open="sortBy.open"
