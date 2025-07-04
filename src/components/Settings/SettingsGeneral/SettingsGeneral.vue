@@ -14,9 +14,7 @@
       <b-form-input :id="`input-settings-${name}`" v-model="replica[name]" />
     </b-form-group>
     <div class="d-flex gap-3 justify-content-end">
-      <b-button type="reset" variant="outline-tertiary" :disabled="hasNotChanged" @click="reset">
-        {{ resetLabel }}
-      </b-button>
+      <button-reset type="reset" :disabled="hasNotChanged" :variant="VARIANT.OUTLINE_TERTIARY" @click="reset" />
       <b-button type="submit" variant="action" :disabled="hasNotChanged">
         {{ submitLabel }}
       </b-button>
@@ -30,6 +28,8 @@ import { useI18n } from 'vue-i18n'
 import { isEqual } from 'lodash'
 
 import SettingsGeneralLabel from '@/components/Settings/SettingsGeneral/SettingsGeneralLabel'
+import ButtonReset from '@/components/Button/ButtonReset'
+import { VARIANT } from '@/enums/variants'
 
 const props = defineProps({
   settings: {
