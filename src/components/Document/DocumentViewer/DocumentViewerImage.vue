@@ -1,4 +1,5 @@
 <script setup>
+import { useI18n } from 'vue-i18n'
 import { onBeforeMount, ref } from 'vue'
 
 import { useImage } from '@/composables/useImage'
@@ -15,6 +16,7 @@ const props = defineProps({
   }
 })
 
+const { t } = useI18n()
 const { rotateBase64Image } = useImage()
 const { waitFor, loaderId } = useWait()
 const { computedDocumentRotation } = useDocumentViewStore()
@@ -48,13 +50,13 @@ onBeforeMount(waitFor(fetch))
       <div class="image-viewer__wrapper__controls justify-content-center d-flex gap-1 p-1">
         <button-row-action
           class="image-viewer__wrapper__controls__button"
-          label="Rotate 90° to the left"
+          :label="t('documentViewerImage.rotateCounterClockwise')"
           :icon-left="PhArrowCounterClockwise"
           @click="rotateCounterClockwise()"
         />
         <button-row-action
           class="image-viewer__wrapper__controls__button"
-          label="Rotate 90° to the right"
+          :label="t('documentViewerImage.rotateClockwise')"
           :icon-left="PhArrowClockwise"
           @click="rotateClockwise()"
         />
