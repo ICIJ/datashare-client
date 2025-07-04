@@ -3,6 +3,7 @@ import { onBeforeMount, ref } from 'vue'
 
 import { useImage } from '@/composables/useImage'
 import { useWait } from '@/composables/useWait'
+import { useDocumentViewStore } from '@/store/modules/documentView'
 import AppSpinner from '@/components/AppSpinner/AppSpinner'
 import AppWait from '@/components/AppWait/AppWait'
 import ButtonRowAction from '@/components/Button/ButtonRowAction/ButtonRowAction'
@@ -16,8 +17,10 @@ const props = defineProps({
 
 const { rotateBase64Image } = useImage()
 const { waitFor, loaderId } = useWait()
+const { computedDocumentRotation } = useDocumentViewStore()
+
 const imageBase64 = ref(null)
-const imageRotation = ref(0)
+const imageRotation = computedDocumentRotation(props.document)
 
 async function fetch() {
   imageBase64.value = await rotateBase64Image(props.document.inlineFullUrl, imageRotation)
