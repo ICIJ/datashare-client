@@ -1,3 +1,5 @@
+import { toValue } from 'vue'
+
 import { apiInstance as api } from '@/api/apiInstance'
 
 export function useImage() {
@@ -60,9 +62,39 @@ export function useImage() {
     }
   }
 
+  /**
+   * Rotate an image by a given number of degrees.
+   *
+   * @param {string} src - The src string of the image.
+   * @param {number} degrees - The number of degrees to rotate the image (default is 90).
+   * @returns {Promise<string>} A promise that resolves to the rotated image as a base64 string.
+   */
+  async function rotateBase64Image(src, degrees = 90) {
+    const img = await fetchImage(toValue(src))
+    const radians = (toValue(degrees) % 360) * (Math.PI / 180)
+    const sin = Math.abs(Math.sin(radians))
+    const cos = Math.abs(Math.cos(radians))
+
+    const newWidth = img.width * cos + img.height * sin
+    const newHeight = img.width * sin + img.height * cos
+
+    const canvas = document.createElement('canvas')
+    const ctx = canvas.getContext('2d')
+
+    canvas.width = newWidth
+    canvas.height = newHeight
+
+    ctx.translate(newWidth / 2, newHeight / 2)
+    ctx.rotate(radians)
+    ctx.drawImage(img, -img.width / 2, -img.height / 2)
+
+    return canvas.toDataURL()
+  }
+
   return {
     fetchImage,
     fetchImageAsBase64,
-    fetchImageDimensions
+    fetchImageDimensions,
+    rotateBase64Image
   }
 }
