@@ -2,12 +2,13 @@ import { getCookie } from 'tiny-cookie'
 import { kebabCase, startCase } from 'lodash'
 import { computed } from 'vue'
 
-import { apiInstance as api } from '@/api/apiInstance'
 import settings from '@/utils/settings'
 import { useConfig } from '@/composables/useConfig'
+import { useImage } from '@/composables/useImage'
 
 export const useDocumentPreview = () => {
   const config = useConfig()
+  const { fetchImageDimensions } = useImage()
 
   /**
    * True if a preview host is configured.
@@ -81,59 +82,14 @@ export const useDocumentPreview = () => {
   }
 
   /**
-   * Fetch the image.
-   *
-   * @param {string} src - The URL of the image.
-   * @returns {Promise<HTMLImageElement>} A promise that resolves to the image element.
-   */
-  async function fetchImage(src) {
-    return new Promise((resolve, reject) => {
-      const img = new Image()
-      img.onload = () => resolve(img)
-      img.onerror = () => reject(new Error('Unable to fetch the thumbnail'))
-      // This is necessary to avoid CORS issues
-      img.crossOrigin = 'Anonymous'
-      img.src = src
-    })
-  }
-
-  /**
-   * Fetch the image as a base64 string.
-   *
-   * @param {string} src - The URL of the image.
-   * @returns {Promise<object>} A promise that resolves to an object containing the base64 string and image dimensions.
-   */
-  async function fetchImageAsBase64(src) {
-    try {
-      const responseType = 'blob'
-      const cache = 'default'
-      const headers = { [sessionIdHeaderName.value]: sessionIdHeaderValue.value }
-      const { data: imgBlob } = await api.axios.get(src, { responseType, cache, headers })
-      return new Promise((resolve, reject) => {
-        const fileReader = new FileReader()
-        fileReader.readAsDataURL(imgBlob)
-        fileReader.onerror = reject
-        fileReader.onload = () => resolve(fileReader.result)
-      })
-    } catch (error) {
-      throw new Error('Unable to fetch the image as base64')
-    }
-  }
-
-  /**
-   * Fetch the image dimensions and base64 string.
+   * Fetch the image dimensions and base64 string with authentication headers.
    *
    * @param {string} src - The URL of the image.
    * @returns {Promise<object>} A promise that resolves to an object containing the width, height, base64 string, and source URL.
    */
-  async function fetchImageDimensions(src) {
-    try {
-      const base64 = await fetchImageAsBase64(src)
-      const img = await fetchImage(base64)
-      return { width: img.width, height: img.height, base64, src }
-    } catch (error) {
-      throw new Error('Unable to fetch image and its dimensions')
-    }
+  async function fetchImageDimensionsWithAuth(src) {
+    const headers = { [sessionIdHeaderName.value]: sessionIdHeaderValue.value }
+    return fetchImageDimensions(src, { headers })
   }
 
   return {
@@ -145,8 +101,6 @@ export const useDocumentPreview = () => {
     getPreviewMetaUrl,
     getPreviewUrl,
     canPreviewRaw,
-    fetchImage,
-    fetchImageAsBase64,
-    fetchImageDimensions
+    fetchImageDimensionsWithAuth
   }
 }
