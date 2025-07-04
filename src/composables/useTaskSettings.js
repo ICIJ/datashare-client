@@ -12,7 +12,7 @@ import useMode from '@/composables/useMode'
 
 export function useTaskSettings(pageName) {
   const appStore = useAppStore()
-  const settingsView = camelCase(pageName)
+  const VIEW = camelCase(pageName)
   const { isServer } = useMode()
   const { t } = useI18n()
   const { sortByLabel, tSortByOption, perPageLabel, visiblePropertiesLabel } = useViewSettings()
@@ -23,8 +23,8 @@ export function useTaskSettings(pageName) {
     open: true,
     modelValue: useUrlParamWithStore('perPage', {
       transform: (value) => Math.max(10, parseInt(value)),
-      get: () => appStore.getSettings(settingsView, 'perPage'),
-      set: (perPage) => appStore.setSettings(settingsView, { perPage })
+      get: () => appStore.getSettings(VIEW, 'perPage'),
+      set: (perPage) => appStore.setSettings(VIEW, { perPage })
     }),
     options: [
       {
@@ -51,8 +51,8 @@ export function useTaskSettings(pageName) {
     type: INPUT_RADIO,
     open: true,
     modelValue: useUrlParamsWithStore(['sort', 'order'], {
-      get: () => appStore.getSettings(settingsView, 'orderBy'),
-      set: (sort, order) => appStore.setSettings(settingsView, { orderBy: [sort, order] })
+      get: () => appStore.getSettings(VIEW, 'orderBy'),
+      set: (sort, order) => appStore.setSettings(VIEW, { orderBy: [sort, order] })
     }),
     options: items.reduce((acc, p) => {
       if (p.sortable) {
@@ -71,8 +71,8 @@ export function useTaskSettings(pageName) {
     type: INPUT_CHECKBOX,
     open: true,
     modelValue: computed({
-      get: () => appStore.getSettings(settingsView, 'properties'),
-      set: (properties) => appStore.setSettings(settingsView, { properties })
+      get: () => appStore.getSettings(VIEW, 'properties'),
+      set: (properties) => appStore.setSettings(VIEW, { properties })
     }),
     options: items.map((p) => ({
       value: p.key,
@@ -90,10 +90,15 @@ export function useTaskSettings(pageName) {
     return properties.value.options.filter((p) => properties.value.modelValue.includes(p.value))
   })
 
+  function reset() {
+    appStore.resetSettings(VIEW)
+  }
+
   return {
     sortBy,
     properties,
     propertiesModelValueOptions,
-    perPage
+    perPage,
+    reset
   }
 }

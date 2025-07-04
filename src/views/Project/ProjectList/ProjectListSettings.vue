@@ -11,6 +11,21 @@ import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
 import { useViewSettings, SORT_ORDER_KEY, SORT_TYPE_KEY, INPUT_RADIO } from '@/composables/useViewSettings'
 import { useAppStore } from '@/store/modules'
 
+defineProps({
+  hide: {
+    type: Function,
+    default: noop
+  },
+  visible: {
+    type: Boolean
+  },
+  placement: {
+    type: String
+  }
+})
+
+const VIEW = 'projectList'
+
 const { t } = useI18n()
 const { sortByLabel, tSortByOption, tLayout, perPageLabel } = useViewSettings(t)
 const appStore = useAppStore()
@@ -20,8 +35,8 @@ const layout = ref({
   type: INPUT_RADIO,
   open: true,
   modelValue: useUrlParamWithStore('layout', {
-    get: () => appStore.getSettings('projectList', 'layout'),
-    set: (layout) => appStore.setSettings('projectList', { layout })
+    get: () => appStore.getSettings(VIEW, 'layout'),
+    set: (layout) => appStore.setSettings(VIEW, { layout })
   }),
   options: [
     {
@@ -43,8 +58,8 @@ const perPage = ref({
   open: true,
   modelValue: useUrlParamWithStore('perPage', {
     transform: (value) => Math.max(10, parseInt(value)),
-    get: () => appStore.getSettings('projectList', 'perPage'),
-    set: (perPage) => appStore.setSettings('projectList', { perPage })
+    get: () => appStore.getSettings(VIEW, 'perPage'),
+    set: (perPage) => appStore.setSettings(VIEW, { perPage })
   }),
   options: [
     {
@@ -67,8 +82,8 @@ const sortBy = ref({
   type: INPUT_RADIO,
   open: true,
   modelValue: useUrlParamsWithStore(['sort', 'order'], {
-    get: () => appStore.getSettings('projectList', 'orderBy'),
-    set: (sort, order) => appStore.setSettings('projectList', { orderBy: [sort, order] })
+    get: () => appStore.getSettings(VIEW, 'orderBy'),
+    set: (sort, order) => appStore.setSettings(VIEW, { orderBy: [sort, order] })
   }),
   options: [
     {
@@ -98,22 +113,13 @@ const sortBy = ref({
   ]
 })
 
-defineProps({
-  hide: {
-    type: Function,
-    default: noop
-  },
-  visible: {
-    type: Boolean
-  },
-  placement: {
-    type: String
-  }
-})
+function reset() {
+  appStore.resetSettings(VIEW)
+}
 </script>
 
 <template>
-  <page-settings :hide="hide" :visible="visible" :placement="placement">
+  <page-settings :hide="hide" :visible="visible" :placement="placement" @reset="reset">
     <page-settings-section
       v-model="sortBy.modelValue"
       v-model:open="sortBy.open"
