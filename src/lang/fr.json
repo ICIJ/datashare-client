@@ -417,6 +417,10 @@
   "documentContent": {
     "noContent": "Aucun contenu extrait pour ce document"
   },
+  "documentViewerImage": {
+    "rotateCounterClockwise": "Rotate 90° to the left",
+    "rotateClockwise": "Rotate 90° to the right"
+  },
   "documentViewTabs": {
     "text": "Texte",
     "viewer": "Aperçu",
