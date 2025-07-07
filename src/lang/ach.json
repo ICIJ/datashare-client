@@ -417,6 +417,10 @@
   "documentContent": {
     "noContent": "crwdns8026:0crwdne8026:0"
   },
+  "documentViewerImage": {
+    "rotateCounterClockwise": "crwdns9946:0crwdne9946:0",
+    "rotateClockwise": "crwdns9948:0crwdne9948:0"
+  },
   "documentViewTabs": {
     "text": "crwdns8028:0crwdne8028:0",
     "viewer": "crwdns8030:0crwdne8030:0",
