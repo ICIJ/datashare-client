@@ -153,12 +153,9 @@ export const useAppStore = defineStore(
      *
      * @returns {void}
      */
-    const resetSettings = (view, name) => {
+    const resetSettings = (view = null) => {
       const defaultSettings = cloneDeep(SETTINGS)
-      if (view && name) {
-        // view+name = single section
-        settings.views[view][name] = defaultSettings.views[view][name]
-      } else if (view) {
+      if (view) {
         // view = all settings sections in a page
         settings.views[view] = defaultSettings.views[view]
       } else {

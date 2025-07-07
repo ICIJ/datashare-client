@@ -55,4 +55,22 @@ describe('AppStore', () => {
     store.setSettings('view1', 'name', 'value')
     expect(store.getSettings('view1', 'name')).toBe('value')
   })
+
+  it('should reset settings to default settings', () => {
+    const originalValue = store.getSettings('projectList', 'perPage')
+    store.setSettings('view1', 'name', 'value')
+    store.setSettings('projectList', 'perPage', '50')
+    store.resetSettings()
+    expect(store.getSettings('view1', 'name')).toBe(undefined)
+    expect(store.getSettings('projectList', 'perPage')).toBe(originalValue)
+  })
+
+  it('should reset settings for projectListView view only', () => {
+    const originalValue = store.getSettings('projectList', 'perPage')
+    store.setSettings('view1', 'name', 'value')
+    store.setSettings('projectList', 'perPage', '50')
+    store.resetSettings('projectList')
+    expect(store.getSettings('view1', 'name')).toBe('value')
+    expect(store.getSettings('projectList', 'perPage')).toBe(originalValue)
+  })
 })
