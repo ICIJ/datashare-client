@@ -417,6 +417,10 @@
   "documentContent": {
     "noContent": "crwdns8026:0crwdne8026:0"
   },
+  "documentViewerImage": {
+    "rotateCounterClockwise": "crwdns9946:0crwdne9946:0",
+    "rotateClockwise": "crwdns9948:0crwdne9948:0"
+  },
   "documentViewTabs": {
     "text": "crwdns8028:0crwdne8028:0",
     "viewer": "crwdns8030:0crwdne8030:0",
@@ -1229,7 +1233,8 @@
     "seeMore": "crwdns9154:0crwdne9154:0"
   },
   "pageSettings": {
-    "title": "crwdns9156:0crwdne9156:0"
+    "title": "crwdns9156:0crwdne9156:0",
+    "reset": "crwdns9950:0crwdne9950:0"
   },
   "pageSettingsSectionGroupAll": {
     "label": "crwdns9158:0crwdne9158:0"

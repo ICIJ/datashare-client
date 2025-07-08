@@ -417,6 +417,10 @@
   "documentContent": {
     "noContent": "No se extrajo contenido de este documento"
   },
+  "documentViewerImage": {
+    "rotateCounterClockwise": "Rotate 90° to the left",
+    "rotateClockwise": "Rotate 90° to the right"
+  },
   "documentViewTabs": {
     "text": "Texto",
     "viewer": "Vista previa",
@@ -1229,7 +1233,8 @@
     "seeMore": "Ver más"
   },
   "pageSettings": {
-    "title": "Configuración de página"
+    "title": "Configuración de página",
+    "reset": "Reset all"
   },
   "pageSettingsSectionGroupAll": {
     "label": "Todos"
