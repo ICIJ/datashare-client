@@ -1743,6 +1743,7 @@
       "extractionLevel": "Extraction level",
       "extractionDate": "Indexing date",
       "language": "Language",
+      "ocrConfidence": "OCR confidence",
       "project": "Project"
     }
   },

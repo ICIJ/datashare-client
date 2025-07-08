@@ -134,6 +134,13 @@ const canonicalItems = computed(() => [
     icon: 'text-columns',
     value: document.value.source.contentTextLength,
     component: DisplayNumber
+  },
+  {
+    name: 'metadata.tika_metadata_ocr_confidence',
+    label: t('document.ocrConfidence'),
+    icon: 'scan',
+    value: document.value.ocrConfidence,
+    component: DisplayNumber
   }
 ])
 
