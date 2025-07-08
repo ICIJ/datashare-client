@@ -17,14 +17,15 @@ const appStore = useAppStore()
 const searchStore = useSearchStore()
 const { tLayout } = useViewSettings(t)
 const { propertiesOptions, sortByOptions } = useSearchProperties()
+const VIEW = 'search'
 
 const layout = ref({
   label: tLayout.label,
   type: INPUT_RADIO,
   open: true,
   modelValue: computed({
-    get: () => appStore.getSettings('search', 'layout'),
-    set: (layout) => appStore.setSettings('search', { layout })
+    get: () => appStore.getSettings(VIEW, 'layout'),
+    set: (layout) => appStore.setSettings(VIEW, { layout })
   }),
   options: [
     {
@@ -51,13 +52,13 @@ const perPage = ref({
   open: true,
   modelValue: useUrlParamWithStore('perPage', {
     to: computed(() => {
-      const name = 'search'
+      const name = VIEW
       const { toRouteQuery: query } = searchStore
       return { name, query }
     }),
     transform: (value) => Math.max(10, parseInt(value)),
-    get: () => appStore.getSettings('search', 'perPage'),
-    set: (perPage) => appStore.setSettings('search', { perPage })
+    get: () => appStore.getSettings(VIEW, 'perPage'),
+    set: (perPage) => appStore.setSettings(VIEW, { perPage })
   }),
   options: [
     {
@@ -82,12 +83,12 @@ const sortBy = ref({
   options: sortByOptions,
   modelValue: useUrlParamsWithStore(['sort', 'order'], {
     to: computed(() => {
-      const name = 'search'
+      const name = VIEW
       const { toRouteQuery: query } = searchStore
       return { name, query }
     }),
-    get: () => appStore.getSettings('search', 'orderBy'),
-    set: (sort = '_score', order = 'desc') => appStore.setSettings('search', { orderBy: [sort, order] })
+    get: () => appStore.getSettings(VIEW, 'orderBy'),
+    set: (sort = '_score', order = 'desc') => appStore.setSettings(VIEW, { orderBy: [sort, order] })
   })
 })
 
@@ -97,8 +98,8 @@ const properties = ref({
   open: true,
   options: propertiesOptions,
   modelValue: computed({
-    get: () => appStore.getSettings('search', 'properties'),
-    set: (properties) => appStore.setSettings('search', { properties })
+    get: () => appStore.getSettings(VIEW, 'properties'),
+    set: (properties) => appStore.setSettings(VIEW, { properties })
   })
 })
 
@@ -114,6 +115,10 @@ defineProps({
     type: String
   }
 })
+
+function reset() {
+  appStore.resetSettings(VIEW)
+}
 </script>
 
 <template>
@@ -124,6 +129,7 @@ defineProps({
     :visible="visible"
     :placement="placement"
     route="search"
+    @reset="reset"
   >
     <page-settings-section
       v-model="sortBy.modelValue"
