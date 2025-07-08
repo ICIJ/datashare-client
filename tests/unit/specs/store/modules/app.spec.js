@@ -65,12 +65,19 @@ describe('AppStore', () => {
     expect(store.getSettings('projectList', 'perPage')).toBe(originalValue)
   })
 
-  it('should reset settings for projectListView view only', () => {
+  it('should reset settings for projectList View view only', () => {
     const originalValue = store.getSettings('projectList', 'perPage')
     store.setSettings('view1', 'name', 'value')
     store.setSettings('projectList', 'perPage', '50')
     store.resetSettings('projectList')
     expect(store.getSettings('view1', 'name')).toBe('value')
     expect(store.getSettings('projectList', 'perPage')).toBe(originalValue)
+  })
+
+  it('should reset settings for array settings', () => {
+    const originalValue = store.getSettings('search', 'orderBy')
+    store.setSettings('search', 'orderBy', ['relevance', 'desc'])
+    store.resetSettings('search')
+    expect(store.getSettings('search', 'orderBy')).toEqual(originalValue)
   })
 })
