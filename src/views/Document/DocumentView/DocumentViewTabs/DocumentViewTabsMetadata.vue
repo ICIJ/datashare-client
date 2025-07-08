@@ -139,7 +139,7 @@ const canonicalItems = computed(() => [
     name: 'metadata.tika_metadata_ocr_confidence',
     label: t('document.ocrConfidence'),
     icon: 'scan',
-    value: document.value.ocrConfidence,
+    value: document.value.source.ocrConfidence,
     component: DisplayNumber
   }
 ])
