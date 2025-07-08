@@ -1233,7 +1233,8 @@
     "seeMore": "Ver más"
   },
   "pageSettings": {
-    "title": "Configuración de página"
+    "title": "Configuración de página",
+    "reset": "Reset all"
   },
   "pageSettingsSectionGroupAll": {
     "label": "Todos"
