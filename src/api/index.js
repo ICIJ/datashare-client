@@ -91,6 +91,9 @@ export class Api {
   removeNamedEntitiesByMentionNorm(project, mentionNorm) {
     return this.sendActionAsText(`/api/${project}/namedEntities/hide/${mentionNorm}`, { method: Method.PUT })
   }
+  getPages({ index, id, routing }) {
+    return this.sendAction(`/api/${index}/documents/pages/${id}`, { method: Method.GET, params: { routing } })
+  }
   getSource(document, config = {}) {
     return this.sendAction(document.url, config)
   }

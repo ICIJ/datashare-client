@@ -1,6 +1,6 @@
 <script setup>
 import { computed, inject, nextTick, onMounted, reactive, ref, toRef, useTemplateRef, watch } from 'vue'
-import { clamp, entries, findLastIndex, get, isEmpty, range, throttle } from 'lodash'
+import { clamp, entries, findLastIndex, get, isEmpty, minBy, range, throttle } from 'lodash'
 import { useScroll, useElementSize, useWindowSize } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 
@@ -14,6 +14,7 @@ import DocumentGlobalSearchTerms from '@/components/Document/DocumentGlobalSearc
 import DocumentLocalSearch from '@/components/Document/DocumentLocalSearch/DocumentLocalSearch'
 import Hook from '@/components/Hook/Hook'
 import { useDocumentStore, usePipelinesStore, useSearchStore } from '@/store/modules'
+import { apiInstance as api } from '@/api/apiInstance'
 
 const props = defineProps({
   document: Object,
@@ -59,6 +60,7 @@ const localSearchOccurrences = ref(0)
 const localSearchTerm = ref(props.q)
 const rightToLeftLanguages = ['ARABIC', 'HEBREW', 'PERSIAN', 'KURDISH', 'URDU', 'FULAH', 'AZERBAIJANI']
 const maxOffsetTranslations = ref({})
+const syncedPages = ref([])
 
 const globalSearchTerms = computed(() => searchStore.retrieveContentQueryTerms)
 
@@ -117,11 +119,11 @@ const classList = computed(() => {
 
 const page = computed({
   get() {
-    return Math.floor(activeContentSliceOffset.value / props.pageSize) + 1
+    return offsets.value.indexOf(activeContentSliceOffset.value) + 1 || 1
   },
   set(value) {
     scrollToDocumentStart()
-    activeContentSliceOffset.value = (value - 1) * props.pageSize
+    activeContentSliceOffset.value = offsets.value[value - 1] || 0
   }
 })
 
@@ -133,11 +135,24 @@ const maxOffset = computed(() => {
 })
 
 const nbPages = computed(() => {
+  if (syncedPages.value.length) {
+    return syncedPages.value.length
+  }
   return Math.floor(maxOffset.value / props.pageSize) + 1
 })
 
 const offsets = computed(() => {
-  return range(0, maxOffset.value, props.pageSize)
+  return pages.value.map(([start]) => start)
+})
+
+const pages = computed(() => {
+  if (syncedPages.value.length) {
+    return syncedPages.value
+  }
+  return range(0, maxOffset.value, props.pageSize).map((start) => {
+    const end = Math.min(start + props.pageSize - 1, maxOffset.value)
+    return [start, end]
+  })
 })
 
 const loadedOnce = computed(() => {
@@ -167,6 +182,7 @@ watch(contentPipeline, async () => {
 
 onMounted(async () => {
   await loadMaxOffset()
+  await syncPages()
   if (props.q) {
     await retrieveOccurrencesAndUpdateContent()
   } else {
@@ -179,6 +195,14 @@ const loadMaxOffset = waitFor(async function (targetLanguage = props.targetLangu
   const offset = await documentStore.getContentMaxOffset({ targetLanguage })
   maxOffsetTranslations.value[key] = offset
   return offset
+})
+
+const syncPages = waitFor(async function () {
+  if (!props.targetLanguage || props.targetLanguage === 'original') {
+    syncedPages.value = await api.getPages(documentStore.document).catch(() => [])
+  } else {
+    syncedPages.value = []
+  }
 })
 
 function findContentSliceIndexAround(desiredOffset) {
@@ -227,9 +251,15 @@ function hasContentSlice({ offset = 0, targetLanguage = props.targetLanguage } =
   return !!getContentSlice({ offset, targetLanguage })
 }
 
+function closestPage({ offset = 0 } = {}) {
+  const closestOffsetIndex = minBy(offsets.value, (v) => Math.abs(v - offset))
+  const offsetIndex = offsets.value.indexOf(closestOffsetIndex)
+  return pages.value[offsetIndex] || [0, Math.min(props.pageSize - 1, maxOffset.value)]
+}
+
 async function loadContentSlice({ offset = 0, targetLanguage = props.targetLanguage } = {}) {
-  const endOffset = offset + props.pageSize
-  const limit = Math.max(Math.min(endOffset, maxOffset.value) - offset, 0)
+  const [, endOffset] = closestPage({ offset })
+  const limit = Math.min(Math.max(endOffset - offset + 1, 0), maxOffset.value - offset)
   const { content } = await documentStore.getContentSlice({ offset, limit, targetLanguage })
   return setContentSlice({ offset, targetLanguage, content })
 }
@@ -312,10 +342,10 @@ async function jumpToActiveLocalSearchTerm() {
 
 async function loadContentSliceAround(desiredOffset) {
   const desiredOffsetIndex = findContentSliceIndexAround(desiredOffset)
-  const offsetValue = offsets.value[desiredOffsetIndex]
-  const slice = await loadContentSliceOnce({ offset: offsetValue })
+  const offset = offsets.value[desiredOffsetIndex]
+  const slice = await loadContentSliceOnce({ offset })
 
-  return { ...slice, offset: offsetValue }
+  return { ...slice, offset }
 }
 </script>
 
