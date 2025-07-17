@@ -1,9 +1,8 @@
 <script setup>
-import { PhosphorIcon } from '@icij/murmur-next'
+import { PhosphorIcon, ButtonIcon } from '@icij/murmur-next'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import ButtonIcon from '@/components/Button/ButtonIcon'
 import { isUrl } from '@/utils/strings'
 
 const url = defineModel({ type: String })

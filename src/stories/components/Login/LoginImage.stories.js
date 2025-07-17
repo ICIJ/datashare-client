@@ -1,6 +1,6 @@
 import { ref } from 'vue'
+import { ButtonIcon } from '@icij/murmur-next'
 
-import ButtonIcon from '@/components/Button/ButtonIcon'
 import LoginImage from '@/components/Login/LoginImage'
 
 export default {

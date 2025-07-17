@@ -1,9 +1,8 @@
 <script setup>
 import { computed, useSlots } from 'vue'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { PhosphorIcon, ButtonIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 
-import ButtonIcon from '@/components/Button/ButtonIcon'
 import { VARIANT } from '@/enums/variants.js'
 
 const VARIANTS = {

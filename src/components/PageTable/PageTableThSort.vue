@@ -1,8 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { PhSortDescending, PhSortAscending } from '@phosphor-icons/vue'
-
-import ButtonIcon from '@/components/Button/ButtonIcon'
+import { ButtonIcon } from '@icij/murmur-next'
 
 const emit = defineEmits(['update:sorted', 'update:order'])
 
