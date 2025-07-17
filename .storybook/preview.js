@@ -1,7 +1,7 @@
-/** @type { import('@storybook/vue3').Preview } */
-import { setup } from '@storybook/vue3'
-import { useArgs } from '@storybook/preview-api'
-import { styled } from '@storybook/theming'
+/** @type { import('@storybook/vue3-vite').Preview } */
+import { setup } from '@storybook/vue3-vite'
+import { useArgs } from 'storybook/preview-api'
+import { styled } from 'storybook/theming'
 import { withThemeByDataAttribute } from '@storybook/addon-themes'
 import { createBootstrap } from 'bootstrap-vue-next'
 import { createI18n } from 'vue-i18n'
