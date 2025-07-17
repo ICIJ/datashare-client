@@ -1,8 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-
-import ImageMode from '@/components/ImageMode/ImageMode'
-import ImageModeSource from '@/components/ImageMode/ImageModeSource'
+import { ImageMode, ImageModeSource } from '@icij/murmur-next'
 
 const props = defineProps({
   image: {
