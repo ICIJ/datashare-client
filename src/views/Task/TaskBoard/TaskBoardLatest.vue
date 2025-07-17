@@ -1,8 +1,8 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { ButtonIcon } from '@icij/murmur-next'
 
-import ButtonIcon from '@/components/Button/ButtonIcon'
 import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
 import DisplayProgress from '@/components/Display/DisplayProgress'
 import DisplayProjectList from '@/components/Display/DisplayProjectList'

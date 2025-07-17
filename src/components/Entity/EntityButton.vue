@@ -1,10 +1,10 @@
 <script setup>
 import { computed } from 'vue'
+import { ButtonIcon } from '@icij/murmur-next'
 
 import EntityOccurrences from './EntityOccurrences'
 
 import { getCategoryIcon, getCategoryColor } from '@/utils/entity'
-import ButtonIcon from '@/components/Button/ButtonIcon'
 
 defineOptions({
   name: 'EntityButton'
