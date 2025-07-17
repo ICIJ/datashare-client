@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
+import { ButtonIcon } from '@icij/murmur-next'
 
-import ButtonIcon from '@/components/Button/ButtonIcon'
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
 
 const active = defineModel('active', { type: Boolean })

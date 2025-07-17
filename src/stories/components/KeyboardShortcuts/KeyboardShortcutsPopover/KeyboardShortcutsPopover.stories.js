@@ -1,10 +1,9 @@
 import { uniqueId } from 'lodash'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { PhosphorIcon, ButtonIcon } from '@icij/murmur-next'
 import { vueRouter } from 'storybook-vue3-router'
 
 import KeyboardShortcutsPopover from '@/components/KeyboardShortcuts/KeyboardShortcutsPopover/KeyboardShortcutsPopover'
 import KeyboardShortcutsSectionEntry from '@/components/KeyboardShortcuts/KeyboardShortcutsSection/KeyboardShortcutsSectionEntry'
-import ButtonIcon from '@/components/Button/ButtonIcon'
 
 const routes = [{ path: '/', name: 'keyboard-shortcuts' }]
 

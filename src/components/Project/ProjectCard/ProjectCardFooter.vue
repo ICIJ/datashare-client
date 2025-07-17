@@ -1,11 +1,11 @@
 <script setup>
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { ButtonIcon } from '@icij/murmur-next'
 
 import ProjectCardUpdateDate from './ProjectCardUpdateDate'
 import ProjectCardDocumentsCount from './ProjectCardDocumentsCount'
 
-import ButtonIcon from '@/components/Button/ButtonIcon'
 import Hook from '@/components/Hook/Hook'
 
 const props = defineProps({
