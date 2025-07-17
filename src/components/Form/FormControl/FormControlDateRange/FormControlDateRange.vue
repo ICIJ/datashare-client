@@ -1,10 +1,9 @@
 <script setup>
 import { computed, useTemplateRef } from 'vue'
 import { DatePicker } from 'v-calendar'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { PhosphorIcon, useColorMode } from '@icij/murmur-next'
 
 import { inputSizeValidator, SIZE } from '@/enums/sizes'
-import { useColorMode } from '@/composables/useColorMode'
 
 const modelValue = defineModel({ type: [Object, Array], default: () => ({ start: null, end: null }) })
 
