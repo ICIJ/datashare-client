@@ -1,8 +1,7 @@
-import { PhosphorIcon } from '@icij/murmur-next'
+import { PhosphorIcon, ButtonIcon } from '@icij/murmur-next'
 import { BButton } from 'bootstrap-vue-next'
 
 import DocumentUserActionsCard from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsCard'
-import ButtonIcon from '@/components/Button/ButtonIcon'
 import DisplayTags from '@/components/Display/DisplayTags'
 
 export default {

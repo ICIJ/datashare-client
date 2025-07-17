@@ -1,8 +1,8 @@
 <script setup>
 import { computed } from 'vue'
+import { ButtonIcon } from '@icij/murmur-next'
 
 import { VARIANT, variantValidator } from '@/enums/variants'
-import ButtonIcon from '@/components/Button/ButtonIcon'
 
 defineOptions({
   name: 'SearchParameterQueryTerm'

@@ -1,9 +1,9 @@
 <script setup>
 import { useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { ButtonIcon } from '@icij/murmur-next'
 
 import LoginImage from '@/components/Login/LoginImage'
-import ButtonIcon from '@/components/Button/ButtonIcon'
 import I18nLocaleDropdown from '@/components/I18n/I18nLocaleDropdown'
 import { useCore } from '@/composables/useCore'
 import settings from '@/utils/settings'

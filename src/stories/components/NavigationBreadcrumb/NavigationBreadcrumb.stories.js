@@ -1,6 +1,6 @@
 import { vueRouter } from 'storybook-vue3-router'
+import { ButtonIcon } from '@icij/murmur-next'
 
-import ButtonIcon from '@/components/Button/ButtonIcon'
 import NavigationBreadcrumb from '@/components/NavigationBreadcrumb/NavigationBreadcrumb'
 import NavigationBreadcrumbEntry from '@/components/NavigationBreadcrumb/NavigationBreadcrumbEntry'
 

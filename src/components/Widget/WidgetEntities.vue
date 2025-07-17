@@ -36,13 +36,13 @@
 import { sum, values } from 'lodash'
 import bodybuilder from 'bodybuilder'
 import { useI18n } from 'vue-i18n'
+import { ButtonIcon } from '@icij/murmur-next'
 
 import WidgetBarometer from './WidgetBarometer'
 
 import { useWait } from '@/composables/useWait'
 import AppSpinner from '@/components/AppSpinner/AppSpinner'
 import AppWait from '@/components/AppWait/AppWait'
-import ButtonIcon from '@/components/Button/ButtonIcon'
 import { MODE_NAME } from '@/mode'
 import { getCategoryIcon, getCategoryVariant } from '@/utils/entity'
 import { ENTITY_CATEGORY } from '@/enums/entityCategories'

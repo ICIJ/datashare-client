@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
+import { ButtonIcon } from '@icij/murmur-next'
 
-import ButtonIcon from '@/components/Button/ButtonIcon'
 import { useBreakpoints } from '@/composables/useBreakpoints'
 import { SIZE } from '@/enums/sizes'
 

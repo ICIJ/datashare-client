@@ -2,8 +2,8 @@
 import { computed } from 'vue'
 import { PhFloppyDiskBack, PhCheck } from '@phosphor-icons/vue'
 import { useI18n } from 'vue-i18n'
+import { ButtonIcon } from '@icij/murmur-next'
 
-import ButtonIcon from '@/components/Button/ButtonIcon'
 import { useBreakpoints } from '@/composables/useBreakpoints'
 import { breakpointSizeValidator, SIZE } from '@/enums/sizes'
 
