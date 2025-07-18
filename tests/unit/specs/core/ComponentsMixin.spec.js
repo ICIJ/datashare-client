@@ -10,23 +10,23 @@ describe('ComponentsMixin', () => {
   })
 
   it('should find component by name with exact match', async () => {
-    const ButtonIcon = await core.findComponent('Button/ButtonIcon')
-    expect(ButtonIcon.name).toBe('ButtonIcon')
+    const ButtonRecommendation = await core.findComponent('Button/ButtonRecommendation')
+    expect(ButtonRecommendation.name).toBe('ButtonRecommendation')
   })
 
   it('should find component by name with wrong case', async () => {
-    const ButtonIcon = await core.findComponent('Button/buttonIcon')
-    expect(ButtonIcon.name).toBe('ButtonIcon')
+    const ButtonRecommendation = await core.findComponent('Button/buttonRecommendation')
+    expect(ButtonRecommendation.name).toBe('ButtonRecommendation')
   })
 
   it('should find component by name with kebab case', async () => {
-    const ButtonIcon = await core.findComponent('Button/button-icon')
-    expect(ButtonIcon.name).toBe('ButtonIcon')
+    const ButtonRecommendation = await core.findComponent('Button/button-recommendation')
+    expect(ButtonRecommendation.name).toBe('ButtonRecommendation')
   })
 
   it('should find component by name with underscore case', async () => {
-    const ButtonIcon = await core.findComponent('Button/button_icon')
-    expect(ButtonIcon.name).toBe('ButtonIcon')
+    const ButtonRecommendation = await core.findComponent('Button/button_recommendation')
+    expect(ButtonRecommendation.name).toBe('ButtonRecommendation')
   })
 
   it('should return null with unknown component', async () => {
@@ -43,9 +43,9 @@ describe('ComponentsMixin', () => {
   })
 
   it('should find an instantiable component', async () => {
-    const ButtonIcon = await core.findComponent('Button/ButtonIcon')
-    const wrapper = shallowMount(ButtonIcon, { localVue })
-    expect(wrapper.findComponent({ name: 'ButtonIcon' }).exists()).toBeTruthy()
+    const ButtonRecommendation = await core.findComponent('Button/ButtonRecommendation')
+    const wrapper = shallowMount(ButtonRecommendation, { localVue })
+    expect(wrapper.findComponent({ name: 'ButtonRecommendation' }).exists()).toBeTruthy()
   })
 
   it('should find component in sub-folder', async () => {

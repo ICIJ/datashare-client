@@ -15,7 +15,7 @@ export default ({ mode }) => {
   const VITE_CWD  = process.cwd()
   const ENV = loadEnv(mode, process.cwd(), '')
   Object.assign(process.env, { ...ENV, VITE_GIT_HASH, VITE_CWD })
-  
+
   return defineConfig({
     base: process.env.VITE_BASE,
     plugins: [
