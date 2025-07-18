@@ -1,5 +1,5 @@
 import { BCloseButton } from 'bootstrap-vue-next'
-import { fn } from '@storybook/test'
+import { fn } from 'storybook/test'
 
 import PageSettings from '@/components/PageSettings/PageSettings'
 import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'

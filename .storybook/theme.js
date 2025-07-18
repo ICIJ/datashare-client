@@ -1,6 +1,6 @@
 
 
-import { create } from '@storybook/theming/create'
+import { create } from 'storybook/theming/create'
 import brandImage from '../src/assets/images/logo-design-system.png'
 
 export default create({
