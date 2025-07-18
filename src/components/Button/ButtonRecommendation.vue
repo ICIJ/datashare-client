@@ -3,6 +3,7 @@ import { ButtonIcon } from '@icij/murmur-next'
 
 import DisplayUser from '@/components/Display/DisplayUser'
 
+defineOptions({ name: 'ButtonRecommendation' })
 defineProps({
   label: {
     type: String,
