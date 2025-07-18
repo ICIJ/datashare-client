@@ -1,11 +1,10 @@
 <script setup>
 import { whenever } from '@vueuse/core'
 import { ref, computed } from 'vue'
-import { PhosphorIcon, HapticCopy } from '@icij/murmur-next'
+import { PhosphorIcon, HapticCopy, ButtonIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 
 import AppModal from '@/components/AppModal/AppModal'
-import ButtonIcon from '@/components/Button/ButtonIcon'
 import DisplayHash from '@/components/Display/DisplayHash'
 import SettingsViewLayout from '@/views/Settings/SettingsView/SettingsViewLayout'
 import { useCore } from '@/composables/useCore'

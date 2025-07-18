@@ -1,8 +1,6 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
-
-import ButtonIcon from '@/components/Button/ButtonIcon'
-import ImageMode from '@/components/ImageMode/ImageMode'
+import { ButtonIcon, ImageMode } from '@icij/murmur-next'
 
 defineProps({
   title: {

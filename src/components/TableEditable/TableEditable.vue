@@ -44,10 +44,10 @@
 
 <script setup>
 import { reactive } from 'vue'
+import { ButtonIcon } from '@icij/murmur-next'
 
 import RowEditable from './RowEditable.vue'
 
-import ButtonIcon from '@/components/Button/ButtonIcon'
 const items = defineModel('items', {
   type: Array,
   default: () => reactive([{ name: '', focused: false }])

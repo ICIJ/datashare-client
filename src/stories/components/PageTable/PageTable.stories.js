@@ -1,7 +1,8 @@
+import { ButtonIcon } from '@icij/murmur-next'
+
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
 import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayVisibility from '@/components/Display/DisplayVisibility'
-import ButtonIcon from '@/components/Button/ButtonIcon'
 import PageTable from '@/components/PageTable/PageTable'
 import PageTableTdActions from '@/components/PageTable/PageTableTdActions'
 import PageTableTh from '@/components/PageTable/PageTableTh'

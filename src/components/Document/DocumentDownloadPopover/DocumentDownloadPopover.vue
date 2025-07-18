@@ -1,6 +1,6 @@
 <script setup>
 import { useTemplateRef } from 'vue'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { PhosphorIcon, ButtonIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 
 import DocumentDownloadPopoverSection from './DocumentDownloadPopoverSection'
@@ -9,7 +9,6 @@ import { useDocumentDownload } from '@/composables/useDocumentDownload'
 import AppPopover from '@/components/AppPopover/AppPopover'
 import DisplayContentType from '@/components/Display/DisplayContentType'
 import DismissableAlert from '@/components/Dismissable/DismissableAlert'
-import ButtonIcon from '@/components/Button/ButtonIcon'
 
 /**
  * Toggle value when the popover is open

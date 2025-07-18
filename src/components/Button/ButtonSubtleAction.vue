@@ -1,5 +1,5 @@
 <script setup>
-import ButtonIcon from '@/components/Button/ButtonIcon'
+import { ButtonIcon } from '@icij/murmur-next'
 </script>
 
 <template>

@@ -1,11 +1,9 @@
 <script setup>
 import { computed, nextTick, onMounted, ref, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { PhosphorIcon, ButtonIcon } from '@icij/murmur-next'
 
 import FormControlTagInputEntry from './FormControlTagInputEntry'
-
-import ButtonIcon from '@/components/Button/ButtonIcon'
 
 const props = defineProps({
   modelValue: {

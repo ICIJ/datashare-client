@@ -1,7 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-
-import ButtonIcon from '@/components/Button/ButtonIcon'
+import { ButtonIcon } from '@icij/murmur-next'
 
 defineOptions({ name: 'DocumentUserActionsEntry' })
 

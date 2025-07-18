@@ -1,5 +1,6 @@
+import { ImageModeSource } from '@icij/murmur-next'
+
 import AppModal from '@/components/AppModal/AppModal'
-import ImageModeSource from '@/components/ImageMode/ImageModeSource'
 import image from '@/assets/images/illustrations/app-modal-default-light.svg'
 import imageDark from '@/assets/images/illustrations/app-modal-default-dark.svg'
 import { breakpointSizeArgType } from '~storybook/utils'

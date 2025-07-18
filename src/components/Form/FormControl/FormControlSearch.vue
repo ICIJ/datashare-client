@@ -1,11 +1,10 @@
 <script setup>
 import { computed, toRef, useTemplateRef, watch } from 'vue'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { PhosphorIcon, ButtonIcon } from '@icij/murmur-next'
 import { PhCircleNotch, PhMagnifyingGlass } from '@phosphor-icons/vue'
 import { useI18n } from 'vue-i18n'
 
 import { buttonSizeValidator, SIZE } from '@/enums/sizes'
-import ButtonIcon from '@/components/Button/ButtonIcon'
 
 /**
  * A search input with pill layout.

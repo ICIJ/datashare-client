@@ -1,8 +1,7 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
-
-import ButtonIcon from '@/components/Button/ButtonIcon'
+import { ButtonIcon } from '@icij/murmur-next'
 
 const props = defineProps({
   shouldInstall: {

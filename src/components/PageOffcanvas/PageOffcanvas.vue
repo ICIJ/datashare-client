@@ -1,10 +1,10 @@
 <script setup>
 import { computed } from 'vue'
+import { ButtonIcon } from '@icij/murmur-next'
 
 import { OFFCANVAS_PLACEMENT, offcanvasPlacementValidator } from '@/enums/placements'
 import { useBreakpoints } from '@/composables/useBreakpoints'
 import { breakpointSizeValidator, SIZE } from '@/enums/sizes'
-import ButtonIcon from '@/components/Button/ButtonIcon'
 
 const modelValue = defineModel({ type: Boolean })
 

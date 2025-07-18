@@ -1,8 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue'
+import { ImageMode, ImageModeSource } from '@icij/murmur-next'
 
-import ImageMode from '@/components/ImageMode/ImageMode'
-import ImageModeSource from '@/components/ImageMode/ImageModeSource'
 import image from '@/assets/images/illustrations/login-image-dark.svg'
 import imageDark from '@/assets/images/illustrations/login-image-light.svg'
 import logo from '@/assets/images/logo-color-symbol.svg'

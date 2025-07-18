@@ -1,12 +1,12 @@
 <script setup>
 import { computed, useAttrs } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { ImageModeSource } from '@icij/murmur-next'
 
 import AppModal from '@/components/AppModal/AppModal'
 import JsonFormatter from '@/components/JsonFormatter'
 import imageHeaderLight from '@/assets/images/illustrations/app-modal-error-light.svg'
 import imageHeaderDark from '@/assets/images/illustrations/app-modal-error-dark.svg'
-import ImageModeSource from '@/components/ImageMode/ImageModeSource'
 
 const modelValue = defineModel({ type: Boolean, required: true })
 

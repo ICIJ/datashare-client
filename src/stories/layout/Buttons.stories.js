@@ -1,6 +1,6 @@
 import { BButton } from 'bootstrap-vue-next'
+import { ButtonIcon } from '@icij/murmur-next'
 
-import ButtonIcon from '@/components/Button/ButtonIcon'
 import { VARIANTS } from '@/enums/variants'
 import { buttonSizesArgType } from '~storybook/utils'
 import { SIZE } from '@/enums/sizes'

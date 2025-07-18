@@ -1,8 +1,8 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
+import { ButtonIcon } from '@icij/murmur-next'
 
 import AppSidebarFooterKeyboardShortcutsPopover from '@/components/AppSidebar/AppSidebarFooterKeyboardShortcutsPopover'
-import ButtonIcon from '@/components/Button/ButtonIcon'
 
 defineProps({
   compact: {

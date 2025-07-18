@@ -2,12 +2,12 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
+import { ButtonIcon } from '@icij/murmur-next'
 
 import AppSidebarFooterKeyboardShortcuts from '@/components/AppSidebar/AppSidebarFooterKeyboardShortcuts'
 import AppSidebarFooterLinks from '@/components/AppSidebar/AppSidebarFooterLinks'
 import AppSidebarFooterLinksEntry from '@/components/AppSidebar/AppSidebarFooterLinksEntry'
 import AppSidebarFooterLogo from '@/components/AppSidebar/AppSidebarFooterLogo'
-import ButtonIcon from '@/components/Button/ButtonIcon'
 import Hook from '@/components/Hook/Hook'
 import { useConfirmModal } from '@/composables/useConfirmModal'
 import { useRemoveAll } from '@/composables/useRemoveAll'

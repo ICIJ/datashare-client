@@ -2,9 +2,9 @@
 import { computed, ref, toRef, watch } from 'vue'
 import { isArray } from 'lodash'
 import { useI18n } from 'vue-i18n'
+import { ButtonIcon } from '@icij/murmur-next'
 
 import AppModal from '@/components/AppModal/AppModal'
-import ButtonIcon from '@/components/Button/ButtonIcon'
 import PathTree from '@/components/PathTree/PathTree'
 import PathTreeBreadcrumb from '@/components/PathTree/PathTreeBreadcrumb/PathTreeBreadcrumb'
 import { useCore } from '@/composables/useCore'

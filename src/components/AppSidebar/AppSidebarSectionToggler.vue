@@ -1,8 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-
-import ButtonIcon from '@/components/Button/ButtonIcon'
+import { ButtonIcon } from '@icij/murmur-next'
 
 const props = defineProps({
   active: {

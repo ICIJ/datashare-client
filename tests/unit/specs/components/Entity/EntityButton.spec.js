@@ -1,8 +1,8 @@
 import { shallowMount } from '@vue/test-utils'
+import { ButtonIcon } from '@icij/murmur-next'
 
 import EntityButton from '@/components/Entity/EntityButton'
 import EntityOccurrences from '@/components/Entity/EntityOccurrences'
-import ButtonIcon from '@/components/Button/ButtonIcon'
 
 describe('EntityButton.vue', () => {
   it('should be a Vue instance', async () => {
