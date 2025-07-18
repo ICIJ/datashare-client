@@ -56,8 +56,7 @@ describe('TaskEntitiesForm.vue', () => {
 
   it('should call findNames action with CORENLP pipeline, by default', async () => {
     const wrapper = shallowMount(TaskEntitiesForm, { global: { plugins, renderStubDefaultSlot: true } })
-    await wrapper.vm.submit()
-    await flushPromises()
+    await wrapper.find('form-creation-stub').trigger('submit')
     await expect(api.findNames).toBeCalledWith(
       'CORENLP',
       expect.objectContaining({
@@ -76,7 +75,8 @@ describe('TaskEntitiesForm.vue', () => {
     const wrapper = mount(TaskEntitiesForm, { global: { plugins, renderStubDefaultSlot: true } })
     await flushPromises()
     wrapper.find('[name=pipeline][value=ANOTHERNLP]').setChecked()
-    await wrapper.vm.submit()
+    await wrapper.find('.task-entities-form').trigger('submit')
+    // await wrapper.vm.submit()
     expect(api.findNames).toBeCalledWith(
       'ANOTHERNLP',
       expect.objectContaining({
@@ -90,7 +90,7 @@ describe('TaskEntitiesForm.vue', () => {
     await flushPromises()
     wrapper.find('[name=pipeline][value=ANOTHERNLP]').setChecked()
     wrapper.find('[name=offline][value=true]').setChecked()
-    await wrapper.vm.submit()
+    await wrapper.find('.task-entities-form').trigger('submit')
     expect(api.findNames).toBeCalledWith(
       'ANOTHERNLP',
       expect.objectContaining({
@@ -103,7 +103,7 @@ describe('TaskEntitiesForm.vue', () => {
     const wrapper = mount(TaskEntitiesForm, { global: { plugins, renderStubDefaultSlot: true } })
     await flushPromises()
     wrapper.find('[name=pipeline][value=ANOTHERNLP]').setChecked()
-    await wrapper.vm.reset()
+    await wrapper.find('.task-entities-form').trigger('reset')
     expect(wrapper.vm.pipeline).toBe('CORENLP')
   })
 })
