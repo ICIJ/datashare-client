@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 
 import { useWait } from '@/composables/useWait'
+import AppSpinner from '@/components/AppSpinner/AppSpinner'
 
 const props = defineProps({
   /**
@@ -17,6 +18,14 @@ const props = defineProps({
   for: {
     type: String,
     required: true
+  },
+  spinner: {
+    type: Boolean,
+    default: false
+  },
+  spinnerClass: {
+    type: [String, Object, Array],
+    default: null
   }
 })
 
@@ -26,7 +35,9 @@ const showWaitingSlot = computed(() => waiting(props.for))
 
 <template>
   <component :is="tag" class="app-wait">
-    <slot v-if="showWaitingSlot" name="waiting" />
+    <slot v-if="showWaitingSlot" name="waiting">
+      <app-spinner v-if="spinner" :class="spinnerClass" />
+    </slot>
     <slot v-else />
   </component>
 </template>
