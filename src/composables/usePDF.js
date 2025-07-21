@@ -3,6 +3,8 @@ import { escapeRegExp } from 'lodash'
 import * as PDFJS from 'pdfjs-dist'
 import PDFWorker from 'pdfjs-dist/build/pdf.worker.min?url'
 
+import { useWait } from '@/composables/useWait'
+
 // This is directly inspired by vue-pdfjs implementation of PDF.js
 // @see https://erindoyle.dev/using-pdfjs-with-vite/
 function configureWorker(wokerSrc) {
@@ -15,6 +17,7 @@ export function usePDF(src) {
   const pdf = computed(() => pdfDoc.value?.loadingTask ?? null)
   const numPages = computed(() => pdfDoc.value?.numPages ?? 0)
   const sizes = shallowRef([])
+  const { waitFor, isLoading, loaderId } = useWait()
 
   if (!PDFJS.GlobalWorkerOptions?.workerSrc) {
     configureWorker(PDFWorker)
@@ -26,11 +29,13 @@ export function usePDF(src) {
    * @param {string} src - The source URL or path of the PDF document. If not provided, it uses the current value of `srcRef`.
    * @returns {Promise<void>} - A promise that resolves when the PDF is loaded.
    */
-  async function load(src = srcRef.value) {
+  const load = waitFor(async (src = srcRef.value) => {
     // If the PDF document is already loaded, destroy it before loading a new one
     if (pdfDoc.value) pdfDoc.value.destroy()
     // If the source has not changed, do not perform unecessary change
     if (srcRef.value !== src) srcRef.value = src
+    // If the source is not provided, do not load anything
+    if (!src) return
 
     const loadingTask = PDFJS.getDocument(src)
 
@@ -45,7 +50,7 @@ export function usePDF(src) {
       // `ratios` is a shallowRef so we cannot directly push to it or it will not trigger reactivity.
       sizes.value = [...sizes.value, size]
     }
-  }
+  })
 
   /**
    * Finds all matches of the given term in the PDF document.
@@ -74,5 +79,5 @@ export function usePDF(src) {
 
   watch(srcRef, load, { immediate: true })
 
-  return { findHighlights, load, pdf, pdfDoc, numPages, sizes }
+  return { findHighlights, load, isLoading, loaderId, pdf, pdfDoc, numPages, sizes }
 }
