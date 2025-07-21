@@ -10,7 +10,6 @@ const { document } = useDocument()
 const { hasFeature } = useFeatures()
 
 const paginatedTypes = [
-  'application/pdf',
   'application/msword',
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
   'application/vnd.openxmlformats-officedocument.presentationml.presentation',
@@ -26,6 +25,8 @@ const previewComponent = computed(() => {
     return null
   }
   switch (true) {
+    case document.value.isPdf:
+      return 'DocumentViewerPdf'
     case document.value.isJson:
       return 'DocumentViewerJson'
     case isPaginated.value:
@@ -61,7 +62,9 @@ const asyncPreviewComponent = computed(() => {
 <template>
   <div class="d-flex flex-grow-1 document__preview">
     <template v-if="previewComponent">
-      <component :is="asyncPreviewComponent" :document="document" />
+      <suspense>
+        <component :is="asyncPreviewComponent" :document="document" />
+      </suspense>
     </template>
     <template v-else>
       <div class="p-3 text-center flex-grow-1">

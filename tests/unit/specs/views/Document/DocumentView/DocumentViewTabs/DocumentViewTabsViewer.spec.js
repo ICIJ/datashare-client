@@ -58,9 +58,9 @@ describe('DocumentViewTabsViewer.vue', () => {
     expect(wrapper.vm.previewComponent).toBe('DocumentViewerLegacySpreadsheet')
   })
 
-  it('should call the DocumentViewerPaginated component for PDF document', async () => {
+  it('should call the DocumentViewerPaginated component for Word document', async () => {
     const document = await letData(es)
-      .have(new IndexedDocument(id, index).withContentType('application/pdf'))
+      .have(new IndexedDocument(id, index).withContentType('application/msword'))
       .commitAndGetLastDocument()
     await documentStore.getDocument({ id, index })
 
