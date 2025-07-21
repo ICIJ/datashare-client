@@ -32,16 +32,19 @@
   z-index: $stretched-link-z-index + 10;
 }
 
+.dropdown-item-text,
 .dropdown-item {
   border-radius: var(--bs-border-radius);
 
   &.active {
     font-weight: 500;
-
-    &:hover {
-      background: var(--bs-dropdown-link-hover-bg);
-    }
+    background: var(--bs-body-bg);
   }
+}
+
+.dropdown-item.active:hover {
+  background: var(--bs-dropdown-link-hover-bg);
+  color: var(--bs-dropdown-link-hover-color);
 }
 
 .form-check .form-check-input:checked + .form-check-label {
