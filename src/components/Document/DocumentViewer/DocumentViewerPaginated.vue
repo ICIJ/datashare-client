@@ -5,10 +5,7 @@
         {{ t('document.fetching') }}
       </div>
     </template>
-    <div v-if="document.isPdf" class="flex-grow-1">
-      <iframe :src="document.inlineFullUrl" width="100%" height="100%" frameborder="0" allowfullscreen />
-    </div>
-    <div v-else-if="isPreviewable" class="d-flex flex-grow-1">
+    <div v-if="isPreviewable" class="d-flex flex-grow-1">
       <div class="paginated-viewer__thumbnails bg-tertiary-subtle">
         <div class="text-center p-2 d-flex align-items-center paginated-viewer__thumbnails__select">
           <select
