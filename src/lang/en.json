@@ -432,7 +432,15 @@
       "zoom": "Zoom",
       "zoomIn": "Zoom in",
       "zoomOut": "Zoom out"
-    }
+    },
+    "error": "Something went wrong while loading the PDF document.",
+    "switch": "Switch to built-in viewer"
+  },
+  "documentViewerPdfEmbedded": {
+    "switch": "Switch to Datashare viewer"
+  },
+  "documentViewerPdfNavDropdownEmbed": {
+    "switch": "Switch to built-in viewer"
   },
   "documentViewTabs": {
     "text": "Text",
