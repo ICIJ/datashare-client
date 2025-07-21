@@ -8,10 +8,17 @@ import { useCore } from '@/composables/useCore'
 import { useSearchStore } from '@/store/modules'
 
 const props = defineProps({
-  document: Object,
+  document: {
+    type: Object,
+    required: true
+  },
   targetLanguage: {
     type: String,
     default: null
+  },
+  noCount: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -67,6 +74,7 @@ function resetTerms() {
 }
 
 async function searchTerms() {
+  if (props.noCount) return
   // Then load the actual values and stats for each term
   terms.value.forEach(async ({ label }, i) => {
     try {
