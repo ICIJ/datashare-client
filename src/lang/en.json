@@ -421,6 +421,19 @@
     "rotateCounterClockwise": "Rotate 90° to the left",
     "rotateClockwise": "Rotate 90° to the right"
   },
+  "documentViewerPdf": {
+    "rotation": {
+      "clockwise": "Rotate clockwise",
+      "counterClockwise": "Rotate counterclockwise"
+    },
+    "scale": {
+      "fit": "Fit to page",
+      "width": "Fit to width",
+      "zoom": "Zoom",
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out"
+    }
+  },
   "documentViewTabs": {
     "text": "Text",
     "viewer": "View",
