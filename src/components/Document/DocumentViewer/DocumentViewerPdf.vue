@@ -2,7 +2,10 @@
 import VueScrollTo from 'vue-scrollto'
 import { computed, ref, useTemplateRef } from 'vue'
 import { refDebounced, whenever, useElementBounding } from '@vueuse/core'
+import { supportsPDFs as embeddable } from 'pdfobject'
+import { useI18n } from 'vue-i18n'
 
+import DocumentViewerPdfEmbedded from './DocumentViewerPdf/DocumentViewerPdfEmbedded'
 import DocumentViewerPdfNav from './DocumentViewerPdf/DocumentViewerPdfNav'
 import DocumentViewerPdfPage from './DocumentViewerPdf/DocumentViewerPdfPage'
 
@@ -10,6 +13,9 @@ import { SCALE_FIT, SCALE_WIDTH } from '@/enums/documentViewerPdf'
 import { useWait } from '@/composables/useWait'
 import { useScrollParent } from '@/composables/useScrollParent'
 import { usePDF } from '@/composables/usePDF'
+import { useDocumentViewStore } from '@/store/modules/documentView'
+import AppWait from '@/components/AppWait/AppWait'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 import DocumentLocalSearch from '@/components/Document/DocumentLocalSearch/DocumentLocalSearch'
 import DocumentGlobalSearchTerms from '@/components/Document/DocumentGlobalSearchTerms/DocumentGlobalSearchTerms'
 
@@ -20,12 +26,15 @@ const props = defineProps({
   }
 })
 
-const { pdf, numPages, sizes, findHighlights } = usePDF(props.document.fullUrl)
-const { waitFor, isLoading } = useWait()
+const documentViewStore = useDocumentViewStore()
 const scrollParent = useScrollParent()
+const src = computed(() => (documentViewStore.embeddedPdf ? null : props.document.fullUrl))
+const { pdf, numPages, sizes, findHighlights, loaderId: pdfLoaderId } = usePDF(src)
+const { waitFor, isLoading } = useWait()
+const { t } = useI18n()
 
 const currentPage = ref(1)
-const rotation = ref(0)
+const rotation = documentViewStore.computedDocumentRotation(props.document)
 const scale = ref(SCALE_FIT)
 const pageElements = useTemplateRef('pages')
 const toolboxElement = useTemplateRef('toolbox')
@@ -87,7 +96,12 @@ whenever(
 </script>
 
 <template>
-  <div class="document-viewer-pdf" :class="classList">
+  <document-viewer-pdf-embedded
+    v-if="documentViewStore.embeddedPdf"
+    v-model="documentViewStore.embeddedPdf"
+    :document="document"
+  />
+  <div v-else class="document-viewer-pdf" :class="classList">
     <div ref="toolbox" class="document-viewer-pdf__toolbox d-flex flex-column gap-3">
       <div class="d-flex flex-column flex-lg-row align-items-lg-center gap-3">
         <document-local-search
@@ -97,37 +111,48 @@ whenever(
           :occurrences="highlightOccurrences"
           class="flex-grow-1"
         />
-        <div class="d-flex align-items-center gap-3">
-          <document-viewer-pdf-nav
-            v-model:rotation="rotation"
-            v-model:scale="scale"
-            class="flex-shrink-0"
-            :page="currentPage"
-            :num-pages="numPages"
-            @update:page="scrollToPage"
-          />
-        </div>
+        <document-viewer-pdf-nav
+          v-model:rotation="rotation"
+          v-model:scale="scale"
+          v-model:embed="documentViewStore.embeddedPdf"
+          :page="currentPage"
+          :num-pages="numPages"
+          @update:page="scrollToPage"
+        />
       </div>
       <document-global-search-terms :document="document" no-count @select="highlightText = $event" />
     </div>
-    <div class="document-viewer-pdf__pages pt-3">
-      <document-viewer-pdf-page
-        v-for="{ page, ...size } in sizes"
-        ref="pages"
-        :key="page"
-        class="document-viewer-pdf__pages__entry"
-        :scale="pageScale"
-        :rotation="rotation"
-        :fit-parent="pageFitParent"
-        :page="page"
-        :size="size"
-        :pdf="pdf"
-        :highlight-text="highlightTextDebounced"
-        :highlight-index="getPageHighlightIndex(page)"
-        :scroll-offset="-toolboxHeight"
-        @visible="currentPage = page"
-      />
-    </div>
+    <app-wait class="document-viewer-pdf__pages pt-3" :for="pdfLoaderId" spinner>
+      <template v-if="pdf">
+        <document-viewer-pdf-page
+          v-for="{ page, ...size } in sizes"
+          ref="pages"
+          :key="page"
+          class="document-viewer-pdf__pages__entry"
+          :scale="pageScale"
+          :rotation="rotation"
+          :fit-parent="pageFitParent"
+          :page="page"
+          :size="size"
+          :pdf="pdf"
+          :highlight-text="highlightTextDebounced"
+          :highlight-index="getPageHighlightIndex(page)"
+          :scroll-offset="-toolboxHeight"
+          @visible="currentPage = page"
+        />
+      </template>
+      <template v-else>
+        <div class="text-center fw-medium">
+          <p>{{ t('documentViewerPdf.error') }}</p>
+          <button-icon
+            v-if="embeddable"
+            :label="t('documentViewerPdf.switch')"
+            :icon-left="PhFilePdf"
+            @click="documentViewStore.embeddedPdf = true"
+          />
+        </div>
+      </template>
+    </app-wait>
   </div>
 </template>
 
