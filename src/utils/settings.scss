@@ -170,7 +170,7 @@ $popover-body-padding-x: $spacer-xl;
 $popover-arrow-width: $spacer-xl;
 $popover-arrow-height: $spacer;
 
-$mark-bg: var(--bs-mark);
+$mark-bg: map-get($theme-colors, mark);
 
 $modal-inner-padding: $spacer-xl;
 
