@@ -234,6 +234,10 @@ defineExpose({ resetSize, resetStartSize, resetEndSize })
       flex-direction: column;
       gap: $spacer;
       overflow: auto;
+
+      .document-floating--reached-full-width & {
+        margin-right: 0;
+      }
     }
   }
 
@@ -250,7 +254,11 @@ defineExpose({ resetSize, resetStartSize, resetEndSize })
   &__end {
     min-width: 0;
     width: 100%;
-    padding-left: $spacer;
+
+    .document-floating--has-floating-children &,
+    .document-floating--has-floating-siblings & {
+      padding-left: $spacer;
+    }
   }
 }
 </style>
