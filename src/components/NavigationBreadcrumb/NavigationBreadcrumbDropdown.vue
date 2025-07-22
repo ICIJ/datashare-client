@@ -30,7 +30,7 @@ defineProps({
     >
       <template #button-content>
         <slot name="button-content">
-          <phosphor-icon :name="PhDotsThree" />
+          <phosphor-icon :name="PhDotsThreeOutline" fill />
         </slot>
       </template>
       <slot>
