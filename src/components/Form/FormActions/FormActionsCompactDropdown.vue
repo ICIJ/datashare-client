@@ -41,7 +41,6 @@ const menuClassList = computed(() => {
     :menu-class="menuClassList"
     toggle-class="form-actions-compact-dropdown__toggle"
     boundary="viewport"
-    teleport-to="body"
     no-caret
     end
   >
@@ -56,9 +55,9 @@ const menuClassList = computed(() => {
 
 <style lang="scss">
 .form-actions-compact-dropdown {
-  --form-actions-compact-dropdown-toggle-padding-y: calc(var(--bs-btn-padding-y) - 0.1em);
-
   &__toggle {
+    --form-actions-compact-dropdown-toggle-padding-y: calc(var(--bs-btn-padding-y) - 0.1em);
+
     padding-top: var(--form-actions-compact-dropdown-toggle-padding-y);
     padding-bottom: var(--form-actions-compact-dropdown-toggle-padding-y);
   }
