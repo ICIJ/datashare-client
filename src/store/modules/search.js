@@ -631,7 +631,6 @@ export const useSearchStore = defineSuffixedStore('search', () => {
 
     setIsReady(false)
     setError()
-    setResponse()
 
     try {
       saveAppliedQuery()
@@ -642,6 +641,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
       }
       setResponse({ raw, roots })
     } catch (error) {
+      setResponse()
       setError(error)
     } finally {
       setIsReady(true)
