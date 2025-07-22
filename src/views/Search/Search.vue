@@ -83,9 +83,9 @@ const total = computed(() => parseInt(searchStore.response.total))
 const perPage = computed(() => parseInt(appStore.getSettings('search', 'perPage')))
 const page = useUrlPageFromWithStore({
   perPage: toValue(perPage),
-  // The "to" query parameter is used to ensure that when the page is changed, the route query is updated
-  // to be on the search route. Here we use the store's `toRouteQuery` to ensure that the route query is updated
-  // with the current search parameters. This allow us to navigate from child routes where the query parameters
+  // The "to" parameter is used to ensure that when the page is changed, the route query is updated
+  // to be on a given route. Here we use the store's `toRouteQuery` to ensure that the route query is updated
+  // with the current search parameters. This allows us to navigate from child routes where the query parameters
   // are not the same as the search route.
   to: () => {
     const name = 'search'
