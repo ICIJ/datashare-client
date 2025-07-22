@@ -132,7 +132,7 @@ const addToRoute = computed(() => {
 <template>
   <div class="project-list">
     <page-header
-      v-model:searchQuery="searchQuery"
+      v-model:search-query="searchQuery"
       v-model:page="page"
       :add-to="addToRoute"
       :add-label="t('projectNew.title')"
