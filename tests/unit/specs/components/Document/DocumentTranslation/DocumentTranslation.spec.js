@@ -15,7 +15,8 @@ vi.mock('@/api/apiInstance', async (importOriginal) => {
   return {
     apiInstance: {
       ...apiInstance,
-      getDocumentSlice: vi.fn()
+      getDocumentSlice: vi.fn(),
+      getPages: vi.fn().mockResolvedValue([])
     }
   }
 })
