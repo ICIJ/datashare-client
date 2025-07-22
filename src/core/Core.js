@@ -366,8 +366,8 @@ class Core extends Behaviors {
    * @returns {Core} the current instance of Core
    */
   applyPageTitle() {
-    if (document) {
-      document.title = this.pageTitle ? `${this.pageTitle} - Datashare` : 'Datashare'
+    if (window.document) {
+      window.document.title = this.pageTitle ? `${this.pageTitle} - Datashare` : 'Datashare'
     }
     return this
   }
