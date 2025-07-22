@@ -225,17 +225,17 @@ html[data-bs-theme] body .Toastify {
       color: var(--bs-secondary-text-emphasis);
     }
   }
-  
+
   &:not(&--manual) > .nav-link.router-link-active,
   &:not(&--manual) > .nav-link.router-link-exact-active,
   &:not(&--manual) > .nav-link.active,
   &--manual.tab-group-navigation-entry--active > .nav-link {
-  
+
     --color: var(--bs-emphasis-color);
     background: transparent;
     border-bottom: 2px solid var(--bs-primary);
     font-weight: 500;
-  
+
     .nav-tabs.flex-column>& {
       border-left: 2px solid var(--bs-primary);
     }
@@ -273,4 +273,9 @@ html[data-bs-theme] body .Toastify {
 
 .phosphor-icon {
   min-width: 1em;
+}
+
+/* CD: temporary fix for button icon alignment */
+.button-icon{
+  display: inline-flex !important;
 }
