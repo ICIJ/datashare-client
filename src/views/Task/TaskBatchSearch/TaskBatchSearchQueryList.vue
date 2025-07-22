@@ -128,7 +128,7 @@ watch(toRef(route, 'query'), fetchBatchSearchQueries, { deep: true, immediate: t
     <b-row>
       <b-col lg="8" cols="12">
         <page-header-toolbar
-          v-model:searchQuery="searchQuery"
+          v-model:search-query="searchQuery"
           v-model:page="page"
           :per-page="perPage"
           :total-rows="batchSearch?.nbQueries ?? 0"

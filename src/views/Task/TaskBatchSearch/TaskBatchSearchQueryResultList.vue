@@ -124,7 +124,7 @@ watch(toRef(route, 'query'), fetchBatchSearchResults, { deep: true, immediate: t
 
 <template>
   <page-header
-    v-model:searchQuery="searchQuery"
+    v-model:search-query="searchQuery"
     v-model:page="page"
     :breadcrumb-routes="breadcrumbRoutes"
     :per-page="perPage"
