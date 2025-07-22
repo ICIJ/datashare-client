@@ -119,7 +119,7 @@ defineExpose({ focus, blur, clear: clearInput })
 
 <template>
   <form class="form-control-search" :class="classList" @submit.prevent="emit('submit', modelValue)">
-    <div class="form-control-search__input-group input-group">
+    <div class="form-control-search__input-group input-group flex-nowrap">
       <span class="form-control-search__start input-group-text border-end-0">
         <slot name="input-start" v-bind="{ loading, icon, noIcon }">
           <phosphor-icon v-if="!noIcon" :name="icon" square :spin="loading" />
