@@ -17,6 +17,10 @@ const props = defineProps({
   },
   loading: {
     type: Boolean
+  },
+  compact: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -65,6 +69,7 @@ wheneverActionShortcut('findNextOccurrence', () => !findPreviousOccurrenceKey.va
       :hidden="!modelValue"
       :active-index="activeIndex"
       :occurrences="occurrences"
+      v-if="!compact"
       class="ms-2 align-self-center"
     />
   </div>

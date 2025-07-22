@@ -5,6 +5,7 @@ import { useScroll, useElementSize, useWindowSize } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 
 import { addLocalSearchMarksClassByOffsets } from '@/utils/strings'
+import { useCompact } from '@/composables/useCompact'
 import { useWait } from '@/composables/useWait'
 import { useQueryObserver } from '@/composables/useQueryObserver'
 import ButtonToTop from '@/components/Button/ButtonToTop'
@@ -27,6 +28,10 @@ const props = defineProps({
   pageSize: {
     type: Number,
     default: 1e4
+  },
+  compactThreshold: {
+    type: Number,
+    default: 770
   }
 })
 
@@ -39,6 +44,7 @@ const pipelinesStore = usePipelinesStore()
 const searchStore = useSearchStore.inject()
 const elementRef = useTemplateRef('element')
 const containerRef = modal ? querySelector('.document-modal') : window
+const { compact } = useCompact(elementRef, { threshold: toRef(props, 'compactThreshold') })
 const { height: elementHeight } = useElementSize(elementRef)
 const { height: windowHeight } = useWindowSize()
 const { y: scrollY } = useScroll(containerRef)
@@ -323,6 +329,7 @@ async function loadContentSliceAround(desiredOffset) {
         <document-local-search
           v-model="localSearchTerm"
           v-model:active-index="localSearchIndex"
+          :compact="compact"
           :loading="isLoading"
           :disabled="!hasExtractedContent"
           :occurrences="localSearchOccurrences"
@@ -330,7 +337,7 @@ async function loadContentSliceAround(desiredOffset) {
         />
         <hook name="document.content.toolbox.local-search:after" />
         <hook name="document.content.toolbox.before:before" />
-        <tiny-pagination v-if="showPagination" v-model="page" :per-page="1" :total-rows="nbPages" />
+        <tiny-pagination v-if="showPagination" v-model="page" :per-page="1" :total-rows="nbPages" :compact="compact" />
         <hook name="document.content.toolbox.pagination:after" />
       </div>
       <document-global-search-terms
