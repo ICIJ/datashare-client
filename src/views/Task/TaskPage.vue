@@ -69,7 +69,7 @@ function refresh() {
   <div class="task-page">
     <page-header
       :key="totalRows"
-      v-model:searchQuery="searchQuery"
+      v-model:search-query="searchQuery"
       v-model:page="page"
       :add-to="showAdd ? addToRoute : null"
       :add-label="showAdd ? addLabel : null"

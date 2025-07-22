@@ -114,13 +114,13 @@ async function submit() {
       v-model:name="name"
       v-model:description="description"
       v-model:visibility="visibility"
-      v-model:selectedProjects="selectedProjects"
+      v-model:selected-projects="selectedProjects"
     />
-    <task-batch-search-form-queries v-model:csvFile="csvFile" />
+    <task-batch-search-form-queries v-model:csv-file="csvFile" />
     <task-batch-search-form-operators
-      v-model:phraseMatch="phraseMatch"
-      v-model:phraseChanges="phraseChanges"
-      v-model:spellingChanges="spellingChanges"
+      v-model:phrase-match="phraseMatch"
+      v-model:phrase-changes="phraseChanges"
+      v-model:spelling-changes="spellingChanges"
     />
     <task-batch-search-form-filters />
     <task-batch-search-form-overview :uri="uri" />

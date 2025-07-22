@@ -122,11 +122,11 @@ onAfterRouteQueryFromUpdate(refreshSearchFromRoute, { immediate: route.name === 
       <slot name="filters" />
       <div class="search__main__content flex-grow-1 flex-truncate">
         <search-toolbar
-          v-model:toggleSidebar="toggleSidebar"
-          v-model:toggleFilters="toggleFilters"
-          v-model:toggleSearchBreadcrumb="toggleSearchBreadcrumb"
-          v-model:toggleSettings="toggleSettings"
-          v-model:isFiltersClosed="isFiltersClosed"
+          v-model:toggle-sidebar="toggleSidebar"
+          v-model:toggle-filters="toggleFilters"
+          v-model:toggle-search-breadcrumb="toggleSearchBreadcrumb"
+          v-model:toggle-settings="toggleSettings"
+          v-model:is-filters-closed="isFiltersClosed"
           :search-breadcrumb-counter="searchBreadcrumbCounter"
         />
         <search-breadcrumb v-model:visible="toggleSearchBreadcrumb" />
