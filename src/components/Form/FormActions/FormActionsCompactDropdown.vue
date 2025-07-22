@@ -13,7 +13,7 @@ const props = defineProps({
   },
   dropdownIcon: {
     type: [String, Object, Array],
-    default: PhDotsThreeOutlineVertical
+    default: () => [PhDotsThreeOutlineVertical, 'fill']
   }
 })
 
