@@ -8,7 +8,7 @@ describe('DocumentViewTabs.vue', () => {
   let core
 
   beforeEach(() => {
-    core = CoreSetup.init().useAll().useRouter()
+    core = CoreSetup.init().useAll().useRouter([])
   })
 
   it('should display the component', async () => {
