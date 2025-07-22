@@ -66,10 +66,10 @@ wheneverActionShortcut('findNextOccurrence', () => !findPreviousOccurrenceKey.va
       @next="next"
     />
     <document-local-search-occurrences
+      v-if="!compact"
       :hidden="!modelValue"
       :active-index="activeIndex"
       :occurrences="occurrences"
-      v-if="!compact"
       class="ms-2 align-self-center"
     />
   </div>
