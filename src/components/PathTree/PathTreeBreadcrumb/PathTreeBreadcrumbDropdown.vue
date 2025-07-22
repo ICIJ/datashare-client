@@ -26,7 +26,7 @@ defineProps({
     variant="link"
   >
     <template #button-content>
-      <phosphor-icon :name="PhDotsThree" />
+      <phosphor-icon :name="PhDotsThree" weight="bold" />
     </template>
     <b-dropdown-item
       v-for="{ text, value } in options"
