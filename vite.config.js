@@ -66,14 +66,16 @@ export default ({ mode }) => {
     css: {
       preprocessorOptions: {
         scss: {
-          quietDeps: true,
-          silenceDeprecations: ['legacy-js-api'],
           api: 'modern',
+          silenceDeprecations: ['legacy-js-api', 'import','mixed-decls', 'color-functions', 'function-units', 'global-builtin'],
           additionalData: `
             @use 'sass:math';
             @use 'sass:color';
             @import "@/utils/settings.scss";
           `
+        },
+        sass: { // https://github.com/twbs/bootstrap/issues/40962
+          quietDeps: true,
         }
       }
     },
