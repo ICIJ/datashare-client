@@ -1,5 +1,6 @@
+import { ButtonIcon } from '@icij/murmur-next'
+
 import FormActions from '@/components/Form/FormActions/FormActions'
-import ButtonIcon from '@/components//Button/ButtonIcon'
 import { VARIANT } from '@/enums/variants'
 import { buttonSizesArgType, variantsArgType } from '~storybook/utils'
 import { SIZE } from '@/enums/sizes'
