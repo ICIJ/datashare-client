@@ -3,15 +3,18 @@ import { useRouter, useRoute } from 'vue-router'
 import { clamp, matches } from 'lodash'
 
 import EsDocList from '@/api/resources/EsDocList'
+import { useBreakpoints } from '@/composables/useBreakpoints'
 import { useCore } from '@/composables/useCore'
 import { useDocument } from '@/composables/useDocument'
 import { useSearchStore } from '@/store/modules'
+import { SIZE } from '@/enums/sizes'
 
 export function useSearchNav(currentDocument = null) {
   const { core } = useCore()
   const { document: viewDocument } = useDocument()
   const route = useRoute()
   const router = useRouter()
+  const { breakpointUp } = useBreakpoints()
   const searchStore = useSearchStore.inject()
   const currentDocumentRef = toRef(currentDocument)
   const document = computed(() => currentDocumentRef.value || viewDocument.value)
@@ -32,6 +35,8 @@ export function useSearchNav(currentDocument = null) {
   const documentPosition = computed(() => perPage.value * (page.value - 1) + documentPagePosition.value)
   // Check if there are any hits in which the document is present
   const isDocumentInPage = computed(() => documentPagePosition.value > -1)
+  // Check if the carousel is available (if the document is in the page and the screen size is medium or larger)
+  const hasCarousel = computed(() => isDocumentInPage.value && breakpointUp.value[SIZE.MD])
   // Check if there are any hits
   const hasEntries = computed(() => !!hits.value.length)
   // Check if the document is the first or last in the current page based on its position in the hits array
@@ -40,7 +45,6 @@ export function useSearchNav(currentDocument = null) {
   // Check if the previous and next buttons should be disabled
   const disabledPrevious = computed(() => documentPosition.value === 0)
   const disabledNext = computed(() => documentPosition.value === total.value - 1)
-
   const atEntryIndex = (entryIndex) => {
     return hits.value[entryIndex]
   }
@@ -150,6 +154,7 @@ export function useSearchNav(currentDocument = null) {
     fetchCarouselEntries,
     isDocumentInPage,
     hasEntries,
+    hasCarousel,
     isFirstInPage,
     isLastInPage,
     next,

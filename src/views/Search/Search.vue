@@ -41,7 +41,7 @@ const {
   onAfterRouteQueryFromUpdate
 } = useSearchFilter()
 const { count: searchBreadcrumbCounter, anyFilters } = useSearchBreadcrumb()
-const { hasEntries: hasSearchEntries } = useSearchNav()
+const { hasEntries, hasCarousel } = useSearchNav()
 
 const { t } = useI18n()
 const entriesRef = useTemplateRef('entries')
@@ -66,7 +66,7 @@ const selectMode = ref(false)
 // In this function, it's important we refresh the route before assigning the value to the
 // enoughFloatingSpace ref in order to avoid a brief flicker of the document view in the modal.
 const toggleDocumentModal = async (enoughSpace) => {
-  if (documentRoute.value && hasSearchEntries.value && (!enoughSpace || !isListLayout.value || route.query.modal)) {
+  if (documentRoute.value && hasEntries.value && (!enoughSpace || !isListLayout.value || route.query.modal)) {
     await refreshRoute()
   }
 
@@ -180,7 +180,7 @@ onAfterRouteQueryFromUpdate(refreshSearchFromRoute, { immediate: route.name === 
             </template>
             <router-view v-slot="{ Component }">
               <document-modal v-if="renderDocumentInModal" :model-value="!!Component" @hide="refreshRoute">
-                <search-carousel />
+                <search-carousel v-if="hasCarousel" />
                 <component :is="Component" />
               </document-modal>
               <component :is="Component" v-else>

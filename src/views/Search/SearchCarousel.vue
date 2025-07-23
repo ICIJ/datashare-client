@@ -83,7 +83,7 @@ watchSearchEntries(fetch, { immediate: true })
   <document-carousel
     v-if="isDocumentInPage"
     v-model:position="position"
-    class="search-carousel d-none d-md-flex"
+    class="search-carousel"
     :total="total"
     :disabled-previous="disabledPrevious"
     :disabled-next="disabledNext"
