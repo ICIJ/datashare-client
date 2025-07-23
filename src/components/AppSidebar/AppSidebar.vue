@@ -112,7 +112,7 @@ onBeforeMount(() => (appStore.sidebar.closed = appStore.sidebar.closed || fullWi
     <hook name="app-sidebar:before" :bind="{ compact, closed }" />
     <div class="flex-grow-1 p-3">
       <div class="d-flex justify-content-between">
-        <app-sidebar-toggler v-model:active="compact" class="d-none d-md-block" />
+        <app-sidebar-toggler v-model:active="compact" class="d-none d-md-inline-flex" />
         <app-sidebar-close v-if="!compact" v-model:active="closed" />
       </div>
       <div class="py-4 d-flex flex-column gap-3">
