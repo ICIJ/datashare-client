@@ -31,13 +31,20 @@ const props = defineProps({
 
 const { waiting } = useWait()
 const showWaitingSlot = computed(() => waiting(props.for))
+const classList = computed(() => ({ 'app-wait--waiting': showWaitingSlot.value }))
 </script>
 
 <template>
-  <component :is="tag" class="app-wait">
+  <component :is="tag" class="app-wait" :class="classList">
     <slot v-if="showWaitingSlot" name="waiting">
       <app-spinner v-if="spinner" :class="spinnerClass" />
     </slot>
     <slot v-else />
   </component>
 </template>
+
+<style lang="scss" scoped>
+.app-wait--waiting {
+  text-align: center;
+}
+</style>
