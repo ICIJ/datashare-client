@@ -2,6 +2,7 @@
 import { random } from 'lodash'
 
 import AppPlaceholder from '@/components/AppPlaceholder/AppPlaceholder'
+import DocumentContentPlaceholder from '@/components/Document/DocumentContentPlaceholder'
 import ModeServerOnly from '@/components/Mode/ModeServerOnly'
 import TabGroupNavigation from '@/components/TabGroup/TabGroupNavigation/TabGroupNavigation'
 import TabGroupNavigationEntry from '@/components/TabGroup/TabGroupNavigation/TabGroupNavigationEntry'
@@ -40,9 +41,6 @@ import TabGroupNavigationEntry from '@/components/TabGroup/TabGroupNavigation/Ta
         <app-placeholder width="5rem" height="1.5rem" />
       </tab-group-navigation-entry>
     </tab-group-navigation>
-    <div class="d-flex flex-column gap-3">
-      <app-placeholder height="2.875rem" />
-      <app-placeholder v-for="j in 10" :key="j" :width="random(30, 70)" />
-    </div>
+    <document-content-placeholder />
   </div>
 </template>
