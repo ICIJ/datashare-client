@@ -1,7 +1,7 @@
 <template>
-  <div class="app d-flex" :style="style">
+  <div class="app d-flex">
     <hook name="app:before" />
-    <app-sidebar ref="app-sidebar" />
+    <app-sidebar />
     <div class="app__view flex-grow-1">
       <router-view v-slot="{ Component }">
         <component :is="Component">
@@ -23,7 +23,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, onBeforeUnmount, useTemplateRef } from 'vue'
+import { computed, onMounted, onBeforeUnmount } from 'vue'
 import { compact, get, property } from 'lodash'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -33,7 +33,6 @@ import Hook from '@/components/Hook/Hook'
 import PageOffcanvas from '@/components/PageOffcanvas/PageOffcanvas'
 import ScrollTracker from '@/components/ScrollTracker'
 import { useCore } from '@/composables/useCore'
-import { useResizeObserver } from '@/composables/useResizeObserver'
 import { useAppStore } from '@/store/modules'
 
 const { core } = useCore()
@@ -75,15 +74,6 @@ const FiltersComponent = computed(() => {
   return route.matched.map(property('components')).findLast((components) => 'filters' in components)?.filters
 })
 
-const appSidebarRef = useTemplateRef('app-sidebar')
-const { state: appSidebarState } = useResizeObserver(appSidebarRef)
-
-const style = computed(() => {
-  return {
-    '--app-sidebar-width': `${appSidebarState.contentRect.width}px`
-  }
-})
-
 onMounted(async () => {
   core?.on('http::error', handleHttpError)
 })
@@ -96,7 +86,6 @@ onBeforeUnmount(() => {
 <style lang="scss" scoped>
 .app {
   --app-nav-height: #{$app-nav-height};
-  --app-sidebar-width: #{$app-sidebar-width};
 
   min-height: 100vh;
 

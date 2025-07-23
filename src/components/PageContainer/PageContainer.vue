@@ -64,7 +64,7 @@ const classList = computed(() => {
   }
 
   &--fluid {
-    max-width: calc(100vw - var(--app-sidebar-width));
+    max-width: 100%;
   }
 
   &--compact {
