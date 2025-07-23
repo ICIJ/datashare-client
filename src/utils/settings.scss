@@ -252,6 +252,8 @@ $dropdown-link-hover-color: var(--bs-action-text-emphasis);
 $dropdown-link-active-color: var(--bs-action-text-emphasis);
 $dropdown-link-active-bg: var(--bs-dropdown-bg);
 
+$color-mode-type: data;
+
 // Bootstrap variables and mixins must be available everywhere
 @import "bootstrap/scss/functions";
 @import "bootstrap/scss/variables";
@@ -267,20 +269,9 @@ $dropdown-link-active-bg: var(--bs-dropdown-bg);
 $app-nav-height: 4.5rem;
 $app-nav-brand-height: $app-nav-height - ($spacer * 2);
 
-$app-sidebar-bg: color.adjust(#31313a, $lightness: -10%);
-$app-sidebar-color: #fff;
-$app-sidebar-border-color: mix($app-sidebar-color, $app-sidebar-bg, 5%);
 $app-sidebar-width: 310px;
 $app-sidebar-compact-width: 85px;
-$app-sidebar-link-color: mix($app-sidebar-bg, $app-sidebar-color, 40%);
-
-$app-context-sidebar-bg: mix(#fff, $app-sidebar-bg, 5%);
-$app-context-sidebar-color: #fff;
-$app-context-sidebar-width: 380px;
 
 $search-results-list-width: 600px;
 
-$document-max-width: 980px;
-$document-float-breakpoint-width:  1700px;
-$color-mode-type: data;
 
