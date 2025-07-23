@@ -104,7 +104,6 @@ const fetchRouteDocument = async ({ params } = route) => {
 }
 
 const fetchTabComponent = tabWaitFor(async (tab) => {
-  await new Promise((resolve) => setTimeout(resolve, 10000))
   const entry = tabs.value.find(matches({ tab }))
   component.value = await entry?.component().then(property('default')).then(markRaw)
 })
