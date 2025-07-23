@@ -25,26 +25,19 @@ const props = defineProps({
   },
   spinnerClass: {
     type: [String, Object, Array],
-    default: null
+    default: 'my-3 mx-auto d-flex'
   }
 })
 
 const { waiting } = useWait()
 const showWaitingSlot = computed(() => waiting(props.for))
-const classList = computed(() => ({ 'app-wait--waiting': showWaitingSlot.value }))
 </script>
 
 <template>
-  <component :is="tag" class="app-wait" :class="classList">
+  <component :is="tag" class="app-wait">
     <slot v-if="showWaitingSlot" name="waiting">
       <app-spinner v-if="spinner" :class="spinnerClass" />
     </slot>
     <slot v-else />
   </component>
 </template>
-
-<style lang="scss" scoped>
-.app-wait--waiting {
-  text-align: center;
-}
-</style>
