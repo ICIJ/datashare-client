@@ -1,6 +1,7 @@
 <script setup>
 import { computed, watch } from 'vue'
 
+import PageOffcanvasReplacement from '@/components/PageOffcanvas/PageOffcanvasReplacement'
 import FiltersPanelToggler from '@/components/FiltersPanel/FiltersPanelToggler'
 import FiltersPanelSearch from '@/components/FiltersPanel/FiltersPanelSearch'
 import { useBreakpoints } from '@/composables/useBreakpoints'
@@ -9,16 +10,12 @@ import { useAppStore } from '@/store/modules'
 
 const q = defineModel('q', { type: String, default: '' })
 
-const { sticky } = defineProps({
+defineProps({
   noToggler: {
     type: Boolean,
     default: false
   },
   noSearch: {
-    type: Boolean,
-    default: false
-  },
-  sticky: {
     type: Boolean,
     default: false
   }
@@ -29,33 +26,39 @@ const emit = defineEmits(['close'])
 const appStore = useAppStore()
 const { breakpointDown } = useBreakpoints()
 
+const show = computed({
+  get: () => !closed.value,
+  set: (value) => (closed.value = !value)
+})
+
 const closed = computed({
   get: () => appStore.filters.closed,
   set: (value) => (appStore.filters.closed = value)
 })
 
-const fullWidth = computed(() => {
+const isOffCanvas = computed(() => {
   return breakpointDown.value[SIZE.MD]
 })
 
 const classList = computed(() => {
   return {
-    'filters-panel--sticky': sticky,
     'filters-panel--closed': closed.value,
-    'filters-panel--full-width': fullWidth.value
+    'filters-panel--off-canvas': isOffCanvas.value
   }
 })
 
 // This ensure that when passing in full width, the panel is closed
-watch(fullWidth, (value) => value && (closed.value = true), { immediate: true })
+watch(isOffCanvas, (value) => value && (closed.value = true), { immediate: true })
 </script>
 
 <template>
-  <div class="filters-panel" :class="classList">
-    <filters-panel-toggler v-if="!noToggler" class="filters-panel__toggler" @close="emit('close')" />
-    <filters-panel-search v-if="!noSearch" v-model="q" class="filters-panel__search" />
-    <slot />
-  </div>
+  <page-offcanvas-replacement v-model="show" :active="isOffCanvas">
+    <div class="filters-panel" :class="classList">
+      <filters-panel-toggler v-if="!noToggler" class="filters-panel__toggler" @close="emit('close')" />
+      <filters-panel-search v-if="!noSearch" v-model="q" class="filters-panel__search" />
+      <slot />
+    </div>
+  </page-offcanvas-replacement>
 </template>
 
 <style scoped lang="scss">
@@ -66,24 +69,24 @@ watch(fullWidth, (value) => value && (closed.value = true), { immediate: true })
   align-items: start;
   gap: $spacer-xl;
   background: var(--bs-tertiary-bg-subtle);
-  max-width: 320px;
-  width: 100%;
+  flex: 0 0 $filters-panel-width;
+  width: $filters-panel-width;
+  height: 100vh;
+  overflow: auto;
 
-  &--sticky {
-    position: sticky;
-    top: 0;
-    overflow: auto;
-    height: 100vh;
+  position: sticky;
+  z-index: $zindex-sticky;
+  left: 0;
+  top: 0;
+
+  &--closed:not(&--off-canvas) {
+    display: none;
   }
 
-  &--full-width {
+  &--off-canvas {
     max-width: min(100%, 100vw);
     width: 100%;
-    position: fixed;
-    z-index: $zindex-sticky;
-    right: 0;
-    left: 0;
-    bottom: 0;
+    position: relative;
 
     .filters-panel__search {
       width: 100%;

@@ -124,7 +124,7 @@ onAfterRouteQueryFromUpdate(refreshSearchFromRoute, { immediate: route.name === 
 <template>
   <page-container class="search" fluid>
     <hook name="search:before" />
-    <div class="search__main d-flex">
+    <div class="search__main d-flex gap-3">
       <slot name="filters" />
       <div class="search__main__content flex-grow-1 flex-truncate">
         <search-toolbar

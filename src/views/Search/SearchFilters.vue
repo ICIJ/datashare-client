@@ -11,8 +11,8 @@ import FiltersPanel from '@/components/FiltersPanel/FiltersPanel'
 import FiltersPanelSection from '@/components/FiltersPanel/FiltersPanelSection'
 import { useSearchStore } from '@/store/modules'
 
-const { toggleFilters } = useViews()
 const searchStore = useSearchStore.inject()
+const { toggleFilters } = useViews()
 const { isMode } = useMode()
 const { getFilterComponent } = useSearchFilter()
 const { t } = useI18n()
@@ -35,13 +35,7 @@ const closeFilters = () => (toggleFilters.value = false)
 </script>
 
 <template>
-  <filters-panel
-    v-show="toggleFilters"
-    v-model:q="q"
-    class="search-filters flex-shrink-0 me-3"
-    sticky
-    @close="closeFilters"
-  >
+  <filters-panel v-model:q="q" @close="closeFilters">
     <filters-panel-section v-for="section in sections" :key="section" :title="t(`filter.sections.${section}`)">
       <component
         :is="getFilterComponent(filter)"
