@@ -10,6 +10,7 @@ import DocumentViewTitle from './DocumentViewTitle'
 import DocumentViewUserActions from './DocumentViewUserActions'
 
 import AppWait from '@/components/AppWait/AppWait'
+import DocumentContentPlaceholder from '@/components/Document/DocumentContentPlaceholder'
 import DocumentPlaceholder from '@/components/Document/DocumentPlaceholder'
 import { useSearchNav } from '@/composables/useSearchNav'
 import { useDocument } from '@/composables/useDocument'
@@ -103,6 +104,7 @@ const fetchRouteDocument = async ({ params } = route) => {
 }
 
 const fetchTabComponent = tabWaitFor(async (tab) => {
+  await new Promise((resolve) => setTimeout(resolve, 10000))
   const entry = tabs.value.find(matches({ tab }))
   component.value = await entry?.component().then(property('default')).then(markRaw)
 })
@@ -149,6 +151,9 @@ onBeforeRouteUpdate(fetchRouteDocument)
 
     <app-wait :for="tabLoaderId">
       <component :is="component" v-if="component" :q="q ?? route.query.q" />
+      <template #waiting>
+        <document-content-placeholder class="py-3" />
+      </template>
     </app-wait>
   </app-wait>
 </template>
