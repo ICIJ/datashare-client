@@ -112,8 +112,8 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
 
 <style lang="scss" scoped>
 .error {
-  background: $app-context-sidebar-bg no-repeat right bottom;
-  color: $app-context-sidebar-color;
+  background: var(--bs-dark) no-repeat right bottom;
+  color: var(--bs-light);
   width: 100%;
   min-height: 100vh;
 
@@ -132,7 +132,7 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
         flex-direction: row;
         align-items: center;
         justify-content: center;
-        background: $app-sidebar-bg;
+        background: var(--bs-dark-bg-subtle);
         border-radius: 1em;
 
         &__icon {
@@ -158,12 +158,12 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
         &:not(:last-of-type):after {
           content: '|';
           margin: 0 $spacer;
-          color: $app-sidebar-link-color;
+          color: rgba(var(--bs-body-bg-rgb), 0.5);
         }
 
         &,
         a {
-          color: $app-sidebar-link-color;
+          color: rgba(var(--bs-body-bg-rgb), 0.5);
         }
       }
     }
