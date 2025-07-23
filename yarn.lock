@@ -553,10 +553,10 @@
     eslint-plugin-vue "^9.9.0"
     prettier "^2.8.4"
 
-"@icij/murmur-next@4.5.5":
-  version "4.5.5"
-  resolved "https://registry.yarnpkg.com/@icij/murmur-next/-/murmur-next-4.5.5.tgz#48c98cd385db25cdb1516a7600239e1328444fb8"
-  integrity sha512-xhewMfktLeV+dj8dNwox1EtpKSriurd9Zyg7z4xyx2f6y0xwdf7f8aivzcGfE56WzR8pxftzUm838ssrNSol+g==
+"@icij/murmur-next@4.5.6":
+  version "4.5.6"
+  resolved "https://registry.yarnpkg.com/@icij/murmur-next/-/murmur-next-4.5.6.tgz#b81f34f5b364f903694020ec63cfffd51e23feb5"
+  integrity sha512-9BX8rmaDisDI0Vue3z4m5F/cdupaGMqaewmkUZsyeSpp6dfkuZsGI7U9iPNvgULvzYVdfURzVsDViObQedOt3Q==
   dependencies:
     "@phosphor-icons/vue" "^2.2.1"
     "@storybook/preset-scss" "^1.0.3"
