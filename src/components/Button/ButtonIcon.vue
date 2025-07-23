@@ -1,8 +1,7 @@
 <script>
-// Ensure retro-compatibility with plugins
-import { defineComponent } from 'vue'
 import { ButtonIcon } from '@icij/murmur-next'
-
-// Re-export the ButtonIcon component. If not using script setup, storybook doc gen will fail during build.
-export default defineComponent(ButtonIcon)
+// This export is necessary to ensure that the ButtonIcon component is properly registered
+// and available for use in Datashare's plugins. As you can see, we export a copy of the ButtonIcon component
+// to avoid conflicts with the vue-docgen-plugin used by Storybook.
+export default { ...ButtonIcon }
 </script>
