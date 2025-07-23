@@ -15,6 +15,7 @@ import { useSearchNav } from '@/composables/useSearchNav'
 import { useDocument } from '@/composables/useDocument'
 import { useUrlParamWithStore } from '@/composables/useUrlParamWithStore'
 import { useAppStore } from '@/store/modules'
+import { useWait } from '@/composables/useWait'
 
 const props = defineProps({
   id: {
@@ -37,6 +38,7 @@ const route = useRoute()
 const appStore = useAppStore()
 const { t } = useI18n()
 const elementRef = useTemplateRef('element')
+const { waitFor: tabWaitFor, loaderId: tabLoaderId } = useWait()
 const { whenSearchHasNoEntries } = useSearchNav()
 const { document, fetchDocumentOnce, loaderId } = useDocument(elementRef)
 
@@ -100,10 +102,10 @@ const fetchRouteDocument = async ({ params } = route) => {
   }
 }
 
-const fetchTabComponent = async (tab) => {
+const fetchTabComponent = tabWaitFor(async (tab) => {
   const entry = tabs.value.find(matches({ tab }))
   component.value = await entry?.component().then(property('default')).then(markRaw)
-}
+})
 
 const redirectToDocumentStandalone = () => {
   if (route.name === 'document') {
@@ -145,7 +147,9 @@ onBeforeRouteUpdate(fetchRouteDocument)
     <document-view-title class="mb-3" :document="document" />
     <document-view-tabs :tabs="tabs" />
 
-    <component :is="component" v-if="component" :q="q ?? route.query.q" />
+    <app-wait :for="tabLoaderId">
+      <component :is="component" v-if="component" :q="q ?? route.query.q" />
+    </app-wait>
   </app-wait>
 </template>
 
