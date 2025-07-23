@@ -421,6 +421,27 @@
     "rotateCounterClockwise": "crwdns9946:0crwdne9946:0",
     "rotateClockwise": "crwdns9948:0crwdne9948:0"
   },
+  "documentViewerPdf": {
+    "rotation": {
+      "clockwise": "crwdns9952:0crwdne9952:0",
+      "counterClockwise": "crwdns9954:0crwdne9954:0"
+    },
+    "scale": {
+      "fit": "crwdns9956:0crwdne9956:0",
+      "width": "crwdns9958:0crwdne9958:0",
+      "zoom": "crwdns9960:0crwdne9960:0",
+      "zoomIn": "crwdns9962:0crwdne9962:0",
+      "zoomOut": "crwdns9964:0crwdne9964:0"
+    },
+    "error": "crwdns9966:0crwdne9966:0",
+    "switch": "crwdns9968:0crwdne9968:0"
+  },
+  "documentViewerPdfEmbedded": {
+    "switch": "crwdns9970:0crwdne9970:0"
+  },
+  "documentViewerPdfNavDropdownEmbed": {
+    "switch": "crwdns9972:0crwdne9972:0"
+  },
   "documentViewTabs": {
     "text": "crwdns8028:0crwdne8028:0",
     "viewer": "crwdns8030:0crwdne8030:0",
