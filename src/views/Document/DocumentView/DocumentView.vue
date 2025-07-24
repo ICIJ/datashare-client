@@ -12,6 +12,7 @@ import DocumentViewUserActions from './DocumentViewUserActions'
 import AppWait from '@/components/AppWait/AppWait'
 import DocumentContentPlaceholder from '@/components/Document/DocumentContentPlaceholder'
 import DocumentPlaceholder from '@/components/Document/DocumentPlaceholder'
+import { replaceUrlParamValue } from '@/composables/replaceUrlParamValue'
 import { useSearchNav } from '@/composables/useSearchNav'
 import { useDocument } from '@/composables/useDocument'
 import { useUrlParamWithStore } from '@/composables/useUrlParamWithStore'
@@ -42,6 +43,9 @@ const elementRef = useTemplateRef('element')
 const { waitFor: tabWaitFor, loaderId: tabLoaderId } = useWait()
 const { whenSearchHasNoEntries } = useSearchNav()
 const { document, fetchDocumentOnce, loaderId } = useDocument(elementRef)
+
+// Ensure the "extracted-text" tab is replaced with "text" for consistency
+replaceUrlParamValue({ name: 'tab', oldValue: 'extracted-text', newValue: 'text' })
 
 // We cannot use a <router-view> to display the tabs because the document view must be independent of the router.
 // This independence is crucial to allow the document view to be used in various contexts, such as displaying a document
