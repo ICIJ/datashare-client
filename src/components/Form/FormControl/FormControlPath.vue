@@ -32,6 +32,7 @@ const props = defineProps({
 const { t } = useI18n()
 const { core } = useCore()
 const selectedPaths = ref([])
+const showPathTree = ref(false)
 const sourcePath = computed(() => props.path ?? core.getDefaultDataDir())
 const display = computed(() => modelValue.value ?? sourcePath.value)
 
@@ -58,13 +59,13 @@ function onOk() {
 
 <template>
   <div class="form-control-path d-flex no-wrap gap-3">
-    <button-icon v-b-modal.modal-form-control-path :icon-right="PhMagnifyingGlass" variant="action">
+    <button-icon :icon-right="PhMagnifyingGlass" variant="action" @click="showPathTree = true">
       {{ t('formControlPath.browse') }}
     </button-icon>
-    <button-icon v-b-modal.modal-form-control-path :icon-left="PhFolderOpen" variant="outline-tertiary">
+    <button-icon :icon-left="PhFolderOpen" variant="outline-tertiary" @click="showPathTree = true">
       <path-tree-breadcrumb :model-value="display" datadir-label no-link />
     </button-icon>
-    <app-modal id="modal-form-control-path" lazy scrollable no-header size="lg" @ok="onOk">
+    <app-modal v-model="showPathTree" lazy scrollable no-header size="lg" @ok="onOk">
       <path-tree
         v-model:selected-paths="selectedPaths"
         :path="sourcePath"
