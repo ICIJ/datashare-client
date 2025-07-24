@@ -33,6 +33,6 @@ export function useScrollParent({ closestModal = true } = {}) {
     // directly to ensure that the scroll is contained within the modal.
     const modal = closestModal ? parent.value?.closest('.modal') : null
 
-    return getScrollParent(modal || parent.value)
+    return modal || getScrollParent(parent.value)
   })
 }
