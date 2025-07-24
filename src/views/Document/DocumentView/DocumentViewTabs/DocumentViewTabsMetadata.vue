@@ -198,9 +198,9 @@ const classList = computed(() => {
 </script>
 
 <template>
-  <div class="document-view-tabs-metadata w-100 d-flex flex-column gap-3" :class="classList">
-    <document-view-tabs-metadata-linked-documents-card class="my-3" />
-    <div class="bg-body sticky-top">
+  <div class="document-view-tabs-metadata w-100 d-flex flex-column gap-3 pt-3" :class="classList">
+    <document-view-tabs-metadata-linked-documents-card />
+    <div class="bg-body py-3 sticky-top">
       <form-control-search v-model="q" :placeholder="t('documentViewTabsMetadata.search')" clear-text shadow />
     </div>
     <transition-group tag="div" name="list">
