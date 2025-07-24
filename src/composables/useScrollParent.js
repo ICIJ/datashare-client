@@ -8,7 +8,7 @@ import { useParentElement } from '@vueuse/core'
  * @returns {HTMLElement} - The first scrollable parent element found, or document.body if none is found.
  */
 function getScrollParent(node) {
-  if (node == null) {
+  if (node == null || node === document.body) {
     return document.body
   }
 
