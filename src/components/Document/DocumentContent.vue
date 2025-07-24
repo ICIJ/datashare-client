@@ -375,7 +375,7 @@ async function loadContentSliceAround(desiredOffset) {
     <div class="document-content__wrapper">
       <slot name="before-content" />
       <hook name="document.content.body:before" />
-      <div v-if="hasExtractedContent" class="document-content__body" v-html="currentContentPage"></div>
+      <div v-if="hasExtractedContent" class="document-content__body" v-html="currentContentPage" />
       <div v-else-if="loadedOnce" class="document-content__body document-content__body--no-content text-center p-3">
         {{ t('documentContent.noContent') }}
       </div>
@@ -405,6 +405,10 @@ async function loadContentSliceAround(desiredOffset) {
     &:empty {
       display: none;
     }
+  }
+
+  &__body {
+    word-break: break-all;
   }
 
   &--rtl &__body {
