@@ -2,6 +2,8 @@
 import { computed, provide, watch } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 
+import { useScrollParent } from '@/composables/useScrollParent'
+
 const props = defineProps({
   variant: {
     type: String,
@@ -23,6 +25,8 @@ watch(
   { immediate: true }
 )
 
+const teleportTo = useScrollParent()
+
 const classList = computed(() => {
   return [`form-actions-compact-dropdown--${props.variant}`]
 })
@@ -39,6 +43,7 @@ const menuClassList = computed(() => {
     :size="size"
     :class="classList"
     :menu-class="menuClassList"
+    :teleport-to="teleportTo"
     toggle-class="form-actions-compact-dropdown__toggle"
     boundary="viewport"
     no-caret
