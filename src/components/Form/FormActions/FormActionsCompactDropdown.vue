@@ -92,7 +92,8 @@ const menuClassList = computed(() => {
       }
     }
 
-    & > li > .btn {
+    & > li > .btn,
+    & > li > .button-icon.btn {
       display: flex;
       min-width: 100%;
 
