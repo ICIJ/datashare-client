@@ -1,15 +1,17 @@
 <script setup>
 import VueScrollTo from 'vue-scrollto'
-import { computed, ref, useTemplateRef } from 'vue'
+import { computed, ref, useTemplateRef, toRef } from 'vue'
 import { refDebounced, whenever, useElementBounding } from '@vueuse/core'
 import { supportsPDFs as embeddable } from 'pdfobject'
 import { useI18n } from 'vue-i18n'
 
 import DocumentViewerPdfEmbedded from './DocumentViewerPdf/DocumentViewerPdfEmbedded'
-import DocumentViewerPdfNav from './DocumentViewerPdf/DocumentViewerPdfNav'
+import DocumentViewerPdfPagination from './DocumentViewerPdf/DocumentViewerPdfPagination'
+import DocumentViewerPdfDropdown from './DocumentViewerPdf/DocumentViewerPdfDropdown/DocumentViewerPdfDropdown'
 import DocumentViewerPdfPage from './DocumentViewerPdf/DocumentViewerPdfPage'
 
 import { SCALE_FIT, SCALE_WIDTH } from '@/enums/documentViewerPdf'
+import { useCompact } from '@/composables/useCompact'
 import { useWait } from '@/composables/useWait'
 import { useScrollParent } from '@/composables/useScrollParent'
 import { usePDF } from '@/composables/usePDF'
@@ -23,6 +25,10 @@ const props = defineProps({
   document: {
     type: Object,
     required: true
+  },
+  compactThreshold: {
+    type: Number,
+    default: 770
   }
 })
 
@@ -39,6 +45,7 @@ const scale = ref(SCALE_FIT)
 const pageElements = useTemplateRef('pages')
 const toolboxElement = useTemplateRef('toolbox')
 const { height: toolboxHeight } = useElementBounding(toolboxElement)
+const { compact: toolboxCompact } = useCompact(toolboxElement, { threshold: toRef(props, 'compactThreshold') })
 const highlightText = ref(null)
 const highlightTextDebounced = refDebounced(highlightText, 300)
 const highlightIndex = ref(0)
@@ -103,22 +110,22 @@ whenever(
   />
   <div v-else class="document-viewer-pdf" :class="classList">
     <div ref="toolbox" class="document-viewer-pdf__toolbox d-flex flex-column gap-3">
-      <div class="d-flex flex-column flex-lg-row align-items-lg-center gap-3">
+      <div class="d-flex flex-nowrap align-items-lg-center gap-3">
         <document-local-search
           v-model="highlightText"
           v-model:active-index="highlightIndex"
+          :compact="toolboxCompact"
           :loading="isHightlightLoading"
           :occurrences="highlightOccurrences"
           class="flex-grow-1"
         />
-        <document-viewer-pdf-nav
-          v-model:rotation="rotation"
-          v-model:scale="scale"
-          v-model:embed="documentViewStore.embeddedPdf"
+        <document-viewer-pdf-pagination
           :page="currentPage"
-          :num-pages="numPages"
+          :total-rows="numPages"
+          :compact="toolboxCompact"
           @update:page="scrollToPage"
         />
+        <document-viewer-pdf-dropdown v-model:rotation="rotation" v-model:scale="scale" v-model:embed="embed" />
       </div>
       <document-global-search-terms :document="document" no-count @select="highlightText = $event" />
     </div>
