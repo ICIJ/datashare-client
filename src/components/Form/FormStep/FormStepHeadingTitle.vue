@@ -1,6 +1,4 @@
 <script setup>
-import { EllipsisTooltip as vEllipsisTooltip } from '@icij/murmur-next'
-
 defineProps({
   title: {
     type: String,
@@ -14,7 +12,7 @@ defineProps({
 </script>
 
 <template>
-  <component :is="tag" v-ellipsis-tooltip="{ title }" class="form-step-heading-title text-truncate">
+  <component :is="tag" class="form-step-heading-title text-truncate">
     <slot>{{ title }}</slot>
   </component>
 </template>
