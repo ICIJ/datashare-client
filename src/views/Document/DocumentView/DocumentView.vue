@@ -44,8 +44,11 @@ const { waitFor: tabWaitFor, loaderId: tabLoaderId } = useWait()
 const { whenSearchHasNoEntries } = useSearchNav()
 const { document, fetchDocumentOnce, loaderId } = useDocument(elementRef)
 
-// Ensure the "extracted-text" tab is replaced with "text" for consistency
+// Ensure legacy tab names are replaced with new ones for backward compatibility
 replaceUrlParamValue({ name: 'tab', oldValue: 'extracted-text', newValue: 'text' })
+replaceUrlParamValue({ name: 'tab', oldValue: 'preview', newValue: 'view' })
+replaceUrlParamValue({ name: 'tab', oldValue: 'details', newValue: 'metadata' })
+replaceUrlParamValue({ name: 'tab', oldValue: 'named-entities', newValue: 'entities' })
 
 // We cannot use a <router-view> to display the tabs because the document view must be independent of the router.
 // This independence is crucial to allow the document view to be used in various contexts, such as displaying a document
