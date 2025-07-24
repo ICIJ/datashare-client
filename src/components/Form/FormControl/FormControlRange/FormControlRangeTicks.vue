@@ -30,7 +30,7 @@ const style = computed(() => {
 </script>
 
 <template>
-  <div class="form-control-range-ticks">
+  <div class="form-control-range-ticks d-flex flex-row gap-1 gap-sm-3 mx-3">
     <form-control-range-ticks-entry
       v-for="s in steps"
       :key="s"
@@ -41,12 +41,3 @@ const style = computed(() => {
     />
   </div>
 </template>
-
-<style lang="scss" scoped>
-.form-control-range-ticks {
-  display: flex;
-  flex-flow: row;
-  gap: $spacer-xl;
-  margin: 0 math.div($spacer-xl, 2);
-}
-</style>
