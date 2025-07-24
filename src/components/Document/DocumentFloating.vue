@@ -197,11 +197,6 @@ defineExpose({ resetSize, resetStartSize, resetEndSize })
     visibility: hidden;
   }
 
-  &:not(.document-floating--enough-space) &__start,
-  &:not(.document-floating--enough-space) &__end {
-    overflow: hidden;
-  }
-
   &__start {
     display: none;
     max-height: 100vh;
@@ -245,8 +240,8 @@ defineExpose({ resetSize, resetStartSize, resetEndSize })
     transform: translateX(-50%);
     display: none;
 
-    .document-floating--has-floating-children &,
-    .document-floating--has-floating-siblings & {
+    .document-floating--enough-space.document-floating--has-floating-children &,
+    .document-floating--enough-space.document-floating--has-floating-siblings & {
       display: block;
     }
   }
