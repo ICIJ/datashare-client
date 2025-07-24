@@ -199,7 +199,10 @@ const loadMaxOffset = waitFor(async function (targetLanguage = props.targetLangu
 
 const syncPages = waitFor(async function () {
   if (!props.targetLanguage || props.targetLanguage === 'original') {
-    syncedPages.value = await api.getPages(documentStore.document).catch(() => [])
+    syncedPages.value = await api
+      .getPages(documentStore.document)
+      .then(({ pages }) => pages)
+      .catch(() => [])
   } else {
     syncedPages.value = []
   }
