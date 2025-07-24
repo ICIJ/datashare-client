@@ -110,7 +110,7 @@ whenever(
   />
   <div v-else class="document-viewer-pdf" :class="classList">
     <div ref="toolbox" class="document-viewer-pdf__toolbox d-flex flex-column gap-3">
-      <div class="d-flex flex-nowrap align-items-lg-center gap-3">
+      <div class="d-flex flex-md-nowrap flex-wrap align-items-lg-center gap-3">
         <document-local-search
           v-model="highlightText"
           v-model:active-index="highlightIndex"
@@ -119,13 +119,20 @@ whenever(
           :occurrences="highlightOccurrences"
           class="flex-grow-1"
         />
-        <document-viewer-pdf-pagination
-          :page="currentPage"
-          :total-rows="numPages"
-          :compact="toolboxCompact"
-          @update:page="scrollToPage"
-        />
-        <document-viewer-pdf-dropdown v-model:rotation="rotation" v-model:scale="scale" v-model:embed="embed" />
+        <div class="d-flex flex-grow-1 flex-md-grow-0 flex-nowrap align-items-center gap-2">
+          <document-viewer-pdf-pagination
+            :page="currentPage"
+            :total-rows="numPages"
+            :compact="toolboxCompact"
+            @update:page="scrollToPage"
+          />
+          <document-viewer-pdf-dropdown
+            v-model:rotation="rotation"
+            v-model:scale="scale"
+            v-model:embed="embed"
+            class="flex-shrink-0 ms-auto"
+          />
+        </div>
       </div>
       <document-global-search-terms :document="document" no-count @select="highlightText = $event" />
     </div>

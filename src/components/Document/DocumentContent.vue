@@ -361,7 +361,7 @@ async function loadContentSliceAround(desiredOffset) {
     <hook name="document.content:before" />
     <div class="document-content__toolbox d-flex flex-column gap-3">
       <hook name="document.content.toolbox:before" />
-      <div class="d-flex align-items-center gap-3">
+      <div class="d-flex flex-md-nowrap flex-wrap align-items-center gap-3">
         <hook name="document.content.toolbox.local-search:before" />
         <document-local-search
           v-model="localSearchTerm"
@@ -374,7 +374,9 @@ async function loadContentSliceAround(desiredOffset) {
         />
         <hook name="document.content.toolbox.local-search:after" />
         <hook name="document.content.toolbox.before:before" />
-        <tiny-pagination v-if="showPagination" v-model="page" :per-page="1" :total-rows="nbPages" :compact="compact" />
+        <div v-if="showPagination" class="document-content__toolbox__pagination">
+          <tiny-pagination v-model="page" :per-page="1" :total-rows="nbPages" :compact="compact" />
+        </div>
         <hook name="document.content.toolbox.pagination:after" />
       </div>
       <document-global-search-terms
