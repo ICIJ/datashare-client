@@ -1,15 +1,12 @@
 <script setup>
-import { computed, inject, nextTick, onMounted, reactive, ref, toRef, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, onMounted, reactive, ref, toRef, useTemplateRef, watch } from 'vue'
 import { clamp, entries, findLastIndex, get, isEmpty, minBy, range, throttle } from 'lodash'
-import { useScroll, useElementSize, useWindowSize } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 
 import { addLocalSearchMarksClassByOffsets } from '@/utils/strings'
 import { useCompact } from '@/composables/useCompact'
 import { useMode } from '@/composables/useMode'
 import { useWait } from '@/composables/useWait'
-import { useQueryObserver } from '@/composables/useQueryObserver'
-import ButtonToTop from '@/components/Button/ButtonToTop'
 import DocumentAttachments from '@/components/Document/DocumentAttachments'
 import DocumentGlobalSearchTerms from '@/components/Document/DocumentGlobalSearchTerms/DocumentGlobalSearchTerms'
 import DocumentLocalSearch from '@/components/Document/DocumentLocalSearch/DocumentLocalSearch'
@@ -38,19 +35,13 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
-const { querySelector } = useQueryObserver()
 const { isServer } = useMode()
-const modal = inject('modal', false)
 
 const documentStore = useDocumentStore()
 const pipelinesStore = usePipelinesStore()
 const searchStore = useSearchStore.inject()
 const elementRef = useTemplateRef('element')
-const containerRef = modal ? querySelector('.document-modal') : window
 const { compact } = useCompact(elementRef, { threshold: toRef(props, 'compactThreshold') })
-const { height: elementHeight } = useElementSize(elementRef)
-const { height: windowHeight } = useWindowSize()
-const { y: scrollY } = useScroll(containerRef)
 const { waitFor, isLoading } = useWait()
 
 const contentSlices = reactive({})
@@ -96,11 +87,6 @@ const activeTermOffset = computed(() => {
 
 const showPagination = computed(() => {
   return nbPages.value > 1 && loadedOnce.value
-})
-
-const showButtonToTop = computed(() => {
-  const heightThreshold = windowHeight.value * 0.2
-  return scrollY.value > heightThreshold && elementHeight.value > windowHeight.value && loadedOnce.value
 })
 
 const hasLocalSearchTerms = computed(() => {
@@ -330,10 +316,6 @@ function scrollToDocumentStart() {
   }
 }
 
-function scrollToTop() {
-  scrollY.value = 0
-}
-
 async function jumpToActiveLocalSearchTerm() {
   clearActiveLocalSearchTerm()
   await nextTick()
@@ -397,9 +379,6 @@ async function loadContentSliceAround(desiredOffset) {
       <div v-else-if="loadedOnce" class="document-content__body document-content__body--no-content text-center p-3">
         {{ t('documentContent.noContent') }}
       </div>
-      <transition name="fade">
-        <button-to-top v-if="showButtonToTop" class="document-content__wrapper__to-top" @click="scrollToTop" />
-      </transition>
       <hook name="document.content.body:after" />
       <slot name="after-content" />
     </div>
@@ -425,28 +404,6 @@ async function loadContentSliceAround(desiredOffset) {
 
     &:empty {
       display: none;
-    }
-  }
-
-  &__wrapper {
-    &__to-top {
-      position: fixed;
-      bottom: $spacer;
-      right: $spacer;
-
-      .modal-fullscreen & {
-        right: calc(var(--bs-modal-margin) + var(--bs-modal-padding));
-      }
-
-      &.fade-enter-active,
-      &.fade-leave-active {
-        transition: opacity 0.3s;
-      }
-
-      &.fade-enter-from,
-      &.fade-leave-to {
-        opacity: 0;
-      }
     }
   }
 
