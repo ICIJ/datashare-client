@@ -6,6 +6,7 @@ import { useI18n } from 'vue-i18n'
 
 import { addLocalSearchMarksClassByOffsets } from '@/utils/strings'
 import { useCompact } from '@/composables/useCompact'
+import { useMode } from '@/composables/useMode'
 import { useWait } from '@/composables/useWait'
 import { useQueryObserver } from '@/composables/useQueryObserver'
 import ButtonToTop from '@/components/Button/ButtonToTop'
@@ -38,6 +39,7 @@ const props = defineProps({
 
 const { t } = useI18n()
 const { querySelector } = useQueryObserver()
+const { isServer } = useMode()
 const modal = inject('modal', false)
 
 const documentStore = useDocumentStore()
@@ -198,7 +200,9 @@ const loadMaxOffset = waitFor(async function (targetLanguage = props.targetLangu
 })
 
 const syncPages = waitFor(async function () {
-  if (!props.targetLanguage || props.targetLanguage === 'original') {
+  // This experimental feature is only available for LOCAL/EMBEDDED mode for now
+  // because it can be resource-intensive for large documents.
+  if (!isServer.value && (!props.targetLanguage || props.targetLanguage === 'original')) {
     syncedPages.value = await api
       .getPages(documentStore.document)
       .then(({ pages }) => pages)
