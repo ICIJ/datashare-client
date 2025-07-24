@@ -3,11 +3,11 @@
     <template #selector="{ selectedPath, setSelectedPath }">
       <button-icon
         v-if="selectedPath"
-        v-b-modal.modal-widget-select-path
         size="sm"
         variant="outline-action"
         :icon-left="PhTreeStructure"
         class="me-3 d-inline-flex"
+        @click="showPathTree = true"
       >
         <path-tree-breadcrumb
           datadir-icon="filter"
@@ -21,7 +21,7 @@
         </span>
       </button-icon>
       <app-modal
-        id="modal-widget-select-path"
+        v-model="showPathTree"
         cancel-variant="outline-action"
         :cancel-title="t('global.cancel')"
         no-header
@@ -88,7 +88,8 @@ export default {
   },
   data() {
     return {
-      pathTreeValues: []
+      pathTreeValues: [],
+      showPathTree: false
     }
   },
   computed: {
