@@ -137,7 +137,7 @@ const maxOffset = computed(() => {
 })
 
 const nbPages = computed(() => {
-  if (syncedPages.value.length) {
+  if (syncedPages.value?.length) {
     return syncedPages.value.length
   }
   return Math.floor(maxOffset.value / props.pageSize) + 1
@@ -148,7 +148,7 @@ const offsets = computed(() => {
 })
 
 const pages = computed(() => {
-  if (syncedPages.value.length) {
+  if (syncedPages.value?.length) {
     return syncedPages.value
   }
   return range(0, maxOffset.value, props.pageSize).map((start) => {
