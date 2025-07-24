@@ -56,7 +56,7 @@ wheneverActionShortcut('findNextOccurrence', () => !findPreviousOccurrenceKey.va
 </script>
 
 <template>
-  <div class="document-local-search d-flex">
+  <div class="document-local-search">
     <document-local-search-input ref="input" v-model="modelValue" class="flex-grow-1" :loading="loading" />
     <document-local-search-nav
       :disabled-previous="disabledPrevious"
@@ -78,7 +78,6 @@ wheneverActionShortcut('findNextOccurrence', () => !findPreviousOccurrenceKey.va
 <style lang="scss" scoped>
 .document-local-search {
   display: flex;
-  display: inline-flex;
   border-radius: var(--bs-border-radius);
 }
 </style>
