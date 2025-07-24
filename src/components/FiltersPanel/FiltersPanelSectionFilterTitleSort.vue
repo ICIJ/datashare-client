@@ -16,7 +16,7 @@ const props = defineProps({
   },
   teleportTo: {
     type: String,
-    default: 'body'
+    default: '.filters-panel'
   }
 })
 
