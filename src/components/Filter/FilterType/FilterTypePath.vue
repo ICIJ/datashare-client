@@ -61,25 +61,28 @@ watchIndices(reset)
 
 <template>
   <filter-type :filter="filter" :modal="modal" flush>
-    <path-tree
-      ref="tree"
-      v-model:selected-paths="selectedPaths"
-      v-model:open-paths="openPaths"
-      v-model:path="path"
-      include-children-documents
-      :compact="!modal"
-      :projects="projects"
-      :pre-body-build="preBodyBuild"
-      :sort-by="filter.sortBy"
-      :order-by="filter.orderBy"
-      :no-stats="hideCount"
-      :nested="nested"
-      no-label
-      no-link
-      elasticsearch-only
-      select-mode
-      multiple
-    />
+    <template #default="{ opened }">
+      <path-tree
+        v-if="opened"
+        ref="tree"
+        v-model:selected-paths="selectedPaths"
+        v-model:open-paths="openPaths"
+        v-model:path="path"
+        include-children-documents
+        :compact="!modal"
+        :projects="projects"
+        :pre-body-build="preBodyBuild"
+        :sort-by="filter.sortBy"
+        :order-by="filter.orderBy"
+        :no-stats="hideCount"
+        :nested="nested"
+        no-label
+        no-link
+        elasticsearch-only
+        select-mode
+        multiple
+      />
+    </template>
     <template #actions>
       <button-toggle-path-tree-view v-model:active="nested" />
     </template>

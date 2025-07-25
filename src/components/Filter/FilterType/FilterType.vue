@@ -4,6 +4,7 @@ import { compact, concat, escapeRegExp, flatten, get, noop, setWith, uniqueId } 
 import InfiniteLoading from 'v3-infinite-loading'
 import { useI18n } from 'vue-i18n'
 
+import { refWhenever } from '@/composables/refWhenever'
 import { useWait } from '@/composables/useWait'
 import { useSearchFilter } from '@/composables/useSearchFilter'
 import FilterModal from '@/components/Filter/FilterModal/FilterModal'
@@ -15,6 +16,7 @@ import { useSearchStore } from '@/store/modules'
 
 const query = defineModel('query', { type: String, default: '' })
 const collapse = defineModel('collapse', { type: Boolean, default: null })
+const opened = refWhenever(collapse, (value) => value === false)
 
 const { filter, modal } = defineProps({
   filter: {
@@ -242,7 +244,7 @@ onBeforeMount(async () => {
     :loading="isLoading"
     :modal="modal"
   >
-    <slot name="all" v-bind="{ entries, filter }">
+    <slot name="all" v-bind="{ entries, filter, opened }">
       <filter-type-all v-if="!filter.hideAll" :filter="filter" />
     </slot>
     <template #search="{ search, searchPlaceholder }">
@@ -251,7 +253,7 @@ onBeforeMount(async () => {
     <template #actions>
       <slot name="actions" />
     </template>
-    <slot v-bind="{ entries, filter }">
+    <slot v-bind="{ entries, filter, opened }">
       <filters-panel-section-filter-entry
         v-for="{ item, label } in entries"
         :key="item.key"
