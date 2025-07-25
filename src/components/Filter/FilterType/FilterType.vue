@@ -207,8 +207,6 @@ onBeforeMount(async () => {
   collapse.value = collapse.value ?? !hasAnyValue.value
   // Only load data on mount if the filter is visible (not collapsed)
   await aggregateIfVisible()
-  // Collapsing/Expanding the filter will trigger an update of the data
-  watch(collapse, aggregateIfVisible)
   // Query value (in the search field) that trigger an update of the data
   watch(query, aggregateIfVisible)
   // General values that might trigger an update of the data
