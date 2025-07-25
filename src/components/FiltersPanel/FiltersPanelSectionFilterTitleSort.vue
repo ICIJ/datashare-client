@@ -13,10 +13,6 @@ const props = defineProps({
   sortByOptions: {
     type: Array,
     default: () => settings.filter.sortByOptions
-  },
-  teleportTo: {
-    type: String,
-    default: '.filters-panel'
   }
 })
 
@@ -46,7 +42,6 @@ const isOptionActive = ({ sortBy, orderBy }) => {
 <template>
   <b-dropdown
     v-model="showDropdown"
-    :teleport-to="teleportTo"
     class="filters-panel-section-filter-title-sort"
     variant="link"
     end
