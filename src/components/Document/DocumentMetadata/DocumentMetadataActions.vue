@@ -30,7 +30,7 @@ const indices = computed(() => props.index)
 </script>
 
 <template>
-  <div class="document-metdata-actions">
+  <div class="document-metadata-actions">
     <slot>
       <document-metadata-actions-entry
         :label="t('documentMetadataActions.search')"
@@ -57,7 +57,7 @@ const indices = computed(() => props.index)
 </template>
 
 <style lang="scss" scoped>
-.document-metdata-actions {
+.document-metadata-actions {
   display: inline-flex;
   gap: 2px;
 }
