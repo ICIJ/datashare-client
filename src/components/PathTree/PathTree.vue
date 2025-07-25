@@ -257,7 +257,7 @@ const selectDirectory = (key) => {
 
 const getDirectoryCount = (key) => {
   const directory = directories.value.find(matches({ key }))
-  if (directory) {
+  if (directory?.directories) {
     // If the directory is empty, we need to return the number of directories
     // minus the number of the current directory.
     return Math.max(0, directory.directories.value - (directoryIsEmpty.value[key] ?? 0))
@@ -269,27 +269,59 @@ const getBasename = (value) => {
   return value.split(pathSeparator.value).pop()
 }
 
-const bodybuilderBase = ({ from = 0, size = 100 } = {}) => {
-  const body = bodybuilder().size(0).rawOption('track_total_hits', true)
-  // Only the extraction level is an optional query
+/**
+ * Builds an Elasticsearch query with optional pagination,
+ * total-size aggregations, and extraction-level filtering.
+ *
+ * @param {Object} options
+ * @param {number} options.from – Pagination offset for bucket_sort (default 0)
+ * @param {number} options.size – Pagination limit for bucket_sort (default 100)
+ * @returns {Bodybuilder} – A bodybuilder instance ready for .build()
+ */
+const getBodybuilder = ({ from = 0, size = 100 } = {}) => {
+  // Start with an empty body, no hits returned (we only care about aggs)
+  const body = bodybuilder().size(0)
+  // Ensure we get accurate hit counts, even if they exceed 10,000
+  body.rawOption('track_total_hits', true)
+  // Filter to all dirname values matching our wildcard pattern (case-insensitive),
+  // this include the current path and all sub-paths.
+  body.andQuery('wildcard', 'dirname', { value: wildcardQuery.value, case_insensitive: true })
+  // Filter to paths exactly matching our target tree node
+  body.andQuery('term', 'dirname.tree', path.value)
+  // Only include Document-type entries
+  body.andQuery('match', 'type', 'Document')
+  // Aggregate by directory tree, with pagination and optional sub-aggs:
+  //
+  // * "terms" is the aggregation type
+  // * "dirname.tree" is the field to aggregate on
+  // * "dirnameTreeAggOptions.value" is the options for the aggregation
+  // * "dirname" is the name of the aggregation
+  // * The inner function is used to define sub-aggregations and pagination for each terms bucket
+  body.agg('terms', 'dirname.tree', dirnameTreeAggOptions.value, 'dirname', (inner) => {
+    // Sort and paginate each terms bucket
+    inner.agg('bucket_sort', { size, from }, 'bucket_truncate')
+    // In "full" mode (not compact), add sum and directory-count sub-aggs
+    if (!props.compact) {
+      inner.agg('sum', 'contentLength', 'size')
+      inner.agg('cardinality', 'dirname', 'directories')
+    }
+    return inner
+  })
+
+  // If we only want top-level extractions, filter out child documents
   if (!props.includeChildrenDocuments) {
     body.andQuery('match', 'extractionLevel', 0)
   }
-  return body
-    .andQuery('wildcard', 'dirname', {
-      value: wildcardQuery.value,
-      case_insensitive: true
-    })
-    .andQuery('term', 'dirname.tree', path.value)
-    .andQuery('match', 'type', 'Document')
-    .agg('terms', 'dirname.tree', dirnameTreeAggOptions.value, 'dirname', (b) => {
-      return b
-        .agg('sum', 'contentLength', 'size')
-        .agg('bucket_sort', { size, from }, 'bucket_truncate')
-        .agg('cardinality', 'dirname', 'directories')
-    })
-    .agg('sum', 'contentLength', 'total_size')
-    .agg('cardinality', 'dirname', 'total_directories')
+
+  // In "full" mode (not compact), add top-level totals across all buckets
+  if (!props.compact) {
+    body.agg('sum', 'contentLength', 'total_size')
+    body.agg('cardinality', 'dirname', 'total_directories')
+  }
+
+  // Allow any last-minute tweaks (e.g. additional filters),
+  // then return the configured bodybuilder instance
+  return props.preBodyBuild(body)
 }
 
 const directoryIsEmpty = ref({})
@@ -337,7 +369,7 @@ const loadData = async ({ clearPages = false } = {}) => {
     const index = props.projects.join(',')
     const from = clearPages ? 0 : offset.value
     const size = perPage
-    const body = props.preBodyBuild(bodybuilderBase({ from, size })).build()
+    const body = getBodybuilder({ from, size }).build()
     const preference = 'tree-view-paths-terms'
     const res = await core.api.elasticsearch.search({ index, body, preference })
     // When the number of directories is displayed,
@@ -474,7 +506,7 @@ defineExpose({ loadData, loadDataWithSpinner, reloadData, isLoading })
           :projects="projects"
           :documents="directory.doc_count"
           :directories="getDirectoryCount(directory.key)"
-          :size="directory.size.value"
+          :size="directory.size?.value"
           :selected="isSelectedDirectory(directory.key)"
           :collapse="isCollapsedDirectory(directory.key)"
           :compact="compact"
