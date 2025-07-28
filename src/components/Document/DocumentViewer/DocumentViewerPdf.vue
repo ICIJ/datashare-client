@@ -129,7 +129,7 @@ whenever(
           <document-viewer-pdf-dropdown
             v-model:rotation="rotation"
             v-model:scale="scale"
-            v-model:embed="embed"
+            v-model:embed="documentViewStore.embeddedPdf"
             class="flex-shrink-0 ms-auto"
           />
         </div>
