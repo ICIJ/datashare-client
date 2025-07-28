@@ -68,12 +68,17 @@ const classList = computed(() => {
 <style lang="scss">
 .page-offcanvas {
   max-width: 100vw;
+  padding-bottom: 0;
   overflow: auto;
   overflow-x: hidden;
 
   &--compact.offcanvas {
     --bs-offcanvas-padding-x: #{$spacer};
     --bs-offcanvas-width: 100%;
+  }
+
+  & > .offcanvas-body {
+    padding-bottom: 0;
   }
 
   &__header {

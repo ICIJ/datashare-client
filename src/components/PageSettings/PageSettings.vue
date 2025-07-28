@@ -42,10 +42,10 @@ onBeforeRouteLeave(hide)
       <page-settings-title :title="title" />
       <page-settings-hide :hide="hide" />
     </div>
-    <div class="overflow-y-auto flex-grow-1">
+    <div class="flex-grow-1">
       <slot v-bind="{ title, hide, placement, visible }" />
     </div>
-    <div class="page-settings__footer mt-2">
+    <div class="page-settings__footer py-3 position-sticky bottom-0 bg-body">
       <button-reset label-key="pageSettings.reset" @click="onReset" />
     </div>
   </div>
