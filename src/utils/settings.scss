@@ -199,6 +199,8 @@ $modal-md: 500px;
 $modal-lg: 800px;
 $modal-xl: 1140px;
 
+$modal-transition: transform .2s ease-out;
+
 $offcanvas-box-shadow: none;
 $offcanvas-border-color: var(--bs-tertiary-border-subtle);
 $offcanvas-width: 300px;
