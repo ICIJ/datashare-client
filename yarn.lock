@@ -553,16 +553,16 @@
     eslint-plugin-vue "^9.9.0"
     prettier "^2.8.4"
 
-"@icij/murmur-next@4.5.8":
-  version "4.5.8"
-  resolved "https://registry.yarnpkg.com/@icij/murmur-next/-/murmur-next-4.5.8.tgz#19fe93d3f39bdc8b362fff31710c68a4a0656fa8"
-  integrity sha512-JjPVvJy5tamucva3XhIxkqfQDs6S37d1ibA/gGYYqU/XOrhk+GTXLyRmflEaexPqoU37AhcWo/w7duV4Q0XuuA==
+"@icij/murmur-next@4.5.9":
+  version "4.5.9"
+  resolved "https://registry.yarnpkg.com/@icij/murmur-next/-/murmur-next-4.5.9.tgz#b0f2bcf0d4144ab0fdafb4633bb68ea19188d4eb"
+  integrity sha512-jEVmUnjx+kmxyyVXfEuYf/pyX26PLZ0eozxX+kQlWst9rMJVjAhXk6g8k2aZq9WmUOUHFOrPFs+2WaAnqssZAQ==
   dependencies:
     "@phosphor-icons/vue" "^2.2.1"
     "@storybook/preset-scss" "^1.0.3"
     "@types/topojson" "^3.2.6"
     bootstrap "^5.3.7"
-    bootstrap-vue-next "0.30.3"
+    bootstrap-vue-next "0.30.4"
     canvas "^3.1.2"
     clipboard "^2.0.11"
     d3 "^7.9.0"
@@ -2080,11 +2080,6 @@ boolbase@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/boolbase/-/boolbase-1.0.0.tgz#68dff5fbe60c51eb37725ea9e3ed310dcc1e776e"
   integrity sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==
-
-bootstrap-vue-next@0.30.3:
-  version "0.30.3"
-  resolved "https://registry.yarnpkg.com/bootstrap-vue-next/-/bootstrap-vue-next-0.30.3.tgz#890cfc9b5977aad937d8b1ff00ce00f02bf37744"
-  integrity sha512-cP2WVu7hD9za7Ad9jXKr8yQO5O954pp4gkog3u04NUh1afgB+aFbjq/vK1R5Ozfb0VkpH9p5A2YyFhIU69qDOQ==
 
 bootstrap-vue-next@0.30.4:
   version "0.30.4"
