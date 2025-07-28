@@ -74,7 +74,7 @@ const classList = computed(() => {
 
   &--compact.offcanvas {
     --bs-offcanvas-padding-x: #{$spacer};
-    --bs-offcanvas-width: 100%;
+    --bs-offcanvas-width: min(320px, 100vw);
   }
 
   & > .offcanvas-body {
