@@ -1,5 +1,4 @@
 import { computed, inject, provide, useId, watch, h } from 'vue'
-import { computedInject } from '@vueuse/core'
 import { useRoute, useRouter } from 'vue-router'
 import { find, matches, overSome } from 'lodash'
 import { useModalController } from 'bootstrap-vue-next'
@@ -96,10 +95,12 @@ export const useDocument = function (element) {
   }
 
   const injectDocumentViewFloatingId = () => {
-    return inject(DOCUMENT_VIEW_FLOATING_ID_KEY)
+    return inject(DOCUMENT_VIEW_FLOATING_ID_KEY, null)
   }
 
-  const documentViewFloatingSelector = computedInject(DOCUMENT_VIEW_FLOATING_ID_KEY, (id) => `#${id}`)
+  const documentViewFloatingSelector = computed(() => {
+    return injectDocumentViewFloatingId.value ? `#${injectDocumentViewFloatingId.value}` : null
+  })
 
   const watchDocument = function (callback, options) {
     // We watch the document's router params as string to avoid deep watching the object
