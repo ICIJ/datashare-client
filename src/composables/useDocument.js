@@ -99,7 +99,8 @@ export const useDocument = function (element) {
   }
 
   const documentViewFloatingSelector = computed(() => {
-    return injectDocumentViewFloatingId.value ? `#${injectDocumentViewFloatingId.value}` : null
+    const id = injectDocumentViewFloatingId()
+    return id ? `#${id}` : null
   })
 
   const watchDocument = function (callback, options) {
