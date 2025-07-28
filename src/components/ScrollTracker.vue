@@ -33,7 +33,7 @@ export default {
   },
   methods: {
     request({ element } = {}) {
-      this.target = toValue(element).$el ?? toValue(element)
+      this.target = toValue(element)?.$el ?? toValue(element)
       this.toggle(this.shouldBeVisible())
     },
     scrollToTarget() {
