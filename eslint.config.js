@@ -6,7 +6,7 @@ import { globals as iconsGlobals } from './bin/icons.js'
 
 export default [
   {
-    ignores: ['public', '.storybook']
+    ignores: ['public']
   },
 
   // ICIJ ESLint shared config (includes Vue, TypeScript, Stylistic and Vitest)
