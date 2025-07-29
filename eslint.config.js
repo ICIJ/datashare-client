@@ -43,6 +43,7 @@ export default [
     languageOptions: {
       globals: {
         ...iconsGlobals,
+        // Vite uses process.env for environment variables
         process: true
       }
     },
