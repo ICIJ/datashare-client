@@ -1,23 +1,23 @@
-import globals from "globals"
-import icijeslint from "@icij/eslint-config"
+import globals from 'globals'
+import icijeslint from '@icij/eslint-config'
 import storybook from 'eslint-plugin-storybook'
 
-import { globals as iconsGlobals } from "./bin/icons.js"
+import { globals as iconsGlobals } from './bin/icons.js'
 
 export default [
   {
-    ignores: [ "**/*.config.js", "public", ".storybook"]
+    ignores: ['public', '.storybook']
   },
-  
+
   // ICIJ ESLint shared config (includes Vue, TypeScript, Stylistic and Vitest)
   ...icijeslint.configs.all,
 
   // Storybook config
   ...storybook.configs['flat/recommended'],
 
-  // Node scripts for common tasks
+  // Node scripts for common tasks and config files
   {
-    files: ["bin/**/*.{cjs,mjs,js}"],
+    files: ['bin/**/*.{cjs,mjs,js}', '*.config.js'],
     languageOptions: {
       globals: {
         ...globals.node,
@@ -28,8 +28,8 @@ export default [
   // Vitest are written for the browser and must include browser globals
   {
     files: [
-      "src/**/*.{js,vue}",
-      "tests/**/*.js",
+      'src/**/*.{js,vue}',
+      'tests/**/*.js',
     ],
     languageOptions: {
       globals: {
@@ -52,13 +52,13 @@ export default [
       // "vue/no-v-for-template-key": "off",
       // "vue/no-custom-modifiers-on-v-model": "off",
       // "vue/no-multiple-template-root": "off",
-      "vue/valid-v-slot": "off",
+      'vue/valid-v-slot': 'off',
       // We use `require` with vite to make all components available for plugins.
       // We might want to refactor this in the future with eslint comments.
-      "@typescript-eslint/no-require-imports": "off",
-      // We use `v-html` in some components with vue i18n. 
+      '@typescript-eslint/no-require-imports': 'off',
+      // We use `v-html` in some components with vue i18n.
       // We might want to refactor this in the future with eslint comments.
-      "vue/no-v-html": "off"
+      'vue/no-v-html': 'off'
     }
   }
 ]
