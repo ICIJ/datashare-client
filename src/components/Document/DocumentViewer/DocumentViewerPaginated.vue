@@ -154,7 +154,7 @@ export default {
         try {
           this.meta = await this.fetchMeta()
         }
-        catch (e) {
+        catch {
           throw Error('Unable to fetch the thumbnail informations')
         }
       })

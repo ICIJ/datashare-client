@@ -28,6 +28,8 @@ defineProps({
     default: 'action'
   }
 })
+
+const emit = defineEmits(['cancel', 'ok'])
 const { t } = useI18n()
 </script>
 
@@ -41,14 +43,14 @@ const { t } = useI18n()
         v-if="!okOnly"
         :disabled="cancelDisabled"
         :variant="cancelVariant"
-        @click="$emit('cancel')"
+        @click="emit('cancel')"
       >
         {{ cancelTitle || t('appModalFooter.cancelTitle') }}
       </button-icon>
       <button-icon
         :disabled="okDisabled"
         :variant="okVariant"
-        @click="$emit('ok')"
+        @click="emit('ok')"
       >
         {{ okTitle || t('appModalFooter.okTitle') }}
       </button-icon>

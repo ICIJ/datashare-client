@@ -3,21 +3,13 @@ import { useI18n } from 'vue-i18n'
 
 import ProjectDropdownSelectorCheckbox from './ProjectDropdownSelectorCheckbox'
 
-defineProps({
-  modelValue: {
-    type: Boolean
-  }
-})
-
+const modelValue = defineModel('modelValue', { type: Boolean })
 const { t } = useI18n()
 </script>
 
 <template>
   <li class="project-dropdown-selector-all">
-    <project-dropdown-selector-checkbox
-      :model-value="modelValue"
-      @update:model-value="$emit('update:modelValue', $event)"
-    >
+    <project-dropdown-selector-checkbox v-model="modelValue">
       {{ t('projectDropdownSelectorAll.label') }}
     </project-dropdown-selector-checkbox>
   </li>

@@ -71,6 +71,7 @@ const threadBody = computed(() => {
   // Similar subject
   body.query('query_string', {
     fields: ['metadata.tika_metadata_dc_subject', 'metadata.tika_metadata_subject'],
+    // eslint-disable-next-line no-useless-escape
     query: `.*\"${props.document.cleanSubject}\".*`
   })
   // Collect all field data

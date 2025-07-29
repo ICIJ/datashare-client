@@ -59,7 +59,7 @@ export default {
       try {
         this.textLanguages = await this.$core.api.textLanguages()
       }
-      catch (e) {
+      catch {
         this.$toast.error(this.t('formControlExtractingLanguage.failedToRetrieveLanguages'))
       }
       this.wait.end(this.loaderId)

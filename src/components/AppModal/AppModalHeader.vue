@@ -23,6 +23,8 @@ defineProps({
     default: false
   }
 })
+
+const emit = defineEmits(['close'])
 const { t } = useI18n()
 </script>
 
@@ -39,7 +41,7 @@ const { t } = useI18n()
         class="app-modal-header__close ms-auto"
         :class="headerCloseClass"
         :label="t('appModalHeader.close')"
-        @click="$emit('close')"
+        @click="emit('close')"
       />
     </slot>
     <slot name="image">

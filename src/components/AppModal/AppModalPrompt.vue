@@ -54,8 +54,8 @@ const submit = () => emit('submit', { value: inputValue.value, trigger: 'submit'
     <template #default="{ cancel, close, hide, ok, visible }">
       <div
         v-for="(fn, name) in otherSlots"
-        :slot="name"
         :key="name"
+        v-slot[name]
       >
         <component :is="fn" />
       </div>

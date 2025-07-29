@@ -1,8 +1,7 @@
 <script setup>
+const modelValue = defineModel('modelValue', { type: Boolean })
+
 defineProps({
-  modelValue: {
-    type: Boolean
-  },
   disabled: {
     type: Boolean
   }
@@ -12,9 +11,8 @@ defineProps({
 <template>
   <div class="project-dropdown-selector-checkbox">
     <b-form-checkbox
-      :model-value="modelValue"
+      v-model="modelValue"
       :disabled="disabled"
-      @update:model-value="$emit('update:modelValue', $event)"
     >
       <slot />
     </b-form-checkbox>

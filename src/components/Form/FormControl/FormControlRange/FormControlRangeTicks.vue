@@ -4,10 +4,9 @@ import { computed } from 'vue'
 
 import FormControlRangeTicksEntry from './FormControlRangeTicksEntry'
 
+const modelValue = defineModel('modelValue', { type: Number })
+
 const props = defineProps({
-  modelValue: {
-    type: Number
-  },
   step: {
     type: Number
   },
@@ -37,7 +36,7 @@ const style = computed(() => {
       :value="s"
       :active="modelValue === s"
       :style="style"
-      @click="$emit('update:modelValue', s)"
+      @click="modelValue = s"
     />
   </div>
 </template>

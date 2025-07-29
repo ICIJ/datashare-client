@@ -103,8 +103,7 @@ export default {
      */
     modelValue: {
       type: [String, Array],
-      default: 'all',
-      required: true
+      default: 'all'
     },
     /**
      * The select value can be a series values.

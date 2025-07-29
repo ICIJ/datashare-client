@@ -121,6 +121,7 @@ export default {
       type: Boolean
     }
   },
+  emits: ['hidden', 'changed', 'selected', 'update:modelValue'],
   data() {
     return {
       query: null,

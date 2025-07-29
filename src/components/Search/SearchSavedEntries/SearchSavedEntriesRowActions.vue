@@ -15,7 +15,7 @@ const { event } = defineProps({
 })
 
 const detailsShowing = defineModel('toggle', { type: Boolean })
-const emit = defineEmits(['edited', 'removed'])
+const emit = defineEmits(['edit', 'remove'])
 
 const { t } = useI18n()
 const { show: showEditModal } = useSearchSavingModal()

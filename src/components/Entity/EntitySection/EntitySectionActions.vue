@@ -9,6 +9,8 @@ defineProps({
     required: true
   }
 })
+
+const emit = defineEmits(['copy', 'download'])
 const { t } = useI18n()
 </script>
 
@@ -18,12 +20,12 @@ const { t } = useI18n()
       <entity-section-actions-entry
         :label="t('entitySectionActions.copy')"
         icon="clipboard"
-        @click="$emit('copy', category)"
+        @click="emit('copy', category)"
       />
       <entity-section-actions-entry
         :label="t('entitySectionActions.download')"
         icon="download-simple"
-        @click="$emit('download', category)"
+        @click="emit('download', category)"
       />
     </slot>
   </div>

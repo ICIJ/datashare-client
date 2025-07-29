@@ -1,20 +1,15 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 
-defineProps({
-  modelValue: {
-    type: Boolean
-  }
-})
+const modelValue = defineModel('modelValue', { type: Boolean })
 const { t } = useI18n()
 </script>
 
 <template>
   <div class="document-card-checkbox">
     <b-form-checkbox
+      v-model="modelValue"
       :aria-label="t('documentCardCheckbox.selectDocument')"
-      :model-value="modelValue"
-      @update:model-value="$emit('update:modelValue', $event)"
     >
       <span class="visually-hidden">{{ t('documentCardCheckbox.selectDocument') }}</span>
     </b-form-checkbox>

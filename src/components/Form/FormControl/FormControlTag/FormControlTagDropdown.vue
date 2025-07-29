@@ -6,13 +6,13 @@ import { autoUpdate, autoPlacement, size, useFloating } from '@floating-ui/vue'
 
 import FormControlTagDropdownItem from './FormControlTagDropdownItem'
 
+const modelValue = defineModel('modelValue', { type: Array })
+const focusIndex = defineModel('focusIndex', { type: Number, default: -1 })
+
 const props = defineProps({
   options: {
     type: Array,
     default: () => []
-  },
-  modelValue: {
-    type: Array
   },
   inputValue: {
     type: String
@@ -37,23 +37,19 @@ const props = defineProps({
   },
   noDuplicates: {
     type: Boolean
-  },
-  focusIndex: {
-    type: Number,
-    default: -1
   }
 })
 
 const previousFocusIndex = computed(() => {
-  return Math.max(-1, props.focusIndex - 1)
+  return Math.max(-1, focusIndex.value - 1)
 })
 
 const nextFocusIndex = computed(() => {
-  return Math.min(filteredOptions.value.length - 1, props.focusIndex + 1)
+  return Math.min(filteredOptions.value.length - 1, focusIndex.value + 1)
 })
 
 const hasOption = (option) => {
-  return props.modelValue.includes(getOptionValue(option))
+  return modelValue.value.includes(getOptionValue(option))
 }
 
 const getOptionValue = ({ item }) => {
@@ -86,15 +82,15 @@ const fuse = computed(() => {
   })
 })
 
-const emit = defineEmits(['addTag', 'update:show', 'update:tag', 'update:modelValue'])
+const emit = defineEmits(['addTag', 'update:show', 'update:tag'])
 
 const addOption = (option) => {
   addTag(getOptionValue(option))
 }
 
 const addFocusOption = () => {
-  if (props.focusIndex > -1) {
-    addOption(filteredOptions.value[props.focusIndex])
+  if (focusIndex.value > -1) {
+    addOption(filteredOptions.value[focusIndex.value])
   }
 }
 
@@ -107,10 +103,10 @@ watch(filteredOptions, (filteredOptions) => {
 })
 
 watch(
-  () => props.focusIndex,
+  () => focusIndex.value,
   () => {
     const dropdownItems = element.value.querySelectorAll('.dropdown-item')
-    dropdownItems[props.focusIndex]?.focus()
+    dropdownItems[focusIndex.value]?.focus()
   }
 )
 
@@ -155,8 +151,8 @@ watch(
     class="form-control-tag-dropdown dropdown-menu"
     :class="classList"
     :style="floatingStyles"
-    @keydown.up.prevent="$emit('update:focusIndex', previousFocusIndex)"
-    @keydown.down.prevent="$emit('update:focusIndex', nextFocusIndex)"
+    @keydown.up.prevent="focusIndex = previousFocusIndex"
+    @keydown.down.prevent="focusIndex = nextFocusIndex"
     @keydown.enter.prevent="addFocusOption()"
   >
     <form-control-tag-dropdown-item
