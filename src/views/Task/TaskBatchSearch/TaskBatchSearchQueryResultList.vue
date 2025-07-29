@@ -123,6 +123,7 @@ watch(toRef(route, 'query'), fetchBatchSearchResults, { deep: true, immediate: t
 </script>
 
 <template>
+  <!-- eslint-disable vue/valid-v-slot -->
   <page-header
     v-model:search-query="searchQuery"
     v-model:page="page"
