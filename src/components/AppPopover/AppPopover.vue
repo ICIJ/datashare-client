@@ -9,7 +9,7 @@ const modelValue = defineModel({ type: Boolean, default: false })
 
 defineProps({
   teleportTo: {
-    type: String,
+    type: [String, Object],
     default: 'body'
   },
   title: {
