@@ -39,7 +39,7 @@ export const Default = {
     okTitle: 'Ok',
     errorTitle: 'The error is',
     errorMessage:
-      "SearchException: query='\"error' message='org.icij.datashare.batch.SearchException: co.elastic.clients.json.JsonpMappingException: Error deserializing co.elastic.clients.elasticsearch._types.query_dsl.QueryStringQuery: jakarta.json.stream.JsonParsingException: Unexpected char 101 at (line no=1, column no=83, offset=82) (JSON path: bool.must[1].bool.should[0].query_string.query) (line no=1, column no=84, offset=83)'",
+      'SearchException: query=\'"error\' message=\'org.icij.datashare.batch.SearchException: co.elastic.clients.json.JsonpMappingException: Error deserializing co.elastic.clients.elasticsearch._types.query_dsl.QueryStringQuery: jakarta.json.stream.JsonParsingException: Unexpected char 101 at (line no=1, column no=83, offset=82) (JSON path: bool.must[1].bool.should[0].query_string.query) (line no=1, column no=84, offset=83)\'',
     description: `The system encountered a problem. It can be a syntax error that you made in your CSV or another error. Please refer to <a href="/">this help page</a> where most common errors are described.`
   }
 }

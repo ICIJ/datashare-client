@@ -26,7 +26,7 @@ export default {
     nowrap: true,
     flush: false
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       TabGroupNavigation,
       TabGroupNavigationEntry

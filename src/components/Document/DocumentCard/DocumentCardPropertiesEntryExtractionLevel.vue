@@ -13,7 +13,10 @@ defineProps({
 </script>
 
 <template>
-  <document-card-properties-entry :document="document" :property="property">
+  <document-card-properties-entry
+    :document="document"
+    :property="property"
+  >
     <display-extraction-level :value="document.extractionLevel" />
   </document-card-properties-entry>
 </template>

@@ -34,23 +34,23 @@ const projects = computed(() => {
 })
 
 const pinnedProjects = computed(() => {
-  return projects.value.filter((project) => appStore.isProjectPinned(project.name))
+  return projects.value.filter(project => appStore.isProjectPinned(project.name))
 })
 
 const compact = computed({
   // Compact mode is always disabled on screen smaller than MD
   get: () => !breakpointDown.value[SIZE.MD] && appStore.sidebar.compact,
-  set: (value) => (appStore.sidebar.compact = value)
+  set: value => (appStore.sidebar.compact = value)
 })
 
 const show = computed({
   get: () => !closed.value,
-  set: (value) => (closed.value = !value)
+  set: value => (closed.value = !value)
 })
 
 const closed = computed({
   get: () => appStore.sidebar.closed,
-  set: (value) => (appStore.sidebar.closed = value)
+  set: value => (appStore.sidebar.closed = value)
 })
 
 const isOffCanvas = computed(() => breakpointDown.value[SIZE.MD])
@@ -114,16 +114,34 @@ onBeforeMount(() => (appStore.sidebar.closed = appStore.sidebar.closed || isOffC
 </script>
 
 <template>
-  <page-offcanvas-replacement v-model="show" :active="isOffCanvas">
-    <div class="app-sidebar" :class="classList">
-      <hook name="app-sidebar:before" :bind="{ compact, closed }" />
+  <page-offcanvas-replacement
+    v-model="show"
+    :active="isOffCanvas"
+  >
+    <div
+      class="app-sidebar"
+      :class="classList"
+    >
+      <hook
+        name="app-sidebar:before"
+        :bind="{ compact, closed }"
+      />
       <div class="flex-grow-1 p-3">
         <div class="d-flex justify-content-between">
-          <app-sidebar-toggler v-model:active="compact" class="d-none d-md-inline-flex" />
-          <app-sidebar-close v-if="!compact" v-model:active="closed" />
+          <app-sidebar-toggler
+            v-model:active="compact"
+            class="d-none d-md-inline-flex"
+          />
+          <app-sidebar-close
+            v-if="!compact"
+            v-model:active="closed"
+          />
         </div>
         <div class="py-4 d-flex flex-column gap-3">
-          <hook name="app-sidebar-sections:before" :bind="{ compact, closed }" />
+          <hook
+            name="app-sidebar-sections:before"
+            :bind="{ compact, closed }"
+          />
           <app-sidebar-section
             class="app-sidebar__section app-sidebar__section--projects"
             :title="t('appSidebar.projects')"
@@ -146,7 +164,10 @@ onBeforeMount(() => (appStore.sidebar.closed = appStore.sidebar.closed || isOffC
               :icon="PhPushPin"
               :to="{ name: 'project.view.overview.insights', params: { name: project.name } }"
             >
-              <project-label :project="project" hide-thumbnail />
+              <project-label
+                :project="project"
+                hide-thumbnail
+              />
             </app-sidebar-section-entry>
           </app-sidebar-section>
           <app-sidebar-section
@@ -163,10 +184,16 @@ onBeforeMount(() => (appStore.sidebar.closed = appStore.sidebar.closed || isOffC
             >
               {{ t('appSidebar.searchDocuments') }}
             </app-sidebar-section-entry>
-            <app-sidebar-section-entry :icon="PhClockCounterClockwise" :to="{ name: 'search.history.list' }">
+            <app-sidebar-section-entry
+              :icon="PhClockCounterClockwise"
+              :to="{ name: 'search.history.list' }"
+            >
               {{ t('appSidebar.history') }}
             </app-sidebar-section-entry>
-            <app-sidebar-section-entry :icon="PhListChecks" :to="{ name: 'search.saved.list' }">
+            <app-sidebar-section-entry
+              :icon="PhListChecks"
+              :to="{ name: 'search.saved.list' }"
+            >
               {{ t('appSidebar.savedSearches') }}
             </app-sidebar-section-entry>
           </app-sidebar-section>
@@ -177,7 +204,10 @@ onBeforeMount(() => (appStore.sidebar.closed = appStore.sidebar.closed || isOffC
             :to="{ name: 'task.task-board' }"
             :compact="compact"
           >
-            <app-sidebar-section-entry :icon="PhDotsNine" :to="{ name: 'task.task-board' }">
+            <app-sidebar-section-entry
+              :icon="PhDotsNine"
+              :to="{ name: 'task.task-board' }"
+            >
               {{ t('task.task-board.title') }}
             </app-sidebar-section-entry>
             <app-sidebar-section-entry
@@ -188,7 +218,10 @@ onBeforeMount(() => (appStore.sidebar.closed = appStore.sidebar.closed || isOffC
             >
               {{ t('task.batch-search.title') }}
             </app-sidebar-section-entry>
-            <app-sidebar-section-entry :icon="PhDownloadSimple" :to="{ name: 'task.batch-download.list' }">
+            <app-sidebar-section-entry
+              :icon="PhDownloadSimple"
+              :to="{ name: 'task.batch-download.list' }"
+            >
               {{ t('task.batch-download.title') }}
             </app-sidebar-section-entry>
             <app-sidebar-section-entry
@@ -210,7 +243,10 @@ onBeforeMount(() => (appStore.sidebar.closed = appStore.sidebar.closed || isOffC
               {{ t('task.entities.title') }}
             </app-sidebar-section-entry>
           </app-sidebar-section>
-          <hook name="app-sidebar-sections:after" :bind="{ compact, closed }" />
+          <hook
+            name="app-sidebar-sections:after"
+            :bind="{ compact, closed }"
+          />
         </div>
       </div>
       <app-sidebar-footer

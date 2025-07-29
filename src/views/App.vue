@@ -5,16 +5,29 @@
     <div class="app__view flex-grow-1">
       <router-view v-slot="{ Component }">
         <component :is="Component">
-          <template v-if="hasFilters" #filters>
+          <template
+            v-if="hasFilters"
+            #filters
+          >
             <component :is="FiltersComponent" />
           </template>
         </component>
       </router-view>
       <scroll-tracker />
     </div>
-    <page-offcanvas v-if="hasSettings" v-model="showPageSettings" no-header>
+    <page-offcanvas
+      v-if="hasSettings"
+      v-model="showPageSettings"
+      no-header
+    >
       <template #default="{ visible, placement, hide }">
-        <component :is="settingComponent" :key="route.name" :visible="visible" :placement="placement" @hide="hide()" />
+        <component
+          :is="settingComponent"
+          :key="route.name"
+          :visible="visible"
+          :placement="placement"
+          @hide="hide()"
+        />
       </template>
     </page-offcanvas>
     <b-modal-orchestrator />
@@ -63,15 +76,15 @@ const settingComponent = computed(() => {
 
 const showPageSettings = computed({
   get: () => hasSettings.value && !appStore.settings.closed,
-  set: (value) => (appStore.settings.closed = !value)
+  set: value => (appStore.settings.closed = !value)
 })
 
 const hasFilters = computed(() => {
-  return route.matched.some((route) => !!get(route, 'components.filters', false))
+  return route.matched.some(route => !!get(route, 'components.filters', false))
 })
 
 const FiltersComponent = computed(() => {
-  return route.matched.map(property('components')).findLast((components) => 'filters' in components)?.filters
+  return route.matched.map(property('components')).findLast(components => 'filters' in components)?.filters
 })
 
 onMounted(async () => {

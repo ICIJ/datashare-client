@@ -64,7 +64,10 @@ watch(toRef(props, 'name'), fetch, { immediate: true })
 
 <template>
   <div class="project-view-overview">
-    <app-wait class="bg-tertiary-subtle rounded-1 p-1 px-md-4 py-4 mb-3" :for="loaderId">
+    <app-wait
+      class="bg-tertiary-subtle rounded-1 p-1 px-md-4 py-4 mb-3"
+      :for="loaderId"
+    >
       <template #waiting>
         <div class="text-center py-5">
           <app-spinner size="2em" />
@@ -85,17 +88,32 @@ watch(toRef(props, 'name'), fetch, { immediate: true })
         show-submit
         size="lg"
       />
-      <tab-group-navigation class="mx-3" nowrap>
-        <tab-group-navigation-entry icon="chart-bar" :to="{ name: 'project.view.overview.insights', params }">
+      <tab-group-navigation
+        class="mx-3"
+        nowrap
+      >
+        <tab-group-navigation-entry
+          icon="chart-bar"
+          :to="{ name: 'project.view.overview.insights', params }"
+        >
           {{ t('projectViewOverview.nav.insights') }}
         </tab-group-navigation-entry>
-        <tab-group-navigation-entry icon="tree-structure" :to="{ name: 'project.view.overview.paths', params }">
+        <tab-group-navigation-entry
+          icon="tree-structure"
+          :to="{ name: 'project.view.overview.paths', params }"
+        >
           {{ t('projectViewOverview.nav.paths') }}
         </tab-group-navigation-entry>
-        <tab-group-navigation-entry icon="polygon" :to="{ name: 'project.view.overview.graph', params }">
+        <tab-group-navigation-entry
+          icon="polygon"
+          :to="{ name: 'project.view.overview.graph', params }"
+        >
           {{ t('projectViewOverview.nav.graph') }}
         </tab-group-navigation-entry>
-        <tab-group-navigation-entry icon="info" :to="{ name: 'project.view.overview.details', params }">
+        <tab-group-navigation-entry
+          icon="info"
+          :to="{ name: 'project.view.overview.details', params }"
+        >
           {{ t('projectViewOverview.nav.details') }}
         </tab-group-navigation-entry>
         <tab-group-navigation-entry
@@ -105,7 +123,10 @@ watch(toRef(props, 'name'), fetch, { immediate: true })
           {{ t('projectViewOverview.nav.history') }}
         </tab-group-navigation-entry>
       </tab-group-navigation>
-      <router-view v-if="hasDocuments" :key="name" />
+      <router-view
+        v-if="hasDocuments"
+        :key="name"
+      />
       <empty-state
         v-else
         :label="t('projectViewOverview.emptyStateLabel')"

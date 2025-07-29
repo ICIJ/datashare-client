@@ -9,7 +9,7 @@ import { useUrlParam } from '@/composables/useUrlParam'
 
 export function useUrlPageParam(max = Infinity) {
   return useUrlParam('page', {
-    transform: (value) => Math.min(parseInt(value), max),
+    transform: value => Math.min(parseInt(value), max),
     initialValue: 1
   })
 }

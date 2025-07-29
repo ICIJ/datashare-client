@@ -20,7 +20,10 @@ const style = computed(() => {
 </script>
 
 <template>
-  <span class="document-thumbnail-image" :style="style" />
+  <span
+    class="document-thumbnail-image"
+    :style="style"
+  />
 </template>
 
 <style lang="scss" scoped>

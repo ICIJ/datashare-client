@@ -12,7 +12,7 @@ export default {
   args: {
     title: 'Documents info'
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       FiltersPanelSection,
       FiltersPanelSectionFilter,

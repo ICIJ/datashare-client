@@ -59,7 +59,11 @@ const occurrences = computed(() => {
     :to="entity.to"
   >
     {{ entity.mention }}
-    <entity-occurrences v-if="occurrences" class="ms-2" :occurrences="occurrences" />
+    <entity-occurrences
+      v-if="occurrences"
+      class="ms-2"
+      :occurrences="occurrences"
+    />
   </button-icon>
 </template>
 

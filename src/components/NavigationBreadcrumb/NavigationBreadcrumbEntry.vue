@@ -20,7 +20,10 @@ const classList = computed(() => {
 </script>
 
 <template>
-  <div class="navigation-breadcrumb-entry" :class="classList">
+  <div
+    class="navigation-breadcrumb-entry"
+    :class="classList"
+  >
     <slot />
     <phosphor-icon
       v-if="!noCaret"

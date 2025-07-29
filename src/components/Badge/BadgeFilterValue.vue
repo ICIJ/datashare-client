@@ -17,7 +17,7 @@ const props = defineProps({
 })
 
 const filter = computed(() => {
-  return filters.find((filter) => filter.options.name === props.name)
+  return filters.find(filter => filter.options.name === props.name)
 })
 
 const display = computed(() => {
@@ -31,9 +31,16 @@ const values = computed(() => {
 
 <template>
   <span class="badge-filter-value">
-    <span v-for="(item, i) in values" :key="i" class="badge-filter-value__item">
+    <span
+      v-for="(item, i) in values"
+      :key="i"
+      class="badge-filter-value__item"
+    >
       <template v-if="display">
-        <component :is="display" :value="item" />
+        <component
+          :is="display"
+          :value="item"
+        />
       </template>
       <template v-else>
         {{ item }}

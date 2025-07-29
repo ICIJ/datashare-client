@@ -41,7 +41,7 @@ const fetchAllTagsByIndex = async (index) => {
 const hasTags = computed(() => tags.value.length > 0)
 
 async function fetchAllTags() {
-  const results = await Promise.all(map(props.indices, (index) => fetchAllTagsByIndex(index)))
+  const results = await Promise.all(map(props.indices, index => fetchAllTagsByIndex(index)))
   allTags.value = flatten(results)
 }
 
@@ -69,7 +69,10 @@ onBeforeMount(fetchAllTags)
     @submit="submit"
   >
     <template #header-image-source>
-      <image-mode-source :src="imageDark" color-mode="dark" />
+      <image-mode-source
+        :src="imageDark"
+        color-mode="dark"
+      />
     </template>
     <template #default="{ visible }">
       <div class="d-flex flex-column gap-3">
@@ -87,7 +90,10 @@ onBeforeMount(fetchAllTags)
           @blur="closeAllowed = false"
         />
         {{ t('searchSelectionAddTagsModal.description') }}
-        <p v-if="hasTags" class="mt-2">
+        <p
+          v-if="hasTags"
+          class="mt-2"
+        >
           {{ t('searchSelectionAddTagsModal.question', tags.length) }}
         </p>
       </div>

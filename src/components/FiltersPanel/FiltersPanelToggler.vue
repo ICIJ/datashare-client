@@ -7,7 +7,12 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <button-icon class="filters-panel-toggler" variant="outline-dark" icon-left="x" @click="emit('close')">
+  <button-icon
+    class="filters-panel-toggler"
+    variant="outline-dark"
+    icon-left="x"
+    @click="emit('close')"
+  >
     <slot>
       {{ t('filtersPanelToggler.label') }}
     </slot>

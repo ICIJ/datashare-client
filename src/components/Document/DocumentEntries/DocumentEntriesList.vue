@@ -61,7 +61,11 @@ defineExpose({
 </script>
 
 <template>
-  <document-floating ref="element" class="document-entries-list" fill>
+  <document-floating
+    ref="element"
+    class="document-entries-list"
+    fill
+  >
     <template #start>
       <div class="document-entries-list__start">
         <div class="document-entries-list__start__header">
@@ -69,7 +73,11 @@ defineExpose({
         </div>
         <div class="document-entries-list__start__list">
           <template v-if="loading">
-            <document-card-placeholder :properties="properties" :repeat="5" vertical-actions />
+            <document-card-placeholder
+              :properties="properties"
+              :repeat="5"
+              vertical-actions
+            />
           </template>
           <template v-else-if="entries.length">
             <document-card

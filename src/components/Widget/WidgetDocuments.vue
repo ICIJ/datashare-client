@@ -1,6 +1,10 @@
 <template>
   <div class="widget widget--documents">
-    <widget-barometer-documents :to="toSearch" :nb-documents="total" :nb-documents-on-disks="onDisk" />
+    <widget-barometer-documents
+      :to="toSearch"
+      :nb-documents="total"
+      :nb-documents-on-disks="onDisk"
+    />
   </div>
 </template>
 

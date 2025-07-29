@@ -30,7 +30,11 @@ const title = computed(() => {
 
 <template>
   <h3 class="fs-6 fw-medium m-0">
-    <phosphor-icon :name="icon" class="mr-2" weight="bold" />
+    <phosphor-icon
+      :name="icon"
+      class="mr-2"
+      weight="bold"
+    />
     {{ title }}
     <entity-occurrences :occurrences="count" />
   </h3>

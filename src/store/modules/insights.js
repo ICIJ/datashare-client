@@ -38,7 +38,7 @@ export const useInsightsStore = defineStore('insights', () => {
    * @param {string} name - The name of the widget to remove.
    */
   function removeWidget(name) {
-    const index = findIndex(widgets.value, (options) => options.name === name)
+    const index = findIndex(widgets.value, options => options.name === name)
     if (index !== -1) {
       widgets.value.splice(index, 1)
     }

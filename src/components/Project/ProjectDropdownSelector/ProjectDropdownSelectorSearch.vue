@@ -36,7 +36,10 @@ const emit = defineEmits(['update:model-value', 'blur', 'up', 'down', 'enter'])
         @enter="emit('enter', $event)"
       />
     </div>
-    <div v-if="!hasMatches" class="text-center small text-muted pb-2">
+    <div
+      v-if="!hasMatches"
+      class="text-center small text-muted pb-2"
+    >
       {{ t('projectDropdownSelectorSearch.noMatches') }}
     </div>
   </li>

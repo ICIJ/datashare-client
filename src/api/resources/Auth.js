@@ -23,7 +23,8 @@ export default class Auth {
   async _checkAuthentication() {
     try {
       return this._getCookieUsername() || (await this._getBasicAuthUserName())
-    } catch (_) {
+    }
+    catch (_) {
       return null
     }
   }
@@ -33,7 +34,8 @@ export default class Auth {
       const response = await this.api.getUser()
       setTimeout(this.reset.bind(this), 43200 * 1000)
       return response.uid
-    } catch (error) {
+    }
+    catch (error) {
       if (error && error.response && error.response.status !== 401) {
         throw new Error(`${error.response.status} ${error.response.statusText}`)
       }

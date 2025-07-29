@@ -10,7 +10,10 @@ defineProps({
 </script>
 
 <template>
-  <p class="entity-popover-mention-excerpt text-center m-0" v-html="excerpt" />
+  <p
+    class="entity-popover-mention-excerpt text-center m-0"
+    v-html="excerpt"
+  />
 </template>
 
 <style lang="scss">

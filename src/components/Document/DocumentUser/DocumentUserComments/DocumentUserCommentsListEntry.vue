@@ -33,13 +33,23 @@ const { t } = useI18n()
   <section class="document-user-comments-list-entry py-2">
     <div class="d-flex align-items-center text-nowrap gap-2">
       <slot name="avatar">
-        <display-user-avatar :value="username" height="38px" />
+        <display-user-avatar
+          :value="username"
+          height="38px"
+        />
       </slot>
       <slot name="header">
-        <display-user :value="username" class="fw-bold text-body-emphasis" hide-avatar />
+        <display-user
+          :value="username"
+          class="fw-bold text-body-emphasis"
+          hide-avatar
+        />
       </slot>
       <slot name="date">
-        <display-datetime class="ms-auto text-body-tertiary" :value="date" />
+        <display-datetime
+          class="ms-auto text-body-tertiary"
+          :value="date"
+        />
       </slot>
       <slot name="link">
         <button-icon

@@ -13,7 +13,7 @@ const { value } = defineProps({
   format: {
     type: String,
     default: FORMAT_SHORT,
-    validator: (value) => [FORMAT_SHORT, FORMAT_MONTH, FORMAT_LONG, FORMAT_FROM_NOW].includes(value)
+    validator: value => [FORMAT_SHORT, FORMAT_MONTH, FORMAT_LONG, FORMAT_FROM_NOW].includes(value)
   }
 })
 
@@ -28,8 +28,16 @@ const end = computed(() => {
 
 <template>
   <span class="display-datetime-range">
-    <display-datetime :value="start" :format="format" no-tooltip />
-    <display-datetime :value="end" :format="format" no-tooltip />
+    <display-datetime
+      :value="start"
+      :format="format"
+      no-tooltip
+    />
+    <display-datetime
+      :value="end"
+      :format="format"
+      no-tooltip
+    />
   </span>
 </template>
 

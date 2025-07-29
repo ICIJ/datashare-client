@@ -1,6 +1,11 @@
 <template>
   <div class="legacy-spreadsheet-viewer w-100 py-3">
-    <app-overlay :show="wait.waiting(loaderId)" spinner-small class="sticky-top" rounded>
+    <app-overlay
+      :show="wait.waiting(loaderId)"
+      spinner-small
+      class="sticky-top"
+      rounded
+    >
       <div class="legacy-spreadsheet-viewer__header bg-tertiary-subtle p-3 rounded">
         <b-form-select
           v-model="activeSheetName"
@@ -12,7 +17,10 @@
     </app-overlay>
     <template v-if="activeSheetName">
       <div class="legacy-spreadsheet-viewer__content mt-3">
-        <div class="table-responsive" v-html="activeSheetHTML" />
+        <div
+          class="table-responsive"
+          v-html="activeSheetHTML"
+        />
       </div>
     </template>
   </div>
@@ -83,7 +91,8 @@ export default {
         const data = await this.getSource(this.document, { responseType: 'arraybuffer' })
         this.workbook = await read(data, { type: 'array' })
         this.activeSheetName = this.sheetNames[0]
-      } catch ({ message }) {
+      }
+      catch ({ message }) {
         this.$toast.error(message)
       }
     },

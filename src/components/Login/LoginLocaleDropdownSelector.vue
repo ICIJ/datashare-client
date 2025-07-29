@@ -11,6 +11,9 @@ const { t } = useI18n()
     <span class="p-1">
       {{ t('loginLocaleDropdownSelector.label') }}
     </span>
-    <i18n-locale-dropdown class="p-1" popover-placement="top" />
+    <i18n-locale-dropdown
+      class="p-1"
+      popover-placement="top"
+    />
   </span>
 </template>

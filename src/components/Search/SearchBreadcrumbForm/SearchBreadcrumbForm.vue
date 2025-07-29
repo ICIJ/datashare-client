@@ -33,17 +33,26 @@ const emit = defineEmits(['clear:filters', 'clear:query', 'clear:all', 'save:sea
 </script>
 
 <template>
-  <b-collapse v-model="visible" class="search-breadcrumb-form">
+  <b-collapse
+    v-model="visible"
+    class="search-breadcrumb-form"
+  >
     <div class="p-3">
       <template v-if="isEmpty">
         <div class="d-flex align-items-center">
-          <search-breadcrumb-form-toggler class="order-1 align-self-start" @click="visible = false" />
+          <search-breadcrumb-form-toggler
+            class="order-1 align-self-start"
+            @click="visible = false"
+          />
           <search-breadcrumb-form-empty class="flex-grow-1 me-3" />
         </div>
       </template>
       <template v-else>
         <div class="d-flex mb-3">
-          <search-breadcrumb-form-toggler class="order-1 align-self-start" @click="visible = false" />
+          <search-breadcrumb-form-toggler
+            class="order-1 align-self-start"
+            @click="visible = false"
+          />
           <search-breadcrumb-form-list class="flex-grow-1">
             <slot />
           </search-breadcrumb-form-list>

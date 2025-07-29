@@ -11,7 +11,7 @@ export default {
       options: [INPUT_CHECKBOX, INPUT_CHECKBOX]
     }
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       PageSettingsSection,
       PageSettingsSectionGroup

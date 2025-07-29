@@ -32,8 +32,14 @@ const toProjectEdit = computed(() => ({
   <div class="project-actions d-flex gap-2">
     <slot>
       <mode-local-only>
-        <button-row-action-edit :label="t('projectRowActions.edit')" :to="toProjectEdit" />
-        <button-row-action-delete :label="t('projectRowActions.delete')" @click="showProjectDeletionModal" />
+        <button-row-action-edit
+          :label="t('projectRowActions.edit')"
+          :to="toProjectEdit"
+        />
+        <button-row-action-delete
+          :label="t('projectRowActions.delete')"
+          @click="showProjectDeletionModal"
+        />
       </mode-local-only>
       <button-toggle-pin v-model:active="pinned" />
     </slot>

@@ -50,9 +50,16 @@ const visibleFieldsKeys = computed(() => visibleFields.value.map(property('key')
     <div class="document-entries-table__header">
       <slot name="header" />
     </div>
-    <page-table v-model:sort="sort" v-model:order="order" :select-mode="selectMode">
+    <page-table
+      v-model:sort="sort"
+      v-model:order="order"
+      :select-mode="selectMode"
+    >
       <template #colgroup>
-        <col v-if="selectMode" style="width: 3rem" />
+        <col
+          v-if="selectMode"
+          style="width: 3rem"
+        >
       </template>
       <template #thead>
         <document-entries-table-head

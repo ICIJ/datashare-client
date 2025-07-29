@@ -7,7 +7,7 @@ import { useSearchStore } from '@/store/modules'
   @mixin ProjectsMixin
   @typicalname datashare
 */
-const ProjectsMixin = (superclass) =>
+const ProjectsMixin = superclass =>
   class extends superclass {
     /**
      * Get the search store
@@ -17,6 +17,7 @@ const ProjectsMixin = (superclass) =>
     get searchStore() {
       return useSearchStore()
     }
+
     /**
      * Call a function when a project is selected
      * @param {String} name - Name of the project
@@ -27,7 +28,7 @@ const ProjectsMixin = (superclass) =>
      * @memberof ProjectsMixin.prototype
      */
     toggleForProject({ project = null, withFn = noop, withoutFn = noop } = {}) {
-      const toggle = (values) => (castArray(values).includes(project) ? withFn() : withoutFn())
+      const toggle = values => (castArray(values).includes(project) ? withFn() : withoutFn())
       // Toggle once
       toggle(this.searchStore.index)
       // Watch store actions
@@ -35,6 +36,7 @@ const ProjectsMixin = (superclass) =>
         return (name === 'setIndices' || name === 'setIndex') && after(() => toggle(args[0]))
       })
     }
+
     /**
      * Create a default project on Datashare using the API
      * @memberof ProjectsMixin.prototype
@@ -51,6 +53,7 @@ const ProjectsMixin = (superclass) =>
       const project = await this.api.createProject(data)
       return this.setProject(project)
     }
+
     /**
      * Return true if the default project exists
      * @returns {Promise:Boolean}
@@ -58,10 +61,12 @@ const ProjectsMixin = (superclass) =>
     async defaultProjectExists() {
       try {
         return !!(await this.api.getProject(this.defaultProject))
-      } catch (_) {
+      }
+      catch (_) {
         return false
       }
     }
+
     /**
      * Retrieve a project by its name
      * @param {String} name Name of the project to retrieve
@@ -70,6 +75,7 @@ const ProjectsMixin = (superclass) =>
     findProject(name) {
       return find(this.projects, { name })
     }
+
     /**
      * Delete a project by it name identifier.
      * @param {String} name Name of the project to retrieve
@@ -95,6 +101,7 @@ const ProjectsMixin = (superclass) =>
 
       return index
     }
+
     /**
      * Delete a project from the search store
      * @param {String} name Name of the project to delete fropm the store
@@ -109,6 +116,7 @@ const ProjectsMixin = (superclass) =>
         this.searchStore.reset()
       }
     }
+
     /**
      * Update a project in the list or add it if it doesn't exist yet.
      * @param {Object} project
@@ -120,12 +128,14 @@ const ProjectsMixin = (superclass) =>
       const index = findIndex(projects, { name: project?.name })
       if (index > -1) {
         projects[index] = project
-      } else {
+      }
+      else {
         projects.push(project)
       }
       this.config.set('projects', projects)
       return project
     }
+
     /**
      * List all projects this user has access to.
      * @returns {Array:String}
@@ -133,6 +143,7 @@ const ProjectsMixin = (superclass) =>
     get projects() {
       return sortBy(this.config.get('projects', []), iteratee('name'))
     }
+
     /**
      * List all projects name ids this user has access to.
      * @returns {Array:String}
@@ -140,6 +151,7 @@ const ProjectsMixin = (superclass) =>
     get projectIds() {
       return this.projects.map(iteratee('name'))
     }
+
     /**
      * Get the name of the default project
      * @returns {String}

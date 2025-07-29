@@ -69,7 +69,10 @@ const uninstallAddon = () => {
       >
         {{ updateLabel }}
       </button-icon>
-      <span v-if="version" class="addon-card-view-actions__text text-secondary-emphasis text-nowrap">
+      <span
+        v-if="version"
+        class="addon-card-view-actions__text text-secondary-emphasis text-nowrap"
+      >
         {{ versionLabel }}
       </span>
       <button-icon

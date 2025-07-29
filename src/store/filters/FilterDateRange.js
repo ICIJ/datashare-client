@@ -17,7 +17,8 @@ export default class FilterDateRange extends FilterDate {
       const timestamp = item.key + new Date().getTimezoneOffset() * 60 * 1000
       const locale = localStorage.getItem('locale')
       return dayjs(timestamp).locale(locale).format('L')
-    } else {
+    }
+    else {
       return item.key
     }
   }
@@ -29,7 +30,7 @@ export default class FilterDateRange extends FilterDate {
     const gte = new Date(Math.min(minValue, maxValue))
     const lte = new Date(Math.max(minValue, maxValue))
 
-    return body.query('bool', (sub) => sub[func]('range', this.key, { gte, lte }))
+    return body.query('bool', sub => sub[func]('range', this.key, { gte, lte }))
   }
 
   body(body, { interval = this.interval } = {}) {

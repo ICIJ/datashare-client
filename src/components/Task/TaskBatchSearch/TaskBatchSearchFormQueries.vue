@@ -10,9 +10,15 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <form-step :title="t('task.batch-search.form.sections.queries')" :index="2">
+  <form-step
+    :title="t('task.batch-search.form.sections.queries')"
+    :index="2"
+  >
     <tab-group>
-      <tab-group-entry active :title="t('task.batch-search.form.csvFile.label')">
+      <tab-group-entry
+        active
+        :title="t('task.batch-search.form.csvFile.label')"
+      >
         <b-form-file
           v-model="csvFile"
           :placeholder="t('task.batch-search.form.csvFile.placeholder')"

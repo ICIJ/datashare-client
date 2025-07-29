@@ -16,12 +16,15 @@ export class Api {
     this.eventBus = _EventBus
     this.elasticsearch = _elasticsearch
   }
+
   tree(path) {
     return this.sendAction('/api/tree/' + trim(path, '/'), { method: Method.GET })
   }
+
   index(options = {}) {
     return this.indexPath('file', options)
   }
+
   indexPath(path, { ocr = false, filter = true, language = null, defaultProject = null } = {}) {
     const ocrLanguage = get(settings, ['iso6392', 'tesseract', language], language)
     const options = omitBy({ ocr, filter, language, ocrLanguage, defaultProject }, isNull)
@@ -29,118 +32,149 @@ export class Api {
     const trimedPath = trim(path, '/')
     return this.sendActionAsText(`/api/task/batchUpdate/index/${trimedPath}`, { method: Method.POST, data })
   }
+
   runBatchDownload(options) {
     return this.sendAction('/api/task/batchDownload', { method: Method.POST, data: { options } })
   }
+
   findNames(pipeline, { syncModels = true, defaultProject = null } = {}) {
     const options = omitBy({ syncModels, defaultProject }, isNull)
     const data = { options }
     return this.sendActionAsText(`/api/task/findNames/${pipeline}`, { method: Method.POST, data })
   }
+
   stopPendingTasks({ name = null, ...filters } = {}) {
     const params = { ...filters, name }
     return this.sendAction('/api/task/stop', { method: Method.PUT, params })
   }
+
   stopTask(name) {
     return this.sendActionAsText(`/api/task/stop/${encodeURIComponent(name)}`, { method: Method.PUT })
   }
+
   removeTask(name) {
     return this.sendAction(`/api/task/clean/${encodeURIComponent(name)}`, { method: Method.DELETE })
   }
+
   removeDoneTasks({ name = null, ...filters } = {}) {
     const params = { ...filters, name }
     return this.sendAction('/api/task/clean', { method: Method.POST, params })
   }
+
   getTasks({ name = null, from = 0, size = 10, order = 'asc', sort, ...filters } = {}) {
     const params = { ...filters, name, from, size, order, sort }
     return this.sendAction('/api/task', { params })
   }
+
   getTask(id) {
     return this.sendAction(`/api/task/${id}`)
   }
+
   createIndex(index) {
     return this.sendActionAsText(`/api/index/${index}`, { method: Method.PUT })
   }
+
   createProject(data) {
     return this.sendAction(`/api/project/`, { method: Method.POST, data })
   }
+
   updateProject(data) {
     const { name } = data
     return this.sendActionAsText(`/api/project/${name}`, { method: Method.PUT, data })
   }
+
   removeProject(name) {
     return this.sendActionAsText(`/api/project/${name}`, { method: Method.DELETE })
   }
+
   removeProjects() {
     return this.sendActionAsText(`/api/project/`, { method: Method.DELETE })
   }
+
   getProject(project) {
     return this.sendAction(`/api/project/${project}`)
   }
+
   getVersion() {
     return this.sendAction('/version')
   }
+
   getSettings() {
     return this.sendAction('/settings')
   }
+
   setSettings(settings) {
     const headers = { 'Content-Type': 'application/json' }
     const responseType = 'text'
     return this.sendAction('/api/settings', { method: 'PATCH', data: { data: settings }, headers, responseType })
   }
+
   removeNamedEntitiesByMentionNorm(project, mentionNorm) {
     return this.sendActionAsText(`/api/${project}/namedEntities/hide/${mentionNorm}`, { method: Method.PUT })
   }
+
   getPages({ index, id, routing }) {
     return this.sendAction(`/api/${index}/documents/pages/${id}`, { method: Method.GET, params: { routing } })
   }
+
   getSource(document, config = {}) {
     return this.sendAction(document.url, config)
   }
+
   getStarredDocuments(project) {
     return this.sendAction(`/api/${project}/documents/starred`)
   }
+
   starDocuments(project, data) {
     return this.sendActionAsText(`/api/${project}/documents/batchUpdate/star`, { method: Method.POST, data })
   }
+
   unstarDocuments(project, data) {
     return this.sendActionAsText(`/api/${project}/documents/batchUpdate/unstar`, { method: Method.POST, data })
   }
+
   getTags(project, documentId) {
     return this.sendAction(`/api/${project}/documents/tags/${documentId}`)
   }
+
   tagDocument(project, documentId, routingId, data) {
     return this.sendActionAsText(`/api/${project}/documents/tag/${documentId}?routing=${routingId}`, {
       method: Method.PUT,
       data
     })
   }
+
   untagDocument(project, documentId, routingId, data) {
     return this.sendActionAsText(`/api/${project}/documents/untag/${documentId}?routing=${routingId}`, {
       method: Method.PUT,
       data
     })
   }
+
   tagDocuments(project, docIds, tags) {
     return this.sendActionAsText(`/api/${project}/documents/batchUpdate/tag`, {
       method: Method.POST,
       data: { docIds, tags }
     })
   }
+
   untagDocuments(project, docIds, tags) {
     return this.sendActionAsText(`/api/${project}/documents/batchUpdate/untag`, {
       method: Method.POST,
       data: { docIds, tags }
     })
   }
+
   getDocumentSlice(project, documentId, offset, limit, targetLanguage = null, routing = null) {
     const params = { limit, offset, routing, targetLanguage }
     return this.sendAction(`/api/${project}/documents/content/${documentId}`, { method: Method.GET, params })
   }
+
   searchDocument(project, documentId, query, targetLanguage, routing = null) {
     const params = { query, routing, targetLanguage }
     return this.sendAction(`/api/${project}/documents/searchContent/${documentId}`, { method: Method.GET, params })
   }
+
   batchSearch(name, csvFile, description, project, phraseMatch, fuzziness, published, queryTemplate, uri) {
     const data = new FormData()
     data.append('name', name)
@@ -153,13 +187,16 @@ export class Api {
     data.append('uri', uri)
     return this.sendActionAsText(`/api/task/batchSearch/${project}`, { method: Method.POST, data })
   }
+
   getBatchSearch(batchId) {
     return this.sendAction(`/api/batch/search/${batchId}`)
   }
+
   getBatchSearchQueries(batchId, from = 0, size = 100, search = null, sort = 'query_number', order = 'asc') {
     const params = { from, size, search, sort, order }
     return this.sendAction(`/api/batch/search/${batchId}/queries`, { method: Method.GET, params })
   }
+
   getBatchSearches(
     from = 0,
     size = 100,
@@ -195,6 +232,7 @@ export class Api {
 
     return this.sendAction('/api/batch/search?' + searchParams, { method: Method.GET })
   }
+
   getBatchSearchResults(
     batchId,
     from = 0,
@@ -208,115 +246,148 @@ export class Api {
     const data = { from, size, queries, sort, order, contentTypes, queriesExcluded }
     return this.sendAction(`/api/batch/search/result/${batchId}`, { method: Method.POST, data })
   }
+
   relaunchBatchSearch(batchId, name, description) {
     const data = { name, description }
     return this.sendActionAsText(`/api/task/batchSearch/copy/${batchId}`, { method: Method.POST, data })
   }
+
   removeBatchSearch(batchId) {
     return this.sendActionAsText(`/api/batch/search/${batchId}`, { method: Method.DELETE })
   }
+
   removeBatchSearches() {
     return this.sendActionAsText('/api/batch/search', { method: Method.DELETE })
   }
+
   updateBatchSearch(batchId, published) {
     const data = { published }
     return this.sendAction(`/api/batch/search/${batchId}`, { method: 'PATCH', data: { data } })
   }
+
   static getFullUrl(path) {
     const base = import.meta.env.VITE_DS_HOST || `${window.location.protocol}//${window.location.host}`
     const url = new URL(path, base)
     return url.href
   }
+
   isDownloadAllowed(project) {
     return this.sendActionAsText(`/api/project/isDownloadAllowed/${project}`)
   }
+
   retrieveNotes(project) {
     return this.sendAction(replace(`/api/${project}/notes`, '//', '/'))
   }
+
   getUser() {
     return this.sendAction('/api/users/me')
   }
+
   getHistoryEvents(type, from, size, sort, desc, projects) {
     sort = sort ?? 'modification_date'
     desc = desc ?? true
     const params = { type, from, size, sort, desc, projects }
     return this.sendAction('/api/users/me/history', { method: Method.GET, params })
   }
+
   addHistoryEvent(projectIds, type, name, uri) {
     const data = { projectIds, type, name, uri }
     return this.sendActionAsText('/api/users/me/history', { method: Method.PUT, data })
   }
+
   renameHistoryEvent(eventId, name, type = 'SEARCH') {
     return this.sendAction('/api/users/me/history', {
       method: Method.PUT,
       data: { eventId, name, type }
     })
   }
+
   removeHistoryEvents(type) {
     return this.sendAction('/api/users/me/history', { method: Method.DELETE, params: { type } })
   }
+
   removeHistoryEvent(id) {
     return this.sendAction('/api/users/me/history/event', { method: Method.DELETE, params: { id } })
   }
+
   setMarkAsRecommended(project, data) {
     return this.sendActionAsText(`/api/${project}/documents/batchUpdate/recommend`, { method: Method.POST, data })
   }
+
   setUnmarkAsRecommended(project, data) {
     return this.sendActionAsText(`/api/${project}/documents/batchUpdate/unrecommend`, { method: Method.POST, data })
   }
+
   getRecommendationsByDocuments(project, docId) {
     return this.sendAction(`/api/users/recommendationsby?project=${project}&docIds=${docId}`)
   }
+
   getRecommendationsByProject(project) {
     return this.sendAction('/api/users/recommendations', { method: Method.GET, params: { project } })
   }
+
   getDocumentUserRecommendations(from, size, project) {
     const params = { from, size, project }
     return this.sendAction('/api/document-user-recommendation/', { method: Method.GET, params })
   }
+
   getDocumentsRecommendedBy(project, users = []) {
     const userids = join(users)
     return this.sendAction(`/api/${project}/documents/recommendations`, { method: Method.GET, params: { userids } })
   }
+
   getNerPipelines() {
     return this.sendAction('/api/ner/pipelines')
   }
+
   getApiKey(userId) {
     return this.sendAction(`/api/key/${userId}`, { method: Method.GET })
   }
+
   createApiKey(userId) {
     return this.sendAction(`/api/key/${userId}`, { method: Method.PUT })
   }
+
   removeApiKey(userId) {
     return this.sendActionAsText(`/api/key/${userId}`, { method: Method.DELETE })
   }
+
   getPlugins(query = '') {
     return this.sendAction(`/api/plugins?filter=.*${toLower(query)}.*`)
   }
+
   installPluginFromId(pluginId) {
     return this.sendAction(`/api/plugins/install?id=${pluginId}`, { method: Method.PUT })
   }
+
   installPluginFromUrl(pluginUrl) {
     return this.sendAction(`/api/plugins/install?url=${pluginUrl}`, { method: Method.PUT })
   }
+
   uninstallPluginFromId(pluginId) {
     return this.sendAction(`/api/plugins/uninstall?id=${pluginId}`, { method: Method.DELETE })
   }
+
   getExtensions(query = '') {
     return this.sendAction(`/api/extensions?filter=.*${toLower(query)}.*`)
   }
+
   installExtensionFromId(extensionId) {
     return this.sendAction(`/api/extensions/install?id=${extensionId}`, { method: Method.PUT })
   }
+
   installExtensionFromUrl(extensionUrl) {
     return this.sendAction(`/api/extensions/install?url=${extensionUrl}`, { method: Method.PUT })
   }
+
   uninstallExtensionFromId(extensionId) {
     return this.sendAction(`/api/extensions/uninstall?id=${extensionId}`, { method: Method.DELETE })
   }
+
   ocrLanguages() {
     return this.sendAction('/api/settings/ocr/languages')
   }
+
   textLanguages() {
     return this.sendAction('/api/settings/text/languages')
   }
@@ -329,11 +400,13 @@ export class Api {
     try {
       const r = await this.axios?.request({ url: Api.getFullUrl(url), ...config })
       return r ? r.data : null
-    } catch (error) {
+    }
+    catch (error) {
       this.eventBus?.emit('http::error', error)
       throw error
     }
   }
+
   async sendActionAsText(url, config = {}) {
     const headers = { 'Content-Type': 'text/plain;charset=UTF-8' }
     const responseType = 'text'

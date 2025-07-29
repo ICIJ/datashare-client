@@ -36,7 +36,7 @@ describe('useElementObserver', () => {
 
   it('rejects if element not created within timeout', async () => {
     await expect(observer.waitForElementCreated('.never-created', 50)).rejects.toThrow(
-      "Element '.never-created' not created within timeout"
+      'Element \'.never-created\' not created within timeout'
     )
   })
 
@@ -62,7 +62,7 @@ describe('useElementObserver', () => {
     container.appendChild(el)
 
     await expect(observer.waitForElementDestroyed('.never-destroyed', 50)).rejects.toThrow(
-      "Element '.never-destroyed' not destroyed within timeout"
+      'Element \'.never-destroyed\' not destroyed within timeout'
     )
   })
 })

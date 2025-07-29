@@ -12,7 +12,7 @@ export default {
   args: {
     compact: true
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       AppSidebarToggler
     },

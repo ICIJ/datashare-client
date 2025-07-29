@@ -9,7 +9,7 @@ export default {
     modelValue: false,
     disabled: false
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       PathTreeViewEntryNameCheckbox
     },

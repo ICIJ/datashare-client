@@ -1,6 +1,10 @@
 <template>
   <div class="d-flex">
-    <div v-if="!isEditing" class="editable-row mx-3" @click="startEditing">
+    <div
+      v-if="!isEditing"
+      class="editable-row mx-3"
+      @click="startEditing"
+    >
       <i v-if="showPlaceholder">{{ placeholder }}</i>
       <span v-else>{{ cellValue }}</span>
     </div>

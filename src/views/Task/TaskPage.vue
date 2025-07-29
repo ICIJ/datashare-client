@@ -43,21 +43,21 @@ const { addToRoute, addLabel, searchQuery, page, perPage, sortBy, searchPlacehol
   props.pageName
 )
 
-const { noTasks, fetchTasks, hasPendingTasks, hasDoneTasks, stopPendingTasks, removeDoneTasks, isLoading } =
-  useTaskPolling({ names: props.taskFilter, searchQuery, sortBy, page, perPage })
+const { noTasks, fetchTasks, hasPendingTasks, hasDoneTasks, stopPendingTasks, removeDoneTasks, isLoading }
+  = useTaskPolling({ names: props.taskFilter, searchQuery, sortBy, page, perPage })
 
-const setSort = (value) => (sort.value = value)
+const setSort = value => (sort.value = value)
 
 const sort = computed({
   get: () => sortBy?.value?.[0],
-  set: (value) => (sortBy.value = [value, order.value])
+  set: value => (sortBy.value = [value, order.value])
 })
 
-const setOrder = (value) => (order.value = value)
+const setOrder = value => (order.value = value)
 
 const order = computed({
   get: () => sortBy?.value?.[1],
-  set: (value) => (sortBy.value = [sort.value, value])
+  set: value => (sortBy.value = [sort.value, value])
 })
 
 function refresh() {
@@ -90,17 +90,28 @@ function refresh() {
         />
       </template>
       <template #pagination="{ setPage }">
-        <slot name="pagination" v-bind="{ page, setPage, perPage, totalRows }">
-          <row-pagination-tasks v-model="page" :per-page="perPage" :total-rows="totalRows" />
+        <slot
+          name="pagination"
+          v-bind="{ page, setPage, perPage, totalRows }"
+        >
+          <row-pagination-tasks
+            v-model="page"
+            :per-page="perPage"
+            :total-rows="totalRows"
+          />
         </slot>
       </template>
     </page-header>
     <page-container fluid>
       <div>
-        <dismissable-alert variant="info" persist :name="`task.${pageName}.list.info`">
+        <dismissable-alert
+          variant="info"
+          persist
+          :name="`task.${pageName}.list.info`"
+        >
           {{ t(`task.${pageName}.list.info`) }}
         </dismissable-alert>
-        <slot name="taskFailedModal"></slot>
+        <slot name="taskFailedModal" />
         <template v-if="!isLoading && noTasks">
           <slot
             name="empty"

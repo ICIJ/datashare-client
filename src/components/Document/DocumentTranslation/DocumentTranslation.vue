@@ -44,7 +44,7 @@ const detectedLanguage = computed(() => {
 
 const showTranslatedContent = computed({
   get: () => documentStore.showTranslatedContent,
-  set: (value) => documentStore.toggleTranslatedContent(value)
+  set: value => documentStore.toggleTranslatedContent(value)
 })
 
 const translation = computed(() => {
@@ -71,8 +71,15 @@ onMounted(loadAvailableTranslations)
 
 <template>
   <div class="document-translation">
-    <document-content :document="document" :q="q" :target-language="selectedTargetLanguage">
-      <template v-if="hasTranslations" #before-content>
+    <document-content
+      :document="document"
+      :q="q"
+      :target-language="selectedTargetLanguage"
+    >
+      <template
+        v-if="hasTranslations"
+        #before-content
+      >
         <document-translation-alert
           v-model:active="showTranslatedContent"
           :source-language="sourceLanguage"

@@ -27,7 +27,11 @@
         @down="moveFocusDown"
         @enter="selectFocusValue"
       />
-      <project-dropdown-selector-all v-if="hasMatches && multiple" v-model="selectAll" @click.stop />
+      <project-dropdown-selector-all
+        v-if="hasMatches && multiple"
+        v-model="selectAll"
+        @click.stop
+      />
     </template>
     <template #button-content>
       <project-dropdown-selector-button-content
@@ -42,8 +46,8 @@
         :focus="focusIndex === index"
         :selected="hasValue(project)"
         :no-checkbox="!multiple"
-        @toggleValue="toggleValue($event, project)"
-        @toggleUniqueValue="toggleUniqueValue($event, project)"
+        @toggle-value="toggleValue($event, project)"
+        @toggle-unique-value="toggleUniqueValue($event, project)"
       />
     </template>
   </search-bar-input-dropdown>

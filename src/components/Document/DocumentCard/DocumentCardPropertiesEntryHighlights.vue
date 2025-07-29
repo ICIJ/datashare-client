@@ -18,8 +18,13 @@ defineProps({
     :document="document"
     :property="property"
   >
-    <display-highlights v-if="document.highlights.length" :value="document.highlights" />
-    <template v-else>&#8212;</template>
+    <display-highlights
+      v-if="document.highlights.length"
+      :value="document.highlights"
+    />
+    <template v-else>
+      &#8212;
+    </template>
   </document-card-properties-entry>
 </template>
 

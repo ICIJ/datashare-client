@@ -46,14 +46,14 @@ describe('Highlight', () => {
 
   it('should hightlight one "bar" with a custom class', () => {
     const content = 'foo, bar, baz'
-    const each = (m) => `<mark class="local-mark">${m.content}</mark>`
+    const each = m => `<mark class="local-mark">${m.content}</mark>`
     const highlighted = Highlight.create({ content, each }).ranges([{ start: 5, length: 3 }])
     expect(highlighted).toBe('foo, <mark class="local-mark">bar</mark>, baz')
   })
 
   it('should hightlight "foo" and "bar" with a category class', () => {
     const content = 'foo, bar, baz'
-    const each = (m) => `<mark class="${m.category}">${m.content}</mark>`
+    const each = m => `<mark class="${m.category}">${m.content}</mark>`
     const highlighted = Highlight.create({ content, each }).ranges([
       { start: 0, length: 3, category: 'person' },
       { start: 5, length: 3, category: 'location' }

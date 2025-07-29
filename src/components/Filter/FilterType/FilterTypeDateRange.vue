@@ -16,10 +16,10 @@ const props = defineProps({
 
 const { getFilterValues, setFilterValue } = useSearchFilter()
 
-const toInt = (value) => parseInt(value, 10)
-const toDate = (value) => new Date(value)
-const toTimestamp = (value) => toDate(value).getTime()
-const toEndOfDayTimestamp = (value) => toDate(value).setUTCHours(23, 59, 59, 999)
+const toInt = value => parseInt(value, 10)
+const toDate = value => new Date(value)
+const toTimestamp = value => toDate(value).getTime()
+const toEndOfDayTimestamp = value => toDate(value).setUTCHours(23, 59, 59, 999)
 
 const selected = computed({
   get() {
@@ -44,9 +44,15 @@ const selected = computed({
 </script>
 
 <template>
-  <filter-type :filter="filter" flush>
+  <filter-type
+    :filter="filter"
+    flush
+  >
     <template #default="{ entries }">
-      <form-control-date-range v-model="selected" size="sm" />
+      <form-control-date-range
+        v-model="selected"
+        size="sm"
+      />
       <column-chart-picker
         v-if="entries.length > 1"
         v-model="selected"

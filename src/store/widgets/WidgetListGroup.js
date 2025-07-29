@@ -19,6 +19,7 @@ class WidgetListGroup extends WidgetEmpty {
     this.items = items
     this.pipeline = pipeline
   }
+
   get component() {
     return Component
   }

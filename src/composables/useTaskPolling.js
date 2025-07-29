@@ -31,14 +31,14 @@ export function useTaskPolling({ names = [], sortBy = [], perPage = null, page =
 
   async function fetchTasks() {
     await taskStore.fetchTasks({
-      names: toValue(names),
-      sort: toValue(sortBy)?.[0],
-      order: toValue(sortBy)?.[1] ?? 'asc',
+      'names': toValue(names),
+      'sort': toValue(sortBy)?.[0],
+      'order': toValue(sortBy)?.[1] ?? 'asc',
       // Filters can be build with arbitrary values
       'args.batchRecord.name': toValue(searchQuery),
       // The tasks API endpoint has limited support for pagination so we get all tasks at once
-      size: toValue(perPage),
-      from: (toValue(page) - 1) * toValue(perPage)
+      'size': toValue(perPage),
+      'from': (toValue(page) - 1) * toValue(perPage)
     })
     // Continue to poll task if they are pending ones
     return hasPendingTasks.value

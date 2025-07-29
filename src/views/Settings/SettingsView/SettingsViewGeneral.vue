@@ -70,16 +70,40 @@ onBeforeMount(loadSettings)
 </script>
 
 <template>
-  <settings-view-layout info-name="general" :info-label="infoLabel" :no-results="noResults">
+  <settings-view-layout
+    info-name="general"
+    :info-label="infoLabel"
+    :no-results="noResults"
+  >
     <template #filter>
-      <form-control-search v-model="filterTerm" autofocus clear-text shadow :placeholder="searchPlaceholder" />
+      <form-control-search
+        v-model="filterTerm"
+        autofocus
+        clear-text
+        shadow
+        :placeholder="searchPlaceholder"
+      />
     </template>
-    <template #noResult>{{ noResultsLabel }}</template>
-    <app-wait v-if="!noResults" :for="loaderId">
+    <template #noResult>
+      {{ noResultsLabel }}
+    </template>
+    <app-wait
+      v-if="!noResults"
+      :for="loaderId"
+    >
       <template #waiting>
-        <phosphor-icon :name="PhCircleNotch" spin size="lg" class="ms-auto" />
+        <phosphor-icon
+          :name="PhCircleNotch"
+          spin
+          size="lg"
+          class="ms-auto"
+        />
       </template>
-      <settings-general :settings="filteredSettings" class="card border-0" @save="onSubmit" />
+      <settings-general
+        :settings="filteredSettings"
+        class="card border-0"
+        @save="onSubmit"
+      />
     </app-wait>
   </settings-view-layout>
 </template>

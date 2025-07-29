@@ -35,8 +35,17 @@ const confirmRemovalModal = async () => {
 
 <template>
   <div class="d-flex gap-2">
-    <button-row-action-edit :label="t('searchSavedEntriesRowActions.edit')" @click="confirmEditModal" />
-    <button-row-action-delete :label="t('searchSavedEntriesRowActions.delete')" @click="confirmRemovalModal" />
-    <page-table-toggle-details-button v-model="detailsShowing" hide-tooltip />
+    <button-row-action-edit
+      :label="t('searchSavedEntriesRowActions.edit')"
+      @click="confirmEditModal"
+    />
+    <button-row-action-delete
+      :label="t('searchSavedEntriesRowActions.delete')"
+      @click="confirmRemovalModal"
+    />
+    <page-table-toggle-details-button
+      v-model="detailsShowing"
+      hide-tooltip
+    />
   </div>
 </template>

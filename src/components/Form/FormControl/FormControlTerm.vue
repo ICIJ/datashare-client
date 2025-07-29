@@ -50,7 +50,7 @@ const { t } = useI18n()
     :model-value="modelValue"
     :size="size"
     :state="state"
-    @update:modelValue="$emit('update:modelValue', $event)"
+    @update:model-value="$emit('update:modelValue', $event)"
   >
     <template #tag="{ tag, removeTag }">
       <search-breadcrumb-form-entry

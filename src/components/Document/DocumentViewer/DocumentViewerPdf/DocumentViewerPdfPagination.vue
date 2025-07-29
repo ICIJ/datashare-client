@@ -10,5 +10,10 @@ defineProps({
 </script>
 
 <template>
-  <tiny-pagination :key="numPages" v-model="page" :per-page="1" :total-rows="numPages" />
+  <tiny-pagination
+    :key="numPages"
+    v-model="page"
+    :per-page="1"
+    :total-rows="numPages"
+  />
 </template>

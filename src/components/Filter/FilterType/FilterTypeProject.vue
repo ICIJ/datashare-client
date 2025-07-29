@@ -64,12 +64,19 @@ const isProjectSelected = (id) => {
 </script>
 
 <template>
-  <filter-type :filter="filter" :count="selected.length">
+  <filter-type
+    :filter="filter"
+    :count="selected.length"
+  >
     <template #all>
       <filter-type-project-all />
     </template>
     <template #search>
-      <form-control-search v-model="query" clear-text class="filters-panel-section-filter__content__search mb-3" />
+      <form-control-search
+        v-model="query"
+        clear-text
+        class="filters-panel-section-filter__content__search mb-3"
+      />
     </template>
     <template #default="{ entries }">
       <b-form-checkbox-group v-model="selected">
@@ -80,7 +87,10 @@ const isProjectSelected = (id) => {
           :count="count"
           :hide-count="hideCount || !isProjectSelected(id)"
         >
-          <project-label :project="id" hide-thumbnail />
+          <project-label
+            :project="id"
+            hide-thumbnail
+          />
         </filters-panel-section-filter-entry>
       </b-form-checkbox-group>
     </template>

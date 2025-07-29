@@ -49,22 +49,46 @@ const qSent = computed(() => {
 </script>
 
 <template>
-  <b-popover teleport-to="body" class="display-email__popover" placement="bottom" :boundary-padding="16">
+  <b-popover
+    teleport-to="body"
+    class="display-email__popover"
+    placement="bottom"
+    :boundary-padding="16"
+  >
     <template #target>
-      <component :is="tag" class="display-email">
+      <component
+        :is="tag"
+        class="display-email"
+      >
         {{ nameOrRawEmail }}
       </component>
     </template>
     <div class="display-email__popover__content">
-      <div class="h6 m-0">{{ nameWithoutEmail }}</div>
-      <div class="mb-3">{{ emailWithoutName || value }}</div>
+      <div class="h6 m-0">
+        {{ nameWithoutEmail }}
+      </div>
+      <div class="mb-3">
+        {{ emailWithoutName || value }}
+      </div>
       <div class="d-flex flex-wrap gap-3">
-        <router-link :to="{ name: 'search', query: { q: qReceived, indices } }" class="btn btn-action">
-          <phosphor-icon :name="PhTrayArrowDown" class="display-email__popover__content__icon" />
+        <router-link
+          :to="{ name: 'search', query: { q: qReceived, indices } }"
+          class="btn btn-action"
+        >
+          <phosphor-icon
+            :name="PhTrayArrowDown"
+            class="display-email__popover__content__icon"
+          />
           {{ t('displayEmail.receivedLink') }}
         </router-link>
-        <router-link :to="{ name: 'search', query: { q: qSent, indices } }" class="btn btn-action">
-          <phosphor-icon :name="PhTrayArrowUp" class="display-email__popover__content__icon" />
+        <router-link
+          :to="{ name: 'search', query: { q: qSent, indices } }"
+          class="btn btn-action"
+        >
+          <phosphor-icon
+            :name="PhTrayArrowUp"
+            class="display-email__popover__content__icon"
+          />
           {{ t('displayEmail.sentLink') }}
         </router-link>
       </div>

@@ -73,9 +73,11 @@ function calculateDragPosition({ startX, initialClientX, clientX, bindingValue, 
 function handleDragThresholds({ position, x, detail, reduceThreshold, expandThreshold, parentWidth, emitCallback }) {
   if (x - position >= reduceThreshold) {
     emitCallback('reduce', detail)
-  } else if (position >= parentWidth - expandThreshold) {
+  }
+  else if (position >= parentWidth - expandThreshold) {
     emitCallback('expand', detail)
-  } else {
+  }
+  else {
     emitCallback('drag', detail)
   }
 }
@@ -150,7 +152,8 @@ export const draggable = {
         initialClientX = event.clientX
         document.addEventListener('mousemove', onDragMove)
         document.addEventListener('mouseup', onDragEnd)
-      } else {
+      }
+      else {
         initialClientX = event.touches[0].clientX
         document.addEventListener('touchmove', onDragMove)
         document.addEventListener('touchend', onDragEnd)

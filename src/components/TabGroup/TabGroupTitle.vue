@@ -30,7 +30,11 @@ defineProps({
       />
     </template>
     <slot />
-    <b-badge v-if="count !== null" variant="transparent" pill>
+    <b-badge
+      v-if="count !== null"
+      variant="transparent"
+      pill
+    >
       {{ count }}
     </b-badge>
   </span>

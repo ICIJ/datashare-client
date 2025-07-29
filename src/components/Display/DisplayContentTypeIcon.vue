@@ -25,5 +25,8 @@ const style = computed(() => {
 </script>
 
 <template>
-  <phosphor-icon :name="icon" :style="style" />
+  <phosphor-icon
+    :name="icon"
+    :style="style"
+  />
 </template>

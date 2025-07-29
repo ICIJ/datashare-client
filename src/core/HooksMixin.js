@@ -7,11 +7,12 @@ import { useHooksStore } from '@/store/modules'
   @mixin HooksMixin
   @typicalname datashare
 */
-const HooksMixin = (superclass) =>
+const HooksMixin = superclass =>
   class extends superclass {
     get hooksStore() {
       return useHooksStore()
     }
+
     /**
      * Register a hook
      * @memberof HooksMixin.prototype
@@ -24,6 +25,7 @@ const HooksMixin = (superclass) =>
     registerHook(...args) {
       this.hooksStore.register(...args)
     }
+
     /**
      * Unregister a specific hook
      * @memberof HooksMixin.prototype
@@ -32,6 +34,7 @@ const HooksMixin = (superclass) =>
     unregisterHook(...args) {
       this.hooksStore.unregister(...args)
     }
+
     /**
      * Unregister all hooks from a target
      * @param {String} name - Name of the target
@@ -40,6 +43,7 @@ const HooksMixin = (superclass) =>
     resetHook(name) {
       this.hooksStore.resetTarget(name)
     }
+
     /**
      * Unregister all hooks, on every targets
      * @memberof HooksMixin.prototype
@@ -47,6 +51,7 @@ const HooksMixin = (superclass) =>
     resetHooks() {
       this.hooksStore.reset()
     }
+
     /**
      * Register a hook for a specific project
      * @memberof HooksMixin.prototype

@@ -26,11 +26,12 @@ export function isUrl(value, protocols = ['https', 'http']) {
 
   try {
     url = new URL(value)
-  } catch (_) {
+  }
+  catch (_) {
     return false
   }
 
-  return some(protocols, (protocol) => protocol === trimEnd(url.protocol, ':'))
+  return some(protocols, protocol => protocol === trimEnd(url.protocol, ':'))
 }
 
 /**
@@ -92,7 +93,8 @@ export function addLocalSearchMarksClass(content = '<div></div>', localSearchTer
       localSearchOccurrences
     }
     // Silently fails
-  } catch (error) {
+  }
+  catch (error) {
     return { content, localSearchIndex, localSearchOccurrences }
   }
 }

@@ -15,6 +15,9 @@ watch(toRef(selectedTheme, 'value'), setTheme, { immediate: true })
 
 <template>
   <settings-view-layout>
-    <settings-appearance v-model="selectedTheme" :options="themes" />
+    <settings-appearance
+      v-model="selectedTheme"
+      :options="themes"
+    />
   </settings-view-layout>
 </template>

@@ -28,8 +28,14 @@ const component = computed(() => {
 </script>
 
 <template>
-  <li class="path-tree-breadcrumb-entry list-inline-item" :class="classList">
-    <component :is="component" @select="emit('select')">
+  <li
+    class="path-tree-breadcrumb-entry list-inline-item"
+    :class="classList"
+  >
+    <component
+      :is="component"
+      @select="emit('select')"
+    >
       <slot />
     </component>
   </li>

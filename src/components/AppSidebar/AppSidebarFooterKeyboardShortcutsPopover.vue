@@ -12,7 +12,12 @@ const isVisible = computed(() => !!routeShortcuts.value.length)
 </script>
 
 <template>
-  <keyboard-shortcuts-popover v-if="isVisible" :boundary-padding="36" click close-on-hide>
+  <keyboard-shortcuts-popover
+    v-if="isVisible"
+    :boundary-padding="36"
+    click
+    close-on-hide
+  >
     <slot>
       <keyboard-shortcuts-section-entry
         v-for="(shortcut, i) in routeShortcuts"
@@ -23,7 +28,10 @@ const isVisible = computed(() => !!routeShortcuts.value.length)
       />
     </slot>
     <template #target="{ show, hide, toggle, visible }">
-      <slot name="target" v-bind="{ show, hide, toggle, visible }" />
+      <slot
+        name="target"
+        v-bind="{ show, hide, toggle, visible }"
+      />
     </template>
   </keyboard-shortcuts-popover>
 </template>

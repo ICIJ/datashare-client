@@ -129,7 +129,8 @@ export const useStarredStore = defineStore('starred', () => {
     if (i > -1) {
       // If the document is starred, unstar it
       return unstarDocuments({ index, id })
-    } else {
+    }
+    else {
       // Otherwise, star it
       return starDocuments({ index, id })
     }
@@ -140,7 +141,7 @@ export const useStarredStore = defineStore('starred', () => {
     const docs = []
     for (const index of castArray(indices)) {
       const ids = await api.getStarredDocuments(index)
-      const items = castArray(ids).map((id) => ({ id, index }))
+      const items = castArray(ids).map(id => ({ id, index }))
       docs.push(...items)
     }
     setDocuments(docs)

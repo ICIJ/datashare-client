@@ -26,11 +26,23 @@ const emit = defineEmits(['clear:filters', 'clear:query', 'clear:all', 'save:sea
 </script>
 
 <template>
-  <form-actions class="search-breadcrumb-form-footer" variant="link" end>
-    <button-icon :disabled="disabledClearFilters" icon-left="eraser" @click="emit('clear:filters')">
+  <form-actions
+    class="search-breadcrumb-form-footer"
+    variant="link"
+    end
+  >
+    <button-icon
+      :disabled="disabledClearFilters"
+      icon-left="eraser"
+      @click="emit('clear:filters')"
+    >
       {{ t('searchBreadcrumbFormFooter.clearFilters') }}
     </button-icon>
-    <button-icon :disabled="disabledClearQuery" icon-left="x-circle" @click="emit('clear:query')">
+    <button-icon
+      :disabled="disabledClearQuery"
+      icon-left="x-circle"
+      @click="emit('clear:query')"
+    >
       {{ t('searchBreadcrumbFormFooter.clearQuery') }}
     </button-icon>
     <button-icon

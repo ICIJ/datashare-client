@@ -95,7 +95,7 @@ const page = useUrlPageFromWithStore({
   // The value of the "from" query parameter is directly taken from the store
   get: () => searchStore.from,
   // The value of the "from" query parameter is mutated with the store
-  set: (value) => (searchStore.from = value)
+  set: value => (searchStore.from = value)
 })
 
 const documentViewFloatingId = provideDocumentViewFloatingId()
@@ -122,7 +122,10 @@ onAfterRouteQueryFromUpdate(refreshSearchFromRoute, { immediate: route.name === 
 </script>
 
 <template>
-  <page-container class="search" fluid>
+  <page-container
+    class="search"
+    fluid
+  >
     <hook name="search:before" />
     <div class="search__main d-flex gap-3">
       <slot name="filters" />
@@ -164,7 +167,7 @@ onAfterRouteQueryFromUpdate(refreshSearchFromRoute, { immediate: route.name === 
             :total="total"
             :per-page="perPage"
             :loading="isLoading"
-            @update:enoughSpace="toggleDocumentModal"
+            @update:enough-space="toggleDocumentModal"
           >
             <template #header="{ compact }">
               <search-selection
@@ -176,14 +179,21 @@ onAfterRouteQueryFromUpdate(refreshSearchFromRoute, { immediate: route.name === 
               />
             </template>
             <template #floating>
-              <div :id="documentViewFloatingId"></div>
+              <div :id="documentViewFloatingId" />
             </template>
             <router-view v-slot="{ Component }">
-              <document-modal v-if="renderDocumentInModal" :model-value="!!Component" @hide="refreshRoute">
+              <document-modal
+                v-if="renderDocumentInModal"
+                :model-value="!!Component"
+                @hide="refreshRoute"
+              >
                 <search-carousel v-if="hasCarousel" />
                 <component :is="Component" />
               </document-modal>
-              <component :is="Component" v-else>
+              <component
+                :is="Component"
+                v-else
+              >
                 <template #nav>
                   <search-nav />
                 </template>

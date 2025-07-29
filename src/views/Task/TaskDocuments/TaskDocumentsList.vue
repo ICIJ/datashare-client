@@ -37,7 +37,11 @@ function isRunning(item) {
 </script>
 
 <template>
-  <task-page :task-filter="[TASK_NAME.INDEX, TASK_NAME.SCAN]" page-name="documents" show-add>
+  <task-page
+    :task-filter="[TASK_NAME.INDEX, TASK_NAME.SCAN]"
+    page-name="documents"
+    show-add
+  >
     <template #empty>
       <empty-state
         image-max-width="345px"
@@ -65,7 +69,10 @@ function isRunning(item) {
           {{ t(getHumanTaskName(item.name)) }}
         </template>
         <template #cell(documents)="{ item }">
-          <display-number v-if="item?.result?.value && item.result.value[1]" :value="item.result.value[1]" />
+          <display-number
+            v-if="item?.result?.value && item.result.value[1]"
+            :value="item.result.value[1]"
+          />
         </template>
         <template #cell(project)="{ item }">
           <display-project-list :values="getProject(item)" />
@@ -77,7 +84,10 @@ function isRunning(item) {
           <display-datetime-from-now :value="item.createdAt" />
         </template>
         <template #row-actions="{ item }">
-          <button-row-action-stop :disabled="!isRunning(item)" @stop="stopTask(item.id)" />
+          <button-row-action-stop
+            :disabled="!isRunning(item)"
+            @stop="stopTask(item.id)"
+          />
           <button-row-action-delete @delete="taskStore.removeTask(item.id)" />
         </template>
       </page-table-generic>

@@ -137,11 +137,11 @@ const canonicalItems = computed(() => [
   }
 ])
 
-const isCannonical = (name) => canonicalItems.value.map(property('name')).includes(name)
+const isCannonical = name => canonicalItems.value.map(property('name')).includes(name)
 
 const metadataItems = computed(() => {
   return document.value.metadata
-    .filter((name) => !isCannonical(name) && !isCannonical(`metadata.${name}`))
+    .filter(name => !isCannonical(name) && !isCannonical(`metadata.${name}`))
     .map((name) => {
       const label = document.value.shortMetaName(name)
       const value = document.value.meta(name)
@@ -177,7 +177,7 @@ const pinning = ref(0)
 
 const pinned = computed({
   get: () => appStore.getSettings('documentViewMetadata', 'pinned'),
-  set: (pinned) => appStore.setSettings('documentViewMetadata', { pinned })
+  set: pinned => appStore.setSettings('documentViewMetadata', { pinned })
 })
 
 const pin = async (name, value) => {
@@ -198,12 +198,23 @@ const classList = computed(() => {
 </script>
 
 <template>
-  <div class="document-view-tabs-metadata w-100 d-flex flex-column gap-3 pt-3" :class="classList">
+  <div
+    class="document-view-tabs-metadata w-100 d-flex flex-column gap-3 pt-3"
+    :class="classList"
+  >
     <document-view-tabs-metadata-linked-documents-card />
     <div class="bg-body py-3 sticky-top">
-      <form-control-search v-model="q" :placeholder="t('documentViewTabsMetadata.search')" clear-text shadow />
+      <form-control-search
+        v-model="q"
+        :placeholder="t('documentViewTabsMetadata.search')"
+        clear-text
+        shadow
+      />
     </div>
-    <transition-group tag="div" name="list">
+    <transition-group
+      tag="div"
+      name="list"
+    >
       <document-metadata
         v-for="item in items"
         :key="item.name"
@@ -216,7 +227,11 @@ const classList = computed(() => {
         class="document-view-tabs-metadata__entry"
         @update:pinned="pin(item.name, $event)"
       >
-        <component :is="item.component" v-if="item.component" v-bind="item.binding ?? { value: item.value }" />
+        <component
+          :is="item.component"
+          v-if="item.component"
+          v-bind="item.binding ?? { value: item.value }"
+        />
       </document-metadata>
     </transition-group>
   </div>

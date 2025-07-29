@@ -26,13 +26,24 @@ const classList = computed(() => ({
 </script>
 
 <template>
-  <div class="form-step bg-tertiary-subtle p-3 rounded-4" :class="classList">
-    <form-step-heading v-model:collapse="collapse" :title="title" :index="index">
+  <div
+    class="form-step bg-tertiary-subtle p-3 rounded-4"
+    :class="classList"
+  >
+    <form-step-heading
+      v-model:collapse="collapse"
+      :title="title"
+      :index="index"
+    >
       <template #title>
         <slot name="title" />
       </template>
     </form-step-heading>
-    <form-step-content :collapse="collapse" class="ms-md-5" :content-class="contentClass">
+    <form-step-content
+      :collapse="collapse"
+      class="ms-md-5"
+      :content-class="contentClass"
+    >
       <slot />
     </form-step-content>
   </div>

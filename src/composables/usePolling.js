@@ -44,11 +44,13 @@ export function usePolling() {
           if (await fn()) {
             // Update the poll id with the next one
             poll.id = schedulePoll({ fn, timeout })
-          } else {
+          }
+          else {
             unregisteredPoll(poll)
           }
           // Reject promise triggers unregistering of the poll
-        } catch (_) {
+        }
+        catch (_) {
           unregisteredPoll(poll)
         }
       }, !immediate * callOrGetTimeout(timeout))

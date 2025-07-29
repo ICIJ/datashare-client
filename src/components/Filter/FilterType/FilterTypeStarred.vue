@@ -32,14 +32,14 @@ async function fetch() {
   total.value = await getTotal()
 }
 
-const isTruthy = (value) => value === true || value === 'true'
+const isTruthy = value => value === true || value === 'true'
 
 const selected = computed({
   get() {
     return getFilterValues(props.filter).map(isTruthy)
   },
   set(values) {
-    const key = castArray(values).map((bool) => isTruthy(bool).toString())
+    const key = castArray(values).map(bool => isTruthy(bool).toString())
     setFilterValue(props.filter, { key })
   }
 })

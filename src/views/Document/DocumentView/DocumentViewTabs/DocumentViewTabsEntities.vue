@@ -26,7 +26,7 @@ const hasEntities = computed(() => sumBy(categories.value, getCategoryTotal))
 const namedEntitiesPaginatedByCategories = computed(() => documentStore.namedEntitiesPaginatedByCategories)
 const namedEntitiesByCategories = computed(() => {
   const namedEntitiesByCategories = mapValues(namedEntitiesPaginatedByCategories.value, (pages) => {
-    return flatten(pages.map((page) => page.hits))
+    return flatten(pages.map(page => page.hits))
   })
   return pickBy(namedEntitiesByCategories, (hits, category) => !!hits.length && categoryIsNotEmpty(category))
 })
@@ -64,10 +64,10 @@ const hitsWithRoute = (hits) => {
 }
 
 const categories = computed(() => documentStore.categories)
-const getCategoryTotal = (category) => get(namedEntitiesPaginatedByCategories.value, [category, 0, 'total'], 0)
-const getCategoryCount = (category) => documentStore.countNamedEntitiesInCategory(category)
-const categoryIsNotEmpty = (category) => !!getCategoryTotal(category)
-const categoryHasNextPage = (category) => getCategoryTotal(category) > getCategoryCount(category)
+const getCategoryTotal = category => get(namedEntitiesPaginatedByCategories.value, [category, 0, 'total'], 0)
+const getCategoryCount = category => documentStore.countNamedEntitiesInCategory(category)
+const categoryIsNotEmpty = category => !!getCategoryTotal(category)
+const categoryHasNextPage = category => getCategoryTotal(category) > getCategoryCount(category)
 
 const getNextPageInCategory = async (category) => {
   if (!loadingNamedEntities.value) {

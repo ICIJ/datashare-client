@@ -89,8 +89,16 @@ export default {
 
 <template>
   <transition name="fade">
-    <a v-show="visible" class="scroll-tracker" tabindex="0" @click="scrollToTarget">
-      <phosphor-icon :name="icon" weight="fill" />
+    <a
+      v-show="visible"
+      class="scroll-tracker"
+      tabindex="0"
+      @click="scrollToTarget"
+    >
+      <phosphor-icon
+        :name="icon"
+        weight="fill"
+      />
     </a>
   </transition>
 </template>

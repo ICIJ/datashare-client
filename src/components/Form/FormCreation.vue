@@ -36,11 +36,22 @@ function submit(values) {
 </script>
 
 <template>
-  <b-form class="form-creation" novalidate @reset.stop.prevent="reset" @submit.stop.prevent="submit">
-    <div aria-description="form-content" :class="contentClassList">
+  <b-form
+    class="form-creation"
+    novalidate
+    @reset.stop.prevent="reset"
+    @submit.stop.prevent="submit"
+  >
+    <div
+      aria-description="form-content"
+      :class="contentClassList"
+    >
       <slot />
     </div>
-    <div class="d-flex justify-content-end mb-4" aria-description="form-footer">
+    <div
+      class="d-flex justify-content-end mb-4"
+      aria-description="form-footer"
+    >
       <span class="d-flex gap-4">
         <button-icon
           type="reset"
@@ -51,7 +62,12 @@ function submit(values) {
         >
           <slot name="reset-text" />
         </button-icon>
-        <button-icon type="submit" variant="action" :disabled="!valid" :icon-right="submitIcon">
+        <button-icon
+          type="submit"
+          variant="action"
+          :disabled="!valid"
+          :icon-right="submitIcon"
+        >
           <slot name="submit-text">{{ submitLabel ?? t('global.submit') }}</slot>
         </button-icon>
       </span>

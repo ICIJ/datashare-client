@@ -1,5 +1,9 @@
 <template>
-  <div :id="uniqueId" class="search-bar" :class="{ 'search-bar--focused': focused }">
+  <div
+    :id="uniqueId"
+    class="search-bar"
+    :class="{ 'search-bar--focused': focused }"
+  >
     <div class="d-flex align-items-center">
       <search-bar-input
         ref="searchInput"
@@ -41,7 +45,7 @@
             :hide="hiddenSuggestions"
             :items="suggestions"
             :active-items="activeSuggestions"
-            @update:modelValue="selectTerm"
+            @update:model-value="selectTerm"
             @click="submit"
           >
             <template #item-label="{ item }">
@@ -86,7 +90,7 @@ import { useSearchStore } from '@/store/modules'
 
 function escapeLuceneChars(str) {
   const escapable = [' ', '+', '-', '&&', '||', '!', '(', ')', '{', '}', '[', ']', '^', '~', '?', ':', '\\', '/']
-  return some(escapable, (char) => str.indexOf(char) > -1) ? JSON.stringify(str) : str
+  return some(escapable, char => str.indexOf(char) > -1) ? JSON.stringify(str) : str
 }
 
 /**
@@ -189,7 +193,7 @@ export default {
     selectedProjects: {
       get() {
         const indices = this.indices ?? this.searchStore.indices
-        return indices.filter((index) => !!this.$core.findProject(index)).map((name) => ({ name }))
+        return indices.filter(index => !!this.$core.findProject(index)).map(name => ({ name }))
       },
       set(projects) {
         const indices = projects.map(iteratee('name'))
@@ -206,7 +210,7 @@ export default {
       return uniqueId('search-bar-')
     },
     suggestionsAllowed() {
-      const terms = this.termCandidates().map((t) => t.term)
+      const terms = this.termCandidates().map(t => t.term)
       const lastTerm = last(terms) || ''
       return ['all', settings.suggestedImplicitFields].indexOf(this.field) > -1 && lastTerm.length > 4
     },
@@ -254,10 +258,10 @@ export default {
       const fields = castArray(candidate.field === '<implicit>' ? settings.suggestedImplicitFields : candidate.field)
       const include = `.*${escapeRegExp(candidate.term).toLowerCase()}.*`
       const body = bodybuilder().size(0)
-      fields.forEach((field) => body.aggregation('terms', field, { include }, field))
+      fields.forEach(field => body.aggregation('terms', field, { include }, field))
       const preference = 'search-bar-suggestions'
       const response = await this.$core.api.elasticsearch.search({ index, body: body.build(), preference })
-      const suggestionsPerField = fields.map((f) => get(response, `aggregations.${f}.buckets`, []))
+      const suggestionsPerField = fields.map(f => get(response, `aggregations.${f}.buckets`, []))
       const suggestions = orderBy(suggestionsPerField.flat(), ['doc_count'], ['desc'])
       // Return an object to check later if the promise result is still applicable
       return { query, suggestions }
@@ -275,7 +279,8 @@ export default {
         if (settings.suggestedFields.indexOf(ast.field) > -1) terms.push(ast)
         // Return all the terms
         return terms
-      } catch (_) {
+      }
+      catch (_) {
         return []
       }
     },
@@ -294,7 +299,8 @@ export default {
       try {
         ast = this.replaceLastTermCandidate(term, ast)
         return lucene.toString(ast)
-      } catch (_) {
+      }
+      catch (_) {
         return this.query
       }
     },
@@ -313,10 +319,12 @@ export default {
             this.suggestions = query === this.query ? suggestions : []
             this.activeSuggestions = []
           }
-        } else {
+        }
+        else {
           this.suggestions = []
         }
-      } catch (_) {
+      }
+      catch (_) {
         this.hideSuggestions()
       }
     }, 200),

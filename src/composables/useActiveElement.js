@@ -32,8 +32,8 @@ export function useActiveElement(options = {}) {
     if (triggerOnRemoval) {
       const observer = new MutationObserver((mutations) => {
         mutations
-          .filter((m) => m.removedNodes.length)
-          .map((n) => Array.from(n.removedNodes))
+          .filter(m => m.removedNodes.length)
+          .map(n => Array.from(n.removedNodes))
           .flat()
           .forEach((node) => {
             if (node === activeElement.value) trigger()

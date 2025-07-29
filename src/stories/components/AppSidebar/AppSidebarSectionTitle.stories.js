@@ -21,7 +21,7 @@ export default {
     icon: 'rocket-launch',
     title: 'Tasks'
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       AppSidebarSectionTitle
     },

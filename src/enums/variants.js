@@ -79,7 +79,7 @@ export const VARIANT = Object.freeze({
 })
 
 export const VARIANTS_PLAIN = Object.values(VARIANT_PLAIN)
-export const variantPlainValidator = (v) => VARIANTS_PLAIN.includes(v)
+export const variantPlainValidator = v => VARIANTS_PLAIN.includes(v)
 
 export const VARIANTS = Object.values(VARIANT)
-export const variantValidator = (v) => VARIANTS.includes(v)
+export const variantValidator = v => VARIANTS.includes(v)

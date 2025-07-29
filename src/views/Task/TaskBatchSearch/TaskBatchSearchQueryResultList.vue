@@ -51,14 +51,14 @@ const hits = ref(null)
 const searchQuery = useUrlParam('q', '')
 
 const page = useUrlParam('page', {
-  transform: (value) => parseInt(value),
+  transform: value => parseInt(value),
   initialValue: 1
 })
 
 const perPage = useUrlParamWithStore('perPage', {
-  transform: (value) => Math.max(10, parseInt(value)),
+  transform: value => Math.max(10, parseInt(value)),
   get: () => appStore.getSettings(settingsView, 'perPage'),
-  set: (value) => appStore.setSettings(settingsView, { perPage: parseInt(value) })
+  set: value => appStore.setSettings(settingsView, { perPage: parseInt(value) })
 })
 
 const orderBy = useUrlParamsWithStore(['sort', 'order'], {
@@ -68,12 +68,12 @@ const orderBy = useUrlParamsWithStore(['sort', 'order'], {
 
 const sort = computed({
   get: () => orderBy.value?.[0],
-  set: (value) => (orderBy.value = [value, order.value])
+  set: value => (orderBy.value = [value, order.value])
 })
 
 const order = computed({
   get: () => orderBy.value?.[1],
-  set: (value) => (orderBy.value = [sort.value, value])
+  set: value => (orderBy.value = [sort.value, value])
 })
 
 const from = computed(() => (page.value - 1) * perPage.value)
@@ -146,8 +146,14 @@ watch(toRef(route, 'query'), fetchBatchSearchResults, { deep: true, immediate: t
     </template>
   </page-header>
   <page-container fluid>
-    <slot v-if="isEmpty" name="empty">
-      <empty-state :label="t('task.batch-search-results.show.emptyStateLabel')" :image="batchSearchResultsEmpty" />
+    <slot
+      v-if="isEmpty"
+      name="empty"
+    >
+      <empty-state
+        :label="t('task.batch-search-results.show.emptyStateLabel')"
+        :image="batchSearchResultsEmpty"
+      />
     </slot>
     <page-table-generic
       v-else
@@ -166,16 +172,26 @@ watch(toRef(route, 'query'), fetchBatchSearchResults, { deep: true, immediate: t
         <display-number :value="item.documentNumber" />
       </template>
       <template #cell(documentName)="{ item }">
-        <router-link-batch-search-result :item="item" class="text-nowrap" modal />
+        <router-link-batch-search-result
+          :item="item"
+          class="text-nowrap"
+          modal
+        />
       </template>
       <template #cell(project)="{ item }">
         <project-button :project="item.project" />
       </template>
       <template #cell(contentType)="{ item }">
-        <display-content-type :value="item.contentType" class="text-nowrap" />
+        <display-content-type
+          :value="item.contentType"
+          class="text-nowrap"
+        />
       </template>
       <template #cell(contentLength)="{ item }">
-        <display-content-length :value="item.contentLength" class="text-nowrap" />
+        <display-content-length
+          :value="item.contentLength"
+          class="text-nowrap"
+        />
       </template>
       <template #cell(documentPath)="{ item }">
         {{ item.documentPath }}

@@ -17,7 +17,8 @@ export default class FilterDate extends FilterDocument {
       param.values.forEach((date) => {
         if (parseInt(date) === 0) {
           sub.notQuery('exists', this.key)
-        } else {
+        }
+        else {
           const gte = new Date(parseInt(date))
           const tmp = new Date(parseInt(date))
           const lte = new Date(tmp.setMonth(tmp.getMonth() + 1) - 1)

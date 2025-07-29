@@ -65,7 +65,10 @@ const showTitle = computed(() => props.properties?.includes('title'))
     @mouseenter="hover = true"
     @mouseleave="hover = false"
   >
-    <hook name="document-card-grid:before" :bind="{ document }" />
+    <hook
+      name="document-card-grid:before"
+      :bind="{ document }"
+    />
     <div class="document-card-grid__wrapper d-flex flex-column gap-3 p-3 pe-0">
       <document-thumbnail
         v-if="showThumbnail"
@@ -78,7 +81,10 @@ const showTitle = computed(() => props.properties?.includes('title'))
         @click="showDocumentViewerModal"
       />
       <div class="document-card-grid__wrapper__properties">
-        <hook name="document-card-grid-properties:before" :bind="{ document }" />
+        <hook
+          name="document-card-grid-properties:before"
+          :bind="{ document }"
+        />
         <router-link-document
           v-if="showTitle"
           :id="document.id"
@@ -91,8 +97,14 @@ const showTitle = computed(() => props.properties?.includes('title'))
         >
           {{ document.title }}
         </router-link-document>
-        <document-card-properties :document="document" :properties="properties" />
-        <hook name="document-card-grid-properties:after" :bind="{ document }" />
+        <document-card-properties
+          :document="document"
+          :properties="properties"
+        />
+        <hook
+          name="document-card-grid-properties:after"
+          :bind="{ document }"
+        />
       </div>
     </div>
     <document-actions-group
@@ -105,7 +117,10 @@ const showTitle = computed(() => props.properties?.includes('title'))
       tooltip-placement="right"
       vertical
     />
-    <hook name="document-card-grid:after" :bind="{ document }" />
+    <hook
+      name="document-card-grid:after"
+      :bind="{ document }"
+    />
   </div>
 </template>
 

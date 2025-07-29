@@ -10,7 +10,6 @@ import { useHooksStore } from '@/store/modules'
 // Because we use custom component, the runtime-build function must be defined
 // explicitely in the hooked component definition.
 function hookedComponentDefinition(content = '') {
-  // eslint-disable-next-line vue/one-component-per-file
   return defineComponent({
     render() {
       return h('div', { class: 'hooked-component' }, content)

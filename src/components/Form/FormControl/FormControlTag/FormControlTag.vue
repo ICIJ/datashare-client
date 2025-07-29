@@ -94,7 +94,7 @@ const separators = computed(() => {
 })
 
 const escapedSeparators = computed(() => {
-  return separators.value.map((separator) => escapeRegExp(separator))
+  return separators.value.map(separator => escapeRegExp(separator))
 })
 
 const separatorsPattern = computed(() => {
@@ -102,7 +102,7 @@ const separatorsPattern = computed(() => {
 })
 
 const endWithSeparator = (tag) => {
-  return separators.value.some((separator) => tag.endsWith(separator))
+  return separators.value.some(separator => tag.endsWith(separator))
 }
 function focus() {
   inputElement.value.focus()
@@ -141,7 +141,7 @@ const tagCreateValidator = (tag) => {
 }
 
 const removeTag = (tag) => {
-  const modelValue = props.modelValue.filter((t) => t !== tag)
+  const modelValue = props.modelValue.filter(t => t !== tag)
   emit('update:modelValue', modelValue)
   focus()
 }
@@ -173,13 +173,14 @@ const classList = computed(() => {
 function onEsc() {
   if (showDropdown.value === true) {
     showDropdown.value = false
-  } else {
+  }
+  else {
     inputElement.value.blur()
   }
 }
 const inputValue = () => props.inputValue
-watch(inputValue, (value) => (inputValueTrigger.value = value), { immediate: true })
-watch(inputValueTrigger, (value) => emit('update:inputValue', value))
+watch(inputValue, value => (inputValueTrigger.value = value), { immediate: true })
+watch(inputValueTrigger, value => emit('update:inputValue', value))
 
 watch(useActiveElement(), async (activeElement) => {
   showDropdown.value = showDropdown.value && element.value.contains(activeElement)
@@ -188,7 +189,8 @@ watch(useActiveElement(), async (activeElement) => {
 watch(focusIndex, (value) => {
   if (value === -1) {
     focus()
-  } else {
+  }
+  else {
     showDropdown.value = !!inputValueTrigger.value
   }
 })
@@ -197,7 +199,11 @@ defineExpose({ focus })
 </script>
 
 <template>
-  <div ref="element" class="form-control-tag" :class="classList">
+  <div
+    ref="element"
+    class="form-control-tag"
+    :class="classList"
+  >
     <form-control-tag-input
       ref="inputElement"
       class="form-control-tag__input"
@@ -215,7 +221,7 @@ defineExpose({ focus })
       :input-value="inputValueTrigger"
       :disabled="!tagValidator(inputValueTrigger)"
       @clear="clear"
-      @update:inputValue="inputTag($event)"
+      @update:input-value="inputTag($event)"
       @add-tag="addTag($event)"
       @remove-tag="removeTag($event)"
       @remove-last-tag="removeLastTag()"
@@ -226,7 +232,10 @@ defineExpose({ focus })
     >
       <!-- eslint-disable-next-line vue/no-template-shadow -->
       <template #tag="{ tag }">
-        <slot name="tag" v-bind="{ tag, removeTag }" />
+        <slot
+          name="tag"
+          v-bind="{ tag, removeTag }"
+        />
       </template>
     </form-control-tag-input>
     <form-control-tag-dropdown
@@ -240,7 +249,7 @@ defineExpose({ focus })
       :track-by="trackBy"
       :target="inputElement"
       :focus-index="focusIndex"
-      @update:focusIndex="focusIndex = $event"
+      @update:focus-index="focusIndex = $event"
       @update:show="showDropdown = $event"
       @add-tag="addTag($event)"
       @keydown.esc="onEsc"

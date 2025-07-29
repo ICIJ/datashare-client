@@ -40,12 +40,21 @@ const classList = computed(() => {
 </script>
 
 <template>
-  <div class="filters-panel-section-filter-actions" :class="classList">
+  <div
+    class="filters-panel-section-filter-actions"
+    :class="classList"
+  >
     <span class="d-flex gap-2">
-      <b-form-checkbox v-if="!hideContextualize" v-model="contextualize">
+      <b-form-checkbox
+        v-if="!hideContextualize"
+        v-model="contextualize"
+      >
         {{ t('filtersPanelSectionFilterActions.contextualize') }}
       </b-form-checkbox>
-      <b-form-checkbox v-if="!hideExclude" v-model="exclude">
+      <b-form-checkbox
+        v-if="!hideExclude"
+        v-model="exclude"
+      >
         {{ t('filtersPanelSectionFilterActions.exclude') }}
       </b-form-checkbox>
     </span>

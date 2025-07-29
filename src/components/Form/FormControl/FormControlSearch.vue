@@ -112,17 +112,29 @@ const classList = computed(() => {
   }
 })
 const placeholder = computed(() => props.placeholder ?? t('formControlSearch.placeholder'))
-watch(toRef(props, 'autofocus'), (autofocus) => autofocus && focus())
+watch(toRef(props, 'autofocus'), autofocus => autofocus && focus())
 
 defineExpose({ focus, blur, clear: clearInput })
 </script>
 
 <template>
-  <form class="form-control-search" :class="classList" @submit.prevent="emit('submit', modelValue)">
+  <form
+    class="form-control-search"
+    :class="classList"
+    @submit.prevent="emit('submit', modelValue)"
+  >
     <div class="form-control-search__input-group input-group flex-nowrap">
       <span class="form-control-search__start input-group-text border-end-0">
-        <slot name="input-start" v-bind="{ loading, icon, noIcon }">
-          <phosphor-icon v-if="!noIcon" :name="icon" square :spin="loading" />
+        <slot
+          name="input-start"
+          v-bind="{ loading, icon, noIcon }"
+        >
+          <phosphor-icon
+            v-if="!noIcon"
+            :name="icon"
+            square
+            :spin="loading"
+          />
         </slot>
       </span>
       <b-form-input
@@ -137,7 +149,7 @@ defineExpose({ focus, blur, clear: clearInput })
         @keydown.down="emit('down', $event)"
         @keydown.enter="emit('enter', $event)"
         @keydown.esc="blur"
-        @update:modelValue="setInput"
+        @update:model-value="setInput"
         @blur="emit('blur', $event)"
         @focus="emit('focus', $event)"
       />
@@ -151,7 +163,10 @@ defineExpose({ focus, blur, clear: clearInput })
           class="form-control-search__clear__icon p-1 mx-1 border-0"
           @click="clearInput()"
         />
-        <slot name="input-end" v-bind="{ loading, clearText }" />
+        <slot
+          name="input-end"
+          v-bind="{ loading, clearText }"
+        />
       </span>
     </div>
   </form>

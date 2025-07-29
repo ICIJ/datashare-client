@@ -1,16 +1,25 @@
 <template>
-  <b-table-simple small class="table-editable">
+  <b-table-simple
+    small
+    class="table-editable"
+  >
     <b-thead>
       <b-tr>
         <b-th>#</b-th>
         <b-th><span class="mx-3">Query</span></b-th>
-        <b-th></b-th>
+        <b-th />
       </b-tr>
     </b-thead>
 
     <b-tbody class="overflow-y-auto h-auto">
-      <b-tr v-for="(item, index) in items" :key="index" class="">
-        <b-td class="table-editable__index text">{{ index + 1 }}</b-td>
+      <b-tr
+        v-for="(item, index) in items"
+        :key="index"
+        class=""
+      >
+        <b-td class="table-editable__index text">
+          {{ index + 1 }}
+        </b-td>
         <b-td>
           <row-editable
             v-model:focused="item.focused"

@@ -20,8 +20,14 @@ const tagWithSeparator = (tag, index) => {
 
 <template>
   <span class="display-tags d-inline-flex flex-wrap gap-1">
-    <template v-for="(tag, index) in tags" :key="tag">
-      <slot name="tag" v-bind="{ tag, index }">
+    <template
+      v-for="(tag, index) in tags"
+      :key="tag"
+    >
+      <slot
+        name="tag"
+        v-bind="{ tag, index }"
+      >
         {{ tagWithSeparator(tag, index) }}
       </slot>
     </template>

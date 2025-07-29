@@ -7,5 +7,8 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <button-row-action :icon="PhMagnifyingGlass" :label="t('buttonRowAction.search')" />
+  <button-row-action
+    :icon="PhMagnifyingGlass"
+    :label="t('buttonRowAction.search')"
+  />
 </template>

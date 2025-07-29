@@ -18,7 +18,11 @@ const classList = computed(() => {
 </script>
 
 <template>
-  <button type="button" class="form-control-range-ticks-entry btn btn-outline-action" :class="classList">
+  <button
+    type="button"
+    class="form-control-range-ticks-entry btn btn-outline-action"
+    :class="classList"
+  >
     {{ value }}
   </button>
 </template>

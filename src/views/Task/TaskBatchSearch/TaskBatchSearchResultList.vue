@@ -19,9 +19,15 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <task-batch-search-query-result-list :uuid="uuid" :indices="indices">
+  <task-batch-search-query-result-list
+    :uuid="uuid"
+    :indices="indices"
+  >
     <template #empty>
-      <empty-state :label="t('task.batch-search-results.list.emptyStateLabel')" :image="batchSearchResultsEmpty" />
+      <empty-state
+        :label="t('task.batch-search-results.list.emptyStateLabel')"
+        :image="batchSearchResultsEmpty"
+      />
     </template>
   </task-batch-search-query-result-list>
 </template>

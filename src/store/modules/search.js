@@ -157,7 +157,8 @@ export const useSearchStore = defineSuffixedStore('search', () => {
       const isRightFuzzyNumber = get(query, 'left.similarity', null) !== null
       if (get(query, 'right.left', null) === null) {
         getTerm(query, 'right', null, get(query, 'operator', null), isRightFuzzyNumber)
-      } else {
+      }
+      else {
         retTerms(get(query, 'right'), get(query, 'operator', null), isRightFuzzyNumber)
       }
     }
@@ -165,14 +166,15 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     try {
       retTerms(lucene.parse(q.value.replace('\\@', '@')))
       return terms
-    } catch (_) {
+    }
+    catch (_) {
       return []
     }
   })
 
   const retrieveContentQueryTerms = computed(() => {
     const fields = ['', 'content']
-    return retrieveQueryTerms.value.filter((item) => fields.includes(item.field))
+    return retrieveQueryTerms.value.filter(item => fields.includes(item.field))
   })
 
   const page = computed(() => {
@@ -329,7 +331,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     // this action can also receive a string with a comma separated
     // list of indices.
     const cleaned = compact(castArray(value))
-      .map((str) => str.split(','))
+      .map(str => str.split(','))
       .flat()
     indices.value = cleaned
   }
@@ -497,7 +499,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     // Look for existing values for this name
     const existingValues = values.value?.[name] ?? []
     // Filter the values for this name to remove the given value
-    values.value[name] = existingValues.filter((existingValue) => existingValue !== value)
+    values.value[name] = existingValues.filter(existingValue => existingValue !== value)
   }
 
   /**
@@ -522,10 +524,11 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * @param {number|null} [params.position=null] - The position to insert the filter in the list, default is null (append to the end).
    */
   function addFilter({ type = 'FilterText', options = {}, position = null } = {}) {
-    if (!filters.value.find((filter) => filter.options.name === options.name)) {
+    if (!filters.value.find(filter => filter.options.name === options.name)) {
       if (position === null) {
         filters.value.push({ type, options })
-      } else {
+      }
+      else {
         filters.value.splice(position, 0, { type, options })
       }
     }
@@ -640,10 +643,12 @@ export const useSearchStore = defineSuffixedStore('search', () => {
         searchBreadcrumbStore.pushSearchQuery(toBaseRouteQuery.value)
       }
       setResponse({ raw, roots })
-    } catch (error) {
+    }
+    catch (error) {
       setResponse()
       setError(error)
-    } finally {
+    }
+    finally {
       setIsReady(true)
     }
   }
@@ -669,8 +674,8 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * @returns {Promise} - A promise that resolves to the root documents.
    */
   async function searchRootDocuments(raw) {
-    const embedded = get(raw, 'hits.hits', []).filter((hit) => hit._source.extractionLevel > 0)
-    const ids = compact(embedded.map((hit) => hit._source.rootDocument))
+    const embedded = get(raw, 'hits.hits', []).filter(hit => hit._source.extractionLevel > 0)
+    const ids = compact(embedded.map(hit => hit._source.rootDocument))
     const source = ['contentType', 'contentLength', 'title', 'path']
     return ids.length ? api.elasticsearch.ids(indices.value.join(','), ids, source) : EsDocList.none()
   }
@@ -697,8 +702,8 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     // Iterate over the list of filter
     instantiatedFilters.value.forEach((filter) => {
       // The filter key are formatted in the URL as follow: f[filterName] or f[-filterName] for excluded filters
-      withRouteQuery(`f[${filter.name}]`, (key) => addFilterValue(filter.itemParam({ key })))
-      withRouteQuery(`f[-${filter.name}]`, (key) => addFilterValue(filter.itemParam({ key })))
+      withRouteQuery(`f[${filter.name}]`, key => addFilterValue(filter.itemParam({ key })))
+      withRouteQuery(`f[-${filter.name}]`, key => addFilterValue(filter.itemParam({ key })))
       withRouteQuery(`f[-${filter.name}]`, () => excludeFilter(filter.name))
     })
   }
@@ -718,7 +723,8 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     // The query can be a string
     if (isString(value)) {
       setQuery(value)
-    } else {
+    }
+    else {
       // Create a helper function that call the setter only if the key exists `q`
       const withKey = (key, setter) => key in value && setter(value[key])
       // Then we list of the keys that can be update
@@ -846,8 +852,8 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * @returns {Object} - The modified query object with the term removed.
    */
   function deleteTermFromLuceneQuery(query, term = '') {
-    const hasQuery = (key) => has(query, key)
-    const hasntQuery = (key) => !hasQuery(key)
+    const hasQuery = key => has(query, key)
+    const hasntQuery = key => !hasQuery(key)
     if (get(query, 'left.term', '') === term) delete query.left
     if (get(query, 'right.term', '') === term) delete query.right
     if (hasQuery('left.left')) query.left = deleteTermFromLuceneQuery(query.left, term)

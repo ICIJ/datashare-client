@@ -51,7 +51,7 @@ export const useDocumentStore = defineStore(
      */
     const countNamedEntitiesInCategory = (category) => {
       const pages = get(namedEntitiesPaginatedByCategories, [category], [])
-      return sumBy(pages, (page) => get(page, 'hits.length', 0))
+      return sumBy(pages, page => get(page, 'hits.length', 0))
     }
 
     /**
@@ -60,7 +60,7 @@ export const useDocumentStore = defineStore(
      */
     const namedEntities = computed(() => {
       const categoriesPages = Object.values(namedEntitiesPaginatedByCategories)
-      const hits = categoriesPages.map((pages) => pages.map((page) => page.hits))
+      const hits = categoriesPages.map(pages => pages.map(page => page.hits))
       return flattenDeep(hits)
     })
 
@@ -108,7 +108,8 @@ export const useDocumentStore = defineStore(
       if (raw !== null) {
         document.value = EsDocList.instantiate(raw)
         isContentLoaded.value = document.value.hasContent
-      } else {
+      }
+      else {
         document.value = null
       }
     }
@@ -152,7 +153,7 @@ export const useDocumentStore = defineStore(
       const user = { id: userId }
       const creationDate = Date.now()
       const words = compact(label.split(' '))
-      const newTags = words.map((label) => ({ label, user, creationDate }))
+      const newTags = words.map(label => ({ label, user, creationDate }))
       tags.value = uniqBy(tags.value.concat(newTags), 'label')
     }
 
@@ -198,7 +199,8 @@ export const useDocumentStore = defineStore(
       if (raw !== null) {
         parentDocument.value = EsDocList.instantiate(raw)
         if (document.value) document.value.parent = raw
-      } else {
+      }
+      else {
         parentDocument.value = null
       }
       return parentDocument.value
@@ -213,7 +215,8 @@ export const useDocumentStore = defineStore(
       if (raw !== null) {
         rootDocument.value = EsDocList.instantiate(raw)
         if (document.value) document.value.root = raw
-      } else {
+      }
+      else {
         rootDocument.value = null
       }
       return rootDocument.value
@@ -275,9 +278,11 @@ export const useDocumentStore = defineStore(
         const fetchedDoc = await api.elasticsearch.getDocumentWithoutContent(index, id, routing)
         setIdAndRouting({ id, index, routing })
         setDocument(fetchedDoc)
-      } catch (error) {
+      }
+      catch (error) {
         setDocument(null)
-      } finally {
+      }
+      finally {
         toggleUserAction()
       }
       return document.value
@@ -371,7 +376,8 @@ export const useDocumentStore = defineStore(
           const { parentDocument: id, rootDocument: routing } = document.value.raw._source
           const fetched = await api.elasticsearch.getDocumentWithoutContent(index, id, routing)
           setParentDocument(fetched)
-        } catch (error) {
+        }
+        catch (error) {
           setParentDocument(null)
         }
       }
@@ -389,7 +395,8 @@ export const useDocumentStore = defineStore(
           const { rootDocument: id } = document.value.raw._source
           const fetched = await api.elasticsearch.getDocumentWithoutContent(index, id, id)
           setRootDocument(fetched)
-        } catch (error) {
+        }
+        catch (error) {
           setRootDocument(null)
         }
       }
@@ -416,7 +423,7 @@ export const useDocumentStore = defineStore(
      */
     async function getFirstPageForNamedEntityInAllCategories({ filterToken = null } = {}) {
       return Promise.all(
-        categories.value.map((category) => getFirstPageForNamedEntityInCategory({ filterToken, category }))
+        categories.value.map(category => getFirstPageForNamedEntityInCategory({ filterToken, category }))
       )
     }
 
@@ -444,10 +451,12 @@ export const useDocumentStore = defineStore(
         const page = new EsDocList(raw)
         if (from === 0) {
           setNamedEntitiesPages({ category, pages: [page] })
-        } else {
+        }
+        else {
           addNamedEntitiesPage({ category, page })
         }
-      } catch (error) {
+      }
+      catch (error) {
         // Fail silently on error
       }
     }
@@ -459,7 +468,8 @@ export const useDocumentStore = defineStore(
     async function getTags() {
       try {
         setTags(await api.getTags(document.value.index, document.value.id))
-      } catch (error) {
+      }
+      catch (error) {
         setTags([])
       }
       return tags.value
@@ -512,10 +522,12 @@ export const useDocumentStore = defineStore(
       try {
         if (isRecommended.value) {
           await api.setUnmarkAsRecommended(document.value.index, [document.value.id])
-        } else {
+        }
+        else {
           await api.setMarkAsRecommended(document.value.index, [document.value.id])
         }
-      } finally {
+      }
+      finally {
         await getRecommendationsByDocuments(userId)
       }
     }
@@ -532,7 +544,8 @@ export const useDocumentStore = defineStore(
         recommendBy(map(sorted, 'item.id'))
         const idx = recommendedBy.value.indexOf(userId)
         recommend(idx > -1)
-      } catch (error) {
+      }
+      catch (error) {
         recommendBy([])
         recommend(false)
       }

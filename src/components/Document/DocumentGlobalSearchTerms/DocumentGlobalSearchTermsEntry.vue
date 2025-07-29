@@ -34,10 +34,18 @@ const isInTags = computed(() => term.count === 0 && term.tags > 0)
     <span class="document-global-search-terms-entry__label">
       {{ label }}
     </span>
-    <b-badge v-if="isInMetadata" class="document-global-search-terms-entry__metadata" variant="light">
+    <b-badge
+      v-if="isInMetadata"
+      class="document-global-search-terms-entry__metadata"
+      variant="light"
+    >
       {{ t('document.inMetadata') }}
     </b-badge>
-    <b-badge v-else-if="isInTags" class="document-global-search-terms-entry__tags" variant="light">
+    <b-badge
+      v-else-if="isInTags"
+      class="document-global-search-terms-entry__tags"
+      variant="light"
+    >
       {{ t('document.inTags') }}
     </b-badge>
   </search-parameter-query-term>

@@ -46,7 +46,10 @@ onBeforeRouteLeave(hide)
       <slot v-bind="{ title, hide, placement, visible }" />
     </div>
     <div class="page-settings__footer py-3 position-sticky bottom-0 bg-body">
-      <button-reset label-key="pageSettings.reset" @click="onReset" />
+      <button-reset
+        label-key="pageSettings.reset"
+        @click="onReset"
+      />
     </div>
   </div>
 </template>

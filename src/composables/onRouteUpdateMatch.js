@@ -8,5 +8,5 @@ import { onRouteUpdateCondition } from './onRouteUpdateCondition'
  */
 
 export function onRouteUpdateMatch(name = null, callback) {
-  onRouteUpdateCondition((to) => name === null || to.name === name, callback)
+  onRouteUpdateCondition(to => name === null || to.name === name, callback)
 }

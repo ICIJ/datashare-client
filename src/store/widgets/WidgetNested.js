@@ -17,6 +17,7 @@ class WidgetNested extends WidgetEmpty {
     super(options)
     this.widgets = castArray(widgets)
   }
+
   get component() {
     return Component
   }

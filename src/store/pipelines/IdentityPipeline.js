@@ -4,6 +4,7 @@ class IdentityPipeline {
     this.category = category
     this.order = order
   }
+
   apply(value) {
     return value
   }

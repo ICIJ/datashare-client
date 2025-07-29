@@ -28,7 +28,11 @@ function getProject(item) {
 </script>
 
 <template>
-  <task-page :task-filter="[TASK_NAME.EXTRACT_NLP, TASK_NAME.ENQUEUE_FROM_INDEX]" page-name="entities" show-add>
+  <task-page
+    :task-filter="[TASK_NAME.EXTRACT_NLP, TASK_NAME.ENQUEUE_FROM_INDEX]"
+    page-name="entities"
+    show-add
+  >
     <template #empty>
       <empty-state
         :image="tasksEntitiesEmpty"
@@ -52,10 +56,16 @@ function getProject(item) {
           <display-status :value="item.state" />
         </template>
         <template #cell(entitiesToFind)="{ item }">
-          <div v-if="isPipelineEmail(item)" class="d-flex gap-2">
+          <div
+            v-if="isPipelineEmail(item)"
+            class="d-flex gap-2"
+          >
             <entity-button :entity="{ mention: 'Email', category: ENTITY_CATEGORY.EMAIL }" />
           </div>
-          <div v-else class="d-flex gap-2">
+          <div
+            v-else
+            class="d-flex gap-2"
+          >
             <entity-button :entity="{ mention: 'People', category: ENTITY_CATEGORY.PERSON }" />
             <entity-button :entity="{ mention: 'Organization', category: ENTITY_CATEGORY.ORGANIZATION }" />
             <entity-button :entity="{ mention: 'Location', category: ENTITY_CATEGORY.LOCATION }" />

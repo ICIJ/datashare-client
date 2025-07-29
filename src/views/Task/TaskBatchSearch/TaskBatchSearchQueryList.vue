@@ -45,14 +45,14 @@ const batchSearch = ref(null)
 const searchQuery = useUrlParam('q', '')
 
 const page = useUrlParam('page', {
-  transform: (value) => parseInt(value),
+  transform: value => parseInt(value),
   initialValue: 1
 })
 
 const perPage = useUrlParamWithStore('perPage', {
-  transform: (value) => Math.max(10, parseInt(value)),
+  transform: value => Math.max(10, parseInt(value)),
   get: () => appStore.getSettings(settingsView, 'perPage'),
-  set: (value) => appStore.setSettings(settingsView, { perPage: parseInt(value) })
+  set: value => appStore.setSettings(settingsView, { perPage: parseInt(value) })
 })
 
 const orderBy = useUrlParamsWithStore(['sort', 'order'], {
@@ -62,12 +62,12 @@ const orderBy = useUrlParamsWithStore(['sort', 'order'], {
 
 const sort = computed({
   get: () => orderBy.value?.[0],
-  set: (value) => (orderBy.value = [value, order.value])
+  set: value => (orderBy.value = [value, order.value])
 })
 
 const order = computed({
   get: () => orderBy.value?.[1],
-  set: (value) => (orderBy.value = [sort.value, value])
+  set: value => (orderBy.value = [sort.value, value])
 })
 
 const from = computed(() => (page.value - 1) * perPage.value)
@@ -124,9 +124,15 @@ watch(toRef(route, 'query'), fetchBatchSearchQueries, { deep: true, immediate: t
       <app-spinner v-else />
     </template>
   </page-header>
-  <page-container fluid class="pb-3">
+  <page-container
+    fluid
+    class="pb-3"
+  >
     <b-row>
-      <b-col lg="8" cols="12">
+      <b-col
+        lg="8"
+        cols="12"
+      >
         <page-header-toolbar
           v-model:search-query="searchQuery"
           v-model:page="page"
@@ -137,7 +143,11 @@ watch(toRef(route, 'query'), fetchBatchSearchQueries, { deep: true, immediate: t
           searchable
         >
           <template #pagination="{ totalRows }">
-            <row-pagination-queries v-model="page" :total-rows="totalRows" :per-page="perPage" />
+            <row-pagination-queries
+              v-model="page"
+              :total-rows="totalRows"
+              :per-page="perPage"
+            />
           </template>
         </page-header-toolbar>
         <page-table-generic
@@ -163,8 +173,14 @@ watch(toRef(route, 'query'), fetchBatchSearchQueries, { deep: true, immediate: t
           </template>
         </page-table-generic>
       </b-col>
-      <b-col lg="4" cols="12">
-        <batch-search-card v-if="batchSearch" :batch-search="batchSearch" />
+      <b-col
+        lg="4"
+        cols="12"
+      >
+        <batch-search-card
+          v-if="batchSearch"
+          :batch-search="batchSearch"
+        />
       </b-col>
     </b-row>
   </page-container>

@@ -20,7 +20,7 @@ const props = defineProps({
   type: {
     type: String,
     required: true,
-    validator: (value) => [INPUT_RADIO, INPUT_CHECKBOX].includes(value)
+    validator: value => [INPUT_RADIO, INPUT_CHECKBOX].includes(value)
   },
   name: {
     type: String
@@ -49,9 +49,19 @@ const formInput = computed(() => (isRadio.value ? BFormRadio : BFormCheckbox))
 </script>
 
 <template>
-  <page-settings-section-group v-model="open" :label="label" class="page-settings-section">
-    <div v-if="isCheckbox" class="page-settings-section__input-group">
-      <page-settings-section-group-all v-model="modelValue" :options="options" />
+  <page-settings-section-group
+    v-model="open"
+    :label="label"
+    class="page-settings-section"
+  >
+    <div
+      v-if="isCheckbox"
+      class="page-settings-section__input-group"
+    >
+      <page-settings-section-group-all
+        v-model="modelValue"
+        :options="options"
+      />
     </div>
     <component
       :is="formGroup"
@@ -68,7 +78,10 @@ const formInput = computed(() => (isRadio.value ? BFormRadio : BFormCheckbox))
         :disabled="option.disabled"
         :name="name ?? defaultName"
       >
-        <page-settings-entry :text="option.text ?? String(option.value)" :icon="option.icon" />
+        <page-settings-entry
+          :text="option.text ?? String(option.value)"
+          :icon="option.icon"
+        />
       </component>
     </component>
   </page-settings-section-group>

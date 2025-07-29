@@ -39,7 +39,10 @@ function save() {
 </script>
 
 <template>
-  <b-form class="d-flex flex-column gap-1" @submit.prevent="save">
+  <b-form
+    class="d-flex flex-column gap-1"
+    @submit.prevent="save"
+  >
     <b-form-group
       v-for="(_, name) in settings"
       :key="name"
@@ -49,13 +52,28 @@ function save() {
       :label-for="`input-settings-${name}`"
     >
       <template #label>
-        <settings-general-label :name="name" :field-changed="fieldChanged(name)" @restore="restore" />
+        <settings-general-label
+          :name="name"
+          :field-changed="fieldChanged(name)"
+          @restore="restore"
+        />
       </template>
-      <b-form-input :id="`input-settings-${name}`" v-model="replica[name]" />
+      <b-form-input
+        :id="`input-settings-${name}`"
+        v-model="replica[name]"
+      />
     </b-form-group>
     <div class="d-flex gap-3 justify-content-end">
-      <button-reset type="reset" :disabled="hasNotChanged" @click="reset" />
-      <b-button type="submit" variant="action" :disabled="hasNotChanged">
+      <button-reset
+        type="reset"
+        :disabled="hasNotChanged"
+        @click="reset"
+      />
+      <b-button
+        type="submit"
+        variant="action"
+        :disabled="hasNotChanged"
+      >
         {{ submitLabel }}
       </b-button>
     </div>

@@ -104,7 +104,7 @@ const tabs = computed(() => {
 const tab = useUrlParamWithStore('tab', {
   initialValue: 'text',
   get: () => appStore.getSettings('documentView', 'tab'),
-  set: (tab) => appStore.setSettings('documentView', { tab })
+  set: tab => appStore.setSettings('documentView', { tab })
 })
 
 const component = ref(null)
@@ -155,33 +155,60 @@ onBeforeRouteUpdate(fetchRouteDocument)
 </script>
 
 <template>
-  <app-wait ref="element" class="document-view d-flex flex-column" :for="loaderId">
+  <app-wait
+    ref="element"
+    class="document-view d-flex flex-column"
+    :for="loaderId"
+  >
     <template #waiting>
       <document-placeholder />
     </template>
 
     <div class="document-view__header mb-3 d-flex justify-content-between align-items-center gap-2">
-      <slot name="header-start" v-bind="{ document }" />
+      <slot
+        name="header-start"
+        v-bind="{ document }"
+      />
       <document-view-user-actions />
-      <document-view-actions :document="document" class="ms-auto" />
-      <slot name="nav" v-bind="{ document }">
+      <document-view-actions
+        :document="document"
+        class="ms-auto"
+      />
+      <slot
+        name="nav"
+        v-bind="{ document }"
+      >
         <router-view name="nav" />
       </slot>
-      <slot name="header-end" v-bind="{ document }" />
+      <slot
+        name="header-end"
+        v-bind="{ document }"
+      />
     </div>
 
-    <document-view-title class="mb-3" :document="document" />
+    <document-view-title
+      class="mb-3"
+      :document="document"
+    />
     <document-view-tabs :tabs="tabs" />
 
     <app-wait :for="tabLoaderId">
-      <component :is="component" v-if="component" :q="q ?? route.query.q" />
+      <component
+        :is="component"
+        v-if="component"
+        :q="q ?? route.query.q"
+      />
       <template #waiting>
         <document-content-placeholder class="py-3" />
       </template>
     </app-wait>
 
     <transition name="fade">
-      <button-to-top v-if="showButtonToTop" class="document-view__to-top" @click="scrollToTop" />
+      <button-to-top
+        v-if="showButtonToTop"
+        class="document-view__to-top"
+        @click="scrollToTop"
+      />
     </transition>
   </app-wait>
 </template>

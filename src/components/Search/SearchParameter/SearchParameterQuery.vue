@@ -47,7 +47,8 @@ const emit = defineEmits(['click:x'])
 const ast = computed(() => {
   try {
     return lucene.parse(props.query.replace('\\@', '@'))
-  } catch {
+  }
+  catch {
     return null
   }
 })

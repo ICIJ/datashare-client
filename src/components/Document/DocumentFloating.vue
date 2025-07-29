@@ -66,7 +66,7 @@ const separatorLineLeft = ref(props.minStartWidth)
 const enoughStartSpace = computed(() => separatorLineLeft.value >= props.minStartWidth)
 const enoughEndSpace = computed(() => separatorLineRight.value >= props.minEndWidth)
 const enoughSpace = computed(() => enoughStartSpace.value && enoughEndSpace.value)
-watch(enoughSpace, (value) => emit('update:enoughSpace', value), { immediate: !!elementRef?.value?.$el })
+watch(enoughSpace, value => emit('update:enoughSpace', value), { immediate: !!elementRef?.value?.$el })
 
 const reachedZeroWidth = computed(() => separatorLineLeft.value === 0)
 const reachedMinWidth = computed(() => separatorLineLeft.value <= props.minStartWidth)
@@ -74,11 +74,11 @@ const reachedFullWidth = computed(() => separatorLineLeft.value > fullWidth.valu
 
 const floatingChildren = querySelectorAll('.document-floating__start__floating > *', { immediate: false })
 const hasFloatingChildren = computed(() => !!floatingChildren.value.length)
-watch(hasFloatingChildren, (value) => value && resetStartSize())
+watch(hasFloatingChildren, value => value && resetStartSize())
 
 const floatingSiblings = querySelectorAll('.document-floating__start__floating ~ *', { immediate: false })
 const hasFloatingSiblings = computed(() => !!floatingSiblings.value.length)
-watch(hasFloatingSiblings, (value) => value && resetStartSize())
+watch(hasFloatingSiblings, value => value && resetStartSize())
 
 const separatorLineStyle = computed(() => {
   const left = reachedFullWidth.value ? '100%' : `${separatorLineLeft.value}px`
@@ -118,7 +118,8 @@ function drag(left) {
 function reduce() {
   if (reachedMinWidth.value) {
     separatorLineLeft.value = 0
-  } else {
+  }
+  else {
     separatorLineLeft.value = props.minStartWidth
   }
 }
@@ -126,7 +127,8 @@ function reduce() {
 function expand(left) {
   if (reachedZeroWidth.value) {
     separatorLineLeft.value = props.minStartWidth
-  } else {
+  }
+  else {
     separatorLineLeft.value = left
   }
 }
@@ -152,12 +154,30 @@ defineExpose({ resetSize, resetStartSize, resetEndSize })
 </script>
 
 <template>
-  <div ref="element" class="document-floating" :class="classList" :style="style">
-    <div class="document-floating__start" :style="startStyle" :class="startClass">
-      <slot name="floating" v-bind="{ documentViewFloatingId, enoughSpace }">
-        <div :id="documentViewFloatingId" class="document-floating__start__floating"></div>
+  <div
+    ref="element"
+    class="document-floating"
+    :class="classList"
+    :style="style"
+  >
+    <div
+      class="document-floating__start"
+      :style="startStyle"
+      :class="startClass"
+    >
+      <slot
+        name="floating"
+        v-bind="{ documentViewFloatingId, enoughSpace }"
+      >
+        <div
+          :id="documentViewFloatingId"
+          class="document-floating__start__floating"
+        />
       </slot>
-      <slot name="start" v-bind="{ enoughSpace }" />
+      <slot
+        name="start"
+        v-bind="{ enoughSpace }"
+      />
     </div>
     <separator-line
       class="document-floating__separator-line"
@@ -174,7 +194,10 @@ defineExpose({ resetSize, resetStartSize, resetEndSize })
       @reduce="reduce"
       @expand="expand"
     />
-    <div class="document-floating__end" :class="endClass">
+    <div
+      class="document-floating__end"
+      :class="endClass"
+    >
       <slot v-bind="{ enoughSpace }" />
     </div>
   </div>

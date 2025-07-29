@@ -17,7 +17,7 @@ vi.mock('lodash', async (importOriginal) => {
   const { default: actual } = await importOriginal()
   return {
     ...actual,
-    debounce: (cb) => cb
+    debounce: cb => cb
   }
 })
 
@@ -187,7 +187,7 @@ describe('useUrlParamWithStore', () => {
 
       return useUrlParamWithStore('perPage', {
         get: () => appStore.getSettings('search', 'perPage'),
-        set: (perPage) => appStore.setSettings('search', { perPage })
+        set: perPage => appStore.setSettings('search', { perPage })
       })
     }
   })
@@ -325,7 +325,7 @@ describe('replaceUrlParam', () => {
   })
 
   it('should transform the parameter when "to" is a function', async () => {
-    const to = (value) => ({
+    const to = value => ({
       transformedParam: value.toUpperCase()
     })
 
@@ -368,7 +368,7 @@ describe('replaceUrlParam', () => {
       initialRoute: { path: '/', query: { param1: 'value1', param2: 'value2' } },
       composable: () => {
         replaceUrlParam({ from: 'param1', to: 'newParam1' })
-        replaceUrlParam({ from: 'param2', to: (value) => ({ newParam2: value + '_suffix' }) })
+        replaceUrlParam({ from: 'param2', to: value => ({ newParam2: value + '_suffix' }) })
       }
     })
 

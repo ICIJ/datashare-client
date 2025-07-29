@@ -38,7 +38,7 @@ export const HUMAN_TASK_NAME = Object.freeze({
 })
 export const TASK_NAME_LIST = Object.values(TASK_NAME)
 
-export const taskNameValidator = (v) => TASK_NAME_LIST.includes(v)
+export const taskNameValidator = v => TASK_NAME_LIST.includes(v)
 
 export function getTaskName(longName) {
   return longName.split('.').pop()

@@ -26,7 +26,8 @@ const applyBatchedUpdates = debounce((router, route, to) => {
     // Apply the batched updates to the query
     if (!name || route.name === name) {
       router.push({ params, query: newQuery })
-    } else {
+    }
+    else {
       router.push({ params, name, query: newQuery })
     }
     // Reset the batch after applying
@@ -93,7 +94,7 @@ export function useUrlParam(queryParam, initialOrOptions = {}) {
   const { initialValue = null, transform = identity, to = null } = options
 
   const get = () => transform(route.query[queryParam] ?? initialValue)
-  const set = (value) => batchQueryParamUpdate(router, route, to, [queryParam], [transform(value)])
+  const set = value => batchQueryParamUpdate(router, route, to, [queryParam], [transform(value)])
 
   // Create a computed property that synchronizes the query parameter with the reactive value
   const param = computed({ get, set })

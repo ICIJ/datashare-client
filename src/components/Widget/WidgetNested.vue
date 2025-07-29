@@ -2,10 +2,22 @@
   <div class="widget widget--nested d-flex flex-column">
     <div class="widget__container d-flex flex-column flex-grow-1">
       <b-row class="align-items-stretch flex-grow-1">
-        <b-col v-for="(w, index) in instantiatedWidgets" :key="index" :xl="w.cols">
-          <div class="widget__container__widget" :class="{ card: w.card }">
+        <b-col
+          v-for="(w, index) in instantiatedWidgets"
+          :key="index"
+          :xl="w.cols"
+        >
+          <div
+            class="widget__container__widget"
+            :class="{ card: w.card }"
+          >
             <suspense>
-              <component :is="w.component" :project="project" :widget="w" class="flex-grow-1" />
+              <component
+                :is="w.component"
+                :project="project"
+                :widget="w"
+                class="flex-grow-1"
+              />
             </suspense>
           </div>
         </b-col>

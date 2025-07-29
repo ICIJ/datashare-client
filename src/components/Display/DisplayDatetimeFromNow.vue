@@ -15,5 +15,9 @@ defineProps({
 </script>
 
 <template>
-  <display-datetime :value="value" :format="FORMAT_FROM_NOW" :no-tooltip="noTooltip" />
+  <display-datetime
+    :value="value"
+    :format="FORMAT_FROM_NOW"
+    :no-tooltip="noTooltip"
+  />
 </template>

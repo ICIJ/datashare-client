@@ -30,10 +30,16 @@ const homepageLabel = computed(() => t('addonCardViewDetails.homepage'))
     </div>
     <p v-if="description">
       <slot>
-        <text-truncate :text="description" :truncate-length="250" />
+        <text-truncate
+          :text="description"
+          :truncate-length="250"
+        />
       </slot>
     </p>
-    <span v-if="url" class="text-secondary-emphasis flex-grow-0 gap-2">
+    <span
+      v-if="url"
+      class="text-secondary-emphasis flex-grow-0 gap-2"
+    >
       {{ homepageLabel }} <a :href="url">{{ url }}</a>
     </span>
   </div>

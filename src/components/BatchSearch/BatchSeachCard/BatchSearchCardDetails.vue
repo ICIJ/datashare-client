@@ -79,7 +79,8 @@ const uriFiltersEntries = computed(() => {
   try {
     const path = uri.split('#/?').pop()
     return parseFiltersEntries(parseQuery(path))
-  } catch {
+  }
+  catch {
     return []
   }
 })
@@ -87,7 +88,8 @@ const uriFiltersEntries = computed(() => {
 const uriWithoutIndices = computed(() => {
   try {
     return stringifyQuery(omit(parseQuery(uri), ['indices']))
-  } catch {
+  }
+  catch {
     return ''
   }
 })
@@ -103,7 +105,12 @@ const showError = () => showBatchSearchErrorModal(batchSearch)
     <ul class="batch-search-card-details__list list-unstyled">
       <li>
         <batch-search-card-details-entry :label="t('batchSearchCardDetails.status')">
-          <task-status :status="state" with-label with-click @error="showError" />
+          <task-status
+            :status="state"
+            with-label
+            with-click
+            @error="showError"
+          />
         </batch-search-card-details-entry>
       </li>
       <li>
@@ -153,7 +160,7 @@ const showError = () => showBatchSearchErrorModal(batchSearch)
         </batch-search-card-details-entry>
       </li>
     </ul>
-    <hr class="my-1" />
+    <hr class="my-1">
     <ul class="batch-search-card-details__list list-unstyled">
       <li class="my-0">
         <batch-search-card-details-entry
@@ -175,13 +182,22 @@ const showError = () => showBatchSearchErrorModal(batchSearch)
         </batch-search-card-details-entry>
       </li>
       <li class="mt-2">
-        <batch-search-card-details-entry :label="t('batchSearchCardDetails.date')" :icon="PhCalendarBlank">
+        <batch-search-card-details-entry
+          :label="t('batchSearchCardDetails.date')"
+          :icon="PhCalendarBlank"
+        >
           <display-datetime :value="date" />
         </batch-search-card-details-entry>
       </li>
       <li>
-        <batch-search-card-details-entry :label="t('batchSearchCardDetails.author')" :icon="PhUser">
-          <display-user hide-avatar :value="user.id" />
+        <batch-search-card-details-entry
+          :label="t('batchSearchCardDetails.author')"
+          :icon="PhUser"
+        >
+          <display-user
+            hide-avatar
+            :value="user.id"
+          />
         </batch-search-card-details-entry>
       </li>
       <li>
@@ -219,13 +235,24 @@ const showError = () => showBatchSearchErrorModal(batchSearch)
           buttons
         >
           <div class="d-flex flex-wrap gap-2">
-            <project-button v-for="(project, index) in projects" :key="index" :project="project" />
+            <project-button
+              v-for="(project, index) in projects"
+              :key="index"
+              :project="project"
+            />
           </div>
         </batch-search-card-details-entry>
       </li>
       <li v-if="hasUriWithFilters">
-        <batch-search-card-details-entry :label="t('batchSearchCardDetails.filters')" :icon="PhFunnel" buttons>
-          <search-breadcrumb-uri :uri="uriWithoutIndices" no-label />
+        <batch-search-card-details-entry
+          :label="t('batchSearchCardDetails.filters')"
+          :icon="PhFunnel"
+          buttons
+        >
+          <search-breadcrumb-uri
+            :uri="uriWithoutIndices"
+            no-label
+          />
         </batch-search-card-details-entry>
       </li>
     </ul>

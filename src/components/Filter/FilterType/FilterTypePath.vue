@@ -41,7 +41,7 @@ const selectedPaths = computedFilterValues(props.filter)
 
 const preBodyBuild = whenFilterContextualized(props.filter, (body) => {
   // Add every filter to the search body
-  searchStore.instantiatedFilters.forEach((filter) => filter.addFilter(body))
+  searchStore.instantiatedFilters.forEach(filter => filter.addFilter(body))
   // Add query to the search body
   core.api.elasticsearch.addQueryToFilter(searchStore.q || '*', body)
   return body
@@ -60,7 +60,11 @@ watchIndices(reset)
 </script>
 
 <template>
-  <filter-type :filter="filter" :modal="modal" flush>
+  <filter-type
+    :filter="filter"
+    :modal="modal"
+    flush
+  >
     <template #default="{ opened }">
       <path-tree
         v-if="opened"

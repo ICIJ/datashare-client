@@ -89,7 +89,10 @@ const showOperator = computed(() => {
     icon-right-hover-weight="bold"
     @click:icon-right="emit('click:x')"
   >
-    <template v-if="showOperator" #start>
+    <template
+      v-if="showOperator"
+      #start
+    >
       <span class="search-parameter-query-term__operator">
         {{ operator }}
       </span>

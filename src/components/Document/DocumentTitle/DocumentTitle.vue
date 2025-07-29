@@ -32,15 +32,21 @@ const isSliced = computed(() => slices.value.length > 1)
 const hasSubject = computed(() => !isSliced.value && props.document.hasSubject)
 const subject = computed(() => props.document.subject)
 
-const isFirstSlice = (index) => index === 0
-const isLastSlice = (index) => index === slices.value.length - 1
-const isRootSlice = (index) => slices.value.length > 1 && isFirstSlice(index)
-const isMiddleSlice = (index) => !isFirstSlice(index) && !isLastSlice(index)
+const isFirstSlice = index => index === 0
+const isLastSlice = index => index === slices.value.length - 1
+const isRootSlice = index => slices.value.length > 1 && isFirstSlice(index)
+const isMiddleSlice = index => !isFirstSlice(index) && !isLastSlice(index)
 </script>
 
 <template>
-  <div class="document-title" :class="classList">
-    <document-title-subject v-if="hasSubject" :subject="subject" />
+  <div
+    class="document-title"
+    :class="classList"
+  >
+    <document-title-subject
+      v-if="hasSubject"
+      :subject="subject"
+    />
     <document-title-slice
       v-for="(slice, index) in slices"
       v-else

@@ -32,7 +32,10 @@ const all = computed({
 </script>
 
 <template>
-  <b-form-checkbox v-model="all" :indeterminate="indeterminate">
+  <b-form-checkbox
+    v-model="all"
+    :indeterminate="indeterminate"
+  >
     {{ t('pageSettingsSectionGroupAll.label') }}
   </b-form-checkbox>
 </template>

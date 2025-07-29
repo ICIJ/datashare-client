@@ -29,7 +29,12 @@ const classList = computed(() => {
 </script>
 
 <template>
-  <display-status class="display-visibility" :class="classList" :icon="icon" :title="title" />
+  <display-status
+    class="display-visibility"
+    :class="classList"
+    :icon="icon"
+    :title="title"
+  />
 </template>
 
 <style lang="scss" scoped>

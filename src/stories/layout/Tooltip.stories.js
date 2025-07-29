@@ -6,7 +6,7 @@ import { PLACEMENTS } from '@/enums/placements'
 export default {
   title: 'Layout/Tooltip',
   component: BTooltip,
-  render: (args) => ({
+  render: args => ({
     components: {
       BTooltip,
       PhosphorIcon

@@ -65,7 +65,7 @@ const classList = computed(() => {
     :style="style"
     @drag="drag"
     @dragend="dragend"
-  ></a>
+  />
 </template>
 
 <style lang="scss" scoped>

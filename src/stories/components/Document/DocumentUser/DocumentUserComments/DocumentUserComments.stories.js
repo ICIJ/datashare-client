@@ -34,7 +34,7 @@ export const WithComments = {
         username: 'lskywalker',
         date: 1231231231231,
         to: '/toto/1',
-        text: "I'm not sure this is enough for the Vulkans to write the story. Wdyt @spoke?"
+        text: 'I\'m not sure this is enough for the Vulkans to write the story. Wdyt @spoke?'
       },
       {
         username: 'spoke',

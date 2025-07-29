@@ -16,7 +16,7 @@ import { useSearchStore } from '@/store/modules'
 
 const query = defineModel('query', { type: String, default: '' })
 const collapse = defineModel('collapse', { type: Boolean, default: null })
-const opened = refWhenever(collapse, (value) => value === false)
+const opened = refWhenever(collapse, value => value === false)
 
 const { filter, modal } = defineProps({
   filter: {
@@ -163,7 +163,7 @@ const buckets = computed(() => {
 
 const excludedBucketsPage = computed(() => {
   if (contextualize.value && exclude.value) {
-    const values = filter.values.map((key) => ({ key, doc_count: 0 }))
+    const values = filter.values.map(key => ({ key, doc_count: 0 }))
     return setWith({}, pageBucketsPath.value.join('.'), values, Object)
   }
   return []
@@ -196,7 +196,8 @@ const debouncedCollapse = computed({
   set: async (value) => {
     if (value) {
       collapse.value = true
-    } else {
+    }
+    else {
       await aggregateOver()
       await nextTick()
       collapse.value = false
@@ -244,11 +245,20 @@ onBeforeMount(async () => {
     :loading="isLoading"
     :modal="modal"
   >
-    <slot name="all" v-bind="{ entries, filter, opened }">
-      <filter-type-all v-if="!filter.hideAll" :filter="filter" />
+    <slot
+      name="all"
+      v-bind="{ entries, filter, opened }"
+    >
+      <filter-type-all
+        v-if="!filter.hideAll"
+        :filter="filter"
+      />
     </slot>
     <template #search="{ search, searchPlaceholder }">
-      <slot name="search" v-bind="{ search, searchPlaceholder }" />
+      <slot
+        name="search"
+        v-bind="{ search, searchPlaceholder }"
+      />
     </template>
     <template #actions>
       <slot name="actions" />
@@ -268,11 +278,26 @@ onBeforeMount(async () => {
           <slot name="entry-count" />
         </template>
       </filters-panel-section-filter-entry>
-      <infinite-loading v-if="!noInfiniteScroll" :identifier="infiniteId" :distance="200" @infinite="nextAggregate">
-        <template #spinner><span></span></template>
-        <template #complete><span></span></template>
+      <infinite-loading
+        v-if="!noInfiniteScroll"
+        :identifier="infiniteId"
+        :distance="200"
+        @infinite="nextAggregate"
+      >
+        <template #spinner>
+          <span />
+        </template>
+        <template #complete>
+          <span />
+        </template>
       </infinite-loading>
     </slot>
-    <filter-modal v-model="expand" v-model:sort="sort" :filter="filter" :hide-count="hideCount" :modal="modal" />
+    <filter-modal
+      v-model="expand"
+      v-model:sort="sort"
+      :filter="filter"
+      :hide-count="hideCount"
+      :modal="modal"
+    />
   </filters-panel-section-filter>
 </template>

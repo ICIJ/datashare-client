@@ -10,5 +10,9 @@ defineProps({
 </script>
 
 <template>
-  <button-icon variant="link" class="bg-action-subtle text-action-emphasis-subtle p-1" :hide-label="hideLabel" />
+  <button-icon
+    variant="link"
+    class="bg-action-subtle text-action-emphasis-subtle p-1"
+    :hide-label="hideLabel"
+  />
 </template>

@@ -38,7 +38,7 @@ const { isLoading, waitFor } = useWait()
 
 const view = 'searchSavedList'
 const perPage = useUrlParamWithStore('perPage', {
-  transform: (value) => Math.max(10, parseInt(value)),
+  transform: value => Math.max(10, parseInt(value)),
   get: () => appStore.getSettings(view, 'perPage'),
   set: (value) => {
     appStore.setSettings(view, { perPage: parseInt(value) })
@@ -60,12 +60,12 @@ const orderBy = useUrlParamsWithStore(['sort', 'order'], {
 
 const sort = computed({
   get: () => orderBy.value?.[0],
-  set: (value) => (orderBy.value = [value, order.value])
+  set: value => (orderBy.value = [value, order.value])
 })
 
 const order = computed({
   get: () => orderBy.value?.[1],
-  set: (value) => (orderBy.value = [sort.value, value])
+  set: value => (orderBy.value = [sort.value, value])
 })
 
 const orderDesc = computed(() => order.value === 'desc')
@@ -74,7 +74,7 @@ const isEmpty = computed(() => !isLoading.value && !events.value.length)
 
 const fetch = waitFor(async () => {
   const result = await api.getHistoryEvents('search', offset.value, perPage.value, sort.value, orderDesc.value)
-  events.value = result?.items?.map((item) => ({ ...item })) ?? []
+  events.value = result?.items?.map(item => ({ ...item })) ?? []
   pagination.value = result?.pagination
 })
 
@@ -100,14 +100,24 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
       :total-rows="pagination?.total ?? 0"
     >
       <template #breadcrumb>
-        <navigation-breadcrumb-link :to="searchRoute" :title="t('appSidebar.search')" />
-        <navigation-breadcrumb-link :to="{ name: 'search.saved.list' }" no-caret />
+        <navigation-breadcrumb-link
+          :to="searchRoute"
+          :title="t('appSidebar.search')"
+        />
+        <navigation-breadcrumb-link
+          :to="{ name: 'search.saved.list' }"
+          no-caret
+        />
       </template>
       <template #actions>
         <button-clear-saved-searches @click="showRemoveAllModal" />
       </template>
       <template #pagination="{ totalRows }">
-        <row-pagination-searches v-model="page" :total-rows="totalRows" :per-page="perPage" />
+        <row-pagination-searches
+          v-model="page"
+          :total-rows="totalRows"
+          :per-page="perPage"
+        />
       </template>
     </page-header>
     <page-container fluid>
@@ -120,7 +130,13 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
         :action-label="t('searchSavedList.emptyStateAction')"
         :action-to="searchRoute"
       />
-      <search-saved-entries v-else v-model:sort="sort" v-model:order="order" :events="events" @reload="fetch" />
+      <search-saved-entries
+        v-else
+        v-model:sort="sort"
+        v-model:order="order"
+        :events="events"
+        @reload="fetch"
+      />
     </page-container>
   </div>
 </template>

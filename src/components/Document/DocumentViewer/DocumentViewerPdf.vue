@@ -72,7 +72,7 @@ const classList = computed(() => {
  */
 function getPageHighlightIndex(value) {
   const match = highlightMatches.value[highlightIndex.value - 1]
-  const firstPageMatch = highlightMatches.value.findIndex((m) => m.page === value)
+  const firstPageMatch = highlightMatches.value.findIndex(m => m.page === value)
   return match && match.page === value ? highlightIndex.value - firstPageMatch : 0
 }
 
@@ -108,8 +108,15 @@ whenever(
     v-model="documentViewStore.embeddedPdf"
     :document="document"
   />
-  <div v-else class="document-viewer-pdf" :class="classList">
-    <div ref="toolbox" class="document-viewer-pdf__toolbox d-flex flex-column gap-3">
+  <div
+    v-else
+    class="document-viewer-pdf"
+    :class="classList"
+  >
+    <div
+      ref="toolbox"
+      class="document-viewer-pdf__toolbox d-flex flex-column gap-3"
+    >
       <div class="d-flex flex-md-nowrap flex-wrap align-items-lg-center gap-3">
         <document-local-search
           v-model="highlightText"
@@ -134,9 +141,17 @@ whenever(
           />
         </div>
       </div>
-      <document-global-search-terms :document="document" no-count @select="highlightText = $event" />
+      <document-global-search-terms
+        :document="document"
+        no-count
+        @select="highlightText = $event"
+      />
     </div>
-    <app-wait class="document-viewer-pdf__pages pt-3" :for="pdfLoaderId" spinner>
+    <app-wait
+      class="document-viewer-pdf__pages pt-3"
+      :for="pdfLoaderId"
+      spinner
+    >
       <template v-if="pdf">
         <document-viewer-pdf-page
           v-for="{ page, ...size } in sizes"

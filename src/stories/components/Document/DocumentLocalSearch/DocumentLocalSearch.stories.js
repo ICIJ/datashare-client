@@ -8,7 +8,7 @@ export default {
     modelValue: '',
     activeIndex: 0
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       DocumentLocalSearch
     },

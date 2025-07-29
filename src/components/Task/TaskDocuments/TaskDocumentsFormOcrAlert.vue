@@ -31,7 +31,7 @@ const { t } = useI18n()
 
 const languageName = computed(() => {
   if (props.isoLang) {
-    const name = find(props.textLanguages, (language) => language.iso6392 === props.isoLang)?.name
+    const name = find(props.textLanguages, language => language.iso6392 === props.isoLang)?.name
     return t(`filter.lang.${name}`)
   }
   return 'default'
@@ -61,7 +61,11 @@ function sameLanguage(nameOrIso6392) {
 </script>
 
 <template>
-  <app-overlay :show="!isReady" class="task-documents-form-ocr-alert" spinner-small>
+  <app-overlay
+    :show="!isReady"
+    class="task-documents-form-ocr-alert"
+    spinner-small
+  >
     <b-alert
       :model-value="!hasTesseract"
       lazy
@@ -78,7 +82,10 @@ function sameLanguage(nameOrIso6392) {
     >
       {{ t('taskDocumentsFormOcrAlert.isMissing', { language: languageName }) }}
       {{ t('taskDocumentsFormOcrAlert.useDefault') }}
-      <a href="https://icij.gitbook.io/datashare/local-mode/add-more-languages" target="_blank">
+      <a
+        href="https://icij.gitbook.io/datashare/local-mode/add-more-languages"
+        target="_blank"
+      >
         {{ t('taskDocumentsFormOcrAlert.installOcrLanguage', { availableLanguages: textLanguages.length }) }}
       </a>
     </b-alert>

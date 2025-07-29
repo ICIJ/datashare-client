@@ -15,7 +15,8 @@ if (import.meta.env.MODE !== 'test' && window) {
       // redirect the user to the login page
       if (error?.response?.status === 401) {
         vm.$router.push('login')
-      } else {
+      }
+      else {
         vm.$router.push({ name: 'error', state: { error } })
       }
     })

@@ -7,6 +7,7 @@ class UsernameIsYouPipeline extends IdentityPipeline {
     }
     return username
   }
+
   async isYou(username, auth) {
     return username === (await auth.getUsername())
   }

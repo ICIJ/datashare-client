@@ -11,7 +11,8 @@ class SanitizeHtml extends IdentityPipeline {
     try {
       const whiteList = { mark: ['style', 'class', 'title', 'data-offset'], p: true }
       return process(whiteList)
-    } catch (_) {
+    }
+    catch (_) {
       const whiteList = { mark: ['style', 'class', 'title', 'data-offset'] }
       return process(whiteList)
     }

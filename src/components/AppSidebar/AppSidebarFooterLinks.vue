@@ -20,11 +20,20 @@ const classList = computed(() => {
 </script>
 
 <template>
-  <hook name="app-sidebar-footer-links:before" :bind="{ compact, name }" />
-  <div class="app-sidebar-footer-links" :class="classList">
+  <hook
+    name="app-sidebar-footer-links:before"
+    :bind="{ compact, name }"
+  />
+  <div
+    class="app-sidebar-footer-links"
+    :class="classList"
+  >
     <slot v-bind="{ compact }" />
   </div>
-  <hook name="app-sidebar-footer-links:after" :bind="{ compact, name }" />
+  <hook
+    name="app-sidebar-footer-links:after"
+    :bind="{ compact, name }"
+  />
 </template>
 
 <style lang="scss" scoped>

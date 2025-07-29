@@ -26,7 +26,10 @@ defineProps({
     variant="link"
   >
     <template #button-content>
-      <phosphor-icon :name="PhDotsThree" weight="bold" />
+      <phosphor-icon
+        :name="PhDotsThree"
+        weight="bold"
+      />
     </template>
     <b-dropdown-item
       v-for="{ text, value } in options"
@@ -34,7 +37,11 @@ defineProps({
       class="d-flex gap-2"
       @click="$emit('select', value)"
     >
-      <phosphor-icon v-if="!compact" :name="PhFolder" class="flex-shrink-0" />
+      <phosphor-icon
+        v-if="!compact"
+        :name="PhFolder"
+        class="flex-shrink-0"
+      />
       {{ text }}
     </b-dropdown-item>
   </b-dropdown>

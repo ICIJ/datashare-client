@@ -7,5 +7,9 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <button-icon :label="t('documentUserCommentsListNewest.label')" :icon-left="PhCaretDown" variant="link" />
+  <button-icon
+    :label="t('documentUserCommentsListNewest.label')"
+    :icon-left="PhCaretDown"
+    variant="link"
+  />
 </template>

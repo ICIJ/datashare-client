@@ -65,7 +65,7 @@ describe('refWhenever', () => {
   it('should set triggered to false when value changes with a condition', async () => {
     const wrapper = factory(() => {
       const open = ref(true)
-      const closedOnce = refWhenever(open, (value) => !value)
+      const closedOnce = refWhenever(open, value => !value)
       return { open, closedOnce }
     })
 
@@ -78,7 +78,7 @@ describe('refWhenever', () => {
   it('should set triggered to false when value changes and stay false with a condition', async () => {
     const wrapper = factory(() => {
       const open = ref(true)
-      const closedOnce = refWhenever(open, (value) => !value)
+      const closedOnce = refWhenever(open, value => !value)
       return { open, closedOnce }
     })
 

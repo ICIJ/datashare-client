@@ -47,9 +47,9 @@ const perPage = ref({
   type: INPUT_RADIO,
   open: true,
   modelValue: useUrlParamWithStore('perPage', {
-    transform: (value) => Math.max(10, parseInt(value)),
+    transform: value => Math.max(10, parseInt(value)),
     get: () => appStore.getSettings(VIEW, 'perPage'),
-    set: (perPage) => appStore.setSettings(VIEW, { perPage })
+    set: perPage => appStore.setSettings(VIEW, { perPage })
   }),
   options: [
     {
@@ -73,7 +73,7 @@ const properties = ref({
   open: true,
   modelValue: computed({
     get: () => appStore.getSettings(VIEW, 'properties'),
-    set: (properties) => appStore.setSettings(VIEW, { properties })
+    set: properties => appStore.setSettings(VIEW, { properties })
   }),
   options: propertiesOptions
 })
@@ -84,7 +84,12 @@ function reset() {
 </script>
 
 <template>
-  <page-settings :hide="hide" :visible="visible" :placement="placement" @reset="reset">
+  <page-settings
+    :hide="hide"
+    :visible="visible"
+    :placement="placement"
+    @reset="reset"
+  >
     <page-settings-section
       v-model="sortBy.modelValue"
       v-model:open="sortBy.open"

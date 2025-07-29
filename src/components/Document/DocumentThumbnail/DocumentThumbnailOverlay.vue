@@ -15,7 +15,10 @@ defineProps({
 
 <template>
   <span class="document-thumbnail-overlay">
-    <phosphor-icon :name="icon" :size="size" />
+    <phosphor-icon
+      :name="icon"
+      :size="size"
+    />
   </span>
 </template>
 

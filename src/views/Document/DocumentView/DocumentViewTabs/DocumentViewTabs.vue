@@ -46,7 +46,10 @@ wheneverRouteActionShortcut('goToNextTab', () => router.push(nextTabRoute.value)
 
 <template>
   <tab-group-navigation nowrap>
-    <hook name="document-view-tabs:before" :bind="{ tab, tabs }" />
+    <hook
+      name="document-view-tabs:before"
+      :bind="{ tab, tabs }"
+    />
     <tab-group-navigation-entry
       v-for="entry in tabs"
       :key="entry.title"
@@ -57,6 +60,9 @@ wheneverRouteActionShortcut('goToNextTab', () => router.push(nextTabRoute.value)
     >
       {{ entry.title }}
     </tab-group-navigation-entry>
-    <hook name="document-view-tabs:after" :bind="{ tab, tabs }" />
+    <hook
+      name="document-view-tabs:after"
+      :bind="{ tab, tabs }"
+    />
   </tab-group-navigation>
 </template>
