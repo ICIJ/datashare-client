@@ -116,6 +116,7 @@ watch(toRef(route, 'query'), fetchBatchSearchQueries, { deep: true, immediate: t
 </script>
 
 <template>
+  <!-- eslint-disable vue/valid-v-slot -->
   <page-header>
     <template #entry-label(task.batch-search-queries.list)>
       <template v-if="batchSearch">
