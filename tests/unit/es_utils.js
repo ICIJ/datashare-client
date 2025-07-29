@@ -169,7 +169,7 @@ class IndexedDocument {
 
   withContentTranslated(content, sourceLanguage, targetLanguage) {
     const translation = { content, source_language: sourceLanguage, target_language: targetLanguage }
-    this.content_translated = [] || this.content_translated
+    this.content_translated ||= []
     this.content_translated.push(translation)
     return this
   }
