@@ -57,7 +57,12 @@ wheneverActionShortcut('findNextOccurrence', () => !findPreviousOccurrenceKey.va
 
 <template>
   <div class="document-local-search">
-    <document-local-search-input ref="input" v-model="modelValue" class="flex-grow-1" :loading="loading" />
+    <document-local-search-input
+      ref="input"
+      v-model="modelValue"
+      class="flex-grow-1"
+      :loading="loading"
+    />
     <document-local-search-nav
       :disabled-previous="disabledPrevious"
       :disabled-next="disabledNext"

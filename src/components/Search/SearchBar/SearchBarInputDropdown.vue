@@ -18,17 +18,30 @@
     variant="outline-tertiary"
   >
     <template #button-content>
-      <slot name="button-content" :dropdown="dropdown">
-        <span v-for="v in modelValues" :key="v">
+      <slot
+        name="button-content"
+        :dropdown="dropdown"
+      >
+        <span
+          v-for="v in modelValues"
+          :key="v"
+        >
           {{ t(optionsPathValue + v) }}
         </span>
       </slot>
       <template v-if="!noCaret">
-        <phosphor-icon :name="PhCaretDown" class="ms-2" />
+        <phosphor-icon
+          :name="PhCaretDown"
+          class="ms-2"
+        />
       </template>
     </template>
     <!-- @slot Area to insert content above the dropdown -->
-    <slot name="above" :dropdown="dropdown" :visible="visible"></slot>
+    <slot
+      name="above"
+      :dropdown="dropdown"
+      :visible="visible"
+    />
     <b-dropdown-item
       v-for="(option, index) in options"
       :key="index"
@@ -36,14 +49,24 @@
       :link-class="linkClass"
       class="search-bar-input-dropdown__option"
     >
-      <slot name="dropdown-item" v-bind="{ option, index, modelValues, hasValue, toggleValue, toggleUniqueValue }">
-        <span class="px-3 d-block" @click="toggleValue($event, option)">
+      <slot
+        name="dropdown-item"
+        v-bind="{ option, index, modelValues, hasValue, toggleValue, toggleUniqueValue }"
+      >
+        <span
+          class="px-3 d-block"
+          @click="toggleValue($event, option)"
+        >
           {{ t(optionsPathValue + option) }}
         </span>
       </slot>
     </b-dropdown-item>
     <!-- @slot Area to insert content bellow the dropdown -->
-    <slot name="bellow" :dropdown="dropdown" :visible="visible"></slot>
+    <slot
+      name="bellow"
+      :dropdown="dropdown"
+      :visible="visible"
+    />
   </b-dropdown>
 </template>
 
@@ -177,7 +200,8 @@ export default {
     selectValue(value) {
       if (this.multiple) {
         this.selectedValue = [...this.modelValues, value]
-      } else {
+      }
+      else {
         this.selectedValue = value
       }
     },
@@ -189,7 +213,8 @@ export default {
     setValue(value) {
       if (this.multiple) {
         this.selectedValue = [value]
-      } else {
+      }
+      else {
         this.selectedValue = value
       }
     },

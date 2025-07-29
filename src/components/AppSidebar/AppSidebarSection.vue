@@ -31,20 +31,46 @@ const classList = computed(() => {
 </script>
 
 <template>
-  <section class="app-sidebar-section" :class="classList">
-    <hook name="app-sidebar-section:before" :bind="{ title, to, compact, active }" />
-    <app-sidebar-section-toggler v-if="compact" :title="title" :icon="icon" :active="active" :to="to" />
+  <section
+    class="app-sidebar-section"
+    :class="classList"
+  >
+    <hook
+      name="app-sidebar-section:before"
+      :bind="{ title, to, compact, active }"
+    />
+    <app-sidebar-section-toggler
+      v-if="compact"
+      :title="title"
+      :icon="icon"
+      :active="active"
+      :to="to"
+    />
     <template v-else>
       <slot name="title">
-        <app-sidebar-section-title class="p-3" :title="title" :icon="icon" :compact="compact" />
+        <app-sidebar-section-title
+          class="p-3"
+          :title="title"
+          :icon="icon"
+          :compact="compact"
+        />
       </slot>
       <div class="app-sidebar-section__entries ms-4 px-3 pb-3">
-        <hook name="app-sidebar-section-entries:before" :bind="{ title, to, compact, active }" />
+        <hook
+          name="app-sidebar-section-entries:before"
+          :bind="{ title, to, compact, active }"
+        />
         <slot />
-        <hook name="app-sidebar-section-entries:after" :bind="{ title, to, compact, active }" />
+        <hook
+          name="app-sidebar-section-entries:after"
+          :bind="{ title, to, compact, active }"
+        />
       </div>
     </template>
-    <hook name="app-sidebar-section:after" :bind="{ title, to, compact, active }" />
+    <hook
+      name="app-sidebar-section:after"
+      :bind="{ title, to, compact, active }"
+    />
   </section>
 </template>
 

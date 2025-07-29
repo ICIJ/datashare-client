@@ -20,7 +20,7 @@ export const useKeyboardShortcuts = (magicKeysOptions = {}) => {
    * @type {import('vue').ComputedRef<string[]>}
    */
   const matchedRoutes = computed(() => {
-    return compact(route.matched.map((match) => match.name))
+    return compact(route.matched.map(match => match.name))
   })
 
   /**
@@ -29,7 +29,7 @@ export const useKeyboardShortcuts = (magicKeysOptions = {}) => {
    */
   const routeShortcuts = computed(() => {
     return allShortcuts.filter(({ route = null }) => {
-      return !route || castArray(route).some((name) => matchedRoutes.value.includes(name))
+      return !route || castArray(route).some(name => matchedRoutes.value.includes(name))
     })
   })
 
@@ -122,7 +122,7 @@ export const useKeyboardShortcuts = (magicKeysOptions = {}) => {
    * @returns {Function|undefined} The unwatch function if a key exists; otherwise, undefined.
    */
   function wheneverRouteActionShortcut(action, callback = noop, options = {}) {
-    return watchRouteActionShortcut(action, (pressed) => pressed && callback(), options)
+    return watchRouteActionShortcut(action, pressed => pressed && callback(), options)
   }
 
   /**
@@ -134,7 +134,7 @@ export const useKeyboardShortcuts = (magicKeysOptions = {}) => {
    * @returns {Function|undefined} The unwatch function if a key exists; otherwise, undefined.
    */
   function wheneverActionShortcut(action, callback = noop, options = {}) {
-    return watchActionShortcut(action, (pressed) => pressed && callback(), options)
+    return watchActionShortcut(action, pressed => pressed && callback(), options)
   }
 
   return {

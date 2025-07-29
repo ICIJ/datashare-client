@@ -73,27 +73,52 @@ const classList = computed(() => {
 </script>
 
 <template>
-  <footer class="app-sidebar-footer" :class="classList">
-    <hook name="app-sidebar-footer:before" :bind="{ compact }" />
+  <footer
+    class="app-sidebar-footer"
+    :class="classList"
+  >
+    <hook
+      name="app-sidebar-footer:before"
+      :bind="{ compact }"
+    />
     <!-- First links row -->
-    <app-sidebar-footer-links name="first" :compact="compact">
-      <app-sidebar-footer-links-entry name="logo" :compact="compact">
+    <app-sidebar-footer-links
+      name="first"
+      :compact="compact"
+    >
+      <app-sidebar-footer-links-entry
+        name="logo"
+        :compact="compact"
+      >
         <app-sidebar-footer-logo :compact="compact">
           <template #version>
             <slot name="version" />
           </template>
         </app-sidebar-footer-logo>
       </app-sidebar-footer-links-entry>
-      <app-sidebar-footer-links-entry v-if="!noKeyboardShortcuts && !compact" name="keyboard-shortcuts">
+      <app-sidebar-footer-links-entry
+        v-if="!noKeyboardShortcuts && !compact"
+        name="keyboard-shortcuts"
+      >
         <app-sidebar-footer-keyboard-shortcuts />
       </app-sidebar-footer-links-entry>
     </app-sidebar-footer-links>
     <!-- Second links row -->
-    <app-sidebar-footer-links name="second" :compact="compact">
-      <app-sidebar-footer-links-entry v-if="!noKeyboardShortcuts && compact" name="keyboard-shortcuts">
+    <app-sidebar-footer-links
+      name="second"
+      :compact="compact"
+    >
+      <app-sidebar-footer-links-entry
+        v-if="!noKeyboardShortcuts && compact"
+        name="keyboard-shortcuts"
+      >
         <app-sidebar-footer-keyboard-shortcuts />
       </app-sidebar-footer-links-entry>
-      <app-sidebar-footer-links-entry v-if="!noSettings" :compact="compact" name="settings">
+      <app-sidebar-footer-links-entry
+        v-if="!noSettings"
+        :compact="compact"
+        name="settings"
+      >
         <button-icon
           :to="{ name: 'settings.appearance' }"
           hide-label
@@ -104,7 +129,11 @@ const classList = computed(() => {
           :label="t('appSidebarFooter.settings')"
         />
       </app-sidebar-footer-links-entry>
-      <app-sidebar-footer-links-entry v-if="!noHelp" :compact="compact" name="help">
+      <app-sidebar-footer-links-entry
+        v-if="!noHelp"
+        :compact="compact"
+        name="help"
+      >
         <button-icon
           :href="helpLink"
           target="_blank"
@@ -116,7 +145,11 @@ const classList = computed(() => {
           :label="t('appSidebarFooter.help')"
         />
       </app-sidebar-footer-links-entry>
-      <app-sidebar-footer-links-entry v-if="!noRemoveAll" :compact="compact" name="remove-all">
+      <app-sidebar-footer-links-entry
+        v-if="!noRemoveAll"
+        :compact="compact"
+        name="remove-all"
+      >
         <button-icon
           hide-label
           variant="link"
@@ -127,7 +160,11 @@ const classList = computed(() => {
           @click="confirmRemoveAll"
         />
       </app-sidebar-footer-links-entry>
-      <app-sidebar-footer-links-entry v-if="!noSignOut" :compact="compact" name="sign-out">
+      <app-sidebar-footer-links-entry
+        v-if="!noSignOut"
+        :compact="compact"
+        name="sign-out"
+      >
         <button-icon
           :href="signOutLink"
           hide-label
@@ -139,7 +176,10 @@ const classList = computed(() => {
         />
       </app-sidebar-footer-links-entry>
     </app-sidebar-footer-links>
-    <hook name="app-sidebar-footer:after" :bind="{ compact }" />
+    <hook
+      name="app-sidebar-footer:after"
+      :bind="{ compact }"
+    />
   </footer>
 </template>
 

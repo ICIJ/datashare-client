@@ -109,7 +109,8 @@ async function fetchThumbnail() {
       thumbnail.value = await fetchImageDimensionsWithAuth(url)
       emit('loaded')
     }
-  } catch (_) {
+  }
+  catch (_) {
     errored.value = true
     emit('errored')
   }
@@ -135,7 +136,12 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <div ref="element" class="document-thumbnail" :class="classList" :style="style">
+  <div
+    ref="element"
+    class="document-thumbnail"
+    :class="classList"
+    :style="style"
+  >
     <document-thumbnail-image
       v-if="showImage"
       class="document-thumbnail__image"

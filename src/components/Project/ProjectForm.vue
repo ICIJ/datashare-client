@@ -91,7 +91,13 @@ const submitLabel = computed(() => t('projectForm.submit'))
 </script>
 
 <template>
-  <form-creation :valid="valid" :reset-label="resetLabel" :submit-label="submitLabel" @reset="reset" @submit="submit">
+  <form-creation
+    :valid="valid"
+    :reset-label="resetLabel"
+    :submit-label="submitLabel"
+    @reset="reset"
+    @submit="submit"
+  >
     <div>
       <form-fieldset
         class="project-form__group project-form__group--label"
@@ -151,7 +157,10 @@ const submitLabel = computed(() => t('projectForm.submit'))
         :disabled="disabled"
         :validated="isPresent(form.sourcePath)"
       >
-        <form-control-path v-model="form.sourcePath" class="p-0" />
+        <form-control-path
+          v-model="form.sourcePath"
+          class="p-0"
+        />
       </form-fieldset>
       <form-fieldset
         class="project-form__group project-form__group--logo-url"

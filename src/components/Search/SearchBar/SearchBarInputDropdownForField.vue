@@ -47,7 +47,7 @@ export default {
     options: {
       type: Array,
       default() {
-        return settings.searchFields.map((field) => field.key)
+        return settings.searchFields.map(field => field.key)
       }
     },
     /**

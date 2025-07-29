@@ -81,7 +81,10 @@ const isVisible = computed(() => props.modal || !collapse.value)
 </script>
 
 <template>
-  <div class="filters-panel-section-filter" :class="classList">
+  <div
+    class="filters-panel-section-filter"
+    :class="classList"
+  >
     <filters-panel-section-filter-title
       v-if="!modal"
       v-model:collapse="collapse"
@@ -109,8 +112,14 @@ const isVisible = computed(() => props.modal || !collapse.value)
       </template>
     </filters-panel-section-filter-title>
     <b-collapse :model-value="isVisible">
-      <div class="filters-panel-section-filter__content" :class="contentClass">
-        <slot name="search" v-bind="{ search, searchPlaceholder }">
+      <div
+        class="filters-panel-section-filter__content"
+        :class="contentClass"
+      >
+        <slot
+          name="search"
+          v-bind="{ search, searchPlaceholder }"
+        >
           <form-control-search
             v-if="!hideSearch"
             v-model="search"

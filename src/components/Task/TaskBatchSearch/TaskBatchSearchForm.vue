@@ -26,8 +26,8 @@ const formSearchStore = useSearchStore.disposable()
 formSearchStore.setIndices(searchSearch.indices)
 
 const selectedProjects = computed({
-  get: () => formSearchStore.indices.map((name) => ({ name })),
-  set: (projects) => formSearchStore.setIndices(projects.map(property('name')))
+  get: () => formSearchStore.indices.map(name => ({ name })),
+  set: projects => formSearchStore.setIndices(projects.map(property('name')))
 })
 
 const initialValues = {
@@ -94,7 +94,8 @@ async function submit() {
     await createBatchSearch()
     await router.push({ name: 'task.batch-search.list' })
     toast.success(t('task.batch-search.form.submitSuccess'))
-  } catch (error) {
+  }
+  catch (error) {
     toast.error(t('task.batch-search.form.submitError'))
   }
 }

@@ -28,7 +28,8 @@ const submit = waitFor(async (project) => {
     core.setProject(project)
     notifySucceed(OPERATION.UPDATE)
     return redirectToProject(project)
-  } catch (error) {
+  }
+  catch (error) {
     notifyFailed(error, OPERATION.UPDATE)
   }
 })
@@ -51,8 +52,17 @@ function redirectToProject({ name }) {
 
 <template>
   <div class="project-view-edit">
-    <app-overlay rounded="sm" :show="isLoading">
-      <project-form edit card :disabled="isLoading" :values="project" @submit="submit">
+    <app-overlay
+      rounded="sm"
+      :show="isLoading"
+    >
+      <project-form
+        edit
+        card
+        :disabled="isLoading"
+        :values="project"
+        @submit="submit"
+      >
         <template #submit-text>
           {{ t('projectViewEdit.submit') }}
         </template>

@@ -13,7 +13,7 @@ vi.mock('lodash', async (importOriginal) => {
   const { default: actual } = await importOriginal()
   return {
     ...actual,
-    throttle: (cb) => cb
+    throttle: cb => cb
   }
 })
 
@@ -74,8 +74,8 @@ describe('DocumentContent.vue', () => {
 
   describe('the extracted text content', () => {
     it('should sanitize the HTML in the extracted text', async () => {
-      const content =
-        'this is a <span>content</span> with some <img src="this.is.a.source" alt="alt" title="title" />images and <a href="this.is.an.href" target="_blank">links</a>'
+      const content
+        = 'this is a <span>content</span> with some <img src="this.is.a.source" alt="alt" title="title" />images and <a href="this.is.an.href" target="_blank">links</a>'
       const { document } = await mockDocumentContentSlice(content)
       const { plugins } = core
       const props = { document }
@@ -99,8 +99,8 @@ describe('DocumentContent.vue', () => {
     })
 
     it('should display the text right to left for arabic', async () => {
-      const content =
-        'المنال ويتلذذ بالآلام، الألم هو الألم ولكن نتيجة لظروف ما قد تكمن السعاده فيما نتحمله من كد وأسي.'
+      const content
+        = 'المنال ويتلذذ بالآلام، الألم هو الألم ولكن نتيجة لظروف ما قد تكمن السعاده فيما نتحمله من كد وأسي.'
       const { document } = await mockDocumentContentSlice(content, {
         language: 'ARABIC'
       })

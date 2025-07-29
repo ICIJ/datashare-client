@@ -50,7 +50,10 @@
         :shorter-label="shorterLabels"
         @click="emit('action', DOCUMENT_USER_ACTIONS.FOLDERS)"
       />
-      <hook name="document-user-actions:after" :bind="{ shorterLabels }" />
+      <hook
+        name="document-user-actions:after"
+        :bind="{ shorterLabels }"
+      />
     </form-actions>
   </div>
 </template>

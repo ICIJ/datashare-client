@@ -1,16 +1,32 @@
 <template>
   <div class="widget widget--recommended-by">
     <div class="widget__header d-flex align-items-center">
-      <phosphor-icon :name="PhUsersThree" class="me-2" size="2em" />
-      <h3 class="m-0 p-0 widget__header__title">{{ t('widget.recommendedBy.title') }}</h3>
+      <phosphor-icon
+        :name="PhUsersThree"
+        class="me-2"
+        size="2em"
+      />
+      <h3 class="m-0 p-0 widget__header__title">
+        {{ t('widget.recommendedBy.title') }}
+      </h3>
     </div>
-    <app-wait :for="loaderId" transition="fade">
+    <app-wait
+      :for="loaderId"
+      transition="fade"
+    >
       <template #waiting>
         <div class="widget__spinner text-center p-4">
-          <phosphor-icon :name="PhCircleNotch" spin size="2em" />
+          <phosphor-icon
+            :name="PhCircleNotch"
+            spin
+            size="2em"
+          />
         </div>
       </template>
-      <div class="list-group widget__list" :class="{ 'list-group-flush': widget.card }">
+      <div
+        class="list-group widget__list"
+        :class="{ 'list-group-flush': widget.card }"
+      >
         <document-card
           v-for="({ document, user, creationDate }, i) in items"
           :key="i"
@@ -23,15 +39,30 @@
           <template #actions>
             <div class="d-flex flew-nowrap gap-3">
               <display-user :value="user.id" />
-              <display-datetime :value="creationDate" format="fromNow" class="text-secondary-emphasis" />
+              <display-datetime
+                :value="creationDate"
+                format="fromNow"
+                class="text-secondary-emphasis"
+              />
             </div>
           </template>
         </document-card>
-        <infinite-loading v-if="useInfiniteScroll" :identifier="infiniteScrollId" @infinite="loadNextPage">
-          <template #spinner><span></span></template>
-          <template #complete><span></span></template>
+        <infinite-loading
+          v-if="useInfiniteScroll"
+          :identifier="infiniteScrollId"
+          @infinite="loadNextPage"
+        >
+          <template #spinner>
+            <span />
+          </template>
+          <template #complete>
+            <span />
+          </template>
         </infinite-loading>
-        <div v-if="reachedTheEnd" class="text-muted p-3 text-center">
+        <div
+          v-if="reachedTheEnd"
+          class="text-muted p-3 text-center"
+        >
           <span v-if="items.length">•</span>
           <span v-else>{{ t('widget.noRecommendations') }}</span>
         </div>
@@ -125,7 +156,7 @@ async function getPageHits(page) {
 }
 
 function getPageHitsBody(page) {
-  const values = page.map((recommendation) => recommendation.document.id)
+  const values = page.map(recommendation => recommendation.document.id)
   const excludes = ['content', 'content_translated']
   return bodybuilder().size(values.length).rawOption('_source', { excludes }).query('ids', { values }).build()
 }

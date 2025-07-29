@@ -22,7 +22,10 @@ const embed = defineModel('embed', { type: Boolean, default: false })
   >
     <template #button-content>
       <slot name="button-content">
-        <phosphor-icon :name="PhDotsThreeOutlineVertical" fill />
+        <phosphor-icon
+          :name="PhDotsThreeOutlineVertical"
+          fill
+        />
       </slot>
     </template>
     <document-viewer-pdf-dropdown-rotation-clockwise v-model="rotation" />

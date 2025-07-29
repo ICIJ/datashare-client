@@ -8,7 +8,7 @@ export default {
     index: 1,
     collapse: false
   },
-  render: (args) => ({
+  render: args => ({
     setup: () => ({ args }),
     components: {
       FormStepHeading

@@ -47,9 +47,18 @@ const classList = computed(() => {
 </script>
 
 <template>
-  <div class="app-sidebar-section-entry d-flex align-entrys-center flex-truncate" :class="classList">
-    <router-link :to="to" class="app-sidebar-section-entry__link text-truncate d-flex flex-grow-1">
-      <phosphor-icon class="app-sidebar-section-entry__link__icon me-2" :name="icon" />
+  <div
+    class="app-sidebar-section-entry d-flex align-entrys-center flex-truncate"
+    :class="classList"
+  >
+    <router-link
+      :to="to"
+      class="app-sidebar-section-entry__link text-truncate d-flex flex-grow-1"
+    >
+      <phosphor-icon
+        class="app-sidebar-section-entry__link__icon me-2"
+        :name="icon"
+      />
       <slot>{{ title }}</slot>
     </router-link>
     <router-link
@@ -59,7 +68,11 @@ const classList = computed(() => {
       class="app-sidebar-section-entry__action ms-2 d-flex"
       :title="actionTitle"
     >
-      <phosphor-icon class="app-sidebar-section-entry__action__icon" hover-weight="bold" :name="actionIcon" />
+      <phosphor-icon
+        class="app-sidebar-section-entry__action__icon"
+        hover-weight="bold"
+        :name="actionIcon"
+      />
       <span class="visually-hidden">{{ actionTitle }}</span>
     </router-link>
   </div>

@@ -33,7 +33,12 @@ function getBatchDownloadRecord(item, key, defaultValue) {
 </script>
 
 <template>
-  <task-page :task-filter="[TASK_NAME.BATCH_DOWNLOAD]" page-name="batch-download" hide-clear-done hide-stop-pending>
+  <task-page
+    :task-filter="[TASK_NAME.BATCH_DOWNLOAD]"
+    page-name="batch-download"
+    hide-clear-done
+    hide-stop-pending
+  >
     <template #empty>
       <empty-state
         image-max-width="235px"
@@ -48,7 +53,7 @@ function getBatchDownloadRecord(item, key, defaultValue) {
         :per-page="perPage"
         :total-rows="totalRows"
         :model-value="page"
-        @update:modelValue="setPage"
+        @update:model-value="setPage"
       />
     </template>
     <template #default="{ tasks, sort, order, updateSort, updateOrder, refresh, empty, loading }">
@@ -76,7 +81,11 @@ function getBatchDownloadRecord(item, key, defaultValue) {
           <display-datetime-from-now :value="item.createdAt" />
         </template>
         <template #cell(size)="{ item }">
-          <display-content-length v-if="hasZipSize(item)" :value="item.result?.value?.size" class="text-nowrap" />
+          <display-content-length
+            v-if="hasZipSize(item)"
+            :value="item.result?.value?.size"
+            class="text-nowrap"
+          />
         </template>
         <template #cell(progress)="{ item }">
           <display-progress :value="item.progress" />
@@ -93,7 +102,11 @@ function getBatchDownloadRecord(item, key, defaultValue) {
           />
         </template>
         <template #row-details="{ item }">
-          <search-breadcrumb-uri :uri="getBatchDownloadRecord(item).uri" no-label class="ps-5" />
+          <search-breadcrumb-uri
+            :uri="getBatchDownloadRecord(item).uri"
+            no-label
+            class="ps-5"
+          />
         </template>
       </page-table-generic>
     </template>

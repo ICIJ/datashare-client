@@ -25,7 +25,14 @@ defineProps({
 </script>
 
 <template>
-  <button-icon :icon-right="icon" :href="href" :to="to" :target="target" class="px-4 py-2" :variant="variant">
+  <button-icon
+    :icon-right="icon"
+    :href="href"
+    :to="to"
+    :target="target"
+    class="px-4 py-2"
+    :variant="variant"
+  >
     <slot>
       {{ label }}
     </slot>

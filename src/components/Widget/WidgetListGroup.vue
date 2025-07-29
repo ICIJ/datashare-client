@@ -1,9 +1,19 @@
 <template>
   <div class="widget widget--list-group">
-    <div v-if="widget.title" class="widget__header" :class="{ 'card-body': widget.card }">
-      <h3 class="m-0 h" v-html="widget.title"></h3>
+    <div
+      v-if="widget.title"
+      class="widget__header"
+      :class="{ 'card-body': widget.card }"
+    >
+      <h3
+        class="m-0 h"
+        v-html="widget.title"
+      />
     </div>
-    <div class="list-group widget__list" :class="{ 'list-group-flush': widget.card }">
+    <div
+      class="list-group widget__list"
+      :class="{ 'list-group-flush': widget.card }"
+    >
       <component
         :is="itemComponent(item)"
         v-for="(item, i) in items"
@@ -16,7 +26,10 @@
         <div class="widget__list__item__label">
           {{ item.label }}
         </div>
-        <div v-if="item.description" class="widget__list__item__description">
+        <div
+          v-if="item.description"
+          class="widget__list__item__description"
+        >
           {{ item.description }}
         </div>
       </component>

@@ -70,12 +70,24 @@ const promptProjectDeletion = async () => {
 
 <template>
   <section class="project-jumbotron">
-    <hook name="project-jumbotron:before" :bind="{ project }" />
+    <hook
+      name="project-jumbotron:before"
+      :bind="{ project }"
+    />
     <div class="project-jumbotron__header d-md-flex align-items-center justify-content-between flex-truncate gap-1">
       <h3 class="project-jumbotron__header__title mb-3 mb-md-0">
-        <hook name="project-jumbotron-label:before" :bind="{ project }" />
-        <project-label :project="project" :hide-thumbnail="!compact" />
-        <hook name="project-jumbotron-label:after" :bind="{ project }" />
+        <hook
+          name="project-jumbotron-label:before"
+          :bind="{ project }"
+        />
+        <project-label
+          :project="project"
+          :hide-thumbnail="!compact"
+        />
+        <hook
+          name="project-jumbotron-label:after"
+          :bind="{ project }"
+        />
       </h3>
       <mode-local-only>
         <button-row-action-delete
@@ -97,30 +109,62 @@ const promptProjectDeletion = async () => {
       <project-jumbotron-pin v-model:pinned="pinned" />
     </div>
     <div class="project-jumbotron__content d-flex gap-3 align-items-start">
-      <hook name="project-jumbotron-content:before" :bind="{ project }" />
-      <project-thumbnail v-if="!compact" :project="project" width="100px" rounded class="flex-shrink-0" />
+      <hook
+        name="project-jumbotron-content:before"
+        :bind="{ project }"
+      />
+      <project-thumbnail
+        v-if="!compact"
+        :project="project"
+        width="100px"
+        rounded
+        class="flex-shrink-0"
+      />
       <div class="d-flex flex-column gap-3 align-self-stretch">
-        <p v-if="project.description" class="project-jumbotron__content__description m-0">{{ project.description }}</p>
+        <p
+          v-if="project.description"
+          class="project-jumbotron__content__description m-0"
+        >
+          {{ project.description }}
+        </p>
         <footer class="project-jumbotron__content__footer d-md-flex gap-3 mt-auto">
-          <hook name="project-jumbotron-content-footer:before" :bind="{ project }" />
+          <hook
+            name="project-jumbotron-content-footer:before"
+            :bind="{ project }"
+          />
           <div class="d-flex flex-wrap gap-3 text-body-secondary">
-            <span v-if="creationDate" class="text-nowrap">
+            <span
+              v-if="creationDate"
+              class="text-nowrap"
+            >
               <phosphor-icon :name="PhCalendarBlank" />
               {{ t('projectJumbotron.creationDate') }}
               <display-datetime :value="creationDate" />
             </span>
-            <span v-if="updateDate" class="text-nowrap">
+            <span
+              v-if="updateDate"
+              class="text-nowrap"
+            >
               <phosphor-icon :name="PhCalendarCheck" />
               {{ t('projectJumbotron.updateDate') }}
               <display-datetime :value="updateDate" />
             </span>
           </div>
-          <hook name="project-jumbotron-content-footer:after" :bind="{ project }" />
+          <hook
+            name="project-jumbotron-content-footer:after"
+            :bind="{ project }"
+          />
         </footer>
       </div>
-      <hook name="project-jumbotron-content:after" :bind="{ project }" />
+      <hook
+        name="project-jumbotron-content:after"
+        :bind="{ project }"
+      />
     </div>
-    <hook name="project-jumbotron:after" :bind="{ project }" />
+    <hook
+      name="project-jumbotron:after"
+      :bind="{ project }"
+    />
   </section>
 </template>
 

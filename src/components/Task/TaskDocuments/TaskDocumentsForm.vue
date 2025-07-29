@@ -81,12 +81,13 @@ function dispatchExtract() {
 }
 
 const successMessage = computed(() => t(`task.documents.form.success`))
-const errorMessage = (error) => t(`task.documents.form.error`, { error })
+const errorMessage = error => t(`task.documents.form.error`, { error })
 
 async function submit() {
   try {
     await toastedPromise(dispatchExtract(), { successMessage, errorMessage })
-  } catch (error) {}
+  }
+  catch (error) {}
   await core.router.push({ name: 'task.documents.list' })
 }
 
@@ -107,7 +108,8 @@ async function retrieveLanguages() {
     const [tL, ocrL] = await Promise.all([core.api.textLanguages(), core.api.ocrLanguages()])
     textLanguages.value = castArray(tL)
     ocrLanguages.value = castArray(ocrL)
-  } catch (e) {
+  }
+  catch (e) {
     hasTesseract.value = e.response?.status !== 503
     if (hasTesseract.value) {
       throw e
@@ -132,12 +134,27 @@ watch(
 </script>
 
 <template>
-  <form-creation class="task-documents-form" :submit-label="submitLabel" @reset="reset" @submit="submit">
-    <form-fieldset-i18n name="project-selector" translation-key="task.documents.form.projectSelector">
+  <form-creation
+    class="task-documents-form"
+    :submit-label="submitLabel"
+    @reset="reset"
+    @submit="submit"
+  >
+    <form-fieldset-i18n
+      name="project-selector"
+      translation-key="task.documents.form.projectSelector"
+    >
       <search-bar-input-dropdown-for-projects v-model="selectedProject" />
     </form-fieldset-i18n>
-    <form-fieldset-i18n name="source-path" translation-key="task.documents.form.path">
-      <form-control-path v-model="path" :path="sourcePath" hide-folder-icon />
+    <form-fieldset-i18n
+      name="source-path"
+      translation-key="task.documents.form.path"
+    >
+      <form-control-path
+        v-model="path"
+        :path="sourcePath"
+        hide-folder-icon
+      />
     </form-fieldset-i18n>
     <form-fieldset-i18n
       name="extracting-language"
@@ -174,7 +191,12 @@ watch(
       label-class="pt-md-0"
       description-class="pt-md-0"
     >
-      <b-form-radio-group v-model="skipIndexedDocuments" name="skip-indexed-documents" :options="skipOptions" stacked />
+      <b-form-radio-group
+        v-model="skipIndexedDocuments"
+        name="skip-indexed-documents"
+        :options="skipOptions"
+        stacked
+      />
     </form-fieldset-i18n>
   </form-creation>
 </template>

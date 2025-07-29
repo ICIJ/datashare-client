@@ -22,8 +22,14 @@ const showHeader = computed(() => props.title || slots.title || slots.close)
 </script>
 
 <template>
-  <div v-if="showHeader" class="app-popover-header d-flex align-items-start">
-    <component :is="tag" class="app-popover-header__title flex-grow-1">
+  <div
+    v-if="showHeader"
+    class="app-popover-header d-flex align-items-start"
+  >
+    <component
+      :is="tag"
+      class="app-popover-header__title flex-grow-1"
+    >
       <slot name="title">
         {{ title }}
       </slot>

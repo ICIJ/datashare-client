@@ -88,8 +88,16 @@ const labelColsLg = computed(() => {
   >
     <template #label>
       <div class="form-fieldset__label text-body-emphasis">
-        <phosphor-icon v-if="icon" :name="icon" :variant="iconVariant" class="me-2" />
-        <slot name="label" v-bind="{ labelFor }">
+        <phosphor-icon
+          v-if="icon"
+          :name="icon"
+          :variant="iconVariant"
+          class="me-2"
+        />
+        <slot
+          name="label"
+          v-bind="{ labelFor }"
+        >
           {{ label }}
         </slot>
       </div>
@@ -99,7 +107,10 @@ const labelColsLg = computed(() => {
         <div class="form-fieldset__content">
           <slot v-bind="{ compact }" />
         </div>
-        <div class="form-fieldset__description text-secondary-emphasis" :class="descriptionClass">
+        <div
+          class="form-fieldset__description text-secondary-emphasis"
+          :class="descriptionClass"
+        >
           {{ description }}
         </div>
       </div>

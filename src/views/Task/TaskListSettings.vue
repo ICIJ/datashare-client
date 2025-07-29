@@ -30,7 +30,13 @@ const title = computed(() => t(`task.settingTitle`, { page: t(pageTitleKey.value
 </script>
 
 <template>
-  <page-settings :title="title" :hide="hide" :visible="visible" :placement="placement" @reset="reset">
+  <page-settings
+    :title="title"
+    :hide="hide"
+    :visible="visible"
+    :placement="placement"
+    @reset="reset"
+  >
     <page-settings-section
       v-model="sortBy.modelValue"
       v-model:open="sortBy.open"

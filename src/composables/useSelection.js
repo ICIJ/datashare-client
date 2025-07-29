@@ -34,7 +34,8 @@ export function useSelection(initialSelection, initialAll = []) {
   const toggleSelection = (value, isSelected) => {
     if (isSelected) {
       addToSelection(value)
-    } else {
+    }
+    else {
       removeFromSelection(value)
     }
   }

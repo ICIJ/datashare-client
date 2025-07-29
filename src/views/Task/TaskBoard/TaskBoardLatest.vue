@@ -31,7 +31,7 @@ const allFields = items.map((item) => {
 })
 
 // Get all fields except the author field if we are on the server
-const fields = computed(() => allFields.filter((p) => isServer.value || p.name !== 'author'))
+const fields = computed(() => allFields.filter(p => isServer.value || p.name !== 'author'))
 
 const more = 3
 
@@ -125,13 +125,20 @@ function getTaskIcon(item) {
 </script>
 
 <template>
-  <b-card-body no-border class="task-all__latest no-border">
+  <b-card-body
+    no-border
+    class="task-all__latest no-border"
+  >
     <b-card-title class="pb-4">
       <phosphor-icon :name="PhRocketLaunch" />
       {{ t('task.task-board.latest.title') }}
     </b-card-title>
     <div class="d-flex flex-column justify-content-center">
-      <page-table-generic :items="tasks" :fields="fields" :loading="isLoading">
+      <page-table-generic
+        :items="tasks"
+        :fields="fields"
+        :loading="isLoading"
+      >
         <template #cell(taskType)="{ item }">
           <button-icon
             :icon-left="getTaskIcon(item)"
@@ -144,10 +151,16 @@ function getTaskIcon(item) {
           />
         </template>
         <template #cell(state)="{ item }">
-          <display-status size="sm" :value="item.state" />
+          <display-status
+            size="sm"
+            :value="item.state"
+          />
         </template>
         <template #cell(name)="{ item }">
-          <router-link-batch-download v-if="item.name === TASK_NAME.BATCH_DOWNLOAD" :item="item" />
+          <router-link-batch-download
+            v-if="item.name === TASK_NAME.BATCH_DOWNLOAD"
+            :item="item"
+          />
           <router-link-batch-search
             v-else-if="item.name === TASK_NAME.BATCH_SEARCH || item.name === TASK_NAME.BATCH_SEARCH_PROXY"
             :item="item"
@@ -158,7 +171,10 @@ function getTaskIcon(item) {
           <display-datetime-from-now :value="item.createdAt" />
         </template>
         <template #cell(author)="{ item }">
-          <display-user :value="getAuthor(item)" class="text-nowrap" />
+          <display-user
+            :value="getAuthor(item)"
+            class="text-nowrap"
+          />
         </template>
         <template #cell(projects)="{ item }">
           <display-project-list :values="getProjects(item)" />
@@ -167,7 +183,11 @@ function getTaskIcon(item) {
           <display-progress :value="item.progress" />
         </template>
       </page-table-generic>
-      <b-button v-if="!hideShowMore" variant="outline-secondary mx-auto mb-3" @click="showMore">
+      <b-button
+        v-if="!hideShowMore"
+        variant="outline-secondary mx-auto mb-3"
+        @click="showMore"
+      >
         {{ t('task.task-board.latest.showMore') }}
       </b-button>
     </div>

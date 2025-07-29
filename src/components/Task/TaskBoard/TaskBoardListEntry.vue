@@ -22,14 +22,27 @@ const compact = computed(() => {
 </script>
 
 <template>
-  <b-card no-body class="task-board-list-entry border-0 p-4">
+  <b-card
+    no-body
+    class="task-board-list-entry border-0 p-4"
+  >
     <b-row class="d-flex flex-grow-1 g-3">
       <b-col md="2">
-        <router-link :to="listLink" class="d-block">
-          <phosphor-icon :name="icon" size="100%" class="task-board-list-entry__icon" />
+        <router-link
+          :to="listLink"
+          class="d-block"
+        >
+          <phosphor-icon
+            :name="icon"
+            size="100%"
+            class="task-board-list-entry__icon"
+          />
         </router-link>
       </b-col>
-      <b-col md="10" class="d-flex">
+      <b-col
+        md="10"
+        class="d-flex"
+      >
         <b-card-body class="d-flex flex-column p-0">
           <template #title>
             <h3 class="h4">
@@ -39,12 +52,18 @@ const compact = computed(() => {
             </h3>
           </template>
           <b-card-text class="d-flex flex-column flex-grow-1">
-            <slot name="description" v-bind="{ description }">
+            <slot
+              name="description"
+              v-bind="{ description }"
+            >
               <p>{{ description }}</p>
             </slot>
           </b-card-text>
           <b-card-text class="d-flex justify-content-end gap-2 flex-md-row row-wrap">
-            <slot name="actions" v-bind="{ listLink, actionLink }">
+            <slot
+              name="actions"
+              v-bind="{ listLink, actionLink }"
+            >
               <button-icon
                 v-if="actionLink"
                 :hide-label="compact"

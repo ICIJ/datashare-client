@@ -27,11 +27,21 @@ function open() {
 </script>
 
 <template>
-  <div class="form-step-heading d-flex align-items-center gap-3" @click="open">
-    <form-step-heading-index :index="index" :collapse="collapse" />
+  <div
+    class="form-step-heading d-flex align-items-center gap-3"
+    @click="open"
+  >
+    <form-step-heading-index
+      :index="index"
+      :collapse="collapse"
+    />
     <form-step-heading-title :title="title">
       <slot name="title" />
     </form-step-heading-title>
-    <form-step-heading-toggler :collapse="collapse" class="ms-auto" @click.stop="toggleCollapse" />
+    <form-step-heading-toggler
+      :collapse="collapse"
+      class="ms-auto"
+      @click.stop="toggleCollapse"
+    />
   </div>
 </template>

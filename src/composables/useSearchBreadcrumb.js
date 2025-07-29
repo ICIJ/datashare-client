@@ -19,7 +19,7 @@ export function useSearchBreadcrumb() {
     const indices = compact(routeQuery.indices.split(','))
     const noXIcon = indices.length === 1
     const filter = 'project'
-    return indices.map((value) => ({ filter, value, noXIcon }))
+    return indices.map(value => ({ filter, value, noXIcon }))
   }
 
   const indicesEntries = computed(() => {
@@ -76,7 +76,8 @@ export function useSearchBreadcrumb() {
 
     if (filter === 'project') {
       removeIndex(value)
-    } else if (filter) {
+    }
+    else if (filter) {
       removeFilterValue(trimStart(filter, '-'), value)
     }
 

@@ -1,5 +1,9 @@
 <template>
-  <widget-documents-by-creation-date ref="widgetDocumentsByCreationDate" :widget="widget" :project="project">
+  <widget-documents-by-creation-date
+    ref="widgetDocumentsByCreationDate"
+    :widget="widget"
+    :project="project"
+  >
     <template #selector="{ selectedPath, setSelectedPath }">
       <button-icon
         v-if="selectedPath"

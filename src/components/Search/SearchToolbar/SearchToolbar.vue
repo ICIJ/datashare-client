@@ -31,8 +31,15 @@ const classList = computed(() => ({ 'search-toolbar--compact': compact.value }))
 </script>
 
 <template>
-  <div ref="element" class="search-toolbar d-flex gap-3 py-3 align-items-start" :class="classList">
-    <button-toggle-sidebar v-if="!toggleSidebar && !compact" v-model:active="toggleSidebar" />
+  <div
+    ref="element"
+    class="search-toolbar d-flex gap-3 py-3 align-items-start"
+    :class="classList"
+  >
+    <button-toggle-sidebar
+      v-if="!toggleSidebar && !compact"
+      v-model:active="toggleSidebar"
+    />
     <div class="search-toolbar__filters d-flex gap-3">
       <button-toggle-filters
         v-if="isFiltersClosed"
@@ -46,9 +53,18 @@ const classList = computed(() => ({ 'search-toolbar--compact': compact.value }))
       />
     </div>
     <div class="search-toolbar__form d-flex gap-3 flex-grow-1">
-      <button-toggle-sidebar v-if="!toggleSidebar && compact" v-model:active="toggleSidebar" />
-      <search-bar :compact="compact" class="search__main__search-bar flex-grow-1" />
-      <button-toggle-settings v-model:active="toggleSettings" class="search__main__toggle-settings" />
+      <button-toggle-sidebar
+        v-if="!toggleSidebar && compact"
+        v-model:active="toggleSidebar"
+      />
+      <search-bar
+        :compact="compact"
+        class="search__main__search-bar flex-grow-1"
+      />
+      <button-toggle-settings
+        v-model:active="toggleSettings"
+        class="search__main__toggle-settings"
+      />
     </div>
   </div>
 </template>

@@ -43,7 +43,13 @@ const { t } = useI18n()
       />
     </slot>
     <slot name="image">
-      <image-mode v-if="image" image-class="app-modal-header__image" :src="image" :alt="imageAlt" :width="imageWidth">
+      <image-mode
+        v-if="image"
+        image-class="app-modal-header__image"
+        :src="image"
+        :alt="imageAlt"
+        :width="imageWidth"
+      >
         <slot name="image-source" />
       </image-mode>
     </slot>

@@ -5,7 +5,7 @@ export function useElementVisibilityOnce(element) {
   const isVisible = useElementVisibility(element)
   const visible = ref(isVisible.value)
 
-  whenever(isVisible, (value) => (visible.value = value), { once: true })
+  whenever(isVisible, value => (visible.value = value), { once: true })
 
   return visible
 }

@@ -7,7 +7,7 @@ describe('strings', () => {
       expect(content).toBe('Lorem ipsum <mark class="local-search-term">dolor</mark>')
     })
 
-    it("shouldn't wrap anything", () => {
+    it('shouldn\'t wrap anything', () => {
       const { content } = addLocalSearchMarksClass('Lorem ipsum dolor', { label: 'sit amet' })
       expect(content).toBe('Lorem ipsum dolor')
     })

@@ -35,7 +35,7 @@ export function useViewSettings() {
 
   function fieldsToSortByOptions(fields) {
     return fields
-      .filter((field) => field.sortable)
+      .filter(field => field.sortable)
       .map((field) => {
         const sortingKey = field.sortingKey ?? field.key
         const type = field.type ?? SORT_TYPE_KEY.DEFAULT

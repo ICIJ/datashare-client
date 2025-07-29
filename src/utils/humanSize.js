@@ -9,7 +9,8 @@ export default function humanSize(
   const addUnit = (v, i) => String([B, KB, MB, GB, TB][i]).replace('%', v)
   if (unitIndex === 0 || !showBytes) {
     return addUnit(value, unitIndex)
-  } else {
+  }
+  else {
     return `${addUnit(value, unitIndex)} (${addUnit(size, 0)})`
   }
 }

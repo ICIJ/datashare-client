@@ -47,9 +47,18 @@ onRouteUpdateNotMatch(route.name, () => hide())
     fullscreen
     lazy
   >
-    <document-floating class="my-3" no-reduce no-expand>
+    <document-floating
+      class="my-3"
+      no-reduce
+      no-expand
+    >
       <slot>
-        <document-view :id="id" :routing="routing" :index="index" :q="q" />
+        <document-view
+          :id="id"
+          :routing="routing"
+          :index="index"
+          :q="q"
+        />
       </slot>
       <template #nav>
         <slot name="nav" />

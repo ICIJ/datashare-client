@@ -111,10 +111,18 @@ const hasRowDetailsSlot = computed(() => 'row-details' in slots)
 </script>
 
 <template>
-  <page-table v-model:sort="sort" v-model:order="order" :loading="loading">
+  <page-table
+    v-model:sort="sort"
+    v-model:order="order"
+    :loading="loading"
+  >
     <template #colgroup>
-      <col v-for="field in fields" :key="field.name" :style="field.colStyle" />
-      <col :style="actionsColStyle" />
+      <col
+        v-for="field in fields"
+        :key="field.name"
+        :style="field.colStyle"
+      >
+      <col :style="actionsColStyle">
     </template>
 
     <template #thead>
@@ -127,27 +135,41 @@ const hasRowDetailsSlot = computed(() => 'row-details' in slots)
         :sortable="!!field.sortable"
         :emphasis="!!field.emphasis"
         :name="field.sortingKey ?? field.key ?? field.value"
-      >
-      </page-table-th>
+      />
     </template>
 
     <template #waiting>
-      <page-table-tr-placeholder :repeat="Math.max(3, items.length)" :properties="fields">
+      <page-table-tr-placeholder
+        :repeat="Math.max(3, items.length)"
+        :properties="fields"
+      >
         <td class="text-end">
           <div class="d-inline-flex gap-3 py-2">
-            <app-placeholder width="16px" height="16px" :repeat="2" />
+            <app-placeholder
+              width="16px"
+              height="16px"
+              :repeat="2"
+            />
           </div>
         </td>
       </page-table-tr-placeholder>
     </template>
 
     <page-table-tr v-if="!items?.length">
-      <td :colspan="fields.length + 1" class="page-table-generic__no-result text-center">
-        <slot name="empty">{{ t('task.noResults') }}</slot>
+      <td
+        :colspan="fields.length + 1"
+        class="page-table-generic__no-result text-center"
+      >
+        <slot name="empty">
+          {{ t('task.noResults') }}
+        </slot>
       </td>
     </page-table-tr>
 
-    <template v-for="(item, index) in items" :key="primaryKey ? item[primaryKey] ?? index : index">
+    <template
+      v-for="(item, index) in items"
+      :key="primaryKey ? item[primaryKey] ?? index : index"
+    >
       <page-table-tr class="page-table-generic__row">
         <td
           v-for="(field, i) in fields"
@@ -165,15 +187,25 @@ const hasRowDetailsSlot = computed(() => 'row-details' in slots)
           </slot>
         </td>
         <page-table-td-actions>
-          <slot name="row-actions" v-bind="callItemBinding(item, 'row-actions')" />
+          <slot
+            name="row-actions"
+            v-bind="callItemBinding(item, 'row-actions')"
+          />
         </page-table-td-actions>
       </page-table-tr>
 
       <template v-if="hasRowDetailsSlot && rowDetailsShowing(item)">
-        <tr class="d-none" aria-hidden="true" role="presentation" />
+        <tr
+          class="d-none"
+          aria-hidden="true"
+          role="presentation"
+        />
         <page-table-tr class="page-table-generic__row-details">
           <td :colspan="fields.length + 1">
-            <slot name="row-details" v-bind="callItemBinding(item, 'row-details')" />
+            <slot
+              name="row-details"
+              v-bind="callItemBinding(item, 'row-details')"
+            />
           </td>
         </page-table-tr>
       </template>

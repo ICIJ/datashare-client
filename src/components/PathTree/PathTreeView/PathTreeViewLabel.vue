@@ -21,7 +21,10 @@ const { t } = useI18n()
 
 <template>
   <div class="path-tree-view-label d-flex gap-2 align-items-center">
-    <phosphor-icon v-if="icon" :name="icon" />
+    <phosphor-icon
+      v-if="icon"
+      :name="icon"
+    />
     <div class="text-truncate flex-grow-1">
       {{ label ?? t('pathViewLabel.label') }}
     </div>

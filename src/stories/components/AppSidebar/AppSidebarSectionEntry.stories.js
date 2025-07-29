@@ -25,7 +25,7 @@ export default {
     content: 'History',
     active: false
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       AppSidebarSectionEntry
     },

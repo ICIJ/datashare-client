@@ -43,7 +43,8 @@ watch(toRef(props, 'projects'), () => {
 watch(toRef(props, 'path'), (value) => {
   if (props.multiple && isArray(value)) {
     selectedPaths.value = value
-  } else {
+  }
+  else {
     selectedPaths.value = [value]
   }
 })
@@ -51,7 +52,8 @@ watch(toRef(props, 'path'), (value) => {
 function onOk() {
   if (props.multiple) {
     modelValue.value = selectedPaths.value
-  } else {
+  }
+  else {
     modelValue.value = selectedPaths.value[0]
   }
 }
@@ -59,13 +61,32 @@ function onOk() {
 
 <template>
   <div class="form-control-path d-flex no-wrap gap-3">
-    <button-icon :icon-right="PhMagnifyingGlass" variant="action" @click="showPathTree = true">
+    <button-icon
+      :icon-right="PhMagnifyingGlass"
+      variant="action"
+      @click="showPathTree = true"
+    >
       {{ t('formControlPath.browse') }}
     </button-icon>
-    <button-icon :icon-left="PhFolderOpen" variant="outline-tertiary" @click="showPathTree = true">
-      <path-tree-breadcrumb :model-value="display" datadir-label no-link />
+    <button-icon
+      :icon-left="PhFolderOpen"
+      variant="outline-tertiary"
+      @click="showPathTree = true"
+    >
+      <path-tree-breadcrumb
+        :model-value="display"
+        datadir-label
+        no-link
+      />
     </button-icon>
-    <app-modal v-model="showPathTree" lazy scrollable no-header size="lg" @ok="onOk">
+    <app-modal
+      v-model="showPathTree"
+      lazy
+      scrollable
+      no-header
+      size="lg"
+      @ok="onOk"
+    >
       <path-tree
         v-model:selected-paths="selectedPaths"
         :path="sourcePath"

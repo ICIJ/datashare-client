@@ -17,6 +17,7 @@ export default class FilterContentType extends FilterText {
     }
     super({ alternativeSearch, ...options })
   }
+
   itemLabel(item) {
     return getDocumentTypeLabel(item.key)
   }

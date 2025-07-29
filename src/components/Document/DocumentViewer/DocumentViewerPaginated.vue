@@ -1,11 +1,17 @@
 <template>
-  <app-wait :for="loaderId" class="w-100 d-flex flex-column py-3 paginated-viewer">
+  <app-wait
+    :for="loaderId"
+    class="w-100 d-flex flex-column py-3 paginated-viewer"
+  >
     <template #waiting>
       <div class="p-3 w-100 text-muted">
         {{ t('document.fetching') }}
       </div>
     </template>
-    <div v-if="isPreviewable" class="d-flex flex-grow-1">
+    <div
+      v-if="isPreviewable"
+      class="d-flex flex-grow-1"
+    >
       <div class="paginated-viewer__thumbnails bg-tertiary-subtle">
         <div class="text-center p-2 d-flex align-items-center paginated-viewer__thumbnails__select">
           <select
@@ -13,7 +19,11 @@
             class="form-control form-control-sm"
             @change="scrollToPageAndThumbnail(active)"
           >
-            <option v-for="page in pagesRange" :key="page" :value="page">
+            <option
+              v-for="page in pagesRange"
+              :key="page"
+              :value="page"
+            >
               {{ page + 1 }}
             </option>
           </select>
@@ -27,7 +37,12 @@
             :class="{ 'paginated-viewer__thumbnails__items__item--active': active === page }"
             @click="setActiveAndScrollToPage(page)"
           >
-            <document-thumbnail :document="document" :page="page" size="md" fit />
+            <document-thumbnail
+              :document="document"
+              :page="page"
+              size="md"
+              fit
+            />
             <span class="paginated-viewer__thumbnails__items__item__page">
               {{ page + 1 }}
             </span>
@@ -37,7 +52,11 @@
       <div
         class="paginated-viewer__preview flex-grow-1 text-center d-flex flex-column flex-wrap align-items-center gap-5"
       >
-        <div v-for="page in pagesRange" :key="page" class="paginated-viewer__preview__page w-100 text-center px-3">
+        <div
+          v-for="page in pagesRange"
+          :key="page"
+          class="paginated-viewer__preview__page w-100 text-center px-3"
+        >
           <document-thumbnail
             v-intersection-observer="[onPageIntersectionObserver, { threshold: 0.5 }]"
             class="border d-inline-block"
@@ -52,7 +71,10 @@
         </div>
       </div>
     </div>
-    <div v-else class="p-3 text-center">
+    <div
+      v-else
+      class="p-3 text-center"
+    >
       {{ t('document.notAvailable') }}
     </div>
   </app-wait>
@@ -131,7 +153,8 @@ export default {
       await this.waitFor(async () => {
         try {
           this.meta = await this.fetchMeta()
-        } catch (e) {
+        }
+        catch (e) {
           throw Error('Unable to fetch the thumbnail informations')
         }
       })
@@ -142,7 +165,8 @@ export default {
       try {
         this.wait.start(this.loaderId)
         await callback()
-      } finally {
+      }
+      finally {
         this.wait.end(this.loaderId)
       }
     },

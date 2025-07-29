@@ -22,8 +22,14 @@ const classList = computed(() => {
 </script>
 
 <template>
-  <h3 class="app-sidebar-section-title" :class="classList">
-    <phosphor-icon class="me-2" :name="icon" />
+  <h3
+    class="app-sidebar-section-title"
+    :class="classList"
+  >
+    <phosphor-icon
+      class="me-2"
+      :name="icon"
+    />
     <slot>{{ title }}</slot>
   </h3>
 </template>

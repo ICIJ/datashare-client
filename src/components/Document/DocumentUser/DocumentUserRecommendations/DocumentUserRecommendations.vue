@@ -31,14 +31,24 @@ const { t } = useI18n()
     show-warning
     action-end
   >
-    <div v-if="count" class="d-flex gap-2 flex-wrap align-items-top">
-      <button-recommendation v-for="user in recommendedBy" :key="user" :label="user" />
+    <div
+      v-if="count"
+      class="d-flex gap-2 flex-wrap align-items-top"
+    >
+      <button-recommendation
+        v-for="user in recommendedBy"
+        :key="user"
+        :label="user"
+      />
     </div>
     <template #action-warning>
       {{ t('documentUserRecommendations.warning') }}
     </template>
     <template #action>
-      <button-toggle-recommendation v-model:active="recommended" class="align-self-end" />
+      <button-toggle-recommendation
+        v-model:active="recommended"
+        class="align-self-end"
+      />
     </template>
   </document-user-actions-card>
 </template>

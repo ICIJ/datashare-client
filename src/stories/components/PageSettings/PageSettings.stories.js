@@ -9,7 +9,7 @@ export default {
   title: 'Components/PageSettings',
   tags: ['autodocs'],
   component: PageSettings,
-  render: (args) => ({
+  render: args => ({
     components: {
       PageSettings,
       PageSettingsSection,

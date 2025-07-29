@@ -25,12 +25,12 @@ const { waitForElementCreated } = useElementObserver()
 
 const showRecommendationsCard = computed({
   get: () => documentStore.isUserActionVisible(DOCUMENT_USER_ACTIONS.RECOMMENDATIONS),
-  set: (value) => documentStore.toggleUserAction(DOCUMENT_USER_ACTIONS.RECOMMENDATIONS, value)
+  set: value => documentStore.toggleUserAction(DOCUMENT_USER_ACTIONS.RECOMMENDATIONS, value)
 })
 
 const showTagsCard = computed({
   get: () => documentStore.isUserActionVisible(DOCUMENT_USER_ACTIONS.TAGS),
-  set: (value) => documentStore.toggleUserAction(DOCUMENT_USER_ACTIONS.TAGS, value)
+  set: value => documentStore.toggleUserAction(DOCUMENT_USER_ACTIONS.TAGS, value)
 })
 
 const hasFloatingElement = ref(false)
@@ -87,8 +87,14 @@ onBeforeMount(fetchAllTags)
     :recommendations="recommendedBy.length"
     @action="documentStore.toggleUserAction"
   />
-  <teleport v-if="hasFloatingElement" :to="documentViewFloatingSelector">
-    <hook name="document-user-actions-cards:before" :bind="{ document }" />
+  <teleport
+    v-if="hasFloatingElement"
+    :to="documentViewFloatingSelector"
+  >
+    <hook
+      name="document-user-actions-cards:before"
+      :bind="{ document }"
+    />
     <document-user-tags
       v-model="showTagsCard"
       :is-server="isServer"
@@ -103,6 +109,9 @@ onBeforeMount(fetchAllTags)
       v-model:recommended="recommended"
       :recommended-by="recommendedBy"
     />
-    <hook name="document-user-actions-cards:after" :bind="{ document }" />
+    <hook
+      name="document-user-actions-cards:after"
+      :bind="{ document }"
+    />
   </teleport>
 </template>

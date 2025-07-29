@@ -51,7 +51,8 @@ const loadAddons = waitFor(async (searchTerm) => {
   error.value = false
   try {
     addons.value = await retrieveAddonsFn.value(searchTerm)
-  } catch (e) {
+  }
+  catch (e) {
     error.value = true
   }
 })
@@ -73,27 +74,61 @@ const noResults = computed(() => {
 
 const filteredAddons = computed(() => {
   if (filterTerm.value.length > 0) {
-    return fuse.value.search(filterTerm.value).map((r) => r.item)
+    return fuse.value.search(filterTerm.value).map(r => r.item)
   }
   return addons.value
 })
 </script>
 
 <template>
-  <settings-view-layout :info-name="addonsType" :info-label="infoLabel" :no-results="noResults">
+  <settings-view-layout
+    :info-name="addonsType"
+    :info-label="infoLabel"
+    :no-results="noResults"
+  >
     <template #filter>
-      <form-control-search v-model="filterTerm" autofocus clear-text shadow :placeholder="searchPlaceholder" />
+      <form-control-search
+        v-model="filterTerm"
+        autofocus
+        clear-text
+        shadow
+        :placeholder="searchPlaceholder"
+      />
     </template>
-    <template #noResult>{{ noResultsLabel }}</template>
+    <template #noResult>
+      {{ noResultsLabel }}
+    </template>
     <div class="col-12 col-xl-8">
-      <addon-url-input v-model="url" :loading="isLoading" @install="installFromUrl" />
+      <addon-url-input
+        v-model="url"
+        :loading="isLoading"
+        @install="installFromUrl"
+      />
     </div>
-    <b-alert v-if="error" variant="danger" model-value>{{ errorLabel }}</b-alert>
-    <app-wait :for="loaderId" class="row g-4">
+    <b-alert
+      v-if="error"
+      variant="danger"
+      model-value
+    >
+      {{ errorLabel }}
+    </b-alert>
+    <app-wait
+      :for="loaderId"
+      class="row g-4"
+    >
       <template #waiting>
-        <phosphor-icon :name="PhCircleNotch" spin size="lg" class="ms-auto" />
+        <phosphor-icon
+          :name="PhCircleNotch"
+          spin
+          size="lg"
+          class="ms-auto"
+        />
       </template>
-      <div v-for="addon in filteredAddons" :key="addon.id" class="col-12 col-xl-6 d-flex">
+      <div
+        v-for="addon in filteredAddons"
+        :key="addon.id"
+        class="col-12 col-xl-6 d-flex"
+      >
         <addon-card
           :id="addon.id"
           :addon-type="addonsType"

@@ -58,7 +58,11 @@ const handleClick = (event) => {
 </script>
 
 <template>
-  <a :href="href" class="link-visitable" @click.exact="handleClick">
+  <a
+    :href="href"
+    class="link-visitable"
+    @click.exact="handleClick"
+  >
     <slot />
   </a>
 </template>

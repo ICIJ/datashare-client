@@ -1,12 +1,21 @@
 <template>
-  <b-tooltip :delay="tooltipDelay" :placement="tooltipPlacement" teleport-to="body">
+  <b-tooltip
+    :delay="tooltipDelay"
+    :placement="tooltipPlacement"
+    teleport-to="body"
+  >
     <template #target>
-      <div class="version-number d-inline-block">v{{ serverVersion }}</div>
+      <div class="version-number d-inline-block">
+        v{{ serverVersion }}
+      </div>
     </template>
     <div class="version-number__tooltip text-nowrap text-start">
       <div class="d-flex align-items-baseline version-number__tooltip__client py-2">
         <div class="flex-grow-1 pe-5">
-          <phosphor-icon :name="PhDesktop" class="me-1" />
+          <phosphor-icon
+            :name="PhDesktop"
+            class="me-1"
+          />
           {{ t('versionNumber.client') }}
         </div>
         <div class="font-monospace version-number__tooltip__client__value">
@@ -15,7 +24,10 @@
       </div>
       <div class="d-flex align-items-baseline version-number__tooltip__server py-2">
         <div class="flex-grow-1 pe-5">
-          <phosphor-icon :name="PhHardDrives" class="me-1" />
+          <phosphor-icon
+            :name="PhHardDrives"
+            class="me-1"
+          />
           {{ t('versionNumber.server') }}
         </div>
         <div class="font-monospace version-number__tooltip__server__value">

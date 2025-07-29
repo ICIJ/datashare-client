@@ -1,18 +1,33 @@
 <template>
-  <div v-if="isReady && hasAttachments" class="document-attachments">
+  <div
+    v-if="isReady && hasAttachments"
+    class="document-attachments"
+  >
     <h6>{{ t('document.attachments.heading', total, { total }) }}</h6>
     <ul class="document-attachments__list list-unstyled d-flex-inline">
-      <li v-for="attachment in attachments" :key="attachment.id" class="document-attachments__list__item">
+      <li
+        v-for="attachment in attachments"
+        :key="attachment.id"
+        class="document-attachments__list__item"
+      >
         <router-link
           :to="{ name: 'document', params: attachment.routerParams }"
           class="document-attachments__list__item__link d-flex-inline"
         >
-          <phosphor-icon :name="document.contentTypeIcon" class="me-1 mt-1" />
+          <phosphor-icon
+            :name="document.contentTypeIcon"
+            class="me-1 mt-1"
+          />
           <span>{{ attachment.slicedName.pop() }}</span>
         </router-link>
       </li>
     </ul>
-    <a v-if="total && attachments.length < total" href="#" class="document-attachments__more" @click.prevent="loadMore">
+    <a
+      v-if="total && attachments.length < total"
+      href="#"
+      class="document-attachments__more"
+      @click.prevent="loadMore"
+    >
       {{ t('document.attachments.more') }}
     </a>
   </div>
@@ -56,13 +71,13 @@ export default {
   },
   computed: {
     attachments() {
-      return flatten(this.pages.map((page) => page.hits))
+      return flatten(this.pages.map(page => page.hits))
     },
     total() {
       return get(this, 'pages.0.total', null)
     },
     from() {
-      return sum(this.pages.map((page) => page.hits.length))
+      return sum(this.pages.map(page => page.hits.length))
     },
     isReady() {
       return !this.wait.waiting('document-attachement')

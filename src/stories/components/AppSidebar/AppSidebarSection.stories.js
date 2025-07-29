@@ -30,7 +30,7 @@ export default {
     active: true,
     compact: false
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       AppSidebarSection,
       AppSidebarSectionEntry

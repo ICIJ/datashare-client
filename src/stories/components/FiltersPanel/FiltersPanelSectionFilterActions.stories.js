@@ -11,7 +11,7 @@ export default {
     hideShowMore: false,
     hideSort: false
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       FiltersPanelSectionFilterActions
     },

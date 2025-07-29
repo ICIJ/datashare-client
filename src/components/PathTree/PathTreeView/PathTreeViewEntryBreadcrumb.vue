@@ -18,7 +18,16 @@ const maxDirectories = computed(() => {
 
 <template>
   <div class="path-tree-view-entry-breadcrumb d-flex gap-1 align-items-center">
-    <phosphor-icon v-if="!compact" :name="PhFolderOpen" class="flex-shrink-0" />
-    <path-tree-breadcrumb v-model="modelValue" :compact="compact" :max-directories="maxDirectories" datadir-label />
+    <phosphor-icon
+      v-if="!compact"
+      :name="PhFolderOpen"
+      class="flex-shrink-0"
+    />
+    <path-tree-breadcrumb
+      v-model="modelValue"
+      :compact="compact"
+      :max-directories="maxDirectories"
+      datadir-label
+    />
   </div>
 </template>

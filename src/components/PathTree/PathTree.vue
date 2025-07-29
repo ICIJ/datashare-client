@@ -209,9 +209,9 @@ const treeAsPagesBuckets = computed(() => {
 })
 
 const directories = computed(() => {
-  const buckets = flatten(pages.value.map((p) => get(p, 'aggregations.dirname.buckets', [])))
+  const buckets = flatten(pages.value.map(p => get(p, 'aggregations.dirname.buckets', [])))
   const allDirectories = uniqBy([...buckets, ...treeAsPagesBuckets.value], 'key')
-  return props.hideEmpty ? allDirectories.filter((dir) => dir.doc_count > 0) : allDirectories
+  return props.hideEmpty ? allDirectories.filter(dir => dir.doc_count > 0) : allDirectories
 })
 
 const isCollapsedDirectory = (key) => {
@@ -222,10 +222,12 @@ const collapseDirectory = (key) => {
   if (nested.value) {
     if (isCollapsedDirectory(key)) {
       openPaths.value = [...openPaths.value, key]
-    } else {
+    }
+    else {
       openPaths.value = openPaths.value.toSpliced(openPaths.value.indexOf(key), 1)
     }
-  } else {
+  }
+  else {
     path.value = key
   }
 }
@@ -248,9 +250,11 @@ const selectDirectory = (key) => {
   const dir = toDirectory(key)
   if (isSelectedDirectory(key)) {
     selectedPaths.value = selectedPaths.value.toSpliced(selectedPaths.value.indexOf(dir), 1)
-  } else if (props.multiple) {
+  }
+  else if (props.multiple) {
     selectedPaths.value = [...selectedPaths.value, dir]
-  } else {
+  }
+  else {
     selectedPaths.value = selectedPaths.value.toSpliced(0, selectedPaths.value.length, dir)
   }
 }
@@ -385,7 +389,8 @@ const loadData = async ({ clearPages = false } = {}) => {
     if (clearPages) await clearPagesAndLoadTree()
     // Add the result as a page
     pages.value.push(res)
-  } else if (clearPages) {
+  }
+  else if (clearPages) {
     // If no projects are given and we are clearing the pages,
     // we should load the tree anyway.
     await loadTree()
@@ -420,7 +425,8 @@ const loadTree = async () => {
     if (shouldLoadTree.value) {
       tree.value = await core.api.tree(path.value)
     }
-  } catch {
+  }
+  catch {
     tree.value = { contents: [] }
   }
 }
@@ -490,7 +496,10 @@ defineExpose({ loadData, loadDataWithSpinner, reloadData, isLoading })
         :level="level"
         @update:selected="selectDirectory(path)"
       >
-        <template v-if="!nested" #name>
+        <template
+          v-if="!nested"
+          #name
+        >
           <path-tree-view-entry-breadcrumb
             :compact="compact"
             :model-value="path"
@@ -519,7 +528,10 @@ defineExpose({ loadData, loadDataWithSpinner, reloadData, isLoading })
           @update:selected="selectDirectory(directory.key)"
           @update:collapse="collapseDirectory(directory.key)"
         >
-          <template v-if="nested" #default="{ collapse }">
+          <template
+            v-if="nested"
+            #default="{ collapse }"
+          >
             <path-tree
               v-if="!collapse"
               :ref="(el) => (directoriesRefs[directory.key] = el)"

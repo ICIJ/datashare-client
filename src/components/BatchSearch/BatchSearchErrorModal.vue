@@ -27,7 +27,8 @@ const errorMessageAsJson = computed(() => {
   const match = props.errorMessage?.match(re)
   try {
     return JSON.parse(match)
-  } catch (_) {
+  }
+  catch (_) {
     return null
   }
 })
@@ -45,10 +46,16 @@ const errorMessageAsJson = computed(() => {
     size="lg"
   >
     <template #header-image-source>
-      <image-mode-source :src="imageHeaderDark" color-mode="dark" />
+      <image-mode-source
+        :src="imageHeaderDark"
+        color-mode="dark"
+      />
     </template>
     <div class="d-flex flex-column gap-4 mt-0 pt-0">
-      <div v-if="errorQuery" class="text-center">
+      <div
+        v-if="errorQuery"
+        class="text-center"
+      >
         <p class="text-center fw-medium">
           {{ t('batchSearchErrorModal.errorQuery') }}
         </p>
@@ -76,7 +83,11 @@ const errorMessageAsJson = computed(() => {
           </div>
         </template>
       </div>
-      <i18n-t keypath="batchSearchErrorModal.description" tag="p" class="m-0">
+      <i18n-t
+        keypath="batchSearchErrorModal.description"
+        tag="p"
+        class="m-0"
+      >
         <template #link>
           <a
             href="https://icij.gitbook.io/datashare/usage/faq/common-errors/list-of-common-errors-leading-to-failure-in-batch-searches"

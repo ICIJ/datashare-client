@@ -5,7 +5,11 @@
         {{ t('widgetDocumentsByCreationDateByPath.title') }}
       </h3>
       <div class="widget__header__selectors d-flex align-items-center my-2">
-        <slot name="selector" :selected-path="selectedPath" :set-selected-path="setSelectedPath" />
+        <slot
+          name="selector"
+          :selected-path="selectedPath"
+          :set-selected-path="setSelectedPath"
+        />
         <div class="btn-group">
           <button
             v-for="(_, interval) in intervals"
@@ -29,7 +33,11 @@
             <app-spinner size="2em" />
           </div>
         </template>
-        <div v-if="hasData" ref="widget__content__chart" class="widget__content__chart align-items-center">
+        <div
+          v-if="hasData"
+          ref="widget__content__chart"
+          class="widget__content__chart align-items-center"
+        >
           <column-chart
             :key="dataKey"
             hover
@@ -40,8 +48,12 @@
             @select="searchInterval"
           >
             <template #tooltip="{ datum: { date, value: total } }">
-              <h5 class="m-0">{{ tooltipFormat(date) }}</h5>
-              <p class="m-0 text-nowrap">{{ t('widget.creationDate.document', { total }, total) }}</p>
+              <h5 class="m-0">
+                {{ tooltipFormat(date) }}
+              </h5>
+              <p class="m-0 text-nowrap">
+                {{ t('widget.creationDate.document', { total }, total) }}
+              </p>
             </template>
           </column-chart>
           <column-chart-picker
@@ -55,11 +67,20 @@
             :column-height-ratio="0.1"
           />
         </div>
-        <div v-else class="text-muted text-center">
+        <div
+          v-else
+          class="text-muted text-center"
+        >
           {{ t('widget.noData') }}
         </div>
-        <div v-if="missings" class="widget__content__missing small d-flex align-items-center mt-2">
-          <p class="my-0 text-muted" :title="t('widget.creationDate.missingTooltip')">
+        <div
+          v-if="missings"
+          class="widget__content__missing small d-flex align-items-center mt-2"
+        >
+          <p
+            class="my-0 text-muted"
+            :title="t('widget.creationDate.missingTooltip')"
+          >
             {{ t('widget.creationDate.missing', { total: n(missings) }, missings) }}
           </p>
         </div>
@@ -157,7 +178,7 @@ const selectedIntervalBins = computed(() => {
 })
 const datesExtent = computed(() => {
   if (data.value.length) {
-    return d3.extent(cleanData.value, (d) => d.date)
+    return d3.extent(cleanData.value, d => d.date)
   }
   return []
 })
@@ -185,7 +206,7 @@ const datesHistogram = computed(() => {
   // set the parameters for the histogram
   const histogram = d3
     .histogram()
-    .value((d) => d.date)
+    .value(d => d.date)
     .domain(widthScale.value.domain())
     .thresholds(widthScale.value.copy().ticks(bins.length))
   return histogram(cleanData.value)
@@ -205,7 +226,7 @@ const endTick = computed(() => {
 
 const aggregatedDataSlice = computed(() => {
   return datesHistogramSlice.value.map((bin) => {
-    return { date: bin.x0, value: d3.sum(bin, (d) => d.doc_count) }
+    return { date: bin.x0, value: d3.sum(bin, d => d.doc_count) }
   })
 })
 const aggDateHistogramOptions = computed(() => {
@@ -228,7 +249,7 @@ const cleanData = computed(() => {
   })
 })
 const missingData = computed(() => {
-  return data.value.filter((bucket) => !isBucketValid(bucket))
+  return data.value.filter(bucket => !isBucketValid(bucket))
 })
 const missings = computed(() => {
   return missingData.value.reduce((sum, { doc_count: count }) => sum + count, 0)
@@ -266,7 +287,7 @@ function bodybuilderBase({ size = 1000, from = 0 } = {}) {
       'date_histogram',
       field,
       'agg_by_creation_date',
-      (sub) => sub.agg('bucket_sort', { size, from }, 'bucket_sort_truncate'),
+      sub => sub.agg('bucket_sort', { size, from }, 'bucket_sort_truncate'),
       aggDateHistogramOptions.value
     )
 }

@@ -52,7 +52,10 @@ const classList = computed(() => {
 </script>
 
 <template>
-  <div class="path-tree-view-entry-stats d-flex gap-2 text-nowrap" :class="classList">
+  <div
+    class="path-tree-view-entry-stats d-flex gap-2 text-nowrap"
+    :class="classList"
+  >
     <path-tree-view-entry-stats-documents
       :active="active"
       :compact="compactOrInjected"
@@ -62,8 +65,17 @@ const classList = computed(() => {
       :value="documents"
     />
     <template v-if="!compactOrInjected">
-      <path-tree-view-entry-stats-directories :value="directories" :active="active" :compact="compactOrInjected" />
-      <path-tree-view-entry-stats-size :value="size" class="ms-auto" :active="active" :compact="compactOrInjected" />
+      <path-tree-view-entry-stats-directories
+        :value="directories"
+        :active="active"
+        :compact="compactOrInjected"
+      />
+      <path-tree-view-entry-stats-size
+        :value="size"
+        class="ms-auto"
+        :active="active"
+        :compact="compactOrInjected"
+      />
     </template>
   </div>
 </template>

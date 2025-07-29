@@ -147,7 +147,7 @@ const loadedOnce = computed(() => {
   return !isEmpty(maxOffsetTranslations.value) && !isEmpty(contentSlices)
 })
 
-watch(toRef(props, 'q'), (value) => (localSearchTerm.value = value))
+watch(toRef(props, 'q'), value => (localSearchTerm.value = value))
 
 watch(localSearchTerm, throttle(retrieveOccurrencesAndUpdateContent, 300))
 
@@ -173,7 +173,8 @@ onMounted(async () => {
   await syncPages()
   if (props.q) {
     await retrieveOccurrencesAndUpdateContent()
-  } else {
+  }
+  else {
     await activateContentSlice({ offset: 0 })
   }
 })
@@ -193,13 +194,14 @@ const syncPages = waitFor(async function () {
       .getPages(documentStore.document)
       .then(({ pages }) => pages)
       .catch(() => [])
-  } else {
+  }
+  else {
     syncedPages.value = []
   }
 })
 
 function findContentSliceIndexAround(desiredOffset) {
-  return findLastIndex(offsets.value, (offset) => offset <= desiredOffset)
+  return findLastIndex(offsets.value, offset => offset <= desiredOffset)
 }
 
 function setContentSlice({
@@ -245,7 +247,7 @@ function hasContentSlice({ offset = 0, targetLanguage = props.targetLanguage } =
 }
 
 function closestPage({ offset = 0 } = {}) {
-  const closestOffsetIndex = minBy(offsets.value, (v) => Math.abs(v - offset))
+  const closestOffsetIndex = minBy(offsets.value, v => Math.abs(v - offset))
   const offsetIndex = offsets.value.indexOf(closestOffsetIndex)
   return pages.value[offsetIndex] || [0, Math.min(props.pageSize - 1, maxOffset.value)]
 }
@@ -285,7 +287,8 @@ async function retrieveTotalOccurrences() {
     localSearchIndexes.value = offsets
     localSearchOccurrences.value = count
     localSearchIndex.value = Number(!!count)
-  } catch (_) {
+  }
+  catch (_) {
     localSearchIndexes.value = []
     localSearchOccurrences.value = 0
     localSearchIndex.value = 0
@@ -307,7 +310,7 @@ const activateContentSlice = waitFor(async function ({ offset = 0 } = {}) {
 
 function clearActiveLocalSearchTerm() {
   const activeTerms = elementRef.value.querySelectorAll('.local-search-term--active')
-  activeTerms.forEach((term) => term.classList.remove('local-search-term--active'))
+  activeTerms.forEach(term => term.classList.remove('local-search-term--active'))
 }
 
 function scrollToDocumentStart() {
@@ -324,7 +327,8 @@ async function jumpToActiveLocalSearchTerm() {
   if (activeTerm) {
     activeTerm.classList.add('local-search-term--active')
     activeTerm.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' })
-  } else {
+  }
+  else {
     elementRef.value.scrollTop = 0
   }
 }
@@ -339,7 +343,11 @@ async function loadContentSliceAround(desiredOffset) {
 </script>
 
 <template>
-  <div ref="element" class="document-content" :class="classList">
+  <div
+    ref="element"
+    class="document-content"
+    :class="classList"
+  >
     <hook name="document.content:before" />
     <div class="document-content__toolbox d-flex flex-column gap-3">
       <hook name="document.content.toolbox:before" />
@@ -356,8 +364,16 @@ async function loadContentSliceAround(desiredOffset) {
         />
         <hook name="document.content.toolbox.local-search:after" />
         <hook name="document.content.toolbox.before:before" />
-        <div v-if="showPagination" class="document-content__toolbox__pagination">
-          <tiny-pagination v-model="page" :per-page="1" :total-rows="nbPages" :compact="compact" />
+        <div
+          v-if="showPagination"
+          class="document-content__toolbox__pagination"
+        >
+          <tiny-pagination
+            v-model="page"
+            :per-page="1"
+            :total-rows="nbPages"
+            :compact="compact"
+          />
         </div>
         <hook name="document.content.toolbox.pagination:after" />
       </div>
@@ -369,20 +385,36 @@ async function loadContentSliceAround(desiredOffset) {
       <hook name="document.content.toolbox:after" />
     </div>
     <div class="document-content__togglers">
-      <hook name="document.content.togglers:before" x-class="d-flex flex-row justify-content-end align-items-center" />
-      <hook name="document.content.togglers:after" x-class="d-flex flex-row justify-content-end align-items-center" />
+      <hook
+        name="document.content.togglers:before"
+        x-class="d-flex flex-row justify-content-end align-items-center"
+      />
+      <hook
+        name="document.content.togglers:after"
+        x-class="d-flex flex-row justify-content-end align-items-center"
+      />
     </div>
     <div class="document-content__wrapper">
       <slot name="before-content" />
       <hook name="document.content.body:before" />
-      <div v-if="hasExtractedContent" class="document-content__body" v-html="currentContentPage" />
-      <div v-else-if="loadedOnce" class="document-content__body document-content__body--no-content text-center p-3">
+      <div
+        v-if="hasExtractedContent"
+        class="document-content__body"
+        v-html="currentContentPage"
+      />
+      <div
+        v-else-if="loadedOnce"
+        class="document-content__body document-content__body--no-content text-center p-3"
+      >
         {{ t('documentContent.noContent') }}
       </div>
       <hook name="document.content.body:after" />
       <slot name="after-content" />
     </div>
-    <document-attachments v-show="loadedOnce" :document="document" />
+    <document-attachments
+      v-show="loadedOnce"
+      :document="document"
+    />
     <hook name="document.content:after" />
   </div>
 </template>

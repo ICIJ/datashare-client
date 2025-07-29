@@ -17,7 +17,7 @@ export default {
     noLabel: false,
     noSearch: false
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       PathTreeView,
       PathTreeViewEntry,

@@ -83,7 +83,7 @@ export const MutlipleCards = {
       }
     ]
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       ProjectCard
     },

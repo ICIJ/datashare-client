@@ -28,7 +28,8 @@ export function useCore() {
         if (errorMessage) {
           if (isFunction(errorMessage)) {
             proxy.$toast.error(errorMessage(err))
-          } else {
+          }
+          else {
             proxy.$toast.error(errorMessage)
           }
         }

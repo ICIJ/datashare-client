@@ -110,10 +110,21 @@ defineExpose({
 </script>
 
 <template>
-  <div class="form-control-tag-input" :class="classList">
+  <div
+    class="form-control-tag-input"
+    :class="classList"
+  >
     <template v-for="(tag, index) in tags">
-      <slot name="tag" v-bind="{ tag }">
-        <form-control-tag-input-entry :key="index" :label="tag" :size="size" @click="$emit('removeTag', tag)" />
+      <slot
+        name="tag"
+        v-bind="{ tag }"
+      >
+        <form-control-tag-input-entry
+          :key="index"
+          :label="tag"
+          :size="size"
+          @click="$emit('removeTag', tag)"
+        />
       </slot>
     </template>
     <div class="form-control-tag-input__form">

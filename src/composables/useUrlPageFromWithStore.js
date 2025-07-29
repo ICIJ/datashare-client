@@ -22,7 +22,7 @@ export function useUrlPageFromWithStore({ perPage = 25, to = null, get, set, ...
   const transform = toNumber
   const from = useUrlParamWithStore('from', { get, set, to, transform, ...options })
   return computed({
-    set: (value) => setNumberRef(from, (value - 1) * perPage),
+    set: value => setNumberRef(from, (value - 1) * perPage),
     get: () => Math.floor(from.value / perPage) + 1
   })
 }

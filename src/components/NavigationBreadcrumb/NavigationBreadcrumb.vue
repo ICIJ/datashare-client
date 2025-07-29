@@ -26,7 +26,8 @@ const currentRoute = computed(() => {
   const name = props.currentRouteName ?? route.name
   try {
     return router.resolve({ name })
-  } catch {
+  }
+  catch {
     return null
   }
 })
@@ -74,9 +75,19 @@ const hasHiddenRoutes = computed(() => hiddenRoutes.value.length > 0)
 <template>
   <div class="navigation-breadcrumb">
     <slot v-bind="{ currentRoute, matchedRoutes, routes, visibleRoutes }">
-      <navigation-breadcrumb-dropdown v-if="hasHiddenRoutes" :routes="hiddenRoutes">
-        <template v-for="{ name } in hiddenRoutes" #[`entry-label(${name})`]="binding" :key="name">
-          <slot :name="`entry-label(${name})`" v-bind="binding" />
+      <navigation-breadcrumb-dropdown
+        v-if="hasHiddenRoutes"
+        :routes="hiddenRoutes"
+      >
+        <template
+          v-for="{ name } in hiddenRoutes"
+          #[`entry-label(${name})`]="binding"
+          :key="name"
+        >
+          <slot
+            :name="`entry-label(${name})`"
+            v-bind="binding"
+          />
         </template>
       </navigation-breadcrumb-dropdown>
       <navigation-breadcrumb-link

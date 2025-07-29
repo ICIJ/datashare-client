@@ -20,7 +20,7 @@ export const useRecommendedStore = defineStore('recommended', () => {
    */
   async function fetchIndicesRecommendations(indices) {
     try {
-      const recommendationsByProject = indices.map((index) => api.getRecommendationsByProject(index))
+      const recommendationsByProject = indices.map(index => api.getRecommendationsByProject(index))
       const recommendations = await Promise.all(recommendationsByProject)
       total.value = sumBy(recommendations, 'totalCount')
       const aggregates = flatten(map(recommendations, 'aggregates'))
@@ -34,7 +34,8 @@ export const useRecommendedStore = defineStore('recommended', () => {
         return merged
       }, {})
       byUsers.value = Object.values(sumByUsers)
-    } catch (_) {
+    }
+    catch (_) {
       byUsers.value = []
       total.value = 0
     }
@@ -62,12 +63,14 @@ export const useRecommendedStore = defineStore('recommended', () => {
   async function getDocumentsRecommendedBy(indices, users) {
     try {
       if (indices.length + users.length > 1) {
-        const documentsByProject = indices.map((index) => api.getDocumentsRecommendedBy(index, users))
+        const documentsByProject = indices.map(index => api.getDocumentsRecommendedBy(index, users))
         documents.value = flatten(await Promise.all(documentsByProject))
-      } else {
+      }
+      else {
         documents.value = []
       }
-    } catch (_) {
+    }
+    catch (_) {
       documents.value = []
     }
   }

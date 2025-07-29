@@ -35,9 +35,18 @@ const teleportTo = useScrollParent()
 </script>
 
 <template>
-  <app-popover ref="popover" v-model="modelValue" hide-header class="document-share-popover" :teleport-to="teleportTo">
+  <app-popover
+    ref="popover"
+    v-model="modelValue"
+    hide-header
+    class="document-share-popover"
+    :teleport-to="teleportTo"
+  >
     <template #target="binding">
-      <slot name="target" v-bind="binding" />
+      <slot
+        name="target"
+        v-bind="binding"
+      />
     </template>
     <document-share-popover-form :document="document" />
   </app-popover>

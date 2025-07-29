@@ -87,7 +87,7 @@ function applyHighlight() {
   const highlights = [...element.value.getElementsByClassName(HIGHLIGHT_CLASS)]
   const highlight = highlights[props.highlightIndex - 1]
   // Remove all classes "highlight--active" from the page and highlight the current one
-  highlights.forEach((el) => el.classList.toggle(HIGHLIGHT_ACTIVE_CLASS, el === highlight))
+  highlights.forEach(el => el.classList.toggle(HIGHLIGHT_ACTIVE_CLASS, el === highlight))
   // Only scroll to the highlight/page if the current page has a highlight index
   if (props.highlightIndex && highlight) {
     // If no highlight is found, offset the scroll to the center of the page
@@ -103,7 +103,11 @@ whenever(isVisible, () => emit('visible'))
 </script>
 
 <template>
-  <div ref="element" class="document-viewer-pdf-page" :style="style">
+  <div
+    ref="element"
+    class="document-viewer-pdf-page"
+    :style="style"
+  >
     <vue-pdf
       v-if="isVisibleOnce || highlightIndex"
       :key="`${scale}-${rotation}-${fitParent}`"
@@ -120,7 +124,10 @@ whenever(isVisible, () => emit('visible'))
       :width="rendererWidth"
       @highlight="applyHighlight"
     />
-    <div v-else class="document-viewer-pdf-page__placeholder" />
+    <div
+      v-else
+      class="document-viewer-pdf-page__placeholder"
+    />
   </div>
 </template>
 

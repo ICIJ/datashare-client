@@ -13,18 +13,31 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <form-step :title="t('task.batch-search.form.sections.operators')" :index="3" collapse>
+  <form-step
+    :title="t('task.batch-search.form.sections.operators')"
+    :index="3"
+    collapse
+  >
     <form-fieldset-i18n
       name="phraseMatch"
       translation-key="task.batch-search.form.phraseMatch"
       :icon="PhQuotes"
       label-class="pt-md-0"
     >
-      <b-form-radio-group v-model="phraseMatch" stacked>
-        <b-form-radio name="phraseMatch" :value="false">
+      <b-form-radio-group
+        v-model="phraseMatch"
+        stacked
+      >
+        <b-form-radio
+          name="phraseMatch"
+          :value="false"
+        >
           {{ t('task.batch-search.form.phraseMatch.options.no') }}
         </b-form-radio>
-        <b-form-radio name="phraseMatch" :value="true">
+        <b-form-radio
+          name="phraseMatch"
+          :value="true"
+        >
           {{ t('task.batch-search.form.phraseMatch.options.yes') }}
         </b-form-radio>
       </b-form-radio-group>
@@ -37,7 +50,13 @@ const { t } = useI18n()
       force-compact
       :icon="PhTextAa"
     >
-      <form-control-range v-model="phraseChanges" name="phraseChanges" :min="0" :max="3" :step="1" />
+      <form-control-range
+        v-model="phraseChanges"
+        name="phraseChanges"
+        :min="0"
+        :max="3"
+        :step="1"
+      />
     </form-fieldset-i18n>
     <form-fieldset-i18n
       v-else
@@ -47,7 +66,13 @@ const { t } = useI18n()
       force-compact
       :icon="PhTextAa"
     >
-      <form-control-range v-model="spellingChanges" name="spellingChanges" :min="0" :max="5" :step="1" />
+      <form-control-range
+        v-model="spellingChanges"
+        name="spellingChanges"
+        :min="0"
+        :max="5"
+        :step="1"
+      />
     </form-fieldset-i18n>
   </form-step>
 </template>

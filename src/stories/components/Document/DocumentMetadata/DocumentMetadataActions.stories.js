@@ -7,7 +7,7 @@ export default {
   args: {
     pinned: false
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       DocumentMetadataActions
     },

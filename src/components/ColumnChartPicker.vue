@@ -252,7 +252,9 @@ export default {
     </range-picker>
     <div class="column-chart-picker__scale d-flex">
       <div>{{ intervalFormat(start) }}</div>
-      <div class="ms-auto">{{ intervalFormat(end) }}</div>
+      <div class="ms-auto">
+        {{ intervalFormat(end) }}
+      </div>
     </div>
   </div>
 </template>

@@ -30,10 +30,16 @@ const compact = computed(() => breakpointDown.value[props.compactBreakpoint])
 <template>
   <page-table-tr class="project-card-row">
     <project-row-label :project="project" />
-    <project-row-description v-if="!compact" :project="project" />
+    <project-row-description
+      v-if="!compact"
+      :project="project"
+    />
     <project-row-documents-count :project="project" />
     <project-row-update-date :project="project" />
-    <project-row-links :project="project" :compact-breakpoint="compactBreakpoint" />
+    <project-row-links
+      :project="project"
+      :compact-breakpoint="compactBreakpoint"
+    />
     <project-row-actions :project="project" />
   </page-table-tr>
 </template>

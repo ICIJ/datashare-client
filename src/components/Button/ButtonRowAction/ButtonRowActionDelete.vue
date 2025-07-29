@@ -7,5 +7,8 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <button-row-action :icon="PhTrash" :label="t('buttonRowAction.delete')" />
+  <button-row-action
+    :icon="PhTrash"
+    :label="t('buttonRowAction.delete')"
+  />
 </template>

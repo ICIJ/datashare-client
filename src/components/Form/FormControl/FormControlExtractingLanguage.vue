@@ -58,7 +58,8 @@ export default {
       this.wait.start(this.loaderId)
       try {
         this.textLanguages = await this.$core.api.textLanguages()
-      } catch (e) {
+      }
+      catch (e) {
         this.$toast.error(this.t('formControlExtractingLanguage.failedToRetrieveLanguages'))
       }
       this.wait.end(this.loaderId)
@@ -68,7 +69,12 @@ export default {
 </script>
 
 <template>
-  <app-overlay :show="!isReady" class="form-control-extracting-language" rounded spinner-small>
+  <app-overlay
+    :show="!isReady"
+    class="form-control-extracting-language"
+    rounded
+    spinner-small
+  >
     <b-alert
       v-if="isReady && hasTextLanguages"
       model-value
@@ -82,7 +88,7 @@ export default {
         :model-value="modelValue"
         :options="[nullOption, ...options]"
         class="form-control-extracting-language__ocr-options"
-        @update:modelValue="(newValue) => $emit('update:modelValue', newValue)"
+        @update:model-value="(newValue) => $emit('update:modelValue', newValue)"
       />
     </b-form-group>
   </app-overlay>

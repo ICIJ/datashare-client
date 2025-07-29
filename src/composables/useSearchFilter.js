@@ -43,9 +43,11 @@ export function useSearchFilter() {
   function labelToHuman(label) {
     if (te(label)) {
       return t(label)
-    } else if (te('global.' + label)) {
+    }
+    else if (te('global.' + label)) {
       return t('global.' + label)
-    } else if (te('filter.' + label)) {
+    }
+    else if (te('filter.' + label)) {
       return t('filter.' + label)
     }
     return label
@@ -87,13 +89,13 @@ export function useSearchFilter() {
 
   function computedFilterValues(filter, { get = null, set = null } = {}) {
     get ??= () => getFilterValues(filter)
-    set ??= (key) => setFilterValue(filter, { key })
+    set ??= key => setFilterValue(filter, { key })
     return computed({ get, set })
   }
 
   function computedProjects({ get = null, set = null } = {}) {
     get ??= () => indices.value
-    set ??= (indices) => searchStore.setIndices(indices)
+    set ??= indices => searchStore.setIndices(indices)
     return computed({ get, set })
   }
 
@@ -263,7 +265,7 @@ export function useSearchFilter() {
 
   function computedExcludeFilter(filter, { get = null, set = null } = {}) {
     get ??= () => isFilterExcluded(filter)
-    set ??= (checked) => toggleExcludeFilter(filter, checked)
+    set ??= checked => toggleExcludeFilter(filter, checked)
     return computed({ get, set })
   }
 
@@ -280,7 +282,7 @@ export function useSearchFilter() {
 
   function computedContextualizeFilter(filter, { get = null, set = null } = {}) {
     get ??= () => isFilterContextualized(filter)
-    set ??= (checked) => toggleContextualizeFilter(filter, checked)
+    set ??= checked => toggleContextualizeFilter(filter, checked)
     return computed({ get, set })
   }
 
@@ -342,12 +344,12 @@ export function useSearchFilter() {
     return onAfterRouteUpdate((to, from) => {
       if (
         // We don't want to trigger the callback when the route is not "search"
-        to.name === 'search' &&
+        to.name === 'search'
         // or when the previous route is not a document in a modal (for instance,
         // when the user navigates from a document in grid view)
-        !(from.name === 'document' && from.query.modal) &&
+        && !(from.name === 'document' && from.query.modal)
         // or when the `from` query parameter is not changed.
-        to.query.from !== from.query.from
+        && to.query.from !== from.query.from
       ) {
         callback(to, from)
       }

@@ -21,7 +21,13 @@ const link = computed(() => {
 </script>
 
 <template>
-  <advanced-link-form no-fade :title="document.title" variant="action" :model-value="1" :link="link" />
+  <advanced-link-form
+    no-fade
+    :title="document.title"
+    variant="action"
+    :model-value="1"
+    :link="link"
+  />
 </template>
 
 <style lang="scss" scoped>

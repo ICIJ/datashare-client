@@ -7,7 +7,7 @@ import { slugger } from '@/utils/strings'
  * @mixin
  * @typicalname datashare
  */
-const ComponentMixin = (superclass) =>
+const ComponentMixin = superclass =>
   class extends superclass {
     /**
      * Asynchronously find a component in the lazyComponents object by its name.
@@ -29,7 +29,7 @@ const ComponentMixin = (superclass) =>
      */
     async getComponent(name) {
       // Find the component name key in lazyComponents object that matches the given name when slugified.
-      const key = find(keys(this.lazyComponents), (key) => this.sameComponentNames(name, key))
+      const key = find(keys(this.lazyComponents), key => this.sameComponentNames(name, key))
       // If a matching key is found, return the component object from the lazyComponents object.
       if (key) {
         return this.lazyComponents[key]?.().then(iteratee('default'))

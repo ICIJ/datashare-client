@@ -22,7 +22,7 @@ const hadTotal = ref(false)
 const total = computedTotal(toRef(props, 'filter'))
 const hideTotal = computed(() => total.value === null || !hadTotal.value)
 // We need to update hadTotal after the search is ready and a total is given
-watch(toRef(searchStore, 'isReady'), (value) => (hadTotal.value = value && total.value !== null))
+watch(toRef(searchStore, 'isReady'), value => (hadTotal.value = value && total.value !== null))
 </script>
 
 <template>

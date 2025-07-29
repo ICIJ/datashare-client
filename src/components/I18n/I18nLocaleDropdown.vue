@@ -40,10 +40,18 @@ const dropdownItemClass = (key) => {
     class="i18n-locale-dropdown__list popover-body-p-0"
   >
     <template #target>
-      <b-button class="i18n-locale-dropdown" href="#" :variant="null" @click.prevent>
+      <b-button
+        class="i18n-locale-dropdown"
+        href="#"
+        :variant="null"
+        @click.prevent
+      >
         <span class="i18n-locale-dropdown__button">
           <slot v-bind="{ currentLocale, locales }">
-            <phosphor-icon :name="PhGlobeHemisphereWest" class="me-1" />
+            <phosphor-icon
+              :name="PhGlobeHemisphereWest"
+              class="me-1"
+            />
             {{ currentLocale.label }}
           </slot>
         </span>

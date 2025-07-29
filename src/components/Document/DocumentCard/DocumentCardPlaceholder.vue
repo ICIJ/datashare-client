@@ -29,19 +29,37 @@ const actionsClassList = computed(() => {
 </script>
 
 <template>
-  <div v-for="i in repeat" :key="i" class="document-card-placeholder p-3 d-flex gap-3">
-    <div v-if="hasThumbnail" class="document-card-placeholder__thumbnail flex-grow-1">
+  <div
+    v-for="i in repeat"
+    :key="i"
+    class="document-card-placeholder p-3 d-flex gap-3"
+  >
+    <div
+      v-if="hasThumbnail"
+      class="document-card-placeholder__thumbnail flex-grow-1"
+    >
       <app-placeholder squared />
     </div>
     <div class="document-card-placeholder__properties d-flex flex-column gap-2 h-100 w-100">
       <app-placeholder :width="random(40, 70)" />
-      <div v-for="j in properties.length - 1" :key="j" class="d-flex flex-grow-1 gap-1 align-items-start">
+      <div
+        v-for="j in properties.length - 1"
+        :key="j"
+        class="d-flex flex-grow-1 gap-1 align-items-start"
+      >
         <app-placeholder width="1em" />
         <app-placeholder :width="random(5, 20)" />
       </div>
     </div>
-    <div class="document-card-placeholder__actions" :class="actionsClassList">
-      <app-placeholder width="1.75rem" height="1.75rem" :repeat="4" />
+    <div
+      class="document-card-placeholder__actions"
+      :class="actionsClassList"
+    >
+      <app-placeholder
+        width="1.75rem"
+        height="1.75rem"
+        :repeat="4"
+      />
     </div>
   </div>
 </template>

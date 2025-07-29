@@ -6,6 +6,7 @@ export default class FilterLanguage extends FilterText {
   itemLabel(item) {
     return `filter.lang.${item.key}`
   }
+
   static get display() {
     return DisplayLanguage
   }

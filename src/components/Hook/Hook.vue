@@ -41,9 +41,20 @@ const isDebug = computed(() => config.is('hooksDebug'))
 </script>
 
 <template>
-  <component :is="debugTag" v-if="isDebug" class="hook-debug" :title="title" />
+  <component
+    :is="debugTag"
+    v-if="isDebug"
+    class="hook-debug"
+    :title="title"
+  />
   <suspense>
-    <component :is="component" v-for="({ component }, i) of components" :key="i" v-bind="bind" :class="xClass" />
+    <component
+      :is="component"
+      v-for="({ component }, i) of components"
+      :key="i"
+      v-bind="bind"
+      :class="xClass"
+    />
   </suspense>
 </template>
 

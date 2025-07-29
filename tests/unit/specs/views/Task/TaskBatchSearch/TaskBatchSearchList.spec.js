@@ -20,25 +20,25 @@ vi.mock('@/api/apiInstance', () => {
             args: {
               batchRecord: {
                 '@type': 'org.icij.datashare.batch.BatchSearchRecord',
-                uuid: 'e0fd5476-fa48-4a1f-ba61-b959ec8ed6fb',
-                projects: ['local-datashare'],
-                name: 'qsdf',
-                description: '',
-                nbQueries: 3,
-                date: '2025-03-06T06:47:19.820+00:00',
-                state: 'QUEUED',
-                user: { id: 'local', name: null, email: null, provider: 'local' },
-                nbResults: 0,
-                published: false,
-                errorMessage: null,
-                errorQuery: null
+                'uuid': 'e0fd5476-fa48-4a1f-ba61-b959ec8ed6fb',
+                'projects': ['local-datashare'],
+                'name': 'qsdf',
+                'description': '',
+                'nbQueries': 3,
+                'date': '2025-03-06T06:47:19.820+00:00',
+                'state': 'QUEUED',
+                'user': { id: 'local', name: null, email: null, provider: 'local' },
+                'nbResults': 0,
+                'published': false,
+                'errorMessage': null,
+                'errorQuery': null
               },
               user: {
                 '@type': 'org.icij.datashare.session.DatashareUser',
-                id: 'local',
-                name: null,
-                email: null,
-                provider: 'local'
+                'id': 'local',
+                'name': null,
+                'email': null,
+                'provider': 'local'
               }
             },
             result: { value: 1 }
@@ -54,25 +54,25 @@ vi.mock('@/api/apiInstance', () => {
             args: {
               batchRecord: {
                 '@type': 'org.icij.datashare.batch.BatchSearchRecord',
-                uuid: 'abcdefgh-fa48-4a1f-ba61-b959ec8ed6fb',
-                projects: ['local-datashare'],
-                name: 'qsdf',
-                description: '',
-                nbQueries: 3,
-                date: '2025-03-06T06:47:19.820+00:00',
-                state: 'QUEUED',
-                user: { id: 'other', name: null, email: null, provider: 'local' },
-                nbResults: 0,
-                published: false,
-                errorMessage: null,
-                errorQuery: null
+                'uuid': 'abcdefgh-fa48-4a1f-ba61-b959ec8ed6fb',
+                'projects': ['local-datashare'],
+                'name': 'qsdf',
+                'description': '',
+                'nbQueries': 3,
+                'date': '2025-03-06T06:47:19.820+00:00',
+                'state': 'QUEUED',
+                'user': { id: 'other', name: null, email: null, provider: 'local' },
+                'nbResults': 0,
+                'published': false,
+                'errorMessage': null,
+                'errorQuery': null
               },
               user: {
                 '@type': 'org.icij.datashare.session.DatashareUser',
-                id: 'other',
-                name: null,
-                email: null,
-                provider: 'local'
+                'id': 'other',
+                'name': null,
+                'email': null,
+                'provider': 'local'
               }
             },
             result: { value: 1 }

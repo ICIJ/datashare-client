@@ -9,7 +9,7 @@ import { whenever } from '@vueuse/core'
  * @param condition - A predicate to apply on each new value
  * @returns A ref<boolean> that becomes true once the condition is met and never resets
  */
-export function refWhenever(source, condition = (v) => Boolean(v)) {
+export function refWhenever(source, condition = v => Boolean(v)) {
   const triggered = ref(false)
   const apply = () => condition(toValue(source))
   const cb = () => (triggered.value = true)

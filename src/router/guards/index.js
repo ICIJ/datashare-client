@@ -10,25 +10,30 @@ export default (core) => {
     const appStore = useAppStore()
     try {
       const username = await auth.getUsername()
-      const skipsAuth = to.matched.some((r) => get(r, 'meta.skipsAuth', false))
+      const skipsAuth = to.matched.some(r => get(r, 'meta.skipsAuth', false))
       if (skipsAuth) {
         next()
         // The user is authenticated
-      } else if (username) {
+      }
+      else if (username) {
         const path = appStore.popRedirectAfterLogin()
         if (to.path !== path && path !== null) {
           next({ path })
-        } else {
+        }
+        else {
           next()
         }
         // The user isn't authenticated
-      } else if (from.name !== 'login' && to.name !== 'login') {
+      }
+      else if (from.name !== 'login' && to.name !== 'login') {
         appStore.setRedirectAfterLogin(to.path)
         next({ name: 'login' })
-      } else {
+      }
+      else {
         next()
       }
-    } catch (error) {
+    }
+    catch (error) {
       next({ name: 'error', state: { error } })
     }
   }
@@ -39,7 +44,8 @@ export default (core) => {
     if (!projects.length && ['error', 'login'].indexOf(to.name) === -1) {
       const title = i18n.global.t('error.noProjects')
       next({ name: 'error', state: { foo: title } })
-    } else {
+    }
+    else {
       next()
     }
   }
@@ -62,7 +68,8 @@ export default (core) => {
     const allowedModes = get(meta, 'allowedModes', [])
     if (allowedModes.length === 0 || allowedModes.includes(currentMode)) {
       next()
-    } else {
+    }
+    else {
       const title = i18n.global.t('error.notFound')
       next({ name: 'error', state: { title } })
     }

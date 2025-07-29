@@ -43,7 +43,7 @@ function objectIncludes(object, text) {
   if (typeof object === 'string') {
     return object.toLowerCase().includes(text.toLowerCase())
   }
-  return Object.values(object).some((object) => objectIncludes(object, text))
+  return Object.values(object).some(object => objectIncludes(object, text))
 }
 
 function toVariant(string = '', defaultVariant = 'dark', prefix = '') {

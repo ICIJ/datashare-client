@@ -20,8 +20,13 @@ const content = computed(() => t('entityPopoverInfo.content'))
 
 <template>
   <div class="entity-popover-info">
-    <p class="text-secondary-emphasis mb-2">{{ content }}</p>
-    <i18n-t keypath="entityPopoverInfo.label" tag="p">
+    <p class="text-secondary-emphasis mb-2">
+      {{ content }}
+    </p>
+    <i18n-t
+      keypath="entityPopoverInfo.label"
+      tag="p"
+    >
       <template #extractor>
         <span class="font-monospace border border-tertiary rounded-1 p-1 cursor-pointer">{{ extractor }}</span>
       </template>

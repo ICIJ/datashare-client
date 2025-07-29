@@ -73,6 +73,7 @@ class Core extends Behaviors {
     // This watcher will update the page title whenever the _pageContext ref changes.
     watchEffect(this.applyPageTitle.bind(this))
   }
+
   /**
    * Add a Vue plugin to the app
    * @param {Object} Plugin - The actual Vue plugin class
@@ -83,6 +84,7 @@ class Core extends Behaviors {
     this.vue.use(Plugin, options)
     return this
   }
+
   /**
    * Configure all default Vue plugins for this application
    * @returns {Core} the current instance of Core
@@ -109,6 +111,7 @@ class Core extends Behaviors {
     this.useCore()
     return this
   }
+
   /**
    * Configure vue-i18n plugin
    * @returns {Core} the current instance of Core
@@ -147,6 +150,7 @@ class Core extends Behaviors {
     this.use(this._i18n)
     return this
   }
+
   /**
    * Configure bootstrap-vue plugin
    * @returns {Core} the current instance of Core
@@ -156,6 +160,7 @@ class Core extends Behaviors {
     this.use(this.bootstrapVue)
     return this
   }
+
   /**
    * Configure vue-router plugin
    * @returns {Core} the current instance of Core
@@ -167,6 +172,7 @@ class Core extends Behaviors {
     guards(this)
     return this
   }
+
   /**
    * Configure pinia
    * @returns {Core} the current instance of Core
@@ -175,6 +181,7 @@ class Core extends Behaviors {
     this.use(this.pinia)
     return this
   }
+
   /**
    * Configure most common Vue plugins (Murmur, VueScrollTo and VueCalendar)
    * @returns {Core} the current instance of Core
@@ -194,10 +201,11 @@ class Core extends Behaviors {
       clearOnUrlChange: false,
       hideProgressBar: true,
       autoClose: 5000,
-      useHandler: (app) => app.use(this.i18n)
+      useHandler: app => app.use(this.i18n)
     })
     return this
   }
+
   /**
    * Add a $core property to the instance's Vue
    * @returns {Core} the current instance of Core
@@ -207,6 +215,7 @@ class Core extends Behaviors {
     this.use(this.plugin)
     return this
   }
+
   /**
    * Build a VueCore instance with the current Core instance
    * as a parameter of the global properties.
@@ -245,6 +254,7 @@ class Core extends Behaviors {
       }
     }
   }
+
   /**
    * Load settings from the server and instantiate most of the application configuration.
    * @async
@@ -277,7 +287,8 @@ class Core extends Behaviors {
       setTheme(getTheme())
       // Hold a promise that is resolved when the core is configured
       return this.ready && this._readyResolve(this)
-    } catch (error) {
+    }
+    catch (error) {
       return this.ready && this._readyReject(error)
     }
   }
@@ -305,6 +316,7 @@ class Core extends Behaviors {
     // Return an instance of the int constructor we receive.
     return this.vue
   }
+
   /**
    * Build a promise to be resolved when the application is configured.
    */
@@ -316,6 +328,7 @@ class Core extends Behaviors {
     // Notify the document the core is ready
     this._ready.then(() => this.dispatch('ready'))
   }
+
   /**
    * Dispatch an event from the document root, passing the core application through event message.
    * @param {String} name - Name of the event to fire
@@ -326,6 +339,7 @@ class Core extends Behaviors {
     dispatch(name, { app: this, core: this, ...args })
     return this
   }
+
   /**
    * Get the current signed user.
    * @async
@@ -335,6 +349,7 @@ class Core extends Behaviors {
   getUser() {
     return this.api.getUser()
   }
+
   /**
    * Get and update user definition in place
    * @async
@@ -344,6 +359,7 @@ class Core extends Behaviors {
     // Load the user
     this.config.merge(await this.getUser())
   }
+
   /**
    * Get settings (both from the server settings and the current mode)
    * @async
@@ -360,6 +376,7 @@ class Core extends Behaviors {
     // The backend can yet override some configuration
     this.config.merge(serverSettings)
   }
+
   /**
    * Append the given title to the page title
    * @param {String} title - Title to append to the page
@@ -371,6 +388,7 @@ class Core extends Behaviors {
     }
     return this
   }
+
   /**
    * Get the page context, which is used to set the page title or other page-related data.
    * @param {String} [path] - Optional path to a specific property in the page context object.
@@ -382,6 +400,7 @@ class Core extends Behaviors {
     }
     return this._pageContext
   }
+
   /**
    * Set the page context, which is used to set the page title or other page-related data.
    * @param {Object} context - The context object to set, which can include a title or other properties.
@@ -391,6 +410,7 @@ class Core extends Behaviors {
     Object.assign(this._pageContext, context)
     return this
   }
+
   /**
    * Clear the page context, removing all properties from it.
    * @returns {Core} the current instance of Core
@@ -403,6 +423,7 @@ class Core extends Behaviors {
     }
     return this
   }
+
   /**
    * Register a callback to an event using the EventBus singleton.
    * @param {String} event
@@ -411,6 +432,7 @@ class Core extends Behaviors {
   on(event, callback) {
     EventBus.on(event, callback)
   }
+
   /**
    * Unregister a callback to an event using the EventBus singleton.
    * @param {String} event
@@ -419,6 +441,7 @@ class Core extends Behaviors {
   off(event, callback) {
     EventBus.off(event, callback)
   }
+
   /**
    * Emit an event using the EventBus singleton.
    * @param {String} event
@@ -427,6 +450,7 @@ class Core extends Behaviors {
   emit(event, payload) {
     EventBus.emit(event, payload)
   }
+
   /**
    * Get a promise that is resolved when the application is ready
    * @fullfil {Object} The actual application core instance.
@@ -438,6 +462,7 @@ class Core extends Behaviors {
     }
     return this._ready
   }
+
   /**
    * The application core instance. Deprecated in favor or the `core` property.
    * @type {Core}
@@ -446,6 +471,7 @@ class Core extends Behaviors {
   get app() {
     return this
   }
+
   /**
    * The application core instance
    * @type {Core}
@@ -453,6 +479,7 @@ class Core extends Behaviors {
   get core() {
     return this
   }
+
   /**
    * The Bootstrap Vue plugin instance.
    * @returns {Plugin}
@@ -460,6 +487,7 @@ class Core extends Behaviors {
   get bootstrapVue() {
     return this._bootstrapVue
   }
+
   /**
    * The I18n instance
    * @type {I18n}
@@ -467,6 +495,7 @@ class Core extends Behaviors {
   get i18n() {
     return this._i18n
   }
+
   /**
    * The VueRouter instance
    * @type {VueRouter}
@@ -474,6 +503,7 @@ class Core extends Behaviors {
   get router() {
     return this._router
   }
+
   /**
    * The current route object
    * @type {Route}
@@ -481,6 +511,7 @@ class Core extends Behaviors {
   get route() {
     return toValue(this._router.currentRoute)
   }
+
   /**
    * The Pinia instance
    * @type {Pinia}
@@ -488,12 +519,14 @@ class Core extends Behaviors {
   get pinia() {
     return pinia
   }
+
   /**
    * All Pinia stores available in the application
    */
   get stores() {
     return stores
   }
+
   /**
    * The CorePlugin instance
    * @returns {*}
@@ -501,6 +534,7 @@ class Core extends Behaviors {
   get plugin() {
     return this._plugin
   }
+
   /**
    * The Auth module instance
    * @type {Auth}
@@ -508,6 +542,7 @@ class Core extends Behaviors {
   get auth() {
     return this._auth
   }
+
   /**
    * The configuration object provided by Murmur
    * @type {Object}
@@ -515,6 +550,7 @@ class Core extends Behaviors {
   get config() {
     return Murmur.config
   }
+
   /**
    * The Datashare api interface
    * @type {Api}
@@ -522,6 +558,7 @@ class Core extends Behaviors {
   get api() {
     return this._api
   }
+
   /**
    * The Vue app
    * @type {Vue}
@@ -529,6 +566,7 @@ class Core extends Behaviors {
   get vue() {
     return this._vue
   }
+
   /**
    * Get current Datashare mode
    * @type {String}
@@ -536,6 +574,7 @@ class Core extends Behaviors {
   get mode() {
     return getMode(this.config.get('mode'))
   }
+
   /**
    * Get the current page context
    * @type {Object}
@@ -543,6 +582,7 @@ class Core extends Behaviors {
   get pageContext() {
     return this._pageContext
   }
+
   /**
    * Get the current page title
    * @type {String}
@@ -550,6 +590,7 @@ class Core extends Behaviors {
   get pageTitle() {
     return this._pageContext.title
   }
+
   /**
    * Append the given title to the page title
    * @param {String} title - Title to append to the page
@@ -557,6 +598,7 @@ class Core extends Behaviors {
   set pageTitle(title) {
     this._pageContext.title = title ?? null
   }
+
   /**
    * instantiate a Core class (useful for chaining usage or mapping)
    * @param {...Mixed} options - Options to pass to the Core constructor
@@ -569,7 +611,7 @@ class Core extends Behaviors {
 
 // Force usage of Core.init instead of constructor
 const coreInit = Object.freeze({
-  isInstanceOfCore: (object) => object instanceof Core,
+  isInstanceOfCore: object => object instanceof Core,
   init: Core.init
 })
 

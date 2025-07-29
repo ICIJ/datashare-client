@@ -155,7 +155,8 @@ describe('Datashare backend client', () => {
     EventBus.on('http::error', mockCallback)
     try {
       await api.getSettings()
-    } catch (error) {
+    }
+    catch (error) {
       expect(error.response.status).toBe(401)
     }
     expect(axios.request).toBeCalledTimes(1)
@@ -462,7 +463,8 @@ describe('Datashare backend client', () => {
 
     try {
       await api.createIndex()
-    } catch (err) {
+    }
+    catch (err) {
       expect(err).toEqual(error)
     }
 

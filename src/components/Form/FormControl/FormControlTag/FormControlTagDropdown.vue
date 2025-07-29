@@ -73,7 +73,7 @@ const filteredOptions = computed(() => {
 
 const availableOptions = computed(() => {
   if (props.noDuplicates) {
-    return props.options.filter((option) => !hasOption(option))
+    return props.options.filter(option => !hasOption(option))
   }
   return props.options
 })
@@ -169,7 +169,10 @@ watch(
     >
       <!-- eslint-disable-next-line vue/no-template-shadow -->
       <template #default="{ active, item, value }">
-        <slot name="dropdown-item" v-bind="{ active, item, value }" />
+        <slot
+          name="dropdown-item"
+          v-bind="{ active, item, value }"
+        />
       </template>
     </form-control-tag-dropdown-item>
   </div>

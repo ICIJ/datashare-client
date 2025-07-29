@@ -11,5 +11,9 @@ defineProps({
 </script>
 
 <template>
-  <display-datetime :value="value" :format="FORMAT_MONTH" no-tooltip />
+  <display-datetime
+    :value="value"
+    :format="FORMAT_MONTH"
+    no-tooltip
+  />
 </template>

@@ -37,10 +37,17 @@ const noMatches = computed(() => !loading && !entries.length)
     </div>
     <div class="document-entries-grid__list">
       <template v-if="loading">
-        <document-card-grid-placeholder :properties="properties" :repeat="5" />
+        <document-card-grid-placeholder
+          :properties="properties"
+          :repeat="5"
+        />
       </template>
       <template v-else>
-        <div v-for="entry in entries" :key="entry.id" class="document-entries-grid__list__item">
+        <div
+          v-for="entry in entries"
+          :key="entry.id"
+          class="document-entries-grid__list__item"
+        >
           <document-card-grid
             v-model:selected="selectionValues[entry.id]"
             class="h-100"
@@ -51,7 +58,10 @@ const noMatches = computed(() => !loading && !entries.length)
         </div>
       </template>
     </div>
-    <div v-if="noMatches" class="p-3 text-secondary text-center">
+    <div
+      v-if="noMatches"
+      class="p-3 text-secondary text-center"
+    >
       {{ t('documentEntries.noMatches') }}
     </div>
     <slot />

@@ -7,7 +7,7 @@ export default {
     collapse: true,
     index: 1
   },
-  render: (args) => ({
+  render: args => ({
     setup: () => ({ args }),
     components: {
       FormStepHeadingIndex

@@ -9,7 +9,7 @@ import { useSearchStore } from '@/store/modules'
   @mixin FiltersMixin
   @typicalname datashare
 */
-const FiltersMixin = (superclass) =>
+const FiltersMixin = superclass =>
   class extends superclass {
     /**
      * Get the search store
@@ -19,6 +19,7 @@ const FiltersMixin = (superclass) =>
     get searchStore() {
       return useSearchStore()
     }
+
     /**
      * Register a filter
      * @memberof FiltersMixin.prototype
@@ -35,6 +36,7 @@ const FiltersMixin = (superclass) =>
     registerFilter(...args) {
       this.searchStore.addFilter(...args)
     }
+
     /**
      * Unregister a filter
      * @memberof FiltersMixin.prototype
@@ -43,6 +45,7 @@ const FiltersMixin = (superclass) =>
     unregisterFilter(name) {
       this.searchStore.removeFilter(name)
     }
+
     /**
      * Register a filter only for a specific project
      * @memberof FiltersMixin.prototype
@@ -63,6 +66,7 @@ const FiltersMixin = (superclass) =>
         withoutFn: () => this.unregisterFilter(options.name)
       })
     }
+
     /**
      * Unregister a filter only for a specific project
      * @memberof FiltersMixin.prototype

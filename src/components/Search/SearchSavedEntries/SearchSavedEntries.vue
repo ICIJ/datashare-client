@@ -59,7 +59,10 @@ function searchParamsQuery(uri) {
     show-row-details
   >
     <template #cell(name)="{ item }">
-      <router-link :to="{ name: 'search', query: searchParamsQuery(item.uri) }" class="fw-medium">
+      <router-link
+        :to="{ name: 'search', query: searchParamsQuery(item.uri) }"
+        class="fw-medium"
+      >
         {{ item.name }}
       </router-link>
     </template>
@@ -76,7 +79,11 @@ function searchParamsQuery(uri) {
       />
     </template>
     <template #row-details="{ item }">
-      <search-breadcrumb-uri :uri="item.uri" no-label class="ps-5" />
+      <search-breadcrumb-uri
+        :uri="item.uri"
+        no-label
+        class="ps-5"
+      />
     </template>
     <template #empty>
       {{ t('searchSavedEntries.empty') }}

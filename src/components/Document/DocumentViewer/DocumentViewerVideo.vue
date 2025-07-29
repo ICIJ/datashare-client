@@ -5,21 +5,47 @@
     :border-variant="cardVariant"
     no-body
   >
-    <video controls :autoplay="autoplay" :loop="loop" class="video-viewer__player w-100">
-      <source :src="document.inlineFullUrl" :type="document.contentType" />
+    <video
+      controls
+      :autoplay="autoplay"
+      :loop="loop"
+      class="video-viewer__player w-100"
+    >
+      <source
+        :src="document.inlineFullUrl"
+        :type="document.contentType"
+      >
     </video>
     <template #footer>
       <div class="d-lg-flex">
-        <div switches class="my-auto d-flex">
-          <b-form-checkbox v-model="autoplay" switch class="my-2 me-3">
+        <div
+          switches
+          class="my-auto d-flex"
+        >
+          <b-form-checkbox
+            v-model="autoplay"
+            switch
+            class="my-2 me-3"
+          >
             {{ t('document.player.autoplay') }}
           </b-form-checkbox>
-          <b-form-checkbox v-model="loop" switch class="my-2 me-3">
+          <b-form-checkbox
+            v-model="loop"
+            switch
+            class="my-2 me-3"
+          >
             {{ t('document.player.loop') }}
           </b-form-checkbox>
         </div>
-        <b-alert :model-value="cannotPlayVideoFormat" variant="warning" class="ms-auto mt-3 mb-0 my-lg-auto">
-          <phosphor-icon :name="PhWarning" class="me-2" />
+        <b-alert
+          :model-value="cannotPlayVideoFormat"
+          variant="warning"
+          class="ms-auto mt-3 mb-0 my-lg-auto"
+        >
+          <phosphor-icon
+            :name="PhWarning"
+            class="me-2"
+          />
           {{ t('document.player.video.unknownFormat') }}
         </b-alert>
       </div>

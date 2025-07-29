@@ -90,7 +90,10 @@ defineExpose({ focus, blur, clear })
     @clear="emit('clear')"
   >
     <template #input-end>
-      <div v-if="!compact" class="d-flex flew-nowrap gap-1">
+      <div
+        v-if="!compact"
+        class="d-flex flew-nowrap gap-1"
+      >
         <slot name="addons" />
       </div>
       <b-button

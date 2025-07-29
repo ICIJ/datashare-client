@@ -40,16 +40,16 @@ const widthString = computed(() => {
   return props.width === undefined
     ? undefined
     : typeof props.width === 'number'
-    ? props.width.toString() + '%'
-    : props.width
+      ? props.width.toString() + '%'
+      : props.width
 })
 
 const heightString = computed(() => {
   return props.height === undefined
     ? undefined
     : typeof props.height === 'number'
-    ? props.height.toString() + '%'
-    : props.height
+      ? props.height.toString() + '%'
+      : props.height
 })
 
 const colsString = computed(() => {
@@ -76,7 +76,13 @@ const style = computed(() => {
 </script>
 
 <template>
-  <div v-for="i in repeat" :key="i" class="app-placeholder placeholder rounded" :class="classList" :style="style" />
+  <div
+    v-for="i in repeat"
+    :key="i"
+    class="app-placeholder placeholder rounded"
+    :class="classList"
+    :style="style"
+  />
 </template>
 
 <style lang="scss">

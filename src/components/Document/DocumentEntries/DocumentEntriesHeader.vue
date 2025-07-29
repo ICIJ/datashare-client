@@ -71,7 +71,8 @@ const runBatchDownload = async () => {
     const body = t('documentEntriesHeader.batchDownloadCreated')
     const linkLabel = t('documentEntriesHeader.batchDownloadLink')
     toast.success(body, { href, linkLabel })
-  } catch (_) {
+  }
+  catch (_) {
     const body = t('documentEntriesHeader.batchDownloadError')
     toast.error(body)
   }
@@ -84,12 +85,20 @@ const classList = computed(() => {
 })
 
 // Hide the batch mode toggle if there are no items to select
-watch(toRef(props, 'total'), (total) => (selectMode.value = selectMode.value && total > 0))
+watch(toRef(props, 'total'), total => (selectMode.value = selectMode.value && total > 0))
 </script>
 
 <template>
-  <div ref="element" class="document-entries-header" :class="classList">
-    <button-toggle-batch-mode v-model:active="selectMode" :loading="loading" :disabled="total === 0" />
+  <div
+    ref="element"
+    class="document-entries-header"
+    :class="classList"
+  >
+    <button-toggle-batch-mode
+      v-model:active="selectMode"
+      :loading="loading"
+      :disabled="total === 0"
+    />
     <slot v-bind="{ compact }">
       <div>
         <row-pagination-documents
@@ -100,7 +109,10 @@ watch(toRef(props, 'total'), (total) => (selectMode.value = selectMode.value && 
           :per-page="perPage"
           :compact="compact"
         />
-        <button-download-documents :label="batchDownloadDocumentsLabel" @click="runBatchDownload" />
+        <button-download-documents
+          :label="batchDownloadDocumentsLabel"
+          @click="runBatchDownload"
+        />
       </div>
     </slot>
   </div>

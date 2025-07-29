@@ -1,13 +1,31 @@
 <template>
   <div class="widget widget--field-facets">
-    <div v-if="widget.title" class="widget__header d-flex align-items-center">
-      <phosphor-icon v-if="widget.icon" :name="widget.icon" class="me-2" size="2em" />
-      <h3 class="m-0 p-0 h5" v-html="title"></h3>
+    <div
+      v-if="widget.title"
+      class="widget__header d-flex align-items-center"
+    >
+      <phosphor-icon
+        v-if="widget.icon"
+        :name="widget.icon"
+        class="me-2"
+        size="2em"
+      />
+      <h3
+        class="m-0 p-0 h5"
+        v-html="title"
+      />
     </div>
-    <app-wait :for="loaderId" transition="fade">
+    <app-wait
+      :for="loaderId"
+      transition="fade"
+    >
       <template #waiting>
         <div class="widget__spinner text-center p-4">
-          <phosphor-icon :name="PhCircleNotch" spin size="2em" />
+          <phosphor-icon
+            :name="PhCircleNotch"
+            spin
+            size="2em"
+          />
         </div>
       </template>
       <div class="widget__list">
@@ -20,11 +38,22 @@
           :total="total"
           :to="to"
         />
-        <infinite-loading v-if="useInfiniteScroll" :identifier="infiniteScrollId" @infinite="loadNextPage">
-          <template #spinner><span></span></template>
-          <template #complete><span></span></template>
+        <infinite-loading
+          v-if="useInfiniteScroll"
+          :identifier="infiniteScrollId"
+          @infinite="loadNextPage"
+        >
+          <template #spinner>
+            <span />
+          </template>
+          <template #complete>
+            <span />
+          </template>
         </infinite-loading>
-        <div v-if="reachedTheEnd" class="text-tertiary p-3 text-center">
+        <div
+          v-if="reachedTheEnd"
+          class="text-tertiary p-3 text-center"
+        >
           <span v-if="items.length">•</span>
           <span v-else>{{ t('widget.noData') }}</span>
         </div>

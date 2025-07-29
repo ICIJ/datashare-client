@@ -46,7 +46,8 @@ describe('auth backend client', () => {
       expect.assertions(1)
       try {
         await auth._getBasicAuthUserName()
-      } catch (e) {
+      }
+      catch (e) {
         expect(e).toEqual(new Error('500 message'))
       }
     })

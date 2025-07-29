@@ -16,7 +16,7 @@ export default {
     directories: ~~(2e2 * Math.random()),
     size: ~~(2e3 * Math.random())
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       PathTreeViewEntry
     },

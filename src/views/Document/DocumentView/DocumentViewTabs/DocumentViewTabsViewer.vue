@@ -63,7 +63,10 @@ const asyncPreviewComponent = computed(() => {
   <div class="d-flex flex-grow-1 document__preview">
     <template v-if="previewComponent">
       <suspense>
-        <component :is="asyncPreviewComponent" :document="document" />
+        <component
+          :is="asyncPreviewComponent"
+          :document="document"
+        />
       </suspense>
     </template>
     <template v-else>

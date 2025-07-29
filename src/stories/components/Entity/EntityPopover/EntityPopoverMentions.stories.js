@@ -16,7 +16,7 @@ export default {
     excerpt,
     excerpts
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       EntityPopoverMentions
     },

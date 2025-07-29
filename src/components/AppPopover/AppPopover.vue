@@ -27,18 +27,37 @@ const toggle = () => (modelValue.value = !modelValue.value)
 </script>
 
 <template>
-  <b-popover ref="popover" v-model="modelValue" class="app-popover" :teleport-to="teleportTo">
+  <b-popover
+    ref="popover"
+    v-model="modelValue"
+    class="app-popover"
+    :teleport-to="teleportTo"
+  >
     <template #default>
-      <app-popover-header v-if="!hideHeader" :title="title" class="mb-3" @hide="hide">
-        <slot name="title" v-bind="{ show, hide, toggle, visible }" />
+      <app-popover-header
+        v-if="!hideHeader"
+        :title="title"
+        class="mb-3"
+        @hide="hide"
+      >
+        <slot
+          name="title"
+          v-bind="{ show, hide, toggle, visible }"
+        />
         <template #close>
-          <slot name="close" v-bind="{ show, hide, toggle, visible }" />
+          <slot
+            name="close"
+            v-bind="{ show, hide, toggle, visible }"
+          />
         </template>
       </app-popover-header>
       <slot v-bind="{ show, hide, toggle, visible }" />
     </template>
     <template #target>
-      <slot name="target" v-bind="{ show, hide, toggle, visible }" />
+      <slot
+        name="target"
+        v-bind="{ show, hide, toggle, visible }"
+      />
     </template>
   </b-popover>
 </template>

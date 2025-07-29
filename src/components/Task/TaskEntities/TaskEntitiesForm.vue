@@ -53,7 +53,8 @@ const fetchPipelines = waitFor(loaderPipelineId, getNerPipelines)
 onMounted(async () => {
   try {
     pipelines.value = await fetchPipelines()
-  } catch (e) {
+  }
+  catch (e) {
     error.value = e
   }
 })
@@ -64,7 +65,7 @@ watch(
     pipeline.value = entityType === EMAILS ? emailPipeline : defaultPipeline
   }
 )
-const pipelinesNamedEntities = computed(() => filter(values(pipelines.value), (p) => p !== emailPipeline))
+const pipelinesNamedEntities = computed(() => filter(values(pipelines.value), p => p !== emailPipeline))
 const hasPipelinesNamedEntities = computed(() => pipelinesNamedEntities.value.length > 0)
 const hasPipelineEmail = computed(() => includes(values(pipelines.value), emailPipeline))
 
@@ -105,7 +106,7 @@ const pipelineOptions = computed(() => {
 
 const submitLabel = computed(() => t(`task.entities.form.submit`))
 const successMessage = computed(() => t('task.entities.form.success'))
-const errorMessage = (error) => t(`task.entities.form.error`, { error })
+const errorMessage = error => t(`task.entities.form.error`, { error })
 
 const valid = computed(() => {
   return !waiting(loaderPipelineId) && !waiting(loaderLaunchTask) && !error.value
@@ -141,7 +142,10 @@ async function submit() {
       @reset="reset"
       @submit="submit"
     >
-      <form-fieldset-i18n name="project-selector" translation-key="task.entities.form.projectSelector">
+      <form-fieldset-i18n
+        name="project-selector"
+        translation-key="task.entities.form.projectSelector"
+      >
         <search-bar-input-dropdown-for-projects v-model="selectedProject" />
       </form-fieldset-i18n>
       <form-fieldset-i18n
@@ -151,7 +155,12 @@ async function submit() {
         label-class="pt-md-0"
         description-class="pt-md-0"
       >
-        <b-form-radio-group v-model="findEntities" name="findEntities" :options="findEntitiesOptions" stacked />
+        <b-form-radio-group
+          v-model="findEntities"
+          name="findEntities"
+          :options="findEntitiesOptions"
+          stacked
+        />
       </form-fieldset-i18n>
       <form-fieldset-i18n
         v-if="isPipelineNamedEntities"
@@ -160,9 +169,23 @@ async function submit() {
         label-class="pt-md-0"
         description-class="pt-md-0"
       >
-        <b-alert v-if="error" model-value variant="danger">{{ error }}</b-alert>
-        <b-form-radio-group v-else v-model="pipeline" :options="pipelineOptions" name="pipeline" stacked>
-          <template #option="val"> <div v-html="val.text" /> </template>
+        <b-alert
+          v-if="error"
+          model-value
+          variant="danger"
+        >
+          {{ error }}
+        </b-alert>
+        <b-form-radio-group
+          v-else
+          v-model="pipeline"
+          :options="pipelineOptions"
+          name="pipeline"
+          stacked
+        >
+          <template #option="val">
+            <div v-html="val.text" />
+          </template>
         </b-form-radio-group>
       </form-fieldset-i18n>
       <form-fieldset-i18n
@@ -171,7 +194,12 @@ async function submit() {
         label-class="pt-md-0"
         description-class="pt-md-0"
       >
-        <b-form-radio-group v-model="offline" name="offline" :options="offlineOptions" stacked />
+        <b-form-radio-group
+          v-model="offline"
+          name="offline"
+          :options="offlineOptions"
+          stacked
+        />
       </form-fieldset-i18n>
     </form-creation>
   </app-wait>

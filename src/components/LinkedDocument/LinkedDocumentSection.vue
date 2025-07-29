@@ -1,10 +1,26 @@
 <template>
-  <b-accordion flush class="linked-document-section rounded-end col-12 col-lg-6 m-0 pe-1">
-    <b-accordion-item v-model="open" :header-class="headerClass" button-class="rounded">
+  <b-accordion
+    flush
+    class="linked-document-section rounded-end col-12 col-lg-6 m-0 pe-1"
+  >
+    <b-accordion-item
+      v-model="open"
+      :header-class="headerClass"
+      button-class="rounded"
+    >
       <template #title>
-        <slot name="title"> <linked-document-section-header :title="title" :icon="icon" /> </slot>
+        <slot name="title">
+          <linked-document-section-header
+            :title="title"
+            :icon="icon"
+          />
+        </slot>
       </template>
-      <linked-document-section-list :description="description" :documents="documents" :to-search="toSearch" />
+      <linked-document-section-list
+        :description="description"
+        :documents="documents"
+        :to-search="toSearch"
+      />
     </b-accordion-item>
   </b-accordion>
 </template>

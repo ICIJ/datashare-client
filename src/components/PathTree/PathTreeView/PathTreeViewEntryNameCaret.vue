@@ -23,8 +23,16 @@ const icon = computed(() => {
 </script>
 
 <template>
-  <div class="path-tree-view-entry-name-caret d-flex" :class="classList">
-    <phosphor-icon :name="icon" :spin="loading" :fill="!loading" class="path-tree-view-entry-name-caret__icon" />
+  <div
+    class="path-tree-view-entry-name-caret d-flex"
+    :class="classList"
+  >
+    <phosphor-icon
+      :name="icon"
+      :spin="loading"
+      :fill="!loading"
+      class="path-tree-view-entry-name-caret__icon"
+    />
   </div>
 </template>
 

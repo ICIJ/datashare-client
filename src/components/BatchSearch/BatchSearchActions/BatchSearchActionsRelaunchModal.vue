@@ -21,16 +21,36 @@ const submit = () => {
 </script>
 
 <template>
-  <app-modal-prompt :title="t('batchSearchActionsRelaunchModal.title')" @submit="submit">
+  <app-modal-prompt
+    :title="t('batchSearchActionsRelaunchModal.title')"
+    @submit="submit"
+  >
     <div class="d-flex flex-column gap-3">
-      <b-form-group :label="t('batchSearchActionsRelaunchModal.name')" label-for="input-name">
-        <b-form-input id="input-name" ref="inputModal" v-model="name" type="text" />
+      <b-form-group
+        :label="t('batchSearchActionsRelaunchModal.name')"
+        label-for="input-name"
+      >
+        <b-form-input
+          id="input-name"
+          ref="inputModal"
+          v-model="name"
+          type="text"
+        />
       </b-form-group>
-      <b-form-group :label="t('batchSearchActionsRelaunchModal.description')" label-for="input-description">
-        <b-form-textarea id="input-description" v-model="description" />
+      <b-form-group
+        :label="t('batchSearchActionsRelaunchModal.description')"
+        label-for="input-description"
+      >
+        <b-form-textarea
+          id="input-description"
+          v-model="description"
+        />
       </b-form-group>
       <b-form-group>
-        <b-form-checkbox id="input-delete-after-relaunch" v-model="deleteAfterRelaunch">
+        <b-form-checkbox
+          id="input-delete-after-relaunch"
+          v-model="deleteAfterRelaunch"
+        >
           {{ t('batchSearchActionsRelaunchModal.deleteAfterRelaunch') }}
         </b-form-checkbox>
       </b-form-group>

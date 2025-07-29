@@ -35,8 +35,14 @@ const noHeader = computed(() => noToggler && noSort)
 </script>
 
 <template>
-  <header v-if="!noHeader" class="d-flex justify-content-between align-items-center">
-    <span v-if="!noSort" class="d-inline-flex align-items-center gap-1 text-nowrap text-body-secondary">
+  <header
+    v-if="!noHeader"
+    class="d-flex justify-content-between align-items-center"
+  >
+    <span
+      v-if="!noSort"
+      class="d-inline-flex align-items-center gap-1 text-nowrap text-body-secondary"
+    >
       <phosphor-icon :name="PhSortDescending" />
       {{ t('documentUserCommentsList.sortingText') }}
     </span>

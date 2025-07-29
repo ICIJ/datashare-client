@@ -32,15 +32,25 @@ const compact = computed(() => {
 
 <template>
   <div class="project-entries-table">
-    <page-table v-model:sort="sort" v-model:order="order">
+    <page-table
+      v-model:sort="sort"
+      v-model:order="order"
+    >
       <template #colgroup>
-        <col style="min-width: 200px" />
-        <col v-if="!compact" style="min-width: 200px" />
+        <col style="min-width: 200px">
+        <col
+          v-if="!compact"
+          style="min-width: 200px"
+        >
       </template>
       <template #thead>
         <project-entries-table-head :compact-breakpoint="compactBreakpoint" />
       </template>
-      <project-entries-table-body :compact-breakpoint="compactBreakpoint" :projects="projects" :loading="loading" />
+      <project-entries-table-body
+        :compact-breakpoint="compactBreakpoint"
+        :projects="projects"
+        :loading="loading"
+      />
     </page-table>
   </div>
 </template>

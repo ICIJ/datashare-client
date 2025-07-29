@@ -17,10 +17,20 @@ const classList = computed(() => {
 </script>
 
 <template>
-  <div class="app-sidebar-footer-logo" :class="classList">
-    <img src="@/assets/images/logo-color-symbol.svg" alt="Datashare" class="img-fluid" />
+  <div
+    class="app-sidebar-footer-logo"
+    :class="classList"
+  >
+    <img
+      src="@/assets/images/logo-color-symbol.svg"
+      alt="Datashare"
+      class="img-fluid"
+    >
     <app-sidebar-footer-logo-version>
-      <slot name="version" v-bind="{ compact }" />
+      <slot
+        name="version"
+        v-bind="{ compact }"
+      />
     </app-sidebar-footer-logo-version>
   </div>
 </template>

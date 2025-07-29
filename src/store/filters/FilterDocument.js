@@ -7,6 +7,6 @@ export default class FilterDocument extends FilterType {
   }
 
   addParentIncludeFilter(body, param) {
-    return body.query('has_parent', { parent_type: 'Document' }, (q) => this.addChildIncludeFilter(q, param))
+    return body.query('has_parent', { parent_type: 'Document' }, q => this.addChildIncludeFilter(q, param))
   }
 }

@@ -11,7 +11,8 @@ export function datasharePlugin(Client) {
   Client.prototype.getDocument = function (index, id, routing = null, params = {}) {
     try {
       return this.get({ index, id, routing, ...params })
-    } catch (error) {
+    }
+    catch (error) {
       EventBus.emit('http::error', error)
       throw error
     }
@@ -29,7 +30,7 @@ export function datasharePlugin(Client) {
 
   Client.prototype._search = function (params) {
     return this.search({ ...params }).then(
-      (data) => data,
+      data => data,
       (error) => {
         EventBus.emit('http::error', error)
         throw error
@@ -95,7 +96,7 @@ export function datasharePlugin(Client) {
   }
 
   Client.prototype.addQueryToFilter = function (query, body, fields = []) {
-    body.query('match_all').addQuery('bool', (b) =>
+    body.query('match_all').addQuery('bool', b =>
       b
         // Add the query string to the body
         .orQuery('query_string', {
@@ -138,7 +139,7 @@ export function datasharePlugin(Client) {
 
   Client.prototype._addQueryToBody = function (query, body, fields = []) {
     if (isEqual(fields, ['path'])) replace(query, /\//g, '\\/')
-    body.query('match_all').addQuery('bool', (b) =>
+    body.query('match_all').addQuery('bool', b =>
       b.orQuery('query_string', {
         query,
         fields: fields.length ? fields : undefined
@@ -165,7 +166,7 @@ export function datasharePlugin(Client) {
     // Add an option to highlight fragments in the results
     body.rawOption('highlight', {
       fields: {
-        content: {
+        'content': {
           fragment_size: 280,
           number_of_fragments: 2,
           pre_tags: ['<mark>'],

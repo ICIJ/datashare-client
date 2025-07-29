@@ -52,7 +52,7 @@ export const useDocumentDownloadStore = defineStore('documentDownload', () => {
   const isAllowed = computed(() => {
     // Stricktly equal to true so download is not allowed by default
     // even if the index' status is not loaded.
-    return (index) => !(index in allowedFor) || allowedFor[index] === true
+    return index => !(index in allowedFor) || allowedFor[index] === true
   })
 
   return { allow, fetchIndexStatus, fetchIndicesStatus, isAllowed }

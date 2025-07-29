@@ -65,7 +65,7 @@ const threadBody = computed(() => {
   // Select only the Documents at the same extraction level
   body.query('match', 'extractionLevel', props.document.extractionLevel)
   // Select emails only
-  body.query('bool', (b) =>
+  body.query('bool', b =>
     b.orQuery('match', 'contentType', 'application/vnd.ms-outlook').orQuery('regexp', 'contentType', 'message/.*')
   )
   // Similar subject
@@ -115,7 +115,8 @@ async function getThread() {
       return new EsDocList(raw)
     }
     return EsDocList.none()
-  } catch (_) {
+  }
+  catch (_) {
     return EsDocList.none()
   }
 }
@@ -137,7 +138,10 @@ onBeforeRouteUpdate(init)
 </script>
 
 <template>
-  <app-wait ref="element" :for="loaderId">
+  <app-wait
+    ref="element"
+    :for="loaderId"
+  >
     <template #waiting>
       <app-spinner class="d-flex mx-auto my-5" />
     </template>
@@ -149,10 +153,16 @@ onBeforeRouteUpdate(init)
           class="document-thread__list__email"
           :class="{ 'document-thread__list__email--active': isActive(email) }"
         >
-          <router-link :to="{ name: 'document', params: email.routerParams }" class="p-3 d-block">
+          <router-link
+            :to="{ name: 'document', params: email.routerParams }"
+            class="p-3 d-block"
+          >
             <div class="d-flex text-nowrap gap-3">
               <div class="document-thread__list__email__from flex-grow-1">
-                <display-email :value="email.messageFrom" tag="strong" />
+                <display-email
+                  :value="email.messageFrom"
+                  tag="strong"
+                />
               </div>
               <abbr
                 v-if="email.creationDate"
@@ -164,20 +174,35 @@ onBeforeRouteUpdate(init)
               </abbr>
             </div>
             <div class="d-flex gap-3">
-              <span v-if="isActive(email) && email.messageTo" class="document-thread__list__email__to text-secondary">
+              <span
+                v-if="isActive(email) && email.messageTo"
+                class="document-thread__list__email__to text-secondary"
+              >
                 {{ t('documentThread.to') }}
                 <ul class="list-inline d-inline">
-                  <li v-for="to in email.messageTo.split(',')" :key="to" class="list-inline-item">
+                  <li
+                    v-for="to in email.messageTo.split(',')"
+                    :key="to"
+                    class="list-inline-item"
+                  >
                     <display-email :value="to" />
                   </li>
                 </ul>
               </span>
-              <span v-else class="document-thread__list__email__excerpt text-secondary w-100">
+              <span
+                v-else
+                class="document-thread__list__email__excerpt text-secondary w-100"
+              >
                 {{ email.excerpt }}
               </span>
             </div>
           </router-link>
-          <document-translation v-if="isActive(email)" :document="document" :q="q" class="mt-0 m-3" />
+          <document-translation
+            v-if="isActive(email)"
+            :document="document"
+            :q="q"
+            class="mt-0 m-3"
+          />
         </li>
       </ul>
     </div>

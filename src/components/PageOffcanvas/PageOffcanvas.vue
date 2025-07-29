@@ -47,7 +47,12 @@ const classList = computed(() => {
     header-class="page-offcanvas__header"
   >
     <template #header="{ hide }">
-      <h5 v-if="title" class="page-offcanvas__header__title m-0">{{ title }}</h5>
+      <h5
+        v-if="title"
+        class="page-offcanvas__header__title m-0"
+      >
+        {{ title }}
+      </h5>
       <button-icon
         icon-left="x"
         icon-left-size="1.5em"

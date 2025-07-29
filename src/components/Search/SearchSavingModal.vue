@@ -38,7 +38,8 @@ async function confirmSaving() {
     const hasLink = route.name !== 'search.saved.list'
     toast.success(body, hasLink ? { href, linkLabel } : null)
     emit('success')
-  } catch (_) {
+  }
+  catch (_) {
     toast.error(t('searchSavingModal.error'))
     emit('error')
   }
@@ -58,10 +59,25 @@ async function confirmSaving() {
   >
     <template #default="{ close, visible }">
       <form @submit.prevent="confirmSaving().then(close)">
-        <form-fieldset :label="t('searchSavingModal.form.name')" :icon="PhTextAa" label-visually-hidden>
+        <form-fieldset
+          :label="t('searchSavingModal.form.name')"
+          :icon="PhTextAa"
+          label-visually-hidden
+        >
           <div class="col">
-            <b-form-input v-if="visible" v-model="form.name" name="name" type="text" autofocus required class="mb-3" />
-            <i18n-t keypath="searchSavingModal.form.description" tag="p">
+            <b-form-input
+              v-if="visible"
+              v-model="form.name"
+              name="name"
+              type="text"
+              autofocus
+              required
+              class="mb-3"
+            />
+            <i18n-t
+              keypath="searchSavingModal.form.description"
+              tag="p"
+            >
               <template #link>
                 <router-link :to="{ name: 'search.saved.list' }">
                   <i18n-t keypath="searchSavingModal.form.link" />

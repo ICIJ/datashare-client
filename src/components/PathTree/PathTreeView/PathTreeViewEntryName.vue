@@ -74,8 +74,14 @@ const toggle = () => {
       class="flex-shrink-0 above-stretched-link"
     />
     <slot v-bind="{ toggle, icon, name, compactOrInjected }">
-      <div class="path-tree-view-entry-name__value text-truncate stretched-link" @click="toggle">
-        <phosphor-icon v-if="!compactOrInjected" :name="icon" />
+      <div
+        class="path-tree-view-entry-name__value text-truncate stretched-link"
+        @click="toggle"
+      >
+        <phosphor-icon
+          v-if="!compactOrInjected"
+          :name="icon"
+        />
         {{ name }}
       </div>
     </slot>

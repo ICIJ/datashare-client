@@ -54,10 +54,23 @@ const close = () => {
 </script>
 
 <template>
-  <b-card v-if="modelValue" class="card-panel shadow-sm" :class="classList">
-    <b-card-title class="card-panel__title" :class="titleClass" :tag="titleTag">
+  <b-card
+    v-if="modelValue"
+    class="card-panel shadow-sm"
+    :class="classList"
+  >
+    <b-card-title
+      class="card-panel__title"
+      :class="titleClass"
+      :tag="titleTag"
+    >
       <span>
-        <phosphor-icon v-if="icon" :name="icon" :weight="iconWeight" class="me-2" />
+        <phosphor-icon
+          v-if="icon"
+          :name="icon"
+          :weight="iconWeight"
+          class="me-2"
+        />
         <slot name="title">{{ title }}</slot>
       </span>
       <button-icon
@@ -72,7 +85,11 @@ const close = () => {
         @click="close()"
       />
     </b-card-title>
-    <b-card-text class="card-panel__content d-flex flex-column" :class="contentClass" tag="div">
+    <b-card-text
+      class="card-panel__content d-flex flex-column"
+      :class="contentClass"
+      tag="div"
+    >
       <slot />
     </b-card-text>
   </b-card>

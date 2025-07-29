@@ -34,19 +34,41 @@ onBeforeMount(() => insightsStore.setProject(props.name))
 
 <template>
   <div class="project-view-overview-widgets">
-    <div v-if="widgets.length" class="project-view-overview-widgets__container">
+    <div
+      v-if="widgets.length"
+      class="project-view-overview-widgets__container"
+    >
       <b-row class="align-items-stretch">
-        <b-col v-for="(widget, index) in widgets" :key="index" :lg="widget.cols">
-          <div class="project-view-overview-widgets__container__widget" :class="{ card: widget.card }">
+        <b-col
+          v-for="(widget, index) in widgets"
+          :key="index"
+          :lg="widget.cols"
+        >
+          <div
+            class="project-view-overview-widgets__container__widget"
+            :class="{ card: widget.card }"
+          >
             <suspense>
-              <component :is="widget.component" :widget="widget" :project="name" class="flex-grow-1" />
+              <component
+                :is="widget.component"
+                :widget="widget"
+                :project="name"
+                class="flex-grow-1"
+              />
             </suspense>
           </div>
         </b-col>
       </b-row>
     </div>
-    <slot v-else name="empty">
-      <empty-state :label="t('global.building')" :image="appBuilding" :image-dark="appBuildingDark" />
+    <slot
+      v-else
+      name="empty"
+    >
+      <empty-state
+        :label="t('global.building')"
+        :image="appBuilding"
+        :image-dark="appBuildingDark"
+      />
     </slot>
   </div>
 </template>

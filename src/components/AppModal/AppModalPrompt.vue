@@ -46,9 +46,17 @@ const submit = () => emit('submit', { value: inputValue.value, trigger: 'submit'
 </script>
 
 <template>
-  <app-modal v-bind="attrs" v-model="modelValue" @ok="submit">
+  <app-modal
+    v-bind="attrs"
+    v-model="modelValue"
+    @ok="submit"
+  >
     <template #default="{ cancel, close, hide, ok, visible }">
-      <div v-for="(fn, name) in otherSlots" :slot="name" :key="name">
+      <div
+        v-for="(fn, name) in otherSlots"
+        :slot="name"
+        :key="name"
+      >
         <component :is="fn" />
       </div>
       <slot v-bind="{ cancel, close, hide, ok, visible }">

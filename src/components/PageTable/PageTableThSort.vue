@@ -28,7 +28,8 @@ const icon = computed(() => {
 const toggleOrder = () => {
   if (props.sorted) {
     emit('update:order', props.order === 'desc' ? 'asc' : 'desc')
-  } else {
+  }
+  else {
     emit('update:sorted', true)
   }
 }

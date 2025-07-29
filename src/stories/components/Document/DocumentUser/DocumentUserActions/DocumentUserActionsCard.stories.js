@@ -17,7 +17,7 @@ export default {
     actionStart: true,
     actionEnd: false
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       DocumentUserActionsCard,
       DisplayTags,
@@ -60,7 +60,7 @@ export const SplitContentExample = {
     listNameOthers: 'Added by others',
     listNameYours: 'Added by you'
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       DocumentUserActionsCard,
       ButtonIcon,
@@ -92,7 +92,7 @@ export const DefaultContentSlot = {
     title: '27 Comments',
     showWarning: true
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       DocumentUserActionsCard,
       ButtonIcon,

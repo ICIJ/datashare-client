@@ -84,8 +84,8 @@ const { t } = useI18n()
       :has-comments="hasComments"
       :has-newest="hasNewest"
       :has-oldest="hasOldest"
-      @goToNewest="$emit('goToNewest')"
-      @goToOldest="$emit('goToOldest')"
+      @go-to-newest="$emit('goToNewest')"
+      @go-to-oldest="$emit('goToOldest')"
     >
       <slot name="comments" />
     </document-user-comments-list>
@@ -95,7 +95,11 @@ const { t } = useI18n()
       </slot>
     </template>
     <template #action>
-      <document-user-comments-form v-model="comment" :disabled="disabled" @submit="$emit('submit', $event)" />
+      <document-user-comments-form
+        v-model="comment"
+        :disabled="disabled"
+        @submit="$emit('submit', $event)"
+      />
     </template>
   </document-user-actions-card>
 </template>

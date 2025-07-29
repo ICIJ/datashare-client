@@ -11,8 +11,15 @@ defineProps({
 </script>
 
 <template>
-  <project-link class="project-row-thumbnail d-block" :project="project">
-    <project-thumbnail width="100%" :project="project" rounded />
+  <project-link
+    class="project-row-thumbnail d-block"
+    :project="project"
+  >
+    <project-thumbnail
+      width="100%"
+      :project="project"
+      rounded
+    />
   </project-link>
 </template>
 

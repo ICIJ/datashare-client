@@ -15,7 +15,7 @@ export default {
     icon: 'folder-open',
     description: 'The document directory is the path to the document in Datashare.'
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       DocumentMetadata
     },
@@ -36,7 +36,7 @@ export const WithDatetime = {
     value: '2021-01-01T00:00:00Z',
     icon: 'calendar-blank'
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       DocumentMetadata,
       DisplayDatetime
@@ -56,7 +56,7 @@ export const WithContentLength = {
     value: 123456,
     icon: 'floppy-disk-back'
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       DocumentMetadata,
       DisplayContentLength
@@ -76,7 +76,7 @@ export const WithProjectButton = {
     value: 'Luxleaks',
     icon: 'circles-three-plus'
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       DocumentMetadata,
       ProjectButton
@@ -96,7 +96,7 @@ export const WithLanguage = {
     value: 'CHINESE',
     icon: 'globe-hemisphere-west'
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       DocumentMetadata,
       DisplayLanguage

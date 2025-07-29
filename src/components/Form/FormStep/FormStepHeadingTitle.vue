@@ -12,7 +12,10 @@ defineProps({
 </script>
 
 <template>
-  <component :is="tag" class="form-step-heading-title text-truncate">
+  <component
+    :is="tag"
+    class="form-step-heading-title text-truncate"
+  >
     <slot>{{ title }}</slot>
   </component>
 </template>

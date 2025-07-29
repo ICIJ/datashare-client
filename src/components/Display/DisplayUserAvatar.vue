@@ -48,7 +48,8 @@ const style = computed(() => {
 const isSrcValid = computed(() => {
   try {
     return Boolean(new URL(src.value))
-  } catch (_) {
+  }
+  catch (_) {
     return false
   }
 })
@@ -72,7 +73,7 @@ watch(pipelinesStore.registered, applyPipeline, { deep: true })
     :style="style"
     :src="src"
     :alt="alt"
-  />
+  >
   <span
     v-else
     aria-label="avatar-icon"

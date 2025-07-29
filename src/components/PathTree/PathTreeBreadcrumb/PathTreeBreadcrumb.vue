@@ -76,12 +76,12 @@ const treeDirectories = computed(() => {
 const tree = computed(() =>
   treeDirectories.value
     // Filter out empty directories
-    .filter((directory) => directory !== '')
+    .filter(directory => directory !== '')
     // Transform each directory into a path entry
     .reduce(getNextTreeEntry, [])
 )
 
-const treeWithoutDataDir = computed(() => tree.value.filter((d) => d.length > dataDir.length))
+const treeWithoutDataDir = computed(() => tree.value.filter(d => d.length > dataDir.length))
 
 const treeOptions = computed(() => {
   const options = treeWithoutDataDir.value.map(pathOption)
@@ -94,7 +94,11 @@ const hasDropdown = computed(() => treeOptions.value.length > props.maxDirectori
 
 <template>
   <ul class="path-tree-breadcrumb list-inline flex-grow-1 m-0 text-truncate lh-1">
-    <path-tree-breadcrumb-entry v-if="hasDropdown" :compact="compact" abbr>
+    <path-tree-breadcrumb-entry
+      v-if="hasDropdown"
+      :compact="compact"
+      abbr
+    >
       <path-tree-breadcrumb-dropdown
         :compact="compact"
         :disabled="dropdownDisabled"

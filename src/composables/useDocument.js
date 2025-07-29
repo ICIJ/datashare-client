@@ -49,7 +49,7 @@ export const useDocument = function (element) {
 
   const documentRoute = computed(() => {
     const { matched } = router.currentRoute.value ?? []
-    const predicates = ['document', 'document-standalone'].map((name) => matches({ name }))
+    const predicates = ['document', 'document-standalone'].map(name => matches({ name }))
     return find(matched, overSome(predicates))
   })
 
@@ -75,7 +75,8 @@ export const useDocument = function (element) {
   const documentPath = computed(() => {
     if (core.config.get('mountedDataDir')) {
       return document.value.source.path.replace(core.config.get('dataDir'), core.config.get('mountedDataDir'))
-    } else {
+    }
+    else {
       return document.value.source.path
     }
   })
@@ -83,7 +84,8 @@ export const useDocument = function (element) {
   const documentDirname = computed(() => {
     if (core.config.get('mountedDataDir')) {
       return document.value.source.dirname.replace(core.config.get('dataDir'), core.config.get('mountedDataDir'))
-    } else {
+    }
+    else {
       return document.value.source.dirname
     }
   })

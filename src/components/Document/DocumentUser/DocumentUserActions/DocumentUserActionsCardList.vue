@@ -16,8 +16,14 @@ defineProps({
 
 <template>
   <div class="document-user-actions-card-list">
-    <document-user-actions-card-list-title v-if="title" :title="title" />
-    <div class="document-user-actions-card-list__body" :class="bodyClass">
+    <document-user-actions-card-list-title
+      v-if="title"
+      :title="title"
+    />
+    <div
+      class="document-user-actions-card-list__body"
+      :class="bodyClass"
+    >
       <slot />
     </div>
   </div>

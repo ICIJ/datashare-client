@@ -22,9 +22,9 @@ export function useTaskSettings(pageName) {
     type: INPUT_RADIO,
     open: true,
     modelValue: useUrlParamWithStore('perPage', {
-      transform: (value) => Math.max(10, parseInt(value)),
+      transform: value => Math.max(10, parseInt(value)),
       get: () => appStore.getSettings(VIEW, 'perPage'),
-      set: (perPage) => appStore.setSettings(VIEW, { perPage })
+      set: perPage => appStore.setSettings(VIEW, { perPage })
     }),
     options: [
       {
@@ -44,7 +44,7 @@ export function useTaskSettings(pageName) {
 
   const props = useTaskProperties(pageName)
 
-  const items = props.items.filter((p) => isServer.value || p.key !== 'author')
+  const items = props.items.filter(p => isServer.value || p.key !== 'author')
 
   const sortBy = ref({
     label: sortByLabel,
@@ -72,9 +72,9 @@ export function useTaskSettings(pageName) {
     open: true,
     modelValue: computed({
       get: () => appStore.getSettings(VIEW, 'properties'),
-      set: (properties) => appStore.setSettings(VIEW, { properties })
+      set: properties => appStore.setSettings(VIEW, { properties })
     }),
-    options: items.map((p) => ({
+    options: items.map(p => ({
       value: p.key,
       icon: p.icon,
       thStyle: p.thStyle,
@@ -87,7 +87,7 @@ export function useTaskSettings(pageName) {
   })
 
   const propertiesModelValueOptions = computed(() => {
-    return properties.value.options.filter((p) => properties.value.modelValue.includes(p.value))
+    return properties.value.options.filter(p => properties.value.modelValue.includes(p.value))
   })
 
   function reset() {

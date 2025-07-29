@@ -8,7 +8,11 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <b-dropdown-item-button :disabled="!embeddable" :active="modelValue" @click="modelValue = !modelValue">
+  <b-dropdown-item-button
+    :disabled="!embeddable"
+    :active="modelValue"
+    @click="modelValue = !modelValue"
+  >
     <span class="d-flex align-items-center gap-2">
       <phosphor-icon :name="PhFilePdf" />
       {{ t('documentViewerPdfNavDropdownEmbed.switch') }}

@@ -22,8 +22,20 @@ const filterLanguage = formSearchStore.getFilter({ name: 'language' })
     content-class="bg-transparent rounded-0 d-flex flex-column gap-3 px-0 m-0"
     collapse
   >
-    <filter-type-path :filter="filterPath" actions-position-title hide-contextualize class="p-3" content-class="pb-0" />
-    <filter-type :filter="filterTags" actions-position-title hide-contextualize class="p-3" content-class="pb-0" />
+    <filter-type-path
+      :filter="filterPath"
+      actions-position-title
+      hide-contextualize
+      class="p-3"
+      content-class="pb-0"
+    />
+    <filter-type
+      :filter="filterTags"
+      actions-position-title
+      hide-contextualize
+      class="p-3"
+      content-class="pb-0"
+    />
     <filter-type
       :filter="filterContentType"
       actions-position-title
@@ -31,7 +43,13 @@ const filterLanguage = formSearchStore.getFilter({ name: 'language' })
       class="p-3"
       content-class="pb-0"
     />
-    <filter-type :filter="filterLanguage" actions-position-title hide-contextualize class="p-3" content-class="pb-0" />
+    <filter-type
+      :filter="filterLanguage"
+      actions-position-title
+      hide-contextualize
+      class="p-3"
+      content-class="pb-0"
+    />
   </form-step>
 </template>
 

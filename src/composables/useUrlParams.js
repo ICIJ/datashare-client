@@ -28,13 +28,13 @@ export function useUrlParams(queryParams, initialOrOptions = {}) {
 
   // Determine the getter function (from options or fallback to initialValue)
   const get = () => {
-    const values = queryParams.map((param) => route.query[param])
+    const values = queryParams.map(param => route.query[param])
     // If all query parameters exist in the URL, transform and return them, else return the reactive values
     return (values.some(isUndefined) ? initialValue : values).map(transform)
   }
 
   // Determine the setter function (from options or fallback to updating the query parameters in the URL)
-  const set = (values) => batchQueryParamUpdate(router, route, to, queryParams, values.map(transform))
+  const set = values => batchQueryParamUpdate(router, route, to, queryParams, values.map(transform))
 
   // Create a computed property that synchronizes the query parameters with the reactive values
   const param = computed({ get, set })

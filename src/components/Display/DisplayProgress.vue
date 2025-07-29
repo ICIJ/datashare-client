@@ -35,12 +35,24 @@ const classList = computed(() => {
 </script>
 
 <template>
-  <span class="display-progress" :class="classList">
-    <span v-if="!noLabel" class="display-progress__label">
+  <span
+    class="display-progress"
+    :class="classList"
+  >
+    <span
+      v-if="!noLabel"
+      class="display-progress__label"
+    >
       {{ n(clampValue, { useGrouping: false, style: 'percent' }) }}
     </span>
-    <span class="display-progress__value" aria-hidden>
-      <span class="display-progress__value__bar" :style="barStyle"></span>
+    <span
+      class="display-progress__value"
+      aria-hidden
+    >
+      <span
+        class="display-progress__value__bar"
+        :style="barStyle"
+      />
     </span>
   </span>
 </template>

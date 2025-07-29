@@ -38,9 +38,19 @@ defineProps({
 
 <template>
   <span class="document-title-slice">
-    <document-title-slice-root v-if="isRoot && interactiveRoot" :document="document" :slice="slice" />
-    <document-title-slice-first v-else-if="isFirst" :slice="slice" />
+    <document-title-slice-root
+      v-if="isRoot && interactiveRoot"
+      :document="document"
+      :slice="slice"
+    />
+    <document-title-slice-first
+      v-else-if="isFirst"
+      :slice="slice"
+    />
     <document-title-slice-middle v-else-if="isMiddle" />
-    <document-title-slice-last v-else :slice="slice" />
+    <document-title-slice-last
+      v-else
+      :slice="slice"
+    />
   </span>
 </template>

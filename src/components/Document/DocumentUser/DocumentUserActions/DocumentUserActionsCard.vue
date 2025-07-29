@@ -72,10 +72,16 @@ defineProps({
     <section class="d-flex flex-column gap-3">
       <slot>
         <template v-if="isSplit">
-          <document-user-actions-card-list :title="listNameYours" :body-class="listBodyClassYours">
+          <document-user-actions-card-list
+            :title="listNameYours"
+            :body-class="listBodyClassYours"
+          >
             <slot name="yours" />
           </document-user-actions-card-list>
-          <document-user-actions-card-list :title="listNameOthers" :body-class="listBodyClassOthers">
+          <document-user-actions-card-list
+            :title="listNameOthers"
+            :body-class="listBodyClassOthers"
+          >
             <slot name="others" />
           </document-user-actions-card-list>
         </template>
@@ -86,8 +92,14 @@ defineProps({
         </template>
       </slot>
     </section>
-    <footer v-if="actionEnd" class="d-flex flex-column">
-      <document-user-actions-card-info v-if="showWarning" class="text-light-emphasis">
+    <footer
+      v-if="actionEnd"
+      class="d-flex flex-column"
+    >
+      <document-user-actions-card-info
+        v-if="showWarning"
+        class="text-light-emphasis"
+      >
         <slot name="action-warning" />
       </document-user-actions-card-info>
       <slot name="action" />

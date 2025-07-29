@@ -16,7 +16,8 @@ export function responseWithArrayBuffer(path, returnBuffer = true) {
     const status = 200
     const mockResponse = returnBuffer ? { status, arrayBuffer: () => arrayBuffer } : arrayBuffer
     return Promise.resolve(mockResponse)
-  } catch (_) {
+  }
+  catch (_) {
     const status = 404
     const mockResponse = { status, message: 'document.error_not_found' }
     return Promise.reject(mockResponse)
