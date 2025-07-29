@@ -4,6 +4,7 @@ import { useTemplateRef } from 'vue'
 import DocumentSharePopoverForm from './DocumentSharePopoverForm'
 
 import AppPopover from '@/components/AppPopover/AppPopover'
+import { useScrollParent } from '@/composables/useScrollParent'
 
 /**
  * Toggle value when the popover is open
@@ -30,10 +31,11 @@ defineExpose({
     popoverRef.value.show()
   }
 })
+const teleportTo = useScrollParent()
 </script>
 
 <template>
-  <app-popover ref="popover" v-model="modelValue" hide-header class="document-share-popover">
+  <app-popover ref="popover" v-model="modelValue" hide-header class="document-share-popover" :teleport-to="teleportTo">
     <template #target="binding">
       <slot name="target" v-bind="binding" />
     </template>
