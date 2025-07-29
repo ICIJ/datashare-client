@@ -16,6 +16,8 @@ const _position = '_POSITION'
 const _separator = '/'
 
 export default class Document extends EsDoc {
+  esName = 'Document'
+
   constructor(raw, parent = null, root = null, position = 0) {
     super(raw)
     this.parent = parent
@@ -49,8 +51,9 @@ export default class Document extends EsDoc {
   }
 
   metaAsQueryParam(name, defaultValue) {
-    const rawName
-      = name in this.raw || name in this.raw?._source ? name : `metadata.tika_metadata_${this.shortMetaName(name)}`
+    const raw = this.raw || {}
+    const rawSource = raw._source || {}
+    const rawName = name in raw || name in rawSource ? name : `metadata.tika_metadata_${this.shortMetaName(name)}`
 
     return this.valueAsQueryParam(rawName, this.meta(name, defaultValue))
   }
@@ -442,10 +445,6 @@ export default class Document extends EsDoc {
   get hasBigContentTextLength() {
     // 50,000 characters
     return this.contentTextLength === undefined || this.contentTextLength === 0 || this.contentTextLength > 5e4
-  }
-
-  static get esName() {
-    return 'Document'
   }
 
   static create(raw) {

@@ -3,6 +3,8 @@ import { get } from 'lodash'
 import EsDoc from './EsDoc'
 
 export default class NamedEntity extends EsDoc {
+  esName = 'NamedEntity'
+
   get category() {
     return this.source.category.toLowerCase()
   }
@@ -30,9 +32,5 @@ export default class NamedEntity extends EsDoc {
 
   get extractor() {
     return this.source.extractor
-  }
-
-  static get esName() {
-    return 'NamedEntity'
   }
 }
