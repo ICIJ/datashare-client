@@ -4,7 +4,7 @@ import { mergeConfig, defineConfig, configDefaults } from 'vitest/config'
 
 import viteConfig from './vite.config.js'
 
-export default defineConfig((configEnv) =>
+export default defineConfig(configEnv =>
   mergeConfig(
     viteConfig(configEnv),
     defineConfig({

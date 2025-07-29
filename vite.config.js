@@ -12,7 +12,7 @@ import { BootstrapVueNextResolver } from 'unplugin-vue-components/resolvers'
 
 export default ({ mode }) => {
   const VITE_GIT_HASH = childProcess.execSync('git rev-parse HEAD').toString()
-  const VITE_CWD  = process.cwd()
+  const VITE_CWD = process.cwd()
   const ENV = loadEnv(mode, process.cwd(), '')
   Object.assign(process.env, { ...ENV, VITE_GIT_HASH, VITE_CWD })
 
@@ -54,8 +54,8 @@ export default ({ mode }) => {
       dedupe: ['vue'],
       extensions: ['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json', '.vue'],
       alias: {
-        path: 'path-browserify',
-        vue: resolve(__dirname, 'node_modules/vue/dist/vue.esm-bundler.js'),
+        'path': 'path-browserify',
+        'vue': resolve(__dirname, 'node_modules/vue/dist/vue.esm-bundler.js'),
         '@': resolve(__dirname, './src'),
         '~storybook': resolve('.storybook'),
         '~node_modules': resolve('node_modules'),
@@ -67,7 +67,7 @@ export default ({ mode }) => {
       preprocessorOptions: {
         scss: {
           api: 'modern',
-          silenceDeprecations: ['legacy-js-api', 'import','mixed-decls', 'color-functions', 'function-units', 'global-builtin'],
+          silenceDeprecations: ['legacy-js-api', 'import', 'mixed-decls', 'color-functions', 'function-units', 'global-builtin'],
           additionalData: `
             @use 'sass:math';
             @use 'sass:color';
