@@ -27,7 +27,7 @@ export function isUrl(value, protocols = ['https', 'http']) {
   try {
     url = new URL(value)
   }
-  catch (_) {
+  catch {
     return false
   }
 

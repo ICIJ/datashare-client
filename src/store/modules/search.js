@@ -167,7 +167,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
       retTerms(lucene.parse(q.value.replace('\\@', '@')))
       return terms
     }
-    catch (_) {
+    catch {
       return []
     }
   })

@@ -50,7 +50,7 @@ export function usePolling() {
           }
           // Reject promise triggers unregistering of the poll
         }
-        catch (_) {
+        catch {
           unregisteredPoll(poll)
         }
       }, !immediate * callOrGetTimeout(timeout))

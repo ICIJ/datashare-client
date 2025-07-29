@@ -322,7 +322,7 @@ export const routes = [
                 try {
                   return core?.findProject(core.route.params.name).label
                 }
-                catch (_) {
+                catch {
                   return null
                 }
               }

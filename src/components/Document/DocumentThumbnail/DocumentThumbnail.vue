@@ -110,7 +110,7 @@ async function fetchThumbnail() {
       emit('loaded')
     }
   }
-  catch (_) {
+  catch {
     errored.value = true
     emit('errored')
   }

@@ -28,7 +28,7 @@ const errorMessageAsJson = computed(() => {
   try {
     return JSON.parse(match)
   }
-  catch (_) {
+  catch {
     return null
   }
 })
