@@ -15,6 +15,7 @@
     "test:unit": "vitest --run",
     "test:unit:watch": "vitest",
     "lint": "eslint",
+    "lint:modified": "yarn lint $(git diff --name-only HEAD | xargs)",
     "lint:fix": "yarn lint --fix",
     "doc": "yarn doc:api && yarn doc:hooks && yarn doc:widgets && yarn doc:storybook && yarn doc:title",
     "doc:api": "npx jsdoc-to-markdown --plugin bin/dmd/plugin.cjs --separators --template bin/dmd/api.hbs src/core/*.js > src/stories/01-api.mdx",
