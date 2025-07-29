@@ -40,7 +40,7 @@ export function useImage() {
         fileReader.onload = () => resolve(fileReader.result)
       })
     }
-    catch (error) {
+    catch {
       throw new Error('Unable to fetch the image as base64')
     }
   }
@@ -59,7 +59,7 @@ export function useImage() {
       const img = await fetchImage(base64)
       return { width: img.width, height: img.height, base64, src }
     }
-    catch (error) {
+    catch {
       throw new Error('Unable to fetch image and its dimensions')
     }
   }

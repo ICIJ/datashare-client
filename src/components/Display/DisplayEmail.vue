@@ -6,7 +6,7 @@ import { useI18n } from 'vue-i18n'
 
 import { useSearchStore } from '@/store/modules'
 
-const EMAIL_REGEX = /(.+)\<(.+)\>/i
+const EMAIL_REGEX = /(.+)<(.+)>/i
 
 const props = defineProps({
   value: {

@@ -63,7 +63,7 @@ class Core extends Behaviors {
    */
   constructor(api = apiInstance, mode = getMode(MODE_NAME.LOCAL)) {
     super()
-    const Root = defineComponent({ name: 'Datashare', template: '<router-view></router-view>' })
+    const Root = defineComponent({ template: '<router-view />' })
     this._vue = createApp(Root)
     this._api = api
     this._auth = new Auth(mode, this._api)
@@ -222,6 +222,7 @@ class Core extends Behaviors {
    * @returns {VueCore}
    */
   buildCorePlugin() {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const core = this
     return class VueCore {
       static install(app) {
@@ -326,7 +327,7 @@ class Core extends Behaviors {
       this._readyReject = reject
     })
     // Notify the document the core is ready
-    this._ready.then(() => this.dispatch('ready'))
+    return this._ready.then(() => this.dispatch('ready'))
   }
 
   /**
@@ -458,7 +459,7 @@ class Core extends Behaviors {
    */
   get ready() {
     if (!this._ready) {
-      this.defer()
+      return this.defer()
     }
     return this._ready
   }

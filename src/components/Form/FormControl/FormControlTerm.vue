@@ -3,10 +3,9 @@ import { useI18n } from 'vue-i18n'
 
 import FormControlTag from './FormControlTag/FormControlTag'
 
+const modelValue = defineModel('modelValue', { type: Array })
+
 defineProps({
-  modelValue: {
-    type: Array
-  },
   size: {
     type: String,
     default: 'md'
@@ -41,16 +40,15 @@ const { t } = useI18n()
 
 <template>
   <form-control-tag
+    v-model="modelValue"
     class="form-control-term"
     :separator="separator"
     :placeholder="placeholder ?? t('formControlTerm.placeholder')"
     :add-button-text="addButtonText ?? t('formControlTerm.addButtonText')"
     :invalid-tag-text="invalidTagText ?? t('formControlTerm.invalidTagText')"
     :duplicate-tag-text="duplicateTagText ?? t('formControlTerm.duplicateTagText')"
-    :model-value="modelValue"
     :size="size"
     :state="state"
-    @update:model-value="$emit('update:modelValue', $event)"
   >
     <template #tag="{ tag, removeTag }">
       <search-breadcrumb-form-entry

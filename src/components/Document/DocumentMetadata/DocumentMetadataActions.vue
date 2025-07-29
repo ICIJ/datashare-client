@@ -7,6 +7,8 @@ import DocumentMetadataActionsEntry from './DocumentMetadataActionsEntry'
 
 const pinned = defineModel('pinned', { type: Boolean })
 
+const emit = defineEmits(['search'])
+
 const props = defineProps({
   name: {
     type: String,
@@ -36,7 +38,7 @@ const indices = computed(() => props.index)
         :label="t('documentMetadataActions.search')"
         :to="{ name: 'search', query: { q, indices } }"
         icon="magnifying-glass"
-        @click="$emit('search')"
+        @click="emit('search')"
       />
       <haptic-copy
         :label="t('documentMetadataActions.copy')"

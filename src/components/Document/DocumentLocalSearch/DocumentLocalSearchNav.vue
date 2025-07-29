@@ -11,6 +11,8 @@ defineProps({
     type: Boolean
   }
 })
+
+const emit = defineEmits(['previous', 'next'])
 const { t } = useI18n()
 </script>
 
@@ -20,13 +22,13 @@ const { t } = useI18n()
       :disabled="disabledPrevious"
       :icon="PhCaretUp"
       :label="t('documentLocalSearchNav.previous')"
-      @click="$emit('previous')"
+      @click="emit('previous')"
     />
     <document-local-search-nav-item
       :disabled="disabledNext"
       :icon="PhCaretDown"
       :label="t('documentLocalSearchNav.next')"
-      @click="$emit('next')"
+      @click="emit('next')"
     />
   </b-button-group>
 </template>

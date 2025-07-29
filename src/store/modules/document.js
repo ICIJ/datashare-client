@@ -279,7 +279,7 @@ export const useDocumentStore = defineStore(
         setIdAndRouting({ id, index, routing })
         setDocument(fetchedDoc)
       }
-      catch (error) {
+      catch {
         setDocument(null)
       }
       finally {
@@ -377,7 +377,7 @@ export const useDocumentStore = defineStore(
           const fetched = await api.elasticsearch.getDocumentWithoutContent(index, id, routing)
           setParentDocument(fetched)
         }
-        catch (error) {
+        catch {
           setParentDocument(null)
         }
       }
@@ -396,7 +396,7 @@ export const useDocumentStore = defineStore(
           const fetched = await api.elasticsearch.getDocumentWithoutContent(index, id, id)
           setRootDocument(fetched)
         }
-        catch (error) {
+        catch {
           setRootDocument(null)
         }
       }
@@ -456,9 +456,7 @@ export const useDocumentStore = defineStore(
           addNamedEntitiesPage({ category, page })
         }
       }
-      catch (error) {
-        // Fail silently on error
-      }
+      catch { /* empty */ }
     }
 
     /**
@@ -469,7 +467,7 @@ export const useDocumentStore = defineStore(
       try {
         setTags(await api.getTags(document.value.index, document.value.id))
       }
-      catch (error) {
+      catch {
         setTags([])
       }
       return tags.value
@@ -545,7 +543,7 @@ export const useDocumentStore = defineStore(
         const idx = recommendedBy.value.indexOf(userId)
         recommend(idx > -1)
       }
-      catch (error) {
+      catch {
         recommendBy([])
         recommend(false)
       }

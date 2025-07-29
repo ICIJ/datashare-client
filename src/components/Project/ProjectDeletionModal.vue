@@ -37,7 +37,7 @@ async function confirmDeletion() {
     toast.success(t('projectDeletionModal.notify.succeed'))
     emit('success')
   }
-  catch (error) {
+  catch {
     toast.error(t('projectDeletionModal.notify.failed'))
     emit('error')
   }

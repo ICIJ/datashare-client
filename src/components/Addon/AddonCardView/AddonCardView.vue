@@ -31,6 +31,8 @@ const props = defineProps({
   }
 })
 
+const emit = defineEmits(['install', 'update', 'uninstall'])
+
 const hasAvailableUpdate = computed(() => {
   return props.installed && props.version !== props.recommendedVersion
 })
@@ -52,9 +54,9 @@ const hasAvailableUpdate = computed(() => {
       :should-install="!installed"
       :should-update="hasAvailableUpdate"
       :loading="loading"
-      @install="$emit('install')"
-      @update="$emit('update')"
-      @uninstall="$emit('uninstall')"
+      @install="emit('install')"
+      @update="emit('update')"
+      @uninstall="emit('uninstall')"
     />
   </b-card>
 </template>

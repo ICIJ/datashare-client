@@ -13,6 +13,8 @@ defineProps({
     default: false
   }
 })
+
+const emit = defineEmits(['select'])
 </script>
 
 <template>
@@ -35,7 +37,7 @@ defineProps({
       v-for="{ text, value } in options"
       :key="value"
       class="d-flex gap-2"
-      @click="$emit('select', value)"
+      @click="emit('select', value)"
     >
       <phosphor-icon
         v-if="!compact"

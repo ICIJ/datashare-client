@@ -52,7 +52,7 @@ const loadAddons = waitFor(async (searchTerm) => {
   try {
     addons.value = await retrieveAddonsFn.value(searchTerm)
   }
-  catch (e) {
+  catch {
     error.value = true
   }
 })
