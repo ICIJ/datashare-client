@@ -49,7 +49,7 @@ const isSrcValid = computed(() => {
   try {
     return Boolean(new URL(src.value))
   }
-  catch (_) {
+  catch {
     return false
   }
 })

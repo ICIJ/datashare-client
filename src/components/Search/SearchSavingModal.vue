@@ -39,7 +39,7 @@ async function confirmSaving() {
     toast.success(body, hasLink ? { href, linkLabel } : null)
     emit('success')
   }
-  catch (_) {
+  catch {
     toast.error(t('searchSavingModal.error'))
     emit('error')
   }

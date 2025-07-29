@@ -62,7 +62,7 @@ const ProjectsMixin = superclass =>
       try {
         return !!(await this.api.getProject(this.defaultProject))
       }
-      catch (_) {
+      catch {
         return false
       }
     }

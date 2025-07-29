@@ -280,7 +280,7 @@ export default {
         // Return all the terms
         return terms
       }
-      catch (_) {
+      catch {
         return []
       }
     },
@@ -300,7 +300,7 @@ export default {
         ast = this.replaceLastTermCandidate(term, ast)
         return lucene.toString(ast)
       }
-      catch (_) {
+      catch {
         return this.query
       }
     },
@@ -324,7 +324,7 @@ export default {
           this.suggestions = []
         }
       }
-      catch (_) {
+      catch {
         this.hideSuggestions()
       }
     }, 200),

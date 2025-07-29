@@ -116,7 +116,7 @@ async function getThread() {
     }
     return EsDocList.none()
   }
-  catch (_) {
+  catch {
     return EsDocList.none()
   }
 }

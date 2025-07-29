@@ -24,7 +24,7 @@ export default class Auth {
     try {
       return this._getCookieUsername() || (await this._getBasicAuthUserName())
     }
-    catch (_) {
+    catch {
       return null
     }
   }

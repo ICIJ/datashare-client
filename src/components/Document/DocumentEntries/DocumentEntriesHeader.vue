@@ -72,7 +72,7 @@ const runBatchDownload = async () => {
     const linkLabel = t('documentEntriesHeader.batchDownloadLink')
     toast.success(body, { href, linkLabel })
   }
-  catch (_) {
+  catch {
     const body = t('documentEntriesHeader.batchDownloadError')
     toast.error(body)
   }

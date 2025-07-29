@@ -288,7 +288,7 @@ async function retrieveTotalOccurrences() {
     localSearchOccurrences.value = count
     localSearchIndex.value = Number(!!count)
   }
-  catch (_) {
+  catch {
     localSearchIndexes.value = []
     localSearchOccurrences.value = 0
     localSearchIndex.value = 0

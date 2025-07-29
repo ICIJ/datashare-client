@@ -35,7 +35,7 @@ export const useRecommendedStore = defineStore('recommended', () => {
       }, {})
       byUsers.value = Object.values(sumByUsers)
     }
-    catch (_) {
+    catch {
       byUsers.value = []
       total.value = 0
     }
@@ -70,7 +70,7 @@ export const useRecommendedStore = defineStore('recommended', () => {
         documents.value = []
       }
     }
-    catch (_) {
+    catch {
       documents.value = []
     }
   }

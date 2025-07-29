@@ -87,7 +87,7 @@ async function submit() {
   try {
     await toastedPromise(dispatchExtract(), { successMessage, errorMessage })
   }
-  catch (error) {}
+  catch { /* empty */ }
   await core.router.push({ name: 'task.documents.list' })
 }
 
