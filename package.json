@@ -71,7 +71,7 @@
     "xss": "^1.0.15"
   },
   "devDependencies": {
-    "@icij/eslint-config": "^3.0.1",
+    "@icij/eslint-config": "^3.0.3",
     "@storybook/addon-docs": "^9.0.18",
     "@storybook/addon-links": "^9.0.18",
     "@storybook/addon-themes": "^9.0.18",

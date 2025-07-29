@@ -568,10 +568,10 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/retry/-/retry-0.4.3.tgz#c2b9d2e374ee62c586d3adbea87199b1d7a7a6ba"
   integrity sha512-bV0Tgo9K4hfPCek+aMAn81RppFKv2ySDQeMoSZuvTASywNTnVJCArCZE2FWqpvIatKu7VMRLWlR1EazvVhDyhQ==
 
-"@icij/eslint-config@^3.0.1":
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/@icij/eslint-config/-/eslint-config-3.0.1.tgz#1f9a1b93dd4bbcf250aec95d25e18dd258bd8995"
-  integrity sha512-2/ufL0Afp72S7YXEuTRatyDPbxGFXS1TbdJi5Qx6xFHrqOmnXfMx9YXkQRl1VnpO3OrQ8ThzOrj2i8/6tr3qeg==
+"@icij/eslint-config@^3.0.3":
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/@icij/eslint-config/-/eslint-config-3.0.3.tgz#aae1ce2a964f576a9b8a55714318a398c1dabfa8"
+  integrity sha512-oMFEAnSxgqI/DgDU6Fq84FCP+U4XRi1YYYWAFLa89/hQX+wnZtI+kdF65tnO8N8JNaxSKIEwgWSXX8JzPF7QTA==
   dependencies:
     "@stylistic/eslint-plugin" "^5.1.0"
     "@typescript-eslint/parser" "^8.38.0"
