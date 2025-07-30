@@ -136,8 +136,10 @@
     "danger": "Failure",
     "warning": "Warning",
     "info": "Information",
+    "pending": "Pending",
+    "created": "Pending",
+    "queued": "Pending",
     "running": "Running",
-    "queued": "Queued",
     "draft": "Draft"
   },
   "displayVisibility": {
