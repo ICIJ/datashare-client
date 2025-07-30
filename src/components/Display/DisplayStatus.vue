@@ -1,4 +1,5 @@
 <script setup>
+import { slugger } from '@/utils/strings'
 import { computed, useTemplateRef } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 
@@ -49,7 +50,14 @@ const valueVariant = computed(() => {
 })
 
 const valueIcon = computed(() => {
-  return toVariantIcon(props.value)
+  const slug = slugger(props.value).toLowerCase()
+  const icons = {
+    draft: 'floppy-disk-back',
+    queued: 'clock-countdown',
+    pending: 'clock-countdown',
+    created: 'clock-countdown',
+  }
+  return icons[slug] ?? toVariantIcon(props.value)
 })
 </script>
 

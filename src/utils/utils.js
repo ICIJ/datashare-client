@@ -54,8 +54,6 @@ function toVariantIcon(string = '', defaultVariant = 'dark') {
   const variant = toVariant(string, defaultVariant)
   const icons = {
     danger: 'x',
-    draft: 'floppy-disk-back',
-    queued: 'clock-countdown',
     info: 'info',
     success: 'check',
     warning: 'warning'
