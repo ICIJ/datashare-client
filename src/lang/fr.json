@@ -136,8 +136,10 @@
     "danger": "Échec",
     "warning": "Avertissement",
     "info": "Information",
+    "pending": "Pending",
+    "created": "Pending",
+    "queued": "Pending",
     "running": "En cours",
-    "queued": "En attente",
     "draft": "Brouillon"
   },
   "displayVisibility": {
