@@ -16,7 +16,6 @@ import { useSearchStore } from '@/store/modules'
 
 const query = defineModel('query', { type: String, default: '' })
 const collapse = defineModel('collapse', { type: Boolean, default: null })
-const opened = refWhenever(collapse, value => value === false)
 
 const { filter, modal } = defineProps({
   filter: {
@@ -31,6 +30,7 @@ const { filter, modal } = defineProps({
   }
 })
 
+const opened = refWhenever(collapse, value => value === false || modal === true)
 const { t } = useI18n()
 
 const pages = reactive([])
