@@ -16,7 +16,12 @@ import { getHumanTaskName, TASK_NAME } from '@/enums/taskNames'
 import { TASK_STATUS } from '@/enums/taskStatus'
 import { useTaskStore } from '@/store/modules'
 import TaskPage from '@/views/Task/TaskPage'
+import { useConfirmModal } from '@/composables/useConfirmModal'
+import { apiInstance as api } from '@/api/apiInstance'
+import { useCore } from '@/composables/useCore'
 
+const { afterConfirmation } = useConfirmModal()
+const { toastedPromise } = useCore()
 const taskStore = useTaskStore()
 const settingName = 'documents'
 
@@ -26,7 +31,11 @@ const { t } = useI18n()
 async function stopTask(uuid) {
   return taskStore.stopTask(uuid)
 }
-
+const successMessage = t('task.remove.success')
+const errorMessage = t('task.remove.error')
+function remove(id) {
+  return toastedPromise(api.removeTask(id), { successMessage, errorMessage })
+}
 function getProject(item) {
   return item.args.defaultProject
 }
@@ -34,6 +43,7 @@ function getProject(item) {
 function isRunning(item) {
   return item.state === TASK_STATUS.RUNNING
 }
+
 </script>
 
 <template>
@@ -51,7 +61,7 @@ function isRunning(item) {
         :action-to="{ name: 'task.documents.new' }"
       />
     </template>
-    <template #default="{ tasks, sort, order, updateSort, updateOrder, empty, loading }">
+    <template #default="{ tasks, sort, order, updateSort, updateOrder, empty, loading, refresh }">
       <page-table-generic
         v-if="loading || !empty"
         :items="tasks"
@@ -88,7 +98,11 @@ function isRunning(item) {
             :disabled="!isRunning(item)"
             @stop="stopTask(item.id)"
           />
-          <button-row-action-delete @delete="taskStore.removeTask(item.id)" />
+          <button-row-action-delete
+            @click="afterConfirmation(async ()=>{
+              await remove(item.id)
+              await refresh()})"
+          />
         </template>
       </page-table-generic>
     </template>
