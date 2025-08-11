@@ -880,6 +880,10 @@
     "noResults": "No results.",
     "emptyStateLabel": "You have not yet started any tasks. {link}",
     "emptyStateLabelLink": "Read more.",
+    "remove": {
+      "success": "Task has been removed",
+      "error": "Task has not been removed"
+    },
     "settings": {
       "createdAt": "Created on",
       "name": "Name",
