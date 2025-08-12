@@ -1,10 +1,10 @@
 <script setup>
-import { useTemplateRef } from 'vue'
+import { useTemplateRef, computed } from 'vue'
 
 import DocumentSharePopoverForm from './DocumentSharePopoverForm'
 
 import AppPopover from '@/components/AppPopover/AppPopover'
-import { useScrollParent } from '@/composables/useScrollParent'
+import { useParentElement } from '@vueuse/core'
 
 /**
  * Toggle value when the popover is open
@@ -31,7 +31,13 @@ defineExpose({
     popoverRef.value.show()
   }
 })
-const teleportTo = useScrollParent()
+
+// Teleport only if the popover is inside a modal
+const teleportTo = computed(() => {
+  const parent = useParentElement(popoverRef)
+  const closest = parent.value?.closest('.modal')
+  return closest ?? undefined
+})
 </script>
 
 <template>
@@ -54,7 +60,7 @@ const teleportTo = useScrollParent()
 
 <style lang="scss">
 .document-share-popover {
-  --bs-popover-max-width: min(90vw, 500px);
+  --bs-popover-max-width: min(70vw, 460px);
   width: 100%;
 }
 </style>
