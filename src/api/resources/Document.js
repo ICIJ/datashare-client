@@ -16,7 +16,7 @@ const _position = '_POSITION'
 const _separator = '/'
 
 export default class Document extends EsDoc {
-  esName = 'Document'
+  static esName = 'Document'
 
   constructor(raw, parent = null, root = null, position = 0) {
     super(raw)
