@@ -82,7 +82,7 @@ export default class EsDocList {
   }
 
   static instantiate(hit, parent = null, root = null, position = 0) {
-    const Type = find(EsDocList.types, Type => Type.match(hit))
+    const Type = find(EsDocList.types, t => t.match(hit))
     return new Type(hit, parent, root, position)
   }
 
