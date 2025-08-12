@@ -46,10 +46,13 @@ const link = computed(() => {
     --bs-nav-link-hover-color: var(--bs-body-color);
     --bs-nav-tabs-link-hover-border-color: var(--bs-primary);
 
+    overflow: auto;
+    flex-wrap: nowrap;
     gap: 1rem;
 
     .nav-link {
       border-bottom: 2px solid transparent;
+      text-wrap-mode:nowrap;
 
       &.active,
       &:hover {
