@@ -1,10 +1,6 @@
 <script setup>
-import { computed, ref, onBeforeMount, watch } from 'vue'
-import { get } from 'lodash'
-import bodybuilder from 'bodybuilder'
-
+import { computed, ref, watch } from 'vue'
 import { DOCUMENT_USER_ACTIONS } from '@/enums/documentUserActions'
-import { useCore } from '@/composables/useCore'
 import { useMode } from '@/composables/useMode'
 import { useDocument } from '@/composables/useDocument'
 import { useAuth } from '@/composables/useAuth'
@@ -14,10 +10,10 @@ import DocumentUserRecommendations from '@/components/Document/DocumentUser/Docu
 import DocumentUserTags from '@/components/Document/DocumentUser/DocumentUserTags/DocumentUserTags'
 import Hook from '@/components/Hook/Hook'
 import { useRecommendedStore, useDocumentStore } from '@/store/modules'
+import { useElasticSearchQuery } from '@/composables/useElasticSearchQuery'
 
 const recommendedStore = useRecommendedStore()
 const documentStore = useDocumentStore()
-const { core } = useCore()
 const { isServer } = useMode()
 const { document, documentViewFloatingSelector } = useDocument()
 const { username } = useAuth()
@@ -57,13 +53,7 @@ const addTags = (labels) => {
   return documentStore.addTags({ documents: [document.value], labels })
 }
 
-const fetchAllTags = async () => {
-  const index = document.value.index
-  const body = bodybuilder().size(0).agg('terms', 'tags').build()
-  const response = await core.api.elasticsearch.search({ index, body })
-  const buckets = get(response, 'aggregations.agg_terms_tags.buckets', [])
-  allTags.value = buckets.map(({ key: label }) => ({ label }))
-}
+const { fetchAllTagsByIndex } = useElasticSearchQuery()
 
 const waitForFloatingElement = async () => {
   hasFloatingElement.value = false
@@ -74,7 +64,11 @@ const waitForFloatingElement = async () => {
 
 watch(documentViewFloatingSelector, waitForFloatingElement, { immediate: true })
 
-onBeforeMount(fetchAllTags)
+watch(() => document.value, async () => {
+  if (document.value?.index) {
+    allTags.value = await fetchAllTagsByIndex(document.value.index)
+  }
+})
 </script>
 
 <template>
