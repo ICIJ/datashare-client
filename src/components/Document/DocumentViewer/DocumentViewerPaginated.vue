@@ -1,5 +1,6 @@
 <template>
   <app-wait
+    ref="componentRoot"
     :for="loaderId"
     class="w-100 d-flex flex-column py-3 paginated-viewer"
   >
@@ -80,11 +81,13 @@
   </app-wait>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, onMounted } from 'vue'
 import { vIntersectionObserver } from '@vueuse/components'
 import { get, range } from 'lodash'
 import axios from 'axios'
 import { useI18n } from 'vue-i18n'
+import { useConfig } from '@/composables/useConfig'
 
 import { useWait } from '@/composables/useWait'
 import { useDocumentPreview } from '@/composables/useDocumentPreview'
@@ -92,121 +95,119 @@ import AppWait from '@/components/AppWait/AppWait'
 import DocumentThumbnail from '@/components/Document/DocumentThumbnail/DocumentThumbnail'
 
 /**
- * Display a paginated preview of a document using the preview server.
+ * The selected document
  */
-export default {
-  name: 'DocumentViewerPaginated',
-  components: {
-    AppWait,
-    DocumentThumbnail
-  },
-  directives: {
-    IntersectionObserver: vIntersectionObserver
-  },
-  props: {
-    /**
-     * The selected document
-     */
-    document: {
-      type: Object
+const props = defineProps({
+  document: {
+    type: Object,
+    default: () => ({})
+  }
+})
+
+const { t } = useI18n()
+const { getPreviewMetaUrl, sessionIdHeaderName, sessionIdHeaderValue } = useDocumentPreview()
+const wait = useWait()
+const config = useConfig()
+
+const active = ref(0)
+const errored = ref(false)
+const meta = ref({
+  pages: 1
+})
+
+const hasPreviewHost = computed(() => {
+  return !!config.get('previewHost')
+})
+
+const pagesRange = computed(() => {
+  return range(meta.value.pages)
+})
+
+const metaOptions = computed(() => {
+  return {
+    method: 'GET',
+    cache: 'default',
+    headers: {
+      [sessionIdHeaderName.value]: sessionIdHeaderValue.value
     }
-  },
-  setup() {
-    const { t } = useI18n()
-    const { getPreviewMetaUrl } = useDocumentPreview()
-    return { wait: useWait(), t, getPreviewMetaUrl }
-  },
-  data() {
-    return {
-      active: 0,
-      errored: false,
-      meta: {
-        pages: 1
-      }
-    }
-  },
-  computed: {
-    hasPreviewHost() {
-      return !!this.$config.get('previewHost')
-    },
-    pagesRange() {
-      return range(this.meta.pages)
-    },
-    metaOptions() {
-      return {
-        method: 'GET',
-        cache: 'default',
-        headers: {
-          [this.sessionIdHeaderName]: this.sessionIdHeaderValue
-        }
-      }
-    },
-    loaderId() {
-      return this.wait.loaderId
-    },
-    isPreviewable() {
-      return this.hasPreviewHost && get(this, 'meta.previewable', false) && !this.errored
-    }
-  },
-  async mounted() {
-    if (this.hasPreviewHost) {
-      await this.waitFor(async () => {
-        try {
-          this.meta = await this.fetchMeta()
-        }
-        catch {
-          throw Error('Unable to fetch the thumbnail informations')
-        }
-      })
-    }
-  },
-  methods: {
-    async waitFor(callback) {
-      try {
-        this.wait.start(this.loaderId)
-        await callback()
-      }
-      finally {
-        this.wait.end(this.loaderId)
-      }
-    },
-    async fetchMeta() {
-      const url = this.getPreviewMetaUrl(this.document)
-      const { data } = await axios({ url, ...this.metaOptions })
-      return data
-    },
-    onPageIntersectionObserver([entry]) {
-      if (entry.isIntersecting) {
-        const page = parseInt(entry.target.getAttribute('data-page'), 10) - 1
-        if (this.active !== page) {
-          this.setActiveAndScrollToThumbnail(page)
-        }
-      }
-    },
-    setActiveAndScrollToThumbnail(page) {
-      this.active = page
-      this.scrollToThumbnail(page)
-    },
-    setActiveAndScrollToPage(page) {
-      this.active = page
-      this.scrollToPage(page)
-    },
-    scrollToThumbnail(page) {
-      const thumbnails = this.$el.querySelectorAll('.paginated-viewer__thumbnails__items__item')
-      const target = thumbnails[page]
-      target.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
-    },
-    scrollToPage(page) {
-      const previews = this.$el.querySelectorAll('.paginated-viewer__preview__page')
-      const target = previews[page]
-      target.scrollIntoView({ behavior: 'instant', block: 'nearest' })
-    },
-    scrollToPageAndThumbnail(page) {
-      this.scrollToPage(page)
-      this.scrollToThumbnail(page)
+  }
+})
+
+const loaderId = computed(() => {
+  return wait.loaderId
+})
+
+const isPreviewable = computed(() => {
+  return hasPreviewHost.value && get(meta.value, 'previewable', false) && !errored.value
+})
+
+async function waitFor(callback) {
+  try {
+    wait.start(loaderId.value)
+    await callback()
+  }
+  finally {
+    wait.end(loaderId.value)
+  }
+}
+
+async function fetchMeta() {
+  const url = getPreviewMetaUrl(props.document)
+  const { data } = await axios({ url, ...metaOptions.value })
+  return data
+}
+
+function onPageIntersectionObserver([entry]) {
+  if (entry.isIntersecting) {
+    const page = parseInt(entry.target.getAttribute('data-page'), 10) - 1
+    if (active.value !== page) {
+      setActiveAndScrollToThumbnail(page)
     }
   }
 }
+
+function setActiveAndScrollToThumbnail(page) {
+  active.value = page
+  scrollToThumbnail(page)
+}
+
+function setActiveAndScrollToPage(page) {
+  active.value = page
+  scrollToPage(page)
+}
+
+// Create refs for the component root element
+const componentRoot = ref(null)
+
+function scrollToThumbnail(page) {
+  const thumbnails = componentRoot.value.querySelectorAll('.paginated-viewer__thumbnails__items__item')
+  const target = thumbnails[page]
+  target.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+}
+
+function scrollToPage(page) {
+  const previews = componentRoot.value.querySelectorAll('.paginated-viewer__preview__page')
+  const target = previews[page]
+  target.scrollIntoView({ behavior: 'instant', block: 'nearest' })
+}
+
+function scrollToPageAndThumbnail(page) {
+  scrollToPage(page)
+  scrollToThumbnail(page)
+}
+
+onMounted(async () => {
+  if (hasPreviewHost.value) {
+    await waitFor(async () => {
+      try {
+        meta.value = await fetchMeta()
+      }
+      catch {
+        throw Error('Unable to fetch the thumbnail informations')
+      }
+    })
+  }
+})
 </script>
 
 <style lang="scss">
