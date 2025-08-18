@@ -77,7 +77,5 @@ describe('TaskEntitiesList.vue', () => {
     expect(deleteButton.exists()).toBeTruthy()
     expect(stopButton.attributes('disabled')).toBeDefined()
     expect(deleteButton.attributes('disabled')).toBeUndefined()
-
-
   })
 })
