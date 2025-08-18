@@ -13,9 +13,17 @@ import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import { ENTITY_CATEGORY } from '@/enums/entityCategories'
 import { TASK_NAME } from '@/enums/taskNames'
 import TaskPage from '@/views/Task/TaskPage'
+import ButtonRowActionStop from "@/components/Button/ButtonRowAction/ButtonRowActionStop.vue";
+import ButtonRowActionDelete from "@/components/Button/ButtonRowAction/ButtonRowActionDelete.vue";
+import {apiInstance as api} from "@/api/apiInstance.js";
+import {TASK_STATUS} from "@/enums/taskStatus.js";
+import {useConfirmModal} from "@/composables/useConfirmModal.js";
+import {useCore} from "@/composables/useCore.js";
 
 const settingName = 'entities'
 const { propertiesModelValueOptions } = useTaskSettings(settingName)
+const { afterConfirmation } = useConfirmModal()
+const { toastedPromise } = useCore()
 
 const { t } = useI18n()
 function isPipelineEmail(item) {
@@ -24,6 +32,15 @@ function isPipelineEmail(item) {
 
 function getProject(item) {
   return item.args.defaultProject
+}
+
+function remove(id) {
+  return toastedPromise(api.removeTask(id), { successMessage: t('task.remove.success'),
+    errorMessage: t('task.remove.error') })
+}
+
+function isRunning(item) {
+  return item.state === TASK_STATUS.RUNNING
 }
 </script>
 
@@ -41,7 +58,7 @@ function getProject(item) {
         :action-to="{ name: 'task.entities.new' }"
       />
     </template>
-    <template #default="{ tasks, sort, order, updateSort, updateOrder, loading, empty }">
+    <template #default="{ tasks, sort, order, updateSort, updateOrder, loading, empty, refresh }">
       <page-table-generic
         v-if="loading || !empty"
         :items="tasks"
@@ -82,6 +99,17 @@ function getProject(item) {
         </template>
         <template #cell(createdAt)="{ item }">
           <display-datetime-from-now :value="item.createdAt" />
+        </template>
+        <template #row-actions="{ item }">
+          <button-row-action-stop
+            :disabled="!isRunning(item)"
+            @stop="stopTask(item.id)"
+          />
+          <button-row-action-delete
+            @click="afterConfirmation(async ()=>{
+              await remove(item.id)
+              await refresh()})"
+          />
         </template>
       </page-table-generic>
     </template>

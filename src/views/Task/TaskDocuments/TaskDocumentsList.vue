@@ -31,10 +31,10 @@ const { t } = useI18n()
 async function stopTask(uuid) {
   return taskStore.stopTask(uuid)
 }
-const successMessage = t('task.remove.success')
-const errorMessage = t('task.remove.error')
+
 function remove(id) {
-  return toastedPromise(api.removeTask(id), { successMessage, errorMessage })
+  return toastedPromise(api.removeTask(id), { successMessage: t('task.remove.success'),
+    errorMessage: t('task.remove.error') })
 }
 function getProject(item) {
   return item.args.defaultProject
