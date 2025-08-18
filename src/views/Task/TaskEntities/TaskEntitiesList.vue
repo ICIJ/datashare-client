@@ -13,12 +13,12 @@ import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import { ENTITY_CATEGORY } from '@/enums/entityCategories'
 import { TASK_NAME } from '@/enums/taskNames'
 import TaskPage from '@/views/Task/TaskPage'
-import ButtonRowActionStop from "@/components/Button/ButtonRowAction/ButtonRowActionStop.vue";
-import ButtonRowActionDelete from "@/components/Button/ButtonRowAction/ButtonRowActionDelete.vue";
-import {apiInstance as api} from "@/api/apiInstance.js";
-import {TASK_STATUS} from "@/enums/taskStatus.js";
-import {useConfirmModal} from "@/composables/useConfirmModal.js";
-import {useCore} from "@/composables/useCore.js";
+import ButtonRowActionStop from '@/components/Button/ButtonRowAction/ButtonRowActionStop.vue'
+import ButtonRowActionDelete from '@/components/Button/ButtonRowAction/ButtonRowActionDelete.vue'
+import { apiInstance as api } from '@/api/apiInstance.js'
+import { TASK_STATUS } from '@/enums/taskStatus.js'
+import { useConfirmModal } from '@/composables/useConfirmModal.js'
+import { useCore } from '@/composables/useCore.js'
 
 const settingName = 'entities'
 const { propertiesModelValueOptions } = useTaskSettings(settingName)
