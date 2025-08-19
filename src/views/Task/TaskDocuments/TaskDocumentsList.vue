@@ -33,8 +33,9 @@ async function stopTask(uuid) {
 }
 
 function remove(id) {
-  return toastedPromise(api.removeTask(id), { successMessage: t('task.remove.success'),
-    errorMessage: t('task.remove.error') })
+  const successMessage = t('task.remove.success')
+  const errorMessage = t('task.remove.error')
+  return toastedPromise(api.removeTask(id), { successMessage, errorMessage })
 }
 function getProject(item) {
   return item.args.defaultProject
