@@ -136,8 +136,10 @@
     "danger": "Failure",
     "warning": "Warning",
     "info": "Information",
+    "pending": "Pending",
+    "created": "Pending",
+    "queued": "Pending",
     "running": "Running",
-    "queued": "Queued",
     "draft": "Draft"
   },
   "displayVisibility": {
@@ -878,6 +880,8 @@
     "noResults": "No results.",
     "emptyStateLabel": "You have not yet started any tasks. {link}",
     "emptyStateLabelLink": "Read more.",
+    "removeSuccess": "Task has been removed",
+    "removeError": "Task has not been removed",
     "settings": {
       "createdAt": "Created on",
       "name": "名称",

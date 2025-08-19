@@ -136,8 +136,10 @@
     "danger": "crwdns7674:0crwdne7674:0",
     "warning": "crwdns7676:0crwdne7676:0",
     "info": "crwdns7678:0crwdne7678:0",
+    "pending": "crwdns9974:0crwdne9974:0",
+    "created": "crwdns9976:0crwdne9976:0",
+    "queued": "crwdns9978:0crwdne9978:0",
     "running": "crwdns7680:0crwdne7680:0",
-    "queued": "crwdns7682:0crwdne7682:0",
     "draft": "crwdns7684:0crwdne7684:0"
   },
   "displayVisibility": {
@@ -878,6 +880,8 @@
     "noResults": "crwdns8708:0crwdne8708:0",
     "emptyStateLabel": "crwdns8710:0{link}crwdne8710:0",
     "emptyStateLabelLink": "crwdns8712:0crwdne8712:0",
+    "removeSuccess": "crwdns9980:0crwdne9980:0",
+    "removeError": "crwdns9982:0crwdne9982:0",
     "settings": {
       "createdAt": "crwdns8714:0crwdne8714:0",
       "name": "crwdns8716:0crwdne8716:0",
