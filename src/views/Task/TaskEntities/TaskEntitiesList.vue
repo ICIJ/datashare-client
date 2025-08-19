@@ -45,7 +45,7 @@ function isRunning(item) {
 }
 
 function removeWithConfirmation(id, callback) {
-  afterConfirmation(async () => {
+  return afterConfirmation(async () => {
     await remove(id)
     await callback()
   })
