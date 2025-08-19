@@ -35,12 +35,20 @@ function getProject(item) {
 }
 
 function remove(id) {
-  return toastedPromise(api.removeTask(id), { successMessage: t('task.remove.success'),
-    errorMessage: t('task.remove.error') })
+  const successMessage = t('task.removeSuccess')
+  const errorMessage = t('task.removeError')
+  return toastedPromise(api.removeTask(id), { successMessage, errorMessage })
 }
 
 function isRunning(item) {
   return item.state === TASK_STATUS.RUNNING
+}
+
+function removeWithConfirmation(id, callback) {
+  afterConfirmation(async () => {
+    await remove(id)
+    await callback()
+  })
 }
 </script>
 
@@ -106,9 +114,7 @@ function isRunning(item) {
             @stop="stopTask(item.id)"
           />
           <button-row-action-delete
-            @click="afterConfirmation(async ()=>{
-              await remove(item.id)
-              await refresh()})"
+            @click="removeWithConfirmation(item.id, refresh)"
           />
         </template>
       </page-table-generic>
