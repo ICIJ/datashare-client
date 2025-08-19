@@ -880,6 +880,8 @@
     "noResults": "Pas de résultat.",
     "emptyStateLabel": "Vous n'avez pas encore lancé de tâche. {link}",
     "emptyStateLabelLink": "En savoir plus.",
+    "removeSuccess": "Task has been removed",
+    "removeError": "Task has not been removed",
     "settings": {
       "createdAt": "Créé le",
       "name": "Nom",
