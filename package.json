@@ -11,6 +11,7 @@
     "serve": "vite serve",
     "storybook": "storybook dev -p 6006 --ci",
     "build": "vite build",
+    "preview": "vite preview",
     "test": "yarn test:unit",
     "test:unit": "vitest --run",
     "test:unit:watch": "vitest",
