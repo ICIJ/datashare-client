@@ -41,7 +41,7 @@ const classList = computed(() => {
 
 <template>
   <div
-    class="filters-panel-section-filter-actions"
+    class="filters-panel-section-filter-actions gap-1"
     :class="classList"
   >
     <span class="d-flex gap-2">
@@ -60,7 +60,6 @@ const classList = computed(() => {
     </span>
     <button-subtle-action
       v-if="!hideExpand"
-      class="ms-auto"
       tooltip-placement="right"
       icon-left="arrows-out-simple"
       :label="t('filtersPanelSectionFilterActions.expand')"
@@ -75,7 +74,6 @@ const classList = computed(() => {
   justify-content: space-between;
   align-items: center;
   overflow: auto;
-  gap: $spacer;
 
   &--empty {
     display: none;
