@@ -14,8 +14,8 @@
     :teleport-to="teleportTo"
     :teleport-disabled="teleportDisabled"
     @selected="reset"
-    @hidden="$emit('hidden', $event)"
-    @changed="$emit('changed', $event)"
+    @hidden="emit('hidden', $event)"
+    @changed="emit('changed', $event)"
   >
     <template #above="{ visible }">
       <project-dropdown-selector-search
@@ -54,7 +54,8 @@
   </search-bar-input-dropdown>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, watch, nextTick } from 'vue'
 import { compact, find, isArray, trim } from 'lodash'
 
 import ProjectDropdownSelectorAll from './ProjectDropdownSelectorAll'
@@ -65,157 +66,178 @@ import ProjectDropdownSelectorSearch from './ProjectDropdownSelectorSearch'
 import SearchBarInputDropdown from '@/components/Search/SearchBar/SearchBarInputDropdown'
 import { iwildcardMatch } from '@/utils/strings'
 
-export default {
-  name: 'ProjectDropdownSelector',
-  components: {
-    ProjectDropdownSelectorAll,
-    ProjectDropdownSelectorButtonContent,
-    ProjectDropdownSelectorEntry,
-    ProjectDropdownSelectorSearch,
-    SearchBarInputDropdown
+/**
+ * Props definition
+ */
+const props = defineProps({
+  /**
+   * List of selected projects (multiple selection), or object (single selection)
+   */
+  modelValue: {
+    type: [Array, Object],
+    default: () => []
   },
-  props: {
-    /**
-     * List of selected projects (multiple selection), or object (single selection)
-     */
-    modelValue: {
-      type: [Array, Object],
-      default: () => []
-    },
-    /**
-     * Limit the number of visible project thumbnails
-     */
-    sliceSize: {
-      type: Number,
-      default: 3
-    },
-    /**
-     * The dropdown toggler must be disabled.
-     */
-    disabled: {
-      type: Boolean
-    },
-    /**
-     * The caret in the dropdown toggler must be hidden.
-     */
-    noCaret: {
-      type: Boolean
-    },
-    /**
-     * List of projects
-     */
-    projects: {
-      type: Array,
-      default: () => []
-    },
-    /**
-     * Teleport the dropdown to a different element.
-     */
-    teleportTo: {
-      type: [String, Object],
-      default: 'body'
-    },
-    /**
-     * Disable teleporting the dropdown to a different element.
-     */
-    teleportDisabled: {
-      type: Boolean
-    }
+  /**
+   * Limit the number of visible project thumbnails
+   */
+  sliceSize: {
+    type: Number,
+    default: 3
   },
-  emits: ['hidden', 'changed', 'selected', 'update:modelValue'],
-  data() {
-    return {
-      query: null,
-      focusIndex: -1
-    }
+  /**
+   * The dropdown toggler must be disabled.
+   */
+  disabled: {
+    type: Boolean
   },
-  computed: {
-    hasMatches() {
-      return !this.hasQuery || this.options.length > 0
-    },
-    hasQuery() {
-      return !!this.query
-    },
-    wildcardQuery() {
-      if (this.hasQuery) {
-        // This ensures the query ends and starts
-        // with one (and only one) wildcard
-        return '*' + trim(this.query, '*') + '*'
-      }
-      return '*'
-    },
-    multiple() {
-      return isArray(this.modelValue)
-    },
-    selectedProjects: {
-      get() {
-        if (!this.multiple) {
-          return [this.modelValue]
-        }
-        return compact(
-          this.modelValue.map(({ name }) => {
-            return find(this.projects, { name })
-          })
-        )
-      },
-      set(value) {
-        this.$emit('update:modelValue', value)
-      }
-    },
-    options() {
-      return this.projects.filter(({ label = '', name = '' } = {}) => {
-        return iwildcardMatch(label, this.wildcardQuery) || iwildcardMatch(name, this.wildcardQuery)
-      })
-    },
-    hasMultipleProjects() {
-      return this.selectedProjects?.length > 1
-    },
-    selectAll: {
-      get() {
-        return this.selectedProjects?.length === this.projects.length
-      },
-      set(value) {
-        this.selectedProjects = value ? this.projects : this.projects.slice(0, 1)
-      }
-    }
+  /**
+   * The caret in the dropdown toggler must be hidden.
+   */
+  noCaret: {
+    type: Boolean
   },
-  watch: {
-    query() {
-      this.focusIndex = this.query && this.options.length ? 0 : -1
-    }
+  /**
+   * List of projects
+   */
+  projects: {
+    type: Array,
+    default: () => []
   },
-  methods: {
-    moveFocusUp() {
-      this.focusIndex = Math.max(-1, this.focusIndex - 1)
-      this.moveFocusIntoView()
-    },
-    moveFocusDown() {
-      this.focusIndex = Math.min(this.options.length - 1, this.focusIndex + 1)
-      this.moveFocusIntoView()
-    },
-    async moveFocusIntoView() {
-      await this.$nextTick()
-      const selector = '.project-dropdown-selector__item--focus'
-      const options = { behavior: 'instant', block: 'end' }
-      this.$el.querySelector(selector)?.scrollIntoView(false, options)
-    },
-    selectFocusValue($event) {
-      if (this.focusIndex > -1) {
-        this.$refs.inputDropdown.toggleUniqueValue($event, this.options[this.focusIndex])
-        this.$refs.inputDropdown.hide()
-      }
-    },
-    resetFocus() {
-      this.focusIndex = -1
-    },
-    resetQuery() {
-      this.query = null
-    },
-    reset() {
-      this.resetFocus()
-      this.resetQuery()
-    }
+  /**
+   * Teleport the dropdown to a different element.
+   */
+  teleportTo: {
+    type: [String, Object],
+    default: 'body'
+  },
+  /**
+   * Disable teleporting the dropdown to a different element.
+   */
+  teleportDisabled: {
+    type: Boolean
   }
+})
+
+/**
+ * Emits definition
+ */
+const emit = defineEmits(['hidden', 'changed', 'selected', 'update:modelValue'])
+
+/**
+ * Template refs
+ */
+const inputDropdown = ref(null)
+
+/**
+ * State
+ */
+const query = ref(null)
+const focusIndex = ref(-1)
+
+/**
+ * Computed properties
+ */
+const hasQuery = computed(() => {
+  return !!query.value
+})
+
+const hasMatches = computed(() => {
+  return !hasQuery.value || options.value.length > 0
+})
+
+const wildcardQuery = computed(() => {
+  if (hasQuery.value) {
+    // This ensures the query ends and starts
+    // with one (and only one) wildcard
+    return '*' + trim(query.value, '*') + '*'
+  }
+  return '*'
+})
+
+const multiple = computed(() => {
+  return isArray(props.modelValue)
+})
+
+const selectedProjects = computed({
+  get() {
+    if (!multiple.value) {
+      return [props.modelValue]
+    }
+    return compact(
+      props.modelValue.map(({ name }) => {
+        return find(props.projects, { name })
+      })
+    )
+  },
+  set(value) {
+    emit('update:modelValue', value)
+  }
+})
+
+const options = computed(() => {
+  return props.projects.filter(({ label = '', name = '' } = {}) => {
+    return iwildcardMatch(label, wildcardQuery.value) || iwildcardMatch(name, wildcardQuery.value)
+  })
+})
+
+const hasMultipleProjects = computed(() => {
+  return selectedProjects.value?.length > 1
+})
+
+const selectAll = computed({
+  get() {
+    return selectedProjects.value?.length === props.projects.length
+  },
+  set(value) {
+    selectedProjects.value = value ? props.projects : props.projects.slice(0, 1)
+  }
+})
+
+/**
+ * Watch
+ */
+watch(query, () => {
+  focusIndex.value = query.value && options.value.length ? 0 : -1
+})
+
+/**
+ * Methods
+ */
+function moveFocusUp() {
+  focusIndex.value = Math.max(-1, focusIndex.value - 1)
+  moveFocusIntoView()
+}
+
+function moveFocusDown() {
+  focusIndex.value = Math.min(options.value.length - 1, focusIndex.value + 1)
+  moveFocusIntoView()
+}
+
+async function moveFocusIntoView() {
+  await nextTick()
+  const selector = '.project-dropdown-selector__item--focus'
+  const options = { behavior: 'instant', block: 'end' }
+  inputDropdown.value.$el.querySelector(selector)?.scrollIntoView(false, options)
+}
+
+function selectFocusValue($event) {
+  if (focusIndex.value > -1) {
+    inputDropdown.value.toggleUniqueValue($event, options.value[focusIndex.value])
+    inputDropdown.value.hide()
+  }
+}
+
+function resetFocus() {
+  focusIndex.value = -1
+}
+
+function resetQuery() {
+  query.value = null
+}
+
+function reset() {
+  resetFocus()
+  resetQuery()
 }
 </script>
 
