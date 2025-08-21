@@ -34,6 +34,7 @@ defineExpose({
 
 // Teleport only if the popover is inside a modal
 const teleportTo = computed(() => {
+  if (!popoverRef.value) return undefined
   const parent = useParentElement(popoverRef)
   const closest = parent.value?.closest('.modal')
   return closest ?? undefined
