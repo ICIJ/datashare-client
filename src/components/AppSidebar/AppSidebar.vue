@@ -283,6 +283,9 @@ onBeforeMount(() => (appStore.sidebar.closed = appStore.sidebar.closed || isOffC
 
   &--compact {
     max-width: min($app-sidebar-compact-width, 100vw);
+    .app-sidebar__section {
+      width: 44px;
+    }
   }
 
   &--closed:not(.app-sidebar--off-canvas) {
