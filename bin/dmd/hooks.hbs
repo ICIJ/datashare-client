@@ -27,14 +27,14 @@ document.addEventListener('datashare:ready', async () => {
     },
     template: `
       <div>
-        This is a custom component that will be mounted bellow the page header.
+        This is a custom component that will be mounted below the page header.
         <ButtonAdd />
       </div>
     `
   }
 
   // Register the component with Datashare's plugin system
-  // This will mount the component bellow the page header
+  // This will mount the component below the page header
   datashare.registerHook({ target: 'page-header:after', definition })
 })
 ```

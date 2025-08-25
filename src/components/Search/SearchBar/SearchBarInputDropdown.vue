@@ -61,9 +61,9 @@
         </span>
       </slot>
     </b-dropdown-item>
-    <!-- @slot Area to insert content bellow the dropdown -->
+    <!-- @slot Area to insert content below the dropdown -->
     <slot
-      name="bellow"
+      name="below"
       :dropdown="dropdown"
       :visible="visible"
     />
@@ -233,10 +233,10 @@ export default {
       return includes(this.modelValues, value)
     },
     hide() {
-      return this.$refs.dropdown.hide()
+      //   return this.$refs.dropdown.hide()
     },
     hidden($event) {
-      this.$emit('hide', $event)
+    //  this.$emit('hide', $event)
       // When the value changed,
       // the component emit a second event.
       if (this.valueChanged) {

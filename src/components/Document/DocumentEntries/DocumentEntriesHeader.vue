@@ -40,7 +40,7 @@ const { t, tm, n } = useI18n()
 const searchStore = useSearchStore.inject()
 const router = useRouter()
 
-// We limit pagination bellow 10,000 results
+// We limit pagination below 10,000 results
 const noNextPage = computed(() => props.perPage * page.value >= 1e4)
 const noLastPage = computed(() => props.total >= 1e4)
 
