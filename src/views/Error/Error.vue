@@ -26,7 +26,7 @@ const props = defineProps({
     default: null
   },
   /**
-   * Description (bellow the title) of the error page.
+   * Description (below the title) of the error page.
    */
   description: {
     type: String,
