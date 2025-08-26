@@ -95,7 +95,7 @@ import AppWait from '@/components/AppWait/AppWait'
 import DocumentThumbnail from '@/components/Document/DocumentThumbnail/DocumentThumbnail'
 
 /**
- * The selected document
+ * Display a paginated preview of a document using the preview server.
  */
 const props = defineProps({
   document: {
