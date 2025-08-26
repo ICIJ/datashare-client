@@ -26,6 +26,7 @@
         @up="moveFocusUp"
         @down="moveFocusDown"
         @enter="selectFocusValue"
+        @click.stop
       />
       <project-dropdown-selector-all
         v-if="hasMatches && multiple"
