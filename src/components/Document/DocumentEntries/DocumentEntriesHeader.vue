@@ -26,7 +26,7 @@ const props = defineProps({
   },
   compactThreshold: {
     type: Number,
-    default: 580
+    default: 380
   },
   loading: {
     type: Boolean
