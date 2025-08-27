@@ -81,7 +81,7 @@ onBeforeMount(() => {
     v-if="isReady && hasAttachments"
     class="document-attachments"
   >
-    <h6>{{ t('document.attachments.heading', total, { total }) }}</h6>
+    <h6>{{ t('document.attachments.heading', { total }, total ) }}</h6>
     <ul class="document-attachments__list list-unstyled d-flex-inline">
       <li
         v-for="attachment in attachments"
