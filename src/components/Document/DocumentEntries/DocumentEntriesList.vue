@@ -140,7 +140,6 @@ defineExpose({
       gap: $spacer;
       padding-bottom: $spacer;
       overflow: auto;
-      flex-grow: 1;
     }
   }
 
