@@ -26,7 +26,7 @@ const props = defineProps({
   },
   compactThreshold: {
     type: Number,
-    default: 380
+    default: 480
   },
   loading: {
     type: Boolean
@@ -124,7 +124,7 @@ watch(toRef(props, 'total'), total => (selectMode.value = selectMode.value && to
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: $spacer;
+  gap: $spacer-xs;
   padding: 0;
   height: calc(2.875rem + #{$spacer * 2});
 
