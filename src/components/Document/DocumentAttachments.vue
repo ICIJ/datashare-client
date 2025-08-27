@@ -7,7 +7,7 @@ import { useI18n } from 'vue-i18n'
 
 import EsDocList from '@/api/resources/EsDocList'
 import { useWait } from '@/composables/useWait'
-import { useCore } from '@/composables/useCore'
+import { apiInstance as api } from '@/api/apiInstance'
 
 /**
  * A list of attachments for a document (usually, it's child documents)
@@ -24,7 +24,6 @@ const props = defineProps({
 
 const { t } = useI18n()
 const wait = useWait()
-const { core } = useCore()
 
 const pages = ref([])
 const size = ref(50)
@@ -64,7 +63,7 @@ async function loadMore() {
   const { index } = props.document
   const body = searchBody().build()
   try {
-    const response = await core.api.elasticsearch.search({ index, body })
+    const response = await api.elasticsearch.search({ index, body })
     pages.value.push(new EsDocList(response))
   }
   finally {
