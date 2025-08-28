@@ -1,5 +1,6 @@
 <template>
   <b-tooltip
+    interactive
     :delay="tooltipDelay"
     :placement="tooltipPlacement"
     teleport-to="body"
@@ -20,6 +21,12 @@
         </div>
         <div class="font-monospace version-number__tooltip__client__value">
           {{ shortClientHash }}
+          <haptic-copy
+            :text="shortClientHash"
+            variant="link"
+            class="p-1 bg-dark-subtle text-bg-dark"
+            hide-label
+          />
         </div>
       </div>
       <div class="d-flex align-items-baseline version-number__tooltip__server py-2">
@@ -32,6 +39,12 @@
         </div>
         <div class="font-monospace version-number__tooltip__server__value">
           {{ serverHash }}
+          <haptic-copy
+            :text="serverHash"
+            variant="link"
+            class="p-1 bg-dark-subtle text-bg-dark"
+            hide-label
+          />
         </div>
       </div>
     </div>
@@ -45,6 +58,8 @@ import { useI18n } from 'vue-i18n'
 
 import { useCore } from '@/composables/useCore'
 
+import { useClipboard } from '@vueuse/core'
+import ButtonSubtleAction from '@/components/Button/ButtonSubtleAction'
 /**
  * Display Datashare's version number.
  */
@@ -81,6 +96,7 @@ const setVersion = async () => {
   serverVersion.value = version['git.tag'] || version['git.build.version']
 }
 
+const { text, copy, copied, isSupported } = useClipboard()
 onMounted(setVersion)
 </script>
 
