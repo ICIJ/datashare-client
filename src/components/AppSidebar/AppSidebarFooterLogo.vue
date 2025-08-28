@@ -18,7 +18,7 @@ const classList = computed(() => {
 
 <template>
   <div
-    class="app-sidebar-footer-logo"
+    class="app-sidebar-footer-logo flex-truncate"
     :class="classList"
   >
     <img

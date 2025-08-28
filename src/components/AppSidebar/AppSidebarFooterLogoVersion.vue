@@ -7,7 +7,7 @@ defineProps({
 </script>
 
 <template>
-  <div class="app-sidebar-footer-logo-version ext-truncate w-100">
+  <div class="app-sidebar-footer-logo-version text-truncate">
     <slot v-bind="{ compact }" />
   </div>
 </template>
