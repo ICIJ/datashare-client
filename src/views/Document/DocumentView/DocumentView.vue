@@ -164,52 +164,56 @@ onBeforeRouteUpdate(fetchRouteDocument)
       <document-placeholder />
     </template>
 
-    <div class="document-view__header mb-3 d-flex justify-content-between align-items-center gap-2">
-      <slot
-        name="header-start"
-        v-bind="{ document }"
-      />
-      <document-view-user-actions />
-      <document-view-actions
+    <template
+      v-if="document"
+    >
+      <div class="document-view__header mb-3 d-flex justify-content-between align-items-center gap-2">
+        <slot
+          name="header-start"
+          v-bind="{ document }"
+        />
+        <document-view-user-actions />
+        <document-view-actions
+          :document="document"
+          class="ms-auto"
+        />
+        <slot
+          name="nav"
+          v-bind="{ document }"
+        >
+          <router-view name="nav" />
+        </slot>
+        <slot
+          name="header-end"
+          v-bind="{ document }"
+        />
+      </div>
+
+      <document-view-title
+        class="mb-3"
         :document="document"
-        class="ms-auto"
       />
-      <slot
-        name="nav"
-        v-bind="{ document }"
-      >
-        <router-view name="nav" />
-      </slot>
-      <slot
-        name="header-end"
-        v-bind="{ document }"
-      />
-    </div>
+      <document-view-tabs :tabs="tabs" />
 
-    <document-view-title
-      class="mb-3"
-      :document="document"
-    />
-    <document-view-tabs :tabs="tabs" />
+      <app-wait :for="tabLoaderId">
+        <component
+          :is="component"
+          v-if="component"
+          :q="q ?? route.query.q"
+        />
+        <template #waiting>
+          <document-content-placeholder class="py-3" />
+        </template>
+      </app-wait>
 
-    <app-wait :for="tabLoaderId">
-      <component
-        :is="component"
-        v-if="component"
-        :q="q ?? route.query.q"
-      />
-      <template #waiting>
-        <document-content-placeholder class="py-3" />
-      </template>
-    </app-wait>
-
-    <transition name="fade">
-      <button-to-top
-        v-if="showButtonToTop"
-        class="document-view__to-top"
-        @click="scrollToTop"
-      />
-    </transition>
+      <transition name="fade">
+        <button-to-top
+          v-if="showButtonToTop"
+          class="document-view__to-top"
+          @click="scrollToTop"
+        />
+      </transition>
+    </template>
   </app-wait>
 </template>
 
