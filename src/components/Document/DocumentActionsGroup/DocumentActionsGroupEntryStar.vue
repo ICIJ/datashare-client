@@ -33,7 +33,7 @@ const { t } = useI18n()
 const starredStore = useStarredStore()
 
 const isStarred = computed(() => {
-  return starredStore.isStarred(document)
+  return !!document && starredStore.isStarred(document)
 })
 
 const toggleStar = () => {
