@@ -2,18 +2,19 @@
 const page = defineModel('page', { type: Number, default: 1 })
 
 defineProps({
-  numPages: {
+  totalRows: {
     type: Number,
     default: 0
   }
 })
+
 </script>
 
 <template>
   <tiny-pagination
-    :key="numPages"
+    :key="totalRows"
     v-model="page"
     :per-page="1"
-    :total-rows="numPages"
+    :total-rows="totalRows"
   />
 </template>
