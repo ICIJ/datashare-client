@@ -182,22 +182,24 @@ onAfterRouteQueryFromUpdate(refreshSearchFromRoute, { immediate: route.name === 
               <div :id="documentViewFloatingId" />
             </template>
             <router-view v-slot="{ Component }">
-              <document-modal
-                v-if="renderDocumentInModal"
-                :model-value="!!Component"
-                @hide="refreshRoute"
-              >
-                <search-carousel v-if="hasCarousel" />
-                <component :is="Component" />
-              </document-modal>
-              <component
-                :is="Component"
-                v-else
-              >
-                <template #nav>
-                  <search-nav />
-                </template>
-              </component>
+              <template v-if="!isSearchRoute">
+                <document-modal
+                  v-if="renderDocumentInModal"
+                  :model-value="!!Component"
+                  @hide="refreshRoute"
+                >
+                  <search-carousel v-if="hasCarousel" />
+                  <component :is="Component" />
+                </document-modal>
+                <component
+                  :is="Component"
+                  v-else
+                >
+                  <template #nav>
+                    <search-nav />
+                  </template>
+                </component>
+              </template>
             </router-view>
           </document-entries>
         </div>
