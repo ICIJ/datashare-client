@@ -74,11 +74,11 @@ const reachedFullWidth = computed(() => separatorLineLeft.value > fullWidth.valu
 
 const floatingChildren = querySelectorAll('.document-floating__start__floating > *', { immediate: false })
 const hasFloatingChildren = computed(() => !!floatingChildren.value.length)
-watch(hasFloatingChildren, value => value && resetStartSize())
+// watch(hasFloatingChildren, value => value && resetStartSize())
 
 const floatingSiblings = querySelectorAll('.document-floating__start__floating ~ *', { immediate: false })
 const hasFloatingSiblings = computed(() => !!floatingSiblings.value.length)
-watch(hasFloatingSiblings, value => value && resetStartSize())
+// watch(hasFloatingSiblings, value => value && resetStartSize())
 
 const separatorLineStyle = computed(() => {
   const left = reachedFullWidth.value ? '100%' : `${separatorLineLeft.value}px`
@@ -261,12 +261,17 @@ defineExpose({ resetSize, resetStartSize, resetEndSize })
 
   &__separator-line {
     transform: translateX(-50%);
-    display: none;
+    display:none;
+    @include media-breakpoint-up(sm) {
+      .document-floating--has-floating-children &,.document-floating--has-floating-siblings &{
+        display: block;
+      }
+    }
 
-    .document-floating--enough-space.document-floating--has-floating-children &,
+    /*.document-floating--enough-space.document-floating--has-floating-children &,
     .document-floating--enough-space.document-floating--has-floating-siblings & {
       display: block;
-    }
+    }*/
   }
 
   &__end {
