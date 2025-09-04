@@ -23,8 +23,8 @@
           {{ shortClientHash }}
           <haptic-copy
             :text="shortClientHash"
-            variant="link"
-            class="p-1 bg-dark-subtle text-bg-dark"
+            variant="dark"
+            class="p-1"
             hide-label
           />
         </div>
@@ -41,8 +41,8 @@
           {{ serverHash }}
           <haptic-copy
             :text="serverHash"
-            variant="link"
-            class="p-1 bg-dark-subtle text-bg-dark"
+            variant="dark"
+            class="p-1"
             hide-label
           />
         </div>
