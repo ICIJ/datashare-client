@@ -1129,8 +1129,7 @@
         },
         "csvString": {
           "label": "Or type your queries",
-          "placeholder": "Enter one search term per line here...",
-          "new": "New"
+          "placeholder": "Enter one search term per line here..."
         },
         "phraseChanges": {
           "label": "Sentence changes",

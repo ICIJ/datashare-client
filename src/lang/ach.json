@@ -1122,9 +1122,8 @@
           "label": "crwdns8994:0crwdne8994:0",
           "placeholder": "crwdns8996:0crwdne8996:0"
         },
-        "listQueries": {
-          "label": "crwdns8998:0crwdne8998:0",
-          "placeholder": "crwdns9000:0crwdne9000:0"
+        "csvString": {
+          "label": "crwdns8998:0crwdne8998:0"
         },
         "phraseChanges": {
           "label": "crwdns9002:0crwdne9002:0",

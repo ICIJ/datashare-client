@@ -1122,9 +1122,8 @@
           "label": "Téléchargez un CSV",
           "placeholder": "Déposez votre CSV"
         },
-        "listQueries": {
-          "label": "Ou tapez vos requêtes",
-          "placeholder": "Nouvelle fonctionnalité à venir bientôt !"
+        "csvString": {
+          "label": "Ou tapez vos requêtes"
         },
         "phraseChanges": {
           "label": "Changements de phrase",
