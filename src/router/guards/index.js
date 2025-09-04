@@ -13,7 +13,6 @@ export default (core) => {
       const skipsAuth = to.matched.some(r => get(r, 'meta.skipsAuth', false))
       if (skipsAuth) {
         next()
-        // The user is authenticated
       }
       else if (username) {
         const path = appStore.popRedirectAfterLogin()
@@ -23,7 +22,6 @@ export default (core) => {
         else {
           next()
         }
-        // The user isn't authenticated
       }
       else if (from.name !== 'login' && to.name !== 'login') {
         appStore.setRedirectAfterLogin(to.path)

@@ -12,6 +12,7 @@ import Hook from '@/components/Hook/Hook'
 import { useConfirmModal } from '@/composables/useConfirmModal'
 import { useRemoveAll } from '@/composables/useRemoveAll'
 import { useCore } from '@/composables/useCore'
+import { useAuth } from '@/composables/useAuth'
 
 const props = defineProps({
   compact: {
@@ -48,6 +49,7 @@ const { t } = useI18n()
 const { toastedPromise } = useCore()
 const { confirm } = useConfirmModal()
 const { removeAll } = useRemoveAll()
+const { isBasicAuth } = useAuth()
 const router = useRouter()
 
 const removeAllAndRedirect = async () => {
@@ -68,6 +70,26 @@ const confirmRemoveAll = async () => {
 const classList = computed(() => {
   return {
     'app-sidebar-footer--compact': props.compact
+  }
+})
+
+const signOutLink = computed(() => {
+  if (isBasicAuth.value) {
+    return null
+  }
+  return props.signOutLink
+})
+
+const signOutLabel = computed(() => {
+  if (isBasicAuth.value) {
+    return t('appSidebarFooter.signOutBasic')
+  }
+  return t('appSidebarFooter.signOut')
+})
+
+const signOutClass = computed(() => {
+  return {
+    'app-sidebar-footer__sign-out--basic-auth': isBasicAuth.value
   }
 })
 </script>
@@ -167,12 +189,13 @@ const classList = computed(() => {
       >
         <button-icon
           :href="signOutLink"
+          :label="signOutLabel"
+          :class="signOutClass"
           hide-label
           variant="link"
-          class="p-0 text-body"
+          class="app-sidebar-footer__sign-out p-0 text-body"
           icon-left="sign-out"
           icon-left-hover-weight="bold"
-          :label="t('appSidebarFooter.signOut')"
         />
       </app-sidebar-footer-links-entry>
     </app-sidebar-footer-links>
@@ -197,6 +220,10 @@ const classList = computed(() => {
     flex-direction: column-reverse;
     align-items: center;
     gap: $spacer-xl;
+  }
+
+  &__sign-out--basic-auth {
+    cursor: not-allowed;
   }
 }
 </style>

@@ -61,12 +61,12 @@ class Core extends Behaviors {
    * @param api - Datashare api interface
    * @param mode - mode of authentication ('local' or 'server'
    */
-  constructor(api = apiInstance, mode = getMode(MODE_NAME.LOCAL)) {
+  constructor(api = apiInstance) {
     super()
     const Root = defineComponent({ template: '<router-view />' })
     this._vue = createApp(Root)
     this._api = api
-    this._auth = new Auth(mode, this._api)
+    this._auth = new Auth()
     this._pageContext = reactive({ title: null })
     // Setup deferred state
     this.defer()
