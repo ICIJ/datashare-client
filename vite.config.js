@@ -86,7 +86,7 @@ export default ({ mode }) => {
         usePolling: true
       },
       proxy: {
-        '^/(version|settings|me|api).?': {
+        '^/(version|settings|me|api|auth).?': {
           target: process.env.VITE_DEV_PROXY,
           changeOrigin: true,
           secure: false
