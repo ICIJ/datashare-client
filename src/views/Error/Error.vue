@@ -166,7 +166,7 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
         flex-direction: row;
         align-items: center;
         justify-content: center;
-        background: var(--bs-dark-bg-subtle);
+        background: var(--bs-black);
         border-radius: 1em;
 
         &__icon {
@@ -192,12 +192,12 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
         &:not(:last-of-type):after {
           content: '|';
           margin: 0 $spacer;
-          color: rgba(var(--bs-body-bg-rgb), 0.5);
+          color: rgba(var(--bs-light-rgb), 0.5);
         }
 
         &,
         a {
-          color: rgba(var(--bs-body-bg-rgb), 0.5);
+          color: rgba(var(--bs-light-rgb), 0.5);
         }
       }
     }
