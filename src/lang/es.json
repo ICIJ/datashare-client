@@ -1122,9 +1122,8 @@
           "label": "Usar un CSV",
           "placeholder": "Soltar tu CSV"
         },
-        "listQueries": {
-          "label": "O escribe tus consultas",
-          "placeholder": "¡Nueva funcionalidad próximamente!"
+        "csvString": {
+          "label": "O escribe tus consultas"
         },
         "phraseChanges": {
           "label": "Cambios de frase",
