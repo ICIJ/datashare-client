@@ -832,6 +832,7 @@
   },
   "appSidebarFooter": {
     "signOut": "Cerrar sesión",
+    "signOutBasic": "To sign out from Datashare you must close your web browser.",
     "keyboardShortcuts": "Atajos de teclado",
     "settings": "Configuración",
     "help": "Ayuda",
