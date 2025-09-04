@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { computed, ref, toValue } from 'vue'
 
+import { BATCH_SEARCH_CSV_FILE, BATCH_SEARCH_CSV_STRING } from '@/enums/batchSearch'
 import FormCreation from '@/components/Form/FormCreation'
 import TaskBatchSearchFormDetails from '@/components/Task/TaskBatchSearch/TaskBatchSearchFormDetails'
 import TaskBatchSearchFormQueries from '@/components/Task/TaskBatchSearch/TaskBatchSearchFormQueries'
@@ -36,6 +37,7 @@ const initialValues = {
   description: '',
   visibility: false,
   csvFile: null,
+  csvString: '',
   phraseMatch: false,
   phraseChanges: 0,
   spellingChanges: 0
@@ -44,7 +46,9 @@ const initialValues = {
 const name = ref(initialValues.name)
 const description = ref(initialValues.description)
 const visibility = ref(initialValues.visibility)
+const csvTab = ref(BATCH_SEARCH_CSV_FILE)
 const csvFile = ref(initialValues.csvFile)
+const csvString = ref(initialValues.csvString)
 const phraseMatch = ref(initialValues.phraseMatch)
 const phraseChanges = ref(initialValues.phraseChanges)
 const spellingChanges = ref(initialValues.spellingChanges)
@@ -55,11 +59,24 @@ function reset() {
   description.value = initialValues.description
   visibility.value = initialValues.visibility
   csvFile.value = initialValues.csvFile
+  csvString.value = initialValues.csvString
   phraseMatch.value = initialValues.phraseMatch
   phraseChanges.value = initialValues.phraseChanges
   spellingChanges.value = initialValues.spellingChanges
   formSearchStore.resetFilterValues()
 }
+
+const csv = computed(() => {
+  if (csvTab.value === BATCH_SEARCH_CSV_FILE) {
+    return csvFile.value
+  }
+  if (csvTab.value === BATCH_SEARCH_CSV_STRING && csvString.value.trim().length) {
+    return new File([csvString.value], 'queries.csv', {
+      type: 'text/csv;charset=utf-8',
+    })
+  }
+  return null
+})
 
 const queryTemplate = computed(() => {
   const { instantiatedFilters } = formSearchStore
@@ -69,12 +86,12 @@ const queryTemplate = computed(() => {
 
 const uri = computed(() => formSearchStore.stringifyBaseRouteQuery)
 
-const isValid = computed(() => name.value.trim(' ').length > 0 && csvFile.value !== null)
+const isValid = computed(() => name.value.trim(' ').length > 0 && csv.value !== null)
 
 function createBatchSearch() {
   return core.api.batchSearch(
     name.value,
-    csvFile.value,
+    csv.value,
     description.value,
     formSearchStore.indices.join(','),
     phraseMatch.value,
@@ -117,7 +134,11 @@ async function submit() {
       v-model:visibility="visibility"
       v-model:selected-projects="selectedProjects"
     />
-    <task-batch-search-form-queries v-model:csv-file="csvFile" />
+    <task-batch-search-form-queries
+      v-model:csv-tab="csvTab"
+      v-model:csv-file="csvFile"
+      v-model:csv-string="csvString"
+    />
     <task-batch-search-form-operators
       v-model:phrase-match="phraseMatch"
       v-model:phrase-changes="phraseChanges"
