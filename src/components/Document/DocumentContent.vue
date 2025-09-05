@@ -1,6 +1,6 @@
 <script setup>
 import { computed, nextTick, onMounted, reactive, ref, toRef, useTemplateRef, watch } from 'vue'
-import { clamp, entries, findLastIndex, get, isEmpty, minBy, range, throttle } from 'lodash'
+import { clamp, entries, findLastIndex, get, isEmpty, iteratee, minBy, range, throttle } from 'lodash'
 import { useI18n } from 'vue-i18n'
 
 import { addLocalSearchMarksClassByOffsets } from '@/utils/strings'
@@ -188,17 +188,30 @@ const loadMaxOffset = waitFor(async function (targetLanguage = props.targetLangu
   return offset
 })
 
-const mustSyncPages = computed(() => {
-  // This experimental feature is only available for LOCAL/EMBEDDED mode, when
-  // the artifact dir is configured. This is because it can be very
-  // resource-intensive for large documents.
-  const hasArtifactDir = !!config.get('artifactDir')
-  const isOriginalLanguage = !props.targetLanguage || props.targetLanguage === 'original'
-  return !isServer.value && hasArtifactDir && isOriginalLanguage
-})
+const sameTikaVersion = async function () {
+  const dsTikaVersion = await api.getVersion().then(iteratee('ds.extractorVersion'))
+  const documentTikaVersion = props.document.meta('tika_version')
+  return dsTikaVersion === documentTikaVersion
+}
+
+const mustSyncPages = async function () {
+  // This feature is experimental and heavy, so we only enable it
+  // when certain conditions are met. Including:
+  //
+  // * The document is a PDF
+  return props.document.contentType === 'application/pdf'
+  // * We are not in SERVER mode (LOCAL or EMBEDDED)
+    && !isServer.value
+  // * The server has an artifact directory configured
+    && !!config.get('artifactDir')
+  // * The user is not requesting a translation
+    && (!props.targetLanguage || props.targetLanguage === 'original')
+  // * The Tika version used to extract the document is the same as the one used by the server
+    && await sameTikaVersion()
+}
 
 const syncPages = waitFor(async function () {
-  if (mustSyncPages.value) {
+  if (await mustSyncPages()) {
     syncedPages.value = await api
       .getPages(documentStore.document)
       .then(({ pages }) => pages)
