@@ -1,19 +1,18 @@
 import remarkGfm from 'remark-gfm'
-import { mergeConfig } from "vitest/config";
-
+import { mergeConfig } from 'vitest/config'
 
 /** @type { import('@storybook/vue3-vite').StorybookConfig } */
 const config = {
   core: {
     disableTelemetry: true
   },
-  stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
+  stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
   staticDirs: ['./static'],
   addons: [
-    "@storybook/addon-links",
+    '@storybook/addon-links',
     '@storybook/addon-themes',
     'storybook-addon-vue-slots',
-    "storybook-addon-pseudo-states",
+    'storybook-addon-pseudo-states',
     {
       name: '@storybook/addon-docs',
       options: {
@@ -26,11 +25,11 @@ const config = {
     }
   ],
   framework: {
-    name: "@storybook/vue3-vite",
+    name: '@storybook/vue3-vite',
     options: {},
   },
-  //needed SB9 and storybook-vue3-router 5.0.0 compatibility  https://github.com/NickMcBurney/storybook-vue3-router/issues/68
-  viteFinal: async (config) =>
+  // needed SB9 and storybook-vue3-router 5.0.0 compatibility  https://github.com/NickMcBurney/storybook-vue3-router/issues/68
+  viteFinal: async config =>
     mergeConfig(config, {
       resolve: {
         alias: {

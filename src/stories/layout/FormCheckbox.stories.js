@@ -3,7 +3,7 @@ import { ref } from 'vue'
 
 export default {
   title: 'Layout/FormCheckbox',
-  render: (args) => ({
+  render: args => ({
     // Components used in your story `template` are defined in the `components` object
     components: { BFormGroup, BFormCheckboxGroup },
     // The story's `args` need to be mapped into the template through the `setup()` method

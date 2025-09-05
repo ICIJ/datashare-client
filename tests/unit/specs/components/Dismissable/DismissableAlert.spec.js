@@ -93,7 +93,7 @@ describe('DismissableAlert', () => {
         persist: false
       }
     })
-    expect(wrapper.find('button').text()).toBe("Don't show this again")
+    expect(wrapper.find('button').text()).toBe('Don\'t show this again')
   })
 
   it('renders with provided link label', () => {

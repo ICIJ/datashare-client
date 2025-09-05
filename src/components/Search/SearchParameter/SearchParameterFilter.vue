@@ -62,7 +62,7 @@ const props = defineProps({
 const { t } = useI18n()
 
 const filter = computed(() => {
-  return filtersDefs.find((filter) => filter.options.name === field.value)
+  return filtersDefs.find(filter => filter.options.name === field.value)
 })
 
 const prefix = computed(() => {
@@ -110,7 +110,11 @@ const display = computed(() => {
     :no-icon="noIcon"
     :no-x-icon="noXIcon"
   >
-    <component :is="display" v-if="display" :value="term" />
+    <component
+      :is="display"
+      v-if="display"
+      :value="term"
+    />
     <slot v-else />
   </search-parameter-query-term>
 </template>

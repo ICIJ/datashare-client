@@ -21,8 +21,14 @@ const classList = computed(() => {
 </script>
 
 <template>
-  <b-tr :class="classList" class="page-table-tr">
-    <td v-show="selectMode" class="page-table-tr__select">
+  <b-tr
+    :class="classList"
+    class="page-table-tr"
+  >
+    <td
+      v-show="selectMode"
+      class="page-table-tr__select"
+    >
       <b-form-checkbox v-model="selected" />
     </td>
     <slot />

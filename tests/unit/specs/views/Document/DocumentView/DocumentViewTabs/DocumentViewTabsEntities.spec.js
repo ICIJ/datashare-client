@@ -14,7 +14,7 @@ vi.mock('lodash', async (importOriginal) => {
   const { default: actual } = await importOriginal()
   return {
     ...actual,
-    throttle: (cb) => cb
+    throttle: cb => cb
   }
 })
 

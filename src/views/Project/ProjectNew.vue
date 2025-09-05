@@ -19,7 +19,8 @@ const submit = waitFor(async (project) => {
     await core.setProject(project)
     notifyCreationSucceed()
     redirectToProject(project)
-  } catch (error) {
+  }
+  catch (error) {
     notifyCreationFailed(error)
   }
 })
@@ -46,8 +47,16 @@ function redirectToProject({ name }) {
   <div class="project-new">
     <page-header no-toggle-settings />
     <page-container fluid>
-      <app-overlay rounded="sm" :show="isLoading">
-        <project-form class="mb-4" card :disabled="isLoading" @submit="submit" />
+      <app-overlay
+        rounded="sm"
+        :show="isLoading"
+      >
+        <project-form
+          class="mb-4"
+          card
+          :disabled="isLoading"
+          @submit="submit"
+        />
       </app-overlay>
     </page-container>
   </div>

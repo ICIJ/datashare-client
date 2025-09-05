@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import { ROTATIONS_COUNTERWISE } from '@/enums/documentViewerPdf'
-import RotateCounterClockwiseButton from '@/components/Document/DocumentViewer/DocumentViewerPdf/DocumentViewerPdfNavDropdown/DocumentViewerPdfNavDropdownRotationCounterClockwise.vue'
+import RotateCounterClockwiseButton from '@/components/Document/DocumentViewer/DocumentViewerPdf/DocumentViewerPdfDropdown/DocumentViewerPdfDropdownRotationCounterClockwise.vue'
 
 describe('RotateCounterClockwiseButton.vue', () => {
   // helper to create a wrapper with a specific modelValue

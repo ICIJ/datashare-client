@@ -55,16 +55,30 @@ whenever(username, getHashedApiKey, { immediate: true })
 
 <template>
   <settings-view-layout class="settings-view-api">
-    <div v-if="!hasHashedKey" class="settings-view-api__create text-center">
+    <div
+      v-if="!hasHashedKey"
+      class="settings-view-api__create text-center"
+    >
       <div class="mb-3">
-        <phosphor-icon :name="PhKey" size="3em" />
+        <phosphor-icon
+          :name="PhKey"
+          size="3em"
+        />
       </div>
       <p v-html="t('settings.api.description')" />
-      <button-icon variant="action" :icon-left="PhPlus" class="settings-view-api__create__button" @click="createApiKey">
+      <button-icon
+        variant="action"
+        :icon-left="PhPlus"
+        class="settings-view-api__create__button"
+        @click="createApiKey"
+      >
         {{ t('settings.api.newApiKey') }}
       </button-icon>
     </div>
-    <div v-else class="settings-view-api__show">
+    <div
+      v-else
+      class="settings-view-api__show"
+    >
       <p v-html="t('settings.api.description')" />
       <div class="d-flex border rounded align-items-center">
         <div class="d-inline-flex flex-column align-items-center gap-1 p-3">
@@ -76,7 +90,10 @@ whenever(username, getHashedApiKey, { immediate: true })
         <div class="flex-grow-1 p-3">
           <i18n-t keypath="settings.api.key.hash">
             <template #hash>
-              <display-hash class="settings-view-api__show__hash" :value="hashedKey" />
+              <display-hash
+                class="settings-view-api__show__hash"
+                :value="hashedKey"
+              />
             </template>
           </i18n-t>
           <p class="text-secondary-emphasis m-0">
@@ -120,8 +137,16 @@ whenever(username, getHashedApiKey, { immediate: true })
     >
       <p>{{ t('settings.api.key.warning') }}</p>
       <div class="input-group">
-        <input class="form-control font-monospace." readonly :value="apiKey" />
-        <haptic-copy :text="apiKey" class="btn-outline-action" :label="t('settings.api.key.copy')" />
+        <input
+          class="form-control font-monospace."
+          readonly
+          :value="apiKey"
+        >
+        <haptic-copy
+          :text="apiKey"
+          class="btn-outline-action"
+          :label="t('settings.api.key.copy')"
+        />
       </div>
     </app-modal>
   </settings-view-layout>

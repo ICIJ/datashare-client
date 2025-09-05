@@ -1,5 +1,5 @@
 <template>
-  <div class="json-formatter"></div>
+  <div class="json-formatter" />
 </template>
 
 <script>

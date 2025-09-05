@@ -37,7 +37,8 @@ const currentRoute = computed(() => {
   const name = props.currentRouteName ?? router.currentRoute.value?.name
   try {
     return router.resolve({ name })
-  } catch {
+  }
+  catch {
     return null
   }
 })
@@ -45,7 +46,8 @@ const currentRoute = computed(() => {
 const resolved = computed(() => {
   try {
     return router.resolve(props.to)
-  } catch {
+  }
+  catch {
     return null
   }
 })
@@ -59,8 +61,9 @@ const route = computed(() => {
     // in order to display the correct breadcrumb link.
     //
     // If no child route has an empty path, we keep the current route.
-    return children.find((child) => child.path === '') ?? resolved
-  } catch {
+    return children.find(child => child.path === '') ?? resolved
+  }
+  catch {
     return null
   }
 })
@@ -81,7 +84,12 @@ const classList = computed(() => {
 </script>
 
 <template>
-  <a v-if="route" :href="resolved.href" class="navigation-breadcrumb-link" :class="classList">
+  <a
+    v-if="route"
+    :href="resolved.href"
+    class="navigation-breadcrumb-link"
+    :class="classList"
+  >
     <span class="navigation-breadcrumb-link__label">
       <phosphor-icon
         v-if="!noIcon && icon"
@@ -90,7 +98,10 @@ const classList = computed(() => {
       />
       <span class="navigation-breadcrumb-link__label__content">
         <slot>
-          <display-route :value="to.name" :title="title" />
+          <display-route
+            :value="to.name"
+            :title="title"
+          />
         </slot>
       </span>
     </span>

@@ -15,6 +15,7 @@ class WidgetRecommendedBy extends WidgetEmpty {
     super(options)
     this.hideThumbnails = !!hideThumbnails
   }
+
   get component() {
     return Component
   }

@@ -90,14 +90,28 @@ async function editPromptModal() {
 
 <template>
   <div class="batch-search-actions flex-nowrap d-flex gap-2">
-    <batch-search-actions-edit v-if="false" :hide-label="hideLabels" :square="hideLabels" @click="editPromptModal()" />
+    <batch-search-actions-edit
+      v-if="false"
+      :hide-label="hideLabels"
+      :square="hideLabels"
+      @click="editPromptModal()"
+    />
     <batch-search-actions-relaunch
       :disabled="!isOver"
       :hide-label="hideLabels"
       :square="hideLabels"
       @click="relaunchPromptModal()"
     />
-    <batch-search-actions-stop v-if="isRunning" :hide-label="hideLabels" :square="hideLabels" @click="stop()" />
-    <batch-search-actions-delete :hide-label="hideLabels" :square="hideLabels" @click="afterConfirmation(remove)" />
+    <batch-search-actions-stop
+      v-if="isRunning"
+      :hide-label="hideLabels"
+      :square="hideLabels"
+      @click="stop()"
+    />
+    <batch-search-actions-delete
+      :hide-label="hideLabels"
+      :square="hideLabels"
+      @click="afterConfirmation(remove)"
+    />
   </div>
 </template>

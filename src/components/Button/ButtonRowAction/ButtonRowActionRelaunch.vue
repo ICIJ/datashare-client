@@ -7,5 +7,8 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <button-row-action :icon="PhArrowClockwise" :label="t('buttonRowAction.relaunch')" />
+  <button-row-action
+    :icon="PhArrowClockwise"
+    :label="t('buttonRowAction.relaunch')"
+  />
 </template>

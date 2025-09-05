@@ -34,7 +34,10 @@ const { t } = useI18n()
 
 <template>
   <template v-if="loading">
-    <document-row-placeholder :properties="properties" :repeat="5" />
+    <document-row-placeholder
+      :properties="properties"
+      :repeat="5"
+    />
   </template>
   <template v-else-if="entries.length">
     <document-row
@@ -48,7 +51,10 @@ const { t } = useI18n()
   </template>
   <template v-else>
     <tr>
-      <td class="p-3 text-secondary text-center" :colspan="properties.length + 1">
+      <td
+        class="p-3 text-secondary text-center"
+        :colspan="properties.length + 1"
+      >
         {{ t('documentEntries.noMatches') }}
       </td>
     </tr>

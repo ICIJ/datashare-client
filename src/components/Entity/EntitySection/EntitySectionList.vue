@@ -12,7 +12,11 @@ defineProps({
 <template>
   <div class="d-flex flex-wrap gap-2">
     <slot v-bind="{ entries }">
-      <entity-section-list-entry v-for="(entity, i) in entries" :key="i" :entity="entity" />
+      <entity-section-list-entry
+        v-for="(entity, i) in entries"
+        :key="i"
+        :entity="entity"
+      />
     </slot>
   </div>
 </template>

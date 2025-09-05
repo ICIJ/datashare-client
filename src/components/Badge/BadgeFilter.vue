@@ -16,8 +16,14 @@ defineProps({
 
 <template>
   <span class="badge-filter px-2 py-1 rounded border border-light-subtle d-inline-flex flex-column">
-    <badge-filter-header class="mb-1" :name="name" />
-    <badge-filter-value :name="name" :value="value" />
+    <badge-filter-header
+      class="mb-1"
+      :name="name"
+    />
+    <badge-filter-value
+      :name="name"
+      :value="value"
+    />
   </span>
 </template>
 

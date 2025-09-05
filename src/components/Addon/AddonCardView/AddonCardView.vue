@@ -31,23 +31,32 @@ const props = defineProps({
   }
 })
 
+const emit = defineEmits(['install', 'update', 'uninstall'])
+
 const hasAvailableUpdate = computed(() => {
   return props.installed && props.version !== props.recommendedVersion
 })
 </script>
 
 <template>
-  <b-card class="addon-card-view" body-class="d-flex gap-2">
-    <addon-card-view-details :title="title" :url="url" :description="description" />
+  <b-card
+    class="addon-card-view"
+    body-class="d-flex gap-2"
+  >
+    <addon-card-view-details
+      :title="title"
+      :url="url"
+      :description="description"
+    />
     <addon-card-view-actions
       :version="version"
       :recommended-version="recommendedVersion"
       :should-install="!installed"
       :should-update="hasAvailableUpdate"
       :loading="loading"
-      @install="$emit('install')"
-      @update="$emit('update')"
-      @uninstall="$emit('uninstall')"
+      @install="emit('install')"
+      @update="emit('update')"
+      @uninstall="emit('uninstall')"
     />
   </b-card>
 </template>

@@ -14,7 +14,7 @@ export default {
   args: {
     collapseTags: false
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       FiltersPanelToggler,
       FiltersPanelSearch,
@@ -31,7 +31,7 @@ export default {
     },
     computed: {
       count() {
-        return Object.values(this.values).filter((v) => v).length
+        return Object.values(this.values).filter(v => v).length
       }
     },
     setup: () => ({ args }),

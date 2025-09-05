@@ -1,6 +1,12 @@
 <template>
-  <span :class="{ 'fw-bold': fieldChanged }" class="d-flex align-items-top">
-    <span class="flex-grow-1 py-1" :title="name">
+  <span
+    :class="{ 'fw-bold': fieldChanged }"
+    class="d-flex align-items-top"
+  >
+    <span
+      class="flex-grow-1 py-1"
+      :title="name"
+    >
       {{ formatSettingName(name) }}
     </span>
     <span>
@@ -41,7 +47,7 @@ function capitalizeKnownAcronyms(str) {
   return str
     .split(' ')
     .map((word) => {
-      const knownAcronyms = KNOWN_ACRONYMS.map((a) => a.toUpperCase())
+      const knownAcronyms = KNOWN_ACRONYMS.map(a => a.toUpperCase())
       const index = knownAcronyms.indexOf(word.toUpperCase())
       if (index > -1) {
         return KNOWN_ACRONYMS[index]

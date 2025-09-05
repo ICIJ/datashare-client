@@ -83,7 +83,7 @@ describe('DocumentTranslation.vue', () => {
     expect(wrapper.vm.hasTranslations).toBe(false)
   })
 
-  it("shouldn't show italian translation", async () => {
+  it('shouldn\'t show italian translation', async () => {
     const mocked = mockedDocumentContentFactory('document-with-a-translation-in-italian', 'Premier')
     mocked.indexedDocument.withLanguage('FRENCH').withContentTranslated('Primo', 'FRENCH', 'ITALIAN')
     const { document } = await mocked.commit()

@@ -39,8 +39,18 @@ const title = computed(() => {
 </script>
 
 <template>
-  <router-link class="document-carousel-entry" :to="to" :class="classList" @click="emit('select', document)">
-    <document-thumbnail :size="size" :document="document" crop class="mb-2" />
+  <router-link
+    class="document-carousel-entry"
+    :to="to"
+    :class="classList"
+    @click="emit('select', document)"
+  >
+    <document-thumbnail
+      :size="size"
+      :document="document"
+      crop
+      class="mb-2"
+    />
     <div class="document-carousel-entry__title">
       {{ title }}
     </div>

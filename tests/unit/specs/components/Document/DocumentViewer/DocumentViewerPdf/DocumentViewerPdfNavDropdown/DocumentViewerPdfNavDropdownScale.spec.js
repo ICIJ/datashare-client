@@ -2,9 +2,9 @@ import { mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import { SCALE_FIT, SCALE_WIDTH } from '@/enums/documentViewerPdf'
-import DocumentViewerPdfScaleDropdown from '@/components/Document/DocumentViewer/DocumentViewerPdf/DocumentViewerPdfNavDropdown/DocumentViewerPdfNavDropdownScale.vue'
+import DocumentViewerPdfScaleDropdown from '@/components/Document/DocumentViewer/DocumentViewerPdf/DocumentViewerPdfDropdown/DocumentViewerPdfDropdownScale.vue'
 
-describe('DocumentViewerPdfNavDropdownScale.vue', () => {
+describe('DocumentViewerPdfDropdownScale.vue', () => {
   // helper to create a wrapper with a specific modelValue
   const factory = (modelValue = SCALE_FIT) => {
     const { plugins } = CoreSetup.init().useAll()

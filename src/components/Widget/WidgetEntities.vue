@@ -1,5 +1,8 @@
 <template>
-  <app-wait :for="loaderId" transition="fade">
+  <app-wait
+    :for="loaderId"
+    transition="fade"
+  >
     <template #waiting>
       <div class="m-5 text-center h-100">
         <app-spinner size="2em" />
@@ -8,7 +11,11 @@
     <div class="widget widget--entities d-flex h-100 w-100">
       <template v-if="total || isServer">
         <div class="row flex-grow-1">
-          <div v-for="category in categories" :key="category" class="col-6 col-xl">
+          <div
+            v-for="category in categories"
+            :key="category"
+            class="col-6 col-xl"
+          >
             <widget-barometer
               :icon="getCategoryIcon(category)"
               :variant="getCategoryVariant(category)"
@@ -19,7 +26,10 @@
           </div>
         </div>
       </template>
-      <div v-else class="text-center w-100 align-self-center">
+      <div
+        v-else
+        class="text-center w-100 align-self-center"
+      >
         <p>{{ t('widget.noEntitiesFindSome') }}</p>
         <button-icon
           :to="{ name: 'task.entities.new', query: { project } }"

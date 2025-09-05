@@ -23,8 +23,8 @@ const tag = (label, userId) => {
   const user = { id: userId }
   return { label, user }
 }
-const tagMine = (label) => tag(label, 'jsmith')
-const tagOther = (label) => tag(label, uniqueId('other'))
+const tagMine = label => tag(label, 'jsmith')
+const tagOther = label => tag(label, uniqueId('other'))
 const tags = [tagMine('toto'), tagMine('titi'), tagMine('tata'), tagOther('riri'), tagOther('fifi'), tagOther('loulou')]
 
 export const Default = {}

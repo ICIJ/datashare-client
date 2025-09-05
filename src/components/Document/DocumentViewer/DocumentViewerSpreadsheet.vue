@@ -1,5 +1,8 @@
 <template>
-  <app-wait for="load spreadsheet" class="w-100 py-3">
+  <app-wait
+    for="load spreadsheet"
+    class="w-100 py-3"
+  >
     <template #waiting>
       <div class="text-muted">
         {{ t('document.fetching') }}
@@ -8,9 +11,16 @@
     <div v-if="!isPreviewable">
       {{ t('document.notAvailable') }}
     </div>
-    <div v-else class="spreadsheet-viewer__content d-flex flex-column h-100">
+    <div
+      v-else
+      class="spreadsheet-viewer__content d-flex flex-column h-100"
+    >
       <div class="spreadsheet-viewer__content__toolbox bg-tertiary-subtle d-flex align-items-center p-2">
-        <b-form-checkbox v-model="fieldsInFirstItem" switch class="ms-3">
+        <b-form-checkbox
+          v-model="fieldsInFirstItem"
+          switch
+          class="ms-3"
+        >
           {{ t('document.spreadsheet.fieldsInFirstItem') }}
         </b-form-checkbox>
         <div
@@ -23,8 +33,11 @@
               class="form-control"
               :placeholder="t('document.spreadsheet.findInSpreadsheet')"
               @input="debounceFilterInput"
-            />
-            <div v-if="filter" class="input-group-append">
+            >
+            <div
+              v-if="filter"
+              class="input-group-append"
+            >
               <div class="input-group-text">
                 {{ t('document.spreadsheet.filtered.rows', filteredItems.length) }}
               </div>
@@ -32,13 +45,19 @@
           </div>
         </div>
       </div>
-      <div class="spreadsheet-viewer__content__table mx-3 small flex-grow-1" :style="tableVars">
+      <div
+        class="spreadsheet-viewer__content__table mx-3 small flex-grow-1"
+        :style="tableVars"
+      >
         <dynamic-scroller
           :items="scrollerItems"
           :min-item-size="54"
           class="spreadsheet-viewer__content__table__scroller border-left border mb-3"
         >
-          <template v-if="fieldsInFirstItem" #before>
+          <template
+            v-if="fieldsInFirstItem"
+            #before
+          >
             <div class="spreadsheet-viewer__content__table__item row no-gutters border-bottom">
               <div
                 v-for="field in fields"
@@ -52,7 +71,12 @@
             </div>
           </template>
           <template #default="{ item, index, active }">
-            <dynamic-scroller-item :item="item" :active="active" :data-index="index" :size-dependencies="item.cols">
+            <dynamic-scroller-item
+              :item="item"
+              :active="active"
+              :data-index="index"
+              :size-dependencies="item.cols"
+            >
               <div class="spreadsheet-viewer__content__table__item row no-gutters border-bottom">
                 <div
                   v-for="(col, i) in item.cols"
@@ -68,8 +92,17 @@
           </template>
         </dynamic-scroller>
       </div>
-      <b-tabs v-if="nonEmptySheets.length > 1" v-model="activeSheetIndex" pills class="mx-3 mb-3">
-        <b-tab v-for="(sheet, i) in nonEmptySheets" :key="i" :title="sheet"></b-tab>
+      <b-tabs
+        v-if="nonEmptySheets.length > 1"
+        v-model="activeSheetIndex"
+        pills
+        class="mx-3 mb-3"
+      >
+        <b-tab
+          v-for="(sheet, i) in nonEmptySheets"
+          :key="i"
+          :title="sheet"
+        />
       </b-tabs>
     </div>
   </app-wait>
@@ -157,7 +190,7 @@ export default {
     nonEmptySheets() {
       return filter(this.sheets, (sheet) => {
         const rows = get(this, `meta.content.${sheet}`, [])
-        return filter(rows, (row) => row.length).length
+        return filter(rows, row => row.length).length
       })
     },
     filteredItems() {

@@ -1,11 +1,10 @@
 import get from 'lodash/get'
 import { ref } from 'vue'
 import { getCookie } from 'tiny-cookie'
+import { apiInstance as api } from '@/api/apiInstance'
 
 export default class Auth {
-  constructor(mode, api) {
-    this.mode = mode
-    this.api = api
+  constructor() {
     this.me = ref(null)
   }
 
@@ -16,6 +15,18 @@ export default class Auth {
     return this.me.value
   }
 
+  async signOutBasicAuth() {
+    return api.sendAction('/api/users/me', {
+      headers: {
+        Authorization: `Basic ${window.btoa('logout:logout')}`,
+      }
+    })
+  }
+
+  isBasicAuth() {
+    return !!this.me.value && !this._getCookieUsername()
+  }
+
   reset() {
     this.me.value = null
   }
@@ -23,17 +34,19 @@ export default class Auth {
   async _checkAuthentication() {
     try {
       return this._getCookieUsername() || (await this._getBasicAuthUserName())
-    } catch (_) {
+    }
+    catch {
       return null
     }
   }
 
   async _getBasicAuthUserName() {
     try {
-      const response = await this.api.getUser()
+      const response = await api.getUser()
       setTimeout(this.reset.bind(this), 43200 * 1000)
       return response.uid
-    } catch (error) {
+    }
+    catch (error) {
       if (error && error.response && error.response.status !== 401) {
         throw new Error(`${error.response.status} ${error.response.statusText}`)
       }

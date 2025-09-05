@@ -29,7 +29,7 @@ const style = computed(() => {
 
 async function shake() {
   shaking.value = true
-  await new Promise((resolve) => setTimeout(resolve, props.shakingDuration))
+  await new Promise(resolve => setTimeout(resolve, props.shakingDuration))
   shaking.value = false
 }
 
@@ -42,12 +42,23 @@ defineExpose({
 </script>
 
 <template>
-  <div class="login-image" :class="classList" :style="style">
+  <div
+    class="login-image"
+    :class="classList"
+    :style="style"
+  >
     <image-mode class="login-image__bg">
       <image-mode-source :src="image" />
-      <image-mode-source :src="imageDark" color-mode="dark" />
+      <image-mode-source
+        :src="imageDark"
+        color-mode="dark"
+      />
     </image-mode>
-    <img :src="logo" alt="Datashare" class="login-image__logo" />
+    <img
+      :src="logo"
+      alt="Datashare"
+      class="login-image__logo"
+    >
   </div>
 </template>
 

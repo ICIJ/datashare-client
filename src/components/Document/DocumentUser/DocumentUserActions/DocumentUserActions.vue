@@ -50,20 +50,25 @@
         :shorter-label="shorterLabels"
         @click="emit('action', DOCUMENT_USER_ACTIONS.FOLDERS)"
       />
-      <hook name="document-user-actions:after" :bind="{ shorterLabels }" />
+      <hook
+        name="document-user-actions:after"
+        :bind="{ shorterLabels }"
+      />
     </form-actions>
   </div>
 </template>
 
 <script setup>
-import { toRef, useTemplateRef } from 'vue'
+import { computed, toRef } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useParentElement } from '@vueuse/core'
 
 import { DOCUMENT_USER_ACTIONS } from '@/enums/documentUserActions'
 import DocumentUserActionsEntry from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsEntry'
 import FormActions from '@/components/Form/FormActions/FormActions'
 import Hook from '@/components/Hook/Hook'
 import { useCompact } from '@/composables/useCompact'
+import { useBreakpoints } from '@/composables/useBreakpoints'
 import { SIZE } from '@/enums/sizes'
 
 defineOptions({ name: 'DocumentUserActions' })
@@ -128,9 +133,12 @@ const props = defineProps({
 })
 const { t } = useI18n()
 
-const elementRef = useTemplateRef('element')
-// We short labels based on the width of the element.
-const { compact: shorterLabels } = useCompact(elementRef, { threshold: toRef(props, 'shorterLabelsThreshold') })
+const parentRef = useParentElement()
+const { breakpointDown } = useBreakpoints()
+const { compact: compactParent } = useCompact(parentRef, { threshold: toRef(props, 'shorterLabelsThreshold') })
+const showDropdown = computed(() => breakpointDown.value[props.compactAutoBreakpoint])
+// We short labels based on the width of the parent and visibility of the dropdown
+const shorterLabels = computed(() => compactParent.value && !showDropdown.value)
 
 const emit = defineEmits(['action'])
 </script>

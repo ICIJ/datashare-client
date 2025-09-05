@@ -14,9 +14,16 @@ defineProps({
 </script>
 
 <template>
-  <entity-in-context lazy :click="false" :entity="entity">
+  <entity-in-context
+    lazy
+    :click="false"
+    :entity="entity"
+  >
     <template #target>
-      <entity-button :entity="entity" clickable />
+      <entity-button
+        :entity="entity"
+        clickable
+      />
     </template>
   </entity-in-context>
 </template>

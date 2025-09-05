@@ -52,7 +52,10 @@ const classList = computed(() => {
 </script>
 
 <template>
-  <div class="path-tree-view-entry-stats-documents d-inline-flex align-items-center" :class="classList">
+  <div
+    class="path-tree-view-entry-stats-documents d-inline-flex align-items-center"
+    :class="classList"
+  >
     <component
       :is="is"
       :to="to"

@@ -12,5 +12,8 @@ defineProps({
 </script>
 
 <template>
-  <div class="display-highlights" v-html="value.join(separator)"></div>
+  <div
+    class="display-highlights"
+    v-html="value.join(separator)"
+  />
 </template>

@@ -46,11 +46,15 @@ defineProps({
 const { t } = useI18n()
 // We need to expose the setPage function to v-slot variables
 // and we cannot pass the model directly to the slot
-const setPage = (value) => (page.value = value)
+const setPage = value => (page.value = value)
 </script>
 
 <template>
-  <page-container fluid :sticky="sticky" class="page-header-toolbar d-flex justify-content-between flex-wrap gap-3">
+  <page-container
+    fluid
+    :sticky="sticky"
+    class="page-header-toolbar d-flex justify-content-between flex-wrap gap-3"
+  >
     <hook name="page-header-toolbar:before" />
     <slot name="start" />
     <slot name="toggle-filters">
@@ -61,9 +65,20 @@ const setPage = (value) => (page.value = value)
         @toggle="emit('toggleFilters', $event)"
       />
     </slot>
-    <slot name="pagination" v-bind="{ page, setPage, paginable, perPage, totalRows }">
-      <div v-if="paginable" class="page-header-toolbar__pagination">
-        <row-pagination :key="totalRows" v-model="page" :total-rows="totalRows" :per-page="perPage" />
+    <slot
+      name="pagination"
+      v-bind="{ page, setPage, paginable, perPage, totalRows }"
+    >
+      <div
+        v-if="paginable"
+        class="page-header-toolbar__pagination"
+      >
+        <row-pagination
+          :key="totalRows"
+          v-model="page"
+          :total-rows="totalRows"
+          :per-page="perPage"
+        />
       </div>
     </slot>
     <slot name="search">

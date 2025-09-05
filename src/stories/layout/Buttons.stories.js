@@ -11,7 +11,7 @@ export default {
   argTypes: {
     size: buttonSizesArgType
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       BButton,
       ButtonIcon

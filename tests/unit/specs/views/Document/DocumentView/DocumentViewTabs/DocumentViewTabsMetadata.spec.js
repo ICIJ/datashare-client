@@ -48,7 +48,7 @@ describe('DocumentViewTabsMetadata.vue', () => {
     })
 
     const inputs = wrapper.findAll('.document-metadata__value')
-    const values = inputs.map((input) => input.text())
+    const values = inputs.map(input => input.text())
     expect(values).toContain('French')
   })
 

@@ -22,6 +22,9 @@ defineProps({
         {{ label }}
       </span>
     </span>
-    <img :src="thumbnail" class="rounded-1 img-fluid d-none d-lg-block" />
+    <img
+      :src="thumbnail"
+      class="rounded-1 img-fluid d-none d-lg-block"
+    >
   </div>
 </template>

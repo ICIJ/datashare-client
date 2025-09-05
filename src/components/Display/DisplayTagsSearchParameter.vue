@@ -18,7 +18,10 @@ const emit = defineEmits(['delete'])
 <template>
   <display-tags :value="value">
     <template #content="{ content: label }">
-      <button-tag :label="label" @delete="emit('delete', label)" />
+      <button-tag
+        :label="label"
+        @delete="emit('delete', label)"
+      />
     </template>
   </display-tags>
 </template>

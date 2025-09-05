@@ -17,7 +17,15 @@ const { document } = useDocument()
 <template>
   <div class="document-view-tabs-text">
     <document-notes :path="document.path" />
-    <document-thread v-if="document.isEmail" :document="document" :q="q" />
-    <document-translation v-else :document="document" :q="q" />
+    <document-thread
+      v-if="document.isEmail"
+      :document="document"
+      :q="q"
+    />
+    <document-translation
+      v-else
+      :document="document"
+      :q="q"
+    />
   </div>
 </template>

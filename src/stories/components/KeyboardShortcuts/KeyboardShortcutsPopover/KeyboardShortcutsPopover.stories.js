@@ -12,7 +12,7 @@ export default {
   tags: ['autodocs'],
   decorators: [vueRouter(routes)],
   component: KeyboardShortcutsPopover,
-  render: (args) => ({
+  render: args => ({
     components: {
       ButtonIcon,
       KeyboardShortcutsPopover,

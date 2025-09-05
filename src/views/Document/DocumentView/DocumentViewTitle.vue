@@ -13,12 +13,24 @@ defineProps({
 
 <template>
   <div class="document-view-title d-flex align-items-center column-gap-3 row-gap-1">
-    <hook name="document-view-title:before" :bind="{ document }" />
+    <hook
+      name="document-view-title:before"
+      :bind="{ document }"
+    />
     <h2 class="document-view-title__title m-0 flex-grow-1">
-      <document-title interactive-root :document="document" />
+      <document-title
+        interactive-root
+        :document="document"
+      />
     </h2>
-    <project-button :project="document.project" class="flex-shrink-0" />
-    <hook name="document-view-title:after" :bind="{ document }" />
+    <project-button
+      :project="document.project"
+      class="flex-shrink-0"
+    />
+    <hook
+      name="document-view-title:after"
+      :bind="{ document }"
+    />
   </div>
 </template>
 

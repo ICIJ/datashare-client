@@ -76,7 +76,10 @@ const compactOrInjected = computed(() => props.compact ?? inject('compact', fals
 </script>
 
 <template>
-  <div class="path-tree-view-entry" :class="classList">
+  <div
+    class="path-tree-view-entry"
+    :class="classList"
+  >
     <div
       v-if="!noHeader"
       class="path-tree-view-entry__header d-flex align-items-center position-relative"
@@ -110,7 +113,10 @@ const compactOrInjected = computed(() => props.compact ?? inject('compact', fals
         :active="compactOrInjected ? selected : active"
       />
     </div>
-    <b-collapse :model-value="!collapse" class="path-tree-view-entry__subdirectories">
+    <b-collapse
+      :model-value="!collapse"
+      class="path-tree-view-entry__subdirectories"
+    >
       <slot v-bind="{ collapse, selected, active }" />
     </b-collapse>
   </div>

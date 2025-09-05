@@ -26,11 +26,12 @@ export function isUrl(value, protocols = ['https', 'http']) {
 
   try {
     url = new URL(value)
-  } catch (_) {
+  }
+  catch {
     return false
   }
 
-  return some(protocols, (protocol) => protocol === trimEnd(url.protocol, ':'))
+  return some(protocols, protocol => protocol === trimEnd(url.protocol, ':'))
 }
 
 /**
@@ -92,7 +93,8 @@ export function addLocalSearchMarksClass(content = '<div></div>', localSearchTer
       localSearchOccurrences
     }
     // Silently fails
-  } catch (error) {
+  }
+  catch {
     return { content, localSearchIndex, localSearchOccurrences }
   }
 }
@@ -107,12 +109,12 @@ export function getConsonants(value = '') {
   const vowels = ['a', 'e', 'i', 'o', 'u', 'y']
   const consonants = []
 
-  for (let i = 0; i < value.length; i++) {
-    const char = value[i].toLowerCase()
+  for (const v of value) {
+    const char = v.toLowerCase()
     // Check if the character is an alphabet and not a vowel
     if (/^[a-z]$/.test(char) && !vowels.includes(char)) {
       // Push the original value to keep the case
-      consonants.push(value[i])
+      consonants.push(v)
     }
   }
 

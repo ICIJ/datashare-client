@@ -36,8 +36,15 @@ const onClick = () => isFailed.value && props.withClick && emit('error')
     size="md"
     @click="onClick"
   >
-    <display-status class="border-0" :value="status" :no-tooltip="withLabel" />
-    <display-status-label v-if="withLabel" :value="status" />
+    <display-status
+      class="border-0"
+      :value="status"
+      :no-tooltip="withLabel"
+    />
+    <display-status-label
+      v-if="withLabel"
+      :value="status"
+    />
   </component>
 </template>
 

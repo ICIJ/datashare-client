@@ -33,7 +33,11 @@ const barStyle = computed(() => {
 </script>
 
 <template>
-  <component :is="is" class="widget-field-facets-entry" :to="to">
+  <component
+    :is="is"
+    class="widget-field-facets-entry"
+    :to="to"
+  >
     <div class="d-flex align-items-center flex-truncate">
       <div class="widget-field-facets-entry__label text-truncate">
         <slot>{{ label }}</slot>
@@ -45,12 +49,18 @@ const barStyle = computed(() => {
           weight="bold"
           class="me-2 flex-shrink-0 widget-field-facets-entry__count__icon"
         />
-        <slot name="count" v-bind="{ count }">
+        <slot
+          name="count"
+          v-bind="{ count }"
+        >
           <display-number :value="count" />
         </slot>
       </span>
     </div>
-    <div class="widget-field-facets-entry__bar" :style="barStyle"></div>
+    <div
+      class="widget-field-facets-entry__bar"
+      :style="barStyle"
+    />
   </component>
 </template>
 

@@ -37,7 +37,7 @@ export default class FilterEntity extends FilterType {
         return sub
           .query('query_string', {
             default_field: 'mentionNorm',
-            query: param.values.map((v) => `(${v})`).join(' OR ')
+            query: param.values.map(v => `(${v})`).join(' OR ')
           })
           .query('query_string', {
             default_field: 'category',
@@ -47,7 +47,7 @@ export default class FilterEntity extends FilterType {
 
       b.orQuery('query_string', {
         default_field: 'mentionNorm',
-        query: param.values.map((v) => `(${v})`).join(' OR ')
+        query: param.values.map(v => `(${v})`).join(' OR ')
       })
       return b
     })

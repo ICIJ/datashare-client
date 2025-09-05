@@ -12,6 +12,7 @@ import Hook from '@/components/Hook/Hook'
 import { useConfirmModal } from '@/composables/useConfirmModal'
 import { useRemoveAll } from '@/composables/useRemoveAll'
 import { useCore } from '@/composables/useCore'
+import { useAuth } from '@/composables/useAuth'
 
 const props = defineProps({
   compact: {
@@ -48,6 +49,7 @@ const { t } = useI18n()
 const { toastedPromise } = useCore()
 const { confirm } = useConfirmModal()
 const { removeAll } = useRemoveAll()
+const { isBasicAuth } = useAuth()
 const router = useRouter()
 
 const removeAllAndRedirect = async () => {
@@ -70,30 +72,75 @@ const classList = computed(() => {
     'app-sidebar-footer--compact': props.compact
   }
 })
+
+const signOutLink = computed(() => {
+  if (isBasicAuth.value) {
+    return null
+  }
+  return props.signOutLink
+})
+
+const signOutLabel = computed(() => {
+  if (isBasicAuth.value) {
+    return t('appSidebarFooter.signOutBasic')
+  }
+  return t('appSidebarFooter.signOut')
+})
+
+const signOutClass = computed(() => {
+  return {
+    'app-sidebar-footer__sign-out--basic-auth': isBasicAuth.value
+  }
+})
 </script>
 
 <template>
-  <footer class="app-sidebar-footer" :class="classList">
-    <hook name="app-sidebar-footer:before" :bind="{ compact }" />
+  <footer
+    class="app-sidebar-footer"
+    :class="classList"
+  >
+    <hook
+      name="app-sidebar-footer:before"
+      :bind="{ compact }"
+    />
     <!-- First links row -->
-    <app-sidebar-footer-links name="first" :compact="compact">
-      <app-sidebar-footer-links-entry name="logo" :compact="compact">
+    <app-sidebar-footer-links
+      name="first"
+      :compact="compact"
+    >
+      <app-sidebar-footer-links-entry
+        name="logo"
+        :compact="compact"
+      >
         <app-sidebar-footer-logo :compact="compact">
           <template #version>
             <slot name="version" />
           </template>
         </app-sidebar-footer-logo>
       </app-sidebar-footer-links-entry>
-      <app-sidebar-footer-links-entry v-if="!noKeyboardShortcuts && !compact" name="keyboard-shortcuts">
+      <app-sidebar-footer-links-entry
+        v-if="!noKeyboardShortcuts && !compact"
+        name="keyboard-shortcuts"
+      >
         <app-sidebar-footer-keyboard-shortcuts />
       </app-sidebar-footer-links-entry>
     </app-sidebar-footer-links>
     <!-- Second links row -->
-    <app-sidebar-footer-links name="second" :compact="compact">
-      <app-sidebar-footer-links-entry v-if="!noKeyboardShortcuts && compact" name="keyboard-shortcuts">
+    <app-sidebar-footer-links
+      name="second"
+      :compact="compact"
+    >
+      <app-sidebar-footer-links-entry
+        v-if="!noKeyboardShortcuts && compact"
+        name="keyboard-shortcuts"
+      >
         <app-sidebar-footer-keyboard-shortcuts />
       </app-sidebar-footer-links-entry>
-      <app-sidebar-footer-links-entry v-if="!noSettings" :compact="compact" name="settings">
+      <app-sidebar-footer-links-entry
+        v-if="!noSettings"
+        :compact="compact"
+        name="settings"
+      >
         <button-icon
           :to="{ name: 'settings.appearance' }"
           hide-label
@@ -104,7 +151,11 @@ const classList = computed(() => {
           :label="t('appSidebarFooter.settings')"
         />
       </app-sidebar-footer-links-entry>
-      <app-sidebar-footer-links-entry v-if="!noHelp" :compact="compact" name="help">
+      <app-sidebar-footer-links-entry
+        v-if="!noHelp"
+        :compact="compact"
+        name="help"
+      >
         <button-icon
           :href="helpLink"
           target="_blank"
@@ -116,7 +167,11 @@ const classList = computed(() => {
           :label="t('appSidebarFooter.help')"
         />
       </app-sidebar-footer-links-entry>
-      <app-sidebar-footer-links-entry v-if="!noRemoveAll" :compact="compact" name="remove-all">
+      <app-sidebar-footer-links-entry
+        v-if="!noRemoveAll"
+        :compact="compact"
+        name="remove-all"
+      >
         <button-icon
           hide-label
           variant="link"
@@ -127,19 +182,27 @@ const classList = computed(() => {
           @click="confirmRemoveAll"
         />
       </app-sidebar-footer-links-entry>
-      <app-sidebar-footer-links-entry v-if="!noSignOut" :compact="compact" name="sign-out">
+      <app-sidebar-footer-links-entry
+        v-if="!noSignOut"
+        :compact="compact"
+        name="sign-out"
+      >
         <button-icon
           :href="signOutLink"
+          :label="signOutLabel"
+          :class="signOutClass"
           hide-label
           variant="link"
-          class="p-0 text-body"
+          class="app-sidebar-footer__sign-out p-0 text-body"
           icon-left="sign-out"
           icon-left-hover-weight="bold"
-          :label="t('appSidebarFooter.signOut')"
         />
       </app-sidebar-footer-links-entry>
     </app-sidebar-footer-links>
-    <hook name="app-sidebar-footer:after" :bind="{ compact }" />
+    <hook
+      name="app-sidebar-footer:after"
+      :bind="{ compact }"
+    />
   </footer>
 </template>
 
@@ -157,6 +220,10 @@ const classList = computed(() => {
     flex-direction: column-reverse;
     align-items: center;
     gap: $spacer-xl;
+  }
+
+  &__sign-out--basic-auth {
+    cursor: not-allowed;
   }
 }
 </style>

@@ -30,7 +30,7 @@ describe('PipelinesStore', () => {
 
   it('should register a pipeline with a function', () => {
     const name = 'test-pl-with-function'
-    const type = (value) => value.toUpperCase()
+    const type = value => value.toUpperCase()
     pipelinesStore.register({ name, type })
     const pipeline = pipelinesStore.getInstantiatedPipeline(name)
     expect(pipeline).toBeInstanceOf(SimplePipeline)
@@ -106,7 +106,7 @@ describe('PipelinesStore', () => {
 
   it('should apply a pipeline chain which multiply by 2', () => {
     const category = 'test-category-math'
-    const type = (value) => value * 2
+    const type = value => value * 2
     pipelinesStore.register({ category, type })
     pipelinesStore.register({ category, type })
     const pipelines = pipelinesStore.getPipelineChainByCategory(category)
@@ -117,8 +117,8 @@ describe('PipelinesStore', () => {
 
   it('should have ordered pipelines', () => {
     const category = 'test-category-ordered-case'
-    pipelinesStore.register({ category, type: (s) => s.toLowerCase() })
-    pipelinesStore.register({ category, type: (s) => s.toUpperCase() })
+    pipelinesStore.register({ category, type: s => s.toLowerCase() })
+    pipelinesStore.register({ category, type: s => s.toUpperCase() })
     const pipelines = pipelinesStore.getPipelineChainByCategory(category)
     expect(pipelines).toHaveLength(2)
     expect(pipelines.reduce((res, fn) => fn(res), 'foo BAR')).toBe('FOO BAR')
@@ -127,8 +127,8 @@ describe('PipelinesStore', () => {
 
   it('should have ordered pipelines with a property', () => {
     const category = 'test-category-ordered-case-with-property'
-    pipelinesStore.register({ category, type: (s) => s.toLowerCase(), order: 10 })
-    pipelinesStore.register({ category, type: (s) => s.toUpperCase(), order: 5 })
+    pipelinesStore.register({ category, type: s => s.toLowerCase(), order: 10 })
+    pipelinesStore.register({ category, type: s => s.toUpperCase(), order: 5 })
     const pipelines = pipelinesStore.getPipelineChainByCategory(category)
     expect(pipelines).toHaveLength(2)
     expect(pipelines.reduce((res, fn) => fn(res), 'foo BAR')).toBe('foo bar')

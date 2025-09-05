@@ -25,7 +25,7 @@ export default {
     title: 'Tasks',
     active: true
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       AppSidebarSectionToggler
     },

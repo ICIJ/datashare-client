@@ -41,7 +41,7 @@ const selectedPaths = computedFilterValues(props.filter)
 
 const preBodyBuild = whenFilterContextualized(props.filter, (body) => {
   // Add every filter to the search body
-  searchStore.instantiatedFilters.forEach((filter) => filter.addFilter(body))
+  searchStore.instantiatedFilters.forEach(filter => filter.addFilter(body))
   // Add query to the search body
   core.api.elasticsearch.addQueryToFilter(searchStore.q || '*', body)
   return body
@@ -60,26 +60,33 @@ watchIndices(reset)
 </script>
 
 <template>
-  <filter-type :filter="filter" :modal="modal" flush>
-    <path-tree
-      ref="tree"
-      v-model:selected-paths="selectedPaths"
-      v-model:open-paths="openPaths"
-      v-model:path="path"
-      include-children-documents
-      :compact="!modal"
-      :projects="projects"
-      :pre-body-build="preBodyBuild"
-      :sort-by="filter.sortBy"
-      :order-by="filter.orderBy"
-      :no-stats="hideCount"
-      :nested="nested"
-      no-label
-      no-link
-      elasticsearch-only
-      select-mode
-      multiple
-    />
+  <filter-type
+    :filter="filter"
+    :modal="modal"
+    flush
+  >
+    <template #default="{ opened }">
+      <path-tree
+        v-if="opened"
+        ref="tree"
+        v-model:selected-paths="selectedPaths"
+        v-model:open-paths="openPaths"
+        v-model:path="path"
+        include-children-documents
+        :compact="!modal"
+        :projects="projects"
+        :pre-body-build="preBodyBuild"
+        :sort-by="filter.sortBy"
+        :order-by="filter.orderBy"
+        :no-stats="hideCount"
+        :nested="nested"
+        no-label
+        no-link
+        elasticsearch-only
+        select-mode
+        multiple
+      />
+    </template>
     <template #actions>
       <button-toggle-path-tree-view v-model:active="nested" />
     </template>

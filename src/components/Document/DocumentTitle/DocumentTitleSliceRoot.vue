@@ -24,7 +24,10 @@ const params = computed(() => {
 </script>
 
 <template>
-  <router-link class="document-title-slice-root" :to="{ name: 'document', params }">
+  <router-link
+    class="document-title-slice-root"
+    :to="{ name: 'document', params }"
+  >
     {{ document.root?.subject || slice }}
   </router-link>
 </template>

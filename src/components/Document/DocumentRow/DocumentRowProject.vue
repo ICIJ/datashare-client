@@ -10,6 +10,10 @@ defineProps({
 
 <template>
   <td>
-    <project-button :project="document.project" no-link disabled />
+    <project-button
+      :project="document.project"
+      no-link
+      disabled
+    />
   </td>
 </template>

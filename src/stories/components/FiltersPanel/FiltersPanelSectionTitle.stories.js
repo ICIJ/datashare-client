@@ -10,7 +10,7 @@ export default {
   args: {
     title: 'Named entities'
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       FiltersPanelSectionTitle
     },

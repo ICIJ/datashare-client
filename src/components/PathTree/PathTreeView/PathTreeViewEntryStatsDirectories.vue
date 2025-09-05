@@ -13,7 +13,10 @@ defineProps({
 
 <template>
   <div class="path-tree-view-entry-stats-directories px-2 py-1">
-    <phosphor-icon :name="PhFolders" class="me-2" />
+    <phosphor-icon
+      :name="PhFolders"
+      class="me-2"
+    />
     <display-number :value="value" />
   </div>
 </template>

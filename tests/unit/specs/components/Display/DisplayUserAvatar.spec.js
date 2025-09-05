@@ -12,7 +12,7 @@ vi.mock('@/api/apiInstance', () => {
 })
 
 describe('DisplayUserAvatar.vue', () => {
-  const flushPromises = () => new Promise((resolve) => setImmediate(resolve))
+  const flushPromises = () => new Promise(resolve => setImmediate(resolve))
   let wrapper, core
 
   beforeAll(() => {
@@ -49,7 +49,7 @@ describe('DisplayUserAvatar.vue', () => {
     core.registerPipeline({
       name: 'avatar-from-username',
       category: wrapper.vm.pipeline,
-      type: (username) => `http://datashare.icij.org/${username}.png`
+      type: username => `http://datashare.icij.org/${username}.png`
     })
     await flushPromises()
     const src = 'http://datashare.icij.org/foo.png'

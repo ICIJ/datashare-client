@@ -1,5 +1,5 @@
 <template>
-  <div class="widget widget--empty"></div>
+  <div class="widget widget--empty" />
 </template>
 
 <script>

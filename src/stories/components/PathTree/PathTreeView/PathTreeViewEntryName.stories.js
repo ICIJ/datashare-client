@@ -10,7 +10,7 @@ export default {
     name: 'Contracts',
     selectMode: false
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       PathTreeViewEntryName
     },

@@ -19,7 +19,7 @@ export default {
       contentTypeIcon: markRaw(PhFilePdf)
     }
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       DocumentDownloadPopover
     },

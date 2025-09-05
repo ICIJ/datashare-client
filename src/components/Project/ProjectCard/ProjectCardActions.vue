@@ -12,8 +12,14 @@ defineProps({
 
 <template>
   <div class="project-actions">
-    <hook name="project-card-actions:before" :bind="{ project }" />
+    <hook
+      name="project-card-actions:before"
+      :bind="{ project }"
+    />
     <project-actions :project="project" />
-    <hook name="project-card-actions:after" :bind="{ project }" />
+    <hook
+      name="project-card-actions:after"
+      :bind="{ project }"
+    />
   </div>
 </template>

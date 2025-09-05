@@ -30,10 +30,17 @@ const anyOccurences = computed(() => props.occurrences > 0 && nbProjects.value)
 </script>
 
 <template>
-  <div v-if="anyOccurences" class="entity-popover-mention-occurrences">
+  <div
+    v-if="anyOccurences"
+    class="entity-popover-mention-occurrences"
+  >
     <p>{{ `${occurrences} ${projectList}` }}</p>
     <div class="d-flex flex-wrap gap-2">
-      <project-button v-for="(project, index) in projects" :key="index" :project="project" />
+      <project-button
+        v-for="(project, index) in projects"
+        :key="index"
+        :project="project"
+      />
     </div>
   </div>
 </template>

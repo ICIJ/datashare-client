@@ -23,7 +23,15 @@ const icon = computed(() => {
 </script>
 
 <template>
-  <button-icon variant="light" class="py-2" :icon-right="icon" @click="toggle">
-    <display-datetime :value="date" no-tooltip />
+  <button-icon
+    variant="light"
+    class="py-2"
+    :icon-right="icon"
+    @click="toggle"
+  >
+    <display-datetime
+      :value="date"
+      no-tooltip
+    />
   </button-icon>
 </template>

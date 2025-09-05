@@ -19,8 +19,16 @@ defineProps({
 </script>
 
 <template>
-  <div class="form-control-range-slider" aria-hidden="true">
-    <form-control-range-slider-bullet v-model="modelValue" :min="min" :max="max" :step="step" />
+  <div
+    class="form-control-range-slider"
+    aria-hidden="true"
+  >
+    <form-control-range-slider-bullet
+      v-model="modelValue"
+      :min="min"
+      :max="max"
+      :step="step"
+    />
   </div>
 </template>
 

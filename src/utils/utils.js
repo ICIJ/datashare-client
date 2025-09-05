@@ -43,7 +43,7 @@ function objectIncludes(object, text) {
   if (typeof object === 'string') {
     return object.toLowerCase().includes(text.toLowerCase())
   }
-  return Object.values(object).some((object) => objectIncludes(object, text))
+  return Object.values(object).some(object => objectIncludes(object, text))
 }
 
 function toVariant(string = '', defaultVariant = 'dark', prefix = '') {
@@ -54,8 +54,6 @@ function toVariantIcon(string = '', defaultVariant = 'dark') {
   const variant = toVariant(string, defaultVariant)
   const icons = {
     danger: 'x',
-    draft: 'floppy-disk-back',
-    queued: 'clock-countdown',
     info: 'info',
     success: 'check',
     warning: 'warning'

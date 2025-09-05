@@ -1127,9 +1127,9 @@
           "label": "Use a CSV",
           "placeholder": "Drop your CSV"
         },
-        "listQueries": {
+        "csvString": {
           "label": "Or type your queries",
-          "placeholder": "New feature coming soon!"
+          "placeholder": "Enter one search term per line here..."
         },
         "phraseChanges": {
           "label": "Sentence changes",

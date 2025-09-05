@@ -76,7 +76,11 @@ async function relaunch() {
 
 <template>
   <div class="batch-download-actions d-flex gap-2">
-    <button-row-action icon="arrow-clockwise" :label="t('batchDownloadActions.relaunch.label')" @click="relaunch" />
+    <button-row-action
+      icon="arrow-clockwise"
+      :label="t('batchDownloadActions.relaunch.label')"
+      @click="relaunch"
+    />
     <button-row-action
       icon="magnifying-glass"
       tag="router-link"

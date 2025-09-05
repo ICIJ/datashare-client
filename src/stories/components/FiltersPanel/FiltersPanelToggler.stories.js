@@ -8,7 +8,7 @@ export default {
   },
   argTypes: {},
   args: {},
-  render: (args) => ({
+  render: args => ({
     components: {
       FiltersPanelToggler
     },

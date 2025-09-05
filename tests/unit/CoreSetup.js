@@ -19,15 +19,19 @@ class CoreSetup extends Core {
       this.router
     ]
   }
+
   get murmur() {
     return Murmur
   }
+
   get vueScrollTo() {
     return VueScrollTo
   }
+
   get vCalendar() {
     return VCalendar
   }
+
   useAll() {
     this.usePinia()
     this.useI18n()
@@ -36,6 +40,7 @@ class CoreSetup extends Core {
     this.useCore()
     return this
   }
+
   useRouter(routes = null) {
     if (routes) {
       const history = createWebHashHistory()
@@ -45,12 +50,14 @@ class CoreSetup extends Core {
     }
     return super.useRouter()
   }
+
   useRouterWithoutGuards() {
     const history = createWebHashHistory()
     this._router = createRouter({ routes, history })
     this.use(this.router)
     return this
   }
+
   static init(...options) {
     return new CoreSetup(...options)
   }

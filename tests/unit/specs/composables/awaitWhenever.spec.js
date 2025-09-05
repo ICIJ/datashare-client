@@ -51,6 +51,7 @@ describe('awaitWhenever', () => {
       const fn = vi.fn(() =>
         promise.then((n) => {
           sideEffect = n
+          return
         })
       )
       const task = awaitWhenever(fn, () => true)
@@ -71,6 +72,7 @@ describe('awaitWhenever', () => {
       const fn = vi.fn(() =>
         promise.then((n) => {
           sideEffect = n
+          return
         })
       )
       const task = awaitWhenever(fn, () => false)
@@ -95,6 +97,7 @@ describe('awaitWhenever', () => {
       const fn = vi.fn(() =>
         promise.then((s) => {
           result = s
+          return
         })
       )
 
@@ -116,6 +119,7 @@ describe('awaitWhenever', () => {
       const fn = vi.fn(() =>
         promise.then((s) => {
           result = s
+          return
         })
       )
 
@@ -139,6 +143,7 @@ describe('awaitWhenever', () => {
       const fn = vi.fn(() =>
         promise.then(() => {
           done = true
+          return
         })
       )
 
@@ -155,6 +160,7 @@ describe('awaitWhenever', () => {
       const fn = vi.fn(() =>
         promise.then(() => {
           done = true
+          return
         })
       )
 

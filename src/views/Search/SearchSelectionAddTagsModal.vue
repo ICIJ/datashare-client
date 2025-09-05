@@ -1,7 +1,6 @@
 <script setup>
 import { ref, computed, onBeforeMount } from 'vue'
-import bodybuilder from 'bodybuilder'
-import { flatten, get, map } from 'lodash'
+import { flatten, map } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import { ImageModeSource } from '@icij/murmur-next'
 
@@ -9,7 +8,7 @@ import imageLight from '@/assets/images/illustrations/app-modal-tag-add-light.sv
 import imageDark from '@/assets/images/illustrations/app-modal-tag-add-dark.svg'
 import AppModalPrompt from '@/components/AppModal/AppModalPrompt'
 import FormControlTag from '@/components/Form/FormControl/FormControlTag/FormControlTag'
-import { useCore } from '@/composables/useCore'
+import { useElasticSearchQuery } from '@/composables/useElasticSearchQuery'
 
 const props = defineProps({
   indices: { type: Array, default: () => [] },
@@ -18,7 +17,6 @@ const props = defineProps({
 
 const emit = defineEmits(['submit'])
 
-const { core } = useCore()
 const { t } = useI18n()
 
 const tags = ref([])
@@ -31,17 +29,12 @@ const submit = () => {
   })
 }
 
-const fetchAllTagsByIndex = async (index) => {
-  const body = bodybuilder().size(0).agg('terms', 'tags').build()
-  const response = await core.api.elasticsearch.search({ index, body })
-  const buckets = get(response, 'aggregations.agg_terms_tags.buckets', [])
-  return buckets.map(({ key: label }) => label)
-}
+const { fetchAllTagsByIndex } = useElasticSearchQuery()
 
 const hasTags = computed(() => tags.value.length > 0)
 
 async function fetchAllTags() {
-  const results = await Promise.all(map(props.indices, (index) => fetchAllTagsByIndex(index)))
+  const results = await Promise.all(map(props.indices, index => fetchAllTagsByIndex(index)))
   allTags.value = flatten(results)
 }
 
@@ -69,7 +62,10 @@ onBeforeMount(fetchAllTags)
     @submit="submit"
   >
     <template #header-image-source>
-      <image-mode-source :src="imageDark" color-mode="dark" />
+      <image-mode-source
+        :src="imageDark"
+        color-mode="dark"
+      />
     </template>
     <template #default="{ visible }">
       <div class="d-flex flex-column gap-3">
@@ -87,7 +83,10 @@ onBeforeMount(fetchAllTags)
           @blur="closeAllowed = false"
         />
         {{ t('searchSelectionAddTagsModal.description') }}
-        <p v-if="hasTags" class="mt-2">
+        <p
+          v-if="hasTags"
+          class="mt-2"
+        >
           {{ t('searchSelectionAddTagsModal.question', tags.length) }}
         </p>
       </div>

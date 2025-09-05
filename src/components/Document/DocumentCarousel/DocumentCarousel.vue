@@ -37,18 +37,18 @@ const adjustedPosition = computed({
 </script>
 
 <template>
-  <div class="document-carousel">
+  <div class="document-carousel rounded-top">
     <tiny-pagination
       v-model="adjustedPosition"
       :per-page="1"
       :total-rows="total"
-      class="document-carousel__pagination mx-auto py-1"
+      class="document-carousel__pagination py-1"
     >
       <template #page>
         {{ t('documentCarousel.page') }}
       </template>
     </tiny-pagination>
-    <div class="document-carousel__content p-3">
+    <div class="document-carousel__content p-3 rounded-bottom">
       <document-carousel-nav
         :icon="PhCaretLeft"
         class="document-carousel__content__nav"
@@ -76,6 +76,9 @@ const adjustedPosition = computed({
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin: auto;
+  opacity: 0.98;
+  max-width: min(800px,90%);
   position: relative;
 
   &:hover {

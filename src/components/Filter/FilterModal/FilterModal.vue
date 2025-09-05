@@ -39,8 +39,16 @@ const hasExpandModal = computed(() => !modal && !filter.hideExpand)
     body-class="py-0"
   >
     <template #title>
-      <filter-modal-title v-model:sort="sort" :filter="filter" />
+      <filter-modal-title
+        v-model:sort="sort"
+        :filter="filter"
+      />
     </template>
-    <component :is="getFilterComponent(filter)" :filter="filter" :hide-count="hideCount" modal />
+    <component
+      :is="getFilterComponent(filter)"
+      :filter="filter"
+      :hide-count="hideCount"
+      modal
+    />
   </app-modal>
 </template>

@@ -22,6 +22,7 @@ class WidgetEmpty {
     this.modes = modes
     this.section = section
   }
+
   get component() {
     return Component
   }

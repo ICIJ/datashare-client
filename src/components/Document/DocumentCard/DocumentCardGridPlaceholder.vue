@@ -19,14 +19,25 @@ const hasThumbnail = computed(() => props.properties?.includes('thumbnail'))
 </script>
 
 <template>
-  <div v-for="i in repeat" :key="i" class="document-card-grid-placeholder border p-3 d-flex gap-3">
+  <div
+    v-for="i in repeat"
+    :key="i"
+    class="document-card-grid-placeholder border p-3 d-flex gap-3"
+  >
     <div class="document-card-grid-placeholder__wrapper flex-grow-1 d-flex flex-column gap-2">
-      <div v-if="hasThumbnail" class="document-card-grid-placeholder__wrapper__thumbnail">
+      <div
+        v-if="hasThumbnail"
+        class="document-card-grid-placeholder__wrapper__thumbnail"
+      >
         <app-placeholder squared />
       </div>
       <div class="document-card-grid-placeholder__wrapper__properties d-flex flex-column gap-2 h-100 w-100">
         <app-placeholder :width="random(70, 95)" />
-        <div v-for="j in properties.length - 1" :key="j" class="d-flex flex-grow-1 gap-1 align-items-start">
+        <div
+          v-for="j in properties.length - 1"
+          :key="j"
+          class="d-flex flex-grow-1 gap-1 align-items-start"
+        >
           <app-placeholder width="1em" />
           <app-placeholder :width="random(30, 70)" />
         </div>

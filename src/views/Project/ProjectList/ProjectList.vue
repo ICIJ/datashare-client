@@ -28,14 +28,14 @@ const appStore = useAppStore()
 const searchQuery = useUrlParam('q', '')
 
 const page = useUrlParam('page', {
-  transform: (value) => parseInt(value),
+  transform: value => parseInt(value),
   initialValue: 1
 })
 
 const perPage = useUrlParamWithStore('perPage', {
-  transform: (value) => Math.max(10, parseInt(value)),
+  transform: value => Math.max(10, parseInt(value)),
   get: () => appStore.getSettings('projectList', 'perPage'),
-  set: (value) => appStore.setSettings('projectList', { perPage: parseInt(value) })
+  set: value => appStore.setSettings('projectList', { perPage: parseInt(value) })
 })
 
 const documentsCountByProject = ref({})
@@ -66,7 +66,8 @@ const fetch = waitFor(async () => {
   try {
     await awaitWhenever(fetchDocumentsCountByProject, isSortedByCount)
     await awaitWhenever(fetchMaxExtractionDateByProject, isSortedByMaxExtractionDate)
-  } catch {
+  }
+  catch {
     toast.error('Unable to fetch projects details.')
   }
 })
@@ -106,7 +107,7 @@ const projects = computed(() => {
 
 const layout = useUrlParamWithStore('layout', {
   get: () => appStore.getSettings('projectList', 'layout'),
-  set: (layout) => appStore.setSettings('projectList', { layout })
+  set: layout => appStore.setSettings('projectList', { layout })
 })
 
 const orderBy = useUrlParamsWithStore(['sort', 'order'], {
@@ -116,12 +117,12 @@ const orderBy = useUrlParamsWithStore(['sort', 'order'], {
 
 const sort = computed({
   get: () => orderBy.value?.[0],
-  set: (value) => (orderBy.value = [value, order.value])
+  set: value => (orderBy.value = [value, order.value])
 })
 
 const order = computed({
   get: () => orderBy.value?.[1],
-  set: (value) => (orderBy.value = [sort.value, value])
+  set: value => (orderBy.value = [sort.value, value])
 })
 
 const addToRoute = computed(() => {
@@ -144,7 +145,11 @@ const addToRoute = computed(() => {
       :search-placeholder="t('projectList.searchPlaceholder')"
     >
       <template #pagination="{ totalRows }">
-        <row-pagination-projects v-model="page" :total-rows="totalRows" :per-page="perPage" />
+        <row-pagination-projects
+          v-model="page"
+          :total-rows="totalRows"
+          :per-page="perPage"
+        />
       </template>
     </page-header>
     <page-container fluid>

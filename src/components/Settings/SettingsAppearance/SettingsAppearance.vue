@@ -12,7 +12,10 @@ defineProps({
 </script>
 
 <template>
-  <b-form-group v-slot="{ ariaDescribedby }" class="settings-appearance m-auto">
+  <b-form-group
+    v-slot="{ ariaDescribedby }"
+    class="settings-appearance m-auto"
+  >
     <b-form-radio-group
       id="radio-group-theme"
       v-model="modelValue"
@@ -28,7 +31,10 @@ defineProps({
         :aria-describedby="ariaDescribedby"
         :name="option.name"
       >
-        <settings-appearance-option v-bind="option" class="flex-grow-1" />
+        <settings-appearance-option
+          v-bind="option"
+          class="flex-grow-1"
+        />
       </b-form-radio>
     </b-form-radio-group>
   </b-form-group>

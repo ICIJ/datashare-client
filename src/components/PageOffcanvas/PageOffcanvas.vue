@@ -47,7 +47,12 @@ const classList = computed(() => {
     header-class="page-offcanvas__header"
   >
     <template #header="{ hide }">
-      <h5 v-if="title" class="page-offcanvas__header__title m-0">{{ title }}</h5>
+      <h5
+        v-if="title"
+        class="page-offcanvas__header__title m-0"
+      >
+        {{ title }}
+      </h5>
       <button-icon
         icon-left="x"
         icon-left-size="1.5em"
@@ -68,12 +73,17 @@ const classList = computed(() => {
 <style lang="scss">
 .page-offcanvas {
   max-width: 100vw;
+  padding-bottom: 0;
   overflow: auto;
   overflow-x: hidden;
 
   &--compact.offcanvas {
     --bs-offcanvas-padding-x: #{$spacer};
-    --bs-offcanvas-width: 100%;
+    --bs-offcanvas-width: min(320px, 100vw);
+  }
+
+  & > .offcanvas-body {
+    padding-bottom: 0;
   }
 
   &__header {

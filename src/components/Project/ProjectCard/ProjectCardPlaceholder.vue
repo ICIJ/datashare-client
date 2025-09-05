@@ -12,7 +12,11 @@ defineProps({
 </script>
 
 <template>
-  <div v-for="i in repeat" :key="i" class="project-card-placeholder border rounded p-4 d-flex gap-3">
+  <div
+    v-for="i in repeat"
+    :key="i"
+    class="project-card-placeholder border rounded p-4 d-flex gap-3"
+  >
     <div class="flex-grow-1 project-card-placeholder__thumbnail">
       <app-placeholder squared />
     </div>
@@ -22,7 +26,12 @@ defineProps({
           <app-placeholder :width="random(30, 60)" />
         </h3>
         <p>
-          <app-placeholder v-for="j in 2" :key="j" :cols="random(7, 9)" whitespace />
+          <app-placeholder
+            v-for="j in 2"
+            :key="j"
+            :cols="random(7, 9)"
+            whitespace
+          />
         </p>
       </div>
       <div class="d-flex flex-column gap-2">

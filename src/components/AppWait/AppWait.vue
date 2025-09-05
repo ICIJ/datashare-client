@@ -34,9 +34,18 @@ const showWaitingSlot = computed(() => waiting(props.for))
 </script>
 
 <template>
-  <component :is="tag" class="app-wait">
-    <slot v-if="showWaitingSlot" name="waiting">
-      <app-spinner v-if="spinner" :class="spinnerClass" />
+  <component
+    :is="tag"
+    class="app-wait"
+  >
+    <slot
+      v-if="showWaitingSlot"
+      name="waiting"
+    >
+      <app-spinner
+        v-if="spinner"
+        :class="spinnerClass"
+      />
     </slot>
     <slot v-else />
   </component>

@@ -89,7 +89,7 @@ export default {
       contentTypeIcon: markRaw(PhFilePdf)
     }
   },
-  render: (args) => ({
+  render: args => ({
     components: { DocumentCard },
     setup: () => ({ args }),
     template: `<document-card v-bind="args" @update:selected="args.selected = $event" />`

@@ -25,7 +25,7 @@ const layout = ref({
   open: true,
   modelValue: computed({
     get: () => appStore.getSettings(VIEW, 'layout'),
-    set: (layout) => appStore.setSettings(VIEW, { layout })
+    set: layout => appStore.setSettings(VIEW, { layout })
   }),
   options: [
     {
@@ -56,9 +56,9 @@ const perPage = ref({
       const { toRouteQuery: query } = searchStore
       return { name, query }
     }),
-    transform: (value) => Math.max(10, parseInt(value)),
+    transform: value => Math.max(10, parseInt(value)),
     get: () => appStore.getSettings(VIEW, 'perPage'),
-    set: (perPage) => appStore.setSettings(VIEW, { perPage })
+    set: perPage => appStore.setSettings(VIEW, { perPage })
   }),
   options: [
     {
@@ -99,7 +99,7 @@ const properties = ref({
   options: propertiesOptions,
   modelValue: computed({
     get: () => appStore.getSettings(VIEW, 'properties'),
-    set: (properties) => appStore.setSettings(VIEW, { properties })
+    set: properties => appStore.setSettings(VIEW, { properties })
   })
 })
 

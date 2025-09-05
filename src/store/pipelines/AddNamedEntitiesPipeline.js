@@ -26,13 +26,16 @@ class AddNamedEntitiesPipeline extends IdentityPipeline {
     }
     return content
   }
+
   buildNamedEntityMark({ extractor, category, content: mention }) {
     const classNames = this.getCategoryClass(category, 'ner--')
     return this.namedEntityMarkTemplate({ classNames, extractor, mention })
   }
+
   getCategoryClass(category = 'muted', prefix = '') {
     return `${prefix}category-${category.toLowerCase()}`
   }
+
   get namedEntityMarkTemplate() {
     return template('<mark class="ner <%= classNames %>" title="<%= extractor %>"><%= mention %></mark>')
   }

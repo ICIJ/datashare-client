@@ -1,8 +1,24 @@
 <template>
   <div class="widget widget--disk-usage">
-    <widget-barometer-disk-usage v-b-modal.modal-disk-usage clickable :size="size" />
-    <app-modal id="modal-disk-usage" lazy scrollable no-header no-footer size="lg">
-      <path-tree v-model:path="path" :projects="[project]" nested elasticsearch-only />
+    <widget-barometer-disk-usage
+      v-b-modal.modal-disk-usage
+      clickable
+      :size="size"
+    />
+    <app-modal
+      id="modal-disk-usage"
+      lazy
+      scrollable
+      no-header
+      no-footer
+      size="lg"
+    >
+      <path-tree
+        v-model:path="path"
+        :projects="[project]"
+        nested
+        elasticsearch-only
+      />
     </app-modal>
   </div>
 </template>
@@ -72,7 +88,7 @@ export default {
         .build()
       const preference = 'widget-disk-usage'
       const res = await this.$core.api.elasticsearch.search({ index, body, preference, size: 0 })
-      // eslint-disable-next-line camelcase
+
       return res?.aggregations?.agg_sum_contentLength?.value || 0
     },
     async loadData() {

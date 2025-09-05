@@ -1,24 +1,5 @@
-<template>
-  <div v-if="isReady && hasAttachments" class="document-attachments">
-    <h6>{{ t('document.attachments.heading', total, { total }) }}</h6>
-    <ul class="document-attachments__list list-unstyled d-flex-inline">
-      <li v-for="attachment in attachments" :key="attachment.id" class="document-attachments__list__item">
-        <router-link
-          :to="{ name: 'document', params: attachment.routerParams }"
-          class="document-attachments__list__item__link d-flex-inline"
-        >
-          <phosphor-icon :name="document.contentTypeIcon" class="me-1 mt-1" />
-          <span>{{ attachment.slicedName.pop() }}</span>
-        </router-link>
-      </li>
-    </ul>
-    <a v-if="total && attachments.length < total" href="#" class="document-attachments__more" @click.prevent="loadMore">
-      {{ t('document.attachments.more') }}
-    </a>
-  </div>
-</template>
-
-<script>
+<script setup>
+import { ref, computed, onBeforeMount } from 'vue'
 import bodybuilder from 'bodybuilder'
 import { PhosphorIcon } from '@icij/murmur-next'
 import { flatten, get, sum } from 'lodash'
@@ -26,75 +7,109 @@ import { useI18n } from 'vue-i18n'
 
 import EsDocList from '@/api/resources/EsDocList'
 import { useWait } from '@/composables/useWait'
+import { apiInstance as api } from '@/api/apiInstance'
 
 /**
  * A list of attachments for a document (usually, it's child documents)
  */
-export default {
-  name: 'DocumentAttachments',
-  components: {
-    PhosphorIcon
-  },
-  props: {
-    /**
-     * The selected document
-     */
-    document: {
-      type: Object
-    }
-  },
-  setup() {
-    const { t } = useI18n()
+const props = defineProps({
+  /**
+   * The selected document
+   */
+  document: {
+    type: Object,
+    default: () => ({})
+  }
+})
 
-    return { wait: useWait(), t }
-  },
-  data() {
-    return {
-      pages: [],
-      size: 50
-    }
-  },
-  computed: {
-    attachments() {
-      return flatten(this.pages.map((page) => page.hits))
-    },
-    total() {
-      return get(this, 'pages.0.total', null)
-    },
-    from() {
-      return sum(this.pages.map((page) => page.hits.length))
-    },
-    isReady() {
-      return !this.wait.waiting('document-attachement')
-    },
-    hasAttachments() {
-      return !!this.attachments.length
-    }
-  },
-  async mounted() {
-    await this.loadMore()
-  },
-  methods: {
-    async loadMore() {
-      this.wait.start('document-attachement')
-      const { index } = this.document
-      const body = this.searchBody().build()
-      const response = await this.$core.api.elasticsearch.search({ index, body })
-      this.pages.push(new EsDocList(response))
-      this.wait.end('document-attachement')
-    },
-    searchBody() {
-      return bodybuilder()
-        .query('match', 'type', 'Document')
-        .query('match', 'extractionLevel', this.document.extractionLevel + 1)
-        .query('match', '_routing', this.document.id)
-        .rawOption('_source', { includes: ['*'], excludes: ['content'] })
-        .from(this.from)
-        .size(this.size)
-    }
+const { t } = useI18n()
+const wait = useWait()
+
+const pages = ref([])
+const size = ref(50)
+
+const attachments = computed(() => {
+  return flatten(pages.value.map(page => page.hits))
+})
+
+const total = computed(() => {
+  return get(pages.value, '0.total', null)
+})
+
+const from = computed(() => {
+  return sum(pages.value.map(page => page.hits.length))
+})
+
+const isReady = computed(() => {
+  return !wait.waiting('document-attachments')
+})
+
+const hasAttachments = computed(() => {
+  return !!attachments.value.length
+})
+
+function searchBody() {
+  return bodybuilder()
+    .query('match', 'type', 'Document')
+    .query('match', 'extractionLevel', props.document.extractionLevel + 1)
+    .query('match', '_routing', props.document.id)
+    .rawOption('_source', { includes: ['*'], excludes: ['content'] })
+    .from(from.value)
+    .size(size.value)
+}
+
+async function loadMore() {
+  wait.start('document-attachments')
+  const { index } = props.document
+  const body = searchBody().build()
+  try {
+    const response = await api.elasticsearch.search({ index, body })
+    pages.value.push(new EsDocList(response))
+  }
+  finally {
+    wait.end('document-attachments')
   }
 }
+
+onBeforeMount(() => {
+  return loadMore()
+})
 </script>
+
+<template>
+  <div
+    v-if="isReady && hasAttachments"
+    class="document-attachments"
+  >
+    <h6>{{ t('document.attachments.heading', { total }, total ) }}</h6>
+    <ul class="document-attachments__list list-unstyled d-flex-inline">
+      <li
+        v-for="attachment in attachments"
+        :key="attachment.id"
+        class="document-attachments__list__item"
+      >
+        <router-link
+          :to="{ name: 'document', params: attachment.routerParams }"
+          class="document-attachments__list__item__link d-flex-inline"
+        >
+          <phosphor-icon
+            :name="document.contentTypeIcon"
+            class="me-1 mt-1"
+          />
+          <span>{{ attachment.slicedName.pop() }}</span>
+        </router-link>
+      </li>
+    </ul>
+    <a
+      v-if="total && attachments.length < total"
+      href="#"
+      class="document-attachments__more"
+      @click.prevent="loadMore"
+    >
+      {{ t('document.attachments.more') }}
+    </a>
+  </div>
+</template>
 
 <style lang="scss">
 .document-attachments {

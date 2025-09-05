@@ -28,7 +28,7 @@ export function useSearchNav(currentDocument = null) {
   // Route to the search page with the current search query
   const searchRoute = computed(() => ({ name: 'search', query: searchStore.toRouteQuery }))
   // Check if the current route is a child of the search route (or the search route itself)
-  const isSearchChildRoute = computed(() => route.matched.some((route) => route.name === 'search'))
+  const isSearchChildRoute = computed(() => route.matched.some(route => route.name === 'search'))
   // Position of the document in the hits array
   const documentPagePosition = computed(() => (document.value ? hits.value.findIndex(document.value.eq) : -1))
   // Position of the document in the total documents

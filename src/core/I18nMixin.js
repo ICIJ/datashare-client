@@ -7,7 +7,7 @@ import settings from '@/utils/settings'
   @mixin I18nMixin
   @typicalname datashare
 */
-const I18nMixin = (superclass) =>
+const I18nMixin = superclass =>
   class extends superclass {
     /**
      * Initialize i18N using the local storage and load
@@ -51,7 +51,7 @@ const I18nMixin = (superclass) =>
      */
     async loadI18Locale(locale) {
       if (!this.hasI18Locale(locale)) {
-        const messages = await import(`../lang/${locale}.json`).then((m) => m.default)
+        const messages = await import(`../lang/${locale}.json`).then(m => m.default)
         this.i18n.global.setLocaleMessage(locale, messages)
       }
       const murmurMessages = Murmur.i18n.global.getLocaleMessage(locale)

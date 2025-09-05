@@ -34,6 +34,11 @@ searchStore.updateFromRouteQuery(breadcrumbRouteQuery.value)
     <template #label>
       <slot name="label" />
     </template>
-    <search-breadcrumb-form-entry v-for="(entry, i) in entries" :key="i" v-bind="entry" no-x-icon />
+    <search-breadcrumb-form-entry
+      v-for="(entry, i) in entries"
+      :key="i"
+      v-bind="entry"
+      no-x-icon
+    />
   </search-breadcrumb-form-list>
 </template>

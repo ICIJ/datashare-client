@@ -52,9 +52,21 @@ const classList = computed(() => {
 </script>
 
 <template>
-  <div class="path-tree-view d-flex flex-column" :class="classList">
-    <path-tree-view-label v-if="!noLabel" v-model:nested="nested" :label="label" :icon="icon" />
-    <path-tree-view-search v-if="!noSearch" v-model="query" :shadow="!compact" />
+  <div
+    class="path-tree-view d-flex flex-column"
+    :class="classList"
+  >
+    <path-tree-view-label
+      v-if="!noLabel"
+      v-model:nested="nested"
+      :label="label"
+      :icon="icon"
+    />
+    <path-tree-view-search
+      v-if="!noSearch"
+      v-model="query"
+      :shadow="!compact"
+    />
     <div>
       <slot v-bind="{ selectMode }" />
     </div>

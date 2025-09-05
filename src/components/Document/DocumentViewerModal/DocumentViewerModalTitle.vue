@@ -15,7 +15,10 @@ const to = computed(() => {
 </script>
 
 <template>
-  <router-link class="document-viewer-modal-title" :to="to">
+  <router-link
+    class="document-viewer-modal-title"
+    :to="to"
+  >
     {{ document.title }}
   </router-link>
 </template>

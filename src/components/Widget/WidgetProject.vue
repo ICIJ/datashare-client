@@ -12,10 +12,17 @@
             {{ label }}
           </div>
           <div class="col-8 widget__fields__item__value">
-            <a v-if="href" :href="href" class="text-truncate d-block">
+            <a
+              v-if="href"
+              :href="href"
+              class="text-truncate d-block"
+            >
               {{ value }}
             </a>
-            <span v-else :class="classList">
+            <span
+              v-else
+              :class="classList"
+            >
               {{ value || '-' }}
             </span>
           </div>

@@ -35,8 +35,8 @@ export const PLACEMENT = Object.freeze({
   BOTTOM_START
 })
 export const PLACEMENTS = Object.values(PLACEMENT)
-export const placementValidator = (v) => PLACEMENTS.includes(v)
+export const placementValidator = v => PLACEMENTS.includes(v)
 
 export const OFFCANVAS_PLACEMENT = Object.freeze({ START, END, TOP, BOTTOM })
 export const OFFCANVAS_PLACEMENTS = Object.values(OFFCANVAS_PLACEMENT)
-export const offcanvasPlacementValidator = (v) => OFFCANVAS_PLACEMENTS.includes(v)
+export const offcanvasPlacementValidator = v => OFFCANVAS_PLACEMENTS.includes(v)

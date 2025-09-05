@@ -12,7 +12,7 @@ export default {
     offsets: 5033,
     projects: ['banana papers', 'citrus confidential']
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       EntityPopover
     },

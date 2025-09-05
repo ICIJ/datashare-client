@@ -14,7 +14,12 @@ defineProps({
 
 <template>
   <div class="path-tree-view-entry-name-checkbox px-1">
-    <b-form-checkbox :id="id" v-model="modelValue" v-model:indeterminate="indeterminate" :disabled="disabled" />
+    <b-form-checkbox
+      :id="id"
+      v-model="modelValue"
+      v-model:indeterminate="indeterminate"
+      :disabled="disabled"
+    />
   </div>
 </template>
 

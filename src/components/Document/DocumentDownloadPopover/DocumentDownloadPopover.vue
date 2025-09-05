@@ -51,9 +51,17 @@ defineExpose({
 </script>
 
 <template>
-  <app-popover ref="popover" v-model="modelValue" hide-header class="document-download-popover">
+  <app-popover
+    ref="popover"
+    v-model="modelValue"
+    hide-header
+    class="document-download-popover"
+  >
     <template #target="binding">
-      <slot name="target" v-bind="binding" />
+      <slot
+        name="target"
+        v-bind="binding"
+      />
     </template>
     <div class="document-download-popover__body">
       <button-icon
@@ -90,13 +98,26 @@ defineExpose({
         download
       />
       <div class="document-download-popover__body__sections">
-        <document-download-popover-section :title="t('documentDownloadPopover.sectionTitle')" :value="document.title" />
+        <document-download-popover-section
+          :title="t('documentDownloadPopover.sectionTitle')"
+          :value="document.title"
+        />
         <document-download-popover-section :title="t('documentDownloadPopover.sectionContentType')">
-          <phosphor-icon :name="document.contentTypeIcon" class="me-2" />
+          <phosphor-icon
+            :name="document.contentTypeIcon"
+            class="me-2"
+          />
           <display-content-type :value="document.contentType" />
         </document-download-popover-section>
         <document-download-popover-section v-if="executionWarning">
-          <dismissable-alert class="m-0" no-close no-button bordered icon-class="align-self-start" variant="warning">
+          <dismissable-alert
+            class="m-0"
+            no-close
+            no-button
+            bordered
+            icon-class="align-self-start"
+            variant="warning"
+          >
             {{ executionWarning }}
           </dismissable-alert>
         </document-download-popover-section>

@@ -15,7 +15,10 @@ const classList = computed(() => {
 </script>
 
 <template>
-  <a class="separator-line-drag" :class="classList" />
+  <a
+    class="separator-line-drag"
+    :class="classList"
+  />
 </template>
 
 <style lang="scss" scoped>

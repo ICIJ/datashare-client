@@ -11,7 +11,7 @@ export const useDocumentNotesStore = defineStore('documentNotes', () => {
    * Delete all notes for each project
    * @returns {void}
    */
-  const reset = () => Object.keys(notes).forEach((key) => delete notes[key])
+  const reset = () => Object.keys(notes).forEach(key => delete notes[key])
 
   /**
    * Set a list of notes for a given project
@@ -58,7 +58,7 @@ export const useDocumentNotesStore = defineStore('documentNotes', () => {
    */
   const fetchNotesByPath = async ({ project, path }) => {
     const notes = await fetchNotesOnce({ project })
-    return notes.filter((note) => path.startsWith(note.path))
+    return notes.filter(note => path.startsWith(note.path))
   }
 
   return { notes, reset, set, fetchNotesByPath, fetchNotes, fetchNotesOnce }

@@ -24,10 +24,19 @@ const size = computed(() => (spinnerSmall ? 'md' : 'xl'))
 </script>
 
 <template>
-  <b-overlay :opacity="0.7" :variant="overlayVariant ?? variant">
+  <b-overlay
+    :opacity="0.7"
+    :variant="overlayVariant ?? variant"
+  >
     <template #overlay="bindings">
-      <slot name="overlay" v-bind="bindings">
-        <app-spinner :size="size" :variant="spinnerVariant ?? contrastOverlayVariant" />
+      <slot
+        name="overlay"
+        v-bind="bindings"
+      >
+        <app-spinner
+          :size="size"
+          :variant="spinnerVariant ?? contrastOverlayVariant"
+        />
       </slot>
     </template>
     <slot />

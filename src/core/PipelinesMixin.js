@@ -7,7 +7,7 @@ import { usePipelinesStore } from '@/store/modules'
   @mixin PipelinesMixin
   @typicalname datashare
 */
-const PipelinesMixin = (superclass) =>
+const PipelinesMixin = superclass =>
   class extends superclass {
     /**
      * Get the pipelines store
@@ -18,6 +18,7 @@ const PipelinesMixin = (superclass) =>
     get pipelinesStore() {
       return usePipelinesStore()
     }
+
     /**
      * Register a pipeline
      * @memberof PipelinesMixin.prototype
@@ -29,6 +30,7 @@ const PipelinesMixin = (superclass) =>
     registerPipeline(...args) {
       this.pipelinesStore.register(...args)
     }
+
     /**
      * Unregister a pipeline
      * @param {String} name - Name of the pipeline
@@ -37,6 +39,7 @@ const PipelinesMixin = (superclass) =>
     unregisterPipeline(name) {
       this.pipelinesStore.unregister(name)
     }
+
     /**
      * Register a pipeline for a specific project
      * @memberof PipelinesMixin.prototype
@@ -57,6 +60,7 @@ const PipelinesMixin = (superclass) =>
         withoutFn: () => this.unregisterPipeline(name)
       })
     }
+
     /**
      * Unregister a pipeline for a specific project
      * @memberof PipelinesMixin.prototype

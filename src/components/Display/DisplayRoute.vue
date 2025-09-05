@@ -26,7 +26,8 @@ const route = computed(() => {
       return router.resolve(props.value)
     }
     return router.resolve({ name: props.value })
-  } catch {
+  }
+  catch {
     return null
   }
 })

@@ -47,9 +47,9 @@ export class Highlight {
       return !some(previousRanges, ({ start, length }) => {
         // It starts in the current range
         return (
-          inRange(start, range.start - 1, range.start + range.length + 1) ||
+          inRange(start, range.start - 1, range.start + range.length + 1)
           // Or it ends in the current range
-          inRange(start + length, range.start - 1, range.start + range.length + 1)
+          || inRange(start + length, range.start - 1, range.start + range.length + 1)
         )
       })
     })

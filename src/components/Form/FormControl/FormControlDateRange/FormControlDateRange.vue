@@ -52,7 +52,10 @@ const isDark = computed(() => ['dark', 'black'].includes(colorMode.value))
 </script>
 
 <template>
-  <div ref="element" class="form-control-date-range">
+  <div
+    ref="element"
+    class="form-control-date-range"
+  >
     <date-picker
       v-model.range="modelValue"
       :locale="$i18n.locale"
@@ -67,9 +70,19 @@ const isDark = computed(() => ['dark', 'black'].includes(colorMode.value))
       <template #default="{ inputValue, inputEvents }">
         <slot v-bind="{ inputValue, inputEvents, masks, size }">
           <div class="d-flex gap-3 align-items-center">
-            <b-form-input :placeholder="masks" :value="inputValue.start" :size="size" v-on="inputEvents.start" />
+            <b-form-input
+              :placeholder="masks"
+              :value="inputValue.start"
+              :size="size"
+              v-on="inputEvents.start"
+            />
             <phosphor-icon :name="PhArrowRight" />
-            <b-form-input :placeholder="masks" :value="inputValue.end" :size="size" v-on="inputEvents.end" />
+            <b-form-input
+              :placeholder="masks"
+              :value="inputValue.end"
+              :size="size"
+              v-on="inputEvents.end"
+            />
           </div>
         </slot>
       </template>

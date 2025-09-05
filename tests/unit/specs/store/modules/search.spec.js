@@ -362,11 +362,11 @@ describe('SearchStore', () => {
       searchStore.addFilterValue({ name: 'contentType', value: 'TXT' })
 
       expect(searchStore.toRouteQuery).toMatchObject({
-        indices: index,
-        q: 'datashare',
-        from: '0',
-        perPage: '12',
-        sort: 'randomOrder',
+        'indices': index,
+        'q': 'datashare',
+        'from': '0',
+        'perPage': '12',
+        'sort': 'randomOrder',
         'f[contentType]': ['TXT']
       })
 
@@ -406,7 +406,7 @@ describe('SearchStore', () => {
       })
 
       it('should not reset the "field" after the store is updated', async () => {
-        searchStore.updateFromRouteQuery({ 'f[contentType]': ['application/pdf'], field: 'author' })
+        searchStore.updateFromRouteQuery({ 'f[contentType]': ['application/pdf'], 'field': 'author' })
         expect(searchStore.getFilter({ name: 'contentType' }).values).toHaveLength(1)
         searchStore.updateFromRouteQuery({ q: 'bar' })
         expect(searchStore.field).toBe('author')
@@ -466,7 +466,7 @@ describe('SearchStore', () => {
   })
 
   describe('Delete query terms', () => {
-    it("should not delete the term from the query if it doesn't exist", async () => {
+    it('should not delete the term from the query if it doesn\'t exist', async () => {
       searchStore.setQuery('*')
       await searchStore.queryDeleteQueryTerm('term')
 
@@ -852,7 +852,7 @@ describe('SearchStore', () => {
     })
 
     it('should find a "contentType" filter using function', () => {
-      expect(searchStore.getFilter((f) => f.name === 'contentType')).toBeDefined()
+      expect(searchStore.getFilter(f => f.name === 'contentType')).toBeDefined()
     })
 
     it('should count 2 documents of type "type_01"', async () => {

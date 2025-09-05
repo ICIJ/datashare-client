@@ -1,6 +1,12 @@
 <template>
-  <div v-if="source" class="json-viewer py-3">
-    <json-formatter :json="source" class="json-viewer__formatter" />
+  <div
+    v-if="source"
+    class="json-viewer py-3"
+  >
+    <json-formatter
+      :json="source"
+      class="json-viewer__formatter"
+    />
   </div>
 </template>
 

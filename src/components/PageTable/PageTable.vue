@@ -48,14 +48,30 @@ provide('orderBy', orderBy)
 </script>
 
 <template>
-  <b-table-simple responsive borderless striped hover class="page-table" :class="classList">
+  <b-table-simple
+    responsive
+    borderless
+    striped
+    hover
+    class="page-table"
+    :class="classList"
+  >
     <colgroup v-if="hasColgroup">
-      <slot v-bind="{ selectMode, sortBy, orderBy }" name="colgroup" />
+      <slot
+        v-bind="{ selectMode, sortBy, orderBy }"
+        name="colgroup"
+      />
     </colgroup>
     <thead v-if="hasThead">
       <tr>
-        <th v-show="selectMode" class="page-table__select"></th>
-        <slot v-bind="{ selectMode, sortBy, orderBy }" name="thead" />
+        <th
+          v-show="selectMode"
+          class="page-table__select"
+        />
+        <slot
+          v-bind="{ selectMode, sortBy, orderBy }"
+          name="thead"
+        />
       </tr>
     </thead>
     <template v-if="loading">
@@ -69,7 +85,10 @@ provide('orderBy', orderBy)
       </tbody>
     </template>
     <tfoot v-if="hasTfoot">
-      <slot v-bind="{ selectMode, sortBy, orderBy }" name="tfoot" />
+      <slot
+        v-bind="{ selectMode, sortBy, orderBy }"
+        name="tfoot"
+      />
     </tfoot>
   </b-table-simple>
 </template>

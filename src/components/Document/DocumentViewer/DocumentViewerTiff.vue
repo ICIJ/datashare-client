@@ -1,8 +1,15 @@
 <template>
   <div class="tiff-viewer w-100 py-3">
-    <app-overlay :show="isLoading" rounded spinner-small>
+    <app-overlay
+      :show="isLoading"
+      rounded
+      spinner-small
+    >
       <div class="tiff-viewer__header bg-tertiary-subtle d-flex algin-items-center rounded p-3">
-        <div v-if="hasPages" class="tiff-viewer__header__pagination text-muted">
+        <div
+          v-if="hasPages"
+          class="tiff-viewer__header__pagination text-muted"
+        >
           <span class="badge text-bg-dark">
             <span>
               {{ active }}
@@ -12,18 +19,36 @@
         </div>
         <div class="tiff-viewer__header__pagination__actions flex-grow-1 text-end">
           <div class="btn-group">
-            <button class="btn btn-outline-tertiary" @click="rotateActivePage(active, -1)">
-              <phosphor-icon :name="PhArrowCounterClockwise" class="float-end" />
+            <button
+              class="btn btn-outline-tertiary"
+              @click="rotateActivePage(active, -1)"
+            >
+              <phosphor-icon
+                :name="PhArrowCounterClockwise"
+                class="float-end"
+              />
             </button>
-            <button class="btn btn-outline-tertiary" @click="rotateActivePage(active, 1)">
-              <phosphor-icon :name="PhArrowClockwise" class="float-end" />
+            <button
+              class="btn btn-outline-tertiary"
+              @click="rotateActivePage(active, 1)"
+            >
+              <phosphor-icon
+                :name="PhArrowClockwise"
+                class="float-end"
+              />
             </button>
           </div>
         </div>
       </div>
     </app-overlay>
-    <div v-if="!isLoading" class="d-flex my-3">
-      <div v-if="hasPages" class="tiff-viewer__thumbnails ms-3">
+    <div
+      v-if="!isLoading"
+      class="d-flex my-3"
+    >
+      <div
+        v-if="hasPages"
+        class="tiff-viewer__thumbnails ms-3"
+      >
         <div
           v-for="page in pages.length"
           :key="page"
@@ -32,17 +57,31 @@
           @click="activate(page)"
         >
           <div class="tiff-viewer__thumbnails__item__thumbnail">
-            <img class="img-responsive" :width="thumbWidth" :height="thumbWidth" :src="getPage(page)" />
+            <img
+              class="img-responsive"
+              :width="thumbWidth"
+              :height="thumbWidth"
+              :src="getPage(page)"
+            >
             <div class="tiff-viewer__thumbnails__item__thumbnail__page text-center small">
               <span class="badge">{{ page }}</span>
             </div>
           </div>
         </div>
       </div>
-      <div v-if="!error" class="tiff-viewer__preview text-center flex-grow-1">
-        <img class="tiff-viewer__preview__canvas mw-100 mb-3" :src="getPage(active)" />
+      <div
+        v-if="!error"
+        class="tiff-viewer__preview text-center flex-grow-1"
+      >
+        <img
+          class="tiff-viewer__preview__canvas mw-100 mb-3"
+          :src="getPage(active)"
+        >
       </div>
-      <div v-else class="tiff-viewer__error fw-bold text-center text-danger flex-grow-1">
+      <div
+        v-else
+        class="tiff-viewer__error fw-bold text-center text-danger flex-grow-1"
+      >
         {{ error }}
       </div>
     </div>
@@ -100,7 +139,8 @@ export default {
       for (const index in this.tiffData) {
         this.pages.push(await this.renderPage(index))
       }
-    } catch (error) {
+    }
+    catch (error) {
       this.error = error.message
     }
   },

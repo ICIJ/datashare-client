@@ -49,10 +49,20 @@ const count = computed(() => tags.length)
     list-body-class-yours="d-flex flex-row flex-wrap gap-2"
   >
     <template #yours>
-      <button-tag v-for="{ label } in yourTags" :key="label" :label="label" @delete="emit('delete', label)" />
+      <button-tag
+        v-for="{ label } in yourTags"
+        :key="label"
+        :label="label"
+        @delete="emit('delete', label)"
+      />
     </template>
     <template #others>
-      <button-tag v-for="{ label } in othersTags" :key="label" :label="label" @delete="emit('delete', label)" />
+      <button-tag
+        v-for="{ label } in othersTags"
+        :key="label"
+        :label="label"
+        @delete="emit('delete', label)"
+      />
     </template>
     <template #action-warning>
       {{ t('documentUserTags.tagWarning') }}

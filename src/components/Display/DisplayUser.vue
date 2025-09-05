@@ -109,7 +109,10 @@ onBeforeMount(applyPipelinesWithLoader)
       :class="{ 'display-user__username--loading': isLoading }"
       aria-label="username"
     >
-      <app-wait :for="loaderId" class="d-inline">
+      <app-wait
+        :for="loaderId"
+        class="d-inline"
+      >
         <template #waiting>
           {{ value }}
         </template>

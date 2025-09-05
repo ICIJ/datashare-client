@@ -25,18 +25,25 @@ const filters = computed(() => {
   })
 })
 
-const filtersTitles = computed(() => filters.value.map((filter) => ({ filter, title: t(`filter.${filter.name}`) })))
+const filtersTitles = computed(() => filters.value.map(filter => ({ filter, title: t(`filter.${filter.name}`) })))
 const fuse = computed(() => new Fuse(filtersTitles.value, { threshold: 0.1, shouldSort: false, keys: ['title'] }))
 const fuseFilters = computed(() => fuse.value.search(q.value).map(property('item.filter')))
 const displayedFilters = computed(() => (q.value ? fuseFilters.value : filters.value))
 const filtersBySection = computed(() => groupBy(displayedFilters.value, 'section'))
-const sections = computed(() => uniq(displayedFilters.value.map((filter) => filter.section)))
+const sections = computed(() => uniq(displayedFilters.value.map(filter => filter.section)))
 const closeFilters = () => (toggleFilters.value = false)
 </script>
 
 <template>
-  <filters-panel v-model:q="q" @close="closeFilters">
-    <filters-panel-section v-for="section in sections" :key="section" :title="t(`filter.sections.${section}`)">
+  <filters-panel
+    v-model:q="q"
+    @close="closeFilters"
+  >
+    <filters-panel-section
+      v-for="section in sections"
+      :key="section"
+      :title="t(`filter.sections.${section}`)"
+    >
       <component
         :is="getFilterComponent(filter)"
         v-for="filter in filtersBySection[section]"

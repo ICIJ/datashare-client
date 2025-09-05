@@ -37,9 +37,20 @@ const emit = defineEmits(['toggleValue', 'toggleUniqueValue'])
 </script>
 
 <template>
-  <div class="project-dropdown-selector-entry rounded" :class="classList" @click="select($event)">
-    <project-dropdown-selector-checkbox v-if="!noCheckbox" :model-value="selected" />
-    <project-label class="pe-1 py-2" no-caption :project="project" />
+  <div
+    class="project-dropdown-selector-entry rounded"
+    :class="classList"
+    @click="select($event)"
+  >
+    <project-dropdown-selector-checkbox
+      v-if="!noCheckbox"
+      :model-value="selected"
+    />
+    <project-label
+      class="pe-1 py-2"
+      no-caption
+      :project="project"
+    />
   </div>
 </template>
 

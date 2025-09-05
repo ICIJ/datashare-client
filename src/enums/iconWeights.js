@@ -15,4 +15,4 @@ export const ICON_WEIGHT = Object.freeze({
 })
 
 export const ICON_WEIGHTS = Object.values(ICON_WEIGHT)
-export const iconWeightValidator = (v) => ICON_WEIGHTS.includes(v)
+export const iconWeightValidator = v => ICON_WEIGHTS.includes(v)

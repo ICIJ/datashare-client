@@ -10,7 +10,7 @@ export default {
     reduceDisabled: false,
     expandDisabled: false
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       SeparatorLine
     },

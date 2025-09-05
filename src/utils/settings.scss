@@ -199,11 +199,14 @@ $modal-md: 500px;
 $modal-lg: 800px;
 $modal-xl: 1140px;
 
+$modal-transition: transform .2s ease-out;
+
 $offcanvas-box-shadow: none;
 $offcanvas-border-color: var(--bs-tertiary-border-subtle);
 $offcanvas-width: 300px;
 $offcanvas-padding-y: $spacer;
 $offcanvas-padding-x: $spacer-xl;
+$offcanvas-transition-duration: 0.2s;
 
 $kbd-padding-y: $spacer-xxs;
 $kbd-padding-x: $spacer-xs;
@@ -270,7 +273,7 @@ $app-nav-height: 4.5rem;
 $app-nav-brand-height: $app-nav-height - ($spacer * 2);
 
 $app-sidebar-width: 310px;
-$app-sidebar-compact-width: 85px;
+$app-sidebar-compact-width: 80px;
 
 $filters-panel-width: 320px;
 $search-results-list-width: 600px;

@@ -27,12 +27,12 @@ export const useSearchBreadcrumbStore = defineStore('searchBreadcrumb', () => {
    */
   function withIndices(params, defaultValue = []) {
     const searchParams = new URLSearchParams(params.split('?', 2).pop())
-    const split = (value) => value.split(',')
+    const split = value => value.split(',')
     const indices = castArray(searchParams.get('indices') ?? defaultValue)
       .map(split)
       .flat()
     searchParams.delete('indices')
-    indices.forEach((index) => searchParams.append('indices', index))
+    indices.forEach(index => searchParams.append('indices', index))
     return searchParams.toString()
   }
 

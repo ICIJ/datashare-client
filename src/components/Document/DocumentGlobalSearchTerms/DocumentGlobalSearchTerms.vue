@@ -33,7 +33,7 @@ const queryTerms = computed(() => searchStore.retrieveContentQueryTerms)
 const queryTermsWithoutNegation = computed(() => queryTerms.value.filter(({ negation }) => !negation))
 const sortedTerms = computed(() => orderBy(terms.value, ['count', 'metadata', 'tags'], ['desc', 'desc', 'desc']))
 const metadataFields = computed(() => [
-  ...keys(props.document.source.metadata).map((m) => `source.metadata.${m}`),
+  ...keys(props.document.source.metadata).map(m => `source.metadata.${m}`),
   'source.language',
   'source.path'
 ])
@@ -49,7 +49,7 @@ function searchTermInContent(label) {
 
 function searchTermInTags(label) {
   const needle = label.toLowerCase()
-  const tags = props.document.tags.filter((t) => t.toLowerCase().includes(needle))
+  const tags = props.document.tags.filter(t => t.toLowerCase().includes(needle))
   const count = tags.length
   return { count, tags }
 }
@@ -57,7 +57,7 @@ function searchTermInTags(label) {
 function searchTermInMetadata(label) {
   const needle = label.toLowerCase()
   const fields = metadataFields.value
-  const metadata = fields.filter((f) => String(get(props.document, f)).toLowerCase().includes(needle))
+  const metadata = fields.filter(f => String(get(props.document, f)).toLowerCase().includes(needle))
   const count = metadata.length
   return { count, metadata }
 }
@@ -82,7 +82,8 @@ async function searchTerms() {
       const { count: tags } = searchTermInTags(label)
       const { count: metadata } = searchTermInMetadata(label)
       terms.value[i] = { label, count, offsets, metadata, tags }
-    } catch {
+    }
+    catch {
       terms.value[i] = { label, count: 0, offsets: 0, metadata: 0, tags: 0 }
     }
   })
@@ -90,10 +91,21 @@ async function searchTerms() {
 </script>
 
 <template>
-  <div v-if="document && terms.length" class="document-global-search-terms-tags d-flex align-items-center">
+  <div
+    v-if="document && terms.length"
+    class="document-global-search-terms-tags d-flex align-items-center"
+  >
     <ul class="list-inline m-0">
-      <li v-for="(term, index) in sortedTerms" :key="index" class="list-inline-item">
-        <document-global-search-terms-entry :term="term" :index="index" @click="emit('select', term.label)" />
+      <li
+        v-for="(term, index) in sortedTerms"
+        :key="index"
+        class="list-inline-item"
+      >
+        <document-global-search-terms-entry
+          :term="term"
+          :index="index"
+          @click="emit('select', term.label)"
+        />
       </li>
     </ul>
   </div>

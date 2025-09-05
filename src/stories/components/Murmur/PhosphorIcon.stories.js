@@ -31,7 +31,7 @@ export default {
     fade: false,
     spinDuration: '1s'
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       PhosphorIcon
     },

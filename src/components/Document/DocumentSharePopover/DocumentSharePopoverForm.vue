@@ -21,7 +21,13 @@ const link = computed(() => {
 </script>
 
 <template>
-  <advanced-link-form no-fade :title="document.title" variant="action" :value="1" :link="link" />
+  <advanced-link-form
+    no-fade
+    :title="document.title"
+    variant="action"
+    :model-value="1"
+    :link="link"
+  />
 </template>
 
 <style lang="scss" scoped>
@@ -40,10 +46,13 @@ const link = computed(() => {
     --bs-nav-link-hover-color: var(--bs-body-color);
     --bs-nav-tabs-link-hover-border-color: var(--bs-primary);
 
+    overflow: auto;
+    flex-wrap: nowrap;
     gap: 1rem;
 
     .nav-link {
       border-bottom: 2px solid transparent;
+      text-wrap-mode:nowrap;
 
       &.active,
       &:hover {

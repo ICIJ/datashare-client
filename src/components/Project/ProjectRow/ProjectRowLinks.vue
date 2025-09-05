@@ -35,7 +35,10 @@ const compact = computed(() => {
 
 <template>
   <td class="project-row-links">
-    <hook name="project-row-links:before" :bind="{ project }" />
+    <hook
+      name="project-row-links:before"
+      :bind="{ project }"
+    />
     <div class="d-flex gap-3">
       <slot>
         <button-icon
@@ -49,7 +52,10 @@ const compact = computed(() => {
         />
       </slot>
     </div>
-    <hook name="project-row-links:after" :bind="{ project }" />
+    <hook
+      name="project-row-links:after"
+      :bind="{ project }"
+    />
   </td>
 </template>
 

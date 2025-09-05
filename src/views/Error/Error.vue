@@ -26,7 +26,7 @@ const props = defineProps({
     default: null
   },
   /**
-   * Description (bellow the title) of the error page.
+   * Description (below the title) of the error page.
    */
   description: {
     type: String,
@@ -64,7 +64,10 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
       <div class="error__container container">
         <h1 class="mb-3 error__container__heading">
           <span class="error__container__heading__code me-3">
-            <phosphor-icon :name="PhSmileySad" class="text-primary" />
+            <phosphor-icon
+              :name="PhSmileySad"
+              class="text-primary"
+            />
             <span class="px-2 error__container__heading__code__value">
               {{ code }}
             </span>
@@ -76,30 +79,61 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
         </p>
         <ul class="error__container__links list-inline text-capitalize">
           <li class="list-inline-item error__container__links__item">
-            <a :href="faqLink" target="_blank">
-              <phosphor-icon weight="duotone" :name="PhQuestion" class="error__container__links__item__icon me-1" />
+            <a
+              :href="faqLink"
+              target="_blank"
+            >
+              <phosphor-icon
+                weight="duotone"
+                :name="PhQuestion"
+                class="error__container__links__item__icon me-1"
+              />
               {{ t('error.faq') }}
             </a>
           </li>
           <li class="list-inline-item error__container__links__item">
-            <a :href="documentationLink" target="_blank">
-              <phosphor-icon weight="duotone" :name="PhBook" class="error__container__links__item__icon me-1" />
+            <a
+              :href="documentationLink"
+              target="_blank"
+            >
+              <phosphor-icon
+                weight="duotone"
+                :name="PhBook"
+                class="error__container__links__item__icon me-1"
+              />
               {{ t('error.userGuides') }}
             </a>
           </li>
           <li class="list-inline-item error__container__links__item">
-            <a :href="helpLink" target="_blank">
-              <phosphor-icon weight="duotone" :name="PhAmbulance" class="error__container__links__item__icon me-1" />
+            <a
+              :href="helpLink"
+              target="_blank"
+            >
+              <phosphor-icon
+                weight="duotone"
+                :name="PhAmbulance"
+                class="error__container__links__item__icon me-1"
+              />
               {{ t('error.help') }}
             </a>
           </li>
           <li class="list-inline-item error__container__links__item">
-            <version-number tooltip-placement="top" class="d-inline" />
+            <version-number
+              tooltip-placement="top"
+              class="d-inline"
+            />
           </li>
           <mode-server-only v-if="isAuthenticated">
             <li class="list-inline-item error__container__links__item error__container__links__item--logout">
-              <a :href="logoutLink" target="_blank">
-                <phosphor-icon weight="duotone" :name="PhSignOut" class="error__container__links__item__icon me-1" />
+              <a
+                :href="logoutLink"
+                target="_blank"
+              >
+                <phosphor-icon
+                  weight="duotone"
+                  :name="PhSignOut"
+                  class="error__container__links__item__icon me-1"
+                />
                 {{ t('error.logout') }}
               </a>
             </li>
@@ -132,7 +166,7 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
         flex-direction: row;
         align-items: center;
         justify-content: center;
-        background: var(--bs-dark-bg-subtle);
+        background: var(--bs-black);
         border-radius: 1em;
 
         &__icon {
@@ -158,12 +192,12 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
         &:not(:last-of-type):after {
           content: '|';
           margin: 0 $spacer;
-          color: rgba(var(--bs-body-bg-rgb), 0.5);
+          color: rgba(var(--bs-light-rgb), 0.5);
         }
 
         &,
         a {
-          color: rgba(var(--bs-body-bg-rgb), 0.5);
+          color: rgba(var(--bs-light-rgb), 0.5);
         }
       }
     }

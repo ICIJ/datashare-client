@@ -23,7 +23,7 @@ const props = defineProps({
   format: {
     type: String,
     default: FORMAT_SHORT,
-    validator: (value) => [FORMAT_SHORT, FORMAT_MONTH, FORMAT_LONG, FORMAT_FROM_NOW].includes(value)
+    validator: value => [FORMAT_SHORT, FORMAT_MONTH, FORMAT_LONG, FORMAT_FROM_NOW].includes(value)
   },
   tooltipDelay: {
     type: Object,

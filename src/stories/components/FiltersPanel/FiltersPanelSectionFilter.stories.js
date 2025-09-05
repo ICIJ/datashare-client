@@ -23,7 +23,7 @@ export default {
     hideSort: false,
     loading: false
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       FiltersPanelSectionFilter,
       FiltersPanelSectionFilterEntry
@@ -36,7 +36,7 @@ export default {
     },
     computed: {
       count() {
-        return Object.values(this.values).filter((v) => v).length
+        return Object.values(this.values).filter(v => v).length
       }
     },
     template: `
@@ -76,7 +76,7 @@ export const ForPath = {
     hideSearch: false,
     hideSort: false
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       FiltersPanelSectionFilter,
       PathTreeView,
@@ -91,7 +91,7 @@ export const ForPath = {
     },
     computed: {
       count() {
-        return Object.values(this.values).filter((v) => v).length
+        return Object.values(this.values).filter(v => v).length
       }
     },
     template: `

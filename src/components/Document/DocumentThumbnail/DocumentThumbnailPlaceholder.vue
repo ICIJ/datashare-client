@@ -21,8 +21,14 @@ const style = computed(() => {
 </script>
 
 <template>
-  <span class="document-thumbnail-placeholder" :style="style">
-    <display-content-type-icon :value="document.contentType" colorize />
+  <span
+    class="document-thumbnail-placeholder"
+    :style="style"
+  >
+    <display-content-type-icon
+      :value="document.contentType"
+      colorize
+    />
   </span>
 </template>
 

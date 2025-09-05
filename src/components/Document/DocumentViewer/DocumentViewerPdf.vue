@@ -1,15 +1,17 @@
 <script setup>
 import VueScrollTo from 'vue-scrollto'
-import { computed, ref, useTemplateRef } from 'vue'
+import { computed, ref, useTemplateRef, toRef } from 'vue'
 import { refDebounced, whenever, useElementBounding } from '@vueuse/core'
 import { supportsPDFs as embeddable } from 'pdfobject'
 import { useI18n } from 'vue-i18n'
 
 import DocumentViewerPdfEmbedded from './DocumentViewerPdf/DocumentViewerPdfEmbedded'
-import DocumentViewerPdfNav from './DocumentViewerPdf/DocumentViewerPdfNav'
+import DocumentViewerPdfPagination from './DocumentViewerPdf/DocumentViewerPdfPagination'
+import DocumentViewerPdfDropdown from './DocumentViewerPdf/DocumentViewerPdfDropdown/DocumentViewerPdfDropdown'
 import DocumentViewerPdfPage from './DocumentViewerPdf/DocumentViewerPdfPage'
 
 import { SCALE_FIT, SCALE_WIDTH } from '@/enums/documentViewerPdf'
+import { useCompact } from '@/composables/useCompact'
 import { useWait } from '@/composables/useWait'
 import { useScrollParent } from '@/composables/useScrollParent'
 import { usePDF } from '@/composables/usePDF'
@@ -23,6 +25,10 @@ const props = defineProps({
   document: {
     type: Object,
     required: true
+  },
+  compactThreshold: {
+    type: Number,
+    default: 770
   }
 })
 
@@ -39,6 +45,7 @@ const scale = ref(SCALE_FIT)
 const pageElements = useTemplateRef('pages')
 const toolboxElement = useTemplateRef('toolbox')
 const { height: toolboxHeight } = useElementBounding(toolboxElement)
+const { compact: toolboxCompact } = useCompact(toolboxElement, { threshold: toRef(props, 'compactThreshold') })
 const highlightText = ref(null)
 const highlightTextDebounced = refDebounced(highlightText, 300)
 const highlightIndex = ref(0)
@@ -65,7 +72,7 @@ const classList = computed(() => {
  */
 function getPageHighlightIndex(value) {
   const match = highlightMatches.value[highlightIndex.value - 1]
-  const firstPageMatch = highlightMatches.value.findIndex((m) => m.page === value)
+  const firstPageMatch = highlightMatches.value.findIndex(m => m.page === value)
   return match && match.page === value ? highlightIndex.value - firstPageMatch : 0
 }
 
@@ -101,28 +108,50 @@ whenever(
     v-model="documentViewStore.embeddedPdf"
     :document="document"
   />
-  <div v-else class="document-viewer-pdf" :class="classList">
-    <div ref="toolbox" class="document-viewer-pdf__toolbox d-flex flex-column gap-3">
-      <div class="d-flex flex-column flex-lg-row align-items-lg-center gap-3">
+  <div
+    v-else
+    class="document-viewer-pdf"
+    :class="classList"
+  >
+    <div
+      ref="toolbox"
+      class="document-viewer-pdf__toolbox d-flex flex-column gap-3"
+    >
+      <div class="d-flex flex-md-nowrap flex-wrap align-items-lg-center gap-3">
         <document-local-search
           v-model="highlightText"
           v-model:active-index="highlightIndex"
+          :compact="toolboxCompact"
           :loading="isHightlightLoading"
           :occurrences="highlightOccurrences"
           class="flex-grow-1"
         />
-        <document-viewer-pdf-nav
-          v-model:rotation="rotation"
-          v-model:scale="scale"
-          v-model:embed="documentViewStore.embeddedPdf"
-          :page="currentPage"
-          :num-pages="numPages"
-          @update:page="scrollToPage"
-        />
+        <div class="d-flex flex-grow-1 flex-md-grow-0 flex-nowrap align-items-center gap-2">
+          <document-viewer-pdf-pagination
+            :page="currentPage"
+            :total-rows="numPages"
+            :compact="toolboxCompact"
+            @update:page="scrollToPage"
+          />
+          <document-viewer-pdf-dropdown
+            v-model:rotation="rotation"
+            v-model:scale="scale"
+            v-model:embed="documentViewStore.embeddedPdf"
+            class="flex-shrink-0 ms-auto"
+          />
+        </div>
       </div>
-      <document-global-search-terms :document="document" no-count @select="highlightText = $event" />
+      <document-global-search-terms
+        :document="document"
+        no-count
+        @select="highlightText = $event"
+      />
     </div>
-    <app-wait class="document-viewer-pdf__pages pt-3" :for="pdfLoaderId" spinner>
+    <app-wait
+      class="document-viewer-pdf__pages pt-3"
+      :for="pdfLoaderId"
+      spinner
+    >
       <template v-if="pdf">
         <document-viewer-pdf-page
           v-for="{ page, ...size } in sizes"

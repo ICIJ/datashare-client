@@ -69,7 +69,7 @@ export const ShowSubmit = {
   }
 }
 export const AddonSlot = {
-  render: (args) => ({
+  render: args => ({
     components: {
       SearchBarInput
     },

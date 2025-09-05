@@ -61,7 +61,7 @@ function canManageBatchSearch(item) {
         :per-page="perPage"
         :total-rows="totalRows"
         :model-value="page"
-        @update:modelValue="setPage"
+        @update:model-value="setPage"
       />
     </template>
     <template #default="{ tasks, sort, order, updateSort, updateOrder, refresh, searchQuery, empty, loading }">
@@ -99,7 +99,10 @@ function canManageBatchSearch(item) {
           <display-project-list :values="getBatchSearchProjects(item)" />
         </template>
         <template #cell(author)="{ item }">
-          <display-user :value="getBatchSearchRecord(item, 'user.id')" class="text-nowrap" />
+          <display-user
+            :value="getBatchSearchRecord(item, 'user.id')"
+            class="text-nowrap"
+          />
         </template>
         <template #cell(createdAt)="{ item }">
           <display-datetime-from-now :value="item.createdAt" />

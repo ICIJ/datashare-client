@@ -7,7 +7,7 @@ export default {
     variants: ['info', 'danger', 'success', 'warning', 'action', 'primary', 'secondary', 'tertiary'],
     content: 'A text of average length and without HTML or anything fancy.'
   },
-  render: (args) => ({
+  render: args => ({
     components: { BAlert },
     setup() {
       return { args }

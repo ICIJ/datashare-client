@@ -61,7 +61,10 @@ const classList = computed(() => {
     :target="target"
     :to="to"
   >
-    <tab-group-title :icon="icon" :count="count">
+    <tab-group-title
+      :icon="icon"
+      :count="count"
+    >
       <slot />
     </tab-group-title>
   </b-nav-item>

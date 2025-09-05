@@ -30,11 +30,17 @@ const allKeys = computed(() => {
 <template>
   <div class="keyboard-shortcuts-section-entry d-flex gap-3 align-items-center py-2">
     <div class="keyboard-shortcuts-section-entry__label">
-      <slot name="label">{{ label }}</slot>
+      <slot name="label">
+        {{ label }}
+      </slot>
     </div>
     <div class="keyboard-shortcuts-section-entry__keys d-flex gap-3 align-items-center text-nowrap flex-nowrap">
       <slot>
-        <keyboard-shortcuts-section-entry-key v-for="(key, i) in allKeys" :key="i" :value="key" />
+        <keyboard-shortcuts-section-entry-key
+          v-for="(key, i) in allKeys"
+          :key="i"
+          :value="key"
+        />
       </slot>
     </div>
   </div>

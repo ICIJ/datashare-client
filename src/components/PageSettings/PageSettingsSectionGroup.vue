@@ -7,10 +7,16 @@
         :aria-expanded="modelValue ? 'true' : 'false'"
         @click="toggleSection"
       >
-        <phosphor-icon class="d-inline-flex me-2" :name="caretIcon" />{{ label }}
+        <phosphor-icon
+          class="d-inline-flex me-2"
+          :name="caretIcon"
+        />{{ label }}
       </div>
     </template>
-    <b-collapse id="page-settings-group-collapse" v-model="modelValue">
+    <b-collapse
+      id="page-settings-group-collapse"
+      v-model="modelValue"
+    >
       <slot v-bind="{ open: modelValue }" />
     </b-collapse>
   </b-form-group>

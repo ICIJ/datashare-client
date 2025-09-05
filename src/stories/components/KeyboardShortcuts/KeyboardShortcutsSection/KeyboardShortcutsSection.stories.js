@@ -8,7 +8,7 @@ export default {
   args: {
     title: 'Search'
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       KeyboardShortcutsSection,
       KeyboardShortcutsSectionEntry

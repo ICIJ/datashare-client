@@ -69,7 +69,10 @@ const queryComponentProps = computed(() => {
 </script>
 
 <template>
-  <component :is="component" v-bind="componentProps">
+  <component
+    :is="component"
+    v-bind="componentProps"
+  >
     <slot />
   </component>
 </template>

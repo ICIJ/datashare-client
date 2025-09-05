@@ -71,7 +71,7 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
       ])
       const bin = wrapper.vm.dateToBin(new Date(Date.UTC(2013, 0)))
       const query = wrapper.vm.binToQuery(bin)
-      expect(query).toStrictEqual({ 'f[creationDate]': '1356998400000:1388534400000', indices: [anotherProject] })
+      expect(query).toStrictEqual({ 'f[creationDate]': '1356998400000:1388534400000', 'indices': [anotherProject] })
     })
   })
 })

@@ -70,7 +70,7 @@ describe('DocumentStore', () => {
     expect(documentStore.parentDocument.id).toBe(routing)
   })
 
-  it("should get the document's named entities", async () => {
+  it('should get the document\'s named entities', async () => {
     await letData(es).have(new IndexedDocument(id, index).withNer('naz')).commit()
     await documentStore.getDocument({ id, index })
     await documentStore.getFirstPageForNamedEntityInAllCategories()
@@ -79,7 +79,7 @@ describe('DocumentStore', () => {
     expect(documentStore.namedEntities[0].raw._routing).toBe(id)
   })
 
-  it("should get only the not hidden document's named entities", async () => {
+  it('should get only the not hidden document\'s named entities', async () => {
     await letData(es)
       .have(
         new IndexedDocument(id, index)
@@ -104,7 +104,7 @@ describe('DocumentStore', () => {
       api.tagDocuments.mockResolvedValue({})
     })
 
-    it("should get the document's tags", async () => {
+    it('should get the document\'s tags', async () => {
       const tags = [{ label: 'tag_01' }, { label: 'tag_02' }]
       api.getTags.mockResolvedValue(tags)
       await letData(es)

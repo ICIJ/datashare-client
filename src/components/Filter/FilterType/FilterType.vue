@@ -4,6 +4,7 @@ import { compact, concat, escapeRegExp, flatten, get, noop, setWith, uniqueId } 
 import InfiniteLoading from 'v3-infinite-loading'
 import { useI18n } from 'vue-i18n'
 
+import { refWhenever } from '@/composables/refWhenever'
 import { useWait } from '@/composables/useWait'
 import { useSearchFilter } from '@/composables/useSearchFilter'
 import FilterModal from '@/components/Filter/FilterModal/FilterModal'
@@ -29,6 +30,7 @@ const { filter, modal } = defineProps({
   }
 })
 
+const opened = refWhenever(collapse, value => value === false || modal === true)
 const { t } = useI18n()
 
 const pages = reactive([])
@@ -161,7 +163,7 @@ const buckets = computed(() => {
 
 const excludedBucketsPage = computed(() => {
   if (contextualize.value && exclude.value) {
-    const values = filter.values.map((key) => ({ key, doc_count: 0 }))
+    const values = filter.values.map(key => ({ key, doc_count: 0 }))
     return setWith({}, pageBucketsPath.value.join('.'), values, Object)
   }
   return []
@@ -194,7 +196,8 @@ const debouncedCollapse = computed({
   set: async (value) => {
     if (value) {
       collapse.value = true
-    } else {
+    }
+    else {
       await aggregateOver()
       await nextTick()
       collapse.value = false
@@ -207,8 +210,6 @@ onBeforeMount(async () => {
   collapse.value = collapse.value ?? !hasAnyValue.value
   // Only load data on mount if the filter is visible (not collapsed)
   await aggregateIfVisible()
-  // Collapsing/Expanding the filter will trigger an update of the data
-  watch(collapse, aggregateIfVisible)
   // Query value (in the search field) that trigger an update of the data
   watch(query, aggregateIfVisible)
   // General values that might trigger an update of the data
@@ -244,16 +245,25 @@ onBeforeMount(async () => {
     :loading="isLoading"
     :modal="modal"
   >
-    <slot name="all" v-bind="{ entries, filter }">
-      <filter-type-all v-if="!filter.hideAll" :filter="filter" />
+    <slot
+      name="all"
+      v-bind="{ entries, filter, opened }"
+    >
+      <filter-type-all
+        v-if="!filter.hideAll"
+        :filter="filter"
+      />
     </slot>
     <template #search="{ search, searchPlaceholder }">
-      <slot name="search" v-bind="{ search, searchPlaceholder }" />
+      <slot
+        name="search"
+        v-bind="{ search, searchPlaceholder }"
+      />
     </template>
     <template #actions>
       <slot name="actions" />
     </template>
-    <slot v-bind="{ entries, filter }">
+    <slot v-bind="{ entries, filter, opened }">
       <filters-panel-section-filter-entry
         v-for="{ item, label } in entries"
         :key="item.key"
@@ -268,11 +278,26 @@ onBeforeMount(async () => {
           <slot name="entry-count" />
         </template>
       </filters-panel-section-filter-entry>
-      <infinite-loading v-if="!noInfiniteScroll" :identifier="infiniteId" :distance="200" @infinite="nextAggregate">
-        <template #spinner><span></span></template>
-        <template #complete><span></span></template>
+      <infinite-loading
+        v-if="!noInfiniteScroll"
+        :identifier="infiniteId"
+        :distance="200"
+        @infinite="nextAggregate"
+      >
+        <template #spinner>
+          <span />
+        </template>
+        <template #complete>
+          <span />
+        </template>
       </infinite-loading>
     </slot>
-    <filter-modal v-model="expand" v-model:sort="sort" :filter="filter" :hide-count="hideCount" :modal="modal" />
+    <filter-modal
+      v-model="expand"
+      v-model:sort="sort"
+      :filter="filter"
+      :hide-count="hideCount"
+      :modal="modal"
+    />
   </filters-panel-section-filter>
 </template>

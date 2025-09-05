@@ -28,7 +28,7 @@ const hadTotal = ref(false)
 const total = computed(() => (allProjectsSelected.value ? searchStore.total : null))
 const hideTotal = computed(() => total.value === null || !hadTotal.value)
 // We need to update hadTotal after the search is ready and all projects are selected
-watch(toRef(searchStore, 'isReady'), (value) => (hadTotal.value = value && allProjectsSelected.value))
+watch(toRef(searchStore, 'isReady'), value => (hadTotal.value = value && allProjectsSelected.value))
 </script>
 
 <template>

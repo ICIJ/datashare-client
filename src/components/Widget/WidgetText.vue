@@ -1,9 +1,20 @@
 <template>
   <div class="widget widget--text">
-    <div v-if="widget.title" class="widget__header" :class="{ 'card-body': widget.card }">
-      <h3 class="m-0 h5" v-html="widget.title"></h3>
+    <div
+      v-if="widget.title"
+      class="widget__header"
+      :class="{ 'card-body': widget.card }"
+    >
+      <h3
+        class="m-0 h5"
+        v-html="widget.title"
+      />
     </div>
-    <div class="widget__content lead" :class="{ 'card-body': widget.card }" v-html="content"></div>
+    <div
+      class="widget__content lead"
+      :class="{ 'card-body': widget.card }"
+      v-html="content"
+    />
   </div>
 </template>
 

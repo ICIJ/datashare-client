@@ -40,11 +40,23 @@ defineEmits(['goToNewest', 'goToOldest'])
 
 <template>
   <div class="document-user-comments-list">
-    <b-collapse v-model="visible" tag="section">
+    <b-collapse
+      v-model="visible"
+      tag="section"
+    >
       <div class="d-flex flex-column gap-1 align-items-center">
-        <document-user-comments-list-oldest v-if="hasOldest" @click="$emit('goToOldest')" />
-        <div v-if="comments.length" class="document-user-comments-list__entries">
-          <slot name="default" v-bind="{ visible, comments }">
+        <document-user-comments-list-oldest
+          v-if="hasOldest"
+          @click="$emit('goToOldest')"
+        />
+        <div
+          v-if="comments.length"
+          class="document-user-comments-list__entries"
+        >
+          <slot
+            name="default"
+            v-bind="{ visible, comments }"
+          >
             <document-user-comments-list-entry
               v-for="(comment, index) in comments"
               :id="`comment-${index}`"
@@ -56,7 +68,10 @@ defineEmits(['goToNewest', 'goToOldest'])
             />
           </slot>
         </div>
-        <document-user-comments-list-newest v-if="hasNewest" @click="$emit('goToNewest')" />
+        <document-user-comments-list-newest
+          v-if="hasNewest"
+          @click="$emit('goToNewest')"
+        />
       </div>
     </b-collapse>
   </div>

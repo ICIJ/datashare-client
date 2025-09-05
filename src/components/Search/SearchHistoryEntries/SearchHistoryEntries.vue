@@ -49,7 +49,7 @@ const entries = computed(() => {
     hits.value
       // This create a list of tuples where the first element is the document and the second is the event.
       .map((document) => {
-        const event = events.find((event) => eventParams(event).id === document.id)
+        const event = events.find(event => eventParams(event).id === document.id)
         return [document, event]
       })
       // This filter out the documents that don't have a corresponding event.
@@ -109,16 +109,31 @@ watch(() => eventsIds.value, fetch, { deep: true, immediate: true })
 </script>
 
 <template>
-  <div v-if="loading" class="d-flex flex-column gap-3 mb-3">
+  <div
+    v-if="loading"
+    class="d-flex flex-column gap-3 mb-3"
+  >
     <div class="text-center">
-      <app-placeholder height="2.375rem" width="9rem" />
+      <app-placeholder
+        height="2.375rem"
+        width="9rem"
+      />
     </div>
     <document-card-placeholder :repeat="3" />
   </div>
-  <b-collapse v-for="(entry, key) of groupedEntries" v-else :key="key" visible>
+  <b-collapse
+    v-for="(entry, key) of groupedEntries"
+    v-else
+    :key="key"
+    visible
+  >
     <template #header="{ visible, toggle }">
       <div class="text-center mb-3 sticky-top">
-        <button-toggle-day :date="key" :active="visible" @click="toggle" />
+        <button-toggle-day
+          :date="key"
+          :active="visible"
+          @click="toggle"
+        />
       </div>
     </template>
     <div class="d-flex flex-column gap-3 mb-3">
@@ -134,7 +149,10 @@ watch(() => eventsIds.value, fetch, { deep: true, immediate: true })
           <div
             class="d-flex flex-column flex-lg-row-reverse align-items-end align-items-lg-center text-right gap-1 gap-lg-3"
           >
-            <display-time :value="event.modificationDate" class="text-secondary" />
+            <display-time
+              :value="event.modificationDate"
+              class="text-secondary"
+            />
             <document-actions-group
               :vertical="verticalDocumentActions"
               tooltip-placement="right-start"

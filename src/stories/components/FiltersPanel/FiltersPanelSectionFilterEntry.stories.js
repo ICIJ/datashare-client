@@ -12,7 +12,7 @@ export default {
     count: 123456,
     modelValue: true
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       FiltersPanelSectionFilterEntry
     },

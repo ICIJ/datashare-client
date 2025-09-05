@@ -111,7 +111,7 @@ describe('Core', () => {
       expect(core.getDefaultProject()).toEqual('my_project')
     })
 
-    it("should return first user project when user doesn't have the default project", () => {
+    it('should return first user project when user doesn\'t have the default project', () => {
       core.config.set('projects', [{ name: 'user_project' }])
       core.config.set('defaultProject', 'default_project')
       expect(core.getDefaultProject()).toEqual('user_project')

@@ -1,7 +1,14 @@
 <template>
-  <component :is="is" :to="to" class="project-link">
+  <component
+    :is="is"
+    :to="to"
+    class="project-link"
+  >
     <slot>
-      <project-label :project="project" :hide-thumbnail="hideThumbnail" />
+      <project-label
+        :project="project"
+        :hide-thumbnail="hideThumbnail"
+      />
     </slot>
   </component>
 </template>

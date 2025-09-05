@@ -13,7 +13,10 @@ defineProps({
 </script>
 
 <template>
-  <document-card-properties-entry :document="document" :property="property">
+  <document-card-properties-entry
+    :document="document"
+    :property="property"
+  >
     <display-content-length :value="document[property]" />
   </document-card-properties-entry>
 </template>

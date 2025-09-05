@@ -7,7 +7,10 @@ const { t } = useI18n()
 
 <template>
   <h4 class="keyboard-shortcuts-popover-title d-flex align-items-center text-truncate">
-    <phosphor-icon :name="PhKeyboard" class="me-2 flex-shrink-0" />
+    <phosphor-icon
+      :name="PhKeyboard"
+      class="me-2 flex-shrink-0"
+    />
     {{ t('keyboardShortcutsPopoverTitle.label') }}
   </h4>
 </template>

@@ -1,5 +1,4 @@
 import { computed, inject, provide, useId, watch, h } from 'vue'
-import { computedInject } from '@vueuse/core'
 import { useRoute, useRouter } from 'vue-router'
 import { find, matches, overSome } from 'lodash'
 import { useModalController } from 'bootstrap-vue-next'
@@ -50,7 +49,7 @@ export const useDocument = function (element) {
 
   const documentRoute = computed(() => {
     const { matched } = router.currentRoute.value ?? []
-    const predicates = ['document', 'document-standalone'].map((name) => matches({ name }))
+    const predicates = ['document', 'document-standalone'].map(name => matches({ name }))
     return find(matched, overSome(predicates))
   })
 
@@ -76,7 +75,8 @@ export const useDocument = function (element) {
   const documentPath = computed(() => {
     if (core.config.get('mountedDataDir')) {
       return document.value.source.path.replace(core.config.get('dataDir'), core.config.get('mountedDataDir'))
-    } else {
+    }
+    else {
       return document.value.source.path
     }
   })
@@ -84,7 +84,8 @@ export const useDocument = function (element) {
   const documentDirname = computed(() => {
     if (core.config.get('mountedDataDir')) {
       return document.value.source.dirname.replace(core.config.get('dataDir'), core.config.get('mountedDataDir'))
-    } else {
+    }
+    else {
       return document.value.source.dirname
     }
   })
@@ -96,10 +97,13 @@ export const useDocument = function (element) {
   }
 
   const injectDocumentViewFloatingId = () => {
-    return inject(DOCUMENT_VIEW_FLOATING_ID_KEY)
+    return inject(DOCUMENT_VIEW_FLOATING_ID_KEY, null)
   }
 
-  const documentViewFloatingSelector = computedInject(DOCUMENT_VIEW_FLOATING_ID_KEY, (id) => `#${id}`)
+  const documentViewFloatingSelector = computed(() => {
+    const id = injectDocumentViewFloatingId()
+    return id ? `#${id}` : null
+  })
 
   const watchDocument = function (callback, options) {
     // We watch the document's router params as string to avoid deep watching the object

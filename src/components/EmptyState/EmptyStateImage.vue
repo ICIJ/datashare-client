@@ -27,11 +27,21 @@ const style = computed(() => {
 </script>
 
 <template>
-  <div class="empty-state-image" :style="style">
+  <div
+    class="empty-state-image"
+    :style="style"
+  >
     <image-mode image-class="img-fluid w-100">
       <slot name="source">
-        <image-mode-source v-if="imageDark" :src="imageDark" color-mode="dark" />
-        <image-mode-source :src="image" :alt="alt" />
+        <image-mode-source
+          v-if="imageDark"
+          :src="imageDark"
+          color-mode="dark"
+        />
+        <image-mode-source
+          :src="image"
+          :alt="alt"
+        />
       </slot>
     </image-mode>
   </div>

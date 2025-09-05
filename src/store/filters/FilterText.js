@@ -57,11 +57,11 @@ export default class FilterText {
   }
 
   addParentIncludeFilter(body, param) {
-    return body.query('has_parent', { parent_type: 'Document' }, (q) => q.query('terms', this.key, param.values))
+    return body.query('has_parent', { parent_type: 'Document' }, q => q.query('terms', this.key, param.values))
   }
 
   addParentExcludeFilter(body, param) {
-    return body.query('has_parent', { parent_type: 'Document' }, (q) => q.notQuery('terms', this.key, param.values))
+    return body.query('has_parent', { parent_type: 'Document' }, q => q.notQuery('terms', this.key, param.values))
   }
 
   addChildExcludeFilter(body, param) {
@@ -103,7 +103,7 @@ export default class FilterText {
   }
 
   isNamedEntityAggregation(body) {
-    return some(['"must":{"term":{"type":"NamedEntity"}}', '"must":[{"term":{"type":"NamedEntity"}}'], (str) =>
+    return some(['"must":{"term":{"type":"NamedEntity"}}', '"must":[{"term":{"type":"NamedEntity"}}'], str =>
       includes(JSON.stringify(body.build()), str)
     )
   }

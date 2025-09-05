@@ -49,7 +49,11 @@ const icon = computed(() => {
 
 <template>
   <kbd class="keyboard-shortcuts-section-entry-key flex-shrink-0">
-    <phosphor-icon v-if="icon" :name="icon" size="1em" />
+    <phosphor-icon
+      v-if="icon"
+      :name="icon"
+      size="1em"
+    />
     <template v-else>{{ value }}</template>
   </kbd>
 </template>

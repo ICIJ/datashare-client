@@ -25,8 +25,7 @@ const { t } = useI18n()
           :list-link="{ name: 'task.batch-search.list' }"
           :action-link="{ name: 'task.batch-search.new' }"
           :action-text="t('task.task-board.entries.batch-search.actionText')"
-        >
-        </task-board-list-entry>
+        />
         <task-board-list-entry
           :icon="TASK_NAME_ICON[TASK_NAME.BATCH_DOWNLOAD]"
           :title="t('task.task-board.entries.batch-download.title')"

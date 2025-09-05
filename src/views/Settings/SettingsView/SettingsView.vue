@@ -51,14 +51,20 @@ const tabs = computed(() => [
   }
 ])
 
-const displayTabs = computed(() => tabs.value.filter((tab) => tab.modes.some(isMode)))
+const displayTabs = computed(() => tabs.value.filter(tab => tab.modes.some(isMode)))
 </script>
 
 <template>
   <page-header no-toggle-settings />
-  <page-container fluid class="settings-view">
+  <page-container
+    fluid
+    class="settings-view"
+  >
     <div class="bg-tertiary-subtle rounded-1 py-4 px-5">
-      <tab-group-navigation class="mx-3" nowrap>
+      <tab-group-navigation
+        class="mx-3"
+        nowrap
+      >
         <tab-group-navigation-entry
           v-for="tab in displayTabs"
           :key="tab.name"

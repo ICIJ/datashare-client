@@ -36,7 +36,10 @@ const canManageBatchSearch = computed(() => batchSearch.user.id === username.val
       :text="batchSearch.description"
       :aria-label="t('batchSearchCardDetails.description')"
     />
-    <batch-search-actions v-if="canManageBatchSearch" :batch-search="batchSearch" />
+    <batch-search-actions
+      v-if="canManageBatchSearch"
+      :batch-search="batchSearch"
+    />
     <batch-search-card-details :batch-search="batchSearch" />
   </card-panel>
 </template>

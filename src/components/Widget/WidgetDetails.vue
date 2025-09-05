@@ -76,7 +76,10 @@ const availableMetadata = computed(() => {
 </script>
 
 <template>
-  <b-card class="widget-details border-0" body-class="p-4">
+  <b-card
+    class="widget-details border-0"
+    body-class="p-4"
+  >
     <div
       v-for="{ key, label, href, value, component, classList, icon } in availableMetadata"
       :key="key"
@@ -84,15 +87,31 @@ const availableMetadata = computed(() => {
     >
       <div class="row g-0">
         <div class="col-12 col-md-3 widget-details__item__label d-flex flex-truncate align-items-center">
-          <phosphor-icon v-if="icon" :name="icon" class="me-2 flex-shrink-0" />
+          <phosphor-icon
+            v-if="icon"
+            :name="icon"
+            class="me-2 flex-shrink-0"
+          />
           <span class="text-truncate">{{ label }}</span>
         </div>
         <div class="col widget-details__item__value ps-md-3 fw-medium">
-          <a v-if="href" :href="href" class="text-truncate d-block">
-            <component :is="component" :value="value" :class="classList" />
+          <a
+            v-if="href"
+            :href="href"
+            class="text-truncate d-block"
+          >
+            <component
+              :is="component"
+              :value="value"
+              :class="classList"
+            />
           </a>
           <template v-else>
-            <component :is="component" :value="value" :class="classList" />
+            <component
+              :is="component"
+              :value="value"
+              :class="classList"
+            />
           </template>
         </div>
       </div>

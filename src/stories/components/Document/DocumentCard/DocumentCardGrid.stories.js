@@ -82,7 +82,7 @@ export default {
       contentTypeIcon: markRaw(PhFilePdf)
     }
   },
-  render: (args) => ({
+  render: args => ({
     components: { DocumentCardGrid },
     setup: () => ({ args }),
     template: `<document-card-grid v-bind="args" @update:selected="args.selected = $event" />`

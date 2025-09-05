@@ -1,5 +1,3 @@
-
-
 import { create } from 'storybook/theming/create'
 import brandImage from '../src/assets/images/logo-design-system.png'
 

@@ -18,7 +18,11 @@ const classList = computed(() => ({
 </script>
 
 <template>
-  <div class="form-step-heading-index" :class="classList" @click="toggle">
+  <div
+    class="form-step-heading-index"
+    :class="classList"
+    @click="toggle"
+  >
     {{ index }}
   </div>
 </template>

@@ -59,7 +59,7 @@ export const useHooksStore = defineStore('hooks', () => {
   const resetTarget = (target) => {
     // This is a method to remove all registered components for a specific target
     // without creating a new array reference
-    registered.splice(0, registered.length, ...registered.filter((r) => r.target !== target))
+    registered.splice(0, registered.length, ...registered.filter(r => r.target !== target))
   }
 
   const components = computed(() => {
@@ -67,11 +67,11 @@ export const useHooksStore = defineStore('hooks', () => {
   })
 
   const filterComponentsByTarget = computed(() => {
-    return (target) => filter(components.value, { target })
+    return target => filter(components.value, { target })
   })
 
   const getComponentByName = computed(() => {
-    return (name) => find(components.value, { name })
+    return name => find(components.value, { name })
   })
 
   return {

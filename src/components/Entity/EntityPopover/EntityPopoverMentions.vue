@@ -9,7 +9,7 @@ import EntityPopoverMentionExcerpt from './EntityPopoverMentionExcerpt'
 const offset = defineModel('offset', { type: Number, default: 0 })
 const page = computed({
   get: () => offset.value + 1,
-  set: (value) => (offset.value = value - 1)
+  set: value => (offset.value = value - 1)
 })
 
 defineProps({
@@ -41,9 +41,22 @@ const { t } = useI18n()
       </div>
     </template>
     <template v-else>
-      <entity-popover-mention-excerpt :mention="mention" :excerpt="excerpt" />
-      <tiny-pagination v-if="offsets > 1" v-model="page" :per-page="1" :total-rows="offsets" compact />
+      <entity-popover-mention-excerpt
+        :mention="mention"
+        :excerpt="excerpt"
+      />
+      <tiny-pagination
+        v-if="offsets > 1"
+        v-model="page"
+        :per-page="1"
+        :total-rows="offsets"
+        compact
+      />
     </template>
-    <entity-popover-mention-occurrences :offsets="offsets" :projects="projects" class="text-secondary-emphasis" />
+    <entity-popover-mention-occurrences
+      :offsets="offsets"
+      :projects="projects"
+      class="text-secondary-emphasis"
+    />
   </div>
 </template>

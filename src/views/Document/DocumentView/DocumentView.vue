@@ -3,6 +3,7 @@ import { computed, markRaw, onBeforeMount, ref, useTemplateRef, watch } from 'vu
 import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { matches, property } from 'lodash'
+import { useElementSize, useScroll, useWindowSize } from '@vueuse/core'
 
 import DocumentViewActions from './DocumentViewActions'
 import DocumentViewTabs from './DocumentViewTabs/DocumentViewTabs'
@@ -10,13 +11,16 @@ import DocumentViewTitle from './DocumentViewTitle'
 import DocumentViewUserActions from './DocumentViewUserActions'
 
 import AppWait from '@/components/AppWait/AppWait'
+import ButtonToTop from '@/components/Button/ButtonToTop'
 import DocumentContentPlaceholder from '@/components/Document/DocumentContentPlaceholder'
 import DocumentPlaceholder from '@/components/Document/DocumentPlaceholder'
+import { replaceUrlParamValue } from '@/composables/replaceUrlParamValue'
 import { useSearchNav } from '@/composables/useSearchNav'
 import { useDocument } from '@/composables/useDocument'
 import { useUrlParamWithStore } from '@/composables/useUrlParamWithStore'
 import { useAppStore } from '@/store/modules'
 import { useWait } from '@/composables/useWait'
+import { useScrollParent } from '@/composables/useScrollParent'
 
 const props = defineProps({
   id: {
@@ -37,11 +41,23 @@ const props = defineProps({
 const router = useRouter()
 const route = useRoute()
 const appStore = useAppStore()
-const { t } = useI18n()
+
+const containerRef = useScrollParent({ topLevelParent: window })
 const elementRef = useTemplateRef('element')
+
+const { height: elementHeight } = useElementSize(elementRef)
+const { height: windowHeight } = useWindowSize()
+const { y: scrollY } = useScroll(containerRef)
 const { waitFor: tabWaitFor, loaderId: tabLoaderId } = useWait()
 const { whenSearchHasNoEntries } = useSearchNav()
 const { document, fetchDocumentOnce, loaderId } = useDocument(elementRef)
+const { t } = useI18n()
+
+// Ensure legacy tab names are replaced with new ones for backward compatibility
+replaceUrlParamValue({ name: 'tab', oldValue: 'extracted-text', newValue: 'text' })
+replaceUrlParamValue({ name: 'tab', oldValue: 'preview', newValue: 'view' })
+replaceUrlParamValue({ name: 'tab', oldValue: 'details', newValue: 'metadata' })
+replaceUrlParamValue({ name: 'tab', oldValue: 'named-entities', newValue: 'entities' })
 
 // We cannot use a <router-view> to display the tabs because the document view must be independent of the router.
 // This independence is crucial to allow the document view to be used in various contexts, such as displaying a document
@@ -88,7 +104,7 @@ const tabs = computed(() => {
 const tab = useUrlParamWithStore('tab', {
   initialValue: 'text',
   get: () => appStore.getSettings('documentView', 'tab'),
-  set: (tab) => appStore.setSettings('documentView', { tab })
+  set: tab => appStore.setSettings('documentView', { tab })
 })
 
 const component = ref(null)
@@ -118,6 +134,15 @@ const redirectToDocumentStandalone = () => {
   }
 }
 
+const showButtonToTop = computed(() => {
+  const heightThreshold = windowHeight.value * 0.2
+  return scrollY.value > heightThreshold && elementHeight.value > windowHeight.value
+})
+
+function scrollToTop() {
+  scrollY.value = 0
+}
+
 // Ensure the selected tab's component is loaded and in sync with the route
 watch(tab, fetchTabComponent, { immediate: true })
 
@@ -130,30 +155,65 @@ onBeforeRouteUpdate(fetchRouteDocument)
 </script>
 
 <template>
-  <app-wait ref="element" class="document-view d-flex flex-column" :for="loaderId">
+  <app-wait
+    ref="element"
+    class="document-view d-flex flex-column"
+    :for="loaderId"
+  >
     <template #waiting>
       <document-placeholder />
     </template>
 
-    <div class="document-view__header mb-3 d-flex justify-content-between align-items-center gap-2">
-      <slot name="header-start" v-bind="{ document }" />
-      <document-view-user-actions />
-      <document-view-actions :document="document" class="ms-auto" />
-      <slot name="nav" v-bind="{ document }">
-        <router-view name="nav" />
-      </slot>
-      <slot name="header-end" v-bind="{ document }" />
-    </div>
+    <template
+      v-if="document"
+    >
+      <div class="document-view__header mb-3 d-flex justify-content-between align-items-center gap-2">
+        <slot
+          name="header-start"
+          v-bind="{ document }"
+        />
+        <document-view-user-actions />
+        <document-view-actions
+          :document="document"
+          class="ms-auto"
+        />
+        <slot
+          name="nav"
+          v-bind="{ document }"
+        >
+          <router-view name="nav" />
+        </slot>
+        <slot
+          name="header-end"
+          v-bind="{ document }"
+        />
+      </div>
 
-    <document-view-title class="mb-3" :document="document" />
-    <document-view-tabs :tabs="tabs" />
+      <document-view-title
+        class="mb-3"
+        :document="document"
+      />
+      <document-view-tabs :tabs="tabs" />
 
-    <app-wait :for="tabLoaderId">
-      <component :is="component" v-if="component" :q="q ?? route.query.q" />
-      <template #waiting>
-        <document-content-placeholder class="py-3" />
-      </template>
-    </app-wait>
+      <app-wait :for="tabLoaderId">
+        <component
+          :is="component"
+          v-if="component"
+          :q="q ?? route.query.q"
+        />
+        <template #waiting>
+          <document-content-placeholder class="py-3" />
+        </template>
+      </app-wait>
+
+      <transition name="fade">
+        <button-to-top
+          v-if="showButtonToTop"
+          class="document-view__to-top"
+          @click="scrollToTop"
+        />
+      </transition>
+    </template>
   </app-wait>
 </template>
 
@@ -163,5 +223,25 @@ onBeforeRouteUpdate(fetchRouteDocument)
   min-width: 100%;
   min-height: calc(70vh);
   flex-basis: 100%;
+
+  &__to-top.btn {
+    position: fixed;
+    bottom: $spacer;
+    right: $spacer;
+
+    .modal-fullscreen & {
+      right: calc(var(--bs-modal-margin) + var(--bs-modal-padding));
+    }
+
+    &.fade-enter-active,
+    &.fade-leave-active {
+      transition: opacity 0.3s;
+    }
+
+    &.fade-enter-from,
+    &.fade-leave-to {
+      opacity: 0;
+    }
+  }
 }
 </style>

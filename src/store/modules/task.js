@@ -36,7 +36,7 @@ export const useTaskStore = defineStore('task', () => {
 
   const removeTask = async (id) => {
     await api.removeTask(id)
-    setTasks(tasks.value.filter((task) => task.id !== id))
+    setTasks(tasks.value.filter(task => task.id !== id))
   }
 
   const removeBatchSearch = async (id) => {

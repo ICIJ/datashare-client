@@ -3,7 +3,7 @@ import { shallowMount } from '@vue/test-utils'
 import TaskActions from '@/components/Task/TaskActions'
 vi.mock('vue-i18n', () => ({
   useI18n: () => ({
-    t: (key) => key
+    t: key => key
   })
 }))
 describe('Task Actions', () => {

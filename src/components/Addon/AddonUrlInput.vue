@@ -22,7 +22,10 @@ function installPluginFromUrl() {
 </script>
 
 <template>
-  <div role="group" class="input-group mb-3">
+  <div
+    role="group"
+    class="input-group mb-3"
+  >
     <span class="input-group-text">
       <phosphor-icon :name="PhLink" />
     </span>
@@ -45,7 +48,10 @@ function installPluginFromUrl() {
     >
       {{ t('addonUrlInput.install') }}
     </button-icon>
-    <b-form-invalid-feedback class="text-primary" :state="isFormValid">
+    <b-form-invalid-feedback
+      class="text-primary"
+      :state="isFormValid"
+    >
       {{ t('addonUrlInput.enterCorrectUrl') }}
     </b-form-invalid-feedback>
   </div>

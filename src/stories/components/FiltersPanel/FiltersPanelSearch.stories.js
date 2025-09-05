@@ -10,7 +10,7 @@ export default {
   args: {
     modelValue: ''
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       FiltersPanelSearch
     },

@@ -25,7 +25,7 @@ function collectHookOccurrences() {
     const component = occurrence.split(':')[0].split('/').slice(1).join('/')
     const line = occurrence.split(':')[1]
     const match = occurrence.split(':').slice(2).join(':')
-    const hook = (match.match(/\"(.*:\w*)\"/) || [])[1]
+    const hook = (match.match(/"(.*:\w*)"/) || [])[1]
     const source = new URL(`blob/master/src/${component}#L${line}`, repository.url)
     return { component, source, line, hook }
   })

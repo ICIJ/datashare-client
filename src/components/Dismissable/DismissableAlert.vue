@@ -75,7 +75,12 @@ const classList = {
 </script>
 
 <template>
-  <b-alert :variant="variant" :model-value="show" class="px-3 py-2 dismissable-alert" :class="classList">
+  <b-alert
+    :variant="variant"
+    :model-value="show"
+    class="px-3 py-2 dismissable-alert"
+    :class="classList"
+  >
     <toast-body
       :toast-props="{ type: variant }"
       :icon="icon"
@@ -87,8 +92,13 @@ const classList = {
     >
       <template #default="{ linkClassList }">
         <div class="d-md-flex align-items-center pb-2 pb-md-0 me-3">
-          <p class="m-md-0"><slot /></p>
-          <slot name="button" v-bind="{ linkClassList, linkLabel, noButton, dismiss }">
+          <p class="m-md-0">
+            <slot />
+          </p>
+          <slot
+            name="button"
+            v-bind="{ linkClassList, linkLabel, noButton, dismiss }"
+          >
             <button
               v-if="!noButton"
               class="btn text-nowrap dismissable-alert__body__button ms-md-3"

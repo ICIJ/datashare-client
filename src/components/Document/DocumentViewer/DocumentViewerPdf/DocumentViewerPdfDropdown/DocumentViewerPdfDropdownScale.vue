@@ -7,7 +7,7 @@ import { SCALE_FIT, SCALE_WIDTH, SCALES } from '@/enums/documentViewerPdf'
 import ButtonRowAction from '@/components/Button/ButtonRowAction/ButtonRowAction'
 
 const modelValue = defineModel({ type: [String, Number], default: SCALE_FIT })
-const numericScales = SCALES.filter((scale) => typeof scale.value === 'number')
+const numericScales = SCALES.filter(scale => typeof scale.value === 'number')
 
 const { t } = useI18n()
 const lastNumericValue = ref(1)
@@ -41,13 +41,19 @@ watch(
 </script>
 
 <template>
-  <b-dropdown-item-button :active="modelValue === SCALE_FIT" @click="modelValue = SCALE_FIT">
+  <b-dropdown-item-button
+    :active="modelValue === SCALE_FIT"
+    @click="modelValue = SCALE_FIT"
+  >
     <span class="d-flex align-items-center gap-2">
       <phosphor-icon :name="PhArrowsInLineHorizontal" />
       {{ t('documentViewerPdf.scale.fit') }}
     </span>
   </b-dropdown-item-button>
-  <b-dropdown-item-button :active="modelValue === SCALE_WIDTH" @click="modelValue = SCALE_WIDTH">
+  <b-dropdown-item-button
+    :active="modelValue === SCALE_WIDTH"
+    @click="modelValue = SCALE_WIDTH"
+  >
     <span class="d-flex align-items-center gap-2">
       <phosphor-icon :name="PhArrowsHorizontal" />
       {{ t('documentViewerPdf.scale.width') }}

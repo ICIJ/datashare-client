@@ -21,7 +21,12 @@ const classList = computed(() => ({ 'router-link-batch-download--disabled': !exi
 </script>
 
 <template>
-  <component :is="tag" v-bind="attrs" class="router-link-batch-download text-nowrap" :class="classList">
+  <component
+    :is="tag"
+    v-bind="attrs"
+    class="router-link-batch-download text-nowrap"
+    :class="classList"
+  >
     <phosphor-icon :name="PhDownloadSimple" />
     {{ text }}
   </component>

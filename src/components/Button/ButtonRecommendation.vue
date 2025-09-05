@@ -13,8 +13,15 @@ defineProps({
 </script>
 
 <template>
-  <button-icon class="button-recommendation" variant="outline-secondary" :label="label">
-    <display-user :value="label" avatar-height="1em" />
+  <button-icon
+    class="button-recommendation"
+    variant="outline-secondary"
+    :label="label"
+  >
+    <display-user
+      :value="label"
+      avatar-height="1em"
+    />
   </button-icon>
 </template>
 

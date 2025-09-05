@@ -35,14 +35,23 @@ defineProps({
 
 <template>
   <div class="document-metadata">
-    <phosphor-icon class="document-metadata__icon" :name="icon" />
+    <phosphor-icon
+      class="document-metadata__icon"
+      :name="icon"
+    />
     <div class="document-metadata__label">
-      <span v-b-tooltip.body="{ delay: tooltipDelay }" :title="label">
+      <span
+        v-b-tooltip.body="{ delay: tooltipDelay }"
+        :title="label"
+      >
         {{ label }}
       </span>
     </div>
     <div class="document-metadata__value">
-      <div v-ellipsis-tooltip="{ title: value }" class="text-truncate">
+      <div
+        v-ellipsis-tooltip="{ title: value }"
+        class="text-truncate"
+      >
         <slot v-bind="{ icon, label, value }">
           {{ value }}
         </slot>

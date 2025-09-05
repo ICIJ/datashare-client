@@ -12,11 +12,17 @@ defineProps({
 </script>
 
 <template>
-  <hook name="app-sidebar-footer-links-entry:before" :bind="{ compact, name }" />
+  <hook
+    name="app-sidebar-footer-links-entry:before"
+    :bind="{ compact, name }"
+  />
   <div class="app-sidebar-footer-links-entry">
     <slot v-bind="{ compact, name }" />
   </div>
-  <hook name="app-sidebar-footer-links-entry:after" :bind="{ compact, name }" />
+  <hook
+    name="app-sidebar-footer-links-entry:after"
+    :bind="{ compact, name }"
+  />
 </template>
 
 <style lang="scss" scoped>

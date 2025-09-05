@@ -1,7 +1,13 @@
 <template>
   <div class="linked-document-card bg-tertiary-subtle rounded row gx-0">
-    <slot name="siblings" v-bind="{ modelValue, onUpdateModelValue }"> </slot>
-    <slot name="children" v-bind="{ modelValue, onUpdateModelValue }"> </slot>
+    <slot
+      name="siblings"
+      v-bind="{ modelValue, onUpdateModelValue }"
+    />
+    <slot
+      name="children"
+      v-bind="{ modelValue, onUpdateModelValue }"
+    />
   </div>
 </template>
 

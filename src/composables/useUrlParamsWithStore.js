@@ -31,7 +31,7 @@ export function useUrlParamsWithStore(queryParams, options = {}) {
 
   // Get and transform the route value
   const getRouteValues = () => {
-    const values = queryParams.map((param) => route.query[param])
+    const values = queryParams.map(param => route.query[param])
     // If all query parameters exist in the URL, transform and return them, else return the values from the store
     return values.every(isUndefined) ? null : values.map(transform)
   }

@@ -63,10 +63,17 @@ const labelClassList = computed(() => {
 </script>
 
 <template>
-  <b-th class="page-table-th text-nowrap" :class="classList">
+  <b-th
+    class="page-table-th text-nowrap"
+    :class="classList"
+  >
     <slot>
       <span class="page-table-th__content">
-        <phosphor-icon v-if="icon" :name="icon" class="me-1 my-2" />
+        <phosphor-icon
+          v-if="icon"
+          :name="icon"
+          class="me-1 my-2"
+        />
         <span :class="labelClassList">{{ label }}</span>
         <page-table-th-sort
           v-if="sortable && name"

@@ -17,8 +17,14 @@ defineProps({
 
 <template>
   <div class="project-card border rounded p-4 d-flex gap-3">
-    <hook name="project-card:before" :bind="{ project }" />
-    <project-card-thumbnail :project="project" class="flex-grow-1">
+    <hook
+      name="project-card:before"
+      :bind="{ project }"
+    />
+    <project-card-thumbnail
+      :project="project"
+      class="flex-grow-1"
+    >
       <slot name="thumbnail" />
     </project-card-thumbnail>
     <div class="d-flex flex-column gap-4 h-100 w-100 flex-truncate">
@@ -37,6 +43,9 @@ defineProps({
         <slot name="footer" />
       </project-card-footer>
     </div>
-    <hook name="project-card:after" :bind="{ project }" />
+    <hook
+      name="project-card:after"
+      :bind="{ project }"
+    />
   </div>
 </template>

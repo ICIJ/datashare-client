@@ -81,7 +81,10 @@ const isVisible = computed(() => props.modal || !collapse.value)
 </script>
 
 <template>
-  <div class="filters-panel-section-filter" :class="classList">
+  <div
+    class="filters-panel-section-filter"
+    :class="classList"
+  >
     <filters-panel-section-filter-title
       v-if="!modal"
       v-model:collapse="collapse"
@@ -95,7 +98,6 @@ const isVisible = computed(() => props.modal || !collapse.value)
       class="mx-2"
     >
       <template #actions>
-        <slot name="actions" />
         <filters-panel-section-filter-actions
           v-if="actionsPositionTitle"
           v-model:contextualize="contextualize"
@@ -106,11 +108,18 @@ const isVisible = computed(() => props.modal || !collapse.value)
           :hide-expand="modal || hideExpand"
           class="filters-panel-section-filter__footer px-2"
         />
+        <slot name="actions" />
       </template>
     </filters-panel-section-filter-title>
     <b-collapse :model-value="isVisible">
-      <div class="filters-panel-section-filter__content" :class="contentClass">
-        <slot name="search" v-bind="{ search, searchPlaceholder }">
+      <div
+        class="filters-panel-section-filter__content"
+        :class="contentClass"
+      >
+        <slot
+          name="search"
+          v-bind="{ search, searchPlaceholder }"
+        >
           <form-control-search
             v-if="!hideSearch"
             v-model="search"
@@ -119,7 +128,7 @@ const isVisible = computed(() => props.modal || !collapse.value)
             class="filters-panel-section-filter__content__search mb-3"
           />
         </slot>
-        <div :class="flush ? '' : 'ps-4 pe-2'">
+        <div :class="flush ? '' : 'px-2'">
           <slot />
         </div>
       </div>

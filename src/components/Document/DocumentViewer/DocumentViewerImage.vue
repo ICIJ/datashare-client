@@ -42,7 +42,10 @@ onBeforeMount(waitFor(fetch))
 </script>
 
 <template>
-  <app-wait class="image-viewer mx-auto p-3" :for="loaderId">
+  <app-wait
+    class="image-viewer mx-auto p-3"
+    :for="loaderId"
+  >
     <template #waiting>
       <app-spinner />
     </template>
@@ -61,7 +64,10 @@ onBeforeMount(waitFor(fetch))
           @click="rotateClockwise()"
         />
       </div>
-      <img :src="imageBase64" class="image-viewer__wrapper__image img-fluid" />
+      <img
+        :src="imageBase64"
+        class="image-viewer__wrapper__image img-fluid"
+      >
     </div>
   </app-wait>
 </template>

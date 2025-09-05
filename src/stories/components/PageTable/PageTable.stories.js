@@ -18,7 +18,7 @@ export default {
     sort: 'name',
     order: 'asc'
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       ButtonIcon,
       PageTable,

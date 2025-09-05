@@ -10,7 +10,7 @@ export function useMode() {
   const isServer = computed(() => modeName.value === MODE_NAME.SERVER)
   const isLocal = computed(() => modeName.value === MODE_NAME.LOCAL)
   const isEmbedded = computed(() => modeName.value === MODE_NAME.EMBEDDED)
-  const isMode = (name) => modeName.value === name.toUpperCase()
+  const isMode = name => modeName.value === name.toUpperCase()
 
   return { mode, modeName, isServer, isLocal, isEmbedded, isMode }
 }

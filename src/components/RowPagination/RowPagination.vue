@@ -37,19 +37,38 @@ const hasFewerRows = computed(() => props.totalRows <= page.value * +props.perPa
 </script>
 
 <template>
-  <tiny-pagination :key="totalRows" v-model="page" row :total-rows="totalRows" :per-page="+perPage" :compact="compact">
+  <tiny-pagination
+    :key="totalRows"
+    v-model="page"
+    row
+    :total-rows="totalRows"
+    :per-page="+perPage"
+    :compact="compact"
+  >
     <template #number-of-rows="{ lastRangeRow: to }">
-      <i18n-t v-if="compact" :keypath="keypathRowRangeCompact" :plural="totalRows">
+      <i18n-t
+        v-if="compact"
+        :keypath="keypathRowRangeCompact"
+        :plural="totalRows"
+      >
         <template #total>
           <display-number :value="totalRows" />
         </template>
       </i18n-t>
-      <i18n-t v-else-if="hasFewerRows" :keypath="keypathRowRangeFewer" :plural="totalRows">
+      <i18n-t
+        v-else-if="hasFewerRows"
+        :keypath="keypathRowRangeFewer"
+        :plural="totalRows"
+      >
         <template #total>
           <display-number :value="totalRows" />
         </template>
       </i18n-t>
-      <i18n-t v-else :keypath="keypathRowRange" :plural="totalRows">
+      <i18n-t
+        v-else
+        :keypath="keypathRowRange"
+        :plural="totalRows"
+      >
         <template #total>
           <display-number :value="totalRows" />
         </template>

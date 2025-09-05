@@ -10,6 +10,9 @@ defineProps({
 
 <template>
   <div class="project-view-overview-graph">
-    <project-view-overview-widgets :name="name" section="details" />
+    <project-view-overview-widgets
+      :name="name"
+      section="details"
+    />
   </div>
 </template>

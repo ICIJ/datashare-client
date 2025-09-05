@@ -7,7 +7,7 @@ class AddLineBreaksPipeline extends IdentityPipeline {
     return value
       .split('\n')
       .map(trim)
-      .map((row) => `<p>${row}</p>`)
+      .map(row => `<p>${row}</p>`)
       .join('')
   }
 }

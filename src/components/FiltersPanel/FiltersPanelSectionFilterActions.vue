@@ -40,18 +40,26 @@ const classList = computed(() => {
 </script>
 
 <template>
-  <div class="filters-panel-section-filter-actions" :class="classList">
+  <div
+    class="filters-panel-section-filter-actions gap-1"
+    :class="classList"
+  >
     <span class="d-flex gap-2">
-      <b-form-checkbox v-if="!hideContextualize" v-model="contextualize">
+      <b-form-checkbox
+        v-if="!hideContextualize"
+        v-model="contextualize"
+      >
         {{ t('filtersPanelSectionFilterActions.contextualize') }}
       </b-form-checkbox>
-      <b-form-checkbox v-if="!hideExclude" v-model="exclude">
+      <b-form-checkbox
+        v-if="!hideExclude"
+        v-model="exclude"
+      >
         {{ t('filtersPanelSectionFilterActions.exclude') }}
       </b-form-checkbox>
     </span>
     <button-subtle-action
       v-if="!hideExpand"
-      class="ms-auto"
       tooltip-placement="right"
       icon-left="arrows-out-simple"
       :label="t('filtersPanelSectionFilterActions.expand')"
@@ -66,7 +74,6 @@ const classList = computed(() => {
   justify-content: space-between;
   align-items: center;
   overflow: auto;
-  gap: $spacer;
 
   &--empty {
     display: none;

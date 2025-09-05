@@ -53,10 +53,18 @@ const breadcrumbMaxLevel = computed(() => {
 </script>
 
 <template>
-  <page-container ref="element" fluid class="page-header-nav d-flex justify-content-between gap-3">
+  <page-container
+    ref="element"
+    fluid
+    class="page-header-nav d-flex justify-content-between gap-3"
+  >
     <hook name="page-header-nav:before" />
     <slot name="toggle-sidebar">
-      <button-toggle-sidebar v-if="showToggleSidebar" v-model:active="toggleSidebar" class="flex-shrink-0" />
+      <button-toggle-sidebar
+        v-if="showToggleSidebar"
+        v-model:active="toggleSidebar"
+        class="flex-shrink-0"
+      />
     </slot>
     <navigation-breadcrumb
       v-if="!noBreadcrumb"
@@ -66,14 +74,28 @@ const breadcrumbMaxLevel = computed(() => {
     >
       <slot name="breadcrumb" />
       <!-- This forwards all the given slots to navgiation breadcrumb -->
-      <template v-for="(_slot, name) of $slots" :key="name" #[name]="binding">
-        <slot :name="name" v-bind="binding" />
+      <template
+        v-for="(_slot, name) of $slots"
+        :key="name"
+        #[name]="binding"
+      >
+        <slot
+          :name="name"
+          v-bind="binding"
+        />
       </template>
     </navigation-breadcrumb>
     <div class="page-header-nav__actions d-flex gap-1 gap-md-3 align-items-center">
       <slot name="actions" />
-      <button-add v-if="addTo" :to="addTo" :label="addLabel" />
-      <button-toggle-settings v-if="!noToggleSettings" v-model:active="toggleSettings" />
+      <button-add
+        v-if="addTo"
+        :to="addTo"
+        :label="addLabel"
+      />
+      <button-toggle-settings
+        v-if="!noToggleSettings"
+        v-model:active="toggleSettings"
+      />
     </div>
     <hook name="page-header-nav:before" />
   </page-container>

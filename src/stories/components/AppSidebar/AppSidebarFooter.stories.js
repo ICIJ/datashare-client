@@ -40,7 +40,7 @@ export default {
       }
     }
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       AppSidebarFooter
     },

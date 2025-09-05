@@ -78,7 +78,6 @@ const decorators = [
   }
 ]
 
-
 const style = {
   fontFamily: 'var(--bs-font-sans-serif) !important',
   fontSize: '1em',
@@ -96,7 +95,7 @@ const h1Style = {
 
 const aStyle = {
   ...style,
-  color: 'rgba(var(--bs-link-color-rgb), var(--bs-link-opacity, 1));',
+  'color': 'rgba(var(--bs-link-color-rgb), var(--bs-link-opacity, 1));',
   '&:hover': {
     textDecoration: 'underline'
   }

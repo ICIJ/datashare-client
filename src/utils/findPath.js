@@ -18,7 +18,7 @@ export function findPath(obj, valueToFind) {
     }
 
     if (isObject(currentObj) || isArray(currentObj)) {
-      return some(keys(currentObj), (key) => search(currentObj[key], currentPath ? `${currentPath}.${key}` : key))
+      return some(keys(currentObj), key => search(currentObj[key], currentPath ? `${currentPath}.${key}` : key))
     }
 
     return false

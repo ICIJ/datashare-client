@@ -11,7 +11,10 @@ defineProps({
 
 <template>
   <b-collapse :model-value="!collapse">
-    <div class="form-step-content" :class="contentClass">
+    <div
+      class="form-step-content"
+      :class="contentClass"
+    >
       <slot />
     </div>
   </b-collapse>

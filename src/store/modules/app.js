@@ -142,7 +142,8 @@ export const useAppStore = defineStore(
     const setSettings = (view, nameOrvalues = {}, value = null) => {
       if (isObject(nameOrvalues)) {
         settings.views[view] = { ...settings.views[view], ...nameOrvalues }
-      } else if (isString(nameOrvalues)) {
+      }
+      else if (isString(nameOrvalues)) {
         settings.views[view] ||= {}
         settings.views[view][nameOrvalues] = value
       }
@@ -158,7 +159,8 @@ export const useAppStore = defineStore(
       if (view) {
         // view = all settings sections in a page
         settings.views[view] = defaultSettings.views[view]
-      } else {
+      }
+      else {
         // all settings
         Object.assign(settings, defaultSettings)
       }
@@ -212,7 +214,7 @@ export const useAppStore = defineStore(
      * @param {string} name - Project name.
      */
     const unpinProject = (name) => {
-      pins.projects = pins.projects.filter((n) => n !== name)
+      pins.projects = pins.projects.filter(n => n !== name)
     }
 
     return {

@@ -1,4 +1,5 @@
 <script setup>
+import { slugger } from '@/utils/strings'
 import { computed, useTemplateRef } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 
@@ -49,18 +50,42 @@ const valueVariant = computed(() => {
 })
 
 const valueIcon = computed(() => {
-  return toVariantIcon(props.value)
+  const slug = slugger(props.value).toLowerCase()
+  const icons = {
+    draft: 'floppy-disk-back',
+    queued: 'clock-countdown',
+    pending: 'clock-countdown',
+    created: 'clock-countdown',
+  }
+  return icons[slug] ?? toVariantIcon(props.value)
 })
 </script>
 
 <template>
-  <component :is="tag" ref="element" :attrs="$attrs" class="display-status" :class="classList">
+  <component
+    :is="tag"
+    ref="element"
+    :attrs="$attrs"
+    class="display-status"
+    :class="classList"
+  >
     <phosphor-icon :name="icon ?? valueIcon" />
     <span class="visually-hidden">
-      <display-status-label :value="value" :title="title" />
+      <display-status-label
+        :value="value"
+        :title="title"
+      />
     </span>
-    <b-tooltip teleport-to="body" :manual="noTooltip" :delay="tooltipDelay" :target="element">
-      <display-status-label :value="value" :title="title" />
+    <b-tooltip
+      teleport-to="body"
+      :manual="noTooltip"
+      :delay="tooltipDelay"
+      :target="element"
+    >
+      <display-status-label
+        :value="value"
+        :title="title"
+      />
     </b-tooltip>
   </component>
 </template>

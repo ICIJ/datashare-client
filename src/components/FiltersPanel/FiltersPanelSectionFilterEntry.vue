@@ -39,8 +39,15 @@ const showCount = computed(() => !props.hideCount && !isNaN(props.count))
 </script>
 
 <template>
-  <div class="filters-panel-section-filter-entry" :class="classList">
-    <b-form-checkbox v-model="modelValue" :value="value" :disabled="disabled">
+  <div
+    class="filters-panel-section-filter-entry"
+    :class="classList"
+  >
+    <b-form-checkbox
+      v-model="modelValue"
+      :value="value"
+      :disabled="disabled"
+    >
       <slot v-bind="{ label }">
         <span
           v-ellipsis-tooltip="{ title: label, placement: 'right', offset: 8, teleportTo: 'body' }"
@@ -50,8 +57,16 @@ const showCount = computed(() => !props.hideCount && !isNaN(props.count))
         </span>
       </slot>
     </b-form-checkbox>
-    <b-badge v-if="showCount" class="filters-panel-section-filter-entry__count" pill variant="link">
-      <slot name="count" v-bind="{ count }">
+    <b-badge
+      v-if="showCount"
+      class="filters-panel-section-filter-entry__count"
+      pill
+      variant="link"
+    >
+      <slot
+        name="count"
+        v-bind="{ count }"
+      >
         <display-number :value="Number(count)" />
       </slot>
     </b-badge>

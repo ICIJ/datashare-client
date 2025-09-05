@@ -1,5 +1,5 @@
 <script setup>
-import { PhosphorIcon, EllipsisTooltip as vEllipsisTooltip } from '@icij/murmur-next'
+import { PhosphorIcon } from '@icij/murmur-next'
 import { computed } from 'vue'
 
 import FiltersPanelSectionFilterTitleSort from '@/components/FiltersPanel/FiltersPanelSectionFilterTitleSort'
@@ -39,23 +39,43 @@ const classList = computed(() => {
 </script>
 
 <template>
-  <h3 class="filters-panel-section-filter-title gap-1" :class="classList">
+  <h3
+    class="filters-panel-section-filter-title gap-1"
+    :class="classList"
+  >
     <slot>
       <span
-        v-ellipsis-tooltip="{ title, placement: 'right' }"
         class="flex-grow-1 text-truncate"
         @click="collapse = !collapse"
       >
-        <phosphor-icon :name="icon" class="me-2" />
+        <phosphor-icon
+          :name="icon"
+          class="me-2"
+        />
         {{ title }}
       </span>
-      <slot v-if="!collapse" name="actions" />
-      <filters-panel-section-filter-title-sort v-if="showSort" v-model="sort" />
+      <slot
+        v-if="!collapse"
+        name="actions"
+      />
+      <filters-panel-section-filter-title-sort
+        v-if="showSort"
+        v-model="sort"
+      />
       <span @click="collapse = !collapse">
-        <b-badge v-if="showCount" class="filters-panel-section-filter-title__count" pill variant="primary-subtle">
+        <b-badge
+          v-if="showCount"
+          class="filters-panel-section-filter-title__count"
+          pill
+          variant="primary-subtle"
+        >
           {{ count }}
         </b-badge>
-        <filters-panel-section-filter-title-toggler class="ms-auto" :collapse="collapse" :loading="loading" />
+        <filters-panel-section-filter-title-toggler
+          class="ms-auto"
+          :collapse="collapse"
+          :loading="loading"
+        />
       </span>
     </slot>
   </h3>

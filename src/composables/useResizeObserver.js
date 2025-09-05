@@ -1,7 +1,7 @@
 import { reactive, watchEffect, onBeforeUnmount, toValue } from 'vue'
 import ResizeObserver from 'resize-observer-polyfill'
 
-const toElement = (ref) => toValue(ref)?.$el ?? toValue(ref)
+const toElement = ref => toValue(ref)?.$el ?? toValue(ref)
 
 export const useResizeObserver = (resizableRef) => {
   const contentRect = toElement(resizableRef)?.getBoundingClientRect() ?? {}

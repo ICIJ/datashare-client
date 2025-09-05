@@ -39,8 +39,15 @@ const isLastProjectSlice = (p) => {
 </script>
 
 <template>
-  <div class="project-dropdown-selector-button-content" :class="classList">
-    <span v-for="(project, p) in slicedProjects" :key="p" class="project-dropdown-selector-button-content__project">
+  <div
+    class="project-dropdown-selector-button-content"
+    :class="classList"
+  >
+    <span
+      v-for="(project, p) in slicedProjects"
+      :key="p"
+      class="project-dropdown-selector-button-content__project"
+    >
       <project-thumbnail
         :project="project"
         no-caption

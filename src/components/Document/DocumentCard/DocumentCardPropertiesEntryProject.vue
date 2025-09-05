@@ -13,7 +13,15 @@ defineProps({
 </script>
 
 <template>
-  <document-card-properties-entry :document="document" :property="property" hide-icon>
-    <project-button :project="document.project" no-link disabled />
+  <document-card-properties-entry
+    :document="document"
+    :property="property"
+    hide-icon
+  >
+    <project-button
+      :project="document.project"
+      no-link
+      disabled
+    />
   </document-card-properties-entry>
 </template>

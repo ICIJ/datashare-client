@@ -10,7 +10,7 @@ export default {
     sourceLanguage: 'FRENCH',
     targetLanguage: 'ENGLISH'
   },
-  render: (args) => ({
+  render: args => ({
     setup: () => ({ args }),
     components: {
       DocumentTranslationAlert

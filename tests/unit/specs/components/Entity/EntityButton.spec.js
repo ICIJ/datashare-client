@@ -15,7 +15,7 @@ describe('EntityButton.vue', () => {
     const props = { entity: { category: 'PERSON', mention: 'Riri', offsets: ['2', '4'], to: {} } }
     const wrapper = shallowMount(EntityButton, {
       props,
-      global: { mocks: { $n: (msg) => msg }, renderStubDefaultSlot: true }
+      global: { mocks: { $n: msg => msg }, renderStubDefaultSlot: true }
     })
     expect(wrapper.text()).toBe('Riri')
   })
@@ -24,7 +24,7 @@ describe('EntityButton.vue', () => {
     const props = { entity: { category: 'PERSON', mention: 'Riri', offsets: ['2', '4'], to: {} } }
     const wrapper = shallowMount(EntityButton, {
       props,
-      global: { mocks: { $n: (msg) => msg }, renderStubDefaultSlot: true }
+      global: { mocks: { $n: msg => msg }, renderStubDefaultSlot: true }
     })
     expect(wrapper.findComponent(EntityOccurrences).exists()).toBe(true)
     expect(wrapper.findComponent(EntityOccurrences).attributes('occurrences')).toBe('2')
@@ -33,7 +33,7 @@ describe('EntityButton.vue', () => {
     const props = { entity: { category: 'PERSON', mention: 'Riri', offsets: [], to: {} } }
     const wrapper = shallowMount(EntityButton, {
       props,
-      global: { mocks: { $n: (msg) => msg }, renderStubDefaultSlot: true }
+      global: { mocks: { $n: msg => msg }, renderStubDefaultSlot: true }
     })
     expect(wrapper.findComponent(EntityOccurrences).exists()).toBe(false)
   })
@@ -41,7 +41,7 @@ describe('EntityButton.vue', () => {
     const props = { entity: { category: 'PERSON', mention: 'Riri', offsets: [], to: {} } }
     const wrapper = shallowMount(EntityButton, {
       props,
-      global: { mocks: { $n: (msg) => msg }, renderStubDefaultSlot: true }
+      global: { mocks: { $n: msg => msg }, renderStubDefaultSlot: true }
     })
     expect(wrapper.findComponent(ButtonIcon).exists()).toBe(true)
     expect(wrapper.findComponent(ButtonIcon).attributes('class')).toContain('entity-button--category-person')

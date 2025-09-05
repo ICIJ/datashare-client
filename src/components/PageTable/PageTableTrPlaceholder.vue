@@ -17,8 +17,14 @@ defineProps({
 </script>
 
 <template>
-  <page-table-tr v-for="i in repeat" :key="i">
-    <td v-for="p in properties" :key="p">
+  <page-table-tr
+    v-for="i in repeat"
+    :key="i"
+  >
+    <td
+      v-for="p in properties"
+      :key="p"
+    >
       <app-placeholder :width="random(80, 100)" />
     </td>
     <slot />

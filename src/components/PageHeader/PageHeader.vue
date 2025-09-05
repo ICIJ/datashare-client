@@ -80,8 +80,15 @@ const hasToolbar = computed(() => {
     :breadcrumb-routes="breadcrumbRoutes"
   >
     <!-- This forwards all the given slots to page-header-nav -->
-    <template v-for="(_slot, name) of $slots" :key="name" #[name]="binding">
-      <slot :name="name" v-bind="binding" />
+    <template
+      v-for="(_slot, name) of $slots"
+      :key="name"
+      #[name]="binding"
+    >
+      <slot
+        :name="name"
+        v-bind="binding"
+      />
     </template>
   </page-header-nav>
   <page-header-toolbar
@@ -107,7 +114,10 @@ const hasToolbar = computed(() => {
       <slot name="toggle-filters>" />
     </template>
     <template #pagination="bindings">
-      <slot name="pagination" v-bind="bindings" />
+      <slot
+        name="pagination"
+        v-bind="bindings"
+      />
     </template>
     <template #search>
       <slot name="search" />

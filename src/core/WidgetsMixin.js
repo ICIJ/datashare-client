@@ -7,7 +7,7 @@ import { useInsightsStore } from '@/store/modules'
   @mixin WidgetsMixin
   @typicalname datashare
 */
-const WidgetsMixin = (superclass) =>
+const WidgetsMixin = superclass =>
   class extends superclass {
     /**
      * Get the insights store
@@ -19,6 +19,7 @@ const WidgetsMixin = (superclass) =>
     get insightsStore() {
       return useInsightsStore()
     }
+
     /**
      * Register a widget
      * @memberof WidgetsMixin.prototype
@@ -31,6 +32,7 @@ const WidgetsMixin = (superclass) =>
     registerWidget(...args) {
       this.insightsStore.addWidget(...args)
     }
+
     /**
      * Unregister a widget
      * @memberof WidgetsMixin.prototype
@@ -39,6 +41,7 @@ const WidgetsMixin = (superclass) =>
     unregisterWidget(...args) {
       this.insightsStore.removeWidget(...args)
     }
+
     /**
      * Unregister all widgets
      * @memberof WidgetsMixin.prototype
@@ -46,6 +49,7 @@ const WidgetsMixin = (superclass) =>
     clearWidgets() {
       this.insightsStore.clearWidgets()
     }
+
     /**
      * Call a function when a project is selected in the insights store.
      *
@@ -56,7 +60,7 @@ const WidgetsMixin = (superclass) =>
      * @param {Function} options.withoutFn - Function to call when the project is unselected
      */
     toggleForInsightsProject({ project, withFn, withoutFn }) {
-      const toggle = (value) => (value === project ? withFn(value) : withoutFn(value))
+      const toggle = value => (value === project ? withFn(value) : withoutFn(value))
       // Toggle once
       toggle(this.insightsStore.project)
       // Watch store actions
@@ -64,6 +68,7 @@ const WidgetsMixin = (superclass) =>
         return name === 'setProject' && after(() => toggle(args[0]))
       })
     }
+
     /**
      * Register a widget for a specific project
      * @memberof WidgetsMixin.prototype
@@ -85,6 +90,7 @@ const WidgetsMixin = (superclass) =>
         withoutFn: () => this.unregisterWidget(name)
       })
     }
+
     /**
      * Replace an existing widget
      * @memberof WidgetsMixin.prototype
@@ -110,6 +116,7 @@ const WidgetsMixin = (superclass) =>
       // is the same than the one we replace
       this.registerWidget({ ...options, name })
     }
+
     /**
      * Replace an existing widget for a specific project
      * @memberof WidgetsMixin.prototype

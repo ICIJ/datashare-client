@@ -20,8 +20,15 @@ const { t } = useI18n()
 
 <template>
   <div class="search-breadcrumb-form-list d-flex flex-column gap-3">
-    <div v-if="!noLabel" class="fw-medium text-action-emphasis text-nowrap" :class="labelClass">
-      <phosphor-icon :name="icon" class="me-2" />
+    <div
+      v-if="!noLabel"
+      class="fw-medium text-action-emphasis text-nowrap"
+      :class="labelClass"
+    >
+      <phosphor-icon
+        :name="icon"
+        class="me-2"
+      />
       <slot name="label">
         {{ t('searchBreadcrumbFormList.label') }}
       </slot>

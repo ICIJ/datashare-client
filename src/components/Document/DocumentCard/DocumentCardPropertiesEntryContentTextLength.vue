@@ -15,7 +15,10 @@ const { n } = useI18n()
 </script>
 
 <template>
-  <document-card-properties-entry :document="document" :property="property">
+  <document-card-properties-entry
+    :document="document"
+    :property="property"
+  >
     {{ n(document.contentTextLength) }}
   </document-card-properties-entry>
 </template>

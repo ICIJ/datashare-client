@@ -76,7 +76,11 @@ const dragEnd = ({ detail }) => {
 </script>
 
 <template>
-  <div ref="target" class="separator-line" :class="classList">
+  <div
+    ref="target"
+    class="separator-line"
+    :class="classList"
+  >
     <separator-line-drag
       v-draggable.relative="{ target, minStart, minEnd, reduceThreshold, expandThreshold }"
       class="separator-line__drag"
@@ -88,8 +92,16 @@ const dragEnd = ({ detail }) => {
       @dragend="dragEnd"
     />
     <div class="separator-line__buttons">
-      <separator-line-reduce v-if="!noReduce" :disabled="reduceDisabled" @click="reduce" />
-      <separator-line-expand v-if="!noExpand" :disabled="expandDisabled" @click="expand" />
+      <separator-line-reduce
+        v-if="!noReduce"
+        :disabled="reduceDisabled"
+        @click="reduce"
+      />
+      <separator-line-expand
+        v-if="!noExpand"
+        :disabled="expandDisabled"
+        @click="expand"
+      />
     </div>
   </div>
 </template>

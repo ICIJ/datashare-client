@@ -19,7 +19,10 @@ const { t } = useI18n()
 
 <template>
   <div class="project-view-overview-graph">
-    <project-view-overview-widgets :name="name" section="graph">
+    <project-view-overview-widgets
+      :name="name"
+      section="graph"
+    >
       <template #empty>
         <empty-state
           image-max-width="265px"

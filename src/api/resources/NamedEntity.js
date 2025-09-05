@@ -3,9 +3,12 @@ import { get } from 'lodash'
 import EsDoc from './EsDoc'
 
 export default class NamedEntity extends EsDoc {
+  static esName = 'NamedEntity'
+
   get category() {
     return this.source.category.toLowerCase()
   }
+
   get offsets() {
     /**
      * This ensures retro compatibility with Named Entities extracted
@@ -18,16 +21,16 @@ export default class NamedEntity extends EsDoc {
     }
     return get(this, 'source.offsets', [])
   }
+
   get length() {
     return this.source.mention.length
   }
+
   get mention() {
     return this.source.mention
   }
+
   get extractor() {
     return this.source.extractor
-  }
-  static get esName() {
-    return 'NamedEntity'
   }
 }

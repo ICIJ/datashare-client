@@ -31,7 +31,7 @@ export default {
     title: null,
     autoClose: false
   },
-  render: (args) => ({
+  render: args => ({
     methods: {
       toast() {
         toast?.(({ closeToast, toastProps }) => h(ToastBody, { closeToast, toastProps, ...args }), this.toastProps)

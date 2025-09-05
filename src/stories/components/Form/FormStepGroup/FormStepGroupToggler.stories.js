@@ -6,7 +6,7 @@ export default {
   args: {
     collapse: true
   },
-  render: (args) => ({
+  render: args => ({
     setup: () => ({ args }),
     components: {
       FormStepGroupToggler

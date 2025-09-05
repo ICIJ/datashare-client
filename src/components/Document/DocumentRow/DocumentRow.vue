@@ -60,8 +60,17 @@ const visibleFields = computed(() => {
 </script>
 
 <template>
-  <page-table-tr v-model:selected="selected" class="document-row position-relative" :select-mode="selectMode">
-    <component :is="entryComponents[key]" v-for="{ key } in visibleFields" :key="key" :document="document" />
+  <page-table-tr
+    v-model:selected="selected"
+    class="document-row position-relative"
+    :select-mode="selectMode"
+  >
+    <component
+      :is="entryComponents[key]"
+      v-for="{ key } in visibleFields"
+      :key="key"
+      :document="document"
+    />
     <document-row-actions :document="document" />
   </page-table-tr>
 </template>

@@ -12,7 +12,7 @@ vi.mock('@/api/apiInstance', () => {
 })
 
 describe('DisplayUser.vue', () => {
-  const flushPromises = () => new Promise((resolve) => setImmediate(resolve))
+  const flushPromises = () => new Promise(resolve => setImmediate(resolve))
   let wrapper, core
 
   beforeAll(() => {
@@ -56,7 +56,7 @@ describe('DisplayUser.vue', () => {
     core.registerPipeline({
       name: 'username-to-uppercase',
       category: wrapper.vm.usernamePipeline,
-      type: (username) => username.toUpperCase()
+      type: username => username.toUpperCase()
     })
     await flushPromises()
     expect(wrapper.find('.display-user__username').text()).toBe('FOO')

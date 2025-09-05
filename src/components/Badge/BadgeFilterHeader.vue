@@ -14,7 +14,7 @@ const props = defineProps({
 const { t } = useI18n()
 
 const filter = computed(() => {
-  return filters.find((filter) => filter.options.name === props.name)
+  return filters.find(filter => filter.options.name === props.name)
 })
 
 const icon = computed(() => {
@@ -24,7 +24,10 @@ const icon = computed(() => {
 
 <template>
   <span class="badge-filter-header text-secondary d-flex gap-1 align-items-center">
-    <phosphor-icon size="1em" :name="icon" />
+    <phosphor-icon
+      size="1em"
+      :name="icon"
+    />
     {{ t(`filter.${name}`) }}
   </span>
 </template>

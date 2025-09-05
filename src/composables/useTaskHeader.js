@@ -17,7 +17,7 @@ export function useTaskHeader(pageName) {
   const searchPlaceholder = computed(() => t(`task.${pageName}.list.searchPlaceholder`))
 
   const page = useUrlParam('page', {
-    transform: (value) => parseInt(value),
+    transform: value => parseInt(value),
     initialValue: 1
   })
 
@@ -34,11 +34,11 @@ export function useTaskHeader(pageName) {
     page,
     perPage: computed({
       get: () => perPage.value.modelValue,
-      set: (value) => (perPage.value.modelValue = value)
+      set: value => (perPage.value.modelValue = value)
     }),
     sortBy: computed({
       get: () => sortBy.value.modelValue,
-      set: (value) => (sortBy.value.modelValue = value)
+      set: value => (sortBy.value.modelValue = value)
     })
   }
 }

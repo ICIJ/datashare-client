@@ -26,7 +26,7 @@ export function useWait({ throttle = 0, scoped = false } = {}) {
    * @param {string|Ref}
    * @return {boolean|undefined} - The value of the loader
    */
-  const get = (id) => waitStore.get(scopeKey, id)
+  const get = id => waitStore.get(scopeKey, id)
 
   /**
    * Set the value of a loader

@@ -70,10 +70,10 @@ export const usePipelinesStore = defineStore('pipelines', () => {
   const instantiatePipeline = ({ type = 'IdentityPipeline', ...options } = {}) => {
     // The given type is a class with a `apply` method
     if (type?.prototype?.apply) {
-      // eslint-disable-next-line new-cap
       return new type(options)
       // The given type is function
-    } else if (isFunction(type)) {
+    }
+    else if (isFunction(type)) {
       return new pipelineTypes.SimplePipeline({ apply: type, ...options })
     }
     const Type = pipelineTypes[type] || pipelineTypes.IdentityPipeline
@@ -86,7 +86,7 @@ export const usePipelinesStore = defineStore('pipelines', () => {
    * @param {String} name The name of the pipeline
    * @returns {Object}
    */
-  const getPipelineByName = (name) => find(registered, { name })
+  const getPipelineByName = name => find(registered, { name })
 
   /**
    * Get a list of pipelines by category
@@ -120,7 +120,7 @@ export const usePipelinesStore = defineStore('pipelines', () => {
    */
   const getPipelineChainByCategory = (category = null) => {
     const pipelines = getInstantiatedPipelinesByCategory(category)
-    return pipelines.map((p) => p.apply.bind(p))
+    return pipelines.map(p => p.apply.bind(p))
   }
 
   /**

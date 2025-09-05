@@ -1,8 +1,19 @@
 <template>
-  <span class="project-thumbnail" :style="style" :class="classList" :data-caption="caption">
+  <span
+    class="project-thumbnail"
+    :style="style"
+    :class="classList"
+    :data-caption="caption"
+  >
     <span class="project-thumbnail__caption">{{ caption }}</span>
-    <span v-if="checked" class="project-thumbnail__check">
-      <phosphor-icon :name="PhCheckFat" fill />
+    <span
+      v-if="checked"
+      class="project-thumbnail__check"
+    >
+      <phosphor-icon
+        :name="PhCheckFat"
+        fill
+      />
     </span>
   </span>
 </template>

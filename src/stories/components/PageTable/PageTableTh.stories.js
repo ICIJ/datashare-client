@@ -17,7 +17,7 @@ export default {
     sorted: true,
     order: 'desc'
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       PageTableTh
     },

@@ -11,12 +11,14 @@ export class HookedComponent {
     this.order = order
     this.definition = definition
   }
+
   get component() {
     if (isString(this.definition)) {
       return defineComponent({ template: this.definition })
     }
     return defineComponent(this.definition)
   }
+
   static create(...args) {
     return new HookedComponent(...args)
   }

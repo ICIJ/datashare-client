@@ -38,6 +38,7 @@ class WidgetFieldFacets extends WidgetListGroup {
     this.routeQueryField = routeQueryField
     this.bucketTranslation = castFunction(bucketTranslation)
   }
+
   get component() {
     return Component
   }

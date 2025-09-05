@@ -11,7 +11,10 @@ defineProps({
 
 <template>
   <td class="project-row-update-date">
-    <span v-if="project.updateDate" class="text-secondary-emphasis">
+    <span
+      v-if="project.updateDate"
+      class="text-secondary-emphasis"
+    >
       <slot>
         <display-datetime-short :value="project.updateDate" />
       </slot>

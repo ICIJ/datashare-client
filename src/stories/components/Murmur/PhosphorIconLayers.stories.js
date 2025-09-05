@@ -12,7 +12,7 @@ export default {
   args: {
     size: '44px'
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       PhosphorIcon,
       PhosphorIconLayers

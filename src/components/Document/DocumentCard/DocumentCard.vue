@@ -64,8 +64,16 @@ const showTitle = computed(() => props.properties?.includes('title'))
 </script>
 
 <template>
-  <div class="document-card" :class="classList" @mouseenter="hover = true" @mouseleave="hover = false">
-    <hook name="document-card:before" :bind="{ document }" />
+  <div
+    class="document-card"
+    :class="classList"
+    @mouseenter="hover = true"
+    @mouseleave="hover = false"
+  >
+    <hook
+      name="document-card:before"
+      :bind="{ document }"
+    />
     <div class="d-flex flex-column align-items-center above-stretched-link">
       <document-card-checkbox
         v-if="selectMode"
@@ -84,7 +92,10 @@ const showTitle = computed(() => props.properties?.includes('title'))
       />
     </div>
     <div class="document-card__properties">
-      <hook name="document-card-properties:before" :bind="{ document }" />
+      <hook
+        name="document-card-properties:before"
+        :bind="{ document }"
+      />
       <router-link-document
         v-if="showTitle"
         :id="document.id"
@@ -97,8 +108,14 @@ const showTitle = computed(() => props.properties?.includes('title'))
       >
         {{ document.title }}
       </router-link-document>
-      <document-card-properties :document="document" :properties="properties" />
-      <hook name="document-card-properties:after" :bind="{ document }" />
+      <document-card-properties
+        :document="document"
+        :properties="properties"
+      />
+      <hook
+        name="document-card-properties:after"
+        :bind="{ document }"
+      />
     </div>
     <div class="document-card__actions above-stretched-link">
       <slot name="actions">
@@ -110,7 +127,10 @@ const showTitle = computed(() => props.properties?.includes('title'))
         />
       </slot>
     </div>
-    <hook name="document-card:after" :bind="{ document }" />
+    <hook
+      name="document-card:after"
+      :bind="{ document }"
+    />
   </div>
 </template>
 

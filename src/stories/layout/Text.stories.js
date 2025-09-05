@@ -1,6 +1,6 @@
 export default {
   title: 'Layout/Text',
-  render: (args) => ({
+  render: args => ({
     setup() {
       return { args }
     },

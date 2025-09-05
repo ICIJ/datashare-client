@@ -46,7 +46,7 @@ export const CustomSlots = {
     variant: VARIANT.INFO,
     icon: 'book'
   },
-  render: (args) => ({
+  render: args => ({
     components: {
       DismissableAlert,
       PhosphorIcon

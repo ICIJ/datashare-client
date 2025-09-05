@@ -16,10 +16,19 @@ const to = computed(() => {
 
 <template>
   <td>
-    <hook name="document-row-title:before" :bind="{ document }" />
-    <router-link :to="to" class="document-row-title fw-medium link-visitable stretched-link">
+    <hook
+      name="document-row-title:before"
+      :bind="{ document }"
+    />
+    <router-link
+      :to="to"
+      class="document-row-title fw-medium link-visitable stretched-link"
+    >
       {{ document.title }}
     </router-link>
-    <hook name="document-row-title:after" :bind="{ document }" />
+    <hook
+      name="document-row-title:after"
+      :bind="{ document }"
+    />
   </td>
 </template>

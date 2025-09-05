@@ -7,15 +7,26 @@
     class="widget-barometer"
     body-class="d-flex flex-column flex-truncate text-center gap-1 "
   >
-    <phosphor-icon :variant="variant" size="2rem" :name="icon" />
+    <phosphor-icon
+      :variant="variant"
+      size="2rem"
+      :name="icon"
+    />
     <div class="widget-barometer__value fw-bold text-truncate w-100">
       <slot>
-        <display-number-human v-if="isNumber" :value="value" />
-        <template v-else>{{ value }}</template>
+        <display-number-human
+          v-if="isNumber"
+          :value="value"
+        />
+        <template v-else>
+          {{ value }}
+        </template>
       </slot>
     </div>
     <div class="widget-barometer__label text-truncate w-100">
-      <slot name="label">{{ label }}</slot>
+      <slot name="label">
+        {{ label }}
+      </slot>
     </div>
   </b-card>
 </template>

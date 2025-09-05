@@ -14,7 +14,12 @@ defineProps({
 </script>
 
 <template>
-  <b-popover class="keyboard-shortcuts-popover" :target="target" :placement="placement" teleport-to="body">
+  <b-popover
+    class="keyboard-shortcuts-popover"
+    :target="target"
+    :placement="placement"
+    teleport-to="body"
+  >
     <div
       class="keyboard-shortcuts-popover__header d-flex flex-truncate justify-content-between align-items-center w-100 mb-4"
     >
@@ -25,7 +30,10 @@ defineProps({
       <slot />
     </div>
     <template #target="{ show, hide, toggle, visible }">
-      <slot name="target" v-bind="{ show, hide, toggle, visible }" />
+      <slot
+        name="target"
+        v-bind="{ show, hide, toggle, visible }"
+      />
     </template>
   </b-popover>
 </template>

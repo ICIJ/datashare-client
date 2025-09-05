@@ -19,8 +19,16 @@ const allProjects = computed(() => core.projects)
 </script>
 
 <template>
-  <form-step :title="t('task.batch-search.form.sections.general')" :index="1">
-    <form-fieldset-i18n required name="name" translation-key="task.batch-search.form.name" :icon="PhTextAa">
+  <form-step
+    :title="t('task.batch-search.form.sections.general')"
+    :index="1"
+  >
+    <form-fieldset-i18n
+      required
+      name="name"
+      translation-key="task.batch-search.form.name"
+      :icon="PhTextAa"
+    >
       <b-form-input
         v-model="name"
         type="text"
@@ -28,10 +36,21 @@ const allProjects = computed(() => core.projects)
         :placeholder="t('task.batch-search.form.name.placeholder')"
       />
     </form-fieldset-i18n>
-    <form-fieldset-i18n name="projects" translation-key="task.batch-search.form.projects" :icon="PhCirclesThreePlus">
-      <project-dropdown-selector v-model="selectedProjects" :projects="allProjects" />
+    <form-fieldset-i18n
+      name="projects"
+      translation-key="task.batch-search.form.projects"
+      :icon="PhCirclesThreePlus"
+    >
+      <project-dropdown-selector
+        v-model="selectedProjects"
+        :projects="allProjects"
+      />
     </form-fieldset-i18n>
-    <form-fieldset-i18n name="description" translation-key="task.batch-search.form.description" :icon="PhTextAlignLeft">
+    <form-fieldset-i18n
+      name="description"
+      translation-key="task.batch-search.form.description"
+      :icon="PhTextAlignLeft"
+    >
       <b-form-textarea
         v-model="description"
         name="description"
@@ -48,11 +67,20 @@ const allProjects = computed(() => core.projects)
         label-class="pt-md-0"
         :icon="PhQuotes"
       >
-        <b-form-radio-group v-model="visibility" stacked>
-          <b-form-radio name="visibility" :value="false">
+        <b-form-radio-group
+          v-model="visibility"
+          stacked
+        >
+          <b-form-radio
+            name="visibility"
+            :value="false"
+          >
             {{ t('task.batch-search.form.visibility.options.private') }}
           </b-form-radio>
-          <b-form-radio name="visibility" :value="true">
+          <b-form-radio
+            name="visibility"
+            :value="true"
+          >
             {{ t('task.batch-search.form.visibility.options.shared') }}
           </b-form-radio>
         </b-form-radio-group>

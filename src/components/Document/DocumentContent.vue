@@ -1,14 +1,12 @@
 <script setup>
-import { computed, inject, nextTick, onMounted, reactive, ref, toRef, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, onMounted, reactive, ref, toRef, useTemplateRef, watch } from 'vue'
 import { clamp, entries, findLastIndex, get, isEmpty, minBy, range, throttle } from 'lodash'
-import { useScroll, useElementSize, useWindowSize } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 
 import { addLocalSearchMarksClassByOffsets } from '@/utils/strings'
 import { useCompact } from '@/composables/useCompact'
+import { useMode } from '@/composables/useMode'
 import { useWait } from '@/composables/useWait'
-import { useQueryObserver } from '@/composables/useQueryObserver'
-import ButtonToTop from '@/components/Button/ButtonToTop'
 import DocumentAttachments from '@/components/Document/DocumentAttachments'
 import DocumentGlobalSearchTerms from '@/components/Document/DocumentGlobalSearchTerms/DocumentGlobalSearchTerms'
 import DocumentLocalSearch from '@/components/Document/DocumentLocalSearch/DocumentLocalSearch'
@@ -37,18 +35,13 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
-const { querySelector } = useQueryObserver()
-const modal = inject('modal', false)
+const { isServer } = useMode()
 
 const documentStore = useDocumentStore()
 const pipelinesStore = usePipelinesStore()
 const searchStore = useSearchStore.inject()
 const elementRef = useTemplateRef('element')
-const containerRef = modal ? querySelector('.document-modal') : window
 const { compact } = useCompact(elementRef, { threshold: toRef(props, 'compactThreshold') })
-const { height: elementHeight } = useElementSize(elementRef)
-const { height: windowHeight } = useWindowSize()
-const { y: scrollY } = useScroll(containerRef)
 const { waitFor, isLoading } = useWait()
 
 const contentSlices = reactive({})
@@ -96,11 +89,6 @@ const showPagination = computed(() => {
   return nbPages.value > 1 && loadedOnce.value
 })
 
-const showButtonToTop = computed(() => {
-  const heightThreshold = windowHeight.value * 0.2
-  return scrollY.value > heightThreshold && elementHeight.value > windowHeight.value && loadedOnce.value
-})
-
 const hasLocalSearchTerms = computed(() => {
   return localSearchTerm.value && localSearchTerm.value.length > 0
 })
@@ -135,7 +123,7 @@ const maxOffset = computed(() => {
 })
 
 const nbPages = computed(() => {
-  if (syncedPages.value.length) {
+  if (syncedPages.value?.length) {
     return syncedPages.value.length
   }
   return Math.floor(maxOffset.value / props.pageSize) + 1
@@ -146,7 +134,7 @@ const offsets = computed(() => {
 })
 
 const pages = computed(() => {
-  if (syncedPages.value.length) {
+  if (syncedPages.value?.length) {
     return syncedPages.value
   }
   return range(0, maxOffset.value, props.pageSize).map((start) => {
@@ -159,7 +147,7 @@ const loadedOnce = computed(() => {
   return !isEmpty(maxOffsetTranslations.value) && !isEmpty(contentSlices)
 })
 
-watch(toRef(props, 'q'), (value) => (localSearchTerm.value = value))
+watch(toRef(props, 'q'), value => (localSearchTerm.value = value))
 
 watch(localSearchTerm, throttle(retrieveOccurrencesAndUpdateContent, 300))
 
@@ -185,7 +173,8 @@ onMounted(async () => {
   await syncPages()
   if (props.q) {
     await retrieveOccurrencesAndUpdateContent()
-  } else {
+  }
+  else {
     await activateContentSlice({ offset: 0 })
   }
 })
@@ -198,15 +187,21 @@ const loadMaxOffset = waitFor(async function (targetLanguage = props.targetLangu
 })
 
 const syncPages = waitFor(async function () {
-  if (!props.targetLanguage || props.targetLanguage === 'original') {
-    syncedPages.value = await api.getPages(documentStore.document).catch(() => [])
-  } else {
+  // This experimental feature is only available for LOCAL/EMBEDDED mode for now
+  // because it can be resource-intensive for large documents.
+  if (!isServer.value && (!props.targetLanguage || props.targetLanguage === 'original')) {
+    syncedPages.value = await api
+      .getPages(documentStore.document)
+      .then(({ pages }) => pages)
+      .catch(() => [])
+  }
+  else {
     syncedPages.value = []
   }
 })
 
 function findContentSliceIndexAround(desiredOffset) {
-  return findLastIndex(offsets.value, (offset) => offset <= desiredOffset)
+  return findLastIndex(offsets.value, offset => offset <= desiredOffset)
 }
 
 function setContentSlice({
@@ -252,7 +247,7 @@ function hasContentSlice({ offset = 0, targetLanguage = props.targetLanguage } =
 }
 
 function closestPage({ offset = 0 } = {}) {
-  const closestOffsetIndex = minBy(offsets.value, (v) => Math.abs(v - offset))
+  const closestOffsetIndex = minBy(offsets.value, v => Math.abs(v - offset))
   const offsetIndex = offsets.value.indexOf(closestOffsetIndex)
   return pages.value[offsetIndex] || [0, Math.min(props.pageSize - 1, maxOffset.value)]
 }
@@ -292,7 +287,8 @@ async function retrieveTotalOccurrences() {
     localSearchIndexes.value = offsets
     localSearchOccurrences.value = count
     localSearchIndex.value = Number(!!count)
-  } catch (_) {
+  }
+  catch {
     localSearchIndexes.value = []
     localSearchOccurrences.value = 0
     localSearchIndex.value = 0
@@ -314,17 +310,13 @@ const activateContentSlice = waitFor(async function ({ offset = 0 } = {}) {
 
 function clearActiveLocalSearchTerm() {
   const activeTerms = elementRef.value.querySelectorAll('.local-search-term--active')
-  activeTerms.forEach((term) => term.classList.remove('local-search-term--active'))
+  activeTerms.forEach(term => term.classList.remove('local-search-term--active'))
 }
 
 function scrollToDocumentStart() {
   if (elementRef.value && elementRef.value.getBoundingClientRect().top < 0) {
     elementRef.value.scrollIntoView({ block: 'start', inline: 'nearest', behavior: 'instant' })
   }
-}
-
-function scrollToTop() {
-  scrollY.value = 0
 }
 
 async function jumpToActiveLocalSearchTerm() {
@@ -335,7 +327,8 @@ async function jumpToActiveLocalSearchTerm() {
   if (activeTerm) {
     activeTerm.classList.add('local-search-term--active')
     activeTerm.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' })
-  } else {
+  }
+  else {
     elementRef.value.scrollTop = 0
   }
 }
@@ -350,11 +343,15 @@ async function loadContentSliceAround(desiredOffset) {
 </script>
 
 <template>
-  <div ref="element" class="document-content" :class="classList">
+  <div
+    ref="element"
+    class="document-content"
+    :class="classList"
+  >
     <hook name="document.content:before" />
     <div class="document-content__toolbox d-flex flex-column gap-3">
       <hook name="document.content.toolbox:before" />
-      <div class="d-flex align-items-center gap-3">
+      <div class="d-flex flex-md-nowrap flex-wrap align-items-center gap-3">
         <hook name="document.content.toolbox.local-search:before" />
         <document-local-search
           v-model="localSearchTerm"
@@ -367,7 +364,17 @@ async function loadContentSliceAround(desiredOffset) {
         />
         <hook name="document.content.toolbox.local-search:after" />
         <hook name="document.content.toolbox.before:before" />
-        <tiny-pagination v-if="showPagination" v-model="page" :per-page="1" :total-rows="nbPages" :compact="compact" />
+        <div
+          v-if="showPagination"
+          class="document-content__toolbox__pagination"
+        >
+          <tiny-pagination
+            v-model="page"
+            :per-page="1"
+            :total-rows="nbPages"
+            :compact="compact"
+          />
+        </div>
         <hook name="document.content.toolbox.pagination:after" />
       </div>
       <document-global-search-terms
@@ -378,23 +385,36 @@ async function loadContentSliceAround(desiredOffset) {
       <hook name="document.content.toolbox:after" />
     </div>
     <div class="document-content__togglers">
-      <hook name="document.content.togglers:before" x-class="d-flex flex-row justify-content-end align-items-center" />
-      <hook name="document.content.togglers:after" x-class="d-flex flex-row justify-content-end align-items-center" />
+      <hook
+        name="document.content.togglers:before"
+        x-class="d-flex flex-row justify-content-end align-items-center"
+      />
+      <hook
+        name="document.content.togglers:after"
+        x-class="d-flex flex-row justify-content-end align-items-center"
+      />
     </div>
     <div class="document-content__wrapper">
       <slot name="before-content" />
       <hook name="document.content.body:before" />
-      <div v-if="hasExtractedContent" class="document-content__body" v-html="currentContentPage"></div>
-      <div v-else-if="loadedOnce" class="document-content__body document-content__body--no-content text-center p-3">
+      <div
+        v-if="hasExtractedContent"
+        class="document-content__body"
+        v-html="currentContentPage"
+      />
+      <div
+        v-else-if="loadedOnce"
+        class="document-content__body document-content__body--no-content text-center p-3"
+      >
         {{ t('documentContent.noContent') }}
       </div>
-      <transition name="fade">
-        <button-to-top v-if="showButtonToTop" class="document-content__wrapper__to-top" @click="scrollToTop" />
-      </transition>
       <hook name="document.content.body:after" />
       <slot name="after-content" />
     </div>
-    <document-attachments v-show="loadedOnce" :document="document" />
+    <document-attachments
+      v-show="loadedOnce"
+      :document="document"
+    />
     <hook name="document.content:after" />
   </div>
 </template>
@@ -419,26 +439,8 @@ async function loadContentSliceAround(desiredOffset) {
     }
   }
 
-  &__wrapper {
-    &__to-top {
-      position: fixed;
-      bottom: $spacer;
-      right: $spacer;
-
-      .modal-fullscreen & {
-        right: calc(var(--bs-modal-margin) + var(--bs-modal-padding));
-      }
-
-      &.fade-enter-active,
-      &.fade-leave-active {
-        transition: opacity 0.3s;
-      }
-
-      &.fade-enter-from,
-      &.fade-leave-to {
-        opacity: 0;
-      }
-    }
+  &__body {
+    word-break: break-all;
   }
 
   &--rtl &__body {

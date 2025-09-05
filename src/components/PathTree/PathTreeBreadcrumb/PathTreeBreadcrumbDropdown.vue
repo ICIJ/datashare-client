@@ -13,6 +13,8 @@ defineProps({
     default: false
   }
 })
+
+const emit = defineEmits(['select'])
 </script>
 
 <template>
@@ -26,15 +28,22 @@ defineProps({
     variant="link"
   >
     <template #button-content>
-      <phosphor-icon :name="PhDotsThree" weight="bold" />
+      <phosphor-icon
+        :name="PhDotsThree"
+        weight="bold"
+      />
     </template>
     <b-dropdown-item
       v-for="{ text, value } in options"
       :key="value"
       class="d-flex gap-2"
-      @click="$emit('select', value)"
+      @click="emit('select', value)"
     >
-      <phosphor-icon v-if="!compact" :name="PhFolder" class="flex-shrink-0" />
+      <phosphor-icon
+        v-if="!compact"
+        :name="PhFolder"
+        class="flex-shrink-0"
+      />
       {{ text }}
     </b-dropdown-item>
   </b-dropdown>

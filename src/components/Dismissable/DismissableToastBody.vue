@@ -79,20 +79,52 @@ const linkClassList = computed(() => [`btn-outline-${variant.value}`])
 </script>
 
 <template>
-  <div class="toast-body d-flex align-items-center" :class="classList">
-    <div v-if="!noIcon" class="toast-body__icon py-1 d-none d-md-block" :class="iconClass">
-      <phosphor-icon :name="icon" :variant="variant" weight="bold" />
+  <div
+    class="toast-body d-flex align-items-center"
+    :class="classList"
+  >
+    <div
+      v-if="!noIcon"
+      class="toast-body__icon py-1 d-none d-md-block"
+      :class="iconClass"
+    >
+      <phosphor-icon
+        :name="icon"
+        :variant="variant"
+        weight="bold"
+      />
     </div>
     <div class="flex-grow-1 d-flex align-items-center">
-      <div class="toast-body__content" :class="contentClass">
-        <h5 v-if="title" class="toast-body__content__title">{{ title }}</h5>
+      <div
+        class="toast-body__content"
+        :class="contentClass"
+      >
+        <h5
+          v-if="title"
+          class="toast-body__content__title"
+        >
+          {{ title }}
+        </h5>
         <p class="toast-body__content__body mb-0 d-inline">
-          <slot v-bind="{ closeToast, linkClassList, linkLabelDisplay }">{{ body }}</slot>
+          <slot v-bind="{ closeToast, linkClassList, linkLabelDisplay }">
+            {{ body }}
+          </slot>
         </p>
       </div>
-      <span v-if="hasLink" class="toast-body__link ms-3">
-        <slot name="link" v-bind="{ closeToast, linkClassList, linkLabelDisplay }">
-          <a :href="href" class="btn text-nowrap" :class="linkClassList" @click.passive="closeToast">
+      <span
+        v-if="hasLink"
+        class="toast-body__link ms-3"
+      >
+        <slot
+          name="link"
+          v-bind="{ closeToast, linkClassList, linkLabelDisplay }"
+        >
+          <a
+            :href="href"
+            class="btn text-nowrap"
+            :class="linkClassList"
+            @click.passive="closeToast"
+          >
             {{ linkLabelDisplay }}
           </a>
         </slot>

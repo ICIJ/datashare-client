@@ -14,7 +14,7 @@ export default {
       default: `Default slot content`
     }
   },
-  render: (args) => ({
+  render: args => ({
     setup: () => ({ args }),
     components: {
       FormStep

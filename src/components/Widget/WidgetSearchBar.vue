@@ -1,6 +1,12 @@
 <template>
-  <div class="widget widget--search-bar" :class="{ 'card-body': widget.card }">
-    <search-bar class="p-0" :indices="indices" />
+  <div
+    class="widget widget--search-bar"
+    :class="{ 'card-body': widget.card }"
+  >
+    <search-bar
+      class="p-0"
+      :indices="indices"
+    />
   </div>
 </template>
 

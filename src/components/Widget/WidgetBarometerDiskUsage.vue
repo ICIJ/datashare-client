@@ -1,5 +1,9 @@
 <template>
-  <widget-barometer class="widget-barometer-disk-usage" :icon="icon" :label="label">
+  <widget-barometer
+    class="widget-barometer-disk-usage"
+    :icon="icon"
+    :label="label"
+  >
     {{ value }}
   </widget-barometer>
 </template>

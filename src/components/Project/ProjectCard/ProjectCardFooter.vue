@@ -26,7 +26,10 @@ const toProjectSearch = computed(() => ({
 
 <template>
   <div class="project-card-footer d-flex flex-column flex-xl-row gap-3">
-    <hook name="project-card-footer:before" :bind="{ project }" />
+    <hook
+      name="project-card-footer:before"
+      :bind="{ project }"
+    />
     <slot>
       <div class="d-flex flex-column lh-lg-1 mt-auto flex-grow-1 align-items-start">
         <project-card-update-date :project="project">
@@ -45,7 +48,10 @@ const toProjectSearch = computed(() => ({
         :label="t('projectCardFooter.search')"
       />
     </slot>
-    <hook name="project-card-footer:after" :bind="{ project }" />
+    <hook
+      name="project-card-footer:after"
+      :bind="{ project }"
+    />
   </div>
 </template>
 

@@ -28,12 +28,12 @@ const { breakpointDown } = useBreakpoints()
 
 const show = computed({
   get: () => !closed.value,
-  set: (value) => (closed.value = !value)
+  set: value => (closed.value = !value)
 })
 
 const closed = computed({
   get: () => appStore.filters.closed,
-  set: (value) => (appStore.filters.closed = value)
+  set: value => (appStore.filters.closed = value)
 })
 
 const isOffCanvas = computed(() => {
@@ -48,14 +48,28 @@ const classList = computed(() => {
 })
 
 // This ensure that when passing in full width, the panel is closed
-watch(isOffCanvas, (value) => value && (closed.value = true), { immediate: true })
+watch(isOffCanvas, value => value && (closed.value = true), { immediate: true })
 </script>
 
 <template>
-  <page-offcanvas-replacement v-model="show" :active="isOffCanvas">
-    <div class="filters-panel" :class="classList">
-      <filters-panel-toggler v-if="!noToggler" class="filters-panel__toggler" @close="emit('close')" />
-      <filters-panel-search v-if="!noSearch" v-model="q" class="filters-panel__search" />
+  <page-offcanvas-replacement
+    v-model="show"
+    :active="isOffCanvas"
+  >
+    <div
+      class="filters-panel"
+      :class="classList"
+    >
+      <filters-panel-toggler
+        v-if="!noToggler"
+        class="filters-panel__toggler"
+        @close="emit('close')"
+      />
+      <filters-panel-search
+        v-if="!noSearch"
+        v-model="q"
+        class="filters-panel__search"
+      />
       <slot />
     </div>
   </page-offcanvas-replacement>

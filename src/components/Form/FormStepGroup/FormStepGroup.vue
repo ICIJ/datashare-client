@@ -32,7 +32,11 @@ const isCollapsed = (index, initial = true) => {
 
 <template>
   <div class="form-step-group d-flex flex-column gap-3">
-    <form-step-group-toggler :collapse="collapseAll" class="align-self-end" @update:collapse="collapseAll = $event" />
+    <form-step-group-toggler
+      :collapse="collapseAll"
+      class="align-self-end"
+      @update:collapse="collapseAll = $event"
+    />
     <slot v-bind="{ toggle, isCollapsed }" />
   </div>
 </template>

@@ -7,8 +7,8 @@ import ProjectEntriesTable from './ProjectEntriesTable'
 
 import { LAYOUTS, layoutValidator } from '@/enums/layouts'
 
-defineModel('sort', { type: String, default: null })
-defineModel('order', { type: String, default: 'desc' })
+const sort = defineModel('sort', { type: String, default: null })
+const order = defineModel('order', { type: String, default: 'desc' })
 
 const props = defineProps({
   projects: {
@@ -41,7 +41,7 @@ const componentProps = computed(() => {
     :is="component"
     v-bind="componentProps"
     class="project-entries"
-    @update:order="$emit('update:order', $event)"
-    @update:sort="$emit('update:sort', $event)"
+    @update:order="order = $event"
+    @update:sort="sort = $event"
   />
 </template>

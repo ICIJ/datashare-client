@@ -44,7 +44,10 @@ defineProps({
     :title-link-class="titleLinkClass"
   >
     <template #title>
-      <tab-group-title :icon="icon" :count="count">
+      <tab-group-title
+        :icon="icon"
+        :count="count"
+      >
         <slot name="title">
           {{ title }}
         </slot>

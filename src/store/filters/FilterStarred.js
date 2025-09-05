@@ -10,8 +10,9 @@ export default class FilterStarred extends FilterText {
     super(options)
     this.component = 'FilterTypeStarred'
   }
+
   addChildIncludeFilter(body, { values }) {
-    const hasBool = (bool) => values.includes(bool) || values.includes(bool.toString())
+    const hasBool = bool => values.includes(bool) || values.includes(bool.toString())
 
     if (hasBool(true) && hasBool(false)) {
       return body
@@ -27,21 +28,26 @@ export default class FilterStarred extends FilterText {
 
     return body
   }
+
   itemLabel(item) {
     return get(FilterStarred.starredLabels, item.key, item.key)
   }
+
   get starredDocuments() {
     return useStarredStore().documents
   }
+
   get starredDocumentIds() {
     return map(this.starredDocuments, 'id')
   }
+
   static get starredLabels() {
     return {
       true: 'filter.starred',
       false: 'filter.notStarred'
     }
   }
+
   static get display() {
     return DisplayStarred
   }

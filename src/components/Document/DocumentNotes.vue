@@ -1,6 +1,14 @@
 <template>
-  <div v-if="notes.length" class="m-3">
-    <b-alert v-for="note in notes" :key="note.note" :variant="note.variant || 'warning'" show>
+  <div
+    v-if="notes.length"
+    class="m-3"
+  >
+    <b-alert
+      v-for="note in notes"
+      :key="note.note"
+      :variant="note.variant || 'warning'"
+      show
+    >
       {{ note.note }}
     </b-alert>
   </div>

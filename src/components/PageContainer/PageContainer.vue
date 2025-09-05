@@ -40,7 +40,10 @@ const classList = computed(() => {
 </script>
 
 <template>
-  <div class="page-container" :class="classList">
+  <div
+    class="page-container"
+    :class="classList"
+  >
     <slot />
   </div>
 </template>

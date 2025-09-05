@@ -9,5 +9,8 @@ defineProps({
 </script>
 
 <template>
-  <project-label :project="value" hide-thumbnail />
+  <project-label
+    :project="value"
+    hide-thumbnail
+  />
 </template>

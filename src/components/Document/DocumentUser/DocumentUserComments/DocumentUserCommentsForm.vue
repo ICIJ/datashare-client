@@ -22,7 +22,10 @@ const emit = defineEmits({
 </script>
 
 <template>
-  <b-form class="document-user-comments-form d-flex flex-column gap-2" @submit.prevent="emit('submit', comment)">
+  <b-form
+    class="document-user-comments-form d-flex flex-column gap-2"
+    @submit.prevent="emit('submit', comment)"
+  >
     <b-form-textarea
       v-model="comment"
       :disabled="disabled"
@@ -32,7 +35,11 @@ const emit = defineEmits({
       @keydown.enter.ctrl="emit('submit', comment)"
     />
     <div class="d-flex justify-content-end gap-2">
-      <button-icon type="submit" variant="action" :disabled="disabled">
+      <button-icon
+        type="submit"
+        variant="action"
+        :disabled="disabled"
+      >
         {{ t('documentUserCommentsForm.submit') }}
       </button-icon>
     </div>

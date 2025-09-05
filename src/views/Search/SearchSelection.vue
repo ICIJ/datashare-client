@@ -45,7 +45,7 @@ const { selectAll, unselectAll, isSelected, indeterminate } = useSelection(selec
 
 const selected = computed({
   get: () => count.value === props.entries.length,
-  set: (value) => (value ? selectAll() : unselectAll())
+  set: value => (value ? selectAll() : unselectAll())
 })
 
 const { breakpointDown } = useBreakpoints()
@@ -128,7 +128,12 @@ const tagSelection = async (documents, labels) => {
       :disabled="noSelection"
       @click="unstarSelection"
     />
-    <button-icon :label="t('searchSelection.tag')" :icon-left="PhHash" :disabled="noSelection" @click="addTagsModal" />
+    <button-icon
+      :label="t('searchSelection.tag')"
+      :icon-left="PhHash"
+      :disabled="noSelection"
+      @click="addTagsModal"
+    />
   </form-actions>
 </template>
 

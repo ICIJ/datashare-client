@@ -1,14 +1,14 @@
 import { computed, toRef, shallowRef, watch } from 'vue'
 import { escapeRegExp } from 'lodash'
 import * as PDFJS from 'pdfjs-dist'
-import PDFWorker from 'pdfjs-dist/build/pdf.worker.min?url'
+import workerSrc from 'pdfjs-dist/build/pdf.worker.min?url'
 
 import { useWait } from '@/composables/useWait'
 
 // This is directly inspired by vue-pdfjs implementation of PDF.js
 // @see https://erindoyle.dev/using-pdfjs-with-vite/
-function configureWorker(wokerSrc) {
-  PDFJS.GlobalWorkerOptions.workerSrc = wokerSrc
+function configureWorker() {
+  PDFJS.GlobalWorkerOptions.workerSrc = workerSrc
 }
 
 export function usePDF(src) {
@@ -20,7 +20,7 @@ export function usePDF(src) {
   const { waitFor, isLoading, loaderId } = useWait()
 
   if (!PDFJS.GlobalWorkerOptions?.workerSrc) {
-    configureWorker(PDFWorker)
+    configureWorker()
   }
 
   /**
@@ -37,7 +37,8 @@ export function usePDF(src) {
     // If the source is not provided, do not load anything
     if (!src) return
 
-    const loadingTask = PDFJS.getDocument(src)
+    const wasmUrl = `https://unpkg.com/pdfjs-dist@${PDFJS.version}/wasm/`
+    const loadingTask = PDFJS.getDocument({ url: src, wasmUrl })
 
     pdfDoc.value = await loadingTask.promise
     sizes.value = []

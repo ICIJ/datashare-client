@@ -13,10 +13,6 @@ const props = defineProps({
   sortByOptions: {
     type: Array,
     default: () => settings.filter.sortByOptions
-  },
-  teleportTo: {
-    type: String,
-    default: 'body'
   }
 })
 
@@ -46,7 +42,6 @@ const isOptionActive = ({ sortBy, orderBy }) => {
 <template>
   <b-dropdown
     v-model="showDropdown"
-    :teleport-to="teleportTo"
     class="filters-panel-section-filter-title-sort"
     variant="link"
     end
@@ -54,7 +49,10 @@ const isOptionActive = ({ sortBy, orderBy }) => {
     no-caret
   >
     <template #button-content>
-      <phosphor-icon :name="PhSortAscending" height="1em" />
+      <phosphor-icon
+        :name="PhSortAscending"
+        height="1em"
+      />
       <span class="visually-hidden">Sort</span>
     </template>
     <b-dropdown-item
