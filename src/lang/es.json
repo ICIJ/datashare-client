@@ -138,7 +138,7 @@
     "info": "Información",
     "pending": "Pending",
     "created": "Pending",
-    "queued": "Pending",
+    "queued": "En cola",
     "running": "En ejecución",
     "draft": "Borrador"
   },
@@ -1127,9 +1127,9 @@
           "label": "Usar un CSV",
           "placeholder": "Soltar tu CSV"
         },
-        "listQueries": {
+        "csvString": {
           "label": "O escribe tus consultas",
-          "placeholder": "¡Nueva funcionalidad próximamente!"
+          "placeholder": "Enter one search term per line here..."
         },
         "phraseChanges": {
           "label": "Cambios de frase",
