@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n'
 
 import { addLocalSearchMarksClassByOffsets } from '@/utils/strings'
 import { useCompact } from '@/composables/useCompact'
+import { useConfig } from '@/composables/useConfig'
 import { useMode } from '@/composables/useMode'
 import { useWait } from '@/composables/useWait'
 import DocumentAttachments from '@/components/Document/DocumentAttachments'
@@ -34,6 +35,7 @@ const props = defineProps({
   }
 })
 
+const config = useConfig()
 const { t } = useI18n()
 const { isServer } = useMode()
 
@@ -186,10 +188,17 @@ const loadMaxOffset = waitFor(async function (targetLanguage = props.targetLangu
   return offset
 })
 
+const mustSyncPages = computed(() => {
+  // This experimental feature is only available for LOCAL/EMBEDDED mode, when
+  // the artifact dir is configured. This is because it can be very
+  // resource-intensive for large documents.
+  const hasArtifactDir = !!config.get('artifactDir')
+  const isOriginalLanguage = !props.targetLanguage || props.targetLanguage === 'original'
+  return !isServer.value && hasArtifactDir && isOriginalLanguage
+})
+
 const syncPages = waitFor(async function () {
-  // This experimental feature is only available for LOCAL/EMBEDDED mode for now
-  // because it can be resource-intensive for large documents.
-  if (!isServer.value && (!props.targetLanguage || props.targetLanguage === 'original')) {
+  if (mustSyncPages.value) {
     syncedPages.value = await api
       .getPages(documentStore.document)
       .then(({ pages }) => pages)
