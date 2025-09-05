@@ -136,8 +136,10 @@
     "danger": "Échec",
     "warning": "Avertissement",
     "info": "Information",
-    "running": "En cours",
+    "pending": "Pending",
+    "created": "Pending",
     "queued": "En attente",
+    "running": "En cours",
     "draft": "Brouillon"
   },
   "displayVisibility": {
@@ -830,6 +832,7 @@
   },
   "appSidebarFooter": {
     "signOut": "Se déconnecter",
+    "signOutBasic": "To sign out from Datashare you must close your web browser.",
     "keyboardShortcuts": "Raccourcis clavier",
     "settings": "Paramètres",
     "help": "Aide",
@@ -878,6 +881,8 @@
     "noResults": "Pas de résultat.",
     "emptyStateLabel": "Vous n'avez pas encore lancé de tâche. {link}",
     "emptyStateLabelLink": "En savoir plus.",
+    "removeSuccess": "Task has been removed",
+    "removeError": "Task has not been removed",
     "settings": {
       "createdAt": "Créé le",
       "name": "Nom",
@@ -1123,7 +1128,8 @@
           "placeholder": "Déposez votre CSV"
         },
         "csvString": {
-          "label": "Ou tapez vos requêtes"
+          "label": "Ou tapez vos requêtes",
+          "placeholder": "Enter one search term per line here..."
         },
         "phraseChanges": {
           "label": "Changements de phrase",
