@@ -17,6 +17,7 @@ import DocumentViewTabsMetadataLinkedDocumentsCard from '@/views/Document/Docume
 import { useDocument } from '@/composables/useDocument'
 import { useDebouncedRef } from '@/composables/useDebouncedRef'
 import { useAppStore } from '@/store/modules'
+
 const { document, documentPath, documentDirname, parentDocument } = useDocument()
 const { t } = useI18n()
 const q = useDebouncedRef('')
