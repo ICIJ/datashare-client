@@ -56,7 +56,7 @@ import { onMounted, ref } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 
-import { useCore } from '@/composables/useCore'
+import { apiInstance as api } from '@/api/apiInstance'
 
 /**
  * Display Datashare's version number.
@@ -82,14 +82,8 @@ const serverVersion = ref(null)
 const clientHash = import.meta.env.VITE_GIT_HASH ?? ''
 const shortClientHash = ref(clientHash.substring(0, 7))
 
-const { core } = useCore()
-
-const fetchVersion = async () => {
-  return core.api.getVersion()
-}
-
 const setVersion = async () => {
-  const version = await fetchVersion()
+  const version = await api.getVersion()
   serverHash.value = version['git.commit.id.abbrev']
   serverVersion.value = version['git.tag'] || version['git.build.version']
 }
