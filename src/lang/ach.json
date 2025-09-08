@@ -163,6 +163,15 @@
     "sectionContentType": "crwdns7708:0crwdne7708:0",
     "sectionDescription": "crwdns7710:0crwdne7710:0"
   },
+  "documentDropdownReindexModalParent": {
+    "alert": "crwdns9990:0crwdne9990:0"
+  },
+  "documentDropdownReindexModal": {
+    "title": "crwdns9992:0crwdne9992:0",
+    "okTitle": "crwdns9994:0crwdne9994:0",
+    "formLanguage": "crwdns9996:0crwdne9996:0",
+    "formOcr": "crwdns9998:0crwdne9998:0"
+  },
   "entityPopoverInfo": {
     "content": "crwdns7712:0crwdne7712:0",
     "label": "crwdns7714:0{extractor}crwdnd7714:0{language}crwdne7714:0"
