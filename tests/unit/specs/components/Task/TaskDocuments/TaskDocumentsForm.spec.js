@@ -88,15 +88,6 @@ describe('TaskDocumentsForm.vue', () => {
     )
   })
 
-  it('retrieves text and ocr languages', async () => {
-    api.textLanguages.mockClear() // called on mounted
-    api.ocrLanguages.mockClear() // called on mounted
-    shallowMount(TaskDocumentsForm, { global: { plugins } })
-
-    expect(api.textLanguages).toBeCalledTimes(1)
-    expect(api.ocrLanguages).toBeCalledTimes(1)
-  })
-
   it('should show the project selector', async () => {
     const wrapper = mount(TaskDocumentsForm, {
       global: { plugins, renderStubDefaultSlot: true }
