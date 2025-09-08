@@ -25,7 +25,7 @@ const options = computed(() =>
   }))
 )
 
-onMounted(languagesStore.fetch)
+onMounted(languagesStore.fetchOnce)
 </script>
 
 <template>

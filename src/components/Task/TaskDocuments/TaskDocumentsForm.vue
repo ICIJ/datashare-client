@@ -89,7 +89,7 @@ const skipOptions = computed(() => [
 ])
 
 // Fetch available languages and OCR languages before mounting the component
-onBeforeMount(languagesStore.fetch)
+onBeforeMount(languagesStore.fetchOnce)
 // When the project prop changes, update the selected project
 watch(toRef(props, 'project'), () => (selectedProject.value = currentProject.value))
 // When a project is selected, update the path to the project's source path
