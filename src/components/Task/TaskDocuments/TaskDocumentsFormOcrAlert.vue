@@ -58,7 +58,7 @@ onBeforeMount(languagesStore.fetchOnce)
 
 <template>
   <b-alert
-    :model-value="showTesseractMissing"
+    :show="showTesseractMissing"
     :class="contentClass"
     class="task-documents-form-ocr-alert task-documents-form-ocr-alert--tesseract-missing"
     lazy
@@ -67,7 +67,7 @@ onBeforeMount(languagesStore.fetchOnce)
     {{ t('taskDocumentsFormOcrAlert.tesseractNotInstalled') }}
   </b-alert>
   <b-alert
-    :model-value="showLanguageMissing"
+    :show="showLanguageMissing"
     :class="contentClass"
     class="task-documents-form-ocr-alert task-documents-form-ocr-alert--language-missing"
     lazy
