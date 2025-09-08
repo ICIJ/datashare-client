@@ -1,4 +1,5 @@
 import { shallowMount, mount } from '@vue/test-utils'
+import { setActivePinia, createPinia } from 'pinia'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import FormControlExtractingLanguage from '@/components/Form/FormControl/FormControlExtractingLanguage'
@@ -22,6 +23,10 @@ vi.mock('@/api/apiInstance', () => {
 // @todo file renamed but the tests have to be rewritten
 describe('TaskDocumentsForm.vue', () => {
   let plugins
+
+  beforeEach(() => {
+    setActivePinia(createPinia())
+  })
 
   beforeEach(async () => {
     vi.clearAllMocks()

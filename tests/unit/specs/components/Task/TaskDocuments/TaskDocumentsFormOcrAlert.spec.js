@@ -1,4 +1,5 @@
 import { mount, flushPromises } from '@vue/test-utils'
+import { setActivePinia, createPinia } from 'pinia'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import TaskDocumentsFormOcrAlert from '@/components/Task/TaskDocuments/TaskDocumentsFormOcrAlert'
@@ -31,6 +32,10 @@ vi.mock('@/api/apiInstance', () => {
 describe('TaskDocumentsFormOcrAlert.vue', () => {
   const { plugins } = CoreSetup.init().useAll()
   let wrapper
+
+  beforeEach(() => {
+    setActivePinia(createPinia())
+  })
 
   describe('OCR for italian language is not installed', () => {
     beforeEach(async () => {

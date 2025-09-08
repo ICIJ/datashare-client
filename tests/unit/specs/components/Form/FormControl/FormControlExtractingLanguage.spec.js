@@ -1,4 +1,5 @@
 import { mount, flushPromises } from '@vue/test-utils'
+import { setActivePinia, createPinia } from 'pinia'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import FormControlExtractingLanguage from '@/components/Form/FormControl/FormControlExtractingLanguage'
@@ -24,6 +25,10 @@ vi.mock('@/api/apiInstance', () => {
 })
 
 describe('FormControlExtractingLanguage.vue', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+  })
+
   describe('Has languages available', () => {
     let wrapper
 
@@ -62,7 +67,7 @@ describe('FormControlExtractingLanguage.vue', () => {
     let wrapper
 
     beforeEach(async () => {
-      api.textLanguages.mockRejectedValue({})
+      api.textLanguages.mockRejectedValue()
       const { plugins } = CoreSetup.init().useAll()
       wrapper = mount(FormControlExtractingLanguage, { global: { plugins } })
       await flushPromises()
