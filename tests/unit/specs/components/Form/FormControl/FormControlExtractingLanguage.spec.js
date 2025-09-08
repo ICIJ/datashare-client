@@ -13,6 +13,11 @@ vi.mock('@/api/apiInstance', () => {
         { name: 'FRENCH', iso6392: 'fra' },
         { name: 'SPANISH', iso6392: 'spa' },
         { name: 'ITALIAN', iso6392: 'ita' }
+      ]),
+      ocrLanguages: vi.fn().mockResolvedValue([
+        { name: 'CHINESE', iso6392: 'zho' },
+        { name: 'ENGLISH', iso6392: 'eng' },
+        { name: 'FRENCH', iso6392: 'fra' }
       ])
     }
   }
@@ -63,9 +68,14 @@ describe('FormControlExtractingLanguage.vue', () => {
       await flushPromises()
     })
 
-    it('should emit an ocr-error event on text languages reject', () => {
-      expect(wrapper.find('.form-control-extracting-language--no-language').exists()).toBeTruthy()
-      expect(wrapper.find('.form-control-extracting-language--no-language').text()).toBe('Failed to retrieve languages')
+    afterAll(() => {
+      vi.resetAllMocks()
+    })
+
+    it('should display a message when text languages is rejected', () => {
+      console.log(wrapper.html())
+      expect(wrapper.find('.form-control-extracting-language__no-language').exists()).toBeTruthy()
+      expect(wrapper.find('.form-control-extracting-language__no-language').text()).toBe('Failed to retrieve languages')
     })
   })
 })
