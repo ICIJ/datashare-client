@@ -42,6 +42,10 @@ const props = defineProps({
   modal: {
     type: Boolean,
     default: false
+  },
+  noActions: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -117,7 +121,10 @@ const showTitle = computed(() => props.properties?.includes('title'))
         :bind="{ document }"
       />
     </div>
-    <div class="document-card__actions above-stretched-link">
+    <div
+      v-if="!noActions"
+      class="document-card__actions above-stretched-link"
+    >
       <slot name="actions">
         <document-actions-group
           tooltip-placement="right-start"
