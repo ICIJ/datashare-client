@@ -25,7 +25,7 @@ const options = computed(() =>
   }))
 )
 
-onMounted(languagesStore.fetchOnce)
+onMounted(languagesStore.fetch)
 </script>
 
 <template>
@@ -39,7 +39,7 @@ onMounted(languagesStore.fetchOnce)
       v-if="languagesStore.missingTextLanguages"
       model-value
       variant="danger"
-      class="form-control-extracting-language--no-language m-0"
+      class="form-control-extracting-language__no-language m-0"
     >
       {{ t('formControlExtractingLanguage.failedToRetrieveLanguages') }}
     </b-alert>
