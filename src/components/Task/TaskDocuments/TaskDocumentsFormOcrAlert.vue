@@ -9,6 +9,13 @@ import settings from '@/utils/settings'
 const props = defineProps({
   language: {
     type: String
+  },
+  disabled: {
+    type: Boolean,
+    default: false
+  },
+  contentClass: {
+    type: [String, Array, Object]
   }
 })
 
@@ -30,8 +37,12 @@ const isLanguageAvailable = computed(() => {
   })
 })
 
-const shouldDisplayLanguageMessage = computed(() => {
-  return languagesStore.ocrAvailable && props.language && !isLanguageAvailable.value
+const showTesseractMissing = computed(() => {
+  return !props.disabled && languagesStore.fetched && !languagesStore.ocrAvailable
+})
+
+const showLanguageMissing = computed(() => {
+  return !props.disabled && languagesStore.fetched && languagesStore.ocrAvailable && props.language && !isLanguageAvailable.value
 })
 
 function toTesseractCode(name) {
@@ -46,34 +57,36 @@ onBeforeMount(languagesStore.fetchOnce)
 </script>
 
 <template>
-  <div
-    v-if="languagesStore.fetched"
-    class="task-documents-form-ocr-alert"
-    spinner-small
+  <b-alert
+    :model-value="showTesseractMissing"
+    :class="contentClass"
+    class="task-documents-form-ocr-alert task-documents-form-ocr-alert--tesseract-missing"
+    lazy
+    variant="warning"
   >
-    <b-alert
-      :model-value="!languagesStore.ocrAvailable"
-      lazy
-      variant="warning"
-      class="mt-3"
+    {{ t('taskDocumentsFormOcrAlert.tesseractNotInstalled') }}
+  </b-alert>
+  <b-alert
+    :model-value="showLanguageMissing"
+    :class="contentClass"
+    class="task-documents-form-ocr-alert task-documents-form-ocr-alert--language-missing"
+    lazy
+    variant="warning"
+  >
+    {{ t('taskDocumentsFormOcrAlert.isMissing', { language: languageName }) }}
+    {{ t('taskDocumentsFormOcrAlert.useDefault') }}
+    <a
+      href="https://icij.gitbook.io/datashare/local-mode/add-more-languages"
+      target="_blank"
+      class="alert-link"
     >
-      {{ t('taskDocumentsFormOcrAlert.tesseractNotInstalled') }}
-    </b-alert>
-    <b-alert
-      :model-value="shouldDisplayLanguageMessage"
-      lazy
-      variant="warning"
-      class="task-documents-form-ocr-alert__install-ocr-language mt-3"
-    >
-      {{ t('taskDocumentsFormOcrAlert.isMissing', { language: languageName }) }}
-      {{ t('taskDocumentsFormOcrAlert.useDefault') }}
-      <a
-        href="https://icij.gitbook.io/datashare/local-mode/add-more-languages"
-        target="_blank"
-        class="alert-link"
-      >
-        {{ t('taskDocumentsFormOcrAlert.installOcrLanguage', { availableLanguages: languagesStore.textLanguages.length }) }}
-      </a>
-    </b-alert>
-  </div>
+      {{ t('taskDocumentsFormOcrAlert.installOcrLanguage', { availableLanguages: languagesStore.textLanguages.length }) }}
+    </a>
+  </b-alert>
 </template>
+
+<style scoped lang="scss">
+.task-documents-form-ocr-alert {
+  margin-bottom: 0;
+}
+</style>

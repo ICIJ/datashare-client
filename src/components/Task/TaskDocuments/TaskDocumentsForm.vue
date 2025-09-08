@@ -137,7 +137,11 @@ watch(selectedProject, p => (path.value = getProjectSourcePath(p)))
         :disabled="languagesStore.missingOcrLanguages"
       />
     </form-fieldset-i18n>
-    <task-documents-form-ocr-alert v-if="extractOcr" :language="language" />
+    <task-documents-form-ocr-alert
+      :disabled="!extractOcr"
+      :language="language"
+      content-class="mb-3"
+    />
     <form-fieldset-i18n
       name="skip-indexed-documents"
       translation-key="task.documents.form.skipIndexedDocuments"
