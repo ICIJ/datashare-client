@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onBeforeMount, reactive, watch, toRef, toValue } from 'vue'
+import { computed, onBeforeMount, reactive, watch, toRef, toValue } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { useCore } from '@/composables/useCore'
