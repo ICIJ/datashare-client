@@ -5,8 +5,11 @@ import { createWebHashHistory, createRouter } from 'vue-router'
 
 import { Core } from '@/core/Core'
 import { routes } from '@/router'
+import { createPinia, setActivePinia } from 'pinia'
 
 class CoreSetup extends Core {
+  _pinia = null
+
   get plugins() {
     return [
       this.plugin,
@@ -32,6 +35,10 @@ class CoreSetup extends Core {
     return VCalendar
   }
 
+  get pinia() {
+    return this._pinia || super.pinia
+  }
+
   useAll() {
     this.usePinia()
     this.useI18n()
@@ -55,6 +62,12 @@ class CoreSetup extends Core {
     const history = createWebHashHistory()
     this._router = createRouter({ routes, history })
     this.use(this.router)
+    return this
+  }
+
+  createPinia() {
+    this._pinia = createPinia()
+    setActivePinia(this._pinia)
     return this
   }
 
