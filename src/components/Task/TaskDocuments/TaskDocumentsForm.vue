@@ -15,9 +15,6 @@ import TaskDocumentsFormOcrAlert from '@/components/Task/TaskDocuments/TaskDocum
 const props = defineProps({
   project: {
     type: String
-  },
-  disabled: {
-    type: Boolean
   }
 })
 
@@ -25,33 +22,32 @@ const { toastedPromise, core } = useCore()
 const { t } = useI18n()
 const languagesStore = useLanguagesStore()
 
-const currentProject = computed(() => {
-  return core.findProject(props.project ?? core.getDefaultProject())
-})
-
 const sourcePath = computed(() => {
-  return getProjectSourcePath(selectedProject)
+  return getProjectSourcePath(form.defaultProject)
 })
 
-const initialFormValues = computed(() => ({
-  language: null,
-  extractOcr: false,
-  skipIndexedDocuments: true,
-  project: selectedProject.value.name,
-  path: sourcePath.value
-}))
+function initialFormValues() {
+  const project = props.project ?? core.getDefaultProject()
+  const { name: defaultProject } = core.findProject(project)
 
-const selectedProject = ref(currentProject.value)
-const path = ref(initialFormValues.value.path)
-const language = ref(initialFormValues.value.language)
-const extractOcr = ref(initialFormValues.value.extractOcr)
-const skipIndexedDocuments = ref(initialFormValues.value.skipIndexedDocuments)
+  return {
+    defaultProject,
+    language: null,
+    path: getProjectSourcePath(defaultProject),
+    ocr: false,
+    filter: true
+  }
+}
 
-const form = reactive({
-  defaultProject: computed(() => selectedProject.value.name),
-  language: computed(() => (language.value?.length ? language.value : null)),
-  ocr: extractOcr,
-  filter: skipIndexedDocuments
+const form = reactive({ ...initialFormValues() })
+
+const currentProject = computed({
+  get() {
+    return core.findProject(form.defaultProject)
+  },
+  set({ name }) {
+    form.defaultProject = name
+  }
 })
 
 function getProjectSourcePath(projectRef) {
@@ -61,16 +57,14 @@ function getProjectSourcePath(projectRef) {
 }
 
 function reset() {
-  selectedProject.value = { name: initialFormValues.value.project }
-  path.value = initialFormValues.value.path
-  language.value = initialFormValues.value.language
-  extractOcr.value = initialFormValues.value.extractOcr
-  skipIndexedDocuments.value = initialFormValues.value.skipIndexedDocuments
+  for (const field in initialFormValues()) {
+    form[field] = initialFormValues()[field]
+  }
 }
 
 async function dispatchExtract() {
-  if (path.value) {
-    return core.api.indexPath(path.value, form)
+  if (form.path) {
+    return core.api.indexPath(form.path, form)
   }
   return core.api.index(form)
 }
@@ -91,9 +85,9 @@ const skipOptions = computed(() => [
 // Fetch available languages and OCR languages before mounting the component
 onBeforeMount(languagesStore.fetchOnce)
 // When the project prop changes, update the selected project
-watch(toRef(props, 'project'), () => (selectedProject.value = currentProject.value))
+watch(toRef(props, 'project'), () => (form.defaultProject = currentProject.value))
 // When a project is selected, update the path to the project's source path
-watch(selectedProject, p => (path.value = getProjectSourcePath(p)))
+watch(toRef(form, 'defaultProject'), p => form.path = getProjectSourcePath(core.findProject(p)))
 </script>
 
 <template>
@@ -107,14 +101,14 @@ watch(selectedProject, p => (path.value = getProjectSourcePath(p)))
       name="project-selector"
       translation-key="task.documents.form.projectSelector"
     >
-      <search-bar-input-dropdown-for-projects v-model="selectedProject" />
+      <search-bar-input-dropdown-for-projects v-model="currentProject" />
     </form-fieldset-i18n>
     <form-fieldset-i18n
       name="source-path"
       translation-key="task.documents.form.path"
     >
       <form-control-path
-        v-model="path"
+        v-model="form.path"
         :path="sourcePath"
         hide-folder-icon
       />
@@ -124,7 +118,7 @@ watch(selectedProject, p => (path.value = getProjectSourcePath(p)))
       translation-key="task.documents.form.extractingLanguage"
       with-description
     >
-      <form-control-extracting-language v-model="language" />
+      <form-control-extracting-language v-model="form.language" />
     </form-fieldset-i18n>
     <form-fieldset-i18n
       name="extract-extract-ocr"
@@ -133,13 +127,13 @@ watch(selectedProject, p => (path.value = getProjectSourcePath(p)))
       description-class="pt-md-0"
     >
       <form-control-ocr
-        v-model="extractOcr"
+        v-model="form.ocr"
         :disabled="languagesStore.missingOcrLanguages"
       />
     </form-fieldset-i18n>
     <task-documents-form-ocr-alert
-      :disabled="!extractOcr"
-      :language="language"
+      :disabled="!form.ocr"
+      :language="form.language"
       content-class="mb-3"
     />
     <form-fieldset-i18n
@@ -149,7 +143,7 @@ watch(selectedProject, p => (path.value = getProjectSourcePath(p)))
       description-class="pt-md-0"
     >
       <b-form-radio-group
-        v-model="skipIndexedDocuments"
+        v-model="form.filter"
         name="skip-indexed-documents"
         :options="skipOptions"
         stacked

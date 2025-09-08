@@ -77,7 +77,7 @@ describe('TaskDocumentsForm.vue', () => {
       global: { plugins, renderStubDefaultSlot: true }
     })
 
-    expect(wrapper.vm.extractOcr).toBe(false)
+    expect(wrapper.vm.form.ocr).toBe(false)
     const radio = wrapper.find('input[name="extract-ocr"][value=true]')
     expect(radio.element.checked).toBe(false)
     await radio.setValue(true)
