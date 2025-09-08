@@ -3,56 +3,70 @@ import { mount, flushPromises } from '@vue/test-utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import TaskDocumentsFormOcrAlert from '@/components/Task/TaskDocuments/TaskDocumentsFormOcrAlert'
 
-const OCR_LANGUAGES = [
-  { name: 'CHINESE', iso6392: 'zho' },
-  { name: 'ENGLISH', iso6392: 'eng' },
-  { name: 'FRENCH', iso6392: 'fra' }
-]
+vi.mock('@/api/apiInstance', () => {
+  const OCR_LANGUAGES = [
+    { name: 'CHINESE', iso6392: 'zho' },
+    { name: 'ENGLISH', iso6392: 'eng' },
+    { name: 'FRENCH', iso6392: 'fra' }
+  ]
 
-const TEXT_LANGUAGES = [
-  { name: 'CHINESE', iso6392: 'zho' },
-  { name: 'ENGLISH', iso6392: 'eng' },
-  { name: 'FRENCH', iso6392: 'fra' },
-  { name: 'SPANISH', iso6392: 'spa' },
-  { name: 'ITALIAN', iso6392: 'ita' }
-]
+  const TEXT_LANGUAGES = [
+    { name: 'CHINESE', iso6392: 'zho' },
+    { name: 'ENGLISH', iso6392: 'eng' },
+    { name: 'FRENCH', iso6392: 'fra' },
+    { name: 'SPANISH', iso6392: 'spa' },
+    { name: 'ITALIAN', iso6392: 'ita' }
+  ]
+
+  return {
+    apiInstance: {
+      index: vi.fn(),
+      indexPath: vi.fn(),
+      ocrLanguages: vi.fn().mockResolvedValue(OCR_LANGUAGES),
+      textLanguages: vi.fn().mockResolvedValue(TEXT_LANGUAGES)
+    }
+  }
+})
 
 describe('TaskDocumentsFormOcrAlert.vue', () => {
   const { plugins } = CoreSetup.init().useAll()
   let wrapper
 
-  describe('OCR for italian language is installed', () => {
-    it('should display an alert indicating that no OCR are installed', async () => {
+  describe('OCR for italian language is not installed', () => {
+    beforeEach(async () => {
       wrapper = mount(TaskDocumentsFormOcrAlert, {
         global: {
           plugins
         },
         props: {
-          isoLang: 'ita',
-          textLanguages: TEXT_LANGUAGES,
-          ocrLanguages: OCR_LANGUAGES,
-          hasTesseract: true
+          language: 'ita'
         }
       })
       await flushPromises()
-      expect(wrapper.find('.task-documents-form-ocr-alert__install_ocr_language').exists()).toBe(true)
-      expect(wrapper.find('.task-documents-form-ocr-alert').text()).not.toContain('Tesseract OCR is not installed.')
     })
 
-    it('should display an alert indicating that tesseract is not installed', async () => {
+    it('should display an alert indicating that no OCR is installed for italian', () => {
+      expect(wrapper.find('.task-documents-form-ocr-alert').text()).toContain('OCR for "Italian" is not installed.')
+      expect(wrapper.find('.task-documents-form-ocr-alert__install-ocr-language').exists()).toBeTruthy()
+    })
+  })
+
+  describe('OCR for french language is installed', () => {
+    beforeEach(async () => {
       wrapper = mount(TaskDocumentsFormOcrAlert, {
         global: {
           plugins
         },
         props: {
-          isoLang: 'ita',
-          textLanguages: TEXT_LANGUAGES,
-          ocrLanguages: OCR_LANGUAGES,
-          hasTesseract: false
+          language: 'fra'
         }
       })
       await flushPromises()
-      expect(wrapper.find('.task-documents-form-ocr-alert').text()).toContain('Tesseract OCR is not installed.')
+    })
+
+    it('should not display an alert indicating that no OCR is installed for french', () => {
+      expect(wrapper.find('.task-documents-form-ocr-alert').text()).not.toContain('OCR for "french" is not installed.')
+      expect(wrapper.find('.task-documents-form-ocr-alert__install-ocr-language').exists()).toBeFalsy()
     })
   })
 })

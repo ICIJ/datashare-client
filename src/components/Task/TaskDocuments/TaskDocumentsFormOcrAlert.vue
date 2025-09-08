@@ -1,54 +1,37 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, onBeforeMount } from 'vue'
 import { some, get, find } from 'lodash'
 import { useI18n } from 'vue-i18n'
 
+import { useLanguagesStore } from '@/store/modules/languages'
 import settings from '@/utils/settings'
-import AppOverlay from '@/components/AppOverlay/AppOverlay'
 
 const props = defineProps({
-  isoLang: {
+  language: {
     type: String
-  },
-  textLanguages: {
-    type: Array,
-    default: () => []
-  },
-  ocrLanguages: {
-    type: Array,
-    default: () => []
-  },
-  hasTesseract: {
-    type: Boolean,
-    default: true
-  },
-  isReady: {
-    type: Boolean
   }
 })
 
 const { t } = useI18n()
+const languagesStore = useLanguagesStore()
 
 const languageName = computed(() => {
-  if (props.isoLang) {
-    const name = find(props.textLanguages, language => language.iso6392 === props.isoLang)?.name
+  if (props.language) {
+    const language = find(languagesStore.textLanguages, ({ iso6392 }) => iso6392 === props.language)
+    const { name = null } = language || {}
     return t(`filter.lang.${name}`)
   }
   return 'default'
 })
 
 const isLanguageAvailable = computed(() => {
-  return some(props.ocrLanguages, ({ name, iso6392 }) => {
+  return some(languagesStore.ocrLanguages, ({ name, iso6392 }) => {
     return sameLanguage(name) || sameLanguage(iso6392)
   })
 })
 
-const isOcrLanguage = computed(() => {
-  return !props.isoLang || isLanguageAvailable.value
-})
-
 const shouldDisplayLanguageMessage = computed(() => {
-  return props.hasTesseract && !isOcrLanguage.value
+  return languagesStore.ocrAvailable && props.language && !isLanguageAvailable.value
 })
 
 function toTesseractCode(name) {
@@ -56,21 +39,23 @@ function toTesseractCode(name) {
 }
 
 function sameLanguage(nameOrIso6392) {
-  return toTesseractCode(nameOrIso6392) === toTesseractCode(props.isoLang)
+  return toTesseractCode(nameOrIso6392) === toTesseractCode(props.language)
 }
+
+onBeforeMount(languagesStore.fetchOnce)
 </script>
 
 <template>
-  <app-overlay
-    :show="!isReady"
+  <div
+    v-if="languagesStore.fetched"
     class="task-documents-form-ocr-alert"
     spinner-small
   >
     <b-alert
-      :model-value="!hasTesseract"
+      :model-value="!languagesStore.ocrAvailable"
       lazy
       variant="warning"
-      class="task-documents-form-ocr-alert__tesseract_not_installed mt-3"
+      class="mt-3"
     >
       {{ t('taskDocumentsFormOcrAlert.tesseractNotInstalled') }}
     </b-alert>
@@ -78,16 +63,17 @@ function sameLanguage(nameOrIso6392) {
       :model-value="shouldDisplayLanguageMessage"
       lazy
       variant="warning"
-      class="task-documents-form-ocr-alert__install_ocr_language mt-3"
+      class="task-documents-form-ocr-alert__install-ocr-language mt-3"
     >
       {{ t('taskDocumentsFormOcrAlert.isMissing', { language: languageName }) }}
       {{ t('taskDocumentsFormOcrAlert.useDefault') }}
       <a
         href="https://icij.gitbook.io/datashare/local-mode/add-more-languages"
         target="_blank"
+        class="alert-link"
       >
-        {{ t('taskDocumentsFormOcrAlert.installOcrLanguage', { availableLanguages: textLanguages.length }) }}
+        {{ t('taskDocumentsFormOcrAlert.installOcrLanguage', { availableLanguages: languagesStore.textLanguages.length }) }}
       </a>
     </b-alert>
-  </app-overlay>
+  </div>
 </template>

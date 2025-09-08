@@ -9,21 +9,25 @@ import { useWait } from '@/composables/useWait'
  * Defines the store for managing Datashare supported languages.
  */
 export const useLanguagesStore = defineStore('languages', () => {
+  const fetched = ref(false)
   const textLanguages = ref([])
   const ocrLanguages = ref([])
+  const ocrAvailable = ref(null)
   const { isLoading, isReady, waitFor } = useWait()
 
   const hasTextLanguages = computed(() => !!textLanguages.value.length)
   const hasOcrLanguages = computed(() => !!ocrLanguages.value.length)
 
-  const missingTextLanguages = computed(() => isReady.value && !hasTextLanguages.value)
-  const missingOcrLanguages = computed(() => isReady.value && !hasOcrLanguages.value)
+  const missingTextLanguages = computed(() => fetched.value && !hasTextLanguages.value)
+  const missingOcrLanguages = computed(() => fetched.value && !hasOcrLanguages.value)
 
-  const fetch = waitFor(() => {
-    return Promise.all([
+  const fetch = waitFor(async () => {
+    await Promise.all([
       fetchTextLanguages(),
       fetchOcrLanguages()
     ])
+
+    fetched.value = true
   })
 
   const fetchOnce = once(fetch)
@@ -34,7 +38,13 @@ export const useLanguagesStore = defineStore('languages', () => {
   })
 
   const fetchOcrLanguages = waitFor(async () => {
-    ocrLanguages.value = castArray(await api.ocrLanguages())
+    try {
+      ocrLanguages.value = castArray(await api.ocrLanguages())
+      ocrAvailable.value = true
+    }
+    catch (error) {
+      ocrAvailable.value = error.response?.status !== 503
+    }
     return ocrLanguages.value
   })
 
@@ -47,7 +57,9 @@ export const useLanguagesStore = defineStore('languages', () => {
     missingOcrLanguages,
     fetch,
     fetchOnce,
+    fetched,
     textLanguages,
-    ocrLanguages
+    ocrLanguages,
+    ocrAvailable,
   }
 })
