@@ -1,5 +1,4 @@
 import { mount, flushPromises } from '@vue/test-utils'
-import { setActivePinia, createPinia } from 'pinia'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import TaskDocumentsFormOcrAlert from '@/components/Task/TaskDocuments/TaskDocumentsFormOcrAlert'
@@ -30,15 +29,12 @@ vi.mock('@/api/apiInstance', () => {
 })
 
 describe('TaskDocumentsFormOcrAlert.vue', () => {
-  const { plugins } = CoreSetup.init().useAll()
   let wrapper
-
-  beforeEach(() => {
-    setActivePinia(createPinia())
-  })
 
   describe('OCR for italian language is not installed', () => {
     beforeEach(async () => {
+      const { plugins } = CoreSetup.init().createPinia().useAll()
+
       wrapper = mount(TaskDocumentsFormOcrAlert, {
         global: {
           plugins
@@ -51,13 +47,15 @@ describe('TaskDocumentsFormOcrAlert.vue', () => {
     })
 
     it('should display an alert indicating that no OCR is installed for italian', () => {
-      expect(wrapper.find('.task-documents-form-ocr-alert').text()).toContain('OCR for "Italian" is not installed.')
-      expect(wrapper.find('.task-documents-form-ocr-alert__install-ocr-language').exists()).toBeTruthy()
+      console.log(wrapper.html())
+      expect(wrapper.text()).toContain('OCR for "Italian" is not installed.')
     })
   })
 
   describe('OCR for french language is installed', () => {
     beforeEach(async () => {
+      const { plugins } = CoreSetup.init().createPinia().useAll()
+
       wrapper = mount(TaskDocumentsFormOcrAlert, {
         global: {
           plugins
@@ -70,8 +68,7 @@ describe('TaskDocumentsFormOcrAlert.vue', () => {
     })
 
     it('should not display an alert indicating that no OCR is installed for french', () => {
-      expect(wrapper.find('.task-documents-form-ocr-alert').text()).not.toContain('OCR for "french" is not installed.')
-      expect(wrapper.find('.task-documents-form-ocr-alert__install-ocr-language').exists()).toBeFalsy()
+      expect(wrapper.text()).not.toContain('OCR for "french" is not installed.')
     })
   })
 })

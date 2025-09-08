@@ -61,7 +61,6 @@ onBeforeMount(languagesStore.fetchOnce)
     :show="showTesseractMissing"
     :class="contentClass"
     class="task-documents-form-ocr-alert task-documents-form-ocr-alert--tesseract-missing"
-    lazy
     variant="warning"
   >
     {{ t('taskDocumentsFormOcrAlert.tesseractNotInstalled') }}
@@ -70,7 +69,6 @@ onBeforeMount(languagesStore.fetchOnce)
     :show="showLanguageMissing"
     :class="contentClass"
     class="task-documents-form-ocr-alert task-documents-form-ocr-alert--language-missing"
-    lazy
     variant="warning"
   >
     {{ t('taskDocumentsFormOcrAlert.isMissing', { language: languageName }) }}
