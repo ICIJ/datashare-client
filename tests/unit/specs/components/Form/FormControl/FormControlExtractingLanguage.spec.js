@@ -73,7 +73,6 @@ describe('FormControlExtractingLanguage.vue', () => {
     })
 
     it('should display a message when text languages is rejected', () => {
-      console.log(wrapper.html())
       expect(wrapper.find('.form-control-extracting-language__no-language').exists()).toBeTruthy()
       expect(wrapper.find('.form-control-extracting-language__no-language').text()).toBe('Failed to retrieve languages')
     })
