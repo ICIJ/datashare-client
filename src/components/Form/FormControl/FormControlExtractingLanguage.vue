@@ -1,71 +1,47 @@
-<script>
+<script setup>
+import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import AppOverlay from '@/components/AppOverlay/AppOverlay'
+import { apiInstance as api } from '@/api/apiInstance'
 import { useWait } from '@/composables/useWait'
+import AppOverlay from '@/components/AppOverlay/AppOverlay'
 
-/**
- * A form-control to select the extracting language.
- */
-export default {
-  name: 'FormControlExtractingLanguage',
-  components: {
-    AppOverlay
-  },
-  props: {
-    /**
-     * Input value
-     * @model
-     */
-    modelValue: {
-      type: String
-    }
-  },
-  emits: ['update:modelValue'],
-  setup() {
-    const { t } = useI18n()
-    return { wait: useWait(), t }
-  },
-  data() {
-    return {
-      textLanguages: []
-    }
-  },
-  computed: {
-    nullOption() {
-      return { value: null, text: this.t('formControlExtractingLanguage.nullOption') }
-    },
-    options() {
-      return this.textLanguages.map((language) => {
-        return { value: language.iso6392, text: this.t(`filter.lang.${language.name}`) }
-      })
-    },
-    loaderId() {
-      return this.wait.loaderId
-    },
-    isReady() {
-      return !this.wait.waiting(this.loaderId)
-    },
-    hasTextLanguages() {
-      return !this.textLanguages.length
-    }
-  },
-  async mounted() {
-    return this.loadLanguages()
-  },
-  methods: {
-    async loadLanguages() {
-      this.wait.start(this.loaderId)
-      try {
-        this.textLanguages = await this.$core.api.textLanguages()
-      }
-      catch {
-        this.$toast.error(this.t('formControlExtractingLanguage.failedToRetrieveLanguages'))
-      }
-      this.wait.end(this.loaderId)
-    }
+const modelValue = defineModel({
+  type: String,
+  default: null
+})
+
+const { t } = useI18n()
+const wait = useWait()
+const textLanguages = ref([])
+
+const nullOption = computed(() => ({
+  value: null,
+  text: t('formControlExtractingLanguage.nullOption')
+}))
+
+const options = computed(() =>
+  textLanguages.value.map(language => ({
+    value: language.iso6392,
+    text: t(`filter.lang.${language.name}`)
+  }))
+)
+
+const loaderId = computed(() => wait.loaderId)
+const isReady = computed(() => !wait.waiting(loaderId.value))
+const hasTextLanguages = computed(() => !textLanguages.value.length)
+
+async function loadLanguages() {
+  wait.start(loaderId.value)
+  try {
+    textLanguages.value = await api.textLanguages()
+  } catch {
+    window.$toast.error(t('formControlExtractingLanguage.failedToRetrieveLanguages'))
   }
+  wait.end(loaderId.value)
 }
+
+onMounted(loadLanguages)
 </script>
 
 <template>
@@ -85,10 +61,9 @@ export default {
     </b-alert>
     <b-form-group v-else>
       <b-form-select
-        :model-value="modelValue"
+        v-model="modelValue"
         :options="[nullOption, ...options]"
         class="form-control-extracting-language__ocr-options"
-        @update:model-value="(newValue) => $emit('update:modelValue', newValue)"
       />
     </b-form-group>
   </app-overlay>
