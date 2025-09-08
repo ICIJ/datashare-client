@@ -1,8 +1,9 @@
-import { castArray, once } from 'lodash'
+import { castArray } from 'lodash'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
 import { apiInstance as api } from '@/api/apiInstance'
+import { useOnce } from '@/composables/useOnce'
 import { useWait } from '@/composables/useWait'
 
 /**
@@ -30,7 +31,7 @@ export const useLanguagesStore = defineStore('languages', () => {
     fetched.value = true
   })
 
-  const fetchOnce = once(fetch)
+  const { run: fetchOnce } = useOnce(fetch)
 
   const fetchTextLanguages = waitFor(async () => {
     try {
