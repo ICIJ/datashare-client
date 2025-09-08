@@ -1,0 +1,53 @@
+import { castArray, once } from 'lodash'
+import { defineStore } from 'pinia'
+import { computed, ref } from 'vue'
+
+import { apiInstance as api } from '@/api/apiInstance'
+import { useWait } from '@/composables/useWait'
+
+/**
+ * Defines the store for managing Datashare supported languages.
+ */
+export const useLanguagesStore = defineStore('languages', () => {
+  const textLanguages = ref([])
+  const ocrLanguages = ref([])
+  const { isLoading, isReady, waitFor } = useWait()
+
+  const hasTextLanguages = computed(() => !!textLanguages.value.length)
+  const hasOcrLanguages = computed(() => !!ocrLanguages.value.length)
+
+  const missingTextLanguages = computed(() => isReady.value && !hasTextLanguages.value)
+  const missingOcrLanguages = computed(() => isReady.value && !hasOcrLanguages.value)
+
+  const fetch = waitFor(() => {
+    return Promise.all([
+      fetchTextLanguages(),
+      fetchOcrLanguages()
+    ])
+  })
+
+  const fetchOnce = once(fetch)
+
+  const fetchTextLanguages = waitFor(async () => {
+    textLanguages.value = castArray(await api.textLanguages())
+    return textLanguages.value
+  })
+
+  const fetchOcrLanguages = waitFor(async () => {
+    ocrLanguages.value = castArray(await api.ocrLanguages())
+    return ocrLanguages.value
+  })
+
+  return {
+    isLoading,
+    isReady,
+    hasTextLanguages,
+    hasOcrLanguages,
+    missingTextLanguages,
+    missingOcrLanguages,
+    fetch,
+    fetchOnce,
+    textLanguages,
+    ocrLanguages
+  }
+})
