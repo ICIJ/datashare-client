@@ -102,7 +102,7 @@ describe('useOnce', () => {
 
     d.resolve(123)
     const results = await Promise.all(calls)
-    results.forEach((v) => expect(v).toBe(123))
+    results.forEach(v => expect(v).toBe(123))
   })
 
   it('reset() clears cached success and allows rerun', async () => {
@@ -132,7 +132,7 @@ describe('useOnce', () => {
   })
 
   it('captures arguments from the first invocation only', async () => {
-    const fn = vi.fn(async (arg) => `hello:${arg}`)
+    const fn = vi.fn(async arg => `hello:${arg}`)
     const { run } = useOnce(fn)
 
     const pA = run('A') // first args captured internally
@@ -150,7 +150,7 @@ describe('useOnce', () => {
     const fn = vi
       .fn()
       .mockImplementationOnce(() => d1.promise) // will reject
-      .mockImplementationOnce((x) => d2.promise.then(() => `ok:${x}`))
+      .mockImplementationOnce(x => d2.promise.then(() => `ok:${x}`))
 
     const { run } = useOnce(fn)
 
