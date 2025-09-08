@@ -33,7 +33,12 @@ export const useLanguagesStore = defineStore('languages', () => {
   const fetchOnce = once(fetch)
 
   const fetchTextLanguages = waitFor(async () => {
-    textLanguages.value = castArray(await api.textLanguages())
+    try {
+      textLanguages.value = castArray(await api.textLanguages())
+    }
+    catch {
+      textLanguages.value = []
+    }
     return textLanguages.value
   })
 
@@ -43,6 +48,7 @@ export const useLanguagesStore = defineStore('languages', () => {
       ocrAvailable.value = true
     }
     catch (error) {
+      ocrLanguages.value = []
       ocrAvailable.value = error.response?.status !== 503
     }
     return ocrLanguages.value
