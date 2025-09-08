@@ -24,7 +24,7 @@ defineProps({
     default: 'outside'
   },
   buttonIcon: {
-    type: String,
+    type: [String, Object],
     default: PhDotsThreeOutlineVertical
   }
 })
