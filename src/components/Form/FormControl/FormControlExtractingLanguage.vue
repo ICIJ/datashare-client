@@ -1,9 +1,8 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import { apiInstance as api } from '@/api/apiInstance'
-import { useWait } from '@/composables/useWait'
+import { useLanguagesStore } from '@/store/modules/languages'
 import AppOverlay from '@/components/AppOverlay/AppOverlay'
 
 const modelValue = defineModel({
@@ -12,8 +11,7 @@ const modelValue = defineModel({
 })
 
 const { t } = useI18n()
-const wait = useWait()
-const textLanguages = ref([])
+const languagesStore = useLanguagesStore()
 
 const nullOption = computed(() => ({
   value: null,
@@ -21,38 +19,24 @@ const nullOption = computed(() => ({
 }))
 
 const options = computed(() =>
-  textLanguages.value.map(language => ({
+  languagesStore.textLanguages.map(language => ({
     value: language.iso6392,
     text: t(`filter.lang.${language.name}`)
   }))
 )
 
-const loaderId = computed(() => wait.loaderId)
-const isReady = computed(() => !wait.waiting(loaderId.value))
-const hasTextLanguages = computed(() => !textLanguages.value.length)
-
-async function loadLanguages() {
-  wait.start(loaderId.value)
-  try {
-    textLanguages.value = await api.textLanguages()
-  } catch {
-    window.$toast.error(t('formControlExtractingLanguage.failedToRetrieveLanguages'))
-  }
-  wait.end(loaderId.value)
-}
-
-onMounted(loadLanguages)
+onMounted(languagesStore.fetchOnce)
 </script>
 
 <template>
   <app-overlay
-    :show="!isReady"
+    :show="languagesStore.isLoading"
     class="form-control-extracting-language"
     rounded
     spinner-small
   >
     <b-alert
-      v-if="isReady && hasTextLanguages"
+      v-if="languagesStore.missingTextLanguages"
       model-value
       variant="danger"
       class="form-control-extracting-language--no-language m-0"
