@@ -163,6 +163,15 @@
     "sectionContentType": "¿Cuál es el tipo del documento?",
     "sectionDescription": "Una vez descargado, ¿cómo puedo abrirlo?"
   },
+  "documentDropdownReindexModalParent": {
+    "alert": "This document was extracted from another document. To reindex it, Datashare needs to reprocess the parent document. Depending on the file size and the selected options, this may take some time."
+  },
+  "documentDropdownReindexModal": {
+    "title": "Reindex this document",
+    "okTitle": "Reindex",
+    "formLanguage": "Document language",
+    "formOcr": "Extract text from images and PDFs (OCR)"
+  },
   "entityPopoverInfo": {
     "content": "Esta entidad fue extraída con:",
     "label": "{extractor} en {language}"
