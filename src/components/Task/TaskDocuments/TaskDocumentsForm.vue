@@ -63,10 +63,7 @@ function reset() {
 }
 
 async function dispatchExtract() {
-  if (form.path) {
-    return core.api.indexPath(form.path, form)
-  }
-  return core.api.index(form)
+  return core.api.indexPath(form.path ?? null, form)
 }
 
 const successMessage = computed(() => t(`task.documents.form.success`))

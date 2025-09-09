@@ -21,16 +21,15 @@ export class Api {
     return this.sendAction('/api/tree/' + trim(path, '/'), { method: Method.GET })
   }
 
-  index(options = {}) {
-    return this.indexPath('file', options)
+  index({ ocr = false, filter = true, language = null, path = null, defaultProject = null } = {}) {
+    const ocrLanguage = get(settings, ['iso6392', 'tesseract', language], language)
+    const options = omitBy({ ocr, path, filter, language, ocrLanguage, defaultProject }, isNull)
+    const data = { options }
+    return this.sendActionAsText(`/api/task/batchUpdate/index`, { method: Method.POST, data })
   }
 
-  indexPath(path, { ocr = false, filter = true, language = null, defaultProject = null } = {}) {
-    const ocrLanguage = get(settings, ['iso6392', 'tesseract', language], language)
-    const options = omitBy({ ocr, filter, language, ocrLanguage, defaultProject }, isNull)
-    const data = { options }
-    const trimedPath = trim(path, '/')
-    return this.sendActionAsText(`/api/task/batchUpdate/index/${trimedPath}`, { method: Method.POST, data })
+  indexPath(path, options = {}) {
+    return this.index({ ...options, path })
   }
 
   runBatchDownload(options) {
