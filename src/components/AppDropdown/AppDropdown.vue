@@ -26,6 +26,10 @@ defineProps({
   buttonIcon: {
     type: [String, Object],
     default: PhDotsThreeOutlineVertical
+  },
+  buttonIconWeight: {
+    type: String,
+    default: 'fill'
   }
 })
 </script>
@@ -43,7 +47,7 @@ defineProps({
       <slot name="button-content">
         <phosphor-icon
           :name="buttonIcon"
-          fill
+          :weight="buttonIconWeight"
         />
       </slot>
     </template>
