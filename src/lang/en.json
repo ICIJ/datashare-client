@@ -402,9 +402,9 @@
     "placeholder": "Add tags"
   },
   "documentMetadataActions": {
-    "copy": "Copy value",
-    "copyKey": "Copy key",
-    "copySearch": "Copy search",
+    "copy": "Copy metadata value",
+    "copyKey": "Copy metadata key",
+    "copySearch": "Copy as search query",
     "search": "Search metadata value",
     "pin": "Pin metadata"
   },

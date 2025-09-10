@@ -81,8 +81,10 @@ const indices = computed(() => props.index)
 .document-metadata-actions {
   display: inline-flex;
   gap: 2px;
-  &:deep(.haptic-copy){
-    all: unset !important;
+  &:deep(.dropdown-item .haptic-copy){
+    // haptic-copy needs to have its default styles completely removed
+    // because it's a b-button and the dropdown-item is also a button
+    all: unset ;
   }
 }
 </style>
