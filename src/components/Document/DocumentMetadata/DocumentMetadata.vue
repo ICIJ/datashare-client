@@ -41,7 +41,6 @@ defineProps({
     />
     <div class="document-metadata__label">
       <span
-        v-b-tooltip.body="{ delay: tooltipDelay }"
         :title="label"
       >
         {{ label }}

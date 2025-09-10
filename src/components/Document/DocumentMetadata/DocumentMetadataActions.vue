@@ -4,6 +4,7 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import DocumentMetadataActionsEntry from './DocumentMetadataActionsEntry'
+import AppDropdown from '@/components/AppDropdown/AppDropdown'
 
 const pinned = defineModel('pinned', { type: Boolean })
 
@@ -40,13 +41,31 @@ const indices = computed(() => props.index)
         icon="magnifying-glass"
         @click="emit('search')"
       />
-      <haptic-copy
-        :label="t('documentMetadataActions.copy')"
-        :text="value"
-        hide-label
-        class="border-0"
-        variant="outline-secondary"
-      />
+      <app-dropdown
+        :button-icon="PhClipboard"
+        button-icon-weight="regular"
+      >
+        <b-dropdown-item>
+          <haptic-copy
+            :class="{'btn':false, 'btn-md':false}"
+            :label="t('documentMetadataActions.copy')"
+            :text="value"
+          />
+        </b-dropdown-item>
+        <b-dropdown-item>
+          <haptic-copy
+            tag="span"
+            :label="t('documentMetadataActions.copyKey')"
+            :text="name"
+          />
+        </b-dropdown-item>
+        <b-dropdown-item>
+          <haptic-copy
+            :label="t('documentMetadataActions.copySearch')"
+            :text="q"
+          />
+        </b-dropdown-item>
+      </app-dropdown>
       <document-metadata-actions-entry
         :label="t('documentMetadataActions.pin')"
         icon="push-pin"
@@ -62,5 +81,8 @@ const indices = computed(() => props.index)
 .document-metadata-actions {
   display: inline-flex;
   gap: 2px;
+  &:deep(.haptic-copy){
+    all: unset !important;
+  }
 }
 </style>
