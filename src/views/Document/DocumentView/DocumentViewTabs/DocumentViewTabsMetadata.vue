@@ -138,11 +138,11 @@ const canonicalItems = computed(() => [
   }
 ])
 
-const isCannonical = name => canonicalItems.value.map(property('name')).includes(name)
+const isCanonical = name => canonicalItems.value.map(property('name')).includes(name)
 
 const metadataItems = computed(() => {
   return document.value.metadata
-    .filter(name => !isCannonical(name) && !isCannonical(`metadata.${name}`))
+    .filter(name => !isCanonical(name) && !isCanonical(`metadata.${name}`))
     .map((name) => {
       const label = document.value.shortMetaName(name)
       const value = document.value.meta(name)
