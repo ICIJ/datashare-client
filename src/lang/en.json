@@ -404,7 +404,7 @@
   "documentMetadataActions": {
     "copy": "Copy metadata value",
     "copyKey": "Copy metadata key",
-    "copySearch": "Copy as search query",
+    "copySearch": "Copy metadata as search query",
     "search": "Search metadata value",
     "pin": "Pin metadata"
   },
