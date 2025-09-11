@@ -18,7 +18,6 @@ import SearchNav from '@/views/Search/SearchNav'
 import DocumentEntries from '@/components/Document/DocumentEntries/DocumentEntries'
 import Hook from '@/components/Hook/Hook'
 import { useDocument } from '@/composables/useDocument'
-import { whenIsRoute } from '@/composables/whenIsRoute'
 import { useUrlPageFromWithStore } from '@/composables/useUrlPageFromWithStore'
 import { useSearchFilter } from '@/composables/useSearchFilter'
 import { useSearchBreadcrumb } from '@/composables/useSearchBreadcrumb'
@@ -63,38 +62,24 @@ const toggleSearchBreadcrumb = ref(false)
 const selectMode = ref(false)
 
 // The modal is displayed only if there is enough space to display the document view.
-// In this function, it's important we refresh the route before assigning the value to the
-// enoughFloatingSpace ref in order to avoid a brief flicker of the document view in the modal.
-const toggleDocumentModal = async (enoughSpace) => {
-  // if (false && documentRoute.value && hasEntries.value && (!enoughSpace || !isListLayout.value || route.query.modal)) {
-  //   await refreshRoute()
-  // }
-  enoughFloatingSpace.value = enoughSpace
-}
-
+const toggleDocumentModal = async enoughSpace => (enoughFloatingSpace.value = enoughSpace)
 // The "floating space" is the right side of the list layout, which display the document view.
 const enoughFloatingSpace = ref(false)
+
 // In list view, if the floating space is not enough, the document view is displayed in a modal.
 // User can also force the document view to be displayed in a modal by adding the "modal" query parameter.
 const renderDocumentInModal = computed(() => !isListLayout.value || route.query.modal)
 const renderDocumentInFullWidth = computed(() => !enoughFloatingSpace.value && !renderDocumentInModal.value)
 
-function adjustDocumentFloatingSizes() {
-  if (renderDocumentInFullWidth.value) {
-    if (isSearchRoute.value) {
-      toValue(entriesRef)?.expandFull()
-    }
-    else {
-      toValue(entriesRef)?.reduceFull()
-    }
-  }
-}
-
 // When the document view is displayed in "full width", the sizes of the floating blocks
 // must be adjusted. For instance, if the search results are shown, the DocumentFloating
 // component must be expanded to take the whole width. If the document is shown, that's the
 // opposite and the document should take the whole width.
-watch([renderDocumentInFullWidth, isSearchRoute], () => adjustDocumentFloatingSizes)
+watch([renderDocumentInFullWidth, isSearchRoute], () => {
+  if (renderDocumentInFullWidth.value) {
+    toValue(entriesRef)?.toggleFullWidth(!isSearchRoute.value)
+  }
+})
 
 const total = computed(() => parseInt(searchStore.response.total))
 const perPage = computed(() => parseInt(appStore.getSettings('search', 'perPage')))
