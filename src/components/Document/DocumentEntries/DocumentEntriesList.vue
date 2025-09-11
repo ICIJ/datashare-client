@@ -67,6 +67,8 @@ defineExpose({
   <document-floating
     ref="element"
     class="document-entries-list"
+    no-reduce
+    no-expand
     fill
   >
     <template #start>
