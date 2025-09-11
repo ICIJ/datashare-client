@@ -29,7 +29,7 @@ import { MODE_NAME } from '@/mode'
 import { useAppStore, useSearchStore } from '@/store/modules'
 
 const { toggleSettings, toggleFilters, toggleSidebar, isFiltersClosed } = useViews()
-const { provideDocumentViewFloatingId, documentRoute } = useDocument()
+const { provideDocumentViewFloatingId } = useDocument()
 const {
   refreshRoute,
   refreshRouteFromStart,
@@ -41,7 +41,7 @@ const {
   onAfterRouteQueryFromUpdate
 } = useSearchFilter()
 const { count: searchBreadcrumbCounter, anyFilters } = useSearchBreadcrumb()
-const { hasEntries, hasCarousel } = useSearchNav()
+const { hasCarousel, searchRoute } = useSearchNav()
 
 const { t } = useI18n()
 const entriesRef = useTemplateRef('entries')
@@ -66,10 +66,9 @@ const selectMode = ref(false)
 // In this function, it's important we refresh the route before assigning the value to the
 // enoughFloatingSpace ref in order to avoid a brief flicker of the document view in the modal.
 const toggleDocumentModal = async (enoughSpace) => {
-  if (documentRoute.value && hasEntries.value && (!enoughSpace || !isListLayout.value || route.query.modal)) {
-    await refreshRoute()
-  }
-
+  // if (false && documentRoute.value && hasEntries.value && (!enoughSpace || !isListLayout.value || route.query.modal)) {
+  //   await refreshRoute()
+  // }
   enoughFloatingSpace.value = enoughSpace
 }
 
@@ -77,7 +76,25 @@ const toggleDocumentModal = async (enoughSpace) => {
 const enoughFloatingSpace = ref(false)
 // In list view, if the floating space is not enough, the document view is displayed in a modal.
 // User can also force the document view to be displayed in a modal by adding the "modal" query parameter.
-const renderDocumentInModal = computed(() => !enoughFloatingSpace.value || !isListLayout.value || route.query.modal)
+const renderDocumentInModal = computed(() => !isListLayout.value || route.query.modal)
+const renderDocumentInFullWidth = computed(() => !enoughFloatingSpace.value && !renderDocumentInModal.value)
+
+function adjustDocumentFloatingSizes() {
+  if (renderDocumentInFullWidth.value) {
+    if (isSearchRoute.value) {
+      toValue(entriesRef)?.expandFull()
+    }
+    else {
+      toValue(entriesRef)?.reduceFull()
+    }
+  }
+}
+
+// When the document view is displayed in "full width", the sizes of the floating blocks
+// must be adjusted. For instance, if the search results are shown, the DocumentFloating
+// component must be expanded to take the whole width. If the document is shown, that's the
+// opposite and the document should take the whole width.
+watch([renderDocumentInFullWidth, isSearchRoute], () => adjustDocumentFloatingSizes)
 
 const total = computed(() => parseInt(searchStore.response.total))
 const perPage = computed(() => parseInt(appStore.getSettings('search', 'perPage')))
@@ -99,11 +116,6 @@ const page = useUrlPageFromWithStore({
 })
 
 const documentViewFloatingId = provideDocumentViewFloatingId()
-
-const resetEntriesListSize = () => toValue(entriesRef)?.resetListSize?.()
-// The user might have resized the entries list or the document view. When the search is updated
-// or a new document is loaded, we need to reset original size to ensure that they are displayed.
-watch(() => route.query, whenIsRoute('search', resetEntriesListSize), { deep: true, immediate: true })
 
 // Refresh route query when a filter changes (either their values or if they are excluded)
 watchFilters(refreshRouteFromStart)
@@ -139,6 +151,11 @@ onAfterRouteQueryFromUpdate(refreshSearchFromRoute, { immediate: route.name === 
           :search-breadcrumb-counter="searchBreadcrumbCounter"
         />
         <search-breadcrumb v-model:visible="toggleSearchBreadcrumb" />
+        <div v-if="renderDocumentInFullWidth && !isSearchRoute">
+          <router-link :to="searchRoute">
+            Back
+          </router-link>
+        </div>
         <div class="search__main__results">
           <empty-state
             v-if="isErroed"
