@@ -85,8 +85,6 @@ const dragEnd = ({ detail }) => {
       v-draggable.relative="{ target, minStart, minEnd, reduceThreshold, expandThreshold }"
       class="separator-line__drag"
       :dragging="dragging"
-      @reduce="reduce"
-      @expand="expand"
       @drag="drag"
       @dragstart="dragStart"
       @dragend="dragEnd"

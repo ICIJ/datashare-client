@@ -65,20 +65,25 @@ const separatorLineLeft = ref(props.minStartWidth)
 
 const enoughStartSpace = computed(() => separatorLineLeft.value >= props.minStartWidth)
 const enoughEndSpace = computed(() => separatorLineRight.value >= props.minEndWidth)
-const enoughSpace = computed(() => enoughStartSpace.value && enoughEndSpace.value)
-watch(enoughSpace, value => emit('update:enoughSpace', value), { immediate: !!elementRef?.value?.$el })
+const enoughWidth = computed(() => fullWidth.value > (props.minStartWidth + props.minEndWidth))
+// Enough space width to display list and document side by side
+const enoughSpace = computed(() => enoughStartSpace.value && enoughEndSpace.value && enoughWidth.value)
+
+watch(enoughSpace, (value) => {
+  console.log('enoughSpace', value)
+
+  emit('update:enoughSpace', value)
+}, { immediate: !!elementRef?.value?.$el })
 
 const reachedZeroWidth = computed(() => separatorLineLeft.value === 0)
 const reachedMinWidth = computed(() => separatorLineLeft.value <= props.minStartWidth)
-const reachedFullWidth = computed(() => separatorLineLeft.value > fullWidth.value - props.minEndWidth)
+const reachedFullWidth = computed(() => separatorLineLeft.value > Math.max(fullWidth.value - props.minEndWidth, 0))
 
 const floatingChildren = querySelectorAll('.document-floating__start__floating > *', { immediate: false })
 const hasFloatingChildren = computed(() => !!floatingChildren.value.length)
-// watch(hasFloatingChildren, value => value && resetStartSize())
 
 const floatingSiblings = querySelectorAll('.document-floating__start__floating ~ *', { immediate: false })
 const hasFloatingSiblings = computed(() => !!floatingSiblings.value.length)
-// watch(hasFloatingSiblings, value => value && resetStartSize())
 
 const separatorLineStyle = computed(() => {
   const left = reachedFullWidth.value ? '100%' : `${separatorLineLeft.value}px`
@@ -117,20 +122,30 @@ function drag(left) {
 
 function reduce() {
   if (reachedMinWidth.value) {
-    separatorLineLeft.value = 0
+    reduceFull()
   }
   else {
     separatorLineLeft.value = props.minStartWidth
   }
 }
 
-function expand(left) {
+function reduceFull() {
+  console.log('reduceFull document floating')
+  separatorLineLeft.value = 0
+}
+
+function expand() {
   if (reachedZeroWidth.value) {
     separatorLineLeft.value = props.minStartWidth
   }
   else {
-    separatorLineLeft.value = left
+    expandFull()
   }
+}
+
+function expandFull() {
+  console.log('expandFull document floating')
+  separatorLineLeft.value = fullWidth.value - 50
 }
 
 function resetSize() {
@@ -150,7 +165,7 @@ function resetEndSize() {
   }
 }
 
-defineExpose({ resetSize, resetStartSize, resetEndSize })
+defineExpose({ resetSize, resetStartSize, resetEndSize, reduceFull, expandFull })
 </script>
 
 <template>
@@ -263,7 +278,8 @@ defineExpose({ resetSize, resetStartSize, resetEndSize })
     transform: translateX(-50%);
     display:none;
     @include media-breakpoint-up(sm) {
-      .document-floating--has-floating-children &,.document-floating--has-floating-siblings &{
+      .document-floating--has-floating-children &,
+      .document-floating--has-floating-siblings &{
         display: block;
       }
     }

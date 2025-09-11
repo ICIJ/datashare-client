@@ -70,6 +70,12 @@ defineExpose({
   },
   resetDocumentSize() {
     return toValue(elementRef)?.resetDocumentSize?.()
+  },
+  reduceFull() {
+    return toValue(elementRef)?.reduceFull?.()
+  },
+  expandFull() {
+    return toValue(elementRef)?.expandFull?.()
   }
 })
 </script>
