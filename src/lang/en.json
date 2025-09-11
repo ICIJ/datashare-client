@@ -402,9 +402,11 @@
     "placeholder": "Add tags"
   },
   "documentMetadataActions": {
-    "copy": "Copy this metadata value",
-    "search": "Search this metadata value",
-    "pin": "Pin this metadata"
+    "copy": "Copy metadata value",
+    "copyKey": "Copy metadata key",
+    "copySearch": "Copy metadata as search query",
+    "search": "Search metadata value",
+    "pin": "Pin metadata"
   },
   "documentTranslatedContent": {
     "detected": "Detected language",
