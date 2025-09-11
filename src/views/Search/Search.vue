@@ -26,6 +26,7 @@ import { useViews } from '@/composables/useViews'
 import { LAYOUTS } from '@/enums/layouts'
 import { MODE_NAME } from '@/mode'
 import { useAppStore, useSearchStore } from '@/store/modules'
+import SearchBackLink from '@/views/Search/SearchBackLink'
 
 const { toggleSettings, toggleFilters, toggleSidebar, isFiltersClosed } = useViews()
 const { provideDocumentViewFloatingId } = useDocument()
@@ -136,11 +137,6 @@ onAfterRouteQueryFromUpdate(refreshSearchFromRoute, { immediate: route.name === 
           :search-breadcrumb-counter="searchBreadcrumbCounter"
         />
         <search-breadcrumb v-model:visible="toggleSearchBreadcrumb" />
-        <div v-if="renderDocumentInFullWidth && !isSearchRoute">
-          <router-link :to="searchRoute">
-            Back
-          </router-link>
-        </div>
         <div class="search__main__results">
           <empty-state
             v-if="isErroed"
@@ -197,6 +193,11 @@ onAfterRouteQueryFromUpdate(refreshSearchFromRoute, { immediate: route.name === 
                   :is="Component"
                   v-else
                 >
+                  <template #header-start>
+                    <div v-if="renderDocumentInFullWidth && !isSearchRoute">
+                      <search-back-link />
+                    </div>
+                  </template>
                   <template #nav>
                     <search-nav />
                   </template>
