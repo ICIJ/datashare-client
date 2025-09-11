@@ -77,9 +77,11 @@ const reachedFullWidth = computed(() => separatorLineLeft.value > Math.max(fullW
 
 const floatingChildren = querySelectorAll('.document-floating__start__floating > *', { immediate: false })
 const hasFloatingChildren = computed(() => !!floatingChildren.value.length)
+watch(hasFloatingChildren, value => value && resetStartSize())
 
 const floatingSiblings = querySelectorAll('.document-floating__start__floating ~ *', { immediate: false })
 const hasFloatingSiblings = computed(() => !!floatingSiblings.value.length)
+watch(hasFloatingSiblings, value => value && resetStartSize())
 
 const separatorLineStyle = computed(() => {
   const left = reachedFullWidth.value ? '100%' : `${separatorLineLeft.value}px`
