@@ -69,11 +69,7 @@ const enoughWidth = computed(() => fullWidth.value > (props.minStartWidth + prop
 // Enough space width to display list and document side by side
 const enoughSpace = computed(() => enoughStartSpace.value && enoughEndSpace.value && enoughWidth.value)
 
-watch(enoughSpace, (value) => {
-  console.log('enoughSpace', value)
-
-  emit('update:enoughSpace', value)
-}, { immediate: !!elementRef?.value?.$el })
+watch(enoughSpace, value => emit('update:enoughSpace', value), { immediate: !!elementRef?.value?.$el })
 
 const reachedZeroWidth = computed(() => separatorLineLeft.value === 0)
 const reachedMinWidth = computed(() => separatorLineLeft.value <= props.minStartWidth)
@@ -122,15 +118,14 @@ function drag(left) {
 
 function reduce() {
   if (reachedMinWidth.value) {
-    reduceFull()
+    reduceFloatingStart()
   }
   else {
     separatorLineLeft.value = props.minStartWidth
   }
 }
 
-function reduceFull() {
-  console.log('reduceFull document floating')
+function reduceFloatingStart() {
   separatorLineLeft.value = 0
 }
 
@@ -139,12 +134,11 @@ function expand() {
     separatorLineLeft.value = props.minStartWidth
   }
   else {
-    expandFull()
+    expandFloatingStart()
   }
 }
 
-function expandFull() {
-  console.log('expandFull document floating')
+function expandFloatingStart() {
   separatorLineLeft.value = fullWidth.value - 50
 }
 
@@ -165,7 +159,11 @@ function resetEndSize() {
   }
 }
 
-defineExpose({ resetSize, resetStartSize, resetEndSize, reduceFull, expandFull })
+function toggleFullWidth(toggler) {
+  return toggler ? reduceFloatingStart() : expandFloatingStart()
+}
+
+defineExpose({ resetSize, resetStartSize, resetEndSize, toggleFullWidth })
 </script>
 
 <template>
