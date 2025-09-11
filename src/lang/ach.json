@@ -402,9 +402,11 @@
     "placeholder": "crwdns8000:0crwdne8000:0"
   },
   "documentMetadataActions": {
-    "copy": "crwdns8002:0crwdne8002:0",
-    "search": "crwdns8004:0crwdne8004:0",
-    "pin": "crwdns8006:0crwdne8006:0"
+    "copy": "crwdns10000:0crwdne10000:0",
+    "copyKey": "crwdns10002:0crwdne10002:0",
+    "copySearch": "crwdns10004:0crwdne10004:0",
+    "search": "crwdns10006:0crwdne10006:0",
+    "pin": "crwdns10008:0crwdne10008:0"
   },
   "documentTranslatedContent": {
     "detected": "crwdns8008:0crwdne8008:0",
