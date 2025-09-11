@@ -116,6 +116,11 @@ defineExpose({
   &:deep(.document-floating__separator-line) {
     top: $spacer;
     height: calc(100% - #{$spacer * 2});
+
+  }
+  &:deep(.document-floating--reached-min-width .document-floating__separator-line),
+  &:deep(.document-floating--reached-full-width .document-floating__separator-line) {
+    display: none;
   }
 
   &:deep(.document-floating__start__floating) {

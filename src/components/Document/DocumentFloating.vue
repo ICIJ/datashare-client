@@ -277,17 +277,11 @@ defineExpose({ resetSize, resetStartSize, resetEndSize, toggleFullWidth })
   &__separator-line {
     transform: translateX(-50%);
     display:none;
-    @include media-breakpoint-up(sm) {
-      .document-floating--has-floating-children &,
-      .document-floating--has-floating-siblings &{
-        display: block;
-      }
-    }
 
-    /*.document-floating--enough-space.document-floating--has-floating-children &,
+    .document-floating--enough-space.document-floating--has-floating-children &,
     .document-floating--enough-space.document-floating--has-floating-siblings & {
       display: block;
-    }*/
+    }
   }
 
   &__end {
