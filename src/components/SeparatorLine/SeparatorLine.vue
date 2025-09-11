@@ -56,8 +56,12 @@ const { state: targetState } = useResizeObserver(target)
 
 const emit = defineEmits(['reduce', 'expand', 'drag', 'dragstart', 'dragend'])
 const getMax = () => target.value.parentNode.getBoundingClientRect().width - targetState.offsetWidth
-const reduce = () => !props.noReduce && emit('reduce', 0)
-const expand = () => !props.noExpand && emit('expand', getMax())
+const reduce = () => {
+  return !props.noReduce && emit('reduce', 0)
+}
+const expand = () => {
+  return !props.noExpand && emit('expand', getMax())
+}
 
 const drag = ({ detail }) => {
   dragging.value = true
@@ -85,6 +89,8 @@ const dragEnd = ({ detail }) => {
       v-draggable.relative="{ target, minStart, minEnd, reduceThreshold, expandThreshold }"
       class="separator-line__drag"
       :dragging="dragging"
+      @expand="expand"
+      @reduce="reduce"
       @drag="drag"
       @dragstart="dragStart"
       @dragend="dragEnd"
