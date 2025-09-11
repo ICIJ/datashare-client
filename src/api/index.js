@@ -23,7 +23,8 @@ export class Api {
 
   index({ ocr = false, filter = true, language = null, path = null, defaultProject = null } = {}) {
     const ocrLanguage = get(settings, ['iso6392', 'tesseract', language], language)
-    const options = omitBy({ ocr, path, filter, language, ocrLanguage, defaultProject }, isNull)
+    const trimedPath = trim(path, '/')
+    const options = omitBy({ ocr, path: trimedPath, filter, language, ocrLanguage, defaultProject }, isNull)
     const data = { options }
     return this.sendActionAsText(`/api/task/batchUpdate/index`, { method: Method.POST, data })
   }

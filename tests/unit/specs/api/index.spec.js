@@ -20,12 +20,13 @@ describe('Datashare backend client', () => {
     json = await api.indexPath('example')
     expect(axios.request).toBeCalledWith(
       expect.objectContaining({
-        url: Api.getFullUrl('/api/task/batchUpdate/index/example'),
+        url: Api.getFullUrl('/api/task/batchUpdate/index'),
         method: 'POST',
         data: {
           options: {
             filter: true,
-            ocr: false
+            ocr: false,
+            path: 'example'
           }
         }
       })
@@ -35,7 +36,15 @@ describe('Datashare backend client', () => {
     json = await api.indexPath('/file/')
     expect(axios.request).toBeCalledWith(
       expect.objectContaining({
-        url: Api.getFullUrl('/api/task/batchUpdate/index/file')
+        url: Api.getFullUrl('/api/task/batchUpdate/index'),
+        method: 'POST',
+        data: {
+          options: {
+            filter: true,
+            ocr: false,
+            path: 'file'
+          }
+        }
       })
     )
   })
@@ -43,12 +52,13 @@ describe('Datashare backend client', () => {
     json = await api.indexPath('file', { ocr: true })
     expect(axios.request).toBeCalledWith(
       expect.objectContaining({
-        url: Api.getFullUrl('/api/task/batchUpdate/index/file'),
+        url: Api.getFullUrl('/api/task/batchUpdate/index'),
         method: 'POST',
         data: {
           options: {
             ocr: true,
-            filter: true
+            filter: true,
+            path: 'file'
           }
         }
       })
@@ -58,12 +68,13 @@ describe('Datashare backend client', () => {
     json = await api.indexPath('file', { filter: false })
     expect(axios.request).toBeCalledWith(
       expect.objectContaining({
-        url: Api.getFullUrl('/api/task/batchUpdate/index/file'),
+        url: Api.getFullUrl('/api/task/batchUpdate/index'),
         method: 'POST',
         data: {
           options: {
             filter: false,
-            ocr: false
+            ocr: false,
+            path: 'file'
           }
         }
       })
@@ -74,14 +85,15 @@ describe('Datashare backend client', () => {
     json = await api.indexPath('file', { language: 'fra' })
     expect(axios.request).toBeCalledWith(
       expect.objectContaining({
-        url: Api.getFullUrl('/api/task/batchUpdate/index/file'),
+        url: Api.getFullUrl('/api/task/batchUpdate/index'),
         method: 'POST',
         data: {
           options: {
             filter: true,
             ocr: false,
             language: 'fra',
-            ocrLanguage: 'fra'
+            ocrLanguage: 'fra',
+            path: 'file'
           }
         }
       })
@@ -89,19 +101,19 @@ describe('Datashare backend client', () => {
   })
 
   it('executes a default extract (/index) action by calling indexPath with "file" as default', async () => {
-    const spy = vi.spyOn(api, 'indexPath')
-    json = await api.index({})
+    const spy = vi.spyOn(api, 'index')
+    json = await api.indexPath('file', {})
 
     expect(spy).toHaveBeenCalledTimes(1)
-    expect(spy).toBeCalledWith('file', {})
+    expect(spy).toBeCalledWith({ path: 'file' })
   })
 
   it('calls index with specified language', async () => {
-    const spy = vi.spyOn(api, 'indexPath')
+    const spy = vi.spyOn(api, 'index')
 
-    json = await api.index({ language: 'fra' })
+    json = await api.indexPath('file', { language: 'fra' })
     expect(spy).toHaveBeenCalled()
-    expect(spy).toBeCalledWith('file', { language: 'fra' })
+    expect(spy).toBeCalledWith({ path: 'file', language: 'fra' })
   })
 
   it('should return backend response to findNames', async () => {
