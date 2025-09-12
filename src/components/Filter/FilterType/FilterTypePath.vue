@@ -80,6 +80,7 @@ watchIndices(reset)
         :order-by="filter.orderBy"
         :no-stats="hideCount"
         :nested="nested"
+        no-documents
         no-label
         no-link
         elasticsearch-only
