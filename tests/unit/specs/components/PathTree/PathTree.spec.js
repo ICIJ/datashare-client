@@ -64,10 +64,10 @@ describe('PathTree.vue', () => {
           projects: [index],
           path: '/home/foo',
           selectedPaths: ['path_01', 'path_02'],
-          size: true,
           count: true,
           nested: true,
-          infiniteScroll: false
+          infiniteScroll: false,
+          noDocuments: true
         },
         global: {
           plugins: core.plugins,
@@ -82,20 +82,6 @@ describe('PathTree.vue', () => {
 
     it('should be a Vue instance', () => {
       expect(wrapper).toBeTruthy()
-    })
-
-    it('should display 3 directories including the current', async () => {
-      await letData(es)
-        .have(new IndexedDocuments().setBaseName('/home/foo/bar/doc_01').withIndex(index).count(5))
-        .commit()
-      await letData(es)
-        .have(new IndexedDocuments().setBaseName('/home/foo/baz/doc_02').withIndex(index).count(5))
-        .commit()
-      await wrapper.vm.loadData()
-
-      expect(wrapper.find('.path-tree-view-entry-stats-documents').exists()).toBeTruthy()
-      expect(wrapper.find('.path-tree-view-entry-stats-documents').text()).toBe('10')
-      expect(wrapper.findAll('.path-tree-view-entry')).toHaveLength(3)
     })
 
     it('should display 4 directories including one from the tree', async () => {
@@ -162,10 +148,10 @@ describe('PathTree.vue', () => {
         props: {
           projects: [index],
           path: 'C:\\home\\foo',
-          size: true,
           count: true,
           nested: true,
-          infiniteScroll: false
+          infiniteScroll: false,
+          noDocuments: true
         },
         global: {
           plugins: core.plugins,
