@@ -1,8 +1,11 @@
 <template>
-  <div class="app d-flex">
+  <div
+    class="app"
+    :style="style"
+  >
     <hook name="app:before" />
-    <app-sidebar />
-    <div class="app__view flex-grow-1">
+    <app-sidebar ref="sidebar" />
+    <div class="app__view">
       <router-view v-slot="{ Component }">
         <component :is="Component">
           <template
@@ -36,7 +39,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, onBeforeUnmount } from 'vue'
+import { computed, onMounted, onBeforeUnmount, useTemplateRef } from 'vue'
 import { compact, get, property } from 'lodash'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -52,6 +55,7 @@ const { core } = useCore()
 const appStore = useAppStore()
 const { t } = useI18n()
 const route = useRoute()
+const sidebar = useTemplateRef('sidebar')
 
 const signinUrl = computed(() => import.meta.env.VITE_DS_AUTH_SIGNIN)
 
@@ -65,6 +69,12 @@ const handleHttpError = (err) => {
     core.toast.error(body, { href, linkLabel, autoClose: false })
   }
 }
+
+const style = computed(() => {
+  return {
+    '--app-sidebar-width': `${sidebar.value?.width ?? 0}px`
+  }
+})
 
 const hasSettings = computed(() => {
   return route?.meta?.settings !== false && !!settingComponent.value
@@ -99,12 +109,19 @@ onBeforeUnmount(() => {
 <style lang="scss" scoped>
 .app {
   --app-nav-height: #{$app-nav-height};
+  --app-sidebar-width: 0px;
 
   min-height: 100vh;
+  display: flex;
 
-  &__view:has(.table-responsive) {
-    max-width: 100vw;
-    overflow-x: hidden;
+  &__view {
+    flex: 1 1 auto;
+    max-width: calc(100vw - var(--app-sidebar-width));
+
+    &:has(.table-responsive) {
+      overflow-x: hidden;
+    }
   }
+
 }
 </style>

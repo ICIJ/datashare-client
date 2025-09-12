@@ -67,7 +67,7 @@ const classList = computed(() => {
   }
 
   &--fluid {
-    max-width: 100vw;
+    max-width: 100%;
   }
 
   &--compact {
