@@ -498,15 +498,15 @@ const clearPagesAndLoadTree = async () => {
 }
 
 const totalDocuments = computed(() => {
-  return get(lastPage.value, 'hits.total.value', 0)
+  return get(pages.value, '0.directories.hits.total.value', 0)
 })
 
 const totalDirectories = computed(() => {
-  return Math.max(0, get(lastPage.value, 'aggregations.total_directories.value', 0) - 1)
+  return Math.max(0, get(pages.value, '0.directories.aggregations.total_directories.value', 0) - 1)
 })
 
 const totalSize = computed(() => {
-  return get(lastPage.value, 'aggregations.total_size.value', 0)
+  return get(pages.value, '0.directories.aggregations.total_size.value', 0)
 })
 
 onBeforeMount(() => {
