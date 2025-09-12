@@ -83,7 +83,7 @@ watchIndices(reset)
         no-documents
         no-label
         no-link
-        elasticsearch-only
+        no-tree
         select-mode
         multiple
       />

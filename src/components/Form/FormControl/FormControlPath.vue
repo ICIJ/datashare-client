@@ -19,7 +19,7 @@ const props = defineProps({
   multiple: {
     type: Boolean
   },
-  elasticsearchOnly: {
+  noTree: {
     type: Boolean,
     default: false
   },
@@ -95,7 +95,7 @@ function onOk() {
         nested
         no-stats
         select-mode
-        :elasticsearch-only="elasticsearchOnly"
+        :no-tree="noTree"
       />
     </app-modal>
   </div>

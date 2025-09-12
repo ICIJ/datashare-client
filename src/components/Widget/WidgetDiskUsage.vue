@@ -17,7 +17,7 @@
         v-model:path="path"
         :projects="[project]"
         nested
-        elasticsearch-only
+        no-tree
       />
     </app-modal>
   </div>
