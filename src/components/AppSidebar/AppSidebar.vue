@@ -1,7 +1,8 @@
 <script setup>
-import { computed, onBeforeMount, watch } from 'vue'
+import { computed, onBeforeMount, watch, useTemplateRef } from 'vue'
 import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { useElementSize } from '@vueuse/core'
 
 import AppSidebarFooter from './AppSidebarFooter'
 import AppSidebarSection from './AppSidebarSection'
@@ -23,6 +24,8 @@ import { useAppStore } from '@/store/modules'
 import settings from '@/utils/settings'
 
 const appStore = useAppStore()
+const element = useTemplateRef('element')
+const { width } = useElementSize(element)
 const { core } = useCore()
 const { searchRoute, isSearchChildRoute } = useSearchNav()
 const { isServer } = useMode()
@@ -111,6 +114,13 @@ onBeforeRouteUpdate(autoClose)
 onBeforeRouteLeave(autoClose)
 // Ensure the sidebar is closed by default on mobile devices
 onBeforeMount(() => (appStore.sidebar.closed = appStore.sidebar.closed || isOffCanvas.value))
+
+defineExpose({
+  // Exposing the width of the sidebar. When the sidebar is in off-canvas mode,
+  // its width is considered to be 0 so it doesn't take space in the layout.
+  // @see App.vue for usage in CSS variable.
+  width: computed(() => isOffCanvas.value ? 0 : width.value)
+})
 </script>
 
 <template>
@@ -119,6 +129,7 @@ onBeforeMount(() => (appStore.sidebar.closed = appStore.sidebar.closed || isOffC
     :active="isOffCanvas"
   >
     <div
+      ref="element"
       class="app-sidebar"
       :class="classList"
     >
