@@ -30,16 +30,26 @@ const props = defineProps({
   level: {
     type: Number,
     default: 0
+  },
+  type: {
+    type: String,
+    default: 'directory'
   }
 })
 
-const icon = computed(() => (collapse.value ? PhFolder : PhFolderOpen))
+const icon = computed(() => {
+  if (props.type === 'document') {
+    return PhFile
+  }
+  return collapse.value ? PhFolder : PhFolderOpen
+})
 
 const classList = computed(() => ({
   'path-tree-view-entry-name--collapse': collapse.value,
   'path-tree-view-entry-name--compact': compactOrInjected.value,
   'path-tree-view-entry-name--selected': selected.value,
-  'path-tree-view-entry-name--nested': props.nested
+  'path-tree-view-entry-name--nested': props.nested,
+  [`path-tree-view-entry-name--${props.type}`]: true
 }))
 
 const style = computed(() => ({
@@ -64,7 +74,7 @@ const toggle = () => {
       v-if="nested"
       :collapse="collapse"
       :loading="loading"
-      class="flex-shrink-0"
+      class="path-tree-view-entry-name__caret flex-shrink-0"
       @click="toggle"
     />
     <path-tree-view-entry-name-checkbox
@@ -78,10 +88,15 @@ const toggle = () => {
         class="path-tree-view-entry-name__value text-truncate stretched-link"
         @click="toggle"
       >
-        <phosphor-icon
-          v-if="!compactOrInjected"
-          :name="icon"
-        />
+        <slot
+          name="icon"
+          v-bind="{ icon }"
+        >
+          <phosphor-icon
+            v-if="!compactOrInjected"
+            :name="icon"
+          />
+        </slot>
         {{ name }}
       </div>
     </slot>
@@ -94,6 +109,10 @@ const toggle = () => {
   --level-indent-factor: 0;
 
   margin-left: calc(var(--level-indent-width) * var(--level-indent-factor));
+
+  &--document &__caret {
+    visibility: hidden;
+  }
 
   &--compact {
     --level-indent-width: #{$spacer-xs};
