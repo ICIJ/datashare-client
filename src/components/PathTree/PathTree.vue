@@ -97,7 +97,7 @@ const props = defineProps({
    * If true, the tree will only display directories that have documents
    * indexed in Elasticsearch.
    */
-  elasticsearchOnly: { type: Boolean },
+  noTree: { type: Boolean },
   /**
    * The level of the tree (for recursive rendering of this component)
    */
@@ -522,7 +522,7 @@ const shouldLoadTree = computed(() => {
   // load directories from the /tree API when they are
   // already present in next result page of the
   // ElasticSearch aggregation.
-  return reachedTheEnd.value && !isServer.value && !props.elasticsearchOnly
+  return reachedTheEnd.value && !isServer.value && !props.noTree
 })
 
 const clearPagesAndLoadTree = async () => {
@@ -634,7 +634,7 @@ defineExpose({ loadData, loadDataWithSpinner, reloadData, isLoading })
               :pre-body-build="preBodyBuild"
               :sort-by="sortBy"
               :order-by="orderBy"
-              :elasticsearch-only="elasticsearchOnly"
+              :no-tree="noTree"
               :include-children-documents="includeChildrenDocuments"
             />
           </template>

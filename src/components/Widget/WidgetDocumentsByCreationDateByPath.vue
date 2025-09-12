@@ -44,7 +44,7 @@
           select-mode
           nested
           no-documents
-          elasticsearch-only
+          no-tree
         />
       </app-modal>
     </template>
