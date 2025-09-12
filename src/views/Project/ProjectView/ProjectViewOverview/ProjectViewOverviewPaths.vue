@@ -9,10 +9,10 @@ defineProps({
 </script>
 
 <template>
-  <div class="project-view-overview-path">
+  <div class="project-view-overview-paths">
     <project-view-overview-widgets
       :name="name"
-      section="path"
+      section="paths"
     />
   </div>
 </template>
