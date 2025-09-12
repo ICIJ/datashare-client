@@ -58,6 +58,14 @@ const props = defineProps({
   level: {
     type: Number,
     default: 0
+  },
+  type: {
+    type: String,
+    default: 'directory'
+  },
+  to: {
+    type: Object,
+    default: null
   }
 })
 
@@ -67,16 +75,20 @@ const classList = computed(() => {
   return {
     'path-tree-view-entry--active': active.value,
     'path-tree-view-entry--selected': selected.value,
-    'path-tree-view-entry--compact': compactOrInjected.value
+    'path-tree-view-entry--compact': compactOrInjected.value,
+    [`path-tree-view-entry--${props.type}`]: true
   }
 })
 
 const selectModeOrInjected = computed(() => props.selectMode ?? inject('selectMode', false))
 const compactOrInjected = computed(() => props.compact ?? inject('compact', false))
+const tag = computed(() => (props.to ? 'router-link' : 'div'))
 </script>
 
 <template>
-  <div
+  <component
+    :is="tag"
+    :to="to"
     class="path-tree-view-entry"
     :class="classList"
   >
@@ -96,7 +108,11 @@ const compactOrInjected = computed(() => props.compact ?? inject('compact', fals
         :select-mode="selectModeOrInjected"
         :nested="nested"
         :level="level"
+        :type="type"
       >
+        <template #icon>
+          <slot name="icon" />
+        </template>
         <slot name="name" />
       </path-tree-view-entry-name>
       <path-tree-view-entry-stats
@@ -119,12 +135,13 @@ const compactOrInjected = computed(() => props.compact ?? inject('compact', fals
     >
       <slot v-bind="{ collapse, selected, active }" />
     </b-collapse>
-  </div>
+  </component>
 </template>
 
 <style lang="scss" scoped>
 .path-tree-view-entry {
   margin-top: 1px;
+  display: block;
 
   &--compact {
     margin-top: 0;

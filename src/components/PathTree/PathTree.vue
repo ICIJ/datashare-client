@@ -3,7 +3,9 @@ import { onBeforeMount, computed, ref, reactive, toRef, watch } from 'vue'
 import { flatten, filter, get, matches, identity, includes, property, trim, trimEnd, uniqBy } from 'lodash'
 import bodybuilder from 'bodybuilder'
 
+import Document from '@/api/resources/Document'
 import PathTreeView from '@/components/PathTree/PathTreeView/PathTreeView'
+import PathTreeViewDocument from '@/components/PathTree/PathTreeView/PathTreeViewDocument'
 import PathTreeViewEntry from '@/components/PathTree/PathTreeView/PathTreeViewEntry'
 import PathTreeViewEntryBreadcrumb from '@/components/PathTree/PathTreeView/PathTreeViewEntryBreadcrumb'
 import PathTreeViewEntryMore from '@/components/PathTree/PathTreeView/PathTreeViewEntryMore'
@@ -54,6 +56,10 @@ const props = defineProps({
    * Deactivate the stats display
    */
   noStats: { type: Boolean },
+  /**
+   * Deactivate the document listing
+   */
+  noDocuments: { type: Boolean },
   /**
    * Whether to display empty directories
    */
@@ -111,11 +117,15 @@ const lastPage = computed(() => {
 })
 
 const lastPageDirectories = computed(() => {
-  return get(lastPage.value, 'aggregations.dirname.buckets', [])
+  return get(lastPage.value, 'directories.aggregations.dirname.buckets', [])
+})
+
+const lastPageDocuments = computed(() => {
+  return get(lastPage.value, 'documents.hits.hits', [])
 })
 
 const offset = computed(() => {
-  return directories.value.length || 0
+  return directories.value.length + documents.value.length || 0
 })
 
 const nextOffset = computed(() => {
@@ -132,6 +142,10 @@ const order = computed(() => {
 
 const hasQuery = computed(() => {
   return query.value && trim(query.value)
+})
+
+const nextLevel = computed(() => {
+  return props.level + 1
 })
 
 watch(query, () => loadDataWithSpinner({ clearPages: true }))
@@ -154,11 +168,15 @@ const dirnameTreeAggOptions = computed(() => {
 })
 
 const reachedTheEnd = computed(() => {
-  return lastPageDirectories.value.length < perPage
+  return lastPageDirectories.value.length + lastPageDocuments.value.length < perPage
 })
 
-const treeChildren = computed(() => {
+const treeDirectories = computed(() => {
   return filter(tree.value?.contents ?? [], { type: 'directory' })
+})
+
+const treeDocuments = computed(() => {
+  return filter(tree.value?.contents ?? [], { type: 'file' })
 })
 
 const pathSeparator = computed(() => {
@@ -186,11 +204,9 @@ const excludeOption = computed(() => {
   return wildcardRegExpPattern(wildcardSubPath.value)
 })
 
-const treeAsPagesBuckets = computed(() => {
+const treeAsDirectories = computed(() => {
   return (
-    treeChildren.value
-      // Only keep directories
-      .filter(({ type }) => type === 'directory')
+    treeDirectories.value
       // Only keep the ones matching with the query
       .filter(({ name }) => {
         if (hasQuery.value) {
@@ -208,10 +224,48 @@ const treeAsPagesBuckets = computed(() => {
   )
 })
 
+const treeAsDocuments = computed(() => {
+  return (
+    treeDocuments.value
+      // Only keep the ones matching with the query
+      .filter(({ name }) => {
+        if (hasQuery.value) {
+          // Compare only with the basename
+          const basename = name.split(pathSeparator.value).pop()
+          // And use case-insensitive wildcard match
+          return iwildcardMatch(basename, wildcardQuery.value)
+        }
+        return true
+      })
+      // Transform it to match with the ES hits format
+      .map(({ name: path, size: contentLength }) => {
+        const title = path.split(pathSeparator.value).pop()
+        const extractionLevel = 0
+        const type = 'Document'
+        const dirname = trimEnd(path.split(title).shift(), pathSeparator.value)
+        const _index = null
+        const _id = path
+        const _source = { title, path, contentLength, extractionLevel, type, dirname }
+        return Document.create({ _id, _index, _source })
+      })
+  )
+})
+
 const directories = computed(() => {
-  const buckets = flatten(pages.value.map(p => get(p, 'aggregations.dirname.buckets', [])))
-  const allDirectories = uniqBy([...buckets, ...treeAsPagesBuckets.value], 'key')
+  const buckets = flatten(pages.value.map(p => get(p, 'directories.aggregations.dirname.buckets', [])))
+  const allDirectories = uniqBy([...buckets, ...treeAsDirectories.value], 'key')
   return props.hideEmpty ? allDirectories.filter(dir => dir.doc_count > 0) : allDirectories
+})
+
+const pagesDocuments = computed(() => {
+  return flatten(pages.value.map(p => get(p, 'documents.hits.hits', [])))
+})
+
+const documents = computed(() => {
+  if (props.noDocuments) {
+    return []
+  }
+  return uniqBy([...pagesDocuments.value, ...treeAsDocuments.value], '_source.path')
 })
 
 const isCollapsedDirectory = (key) => {
@@ -236,19 +290,19 @@ const toDirectory = (path) => {
   return trimEnd(path, pathSeparator.value) + pathSeparator.value
 }
 
-const isSelectedDirectory = (key) => {
+const isSelectedPath = (key) => {
   return selectedPaths.value.map(toDirectory).includes(toDirectory(key))
 }
 
 const isIndeterminateDirectory = (key) => {
   return selectedPaths.value.some((path) => {
-    return toDirectory(path).startsWith(toDirectory(key)) && !isSelectedDirectory(key)
+    return toDirectory(path).startsWith(toDirectory(key)) && !isSelectedPath(key)
   })
 }
 
-const selectDirectory = (key) => {
+const selectPath = (key) => {
   const dir = toDirectory(key)
-  if (isSelectedDirectory(key)) {
+  if (isSelectedPath(key)) {
     selectedPaths.value = selectedPaths.value.toSpliced(selectedPaths.value.indexOf(dir), 1)
   }
   else if (props.multiple) {
@@ -284,7 +338,7 @@ const getBasename = (value) => {
  */
 const getBodybuilder = ({ from = 0, size = 100 } = {}) => {
   // Start with an empty body, no hits returned (we only care about aggs)
-  const body = bodybuilder().size(0)
+  const body = bodybuilder()
   // Ensure we get accurate hit counts, even if they exceed 10,000
   body.rawOption('track_total_hits', true)
   // Filter to all dirname values matching our wildcard pattern (case-insensitive),
@@ -328,6 +382,25 @@ const getBodybuilder = ({ from = 0, size = 100 } = {}) => {
   return props.preBodyBuild(body)
 }
 
+const fetchDirectories = async ({ clearPages = false } = {}) => {
+  const index = props.projects.join(',')
+  const from = clearPages ? 0 : offset.value
+  const size = perPage
+  const body = getBodybuilder({ from, size }).build()
+  const preference = 'tree-view-directories'
+  const res = await core.api.elasticsearch.search({ index, body, preference })
+  // When the number of directories is displayed,
+  // we need to fetch the number of empty directories to adjust the
+  // directory count in the tree view. Unfortunely, this cannot
+  // be done in the same request as the aggregation because
+  // we need the list of directories to check if they are empty or not.
+  if (!props.compact) {
+    const dirs = res.aggregations.dirname.buckets.map(property('key'))
+    await fetchEmptyDirectories(dirs)
+  }
+  return res
+}
+
 const directoryIsEmpty = ref({})
 
 // This function will check if the directories are empty or not
@@ -335,11 +408,11 @@ const directoryIsEmpty = ref({})
 // to check if the directory is empty to adjust the directory count
 // in the tree view to not count the current directory when it doesn't
 // have any documents.
-const fetchEmptyDirectory = async (dirs = []) => {
+const fetchEmptyDirectories = async (dirs = []) => {
   if (!dirs.length) return
 
   const index = props.projects.join(',')
-  const preference = 'tree-view-paths-count'
+  const preference = 'tree-view-empty-directories'
   const body = bodybuilder()
     .size(0)
     .andQuery('match', 'type', 'Document')
@@ -367,28 +440,37 @@ const fetchEmptyDirectory = async (dirs = []) => {
   Object.entries(buckets).forEach(([key, { doc_count: count }]) => (directoryIsEmpty.value[key] = !!count))
 }
 
+const fetchDocuments = async () => {
+  const perPageLeft = perPage - lastPageDirectories.value.length
+  // Load documents only if the last page has space left and if documents are not disabled
+  if (!props.noDocuments && perPageLeft > 0 && props.projects.length) {
+    const index = props.projects.join(',')
+    const body = bodybuilder()
+      .size(perPageLeft)
+      .from(pagesDocuments.value.length)
+      .andQuery('match', 'type', 'Document')
+      .andQuery('match', 'extractionLevel', 0)
+      .andQuery('match', 'dirname', path.value)
+      .build()
+    const preference = 'tree-view-documents'
+    const _source_excludes = 'content,content_translated,metadata'
+    return core.api.elasticsearch.search({ index, body, preference, _source_excludes })
+  }
+  return null
+}
+
 const loadData = async ({ clearPages = false } = {}) => {
   // Only load data if there are any projects
   if (props.projects.length) {
-    const index = props.projects.join(',')
-    const from = clearPages ? 0 : offset.value
-    const size = perPage
-    const body = getBodybuilder({ from, size }).build()
-    const preference = 'tree-view-paths-terms'
-    const res = await core.api.elasticsearch.search({ index, body, preference })
-    // When the number of directories is displayed,
-    // we need to fetch the number of empty directories to adjust the
-    // directory count in the tree view. Unfortunely, this cannot
-    // be done in the same request as the aggregation because
-    // we need the list of directories to check if they are empty or not.
-    if (!props.compact) {
-      const dirs = res.aggregations.dirname.buckets.map(property('key'))
-      await fetchEmptyDirectory(dirs)
-    }
+    // Fetch all the directories for the current page
+    const directories = await fetchDirectories({ clearPages })
     // Clear the list of pages (to start over!)
     if (clearPages) await clearPagesAndLoadTree()
-    // Add the result as a page
-    pages.value.push(res)
+    // Add the results as a page
+    pages.value.push({ directories })
+    // Fetch all the documents if there is space left in the latest page, and
+    // store it in the last page
+    lastPage.value.documents = await fetchDocuments()
   }
   else if (clearPages) {
     // If no projects are given and we are clearing the pages,
@@ -483,7 +565,7 @@ defineExpose({ loadData, loadDataWithSpinner, reloadData, isLoading })
         :name="getBasename(path)"
         :path="path"
         :projects="projects"
-        :selected="isSelectedDirectory(path)"
+        :selected="isSelectedPath(path)"
         :documents="totalDocuments"
         :directories="totalDirectories"
         :size="totalSize"
@@ -494,7 +576,7 @@ defineExpose({ loadData, loadDataWithSpinner, reloadData, isLoading })
         :no-link="noLink"
         :nested="nested"
         :level="level"
-        @update:selected="selectDirectory(path)"
+        @update:selected="selectPath(path)"
       >
         <template
           v-if="!nested"
@@ -516,7 +598,7 @@ defineExpose({ loadData, loadDataWithSpinner, reloadData, isLoading })
           :documents="directory.doc_count"
           :directories="getDirectoryCount(directory.key)"
           :size="directory.size?.value"
-          :selected="isSelectedDirectory(directory.key)"
+          :selected="isSelectedPath(directory.key)"
           :collapse="isCollapsedDirectory(directory.key)"
           :compact="compact"
           :no-stats="noStats"
@@ -524,8 +606,8 @@ defineExpose({ loadData, loadDataWithSpinner, reloadData, isLoading })
           :data="JSON.stringify(directory)"
           :indeterminate="isIndeterminateDirectory(directory.key)"
           :nested="nested"
-          :level="level + 1"
-          @update:selected="selectDirectory(directory.key)"
+          :level="nextLevel"
+          @update:selected="selectPath(directory.key)"
           @update:collapse="collapseDirectory(directory.key)"
         >
           <template
@@ -540,13 +622,14 @@ defineExpose({ loadData, loadDataWithSpinner, reloadData, isLoading })
               v-model:nested="nested"
               no-label
               no-search
-              :level="level + 1"
+              :level="nextLevel"
               :path="directory.key"
               :projects="projects"
               :select-mode="selectMode"
               :multiple="multiple"
               :no-link="noLink"
               :no-stats="noStats"
+              :no-documents="noDocuments"
               :compact="compact"
               :pre-body-build="preBodyBuild"
               :sort-by="sortBy"
@@ -556,11 +639,23 @@ defineExpose({ loadData, loadDataWithSpinner, reloadData, isLoading })
             />
           </template>
         </path-tree-view-entry>
+        <path-tree-view-document
+          v-for="document in documents"
+          :key="document.path"
+          :selected="isSelectedPath(document.path)"
+          :select-mode="selectMode"
+          :compact="compact"
+          :entry="document"
+          :level="nextLevel"
+          :nested="nested"
+          @update:selected="selectPath(document.path)"
+        />
         <path-tree-view-entry-more
           v-if="!reachedTheEnd"
-          :total="totalDirectories"
+          :level="nextLevel"
           :per-page="perPage"
           :page="page"
+          :total="totalDirectories"
           @click="nextLoadData"
         />
       </path-tree-view-entry>
