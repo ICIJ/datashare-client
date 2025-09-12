@@ -42,6 +42,8 @@
           :path="dataDir"
           :projects="projects"
           select-mode
+          nested
+          no-documents
           elasticsearch-only
         />
       </app-modal>
