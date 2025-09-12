@@ -10,6 +10,7 @@ import PathTreeViewEntry from '@/components/PathTree/PathTreeView/PathTreeViewEn
 import PathTreeViewEntryBreadcrumb from '@/components/PathTree/PathTreeView/PathTreeViewEntryBreadcrumb'
 import PathTreeViewEntryMore from '@/components/PathTree/PathTreeView/PathTreeViewEntryMore'
 import { useCore } from '@/composables/useCore'
+import { usePath } from '@/composables/usePath'
 import { useMode } from '@/composables/useMode'
 import { useWait } from '@/composables/useWait'
 import { wildcardRegExpPattern, iwildcardMatch } from '@/utils/strings'
@@ -106,6 +107,8 @@ const props = defineProps({
 
 const { core } = useCore()
 const { waitFor, isLoading } = useWait()
+const { pathSeparator, getBasename, isSelectedPath, isIndeterminateDirectory, togglePath } = usePath(selectedPaths, props)
+const { isServer } = useMode()
 
 const pages = ref([])
 const directoriesRefs = reactive({})
@@ -179,10 +182,6 @@ const treeDocuments = computed(() => {
   return filter(tree.value?.contents ?? [], { type: 'file' })
 })
 
-const pathSeparator = computed(() => {
-  return core.config.get('pathSeparator', '/')
-})
-
 const wildcardQuery = computed(() => {
   return hasQuery.value ? '*' + query.value.toLowerCase() + '*' : '*'
 })
@@ -231,7 +230,7 @@ const treeAsDocuments = computed(() => {
       .filter(({ name }) => {
         if (hasQuery.value) {
           // Compare only with the basename
-          const basename = name.split(pathSeparator.value).pop()
+          const basename = getBasename(name)
           // And use case-insensitive wildcard match
           return iwildcardMatch(basename, wildcardQuery.value)
         }
@@ -286,33 +285,6 @@ const collapseDirectory = (key) => {
   }
 }
 
-const toDirectory = (path) => {
-  return trimEnd(path, pathSeparator.value) + pathSeparator.value
-}
-
-const isSelectedPath = (key) => {
-  return selectedPaths.value.map(toDirectory).includes(toDirectory(key))
-}
-
-const isIndeterminateDirectory = (key) => {
-  return selectedPaths.value.some((path) => {
-    return toDirectory(path).startsWith(toDirectory(key)) && !isSelectedPath(key)
-  })
-}
-
-const selectPath = (key) => {
-  const dir = toDirectory(key)
-  if (isSelectedPath(key)) {
-    selectedPaths.value = selectedPaths.value.toSpliced(selectedPaths.value.indexOf(dir), 1)
-  }
-  else if (props.multiple) {
-    selectedPaths.value = [...selectedPaths.value, dir]
-  }
-  else {
-    selectedPaths.value = selectedPaths.value.toSpliced(0, selectedPaths.value.length, dir)
-  }
-}
-
 const getDirectoryCount = (key) => {
   const directory = directories.value.find(matches({ key }))
   if (directory?.directories) {
@@ -321,10 +293,6 @@ const getDirectoryCount = (key) => {
     return Math.max(0, directory.directories.value - (directoryIsEmpty.value[key] ?? 0))
   }
   return 0
-}
-
-const getBasename = (value) => {
-  return value.split(pathSeparator.value).pop()
 }
 
 /**
@@ -513,7 +481,6 @@ const loadTree = async () => {
   }
 }
 
-const { isServer } = useMode()
 const shouldLoadTree = computed(() => {
   // The /tree API is disabled in server so we ensure
   // the mode is correct before running it.
@@ -576,7 +543,7 @@ defineExpose({ loadData, loadDataWithSpinner, reloadData, isLoading })
         :no-link="noLink"
         :nested="nested"
         :level="level"
-        @update:selected="selectPath(path)"
+        @update:selected="togglePath(path)"
       >
         <template
           v-if="!nested"
@@ -607,7 +574,7 @@ defineExpose({ loadData, loadDataWithSpinner, reloadData, isLoading })
           :indeterminate="isIndeterminateDirectory(directory.key)"
           :nested="nested"
           :level="nextLevel"
-          @update:selected="selectPath(directory.key)"
+          @update:selected="togglePath(directory.key)"
           @update:collapse="collapseDirectory(directory.key)"
         >
           <template
@@ -648,7 +615,7 @@ defineExpose({ loadData, loadDataWithSpinner, reloadData, isLoading })
           :entry="document"
           :level="nextLevel"
           :nested="nested"
-          @update:selected="selectPath(document.path)"
+          @update:selected="togglePath(document.path)"
         />
         <path-tree-view-entry-more
           v-if="!reachedTheEnd"
