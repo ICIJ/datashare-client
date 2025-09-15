@@ -31,17 +31,16 @@
         :size="size"
         :tooltip-placement="tooltipPlacement"
       />
-      <document-actions-group-entry-close
-        v-if="modal"
+      <document-actions-group-entry-expand
         :document="document"
         :size="size"
         :tooltip-placement="tooltipPlacement"
       />
-      <document-actions-group-entry-expand
-        v-else
+      <document-actions-group-entry-close
         :document="document"
         :size="size"
         :tooltip-placement="tooltipPlacement"
+        @click="onClose"
       />
     </slot>
     <hook
@@ -64,6 +63,9 @@ import DocumentCardCheckbox from '@/components/Document/DocumentCard/DocumentCar
 import Hook from '@/components/Hook/Hook'
 import { PLACEMENT, placementValidator } from '@/enums/placements'
 import { breakpointSizeValidator, SIZE } from '@/enums/sizes'
+import { useModalController } from 'bootstrap-vue-next'
+import useSearchNav from '@/composables/useSearchNav'
+import { useRouter } from 'vue-router'
 
 /**
  * True if checkbox is selected
@@ -116,6 +118,21 @@ const classList = computed(() => {
     'document-actions-group--vertical': vertical
   }
 })
+
+const modalController = useModalController()
+const { searchRoute } = useSearchNav()
+const router = useRouter()
+async function onClose() {
+  if (modal) {
+    console.log('test')
+    modalController.hide()
+  }
+  else {
+    console.log(searchRoute)
+
+    return router.push(searchRoute.value)
+  }
+}
 </script>
 
 <style lang="scss" scoped>
