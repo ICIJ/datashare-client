@@ -1,11 +1,12 @@
 <template>
   <ul
-    class="linked-document-list list-unstyled pt-1"
+    class="linked-document-list list-unstyled"
     :style="style"
   >
     <li
       v-for="{ contentType, index, id, routing, name } in documents"
       :key="id"
+      class="pb-1"
     >
       <linked-document-list-entry
         :id="id"
@@ -31,7 +32,7 @@ const props = defineProps({
   },
   height: {
     type: String,
-    default: '120px'
+    default: '130px'
   }
 })
 

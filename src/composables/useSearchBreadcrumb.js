@@ -62,7 +62,8 @@ export function useSearchBreadcrumb() {
 
   const hasQueryEntries = computed(() => !!queryEntries.value.length)
   const hasFiltersEntries = computed(() => !!filtersEntries.value.length)
-  const hasQueryAndFiltersEntries = computed(() => hasQueryEntries.value && hasFiltersEntries.value)
+  // Enable the button whereas there is filters or queries even if one of them is empty
+  const hasQueryAndFiltersEntries = computed(() => hasQueryEntries.value || hasFiltersEntries.value)
 
   const clearEntry = (entryAst, { query, filter, value }) => {
     if (entryAst && query) {

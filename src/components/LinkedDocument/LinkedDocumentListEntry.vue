@@ -7,9 +7,9 @@
         :routing="routing"
         :title="name"
       >
-        <phosphor-icon
-          :name="findContentTypeIcon(contentType)"
-          class="me-2"
+        <display-content-type-icon
+          :value="contentType"
+          colorize
         />
         {{ name }}
       </router-link-document>
@@ -18,10 +18,8 @@
 </template>
 
 <script setup>
-import { PhosphorIcon } from '@icij/murmur-next'
-
-import { findContentTypeIcon } from '@/utils/iconFiles'
 import RouterLinkDocument from '@/components/RouterLink/RouterLinkDocument'
+import DisplayContentTypeIcon from '@/components/Display/DisplayContentTypeIcon'
 
 defineOptions({
   name: 'LinkedDocumentListEntry'
@@ -50,3 +48,13 @@ defineProps({
   }
 })
 </script>
+<style lang="scss" scoped>
+router-link-document {
+  cursor: pointer;
+  color: var(--bs-link-color);
+
+&:hover {
+  color: var(--bs-link-hover-color);
+}
+}
+</style>
