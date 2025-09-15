@@ -1,5 +1,4 @@
 <script setup>
-import { useModalController } from 'bootstrap-vue-next'
 import { useI18n } from 'vue-i18n'
 
 import DocumentActionsGroupEntry from './DocumentActionsGroupEntry'
@@ -27,7 +26,6 @@ defineProps({
 })
 const { t } = useI18n()
 
-const modalController = useModalController()
 </script>
 
 <template>
@@ -37,7 +35,5 @@ const modalController = useModalController()
     :label="t('documentActionsGroup.close')"
     :tooltip-placement="tooltipPlacement"
     :vertical="vertical"
-    hide-tooltip
-    @click="modalController.hide()"
   />
 </template>
