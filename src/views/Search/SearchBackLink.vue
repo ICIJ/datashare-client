@@ -7,7 +7,10 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <router-link :to="searchRoute">
+  <router-link
+    :to="searchRoute"
+    class="search-back-link"
+  >
     <span class="d-inline-flex gap-1"><phosphor-icon :name="PhCaretLeft" />{{ t('searchBackLink') }}</span>
   </router-link>
 </template>
