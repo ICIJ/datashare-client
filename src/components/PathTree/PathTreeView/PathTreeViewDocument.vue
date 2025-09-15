@@ -55,6 +55,9 @@ const handleClick = (event) => {
     event.stopPropagation()
     showDocumentModal(params.index, params.id, params.routing)
   }
+  else {
+    selected.value = !selected.value
+  }
 }
 </script>
 
@@ -72,7 +75,7 @@ const handleClick = (event) => {
     :name="document.title"
     :path="document.path"
     :projects="[document.project]"
-    @click="handleClick"
+    @click.capture="handleClick"
   >
     <template #icon>
       <display-content-type-icon
