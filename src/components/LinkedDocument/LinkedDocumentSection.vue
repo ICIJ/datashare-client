@@ -1,7 +1,7 @@
 <template>
   <b-accordion
     flush
-    class="linked-document-section rounded-end col-12 col-lg-6 m-0 pe-1"
+    class="linked-document-section rounded-end col-12 col-md-6 m-0 pe-1"
   >
     <b-accordion-item
       v-model="open"
