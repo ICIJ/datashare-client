@@ -5,6 +5,7 @@ import { PhFolder, PhFolderOpen } from '@phosphor-icons/vue'
 
 import PathTreeViewEntryNameCaret from './PathTreeViewEntryNameCaret'
 import PathTreeViewEntryNameCheckbox from './PathTreeViewEntryNameCheckbox'
+import { LAYOUTS, layoutValidator } from '@/enums/pathTree'
 
 const collapse = defineModel('collapse', { type: Boolean })
 const selected = defineModel('selected', { type: Boolean })
@@ -24,8 +25,10 @@ const props = defineProps({
   loading: {
     type: Boolean
   },
-  nested: {
-    type: Boolean
+  layout: {
+    type: String,
+    default: LAYOUTS.TREE,
+    validator: layoutValidator
   },
   level: {
     type: Number,
@@ -48,7 +51,7 @@ const classList = computed(() => ({
   'path-tree-view-entry-name--collapse': collapse.value,
   'path-tree-view-entry-name--compact': compactOrInjected.value,
   'path-tree-view-entry-name--selected': selected.value,
-  'path-tree-view-entry-name--nested': props.nested,
+  'path-tree-view-entry-name--nested': props.layout === LAYOUTS.TREE,
   [`path-tree-view-entry-name--${props.type}`]: true
 }))
 
@@ -71,7 +74,7 @@ const toggle = () => {
     :style="style"
   >
     <path-tree-view-entry-name-caret
-      v-if="nested"
+      v-if="props.layout === LAYOUTS.TREE"
       :collapse="collapse"
       :loading="loading"
       class="path-tree-view-entry-name__caret flex-shrink-0"

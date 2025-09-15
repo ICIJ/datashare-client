@@ -3,6 +3,7 @@ import { computed, inject, ref } from 'vue'
 
 import PathTreeViewEntryName from './PathTreeViewEntryName'
 import PathTreeViewEntryStats from './PathTreeViewEntryStats'
+import { LAYOUTS, layoutValidator } from '@/enums/pathTree'
 
 const collapse = defineModel('collapse', { type: Boolean })
 const selected = defineModel('selected', { type: Boolean })
@@ -52,8 +53,10 @@ const props = defineProps({
   noLink: {
     type: Boolean
   },
-  nested: {
-    type: Boolean
+  layout: {
+    type: String,
+    default: LAYOUTS.TREE,
+    validator: layoutValidator
   },
   level: {
     type: Number,
@@ -106,7 +109,7 @@ const tag = computed(() => (props.to ? 'router-link' : 'div'))
         :name="name"
         :loading="loading"
         :select-mode="selectModeOrInjected"
-        :nested="nested"
+        :layout="layout"
         :level="level"
         :type="type"
       >

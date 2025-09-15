@@ -3,9 +3,10 @@ import { computed, provide, watch } from 'vue'
 
 import PathTreeViewLabel from './PathTreeViewLabel'
 import PathTreeViewSearch from './PathTreeViewSearch'
+import { LAYOUTS, layoutValidator } from '@/enums/pathTree'
 
 const query = defineModel('query', { type: String })
-const nested = defineModel('nested', { type: Boolean })
+const layout = defineModel('layout', { type: String, default: LAYOUTS.TREE, validator: layoutValidator })
 
 const props = defineProps({
   label: {
@@ -58,7 +59,7 @@ const classList = computed(() => {
   >
     <path-tree-view-label
       v-if="!noLabel"
-      v-model:nested="nested"
+      v-model:layout="layout"
       :label="label"
       :icon="icon"
     />

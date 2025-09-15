@@ -1,10 +1,11 @@
 <script setup>
 import { computed } from 'vue'
 
-import { useDocumentModal } from '@/composables/useDocumentModal'
 import DisplayContentTypeIcon from '@/components/Display/DisplayContentTypeIcon'
 import Document from '@/api/resources/Document'
 import PathTreeViewEntry from '@/components/PathTree/PathTreeView/PathTreeViewEntry'
+import { useDocumentModal } from '@/composables/useDocumentModal'
+import { LAYOUTS, layoutValidator } from '@/enums/pathTree'
 
 const selected = defineModel('selected', { type: Boolean })
 
@@ -21,9 +22,10 @@ const { entry, selectMode } = defineProps({
     type: Boolean,
     default: false
   },
-  nested: {
-    type: Boolean,
-    default: false
+  layout: {
+    type: String,
+    default: LAYOUTS.TREE,
+    validator: layoutValidator
   },
   selectMode: {
     type: Boolean,
@@ -70,7 +72,7 @@ const handleClick = (event) => {
     type="document"
     :to="to"
     :level="level"
-    :nested="nested"
+    :layout="layout"
     :compact="compact"
     :name="document.title"
     :path="document.path"

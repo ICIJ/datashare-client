@@ -1,10 +1,12 @@
 <script setup>
+import { computed } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 
 import ButtonTogglePathTreeView from '@/components/Button/ButtonTogglePathTreeView'
+import { LAYOUTS, layoutValidator } from '@/enums/pathTree'
 
-const nested = defineModel('nested', { type: Boolean })
+const layout = defineModel('layout', { type: String, default: LAYOUTS.TREE, validator: layoutValidator })
 
 defineProps({
   label: {
@@ -13,6 +15,13 @@ defineProps({
   icon: {
     type: [String, Object, Array],
     default: PhTreeStructure
+  }
+})
+
+const nested = computed({
+  get: () => layout.value === LAYOUTS.TREE,
+  set: (value) => {
+    layout.value = value ? LAYOUTS.TREE : LAYOUTS.LIST
   }
 })
 
