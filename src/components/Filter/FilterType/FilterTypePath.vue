@@ -7,6 +7,7 @@ import PathTree from '@/components/PathTree/PathTree'
 import { useSearchFilter } from '@/composables/useSearchFilter'
 import { useCore } from '@/composables/useCore'
 import { useSearchStore } from '@/store/modules'
+import { LAYOUTS } from '@/enums/pathTree'
 
 const { core } = useCore()
 const searchStore = useSearchStore.inject()
@@ -50,6 +51,13 @@ const preBodyBuild = whenFilterContextualized(props.filter, (body) => {
 const reloadData = () => tree.value.reloadData()
 const reset = () => (selectedPaths.value = [])
 
+const layout = computed({
+  get: () => nested.value ? LAYOUTS.TREE : LAYOUTS.LIST,
+  set: (value) => {
+    nested.value = value === LAYOUTS.TREE
+  }
+})
+
 watchFilterContextualized(props.filter, reloadData)
 // When the filter is excluded/included and it's contextualized then reload the data with a spinner
 watchFilterExcluded(props.filter, whenFilterContextualized(props.filter, reloadData))
@@ -79,7 +87,7 @@ watchIndices(reset)
         :sort-by="filter.sortBy"
         :order-by="filter.orderBy"
         :no-stats="hideCount"
-        :nested="nested"
+        :layout="layout"
         no-documents
         no-label
         no-link

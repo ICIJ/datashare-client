@@ -1,6 +1,6 @@
 <script setup>
 import { onBeforeMount, computed, ref, reactive, toRef, watch } from 'vue'
-import { flatten, filter, get, matches, identity, includes, property, trim, trimEnd, uniqBy } from 'lodash'
+import { flatten, filter, get, matches, identity, property, trim, trimEnd, uniqBy } from 'lodash'
 import bodybuilder from 'bodybuilder'
 
 import Document from '@/api/resources/Document'
@@ -9,6 +9,7 @@ import PathTreeViewDocument from '@/components/PathTree/PathTreeView/PathTreeVie
 import PathTreeViewEntry from '@/components/PathTree/PathTreeView/PathTreeViewEntry'
 import PathTreeViewEntryBreadcrumb from '@/components/PathTree/PathTreeView/PathTreeViewEntryBreadcrumb'
 import PathTreeViewEntryMore from '@/components/PathTree/PathTreeView/PathTreeViewEntryMore'
+import { LAYOUTS, ORDER_BY, SORT_BY, layoutValidator, orderByValidator, sortByValidator } from '@/enums/pathTree'
 import { useCore } from '@/composables/useCore'
 import { usePath } from '@/composables/usePath'
 import { useMode } from '@/composables/useMode'
@@ -19,7 +20,7 @@ const query = defineModel('query', { type: String })
 const selectedPaths = defineModel('selectedPaths', { type: Array, default: () => [] })
 const openPaths = defineModel('openPaths', { type: Array, default: () => [] })
 const path = defineModel('path', { type: String })
-const nested = defineModel('nested', { type: Boolean })
+const layout = defineModel('layout', { type: String, default: LAYOUTS.TREE, validator: layoutValidator })
 
 const props = defineProps({
   /**
@@ -74,20 +75,16 @@ const props = defineProps({
    */
   sortBy: {
     type: String,
-    default: 'size',
-    validator: (order) => {
-      return includes(['_count', '_key', 'size'], order)
-    }
+    default: SORT_BY.SIZE,
+    validator: sortByValidator
   },
   /**
    * Order to sort by (asc or desc)
    */
   orderBy: {
     type: String,
-    default: 'desc',
-    validator: (order) => {
-      return includes(['asc', 'desc'], order)
-    }
+    default: ORDER_BY.DESC,
+    validator: orderByValidator
   },
   /**
    * If true, the document count and size of each directory will include
@@ -155,8 +152,8 @@ watch(query, () => loadDataWithSpinner({ clearPages: true }))
 watch(order, () => loadDataWithSpinner({ clearPages: true }))
 watch(path, () => loadDataWithSpinner({ clearPages: true }))
 watch(toRef(props, 'projects'), () => loadDataWithSpinner({ clearPages: true, deep: true }))
-// When nested value change, we restore the path
-watch(nested, () => {
+// When layout change, we restore the path
+watch(layout, () => {
   path.value = core.getDefaultDataDir()
   openPaths.value = []
 })
@@ -272,7 +269,7 @@ const isCollapsedDirectory = (key) => {
 }
 
 const collapseDirectory = (key) => {
-  if (nested.value) {
+  if (layout.value === LAYOUTS.TREE) {
     if (isCollapsedDirectory(key)) {
       openPaths.value = [...openPaths.value, key]
     }
@@ -520,7 +517,7 @@ defineExpose({ loadData, loadDataWithSpinner, reloadData, isLoading })
   <div class="path-tree">
     <path-tree-view
       v-model:query="query"
-      v-model:nested="nested"
+      v-model:layout="layout"
       :no-label="noLabel"
       :no-search="noSearch"
       :select-mode="selectMode"
@@ -541,12 +538,12 @@ defineExpose({ loadData, loadDataWithSpinner, reloadData, isLoading })
         :no-header="level > 0"
         :no-stats="noStats"
         :no-link="noLink"
-        :nested="nested"
+        :layout="layout"
         :level="level"
         @update:selected="togglePath(path)"
       >
         <template
-          v-if="!nested"
+          v-if="layout !== LAYOUTS.TREE"
           #name
         >
           <path-tree-view-entry-breadcrumb
@@ -572,13 +569,13 @@ defineExpose({ loadData, loadDataWithSpinner, reloadData, isLoading })
           :no-link="noLink"
           :data="JSON.stringify(directory)"
           :indeterminate="isIndeterminateDirectory(directory.key)"
-          :nested="nested"
+          :layout="layout"
           :level="nextLevel"
           @update:selected="togglePath(directory.key)"
           @update:collapse="collapseDirectory(directory.key)"
         >
           <template
-            v-if="nested"
+            v-if="layout === LAYOUTS.TREE"
             #default="{ collapse }"
           >
             <path-tree
@@ -586,7 +583,7 @@ defineExpose({ loadData, loadDataWithSpinner, reloadData, isLoading })
               :ref="(el) => (directoriesRefs[directory.key] = el)"
               v-model:selected-paths="selectedPaths"
               v-model:open-paths="openPaths"
-              v-model:nested="nested"
+              v-model:layout="layout"
               no-label
               no-search
               :level="nextLevel"
@@ -614,7 +611,7 @@ defineExpose({ loadData, loadDataWithSpinner, reloadData, isLoading })
           :compact="compact"
           :entry="document"
           :level="nextLevel"
-          :nested="nested"
+          :layout="layout"
           @update:selected="togglePath(document.path)"
         />
         <path-tree-view-entry-more
