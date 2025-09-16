@@ -2,6 +2,7 @@
 import { useModalController } from 'bootstrap-vue-next'
 
 import DocumentDropdownReindexModal from '@/components/Document/DocumentDropdown/DocumentDropdownReindexModal'
+import { useI18n } from 'vue-i18n'
 
 const { document } = defineProps({
   document: {
@@ -9,7 +10,7 @@ const { document } = defineProps({
     required: true
   }
 })
-
+const { t } = useI18n()
 const modalController = useModalController()
 
 function showModal() {
@@ -17,13 +18,14 @@ function showModal() {
   const props = { document }
   modalController.create({ component, props })
 }
+
 </script>
 
 <template>
   <b-dropdown-item-button @click="showModal()">
     <span class="d-flex align-items-center gap-2">
       <phosphor-icon :name="PhArrowClockwise" />
-      Reindex this document
+      {{ t('documentDropdownReindexModal.title') }}
     </span>
   </b-dropdown-item-button>
 </template>
