@@ -192,16 +192,7 @@ onAfterRouteQueryFromUpdate(refreshSearchFromRoute, { immediate: route.name === 
                 <component
                   :is="Component"
                   v-else
-                >
-                  <template #header-start>
-                    <div v-if="renderDocumentInFullWidth && !isSearchRoute">
-                      <search-back-link />
-                    </div>
-                  </template>
-                  <template #nav>
-                    <search-nav />
-                  </template>
-                </component>
+                />
               </template>
             </router-view>
           </document-entries>

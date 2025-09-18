@@ -37,7 +37,7 @@ defineProps({
 </script>
 
 <template>
-  <span class="document-title-slice">
+  <span class="document-title-slice text-nowrap">
     <document-title-slice-root
       v-if="isRoot && interactiveRoot"
       :document="document"
