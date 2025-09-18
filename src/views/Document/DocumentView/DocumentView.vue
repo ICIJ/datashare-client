@@ -167,6 +167,14 @@ onBeforeRouteUpdate(fetchRouteDocument)
     <template
       v-if="document"
     >
+      <div class="d-flex">
+        <slot
+          name="nav"
+          v-bind="{ document }"
+        >
+          <router-view name="nav" />
+        </slot>
+      </div>
       <div class="document-view__header d-flex justify-content-between align-items-center gap-2 my-2">
         <slot
           name="header-start"
@@ -175,12 +183,7 @@ onBeforeRouteUpdate(fetchRouteDocument)
         <document-view-title
           :document="document"
         />
-        <slot
-          name="nav"
-          v-bind="{ document }"
-        >
-          <router-view name="nav" />
-        </slot>
+
         <document-view-actions
           :document="document"
           class="ms-auto"

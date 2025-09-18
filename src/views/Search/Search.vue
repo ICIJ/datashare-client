@@ -192,7 +192,11 @@ onAfterRouteQueryFromUpdate(refreshSearchFromRoute, { immediate: route.name === 
                 <component
                   :is="Component"
                   v-else
-                />
+                >
+                  <template #nav>
+                    <search-nav />
+                  </template>
+                </component>
               </template>
             </router-view>
           </document-entries>
