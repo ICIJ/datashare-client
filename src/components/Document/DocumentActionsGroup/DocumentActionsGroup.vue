@@ -32,11 +32,13 @@
         :tooltip-placement="tooltipPlacement"
       />
       <document-actions-group-entry-expand
+        v-if="!modal"
         :document="document"
         :size="size"
         :tooltip-placement="tooltipPlacement"
       />
       <document-actions-group-entry-close
+        v-if="modal || !vertical"
         :document="document"
         :size="size"
         :tooltip-placement="tooltipPlacement"
@@ -64,8 +66,8 @@ import Hook from '@/components/Hook/Hook'
 import { PLACEMENT, placementValidator } from '@/enums/placements'
 import { breakpointSizeValidator, SIZE } from '@/enums/sizes'
 import { useModalController } from 'bootstrap-vue-next'
-import useSearchNav from '@/composables/useSearchNav'
 import { useRouter } from 'vue-router'
+import useSearchNav from '@/composables/useSearchNav'
 
 /**
  * True if checkbox is selected
@@ -124,12 +126,9 @@ const { searchRoute } = useSearchNav()
 const router = useRouter()
 async function onClose() {
   if (modal) {
-    console.log('test')
     modalController.hide()
   }
   else {
-    console.log(searchRoute)
-
     return router.push(searchRoute.value)
   }
 }
