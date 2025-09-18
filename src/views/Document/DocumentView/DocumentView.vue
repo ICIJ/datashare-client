@@ -167,15 +167,13 @@ onBeforeRouteUpdate(fetchRouteDocument)
     <template
       v-if="document"
     >
-      <div class="document-view__header mb-3 d-flex justify-content-between align-items-center gap-2">
+      <div class="document-view__header d-flex justify-content-between align-items-center gap-2 my-2">
         <slot
           name="header-start"
           v-bind="{ document }"
         />
-        <document-view-user-actions />
-        <document-view-actions
+        <document-view-title
           :document="document"
-          class="ms-auto"
         />
         <slot
           name="nav"
@@ -183,18 +181,21 @@ onBeforeRouteUpdate(fetchRouteDocument)
         >
           <router-view name="nav" />
         </slot>
+        <document-view-actions
+          :document="document"
+          class="ms-auto"
+        />
         <slot
           name="header-end"
           v-bind="{ document }"
         />
       </div>
-
-      <document-view-title
-        class="mb-3"
-        :document="document"
-      />
-      <document-view-tabs :tabs="tabs" />
-
+      <div class="d-flex flex-md-row-reverse flex-column flex-nowrap justify-content-between">
+        <div>
+          <document-view-user-actions />
+        </div>
+        <document-view-tabs :tabs="tabs" />
+      </div>
       <app-wait :for="tabLoaderId">
         <component
           :is="component"

@@ -9,10 +9,8 @@ import { useConfig } from '@/composables/useConfig'
 import { useMode } from '@/composables/useMode'
 import { useWait } from '@/composables/useWait'
 import DocumentAttachments from '@/components/Document/DocumentAttachments'
-import DocumentDropdown from '@/components/Document/DocumentDropdown/DocumentDropdown'
 import DocumentGlobalSearchTerms from '@/components/Document/DocumentGlobalSearchTerms/DocumentGlobalSearchTerms'
 import DocumentLocalSearch from '@/components/Document/DocumentLocalSearch/DocumentLocalSearch'
-import ModeLocalOnly from '@/components/Mode/ModeLocalOnly'
 import Hook from '@/components/Hook/Hook'
 import { useDocumentStore, usePipelinesStore, useSearchStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
@@ -400,9 +398,6 @@ async function loadContentSliceAround(desiredOffset) {
           />
         </div>
         <hook name="document.content.toolbox.pagination:after" />
-        <mode-local-only>
-          <document-dropdown :document="document" />
-        </mode-local-only>
       </div>
       <document-global-search-terms
         :document="document"

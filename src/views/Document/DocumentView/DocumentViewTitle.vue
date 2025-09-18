@@ -1,14 +1,28 @@
 <script setup>
 import DocumentTitle from '@/components/Document/DocumentTitle/DocumentTitle'
 import Hook from '@/components/Hook/Hook'
-import ProjectButton from '@/components/Project/ProjectButton'
+import ProjectThumbnail from '@/components/Project/ProjectThumbnail'
+import { computed } from 'vue'
+import { isObject, startCase } from 'lodash'
+import { useCore } from '@/composables/useCore'
 
-defineProps({
+const props = defineProps({
   document: {
     type: Object,
     required: true
   }
 })
+
+const { core } = useCore()
+
+const resolvedProject = computed(() => {
+  if (isObject(props.document.project)) {
+    return core?.findProject(props.document.project.name) ?? props.document.project
+  }
+  return core?.findProject(props.document.project) ?? { name: props.document.project }
+})
+const projectDisplay = computed(() => resolvedProject.value.label ?? startCase(resolvedProject.value.name))
+
 </script>
 
 <template>
@@ -17,16 +31,16 @@ defineProps({
       name="document-view-title:before"
       :bind="{ document }"
     />
-    <h2 class="document-view-title__title m-0 flex-grow-1">
+    <h2 class="document-view-title__title flex-grow-1 d-flex gap-2 align-items-center m-0">
+      <project-thumbnail
+        :project="projectDisplay"
+        width="1.5em"
+      />
       <document-title
         interactive-root
         :document="document"
       />
     </h2>
-    <project-button
-      :project="document.project"
-      class="flex-shrink-0"
-    />
     <hook
       name="document-view-title:after"
       :bind="{ document }"

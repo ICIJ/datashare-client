@@ -1,10 +1,8 @@
 <template>
-  <div class="document-user-actions bg-action-subtle p-1 rounded-1 d-inline-block">
+  <div class="document-user-actions bg-action-subtle p-1 rounded-1 d-block ">
     <form-actions
       ref="element"
       end
-      compact-auto
-      :compact-auto-breakpoint="compactAutoBreakpoint"
       variant="action"
       compact-variant="outline-action"
       class="d-inline-flex justify-content-start flex-grow-0 gap-1"
@@ -49,6 +47,10 @@
         :hide-tooltip="!shorterLabels"
         :shorter-label="shorterLabels"
         @click="emit('action', DOCUMENT_USER_ACTIONS.FOLDERS)"
+      />
+      <slot
+        name="end"
+        v-bind="{shorterLabels}"
       />
       <hook
         name="document-user-actions:after"

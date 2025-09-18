@@ -4,6 +4,7 @@
     :style="style"
     :class="classList"
     :data-caption="caption"
+    :title="project"
   >
     <span class="project-thumbnail__caption">{{ caption }}</span>
     <span
