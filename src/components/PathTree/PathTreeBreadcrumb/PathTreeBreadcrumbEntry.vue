@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { PhosphorIcon } from '@icij/murmur-next'
 
 import PathTreeBreadcrumbEntryLabel from './PathTreeBreadcrumbEntryLabel.vue'
 import PathTreeBreadcrumbEntryLink from './PathTreeBreadcrumbEntryLink.vue'
@@ -9,6 +10,10 @@ const props = defineProps({
     type: Boolean
   },
   compact: {
+    type: Boolean,
+    default: false
+  },
+  last: {
     type: Boolean,
     default: false
   }
@@ -29,7 +34,7 @@ const component = computed(() => {
 
 <template>
   <li
-    class="path-tree-breadcrumb-entry list-inline-item"
+    class="path-tree-breadcrumb-entry list-inline-item text-body-secondary"
     :class="classList"
   >
     <component
@@ -38,32 +43,33 @@ const component = computed(() => {
     >
       <slot />
     </component>
+    <phosphor-icon
+      v-if="!props.last"
+      size="1em"
+      :name="PhCaretRight"
+      class="text-body-secondary"
+    />
   </li>
 </template>
 
 <style lang="scss" scoped>
 .path-tree-breadcrumb-entry {
-  --margin-x: #{$spacer-xs};
+  --spacer: #{$spacer-xs};
 
-  margin-right: var(--margin-x);
   padding: 0;
+  margin: 0;
   display: inline-flex;
+  align-items: center;
   line-height: 1;
-  display: inline-block;
+  gap: var(--spacer);
+  margin-right: var(--spacer);
 
   &--compact {
-    --margin-x: #{$spacer-xxs};
+    --spacer: #{$spacer-xxs};
   }
 
   &:last-child {
     font-weight: bold;
-  }
-
-  &:not(:last-child):after {
-    content: '›';
-    font-weight: bold;
-    opacity: $hr-opacity;
-    margin-left: var(--margin-x);
   }
 }
 </style>
