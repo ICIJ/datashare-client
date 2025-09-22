@@ -1,7 +1,7 @@
 <script setup>
 import { basename } from 'path'
 import { computed } from 'vue'
-import { isArray } from 'lodash'
+import { isArray, last } from 'lodash'
 import { useI18n } from 'vue-i18n'
 
 import PathTreeBreadcrumbDropdown from './PathTreeBreadcrumbDropdown.vue'
@@ -89,6 +89,9 @@ const treeOptions = computed(() => {
   return props.noDatadir ? options : [dataDirOption, ...options]
 })
 
+const hiddenTreeOptions = computed(() => treeOptions.value.slice(0, -props.maxDirectories))
+const visibleTreeOptions = computed(() => treeOptions.value.slice(-props.maxDirectories))
+const lastTreeOption = computed(() => last(treeOptions.value))
 const hasDropdown = computed(() => treeOptions.value.length > props.maxDirectories)
 </script>
 
@@ -102,15 +105,16 @@ const hasDropdown = computed(() => treeOptions.value.length > props.maxDirectori
       <path-tree-breadcrumb-dropdown
         :compact="compact"
         :disabled="dropdownDisabled"
-        :options="treeOptions.slice(0, -maxDirectories)"
+        :options="hiddenTreeOptions"
         @select="modelValue = $event"
       />
     </path-tree-breadcrumb-entry>
     <path-tree-breadcrumb-entry
-      v-for="{ text, value } in treeOptions.slice(-maxDirectories)"
+      v-for="{ text, value } in visibleTreeOptions"
       :key="value"
       :compact="compact"
-      :no-link="noLink"
+      :no-search-link="noLink"
+      :last="lastTreeOption.value === value"
       @select="modelValue = value"
     >
       {{ text }}
