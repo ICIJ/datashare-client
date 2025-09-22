@@ -4,7 +4,6 @@ import { useElementBounding } from '@vueuse/core'
 
 import { useDocument } from '@/composables/useDocument'
 import { useQueryObserver } from '@/composables/useQueryObserver'
-import { useResizeObserver } from '@/composables/useResizeObserver'
 import SeparatorLine from '@/components/SeparatorLine/SeparatorLine'
 
 const props = defineProps({
@@ -41,39 +40,16 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['update:enoughSpace'])
-
 const elementRef = useTemplateRef('element')
 const { querySelectorAll } = useQueryObserver(elementRef)
-const { state: elementState } = useResizeObserver(elementRef)
 const { top, left } = useElementBounding(elementRef)
 const { provideDocumentViewFloatingId } = useDocument()
 const documentViewFloatingId = provideDocumentViewFloatingId()
 
-const fullWidth = computed(() => elementState.offsetWidth)
-
-const separatorLineRight = computed({
-  get() {
-    return fullWidth.value - separatorLineLeft.value
-  },
-  set(right) {
-    separatorLineLeft.value = fullWidth.value - right
-  }
-})
-
 const separatorLineLeft = ref(props.minStartWidth)
-
-const enoughStartSpace = computed(() => separatorLineLeft.value >= props.minStartWidth)
-const enoughEndSpace = computed(() => separatorLineRight.value >= props.minEndWidth)
-const enoughWidth = computed(() => fullWidth.value > (props.minStartWidth + props.minEndWidth))
-// Enough space width to display list and document side by side
-const enoughSpace = computed(() => enoughStartSpace.value && enoughEndSpace.value && enoughWidth.value)
-
-watch(enoughSpace, value => emit('update:enoughSpace', value), { immediate: !!elementRef?.value?.$el })
 
 const reachedZeroWidth = computed(() => separatorLineLeft.value === 0)
 const reachedMinWidth = computed(() => separatorLineLeft.value <= props.minStartWidth)
-const reachedFullWidth = computed(() => separatorLineLeft.value > Math.max(fullWidth.value - props.minEndWidth, 0))
 
 const floatingChildren = querySelectorAll('.document-floating__start__floating > *', { immediate: false })
 const hasFloatingChildren = computed(() => !!floatingChildren.value.length)
@@ -84,7 +60,7 @@ const hasFloatingSiblings = computed(() => !!floatingSiblings.value.length)
 watch(hasFloatingSiblings, value => value && resetStartSize())
 
 const separatorLineStyle = computed(() => {
-  const left = reachedFullWidth.value ? '100%' : `${separatorLineLeft.value}px`
+  const left = `${separatorLineLeft.value}px`
   return { left }
 })
 
@@ -96,11 +72,9 @@ const startStyle = computed(() => {
 
 const classList = computed(() => {
   return {
-    'document-floating--enough-space': enoughSpace.value,
     'document-floating--fill': props.fill,
     'document-floating--reached-zero-width': reachedZeroWidth.value,
     'document-floating--reached-min-width': reachedMinWidth.value,
-    'document-floating--reached-full-width': reachedFullWidth.value,
     'document-floating--has-floating-children': hasFloatingChildren.value,
     'document-floating--has-floating-siblings': hasFloatingSiblings.value,
     'document-floating--has-floating': hasFloatingSiblings.value || hasFloatingChildren.value
@@ -119,34 +93,15 @@ function drag(left) {
 }
 
 function reduce() {
-  if (reachedMinWidth.value) {
-    reduceFloatingStart()
-  }
-  else {
-    separatorLineLeft.value = props.minStartWidth
-  }
-}
-
-function reduceFloatingStart() {
-  separatorLineLeft.value = 0
+  separatorLineLeft.value = props.minStartWidth
 }
 
 function expand() {
-  if (reachedZeroWidth.value) {
-    separatorLineLeft.value = props.minStartWidth
-  }
-  else {
-    expandFloatingStart()
-  }
-}
-
-function expandFloatingStart() {
-  separatorLineLeft.value = fullWidth.value - 50
+  separatorLineLeft.value = props.maxEndWidth
 }
 
 function resetSize() {
   resetStartSize()
-  resetEndSize()
 }
 
 function resetStartSize() {
@@ -155,17 +110,7 @@ function resetStartSize() {
   }
 }
 
-function resetEndSize() {
-  if (reachedFullWidth.value) {
-    separatorLineLeft.value = props.minStartWidth
-  }
-}
-
-function toggleFullWidth(toggler) {
-  return toggler ? reduceFloatingStart() : expandFloatingStart()
-}
-
-defineExpose({ resetSize, resetStartSize, resetEndSize, toggleFullWidth })
+defineExpose({ resetSize, resetStartSize })
 </script>
 
 <template>
@@ -202,7 +147,7 @@ defineExpose({ resetSize, resetStartSize, resetEndSize, toggleFullWidth })
       :reduce-threshold="reduceThreshold"
       :reduce-disabled="reachedZeroWidth"
       :expand-threshold="expandThreshold"
-      :expand-disabled="reachedFullWidth"
+      expand-disabled
       :min-start="minStartWidth"
       :min-end="minEndWidth"
       @drag="drag"
@@ -231,8 +176,9 @@ defineExpose({ resetSize, resetStartSize, resetEndSize, toggleFullWidth })
     visibility: hidden;
   }
 
-  &--reached-full-width.document-floating--has-floating &__end {
-    visibility: hidden;
+  .document-floating--has-floating &__end {
+    min-width: 500px;
+    overflow-x: auto;
   }
 
   &__start {
@@ -278,8 +224,8 @@ defineExpose({ resetSize, resetStartSize, resetEndSize, toggleFullWidth })
     transform: translateX(-50%);
     display:none;
 
-    .document-floating--enough-space.document-floating--has-floating-children &,
-    .document-floating--enough-space.document-floating--has-floating-siblings & {
+    .document-floating--has-floating-children &,
+    .document-floating--has-floating-siblings & {
       display: block;
     }
   }
