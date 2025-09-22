@@ -56,9 +56,6 @@ defineExpose({
   },
   resetDocumentSize() {
     return toValue(elementRef)?.resetEndSize?.()
-  },
-  toggleFullWidth(toggler) {
-    return toValue(elementRef)?.toggleFullWidth?.(toggler)
   }
 })
 </script>

@@ -55,9 +55,9 @@ const target = useTemplateRef('target')
 const { state: targetState } = useResizeObserver(target)
 
 const emit = defineEmits(['reduce', 'expand', 'drag', 'dragstart', 'dragend'])
-const getMax = () => target.value.parentNode.getBoundingClientRect().width - targetState.offsetWidth
+const getMax = () => Math.min(target.value.parentNode.getBoundingClientRect().width - targetState.offsetWidth, props.minEnd)
 const reduce = () => {
-  return !props.noReduce && emit('reduce', 0)
+  return !props.noReduce && emit('reduce', props.minStart)
 }
 const expand = () => {
   return !props.noExpand && emit('expand', getMax())

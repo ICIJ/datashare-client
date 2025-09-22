@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, watch, toValue, useTemplateRef } from 'vue'
+import { computed, ref, toValue } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
@@ -26,7 +26,6 @@ import { useViews } from '@/composables/useViews'
 import { LAYOUTS } from '@/enums/layouts'
 import { MODE_NAME } from '@/mode'
 import { useAppStore, useSearchStore } from '@/store/modules'
-import SearchBackLink from '@/views/Search/SearchBackLink'
 
 const { toggleSettings, toggleFilters, toggleSidebar, isFiltersClosed } = useViews()
 const { provideDocumentViewFloatingId } = useDocument()
@@ -41,10 +40,9 @@ const {
   onAfterRouteQueryFromUpdate
 } = useSearchFilter()
 const { count: searchBreadcrumbCounter, anyFilters } = useSearchBreadcrumb()
-const { hasCarousel, searchRoute } = useSearchNav()
+const { hasCarousel } = useSearchNav()
 
 const { t } = useI18n()
-const entriesRef = useTemplateRef('entries')
 const appStore = useAppStore()
 const searchStore = useSearchStore()
 const route = useRoute()
@@ -62,25 +60,9 @@ const selection = ref([])
 const toggleSearchBreadcrumb = ref(false)
 const selectMode = ref(false)
 
-// The modal is displayed only if there is enough space to display the document view.
-const toggleDocumentModal = async enoughSpace => (enoughFloatingSpace.value = enoughSpace)
-// The "floating space" is the right side of the list layout, which display the document view.
-const enoughFloatingSpace = ref(false)
-
 // In list view, if the floating space is not enough, the document view is displayed in a modal.
 // User can also force the document view to be displayed in a modal by adding the "modal" query parameter.
 const renderDocumentInModal = computed(() => !isListLayout.value || route.query.modal)
-const renderDocumentInFullWidth = computed(() => !enoughFloatingSpace.value && !renderDocumentInModal.value)
-
-// When the document view is displayed in "full width", the sizes of the floating blocks
-// must be adjusted. For instance, if the search results are shown, the DocumentFloating
-// component must be expanded to take the whole width. If the document is shown, that's the
-// opposite and the document should take the whole width.
-watch([renderDocumentInFullWidth, isSearchRoute], () => {
-  if (renderDocumentInFullWidth.value) {
-    toValue(entriesRef)?.toggleFullWidth(!isSearchRoute.value)
-  }
-})
 
 const total = computed(() => parseInt(searchStore.response.total))
 const perPage = computed(() => parseInt(appStore.getSettings('search', 'perPage')))
@@ -165,7 +147,6 @@ onAfterRouteQueryFromUpdate(refreshSearchFromRoute, { immediate: route.name === 
             :total="total"
             :per-page="perPage"
             :loading="isLoading"
-            @update:enough-space="toggleDocumentModal"
           >
             <template #header="{ compact }">
               <search-selection
