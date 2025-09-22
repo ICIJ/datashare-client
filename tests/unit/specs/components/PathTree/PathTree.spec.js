@@ -47,6 +47,10 @@ vi.mock('@/api/apiInstance', async (importOriginal) => {
 })
 
 describe('PathTree.vue', () => {
+  afterAll(() => {
+    vi.resetAllMocks()
+  })
+
   describe('Posix', () => {
     const { index, es } = esConnectionHelper.build()
     let wrapper, core, searchStore
@@ -74,10 +78,6 @@ describe('PathTree.vue', () => {
           renderStubDefaultSlot: true
         }
       })
-    })
-
-    afterAll(() => {
-      vi.resetAllMocks()
     })
 
     it('should be a Vue instance', () => {
