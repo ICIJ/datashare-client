@@ -1034,8 +1034,7 @@
           "label": "Select a project"
         },
         "path": {
-          "label": "Select the folder or subfolder to analyze",
-          "description": "The entire Datashare home will be indexed by default."
+          "label": "Select the folder or subfolder to analyze"
         },
         "extractingLanguage": {
           "label": "Choose the language to extract"
