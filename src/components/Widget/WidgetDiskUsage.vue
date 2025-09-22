@@ -1,35 +1,7 @@
-<template>
-  <div class="widget widget--disk-usage">
-    <widget-barometer-disk-usage
-      v-b-modal.modal-disk-usage
-      clickable
-      :size="size"
-    />
-    <app-modal
-      id="modal-disk-usage"
-      lazy
-      scrollable
-      no-header
-      no-footer
-      size="lg"
-    >
-      <path-tree
-        v-model:path="path"
-        :projects="[project]"
-        nested
-        no-tree
-      />
-    </app-modal>
-  </div>
-</template>
-
 <script>
 import bodybuilder from 'bodybuilder'
 
 import WidgetBarometerDiskUsage from './WidgetBarometerDiskUsage'
-
-import AppModal from '@/components/AppModal/AppModal'
-import PathTree from '@/components/PathTree/PathTree'
 
 /**
  * Widget to display the disk space occupied by indexed files on the insights page.
@@ -37,8 +9,6 @@ import PathTree from '@/components/PathTree/PathTree'
 export default {
   name: 'WidgetDiskUsage',
   components: {
-    AppModal,
-    PathTree,
     WidgetBarometerDiskUsage
   },
   props: {
@@ -58,23 +28,10 @@ export default {
   },
   data() {
     return {
-      onDisk: null,
-      path: null,
       size: null
     }
   },
-  computed: {
-    dataDir() {
-      return this.$config.get('mountedDataDir') || this.$config.get('dataDir')
-    }
-  },
-  watch: {
-    project() {
-      this.path = this.dataDir
-    }
-  },
   async created() {
-    this.path = this.dataDir
     await this.loadData()
   },
   methods: {
@@ -97,6 +54,18 @@ export default {
   }
 }
 </script>
+
+<template>
+  <router-link
+    class="widget widget--disk-usage d-block"
+    :to="{ name: 'project.view.overview.paths' }"
+  >
+    <widget-barometer-disk-usage
+      clickable
+      :size="size"
+    />
+  </router-link>
+</template>
 
 <style lang="scss" scoped>
 .widget {
