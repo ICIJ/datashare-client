@@ -1,13 +1,16 @@
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
-import { useConfig } from '@/composables/useConfig'
 import PathTree from '@/components/PathTree/PathTree'
+import PathTreeLayouts from '@/components/PathTree/PathTreeLayouts/PathTreeLayouts'
+import { useConfig } from '@/composables/useConfig'
+import { useCore } from '@/composables/useCore'
+import { LAYOUTS } from '@/enums/pathTree'
 
 /**
  * A placeholder widget for the insights page. This widget is not intended to be used directly.
  */
-defineProps({
+const props = defineProps({
   /**
    * The widget definition object.
    */
@@ -23,18 +26,34 @@ defineProps({
   }
 })
 
+const { core } = useCore()
+const { sourcePath } = core.findProject(props.project)
 const config = useConfig()
-const path = ref(config.get('mountedDataDir') || config.get('dataDir'))
+const dataDir = config.get('mountedDataDir') || config.get('dataDir')
+const defaultPath = sourcePath ? decodeURI(sourcePath.split('//').pop()) : dataDir
+const path = ref(defaultPath)
+const layout = ref(LAYOUTS.GRID)
+const projects = [props.project]
+const flush = computed(() => layout.value === LAYOUTS.GRID)
 </script>
 
 <template>
   <div class="widget widget--paths p-5">
     <path-tree
       v-model:path="path"
-      :projects="[project]"
+      v-model:layout="layout"
+      :default-path="defaultPath"
+      :projects="projects"
+      :flush="flush"
       no-label
-      nested
-    />
+    >
+      <template #before>
+        <path-tree-layouts
+          v-model="layout"
+          class="ms-auto"
+        />
+      </template>
+    </path-tree>
   </div>
 </template>
 
