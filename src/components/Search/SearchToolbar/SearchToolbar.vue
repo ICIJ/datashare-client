@@ -40,16 +40,16 @@ const classList = computed(() => ({ 'search-toolbar--compact': compact.value }))
       v-if="!toggleSidebar && !compact"
       v-model:active="toggleSidebar"
     />
-    <div class="search-toolbar__filters d-flex gap-3">
+    <div class="search-toolbar__filters d-flex flex-shrink-0 gap-3">
       <button-toggle-filters
         v-if="isFiltersClosed"
         v-model:active="toggleFilters"
-        class="search__main__toggle-filters"
+        class="search-toolbar__filters__toggle-filters"
       />
       <button-toggle-search-breadcrumb
         v-model:active="toggleSearchBreadcrumb"
         :counter="searchBreadcrumbCounter"
-        class="search__main__toggle-search-breadcrumb"
+        class="search-toolbar__filters__toggle-search-breadcrumb"
       />
     </div>
     <div class="search-toolbar__form d-flex gap-3 flex-grow-1">
