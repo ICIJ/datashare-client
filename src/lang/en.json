@@ -1666,8 +1666,16 @@
   "widgetDocumentsByCreationDateByPath": {
     "title": "Number of documents by creation date"
   },
+  "pathTreeLayouts": {
+    "tree": "Tree view",
+    "list": "List view",
+    "grid": "Folder view"
+  },
   "pathTreeBreadcrumb": {
     "datadir": "Home"
+  },
+  "pathTreeViewEntrySearchLink": {
+    "label": "Search in this folder"
   },
   "projectCardUpdateDate": {
     "label": "Updated"
