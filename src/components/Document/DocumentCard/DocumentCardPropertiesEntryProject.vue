@@ -20,7 +20,7 @@ defineProps({
   >
     <project-button
       :project="document.project"
-      no-link
+      no-search
       disabled
     />
   </document-card-properties-entry>

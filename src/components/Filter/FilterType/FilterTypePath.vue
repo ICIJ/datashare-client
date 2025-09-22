@@ -90,7 +90,7 @@ watchIndices(reset)
         :layout="layout"
         no-documents
         no-label
-        no-link
+        no-search
         no-tree
         select-mode
         multiple
