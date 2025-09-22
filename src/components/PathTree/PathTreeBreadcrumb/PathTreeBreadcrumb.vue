@@ -113,7 +113,7 @@ const hasDropdown = computed(() => treeOptions.value.length > props.maxDirectori
       v-for="{ text, value } in visibleTreeOptions"
       :key="value"
       :compact="compact"
-      :no-search-link="noLink"
+      :no-link="noLink"
       :last="lastTreeOption.value === value"
       @select="modelValue = value"
     >
