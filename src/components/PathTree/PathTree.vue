@@ -26,6 +26,7 @@ import { useCore } from '@/composables/useCore'
 import { usePath } from '@/composables/usePath'
 import { useMode } from '@/composables/useMode'
 import { useWait } from '@/composables/useWait'
+import { apiInstance as api } from '@/api/apiInstance'
 import { wildcardRegExpPattern, iwildcardMatch } from '@/utils/strings'
 
 const query = defineModel('query', { type: String })
@@ -332,7 +333,7 @@ async function fetchDirectories({ clearPages = false } = {}) {
   const from = clearPages ? 0 : offset.value
   const body = getDirectoriesBodybuilder({ from }).build()
   const preference = 'tree-view-directories'
-  const res = await core.api.elasticsearch.search({ index, body, preference })
+  const res = await api.elasticsearch.search({ index, body, preference })
   if (!props.compact) {
     const dirs = res.aggregations.dirname.buckets.map(property('key'))
     await fetchEmptyDirectories(dirs)
@@ -381,7 +382,7 @@ async function fetchEmptyDirectories(dirs = []) {
   const index = props.projects.join(',')
   const preference = 'tree-view-empty-directories'
   const body = getEmptyDirectoriesBodybuilder(dirs).build()
-  const res = await core.api.elasticsearch.search({ index, body, preference })
+  const res = await api.elasticsearch.search({ index, body, preference })
   const buckets = get(res, 'aggregations.doc_count_by_dirname.buckets', {})
   Object.entries(buckets).forEach(([key, { doc_count }]) => {
     directoryIsEmpty.value[key] = !!doc_count
@@ -425,7 +426,7 @@ async function fetchDocuments() {
   const body = getDocumentsBodybuilder({ from, size }).build()
   const preference = 'tree-view-documents'
   const _source = 'title,dirname,path,contentType,contentLenght,extractionLevel'
-  return core.api.elasticsearch.search({ index, body, preference, _source })
+  return api.elasticsearch.search({ index, body, preference, _source })
 }
 
 /**
@@ -491,7 +492,7 @@ async function nextLoadData($infiniteLoadingState) {
  */
 async function loadTree() {
   tree.value = shouldLoadTree.value
-    ? await core.api.tree(trimmedPath.value).then(property('contents')).catch(() => [])
+    ? await api.tree(trimmedPath.value).then(property('contents')).catch(() => [])
     : []
 }
 
