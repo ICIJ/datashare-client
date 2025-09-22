@@ -3,7 +3,13 @@ import { computed, inject } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur-next'
 
+import { LAYOUTS, layoutValidator } from '@/enums/pathTree'
+
 const props = defineProps({
+  flat: {
+    type: Boolean,
+    default: false
+  },
   page: {
     type: Number,
     default: 1
@@ -20,6 +26,11 @@ const props = defineProps({
     type: Boolean,
     default: null
   },
+  layout: {
+    type: String,
+    default: LAYOUTS.TREE,
+    validator: layoutValidator
+  },
   level: {
     type: Number,
     default: 0
@@ -28,8 +39,15 @@ const props = defineProps({
 
 const { t } = useI18n()
 
+const classList = computed(() => {
+  return {
+    'path-tree-view-entry-more--flat': props.flat,
+    [`path-tree-view-entry-more--${props.layout}`]: true
+  }
+})
+
 const style = computed(() => ({
-  '--level-indent-factor': props.level
+  '--path-tree-view-entry-more-indent-factor': props.level
 }))
 
 const nextPageSize = computed(() => {
@@ -45,26 +63,48 @@ const size = computed(() => (compactOrInjected.value ? 'sm' : 'md'))
 </script>
 
 <template>
-  <button-icon
-    :icon-left="PhCaretDown"
-    icon-left-variant="primary"
-    class="path-tree-view-entry-more shadow-lg text-nowrap"
-    variant="outline-tertiary"
-    :size="size"
+  <div
+    class="path-tree-view-entry-more"
     :style="style"
+    :class="classList"
   >
-    <slot>
-      {{ t('pathViewEntryMore.label', { nextPageSize, directoriesLeft }, directoriesLeft) }}
-    </slot>
-  </button-icon>
+    <button-icon
+      :icon-left="PhCaretDown"
+      icon-left-variant="primary"
+      class="shadow-lg text-nowrap above-stretched-link"
+      variant="outline-tertiary"
+      :size="size"
+    >
+      <slot>
+        {{ t('pathViewEntryMore.label', { nextPageSize, directoriesLeft }, directoriesLeft) }}
+      </slot>
+    </button-icon>
+  </div>
 </template>
 
 <style lang="scss" scoped>
 .path-tree-view-entry-more {
-  --level-indent-width: #{$spacer};
-  --level-indent-factor: 0;
+  --path-tree-view-entry-more-indent-width: #{$spacer-xl};
+  --path-tree-view-entry-more-indent-factor: 0;
+  --path-tree-view-entry-more-padding-x: calc(var(--path-tree-view-entry-more-indent-width) * var(--path-tree-view-entry-more-indent-factor));
+  --path-tree-view-entry-more-padding-y: #{$spacer-xs};
+  --path-tree-view-entry-more-justify-content: flex-start;
 
-  margin-left: calc(var(--level-indent-width) * var(--level-indent-factor));
-  margin-bottom: $spacer;
+  display: flex;
+  justify-content: var(--path-tree-view-entry-more-justify-content);
+  padding-inline: var(--path-tree-view-entry-more-padding-x);
+  padding-block: var(--path-tree-view-entry-more-padding-y);
+  grid-column: 1 / -1;
+
+  &--flat {
+    --path-tree-view-entry-more-padding-x: 0;
+    --path-tree-view-entry-more-justify-content: center;
+  }
+
+  &--grid {
+    --path-tree-view-entry-more-padding-x: 0;
+    --path-tree-view-entry-more-padding-y: 0;
+    --path-tree-view-entry-more-justify-content: center;
+  }
 }
 </style>
