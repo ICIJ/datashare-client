@@ -35,7 +35,7 @@ const props = defineProps({
     type: Boolean,
     default: null
   },
-  noLink: {
+  noSearchLink: {
     type: Boolean
   }
 })
@@ -59,7 +59,7 @@ const classList = computed(() => {
     <path-tree-view-entry-stats-documents
       :active="active"
       :compact="compactOrInjected"
-      :no-link="noLink"
+      :no-search-link="noSearchLink"
       :path="path"
       :projects="projects"
       :value="documents"
