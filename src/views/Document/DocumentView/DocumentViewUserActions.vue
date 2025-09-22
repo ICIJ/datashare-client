@@ -11,10 +11,6 @@ import DocumentUserTags from '@/components/Document/DocumentUser/DocumentUserTag
 import Hook from '@/components/Hook/Hook'
 import { useRecommendedStore, useDocumentStore } from '@/store/modules'
 import { useElasticSearchQuery } from '@/composables/useElasticSearchQuery'
-import { useModalController } from 'bootstrap-vue-next'
-import DocumentUserActionsEntry from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsEntry'
-import ModeLocalOnly from '@/components/Mode/ModeLocalOnly'
-import DocumentDropdownReindexModal from '@/components/Document/DocumentDropdown/DocumentDropdownReindexModal'
 
 const recommendedStore = useRecommendedStore()
 const documentStore = useDocumentStore()
@@ -56,13 +52,7 @@ const deleteTag = (label) => {
 const addTags = (labels) => {
   return documentStore.addTags({ documents: [document.value], labels })
 }
-const modalController = useModalController()
 
-function showModal() {
-  const component = DocumentDropdownReindexModal
-  const props = { document }
-  modalController.create({ component, props })
-}
 const { fetchAllTagsByIndex } = useElasticSearchQuery()
 
 const waitForFloatingElement = async () => {
@@ -90,18 +80,7 @@ watch(() => document.value, async () => {
     :tags="tags.length"
     :recommendations="recommendedBy.length"
     @action="documentStore.toggleUserAction"
-  >
-    <template #end="{shorterLabels}">
-      <mode-local-only>
-        <document-user-actions-entry
-          :shorter-label="shorterLabels"
-          label="Reindex document"
-          :icon="PhArrowClockwise"
-          @click="showModal"
-        />
-      </mode-local-only>
-    </template>
-  </document-user-actions>
+  />
   <teleport
     v-if="hasFloatingElement"
     :to="documentViewFloatingSelector"
