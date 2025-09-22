@@ -25,6 +25,18 @@ const props = defineProps({
   loading: {
     type: Boolean
   },
+  noLink: {
+    type: Boolean,
+    default: false
+  },
+  noSearchLink: {
+    type: Boolean,
+    default: false
+  },
+  noCaret: {
+    type: Boolean,
+    default: false
+  },
   layout: {
     type: String,
     default: LAYOUTS.TREE,
@@ -44,23 +56,27 @@ const icon = computed(() => {
   if (props.type === 'document') {
     return PhFile
   }
-  return collapse.value ? PhFolder : PhFolderOpen
+  return [collapse.value ? PhFolder : PhFolderOpen, 'fill']
 })
 
 const classList = computed(() => ({
   'path-tree-view-entry-name--collapse': collapse.value,
   'path-tree-view-entry-name--compact': compactOrInjected.value,
   'path-tree-view-entry-name--selected': selected.value,
-  'path-tree-view-entry-name--nested': props.layout === LAYOUTS.TREE,
-  [`path-tree-view-entry-name--${props.type}`]: true
+  'path-tree-view-entry-name--no-link': props.noLink,
+  'path-tree-view-entry-name--no-search-link': props.noSearchLink,
+  'path-tree-view-entry-name--no-caret': props.noCaret,
+  [`path-tree-view-entry-name--${props.type}`]: true,
+  [`path-tree-view-entry-name--${props.layout}`]: true
 }))
 
 const style = computed(() => ({
-  '--level-indent-factor': props.level
+  '--path-tree-view-entry-name-indent-factor': props.level
 }))
 
 const selectModeOrInjected = computed(() => props.selectMode ?? inject('selectMode', false))
 const compactOrInjected = computed(() => props.compact ?? inject('compact', false))
+const hasIcon = computed(() => !selectModeOrInjected.value || (selectModeOrInjected.value && !compactOrInjected.value))
 
 const toggle = () => {
   collapse.value = !collapse.value
@@ -96,7 +112,8 @@ const toggle = () => {
           v-bind="{ icon }"
         >
           <phosphor-icon
-            v-if="!compactOrInjected"
+            v-if="hasIcon"
+            class="path-tree-view-entry-name__value__icon"
             :name="icon"
           />
         </slot>
@@ -108,30 +125,60 @@ const toggle = () => {
 
 <style lang="scss" scoped>
 .path-tree-view-entry-name {
-  --level-indent-width: #{$spacer};
-  --level-indent-factor: 0;
+  --path-tree-view-entry-name-font-weight: normal;
+  --path-tree-view-entry-name-color: inherit;
+  --path-tree-view-entry-name-icon-color: inherit;
+  --path-tree-view-entry-name-cursor: default;
 
-  margin-left: calc(var(--level-indent-width) * var(--level-indent-factor));
+  --path-tree-view-entry-name-indent-width: 0px;
+  --path-tree-view-entry-name-indent-factor: 0;
+  --path-tree-view-entry-name-margin: 0;
+  --path-tree-view-entry-name-caret-visibility: visible;
+  --path-tree-view-entry-name-margin: calc(var(--path-tree-view-entry-name-indent-width) * var(--path-tree-view-entry-name-indent-factor));
 
-  &--document &__caret {
-    visibility: hidden;
-  }
+  font-weight: var(--path-tree-view-entry-name-font-weight);
+  color: var(--path-tree-view-entry-name-color);
+  cursor: var(--path-tree-view-entry-name-cursor);
+  margin-left: var(--path-tree-view-entry-name-margin);
 
   &--compact {
-    --level-indent-width: #{$spacer-xs};
+    --path-tree-view-entry-name-indent-width: #{$spacer-xs};
+  }
+
+  &:not(&--grid) {
+    --path-tree-view-entry-name-indent-width: #{$spacer};
+  }
+
+  &--no-caret {
+    --path-tree-view-entry-name-caret-visibility: hidden;
+  }
+
+  &__caret {
+    visibility: var(--path-tree-view-entry-name-caret-visibility);
+  }
+
+  &__icon {
+    color: var(--path-tree-view-entry-name-icon-color);
   }
 
   &--compact.path-tree-view-entry-name--selected {
-    font-weight: 500;
-    color: var(--bs-action-text-emphasis);
+    --path-tree-view-entry-name-font-weight: 500;
+    --path-tree-view-entry-name-color: var(--bs-action-text-emphasis);
   }
 
-  &:not(&--nested):not(&--selected) &__value {
-    cursor: pointer;
-    color: var(--bs-link-color);
+  &--grid:not(&--selected) {
+    --path-tree-view-entry-name-font-weight: 500;
+    --path-tree-view-entry-name-color: var(--bs-body-color);
+    --path-tree-view-entry-name-icon-color: var(--bs-secondary);
+  }
+
+  &--list:not(&--selected):not(&--no-link),
+  &--grid:not(&--selected):not(&--no-link) {
+    --path-tree-view-entry-name-cursor: pointer;
+    --path-tree-view-entry-name-color: var(--bs-link-color);
 
     &:hover {
-      color: var(--bs-link-hover-color);
+      --path-tree-view-entry-name-color: var(--bs-link-hover-color);
     }
   }
 }
