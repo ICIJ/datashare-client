@@ -37,7 +37,17 @@ export function usePath(selectedPathsRef, { multiple = false } = {}) {
    * @returns {string}
    */
   function normalizeDirectory(path) {
-    return trimEnd(path, pathSeparator.value) + pathSeparator.value
+    return trimDirectory(path) + pathSeparator.value
+  }
+
+  /**
+   * Trims the trailing path separator from a directory path.
+   *
+   * @param {string} path
+   * @returns {string}
+   */
+  function trimDirectory(path) {
+    return trimEnd(path, pathSeparator.value)
   }
 
   /**
@@ -116,6 +126,7 @@ export function usePath(selectedPathsRef, { multiple = false } = {}) {
     pathSeparator,
     getBasename,
     normalizeDirectory,
+    trimDirectory,
     isSelectedPath,
     isIndeterminateDirectory,
     selectPath,
