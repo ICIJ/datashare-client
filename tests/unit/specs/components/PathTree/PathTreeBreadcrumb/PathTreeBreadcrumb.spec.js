@@ -38,7 +38,7 @@ describe('PathTreeBreadcrumb.vue', () => {
   })
 
   it('should display 3 entries (including the abbreviation)', async () => {
-    const props = { modelValue: '/home/foo/bar/baz/lo/rem', maxDirectories: 2, datadirLabel: true }
+    const props = { modelValue: '/home/foo/bar/baz/lo/rem', maxEntries: 2, datadirLabel: true }
     const wrapper = mount(PathTreeBreadcrumb, { global: { plugins }, props })
     expect(wrapper.findAll('.path-tree-breadcrumb-entry')).toHaveLength(3)
     expect(wrapper.find('.path-tree-breadcrumb-dropdown').exists()).toBeTruthy()
@@ -61,7 +61,7 @@ describe('PathTreeBreadcrumb.vue', () => {
     config.set('pathSeparator', '\\')
     const props = {
       modelValue: 'C:\\Users\\dev\\AppData\\Roaming\\Datashare\\foo\\bar\\baz\\lo\\rem',
-      maxDirectories: 2,
+      maxEntries: 2,
       datadirLabel: true
     }
     const wrapper = mount(PathTreeBreadcrumb, { global: { plugins }, props })
