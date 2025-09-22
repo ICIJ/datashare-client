@@ -107,7 +107,6 @@ watch(toRef(form, 'defaultProject'), p => form.path = getProjectSourcePath(core.
       <form-control-path
         v-model="form.path"
         :path="sourcePath"
-        hide-folder-icon
       />
     </form-fieldset-i18n>
     <form-fieldset-i18n
