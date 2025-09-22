@@ -1018,8 +1018,7 @@
           "label": "Sélectionnez un projet"
         },
         "path": {
-          "label": "Sélectionnez le dossier ou le sous-dossier à analyser",
-          "description": "Par défaut, le dossier \"Datashare\" dans son entier sera indexé."
+          "label": "Sélectionnez le dossier ou le sous-dossier à analyser"
         },
         "extractingLanguage": {
           "label": "Choisissez la langue à utiliser pour extraire le texte"

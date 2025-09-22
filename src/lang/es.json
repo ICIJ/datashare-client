@@ -1018,8 +1018,7 @@
           "label": "Seleccione un proyecto"
         },
         "path": {
-          "label": "Seleccione la carpeta o subcarpeta para analizar",
-          "description": "Todo el directorio principal de Datashare se indexará por defecto."
+          "label": "Seleccione la carpeta o subcarpeta para analizar"
         },
         "extractingLanguage": {
           "label": "Elija el idioma a extraer"
