@@ -18,7 +18,7 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  maxDirectories: {
+  maxEntries: {
     type: Number,
     default: 5
   },
@@ -89,10 +89,10 @@ const treeOptions = computed(() => {
   return props.noDatadir ? options : [dataDirOption, ...options]
 })
 
-const hiddenTreeOptions = computed(() => treeOptions.value.slice(0, -props.maxDirectories))
-const visibleTreeOptions = computed(() => treeOptions.value.slice(-props.maxDirectories))
+const hiddenTreeOptions = computed(() => treeOptions.value.slice(0, -props.maxEntries))
+const visibleTreeOptions = computed(() => treeOptions.value.slice(-props.maxEntries))
 const lastTreeOption = computed(() => last(treeOptions.value))
-const hasDropdown = computed(() => treeOptions.value.length > props.maxDirectories)
+const hasDropdown = computed(() => treeOptions.value.length > props.maxEntries)
 </script>
 
 <template>
@@ -104,7 +104,7 @@ const hasDropdown = computed(() => treeOptions.value.length > props.maxDirectori
     >
       <path-tree-breadcrumb-dropdown
         :compact="compact"
-        :disabled="dropdownDisabled"
+        :disabled="noLink || dropdownDisabled"
         :options="hiddenTreeOptions"
         @select="modelValue = $event"
       />
