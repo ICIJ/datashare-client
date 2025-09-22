@@ -3,13 +3,14 @@ import { computed } from 'vue'
 
 import DisplayContentTypeIcon from '@/components/Display/DisplayContentTypeIcon'
 import Document from '@/api/resources/Document'
+import PathTreeViewDocumentPreview from '@/components/PathTree/PathTreeView/PathTreeViewDocumentPreview'
 import PathTreeViewEntry from '@/components/PathTree/PathTreeView/PathTreeViewEntry'
 import { useDocumentModal } from '@/composables/useDocumentModal'
 import { LAYOUTS, layoutValidator } from '@/enums/pathTree'
 
 const selected = defineModel('selected', { type: Boolean })
 
-const { entry, selectMode } = defineProps({
+const { entry, compact, layout, noLink, selectMode } = defineProps({
   entry: {
     type: Object,
     required: true
@@ -22,12 +23,20 @@ const { entry, selectMode } = defineProps({
     type: Boolean,
     default: false
   },
+  noLink: {
+    type: Boolean,
+    default: false
+  },
   layout: {
     type: String,
     default: LAYOUTS.TREE,
     validator: layoutValidator
   },
   selectMode: {
+    type: Boolean,
+    default: false
+  },
+  squared: {
     type: Boolean,
     default: false
   }
@@ -41,8 +50,11 @@ const document = computed(() => {
 
 const isLink = computed(() => {
   const { routerParams: params } = document.value
-  return params.id && params.index && !selectMode
+  return params.id && params.index && !selectMode && !noLink
 })
+
+const isGridView = computed(() => layout === LAYOUTS.GRID)
+const hasIcon = computed(() => !selectMode || (selectMode && !compact))
 
 const to = computed(() => {
   const { routerParams: params } = document.value
@@ -57,7 +69,7 @@ const handleClick = (event) => {
     event.stopPropagation()
     showDocumentModal(params.index, params.id, params.routing)
   }
-  else {
+  else if (selectMode) {
     selected.value = !selected.value
   }
 }
@@ -66,23 +78,34 @@ const handleClick = (event) => {
 <template>
   <path-tree-view-entry
     v-model:selected="selected"
-    no-link
+    no-caret
+    no-search-link
     no-stats
     collapse
-    type="document"
+    stretched
+    :compact="compact"
     :to="to"
     :level="level"
     :layout="layout"
-    :compact="compact"
+    :no-link="noLink"
+    :squared="squared"
     :name="document.title"
     :path="document.path"
     :projects="[document.project]"
+    :select-mode="selectMode"
     @click.capture="handleClick"
   >
     <template #icon>
       <display-content-type-icon
+        v-if="hasIcon"
         :value="document.contentType"
         colorize
+      />
+    </template>
+    <template #preview>
+      <path-tree-view-document-preview
+        v-if="isGridView"
+        :entry="entry"
       />
     </template>
   </path-tree-view-entry>
