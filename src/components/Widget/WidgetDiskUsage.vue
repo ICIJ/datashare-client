@@ -1,58 +1,47 @@
-<script>
+<script setup>
+import { ref, watch, toRef } from 'vue'
 import bodybuilder from 'bodybuilder'
 
+import { apiInstance as api } from '@/api/apiInstance'
 import WidgetBarometerDiskUsage from './WidgetBarometerDiskUsage'
 
-/**
- * Widget to display the disk space occupied by indexed files on the insights page.
- */
-export default {
-  name: 'WidgetDiskUsage',
-  components: {
-    WidgetBarometerDiskUsage
+const props = defineProps({
+  /**
+   * The widget definition object.
+   */
+  widget: {
+    type: Object
   },
-  props: {
-    /**
-     * The widget definition object.
-     */
-    widget: {
-      type: Object
-    },
-    /**
-     * The project name.
-     */
-    project: {
-      type: String,
-      required: true
-    }
-  },
-  data() {
-    return {
-      size: null
-    }
-  },
-  async created() {
-    await this.loadData()
-  },
-  methods: {
-    async sumSize() {
-      const index = this.project
-      const body = bodybuilder()
-        .andQuery('match', 'type', 'Document')
-        .andQuery('match', 'extractionLevel', 0)
-        .size(0)
-        .aggregation('sum', 'contentLength')
-        .build()
-      const preference = 'widget-disk-usage'
-      const res = await this.$core.api.elasticsearch.search({ index, body, preference, size: 0 })
-
-      return res?.aggregations?.agg_sum_contentLength?.value || 0
-    },
-    async loadData() {
-      this.size = await this.sumSize()
-    }
+  /**
+   * The project name.
+   */
+  project: {
+    type: String,
+    required: true
   }
+})
+
+const size = ref(null)
+
+async function sumSize() {
+  const index = props.project
+  const body = bodybuilder()
+    .size(0)
+    .andQuery('match', 'type', 'Document')
+    .andQuery('match', 'extractionLevel', 0)
+    .aggregation('sum', 'contentLength', 'agg_sum_content_length')
+    .build()
+  const preference = 'widget-disk-usage'
+  const res = await api.elasticsearch.search({ index, body, preference, size: 0 })
+
+  return res?.aggregations?.agg_sum_content_length?.value || 0
 }
+
+async function loadData() {
+  size.value = await sumSize()
+}
+
+watch(toRef(props, 'project'), loadData, { immediate: true })
 </script>
 
 <template>
