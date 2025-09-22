@@ -75,6 +75,7 @@ function onOk() {
     >
       <path-tree-breadcrumb
         :model-value="display"
+        :max-entries="1"
         datadir-label
         no-link
       />
