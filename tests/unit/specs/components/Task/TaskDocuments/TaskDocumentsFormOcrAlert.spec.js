@@ -47,7 +47,6 @@ describe('TaskDocumentsFormOcrAlert.vue', () => {
     })
 
     it('should display an alert indicating that no OCR is installed for italian', () => {
-      console.log(wrapper.html())
       expect(wrapper.text()).toContain('OCR for "Italian" is not installed.')
     })
   })
