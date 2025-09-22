@@ -23,14 +23,14 @@ const props = defineProps({
     type: Boolean,
     default: null
   },
-  noLink: {
+  noSearchLink: {
     type: Boolean
   }
 })
 
 const compactOrInjected = computed(() => props.compact ?? inject('compact', false))
 
-const is = computed(() => (props.noLink || props.compact ? 'span' : 'router-link'))
+const is = computed(() => (props.noSearchLink || props.compact ? 'span' : 'router-link'))
 
 const to = computed(() => {
   if (is.value === 'span') {
@@ -45,7 +45,7 @@ const to = computed(() => {
 const classList = computed(() => {
   return {
     'path-tree-view-entry-stats-documents--active': props.active,
-    'path-tree-view-entry-stats-documents--no-link': props.noLink,
+    'path-tree-view-entry-stats-documents--no-search-link': props.noSearchLink,
     'path-tree-view-entry-stats-documents--compact': compactOrInjected.value
   }
 })
@@ -110,13 +110,13 @@ const classList = computed(() => {
     }
   }
 
-  &--active:not(&--no-link) &__link {
+  &--active:not(&--no-search-link) &__link {
     background: var(--bs-action);
     color: var(--bs-white);
   }
 
-  &--active:not(&--compact):not(&--no-link) &__link,
-  &:not(&--compact):not(&--no-link) &__link:hover {
+  &--active:not(&--compact):not(&--no-search-link) &__link,
+  &:not(&--compact):not(&--no-search-link) &__link:hover {
     background: var(--bs-body-bg);
     color: var(--bs-body-color);
 
@@ -125,7 +125,7 @@ const classList = computed(() => {
     }
   }
 
-  &:not(&--compact):not(&--no-link) &__link:hover {
+  &:not(&--compact):not(&--no-search-link) &__link:hover {
     .path-tree-view-entry-stats-documents__link__icon--default {
       display: none;
     }
