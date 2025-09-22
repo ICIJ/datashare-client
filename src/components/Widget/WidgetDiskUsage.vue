@@ -5,6 +5,8 @@ import bodybuilder from 'bodybuilder'
 import { apiInstance as api } from '@/api/apiInstance'
 import WidgetBarometerDiskUsage from './WidgetBarometerDiskUsage'
 
+defineOptions({ name: 'WidgetDiskUsage' })
+
 const props = defineProps({
   /**
    * The widget definition object.
