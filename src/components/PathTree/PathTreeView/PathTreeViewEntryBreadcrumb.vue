@@ -26,7 +26,7 @@ const maxDirectories = computed(() => {
     <path-tree-breadcrumb
       v-model="modelValue"
       :compact="compact"
-      :max-directories="maxDirectories"
+      :max-entries="maxDirectories"
       datadir-label
     />
   </div>
