@@ -1,61 +1,95 @@
 <template>
-  <div class="document-user-actions bg-action-subtle p-1 rounded-1 d-block ">
+  <div class="document-user-actions bg-action-subtle p-1 rounded-1">
     <form-actions
       ref="element"
-      end
       variant="action"
+      compact-auto
+      :compact-auto-breakpoint="compactAutoBreakpoint"
       compact-variant="outline-action"
-      class="d-inline-flex justify-content-start flex-grow-0 gap-1"
+      class="d-flex justify-content-between"
     >
-      <hook name="document-user-actions:before" />
-      <document-user-actions-entry
-        v-if="showTags"
-        :active="activeTags"
-        :label="t(`documentUserActions.tags`, { n: tags })"
-        :value="String(tags)"
-        :icon="PhHash"
-        :hide-tooltip="!shorterLabels"
-        :shorter-label="shorterLabels"
-        @click="emit('action', DOCUMENT_USER_ACTIONS.TAGS)"
-      />
-      <document-user-actions-entry
-        v-if="showRecommendations"
-        :active="activeRecommendations"
-        :label="t(`documentUserActions.recommendations`, { n: recommendations })"
-        :value="String(recommendations)"
-        :icon="[PhEyes, 'fill']"
-        :hide-tooltip="!shorterLabels"
-        :shorter-label="shorterLabels"
-        @click="emit('action', DOCUMENT_USER_ACTIONS.RECOMMENDATIONS)"
-      />
-      <document-user-actions-entry
-        v-if="showNotes"
-        :active="activeNotes"
-        :label="t(`documentUserActions.notes`, { n: notes })"
-        :value="String(notes)"
-        :icon="PhNoteBlank"
-        :hide-tooltip="!shorterLabels"
-        :shorter-label="shorterLabels"
-        @click="emit('action', DOCUMENT_USER_ACTIONS.TAGS.NOTES)"
-      />
-      <document-user-actions-entry
-        v-if="showFolders"
-        :active="activeFolders"
-        :label="t(`documentUserActions.folders`, { n: folders })"
-        :value="String(folders)"
-        :icon="PhFolder"
-        :hide-tooltip="!shorterLabels"
-        :shorter-label="shorterLabels"
-        @click="emit('action', DOCUMENT_USER_ACTIONS.FOLDERS)"
-      />
-      <slot
-        name="end"
-        v-bind="{shorterLabels}"
-      />
-      <hook
-        name="document-user-actions:after"
-        :bind="{ shorterLabels }"
-      />
+      <template #default="{isCompact}">
+        <div class="document-user-actions__start d-inline-flex gap-1 flex-nowrap">
+          <hook name="document-user-actions:before" />
+          <document-user-actions-entry
+            v-if="showTags"
+            :active="activeTags"
+            :label="t(`documentUserActions.tags`, { n: tags })"
+            :value="String(tags)"
+            :icon="PhHash"
+            :hide-tooltip="!shorterLabels"
+            :shorter-label="shorterLabels"
+            @click="emit('action', DOCUMENT_USER_ACTIONS.TAGS)"
+          />
+          <document-user-actions-entry
+            v-if="showRecommendations"
+            :active="activeRecommendations"
+            :label="t(`documentUserActions.recommendations`, { n: recommendations })"
+            :value="String(recommendations)"
+            :icon="[PhEyes, 'fill']"
+            :hide-tooltip="!shorterLabels"
+            :shorter-label="shorterLabels"
+            @click="emit('action', DOCUMENT_USER_ACTIONS.RECOMMENDATIONS)"
+          />
+          <document-user-actions-entry
+            v-if="showNotes"
+            :active="activeNotes"
+            :label="t(`documentUserActions.notes`, { n: notes })"
+            :value="String(notes)"
+            :icon="PhNoteBlank"
+            :hide-tooltip="!shorterLabels"
+            :shorter-label="shorterLabels"
+            @click="emit('action', DOCUMENT_USER_ACTIONS.TAGS.NOTES)"
+          />
+          <document-user-actions-entry
+            v-if="showFolders"
+            :active="activeFolders"
+            :label="t(`documentUserActions.folders`, { n: folders })"
+            :value="String(folders)"
+            :icon="PhFolder"
+            :hide-tooltip="!shorterLabels"
+            :shorter-label="shorterLabels"
+            @click="emit('action', DOCUMENT_USER_ACTIONS.FOLDERS)"
+          />
+        </div>
+        <div class="document-user-actions__end d-inline-flex gap-1 flex-nowrap">
+          <template v-if="isCompact">
+            <mode-local-only>
+              <document-user-actions-entry
+                label="Reindex document"
+                value=""
+                :icon="PhArrowClockwise"
+                @click="showModal"
+              />
+            </mode-local-only>
+          </template>
+          <template v-else>
+            <form-actions-compact
+              variant="outline-action"
+              class=""
+            >
+              <template #dropdown>
+                <mode-local-only>
+                  <document-user-actions-entry
+                    label="Reindex document"
+                    value=""
+                    :icon="PhArrowClockwise"
+                    @click="showModal"
+                  />
+                </mode-local-only>
+              </template>
+            </form-actions-compact>
+          </template>
+          <slot
+            name="end"
+            v-bind="{shorterLabels}"
+          />
+          <hook
+            name="document-user-actions:after"
+            :bind="{ shorterLabels }"
+          />
+        </div>
+      </template>
     </form-actions>
   </div>
 </template>
@@ -72,6 +106,10 @@ import Hook from '@/components/Hook/Hook'
 import { useCompact } from '@/composables/useCompact'
 import { useBreakpoints } from '@/composables/useBreakpoints'
 import { SIZE } from '@/enums/sizes'
+import ModeLocalOnly from '@/components/Mode/ModeLocalOnly'
+import { useModalController } from 'bootstrap-vue-next'
+import DocumentDropdownReindexModal from '@/components/Document/DocumentDropdown/DocumentDropdownReindexModal'
+import FormActionsCompact from '@/components/Form/FormActions/FormActionsCompact'
 
 defineOptions({ name: 'DocumentUserActions' })
 
@@ -141,7 +179,13 @@ const { compact: compactParent } = useCompact(parentRef, { threshold: toRef(prop
 const showDropdown = computed(() => breakpointDown.value[props.compactAutoBreakpoint])
 // We short labels based on the width of the parent and visibility of the dropdown
 const shorterLabels = computed(() => compactParent.value && !showDropdown.value)
+const modalController = useModalController()
 
+function showModal() {
+  const component = DocumentDropdownReindexModal
+  const props = { document }
+  modalController.create({ component, props })
+}
 const emit = defineEmits(['action'])
 </script>
 
