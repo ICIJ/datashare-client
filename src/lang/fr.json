@@ -136,8 +136,10 @@
     "danger": "Échec",
     "warning": "Avertissement",
     "info": "Information",
-    "running": "En cours",
+    "pending": "Pending",
+    "created": "Pending",
     "queued": "En attente",
+    "running": "En cours",
     "draft": "Brouillon"
   },
   "displayVisibility": {
@@ -160,6 +162,15 @@
     "sectionTitle": "Quel est le titre du document ?",
     "sectionContentType": "Quel est le type du document ?",
     "sectionDescription": "Une fois téléchargé, comment puis-je l'ouvrir ?"
+  },
+  "documentDropdownReindexModalParent": {
+    "alert": "This document was extracted from another document. To reindex it, Datashare needs to reprocess the parent document. Depending on the file size and the selected options, this may take some time."
+  },
+  "documentDropdownReindexModal": {
+    "title": "Reindex this document",
+    "okTitle": "Reindex",
+    "formLanguage": "Document language",
+    "formOcr": "Extract text from images and PDFs (OCR)"
   },
   "entityPopoverInfo": {
     "content": "Cette entité a été extraite avec :",
@@ -392,6 +403,8 @@
   },
   "documentMetadataActions": {
     "copy": "Copier la valeur de cette métadonnée",
+    "copyKey": "Copy metadata key",
+    "copySearch": "Copy metadata as search query",
     "search": "Rechercher la valeur de cette métadonnée",
     "pin": "Épingler cette métadonnée"
   },
@@ -830,6 +843,7 @@
   },
   "appSidebarFooter": {
     "signOut": "Se déconnecter",
+    "signOutBasic": "To sign out from Datashare you must close your web browser.",
     "keyboardShortcuts": "Raccourcis clavier",
     "settings": "Paramètres",
     "help": "Aide",
@@ -878,6 +892,8 @@
     "noResults": "Pas de résultat.",
     "emptyStateLabel": "Vous n'avez pas encore lancé de tâche. {link}",
     "emptyStateLabelLink": "En savoir plus.",
+    "removeSuccess": "Task has been removed",
+    "removeError": "Task has not been removed",
     "settings": {
       "createdAt": "Créé le",
       "name": "Nom",
@@ -1122,7 +1138,8 @@
           "placeholder": "Déposez votre CSV"
         },
         "csvString": {
-          "label": "Ou tapez vos requêtes"
+          "label": "Ou tapez vos requêtes",
+          "placeholder": "Enter one search term per line here..."
         },
         "phraseChanges": {
           "label": "Changements de phrase",
@@ -1648,8 +1665,16 @@
   "widgetDocumentsByCreationDateByPath": {
     "title": "Nombre de documents par date de création"
   },
+  "pathTreeLayouts": {
+    "tree": "Tree view",
+    "list": "List view",
+    "grid": "Folder view"
+  },
   "pathTreeBreadcrumb": {
     "datadir": "Accueil"
+  },
+  "pathTreeViewEntrySearchLink": {
+    "label": "Search in this folder"
   },
   "projectCardUpdateDate": {
     "label": "Modifié le"
