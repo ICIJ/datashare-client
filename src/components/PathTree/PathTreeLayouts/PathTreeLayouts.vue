@@ -7,13 +7,20 @@ const modelValue = defineModel('modelValue', {
   default: LAYOUTS.TREE,
   validator: layoutValidator
 })
+
+defineProps({
+  name: {
+    type: String,
+    default: 'path-tree-layouts'
+  }
+})
 </script>
 
 <template>
-  <div>
+  <div class="path-tree-layouts">
     <b-form-radio-group
       v-model="modelValue"
-      name="path-tree-layouts"
+      :name="name"
     >
       <b-form-radio :value="LAYOUTS.TREE">
         <phosphor-icon name="tree-view" /> {{ $t('pathTreeLayouts.tree') }}
