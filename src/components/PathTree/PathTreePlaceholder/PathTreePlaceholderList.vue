@@ -3,7 +3,7 @@ import { computed } from 'vue'
 
 import PathTreePlaceholderListEntry from './PathTreePlaceholderListEntry.vue'
 
-const { compact, entries, level } = defineProps({
+const props = defineProps({
   compact: {
     type: Boolean,
     default: false
@@ -36,26 +36,26 @@ const { compact, entries, level } = defineProps({
 
 const classList = computed(() => {
   return {
-    'path-tree-placeholder-list--compact': compact
+    'path-tree-placeholder-list--compact': props.compact
   }
 })
 
 const hasBreadcrumb = computed(() => {
-  return level === 0
+  return props.level === 0
 })
 
 const childEntries = computed(() => {
   if (hasBreadcrumb.value) {
-    return Math.max(0, entries - 1)
+    return Math.max(0, props.entries - 1)
   }
-  return entries
+  return props.entries
 })
 
 const childLevel = computed(() => {
   if (hasBreadcrumb.value) {
-    return level + 1
+    return props.level + 1
   }
-  return level
+  return props.level
 })
 </script>
 
