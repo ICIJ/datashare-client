@@ -136,8 +136,10 @@
     "danger": "Fallo",
     "warning": "Cuidado",
     "info": "Información",
-    "running": "En ejecución",
+    "pending": "Pending",
+    "created": "Pending",
     "queued": "En cola",
+    "running": "En ejecución",
     "draft": "Borrador"
   },
   "displayVisibility": {
@@ -160,6 +162,15 @@
     "sectionTitle": "¿Cuál es el título del documento?",
     "sectionContentType": "¿Cuál es el tipo del documento?",
     "sectionDescription": "Una vez descargado, ¿cómo puedo abrirlo?"
+  },
+  "documentDropdownReindexModalParent": {
+    "alert": "This document was extracted from another document. To reindex it, Datashare needs to reprocess the parent document. Depending on the file size and the selected options, this may take some time."
+  },
+  "documentDropdownReindexModal": {
+    "title": "Reindex this document",
+    "okTitle": "Reindex",
+    "formLanguage": "Document language",
+    "formOcr": "Extract text from images and PDFs (OCR)"
   },
   "entityPopoverInfo": {
     "content": "Esta entidad fue extraída con:",
@@ -392,6 +403,8 @@
   },
   "documentMetadataActions": {
     "copy": "Copiar este valor de metadatos",
+    "copyKey": "Copy metadata key",
+    "copySearch": "Copy metadata as search query",
     "search": "Buscar este valor de metadatos",
     "pin": "Anclar estos metadatos"
   },
@@ -830,6 +843,7 @@
   },
   "appSidebarFooter": {
     "signOut": "Cerrar sesión",
+    "signOutBasic": "To sign out from Datashare you must close your web browser.",
     "keyboardShortcuts": "Atajos de teclado",
     "settings": "Configuración",
     "help": "Ayuda",
@@ -878,6 +892,8 @@
     "noResults": "Sin resultados.",
     "emptyStateLabel": "Aún no has iniciado ninguna tarea. {link}",
     "emptyStateLabelLink": "Leer más.",
+    "removeSuccess": "Task has been removed",
+    "removeError": "Task has not been removed",
     "settings": {
       "createdAt": "Creado el",
       "name": "Nombre",
@@ -1122,7 +1138,8 @@
           "placeholder": "Soltar tu CSV"
         },
         "csvString": {
-          "label": "O escribe tus consultas"
+          "label": "O escribe tus consultas",
+          "placeholder": "Enter one search term per line here..."
         },
         "phraseChanges": {
           "label": "Cambios de frase",
@@ -1648,8 +1665,16 @@
   "widgetDocumentsByCreationDateByPath": {
     "title": "Número de documentos por fecha de creación"
   },
+  "pathTreeLayouts": {
+    "tree": "Tree view",
+    "list": "List view",
+    "grid": "Folder view"
+  },
   "pathTreeBreadcrumb": {
     "datadir": "Inicio"
+  },
+  "pathTreeViewEntrySearchLink": {
+    "label": "Search in this folder"
   },
   "projectCardUpdateDate": {
     "label": "Actualizado:"
