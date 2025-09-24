@@ -4,7 +4,10 @@ import { computed } from 'vue'
 import Document from '@/api/resources/Document'
 import DocumentThumbnail from '@/components/Document/DocumentThumbnail/DocumentThumbnail'
 
-const { entry } = defineProps({
+const props = defineProps({
+  /**
+   * Document or entry object to render
+   */
   entry: {
     type: Object,
     required: true
@@ -12,7 +15,7 @@ const { entry } = defineProps({
 })
 
 const document = computed(() => {
-  return entry instanceof Document ? entry : Document.create(entry)
+  return props.entry instanceof Document ? props.entry : Document.create(props.entry)
 })
 </script>
 

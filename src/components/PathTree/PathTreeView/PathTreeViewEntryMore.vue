@@ -6,31 +6,53 @@ import { ButtonIcon } from '@icij/murmur-next'
 import { LAYOUTS, layoutValidator } from '@/enums/pathTree'
 
 const props = defineProps({
+  /**
+   * Whether to render as a flat list (no indentation)
+   */
   flat: {
     type: Boolean,
     default: false
   },
+  /**
+   * Current page number (1-based)
+   */
   page: {
     type: Number,
     default: 1
   },
+  /**
+   * Number of entries to load per page
+   */
   perPage: {
     type: Number,
     default: 25
   },
+  /**
+   * Total number of entries available
+   */
   total: {
     type: Number,
     default: 0
   },
+  /**
+   * Whether to render in compact mode (no gaps between entries). If null, will
+   * inherit from the parent PathTreeView component.
+   */
   compact: {
     type: Boolean,
     default: null
   },
+  /**
+   * Layout to use for rendering the entry
+   */
   layout: {
     type: String,
     default: LAYOUTS.TREE,
     validator: layoutValidator
   },
+  /**
+   * Current nesting level (0 = root)
+   */
   level: {
     type: Number,
     default: 0

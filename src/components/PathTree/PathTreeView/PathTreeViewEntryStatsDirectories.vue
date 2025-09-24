@@ -4,6 +4,9 @@ import { PhosphorIcon } from '@icij/murmur-next'
 import DisplayNumber from '@/components/Display/DisplayNumber'
 
 defineProps({
+  /**
+   * Number of directories in the entry
+   */
   value: {
     type: Number,
     default: 0

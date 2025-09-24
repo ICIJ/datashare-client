@@ -6,35 +6,62 @@ import PathTreeViewEntryStatsDirectories from './PathTreeViewEntryStatsDirectori
 import PathTreeViewEntryStatsSize from './PathTreeViewEntryStatsSize'
 
 const props = defineProps({
+  /**
+   * Current path (used for the search link)
+   */
   path: {
     type: String
   },
+  /**
+   * List of projects to use with the search link
+   */
   projects: {
     type: Array,
     default: () => []
   },
+  /**
+   * Number of documents in the entry
+   */
   documents: {
     type: Number,
     default: 0
   },
+  /**
+   * Number of directories in the entry
+   */
   directories: {
     type: Number,
     default: 0
   },
+  /**
+   * Size of the entry (in bytes)
+   */
   size: {
     type: Number,
     default: 0
   },
+  /**
+   * Whether the entry is selected (affects styling)
+   */
   selected: {
     type: Boolean
   },
+  /**
+   * Whether the entry is active (affects styling)
+   */
   active: {
     type: Boolean
   },
+  /**
+   * Whether to render in compact mode (no gaps between entries)
+   */
   compact: {
     type: Boolean,
     default: null
   },
+  /**
+   * Whether to hide the search link in the documents stat
+   */
   noSearchLink: {
     type: Boolean
   }

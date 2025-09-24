@@ -11,31 +11,52 @@ import { LAYOUTS, layoutValidator } from '@/enums/pathTree'
 const selected = defineModel('selected', { type: Boolean })
 
 const { entry, compact, layout, noLink, selectMode } = defineProps({
+  /**
+   * Document or entry object to render
+   */
   entry: {
     type: Object,
     required: true
   },
+  /**
+   * Level of indentation (0 = root level)
+   */
   level: {
     type: Number,
     default: 0
   },
+  /**
+   * Whether to render in compact mode (no gaps between entries)
+   */
   compact: {
     type: Boolean,
     default: false
   },
+  /**
+   * Whether to disable the link (always render as plain text)
+   */
   noLink: {
     type: Boolean,
     default: false
   },
+  /**
+   * Layout to use for rendering the entry
+   */
   layout: {
     type: String,
     default: LAYOUTS.TREE,
     validator: layoutValidator
   },
+  /**
+   * Whether to enable select mode (checkboxes next to entries)
+   */
   selectMode: {
     type: Boolean,
     default: false
   },
+  /**
+   * Whether to render with squared corners (for nested list)
+   */
   squared: {
     type: Boolean,
     default: false

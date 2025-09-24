@@ -5,14 +5,17 @@ import PathTreeBreadcrumb from '@/components/PathTree/PathTreeBreadcrumb/PathTre
 
 const modelValue = defineModel({ type: String })
 
-const { compact } = defineProps({
+const props = defineProps({
+  /**
+   * Whether to render in compact mode (no gaps between entries)
+   */
   compact: {
     type: Boolean
   }
 })
 
 const maxDirectories = computed(() => {
-  return compact ? 2 : 3
+  return props.compact ? 2 : 3
 })
 </script>
 

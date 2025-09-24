@@ -4,9 +4,15 @@ import { PhosphorIcon } from '@icij/murmur-next'
 import { PhCaretDown, PhCircleNotch } from '@phosphor-icons/vue'
 
 const props = defineProps({
+  /**
+   * Whether the caret is in the "collapsed" state (points to the right)
+   */
   collapse: {
     type: Boolean
   },
+  /**
+   * Whether the entry is currently loading (replace the caret with a spinner)
+   */
   loading: {
     type: Boolean
   }

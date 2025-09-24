@@ -6,6 +6,9 @@ import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 const modelValue = defineModel({ type: String })
 
 defineProps({
+  /**
+   * Whether to add a shadow to the search box
+   */
   shadow: {
     type: Boolean,
     default: true
