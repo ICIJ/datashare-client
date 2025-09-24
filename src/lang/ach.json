@@ -136,8 +136,10 @@
     "danger": "crwdns7674:0crwdne7674:0",
     "warning": "crwdns7676:0crwdne7676:0",
     "info": "crwdns7678:0crwdne7678:0",
+    "pending": "crwdns9974:0crwdne9974:0",
+    "created": "crwdns9976:0crwdne9976:0",
+    "queued": "crwdns9978:0crwdne9978:0",
     "running": "crwdns7680:0crwdne7680:0",
-    "queued": "crwdns7682:0crwdne7682:0",
     "draft": "crwdns7684:0crwdne7684:0"
   },
   "displayVisibility": {
@@ -160,6 +162,15 @@
     "sectionTitle": "crwdns7706:0crwdne7706:0",
     "sectionContentType": "crwdns7708:0crwdne7708:0",
     "sectionDescription": "crwdns7710:0crwdne7710:0"
+  },
+  "documentDropdownReindexModalParent": {
+    "alert": "crwdns9990:0crwdne9990:0"
+  },
+  "documentDropdownReindexModal": {
+    "title": "crwdns9992:0crwdne9992:0",
+    "okTitle": "crwdns9994:0crwdne9994:0",
+    "formLanguage": "crwdns9996:0crwdne9996:0",
+    "formOcr": "crwdns9998:0crwdne9998:0"
   },
   "entityPopoverInfo": {
     "content": "crwdns7712:0crwdne7712:0",
@@ -391,9 +402,11 @@
     "placeholder": "crwdns8000:0crwdne8000:0"
   },
   "documentMetadataActions": {
-    "copy": "crwdns8002:0crwdne8002:0",
-    "search": "crwdns8004:0crwdne8004:0",
-    "pin": "crwdns8006:0crwdne8006:0"
+    "copy": "crwdns10000:0crwdne10000:0",
+    "copyKey": "crwdns10002:0crwdne10002:0",
+    "copySearch": "crwdns10004:0crwdne10004:0",
+    "search": "crwdns10006:0crwdne10006:0",
+    "pin": "crwdns10008:0crwdne10008:0"
   },
   "documentTranslatedContent": {
     "detected": "crwdns8008:0crwdne8008:0",
@@ -830,6 +843,7 @@
   },
   "appSidebarFooter": {
     "signOut": "crwdns8644:0crwdne8644:0",
+    "signOutBasic": "crwdns9984:0crwdne9984:0",
     "keyboardShortcuts": "crwdns8646:0crwdne8646:0",
     "settings": "crwdns8648:0crwdne8648:0",
     "help": "crwdns8650:0crwdne8650:0",
@@ -878,6 +892,8 @@
     "noResults": "crwdns8708:0crwdne8708:0",
     "emptyStateLabel": "crwdns8710:0{link}crwdne8710:0",
     "emptyStateLabelLink": "crwdns8712:0crwdne8712:0",
+    "removeSuccess": "crwdns9980:0crwdne9980:0",
+    "removeError": "crwdns9982:0crwdne9982:0",
     "settings": {
       "createdAt": "crwdns8714:0crwdne8714:0",
       "name": "crwdns8716:0crwdne8716:0",
@@ -1122,7 +1138,8 @@
           "placeholder": "crwdns8996:0crwdne8996:0"
         },
         "csvString": {
-          "label": "crwdns8998:0crwdne8998:0"
+          "label": "crwdns9986:0crwdne9986:0",
+          "placeholder": "crwdns9988:0crwdne9988:0"
         },
         "phraseChanges": {
           "label": "crwdns9002:0crwdne9002:0",
@@ -1648,8 +1665,16 @@
   "widgetDocumentsByCreationDateByPath": {
     "title": "crwdns9836:0crwdne9836:0"
   },
+  "pathTreeLayouts": {
+    "tree": "crwdns10010:0crwdne10010:0",
+    "list": "crwdns10012:0crwdne10012:0",
+    "grid": "crwdns10014:0crwdne10014:0"
+  },
   "pathTreeBreadcrumb": {
     "datadir": "crwdns9600:0crwdne9600:0"
+  },
+  "pathTreeViewEntrySearchLink": {
+    "label": "crwdns10016:0crwdne10016:0"
   },
   "projectCardUpdateDate": {
     "label": "crwdns9928:0crwdne9928:0"
