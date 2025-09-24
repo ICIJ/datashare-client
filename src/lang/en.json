@@ -1037,8 +1037,7 @@
           "label": "Select a project"
         },
         "path": {
-          "label": "Select the folder or subfolder to analyze",
-          "description": "The entire Datashare home will be indexed by default."
+          "label": "Select the folder or subfolder to analyze"
         },
         "extractingLanguage": {
           "label": "Choose the language to extract"
@@ -1669,8 +1668,16 @@
   "widgetDocumentsByCreationDateByPath": {
     "title": "Number of documents by creation date"
   },
+  "pathTreeLayouts": {
+    "tree": "Tree view",
+    "list": "List view",
+    "grid": "Folder view"
+  },
   "pathTreeBreadcrumb": {
     "datadir": "Home"
+  },
+  "pathTreeViewEntrySearchLink": {
+    "label": "Search in this folder"
   },
   "projectCardUpdateDate": {
     "label": "Updated"
