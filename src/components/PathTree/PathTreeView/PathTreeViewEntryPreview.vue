@@ -7,28 +7,46 @@ import { useElementVisibilityOnce } from '@/composables/useElementVisibilityOnce
 
 const path = defineModel('path', { type: String, required: true })
 
-const { compact } = defineProps({
+const props = defineProps({
+  /**
+   * List of projects to use with the nested PathTree component
+   */
   projects: {
     type: Array,
     default: () => []
   },
+  /**
+   * Whether to render in compact mode (no gaps between entries)
+   */
   compact: {
     type: Boolean,
     default: false
   },
+  /**
+   * Whether to hide documents in the nested PathTree (only show directories)
+   */
   noDocuments: {
     type: Boolean,
     default: false
   },
+  /**
+   * Whether to disable links in the nested PathTree (always render as plain text)
+   */
   noLink: {
     type: Boolean,
     default: false
   },
+  /**
+   * Sort to use for rendering the nested PathTree component
+   */
   sortBy: {
     type: String,
     default: SORT_BY.KEY,
     validator: sortByValidator
   },
+  /**
+   * Order to use for rendering the nested PathTree component
+   */
   orderBy: {
     type: String,
     default: ORDER_BY.ASC,
@@ -39,7 +57,7 @@ const { compact } = defineProps({
 const element = useTemplateRef('element')
 const wasVisibleOnce = useElementVisibilityOnce(element)
 const classList = computed(() => ({
-  'path-tree-view-entry-preview--compact': compact
+  'path-tree-view-entry-preview--compact': props.compact
 }))
 </script>
 

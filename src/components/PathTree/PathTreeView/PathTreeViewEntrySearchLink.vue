@@ -4,10 +4,16 @@ import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur-next'
 
 const props = defineProps({
+  /**
+   * List of projects to use with the search link
+   */
   projects: {
     type: Array,
     default: () => []
   },
+  /**
+   * Current path to use with the search link
+   */
   path: {
     type: String
   }

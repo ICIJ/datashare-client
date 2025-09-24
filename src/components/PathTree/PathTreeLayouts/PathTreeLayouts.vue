@@ -9,6 +9,9 @@ const modelValue = defineModel('modelValue', {
 })
 
 defineProps({
+  /**
+   * Name attribute for the radio group
+   */
   name: {
     type: String,
     default: 'path-tree-layouts'

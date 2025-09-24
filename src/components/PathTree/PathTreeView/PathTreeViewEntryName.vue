@@ -12,40 +12,72 @@ const selected = defineModel('selected', { type: Boolean })
 const indeterminate = defineModel('indeterminate', { type: Boolean })
 
 const props = defineProps({
+  /**
+   * Whether to render in compact mode (no gaps between entries). If null, will
+   * inherit from the parent PathTreeView component.
+   */
   compact: {
     type: Boolean,
     default: null
   },
+  /**
+   * Name of the entry to display
+   */
   name: {
     type: String
   },
+  /**
+   * Whether the entry is in select mode (checkbox next to entry). If null, will
+   * inherit from the parent PathTreeView component.
+   */
   selectMode: {
     type: Boolean
   },
+  /**
+   * Whether the entry is currently loading (replace the caret with a spinner)
+   */
   loading: {
     type: Boolean
   },
+  /**
+   * Whether to disable the link (always render as plain text)
+   */
   noLink: {
     type: Boolean,
     default: false
   },
+  /**
+   * Whether to disable the search link (always render as plain text)
+   */
   noSearchLink: {
     type: Boolean,
     default: false
   },
+  /**
+   * Whether to hide the caret (for entries that cannot be expanded/collapsed)
+   */
   noCaret: {
     type: Boolean,
     default: false
   },
+  /**
+   * Layout to use for rendering the entry
+   */
   layout: {
     type: String,
     default: LAYOUTS.TREE,
     validator: layoutValidator
   },
+  /**
+   * Current nesting level (0 = root)
+   */
   level: {
     type: Number,
     default: 0
   },
+  /**
+   * Type of entry (document or directory)
+   */
   type: {
     type: String,
     default: 'directory'

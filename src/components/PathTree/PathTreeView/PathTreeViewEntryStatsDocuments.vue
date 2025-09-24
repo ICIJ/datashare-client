@@ -5,24 +5,43 @@ import { PhosphorIcon } from '@icij/murmur-next'
 import DisplayNumber from '@/components/Display/DisplayNumber'
 
 const props = defineProps({
+  /**
+   * Number of documents in the entry
+   */
   value: {
     type: Number,
     required: true
   },
+  /**
+   * List of projects to use with the search link
+   */
   projects: {
     type: Array,
     default: () => []
   },
+  /**
+   * Current path (used for the search link)
+   */
   path: {
     type: String
   },
+  /**
+   * Whether the entry is active (affects styling)
+   */
   active: {
     type: Boolean
   },
+  /**
+   * Whether to render in compact mode (no gaps between entries). If null, will
+   * inherit from the parent PathTreeView component.
+   */
   compact: {
     type: Boolean,
     default: null
   },
+  /**
+   * Whether to hide the search link
+   */
   noSearchLink: {
     type: Boolean
   }

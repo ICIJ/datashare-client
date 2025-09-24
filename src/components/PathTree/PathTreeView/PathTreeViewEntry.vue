@@ -13,85 +13,154 @@ const indeterminate = defineModel('indeterminate', { type: Boolean })
 const path = defineModel('path', { type: String, required: true })
 
 const props = defineProps({
+  /**
+   * Name of the entry (file or directory name)
+   */
   name: {
     type: String,
     required: true
   },
+  /**
+   * Array of project IDs the entry belongs to
+   */
   projects: {
     type: Array,
     default: () => []
   },
+  /**
+   * Whether the entry is currently in select mode (checkboxes visible)
+   */
   selectMode: {
     type: Boolean,
     default: null
   },
+  /**
+   * Whether to render in compact mode (no gaps between entries)
+   */
   compact: {
     type: Boolean,
     default: null
   },
+  /**
+   * Number of documents in the directory (only for directories)
+   */
   documents: {
     type: Number,
     default: 0
   },
+  /**
+   * Number of subdirectories in the directory (only for directories)
+   */
   directories: {
     type: Number,
     default: 0
   },
+  /**
+   * Whether to render with flushed styles (no padding)
+   */
   flush: {
     type: Boolean
   },
+  /**
+   * Total size of all documents in the directory (only for directories)
+   */
   size: {
     type: Number,
     default: 0
   },
+  /**
+   * Whether to hide the header (name, stats)
+   */
   noHeader: {
     type: Boolean
   },
+  /**
+   * Whether the entry is in loading state
+   */
   loading: {
     type: Boolean
   },
+  /**
+   * Whether to display the caret (for collapsing/expanding)
+   */
   noCaret: {
     type: Boolean
   },
+  /**
+   * Whether to display documents in the nested directory preview
+   */
   noDocuments: {
     type: Boolean
   },
+  /**
+   * Whether to disable the link (always render as plain text)
+   */
   noLink: {
     type: Boolean
   },
+  /**
+   * Whether to hide the preview of the entry in grid view
+   */
   noPreview: {
     type: Boolean
   },
+  /**
+   * Whether to hide the stats (size, date) on the entry
+   */
   noStats: {
     type: Boolean
   },
+  /**
+   * Whether to hide the search link (magnifying glass icon)
+   */
   noSearchLink: {
     type: Boolean
   },
+  /**
+   * Layout to use for rendering the entry
+   */
   layout: {
     type: String,
     default: LAYOUTS.TREE,
     validator: layoutValidator
   },
+  /**
+   * Current nesting level (0 = root)
+   */
   level: {
     type: Number,
     default: 0
   },
+  /**
+   * Whether the entry has squared corners (for nested list)
+   */
   squared: {
     type: Boolean
   },
+  /**
+   * Whether to stretch the clickable area of the entry (only with link)
+   */
   stretched: {
     type: Boolean
   },
+  /**
+   * Router link target (if different from path)
+   */
   to: {
     type: Object,
     default: null
   },
+  /**
+   * Sort field to use for documents in the nested directory preview
+   */
   sortBy: {
     type: String,
     default: SORT_BY.KEY,
     validator: sortByValidator
   },
+  /**
+   * Sort order to use for documents in the nested directory preview
+   */
   orderBy: {
     type: String,
     default: ORDER_BY.ASC,

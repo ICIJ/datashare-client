@@ -2,6 +2,9 @@
 import DisplayContentLength from '@/components/Display/DisplayContentLength'
 
 defineProps({
+  /**
+   * Size of the entry in bytes
+   */
   value: {
     type: Number,
     required: true

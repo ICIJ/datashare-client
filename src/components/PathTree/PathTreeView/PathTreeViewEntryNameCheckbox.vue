@@ -3,9 +3,15 @@ const modelValue = defineModel({ type: Boolean })
 const indeterminate = defineModel('indeterminate', { type: Boolean })
 
 defineProps({
+  /**
+   * Whether to disable the checkbox
+   */
   disabled: {
     type: Boolean
   },
+  /**
+   * ID to assign to the checkbox input
+   */
   id: {
     type: String
   }

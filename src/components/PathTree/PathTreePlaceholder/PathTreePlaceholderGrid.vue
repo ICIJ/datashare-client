@@ -6,18 +6,30 @@ import AppPlaceholder from '@/components/AppPlaceholder/AppPlaceholder'
 import PathTreePlaceholderListEntry from './PathTreePlaceholderListEntry'
 
 const { compact } = defineProps({
+  /**
+   * Whether to render in compact mode (no gaps between entries)
+   */
   compact: {
     type: Boolean,
     default: false
   },
+  /**
+   * Number of entries to render (including breadcrumb if level is 0)
+   */
   entries: {
     type: Number,
     default: 1
   },
+  /**
+   * Whether to render as a flat list (no indentation)
+   */
   flat: {
     type: Boolean,
     default: false
   },
+  /**
+   * Whether to hide the stats (size, date) on each entry
+   */
   noStats: {
     type: Boolean,
     default: false

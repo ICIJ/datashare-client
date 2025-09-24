@@ -9,9 +9,15 @@ import { LAYOUTS, layoutValidator } from '@/enums/pathTree'
 const layout = defineModel('layout', { type: String, default: LAYOUTS.TREE, validator: layoutValidator })
 
 defineProps({
+  /**
+   * Optional label to display above the tree
+   */
   label: {
     type: String
   },
+  /**
+   * Optional icon to display next to the label (string name or icon object)
+   */
   icon: {
     type: [String, Object, Array],
     default: PhTreeStructure

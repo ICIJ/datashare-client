@@ -10,37 +10,70 @@ const query = defineModel('query', { type: String })
 const layout = defineModel('layout', { type: String, default: LAYOUTS.TREE, validator: layoutValidator })
 
 const props = defineProps({
+  /**
+   * Optional label to display above the tree
+   */
   label: {
     type: String
   },
+  /**
+   * Optional icon to display next to the label (string name or icon object)
+   */
   icon: {
     type: [String, Object, Array]
   },
+  /**
+   * Whether to enable select mode (checkboxes next to entries)
+   */
   selectMode: {
     type: Boolean
   },
+  /**
+   * Use compact mode (no gaps between entries)
+   */
   compact: {
     type: Boolean
   },
+  /**
+   * Whether to render as a flat list (no indentation)
+   */
   flat: {
     type: Boolean
   },
+  /**
+   * Current nesting level (0 = root)
+   */
   level: {
     type: Number,
     default: 0
   },
+  /**
+   * Whether to hide the label
+   */
   noLabel: {
     type: Boolean
   },
+  /**
+   * Whether to hide the placeholder when loading
+   */
   noPlaceholder: {
     type: Boolean
   },
+  /**
+   * Whether to hide the search box
+   */
   noStats: {
     type: Boolean
   },
+  /**
+   * Whether to hide the search box
+   */
   noSearch: {
     type: Boolean
   },
+  /**
+   * Whether the tree is currently loading (shows placeholder if true)
+   */
   isLoading: {
     type: Boolean
   }

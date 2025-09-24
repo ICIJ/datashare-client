@@ -6,30 +6,51 @@ import { PhosphorIcon } from '@icij/murmur-next'
 import AppPlaceholder from '@/components/AppPlaceholder/AppPlaceholder'
 
 const { compact, flat, flush, level, open } = defineProps({
+  /**
+   * Whether to render in compact mode (no gaps between entries)
+   */
   compact: {
     type: Boolean,
     default: false
   },
+  /**
+   * Whether to render as a flat list (no indentation)
+   */
   flat: {
     type: Boolean,
     default: false
   },
+  /**
+   * Whether to render entries without a padding
+   */
   flush: {
     type: Boolean,
     default: false
   },
+  /**
+   * Current nesting level (0 = root)
+   */
   level: {
     type: Number,
     default: 0
   },
+  /**
+   * Whether the entry is nested inside another list (adds a left border)
+   */
   nested: {
     type: Boolean,
     default: false
   },
+  /**
+   * Whether to hide the stats (size, date) on each entry
+   */
   noStats: {
     type: Boolean,
     default: false
   },
+  /**
+   * Whether the entry is "open" (shows down caret instead of right caret)
+   */
   open: {
     type: Boolean,
     default: false
