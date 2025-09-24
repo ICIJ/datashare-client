@@ -12,7 +12,7 @@ defineProps({
   <td>
     <project-button
       :project="document.project"
-      no-search
+      no-link
       disabled
     />
   </td>
