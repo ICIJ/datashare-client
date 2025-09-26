@@ -176,11 +176,6 @@ defineExpose({ resetSize, resetStartSize })
     visibility: hidden;
   }
 
-  .document-floating--has-floating &__end {
-    min-width: 500px;
-    overflow-x: auto;
-  }
-
   &__start {
     display: none;
     max-height: 100vh;
