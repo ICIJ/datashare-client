@@ -19,12 +19,6 @@ const { document } = defineProps({
   tooltipPlacement: {
     type: String,
     default: 'bottom'
-  },
-  /**
-   * Use vertical layout for the button
-   */
-  vertical: {
-    type: Boolean
   }
 })
 
@@ -47,7 +41,6 @@ const toggleStar = () => {
     icon="star"
     :label="t('documentActionsGroup.star')"
     :tooltip-placement="tooltipPlacement"
-    :vertical="vertical"
     :fill="isStarred"
     hide-tooltip
     @click="toggleStar()"
