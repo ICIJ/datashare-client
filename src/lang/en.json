@@ -281,7 +281,6 @@
       }
     }
   },
-  "searchBackLink": "Back",
   "searchFormControl": {
     "submitLabel": "Search"
   },
