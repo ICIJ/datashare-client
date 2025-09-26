@@ -26,7 +26,7 @@ export const useResizeObserver = (resizableRef) => {
       state.contentRect = element.getBoundingClientRect()
       state.offsetWidth = element.offsetWidth
       state.offsetHeight = element.offsetHeight
-      // Bind the elemnt to the resize observer
+      // Bind the element to the resize observer
       observer.observe(element)
     }
   })
