@@ -18,7 +18,16 @@ const { isServer } = useMode()
 const { document, documentViewFloatingSelector } = useDocument()
 const { username } = useAuth()
 const { waitForElementCreated } = useElementObserver()
-
+defineProps({
+  compact: {
+    type: Boolean,
+    default: false
+  },
+  grow: {
+    type: Boolean,
+    default: false
+  }
+})
 const showRecommendationsCard = computed({
   get: () => documentStore.isUserActionVisible(DOCUMENT_USER_ACTIONS.RECOMMENDATIONS),
   set: value => documentStore.toggleUserAction(DOCUMENT_USER_ACTIONS.RECOMMENDATIONS, value)
@@ -69,10 +78,13 @@ watch(() => document.value, async () => {
     allTags.value = await fetchAllTagsByIndex(document.value.index)
   }
 })
+
 </script>
 
 <template>
   <document-user-actions
+    :class="{'flex-grow-1':grow}"
+    :compact="compact"
     show-tags
     :show-recommendations="isServer"
     :active-recommendations="showRecommendationsCard"
@@ -80,32 +92,33 @@ watch(() => document.value, async () => {
     :tags="tags.length"
     :recommendations="recommendedBy.length"
     @action="documentStore.toggleUserAction"
-  />
-  <teleport
-    v-if="hasFloatingElement"
-    :to="documentViewFloatingSelector"
   >
-    <hook
-      name="document-user-actions-cards:before"
-      :bind="{ document }"
-    />
-    <document-user-tags
-      v-model="showTagsCard"
-      :is-server="isServer"
-      :username="username"
-      :tags="tags"
-      :all-tags="allTags"
-      @delete="deleteTag"
-      @add="addTags"
-    />
-    <document-user-recommendations
-      v-model="showRecommendationsCard"
-      v-model:recommended="recommended"
-      :recommended-by="recommendedBy"
-    />
-    <hook
-      name="document-user-actions-cards:after"
-      :bind="{ document }"
-    />
-  </teleport>
+    <teleport
+      v-if="hasFloatingElement"
+      :to="documentViewFloatingSelector"
+    >
+      <hook
+        name="document-user-actions-cards:before"
+        :bind="{ document }"
+      />
+      <document-user-tags
+        v-model="showTagsCard"
+        :is-server="isServer"
+        :username="username"
+        :tags="tags"
+        :all-tags="allTags"
+        @delete="deleteTag"
+        @add="addTags"
+      />
+      <document-user-recommendations
+        v-model="showRecommendationsCard"
+        v-model:recommended="recommended"
+        :recommended-by="recommendedBy"
+      />
+      <hook
+        name="document-user-actions-cards:after"
+        :bind="{ document }"
+      />
+    </teleport>
+  </document-user-actions>
 </template>
