@@ -64,7 +64,6 @@ function handleClick(event) {
     :href="href"
     :label="t('documentActionsGroup.expand')"
     :tooltip-placement="tooltipPlacement"
-    :vertical="vertical"
     hide-tooltip
     @click.exact="handleClick"
   />

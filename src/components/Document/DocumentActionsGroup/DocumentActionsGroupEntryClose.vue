@@ -16,12 +16,6 @@ defineProps({
   tooltipPlacement: {
     type: String,
     default: 'bottom'
-  },
-  /**
-   * Use vertical layout for the button
-   */
-  vertical: {
-    type: Boolean
   }
 })
 const { t } = useI18n()
@@ -34,6 +28,5 @@ const { t } = useI18n()
     :icon="PhX"
     :label="t('documentActionsGroup.close')"
     :tooltip-placement="tooltipPlacement"
-    :vertical="vertical"
   />
 </template>
