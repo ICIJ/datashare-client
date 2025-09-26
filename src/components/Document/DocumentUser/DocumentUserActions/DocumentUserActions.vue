@@ -3,10 +3,9 @@
     <form-actions
       ref="element"
       variant="action"
-      compact-auto
-      :compact-auto-breakpoint="compactAutoBreakpoint"
+      :compact="compact"
       compact-variant="outline-action"
-      class="d-flex justify-content-between"
+      class="d-flex justify-content-between flex-nowrap"
     >
       <template #default="{isCompact}">
         <div class="document-user-actions__start d-inline-flex gap-1 flex-nowrap">
@@ -91,21 +90,17 @@
         </div>
       </template>
     </form-actions>
+    <slot />
   </div>
 </template>
 
 <script setup>
-import { computed, toRef } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useParentElement } from '@vueuse/core'
 
 import { DOCUMENT_USER_ACTIONS } from '@/enums/documentUserActions'
 import DocumentUserActionsEntry from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsEntry'
 import FormActions from '@/components/Form/FormActions/FormActions'
 import Hook from '@/components/Hook/Hook'
-import { useCompact } from '@/composables/useCompact'
-import { useBreakpoints } from '@/composables/useBreakpoints'
-import { SIZE } from '@/enums/sizes'
 import ModeLocalOnly from '@/components/Mode/ModeLocalOnly'
 import { useModalController } from 'bootstrap-vue-next'
 import DocumentDropdownReindexModal from '@/components/Document/DocumentDropdown/DocumentDropdownReindexModal'
@@ -113,7 +108,7 @@ import FormActionsCompact from '@/components/Form/FormActions/FormActionsCompact
 
 defineOptions({ name: 'DocumentUserActions' })
 
-const props = defineProps({
+defineProps({
   showTags: {
     type: Boolean,
     default: true
@@ -162,23 +157,18 @@ const props = defineProps({
     type: Number,
     default: 0
   },
-  compactAutoBreakpoint: {
-    type: String,
-    default: SIZE.SM
+  compact: {
+    type: Boolean,
+    default: false
   },
-  shorterLabelsThreshold: {
-    type: Number,
-    default: 660
+  shorterLabels: {
+    type: Boolean,
+    default: false
   }
 })
 const { t } = useI18n()
 
-const parentRef = useParentElement()
-const { breakpointDown } = useBreakpoints()
-const { compact: compactParent } = useCompact(parentRef, { threshold: toRef(props, 'shorterLabelsThreshold') })
-const showDropdown = computed(() => breakpointDown.value[props.compactAutoBreakpoint])
 // We short labels based on the width of the parent and visibility of the dropdown
-const shorterLabels = computed(() => compactParent.value && !showDropdown.value)
 const modalController = useModalController()
 
 function showModal() {
@@ -195,6 +185,12 @@ const emit = defineEmits(['action'])
     --bs-btn-bg: var(--bs-btn-action-bg);
     --bs-btn-color: var(--bs-btn-action-text);
     --bs-btn-border-color: transparent;
+  }
+
+  &__end{
+    flex: 0 1 100%;
+    justify-content: end;
+
   }
 }
 </style>
