@@ -1,27 +1,14 @@
 <script setup>
 import DocumentTitle from '@/components/Document/DocumentTitle/DocumentTitle'
 import Hook from '@/components/Hook/Hook'
-import ProjectThumbnail from '@/components/Project/ProjectThumbnail'
-import { computed } from 'vue'
-import { isObject, startCase } from 'lodash'
-import { useCore } from '@/composables/useCore'
+import ProjectButton from '@/components/Project/ProjectButton'
 
-const props = defineProps({
+defineProps({
   document: {
     type: Object,
     required: true
   }
 })
-
-const { core } = useCore()
-
-const resolvedProject = computed(() => {
-  if (isObject(props.document.project)) {
-    return core?.findProject(props.document.project.name) ?? props.document.project
-  }
-  return core?.findProject(props.document.project) ?? { name: props.document.project }
-})
-const projectDisplay = computed(() => resolvedProject.value.label ?? startCase(resolvedProject.value.name))
 
 </script>
 
@@ -31,14 +18,14 @@ const projectDisplay = computed(() => resolvedProject.value.label ?? startCase(r
       name="document-view-title:before"
       :bind="{ document }"
     />
-    <h2 class="document-view-title__title flex-grow-1 d-flex gap-2 align-items-center m-0">
-      <project-thumbnail
-        :project="projectDisplay"
-        width="1.5em"
-      />
+    <h2 class="document-view-title__title d-flex flex-grow-1 justify-content-between align-items-center m-0">
       <document-title
         interactive-root
         :document="document"
+      />
+      <project-button
+        :project="document.project"
+        class="flex-shrink-0"
       />
     </h2>
     <hook
