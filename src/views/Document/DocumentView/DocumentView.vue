@@ -21,7 +21,6 @@ import { useUrlParamWithStore } from '@/composables/useUrlParamWithStore'
 import { useAppStore } from '@/store/modules'
 import { useWait } from '@/composables/useWait'
 import { useScrollParent } from '@/composables/useScrollParent'
-import { useResizeObserver } from '@/composables/useResizeObserver'
 
 const props = defineProps({
   id: {
@@ -154,27 +153,6 @@ onBeforeMount(whenSearchHasNoEntries(redirectToDocumentStandalone))
 onBeforeMount(fetchRouteDocument)
 onBeforeRouteUpdate(fetchRouteDocument)
 
-/* We want to calculate when the user action should be expanded (grow).
- So when the panel is resized we go from :
- | parent                 |
- | tabs    | actions      |
- to:
- | parent     |
- | actions    |
- | tabs       |
-
- We cannot use breakpoints since the panel is resizable (with the separator line),
- and some menu can appear and reduce the panel size too.
-*/
-const parentRef = useTemplateRef('document-view__actions')
-const actionsRef = useTemplateRef('actions')
-const tabsRef = useTemplateRef('tabs')
-const { state: parentState } = useResizeObserver(parentRef)
-const { state: actionsState } = useResizeObserver(actionsRef)
-const { state: tabsState } = useResizeObserver(tabsRef)
-const totalOriginalWidth = computed(() => actionsState.offsetWidth + tabsState.offsetWidth)
-const shouldGrow = computed(() => actionsState.offsetWidth <= parentState.offsetWidth && totalOriginalWidth.value > parentState.offsetWidth)
-
 </script>
 
 <template>
@@ -190,45 +168,37 @@ const shouldGrow = computed(() => actionsState.offsetWidth <= parentState.offset
     <template
       v-if="document"
     >
-      <div class="d-flex">
+      <div class="document-view__header d-flex gap-2 mb-2">
+        <slot
+          name="header-start"
+          v-bind="{ document }"
+        />
+        <document-view-user-actions />
+        <document-view-actions
+          :document="document"
+          class="ms-auto"
+        />
         <slot
           name="nav"
           v-bind="{ document }"
         >
           <router-view name="nav" />
         </slot>
-      </div>
-      <div class="document-view__header d-flex justify-content-between align-items-center gap-2 my-2">
-        <slot
-          name="header-start"
-          v-bind="{ document }"
-        />
-        <document-view-title
-          :document="document"
-        />
-        <document-view-actions
-          :document="document"
-          class="ms-auto"
-        />
         <slot
           name="header-end"
           v-bind="{ document }"
         />
       </div>
-      <div
-        ref="document-view__actions"
-        class="document-view__actions d-flex flex-row flex-sm-row-reverse flex-wrap justify-content-between"
-      >
-        <document-view-user-actions
-          ref="actions"
-          :grow="shouldGrow"
-        />
-        <document-view-tabs
-          ref="tabs"
-          :tabs="tabs"
-          class="document-view__document-view-tabs  "
-        />
-      </div>
+      <slot
+        name="header-end"
+        v-bind="{ document }"
+      />
+      <document-view-title
+        :document="document"
+      />
+      <document-view-tabs
+        :tabs="tabs"
+      />
       <app-wait :for="tabLoaderId">
         <component
           :is="component"
