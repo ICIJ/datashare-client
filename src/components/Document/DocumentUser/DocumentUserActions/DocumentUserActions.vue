@@ -5,90 +5,66 @@
       variant="action"
       :compact="compact"
       compact-variant="outline-action"
-      class="d-flex justify-content-between flex-nowrap"
+      class="d-flex justify-content-between flex-nowrap gap-0"
     >
-      <template #default="{isCompact}">
-        <div class="document-user-actions__start d-inline-flex gap-1 flex-nowrap">
-          <hook name="document-user-actions:before" />
-          <document-user-actions-entry
-            v-if="showTags"
-            :active="activeTags"
-            :label="t(`documentUserActions.tags`, { n: tags })"
-            :value="String(tags)"
-            :icon="PhHash"
-            :hide-tooltip="!shorterLabels"
-            :shorter-label="shorterLabels"
-            @click="emit('action', DOCUMENT_USER_ACTIONS.TAGS)"
-          />
-          <document-user-actions-entry
-            v-if="showRecommendations"
-            :active="activeRecommendations"
-            :label="t(`documentUserActions.recommendations`, { n: recommendations })"
-            :value="String(recommendations)"
-            :icon="[PhEyes, 'fill']"
-            :hide-tooltip="!shorterLabels"
-            :shorter-label="shorterLabels"
-            @click="emit('action', DOCUMENT_USER_ACTIONS.RECOMMENDATIONS)"
-          />
-          <document-user-actions-entry
-            v-if="showNotes"
-            :active="activeNotes"
-            :label="t(`documentUserActions.notes`, { n: notes })"
-            :value="String(notes)"
-            :icon="PhNoteBlank"
-            :hide-tooltip="!shorterLabels"
-            :shorter-label="shorterLabels"
-            @click="emit('action', DOCUMENT_USER_ACTIONS.TAGS.NOTES)"
-          />
-          <document-user-actions-entry
-            v-if="showFolders"
-            :active="activeFolders"
-            :label="t(`documentUserActions.folders`, { n: folders })"
-            :value="String(folders)"
-            :icon="PhFolder"
-            :hide-tooltip="!shorterLabels"
-            :shorter-label="shorterLabels"
-            @click="emit('action', DOCUMENT_USER_ACTIONS.FOLDERS)"
-          />
-        </div>
-        <div class="document-user-actions__end d-inline-flex gap-1 flex-nowrap">
-          <template v-if="isCompact">
-            <mode-local-only>
-              <document-user-actions-entry
-                label="Reindex document"
-                value=""
-                :icon="PhArrowClockwise"
-                @click="showModal"
-              />
-            </mode-local-only>
-          </template>
-          <template v-else>
-            <form-actions-compact
-              variant="outline-action"
-              class=""
-            >
-              <template #dropdown>
-                <mode-local-only>
-                  <document-user-actions-entry
-                    label="Reindex document"
-                    value=""
-                    :icon="PhArrowClockwise"
-                    @click="showModal"
-                  />
-                </mode-local-only>
-              </template>
-            </form-actions-compact>
-          </template>
-          <slot
-            name="end"
-            v-bind="{shorterLabels}"
-          />
-          <hook
-            name="document-user-actions:after"
-            :bind="{ shorterLabels }"
-          />
-        </div>
-      </template>
+      <div class="document-user-actions__start d-inline-flex gap-1 flex-nowrap">
+        <hook name="document-user-actions:before" />
+        <document-user-actions-entry
+          v-if="showTags"
+          :active="activeTags"
+          :label="t(`documentUserActions.tags`, { n: tags })"
+          :value="String(tags)"
+          :icon="PhHash"
+          :hide-tooltip="!shorterLabels"
+          :shorter-label="shorterLabels"
+          @click="emit('action', DOCUMENT_USER_ACTIONS.TAGS)"
+        />
+        <document-user-actions-entry
+          v-if="showRecommendations"
+          :active="activeRecommendations"
+          :label="t(`documentUserActions.recommendations`, { n: recommendations })"
+          :value="String(recommendations)"
+          :icon="[PhEyes, 'fill']"
+          :hide-tooltip="!shorterLabels"
+          :shorter-label="shorterLabels"
+          @click="emit('action', DOCUMENT_USER_ACTIONS.RECOMMENDATIONS)"
+        />
+        <document-user-actions-entry
+          v-if="showNotes"
+          :active="activeNotes"
+          :label="t(`documentUserActions.notes`, { n: notes })"
+          :value="String(notes)"
+          :icon="PhNoteBlank"
+          :hide-tooltip="!shorterLabels"
+          :shorter-label="shorterLabels"
+          @click="emit('action', DOCUMENT_USER_ACTIONS.TAGS.NOTES)"
+        />
+        <document-user-actions-entry
+          v-if="showFolders"
+          :active="activeFolders"
+          :label="t(`documentUserActions.folders`, { n: folders })"
+          :value="String(folders)"
+          :icon="PhFolder"
+          :hide-tooltip="!shorterLabels"
+          :shorter-label="shorterLabels"
+          @click="emit('action', DOCUMENT_USER_ACTIONS.FOLDERS)"
+        />
+      </div>
+      <div class="document-user-actions__end d-inline-flex gap-1 flex-nowrap">
+        <mode-local-only>
+          <app-dropdown toggle-class="bg-transparent border-0">
+            <document-dropdown-reindex />
+          </app-dropdown>
+        </mode-local-only>
+        <slot
+          name="end"
+          v-bind="{ shorterLabels }"
+        />
+        <hook
+          name="document-user-actions:after"
+          :bind="{ shorterLabels }"
+        />
+      </div>
     </form-actions>
     <slot />
   </div>
@@ -98,13 +74,12 @@
 import { useI18n } from 'vue-i18n'
 
 import { DOCUMENT_USER_ACTIONS } from '@/enums/documentUserActions'
+import AppDropdown from '@/components/AppDropdown/AppDropdown'
+import DocumentDropdownReindex from '@/components/Document/DocumentDropdown/DocumentDropdownReindex'
 import DocumentUserActionsEntry from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsEntry'
 import FormActions from '@/components/Form/FormActions/FormActions'
 import Hook from '@/components/Hook/Hook'
 import ModeLocalOnly from '@/components/Mode/ModeLocalOnly'
-import { useModalController } from 'bootstrap-vue-next'
-import DocumentDropdownReindexModal from '@/components/Document/DocumentDropdown/DocumentDropdownReindexModal'
-import FormActionsCompact from '@/components/Form/FormActions/FormActionsCompact'
 
 defineOptions({ name: 'DocumentUserActions' })
 
@@ -166,16 +141,8 @@ defineProps({
     default: false
   }
 })
+
 const { t } = useI18n()
-
-// We short labels based on the width of the parent and visibility of the dropdown
-const modalController = useModalController()
-
-function showModal() {
-  const component = DocumentDropdownReindexModal
-  const props = { document }
-  modalController.create({ component, props })
-}
 const emit = defineEmits(['action'])
 </script>
 
