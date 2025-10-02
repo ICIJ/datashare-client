@@ -28,5 +28,6 @@ const { t } = useI18n()
     :icon="PhX"
     :label="t('documentActionsGroup.close')"
     :tooltip-placement="tooltipPlacement"
+    hide-tooltip
   />
 </template>
