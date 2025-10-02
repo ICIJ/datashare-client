@@ -15,7 +15,7 @@ const iconSize = '2.5rem'
     <div class="d-flex gap-3 align-items-center">
       <div class="d-flex gap-1 bg-body-secondary p-1 rounded">
         <app-placeholder
-          width="10rem"
+          width="11.25rem"
           height="2.75rem"
         />
         <mode-server-only>

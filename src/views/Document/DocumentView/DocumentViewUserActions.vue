@@ -83,6 +83,7 @@ watch(() => document.value, async () => {
 
 <template>
   <document-user-actions
+    class="flex-shrink-0"
     :class="{'flex-grow-1':grow}"
     :compact="compact"
     show-tags

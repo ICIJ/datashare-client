@@ -168,7 +168,9 @@ onBeforeRouteUpdate(fetchRouteDocument)
     <template
       v-if="document"
     >
-      <div class="document-view__header d-flex gap-2 mb-2">
+      <div
+        class="document-view__header d-flex gap-2 mb-2"
+      >
         <slot
           name="header-start"
           v-bind="{ document }"
