@@ -21,6 +21,7 @@ import { useUrlParamWithStore } from '@/composables/useUrlParamWithStore'
 import { useAppStore } from '@/store/modules'
 import { useWait } from '@/composables/useWait'
 import { useScrollParent } from '@/composables/useScrollParent'
+import { SIZE } from '@/enums/sizes'
 
 const props = defineProps({
   id: {
@@ -143,6 +144,9 @@ const showButtonToTop = computed(() => {
   return scrollY.value > heightThreshold && elementHeight.value > windowHeight.value
 })
 
+// Adjust the size of action buttons based on the compact mode.
+const actionsSize = computed(() => (props.compact ? SIZE.SM : SIZE.MD))
+
 function scrollToTop() {
   scrollY.value = 0
 }
@@ -183,6 +187,7 @@ onBeforeRouteUpdate(fetchRouteDocument)
         <document-view-actions
           :document="document"
           :no-close="compact"
+          :size="actionsSize"
           class="ms-auto"
         />
         <slot
