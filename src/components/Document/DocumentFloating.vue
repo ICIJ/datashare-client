@@ -174,32 +174,94 @@ function resetStartSize() {
 
 <style lang="scss" floating>
 .document-floating {
+  --document-floating-min-height: auto;
+  --document-floating-start-visibility: visible;
+  --document-floating-start-display: none;
+  --document-floating-start-max-height: 100vh;
+  --document-floating-start-position: sticky;
+  --document-floating-start-overflow: hidden;
+  --document-floating-start-min-width: 0;
+  --document-floating-start-max-width: var(--document-floating-separator-line-left, auto);
+  --document-floating-start-padding: 0;
+  --document-floating-start-floating-margin-right: #{$spacer};
+  --document-floating-start-floating-display: none;
+  --document-floating-end-display: block;
+  --document-floating-end-min-width: 0;
+  --document-floating-end-max-width: none;
+  --document-floating-end-max-height: none;
+  --document-floating-end-padding-left: 0;
+  --document-floating-end-position: static;
+  --document-floating-end-overflow: visible;
+  --document-floating-separator-line-display: none;
+
   position: relative;
   display: flex;
+  min-height: var(--document-floating-min-height);
 
   &--fill {
-    min-height: calc(100vh - var(--document-floating-top));
+    --document-floating-min-height: calc(100vh - var(--document-floating-top));
   }
 
-  &--reached-zero-width &__start {
-    visibility: hidden;
+  &--reached-zero-width {
+    --document-floating-start-visibility: hidden;
+  }
+
+  &--has-floating-children,
+  &--has-floating-siblings {
+    --document-floating-start-display: block;
+    --document-floating-separator-line-display: block;
+    --document-floating-end-padding-left: #{$spacer};
+  }
+
+  &--has-floating-children {
+    --document-floating-start-floating-display: flex;
+  }
+
+  &--display-end.document-floating--has-floating-children {
+    --document-floating-start-display: block;
+    --document-floating-start-min-width: 100%;
+    --document-floating-end-display: none;
+  }
+
+  &--reached-full-width {
+    --document-floating-start-floating-margin-right: 0;
+  }
+
+  &--display-start,
+  &--display-end {
+    --document-floating-separator-line-display: none;
+    --document-floating-start-floating-margin-right: 0;
+  }
+
+  &--display-start {
+    --document-floating-start-min-width: 100%;
+    --document-floating-start-max-width: none;
+    --document-floating-start-max-height: none;
+    --document-floating-start-position: static;
+    --document-floating-start-overflow: visible;
+    --document-floating-start-display: block;
+    --document-floating-end-display: none;
+  }
+
+  &--display-end {
+    --document-floating-end-min-width: 100%;
+    --document-floating-end-max-width: none;
+    --document-floating-end-max-height: none;
+    --document-floating-end-padding-left: 0;
+    --document-floating-end-position: static;
+    --document-floating-end-overflow: visible;
+    --document-floating-start-display: none;
   }
 
   &__start {
-    display: none;
-    max-height: 100vh;
-    position: sticky;
+    display: var(--document-floating-start-display);
+    max-height: var(--document-floating-start-max-height);
+    position: var(--document-floating-start-position);
     top: 0;
-    overflow: hidden;
-
-    .document-floating--has-floating-children &,
-    .document-floating--has-floating-siblings & {
-      display: block;
-    }
-
-    .document-floating--has-floating-children &__floating {
-      display: flex;
-    }
+    overflow: var(--document-floating-start-overflow);
+    min-width: var(--document-floating-start-min-width);
+    max-width: var(--document-floating-start-max-width);
+    visibility: var(--document-floating-start-visibility);
 
     &__floating {
       position: sticky;
@@ -209,90 +271,31 @@ function resetStartSize() {
       right: 0;
       height: 100%;
       padding: $spacer;
-      margin-right: $spacer;
+      margin-right: var(--document-floating-start-floating-margin-right);
       box-shadow: 0 $spacer 0 0 var(--bs-body-bg);
       background: var(--bs-action-bg-subtle);
       border-radius: var(--bs-border-radius);
-      display: none;
+      display: var(--document-floating-start-floating-display);
       flex-direction: column;
       gap: $spacer;
       overflow: auto;
-
-      .document-floating--reached-full-width & {
-        margin-right: 0;
-      }
     }
   }
 
   &__separator-line {
     transform: translateX(-50%);
-    display:none;
-
-    .document-floating--has-floating-children &,
-    .document-floating--has-floating-siblings & {
-      display: block;
-    }
+    display: var(--document-floating-separator-line-display);
   }
 
   &__end {
-    min-width: 0;
     width: 100%;
-
-    .document-floating--has-floating-children &,
-    .document-floating--has-floating-siblings & {
-      padding-left: $spacer;
-    }
-  }
-
-  &--display-start {
-    position: static;
-
-    .document-floating__start {
-      min-width: 100%;
-      max-width: none;
-      max-height: none;
-      position: static;
-      overflow: visible;
-    }
-
-    .document-floating__end,
-    .document-floating__separator-line {
-      display: none;
-    }
-  }
-
-  &--display-end {
-    position: static;
-    overflow: visible;
-
-    .document-floating__end {
-      min-width: 100%;
-      max-width: none;
-      max-height: none;
-      padding-left: 0;
-      position: static;
-      overflow: visible;
-    }
-
-    .document-floating__start,
-    .document-floating__separator-line {
-      display: none;
-    }
-
-    &.document-floating--has-floating-children  {
-      .document-floating__start {
-        display: block;
-        min-width: 100%;
-      }
-
-      .document-floating__start__floating {
-        margin-right: 0;
-      }
-
-      .document-floating__end {
-        display: none;
-      }
-    }
+    min-width: var(--document-floating-end-min-width);
+    max-width: var(--document-floating-end-max-width);
+    max-height: var(--document-floating-end-max-height);
+    padding-left: var(--document-floating-end-padding-left);
+    position: var(--document-floating-end-position);
+    overflow: var(--document-floating-end-overflow);
+    display: var(--document-floating-end-display);
   }
 }
 </style>
