@@ -1,11 +1,12 @@
 import { computed, toRef } from 'vue'
+import { useParentElement } from '@vueuse/core'
 
 import { useResizeObserver } from '@/composables/useResizeObserver'
 import { useBreakpoints } from '@/composables/useBreakpoints'
 import { SIZE } from '@/enums/sizes'
 
-export const useCompact = function (element, options = { threshold: 0, breakpoint: SIZE.MD }) {
-  const elementRef = toRef(element)
+export const useCompact = function (element = null, options = { threshold: 0, breakpoint: SIZE.MD }) {
+  const elementRef = toRef(element ?? useParentElement())
   const optionsRef = toRef(options)
 
   const { breakpointDown } = useBreakpoints()
