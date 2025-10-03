@@ -38,7 +38,7 @@
         :tooltip-placement="tooltipPlacement"
       />
       <document-actions-group-entry-close
-        v-if="!noClose"
+        v-if="modal || !noClose"
         :document="document"
         :size="size"
         :tooltip-placement="tooltipPlacement"
