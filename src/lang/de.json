@@ -53,6 +53,9 @@
   "buttonAdd": {
     "label": "Add new"
   },
+  "buttonBackToSearch": {
+    "label": "Back"
+  },
   "buttonTogglePathTreeView": {
     "list": "List view",
     "tree": "Tree view"
