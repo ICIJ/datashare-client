@@ -1,5 +1,5 @@
 <script setup>
-import { computed, markRaw, onBeforeMount, ref, useTemplateRef, watch } from 'vue'
+import { computed, inject, markRaw, onBeforeMount, ref, useTemplateRef, watch } from 'vue'
 import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { matches, property } from 'lodash'
@@ -144,8 +144,9 @@ const showButtonToTop = computed(() => {
   return scrollY.value > heightThreshold && elementHeight.value > windowHeight.value
 })
 
+const modal = inject('modal', undefined)
 // Adjust the size of action buttons based on the compact mode.
-const actionsSize = computed(() => (props.compact ? SIZE.SM : SIZE.MD))
+const actionsSize = computed(() => (props.compact && !modal ? SIZE.SM : SIZE.MD))
 
 function scrollToTop() {
   scrollY.value = 0
@@ -173,9 +174,7 @@ onBeforeRouteUpdate(fetchRouteDocument)
       <document-placeholder />
     </template>
 
-    <template
-      v-if="document"
-    >
+    <template v-if="document">
       <div
         class="document-view__header d-flex gap-2 mb-2"
       >
