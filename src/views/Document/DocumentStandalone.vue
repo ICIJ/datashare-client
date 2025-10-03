@@ -42,6 +42,7 @@ const display = computed(() => compact.value ? DISPLAY.END : DISPLAY.BOTH)
       :routing="routing"
       :index="index"
       :q="q"
+      :compact="compact"
     >
       <template
         v-if="!toggleSidebar"
