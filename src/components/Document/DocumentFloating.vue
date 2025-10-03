@@ -4,16 +4,23 @@ import { useElementBounding } from '@vueuse/core'
 
 import { useDocument } from '@/composables/useDocument'
 import { useQueryObserver } from '@/composables/useQueryObserver'
+import { useResizeObserver } from '@/composables/useResizeObserver'
+import { DISPLAY, displayValidator } from '@/enums/documentFloating'
 import SeparatorLine from '@/components/SeparatorLine/SeparatorLine'
 
 const props = defineProps({
+  display: {
+    type: String,
+    default: DISPLAY.BOTH,
+    validator: displayValidator
+  },
   minStartWidth: {
     type: Number,
     default: 400
   },
   minEndWidth: {
     type: Number,
-    default: 500
+    default: 600
   },
   reduceThreshold: {
     type: Number,
@@ -22,6 +29,10 @@ const props = defineProps({
   expandThreshold: {
     type: Number,
     default: 100
+  },
+  enoughSpaceThreshold: {
+    type: Number,
+    default: 900
   },
   noReduce: {
     type: Boolean
@@ -40,13 +51,22 @@ const props = defineProps({
   }
 })
 
+const emit = defineEmits(['update:enoughSpace'])
+
 const elementRef = useTemplateRef('element')
 const { querySelectorAll } = useQueryObserver(elementRef)
+const { state: elementState } = useResizeObserver(elementRef)
 const { top, left } = useElementBounding(elementRef)
 const { provideDocumentViewFloatingId } = useDocument()
 const documentViewFloatingId = provideDocumentViewFloatingId()
 
 const separatorLineLeft = ref(props.minStartWidth)
+const separatorLineRight = computed(() => elementState.offsetWidth - separatorLineLeft.value)
+
+const enoughStartSpace = computed(() => separatorLineLeft.value >= props.minStartWidth)
+const enoughEndSpace = computed(() => separatorLineRight.value >= props.minEndWidth)
+const enoughSpace = computed(() => enoughStartSpace.value && enoughEndSpace.value && elementState.offsetWidth >= props.enoughSpaceThreshold)
+watch(enoughSpace, value => emit('update:enoughSpace', value), { immediate: !!elementRef?.value?.$el })
 
 const reachedZeroWidth = computed(() => separatorLineLeft.value === 0)
 const reachedMinWidth = computed(() => separatorLineLeft.value <= props.minStartWidth)
@@ -73,6 +93,8 @@ const startStyle = computed(() => {
 const classList = computed(() => {
   return {
     'document-floating--fill': props.fill,
+    'document-floating--display-start': props.display === DISPLAY.START,
+    'document-floating--display-end': props.display === DISPLAY.END,
     'document-floating--reached-zero-width': reachedZeroWidth.value,
     'document-floating--reached-min-width': reachedMinWidth.value,
     'document-floating--has-floating-children': hasFloatingChildren.value,
@@ -92,25 +114,13 @@ function drag(left) {
   separatorLineLeft.value = left
 }
 
-function reduce() {
-  separatorLineLeft.value = props.minStartWidth
-}
-
-function expand() {
-  separatorLineLeft.value = props.maxEndWidth
-}
-
-function resetSize() {
-  resetStartSize()
-}
-
 function resetStartSize() {
   if (reachedZeroWidth.value) {
     separatorLineLeft.value = props.minStartWidth
   }
 }
 
-defineExpose({ resetSize, resetStartSize })
+defineExpose({ resetStartSize })
 </script>
 
 <template>
@@ -151,8 +161,6 @@ defineExpose({ resetSize, resetStartSize })
       :min-start="minStartWidth"
       :min-end="minEndWidth"
       @drag="drag"
-      @reduce="reduce"
-      @expand="expand"
     />
     <div
       class="document-floating__end"
@@ -232,6 +240,40 @@ defineExpose({ resetSize, resetStartSize })
     .document-floating--has-floating-children &,
     .document-floating--has-floating-siblings & {
       padding-left: $spacer;
+    }
+  }
+
+  &--display-start {
+    .document-floating__start {
+      min-width: 100%;
+    }
+
+    .document-floating__end,
+    .document-floating__separator-line {
+      display: none;
+    }
+  }
+
+  &--display-end {
+    .document-floating__end {
+      min-width: 100%;
+      padding-left: 0;
+    }
+
+    .document-floating__start,
+    .document-floating__separator-line {
+      display: none;
+    }
+
+    &.document-floating--has-floating-children  {
+      .document-floating__start {
+        display: block;
+        min-width: 100%;
+      }
+
+      .document-floating__end {
+        display: none;
+      }
     }
   }
 }
