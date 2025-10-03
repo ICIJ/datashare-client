@@ -52,7 +52,10 @@
       </div>
       <div class="document-user-actions__end d-inline-flex gap-1 flex-nowrap">
         <mode-local-only>
-          <app-dropdown toggle-class="border-0">
+          <app-dropdown
+            toggle-class="border-0"
+            :teleport-to="teleportTo"
+          >
             <document-dropdown-reindex />
           </app-dropdown>
         </mode-local-only>
@@ -73,13 +76,14 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 
-import { DOCUMENT_USER_ACTIONS } from '@/enums/documentUserActions'
 import AppDropdown from '@/components/AppDropdown/AppDropdown'
 import DocumentDropdownReindex from '@/components/Document/DocumentDropdown/DocumentDropdownReindex'
 import DocumentUserActionsEntry from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsEntry'
 import FormActions from '@/components/Form/FormActions/FormActions'
 import Hook from '@/components/Hook/Hook'
 import ModeLocalOnly from '@/components/Mode/ModeLocalOnly'
+import { DOCUMENT_USER_ACTIONS } from '@/enums/documentUserActions'
+import { useScrollParent } from '@/composables/useScrollParent'
 
 defineOptions({ name: 'DocumentUserActions' })
 
@@ -144,6 +148,7 @@ defineProps({
 
 const { t } = useI18n()
 const emit = defineEmits(['action'])
+const teleportTo = useScrollParent({ node: document.body })
 </script>
 
 <style lang="scss" scoped>
