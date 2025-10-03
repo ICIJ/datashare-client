@@ -21,26 +21,35 @@ const props = defineProps({
   compactThreshold: {
     type: Number,
     default: 770
+  },
+  noSearchFilters: {
+    type: Boolean,
+    default: false
   }
 })
 
 const elementRef = useTemplateRef('element')
 const threshold = toRef(props, 'compactThreshold')
 const { compact } = useCompact(elementRef, { threshold })
-const classList = computed(() => ({ 'search-toolbar--compact': compact.value }))
+const classList = computed(() => {
+  return {
+    'search-toolbar--compact': compact.value,
+    'search-toolbar--no-search-filters': props.noSearchFilters
+  }
+})
 </script>
 
 <template>
   <div
     ref="element"
-    class="search-toolbar d-flex gap-3 py-3 align-items-start"
+    class="search-toolbar"
     :class="classList"
   >
     <button-toggle-sidebar
       v-if="!toggleSidebar && !compact"
       v-model:active="toggleSidebar"
     />
-    <div class="search-toolbar__filters d-flex flex-shrink-0 gap-3">
+    <div class="search-toolbar__filters">
       <button-toggle-filters
         v-if="isFiltersClosed"
         v-model:active="toggleFilters"
@@ -52,7 +61,7 @@ const classList = computed(() => ({ 'search-toolbar--compact': compact.value }))
         class="search-toolbar__filters__toggle-search-breadcrumb"
       />
     </div>
-    <div class="search-toolbar__form d-flex gap-3 flex-grow-1">
+    <div class="search-toolbar__form">
       <button-toggle-sidebar
         v-if="!toggleSidebar && compact"
         v-model:active="toggleSidebar"
@@ -72,12 +81,23 @@ const classList = computed(() => ({ 'search-toolbar--compact': compact.value }))
 <style scoped lang="scss">
 .search-toolbar {
   flex-wrap: nowrap;
+  padding-block: $spacer;
+  display: flex;
+  gap: $spacer;
+  align-items: flex-start;
 
   &__filters {
     order: 0;
+    display: flex;
+    gap: $spacer;
+    flex-shrink: 0;
   }
+
   &__form {
     order: 0;
+    display: flex;
+    gap: $spacer;
+    flex-grow: 1;
   }
 
   &--compact {
@@ -87,6 +107,14 @@ const classList = computed(() => ({ 'search-toolbar--compact': compact.value }))
       order: 1;
       width: 100%;
       justify-content: space-between;
+    }
+  }
+
+  &--no-search-filters {
+    padding-bottom: 0;
+
+    .search-toolbar__filters {
+      display: none;
     }
   }
 }
