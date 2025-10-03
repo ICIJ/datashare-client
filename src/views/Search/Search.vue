@@ -24,6 +24,7 @@ import { useSearchBreadcrumb } from '@/composables/useSearchBreadcrumb'
 import { useSearchNav } from '@/composables/useSearchNav'
 import { useViews } from '@/composables/useViews'
 import { LAYOUTS } from '@/enums/layouts'
+import { DISPLAY as ENTRIES_DISPLAY } from '@/enums/documentFloating'
 import { MODE_NAME } from '@/mode'
 import { useAppStore, useSearchStore } from '@/store/modules'
 
@@ -59,6 +60,20 @@ const isEmpty = computed(() => isSearchRoute.value && !isLoading.value && !total
 const selection = ref([])
 const toggleSearchBreadcrumb = ref(false)
 const selectMode = ref(false)
+
+// The this value is used to know if the floating document view has enough space to be displayed
+// next to the search results. It is updated by the DocumentEntries component which itself gets it
+// from the child DocumentFloating component.
+const enoughFloatingSpace = ref(false)
+
+const entriesDisplay = computed(() => {
+  if (!enoughFloatingSpace.value) {
+    return isSearchRoute.value || route.query.modal
+      ? ENTRIES_DISPLAY.START
+      : ENTRIES_DISPLAY.END
+  }
+  return ENTRIES_DISPLAY.BOTH
+})
 
 // In list view, if the floating space is not enough, the document view is displayed in a modal.
 // User can also force the document view to be displayed in a modal by adding the "modal" query parameter.
@@ -143,10 +158,12 @@ onAfterRouteQueryFromUpdate(refreshSearchFromRoute, { immediate: route.name === 
             :entries="entries"
             :selection="selection"
             :properties="properties"
+            :display="entriesDisplay"
             :layout="layout"
             :total="total"
             :per-page="perPage"
             :loading="isLoading"
+            @update:enough-space="enoughFloatingSpace = $event"
           >
             <template #header="{ compact }">
               <search-selection
@@ -172,7 +189,6 @@ onAfterRouteQueryFromUpdate(refreshSearchFromRoute, { immediate: route.name === 
                 </document-modal>
                 <component
                   :is="Component"
-                  v-else
                 >
                   <template #nav>
                     <search-nav />
