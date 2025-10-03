@@ -1,6 +1,6 @@
 <script setup>
 import { pickBy } from 'lodash'
-import { computed, toValue, useTemplateRef } from 'vue'
+import { computed } from 'vue'
 
 import DocumentEntriesHeader from './DocumentEntriesHeader'
 import DocumentEntriesList from './DocumentEntriesList'
@@ -49,8 +49,6 @@ const props = defineProps({
   }
 })
 
-const elementRef = useTemplateRef('element')
-
 const component = computed(() => {
   const layouts = {
     [LAYOUTS.LIST]: DocumentEntriesList,
@@ -66,19 +64,12 @@ const componentProps = computed(() => {
     return name in component.value.props
   })
 })
-
-defineExpose({
-  resetListSize() {
-    return toValue(elementRef)?.resetListSize?.()
-  }
-})
 </script>
 
 <template>
   <component
     :is="component"
     v-bind="componentProps"
-    ref="element"
     v-model:selection="selection"
   >
     <slot />
