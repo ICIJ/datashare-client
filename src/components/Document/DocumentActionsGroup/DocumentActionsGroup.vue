@@ -130,13 +130,12 @@ const classList = computed(() => {
 const modalController = useModalController()
 const { searchRoute } = useSearchNav()
 const router = useRouter()
+
 async function onClose() {
   if (modal) {
-    modalController.hide()
+    return modalController.hide()
   }
-  else {
-    return router.push(searchRoute.value)
-  }
+  return router.push(searchRoute.value)
 }
 </script>
 
