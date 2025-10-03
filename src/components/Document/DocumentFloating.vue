@@ -85,6 +85,9 @@ const separatorLineStyle = computed(() => {
 })
 
 const startStyle = computed(() => {
+  if (props.display !== DISPLAY.BOTH) {
+    return {}
+  }
   const maxWidth = separatorLineStyle.value.left
   const flex = `${maxWidth} 0 0`
   return { maxWidth, flex }
@@ -242,8 +245,14 @@ function resetStartSize() {
   }
 
   &--display-start {
+    position: static;
+
     .document-floating__start {
       min-width: 100%;
+      max-width: none;
+      max-height: none;
+      position: static;
+      overflow: visible;
     }
 
     .document-floating__end,
@@ -253,9 +262,16 @@ function resetStartSize() {
   }
 
   &--display-end {
+    position: static;
+    overflow: visible;
+
     .document-floating__end {
       min-width: 100%;
+      max-width: none;
+      max-height: none;
       padding-left: 0;
+      position: static;
+      overflow: visible;
     }
 
     .document-floating__start,
@@ -267,6 +283,10 @@ function resetStartSize() {
       .document-floating__start {
         display: block;
         min-width: 100%;
+      }
+
+      .document-floating__start__floating {
+        margin-right: 0;
       }
 
       .document-floating__end {
