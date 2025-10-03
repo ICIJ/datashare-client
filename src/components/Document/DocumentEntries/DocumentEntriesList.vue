@@ -52,12 +52,6 @@ const scrollDocumentCardIntoView = function ({ id, index } = {}) {
 }
 
 watchDocument(scrollDocumentCardIntoView)
-
-defineExpose({
-  resetListSize() {
-    return toValue(elementRef)?.resetStartSize?.()
-  }
-})
 </script>
 
 <template>

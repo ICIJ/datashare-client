@@ -119,8 +119,6 @@ function resetStartSize() {
     separatorLineLeft.value = props.minStartWidth
   }
 }
-
-defineExpose({ resetStartSize })
 </script>
 
 <template>
