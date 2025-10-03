@@ -35,6 +35,10 @@ const props = defineProps({
   q: {
     type: String,
     default: ''
+  },
+  compact: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -175,9 +179,10 @@ onBeforeRouteUpdate(fetchRouteDocument)
           name="header-start"
           v-bind="{ document }"
         />
-        <document-view-user-actions />
+        <document-view-user-actions v-if="!compact" />
         <document-view-actions
           :document="document"
+          :no-close="compact"
           class="ms-auto"
         />
         <slot
@@ -197,6 +202,10 @@ onBeforeRouteUpdate(fetchRouteDocument)
       />
       <document-view-title
         :document="document"
+      />
+      <document-view-user-actions
+        v-if="compact"
+        class="my-2"
       />
       <document-view-tabs
         :tabs="tabs"
@@ -229,6 +238,7 @@ onBeforeRouteUpdate(fetchRouteDocument)
   min-width: 100%;
   min-height: calc(70vh);
   flex-basis: 100%;
+
   &__document-view-tabs{
     flex: 1 1 480px;
   }
