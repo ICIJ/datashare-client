@@ -7,6 +7,7 @@ import searchEmpty from '@/assets/images/illustrations/search-empty-light.svg'
 import searchEmptyDark from '@/assets/images/illustrations/search-empty-dark.svg'
 import searchError from '@/assets/images/illustrations/app-modal-alert-naming-light.svg'
 import searchErrorDark from '@/assets/images/illustrations/app-modal-alert-naming-dark.svg'
+import ButtonBackToSearch from '@/components/Button/ButtonBackToSearch'
 import DocumentModal from '@/components/Document/DocumentModal'
 import EmptyState from '@/components/EmptyState/EmptyState'
 import PageContainer from '@/components/PageContainer/PageContainer'
@@ -189,9 +190,16 @@ onAfterRouteQueryFromUpdate(refreshSearchFromRoute, { immediate: route.name === 
                 </document-modal>
                 <component
                   :is="Component"
+                  :compact="!enoughFloatingSpace"
                 >
                   <template #nav>
                     <search-nav />
+                  </template>
+                  <template
+                    v-if="!enoughFloatingSpace"
+                    #header-start
+                  >
+                    <button-back-to-search class="ps-0" />
                   </template>
                 </component>
               </template>
