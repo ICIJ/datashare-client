@@ -38,7 +38,7 @@
         :tooltip-placement="tooltipPlacement"
       />
       <document-actions-group-entry-close
-        v-if="modal || !vertical"
+        v-if="!noClose"
         :document="document"
         :size="size"
         :tooltip-placement="tooltipPlacement"
@@ -110,6 +110,12 @@ const { vertical } = defineProps({
     type: String,
     default: SIZE.SM,
     validator: breakpointSizeValidator
+  },
+  /**
+   * When true the close button is not displayed
+   */
+  noClose: {
+    type: Boolean
   }
 })
 

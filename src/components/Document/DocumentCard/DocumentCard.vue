@@ -130,6 +130,7 @@ const showTitle = computed(() => props.properties?.includes('title'))
           tooltip-placement="right-start"
           :document="document"
           vertical
+          no-close
           :is-download-allowed="isDownloadAllowed"
         />
       </slot>

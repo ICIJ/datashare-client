@@ -13,6 +13,7 @@ defineProps({
   <td class="document-row-actions text-end">
     <document-actions-group
       :document="document"
+      no-close
       class="d-inline-flex above-stretched-link"
     />
   </td>

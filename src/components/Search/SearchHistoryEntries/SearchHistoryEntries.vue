@@ -154,6 +154,7 @@ watch(() => eventsIds.value, fetch, { deep: true, immediate: true })
               class="text-secondary"
             />
             <document-actions-group
+              no-close
               :vertical="verticalDocumentActions"
               tooltip-placement="right-start"
               :document="document"

@@ -114,6 +114,7 @@ const showTitle = computed(() => props.properties?.includes('title'))
       :select-mode="selectMode"
       name="checkbox"
       class="ms-auto flex-shrink-0 p-3 above-stretched-link"
+      no-close
       tooltip-placement="right"
       vertical
     />
