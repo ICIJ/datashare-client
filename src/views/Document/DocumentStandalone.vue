@@ -5,7 +5,7 @@ import ButtonToggleSidebar from '@/components/Button/ButtonToggleSidebar'
 import DocumentFloating from '@/components/Document/DocumentFloating.vue'
 import DocumentView from '@/views/Document/DocumentView/DocumentView'
 import { useViews } from '@/composables/useViews'
-import { useBreakpoints, BREAKPOINT_LG } from '@/composables/useBreakpoints'
+import { useCompact } from '@/composables/useCompact'
 import { DISPLAY } from '@/enums/documentFloating'
 
 defineProps({
@@ -25,8 +25,8 @@ defineProps({
 })
 
 const { toggleSidebar } = useViews()
-const { breakpointDown } = useBreakpoints()
-const display = computed(() => breakpointDown.value[BREAKPOINT_LG] ? DISPLAY.END : DISPLAY.BOTH)
+const { compact } = useCompact(null, { threshold: 900 })
+const display = computed(() => compact.value ? DISPLAY.END : DISPLAY.BOTH)
 </script>
 
 <template>

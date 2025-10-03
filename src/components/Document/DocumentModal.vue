@@ -1,5 +1,5 @@
 <script setup>
-import { computed, useId } from 'vue'
+import { computed, useId, useTemplateRef } from 'vue'
 import { useRoute } from 'vue-router'
 import { useModal } from 'bootstrap-vue-next'
 
@@ -8,7 +8,7 @@ import DocumentFloating from '@/components/Document/DocumentFloating'
 import DocumentView from '@/views/Document/DocumentView/DocumentView'
 import { onRouteLeaveNotMatch } from '@/composables/onRouteLeaveNotMatch'
 import { onRouteUpdateNotMatch } from '@/composables/onRouteUpdateNotMatch'
-import { useBreakpoints, BREAKPOINT_LG } from '@/composables/useBreakpoints'
+import { useCompact } from '@/composables/useCompact'
 import { DISPLAY } from '@/enums/documentFloating'
 
 const modelValue = defineModel({ type: Boolean, default: false })
@@ -31,9 +31,10 @@ defineProps({
 
 const route = useRoute()
 const modalId = useId()
+const documentFloatingRef = useTemplateRef('document-floating')
 const { hide } = useModal(modalId)
-const { breakpointDown } = useBreakpoints()
-const display = computed(() => breakpointDown.value[BREAKPOINT_LG] ? DISPLAY.END : DISPLAY.BOTH)
+const { compact } = useCompact(documentFloatingRef, { threshold: 900 })
+const display = computed(() => compact.value ? DISPLAY.END : DISPLAY.BOTH)
 
 onRouteLeaveNotMatch(route.name, () => hide())
 onRouteUpdateNotMatch(route.name, () => hide())
@@ -52,6 +53,7 @@ onRouteUpdateNotMatch(route.name, () => hide())
     lazy
   >
     <document-floating
+      ref="document-floating"
       class="my-3"
       :display="display"
       no-reduce
