@@ -12,12 +12,6 @@ import Hook from '@/components/Hook/Hook'
 import { useRecommendedStore, useDocumentStore } from '@/store/modules'
 import { useElasticSearchQuery } from '@/composables/useElasticSearchQuery'
 
-const recommendedStore = useRecommendedStore()
-const documentStore = useDocumentStore()
-const { isServer } = useMode()
-const { document, documentViewFloatingSelector } = useDocument()
-const { username } = useAuth()
-const { waitForElementCreated } = useElementObserver()
 defineProps({
   compact: {
     type: Boolean,
@@ -28,6 +22,14 @@ defineProps({
     default: false
   }
 })
+
+const recommendedStore = useRecommendedStore()
+const documentStore = useDocumentStore()
+const { isServer } = useMode()
+const { document, documentViewFloatingSelector } = useDocument()
+const { username } = useAuth()
+const { waitForElementCreated } = useElementObserver()
+
 const showRecommendationsCard = computed({
   get: () => documentStore.isUserActionVisible(DOCUMENT_USER_ACTIONS.RECOMMENDATIONS),
   set: value => documentStore.toggleUserAction(DOCUMENT_USER_ACTIONS.RECOMMENDATIONS, value)
@@ -39,7 +41,6 @@ const showTagsCard = computed({
 })
 
 const hasFloatingElement = ref(false)
-
 const tags = computed(() => documentStore.tags)
 const allTags = ref([])
 const recommendedBy = computed(() => documentStore.recommendedBy)
