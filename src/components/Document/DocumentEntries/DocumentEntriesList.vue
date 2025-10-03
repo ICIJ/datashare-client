@@ -1,5 +1,5 @@
 <script setup>
-import { toValue, useTemplateRef } from 'vue'
+import { computed, toValue, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import VueScrollTo from 'vue-scrollto'
 
@@ -10,7 +10,7 @@ import { useDocument } from '@/composables/useDocument'
 import { useSelection } from '@/composables/useSelection'
 import { DISPLAY, displayValidator } from '@/enums/documentFloating'
 
-defineProps({
+const props = defineProps({
   entries: {
     type: Array
   },
@@ -51,6 +51,12 @@ const scrollDocumentCardIntoView = function ({ id, index } = {}) {
   }
 }
 
+const startClassList = computed(() => {
+  return {
+    'document-entries-list__start--display-start': props.display === DISPLAY.START
+  }
+})
+
 watchDocument(scrollDocumentCardIntoView)
 </script>
 
@@ -64,7 +70,10 @@ watchDocument(scrollDocumentCardIntoView)
     fill
   >
     <template #start>
-      <div class="document-entries-list__start">
+      <div
+        class="document-entries-list__start"
+        :class="startClassList"
+      >
         <div class="document-entries-list__start__header">
           <slot name="header" />
         </div>
@@ -108,8 +117,8 @@ watchDocument(scrollDocumentCardIntoView)
   &:deep(.document-floating__separator-line) {
     top: $spacer;
     height: calc(100% - #{$spacer * 2});
-
   }
+
   &:deep(.document-floating--reached-min-width .document-floating__separator-line),
   &:deep(.document-floating--reached-full-width .document-floating__separator-line) {
     display: none;
@@ -120,28 +129,49 @@ watchDocument(scrollDocumentCardIntoView)
   }
 
   &__start {
-    position: sticky;
+    --document-entries-list-start-max-height: 100vh;
+    --document-entries-list-start-position: sticky;
+    --document-entries-list-start-display: flex;
+
+    --document-entries-list-start-header-position: static;
+    --document-entries-list-start-header-padding-right: #{$spacer};
+    --document-entries-list-start-list-padding-right: #{$spacer};
+
     top: 0;
-    display: flex;
-    max-height: 100vh;
+    position: var(--document-entries-list-start-position);
+    max-height: var(--document-entries-list-start-max-height);
+    display: var(--document-entries-list-start-display);
     flex-direction: column;
 
     &__header {
+      top: 0;
       min-width: 0;
       max-width: 100%;
       width: 100%;
       flex-shrink: 1;
-      padding-right: $spacer;
+      position: var(--document-entries-list-start-header-position);
+      padding-right: var(--document-entries-list-start-header-padding-right);
+      background: var(--bs-body-bg);
+      z-index: $zindex-sticky;
     }
 
     &__list {
       flex-grow: 1;
       display: flex;
       flex-direction: column;
-      padding-right: $spacer;
+      padding-right: var(--document-entries-list-start-list-padding-right);
       gap: $spacer;
       padding-bottom: $spacer;
       overflow: auto;
+    }
+
+    &--display-start {
+      --document-entries-list-start-position: static;
+      --document-entries-list-start-max-height: none;
+      --document-entries-list-start-display: block;
+      --document-entries-list-start-header-position: sticky;
+      --document-entries-list-start-header-padding-right: 0;
+      --document-entries-list-start-list-padding-right: 0;
     }
   }
 
