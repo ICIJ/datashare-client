@@ -65,6 +65,7 @@ onRouteUpdateNotMatch(route.name, () => hide())
           :routing="routing"
           :index="index"
           :q="q"
+          :compact="compact"
         />
       </slot>
       <template #nav>
