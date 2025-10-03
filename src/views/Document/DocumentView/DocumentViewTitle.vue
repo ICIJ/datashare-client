@@ -18,7 +18,7 @@ defineProps({
       name="document-view-title:before"
       :bind="{ document }"
     />
-    <h2 class="document-view-title__title d-flex flex-grow-1 justify-content-between align-items-center m-0">
+    <h2 class="document-view-title__title d-flex flex-grow-1 gap-3 justify-content-between align-items-center m-0">
       <document-title
         interactive-root
         :document="document"
