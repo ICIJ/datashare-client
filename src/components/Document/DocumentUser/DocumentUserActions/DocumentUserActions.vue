@@ -5,7 +5,7 @@
       variant="action"
       :compact="compact"
       compact-variant="outline-action"
-      class="d-flex justify-content-between flex-nowrap gap-0"
+      class="d-flex justify-content-between flex-nowrap gap-1"
     >
       <div class="document-user-actions__start d-inline-flex gap-1 flex-nowrap">
         <hook name="document-user-actions:before" />
@@ -52,7 +52,7 @@
       </div>
       <div class="document-user-actions__end d-inline-flex gap-1 flex-nowrap">
         <mode-local-only>
-          <app-dropdown toggle-class="bg-transparent border-0">
+          <app-dropdown toggle-class="border-0">
             <document-dropdown-reindex />
           </app-dropdown>
         </mode-local-only>
