@@ -243,6 +243,12 @@ onBeforeRouteUpdate(fetchRouteDocument)
   min-height: calc(70vh);
   flex-basis: 100%;
 
+  &__header {
+    max-width: 100%;
+    flex-wrap: nowrap;
+    overflow: auto;
+  }
+
   &__document-view-tabs{
     flex: 1 1 480px;
   }
