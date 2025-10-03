@@ -1,12 +1,12 @@
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 
 // Define constants for breakpoint names
-const BREAKPOINT_XS = 'xs'
-const BREAKPOINT_SM = 'sm'
-const BREAKPOINT_MD = 'md'
-const BREAKPOINT_LG = 'lg'
-const BREAKPOINT_XL = 'xl'
-const BREAKPOINT_XXL = 'xxl'
+export const BREAKPOINT_XS = 'xs'
+export const BREAKPOINT_SM = 'sm'
+export const BREAKPOINT_MD = 'md'
+export const BREAKPOINT_LG = 'lg'
+export const BREAKPOINT_XL = 'xl'
+export const BREAKPOINT_XXL = 'xxl'
 
 // Define constants for CSS variable names
 const BREAKPOINT_VARIABLES = {
