@@ -8,6 +8,7 @@ import DocumentEntriesGrid from './DocumentEntriesGrid'
 import DocumentEntriesTable from './DocumentEntriesTable'
 
 import { LAYOUTS, layoutValidator } from '@/enums/layouts'
+import { DISPLAY, displayValidator } from '@/enums/documentFloating'
 
 const selectMode = defineModel('selectMode', { type: Boolean, default: false })
 const selection = defineModel('selection', { type: Array, default: () => [] })
@@ -21,6 +22,11 @@ const props = defineProps({
     type: String,
     validator: layoutValidator,
     default: LAYOUTS.LIST
+  },
+  display: {
+    type: String,
+    default: DISPLAY.BOTH,
+    validator: displayValidator
   },
   perPage: {
     type: Number,
@@ -62,14 +68,8 @@ const componentProps = computed(() => {
 })
 
 defineExpose({
-  resetSize() {
-    return toValue(elementRef)?.resetSize?.()
-  },
   resetListSize() {
     return toValue(elementRef)?.resetListSize?.()
-  },
-  resetDocumentSize() {
-    return toValue(elementRef)?.resetDocumentSize?.()
   }
 })
 </script>
