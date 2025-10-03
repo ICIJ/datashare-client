@@ -8,6 +8,7 @@ import DocumentCardPlaceholder from '@/components/Document/DocumentCard/Document
 import DocumentFloating from '@/components/Document/DocumentFloating'
 import { useDocument } from '@/composables/useDocument'
 import { useSelection } from '@/composables/useSelection'
+import { DISPLAY, displayValidator } from '@/enums/documentFloating'
 
 defineProps({
   entries: {
@@ -23,6 +24,11 @@ defineProps({
   },
   loading: {
     type: Boolean
+  },
+  display: {
+    type: String,
+    default: DISPLAY.BOTH,
+    validator: displayValidator
   }
 })
 const { t } = useI18n()
@@ -48,14 +54,8 @@ const scrollDocumentCardIntoView = function ({ id, index } = {}) {
 watchDocument(scrollDocumentCardIntoView)
 
 defineExpose({
-  resetSize() {
-    return toValue(elementRef)?.resetSize?.()
-  },
   resetListSize() {
     return toValue(elementRef)?.resetStartSize?.()
-  },
-  resetDocumentSize() {
-    return toValue(elementRef)?.resetEndSize?.()
   }
 })
 </script>
@@ -64,6 +64,7 @@ defineExpose({
   <document-floating
     ref="element"
     class="document-entries-list"
+    :display="display"
     no-reduce
     no-expand
     fill
