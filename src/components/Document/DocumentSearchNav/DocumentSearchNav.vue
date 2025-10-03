@@ -65,5 +65,6 @@ wheneverRouteActionShortcut('goToNextDocument', () => {
   color: var(--bs-tertiary-color-subtle);
   background: var(--bs-tertiary-bg-subtle);
   min-width: auto;
+  gap: $spacer-xxs;
 }
 </style>
