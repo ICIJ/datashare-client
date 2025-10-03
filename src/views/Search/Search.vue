@@ -187,7 +187,10 @@ onAfterRouteQueryFromUpdate(refreshSearchFromRoute, { immediate: route.name === 
                   @hide="refreshRoute"
                 >
                   <search-carousel v-if="hasCarousel" />
-                  <component :is="Component" />
+                  <component
+                    :is="Component"
+                    :compact="!enoughFloatingSpace"
+                  />
                 </document-modal>
                 <component
                   :is="Component"
