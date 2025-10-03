@@ -133,6 +133,7 @@ onAfterRouteQueryFromUpdate(refreshSearchFromRoute, { immediate: route.name === 
           v-model:toggle-settings="toggleSettings"
           v-model:is-filters-closed="isFiltersClosed"
           :search-breadcrumb-counter="searchBreadcrumbCounter"
+          :no-search-filters="!enoughFloatingSpace && !isSearchRoute"
         />
         <search-breadcrumb v-model:visible="toggleSearchBreadcrumb" />
         <div class="search__main__results">
