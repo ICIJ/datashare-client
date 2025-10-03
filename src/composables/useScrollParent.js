@@ -25,15 +25,16 @@ function getScrollParent(node, topLevelParent = document.body) {
  *
  * @param {Object} options - Options for the composable.
  * @param {boolean} options.closestModal - Whether to look for the closest modal as the scroll parent.
+ * @param {HTMLElement|null} options.node - The specific node to find the scroll parent for. If null, uses the parent element of the component.
  * @param {HTMLElement} options.topLevelParent - The top-level parent element to stop searching at. Defaults to `document.body`.
  * @returns {ComputedRef<HTMLElement>} - A computed reference to the scroll parent element.
  */
-export function useScrollParent({ closestModal = true, topLevelParent = document.body } = {}) {
+export function useScrollParent({ closestModal = true, node = null, topLevelParent = document.body } = {}) {
   const parent = useParentElement()
   return computed(() => {
     // In case we are using this composable from a modal, we can use the modal as the scroll parent
     // directly to ensure that the scroll is contained within the modal.
     const modal = closestModal ? parent.value?.closest('.modal') : null
-    return modal || getScrollParent(parent.value, topLevelParent)
+    return modal || getScrollParent(node || parent.value, topLevelParent)
   })
 }
