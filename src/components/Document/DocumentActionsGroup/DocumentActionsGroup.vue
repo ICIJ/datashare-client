@@ -128,14 +128,14 @@ const classList = computed(() => {
 })
 
 const modalController = useModalController()
-const { searchRoute } = useSearchNav()
+const { searchRouteWithoutRefresh } = useSearchNav()
 const router = useRouter()
 
 async function onClose() {
   if (modal) {
     return modalController.hide()
   }
-  return router.push(searchRoute.value)
+  return router.push(searchRouteWithoutRefresh.value)
 }
 </script>
 

@@ -19,7 +19,7 @@ const { tabs } = defineProps({
 const appStore = useAppStore()
 const router = useRouter()
 const route = useRoute()
-const { searchRoute } = useSearchNav()
+const { searchRouteWithoutRefresh } = useSearchNav()
 const { wheneverRouteActionShortcut } = useKeyboardShortcuts()
 
 const modal = inject('modal', undefined)
@@ -33,7 +33,7 @@ const currentTabIndex = computed(() => {
 })
 
 // We must close the current document on "escape" key press only if we are in list view (ie. not in a modal)
-wheneverRouteActionShortcut('back', () => !modal && router.push(searchRoute.value))
+wheneverRouteActionShortcut('back', () => !modal && router.push(searchRouteWithoutRefresh.value))
 
 const previousTabIndex = computed(() => (currentTabIndex.value || tabs.length) - (1 % tabs.length))
 const previousTabRoute = computed(() => tabRoute(tabs[previousTabIndex.value]))
