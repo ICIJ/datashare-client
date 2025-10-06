@@ -27,6 +27,8 @@ export function useSearchNav(currentDocument = null) {
 
   // Route to the search page with the current search query
   const searchRoute = computed(() => ({ name: 'search', query: searchStore.toRouteQuery }))
+  // Route to the search that will not trigger a refresh of the store
+  const searchRouteWithoutRefresh = computed(() => ({ name: 'search', query: { ...searchStore.toRouteQuery, noRefresh: 1 } }))
   // Check if the current route is a child of the search route (or the search route itself)
   const isSearchChildRoute = computed(() => route.matched.some(route => route.name === 'search'))
   // Position of the document in the hits array
@@ -145,6 +147,7 @@ export function useSearchNav(currentDocument = null) {
 
   return {
     searchRoute,
+    searchRouteWithoutRefresh,
     isSearchChildRoute,
     disabledNext,
     disabledPrevious,
