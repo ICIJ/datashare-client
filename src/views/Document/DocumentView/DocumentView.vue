@@ -161,7 +161,6 @@ onBeforeMount(whenSearchHasNoEntries(redirectToDocumentStandalone))
 // Ensure the document is always in sync with the route
 onBeforeMount(fetchRouteDocument)
 onBeforeRouteUpdate(fetchRouteDocument)
-
 </script>
 
 <template>
