@@ -20,6 +20,10 @@ const props = defineProps({
   dropdownIcon: {
     type: [String, Object, Array],
     default: () => [PhDotsThreeOutlineVertical, 'fill']
+  },
+  teleportTo: {
+    type: [String, Object],
+    default: null
   }
 })
 
@@ -54,6 +58,7 @@ const classList = computed(() => {
         :variant="variant"
         :size="size"
         :dropdown-icon="dropdownIcon"
+        :teleport-to="teleportTo"
       >
         <slot name="dropdown" />
       </form-actions-compact-dropdown>
