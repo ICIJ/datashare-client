@@ -33,7 +33,7 @@ const route = useRoute()
 const modalId = useId()
 const documentFloatingRef = useTemplateRef('document-floating')
 const { hide } = useModal(modalId)
-const { compact } = useCompact(documentFloatingRef, { threshold: 900 })
+const { compact } = useCompact(documentFloatingRef, { threshold: 660 })
 const display = computed(() => compact.value ? DISPLAY.END : DISPLAY.BOTH)
 
 onRouteLeaveNotMatch(route.name, () => hide())

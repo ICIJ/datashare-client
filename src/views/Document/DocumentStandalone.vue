@@ -25,7 +25,7 @@ defineProps({
 })
 
 const { toggleSidebar } = useViews()
-const { compact } = useCompact(null, { threshold: 900 })
+const { compact } = useCompact(null, { threshold: 660 })
 const display = computed(() => compact.value ? DISPLAY.END : DISPLAY.BOTH)
 </script>
 
