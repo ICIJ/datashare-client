@@ -16,6 +16,10 @@ const props = defineProps({
   dropdownIcon: {
     type: [String, Object, Array],
     default: () => [PhDotsThreeOutlineVertical, 'fill']
+  },
+  teleportTo: {
+    type: [String, Object],
+    default: null
   }
 })
 
@@ -25,7 +29,8 @@ watch(
   { immediate: true }
 )
 
-const teleportTo = useScrollParent()
+const scrollParent = useScrollParent()
+const teleportToOrScrollParent = computed(() => props.teleportTo || scrollParent.value)
 
 const classList = computed(() => {
   return [`form-actions-compact-dropdown--${props.variant}`]
@@ -43,7 +48,7 @@ const menuClassList = computed(() => {
     :size="size"
     :class="classList"
     :menu-class="menuClassList"
-    :teleport-to="teleportTo"
+    :teleport-to="teleportToOrScrollParent"
     toggle-class="form-actions-compact-dropdown__toggle"
     boundary="viewport"
     no-caret

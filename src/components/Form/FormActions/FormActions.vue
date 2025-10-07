@@ -1,5 +1,5 @@
 <script setup>
-import { computed, watch, provide } from 'vue'
+import { computed, watch, provide, useSlots } from 'vue'
 
 import FormActionsCompact from './FormActionsCompact'
 
@@ -47,10 +47,17 @@ const props = defineProps({
   },
   end: {
     type: Boolean
+  },
+  teleportTo: {
+    type: [String, Object],
+    default: null
   }
 })
 
 const { breakpointDown } = useBreakpoints()
+
+const slots = useSlots()
+const hasDropdownSlot = computed(() => !!slots.dropdown)
 
 const isCompact = computed(() => {
   // If compactAuto is true, use the compactAutoBreakpoint value to determine if the
@@ -95,13 +102,17 @@ watch(
         :variant="compactVariant"
         :size="size"
         :dropdown-icon="dropdownIcon"
+        :teleport-to="teleportTo"
       >
-        <slot
-          name="compact"
-          v-bind="{ isCompact }"
-        />
         <template #dropdown>
-          <slot v-bind="{ isCompact }" />
+          <slot
+            name="compact"
+            v-bind="{ isCompact }"
+          />
+          <slot
+            name="dropdown"
+            v-bind="{ isCompact }"
+          />
         </template>
       </form-actions-compact>
       <slot
@@ -119,6 +130,20 @@ watch(
         v-bind="{ isCompact }"
       />
       <slot v-bind="{ isCompact }" />
+      <form-actions-compact
+        v-if="hasDropdownSlot"
+        :variant="compactVariant"
+        :size="size"
+        :dropdown-icon="dropdownIcon"
+        :teleport-to="teleportTo"
+      >
+        <template #dropdown>
+          <slot
+            name="dropdown"
+            v-bind="{ isCompact }"
+          />
+        </template>
+      </form-actions-compact>
       <slot
         name="end"
         v-bind="{ isCompact }"
