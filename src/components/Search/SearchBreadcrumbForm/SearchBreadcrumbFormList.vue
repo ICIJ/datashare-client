@@ -33,7 +33,7 @@ const { t } = useI18n()
         {{ t('searchBreadcrumbFormList.label') }}
       </slot>
     </div>
-    <div class="search-breadcrumb-form__entries d-flex flex-wrap row-gap-2 column-gap-2 align-items-baseline">
+    <div class="search-breadcrumb-form-list__entries d-flex flex-wrap row-gap-2 column-gap-2 align-items-baseline">
       <slot />
     </div>
   </div>
