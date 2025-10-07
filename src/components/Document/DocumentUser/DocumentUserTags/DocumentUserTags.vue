@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { matchesProperty, negate, property } from 'lodash'
 import { useI18n } from 'vue-i18n'
 
+import { useMode } from '@/composables/useMode'
 import ButtonTag from '@/components/Button/ButtonTag'
 import DocumentUserActionsCard from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsCard'
 import DocumentUserTagsAction from '@/components/Document/DocumentUser/DocumentUserTags/DocumentUserTagsAction'
@@ -20,14 +21,12 @@ const { tags, allTags, username } = defineProps({
   },
   username: {
     type: String
-  },
-  isServer: {
-    type: Boolean
   }
 })
 
 const emit = defineEmits(['delete', 'add'])
 const { t } = useI18n()
+const { isServer } = useMode()
 const tagsLabels = computed(() => tags.map(property('label')))
 const allTagsLabels = computed(() => allTags.map(property('label')))
 const matchesUsername = computed(() => matchesProperty('user.id', username))

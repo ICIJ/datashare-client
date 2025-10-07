@@ -5,7 +5,6 @@ import { useAuth } from '@/composables/useAuth'
 import { useElementObserver } from '@/composables/useElementObserver'
 import { useElasticSearchQuery } from '@/composables/useElasticSearchQuery'
 import { useDocument } from '@/composables/useDocument'
-import { useMode } from '@/composables/useMode'
 import { DOCUMENT_USER_ACTIONS } from '@/enums/documentUserActions'
 import DocumentUserActions from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActions'
 import DocumentUserRecommendations from '@/components/Document/DocumentUser/DocumentUserRecommendations/DocumentUserRecommendations'
@@ -22,7 +21,6 @@ defineProps({
 
 const recommendedStore = useRecommendedStore()
 const documentStore = useDocumentStore()
-const { isServer } = useMode()
 const { document, documentViewFloatingSelector } = useDocument()
 const { username } = useAuth()
 const { waitForElementCreated } = useElementObserver()
@@ -100,7 +98,6 @@ watch(() => document.value, async () => {
       />
       <document-user-tags
         v-model="showTagsCard"
-        :is-server="isServer"
         :username="username"
         :tags="tags"
         :all-tags="allTags"
