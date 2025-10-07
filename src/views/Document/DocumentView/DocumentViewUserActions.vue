@@ -83,7 +83,6 @@ watch(() => document.value, async () => {
   <document-user-actions
     :compact="compact"
     show-tags
-    show-notes
     :show-recommendations="isServer"
     :active-recommendations="showRecommendationsCard"
     :active-tags="showTagsCard"
