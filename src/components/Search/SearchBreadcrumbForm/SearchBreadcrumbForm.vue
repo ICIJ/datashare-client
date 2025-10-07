@@ -26,6 +26,9 @@ defineProps({
   disabledCreateAlert: {
     type: Boolean,
     default: true
+  },
+  wrapperClass: {
+    type: [String, Array, Object]
   }
 })
 
@@ -37,7 +40,10 @@ const emit = defineEmits(['clear:filters', 'clear:query', 'clear:all', 'save:sea
     v-model="visible"
     class="search-breadcrumb-form"
   >
-    <div class="p-3">
+    <div
+      class="search-breadcrumb-form__wrapper p-3"
+      :class="wrapperClass"
+    >
       <template v-if="isEmpty">
         <div class="d-flex align-items-center">
           <search-breadcrumb-form-toggler
@@ -76,12 +82,15 @@ const emit = defineEmits(['clear:filters', 'clear:query', 'clear:all', 'save:sea
 
 <style lang="scss">
 .search-breadcrumb-form {
-  color: var(--bs-tertiary-color-subtle);
-  background: var(--bs-tertiary-bg-subtle);
-  border-radius: var(--bs-border-radius);
 
-  &__entries:deep(.search-breadcrumb-entry:last-of-type .search-breadcrumb-entry__caret) {
-    display: none;
+  &__wrapper {
+    color: var(--bs-tertiary-color-subtle);
+    background: var(--bs-tertiary-bg-subtle);
+    border-radius: var(--bs-border-radius);
+
+    .search-breadcrumb-form-list__entries:deep(.search-breadcrumb-entry:last-of-type .search-breadcrumb-entry__caret) {
+      display: none;
+    }
   }
 }
 </style>
