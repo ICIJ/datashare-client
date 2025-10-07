@@ -2,7 +2,7 @@
 import { computed, inject, markRaw, onBeforeMount, ref, useTemplateRef, watch } from 'vue'
 import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { matches, over, property } from 'lodash'
+import { matches, property } from 'lodash'
 import { useElementSize, useScroll, useWindowSize } from '@vueuse/core'
 
 import DocumentViewActions from './DocumentViewActions'
