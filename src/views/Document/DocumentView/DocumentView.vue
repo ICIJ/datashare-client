@@ -215,10 +215,15 @@ onBeforeRouteUpdate(fetchRouteDocument)
       <document-view-title
         :document="document"
       />
-      <document-view-user-actions
+      <parent-overflow
         v-if="compact"
         class="my-2"
-      />
+      >
+        <document-view-user-actions />
+        <template #fallback>
+          <document-view-user-actions shorter-labels />
+        </template>
+      </parent-overflow>
       <document-view-tabs
         :tabs="tabs"
       />
