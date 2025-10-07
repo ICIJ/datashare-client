@@ -83,6 +83,7 @@ const classList = computed(() => {
   border-radius: var(--bs-border-radius);
   background: var(--form-actions-compact-bg);
   color: var(--form-actions-compact-color);
+  margin-left: auto;
 
   @each $variant, $value in $theme-colors {
     &--#{$variant} {
