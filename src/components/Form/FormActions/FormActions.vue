@@ -93,17 +93,18 @@ watch(
     :aria-label="ariaLabel"
     :class="classList"
   >
+    <slot v-bind="{ isCompact }" />
     <template v-if="isCompact">
-      <slot
-        name="start"
-        v-bind="{ isCompact }"
-      />
       <form-actions-compact
         :variant="compactVariant"
         :size="size"
         :dropdown-icon="dropdownIcon"
         :teleport-to="teleportTo"
       >
+        <slot
+          name="start"
+          v-bind="{ isCompact }"
+        />
         <template #dropdown>
           <slot
             name="compact"
@@ -129,7 +130,6 @@ watch(
         name="compact"
         v-bind="{ isCompact }"
       />
-      <slot v-bind="{ isCompact }" />
       <form-actions-compact
         v-if="hasDropdownSlot"
         :variant="compactVariant"
