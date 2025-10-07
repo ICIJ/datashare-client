@@ -135,7 +135,10 @@ onAfterRouteQueryFromUpdate(refreshSearchFromRoute, { immediate: route.name === 
           :search-breadcrumb-counter="searchBreadcrumbCounter"
           :no-search-filters="!enoughFloatingSpace && !isSearchRoute"
         />
-        <search-breadcrumb v-model:visible="toggleSearchBreadcrumb" />
+        <search-breadcrumb
+          v-model:visible="toggleSearchBreadcrumb"
+          wrapper-class="mt-3"
+        />
         <div class="search__main__results">
           <empty-state
             v-if="isErroed"
