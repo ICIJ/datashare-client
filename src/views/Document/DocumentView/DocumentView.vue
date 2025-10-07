@@ -2,7 +2,7 @@
 import { computed, inject, markRaw, onBeforeMount, ref, useTemplateRef, watch } from 'vue'
 import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { matches, property } from 'lodash'
+import { matches, over, property } from 'lodash'
 import { useElementSize, useScroll, useWindowSize } from '@vueuse/core'
 
 import DocumentViewActions from './DocumentViewActions'
@@ -14,6 +14,7 @@ import AppWait from '@/components/AppWait/AppWait'
 import ButtonToTop from '@/components/Button/ButtonToTop'
 import DocumentContentPlaceholder from '@/components/Document/DocumentContentPlaceholder'
 import DocumentPlaceholder from '@/components/Document/DocumentPlaceholder'
+import ParentOverflow from '@/components/ParentOverflow/ParentOverflow'
 import { replaceUrlParamValue } from '@/composables/replaceUrlParamValue'
 import { useSearchNav } from '@/composables/useSearchNav'
 import { useDocument } from '@/composables/useDocument'
@@ -181,7 +182,15 @@ onBeforeRouteUpdate(fetchRouteDocument)
           name="header-start"
           v-bind="{ document }"
         />
-        <document-view-user-actions v-if="!compact" />
+        <parent-overflow
+          v-if="!compact"
+          class="flex-grow-1 d-flex"
+        >
+          <document-view-user-actions />
+          <template #fallback>
+            <document-view-user-actions compact />
+          </template>
+        </parent-overflow>
         <document-view-actions
           :document="document"
           :no-close="compact"
