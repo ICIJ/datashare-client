@@ -3,11 +3,12 @@
     <form-actions
       ref="element"
       variant="action"
+      :teleport-to="teleportTo"
       :compact="compact"
       compact-variant="outline-action"
       class="d-flex justify-content-between flex-nowrap gap-1"
     >
-      <div class="document-user-actions__start d-inline-flex gap-1 flex-nowrap">
+      <template #compact>
         <hook name="document-user-actions:before" />
         <document-user-actions-entry
           v-if="showTags"
@@ -49,25 +50,13 @@
           :shorter-label="shorterLabels"
           @click="emit('action', DOCUMENT_USER_ACTIONS.FOLDERS)"
         />
-      </div>
-      <div class="document-user-actions__end d-inline-flex gap-1 flex-nowrap">
+        <hook name="document-user-actions:after" />
+      </template>
+      <template #dropdown>
         <mode-local-only>
-          <app-dropdown
-            toggle-class="border-0"
-            :teleport-to="teleportTo"
-          >
-            <document-dropdown-reindex />
-          </app-dropdown>
+          <document-dropdown-reindex />
         </mode-local-only>
-        <slot
-          name="end"
-          v-bind="{ shorterLabels }"
-        />
-        <hook
-          name="document-user-actions:after"
-          :bind="{ shorterLabels }"
-        />
-      </div>
+      </template>
     </form-actions>
     <slot />
   </div>
@@ -76,7 +65,6 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 
-import AppDropdown from '@/components/AppDropdown/AppDropdown'
 import DocumentDropdownReindex from '@/components/Document/DocumentDropdown/DocumentDropdownReindex'
 import DocumentUserActionsEntry from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsEntry'
 import FormActions from '@/components/Form/FormActions/FormActions'
@@ -153,6 +141,8 @@ const teleportTo = useScrollParent({ node: document.body })
 
 <style lang="scss" scoped>
 .document-user-actions {
+  flex-shrink: 0;
+
   &:deep(.form-actions-compact-dropdown__toggle) {
     --bs-btn-bg: var(--bs-btn-action-bg);
     --bs-btn-color: var(--bs-btn-action-text);
