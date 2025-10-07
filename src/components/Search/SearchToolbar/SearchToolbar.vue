@@ -81,10 +81,12 @@ const classList = computed(() => {
 <style scoped lang="scss">
 .search-toolbar {
   flex-wrap: nowrap;
-  padding-block: $spacer;
+  padding-top: $spacer;
   display: flex;
   gap: $spacer;
   align-items: flex-start;
+  position: relative;
+  z-index: 100;
 
   &__filters {
     order: 0;
