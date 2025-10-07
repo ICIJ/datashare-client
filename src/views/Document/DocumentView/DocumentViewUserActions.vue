@@ -1,23 +1,20 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { DOCUMENT_USER_ACTIONS } from '@/enums/documentUserActions'
-import { useMode } from '@/composables/useMode'
-import { useDocument } from '@/composables/useDocument'
+
 import { useAuth } from '@/composables/useAuth'
 import { useElementObserver } from '@/composables/useElementObserver'
+import { useElasticSearchQuery } from '@/composables/useElasticSearchQuery'
+import { useDocument } from '@/composables/useDocument'
+import { useMode } from '@/composables/useMode'
+import { DOCUMENT_USER_ACTIONS } from '@/enums/documentUserActions'
 import DocumentUserActions from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActions'
 import DocumentUserRecommendations from '@/components/Document/DocumentUser/DocumentUserRecommendations/DocumentUserRecommendations'
 import DocumentUserTags from '@/components/Document/DocumentUser/DocumentUserTags/DocumentUserTags'
 import Hook from '@/components/Hook/Hook'
 import { useRecommendedStore, useDocumentStore } from '@/store/modules'
-import { useElasticSearchQuery } from '@/composables/useElasticSearchQuery'
 
 defineProps({
   compact: {
-    type: Boolean,
-    default: false
-  },
-  grow: {
     type: Boolean,
     default: false
   }
@@ -84,10 +81,9 @@ watch(() => document.value, async () => {
 
 <template>
   <document-user-actions
-    class="flex-shrink-0"
-    :class="{'flex-grow-1':grow}"
     :compact="compact"
     show-tags
+    show-notes
     :show-recommendations="isServer"
     :active-recommendations="showRecommendationsCard"
     :active-tags="showTagsCard"
