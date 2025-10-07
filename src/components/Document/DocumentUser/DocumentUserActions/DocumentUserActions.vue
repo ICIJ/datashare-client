@@ -6,7 +6,7 @@
       :teleport-to="teleportTo"
       :compact="compact"
       compact-variant="outline-action"
-      class="d-flex justify-content-between flex-nowrap gap-1"
+      class="document-user-actions__form"
     >
       <template #compact>
         <hook name="document-user-actions:before" />
@@ -147,6 +147,13 @@ const teleportTo = useScrollParent({ node: document.body })
     --bs-btn-bg: var(--bs-btn-action-bg);
     --bs-btn-color: var(--bs-btn-action-text);
     --bs-btn-border-color: transparent;
+  }
+
+  &__form {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    gap: $spacer-xxs;
   }
 
   &__end{
