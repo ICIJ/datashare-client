@@ -20,7 +20,7 @@ const props = defineProps({
   },
   minEndWidth: {
     type: Number,
-    default: 600
+    default: 500
   },
   reduceThreshold: {
     type: Number,
@@ -32,7 +32,7 @@ const props = defineProps({
   },
   enoughSpaceThreshold: {
     type: Number,
-    default: 900
+    default: 660
   },
   noReduce: {
     type: Boolean
