@@ -100,16 +100,14 @@ const tagSelection = async (documents, labels) => {
     :compact="compact"
     compact-auto
   >
+    <b-form-checkbox
+      v-model="selected"
+      v-model:indeterminate="indeterminate"
+      :wrapper-attrs="{ class: 'search-selection__form-checkbox' }"
+    >
+      {{ t('searchSelection.count', count, { count: n(count) }) }}
+    </b-form-checkbox>
     <template #start>
-      <b-form-checkbox
-        v-model="selected"
-        v-model:indeterminate="indeterminate"
-        :wrapper-attrs="{ class: 'search-selection__form-checkbox' }"
-      >
-        {{ t('searchSelection.count', count, { count: n(count) }) }}
-      </b-form-checkbox>
-    </template>
-    <template #compact>
       <button-icon
         class="flex-shrink-0"
         :label="t('searchSelection.star')"
@@ -121,19 +119,21 @@ const tagSelection = async (documents, labels) => {
         @click="starSelection"
       />
     </template>
-    <button-icon
-      class="flex-shrink-0"
-      :label="t('searchSelection.unstar')"
-      :icon-left="PhStar"
-      :disabled="noSelection"
-      @click="unstarSelection"
-    />
-    <button-icon
-      :label="t('searchSelection.tag')"
-      :icon-left="PhHash"
-      :disabled="noSelection"
-      @click="addTagsModal"
-    />
+    <template #compact>
+      <button-icon
+        class="flex-shrink-0"
+        :label="t('searchSelection.unstar')"
+        :icon-left="PhStar"
+        :disabled="noSelection"
+        @click="unstarSelection"
+      />
+      <button-icon
+        :label="t('searchSelection.tag')"
+        :icon-left="PhHash"
+        :disabled="noSelection"
+        @click="addTagsModal"
+      />
+    </template>
   </form-actions>
 </template>
 
