@@ -1,4 +1,5 @@
 <script setup>
+import { PhosphorIcon } from '@icij/murmur-next'
 import { VARIANT, variantValidator } from '@/enums/variants'
 
 defineProps({
