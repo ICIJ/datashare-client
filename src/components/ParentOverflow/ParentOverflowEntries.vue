@@ -33,9 +33,16 @@ const props = defineProps({
   dropdownButtonIconWeight: {
     type: String
   },
+  dropdownDisabled: {
+    type: Boolean
+  },
   dropdownEntryTag: {
     type: String,
     default: () => BDropdownItem
+  },
+  dropdownTeleportTo: {
+    type: [String, Boolean, Object],
+    default: 'body'
   },
   listClass: {
     type: [String, Array, Object]
@@ -132,6 +139,11 @@ function hasVisibleNextEntry(indexOrEntry) {
   return getEntryVisibility(index) && getEntryVisibility(index + 1)
 }
 
+function isLastEntry(indexOrEntry) {
+  const index = getEntryIndex(indexOrEntry)
+  return index === allEntries.value.length - 1
+}
+
 const allEntries = computed(() => Object.values(registeredEntries).length ? registeredEntries : props.entries)
 
 const entriesVisibility = computed(() => {
@@ -154,6 +166,7 @@ const hiddenEntries = computed(() => {
 })
 
 const hasHiddenEntries = computed(() => hiddenEntries.value.length > 0)
+const hasDropdownSeparator = computed(() => hasHiddenEntries.value && hiddenEntries.value.length < allEntries.value.length && props.reverse)
 
 const classList = computed(() => {
   return {
@@ -172,6 +185,12 @@ const classList = computed(() => {
       class="parent-overflow-entries__list"
       :class="listClass"
     >
+      <div
+        v-if="hasDropdownSeparator"
+        class="parent-overflow-entries__dropdown-separator"
+      >
+        <slot name="separator" />
+      </div>
       <slot>
         <component
           :is="entryTag"
@@ -189,6 +208,7 @@ const classList = computed(() => {
             {{ entry }}
           </slot>
           <div
+            v-if="!isLastEntry(index)"
             class="parent-overflow-entries__list__entry__separator"
             :aria-hidden="!hasVisibleNextEntry(index)"
           >
@@ -200,6 +220,8 @@ const classList = computed(() => {
     <app-dropdown
       v-if="hasHiddenEntries"
       class="parent-overflow-entries__dropdown"
+      :disabled="dropdownDisabled"
+      :teleport-to="dropdownTeleportTo"
       :class="dropdownClass"
       :toggle-class="dropdownToggleClass"
       :button-icon="dropdownButtonIcon"
@@ -235,6 +257,11 @@ const classList = computed(() => {
     --parent-overflow-entries-flex-direction: row-reverse;
   }
 
+  &__dropdown-separator {
+    flex-shrink: 0;
+    flex-grow: 0;
+  }
+
   &__list {
     display: flex;
     flex-wrap: nowrap;
@@ -248,9 +275,13 @@ const classList = computed(() => {
       display: flex;
       flex-wrap: nowrap;
       align-items: center;
+      flex-shrink: 0;
+      flex-grow: 0;
 
       &__separator {
         visibility: hidden;
+        flex-shrink: 0;
+        flex-grow: 0;
       }
 
       &--hidden {
