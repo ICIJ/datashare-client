@@ -70,12 +70,13 @@ function onOk() {
     </button-icon>
     <button-icon
       :icon-left="PhFolderOpen"
+      class="flex-shrink-1"
       variant="outline-tertiary"
       @click="showPathTree = true"
     >
       <path-tree-breadcrumb
+        class="flex-shrink-0"
         :model-value="display"
-        :max-entries="1"
         datadir-label
         no-link
       />
