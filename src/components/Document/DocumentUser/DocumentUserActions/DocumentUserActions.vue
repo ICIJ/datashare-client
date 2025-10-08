@@ -52,10 +52,11 @@
         />
         <hook name="document-user-actions:after" />
       </template>
-      <template #dropdown>
-        <mode-local-only>
-          <document-dropdown-reindex />
-        </mode-local-only>
+      <template
+        v-if="!isServer"
+        #dropdown
+      >
+        <document-dropdown-reindex />
       </template>
     </form-actions>
     <slot />
@@ -69,9 +70,9 @@ import DocumentDropdownReindex from '@/components/Document/DocumentDropdown/Docu
 import DocumentUserActionsEntry from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsEntry'
 import FormActions from '@/components/Form/FormActions/FormActions'
 import Hook from '@/components/Hook/Hook'
-import ModeLocalOnly from '@/components/Mode/ModeLocalOnly'
 import { DOCUMENT_USER_ACTIONS } from '@/enums/documentUserActions'
 import { useScrollParent } from '@/composables/useScrollParent'
+import { useMode } from '@/composables/useMode'
 
 defineOptions({ name: 'DocumentUserActions' })
 
@@ -137,6 +138,7 @@ defineProps({
 const { t } = useI18n()
 const emit = defineEmits(['action'])
 const teleportTo = useScrollParent({ node: document.body })
+const { isServer } = useMode()
 </script>
 
 <style lang="scss" scoped>
