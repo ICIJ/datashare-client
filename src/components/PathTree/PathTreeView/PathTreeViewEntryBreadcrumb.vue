@@ -1,11 +1,9 @@
 <script setup>
-import { computed } from 'vue'
-
 import PathTreeBreadcrumb from '@/components/PathTree/PathTreeBreadcrumb/PathTreeBreadcrumb'
 
 const modelValue = defineModel({ type: String })
 
-const props = defineProps({
+defineProps({
   /**
    * Whether to render in compact mode (no gaps between entries)
    */
@@ -13,14 +11,10 @@ const props = defineProps({
     type: Boolean
   }
 })
-
-const maxDirectories = computed(() => {
-  return props.compact ? 2 : 3
-})
 </script>
 
 <template>
-  <div class="path-tree-view-entry-breadcrumb d-flex gap-1 align-items-center">
+  <div class="path-tree-view-entry-breadcrumb d-flex flex-grow-1 gap-1 align-items-center">
     <phosphor-icon
       v-if="!compact"
       :name="PhFolderOpen"
@@ -28,8 +22,8 @@ const maxDirectories = computed(() => {
     />
     <path-tree-breadcrumb
       v-model="modelValue"
+      class="flex-grow-1"
       :compact="compact"
-      :max-entries="maxDirectories"
       datadir-label
     />
   </div>

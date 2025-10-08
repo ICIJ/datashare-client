@@ -4,8 +4,10 @@ import { computed } from 'vue'
 import { isArray, last } from 'lodash'
 import { useI18n } from 'vue-i18n'
 
-import PathTreeBreadcrumbDropdown from './PathTreeBreadcrumbDropdown.vue'
 import PathTreeBreadcrumbEntry from './PathTreeBreadcrumbEntry.vue'
+import PathTreeBreadcrumbDropdownItem from './PathTreeBreadcrumbDropdownItem.vue'
+
+import ParentOverflowEntries from '@/components/ParentOverflow/ParentOverflowEntries'
 
 import { useCore } from '@/composables/useCore'
 
@@ -89,35 +91,42 @@ const treeOptions = computed(() => {
   return props.noDatadir ? options : [dataDirOption, ...options]
 })
 
-const hiddenTreeOptions = computed(() => treeOptions.value.slice(0, -props.maxEntries))
-const visibleTreeOptions = computed(() => treeOptions.value.slice(-props.maxEntries))
 const lastTreeOption = computed(() => last(treeOptions.value))
-const hasDropdown = computed(() => treeOptions.value.length > props.maxEntries)
 </script>
 
 <template>
-  <ul class="path-tree-breadcrumb list-inline flex-grow-1 m-0 text-truncate lh-1">
-    <path-tree-breadcrumb-entry
-      v-if="hasDropdown"
-      :compact="compact"
-      abbr
-    >
-      <path-tree-breadcrumb-dropdown
+  <parent-overflow-entries
+    :dropdown-button-icon="PhDotsThreeOutline"
+    :dropdown-disabled="noLink || dropdownDisabled"
+    :entries="treeOptions"
+    class="path-tree-breadcrumb list-inline flex-grow-1 flex-shrink-1 m-0 text-truncate lh-1"
+    dropdown-toggle-class="border-0 btn-sm"
+    reverse
+  >
+    <template #entry="{ entry }">
+      <path-tree-breadcrumb-entry
         :compact="compact"
-        :disabled="noLink || dropdownDisabled"
-        :options="hiddenTreeOptions"
-        @select="modelValue = $event"
+        :no-link="noLink"
+        :last="lastTreeOption.value === entry.value"
+        @select="modelValue = entry.value"
+      >
+        {{ entry.text }}
+      </path-tree-breadcrumb-entry>
+    </template>
+    <template #dropdown-entry="{ entry }">
+      <path-tree-breadcrumb-dropdown-item
+        :compact="compact"
+        @click="modelValue = entry.value"
+      >
+        {{ entry.text }}
+      </path-tree-breadcrumb-dropdown-item>
+    </template>
+    <template #separator>
+      <phosphor-icon
+        size="1em"
+        :name="PhCaretRight"
+        class="text-body-secondary px-1"
       />
-    </path-tree-breadcrumb-entry>
-    <path-tree-breadcrumb-entry
-      v-for="{ text, value } in visibleTreeOptions"
-      :key="value"
-      :compact="compact"
-      :no-link="noLink"
-      :last="lastTreeOption.value === value"
-      @select="modelValue = value"
-    >
-      {{ text }}
-    </path-tree-breadcrumb-entry>
-  </ul>
+    </template>
+  </parent-overflow-entries>
 </template>

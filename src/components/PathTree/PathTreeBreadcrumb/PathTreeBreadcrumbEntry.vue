@@ -1,6 +1,5 @@
 <script setup>
 import { computed } from 'vue'
-import { PhosphorIcon } from '@icij/murmur-next'
 
 import PathTreeBreadcrumbEntryLabel from './PathTreeBreadcrumbEntryLabel.vue'
 import PathTreeBreadcrumbEntryLink from './PathTreeBreadcrumbEntryLink.vue'
@@ -10,10 +9,6 @@ const props = defineProps({
     type: Boolean
   },
   compact: {
-    type: Boolean,
-    default: false
-  },
-  last: {
     type: Boolean,
     default: false
   }
@@ -43,12 +38,6 @@ const component = computed(() => {
     >
       <slot />
     </component>
-    <phosphor-icon
-      v-if="!props.last"
-      size="1em"
-      :name="PhCaretRight"
-      class="text-body-secondary"
-    />
   </li>
 </template>
 
@@ -62,7 +51,6 @@ const component = computed(() => {
   align-items: center;
   line-height: 1;
   gap: var(--spacer);
-  margin-right: var(--spacer);
 
   &--compact {
     --spacer: #{$spacer-xxs};
