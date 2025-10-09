@@ -20,10 +20,6 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  maxEntries: {
-    type: Number,
-    default: 5
-  },
   datadirLabel: {
     type: Boolean
   },

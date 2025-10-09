@@ -37,13 +37,6 @@ describe('PathTreeBreadcrumb.vue', () => {
     expect(wrapper.find('.path-tree-breadcrumb-dropdown').exists()).toBeFalsy()
   })
 
-  it('should display 3 entries (including the abbreviation)', async () => {
-    const props = { modelValue: '/home/foo/bar/baz/lo/rem', maxEntries: 2, datadirLabel: true }
-    const wrapper = mount(PathTreeBreadcrumb, { global: { plugins }, props })
-    expect(wrapper.findAll('.path-tree-breadcrumb-entry')).toHaveLength(3)
-    expect(wrapper.find('.path-tree-breadcrumb-dropdown').exists()).toBeTruthy()
-  })
-
   it('should display 3 entries with Windows pathSeparator', async () => {
     config.set('dataDir', 'C:\\Users\\dev\\AppData\\Roaming\\Datashare\\foo')
     config.set('pathSeparator', '\\')
@@ -54,19 +47,5 @@ describe('PathTreeBreadcrumb.vue', () => {
     expect(items.at(0).text()).toBe('Home')
     expect(items.at(1).text()).toBe('bar')
     expect(items.at(2).text()).toBe('baz')
-  })
-
-  it('should display 3 entries (including the abbreviation) with Windows pathSeparator', async () => {
-    config.set('dataDir', 'C:\\Users\\dev\\AppData\\Roaming\\Datashare\\foo')
-    config.set('pathSeparator', '\\')
-    const props = {
-      modelValue: 'C:\\Users\\dev\\AppData\\Roaming\\Datashare\\foo\\bar\\baz\\lo\\rem',
-      maxEntries: 2,
-      datadirLabel: true
-    }
-    const wrapper = mount(PathTreeBreadcrumb, { global: { plugins }, props })
-    expect(wrapper.findAll('.path-tree-breadcrumb-entry')).toHaveLength(3)
-    // One for the root link and one for the abbreviation
-    expect(wrapper.find('.path-tree-breadcrumb-dropdown').exists()).toBeTruthy()
   })
 })
