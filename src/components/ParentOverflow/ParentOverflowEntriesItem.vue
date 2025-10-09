@@ -5,10 +5,14 @@ import { useElementSize } from '@vueuse/core'
 
 defineOptions({ name: 'ParentOverflowEntriesItem' })
 
-const { label } = defineProps({
+const { label, context } = defineProps({
   label: {
     type: String,
     required: true
+  },
+  context: {
+    type: [Object, String, Number, Array],
+    default: null
   }
 })
 
@@ -30,7 +34,7 @@ const classList = computed(() => {
   }
 })
 
-defineExpose({ size, label })
+defineExpose({ size, label, context })
 </script>
 
 <template>

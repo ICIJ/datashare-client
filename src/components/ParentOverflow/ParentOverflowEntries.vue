@@ -125,7 +125,7 @@ function getEntryClass(indexOrEntry) {
 
 function getEntryBinding(indexOrEntry) {
   const index = getEntryIndex(indexOrEntry)
-  const entry = allEntries.value[index]
+  const entry = getEntry(indexOrEntry)
   const size = getEntrySize(index)
   const visible = getEntryVisibility(index)
   const hasVisibleNext = hasVisibleNextEntry(index)
@@ -258,6 +258,9 @@ const classList = computed(() => {
   }
 
   &__dropdown-separator {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
     flex-shrink: 0;
     flex-grow: 0;
   }
