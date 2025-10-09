@@ -25,7 +25,7 @@ const props = defineProps({
   },
   dropdownToggleClass: {
     type: [String, Array, Object],
-    default: 'btn-sm'
+    default: null
   },
   dropdownButtonIcon: {
     type: [String, Object, Array]
@@ -43,6 +43,14 @@ const props = defineProps({
   dropdownTeleportTo: {
     type: [String, Boolean, Object],
     default: 'body'
+  },
+  dropdownVariant: {
+    type: String,
+    default: null
+  },
+  dropdownSize: {
+    type: String,
+    default: 'sm'
   },
   listClass: {
     type: [String, Array, Object]
@@ -220,10 +228,12 @@ const classList = computed(() => {
     <app-dropdown
       v-if="hasHiddenEntries"
       class="parent-overflow-entries__dropdown"
+      :size="dropdownSize"
       :disabled="dropdownDisabled"
       :teleport-to="dropdownTeleportTo"
       :class="dropdownClass"
       :toggle-class="dropdownToggleClass"
+      :variant="dropdownVariant"
       :button-icon="dropdownButtonIcon"
       :button-icon-weight="dropdownButtonIconWeight"
     >
