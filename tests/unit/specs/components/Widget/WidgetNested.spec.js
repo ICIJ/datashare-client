@@ -1,9 +1,10 @@
 import { mount } from '@vue/test-utils'
 
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
+import CoreSetup from '~tests/unit/CoreSetup'
 import * as widgets from '@/store/widgets'
 import WidgetNested from '@/components/Widget/WidgetNested'
-import CoreSetup from '~tests/unit/CoreSetup'
+import { useInsightsStore } from '@/store/modules/insights'
 
 describe('WidgetNested.vue', () => {
   let wrapper
@@ -11,13 +12,14 @@ describe('WidgetNested.vue', () => {
   beforeAll(() => {
     const { index: project } = esConnectionHelper.build()
     const { plugins } = CoreSetup.init().useAll()
+    const insightsStore = useInsightsStore()
+    insightsStore.setProject(project)
 
     wrapper = mount(WidgetNested, {
       global: {
         plugins
       },
       props: {
-        project,
         widget: new widgets.WidgetNested({
           card: true,
           widgets: [

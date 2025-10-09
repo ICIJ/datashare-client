@@ -81,6 +81,7 @@ import { useI18n } from 'vue-i18n'
 
 import { useCore } from '@/composables/useCore'
 import { useWait } from '@/composables/useWait'
+import { useInsightsStore } from '@/store/modules'
 import EsDocList from '@/api/resources/EsDocList'
 import AppWait from '@/components/AppWait/AppWait'
 import DocumentCard from '@/components/Document/DocumentCard/DocumentCard'
@@ -91,10 +92,6 @@ const props = defineProps({
   widget: {
     type: Object,
     default: () => ({})
-  },
-  project: {
-    type: String,
-    default: null
   },
   pageSize: {
     type: Number,
@@ -108,6 +105,7 @@ const hits = ref([])
 const { t } = useI18n()
 const { core } = useCore()
 const { waitFor, loaderId } = useWait()
+const insightsStore = useInsightsStore()
 const infiniteScrollId = uniqueId('infinite-scroll-')
 
 const items = computed(() => compact(flatten(pages.value).map(recordToItem)))
@@ -128,7 +126,7 @@ function loadFirstPage() {
 }
 
 async function loadPage() {
-  const page = await core.api.getDocumentUserRecommendations(offset.value, props.pageSize, props.project)
+  const page = await core.api.getDocumentUserRecommendations(offset.value, props.pageSize, insightsStore.project)
   const pageHits = await getPageHits(page)
   pages.value.push(page)
   hits.value.push(pageHits)
@@ -150,7 +148,7 @@ function recordToItem({ user, document: { id }, creationDate }) {
 async function getPageHits(page) {
   const preference = 'widget-recommended-by'
   const body = getPageHitsBody(page)
-  const index = props.project
+  const index = insightsStore.project
   const response = await core.api.elasticsearch.search({ index, body, preference })
   return new EsDocList(response)
 }

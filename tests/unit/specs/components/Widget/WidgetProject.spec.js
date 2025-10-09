@@ -2,6 +2,7 @@ import { shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import WidgetProject from '@/components/Widget/WidgetProject'
+import { useInsightsStore } from '@/store/modules/insights'
 
 describe('WidgetProject.vue', () => {
   const foo = {
@@ -17,9 +18,10 @@ describe('WidgetProject.vue', () => {
 
   beforeEach(() => {
     const { config, plugins } = CoreSetup.init().useAll()
-    const props = { project: foo.name }
+    const insightsStore = useInsightsStore()
+    insightsStore.setProject(foo.name)
     config.set('projects', projects)
-    wrapper = shallowMount(WidgetProject, { global: { plugins }, props })
+    wrapper = shallowMount(WidgetProject, { global: { plugins } })
   })
 
   it('should be a Vue instance', () => {

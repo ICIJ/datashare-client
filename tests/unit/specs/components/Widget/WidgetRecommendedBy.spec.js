@@ -5,6 +5,7 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import * as widgets from '@/store/widgets'
 import WidgetRecommendedBy from '@/components/Widget/WidgetRecommendedBy'
 import { apiInstance as api } from '@/api/apiInstance'
+import { useInsightsStore } from '@/store/modules/insights'
 
 vi.mock('@/api/apiInstance', async (importOriginal) => {
   const {
@@ -47,9 +48,11 @@ describe('WidgetRecommendedBy.vue', () => {
 
   beforeEach(async () => {
     const { plugins } = CoreSetup.init().useAll().useRouterWithoutGuards()
+    const insightsStore = useInsightsStore()
     const global = { plugins }
     const widget = new widgets.WidgetRecommendedBy({ card: true })
-    const props = { widget, project: index }
+    const props = { widget }
+    insightsStore.setProject(index)
     wrapper = shallowMount(WidgetRecommendedBy, { global, props })
     await flushPromises()
   })

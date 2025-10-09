@@ -68,10 +68,12 @@ import { camelCase, flatten, get, iteratee, noop, uniqueId } from 'lodash'
 import InfiniteLoading from 'v3-infinite-loading'
 import { PhosphorIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
+import { toRef } from 'vue'
 
 import WidgetFieldFacetsEntry from './WidgetFieldFacetsEntry'
 
 import { useWait } from '@/composables/useWait'
+import { useInsightsStore } from '@/store/modules'
 import AppWait from '@/components/AppWait/AppWait'
 
 /**
@@ -94,13 +96,6 @@ export default {
       default: () => {}
     },
     /**
-     * The project name.
-     */
-    project: {
-      type: String,
-      required: true
-    },
-    /**
      * Size of the aggregaction bucket
      */
     bucketsSize: {
@@ -110,7 +105,10 @@ export default {
   },
   setup() {
     const { t, te } = useI18n()
-    return { wait: useWait(), te, t }
+    const wait = useWait()
+    const insightsStore = useInsightsStore()
+    const project = toRef(insightsStore, 'project')
+    return { wait, te, t, project }
   },
   data() {
     return {
@@ -164,8 +162,13 @@ export default {
       return this.offset > 0 && !this.reachedTheEnd
     }
   },
-  mounted() {
-    return this.loadFirstPage()
+  watch: {
+    project: {
+      immediate: true,
+      handler() {
+        this.loadFirstPage()
+      }
+    }
   },
   methods: {
     clearPages() {
@@ -183,7 +186,9 @@ export default {
     async loadPage() {
       const body = this.bodybuilderBase().build()
       const preference = 'widget-field-facets-' + this.widget.name
-      const page = await this.$core.api.elasticsearch.search({ index: this.project, size: 0, body, preference })
+      const index = this.project
+      const size = 0
+      const page = await this.$core.api.elasticsearch.search({ index, size, body, preference })
       this.pages.push(page)
     },
     async loadNextPage($infiniteLoadingState) {

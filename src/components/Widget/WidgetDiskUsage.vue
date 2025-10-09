@@ -3,30 +3,25 @@ import { ref, watch, toRef } from 'vue'
 import bodybuilder from 'bodybuilder'
 
 import { apiInstance as api } from '@/api/apiInstance'
+import { useInsightsStore } from '@/store/modules'
 import WidgetBarometerDiskUsage from './WidgetBarometerDiskUsage'
 
 defineOptions({ name: 'WidgetDiskUsage' })
 
-const props = defineProps({
+defineProps({
   /**
    * The widget definition object.
    */
   widget: {
     type: Object
-  },
-  /**
-   * The project name.
-   */
-  project: {
-    type: String,
-    required: true
   }
 })
 
 const size = ref(null)
+const insightsStore = useInsightsStore()
 
 async function sumSize() {
-  const index = props.project
+  const index = insightsStore.project
   const body = bodybuilder()
     .size(0)
     .andQuery('match', 'type', 'Document')
@@ -43,7 +38,7 @@ async function loadData() {
   size.value = await sumSize()
 }
 
-watch(toRef(props, 'project'), loadData, { immediate: true })
+watch(toRef(insightsStore, 'project'), loadData, { immediate: true })
 </script>
 
 <template>

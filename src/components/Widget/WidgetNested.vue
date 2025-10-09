@@ -14,7 +14,6 @@
             <suspense>
               <component
                 :is="w.component"
-                :project="project"
                 :widget="w"
                 class="flex-grow-1"
               />
@@ -42,13 +41,6 @@ export default {
      */
     widget: {
       type: Object,
-      required: true
-    },
-    /**
-     * The project name.
-     */
-    project: {
-      type: String,
       required: true
     }
   },

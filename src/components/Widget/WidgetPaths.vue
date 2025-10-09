@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 
+import { useInsightsStore } from '@/store/modules'
 import PathTree from '@/components/PathTree/PathTree'
 import PathTreeLayouts from '@/components/PathTree/PathTreeLayouts/PathTreeLayouts'
 import { useConfig } from '@/composables/useConfig'
@@ -10,30 +11,24 @@ import { LAYOUTS } from '@/enums/pathTree'
 /**
  * A placeholder widget for the insights page. This widget is not intended to be used directly.
  */
-const props = defineProps({
+defineProps({
   /**
    * The widget definition object.
    */
   widget: {
     type: Object
-  },
-  /**
-   * The project name.
-   */
-  project: {
-    type: String,
-    required: true
   }
 })
 
+const insightsStore = useInsightsStore()
 const { core } = useCore()
-const { sourcePath } = core.findProject(props.project)
+const { sourcePath } = core.findProject(insightsStore.project)
 const config = useConfig()
 const dataDir = config.get('mountedDataDir') || config.get('dataDir')
 const defaultPath = sourcePath ? decodeURI(sourcePath.split('//').pop()) : dataDir
 const path = ref(defaultPath)
 const layout = ref(LAYOUTS.GRID)
-const projects = [props.project]
+const projects = computed(() => [insightsStore.project])
 const flush = computed(() => layout.value === LAYOUTS.GRID)
 </script>
 

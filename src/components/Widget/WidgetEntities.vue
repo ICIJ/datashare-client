@@ -43,14 +43,16 @@
 </template>
 
 <script>
-import { sum, values } from 'lodash'
 import bodybuilder from 'bodybuilder'
+import { sum, values } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur-next'
+import { toRef } from 'vue'
 
 import WidgetBarometer from './WidgetBarometer'
 
 import { useWait } from '@/composables/useWait'
+import { useInsightsStore } from '@/store/modules'
 import AppSpinner from '@/components/AppSpinner/AppSpinner'
 import AppWait from '@/components/AppWait/AppWait'
 import { MODE_NAME } from '@/mode'
@@ -74,17 +76,14 @@ export default {
      */
     widget: {
       type: Object
-    },
-    /**
-     * The project name.
-     */
-    project: {
-      type: String,
-      required: true
     }
   },
   setup() {
-    return { wait: useWait(), t: useI18n().t }
+    const { t } = useI18n()
+    const wait = useWait()
+    const insightsStore = useInsightsStore()
+    const project = toRef(insightsStore, 'project')
+    return { wait, t, project }
   },
   data() {
     return {
@@ -111,12 +110,12 @@ export default {
     }
   },
   watch: {
-    project() {
-      return this.loadData()
+    project: {
+      immediate: true,
+      handler() {
+        this.loadData()
+      }
     }
-  },
-  created() {
-    return this.loadData()
   },
   methods: {
     getCategoryIcon,

@@ -93,16 +93,18 @@
 import bodybuilder from 'bodybuilder'
 import { clamp, get } from 'lodash'
 import * as d3 from 'd3'
-import { computed, nextTick, ref, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, ref, useTemplateRef, watch, toRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
+import { whenever } from '@vueuse/core'
 
+import { useInsightsStore } from '@/store/modules'
 import { useWait } from '@/composables/useWait'
+import { useCore } from '@/composables/useCore'
 import AppWait from '@/components/AppWait/AppWait'
 import AppSpinner from '@/components/AppSpinner/AppSpinner'
 import ColumnChartPicker from '@/components/ColumnChartPicker'
 import FilterDate from '@/store/filters/FilterDate'
-import { useCore } from '@/composables/useCore.js'
 
 /**
  * Widget to display the number of files by creation date on the insights page.
@@ -122,19 +124,13 @@ const props = defineProps({
   minColumnWidth: {
     type: Number,
     default: 45
-  },
-  /**
-   * The project name.
-   */
-  project: {
-    type: String,
-    required: true
   }
 })
 
 const wait = useWait()
 const { t, n } = useI18n()
 const { core } = useCore()
+const insightsStore = useInsightsStore()
 const router = useRouter()
 
 const data = ref([])
@@ -299,7 +295,9 @@ async function loadData() {
   wait.start(loaderId.value)
   const body = bodybuilderBase().build()
   const preference = 'widget-documents-by-creation-date'
-  const res = await core.api.elasticsearch.search({ index: props.project, size: 0, body, preference })
+  const index = insightsStore.project
+  const size = 0
+  const res = await core.api.elasticsearch.search({ index, size, body, preference })
   updateData(get(res, 'aggregations.agg_by_creation_date.buckets', []))
   wait.end(loaderId.value)
 }
@@ -340,7 +338,7 @@ function binToQueryValues({ x0, x1 }) {
   return [x0.getTime(), x1.getTime()]
 }
 function binToQuery(bin) {
-  const indices = [props.project]
+  const indices = [insightsStore.project]
   const creationDateField = 'f[creationDate]'
   const values = binToQueryValues(bin)
   const query = { [creationDateField]: values.slice(0, 2).join(':'), indices }
@@ -350,15 +348,11 @@ function binToQuery(bin) {
   return query
 }
 
-watch(
-  () => props.project,
-  async () => {
-    selectedPath.value = dataDir.value
-    await nextTick()
-    await init()
-  },
-  { immediate: true }
-)
+whenever(toRef(insightsStore, 'project'), async () => {
+  selectedPath.value = dataDir.value
+  await nextTick()
+  await init()
+}, { immediate: true })
 
 watch(sliceRange, (value, previousValue) => {
   dataKey.value++

@@ -4,14 +4,17 @@ import { IndexedDocuments, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
 import WidgetDocuments from '@/components/Widget/WidgetDocuments'
+import { useInsightsStore } from '@/store/modules/insights'
 
 describe('WidgetDocuments.vue', () => {
   const { index: project, es } = esConnectionHelper.build()
-  const props = { project, widget: { title: 'Hello world' } }
+  const props = { widget: { title: 'Hello world' } }
   let wrapper = null
 
   beforeEach(() => {
     const { plugins } = CoreSetup.init().useAll()
+    const insightsStore = useInsightsStore()
+    insightsStore.setProject(project)
     wrapper = mount(WidgetDocuments, { global: { plugins }, props })
   })
 

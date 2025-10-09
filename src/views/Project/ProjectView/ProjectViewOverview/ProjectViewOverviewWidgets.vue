@@ -1,5 +1,6 @@
 <script setup>
-import { computed, watch, onBeforeMount, toRef } from 'vue'
+import { computed, toRef } from 'vue'
+import { whenever } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 
 import appBuilding from '@/assets/images/illustrations/app-building.svg'
@@ -28,8 +29,7 @@ const widgets = computed(() => {
   })
 })
 
-watch(toRef(props, 'name'), insightsStore.setProject)
-onBeforeMount(() => insightsStore.setProject(props.name))
+whenever(toRef(props, 'name'), insightsStore.setProject, { immediate: true })
 </script>
 
 <template>
@@ -52,7 +52,6 @@ onBeforeMount(() => insightsStore.setProject(props.name))
               <component
                 :is="widget.component"
                 :widget="widget"
-                :project="name"
                 class="flex-grow-1"
               />
             </suspense>

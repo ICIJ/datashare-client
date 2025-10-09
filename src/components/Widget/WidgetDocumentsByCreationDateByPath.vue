@@ -55,7 +55,9 @@
 import { castArray, trimEnd } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur-next'
+import { toRef } from 'vue'
 
+import { useInsightsStore } from '@/store/modules'
 import AppModal from '@/components/AppModal/AppModal'
 import PathTreeBreadcrumb from '@/components/PathTree/PathTreeBreadcrumb/PathTreeBreadcrumb'
 import PathTree from '@/components/PathTree/PathTree'
@@ -79,18 +81,13 @@ export default {
      */
     widget: {
       type: Object
-    },
-    /**
-     * The project name.
-     */
-    project: {
-      type: String,
-      required: true
     }
   },
   setup() {
     const { t } = useI18n()
-    return { t }
+    const insightsStore = useInsightsStore()
+    const project = toRef(insightsStore, 'project')
+    return { t, project }
   },
   data() {
     return {

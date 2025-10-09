@@ -4,17 +4,20 @@ import esConnectionHelper from '../../utils/esConnectionHelper.js'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import WidgetDocumentsByCreationDate from '@/components/Widget/WidgetDocumentsByCreationDate'
+import { useInsightsStore } from '@/store/modules/insights'
 
 describe('WidgetDocumentsByCreationDate.vue', () => {
   const { index: project } = esConnectionHelper.build()
   const { index: anotherProject } = esConnectionHelper.build()
-  const props = { project, widget: { title: 'Hello world' } }
+  const props = { widget: { title: 'Hello world' } }
   let wrapper
 
   describe('with one valid creation date', () => {
     beforeEach(() => {
       const { plugins } = CoreSetup.init().useAll()
+      const insightsStore = useInsightsStore()
       const global = { plugins, renderStubDefaultSlot: true }
+      insightsStore.setProject(project)
       wrapper = shallowMount(WidgetDocumentsByCreationDate, { props, global })
     })
 
@@ -42,11 +45,12 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
   })
 
   describe('with 3 valid creation date', () => {
-    beforeEach(async () => {
+    beforeEach(() => {
       const { plugins } = CoreSetup.init().useAll()
+      const insightsStore = useInsightsStore()
       const global = { plugins, renderStubDefaultSlot: true }
+      insightsStore.setProject(anotherProject)
       wrapper = shallowMount(WidgetDocumentsByCreationDate, { global, props })
-      await wrapper.setProps({ project: anotherProject })
     })
 
     it('should display 2 selectors', () => {

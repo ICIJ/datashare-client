@@ -7,13 +7,18 @@ import { PhosphorIcon } from '@icij/murmur-next'
 import DisplayRaw from '@/components/Display/DisplayRaw'
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
 import { useCore } from '@/composables/useCore'
+import { useInsightsStore } from '@/store/modules'
 
-const props = defineProps({
-  project: {
-    type: String,
-    required: true
+defineProps({
+  /**
+   * The widget definition object.
+   */
+  widget: {
+    type: Object
   }
 })
+
+const insightsStore = useInsightsStore()
 
 const fields = [
   {
@@ -56,7 +61,7 @@ const { core } = useCore()
 
 // Generate metadata for each field
 const metadata = computed(() => {
-  const project = core.findProject(props.project)
+  const project = core.findProject(insightsStore.project)
   return fields.map((field) => {
     const rawValue = project[field.key]
     const value = isFunction(field.formatter) ? field.formatter({ ...field, rawValue }) : rawValue

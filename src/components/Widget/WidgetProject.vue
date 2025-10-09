@@ -36,6 +36,9 @@
 import dayjs from 'dayjs'
 import { isFunction, kebabCase } from 'lodash'
 import { useI18n } from 'vue-i18n'
+import { toRef } from 'vue'
+
+import { useInsightsStore } from '@/store/modules'
 
 /**
  * A placeholder widget for the insights page. This widget is not intended to be used directly.
@@ -49,18 +52,13 @@ export default {
     widget: {
       type: Object,
       default: () => ({})
-    },
-    /**
-     * The project name.
-     */
-    project: {
-      type: String,
-      required: true
     }
   },
   setup() {
     const { t } = useI18n()
-    return { t }
+    const insightsStore = useInsightsStore()
+    const project = toRef(insightsStore, 'project')
+    return { t, project }
   },
   data() {
     return {

@@ -11,6 +11,9 @@
 </template>
 
 <script>
+import { toRef } from 'vue'
+
+import { useInsightsStore } from '@/store/modules'
 import SearchBar from '@/components/Search/SearchBar/SearchBar'
 
 /**
@@ -27,14 +30,12 @@ export default {
      */
     widget: {
       type: Object
-    },
-    /**
-     * The project name.
-     */
-    project: {
-      type: String,
-      required: true
     }
+  },
+  setup() {
+    const insightsStore = useInsightsStore()
+    const project = toRef(insightsStore, 'project')
+    return { project }
   },
   computed: {
     indices() {

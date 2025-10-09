@@ -4,6 +4,7 @@ import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
 import * as widgets from '@/store/widgets'
 import WidgetFieldFacets from '@/components/Widget/WidgetFieldFacets'
+import { useInsightsStore } from '@/store/modules/insights'
 
 vi.mock('@/api/apiInstance', () => {
   return {
@@ -34,13 +35,14 @@ describe('WidgetFieldFacets.vue', () => {
 
   beforeEach(async () => {
     const { plugins } = CoreSetup.init().useAll().useRouterWithoutGuards()
+    const insightsStore = useInsightsStore()
+    insightsStore.setProject(project)
 
     wrapper = shallowMount(WidgetFieldFacets, {
       global: {
         plugins
       },
       props: {
-        project,
         widget: new widgets.WidgetFieldFacets({
           title: 'Test Widget',
           card: true,
