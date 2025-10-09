@@ -354,8 +354,8 @@ const hasChildren = computed(() => !!slots.default)
     --path-tree-view-entry-header-bg: transparent;
   }
 
-  &--selected:not(&--compact),
-  &--selected:not(&--compact).path-tree-view-entry--active {
+  &--selected:not(&--compact) > &__header,
+  &--selected:not(&--compact).path-tree-view-entry--active > &__header {
     --path-tree-view-entry-header-bg: var(--bs-action);
     --path-tree-view-entry-header-color: var(--bs-white);
   }
