@@ -123,10 +123,7 @@ watch(toRef(props, 'name'), fetch, { immediate: true })
           {{ t('projectViewOverview.nav.history') }}
         </tab-group-navigation-entry>
       </tab-group-navigation>
-      <router-view
-        v-if="hasDocuments"
-        :key="name"
-      />
+      <router-view v-if="hasDocuments" />
       <empty-state
         v-else
         :label="t('projectViewOverview.emptyStateLabel')"
