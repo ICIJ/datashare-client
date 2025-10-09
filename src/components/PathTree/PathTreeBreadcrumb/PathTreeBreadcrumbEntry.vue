@@ -29,7 +29,7 @@ const component = computed(() => {
 
 <template>
   <li
-    class="path-tree-breadcrumb-entry list-inline-item text-body-secondary"
+    class="path-tree-breadcrumb-entry list-inline-item"
     :class="classList"
   >
     <component
