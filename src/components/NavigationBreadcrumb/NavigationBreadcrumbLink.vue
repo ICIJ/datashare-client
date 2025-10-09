@@ -2,7 +2,6 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { PhosphorIcon } from '@icij/murmur-next'
-import { PhCaretRight } from '@phosphor-icons/vue'
 
 import DisplayRoute from '@/components/Display/DisplayRoute'
 
@@ -90,10 +89,10 @@ const classList = computed(() => {
     class="navigation-breadcrumb-link"
     :class="classList"
   >
-    <span class="navigation-breadcrumb-link__label">
+    <span class="navigation-breadcrumb-link__label d-flex gap-2">
       <phosphor-icon
         v-if="!noIcon && icon"
-        class="navigation-breadcrumb-link__label__icon me-2 d-none d-sm-inline-flex"
+        class="navigation-breadcrumb-link__label__icon"
         :name="icon"
       />
       <span class="navigation-breadcrumb-link__label__content">
@@ -107,7 +106,7 @@ const classList = computed(() => {
     </span>
   </a>
   <phosphor-icon
-    v-if="route && !noCaret"
+    v-if="!noCaret"
     role="separator"
     aria-hidden="true"
     class="navigation-breadcrumb-link__caret mx-2"

@@ -1,30 +1,28 @@
 <script setup>
 import { isString } from 'lodash'
 import { computed, useSlots } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 
-import NavigationBreadcrumbDropdown from '@/components/NavigationBreadcrumb/NavigationBreadcrumbDropdown'
 import NavigationBreadcrumbLink from '@/components/NavigationBreadcrumb/NavigationBreadcrumbLink'
+import NavigationBreadcrumbDropdownEntry from '@/components/NavigationBreadcrumb/NavigationBreadcrumbDropdownEntry'
+
+import ParentOverflowEntries from '@/components/ParentOverflow/ParentOverflowEntries'
+import ParentOverflowEntriesItem from '@/components/ParentOverflow/ParentOverflowEntriesItem'
 
 const props = defineProps({
   currentRouteName: {
     type: String
-  },
-  maxLevel: {
-    type: Number,
-    default: 3
   },
   routes: {
     type: Array
   }
 })
 
-const route = useRoute()
 const router = useRouter()
 
 const currentRoute = computed(() => {
-  const name = props.currentRouteName ?? route.name
   try {
+    const name = props.currentRouteName ?? router.currentRoute.value.name
     return router.resolve({ name })
   }
   catch {
@@ -43,18 +41,8 @@ const allRoutes = computed(() => {
   })
 })
 
-const visibleRoutes = computed(() => {
-  // We only show the last `maxLevel` routes
-  return allRoutes.value.slice(-props.maxLevel)
-})
-
-const hiddenRoutes = computed(() => {
-  // We hide the first `maxLevel` routes
-  return allRoutes.value.slice(0, Math.max(0, allRoutes.value.length - props.maxLevel))
-})
-
 const isActiveRoute = (name) => {
-  return visibleRoutes.value[visibleRoutes.value.length - 1].name === name
+  return allRoutes.value[allRoutes.value.length - 1].name === name
 }
 
 const showActiveSlot = (name) => {
@@ -69,54 +57,60 @@ const castRoute = (nameOrRoute) => {
 }
 
 const hasActiveSlot = computed(() => 'active' in useSlots())
-const hasHiddenRoutes = computed(() => hiddenRoutes.value.length > 0)
 </script>
 
 <template>
-  <div class="navigation-breadcrumb">
-    <slot v-bind="{ currentRoute, matchedRoutes, routes, visibleRoutes }">
-      <navigation-breadcrumb-dropdown
-        v-if="hasHiddenRoutes"
-        :routes="hiddenRoutes"
+  <parent-overflow-entries
+    :dropdown-button-icon="PhDotsThreeOutline"
+    :threshold="32"
+    reverse
+    class="navigation-breadcrumb flex-grow-1 flex-shrink-1"
+  >
+    <slot v-bind="{ currentRoute, matchedRoutes, routes, allRoutes }">
+      <parent-overflow-entries-item
+        v-for="route in allRoutes"
+        :key="route.name"
+        :label="route.name"
+        :context="route"
       >
-        <template
-          v-for="{ name } in hiddenRoutes"
-          #[`entry-label(${name})`]="binding"
-          :key="name"
-        >
-          <slot
-            :name="`entry-label(${name})`"
-            v-bind="binding"
-          />
+        <template #default="{ hasVisibleNext }">
+          <navigation-breadcrumb-link
+            :to="route"
+            :current-route-name="currentRouteName"
+            :active="isActiveRoute(route.name)"
+            :no-caret="!hasVisibleNext"
+          >
+            <slot :name="`entry-label(${route.name})`" />
+            <template v-if="showActiveSlot(name)">
+              <slot name="active" />
+            </template>
+          </navigation-breadcrumb-link>
         </template>
-      </navigation-breadcrumb-dropdown>
-      <navigation-breadcrumb-link
-        v-for="{ name } in visibleRoutes"
-        :key="name"
-        :to="{ name }"
-        :current-route-name="currentRouteName"
-        :active="isActiveRoute(name)"
-      >
-        <slot :name="`entry-label(${name})`" />
-        <template v-if="showActiveSlot(name)">
-          <slot name="active" />
-        </template>
-      </navigation-breadcrumb-link>
+      </parent-overflow-entries-item>
     </slot>
-    <slot name="addon" />
-  </div>
+    <template #separator>
+      <phosphor-icon
+        class="mx-2"
+        role="separator"
+        aria-hidden="true"
+        size="1em"
+        :name="PhCaretRight"
+      />
+    </template>
+    <template #dropdown-entry="{ entry }">
+      <navigation-breadcrumb-dropdown-entry :to="entry.exposed.context" />
+    </template>
+  </parent-overflow-entries>
 </template>
 
 <style lang="scss" scoped>
 .navigation-breadcrumb {
   display: flex;
-  align-items: center;
   min-height: 3rem;
-  flex-wrap: nowrap;
   white-space: nowrap;
-
-  &:deep(.navigation-breadcrumb-link:last-of-type + .navigation-breadcrumb-link__caret) {
-    display: none;
-  }
+  flex-grow: 1;
+  flex-shrink: 1;
+  align-items: center;
+  overflow: hidden;
 }
 </style>

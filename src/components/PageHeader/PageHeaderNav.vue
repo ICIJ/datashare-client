@@ -1,6 +1,5 @@
 <script setup>
-import { computed, useTemplateRef } from 'vue'
-import { useElementSize } from '@vueuse/core'
+import { computed } from 'vue'
 
 import ButtonAdd from '@/components/Button/ButtonAdd'
 import ButtonToggleSidebar from '@/components/Button/ButtonToggleSidebar'
@@ -14,8 +13,6 @@ import { breakpointSizeValidator, SIZE } from '@/enums/sizes'
 
 const { breakpointDown } = useBreakpoints()
 const { toggleSettings, toggleSidebar } = useViews()
-const element = useTemplateRef('element')
-const { width: elementWidth } = useElementSize(element)
 
 const props = defineProps({
   noBreadcrumb: {
@@ -46,15 +43,10 @@ const props = defineProps({
 const showToggleSidebar = computed(() => {
   return !props.noToggleSidebar && (!toggleSidebar.value || breakpointDown.value[props.sidebarTogglerBreakpoint])
 })
-
-const breadcrumbMaxLevel = computed(() => {
-  return Math.max(1, Math.round(elementWidth.value / 250))
-})
 </script>
 
 <template>
   <page-container
-    ref="element"
     fluid
     class="page-header-nav d-flex justify-content-between gap-3"
   >
@@ -69,7 +61,6 @@ const breadcrumbMaxLevel = computed(() => {
     <navigation-breadcrumb
       v-if="!noBreadcrumb"
       class="page-header-nav__breadcrumb me-auto"
-      :max-level="breadcrumbMaxLevel"
       :routes="breadcrumbRoutes"
     >
       <slot name="breadcrumb" />
@@ -106,11 +97,6 @@ const breadcrumbMaxLevel = computed(() => {
   padding-block: $spacer;
   background: var(--bs-body-bg);
   max-width: 100vw;
-
-  &__breadcrumb {
-    flex-shrink: 1;
-    overflow: auto;
-  }
 
   &:has(+ .page-header-toolbar) {
     padding-bottom: 0;
