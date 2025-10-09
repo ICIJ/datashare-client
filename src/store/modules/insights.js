@@ -21,7 +21,7 @@ export const useInsightsStore = defineStore('insights', () => {
    * @param {string} value - The name of the project.
    */
   function setProject(value) {
-    project.value = value
+    project.value = value ?? project.value
   }
 
   /**
