@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, toRef } from 'vue'
+import { computed, ref, watch, toRef } from 'vue'
 import bodybuilder from 'bodybuilder'
 
 import { apiInstance as api } from '@/api/apiInstance'
@@ -19,6 +19,13 @@ defineProps({
 
 const size = ref(null)
 const insightsStore = useInsightsStore()
+
+const to = computed(() => {
+  const project = insightsStore.project
+  const params = { project }
+  const name = 'project.view.overview.paths'
+  return { name, params }
+})
 
 async function sumSize() {
   const index = insightsStore.project
@@ -42,15 +49,15 @@ watch(toRef(insightsStore, 'project'), loadData, { immediate: true })
 </script>
 
 <template>
-  <router-link
+  <span
     class="widget widget--disk-usage d-block"
-    :to="{ name: 'project.view.overview.paths' }"
+    :to="to"
   >
     <widget-barometer-disk-usage
       clickable
       :size="size"
     />
-  </router-link>
+  </span>
 </template>
 
 <style lang="scss" scoped>
