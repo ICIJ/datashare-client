@@ -320,7 +320,7 @@ export const routes = [
               icon: null,
               title(core) {
                 try {
-                  return core?.findProject(core.route.params.name).label
+                  return core.findProject(core.route.params.name).label
                 }
                 catch {
                   return null
