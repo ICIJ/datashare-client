@@ -1,5 +1,5 @@
 <script setup>
-import { isNumber, isString } from 'lodash'
+import { isNumber, isString, min } from 'lodash'
 import { computed, useTemplateRef, reactive, provide } from 'vue'
 import { useElementSize } from '@vueuse/core'
 import { vElementSize } from '@vueuse/components'
@@ -58,6 +58,10 @@ const props = defineProps({
   threshold: {
     type: Number,
     default: 0
+  },
+  minVisibleEntries: {
+    type: Number,
+    default: 1
   }
 })
 
@@ -162,7 +166,7 @@ const entriesVisibility = computed(() => {
     const { width } = getEntrySize(entry)
     const index = props.reverse ? allEntries.value.length - 1 - i : i
     totalWidth += width
-    visibility[index] = totalWidth <= listWidth.value - props.threshold
+    visibility[index] = i < props.minVisibleEntries || totalWidth <= listWidth.value - props.threshold
     return visibility
   }, {})
 })
