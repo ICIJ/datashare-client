@@ -1,5 +1,5 @@
 <script setup>
-import { isNumber, isString, min } from 'lodash'
+import { isNumber, isString } from 'lodash'
 import { computed, useTemplateRef, reactive, provide } from 'vue'
 import { useElementSize } from '@vueuse/core'
 import { vElementSize } from '@vueuse/components'

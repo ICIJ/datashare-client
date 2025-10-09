@@ -62,7 +62,6 @@ const hasActiveSlot = computed(() => 'active' in useSlots())
 <template>
   <parent-overflow-entries
     :dropdown-button-icon="PhDotsThreeOutline"
-    :threshold="32"
     reverse
     class="navigation-breadcrumb flex-grow-1 flex-shrink-1"
   >
