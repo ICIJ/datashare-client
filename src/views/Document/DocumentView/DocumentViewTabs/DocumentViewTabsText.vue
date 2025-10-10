@@ -16,7 +16,7 @@ const { document } = useDocument()
 
 <template>
   <div class="document-view-tabs-text">
-    <document-notes :path="document.path" />
+    <document-notes :document="document" />
     <document-thread
       v-if="document.isEmail"
       :document="document"
