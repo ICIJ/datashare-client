@@ -68,7 +68,7 @@ const errored = ref(false)
 const thumbnail = ref(null)
 const blurred = defineModel('blurred', { type: Boolean, default: true })
 
-const { isPreviewActivated, getPreviewUrl, fetchImageDimensionsWithAuth, canPreviewRaw, isBlurred } = useDocumentPreview()
+const { getPreviewUrl, fetchImageDimensionsWithAuth, canPreview, canPreviewRaw, isBlurred } = useDocumentPreview()
 const element = useTemplateRef('element')
 
 const classList = computed(() => {
@@ -94,7 +94,7 @@ const thumbnailUrl = computed(() => {
 const alt = computed(() => `${props.document.basename} preview`)
 const overlayIcon = computed(() => (errored.value ? 'eye-slash' : 'eye'))
 
-const activated = computed(() => isPreviewActivated.value || canPreviewRaw(props.document))
+const activated = computed(() => canPreview(props.document))
 const showImage = computed(() => !!thumbnail.value)
 const showPlaceholder = computed(() => !props.noPlaceholder && !thumbnail.value)
 const showOverlay = computed(() => !props.noOverlay)
