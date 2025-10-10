@@ -5,10 +5,12 @@ import { computed } from 'vue'
 import settings from '@/utils/settings'
 import { useConfig } from '@/composables/useConfig'
 import { useImage } from '@/composables/useImage'
+import { useDocumentNotesStore } from '@/store/modules'
 
 export const useDocumentPreview = () => {
   const config = useConfig()
   const { fetchImageDimensions } = useImage()
+  const documentNotesStore = useDocumentNotesStore()
 
   /**
    * True if a preview host is configured.
@@ -36,6 +38,19 @@ export const useDocumentPreview = () => {
       .join('-')
     return `X-${dsCookieName}`
   })
+
+  /**
+   * True if the preview should be blurred according to the document's note.
+   *
+   * @param {Object} options - The document object.
+   * @param {string} options.project - The document project.
+   * @param {string} options.path - The document path.
+   * @returns {Promise<boolean>} True if the preview should be blurred, false otherwise.
+   */
+  async function isBlurred({ project, path }) {
+    const notes = await documentNotesStore.fetchNotesByPath({ project, path })
+    return notes.some(note => note.blurSensitiveMedia)
+  }
 
   /**
    * Get the preview meta URL (a JSON with metadata about the preview).
@@ -98,6 +113,7 @@ export const useDocumentPreview = () => {
     sessionIdHeaderValue,
     sessionIdHeaderName,
     // Methods
+    isBlurred,
     getPreviewMetaUrl,
     getPreviewUrl,
     canPreviewRaw,
