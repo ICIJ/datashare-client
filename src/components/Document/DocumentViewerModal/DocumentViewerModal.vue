@@ -20,17 +20,24 @@ const props = defineProps({
 })
 
 const { variant, variantCss } = useContrastVariant({ dark: 'darker' })
-const { isBlurred } = useDocumentPreview()
+const { isBlurred, canPreview } = useDocumentPreview()
 
 const document = ref(props.document)
 const blurred = ref(true)
-
 // We track this compositive document key to force the thumbnail to re-render when the document changes
 const key = computed(() => [document.value.index, document.value.id].join('-'))
+
+function setDocument() {
+  document.value = props.document
+}
 // Document ref must stay in sync with the prop
-watch(toRef(props, 'document'), value => (document.value = value), { immediate: true })
+watch(toRef(props, 'document'), setDocument, { immediate: true })
+
+async function setBlurred() {
+  blurred.value = canPreview(document.value) && await isBlurred(document.value)
+}
 // Whenever the document changes, we need to check if it is blurred
-watch(document, async () => (blurred.value = await isBlurred(document.value)))
+watch(document, setBlurred, { immediate: true })
 
 const modalId = useId()
 const { hide } = useModal(modalId)
@@ -61,6 +68,7 @@ onBeforeRouteUpdate(({ name }) => name !== 'search' && hide())
       v-model:show="blurred"
       blurless
       no-center
+      no-fade
       class="my-3"
       :bg-color="variantCss"
     >
