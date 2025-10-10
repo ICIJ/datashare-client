@@ -16,6 +16,10 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  blurless: {
+    type: Boolean,
+    default: false
+  },
   contentClass: {
     type: [String, Object, Array]
   }
@@ -24,9 +28,13 @@ const props = defineProps({
 const overlay = useTemplateRef('overlay')
 const { height: overlayHeight } = useElementBounding(overlay)
 
+const blurred = computed(() => !props.noBlur && show.value && !props.blurless)
+const blurless = computed(() => !props.noBlur && show.value && props.blurless)
+
 const classList = computed(() => {
   return {
-    'dismissable-content-warning--blurred': !props.noBlur && show.value
+    'dismissable-content-warning--blurred': blurred.value,
+    'dismissable-content-warning--blurless': blurless.value
   }
 })
 
@@ -66,6 +74,7 @@ const style = computed(() => {
   --dismissable-content-warning-overflow: visible;
   --dismissable-content-warning-content-filter: none;
   --dismissable-content-warning-content-overflow: visible;
+  --dismissable-content-warning-content-visibility: visible;
 
   overflow: var(--dismissable-content-warning-overflow);
   display: block;
@@ -78,12 +87,17 @@ const style = computed(() => {
     --dismissable-content-warning-content-overflow: hidden;
   }
 
+  &--blurless {
+    --dismissable-content-warning-content-visibility: hidden;
+  }
+
   &__content {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     margin: auto;
+    visibility: var(--dismissable-content-warning-content-visibility);
     filter: var(--dismissable-content-warning-content-filter);
     overflow: var(--dismissable-content-warning-content-overflow);
     transition: filter 0.3s ease;
