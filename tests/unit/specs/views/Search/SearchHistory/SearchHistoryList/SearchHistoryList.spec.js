@@ -15,6 +15,7 @@ vi.mock('@/api/apiInstance', () => {
       isDownloadAllowed: vi.fn().mockResolvedValue(),
       removeHistoryEvent: vi.fn().mockResolvedValue({}),
       getStarredDocuments: vi.fn().mockResolvedValue([]),
+      retrieveNotes: vi.fn().mockResolvedValue([]),
       getHistoryEvents: vi.fn().mockResolvedValue({
         pagination: {
           total: 0,
