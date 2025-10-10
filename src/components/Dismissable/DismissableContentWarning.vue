@@ -8,18 +8,30 @@ import DismissableContentWarningToggler from '@/components/Dismissable/Dismissab
 const show = defineModel('show', { type: Boolean, default: true })
 
 const props = defineProps({
+  /**
+   * Background color of the overlay
+   */
   bgColor: {
     type: String,
     default: 'var(--bs-body-bg)'
   },
+  /**
+   * Remove the blur effect and overlay the content
+   */
   noBlur: {
     type: Boolean,
     default: false
   },
+  /**
+   * Remove the blur effect but keep the content hidden until toggled
+   */
   blurless: {
     type: Boolean,
     default: false
   },
+  /**
+   * Additional classes to add to the content container
+   */
   contentClass: {
     type: [String, Object, Array]
   }
