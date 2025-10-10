@@ -52,7 +52,10 @@ const style = computed(() => {
       <slot />
     </div>
     <template #overlay>
-      <dismissable-content-warning-toggler v-model="show" />
+      <dismissable-content-warning-toggler
+        ref="overlay"
+        v-model="show"
+      />
     </template>
   </app-overlay>
 </template>
