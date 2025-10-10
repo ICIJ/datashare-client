@@ -174,7 +174,7 @@ export default {
   --tiff-viewer-thumbnails-item-filter: none;
 
   &--blurred {
-    --tiff-viewer-thumbnails-item-filter: blur(1rem);
+    --tiff-viewer-thumbnails-item-filter: blur(1rem) grayscale(0.5);
   }
 
   &__thumbnails {

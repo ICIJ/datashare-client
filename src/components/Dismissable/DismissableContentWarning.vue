@@ -95,7 +95,7 @@ const style = computed(() => {
 
   &--blurred {
     --dismissable-content-warning-overflow: hidden;
-    --dismissable-content-warning-content-filter: blur(1rem) grayscale(1);
+    --dismissable-content-warning-content-filter: blur(1rem) grayscale(0.5);
     --dismissable-content-warning-content-overflow: hidden;
   }
 
