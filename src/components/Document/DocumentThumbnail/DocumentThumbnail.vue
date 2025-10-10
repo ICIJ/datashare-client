@@ -48,6 +48,10 @@ const props = defineProps({
     type: Number,
     default: 1
   },
+  noBlur: {
+    type: Boolean,
+    default: false
+  },
   noPlaceholder: {
     type: Boolean,
     default: false
@@ -76,7 +80,7 @@ const classList = computed(() => {
     'document-thumbnail--loaded': !!thumbnail.value,
     'document-thumbnail--clickable': props.clickable,
     'document-thumbnail--hover': props.hover,
-    'document-thumbnail--blurred': blurred.value,
+    'document-thumbnail--blurred': !props.noBlur && blurred.value,
     [`document-thumbnail--${props.size}`]: isNaN(props.size)
   }
 })
@@ -129,7 +133,7 @@ whenever(isVisible, enter, { immediate: props.lazy, once: true })
 
 onBeforeMount(async () => {
   // Set the blurred state according to document notes
-  blurred.value = props.document.project && await isBlurred(props.document)
+  blurred.value = props.noBlur ? false : await isBlurred(props.document)
   // This component can be deactivated globally
   if (!showImage.value) return
   // This component can be lazy loaded
