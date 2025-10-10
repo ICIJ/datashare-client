@@ -222,7 +222,7 @@ onBeforeMount(async () => {
   }
 
   &--blurred .document-thumbnail__image {
-    filter: blur(.75rem) grayscale(1);
+    filter: blur(.75rem) grayscale(0.5);
   }
 
   &:after {
