@@ -10,6 +10,7 @@ import DisplayDatetime from '@/components/Display/DisplayDatetime'
 import DisplayExtractionLevel from '@/components/Display/DisplayExtractionLevel'
 import DisplayLanguage from '@/components/Display/DisplayLanguage'
 import DisplayNumber from '@/components/Display/DisplayNumber'
+import DocumentNotes from '@/components/Document/DocumentNotes'
 import DocumentMetadata from '@/components/Document/DocumentMetadata/DocumentMetadata'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 import ProjectLink from '@/components/Project/ProjectLink'
@@ -203,6 +204,7 @@ const classList = computed(() => {
     class="document-view-tabs-metadata w-100 d-flex flex-column gap-3 pt-3"
     :class="classList"
   >
+    <document-notes :document="document" />
     <document-view-tabs-metadata-linked-documents-card />
     <div class="bg-body py-3 sticky-top">
       <form-control-search
