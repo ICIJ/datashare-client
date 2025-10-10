@@ -118,6 +118,11 @@
     "close": "Close",
     "dontShow": "Don't show this again"
   },
+  "dismissableContentWarning": {
+    "title": "Content Warning",
+    "description": "This media may contain sensitive content that some people may find disturbing or offensive.",
+    "toggle": "Show anyway"
+  },
   "dismissableToastBody": {
     "close": "Close"
   },
