@@ -24,12 +24,12 @@ const { waitFor, loaderId } = useWait()
 const { computedDocumentRotation } = useDocumentViewStore()
 const { isBlurred } = useDocumentPreview()
 
-const blurred = ref(true)
+const blurred = ref(null)
 const imageBase64 = ref(null)
 const imageRotation = computedDocumentRotation(props.document)
 
 async function fetch() {
-  blurred.value = await isBlurred(props.document)
+  blurred.value = blurred.value ?? await isBlurred(props.document)
   imageBase64.value = await rotateBase64Image(props.document.inlineFullUrl, imageRotation)
 }
 
@@ -55,7 +55,7 @@ onBeforeMount(waitFor(fetch))
       <app-spinner />
     </template>
     <div class="image-viewer__wrapper">
-      <div class="image-viewer__wrapper__controls justify-content-center d-flex gap-1 p-1">
+      <div class="image-viewer__wrapper__controls">
         <button-row-action
           class="image-viewer__wrapper__controls__button"
           :label="t('documentViewerImage.rotateCounterClockwise')"
@@ -81,9 +81,13 @@ onBeforeMount(waitFor(fetch))
 
 <style scoped lang="scss">
 .image-viewer {
+  width: 100%;
+  text-align: center;
+
   &__wrapper {
     position: relative;
     overflow: hidden;
+    width: 100%;
 
     &__controls {
       position: absolute;
@@ -92,6 +96,9 @@ onBeforeMount(waitFor(fetch))
       right: 0;
       z-index: 10;
       opacity: 0.25;
+      display: flex;
+      justify-content: center;
+      gap: $spacer-xxs;
 
       &:hover {
         opacity: 1;
