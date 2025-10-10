@@ -16,6 +16,17 @@ vi.mock('@/composables/useImage', () => {
   }
 })
 
+vi.mock('@/api/apiInstance', async (importOriginal) => {
+  const { apiInstance } = await importOriginal()
+
+  return {
+    apiInstance: {
+      ...apiInstance,
+      retrieveNotes: vi.fn().mockResolvedValue([])
+    }
+  }
+})
+
 describe('DocumentViewerImage.vue', () => {
   let wrapper
 
@@ -24,6 +35,10 @@ describe('DocumentViewerImage.vue', () => {
     const { plugins } = CoreSetup.init().useAll()
     wrapper = mount(DocumentViewerImage, { global: { plugins }, props: { document } })
     await flushPromises()
+  })
+
+  afterAll(() => {
+    vi.resetAllMocks()
   })
 
   it('should create an image tag', async () => {

@@ -6,6 +6,17 @@ import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import DocumentViewTabsMetadata from '@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsMetadata'
 import { useDocumentStore } from '@/store/modules'
 
+vi.mock('@/api/apiInstance', async (importOriginal) => {
+  const { apiInstance } = await importOriginal()
+
+  return {
+    apiInstance: {
+      ...apiInstance,
+      retrieveNotes: vi.fn().mockResolvedValue([])
+    }
+  }
+})
+
 describe('DocumentViewTabsMetadata.vue', () => {
   const { index, es } = esConnectionHelper.build()
   let wrapper, core, documentStore
@@ -13,6 +24,10 @@ describe('DocumentViewTabsMetadata.vue', () => {
   beforeAll(() => {
     core = CoreSetup.init().useAll()
     documentStore = useDocumentStore()
+  })
+
+  afterAll(() => {
+    vi.resetAllMocks()
   })
 
   afterEach(() => {

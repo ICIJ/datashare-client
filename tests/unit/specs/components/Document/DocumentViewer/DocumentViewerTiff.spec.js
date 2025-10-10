@@ -8,7 +8,8 @@ import { apiInstance as api } from '@/api/apiInstance'
 vi.mock('@/api/apiInstance', () => {
   return {
     apiInstance: {
-      getSource: vi.fn(({ url }) => mockArrayBuffer(url))
+      getSource: vi.fn(({ url }) => mockArrayBuffer(url)),
+      retrieveNotes: vi.fn().mockResolvedValue([])
     }
   }
 })
