@@ -7,8 +7,10 @@ import DocumentViewerModalTitle from './DocumentViewerModalTitle'
 import DocumentViewerModalNav from './DocumentViewerModalNav'
 
 import AppModal from '@/components/AppModal/AppModal'
+import DismissableContentWarning from '@/components/Dismissable/DismissableContentWarning'
 import DocumentThumbnail from '@/components/Document/DocumentThumbnail/DocumentThumbnail'
-import useContrastVariant from '@/composables/useContrastVariant'
+import { useContrastVariant } from '@/composables/useContrastVariant'
+import { useDocumentPreview } from '@/composables/useDocumentPreview'
 
 const props = defineProps({
   document: {
@@ -17,13 +19,18 @@ const props = defineProps({
   }
 })
 
-const { variant } = useContrastVariant({ dark: 'darker' })
+const { variant, variantCss } = useContrastVariant({ dark: 'darker' })
+const { isBlurred } = useDocumentPreview()
 
 const document = ref(props.document)
-// Document ref must stay in sync with the prop
-watch(toRef(props, 'document'), () => (document.value = props.document))
+const blurred = ref(true)
+
 // We track this compositive document key to force the thumbnail to re-render when the document changes
-const key = computed(() => [document.value.index, document.value.id])
+const key = computed(() => [document.value.index, document.value.id].join('-'))
+// Document ref must stay in sync with the prop
+watch(toRef(props, 'document'), value => (document.value = value), { immediate: true })
+// Whenever the document changes, we need to check if it is blurred
+watch(document, async () => (blurred.value = await isBlurred(document.value)))
 
 const modalId = useId()
 const { hide } = useModal(modalId)
@@ -48,16 +55,19 @@ onBeforeRouteUpdate(({ name }) => name !== 'search' && hide())
     <template #title>
       <document-viewer-modal-title :document="document" />
     </template>
-    <document-viewer-modal-nav
-      v-model:document="document"
-      class="mb-3"
-    />
-    <document-thumbnail
+    <document-viewer-modal-nav v-model:document="document" />
+    <dismissable-content-warning
       :key="key"
-      :document="document"
-      fit
-      size="md"
-      class="mx-auto"
-    />
+      v-model:show="blurred"
+      class="my-3"
+      :bg-color="variantCss"
+    >
+      <document-thumbnail
+        :document="document"
+        size="xl"
+        no-blur
+        fit
+      />
+    </dismissable-content-warning>
   </app-modal>
 </template>
