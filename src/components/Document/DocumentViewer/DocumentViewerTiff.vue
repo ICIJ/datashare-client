@@ -1,53 +1,18 @@
 <template>
-  <div class="tiff-viewer w-100 py-3">
-    <app-overlay
-      :show="isLoading"
-      rounded
-      spinner-small
-    >
-      <div class="tiff-viewer__header bg-tertiary-subtle d-flex algin-items-center rounded p-3">
-        <div
-          v-if="hasPages"
-          class="tiff-viewer__header__pagination text-muted"
-        >
-          <span class="badge text-bg-dark">
-            <span>
-              {{ active }}
-            </span>
-            <span class="fw-normal"> / {{ pages.length }} </span>
-          </span>
-        </div>
-        <div class="tiff-viewer__header__pagination__actions flex-grow-1 text-end">
-          <div class="btn-group">
-            <button
-              class="btn btn-outline-tertiary"
-              @click="rotateActivePage(active, -1)"
-            >
-              <phosphor-icon
-                :name="PhArrowCounterClockwise"
-                class="float-end"
-              />
-            </button>
-            <button
-              class="btn btn-outline-tertiary"
-              @click="rotateActivePage(active, 1)"
-            >
-              <phosphor-icon
-                :name="PhArrowClockwise"
-                class="float-end"
-              />
-            </button>
-          </div>
-        </div>
-      </div>
-    </app-overlay>
+  <app-overlay
+    class="tiff-viewer w-100 py-3"
+    :class="classList"
+    :show="isLoading"
+    :bg-color="'transparent'"
+    spinner-small
+  >
     <div
       v-if="!isLoading"
-      class="d-flex my-3"
+      class="d-flex align-items-start"
     >
       <div
         v-if="hasPages"
-        class="tiff-viewer__thumbnails ms-3"
+        class="tiff-viewer__thumbnails"
       >
         <div
           v-for="page in pages.length"
@@ -69,15 +34,30 @@
           </div>
         </div>
       </div>
-      <div
+      <dismissable-content-warning
         v-if="!error"
-        class="tiff-viewer__preview text-center flex-grow-1"
+        v-model:show="blurred"
+        content-class="tiff-viewer__preview"
       >
+        <div class="tiff-viewer__preview__controls">
+          <button-row-action
+            class="tiff-viewer__preview__controls__button"
+            :label="t('documentViewerImage.rotateCounterClockwise')"
+            :icon-left="PhArrowCounterClockwise"
+            @click="rotateActivePage(active, -1)"
+          />
+          <button-row-action
+            class="tiff-viewer__preview__controls__button"
+            :label="t('documentViewerImage.rotateClockwise')"
+            :icon-left="PhArrowClockwise"
+            @click="rotateActivePage(active, 1)"
+          />
+        </div>
         <img
           class="tiff-viewer__preview__canvas mw-100 mb-3"
           :src="getPage(active)"
         >
-      </div>
+      </dismissable-content-warning>
       <div
         v-else
         class="tiff-viewer__error fw-bold text-center text-danger flex-grow-1"
@@ -85,15 +65,18 @@
         {{ error }}
       </div>
     </div>
-  </div>
+  </app-overlay>
 </template>
 
 <script>
 import { Image } from 'image-js'
+import { useI18n } from 'vue-i18n'
 import * as tiff from 'tiff'
-import { PhosphorIcon } from '@icij/murmur-next'
 
+import { useDocumentPreview } from '@/composables/useDocumentPreview'
 import AppOverlay from '@/components/AppOverlay/AppOverlay'
+import ButtonRowAction from '@/components/Button/ButtonRowAction/ButtonRowAction'
+import DismissableContentWarning from '@/components/Dismissable/DismissableContentWarning'
 import datashareSourceMixin from '@/mixins/datashareSourceMixin'
 
 /**
@@ -103,7 +86,8 @@ export default {
   name: 'DocumentViewerTiff',
   components: {
     AppOverlay,
-    PhosphorIcon
+    ButtonRowAction,
+    DismissableContentWarning
   },
   mixins: [datashareSourceMixin],
   props: {
@@ -114,13 +98,19 @@ export default {
       type: Object
     }
   },
+  setup() {
+    const { isBlurred } = useDocumentPreview()
+    const { t } = useI18n()
+    return { isBlurred, t }
+  },
   data() {
     return {
       error: null,
       thumbWidth: 80,
       tiffData: null,
       active: 1,
-      pages: []
+      pages: [],
+      blurred: true
     }
   },
   computed: {
@@ -129,12 +119,17 @@ export default {
     },
     hasPages() {
       return this.pages.length > 1
+    },
+    classList() {
+      return {
+        'tiff-viewer--blurred': this.blurred
+      }
     }
   },
   async mounted() {
     try {
-      const buffer = await this.getTiffBuffer()
-      this.tiffData = tiff.decode(buffer)
+      this.blurred = await this.isBlurred(this.document)
+      this.tiffData = tiff.decode(await this.getTiffBuffer())
       this.pages = []
       for (const index in this.tiffData) {
         this.pages.push(await this.renderPage(index))
@@ -175,26 +170,24 @@ export default {
 
 <style lang="scss">
 .tiff-viewer {
-  &__header {
-    &__pagination {
-      width: 100px;
-      flex: 100px 0 0;
-      text-align: center;
-      font-size: 1.25rem;
-    }
+  --tiff-viewer-thumbnails-item-filter: none;
+
+  &--blurred {
+    --tiff-viewer-thumbnails-item-filter: blur(1rem);
   }
 
   &__thumbnails {
-    width: 100px;
-    flex: 100px 0 0;
+    width: 80px;
+    flex: 80px 0 0;
     text-align: center;
+    margin-right: $spacer;
 
     &__item {
       margin: auto;
       cursor: pointer;
 
       &--active &__thumbnail {
-        box-shadow: 0 0 0 2px $input-focus-border-color;
+        border-color: $input-focus-border-color;
 
         &__page .badge {
           background-color: $input-focus-border-color;
@@ -204,9 +197,11 @@ export default {
       &__thumbnail {
         display: inline-block;
         position: relative;
+        overflow: hidden;
+        border: 2px solid transparent;
 
         &:hover {
-          box-shadow: 0 0 0 2px $input-focus-border-color, 0 0 $spacer * 0.5 0 $input-focus-border-color;
+          border-color: $input-focus-border-color;
         }
 
         &__page .badge {
@@ -215,6 +210,37 @@ export default {
           bottom: 0.25rem;
           right: 0.25rem;
         }
+
+        & > img {
+          filter: var(--tiff-viewer-thumbnails-item-filter);
+        }
+      }
+    }
+  }
+
+  &__preview {
+    display: flex;
+    flex-direction: column;
+    gap: $spacer;
+
+    &__controls {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      opacity: 0.25;
+      display: flex;
+      justify-content: center;
+      gap: $spacer-xxs;
+
+      &:hover {
+        opacity: 1;
+      }
+
+      &__button {
+        --bs-btn-bg: var(--bs-btn-hover-bg);
+        --bs-btn-active-shadow: none;
       }
     }
   }
