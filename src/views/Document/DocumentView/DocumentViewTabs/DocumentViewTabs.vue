@@ -45,7 +45,10 @@ wheneverRouteActionShortcut('goToNextTab', () => router.push(nextTabRoute.value)
 </script>
 
 <template>
-  <tab-group-navigation nowrap>
+  <tab-group-navigation
+    class="pb-0"
+    nowrap
+  >
     <hook
       name="document-view-tabs:before"
       :bind="{ tab, tabs }"
