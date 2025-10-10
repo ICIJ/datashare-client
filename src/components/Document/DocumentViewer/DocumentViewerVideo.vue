@@ -5,17 +5,19 @@
     :border-variant="cardVariant"
     no-body
   >
-    <video
-      controls
-      :autoplay="autoplay"
-      :loop="loop"
-      class="video-viewer__player w-100"
-    >
-      <source
-        :src="document.inlineFullUrl"
-        :type="document.contentType"
+    <dismissable-content-warning v-model:show="blurred">
+      <video
+        controls
+        :autoplay="autoplay"
+        :loop="loop"
+        class="video-viewer__player w-100"
       >
-    </video>
+        <source
+          :src="document.inlineFullUrl"
+          :type="document.contentType"
+        >
+      </video>
+    </dismissable-content-warning>
     <template #footer>
       <div class="d-lg-flex">
         <div
@@ -59,6 +61,8 @@ import { PhosphorIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 
 import { usePlayerStore } from '@/store/modules'
+import { useDocumentPreview } from '@/composables/useDocumentPreview'
+import DismissableContentWarning from '@/components/Dismissable/DismissableContentWarning.vue'
 
 /**
  * Display a preview video of the document.
@@ -66,6 +70,7 @@ import { usePlayerStore } from '@/store/modules'
 export default {
   name: 'DocumentViewerVideo',
   components: {
+    DismissableContentWarning,
     PhosphorIcon
   },
   props: {
@@ -78,8 +83,13 @@ export default {
   },
   setup() {
     const { t } = useI18n()
-
-    return { t }
+    const { isBlurred } = useDocumentPreview()
+    return { t, isBlurred }
+  },
+  data() {
+    return {
+      blurred: true
+    }
   },
   computed: {
     cannotPlayVideoFormat() {
@@ -92,6 +102,9 @@ export default {
       return this.cannotPlayVideoFormat ? 'warning' : null
     },
     ...mapWritableState(usePlayerStore, ['autoplay', 'loop'])
+  },
+  async mounted() {
+    this.blurred = await this.isBlurred(this.document)
   }
 }
 </script>
