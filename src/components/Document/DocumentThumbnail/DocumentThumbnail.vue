@@ -62,8 +62,9 @@ const emit = defineEmits(['loaded', 'errored', 'enter'])
 
 const errored = ref(false)
 const thumbnail = ref(null)
+const blurred = defineModel('blurred', { type: Boolean, default: true })
 
-const { isPreviewActivated, getPreviewUrl, fetchImageDimensionsWithAuth, canPreviewRaw } = useDocumentPreview()
+const { isPreviewActivated, getPreviewUrl, fetchImageDimensionsWithAuth, canPreviewRaw, isBlurred } = useDocumentPreview()
 const element = useTemplateRef('element')
 
 const classList = computed(() => {
@@ -75,6 +76,7 @@ const classList = computed(() => {
     'document-thumbnail--loaded': !!thumbnail.value,
     'document-thumbnail--clickable': props.clickable,
     'document-thumbnail--hover': props.hover,
+    'document-thumbnail--blurred': blurred.value,
     [`document-thumbnail--${props.size}`]: isNaN(props.size)
   }
 })
@@ -126,6 +128,8 @@ const isVisible = useElementVisibility(element)
 whenever(isVisible, enter, { immediate: props.lazy, once: true })
 
 onBeforeMount(async () => {
+  // Set the blurred state according to document notes
+  blurred.value = props.document.project && await isBlurred(props.document)
   // This component can be deactivated globally
   if (!showImage.value) return
   // This component can be lazy loaded
@@ -213,6 +217,10 @@ onBeforeMount(async () => {
     max-width: calc(var(--document-thumbnail-width) * 1px);
   }
 
+  &--blurred .document-thumbnail__image {
+    filter: blur(.75rem) grayscale(1);
+  }
+
   &:after {
     content: '';
     display: block;
@@ -257,6 +265,7 @@ onBeforeMount(async () => {
     left: 0;
     right: 0;
     bottom: 0;
+    transition: filter 0.3s ease;
   }
 
   &__placeholder {
