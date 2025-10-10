@@ -16,7 +16,10 @@ const { document } = useDocument()
 
 <template>
   <div class="document-view-tabs-text">
-    <document-notes :document="document" />
+    <document-notes
+      :document="document"
+      class="mt-3"
+    />
     <document-thread
       v-if="document.isEmail"
       :document="document"
