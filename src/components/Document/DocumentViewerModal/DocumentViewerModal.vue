@@ -64,7 +64,7 @@ onBeforeRouteUpdate(({ name }) => name !== 'search' && hide())
     >
       <document-thumbnail
         :document="document"
-        size="xl"
+        size="lg"
         no-blur
         fit
       />
