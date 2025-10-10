@@ -3,11 +3,13 @@ import { useI18n } from 'vue-i18n'
 import { onBeforeMount, ref } from 'vue'
 
 import { useImage } from '@/composables/useImage'
+import { useDocumentPreview } from '@/composables/useDocumentPreview'
 import { useWait } from '@/composables/useWait'
 import { useDocumentViewStore } from '@/store/modules/documentView'
 import AppSpinner from '@/components/AppSpinner/AppSpinner'
 import AppWait from '@/components/AppWait/AppWait'
 import ButtonRowAction from '@/components/Button/ButtonRowAction/ButtonRowAction'
+import DismissableContentWarning from '@/components/Dismissable/DismissableContentWarning'
 
 const props = defineProps({
   document: {
@@ -20,11 +22,14 @@ const { t } = useI18n()
 const { rotateBase64Image } = useImage()
 const { waitFor, loaderId } = useWait()
 const { computedDocumentRotation } = useDocumentViewStore()
+const { isBlurred } = useDocumentPreview()
 
+const blurred = ref(true)
 const imageBase64 = ref(null)
 const imageRotation = computedDocumentRotation(props.document)
 
 async function fetch() {
+  blurred.value = await isBlurred(props.document)
   imageBase64.value = await rotateBase64Image(props.document.inlineFullUrl, imageRotation)
 }
 
@@ -64,10 +69,12 @@ onBeforeMount(waitFor(fetch))
           @click="rotateClockwise()"
         />
       </div>
-      <img
-        :src="imageBase64"
-        class="image-viewer__wrapper__image img-fluid"
-      >
+      <dismissable-content-warning v-model:show="blurred">
+        <img
+          :src="imageBase64"
+          class="image-viewer__wrapper__image img-fluid"
+        >
+      </dismissable-content-warning>
     </div>
   </app-wait>
 </template>
@@ -76,6 +83,7 @@ onBeforeMount(waitFor(fetch))
 .image-viewer {
   &__wrapper {
     position: relative;
+    overflow: hidden;
 
     &__controls {
       position: absolute;
