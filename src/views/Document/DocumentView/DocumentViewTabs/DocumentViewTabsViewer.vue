@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 
 import { useFeatures } from '@/composables/useFeatures'
 import { useDocument } from '@/composables/useDocument'
+import DocumentNotes from '@/components/Document/DocumentNotes'
 
 const { t } = useI18n()
 const { document } = useDocument()
@@ -60,7 +61,8 @@ const asyncPreviewComponent = computed(() => {
 </script>
 
 <template>
-  <div class="d-flex flex-grow-1 document__preview">
+  <div class="d-flex flex-grow-1 flex-column document__preview">
+    <document-notes :document="document" />
     <template v-if="previewComponent">
       <suspense>
         <component
