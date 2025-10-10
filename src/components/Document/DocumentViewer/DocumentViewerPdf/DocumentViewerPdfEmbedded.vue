@@ -2,7 +2,10 @@
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur-next'
 
+import DismissableContentWarningToggler from '@/components/Dismissable/DismissableContentWarningToggler'
+
 const modelValue = defineModel({ type: Boolean, default: false })
+const blurred = defineModel('blurred', { type: Boolean, default: true })
 
 defineProps({
   document: {
@@ -22,7 +25,12 @@ const { t } = useI18n()
       :label="t('documentViewerPdfEmbedded.switch')"
       @click="modelValue = false"
     />
+    <dismissable-content-warning-toggler
+      v-if="blurred"
+      v-model="blurred"
+    />
     <iframe
+      v-else
       :src="document.inlineFullUrl"
       class="document-viewer-pdf-embedded__iframe rounded"
       frameborder="0"

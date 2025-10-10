@@ -1,6 +1,6 @@
 <script setup>
 import VueScrollTo from 'vue-scrollto'
-import { computed, ref, useTemplateRef, toRef } from 'vue'
+import { computed, ref, useTemplateRef, toRef, watch } from 'vue'
 import { refDebounced, whenever, useElementBounding } from '@vueuse/core'
 import { supportsPDFs as embeddable } from 'pdfobject'
 import { useI18n } from 'vue-i18n'
@@ -12,12 +12,14 @@ import DocumentViewerPdfPage from './DocumentViewerPdf/DocumentViewerPdfPage'
 
 import { SCALE_FIT, SCALE_WIDTH } from '@/enums/documentViewerPdf'
 import { useCompact } from '@/composables/useCompact'
+import { useDocumentPreview } from '@/composables/useDocumentPreview'
 import { useWait } from '@/composables/useWait'
 import { useScrollParent } from '@/composables/useScrollParent'
 import { usePDF } from '@/composables/usePDF'
 import { useDocumentViewStore } from '@/store/modules/documentView'
 import AppWait from '@/components/AppWait/AppWait'
 import ButtonIcon from '@/components/Button/ButtonIcon'
+import DismissableContentWarningToggler from '@/components/Dismissable/DismissableContentWarningToggler'
 import DocumentLocalSearch from '@/components/Document/DocumentLocalSearch/DocumentLocalSearch'
 import DocumentGlobalSearchTerms from '@/components/Document/DocumentGlobalSearchTerms/DocumentGlobalSearchTerms'
 
@@ -38,10 +40,12 @@ const src = computed(() => (documentViewStore.embeddedPdf ? null : props.documen
 const { pdf, numPages, sizes, findHighlights, loaderId: pdfLoaderId } = usePDF(src)
 const { waitFor, isLoading } = useWait()
 const { t } = useI18n()
+const { isBlurred } = useDocumentPreview()
 
 const currentPage = ref(1)
 const rotation = documentViewStore.computedDocumentRotation(props.document)
 const scale = ref(SCALE_FIT)
+const blurred = ref(null)
 const pageElements = useTemplateRef('pages')
 const toolboxElement = useTemplateRef('toolbox')
 const { height: toolboxHeight } = useElementBounding(toolboxElement)
@@ -93,19 +97,21 @@ function scrollToPage(value) {
   }
 }
 
-whenever(
-  highlightTextDebounced,
-  waitFor(async (value) => {
-    highlightMatches.value = await findHighlights(value)
-    highlightIndex.value = highlightMatches.value.length ? 1 : 0
-  })
-)
+whenever(highlightTextDebounced, waitFor(async (value) => {
+  highlightMatches.value = await findHighlights(value)
+  highlightIndex.value = highlightMatches.value.length ? 1 : 0
+}))
+
+watch(src, async () => {
+  blurred.value ??= await isBlurred(props.document)
+}, { immediate: true })
 </script>
 
 <template>
   <document-viewer-pdf-embedded
     v-if="documentViewStore.embeddedPdf"
     v-model="documentViewStore.embeddedPdf"
+    v-model:blurred="blurred"
     :document="document"
   />
   <div
@@ -126,7 +132,10 @@ whenever(
           :occurrences="highlightOccurrences"
           class="flex-grow-1"
         />
-        <div class="d-flex flex-grow-1 flex-md-grow-0 flex-nowrap align-items-center gap-2">
+        <fieldset
+          :disabled="blurred"
+          class="d-flex flex-grow-1 flex-md-grow-0 flex-nowrap align-items-center gap-2"
+        >
           <document-viewer-pdf-pagination
             :page="currentPage"
             :total-rows="numPages"
@@ -139,7 +148,7 @@ whenever(
             v-model:embed="documentViewStore.embeddedPdf"
             class="flex-shrink-0 ms-auto"
           />
-        </div>
+        </fieldset>
       </div>
       <document-global-search-terms
         :document="document"
@@ -147,8 +156,12 @@ whenever(
         @select="highlightText = $event"
       />
     </div>
+    <dismissable-content-warning-toggler
+      v-if="blurred"
+      v-model="blurred"
+    />
     <app-wait
-      class="document-viewer-pdf__pages pt-3"
+      v-else
       :for="pdfLoaderId"
       spinner
     >
