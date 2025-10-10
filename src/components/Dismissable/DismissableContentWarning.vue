@@ -1,10 +1,9 @@
 <script setup>
 import { computed, useTemplateRef } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { PhosphorIcon, ButtonIcon } from '@icij/murmur-next'
 import { useElementBounding } from '@vueuse/core'
 
 import AppOverlay from '@/components/AppOverlay/AppOverlay'
+import DismissableContentWarningToggler from '@/components/Dismissable/DismissableContentWarningToggler'
 
 const show = defineModel('show', { type: Boolean, default: true })
 
@@ -24,8 +23,6 @@ const props = defineProps({
 
 const overlay = useTemplateRef('overlay')
 const { height: overlayHeight } = useElementBounding(overlay)
-const toggle = () => (show.value = !show.value)
-const { t } = useI18n()
 
 const classList = computed(() => {
   return {
@@ -48,28 +45,14 @@ const style = computed(() => {
     :bg-color="bgColor"
     class="dismissable-content-warning"
   >
-    <div class="dismissable-content-warning__content" :class="contentClass">
+    <div
+      class="dismissable-content-warning__content"
+      :class="contentClass"
+    >
       <slot />
     </div>
     <template #overlay>
-      <div
-        ref="overlay"
-        class="dismissable-content-warning__overlay"
-      >
-        <phosphor-icon
-          :name="PhEyeSlash"
-          size="2em"
-        />
-        <h4>{{ t('dismissableContentWarning.title') }}</h4>
-        <p class="m-0">
-          {{ t('dismissableContentWarning.description') }}
-        </p>
-        <button-icon
-          variant="outline-primary"
-          :label="t('dismissableContentWarning.toggle')"
-          @click="toggle()"
-        />
-      </div>
+      <dismissable-content-warning-toggler v-model="show" />
     </template>
   </app-overlay>
 </template>
@@ -94,23 +77,13 @@ const style = computed(() => {
 
   &__content {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     margin: auto;
     filter: var(--dismissable-content-warning-content-filter);
     overflow: var(--dismissable-content-warning-content-overflow);
     transition: filter 0.3s ease;
-  }
-
-  &__overlay {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    gap: $spacer;
-    padding: $spacer;
-    box-sizing: border-box;
   }
 }
 </style>
