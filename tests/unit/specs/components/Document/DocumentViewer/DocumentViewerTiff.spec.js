@@ -1,6 +1,5 @@
 import { flushPromises, mount } from '@vue/test-utils'
 
-
 import { responseWithArrayBuffer as mockArrayBuffer } from '~tests/unit/tests_utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import DocumentViewerTiff from '@/components/Document/DocumentViewer/DocumentViewerTiff'
@@ -59,7 +58,7 @@ describe('DocumentViewerTiff.vue', () => {
   })
 
   describe('with a missing file', () => {
-    it('should display an error message if the document does not exist', async () => {      
+    it('should display an error message if the document does not exist', async () => {
       api.getSource.mockClear()
       api.getSource.mockRejectedValue(new Error('File not found'))
 
