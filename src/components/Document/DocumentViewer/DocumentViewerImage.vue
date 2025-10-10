@@ -69,7 +69,11 @@ onBeforeMount(waitFor(fetch))
           @click="rotateClockwise()"
         />
       </div>
-      <dismissable-content-warning v-model:show="blurred">
+      <dismissable-content-warning
+        v-model:show="blurred"
+        blurless
+        no-center
+      >
         <img
           :src="imageBase64"
           class="image-viewer__wrapper__image img-fluid"
