@@ -26,6 +26,30 @@ export const useDocumentNotesStore = defineStore('documentNotes', () => {
   }
 
   /**
+   * Get notes for a given project
+   * @param {Object} options
+   * @param {string} options.project - The project name
+   * @returns {Array} The notes for the project
+   */
+  const getNotes = ({ project }) => {
+    return notes[project] || []
+  }
+
+  /**
+   * Get notes for a given path in a project
+   * @param {Object} options
+   * @param {string} options.project - The project name
+   * @param {string} options.path - The path to filter on
+   * @returns {Array} The notes for the path
+   */
+  const getNotesByPath = ({ project, path }) => {
+    if (!hasIn(notes, project)) {
+      return []
+    }
+    return notes[project].filter(note => path.startsWith(note.path))
+  }
+
+  /**
    * Fetch notes from the API for a given project
    * @param {Object} options
    * @param {string} options.project - The project name
@@ -57,9 +81,9 @@ export const useDocumentNotesStore = defineStore('documentNotes', () => {
    * @returns {Promise<Array>} The notes set
    */
   const fetchNotesByPath = async ({ project, path }) => {
-    const notes = await fetchNotesOnce({ project })
-    return notes.filter(note => path.startsWith(note.path))
+    await fetchNotesOnce({ project })
+    return getNotesByPath({ project, path })
   }
 
-  return { notes, reset, set, fetchNotesByPath, fetchNotes, fetchNotesOnce }
+  return { notes, reset, set, getNotesByPath, getNotes, fetchNotes, fetchNotesOnce, fetchNotesByPath }
 })
