@@ -6,15 +6,21 @@ import DocumentNotes from '@/components/Document/DocumentNotes'
 import { useDocumentStore, useDocumentNotesStore, useSearchStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
 
-vi.mock('@/api/apiInstance', {
-  apiInstance: {
-    retrieveNotes: vi.fn()
+vi.mock('@/api/apiInstance', async (importOriginal) => {
+  const { apiInstance } = await importOriginal()
+
+  return {
+    apiInstance: {
+      ...apiInstance,
+      retrieveNotes: vi.fn().mockResolvedValue([])
+    }
   }
 })
 
 describe('DocumentNotes.vue', () => {
   const path = '/this/is/a/'
   const project = 'banana-papers'
+  const document = { path, project }
   const note1 = { note: 'This is a note', project, path: '/this/is/a/', variant: 'warning' }
   const note2 = { note: 'This is a second note', project, path: '/this/is/', variant: 'error' }
 
@@ -40,14 +46,14 @@ describe('DocumentNotes.vue', () => {
   })
 
   it('should NOT display note on document', () => {
-    wrapper = shallowMount(DocumentNotes, { global: { plugins } })
+    wrapper = shallowMount(DocumentNotes, { global: { plugins }, props: { document } })
     expect(wrapper.find('b-alert-stub').exists()).toBeFalsy()
   })
 
   it('should display note on document', async () => {
     const notes = [note1]
     api.retrieveNotes.mockResolvedValue(notes)
-    wrapper = shallowMount(DocumentNotes, { global: { plugins }, props: { path } })
+    wrapper = shallowMount(DocumentNotes, { global: { plugins }, props: { document } })
     await flushPromises()
     expect(wrapper.find('b-alert-stub').exists()).toBeTruthy()
   })
@@ -55,7 +61,7 @@ describe('DocumentNotes.vue', () => {
   it('should display 2 notes on document', async () => {
     const notes = [note1, note2]
     api.retrieveNotes.mockResolvedValue(notes)
-    wrapper = shallowMount(DocumentNotes, { global: { plugins }, props: { path } })
+    wrapper = shallowMount(DocumentNotes, { global: { plugins }, props: { document } })
     await flushPromises()
     expect(wrapper.findAll('b-alert-stub')).toHaveLength(2)
   })
@@ -65,7 +71,7 @@ describe('DocumentNotes.vue', () => {
 
     const notes = [noteNoVariant]
     api.retrieveNotes.mockResolvedValue(notes)
-    wrapper = shallowMount(DocumentNotes, { global: { plugins }, props: { path } })
+    wrapper = shallowMount(DocumentNotes, { global: { plugins }, props: { document } })
     await flushPromises()
     expect(wrapper.find('b-alert-stub').exists()).toBeTruthy()
     expect(wrapper.find('b-alert-stub').attributes('variant')).toBe('warning')
