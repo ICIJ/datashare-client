@@ -84,6 +84,16 @@ export const useDocumentPreview = () => {
   }
 
   /**
+   * Check if the document can be previewed.
+   *
+   * @param {Object} document - The document object.
+   * @returns {boolean} True if the document can be previewed, false otherwise.
+   */
+  function canPreview(document) {
+    return isPreviewActivated.value || canPreviewRaw(document)
+  }
+
+  /**
    * Check if the document can be previewed in raw format.
    *
    * @param {Object} options - The options object.
@@ -116,6 +126,7 @@ export const useDocumentPreview = () => {
     isBlurred,
     getPreviewMetaUrl,
     getPreviewUrl,
+    canPreview,
     canPreviewRaw,
     fetchImageDimensionsWithAuth
   }
