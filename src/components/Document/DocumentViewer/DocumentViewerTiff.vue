@@ -37,6 +37,7 @@
       <dismissable-content-warning
         v-if="!error"
         v-model:show="blurred"
+        no-center
         content-class="tiff-viewer__preview"
       >
         <div class="tiff-viewer__preview__controls">
