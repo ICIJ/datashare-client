@@ -1,4 +1,5 @@
-import { flushPromises, shallowMount } from '@vue/test-utils'
+import { flushPromises, mount } from '@vue/test-utils'
+
 
 import { responseWithArrayBuffer as mockArrayBuffer } from '~tests/unit/tests_utils'
 import CoreSetup from '~tests/unit/CoreSetup'
@@ -32,9 +33,16 @@ describe('DocumentViewerTiff.vue', () => {
     let wrapper = null
 
     beforeEach(async () => {
-      wrapper = shallowMount(DocumentViewerTiff, {
+      wrapper = mount(DocumentViewerTiff, {
+
         global: { plugins: core.plugins },
-        props: { document: { url: 'image.tiff' } }
+        props: {
+          document: {
+            url: 'image.tiff',
+            project: 'test-project',
+            path: '/image.tiff'
+          }
+        }
       })
 
       await flushPromises()
@@ -51,19 +59,23 @@ describe('DocumentViewerTiff.vue', () => {
   })
 
   describe('with a missing file', () => {
-    it('should display an error message if the document does not exist', async () => {
-      // given
+    it('should display an error message if the document does not exist', async () => {      
       api.getSource.mockClear()
-      api.getSource.mockImplementation(() => {
-        throw new Error('File not found')
-      })
-      // when
-      const wrapper = shallowMount(DocumentViewerTiff, {
+      api.getSource.mockRejectedValue(new Error('File not found'))
+
+      const wrapper = mount(DocumentViewerTiff, {
         global: { plugins: core.plugins },
-        props: { document: { url: 'missing.tiff' } }
+        props: {
+          document: {
+            url: 'missing.tiff',
+            project: 'test-project',
+            path: '/missing.tiff'
+          }
+        }
       })
       await flushPromises()
 
+      expect(wrapper.find('.tiff-viewer__error').exists()).toBeTruthy()
       expect(wrapper.find('.tiff-viewer__error').text()).toContain('File not found')
     })
   })
