@@ -40,11 +40,12 @@ export const useDocumentPreview = () => {
   })
 
   /**
-   * True if the preview should be blurred according to the document's note.
+   * True if the preview should be blurred according
+   * to the document's note.
    *
-   * @param {Object} options - The document object.
-   * @param {string} options.project - The document project.
-   * @param {string} options.path - The document path.
+   * @param {Object} document - The document object.
+   * @param {string} document.project - The document project.
+   * @param {string} document.path - The document path.
    * @returns {Promise<boolean>} True if the preview should be blurred, false otherwise.
    */
   async function isBlurred({ project, path }) {
@@ -53,12 +54,13 @@ export const useDocumentPreview = () => {
   }
 
   /**
-   * Get the preview meta URL (a JSON with metadata about the preview).
+   * Get the preview meta URL (a JSON with metadata about
+   * the preview) for a given document.
    *
-   * @param {Object} options - The options object.
-   * @param {string} options.index - The index of the document.
-   * @param {string} options.id - The ID of the document.
-   * @param {string} options.routing - The routing parameter.
+   * @param {Object} document - The document object.
+   * @param {string} document.index - The index of the document.
+   * @param {string} document.id - The ID of the document.
+   * @param {string} document.routing - The routing parameter.
    * @returns {string} The preview meta URL.
    */
   function getPreviewMetaUrl({ index, id, routing } = {}) {
@@ -67,12 +69,12 @@ export const useDocumentPreview = () => {
   }
 
   /**
-   * Get the preview URL.
+   * Get the preview URL (the image itself) for a document.
    *
-   * @param {Object} options - The options object.
-   * @param {string} options.index - The index of the document.
-   * @param {string} options.id - The ID of the document.
-   * @param {string} options.routing - The routing parameter.
+   * @param {Object} document - The document object.
+   * @param {string} document.index - The index of the document.
+   * @param {string} document.id - The ID of the document.
+   * @param {string} document.routing - The routing parameter.
    * @param {Object} params - The parameters object.
    * @param {number} params.page - The page number.
    * @param {string} params.size - The size of the preview.
@@ -94,12 +96,13 @@ export const useDocumentPreview = () => {
   }
 
   /**
-   * Check if the document can be previewed in raw format.
+   * Check if the document can be previewed in raw format
+   * (i.e., without a preview host) for a given document.
    *
-   * @param {Object} options - The options object.
-   * @param {number} options.extractionLevel - The extraction level of the document.
-   * @param {number} options.contentLength - The content length of the document.
-   * @param {boolean} options.isSupportedImage - Whether the document is a supported image.
+   * @param {Object} document - The document object.
+   * @param {number} document.extractionLevel - The extraction level of the document.
+   * @param {number} document.contentLength - The content length of the document.
+   * @param {boolean} document.isSupportedImage - Whether the document is a supported image.
    * @returns {boolean} True if the document can be previewed in raw format, false otherwise.
    */
   function canPreviewRaw({ extractionLevel = -1, contentLength = 0, isSupportedImage = false } = {}) {
