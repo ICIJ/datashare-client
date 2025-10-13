@@ -71,7 +71,7 @@ onBeforeMount(waitFor(fetch))
       </div>
       <dismissable-content-warning
         v-model:show="blurred"
-        blurless
+        hide-content
         no-center
       >
         <img

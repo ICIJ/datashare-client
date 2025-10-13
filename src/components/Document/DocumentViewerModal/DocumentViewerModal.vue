@@ -66,7 +66,7 @@ onBeforeRouteUpdate(({ name }) => name !== 'search' && hide())
     <dismissable-content-warning
       :key="key"
       v-model:show="blurred"
-      blurless
+      hide-content
       no-center
       no-fade
       class="my-3"

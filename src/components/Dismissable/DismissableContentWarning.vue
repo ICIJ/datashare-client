@@ -25,7 +25,7 @@ const props = defineProps({
   /**
    * Remove the blur effect but keep the content hidden until toggled
    */
-  blurless: {
+  hideContent: {
     type: Boolean,
     default: false
   },
@@ -40,13 +40,13 @@ const props = defineProps({
 const overlay = useTemplateRef('overlay')
 const { height: overlayHeight } = useElementBounding(overlay)
 
-const blurred = computed(() => !props.noBlur && show.value && !props.blurless)
-const blurless = computed(() => !props.noBlur && show.value && props.blurless)
+const blurred = computed(() => !props.noBlur && show.value && !props.hideContent)
+const hideContent = computed(() => !props.noBlur && show.value && props.hideContent)
 
 const classList = computed(() => {
   return {
     'dismissable-content-warning--blurred': blurred.value,
-    'dismissable-content-warning--blurless': blurless.value
+    'dismissable-content-warning--hide-content': hideContent.value
   }
 })
 
@@ -99,7 +99,7 @@ const style = computed(() => {
     --dismissable-content-warning-content-overflow: hidden;
   }
 
-  &--blurless {
+  &--hide-content {
     --dismissable-content-warning-content-visibility: hidden;
   }
 
