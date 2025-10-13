@@ -118,6 +118,11 @@
     "close": "crwdns7652:0crwdne7652:0",
     "dontShow": "crwdns7654:0crwdne7654:0"
   },
+  "dismissableContentWarningToggler": {
+    "title": "crwdns10020:0crwdne10020:0",
+    "description": "crwdns10022:0crwdne10022:0",
+    "toggle": "crwdns10024:0crwdne10024:0"
+  },
   "dismissableToastBody": {
     "close": "crwdns7656:0crwdne7656:0"
   },
