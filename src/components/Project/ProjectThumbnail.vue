@@ -25,7 +25,7 @@ import { compact } from 'lodash'
 import { computed } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
 
-import { getConsonants } from '@/utils/strings'
+import { getConsonants, slugger } from '@/utils/strings'
 
 const props = defineProps({
   project: {
@@ -55,7 +55,7 @@ const captionBase = computed(() => {
 })
 
 const abbr = computed(() => {
-  const name = captionBase.value
+  const name = slugger(captionBase.value)
   const start = name.slice(0, 1)
   const end = name.slice(-1)
   const middleConsonants = getConsonants(name.slice(1, -1))
