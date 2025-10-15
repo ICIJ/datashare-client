@@ -110,8 +110,8 @@ describe('FilterType.vue', () => {
       expect(entries).toHaveLength(3)
 
       expect(entries.at(0).attributes('label')).toEqual('HTML document')
-      expect(entries.at(1).attributes('label')).toEqual('text/javascript')
-      expect(entries.at(2).attributes('label')).toEqual('text/stylesheet')
+      expect(entries.at(1).attributes('label')).toEqual('JavaScript')
+      expect(entries.at(2).attributes('label')).toEqual('Stylesheet')
     })
 
     it('should display X filter items after applying the relative search', async () => {

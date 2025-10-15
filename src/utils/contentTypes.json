@@ -504,6 +504,16 @@
     },
     "model": "PlainText"
   },
+  "text/stylesheet": {
+    "label": "Stylesheet",
+    "extensions": [
+      ".css"
+    ],
+    "description": {
+      "en": "A style sheet for describing the presentation of an HTML or XML document. This file can be opened using a text editor but is unlikely to contain any useful information."
+    },
+    "model": "PlainText"
+  },
   "text/javascript": {
     "label": "JavaScript",
     "extensions": [
