@@ -12,6 +12,7 @@ import PageContainer from '@/components/PageContainer/PageContainer'
 import PageHeader from '@/components/PageHeader/PageHeader'
 import RowPaginationSearches from '@/components/RowPagination/RowPaginationSearches'
 import SearchSavedEntries from '@/components/Search/SearchSavedEntries/SearchSavedEntries'
+import ParentOverflowEntriesItem from '@/components/ParentOverflow/ParentOverflowEntriesItem'
 import { useConfirmModal } from '@/composables/useConfirmModal'
 import { useCore } from '@/composables/useCore'
 import { useHistoryEvents } from '@/composables/useHistoryEvents'
@@ -100,14 +101,18 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
       :total-rows="pagination?.total ?? 0"
     >
       <template #breadcrumb>
-        <navigation-breadcrumb-link
-          :to="searchRoute"
-          :title="t('appSidebar.search')"
-        />
-        <navigation-breadcrumb-link
-          :to="{ name: 'search.saved.list' }"
-          no-caret
-        />
+        <parent-overflow-entries-item>
+          <navigation-breadcrumb-link
+            :to="searchRoute"
+            :title="t('appSidebar.search')"
+          />
+        </parent-overflow-entries-item>
+        <parent-overflow-entries-item>
+          <navigation-breadcrumb-link
+            :to="{ name: 'search.saved.list' }"
+            no-caret
+          />
+        </parent-overflow-entries-item>
       </template>
       <template #actions>
         <button-clear-saved-searches @click="showRemoveAllModal" />
