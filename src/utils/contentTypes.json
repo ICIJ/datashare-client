@@ -146,6 +146,29 @@
     },
     "model": "Pages"
   },
+  "application/x-mach-o-bundle": {
+    "label": "Mac OS X executable",
+    "extensions": [
+      ".bundle"
+    ],
+    "description": {
+      "en": "A Mac OS X executable file."
+    },
+    "warning": {
+      "en": "Do not attempt to run this file. It is provided only for reference."
+    },
+    "model": "PlainText"
+  },
+  "application/x-plist": {
+    "label": "Property list",
+    "extensions": [
+      ".plist"
+    ],
+    "description": {
+      "en": "Open using a property list editor."
+    },
+    "model": "PlainText"
+  },
   "application/x-msaccess": {
     "label": "Access database",
     "extensions": [
@@ -471,6 +494,19 @@
     },
     "model": "PlainText"
   },
+  "text/javascript": {
+    "label": "JavaScript",
+    "extensions": [
+      ".js"
+    ],
+    "description": {
+      "en": "Open using a plain text editor. This file is unlikely to contain any information that's useful to non-programmers."
+    },
+    "warning": {
+      "en": "For safety reasons, do not execute this script."
+    },
+    "model": "PlainText"
+  },
   "text/html": {
     "label": "HTML document",
     "extensions": [
@@ -663,6 +699,18 @@
     },
     "model": "PlainText"
   },
+  "image/heic": {
+    "label": "HEIC image",
+    "icon": "image",
+    "extensions": [
+      ".heic",
+      ".heif"
+    ],
+    "description": {
+      "en": "Open using Preview on a Mac and Windows Picture Viewer on Windows."
+    },
+    "model": "Image"
+  },
   "image/bmp": {
     "label": "Bitmap image",
     "icon": "image",
@@ -837,6 +885,17 @@
       "en": "Open using Preview on a Mac and Windows Picture Viewer on Windows."
     },
     "model": "Image"
+  },
+  "application/vnd.apple.keynote.13": {
+    "label": "Keynote presentation",
+    "icon": "keynote",
+    "extensions": [
+      ".key"
+    ],
+    "description": {
+      "en": "Open using Keynote on a Mac or iCloud."
+    },
+    "model": "Pages"
   },
   "application/vnd.adobe.aftereffects.project": {
     "label": "After Effects Project",
