@@ -663,6 +663,17 @@
     },
     "model": "PlainText"
   },
+  "image/bmp": {
+    "label": "Bitmap image",
+    "icon": "image",
+    "extensions": [
+      ".bmp"
+    ],
+    "description": {
+      "en": "Open using Preview on a Mac and Windows Picture Viewer or Paint on Windows."
+    },
+    "model": "Image"
+  },
   "image/tiff": {
     "label": "TIFF image",
     "icon": "image",
@@ -737,6 +748,17 @@
     },
     "model": "Image"
   },
+  "image/vnd.adobe.premiere": {
+    "label": "Premiere Pro Project",
+    "icon": "image",
+    "extensions": [
+      ".prproj"
+    ],
+    "description": {
+      "en": "Open using Premiere Pro on a Mac or Premiere Pro on Windows."
+    },
+    "model": "Image"
+  },
   "image/wmf": {
     "label": "Windows Metafile image",
     "icon": "image",
@@ -804,6 +826,51 @@
       "en": "An icon format used with Apple applications."
     },
     "model": "Image"
+  },
+  "image/webp": {
+    "label": "WebP image",
+    "icon": "image",
+    "extensions": [
+      ".webp"
+    ],
+    "description": {
+      "en": "Open using Preview on a Mac and Windows Picture Viewer on Windows."
+    },
+    "model": "Image"
+  },
+  "application/vnd.adobe.aftereffects.project": {
+    "label": "After Effects Project",
+    "icon": "image",
+    "extensions": [
+      ".aep"
+    ],
+    "description": {
+      "en": "Open using After Effects on a Mac or Windows."
+    },
+    "model": "Image"
+  },
+  "application/illustrator": {
+    "label": "Illustrator",
+    "icon": "image",
+    "extensions": [
+      ".ai"
+    ],
+    "description": {
+      "en": "Open using Adobe Illustrator on a Mac or Windows."
+    },
+    "model": "Image"
+  },
+  "application/x-activemime": {
+    "label": "ActiveMime file",
+    "extensions": [
+      ".acm"
+    ],
+    "description": {
+      "en": "An ActiveMime file is a Microsoft format that can contain any type of file, including executables. It is typically used for email attachments."
+    },
+    "warning": {
+      "en": "Do not attempt to run this file. It is provided only for reference."
+    }
   },
   "application/x-ms-installer": {
     "label": "Windows Installer (MSI)",
@@ -964,6 +1031,17 @@
     },
     "model": "Audio"
   },
+  "audio/vnd.wave": {
+    "label": "WAV audio",
+    "icon": "audio",
+    "extensions": [
+      ".wav"
+    ],
+    "description": {
+      "en": "Open using your usual audio player."
+    },
+    "model": "Audio"
+  },
   "audio/mpeg": {
     "label": "MPEG audio",
     "icon": "audio",
@@ -1008,6 +1086,17 @@
     },
     "model": "Video"
   },
+  "video/x-m4v": {
+    "label": "M4V video",
+    "icon": "video",
+    "extensions": [
+      ".m4v"
+    ],
+    "description": {
+      "en": "Open using QuickTime Player on a Mac or VLC on Windows."
+    },
+    "model": "Video"
+  },
   "video/x-ms-wmv": {
     "label": "Windows Media Video",
     "icon": "video",
@@ -1038,6 +1127,29 @@
     ],
     "description": {
       "en": "Open using VLC or Windows Media Player."
+    },
+    "model": "Video"
+  },
+  "video/3gpp": {
+    "label": "3GPP audio/video",
+    "icon": "video",
+    "extensions": [
+      ".3gp",
+      ".3gpp"
+    ],
+    "description": {
+      "en": "3rd Generation Partnership Project audio/video file. Open using VLC."
+    },
+    "model": "Video"
+  },
+  "vide/x-flv": {
+    "label": "Flash video",
+    "icon": "video",
+    "extensions": [
+      ".flv"
+    ],
+    "description": {
+      "en": "Flash video file. Open using VLC."
     },
     "model": "Video"
   },
