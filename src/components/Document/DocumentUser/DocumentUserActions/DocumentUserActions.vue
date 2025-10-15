@@ -153,7 +153,7 @@ const { isServer } = useMode()
 
   &__form {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     flex-wrap: nowrap;
     gap: $spacer-xxs;
   }
