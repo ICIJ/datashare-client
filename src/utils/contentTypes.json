@@ -265,6 +265,16 @@
     },
     "model": "Pages"
   },
+  "application/rdf+xml": {
+    "label": "RDF file",
+    "extensions": [
+      ".rdf"
+    ],
+    "description": {
+      "en": "Resource Description Framework (RDF) file. Open using a plain text editor."
+    },
+    "model": "PlainText"
+  },
   "application/vnd.ms-excel": {
     "label": "Excel 95-2003 spreadsheet",
     "icon": "excel",
