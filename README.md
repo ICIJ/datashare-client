@@ -15,7 +15,7 @@ Web Client for Datashare
 | **Latest version** | [![Latest version](https://img.shields.io/github/v/tag/icij/datashare-client?style=shield)](https://github.com/ICIJ/datashare-client/releases/latest) |
 | **Release date** | [![Release date](https://img.shields.io/github/release-date/icij/datashare-client?style=shield)](https://github.com/ICIJ/datashare-client/releases/latest) |
 | **Open issues** | [![Open issues](https://img.shields.io/github/issues/icij/datashare?style=shield&color=success)](https://github.com/ICIJ/datashare/issues/) |
-| **Documentation** | [![Storybook](https://img.shields.io/badge/Storybook-FA4070)](https://icij.github.io/datashare-client/) [![JSDoc](https://img.shields.io/badge/JSDoc-193D87)](https://icij.gitbook.io/datashare/developers/frontend/api)   |
+| **Documentation** | [![Storybook](https://img.shields.io/badge/Storybook-FA4070)](https://icij.github.io/datashare-client/) |
 
 </div>
 
