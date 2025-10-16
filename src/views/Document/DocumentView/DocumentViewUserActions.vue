@@ -2,6 +2,7 @@
 import { computed, ref, watch } from 'vue'
 
 import { useAuth } from '@/composables/useAuth'
+import { useMode } from '@/composables/useMode'
 import { useElementObserver } from '@/composables/useElementObserver'
 import { useElasticSearchQuery } from '@/composables/useElasticSearchQuery'
 import { useDocument } from '@/composables/useDocument'
@@ -23,6 +24,7 @@ const recommendedStore = useRecommendedStore()
 const documentStore = useDocumentStore()
 const { document, documentViewFloatingSelector } = useDocument()
 const { username } = useAuth()
+const { isServer } = useMode()
 const { waitForElementCreated } = useElementObserver()
 
 const showRecommendationsCard = computed({
