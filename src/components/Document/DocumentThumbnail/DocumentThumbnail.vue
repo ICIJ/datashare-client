@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, onBeforeMount, useTemplateRef } from 'vue'
+import { computed, ref, onBeforeMount, toRef, useTemplateRef, watch } from 'vue'
 import { useElementVisibility, whenever } from '@vueuse/core'
 
 import DocumentThumbnailImage from '@/components/Document/DocumentThumbnail/DocumentThumbnailImage'
@@ -59,6 +59,10 @@ const props = defineProps({
   noOverlay: {
     type: Boolean,
     default: false
+  },
+  rotation: {
+    type: Number,
+    default: 0
   }
 })
 
@@ -110,9 +114,9 @@ const style = computed(() => {
 
 async function fetchThumbnail() {
   try {
-    if (!thumbnail.value && !errored.value && activated.value) {
+    if (showImage.value && !errored.value && activated.value) {
       const url = canPreviewRaw(props.document) ? props.document.inlineFullUrl : thumbnailUrl.value
-      thumbnail.value = await fetchImageDimensionsWithAuth(url)
+      thumbnail.value = await fetchImageDimensionsWithAuth(url, props.rotation)
       emit('loaded')
     }
   }
@@ -130,6 +134,7 @@ async function enter() {
 const isVisible = useElementVisibility(element)
 // Fetch the image when the element is visible but only once (and immediately if lazy is true)
 whenever(isVisible, enter, { immediate: props.lazy, once: true })
+watch(toRef(props, 'rotation'), fetchThumbnail)
 
 onBeforeMount(async () => {
   // Set the blurred state according to document notes
