@@ -113,11 +113,12 @@ export const useDocumentPreview = () => {
    * Fetch the image dimensions and base64 string with authentication headers.
    *
    * @param {string} src - The URL of the image.
+   * @param {number} rotation - The rotation angle in degrees.
    * @returns {Promise<object>} A promise that resolves to an object containing the width, height, base64 string, and source URL.
    */
-  async function fetchImageDimensionsWithAuth(src) {
+  async function fetchImageDimensionsWithAuth(src, rotation = 0) {
     const headers = { [sessionIdHeaderName.value]: sessionIdHeaderValue.value }
-    return fetchImageDimensions(src, { headers })
+    return fetchImageDimensions(src, { headers, rotation })
   }
 
   return {

@@ -51,13 +51,18 @@ export function useImage() {
    * @param {string} src - The URL of the image.
    * @param {object} options - Optional parameters for the request.
    * @param {object} options.headers - Additional headers to include in the request.
+   * @param {number} options.rotation - The rotation angle in degrees.
    * @returns {Promise<object>} A promise that resolves to an object containing the width, height, base64 string, and source URL.
    */
-  async function fetchImageDimensions(src, { headers = {} } = {}) {
+  async function fetchImageDimensions(src, { headers = {}, rotation = 0 } = {}) {
     try {
-      const base64 = await fetchImageAsBase64(src, { headers })
+      let base64 = await fetchImageAsBase64(src, { headers })
+      // Rotate the image only if rotation is specified
+      base64 = rotation ? await rotateBase64Image(base64, rotation) : base64
+      // Use fetchImage to get the dimensions. Using this function in combination
+      // with a base64 string will avoid unecessary network requests.
       const img = await fetchImage(base64)
-      return { width: img.width, height: img.height, base64, src }
+      return { width: img.width, height: img.height, base64, src, rotation }
     }
     catch {
       throw new Error('Unable to fetch image and its dimensions')

@@ -114,7 +114,7 @@ const style = computed(() => {
 
 async function fetchThumbnail() {
   try {
-    if (showImage.value && !errored.value && activated.value) {
+    if (!errored.value && activated.value && (!thumbnail.value || thumbnail.value.rotation !== props.rotation)) {
       const url = canPreviewRaw(props.document) ? props.document.inlineFullUrl : thumbnailUrl.value
       thumbnail.value = await fetchImageDimensionsWithAuth(url, props.rotation)
       emit('loaded')
@@ -139,8 +139,6 @@ watch(toRef(props, 'rotation'), fetchThumbnail)
 onBeforeMount(async () => {
   // Set the blurred state according to document notes
   blurred.value = props.noBlur ? false : await isBlurred(props.document)
-  // This component can be deactivated globally
-  if (!showImage.value) return
   // This component can be lazy loaded
   if (props.lazy) return
   // Fetch directly
