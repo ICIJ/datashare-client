@@ -59,10 +59,7 @@ onBeforeMount(waitFor(fetch))
       <app-spinner />
     </template>
     <div class="image-viewer__wrapper">
-      <div
-        v-if="isRawImage"
-        class="image-viewer__wrapper__controls"
-      >
+      <div class="image-viewer__wrapper__controls">
         <button-row-action
           class="image-viewer__wrapper__controls__button"
           :label="t('documentViewerImage.rotateCounterClockwise')"
@@ -89,6 +86,7 @@ onBeforeMount(waitFor(fetch))
         <document-thumbnail
           v-else
           :document="document"
+          :rotation="imageRotation"
           size="lg"
           no-blur
           fit
