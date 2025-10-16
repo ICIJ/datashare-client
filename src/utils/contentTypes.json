@@ -802,6 +802,17 @@
     "preview": "yes",
     "model": "Image"
   },
+  "image/x-adobe-dng": {
+    "label": "Digital Negative (DNG)",
+    "icon": "image",
+    "extensions": [
+      ".dng"
+    ],
+    "description": {
+      "en": "Open using Preview or Photoshop on a Mac or Photoshop on Windows."
+    },
+    "model": "Image"
+  },
   "image/vnd.adobe.photoshop": {
     "label": "Photoshop PSD",
     "icon": "image",
