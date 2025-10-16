@@ -31,7 +31,14 @@ describe('DocumentViewerImage.vue', () => {
   let wrapper
 
   beforeEach(async () => {
-    const document = new Document({ _id: 'a-short-id', _routing: 'a-short-id', _index: 'an-index-name' })
+    const document = new Document({
+      _id: 'a-short-id',
+      _routing: 'a-short-id',
+      _index: 'an-index-name',
+      _source: {
+        contentType: 'image/png',
+      }
+    })
     const { plugins } = CoreSetup.init().useAll()
     wrapper = mount(DocumentViewerImage, { global: { plugins }, props: { document } })
     await flushPromises()
