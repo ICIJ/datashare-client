@@ -28,6 +28,10 @@ function getBatchSearchRecord(item, key, defaultValue = null) {
   return get(item, ['args', 'batchRecord', key].join('.'), defaultValue)
 }
 
+function getBatchSearchResult(item, defaultValue = 0) {
+  return get(item, 'result.value.nbResults', get(item, 'result.value', defaultValue))
+}
+
 function getBatchSearchProjects(item) {
   return getBatchSearchRecord(item, 'projects', [])
 }
@@ -93,7 +97,7 @@ function canManageBatchSearch(item) {
           <display-number :value="getBatchSearchRecord(item, 'nbQueries')" />
         </template>
         <template #cell(documents)="{ item }">
-          <display-number :value="item.result?.value ?? 0" />
+          <display-number :value="getBatchSearchResult(item, 0)" />
         </template>
         <template #cell(projects)="{ item }">
           <display-project-list :values="getBatchSearchProjects(item)" />
