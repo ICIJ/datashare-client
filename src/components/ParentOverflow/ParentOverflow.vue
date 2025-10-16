@@ -28,13 +28,13 @@ const noFallback = computed(() => !slots.fallback || !overflow.value)
       ref="content"
       class="parent-overflow__content"
     >
-      <slot v-bind="{ overflow, overflowBlock, overflowInline }" />
+      <slot v-bind="{ overflow }" />
     </div>
 
     <template v-if="overflow">
       <slot
         name="fallback"
-        v-bind="{ overflow, overflowBlock, overflowInline }"
+        v-bind="{ overflow }"
       />
     </template>
   </div>
