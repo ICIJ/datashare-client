@@ -64,7 +64,7 @@ export const useTaskStore = defineStore('task', () => {
   }
 
   const isPending = (id) => {
-    return isQueued(id) || isRunning(id) || isCreated(id)
+    return isQueued(id) || isCreated(id)
   }
 
   const isRunning = (id) => {
@@ -80,11 +80,15 @@ export const useTaskStore = defineStore('task', () => {
   }
 
   const isOver = (id) => {
-    return !isPending(id)
+    return isDone(id) || isCancelled(id)
   }
 
   const isDone = (id) => {
     return getTaskState(id) === TASK_STATUS.DONE
+  }
+
+  const isCancelled = (id) => {
+    return getTaskState(id) === TASK_STATUS.CANCELLED
   }
 
   const getBatchSearchRecord = (id) => {
