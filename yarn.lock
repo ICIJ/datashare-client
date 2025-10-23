@@ -585,10 +585,10 @@
     typescript-eslint "^8.38.0"
     vue-eslint-parser "^10.2.0"
 
-"@icij/murmur-next@4.5.9":
-  version "4.5.9"
-  resolved "https://registry.yarnpkg.com/@icij/murmur-next/-/murmur-next-4.5.9.tgz#b0f2bcf0d4144ab0fdafb4633bb68ea19188d4eb"
-  integrity sha512-jEVmUnjx+kmxyyVXfEuYf/pyX26PLZ0eozxX+kQlWst9rMJVjAhXk6g8k2aZq9WmUOUHFOrPFs+2WaAnqssZAQ==
+"@icij/murmur-next@4.5.12":
+  version "4.5.12"
+  resolved "https://registry.yarnpkg.com/@icij/murmur-next/-/murmur-next-4.5.12.tgz#373d0eeae61a437f6323addbbbe43ee54fdcbab4"
+  integrity sha512-oXSIY2vu/PxH/9yewLdOSAt26MRTT1BbX5EiTxZ6Yaya6D49IK2qhJtaoWLWAF4pQJgWpwb2KCJmzW9xGuGebg==
   dependencies:
     "@phosphor-icons/vue" "^2.2.1"
     "@storybook/preset-scss" "^1.0.3"
@@ -599,7 +599,6 @@
     clipboard "^2.0.11"
     d3 "^7.9.0"
     d3-geo-projection "^4.0.0"
-    eslint-plugin-vitest "^0.5.4"
     jsonp "^0.2.1"
     lodash "^4.17.21"
     mutationobserver-shim "^0.3.7"

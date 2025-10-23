@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@floating-ui/vue": "^1.1.7",
-    "@icij/murmur-next": "4.5.9",
+    "@icij/murmur-next": "4.5.12",
     "@phosphor-icons/vue": "^2.2.1",
     "@popperjs/core": "^2.11.8",
     "@tato30/vue-pdf": "^1.11.4",
