@@ -64,7 +64,7 @@ export const useTaskStore = defineStore('task', () => {
   }
 
   const isPending = (id) => {
-    return isQueued(id) || isRunning(id)
+    return isQueued(id) || isRunning(id) || isCreated(id)
   }
 
   const isRunning = (id) => {
@@ -75,8 +75,12 @@ export const useTaskStore = defineStore('task', () => {
     return getTaskState(id) === TASK_STATUS.QUEUED
   }
 
+  const isCreated = (id) => {
+    return getTaskState(id) === TASK_STATUS.CREATED
+  }
+
   const isOver = (id) => {
-    return !isRunning(id) && !isQueued(id)
+    return !isPending(id)
   }
 
   const isDone = (id) => {
