@@ -14,7 +14,7 @@ export const useTaskStore = defineStore('task', () => {
 
   const pendingTasks = computed(() => tasks.value.map(property('id')).filter(isPending))
   const hasPendingTasks = computed(() => pendingTasks.value.length > 0)
-  const hasDoneTasks = computed(() => tasks.value.length - pendingTasks.value.length > 0)
+  const hasDoneTasks = computed(() => tasks.value.map(property('id')).some(isDone))
 
   const reset = () => {
     setTasks([])
@@ -52,7 +52,7 @@ export const useTaskStore = defineStore('task', () => {
   const removeDoneTasks = async ({ names = [], ...params } = {}) => {
     const name = names.join('|')
     await api.removeDoneTasks({ name, ...params })
-    setTasks(tasks.value.filter(({ id }) => isDone(id)))
+    setTasks(tasks.value.filter(({ id }) => !isOver(id)))
   }
 
   const getTask = (id) => {
@@ -80,11 +80,15 @@ export const useTaskStore = defineStore('task', () => {
   }
 
   const isOver = (id) => {
-    return isDone(id) || isCancelled(id)
+    return isDone(id) || isCancelled(id) || isFailed(id)
   }
 
   const isDone = (id) => {
-    return getTaskState(id) === TASK_STATUS.DONE
+    return getTaskState(id) === TASK_STATUS.DONE || getTaskState(id) === TASK_STATUS.SUCCESS || getTaskState(id) === TASK_STATUS.OK
+  }
+
+  const isFailed = (id) => {
+    return getTaskState(id) === TASK_STATUS.FAILED || getTaskState(id) === TASK_STATUS.FAIL || getTaskState(id) === TASK_STATUS.ERROR
   }
 
   const isCancelled = (id) => {
