@@ -2,6 +2,7 @@
 import { HapticCopy } from '@icij/murmur-next'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { BDropdownItemButton } from 'bootstrap-vue-next'
 
 import DocumentMetadataActionsEntry from './DocumentMetadataActionsEntry'
 import AppDropdown from '@/components/AppDropdown/AppDropdown'
@@ -45,26 +46,24 @@ const indices = computed(() => props.index)
         :button-icon="PhClipboard"
         button-icon-weight="regular"
       >
-        <b-dropdown-item>
-          <haptic-copy
-            :class="{'btn':false, 'btn-md':false}"
-            :label="t('documentMetadataActions.copy')"
-            :text="value"
-          />
-        </b-dropdown-item>
-        <b-dropdown-item>
-          <haptic-copy
-            tag="span"
-            :label="t('documentMetadataActions.copyKey')"
-            :text="name"
-          />
-        </b-dropdown-item>
-        <b-dropdown-item>
-          <haptic-copy
-            :label="t('documentMetadataActions.copySearch')"
-            :text="q"
-          />
-        </b-dropdown-item>
+        <haptic-copy
+          :label="t('documentMetadataActions.copy')"
+          :text="value"
+          :tag="BDropdownItemButton"
+          variant="link"
+        />
+        <haptic-copy
+          :label="t('documentMetadataActions.copyKey')"
+          :text="name"
+          :tag="BDropdownItemButton"
+          variant="link"
+        />
+        <haptic-copy
+          :label="t('documentMetadataActions.copySearch')"
+          :text="q"
+          :tag="BDropdownItemButton"
+          variant="link"
+        />
       </app-dropdown>
       <document-metadata-actions-entry
         :label="t('documentMetadataActions.pin')"
@@ -81,10 +80,5 @@ const indices = computed(() => props.index)
 .document-metadata-actions {
   display: inline-flex;
   gap: 2px;
-  &:deep(.dropdown-item .haptic-copy){
-    // haptic-copy needs to have its default styles completely removed
-    // because it's a b-button and the dropdown-item is also a button
-    all: unset ;
-  }
 }
 </style>
