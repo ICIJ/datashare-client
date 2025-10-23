@@ -51,7 +51,7 @@ const currentProject = computed({
 })
 
 function getProjectSourcePath(projectRef) {
-  const { sourcePath } = toValue(projectRef) || {}
+  const { sourcePath } = core.findProject(toValue(projectRef))
   const currentSourcePath = sourcePath?.split('file://').pop() ?? core.getDefaultDataDir()
   return decodeURI(currentSourcePath)
 }
@@ -84,7 +84,7 @@ onBeforeMount(languagesStore.fetchOnce)
 // When the project prop changes, update the selected project
 watch(toRef(props, 'project'), () => (form.defaultProject = currentProject.value))
 // When a project is selected, update the path to the project's source path
-watch(toRef(form, 'defaultProject'), p => form.path = getProjectSourcePath(core.findProject(p)))
+watch(toRef(form, 'defaultProject'), p => form.path = getProjectSourcePath(p))
 </script>
 
 <template>
