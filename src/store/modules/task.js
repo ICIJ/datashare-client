@@ -14,6 +14,7 @@ export const useTaskStore = defineStore('task', () => {
 
   const pendingTasks = computed(() => tasks.value.map(property('id')).filter(isPending))
   const hasPendingTasks = computed(() => pendingTasks.value.length > 0)
+  const hasRunningTasks = computed(() => tasks.value.map(property('id')).some(isRunning))
   const hasDoneTasks = computed(() => tasks.value.map(property('id')).some(isDone))
 
   const reset = () => {
@@ -126,6 +127,7 @@ export const useTaskStore = defineStore('task', () => {
     pagination,
     pendingTasks,
     hasPendingTasks,
+    hasRunningTasks,
     hasDoneTasks,
     isPending,
     isRunning,

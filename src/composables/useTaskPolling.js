@@ -16,6 +16,7 @@ export function useTaskPolling({ names = [], sortBy = [], perPage = null, page =
 
   const hasDoneTasks = computed(() => taskStore.hasDoneTasks)
   const hasPendingTasks = computed(() => taskStore.hasPendingTasks)
+  const hasRunningTasks = computed(() => taskStore.hasRunningTasks)
   const tasks = computed(() => taskStore.tasks)
   const noTasks = computed(() => !toValue(tasks).length)
 
@@ -41,7 +42,7 @@ export function useTaskPolling({ names = [], sortBy = [], perPage = null, page =
       'from': (toValue(page) - 1) * toValue(perPage)
     })
     // Continue to poll task if they are pending ones
-    return hasPendingTasks.value
+    return hasPendingTasks.value || hasRunningTasks.value
   }
 
   async function startPollingTasks() {
@@ -57,5 +58,5 @@ export function useTaskPolling({ names = [], sortBy = [], perPage = null, page =
   watch(() => [names, sortBy, searchQuery, page, perPage], startPollingTasksWithLoader, { immediate: true, deep: true })
   onBeforeUnmount(taskStore.reset)
 
-  return { tasks, noTasks, fetchTasks, hasPendingTasks, hasDoneTasks, stopPendingTasks, removeDoneTasks, isLoading }
+  return { tasks, noTasks, fetchTasks, hasPendingTasks, hasRunningTasks, hasDoneTasks, stopPendingTasks, removeDoneTasks, isLoading }
 }
