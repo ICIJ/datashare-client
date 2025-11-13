@@ -73,21 +73,11 @@ export const useDocument = function (element) {
   })
 
   const documentPath = computed(() => {
-    if (core.config.get('mountedDataDir')) {
-      return document.value.source.path.replace(core.config.get('dataDir'), core.config.get('mountedDataDir'))
-    }
-    else {
-      return document.value.source.path
-    }
+    return document.value.source.path
   })
 
   const documentDirname = computed(() => {
-    if (core.config.get('mountedDataDir')) {
-      return document.value.source.dirname.replace(core.config.get('dataDir'), core.config.get('mountedDataDir'))
-    }
-    else {
-      return document.value.source.dirname
-    }
+    return document.value.source.dirname
   })
 
   const provideDocumentViewFloatingId = () => {

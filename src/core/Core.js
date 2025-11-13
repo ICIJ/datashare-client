@@ -304,7 +304,11 @@ class Core extends Behaviors {
   }
 
   getDefaultDataDir() {
-    return this.config.get('mountedDataDir') || this.config.get('dataDir')
+    return this.config.get('dataDir')
+  }
+
+  getMountedDataDir() {
+    return this.config.get('mountedDataDir') || this.getDefaultDataDir()
   }
 
   /**

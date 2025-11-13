@@ -1,6 +1,7 @@
 import bodybuilder from 'bodybuilder'
 import { get } from 'lodash'
 import { apiInstance as api } from '@/api/apiInstance'
+
 export function useElasticSearchQuery() {
   const fetchAllTagsByIndex = async (index) => {
     const body = bodybuilder().size(0).agg('terms', 'tags').build()
