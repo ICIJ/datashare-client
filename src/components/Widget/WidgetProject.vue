@@ -1,3 +1,76 @@
+<script setup>
+import dayjs from 'dayjs'
+import { isFunction, kebabCase } from 'lodash'
+import { useI18n } from 'vue-i18n'
+import { computed } from 'vue'
+
+import { useCore } from '@/composables/useCore'
+import { useInsightsStore } from '@/store/modules'
+
+defineProps({
+  widget: {
+    type: Object,
+    default: () => ({})
+  }
+})
+
+const { t } = useI18n()
+const { core } = useCore()
+const insightsStore = useInsightsStore()
+const project = computed(() => core.findProject(insightsStore.project))
+
+const fields = [
+  {
+    key: 'name',
+    classList: 'border font-monospace. px-1 bg-tertiary rounded'
+  },
+  {
+    key: 'sourcePath',
+    formatter({ rawValue }) {
+      return rawValue?.split('//').pop()
+    }
+  },
+  {
+    key: 'maintainerName'
+  },
+  {
+    key: 'publisherName'
+  },
+  {
+    key: 'sourceUrl',
+    href({ rawValue }) {
+      return rawValue
+    },
+    formatter({ rawValue }) {
+      return rawValue?.split('//').pop()
+    }
+  },
+  {
+    key: 'creationDate',
+    formatter: ({ rawValue }) => {
+      return dayjs(rawValue).locale(useI18n().locale.value).format('LL')
+    }
+  },
+  {
+    key: 'updateDate',
+    formatter: ({ rawValue }) => {
+      return dayjs(rawValue).locale(useI18n().locale.value).format('LL')
+    }
+  }
+]
+
+const metadata = computed(() => {
+  return fields.map((field) => {
+    const rawValue = project.value?.[field.key]
+    const value = isFunction(field.formatter) ? field.formatter({ ...field, rawValue }) : rawValue
+    const href = isFunction(field.href) ? field.href({ ...field, rawValue, value }) : null
+    const label = t(`widget.project.fields.${field.key}`)
+    const key = kebabCase(field.key)
+    return { ...field, key, label, href, rawValue, value }
+  })
+})
+</script>
+
 <template>
   <div class="widget widget--project">
     <ul class="list-group list-group-flush widget__fields small">
@@ -31,93 +104,6 @@
     </ul>
   </div>
 </template>
-
-<script>
-import dayjs from 'dayjs'
-import { isFunction, kebabCase } from 'lodash'
-import { useI18n } from 'vue-i18n'
-import { toRef } from 'vue'
-
-import { useInsightsStore } from '@/store/modules'
-
-/**
- * A placeholder widget for the insights page. This widget is not intended to be used directly.
- */
-export default {
-  name: 'WidgetEmpty',
-  props: {
-    /**
-     * The widget definition object.
-     */
-    widget: {
-      type: Object,
-      default: () => ({})
-    }
-  },
-  setup() {
-    const { t } = useI18n()
-    const insightsStore = useInsightsStore()
-    const project = toRef(insightsStore, 'project')
-    return { t, project }
-  },
-  data() {
-    return {
-      fields: [
-        {
-          key: 'name',
-          classList: 'border font-monospace. px-1 bg-tertiary rounded'
-        },
-        {
-          key: 'sourcePath',
-          formatter({ rawValue }) {
-            return rawValue?.split('//').pop()
-          }
-        },
-        {
-          key: 'maintainerName'
-        },
-        {
-          key: 'publisherName'
-        },
-        {
-          key: 'sourceUrl',
-          href({ rawValue }) {
-            return rawValue
-          },
-          formatter({ rawValue }) {
-            return rawValue?.split('//').pop()
-          }
-        },
-        {
-          key: 'creationDate',
-          formatter: ({ rawValue }) => {
-            return dayjs(rawValue).locale(this.$i18n.locale).format('LL')
-          }
-        },
-        {
-          key: 'updateDate',
-          formatter: ({ rawValue }) => {
-            return dayjs(rawValue).locale(this.$i18n.locale).format('LL')
-          }
-        }
-      ]
-    }
-  },
-  computed: {
-    metadata() {
-      return this.fields.map((field) => {
-        const project = this.$core.findProject(this.project)
-        const rawValue = project[field.key]
-        const value = isFunction(field.formatter) ? field.formatter({ ...field, rawValue }) : rawValue
-        const href = isFunction(field.href) ? field.href({ ...field, rawValue, value }) : null
-        const label = this.t(`widget.project.fields.${field.key}`)
-        const key = kebabCase(field.key)
-        return { ...field, key, label, href, rawValue, value }
-      })
-    }
-  }
-}
-</script>
 
 <style lang="scss" scoped>
 .widget--project {
