@@ -97,7 +97,9 @@ export default {
   },
   computed: {
     dataDir() {
-      return this.$config.get('mountedDataDir') || this.$config.get('dataDir')
+      const { sourcePath = null } = this.$core.findProject(this.project)
+      // The sourcePath may be null, in which case we return the default data dir.
+      return sourcePath ? sourcePath.split('//').pop() : this.$core.getDefaultDataDir()
     },
     projects() {
       return castArray(this.project)
