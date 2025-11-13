@@ -6,7 +6,7 @@ export function useDataDir() {
   const { core } = useCore()
   // The data dir is the actualy data directory used by Datashare
   const dataDir = computed(() => core.getDefaultDataDir())
-  // The mounted data dir is the data directory as seen outside of a Docker containers. In 
+  // The mounted data dir is the data directory as seen outside of a Docker containers. In
   // other words, it is the path that the data dir is mounted to and therefore, the one
   // that should be displayed to the end user.
   const mountedDataDir = computed(() => core.getMountedDataDir())
