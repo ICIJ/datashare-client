@@ -7,6 +7,7 @@ import { PhosphorIcon } from '@icij/murmur-next'
 import DisplayRaw from '@/components/Display/DisplayRaw'
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
 import { useCore } from '@/composables/useCore'
+import { useDataDir } from '@/composables/useDataDir'
 import { useInsightsStore } from '@/store/modules'
 
 defineProps({
@@ -19,6 +20,7 @@ defineProps({
 })
 
 const insightsStore = useInsightsStore()
+const { getMountedPath } = useDataDir()
 
 const fields = [
   {
@@ -28,7 +30,7 @@ const fields = [
   {
     key: 'sourcePath',
     icon: 'folder',
-    formatter: ({ rawValue }) => rawValue?.split('//').pop()
+    formatter: ({ rawValue }) => getMountedPath(rawValue?.split('//').pop())
   },
   {
     key: 'maintainerName',
