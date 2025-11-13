@@ -8,7 +8,6 @@ export { default as WidgetDocumentsByCreationDateByPath } from './WidgetDocument
 export { default as WidgetEmpty } from './WidgetEmpty'
 export { default as WidgetEntities } from './WidgetEntities'
 export { default as WidgetPaths } from './WidgetPaths'
-export { default as WidgetProject } from './WidgetProject'
 export { default as WidgetSearchBar } from './WidgetSearchBar'
 export { default as WidgetText } from './WidgetText'
 export { default as WidgetFieldFacets } from './WidgetFieldFacets'
