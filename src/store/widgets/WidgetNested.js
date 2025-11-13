@@ -9,7 +9,7 @@ import Component from '@/components/Widget/WidgetNested'
  */
 class WidgetNested extends WidgetEmpty {
   /**
-   * Create a new WidgetProject
+   * Create a new WidgetNested
    * @param widgets {Array} - A list of nested widgets
    * @param options {Object} - See WidgetEmpty for others options
    */
