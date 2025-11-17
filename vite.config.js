@@ -4,7 +4,7 @@ import * as childProcess from 'child_process'
 import Components from 'unplugin-vue-components/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import vue from '@vitejs/plugin-vue'
-import vueDevTools from 'vite-plugin-vue-devtools'
+// import vueDevTools from 'vite-plugin-vue-devtools' // Temporarily disabled due to localStorage issue
 
 import { PhosphorVuePreset } from './bin/presets'
 import { PhosphorVueResolver } from './bin/resolvers'
@@ -20,7 +20,7 @@ export default ({ mode }) => {
     base: process.env.VITE_BASE,
     plugins: [
       vue(),
-      vueDevTools(),
+      // vueDevTools(), // Temporarily disabled due to localStorage issue
       /**
        * The "Components" plugin resolvers imports automaticaly component in vue
        * templates For PhosphorVueResolver we use an homemade resolver
