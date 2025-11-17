@@ -86,6 +86,21 @@ watch(
     }
   }
 )
+
+watch(
+  () => form.value.sourcePath,
+  (sourcePath) => {
+    if (!sourcePath)
+      return
+    const mountedDataDir = core.config.get('mountedDataDir')
+    if (!mountedDataDir)
+      return
+    const updated = sourcePath.replace(mountedDataDir, core.config.get('dataDir'))
+    if (updated !== sourcePath)
+      form.value.sourcePath = updated
+  }
+)
+
 const resetLabel = computed(() => t('projectForm.reset'))
 const submitLabel = computed(() => t('projectForm.submit'))
 </script>

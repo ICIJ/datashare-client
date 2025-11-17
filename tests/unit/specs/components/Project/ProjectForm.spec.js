@@ -2,13 +2,18 @@ import { mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import ProjectForm from '@/components/Project/ProjectForm'
+import { nextTick } from 'vue'
 
 describe('ProjectForm.vue', () => {
   describe('without an existing project', () => {
-    let wrapper, plugins
+    let core, wrapper, plugins
+    const mountedDataDir = '/bar'
+    const dataDir = '/foo'
 
     beforeEach(() => {
-      plugins = CoreSetup.init().useAll().plugins
+      core = CoreSetup.init().useAll()
+      core.config.merge({ dataDir: dataDir, mountedDataDir: mountedDataDir })
+      plugins = core.plugins
       wrapper = mount(ProjectForm, { global: { plugins } })
     })
 
@@ -114,6 +119,14 @@ describe('ProjectForm.vue', () => {
     it('should not hide the sourcePath input', async () => {
       await wrapper.find('input[name=label]').setValue('bar')
       expect(wrapper.find('.project-form__group--source-path').exists()).toBeTruthy()
+    })
+
+    it('should replace mountedDataDir in sourcePath when value is selected by user', async () => {
+      const relativePath = '/bob'
+      wrapper.findComponent({ name: 'FormControlPath' }).vm.$emit('update:modelValue', mountedDataDir + relativePath)
+      await nextTick()
+
+      expect(wrapper.vm.form.sourcePath).toBe(dataDir + relativePath)
     })
   })
 
