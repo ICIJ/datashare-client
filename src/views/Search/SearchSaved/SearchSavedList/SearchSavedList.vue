@@ -14,7 +14,7 @@ import RowPaginationSearches from '@/components/RowPagination/RowPaginationSearc
 import SearchSavedEntries from '@/components/Search/SearchSavedEntries/SearchSavedEntries'
 import ParentOverflowEntriesItem from '@/components/ParentOverflow/ParentOverflowEntriesItem'
 import { useConfirmModal } from '@/composables/useConfirmModal'
-import { useCore } from '@/composables/useCore'
+import { useToast } from '@/composables/useToast'
 import { useHistoryEvents } from '@/composables/useHistoryEvents'
 import { useSearchNav } from '@/composables/useSearchNav'
 import { useUrlPageParam } from '@/composables/useUrlPageParam'
@@ -31,7 +31,7 @@ const appStore = useAppStore()
 const page = useUrlPageParam()
 const route = useRoute()
 const { t } = useI18n()
-const { toast } = useCore()
+const { toast } = useToast()
 const { confirm: showConfirmModal } = useConfirmModal()
 const { removeAll } = useHistoryEvents('SEARCH')
 const { searchRoute } = useSearchNav()

@@ -22,7 +22,7 @@ export function useSearchFilter() {
   const route = useRoute()
   const router = useRouter()
   const { t, te } = useI18n()
-  const { core } = useCore()
+  const core = useCore()
 
   const filterTypes = {
     FilterType,

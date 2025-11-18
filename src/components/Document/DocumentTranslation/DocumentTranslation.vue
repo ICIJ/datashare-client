@@ -23,7 +23,7 @@ const props = defineProps({
   }
 })
 
-const { core } = useCore()
+const core = useCore()
 const documentStore = useDocumentStore()
 const translations = ref([])
 

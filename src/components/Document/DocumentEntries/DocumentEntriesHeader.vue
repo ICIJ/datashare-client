@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router'
 
 import { useCompact } from '@/composables/useCompact'
 import { useCore } from '@/composables/useCore'
+import { useToast } from '@/composables/useToast'
 import ButtonToggleBatchMode from '@/components/Button/ButtonToggleBatchMode'
 import ButtonDownloadDocuments from '@/components/Button/ButtonDownloadDocuments'
 import RowPaginationDocuments from '@/components/RowPagination/RowPaginationDocuments'
@@ -35,7 +36,8 @@ const props = defineProps({
 
 const elementRef = useTemplateRef('element')
 const { compact } = useCompact(elementRef, { threshold: toRef(props, 'compactThreshold') })
-const { core, toast } = useCore()
+const core = useCore()
+const { toast } = useToast()
 const { t, tm, n } = useI18n()
 const searchStore = useSearchStore.inject()
 const router = useRouter()

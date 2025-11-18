@@ -18,12 +18,12 @@ import ButtonRowActionDelete from '@/components/Button/ButtonRowAction/ButtonRow
 import { apiInstance as api } from '@/api/apiInstance.js'
 import { TASK_STATUS } from '@/enums/taskStatus.js'
 import { useConfirmModal } from '@/composables/useConfirmModal.js'
-import { useCore } from '@/composables/useCore.js'
+import { useToast } from '@/composables/useToast.js'
 
 const settingName = 'entities'
 const { propertiesModelValueOptions } = useTaskSettings(settingName)
 const { afterConfirmation } = useConfirmModal()
-const { toastedPromise } = useCore()
+const { toastedPromise } = useToast()
 
 const { t } = useI18n()
 function isPipelineEmail(item) {

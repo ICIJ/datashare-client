@@ -8,7 +8,7 @@ import image from '@/assets/images/illustrations/app-modal-saved-search-naming-l
 import imageDark from '@/assets/images/illustrations/app-modal-saved-search-naming-dark.svg'
 import AppModal from '@/components/AppModal/AppModal'
 import FormFieldset from '@/components/Form/FormFieldset/FormFieldset'
-import { useCore } from '@/composables/useCore'
+import { useToast } from '@/composables/useToast'
 import { useSearchSaving } from '@/composables/useSearchSaving'
 
 const { event } = defineProps({
@@ -22,7 +22,7 @@ const emit = defineEmits(['success', 'error'])
 const form = reactive({ name: event?.name ?? '' })
 const route = useRoute()
 const router = useRouter()
-const { toast } = useCore()
+const { toast } = useToast()
 const { save } = useSearchSaving()
 const { t } = useI18n()
 

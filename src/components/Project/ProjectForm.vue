@@ -25,7 +25,7 @@ const props = defineProps({
 const emit = defineEmits(['submit'])
 
 const { t } = useI18n()
-const { core } = useCore()
+const core = useCore()
 
 const form = ref(initialFormValues())
 

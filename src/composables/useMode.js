@@ -4,7 +4,7 @@ import { useCore } from '@/composables/useCore'
 import { MODE_NAME } from '@/mode'
 
 export function useMode() {
-  const { core } = useCore()
+  const core = useCore()
   const mode = computed(() => core.mode)
   const modeName = computed(() => mode.value.modeName)
   const isServer = computed(() => modeName.value === MODE_NAME.SERVER)

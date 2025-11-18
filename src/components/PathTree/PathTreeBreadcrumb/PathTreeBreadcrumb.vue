@@ -11,7 +11,7 @@ import ParentOverflowEntries from '@/components/ParentOverflow/ParentOverflowEnt
 
 import { useCore } from '@/composables/useCore'
 
-const { core } = useCore()
+const core = useCore()
 
 const modelValue = defineModel({ type: String })
 

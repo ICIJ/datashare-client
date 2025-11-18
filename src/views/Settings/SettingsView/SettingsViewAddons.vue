@@ -10,14 +10,14 @@ import AddonCard from '@/components/Addon/AddonCard'
 import AppWait from '@/components/AppWait/AppWait'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 import { apiInstance as api } from '@/api/apiInstance'
-import { useCore } from '@/composables/useCore'
+import { useToast } from '@/composables/useToast'
 import { useWait } from '@/composables/useWait'
 import { ADDON_TYPE, addonTypeValidator } from '@/enums/addons'
 import SettingsViewLayout from '@/views/Settings/SettingsView/SettingsViewLayout'
 
 const props = defineProps({ addonsType: { type: String, validator: addonTypeValidator } })
 
-const { toastedPromise } = useCore()
+const { toastedPromise } = useToast()
 const { waitFor, isLoading, loaderId } = useWait()
 const { t } = useI18n()
 

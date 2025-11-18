@@ -5,7 +5,7 @@ import { useI18n } from 'vue-i18n'
 
 import AddonCardView from '@/components/Addon/AddonCardView/AddonCardView'
 import { apiInstance as api } from '@/api/apiInstance'
-import { useCore } from '@/composables/useCore'
+import { useToast } from '@/composables/useToast'
 import { useWait } from '@/composables/useWait'
 import { ADDON_TYPE, addonTypeValidator } from '@/enums/addons'
 
@@ -21,7 +21,7 @@ const props = defineProps({
 
 const emit = defineEmits(['installed', 'uninstalled'])
 const { t } = useI18n()
-const { toastedPromise } = useCore()
+const { toastedPromise } = useToast()
 const { waitFor, isLoading } = useWait()
 const deleteSuccess = computed(() => t(`addonCard.${props.addonType}.deleteSuccess`))
 const deleteError = computed(() => t(`addonCard.${props.addonType}.deleteError`))

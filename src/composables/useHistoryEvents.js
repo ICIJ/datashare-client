@@ -1,7 +1,7 @@
 import { useCore } from '@/composables/useCore'
 
 export const useHistoryEvents = (type) => {
-  const { core } = useCore()
+  const core = useCore()
 
   function save({ id = null, projectIds, name, uri }) {
     if (id) {

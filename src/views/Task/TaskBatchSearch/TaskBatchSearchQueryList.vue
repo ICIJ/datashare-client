@@ -34,7 +34,7 @@ const { t } = useI18n()
 const route = useRoute()
 const appStore = useAppStore()
 const taskStore = useTaskStore()
-const { core } = useCore()
+const core = useCore()
 const { waitFor, isLoading } = useWait()
 const { fields } = useBatchSearchQueryProperties()
 

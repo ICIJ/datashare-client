@@ -6,6 +6,7 @@ import { useI18n } from 'vue-i18n'
 import AppOverlay from '@/components/AppOverlay/AppOverlay'
 import ProjectForm from '@/components/Project/ProjectForm'
 import { useCore } from '@/composables/useCore'
+import { useToast } from '@/composables/useToast'
 import { useWait } from '@/composables/useWait'
 
 const OPERATION = Object.freeze({ UPDATE: 'update' })
@@ -16,7 +17,8 @@ const props = defineProps({
   }
 })
 
-const { core, toast } = useCore()
+const core = useCore()
+const { toast } = useToast()
 const { waitFor, isLoading } = useWait()
 const { t } = useI18n()
 

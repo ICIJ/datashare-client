@@ -12,7 +12,7 @@ import { useAuth } from '@/composables/useAuth'
 import settings from '@/utils/settings'
 
 const { t } = useI18n()
-const { core } = useCore()
+const core = useCore()
 const { username } = useAuth()
 const router = useRouter()
 

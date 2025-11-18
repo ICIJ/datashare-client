@@ -31,7 +31,7 @@ const { events, loadingEvents } = defineProps({
   }
 })
 
-const { core } = useCore()
+const core = useCore()
 const { waitFor, isLoading: loadingDocuments } = useWait()
 const starredStore = useStarredStore()
 const { breakpointDown } = useBreakpoints()

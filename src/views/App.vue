@@ -51,7 +51,7 @@ import ScrollTracker from '@/components/ScrollTracker'
 import { useCore } from '@/composables/useCore'
 import { useAppStore } from '@/store/modules'
 
-const { core } = useCore()
+const core = useCore()
 const appStore = useAppStore()
 const { t } = useI18n()
 const route = useRoute()

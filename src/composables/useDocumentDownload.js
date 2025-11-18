@@ -9,7 +9,7 @@ import byteSize from '@/utils/byteSize'
 export function useDocumentDownload(document) {
   const documentStore = useDocumentStore()
   const documentDownloadStore = useDocumentDownloadStore()
-  const { core } = useCore()
+  const core = useCore()
   const { locale, t } = useI18n()
 
   const documentRef = toRef(document)

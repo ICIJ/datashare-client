@@ -9,6 +9,7 @@ import FormCreation from '@/components/Form/FormCreation'
 import FormFieldsetI18n from '@/components/Form/FormFieldset/FormFieldsetI18n'
 import SearchBarInputDropdownForProjects from '@/components/Search/SearchBar/SearchBarInputDropdownForProjects'
 import { useCore } from '@/composables/useCore'
+import { useToast } from '@/composables/useToast'
 import { useWait } from '@/composables/useWait'
 
 const props = defineProps({
@@ -21,7 +22,8 @@ const props = defineProps({
   }
 })
 
-const { core, toastedPromise } = useCore()
+const core = useCore()
+const { toastedPromise } = useToast()
 
 const { t } = useI18n()
 const { waitFor, waiting } = useWait()

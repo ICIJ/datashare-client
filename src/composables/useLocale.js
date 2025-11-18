@@ -7,7 +7,7 @@ import { useCore } from '@/composables/useCore'
 
 export function useLocale() {
   const { locale } = useI18n()
-  const { core } = useCore()
+  const core = useCore()
   const locales = settings.locales
   const currentLocale = computed(() => find(locales, { key: locale.value }))
   // Watch for changes in the current locale and load the locale

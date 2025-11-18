@@ -13,6 +13,7 @@ import { useUrlParam } from '@/composables/useUrlParam'
 import { useUrlParamWithStore } from '@/composables/useUrlParamWithStore'
 import { useUrlParamsWithStore } from '@/composables/useUrlParamsWithStore'
 import { useCore } from '@/composables/useCore'
+import { useToast } from '@/composables/useToast'
 import { useWait } from '@/composables/useWait'
 import { useAppStore } from '@/store/modules'
 import useMode from '@/composables/useMode'
@@ -21,7 +22,8 @@ const DOCUMENTS_COUNT_FIELD = 'documentsCount'
 const MAX_EXTRACTION_DATE_FIELD = 'updateDate'
 
 const { t } = useI18n()
-const { core, toast } = useCore()
+const core = useCore()
+const { toast } = useToast()
 const { isServer } = useMode()
 const { waitFor, isLoading } = useWait()
 const appStore = useAppStore()

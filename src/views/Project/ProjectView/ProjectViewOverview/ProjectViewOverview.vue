@@ -26,7 +26,7 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
-const { core } = useCore()
+const core = useCore()
 const { waitFor, loaderId } = useWait()
 
 const params = computed(() => {

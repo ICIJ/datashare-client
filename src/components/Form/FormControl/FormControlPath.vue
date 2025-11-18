@@ -30,7 +30,7 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
-const { core } = useCore()
+const core = useCore()
 const selectedPaths = ref([])
 const showPathTree = ref(false)
 const sourcePath = computed(() => props.path ?? core.getDefaultDataDir())

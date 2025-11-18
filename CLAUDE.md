@@ -233,7 +233,7 @@ Use the `useCore()` composable to access the core instance:
 import { useCore } from '@/composables/useCore'
 
 // In component setup
-const { core, toast } = useCore()
+const core = useCore()
 
 // Access API
 core.api.getSettings()
@@ -243,10 +243,6 @@ core.stores.useSearchStore()
 
 // Access router
 core.router.push('/documents')
-
-// Toast notifications
-toast.success('Operation completed')
-toast.error('Something went wrong')
 ```
 
 ### Event Bus
@@ -264,12 +260,31 @@ core.on('document:loaded', (payload) => { ... })
 core.off('document:loaded', handler)
 ```
 
-### Toasted Promises
+### Toast Notifications
 
-The `useCore` composable provides a `toastedPromise` helper that automatically shows success/error toasts:
+Use the `useToast()` composable for toast notifications:
 
 ```javascript
-const { toastedPromise } = useCore()
+import { useToast } from '@/composables/useToast'
+
+// In component setup
+const { toast } = useToast()
+
+// Show notifications
+toast.success('Operation completed')
+toast.error('Something went wrong')
+toast.warning('Warning message')
+toast.info('Information message')
+```
+
+### Toasted Promises
+
+The `useToast` composable provides a `toastedPromise` helper that automatically shows success/error toasts:
+
+```javascript
+import { useToast } from '@/composables/useToast'
+
+const { toastedPromise } = useToast()
 
 toastedPromise(
   api.saveDocument(data),

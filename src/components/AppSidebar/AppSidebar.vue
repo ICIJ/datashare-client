@@ -26,7 +26,7 @@ import settings from '@/utils/settings'
 const appStore = useAppStore()
 const element = useTemplateRef('element')
 const { width } = useElementSize(element)
-const { core } = useCore()
+const core = useCore()
 const { searchRoute, isSearchChildRoute } = useSearchNav()
 const { isServer } = useMode()
 const { breakpointDown } = useBreakpoints()

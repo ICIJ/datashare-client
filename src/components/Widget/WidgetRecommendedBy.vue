@@ -103,7 +103,7 @@ const pages = ref([])
 const hits = ref([])
 
 const { t } = useI18n()
-const { core } = useCore()
+const core = useCore()
 const { waitFor, loaderId } = useWait()
 const insightsStore = useInsightsStore()
 const infiniteScrollId = uniqueId('infinite-scroll-')

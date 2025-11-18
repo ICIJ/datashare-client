@@ -18,7 +18,7 @@ defineOptions({ name: 'SettingsViewApi' })
 
 const hashedKey = ref(null)
 const apiKey = ref(null)
-const { core } = useCore()
+const core = useCore()
 const { username } = useAuth()
 const { confirm } = useConfirmModal()
 const { t } = useI18n()

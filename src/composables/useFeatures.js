@@ -3,7 +3,7 @@ import camelCase from 'lodash/camelCase'
 import { useCore } from '@/composables/useCore'
 
 export function useFeatures() {
-  const { core } = useCore()
+  const core = useCore()
 
   function hasFeature(name) {
     const value = getConfigFeatureValue(name)

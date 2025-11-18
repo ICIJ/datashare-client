@@ -2,7 +2,7 @@
 import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
 
-import { useCore } from '@/composables/useCore'
+import { useToast } from '@/composables/useToast'
 import BatchSearchActionsDelete from '@/components/BatchSearch/BatchSearchActions/BatchSearchActionsDelete'
 import BatchSearchActionsEdit from '@/components/BatchSearch/BatchSearchActions/BatchSearchActionsEdit'
 import BatchSearchActionsEditModal from '@/components/BatchSearch/BatchSearchActions/BatchSearchActionsEditModal'
@@ -33,7 +33,7 @@ const { afterConfirmation } = useConfirmModal()
 const { prompt: showEditModal } = usePromptModal(BatchSearchActionsEditModal)
 const { prompt: showRelaunchModal } = usePromptModal(BatchSearchActionsRelaunchModal)
 
-const { toastedPromise } = useCore()
+const { toastedPromise } = useToast()
 const taskStore = useTaskStore()
 const isOver = computed(() => taskStore.isOver(batchSearch.uuid))
 const isRunning = computed(() => taskStore.isRunning(batchSearch.uuid))

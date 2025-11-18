@@ -8,6 +8,7 @@ import AppWait from '@/components/AppWait/AppWait'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 import SettingsGeneral from '@/components/Settings/SettingsGeneral/SettingsGeneral'
 import { useCore } from '@/composables/useCore'
+import { useToast } from '@/composables/useToast'
 import { useWait } from '@/composables/useWait'
 import SettingsViewLayout from '@/views/Settings/SettingsView/SettingsViewLayout'
 
@@ -16,7 +17,8 @@ import SettingsViewLayout from '@/views/Settings/SettingsView/SettingsViewLayout
  */
 defineOptions({ name: 'SettingsViewGeneral' })
 
-const { core, toastedPromise } = useCore()
+const core = useCore()
+const { toastedPromise } = useToast()
 const { waitFor, loaderId } = useWait()
 const { t } = useI18n()
 

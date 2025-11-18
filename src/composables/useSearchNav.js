@@ -10,7 +10,7 @@ import { useSearchStore } from '@/store/modules'
 import { SIZE } from '@/enums/sizes'
 
 export function useSearchNav(currentDocument = null) {
-  const { core } = useCore()
+  const core = useCore()
   const { document: viewDocument } = useDocument()
   const route = useRoute()
   const router = useRouter()

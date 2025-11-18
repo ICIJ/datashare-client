@@ -36,7 +36,7 @@ const props = defineProps({
   }
 })
 
-const { core } = useCore()
+const core = useCore()
 
 const resolvedProject = computed(() => {
   if (isObject(props.project)) {

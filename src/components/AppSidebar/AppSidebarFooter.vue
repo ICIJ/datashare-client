@@ -11,7 +11,7 @@ import AppSidebarFooterLogo from '@/components/AppSidebar/AppSidebarFooterLogo'
 import Hook from '@/components/Hook/Hook'
 import { useConfirmModal } from '@/composables/useConfirmModal'
 import { useRemoveAll } from '@/composables/useRemoveAll'
-import { useCore } from '@/composables/useCore'
+import { useToast } from '@/composables/useToast'
 import { useAuth } from '@/composables/useAuth'
 
 const props = defineProps({
@@ -46,7 +46,7 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
-const { toastedPromise } = useCore()
+const { toastedPromise } = useToast()
 const { confirm } = useConfirmModal()
 const { removeAll } = useRemoveAll()
 const { isBasicAuth } = useAuth()

@@ -7,6 +7,7 @@ import ButtonRowAction from '@/components/Button/ButtonRowAction/ButtonRowAction
 import ButtonRowActionDelete from '@/components/Button/ButtonRowAction/ButtonRowActionDelete'
 import PageTableToggleDetailsButton from '@/components/PageTable/PageTableToggleDetailsButton'
 import { useCore } from '@/composables/useCore'
+import { useToast } from '@/composables/useToast'
 import { useConfirmModal } from '@/composables/useConfirmModal'
 import { TASK_STATUS } from '@/enums/taskStatus'
 
@@ -42,7 +43,8 @@ const props = defineProps({
   }
 })
 
-const { core, toastedPromise } = useCore()
+const core = useCore()
+const { toastedPromise } = useToast()
 const { afterConfirmation } = useConfirmModal()
 const { t } = useI18n()
 const emit = defineEmits(['refresh', 'relaunch', 'relaunchFailed', 'delete', 'deleteFailed'])

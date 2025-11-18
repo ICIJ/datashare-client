@@ -42,7 +42,7 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
-const { core } = useCore()
+const core = useCore()
 const { isAuthenticated } = useAuth()
 
 const titleAsString = computed(() => {

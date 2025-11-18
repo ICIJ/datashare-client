@@ -31,7 +31,7 @@ const { t, d } = useI18n()
 
 const elementRef = useTemplateRef('element')
 const documentStore = useDocumentStore()
-const { core } = useCore()
+const core = useCore()
 const { waitFor, loaderId } = useWait()
 
 const thread = ref({ hits: [] })

@@ -14,7 +14,7 @@ const visibility = defineModel('visibility', { type: Boolean, required: true })
 const selectedProjects = defineModel('selectedProjects', { type: Array, required: true })
 
 const { t } = useI18n()
-const { core } = useCore()
+const core = useCore()
 const allProjects = computed(() => core.projects)
 </script>
 

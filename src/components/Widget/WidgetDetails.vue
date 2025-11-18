@@ -59,7 +59,7 @@ const fields = [
 ]
 
 const { t } = useI18n()
-const { core } = useCore()
+const core = useCore()
 
 // Generate metadata for each field
 const metadata = computed(() => {

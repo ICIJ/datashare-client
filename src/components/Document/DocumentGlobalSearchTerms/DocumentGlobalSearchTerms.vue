@@ -27,7 +27,7 @@ const emit = defineEmits(['select'])
 const terms = ref([])
 
 const searchStore = useSearchStore.inject()
-const { core } = useCore()
+const core = useCore()
 
 const queryTerms = computed(() => searchStore.retrieveContentQueryTerms)
 const queryTermsWithoutNegation = computed(() => queryTerms.value.filter(({ negation }) => !negation))

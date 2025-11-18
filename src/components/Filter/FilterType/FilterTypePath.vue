@@ -9,7 +9,7 @@ import { useCore } from '@/composables/useCore'
 import { useSearchStore } from '@/store/modules'
 import { LAYOUTS } from '@/enums/pathTree'
 
-const { core } = useCore()
+const core = useCore()
 const searchStore = useSearchStore.inject()
 const {
   computedFilterValues,

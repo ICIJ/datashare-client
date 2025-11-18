@@ -29,7 +29,7 @@ const props = defineProps({
   }
 })
 
-const { core } = useCore()
+const core = useCore()
 // Computed Properties
 const projects = computed(() => core.projects)
 

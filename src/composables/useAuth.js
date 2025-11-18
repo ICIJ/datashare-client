@@ -3,7 +3,7 @@ import { computed, ref, onBeforeMount } from 'vue'
 import { useCore } from './useCore'
 
 export function useAuth() {
-  const { core } = useCore()
+  const core = useCore()
 
   const username = ref(null)
   const isBasicAuth = ref(null)

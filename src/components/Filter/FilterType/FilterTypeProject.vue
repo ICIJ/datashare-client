@@ -21,7 +21,7 @@ defineProps({
 })
 
 const { computedProjects, allProjectsSelected } = useSearchFilter()
-const { core } = useCore()
+const core = useCore()
 const query = defineModel('query', { type: String, default: '' })
 
 const selectedProjects = computedProjects()

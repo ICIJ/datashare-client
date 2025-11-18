@@ -6,7 +6,7 @@ import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPan
 import { useCore } from '@/composables/useCore'
 import { useSearchFilter } from '@/composables/useSearchFilter'
 
-const { core } = useCore()
+const core = useCore()
 const { allProjectsSelected, searchStore } = useSearchFilter()
 
 const { t } = useI18n()

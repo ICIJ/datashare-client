@@ -12,9 +12,11 @@ import TaskBatchSearchFormOperators from '@/components/Task/TaskBatchSearch/Task
 import TaskBatchSearchFormFilters from '@/components/Task/TaskBatchSearch/TaskBatchSearchFormFilters'
 import TaskBatchSearchFormOverview from '@/components/Task/TaskBatchSearch/TaskBatchSearchFormOverview'
 import { useCore } from '@/composables/useCore'
+import { useToast } from '@/composables/useToast'
 import { useSearchStore } from '@/store/modules/search'
 
-const { core, toast } = useCore()
+const core = useCore()
+const { toast } = useToast()
 const { t } = useI18n()
 const router = useRouter()
 const searchSearch = useSearchStore()

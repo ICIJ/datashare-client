@@ -3,7 +3,7 @@ import { toValue } from 'vue'
 import { useCore } from '@/composables/useCore'
 
 export function useProjectMetrics(project) {
-  const { core } = useCore()
+  const core = useCore()
   const { name: index } = toValue(project)
 
   async function fetchDocumentsCount() {

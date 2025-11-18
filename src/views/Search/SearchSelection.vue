@@ -4,7 +4,7 @@ import { property } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur-next'
 
-import { useCore } from '@/composables/useCore'
+import { useToast } from '@/composables/useToast'
 import { useSearchStore, useStarredStore, useDocumentStore } from '@/store/modules'
 import { useSelection } from '@/composables/useSelection'
 import { useBreakpoints } from '@/composables/useBreakpoints'
@@ -54,7 +54,7 @@ const isCompact = computed(() => breakpointDown.value[props.compactAutoBreakpoin
 const starredStore = useStarredStore()
 const searchStore = useSearchStore()
 const documentStore = useDocumentStore()
-const { toastedPromise } = useCore()
+const { toastedPromise } = useToast()
 const { t, n } = useI18n()
 
 const nbSelection = computed(() => selectionEntries.value.length)

@@ -18,10 +18,10 @@ import { useTaskStore } from '@/store/modules'
 import TaskPage from '@/views/Task/TaskPage'
 import { useConfirmModal } from '@/composables/useConfirmModal'
 import { apiInstance as api } from '@/api/apiInstance'
-import { useCore } from '@/composables/useCore'
+import { useToast } from '@/composables/useToast'
 
 const { afterConfirmation } = useConfirmModal()
-const { toastedPromise } = useCore()
+const { toastedPromise } = useToast()
 const taskStore = useTaskStore()
 const settingName = 'documents'
 

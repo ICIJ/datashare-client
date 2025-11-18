@@ -88,7 +88,7 @@ const props = defineProps({
 })
 
 // App services and utilities.
-const { core } = useCore()
+const core = useCore()
 const { waitFor, isLoading } = useWait()
 const { pathSeparator, getBasename, isSelectedPath, isIndeterminateDirectory, trimDirectory, togglePath } = usePath(selectedPaths, props)
 const { isServer } = useMode()

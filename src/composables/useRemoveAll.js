@@ -3,7 +3,7 @@ import { useSearchStore } from '@/store/modules/search'
 import { apiInstance as api } from '@/api/apiInstance'
 
 export const useRemoveAll = () => {
-  const { core } = useCore()
+  const core = useCore()
   const searchStore = useSearchStore()
 
   async function resetDefaultProject() {

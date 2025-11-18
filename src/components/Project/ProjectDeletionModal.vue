@@ -11,6 +11,7 @@ import ProjectLabel from '@/components/Project/ProjectLabel'
 import { useProjectMetrics } from '@/composables/useProjectMetrics'
 import { useWait } from '@/composables/useWait'
 import { useCore } from '@/composables/useCore'
+import { useToast } from '@/composables/useToast'
 
 const props = defineProps({
   project: {
@@ -27,7 +28,8 @@ const tagsCount = ref(0)
 const recommendationsCount = ref(0)
 
 const { waitFor, loaderId } = useWait()
-const { core, toast } = useCore()
+const core = useCore()
+const { toast } = useToast()
 const { fetchDocumentsCount, fetchTagsCount, fetchRecommendationsCount } = useProjectMetrics(props.project)
 
 async function confirmDeletion() {

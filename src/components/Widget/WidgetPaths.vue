@@ -21,7 +21,7 @@ defineProps({
 })
 
 const insightsStore = useInsightsStore()
-const { core } = useCore()
+const core = useCore()
 const { sourcePath } = core.findProject(insightsStore.project)
 const config = useConfig()
 const dataDir = config.get('mountedDataDir') || config.get('dataDir')

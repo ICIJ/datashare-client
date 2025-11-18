@@ -7,9 +7,11 @@ import PageHeader from '@/components/PageHeader/PageHeader'
 import PageContainer from '@/components/PageContainer/PageContainer'
 import ProjectForm from '@/components/Project/ProjectForm'
 import { useCore } from '@/composables/useCore'
+import { useToast } from '@/composables/useToast'
 import { useWait } from '@/composables/useWait'
 
-const { core, toast } = useCore()
+const core = useCore()
+const { toast } = useToast()
 const { waitFor, isLoading } = useWait()
 const { t } = useI18n()
 

@@ -3,6 +3,7 @@ import { computed, onBeforeMount, reactive, watch, toRef, toValue } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { useCore } from '@/composables/useCore'
+import { useToast } from '@/composables/useToast'
 import { useLanguagesStore } from '@/store/modules/languages'
 import FormCreation from '@/components/Form/FormCreation'
 import FormControlExtractingLanguage from '@/components/Form/FormControl/FormControlExtractingLanguage'
@@ -18,7 +19,8 @@ const props = defineProps({
   }
 })
 
-const { toastedPromise, core } = useCore()
+const core = useCore()
+const { toastedPromise } = useToast()
 const { t } = useI18n()
 const languagesStore = useLanguagesStore()
 

@@ -129,7 +129,7 @@ const props = defineProps({
 
 const wait = useWait()
 const { t, n } = useI18n()
-const { core } = useCore()
+const core = useCore()
 const insightsStore = useInsightsStore()
 const router = useRouter()
 

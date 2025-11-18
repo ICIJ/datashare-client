@@ -52,7 +52,7 @@ const transformedLink = ref(null)
 const transformedUsername = ref(null)
 
 const { waitFor, isLoading, loaderId } = useWait()
-const { core } = useCore()
+const core = useCore()
 const pipelinesStore = usePipelinesStore()
 
 const applyAvatarPipeline = () => {
