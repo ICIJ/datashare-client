@@ -4,9 +4,7 @@ import { MODE_NAME } from '@/mode'
 // Mock `useCore`
 vi.mock('@/composables/useCore', () => ({
   useCore: vi.fn(() => ({
-    core: {
-      mode: { modeName: 'SERVER' }
-    }
+    mode: { modeName: 'SERVER' }
   }))
 }))
 

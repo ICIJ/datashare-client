@@ -6,9 +6,7 @@ import CoreSetup from '~tests/unit/CoreSetup'
 
 vi.mock('@/composables/useCore', () => ({
   useCore: vi.fn(() => ({
-    core: {
-      mode: { modeName: 'SERVER' }
-    }
+    mode: { modeName: 'SERVER' }
   }))
 }))
 
