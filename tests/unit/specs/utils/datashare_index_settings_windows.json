@@ -17,12 +17,17 @@
     "metadata.tika_metadata_resourcename",
     "name",
     "path",
+    "path.parts",
     "tags"
   ],
   "analysis": {
     "analyzer": {
       "path_analyzer": {
         "tokenizer": "path_tokenizer"
+      },
+      "path_parts_analyzer": {
+        "tokenizer": "path_parts_tokenizer",
+        "filter": ["lowercase"]
       },
       "folding": {
         "tokenizer": "standard",
@@ -33,6 +38,10 @@
       "path_tokenizer": {
         "type": "path_hierarchy",
         "delimiter": "\\"
+      },
+      "path_parts_tokenizer": {
+        "type": "pattern",
+        "pattern": "[/\\\\. ]+"
       }
     },
     "normalizer": {
