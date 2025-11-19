@@ -3,10 +3,8 @@ import { useDataDir } from '@/composables/useDataDir'
 // Mock `useCore`
 vi.mock('@/composables/useCore', () => ({
   useCore: vi.fn(() => ({
-    core: {
-      getDefaultDataDir: vi.fn(() => '/data/datashare'),
-      getMountedDataDir: vi.fn(() => '/mounted/datashare')
-    }
+    getDefaultDataDir: vi.fn(() => '/data/datashare'),
+    getMountedDataDir: vi.fn(() => '/mounted/datashare')
   }))
 }))
 

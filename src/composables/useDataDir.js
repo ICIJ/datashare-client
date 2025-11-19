@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import { useCore } from '@/composables/useCore'
 
 export function useDataDir() {
-  const { core } = useCore()
+  const core = useCore()
   // The data dir is the actualy data directory used by Datashare
   const dataDir = computed(() => core.getDefaultDataDir())
   // The mounted data dir is the data directory as seen outside of a Docker containers. In
