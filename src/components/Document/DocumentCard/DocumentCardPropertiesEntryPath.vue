@@ -1,4 +1,5 @@
 <script setup>
+import DisplayPath from '@/components/Display/DisplayPath'
 import DocumentCardPropertiesEntry from '@/components/Document/DocumentCard/DocumentCardPropertiesEntry'
 
 defineProps({
@@ -16,6 +17,6 @@ defineProps({
     :document="document"
     :property="property"
   >
-    {{ document.path }}
+    <display-path :value="document.path" />
   </document-card-properties-entry>
 </template>

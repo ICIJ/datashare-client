@@ -1,4 +1,6 @@
 <script setup>
+import DisplayPath from '@/components/Display/DisplayPath'
+
 defineProps({
   document: {
     type: Object
@@ -8,6 +10,6 @@ defineProps({
 
 <template>
   <td>
-    {{ document.path }}
+    <display-path :value="document.path" />
   </td>
 </template>
