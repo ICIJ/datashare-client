@@ -10,8 +10,8 @@ export function useAuth() {
   const isAuthenticated = computed(() => !!username.value)
 
   onBeforeMount(async () => {
-    username.value = await core.auth.getUsername()
-    isBasicAuth.value = await core.auth.isBasicAuth()
+    username.value = await core?.auth.getUsername()
+    isBasicAuth.value = await core?.auth.isBasicAuth()
   })
 
   return { username, isBasicAuth, isAuthenticated }
