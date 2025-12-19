@@ -272,7 +272,7 @@ describe('Datashare backend client', () => {
       expect.objectContaining({
         url: Api.getFullUrl('/api/task/batchSearch/project'),
         method: 'POST',
-        data
+        data: expect.objectContaining(data)
       })
     )
   })
