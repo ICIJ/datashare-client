@@ -1,7 +1,7 @@
 <script setup>
 import { computed, toRef, useTemplateRef, watch } from 'vue'
-import { PhosphorIcon, ButtonIcon } from '@icij/murmur-next'
-import { PhCircleNotch, PhMagnifyingGlass } from '@phosphor-icons/vue'
+import { ButtonIcon } from '@icij/murmur-next'
+import PhosphorIcon from '@/components/PhosphorIcon.vue'
 import { useI18n } from 'vue-i18n'
 
 import { buttonSizeValidator, SIZE } from '@/enums/sizes'

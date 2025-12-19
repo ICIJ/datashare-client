@@ -1,7 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { PhosphorIcon } from '@icij/murmur-next'
-import { PhCaretDown, PhCircleNotch } from '@phosphor-icons/vue'
+import PhosphorIcon from '@/components/PhosphorIcon.vue'
 
 const props = defineProps({
   /**

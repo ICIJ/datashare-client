@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { round } from 'lodash'
-import { PhosphorIcon } from '@icij/murmur-next'
+import PhosphorIcon from '@/components/PhosphorIcon.vue'
 
 import DisplayNumber from '@/components/Display/DisplayNumber'
 

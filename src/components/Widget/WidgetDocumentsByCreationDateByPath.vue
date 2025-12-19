@@ -9,7 +9,7 @@
         v-if="selectedPath"
         size="sm"
         variant="outline-action"
-        :icon-left="PhTreeStructure"
+        icon-left="tree-structure"
         class="me-3 d-inline-flex"
         @click="showPathTree = true"
       >

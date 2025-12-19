@@ -24,8 +24,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { PhosphorIcon } from '@icij/murmur-next'
-import { PhCaretUp, PhCaretDown } from '@phosphor-icons/vue'
+import PhosphorIcon from '@/components/PhosphorIcon.vue'
 
 defineOptions({
   name: 'PageSettingsSectionGroup'

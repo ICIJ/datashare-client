@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { PhosphorIcon } from '@icij/murmur-next'
+import PhosphorIcon from '@/components/PhosphorIcon.vue'
 
 import { useSchema } from '@/composables/useSchema'
 

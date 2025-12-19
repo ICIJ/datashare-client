@@ -35,7 +35,7 @@
 import { isString, isObject } from 'lodash'
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { PhosphorIcon } from '@icij/murmur-next'
+import PhosphorIcon from '@/components/PhosphorIcon.vue'
 
 import DisplayNumberHuman from '@/components/Display/DisplayNumberHuman'
 import { variantValidator } from '@/enums/variants'

@@ -1,7 +1,6 @@
 <script setup>
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { PhCards, PhX } from '@phosphor-icons/vue'
 import { ButtonIcon } from '@icij/murmur-next'
 
 import { VARIANT } from '@/enums/variants'

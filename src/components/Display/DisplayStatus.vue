@@ -1,7 +1,7 @@
 <script setup>
 import { slugger } from '@/utils/strings'
 import { computed, useTemplateRef } from 'vue'
-import { PhosphorIcon } from '@icij/murmur-next'
+import PhosphorIcon from '@/components/PhosphorIcon.vue'
 
 import DisplayStatusLabel from '@/components/Display/DisplayStatusLabel'
 import { buttonSizeValidator, SIZE } from '@/enums/sizes'
