@@ -396,6 +396,10 @@ export class Api {
     return this.sendActionAsText(`/api/index/search/${projectIds}/_mapping/field/${fields}`, { method: Method.GET })
   }
 
+  getPoliciesByUserId(userId) {
+    return this.sendActionAsText(`/api/policies/userId=${userId}`, { method: Method.GET })
+  }
+
   async sendAction(url, config = {}) {
     try {
       const r = await this.axios?.request({ url: Api.getFullUrl(url), ...config })

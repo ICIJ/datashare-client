@@ -356,6 +356,16 @@ class Core extends Behaviors {
   }
 
   /**
+   * Get the current signed user.
+   * @async
+   * @fullfil {Object} Current user
+   * @returns {Promise<Object>}
+   */
+  getUserPolicies() {
+    return this.api.getPoliciesByUserId(this.config.values.uid)
+  }
+
+  /**
    * Get and update user definition in place
    * @async
    * @returns {Promise}

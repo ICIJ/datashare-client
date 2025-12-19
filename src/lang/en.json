@@ -1309,7 +1309,8 @@
     "documents": "Documents",
     "updatedOn": "Updated on",
     "links": "Links",
-    "actions": "Actions"
+    "actions": "Actions",
+    "userRoles": "Your role"
   },
   "projectRowActions": {
     "edit": "Edit project",
