@@ -14,7 +14,10 @@ export default defineConfig(configEnv =>
         environment: 'jsdom',
         exclude: [...configDefaults.exclude, 'e2e/**'],
         root: fileURLToPath(new URL('./', import.meta.url)),
-        setupFiles: [resolve(__dirname, 'tests/unit/setup.js')]
+        setupFiles: [resolve(__dirname, 'tests/unit/setup.js')],
+        pool: 'vmForks',
+        maxWorkers: 1,
+        minWorkers: 1
       }
     })
   )
