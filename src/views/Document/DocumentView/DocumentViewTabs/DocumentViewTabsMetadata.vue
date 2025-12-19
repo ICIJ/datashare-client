@@ -1,6 +1,6 @@
 <script setup>
 import Fuse from 'fuse.js'
-import { computed, ref } from 'vue'
+import { computed, onBeforeUnmount, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { property, orderBy } from 'lodash'
 
@@ -191,6 +191,9 @@ const pin = async (name, value) => {
   // Then simply update the pinned value
   pinned.value[name] = value
 }
+onBeforeUnmount(() => {
+  clearTimeout(pinning.value)
+})
 
 const classList = computed(() => {
   return {
