@@ -1,10 +1,11 @@
 <script setup>
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { PhCirclesThreePlus, PhFiles, PhCalendarBlank } from '@phosphor-icons/vue'
+import { PhCirclesThreePlus, PhFiles, PhCalendarBlank, PhUserSquare } from '@phosphor-icons/vue'
 
 import PageTableTh from '@/components/PageTable/PageTableTh'
 import { useBreakpoints } from '@/composables/useBreakpoints'
+import ModeServerOnly from '@/components/Mode/ModeServerOnly'
 
 const { breakpointDown } = useBreakpoints()
 
@@ -49,6 +50,14 @@ const compact = computed(() => {
     sortable
     name="updateDate"
   />
+  <mode-server-only>
+    <page-table-th
+      :label="t('projectEntriesTableHead.userRoles')"
+      :icon="PhUserSquare"
+      sortable
+      name="userRoles"
+    />
+  </mode-server-only>
   <page-table-th
     :label="t('projectEntriesTableHead.links')"
     hide-label
