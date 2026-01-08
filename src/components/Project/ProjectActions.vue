@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, toValue } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { useProjectDeletionModal } from '@/composables/useProjectDeletionModal'
@@ -9,7 +9,7 @@ import ButtonRowActionDelete from '@/components/Button/ButtonRowAction/ButtonRow
 import ButtonTogglePin from '@/components/Button/ButtonTogglePin'
 import ModeLocalOnly from '@/components/Mode/ModeLocalOnly'
 
-const { project } = defineProps({
+const props = defineProps({
   project: {
     type: Object,
     required: true
@@ -17,13 +17,14 @@ const { project } = defineProps({
 })
 
 const { t } = useI18n()
+const project = computed(() => props.project)
 const { show: showProjectDeletionModal } = useProjectDeletionModal(project)
 const { pinned } = useProjectPinned(project)
 
 const toProjectEdit = computed(() => ({
   name: 'project.view.edit',
   params: {
-    name: project.name
+    name: toValue(project).name
   }
 }))
 </script>
