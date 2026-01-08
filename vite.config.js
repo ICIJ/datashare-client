@@ -16,11 +16,15 @@ export default ({ mode }) => {
   const ENV = loadEnv(mode, process.cwd(), '')
   Object.assign(process.env, { ...ENV, VITE_GIT_HASH, VITE_CWD })
 
+  // Disable vueDevTools in Storybook (causes "environment context" error with vite-plugin-inspect)
+  // https://github.com/storybookjs/storybook/issues/32462
+  const isStorybook = process.argv[1]?.includes('storybook')
+
   return defineConfig({
     base: process.env.VITE_BASE,
     plugins: [
       vue(),
-      vueDevTools(),
+      !isStorybook && vueDevTools(),
       /**
        * The "Components" plugin resolvers imports automaticaly component in vue
        * templates For PhosphorVueResolver we use an homemade resolver
