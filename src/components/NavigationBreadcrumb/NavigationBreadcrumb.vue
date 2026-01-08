@@ -80,7 +80,7 @@ const hasActiveSlot = computed(() => 'active' in useSlots())
             :no-caret="!hasVisibleNext"
           >
             <slot :name="`entry-label(${route.name})`" />
-            <template v-if="showActiveSlot(name)">
+            <template v-if="showActiveSlot(route.name)">
               <slot name="active" />
             </template>
           </navigation-breadcrumb-link>
