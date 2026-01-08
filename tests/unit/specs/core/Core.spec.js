@@ -27,6 +27,14 @@ describe('Core', () => {
     document.body.appendChild(app)
   })
 
+  afterEach(() => {
+    // Cleanup the mounted app element
+    const app = document.getElementById('core')
+    if (app) {
+      app.remove()
+    }
+  })
+
   afterAll(() => {
     vi.resetAllMocks()
   })

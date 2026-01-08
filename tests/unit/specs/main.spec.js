@@ -33,6 +33,11 @@ describe('main', () => {
     vm = vm.useRouter().mount()
   })
 
+  afterEach(() => {
+    // Cleanup all mounted app elements
+    document.querySelectorAll('#app').forEach(el => el.remove())
+  })
+
   afterAll(() => {
     vi.resetAllMocks()
   })
@@ -45,15 +50,17 @@ describe('main', () => {
 
   it('should set the config', async () => {
     api.getUser.mockResolvedValue({ userProjects: ['first-index'], key: 'value' })
+    // Use a unique id for this test's app element
     const app = document.createElement('div')
-    app.setAttribute('id', 'app')
+    app.setAttribute('id', 'app-config-test')
     document.body.appendChild(app)
     core = createCore()
     vm = await core.ready
-    vm = await vm.useRouter().mount()
+    vm = await vm.useRouter().mount('#app-config-test')
     expect(vm.config.globalProperties.$config).toBeDefined()
     expect(vm.config.globalProperties.$config.get('userProjects')).toEqual(['first-index'])
     expect(vm.config.globalProperties.$config.get('key')).toBe('value')
+    app.remove()
   })
 
   it('should find several hooked components by their target name', () => {
