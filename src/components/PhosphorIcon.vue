@@ -50,12 +50,12 @@ const props = defineProps({
   weight: {
     type: String,
     default: 'regular',
-    validator: (value) => ['bold', 'fill', 'thin', 'light', 'regular', 'duotone'].includes(value)
+    validator: value => ['bold', 'fill', 'thin', 'light', 'regular', 'duotone'].includes(value)
   },
   hoverWeight: {
     type: String,
     default: undefined,
-    validator: (value) => !value || ['bold', 'fill', 'thin', 'light', 'regular', 'duotone'].includes(value)
+    validator: value => !value || ['bold', 'fill', 'thin', 'light', 'regular', 'duotone'].includes(value)
   },
   beat: {
     type: Boolean,
@@ -106,7 +106,8 @@ const iconName = computed(() => {
   // Handle component object - extract name if possible
   if (typeof name === 'object' && name?.name) {
     name = name.name
-  } else if (typeof name === 'object') {
+  }
+  else if (typeof name === 'object') {
     // If it's a component object without name, try to use as is
     return 'ph:question'
   }
