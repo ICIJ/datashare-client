@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onBeforeMount, ref } from 'vue'
+import { computed, onBeforeMount, ref, toRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import image from '@/assets/images/illustrations/app-modal-default-light.svg'
@@ -30,7 +30,7 @@ const recommendationsCount = ref(0)
 const { waitFor, loaderId } = useWait()
 const core = useCore()
 const { toast } = useToast()
-const { fetchDocumentsCount, fetchTagsCount, fetchRecommendationsCount } = useProjectMetrics(props.project)
+const { fetchDocumentsCount, fetchTagsCount, fetchRecommendationsCount } = useProjectMetrics(toRef(props, 'project'))
 
 async function confirmDeletion() {
   try {
