@@ -50,6 +50,10 @@ const props = defineProps({
   },
   labelVisuallyHidden: {
     type: Boolean
+  },
+  validated: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -58,7 +62,8 @@ const { compact } = useCompact(elementRef, { threshold: toRef(props, 'compactThr
 
 const classList = computed(() => {
   return {
-    'form-fieldset--required': props.required
+    'form-fieldset--required': props.required,
+    'was-validated': props.validated
   }
 })
 
@@ -85,6 +90,7 @@ const labelColsLg = computed(() => {
     :label-for="labelFor"
     :description="compact ? description : null"
     :label-visually-hidden="labelVisuallyHidden"
+    :validated="validated"
   >
     <template #label>
       <div class="form-fieldset__label text-body-emphasis">
