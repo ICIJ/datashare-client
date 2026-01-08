@@ -425,6 +425,7 @@ export const routes = [
         component: () => import('@/views/Settings/SettingsView/SettingsView'),
         children: [
           {
+            name: 'settings.redirect',
             path: '',
             redirect: '/settings/appearance'
           },
