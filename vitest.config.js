@@ -15,7 +15,13 @@ export default defineConfig(configEnv =>
         exclude: [...configDefaults.exclude, 'e2e/**'],
         root: fileURLToPath(new URL('./', import.meta.url)),
         setupFiles: [resolve(__dirname, 'tests/unit/setup.js')],
-        pool: 'vmForks',
+        pool: 'forks',
+        poolOptions: {
+          forks: {
+            execArgv: ['--max-old-space-size=4096']
+          }
+        },
+        testTimeout: 10000,
         maxWorkers: 1,
         minWorkers: 1
       }
