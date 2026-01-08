@@ -6,7 +6,30 @@ import { globals as iconsGlobals } from './bin/icons.js'
 
 export default [
   {
-    ignores: ['public']
+    ignores: [
+      'public',
+      'dist',
+      'storybook-static',
+      'coverage',
+      // Ignore non-JS/Vue files that ESLint scans but can't lint
+      '**/*.md',
+      '**/*.mdx',
+      '**/*.json',
+      '**/*.yml',
+      '**/*.yaml',
+      '**/*.html',
+      '**/*.scss',
+      '**/*.css',
+      '**/*.svg',
+      '**/*.png',
+      '**/*.hbs',
+      '**/*.txt',
+      '.env*',
+      '.editorconfig',
+      '.gitignore',
+      'Makefile',
+      'crowdin.yml',
+    ]
   },
 
   // ICIJ ESLint shared config (includes Vue, TypeScript, Stylistic and Vitest)
