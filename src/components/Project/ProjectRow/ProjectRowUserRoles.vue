@@ -1,12 +1,15 @@
 <script setup>
 import DisplayRole from '@/components/Display/DisplayRole'
+import {usePolicies} from "@/composables/usePolicies.js";
 
-defineProps({
-  roles: {
-    type: Array,
+const props = defineProps({
+  project: {
+    type: Object,
     required: true,
   }
 })
+const { getRolesByProject } = usePolicies()
+const roles = getRolesByProject(props.project.name)
 </script>
 
 <template>
