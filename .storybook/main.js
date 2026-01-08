@@ -28,13 +28,10 @@ const config = {
     name: '@storybook/vue3-vite',
     options: {},
   },
-  // needed SB9 and storybook-vue3-router 5.0.0 compatibility  https://github.com/NickMcBurney/storybook-vue3-router/issues/68
-  viteFinal: async config =>
+  viteFinal: async (config) =>
     mergeConfig(config, {
       resolve: {
         alias: {
-          // make every import of "@storybook/addon-actions"
-          // resolve to the new package
           '@storybook/addon-actions': 'storybook/actions',
         },
       },
