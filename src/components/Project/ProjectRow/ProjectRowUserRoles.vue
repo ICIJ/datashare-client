@@ -1,6 +1,6 @@
 <script setup>
 import DisplayRole from '@/components/Display/DisplayRole'
-import {usePolicies} from "@/composables/usePolicies.js";
+import { usePolicies } from '@/composables/usePolicies.js'
 
 const props = defineProps({
   project: {
