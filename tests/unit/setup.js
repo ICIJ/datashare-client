@@ -1,4 +1,18 @@
 import 'whatwg-fetch'
+import { config } from '@vue/test-utils'
+import { ref } from 'vue'
+
+// Provide mock context for bootstrap-vue-next directives that require BApp (v0.30+)
+// Different versions use different key formats, so we provide both
+const defaultsKeyPlugin = 'BootstrapVueNext__ID__defaults__plugin__' // v0.30.4 (murmur-next)
+const defaultsKeyRegistry = 'BootstrapVueNext__ID__defaults__registry__' // v0.30.5
+const defaultsValue = ref({})
+
+config.global.provide = {
+  ...config.global.provide,
+  [defaultsKeyPlugin]: defaultsValue,
+  [defaultsKeyRegistry]: defaultsValue
+}
 
 // Save the original log method for later use
 const log = global.console.log
