@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { isFunction, kebabCase } from 'lodash'
 import { useI18n } from 'vue-i18n'
-import PhosphorIcon from '@/components/PhosphorIcon.vue'
+import { PhosphorIcon } from '@icij/murmur-next'
 
 import DisplayRaw from '@/components/Display/DisplayRaw'
 import DisplayDatetime from '@/components/Display/DisplayDatetime'

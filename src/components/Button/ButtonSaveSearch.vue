@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { PhFloppyDiskBack, PhCheck } from '@phosphor-icons/vue'
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur-next'
 

@@ -66,7 +66,7 @@
 import bodybuilder from 'bodybuilder'
 import { camelCase, flatten, get, iteratee, noop, uniqueId } from 'lodash'
 import InfiniteLoading from 'v3-infinite-loading'
-import PhosphorIcon from '@/components/PhosphorIcon.vue'
+import { PhosphorIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 import { toRef } from 'vue'
 

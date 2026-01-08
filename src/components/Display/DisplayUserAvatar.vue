@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, toRef, watch } from 'vue'
-import PhosphorIcon from '@/components/PhosphorIcon.vue'
+import { PhosphorIcon } from '@icij/murmur-next'
 
 import { usePipelinesStore } from '@/store/modules/pipelines'
 

@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import PhosphorIcon from '@/components/PhosphorIcon.vue'
+import { PhosphorIcon } from '@icij/murmur-next'
 import trim from 'lodash/trim'
 import { useI18n } from 'vue-i18n'
 
