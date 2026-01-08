@@ -33,7 +33,6 @@
         />
       </template>
     </page-offcanvas>
-    <b-modal-orchestrator />
     <hook name="app:after" />
   </div>
 </template>
