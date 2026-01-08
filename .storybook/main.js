@@ -28,7 +28,7 @@ const config = {
     name: '@storybook/vue3-vite',
     options: {},
   },
-  viteFinal: async (config) =>
+  viteFinal: async config =>
     mergeConfig(config, {
       resolve: {
         alias: {
