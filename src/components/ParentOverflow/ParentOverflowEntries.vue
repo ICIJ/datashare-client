@@ -37,7 +37,7 @@ const props = defineProps({
     type: Boolean
   },
   dropdownEntryTag: {
-    type: String,
+    type: [String, Object],
     default: () => BDropdownItem
   },
   dropdownTeleportTo: {
