@@ -35,7 +35,7 @@
     "axios": "^1.13.2",
     "bodybuilder": "^2.5.0",
     "bootstrap": "^5.3.8",
-    "bootstrap-vue-next": "0.30.5",
+    "bootstrap-vue-next": "0.42.0",
     "d3": "^7.6.1",
     "dayjs": "^1.11.19",
     "elasticsearch-browser": "16.7.1",
@@ -114,5 +114,8 @@
   "engines": {
     "node": ">= 20",
     "npm": ">= 8"
+  },
+  "resolutions": {
+    "bootstrap-vue-next": "0.30.5"
   }
 }
