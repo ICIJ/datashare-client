@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@floating-ui/vue": "^1.1.9",
-    "@icij/murmur-next": "4.5.12",
+    "@icij/murmur-next": "4.7.4",
     "@phosphor-icons/vue": "^2.2.1",
     "@popperjs/core": "^2.11.8",
     "@tato30/vue-pdf": "^1.11.5",
@@ -73,6 +73,7 @@
   },
   "devDependencies": {
     "@icij/eslint-config": "^3.0.3",
+    "@iconify-json/ph": "^1.2.2",
     "@storybook/addon-docs": "^10.1.11",
     "@storybook/addon-links": "^10.1.11",
     "@storybook/addon-themes": "^10.1.11",
@@ -95,6 +96,7 @@
     "storybook-addon-vue-slots": "^0.9.29",
     "storybook-vue3-router": "^7.0.0",
     "unplugin-auto-import": "^20.3.0",
+    "unplugin-icons": "^22.5.0",
     "unplugin-vue-components": "^30.0.0",
     "vite": "^7.3.1",
     "vite-plugin-vue-devtools": "^8.0.5",
@@ -114,8 +116,5 @@
   "engines": {
     "node": ">= 20",
     "npm": ">= 8"
-  },
-  "resolutions": {
-    "bootstrap-vue-next": "0.30.5"
   }
 }

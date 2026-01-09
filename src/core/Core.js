@@ -7,7 +7,7 @@ import VCalendar from 'v-calendar'
 import VueScrollTo from 'vue-scrollto'
 import Vue3Toastify, { toast } from 'vue3-toastify'
 import { createBootstrap, BApp } from 'bootstrap-vue-next'
-import { createApp, defineComponent, toValue, reactive, ref, watchEffect, h } from 'vue'
+import { createApp, defineComponent, toValue, reactive, watchEffect, h } from 'vue'
 import { createI18n } from 'vue-i18n'
 import { createRouter, createWebHashHistory } from 'vue-router'
 import { iteratee, get } from 'lodash'
@@ -146,13 +146,6 @@ class Core extends Behaviors {
   useBootstrapVue() {
     this._bootstrapVue = createBootstrap({ components: true, directives: true })
     this.use(this.bootstrapVue)
-    // Provide legacy injection keys for murmur-next compatibility
-    // murmur-next bundles bootstrap-vue-next 0.30.x which uses different keys
-    const defaultsKeyPlugin = 'BootstrapVueNext__ID__defaults__plugin__' // v0.30.4 (murmur-next)
-    const defaultsKeyRegistry = 'BootstrapVueNext__ID__defaults__registry__' // v0.30.5
-    const defaultsValue = ref({})
-    this.vue.provide(defaultsKeyPlugin, defaultsValue)
-    this.vue.provide(defaultsKeyRegistry, defaultsValue)
     return this
   }
 
