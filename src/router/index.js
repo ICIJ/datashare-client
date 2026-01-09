@@ -1,3 +1,22 @@
+import IIPhMagnifyingGlass from '~icons/ph/magnifying-glass'
+import IIPhListChecks from '~icons/ph/list-checks'
+import IIPhClockCounterClockwise from '~icons/ph/clock-counter-clockwise'
+import IIPhRocketLaunch from '~icons/ph/rocket-launch'
+import IIPhDotsNine from '~icons/ph/dots-nine'
+import IIPhUsersThree from '~icons/ph/users-three'
+import IIPhPlus from '~icons/ph/plus'
+import IIPhFiles from '~icons/ph/files'
+import IIPhDownloadSimple from '~icons/ph/download-simple'
+import IIPhListMagnifyingGlass from '~icons/ph/list-magnifying-glass'
+import IIPhCirclesThreePlus from '~icons/ph/circles-three-plus'
+import IIPhChartBar from '~icons/ph/chart-bar'
+import IIPhTreeStructure from '~icons/ph/tree-structure'
+import IIPhPolygon from '~icons/ph/polygon'
+import IIPhInfo from '~icons/ph/info'
+import IIPhPencilSimple from '~icons/ph/pencil-simple'
+import IIPhGear from '~icons/ph/gear'
+import IIPhKeyboard from '~icons/ph/keyboard'
+
 import { MODE_NAME } from '@/mode'
 import { checkSearchOrder } from '@/router/guards/checkSearchOrder'
 import { checkSearchSort } from '@/router/guards/checkSearchSort'
@@ -24,7 +43,7 @@ export const routes = [
         path: '',
         meta: {
           title: 'search.title',
-          icon: PhMagnifyingGlass,
+          icon: IPhMagnifyingGlass,
           docs: [
             {
               title: 'Search documents',
@@ -81,7 +100,7 @@ export const routes = [
         name: 'search.saved.list',
         path: 'search/saved',
         meta: {
-          icon: PhListChecks,
+          icon: IPhListChecks,
           title: 'searchSavedList.title'
         },
         components: {
@@ -93,7 +112,7 @@ export const routes = [
         name: 'search.history.list',
         path: 'search/history',
         meta: {
-          icon: PhClockCounterClockwise,
+          icon: IPhClockCounterClockwise,
           title: 'searchHistoryList.title'
         },
         components: {
@@ -110,7 +129,7 @@ export const routes = [
         },
         meta: {
           title: 'task.title',
-          icon: PhRocketLaunch
+          icon: IPhRocketLaunch
         },
         children: [
           {
@@ -123,7 +142,7 @@ export const routes = [
             path: 'task-board',
             meta: {
               title: 'task.task-board.title',
-              icon: PhDotsNine,
+              icon: IPhDotsNine,
               settings: false
             },
             component: () => import('@/views/Task/TaskBoard/TaskBoard')
@@ -133,7 +152,7 @@ export const routes = [
             path: 'entities',
             meta: {
               title: 'task.entities.title',
-              icon: PhUsersThree
+              icon: IPhUsersThree
             },
             children: [
               {
@@ -151,7 +170,7 @@ export const routes = [
                 component: () => import('@/views/Task/TaskEntities/TaskEntitiesNew'),
                 meta: {
                   title: 'task.entities.new.title',
-                  icon: PhPlus
+                  icon: IPhPlus
                 }
               }
             ]
@@ -161,7 +180,7 @@ export const routes = [
             path: 'documents',
             meta: {
               title: 'task.documents.title',
-              icon: PhFiles,
+              icon: IPhFiles,
               allowedModes: [MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]
             },
             children: [
@@ -180,7 +199,7 @@ export const routes = [
                 props: ({ query }) => ({ project: query.project }),
                 meta: {
                   title: 'task.documents.new.title',
-                  icon: PhPlus
+                  icon: IPhPlus
                 }
               }
             ]
@@ -190,7 +209,7 @@ export const routes = [
             path: 'batch-download',
             meta: {
               title: 'task.batch-download.title',
-              icon: PhDownloadSimple
+              icon: IPhDownloadSimple
             },
             children: [
               {
@@ -208,7 +227,7 @@ export const routes = [
             path: 'batch-search',
             meta: {
               title: 'task.batch-search.title',
-              icon: PhListMagnifyingGlass
+              icon: IPhListMagnifyingGlass
             },
             children: [
               {
@@ -217,7 +236,7 @@ export const routes = [
                 component: () => import('@/views/Task/TaskBatchSearch/TaskBatchSearchList'),
                 meta: {
                   breadcrumb: false,
-                  icon: PhListMagnifyingGlass
+                  icon: IPhListMagnifyingGlass
                 }
               },
               {
@@ -226,7 +245,7 @@ export const routes = [
                 component: () => import('@/views/Task/TaskBatchSearch/TaskBatchSearchNew'),
                 meta: {
                   title: 'task.batch-search.new.title',
-                  icon: PhPlus,
+                  icon: IPhPlus,
                   docs: [
                     {
                       title: 'How to use batch searches',
@@ -280,7 +299,7 @@ export const routes = [
         path: 'projects',
         name: 'project',
         meta: {
-          icon: PhCirclesThreePlus,
+          icon: IPhCirclesThreePlus,
           title: 'projects.title'
         },
         components: {
@@ -295,7 +314,7 @@ export const routes = [
               default: () => import('@/views/Project/ProjectList/ProjectList')
             },
             meta: {
-              icon: PhDotsNine,
+              icon: IPhDotsNine,
               title: 'appSidebar.allProjects'
             }
           },
@@ -306,7 +325,7 @@ export const routes = [
               default: () => import('@/views/Project/ProjectNew')
             },
             meta: {
-              icon: PhPlus,
+              icon: IPhPlus,
               title: 'projectNew.title',
               allowedModes: [MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]
             }
@@ -344,7 +363,7 @@ export const routes = [
                     component: () =>
                       import('@/views/Project/ProjectView/ProjectViewOverview/ProjectViewOverviewInsights'),
                     meta: {
-                      icon: PhChartBar,
+                      icon: IPhChartBar,
                       title() {
                         return 'Insights'
                       }
@@ -356,7 +375,7 @@ export const routes = [
                     props: true,
                     component: () => import('@/views/Project/ProjectView/ProjectViewOverview/ProjectViewOverviewPaths'),
                     meta: {
-                      icon: PhTreeStructure,
+                      icon: IPhTreeStructure,
                       title() {
                         return 'Paths'
                       }
@@ -368,7 +387,7 @@ export const routes = [
                     props: true,
                     component: () => import('@/views/Project/ProjectView/ProjectViewOverview/ProjectViewOverviewGraph'),
                     meta: {
-                      icon: PhPolygon,
+                      icon: IPhPolygon,
                       title() {
                         return 'Graph'
                       }
@@ -381,7 +400,7 @@ export const routes = [
                     component: () =>
                       import('@/views/Project/ProjectView/ProjectViewOverview/ProjectViewOverviewDetails'),
                     meta: {
-                      icon: PhInfo,
+                      icon: IPhInfo,
                       title() {
                         return 'Details'
                       }
@@ -394,7 +413,7 @@ export const routes = [
                     component: () =>
                       import('@/views/Project/ProjectView/ProjectViewOverview/ProjectViewOverviewHistory'),
                     meta: {
-                      icon: PhClockCounterClockwise,
+                      icon: IPhClockCounterClockwise,
                       title: 'projectViewOverview.nav.history'
                     }
                   }
@@ -406,7 +425,7 @@ export const routes = [
                 props: true,
                 component: () => import('@/views/Project/ProjectView/ProjectViewEdit'),
                 meta: {
-                  icon: PhPencilSimple,
+                  icon: IPhPencilSimple,
                   title: 'projectViewEdit.title',
                   allowedModes: [MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]
                 }
@@ -420,7 +439,7 @@ export const routes = [
         path: '/settings',
         meta: {
           title: 'settings.title',
-          icon: PhGear
+          icon: IPhGear
         },
         component: () => import('@/views/Settings/SettingsView/SettingsView'),
         children: [
@@ -501,7 +520,7 @@ export const routes = [
         component: () => import('@/views/Shortcuts/ShortcutsView/ShortcutsView'),
         meta: {
           title: 'shortcutsView.title',
-          icon: PhKeyboard
+          icon: IPhKeyboard
         }
       },
       {
