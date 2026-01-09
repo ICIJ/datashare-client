@@ -2,6 +2,8 @@
 import { noop } from 'lodash'
 import { useI18n } from 'vue-i18n'
 
+import IPhChatsTeardrop from '~icons/ph/chats-teardrop'
+
 import DocumentUserCommentsHeader from '@/components/Document/DocumentUser/DocumentUserComments/DocumentUserCommentsHeader'
 import DocumentUserCommentsList from '@/components/Document/DocumentUser/DocumentUserComments/DocumentUserCommentsList'
 import DocumentUserCommentsForm from '@/components/Document/DocumentUser/DocumentUserComments/DocumentUserCommentsForm'
@@ -64,7 +66,7 @@ const { t } = useI18n()
 
 <template>
   <document-user-actions-card
-    :icon="PhChatsTeardrop"
+    :icon="IPhChatsTeardrop"
     :title="t('documentUserActions.comments', count ?? comments.length)"
     show-warning
     action-end
