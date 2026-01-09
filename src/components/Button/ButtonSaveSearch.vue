@@ -3,6 +3,9 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur-next'
 
+import IPhFloppyDiskBack from '~icons/ph/floppy-disk-back'
+import IPhCheck from '~icons/ph/check'
+
 import { useBreakpoints } from '@/composables/useBreakpoints'
 import { breakpointSizeValidator, SIZE } from '@/enums/sizes'
 
@@ -21,7 +24,7 @@ const props = defineProps({
 })
 
 const iconLeft = computed(() => {
-  return props.saved ? PhCheck : PhFloppyDiskBack
+  return props.saved ? IPhCheck : IPhFloppyDiskBack
 })
 
 const { breakpointDown } = useBreakpoints()

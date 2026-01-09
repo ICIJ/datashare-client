@@ -2,6 +2,8 @@
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur-next'
 
+import IPhArrowCounterClockwise from '~icons/ph/arrow-counter-clockwise'
+
 import { VARIANT } from '@/enums/variants'
 defineProps({
   labelKey: { type: String, default: 'global.reset' },
@@ -12,7 +14,7 @@ const { t } = useI18n()
 
 <template>
   <button-icon
-    :icon-left="PhArrowCounterClockwise"
+    :icon-left="IPhArrowCounterClockwise"
     :variant="variant"
   >
     {{ t(labelKey) }}

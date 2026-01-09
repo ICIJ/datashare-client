@@ -2,6 +2,8 @@
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur-next'
 
+import IPhDownloadSimple from '~icons/ph/download-simple'
+
 import { ICON_WEIGHT } from '@/enums/iconWeights'
 
 const iconLeftHoverWeight = ICON_WEIGHT.BOLD
@@ -14,7 +16,7 @@ const { t } = useI18n()
     variant="link"
     :label="t('buttonDownloadDocuments.label')"
     hide-label
-    :icon-left="PhDownloadSimple"
+    :icon-left="IPhDownloadSimple"
     :icon-left-hover-weight="iconLeftHoverWeight"
     :square="true"
   />
