@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from 'vue'
 import DisplayRole from '@/components/Display/DisplayRole'
 import { usePolicies } from '@/composables/usePolicies.js'
 
@@ -9,7 +10,7 @@ const props = defineProps({
   }
 })
 const { getRolesByProject } = usePolicies()
-const roles = getRolesByProject(props.project.name)
+const roles = computed(() => getRolesByProject(props.project.name))
 </script>
 
 <template>
