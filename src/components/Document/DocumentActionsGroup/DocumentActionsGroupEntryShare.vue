@@ -2,6 +2,8 @@
 import { nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+import IPhShareNetwork from '~icons/ph/share-network'
+
 import DocumentActionsGroupEntry from './DocumentActionsGroupEntry'
 
 import DocumentSharePopover from '@/components/Document/DocumentSharePopover/DocumentSharePopover'
@@ -47,7 +49,7 @@ const blur = () => nextTick(() => window.document?.activeElement.blur())
     <template #target>
       <document-actions-group-entry
         class="document-actions-group-entry-share"
-        icon="share-network"
+        :icon="IPhShareNetwork"
         hide-tooltip
         :label="t('documentActionsGroup.share')"
         :size="size"

@@ -1,5 +1,5 @@
 <script setup>
-import { PhosphorIcon, EllipsisTooltip as vEllipsisTooltip } from '@icij/murmur-next'
+import { AppIcon, EllipsisTooltip as vEllipsisTooltip } from '@icij/murmur-next'
 
 import DocumentMetadataActions from './DocumentMetadataActions'
 
@@ -35,7 +35,7 @@ defineProps({
 
 <template>
   <div class="document-metadata">
-    <phosphor-icon
+    <app-icon
       class="document-metadata__icon"
       :name="icon"
     />

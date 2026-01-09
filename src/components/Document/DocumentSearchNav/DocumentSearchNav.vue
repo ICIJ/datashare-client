@@ -1,6 +1,9 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 
+import IPhCaretLeft from '~icons/ph/caret-left'
+import IPhCaretRight from '~icons/ph/caret-right'
+
 import DocumentSearchNavItem from './DocumentSearchNavItem'
 
 import { useKeyboardShortcuts } from '@/composables/useKeyboardShortcuts'
@@ -40,14 +43,14 @@ wheneverRouteActionShortcut('goToNextDocument', () => {
   <div class="document-search-nav">
     <slot>
       <document-search-nav-item
-        :icon="PhCaretLeft"
+        :icon="IPhCaretLeft"
         :label="t('documentSearchNavItem.previous')"
         :disabled="disabledPrevious"
         :tooltip-placement="tooltipPlacement"
         @click="$emit('previous')"
       />
       <document-search-nav-item
-        :icon="PhCaretRight"
+        :icon="IPhCaretRight"
         :label="t('documentSearchNavItem.next')"
         :disabled="disabledNext"
         :tooltip-placement="tooltipPlacement"

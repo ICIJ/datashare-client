@@ -44,10 +44,9 @@
           variant="warning"
           class="ms-auto mt-3 mb-0 my-lg-auto"
         >
-          <phosphor-icon
-            :name="PhWarning"
-            class="me-2"
-          />
+          <app-icon class="me-2">
+            <i-ph-warning />
+          </app-icon>
           {{ t('document.player.video.unknownFormat') }}
         </b-alert>
       </div>
@@ -57,7 +56,7 @@
 
 <script>
 import { mapWritableState } from 'pinia'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 
 import { usePlayerStore } from '@/store/modules'
@@ -71,7 +70,7 @@ export default {
   name: 'DocumentViewerVideo',
   components: {
     DismissableContentWarning,
-    PhosphorIcon
+    AppIcon
   },
   props: {
     /**

@@ -2,6 +2,8 @@
 import { computed, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+import IPhDownloadSimple from '~icons/ph/download-simple'
+
 import DocumentActionsGroupEntry from './DocumentActionsGroupEntry'
 
 import { useDocumentDownload } from '@/composables/useDocumentDownload'
@@ -53,7 +55,7 @@ const blur = () => nextTick(() => window.document?.activeElement.blur())
       <document-actions-group-entry
         ref="element"
         class="document-actions-group-entry-download"
-        icon="download-simple"
+        :icon="IPhDownloadSimple"
         download
         hide-tooltip
         :size="size"

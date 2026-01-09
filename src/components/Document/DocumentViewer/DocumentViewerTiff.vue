@@ -44,13 +44,13 @@
           <button-row-action
             class="tiff-viewer__preview__controls__button"
             :label="t('documentViewerImage.rotateCounterClockwise')"
-            :icon-left="PhArrowCounterClockwise"
+            :icon-left="IPhArrowCounterClockwise"
             @click="rotateActivePage(active, -1)"
           />
           <button-row-action
             class="tiff-viewer__preview__controls__button"
             :label="t('documentViewerImage.rotateClockwise')"
-            :icon-left="PhArrowClockwise"
+            :icon-left="IPhArrowClockwise"
             @click="rotateActivePage(active, 1)"
           />
         </div>
@@ -73,6 +73,9 @@
 import { Image } from 'image-js'
 import { useI18n } from 'vue-i18n'
 import * as tiff from 'tiff'
+
+import IPhArrowCounterClockwise from '~icons/ph/arrow-counter-clockwise'
+import IPhArrowClockwise from '~icons/ph/arrow-clockwise'
 
 import { useDocumentPreview } from '@/composables/useDocumentPreview'
 import AppOverlay from '@/components/AppOverlay/AppOverlay'
@@ -102,7 +105,7 @@ export default {
   setup() {
     const { isBlurred } = useDocumentPreview()
     const { t } = useI18n()
-    return { isBlurred, t }
+    return { isBlurred, t, IPhArrowCounterClockwise, IPhArrowClockwise }
   },
   data() {
     return {

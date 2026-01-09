@@ -3,6 +3,8 @@ import { computed } from 'vue'
 import { matchesProperty, negate, property } from 'lodash'
 import { useI18n } from 'vue-i18n'
 
+import IPhHash from '~icons/ph/hash'
+
 import { useMode } from '@/composables/useMode'
 import ButtonTag from '@/components/Button/ButtonTag'
 import DocumentUserActionsCard from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsCard'
@@ -38,7 +40,7 @@ const count = computed(() => tags.length)
 <template>
   <document-user-actions-card
     action-start
-    icon="hash"
+    :icon="IPhHash"
     :title="t('documentUserActions.tags', count)"
     :is-split="isServer"
     :show-warning="isServer"

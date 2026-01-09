@@ -12,6 +12,9 @@ import DocumentThumbnail from '@/components/Document/DocumentThumbnail/DocumentT
 import ButtonRowAction from '@/components/Button/ButtonRowAction/ButtonRowAction'
 import DismissableContentWarning from '@/components/Dismissable/DismissableContentWarning'
 
+import IPhArrowCounterClockwise from '~icons/ph/arrow-counter-clockwise'
+import IPhArrowClockwise from '~icons/ph/arrow-clockwise'
+
 const props = defineProps({
   document: {
     type: Object,
@@ -63,13 +66,13 @@ onBeforeMount(waitFor(fetch))
         <button-row-action
           class="image-viewer__wrapper__controls__button"
           :label="t('documentViewerImage.rotateCounterClockwise')"
-          :icon-left="PhArrowCounterClockwise"
+          :icon-left="IPhArrowCounterClockwise"
           @click="rotateCounterClockwise()"
         />
         <button-row-action
           class="image-viewer__wrapper__controls__button"
           :label="t('documentViewerImage.rotateClockwise')"
-          :icon-left="PhArrowClockwise"
+          :icon-left="IPhArrowClockwise"
           @click="rotateClockwise()"
         />
       </div>

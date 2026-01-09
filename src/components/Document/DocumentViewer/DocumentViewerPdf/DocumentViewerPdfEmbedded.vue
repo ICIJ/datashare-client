@@ -2,6 +2,8 @@
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur-next'
 
+import IPhFilePdf from '~icons/ph/file-pdf'
+
 import DismissableContentWarningToggler from '@/components/Dismissable/DismissableContentWarningToggler'
 
 const modelValue = defineModel({ type: Boolean, default: false })
@@ -21,7 +23,7 @@ const { t } = useI18n()
   <div class="document-viewer-pdf-embedded d-flex flex-column gap-3 my-3">
     <button-icon
       class="document-viewer-pdf-embedded__button align-self-end"
-      :icon-left="PhFilePdf"
+      :icon-left="IPhFilePdf"
       :label="t('documentViewerPdfEmbedded.switch')"
       @click="modelValue = false"
     />

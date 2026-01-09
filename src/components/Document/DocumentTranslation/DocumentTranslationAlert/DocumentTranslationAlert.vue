@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 
 import DocumentTranslationAlertSource from './DocumentTranslationAlertSource'
 import DocumentTranslationAlertTarget from './DocumentTranslationAlertTarget'
@@ -37,10 +37,9 @@ const classList = computed(() => {
     class="document-translation-alert alert flex-truncate d-flex align-items-center py-2"
     :class="classList"
   >
-    <phosphor-icon
-      :name="PhTranslate"
-      class="me-2 my-1 flex-shrink-0 d-none d-md-inline-flex"
-    />
+    <app-icon class="me-2 my-1 flex-shrink-0 d-none d-md-inline-flex">
+      <i-ph-translate />
+    </app-icon>
     <div class="d-flex align-items-center gap-1 gap-md-3 flex-wrap">
       Translated from:
       <div class="d-flex gap-1 text-nowrap flex-truncate me-md-4">
@@ -49,11 +48,12 @@ const classList = computed(() => {
           :source-language="sourceLanguage"
           class="text-truncate"
         />
-        <phosphor-icon
-          :name="PhCaretRight"
+        <app-icon
           class="flex-shrink-0"
           variant="warning"
-        />
+        >
+          <i-ph-caret-right />
+        </app-icon>
         <document-translation-alert-target
           :target-language="targetLanguage"
           class="text-truncate"

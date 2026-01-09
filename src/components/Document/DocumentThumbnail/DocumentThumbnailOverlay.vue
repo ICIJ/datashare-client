@@ -1,5 +1,5 @@
 <script setup>
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 
 defineProps({
   size: {
@@ -15,7 +15,7 @@ defineProps({
 
 <template>
   <span class="document-thumbnail-overlay">
-    <phosphor-icon
+    <app-icon
       :name="icon"
       :size="size"
     />

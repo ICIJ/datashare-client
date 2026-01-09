@@ -1,7 +1,9 @@
 <script setup>
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { PhosphorIcon, ButtonIcon } from '@icij/murmur-next'
+import { AppIcon, ButtonIcon } from '@icij/murmur-next'
+import IPhEyeClosed from '~icons/ph/eye-closed'
+import IPhEyeClosedFill from '~icons/ph/eye-closed-fill'
 
 const visible = defineModel('visible', {
   type: Boolean,
@@ -30,7 +32,7 @@ const toggle = () => (visible.value = !visible.value)
 const hideComments = 'documentUserCommentsList.hideComments'
 const showComments = 'documentUserCommentsList.showComments'
 const displayComments = computed(() => t(visible.value ? hideComments : showComments))
-const iconWeight = computed(() => (visible.value ? 'regular' : 'fill'))
+const iconLeft = computed(() => (visible.value ? IPhEyeClosed : IPhEyeClosedFill))
 const noHeader = computed(() => noToggler && noSort)
 </script>
 
@@ -43,15 +45,14 @@ const noHeader = computed(() => noToggler && noSort)
       v-if="!noSort"
       class="d-inline-flex align-items-center gap-1 text-nowrap text-body-secondary"
     >
-      <phosphor-icon :name="PhSortDescending" />
+      <app-icon><i-ph-sort-descending /></app-icon>
       {{ t('documentUserCommentsList.sortingText') }}
     </span>
     <button-icon
       v-if="!noToggler"
       class="text-nowrap ms-auto p-0"
       variant="outline-link"
-      :icon-left="PhEyeClosed"
-      :icon-left-weight="iconWeight"
+      :icon-left="iconLeft"
       :label="displayComments"
       :tooltip-delay="tooltipDelay"
       @click="toggle"

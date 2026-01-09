@@ -2,6 +2,9 @@
 import { computed, ref, watch } from 'vue'
 import { matchesProperty } from 'lodash'
 import { useI18n } from 'vue-i18n'
+import { AppIcon } from '@icij/murmur-next'
+import IPhMinus from '~icons/ph/minus'
+import IPhPlus from '~icons/ph/plus'
 
 import { SCALE_FIT, SCALE_WIDTH, SCALES } from '@/enums/documentViewerPdf'
 import ButtonRowAction from '@/components/Button/ButtonRowAction/ButtonRowAction'
@@ -46,7 +49,7 @@ watch(
     @click="modelValue = SCALE_FIT"
   >
     <span class="d-flex align-items-center gap-2">
-      <phosphor-icon :name="PhArrowsInLineHorizontal" />
+      <app-icon><i-ph-arrows-in-line-horizontal /></app-icon>
       {{ t('documentViewerPdf.scale.fit') }}
     </span>
   </b-dropdown-item-button>
@@ -55,24 +58,24 @@ watch(
     @click="modelValue = SCALE_WIDTH"
   >
     <span class="d-flex align-items-center gap-2">
-      <phosphor-icon :name="PhArrowsHorizontal" />
+      <app-icon><i-ph-arrows-horizontal /></app-icon>
       {{ t('documentViewerPdf.scale.width') }}
     </span>
   </b-dropdown-item-button>
   <b-dropdown-text :text-class="{ active: typeof modelValue === 'number' }">
     <span class="d-flex align-items-center gap-2">
-      <phosphor-icon :name="PhMagnifyingGlass" />
+      <app-icon><i-ph-magnifying-glass /></app-icon>
       {{ t('documentViewerPdf.scale.zoom') }}
       <span class="ms-auto d-flex align-items-center gap-1">
         <button-row-action
-          :icon-left="PhMinus"
+          :icon-left="IPhMinus"
           :label="t('documentViewerPdf.scale.zoomOut')"
           @click="zoomOut()"
           @click.stop
         />
         {{ lastNumericValueText }}
         <button-row-action
-          :icon-left="PhPlus"
+          :icon-left="IPhPlus"
           :label="t('documentViewerPdf.scale.zoomOut')"
           @click="zoomIn()"
           @click.stop

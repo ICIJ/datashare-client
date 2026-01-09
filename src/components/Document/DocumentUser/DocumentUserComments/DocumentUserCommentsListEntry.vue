@@ -2,6 +2,8 @@
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur-next'
 
+import IPhArrowSquareOut from '~icons/ph/arrow-square-out'
+
 import DisplayUser from '@/components/Display/DisplayUser'
 import DisplayUserAvatar from '@/components/Display/DisplayUserAvatar'
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
@@ -55,7 +57,7 @@ const { t } = useI18n()
         <button-icon
           class="px-1"
           variant="link"
-          icon-left="arrowSquareOut"
+          :icon-left="IPhArrowSquareOut"
           hide-label
           hide-tooltip
           target="_blank"

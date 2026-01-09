@@ -2,6 +2,8 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+import IPhStar from '~icons/ph/star'
+
 import DocumentActionsGroupEntry from './DocumentActionsGroupEntry'
 
 import { useStarredStore } from '@/store/modules'
@@ -38,7 +40,7 @@ const toggleStar = () => {
 <template>
   <document-actions-group-entry
     class="document-actions-group-entry-star"
-    icon="star"
+    :icon="IPhStar"
     :label="t('documentActionsGroup.star')"
     :tooltip-placement="tooltipPlacement"
     :fill="isStarred"
