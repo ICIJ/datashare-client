@@ -2,6 +2,12 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+import IPhCirclesThreePlus from '~icons/ph/circles-three-plus'
+import IPhFiles from '~icons/ph/files'
+import IPhCalendarBlank from '~icons/ph/calendar-blank'
+import IPhTextAlignLeft from '~icons/ph/text-align-left'
+import IPhUserSquare from '~icons/ph/user-square'
+
 import PageTableTh from '@/components/PageTable/PageTableTh'
 import { useBreakpoints } from '@/composables/useBreakpoints'
 import ModeServerOnly from '@/components/Mode/ModeServerOnly'
@@ -25,7 +31,7 @@ const compact = computed(() => {
 <template>
   <page-table-th
     :label="t('projectEntriesTableHead.name')"
-    :icon="PhCirclesThreePlus"
+    :icon="IPhCirclesThreePlus"
     emphasis
     sortable
     name="name"
@@ -33,26 +39,26 @@ const compact = computed(() => {
   <page-table-th
     v-if="!compact"
     :label="t('projectEntriesTableHead.description')"
-    :icon="PhTextAlignLeft"
+    :icon="IPhTextAlignLeft"
     name="description"
   />
   <page-table-th
     :label="t('projectEntriesTableHead.documents')"
-    :icon="PhFiles"
+    :icon="IPhFiles"
     number
     sortable
     name="documentsCount"
   />
   <page-table-th
     :label="t('projectEntriesTableHead.updatedOn')"
-    :icon="PhCalendarBlank"
+    :icon="IPhCalendarBlank"
     sortable
     name="updateDate"
   />
   <mode-server-only>
     <page-table-th
       :label="t('projectEntriesTableHead.userRoles')"
-      :icon="PhUserSquare"
+      :icon="IPhUserSquare"
       sortable
       name="userRoles"
     />

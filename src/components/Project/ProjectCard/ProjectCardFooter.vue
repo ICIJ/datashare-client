@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur-next'
+import IPhMagnifyingGlass from '~icons/ph/magnifying-glass'
 
 import ProjectCardUpdateDate from './ProjectCardUpdateDate'
 import ProjectCardDocumentsCount from './ProjectCardDocumentsCount'
@@ -49,7 +50,7 @@ const toProjectSearch = computed(() => ({
       </div>
       <button-icon
         :to="toProjectSearch"
-        icon-left="magnifying-glass"
+        :icon-left="IPhMagnifyingGlass"
         variant="outline-primary"
         truncate
         class="project-card-footer__search align-self-start"
