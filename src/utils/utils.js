@@ -1,5 +1,10 @@
 import { get } from 'lodash'
 
+import IPhX from '~icons/ph/x'
+import IPhInfo from '~icons/ph/info'
+import IPhCheck from '~icons/ph/check'
+import IPhWarning from '~icons/ph/warning'
+
 import settings from '@/utils/settings'
 import { slugger } from '@/utils/strings'
 import types from '@/utils/contentTypes.json'
@@ -53,10 +58,10 @@ function toVariant(string = '', defaultVariant = 'dark', prefix = '') {
 function toVariantIcon(string = '', defaultVariant = 'dark') {
   const variant = toVariant(string, defaultVariant)
   const icons = {
-    danger: 'x',
-    info: 'info',
-    success: 'check',
-    warning: 'warning'
+    danger: IPhX,
+    info: IPhInfo,
+    success: IPhCheck,
+    warning: IPhWarning
   }
   return icons[string] ?? icons[variant]
 }

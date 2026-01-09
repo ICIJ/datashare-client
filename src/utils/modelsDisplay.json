@@ -5,22 +5,22 @@
     "foreground": "var(--bs-secondary)"
   },
   "Pages": {
-    "icon": ["files", "fill"],
+    "icon": "files-fill",
     "background": "var(--bs-success-bg-subtle)",
     "foreground": "var(--bs-success)"
   },
   "Image": {
-    "icon": ["image", "fill"],
+    "icon": "image-fill",
     "background": "var(--bs-danger-bg-subtle)",
     "foreground": "var(--bs-danger)"
   },
   "Video": {
-    "icon": ["play", "fill"],
+    "icon": "play-fill",
     "background": "var(--bs-danger-bg-subtle)",
     "foreground": "var(--bs-danger)"
   },
   "Audio": {
-    "icon": ["headphones", "fill"],
+    "icon": "headphones-fill",
     "background": "var(--bs-danger-bg-subtle)",
     "foreground": "var(--bs-danger)"
   },
@@ -30,7 +30,7 @@
     "foreground": "var(--bs-info)"
   },
   "Table": {
-    "icon": ["grid-four", "fill"],
+    "icon": "grid-four-fill",
     "background": "var(--bs-warning-bg-subtle)",
     "foreground": "var(--bs-warning)"
   },
@@ -40,12 +40,12 @@
     "foreground": "var(--bs-primary)"
   },
   "Email": {
-    "icon": ["at", "fill"],
+    "icon": "at-fill",
     "background": "var(--bs-primary-bg-subtle)",
     "foreground": "var(--bs-primary)"
   },
   "Package": {
-    "icon": ["archive", "fill"],
+    "icon": "archive-fill",
     "background": "var(--bs-secondary-bg-subtle)",
     "foreground": "var(--bs-secondary)"
   }

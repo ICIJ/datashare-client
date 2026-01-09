@@ -1,3 +1,8 @@
+import IPhListMagnifyingGlass from '~icons/ph/list-magnifying-glass'
+import IPhDownloadSimple from '~icons/ph/download-simple'
+import IPhFiles from '~icons/ph/files'
+import IPhUsers from '~icons/ph/users'
+
 const prefix = 'org.icij.datashare.tasks'
 const BATCH_SEARCH = `${prefix}.BatchSearchRunner`
 const BATCH_SEARCH_PROXY = `${prefix}.BatchSearchRunnerProxy`
@@ -18,13 +23,13 @@ export const TASK_NAME = Object.freeze({
 })
 
 export const TASK_NAME_ICON = Object.freeze({
-  [BATCH_SEARCH]: 'list-magnifying-glass',
-  [BATCH_SEARCH_PROXY]: 'list-magnifying-glass',
-  [BATCH_DOWNLOAD]: 'download-simple',
-  [SCAN]: 'files',
-  [INDEX]: 'files',
-  [EXTRACT_NLP]: 'users',
-  [ENQUEUE_FROM_INDEX]: 'files'
+  [BATCH_SEARCH]: IPhListMagnifyingGlass,
+  [BATCH_SEARCH_PROXY]: IPhListMagnifyingGlass,
+  [BATCH_DOWNLOAD]: IPhDownloadSimple,
+  [SCAN]: IPhFiles,
+  [INDEX]: IPhFiles,
+  [EXTRACT_NLP]: IPhUsers,
+  [ENQUEUE_FROM_INDEX]: IPhFiles
 })
 export const HUMAN_TASK_NAME = Object.freeze({
   [BATCH_SEARCH]: 'taskNames.batchSearch',
