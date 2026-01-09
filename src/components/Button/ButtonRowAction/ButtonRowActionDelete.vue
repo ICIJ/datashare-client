@@ -1,6 +1,8 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 
+import IPhTrash from '~icons/ph/trash'
+
 import ButtonRowAction from '@/components/Button/ButtonRowAction/ButtonRowAction'
 
 const { t } = useI18n()
@@ -8,7 +10,7 @@ const { t } = useI18n()
 
 <template>
   <button-row-action
-    :icon="PhTrash"
+    :icon="IPhTrash"
     :label="t('buttonRowAction.delete')"
   />
 </template>

@@ -1,6 +1,8 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 
+import IPhPencilSimple from '~icons/ph/pencil-simple'
+
 import ButtonRowAction from '@/components/Button/ButtonRowAction/ButtonRowAction'
 
 const { t } = useI18n()
@@ -8,7 +10,7 @@ const { t } = useI18n()
 
 <template>
   <button-row-action
-    :icon="PhPencilSimple"
+    :icon="IPhPencilSimple"
     :label="t('buttonRowAction.edit')"
   />
 </template>
