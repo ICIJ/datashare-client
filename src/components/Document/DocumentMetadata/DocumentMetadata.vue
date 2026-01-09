@@ -1,6 +1,8 @@
 <script setup>
 import { AppIcon, EllipsisTooltip as vEllipsisTooltip } from '@icij/murmur-next'
 
+import IPhInfo from '~icons/ph/info'
+
 import DocumentMetadataActions from './DocumentMetadataActions'
 
 const pinned = defineModel('pinned', { type: Boolean })
@@ -8,7 +10,7 @@ const pinned = defineModel('pinned', { type: Boolean })
 defineProps({
   icon: {
     type: [String, Object, Array],
-    default: PhInfo
+    default: () => IPhInfo
   },
   name: {
     type: String,
