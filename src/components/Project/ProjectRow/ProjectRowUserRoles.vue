@@ -11,8 +11,11 @@ defineProps({
 
 <template>
   <td class="project-row-user-roles">
-      <slot>
-        <display-roles :project="project" no-icon/>
-      </slot>
+    <slot>
+      <display-roles
+        :project="project"
+        no-icon
+      />
+    </slot>
   </td>
 </template>

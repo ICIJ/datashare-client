@@ -2,7 +2,8 @@
 import { computed } from 'vue'
 
 import DisplayRole from '@/components/Display/DisplayRole.vue'
-import {usePolicies} from "@/composables/usePolicies.js";
+import { usePolicies } from '@/composables/usePolicies.js'
+import { useI18n } from 'vue-i18n'
 const props = defineProps({
   project: {
     type: Object,
@@ -14,18 +15,22 @@ const props = defineProps({
   }
 })
 
-const { getRolesByProject } = usePolicies()
+const { getRolesByProject, formatRoles } = usePolicies()
 const roles = computed(() => getRolesByProject(props.project.name))
+const { t } = useI18n()
+const rolesTitle = computed(() => t('displayRoles.yourRoles', { roles: formatRoles(roles.value) }, roles.value.length))
+
 </script>
 
 <template>
   <span
     v-if="roles"
     class="text-secondary-emphasis d-inline-flex align-items-center gap-1"
+    :title="rolesTitle"
   ><phosphor-icon
-    v-if="!noIcon"
-    :name="PhUserSquare"
-  />
+     v-if="!noIcon"
+     :name="PhUserSquare"
+   />
     <template
       v-for="(role,index) in roles"
       :key="index"

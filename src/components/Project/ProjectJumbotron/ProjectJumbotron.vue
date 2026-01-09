@@ -16,6 +16,8 @@ import DisplayDatetime from '@/components/Display/DisplayDatetime'
 import ProjectLabel from '@/components/Project/ProjectLabel'
 import ProjectThumbnail from '@/components/Project/ProjectThumbnail'
 import ModeLocalOnly from '@/components/Mode/ModeLocalOnly'
+import ModeServerOnly from '@/components/Mode/ModeServerOnly.vue'
+import DisplayRoles from '@/components/Display/DisplayRoles.vue'
 
 const { breakpointDown } = useBreakpoints()
 const router = useRouter()
@@ -121,13 +123,15 @@ const promptProjectDeletion = async () => {
         class="flex-shrink-0"
       />
       <div class="d-flex flex-column gap-3 align-self-stretch">
+        qsdqsdqsdqs
+
         <p
           v-if="project.description"
           class="project-jumbotron__content__description m-0"
         >
           {{ project.description }}
         </p>
-        <footer class="project-jumbotron__content__footer d-md-flex gap-3 mt-auto">
+        <footer class="project-jumbotron__content__footer d-md-flex gap-3 mt-auto ">
           <hook
             name="project-jumbotron-content-footer:before"
             :bind="{ project }"
@@ -149,7 +153,14 @@ const promptProjectDeletion = async () => {
               {{ t('projectJumbotron.updateDate') }}
               <display-datetime :value="updateDate" />
             </span>
+            <mode-server-only>
+              <display-roles
+                :project="project"
+                class="text-body-secondary"
+              />
+            </mode-server-only>
           </div>
+
           <hook
             name="project-jumbotron-content-footer:after"
             :bind="{ project }"
