@@ -1,3 +1,5 @@
+import { markRaw } from 'vue'
+
 import IPhCirclesThreePlus from '~icons/ph/circles-three-plus'
 import IPhStar from '~icons/ph/star'
 import IPhHash from '~icons/ph/hash'
@@ -35,7 +37,7 @@ export default [
     options: {
       name: 'project',
       key: '_index',
-      icon: IPhCirclesThreePlus,
+      icon: markRaw(IPhCirclesThreePlus),
       order: 0,
       section: 'documentsInfo',
       preference: 'filter-project',
@@ -53,7 +55,7 @@ export default [
     options: {
       name: 'starred',
       key: '_id',
-      icon: IPhStar,
+      icon: markRaw(IPhStar),
       order: 10,
       section: 'userData',
       preference: 'filter-starred',
@@ -70,7 +72,7 @@ export default [
     options: {
       name: 'tags',
       key: 'tags',
-      icon: IPhHash,
+      icon: markRaw(IPhHash),
       order: 20,
       section: 'userData',
       preference: 'filter-tags'
@@ -81,7 +83,7 @@ export default [
     options: {
       name: 'recommendedBy',
       key: '_id',
-      icon: IPhUsers,
+      icon: markRaw(IPhUsers),
       modes: [MODE_NAME.SERVER],
       order: 30,
       section: 'userData',
@@ -98,7 +100,7 @@ export default [
     options: {
       name: 'path',
       key: 'byDirname',
-      icon: IPhTreeStructure,
+      icon: markRaw(IPhTreeStructure),
       order: 35,
       section: 'documentsInfo',
       hideAll: true,
@@ -112,7 +114,7 @@ export default [
     options: {
       name: 'contentType',
       key: 'contentType',
-      icon: IPhFile,
+      icon: markRaw(IPhFile),
       order: 40,
       section: 'documentsInfo',
       preference: 'filter-content-type'
@@ -123,7 +125,7 @@ export default [
     options: {
       name: 'creationDate',
       key: 'metadata.tika_metadata_dcterms_created',
-      icon: IPhCalendarBlank,
+      icon: markRaw(IPhCalendarBlank),
       order: 50,
       hideAll: true,
       hideSearch: true,
@@ -139,7 +141,7 @@ export default [
     options: {
       name: 'language',
       key: 'language',
-      icon: IPhGlobe,
+      icon: markRaw(IPhGlobe),
       order: 60,
       section: 'documentsInfo',
       preference: 'filter-language'
@@ -150,7 +152,7 @@ export default [
     options: {
       name: 'namedEntityPerson',
       key: 'byMentions',
-      icon: IPhUserSquare,
+      icon: markRaw(IPhUserSquare),
       category: namedEntityCategoryTranslation.namedEntityPerson,
       order: 70,
       section: 'entities',
@@ -162,7 +164,7 @@ export default [
     options: {
       name: 'namedEntityOrganization',
       key: 'byMentions',
-      icon: IPhBuildings,
+      icon: markRaw(IPhBuildings),
       category: namedEntityCategoryTranslation.namedEntityOrganization,
       order: 80,
       section: 'entities',
@@ -174,7 +176,7 @@ export default [
     options: {
       name: 'namedEntityLocation',
       key: 'byMentions',
-      icon: IPhMapPin,
+      icon: markRaw(IPhMapPin),
       category: namedEntityCategoryTranslation.namedEntityLocation,
       order: 90,
       section: 'entities',
@@ -186,7 +188,7 @@ export default [
     options: {
       name: 'namedEntityEmail',
       key: 'byMentions',
-      icon: IPhEnvelope,
+      icon: markRaw(IPhEnvelope),
       category: namedEntityCategoryTranslation.namedEntityEmail,
       order: 100,
       section: 'entities',
@@ -198,7 +200,7 @@ export default [
     options: {
       name: 'extractionLevel',
       key: 'extractionLevel',
-      icon: IPhPaperclip,
+      icon: markRaw(IPhPaperclip),
       hideSearch: true,
       order: 110,
       section: 'documentsInfo',
@@ -210,7 +212,7 @@ export default [
     options: {
       name: 'indexingDate',
       key: 'extractionDate',
-      icon: IPhCalendarPlus,
+      icon: markRaw(IPhCalendarPlus),
       hideSearch: true,
       order: 120,
       section: 'documentsInfo'
