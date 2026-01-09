@@ -1,6 +1,6 @@
 <script setup>
 import { LAYOUTS, layoutValidator } from '@/enums/pathTree'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 
 const modelValue = defineModel('modelValue', {
   type: String,
@@ -26,13 +26,13 @@ defineProps({
       :name="name"
     >
       <b-form-radio :value="LAYOUTS.TREE">
-        <phosphor-icon name="tree-view" /> {{ $t('pathTreeLayouts.tree') }}
+        <app-icon><i-ph-tree-view /></app-icon> {{ $t('pathTreeLayouts.tree') }}
       </b-form-radio>
       <b-form-radio :value="LAYOUTS.LIST">
-        <phosphor-icon name="list-bullets" /> {{ $t('pathTreeLayouts.list') }}
+        <app-icon><i-ph-list-bullets /></app-icon> {{ $t('pathTreeLayouts.list') }}
       </b-form-radio>
       <b-form-radio :value="LAYOUTS.GRID">
-        <phosphor-icon name="folder" /> {{ $t('pathTreeLayouts.grid') }}
+        <app-icon><i-ph-folder /></app-icon> {{ $t('pathTreeLayouts.grid') }}
       </b-form-radio>
     </b-form-radio-group>
   </div>

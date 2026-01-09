@@ -3,6 +3,8 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur-next'
 
+import IPhMagnifyingGlass from '~icons/ph/magnifying-glass'
+
 const props = defineProps({
   /**
    * List of projects to use with the search link
@@ -30,7 +32,7 @@ const to = computed(() => {
 
 <template>
   <button-icon
-    :icon-left="PhMagnifyingGlass"
+    :icon-left="IPhMagnifyingGlass"
     :to="to"
     variant="link"
     hide-label

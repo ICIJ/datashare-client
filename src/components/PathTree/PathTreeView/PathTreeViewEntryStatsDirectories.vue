@@ -1,5 +1,5 @@
 <script setup>
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 
 import DisplayNumber from '@/components/Display/DisplayNumber'
 
@@ -16,10 +16,9 @@ defineProps({
 
 <template>
   <div class="path-tree-view-entry-stats-directories px-2 py-1">
-    <phosphor-icon
-      :name="PhFolders"
-      class="me-2"
-    />
+    <app-icon class="me-2">
+      <i-ph-folders />
+    </app-icon>
     <display-number :value="value" />
   </div>
 </template>

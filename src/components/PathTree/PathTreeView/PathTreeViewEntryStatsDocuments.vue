@@ -1,6 +1,6 @@
 <script setup>
 import { computed, inject } from 'vue'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 
 import DisplayNumber from '@/components/Display/DisplayNumber'
 
@@ -80,17 +80,18 @@ const classList = computed(() => {
       :to="to"
       class="path-tree-view-entry-stats-documents__link above-stretched-link d-inline-flex align-items-center flex-truncate"
     >
-      <phosphor-icon
-        name="files"
+      <app-icon
         aria-hidden="true"
         class="me-2 flex-shrink-0 path-tree-view-entry-stats-documents__link__icon path-tree-view-entry-stats-documents__link__icon--default"
-      />
-      <phosphor-icon
-        name="magnifying-glass"
+      >
+        <i-ph-files />
+      </app-icon>
+      <app-icon
         aria-hidden="true"
-        weight="bold"
         class="me-2 flex-shrink-0 path-tree-view-entry-stats-documents__link__icon path-tree-view-entry-stats-documents__link__icon--hover"
-      />
+      >
+        <i-ph-magnifying-glass-bold />
+      </app-icon>
       <span class="text-truncate">
         <display-number :value="value" />
       </span>

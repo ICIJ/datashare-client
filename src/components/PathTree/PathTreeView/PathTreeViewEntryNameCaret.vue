@@ -1,7 +1,9 @@
 <script setup>
 import { computed } from 'vue'
-import { PhosphorIcon } from '@icij/murmur-next'
-import { PhCaretDown, PhCircleNotch } from '@phosphor-icons/vue'
+import { AppIcon } from '@icij/murmur-next'
+
+import IPhCaretDown from '~icons/ph/caret-down'
+import IPhCircleNotch from '~icons/ph/circle-notch'
 
 const props = defineProps({
   /**
@@ -24,7 +26,7 @@ const classList = computed(() => ({
 }))
 
 const icon = computed(() => {
-  return props.loading ? PhCircleNotch : PhCaretDown
+  return props.loading ? IPhCircleNotch : IPhCaretDown
 })
 </script>
 
@@ -33,10 +35,9 @@ const icon = computed(() => {
     class="path-tree-view-entry-name-caret d-flex"
     :class="classList"
   >
-    <phosphor-icon
+    <app-icon
       :name="icon"
       :spin="loading"
-      :fill="!loading"
       class="path-tree-view-entry-name-caret__icon"
     />
   </div>

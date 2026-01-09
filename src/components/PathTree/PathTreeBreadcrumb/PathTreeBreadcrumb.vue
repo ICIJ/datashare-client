@@ -3,6 +3,9 @@ import { basename } from 'path'
 import { computed } from 'vue'
 import { isArray, last } from 'lodash'
 import { useI18n } from 'vue-i18n'
+import { AppIcon } from '@icij/murmur-next'
+
+import IPhDotsThreeOutline from '~icons/ph/dots-three-outline'
 
 import PathTreeBreadcrumbEntry from './PathTreeBreadcrumbEntry.vue'
 import PathTreeBreadcrumbDropdownItem from './PathTreeBreadcrumbDropdownItem.vue'
@@ -92,7 +95,7 @@ const lastTreeOption = computed(() => last(treeOptions.value))
 
 <template>
   <parent-overflow-entries
-    :dropdown-button-icon="PhDotsThreeOutline"
+    :dropdown-button-icon="IPhDotsThreeOutline"
     :dropdown-disabled="noLink || dropdownDisabled"
     :entries="treeOptions"
     class="path-tree-breadcrumb list-inline flex-grow-1 flex-shrink-1 m-0 text-truncate lh-1"
@@ -118,11 +121,12 @@ const lastTreeOption = computed(() => last(treeOptions.value))
       </path-tree-breadcrumb-dropdown-item>
     </template>
     <template #separator>
-      <phosphor-icon
+      <app-icon
         size="1em"
-        :name="PhCaretRight"
         class="text-body-secondary px-1"
-      />
+      >
+        <i-ph-caret-right />
+      </app-icon>
     </template>
   </parent-overflow-entries>
 </template>
