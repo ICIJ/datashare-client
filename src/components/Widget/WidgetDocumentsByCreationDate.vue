@@ -41,7 +41,7 @@
           <column-chart
             :key="dataKey"
             hover
-            :hover-icon="['magnifying-glass', 'bold']"
+            :hover-icon="IPhMagnifyingGlassBold"
             :chart-height-ratio="0.4"
             :data="aggregatedDataSlice"
             :x-axis-tick-format="xAxisTickFormat"
@@ -97,6 +97,8 @@ import { computed, nextTick, ref, useTemplateRef, watch, toRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { whenever } from '@vueuse/core'
+
+import IPhMagnifyingGlassBold from '~icons/ph/magnifying-glass-bold'
 
 import { useInsightsStore } from '@/store/modules'
 import { useWait } from '@/composables/useWait'
