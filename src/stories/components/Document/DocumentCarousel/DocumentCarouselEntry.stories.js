@@ -1,6 +1,5 @@
 import { markRaw } from 'vue'
 import { sample } from 'lodash'
-import { PhFilePdf } from '@phosphor-icons/vue'
 
 import { withMurmur } from '~storybook/decorators/murmur'
 import DocumentCarouselEntry from '@/components/Document/DocumentCarousel/DocumentCarouselEntry'

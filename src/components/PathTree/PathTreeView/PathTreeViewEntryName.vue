@@ -1,7 +1,6 @@
 <script setup>
 import { computed, inject } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
-import { PhFolder, PhFolderOpen } from '@phosphor-icons/vue'
 
 import PathTreeViewEntryNameCaret from './PathTreeViewEntryNameCaret'
 import PathTreeViewEntryNameCheckbox from './PathTreeViewEntryNameCheckbox'

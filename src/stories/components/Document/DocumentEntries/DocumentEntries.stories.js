@@ -1,5 +1,4 @@
 import { markRaw } from 'vue'
-import { PhFile, PhFilePdf, PhFileCsv, PhFilePpt, PhFileDoc, PhFileXls, PhFileTxt } from '@phosphor-icons/vue'
 import { vueRouter } from 'storybook-vue3-router'
 import { BPlaceholderTable } from 'bootstrap-vue-next'
 
