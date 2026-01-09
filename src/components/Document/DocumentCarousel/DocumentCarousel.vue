@@ -3,6 +3,9 @@ import { computed } from 'vue'
 import { TinyPagination } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 
+import IPhCaretLeft from '~icons/ph/caret-left'
+import IPhCaretRight from '~icons/ph/caret-right'
+
 import DocumentCarouselNav from './DocumentCarouselNav'
 
 const position = defineModel('position', {
@@ -50,7 +53,7 @@ const adjustedPosition = computed({
     </tiny-pagination>
     <div class="document-carousel__content p-3 rounded-bottom">
       <document-carousel-nav
-        :icon="PhCaretLeft"
+        :icon="IPhCaretLeft"
         class="document-carousel__content__nav"
         :disabled="disabledPrevious"
         :label="t('documentCarousel.previous')"
@@ -60,7 +63,7 @@ const adjustedPosition = computed({
         <slot />
       </div>
       <document-carousel-nav
-        :icon="PhCaretRight"
+        :icon="IPhCaretRight"
         class="document-carousel__content__nav"
         :disabled="disabledNext"
         :label="t('documentCarousel.next')"

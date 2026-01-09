@@ -1,5 +1,6 @@
 <script setup>
 import { useModalController } from 'bootstrap-vue-next'
+import { AppIcon } from '@icij/murmur-next'
 
 import { useDocument } from '@/composables/useDocument'
 import DocumentDropdownReindexModal from '@/components/Document/DocumentDropdown/DocumentDropdownReindexModal'
@@ -17,7 +18,7 @@ function showModal() {
 <template>
   <b-dropdown-item-button @click="showModal()">
     <span class="d-flex align-items-center gap-2">
-      <phosphor-icon :name="PhArrowClockwise" />
+      <app-icon><i-ph-arrow-clockwise /></app-icon>
       Reindex this document
     </span>
   </b-dropdown-item-button>

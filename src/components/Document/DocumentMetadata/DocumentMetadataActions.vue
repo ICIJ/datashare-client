@@ -4,6 +4,10 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { BDropdownItemButton } from 'bootstrap-vue-next'
 
+import IPhClipboard from '~icons/ph/clipboard'
+import IPhMagnifyingGlass from '~icons/ph/magnifying-glass'
+import IPhPushPin from '~icons/ph/push-pin'
+
 import DocumentMetadataActionsEntry from './DocumentMetadataActionsEntry'
 import AppDropdown from '@/components/AppDropdown/AppDropdown'
 
@@ -39,11 +43,11 @@ const indices = computed(() => props.index)
       <document-metadata-actions-entry
         :label="t('documentMetadataActions.search')"
         :to="{ name: 'search', query: { q, indices } }"
-        icon="magnifying-glass"
+        :icon="IPhMagnifyingGlass"
         @click="emit('search')"
       />
       <app-dropdown
-        :button-icon="PhClipboard"
+        :button-icon="IPhClipboard"
         button-icon-weight="regular"
       >
         <haptic-copy
@@ -67,7 +71,7 @@ const indices = computed(() => props.index)
       </app-dropdown>
       <document-metadata-actions-entry
         :label="t('documentMetadataActions.pin')"
-        icon="push-pin"
+        :icon="IPhPushPin"
         :icon-weight="pinIconWeight"
         :icon-hover-weight="pinIconHoverWeight"
         @click="pinned = !pinned"

@@ -1,6 +1,9 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 
+import IPhCaretUp from '~icons/ph/caret-up'
+import IPhCaretDown from '~icons/ph/caret-down'
+
 import DocumentLocalSearchNavItem from './DocumentLocalSearchNavItem'
 
 defineProps({
@@ -20,13 +23,13 @@ const { t } = useI18n()
   <b-button-group>
     <document-local-search-nav-item
       :disabled="disabledPrevious"
-      :icon="PhCaretUp"
+      :icon="IPhCaretUp"
       :label="t('documentLocalSearchNav.previous')"
       @click="emit('previous')"
     />
     <document-local-search-nav-item
       :disabled="disabledNext"
-      :icon="PhCaretDown"
+      :icon="IPhCaretDown"
       :label="t('documentLocalSearchNav.next')"
       @click="emit('next')"
     />

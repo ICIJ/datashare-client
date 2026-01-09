@@ -1,4 +1,6 @@
 <script setup>
+import { AppIcon } from '@icij/murmur-next'
+
 import { ROTATIONS } from '@/enums/documentViewerPdf'
 
 const modelValue = defineModel({ type: Number, default: 0 })
@@ -13,7 +15,7 @@ function rotate() {
 <template>
   <b-dropdown-item-button @click="rotate">
     <span class="d-flex align-items-center gap-2">
-      <phosphor-icon :name="PhArrowClockwise" />
+      <app-icon><i-ph-arrow-clockwise /></app-icon>
       Rotate clockwise
     </span>
   </b-dropdown-item-button>

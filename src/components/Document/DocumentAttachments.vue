@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, onBeforeMount } from 'vue'
 import bodybuilder from 'bodybuilder'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 import { flatten, get, sum } from 'lodash'
 import { useI18n } from 'vue-i18n'
 
@@ -92,7 +92,7 @@ onBeforeMount(() => {
           :to="{ name: 'document', params: attachment.routerParams }"
           class="document-attachments__list__item__link d-flex-inline"
         >
-          <phosphor-icon
+          <app-icon
             :name="document.contentTypeIcon"
             class="me-1 mt-1"
           />

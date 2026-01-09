@@ -1,7 +1,8 @@
 <script setup>
 import { useTemplateRef } from 'vue'
-import { PhosphorIcon, ButtonIcon } from '@icij/murmur-next'
+import { AppIcon, ButtonIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
+import IPhDownloadSimple from '~icons/ph/download-simple'
 
 import DocumentDownloadPopoverSection from './DocumentDownloadPopoverSection'
 
@@ -68,13 +69,13 @@ defineExpose({
         :disabled="isRootTooBig"
         :href="documentFullUrl"
         :label="t('documentDownloadPopover.download')"
-        icon-left="download-simple"
+        :icon-left="IPhDownloadSimple"
         class="document-download-popover__body__button"
         download
       />
       <button-icon
         v-if="hasCleanableContentType"
-        icon-left="download-simple"
+        :icon-left="IPhDownloadSimple"
         :href="documentFullUrlWithoutMetadata"
         :label="t('documentDownloadPopover.downloadWithoutMetadata')"
         variant="outline-action"
@@ -82,7 +83,7 @@ defineExpose({
         download
       />
       <button-icon
-        icon-left="download-simple"
+        :icon-left="IPhDownloadSimple"
         :label="t('documentDownloadPopover.downloadExtractText')"
         variant="outline-action"
         class="document-download-popover__body__button"
@@ -90,7 +91,7 @@ defineExpose({
       />
       <button-icon
         v-if="hasRoot"
-        icon-left="download-simple"
+        :icon-left="IPhDownloadSimple"
         :href="rootDocumentFullUrl"
         :label="t('documentDownloadPopover.downloadRoot')"
         variant="outline-action"
@@ -103,7 +104,7 @@ defineExpose({
           :value="document.title"
         />
         <document-download-popover-section :title="t('documentDownloadPopover.sectionContentType')">
-          <phosphor-icon
+          <app-icon
             :name="document.contentTypeIcon"
             class="me-2"
           />
