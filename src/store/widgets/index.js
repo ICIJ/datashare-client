@@ -1,3 +1,7 @@
+import IPhGlobeHemisphereWest from '~icons/ph/globe-hemisphere-west'
+import IPhFile from '~icons/ph/file'
+import IPhUserCircle from '~icons/ph/user-circle'
+
 import types from '@/utils/contentTypes.json'
 import { MODE_NAME } from '@/mode'
 
@@ -53,7 +57,7 @@ const widgets = [
   {
     name: 'languages',
     order: 40,
-    icon: 'globe-hemisphere-west',
+    icon: IPhGlobeHemisphereWest,
     card: true,
     cols: 4,
     field: 'language',
@@ -64,7 +68,7 @@ const widgets = [
   {
     name: 'content-types',
     order: 50,
-    icon: 'file',
+    icon: IPhFile,
     card: true,
     cols: 4,
     field: 'contentType',
@@ -75,7 +79,7 @@ const widgets = [
   {
     name: 'authors',
     order: 60,
-    icon: 'user-circle',
+    icon: IPhUserCircle,
     card: true,
     cols: 4,
     field: 'metadata.tika_metadata_dc_creator.keyword',
