@@ -1,6 +1,7 @@
 <script setup>
 import { computed, provide, watch } from 'vue'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
+import IPhDotsThreeOutlineVerticalFill from '~icons/ph/dots-three-outline-vertical-fill'
 
 import { useScrollParent } from '@/composables/useScrollParent'
 
@@ -15,7 +16,7 @@ const props = defineProps({
   },
   dropdownIcon: {
     type: [String, Object, Array],
-    default: () => [PhDotsThreeOutlineVertical, 'fill']
+    default: () => IPhDotsThreeOutlineVerticalFill
   },
   teleportTo: {
     type: [String, Object],
@@ -58,7 +59,10 @@ const menuClassList = computed(() => {
       <slot />
     </li>
     <template #button-content>
-      <phosphor-icon :name="dropdownIcon" />
+      <app-icon
+        size="1em"
+        :name="dropdownIcon"
+      />
     </template>
   </b-dropdown>
 </template>
