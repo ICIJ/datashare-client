@@ -23,6 +23,8 @@ import DismissableContentWarningToggler from '@/components/Dismissable/Dismissab
 import DocumentLocalSearch from '@/components/Document/DocumentLocalSearch/DocumentLocalSearch'
 import DocumentGlobalSearchTerms from '@/components/Document/DocumentGlobalSearchTerms/DocumentGlobalSearchTerms'
 
+import IPhFilePdf from '~icons/ph/file-pdf'
+
 const props = defineProps({
   document: {
     type: Object,
@@ -189,7 +191,7 @@ watch(src, async () => {
           <button-icon
             v-if="embeddable"
             :label="t('documentViewerPdf.switch')"
-            :icon-left="PhFilePdf"
+            :icon-left="IPhFilePdf"
             @click="documentViewStore.embeddedPdf = true"
           />
         </div>

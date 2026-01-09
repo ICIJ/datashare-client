@@ -1,6 +1,6 @@
 <script setup>
 import { computed, toValue } from 'vue'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 
 import { useSearchProperties } from '@/composables/useSearchProperties'
 
@@ -37,7 +37,10 @@ const display = computed(() => {
       class="document-card-properties-entry__icon above-stretched-link pe-2 flex-shrink-0"
       :title="display"
     >
-      <phosphor-icon :name="icon ?? items[property].icon ?? property" />
+      <app-icon
+        size="1em"
+        :name="icon ?? items[property].icon ?? property"
+      />
     </div>
     <span class="visually-hidden">{{ display }}:</span>
     <div class="document-card-properties-entry__value">

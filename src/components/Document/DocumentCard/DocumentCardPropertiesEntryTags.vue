@@ -1,4 +1,6 @@
 <script setup>
+import IPhHash from '~icons/ph/hash'
+
 import DocumentCardPropertiesEntry from '@/components/Document/DocumentCard/DocumentCardPropertiesEntry'
 import DisplayTags from '@/components/Display/DisplayTags'
 
@@ -17,7 +19,7 @@ defineProps({
   <document-card-properties-entry
     :document="document"
     :property="property"
-    icon="hash"
+    :icon="IPhHash"
   >
     <display-tags
       v-if="document.tags.length"

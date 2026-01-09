@@ -2,6 +2,8 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+import IPhEyes from '~icons/ph/eyes'
+
 import ButtonRecommendation from '@/components/Button/ButtonRecommendation'
 import ButtonToggleRecommendation from '@/components/Button/ButtonToggleRecommendation'
 import DocumentUserActionsCard from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsCard'
@@ -26,7 +28,7 @@ const { t } = useI18n()
   <document-user-actions-card
     v-model="modelValue"
     :title="t('documentUserActions.recommendations', count)"
-    icon="eyes"
+    :icon="IPhEyes"
     icon-weight="fill"
     show-warning
     action-end
