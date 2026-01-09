@@ -15,7 +15,7 @@
           :active="activeTags"
           :label="t(`documentUserActions.tags`, { n: tags })"
           :value="String(tags)"
-          :icon="PhHash"
+          :icon="IPhHash"
           :hide-tooltip="!shorterLabels"
           :shorter-label="shorterLabels"
           @click="emit('action', DOCUMENT_USER_ACTIONS.TAGS)"
@@ -25,7 +25,7 @@
           :active="activeRecommendations"
           :label="t(`documentUserActions.recommendations`, { n: recommendations })"
           :value="String(recommendations)"
-          :icon="[PhEyes, 'fill']"
+          :icon="IPhEyesFill"
           :hide-tooltip="!shorterLabels"
           :shorter-label="shorterLabels"
           @click="emit('action', DOCUMENT_USER_ACTIONS.RECOMMENDATIONS)"
@@ -35,7 +35,7 @@
           :active="activeNotes"
           :label="t(`documentUserActions.notes`, { n: notes })"
           :value="String(notes)"
-          :icon="PhNoteBlank"
+          :icon="IPhNoteBlank"
           :hide-tooltip="!shorterLabels"
           :shorter-label="shorterLabels"
           @click="emit('action', DOCUMENT_USER_ACTIONS.TAGS.NOTES)"
@@ -45,7 +45,7 @@
           :active="activeFolders"
           :label="t(`documentUserActions.folders`, { n: folders })"
           :value="String(folders)"
-          :icon="PhFolder"
+          :icon="IPhFolder"
           :hide-tooltip="!shorterLabels"
           :shorter-label="shorterLabels"
           @click="emit('action', DOCUMENT_USER_ACTIONS.FOLDERS)"
@@ -65,6 +65,11 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n'
+
+import IPhHash from '~icons/ph/hash'
+import IPhEyesFill from '~icons/ph/eyes-fill'
+import IPhNoteBlank from '~icons/ph/note-blank'
+import IPhFolder from '~icons/ph/folder'
 
 import DocumentDropdownReindex from '@/components/Document/DocumentDropdown/DocumentDropdownReindex'
 import DocumentUserActionsEntry from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsEntry'
