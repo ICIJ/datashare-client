@@ -1,11 +1,13 @@
-import { PhosphorIcon, ButtonIcon } from '@icij/murmur-next'
+import { AppIcon, ButtonIcon } from '@icij/murmur-next'
 import { BButton } from 'bootstrap-vue-next'
+
+import IPhTag from '~icons/ph/tag'
 
 import DocumentUserActionsCard from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsCard'
 import DisplayTags from '@/components/Display/DisplayTags'
 
 export default {
-  components: { BButton, DisplayTags, PhosphorIcon, ButtonIcon },
+  components: { BButton, DisplayTags, AppIcon, ButtonIcon },
   title: 'Components/Document/DocumentUser/DocumentUserActions/DocumentUserActionsCard',
   tags: ['autodocs'],
   component: DocumentUserActionsCard,
@@ -21,7 +23,7 @@ export default {
     components: {
       DocumentUserActionsCard,
       DisplayTags,
-      PhosphorIcon,
+      AppIcon,
       BButton
     },
     setup: () => ({ args }),
@@ -65,9 +67,10 @@ export const SplitContentExample = {
       DocumentUserActionsCard,
       ButtonIcon,
       DisplayTags,
-      PhosphorIcon
+      AppIcon,
+      IPhTag
     },
-    setup: () => ({ args }),
+    setup: () => ({ args, IPhTag }),
     template: `
       <document-user-actions-card v-bind="args">
         <template #others>
@@ -80,7 +83,7 @@ export const SplitContentExample = {
           Your tags are public to project members
         </template>
         <template #action>
-          <button-icon icon-left="tag" label="Add a tag" />
+          <button-icon :icon-left="IPhTag" label="Add a tag" />
         </template>
       </document-user-actions-card>
     `
@@ -97,9 +100,10 @@ export const DefaultContentSlot = {
       DocumentUserActionsCard,
       ButtonIcon,
       DisplayTags,
-      PhosphorIcon
+      AppIcon,
+      IPhTag
     },
-    setup: () => ({ args }),
+    setup: () => ({ args, IPhTag }),
     template: `
       <document-user-actions-card v-bind="args">
         <template>
@@ -109,7 +113,7 @@ export const DefaultContentSlot = {
           Your tags are public to project members
         </template>
         <template #action>
-          <button-icon icon-left="tag" label="Add a tag" />
+          <button-icon :icon-left="IPhTag" label="Add a tag" />
         </template>
       </document-user-actions-card>
     `

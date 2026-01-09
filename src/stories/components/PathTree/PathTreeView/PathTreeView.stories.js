@@ -1,5 +1,6 @@
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 
+import IPhCirclesThreePlus from '~icons/ph/circles-three-plus'
 import PathTreeView from '@/components/PathTree/PathTreeView/PathTreeView'
 import PathTreeViewEntry from '@/components/PathTree/PathTreeView/PathTreeViewEntry'
 import PathTreeViewEntryMore from '@/components/PathTree/PathTreeView/PathTreeViewEntryMore'
@@ -22,7 +23,8 @@ export default {
       PathTreeView,
       PathTreeViewEntry,
       PathTreeViewEntryMore,
-      PhosphorIcon,
+      AppIcon,
+      IPhCirclesThreePlus,
       ProjectLabel
     },
     setup: () => ({ args }),
@@ -31,7 +33,7 @@ export default {
         <path-tree-view-entry :layout="args.layout" :level="0" name="Flowera" :documents="9104" :directories="3" :size="2110000000">
           <template #name>
             <div class="text-truncate">
-              <phosphor-icon name="circles-three-plus" class="me-1" />
+              <AppIcon class="me-1"><IPhCirclesThreePlus /></AppIcon>
               <project-label project="Flowera" hide-thumbnail />
             </div>
           </template>

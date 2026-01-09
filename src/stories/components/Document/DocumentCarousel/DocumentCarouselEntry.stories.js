@@ -1,6 +1,7 @@
 import { markRaw } from 'vue'
 import { sample } from 'lodash'
 
+import IPhFilePdf from '~icons/ph/file-pdf'
 import { withMurmur } from '~storybook/decorators/murmur'
 import DocumentCarouselEntry from '@/components/Document/DocumentCarousel/DocumentCarouselEntry'
 
@@ -32,7 +33,7 @@ export default {
       contentTextLength: 14e3,
       isSupportedImage: true,
       contentType: 'image/jpeg',
-      contentTypeIcon: markRaw(PhFilePdf)
+      contentTypeIcon: markRaw(IPhFilePdf)
     }
   }
 }

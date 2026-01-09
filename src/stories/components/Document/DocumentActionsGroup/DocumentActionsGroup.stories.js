@@ -1,5 +1,6 @@
 import { markRaw } from 'vue'
 
+import IPhFilePdf from '~icons/ph/file-pdf'
 import types from '@/utils/contentTypes.json'
 import DocumentActionsGroup from '@/components/Document/DocumentActionsGroup/DocumentActionsGroup'
 import { PLACEMENT } from '@/enums/placements'
@@ -30,7 +31,7 @@ export default {
       ],
       contentType: 'application/pdf',
       contentTypeDescription: types['application/pdf'].description,
-      contentTypeIcon: markRaw(PhFilePdf)
+      contentTypeIcon: markRaw(IPhFilePdf)
     },
     vertical: false,
     tooltipPlacement: PLACEMENT.BOTTOM,

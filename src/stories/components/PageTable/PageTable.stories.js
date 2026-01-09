@@ -1,5 +1,13 @@
 import { ButtonIcon } from '@icij/murmur-next'
 
+import IPhArrowClockwise from '~icons/ph/arrow-clockwise'
+import IPhArrowsOutSimple from '~icons/ph/arrows-out-simple'
+import IPhDownloadSimple from '~icons/ph/download-simple'
+import IPhMagnifyingGlass from '~icons/ph/magnifying-glass'
+import IPhShareNetwork from '~icons/ph/share-network'
+import IPhStar from '~icons/ph/star'
+import IPhTrash from '~icons/ph/trash'
+
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
 import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayVisibility from '@/components/Display/DisplayVisibility'
@@ -26,7 +34,11 @@ export default {
       PageTableTr,
       PageTableTdActions,
       ProjectLabel,
-      DisplayDatetime
+      DisplayDatetime,
+      IPhStar,
+      IPhDownloadSimple,
+      IPhShareNetwork,
+      IPhArrowsOutSimple
     },
     data() {
       return {
@@ -34,7 +46,7 @@ export default {
       }
     },
     setup: () => {
-      return { args }
+      return { args, IPhStar, IPhDownloadSimple, IPhShareNetwork, IPhArrowsOutSimple }
     },
     template: `
       <page-table v-bind="args">
@@ -55,10 +67,10 @@ export default {
           <td>John Doe</td>
           <td><display-datetime class="text-nowrap" value="2021-09-01" /></td>
           <page-table-td-actions>
-            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="star" class="border-0 me-1" />
-            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="download-simple" class="border-0 me-1" />
-            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="share-network" class="border-0 me-1" />
-            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="arrows-out-simple" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" :icon-left="IPhStar" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" :icon-left="IPhDownloadSimple" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" :icon-left="IPhShareNetwork" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" :icon-left="IPhArrowsOutSimple" class="border-0 me-1" />
           </page-table-td-actions>
         </page-table-tr>
         <page-table-tr v-model:active="activeRows[1]">
@@ -69,10 +81,10 @@ export default {
           <td>Jane Doe</td>
           <td><display-datetime class="text-nowrap" value="2021-09-02" /></td>
           <page-table-td-actions>
-            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="star" class="border-0 me-1" />
-            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="download-simple" class="border-0 me-1" />
-            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="share-network" class="border-0 me-1" />
-            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="arrows-out-simple" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" :icon-left="IPhStar" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" :icon-left="IPhDownloadSimple" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" :icon-left="IPhShareNetwork" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" :icon-left="IPhArrowsOutSimple" class="border-0 me-1" />
           </page-table-td-actions>
         </page-table-tr>
         <page-table-tr v-model:active="activeRows[2]">
@@ -83,10 +95,10 @@ export default {
           <td>Jan Doe</td>
           <td><display-datetime class="text-nowrap" value="2021-09-03" /></td>
           <page-table-td-actions>
-            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="star" class="border-0 me-1" />
-            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="download-simple" class="border-0 me-1" />
-            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="share-network" class="border-0 me-1" />
-            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="arrows-out-simple" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" :icon-left="IPhStar" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" :icon-left="IPhDownloadSimple" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" :icon-left="IPhShareNetwork" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" :icon-left="IPhArrowsOutSimple" class="border-0 me-1" />
           </page-table-td-actions>
         </page-table-tr>
         <page-table-tr v-model:active="activeRows[3]">
@@ -97,10 +109,10 @@ export default {
           <td>Jin Doe</td>
           <td><display-datetime class="text-nowrap" value="2021-09-04" /></td>
           <page-table-td-actions>
-            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="star" class="border-0 me-1" />
-            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="download-simple" class="border-0 me-1" />
-            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="share-network" class="border-0 me-1" />
-            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="arrows-out-simple" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" :icon-left="IPhStar" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" :icon-left="IPhDownloadSimple" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" :icon-left="IPhShareNetwork" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" :icon-left="IPhArrowsOutSimple" class="border-0 me-1" />
           </page-table-td-actions>
         </page-table-tr>
       </page-table>
@@ -121,7 +133,13 @@ export const WithoutSelectMode = {
       ProjectLabel,
       DisplayStatus,
       DisplayVisibility,
-      DisplayDatetime
+      DisplayDatetime,
+      IPhMagnifyingGlass,
+      IPhArrowClockwise,
+      IPhTrash
+    },
+    setup: () => {
+      return { IPhMagnifyingGlass, IPhArrowClockwise, IPhTrash }
     },
     template: `
       <page-table>
@@ -146,9 +164,9 @@ export const WithoutSelectMode = {
           <td>John Doe</td>
           <td><display-datetime class="text-nowrap" value="2021-09-01" /></td>
           <page-table-td-actions>
-            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="magnifying-glass" class="border-0 me-1" />
-            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="arrow-clockwise" class="border-0 me-1" />
-            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="trash" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" :icon-left="IPhMagnifyingGlass" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" :icon-left="IPhArrowClockwise" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" :icon-left="IPhTrash" class="border-0 me-1" />
           </page-table-td-actions>
         </page-table-tr>
         <page-table-tr>
@@ -161,9 +179,9 @@ export const WithoutSelectMode = {
           <td>Jane Doe</td>
           <td><display-datetime class="text-nowrap" value="2021-09-02" /></td>
           <page-table-td-actions>
-            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="magnifying-glass" class="border-0 me-1" />
-            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="arrow-clockwise" class="border-0 me-1" />
-            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="trash" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" :icon-left="IPhMagnifyingGlass" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" :icon-left="IPhArrowClockwise" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" :icon-left="IPhTrash" class="border-0 me-1" />
           </page-table-td-actions>
         </page-table-tr>
         <page-table-tr>
@@ -176,9 +194,9 @@ export const WithoutSelectMode = {
           <td>Jan Doe</td>
           <td><display-datetime class="text-nowrap" value="2021-09-03" /></td>
           <page-table-td-actions>
-            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="magnifying-glass" class="border-0 me-1" />
-            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="arrow-clockwise" class="border-0 me-1" />
-            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="trash" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" :icon-left="IPhMagnifyingGlass" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" :icon-left="IPhArrowClockwise" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" :icon-left="IPhTrash" class="border-0 me-1" />
           </page-table-td-actions>
         </page-table-tr>
         <page-table-tr>
@@ -191,9 +209,9 @@ export const WithoutSelectMode = {
           <td>Jin Doe</td>
           <td><display-datetime class="text-nowrap" value="2021-09-04" /></td>
           <page-table-td-actions>
-            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="magnifying-glass" class="border-0 me-1" />
-            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="arrow-clockwise" class="border-0 me-1" />
-            <button-icon variant="outline-secondary" square hide-label size="sm" icon-left="trash" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" :icon-left="IPhMagnifyingGlass" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" :icon-left="IPhArrowClockwise" class="border-0 me-1" />
+            <button-icon variant="outline-secondary" square hide-label size="sm" :icon-left="IPhTrash" class="border-0 me-1" />
           </page-table-td-actions>
         </page-table-tr>
       </page-table>
