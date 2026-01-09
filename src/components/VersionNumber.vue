@@ -13,10 +13,9 @@
     <div class="version-number__tooltip text-nowrap text-start">
       <div class="d-flex align-items-baseline version-number__tooltip__client py-2">
         <div class="flex-grow-1 pe-5">
-          <phosphor-icon
-            :name="PhDesktop"
-            class="me-1"
-          />
+          <app-icon class="me-1">
+            <i-ph-desktop />
+          </app-icon>
           {{ t('versionNumber.client') }}
         </div>
         <div class="font-monospace version-number__tooltip__client__value">
@@ -31,10 +30,9 @@
       </div>
       <div class="d-flex align-items-baseline version-number__tooltip__server py-2">
         <div class="flex-grow-1 pe-5">
-          <phosphor-icon
-            :name="PhHardDrives"
-            class="me-1"
-          />
+          <app-icon class="me-1">
+            <i-ph-hard-drives />
+          </app-icon>
           {{ t('versionNumber.server') }}
         </div>
         <div class="font-monospace version-number__tooltip__server__value">
@@ -53,7 +51,7 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 
 import { apiInstance as api } from '@/api/apiInstance'

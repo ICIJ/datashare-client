@@ -18,7 +18,7 @@
         </slot>
         <div class="pt-2">
           <button-icon
-            icon-right="magnifying-glass"
+            :icon-right="IPhMagnifyingGlass"
             variant="action"
             :to="toSearch"
           >
@@ -39,6 +39,7 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur-next'
+import IPhMagnifyingGlass from '~icons/ph/magnifying-glass'
 
 import LinkedDocumentList from '@/components/LinkedDocument/LinkedDocumentList'
 

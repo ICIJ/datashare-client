@@ -1,7 +1,8 @@
 <script setup>
 import { computed, useSlots } from 'vue'
-import { PhosphorIcon, ButtonIcon } from '@icij/murmur-next'
+import { AppIcon, ButtonIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
+import IPhX from '~icons/ph/x'
 
 import { VARIANT } from '@/enums/variants.js'
 
@@ -88,10 +89,9 @@ const linkClassList = computed(() => [`btn-outline-${variant.value}`])
       class="toast-body__icon py-1 d-none d-md-block"
       :class="iconClass"
     >
-      <phosphor-icon
+      <app-icon
         :name="icon"
         :variant="variant"
-        weight="bold"
       />
     </div>
     <div class="flex-grow-1 d-flex align-items-center">
@@ -138,7 +138,7 @@ const linkClassList = computed(() => [`btn-outline-${variant.value}`])
         variant="link"
         :label="t('dismissableToastBody.close')"
         hide-label
-        icon-left="x"
+        :icon-left="IPhX"
         @click="closeToast"
       />
     </slot>

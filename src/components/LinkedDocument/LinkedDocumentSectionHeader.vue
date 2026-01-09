@@ -1,6 +1,9 @@
 <template>
   <header class="linked-document-section-header d-inline-flex gap-2 text-body-emphasis">
-    <phosphor-icon :name="icon" />
+    <app-icon
+      size="1em"
+      :name="icon"
+    />
     <span>
       <slot name="title"> {{ title }} </slot>
     </span>
@@ -8,7 +11,7 @@
 </template>
 
 <script setup>
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 
 defineOptions({ name: 'LinkedDocumentSection' })
 

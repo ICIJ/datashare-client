@@ -3,6 +3,9 @@ import { property } from 'lodash'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+import IPhArrowClockwise from '~icons/ph/arrow-clockwise'
+import IPhMagnifyingGlass from '~icons/ph/magnifying-glass'
+
 import ButtonRowAction from '@/components/Button/ButtonRowAction/ButtonRowAction'
 import ButtonRowActionDelete from '@/components/Button/ButtonRowAction/ButtonRowActionDelete'
 import PageTableToggleDetailsButton from '@/components/PageTable/PageTableToggleDetailsButton'
@@ -79,12 +82,12 @@ async function relaunch() {
 <template>
   <div class="batch-download-actions d-flex gap-2">
     <button-row-action
-      icon="arrow-clockwise"
+      :icon="IPhArrowClockwise"
       :label="t('batchDownloadActions.relaunch.label')"
       @click="relaunch"
     />
     <button-row-action
-      icon="magnifying-glass"
+      :icon="IPhMagnifyingGlass"
       tag="router-link"
       :disabled="!uri"
       :to="{ hash: uri, name: 'search' }"

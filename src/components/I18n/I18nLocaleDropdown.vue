@@ -1,6 +1,6 @@
 <script setup>
 import { useTemplateRef } from 'vue'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 
 import { useLocale } from '@/composables/useLocale'
 import { PLACEMENT, placementValidator } from '@/enums/placements'
@@ -48,10 +48,9 @@ const dropdownItemClass = (key) => {
       >
         <span class="i18n-locale-dropdown__button">
           <slot v-bind="{ currentLocale, locales }">
-            <phosphor-icon
-              :name="PhGlobeHemisphereWest"
-              class="me-1"
-            />
+            <app-icon class="me-1">
+              <i-ph-globe-hemisphere-west />
+            </app-icon>
             {{ currentLocale.label }}
           </slot>
         </span>

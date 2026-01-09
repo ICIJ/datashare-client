@@ -2,6 +2,9 @@
 import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
 import { ButtonIcon } from '@icij/murmur-next'
+import IPhArrowsClockwise from '~icons/ph/arrows-clockwise'
+import IPhTrash from '~icons/ph/trash'
+import IPhCloudArrowDown from '~icons/ph/cloud-arrow-down'
 
 const props = defineProps({
   shouldInstall: {
@@ -50,7 +53,7 @@ const uninstallAddon = () => {
       :loading="loading"
       :disabled="loading"
       truncate
-      :icon-left="PhCloudArrowDown"
+      :icon-left="IPhCloudArrowDown"
       variant="action"
       class="flex-grow-0"
       @click="installAddon"
@@ -62,7 +65,7 @@ const uninstallAddon = () => {
         v-if="shouldUpdate"
         :loading="loading"
         :disabled="loading"
-        icon-left="arrows-clockwise"
+        :icon-left="IPhArrowsClockwise"
         variant="action"
         class="flex-grow-0"
         @click="updateAddon"
@@ -78,7 +81,7 @@ const uninstallAddon = () => {
       <button-icon
         :loading="loading"
         :disabled="loading"
-        icon-left="trash"
+        :icon-left="IPhTrash"
         variant="outline-secondary"
         class="addon-card__uninstall"
         @click="uninstallAddon"

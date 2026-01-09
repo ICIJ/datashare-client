@@ -1,6 +1,8 @@
 <script>
 import { toValue, markRaw } from 'vue'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
+import IPhArrowFatUpFill from '~icons/ph/arrow-fat-up-fill'
+import IPhArrowFatDownFill from '~icons/ph/arrow-fat-down-fill'
 
 /**
  * An contextual link to the "right" scroll position.
@@ -8,7 +10,7 @@ import { PhosphorIcon } from '@icij/murmur-next'
 export default {
   name: 'ScrollTracker',
   components: {
-    PhosphorIcon
+    AppIcon
   },
   props: {
     /**
@@ -21,7 +23,7 @@ export default {
   },
   data() {
     return {
-      icon: markRaw(PhArrowFatUp),
+      icon: markRaw(IPhArrowFatUpFill),
       timeoutHolder: null,
       target: null,
       visible: false
@@ -44,7 +46,7 @@ export default {
       return toggler ? this.show() : this.hide()
     },
     show() {
-      this.icon = markRaw(this.isTargetAbove() ? PhArrowFatDown : PhArrowFatUp)
+      this.icon = markRaw(this.isTargetAbove() ? IPhArrowFatDownFill : IPhArrowFatUpFill)
       this.visible = true
       this.setTimeout()
       // Hide the tracker on scroll
@@ -95,9 +97,9 @@ export default {
       tabindex="0"
       @click="scrollToTarget"
     >
-      <phosphor-icon
+      <app-icon
+        size="1em"
         :name="icon"
-        weight="fill"
       />
     </a>
   </transition>

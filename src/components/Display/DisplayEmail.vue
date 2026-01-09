@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 import trim from 'lodash/trim'
 import { useI18n } from 'vue-i18n'
 
@@ -75,20 +75,18 @@ const qSent = computed(() => {
           :to="{ name: 'search', query: { q: qReceived, indices } }"
           class="btn btn-action"
         >
-          <phosphor-icon
-            :name="PhTrayArrowDown"
-            class="display-email__popover__content__icon"
-          />
+          <app-icon class="display-email__popover__content__icon">
+            <i-ph-tray-arrow-down />
+          </app-icon>
           {{ t('displayEmail.receivedLink') }}
         </router-link>
         <router-link
           :to="{ name: 'search', query: { q: qSent, indices } }"
           class="btn btn-action"
         >
-          <phosphor-icon
-            :name="PhTrayArrowUp"
-            class="display-email__popover__content__icon"
-          />
+          <app-icon class="display-email__popover__content__icon">
+            <i-ph-tray-arrow-up />
+          </app-icon>
           {{ t('displayEmail.sentLink') }}
         </router-link>
       </div>

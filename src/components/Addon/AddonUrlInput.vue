@@ -1,7 +1,8 @@
 <script setup>
-import { PhosphorIcon, ButtonIcon } from '@icij/murmur-next'
+import { AppIcon, ButtonIcon } from '@icij/murmur-next'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import IPhCloudArrowDown from '~icons/ph/cloud-arrow-down'
 
 import { isUrl } from '@/utils/strings'
 
@@ -27,7 +28,7 @@ function installPluginFromUrl() {
     class="input-group mb-3"
   >
     <span class="input-group-text">
-      <phosphor-icon :name="PhLink" />
+      <app-icon><i-ph-link /></app-icon>
     </span>
     <b-form-input
       :model-value="url"
@@ -40,7 +41,7 @@ function installPluginFromUrl() {
     />
     <button-icon
       variant="tertiary"
-      :icon-left="PhCloudArrowDown"
+      :icon-left="IPhCloudArrowDown"
       class="ms-2 text-nowrap rounded-1"
       :disabled="!isFormValid || loading"
       :loading="loading"

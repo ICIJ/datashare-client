@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 
 defineOptions({ name: 'BatchSearchCardDetailsEntry' })
 
@@ -34,7 +34,7 @@ const classList = computed(() => {
     :class="classList"
   >
     <div class="d-flex flex-nowrap align-items-start gap-2">
-      <phosphor-icon
+      <app-icon
         v-if="icon"
         :name="icon"
         class="batch-search-card-details-entry__icon text-secondary-emphasis flex-shrink-0"

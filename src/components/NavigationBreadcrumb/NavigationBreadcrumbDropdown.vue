@@ -1,5 +1,6 @@
 <script setup>
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
+import IPhDotsThreeOutline from '~icons/ph/dots-three-outline'
 
 import AppDropdown from '@/components/AppDropdown/AppDropdown'
 import NavigationBreadcrumbDropdownEntry from '@/components/NavigationBreadcrumb/NavigationBreadcrumbDropdownEntry'
@@ -25,7 +26,7 @@ defineProps({
     <app-dropdown
       teleport-to="body"
       variant="link"
-      :button-icon="PhDotsThreeOutline"
+      :button-icon="IPhDotsThreeOutline"
     >
       <slot>
         <navigation-breadcrumb-dropdown-entry
@@ -38,14 +39,15 @@ defineProps({
         </navigation-breadcrumb-dropdown-entry>
       </slot>
     </app-dropdown>
-    <phosphor-icon
+    <app-icon
       v-if="!noCaret"
       role="separator"
       aria-hidden="true"
       class="navigation-breadcrumb-dropdown__caret mx-2"
       size="1em"
-      :name="PhCaretRight"
-    />
+    >
+      <i-ph-caret-right />
+    </app-icon>
   </div>
 </template>
 
@@ -69,7 +71,7 @@ defineProps({
     height: var(--bs-btn-line-height);
     width: var(--bs-btn-line-height);
 
-    & > .phosphor-icon {
+    & > .app-icon {
       vertical-align: -0.32em;
     }
   }

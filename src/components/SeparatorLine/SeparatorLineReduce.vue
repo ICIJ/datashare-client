@@ -1,6 +1,7 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur-next'
+import IPhArrowLineLeft from '~icons/ph/arrow-line-left'
 const { t } = useI18n()
 </script>
 
@@ -9,7 +10,7 @@ const { t } = useI18n()
     square
     pill
     hide-label
-    icon-left="arrow-line-left"
+    :icon-left="IPhArrowLineLeft"
     icon-left-hover-weight="bold"
     :label="t('separatorLine.reduce')"
     size="sm"

@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { AppIcon } from '@icij/murmur-next'
 
 import DisplayRoute from '@/components/Display/DisplayRoute'
 
@@ -37,16 +38,17 @@ const icon = computed(() => {
 
 <template>
   <b-dropdown-item :href="resolved.href">
-    <phosphor-icon
+    <app-icon
       v-if="!noIcon && icon"
       class="me-2"
       :name="icon"
     />
-    <phosphor-icon
+    <app-icon
       v-else
       class="opacity-25 me-2"
-      :name="PhCaretRight"
-    />
+    >
+      <i-ph-caret-right />
+    </app-icon>
     <slot :route="to">
       <display-route :value="to" />
     </slot>

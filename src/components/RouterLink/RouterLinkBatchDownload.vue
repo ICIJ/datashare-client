@@ -1,5 +1,5 @@
 <script setup>
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 import { basename } from 'path'
 import { computed } from 'vue'
 import get from 'lodash/get'
@@ -27,7 +27,7 @@ const classList = computed(() => ({ 'router-link-batch-download--disabled': !exi
     class="router-link-batch-download text-nowrap"
     :class="classList"
   >
-    <phosphor-icon :name="PhDownloadSimple" />
+    <app-icon><i-ph-download-simple /></app-icon>
     {{ text }}
   </component>
 </template>

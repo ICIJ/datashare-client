@@ -1,7 +1,10 @@
 <script setup>
 import { slugger } from '@/utils/strings'
 import { computed, useTemplateRef } from 'vue'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
+
+import IPhFloppyDiskBack from '~icons/ph/floppy-disk-back'
+import IPhClockCountdown from '~icons/ph/clock-countdown'
 
 import DisplayStatusLabel from '@/components/Display/DisplayStatusLabel'
 import { buttonSizeValidator, SIZE } from '@/enums/sizes'
@@ -52,10 +55,10 @@ const valueVariant = computed(() => {
 const valueIcon = computed(() => {
   const slug = slugger(props.value).toLowerCase()
   const icons = {
-    draft: 'floppy-disk-back',
-    queued: 'clock-countdown',
-    pending: 'clock-countdown',
-    created: 'clock-countdown',
+    draft: IPhFloppyDiskBack,
+    queued: IPhClockCountdown,
+    pending: IPhClockCountdown,
+    created: IPhClockCountdown,
   }
   return icons[slug] ?? toVariantIcon(props.value)
 })
@@ -69,7 +72,10 @@ const valueIcon = computed(() => {
     class="display-status"
     :class="classList"
   >
-    <phosphor-icon :name="icon ?? valueIcon" />
+    <app-icon
+      size="1em"
+      :name="icon ?? valueIcon"
+    />
     <span class="visually-hidden">
       <display-status-label
         :value="value"

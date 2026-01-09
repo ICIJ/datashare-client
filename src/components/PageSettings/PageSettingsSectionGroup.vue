@@ -7,7 +7,7 @@
         :aria-expanded="modelValue ? 'true' : 'false'"
         @click="toggleSection"
       >
-        <phosphor-icon
+        <app-icon
           class="d-inline-flex me-2"
           :name="caretIcon"
         />{{ label }}
@@ -24,8 +24,10 @@
 
 <script setup>
 import { computed } from 'vue'
-import { PhosphorIcon } from '@icij/murmur-next'
-import { PhCaretUp, PhCaretDown } from '@phosphor-icons/vue'
+import { AppIcon } from '@icij/murmur-next'
+
+import IPhCaretUp from '~icons/ph/caret-up'
+import IPhCaretDown from '~icons/ph/caret-down'
 
 defineOptions({
   name: 'PageSettingsSectionGroup'
@@ -43,7 +45,7 @@ const modelValue = defineModel({
   default: true
 })
 
-const caretIcon = computed(() => (modelValue.value ? PhCaretUp : PhCaretDown))
+const caretIcon = computed(() => (modelValue.value ? IPhCaretUp : IPhCaretDown))
 
 function toggleSection() {
   modelValue.value = !modelValue.value

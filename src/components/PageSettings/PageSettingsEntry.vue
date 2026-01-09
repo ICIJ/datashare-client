@@ -1,6 +1,6 @@
 <template>
   <span class="page-settings-entry d-inline-flex">
-    <phosphor-icon
+    <app-icon
       v-if="icon"
       :name="icon"
       class="me-2"
@@ -10,7 +10,7 @@
 </template>
 
 <script setup>
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 
 defineOptions({
   name: 'PageSettingsEntry'

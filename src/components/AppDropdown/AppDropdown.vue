@@ -1,5 +1,6 @@
 <script setup>
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
+import IPhDotsThreeOutlineVerticalFill from '~icons/ph/dots-three-outline-vertical-fill'
 import { VARIANT, variantValidator } from '@/enums/variants'
 
 defineProps({
@@ -26,7 +27,7 @@ defineProps({
   },
   buttonIcon: {
     type: [String, Object],
-    default: PhDotsThreeOutlineVertical
+    default: () => IPhDotsThreeOutlineVerticalFill
   },
   buttonIconWeight: {
     type: String,
@@ -46,9 +47,9 @@ defineProps({
   >
     <template #button-content>
       <slot name="button-content">
-        <phosphor-icon
+        <app-icon
+          size="1em"
           :name="buttonIcon"
-          :weight="buttonIconWeight"
         />
       </slot>
     </template>

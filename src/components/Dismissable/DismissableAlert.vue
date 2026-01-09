@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur-next'
+import IPhX from '~icons/ph/x'
 
 import ToastBody from '@/components/Dismissable/DismissableToastBody'
 
@@ -121,7 +122,7 @@ const classList = {
             :label="t('dismissableAlert.close')"
             hide-label
             hide-tooltip
-            icon-left="x"
+            :icon-left="IPhX"
             @click="dismiss(false)"
           />
         </slot>
