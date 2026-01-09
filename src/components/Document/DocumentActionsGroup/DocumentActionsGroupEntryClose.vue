@@ -1,6 +1,8 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 
+import IPhX from '~icons/ph/x'
+
 import DocumentActionsGroupEntry from './DocumentActionsGroupEntry'
 
 defineProps({
@@ -25,7 +27,7 @@ const { t } = useI18n()
 <template>
   <document-actions-group-entry
     class="document-actions-group-entry-close"
-    :icon="PhX"
+    :icon="IPhX"
     :label="t('documentActionsGroup.close')"
     :tooltip-placement="tooltipPlacement"
     hide-tooltip

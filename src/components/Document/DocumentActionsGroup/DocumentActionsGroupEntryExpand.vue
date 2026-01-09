@@ -4,6 +4,8 @@ import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { matchesProperty } from 'lodash'
 
+import IPhArrowsOutSimple from '~icons/ph/arrows-out-simple'
+
 import DocumentActionsGroupEntry from './DocumentActionsGroupEntry'
 
 import { useDocumentModal } from '@/composables/useDocumentModal'
@@ -60,7 +62,7 @@ function handleClick(event) {
 <template>
   <document-actions-group-entry
     class="document-actions-group-entry-expand"
-    :icon="PhArrowsOutSimple"
+    :icon="IPhArrowsOutSimple"
     :href="href"
     :label="t('documentActionsGroup.expand')"
     :tooltip-placement="tooltipPlacement"
