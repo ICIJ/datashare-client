@@ -28,7 +28,6 @@
   "dependencies": {
     "@floating-ui/vue": "^1.1.9",
     "@icij/murmur-next": "4.7.4",
-    "@phosphor-icons/vue": "^2.2.1",
     "@popperjs/core": "^2.11.8",
     "@tato30/vue-pdf": "^1.11.5",
     "@vueuse/components": "^14.1.0",
