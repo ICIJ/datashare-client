@@ -1,6 +1,9 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 
+import IPhClipboard from '~icons/ph/clipboard'
+import IPhDownloadSimple from '~icons/ph/download-simple'
+
 import EntitySectionActionsEntry from './EntitySectionActionsEntry'
 
 defineProps({
@@ -19,12 +22,12 @@ const { t } = useI18n()
     <slot>
       <entity-section-actions-entry
         :label="t('entitySectionActions.copy')"
-        icon="clipboard"
+        :icon="IPhClipboard"
         @click="emit('copy', category)"
       />
       <entity-section-actions-entry
         :label="t('entitySectionActions.download')"
-        icon="download-simple"
+        :icon="IPhDownloadSimple"
         @click="emit('download', category)"
       />
     </slot>

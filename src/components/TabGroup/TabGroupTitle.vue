@@ -1,5 +1,5 @@
 <script setup>
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 
 defineProps({
   icon: {
@@ -15,16 +15,15 @@ defineProps({
 <template>
   <span class="tab-group-title d-flex gap-1">
     <template v-if="icon">
-      <phosphor-icon
+      <app-icon
         :name="icon"
         class="tab-group-title__icon tab-group-title__icon--inactive"
         size="1.25em"
         aria-hidden="true"
       />
-      <phosphor-icon
+      <app-icon
         :name="icon"
         class="tab-group-title__icon tab-group-title__icon--active"
-        weight="bold"
         size="1.25em"
         aria-hidden="true"
       />

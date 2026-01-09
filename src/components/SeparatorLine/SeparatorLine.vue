@@ -185,7 +185,7 @@ const dragEnd = ({ detail }) => {
       pointer-events: all;
       border-color: var(--bs-action-text-emphasis);
 
-      .phosphor-icon {
+      .app-icon {
         height: 100%;
         width: 100%;
       }

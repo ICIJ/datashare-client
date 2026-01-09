@@ -1,7 +1,8 @@
 <script setup>
-import { PhosphorIcon, ButtonIcon } from '@icij/murmur-next'
+import { AppIcon, ButtonIcon } from '@icij/murmur-next'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import IPhX from '~icons/ph/x'
 
 import { ICON_WEIGHTS } from '@/enums/iconWeights'
 
@@ -65,10 +66,9 @@ const close = () => {
       :tag="titleTag"
     >
       <span>
-        <phosphor-icon
+        <app-icon
           v-if="icon"
           :name="icon"
-          :weight="iconWeight"
           class="me-2"
         />
         <slot name="title">{{ title }}</slot>
@@ -77,7 +77,7 @@ const close = () => {
         v-if="!noXIcon"
         variant="outline-tertiary"
         class="card-panel__close"
-        icon-left="x"
+        :icon-left="IPhX"
         hide-label
         hide-tooltip
         square

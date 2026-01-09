@@ -2,6 +2,8 @@
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur-next'
 
+import IPhCaretRight from '~icons/ph/caret-right'
+
 defineProps({
   category: {
     type: String,
@@ -15,7 +17,7 @@ const { t } = useI18n()
   <button-icon
     class="entity-section-actions-entry-more"
     variant="outline-primary"
-    :icon-right="PhCaretRight"
+    :icon-right="IPhCaretRight"
     icon-right-variant="secondary"
   >
     <i18n-t keypath="entitySectionMore.label">

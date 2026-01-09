@@ -4,6 +4,9 @@ import { useI18n } from 'vue-i18n'
 import { stringifyQuery, parseQuery } from 'vue-router'
 import { omit } from 'lodash'
 import { ButtonIcon } from '@icij/murmur-next'
+import IPhList from '~icons/ph/list'
+import IPhCaretRight from '~icons/ph/caret-right'
+import IPhDownloadSimple from '~icons/ph/download-simple'
 
 import BatchSearchCardDetailsEntry from '@/components/BatchSearch/BatchSeachCard/BatchSearchCardDetailsEntry'
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
@@ -125,8 +128,8 @@ const showError = () => showBatchSearchErrorModal(batchSearch)
           :label="t('batchSearchCard.seeAllDocuments')"
           :to="toAllDocuments"
           class="batch-search-card-actions__see-all flex-shrink-1"
-          icon-left="list"
-          icon-right="caret-right"
+          :icon-left="IPhList"
+          :icon-right="IPhCaretRight"
           variant="action"
         />
       </li>
@@ -136,7 +139,7 @@ const showError = () => showBatchSearchErrorModal(batchSearch)
           :href="downloadDocumentsHref"
           :label="t('batchSearchCard.downloadResultsLabel')"
           class="batch-search-card-actions__download text-nowrap"
-          icon-left="download-simple"
+          :icon-left="IPhDownloadSimple"
           variant="outline-primary"
         />
       </li>
@@ -149,7 +152,7 @@ const showError = () => showBatchSearchErrorModal(batchSearch)
           <template #end>
             <button-icon
               :disabled="hasNoQueriesWithoutResults"
-              icon-left="download-simple"
+              :icon-left="IPhDownloadSimple"
               variant="link"
               square
               hide-label
@@ -171,7 +174,7 @@ const showError = () => showBatchSearchErrorModal(batchSearch)
           <template #end>
             <button-icon
               :disabled="hasNoQueries"
-              icon-left="download-simple"
+              :icon-left="IPhDownloadSimple"
               variant="link"
               square
               hide-label

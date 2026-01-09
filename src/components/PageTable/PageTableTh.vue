@@ -1,6 +1,6 @@
 <script setup>
 import { computed, inject } from 'vue'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 
 import PageTableThSort from './PageTableThSort'
 
@@ -69,7 +69,7 @@ const labelClassList = computed(() => {
   >
     <slot>
       <span class="page-table-th__content">
-        <phosphor-icon
+        <app-icon
           v-if="icon"
           :name="icon"
           class="me-1 my-2"

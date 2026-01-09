@@ -35,7 +35,7 @@
         <b-td class="table-editable__action">
           <button-icon
             v-if="item.name?.length > 0"
-            icon-left="trash"
+            :icon-left="IPhTrash"
             variant="outline-secondary"
             square
             hide-label
@@ -54,6 +54,7 @@
 <script setup>
 import { reactive } from 'vue'
 import { ButtonIcon } from '@icij/murmur-next'
+import IPhTrash from '~icons/ph/trash'
 
 import RowEditable from './RowEditable.vue'
 

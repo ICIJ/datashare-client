@@ -13,7 +13,7 @@
       <button-icon
         v-if="fieldChanged"
         :aria-label="t('settings.generalLabel.restore')"
-        icon-left="arrow-counter-clockwise"
+        :icon-left="IPhArrowCounterClockwise"
         variant="link"
         size="sm"
         hide-label
@@ -26,6 +26,7 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur-next'
+import IPhArrowCounterClockwise from '~icons/ph/arrow-counter-clockwise'
 defineProps({
   fieldChanged: {
     type: Boolean,

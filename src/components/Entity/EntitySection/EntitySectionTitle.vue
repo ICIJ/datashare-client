@@ -1,5 +1,5 @@
 <script setup>
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
@@ -30,10 +30,9 @@ const title = computed(() => {
 
 <template>
   <h3 class="fs-6 fw-medium m-0">
-    <phosphor-icon
+    <app-icon
       :name="icon"
       class="mr-2"
-      weight="bold"
     />
     {{ title }}
     <entity-occurrences :occurrences="count" />

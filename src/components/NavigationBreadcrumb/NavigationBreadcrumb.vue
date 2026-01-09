@@ -2,6 +2,9 @@
 import { isString } from 'lodash'
 import { computed, useSlots } from 'vue'
 import { useRouter } from 'vue-router'
+import { AppIcon } from '@icij/murmur-next'
+
+import IPhDotsThreeOutline from '~icons/ph/dots-three-outline'
 
 import NavigationBreadcrumbLink from '@/components/NavigationBreadcrumb/NavigationBreadcrumbLink'
 import NavigationBreadcrumbDropdownEntry from '@/components/NavigationBreadcrumb/NavigationBreadcrumbDropdownEntry'
@@ -61,7 +64,7 @@ const hasActiveSlot = computed(() => 'active' in useSlots())
 
 <template>
   <parent-overflow-entries
-    :dropdown-button-icon="PhDotsThreeOutline"
+    :dropdown-button-icon="IPhDotsThreeOutline"
     reverse
     class="navigation-breadcrumb flex-grow-1 flex-shrink-1"
   >
@@ -88,13 +91,14 @@ const hasActiveSlot = computed(() => 'active' in useSlots())
       </parent-overflow-entries-item>
     </slot>
     <template #separator>
-      <phosphor-icon
+      <app-icon
         class="mx-2"
         role="separator"
         aria-hidden="true"
         size="1em"
-        :name="PhCaretRight"
-      />
+      >
+        <i-ph-caret-right />
+      </app-icon>
     </template>
     <template #dropdown-entry="{ entry }">
       <navigation-breadcrumb-dropdown-entry :to="entry.exposed.context" />

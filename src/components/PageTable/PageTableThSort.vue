@@ -2,6 +2,9 @@
 import { computed } from 'vue'
 import { ButtonIcon } from '@icij/murmur-next'
 
+import IPhSortDescending from '~icons/ph/sort-descending'
+import IPhSortAscending from '~icons/ph/sort-ascending'
+
 const emit = defineEmits(['update:sorted', 'update:order'])
 
 const props = defineProps({
@@ -21,7 +24,7 @@ const classList = computed(() => {
 })
 
 const icon = computed(() => {
-  return props.order === 'desc' ? PhSortAscending : PhSortDescending
+  return props.order === 'desc' ? IPhSortAscending : IPhSortDescending
 })
 
 const toggleOrder = () => {
@@ -40,7 +43,7 @@ const toggleOrder = () => {
     :class="classList"
     class="page-table-th-sort"
     variant="outline-tertiary"
-    icon-left-size="1em"
+    icon-left-size="sm"
     hide-label
     @click="toggleOrder"
   />

@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, toRef, watch } from 'vue'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 
 import { usePipelinesStore } from '@/store/modules/pipelines'
 
@@ -81,12 +81,13 @@ watch(pipelinesStore.registered, applyPipeline, { deep: true })
     :data-abbr="abbr"
     :style="style"
   >
-    <phosphor-icon
+    <app-icon
       v-if="showPlaceholder"
-      :name="PhUser"
       :size="heightWithUnit"
       class="display-user-avatar__placeholder"
-    />
+    >
+      <i-ph-user />
+    </app-icon>
   </span>
 </template>
 
