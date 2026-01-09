@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
-import DisplayRole from '@/components/Display/DisplayRole'
 import { usePolicies } from '@/composables/usePolicies.js'
+import DisplayRoles from '@/components/Display/DisplayRoles.vue'
 
 const props = defineProps({
   project: {
@@ -20,14 +20,7 @@ const roles = computed(() => getRolesByProject(props.project.name))
       class="text-secondary-emphasis"
     >
       <slot>
-        <template
-          v-for="(role,index) in roles"
-          :key="role"
-        >
-          <display-role
-            :value="role"
-            no-icon
-          /><span v-if="index !== roles.length-1">, </span></template>
+        <display-roles :roles="roles" />
       </slot>
     </span>
   </td>
