@@ -30,10 +30,9 @@
         </span>
       </slot>
       <template v-if="!noCaret">
-        <phosphor-icon
-          :name="PhCaretDown"
-          class="ms-2"
-        />
+        <app-icon class="ms-2">
+          <i-ph-caret-down />
+        </app-icon>
       </template>
     </template>
     <!-- @slot Area to insert content above the dropdown -->
@@ -72,7 +71,7 @@
 
 <script>
 import { castArray, cloneDeep, includes, isEqual, without } from 'lodash'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 
 /**
@@ -81,7 +80,7 @@ import { useI18n } from 'vue-i18n'
 export default {
   name: 'SearchBarInputDropdown',
   components: {
-    PhosphorIcon
+    AppIcon
   },
   props: {
     /**

@@ -2,6 +2,9 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+import IPhListChecks from '~icons/ph/list-checks'
+import IPhCalendarBlank from '~icons/ph/calendar-blank'
+
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
 import SearchSavedEntriesRowActions from '@/components/Search/SearchSavedEntries/SearchSavedEntriesRowActions'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
@@ -23,14 +26,14 @@ const { t } = useI18n()
 const fields = [
   {
     value: 'name',
-    icon: 'list-checks',
+    icon: IPhListChecks,
     text: computed(() => t('searchSavedEntries.fields.name')),
     sortable: true,
     emphasis: true
   },
   {
     value: 'creation_date',
-    icon: 'calendar-blank',
+    icon: IPhCalendarBlank,
     text: computed(() => t('searchSavedEntries.fields.creationDate')),
     sortable: true,
     colStyle: {
