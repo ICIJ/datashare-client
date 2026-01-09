@@ -1,4 +1,4 @@
-import { reactive } from 'vue'
+import { markRaw, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import IPhPaintRoller from '~icons/ph/paint-roller'
@@ -47,19 +47,19 @@ export function useTheme() {
 
   const themes = reactive([
     {
-      icon: IPhPaintRoller,
+      icon: markRaw(IPhPaintRoller),
       name: THEMES.AUTOMATIC,
       label: t('themes.automatic'),
       thumbnail: themeAuto
     },
     {
-      icon: IPhSun,
+      icon: markRaw(IPhSun),
       name: THEMES.LIGHT,
       label: t('themes.light'),
       thumbnail: themeLight
     },
     {
-      icon: IPhMoon,
+      icon: markRaw(IPhMoon),
       name: THEMES.DARK,
       label: t('themes.dark'),
       thumbnail: themeDark
