@@ -33,7 +33,7 @@
         <p>{{ t('widget.noEntitiesFindSome') }}</p>
         <button-icon
           :to="{ name: 'task.entities.new', query: { project } }"
-          icon-left="plus"
+          :icon-left="IPhPlus"
           variant="outline-action"
           :label="t('widget.findEntities')"
         />
@@ -48,6 +48,7 @@ import { sum, values } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur-next'
 import { toRef } from 'vue'
+import IPhPlus from '~icons/ph/plus'
 
 import WidgetBarometer from './WidgetBarometer'
 
@@ -83,7 +84,7 @@ export default {
     const wait = useWait()
     const insightsStore = useInsightsStore()
     const project = toRef(insightsStore, 'project')
-    return { wait, t, project }
+    return { wait, t, project, IPhPlus }
   },
   data() {
     return {

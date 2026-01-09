@@ -9,12 +9,11 @@
         v-if="selectedPath"
         size="sm"
         variant="outline-action"
-        :icon-left="PhTreeStructure"
+        :icon-left="IPhTreeStructure"
         class="me-3 d-inline-flex"
         @click="showPathTree = true"
       >
         <path-tree-breadcrumb
-          datadir-icon="filter"
           :model-value="selectedPath"
           :no-datadir="isDataDir(selectedPath)"
           datadir-label
@@ -57,6 +56,8 @@ import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur-next'
 import { toRef } from 'vue'
 
+import IPhTreeStructure from '~icons/ph/tree-structure'
+
 import { useInsightsStore } from '@/store/modules'
 import AppModal from '@/components/AppModal/AppModal'
 import PathTreeBreadcrumb from '@/components/PathTree/PathTreeBreadcrumb/PathTreeBreadcrumb'
@@ -87,7 +88,7 @@ export default {
     const { t } = useI18n()
     const insightsStore = useInsightsStore()
     const project = toRef(insightsStore, 'project')
-    return { t, project }
+    return { t, project, IPhTreeStructure }
   },
   data() {
     return {
