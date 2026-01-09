@@ -137,6 +137,9 @@
   "displayDatetimeRange": {
     "title": "crwdns7666:0{start}crwdnd7666:0{end}crwdne7666:0"
   },
+  "displayRoles": {
+    "yourRoles": "crwdns10026:0{roles}crwdnd10026:0{roles}crwdne10026:0"
+  },
   "displayStatus": {
     "success": "crwdns7668:0crwdne7668:0",
     "error": "crwdns7670:0crwdne7670:0",
@@ -1309,7 +1312,8 @@
     "documents": "crwdns9184:0crwdne9184:0",
     "updatedOn": "crwdns9186:0crwdne9186:0",
     "links": "crwdns9188:0crwdne9188:0",
-    "actions": "crwdns9190:0crwdne9190:0"
+    "actions": "crwdns9190:0crwdne9190:0",
+    "userRoles": "crwdns10028:0crwdne10028:0"
   },
   "projectRowActions": {
     "edit": "crwdns9192:0crwdne9192:0",

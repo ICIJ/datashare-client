@@ -137,6 +137,9 @@
   "displayDatetimeRange": {
     "title": "De {start} à {end}"
   },
+  "displayRoles": {
+    "yourRoles": "No role assigned | Your role: {roles} | Your roles: {roles}"
+  },
   "displayStatus": {
     "success": "Succès",
     "error": "Échec",
@@ -1309,7 +1312,8 @@
     "documents": "Documents",
     "updatedOn": "Modifié le",
     "links": "Liens",
-    "actions": "Actions"
+    "actions": "Actions",
+    "userRoles": "Your role"
   },
   "projectRowActions": {
     "edit": "Modifier le projet",

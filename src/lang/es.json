@@ -137,6 +137,9 @@
   "displayDatetimeRange": {
     "title": "De {start} a {end}"
   },
+  "displayRoles": {
+    "yourRoles": "No role assigned | Your role: {roles} | Your roles: {roles}"
+  },
   "displayStatus": {
     "success": "Listo",
     "error": "Fallo",
@@ -1309,7 +1312,8 @@
     "documents": "Archivos",
     "updatedOn": "Actualizado el",
     "links": "Enlaces",
-    "actions": "Acciones"
+    "actions": "Acciones",
+    "userRoles": "Your role"
   },
   "projectRowActions": {
     "edit": "Editar proyecto",
