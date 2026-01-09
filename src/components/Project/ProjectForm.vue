@@ -3,6 +3,13 @@ import { computed, ref, watch } from 'vue'
 import { cloneDeep, every, kebabCase } from 'lodash'
 import { useI18n } from 'vue-i18n'
 
+import IPhTextAa from '~icons/ph/text-aa'
+import IPhTextAlignLeft from '~icons/ph/text-align-left'
+import IPhFolderOpen from '~icons/ph/folder-open'
+import IPhImage from '~icons/ph/image'
+import IPhUserSquare from '~icons/ph/user-square'
+import IPhLink from '~icons/ph/link'
+
 import FormCreation from '@/components/Form/FormCreation'
 import FormControlPath from '@/components/Form/FormControl/FormControlPath'
 import FormFieldset from '@/components/Form/FormFieldset/FormFieldset'
@@ -101,7 +108,7 @@ const submitLabel = computed(() => t('projectForm.submit'))
     <div>
       <form-fieldset
         class="project-form__group project-form__group--label"
-        icon="text-aa"
+        :icon="IPhTextAa"
         required
         :label="t('projectForm.form.label.label')"
         :invalid-feedback="t('projectForm.form.label.invalidFeedback', { label: form.label })"
@@ -119,7 +126,7 @@ const submitLabel = computed(() => t('projectForm.submit'))
       </form-fieldset>
       <form-fieldset
         class="project-form__group project-form__group--name"
-        icon="text-aa"
+        :icon="IPhTextAa"
         :label="t('projectForm.form.name.label')"
         :disabled="disabled"
       >
@@ -135,7 +142,7 @@ const submitLabel = computed(() => t('projectForm.submit'))
       </form-fieldset>
       <form-fieldset
         class="project-form__group project-form__group--description"
-        icon="text-align-left"
+        :icon="IPhTextAlignLeft"
         :label="t('projectForm.form.description.label')"
         :disabled="disabled"
         :validated="isPresent(form.description)"
@@ -152,7 +159,7 @@ const submitLabel = computed(() => t('projectForm.submit'))
         v-if="!edit"
         class="project-form__group project-form__group--source-path"
         required
-        icon="folder-open"
+        :icon="IPhFolderOpen"
         :label="t('projectForm.form.sourcePath.label')"
         :disabled="disabled"
         :validated="isPresent(form.sourcePath)"
@@ -164,7 +171,7 @@ const submitLabel = computed(() => t('projectForm.submit'))
       </form-fieldset>
       <form-fieldset
         class="project-form__group project-form__group--logo-url"
-        icon="image"
+        :icon="IPhImage"
         :label="t('projectForm.form.logoUrl.label')"
         :disabled="disabled"
         :validated="isUrl(form.logoUrl)"
@@ -179,7 +186,7 @@ const submitLabel = computed(() => t('projectForm.submit'))
       </form-fieldset>
       <form-fieldset
         class="project-form__group project-form__group--maintainer-name"
-        icon="user-square"
+        :icon="IPhUserSquare"
         :label="t('projectForm.form.maintainerName.label')"
         :disabled="disabled"
         :validated="isPresent(form.maintainerName)"
@@ -193,7 +200,7 @@ const submitLabel = computed(() => t('projectForm.submit'))
       </form-fieldset>
       <form-fieldset
         class="project-form__group project-form__group--publisher-name"
-        icon="user-square"
+        :icon="IPhUserSquare"
         :label="t('projectForm.form.publisherName.label')"
         :disabled="disabled"
         :validated="isPresent(form.publisherName)"
@@ -207,7 +214,7 @@ const submitLabel = computed(() => t('projectForm.submit'))
       </form-fieldset>
       <form-fieldset
         class="project-form__group project-form__group--source-url"
-        icon="link"
+        :icon="IPhLink"
         :label="t('projectForm.form.sourceUrl.label')"
         :disabled="disabled"
         :validated="isUrl(form.sourceUrl)"

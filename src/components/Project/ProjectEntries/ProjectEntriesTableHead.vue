@@ -1,7 +1,10 @@
 <script setup>
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { PhCirclesThreePlus, PhFiles, PhCalendarBlank } from '@phosphor-icons/vue'
+import IPhCirclesThreePlus from '~icons/ph/circles-three-plus'
+import IPhFiles from '~icons/ph/files'
+import IPhCalendarBlank from '~icons/ph/calendar-blank'
+import IPhTextAlignLeft from '~icons/ph/text-align-left'
 
 import PageTableTh from '@/components/PageTable/PageTableTh'
 import { useBreakpoints } from '@/composables/useBreakpoints'
@@ -25,7 +28,7 @@ const compact = computed(() => {
 <template>
   <page-table-th
     :label="t('projectEntriesTableHead.name')"
-    :icon="PhCirclesThreePlus"
+    :icon="IPhCirclesThreePlus"
     emphasis
     sortable
     name="name"
@@ -33,19 +36,19 @@ const compact = computed(() => {
   <page-table-th
     v-if="!compact"
     :label="t('projectEntriesTableHead.description')"
-    :icon="PhTextAlignLeft"
+    :icon="IPhTextAlignLeft"
     name="description"
   />
   <page-table-th
     :label="t('projectEntriesTableHead.documents')"
-    :icon="PhFiles"
+    :icon="IPhFiles"
     number
     sortable
     name="documentsCount"
   />
   <page-table-th
     :label="t('projectEntriesTableHead.updatedOn')"
-    :icon="PhCalendarBlank"
+    :icon="IPhCalendarBlank"
     sortable
     name="updateDate"
   />

@@ -11,10 +11,9 @@
       v-if="checked"
       class="project-thumbnail__check"
     >
-      <phosphor-icon
-        :name="PhCheckFat"
-        fill
-      />
+      <app-icon>
+        <i-ph-check-fat-fill />
+      </app-icon>
     </span>
   </span>
 </template>
@@ -23,7 +22,7 @@
 import stringToColor from 'string-to-color'
 import { compact } from 'lodash'
 import { computed } from 'vue'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 
 import { getConsonants, slugger } from '@/utils/strings'
 

@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 
 import ProjectJumbotronPin from './ProjectJumbotronPin'
@@ -137,7 +137,7 @@ const promptProjectDeletion = async () => {
               v-if="creationDate"
               class="text-nowrap"
             >
-              <phosphor-icon :name="PhCalendarBlank" />
+              <app-icon><i-ph-calendar-blank /></app-icon>
               {{ t('projectJumbotron.creationDate') }}
               <display-datetime :value="creationDate" />
             </span>
@@ -145,7 +145,7 @@ const promptProjectDeletion = async () => {
               v-if="updateDate"
               class="text-nowrap"
             >
-              <phosphor-icon :name="PhCalendarCheck" />
+              <app-icon><i-ph-calendar-check /></app-icon>
               {{ t('projectJumbotron.updateDate') }}
               <display-datetime :value="updateDate" />
             </span>
