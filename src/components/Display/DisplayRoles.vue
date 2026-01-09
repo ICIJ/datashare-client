@@ -6,8 +6,8 @@ defineProps({
     required: true
   }
 })
-
 </script>
+
 <template>
   <div
     v-for="(role,index) in roles"
