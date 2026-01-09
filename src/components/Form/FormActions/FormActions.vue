@@ -1,6 +1,8 @@
 <script setup>
 import { computed, watch, provide, useSlots } from 'vue'
 
+import IPhDotsThreeOutlineVerticalFill from '~icons/ph/dots-three-outline-vertical-fill'
+
 import FormActionsCompact from './FormActionsCompact'
 
 import { useBreakpoints } from '@/composables/useBreakpoints'
@@ -36,7 +38,7 @@ const props = defineProps({
   },
   dropdownIcon: {
     type: [String, Object, Array],
-    default: () => [PhDotsThreeOutlineVertical, 'fill']
+    default: () => IPhDotsThreeOutlineVerticalFill
   },
   tag: {
     type: String,
