@@ -1,5 +1,18 @@
 import { camelCase } from 'lodash'
 
+import IPhListChecks from '~icons/ph/list-checks'
+import IPhCalendarBlank from '~icons/ph/calendar-blank'
+import IPhClockCountdown from '~icons/ph/clock-countdown'
+import IPhCirclesThreePlus from '~icons/ph/circles-three-plus'
+import IPhUsersThree from '~icons/ph/users-three'
+import IPhShootingStar from '~icons/ph/shooting-star'
+import IPhFiles from '~icons/ph/files'
+import IPhEyeSlash from '~icons/ph/eye-slash'
+import IPhUserCircle from '~icons/ph/user-circle'
+import IPhMagnifyingGlass from '~icons/ph/magnifying-glass'
+import IPhFloppyDiskBack from '~icons/ph/floppy-disk-back'
+import IPhRocketLaunch from '~icons/ph/rocket-launch'
+
 import { SORT_TYPE_KEY } from '@/composables/useViewSettings'
 import { useViewProperties } from '@/composables/useViewProperties'
 import { useAppStore } from '@/store/modules'
@@ -17,7 +30,7 @@ export function useTaskProperties(pageName) {
   })
 
   const name = propertyItem({
-    icon: 'list-checks',
+    icon: IPhListChecks,
     key: 'name',
     sortable: false,
     emphasis: true,
@@ -26,7 +39,7 @@ export function useTaskProperties(pageName) {
   })
 
   const createdAt = propertyItem({
-    icon: 'calendar-blank',
+    icon: IPhCalendarBlank,
     key: 'createdAt',
     sortingKey: 'creationDate',
     type: SORT_TYPE_KEY.DATE,
@@ -34,7 +47,7 @@ export function useTaskProperties(pageName) {
   })
 
   const progress = propertyItem({
-    icon: 'clock-countdown',
+    icon: IPhClockCountdown,
     key: 'progress',
     type: SORT_TYPE_KEY.NUMBER,
     sortable: false,
@@ -42,7 +55,7 @@ export function useTaskProperties(pageName) {
   })
 
   const state = propertyItem({
-    icon: 'clock-countdown',
+    icon: IPhClockCountdown,
     key: 'state',
     type: SORT_TYPE_KEY.NUMBER,
     sortable: false,
@@ -50,7 +63,7 @@ export function useTaskProperties(pageName) {
   })
 
   const project = propertyItem({
-    icon: 'circles-three-plus',
+    icon: IPhCirclesThreePlus,
     key: 'project',
     type: SORT_TYPE_KEY.ALPHA,
     sortable: false,
@@ -58,7 +71,7 @@ export function useTaskProperties(pageName) {
   })
 
   const projects = propertyItem({
-    icon: 'circles-three-plus',
+    icon: IPhCirclesThreePlus,
     key: 'projects',
     type: SORT_TYPE_KEY.ALPHA,
     sortable: false,
@@ -67,7 +80,7 @@ export function useTaskProperties(pageName) {
   })
 
   const entitiesToFind = propertyItem({
-    icon: 'users-three',
+    icon: IPhUsersThree,
     key: 'entitiesToFind',
     type: SORT_TYPE_KEY.ALPHA,
     sortable: false,
@@ -75,7 +88,7 @@ export function useTaskProperties(pageName) {
   })
 
   const pipeline = propertyItem({
-    icon: 'shooting-star',
+    icon: IPhShootingStar,
     key: 'pipeline',
     type: SORT_TYPE_KEY.ALPHA,
     sortable: false,
@@ -83,7 +96,7 @@ export function useTaskProperties(pageName) {
   })
 
   const documents = propertyItem({
-    icon: 'files',
+    icon: IPhFiles,
     key: 'documents',
     type: SORT_TYPE_KEY.NUMBER,
     sortable: false,
@@ -91,7 +104,7 @@ export function useTaskProperties(pageName) {
   })
 
   const privacy = propertyItem({
-    icon: 'eye-slash',
+    icon: IPhEyeSlash,
     key: 'privacy',
     type: SORT_TYPE_KEY.ALPHA,
     sortable: false,
@@ -99,7 +112,7 @@ export function useTaskProperties(pageName) {
   })
 
   const author = propertyItem({
-    icon: 'user-circle',
+    icon: IPhUserCircle,
     key: 'author',
     type: SORT_TYPE_KEY.ALPHA,
     sortable: false,
@@ -107,7 +120,7 @@ export function useTaskProperties(pageName) {
   })
 
   const queries = propertyItem({
-    icon: 'magnifying-glass',
+    icon: IPhMagnifyingGlass,
     key: 'queries',
     type: SORT_TYPE_KEY.ALPHA,
     sortable: false,
@@ -115,7 +128,7 @@ export function useTaskProperties(pageName) {
   })
 
   const size = propertyItem({
-    icon: 'floppy-disk-back',
+    icon: IPhFloppyDiskBack,
     key: 'size',
     type: SORT_TYPE_KEY.NUMBER,
     sortable: false,
@@ -123,7 +136,7 @@ export function useTaskProperties(pageName) {
   })
 
   const taskType = propertyItem({
-    icon: 'rocket-launch',
+    icon: IPhRocketLaunch,
     key: 'taskType',
     type: SORT_TYPE_KEY.ALPHA,
     sortable: false,

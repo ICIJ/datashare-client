@@ -1,6 +1,15 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+import IPhMagnifyingGlass from '~icons/ph/magnifying-glass'
+import IPhRanking from '~icons/ph/ranking'
+import IPhFile from '~icons/ph/file'
+import IPhCirclesThreePlus from '~icons/ph/circles-three-plus'
+import IPhFileText from '~icons/ph/file-text'
+import IPhFloppyDiskBack from '~icons/ph/floppy-disk-back'
+import IPhTreeStructure from '~icons/ph/tree-structure'
+import IPhCalendarBlank from '~icons/ph/calendar-blank'
+
 import { useViewProperties } from '@/composables/useViewProperties'
 import { SORT_TYPE_KEY, useViewSettings } from '@/composables/useViewSettings'
 
@@ -10,7 +19,7 @@ export function useBatchSearchResultProperties() {
   const { fieldsToSortByOptions, fieldsToPropertiesOptions } = useViewSettings()
 
   const query = propertyItem({
-    icon: 'magnifying-glass',
+    icon: IPhMagnifyingGlass,
     key: 'query',
     text: computed(() => t('task.batch-search-results.show.fields.query')),
     sortable: true,
@@ -19,7 +28,7 @@ export function useBatchSearchResultProperties() {
   })
 
   const documentNumber = propertyItem({
-    icon: 'ranking',
+    icon: IPhRanking,
     key: 'documentNumber',
     sortingKey: 'doc_nb',
     text: computed(() => t('task.batch-search-results.show.fields.documentNumber')),
@@ -29,14 +38,14 @@ export function useBatchSearchResultProperties() {
   })
 
   const documentName = propertyItem({
-    icon: 'file',
+    icon: IPhFile,
     key: 'documentName',
     text: computed(() => t('task.batch-search-results.show.fields.documentName')),
     emphasis: true
   })
 
   const project = propertyItem({
-    icon: 'circles-three-plus',
+    icon: IPhCirclesThreePlus,
     key: 'project',
     sortingKey: 'prj_id',
     text: computed(() => t('task.batch-search-results.show.fields.project')),
@@ -45,13 +54,13 @@ export function useBatchSearchResultProperties() {
   })
 
   const contentType = propertyItem({
-    icon: 'file-text',
+    icon: IPhFileText,
     key: 'contentType',
     text: computed(() => t('task.batch-search-results.show.fields.contentType'))
   })
 
   const contentLength = propertyItem({
-    icon: 'floppy-disk-back',
+    icon: IPhFloppyDiskBack,
     key: 'contentLength',
     sortingKey: 'content_length',
     text: computed(() => t('task.batch-search-results.show.fields.contentLength')),
@@ -60,7 +69,7 @@ export function useBatchSearchResultProperties() {
   })
 
   const documentPath = propertyItem({
-    icon: 'tree-structure',
+    icon: IPhTreeStructure,
     key: 'documentPath',
     sortingKey: 'doc_path',
     text: computed(() => t('task.batch-search-results.show.fields.documentPath')),
@@ -70,7 +79,7 @@ export function useBatchSearchResultProperties() {
   })
 
   const creationDate = propertyItem({
-    icon: 'calendar-blank',
+    icon: IPhCalendarBlank,
     key: 'creationDate',
     sortingKey: 'creation_date',
     text: computed(() => t('task.batch-search-results.show.fields.creationDate')),

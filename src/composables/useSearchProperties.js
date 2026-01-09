@@ -1,6 +1,22 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+import IPhImage from '~icons/ph/image'
+import IPhFileText from '~icons/ph/file-text'
+import IPhQuotes from '~icons/ph/quotes'
+import IPhUserCircle from '~icons/ph/user-circle'
+import IPhTreeStructure from '~icons/ph/tree-structure'
+import IPhHash from '~icons/ph/hash'
+import IPhFloppyDiskBack from '~icons/ph/floppy-disk-back'
+import IPhTextColumns from '~icons/ph/text-columns'
+import IPhFile from '~icons/ph/file'
+import IPhCalendar from '~icons/ph/calendar'
+import IPhCalendarPlus from '~icons/ph/calendar-plus'
+import IPhPaperclip from '~icons/ph/paperclip'
+import IPhGlobeHemisphereWest from '~icons/ph/globe-hemisphere-west'
+import IPhCirclesThreePlus from '~icons/ph/circles-three-plus'
+import IPhFiles from '~icons/ph/files'
+
 import { useViewProperties } from '@/composables/useViewProperties'
 import { SORT_TYPE_KEY, useViewSettings } from '@/composables/useViewSettings'
 
@@ -18,14 +34,14 @@ export function useSearchProperties() {
   })
 
   const thumbnail = propertyItem({
-    icon: 'image',
+    icon: IPhImage,
     key: 'thumbnail',
     emphasis: true,
     text: computed(() => t('documentRow.properties.thumbnail'))
   })
 
   const title = propertyItem({
-    icon: 'file-text',
+    icon: IPhFileText,
     key: 'title',
     required: true,
     emphasis: true,
@@ -36,19 +52,19 @@ export function useSearchProperties() {
   })
 
   const highlights = propertyItem({
-    icon: 'quotes',
+    icon: IPhQuotes,
     key: 'highlights',
     text: computed(() => t('documentRow.properties.highlights'))
   })
 
   const author = propertyItem({
-    icon: 'user-circle',
+    icon: IPhUserCircle,
     key: 'author',
     text: computed(() => t('documentRow.properties.author'))
   })
 
   const path = propertyItem({
-    icon: 'tree-structure',
+    icon: IPhTreeStructure,
     key: 'path',
     sortable: true,
     type: SORT_TYPE_KEY.ALPHA,
@@ -56,13 +72,13 @@ export function useSearchProperties() {
   })
 
   const tags = propertyItem({
-    icon: 'hash',
+    icon: IPhHash,
     key: 'tags',
     text: computed(() => t('documentRow.properties.tags'))
   })
 
   const contentLength = propertyItem({
-    icon: 'floppy-disk-back',
+    icon: IPhFloppyDiskBack,
     key: 'contentLength',
     sortable: true,
     type: SORT_TYPE_KEY.NUMBER,
@@ -70,20 +86,20 @@ export function useSearchProperties() {
   })
 
   const contentTextLength = propertyItem({
-    icon: 'text-columns',
+    icon: IPhTextColumns,
     key: 'contentTextLength',
     type: SORT_TYPE_KEY.NUMBER,
     text: computed(() => t('documentRow.properties.contentTextLength'))
   })
 
   const contentType = propertyItem({
-    icon: 'file',
+    icon: IPhFile,
     key: 'contentType',
     text: computed(() => t('documentRow.properties.contentType'))
   })
 
   const creationDate = propertyItem({
-    icon: 'calendar',
+    icon: IPhCalendar,
     key: 'creationDate',
     type: SORT_TYPE_KEY.DATE,
     sortable: true,
@@ -92,7 +108,7 @@ export function useSearchProperties() {
   })
 
   const extractionDate = propertyItem({
-    icon: 'calendar-plus',
+    icon: IPhCalendarPlus,
     key: 'extractionDate',
     type: SORT_TYPE_KEY.DATE,
     sortable: true,
@@ -100,25 +116,25 @@ export function useSearchProperties() {
   })
 
   const extractionLevel = propertyItem({
-    icon: 'paperclip',
+    icon: IPhPaperclip,
     key: 'extractionLevel',
     text: computed(() => t('documentRow.properties.extractionLevel'))
   })
 
   const language = propertyItem({
-    icon: 'globe-hemisphere-west',
+    icon: IPhGlobeHemisphereWest,
     key: 'language',
     text: computed(() => t('documentRow.properties.language'))
   })
 
   const project = propertyItem({
-    icon: 'circles-three-plus',
+    icon: IPhCirclesThreePlus,
     key: 'project',
     text: computed(() => t('documentRow.properties.project'))
   })
 
   const numberOfPages = propertyItem({
-    icon: 'files',
+    icon: IPhFiles,
     key: 'numberOfPages',
     text: computed(() => t('document.numberOfPages'))
   })
