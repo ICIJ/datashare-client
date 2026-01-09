@@ -17,6 +17,10 @@
 @import './utils/buttons.scss';
 @import './utils/nprogress.scss';
 
+:root {
+  --app-icon-raw-size: 1em;
+}
+
 .link-visitable:visited {
   color: mix($purple, white, 80%);
 }
@@ -274,6 +278,6 @@ html[data-bs-theme] body .Toastify {
   }
 }
 
-.phosphor-icon {
+.app-icon {
   min-width: 1em;
 }

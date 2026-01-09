@@ -20,6 +20,14 @@
     "@jridgewell/gen-mapping" "^0.3.5"
     "@jridgewell/trace-mapping" "^0.3.24"
 
+"@antfu/install-pkg@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@antfu/install-pkg/-/install-pkg-1.1.0.tgz#78fa036be1a6081b5a77a5cf59f50c7752b6ba26"
+  integrity sha512-MGQsmw10ZyI+EJo45CdSER4zEb+p31LpDAFp2Z3gkSd1yqVZGi0Ebx++YTEMonJy4oChEMLsxZ64j8FH6sSqtQ==
+  dependencies:
+    package-manager-detector "^1.3.0"
+    tinyexec "^1.0.1"
+
 "@asamuzakjp/css-color@^4.1.1":
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/@asamuzakjp/css-color/-/css-color-4.1.1.tgz#e5c662f488367dc74194609179fe6621f2586114"
@@ -761,17 +769,16 @@
     typescript-eslint "^8.38.0"
     vue-eslint-parser "^10.2.0"
 
-"@icij/murmur-next@4.5.12":
-  version "4.5.12"
-  resolved "https://registry.yarnpkg.com/@icij/murmur-next/-/murmur-next-4.5.12.tgz#373d0eeae61a437f6323addbbbe43ee54fdcbab4"
-  integrity sha512-oXSIY2vu/PxH/9yewLdOSAt26MRTT1BbX5EiTxZ6Yaya6D49IK2qhJtaoWLWAF4pQJgWpwb2KCJmzW9xGuGebg==
+"@icij/murmur-next@4.7.4":
+  version "4.7.4"
+  resolved "https://registry.yarnpkg.com/@icij/murmur-next/-/murmur-next-4.7.4.tgz#0c2b2fbc036a93b7b3ca241cefeeaa7be206bd91"
+  integrity sha512-FBMDI/wjhxyfBrAlBUgemjsG66kyJ0EBCDOj0IKsKhKYh7XUqp5zGq0GAIgXBE7vN+GJxSdpn02+5XuDkq71SQ==
   dependencies:
-    "@phosphor-icons/vue" "^2.2.1"
     "@storybook/preset-scss" "^1.0.3"
     "@types/topojson" "^3.2.6"
-    bootstrap "^5.3.7"
-    bootstrap-vue-next "0.30.4"
-    canvas "^3.1.2"
+    bootstrap "^5.3.8"
+    bootstrap-vue-next "0.42.0"
+    canvas "^3.2.0"
     clipboard "^2.0.11"
     d3 "^7.9.0"
     d3-geo-projection "^4.0.0"
@@ -783,6 +790,27 @@
     topojson "^3.0.2"
     vue-input-autowidth "^2.2.1"
     vue-virtual-scroller "^2.0.0-beta.8"
+
+"@iconify-json/ph@^1.2.2":
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/@iconify-json/ph/-/ph-1.2.2.tgz#eac734e80f4639df6ade990690a825540b4259c4"
+  integrity sha512-PgkEZNtqa8hBGjHXQa4pMwZa93hmfu8FUSjs/nv4oUU6yLsgv+gh9nu28Kqi8Fz9CCVu4hj1MZs9/60J57IzFw==
+  dependencies:
+    "@iconify/types" "*"
+
+"@iconify/types@*", "@iconify/types@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@iconify/types/-/types-2.0.0.tgz#ab0e9ea681d6c8a1214f30cd741fe3a20cc57f57"
+  integrity sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==
+
+"@iconify/utils@^3.0.2":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@iconify/utils/-/utils-3.1.0.tgz#fb41882915f97fee6f91a2fbb8263e8772ca0438"
+  integrity sha512-Zlzem1ZXhI1iHeeERabLNzBHdOa4VhQbqAcOQaMKuTuyZCpwKbC2R4Dd0Zo3g9EAc+Y4fiarO8HIHRAth7+skw==
+  dependencies:
+    "@antfu/install-pkg" "^1.1.0"
+    "@iconify/types" "^2.0.0"
+    mlly "^1.8.0"
 
 "@intlify/core-base@11.2.8":
   version "11.2.8"
@@ -2256,20 +2284,10 @@ boolbase@^1.0.0:
   resolved "https://registry.yarnpkg.com/boolbase/-/boolbase-1.0.0.tgz#68dff5fbe60c51eb37725ea9e3ed310dcc1e776e"
   integrity sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==
 
-bootstrap-vue-next@0.30.4, bootstrap-vue-next@0.30.5:
-  version "0.30.5"
-  resolved "https://registry.yarnpkg.com/bootstrap-vue-next/-/bootstrap-vue-next-0.30.5.tgz#5434d59f4343aa0860225cf74c57598e13e2c7f3"
-  integrity sha512-0RVqejmEG9xJcaKajAlFV1EjSiSPJFJi4U9bhtg/wbqqM8Nf/ZzY5ftGrT1wvX7MjPWIlEt9EIzLLuSFZs8V8w==
-
 bootstrap-vue-next@0.42.0:
   version "0.42.0"
   resolved "https://registry.yarnpkg.com/bootstrap-vue-next/-/bootstrap-vue-next-0.42.0.tgz#94d490215a2b11e670d66e67c61cdd2c1e183e40"
   integrity sha512-CSkk2jL8Y2U9zgdutxjbBx4DRhKFmxTmaTQhhMYXVvczkVksw2mzRu1MU//950z0lvUwSqJo3R7y0opoyEA8zg==
-
-bootstrap@^5.3.7:
-  version "5.3.7"
-  resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-5.3.7.tgz#8640065036124d961d885d80b5945745e1154d90"
-  integrity sha512-7KgiD8UHjfcPBHEpDNg+zGz8L3LqR3GVwqZiBRFX04a1BCArZOz1r2kjly2HQ0WokqTO0v1nF+QAt8dsW4lKlw==
 
 bootstrap@^5.3.8:
   version "5.3.8"
@@ -2382,10 +2400,10 @@ caniuse-lite@^1.0.30001759, caniuse-lite@^1.0.30001760:
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001760.tgz#bdd1960fafedf8d5f04ff16e81460506ff9b798f"
   integrity sha512-7AAMPcueWELt1p3mi13HR/LHH0TJLT11cnwDJEs3xA4+CK/PLKeO9Kl1oru24htkyUKtkGCvAx4ohB0Ttry8Dw==
 
-canvas@^3.1.2:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/canvas/-/canvas-3.1.2.tgz#a98406ef6178d31e39eb7dc0a488b1181555b792"
-  integrity sha512-Z/tzFAcBzoCvJlOSlCnoekh1Gu8YMn0J51+UAuXJAbW1Z6I9l2mZgdD7738MepoeeIcUdDtbMnOg6cC7GJxy/g==
+canvas@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/canvas/-/canvas-3.2.0.tgz#877c51aabdb99cbb5b2b378138a6cdd681e9d390"
+  integrity sha512-jk0GxrLtUEmW/TmFsk2WghvgHe8B0pxGilqCL21y8lHkPUGa6FTsnCNtHPOzT8O3y+N+m3espawV80bbBlgfTA==
   dependencies:
     node-addon-api "^7.0.0"
     prebuild-install "^7.1.3"
@@ -5199,6 +5217,11 @@ package-json-from-dist@^1.0.0:
   resolved "https://registry.yarnpkg.com/package-json-from-dist/-/package-json-from-dist-1.0.1.tgz#4f1471a010827a86f94cfd9b0727e36d267de505"
   integrity sha512-UEZIS3/by4OC8vL3P2dTXRETpebLI2NiI5vIrjaD/5UtrkFX/tNbwjTSRAGC/+7CAo2pIcBaRgWmcBBHcsaCIw==
 
+package-manager-detector@^1.3.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/package-manager-detector/-/package-manager-detector-1.6.0.tgz#70d0cf0aa02c877eeaf66c4d984ede0be9130734"
+  integrity sha512-61A5ThoTiDG/C8s8UMZwSorAGwMJ0ERVGj2OjoW5pAalsNOg15+iQiPzrLJ4jhZ1HJzmC2PIHT2oEiH3R5fzNA==
+
 pako@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/pako/-/pako-2.1.0.tgz#266cc37f98c7d883545d11335c00fbd4062c9a86"
@@ -6149,6 +6172,11 @@ tinyexec@^0.3.2:
   resolved "https://registry.yarnpkg.com/tinyexec/-/tinyexec-0.3.2.tgz#941794e657a85e496577995c6eef66f53f42b3d2"
   integrity sha512-KQQR9yN7R5+OSwaK0XQoj22pwHoTlgYqmUscPYoknOoWCWfj/5/ABTMRi69FrKU5ffPVh5QcFikpWJI/P1ocHA==
 
+tinyexec@^1.0.1:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/tinyexec/-/tinyexec-1.0.2.tgz#bdd2737fe2ba40bd6f918ae26642f264b99ca251"
+  integrity sha512-W/KYk+NFhkmsYpuHq5JykngiOCnxeVL8v8dFnqxSD8qEEdRfXk1SDM6JzNqcERbcGYj9tMrDQBYV9cjgnunFIg==
+
 tinyglobby@^0.2.14, tinyglobby@^0.2.15:
   version "0.2.15"
   resolved "https://registry.yarnpkg.com/tinyglobby/-/tinyglobby-0.2.15.tgz#e228dd1e638cea993d2fdb4fcd2d4602a79951c2"
@@ -6437,6 +6465,17 @@ unplugin-auto-import@^20.3.0:
     unimport "^5.5.0"
     unplugin "^2.3.11"
     unplugin-utils "^0.3.1"
+
+unplugin-icons@^22.5.0:
+  version "22.5.0"
+  resolved "https://registry.yarnpkg.com/unplugin-icons/-/unplugin-icons-22.5.0.tgz#42c83bf93afcb2b9916fa6f4cc6b438c5cc8c16e"
+  integrity sha512-MBlMtT5RuMYZy4TZgqUL2OTtOdTUVsS1Mhj6G1pEzMlFJlEnq6mhUfoIt45gBWxHcsOdXJDWLg3pRZ+YmvAVWQ==
+  dependencies:
+    "@antfu/install-pkg" "^1.1.0"
+    "@iconify/utils" "^3.0.2"
+    debug "^4.4.3"
+    local-pkg "^1.1.2"
+    unplugin "^2.3.10"
 
 unplugin-utils@^0.3.0, unplugin-utils@^0.3.1:
   version "0.3.1"

@@ -3,6 +3,8 @@ import { resolve } from 'path'
 import * as childProcess from 'child_process'
 import Components from 'unplugin-vue-components/vite'
 import AutoImport from 'unplugin-auto-import/vite'
+import Icons from 'unplugin-icons/vite'
+import IconsResolver from 'unplugin-icons/resolver'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 
@@ -26,15 +28,28 @@ export default ({ mode }) => {
       vue(),
       !isStorybook && vueDevTools(),
       /**
+       * The "Icons" plugin generates icon components from Iconify collections.
+       * Icons are used via <i-{collection}-{icon}> syntax (e.g., <i-ph-user />).
+       */
+      Icons({
+        scale: 1,
+        compiler: 'vue3',
+        autoInstall: true
+      }),
+      /**
        * The "Components" plugin resolvers imports automaticaly component in vue
-       * templates For PhosphorVueResolver we use an homemade resolver
-       * that simply imports icons (example: `<ph-plus>`).
+       * templates. IconsResolver handles <i-ph-*> icon components.
+       * PhosphorVueResolver is kept for backward compatibility with dynamic icons.
        */
       Components({
         dts: false,
         dirs: [],
         resolvers: [
           BootstrapVueNextResolver(),
+          IconsResolver({
+            prefix: 'i',
+            enabledCollections: ['ph']
+          }),
           PhosphorVueResolver()
         ]
       }),
