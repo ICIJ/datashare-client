@@ -1,3 +1,18 @@
+import IPhCirclesThreePlus from '~icons/ph/circles-three-plus'
+import IPhStar from '~icons/ph/star'
+import IPhHash from '~icons/ph/hash'
+import IPhUsers from '~icons/ph/users'
+import IPhTreeStructure from '~icons/ph/tree-structure'
+import IPhFile from '~icons/ph/file'
+import IPhCalendarBlank from '~icons/ph/calendar-blank'
+import IPhGlobe from '~icons/ph/globe'
+import IPhUserSquare from '~icons/ph/user-square'
+import IPhBuildings from '~icons/ph/buildings'
+import IPhMapPin from '~icons/ph/map-pin'
+import IPhEnvelope from '~icons/ph/envelope'
+import IPhPaperclip from '~icons/ph/paperclip'
+import IPhCalendarPlus from '~icons/ph/calendar-plus'
+
 import { MODE_NAME } from '@/mode/index'
 import { namedEntityCategoryTranslation } from '@/store/filters/FilterEntity'
 
@@ -20,7 +35,7 @@ export default [
     options: {
       name: 'project',
       key: '_index',
-      icon: 'circles-three-plus',
+      icon: IPhCirclesThreePlus,
       order: 0,
       section: 'documentsInfo',
       preference: 'filter-project',
@@ -38,7 +53,7 @@ export default [
     options: {
       name: 'starred',
       key: '_id',
-      icon: 'star',
+      icon: IPhStar,
       order: 10,
       section: 'userData',
       preference: 'filter-starred',
@@ -55,7 +70,7 @@ export default [
     options: {
       name: 'tags',
       key: 'tags',
-      icon: 'hash',
+      icon: IPhHash,
       order: 20,
       section: 'userData',
       preference: 'filter-tags'
@@ -66,7 +81,7 @@ export default [
     options: {
       name: 'recommendedBy',
       key: '_id',
-      icon: 'users',
+      icon: IPhUsers,
       modes: [MODE_NAME.SERVER],
       order: 30,
       section: 'userData',
@@ -83,7 +98,7 @@ export default [
     options: {
       name: 'path',
       key: 'byDirname',
-      icon: 'tree-structure',
+      icon: IPhTreeStructure,
       order: 35,
       section: 'documentsInfo',
       hideAll: true,
@@ -97,7 +112,7 @@ export default [
     options: {
       name: 'contentType',
       key: 'contentType',
-      icon: 'file',
+      icon: IPhFile,
       order: 40,
       section: 'documentsInfo',
       preference: 'filter-content-type'
@@ -108,7 +123,7 @@ export default [
     options: {
       name: 'creationDate',
       key: 'metadata.tika_metadata_dcterms_created',
-      icon: 'calendar-blank',
+      icon: IPhCalendarBlank,
       order: 50,
       hideAll: true,
       hideSearch: true,
@@ -124,7 +139,7 @@ export default [
     options: {
       name: 'language',
       key: 'language',
-      icon: 'globe',
+      icon: IPhGlobe,
       order: 60,
       section: 'documentsInfo',
       preference: 'filter-language'
@@ -135,7 +150,7 @@ export default [
     options: {
       name: 'namedEntityPerson',
       key: 'byMentions',
-      icon: 'user-square',
+      icon: IPhUserSquare,
       category: namedEntityCategoryTranslation.namedEntityPerson,
       order: 70,
       section: 'entities',
@@ -147,7 +162,7 @@ export default [
     options: {
       name: 'namedEntityOrganization',
       key: 'byMentions',
-      icon: 'buildings',
+      icon: IPhBuildings,
       category: namedEntityCategoryTranslation.namedEntityOrganization,
       order: 80,
       section: 'entities',
@@ -159,7 +174,7 @@ export default [
     options: {
       name: 'namedEntityLocation',
       key: 'byMentions',
-      icon: 'map-pin',
+      icon: IPhMapPin,
       category: namedEntityCategoryTranslation.namedEntityLocation,
       order: 90,
       section: 'entities',
@@ -171,7 +186,7 @@ export default [
     options: {
       name: 'namedEntityEmail',
       key: 'byMentions',
-      icon: 'envelope',
+      icon: IPhEnvelope,
       category: namedEntityCategoryTranslation.namedEntityEmail,
       order: 100,
       section: 'entities',
@@ -183,7 +198,7 @@ export default [
     options: {
       name: 'extractionLevel',
       key: 'extractionLevel',
-      icon: 'paperclip',
+      icon: IPhPaperclip,
       hideSearch: true,
       order: 110,
       section: 'documentsInfo',
@@ -195,7 +210,7 @@ export default [
     options: {
       name: 'indexingDate',
       key: 'extractionDate',
-      icon: 'calendar-plus',
+      icon: IPhCalendarPlus,
       hideSearch: true,
       order: 120,
       section: 'documentsInfo'
