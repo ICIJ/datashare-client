@@ -1,6 +1,8 @@
 <script setup>
 import { computed, watch, provide } from 'vue'
 
+import IPhDotsThreeOutlineVerticalFill from '~icons/ph/dots-three-outline-vertical-fill'
+
 import FormActionsCompactDropdown from './FormActionsCompactDropdown'
 
 import { VARIANT, variantValidator } from '@/enums/variants'
@@ -19,7 +21,7 @@ const props = defineProps({
   },
   dropdownIcon: {
     type: [String, Object, Array],
-    default: () => [PhDotsThreeOutlineVertical, 'fill']
+    default: () => IPhDotsThreeOutlineVerticalFill
   },
   teleportTo: {
     type: [String, Object],
