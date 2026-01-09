@@ -1,5 +1,4 @@
 <script setup>
-import { PhCaretDown, PhCaretUp } from '@phosphor-icons/vue'
 import { useI18n } from 'vue-i18n'
 
 import ButtonRowAction from '@/components/Button/ButtonRowAction/ButtonRowAction'

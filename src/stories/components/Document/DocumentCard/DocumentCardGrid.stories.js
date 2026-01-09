@@ -1,5 +1,4 @@
 import { markRaw } from 'vue'
-import { PhFilePdf } from '@phosphor-icons/vue'
 import { vueRouter } from 'storybook-vue3-router'
 
 import { withMurmur } from '~storybook/decorators/murmur'

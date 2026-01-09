@@ -1,5 +1,4 @@
 import { markRaw } from 'vue'
-import { PhFilePdf } from '@phosphor-icons/vue'
 
 import types from '@/utils/contentTypes.json'
 import DocumentActionsGroup from '@/components/Document/DocumentActionsGroup/DocumentActionsGroup'
