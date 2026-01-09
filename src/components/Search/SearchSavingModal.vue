@@ -4,6 +4,8 @@ import { useI18n } from 'vue-i18n'
 import { isEmpty } from 'lodash'
 import { useRoute, useRouter } from 'vue-router'
 
+import IPhTextAa from '~icons/ph/text-aa'
+
 import image from '@/assets/images/illustrations/app-modal-saved-search-naming-light.svg'
 import imageDark from '@/assets/images/illustrations/app-modal-saved-search-naming-dark.svg'
 import AppModal from '@/components/AppModal/AppModal'
@@ -61,7 +63,7 @@ async function confirmSaving() {
       <form @submit.prevent="confirmSaving().then(close)">
         <form-fieldset
           :label="t('searchSavingModal.form.name')"
-          :icon="PhTextAa"
+          :icon="IPhTextAa"
           label-visually-hidden
         >
           <div class="col">
