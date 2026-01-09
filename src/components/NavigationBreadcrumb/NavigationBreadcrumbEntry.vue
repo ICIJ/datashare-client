@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 
 const props = defineProps({
   flush: {
@@ -25,14 +25,15 @@ const classList = computed(() => {
     :class="classList"
   >
     <slot />
-    <phosphor-icon
+    <app-icon
       v-if="!noCaret"
       role="separator"
       aria-hidden="true"
       class="navigation-breadcrumb-entry__caret mx-2"
       size="1em"
-      :name="PhCaretRight"
-    />
+    >
+      <i-ph-caret-right />
+    </app-icon>
   </div>
 </template>
 

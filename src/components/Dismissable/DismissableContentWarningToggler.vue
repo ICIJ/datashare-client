@@ -1,6 +1,6 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
-import { PhosphorIcon, ButtonIcon } from '@icij/murmur-next'
+import { AppIcon, ButtonIcon } from '@icij/murmur-next'
 
 const { t } = useI18n()
 const modelValue = defineModel({ type: Boolean, default: true })
@@ -11,10 +11,9 @@ const toggle = () => (modelValue.value = !modelValue.value)
   <div
     class="dismissable-content-warning-toggler"
   >
-    <phosphor-icon
-      :name="PhEyeSlash"
-      size="2em"
-    />
+    <app-icon size="2em">
+      <i-ph-eye-slash />
+    </app-icon>
     <h4>{{ t('dismissableContentWarningToggler.title') }}</h4>
     <p class="m-0">
       {{ t('dismissableContentWarningToggler.description') }}

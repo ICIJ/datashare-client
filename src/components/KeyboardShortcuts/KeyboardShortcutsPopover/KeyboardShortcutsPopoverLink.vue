@@ -2,6 +2,8 @@
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur-next'
 
+import IPhCaretRight from '~icons/ph/caret-right'
+
 const { t } = useI18n()
 </script>
 
@@ -10,7 +12,7 @@ const { t } = useI18n()
     truncate
     variant="outline-action"
     class="keyboard-shortcuts-popover-link"
-    :icon-right="PhCaretRight"
+    :icon-right="IPhCaretRight"
     :to="{ name: 'shortcuts' }"
     icon-right-variant="secondary"
   >

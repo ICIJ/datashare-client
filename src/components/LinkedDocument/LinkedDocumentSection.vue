@@ -44,7 +44,7 @@ defineProps({
     type: String
   },
   icon: {
-    type: String
+    type: [String, Object, Array]
   },
   headerClass: {
     type: String

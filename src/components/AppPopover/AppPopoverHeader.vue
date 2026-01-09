@@ -2,6 +2,7 @@
 import { computed, useSlots } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur-next'
+import IPhX from '~icons/ph/x'
 
 defineOptions({ name: 'AppPopoverTitle' })
 
@@ -36,7 +37,7 @@ const showHeader = computed(() => props.title || slots.title || slots.close)
     </component>
     <slot name="close">
       <button-icon
-        icon-left="x"
+        :icon-left="IPhX"
         hide-label
         hide-tooltip
         variant="outline-secondary"

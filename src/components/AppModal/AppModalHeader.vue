@@ -1,6 +1,7 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon, ImageMode } from '@icij/murmur-next'
+import IPhX from '~icons/ph/x'
 
 defineProps({
   title: {
@@ -33,7 +34,7 @@ const { t } = useI18n()
     <slot name="close">
       <button-icon
         v-if="!noHeaderClose"
-        icon-left="x"
+        :icon-left="IPhX"
         hide-label
         hide-tooltip
         tooltip-placement="right"

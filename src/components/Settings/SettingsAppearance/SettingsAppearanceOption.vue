@@ -1,5 +1,5 @@
 <script setup>
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 
 defineProps({
   icon: {
@@ -17,7 +17,10 @@ defineProps({
 <template>
   <div class="settings-appearance-option d-flex justify-content-between align-items-md-center gap-2 px-3">
     <span class="d-inline-flex gap-2">
-      <phosphor-icon :name="icon" />
+      <app-icon
+        size="1em"
+        :name="icon"
+      />
       <span class="text-nowrap">
         {{ label }}
       </span>

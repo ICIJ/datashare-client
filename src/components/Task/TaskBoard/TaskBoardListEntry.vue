@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
-import { ButtonIcon } from '@icij/murmur-next'
+import { AppIcon, ButtonIcon } from '@icij/murmur-next'
+import IPhPlus from '~icons/ph/plus'
 
 import { useBreakpoints } from '@/composables/useBreakpoints'
 import { SIZE } from '@/enums/sizes'
@@ -32,7 +33,7 @@ const compact = computed(() => {
           :to="listLink"
           class="d-block"
         >
-          <phosphor-icon
+          <app-icon
             :name="icon"
             size="100%"
             class="task-board-list-entry__icon"
@@ -68,7 +69,7 @@ const compact = computed(() => {
                 v-if="actionLink"
                 :hide-label="compact"
                 :label="actionText"
-                icon-left="plus"
+                :icon-left="IPhPlus"
                 variant="outline-action"
                 :to="actionLink"
                 :title="actionText"

@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 
 import filters from '@/store/filters'
@@ -24,7 +24,7 @@ const icon = computed(() => {
 
 <template>
   <span class="badge-filter-header text-secondary d-flex gap-1 align-items-center">
-    <phosphor-icon
+    <app-icon
       size="1em"
       :name="icon"
     />

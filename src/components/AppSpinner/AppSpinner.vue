@@ -1,10 +1,9 @@
 <script setup>
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 </script>
 
 <template>
-  <phosphor-icon
-    :name="PhCircleNotch"
-    spin
-  />
+  <app-icon spin>
+    <i-ph-circle-notch />
+  </app-icon>
 </template>
