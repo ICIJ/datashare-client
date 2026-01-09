@@ -7,6 +7,17 @@ import { ButtonIcon } from '@icij/murmur-next'
 import IPhList from '~icons/ph/list'
 import IPhCaretRight from '~icons/ph/caret-right'
 import IPhDownloadSimple from '~icons/ph/download-simple'
+import IPhFiles from '~icons/ph/files'
+import IPhEmpty from '~icons/ph/empty'
+import IPhListMagnifyingGlass from '~icons/ph/list-magnifying-glass'
+import IPhCalendarBlank from '~icons/ph/calendar-blank'
+import IPhUser from '~icons/ph/user'
+import IPhEye from '~icons/ph/eye'
+import IPhEyeSlash from '~icons/ph/eye-slash'
+import IPhQuotes from '~icons/ph/quotes'
+import IPhArrowsOutLineHorizontal from '~icons/ph/arrows-out-line-horizontal'
+import IPhCirclesThreePlus from '~icons/ph/circles-three-plus'
+import IPhFunnel from '~icons/ph/funnel'
 
 import BatchSearchCardDetailsEntry from '@/components/BatchSearch/BatchSeachCard/BatchSearchCardDetailsEntry'
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
@@ -64,7 +75,7 @@ const noResultsQueries = computed(() => {
 const noResultsQueriesDownload = computed(() => t('batchSearchCard.noResultsQueriesDownload'))
 const noResultsQueriesLabel = hasQueriesWithoutResultsNumber ? noResultsQueries : noResultsQueriesDownload
 
-const visibilityIcon = visibility ? PhEye : PhEyeSlash
+const visibilityIcon = visibility ? IPhEye : IPhEyeSlash
 const visibilityPrivate = computed(() => t('batchSearchCardDetails.visibilityPrivate'))
 const visibilityShared = computed(() => t('batchSearchCardDetails.visibilityShared'))
 const visibilityValue = visibility ? visibilityShared : visibilityPrivate
@@ -118,7 +129,7 @@ const showError = () => showBatchSearchErrorModal(batchSearch)
       </li>
       <li>
         <batch-search-card-details-entry
-          :icon="PhFiles"
+          :icon="IPhFiles"
           :label="t('batchSearchCard.nbDocuments')"
           :value="t('batchSearchCard.nbDocumentsLabel', { n: humanNumber(nbResults) }, nbResults)"
         />
@@ -145,7 +156,7 @@ const showError = () => showBatchSearchErrorModal(batchSearch)
       </li>
       <li class="my-0">
         <batch-search-card-details-entry
-          :icon="PhEmpty"
+          :icon="IPhEmpty"
           :label="t('batchSearchCard.noResultsQueriesLabel')"
           :value="noResultsQueriesLabel"
         >
@@ -167,7 +178,7 @@ const showError = () => showBatchSearchErrorModal(batchSearch)
     <ul class="batch-search-card-details__list list-unstyled">
       <li class="my-0">
         <batch-search-card-details-entry
-          :icon="PhListMagnifyingGlass"
+          :icon="IPhListMagnifyingGlass"
           :label="t('batchSearchCard.nbQueries')"
           :value="t('batchSearchCard.nbQueriesLabel', { n: humanNumber(nbQueries) }, nbQueries)"
         >
@@ -187,7 +198,7 @@ const showError = () => showBatchSearchErrorModal(batchSearch)
       <li class="mt-2">
         <batch-search-card-details-entry
           :label="t('batchSearchCardDetails.date')"
-          :icon="PhCalendarBlank"
+          :icon="IPhCalendarBlank"
         >
           <display-datetime :value="date" />
         </batch-search-card-details-entry>
@@ -195,7 +206,7 @@ const showError = () => showBatchSearchErrorModal(batchSearch)
       <li>
         <batch-search-card-details-entry
           :label="t('batchSearchCardDetails.author')"
-          :icon="PhUser"
+          :icon="IPhUser"
         >
           <display-user
             hide-avatar
@@ -213,28 +224,28 @@ const showError = () => showBatchSearchErrorModal(batchSearch)
       <li>
         <batch-search-card-details-entry
           :label="t('batchSearchCardDetails.phraseMatch')"
-          :icon="PhQuotes"
+          :icon="IPhQuotes"
           :value="phraseMatchValue"
         />
       </li>
       <li v-if="phraseMatch">
         <batch-search-card-details-entry
           :label="t('batchSearchCardDetails.proximity')"
-          :icon="PhArrowsOutLineHorizontal"
+          :icon="IPhArrowsOutLineHorizontal"
           :value="proximityValue"
         />
       </li>
       <li v-else>
         <batch-search-card-details-entry
           :label="t('batchSearchCardDetails.fuzziness')"
-          :icon="PhArrowsOutLineHorizontal"
+          :icon="IPhArrowsOutLineHorizontal"
           :value="fuzzinessValue"
         />
       </li>
       <li>
         <batch-search-card-details-entry
           :label="t('batchSearchCardDetails.projects')"
-          :icon="PhCirclesThreePlus"
+          :icon="IPhCirclesThreePlus"
           buttons
         >
           <div class="d-flex flex-wrap gap-2">
@@ -249,7 +260,7 @@ const showError = () => showBatchSearchErrorModal(batchSearch)
       <li v-if="hasUriWithFilters">
         <batch-search-card-details-entry
           :label="t('batchSearchCardDetails.filters')"
-          :icon="PhFunnel"
+          :icon="IPhFunnel"
           buttons
         >
           <search-breadcrumb-uri
