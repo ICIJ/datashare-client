@@ -7,8 +7,8 @@ import ProjectCardUpdateDate from './ProjectCardUpdateDate'
 import ProjectCardDocumentsCount from './ProjectCardDocumentsCount'
 
 import Hook from '@/components/Hook/Hook'
-import ModeServerOnly from "@/components/Mode/ModeServerOnly.vue";
-import DisplayRoles from "@/components/Display/DisplayRoles.vue";
+import ModeServerOnly from '@/components/Mode/ModeServerOnly.vue'
+import DisplayRoles from '@/components/Display/DisplayRoles.vue'
 
 const props = defineProps({
   project: {
@@ -41,7 +41,10 @@ const toProjectSearch = computed(() => ({
           <slot name="documents-count" />
         </project-card-documents-count>
         <mode-server-only>
-          <display-roles :project="project"/>
+          <display-roles
+            :project="project"
+            class="text-secondary-emphasis"
+          />
         </mode-server-only>
       </div>
       <button-icon

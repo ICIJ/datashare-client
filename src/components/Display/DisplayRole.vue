@@ -1,7 +1,8 @@
 <script setup>
+import { computed } from 'vue'
 import { PhosphorIcon } from '@icij/murmur-next'
-import { camelCase, upperFirst } from 'lodash'
-defineProps({
+import { usePolicies } from '@/composables/usePolicies.js'
+const props = defineProps({
   value: {
     type: String
   },
@@ -10,13 +11,14 @@ defineProps({
     default: false
   }
 })
-
+const { formatRole } = usePolicies()
+const role = computed(() => formatRole(props.value))
 </script>
 
 <template>
-  <span class="d-inline-flex py-2 gap-1">
+  <span class="d-inline-flex gap-1">
     <phosphor-icon
       v-if="!noIcon"
       :name="PhUserSquare"
-    />{{ upperFirst(camelCase(value)) }}</span>
+    />{{ role }}</span>
 </template>
