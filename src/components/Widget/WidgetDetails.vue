@@ -2,7 +2,15 @@
 import { computed } from 'vue'
 import { isFunction, kebabCase } from 'lodash'
 import { useI18n } from 'vue-i18n'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
+
+import IPhNotepad from '~icons/ph/notepad'
+import IPhFolder from '~icons/ph/folder'
+import IPhUserCircle from '~icons/ph/user-circle'
+import IPhLink from '~icons/ph/link'
+import IPhCalendarBlank from '~icons/ph/calendar-blank'
+import IPhCalendarCheck from '~icons/ph/calendar-check'
+import IPhInfo from '~icons/ph/info'
 
 import DisplayRaw from '@/components/Display/DisplayRaw'
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
@@ -25,35 +33,35 @@ const { getMountedPath } = useDataDir()
 const fields = [
   {
     key: 'name',
-    icon: 'notepad'
+    icon: IPhNotepad
   },
   {
     key: 'sourcePath',
-    icon: 'folder',
+    icon: IPhFolder,
     formatter: ({ rawValue }) => getMountedPath(rawValue?.split('//').pop())
   },
   {
     key: 'maintainerName',
-    icon: 'user-circle'
+    icon: IPhUserCircle
   },
   {
     key: 'publisherName',
-    icon: 'user-circle'
+    icon: IPhUserCircle
   },
   {
     key: 'sourceUrl',
-    icon: 'link',
+    icon: IPhLink,
     href: ({ rawValue }) => rawValue,
     formatter: ({ rawValue }) => rawValue?.split('//').pop()
   },
   {
     key: 'creationDate',
-    icon: 'calendar-blank',
+    icon: IPhCalendarBlank,
     component: DisplayDatetime
   },
   {
     key: 'updateDate',
-    icon: 'calendar-check',
+    icon: IPhCalendarCheck,
     component: DisplayDatetime
   }
 ]
@@ -71,7 +79,7 @@ const metadata = computed(() => {
     const label = t(`widget.project.fields.${field.key}`)
     const key = kebabCase(field.key)
     const component = field.component ?? DisplayRaw
-    const icon = field.icon ?? 'info'
+    const icon = field.icon ?? IPhInfo
     return { ...field, key, label, href, rawValue, value, component, icon }
   })
 })
@@ -94,7 +102,7 @@ const availableMetadata = computed(() => {
     >
       <div class="row g-0">
         <div class="col-12 col-md-3 widget-details__item__label d-flex flex-truncate align-items-center">
-          <phosphor-icon
+          <app-icon
             v-if="icon"
             :name="icon"
             class="me-2 flex-shrink-0"

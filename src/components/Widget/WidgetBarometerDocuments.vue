@@ -1,7 +1,7 @@
 <template>
   <widget-barometer
     class="widget-barometer-documents"
-    icon="files"
+    :icon="IPhFiles"
   >
     <i18n-t
       keypath="widget.barometer.document"
@@ -35,6 +35,8 @@
 </template>
 
 <script setup>
+import IPhFiles from '~icons/ph/files'
+
 import DisplayNumberHuman from '@/components/Display/DisplayNumberHuman'
 import WidgetBarometer from '@/components/Widget/WidgetBarometer'
 

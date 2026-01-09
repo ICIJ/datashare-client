@@ -4,7 +4,7 @@
       v-if="widget.title"
       class="widget__header d-flex align-items-center"
     >
-      <phosphor-icon
+      <app-icon
         v-if="widget.icon"
         :name="widget.icon"
         class="me-2"
@@ -21,11 +21,12 @@
     >
       <template #waiting>
         <div class="widget__spinner text-center p-4">
-          <phosphor-icon
-            :name="PhCircleNotch"
+          <app-icon
             spin
             size="2em"
-          />
+          >
+            <i-ph-circle-notch />
+          </app-icon>
         </div>
       </template>
       <div class="widget__list">
@@ -66,7 +67,7 @@
 import bodybuilder from 'bodybuilder'
 import { camelCase, flatten, get, iteratee, noop, uniqueId } from 'lodash'
 import InfiniteLoading from 'v3-infinite-loading'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 import { toRef } from 'vue'
 
@@ -84,7 +85,7 @@ export default {
   components: {
     AppWait,
     InfiniteLoading,
-    PhosphorIcon,
+    AppIcon,
     WidgetFieldFacetsEntry
   },
   props: {

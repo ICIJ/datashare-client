@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { round } from 'lodash'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 
 import DisplayNumber from '@/components/Display/DisplayNumber'
 
@@ -43,12 +43,12 @@ const barStyle = computed(() => {
         <slot>{{ label }}</slot>
       </div>
       <span class="widget-field-facets-entry__count ms-auto flex-shrink-0">
-        <phosphor-icon
-          name="magnifying-glass"
+        <app-icon
           aria-hidden="true"
-          weight="bold"
           class="me-2 flex-shrink-0 widget-field-facets-entry__count__icon"
-        />
+        >
+          <i-ph-magnifying-glass-bold />
+        </app-icon>
         <slot
           name="count"
           v-bind="{ count }"
