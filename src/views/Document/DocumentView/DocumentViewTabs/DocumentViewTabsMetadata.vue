@@ -4,6 +4,20 @@ import { computed, onBeforeUnmount, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { property, orderBy } from 'lodash'
 
+import IPhCirclesThreePlus from '~icons/ph/circles-three-plus'
+import IPhFileText from '~icons/ph/file-text'
+import IPhTreeStructure from '~icons/ph/tree-structure'
+import IPhFolder from '~icons/ph/folder'
+import IPhCalendar from '~icons/ph/calendar'
+import IPhUserCircle from '~icons/ph/user-circle'
+import IPhFloppyDiskBack from '~icons/ph/floppy-disk-back'
+import IPhFiles from '~icons/ph/files'
+import IPhGlobeHemisphereWest from '~icons/ph/globe-hemisphere-west'
+import IPhFile from '~icons/ph/file'
+import IPhNoteBlank from '~icons/ph/note-blank'
+import IPhEnvelope from '~icons/ph/envelope'
+import IPhTextColumns from '~icons/ph/text-columns'
+
 import DisplayContentLength from '@/components/Display/DisplayContentLength'
 import DisplayContentType from '@/components/Display/DisplayContentType'
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
@@ -34,7 +48,7 @@ const canonicalItems = computed(() => [
     name: '_index',
     label: t('document.project'),
     value: document.value.index,
-    icon: 'circles-three-plus',
+    icon: IPhCirclesThreePlus,
     component: ProjectLink,
     binding: {
       project: document.value.index
@@ -43,66 +57,66 @@ const canonicalItems = computed(() => [
   {
     name: 'title',
     label: t('document.title'),
-    icon: 'file-text',
+    icon: IPhFileText,
     value: document.value.title
   },
   {
     name: 'path',
     label: t('document.path'),
-    icon: 'tree-structure',
+    icon: IPhTreeStructure,
     value: documentPath.value
   },
   {
     name: 'dirname',
     label: t('document.dirname'),
-    icon: 'folder',
+    icon: IPhFolder,
     value: documentDirname.value
   },
   {
     name: 'metadata.tika_metadata_dcterms_created',
     label: t('document.creationDate'),
-    icon: 'calendar',
+    icon: IPhCalendar,
     value: document.value.meta('dcterms_created'),
     component: DisplayDatetime
   },
   {
     name: 'metadata.tika_metadata_dc_creator',
     label: t('document.author'),
-    icon: 'user-circle',
+    icon: IPhUserCircle,
     value: document.value.meta('dc_creator')
   },
   {
     name: 'extractionDate',
     label: t('document.extractionDate'),
-    icon: 'calendar',
+    icon: IPhCalendar,
     value: document.value.source.extractionDate,
     component: DisplayDatetime
   },
   {
     name: 'contentLength',
     label: t('document.size'),
-    icon: 'floppy-disk-back',
+    icon: IPhFloppyDiskBack,
     value: document.value.contentLength,
     component: DisplayContentLength
   },
   {
     name: 'metadata.tika_metadata_xmptpg_npages',
     label: t('document.numberOfPages'),
-    icon: 'files',
+    icon: IPhFiles,
     value: document.value.numberOfPages,
     component: DisplayNumber
   },
   {
     name: 'language',
     label: t('document.contentLanguage'),
-    icon: 'globe-hemisphere-west',
+    icon: IPhGlobeHemisphereWest,
     value: document.value.source.language,
     component: DisplayLanguage
   },
   {
     name: 'metadata.tika_metadata_content_type',
     label: t('document.contentType'),
-    icon: 'file',
+    icon: IPhFile,
     value: document.value.source.contentType,
     component: DisplayContentType
   },
@@ -114,26 +128,26 @@ const canonicalItems = computed(() => [
   {
     name: 'extractionLevel',
     label: t('filter.extractionLevel'),
-    icon: 'note-blank',
+    icon: IPhNoteBlank,
     value: document.value.source.extractionLevel,
     component: DisplayExtractionLevel
   },
   {
     name: 'metadata.tika_metadata_message_raw_header_thread_index',
     label: t('document.threadIndex'),
-    icon: 'envelope',
+    icon: IPhEnvelope,
     value: document.value.threadIndex
   },
   {
     name: 'parentDocument',
     label: t('document.parent'),
-    icon: 'file',
+    icon: IPhFile,
     value: parentDocument?.value?.basename
   },
   {
     name: 'contentTextLength',
     label: t('document.contentTextLength'),
-    icon: 'text-columns',
+    icon: IPhTextColumns,
     value: document.value.source.contentTextLength,
     component: DisplayNumber
   }

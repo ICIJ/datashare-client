@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ButtonIcon } from '@icij/murmur-next'
+import { AppIcon, ButtonIcon } from '@icij/murmur-next'
 
 import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
 import DisplayProgress from '@/components/Display/DisplayProgress'
@@ -130,7 +130,9 @@ function getTaskIcon(item) {
     class="task-all__latest no-border"
   >
     <b-card-title class="pb-4">
-      <phosphor-icon :name="PhRocketLaunch" />
+      <app-icon>
+        <i-ph-rocket-launch />
+      </app-icon>
       {{ t('task.task-board.latest.title') }}
     </b-card-title>
     <div class="d-flex flex-column justify-content-center">

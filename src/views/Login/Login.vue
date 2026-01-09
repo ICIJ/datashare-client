@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur-next'
 import { whenever } from '@vueuse/core'
 import { useRouter } from 'vue-router'
+import IPhUser from '~icons/ph/user'
 
 import LoginImage from '@/components/Login/LoginImage'
 import I18nLocaleDropdown from '@/components/I18n/I18nLocaleDropdown'
@@ -37,7 +38,7 @@ whenever(username, () => router.push({ name: 'landing' }))
         :label="t('login.account')"
         :href="signinUrl"
         class="login__enter_link mt-4"
-        icon-left="user"
+        :icon-left="IPhUser"
         variant="action"
         @click="image.shake()"
       />

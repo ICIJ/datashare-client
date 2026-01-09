@@ -3,7 +3,7 @@ import { computed, watch, toRef, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ary } from 'lodash'
 import Fuse from 'fuse.js'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 
 import AddonUrlInput from '@/components/Addon/AddonUrlInput'
 import AddonCard from '@/components/Addon/AddonCard'
@@ -117,12 +117,13 @@ const filteredAddons = computed(() => {
       class="row g-4"
     >
       <template #waiting>
-        <phosphor-icon
-          :name="PhCircleNotch"
+        <app-icon
           spin
           size="lg"
           class="ms-auto"
-        />
+        >
+          <i-ph-circle-notch />
+        </app-icon>
       </template>
       <div
         v-for="addon in filteredAddons"
