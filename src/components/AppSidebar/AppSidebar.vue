@@ -4,6 +4,19 @@ import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useElementSize } from '@vueuse/core'
 
+import IPhCirclesThreePlus from '~icons/ph/circles-three-plus'
+import IPhDotsNine from '~icons/ph/dots-nine'
+import IPhPushPin from '~icons/ph/push-pin'
+import IPhMagnifyingGlass from '~icons/ph/magnifying-glass'
+import IPhFileMagnifyingGlass from '~icons/ph/file-magnifying-glass'
+import IPhClockCounterClockwise from '~icons/ph/clock-counter-clockwise'
+import IPhListChecks from '~icons/ph/list-checks'
+import IPhRocketLaunch from '~icons/ph/rocket-launch'
+import IPhListMagnifyingGlass from '~icons/ph/list-magnifying-glass'
+import IPhDownloadSimple from '~icons/ph/download-simple'
+import IPhFiles from '~icons/ph/files'
+import IPhUsersThree from '~icons/ph/users-three'
+
 import AppSidebarFooter from './AppSidebarFooter'
 import AppSidebarSection from './AppSidebarSection'
 import AppSidebarSectionEntry from './AppSidebarSectionEntry'
@@ -156,12 +169,12 @@ defineExpose({
           <app-sidebar-section
             class="app-sidebar__section app-sidebar__section--projects"
             :title="t('appSidebar.projects')"
-            :icon="PhCirclesThreePlus"
+            :icon="IPhCirclesThreePlus"
             :to="{ name: 'project.list' }"
             :compact="compact"
           >
             <app-sidebar-section-entry
-              :icon="PhDotsNine"
+              :icon="IPhDotsNine"
               exact-match
               :to="{ name: 'project.list' }"
               :action-to="addToProject"
@@ -172,7 +185,7 @@ defineExpose({
             <app-sidebar-section-entry
               v-for="project in pinnedProjects"
               :key="project.name"
-              :icon="PhPushPin"
+              :icon="IPhPushPin"
               :to="{ name: 'project.view.overview.insights', params: { name: project.name } }"
             >
               <project-label
@@ -184,25 +197,25 @@ defineExpose({
           <app-sidebar-section
             class="app-sidebar__section app-sidebar__section--search"
             :title="t('appSidebar.search')"
-            :icon="PhMagnifyingGlass"
+            :icon="IPhMagnifyingGlass"
             :to="searchRoute"
             :compact="compact"
           >
             <app-sidebar-section-entry
-              :icon="PhFileMagnifyingGlass"
+              :icon="IPhFileMagnifyingGlass"
               :to="searchRoute"
               :exact-match="!isSearchChildRoute"
             >
               {{ t('appSidebar.searchDocuments') }}
             </app-sidebar-section-entry>
             <app-sidebar-section-entry
-              :icon="PhClockCounterClockwise"
+              :icon="IPhClockCounterClockwise"
               :to="{ name: 'search.history.list' }"
             >
               {{ t('appSidebar.history') }}
             </app-sidebar-section-entry>
             <app-sidebar-section-entry
-              :icon="PhListChecks"
+              :icon="IPhListChecks"
               :to="{ name: 'search.saved.list' }"
             >
               {{ t('appSidebar.savedSearches') }}
@@ -211,18 +224,18 @@ defineExpose({
           <app-sidebar-section
             class="app-sidebar__section app-sidebar__section--task"
             :title="t('task.title')"
-            :icon="PhRocketLaunch"
+            :icon="IPhRocketLaunch"
             :to="{ name: 'task.task-board' }"
             :compact="compact"
           >
             <app-sidebar-section-entry
-              :icon="PhDotsNine"
+              :icon="IPhDotsNine"
               :to="{ name: 'task.task-board' }"
             >
               {{ t('task.task-board.title') }}
             </app-sidebar-section-entry>
             <app-sidebar-section-entry
-              :icon="PhListMagnifyingGlass"
+              :icon="IPhListMagnifyingGlass"
               :to="{ name: 'task.batch-search.list' }"
               :action-to="{ name: 'task.batch-search.new' }"
               :action-title="t('task.batch-search.new.title')"
@@ -230,14 +243,14 @@ defineExpose({
               {{ t('task.batch-search.title') }}
             </app-sidebar-section-entry>
             <app-sidebar-section-entry
-              :icon="PhDownloadSimple"
+              :icon="IPhDownloadSimple"
               :to="{ name: 'task.batch-download.list' }"
             >
               {{ t('task.batch-download.title') }}
             </app-sidebar-section-entry>
             <app-sidebar-section-entry
               v-if="!noAnalysis"
-              :icon="PhFiles"
+              :icon="IPhFiles"
               :to="{ name: 'task.documents.list' }"
               :action-to="{ name: 'task.documents.new' }"
               :action-title="t('task.documents.new.title')"
@@ -246,7 +259,7 @@ defineExpose({
             </app-sidebar-section-entry>
             <app-sidebar-section-entry
               v-if="!noAnalysis"
-              :icon="PhUsersThree"
+              :icon="IPhUsersThree"
               :to="{ name: 'task.entities.list' }"
               :action-to="{ name: 'task.entities.new' }"
               :action-title="t('task.entities.new.title')"
