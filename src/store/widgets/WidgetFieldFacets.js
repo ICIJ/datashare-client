@@ -1,4 +1,5 @@
 import { iteratee, isFunction } from 'lodash'
+import { markRaw } from 'vue'
 
 import WidgetListGroup from '@/store/widgets/WidgetListGroup'
 import Component from '@/components/Widget/WidgetFieldFacets'
@@ -34,7 +35,7 @@ class WidgetFieldFacets extends WidgetListGroup {
     super(options)
     this.title = title ?? options.name ?? field
     this.field = field
-    this.icon = icon
+    this.icon = icon ? markRaw(icon) : null
     this.routeQueryField = routeQueryField
     this.bucketTranslation = castFunction(bucketTranslation)
   }
