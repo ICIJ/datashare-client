@@ -1,6 +1,10 @@
 <script setup>
 import { computed, inject } from 'vue'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
+
+import IPhFile from '~icons/ph/file'
+import IPhFolderFill from '~icons/ph/folder-fill'
+import IPhFolderOpenFill from '~icons/ph/folder-open-fill'
 
 import PathTreeViewEntryNameCaret from './PathTreeViewEntryNameCaret'
 import PathTreeViewEntryNameCheckbox from './PathTreeViewEntryNameCheckbox'
@@ -85,9 +89,9 @@ const props = defineProps({
 
 const icon = computed(() => {
   if (props.type === 'document') {
-    return PhFile
+    return IPhFile
   }
-  return [collapse.value ? PhFolder : PhFolderOpen, 'fill']
+  return collapse.value ? IPhFolderFill : IPhFolderOpenFill
 })
 
 const classList = computed(() => ({
@@ -142,7 +146,7 @@ const toggle = () => {
           name="icon"
           v-bind="{ icon }"
         >
-          <phosphor-icon
+          <app-icon
             v-if="hasIcon"
             class="path-tree-view-entry-name__value__icon"
             :name="icon"

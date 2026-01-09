@@ -1,7 +1,9 @@
 <script setup>
 import { computed } from 'vue'
 import { random } from 'lodash'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
+import IPhCaretDown from '~icons/ph/caret-down'
+import IPhCaretRight from '~icons/ph/caret-right'
 
 import AppPlaceholder from '@/components/AppPlaceholder/AppPlaceholder'
 
@@ -70,7 +72,7 @@ const classList = computed(() => {
 })
 
 const caretIcon = computed(() => {
-  return open ? PhCaretDown : PhCaretRight
+  return open ? IPhCaretDown : IPhCaretRight
 })
 </script>
 
@@ -81,10 +83,9 @@ const caretIcon = computed(() => {
     :style="style"
   >
     <div class="path-tree-placeholder-list-entry__name">
-      <phosphor-icon
+      <app-icon
         v-if="nested"
         :name="caretIcon"
-        weight="fill"
         width="1em"
       />
       <app-placeholder width="1em" />
