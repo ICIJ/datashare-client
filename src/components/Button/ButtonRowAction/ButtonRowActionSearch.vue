@@ -1,6 +1,8 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 
+import IPhMagnifyingGlass from '~icons/ph/magnifying-glass'
+
 import ButtonRowAction from '@/components/Button/ButtonRowAction/ButtonRowAction'
 
 const { t } = useI18n()
@@ -8,7 +10,7 @@ const { t } = useI18n()
 
 <template>
   <button-row-action
-    :icon="PhMagnifyingGlass"
+    :icon="IPhMagnifyingGlass"
     :label="t('buttonRowAction.search')"
   />
 </template>
