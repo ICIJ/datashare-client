@@ -1,5 +1,5 @@
 <script setup>
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 
 import DisplayDatetimeShort from '@/components/Display/DisplayDatetimeShort'
@@ -20,7 +20,7 @@ const { t } = useI18n()
     class="project-card-update-date text-secondary-emphasis d-inline-flex gap-1 align-items-center flex-wrap"
   >
     <slot>
-      <phosphor-icon :name="PhCalendarBlank" />
+      <app-icon><i-ph-calendar-blank /></app-icon>
       {{ t('projectCardUpdateDate.label') }}
       <display-datetime-short :value="project.updateDate" />
     </slot>
