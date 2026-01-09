@@ -2,6 +2,8 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+import IPhPushPin from '~icons/ph/push-pin'
+
 import ButtonRowAction from '@/components/Button/ButtonRowAction/ButtonRowAction'
 
 const { t } = useI18n()
@@ -14,7 +16,7 @@ const active = defineModel('active', {
 defineProps({
   icon: {
     type: [String, Object, Array],
-    default: PhPushPin
+    default: () => IPhPushPin
   }
 })
 

@@ -3,6 +3,9 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur-next'
 
+import IPhCards from '~icons/ph/cards'
+import IPhX from '~icons/ph/x'
+
 import { VARIANT } from '@/enums/variants'
 
 const active = defineModel('active', { type: Boolean })
@@ -22,7 +25,7 @@ const label = computed(() => {
 })
 
 const icon = computed(() => {
-  return active.value ? PhX : PhCards
+  return active.value ? IPhX : IPhCards
 })
 </script>
 

@@ -2,6 +2,8 @@
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur-next'
 
+import IPhSlidersHorizontal from '~icons/ph/sliders-horizontal'
+
 const active = defineModel('active', { type: Boolean })
 
 defineProps({
@@ -18,7 +20,7 @@ const toggle = () => {
 
 <template>
   <button-icon
-    :icon-left="PhSlidersHorizontal"
+    :icon-left="IPhSlidersHorizontal"
     :label="t('buttonToggleSettings.label')"
     class="button-toggle-settings border-0 flex-shrink-0"
     hide-label

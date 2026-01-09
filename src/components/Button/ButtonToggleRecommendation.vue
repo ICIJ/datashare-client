@@ -3,6 +3,8 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur-next'
 
+import IPhEyesFill from '~icons/ph/eyes-fill'
+
 const active = defineModel('active', { type: Boolean })
 
 const toggle = () => {
@@ -22,8 +24,7 @@ const label = computed(() => {
 <template>
   <button-icon
     variant="action"
-    :icon-left="PhEyes"
-    icon-left-weight="fill"
+    :icon-left="IPhEyesFill"
     class="button-toggler-recommendation"
     :label="label"
     @click="toggle"

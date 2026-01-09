@@ -2,6 +2,9 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+import IPhRows from '~icons/ph/rows'
+import IPhTreeView from '~icons/ph/tree-view'
+
 import ButtonSubtleAction from '@/components/Button/ButtonSubtleAction'
 
 const active = defineModel('active', { type: Boolean })
@@ -17,7 +20,7 @@ const title = computed(() => {
 })
 
 const icon = computed(() => {
-  return active.value ? PhRows : PhTreeView
+  return active.value ? IPhRows : IPhTreeView
 })
 </script>
 
