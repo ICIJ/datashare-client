@@ -1,7 +1,9 @@
 <script setup>
 import { computed, nextTick, onMounted, ref, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { PhosphorIcon, ButtonIcon } from '@icij/murmur-next'
+import { AppIcon, ButtonIcon } from '@icij/murmur-next'
+import IPhHash from '~icons/ph/hash'
+import IPhX from '~icons/ph/x'
 
 import FormControlTagInputEntry from './FormControlTagInputEntry'
 
@@ -30,7 +32,7 @@ const props = defineProps({
   },
   placeholderIcon: {
     type: [String, Object, Array],
-    default: PhHash
+    default: () => IPhHash
   },
   size: {
     type: String,
@@ -128,7 +130,7 @@ defineExpose({
       </slot>
     </template>
     <div class="form-control-tag-input__form">
-      <phosphor-icon
+      <app-icon
         v-if="showPlaceholderIcon"
         :name="placeholderIcon"
         class="form-control-tag-input__form__icon text-secondary ms-2 me-1"
@@ -147,7 +149,7 @@ defineExpose({
       />
       <button-icon
         v-if="!noClear"
-        icon-left="x"
+        :icon-left="IPhX"
         variant="outline-secondary"
         hide-label
         class="form-control-tag-input__form__clear border-0 me-1"

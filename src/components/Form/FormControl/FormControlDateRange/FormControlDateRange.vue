@@ -1,7 +1,7 @@
 <script setup>
 import { computed, useTemplateRef } from 'vue'
 import { DatePicker } from 'v-calendar'
-import { PhosphorIcon, useColorMode } from '@icij/murmur-next'
+import { AppIcon, useColorMode } from '@icij/murmur-next'
 
 import { inputSizeValidator, SIZE } from '@/enums/sizes'
 
@@ -76,7 +76,7 @@ const isDark = computed(() => ['dark', 'black'].includes(colorMode.value))
               :size="size"
               v-on="inputEvents.start"
             />
-            <phosphor-icon :name="PhArrowRight" />
+            <app-icon><i-ph-arrow-right /></app-icon>
             <b-form-input
               :placeholder="masks"
               :value="inputValue.end"

@@ -1,6 +1,6 @@
 <script setup>
 import { computed, useTemplateRef, toRef } from 'vue'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 
 import { VARIANT_PLAIN, variantValidator } from '@/enums/variants'
 import { useCompact } from '@/composables/useCompact'
@@ -94,10 +94,11 @@ const labelColsLg = computed(() => {
   >
     <template #label>
       <div class="form-fieldset__label text-body-emphasis">
-        <phosphor-icon
+        <app-icon
           v-if="icon"
           :name="icon"
           :variant="iconVariant"
+          size="1.25em"
           class="me-2"
         />
         <slot
