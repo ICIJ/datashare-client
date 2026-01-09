@@ -1,3 +1,5 @@
+import { markRaw } from 'vue'
+
 import IPhMagnifyingGlass from '~icons/ph/magnifying-glass'
 import IPhListChecks from '~icons/ph/list-checks'
 import IPhClockCounterClockwise from '~icons/ph/clock-counter-clockwise'
@@ -43,7 +45,7 @@ export const routes = [
         path: '',
         meta: {
           title: 'search.title',
-          icon: IPhMagnifyingGlass,
+          icon: markRaw(IPhMagnifyingGlass),
           docs: [
             {
               title: 'Search documents',
@@ -100,7 +102,7 @@ export const routes = [
         name: 'search.saved.list',
         path: 'search/saved',
         meta: {
-          icon: IPhListChecks,
+          icon: markRaw(IPhListChecks),
           title: 'searchSavedList.title'
         },
         components: {
@@ -112,7 +114,7 @@ export const routes = [
         name: 'search.history.list',
         path: 'search/history',
         meta: {
-          icon: IPhClockCounterClockwise,
+          icon: markRaw(IPhClockCounterClockwise),
           title: 'searchHistoryList.title'
         },
         components: {
@@ -129,7 +131,7 @@ export const routes = [
         },
         meta: {
           title: 'task.title',
-          icon: IPhRocketLaunch
+          icon: markRaw(IPhRocketLaunch)
         },
         children: [
           {
@@ -142,7 +144,7 @@ export const routes = [
             path: 'task-board',
             meta: {
               title: 'task.task-board.title',
-              icon: IPhDotsNine,
+              icon: markRaw(IPhDotsNine),
               settings: false
             },
             component: () => import('@/views/Task/TaskBoard/TaskBoard')
@@ -152,7 +154,7 @@ export const routes = [
             path: 'entities',
             meta: {
               title: 'task.entities.title',
-              icon: IPhUsersThree
+              icon: markRaw(IPhUsersThree)
             },
             children: [
               {
@@ -170,7 +172,7 @@ export const routes = [
                 component: () => import('@/views/Task/TaskEntities/TaskEntitiesNew'),
                 meta: {
                   title: 'task.entities.new.title',
-                  icon: IPhPlus
+                  icon: markRaw(IPhPlus)
                 }
               }
             ]
@@ -180,7 +182,7 @@ export const routes = [
             path: 'documents',
             meta: {
               title: 'task.documents.title',
-              icon: IPhFiles,
+              icon: markRaw(IPhFiles),
               allowedModes: [MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]
             },
             children: [
@@ -199,7 +201,7 @@ export const routes = [
                 props: ({ query }) => ({ project: query.project }),
                 meta: {
                   title: 'task.documents.new.title',
-                  icon: IPhPlus
+                  icon: markRaw(IPhPlus)
                 }
               }
             ]
@@ -209,7 +211,7 @@ export const routes = [
             path: 'batch-download',
             meta: {
               title: 'task.batch-download.title',
-              icon: IPhDownloadSimple
+              icon: markRaw(IPhDownloadSimple)
             },
             children: [
               {
@@ -227,7 +229,7 @@ export const routes = [
             path: 'batch-search',
             meta: {
               title: 'task.batch-search.title',
-              icon: IPhListMagnifyingGlass
+              icon: markRaw(IPhListMagnifyingGlass)
             },
             children: [
               {
@@ -236,7 +238,7 @@ export const routes = [
                 component: () => import('@/views/Task/TaskBatchSearch/TaskBatchSearchList'),
                 meta: {
                   breadcrumb: false,
-                  icon: IPhListMagnifyingGlass
+                  icon: markRaw(IPhListMagnifyingGlass)
                 }
               },
               {
@@ -245,7 +247,7 @@ export const routes = [
                 component: () => import('@/views/Task/TaskBatchSearch/TaskBatchSearchNew'),
                 meta: {
                   title: 'task.batch-search.new.title',
-                  icon: IPhPlus,
+                  icon: markRaw(IPhPlus),
                   docs: [
                     {
                       title: 'How to use batch searches',
@@ -299,7 +301,7 @@ export const routes = [
         path: 'projects',
         name: 'project',
         meta: {
-          icon: IPhCirclesThreePlus,
+          icon: markRaw(IPhCirclesThreePlus),
           title: 'projects.title'
         },
         components: {
@@ -314,7 +316,7 @@ export const routes = [
               default: () => import('@/views/Project/ProjectList/ProjectList')
             },
             meta: {
-              icon: IPhDotsNine,
+              icon: markRaw(IPhDotsNine),
               title: 'appSidebar.allProjects'
             }
           },
@@ -325,7 +327,7 @@ export const routes = [
               default: () => import('@/views/Project/ProjectNew')
             },
             meta: {
-              icon: IPhPlus,
+              icon: markRaw(IPhPlus),
               title: 'projectNew.title',
               allowedModes: [MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]
             }
@@ -363,7 +365,7 @@ export const routes = [
                     component: () =>
                       import('@/views/Project/ProjectView/ProjectViewOverview/ProjectViewOverviewInsights'),
                     meta: {
-                      icon: IPhChartBar,
+                      icon: markRaw(IPhChartBar),
                       title() {
                         return 'Insights'
                       }
@@ -375,7 +377,7 @@ export const routes = [
                     props: true,
                     component: () => import('@/views/Project/ProjectView/ProjectViewOverview/ProjectViewOverviewPaths'),
                     meta: {
-                      icon: IPhTreeStructure,
+                      icon: markRaw(IPhTreeStructure),
                       title() {
                         return 'Paths'
                       }
@@ -387,7 +389,7 @@ export const routes = [
                     props: true,
                     component: () => import('@/views/Project/ProjectView/ProjectViewOverview/ProjectViewOverviewGraph'),
                     meta: {
-                      icon: IPhPolygon,
+                      icon: markRaw(IPhPolygon),
                       title() {
                         return 'Graph'
                       }
@@ -400,7 +402,7 @@ export const routes = [
                     component: () =>
                       import('@/views/Project/ProjectView/ProjectViewOverview/ProjectViewOverviewDetails'),
                     meta: {
-                      icon: IPhInfo,
+                      icon: markRaw(IPhInfo),
                       title() {
                         return 'Details'
                       }
@@ -413,7 +415,7 @@ export const routes = [
                     component: () =>
                       import('@/views/Project/ProjectView/ProjectViewOverview/ProjectViewOverviewHistory'),
                     meta: {
-                      icon: IPhClockCounterClockwise,
+                      icon: markRaw(IPhClockCounterClockwise),
                       title: 'projectViewOverview.nav.history'
                     }
                   }
@@ -425,7 +427,7 @@ export const routes = [
                 props: true,
                 component: () => import('@/views/Project/ProjectView/ProjectViewEdit'),
                 meta: {
-                  icon: IPhPencilSimple,
+                  icon: markRaw(IPhPencilSimple),
                   title: 'projectViewEdit.title',
                   allowedModes: [MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]
                 }
@@ -439,7 +441,7 @@ export const routes = [
         path: '/settings',
         meta: {
           title: 'settings.title',
-          icon: IPhGear
+          icon: markRaw(IPhGear)
         },
         component: () => import('@/views/Settings/SettingsView/SettingsView'),
         children: [
@@ -520,7 +522,7 @@ export const routes = [
         component: () => import('@/views/Shortcuts/ShortcutsView/ShortcutsView'),
         meta: {
           title: 'shortcutsView.title',
-          icon: IPhKeyboard
+          icon: markRaw(IPhKeyboard)
         }
       },
       {
