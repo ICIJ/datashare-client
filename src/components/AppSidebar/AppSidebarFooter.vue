@@ -3,6 +3,10 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { ButtonIcon } from '@icij/murmur-next'
+import IPhGear from '~icons/ph/gear'
+import IPhQuestion from '~icons/ph/question'
+import IPhTrash from '~icons/ph/trash'
+import IPhSignOut from '~icons/ph/sign-out'
 
 import AppSidebarFooterKeyboardShortcuts from '@/components/AppSidebar/AppSidebarFooterKeyboardShortcuts'
 import AppSidebarFooterLinks from '@/components/AppSidebar/AppSidebarFooterLinks'
@@ -146,7 +150,7 @@ const signOutClass = computed(() => {
           hide-label
           variant="link"
           class="p-0 text-body"
-          icon-left="gear"
+          :icon-left="IPhGear"
           icon-left-hover-weight="bold"
           :label="t('appSidebarFooter.settings')"
         />
@@ -162,7 +166,7 @@ const signOutClass = computed(() => {
           hide-label
           variant="link"
           class="p-0 text-body"
-          icon-left="question"
+          :icon-left="IPhQuestion"
           icon-left-hover-weight="bold"
           :label="t('appSidebarFooter.help')"
         />
@@ -176,7 +180,7 @@ const signOutClass = computed(() => {
           hide-label
           variant="link"
           class="p-0 text-body"
-          icon-left="trash"
+          :icon-left="IPhTrash"
           icon-left-hover-weight="bold"
           :label="t('appSidebarFooter.removeAll.link')"
           @click="confirmRemoveAll"
@@ -194,7 +198,7 @@ const signOutClass = computed(() => {
           hide-label
           variant="link"
           class="app-sidebar-footer__sign-out p-0 text-body"
-          icon-left="sign-out"
+          :icon-left="IPhSignOut"
           icon-left-hover-weight="bold"
         />
       </app-sidebar-footer-links-entry>
