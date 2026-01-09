@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref, watch, useTemplateRef } from 'vue'
 import { compact, every, identity, isFunction, escapeRegExp, get, trim } from 'lodash'
+import IPhHash from '~icons/ph/hash'
 
 import FormControlTagInput from './FormControlTagInput'
 import FormControlTagDropdown from './FormControlTagDropdown'
@@ -34,7 +35,7 @@ const props = defineProps({
   },
   placeholderIcon: {
     type: [String, Object, Array],
-    default: PhHash
+    default: IPhHash
   },
   size: {
     type: String,
