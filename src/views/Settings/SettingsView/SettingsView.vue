@@ -2,6 +2,13 @@
 import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
 
+import IPhList from '~icons/ph/list'
+import IPhMoon from '~icons/ph/moon'
+import IPhGlobeHemisphereWest from '~icons/ph/globe-hemisphere-west'
+import IPhMonitor from '~icons/ph/monitor'
+import IPhDatabase from '~icons/ph/database'
+import IPhKey from '~icons/ph/key'
+
 import PageHeader from '@/components/PageHeader/PageHeader'
 import TabGroupNavigation from '@/components/TabGroup/TabGroupNavigation/TabGroupNavigation'
 import TabGroupNavigationEntry from '@/components/TabGroup/TabGroupNavigation/TabGroupNavigationEntry'
@@ -14,37 +21,37 @@ const { isMode } = useMode()
 
 const tabs = computed(() => [
   {
-    icon: 'list',
+    icon: IPhList,
     title: t('settings.general.title'),
     name: 'settings.general',
     modes: [MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]
   },
   {
-    icon: 'moon',
+    icon: IPhMoon,
     title: t('settings.appearance.title'),
     name: 'settings.appearance',
     modes: Object.values(MODE_NAME)
   },
   {
-    icon: 'globe-hemisphere-west',
+    icon: IPhGlobeHemisphereWest,
     title: t('settings.languages.title'),
     name: 'settings.languages',
     modes: Object.values(MODE_NAME)
   },
   {
-    icon: 'monitor',
+    icon: IPhMonitor,
     title: t('settings.addons.plugin.title'),
     name: 'settings.plugins',
     modes: [MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]
   },
   {
-    icon: 'database',
+    icon: IPhDatabase,
     title: t('settings.addons.extension.title'),
     name: 'settings.extensions',
     modes: [MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]
   },
   {
-    icon: 'key',
+    icon: IPhKey,
     title: t('settings.api.title'),
     name: 'settings.api',
     modes: [MODE_NAME.SERVER]
