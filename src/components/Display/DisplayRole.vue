@@ -7,7 +7,7 @@ defineProps({
   },
   noIcon: {
     type: Boolean,
-    default: true
+    default: false
   }
 })
 
