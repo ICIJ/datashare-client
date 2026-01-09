@@ -2,8 +2,6 @@ import globals from 'globals'
 import icijeslint from '@icij/eslint-config'
 import storybook from 'eslint-plugin-storybook'
 
-import { globals as iconsGlobals } from './bin/icons.js'
-
 export default [
   {
     ignores: [
@@ -65,7 +63,6 @@ export default [
   {
     languageOptions: {
       globals: {
-        ...iconsGlobals,
         // Vite uses process.env for environment variables
         process: true
       }
