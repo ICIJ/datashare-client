@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 
 import settings from '@/utils/settings'
@@ -49,10 +49,9 @@ const isOptionActive = ({ sortBy, orderBy }) => {
     no-caret
   >
     <template #button-content>
-      <phosphor-icon
-        :name="PhSortAscending"
-        height="1em"
-      />
+      <app-icon height="1em">
+        <i-ph-sort-ascending />
+      </app-icon>
       <span class="visually-hidden">Sort</span>
     </template>
     <b-dropdown-item

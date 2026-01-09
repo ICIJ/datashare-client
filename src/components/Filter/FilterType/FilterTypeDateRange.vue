@@ -51,7 +51,7 @@ const selected = computed({
     <template #default="{ entries }">
       <form-control-date-range
         v-model="selected"
-        size="sm"
+        size="1em"
       />
       <column-chart-picker
         v-if="entries.length > 1"
