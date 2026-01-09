@@ -14,10 +14,9 @@ defineProps({
 </script>
 
 <template>
-  <span>
+  <span class="d-inline-flex py-2 gap-1">
     <phosphor-icon
       v-if="!noIcon"
       :name="PhUserSquare"
-      class="me-1 my-2"
     />{{ upperFirst(camelCase(value)) }}</span>
 </template>
