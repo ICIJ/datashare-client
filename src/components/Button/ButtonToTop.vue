@@ -2,6 +2,8 @@
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur-next'
 
+import IPhCaretUpBold from '~icons/ph/caret-up-bold'
+
 const { t } = useI18n()
 </script>
 
@@ -11,8 +13,7 @@ const { t } = useI18n()
     size="lg"
     :label="t('buttonToTop.label')"
     variant="primary"
-    :icon-right="PhCaretUp"
-    icon-right-weight="bold"
+    :icon-right="IPhCaretUpBold"
     hide-label
     square
   />

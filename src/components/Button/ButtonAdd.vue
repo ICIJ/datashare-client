@@ -1,6 +1,9 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur-next'
+
+import IPhPlus from '~icons/ph/plus'
+
 defineOptions({ name: 'ButtonAdd' })
 defineProps({
   label: {
@@ -15,7 +18,7 @@ const { t } = useI18n()
     :label="label ?? t('buttonAdd.label')"
     class="button-add"
     hide-label
-    :icon-left="PhPlus"
+    :icon-left="IPhPlus"
     pill
     square
     variant="action"

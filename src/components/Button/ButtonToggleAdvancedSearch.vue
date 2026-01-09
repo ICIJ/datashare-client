@@ -3,6 +3,8 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur-next'
 
+import IPhEyeglasses from '~icons/ph/eyeglasses'
+
 import { useBreakpoints } from '@/composables/useBreakpoints'
 import { VARIANT } from '@/enums/variants.js'
 
@@ -46,7 +48,7 @@ const compact = computed(() => {
     :square="compact"
     :variant="variant"
     class="button-toggle-advanced-search"
-    :icon-right="PhEyeglasses"
+    :icon-right="IPhEyeglasses"
     @click="toggle"
   />
 </template>

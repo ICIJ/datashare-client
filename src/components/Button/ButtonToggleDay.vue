@@ -2,6 +2,9 @@
 import { computed } from 'vue'
 import { ButtonIcon } from '@icij/murmur-next'
 
+import IPhCaretUp from '~icons/ph/caret-up'
+import IPhCaretDown from '~icons/ph/caret-down'
+
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
 
 const active = defineModel('active', { type: Boolean })
@@ -18,7 +21,7 @@ const toggle = () => {
 }
 
 const icon = computed(() => {
-  return active.value ? PhCaretUp : PhCaretDown
+  return active.value ? IPhCaretUp : IPhCaretDown
 })
 </script>
 

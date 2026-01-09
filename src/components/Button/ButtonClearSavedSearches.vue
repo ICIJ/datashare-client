@@ -2,6 +2,8 @@
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur-next'
 
+import IPhTrash from '~icons/ph/trash'
+
 const { t } = useI18n()
 </script>
 
@@ -10,6 +12,6 @@ const { t } = useI18n()
     class="button-clear-saved-searches"
     variant="outline-primary"
     :label="t('buttonClearSavedSearches.label')"
-    :icon-left="PhTrash"
+    :icon-left="IPhTrash"
   />
 </template>

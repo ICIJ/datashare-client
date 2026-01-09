@@ -3,6 +3,8 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur-next'
 
+import IPhFunnel from '~icons/ph/funnel'
+
 import { VARIANT } from '@/enums/variants.js'
 
 const active = defineModel('active', { type: Boolean })
@@ -22,7 +24,7 @@ const variant = computed(() => {
   <button-icon
     class="button-toggle-filters flex-shrink-0"
     :label="t('buttonToggleFilters.label')"
-    :icon-left="PhFunnel"
+    :icon-left="IPhFunnel"
     :variant="variant"
     @click="toggle"
   />

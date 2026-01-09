@@ -3,6 +3,8 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur-next'
 
+import IPhPath from '~icons/ph/path'
+
 import { VARIANT } from '@/enums/variants.js'
 import { ICON_WEIGHT } from '@/enums/iconWeights.js'
 
@@ -49,7 +51,7 @@ const iconLeftWeight = computed(() => {
     :counter-variant="counterVariant"
     :disabled="disabled"
     :icon-left-weight="iconLeftWeight"
-    :icon-left="PhPath"
+    :icon-left="IPhPath"
     :label="t('buttonToggleSearchBreadcrumb.label')"
     :loading="loading"
     :variant="variant"
