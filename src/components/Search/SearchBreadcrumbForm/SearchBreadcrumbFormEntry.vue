@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
+import IPhCaretRightFill from '~icons/ph/caret-right-fill'
 
 import SearchBreadcrumbFormEntryOccurrences from '@/components/Search/SearchBreadcrumbForm/SearchBreadcrumbFormEntryOccurrences'
 import SearchParameter from '@/components/Search/SearchParameter/SearchParameter'
@@ -79,14 +80,13 @@ const showCaret = computed(() => {
         :occurrences="occurrences"
         :previous-occurrences="previousOccurrences"
       />
-      <phosphor-icon
+      <app-icon
         v-if="showCaret"
         role="separator"
         aria-hidden="true"
         class="search-breadcrumb-form-entry__caret"
         size="1em"
-        weight="fill"
-        :name="PhCaretRight"
+        :name="IPhCaretRightFill"
       />
     </div>
   </div>

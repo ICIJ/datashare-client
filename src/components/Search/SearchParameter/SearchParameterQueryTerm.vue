@@ -1,6 +1,8 @@
 <script setup>
 import { computed } from 'vue'
 import { ButtonIcon } from '@icij/murmur-next'
+import IPhMagnifyingGlass from '~icons/ph/magnifying-glass'
+import IPhX from '~icons/ph/x'
 
 import { VARIANT, variantValidator } from '@/enums/variants'
 
@@ -31,7 +33,7 @@ const props = defineProps({
   },
   icon: {
     type: [String, Object, Array],
-    default: PhMagnifyingGlass
+    default: () => IPhMagnifyingGlass
   },
   iconLabel: {
     type: String,
@@ -85,7 +87,7 @@ const showOperator = computed(() => {
     :style="style"
     :icon-left="noIcon ? null : icon"
     :icon-left-label="iconLabel"
-    :icon-right="noXIcon ? null : PhX"
+    :icon-right="noXIcon ? null : IPhX"
     icon-right-hover-weight="bold"
     @click:icon-right="emit('click:x')"
   >
@@ -114,7 +116,7 @@ const showOperator = computed(() => {
     cursor: default;
   }
 
-  &:has(.button-icon__icon-right.phosphor-icon--hover) {
+  &:has(.button-icon__icon-right.app-icon--hover) {
     border-style: solid;
     cursor: pointer;
 
