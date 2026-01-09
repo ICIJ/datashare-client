@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, markRaw } from 'vue'
 import { AppIcon } from '@icij/murmur-next'
 
 import IPhFile from '~icons/ph/file'
@@ -15,15 +15,15 @@ import IPhArchiveFill from '~icons/ph/archive-fill'
 import { useSchema } from '@/composables/useSchema'
 
 const iconMap = {
-  'file': IPhFile,
-  'files-fill': IPhFilesFill,
-  'image-fill': IPhImageFill,
-  'play-fill': IPhPlayFill,
-  'headphones-fill': IPhHeadphonesFill,
-  'text-align-left': IPhTextAlignLeft,
-  'grid-four-fill': IPhGridFourFill,
-  'at-fill': IPhAtFill,
-  'archive-fill': IPhArchiveFill
+  'file': markRaw(IPhFile),
+  'files-fill': markRaw(IPhFilesFill),
+  'image-fill': markRaw(IPhImageFill),
+  'play-fill': markRaw(IPhPlayFill),
+  'headphones-fill': markRaw(IPhHeadphonesFill),
+  'text-align-left': markRaw(IPhTextAlignLeft),
+  'grid-four-fill': markRaw(IPhGridFourFill),
+  'at-fill': markRaw(IPhAtFill),
+  'archive-fill': markRaw(IPhArchiveFill)
 }
 
 const props = defineProps({
@@ -39,7 +39,7 @@ const props = defineProps({
 const { getContentTypeDisplay } = useSchema()
 
 const display = computed(() => getContentTypeDisplay(props.value))
-const icon = computed(() => iconMap[display.value.icon] ?? IPhFile)
+const icon = computed(() => iconMap[display.value.icon] ?? markRaw(IPhFile))
 const style = computed(() => {
   const color = props.colorize ? display.value.foreground : 'inherit'
   return { color }
