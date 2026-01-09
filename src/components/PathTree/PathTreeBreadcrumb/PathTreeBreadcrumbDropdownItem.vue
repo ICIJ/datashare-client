@@ -1,4 +1,6 @@
 <script setup>
+import { AppIcon } from '@icij/murmur-next'
+
 defineProps({
   compact: {
     type: Boolean,
@@ -9,11 +11,12 @@ defineProps({
 
 <template>
   <b-dropdown-item link-class="path-tree-breadcrumb-dropdown-item d-flex gap-2">
-    <phosphor-icon
+    <app-icon
       v-if="!compact"
-      :name="PhFolder"
       class="flex-shrink-0"
-    />
+    >
+      <i-ph-folder />
+    </app-icon>
     <slot />
   </b-dropdown-item>
 </template>

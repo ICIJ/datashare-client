@@ -1,7 +1,8 @@
 <script setup>
 import { computed } from 'vue'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
+import IPhTreeStructure from '~icons/ph/tree-structure'
 
 import ButtonTogglePathTreeView from '@/components/Button/ButtonTogglePathTreeView'
 import { LAYOUTS, layoutValidator } from '@/enums/pathTree'
@@ -20,7 +21,7 @@ defineProps({
    */
   icon: {
     type: [String, Object, Array],
-    default: PhTreeStructure
+    default: () => IPhTreeStructure
   }
 })
 
@@ -36,7 +37,7 @@ const { t } = useI18n()
 
 <template>
   <div class="path-tree-view-label d-flex gap-2 align-items-center">
-    <phosphor-icon
+    <app-icon
       v-if="icon"
       :name="icon"
     />

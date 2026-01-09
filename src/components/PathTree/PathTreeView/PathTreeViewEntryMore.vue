@@ -3,6 +3,8 @@ import { computed, inject } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur-next'
 
+import IPhCaretDown from '~icons/ph/caret-down'
+
 import { LAYOUTS, layoutValidator } from '@/enums/pathTree'
 
 const props = defineProps({
@@ -91,7 +93,7 @@ const size = computed(() => (compactOrInjected.value ? 'sm' : 'md'))
     :class="classList"
   >
     <button-icon
-      :icon-left="PhCaretDown"
+      :icon-left="IPhCaretDown"
       icon-left-variant="primary"
       class="shadow-lg text-nowrap above-stretched-link"
       variant="outline-tertiary"
