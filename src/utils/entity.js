@@ -1,18 +1,24 @@
+import IPhUserCircle from '~icons/ph/user-circle'
+import IPhBuildings from '~icons/ph/buildings'
+import IPhMapPin from '~icons/ph/map-pin'
+import IPhEnvelope from '~icons/ph/envelope'
+import IPhProhibit from '~icons/ph/prohibit'
+
 import { VARIANT } from '@/enums/variants'
 
 export function getCategoryIcon(category) {
   return (
     {
-      person: 'user-circle',
-      persons: 'user-circle',
-      people: 'user-circle',
-      organization: 'buildings',
-      organizations: 'buildings',
-      location: 'map-pin',
-      locations: 'map-pin',
-      email: 'envelope',
-      emails: 'envelope'
-    }[category.toLowerCase()] || 'ban'
+      person: IPhUserCircle,
+      persons: IPhUserCircle,
+      people: IPhUserCircle,
+      organization: IPhBuildings,
+      organizations: IPhBuildings,
+      location: IPhMapPin,
+      locations: IPhMapPin,
+      email: IPhEnvelope,
+      emails: IPhEnvelope
+    }[category.toLowerCase()] || IPhProhibit
   )
 }
 
