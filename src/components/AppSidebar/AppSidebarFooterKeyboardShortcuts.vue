@@ -1,6 +1,7 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur-next'
+import IPhKeyboard from '~icons/ph/keyboard'
 
 import AppSidebarFooterKeyboardShortcutsPopover from '@/components/AppSidebar/AppSidebarFooterKeyboardShortcutsPopover'
 
@@ -24,7 +25,7 @@ const { t } = useI18n()
         hide-label
         variant="link"
         class="p-0 text-body"
-        icon-left="keyboard"
+        :icon-left="IPhKeyboard"
         icon-left-hover-weight="bold"
       />
     </template>

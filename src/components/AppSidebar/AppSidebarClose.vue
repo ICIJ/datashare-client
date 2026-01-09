@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { ButtonIcon } from '@icij/murmur-next'
+import IPhX from '~icons/ph/x'
 
 import { useBreakpoints } from '@/composables/useBreakpoints'
 import { SIZE } from '@/enums/sizes'
@@ -25,7 +26,7 @@ const variant = computed(() => {
 <template>
   <button-icon
     tooltip-placement="right"
-    icon-left="x"
+    :icon-left="IPhX"
     square
     hide-label
     hide-tooltip
