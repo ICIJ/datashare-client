@@ -2,6 +2,11 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+import IPhTextAa from '~icons/ph/text-aa'
+import IPhCirclesThreePlus from '~icons/ph/circles-three-plus'
+import IPhTextAlignLeft from '~icons/ph/text-align-left'
+import IPhQuotes from '~icons/ph/quotes'
+
 import FormFieldsetI18n from '@/components/Form/FormFieldset/FormFieldsetI18n'
 import FormStep from '@/components/Form/FormStep/FormStep'
 import ProjectDropdownSelector from '@/components/Project/ProjectDropdownSelector/ProjectDropdownSelector'
@@ -27,7 +32,7 @@ const allProjects = computed(() => core.projects)
       required
       name="name"
       translation-key="task.batch-search.form.name"
-      :icon="PhTextAa"
+      :icon="IPhTextAa"
     >
       <b-form-input
         v-model="name"
@@ -39,7 +44,7 @@ const allProjects = computed(() => core.projects)
     <form-fieldset-i18n
       name="projects"
       translation-key="task.batch-search.form.projects"
-      :icon="PhCirclesThreePlus"
+      :icon="IPhCirclesThreePlus"
     >
       <project-dropdown-selector
         v-model="selectedProjects"
@@ -49,7 +54,7 @@ const allProjects = computed(() => core.projects)
     <form-fieldset-i18n
       name="description"
       translation-key="task.batch-search.form.description"
-      :icon="PhTextAlignLeft"
+      :icon="IPhTextAlignLeft"
     >
       <b-form-textarea
         v-model="description"
@@ -65,7 +70,7 @@ const allProjects = computed(() => core.projects)
         force-compact
         translation-key="task.batch-search.form.visibility"
         label-class="pt-md-0"
-        :icon="PhQuotes"
+        :icon="IPhQuotes"
       >
         <b-form-radio-group
           v-model="visibility"
