@@ -1,6 +1,7 @@
 import { uniqueId } from 'lodash'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 
+import IPhArrowSquareOut from '~icons/ph/arrow-square-out'
 import DismissableAlert from '@/components/Dismissable/DismissableAlert'
 import { variantsPlainArgType } from '~storybook/utils'
 import { VARIANT } from '@/enums/variants'
@@ -49,7 +50,8 @@ export const CustomSlots = {
   render: args => ({
     components: {
       DismissableAlert,
-      PhosphorIcon
+      AppIcon,
+      IPhArrowSquareOut
     },
     setup: () => ({ args }),
     template: `
@@ -58,7 +60,7 @@ export const CustomSlots = {
         <template #button="{ linkClassList, linkLabel }">
           <a href="/" target="_parent" class="btn d-inline-flex ms-md-3"  :class="linkClassList">
             Read the doc
-            <phosphor-icon name="arrow-square-out" weight="bold" class="ms-2" />
+            <AppIcon weight="bold" class="ms-2"><IPhArrowSquareOut /></AppIcon>
           </a>
         </template>
       </dismissable-alert>

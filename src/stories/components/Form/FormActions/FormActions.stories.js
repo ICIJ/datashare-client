@@ -1,5 +1,14 @@
 import { ButtonIcon } from '@icij/murmur-next'
 
+import IPhArrowCounterClockwise from '~icons/ph/arrow-counter-clockwise'
+import IPhCaretRight from '~icons/ph/caret-right'
+import IPhDownload from '~icons/ph/download'
+import IPhList from '~icons/ph/list'
+import IPhStar from '~icons/ph/star'
+import IPhTag from '~icons/ph/tag'
+import IPhUserGear from '~icons/ph/user-gear'
+import IPhX from '~icons/ph/x'
+
 import FormActions from '@/components/Form/FormActions/FormActions'
 import { VARIANT } from '@/enums/variants'
 import { buttonSizesArgType, variantsArgType } from '~storybook/utils'
@@ -25,17 +34,17 @@ export default {
   },
   render(args) {
     return {
-      components: { FormActions, ButtonIcon },
+      components: { FormActions, ButtonIcon, IPhX, IPhArrowCounterClockwise, IPhCaretRight },
       template: `
         <form-actions v-bind="args">
           10 items selected
-          <button-icon icon-left="x">Cancel</button-icon>
-          <button-icon icon-left="arrow-counter-clockwise">Reset</button-icon>
-          <button-icon variant="action" icon-right="caret-right">Proceed</button-icon>
+          <button-icon :icon-left="IPhX">Cancel</button-icon>
+          <button-icon :icon-left="IPhArrowCounterClockwise">Reset</button-icon>
+          <button-icon variant="action" :icon-right="IPhCaretRight">Proceed</button-icon>
         </form-actions>
       `,
       data() {
-        return { args }
+        return { args, IPhX, IPhArrowCounterClockwise, IPhCaretRight }
       }
     }
   }
@@ -49,22 +58,22 @@ export const Compact = {
   },
   render(args) {
     return {
-      components: { FormActions, ButtonIcon },
+      components: { FormActions, ButtonIcon, IPhList, IPhStar, IPhTag, IPhUserGear, IPhDownload },
       template: `
         <form-actions v-bind="args">
           <template #start>
-            <button-icon icon-left="hamburger">Menu</button-icon>
+            <button-icon :icon-left="IPhList">Menu</button-icon>
           </template>
           <template #compact>
-            <button-icon icon-left="star">Star</button-icon>
+            <button-icon :icon-left="IPhStar">Star</button-icon>
           </template>
-          <button-icon icon-left="tag">Tag</button-icon>
-          <button-icon icon-left="user-gear">Recommend</button-icon>
-          <button-icon icon-left="download">Download</button-icon>
+          <button-icon :icon-left="IPhTag">Tag</button-icon>
+          <button-icon :icon-left="IPhUserGear">Recommend</button-icon>
+          <button-icon :icon-left="IPhDownload">Download</button-icon>
         </form-actions>
       `,
       data() {
-        return { args }
+        return { args, IPhList, IPhStar, IPhTag, IPhUserGear, IPhDownload }
       }
     }
   }

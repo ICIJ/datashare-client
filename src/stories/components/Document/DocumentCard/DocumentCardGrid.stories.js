@@ -1,6 +1,7 @@
 import { markRaw } from 'vue'
-import { PhFilePdf } from '@phosphor-icons/vue'
 import { vueRouter } from 'storybook-vue3-router'
+
+import IPhFilePdf from '~icons/ph/file-pdf'
 
 import { withMurmur } from '~storybook/decorators/murmur'
 import { withPinia } from '~storybook/decorators/pinia'
@@ -79,7 +80,7 @@ export default {
         'Consectetur <mark>IKEA</mark> adipiscing elit.',
         'Sed do eiusmod tempor incididunt ut labore et <mark>IKEA</mark> dolore magna aliqua.'
       ],
-      contentTypeIcon: markRaw(PhFilePdf)
+      contentTypeIcon: markRaw(IPhFilePdf)
     }
   },
   render: args => ({
