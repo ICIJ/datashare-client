@@ -3,6 +3,9 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { pick } from 'lodash'
 
+import IPhListMagnifyingGlass from '~icons/ph/list-magnifying-glass'
+import IPhInfo from '~icons/ph/info'
+
 import EntityPopoverMentions from './EntityPopoverMentions'
 import EntityPopoverInfo from './EntityPopoverInfo'
 
@@ -53,7 +56,7 @@ const mentionsLabel = computed(() => t('entityPopoverTabGroup.mentions'))
   <tab-group class="entity-popover-tab-group">
     <tab-group-entry
       :active="!noExcerpt"
-      :icon="PhListMagnifyingGlass"
+      :icon="IPhListMagnifyingGlass"
       :count="props.offsets"
       :title="mentionsLabel"
     >
@@ -64,7 +67,7 @@ const mentionsLabel = computed(() => t('entityPopoverTabGroup.mentions'))
     </tab-group-entry>
     <tab-group-entry
       :active="noExcerpt"
-      :icon="PhInfo"
+      :icon="IPhInfo"
       :title="infoLabel"
     >
       <entity-popover-info v-bind="infoBinding" />
