@@ -1,6 +1,10 @@
 import { reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+import IPhPaintRoller from '~icons/ph/paint-roller'
+import IPhSun from '~icons/ph/sun'
+import IPhMoon from '~icons/ph/moon'
+
 import themeAuto from '@/assets/images/theme-auto.png'
 import themeLight from '@/assets/images/theme-light.png'
 import themeDark from '@/assets/images/theme-dark.png'
@@ -43,19 +47,19 @@ export function useTheme() {
 
   const themes = reactive([
     {
-      icon: 'paint-roller',
+      icon: IPhPaintRoller,
       name: THEMES.AUTOMATIC,
       label: t('themes.automatic'),
       thumbnail: themeAuto
     },
     {
-      icon: 'sun',
+      icon: IPhSun,
       name: THEMES.LIGHT,
       label: t('themes.light'),
       thumbnail: themeLight
     },
     {
-      icon: 'moon',
+      icon: IPhMoon,
       name: THEMES.DARK,
       label: t('themes.dark'),
       thumbnail: themeDark
