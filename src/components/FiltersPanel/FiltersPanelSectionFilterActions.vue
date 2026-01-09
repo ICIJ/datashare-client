@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import IPhArrowsOutSimple from '~icons/ph/arrows-out-simple'
 
 import ButtonSubtleAction from '@/components/Button/ButtonSubtleAction'
 
@@ -61,7 +62,7 @@ const classList = computed(() => {
     <button-subtle-action
       v-if="!hideExpand"
       tooltip-placement="right"
-      icon-left="arrows-out-simple"
+      :icon-left="IPhArrowsOutSimple"
       :label="t('filtersPanelSectionFilterActions.expand')"
       @click="expand = !expand"
     />

@@ -1,5 +1,5 @@
 <script setup>
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 
 import FiltersPanelSectionFilterTitleSort from '@/components/FiltersPanel/FiltersPanelSectionFilterTitleSort'
@@ -18,7 +18,7 @@ const { t } = useI18n()
 <template>
   <div class="d-flex align-items-center text-start">
     <span class="flex-grow-1 text-truncate">
-      <phosphor-icon
+      <app-icon
         :name="filter.icon"
         class="me-2"
       />
