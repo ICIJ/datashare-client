@@ -8,8 +8,6 @@ import IconsResolver from 'unplugin-icons/resolver'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 
-import { PhosphorVuePreset } from './bin/presets'
-import { PhosphorVueResolver } from './bin/resolvers'
 import { BootstrapVueNextResolver } from 'unplugin-vue-components/resolvers'
 
 export default ({ mode }) => {
@@ -39,7 +37,6 @@ export default ({ mode }) => {
       /**
        * The "Components" plugin resolvers imports automaticaly component in vue
        * templates. IconsResolver handles <i-ph-*> icon components.
-       * PhosphorVueResolver is kept for backward compatibility with dynamic icons.
        */
       Components({
         dts: false,
@@ -49,24 +46,16 @@ export default ({ mode }) => {
           IconsResolver({
             prefix: 'i',
             enabledCollections: ['ph']
-          }),
-          PhosphorVueResolver()
+          })
         ]
       }),
       /**
-       * The "AutoImport" plugin offer a mechanism simimar to the "Components" plugins
-       * but it target javascript variable and references. This allows to imports component
-       * directly in `<script setup>` or in vue template ref (example: `<component :is="PhPlus" />`)
+       * The "AutoImport" plugin offer a mechanism similar to the "Components" plugins
+       * but it targets javascript variables and references.
        */
       AutoImport({
         dts: false,
-        vueTemplate: true,
-        imports: [
-          PhosphorVuePreset()
-        ],
-        resolvers: [
-          PhosphorVueResolver()
-        ]
+        vueTemplate: true
       })
     ],
     resolve: {
