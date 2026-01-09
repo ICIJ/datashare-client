@@ -1,5 +1,5 @@
 <script setup>
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 import { computed } from 'vue'
 
 import FiltersPanelSectionFilterTitleSort from '@/components/FiltersPanel/FiltersPanelSectionFilterTitleSort'
@@ -48,7 +48,7 @@ const classList = computed(() => {
         class="flex-grow-1 text-truncate"
         @click="collapse = !collapse"
       >
-        <phosphor-icon
+        <app-icon
           :name="icon"
           class="me-2"
         />
