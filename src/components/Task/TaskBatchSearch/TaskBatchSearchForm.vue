@@ -4,6 +4,8 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { computed, ref, toValue } from 'vue'
 
+import IPhRocketLaunch from '~icons/ph/rocket-launch'
+
 import { BATCH_SEARCH_CSV_FILE, BATCH_SEARCH_CSV_STRING } from '@/enums/batchSearch'
 import FormCreation from '@/components/Form/FormCreation'
 import TaskBatchSearchFormDetails from '@/components/Task/TaskBatchSearch/TaskBatchSearchFormDetails'
@@ -126,7 +128,7 @@ async function submit() {
     content-class-list="d-flex flex-column gap-3"
     :valid="isValid"
     :submit-label="t('task.batch-search.form.submit')"
-    :submit-icon="PhRocketLaunch"
+    :submit-icon="IPhRocketLaunch"
     @reset="reset"
     @submit="submit"
   >

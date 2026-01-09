@@ -1,6 +1,9 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 
+import IPhQuotes from '~icons/ph/quotes'
+import IPhTextAa from '~icons/ph/text-aa'
+
 import FormControlRange from '@/components/Form/FormControl/FormControlRange/FormControlRange'
 import FormFieldsetI18n from '@/components/Form/FormFieldset/FormFieldsetI18n'
 import FormStep from '@/components/Form/FormStep/FormStep'
@@ -21,7 +24,7 @@ const { t } = useI18n()
     <form-fieldset-i18n
       name="phraseMatch"
       translation-key="task.batch-search.form.phraseMatch"
-      :icon="PhQuotes"
+      :icon="IPhQuotes"
       label-class="pt-md-0"
     >
       <b-form-radio-group
@@ -48,7 +51,7 @@ const { t } = useI18n()
       translation-key="task.batch-search.form.phraseChanges"
       label-class="pt-md-0"
       force-compact
-      :icon="PhTextAa"
+      :icon="IPhTextAa"
     >
       <form-control-range
         v-model="phraseChanges"
@@ -64,7 +67,7 @@ const { t } = useI18n()
       translation-key="task.batch-search.form.spellingChanges"
       label-class="pt-md-0"
       force-compact
-      :icon="PhTextAa"
+      :icon="IPhTextAa"
     >
       <form-control-range
         v-model="spellingChanges"
