@@ -2,6 +2,9 @@
 import { computed, onBeforeMount, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+import IPhFiles from '~icons/ph/files'
+import IPhPaperclip from '~icons/ph/paperclip'
+
 import LinkedDocumentCard from '@/components/LinkedDocument/LinkedDocumentCard'
 import { useDocument } from '@/composables/useDocument'
 import { useSearchStore } from '@/store/modules/search.js'
@@ -52,7 +55,7 @@ onBeforeMount(async () => {
       <linked-document-section
         :model-value="modelValue"
         header-class="rounded-start"
-        icon="files"
+        :icon="IPhFiles"
         :title="t('linkedDocumentCard.siblings.title', { n: searchStoreSiblings.total })"
         :description="t('linkedDocumentCard.siblings.description')"
         :documents="siblings"
@@ -64,7 +67,7 @@ onBeforeMount(async () => {
       <linked-document-section
         :model-value="modelValue"
         header-class="rounded-end"
-        icon="paperclip"
+        :icon="IPhPaperclip"
         :title="t('linkedDocumentCard.children.title', { n: searchStoreChildren.total })"
         :description="t('linkedDocumentCard.children.description')"
         :documents="children"

@@ -14,6 +14,10 @@ import { usePromptModal } from '@/composables/usePromptModal'
 import SearchSelectionAddTagsModal from '@/views/Search/SearchSelectionAddTagsModal'
 import { ICON_WEIGHT } from '@/enums/iconWeights.js'
 
+import IPhStarFill from '~icons/ph/star-fill'
+import IPhStar from '~icons/ph/star'
+import IPhHash from '~icons/ph/hash'
+
 const selection = defineModel('selection', { type: Array, default: () => [] })
 
 const props = defineProps({
@@ -111,8 +115,7 @@ const tagSelection = async (documents, labels) => {
       <button-icon
         class="flex-shrink-0"
         :label="t('searchSelection.star')"
-        :icon-left="PhStar"
-        :icon-left-weight="ICON_WEIGHT.FILL"
+        :icon-left="IPhStarFill"
         :disabled="noSelection"
         :hide-label="isCompact"
         :square="isCompact"
@@ -123,13 +126,13 @@ const tagSelection = async (documents, labels) => {
       <button-icon
         class="flex-shrink-0"
         :label="t('searchSelection.unstar')"
-        :icon-left="PhStar"
+        :icon-left="IPhStar"
         :disabled="noSelection"
         @click="unstarSelection"
       />
       <button-icon
         :label="t('searchSelection.tag')"
-        :icon-left="PhHash"
+        :icon-left="IPhHash"
         :disabled="noSelection"
         @click="addTagsModal"
       />

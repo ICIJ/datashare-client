@@ -1,8 +1,13 @@
 <script setup>
 import { whenever } from '@vueuse/core'
 import { ref, computed } from 'vue'
-import { PhosphorIcon, HapticCopy, ButtonIcon } from '@icij/murmur-next'
+import { AppIcon, HapticCopy, ButtonIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
+
+import IPhKey from '~icons/ph/key'
+import IPhPlus from '~icons/ph/plus'
+import IPhArrowClockwise from '~icons/ph/arrow-clockwise'
+import IPhTrash from '~icons/ph/trash'
 
 import AppModal from '@/components/AppModal/AppModal'
 import DisplayHash from '@/components/Display/DisplayHash'
@@ -60,15 +65,14 @@ whenever(username, getHashedApiKey, { immediate: true })
       class="settings-view-api__create text-center"
     >
       <div class="mb-3">
-        <phosphor-icon
-          :name="PhKey"
-          size="3em"
-        />
+        <app-icon size="3em">
+          <i-ph-key />
+        </app-icon>
       </div>
       <p v-html="t('settings.api.description')" />
       <button-icon
         variant="action"
-        :icon-left="PhPlus"
+        :icon-left="IPhPlus"
         class="settings-view-api__create__button"
         @click="createApiKey"
       >
@@ -82,7 +86,7 @@ whenever(username, getHashedApiKey, { immediate: true })
       <p v-html="t('settings.api.description')" />
       <div class="d-flex border rounded align-items-center">
         <div class="d-inline-flex flex-column align-items-center gap-1 p-3">
-          <phosphor-icon :name="PhKey" />
+          <app-icon><i-ph-key /></app-icon>
           <b-badge variant="dark">
             {{ t('settings.api.key.badge') }}
           </b-badge>
@@ -102,7 +106,7 @@ whenever(username, getHashedApiKey, { immediate: true })
         </div>
         <div class="d-flex justify-content-end gap-1 p-3">
           <button-icon
-            :icon-left="PhArrowClockwise"
+            :icon-left="IPhArrowClockwise"
             icon-left-hover-weight="bold"
             hide-label
             square
@@ -113,7 +117,7 @@ whenever(username, getHashedApiKey, { immediate: true })
             @click="createApiKey"
           />
           <button-icon
-            :icon-left="PhTrash"
+            :icon-left="IPhTrash"
             icon-left-hover-weight="bold"
             hide-label
             square

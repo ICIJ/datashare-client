@@ -3,6 +3,9 @@ import { noop } from 'lodash'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+import IPhDotsNine from '~icons/ph/dots-nine'
+import IPhTable from '~icons/ph/table'
+
 import { LAYOUTS } from '@/enums/layouts'
 import { useUrlParamWithStore } from '@/composables/useUrlParamWithStore'
 import { useUrlParamsWithStore } from '@/composables/useUrlParamsWithStore'
@@ -42,12 +45,12 @@ const layout = ref({
     {
       value: LAYOUTS.GRID,
       text: tLayout.grid,
-      icon: 'dots-nine'
+      icon: IPhDotsNine
     },
     {
       value: LAYOUTS.TABLE,
       text: tLayout.table,
-      icon: 'table'
+      icon: IPhTable
     }
   ]
 })

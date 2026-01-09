@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 
 import { Api } from '@/api'
@@ -64,10 +64,9 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
       <div class="error__container container">
         <h1 class="mb-3 error__container__heading">
           <span class="error__container__heading__code me-3">
-            <phosphor-icon
-              :name="PhSmileySad"
-              class="text-primary"
-            />
+            <app-icon class="text-primary">
+              <i-ph-smiley-sad />
+            </app-icon>
             <span class="px-2 error__container__heading__code__value">
               {{ code }}
             </span>
@@ -83,11 +82,9 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
               :href="faqLink"
               target="_blank"
             >
-              <phosphor-icon
-                weight="duotone"
-                :name="PhQuestion"
-                class="error__container__links__item__icon me-1"
-              />
+              <app-icon class="error__container__links__item__icon me-1">
+                <i-ph-question-duotone />
+              </app-icon>
               {{ t('error.faq') }}
             </a>
           </li>
@@ -96,11 +93,9 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
               :href="documentationLink"
               target="_blank"
             >
-              <phosphor-icon
-                weight="duotone"
-                :name="PhBook"
-                class="error__container__links__item__icon me-1"
-              />
+              <app-icon class="error__container__links__item__icon me-1">
+                <i-ph-book-duotone />
+              </app-icon>
               {{ t('error.userGuides') }}
             </a>
           </li>
@@ -109,11 +104,9 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
               :href="helpLink"
               target="_blank"
             >
-              <phosphor-icon
-                weight="duotone"
-                :name="PhAmbulance"
-                class="error__container__links__item__icon me-1"
-              />
+              <app-icon class="error__container__links__item__icon me-1">
+                <i-ph-ambulance-duotone />
+              </app-icon>
               {{ t('error.help') }}
             </a>
           </li>
@@ -129,11 +122,9 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
                 :href="logoutLink"
                 target="_blank"
               >
-                <phosphor-icon
-                  weight="duotone"
-                  :name="PhSignOut"
-                  class="error__container__links__item__icon me-1"
-                />
+                <app-icon class="error__container__links__item__icon me-1">
+                  <i-ph-sign-out-duotone />
+                </app-icon>
                 {{ t('error.logout') }}
               </a>
             </li>

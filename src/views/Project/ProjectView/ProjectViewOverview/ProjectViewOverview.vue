@@ -3,6 +3,13 @@ import { computed, ref, watch, toRef } from 'vue'
 import { get } from 'lodash'
 import { useI18n } from 'vue-i18n'
 
+import IPhChartBar from '~icons/ph/chart-bar'
+import IPhTreeStructure from '~icons/ph/tree-structure'
+import IPhPolygon from '~icons/ph/polygon'
+import IPhInfo from '~icons/ph/info'
+import IPhClockCounterClockwise from '~icons/ph/clock-counter-clockwise'
+import IPhPlus from '~icons/ph/plus'
+
 import { useCore } from '@/composables/useCore'
 import { useWait } from '@/composables/useWait'
 import { useProjectPinned } from '@/composables/useProjectPinned'
@@ -93,31 +100,31 @@ watch(toRef(props, 'name'), fetch, { immediate: true })
         nowrap
       >
         <tab-group-navigation-entry
-          icon="chart-bar"
+          :icon="IPhChartBar"
           :to="{ name: 'project.view.overview.insights', params }"
         >
           {{ t('projectViewOverview.nav.insights') }}
         </tab-group-navigation-entry>
         <tab-group-navigation-entry
-          icon="tree-structure"
+          :icon="IPhTreeStructure"
           :to="{ name: 'project.view.overview.paths', params }"
         >
           {{ t('projectViewOverview.nav.paths') }}
         </tab-group-navigation-entry>
         <tab-group-navigation-entry
-          icon="polygon"
+          :icon="IPhPolygon"
           :to="{ name: 'project.view.overview.graph', params }"
         >
           {{ t('projectViewOverview.nav.graph') }}
         </tab-group-navigation-entry>
         <tab-group-navigation-entry
-          icon="info"
+          :icon="IPhInfo"
           :to="{ name: 'project.view.overview.details', params }"
         >
           {{ t('projectViewOverview.nav.details') }}
         </tab-group-navigation-entry>
         <tab-group-navigation-entry
-          icon="clock-counter-clockwise"
+          :icon="IPhClockCounterClockwise"
           :to="{ name: 'project.view.overview.history', params }"
         >
           {{ t('projectViewOverview.nav.history') }}
@@ -128,7 +135,7 @@ watch(toRef(props, 'name'), fetch, { immediate: true })
         v-else
         :label="t('projectViewOverview.emptyStateLabel')"
         class="my-5"
-        action-icon="plus"
+        :action-icon="IPhPlus"
         :action-label="t('projectViewOverview.emptyStateAction')"
         :action-to="{ name: 'task.documents.new', query: { project: project.name } }"
         :action-modes="[MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]"

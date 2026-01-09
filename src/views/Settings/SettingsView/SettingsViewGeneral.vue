@@ -1,6 +1,6 @@
 <script setup>
 import { computed, onBeforeMount, reactive, ref } from 'vue'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 import Fuse from 'fuse.js'
 
@@ -94,12 +94,13 @@ onBeforeMount(loadSettings)
       :for="loaderId"
     >
       <template #waiting>
-        <phosphor-icon
-          :name="PhCircleNotch"
+        <app-icon
           spin
           size="lg"
           class="ms-auto"
-        />
+        >
+          <i-ph-circle-notch />
+        </app-icon>
       </template>
       <settings-general
         :settings="filteredSettings"

@@ -5,6 +5,11 @@ import { useI18n } from 'vue-i18n'
 import { matches, property } from 'lodash'
 import { useElementSize, useScroll, useWindowSize } from '@vueuse/core'
 
+import IPhTextAlignLeft from '~icons/ph/text-align-left'
+import IPhFile from '~icons/ph/file'
+import IPhInfo from '~icons/ph/info'
+import IPhUsersThree from '~icons/ph/users-three'
+
 import DocumentViewActions from './DocumentViewActions'
 import DocumentViewTabs from './DocumentViewTabs/DocumentViewTabs'
 import DocumentViewTitle from './DocumentViewTitle'
@@ -79,25 +84,25 @@ const tabs = computed(() => {
     {
       title: t('documentViewTabs.text'),
       component: () => import('@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsText.vue'),
-      icon: 'text-align-left',
+      icon: IPhTextAlignLeft,
       tab: 'text'
     },
     {
       title: t('documentViewTabs.viewer'),
       component: () => import('@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsViewer.vue'),
-      icon: 'file',
+      icon: IPhFile,
       tab: 'viewer'
     },
     {
       title: t('documentViewTabs.metadata'),
       component: () => import('@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsMetadata.vue'),
-      icon: 'info',
+      icon: IPhInfo,
       tab: 'metadata'
     },
     {
       title: t('documentViewTabs.entities'),
       component: () => import('@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsEntities.vue'),
-      icon: 'users-three',
+      icon: IPhUsersThree,
       tab: 'entities'
     }
   ]
