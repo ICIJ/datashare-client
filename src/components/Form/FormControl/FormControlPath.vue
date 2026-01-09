@@ -4,6 +4,9 @@ import { isArray } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur-next'
 
+import IPhMagnifyingGlass from '~icons/ph/magnifying-glass'
+import IPhFolderOpen from '~icons/ph/folder-open'
+
 import AppModal from '@/components/AppModal/AppModal'
 import PathTree from '@/components/PathTree/PathTree'
 import PathTreeBreadcrumb from '@/components/PathTree/PathTreeBreadcrumb/PathTreeBreadcrumb'
@@ -62,14 +65,14 @@ function onOk() {
 <template>
   <div class="form-control-path d-flex no-wrap gap-3">
     <button-icon
-      :icon-right="PhMagnifyingGlass"
+      :icon-right="IPhMagnifyingGlass"
       variant="action"
       @click="showPathTree = true"
     >
       {{ t('formControlPath.browse') }}
     </button-icon>
     <button-icon
-      :icon-left="PhFolderOpen"
+      :icon-left="IPhFolderOpen"
       class="flex-shrink-1"
       variant="outline-tertiary"
       @click="showPathTree = true"

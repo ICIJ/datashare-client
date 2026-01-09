@@ -1,6 +1,8 @@
 <script setup>
 import { ButtonIcon } from '@icij/murmur-next'
 
+import IPhX from '~icons/ph/x'
+
 defineProps({
   label: {
     type: String
@@ -17,7 +19,7 @@ defineProps({
     :size="size"
     :label="label"
     class="form-control-tag-input-entry"
-    :icon-right="PhX"
+    :icon-right="IPhX"
     icon-right-variant="tertiary"
     icon-right-hover-weight="bold"
     variant="light"

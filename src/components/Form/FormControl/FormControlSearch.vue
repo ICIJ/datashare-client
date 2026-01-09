@@ -1,7 +1,11 @@
 <script setup>
 import { computed, toRef, useTemplateRef, watch } from 'vue'
-import { PhosphorIcon, ButtonIcon } from '@icij/murmur-next'
+import { AppIcon, ButtonIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
+
+import IPhCircleNotch from '~icons/ph/circle-notch'
+import IPhMagnifyingGlass from '~icons/ph/magnifying-glass'
+import IPhX from '~icons/ph/x'
 
 import { buttonSizeValidator, SIZE } from '@/enums/sizes'
 
@@ -38,7 +42,7 @@ const props = defineProps({
    */
   iconName: {
     type: [String, Object, Array],
-    default: () => PhMagnifyingGlass
+    default: () => IPhMagnifyingGlass
   },
   /**
    * Add clear text option
@@ -87,7 +91,7 @@ const props = defineProps({
 const emit = defineEmits(['submit', 'focus', 'up', 'down', 'input', 'enter', 'blur', 'clear'])
 
 const hideClearInput = computed(() => !modelValue.value)
-const icon = computed(() => (props.loading ? PhCircleNotch : props.iconName))
+const icon = computed(() => (props.loading ? IPhCircleNotch : props.iconName))
 const target = useTemplateRef('target')
 const focus = () => target.value?.focus()
 const blur = () => target.value?.blur()
@@ -128,7 +132,7 @@ defineExpose({ focus, blur, clear: clearInput })
           name="input-start"
           v-bind="{ loading, icon, noIcon }"
         >
-          <phosphor-icon
+          <app-icon
             v-if="!noIcon"
             :name="icon"
             square
@@ -155,7 +159,7 @@ defineExpose({ focus, blur, clear: clearInput })
       <span class="form-control-search__end input-group-text px-1 py-0 border-start-0">
         <button-icon
           v-if="clearText"
-          icon-left="x"
+          :icon-left="IPhX"
           hide-label
           variant="outline-secondary"
           :size="size"
