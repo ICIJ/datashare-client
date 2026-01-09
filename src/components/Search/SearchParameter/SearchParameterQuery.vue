@@ -3,6 +3,8 @@ import { computed } from 'vue'
 import lucene from 'lucene'
 import { useI18n } from 'vue-i18n'
 
+import IPhWarning from '~icons/ph/warning'
+
 import SearchParameterQueryAst from './SearchParameterQueryAst'
 import SearchParameterQueryTerm from './SearchParameterQueryTerm'
 
@@ -77,7 +79,7 @@ const ast = computed(() => {
     :title="t('searchParameterQuery.title')"
     color="var(--bs-danger)"
     prefix="-"
-    icon="warning"
+    :icon="IPhWarning"
     @click:x="emit('click:x', $event)"
   >
     <slot />

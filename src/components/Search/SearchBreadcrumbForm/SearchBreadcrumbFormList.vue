@@ -1,11 +1,12 @@
 <script setup>
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
+import IPhPath from '~icons/ph/path'
 
 defineProps({
   icon: {
     type: [String, Object, Array],
-    default: PhPath
+    default: () => IPhPath
   },
   noLabel: {
     type: Boolean,
@@ -25,7 +26,7 @@ const { t } = useI18n()
       class="fw-medium text-action-emphasis text-nowrap"
       :class="labelClass"
     >
-      <phosphor-icon
+      <app-icon
         :name="icon"
         class="me-2"
       />
