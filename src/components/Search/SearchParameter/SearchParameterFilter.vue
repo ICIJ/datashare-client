@@ -3,6 +3,8 @@ import { computed } from 'vue'
 import { trimStart } from 'lodash'
 import { useI18n } from 'vue-i18n'
 
+import IPhMagnifyingGlass from '~icons/ph/magnifying-glass'
+
 import SearchParameterQueryTerm from './SearchParameterQueryTerm'
 
 import { VARIANT, variantValidator } from '@/enums/variants'
@@ -81,7 +83,7 @@ const term = computed(() => {
 })
 
 const icon = computed(() => {
-  return props.icon ?? filter.value?.options?.icon ?? PhMagnifyingGlass
+  return props.icon ?? filter.value?.options?.icon ?? IPhMagnifyingGlass
 })
 
 const iconLabel = computed(() => {
