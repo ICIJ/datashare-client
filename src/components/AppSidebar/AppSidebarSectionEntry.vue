@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
+import IPhPlus from '~icons/ph/plus'
 
 const props = defineProps({
   compact: {
@@ -20,7 +21,7 @@ const props = defineProps({
   },
   actionIcon: {
     type: [String, Object, Array],
-    default: PhPlus
+    default: () => IPhPlus
   },
   actionTitle: {
     type: String
@@ -55,8 +56,9 @@ const classList = computed(() => {
       :to="to"
       class="app-sidebar-section-entry__link text-truncate d-flex flex-grow-1"
     >
-      <phosphor-icon
+      <app-icon
         class="app-sidebar-section-entry__link__icon me-2"
+        size="1.25em"
         :name="icon"
       />
       <slot>{{ title }}</slot>
@@ -68,9 +70,9 @@ const classList = computed(() => {
       class="app-sidebar-section-entry__action ms-2 d-flex"
       :title="actionTitle"
     >
-      <phosphor-icon
+      <app-icon
         class="app-sidebar-section-entry__action__icon"
-        hover-weight="bold"
+        size="1.25em"
         :name="actionIcon"
       />
       <span class="visually-hidden">{{ actionTitle }}</span>

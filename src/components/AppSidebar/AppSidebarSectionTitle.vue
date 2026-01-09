@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 
 const props = defineProps({
   compact: {
@@ -26,8 +26,9 @@ const classList = computed(() => {
     class="app-sidebar-section-title"
     :class="classList"
   >
-    <phosphor-icon
+    <app-icon
       class="me-2"
+      size="1.25em"
       :name="icon"
     />
     <slot>{{ title }}</slot>
