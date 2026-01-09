@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { computed, ref } from 'vue'
+import { computed, markRaw, ref } from 'vue'
 import cloneDeep from 'lodash/cloneDeep'
 import find from 'lodash/find'
 import findIndex from 'lodash/findIndex'
@@ -107,7 +107,7 @@ export const useInsightsStore = defineStore('insights', () => {
    */
   function instantiateWidget({ type = 'WidgetEmpty', ...options } = {}) {
     const Type = getWidgetClass(type)
-    return new Type(options)
+    return markRaw(new Type(options))
   }
 
   /**
