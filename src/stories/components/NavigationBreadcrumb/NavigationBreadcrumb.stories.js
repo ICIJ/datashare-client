@@ -1,6 +1,10 @@
 import { vueRouter } from 'storybook-vue3-router'
 import { ButtonIcon } from '@icij/murmur-next'
 
+import IPhDownloadSimple from '~icons/ph/download-simple'
+import IPhPlus from '~icons/ph/plus'
+import IPhSlidersHorizontal from '~icons/ph/sliders-horizontal'
+
 import NavigationBreadcrumb from '@/components/NavigationBreadcrumb/NavigationBreadcrumb'
 import NavigationBreadcrumbEntry from '@/components/NavigationBreadcrumb/NavigationBreadcrumbEntry'
 
@@ -104,13 +108,17 @@ export const ButtonAddon = {
     components: {
       ButtonIcon,
       NavigationBreadcrumb,
-      NavigationBreadcrumbEntry
+      NavigationBreadcrumbEntry,
+      IPhDownloadSimple
+    },
+    setup: () => {
+      return { IPhDownloadSimple }
     },
     template: `
       <navigation-breadcrumb current-route-name="tasks.batch-searches.view">
         <template #addon>
           <navigation-breadcrumb-entry>
-            <button-icon variant="outline-secondary" icon-left="download-simple">
+            <button-icon variant="outline-secondary" :icon-left="IPhDownloadSimple">
               Download 8,506 documents
             </button-icon>
           </navigation-breadcrumb-entry>
@@ -125,13 +133,19 @@ export const MultipleAddons = {
     components: {
       ButtonIcon,
       NavigationBreadcrumb,
-      NavigationBreadcrumbEntry
+      NavigationBreadcrumbEntry,
+      IPhDownloadSimple,
+      IPhPlus,
+      IPhSlidersHorizontal
+    },
+    setup: () => {
+      return { IPhDownloadSimple, IPhPlus, IPhSlidersHorizontal }
     },
     template: `
       <navigation-breadcrumb current-route-name="tasks.batch-searches.view">
         <template #addon>
           <navigation-breadcrumb-entry>
-            <button-icon variant="outline-secondary" icon-left="download-simple">
+            <button-icon variant="outline-secondary" :icon-left="IPhDownloadSimple">
               Download 8,506 documents
             </button-icon>
           </navigation-breadcrumb-entry>
@@ -142,7 +156,7 @@ export const MultipleAddons = {
               pill
               square
               hide-label
-              icon-left="plus"
+              :icon-left="IPhPlus"
               label="Start a batch search" />
           </navigation-breadcrumb-entry>
           <navigation-breadcrumb-entry class="pe-0">
@@ -151,7 +165,7 @@ export const MultipleAddons = {
               variant="link"
               square
               hide-label
-              icon-left="sliders-horizontal"
+              :icon-left="IPhSlidersHorizontal"
               label="Configure current view" />
           </navigation-breadcrumb-entry>
         </template>

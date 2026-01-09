@@ -1,6 +1,8 @@
 import { ref } from 'vue'
 import { ButtonIcon } from '@icij/murmur-next'
 
+import IPhSpinnerGap from '~icons/ph/spinner-gap'
+
 import LoginImage from '@/components/Login/LoginImage'
 
 export default {
@@ -9,16 +11,17 @@ export default {
   render: () => ({
     components: {
       ButtonIcon,
-      LoginImage
+      LoginImage,
+      IPhSpinnerGap
     },
     setup() {
       const image = ref(null)
-      return { image }
+      return { image, IPhSpinnerGap }
     },
     template: `
       <div class="text-center">
         <login-image ref="image" class="my-5" />
-        <button-icon label="Shake it!" icon-left="disco-ball" icon-left-weight="fill" @click="image.shake()" />
+        <button-icon label="Shake it!" :icon-left="IPhSpinnerGap" icon-left-weight="fill" @click="image.shake()" />
       </div>
     `
   })

@@ -1,5 +1,13 @@
 import { markRaw } from 'vue'
 import { vueRouter } from 'storybook-vue3-router'
+
+import IPhFile from '~icons/ph/file'
+import IPhFilePdf from '~icons/ph/file-pdf'
+import IPhFileCsv from '~icons/ph/file-csv'
+import IPhFilePpt from '~icons/ph/file-ppt'
+import IPhFileDoc from '~icons/ph/file-doc'
+import IPhFileXls from '~icons/ph/file-xls'
+import IPhFileTxt from '~icons/ph/file-txt'
 import { BPlaceholderTable } from 'bootstrap-vue-next'
 
 import { layoutArgType } from '~storybook/utils'
@@ -98,7 +106,7 @@ export default {
           'Consectetur <mark>IKEA</mark> adipiscing elit.',
           'Sed do eiusmod tempor incididunt ut labore et <mark>IKEA</mark> dolore magna aliqua.'
         ],
-        contentTypeIcon: markRaw(PhFilePdf)
+        contentTypeIcon: markRaw(IPhFilePdf)
       },
       {
         title: 'Tax Returns.csv',
@@ -117,7 +125,7 @@ export default {
         contentType: 'image/jpeg',
         isSupportedImage: true,
         highlights: ['Lorem ispum dolor sit <mark>TAX THE RICH</mark> amet.'],
-        contentTypeIcon: markRaw(PhFileCsv)
+        contentTypeIcon: markRaw(IPhFileCsv)
       },
       {
         title: 'Annual Financial Statement 2015.docx',
@@ -139,7 +147,7 @@ export default {
           'The company achieved a <mark>profit</mark> of $2 million in 2015.',
           'Total <mark>revenue</mark> increased by 10% compared to the previous year.'
         ],
-        contentTypeIcon: markRaw(PhFileDoc, PhFileXls, PhFileTxt)
+        contentTypeIcon: markRaw(IPhFileDoc)
       },
       {
         title: 'Employee Contract Agreement.pdf',
@@ -161,7 +169,7 @@ export default {
           'The <mark>employee</mark> agrees to the terms and conditions.',
           'This <mark>contract</mark> is valid for two years from the date of signing.'
         ],
-        contentTypeIcon: markRaw(PhFilePdf)
+        contentTypeIcon: markRaw(IPhFilePdf)
       },
       {
         title: 'Project Plan.xlsx',
@@ -183,7 +191,7 @@ export default {
           'The <mark>project plan</mark> outlines the milestones.',
           'Resource allocation is detailed in the <mark>spreadsheet</mark>.'
         ],
-        contentTypeIcon: markRaw(PhFileXls)
+        contentTypeIcon: markRaw(IPhFileXls)
       },
       {
         title: 'Meeting Minutes March 2020.txt',
@@ -205,7 +213,7 @@ export default {
           'Discussion on <mark>budget allocation</mark> for Q2.',
           'Action items assigned to <mark>team members</mark>.'
         ],
-        contentTypeIcon: markRaw(PhFileTxt)
+        contentTypeIcon: markRaw(IPhFileTxt)
       },
       {
         title: 'Research Paper on Quantum Computing.pdf',
@@ -227,7 +235,7 @@ export default {
           'Exploring the potential of <mark>quantum algorithms</mark>.',
           'Challenges in <mark>quantum error correction</mark>.'
         ],
-        contentTypeIcon: markRaw(PhFilePdf)
+        contentTypeIcon: markRaw(IPhFilePdf)
       },
       {
         title: 'Company Brochure 2021.indd',
@@ -246,7 +254,7 @@ export default {
         contentType: 'image/jpeg',
         isSupportedImage: true,
         highlights: ['Introducing our latest <mark>product line</mark>.', 'Company mission and <mark>values</mark>.'],
-        contentTypeIcon: markRaw(PhFile)
+        contentTypeIcon: markRaw(IPhFile)
       },
       {
         title: 'Sales Data Q1 2019.csv',
@@ -268,7 +276,7 @@ export default {
           'Total <mark>sales</mark> increased by 5% in Q1.',
           'Highest growth in the <mark>Asia-Pacific</mark> region.'
         ],
-        contentTypeIcon: markRaw(PhFileCsv)
+        contentTypeIcon: markRaw(IPhFileCsv)
       },
       {
         title: 'Supplier Agreement_TechCorp.docx',
@@ -290,7 +298,7 @@ export default {
           'Terms of <mark>payment</mark> and delivery schedules.',
           'Confidentiality and <mark>non-disclosure</mark> clauses.'
         ],
-        contentTypeIcon: markRaw(PhFileDoc)
+        contentTypeIcon: markRaw(IPhFileDoc)
       },
       {
         title: 'Patent Application_US1234567.pdf',
@@ -312,7 +320,7 @@ export default {
           'Description of the <mark>invention</mark> and its applications.',
           'Claims and <mark>drawings</mark> included.'
         ],
-        contentTypeIcon: markRaw(PhFilePdf)
+        contentTypeIcon: markRaw(IPhFilePdf)
       },
       {
         title: 'Workshop Presentation_SlideDeck.pptx',
@@ -334,7 +342,7 @@ export default {
           'Overview of <mark>training modules</mark>.',
           'Interactive <mark>exercises</mark> and case studies.'
         ],
-        contentTypeIcon: markRaw(PhFilePpt)
+        contentTypeIcon: markRaw(IPhFilePpt)
       }
     ]
   }

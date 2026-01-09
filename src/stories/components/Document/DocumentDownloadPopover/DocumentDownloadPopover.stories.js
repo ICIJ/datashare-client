@@ -1,5 +1,7 @@
 import { markRaw } from 'vue'
 
+import IPhFile from '~icons/ph/file'
+import IPhFilePdf from '~icons/ph/file-pdf'
 import DocumentDownloadPopover from '@/components/Document/DocumentDownloadPopover/DocumentDownloadPopover'
 import types from '@/utils/contentTypes.json'
 
@@ -15,7 +17,7 @@ export default {
       hasStandardExtension: true,
       contentType: 'application/pdf',
       contentTypeDescription: types['application/pdf'].description,
-      contentTypeIcon: markRaw(PhFilePdf)
+      contentTypeIcon: markRaw(IPhFilePdf)
     }
   },
   render: args => ({
@@ -54,7 +56,7 @@ export const WithWarning = {
       hasStandardExtension: false,
       contentTypeDescription: types['text/html'].description,
       contentTypeWarning: types['text/html'].warning,
-      contentTypeIcon: markRaw(PhFile)
+      contentTypeIcon: markRaw(IPhFile)
     }
   }
 }
@@ -69,7 +71,7 @@ export const WithRoot = {
       hasStandardExtension: true,
       contentTypeDescription: types['application/pdf'].description,
       contentTypeWarning: types['application/pdf'].warning,
-      contentTypeIcon: markRaw(PhFilePdf),
+      contentTypeIcon: markRaw(IPhFilePdf),
       root: {
         id: 'fiz',
         title: 'email-with-subject.eml',
@@ -89,7 +91,7 @@ export const WithHugeRoot = {
       hasStandardExtension: true,
       contentTypeDescription: types['image/jpeg'].description,
       contentTypeWarning: types['image/jpeg'].warning,
-      contentTypeIcon: markRaw(PhFile),
+      contentTypeIcon: markRaw(IPhFile),
       root: {
         id: 'fiz',
         title: 'inbox.pst',
@@ -109,7 +111,7 @@ export const WithEverything = {
       hasStandardExtension: false,
       contentTypeDescription: types['application/x-msdownload'].description,
       contentTypeWarning: types['application/x-msdownload'].warning,
-      contentTypeIcon: markRaw(PhFile),
+      contentTypeIcon: markRaw(IPhFile),
       root: {
         id: 'fiz',
         title: 'email-with-subject.eml',

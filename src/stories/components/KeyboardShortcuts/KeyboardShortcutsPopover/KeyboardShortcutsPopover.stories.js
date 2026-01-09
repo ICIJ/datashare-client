@@ -1,7 +1,9 @@
 import { uniqueId } from 'lodash'
-import { PhosphorIcon, ButtonIcon } from '@icij/murmur-next'
+import { AppIcon, ButtonIcon } from '@icij/murmur-next'
 import { vueRouter } from 'storybook-vue3-router'
 
+import IPhArrowLeft from '~icons/ph/arrow-left'
+import IPhKeyboard from '~icons/ph/keyboard'
 import KeyboardShortcutsPopover from '@/components/KeyboardShortcuts/KeyboardShortcutsPopover/KeyboardShortcutsPopover'
 import KeyboardShortcutsSectionEntry from '@/components/KeyboardShortcuts/KeyboardShortcutsSection/KeyboardShortcutsSectionEntry'
 
@@ -17,16 +19,18 @@ export default {
       ButtonIcon,
       KeyboardShortcutsPopover,
       KeyboardShortcutsSectionEntry,
-      PhosphorIcon
+      AppIcon,
+      IPhArrowLeft,
+      IPhKeyboard
     },
     setup: () => {
       const btnId = uniqueId('keyboard-shortcuts-popover-btn-')
-      return { args, btnId }
+      return { args, btnId, IPhKeyboard }
     },
     template: `
-      <button-icon icon-left="keyboard" hide-label square variant="outline-dark" :id="btnId" />
+      <button-icon :icon-left="IPhKeyboard" hide-label square variant="outline-dark" :id="btnId" />
       <span class="text-secondary-emphasis m-3">
-        <phosphor-icon name="arrow-left" fade bounce />
+        <AppIcon fade bounce><IPhArrowLeft /></AppIcon>
         hover me
       </span>
       <keyboard-shortcuts-popover v-bind="args" :target="btnId">
