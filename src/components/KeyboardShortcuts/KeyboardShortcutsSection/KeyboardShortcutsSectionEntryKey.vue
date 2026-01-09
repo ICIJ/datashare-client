@@ -1,6 +1,16 @@
 <script setup>
 import { computed } from 'vue'
-import { PhosphorIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
+
+import IPhCommand from '~icons/ph/command'
+import IPhWindowsLogoFill from '~icons/ph/windows-logo-fill'
+import IPhOption from '~icons/ph/option'
+import IPhArrowRight from '~icons/ph/arrow-right'
+import IPhArrowLeft from '~icons/ph/arrow-left'
+import IPhArrowUp from '~icons/ph/arrow-up'
+import IPhArrowDown from '~icons/ph/arrow-down'
+import IPhArrowFatUp from '~icons/ph/arrow-fat-up'
+import IPhControl from '~icons/ph/control'
 
 import { getShortkeyOS } from '@/utils/utils'
 
@@ -14,33 +24,33 @@ const props = defineProps({
 const icon = computed(() => {
   switch (props.value) {
     case 'super':
-      return getShortkeyOS() === 'mac' ? 'command' : ['windows-logo', 'fill']
+      return getShortkeyOS() === 'mac' ? IPhCommand : IPhWindowsLogoFill
     case '⌘':
-      return 'command'
+      return IPhCommand
     case 'meta':
-      return 'command'
+      return IPhCommand
     case 'option':
-      return 'option'
+      return IPhOption
     case '→':
-      return 'arrow-right'
+      return IPhArrowRight
     case 'arrowright':
-      return 'arrow-right'
+      return IPhArrowRight
     case '←':
-      return 'arrow-left'
+      return IPhArrowLeft
     case 'arrowleft':
-      return 'arrow-left'
+      return IPhArrowLeft
     case '↑':
-      return 'arrow-up'
+      return IPhArrowUp
     case 'arrowup':
-      return 'arrow-up'
+      return IPhArrowUp
     case '↓':
-      return 'arrow-down'
+      return IPhArrowDown
     case 'arrowdown':
-      return 'arrow-down'
+      return IPhArrowDown
     case 'shift':
-      return 'arrow-fat-up'
+      return IPhArrowFatUp
     case '⌃':
-      return 'control'
+      return IPhControl
     default:
       return null
   }
@@ -49,7 +59,7 @@ const icon = computed(() => {
 
 <template>
   <kbd class="keyboard-shortcuts-section-entry-key flex-shrink-0">
-    <phosphor-icon
+    <app-icon
       v-if="icon"
       :name="icon"
       size="1em"
