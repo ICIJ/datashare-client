@@ -5,8 +5,8 @@
       class="widget__header d-flex align-items-center"
     >
       <app-icon
-        v-if="widget.icon"
-        :name="widget.icon"
+        v-if="icon"
+        :name="icon"
         class="me-2"
         size="2em"
       />
@@ -69,7 +69,7 @@ import { camelCase, flatten, get, iteratee, noop, uniqueId } from 'lodash'
 import InfiniteLoading from 'v3-infinite-loading'
 import { AppIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
-import { toRef } from 'vue'
+import { markRaw, toRaw, toRef } from 'vue'
 
 import WidgetFieldFacetsEntry from './WidgetFieldFacetsEntry'
 
@@ -118,6 +118,11 @@ export default {
     }
   },
   computed: {
+    // Get the icon as a non-reactive component to avoid Vue warnings
+    icon() {
+      const icon = toRaw(this.widget.icon)
+      return icon ? markRaw(icon) : null
+    },
     // The items list is just a concatenation of all pages
     buckets() {
       return flatten(this.pages.map(iteratee('aggregations.facets.buckets')))
