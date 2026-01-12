@@ -4,7 +4,6 @@ import { ref, computed } from 'vue'
 import { AppIcon, HapticCopy, ButtonIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 
-import IPhKey from '~icons/ph/key'
 import IPhPlus from '~icons/ph/plus'
 import IPhArrowClockwise from '~icons/ph/arrow-clockwise'
 import IPhTrash from '~icons/ph/trash'
