@@ -31,14 +31,15 @@ const rolesTitle = computed(() => t('displayRoles.yourRoles', { roles: formatRol
      v-if="!noIcon"
      :name="PhUserSquare"
    />
-    <template
+    <span
       v-for="(role,index) in roles"
       :key="index"
+      class="d-inline-flex"
     >
       <display-role
         :value="role"
         no-icon
       /><span v-if="index !== roles.length-1">, </span>
-    </template>
+    </span>
   </span>
 </template>
