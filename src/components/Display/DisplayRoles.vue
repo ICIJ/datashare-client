@@ -1,9 +1,11 @@
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { AppIcon } from '@icij/murmur-next'
 
 import DisplayRole from '@/components/Display/DisplayRole.vue'
 import { usePolicies } from '@/composables/usePolicies.js'
-import { useI18n } from 'vue-i18n'
+
 const props = defineProps({
   project: {
     type: Object,
@@ -27,10 +29,10 @@ const rolesTitle = computed(() => t('displayRoles.yourRoles', { roles: formatRol
     v-if="roles"
     class="text-secondary-emphasis d-inline-flex align-items-center gap-1"
     :title="rolesTitle"
-  ><phosphor-icon
-     v-if="!noIcon"
-     :name="PhUserSquare"
-   />
+  >
+    <app-icon v-if="!noIcon">
+      <i-ph-user-square />
+    </app-icon>
     <span
       v-for="(role,index) in roles"
       :key="index"
