@@ -11,6 +11,10 @@ const props = defineProps({
   noIcon: {
     type: Boolean,
     default: false
+  },
+  iconSize: {
+    type: String,
+    default: null
   }
 })
 
@@ -20,7 +24,10 @@ const role = computed(() => formatRole(props.value))
 
 <template>
   <span class="d-inline-flex gap-1">
-    <app-icon v-if="!noIcon">
+    <app-icon
+      v-if="!noIcon"
+      :size="iconSize"
+    >
       <i-ph-user-square />
     </app-icon>
     {{ role }}
