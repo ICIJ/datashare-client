@@ -429,7 +429,7 @@ export const routes = [
                 meta: {
                   icon: markRaw(IPhPencilSimple),
                   title: 'projectViewEdit.title',
-                  allowedModes: [MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]
+                  allowedRoles: ['ADMIN']
                 }
               }
             ]

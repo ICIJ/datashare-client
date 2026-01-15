@@ -20,5 +20,9 @@ export function usePolicies() {
     return roles.map(formatRole).join(', ')
   }
 
-  return { getRolesByProject, formatRole, formatRoles }
+  function isProjectAdmin(projectName) {
+    return getPolicyByProject(projectName)?.admin === true
+  }
+
+  return { getRolesByProject, formatRole, formatRoles, isProjectAdmin }
 }
