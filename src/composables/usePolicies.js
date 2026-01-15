@@ -9,7 +9,7 @@ export function usePolicies() {
   const userPolicies = computed(() => config.get('policies', []))
 
   function getRolesByProject(projectId) {
-    return find(userPolicies.value, { projectId })?.roles
+    return find(userPolicies.value, { projectId })?.roles ?? [DEFAULT_ROLE]
   }
 
   function formatRole(role) {
