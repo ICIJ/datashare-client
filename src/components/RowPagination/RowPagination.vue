@@ -44,6 +44,7 @@ const hasFewerRows = computed(() => props.totalRows <= page.value * +props.perPa
     :total-rows="totalRows"
     :per-page="+perPage"
     :compact="compact"
+    class="row-pagination"
   >
     <template #number-of-rows="{ lastRangeRow: to }">
       <i18n-t
@@ -79,3 +80,11 @@ const hasFewerRows = computed(() => props.totalRows <= page.value * +props.perPa
     </template>
   </tiny-pagination>
 </template>
+
+<style lang="scss" scoped>
+.row-pagination {
+  &:deep(.tiny-pagination__nav .app-icon) {
+    font-size: 1.25em;
+  }
+}
+</style>
