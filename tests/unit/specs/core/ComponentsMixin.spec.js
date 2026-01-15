@@ -53,4 +53,46 @@ describe('ComponentsMixin', () => {
     const WidgetDiskUsage = await core.findComponent('Widget/WidgetDiskUsage')
     expect(WidgetDiskUsage.name).toBe('WidgetDiskUsage')
   })
+
+  describe('Murmur components', () => {
+    it('should find Murmur component by name', async () => {
+      const AppIcon = await core.findComponent('Murmur/AppIcon')
+      expect(AppIcon).not.toBeNull()
+    })
+
+    it('should find Murmur datavisualisations component', async () => {
+      const BarChart = await core.findComponent('Murmur/BarChart')
+      expect(BarChart).not.toBeNull()
+      expect(BarChart.name).toBe('BarChart')
+    })
+
+    it('should find Murmur maps component', async () => {
+      const ChoroplethMap = await core.findComponent('Murmur/ChoroplethMap')
+      expect(ChoroplethMap).not.toBeNull()
+      expect(ChoroplethMap.name).toBe('ChoroplethMap')
+    })
+
+    it('should return null for unknown Murmur component', async () => {
+      expect(await core.findComponent('Murmur/NonExistentComponent')).toBeNull()
+    })
+
+    it('should throw an exception for unknown Murmur component with getComponent', async () => {
+      expect.assertions(1)
+      try {
+        await core.getComponent('Murmur/NonExistentComponent')
+      } catch (e) {
+        expect(e.message).toEqual("Cannot find Murmur component 'NonExistentComponent'")
+      }
+    })
+
+    it('should get Murmur component directly with getMurmurComponent', () => {
+      const ButtonIcon = core.getMurmurComponent('ButtonIcon')
+      expect(ButtonIcon).not.toBeNull()
+      expect(ButtonIcon.name).toBe('ButtonIcon')
+    })
+
+    it('should return null for unknown component with getMurmurComponent', () => {
+      expect(core.getMurmurComponent('NonExistentComponent')).toBeNull()
+    })
+  })
 })

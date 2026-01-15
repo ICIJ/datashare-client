@@ -1,5 +1,7 @@
 import { compact, find, keys, kebabCase, iteratee, uniq } from 'lodash'
 
+import Murmur from '@icij/murmur-next'
+
 import { slugger } from '@/utils/strings'
 
 /**
@@ -11,6 +13,7 @@ const ComponentMixin = superclass =>
   class extends superclass {
     /**
      * Asynchronously find a component in the lazyComponents object by its name.
+     * Supports "Murmur/" prefix to retrieve components from @icij/murmur-next.
      * @async
      * @function
      * @param {string} name - The name of the component to find.
@@ -21,13 +24,34 @@ const ComponentMixin = superclass =>
     }
 
     /**
+     * Get a component from Murmur by its name.
+     * Searches in Murmur.components, Murmur.datavisualisations, and Murmur.maps.
+     * @function
+     * @param {string} name - The name of the Murmur component to retrieve.
+     * @returns {object|null} - The found component object, or null if not found.
+     */
+    getMurmurComponent(name) {
+      return Murmur.components[name] ?? Murmur.datavisualisations[name] ?? Murmur.maps[name] ?? null
+    }
+
+    /**
      * Asynchronously get a component from the lazyComponents object based on its name.
+     * Supports "Murmur/" prefix to retrieve components from @icij/murmur-next.
      * @async
      * @function
      * @param {string} name - The name of the component to retrieve.
      * @returns {Promise<object|Error>} - A promise that resolves with the found component object, or rejects with an Error if not found.
      */
     async getComponent(name) {
+      // Check for Murmur prefix to retrieve components from @icij/murmur-next
+      if (name.startsWith('Murmur/')) {
+        const murmurName = name.slice(7) // Remove 'Murmur/' prefix
+        const component = this.getMurmurComponent(murmurName)
+        if (component) {
+          return component
+        }
+        throw new Error(`Cannot find Murmur component '${murmurName}'`)
+      }
       // Find the component name key in lazyComponents object that matches the given name when slugified.
       const key = find(keys(this.lazyComponents), key => this.sameComponentNames(name, key))
       // If a matching key is found, return the component object from the lazyComponents object.
