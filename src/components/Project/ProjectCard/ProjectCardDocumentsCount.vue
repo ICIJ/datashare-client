@@ -20,7 +20,9 @@ const hasDocuments = computed(() => isNumber(project.documentsCount) && project.
 <template>
   <div class="project-card-documents-count text-secondary-emphasis d-inline-flex gap-1 align-items-center flex-wrap">
     <slot>
-      <app-icon><i-ph-files /></app-icon>
+      <app-icon size="1.25em">
+        <i-ph-files />
+      </app-icon>
       <display-number
         v-if="hasDocuments"
         :value="project.documentsCount"

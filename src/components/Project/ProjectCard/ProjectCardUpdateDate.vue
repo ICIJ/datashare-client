@@ -20,7 +20,9 @@ const { t } = useI18n()
     class="project-card-update-date text-secondary-emphasis d-inline-flex gap-1 align-items-center flex-wrap"
   >
     <slot>
-      <app-icon><i-ph-calendar-blank /></app-icon>
+      <app-icon size="1.25em">
+        <i-ph-calendar-blank />
+      </app-icon>
       {{ t('projectCardUpdateDate.label') }}
       <display-datetime-short :value="project.updateDate" />
     </slot>

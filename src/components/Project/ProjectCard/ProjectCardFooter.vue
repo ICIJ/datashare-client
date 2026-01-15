@@ -45,6 +45,7 @@ const toProjectSearch = computed(() => ({
           <display-roles
             :project="project"
             class="text-secondary-emphasis"
+            icon-size="1.25em"
           />
         </mode-server-only>
       </div>
