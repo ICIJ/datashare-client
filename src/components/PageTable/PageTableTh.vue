@@ -72,6 +72,7 @@ const labelClassList = computed(() => {
         <app-icon
           v-if="icon"
           :name="icon"
+          size="1.25em"
           class="me-1 my-2"
         />
         <span :class="labelClassList">{{ label }}</span>
