@@ -133,6 +133,7 @@ defineExpose({
       <app-icon
         v-if="showPlaceholderIcon"
         :name="placeholderIcon"
+        size="1.25em"
         class="form-control-tag-input__form__icon text-secondary ms-2 me-1"
       />
       <b-input
