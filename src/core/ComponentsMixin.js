@@ -4,6 +4,10 @@ import Murmur from '@icij/murmur-next'
 
 import { slugger } from '@/utils/strings'
 
+/**
+ * Prefix used to identify Murmur components in findComponent/getComponent calls.
+ * @constant {string}
+ */
 const MURMUR_PREFIX = 'murmur/'
 
 /**
