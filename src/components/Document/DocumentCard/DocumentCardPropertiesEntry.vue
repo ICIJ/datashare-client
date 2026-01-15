@@ -38,7 +38,7 @@ const display = computed(() => {
       :title="display"
     >
       <app-icon
-        size="1em"
+        size="1.25em"
         :name="icon ?? items[property].icon ?? property"
       />
     </div>
