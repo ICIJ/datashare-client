@@ -2,6 +2,8 @@
 import { computed, ref, onBeforeMount, toRef, useTemplateRef, watch } from 'vue'
 import { useElementVisibility, whenever } from '@vueuse/core'
 
+import IPhEyeSlash from '~icons/ph/eye-slash'
+import IPhEye from '~icons/ph/eye'
 import DocumentThumbnailImage from '@/components/Document/DocumentThumbnail/DocumentThumbnailImage'
 import DocumentThumbnailPlaceholder from '@/components/Document/DocumentThumbnail/DocumentThumbnailPlaceholder'
 import DocumentThumbnailOverlay from '@/components/Document/DocumentThumbnail/DocumentThumbnailOverlay'
@@ -96,7 +98,7 @@ const thumbnailUrl = computed(() => {
 })
 
 const alt = computed(() => `${props.document.basename} preview`)
-const overlayIcon = computed(() => (errored.value ? 'eye-slash' : 'eye'))
+const overlayIcon = computed(() => (errored.value ? IPhEyeSlash : IPhEye))
 
 const activated = computed(() => canPreview(props.document))
 const showImage = computed(() => !!thumbnail.value)
