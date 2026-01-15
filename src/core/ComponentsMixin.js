@@ -4,6 +4,8 @@ import Murmur from '@icij/murmur-next'
 
 import { slugger } from '@/utils/strings'
 
+const MURMUR_PREFIX = 'murmur/'
+
 /**
  * Mixin class extending the core to add helpers for components.
  * @mixin
@@ -41,8 +43,8 @@ const ComponentMixin = superclass =>
      * @returns {Promise<object|null>} - The found Murmur component, or null if not a Murmur component or not found.
      */
     findMurmurComponentByPrefix(name) {
-      if (name.toLowerCase().startsWith('murmur/')) {
-        const murmurName = name.slice(7) // Remove 'Murmur/' prefix
+      if (name.toLowerCase().startsWith(MURMUR_PREFIX)) {
+        const murmurName = name.slice(MURMUR_PREFIX.length)
         return Promise.resolve(this.getMurmurComponent(murmurName))
       }
       return Promise.resolve(null)
@@ -55,7 +57,7 @@ const ComponentMixin = superclass =>
      * @returns {Promise<object|null>} - The found component, or null if not found.
      */
     findLocalComponentByName(name) {
-      const key = find(keys(this.lazyComponents), (key) => this.sameComponentNames(name, key))
+      const key = find(keys(this.lazyComponents), key => this.sameComponentNames(name, key))
       if (key) {
         return this.lazyComponents[key]?.().then(iteratee('default'))
       }
@@ -68,7 +70,10 @@ const ComponentMixin = superclass =>
      * @returns {Array<Function>} - Array of finder functions.
      */
     get componentFinders() {
-      return [(name) => this.findMurmurComponentByPrefix(name), (name) => this.findLocalComponentByName(name)]
+      return [
+        name => this.findMurmurComponentByPrefix(name),
+        name => this.findLocalComponentByName(name)
+      ]
     }
 
     /**
