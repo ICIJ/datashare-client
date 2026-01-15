@@ -15,9 +15,9 @@ import Hook from '@/components/Hook/Hook'
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
 import ProjectLabel from '@/components/Project/ProjectLabel'
 import ProjectThumbnail from '@/components/Project/ProjectThumbnail'
-import ModeLocalOnly from '@/components/Mode/ModeLocalOnly'
 import ModeServerOnly from '@/components/Mode/ModeServerOnly.vue'
 import DisplayRoles from '@/components/Display/DisplayRoles.vue'
+import RestrictedOnly from '@/components/Mode/RestrictedOnly.vue'
 
 const { breakpointDown } = useBreakpoints()
 const router = useRouter()
@@ -68,6 +68,7 @@ const promptProjectDeletion = async () => {
     router.push({ name: 'project.list' })
   }
 }
+
 </script>
 
 <template>
@@ -91,7 +92,10 @@ const promptProjectDeletion = async () => {
           :bind="{ project }"
         />
       </h3>
-      <mode-local-only>
+      <RestrictedOnly
+        admin
+        :project="project"
+      >
         <button-row-action-delete
           class="ms-auto"
           size="md"
@@ -107,7 +111,7 @@ const promptProjectDeletion = async () => {
           :to="toEdit"
           :label="t('projectJumbotron.edit')"
         />
-      </mode-local-only>
+      </RestrictedOnly>
       <project-jumbotron-pin v-model:pinned="pinned" />
     </div>
     <div class="project-jumbotron__content d-flex gap-3 align-items-start">
