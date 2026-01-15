@@ -35,6 +35,20 @@ const ComponentMixin = superclass =>
     }
 
     /**
+     * Check if name has "Murmur/" prefix and return the component from @icij/murmur-next.
+     * @function
+     * @param {string} name - The name of the component to retrieve, potentially with "Murmur/" prefix.
+     * @returns {object|null} - The found Murmur component, or null if not a Murmur component or not found.
+     */
+    findMurmurComponentByPrefix(name) {
+      if (name.toLowerCase().startsWith('murmur/')) {
+        const murmurName = name.slice(7) // Remove 'Murmur/' prefix
+        return this.getMurmurComponent(murmurName)
+      }
+      return null
+    }
+
+    /**
      * Asynchronously get a component from the lazyComponents object based on its name.
      * Supports "Murmur/" prefix to retrieve components from @icij/murmur-next.
      * @async
@@ -44,13 +58,12 @@ const ComponentMixin = superclass =>
      */
     async getComponent(name) {
       // Check for Murmur prefix to retrieve components from @icij/murmur-next
-      if (name.startsWith('Murmur/')) {
-        const murmurName = name.slice(7) // Remove 'Murmur/' prefix
-        const component = this.getMurmurComponent(murmurName)
-        if (component) {
-          return component
-        }
-        throw new Error(`Cannot find Murmur component '${murmurName}'`)
+      const murmurComponent = this.findMurmurComponentByPrefix(name)
+      if (murmurComponent) {
+        return murmurComponent
+      }
+      if (name.toLowerCase().startsWith('murmur/')) {
+        throw new Error(`Cannot find Murmur component '${name.slice(7)}'`)
       }
       // Find the component name key in lazyComponents object that matches the given name when slugified.
       const key = find(keys(this.lazyComponents), key => this.sameComponentNames(name, key))
