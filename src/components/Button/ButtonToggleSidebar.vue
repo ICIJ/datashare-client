@@ -27,7 +27,7 @@ const icon = computed(() => {
   <button-icon
     tooltip-placement="right"
     :icon-left="icon"
-    icon-left-size="1.2rem"
+    icon-left-size="1.25rem"
     square
     hide-label
     variant="primary"
