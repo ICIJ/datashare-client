@@ -38,18 +38,41 @@ const ComponentMixin = superclass =>
      * Check if name has "Murmur/" prefix and return the component from @icij/murmur-next.
      * @function
      * @param {string} name - The name of the component to retrieve, potentially with "Murmur/" prefix.
-     * @returns {object|null} - The found Murmur component, or null if not a Murmur component or not found.
+     * @returns {Promise<object|null>} - The found Murmur component, or null if not a Murmur component or not found.
      */
     findMurmurComponentByPrefix(name) {
       if (name.toLowerCase().startsWith('murmur/')) {
         const murmurName = name.slice(7) // Remove 'Murmur/' prefix
-        return this.getMurmurComponent(murmurName)
+        return Promise.resolve(this.getMurmurComponent(murmurName))
       }
-      return null
+      return Promise.resolve(null)
     }
 
     /**
-     * Asynchronously get a component from the lazyComponents object based on its name.
+     * Find a component in the lazyComponents object by its name.
+     * @function
+     * @param {string} name - The name of the component to retrieve.
+     * @returns {Promise<object|null>} - The found component, or null if not found.
+     */
+    findLocalComponentByName(name) {
+      const key = find(keys(this.lazyComponents), (key) => this.sameComponentNames(name, key))
+      if (key) {
+        return this.lazyComponents[key]?.().then(iteratee('default'))
+      }
+      return Promise.resolve(null)
+    }
+
+    /**
+     * List of component finder functions to try in order.
+     * Each finder takes a name and returns a Promise<object|null>.
+     * @returns {Array<Function>} - Array of finder functions.
+     */
+    get componentFinders() {
+      return [(name) => this.findMurmurComponentByPrefix(name), (name) => this.findLocalComponentByName(name)]
+    }
+
+    /**
+     * Asynchronously get a component by trying each finder in order.
      * Supports "Murmur/" prefix to retrieve components from @icij/murmur-next.
      * @async
      * @function
@@ -57,21 +80,12 @@ const ComponentMixin = superclass =>
      * @returns {Promise<object|Error>} - A promise that resolves with the found component object, or rejects with an Error if not found.
      */
     async getComponent(name) {
-      // Check for Murmur prefix to retrieve components from @icij/murmur-next
-      const murmurComponent = this.findMurmurComponentByPrefix(name)
-      if (murmurComponent) {
-        return murmurComponent
+      for (const finder of this.componentFinders) {
+        const component = await finder(name)
+        if (component) {
+          return component
+        }
       }
-      if (name.toLowerCase().startsWith('murmur/')) {
-        throw new Error(`Cannot find Murmur component '${name.slice(7)}'`)
-      }
-      // Find the component name key in lazyComponents object that matches the given name when slugified.
-      const key = find(keys(this.lazyComponents), key => this.sameComponentNames(name, key))
-      // If a matching key is found, return the component object from the lazyComponents object.
-      if (key) {
-        return this.lazyComponents[key]?.().then(iteratee('default'))
-      }
-      // Otherwise, return an Error indicating that the component cannot be found.
       throw new Error(`Cannot find component '${name}'`)
     }
 
