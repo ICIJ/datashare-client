@@ -80,8 +80,9 @@ describe('ComponentsMixin', () => {
       expect.assertions(1)
       try {
         await core.getComponent('Murmur/NonExistentComponent')
-      } catch (e) {
-        expect(e.message).toEqual("Cannot find component 'Murmur/NonExistentComponent'")
+      }
+      catch (e) {
+        expect(e.message).toEqual('Cannot find component \'Murmur/NonExistentComponent\'')
       }
     })
 
