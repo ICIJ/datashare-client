@@ -39,6 +39,7 @@ defineProps({
   <div class="document-metadata">
     <app-icon
       class="document-metadata__icon"
+      size="1.25em"
       :name="icon"
     />
     <div class="document-metadata__label">
