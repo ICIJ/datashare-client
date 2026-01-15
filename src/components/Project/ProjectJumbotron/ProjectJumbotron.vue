@@ -147,7 +147,9 @@ const promptProjectDeletion = async () => {
               v-if="updateDate"
               class="text-nowrap"
             >
-              <app-icon><i-ph-calendar-check /></app-icon>
+              <app-icon>
+                <i-ph-calendar-check />
+              </app-icon>
               {{ t('projectJumbotron.updateDate') }}
               <display-datetime :value="updateDate" />
             </span>
