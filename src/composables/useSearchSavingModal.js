@@ -1,26 +1,21 @@
-import { useModalController } from 'bootstrap-vue-next'
 import { h } from 'vue'
+import { useModal } from 'bootstrap-vue-next'
 
 import SearchSavingModal from '@/components/Search/SearchSavingModal'
 
 export function useSearchSavingModal() {
-  const modalController = useModalController()
+  const { create, hide } = useModal()
 
   function show(event = null) {
     return new Promise((resolve) => {
-      const props = { event }
       const component = h(SearchSavingModal, {
         onOk: resolve,
         onClose: resolve,
         onCancel: resolve
       })
 
-      modalController.create({ component, props })
+      create({ component, event }).show()
     })
-  }
-
-  function hide() {
-    return modalController.hide()
   }
 
   return { show, hide }

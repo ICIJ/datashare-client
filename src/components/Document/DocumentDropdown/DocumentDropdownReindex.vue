@@ -1,17 +1,15 @@
 <script setup>
-import { useModalController } from 'bootstrap-vue-next'
+import { useModal } from 'bootstrap-vue-next'
 import { AppIcon } from '@icij/murmur-next'
 
 import { useDocument } from '@/composables/useDocument'
 import DocumentDropdownReindexModal from '@/components/Document/DocumentDropdown/DocumentDropdownReindexModal'
 
 const { document } = useDocument()
-const modalController = useModalController()
+const { create } = useModal()
 
 function showModal() {
-  const component = DocumentDropdownReindexModal
-  const props = { document }
-  modalController.create({ component, props })
+  create({ component: DocumentDropdownReindexModal, document }).show()
 }
 </script>
 

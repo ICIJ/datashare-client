@@ -1,7 +1,7 @@
 import { computed, inject, provide, useId, watch, h } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { find, matches, overSome } from 'lodash'
-import { useModalController } from 'bootstrap-vue-next'
+import { useModal } from 'bootstrap-vue-next'
 
 import { useCore } from '@/composables/useCore'
 import { useWait } from '@/composables/useWait'
@@ -123,8 +123,7 @@ export const useDocument = function (element) {
 }
 
 export const useDocumentModal = function (document) {
-  const modalController = useModalController()
-  const props = { document }
+  const { create, hide } = useModal()
 
   function show() {
     return new Promise((resolve) => {
@@ -134,12 +133,8 @@ export const useDocumentModal = function (document) {
         onCancel: resolve
       })
 
-      modalController.create({ component, props })
+      create({ component, document }).show()
     })
-  }
-
-  function hide() {
-    return modalController.hide()
   }
 
   return { show, hide }

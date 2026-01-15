@@ -1,10 +1,10 @@
 import { h } from 'vue'
-import { useModalController } from 'bootstrap-vue-next'
+import { useModal } from 'bootstrap-vue-next'
 
 import DocumentModal from '@/components/Document/DocumentModal'
 
 export function useDocumentModal() {
-  const modalController = useModalController()
+  const { create, hide } = useModal()
 
   function show(index, id, routing, q = null) {
     const props = { index, id, routing, q }
@@ -16,12 +16,8 @@ export function useDocumentModal() {
         onCancel: resolve
       })
 
-      modalController.create({ component, props })
+      return create({ component, ...props }).show()
     })
-  }
-
-  function hide() {
-    return modalController.hide()
   }
 
   return { show, hide }

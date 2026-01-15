@@ -1,10 +1,10 @@
 import { h } from 'vue'
-import { useModalController } from 'bootstrap-vue-next'
+import { useModal } from 'bootstrap-vue-next'
 
 import AppModalPrompt from '@/components/AppModal/AppModalPrompt'
 
 export const usePromptModal = (Component = AppModalPrompt) => {
-  const modalController = useModalController()
+  const { create, hide } = useModal()
 
   function show(props = { inputAutofocus: true }) {
     return new Promise((resolve) => {
@@ -15,12 +15,8 @@ export const usePromptModal = (Component = AppModalPrompt) => {
         onSubmit: resolve
       })
 
-      modalController.create({ component, props })
+      create({ component, ...props }).show()
     })
-  }
-
-  function hide() {
-    return modalController.hide()
   }
 
   async function prompt(props) {
