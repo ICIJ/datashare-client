@@ -6,14 +6,26 @@ const DEFAULT_ROLE = 'VIEWER'
 export function usePolicies() {
   const config = useConfig()
   const userPolicies = computed(() => config.get('policies', []))
+
   function getRolesByProject(projectName) {
-    return find(userPolicies.value, p => p.projectId === projectName)?.roles ?? [DEFAULT_ROLE]
+    return getPolicyByProject(projectName)?.roles ?? [DEFAULT_ROLE]
   }
+
+  function getPolicyByProject(projectName) {
+    return find(userPolicies.value, p => p.projectId === projectName)
+  }
+
   function formatRole(role) {
     return upperFirst(camelCase(role))
   }
+
   function formatRoles(roles) {
     return roles.map(formatRole).join(', ')
   }
-  return { getRolesByProject, formatRole, formatRoles }
+
+  function isProjectAdmin(projectName) {
+    return getPolicyByProject(projectName)?.admin === true
+  }
+
+  return { getRolesByProject, formatRole, formatRoles, isProjectAdmin }
 }

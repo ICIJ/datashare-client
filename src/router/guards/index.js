@@ -2,10 +2,13 @@ import { get, isString, isFunction } from 'lodash'
 
 import { useAppStore } from '@/store/modules'
 import { useNProgress } from '@/composables/useNProgress'
+import { usePolicies } from '@/composables/usePolicies.js'
+import useMode from '@/composables/useMode.js'
 
 export default (core) => {
   const { router, auth, config, i18n } = core
-
+  const { isServer } = useMode(core)
+  const { getRolesByProject } = usePolicies()
   async function checkUserAuthentication(to, from, next) {
     const appStore = useAppStore()
     try {
@@ -61,6 +64,22 @@ export default (core) => {
     next()
   }
 
+  function checkUserRoles({ meta }, _from, next) {
+    if (!isServer.value) {
+      return next()
+    }
+    const currentRoles = getRolesByProject('local-datashare')
+    const allowedRoles = get(meta, 'allowedRoles', [])
+    const hasOneRole = allowedRoles.some(role => currentRoles.includes(role))
+    if (allowedRoles.length === 0 || hasOneRole) {
+      next()
+    }
+    else {
+      const title = i18n.global.t('error.notFound')
+      next({ name: 'error', state: { title } })
+    }
+  }
+
   function checkMode({ meta }, _from, next) {
     const currentMode = config.get('mode')
     const allowedModes = get(meta, 'allowedModes', [])
@@ -84,6 +103,7 @@ export default (core) => {
   }
 
   router.beforeEach(checkMode)
+  router.beforeEach(checkUserRoles)
   router.beforeEach(checkUserAuthentication)
   router.beforeEach(checkUserProjects)
   router.beforeEach(preparePageContext)

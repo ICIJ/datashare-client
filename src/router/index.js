@@ -408,7 +408,7 @@ export const routes = [
                 meta: {
                   icon: PhPencilSimple,
                   title: 'projectViewEdit.title',
-                  allowedModes: [MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]
+                  allowedRoles: ['ADMIN']
                 }
               }
             ]
