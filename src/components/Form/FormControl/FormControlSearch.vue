@@ -135,8 +135,9 @@ defineExpose({ focus, blur, clear: clearInput })
           <app-icon
             v-if="!noIcon"
             :name="icon"
-            square
             :spin="loading"
+            square
+            size="1.25em"
           />
         </slot>
       </span>
