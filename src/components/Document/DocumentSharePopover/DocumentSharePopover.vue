@@ -1,32 +1,43 @@
 <script setup>
 import { ref, useTemplateRef, computed, nextTick } from 'vue'
+import { useParentElement, whenever } from '@vueuse/core'
 
 import DocumentSharePopoverForm from './DocumentSharePopoverForm'
 
 import AppPopover from '@/components/AppPopover/AppPopover'
-import { useParentElement } from '@vueuse/core'
 
 /**
  * Toggle value when the popover is open
  */
 const modelValue = defineModel({ type: Boolean })
 
-defineProps({
+const props = defineProps({
   /**
    * The selected document
    */
   document: {
     type: Object
+  },
+  /**
+   * Lazy mount the popover only on first activation
+   */
+  lazy: {
+    type: Boolean,
+    default: true
   }
 })
 
 const popoverRef = useTemplateRef('popover')
 
 // Lazy rendering: only mount the popover after it's been opened once
-const mounted = ref(false)
+const activated = ref(false)
+const mounted = computed(() => !props.lazy || activated.value)
+
+// Activate when modelValue becomes true
+whenever(modelValue, () => (activated.value = true), { once: true })
 
 async function activate() {
-  mounted.value = true
+  activated.value = true
   await nextTick()
   modelValue.value = true
 }
@@ -37,7 +48,7 @@ defineExpose({
     popoverRef.value?.hide()
   },
   async show() {
-    mounted.value = true
+    activated.value = true
     await nextTick()
     popoverRef.value?.show()
   }

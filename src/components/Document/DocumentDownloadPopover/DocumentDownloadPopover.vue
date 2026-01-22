@@ -1,5 +1,6 @@
 <script setup>
-import { ref, useTemplateRef, nextTick } from 'vue'
+import { ref, useTemplateRef, nextTick, computed } from 'vue'
+import { whenever } from '@vueuse/core'
 import { AppIcon, ButtonIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 import IPhDownloadSimple from '~icons/ph/download-simple'
@@ -22,6 +23,13 @@ const props = defineProps({
    */
   document: {
     type: Object
+  },
+  /**
+   * Lazy mount the popover only on first activation
+   */
+  lazy: {
+    type: Boolean,
+    default: true
   }
 })
 const { t } = useI18n()
@@ -41,10 +49,14 @@ const {
 const popoverRef = useTemplateRef('popover')
 
 // Lazy rendering: only mount the popover after it's been opened once
-const mounted = ref(false)
+const activated = ref(false)
+const mounted = computed(() => !props.lazy || activated.value)
+
+// Activate when modelValue becomes true
+whenever(modelValue, () => (activated.value = true), { once: true })
 
 async function activate() {
-  mounted.value = true
+  activated.value = true
   await nextTick()
   modelValue.value = true
 }
@@ -55,7 +67,7 @@ defineExpose({
     popoverRef.value?.hide()
   },
   async show() {
-    mounted.value = true
+    activated.value = true
     await nextTick()
     popoverRef.value?.show()
   }
