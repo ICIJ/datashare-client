@@ -18,8 +18,16 @@ const _separator = '/'
 export default class Document extends EsDoc {
   static esName = 'Document'
 
-  constructor(raw, parent = null, root = null, position = 0) {
-    super(raw)
+  /**
+   * Creates a Document instance.
+   * @param {Object} raw - The raw ES document data
+   * @param {Object|null} [parent=null] - Parent document raw data
+   * @param {Object|null} [root=null] - Root document raw data
+   * @param {number} [position=0] - Position in search results
+   * @param {Object} [options={}] - Options passed to EsDoc
+   */
+  constructor(raw, parent = null, root = null, position = 0, options = {}) {
+    super(raw, options)
     this.parent = parent
     this.root = root
     this.position = position
@@ -71,7 +79,8 @@ export default class Document extends EsDoc {
   }
 
   set parent(parent) {
-    this[_parent] = parent ? new Document(parent) : null
+    // Skip cloning for parent refs - they're read-only
+    this[_parent] = parent ? new Document(parent, null, null, 0, { clone: false }) : null
   }
 
   get parent() {
@@ -79,7 +88,8 @@ export default class Document extends EsDoc {
   }
 
   set root(root) {
-    this[_root] = root ? new Document(root) : null
+    // Skip cloning for root refs - they're read-only
+    this[_root] = root ? new Document(root, null, null, 0, { clone: false }) : null
   }
 
   get root() {
