@@ -56,8 +56,28 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     return find(settings.searchFields, { key: field.value }).fields
   })
 
+  // Cache for instantiated filters - only recreate when filter definitions change
+  const filterCache = new Map()
+
   const instantiatedFilters = computed(() => {
-    return orderArray(filters.value.map(instantiateFilter), 'order', 'asc')
+    const currentFilters = filters.value
+    const result = []
+
+    for (const filterDef of currentFilters) {
+      // Use filter name as cache key since definitions are stable
+      const cacheKey = filterDef.options?.name
+      if (cacheKey && filterCache.has(cacheKey)) {
+        result.push(filterCache.get(cacheKey))
+      } else {
+        const instance = instantiateFilter(filterDef)
+        if (cacheKey) {
+          filterCache.set(cacheKey, instance)
+        }
+        result.push(instance)
+      }
+    }
+
+    return orderArray(result, 'order', 'asc')
   })
 
   const activeFilters = computed(() => {
@@ -100,12 +120,28 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     }
   })
 
+  // Stable stamp that only changes when explicitly refreshed via refreshStamp()
+  const queryStamp = ref(generateStamp())
+
   const toRouteQueryWithStamp = computed(() => {
-    // A random string of 6 chars
-    const seed = range(6).map(() => random(97, 122))
-    const stamp = String.fromCharCode.apply(null, seed)
-    return { ...toRouteQuery.value, stamp }
+    return { ...toRouteQuery.value, stamp: queryStamp.value }
   })
+
+  /**
+   * Generates a random 6-character stamp string.
+   * @returns {string} A random stamp
+   */
+  function generateStamp() {
+    const seed = range(6).map(() => random(97, 122))
+    return String.fromCharCode.apply(null, seed)
+  }
+
+  /**
+   * Refreshes the query stamp to force a new search even with same parameters.
+   */
+  function refreshStamp() {
+    queryStamp.value = generateStamp()
+  }
 
   const toSearchParams = computed(() => {
     return {
@@ -674,10 +710,10 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * @returns {Promise} - A promise that resolves to the root documents.
    */
   async function searchRootDocuments(raw) {
-    const embedded = get(raw, 'hits.hits', []).filter(hit => hit._source.extractionLevel > 0)
-    const ids = compact(embedded.map(hit => hit._source.rootDocument))
+    const embedded = get(raw, 'hits.hits', []).filter((hit) => hit._source.extractionLevel > 0)
+    const ids = uniq(compact(embedded.map((hit) => hit._source.rootDocument)))
     const source = ['contentType', 'contentLength', 'title', 'path']
-    return ids.length ? api.elasticsearch.ids(indices.value.join(','), ids, source) : EsDocList.none()
+    return ids.length ? api.elasticsearch.getDocumentsByIds(indices.value.join(','), ids, source) : EsDocList.none()
   }
 
   /**
@@ -981,6 +1017,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     includeFilter,
     toggleFilter,
     refresh,
+    refreshStamp,
     searchDocuments,
     searchRootDocuments,
     updateFromRouteQuery,
