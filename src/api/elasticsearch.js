@@ -65,34 +65,31 @@ export function datasharePlugin(Client) {
     category = null,
     filterToken = null
   ) {
+    const frequencySort = {
+      _script: {
+        type: 'number',
+        script: { source: "doc['offsets'].size()" },
+        order: 'desc'
+      }
+    }
+
+    const mentionSort = { mentionNorm: 'asc' }
+
     const body = bodybuilder()
       .size(size)
       .from(from)
-      .query('parent_id', {
-        type: 'NamedEntity',
-        id: docId
-      })
-      .rawOption('runtime_mappings', {
-        frequency: {
-          type: 'long',
-          script: {
-            source: 'emit(doc.offsets.length)'
-          }
-        }
-      })
-      .sort([{ frequency: 'desc' }, { mentionNorm: 'asc' }])
-      .addQuery('bool', (bool) => {
-        if (filterToken) {
-          const fields = ['mentionNorm', 'mention']
-          const query = `*${filterToken}*`
-          bool.orQuery('query_string', { fields, query })
-        }
-        return bool
-      })
+      .query('parent_id', { type: 'NamedEntity', id: docId })
+      .sort([frequencySort, mentionSort])
       .filter('term', 'isHidden', 'false')
       .filter('term', 'category', category)
-      .build()
-    return this._search({ index, routing, body })
+
+    if (filterToken) {
+      const fields = ['mentionNorm', 'mention']
+      const query = `*${filterToken}*`
+      body.query('query_string', { fields, query })
+    }
+
+    return this._search({ index, routing, body: body.build() })
   }
 
   Client.prototype.addQueryToFilter = function (query, body, fields = []) {
