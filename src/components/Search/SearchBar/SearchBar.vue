@@ -248,6 +248,8 @@ export default {
       this.searchStore.setField(this.field)
       this.searchStore.setQuery(this.query)
       this.searchStore.setFrom(0)
+      // Generate a new stamp to force refresh even with same query
+      this.searchStore.refreshStamp()
       const query = this.searchStore.toRouteQueryWithStamp
       this.$router.push({ name: 'search', query })
     },
