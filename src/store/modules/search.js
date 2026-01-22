@@ -16,7 +16,7 @@ import {
   uniq
 } from 'lodash'
 import lucene from 'lucene'
-import { ref, computed, toRaw } from 'vue'
+import { ref, computed, toRaw, shallowReactive, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
 import EsDocList from '@/api/resources/EsDocList'
@@ -56,28 +56,33 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     return find(settings.searchFields, { key: field.value }).fields
   })
 
-  // Cache for instantiated filters - only recreate when filter definitions change
-  const filterCache = new Map()
+  // Reactive map to hold filter instances - only updates when filter definitions change
+  const filterInstances = shallowReactive(new Map())
+
+  // Watch filters and sync instances reactively
+  watch(
+    filters,
+    (newFilters) => {
+      const newNames = new Set(newFilters.map((f) => f.options?.name).filter(Boolean))
+      // Remove filters that no longer exist
+      for (const name of filterInstances.keys()) {
+        if (!newNames.has(name)) {
+          filterInstances.delete(name)
+        }
+      }
+      // Add new filters (existing ones are kept)
+      for (const filterDef of newFilters) {
+        const name = filterDef.options?.name
+        if (name && !filterInstances.has(name)) {
+          filterInstances.set(name, instantiateFilter(filterDef))
+        }
+      }
+    },
+    { immediate: true }
+  )
 
   const instantiatedFilters = computed(() => {
-    const currentFilters = filters.value
-    const result = []
-
-    for (const filterDef of currentFilters) {
-      // Use filter name as cache key since definitions are stable
-      const cacheKey = filterDef.options?.name
-      if (cacheKey && filterCache.has(cacheKey)) {
-        result.push(filterCache.get(cacheKey))
-      } else {
-        const instance = instantiateFilter(filterDef)
-        if (cacheKey) {
-          filterCache.set(cacheKey, instance)
-        }
-        result.push(instance)
-      }
-    }
-
-    return orderArray(result, 'order', 'asc')
+    return orderArray([...filterInstances.values()], 'order', 'asc')
   })
 
   const activeFilters = computed(() => {
