@@ -20,7 +20,15 @@ import IPhFiles from '~icons/ph/files'
 import { useViewProperties } from '@/composables/useViewProperties'
 import { SORT_TYPE_KEY, useViewSettings } from '@/composables/useViewSettings'
 
+// Module-level cache for memoized search properties
+let cachedProperties = null
+
 export function useSearchProperties() {
+  // Return cached properties if available
+  if (cachedProperties) {
+    return cachedProperties
+  }
+
   const { t } = useI18n()
   const { propertyItem } = useViewProperties()
   const { fieldsToSortByOptions, fieldsToPropertiesOptions } = useViewSettings()
@@ -160,5 +168,8 @@ export function useSearchProperties() {
   const sortByOptions = fieldsToSortByOptions([relevance, ...fields, extractionDate])
   const propertiesOptions = fieldsToPropertiesOptions(fields)
 
-  return { items, fields, propertiesOptions, sortByOptions }
+  // Cache the result for subsequent calls
+  cachedProperties = { items, fields, propertiesOptions, sortByOptions }
+
+  return cachedProperties
 }
