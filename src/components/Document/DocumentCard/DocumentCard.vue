@@ -90,6 +90,7 @@ const showTitle = computed(() => props.properties?.includes('title'))
         :document="document"
         size="xs"
         crop
+        lazy
         clickable
         :active="hover"
         @click="showDocumentViewerModal"
