@@ -82,6 +82,7 @@ export function datasharePlugin(Client) {
       .sort([frequencySort, mentionSort])
       .filter('term', 'isHidden', 'false')
       .filter('term', 'category', category)
+      .rawOption('track_total_hits', true)
 
     if (filterToken) {
       const fields = ['mentionNorm', 'mention']
