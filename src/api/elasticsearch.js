@@ -68,7 +68,7 @@ export function datasharePlugin(Client) {
     const frequencySort = {
       _script: {
         type: 'number',
-        script: { source: "doc['offsets'].size()" },
+        script: { source: 'doc[\'offsets\'].size()' },
         order: 'desc'
       }
     }
