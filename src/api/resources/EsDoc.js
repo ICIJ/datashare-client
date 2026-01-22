@@ -3,8 +3,14 @@ import { cloneDeep, get, matches, set } from 'lodash'
 const _raw = '_RAW'
 
 export default class EsDoc {
-  constructor(raw = {}) {
-    this[_raw] = cloneDeep(raw)
+  /**
+   * Creates an EsDoc instance.
+   * @param {Object} raw - The raw ES document data
+   * @param {Object} [options={}] - Options
+   * @param {boolean} [options.clone=true] - Whether to deep clone the raw data (set to false for read-only refs)
+   */
+  constructor(raw = {}, { clone = true } = {}) {
+    this[_raw] = clone ? cloneDeep(raw) : raw
   }
 
   get(path, defaultValue) {
