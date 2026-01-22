@@ -42,6 +42,7 @@ const { t } = useI18n()
   <template v-else-if="entries.length">
     <document-row
       v-for="entry in entries"
+      v-memo="[entry.id, selectionValues[entry.id]]"
       :key="entry.id"
       v-model:selected="selectionValues[entry.id]"
       :document="entry"
