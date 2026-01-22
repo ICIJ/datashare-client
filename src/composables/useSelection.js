@@ -4,6 +4,9 @@ export function useSelection(initialSelection, initialAll = []) {
   const selection = initialSelection ? toRef(initialSelection) : ref([])
   const all = toRef(initialAll)
 
+  // Derived Set for O(1) lookups - stays in sync with selection array
+  const selectionSet = computed(() => new Set(selection.value))
+
   const selectionValues = computed(() => {
     return new Proxy(Object.create(null), {
       get(_, value) {
@@ -19,7 +22,8 @@ export function useSelection(initialSelection, initialAll = []) {
   })
 
   const addToSelection = (value) => {
-    if (!selection.value.includes(value)) {
+    // Use Set for O(1) lookup
+    if (!selectionSet.value.has(value)) {
       selection.value.push(value)
     }
   }
@@ -41,7 +45,8 @@ export function useSelection(initialSelection, initialAll = []) {
   }
 
   const isSelected = (value) => {
-    return selection.value.includes(value)
+    // O(1) lookup using Set instead of O(n) array.includes()
+    return selectionSet.value.has(value)
   }
 
   const indeterminate = computed({
