@@ -32,7 +32,7 @@ export default class EsDoc {
   }
 
   get type() {
-    return this.raw_.type
+    return this.raw._source.type
   }
 
   get eq() {
