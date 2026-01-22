@@ -18,7 +18,7 @@ import ProjectThumbnail from '@/components/Project/ProjectThumbnail'
 import ModeServerOnly from '@/components/Mode/ModeServerOnly.vue'
 import DisplayRoles from '@/components/Display/DisplayRoles.vue'
 import RestrictedOnly from '@/components/Mode/RestrictedOnly.vue'
-import ModeLocalOnly from "@/components/Mode/ModeLocalOnly.vue";
+import ModeLocalOnly from '@/components/Mode/ModeLocalOnly.vue'
 
 const { breakpointDown } = useBreakpoints()
 const router = useRouter()
