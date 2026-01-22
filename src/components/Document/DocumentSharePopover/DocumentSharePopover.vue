@@ -1,5 +1,5 @@
 <script setup>
-import { useTemplateRef, computed } from 'vue'
+import { ref, useTemplateRef, computed, nextTick } from 'vue'
 
 import DocumentSharePopoverForm from './DocumentSharePopoverForm'
 
@@ -22,13 +22,24 @@ defineProps({
 
 const popoverRef = useTemplateRef('popover')
 
+// Lazy rendering: only mount the popover after it's been opened once
+const mounted = ref(false)
+
+async function activate() {
+  mounted.value = true
+  await nextTick()
+  modelValue.value = true
+}
+
 defineExpose({
   popoverRef,
   hide() {
-    popoverRef.value.hide()
+    popoverRef.value?.hide()
   },
-  show() {
-    popoverRef.value.show()
+  async show() {
+    mounted.value = true
+    await nextTick()
+    popoverRef.value?.show()
   }
 })
 
@@ -43,20 +54,25 @@ const teleportTo = computed(() => {
 
 <template>
   <app-popover
+    v-if="mounted"
     ref="popover"
     v-model="modelValue"
     hide-header
     class="document-share-popover"
     :teleport-to="teleportTo"
   >
-    <template #target="binding">
-      <slot
-        name="target"
-        v-bind="binding"
-      />
+    <template #target>
+      <slot name="target" />
     </template>
     <document-share-popover-form :document="document" />
   </app-popover>
+  <!-- Render target independently when popover not yet mounted -->
+  <span
+    v-else
+    @click="activate"
+  >
+    <slot name="target" />
+  </span>
 </template>
 
 <style lang="scss">
