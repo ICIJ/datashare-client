@@ -82,12 +82,12 @@ export const useAppStore = defineStore(
         },
         batchSearchQueries: {
           orderBy: ['query', 'asc'],
-          perPage: '100',
+          perPage: '25',
           properties: ['query', 'count']
         },
         batchSearchResults: {
           orderBy: ['doc_nb', 'asc'],
-          perPage: '100',
+          perPage: '25',
           properties: ['query', 'documentNumber', 'documentName', 'contentType', 'project']
         },
         documentView: {
