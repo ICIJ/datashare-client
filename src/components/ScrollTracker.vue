@@ -49,8 +49,8 @@ export default {
       this.icon = markRaw(this.isTargetAbove() ? IPhArrowFatDownFill : IPhArrowFatUpFill)
       this.visible = true
       this.setTimeout()
-      // Hide the tracker on scroll
-      window.addEventListener('scroll', this.hide)
+      // Hide the tracker on scroll - passive for better scroll performance
+      window.addEventListener('scroll', this.hide, { passive: true })
     },
     hide() {
       this.visible = false
