@@ -46,11 +46,11 @@ export default class FilterDateRange extends FilterDate {
   static getIntervalOption(interval = this.interval) {
     switch (interval) {
       case 'day':
-        return { interval: '1d', format: 'yyyy-MM-dd', missing: '1970-01-01' }
+        return { fixed_interval: '1d', format: 'yyyy-MM-dd', missing: '1970-01-01' }
       case 'month':
-        return { interval: '1M', format: 'yyyy-MM', missing: '1970-01' }
+        return { calendar_interval: '1M', format: 'yyyy-MM', missing: '1970-01' }
       default:
-        return { interval: '1y', format: 'yyyy', missing: '1970' }
+        return { calendar_interval: '1y', format: 'yyyy', missing: '1970' }
     }
   }
 
