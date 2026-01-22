@@ -16,7 +16,7 @@ import {
   uniq
 } from 'lodash'
 import lucene from 'lucene'
-import { ref, computed, toRaw, shallowReactive, watch } from 'vue'
+import { ref, computed, toRaw, shallowReactive } from 'vue'
 import { useRouter } from 'vue-router'
 
 import EsDocList from '@/api/resources/EsDocList'
@@ -56,33 +56,45 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     return find(settings.searchFields, { key: field.value }).fields
   })
 
-  // Reactive map to hold filter instances - only updates when filter definitions change
-  const filterInstances = shallowReactive(new Map())
-
-  // Watch filters and sync instances reactively
-  watch(
-    filters,
-    (newFilters) => {
-      const newNames = new Set(newFilters.map((f) => f.options?.name).filter(Boolean))
-      // Remove filters that no longer exist
-      for (const name of filterInstances.keys()) {
-        if (!newNames.has(name)) {
-          filterInstances.delete(name)
-        }
-      }
-      // Add new filters (existing ones are kept)
-      for (const filterDef of newFilters) {
-        const name = filterDef.options?.name
-        if (name && !filterInstances.has(name)) {
-          filterInstances.set(name, instantiateFilter(filterDef))
-        }
-      }
-    },
-    { immediate: true }
-  )
+  // Cache for instantiated filters - reuses existing instances when filter definitions haven't changed
+  const filterCache = shallowReactive(new Map())
 
   const instantiatedFilters = computed(() => {
-    return orderArray([...filterInstances.values()], 'order', 'asc')
+    const currentFilters = filters.value
+    const result = []
+    const currentNames = new Set()
+
+    for (const filterDef of currentFilters) {
+      const name = filterDef.options?.name
+      if (name) {
+        currentNames.add(name)
+        // Reuse cached instance if available, otherwise create new one
+        if (filterCache.has(name)) {
+          result.push(filterCache.get(name))
+        } else {
+          const instance = instantiateFilter(filterDef)
+          filterCache.set(name, instance)
+          result.push(instance)
+        }
+      } else {
+        // No name, always create new instance (for backwards compatibility)
+        result.push(instantiateFilter(filterDef))
+      }
+    }
+
+    // Clean up stale cache entries
+    for (const name of filterCache.keys()) {
+      if (!currentNames.has(name)) {
+        filterCache.delete(name)
+      }
+    }
+
+    return orderArray(result, 'order', 'asc')
+  })
+
+  // O(1) lookup map for filters by name - avoids O(n) find() calls
+  const filterByName = computed(() => {
+    return new Map(instantiatedFilters.value.map((f) => [f.name, f]))
   })
 
   const activeFilters = computed(() => {
@@ -440,9 +452,9 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * @returns {boolean} - Returns true if the filter value exists, false otherwise.
    */
   function hasFilterValue(item) {
-    return !!instantiatedFilters.value.find(({ name, values }) => {
-      return name === item.name && values.indexOf(item.value) > -1
-    })
+    // O(1) lookup using filterByName Map
+    const filter = filterByName.value.get(item.name)
+    return filter ? filter.values.indexOf(item.value) > -1 : false
   }
 
   /**
@@ -519,10 +531,15 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   /**
    * Get a filter by its name or a predicate function.
    *
-   * @param {Function|string} predicate - The predicate function to find the filter or the name of the filter.
+   * @param {Function|string|Object} predicate - The predicate function to find the filter, an object with name property, or the name of the filter.
    * @return {Object|null} - Returns the filter object if found, otherwise null.
    */
   function getFilter(predicate) {
+    // Fast path: O(1) lookup when predicate is an object with name property
+    if (predicate?.name !== undefined) {
+      return filterByName.value.get(predicate.name) ?? null
+    }
+    // Fallback to find for other predicate types (functions, etc.)
     return find(instantiatedFilters.value, predicate)
   }
 
