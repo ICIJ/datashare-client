@@ -1,5 +1,5 @@
 <script setup>
-import { useTemplateRef } from 'vue'
+import { ref, useTemplateRef, nextTick } from 'vue'
 import { AppIcon, ButtonIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 import IPhDownloadSimple from '~icons/ph/download-simple'
@@ -40,29 +40,38 @@ const {
 
 const popoverRef = useTemplateRef('popover')
 
+// Lazy rendering: only mount the popover after it's been opened once
+const mounted = ref(false)
+
+async function activate() {
+  mounted.value = true
+  await nextTick()
+  modelValue.value = true
+}
+
 defineExpose({
   popoverRef,
   hide() {
-    popoverRef.value.hide()
+    popoverRef.value?.hide()
   },
-  show() {
-    popoverRef.value.show()
+  async show() {
+    mounted.value = true
+    await nextTick()
+    popoverRef.value?.show()
   }
 })
 </script>
 
 <template>
   <app-popover
+    v-if="mounted"
     ref="popover"
     v-model="modelValue"
     hide-header
     class="document-download-popover"
   >
-    <template #target="binding">
-      <slot
-        name="target"
-        v-bind="binding"
-      />
+    <template #target>
+      <slot name="target" />
     </template>
     <div class="document-download-popover__body">
       <button-icon
@@ -130,6 +139,13 @@ defineExpose({
       </div>
     </div>
   </app-popover>
+  <!-- Render target independently when popover not yet mounted -->
+  <span
+    v-else
+    @click="activate"
+  >
+    <slot name="target" />
+  </span>
 </template>
 
 <style lang="scss">
