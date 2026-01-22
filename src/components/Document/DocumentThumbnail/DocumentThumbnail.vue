@@ -44,7 +44,7 @@ const props = defineProps({
   },
   lazy: {
     type: Boolean,
-    default: false
+    default: true
   },
   aspectRatio: {
     type: Number,
