@@ -17,7 +17,7 @@ import ProjectLabel from '@/components/Project/ProjectLabel'
 import ProjectThumbnail from '@/components/Project/ProjectThumbnail'
 import ModeServerOnly from '@/components/Mode/ModeServerOnly.vue'
 import DisplayRoles from '@/components/Display/DisplayRoles.vue'
-import RestrictedOnly from '@/components/Mode/RestrictedOnly.vue'
+import PolicyOnly from '@/components/Policy/PolicyOnly.vue'
 import ModeLocalOnly from '@/components/Mode/ModeLocalOnly.vue'
 
 const { breakpointDown } = useBreakpoints()
@@ -103,7 +103,7 @@ const promptProjectDeletion = async () => {
             @click="promptProjectDeletion"
           />
         </mode-local-only>
-        <restricted-only
+        <policy-only
           admin
           :project="project"
         >
@@ -114,7 +114,7 @@ const promptProjectDeletion = async () => {
             :to="toEdit"
             :label="t('projectJumbotron.edit')"
           />
-        </restricted-only>
+        </policy-only>
         <project-jumbotron-pin v-model:pinned="pinned" />
       </div>
     </div>

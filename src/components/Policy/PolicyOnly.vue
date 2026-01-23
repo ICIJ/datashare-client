@@ -1,5 +1,5 @@
 <script setup>
-import { useMode } from '@/composables/useMode'
+import { useMode } from '@/composables/useMode.js'
 import { usePolicies } from '@/composables/usePolicies.js'
 import { computed } from 'vue'
 
