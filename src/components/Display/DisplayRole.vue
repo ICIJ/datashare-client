@@ -3,6 +3,8 @@ import { computed } from 'vue'
 import { AppIcon } from '@icij/murmur-next'
 
 import { usePolicies } from '@/composables/usePolicies.js'
+import {ROLE_KEY} from "@/enums/roles.js";
+import {useI18n} from "vue-i18n";
 
 const props = defineProps({
   value: {
@@ -19,7 +21,8 @@ const props = defineProps({
 })
 
 const { formatRole } = usePolicies()
-const role = computed(() => formatRole(props.value))
+const { t } = useI18n()
+const role = computed(() => formatRole(t(ROLE_KEY[props.value])))
 </script>
 
 <template>
