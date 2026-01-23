@@ -266,6 +266,8 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     sortFilters.value = {}
     contextualizeFilters.value = []
     values.value = {}
+    // Clear the module-level filter cache to avoid stale filter instances
+    filterCache.clear()
   }
 
   /**
