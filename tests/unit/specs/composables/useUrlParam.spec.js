@@ -176,6 +176,48 @@ describe('useUrlPageFrom', () => {
 
     expect(router.currentRoute.value.query.from).toBe('1900')
   })
+
+  it('should use updated perPage when perPage is a ref', async () => {
+    const { ref } = await import('vue')
+    const perPageRef = ref(25)
+    const [result, router] = withSetup({
+      composable: () => useUrlPageFrom({ perPage: perPageRef })
+    })
+
+    // Start at page 1
+    await router.push({ query: { from: '0' } })
+    await flushPromises()
+    expect(result.value).toBe(1)
+
+    // Change perPage from 25 to 10
+    perPageRef.value = 10
+
+    // Go to page 2 - should use new perPage value (10), so from should be 10
+    result.value = 2
+    await flushPromises()
+
+    // Bug: before fix, this would be '25' (using old perPage value)
+    expect(router.currentRoute.value.query.from).toBe('10')
+  })
+
+  it('should calculate correct page number when perPage ref changes', async () => {
+    const { ref } = await import('vue')
+    const perPageRef = ref(25)
+    const [result, router] = withSetup({
+      composable: () => useUrlPageFrom({ perPage: perPageRef })
+    })
+
+    // Set from=20, with perPage=25, we're on page 1
+    await router.push({ query: { from: '20' } })
+    await flushPromises()
+    expect(result.value).toBe(1)
+
+    // Change perPage to 10, now from=20 should be page 3
+    perPageRef.value = 10
+    await flushPromises()
+
+    expect(result.value).toBe(3)
+  })
 })
 
 describe('useUrlParamWithStore', () => {
