@@ -13,7 +13,7 @@ export default class NamedEntity extends EsDoc {
    * @param {number} [position=0] - Position in search results (unused but passed by EsDocList)
    * @param {Object} [options={}] - Options passed to EsDoc
    */
-  constructor(raw, parent = null, root = null, position = 0, options = {}) {
+  constructor(raw, _parent = null, _root = null, _position = 0, options = {}) {
     super(raw, options)
   }
 
