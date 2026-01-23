@@ -16,7 +16,7 @@ import {
   uniq
 } from 'lodash'
 import lucene from 'lucene'
-import { ref, computed, toRaw, shallowReactive } from 'vue'
+import { ref, computed, toRaw } from 'vue'
 import { useRouter } from 'vue-router'
 
 import EsDocList from '@/api/resources/EsDocList'
@@ -56,39 +56,25 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     return find(settings.searchFields, { key: field.value }).fields
   })
 
-  // Cache for instantiated filters - reuses existing instances when filter definitions haven't changed
-  const filterCache = shallowReactive(new Map())
+  // Simple computed that creates filter instances from definitions
+  // Note: Using module-level cache for filter instances to avoid O(n) re-instantiation
+  const filterCache = new Map()
 
   const instantiatedFilters = computed(() => {
-    const currentFilters = filters.value
-    const result = []
-    const currentNames = new Set()
-
-    for (const filterDef of currentFilters) {
+    const result = filters.value.map((filterDef) => {
       const name = filterDef.options?.name
+      // For named filters, reuse cached instance if available
       if (name) {
-        currentNames.add(name)
-        // Reuse cached instance if available, otherwise create new one
-        if (filterCache.has(name)) {
-          result.push(filterCache.get(name))
-        } else {
-          const instance = instantiateFilter(filterDef)
+        let instance = filterCache.get(name)
+        if (!instance) {
+          instance = instantiateFilter(filterDef)
           filterCache.set(name, instance)
-          result.push(instance)
         }
-      } else {
-        // No name, always create new instance (for backwards compatibility)
-        result.push(instantiateFilter(filterDef))
+        return instance
       }
-    }
-
-    // Clean up stale cache entries
-    for (const name of filterCache.keys()) {
-      if (!currentNames.has(name)) {
-        filterCache.delete(name)
-      }
-    }
-
+      // No name, always create new instance
+      return instantiateFilter(filterDef)
+    })
     return orderArray(result, 'order', 'asc')
   })
 
