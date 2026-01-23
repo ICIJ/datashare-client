@@ -1,14 +1,7 @@
 import { useConfig } from '@/composables/useConfig.js'
 import { computed } from 'vue'
 import { camelCase, find, upperFirst } from 'lodash'
-
-const DEFAULT_ROLE = 'READER'
-
-const ROLE_MAP = {
-  ADMIN: 'ADMIN',
-  WRITER: 'EDITOR',
-  READER: 'VIEWER'
-}
+import {DEFAULT_ROLE} from "@/enums/roles.js";
 
 export function usePolicies() {
   const config = useConfig()
@@ -21,8 +14,10 @@ export function usePolicies() {
     return find(userPolicies.value, { projectId })
   }
 
+
+
   function formatRole(role) {
-    return upperFirst(camelCase(ROLE_MAP[role]))
+    return upperFirst(camelCase(role))
   }
 
   function formatRoles(roles) {

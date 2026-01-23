@@ -24,6 +24,7 @@ import { checkSearchOrder } from '@/router/guards/checkSearchOrder'
 import { checkSearchSort } from '@/router/guards/checkSearchSort'
 import { prefillSearchStore } from '@/router/guards/prefillSearchStore'
 import { replaceSizeToPerPage } from '@/router/guards/replaceSizeToPerPage'
+import {ROLE} from "@/enums/roles.js";
 
 export const routes = [
   {
@@ -429,7 +430,7 @@ export const routes = [
                 meta: {
                   icon: markRaw(IPhPencilSimple),
                   title: 'projectViewEdit.title',
-                  allowedRoles: ['ADMIN']
+                  allowedRoles: [ROLE.ADMIN]
                 }
               }
             ]
