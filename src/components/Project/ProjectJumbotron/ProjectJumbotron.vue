@@ -164,7 +164,6 @@ const promptProjectDeletion = async () => {
             <mode-server-only>
               <display-roles
                 :project="project"
-                class="text-blue"
               />
             </mode-server-only>
           </div>
