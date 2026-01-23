@@ -29,7 +29,7 @@ const props = defineProps({
    */
   lazy: {
     type: Boolean,
-    default: true
+    default: false
   }
 })
 const { t } = useI18n()
