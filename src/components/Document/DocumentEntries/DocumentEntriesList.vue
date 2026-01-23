@@ -88,9 +88,9 @@ watchDocument(scrollDocumentCardIntoView)
           <template v-else-if="entries.length">
             <document-card
               v-for="entry in entries"
-              v-memo="[entry.id, selectionValues[entry.id], isRouteActive(entry)]"
               :key="entry.id"
               v-model:selected="selectionValues[entry.id]"
+              v-memo="[entry.id, selectionValues[entry.id], isRouteActive(entry)]"
               :active="isRouteActive(entry)"
               :document="entry"
               :select-mode="selectMode"

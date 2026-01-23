@@ -16,7 +16,7 @@ const _hitsCache = '_HITS_CACHE'
  */
 function buildIdMap(raw) {
   const hits = get(raw, 'hits.hits', [])
-  return new Map(hits.map((hit) => [hit._id, hit]))
+  return new Map(hits.map(hit => [hit._id, hit]))
 }
 
 export default class EsDocList {
@@ -56,14 +56,14 @@ export default class EsDocList {
   removeDuplicates() {
     this.set(
       'hits.hits',
-      uniqBy(this.get('hits.hits', []), (d) => d._id)
+      uniqBy(this.get('hits.hits', []), d => d._id)
     )
     this._invalidateCache()
   }
 
   append(raw) {
     const response = new EsDocList(raw)
-    response.hits.forEach((hit) => this.push('hits.hits', hit))
+    response.hits.forEach(hit => this.push('hits.hits', hit))
     this._invalidateCache()
   }
 
