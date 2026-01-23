@@ -57,25 +57,11 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   })
 
   // Simple computed that creates filter instances from definitions
-  // Note: Using module-level cache for filter instances to avoid O(n) re-instantiation
-  const filterCache = new Map()
-
+  // Note: Filter instances are recreated each time because their bindStore() getters
+  // are evaluated at instantiation time. Caching would break reactivity since the
+  // cached filters would hold stale references to the values object.
   const instantiatedFilters = computed(() => {
-    const result = filters.value.map((filterDef) => {
-      const name = filterDef.options?.name
-      // For named filters, reuse cached instance if available
-      if (name) {
-        let instance = filterCache.get(name)
-        if (!instance) {
-          instance = instantiateFilter(filterDef)
-          filterCache.set(name, instance)
-        }
-        return instance
-      }
-      // No name, always create new instance
-      return instantiateFilter(filterDef)
-    })
-    return orderArray(result, 'order', 'asc')
+    return orderArray(filters.value.map(instantiateFilter), 'order', 'asc')
   })
 
   // O(1) lookup map for filters by name - avoids O(n) find() calls
@@ -266,8 +252,6 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     sortFilters.value = {}
     contextualizeFilters.value = []
     values.value = {}
-    // Clear the module-level filter cache to avoid stale filter instances
-    filterCache.clear()
   }
 
   /**
