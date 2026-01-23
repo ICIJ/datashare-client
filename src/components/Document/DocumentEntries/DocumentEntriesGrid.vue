@@ -45,8 +45,8 @@ const noMatches = computed(() => !loading && !entries.length)
       <template v-else>
         <div
           v-for="entry in entries"
-          v-memo="[entry.id, selectionValues[entry.id]]"
           :key="entry.id"
+          v-memo="[entry.id, selectionValues[entry.id]]"
           class="document-entries-grid__list__item"
         >
           <document-card-grid

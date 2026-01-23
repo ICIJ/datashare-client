@@ -66,7 +66,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
 
   // O(1) lookup map for filters by name - avoids O(n) find() calls
   const filterByName = computed(() => {
-    return new Map(instantiatedFilters.value.map((f) => [f.name, f]))
+    return new Map(instantiatedFilters.value.map(f => [f.name, f]))
   })
 
   const activeFilters = computed(() => {
@@ -704,8 +704,8 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * @returns {Promise} - A promise that resolves to the root documents.
    */
   async function searchRootDocuments(raw) {
-    const embedded = get(raw, 'hits.hits', []).filter((hit) => hit._source.extractionLevel > 0)
-    const ids = uniq(compact(embedded.map((hit) => hit._source.rootDocument)))
+    const embedded = get(raw, 'hits.hits', []).filter(hit => hit._source.extractionLevel > 0)
+    const ids = uniq(compact(embedded.map(hit => hit._source.rootDocument)))
     const source = ['contentType', 'contentLength', 'title', 'path']
     return ids.length ? api.elasticsearch.getDocumentsByIds(indices.value.join(','), ids, source) : EsDocList.none()
   }
