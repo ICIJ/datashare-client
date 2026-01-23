@@ -120,15 +120,7 @@ const {
   computedSortFilter,
   computedContextualizeFilter,
   computedExcludeFilter,
-  toggleFilterValue,
-  watchFilterContextualized,
-  watchFilterSort,
-  watchFilterValues,
-  watchFilterExcluded,
-  watchQuery,
-  watchIndices,
-  watchValues,
-  whenFilterContextualized
+  toggleFilterValue
 } = useSearchFilter()
 
 const exclude = computedExcludeFilter(filter)
@@ -205,24 +197,32 @@ const debouncedCollapse = computed({
   }
 })
 
+// Computed that tracks all dependencies that should trigger aggregation
+// Consolidates 8 separate watchers into one to reduce cascading API calls
+const aggregationDependencies = computed(() => {
+  return {
+    query: query.value,
+    indices: searchStore.indices.join(','),
+    sort: JSON.stringify(sort.value),
+    contextualize: contextualize.value,
+    // Only include these when contextualized
+    ...(contextualize.value && {
+      filterValues: JSON.stringify(filter.values),
+      excluded: exclude.value,
+      allValues: JSON.stringify(searchStore.values),
+      searchQuery: searchStore.q
+    })
+  }
+})
+
 onBeforeMount(async () => {
   // Show the filter by default if it has a value
   collapse.value = collapse.value ?? !hasAnyValue.value
   // Only load data on mount if the filter is visible (not collapsed)
   await aggregateIfVisible()
-  // Query value (in the search field) that trigger an update of the data
-  watch(query, aggregateIfVisible)
-  // General values that might trigger an update of the data
-  watchIndices(aggregateIfVisible)
-  // Filter values that trigger an update of the data
-  watchFilterSort(filter, aggregateIfVisible)
-  watchFilterContextualized(filter, aggregateIfVisible)
-  // Filter values that trigger an update of the data only if the filter is contextualized
-  watchFilterValues(filter, whenFilterContextualized(filter, aggregateIfVisible))
-  watchFilterExcluded(filter, whenFilterContextualized(filter, aggregateIfVisible))
-  // Values from all filters that trigger an update of the data only if the filter is contextualized
-  watchValues(whenFilterContextualized(filter, aggregateIfVisible))
-  watchQuery(whenFilterContextualized(filter, aggregateIfVisible))
+  // Single watcher that consolidates all 8 previous watchers
+  // This reduces cascading API calls by debouncing all dependency changes
+  watch(aggregationDependencies, aggregateIfVisible, { deep: false })
 })
 </script>
 
