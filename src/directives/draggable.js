@@ -166,28 +166,32 @@ export const draggable = {
     /**
      * Continuously called during dragging.
      * Applies position clamping and threshold checks, then emits appropriate events.
+     * Uses requestAnimationFrame to batch DOM reads and prevent layout thrashing.
      */
     function onDragMove(event) {
-      const bindingValue = bindingHandlers.get(el)
-      const targetElement = bindingValue.target
-      const parentWidth = targetElement.parentNode.getBoundingClientRect().width
-      const elementWidth = relative ? el.offsetWidth : 0
-
       const clientX = event instanceof MouseEvent ? event.clientX : event.touches[0].clientX
 
-      const { position, x, detail, reduceThreshold, expandThreshold } = calculateDragPosition({
-        startX,
-        initialClientX,
-        clientX,
-        bindingValue,
-        elementWidth,
-        parentWidth,
-        percent
-      })
+      // Batch DOM reads in requestAnimationFrame to prevent layout thrashing
+      requestAnimationFrame(() => {
+        const bindingValue = bindingHandlers.get(el)
+        const targetElement = bindingValue.target
+        const parentWidth = targetElement.parentNode.getBoundingClientRect().width
+        const elementWidth = relative ? el.offsetWidth : 0
 
-      const emitCallback = (name, payload) => emitEvent(vnode, name, payload)
-      // On drag, "drag" event can be replace by and "expand" or "reduce" event
-      handleDragThresholds({ position, x, detail, reduceThreshold, expandThreshold, parentWidth, emitCallback })
+        const { position, x, detail, reduceThreshold, expandThreshold } = calculateDragPosition({
+          startX,
+          initialClientX,
+          clientX,
+          bindingValue,
+          elementWidth,
+          parentWidth,
+          percent
+        })
+
+        const emitCallback = (name, payload) => emitEvent(vnode, name, payload)
+        // On drag, "drag" event can be replace by and "expand" or "reduce" event
+        handleDragThresholds({ position, x, detail, reduceThreshold, expandThreshold, parentWidth, emitCallback })
+      })
 
       return false
     }
