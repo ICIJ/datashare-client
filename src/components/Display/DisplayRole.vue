@@ -23,7 +23,7 @@ const role = computed(() => formatRole(props.value))
 </script>
 
 <template>
-  <span class="d-inline-flex gap-1">
+  <span class="display-role d-inline-flex gap-1">
     <app-icon
       v-if="!noIcon"
       :size="iconSize"

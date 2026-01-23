@@ -31,7 +31,7 @@ const rolesTitle = computed(() => t('displayRoles.yourRoles', { roles: formatRol
 <template>
   <span
     v-if="roles"
-    class="text-secondary-emphasis d-inline-flex align-items-center gap-1"
+    class="display-roles d-inline-flex align-items-center gap-1"
     :title="rolesTitle"
   >
     <app-icon

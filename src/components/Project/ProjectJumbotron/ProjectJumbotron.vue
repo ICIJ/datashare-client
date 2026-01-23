@@ -93,29 +93,30 @@ const promptProjectDeletion = async () => {
           :bind="{ project }"
         />
       </h3>
-      <mode-local-only>
-        <button-row-action-delete
-          class="ms-auto"
-          size="md"
-          :hide-label="false"
-          :square="false"
-          :label="t('projectJumbotron.delete')"
-          @click="promptProjectDeletion"
-        />
-      </mode-local-only>
-      <restricted-only
-        admin
-        :project="project"
-      >
-        <button-row-action-edit
-          size="md"
-          :hide-label="false"
-          :square="false"
-          :to="toEdit"
-          :label="t('projectJumbotron.edit')"
-        />
-      </restricted-only>
-      <project-jumbotron-pin v-model:pinned="pinned" />
+      <div>
+        <mode-local-only>
+          <button-row-action-delete
+            size="md"
+            :hide-label="false"
+            :square="false"
+            :label="t('projectJumbotron.delete')"
+            @click="promptProjectDeletion"
+          />
+        </mode-local-only>
+        <restricted-only
+          admin
+          :project="project"
+        >
+          <button-row-action-edit
+            size="md"
+            :hide-label="false"
+            :square="false"
+            :to="toEdit"
+            :label="t('projectJumbotron.edit')"
+          />
+        </restricted-only>
+        <project-jumbotron-pin v-model:pinned="pinned" />
+      </div>
     </div>
     <div class="project-jumbotron__content d-flex gap-3 align-items-start">
       <hook
@@ -144,7 +145,7 @@ const promptProjectDeletion = async () => {
           <div class="d-flex flex-wrap gap-3 text-body-secondary">
             <span
               v-if="creationDate"
-              class="text-nowrap"
+              class="text-nowrap d-inline-flex align-items-center gap-1"
             >
               <app-icon><i-ph-calendar-blank /></app-icon>
               {{ t('projectJumbotron.creationDate') }}
@@ -152,7 +153,7 @@ const promptProjectDeletion = async () => {
             </span>
             <span
               v-if="updateDate"
-              class="text-nowrap"
+              class="text-nowrap d-inline-flex align-items-center gap-1"
             >
               <app-icon>
                 <i-ph-calendar-check />
@@ -163,7 +164,7 @@ const promptProjectDeletion = async () => {
             <mode-server-only>
               <display-roles
                 :project="project"
-                class="text-body-secondary"
+                class="text-blue"
               />
             </mode-server-only>
           </div>
