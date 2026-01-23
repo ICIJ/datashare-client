@@ -1,5 +1,5 @@
 import { toNumber } from 'lodash'
-import { computed } from 'vue'
+import { computed, toValue } from 'vue'
 
 import { setNumberRef } from './useUrlParam'
 import { useUrlParamWithStore } from './useUrlParamWithStore'
@@ -11,7 +11,7 @@ import { useUrlParamWithStore } from './useUrlParamWithStore'
  * keeping the page number and 'from' values in sync, and synchronizing with the Vuex store.
  *
  * @param {Object} [options] - Configuration options.
- * @param {number} [options.perPage=25] - The number of items per page.
+ * @param {number|Function|Ref<number>} [options.perPage=25] - The number of items per page (can be reactive).
  * @param {Function|null} [options.to=null] - An optional function to transform the value when updating the URL parameter.
  * @param {Function} [options.get] - Getter function to get the value.
  * @param {Function} [options.set] - Setter function to set the value.
@@ -22,7 +22,7 @@ export function useUrlPageFromWithStore({ perPage = 25, to = null, get, set, ...
   const transform = toNumber
   const from = useUrlParamWithStore('from', { get, set, to, transform, ...options })
   return computed({
-    set: value => setNumberRef(from, (value - 1) * perPage),
-    get: () => Math.floor(from.value / perPage) + 1
+    set: value => setNumberRef(from, (value - 1) * toValue(perPage)),
+    get: () => Math.floor(from.value / toValue(perPage)) + 1
   })
 }
