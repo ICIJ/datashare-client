@@ -382,15 +382,19 @@ export function datasharePlugin(Client) {
 
   /**
    * @deprecated Use _applyQueryString instead
-   * @alias _applyQueryString
+   * Wrapper to maintain backward compatibility with old signature (query, body, fields)
    */
-  Client.prototype.addQueryToFilter = Client.prototype._applyQueryString
+  Client.prototype.addQueryToFilter = function (query, body, fields = []) {
+    return this._applyQueryString(body, query, fields)
+  }
 
   /**
    * @deprecated Use _applyQueryString instead
-   * @alias _applyQueryString
+   * Wrapper to maintain backward compatibility with old signature (query, body, fields)
    */
-  Client.prototype._addQueryToBody = Client.prototype._applyQueryString
+  Client.prototype._addQueryToBody = function (query, body, fields = []) {
+    return this._applyQueryString(body, query, fields)
+  }
 
   /**
    * Applies filters to a body builder using applyTo method.
