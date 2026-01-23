@@ -4,7 +4,7 @@ import { AppIcon } from '@icij/murmur-next'
 
 import DisplayRole from '@/components/Display/DisplayRole.vue'
 import { usePolicies } from '@/composables/usePolicies.js'
-import {useI18n} from "vue-i18n";
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
   project: {
