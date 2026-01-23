@@ -61,7 +61,9 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   // are evaluated at instantiation time. Caching would break reactivity since the
   // cached filters would hold stale references to the values object.
   const instantiatedFilters = computed(() => {
-    return orderArray(filters.value.map(instantiateFilter), 'order', 'asc')
+    // Filter out undefined values (from array holes created by removeFilter using delete)
+    const validFilters = filters.value.filter(Boolean)
+    return orderArray(validFilters.map(instantiateFilter), 'order', 'asc')
   })
 
   // O(1) lookup map for filters by name - avoids O(n) find() calls
@@ -507,9 +509,9 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * @return {Object|null} - Returns the filter object if found, otherwise null.
    */
   function getFilter(predicate) {
-    // Fast path: O(1) lookup when predicate is an object with name property
-    if (predicate?.name !== undefined) {
-      return filterByName.value.get(predicate.name) ?? null
+    // Fast path: O(1) lookup when predicate is a plain object with name property
+    if (typeof predicate === 'object' && predicate !== null && 'name' in predicate) {
+      return filterByName.value.get(predicate.name)
     }
     // Fallback to find for other predicate types (functions, etc.)
     return find(instantiatedFilters.value, predicate)
@@ -657,6 +659,8 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * @returns {Promise<void>} - A promise that resolves when the search is complete.
    */
   async function refresh(save = true) {
+    // Generate a new stamp to ensure this refresh is unique
+    refreshStamp()
     // This check is to avoid unnecessary searches when the query has not changed.
     // We compare the current route query with the last applied query, which is stored
     // in the `lastAppliedQuery` ref. If they are the same, we skip the refresh.

@@ -12,6 +12,11 @@ export default defineConfig(configEnv =>
         globals: true,
         reporters: 'default',
         environment: 'jsdom',
+        environmentOptions: {
+          jsdom: {
+            url: process.env.VITE_ES_HOST || 'http://localhost:9200'
+          }
+        },
         exclude: [...configDefaults.exclude, 'e2e/**'],
         root: fileURLToPath(new URL('./', import.meta.url)),
         setupFiles: [resolve(__dirname, 'tests/unit/setup.js')],
