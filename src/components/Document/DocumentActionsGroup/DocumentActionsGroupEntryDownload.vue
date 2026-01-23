@@ -46,6 +46,7 @@ const blur = () => nextTick(() => window.document?.activeElement.blur())
 <template>
   <document-download-popover
     close-on-hide
+    lazy
     :offset="16"
     :boundary-padding="32"
     :document="document"
