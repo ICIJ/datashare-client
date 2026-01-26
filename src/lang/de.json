@@ -292,6 +292,11 @@
       }
     }
   },
+  "roles": {
+    "admin": "Admin",
+    "writer": "Editor",
+    "reader": "Viewer"
+  },
   "searchFormControl": {
     "submitLabel": "Suche"
   },
