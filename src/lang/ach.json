@@ -292,6 +292,11 @@
       }
     }
   },
+  "roles": {
+    "admin": "crwdns10030:0crwdne10030:0",
+    "writer": "crwdns10032:0crwdne10032:0",
+    "reader": "crwdns10034:0crwdne10034:0"
+  },
   "searchFormControl": {
     "submitLabel": "crwdns7874:0crwdne7874:0"
   },
