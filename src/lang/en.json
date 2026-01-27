@@ -471,6 +471,16 @@
   "documentViewerPdfNavDropdownEmbed": {
     "switch": "Switch to built-in viewer"
   },
+  "display": {
+    "repositoryType": {
+      "fs": "file system",
+      "s3": "Amazon S3",
+      "azure": "Azure",
+      "gcs": "Google Cloud Storage",
+      "hdfs": "HDFS",
+      "url": "URL"
+    }
+  },
   "documentViewTabs": {
     "text": "Text",
     "viewer": "View",
@@ -1513,6 +1523,75 @@
           "button": "Delete",
           "description": "Any applications or scripts using this key will no longer be able to access the Datashare API. You cannot undo this action."
         }
+      }
+    },
+    "snapshots": {
+      "title": "Backups",
+      "info": "Create and manage backups of your Datashare data. Backups can be restored in case of data loss.",
+      "noSnapshots": "No backups found. Create your first backup to protect your data.",
+      "repositoryPath": "Backup storage path",
+      "repositoryPathHint": "This path must be configured in Elasticsearch's path.repo setting.",
+      "repository": {
+        "type": "Type",
+        "location": "Location",
+        "description": "Backups are stored on a {type} repository located at {location}"
+      },
+      "setup": {
+        "title": "Configure Backup Storage",
+        "description": "Your snapshots must be stored in one of the predefined paths. Please select one of the available paths below.",
+        "loading": "Loading available paths...",
+        "noPathsTitle": "No Backup Paths Available",
+        "noPathsDescription": "No backup paths have been configured in Elasticsearch. Please configure the path.repo setting in your Elasticsearch configuration to enable backups.",
+        "selectPath": "Select the filesystem repository location:",
+        "submit": "Configure"
+      },
+      "refresh": "Refresh",
+      "create": "Create Backup",
+      "creating": "Creating...",
+      "list": {
+        "name": "Name",
+        "status": "Status",
+        "date": "Date",
+        "projects": "Projects",
+        "actions": "Actions"
+      },
+      "status": {
+        "SUCCESS": "Completed",
+        "IN_PROGRESS": "In progress",
+        "FAILED": "Failed",
+        "PARTIAL": "Partial"
+      },
+      "restore": {
+        "title": "Restore Backup",
+        "message": "This will restore all data from backup \"{name}\". Existing data may be overwritten.",
+        "warning": "This action cannot be undone.",
+        "confirm": "Restore",
+        "cancel": "Cancel"
+      },
+      "delete": {
+        "title": "Delete Backup",
+        "message": "Are you sure you want to delete backup \"{name}\"?",
+        "confirm": "Delete",
+        "cancel": "Cancel"
+      },
+      "deleteRepository": {
+        "label": "Delete repository",
+        "message": "Are you sure you want to delete the backup repository? Backups won't be available anymore."
+      },
+      "error": {
+        "repository": "Failed to access backup storage: {error}",
+        "repositoryDelete": "Failed to delete backup repository: {error}",
+        "fetch": "Failed to load backups: {error}",
+        "create": "Failed to create backup: {error}",
+        "delete": "Failed to delete backup: {error}",
+        "restore": "Failed to restore backup: {error}"
+      },
+      "success": {
+        "create": "Backup creation started",
+        "delete": "Backup deleted",
+        "restore": "Restore started",
+        "repositoryCreated": "Backup repository configured",
+        "repositoryDeleted": "Backup repository deleted"
       }
     }
   },
