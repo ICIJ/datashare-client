@@ -396,6 +396,11 @@ export class Api {
     return this.sendActionAsText(`/api/index/search/${projectIds}/_mapping/field/${fields}`, { method: Method.GET })
   }
 
+  // Elasticsearch info endpoint
+  getElasticsearchInfo() {
+    return this.sendAction('/api/index')
+  }
+
   // Snapshot Repository endpoints
   getSnapshotRepositories() {
     return this.sendAction('/api/index/_snapshot')
