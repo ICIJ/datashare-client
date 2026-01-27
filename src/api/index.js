@@ -454,13 +454,15 @@ export class Api {
   // Index management endpoints
   closeIndex(index) {
     return this.sendAction(`/api/index/${encodeURIComponent(index)}/_close`, {
-      method: Method.POST
+      method: Method.POST,
+      params: { ignore_unavailable: true }
     })
   }
 
   openIndex(index) {
     return this.sendAction(`/api/index/${encodeURIComponent(index)}/_open`, {
-      method: Method.POST
+      method: Method.POST,
+      params: { ignore_unavailable: true }
     })
   }
 
