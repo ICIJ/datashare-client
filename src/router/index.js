@@ -514,6 +514,16 @@ export const routes = [
               breadcrumb: false,
               allowedModes: [MODE_NAME.SERVER]
             }
+          },
+          {
+            name: 'settings.snapshots',
+            path: 'snapshots',
+            component: () => import('@/views/Settings/SettingsView/SettingsViewSnapshots'),
+            meta: {
+              title: 'settings.snapshots.title',
+              breadcrumb: false,
+              allowedModes: [MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]
+            }
           }
         ]
       },
