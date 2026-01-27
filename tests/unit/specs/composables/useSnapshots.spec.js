@@ -2,7 +2,8 @@ import { mount, flushPromises } from '@vue/test-utils'
 import { setActivePinia, createPinia } from 'pinia'
 
 import CoreSetup from '~tests/unit/CoreSetup'
-import { useSnapshots, SNAPSHOT_STATUS, DEFAULT_REPOSITORY } from '@/composables/useSnapshots'
+import { useSnapshots, DEFAULT_REPOSITORY } from '@/composables/useSnapshots'
+import { SNAPSHOT_STATUS } from '@/enums/snapshotStatus'
 import { apiInstance as api } from '@/api/apiInstance'
 
 vi.mock('@/api/apiInstance', () => {
@@ -47,15 +48,6 @@ describe('useSnapshots composable', () => {
     }
     return mount(TestComponent, { global: { plugins } })
   }
-
-  describe('SNAPSHOT_STATUS', () => {
-    it('should export snapshot status constants', () => {
-      expect(SNAPSHOT_STATUS.SUCCESS).toBe('SUCCESS')
-      expect(SNAPSHOT_STATUS.IN_PROGRESS).toBe('IN_PROGRESS')
-      expect(SNAPSHOT_STATUS.FAILED).toBe('FAILED')
-      expect(SNAPSHOT_STATUS.PARTIAL).toBe('PARTIAL')
-    })
-  })
 
   describe('DEFAULT_REPOSITORY', () => {
     it('should export default repository name', () => {
@@ -196,16 +188,14 @@ describe('useSnapshots composable', () => {
       await wrapper.vm.restoreSnapshot('snapshot-1')
       await flushPromises()
 
-      // Should close indices first
-      expect(api.closeIndex).toHaveBeenCalledWith('index1')
-      expect(api.closeIndex).toHaveBeenCalledWith('index2')
+      // Should close all indices at once
+      expect(api.closeIndex).toHaveBeenCalledWith('index1,index2')
 
       // Should restore snapshot
       expect(api.restoreSnapshot).toHaveBeenCalledWith(DEFAULT_REPOSITORY, 'snapshot-1')
 
-      // Should reopen indices after
-      expect(api.openIndex).toHaveBeenCalledWith('index1')
-      expect(api.openIndex).toHaveBeenCalledWith('index2')
+      // Should reopen all indices at once
+      expect(api.openIndex).toHaveBeenCalledWith('index1,index2')
     })
 
     it('should still reopen indices if restore fails', async () => {

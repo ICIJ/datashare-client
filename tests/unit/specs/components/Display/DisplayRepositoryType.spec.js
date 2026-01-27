@@ -33,9 +33,9 @@ describe('DisplayRepositoryType', () => {
     expect(wrapper.find('.display-repository-type__label').exists()).toBeTruthy()
   })
 
-  it('should display "File system" for fs type', () => {
+  it('should display "file system" for fs type', () => {
     const wrapper = mountComponent({ value: 'fs' })
-    expect(wrapper.text()).toContain('File system')
+    expect(wrapper.text()).toContain('file system')
   })
 
   it('should display "Amazon S3" for s3 type', () => {
@@ -45,6 +45,6 @@ describe('DisplayRepositoryType', () => {
 
   it('should default to fs type when no value provided', () => {
     const wrapper = mountComponent()
-    expect(wrapper.text()).toContain('File system')
+    expect(wrapper.text()).toContain('file system')
   })
 })
