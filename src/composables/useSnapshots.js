@@ -7,16 +7,31 @@ import { usePolling } from '@/composables/usePolling'
 import { useWait } from '@/composables/useWait'
 import { useToast } from '@/composables/useToast'
 import { SNAPSHOT_STATUS } from '@/enums/snapshotStatus'
-import { REPOSITORY_TYPE } from '@/enums/repositoryTypes'
+import { ES_SNAPSHOT_REPOSITORY_TYPE, ES_SNAPSHOT_DEFAULT_REPOSITORY, ES_SNAPSHOT_NAME_PATTERN } from '@/enums/esSnapshots'
+import { ES_DISTRIBUTION } from '@/enums/esDistributions'
 
-export const DEFAULT_REPOSITORY = 'datashare_backup'
+const formatSnapshotName = (date, version = null, distribution = null) => {
+  const parts = ['snapshot', date.getTime()]
+  if (version) parts.push(version)
+  if (distribution) parts.push(distribution)
+  return parts.join('-')
+}
 
-const formatSnapshotName = date => `snapshot-${date.getTime()}`
+export const parseSnapshotName = (name) => {
+  const match = name?.match(ES_SNAPSHOT_NAME_PATTERN)
+  if (!match) return { name: name || null, version: null, distribution: ES_DISTRIBUTION.ELASTICSEARCH }
+  return {
+    name: match[1],
+    version: match[2] || null,
+    distribution: match[3] || ES_DISTRIBUTION.ELASTICSEARCH
+  }
+}
+
 const getFirstNodeSettings = nodes => nodes[Object.keys(nodes)[0]]?.settings
 const extractPathRepo = data => castArray(getFirstNodeSettings(data?.nodes || {})?.path?.repo ?? [])
 const sortByDateDesc = (a, b) => new Date(b.start_time) - new Date(a.start_time)
 
-export function useSnapshots(repositoryName = DEFAULT_REPOSITORY) {
+export function useSnapshots(repositoryName = ES_SNAPSHOT_DEFAULT_REPOSITORY) {
   const { api } = useCore()
   const { registerPollOnce, unregisteredPoll } = usePolling()
   const { waitFor, loaderId, isLoading } = useWait()
@@ -112,7 +127,7 @@ export function useSnapshots(repositoryName = DEFAULT_REPOSITORY) {
 
   const fetchSnapshotsWithLoading = waitFor(fetchSnapshots)
 
-  async function createRepository(path, type = REPOSITORY_TYPE.FS) {
+  async function createRepository(path, type = ES_SNAPSHOT_REPOSITORY_TYPE.FS) {
     const config = { type, settings: { location: path } }
     const promise = api.createSnapshotRepository(repository.value, config)
     await toastedPromise(promise, toastRepositoryCreated)
@@ -126,8 +141,22 @@ export function useSnapshots(repositoryName = DEFAULT_REPOSITORY) {
     snapshots.value = []
   }
 
+  async function fetchElasticsearchInfo() {
+    try {
+      const data = await api.getElasticsearchInfo()
+      return {
+        version: data?.version?.number || null,
+        distribution: data?.version?.distribution || null
+      }
+    }
+    catch {
+      return { version: null, distribution: null }
+    }
+  }
+
   async function createSnapshot() {
-    const snapshotName = formatSnapshotName(new Date())
+    const { version, distribution } = await fetchElasticsearchInfo()
+    const snapshotName = formatSnapshotName(new Date(), version, distribution)
     const promise = api.createSnapshot(repository.value, snapshotName)
     await toastedPromise(promise, toastSnapshotCreated)
     startPolling()
@@ -211,6 +240,7 @@ export function useSnapshots(repositoryName = DEFAULT_REPOSITORY) {
     deleteSnapshot,
     restoreSnapshot,
     getSnapshotByName,
+    parseSnapshotName,
     startPolling,
     stopPolling
   }
