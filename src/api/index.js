@@ -396,6 +396,87 @@ export class Api {
     return this.sendActionAsText(`/api/index/search/${projectIds}/_mapping/field/${fields}`, { method: Method.GET })
   }
 
+  // Snapshot Repository endpoints
+  getSnapshotRepositories() {
+    return this.sendAction('/api/index/_snapshot')
+  }
+
+  getSnapshotRepository(repository) {
+    return this.sendAction(`/api/index/_snapshot/${encodeURIComponent(repository)}`)
+  }
+
+  createSnapshotRepository(repository, config = {}) {
+    return this.sendAction(`/api/index/_snapshot/${encodeURIComponent(repository)}`, {
+      method: Method.PUT,
+      data: config
+    })
+  }
+
+  deleteSnapshotRepository(repository) {
+    return this.sendAction(`/api/index/_snapshot/${encodeURIComponent(repository)}`, {
+      method: Method.DELETE
+    })
+  }
+
+  // Snapshot endpoints
+  getSnapshots(repository) {
+    return this.sendAction(`/api/index/_snapshot/${encodeURIComponent(repository)}/_all`)
+  }
+
+  getSnapshot(repository, snapshot) {
+    return this.sendAction(`/api/index/_snapshot/${encodeURIComponent(repository)}/${encodeURIComponent(snapshot)}`)
+  }
+
+  createSnapshot(repository, snapshot, options = {}) {
+    const params = options.waitForCompletion ? { wait_for_completion: true } : {}
+    return this.sendAction(`/api/index/_snapshot/${encodeURIComponent(repository)}/${encodeURIComponent(snapshot)}`, {
+      method: Method.PUT,
+      params,
+      data: options.body || {}
+    })
+  }
+
+  deleteSnapshot(repository, snapshot) {
+    return this.sendAction(`/api/index/_snapshot/${encodeURIComponent(repository)}/${encodeURIComponent(snapshot)}`, {
+      method: Method.DELETE
+    })
+  }
+
+  restoreSnapshot(repository, snapshot, options = {}) {
+    const params = options.waitForCompletion ? { wait_for_completion: true } : {}
+    return this.sendAction(`/api/index/_snapshot/${encodeURIComponent(repository)}/${encodeURIComponent(snapshot)}/_restore`, {
+      method: Method.POST,
+      params,
+      data: options.body || {}
+    })
+  }
+
+  // Index management endpoints
+  closeIndex(index) {
+    return this.sendAction(`/api/index/${encodeURIComponent(index)}/_close`, {
+      method: Method.POST
+    })
+  }
+
+  openIndex(index) {
+    return this.sendAction(`/api/index/${encodeURIComponent(index)}/_open`, {
+      method: Method.POST
+    })
+  }
+
+  // Cluster information endpoints
+  getClusterNodes() {
+    return this.sendAction('/api/index/_nodes')
+  }
+
+  getClusterNodesSettings() {
+    return this.sendAction('/api/index/_nodes/settings')
+  }
+
+  getClusterSettings() {
+    return this.sendAction('/api/index/_cluster/settings')
+  }
+
   async sendAction(url, config = {}) {
     try {
       const r = await this.axios?.request({ url: Api.getFullUrl(url), ...config })
