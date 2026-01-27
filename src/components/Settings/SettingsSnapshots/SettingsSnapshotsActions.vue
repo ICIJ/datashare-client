@@ -7,7 +7,7 @@ import IPhArrowCounterClockwise from '~icons/ph/arrow-counter-clockwise'
 import ButtonRowAction from '@/components/Button/ButtonRowAction/ButtonRowAction'
 import ButtonRowActionDelete from '@/components/Button/ButtonRowAction/ButtonRowActionDelete'
 import { useConfirmModal } from '@/composables/useConfirmModal'
-import { SNAPSHOT_STATUS } from '@/composables/useSnapshots'
+import { SNAPSHOT_STATUS } from '@/enums/snapshotStatus'
 
 defineOptions({ name: 'SettingsSnapshotsActions' })
 

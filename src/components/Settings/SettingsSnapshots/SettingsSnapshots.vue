@@ -3,8 +3,8 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import SettingsSnapshotsList from '@/components/Settings/SettingsSnapshots/SettingsSnapshotsList'
-import SettingsSnapshotsCreate from '@/components/Settings/SettingsSnapshots/SettingsSnapshotsCreate'
-import SettingsSnapshotsDeleteRepository from '@/components/Settings/SettingsSnapshots/SettingsSnapshotsDeleteRepository'
+import SettingsSnapshotsActionsCreate from '@/components/Settings/SettingsSnapshots/SettingsSnapshotsActionsCreate'
+import SettingsSnapshotsActionsDeleteRepository from '@/components/Settings/SettingsSnapshots/SettingsSnapshotsActionsDeleteRepository'
 import SettingsSnapshotsSetup from '@/components/Settings/SettingsSnapshots/SettingsSnapshotsSetup'
 import DisplayRepositoryType from '@/components/Display/DisplayRepositoryType'
 import DisplayPath from '@/components/Display/DisplayPath'
@@ -63,11 +63,11 @@ const hasSnapshots = computed(() => props.snapshots.length > 0)
           {{ t('settings.snapshots.title') }}
         </h5>
         <div class="settings-snapshots__header__actions d-flex gap-2">
-          <settings-snapshots-create
+          <settings-snapshots-actions-create
             :is-loading="isLoading"
             @create="emit('create')"
           />
-          <settings-snapshots-delete-repository
+          <settings-snapshots-actions-delete-repository
             :is-loading="isLoading"
             @delete="emit('deleteRepository')"
           />
