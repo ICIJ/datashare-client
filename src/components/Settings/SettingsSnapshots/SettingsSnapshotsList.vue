@@ -8,6 +8,7 @@ import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayDatetimeShort from '@/components/Display/DisplayDatetimeShort'
 import DisplayProjectList from '@/components/Display/DisplayProjectList'
 import SettingsSnapshotsActions from '@/components/Settings/SettingsSnapshots/SettingsSnapshotsActions'
+import { parseSnapshotName } from '@/composables/useSnapshots'
 
 defineOptions({ name: 'SettingsSnapshotsList' })
 
@@ -41,10 +42,21 @@ const fields = computed(() => [
     text: t('settings.snapshots.list.date')
   },
   {
+    key: 'version',
+    text: t('settings.snapshots.list.version')
+  },
+  {
+    key: 'distribution',
+    text: t('settings.snapshots.list.distribution')
+  },
+  {
     key: 'indices',
     text: t('settings.snapshots.list.projects')
   }
 ])
+
+const getVersion = name => parseSnapshotName(name).version
+const getDistribution = name => parseSnapshotName(name).distribution
 
 const isEmpty = computed(() => props.snapshots.length === 0)
 
@@ -88,6 +100,21 @@ function statusLabel(state) {
           v-if="item.start_time"
           :value="item.start_time"
         />
+        <span v-else>-</span>
+      </template>
+      <template #cell(version)="{ item }">
+        <span
+          v-if="getVersion(item.snapshot)"
+          class="font-monospace"
+        >
+          {{ getVersion(item.snapshot) }}
+        </span>
+        <span v-else>-</span>
+      </template>
+      <template #cell(distribution)="{ item }">
+        <span v-if="getDistribution(item.snapshot)">
+          {{ getDistribution(item.snapshot) }}
+        </span>
         <span v-else>-</span>
       </template>
       <template #cell(indices)="{ item }">
