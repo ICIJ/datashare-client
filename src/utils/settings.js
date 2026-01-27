@@ -167,7 +167,9 @@ export default {
     running: 'info',
     warning: 'warning',
     cancelled: 'warning',
-    created: 'info'
+    created: 'info',
+    in_progress: 'info',
+    partial: 'warning'
   },
   elasticsearch: {
     waitForAnswer: 700,
