@@ -2,7 +2,9 @@ import { mount, flushPromises } from '@vue/test-utils'
 import { setActivePinia, createPinia } from 'pinia'
 
 import CoreSetup from '~tests/unit/CoreSetup'
-import { useSnapshots, DEFAULT_REPOSITORY } from '@/composables/useSnapshots'
+import { useSnapshots, parseSnapshotName } from '@/composables/useSnapshots'
+import { ES_DISTRIBUTION } from '@/enums/esDistributions'
+import { ES_SNAPSHOT_DEFAULT_REPOSITORY } from '@/enums/esSnapshots'
 import { SNAPSHOT_STATUS } from '@/enums/snapshotStatus'
 import { apiInstance as api } from '@/api/apiInstance'
 
@@ -20,7 +22,8 @@ vi.mock('@/api/apiInstance', () => {
       restoreSnapshot: vi.fn(),
       closeIndex: vi.fn(),
       openIndex: vi.fn(),
-      getClusterNodesSettings: vi.fn()
+      getClusterNodesSettings: vi.fn(),
+      getElasticsearchInfo: vi.fn()
     }
   }
 })
@@ -49,9 +52,9 @@ describe('useSnapshots composable', () => {
     return mount(TestComponent, { global: { plugins } })
   }
 
-  describe('DEFAULT_REPOSITORY', () => {
+  describe('ES_SNAPSHOT_DEFAULT_REPOSITORY', () => {
     it('should export default repository name', () => {
-      expect(DEFAULT_REPOSITORY).toBe('datashare_backup')
+      expect(ES_SNAPSHOT_DEFAULT_REPOSITORY).toBe('datashare_backup')
     })
   })
 
@@ -68,7 +71,7 @@ describe('useSnapshots composable', () => {
       await flushPromises()
 
       expect(api.getSnapshots).toHaveBeenCalledTimes(1)
-      expect(api.getSnapshots).toHaveBeenCalledWith(DEFAULT_REPOSITORY)
+      expect(api.getSnapshots).toHaveBeenCalledWith(ES_SNAPSHOT_DEFAULT_REPOSITORY)
       expect(wrapper.vm.snapshots).toEqual(mockSnapshots)
     })
 
@@ -140,8 +143,58 @@ describe('useSnapshots composable', () => {
     })
   })
 
+  describe('parseSnapshotName', () => {
+    it('should parse snapshot name with version and distribution', () => {
+      const result = parseSnapshotName('snapshot-1706123456789-8.11.1-opensearch')
+      expect(result).toEqual({
+        name: 'snapshot-1706123456789',
+        version: '8.11.1',
+        distribution: ES_DISTRIBUTION.OPENSEARCH
+      })
+    })
+
+    it('should parse snapshot name with version only and default to elasticsearch', () => {
+      const result = parseSnapshotName('snapshot-1706123456789-8.11.1')
+      expect(result).toEqual({
+        name: 'snapshot-1706123456789',
+        version: '8.11.1',
+        distribution: ES_DISTRIBUTION.ELASTICSEARCH
+      })
+    })
+
+    it('should parse snapshot name without version or distribution and default to elasticsearch', () => {
+      const result = parseSnapshotName('snapshot-1706123456789')
+      expect(result).toEqual({
+        name: 'snapshot-1706123456789',
+        version: null,
+        distribution: ES_DISTRIBUTION.ELASTICSEARCH
+      })
+    })
+
+    it('should handle invalid snapshot name and default to elasticsearch', () => {
+      const result = parseSnapshotName('invalid-name')
+      expect(result).toEqual({
+        name: 'invalid-name',
+        version: null,
+        distribution: ES_DISTRIBUTION.ELASTICSEARCH
+      })
+    })
+
+    it('should handle null input', () => {
+      const result = parseSnapshotName(null)
+      expect(result).toEqual({
+        name: null,
+        version: null,
+        distribution: ES_DISTRIBUTION.ELASTICSEARCH
+      })
+    })
+  })
+
   describe('createSnapshot', () => {
-    it('should call API to create snapshot with repository', async () => {
+    it('should call API to create snapshot with version and opensearch distribution', async () => {
+      api.getElasticsearchInfo.mockResolvedValue({
+        version: { number: '2.11.0', distribution: 'opensearch' }
+      })
       api.createSnapshot.mockResolvedValue({})
       api.getSnapshots.mockResolvedValue({ snapshots: [] })
 
@@ -149,9 +202,42 @@ describe('useSnapshots composable', () => {
       await wrapper.vm.createSnapshot()
       await flushPromises()
 
+      expect(api.getElasticsearchInfo).toHaveBeenCalledTimes(1)
       expect(api.createSnapshot).toHaveBeenCalledTimes(1)
       expect(api.createSnapshot).toHaveBeenCalledWith(
-        DEFAULT_REPOSITORY,
+        ES_SNAPSHOT_DEFAULT_REPOSITORY,
+        expect.stringMatching(/^snapshot-\d{13}-2\.11\.0-opensearch$/)
+      )
+    })
+
+    it('should call API to create snapshot with version only when distribution is missing', async () => {
+      api.getElasticsearchInfo.mockResolvedValue({
+        version: { number: '8.11.1' }
+      })
+      api.createSnapshot.mockResolvedValue({})
+      api.getSnapshots.mockResolvedValue({ snapshots: [] })
+
+      const wrapper = mountComposable()
+      await wrapper.vm.createSnapshot()
+      await flushPromises()
+
+      expect(api.createSnapshot).toHaveBeenCalledWith(
+        ES_SNAPSHOT_DEFAULT_REPOSITORY,
+        expect.stringMatching(/^snapshot-\d{13}-8\.11\.1$/)
+      )
+    })
+
+    it('should call API to create snapshot without version when ES info fails', async () => {
+      api.getElasticsearchInfo.mockRejectedValue(new Error('ES unavailable'))
+      api.createSnapshot.mockResolvedValue({})
+      api.getSnapshots.mockResolvedValue({ snapshots: [] })
+
+      const wrapper = mountComposable()
+      await wrapper.vm.createSnapshot()
+      await flushPromises()
+
+      expect(api.createSnapshot).toHaveBeenCalledWith(
+        ES_SNAPSHOT_DEFAULT_REPOSITORY,
         expect.stringMatching(/^snapshot-\d{13}$/)
       )
     })
@@ -166,7 +252,7 @@ describe('useSnapshots composable', () => {
       await wrapper.vm.deleteSnapshot('snapshot-1')
       await flushPromises()
 
-      expect(api.deleteSnapshot).toHaveBeenCalledWith(DEFAULT_REPOSITORY, 'snapshot-1')
+      expect(api.deleteSnapshot).toHaveBeenCalledWith(ES_SNAPSHOT_DEFAULT_REPOSITORY, 'snapshot-1')
       expect(api.getSnapshots).toHaveBeenCalled()
     })
   })
@@ -192,7 +278,7 @@ describe('useSnapshots composable', () => {
       expect(api.closeIndex).toHaveBeenCalledWith('index1,index2')
 
       // Should restore snapshot
-      expect(api.restoreSnapshot).toHaveBeenCalledWith(DEFAULT_REPOSITORY, 'snapshot-1')
+      expect(api.restoreSnapshot).toHaveBeenCalledWith(ES_SNAPSHOT_DEFAULT_REPOSITORY, 'snapshot-1')
 
       // Should reopen all indices at once
       expect(api.openIndex).toHaveBeenCalledWith('index1,index2')
@@ -236,7 +322,7 @@ describe('useSnapshots composable', () => {
 
       // Should not call close/open but still call restore
       expect(api.closeIndex).not.toHaveBeenCalled()
-      expect(api.restoreSnapshot).toHaveBeenCalledWith(DEFAULT_REPOSITORY, 'nonexistent')
+      expect(api.restoreSnapshot).toHaveBeenCalledWith(ES_SNAPSHOT_DEFAULT_REPOSITORY, 'nonexistent')
       expect(api.openIndex).not.toHaveBeenCalled()
     })
   })
@@ -282,7 +368,7 @@ describe('useSnapshots composable', () => {
       await wrapper.vm.fetchRepository()
       await flushPromises()
 
-      expect(api.getSnapshotRepository).toHaveBeenCalledWith(DEFAULT_REPOSITORY)
+      expect(api.getSnapshotRepository).toHaveBeenCalledWith(ES_SNAPSHOT_DEFAULT_REPOSITORY)
       expect(wrapper.vm.repositoryConfig).toEqual(mockConfig.datashare_backup)
       expect(wrapper.vm.hasRepository).toBe(true)
       expect(wrapper.vm.repositoryError).toBeNull()
@@ -312,7 +398,7 @@ describe('useSnapshots composable', () => {
       await wrapper.vm.createRepository('/backups')
       await flushPromises()
 
-      expect(api.createSnapshotRepository).toHaveBeenCalledWith(DEFAULT_REPOSITORY, {
+      expect(api.createSnapshotRepository).toHaveBeenCalledWith(ES_SNAPSHOT_DEFAULT_REPOSITORY, {
         type: 'fs',
         settings: { location: '/backups' }
       })
@@ -332,7 +418,7 @@ describe('useSnapshots composable', () => {
       await wrapper.vm.deleteRepository()
       await flushPromises()
 
-      expect(api.deleteSnapshotRepository).toHaveBeenCalledWith(DEFAULT_REPOSITORY)
+      expect(api.deleteSnapshotRepository).toHaveBeenCalledWith(ES_SNAPSHOT_DEFAULT_REPOSITORY)
       expect(wrapper.vm.repositoryConfig).toBeNull()
       expect(wrapper.vm.snapshots).toEqual([])
       expect(wrapper.vm.hasRepository).toBe(false)

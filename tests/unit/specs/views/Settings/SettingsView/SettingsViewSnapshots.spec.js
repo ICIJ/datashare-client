@@ -4,7 +4,7 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import SettingsViewSnapshots from '@/views/Settings/SettingsView/SettingsViewSnapshots'
 import { MODE_NAME } from '@/mode'
 import { apiInstance as api } from '@/api/apiInstance'
-import { DEFAULT_REPOSITORY } from '@/composables/useSnapshots'
+import { ES_SNAPSHOT_DEFAULT_REPOSITORY } from '@/enums/esSnapshots'
 
 vi.mock('@/api/apiInstance', () => {
   return {
@@ -27,7 +27,7 @@ describe('SettingsViewSnapshots', () => {
   beforeEach(async () => {
     api.getSnapshots.mockResolvedValue({ snapshots: [] })
     api.getSnapshotRepository.mockResolvedValue({
-      [DEFAULT_REPOSITORY]: { type: 'fs', settings: { location: '/backups' } }
+      [ES_SNAPSHOT_DEFAULT_REPOSITORY]: { type: 'fs', settings: { location: '/backups' } }
     })
     const core = CoreSetup.init().useAll()
     plugins = core.plugins
@@ -56,13 +56,13 @@ describe('SettingsViewSnapshots', () => {
   it('should fetch repository on mount', async () => {
     mount(SettingsViewSnapshots, { global: { plugins } })
     await flushPromises()
-    expect(api.getSnapshotRepository).toHaveBeenCalledWith(DEFAULT_REPOSITORY)
+    expect(api.getSnapshotRepository).toHaveBeenCalledWith(ES_SNAPSHOT_DEFAULT_REPOSITORY)
   })
 
   it('should fetch snapshots when repository exists', async () => {
     mount(SettingsViewSnapshots, { global: { plugins } })
     await flushPromises()
-    expect(api.getSnapshots).toHaveBeenCalledWith(DEFAULT_REPOSITORY)
+    expect(api.getSnapshots).toHaveBeenCalledWith(ES_SNAPSHOT_DEFAULT_REPOSITORY)
   })
 
   it('should display snapshots when available', async () => {

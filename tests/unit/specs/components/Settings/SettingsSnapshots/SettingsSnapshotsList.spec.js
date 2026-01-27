@@ -82,6 +82,6 @@ describe('SettingsSnapshotsList', () => {
     ]
     const wrapper = mountComponent({ snapshots })
     const headers = wrapper.findAllComponents({ name: 'PageTableTh' })
-    expect(headers).toHaveLength(4) // Status, Name, Date, Projects
+    expect(headers).toHaveLength(6) // Status, Name, Date, Version, Distribution, Projects
   })
 })
