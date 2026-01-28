@@ -1,4 +1,6 @@
 <script setup>
+import DisplayEmpty from '@/components/Display/DisplayEmpty'
+
 defineOptions({ name: 'DisplayVersion' })
 
 defineProps({
@@ -10,16 +12,13 @@ defineProps({
 </script>
 
 <template>
-  <span
-    v-if="value"
-    class="display-version font-monospace"
+  <display-empty
+    :value="value"
+    class="display-version"
+    :class="{ 'font-monospace': value }"
   >
-    {{ value }}
-  </span>
-  <span
-    v-else
-    class="display-version display-version--empty"
-  >
-    -
-  </span>
+    <template #empty>
+      <span class="display-version--empty">-</span>
+    </template>
+  </display-empty>
 </template>
