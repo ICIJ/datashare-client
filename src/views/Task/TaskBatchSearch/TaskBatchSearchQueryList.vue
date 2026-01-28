@@ -83,6 +83,8 @@ async function fetchBatchSearch() {
   const task = await taskStore.fetchTask(props.uuid)
   // Then fetch the batch search record
   const batchSearchRecord = await core.api.getBatchSearch(props.uuid)
+  console.log(batchSearchRecord)
+  console.log(task.result)
   // Set the page title according to the batch search name
   core.pageTitle = batchSearchRecord.name
   // Finally, we set and extend the batchSearch reactive object
@@ -90,7 +92,8 @@ async function fetchBatchSearch() {
   // sure we have up to date information.
   batchSearch.value = {
     ...batchSearchRecord,
-    nbResults: task.result?.value ?? 0,
+    nbResults: task.result?.value.nbResults ?? 0,
+    nbQueriesWithoutResults: task.result?.value.nbQueriesWithoutResults ?? 0,
     userId: task?.args?.user?.id,
     state: task.state,
     errorMessage: batchSearchRecord.errorMessage ?? task.error?.message ?? null,
