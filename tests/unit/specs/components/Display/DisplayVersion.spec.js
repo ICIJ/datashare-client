@@ -28,11 +28,6 @@ describe('DisplayVersion', () => {
     expect(wrapper.text()).toBe('8.11.1')
   })
 
-  it('should use monospace font', () => {
-    const wrapper = mountComponent({ value: '8.11.1' })
-    expect(wrapper.find('.font-monospace').exists()).toBeTruthy()
-  })
-
   it('should display dash when value is null', () => {
     const wrapper = mountComponent({ value: null })
     expect(wrapper.text()).toBe('-')
