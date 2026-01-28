@@ -1,4 +1,5 @@
 <script setup>
+import isEmpty from 'lodash/isEmpty'
 import DisplayEmpty from '@/components/Display/DisplayEmpty'
 
 defineOptions({ name: 'DisplayVersion' })
@@ -15,10 +16,10 @@ defineProps({
   <display-empty
     :value="value"
     class="display-version"
-    :class="{ 'font-monospace': value }"
+    :class="{ 'display-version--empty': isEmpty(value) }"
   >
     <template #empty>
-      <span class="display-version--empty">-</span>
+      -
     </template>
   </display-empty>
 </template>
