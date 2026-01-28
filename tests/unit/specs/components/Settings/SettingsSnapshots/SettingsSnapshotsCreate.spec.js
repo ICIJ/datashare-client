@@ -1,9 +1,9 @@
 import { mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
-import SettingsSnapshotsActionsCreate from '@/components/Settings/SettingsSnapshots/SettingsSnapshotsActionsCreate'
+import SettingsSnapshotsCreate from '@/components/Settings/SettingsSnapshots/SettingsSnapshotsCreate'
 
-describe('SettingsSnapshotsActionsCreate', () => {
+describe('SettingsSnapshotsCreate', () => {
   let plugins
 
   beforeEach(() => {
@@ -12,7 +12,7 @@ describe('SettingsSnapshotsActionsCreate', () => {
   })
 
   function mountComponent(props = {}) {
-    return mount(SettingsSnapshotsActionsCreate, {
+    return mount(SettingsSnapshotsCreate, {
       global: { plugins },
       props: {
         isLoading: false,
@@ -23,7 +23,7 @@ describe('SettingsSnapshotsActionsCreate', () => {
 
   it('should render the create button', () => {
     const wrapper = mountComponent()
-    expect(wrapper.find('.settings-snapshots-actions-create').exists()).toBeTruthy()
+    expect(wrapper.find('.settings-snapshots-create').exists()).toBeTruthy()
   })
 
   it('should emit create event when clicked', async () => {

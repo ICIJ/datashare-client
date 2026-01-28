@@ -4,7 +4,7 @@ import { ButtonIcon } from '@icij/murmur-next'
 
 import IPhPlus from '~icons/ph/plus'
 
-defineOptions({ name: 'SettingsSnapshotsActionsCreate' })
+defineOptions({ name: 'SettingsSnapshotsCreate' })
 
 defineProps({
   isLoading: {
@@ -23,7 +23,7 @@ const { t } = useI18n()
     variant="outline-primary"
     :icon-left="IPhPlus"
     :disabled="isLoading"
-    class="settings-snapshots-actions-create"
+    class="settings-snapshots-create"
     @click="emit('create')"
   >
     {{ t('settings.snapshots.create') }}
