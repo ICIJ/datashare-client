@@ -7,25 +7,8 @@ import { usePolling } from '@/composables/usePolling'
 import { useWait } from '@/composables/useWait'
 import { useToast } from '@/composables/useToast'
 import { SNAPSHOT_STATUS } from '@/enums/snapshotStatus'
-import { ES_SNAPSHOT_REPOSITORY_TYPE, ES_SNAPSHOT_DEFAULT_REPOSITORY, ES_SNAPSHOT_NAME_PATTERN } from '@/enums/esSnapshots'
-import { ES_DISTRIBUTION } from '@/enums/esDistributions'
-
-const formatSnapshotName = (date, version = null, distribution = null) => {
-  const parts = ['snapshot', date.getTime()]
-  if (version) parts.push(version)
-  if (distribution) parts.push(distribution)
-  return parts.join('-')
-}
-
-export const parseSnapshotName = (name) => {
-  const match = name?.match(ES_SNAPSHOT_NAME_PATTERN)
-  if (!match) return { name: name || null, version: null, distribution: ES_DISTRIBUTION.ELASTICSEARCH }
-  return {
-    name: match[1],
-    version: match[2] || null,
-    distribution: match[3] || ES_DISTRIBUTION.ELASTICSEARCH
-  }
-}
+import { ES_SNAPSHOT_REPOSITORY_TYPE, ES_SNAPSHOT_DEFAULT_REPOSITORY } from '@/enums/esSnapshots'
+import { formatSnapshotName } from '@/utils/esSnapshots'
 
 const getFirstNodeSettings = nodes => nodes[Object.keys(nodes)[0]]?.settings
 const extractPathRepo = data => castArray(getFirstNodeSettings(data?.nodes || {})?.path?.repo ?? [])
@@ -156,7 +139,7 @@ export function useSnapshots(repositoryName = ES_SNAPSHOT_DEFAULT_REPOSITORY) {
 
   async function createSnapshot() {
     const { version, distribution } = await fetchElasticsearchInfo()
-    const snapshotName = formatSnapshotName(new Date(), version, distribution)
+    const snapshotName = formatSnapshotName(version, distribution)
     const promise = api.createSnapshot(repository.value, snapshotName)
     await toastedPromise(promise, toastSnapshotCreated)
     startPolling()
@@ -240,7 +223,6 @@ export function useSnapshots(repositoryName = ES_SNAPSHOT_DEFAULT_REPOSITORY) {
     deleteSnapshot,
     restoreSnapshot,
     getSnapshotByName,
-    parseSnapshotName,
     startPolling,
     stopPolling
   }

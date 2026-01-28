@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 
 import DisplayVersion from '@/components/Display/DisplayVersion'
-import { parseSnapshotName } from '@/composables/useSnapshots'
+import { parseSnapshotName } from '@/utils/esSnapshots'
 
 defineOptions({ name: 'DisplaySnapshotVersion' })
 
