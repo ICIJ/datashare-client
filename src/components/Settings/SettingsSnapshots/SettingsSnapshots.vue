@@ -6,7 +6,7 @@ import SettingsSnapshotsList from '@/components/Settings/SettingsSnapshots/Setti
 import SettingsSnapshotsActionsCreate from '@/components/Settings/SettingsSnapshots/SettingsSnapshotsActionsCreate'
 import SettingsSnapshotsActionsDeleteRepository from '@/components/Settings/SettingsSnapshots/SettingsSnapshotsActionsDeleteRepository'
 import SettingsSnapshotsSetup from '@/components/Settings/SettingsSnapshots/SettingsSnapshotsSetup'
-import DisplayRepositoryType from '@/components/Display/DisplayRepositoryType'
+import DisplaySnapshotRepositoryType from '@/components/Display/DisplaySnapshotRepositoryType'
 import DisplayPath from '@/components/Display/DisplayPath'
 
 defineOptions({ name: 'SettingsSnapshots' })
@@ -88,7 +88,7 @@ const hasSnapshots = computed(() => props.snapshots.length > 0)
           tag="span"
         >
           <template #type>
-            <display-repository-type
+            <display-snapshot-repository-type
               :value="repositoryType"
               class="settings-snapshots__repository__type"
             />

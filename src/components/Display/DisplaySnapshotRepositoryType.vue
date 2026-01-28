@@ -7,7 +7,7 @@ import IPhHardDrives from '~icons/ph/hard-drives'
 import IPhCloud from '~icons/ph/cloud'
 import IPhDatabase from '~icons/ph/database'
 
-defineOptions({ name: 'DisplayRepositoryType' })
+defineOptions({ name: 'DisplaySnapshotRepositoryType' })
 
 const props = defineProps({
   value: {
@@ -36,18 +36,18 @@ const typeLabel = computed(() => {
 </script>
 
 <template>
-  <span class="display-repository-type">
+  <span class="display-snapshot-repository-type">
     <app-icon
-      class="display-repository-type__icon"
+      class="display-snapshot-repository-type__icon"
     >
       <component :is="typeIcon" />
     </app-icon>
-    <span class="display-repository-type__label">{{ typeLabel }}</span>
+    <span class="display-snapshot-repository-type__label">{{ typeLabel }}</span>
   </span>
 </template>
 
 <style lang="scss" scoped>
-.display-repository-type {
+.display-snapshot-repository-type {
   display: inline-flex;
   line-height: 1;
   align-items: baseline;

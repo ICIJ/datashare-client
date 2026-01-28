@@ -2,7 +2,8 @@ import { mount, flushPromises } from '@vue/test-utils'
 import { setActivePinia, createPinia } from 'pinia'
 
 import CoreSetup from '~tests/unit/CoreSetup'
-import { useSnapshots, parseSnapshotName } from '@/composables/useSnapshots'
+import { useEsSnapshots } from '@/composables/useEsSnapshots'
+import { parseSnapshotName } from '@/utils/esSnapshots'
 import { ES_DISTRIBUTION } from '@/enums/esDistributions'
 import { ES_SNAPSHOT_DEFAULT_REPOSITORY } from '@/enums/esSnapshots'
 import { SNAPSHOT_STATUS } from '@/enums/snapshotStatus'
@@ -28,7 +29,7 @@ vi.mock('@/api/apiInstance', () => {
   }
 })
 
-describe('useSnapshots composable', () => {
+describe('useEsSnapshots composable', () => {
   let plugins
 
   beforeEach(() => {
@@ -45,7 +46,7 @@ describe('useSnapshots composable', () => {
   function mountComposable() {
     const TestComponent = {
       setup() {
-        return useSnapshots()
+        return useEsSnapshots()
       },
       template: '<div></div>'
     }
@@ -145,36 +146,36 @@ describe('useSnapshots composable', () => {
 
   describe('parseSnapshotName', () => {
     it('should parse snapshot name with version and distribution', () => {
-      const result = parseSnapshotName('snapshot-1706123456789-8.11.1-opensearch')
+      const result = parseSnapshotName('curious-green-fox-dist:opensearch-ver:2.11.0')
       expect(result).toEqual({
-        name: 'snapshot-1706123456789',
-        version: '8.11.1',
+        name: 'curious-green-fox',
+        version: '2.11.0',
         distribution: ES_DISTRIBUTION.OPENSEARCH
       })
     })
 
     it('should parse snapshot name with version only and default to elasticsearch', () => {
-      const result = parseSnapshotName('snapshot-1706123456789-8.11.1')
+      const result = parseSnapshotName('curious-green-fox-ver:8.11.1')
       expect(result).toEqual({
-        name: 'snapshot-1706123456789',
+        name: 'curious-green-fox',
         version: '8.11.1',
         distribution: ES_DISTRIBUTION.ELASTICSEARCH
       })
     })
 
-    it('should parse snapshot name without version or distribution and default to elasticsearch', () => {
-      const result = parseSnapshotName('snapshot-1706123456789')
+    it('should parse snapshot name with distribution only', () => {
+      const result = parseSnapshotName('curious-green-fox-dist:opensearch')
       expect(result).toEqual({
-        name: 'snapshot-1706123456789',
+        name: 'curious-green-fox',
         version: null,
-        distribution: ES_DISTRIBUTION.ELASTICSEARCH
+        distribution: ES_DISTRIBUTION.OPENSEARCH
       })
     })
 
-    it('should handle invalid snapshot name and default to elasticsearch', () => {
-      const result = parseSnapshotName('invalid-name')
+    it('should parse snapshot name without version or distribution and default to elasticsearch', () => {
+      const result = parseSnapshotName('curious-green-fox')
       expect(result).toEqual({
-        name: 'invalid-name',
+        name: 'curious-green-fox',
         version: null,
         distribution: ES_DISTRIBUTION.ELASTICSEARCH
       })
@@ -206,7 +207,7 @@ describe('useSnapshots composable', () => {
       expect(api.createSnapshot).toHaveBeenCalledTimes(1)
       expect(api.createSnapshot).toHaveBeenCalledWith(
         ES_SNAPSHOT_DEFAULT_REPOSITORY,
-        expect.stringMatching(/^snapshot-\d{13}-2\.11\.0-opensearch$/)
+        expect.stringMatching(/^[a-z]+-[a-z]+-[a-z]+-dist:opensearch-ver:2\.11\.0$/)
       )
     })
 
@@ -223,7 +224,7 @@ describe('useSnapshots composable', () => {
 
       expect(api.createSnapshot).toHaveBeenCalledWith(
         ES_SNAPSHOT_DEFAULT_REPOSITORY,
-        expect.stringMatching(/^snapshot-\d{13}-8\.11\.1$/)
+        expect.stringMatching(/^[a-z]+-[a-z]+-[a-z]+-ver:8\.11\.1$/)
       )
     })
 
@@ -238,7 +239,7 @@ describe('useSnapshots composable', () => {
 
       expect(api.createSnapshot).toHaveBeenCalledWith(
         ES_SNAPSHOT_DEFAULT_REPOSITORY,
-        expect.stringMatching(/^snapshot-\d{13}$/)
+        expect.stringMatching(/^[a-z]+-[a-z]+-[a-z]+$/)
       )
     })
   })
