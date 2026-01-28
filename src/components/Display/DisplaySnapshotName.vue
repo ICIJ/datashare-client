@@ -16,7 +16,7 @@ const name = computed(() => parseSnapshotName(props.value).name)
 </script>
 
 <template>
-  <span class="display-snapshot-name font-monospace">
+  <span class="display-snapshot-name">
     {{ name }}
   </span>
 </template>
