@@ -7,6 +7,7 @@ import IPhArrowCounterClockwise from '~icons/ph/arrow-counter-clockwise'
 import ButtonRowAction from '@/components/Button/ButtonRowAction/ButtonRowAction'
 import ButtonRowActionDelete from '@/components/Button/ButtonRowAction/ButtonRowActionDelete'
 import { useConfirmModal } from '@/composables/useConfirmModal'
+import { parseSnapshotName } from '@/utils/esSnapshots'
 import { SNAPSHOT_STATUS } from '@/enums/snapshotStatus'
 
 defineOptions({ name: 'SettingsSnapshotsActions' })
@@ -30,12 +31,14 @@ const { afterConfirmation } = useConfirmModal()
 const isInProgress = computed(() => props.state === SNAPSHOT_STATUS.IN_PROGRESS)
 
 function confirmDelete() {
-  const description = t('settings.snapshots.delete.message', { name: props.name })
+  const { name } = parseSnapshotName(props.name)
+  const description = t('settings.snapshots.delete.message', { name })
   afterConfirmation(() => emit('delete', props.name), { description })
 }
 
 function confirmRestore() {
-  const description = t('settings.snapshots.restore.message', { name: props.name })
+  const { name } = parseSnapshotName(props.name)
+  const description = t('settings.snapshots.restore.message', { name })
   afterConfirmation(() => emit('restore', props.name), { description })
 }
 </script>
