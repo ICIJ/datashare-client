@@ -111,7 +111,7 @@ describe('SettingsSnapshots', () => {
       ]
       const wrapper = mountComponent({ snapshots })
       expect(wrapper.find('.settings-snapshots__repository__type').exists()).toBeTruthy()
-      expect(wrapper.findComponent({ name: 'DisplayRepositoryType' }).exists()).toBeTruthy()
+      expect(wrapper.findComponent({ name: 'DisplaySnapshotRepositoryType' }).exists()).toBeTruthy()
     })
 
     it('should display repository location', () => {

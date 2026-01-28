@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 
 import SettingsViewLayout from '@/views/Settings/SettingsView/SettingsViewLayout'
 import SettingsSnapshots from '@/components/Settings/SettingsSnapshots/SettingsSnapshots'
-import { useSnapshots } from '@/composables/useSnapshots'
+import { useEsSnapshots } from '@/composables/useEsSnapshots'
 
 defineOptions({ name: 'SettingsViewSnapshots' })
 
@@ -26,7 +26,7 @@ const {
   restoreSnapshot,
   startPolling,
   stopPolling
-} = useSnapshots()
+} = useEsSnapshots()
 
 async function initialize() {
   await fetchRepository()

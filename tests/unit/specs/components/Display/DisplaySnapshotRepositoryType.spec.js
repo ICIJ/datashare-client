@@ -1,9 +1,9 @@
 import { mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
-import DisplayRepositoryType from '@/components/Display/DisplayRepositoryType'
+import DisplaySnapshotRepositoryType from '@/components/Display/DisplaySnapshotRepositoryType'
 
-describe('DisplayRepositoryType', () => {
+describe('DisplaySnapshotRepositoryType', () => {
   let plugins
 
   beforeEach(() => {
@@ -12,7 +12,7 @@ describe('DisplayRepositoryType', () => {
   })
 
   function mountComponent(props = {}) {
-    return mount(DisplayRepositoryType, {
+    return mount(DisplaySnapshotRepositoryType, {
       global: { plugins },
       props
     })
@@ -20,17 +20,17 @@ describe('DisplayRepositoryType', () => {
 
   it('should render the component', () => {
     const wrapper = mountComponent({ value: 'fs' })
-    expect(wrapper.find('.display-repository-type').exists()).toBeTruthy()
+    expect(wrapper.find('.display-snapshot-repository-type').exists()).toBeTruthy()
   })
 
   it('should display the icon', () => {
     const wrapper = mountComponent({ value: 'fs' })
-    expect(wrapper.find('.display-repository-type__icon').exists()).toBeTruthy()
+    expect(wrapper.find('.display-snapshot-repository-type__icon').exists()).toBeTruthy()
   })
 
   it('should display the label', () => {
     const wrapper = mountComponent({ value: 'fs' })
-    expect(wrapper.find('.display-repository-type__label').exists()).toBeTruthy()
+    expect(wrapper.find('.display-snapshot-repository-type__label').exists()).toBeTruthy()
   })
 
   it('should display "file system" for fs type', () => {

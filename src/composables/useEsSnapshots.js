@@ -14,7 +14,7 @@ const getFirstNodeSettings = nodes => nodes[Object.keys(nodes)[0]]?.settings
 const extractPathRepo = data => castArray(getFirstNodeSettings(data?.nodes || {})?.path?.repo ?? [])
 const sortByDateDesc = (a, b) => new Date(b.start_time) - new Date(a.start_time)
 
-export function useSnapshots(repositoryName = ES_SNAPSHOT_DEFAULT_REPOSITORY) {
+export function useEsSnapshots(repositoryName = ES_SNAPSHOT_DEFAULT_REPOSITORY) {
   const { api } = useCore()
   const { registerPollOnce, unregisteredPoll } = usePolling()
   const { waitFor, loaderId, isLoading } = useWait()
