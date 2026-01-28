@@ -4,14 +4,8 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import DisplaySnapshotDistribution from '@/components/Display/DisplaySnapshotDistribution'
 
 describe('DisplaySnapshotDistribution', () => {
-  let plugins
-
-  beforeEach(() => {
-    const core = CoreSetup.init().useAll()
-    plugins = core.plugins
-  })
-
   function mountComponent(props = {}) {
+    const { plugins } = CoreSetup.init().useI18n()
     return mount(DisplaySnapshotDistribution, {
       global: { plugins },
       props
