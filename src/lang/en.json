@@ -479,6 +479,10 @@
       "gcs": "Google Cloud Storage",
       "hdfs": "HDFS",
       "url": "URL"
+    },
+    "esDistribution": {
+      "elasticsearch": "Elasticsearch",
+      "opensearch": "OpenSearch"
     }
   },
   "documentViewTabs": {
