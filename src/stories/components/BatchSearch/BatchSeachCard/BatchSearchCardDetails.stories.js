@@ -27,7 +27,7 @@ export default {
     status: 'success',
     date: new Date(),
     author: 'jsmith',
-    visibility: true,
+    published: true,
     phraseMatch: true,
     proximity: 1,
     fuzziness: 2,
