@@ -471,19 +471,17 @@
   "documentViewerPdfNavDropdownEmbed": {
     "switch": "Switch to built-in viewer"
   },
-  "display": {
-    "repositoryType": {
-      "fs": "file system",
-      "s3": "Amazon S3",
-      "azure": "Azure",
-      "gcs": "Google Cloud Storage",
-      "hdfs": "HDFS",
-      "url": "URL"
-    },
-    "esDistribution": {
-      "elasticsearch": "Elasticsearch",
-      "opensearch": "OpenSearch"
-    }
+  "displayRepositoryType": {
+    "fs": "file system",
+    "s3": "Amazon S3",
+    "azure": "Azure",
+    "gcs": "Google Cloud Storage",
+    "hdfs": "HDFS",
+    "url": "URL"
+  },
+  "displayEsDistribution": {
+    "elasticsearch": "Elasticsearch",
+    "opensearch": "OpenSearch"
   },
   "documentViewTabs": {
     "text": "Text",
