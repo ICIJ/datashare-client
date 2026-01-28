@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 import ButtonRowActionDelete from '@/components/Button/ButtonRowAction/ButtonRowActionDelete'
 import { useConfirmModal } from '@/composables/useConfirmModal'
 
-defineOptions({ name: 'SettingsSnapshotsActionsDeleteRepository' })
+defineOptions({ name: 'SettingsSnapshotsDeleteRepository' })
 
 defineProps({
   isLoading: {
@@ -33,7 +33,7 @@ async function confirmDelete() {
     :hide-label="false"
     :disabled="isLoading"
     :label="t('settings.snapshots.deleteRepository.label')"
-    class="settings-snapshots-actions-delete-repository"
+    class="settings-snapshots-delete-repository"
     @click="confirmDelete"
   />
 </template>

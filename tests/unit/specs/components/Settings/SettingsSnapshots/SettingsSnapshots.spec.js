@@ -37,12 +37,12 @@ describe('SettingsSnapshots', () => {
 
     it('should display the create button', () => {
       const wrapper = mountComponent()
-      expect(wrapper.findComponent({ name: 'SettingsSnapshotsActionsCreate' }).exists()).toBeTruthy()
+      expect(wrapper.findComponent({ name: 'SettingsSnapshotsCreate' }).exists()).toBeTruthy()
     })
 
     it('should emit create event when create button is clicked', async () => {
       const wrapper = mountComponent()
-      const createButton = wrapper.findComponent({ name: 'SettingsSnapshotsActionsCreate' })
+      const createButton = wrapper.findComponent({ name: 'SettingsSnapshotsCreate' })
       await createButton.trigger('click')
       expect(wrapper.emitted('create')).toBeTruthy()
     })
@@ -89,7 +89,7 @@ describe('SettingsSnapshots', () => {
 
     it('should display the delete repository button', () => {
       const wrapper = mountComponent()
-      expect(wrapper.findComponent({ name: 'SettingsSnapshotsActionsDeleteRepository' }).exists()).toBeTruthy()
+      expect(wrapper.findComponent({ name: 'SettingsSnapshotsDeleteRepository' }).exists()).toBeTruthy()
     })
 
     it('should display repository information when snapshots exist', () => {
@@ -136,7 +136,7 @@ describe('SettingsSnapshots', () => {
 
     it('should not show create button', () => {
       const wrapper = mountComponent({ hasRepository: false, repositoryConfig: null })
-      expect(wrapper.findComponent({ name: 'SettingsSnapshotsActionsCreate' }).exists()).toBeFalsy()
+      expect(wrapper.findComponent({ name: 'SettingsSnapshotsCreate' }).exists()).toBeFalsy()
     })
 
     it('should emit createRepository event from setup', async () => {
