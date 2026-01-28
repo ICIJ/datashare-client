@@ -46,6 +46,8 @@ const canManageBatchSearch = computed(() => batchSearch.user.id === username.val
 
 <style lang="scss" scoped>
 .batch-search-card {
+  min-width:300px;
+
   &:deep(.batch-search-card__title) {
     padding: $spacer-xxs 0;
   }

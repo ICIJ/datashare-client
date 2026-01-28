@@ -50,7 +50,7 @@ const {
   user,
   projects,
   state,
-  visibility,
+  published,
   uri
 } = batchSearch
 
@@ -75,10 +75,10 @@ const noResultsQueries = computed(() => {
 const noResultsQueriesDownload = computed(() => t('batchSearchCard.noResultsQueriesDownload'))
 const noResultsQueriesLabel = hasQueriesWithoutResultsNumber ? noResultsQueries : noResultsQueriesDownload
 
-const visibilityIcon = visibility ? IPhEye : IPhEyeSlash
+const visibilityIcon = published ? IPhEye : IPhEyeSlash
 const visibilityPrivate = computed(() => t('batchSearchCardDetails.visibilityPrivate'))
 const visibilityShared = computed(() => t('batchSearchCardDetails.visibilityShared'))
-const visibilityValue = visibility ? visibilityShared : visibilityPrivate
+const visibilityValue = published ? visibilityShared : visibilityPrivate
 
 const phraseMatchOn = computed(() => t('batchSearchCardDetails.phraseMatchOn'))
 const phraseMatchOff = computed(() => t('batchSearchCardDetails.phraseMatchOff'))
