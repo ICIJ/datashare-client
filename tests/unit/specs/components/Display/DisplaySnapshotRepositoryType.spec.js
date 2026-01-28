@@ -1,18 +1,13 @@
-import { mount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import DisplaySnapshotRepositoryType from '@/components/Display/DisplaySnapshotRepositoryType'
 
 describe('DisplaySnapshotRepositoryType', () => {
-  let plugins
-
-  beforeEach(() => {
-    const core = CoreSetup.init().useAll()
-    plugins = core.plugins
-  })
-
   function mountComponent(props = {}) {
-    return mount(DisplaySnapshotRepositoryType, {
+    const { plugins } = CoreSetup.init().useI18n()
+
+    return shallowMount(DisplaySnapshotRepositoryType, {
       global: { plugins },
       props
     })

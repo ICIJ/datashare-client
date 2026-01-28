@@ -4,14 +4,9 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import DisplaySnapshotVersion from '@/components/Display/DisplaySnapshotVersion'
 
 describe('DisplaySnapshotVersion', () => {
-  let plugins
-
-  beforeEach(() => {
-    const core = CoreSetup.init().useAll()
-    plugins = core.plugins
-  })
-
   function mountComponent(props = {}) {
+    const { plugins } = CoreSetup.init().useI18n()
+
     return mount(DisplaySnapshotVersion, {
       global: { plugins },
       props
