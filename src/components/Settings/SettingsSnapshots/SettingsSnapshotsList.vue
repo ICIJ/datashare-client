@@ -7,8 +7,10 @@ import EmptyState from '@/components/EmptyState/EmptyState'
 import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayDatetimeShort from '@/components/Display/DisplayDatetimeShort'
 import DisplayProjectList from '@/components/Display/DisplayProjectList'
+import DisplaySnapshotName from '@/components/Display/DisplaySnapshotName'
+import DisplaySnapshotVersion from '@/components/Display/DisplaySnapshotVersion'
+import DisplaySnapshotDistribution from '@/components/Display/DisplaySnapshotDistribution'
 import SettingsSnapshotsActions from '@/components/Settings/SettingsSnapshots/SettingsSnapshotsActions'
-import { parseSnapshotName } from '@/composables/useSnapshots'
 
 defineOptions({ name: 'SettingsSnapshotsList' })
 
@@ -55,9 +57,6 @@ const fields = computed(() => [
   }
 ])
 
-const getVersion = name => parseSnapshotName(name).version
-const getDistribution = name => parseSnapshotName(name).distribution
-
 const isEmpty = computed(() => props.snapshots.length === 0)
 
 function statusLabel(state) {
@@ -93,7 +92,7 @@ function statusLabel(state) {
         />
       </template>
       <template #cell(snapshot)="{ item }">
-        <span class="font-monospace">{{ item.snapshot }}</span>
+        <display-snapshot-name :value="item.snapshot" />
       </template>
       <template #cell(start_time)="{ item }">
         <display-datetime-short
@@ -103,19 +102,10 @@ function statusLabel(state) {
         <span v-else>-</span>
       </template>
       <template #cell(version)="{ item }">
-        <span
-          v-if="getVersion(item.snapshot)"
-          class="font-monospace"
-        >
-          {{ getVersion(item.snapshot) }}
-        </span>
-        <span v-else>-</span>
+        <display-snapshot-version :value="item.snapshot" />
       </template>
       <template #cell(distribution)="{ item }">
-        <span v-if="getDistribution(item.snapshot)">
-          {{ getDistribution(item.snapshot) }}
-        </span>
-        <span v-else>-</span>
+        <display-snapshot-distribution :value="item.snapshot" />
       </template>
       <template #cell(indices)="{ item }">
         <display-project-list
