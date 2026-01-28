@@ -19,37 +19,32 @@ describe('DisplaySnapshotDistribution', () => {
   }
 
   it('should render the component', () => {
-    const wrapper = mountComponent({ value: 'snapshot-1706123456789-8.11.1-opensearch' })
+    const wrapper = mountComponent({ value: 'curious-green-fox-dist:opensearch-ver:2.11.0' })
     expect(wrapper.find('.display-snapshot-distribution').exists()).toBeTruthy()
   })
 
   it('should extract and display OpenSearch distribution', () => {
-    const wrapper = mountComponent({ value: 'snapshot-1706123456789-8.11.1-opensearch' })
+    const wrapper = mountComponent({ value: 'curious-green-fox-dist:opensearch-ver:2.11.0' })
     expect(wrapper.text()).toBe('OpenSearch')
   })
 
   it('should extract and display Elasticsearch distribution', () => {
-    const wrapper = mountComponent({ value: 'snapshot-1706123456789-8.11.1-elasticsearch' })
+    const wrapper = mountComponent({ value: 'curious-green-fox-dist:elasticsearch-ver:8.11.1' })
     expect(wrapper.text()).toBe('Elasticsearch')
   })
 
   it('should default to Elasticsearch when no distribution in snapshot name', () => {
-    const wrapper = mountComponent({ value: 'snapshot-1706123456789-8.11.1' })
+    const wrapper = mountComponent({ value: 'curious-green-fox-ver:8.11.1' })
     expect(wrapper.text()).toBe('Elasticsearch')
   })
 
-  it('should default to Elasticsearch when only timestamp in snapshot name', () => {
-    const wrapper = mountComponent({ value: 'snapshot-1706123456789' })
-    expect(wrapper.text()).toBe('Elasticsearch')
-  })
-
-  it('should default to Elasticsearch for invalid snapshot name format', () => {
-    const wrapper = mountComponent({ value: 'invalid-name' })
+  it('should default to Elasticsearch when only name in snapshot', () => {
+    const wrapper = mountComponent({ value: 'curious-green-fox' })
     expect(wrapper.text()).toBe('Elasticsearch')
   })
 
   it('should use DisplayEsDistribution component under the hood', () => {
-    const wrapper = mountComponent({ value: 'snapshot-1706123456789-8.11.1-opensearch' })
+    const wrapper = mountComponent({ value: 'curious-green-fox-dist:opensearch-ver:2.11.0' })
     expect(wrapper.findComponent({ name: 'DisplayEsDistribution' }).exists()).toBeTruthy()
   })
 })

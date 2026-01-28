@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 
-import { parseSnapshotName } from '@/composables/useSnapshots'
+import { parseSnapshotName } from '@/utils/esSnapshots'
 
 defineOptions({ name: 'DisplaySnapshotName' })
 

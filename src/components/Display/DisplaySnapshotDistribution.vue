@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 
 import DisplayEsDistribution from '@/components/Display/DisplayEsDistribution'
-import { parseSnapshotName } from '@/composables/useSnapshots'
+import { parseSnapshotName } from '@/utils/esSnapshots'
 
 defineOptions({ name: 'DisplaySnapshotDistribution' })
 

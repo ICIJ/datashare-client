@@ -20,4 +20,5 @@ export const esSnapshotRepositoryTypeValidator = v => ES_SNAPSHOT_REPOSITORY_TYP
 
 // Snapshot constants
 export const ES_SNAPSHOT_DEFAULT_REPOSITORY = 'datashare_backup'
-export const ES_SNAPSHOT_NAME_PATTERN = /^(snapshot-\d+)(?:-([^-]+))?(?:-([^-]+))?$/
+export const ES_SNAPSHOT_DIST_PREFIX = '-dist:'
+export const ES_SNAPSHOT_VER_PREFIX = '-ver:'
