@@ -16,7 +16,7 @@ const props = defineProps({
 const { t } = useI18n()
 
 const label = computed(() => {
-  return t(`display.esDistribution.${props.value}`, props.value)
+  return t(`displayEsDistribution.${props.value}`, props.value)
 })
 </script>
 

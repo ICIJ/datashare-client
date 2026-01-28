@@ -31,7 +31,7 @@ const typeIcon = computed(() => {
 })
 
 const typeLabel = computed(() => {
-  return t(`display.repositoryType.${props.value}`, props.value)
+  return t(`displayRepositoryType.${props.value}`, props.value)
 })
 </script>
 
