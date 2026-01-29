@@ -24,7 +24,7 @@ const props = defineProps({
 const { getRolesByProject, formatRoles } = usePolicies()
 const roles = computed(() => getRolesByProject(props.project.name))
 const { t } = useI18n()
-const rolesTitle = computed(() => t('displayRoles.yourRoles', { roles: formatRoles(t,roles.value) }, roles.value.length))
+const rolesTitle = computed(() => t('displayRoles.yourRoles', { roles: formatRoles(t, roles.value) }, roles.value.length))
 
 </script>
 
