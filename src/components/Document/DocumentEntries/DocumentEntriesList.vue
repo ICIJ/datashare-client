@@ -1,5 +1,5 @@
 <script setup>
-import { computed, toValue, useTemplateRef } from 'vue'
+import { computed, toRef, toValue, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import VueScrollTo from 'vue-scrollto'
 
@@ -7,6 +7,7 @@ import DocumentCard from '@/components/Document/DocumentCard/DocumentCard'
 import DocumentCardPlaceholder from '@/components/Document/DocumentCard/DocumentCardPlaceholder'
 import DocumentFloating from '@/components/Document/DocumentFloating'
 import { useDocument } from '@/composables/useDocument'
+import { useDocumentEntryMemo } from '@/composables/useDocumentEntryMemo'
 import { useSelection } from '@/composables/useSelection'
 import { DISPLAY, displayValidator } from '@/enums/documentFloating'
 
@@ -35,9 +36,12 @@ const { t } = useI18n()
 
 const selection = defineModel('selection', { type: Array, default: () => [] })
 
+const elementRef = useTemplateRef('element')
 const { isRouteActive, watchDocument } = useDocument()
 const { selectionValues } = useSelection(selection)
-const elementRef = useTemplateRef('element')
+const { addProperties, addSelectMode, getMemoKey } = useDocumentEntryMemo()
+addProperties(toRef(props, 'properties'))
+addSelectMode(toRef(props, 'selectMode'))
 
 const scrollDocumentCardIntoView = function ({ id, index } = {}) {
   const selector = `.document-card[data-entry-id="${id}"][data-entry-index="${index}"]`
@@ -90,7 +94,7 @@ watchDocument(scrollDocumentCardIntoView)
               v-for="entry in entries"
               :key="entry.id"
               v-model:selected="selectionValues[entry.id]"
-              v-memo="[entry.id, selectionValues[entry.id], isRouteActive(entry)]"
+              v-memo="getMemoKey(entry, selectionValues[entry.id], isRouteActive(entry))"
               :active="isRouteActive(entry)"
               :document="entry"
               :select-mode="selectMode"
