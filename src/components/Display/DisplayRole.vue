@@ -22,7 +22,7 @@ const props = defineProps({
 
 const { formatRole } = usePolicies()
 const { t } = useI18n()
-const role = computed(() => formatRole(t(ROLE_KEY[props.value])))
+const role = computed(() => formatRole(t,props.value))
 </script>
 
 <template>
