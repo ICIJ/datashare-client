@@ -1,15 +1,16 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, toRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import DocumentCardGrid from '@/components/Document/DocumentCard/DocumentCardGrid'
 import DocumentCardGridPlaceholder from '@/components/Document/DocumentCard/DocumentCardGridPlaceholder'
+import { useDocumentEntryMemo } from '@/composables/useDocumentEntryMemo'
 import { useSelection } from '@/composables/useSelection'
 
 const selection = defineModel('selection', { type: Array, default: () => [] })
 const { selectionValues } = useSelection(selection)
 
-const { loading, entries } = defineProps({
+const props = defineProps({
   entries: {
     type: Array
   },
@@ -25,9 +26,13 @@ const { loading, entries } = defineProps({
     type: Boolean
   }
 })
-const { t } = useI18n()
 
-const noMatches = computed(() => !loading && !entries.length)
+const { t } = useI18n()
+const { addProperties, addSelectMode, getMemoKey } = useDocumentEntryMemo()
+addProperties(toRef(props, 'properties'))
+addSelectMode(toRef(props, 'selectMode'))
+
+const noMatches = computed(() => !props.loading && !props.entries.length)
 </script>
 
 <template>
@@ -46,7 +51,7 @@ const noMatches = computed(() => !loading && !entries.length)
         <div
           v-for="entry in entries"
           :key="entry.id"
-          v-memo="[entry.id, selectionValues[entry.id]]"
+          v-memo="getMemoKey(entry, selectionValues[entry.id])"
           class="document-entries-grid__list__item"
         >
           <document-card-grid
