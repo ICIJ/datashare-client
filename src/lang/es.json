@@ -295,7 +295,7 @@
   "roles": {
     "admin": "Admin",
     "writer": "Editor",
-    "reader": "Viewer"
+    "reader": "Member"
   },
   "searchFormControl": {
     "submitLabel": "Buscar"
