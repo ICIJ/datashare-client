@@ -1,6 +1,8 @@
 <script setup>
+import { toRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+import { useDocumentEntryMemo } from '@/composables/useDocumentEntryMemo'
 import { useSelection } from '@/composables/useSelection'
 import DocumentRow from '@/components/Document/DocumentRow/DocumentRow'
 import DocumentRowPlaceholder from '@/components/Document/DocumentRow/DocumentRowPlaceholder'
@@ -8,7 +10,7 @@ import DocumentRowPlaceholder from '@/components/Document/DocumentRow/DocumentRo
 const selection = defineModel('selection', { type: Array, default: () => [] })
 const { selectionValues } = useSelection(selection)
 
-defineProps({
+const props = defineProps({
   entries: {
     type: Array
   },
@@ -29,7 +31,11 @@ defineProps({
     default: false
   }
 })
+
 const { t } = useI18n()
+const { addProperties, addSelectMode, getMemoKey } = useDocumentEntryMemo()
+addProperties(toRef(props, 'properties'))
+addSelectMode(toRef(props, 'selectMode'))
 </script>
 
 <template>
@@ -44,7 +50,7 @@ const { t } = useI18n()
       v-for="entry in entries"
       :key="entry.id"
       v-model:selected="selectionValues[entry.id]"
-      v-memo="[entry.id, selectionValues[entry.id]]"
+      v-memo="getMemoKey(entry, selectionValues[entry.id])"
       :document="entry"
       :properties="properties"
       :select-mode="selectMode"
