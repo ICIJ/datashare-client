@@ -202,118 +202,118 @@
     "title": "出了点问题",
     "description": "发生错误。请稍后重试，如果问题仍然存在，请联系您的管理员。",
     "noProjects": "您的项目列表为空。请联系您的管理员。",
-    "notFound": "Page not found.",
-    "logout": "Log out",
-    "faq": "FAQ",
-    "userGuides": "User guides",
-    "help": "Ask for help"
+    "notFound": "未找到页面。",
+    "logout": "退出登录",
+    "faq": "常见问题",
+    "userGuides": "用户指南",
+    "help": "寻求帮助"
   },
   "filtersPanelToggler": {
-    "label": "Close filters"
+    "label": "关闭筛选"
   },
   "filtersPanelSectionFilterActions": {
-    "expand": "Expand",
-    "contextualize": "Contextualize",
-    "exclude": "Exclude"
+    "expand": "展开",
+    "contextualize": "情境化",
+    "exclude": "排除"
   },
   "filtersPanelSectionFilterTitleToggler": {
-    "toggle": "Toggle filter"
+    "toggle": "切换筛选"
   },
   "filtersPanelSearch": {
-    "placeholder": "Search filters"
+    "placeholder": "搜索筛选"
   },
   "search": {
-    "title": "Search",
-    "errorStateLabel": "We were unable to perform your search. This might be due to a server error or a syntax error in your query.",
-    "emptyStateLabel": "Oh, it’s lonely in here... This project has no documents yet.",
-    "emptyStateAction": "Add documents",
+    "title": "搜索文档",
+    "errorStateLabel": "我们无法执行您的搜索。这可能是由于服务器错误或您的查询语句存在语法错误。",
+    "emptyStateLabel": "噢，这里好冷清……此项目目前还没有任何文档。",
+    "emptyStateAction": "添加文档",
     "errors": {
-      "badRequest": "Your search query contains an error",
-      "internalError": "The server encountered a problem",
-      "noConnections": "The server is not connected",
-      "notFound": "Nothing was found",
-      "requestTimeout": "Your query did not succeed because of a timeout",
-      "serviceUnavailable": "The server is unable to satisfy your request",
-      "somethingWrong": "Something went wrong",
-      "tryAgain": "Try again"
+      "badRequest": "您的搜索查询包含错误",
+      "internalError": "服务器遇到问题",
+      "noConnections": "服务器未连接",
+      "notFound": "未找到结果",
+      "requestTimeout": "您的查询因超时而失败",
+      "serviceUnavailable": "服务器无法满足您的请求",
+      "somethingWrong": "出了点问题",
+      "tryAgain": "重试"
     },
     "field": {
-      "all": "All fields",
-      "tags": "Tags",
-      "title": "Name",
-      "author": "Author",
-      "recipients": "Recipients",
-      "content": "Content",
-      "path": "Path",
-      "thread": "Thread ID",
-      "description": "Description"
+      "all": "所有区域",
+      "tags": "标签",
+      "title": "名称",
+      "author": "作者",
+      "recipients": "接收人",
+      "content": "内容",
+      "path": "路径",
+      "thread": "主题 ID",
+      "description": "描述"
     },
-    "placeholder": "Search in documents...",
-    "buttonLabel": "Search",
-    "searchIn": "Filter {plural}...",
-    "hideFilters": "Hide filters",
-    "showFilters": "Show filters",
-    "contextualizeFiltersLabel": "Contextualize filters",
-    "contextualizeFiltersDescription": "Filters on the left panel will be updated according to the search results.",
-    "tips": "Tips to improve searching",
+    "placeholder": "键入查询语句、使用运算符或键入正则表达式…",
+    "buttonLabel": "搜索",
+    "searchIn": "筛选 {plural}…",
+    "hideFilters": "隐藏筛选",
+    "showFilters": "显示筛选",
+    "contextualizeFiltersLabel": "情境化筛选",
+    "contextualizeFiltersDescription": "左侧面板的筛选将根据搜索结果进行更新。",
+    "tips": "改善搜索的技巧",
     "settings": {
-      "title": "Search settings",
-      "resultsPerPage": "Number of results by page"
+      "title": "结果设置",
+      "resultsPerPage": "每页文档数"
     },
     "results": {
-      "match": "match in doc",
-      "entities": "nb entities",
-      "results": "on 1 document | on {total} documents",
-      "noResults": "No documents found",
-      "perPage": "per page",
-      "sortedByPath": "sorted by path",
-      "batchDownloadNotAllowed": "Batch downloads are not allowed on multiple projects.",
-      "batchDownload": "Download results",
-      "batchDownloadSubmit": "You are about to download 1 document. | You are about to download {total} documents.",
-      "warningNumber": "You cannot download more than {number} documents.",
-      "warningSize": "You cannot download more than {size}B.",
-      "warningConfirm": "Do you still want to download the first documents of this search?",
+      "match": "文档中匹配",
+      "entities": "实体数量",
+      "results": "1 个文档 | {total} 个文档",
+      "noResults": "未找到文档",
+      "perPage": "每页",
+      "sortedByPath": "按路径排序",
+      "batchDownloadNotAllowed": "多个项目不允许批量下载。",
+      "batchDownload": "下载结果",
+      "batchDownloadSubmit": "您即将下载 1 个文档。| 您即将下载 {total} 个文档。",
+      "warningNumber": "您最多只能下载 {number} 个文档。",
+      "warningSize": "您最多只能下载 {size}B 的文件。",
+      "warningConfirm": "您仍然想要下载本次搜索结果的首批文档吗？",
       "sort": {
-        "sortLabel": "Sort",
-        "sort": "Sort by",
-        "relevance": "Relevance",
-        "dateNewest": "Indexing date (newest)",
-        "dateOldest": "Indexing date (oldest)",
-        "creationDateNewest": "Creation date (newest)",
-        "creationDateOldest": "Creation date (oldest)",
-        "sizeLargest": "Size (decreasing)",
-        "sizeSmallest": "Size (increasing)",
-        "path": "File path (A to Z)",
-        "pathReverse": "File path (Z to A)",
-        "titleNorm": "File name (A to Z)",
-        "titleNormReverse": "File name (Z to A)",
-        "default": "default",
-        "count": "frequency"
+        "sortLabel": "排序",
+        "sort": "排序方式",
+        "relevance": "相关程度",
+        "dateNewest": "索引日期（最近的在前）",
+        "dateOldest": "索引日期（最早的在前）",
+        "creationDateNewest": "创建日期（最近的在前）",
+        "creationDateOldest": "创建日期（最早的在前）",
+        "sizeLargest": "大小（降序）",
+        "sizeSmallest": "大小（升序）",
+        "path": "文件路径（A 到 Z）",
+        "pathReverse": "文件路径（Z 到 A）",
+        "titleNorm": "文件名（A 到 Z）",
+        "titleNormReverse": "文件名（Z 到 A）",
+        "default": "默认",
+        "count": "频率"
       }
     }
   },
   "roles": {
-    "admin": "Admin",
-    "writer": "Editor",
-    "reader": "Medlem"
+    "admin": "管理员",
+    "writer": "编辑者",
+    "reader": "成员"
   },
   "searchFormControl": {
-    "submitLabel": "Search"
+    "submitLabel": "搜索"
   },
   "searchParameterQuery": {
-    "title": "Unable to parse the query"
+    "title": "无法解析查询"
   },
   "searchSavedList": {
-    "title": "Saved searches",
-    "allRemoved": "All saved searches have been removed.",
-    "emptyStateLabel": "There are no saved searches. Go to search to save important searches",
-    "emptyStateAction": "Go to search"
+    "title": "保存的搜索",
+    "allRemoved": "所有已保存的搜索均已删除。",
+    "emptyStateLabel": "没有已保存的搜索。请前往搜索页面保存重要的搜索。",
+    "emptyStateAction": "转到搜索"
   },
   "searchSavedEntries": {
     "fields": {
-      "creationDate": "Created on",
-      "name": "Name of the saved search",
-      "author": "Author"
+      "creationDate": "创建于",
+      "name": "已保存搜索的名称",
+      "author": "作者"
     },
     "empty": "No saved searches."
   },
