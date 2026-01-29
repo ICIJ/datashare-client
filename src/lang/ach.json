@@ -292,6 +292,11 @@
       }
     }
   },
+  "roles": {
+    "admin": "crwdns10030:0crwdne10030:0",
+    "writer": "crwdns10032:0crwdne10032:0",
+    "reader": "crwdns10154:0crwdne10154:0"
+  },
   "searchFormControl": {
     "submitLabel": "crwdns7874:0crwdne7874:0"
   },
@@ -465,6 +470,18 @@
   },
   "documentViewerPdfNavDropdownEmbed": {
     "switch": "crwdns9972:0crwdne9972:0"
+  },
+  "displayRepositoryType": {
+    "fs": "crwdns10036:0crwdne10036:0",
+    "s3": "crwdns10038:0crwdne10038:0",
+    "azure": "crwdns10040:0crwdne10040:0",
+    "gcs": "crwdns10042:0crwdne10042:0",
+    "hdfs": "crwdns10044:0crwdne10044:0",
+    "url": "crwdns10046:0crwdne10046:0"
+  },
+  "displayEsDistribution": {
+    "elasticsearch": "crwdns10048:0crwdne10048:0",
+    "opensearch": "crwdns10050:0crwdne10050:0"
   },
   "documentViewTabs": {
     "text": "crwdns8028:0crwdne8028:0",
@@ -1508,6 +1525,77 @@
           "button": "crwdns9412:0crwdne9412:0",
           "description": "crwdns9414:0crwdne9414:0"
         }
+      }
+    },
+    "snapshots": {
+      "title": "crwdns10052:0crwdne10052:0",
+      "info": "crwdns10054:0crwdne10054:0",
+      "noSnapshots": "crwdns10056:0crwdne10056:0",
+      "repositoryPath": "crwdns10058:0crwdne10058:0",
+      "repositoryPathHint": "crwdns10060:0crwdne10060:0",
+      "repository": {
+        "type": "crwdns10062:0crwdne10062:0",
+        "location": "crwdns10064:0crwdne10064:0",
+        "description": "crwdns10066:0{type}crwdnd10066:0{location}crwdne10066:0"
+      },
+      "setup": {
+        "title": "crwdns10068:0crwdne10068:0",
+        "description": "crwdns10070:0crwdne10070:0",
+        "loading": "crwdns10072:0crwdne10072:0",
+        "noPathsTitle": "crwdns10074:0crwdne10074:0",
+        "noPathsDescription": "crwdns10076:0crwdne10076:0",
+        "selectPath": "crwdns10078:0crwdne10078:0",
+        "submit": "crwdns10080:0crwdne10080:0"
+      },
+      "refresh": "crwdns10082:0crwdne10082:0",
+      "create": "crwdns10084:0crwdne10084:0",
+      "creating": "crwdns10086:0crwdne10086:0",
+      "list": {
+        "name": "crwdns10088:0crwdne10088:0",
+        "status": "crwdns10090:0crwdne10090:0",
+        "date": "crwdns10092:0crwdne10092:0",
+        "version": "crwdns10094:0crwdne10094:0",
+        "distribution": "crwdns10096:0crwdne10096:0",
+        "projects": "crwdns10098:0crwdne10098:0",
+        "actions": "crwdns10100:0crwdne10100:0"
+      },
+      "status": {
+        "SUCCESS": "crwdns10102:0crwdne10102:0",
+        "IN_PROGRESS": "crwdns10104:0crwdne10104:0",
+        "FAILED": "crwdns10106:0crwdne10106:0",
+        "PARTIAL": "crwdns10108:0crwdne10108:0"
+      },
+      "restore": {
+        "title": "crwdns10110:0crwdne10110:0",
+        "message": "crwdns10112:0{name}crwdne10112:0",
+        "warning": "crwdns10114:0crwdne10114:0",
+        "confirm": "crwdns10116:0crwdne10116:0",
+        "cancel": "crwdns10118:0crwdne10118:0"
+      },
+      "delete": {
+        "title": "crwdns10120:0crwdne10120:0",
+        "message": "crwdns10122:0{name}crwdne10122:0",
+        "confirm": "crwdns10124:0crwdne10124:0",
+        "cancel": "crwdns10126:0crwdne10126:0"
+      },
+      "deleteRepository": {
+        "label": "crwdns10128:0crwdne10128:0",
+        "message": "crwdns10130:0crwdne10130:0"
+      },
+      "error": {
+        "repository": "crwdns10132:0{error}crwdne10132:0",
+        "repositoryDelete": "crwdns10134:0{error}crwdne10134:0",
+        "fetch": "crwdns10136:0{error}crwdne10136:0",
+        "create": "crwdns10138:0{error}crwdne10138:0",
+        "delete": "crwdns10140:0{error}crwdne10140:0",
+        "restore": "crwdns10142:0{error}crwdne10142:0"
+      },
+      "success": {
+        "create": "crwdns10144:0crwdne10144:0",
+        "delete": "crwdns10146:0crwdne10146:0",
+        "restore": "crwdns10148:0crwdne10148:0",
+        "repositoryCreated": "crwdns10150:0crwdne10150:0",
+        "repositoryDeleted": "crwdns10152:0crwdne10152:0"
       }
     }
   },
