@@ -1,6 +1,7 @@
 import { isEqual, replace } from 'lodash'
 import bodybuilder from 'bodybuilder'
 import es from 'elasticsearch-browser'
+import { getCookie } from 'tiny-cookie'
 
 import { EventBus } from '@/utils/eventBus'
 import settings from '@/utils/settings'
@@ -442,9 +443,29 @@ export function datasharePlugin(Client) {
   }
 }
 
+/**
+ * Plugin that injects the CSRF token from the `_ds_csrf_token` cookie
+ * as an `X-DS-CSRF-TOKEN` header on every Elasticsearch request.
+ *
+ * @param {Object} Client - The Elasticsearch client constructor
+ * @param {Object} config - Plugin configuration (not used)
+ * @param {Object} components - Elasticsearch client components
+ * @param {Object} components.Transport - The transport component to override
+ */
+export function csrfPlugin(Client, config, components) {
+  const originalRequest = components.Transport.prototype.request
+  components.Transport.prototype.request = function (params, cb) {
+    const token = getCookie(settings.csrf.cookieName)
+    if (token) {
+      params.headers = { ...params.headers, [settings.csrf.headerName]: token }
+    }
+    return originalRequest.call(this, params, cb)
+  }
+}
+
 const elasticsearch = new es.Client({
   host: import.meta.env.VITE_ES_HOST || `${window.location.hostname}:${window.location.port}/api/index/search`,
-  plugins: [datasharePlugin],
+  plugins: [datasharePlugin, csrfPlugin],
   requestTimeout: settings.elasticsearch.requestTimeout
 })
 

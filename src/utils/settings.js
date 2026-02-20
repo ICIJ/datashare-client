@@ -171,6 +171,10 @@ export default {
     in_progress: 'info',
     partial: 'warning'
   },
+  csrf: {
+    cookieName: '_ds_csrf_token',
+    headerName: 'X-DS-CSRF-TOKEN'
+  },
   elasticsearch: {
     waitForAnswer: 700,
     requestTimeout: 60000

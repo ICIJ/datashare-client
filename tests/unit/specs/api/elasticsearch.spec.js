@@ -1,11 +1,13 @@
 import bodybuilder from 'bodybuilder'
 import { setActivePinia, createPinia } from 'pinia'
+import { setCookie, removeCookie } from 'tiny-cookie'
 
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
-import { elasticsearch } from '@/api/elasticsearch'
+import { elasticsearch, csrfPlugin } from '@/api/elasticsearch'
 import { FilterText, FilterEntity } from '@/store/filters'
 import { EventBus } from '@/utils/eventBus'
+import settings from '@/utils/settings'
 
 describe('elasticsearch', () => {
   const { index, es } = esConnectionHelper.build()
@@ -167,5 +169,46 @@ describe('elasticsearch', () => {
     expect(response.hits.hits[0]._id).toEqual('document_03')
     expect(response.hits.hits[1]._id).toEqual('DOCUMENT_02')
     expect(response.hits.hits[2]._id).toEqual('document_01')
+  })
+
+  describe('csrfPlugin', () => {
+    let originalRequest
+    let transport
+
+    beforeEach(() => {
+      originalRequest = vi.fn()
+      transport = { prototype: { request: originalRequest } }
+      csrfPlugin(null, null, { Transport: transport })
+    })
+
+    afterEach(() => {
+      removeCookie(settings.csrf.cookieName)
+    })
+
+    it('should add the CSRF header when the cookie is set', () => {
+      setCookie(settings.csrf.cookieName, 'test-csrf-token')
+      const params = { method: 'POST', body: '{}' }
+      transport.prototype.request(params, vi.fn())
+      expect(originalRequest).toHaveBeenCalledOnce()
+      expect(params.headers).toEqual({ [settings.csrf.headerName]: 'test-csrf-token' })
+    })
+
+    it('should not add the CSRF header when the cookie is absent', () => {
+      removeCookie(settings.csrf.cookieName)
+      const params = { method: 'GET' }
+      transport.prototype.request(params, vi.fn())
+      expect(originalRequest).toHaveBeenCalledOnce()
+      expect(params.headers).toBeUndefined()
+    })
+
+    it('should preserve existing headers when adding the CSRF header', () => {
+      setCookie(settings.csrf.cookieName, 'test-csrf-token')
+      const params = { method: 'POST', headers: { 'Content-Type': 'application/json' } }
+      transport.prototype.request(params, vi.fn())
+      expect(params.headers).toEqual({
+        'Content-Type': 'application/json',
+        [settings.csrf.headerName]: 'test-csrf-token'
+      })
+    })
   })
 })
