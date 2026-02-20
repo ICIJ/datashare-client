@@ -64,14 +64,22 @@ export default (core) => {
     next()
   }
 
-  function checkUserRoles({ meta }, _from, next) {
+  function checkUserRoles({ meta, params }, _from, next) {
     if (!isServer.value) {
       return next()
     }
-    const currentRoles = getRolesByProject('local-datashare')
     const allowedRoles = get(meta, 'allowedRoles', [])
+    if (allowedRoles.length === 0) {
+      return next()
+    }
+    const projectParam = meta.projectParam
+    if (!projectParam || !params[projectParam]) {
+      const title = i18n.global.t('error.notFound')
+      return next({ name: 'error', state: { title } })
+    }
+    const currentRoles = getRolesByProject(params[projectParam])
     const hasOneRole = allowedRoles.some(role => currentRoles.includes(role))
-    if (allowedRoles.length === 0 || hasOneRole) {
+    if (hasOneRole) {
       next()
     }
     else {

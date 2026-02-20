@@ -430,7 +430,8 @@ export const routes = [
                 meta: {
                   icon: markRaw(IPhPencilSimple),
                   title: 'projectViewEdit.title',
-                  allowedRoles: [ROLE.ADMIN]
+                  allowedRoles: [ROLE.ADMIN],
+                  projectParam: 'name'
                 }
               }
             ]
