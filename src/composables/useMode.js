@@ -1,10 +1,10 @@
-import { computed } from 'vue'
+import { computed, toValue } from 'vue'
 
 import { useCore } from '@/composables/useCore'
 import { MODE_NAME } from '@/mode'
 
 export function useMode(coreValue) {
-  const core = coreValue ?? useCore()
+  const core = toValue(coreValue) ?? useCore()
   const mode = computed(() => core.mode)
   const modeName = computed(() => mode.value.modeName)
   const isServer = computed(() => modeName.value === MODE_NAME.SERVER)
