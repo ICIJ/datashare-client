@@ -9,6 +9,12 @@ export default (core) => {
   const { router, auth, config, i18n } = core
   const { isServer } = useMode(core)
   const { getRolesByProject } = usePolicies()
+
+  /**
+   * Verifies the user is authenticated via cookie. Routes with `meta.skipsAuth`
+   * bypass this check. Unauthenticated users are redirected to the login page,
+   * with their original destination stored for redirect after login.
+   */
   async function checkUserAuthentication(to, from, next) {
     const appStore = useAppStore()
     try {
@@ -39,6 +45,11 @@ export default (core) => {
     }
   }
 
+  /**
+   * Ensures the user has at least one project assigned. If no projects are
+   * configured and the target route is not the error or login page, the user
+   * is redirected to an error page.
+   */
   function checkUserProjects(to, from, next) {
     const projects = config.get('projects', [])
     // No project given for this user
@@ -51,6 +62,11 @@ export default (core) => {
     }
   }
 
+  /**
+   * Resets the page context and sets the page title from the route's `meta.title`.
+   * The title can be a translation key string or an async function receiving the
+   * core instance.
+   */
   async function preparePageContext({ meta }, _from, next) {
     core.clearPageContext()
     // Use title from the route meta as a function
@@ -64,6 +80,14 @@ export default (core) => {
     next()
   }
 
+  /**
+   * Enforces role-based access control on routes in SERVER mode. Routes that
+   * require specific roles must declare both `meta.allowedRoles` (e.g. `['ADMIN']`)
+   * and `meta.projectParam` (the route param name holding the project identifier,
+   * e.g. `'name'`). The guard looks up the user's roles for that project and
+   * allows access only if at least one role matches. Skipped entirely in
+   * LOCAL/EMBEDDED modes where there is no role enforcement.
+   */
   function checkUserRoles({ meta, params }, _from, next) {
     if (!isServer.value) {
       return next()
@@ -88,6 +112,12 @@ export default (core) => {
     }
   }
 
+  /**
+   * Restricts routes to specific application modes. If a route declares
+   * `meta.allowedModes` (e.g. `['LOCAL', 'EMBEDDED']`), navigation is only
+   * allowed when the current mode is in that list. Routes without
+   * `allowedModes` are accessible in all modes.
+   */
   function checkMode({ meta }, _from, next) {
     const currentMode = config.get('mode')
     const allowedModes = get(meta, 'allowedModes', [])
@@ -100,11 +130,17 @@ export default (core) => {
     }
   }
 
+  /**
+   * Starts the NProgress loading bar at the beginning of each navigation.
+   */
   function startProgress() {
     const { start } = useNProgress()
     start()
   }
 
+  /**
+   * Completes the NProgress loading bar after navigation settles.
+   */
   function endProgress() {
     const { done } = useNProgress()
     setTimeout(done, 200)
