@@ -26,7 +26,7 @@ export default (core) => {
    * @returns {boolean}
    */
   function routeSkipsAuth(to) {
-    return to.matched.some((r) => get(r, 'meta.skipsAuth', false))
+    return to.matched.some(r => get(r, 'meta.skipsAuth', false))
   }
 
   /**
@@ -40,7 +40,8 @@ export default (core) => {
     const path = appStore.popRedirectAfterLogin()
     if (to.path !== path && path !== null) {
       next({ path })
-    } else {
+    }
+    else {
       next()
     }
   }
@@ -57,7 +58,8 @@ export default (core) => {
     if (from.name !== 'login' && to.name !== 'login') {
       appStore.setRedirectAfterLogin(to.path)
       next({ name: 'login' })
-    } else {
+    }
+    else {
       next()
     }
   }
@@ -72,16 +74,20 @@ export default (core) => {
    */
   async function checkUserAuthentication(to, from, next) {
     try {
+      // Skip authentication check for routes that declare `skipsAuth` in their meta
       if (routeSkipsAuth(to)) {
         return next()
       }
       const username = await auth.getUsername()
+      // If username is returned, user is authenticated; otherwise, not authenticated
       if (username) {
         proceedAuthenticated(to, next)
-      } else {
+      }
+      else {
         proceedUnauthenticated(to, from, next)
       }
-    } catch (error) {
+    }
+    catch (error) {
       next({ name: 'error', state: { error } })
     }
   }
@@ -100,7 +106,8 @@ export default (core) => {
     if (!projects.length && ['error', 'login'].indexOf(to.name) === -1) {
       const title = i18n.global.t('error.noProjects')
       next({ name: 'error', state: { foo: title } })
-    } else {
+    }
+    else {
       next()
     }
   }
@@ -115,10 +122,12 @@ export default (core) => {
    */
   async function preparePageContext({ meta }, _from, next) {
     core.clearPageContext()
+
     // Use title from the route meta as a function
     if (isFunction(meta?.title)) {
       core.pageTitle = await meta.title(core)
     }
+
     // Or use the title from the route meta as a translation key
     else if (isString(meta?.title)) {
       core.pageTitle = i18n.global.t(meta.title)
@@ -151,7 +160,7 @@ export default (core) => {
    */
   function hasRequiredRole(allowedRoles, projectName) {
     const currentRoles = getRolesByProject(projectName)
-    return allowedRoles.some((role) => currentRoles.includes(role))
+    return allowedRoles.some(role => currentRoles.includes(role))
   }
 
   /**
@@ -166,17 +175,23 @@ export default (core) => {
    * @param {import('vue-router').NavigationGuardNext} next
    */
   function checkUserRoles({ meta, params }, _from, next) {
+    // Skip role checks in non-server modes where there is no role enforcement
     if (!isServer.value) {
       return next()
     }
+
     const allowedRoles = get(meta, 'allowedRoles', [])
+    // If no roles are required, allow access without checking
     if (allowedRoles.length === 0) {
       return next()
     }
+
     const projectName = getProjectFromRoute(meta, params)
+    // If route requires roles but no project param is found, or user lacks required roles, deny access
     if (!projectName || !hasRequiredRole(allowedRoles, projectName)) {
       return nextNotFound(next)
     }
+
     next()
   }
 
@@ -194,7 +209,8 @@ export default (core) => {
     const allowedModes = get(meta, 'allowedModes', [])
     if (allowedModes.length === 0 || allowedModes.includes(currentMode)) {
       next()
-    } else {
+    }
+    else {
       nextNotFound(next)
     }
   }

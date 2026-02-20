@@ -87,7 +87,6 @@ describe('guards', () => {
         expect(router.currentRoute.value.name).toBe('login')
       })
     })
-
   })
 
   describe('checkUserProjects', () => {
