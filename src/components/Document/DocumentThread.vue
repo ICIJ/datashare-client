@@ -1,18 +1,19 @@
 <script setup>
 import { computed, nextTick, onMounted, reactive, ref, useTemplateRef } from 'vue'
 import { onBeforeRouteUpdate } from 'vue-router'
-import { findIndex, reduce } from 'lodash'
+import { reduce } from 'lodash'
 import bodybuilder from 'bodybuilder'
 import { useI18n } from 'vue-i18n'
+
+import IPhCaretDown from '~icons/ph/caret-down'
+import IPhCaretUp from '~icons/ph/caret-up'
 
 import { useCore } from '@/composables/useCore'
 import { useWait } from '@/composables/useWait'
 import EsDocList from '@/api/resources/EsDocList'
 import AppWait from '@/components/AppWait/AppWait'
-import AppSpinner from '@/components/AppSpinner/AppSpinner'
 import DocumentTranslation from '@/components/Document/DocumentTranslation/DocumentTranslation'
 import DisplayEmail from '@/components/Display/DisplayEmail'
-import { useDocumentStore } from '@/store/modules'
 
 const props = defineProps({
   document: {
@@ -30,11 +31,11 @@ const props = defineProps({
 const { t, d } = useI18n()
 
 const elementRef = useTemplateRef('element')
-const documentStore = useDocumentStore()
 const core = useCore()
 const { waitFor, loaderId } = useWait()
 
 const thread = ref({ hits: [] })
+const expandedIds = ref(new Set())
 
 const threadQueryFields = reactive({
   threadIndex: 'metadata.tika_metadata_message_raw_header_thread_index',
@@ -45,9 +46,19 @@ function isActive(email) {
   return email.id === props.document.id
 }
 
-const documentIndex = computed(() => {
-  return findIndex(thread.value.hits, isActive)
-})
+function isExpanded(email) {
+  return isActive(email) || expandedIds.value.has(email.id)
+}
+
+function toggleEmail(email) {
+  if (isActive(email)) return
+  if (expandedIds.value.has(email.id)) {
+    expandedIds.value.delete(email.id)
+  }
+  else {
+    expandedIds.value.add(email.id)
+  }
+}
 
 const threadBody = computed(() => {
   const body = bodybuilder()
@@ -103,6 +114,7 @@ const init = waitFor(async function () {
   thread.value.push('hits.hits', props.document.raw)
   thread.value.removeDuplicates()
   thread.value.orderBy('creationDate', ['asc'])
+  expandedIds.value.clear()
 })
 
 async function getThread() {
@@ -123,14 +135,6 @@ async function getThread() {
 }
 
 onMounted(async () => {
-  documentStore.$onAction(({ name, after }) => {
-    if (name === 'getContentSlice') {
-      after(({ content }) => {
-        thread.value.hits[documentIndex.value].content = content
-      })
-    }
-  })
-
   await init()
   await scrollToActive()
 })
@@ -154,29 +158,37 @@ onBeforeRouteUpdate(init)
           class="document-thread__list__email"
           :class="{ 'document-thread__list__email--active': isActive(email) }"
         >
-          <router-link
-            :to="{ name: 'document', params: email.routerParams }"
-            class="p-3 d-block"
+          <div
+            class="document-thread__list__email__header p-3 d-block"
+            role="button"
+            @click="toggleEmail(email)"
           >
-            <div class="d-flex text-nowrap gap-3">
+            <div class="d-flex text-nowrap gap-3 align-items-center">
+              <component
+                :is="isExpanded(email) ? IPhCaretUp : IPhCaretDown"
+                v-if="!isActive(email)"
+                class="document-thread__list__email__chevron flex-shrink-0"
+              />
               <div class="document-thread__list__email__from flex-grow-1">
                 <display-email
                   :value="email.messageFrom"
                   tag="strong"
                 />
               </div>
-              <abbr
+              <router-link
                 v-if="email.creationDate"
                 v-b-tooltip.body="{ delay: tooltipDelay }"
+                :to="{ name: 'document', params: email.routerParams }"
                 class="document-thread__list__email__date"
                 :title="email.creationDateHuman"
+                @click.stop
               >
                 {{ d(email.creationDate) }}
-              </abbr>
+              </router-link>
             </div>
             <div class="d-flex gap-3">
               <span
-                v-if="isActive(email) && email.messageTo"
+                v-if="isExpanded(email) && email.messageTo"
                 class="document-thread__list__email__to text-secondary"
               >
                 {{ t('documentThread.to') }}
@@ -191,16 +203,16 @@ onBeforeRouteUpdate(init)
                 </ul>
               </span>
               <span
-                v-else
+                v-else-if="!isExpanded(email)"
                 class="document-thread__list__email__excerpt text-secondary w-100"
               >
                 {{ email.excerpt }}
               </span>
             </div>
-          </router-link>
+          </div>
           <document-translation
-            v-if="isActive(email)"
-            :document="document"
+            v-if="isExpanded(email)"
+            :document="isActive(email) ? document : email"
             :q="q"
             class="mt-0 m-3"
           />
@@ -233,12 +245,13 @@ onBeforeRouteUpdate(init)
         border-bottom-right-radius: var(--bs-border-radius);
       }
 
-      & > a {
+      &__header {
         color: var(--bs-secondary-color);
+        cursor: pointer;
+      }
 
-        &:hover {
-          text-decoration: none;
-        }
+      &__chevron {
+        color: var(--bs-secondary-color);
       }
 
       &--active {
