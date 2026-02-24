@@ -12,7 +12,7 @@ import DocumentAttachments from '@/components/Document/DocumentAttachments'
 import DocumentGlobalSearchTerms from '@/components/Document/DocumentGlobalSearchTerms/DocumentGlobalSearchTerms'
 import DocumentLocalSearch from '@/components/Document/DocumentLocalSearch/DocumentLocalSearch'
 import Hook from '@/components/Hook/Hook'
-import { useDocumentStore, usePipelinesStore, useSearchStore } from '@/store/modules'
+import { usePipelinesStore, useSearchStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
 
 const props = defineProps({
@@ -39,12 +39,15 @@ const config = useConfig()
 const { t } = useI18n()
 const { isServer } = useMode()
 
-const documentStore = useDocumentStore()
 const pipelinesStore = usePipelinesStore()
 const searchStore = useSearchStore.inject()
 const elementRef = useTemplateRef('element')
 const { compact } = useCompact(elementRef, { threshold: toRef(props, 'compactThreshold') })
 const { waitFor, isLoading } = useWait()
+
+const docIndex = computed(() => props.document?.index)
+const docId = computed(() => props.document?.id)
+const docRouting = computed(() => props.document?.routing)
 
 const contentSlices = reactive({})
 const currentContentPage = ref('')
@@ -183,7 +186,8 @@ onMounted(async () => {
 
 const loadMaxOffset = waitFor(async function (targetLanguage = props.targetLanguage) {
   const key = targetLanguage ?? 'original'
-  const offset = await documentStore.getContentMaxOffset({ targetLanguage })
+  const slice = await api.getDocumentSlice(docIndex.value, docId.value, 0, 0, targetLanguage, docRouting.value)
+  const offset = slice.maxOffset
   maxOffsetTranslations.value[key] = offset
   return offset
 })
@@ -213,7 +217,7 @@ const mustSyncPages = async function () {
 const syncPages = waitFor(async function () {
   if (await mustSyncPages()) {
     syncedPages.value = await api
-      .getPages(documentStore.document)
+      .getPages(props.document)
       .then(({ pages }) => pages)
       .catch(() => [])
   }
@@ -277,7 +281,7 @@ function closestPage({ offset = 0 } = {}) {
 async function loadContentSlice({ offset = 0, targetLanguage = props.targetLanguage } = {}) {
   const [, endOffset] = closestPage({ offset })
   const limit = Math.min(Math.max(endOffset - offset + 1, 0), maxOffset.value - offset)
-  const { content } = await documentStore.getContentSlice({ offset, limit, targetLanguage })
+  const { content } = await api.getDocumentSlice(docIndex.value, docId.value, offset, limit, targetLanguage, docRouting.value)
   return setContentSlice({ offset, targetLanguage, content })
 }
 
@@ -305,7 +309,7 @@ async function retrieveTotalOccurrences() {
     }
     const query = localSearchTerm.value
     const targetLanguage = props.targetLanguage
-    const { count, offsets } = await documentStore.searchOccurrences({ query, targetLanguage })
+    const { count, offsets } = await api.searchDocument(docIndex.value, docId.value, query, targetLanguage, docRouting.value)
     localSearchIndexes.value = offsets
     localSearchOccurrences.value = count
     localSearchIndex.value = Number(!!count)
