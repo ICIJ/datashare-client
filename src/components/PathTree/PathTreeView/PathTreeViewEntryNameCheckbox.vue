@@ -31,6 +31,8 @@ defineProps({
 
 <style lang="scss" scoped>
 .path-tree-view-entry-name-checkbox {
+  z-index: $stretched-link-z-index + 1;
+
   &:deep(.form-check-input:checked) {
     border-color: currentColor;
   }

@@ -130,5 +130,9 @@ const size = computed(() => (compactOrInjected.value ? 'sm' : 'md'))
     --path-tree-view-entry-more-padding-y: 0;
     --path-tree-view-entry-more-justify-content: center;
   }
+
+  & > .above-stretched-link {
+    z-index: $stretched-link-z-index + 1;
+  }
 }
 </style>

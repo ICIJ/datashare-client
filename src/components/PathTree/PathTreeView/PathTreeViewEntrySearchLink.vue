@@ -40,3 +40,9 @@ const to = computed(() => {
     class="path-tree-view-entry-search-link above-stretched-link"
   />
 </template>
+
+<style lang="scss" scoped>
+.path-tree-view-entry-search-link {
+  z-index: $stretched-link-z-index + 1;
+}
+</style>
