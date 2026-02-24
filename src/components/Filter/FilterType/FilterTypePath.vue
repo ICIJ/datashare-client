@@ -1,11 +1,13 @@
 <script setup>
-import { computed, ref, useTemplateRef } from 'vue'
+import { computed, ref, useTemplateRef, watch } from 'vue'
+import { uniq } from 'lodash'
 
 import ButtonTogglePathTreeView from '@/components/Button/ButtonTogglePathTreeView'
 import FilterType from '@/components/Filter/FilterType/FilterType'
 import PathTree from '@/components/PathTree/PathTree'
 import { useSearchFilter } from '@/composables/useSearchFilter'
 import { useCore } from '@/composables/useCore'
+import { usePath } from '@/composables/usePath'
 import { useSearchStore } from '@/store/modules'
 import { LAYOUTS } from '@/enums/pathTree'
 
@@ -39,6 +41,16 @@ const nested = ref(true)
 const path = ref(core.getDefaultDataDir())
 const openPaths = ref([])
 const selectedPaths = computedFilterValues(props.filter)
+const { getAncestorPaths } = usePath(selectedPaths)
+
+// Pre-open ancestor directories of selected paths so the tree
+// reveals them immediately instead of requiring manual expansion.
+watch(selectedPaths, (paths) => {
+  if (!paths.length) return
+  const basePath = path.value
+  const ancestors = paths.flatMap((p) => getAncestorPaths(p, basePath))
+  openPaths.value = uniq([...openPaths.value, ...ancestors])
+}, { immediate: true })
 
 const preBodyBuild = whenFilterContextualized(props.filter, (body) => {
   // Add every filter to the search body
