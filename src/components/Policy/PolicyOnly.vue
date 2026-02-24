@@ -14,10 +14,10 @@ const props = defineProps({
   }
 })
 
-const { isServer, isLocal } = useMode()
+const { isServer } = useMode()
 const { isProjectAdmin } = usePolicies()
 const isAdmin = computed(() => isProjectAdmin(props.project.name))
-const isVisible = computed(() => (props.admin && isAdmin.value && isServer.value) || isLocal.value)
+const isVisible = computed(() => !isServer.value || (props.admin && isAdmin.value))
 </script>
 
 <template>
