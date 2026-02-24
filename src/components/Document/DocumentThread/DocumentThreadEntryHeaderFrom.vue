@@ -12,7 +12,7 @@ defineProps({
 </script>
 
 <template>
-  <div class="document-thread-entry-header-from flex-grow-1">
+  <div class="document-thread-entry-header-from flex-grow-1 text-body-emphasis">
     <display-email
       :value="email.messageFrom"
       tag="strong"
