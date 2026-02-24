@@ -48,7 +48,7 @@ const { getAncestorPaths } = usePath(selectedPaths)
 watch(selectedPaths, (paths) => {
   if (!paths.length) return
   const basePath = path.value
-  const ancestors = paths.flatMap((p) => getAncestorPaths(p, basePath))
+  const ancestors = paths.flatMap(p => getAncestorPaths(p, basePath))
   openPaths.value = uniq([...openPaths.value, ...ancestors])
 }, { immediate: true })
 
