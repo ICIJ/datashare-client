@@ -7,7 +7,7 @@ import DocumentThreadEntryExcerpt from './DocumentThreadEntryExcerpt'
 
 defineOptions({ name: 'DocumentThreadEntryHeader' })
 
-const props = defineProps({
+defineProps({
   email: {
     type: Object,
     required: true
