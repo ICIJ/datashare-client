@@ -93,7 +93,7 @@ const promptProjectDeletion = async () => {
           :bind="{ project }"
         />
       </h3>
-      <div>
+      <div class="d-flex gap-2">
         <mode-local-only>
           <button-row-action-delete
             size="md"
