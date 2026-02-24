@@ -1,7 +1,7 @@
 <script setup>
 import { useDocument } from '@/composables/useDocument'
 import DocumentNotes from '@/components/Document/DocumentNotes'
-import DocumentThread from '@/components/Document/DocumentThread'
+import DocumentThread from '@/components/Document/DocumentThread/DocumentThread'
 import DocumentTranslation from '@/components/Document/DocumentTranslation/DocumentTranslation'
 
 defineProps({

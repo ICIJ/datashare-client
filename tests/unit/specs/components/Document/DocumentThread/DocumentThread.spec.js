@@ -4,7 +4,7 @@ import { nextTick } from 'vue'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
-import DocumentThread from '@/components/Document/DocumentThread'
+import DocumentThread from '@/components/Document/DocumentThread/DocumentThread'
 import { useDocumentStore } from '@/store/modules'
 
 describe('DocumentThread.vue', () => {
@@ -159,42 +159,28 @@ describe('DocumentThread.vue', () => {
 
     it('should display DocumentTranslation for the active email', async () => {
       await createThreadWithEmails()
-      const activeEmail = wrapper.find('.document-thread__list__email--active')
-      expect(activeEmail.exists()).toBeTruthy()
-      expect(activeEmail.find('document-translation-stub').exists()).toBeTruthy()
+      const entries = wrapper.findAllComponents({ name: 'DocumentThreadEntry' })
+      const activeEntry = entries.find(e => e.props('active'))
+      expect(activeEntry).toBeTruthy()
+      expect(activeEntry.props('expanded')).toBe(true)
     })
 
-    it('should not display DocumentTranslation for a collapsed email', async () => {
+    it('should not expand a non-active email by default', async () => {
       await createThreadWithEmails()
-      const emails = wrapper.findAll('.document-thread__list__email:not(.document-thread__list__email--active)')
-      expect(emails.length).toBeGreaterThan(0)
-      expect(emails[0].find('document-translation-stub').exists()).toBeFalsy()
+      const entries = wrapper.findAllComponents({ name: 'DocumentThreadEntry' })
+      const inactiveEntry = entries.find(e => !e.props('active'))
+      expect(inactiveEntry).toBeTruthy()
+      expect(inactiveEntry.props('expanded')).toBe(false)
     })
 
-    it('should show excerpt for a collapsed email', async () => {
-      await createThreadWithEmails()
-      const emails = wrapper.findAll('.document-thread__list__email:not(.document-thread__list__email--active)')
-      expect(emails.length).toBeGreaterThan(0)
-      expect(emails[0].find('.document-thread__list__email__excerpt').exists()).toBeTruthy()
-    })
-
-    it('should expand a non-active email on toggle and show DocumentTranslation', async () => {
+    it('should expand a non-active email on toggle', async () => {
       await createThreadWithEmails()
       const otherEmail = thread.hits.find(email => !wrapper.vm.isActive(email))
       wrapper.vm.toggleEmail(otherEmail)
       await nextTick()
-      // After toggle, the non-active email should now show DocumentTranslation
-      const emails = wrapper.findAll('.document-thread__list__email:not(.document-thread__list__email--active)')
-      expect(emails[0].find('document-translation-stub').exists()).toBeTruthy()
-    })
-
-    it('should hide excerpt when email is expanded', async () => {
-      await createThreadWithEmails()
-      const otherEmail = thread.hits.find(email => !wrapper.vm.isActive(email))
-      wrapper.vm.toggleEmail(otherEmail)
-      await nextTick()
-      const emails = wrapper.findAll('.document-thread__list__email:not(.document-thread__list__email--active)')
-      expect(emails[0].find('.document-thread__list__email__excerpt').exists()).toBeFalsy()
+      const entries = wrapper.findAllComponents({ name: 'DocumentThreadEntry' })
+      const inactiveEntry = entries.find(e => !e.props('active'))
+      expect(inactiveEntry.props('expanded')).toBe(true)
     })
 
     it('should collapse an expanded email on second toggle', async () => {
@@ -204,8 +190,9 @@ describe('DocumentThread.vue', () => {
       await nextTick()
       wrapper.vm.toggleEmail(otherEmail)
       await nextTick()
-      const emails = wrapper.findAll('.document-thread__list__email:not(.document-thread__list__email--active)')
-      expect(emails[0].find('document-translation-stub').exists()).toBeFalsy()
+      const entries = wrapper.findAllComponents({ name: 'DocumentThreadEntry' })
+      const inactiveEntry = entries.find(e => !e.props('active'))
+      expect(inactiveEntry.props('expanded')).toBe(false)
     })
 
     it('should not collapse the active email on toggle', async () => {
@@ -213,21 +200,9 @@ describe('DocumentThread.vue', () => {
       const activeEmail = thread.hits.find(email => wrapper.vm.isActive(email))
       wrapper.vm.toggleEmail(activeEmail)
       await nextTick()
-      const active = wrapper.find('.document-thread__list__email--active')
-      expect(active.find('document-translation-stub').exists()).toBeTruthy()
-    })
-
-    it('should not show chevron icon for the active email', async () => {
-      await createThreadWithEmails()
-      const active = wrapper.find('.document-thread__list__email--active')
-      expect(active.find('.document-thread__list__email__chevron').exists()).toBeFalsy()
-    })
-
-    it('should show chevron icon for a non-active email', async () => {
-      await createThreadWithEmails()
-      const emails = wrapper.findAll('.document-thread__list__email:not(.document-thread__list__email--active)')
-      expect(emails.length).toBeGreaterThan(0)
-      expect(emails[0].find('.document-thread__list__email__chevron').exists()).toBeTruthy()
+      const entries = wrapper.findAllComponents({ name: 'DocumentThreadEntry' })
+      const activeEntry = entries.find(e => e.props('active'))
+      expect(activeEntry.props('expanded')).toBe(true)
     })
   })
 })
