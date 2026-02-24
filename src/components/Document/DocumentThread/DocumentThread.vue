@@ -17,10 +17,6 @@ const props = defineProps({
   q: {
     type: String,
     default: ''
-  },
-  tooltipDelay: {
-    type: Object,
-    default: () => ({ show: 0, hide: 0 })
   }
 })
 
@@ -156,7 +152,6 @@ defineExpose({ getThread, init, thread, isActive, isExpanded, toggleEmail })
           :expanded="isExpanded(email)"
           :document="document"
           :q="q"
-          :tooltip-delay="tooltipDelay"
           @toggle="toggleEmail(email)"
         />
       </ul>

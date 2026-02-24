@@ -54,7 +54,6 @@ const noHeader = computed(() => noToggler && noSort)
       variant="outline-link"
       :icon-left="iconLeft"
       :label="displayComments"
-      :tooltip-delay="tooltipDelay"
       @click="toggle"
     />
   </header>

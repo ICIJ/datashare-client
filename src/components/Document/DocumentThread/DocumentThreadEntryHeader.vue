@@ -19,10 +19,6 @@ const props = defineProps({
   expanded: {
     type: Boolean,
     default: false
-  },
-  tooltipDelay: {
-    type: Object,
-    default: () => ({ show: 0, hide: 0 })
   }
 })
 
@@ -41,10 +37,7 @@ const emit = defineEmits(['toggle'])
         :expanded="expanded"
       />
       <document-thread-entry-header-from :email="email" />
-      <document-thread-entry-header-creation-date
-        :email="email"
-        :tooltip-delay="tooltipDelay"
-      />
+      <document-thread-entry-header-creation-date :email="email" />
     </div>
     <div class="d-flex gap-3">
       <document-thread-entry-header-to

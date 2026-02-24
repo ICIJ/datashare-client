@@ -4,7 +4,7 @@ import DocumentThreadEntryHeader from './DocumentThreadEntryHeader'
 
 defineOptions({ name: 'DocumentThreadEntry' })
 
-const props = defineProps({
+defineProps({
   email: {
     type: Object,
     required: true
@@ -24,10 +24,6 @@ const props = defineProps({
   q: {
     type: String,
     default: ''
-  },
-  tooltipDelay: {
-    type: Object,
-    default: () => ({ show: 0, hide: 0 })
   }
 })
 
@@ -43,7 +39,6 @@ const emit = defineEmits(['toggle'])
       :email="email"
       :active="active"
       :expanded="expanded"
-      :tooltip-delay="tooltipDelay"
       @toggle="emit('toggle')"
     />
     <document-translation
