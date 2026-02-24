@@ -45,9 +45,11 @@ describe('DocumentThreadEntryHeaderCreationDate.vue', () => {
     expect(wrapper.findComponent(RouterLinkStub).exists()).toBe(false)
   })
 
-  it('should display the formatted creation date', () => {
+  it('should render DisplayDatetimeLong with the creation date', () => {
     const wrapper = createWrapper()
-    expect(wrapper.findComponent(RouterLinkStub).text()).toBeTruthy()
+    const display = wrapper.findComponent({ name: 'DisplayDatetimeLong' })
+    expect(display.exists()).toBe(true)
+    expect(display.props('value')).toEqual(mockEmail.creationDate)
   })
 
   it('should link to the document route with correct params', () => {
