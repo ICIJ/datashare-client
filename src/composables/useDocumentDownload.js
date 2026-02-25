@@ -108,8 +108,9 @@ export function useDocumentDownload(document) {
     try {
       const _source = 'content_translated.target_language'
       const data = await core.api.elasticsearch.getSource({ index, id, routing, _source })
-      availableTranslations.value = (data.content_translated || []).filter((t) => t.target_language)
-    } catch {
+      availableTranslations.value = (data.content_translated || []).filter(t => t.target_language)
+    }
+    catch {
       availableTranslations.value = []
     }
   }

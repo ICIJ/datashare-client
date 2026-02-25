@@ -57,7 +57,7 @@ describe('DocumentDownloadPopover.vue', () => {
     const wrapper = mountPopover(doc)
     await flushPromises()
     const buttons = wrapper.findAll('.document-download-popover__body__button')
-    const labels = buttons.map((btn) => btn.attributes('label'))
+    const labels = buttons.map(btn => btn.attributes('label'))
     expect(labels).toContain('Download text translation')
   })
 
@@ -69,7 +69,7 @@ describe('DocumentDownloadPopover.vue', () => {
     const wrapper = mountPopover(doc)
     await flushPromises()
     const buttons = wrapper.findAll('.document-download-popover__body__button')
-    const labels = buttons.map((btn) => btn.attributes('label'))
+    const labels = buttons.map(btn => btn.attributes('label'))
     expect(labels).not.toContain('Download text translation')
   })
 
@@ -91,7 +91,7 @@ describe('DocumentDownloadPopover.vue', () => {
     const wrapper = mountPopover(doc)
     await flushPromises()
     const buttons = wrapper.findAll('.document-download-popover__body__button')
-    const translationButton = buttons.find((btn) => btn.attributes('label') === 'Download text translation')
+    const translationButton = buttons.find(btn => btn.attributes('label') === 'Download text translation')
     expect(translationButton.exists()).toBe(true)
     await translationButton.trigger('click')
     expect(fakeAnchor.click).toHaveBeenCalled()
