@@ -43,7 +43,9 @@ const {
   hasRoot,
   hasCleanableContentType,
   isRootTooBig,
-  downloadTextContent
+  downloadTextContent,
+  hasTranslations,
+  downloadTranslatedContent
 } = useDocumentDownload(props.document)
 
 const popoverRef = useTemplateRef('popover')
@@ -109,6 +111,14 @@ defineExpose({
         variant="outline-action"
         class="document-download-popover__body__button"
         @click="downloadTextContent"
+      />
+      <button-icon
+        v-if="hasTranslations"
+        :icon-left="IPhDownloadSimple"
+        :label="t('documentDownloadPopover.downloadTranslatedText')"
+        variant="outline-action"
+        class="document-download-popover__body__button"
+        @click="downloadTranslatedContent"
       />
       <button-icon
         v-if="hasRoot"
