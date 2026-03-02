@@ -169,6 +169,7 @@
     "download": "Télécharger",
     "downloadWithoutMetadata": "Télécharger sans les métadonnées",
     "downloadExtractText": "Télécharger le texte",
+    "downloadTranslatedText": "Download text translation",
     "downloadRoot": "Télécharger le document à la racine",
     "sectionTitle": "Quel est le titre du document ?",
     "sectionContentType": "Quel est le type du document ?",
