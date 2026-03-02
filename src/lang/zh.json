@@ -169,6 +169,7 @@
     "download": "下载",
     "downloadWithoutMetadata": "下载（不包含元数据）",
     "downloadExtractText": "下载文本",
+    "downloadTranslatedText": "Download text translation",
     "downloadRoot": "下载根目录",
     "sectionTitle": "文档的标题是什么？",
     "sectionContentType": "文档的类型是什么？",
