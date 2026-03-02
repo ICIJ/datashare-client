@@ -169,6 +169,7 @@
     "download": "ダウンロード",
     "downloadWithoutMetadata": "Download without metadata",
     "downloadExtractText": "Download text",
+    "downloadTranslatedText": "Download text translation",
     "downloadRoot": "Download root",
     "sectionTitle": "What's the document's title?",
     "sectionContentType": "What's the document's type?",
