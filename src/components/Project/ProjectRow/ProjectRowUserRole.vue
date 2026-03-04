@@ -1,5 +1,5 @@
 <script setup>
-import DisplayRoles from '@/components/Display/DisplayRoles.vue'
+import DisplayRole from "@/components/Display/DisplayRole.vue";
 
 defineProps({
   project: {
@@ -10,9 +10,10 @@ defineProps({
 </script>
 
 <template>
-  <td class="project-row-user-roles">
+  <td class="project-row-user-role">
     <slot>
-      <display-roles
+      <display-role
+        value="PROJECT_MEMBER"
         :project="project"
         no-icon
       />

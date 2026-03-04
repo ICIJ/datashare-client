@@ -16,7 +16,7 @@ import DisplayDatetime from '@/components/Display/DisplayDatetime'
 import ProjectLabel from '@/components/Project/ProjectLabel'
 import ProjectThumbnail from '@/components/Project/ProjectThumbnail'
 import ModeServerOnly from '@/components/Mode/ModeServerOnly.vue'
-import DisplayRoles from '@/components/Display/DisplayRoles.vue'
+import DisplayRole from '@/components/Display/DisplayRole.vue'
 import PolicyOnly from '@/components/Policy/PolicyOnly.vue'
 import ModeLocalOnly from '@/components/Mode/ModeLocalOnly.vue'
 
@@ -162,7 +162,8 @@ const promptProjectDeletion = async () => {
               <display-datetime :value="updateDate" />
             </span>
             <mode-server-only>
-              <display-roles
+              <display-role
+                value="PROJECT_MEMBER"
                 :project="project"
               />
             </mode-server-only>
