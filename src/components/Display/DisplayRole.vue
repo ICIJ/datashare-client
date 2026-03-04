@@ -3,7 +3,6 @@ import { computed } from 'vue'
 import { AppIcon } from '@icij/murmur-next'
 
 import { usePolicies } from '@/composables/usePolicies.js'
-import { ROLE_KEY } from '@/enums/roles.js'
 import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
