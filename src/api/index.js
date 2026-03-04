@@ -428,10 +428,6 @@ export class Api {
     return this.sendAction(`/api/index/_snapshot/${encodeURIComponent(repository)}/_all`)
   }
 
-  getSnapshot(repository, snapshot) {
-    return this.sendAction(`/api/index/_snapshot/${encodeURIComponent(repository)}/${encodeURIComponent(snapshot)}`)
-  }
-
   createSnapshot(repository, snapshot, options = {}) {
     const params = options.waitForCompletion ? { wait_for_completion: true } : {}
     return this.sendAction(`/api/index/_snapshot/${encodeURIComponent(repository)}/${encodeURIComponent(snapshot)}`, {
@@ -471,17 +467,8 @@ export class Api {
     })
   }
 
-  // Cluster information endpoints
-  getClusterNodes() {
-    return this.sendAction('/api/index/_nodes')
-  }
-
   getClusterNodesSettings() {
     return this.sendAction('/api/index/_nodes/settings')
-  }
-
-  getClusterSettings() {
-    return this.sendAction('/api/index/_cluster/settings')
   }
 
   async sendAction(url, config = {}) {
