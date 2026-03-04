@@ -294,9 +294,9 @@
     }
   },
   "roles": {
-    "admin": "Admin",
-    "writer": "Editor",
-    "reader": "Member"
+    "project_admin": "Admin",
+    "project_editor": "Editor",
+    "project_member": "Member"
   },
   "searchFormControl": {
     "submitLabel": "Search"
