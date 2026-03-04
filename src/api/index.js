@@ -95,6 +95,21 @@ export class Api {
     return this.sendAction(`/api/project/${project}`)
   }
 
+  getProjectPolicies(domain, project, { user = null, from = 0, to = 0 } = {}) {
+    const params = omitBy({ user, from, to }, isNull)
+    return this.sendAction(`/api/policies/${domain}/${project}`, { method: Method.GET, params })
+  }
+
+  removeProjectPolicy(domain, project, { user, role } = {}) {
+    const params = { user, role }
+    return this.sendActionAsText(`/api/policies/${domain}/${project}`, { method: Method.DELETE, params })
+  }
+
+  saveProjectPolicy(domain, project, { user, role } = {}) {
+    const params = { user, role }
+    return this.sendActionAsText(`/api/policies/${domain}/${project}`, { method: Method.PUT, params })
+  }
+
   getVersion() {
     return this.sendAction('/version')
   }

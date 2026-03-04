@@ -483,4 +483,57 @@ describe('Datashare backend client', () => {
     expect(mockCallback.mock.calls).toHaveLength(1)
     expect(mockCallback.mock.calls[0][0]).toEqual(error)
   })
+
+  describe('project policies', () => {
+    it('should call getProjectPolicies with domain and project', async () => {
+      await api.getProjectPolicies('local', 'my-project')
+      expect(axios.request).toBeCalledWith(
+        expect.objectContaining({
+          url: Api.getFullUrl('/api/policies/local/my-project'),
+          method: 'GET',
+          params: { from: 0, to: 0 }
+        })
+      )
+    })
+
+    it('should pass user filter to getProjectPolicies', async () => {
+      await api.getProjectPolicies('local', 'my-project', { user: 'alice' })
+      expect(axios.request).toBeCalledWith(
+        expect.objectContaining({
+          params: expect.objectContaining({ user: 'alice' })
+        })
+      )
+    })
+
+    it('should pass pagination params to getProjectPolicies', async () => {
+      await api.getProjectPolicies('local', 'my-project', { from: 5, to: 10 })
+      expect(axios.request).toBeCalledWith(
+        expect.objectContaining({
+          params: { from: 5, to: 10 }
+        })
+      )
+    })
+
+    it('should call removeProjectPolicy with domain, project, user and role', async () => {
+      await api.removeProjectPolicy('local', 'my-project', { user: 'alice', role: 'PROJECT_MEMBER' })
+      expect(axios.request).toBeCalledWith(
+        expect.objectContaining({
+          url: Api.getFullUrl('/api/policies/local/my-project'),
+          method: 'DELETE',
+          params: { user: 'alice', role: 'PROJECT_MEMBER' }
+        })
+      )
+    })
+
+    it('should call saveProjectPolicy with domain, project, user and role', async () => {
+      await api.saveProjectPolicy('local', 'my-project', { user: 'alice', role: 'PROJECT_EDITOR' })
+      expect(axios.request).toBeCalledWith(
+        expect.objectContaining({
+          url: Api.getFullUrl('/api/policies/local/my-project'),
+          method: 'PUT',
+          params: { user: 'alice', role: 'PROJECT_EDITOR' }
+        })
+      )
+    })
+  })
 })
