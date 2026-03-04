@@ -1,30 +1,30 @@
 import { useConfig } from '@/composables/useConfig.js'
 import { computed } from 'vue'
 import { camelCase, find, upperFirst } from 'lodash'
-import { DEFAULT_ROLE, ROLE_KEY } from '@/enums/roles.js'
+import {DEFAULT_ROLE, ROLE, ROLE_BIT, ROLE_HIERARCHY, ROLE_KEY} from '@/enums/roles.js'
 
 export function usePolicies() {
   const config = useConfig()
-  const userPolicies = computed(() => config.get('policies', []))
+  const policies = computed(() => config.get('policies', []))
 
-  function getRolesByProject(projectId) {
-    return getPolicyByProject(projectId)?.roles ?? [DEFAULT_ROLE]
+  function hasRole(userRole, minimumRole) {
+    return (ROLE_HIERARCHY[userRole] & ROLE_BIT[minimumRole]) !== 0
+  }
+
+  function getRoleByProject(projectId) {
+    return getPolicyByProject(projectId)?.role ?? DEFAULT_ROLE
   }
   function getPolicyByProject(projectId) {
-    return find(userPolicies.value, { projectId })
+    return find(policies.value, { projectId })
   }
 
   function formatRole(t, role) {
     return upperFirst(camelCase(t(ROLE_KEY[role] ?? DEFAULT_ROLE)))
   }
 
-  function formatRoles(t, roles) {
-    return roles.map(r => formatRole(t, r)).join(', ')
-  }
-
   function isProjectAdmin(projectName) {
-    return getPolicyByProject(projectName)?.admin === true
+    return getPolicyByProject(projectName)?.role === ROLE.PROJECT_ADMIN
   }
 
-  return { getRolesByProject, formatRole, formatRoles, isProjectAdmin }
+  return { getRoleByProject, formatRole, isProjectAdmin, hasRole }
 }
