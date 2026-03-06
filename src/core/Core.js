@@ -344,6 +344,21 @@ class Core extends Behaviors {
   }
 
   /**
+   * Map a CasbinRule (from /api/users/me/permissions) to a { projectId, role } policy object.
+   * Rules with format "g, userId, ROLE, domain::projectId" are mapped to project-specific policies.
+   * Instance-wide (*::*) and domain-wide (domain::*) rules are excluded.
+   * @param {Object} rule - CasbinRule object with v1 (role) and v2 (domain::project)
+   * @returns {{ projectId: string, role: string }|null}
+   */
+  casbinRuleToPolicy({ v0, v1, v2} = {}) {
+    if (!v0 || !v1 || !v2 || !v2.includes('::')) return null
+    const [domainId, projectId] = v2.split('::')
+    if (!projectId) return null
+    if (!domainId) return null
+    return { domainId, projectId, role: v1 }
+  }
+
+  /**
    * Get and update user definition in place
    * @async
    * @returns {Promise}
@@ -351,6 +366,10 @@ class Core extends Behaviors {
   async loadUser() {
     // Load the user
     this.config.merge(await this.getUser())
+    // Load and store user permissions as project policies
+    const rules = (await this.api.getUserPermissions?.()) ?? []
+    const policies = rules.map(this.casbinRuleToPolicy).filter(Boolean)
+    this.config.set('policies', policies)
   }
 
   /**

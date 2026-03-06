@@ -484,6 +484,16 @@ describe('Datashare backend client', () => {
     expect(mockCallback.mock.calls[0][0]).toEqual(error)
   })
 
+  it('should call getUserPermissions', async () => {
+    json = await api.getUserPermissions()
+    expect(json).toEqual({})
+    expect(axios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/users/me/permissions')
+      })
+    )
+  })
+
   describe('project policies', () => {
     it('should call getProjectPolicies with domain and project', async () => {
       await api.getProjectPolicies('local', 'my-project')

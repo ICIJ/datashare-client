@@ -298,6 +298,10 @@ export class Api {
     return this.sendAction('/api/users/me')
   }
 
+  getUserPermissions() {
+    return this.sendAction('/api/users/me/permissions')
+  }
+
   getHistoryEvents(type, from, size, sort, desc, projects) {
     sort = sort ?? 'modification_date'
     desc = desc ?? true
