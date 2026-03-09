@@ -2,11 +2,11 @@ import { describe, it, expect, vi } from 'vitest'
 import { usePolicies } from '@/composables/usePolicies.js'
 import * as useConfigModule from '@/composables/useConfig.js'
 import { Core } from '@/core/index.js'
-import {ROLE} from "@/enums/roles.js";
+import { ROLE } from '@/enums/roles.js'
 
 const mockPolicies = [
   { projectId: 'citrus-confidential', role: 'PROJECT_ADMIN' },
-  { projectId: 'banana-papers', role: 'PROJECT_MEMBER'}
+  { projectId: 'banana-papers', role: 'PROJECT_MEMBER' }
 ]
 
 describe('usePolicies', () => {

@@ -196,7 +196,7 @@ describe('guards', () => {
     })
 
     it('should allow access to project.view.edit when user has ADMIN role', async () => {
-      config.set('policies', [{ projectId: 'local-datashare', role: 'PROJECT_ADMIN'}])
+      config.set('policies', [{ projectId: 'local-datashare', role: 'PROJECT_ADMIN' }])
       await router.push({ name: 'project.view.edit', params: { name: 'local-datashare' } })
       expect(router.currentRoute.value.name).toBe('project.view.edit')
     })

@@ -1,7 +1,7 @@
 <script setup>
 import DisplayRole from '@/components/Display/DisplayRole.vue'
-import {usePolicies} from '@/composables/usePolicies.js'
-import {computed} from 'vue'
+import { usePolicies } from '@/composables/usePolicies.js'
+import { computed } from 'vue'
 
 const props = defineProps({
   project: {

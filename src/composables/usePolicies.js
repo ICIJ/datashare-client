@@ -1,7 +1,7 @@
 import { useConfig } from '@/composables/useConfig.js'
 import { computed } from 'vue'
-import { camelCase, upperFirst } from 'lodash'
-import {DEFAULT_ROLE, ROLE, ROLE_BIT, ROLE_HIERARCHY, ROLE_KEY} from '@/enums/roles.js'
+import { upperFirst } from 'lodash'
+import { DEFAULT_ROLE, ROLE, ROLE_BIT, ROLE_HIERARCHY, ROLE_KEY } from '@/enums/roles.js'
 
 export function usePolicies() {
   const config = useConfig()
@@ -33,8 +33,8 @@ export function usePolicies() {
 
   function getHighestRoleFromListForProject(policyList, domainId, projectId) {
     const filtered = policyList?.filter(p =>
-      (p.domainId === domainId || p.domainId === '*') &&
-      (p.projectId === projectId || p.projectId === '*')
+      (p.domainId === domainId || p.domainId === '*')
+      && (p.projectId === projectId || p.projectId === '*')
     )
     return resolveHighestRole(filtered)
   }
@@ -45,7 +45,6 @@ export function usePolicies() {
       : getHighestRoleFromList(policies.value.filter(p => p.projectId === projectId || p.projectId === '*'))
   }
 
-
   function isProjectAdmin(projectName) {
     return hasRole(getRoleByProject(projectName), ROLE.PROJECT_ADMIN)
   }
@@ -53,8 +52,6 @@ export function usePolicies() {
   function formatRole(t, role) {
     return upperFirst(t(ROLE_KEY[role] ?? DEFAULT_ROLE))
   }
-
-
 
   return { getRoleByProject, getHighestRoleFromList, getHighestRoleFromListForDomain, getHighestRoleFromListForProject, formatRole, isProjectAdmin, hasRole }
 }
