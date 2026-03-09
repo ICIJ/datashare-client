@@ -165,7 +165,7 @@ export default (core) => {
 
   /**
    * Enforces role-based access control on routes in SERVER mode. Routes that
-   * require specific roles must declare both `meta.allowedRoles` (e.g. `['ADMIN']`)
+   * require specific roles must declare both `meta.allowedRole` (e.g. `['ADMIN']`)
    * and `meta.projectParam` (the route param name holding the project identifier,
    * e.g. `'name'`). The guard looks up the user's roles for that project and
    * allows access only if at least one role matches. Skipped entirely in

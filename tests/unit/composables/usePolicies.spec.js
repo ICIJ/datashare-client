@@ -16,13 +16,13 @@ describe('usePolicies', () => {
     vi.spyOn(useConfigModule, 'useConfig').mockReturnValue({ get: configGet })
   })
 
-  it('getRolesByProject returns roles for known project', () => {
+  it('getRoleByProject returns roles for known project', () => {
     const { getRoleByProject } = usePolicies()
     expect(getRoleByProject('citrus-confidential')).toEqual('PROJECT_ADMIN')
     expect(getRoleByProject('banana-papers')).toEqual('PROJECT_MEMBER')
   })
 
-  it('getRolesByProject returns default role for unknown project', () => {
+  it('getRoleByProject returns default role for unknown project', () => {
     const { getRoleByProject } = usePolicies()
     expect(getRoleByProject('unknown')).toEqual('PROJECT_MEMBER')
   })
