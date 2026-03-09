@@ -9,7 +9,8 @@ import ProjectCardDocumentsCount from './ProjectCardDocumentsCount'
 
 import Hook from '@/components/Hook/Hook'
 import ModeServerOnly from '@/components/Mode/ModeServerOnly.vue'
-import DisplayRole from "@/components/Display/DisplayRole.vue";
+import DisplayRole from '@/components/Display/DisplayRole.vue'
+import { usePolicies } from '@/composables/usePolicies.js'
 
 const props = defineProps({
   project: {
@@ -19,6 +20,8 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
+const { getRoleByProject } = usePolicies()
+const userRole = computed(() => getRoleByProject(props.project.name))
 const toProjectSearch = computed(() => ({
   name: 'search',
   query: {
@@ -43,7 +46,7 @@ const toProjectSearch = computed(() => ({
         </project-card-documents-count>
         <mode-server-only>
           <display-role
-            value="PROJECT_MEMBER"
+            :value="userRole"
             :project="project"
             class="text-secondary-emphasis"
             icon-size="1.25em"
