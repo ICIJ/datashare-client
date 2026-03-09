@@ -344,13 +344,14 @@ class Core extends Behaviors {
   }
 
   /**
-   * Map a CasbinRule (from /api/users/me/permissions) to a { projectId, role } policy object.
-   * Rules with format "g, userId, ROLE, domain::projectId" are mapped to project-specific policies.
-   * Instance-wide (*::*) and domain-wide (domain::*) rules are excluded.
-   * @param {Object} rule - CasbinRule object with v1 (role) and v2 (domain::project)
-   * @returns {{ projectId: string, role: string }|null}
+   * Map a CasbinRule (from /api/users/me/permissions) to a { domainId, projectId, role } policy object.
+   * Only grouping rules (ptype === 'g') are processed; policy rules (ptype === 'p') are ignored.
+   * Wildcard entries (e.g. *::* for instance-wide, domain::* for domain-wide) are included
+   * and used for wildcard role resolution in usePolicies helpers.
+   * @param {Object} rule - CasbinRule object with ptype, v1 (role) and v2 (domain::project)
+   * @returns {{ domainId: string, projectId: string, role: string }|null}
    */
-  casbinRuleToPolicy({ v0, v1, v2} = {}) {
+  casbinRuleToPolicy({ ptype, v0, v1, v2 } = {}) {
     if (ptype !== 'g') return null
     if (!v0 || !v1 || !v2 || !v2.includes('::')) return null
     const [domainId, projectId] = v2.split('::')
