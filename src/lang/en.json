@@ -293,10 +293,13 @@
       }
     }
   },
-  "roles": {
+  "role": {
+    "instance_admin": "Instance admin",
+    "domain_admin":"Domain admin",
     "project_admin": "Admin",
-    "project_editor": "Editor",
-    "project_member": "Member"
+    "project_editor":"Editor",
+    "project_member": "Member",
+    "project_visitor":"Visitor"
   },
   "searchFormControl": {
     "submitLabel": "Search"
