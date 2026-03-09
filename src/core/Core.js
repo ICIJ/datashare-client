@@ -351,6 +351,7 @@ class Core extends Behaviors {
    * @returns {{ projectId: string, role: string }|null}
    */
   casbinRuleToPolicy({ v0, v1, v2} = {}) {
+    if (ptype !== 'g') return null
     if (!v0 || !v1 || !v2 || !v2.includes('::')) return null
     const [domainId, projectId] = v2.split('::')
     if (!projectId) return null
