@@ -51,4 +51,105 @@ describe('usePolicies', () => {
     expect(hasRole(ROLE.PROJECT_ADMIN, ROLE.PROJECT_EDITOR)).toBe(true)// true
     expect(hasRole(ROLE.PROJECT_MEMBER, ROLE.PROJECT_EDITOR)).toBe(false) // false
   })
+
+  describe('getHighestRoleFromList', () => {
+    it('returns default role for empty list', () => {
+      const { getHighestRoleFromList } = usePolicies()
+      expect(getHighestRoleFromList([])).toBe(ROLE.PROJECT_MEMBER)
+      expect(getHighestRoleFromList(null)).toBe(ROLE.PROJECT_MEMBER)
+    })
+
+    it('returns the single role when list has one entry', () => {
+      const { getHighestRoleFromList } = usePolicies()
+      expect(getHighestRoleFromList([{ role: ROLE.PROJECT_EDITOR }])).toBe(ROLE.PROJECT_EDITOR)
+    })
+
+    it('returns the highest role from multiple policies', () => {
+      const { getHighestRoleFromList } = usePolicies()
+      const list = [{ role: ROLE.PROJECT_MEMBER }, { role: ROLE.PROJECT_ADMIN }]
+      expect(getHighestRoleFromList(list)).toBe(ROLE.PROJECT_ADMIN)
+    })
+
+    it('returns INSTANCE_ADMIN as highest when present', () => {
+      const { getHighestRoleFromList } = usePolicies()
+      const list = [
+        { role: ROLE.PROJECT_ADMIN },
+        { role: ROLE.INSTANCE_ADMIN },
+        { role: ROLE.PROJECT_MEMBER }
+      ]
+      expect(getHighestRoleFromList(list)).toBe(ROLE.INSTANCE_ADMIN)
+    })
+
+    it('returns default role when all roles are unknown', () => {
+      const { getHighestRoleFromList } = usePolicies()
+      expect(getHighestRoleFromList([{ role: 'UNKNOWN_ROLE' }])).toBe(ROLE.PROJECT_MEMBER)
+    })
+  })
+
+  describe('getHighestRoleFromListForDomain', () => {
+    it('returns only roles matching the target domain', () => {
+      const { getHighestRoleFromListForDomain } = usePolicies()
+      const list = [
+        { domainId: 'local', projectId: 'foo', role: ROLE.PROJECT_ADMIN },
+        { domainId: 'remote', projectId: 'bar', role: ROLE.INSTANCE_ADMIN }
+      ]
+      expect(getHighestRoleFromListForDomain(list, 'local')).toBe(ROLE.PROJECT_ADMIN)
+    })
+
+    it('includes policies with wildcard domainId', () => {
+      const { getHighestRoleFromListForDomain } = usePolicies()
+      const list = [
+        { domainId: '*', projectId: 'foo', role: ROLE.DOMAIN_ADMIN },
+        { domainId: 'local', projectId: 'bar', role: ROLE.PROJECT_MEMBER }
+      ]
+      expect(getHighestRoleFromListForDomain(list, 'local')).toBe(ROLE.DOMAIN_ADMIN)
+    })
+
+    it('returns default role when no policy matches the domain', () => {
+      const { getHighestRoleFromListForDomain } = usePolicies()
+      const list = [{ domainId: 'remote', projectId: 'foo', role: ROLE.PROJECT_ADMIN }]
+      expect(getHighestRoleFromListForDomain(list, 'local')).toBe(ROLE.PROJECT_MEMBER)
+    })
+  })
+
+  describe('getHighestRoleFromListForProject', () => {
+    it('returns the role for the exact domain + project', () => {
+      const { getHighestRoleFromListForProject } = usePolicies()
+      const list = [
+        { domainId: 'local', projectId: 'citrus', role: ROLE.PROJECT_ADMIN },
+        { domainId: 'local', projectId: 'banana', role: ROLE.PROJECT_MEMBER }
+      ]
+      expect(getHighestRoleFromListForProject(list, 'local', 'citrus')).toBe(ROLE.PROJECT_ADMIN)
+    })
+
+    it('includes policies with wildcard domainId', () => {
+      const { getHighestRoleFromListForProject } = usePolicies()
+      const list = [
+        { domainId: '*', projectId: 'citrus', role: ROLE.INSTANCE_ADMIN },
+        { domainId: 'local', projectId: 'citrus', role: ROLE.PROJECT_MEMBER }
+      ]
+      expect(getHighestRoleFromListForProject(list, 'local', 'citrus')).toBe(ROLE.INSTANCE_ADMIN)
+    })
+
+    it('includes policies with wildcard projectId', () => {
+      const { getHighestRoleFromListForProject } = usePolicies()
+      const list = [
+        { domainId: 'local', projectId: '*', role: ROLE.DOMAIN_ADMIN },
+        { domainId: 'local', projectId: 'citrus', role: ROLE.PROJECT_MEMBER }
+      ]
+      expect(getHighestRoleFromListForProject(list, 'local', 'citrus')).toBe(ROLE.DOMAIN_ADMIN)
+    })
+
+    it('excludes policies from a different domain even with wildcard project', () => {
+      const { getHighestRoleFromListForProject } = usePolicies()
+      const list = [{ domainId: 'remote', projectId: '*', role: ROLE.INSTANCE_ADMIN }]
+      expect(getHighestRoleFromListForProject(list, 'local', 'citrus')).toBe(ROLE.PROJECT_MEMBER)
+    })
+
+    it('returns default role when no policy matches', () => {
+      const { getHighestRoleFromListForProject } = usePolicies()
+      const list = [{ domainId: 'local', projectId: 'other', role: ROLE.PROJECT_ADMIN }]
+      expect(getHighestRoleFromListForProject(list, 'local', 'citrus')).toBe(ROLE.PROJECT_MEMBER)
+    })
+  })
 })

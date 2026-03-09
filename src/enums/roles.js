@@ -11,9 +11,12 @@ export const ROLE = Object.freeze({
 export const DEFAULT_ROLE = ROLE.PROJECT_MEMBER
 
 export const ROLE_KEY = Object.freeze({
-  PROJECT_ADMIN: 'roles.project_admin',
-  PROJECT_EDITOR: 'roles.project_editor',
-  PROJECT_MEMBER: 'roles.project_member'
+  INSTANCE_ADMIN : "role.instance_admin",
+  DOMAIN_ADMIN : "role.domain_admin",
+  PROJECT_ADMIN : "role.project_admin",
+  PROJECT_EDITOR : "role.project_editor",
+  PROJECT_MEMBER : "role.project_member",
+  PROJECT_VISITOR : "role.project_visitor"
 })
 
 
