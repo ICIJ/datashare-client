@@ -137,9 +137,6 @@
   "displayDatetimeRange": {
     "title": "From {start} to {end}"
   },
-  "displayRoles": {
-    "yourRoles": "No role assigned | Your role: {roles} | Your roles: {roles}"
-  },
   "displayStatus": {
     "success": "Success",
     "error": "Failure",
@@ -293,10 +290,13 @@
       }
     }
   },
-  "roles": {
-    "admin": "Admin",
-    "writer": "Editor",
-    "reader": "Member"
+  "role": {
+    "instance_admin": "Instance admin",
+    "domain_admin": "Domain admin",
+    "project_admin": "Admin",
+    "project_editor": "Editor",
+    "project_member": "Member",
+    "project_visitor": "Visitor"
   },
   "searchFormControl": {
     "submitLabel": "Suche"
