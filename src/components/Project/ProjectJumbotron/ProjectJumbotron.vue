@@ -16,9 +16,10 @@ import DisplayDatetime from '@/components/Display/DisplayDatetime'
 import ProjectLabel from '@/components/Project/ProjectLabel'
 import ProjectThumbnail from '@/components/Project/ProjectThumbnail'
 import ModeServerOnly from '@/components/Mode/ModeServerOnly.vue'
-import DisplayRoles from '@/components/Display/DisplayRoles.vue'
+import DisplayRole from '@/components/Display/DisplayRole.vue'
 import PolicyOnly from '@/components/Policy/PolicyOnly.vue'
 import ModeLocalOnly from '@/components/Mode/ModeLocalOnly.vue'
+import { usePolicies } from '@/composables/usePolicies.js'
 
 const { breakpointDown } = useBreakpoints()
 const router = useRouter()
@@ -41,6 +42,9 @@ const props = defineProps({
 
 const { t } = useI18n()
 const { show: showProjectDeletionModal } = useProjectDeletionModal(props.project)
+const { getRoleByProject } = usePolicies()
+
+const userRole = computed(() => getRoleByProject(props.project.name))
 
 const toEdit = computed(() => ({
   name: 'project.view.edit',
@@ -162,9 +166,7 @@ const promptProjectDeletion = async () => {
               <display-datetime :value="updateDate" />
             </span>
             <mode-server-only>
-              <display-roles
-                :project="project"
-              />
+              <display-role :value="userRole" />
             </mode-server-only>
           </div>
 

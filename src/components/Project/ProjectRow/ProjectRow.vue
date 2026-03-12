@@ -11,7 +11,7 @@ import ProjectRowUpdateDate from './ProjectRowUpdateDate'
 import PageTableTr from '@/components/PageTable/PageTableTr'
 import { useBreakpoints } from '@/composables/useBreakpoints'
 import ModeServerOnly from '@/components/Mode/ModeServerOnly'
-import ProjectRowUserRoles from '@/components/Project/ProjectRow/ProjectRowUserRoles'
+import ProjectRowUserRole from '@/components/Project/ProjectRow/ProjectRowUserRole.vue'
 
 const { breakpointDown } = useBreakpoints()
 
@@ -39,7 +39,7 @@ const compact = computed(() => breakpointDown.value[props.compactBreakpoint])
     <project-row-documents-count :project="project" />
     <project-row-update-date :project="project" />
     <mode-server-only>
-      <project-row-user-roles :project="project" />
+      <project-row-user-role :project="project" />
     </mode-server-only>
     <project-row-links
       :project="project"

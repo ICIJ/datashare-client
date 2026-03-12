@@ -344,6 +344,23 @@ class Core extends Behaviors {
   }
 
   /**
+   * Map a CasbinRule (from /api/users/me/permissions) to a { domainId, projectId, role } policy object.
+   * Only grouping rules (ptype === 'g') are processed; policy rules (ptype === 'p') are ignored.
+   * Wildcard entries (e.g. *::* for instance-wide, domain::* for domain-wide) are included
+   * and used for wildcard role resolution in usePolicies helpers.
+   * @param {Object} rule - CasbinRule object with ptype, v1 (role) and v2 (domain::project)
+   * @returns {{ domainId: string, projectId: string, role: string }|null}
+   */
+  casbinRuleToPolicy({ ptype, v0, v1, v2 } = {}) {
+    if (ptype !== 'g') return null
+    if (!v0 || !v1 || !v2 || !v2.includes('::')) return null
+    const [domainId, projectId] = v2.split('::')
+    if (!projectId) return null
+    if (!domainId) return null
+    return { domainId, projectId, role: v1 }
+  }
+
+  /**
    * Get and update user definition in place
    * @async
    * @returns {Promise}
@@ -351,6 +368,10 @@ class Core extends Behaviors {
   async loadUser() {
     // Load the user
     this.config.merge(await this.getUser())
+    // Load and store user permissions as project policies
+    const rules = (await this.api.getUserPermissions?.()) ?? []
+    const policies = rules.map(this.casbinRuleToPolicy).filter(Boolean)
+    this.config.set('policies', policies)
   }
 
   /**

@@ -184,7 +184,7 @@ describe('guards', () => {
     })
   })
 
-  describe('checkUserRoles', () => {
+  describe('checkUserRole', () => {
     beforeEach(async () => {
       setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'yolo' }, JSON.stringify)
       config.set('mode', 'SERVER')
@@ -196,19 +196,19 @@ describe('guards', () => {
     })
 
     it('should allow access to project.view.edit when user has ADMIN role', async () => {
-      config.set('policies', [{ projectId: 'local-datashare', roles: ['ADMIN'], admin: true }])
+      config.set('policies', [{ projectId: 'local-datashare', role: 'PROJECT_ADMIN' }])
       await router.push({ name: 'project.view.edit', params: { name: 'local-datashare' } })
       expect(router.currentRoute.value.name).toBe('project.view.edit')
     })
 
     it('should redirect to error when user lacks ADMIN role', async () => {
-      config.set('policies', [{ projectId: 'local-datashare', roles: ['READER'], admin: false }])
+      config.set('policies', [{ projectId: 'local-datashare', role: 'PROJECT_MEMBER' }])
       await router.push({ name: 'project.view.edit', params: { name: 'local-datashare' } })
       expect(router.currentRoute.value.name).toBe('error')
     })
 
     it('should redirect to error when user has no policy for the project', async () => {
-      config.set('policies', [{ projectId: 'other-project', roles: ['ADMIN'], admin: true }])
+      config.set('policies', [{ projectId: 'other-project', role: 'PROJECT_ADMIN' }])
       await router.push({ name: 'project.view.edit', params: { name: 'local-datashare' } })
       expect(router.currentRoute.value.name).toBe('error')
     })
@@ -216,8 +216,8 @@ describe('guards', () => {
     it('should check roles for the correct project from route params', async () => {
       config.set('projects', ['local-datashare', 'other-project'])
       config.set('policies', [
-        { projectId: 'local-datashare', roles: ['READER'], admin: false },
-        { projectId: 'other-project', roles: ['ADMIN'], admin: true }
+        { projectId: 'local-datashare', role: 'PROJECT_MEMBER' },
+        { projectId: 'other-project', role: 'PROJECT_ADMIN' }
       ])
       await router.push({ name: 'project.view.edit', params: { name: 'other-project' } })
       expect(router.currentRoute.value.name).toBe('project.view.edit')
@@ -237,7 +237,7 @@ describe('guards', () => {
       expect(router.currentRoute.value.name).not.toBe('error')
     })
 
-    it('should not redirect routes without allowedRoles', async () => {
+    it('should not redirect routes without allowedRole', async () => {
       config.set('policies', [])
       await router.push({ name: 'project.view.overview', params: { name: 'local-datashare' } })
       expect(router.currentRoute.value.name).not.toBe('error')

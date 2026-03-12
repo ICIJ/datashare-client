@@ -95,6 +95,21 @@ export class Api {
     return this.sendAction(`/api/project/${project}`)
   }
 
+  getProjectPolicies(domain, project, { user = null, from = 0, to = 0 } = {}) {
+    const params = omitBy({ user, from, to }, isNull)
+    return this.sendAction(`/api/policies/${domain}/${project}`, { method: Method.GET, params })
+  }
+
+  removeProjectPolicy(domain, project, { user, role } = {}) {
+    const params = { user, role }
+    return this.sendActionAsText(`/api/policies/${domain}/${project}`, { method: Method.DELETE, params })
+  }
+
+  saveProjectPolicy(domain, project, { user, role } = {}) {
+    const params = { user, role }
+    return this.sendActionAsText(`/api/policies/${domain}/${project}`, { method: Method.PUT, params })
+  }
+
   getVersion() {
     return this.sendAction('/version')
   }
@@ -283,6 +298,10 @@ export class Api {
     return this.sendAction('/api/users/me')
   }
 
+  getUserPermissions() {
+    return this.sendAction('/api/users/me/permissions')
+  }
+
   getHistoryEvents(type, from, size, sort, desc, projects) {
     sort = sort ?? 'modification_date'
     desc = desc ?? true
@@ -428,10 +447,6 @@ export class Api {
     return this.sendAction(`/api/index/_snapshot/${encodeURIComponent(repository)}/_all`)
   }
 
-  getSnapshot(repository, snapshot) {
-    return this.sendAction(`/api/index/_snapshot/${encodeURIComponent(repository)}/${encodeURIComponent(snapshot)}`)
-  }
-
   createSnapshot(repository, snapshot, options = {}) {
     const params = options.waitForCompletion ? { wait_for_completion: true } : {}
     return this.sendAction(`/api/index/_snapshot/${encodeURIComponent(repository)}/${encodeURIComponent(snapshot)}`, {
@@ -471,17 +486,8 @@ export class Api {
     })
   }
 
-  // Cluster information endpoints
-  getClusterNodes() {
-    return this.sendAction('/api/index/_nodes')
-  }
-
   getClusterNodesSettings() {
     return this.sendAction('/api/index/_nodes/settings')
-  }
-
-  getClusterSettings() {
-    return this.sendAction('/api/index/_cluster/settings')
   }
 
   async sendAction(url, config = {}) {

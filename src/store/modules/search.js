@@ -984,7 +984,6 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     hits,
     // Actions
     reset,
-    resetForRouteChange,
     resetFilters,
     resetFilterValues,
     resetQuery,

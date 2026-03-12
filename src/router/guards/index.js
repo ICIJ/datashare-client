@@ -8,11 +8,11 @@ import useMode from '@/composables/useMode.js'
 export default (core) => {
   const { router, auth, config, i18n } = core
   const { isServer } = useMode(core)
-  const { getRolesByProject } = usePolicies()
+  const { getRoleByProject, hasRole } = usePolicies()
 
   /**
    * Redirects to the error page with a "not found" title.
-   * Shared by guards that deny access (checkMode, checkUserRoles).
+   * Shared by guards that deny access (checkMode, checkUserRole).
    * @param {import('vue-router').NavigationGuardNext} next
    */
   function nextNotFound(next) {
@@ -152,20 +152,20 @@ export default (core) => {
   }
 
   /**
-   * Returns true if the user has at least one of the required roles for
+   * Returns true if the user has  at least the required
    * the given project.
-   * @param {string[]} allowedRoles
+   * @param {string[]} allowedRole
    * @param {string} projectName
    * @returns {boolean}
    */
-  function hasRequiredRole(allowedRoles, projectName) {
-    const currentRoles = getRolesByProject(projectName)
-    return allowedRoles.some(role => currentRoles.includes(role))
+  function hasRequiredRole(allowedRole, projectName) {
+    const currentRole = getRoleByProject(projectName)
+    return hasRole(currentRole, allowedRole)
   }
 
   /**
    * Enforces role-based access control on routes in SERVER mode. Routes that
-   * require specific roles must declare both `meta.allowedRoles` (e.g. `['ADMIN']`)
+   * require specific roles must declare both `meta.allowedRole` (e.g. `['ADMIN']`)
    * and `meta.projectParam` (the route param name holding the project identifier,
    * e.g. `'name'`). The guard looks up the user's roles for that project and
    * allows access only if at least one role matches. Skipped entirely in
@@ -174,21 +174,21 @@ export default (core) => {
    * @param {import('vue-router').RouteLocationNormalized} _from
    * @param {import('vue-router').NavigationGuardNext} next
    */
-  function checkUserRoles({ meta, params }, _from, next) {
+  function checkUserRole({ meta, params }, _from, next) {
     // Skip role checks in non-server modes where there is no role enforcement
     if (!isServer.value) {
       return next()
     }
 
-    const allowedRoles = get(meta, 'allowedRoles', [])
+    const allowedRole = get(meta, 'allowedRole', '')
     // If no roles are required, allow access without checking
-    if (allowedRoles.length === 0) {
+    if (allowedRole.length === 0) {
       return next()
     }
 
     const projectName = getProjectFromRoute(meta, params)
     // If route requires roles but no project param is found, or user lacks required roles, deny access
-    if (!projectName || !hasRequiredRole(allowedRoles, projectName)) {
+    if (!projectName || !hasRequiredRole(allowedRole, projectName)) {
       return nextNotFound(next)
     }
 
@@ -232,7 +232,7 @@ export default (core) => {
   }
 
   router.beforeEach(checkMode)
-  router.beforeEach(checkUserRoles)
+  router.beforeEach(checkUserRole)
   router.beforeEach(checkUserAuthentication)
   router.beforeEach(checkUserProjects)
   router.beforeEach(preparePageContext)
