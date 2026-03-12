@@ -137,9 +137,6 @@
   "displayDatetimeRange": {
     "title": "从 {start} 到 {end}"
   },
-  "displayRoles": {
-    "yourRoles": "未分配角色 | 您的角色：{roles} | 您的角色：{roles}"
-  },
   "displayStatus": {
     "success": "成功",
     "error": "失败",
@@ -293,10 +290,13 @@
       }
     }
   },
-  "roles": {
-    "admin": "管理员",
-    "writer": "编辑者",
-    "reader": "成员"
+  "role": {
+    "instance_admin": "Instance admin",
+    "domain_admin": "Domain admin",
+    "project_admin": "Admin",
+    "project_editor": "Editor",
+    "project_member": "Member",
+    "project_visitor": "Visitor"
   },
   "searchFormControl": {
     "submitLabel": "搜索"
