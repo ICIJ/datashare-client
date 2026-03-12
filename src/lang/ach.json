@@ -137,9 +137,6 @@
   "displayDatetimeRange": {
     "title": "crwdns7666:0{start}crwdnd7666:0{end}crwdne7666:0"
   },
-  "displayRoles": {
-    "yourRoles": "crwdns10026:0{roles}crwdnd10026:0{roles}crwdne10026:0"
-  },
   "displayStatus": {
     "success": "crwdns7668:0crwdne7668:0",
     "error": "crwdns7670:0crwdne7670:0",
@@ -293,10 +290,13 @@
       }
     }
   },
-  "roles": {
-    "admin": "crwdns10030:0crwdne10030:0",
-    "writer": "crwdns10032:0crwdne10032:0",
-    "reader": "crwdns10154:0crwdne10154:0"
+  "role": {
+    "instance_admin": "crwdns10158:0crwdne10158:0",
+    "domain_admin": "crwdns10160:0crwdne10160:0",
+    "project_admin": "crwdns10162:0crwdne10162:0",
+    "project_editor": "crwdns10164:0crwdne10164:0",
+    "project_member": "crwdns10166:0crwdne10166:0",
+    "project_visitor": "crwdns10168:0crwdne10168:0"
   },
   "searchFormControl": {
     "submitLabel": "crwdns7874:0crwdne7874:0"
