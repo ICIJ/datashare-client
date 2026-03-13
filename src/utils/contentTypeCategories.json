@@ -1,0 +1,33 @@
+{
+    "AUDIO" : {
+      "label": "Audio",
+      "icon": "audio"
+    },
+    "VIDEO" : {
+      "label": "Video",
+      "icon": "video"
+    },
+    "IMAGE" : {
+      "label": "Image",
+      "icon": "image"
+    },
+    "DOCUMENT" : {
+      "label": "Document",
+      "icon": "doc"
+    },
+    "EMAIL" : {
+      "label": "Email",
+      "icon": "email"
+    },
+    "PRESENTATION" : {
+      "label": "Presentation",
+      "icon": "ppt"
+    },
+    "SPREADSHEET" : {
+      "label": "Spreadsheet",
+      "icon": "xls"
+    },
+    "OTHER" : {
+      "label": "Other"
+    }
+}
