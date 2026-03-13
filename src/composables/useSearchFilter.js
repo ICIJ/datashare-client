@@ -9,6 +9,7 @@ import { useCore } from '@/composables/useCore'
 import { onAfterRouteUpdate } from '@/composables/onAfterRouteUpdate'
 import FilterType from '@/components/Filter/FilterType/FilterType'
 import FilterTypeDateRange from '@/components/Filter/FilterType/FilterTypeDateRange'
+import FilterTypeFileTypes from '@/components/Filter/FilterType/FilterTypeFileTypes'
 import FilterTypePath from '@/components/Filter/FilterType/FilterTypePath'
 import FilterTypeProject from '@/components/Filter/FilterType/FilterTypeProject'
 import FilterTypeRecommendedBy from '@/components/Filter/FilterType/FilterTypeRecommendedBy'
@@ -31,7 +32,8 @@ export function useSearchFilter() {
     FilterTypeStarred,
     FilterTypeRecommendedBy,
     FilterTypePath,
-    FilterTypeProject
+    FilterTypeProject,
+    FilterTypeFileTypes,
   }
 
   const indices = computed(() => searchStore.indices)

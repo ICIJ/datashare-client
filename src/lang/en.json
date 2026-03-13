@@ -60,6 +60,10 @@
     "list": "List view",
     "tree": "Tree view"
   },
+  "buttonToggleFileTypesGrouped": {
+    "flat": "File types",
+    "grouped": "File types by categories"
+  },
   "buttonToggleSettings": {
     "label": "Settings"
   },
