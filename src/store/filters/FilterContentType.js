@@ -12,6 +12,11 @@ import { getDocumentTypeLabel } from '@/utils/utils'
  * or the translated label.
  */
 export default class FilterContentType extends FilterText {
+  constructor(options) {
+    super(options)
+    this.component = 'FilterTypeFileTypes'
+  }
+
   /**
    * Map a label-based search query to matching MIME keys.
    * @param {string} query - Lowercased user query.

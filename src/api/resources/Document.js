@@ -9,6 +9,7 @@ import EsDoc from '@/api/resources/EsDoc'
 import humanSize from '@/utils/humanSize'
 import { findContentTypeIcon } from '@/utils/iconFiles'
 import types from '@/utils/contentTypes.json'
+import typeCategories from '@/utils/contentTypeCategories.json'
 
 const _parent = '_PARENT'
 const _root = '_ROOT'
@@ -254,6 +255,14 @@ export default class Document extends EsDoc {
 
   get contentType() {
     return this.source.contentType || 'unknown'
+  }
+
+  get contentTypeCategory() {
+    return this.source.contentTypeCategory || 'unknown'
+  }
+
+  get contentTypeCategoryLabel() {
+    return get(typeCategories, [this.contentTypeCategory, 'label'], null)
   }
 
   get contentTypeLabel() {
