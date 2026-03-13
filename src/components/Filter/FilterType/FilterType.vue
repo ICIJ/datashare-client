@@ -17,7 +17,7 @@ import { useSearchStore } from '@/store/modules'
 const query = defineModel('query', { type: String, default: '' })
 const collapse = defineModel('collapse', { type: Boolean, default: null })
 
-const { filter, modal } = defineProps({
+const { filter, modal, hideCount } = defineProps({
   filter: {
     type: Object,
     required: true
