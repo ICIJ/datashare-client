@@ -16,6 +16,7 @@ export default class FilterContentType extends FilterText {
       })
     }
     super({ alternativeSearch, ...options })
+    this.component = 'FilterTypeFileTypes'
   }
 
   itemLabel(item) {
