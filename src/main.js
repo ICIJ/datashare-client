@@ -10,14 +10,14 @@ if (import.meta.env.MODE !== 'test' && window) {
     .then(() => datashare.useRouter().mount())
     // Redirect to the error page
     .catch((error) => {
-      const vm = datashare.useRouter().mount()
+      datashare.useRouter().mount()
       // Unauthenticated error during initialization:
       // redirect the user to the login page
       if (error?.response?.status === 401) {
-        vm.$router.push('login')
+        datashare.router.push('login')
       }
       else {
-        vm.$router.push({ name: 'error', state: { error } })
+        datashare.router.push({ name: 'error', state: { error } })
       }
     })
   // Register the core globally (so plugins can use it)
