@@ -564,7 +564,10 @@ export const routes = [
     name: 'error',
     path: '/:pathMatch(.*)*',
     component: () => import('@/views/Error/Error'),
-    props: true,
+    props: () => {
+      const { title, description, error, code } = window.history?.state ?? {}
+      return { title, description, error, code }
+    },
     meta: {
       skipsAuth: true,
       title: 'error.title'
