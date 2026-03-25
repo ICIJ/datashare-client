@@ -105,7 +105,7 @@ export default (core) => {
     // No project given for this user
     if (!projects.length && ['error', 'login'].indexOf(to.name) === -1) {
       const title = i18n.global.t('error.noProjects')
-      next({ name: 'error', state: { foo: title } })
+      next({ name: 'error', state: { title } })
     }
     else {
       next()
