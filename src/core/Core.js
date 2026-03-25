@@ -369,9 +369,14 @@ class Core extends Behaviors {
     // Load the user
     this.config.merge(await this.getUser())
     // Load and store user permissions as project policies
-    const rules = (await this.api.getUserPermissions?.()) ?? []
-    const policies = rules.map(this.casbinRuleToPolicy).filter(Boolean)
-    this.config.set('policies', policies)
+    try {
+      const rules = (await this.api.getUserPermissions?.()) ?? []
+      const policies = rules.map(this.casbinRuleToPolicy).filter(Boolean)
+      this.config.set('policies', policies)
+    }
+    catch {
+      this.config.set('policies', [])
+    }
   }
 
   /**
@@ -382,13 +387,14 @@ class Core extends Behaviors {
   async loadSettings() {
     // Get the config object
     const serverSettings = await this.api.getSettings()
-    // Load the user and update the settings accordingly
-    await this.loadUser()
     // Murmur exposes a config attribute which shares a Config object
     // with the current vue instance.
     this.config.merge(getMode(serverSettings.mode))
     // The backend can yet override some configuration
+    // (merged before loadUser so settings like authFilter are available even if auth fails)
     this.config.merge(serverSettings)
+    // Load the user and update the settings accordingly
+    await this.loadUser()
   }
 
   /**
