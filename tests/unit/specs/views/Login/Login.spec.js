@@ -2,25 +2,41 @@ import { mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import Login from '@/views/Login/Login'
-import I18nLocaleDropdown from '@/components/I18n/I18nLocaleDropdown'
+import LoginCard from '@/components/Login/LoginCard'
+import LoginWelcome from '@/components/Login/LoginWelcome'
 
 describe('Login.vue', () => {
-  let wrapper
+  let wrapper, core
 
   beforeEach(() => {
-    const { plugins } = CoreSetup.init().useAll()
-    wrapper = mount(Login, { global: { plugins } })
+    core = CoreSetup.init().useAll()
+    wrapper = mount(Login, { global: { plugins: core.plugins } })
   })
 
-  it('should display a login link', async () => {
-    expect(wrapper.find('.login__enter_link').text()).toBe('Login')
+  it('should show the welcome layout by default', () => {
+    expect(wrapper.findComponent(LoginWelcome).exists()).toBe(true)
   })
 
-  it('should display a help link', () => {
-    expect(wrapper.find('.login__assistance__help').text()).toBe('Ask for help')
+  it('should not show the card layout by default', () => {
+    expect(wrapper.findComponent(LoginCard).exists()).toBe(false)
   })
-  it('should show the locale menu with the current locale', () => {
-    expect(wrapper.findComponent(I18nLocaleDropdown).exists()).toBe(true)
-    expect(wrapper.findComponent(I18nLocaleDropdown).text()).toBe('English')
+
+  describe('when authFilter is FormAuthFilter', () => {
+    beforeEach(() => {
+      core.config.set('authFilter', 'org.icij.datashare.session.FormAuthFilter')
+      wrapper = mount(Login, { global: { plugins: core.plugins } })
+    })
+
+    it('should show the card layout', () => {
+      expect(wrapper.findComponent(LoginCard).exists()).toBe(true)
+    })
+
+    it('should not show the welcome layout', () => {
+      expect(wrapper.findComponent(LoginWelcome).exists()).toBe(false)
+    })
+
+    it('should use the form-auth modifier class', () => {
+      expect(wrapper.find('.login--form-auth').exists()).toBe(true)
+    })
   })
 })
