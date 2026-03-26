@@ -294,6 +294,13 @@ export class Api {
     return this.sendAction(replace(`/api/${project}/notes`, '//', '/'))
   }
 
+  login(username, password) {
+    return this.sendAction('/auth/login', {
+      method: Method.POST,
+      data: { username, password }
+    })
+  }
+
   getUser() {
     return this.sendAction('/api/users/me')
   }
