@@ -14,6 +14,7 @@ if (import.meta.env.MODE !== 'test' && window) {
       // Unauthenticated error during initialization:
       // redirect the user to the login page
       if (error?.response?.status === 401) {
+        datashare.auth.reset()
         datashare.router.push('login')
       }
       else {
