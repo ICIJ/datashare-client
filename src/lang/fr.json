@@ -896,7 +896,11 @@
     "login": "Se connecter",
     "title": "Se connecter",
     "switchLanguage": "Changer de langue",
-    "tagline": "Le logiciel de recherche et d'analyse de données de l'ICIJ"
+    "tagline": "Le logiciel de recherche et d'analyse de données de l'ICIJ",
+    "username": "Username",
+    "password": "Password",
+    "submit": "Sign in",
+    "error": "Invalid username or password."
   },
   "loginLocaleDropdownSelector": {
     "label": "Changer de langue :"
