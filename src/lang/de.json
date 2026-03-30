@@ -896,7 +896,11 @@
     "login": "Anmelden, um fortzufahren",
     "title": "Login",
     "switchLanguage": "Switch language",
-    "tagline": "ICIJ search and discovery platform"
+    "tagline": "ICIJ search and discovery platform",
+    "username": "Username",
+    "password": "Password",
+    "submit": "Sign in",
+    "error": "Invalid username or password."
   },
   "loginLocaleDropdownSelector": {
     "label": "Switch language:"
