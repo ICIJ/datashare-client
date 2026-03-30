@@ -896,7 +896,11 @@
     "login": "Inicia sesión para continuar",
     "title": "Iniciar sesión",
     "switchLanguage": "Cambiar idioma",
-    "tagline": "Plataforma de búsqueda y descubrimiento de ICIJ"
+    "tagline": "Plataforma de búsqueda y descubrimiento de ICIJ",
+    "username": "Username",
+    "password": "Password",
+    "submit": "Sign in",
+    "error": "Invalid username or password."
   },
   "loginLocaleDropdownSelector": {
     "label": "Cambiar idioma:"
