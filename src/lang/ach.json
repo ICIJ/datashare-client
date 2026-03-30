@@ -896,7 +896,11 @@
     "login": "crwdns8674:0crwdne8674:0",
     "title": "crwdns8676:0crwdne8676:0",
     "switchLanguage": "crwdns8678:0crwdne8678:0",
-    "tagline": "crwdns8680:0crwdne8680:0"
+    "tagline": "crwdns8680:0crwdne8680:0",
+    "username": "crwdns10170:0crwdne10170:0",
+    "password": "crwdns10172:0crwdne10172:0",
+    "submit": "crwdns10174:0crwdne10174:0",
+    "error": "crwdns10176:0crwdne10176:0"
   },
   "loginLocaleDropdownSelector": {
     "label": "crwdns8682:0crwdne8682:0"
