@@ -315,11 +315,13 @@ class Core extends Behaviors {
    */
   defer() {
     this._ready = new Promise((resolve, reject) => {
-      this._readyResolve = resolve
+      this._readyResolve = (value) => {
+        this.dispatch('ready')
+        resolve(value)
+      }
       this._readyReject = reject
     })
-    // Notify the document the core is ready
-    return this._ready.then(() => this.dispatch('ready'))
+    return this._ready
   }
 
   /**
