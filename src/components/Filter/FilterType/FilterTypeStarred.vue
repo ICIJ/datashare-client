@@ -1,11 +1,11 @@
 <script setup>
-import {computed, onBeforeMount, ref} from 'vue'
-import {castArray} from 'lodash'
-import {useI18n} from 'vue-i18n'
+import { computed, onBeforeMount, ref } from 'vue'
+import { castArray } from 'lodash'
+import { useI18n } from 'vue-i18n'
 
-import {useSearchFilter} from '@/composables/useSearchFilter'
-import {useWait} from '@/composables/useWait'
-import {useStarredStore} from '@/store/modules'
+import { useSearchFilter } from '@/composables/useSearchFilter'
+import { useWait } from '@/composables/useWait'
+import { useStarredStore } from '@/store/modules'
 import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPanelSectionFilterEntry'
 import FilterType from '@/components/Filter/FilterType/FilterType'
 
