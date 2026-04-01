@@ -14,7 +14,10 @@ export const namedEntityCategoryTranslation = {
 export default class FilterEntity extends FilterType {
   constructor(options) {
     super(options)
-    this.category = (options.category || ENTITY_CATEGORY.PERSON).toUpperCase()
+    if (!options.category) {
+      throw new Error('FilterEntity requires a category')
+    }
+    this.category = options.category.toUpperCase()
     this.component = 'FilterType'
     this.sortByOptions = [
       { sortBy: '_count', orderBy: 'asc' },

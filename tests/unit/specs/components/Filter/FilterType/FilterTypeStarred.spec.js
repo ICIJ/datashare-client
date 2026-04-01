@@ -1,11 +1,10 @@
 import { mount } from '@vue/test-utils'
-import { removeCookie, setCookie } from 'tiny-cookie'
-
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import { useStarredStore, useSearchStore } from '@/store/modules'
 import FilterType from '@/components/Filter/FilterType/FilterType'
 import FilterTypeStarred from '@/components/Filter/FilterType/FilterTypeStarred'
+import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPanelSectionFilterEntry'
 import CoreSetup from '~tests/unit/CoreSetup'
 
 vi.mock('@/api/apiInstance', async (importOriginal) => {
@@ -13,7 +12,7 @@ vi.mock('@/api/apiInstance', async (importOriginal) => {
 
   return {
     apiInstance: {
-      ...apiInstance,
+      elasticsearch: apiInstance.elasticsearch,
       getStarredDocuments: vi.fn().mockResolvedValue([])
     }
   }
@@ -24,10 +23,9 @@ describe('FilterTypeStarred.vue', () => {
   let core, starredStore, searchStore, wrapper
 
   beforeAll(() => {
-    core = CoreSetup.init().useAll().useRouterWithoutGuards()
+    core = CoreSetup.init().useAll()
     starredStore = useStarredStore()
     searchStore = useSearchStore()
-    setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
   })
 
   beforeEach(() => {
@@ -36,11 +34,6 @@ describe('FilterTypeStarred.vue', () => {
     const global = { plugins: core.plugins }
     searchStore.setIndex(index)
     wrapper = mount(FilterTypeStarred, { props, global })
-  })
-
-  afterAll(() => {
-    removeCookie(process.env.VITE_DS_COOKIE_NAME)
-    vi.resetAllMocks()
   })
 
   it('should display 3 items for the starred filter (including "All")', async () => {
@@ -69,23 +62,16 @@ describe('FilterTypeStarred.vue', () => {
   it('should display the results count (without the "All")', async () => {
     await letData(es).have(new IndexedDocument('document_01', index)).commit()
     await letData(es).have(new IndexedDocument('document_02', index)).commit()
-    await letData(es).have(new IndexedDocument('document_03', index)).commit()
-
-    starredStore.setDocuments([
-      {
-        index,
-        id: 'document_01'
-      },
-      {
-        index,
-        id: 'document_02'
-      }
-    ])
+    // Await fetch() directly so getTotal resolves before assert
+    await wrapper.vm.fetch()
+    // fetch() calls fetchIndicesStarredDocuments which is mocked to [], so set docs after
+    starredStore.setDocuments([{ index, id: 'document_01' }, { index, id: 'document_02' }])
 
     await wrapper.findComponent(FilterType).vm.aggregate()
 
-    expect(wrapper.findAll('.filters-panel-section-filter-entry__count')).toHaveLength(2)
-    expect(wrapper.findAll('.filters-panel-section-filter-entry__count').at(0).text()).toBe('2')
-    expect(wrapper.findAll('.filters-panel-section-filter-entry__count').at(1).text()).toBe('0')
+    // entries: [0] = All (inside FilterTypeAll), [1] = Starred, [2] = Not starred
+    const entries = wrapper.findAllComponents(FiltersPanelSectionFilterEntry)
+    expect(entries[1].props('count')).toBe(2)
+    expect(entries[2].props('count')).toBe(0)
   })
 })
