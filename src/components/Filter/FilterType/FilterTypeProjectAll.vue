@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, toRef, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPanelSectionFilterEntry'
@@ -22,13 +22,13 @@ const all = computed({
   }
 })
 
-// We track if the total was already visible before to avoid flickering
-// when hidding it (e.g. when the search is not ready).
+// null while loading to prevent flickering a stale count before the fetch completes.
 const hadTotal = ref(false)
 const total = computed(() => (allProjectsSelected.value ? searchStore.total : null))
 const hideTotal = computed(() => total.value === null || !hadTotal.value)
-// We need to update hadTotal after the search is ready and all projects are selected
-watch(toRef(searchStore, 'isReady'), value => (hadTotal.value = value && allProjectsSelected.value))
+watch(total, (value) => {
+  if (value !== null) hadTotal.value = true
+}, { immediate: true })
 </script>
 
 <template>
