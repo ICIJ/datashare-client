@@ -1,11 +1,11 @@
 <script setup>
 import Fuse from 'fuse.js'
-import { computed, onBeforeMount } from 'vue'
-import { property, sortBy } from 'lodash'
+import {computed, onBeforeMount} from 'vue'
+import {property, sortBy} from 'lodash'
 
-import { useConfig } from '@/composables/useConfig'
-import { useSearchFilter } from '@/composables/useSearchFilter'
-import { useRecommendedStore } from '@/store/modules'
+import {useConfig} from '@/composables/useConfig'
+import {useSearchFilter} from '@/composables/useSearchFilter'
+import {useRecommendedStore} from '@/store/modules'
 import DisplayUser from '@/components/Display/DisplayUser'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 import FilterType from '@/components/Filter/FilterType/FilterType'
@@ -58,6 +58,7 @@ function fetch() {
 
 onBeforeMount(fetch)
 watchIndices(fetch)
+defineExpose({ fetch })
 </script>
 
 <template>
