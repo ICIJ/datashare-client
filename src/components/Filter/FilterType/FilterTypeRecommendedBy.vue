@@ -58,7 +58,6 @@ function fetch() {
 
 onBeforeMount(fetch)
 watchIndices(fetch)
-defineExpose({ fetch })
 </script>
 
 <template>

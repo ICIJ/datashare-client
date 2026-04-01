@@ -47,7 +47,6 @@ const selected = computed({
 
 onBeforeMount(fetch)
 watchIndices(fetch)
-defineExpose({ fetch })
 </script>
 
 <template>
