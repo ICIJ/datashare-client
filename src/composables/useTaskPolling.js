@@ -31,12 +31,14 @@ export function useTaskPolling({ names = [], sortBy = [], perPage = null, page =
   }
 
   async function fetchTasks() {
+    const query = toValue(searchQuery)
     await taskStore.fetchTasks({
       'names': toValue(names),
       'sort': toValue(sortBy)?.[0],
       'order': toValue(sortBy)?.[1] ?? 'asc',
-      // Filters can be build with arbitrary values
-      'args.batchRecord.name': toValue(searchQuery),
+      // Only include the search filter when query is non-empty to avoid
+      // sending an invalid pattern to the backend (which treats it as regex)
+      ...(query ? { 'args.batchRecord.name': query } : {}),
       // The tasks API endpoint has limited support for pagination so we get all tasks at once
       'size': toValue(perPage),
       'from': (toValue(page) - 1) * toValue(perPage)
