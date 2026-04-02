@@ -7,6 +7,7 @@ import Document from '@/api/resources/Document'
 import EsDocList from '@/api/resources/EsDocList'
 import NamedEntity from '@/api/resources/NamedEntity'
 import { useAppStore, useSearchStore } from '@/store/modules'
+import { apiInstance as api } from '@/api/apiInstance'
 
 describe('SearchStore', () => {
   const { index, es } = esConnectionHelper.build()
@@ -1074,6 +1075,37 @@ describe('SearchStore', () => {
       expect(filter.key).toBe('_id')
       expect(filter.constructor.name).toBe('FilterStarred')
       expect(filter.starredDocuments).toEqual([])
+    })
+  })
+
+  describe('runBatchDownload', () => {
+    let rootSearchSpy, runBatchDownloadSpy
+
+    beforeEach(() => {
+      rootSearchSpy = vi.spyOn(api.elasticsearch, 'rootSearch')
+      runBatchDownloadSpy = vi.spyOn(api, 'runBatchDownload').mockResolvedValue({})
+    })
+
+    afterEach(() => {
+      vi.restoreAllMocks()
+    })
+
+    it('should pass the selected field to the elasticsearch query', async () => {
+      searchStore.setField('content')
+      await searchStore.runBatchDownload()
+      expect(rootSearchSpy).toHaveBeenCalledWith(expect.anything(), expect.anything(), ['content'])
+    })
+
+    it('should pass empty fields when searching in all fields', async () => {
+      searchStore.setField('all')
+      await searchStore.runBatchDownload()
+      expect(rootSearchSpy).toHaveBeenCalledWith(expect.anything(), expect.anything(), [])
+    })
+
+    it('should pass the field-specific fields array to the batch download query', async () => {
+      searchStore.setField('path')
+      await searchStore.runBatchDownload()
+      expect(rootSearchSpy).toHaveBeenCalledWith(expect.anything(), expect.anything(), ['path'])
     })
   })
 })
