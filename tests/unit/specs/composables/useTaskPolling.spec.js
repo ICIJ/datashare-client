@@ -1,5 +1,5 @@
 import { flushPromises, mount } from '@vue/test-utils'
-import { setActivePinia, createPinia } from 'pinia'
+import { createPinia } from 'pinia'
 import { ref, defineComponent, h } from 'vue'
 
 import { useTaskPolling } from '@/composables/useTaskPolling'
