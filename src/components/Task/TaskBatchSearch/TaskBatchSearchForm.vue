@@ -111,14 +111,9 @@ async function submit() {
     return
   }
 
-  try {
-    await createBatchSearch()
-    await router.push({ name: 'task.batch-search.list' })
-    toast.success(t('task.batch-search.form.submitSuccess'))
-  }
-  catch {
-    toast.error(t('task.batch-search.form.submitError'))
-  }
+  await createBatchSearch()
+  await router.push({ name: 'task.batch-search.list' })
+  toast.success(t('task.batch-search.form.submitSuccess'))
 }
 </script>
 
