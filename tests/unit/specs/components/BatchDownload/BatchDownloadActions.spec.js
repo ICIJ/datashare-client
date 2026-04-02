@@ -82,4 +82,20 @@ describe('BatchDownloadActions.vue', () => {
       expect(wrapper.emitted().refresh).toBeDefined()
     })
   })
+
+  describe('search link', () => {
+    it('should route to the search with query params from the stored uri', () => {
+      const uri = '/#/?q=*pdf&indices=local-datashare&field=title&from=0'
+      const props = mockRunBatchDownload('id', 'task', { projects, uri })
+      const wrapper = mount(BatchDownloadActions, { props, global: { plugins } })
+      expect(wrapper.vm.searchRoute).toMatchObject({ name: 'search', query: { q: '*pdf', field: 'title', indices: 'local-datashare' } })
+    })
+
+    it('should not put the uri in the hash property of the route', () => {
+      const uri = '/#/?q=*pdf&indices=local-datashare&field=title&from=0'
+      const props = mockRunBatchDownload('id', 'task', { projects, uri })
+      const wrapper = mount(BatchDownloadActions, { props, global: { plugins } })
+      expect(wrapper.vm.searchRoute).not.toHaveProperty('hash')
+    })
+  })
 })

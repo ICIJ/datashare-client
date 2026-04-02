@@ -1079,11 +1079,11 @@ describe('SearchStore', () => {
   })
 
   describe('runBatchDownload', () => {
-    let rootSearchSpy, runBatchDownloadSpy
+    let rootSearchSpy
 
     beforeEach(() => {
       rootSearchSpy = vi.spyOn(api.elasticsearch, 'rootSearch')
-      runBatchDownloadSpy = vi.spyOn(api, 'runBatchDownload').mockResolvedValue({})
+      vi.spyOn(api, 'runBatchDownload').mockResolvedValue({})
     })
 
     afterEach(() => {
