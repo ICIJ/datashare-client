@@ -14,6 +14,7 @@ import DisplayProjectList from '@/components/Display/DisplayProjectList'
 import EmptyState from '@/components/EmptyState/EmptyState'
 import RouterLinkBatchDownload from '@/components/RouterLink/RouterLinkBatchDownload'
 import BatchDownloadActions from '@/components/BatchDownload/BatchDownloadActions'
+import BatchDownloadTruncatedAlert from '@/components/BatchDownload/BatchDownloadTruncatedAlert'
 import SearchBreadcrumbUri from '@/components/Search/SearchBreadcrumbUri/SearchBreadcrumbUri'
 import RowPaginationBatchDownloads from '@/components/RowPagination/RowPaginationBatchDownloads'
 import { TASK_NAME } from '@/enums/taskNames'
@@ -73,6 +74,7 @@ function getBatchDownloadRecord(item, key, defaultValue) {
         </template>
         <template #cell(name)="{ item }">
           <router-link-batch-download :item="item" />
+          <batch-download-truncated-alert :truncation-reason="item.result?.value?.truncationReason" />
         </template>
         <template #cell(projects)="{ item }">
           <display-project-list :values="getBatchDownloadRecord(item, 'projects')" />
