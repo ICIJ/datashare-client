@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import IPhPushPin from '~icons/ph/push-pin'
+import IPhPushPinFill from '~icons/ph/push-pin-fill'
 
 import ButtonRowAction from '@/components/Button/ButtonRowAction/ButtonRowAction'
 
@@ -13,15 +14,8 @@ const active = defineModel('active', {
   default: false
 })
 
-defineProps({
-  icon: {
-    type: [String, Object, Array],
-    default: () => IPhPushPin
-  }
-})
-
-const weight = computed(() => {
-  return active.value ? 'fill' : 'regular'
+const icon = computed(() => {
+  return active.value ? IPhPushPinFill : IPhPushPin
 })
 
 const label = computed(() => {
@@ -45,7 +39,6 @@ const classList = computed(() => {
     :hide-tooltip="false"
     :class="classList"
     :icon-left="icon"
-    :icon-left-weight="weight"
     :label="label"
     @click="togglePin"
   />
