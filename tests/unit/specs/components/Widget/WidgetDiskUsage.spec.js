@@ -26,6 +26,6 @@ describe('WidgetDiskUsage.vue', () => {
   it('should display the total number of document', async () => {
     await letData(es).have(new IndexedDocument('document', project).withContentLength(10)).commit()
     await wrapper.vm.loadData()
-    expect(wrapper.find('.widget-barometer__value').text()).toBe('10.00 B')
+    expect(wrapper.find('.widget-barometer__value').text()).toBe('10 B')
   })
 })
