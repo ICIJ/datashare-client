@@ -5,7 +5,7 @@ export default function humanSize(
 ) {
   if (size === -1 || size === '' || size === undefined || size === null) return '—'
   const unitIndex = Math.floor(size === 0 ? 0 : Math.log(size) / Math.log(1024))
-  const value = (size / Math.pow(1024, unitIndex)).toFixed(2)
+  const value = parseFloat((size / Math.pow(1024, unitIndex)).toFixed(2))
   const addUnit = (v, i) => String([B, KB, MB, GB, TB][i]).replace('%', v)
   if (unitIndex === 0 || !showBytes) {
     return addUnit(value, unitIndex)
