@@ -1108,6 +1108,14 @@
           "size": "crwdns8930:0crwdne8930:0",
           "state": "crwdns8932:0crwdne8932:0",
           "id": "crwdns8934:0crwdne8934:0"
+        },
+        "truncatedAlert": {
+          "sizeLimit": "crwdns10178:0{reason}crwdnd10178:0{limit}crwdne10178:0",
+          "fileCountLimit": "crwdns10180:0{reason}crwdnd10180:0{limit}crwdne10180:0",
+          "reasons": {
+            "sizeLimit": "crwdns10182:0crwdne10182:0",
+            "fileCountLimit": "crwdns10184:0crwdne10184:0"
+          }
         }
       }
     },
