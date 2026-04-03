@@ -42,14 +42,16 @@ const indices = computed(() => props.index)
   <div class="document-metadata-actions">
     <slot>
       <document-metadata-actions-entry
+        class="document-metadata-actions__entry"
         :label="t('documentMetadataActions.search')"
         :to="{ name: 'search', query: { q, indices } }"
         :icon="IPhMagnifyingGlass"
         @click="emit('search')"
       />
       <app-dropdown
+        class="document-metadata-actions__entry document-metadata-actions__entry--copy"
+        button-icon-size="1.25em"
         :button-icon="IPhClipboard"
-        button-icon-weight="regular"
       >
         <haptic-copy
           :label="t('documentMetadataActions.copy')"
@@ -71,6 +73,7 @@ const indices = computed(() => props.index)
         />
       </app-dropdown>
       <document-metadata-actions-entry
+        class="document-metadata-actions__entry"
         :label="t('documentMetadataActions.pin')"
         :icon="pinIcon"
         :icon-hover="pinIconHover"
