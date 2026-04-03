@@ -127,6 +127,10 @@ describe('TaskBatchDownloadList.vue', () => {
     core.config.set('batchDownloadMaxNbFiles', '10000')
   })
 
+  afterEach(() => {
+    vi.clearAllTimers()
+  })
+
   afterAll(() => {
     vi.resetAllMocks()
   })
