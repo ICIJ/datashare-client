@@ -7,6 +7,7 @@ import { BDropdownItemButton } from 'bootstrap-vue-next'
 import IPhClipboard from '~icons/ph/clipboard'
 import IPhMagnifyingGlass from '~icons/ph/magnifying-glass'
 import IPhPushPin from '~icons/ph/push-pin'
+import IPhPushPinFill from '~icons/ph/push-pin-fill'
 
 import DocumentMetadataActionsEntry from './DocumentMetadataActionsEntry'
 import AppDropdown from '@/components/AppDropdown/AppDropdown'
@@ -31,8 +32,8 @@ const props = defineProps({
 })
 const { t } = useI18n()
 
-const pinIconWeight = computed(() => (pinned.value ? 'fill' : null))
-const pinIconHoverWeight = computed(() => (pinned.value ? 'fill' : 'bold'))
+const pinIcon = computed(() => (pinned.value ? IPhPushPinFill : IPhPushPin))
+const pinIconHover = computed(() => IPhPushPinFill)
 const q = computed(() => `${props.name}:"${props.value}"`)
 const indices = computed(() => props.index)
 </script>
@@ -71,9 +72,8 @@ const indices = computed(() => props.index)
       </app-dropdown>
       <document-metadata-actions-entry
         :label="t('documentMetadataActions.pin')"
-        :icon="IPhPushPin"
-        :icon-weight="pinIconWeight"
-        :icon-hover-weight="pinIconHoverWeight"
+        :icon="pinIcon"
+        :icon-hover="pinIconHover"
         @click="pinned = !pinned"
       />
     </slot>

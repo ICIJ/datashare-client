@@ -1,26 +1,14 @@
 <script setup>
 import { ButtonIcon } from '@icij/murmur-next'
 
-import { ICON_WEIGHT, iconWeightValidator } from '@/enums/iconWeights'
-
 defineProps({
   icon: {
     type: [String, Object, Array],
     required: true
   },
-  iconWeight: {
-    type: String,
-    default: ICON_WEIGHT.REGULAR,
-    validator: iconWeightValidator
-  },
-  iconHoverWeight: {
-    type: String,
-    default: ICON_WEIGHT.BOLD,
-    validator: iconWeightValidator
-  },
-  label: {
-    type: String,
-    required: true
+  iconHover: {
+    type: [String, Object, Array],
+    default: null
   }
 })
 </script>
@@ -30,9 +18,7 @@ defineProps({
     class="border-0"
     hide-label
     variant="outline-secondary"
-    :label="label"
     :icon-left="icon"
-    :icon-left-weight="iconWeight"
-    :icon-left-hover-weight="iconHoverWeight"
+    :icon-left-hover="iconHover"
   />
 </template>
