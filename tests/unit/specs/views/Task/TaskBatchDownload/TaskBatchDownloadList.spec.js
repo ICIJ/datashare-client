@@ -4,6 +4,7 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import TaskBatchDownloadList from '@/views/Task/TaskBatchDownload/TaskBatchDownloadList'
 import { apiInstance as api } from '@/api/apiInstance'
 import BatchDownloadActions from '@/components/BatchDownload/BatchDownloadActions'
+import BatchDownloadTruncatedAlert from '@/components/BatchDownload/BatchDownloadTruncatedAlert'
 
 vi.mock('@/api/apiInstance', {
   apiInstance: {
@@ -122,6 +123,8 @@ describe('TaskBatchDownloadList.vue', () => {
 
     const core = CoreSetup.init().useAll().useRouterWithoutGuards()
     plugins = core.plugins
+    core.config.set('batchDownloadMaxSize', '1G')
+    core.config.set('batchDownloadMaxNbFiles', '10000')
   })
 
   afterAll(() => {
@@ -163,5 +166,57 @@ describe('TaskBatchDownloadList.vue', () => {
     await flushPromises()
     const firstRow = wrapper.find('.page-table-generic__row')
     expect(firstRow.findComponent(BatchDownloadActions).exists()).toBe(true)
+  })
+
+  it('should not show a truncated alert when truncationReason is absent', async () => {
+    const wrapper = mount(TaskBatchDownloadList, { global: { plugins } })
+    await flushPromises()
+    expect(wrapper.find('.batch-download-truncated-alert').exists()).toBe(false)
+  })
+
+  it.each([
+    ['SIZE_LIMIT'],
+    ['FILE_COUNT_LIMIT']
+  ])('should show a truncated alert for truncationReason %s', async (truncationReason) => {
+    api.getTasks.mockResolvedValue({
+      items: [
+        {
+          id: '7d664d35-2c11-4f40-9cd5-a9fca9e2384e',
+          name: 'org.icij.datashare.tasks.BatchDownloadRunner',
+          state: 'DONE',
+          progress: 1.0,
+          result: {
+            value: {
+              '@type': 'UriResult',
+              'uri': 'file:///home/dev/.local/share/datashare/tmp/archive.zip',
+              'size': 78398589,
+              truncationReason
+            }
+          },
+          args: {
+            batchDownload: {
+              '@type': 'org.icij.datashare.batch.BatchDownload',
+              'uuid': '1fff1f1d-5881-4bb3-9d47-207a99878298',
+              'projects': [{ name: 'notnot', sourcePath: 'file:///vault/notnot', label: 'notnot' }],
+              'filename': 'file:///home/dev/.local/share/datashare/tmp/archive.zip',
+              'query': { query: '{"bool":{"must":[]}}' },
+              'uri': '/?q=&from=0&size=25&sort=relevance&indices=notnot',
+              'user': { id: 'local', name: null, email: null, provider: 'local' },
+              'encrypted': false,
+              'exists': true
+            },
+            user: { id: 'local', name: null, email: null, provider: 'local' },
+            group: { id: 'Java' }
+          },
+          retriesLeft: 3,
+          createdAt: new Date()
+        }
+      ]
+    })
+    const wrapper = mount(TaskBatchDownloadList, { global: { plugins } })
+    await flushPromises()
+    const alert = wrapper.findComponent(BatchDownloadTruncatedAlert)
+    expect(alert.exists()).toBe(true)
+    expect(alert.props('truncationReason')).toBe(truncationReason)
   })
 }, 10e3)
