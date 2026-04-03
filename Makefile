@@ -1,26 +1,34 @@
-run:
-		yarn serve
+.PHONY: help install dev build preview lint lint-fix test test-unit doc clean
 
-storybook:
-		yarn storybook
+help: ## Show this help
+	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-clean:
-		rm -Rf ./dist
+install: ## Install dependencies
+	yarn install --frozen-lockfile
 
-dist: clean
-		yarn build
+dev: ## Start dev server
+	yarn serve
 
-install:
-		yarn install --frozen-lockfile
+build: ## Build the project
+	yarn build
 
-release:
-		sed -i 's/"version": .*/"version": "'"${NEW_VERSION}"'",/' package.json
-		git commit -am "[release] ${NEW_VERSION}"
-		git tag ${NEW_VERSION}
-		echo "If everything is OK, you can push with tags i.e. git push origin master --tags"
+preview: ## Preview the built site
+	yarn preview
 
-unit:
-		yarn test
+lint: ## Run ESLint across all files
+	yarn lint
 
-doc:
-		yarn doc
+lint-fix: ## Run ESLint with auto-fix
+	yarn lint:fix
+
+test: ## Run all tests in watch mode
+	yarn test
+
+test-unit: ## Run all tests once
+	yarn test:unit
+
+doc: ## Generate documentation
+	yarn doc
+
+clean: ## Remove build artifacts and node_modules
+	rm -rf node_modules dist
