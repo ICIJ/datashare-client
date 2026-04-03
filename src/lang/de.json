@@ -1108,6 +1108,14 @@
           "size": "Größe",
           "state": "Status",
           "id": "Id"
+        },
+        "truncatedAlert": {
+          "sizeLimit": "Results were truncated after reaching the {reason} ({limit}).",
+          "fileCountLimit": "Results were truncated after reaching the {reason} ({limit}).",
+          "reasons": {
+            "sizeLimit": "size limit",
+            "fileCountLimit": "maximum number of files"
+          }
         }
       }
     },
