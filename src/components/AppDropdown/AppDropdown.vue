@@ -29,9 +29,9 @@ defineProps({
     type: [String, Object],
     default: () => IPhDotsThreeOutlineVerticalFill
   },
-  buttonIconWeight: {
-    type: String,
-    default: 'fill'
+  buttonIconSize: {
+    type: [String, Number],
+    default: '1em'
   }
 })
 </script>
@@ -48,8 +48,8 @@ defineProps({
     <template #button-content>
       <slot name="button-content">
         <app-icon
-          size="1em"
           :name="buttonIcon"
+          :size="buttonIconSize"
         />
       </slot>
     </template>

@@ -30,9 +30,6 @@ const props = defineProps({
   dropdownButtonIcon: {
     type: [String, Object, Array]
   },
-  dropdownButtonIconWeight: {
-    type: String
-  },
   dropdownDisabled: {
     type: Boolean
   },
@@ -239,7 +236,6 @@ const classList = computed(() => {
       :toggle-class="dropdownToggleClass"
       :variant="dropdownVariant"
       :button-icon="dropdownButtonIcon"
-      :button-icon-weight="dropdownButtonIconWeight"
     >
       <template
         v-for="(entry, index) in hiddenEntries"
