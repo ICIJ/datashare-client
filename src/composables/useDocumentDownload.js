@@ -6,7 +6,7 @@ import { useDocumentDownloadStore, useDocumentStore } from '@/store/modules'
 import settings from '@/utils/settings'
 import byteSize from '@/utils/byteSize'
 
-export function useDocumentDownload(document) {
+export function useDocumentDownload(document, { immediate = true } = {}) {
   const documentStore = useDocumentStore()
   const documentDownloadStore = useDocumentDownloadStore()
   const core = useCore()
@@ -75,7 +75,7 @@ export function useDocumentDownload(document) {
     return byteSize(embeddedDocumentDownloadMaxSize.value)
   })
 
-  async function fetchStatus() {
+  async function fetchDownloadStatus() {
     const { index = null } = documentRef.value
     // If the index is null, this means the document is not loaded yet
     // and therefore, we should not fetch the status
@@ -102,7 +102,7 @@ export function useDocumentDownload(document) {
     return availableTranslations.value.length > 0
   })
 
-  async function fetchTranslations() {
+  async function fetchTranslationStatus() {
     const { index, id, routing } = documentRef.value
     if (!index || !id) return
     try {
@@ -129,10 +129,17 @@ export function useDocumentDownload(document) {
     a.click()
   }
 
-  watchEffect(fetchStatus)
-  watchEffect(fetchTranslations)
+  async function fetchStatuses() {
+    await Promise.all([fetchDownloadStatus(), fetchTranslationStatus()])
+  }
+
+  if (immediate) {
+    watchEffect(fetchDownloadStatus)
+    watchEffect(fetchTranslationStatus)
+  }
 
   return {
+    fetchStatuses,
     extensionWarning,
     description,
     showExtensionWarning,
