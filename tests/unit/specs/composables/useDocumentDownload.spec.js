@@ -23,11 +23,11 @@ describe('useDocumentDownload composable', () => {
     apiInstance.elasticsearch.getSource = vi.fn().mockResolvedValue(response)
   }
 
-  function mountComposable(document) {
+  function mountComposable(document, options) {
     let result
     const TestComponent = {
       setup() {
-        result = useDocumentDownload(document)
+        result = useDocumentDownload(document, options)
         return result
       },
       template: '<div></div>'
@@ -35,6 +35,40 @@ describe('useDocumentDownload composable', () => {
     mount(TestComponent, { global: { plugins } })
     return result
   }
+
+  describe('fetchStatuses', () => {
+    it('should not fetch download status when immediate is false', async () => {
+      apiInstance.isDownloadAllowed = vi.fn().mockResolvedValue()
+      mockGetSource({ content_translated: [] })
+      const doc = new Document({
+        _id: 'doc1',
+        _index: 'test-index',
+        _source: { title: 'test' }
+      })
+      mountComposable(doc, { immediate: false })
+      await flushPromises()
+      expect(apiInstance.isDownloadAllowed).not.toHaveBeenCalled()
+    })
+
+    it('should fetch download status and translations when fetchStatuses is called', async () => {
+      apiInstance.isDownloadAllowed = vi.fn().mockResolvedValue()
+      mockGetSource({ content_translated: [{ target_language: 'ENGLISH' }] })
+      const doc = new Document({
+        _id: 'doc1',
+        _index: 'test-index',
+        _source: { title: 'test' }
+      })
+      const { fetchStatuses, hasTranslations } = mountComposable(doc, { immediate: false })
+      await flushPromises()
+      expect(apiInstance.isDownloadAllowed).not.toHaveBeenCalled()
+      expect(hasTranslations.value).toBe(false)
+
+      await fetchStatuses()
+      await flushPromises()
+      expect(apiInstance.isDownloadAllowed).toHaveBeenCalledWith('test-index')
+      expect(hasTranslations.value).toBe(true)
+    })
+  })
 
   describe('hasTranslations', () => {
     it('should be true when API returns translations', async () => {
