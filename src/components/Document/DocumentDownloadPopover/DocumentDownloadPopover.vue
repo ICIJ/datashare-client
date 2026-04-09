@@ -34,6 +34,11 @@ const props = defineProps({
 })
 const { t } = useI18n()
 
+const popoverRef = useTemplateRef('popover')
+
+// Lazy rendering: only mount the popover after it's been opened once
+const activated = ref(false)
+
 const {
   description,
   executionWarning,
@@ -45,17 +50,15 @@ const {
   isRootTooBig,
   downloadTextContent,
   hasTranslations,
-  downloadTranslatedContent
-} = useDocumentDownload(props.document)
-
-const popoverRef = useTemplateRef('popover')
-
-// Lazy rendering: only mount the popover after it's been opened once
-const activated = ref(false)
+  downloadTranslatedContent,
+  fetchStatuses
+} = useDocumentDownload(props.document, { immediate: !props.lazy })
 const mounted = computed(() => !props.lazy || activated.value)
 
 // Activate when modelValue becomes true
 whenever(modelValue, () => (activated.value = true), { once: true })
+// Fetch download status and translations when activated
+whenever(activated, fetchStatuses, { once: true })
 
 async function activate() {
   activated.value = true
