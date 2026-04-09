@@ -769,10 +769,10 @@
     typescript-eslint "^8.38.0"
     vue-eslint-parser "^10.2.0"
 
-"@icij/murmur-next@4.7.5":
-  version "4.7.5"
-  resolved "https://registry.yarnpkg.com/@icij/murmur-next/-/murmur-next-4.7.5.tgz#c138144db9093d20ed09a5a2532566590484c9f3"
-  integrity sha512-eugPUXxN25wy7N4GUM7t35IhWumIf5x4mhu3Um+zPvYZ1aBv377RVYiZ6jcgQkvrU5PWcoZRMqwCA6HpAoyYYw==
+"@icij/murmur-next@4.8.4":
+  version "4.8.4"
+  resolved "https://registry.yarnpkg.com/@icij/murmur-next/-/murmur-next-4.8.4.tgz#b5276ff082687e576d739f464e2070233ff20cd5"
+  integrity sha512-BwVSd+b+siKYvdVLUJ60KJB4l8hoTd0bZwcxOamwPiKO4EQdJdXkOd1yimqyYbLwpUb3q6dGLlICHN+WV7pw1w==
   dependencies:
     "@storybook/preset-scss" "^1.0.3"
     "@types/topojson" "^3.2.6"
