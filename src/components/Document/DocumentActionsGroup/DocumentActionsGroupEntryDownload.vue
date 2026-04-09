@@ -1,5 +1,6 @@
 <script setup>
-import { computed, nextTick } from 'vue'
+import { computed, nextTick, useTemplateRef } from 'vue'
+import { whenever } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 
 import IPhDownloadSimple from '~icons/ph/download-simple'
@@ -7,6 +8,7 @@ import IPhDownloadSimple from '~icons/ph/download-simple'
 import DocumentActionsGroupEntry from './DocumentActionsGroupEntry'
 
 import { useDocumentDownload } from '@/composables/useDocumentDownload'
+import { useElementVisibilityOnce } from '@/composables/useElementVisibilityOnce'
 import DocumentDownloadPopover from '@/components/Document/DocumentDownloadPopover/DocumentDownloadPopover'
 import { breakpointSizeValidator, SIZE } from '@/enums/sizes'
 
@@ -37,7 +39,10 @@ const { document } = defineProps({
 
 const { t } = useI18n()
 
-const { isDownloadAllowed, isRootTooBig, documentFullUrl } = useDocumentDownload(document)
+const element = useTemplateRef('element')
+const isVisible = useElementVisibilityOnce(element)
+const { isDownloadAllowed, isRootTooBig, documentFullUrl, fetchStatuses } = useDocumentDownload(document, { immediate: false })
+whenever(isVisible, fetchStatuses, { once: true })
 const hasDownload = computed(() => isDownloadAllowed.value && !isRootTooBig.value)
 const href = computed(() => (hasDownload.value ? documentFullUrl.value : null))
 const blur = () => nextTick(() => window.document?.activeElement.blur())
