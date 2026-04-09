@@ -128,6 +128,15 @@ describe('SearchStore', () => {
       expect(searchStore.response.hits[2]).toBeUndefined()
     })
 
+    it('should only search once when query is called concurrently with the same parameters', async () => {
+      await letData(es).have(new IndexedDocument('document', index).withContent('bar')).commit()
+      const spy = vi.spyOn(api.elasticsearch, 'searchDocs')
+
+      await Promise.all([searchStore.query('bar'), searchStore.query('bar')])
+
+      expect(spy).toHaveBeenCalledTimes(1)
+    })
+
     it('should return document from local project', async () => {
       await letData(es).have(new IndexedDocument('document', index).withContent('bar')).commit()
       await searchStore.query('bar')
