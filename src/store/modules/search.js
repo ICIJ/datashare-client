@@ -648,6 +648,11 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     return includeFilter(name)
   }
 
+  // In-flight refresh promise, used to deduplicate concurrent calls
+  // (e.g. when both onBeforeRouteUpdate and the fullPath watcher fire
+  // for the same navigation).
+  let refreshPromise = null
+
   /**
    * Refresh the search results based on the current search parameters.
    *
@@ -664,8 +669,31 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     // This check is to avoid unnecessary searches when the query has not changed.
     // We compare the current route query with the last applied query, which is stored
     // in the `lastAppliedQuery` ref. If they are the same, we skip the refresh.
-    if (sameAppliedQuery(toRouteQueryWithStamp.value)) return
+    if (sameAppliedQuery(toRouteQueryWithStamp.value)) {
+      return
+    }
+    // If a refresh is already in flight for the same search parameters,
+    // return the existing promise to avoid duplicate API calls. The stamp
+    // is excluded because it changes on every call and would prevent
+    // deduplication. When the query differs (e.g. user started a new search),
+    // we let it through so the new search is not blocked by the previous one.
+    if (refreshPromise && sameAppliedQuery(toRouteQueryWithStamp.value, ['stamp'])) {
+      return refreshPromise
+    }
 
+    refreshPromise = doRefresh(save)
+    return refreshPromise
+  }
+
+  /**
+   * Internal implementation of refresh. Performs the actual search query,
+   * fetches root documents, and updates the response state.
+   * Called exclusively by refresh() which handles deduplication.
+   *
+   * @param {boolean} save - Whether to save the current query state in the search breadcrumb store.
+   * @returns {Promise<void>} - A promise that resolves when the search is complete.
+   */
+  async function doRefresh(save) {
     setIsReady(false)
     setError()
 
@@ -684,6 +712,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     }
     finally {
       setIsReady(true)
+      refreshPromise = null
     }
   }
 
