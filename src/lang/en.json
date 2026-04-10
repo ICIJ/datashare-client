@@ -1391,6 +1391,10 @@
   },
   "projectViewEdit": {
     "title": "Edit project",
+    "tabs": {
+      "details": "Details and documents",
+      "pathBanners": "Banners"
+    },
     "notify": {
       "update": {
         "succeed": "The project was saved",

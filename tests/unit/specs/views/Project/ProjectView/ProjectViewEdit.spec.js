@@ -1,79 +1,41 @@
-import { shallowMount, mount, flushPromises } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
-import ProjectViewEdit from '@/views/Project/ProjectView/ProjectViewEdit'
-import { apiInstance as api } from '@/api/apiInstance'
-
-vi.mock('@/api/apiInstance', () => {
-  return {
-    apiInstance: {
-      updateProject: vi.fn(),
-      removeProject: vi.fn()
-    }
-  }
-})
+import ProjectViewEdit from '@/views/Project/ProjectView/ProjectViewEdit/ProjectViewEdit.vue'
 
 describe('ProjectViewEdit.vue', () => {
   let core
 
   beforeEach(() => {
-    core = CoreSetup.init().useAll().useRouterWithoutGuards()
-    // Ensure the local-datashare project can be found
+    core = CoreSetup.init().useI18n()
     core.config.set('projects', [{ name: 'local-datashare', label: 'Default', sourcePath: '/' }])
   })
-
-  afterAll(() => {
-    vi.resetAllMocks()
-  })
-
-  it('contains a ProjectForm', () => {
+  it('renders two tab navigation entries', () => {
     const props = { name: 'local-datashare' }
     const wrapper = shallowMount(ProjectViewEdit, {
-      global: {
-        plugins: core.plugins,
-        renderStubDefaultSlot: true
-      },
+      global: { plugins: core.plugins, renderStubDefaultSlot: true },
       props
     })
-    expect(wrapper.findComponent({ name: 'ProjectForm' }).exists()).toBeTruthy()
+    expect(wrapper.findAllComponents({ name: 'TabGroupNavigationEntry' })).toHaveLength(2)
   })
 
-  it('contains a ProjectForm in `edit` mode', async () => {
+  it('first tab links to project.view.edit.details', () => {
     const props = { name: 'local-datashare' }
     const wrapper = shallowMount(ProjectViewEdit, {
-      global: {
-        plugins: core.plugins,
-        renderStubDefaultSlot: true
-      },
+      global: { plugins: core.plugins, renderStubDefaultSlot: true },
       props
     })
-    const projectForm = wrapper.findComponent({ name: 'ProjectForm' })
-    expect(projectForm.vm.edit).toBeTruthy()
+    const entries = wrapper.findAllComponents({ name: 'TabGroupNavigationEntry' })
+    expect(entries[0].props('to')).toMatchObject({ name: 'project.view.edit.details' })
   })
 
-  it('updates values of a project when the form is submitted', async () => {
-    // Given
+  it('second tab links to project.view.edit.banners', () => {
     const props = { name: 'local-datashare' }
-    const wrapper = mount(ProjectViewEdit, { global: { plugins: core.plugins }, props })
-    expect(wrapper.vm.$core.projects[0].label).toBe('Default')
-    const projectFormValues = {
-      allowFromMask: '*.*.*.*',
-      description: null,
-      label: 'Default',
-      logoUrl: null,
-      maintainerName: null,
-      name: 'local-datashare',
-      publisherName: null,
-      sourcePath: '/',
-      sourceUrl: null
-    }
-    // when
-    const projectForm = wrapper.findComponent({ name: 'ProjectForm' })
-    await projectForm.vm.$emit('submit', { ...projectFormValues, label: 'NEWLABEL' })
-    await flushPromises()
-
-    // then
-    expect(api.updateProject).toBeCalledWith({ ...projectFormValues, label: 'NEWLABEL' })
-    expect(wrapper.vm.$core.projects[0].label).toBe('NEWLABEL')
+    const wrapper = shallowMount(ProjectViewEdit, {
+      global: { plugins: core.plugins, renderStubDefaultSlot: true },
+      props
+    })
+    const entries = wrapper.findAllComponents({ name: 'TabGroupNavigationEntry' })
+    expect(entries[1].props('to')).toMatchObject({ name: 'project.view.edit.banners' })
   })
 })
