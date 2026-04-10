@@ -1403,7 +1403,51 @@
         "failedBody": "Something happened when trying to edit this project."
       }
     },
-    "submit": "Save"
+    "submit": "Save",
+    "pathBanners": {
+      "add": "Add banner",
+      "edit": "Edit",
+      "editTitle": "Edit banner",
+      "cancel": "Cancel",
+      "empty": "No banners yet. Click \"Add banner\" to create one.",
+      "save": "Save",
+      "reset": "Reset",
+      "description": "Use path banner to provide contextualized information at the top of each document under a specified path.",
+      "previewTitle": "Preview for selected path",
+      "noPathSelected": "No path selected",
+      "fields": {
+        "sensitiveContent": {
+          "label": "Sensitive content",
+          "description": "Sensitive banner adds a blurred overlay on top of the content of documents and ask users to confirm to view"
+        },
+        "path": {
+          "label": "Path",
+          "description": "Select on which path the banner will be displayed"
+        },
+        "text": {
+          "label": "Content",
+          "placeholder": "Text content for the banner",
+          "useDefaultText": "Use default text"
+        },
+        "variant": {
+          "label": "Type"
+        }
+      },
+      "notify": {
+        "create": {
+          "succeedBody": "Banner created.",
+          "failedBody": "Failed to create banner."
+        },
+        "update": {
+          "succeedBody": "Banner saved.",
+          "failedBody": "Failed to save banner."
+        },
+        "delete": {
+          "succeedBody": "Banner deleted.",
+          "failedBody": "Failed to delete banner."
+        }
+      }
+    }
   },
   "projectViewAddDocuments": {
     "title": "Add documents to project",
