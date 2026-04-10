@@ -1684,6 +1684,13 @@
       "TB": "% TB"
     }
   },
+  "variant": {
+    "info": "Info",
+    "warning": "Warning",
+    "danger": "Danger",
+    "success": "Success",
+    "sensitive": "Sensitive content"
+  },
   "batchDownload": {
     "title": "Batch downloads",
     "noFile": "The archive has expired.",
