@@ -9,7 +9,7 @@ vi.mock('@/api/apiInstance', () => {
   return {
     apiInstance: {
       getSource: vi.fn(({ url }) => mockArrayBuffer(url)),
-      retrieveNotes: vi.fn().mockResolvedValue([])
+      getPathBanners: vi.fn().mockResolvedValue([])
     }
   }
 })

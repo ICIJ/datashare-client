@@ -6,7 +6,7 @@ import { apiInstance as api } from '@/api/apiInstance'
 vi.mock('@/api/apiInstance', () => {
   return {
     apiInstance: {
-      retrieveNotes: vi.fn().mockResolvedValue([])
+      getPathBanners: vi.fn().mockResolvedValue([])
     }
   }
 })
@@ -25,19 +25,19 @@ describe('DocumentNotesStore', () => {
     vi.resetAllMocks()
   })
 
-  it('should call the retrieveNotes url', async () => {
+  it('should call the getNotes url', async () => {
     await store.fetchNotesOnce({ project })
 
-    expect(api.retrieveNotes).toBeCalledTimes(1)
-    expect(api.retrieveNotes).toBeCalledWith(project)
+    expect(api.getPathBanners).toBeCalledTimes(1)
+    expect(api.getPathBanners).toBeCalledWith(project)
   })
 
   it('should call the API endpoint only once', async () => {
     await store.fetchNotesOnce({ project })
     await store.fetchNotesOnce({ project })
 
-    expect(api.retrieveNotes).toBeCalledTimes(1)
-    expect(api.retrieveNotes).toBeCalledWith(project)
+    expect(api.getPathBanners).toBeCalledTimes(1)
+    expect(api.getPathBanners).toBeCalledWith(project)
   })
 
   it('should filter on document path', async () => {

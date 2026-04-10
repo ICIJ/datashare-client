@@ -6,13 +6,10 @@ import DocumentNotes from '@/components/Document/DocumentNotes'
 import { useDocumentStore, useDocumentNotesStore, useSearchStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
 
-vi.mock('@/api/apiInstance', async (importOriginal) => {
-  const { apiInstance } = await importOriginal()
-
+vi.mock('@/api/apiInstance', async () => {
   return {
     apiInstance: {
-      ...apiInstance,
-      retrieveNotes: vi.fn().mockResolvedValue([])
+      getPathBanners: vi.fn()
     }
   }
 })
@@ -27,7 +24,7 @@ describe('DocumentNotes.vue', () => {
   let core, wrapper, plugins, documentStore, documentNotesStore, searchStore
 
   beforeAll(() => {
-    api.retrieveNotes.mockResolvedValue([])
+    api.getPathBanners.mockResolvedValue([])
   })
 
   beforeEach(() => {
@@ -52,7 +49,7 @@ describe('DocumentNotes.vue', () => {
 
   it('should display note on document', async () => {
     const notes = [note1]
-    api.retrieveNotes.mockResolvedValue(notes)
+    api.getPathBanners.mockResolvedValue(notes)
     wrapper = shallowMount(DocumentNotes, { global: { plugins }, props: { document } })
     await flushPromises()
     expect(wrapper.find('b-alert-stub').exists()).toBeTruthy()
@@ -60,7 +57,7 @@ describe('DocumentNotes.vue', () => {
 
   it('should display 2 notes on document', async () => {
     const notes = [note1, note2]
-    api.retrieveNotes.mockResolvedValue(notes)
+    api.getPathBanners.mockResolvedValue(notes)
     wrapper = shallowMount(DocumentNotes, { global: { plugins }, props: { document } })
     await flushPromises()
     expect(wrapper.findAll('b-alert-stub')).toHaveLength(2)
@@ -70,7 +67,7 @@ describe('DocumentNotes.vue', () => {
     const noteNoVariant = { note: 'This is note without variant', project, path: '/this/is/a/' }
 
     const notes = [noteNoVariant]
-    api.retrieveNotes.mockResolvedValue(notes)
+    api.getPathBanners.mockResolvedValue(notes)
     wrapper = shallowMount(DocumentNotes, { global: { plugins }, props: { document } })
     await flushPromises()
     expect(wrapper.find('b-alert-stub').exists()).toBeTruthy()
