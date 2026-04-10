@@ -139,7 +139,7 @@ whenever(isVisible, enter, { immediate: props.lazy, once: true })
 watch(toRef(props, 'rotation'), fetchThumbnail)
 
 onBeforeMount(async () => {
-  // Set the blurred state according to document notes
+  // Set the blurred state according to document banners
   blurred.value = props.noBlur ? false : await isBlurred(props.document)
   // This component can be lazy loaded
   if (props.lazy) return

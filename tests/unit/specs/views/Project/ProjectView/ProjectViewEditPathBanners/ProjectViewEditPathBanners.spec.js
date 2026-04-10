@@ -3,7 +3,7 @@ import { shallowMount, flushPromises } from '@vue/test-utils'
 import CoreSetup from '~tests/unit/CoreSetup.js'
 import ProjectViewEditPathBanners from '@/views/Project/ProjectView/ProjectViewEdit/ProjectViewEditPathBanners/ProjectViewEditPathBanners.vue'
 import { apiInstance as api } from '@/api/apiInstance.js'
-import { useDocumentNotesStore } from '@/store/modules/documentNotes.js'
+import { useDocumentPathBannersStore } from '@/store/modules/documentPathBanners.js'
 
 vi.mock('@/api/apiInstance', () => ({
   apiInstance: {
@@ -194,34 +194,34 @@ describe('ProjectViewEditPathBanners.vue', () => {
   })
 
   describe('store invalidation', () => {
-    it('syncs the notes store after loadBanners', async () => {
+    it('syncs the path banners store after loadBanners', async () => {
       api.getPathBanners.mockResolvedValue([existingBanner])
       shallowMountComponent()
       await flushPromises()
-      const store = useDocumentNotesStore()
-      expect(store.getNotes({ project: 'local-datashare' })).toHaveLength(1)
-      expect(store.getNotes({ project: 'local-datashare' })[0]).toMatchObject(existingBanner)
+      const store = useDocumentPathBannersStore()
+      expect(store.getPathBanners({ project: 'local-datashare' })).toHaveLength(1)
+      expect(store.getPathBanners({ project: 'local-datashare' })[0]).toMatchObject(existingBanner)
     })
 
-    it('syncs the notes store after a successful delete', async () => {
+    it('syncs the path banners store after a successful delete', async () => {
       api.getPathBanners.mockResolvedValue([existingBanner])
       const wrapper = shallowMountComponent()
       await flushPromises()
       wrapper.vm.confirmDeleteBanner(0)
       await flushPromises()
-      const store = useDocumentNotesStore()
-      expect(store.getNotes({ project: 'local-datashare' })).toHaveLength(0)
+      const store = useDocumentPathBannersStore()
+      expect(store.getPathBanners({ project: 'local-datashare' })).toHaveLength(0)
     })
 
-    it('does not update the notes store when delete fails', async () => {
+    it('does not update the path banners store when delete fails', async () => {
       api.getPathBanners.mockResolvedValue([existingBanner])
       api.deletePathBanner.mockRejectedValue(new Error('Server error'))
       const wrapper = shallowMountComponent()
       await flushPromises()
       wrapper.vm.confirmDeleteBanner(0)
       await flushPromises()
-      const store = useDocumentNotesStore()
-      expect(store.getNotes({ project: 'local-datashare' })).toHaveLength(1)
+      const store = useDocumentPathBannersStore()
+      expect(store.getPathBanners({ project: 'local-datashare' })).toHaveLength(1)
     })
   })
 
