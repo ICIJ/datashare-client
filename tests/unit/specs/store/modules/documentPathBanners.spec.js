@@ -1,6 +1,6 @@
 import { setActivePinia, createPinia } from 'pinia'
 
-import { useDocumentNotesStore } from '@/store/modules'
+import { useDocumentPathBannersStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
 
 vi.mock('@/api/apiInstance', () => {
@@ -11,30 +11,30 @@ vi.mock('@/api/apiInstance', () => {
   }
 })
 
-describe('DocumentNotesStore', () => {
+describe('DocumentPathBannersStore', () => {
   const project = 'projectName'
   let store
 
   beforeEach(() => {
     vi.clearAllMocks()
     setActivePinia(createPinia())
-    store = useDocumentNotesStore()
+    store = useDocumentPathBannersStore()
   })
 
   afterAll(() => {
     vi.resetAllMocks()
   })
 
-  it('should call the getNotes url', async () => {
-    await store.fetchNotesOnce({ project })
+  it('should call the getPathBanners url', async () => {
+    await store.fetchPathBannersOnce({ project })
 
     expect(api.getPathBanners).toBeCalledTimes(1)
     expect(api.getPathBanners).toBeCalledWith(project)
   })
 
   it('should call the API endpoint only once', async () => {
-    await store.fetchNotesOnce({ project })
-    await store.fetchNotesOnce({ project })
+    await store.fetchPathBannersOnce({ project })
+    await store.fetchPathBannersOnce({ project })
 
     expect(api.getPathBanners).toBeCalledTimes(1)
     expect(api.getPathBanners).toBeCalledWith(project)
@@ -45,7 +45,7 @@ describe('DocumentNotesStore', () => {
     const variant = 'variant'
     store.set({
       project,
-      notes: [
+      pathBanners: [
         { note, project, variant, path: '/this/is/a/' },
         { note, project, variant, path: '/this/is/a/path/to' },
         { note, project, variant, path: '/this/is/a/path/to/document.txt' },
@@ -53,11 +53,11 @@ describe('DocumentNotesStore', () => {
       ]
     })
 
-    const notes = await store.fetchNotesByPath({
+    const pathBanners = await store.fetchPathBannersByPath({
       project,
       path: '/this/is/a/path/to/document.txt'
     })
 
-    expect(notes).toHaveLength(3)
+    expect(pathBanners).toHaveLength(3)
   })
 })

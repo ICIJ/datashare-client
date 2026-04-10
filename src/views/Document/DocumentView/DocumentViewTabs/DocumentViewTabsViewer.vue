@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 
 import { useFeatures } from '@/composables/useFeatures'
 import { useDocument } from '@/composables/useDocument'
-import DocumentNotes from '@/components/Document/DocumentNotes'
+import DocumentPathBanners from '@/components/Document/DocumentPathBanners'
 
 const { t } = useI18n()
 const { document } = useDocument()
@@ -62,7 +62,7 @@ const asyncPreviewComponent = computed(() => {
 
 <template>
   <div class="d-flex flex-grow-1 flex-column document__preview">
-    <document-notes
+    <document-path-banners
       :document="document"
       class="mt-3"
     />

@@ -14,7 +14,7 @@ import { useCore } from '@/composables/useCore.js'
 import { useToast } from '@/composables/useToast.js'
 import { useWait } from '@/composables/useWait.js'
 import PathBannerDescription from '@/components/PathBanner/PathBannerDescription.vue'
-import { useDocumentNotesStore } from '@/store/modules/documentNotes.js'
+import { useDocumentPathBannersStore } from '@/store/modules/documentPathBanners.js'
 
 const props = defineProps({
   name: { type: String }
@@ -27,7 +27,7 @@ const router = useRouter()
 const { toast } = useToast()
 const { waitFor } = useWait()
 const { afterConfirmation } = useConfirmModal()
-const pathBannersStore = useDocumentNotesStore()
+const pathBannersStore = useDocumentPathBannersStore()
 
 const banners = reactive([])
 const modalBannerIndex = ref(-1)
@@ -93,7 +93,7 @@ const deleteBanner = waitFor(async (index) => {
   try {
     await core.api.deletePathBanner(banner.project.name, banner.path)
     banners.splice(index, 1)
-    pathBannersStore.set({ project: props.name, notes: [...banners] })
+    pathBannersStore.set({ project: props.name, pathBanners: [...banners] })
     toast.success(t('projectViewEdit.pathBanners.notify.delete.succeedBody'))
   }
   catch {
@@ -108,7 +108,7 @@ function confirmDeleteBanner(index) {
 async function loadBanners() {
   const data = await core.api.getPathBanners(props.name)
   banners.splice(0, banners.length, ...data)
-  pathBannersStore.set({ project: props.name, notes: data })
+  pathBannersStore.set({ project: props.name, pathBanners: data })
   bannersLoaded.value = true
   resolveBannerId(route.params.bannerId)
 }

@@ -5,12 +5,12 @@ import { computed } from 'vue'
 import settings from '@/utils/settings'
 import { useConfig } from '@/composables/useConfig'
 import { useImage } from '@/composables/useImage'
-import { useDocumentNotesStore } from '@/store/modules'
+import { useDocumentPathBannersStore } from '@/store/modules'
 
 export const useDocumentPreview = () => {
   const config = useConfig()
   const { fetchImageDimensions } = useImage()
-  const documentNotesStore = useDocumentNotesStore()
+  const documentPathBannersStore = useDocumentPathBannersStore()
 
   /**
    * True if a preview host is configured.
@@ -41,7 +41,7 @@ export const useDocumentPreview = () => {
 
   /**
    * True if the preview should be blurred according
-   * to the document's note.
+   * to the document's path banner.
    *
    * @param {Object} document - The document object.
    * @param {string} document.project - The document project.
@@ -49,8 +49,8 @@ export const useDocumentPreview = () => {
    * @returns {Promise<boolean>} True if the preview should be blurred, false otherwise.
    */
   async function isBlurred({ project, path }) {
-    const notes = await documentNotesStore.fetchNotesByPath({ project, path })
-    return notes.some(note => note.blurSensitiveMedia)
+    const pathBanners = await documentPathBannersStore.fetchPathBannersByPath({ project, path })
+    return pathBanners.some(banner => banner.blurSensitiveMedia)
   }
 
   /**
@@ -73,6 +73,7 @@ export const useDocumentPreview = () => {
    *
    * @param {Object} document - The document object.
    * @param {string} document.index - The index of the document.
+   * @param {string} document.id - The ID of the document.
    * @param {string} document.id - The ID of the document.
    * @param {string} document.routing - The routing parameter.
    * @param {Object} params - The parameters object.

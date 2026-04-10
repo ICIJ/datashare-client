@@ -1,6 +1,6 @@
 <script setup>
 import { useDocument } from '@/composables/useDocument'
-import DocumentNotes from '@/components/Document/DocumentNotes'
+import DocumentPathBanners from '@/components/Document/DocumentPathBanners'
 import DocumentThread from '@/components/Document/DocumentThread/DocumentThread'
 import DocumentTranslation from '@/components/Document/DocumentTranslation/DocumentTranslation'
 
@@ -16,7 +16,7 @@ const { document } = useDocument()
 
 <template>
   <div class="document-view-tabs-text">
-    <document-notes
+    <document-path-banners
       :document="document"
       class="mt-3"
     />
