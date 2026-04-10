@@ -198,7 +198,7 @@ describe('guards', () => {
     it('should allow access to project.view.edit when user has ADMIN role', async () => {
       config.set('policies', [{ projectId: 'local-datashare', role: 'PROJECT_ADMIN' }])
       await router.push({ name: 'project.view.edit', params: { name: 'local-datashare' } })
-      expect(router.currentRoute.value.name).toBe('project.view.edit')
+      expect(router.currentRoute.value.name).toBe('project.view.edit.details')
     })
 
     it('should redirect to error when user lacks ADMIN role', async () => {
@@ -220,7 +220,7 @@ describe('guards', () => {
         { projectId: 'other-project', role: 'PROJECT_ADMIN' }
       ])
       await router.push({ name: 'project.view.edit', params: { name: 'other-project' } })
-      expect(router.currentRoute.value.name).toBe('project.view.edit')
+      expect(router.currentRoute.value.name).toBe('project.view.edit.details')
     })
 
     it('should skip role check in LOCAL mode', async () => {

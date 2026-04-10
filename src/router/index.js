@@ -426,13 +426,34 @@ export const routes = [
                 name: 'project.view.edit',
                 path: 'edit',
                 props: true,
-                component: () => import('@/views/Project/ProjectView/ProjectViewEdit'),
+                component: () => import('@/views/Project/ProjectView/ProjectViewEdit/ProjectViewEdit.vue'),
+                redirect: { name: 'project.view.edit.details' },
                 meta: {
                   icon: markRaw(IPhPencilSimple),
                   title: 'projectViewEdit.title',
                   allowedRole: ROLE.PROJECT_ADMIN,
                   projectParam: 'name'
-                }
+                },
+                children: [
+                  {
+                    name: 'project.view.edit.details',
+                    path: 'details',
+                    props: true,
+                    component: () => import('@/views/Project/ProjectView/ProjectViewEdit/ProjectViewEditDetails.vue'),
+                    meta: {
+                      breadcrumb: false,
+                    }
+                  },
+                  {
+                    name: 'project.view.edit.banners',
+                    path: 'banners/:bannerId?',
+                    props: true,
+                    component: () => import('@/views/Project/ProjectView/ProjectViewEdit/ProjectViewEditPathBanners/ProjectViewEditPathBanners.vue'),
+                    meta: {
+                      breadcrumb: false,
+                    }
+                  }
+                ]
               }
             ]
           }
