@@ -54,11 +54,16 @@ const props = defineProps({
   validated: {
     type: Boolean,
     default: false
+  },
+  // eslint-disable-next-line vue/require-prop-types
+  compact: {
+    default: null
   }
 })
 
 const elementRef = useTemplateRef('element')
-const { compact } = useCompact(elementRef, { threshold: toRef(props, 'compactThreshold') })
+const { compact: compactDetected } = useCompact(elementRef, { threshold: toRef(props, 'compactThreshold') })
+const compact = computed(() => props.compact !== null ? props.compact : compactDetected.value)
 
 const classList = computed(() => {
   return {
@@ -110,7 +115,7 @@ const labelColsLg = computed(() => {
       </div>
     </template>
     <template v-if="!compact && (withDescription || description)">
-      <div class="d-flex align-items-start gap-3">
+      <div class="d-flex align-items-center gap-3">
         <div class="form-fieldset__content">
           <slot v-bind="{ compact }" />
         </div>
