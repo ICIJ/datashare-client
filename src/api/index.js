@@ -1,4 +1,4 @@
-import { get, isNull, join, omitBy, replace, toLower, trim } from 'lodash'
+import { get, isNull, join, omitBy, toLower, trim } from 'lodash'
 
 import settings from '@/utils/settings'
 
@@ -108,6 +108,18 @@ export class Api {
   saveProjectPolicy(domain, project, { user, role } = {}) {
     const params = { user, role }
     return this.sendActionAsText(`/api/policies/${domain}/${project}`, { method: Method.PUT, params })
+  }
+
+  getPathBanners(project) {
+    return this.sendAction(`/api/${project}/pathBanners`)
+  }
+
+  savePathBanner(project, path, data) {
+    return this.sendAction(`/api/${project}/pathBanners${path}`, { method: Method.PUT, data })
+  }
+
+  deletePathBanner(project, path) {
+    return this.sendActionAsText(`/api/${project}/pathBanners${path}`, { method: Method.DELETE })
   }
 
   getVersion() {
@@ -288,10 +300,6 @@ export class Api {
 
   isDownloadAllowed(project) {
     return this.sendActionAsText(`/api/project/isDownloadAllowed/${project}`)
-  }
-
-  retrieveNotes(project) {
-    return this.sendAction(replace(`/api/${project}/notes`, '//', '/'))
   }
 
   login(username, password) {

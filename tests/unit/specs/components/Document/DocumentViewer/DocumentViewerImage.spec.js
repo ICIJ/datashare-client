@@ -16,13 +16,10 @@ vi.mock('@/composables/useImage', () => {
   }
 })
 
-vi.mock('@/api/apiInstance', async (importOriginal) => {
-  const { apiInstance } = await importOriginal()
-
+vi.mock('@/api/apiInstance', async () => {
   return {
     apiInstance: {
-      ...apiInstance,
-      retrieveNotes: vi.fn().mockResolvedValue([])
+      getPathBanners: vi.fn().mockResolvedValue([])
     }
   }
 })

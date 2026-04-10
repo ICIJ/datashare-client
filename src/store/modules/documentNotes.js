@@ -56,8 +56,8 @@ export const useDocumentNotesStore = defineStore('documentNotes', () => {
    * @returns {Promise<Array>} The notes set
    */
   const fetchNotes = async ({ project }) => {
-    const notes = await api.retrieveNotes(project)
-    return set({ project, notes })
+    const data = await api.getPathBanners(project)
+    return set({ project, notes: data })
   }
 
   /**

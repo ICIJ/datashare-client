@@ -12,7 +12,7 @@ vi.mock('@/api/apiInstance', async (importOriginal) => {
   return {
     apiInstance: {
       ...apiInstance,
-      retrieveNotes: vi.fn().mockResolvedValue([])
+      getPathBanners: vi.fn().mockResolvedValue([])
     }
   }
 })
