@@ -86,13 +86,18 @@ const linkClassList = computed(() => [`btn-outline-${variant.value}`])
   >
     <div
       v-if="!noIcon"
-      class="toast-body__icon py-1 d-none d-md-block"
+      class="toast-body__icon py-1 d-block"
       :class="iconClass"
     >
-      <app-icon
-        :name="icon"
-        :variant="variant"
-      />
+      <slot
+        name="icon"
+        v-bind="{ icon, variant }"
+      >
+        <app-icon
+          :name="icon"
+          :variant="variant"
+        />
+      </slot>
     </div>
     <div class="flex-grow-1 d-flex align-items-center">
       <div

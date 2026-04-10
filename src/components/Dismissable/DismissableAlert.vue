@@ -1,10 +1,11 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ButtonIcon } from '@icij/murmur-next'
 import IPhX from '~icons/ph/x'
+import { AppIcon } from '@icij/murmur-next'
 
 import ToastBody from '@/components/Dismissable/DismissableToastBody'
+import { BAlert } from 'bootstrap-vue-next'
 
 const props = defineProps({
   name: {
@@ -48,10 +49,15 @@ const props = defineProps({
   closeClass: {
     type: [String, Object, Array],
     default: ''
+  },
+  preventClose: {
+    type: Boolean,
+    default: false
   }
 })
-const { t } = useI18n()
+const emit = defineEmits(['close'])
 
+const { t } = useI18n()
 const localStorageKey = `dismissed-alert-${props.name}`
 const dismissed = ref(props.persist && localStorage.getItem(localStorageKey) === 'true')
 const show = computed(() => dismissed.value === false)
@@ -59,6 +65,12 @@ const linkLabel = computed(() => {
   return props.linkLabel ?? t('dismissableAlert.dontShow')
 })
 
+function emitClose() {
+  if (!props.preventClose) {
+    dismiss(false)
+  }
+  emit('close')
+}
 const dismiss = (persist) => {
   dismissed.value = true
   // Ensure that the state is persisted in local storage
@@ -79,6 +91,8 @@ const classList = {
   <b-alert
     :variant="variant"
     :model-value="show"
+    :dismissible="!noClose"
+    close-variant="link"
     class="px-3 py-2 dismissable-alert"
     :class="classList"
   >
@@ -86,14 +100,23 @@ const classList = {
       :toast-props="{ type: variant }"
       :icon="icon"
       :no-icon="noIcon"
-      :no-close="noClose"
+      no-close
       :icon-class="iconClass"
       :content-class="contentClass"
       class="dismissable-alert__body"
     >
+      <template #icon="iconProps">
+        <slot
+          name="icon"
+          v-bind="iconProps"
+        />
+      </template>
       <template #default="{ linkClassList }">
-        <div class="d-md-flex align-items-center pb-2 pb-md-0 me-3">
-          <p class="m-md-0">
+        <div
+          class="dismissable-alert__body__default align-items-center "
+          :class="{'d-flex' :!noButton}"
+        >
+          <p class="dismissable-alert__body__default__content m-md-0">
             <slot />
           </p>
           <slot
@@ -102,7 +125,7 @@ const classList = {
           >
             <button
               v-if="!noButton"
-              class="btn text-nowrap dismissable-alert__body__button ms-md-3"
+              class="btn text-nowrap dismissable-alert__body__default__button ms-3"
               type="button"
               :class="linkClassList"
               @click="dismiss(persist)"
@@ -112,22 +135,19 @@ const classList = {
           </slot>
         </div>
       </template>
-      <template #close>
-        <slot name="close">
-          <button-icon
-            v-if="!noClose"
-            :class="closeClass"
-            class="dismissable-alert__close p-2 align-self-md-center align-self-start"
-            variant="link"
-            :label="t('dismissableAlert.close')"
-            hide-label
-            hide-tooltip
-            :icon-left="IPhX"
-            @click="dismiss(false)"
-          />
-        </slot>
-      </template>
     </toast-body>
+    <template
+      v-if="!noClose"
+      #close
+    >
+      <slot name="close">
+        <app-icon
+          :name="IPhX"
+          :title="t('dismissableAlert.close')"
+          @click.stop="emitClose"
+        />
+      </slot>
+    </template>
   </b-alert>
 </template>
 
@@ -147,9 +167,11 @@ const classList = {
   }
 
   &__body {
-    &__button {
-      background: var(--bs-body-bg);
-      color: var(--bs-body-color);
+    &__default {
+      &__button {
+        background: var(--bs-body-bg);
+        color: var(--bs-body-color);
+      }
     }
   }
 
