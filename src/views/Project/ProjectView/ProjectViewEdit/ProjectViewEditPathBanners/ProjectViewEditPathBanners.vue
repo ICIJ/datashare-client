@@ -132,7 +132,11 @@ defineExpose({
 
 <template>
   <div class="project-view-edit-path-banners d-flex flex-column gap-2">
-    <path-banner-description class="mt-2" />
+    <path-banner-description 
+      class="mt-2"
+      persist
+      name="project-view-edit-path-banners.description"
+    />
     <button-icon
       data-testid="add-banner"
       type="button"
