@@ -40,6 +40,16 @@ describe('DocumentPathBannersStore', () => {
     expect(api.getPathBanners).toBeCalledWith(project)
   })
 
+  it('should call the API endpoint only once even with concurrent calls', async () => {
+    await Promise.all([
+      store.fetchPathBannersOnce({ project }),
+      store.fetchPathBannersOnce({ project })
+    ])
+
+    expect(api.getPathBanners).toBeCalledTimes(1)
+    expect(api.getPathBanners).toBeCalledWith(project)
+  })
+
   it('should filter on document path', async () => {
     const note = 'note'
     const variant = 'variant'
