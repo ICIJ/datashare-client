@@ -58,7 +58,7 @@ const highlightIndex = ref(0)
 const highlightMatches = ref([])
 const highlightOccurrences = computed(() => highlightMatches.value.length)
 const isHighlightDebouncing = computed(() => highlightTextDebounced.value !== highlightText.value)
-const isHightlightLoading = computed(() => isLoading.value || isHighlightDebouncing.value)
+const isHighlightLoading = computed(() => isLoading.value || isHighlightDebouncing.value)
 
 const pageScale = computed(() => (isNaN(scale.value) ? 1 : Number(scale.value)))
 const pageFitParent = computed(() => scale.value === SCALE_FIT || scale.value === SCALE_WIDTH)
@@ -130,7 +130,7 @@ watch(src, async () => {
           v-model="highlightText"
           v-model:active-index="highlightIndex"
           :compact="toolboxCompact"
-          :loading="isHightlightLoading"
+          :loading="isHighlightLoading"
           :occurrences="highlightOccurrences"
           class="flex-grow-1"
         />
