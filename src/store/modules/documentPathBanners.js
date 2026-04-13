@@ -85,5 +85,10 @@ export const useDocumentPathBannersStore = defineStore('documentPathBanners', ()
     return getPathBannersByPath({ project, path })
   }
 
-  return { pathBanners, reset, set, getPathBannersByPath, getPathBanners, fetchPathBanners, fetchPathBannersOnce, fetchPathBannersByPath }
+  const deletePathBanner = async ({ project, path }) => {
+    await api.deletePathBanner(project, path)
+    await fetchPathBanners({ project })
+  }
+
+  return { pathBanners, reset, set, getPathBannersByPath, getPathBanners, fetchPathBanners, fetchPathBannersOnce, fetchPathBannersByPath ,deletePathBanner}
 })

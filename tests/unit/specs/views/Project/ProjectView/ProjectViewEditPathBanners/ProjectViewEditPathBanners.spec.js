@@ -112,7 +112,7 @@ describe('ProjectViewEditPathBanners.vue', () => {
     })
 
     it('removes the banner from the list after confirmed deletion', async () => {
-      api.getPathBanners.mockResolvedValue([existingBanner])
+      api.getPathBanners.mockResolvedValueOnce([existingBanner]).mockResolvedValueOnce([])
       const wrapper = shallowMountComponent()
       await flushPromises()
       expect(wrapper.vm.banners).toHaveLength(1)
@@ -204,7 +204,7 @@ describe('ProjectViewEditPathBanners.vue', () => {
     })
 
     it('syncs the path banners store after a successful delete', async () => {
-      api.getPathBanners.mockResolvedValue([existingBanner])
+      api.getPathBanners.mockResolvedValueOnce([existingBanner]).mockResolvedValueOnce([])
       const wrapper = shallowMountComponent()
       await flushPromises()
       wrapper.vm.confirmDeleteBanner(0)
@@ -232,7 +232,7 @@ describe('ProjectViewEditPathBanners.vue', () => {
       expect(wrapper.vm.pathHash('/data/docs').length).toBeGreaterThan(0)
     })
 
-    it('is stable — same path always produces the same hash', async () => {
+    it('is stable, same path always produces the same hash', async () => {
       const wrapper = shallowMountComponent()
       expect(wrapper.vm.pathHash('/data/docs')).toBe(wrapper.vm.pathHash('/data/docs'))
     })

@@ -184,7 +184,7 @@ describe('ProjectViewEditPathBannersModal.vue', () => {
     await flushPromises()
     const wrapper = shallowMountComponent()
     const push = vi.spyOn(core.router, 'push')
-    wrapper.vm.onModalCancel()
+    wrapper.vm.closeModal()
     expect(push).toBeCalledWith(expect.objectContaining({ params: expect.objectContaining({ bannerId: undefined }) }))
   })
 })
