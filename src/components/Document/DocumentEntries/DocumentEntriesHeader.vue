@@ -78,15 +78,11 @@ const batchDownloadDocumentsUri = computed(() => {
 })
 
 async function runBatchDownload() {
-  let estimation = null
-  try {
-    estimation = await estimate()
-    if (!exceedsLimit.value) {
-      return proceedBatchDownload()
-    }
-  }
-  catch {
-    // estimation stays null — modal will render the "unknown" variant
+  // Estimation failures resolve to null so the modal renders the "unknown" variant
+  const estimation = await estimate().catch(() => null)
+
+  if (estimation && !exceedsLimit.value) {
+    return proceedBatchDownload()
   }
 
   const ok = await confirmExceedsLimit({
