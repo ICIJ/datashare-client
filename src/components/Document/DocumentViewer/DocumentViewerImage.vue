@@ -26,15 +26,19 @@ const { t } = useI18n()
 const { rotateBase64Image } = useImage()
 const { waitFor, loaderId } = useWait()
 const { computedDocumentRotation } = useDocumentViewStore()
-const { isBlurred, canPreviewRaw } = useDocumentPreview()
+const { isBlurred, getBlurredContentBanner, canPreviewRaw } = useDocumentPreview()
 
 const blurred = ref(null)
+const blurredContent = ref(null)
 const imageBase64 = ref(null)
 const imageRotation = computedDocumentRotation(props.document)
 const isRawImage = computed(() => canPreviewRaw(props.document))
 
 async function fetch() {
   blurred.value = blurred.value ?? await isBlurred(props.document)
+  if(blurred.value){
+    blurredContent.value = await getBlurredContentBanner(props.document)
+  }
   if (isRawImage.value) {
     imageBase64.value = await rotateBase64Image(props.document.inlineFullUrl, imageRotation)
   }
@@ -78,6 +82,7 @@ onBeforeMount(waitFor(fetch))
       </div>
       <dismissable-content-warning
         v-model:show="blurred"
+        :description="blurredContent"
         hide-content
         no-center
       >

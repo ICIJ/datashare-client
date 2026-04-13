@@ -53,6 +53,14 @@ export const useDocumentPreview = () => {
     return pathBanners.some(banner => banner.blurSensitiveMedia)
   }
 
+  async function getBlurredContentBanner({ project, path }) {
+    const pathBanners = await documentPathBannersStore.fetchPathBannersByPath({ project, path })
+    const longestBannerPath = pathBanners.filter(banner => banner.blurSensitiveMedia).reduce((longestBanner, currentBanner) => {
+      return currentBanner?.path?.length > (longestBanner.path?.length ?? 0) ? currentBanner : longestBanner;
+    }, {});
+    return longestBannerPath.note
+  }
+
   /**
    * Get the preview meta URL (a JSON with metadata about
    * the preview) for a given document.
@@ -129,6 +137,7 @@ export const useDocumentPreview = () => {
     sessionIdHeaderName,
     // Methods
     isBlurred,
+    getBlurredContentBanner,
     getPreviewMetaUrl,
     getPreviewUrl,
     canPreview,

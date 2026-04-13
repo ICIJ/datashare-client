@@ -42,12 +42,13 @@ const src = computed(() => (documentViewStore.embeddedPdf ? null : props.documen
 const { pdf, numPages, sizes, findHighlights, loaderId: pdfLoaderId } = usePDF(src)
 const { waitFor, isLoading } = useWait()
 const { t } = useI18n()
-const { isBlurred } = useDocumentPreview()
+const { isBlurred, getBlurredContentBanner } = useDocumentPreview()
 
 const currentPage = ref(1)
 const rotation = documentViewStore.computedDocumentRotation(props.document)
 const scale = ref(SCALE_FIT)
 const blurred = ref(null)
+const blurredContent = ref(null)
 const pageElements = useTemplateRef('pages')
 const toolboxElement = useTemplateRef('toolbox')
 const { height: toolboxHeight } = useElementBounding(toolboxElement)
@@ -106,6 +107,9 @@ whenever(highlightTextDebounced, waitFor(async (value) => {
 
 watch(src, async () => {
   blurred.value ??= await isBlurred(props.document)
+  if(blurred.value){
+    blurredContent.value = await getBlurredContentBanner(props.document)
+  }
 }, { immediate: true })
 </script>
 
@@ -161,6 +165,7 @@ watch(src, async () => {
     <dismissable-content-warning-toggler
       v-if="blurred"
       v-model="blurred"
+      :description="blurredContent"
     />
     <app-wait
       v-else
