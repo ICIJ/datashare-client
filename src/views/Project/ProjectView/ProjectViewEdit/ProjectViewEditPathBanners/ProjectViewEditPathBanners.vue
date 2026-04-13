@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, ref, watch, reactive } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { ButtonIcon } from '@icij/murmur-next'
@@ -10,7 +10,6 @@ import PathBannersList from '@/components/PathBanner/PathBannersList.vue'
 import PathBannersListEntry from '@/components/PathBanner/PathBannersListEntry.vue'
 import ProjectViewEditPathBannersModal from './ProjectViewEditPathBannersModal.vue'
 import { useConfirmModal } from '@/composables/useConfirmModal.js'
-import { useCore } from '@/composables/useCore.js'
 import { useToast } from '@/composables/useToast.js'
 import { useWait } from '@/composables/useWait.js'
 import PathBannerDescription from '@/components/PathBanner/PathBannerDescription.vue'
@@ -21,19 +20,18 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
-const core = useCore()
 const route = useRoute()
 const router = useRouter()
 const { toast } = useToast()
 const { waitFor } = useWait()
 const { afterConfirmation } = useConfirmModal()
-const pathBannersStore = useDocumentPathBannersStore()
+const { pathBanners, fetchPathBanners, deletePathBanner} = useDocumentPathBannersStore()
 
-const banners = reactive([])
+const banners = computed(() => pathBanners[props.name] ?? [])
 const modalBannerIndex = ref(-1)
 const bannersLoaded = ref(false)
 
-const selectedBanner = computed(() => banners[modalBannerIndex.value] ?? null)
+const selectedBanner = computed(() => modalBannerIndex.value < 0 ? null : banners.value[modalBannerIndex.value])
 
 function pathHash(path) {
   let hash = 5381
@@ -54,22 +52,34 @@ function closeModal() {
   router.push(bannersRoute(undefined))
 }
 
-function resolveBannerId(newId) {
-  if (newId === 'new') {
-    modalBannerIndex.value = -1
+function findBannerIndex(id) {
+  return banners.value.findIndex(b => pathHash(b.path) === id)
+}
+function isNewBannerId(id) {
+  return id === 'new'
+}
+function isKnownBanner(id) {
+  return findBannerIndex(id) !== -1
+}
+
+function deactivateModalBanner()  {
+  modalBannerIndex.value = -1
+}
+
+function activateModalBanner(id)  {
+  modalBannerIndex.value = findBannerIndex(id)
+}
+
+function resolveBannerId(id) {
+  if (isNewBannerId(id)) {
+    return deactivateModalBanner()
   }
-  else if (newId) {
-    const index = banners.findIndex(b => pathHash(b.path) === newId)
-    if (index !== -1) {
-      modalBannerIndex.value = index
-    }
-    else {
-      closeModal()
-    }
+
+  if (isKnownBanner(id)) {
+    return activateModalBanner(id)
   }
-  else {
-    modalBannerIndex.value = -1
-  }
+
+  return deactivateModalBanner()
 }
 
 watch(
@@ -87,17 +97,15 @@ function openCreateModal() {
 }
 
 function openEditModal(index) {
-  const { path } = banners[index]
+  const { path } = banners.value[index]
   const to = bannersRoute(pathHash(path))
   router.push(to)
 }
 
 const deleteBanner = waitFor(async (index) => {
-  const banner = banners[index]
+  const { path } = banners.value[index]
   try {
-    await core.api.deletePathBanner(banner.project.name, banner.path)
-    banners.splice(index, 1)
-    pathBannersStore.set({ project: props.name, pathBanners: [...banners] })
+    await deletePathBanner({project:props.name, path})
     toast.success(t('projectViewEdit.pathBanners.notify.delete.succeedBody'))
   }
   catch {
@@ -110,9 +118,7 @@ function confirmDeleteBanner(index) {
 }
 
 async function loadBanners() {
-  const data = await core.api.getPathBanners(props.name)
-  banners.splice(0, banners.length, ...data)
-  pathBannersStore.set({ project: props.name, pathBanners: data })
+  await fetchPathBanners({project:props.name})
   bannersLoaded.value = true
   resolveBannerId(route.params.bannerId)
 }
@@ -147,7 +153,6 @@ defineExpose({
     >
       {{ t('projectViewEdit.pathBanners.add') }}
     </button-icon>
-
     <path-banners-list :banners="banners">
       <template #banner-item="{ banner, index }">
         <path-banners-list-entry

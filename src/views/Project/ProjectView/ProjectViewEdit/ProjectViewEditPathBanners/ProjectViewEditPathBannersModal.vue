@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, nextTick, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { ButtonIcon } from '@icij/murmur-next'
@@ -43,7 +43,7 @@ const activeBanner = computed(() => {
 
 const open = computed({
   get: () => !!route.params.bannerId,
-  set: (val) => { if (!val) closeModal() }
+  set: (val) => { if (!val) nextTick(closeModal) }
 })
 
 const modalTitle = computed(() =>
