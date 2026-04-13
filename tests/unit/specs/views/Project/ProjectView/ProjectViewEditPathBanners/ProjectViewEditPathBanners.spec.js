@@ -36,12 +36,14 @@ describe('ProjectViewEditPathBanners.vue', () => {
     })
   }
 
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.clearAllMocks()
     mockAfterConfirmation.mockImplementation(fn => fn())
     core = CoreSetup.init().useAll().useRouterWithoutGuards()
     api.getPathBanners.mockResolvedValue([])
     api.deletePathBanner.mockResolvedValue({})
+    await core.router.push({ name: 'project.view.edit.banners', params: { name: 'local-datashare' } })
+    await flushPromises()
   })
 
   afterAll(() => {
