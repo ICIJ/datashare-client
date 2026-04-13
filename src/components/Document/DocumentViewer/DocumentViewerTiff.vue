@@ -37,6 +37,7 @@
       <dismissable-content-warning
         v-if="!error"
         v-model:show="blurred"
+        :description="blurredContent"
         no-center
         content-class="tiff-viewer__preview"
       >
@@ -103,9 +104,9 @@ export default {
     }
   },
   setup() {
-    const { isBlurred } = useDocumentPreview()
+    const { isBlurred, getBlurredContentBanner } = useDocumentPreview()
     const { t } = useI18n()
-    return { isBlurred, t, IPhArrowCounterClockwise, IPhArrowClockwise }
+    return { isBlurred, getBlurredContentBanner, t, IPhArrowCounterClockwise, IPhArrowClockwise }
   },
   data() {
     return {
@@ -114,7 +115,8 @@ export default {
       tiffData: null,
       active: 1,
       pages: [],
-      blurred: true
+      blurred: true,
+      blurredContent: null
     }
   },
   computed: {
@@ -133,6 +135,9 @@ export default {
   async mounted() {
     try {
       this.blurred = await this.isBlurred(this.document)
+      if(this.blurred){
+        this.blurredContent = await this.getBlurredContentBanner(this.document)
+      }
       this.tiffData = tiff.decode(await this.getTiffBuffer())
       this.pages = []
       for (const index in this.tiffData) {
