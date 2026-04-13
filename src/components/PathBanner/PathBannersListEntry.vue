@@ -41,7 +41,6 @@ const sensitiveVariant = { key: 'variant.sensitive', icon: IPhEyeSlash }
         :value="banner.variant"
         :title="t(variant.key)"
       />
-
     </b-td>
     <b-td>
       <code class="small">{{ banner.path }}</code>

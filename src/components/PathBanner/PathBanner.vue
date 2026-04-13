@@ -36,5 +36,4 @@ const variantObject = computed(() => variantOptions[props.variant] ?? variantOpt
     </template>
     {{ note }}
   </dismissable-alert>
-
 </template>

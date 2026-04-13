@@ -56,8 +56,8 @@ export const useDocumentPreview = () => {
   async function getBlurredContentBanner({ project, path }) {
     const pathBanners = await documentPathBannersStore.fetchPathBannersByPath({ project, path })
     const longestBannerPath = pathBanners.filter(banner => banner.blurSensitiveMedia).reduce((longestBanner, currentBanner) => {
-      return currentBanner?.path?.length > (longestBanner.path?.length ?? 0) ? currentBanner : longestBanner;
-    }, {});
+      return currentBanner?.path?.length > (longestBanner.path?.length ?? 0) ? currentBanner : longestBanner
+    }, {})
     return longestBannerPath.note
   }
 

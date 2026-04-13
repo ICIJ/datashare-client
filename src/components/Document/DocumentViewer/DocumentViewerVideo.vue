@@ -5,7 +5,10 @@
     :border-variant="cardVariant"
     no-body
   >
-    <dismissable-content-warning v-model:show="blurred" :description="blurredContent">
+    <dismissable-content-warning
+      v-model:show="blurred"
+      :description="blurredContent"
+    >
       <video
         controls
         :autoplay="autoplay"
@@ -105,7 +108,7 @@ export default {
   },
   async mounted() {
     this.blurred = await this.isBlurred(this.document)
-    if(this.blurred){
+    if (this.blurred) {
       this.blurredContent = await this.getBlurredContentBanner(this.document)
     }
   }
