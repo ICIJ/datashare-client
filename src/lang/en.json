@@ -119,7 +119,7 @@
     "dontShow": "Don't show this again"
   },
   "dismissableContentWarningToggler": {
-    "title": "Content Warning",
+    "title": "Content warning",
     "description": "This media may contain sensitive content that some people may find disturbing or offensive.",
     "toggle": "Show anyway"
   },
