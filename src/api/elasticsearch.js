@@ -376,6 +376,26 @@ export function datasharePlugin(Client) {
   }
 
   /**
+   * Estimates the total file count and total size for a search query.
+   * Used to compare against batch download limits.
+   * @param {string} index - The index name
+   * @param {Array} filters - Array of filter objects
+   * @param {string} [query='*'] - Query string
+   * @param {string[]} [fields=[]] - Fields to search in
+   * @returns {Promise<{estimatedCount: number, estimatedSize: number}>} The estimated count and size
+   */
+  Client.prototype.estimateDownloadSize = async function (index, filters, query = DEFAULT_QUERY, fields = []) {
+    const body = this.rootSearch(filters, normalizeQuery(query), fields)
+    body.size(0)
+    body.rawOption('track_total_hits', true)
+    body.aggregation('sum', 'contentLength', 'total_content_length')
+    const res = await this._search({ index, body: body.build() })
+    const estimatedCount = res?.hits?.total?.value ?? 0
+    const estimatedSize = res?.aggregations?.total_content_length?.value ?? 0
+    return { estimatedCount, estimatedSize }
+  }
+
+  /**
    * @deprecated Use getDocumentsByIds instead
    * @alias getDocumentsByIds
    */
