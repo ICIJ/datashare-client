@@ -59,6 +59,6 @@ describe('BatchDownloadConfirmModal.vue', () => {
       estimatedCount: 100,
       estimatedSize: 2048
     })
-    expect(wrapper.findAll('p')).toHaveLength(2) // the variant message + the question
+    expect(wrapper.findAll('.batch-download-confirm-modal__content__message')).toHaveLength(2) // the variant message + the question
   })
 })
