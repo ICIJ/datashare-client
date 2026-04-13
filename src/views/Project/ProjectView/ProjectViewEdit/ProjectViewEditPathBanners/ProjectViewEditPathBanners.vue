@@ -79,6 +79,11 @@ function resolveBannerId(id) {
     return activateModalBanner(id)
   }
 
+  // id defined but unknown (stale) => should close
+  if (id) {
+    return closeModal()
+  }
+
   return deactivateModalBanner()
 }
 
