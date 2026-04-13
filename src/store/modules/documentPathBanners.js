@@ -14,7 +14,10 @@ export const useDocumentPathBannersStore = defineStore('documentPathBanners', ()
    * Delete all path banners for each project
    * @returns {void}
    */
-  const reset = () => Object.keys(pathBanners).forEach(key => delete pathBanners[key])
+  const reset = () => {
+    Object.keys(pathBanners).forEach(key => delete pathBanners[key])
+    Object.keys(fetchPromises).forEach(key => delete fetchPromises[key])
+  }
 
   /**
    * Set a list of path banners for a given project
