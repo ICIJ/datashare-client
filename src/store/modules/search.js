@@ -952,6 +952,16 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   }
 
   /**
+   * Estimate the total file count and total size for the current search query.
+   * Reuses the same query/filters as runBatchDownload.
+   * @returns {Promise<{estimatedCount: number, estimatedSize: number}>}
+   */
+  function estimateDownloadSize() {
+    const estimateQuery = ['', null, undefined].indexOf(q.value) === -1 ? q.value : '*'
+    return api.elasticsearch.estimateDownloadSize(indices.value, instantiatedFilters.value, estimateQuery, fields.value)
+  }
+
+  /**
    * Check if the current route query is the same as the last applied query,
    * ignoring the keys in the `omit` array.
    *
@@ -1057,6 +1067,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     queryNextPage,
     queryDeleteQueryTerm,
     runBatchDownload,
+    estimateDownloadSize,
     sameAppliedQuery
   }
 })
