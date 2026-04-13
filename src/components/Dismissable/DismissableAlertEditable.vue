@@ -36,7 +36,7 @@ defineProps({
 <style scoped lang="scss">
 .dismissable-alert-editable {
   :deep(.alert-body) {
-    flex-basis: 90%;
+    flex-basis: 100%;
   }
 }
 </style>
