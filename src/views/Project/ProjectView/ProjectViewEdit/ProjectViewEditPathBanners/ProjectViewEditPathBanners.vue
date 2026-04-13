@@ -28,6 +28,7 @@ const modalBannerIndex = ref(-1)
 const bannersLoaded = ref(false)
 
 const selectedBanner = computed(() => modalBannerIndex.value < 0 ? null : banners.value[modalBannerIndex.value])
+const projectName = computed(() => route.params.name)
 
 function pathHash(path) {
   let hash = 5381
@@ -40,7 +41,7 @@ function pathHash(path) {
 
 function bannersRoute(bannerId) {
   const name = 'project.view.edit.banners'
-  const params = { name: route.params.name, bannerId }
+  const params = { name: projectName.value, bannerId }
   return { name, params }
 }
 
@@ -106,7 +107,7 @@ function openEditModal(index) {
 const deleteBanner = waitFor(async (index) => {
   const { path } = banners.value[index]
   try {
-    await deletePathBanner({ project: route.params.name, path })
+    await deletePathBanner({ project: projectName.value, path })
     toast.success(t('projectViewEdit.pathBanners.notify.delete.succeedBody'))
   }
   catch {
@@ -119,7 +120,7 @@ function confirmDeleteBanner(index) {
 }
 
 async function loadBanners() {
-  await fetchPathBanners({ project: route.params.name })
+  await fetchPathBanners({ project: projectName.value })
   bannersLoaded.value = true
   resolveBannerId(route.params.bannerId)
 }
@@ -166,7 +167,7 @@ defineExpose({
     </path-banners-list>
 
     <project-view-edit-path-banners-modal
-      :name="name"
+      :name="projectName"
       :banner="selectedBanner"
       @banner:save="loadBanners"
     />
