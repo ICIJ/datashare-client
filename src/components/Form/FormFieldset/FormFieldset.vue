@@ -63,7 +63,7 @@ const props = defineProps({
 
 const elementRef = useTemplateRef('element')
 const { compact: compactDetected } = useCompact(elementRef, { threshold: toRef(props, 'compactThreshold') })
-const compact = computed(() => props.compact !== null ? props.compact : compactDetected.value)
+const compact = computed(() => props.compact ?? compactDetected.value)
 
 const classList = computed(() => {
   return {
