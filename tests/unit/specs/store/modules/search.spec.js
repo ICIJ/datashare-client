@@ -1108,4 +1108,71 @@ describe('SearchStore', () => {
       expect(rootSearchSpy).toHaveBeenCalledWith(expect.anything(), expect.anything(), ['path'])
     })
   })
+
+  describe('estimateDownloadSize', () => {
+    let estimateSpy
+
+    beforeEach(() => {
+      estimateSpy = vi.spyOn(api.elasticsearch, 'estimateDownloadSize').mockResolvedValue({
+        estimatedCount: 0,
+        estimatedSize: 0
+      })
+    })
+
+    afterEach(() => {
+      vi.restoreAllMocks()
+    })
+
+    it('passes indices and instantiated filters to the elasticsearch client', async () => {
+      await searchStore.estimateDownloadSize()
+      expect(estimateSpy).toHaveBeenCalledWith(
+        searchStore.indices,
+        searchStore.instantiatedFilters,
+        '*',
+        []
+      )
+    })
+
+    it('passes "*" when the query is empty', async () => {
+      searchStore.setQuery('')
+      await searchStore.estimateDownloadSize()
+      expect(estimateSpy).toHaveBeenCalledWith(expect.anything(), expect.anything(), '*', expect.anything())
+    })
+
+    it('passes "*" when the query is null', async () => {
+      searchStore.setQuery(null)
+      await searchStore.estimateDownloadSize()
+      expect(estimateSpy).toHaveBeenCalledWith(expect.anything(), expect.anything(), '*', expect.anything())
+    })
+
+    it('passes "*" when the query is undefined', async () => {
+      searchStore.setQuery(undefined)
+      await searchStore.estimateDownloadSize()
+      expect(estimateSpy).toHaveBeenCalledWith(expect.anything(), expect.anything(), '*', expect.anything())
+    })
+
+    it('passes the literal query when set', async () => {
+      searchStore.setQuery('hello world')
+      await searchStore.estimateDownloadSize()
+      expect(estimateSpy).toHaveBeenCalledWith(expect.anything(), expect.anything(), 'hello world', expect.anything())
+    })
+
+    it('passes the selected field as the fields array', async () => {
+      searchStore.setField('content')
+      await searchStore.estimateDownloadSize()
+      expect(estimateSpy).toHaveBeenCalledWith(expect.anything(), expect.anything(), expect.anything(), ['content'])
+    })
+
+    it('passes an empty fields array when searching all fields', async () => {
+      searchStore.setField('all')
+      await searchStore.estimateDownloadSize()
+      expect(estimateSpy).toHaveBeenCalledWith(expect.anything(), expect.anything(), expect.anything(), [])
+    })
+
+    it('forwards the API response', async () => {
+      estimateSpy.mockResolvedValue({ estimatedCount: 7, estimatedSize: 999 })
+      const result = await searchStore.estimateDownloadSize()
+      expect(result).toEqual({ estimatedCount: 7, estimatedSize: 999 })
+    })
+  })
 })
