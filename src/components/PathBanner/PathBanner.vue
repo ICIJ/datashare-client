@@ -15,7 +15,13 @@ const variantObject = computed(() => variantOptions[props.variant] ?? variantOpt
 </script>
 
 <template>
+  <dismissable-content-warning-toggler
+    v-if="sensitive"
+    class="py-2 col-8 border rounded-1 mx-auto"
+    :description="note"
+  />
   <dismissable-alert
+    v-else
     :variant="variant"
     no-close
     no-button
@@ -30,9 +36,5 @@ const variantObject = computed(() => variantOptions[props.variant] ?? variantOpt
     </template>
     {{ note }}
   </dismissable-alert>
-  <dismissable-content-warning-toggler
-    v-if="sensitive"
-    class="py-2 col-8 border rounded-1 mx-auto"
-    :description="note"
-  />
+
 </template>

@@ -1,10 +1,10 @@
 <template>
   <div
-    v-if="nonEmptyPathBanners.length"
+    v-if="nonSensitivePathBanners.length"
     class="document-path-banners d-flex flex-column gap-3"
   >
     <b-alert
-      v-for="({ note, variant }, i) in nonEmptyPathBanners"
+      v-for="({ note, variant }, i) in nonSensitivePathBanners"
       :key="i"
       class="m-0"
       no-fade
@@ -24,7 +24,7 @@ import { useDocumentPathBannersStore } from '@/store/modules'
 
 const props = defineProps({ document: Object })
 const pathBanners = ref([])
-const nonEmptyPathBanners = computed(() => pathBanners.value.filter(({ note }) => !isEmpty(note)))
+const nonSensitivePathBanners = computed(() => pathBanners.value.filter(({ note, blurSensitiveMedia }) => !isEmpty(note) && !blurSensitiveMedia))
 const documentPathBannersStore = useDocumentPathBannersStore()
 
 onBeforeMount(async () => {
