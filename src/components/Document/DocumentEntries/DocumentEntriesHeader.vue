@@ -6,6 +6,9 @@ import { useRouter } from 'vue-router'
 import { useCompact } from '@/composables/useCompact'
 import { useCore } from '@/composables/useCore'
 import { useToast } from '@/composables/useToast'
+import { useBatchDownloadEstimation } from '@/composables/useBatchDownloadEstimation'
+import { useBatchDownloadConfirmModal } from '@/composables/useBatchDownloadConfirmModal'
+import { useBatchDownloadEstimationErrorModal } from '@/composables/useBatchDownloadEstimationErrorModal'
 import ButtonToggleBatchMode from '@/components/Button/ButtonToggleBatchMode'
 import ButtonDownloadDocuments from '@/components/Button/ButtonDownloadDocuments'
 import RowPaginationDocuments from '@/components/RowPagination/RowPaginationDocuments'
@@ -42,6 +45,18 @@ const { t, tm, n } = useI18n()
 const searchStore = useSearchStore.inject()
 const router = useRouter()
 
+const {
+  loading: batchDownloadLoading,
+  estimatedCount,
+  estimatedSize,
+  maxNbFiles,
+  maxSizeBytes,
+  exceedsLimit,
+  estimate
+} = useBatchDownloadEstimation()
+const { confirm: confirmExceedsLimit } = useBatchDownloadConfirmModal()
+const { confirm: confirmEstimationError } = useBatchDownloadEstimationErrorModal()
+
 // We limit pagination below 10,000 results
 const noNextPage = computed(() => props.perPage * page.value >= 1e4)
 const noLastPage = computed(() => props.total >= 1e4)
@@ -49,8 +64,8 @@ const noLastPage = computed(() => props.total >= 1e4)
 const batchDownloadDocumentsLabel = computed(() => {
   const maxFiles = parseInt(core.config.get('batchDownloadMaxNbFiles'))
   const maxSize = core.config.get('batchDownloadMaxSize')
-  const maxSizeBytes = byteSize(maxSize)
-  const locales = { maxFiles: n(maxFiles), maxSize: humanSize(maxSizeBytes, false, tm('human.size')) }
+  const maxSizeBytesValue = byteSize(maxSize)
+  const locales = { maxFiles: n(maxFiles), maxSize: humanSize(maxSizeBytesValue, false, tm('human.size')) }
 
   if (props.total > maxFiles) {
     return t('documentEntriesHeader.batchDownloadDocumentsWarning', locales)
@@ -66,7 +81,33 @@ const batchDownloadDocumentsUri = computed(() => {
   return fullPath
 })
 
-const runBatchDownload = async () => {
+async function runBatchDownload() {
+  try {
+    await estimate()
+  }
+  catch {
+    if (!(await confirmEstimationError())) {
+      return
+    }
+    return proceedBatchDownload()
+  }
+
+  if (exceedsLimit.value) {
+    const ok = await confirmExceedsLimit({
+      estimatedCount: estimatedCount.value,
+      estimatedSize: estimatedSize.value,
+      maxNbFiles: maxNbFiles.value,
+      maxSizeBytes: maxSizeBytes.value
+    })
+    if (!ok) {
+      return
+    }
+  }
+
+  return proceedBatchDownload()
+}
+
+async function proceedBatchDownload() {
   try {
     await searchStore.runBatchDownload(batchDownloadDocumentsUri.value)
     const { href } = router.resolve({ name: 'task.batch-download.list' })
@@ -113,6 +154,7 @@ watch(toRef(props, 'total'), total => (selectMode.value = selectMode.value && to
         />
         <button-download-documents
           :label="batchDownloadDocumentsLabel"
+          :loading="batchDownloadLoading"
           @click="runBatchDownload"
         />
       </div>
