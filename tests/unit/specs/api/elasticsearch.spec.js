@@ -211,4 +211,52 @@ describe('elasticsearch', () => {
       })
     })
   })
+
+  describe('estimateDownloadSize', () => {
+    let searchSpy
+
+    beforeEach(() => {
+      searchSpy = vi.spyOn(elasticsearch, '_search')
+    })
+
+    afterEach(() => {
+      searchSpy.mockRestore()
+    })
+
+    it('builds a query with size 0, track_total_hits and a sum aggregation on contentLength', async () => {
+      searchSpy.mockResolvedValue({
+        hits: { total: { value: 0 } },
+        aggregations: { total_content_length: { value: 0 } }
+      })
+
+      await elasticsearch.estimateDownloadSize(index, [], '*', [])
+
+      expect(searchSpy).toHaveBeenCalledTimes(1)
+      const body = searchSpy.mock.calls[0][0].body
+      expect(body.size).toBe(0)
+      expect(body.track_total_hits).toBe(true)
+      expect(body.aggs).toEqual({
+        total_content_length: { sum: { field: 'contentLength' } }
+      })
+    })
+
+    it('returns the estimated count and size from the response', async () => {
+      searchSpy.mockResolvedValue({
+        hits: { total: { value: 42 } },
+        aggregations: { total_content_length: { value: 1024 } }
+      })
+
+      const result = await elasticsearch.estimateDownloadSize(index, [], '*', [])
+
+      expect(result).toEqual({ estimatedCount: 42, estimatedSize: 1024 })
+    })
+
+    it('defaults estimated count and size to 0 when fields are missing', async () => {
+      searchSpy.mockResolvedValue({})
+
+      const result = await elasticsearch.estimateDownloadSize(index, [], '*', [])
+
+      expect(result).toEqual({ estimatedCount: 0, estimatedSize: 0 })
+    })
+  })
 })
