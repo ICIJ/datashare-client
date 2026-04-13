@@ -105,6 +105,7 @@ watch(
       </b-form-radio-group>
     </form-fieldset>
     <form-fieldset
+      v-if="!form.blurSensitiveMedia"
       :compact="compact"
       :icon="IPhInfo"
       :label="t('projectViewEdit.pathBanners.fields.variant.label')"

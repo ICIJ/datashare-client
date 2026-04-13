@@ -36,14 +36,17 @@ defineProps({
       {{ t('projectViewEdit.pathBanners.previewTitle') }}
     </p>
     <div class="d-flex justify-content-around gap-2 px-1 flex-column col-12 col-lg-8 align-self-center">
+      <dismissable-content-warning-toggler
+        v-if="sensitive"
+        :description="modelValue"
+      />
       <dismissable-alert-editable
+        v-else
         v-model="modelValue"
         v-model:variant="variant"
         :placeholder="placeholder"
       />
-      <dismissable-content-warning-toggler
-        v-if="sensitive"
-      />
+
     </div>
   </div>
 </template>
