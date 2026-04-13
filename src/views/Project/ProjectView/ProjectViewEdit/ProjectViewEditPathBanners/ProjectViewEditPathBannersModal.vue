@@ -60,10 +60,6 @@ function closeModal() {
   router.push(bannersRoute(undefined))
 }
 
-function onModalCancel() {
-  closeModal()
-}
-
 async function onModalSave(formData) {
   const success = await saveBanner(formData)
   if (success) closeModal()
@@ -100,7 +96,7 @@ const saveBanner = waitFor(async (formData) => {
         <button-icon
           type="button"
           variant="outline-action"
-          @click="onModalCancel"
+          @click="closeModal"
         >
           {{ t('projectViewEdit.pathBanners.cancel') }}
         </button-icon>
