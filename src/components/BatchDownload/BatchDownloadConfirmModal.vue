@@ -4,20 +4,19 @@ import { useI18n } from 'vue-i18n'
 
 import AppModal from '@/components/AppModal/AppModal'
 import humanSize from '@/utils/humanSize'
-import image from '@/assets/images/illustrations/app-modal-default-light.svg'
-import imageDark from '@/assets/images/illustrations/app-modal-default-dark.svg'
+import image from '@/assets/images/illustrations/app-modal-alert-naming-light.svg'
+import imageDark from '@/assets/images/illustrations/app-modal-alert-naming-dark.svg'
 
 const props = defineProps({
-  estimatedCount: { type: Number, required: true },
-  estimatedSize: { type: Number, required: true },
   maxNbFiles: { type: Number, required: true },
-  maxSizeBytes: { type: Number, required: true }
+  maxSizeBytes: { type: Number, required: true },
+  estimatedCount: { type: Number, default: null },
+  estimatedSize: { type: Number, default: null }
 })
 
 const { t, tm, n } = useI18n()
 
-const exceedsFileLimit = computed(() => props.estimatedCount > props.maxNbFiles)
-const exceedsSizeLimit = computed(() => props.estimatedSize > props.maxSizeBytes)
+const isKnown = computed(() => props.estimatedCount !== null && props.estimatedSize !== null)
 const formattedEstimatedSize = computed(() => humanSize(props.estimatedSize, false, tm('human.size')))
 const formattedMaxSize = computed(() => humanSize(props.maxSizeBytes, false, tm('human.size')))
 </script>
@@ -29,12 +28,21 @@ const formattedMaxSize = computed(() => humanSize(props.maxSizeBytes, false, tm(
     :title="t('batchDownloadConfirmModal.title')"
   >
     <div class="text-center text-secondary">
-      <p v-if="exceedsFileLimit">
-        {{ t('batchDownloadConfirmModal.exceedsFileLimit', { estimated: n(estimatedCount), limit: n(maxNbFiles) }) }}
+      <p v-if="isKnown">
+        {{ t('batchDownloadConfirmModal.knownTruncation', {
+          estimatedCount: n(estimatedCount),
+          estimatedSize: formattedEstimatedSize,
+          maxFiles: n(maxNbFiles),
+          maxSize: formattedMaxSize
+        }) }}
       </p>
-      <p v-if="exceedsSizeLimit">
-        {{ t('batchDownloadConfirmModal.exceedsSizeLimit', { estimated: formattedEstimatedSize, limit: formattedMaxSize }) }}
+      <p v-else>
+        {{ t('batchDownloadConfirmModal.unknownTruncation', {
+          maxFiles: n(maxNbFiles),
+          maxSize: formattedMaxSize
+        }) }}
       </p>
+      <p>{{ t('batchDownloadConfirmModal.question') }}</p>
     </div>
   </app-modal>
 </template>
