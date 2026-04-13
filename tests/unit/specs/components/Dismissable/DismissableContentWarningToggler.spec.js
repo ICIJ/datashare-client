@@ -22,7 +22,7 @@ describe('DismissableContentWarningToggler.vue', () => {
 
   it('renders the default title', () => {
     const wrapper = shallowMountComponent()
-    expect(wrapper.find('.dismissable-content-warning-toggler__title').text()).toBe('Content Warning')
+    expect(wrapper.find('.dismissable-content-warning-toggler__title').text()).toBe('Content warning')
   })
 
   it('renders the default description when no prop is provided', () => {
