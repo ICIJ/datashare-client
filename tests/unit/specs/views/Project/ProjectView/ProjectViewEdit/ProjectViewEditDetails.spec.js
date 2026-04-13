@@ -1,8 +1,8 @@
 import { mount, flushPromises } from '@vue/test-utils'
 
-import CoreSetup from '~tests/unit/CoreSetup'
+import CoreSetup from '~tests/unit/CoreSetup.js'
 import ProjectViewEdit from '@/views/Project/ProjectView/ProjectViewEdit/ProjectViewEdit.vue'
-import { apiInstance as api } from '@/api/apiInstance'
+import { apiInstance as api } from '@/api/apiInstance.js'
 
 vi.mock('@/api/apiInstance', () => {
   return {
