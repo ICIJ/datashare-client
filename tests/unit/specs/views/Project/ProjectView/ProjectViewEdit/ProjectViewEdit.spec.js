@@ -1,6 +1,6 @@
 import { shallowMount } from '@vue/test-utils'
 
-import CoreSetup from '~tests/unit/CoreSetup'
+import CoreSetup from '~tests/unit/CoreSetup.js'
 import ProjectViewEdit from '@/views/Project/ProjectView/ProjectViewEdit/ProjectViewEdit.vue'
 
 describe('ProjectViewEdit.vue', () => {
