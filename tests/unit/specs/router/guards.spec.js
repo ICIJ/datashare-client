@@ -12,6 +12,20 @@ vi.mock('@/api/apiInstance', () => ({
   }
 }))
 
+// Mock useNProgress to avoid real NProgress timers outliving the jsdom
+// environment (see nprogress.js:98,256 — chained setTimeouts try to touch
+// `document` after test teardown and throw "document is not defined").
+vi.mock('@/composables/useNProgress', () => ({
+  useNProgress: () => ({
+    start: vi.fn(),
+    done: vi.fn(),
+    remove: vi.fn(),
+    toggle: vi.fn(),
+    isLoading: { value: false },
+    progress: { value: null }
+  })
+}))
+
 describe('guards', () => {
   const { auth, router, plugins, config } = CoreSetup.init().useAll().useRouter()
 
