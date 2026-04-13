@@ -30,7 +30,8 @@ export function useBatchDownloadEstimation() {
       estimatedCount.value = c
       estimatedSize.value = s
       return { estimatedCount: c, estimatedSize: s }
-    } finally {
+    }
+    finally {
       loading.value = false
     }
   }
