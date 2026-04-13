@@ -120,14 +120,14 @@ describe('PathBannerForm.vue', () => {
   })
 
   describe('variant and sensitive content fields', () => {
-    it('always renders the VariantDropdown', () => {
+    it('renders the VariantDropdown', () => {
       const wrapper = shallowMountComponent({ banner: existingBanner })
       expect(wrapper.findComponent({ name: 'VariantDropdown' }).exists()).toBe(true)
     })
 
-    it('renders the VariantDropdown even when blurSensitiveMedia is true', () => {
+    it('does not render the VariantDropdown when blurSensitiveMedia is true', () => {
       const wrapper = shallowMountComponent({ banner: sensitiveBanner })
-      expect(wrapper.findComponent({ name: 'VariantDropdown' }).exists()).toBe(true)
+      expect(wrapper.findComponent({ name: 'VariantDropdown' }).exists()).toBe(false)
     })
 
     it('binds the current variant to VariantDropdown', () => {
