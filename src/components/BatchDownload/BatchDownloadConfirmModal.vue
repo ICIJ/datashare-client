@@ -25,6 +25,7 @@ const formattedMaxSize = computed(() => humanSize(props.maxSizeBytes, false, tm(
   <app-modal
     :image="image"
     :image-dark="imageDark"
+    :image-width="110"
     :title="t('batchDownloadConfirmModal.title')"
   >
     <div class="text-center text-secondary">
