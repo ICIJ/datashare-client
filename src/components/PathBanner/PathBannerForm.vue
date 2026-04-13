@@ -3,7 +3,7 @@ import { computed, reactive, watch, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur-next'
 import IPhFolderOpen from '~icons/ph/folder-open'
-import IPhSwatches from '~icons/ph/swatches'
+import IPhInfo from '~icons/ph/info'
 import IPhTextAa from '~icons/ph/text-aa'
 import IPhWarning from '~icons/ph/warning'
 
@@ -106,7 +106,7 @@ watch(
     </form-fieldset>
     <form-fieldset
       :compact="compact"
-      :icon="IPhSwatches"
+      :icon="IPhInfo"
       :label="t('projectViewEdit.pathBanners.fields.variant.label')"
     >
       <variant-dropdown
@@ -123,5 +123,3 @@ watch(
     />
   </b-form>
 </template>
-
-<style scoped lang="scss"></style>
