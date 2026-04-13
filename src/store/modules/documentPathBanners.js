@@ -90,5 +90,5 @@ export const useDocumentPathBannersStore = defineStore('documentPathBanners', ()
     await fetchPathBanners({ project })
   }
 
-  return { pathBanners, reset, set, getPathBannersByPath, getPathBanners, fetchPathBanners, fetchPathBannersOnce, fetchPathBannersByPath ,deletePathBanner}
+  return { pathBanners, reset, set, getPathBannersByPath, getPathBanners, fetchPathBanners, fetchPathBannersOnce, fetchPathBannersByPath, deletePathBanner }
 })

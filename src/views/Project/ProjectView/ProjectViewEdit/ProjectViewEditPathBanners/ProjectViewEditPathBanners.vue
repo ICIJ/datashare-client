@@ -25,7 +25,7 @@ const router = useRouter()
 const { toast } = useToast()
 const { waitFor } = useWait()
 const { afterConfirmation } = useConfirmModal()
-const { pathBanners, fetchPathBanners, deletePathBanner} = useDocumentPathBannersStore()
+const { pathBanners, fetchPathBanners, deletePathBanner } = useDocumentPathBannersStore()
 
 const banners = computed(() => pathBanners[props.name] ?? [])
 const modalBannerIndex = ref(-1)
@@ -62,11 +62,11 @@ function isKnownBanner(id) {
   return findBannerIndex(id) !== -1
 }
 
-function deactivateModalBanner()  {
+function deactivateModalBanner() {
   modalBannerIndex.value = -1
 }
 
-function activateModalBanner(id)  {
+function activateModalBanner(id) {
   modalBannerIndex.value = findBannerIndex(id)
 }
 
@@ -110,7 +110,7 @@ function openEditModal(index) {
 const deleteBanner = waitFor(async (index) => {
   const { path } = banners.value[index]
   try {
-    await deletePathBanner({project:props.name, path})
+    await deletePathBanner({ project: props.name, path })
     toast.success(t('projectViewEdit.pathBanners.notify.delete.succeedBody'))
   }
   catch {
@@ -123,7 +123,7 @@ function confirmDeleteBanner(index) {
 }
 
 async function loadBanners() {
-  await fetchPathBanners({project:props.name})
+  await fetchPathBanners({ project: props.name })
   bannersLoaded.value = true
   resolveBannerId(route.params.bannerId)
 }
@@ -143,7 +143,7 @@ defineExpose({
 
 <template>
   <div class="project-view-edit-path-banners d-flex flex-column gap-2">
-    <path-banner-description 
+    <path-banner-description
       class="mt-2"
       persist
       name="project-view-edit-path-banners.description"
