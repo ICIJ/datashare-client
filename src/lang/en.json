@@ -1775,13 +1775,10 @@
     }
   },
   "batchDownloadConfirmModal": {
-    "title": "Download limit exceeded",
-    "exceedsFileLimit": "Your search contains approximately {estimated} documents but the download limit is {limit}.",
-    "exceedsSizeLimit": "Your search results are approximately {estimated} but the download size limit is {limit}."
-  },
-  "batchDownloadEstimationErrorModal": {
-    "title": "Unable to check download limits",
-    "description": "The system could not verify whether your download exceeds the allowed limits. You can proceed with the download anyway or cancel."
+    "title": "Your download may be truncated",
+    "knownTruncation": "Your search matches approximately {estimatedCount} documents ({estimatedSize}). Batch downloads are limited to {maxFiles} files and {maxSize}, so only part of your results will be included.",
+    "unknownTruncation": "We couldn't verify your search size. Batch downloads are limited to {maxFiles} files and {maxSize}, so your download may be truncated.",
+    "question": "Do you want to proceed anyway?"
   },
   "widget": {
     "noData": "No data",

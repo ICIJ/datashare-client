@@ -18,48 +18,47 @@ describe('BatchDownloadConfirmModal.vue', () => {
     })
   }
 
-  it('renders the file-limit message when estimatedCount exceeds maxNbFiles', () => {
+  it('renders the known-truncation variant when both estimates are provided', () => {
     const wrapper = factory({
-      estimatedCount: 100,
-      estimatedSize: 0,
       maxNbFiles: 10,
-      maxSizeBytes: 1000
+      maxSizeBytes: 1024,
+      estimatedCount: 100,
+      estimatedSize: 2048
     })
     const text = wrapper.text()
     expect(text).toContain('100')
     expect(text).toContain('10')
+    expect(text).toMatch(/\bproceed\b/i)
   })
 
-  it('renders the size-limit message when estimatedSize exceeds maxSizeBytes', () => {
+  it('renders the unknown-truncation variant when estimates are null', () => {
     const wrapper = factory({
-      estimatedCount: 0,
-      estimatedSize: 5000,
-      maxNbFiles: 100,
-      maxSizeBytes: 1000
+      maxNbFiles: 10,
+      maxSizeBytes: 1024,
+      estimatedCount: null,
+      estimatedSize: null
     })
-    const paragraphs = wrapper.findAll('p')
-    expect(paragraphs).toHaveLength(1)
+    const text = wrapper.text()
+    expect(text).toContain('couldn\'t verify')
+    expect(text).toMatch(/\bproceed\b/i)
   })
 
-  it('renders both messages when both limits are exceeded', () => {
+  it('renders the unknown-truncation variant when estimate props are omitted', () => {
     const wrapper = factory({
+      maxNbFiles: 10,
+      maxSizeBytes: 1024
+    })
+    const text = wrapper.text()
+    expect(text).toContain('couldn\'t verify')
+  })
+
+  it('always renders the trailing question paragraph', () => {
+    const wrapper = factory({
+      maxNbFiles: 10,
+      maxSizeBytes: 1024,
       estimatedCount: 100,
-      estimatedSize: 5000,
-      maxNbFiles: 10,
-      maxSizeBytes: 1000
+      estimatedSize: 2048
     })
-    const paragraphs = wrapper.findAll('p')
-    expect(paragraphs).toHaveLength(2)
-  })
-
-  it('renders no paragraph when neither limit is exceeded', () => {
-    const wrapper = factory({
-      estimatedCount: 1,
-      estimatedSize: 1,
-      maxNbFiles: 10,
-      maxSizeBytes: 1000
-    })
-    const paragraphs = wrapper.findAll('p')
-    expect(paragraphs).toHaveLength(0)
+    expect(wrapper.findAll('p')).toHaveLength(2) // the variant message + the question
   })
 })

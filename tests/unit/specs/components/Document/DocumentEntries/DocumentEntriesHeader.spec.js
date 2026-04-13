@@ -6,7 +6,6 @@ import DocumentEntriesHeader from '@/components/Document/DocumentEntries/Documen
 
 const estimateMock = vi.fn()
 const confirmExceedsLimitMock = vi.fn()
-const confirmEstimationErrorMock = vi.fn()
 const exceedsLimitRef = ref(false)
 const loadingRef = ref(false)
 
@@ -30,14 +29,6 @@ vi.mock('@/composables/useBatchDownloadConfirmModal', () => ({
   useBatchDownloadConfirmModal: () => ({
     show: vi.fn(),
     confirm: confirmExceedsLimitMock,
-    hide: vi.fn()
-  })
-}))
-
-vi.mock('@/composables/useBatchDownloadEstimationErrorModal', () => ({
-  useBatchDownloadEstimationErrorModal: () => ({
-    show: vi.fn(),
-    confirm: confirmEstimationErrorMock,
     hide: vi.fn()
   })
 }))
@@ -67,7 +58,6 @@ describe('DocumentEntriesHeader.vue — runBatchDownload orchestration', () => {
 
     estimateMock.mockReset()
     confirmExceedsLimitMock.mockReset()
-    confirmEstimationErrorMock.mockReset()
     toastSuccessMock.mockReset()
     toastErrorMock.mockReset()
     exceedsLimitRef.value = false
@@ -139,23 +129,31 @@ describe('DocumentEntriesHeader.vue — runBatchDownload orchestration', () => {
 
   it('runs the download when estimation fails and the user confirms the fallback', async () => {
     estimateMock.mockRejectedValue(new Error('boom'))
-    confirmEstimationErrorMock.mockResolvedValue(true)
+    confirmExceedsLimitMock.mockResolvedValue(true)
 
     const wrapper = factory()
     await clickDownload(wrapper)
 
-    expect(confirmEstimationErrorMock).toHaveBeenCalledTimes(1)
+    expect(confirmExceedsLimitMock).toHaveBeenCalledTimes(1)
+    expect(confirmExceedsLimitMock).toHaveBeenCalledWith(expect.objectContaining({
+      estimatedCount: null,
+      estimatedSize: null
+    }))
     expect(runBatchDownloadSpy).toHaveBeenCalledTimes(1)
   })
 
   it('skips the download when estimation fails and the user cancels the fallback', async () => {
     estimateMock.mockRejectedValue(new Error('boom'))
-    confirmEstimationErrorMock.mockResolvedValue(false)
+    confirmExceedsLimitMock.mockResolvedValue(false)
 
     const wrapper = factory()
     await clickDownload(wrapper)
 
-    expect(confirmEstimationErrorMock).toHaveBeenCalledTimes(1)
+    expect(confirmExceedsLimitMock).toHaveBeenCalledTimes(1)
+    expect(confirmExceedsLimitMock).toHaveBeenCalledWith(expect.objectContaining({
+      estimatedCount: null,
+      estimatedSize: null
+    }))
     expect(runBatchDownloadSpy).not.toHaveBeenCalled()
   })
 

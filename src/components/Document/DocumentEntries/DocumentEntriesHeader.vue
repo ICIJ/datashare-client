@@ -8,7 +8,6 @@ import { useCore } from '@/composables/useCore'
 import { useToast } from '@/composables/useToast'
 import { useBatchDownloadEstimation } from '@/composables/useBatchDownloadEstimation'
 import { useBatchDownloadConfirmModal } from '@/composables/useBatchDownloadConfirmModal'
-import { useBatchDownloadEstimationErrorModal } from '@/composables/useBatchDownloadEstimationErrorModal'
 import ButtonToggleBatchMode from '@/components/Button/ButtonToggleBatchMode'
 import ButtonDownloadDocuments from '@/components/Button/ButtonDownloadDocuments'
 import RowPaginationDocuments from '@/components/RowPagination/RowPaginationDocuments'
@@ -47,15 +46,12 @@ const router = useRouter()
 
 const {
   loading: batchDownloadLoading,
-  estimatedCount,
-  estimatedSize,
   maxNbFiles,
   maxSizeBytes,
   exceedsLimit,
   estimate
 } = useBatchDownloadEstimation()
 const { confirm: confirmExceedsLimit } = useBatchDownloadConfirmModal()
-const { confirm: confirmEstimationError } = useBatchDownloadEstimationErrorModal()
 
 // We limit pagination below 10,000 results
 const noNextPage = computed(() => props.perPage * page.value >= 1e4)
@@ -82,26 +78,25 @@ const batchDownloadDocumentsUri = computed(() => {
 })
 
 async function runBatchDownload() {
+  let estimation = null
   try {
-    await estimate()
+    estimation = await estimate()
+    if (!exceedsLimit.value) {
+      return proceedBatchDownload()
+    }
   }
   catch {
-    if (!(await confirmEstimationError())) {
-      return
-    }
-    return proceedBatchDownload()
+    // estimation stays null — modal will render the "unknown" variant
   }
 
-  if (exceedsLimit.value) {
-    const ok = await confirmExceedsLimit({
-      estimatedCount: estimatedCount.value,
-      estimatedSize: estimatedSize.value,
-      maxNbFiles: maxNbFiles.value,
-      maxSizeBytes: maxSizeBytes.value
-    })
-    if (!ok) {
-      return
-    }
+  const ok = await confirmExceedsLimit({
+    maxNbFiles: maxNbFiles.value,
+    maxSizeBytes: maxSizeBytes.value,
+    estimatedCount: estimation?.estimatedCount ?? null,
+    estimatedSize: estimation?.estimatedSize ?? null
+  })
+  if (!ok) {
+    return
   }
 
   return proceedBatchDownload()

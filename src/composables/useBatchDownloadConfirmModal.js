@@ -6,13 +6,13 @@ import BatchDownloadConfirmModal from '@/components/BatchDownload/BatchDownloadC
 export function useBatchDownloadConfirmModal() {
   const { create, hide } = useModal()
 
-  function show({ estimatedCount, estimatedSize, maxNbFiles, maxSizeBytes }) {
+  function show({ maxNbFiles, maxSizeBytes, estimatedCount = null, estimatedSize = null } = {}) {
     return new Promise((resolve) => {
       const component = h(BatchDownloadConfirmModal, {
-        estimatedCount,
-        estimatedSize,
         maxNbFiles,
         maxSizeBytes,
+        estimatedCount,
+        estimatedSize,
         onOk: resolve,
         onClose: resolve,
         onCancel: resolve,
