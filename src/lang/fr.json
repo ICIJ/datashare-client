@@ -119,7 +119,7 @@
     "dontShow": "Ne plus afficher"
   },
   "dismissableContentWarningToggler": {
-    "title": "Content Warning",
+    "title": "Content warning",
     "description": "This media may contain sensitive content that some people may find disturbing or offensive.",
     "toggle": "Show anyway"
   },
@@ -1391,6 +1391,10 @@
   },
   "projectViewEdit": {
     "title": "Modifier le projet",
+    "tabs": {
+      "details": "Details and documents",
+      "pathBanners": "Banners"
+    },
     "notify": {
       "update": {
         "succeed": "Le projet a été enregistré",
@@ -1399,7 +1403,51 @@
         "failedBody": "Une erreur est survenue lors de la modification du projet."
       }
     },
-    "submit": "Enregistrer"
+    "submit": "Enregistrer",
+    "pathBanners": {
+      "add": "Add banner",
+      "edit": "Edit",
+      "editTitle": "Edit banner",
+      "cancel": "Cancel",
+      "empty": "No banners yet. Click \"Add banner\" to create one.",
+      "save": "Save",
+      "reset": "Reset",
+      "description": "Use path banner to provide contextualized information at the top of each document under a specified path.",
+      "previewTitle": "Preview",
+      "noPathSelected": "No path selected",
+      "fields": {
+        "sensitiveContent": {
+          "label": "Sensitive content",
+          "description": "Sensitive banner adds a blurred overlay on top of the content of documents and ask users to confirm to view"
+        },
+        "path": {
+          "label": "Path",
+          "description": "Select on which path the banner will be displayed"
+        },
+        "text": {
+          "label": "Content",
+          "placeholder": "Text content for the banner",
+          "useDefaultText": "Use default text"
+        },
+        "variant": {
+          "label": "Type"
+        }
+      },
+      "notify": {
+        "create": {
+          "succeedBody": "Banner created.",
+          "failedBody": "Failed to create banner."
+        },
+        "update": {
+          "succeedBody": "Banner saved.",
+          "failedBody": "Failed to save banner."
+        },
+        "delete": {
+          "succeedBody": "Banner deleted.",
+          "failedBody": "Failed to delete banner."
+        }
+      }
+    }
   },
   "projectViewAddDocuments": {
     "title": "Ajouter des documents au projet",
@@ -1684,6 +1732,13 @@
       "TB": "% TO"
     }
   },
+  "variant": {
+    "info": "Info",
+    "warning": "Warning",
+    "danger": "Danger",
+    "success": "Success",
+    "sensitive": "Sensitive content"
+  },
   "batchDownload": {
     "title": "Téléchargements en lot",
     "noFile": "L'archive a expiré.",
@@ -1718,6 +1773,12 @@
     "search": {
       "label": "Voir les résultats de la recherche"
     }
+  },
+  "batchDownloadConfirmModal": {
+    "title": "Your download may be truncated",
+    "knownTruncation": "Your search matches approximately {estimatedCount} documents ({estimatedSize}). Batch downloads are limited to {maxFiles} files and {maxSize}, so only part of your results will be included.",
+    "unknownTruncation": "We couldn't verify your search size. Batch downloads are limited to {maxFiles} files and {maxSize}, so your download may be truncated.",
+    "question": "Do you want to proceed anyway?"
   },
   "widget": {
     "noData": "Pas de données",
