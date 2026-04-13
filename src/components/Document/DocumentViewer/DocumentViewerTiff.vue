@@ -135,7 +135,7 @@ export default {
   async mounted() {
     try {
       this.blurred = await this.isBlurred(this.document)
-      if(this.blurred){
+      if (this.blurred) {
         this.blurredContent = await this.getBlurredContentBanner(this.document)
       }
       this.tiffData = tiff.decode(await this.getTiffBuffer())

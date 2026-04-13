@@ -107,7 +107,7 @@ whenever(highlightTextDebounced, waitFor(async (value) => {
 
 watch(src, async () => {
   blurred.value ??= await isBlurred(props.document)
-  if(blurred.value){
+  if (blurred.value) {
     blurredContent.value = await getBlurredContentBanner(props.document)
   }
 }, { immediate: true })

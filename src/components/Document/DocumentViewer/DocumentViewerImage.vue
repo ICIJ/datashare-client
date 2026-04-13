@@ -36,7 +36,7 @@ const isRawImage = computed(() => canPreviewRaw(props.document))
 
 async function fetch() {
   blurred.value = blurred.value ?? await isBlurred(props.document)
-  if(blurred.value){
+  if (blurred.value) {
     blurredContent.value = await getBlurredContentBanner(props.document)
   }
   if (isRawImage.value) {

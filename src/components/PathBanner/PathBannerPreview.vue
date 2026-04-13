@@ -46,7 +46,6 @@ defineProps({
         v-model:variant="variant"
         :placeholder="placeholder"
       />
-
     </div>
   </div>
 </template>
