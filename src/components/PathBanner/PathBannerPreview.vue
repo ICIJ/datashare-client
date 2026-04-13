@@ -34,11 +34,6 @@ defineProps({
   <div class="path-banner-preview border-top border-subtle pt-2 d-flex flex-column">
     <p class="fw-semibold">
       {{ t('projectViewEdit.pathBanners.previewTitle') }}
-      <code v-if="path">{{ path }}</code>
-      <code
-        v-else
-        class="fst-italic"
-      >{{ t('projectViewEdit.pathBanners.noPathSelected') }}</code>
     </p>
     <div class="d-flex justify-content-around gap-2 px-1 flex-column col-12 col-lg-8 align-self-center">
       <dismissable-alert-editable
