@@ -1413,7 +1413,7 @@
       "save": "Save",
       "reset": "Reset",
       "description": "Use path banner to provide contextualized information at the top of each document under a specified path.",
-      "previewTitle": "Preview for selected path",
+      "previewTitle": "Preview",
       "noPathSelected": "No path selected",
       "fields": {
         "sensitiveContent": {
