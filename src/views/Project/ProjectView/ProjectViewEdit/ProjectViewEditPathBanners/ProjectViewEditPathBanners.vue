@@ -15,10 +15,6 @@ import { useWait } from '@/composables/useWait.js'
 import PathBannerDescription from '@/components/PathBanner/PathBannerDescription.vue'
 import { useDocumentPathBannersStore } from '@/store/modules/documentPathBanners.js'
 
-const props = defineProps({
-  name: { type: String }
-})
-
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
@@ -27,7 +23,7 @@ const { waitFor } = useWait()
 const { afterConfirmation } = useConfirmModal()
 const { pathBanners, fetchPathBanners, deletePathBanner } = useDocumentPathBannersStore()
 
-const banners = computed(() => pathBanners[props.name] ?? [])
+const banners = computed(() => pathBanners[route.params.name] ?? [])
 const modalBannerIndex = ref(-1)
 const bannersLoaded = ref(false)
 
@@ -44,7 +40,7 @@ function pathHash(path) {
 
 function bannersRoute(bannerId) {
   const name = 'project.view.edit.banners'
-  const params = { name: props.name, bannerId }
+  const params = { name: route.params.name, bannerId }
   return { name, params }
 }
 
@@ -110,7 +106,7 @@ function openEditModal(index) {
 const deleteBanner = waitFor(async (index) => {
   const { path } = banners.value[index]
   try {
-    await deletePathBanner({ project: props.name, path })
+    await deletePathBanner({ project: route.params.name, path })
     toast.success(t('projectViewEdit.pathBanners.notify.delete.succeedBody'))
   }
   catch {
@@ -123,7 +119,7 @@ function confirmDeleteBanner(index) {
 }
 
 async function loadBanners() {
-  await fetchPathBanners({ project: props.name })
+  await fetchPathBanners({ project: route.params.name })
   bannersLoaded.value = true
   resolveBannerId(route.params.bannerId)
 }
