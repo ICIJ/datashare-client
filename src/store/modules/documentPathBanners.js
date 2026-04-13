@@ -6,6 +6,9 @@ import { apiInstance as api } from '@/api/apiInstance'
 
 export const useDocumentPathBannersStore = defineStore('documentPathBanners', () => {
   const pathBanners = reactive({})
+  // Cache of in-flight fetch promises keyed by project, used to
+  // deduplicate concurrent calls to fetchPathBannersOnce for the same project.
+  const fetchPromises = {}
 
   /**
    * Delete all path banners for each project
@@ -61,7 +64,9 @@ export const useDocumentPathBannersStore = defineStore('documentPathBanners', ()
   }
 
   /**
-   * Fetch path banners once from the API for a given project
+   * Fetch path banners once from the API for a given project.
+   * Memoized: returns cached path banners if already fetched and
+   * deduplicates concurrent calls for the same project.
    * @param {Object} options
    * @param {string} options.project - The project name
    * @returns {Promise<Array>} The path banners set
@@ -70,7 +75,8 @@ export const useDocumentPathBannersStore = defineStore('documentPathBanners', ()
     if (hasIn(pathBanners, project)) {
       return pathBanners[project]
     }
-    return await fetchPathBanners({ project })
+    fetchPromises[project] ??= fetchPathBanners({ project })
+    return await fetchPromises[project]
   }
 
   /**
