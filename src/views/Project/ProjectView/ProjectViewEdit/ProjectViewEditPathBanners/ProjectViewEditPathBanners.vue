@@ -45,7 +45,9 @@ function pathHash(path) {
 }
 
 function bannersRoute(bannerId) {
-  return { name: 'project.view.edit.banners', params: { name: props.name, bannerId } }
+  const name = 'project.view.edit.banners'
+  const params = { name: props.name, bannerId }
+  return { name, params }
 }
 
 function closeModal() {
