@@ -23,13 +23,17 @@ const formattedMaxSize = computed(() => humanSize(props.maxSizeBytes, false, tm(
 
 <template>
   <app-modal
+    class="batch-download-confirm-modal"
     :image="image"
     :image-dark="imageDark"
     :image-width="110"
     :title="t('batchDownloadConfirmModal.title')"
   >
-    <div class="text-center text-secondary">
-      <p v-if="isKnown">
+    <div class="batch-download-confirm-modal__content text-center text-secondary">
+      <p
+        v-if="isKnown"
+        class="batch-download-confirm-modal__content__message"
+      >
         {{ t('batchDownloadConfirmModal.knownTruncation', {
           estimatedCount: n(estimatedCount),
           estimatedSize: formattedEstimatedSize,
@@ -37,13 +41,18 @@ const formattedMaxSize = computed(() => humanSize(props.maxSizeBytes, false, tm(
           maxSize: formattedMaxSize
         }) }}
       </p>
-      <p v-else>
+      <p
+        v-else
+        class="batch-download-confirm-modal__content__message"
+      >
         {{ t('batchDownloadConfirmModal.unknownTruncation', {
           maxFiles: n(maxNbFiles),
           maxSize: formattedMaxSize
         }) }}
       </p>
-      <p>{{ t('batchDownloadConfirmModal.question') }}</p>
+      <p class="batch-download-confirm-modal__content__message">
+        {{ t('batchDownloadConfirmModal.question') }}
+      </p>
     </div>
   </app-modal>
 </template>
