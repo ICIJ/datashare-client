@@ -6,6 +6,13 @@ import IPhDownloadSimple from '~icons/ph/download-simple'
 
 import { ICON_WEIGHT } from '@/enums/iconWeights'
 
+defineProps({
+  loading: {
+    type: Boolean,
+    default: false
+  }
+})
+
 const iconLeftHoverWeight = ICON_WEIGHT.BOLD
 const { t } = useI18n()
 </script>
@@ -19,6 +26,7 @@ const { t } = useI18n()
     :icon-left="IPhDownloadSimple"
     :icon-left-hover-weight="iconLeftHoverWeight"
     :square="true"
+    :loading="loading"
   />
 </template>
 
