@@ -85,7 +85,9 @@ function openCreateModal() {
 }
 
 function openEditModal(index) {
-  router.push(bannersRoute(pathHash(banners[index].path)))
+  const { path } = banners[index]
+  const to = bannersRoute(pathHash(path))
+  router.push(to)
 }
 
 const deleteBanner = waitFor(async (index) => {
