@@ -47,11 +47,3 @@ defineProps({
     </div>
   </div>
 </template>
-
-<style lang="scss" scoped>
-.path-banner-preview {
-  :deep(input) {
-    color: inherit;
-  }
-}
-</style>
