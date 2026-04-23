@@ -26,6 +26,9 @@ const props = defineProps({
   },
   hideCount: {
     type: Boolean
+  },
+  indeterminate: {
+    type: Boolean
   }
 })
 
@@ -47,6 +50,7 @@ const showCount = computed(() => !props.hideCount && !isNaN(props.count))
       v-model="modelValue"
       :value="value"
       :disabled="disabled"
+      :indeterminate="indeterminate"
     >
       <slot v-bind="{ label }">
         <span
