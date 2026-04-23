@@ -6,10 +6,10 @@ import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import FilterType from '@/components/Filter/FilterType/FilterType'
 import FilterTypeFileTypes from '@/components/Filter/FilterType/FilterTypeFileTypes'
-import ButtonToggleFileTypesGrouped from '@/components/Button/ButtonToggleFileTypesGrouped'
-import FileTypesViewCategory from '@/components/FileTypes/FileTypesView/FileTypesViewCategory'
-import FileTypesViewCategoryEntry from '@/components/FileTypes/FileTypesView/FileTypesViewCategoryEntry'
-import FileTypesViewEntry from '@/components/FileTypes/FileTypesView/FileTypesViewEntry'
+import ButtonToggleContentTypesView from '@/components/Button/ButtonToggleContentTypesView'
+import ContentTypesViewCategory from '@/components/ContentTypes/ContentTypesView/ContentTypesViewCategory'
+import ContentTypesViewCategoryEntry from '@/components/ContentTypes/ContentTypesView/ContentTypesViewCategoryEntry'
+import ContentTypesViewEntry from '@/components/ContentTypes/ContentTypesView/ContentTypesViewEntry'
 import { apiInstance as api } from '@/api/apiInstance'
 import { useSearchStore } from '@/store/modules'
 
@@ -56,24 +56,24 @@ describe('FilterTypeFileTypes.vue', () => {
     vi.resetAllMocks()
   })
 
-  it('should render a ButtonToggleFileTypesGrouped in the actions slot', () => {
-    expect(wrapper.findComponent(ButtonToggleFileTypesGrouped).exists()).toBe(true)
+  it('should render a ButtonToggleContentTypesView in the actions slot', () => {
+    expect(wrapper.findComponent(ButtonToggleContentTypesView).exists()).toBe(true)
   })
 
   it('should have grouped set to true by default', () => {
-    expect(wrapper.findComponent(ButtonToggleFileTypesGrouped).props('grouped')).toBe(true)
+    expect(wrapper.findComponent(ButtonToggleContentTypesView).props('grouped')).toBe(true)
   })
 
   it('should toggle grouped to false when the button is clicked', async () => {
-    await wrapper.findComponent(ButtonToggleFileTypesGrouped).trigger('click')
-    expect(wrapper.findComponent(ButtonToggleFileTypesGrouped).props('grouped')).toBe(false)
+    await wrapper.findComponent(ButtonToggleContentTypesView).trigger('click')
+    expect(wrapper.findComponent(ButtonToggleContentTypesView).props('grouped')).toBe(false)
   })
 
   it('should toggle grouped back to true on second click', async () => {
-    const button = wrapper.findComponent(ButtonToggleFileTypesGrouped)
+    const button = wrapper.findComponent(ButtonToggleContentTypesView)
     await button.trigger('click')
     await button.trigger('click')
-    expect(wrapper.findComponent(ButtonToggleFileTypesGrouped).props('grouped')).toBe(true)
+    expect(wrapper.findComponent(ButtonToggleContentTypesView).props('grouped')).toBe(true)
   })
 
   it('should render category groups when entries are aggregated in grouped mode', async () => {
@@ -89,9 +89,9 @@ describe('FilterTypeFileTypes.vue', () => {
     await wrapper.findComponent(FilterType).vm.aggregateOver()
     await flushPromises()
 
-    expect(wrapper.findAllComponents(FileTypesViewCategory)).toHaveLength(2)
-    expect(wrapper.findAllComponents(FileTypesViewCategoryEntry)).toHaveLength(3)
-    expect(wrapper.findAllComponents(FileTypesViewEntry)).toHaveLength(0)
+    expect(wrapper.findAllComponents(ContentTypesViewCategory)).toHaveLength(2)
+    expect(wrapper.findAllComponents(ContentTypesViewCategoryEntry)).toHaveLength(3)
+    expect(wrapper.findAllComponents(ContentTypesViewEntry)).toHaveLength(0)
   })
 
   it('should render flat entries when grouped is toggled off', async () => {
@@ -101,10 +101,10 @@ describe('FilterTypeFileTypes.vue', () => {
 
     await wrapper.findComponent(FilterType).vm.aggregateOver()
     await flushPromises()
-    await wrapper.findComponent(ButtonToggleFileTypesGrouped).trigger('click')
+    await wrapper.findComponent(ButtonToggleContentTypesView).trigger('click')
 
-    expect(wrapper.findAllComponents(FileTypesViewCategory)).toHaveLength(0)
-    expect(wrapper.findAllComponents(FileTypesViewEntry)).toHaveLength(3)
+    expect(wrapper.findAllComponents(ContentTypesViewCategory)).toHaveLength(0)
+    expect(wrapper.findAllComponents(ContentTypesViewEntry)).toHaveLength(3)
   })
 
   it('should pass aggregated content types to the categories API', async () => {

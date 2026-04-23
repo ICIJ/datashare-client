@@ -1,5 +1,5 @@
 <template>
-  <div class="file-types-view-category">
+  <div class="content-types-view">
     <slot />
   </div>
 </template>

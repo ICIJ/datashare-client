@@ -1,12 +1,12 @@
 <script setup>
 import { computed, ref, useTemplateRef } from 'vue'
 
-import ButtonToggleFileTypesGrouped from '@/components/Button/ButtonToggleFileTypesGrouped.vue'
-import FileTypesView from '@/components/FileTypes/FileTypesView/FileTypesView.vue'
-import FileTypesViewCategory from '@/components/FileTypes/FileTypesView/FileTypesViewCategory.vue'
-import FileTypesViewCategoryName from '@/components/FileTypes/FileTypesView/FileTypesViewCategoryName.vue'
-import FileTypesViewCategoryEntry from '@/components/FileTypes/FileTypesView/FileTypesViewCategoryEntry.vue'
-import FileTypesViewEntry from '@/components/FileTypes/FileTypesView/FileTypesViewEntry.vue'
+import ButtonToggleContentTypesView from '@/components/Button/ButtonToggleContentTypesView.vue'
+import ContentTypesView from '@/components/ContentTypes/ContentTypesView/ContentTypesView.vue'
+import ContentTypesViewCategory from '@/components/ContentTypes/ContentTypesView/ContentTypesViewCategory.vue'
+import ContentTypesViewCategoryName from '@/components/ContentTypes/ContentTypesView/ContentTypesViewCategoryName.vue'
+import ContentTypesViewCategoryEntry from '@/components/ContentTypes/ContentTypesView/ContentTypesViewCategoryEntry.vue'
+import ContentTypesViewEntry from '@/components/ContentTypes/ContentTypesView/ContentTypesViewEntry.vue'
 import FilterType from './FilterType.vue'
 import { useContentTypeCategories } from '@/composables/useContentTypeCategories'
 
@@ -37,32 +37,32 @@ const { categories } = useContentTypeCategories(contentTypes)
     :hide-search="grouped"
   >
     <template #default="{ entries }">
-      <file-types-view>
+      <content-types-view>
         <template v-if="grouped">
-          <file-types-view-category
+          <content-types-view-category
             v-for="(types, category) in categories"
             :key="category"
           >
-            <file-types-view-category-name :label="category" />
-            <file-types-view-category-entry
-              v-for="fileType in types"
-              :key="fileType"
-              :file-type="fileType"
+            <content-types-view-category-name :label="category" />
+            <content-types-view-category-entry
+              v-for="contentType in types"
+              :key="contentType"
+              :content-type="contentType"
             />
-          </file-types-view-category>
+          </content-types-view-category>
         </template>
         <template v-else>
-          <file-types-view-entry
+          <content-types-view-entry
             v-for="entry in entries"
             :key="entry.item.key"
-            :file-type="entry.item.key"
+            :content-type="entry.item.key"
           />
         </template>
-      </file-types-view>
+      </content-types-view>
     </template>
 
     <template #actions>
-      <button-toggle-file-types-grouped v-model:grouped="grouped" />
+      <button-toggle-content-types-view v-model:grouped="grouped" />
     </template>
   </filter-type>
 </template>

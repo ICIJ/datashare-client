@@ -16,7 +16,7 @@ const toggle = () => {
 }
 
 const title = computed(() => {
-  return grouped.value ? t('buttonToggleFileTypesGrouped.flat') : t('buttonToggleFileTypesGrouped.grouped')
+  return grouped.value ? t('buttonToggleContentTypesView.flat') : t('buttonToggleContentTypesView.grouped')
 })
 
 const icon = computed(() => {
