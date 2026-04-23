@@ -176,12 +176,16 @@ const entries = computed(() => {
 const infiniteId = ref(uniqueId('infinite-search-filter-'))
 const reachedBucketsEnd = computed(() => pages.length && lastPageBuckets.value.length < size.value)
 
-const noInfiniteScroll = computed(() => filter.noInfiniteScroll || !pages.length || reachedBucketsEnd.value)
+const noInfiniteScroll = computed(
+  () => filter.pagelessBucketSize != null
+    || !pages.length
+    || reachedBucketsEnd.value
+)
 const noBucketTranslation = computed(() => filter?.noBucketTranslation ?? false)
 const fromElasticSearch = computed(() => filter?.fromElasticSearch ?? false)
 const count = computed(() => filter.values.length)
 const offset = computed(() => buckets.value?.length ?? 0)
-const size = computed(() => settings.filter.bucketSize)
+const size = computed(() => filter.pagelessBucketSize ?? settings.filter.bucketSize)
 
 const debouncedCollapse = computed({
   get: () => collapse.value,
