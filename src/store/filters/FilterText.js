@@ -17,7 +17,6 @@ export default class FilterText {
     hideExpand = false,
     hideSearch = false,
     hideSort = false,
-    alternativeSearch = () => {},
     order = null,
     section = null,
     fromElasticSearch = true,
@@ -35,7 +34,6 @@ export default class FilterText {
     this.hideSearch = hideSearch
     this.hideSort = hideSort
     this.component = 'FilterType'
-    this.alternativeSearch = alternativeSearch
     this.order = order
     this.section = section
     this.fromElasticSearch = fromElasticSearch
@@ -46,6 +44,10 @@ export default class FilterText {
 
   itemParam({ key }) {
     return { name: this.name, value: key }
+  }
+
+  alternativeSearch() {
+    return []
   }
 
   itemLabel({ key = null, value = null } = {}) {
