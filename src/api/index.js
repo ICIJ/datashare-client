@@ -70,7 +70,7 @@ export class Api {
     return this.sendAction(`/api/task/${id}`)
   }
 
-  getContentTypesGrouppedByCategories(contentTypes) {
+  getContentTypeCategories(contentTypes) {
     return this.sendAction('/api/contentType/categories', {
       method: Method.POST,
       data: contentTypes,

@@ -18,7 +18,7 @@ vi.mock('@/api/apiInstance', async (importOriginal) => {
   return {
     apiInstance: {
       ...apiInstance,
-      getContentTypesGrouppedByCategories: vi.fn()
+      getContentTypeCategories: vi.fn()
     }
   }
 })
@@ -32,8 +32,8 @@ describe('FilterTypeFileTypes.vue', () => {
   })
 
   beforeEach(() => {
-    api.getContentTypesGrouppedByCategories.mockClear()
-    api.getContentTypesGrouppedByCategories.mockResolvedValue({})
+    api.getContentTypeCategories.mockClear()
+    api.getContentTypeCategories.mockResolvedValue({})
 
     core = CoreSetup.init().useAll()
     searchStore = useSearchStore()
@@ -77,7 +77,7 @@ describe('FilterTypeFileTypes.vue', () => {
   })
 
   it('should render category groups when entries are aggregated in grouped mode', async () => {
-    api.getContentTypesGrouppedByCategories.mockResolvedValue({
+    api.getContentTypeCategories.mockResolvedValue({
       Documents: ['application/pdf'],
       Other: ['text/html', 'other']
     })
@@ -114,7 +114,7 @@ describe('FilterTypeFileTypes.vue', () => {
     await wrapper.findComponent(FilterType).vm.aggregateOver()
     await flushPromises()
 
-    expect(api.getContentTypesGrouppedByCategories).toHaveBeenCalledWith(
+    expect(api.getContentTypeCategories).toHaveBeenCalledWith(
       expect.arrayContaining(['application/pdf', 'text/html'])
     )
   })
