@@ -7,9 +7,9 @@ import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import FilterType from '@/components/Filter/FilterType/FilterType'
 import FilterTypeFileTypes from '@/components/Filter/FilterType/FilterTypeFileTypes'
 import ButtonToggleContentTypesView from '@/components/Button/ButtonToggleContentTypesView'
-import ContentTypesViewCategory from '@/components/ContentTypes/ContentTypesView/ContentTypesViewCategory'
-import ContentTypesViewCategoryEntry from '@/components/ContentTypes/ContentTypesView/ContentTypesViewCategoryEntry'
-import ContentTypesViewEntry from '@/components/ContentTypes/ContentTypesView/ContentTypesViewEntry'
+import ContentTypesCategory from '@/components/ContentTypes/ContentTypesCategories/ContentTypesCategory'
+import ContentTypesCategoryItem from '@/components/ContentTypes/ContentTypesCategories/ContentTypesCategoryItem'
+import ContentTypesEntry from '@/components/ContentTypes/ContentTypesCategories/ContentTypesEntry'
 import { apiInstance as api } from '@/api/apiInstance'
 import { useSearchStore } from '@/store/modules'
 
@@ -89,9 +89,9 @@ describe('FilterTypeFileTypes.vue', () => {
     await wrapper.findComponent(FilterType).vm.aggregateOver()
     await flushPromises()
 
-    expect(wrapper.findAllComponents(ContentTypesViewCategory)).toHaveLength(2)
-    expect(wrapper.findAllComponents(ContentTypesViewCategoryEntry)).toHaveLength(3)
-    expect(wrapper.findAllComponents(ContentTypesViewEntry)).toHaveLength(0)
+    expect(wrapper.findAllComponents(ContentTypesCategory)).toHaveLength(2)
+    expect(wrapper.findAllComponents(ContentTypesCategoryItem)).toHaveLength(3)
+    expect(wrapper.findAllComponents(ContentTypesEntry)).toHaveLength(0)
   })
 
   it('should render flat entries when grouped is toggled off', async () => {
@@ -103,8 +103,8 @@ describe('FilterTypeFileTypes.vue', () => {
     await flushPromises()
     await wrapper.findComponent(ButtonToggleContentTypesView).trigger('click')
 
-    expect(wrapper.findAllComponents(ContentTypesViewCategory)).toHaveLength(0)
-    expect(wrapper.findAllComponents(ContentTypesViewEntry)).toHaveLength(3)
+    expect(wrapper.findAllComponents(ContentTypesCategory)).toHaveLength(0)
+    expect(wrapper.findAllComponents(ContentTypesEntry)).toHaveLength(3)
   })
 
   it('should pass aggregated content types to the categories API', async () => {
