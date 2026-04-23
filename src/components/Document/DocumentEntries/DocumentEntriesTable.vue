@@ -89,7 +89,7 @@ const visibleFieldsKeys = computed(() => visibleFields.value.map(property('key')
     background: var(--bs-body-bg);
     position: sticky;
     top: 0;
-    z-index: 10;
+    z-index: $zindex-sticky;
     min-width: 0;
     max-width: 100%;
     width: 100%;
