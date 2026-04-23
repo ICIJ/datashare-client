@@ -117,7 +117,8 @@ export default [
       icon: markRaw(IPhFile),
       order: 40,
       section: 'documentsInfo',
-      preference: 'filter-content-type'
+      preference: 'filter-content-type',
+      pagelessBucketSize: 1000
     }
   },
   {
@@ -144,7 +145,8 @@ export default [
       icon: markRaw(IPhGlobe),
       order: 60,
       section: 'documentsInfo',
-      preference: 'filter-language'
+      preference: 'filter-language',
+      pagelessBucketSize: 1000
     }
   },
   {
@@ -204,7 +206,8 @@ export default [
       hideSearch: true,
       order: 110,
       section: 'documentsInfo',
-      preference: 'filter-extraction-level'
+      preference: 'filter-extraction-level',
+      pagelessBucketSize: 10
     }
   },
   {
