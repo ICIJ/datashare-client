@@ -2,7 +2,7 @@
 const modelValue = defineModel({ type: Boolean, default: false })
 
 defineProps({
-  fileType: {
+  contentType: {
     type: String,
     required: true
   },
@@ -14,13 +14,13 @@ defineProps({
 </script>
 
 <template>
-  <div class="file-types-view-category-entry">
+  <div class="content-types-view-entry">
     <b-form-checkbox v-model="modelValue">
-      {{ fileType }}
+      {{ contentType }}
     </b-form-checkbox>
     <span
       v-if="count !== null"
-      class="file-types-view-category-entry__count"
+      class="content-types-view-entry__count"
     >
       {{ count }}
     </span>
