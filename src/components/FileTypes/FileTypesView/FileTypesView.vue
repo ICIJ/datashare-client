@@ -1,6 +1,9 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, defineProps } from 'vue'
 import { apiInstance as api } from '@/api/apiInstance'
+import FileTypesViewEntry from './FileTypesViewEntry.vue'
+import FileTypesViewGrouped from './FileTypesViewGrouped.vue'
+
 const props = defineProps({
   contentTypes: {
     type: Array,
@@ -23,12 +26,23 @@ watch(() => props.contentTypes, async () => {
 
 </script>
 <template>
-  <template
-    v-for="category in Object.keys(contentTypesByCategories)"
-    :key="category"
-  >
-    {{ category }} : <div v-if="expanded">
-      : {{ contentTypesByCategories[category] }}
-    </div>
+  <template v-if="expanded">
+    <file-types-view-entry
+      v-for="fileType in contentTypes"
+      :key="fileType"
+      :file-type="fileType"
+    />
+  </template>
+  <template v-else>
+    <template
+      v-for="category in Object.keys(contentTypesByCategories)"
+      :key="category"
+    >
+      <file-types-view-grouped
+        :category="category"
+        :file-types="contentTypesByCategories[category]"
+        :expanded="expanded"
+      />
+    </template>
   </template>
 </template>
