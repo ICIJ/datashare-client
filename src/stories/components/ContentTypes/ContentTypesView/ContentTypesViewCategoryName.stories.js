@@ -1,9 +1,9 @@
-import FileTypesViewCategoryName from '@/components/FileTypes/FileTypesView/FileTypesViewCategoryName'
+import ContentTypesViewCategoryName from '@/components/ContentTypes/ContentTypesView/ContentTypesViewCategoryName'
 
 export default {
   tags: ['autodocs'],
-  title: 'Components/FileTypes/FileTypesView/FileTypesViewCategoryName',
-  component: FileTypesViewCategoryName,
+  title: 'Components/ContentTypes/ContentTypesView/ContentTypesViewCategoryName',
+  component: ContentTypesViewCategoryName,
   args: {
     label: 'Documents',
     count: 1586,
