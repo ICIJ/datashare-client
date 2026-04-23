@@ -1,6 +1,7 @@
 import find from 'lodash/find'
 import { shallowMount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
+import { vi } from 'vitest'
 
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import CoreSetup from '~tests/unit/CoreSetup'
@@ -393,6 +394,49 @@ describe('FilterType.vue', () => {
       const entries = wrapper.findAllComponents(FiltersPanelSectionFilterEntry)
       expect(entries).toHaveLength(2)
       expect(entries.at(0).attributes('label')).toBe('Fichier sur disque')
+    })
+  })
+
+  describe('pageless behavior (pagelessBucketSize option)', () => {
+    let filterWrapper, searchStoreSpy
+
+    beforeEach(() => {
+      const filter = searchStore.getFilter({ name: 'language' })
+      // simulate an opted-in config by mutating the instance
+      filter.pagelessBucketSize = 1000
+
+      searchStoreSpy = vi.spyOn(searchStore, 'queryFilter')
+
+      filterWrapper = shallowMount(FilterType, {
+        global: {
+          plugins: core.plugins,
+          renderStubDefaultSlot: true
+        },
+        props: { filter }
+      })
+
+      searchStore.decontextualizeFilter('language')
+      searchStore.setIndex(index)
+      searchStore.reset()
+      searchStore.resetFilters()
+    })
+
+    afterEach(() => {
+      searchStoreSpy.mockRestore()
+    })
+
+    it('requests `pagelessBucketSize` buckets in one page', async () => {
+      await filterWrapper.vm.aggregateOver()
+
+      expect(searchStoreSpy).toHaveBeenCalledWith(
+        expect.objectContaining({ name: 'language', from: 0, size: 1000 })
+      )
+    })
+
+    it('does not render the infinite-loading component', async () => {
+      await filterWrapper.vm.aggregateOver()
+
+      expect(filterWrapper.findComponent({ name: 'InfiniteLoading' }).exists()).toBe(false)
     })
   })
 })
