@@ -1,11 +1,11 @@
-import FileTypesViewCategoryEntry from '@/components/FileTypes/FileTypesView/FileTypesViewCategoryEntry'
+import ContentTypesViewEntry from '@/components/ContentTypes/ContentTypesView/ContentTypesViewEntry'
 
 export default {
   tags: ['autodocs'],
-  title: 'Components/FileTypes/FileTypesView/FileTypesViewCategoryEntry',
-  component: FileTypesViewCategoryEntry,
+  title: 'Components/ContentTypes/ContentTypesView/ContentTypesViewEntry',
+  component: ContentTypesViewEntry,
   args: {
-    fileType: 'PDF',
+    contentType: 'application/pdf',
     count: 1552,
     modelValue: false
   }
