@@ -13,12 +13,15 @@ const props = defineProps({
   }
 })
 
-const grouped = ref(false)
+const grouped = ref(true)
 
 </script>
 
 <template>
-  <filter-type :filter="props.filter">
+  <filter-type
+    :filter="props.filter"
+    :hide-search="grouped"
+  >
     <template
       #default="{ entries }"
     >
