@@ -7,7 +7,7 @@ import types from '@/utils/contentTypes.json'
 import { getDocumentTypeLabel } from '@/utils/utils'
 
 export default class FilterContentType extends FilterText {
-  alternativeSearch(query) {
+  keyAliases(query) {
     return map(types, (item, key) => {
       if (toLower(item.label).includes(query)) {
         return key

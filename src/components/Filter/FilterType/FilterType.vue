@@ -75,8 +75,8 @@ const hasFilterQuery = computed(() => {
   // The filter has a query if:
   //   * it is searchable
   //   * the query is not empty
-  //   * it has an "alternativeSearch" function to generate query tokens
-  return !filter.hideSearch && query.value !== '' && !!filter.alternativeSearch
+  //   * it has a "keyAliases" function to generate additional bucket-key tokens
+  return !filter.hideSearch && query.value !== '' && !!filter.keyAliases
 })
 
 const lastPage = computed(() => pages[pages.length - 1])
@@ -88,8 +88,8 @@ const lastPageBuckets = computed(() => {
 })
 
 const aggregationInclude = computed(() => {
-  const alternativeSearch = compact(filter.alternativeSearch(query.value.toLowerCase()))
-  return '.*(' + concat(alternativeSearch, queryTokens.value).join('|') + ').*'
+  const aliases = compact(filter.keyAliases(query.value.toLowerCase()))
+  return '.*(' + concat(aliases, queryTokens.value).join('|') + ').*'
 })
 
 const aggregationOptions = computed(() => {

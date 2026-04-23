@@ -46,7 +46,7 @@ export default class FilterText {
     return { name: this.name, value: key }
   }
 
-  alternativeSearch() {
+  keyAliases() {
     return []
   }
 

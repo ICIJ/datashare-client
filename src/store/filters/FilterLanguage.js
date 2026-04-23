@@ -5,7 +5,7 @@ import FilterText from './FilterText'
 import DisplayLanguage from '@/components/Display/DisplayLanguage'
 
 export default class FilterLanguage extends FilterText {
-  alternativeSearch(query) {
+  keyAliases(query) {
     return [escapeRegExp(query.toUpperCase())]
   }
 
