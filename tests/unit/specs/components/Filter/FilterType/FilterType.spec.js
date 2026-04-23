@@ -334,6 +334,17 @@ describe('FilterType.vue', () => {
       expect(entries).toHaveLength(1)
       expect(entries.at(0).attributes('label')).toBe('Gallois')
     })
+
+    it('should match language search case-insensitively', async () => {
+      await letData(es).have(new IndexedDocument('document_01', index).withLanguage('ENGLISH')).commit()
+      await letData(es).have(new IndexedDocument('document_02', index).withLanguage('FRENCH')).commit()
+
+      wrapper.vm.query = 'english'
+      await wrapper.vm.aggregateOver()
+
+      expect(wrapper.vm.entries).toHaveLength(1)
+      expect(wrapper.vm.entries[0].item.key).toBe('ENGLISH')
+    })
   })
 
   describe('extractionLevel', () => {
