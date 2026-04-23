@@ -226,6 +226,8 @@ onBeforeMount(async () => {
   // This reduces cascading API calls by debouncing all dependency changes
   watch(aggregationDependencies, aggregateIfVisible, { deep: false })
 })
+
+defineExpose({ entries, aggregateOver })
 </script>
 
 <template>
