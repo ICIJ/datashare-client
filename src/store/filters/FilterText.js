@@ -22,7 +22,8 @@ export default class FilterText {
     fromElasticSearch = true,
     preference = '_local',
     forceExclude = false,
-    modes = null
+    modes = null,
+    pagelessBucketSize = null
   } = {}) {
     this.name = name
     this.key = key
@@ -40,6 +41,7 @@ export default class FilterText {
     this.preference = preference
     this.forceExclude = forceExclude
     this.modes = modes
+    this.pagelessBucketSize = pagelessBucketSize
   }
 
   itemParam({ key }) {
