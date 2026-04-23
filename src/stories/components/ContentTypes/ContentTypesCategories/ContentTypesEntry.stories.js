@@ -1,9 +1,9 @@
-import ContentTypesViewEntry from '@/components/ContentTypes/ContentTypesView/ContentTypesViewEntry'
+import ContentTypesEntry from '@/components/ContentTypes/ContentTypesCategories/ContentTypesEntry'
 
 export default {
   tags: ['autodocs'],
-  title: 'Components/ContentTypes/ContentTypesView/ContentTypesViewEntry',
-  component: ContentTypesViewEntry,
+  title: 'Components/ContentTypes/ContentTypesCategories/ContentTypesEntry',
+  component: ContentTypesEntry,
   args: {
     contentType: 'application/pdf',
     count: 1552,
@@ -21,6 +21,6 @@ export const Selected = {
 
 export const WithoutCount = {
   args: {
-    count: null
+    count: 0
   }
 }
