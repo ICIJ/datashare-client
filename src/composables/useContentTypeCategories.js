@@ -19,7 +19,7 @@ export function useContentTypeCategories(contentTypes) {
       categories.value = {}
       return
     }
-    categories.value = await api.getContentTypesGrouppedByCategories(types)
+    categories.value = await api.getContentTypeCategories(types)
   })
 
   watch(() => toValue(contentTypes), fetchCategories, { immediate: true, deep: true })
