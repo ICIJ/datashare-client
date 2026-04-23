@@ -118,7 +118,9 @@ onBeforeUnmount(() => {
     max-width: calc(100vw - var(--app-sidebar-width));
 
     &:has(.table-responsive) {
-      overflow-x: hidden;
+      // Use `clip` instead of `hidden` so the element does not become a scroll container,
+      // which would break `position: sticky` for the pagination header and filters panel.
+      overflow-x: clip;
     }
   }
 
