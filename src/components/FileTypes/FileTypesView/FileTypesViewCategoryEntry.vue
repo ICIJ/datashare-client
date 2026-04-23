@@ -14,13 +14,13 @@ defineProps({
 </script>
 
 <template>
-  <div class="file-types-view-entry">
+  <div class="file-types-view-category-entry">
     <b-form-checkbox v-model="modelValue">
       {{ fileType }}
     </b-form-checkbox>
     <span
       v-if="count !== null"
-      class="file-types-view-entry__count"
+      class="file-types-view-category-entry__count"
     >
       {{ count }}
     </span>
