@@ -9,8 +9,12 @@ import ContentTypesCategoryName from '@/components/ContentTypes/ContentTypesCate
 import ContentTypesCategoryItem from '@/components/ContentTypes/ContentTypesCategories/ContentTypesCategoryItem.vue'
 import ContentTypesEntry from '@/components/ContentTypes/ContentTypesCategories/ContentTypesEntry.vue'
 import FilterType from './FilterType.vue'
+import contentTypeCategoriesJson from '@/utils/contentTypeCategories.json'
+import settings from '@/utils/settings'
+import { getDocumentTypeLabel } from '@/utils/utils'
 import { useContentTypeCategories } from '@/composables/useContentTypeCategories'
 import { useSearchFilter } from '@/composables/useSearchFilter'
+import { useSearchStore } from '@/store/modules'
 
 const CATEGORY_FILTER_NAME = 'contentTypeCategory'
 
@@ -32,6 +36,16 @@ const contentTypes = computed(() => entries.value.map(entry => entry.item.key))
 
 const { categories } = useContentTypeCategories(contentTypes)
 const { hasFilterValue, toggleFilterValue, getFilterByName, computedAll } = useSearchFilter()
+const searchStore = useSearchStore.inject()
+
+// Read the sort option directly from the search store so the grouped category
+// order reacts to dropdown changes in FilterType.vue without any prop plumbing.
+const sort = computed(() => searchStore.sortFilters[props.filter.name] ?? {
+  sortBy: settings.filter.sortBy,
+  orderBy: settings.filter.orderBy
+})
+const categoryJsonOrder = Object.keys(contentTypeCategoriesJson)
+const categoryLabelFor = category => contentTypeCategoriesJson[category]?.label ?? category
 
 // The hidden companion filter (`contentTypeCategory`) holds the high-level
 // category selection whenever every MIME type in a category is picked.
@@ -161,11 +175,78 @@ const toggleEntry = async (contentType, checked) => {
 const categoryCount = types =>
   types.reduce((sum, contentType) => sum + entryCount(contentType), 0)
 
+// Ordered [category, types] pairs derived from the selected sort option.
+// Never mutates the original `categories` record or `contentTypeCategories.json`.
+const sortedCategoryEntries = computed(() => {
+  const entries = Object.entries(categories.value)
+  const { sortBy, orderBy } = sort.value
+  const direction = orderBy === 'asc' ? 1 : -1
+
+  const jsonPosition = (key) => {
+    const index = categoryJsonOrder.indexOf(key)
+    return index === -1 ? Number.POSITIVE_INFINITY : index
+  }
+
+  const byCount = ([aKey, aTypes], [bKey, bTypes]) => {
+    const diff = categoryCount(aTypes) - categoryCount(bTypes)
+    if (diff !== 0) {
+      return diff * direction
+    }
+    // Stable tie-break: fall back to the order defined in contentTypeCategories.json.
+    return jsonPosition(aKey) - jsonPosition(bKey)
+  }
+
+  const byLabel = ([aKey], [bKey]) => {
+    const compare = categoryLabelFor(aKey).localeCompare(
+      categoryLabelFor(bKey),
+      undefined,
+      { sensitivity: 'base' }
+    )
+    return compare * direction
+  }
+
+  return [...entries].sort(sortBy === '_key' ? byLabel : byCount)
+})
+
+// Apply the same sort option to the MIME types nested inside a category so the
+// two levels stay consistent. Mirrors `sortedCategoryEntries` but operates on
+// bucket `doc_count` and the label returned by `getDocumentTypeLabel`.
+const sortedTypesFor = (types) => {
+  const { sortBy, orderBy } = sort.value
+  const direction = orderBy === 'asc' ? 1 : -1
+
+  const byCount = (aType, bType) => {
+    const diff = entryCount(aType) - entryCount(bType)
+    if (diff !== 0) {
+      return diff * direction
+    }
+    // Stable tie-break by label so equal counts land in a deterministic order.
+    return getDocumentTypeLabel(aType).localeCompare(
+      getDocumentTypeLabel(bType),
+      undefined,
+      { sensitivity: 'base' }
+    )
+  }
+
+  const byLabel = (aType, bType) => {
+    const compare = getDocumentTypeLabel(aType).localeCompare(
+      getDocumentTypeLabel(bType),
+      undefined,
+      { sensitivity: 'base' }
+    )
+    return compare * direction
+  }
+
+  return [...types].sort(sortBy === '_key' ? byLabel : byCount)
+}
+
 defineExpose({
   grouped,
   categoryAllSelected,
   categoryIndeterminate,
   isEntrySelected,
+  sortedCategoryEntries,
+  sortedTypesFor,
   toggleCategory,
   toggleEntry
 })
@@ -176,7 +257,6 @@ defineExpose({
     ref="filterTypeRef"
     :filter="props.filter"
     :hide-search="grouped"
-    :hide-sort="grouped"
   >
     <template #all>
       <content-types-all
@@ -188,7 +268,7 @@ defineExpose({
       <content-types-categories>
         <template v-if="grouped">
           <content-types-category
-            v-for="(types, category) in categories"
+            v-for="[category, types] in sortedCategoryEntries"
             :key="category"
           >
             <content-types-category-name
@@ -199,7 +279,7 @@ defineExpose({
               @update:model-value="toggleCategory(category, types, $event)"
             />
             <content-types-category-item
-              v-for="contentType in types"
+              v-for="contentType in sortedTypesFor(types)"
               :key="contentType"
               :content-type="contentType"
               :count="entryCount(contentType)"
