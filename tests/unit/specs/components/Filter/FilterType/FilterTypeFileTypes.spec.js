@@ -301,19 +301,34 @@ describe('FilterTypeFileTypes.vue', () => {
       expect(searchStore.values.contentTypeCategory).toEqual(['OTHER'])
     })
 
-    it('renders entry checkmarks as checked when the category is stored as contentTypeCategory', async () => {
+    it('renders entry checkmarks as unchecked when the category is stored as contentTypeCategory', async () => {
+      // The category-display rule decouples child checkboxes from the stored
+      // parent: a type that's only implicitly covered by contentTypeCategory
+      // must render unchecked so the user can see at a glance what they
+      // actually picked.
       await seedCategoriesAndIndex()
 
       await findCategoryName('OTHER').vm.$emit('update:modelValue', true)
       await flushPromises()
 
-      expect(findCategoryItem('text/html').props('modelValue')).toBe(true)
-      expect(findCategoryItem('text/plain').props('modelValue')).toBe(true)
-      // A type outside the stored category stays unchecked.
+      expect(findCategoryItem('text/html').props('modelValue')).toBe(false)
+      expect(findCategoryItem('text/plain').props('modelValue')).toBe(false)
+      // A type outside the stored category also stays unchecked.
       expect(findCategoryItem('application/pdf').props('modelValue')).toBe(false)
     })
 
-    it('keeps the category checkbox fully checked when contentTypeCategory is stored', async () => {
+    it('renders an explicitly stored child checked even when its parent category is also stored', async () => {
+      await seedCategoriesAndIndex()
+      // URL-tamper / race scenario where both filters cover the same child.
+      searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'OTHER' })
+      searchStore.addFilterValue({ name: 'contentType', value: 'text/html' })
+      await flushPromises()
+
+      expect(findCategoryItem('text/html').props('modelValue')).toBe(true)
+      expect(findCategoryItem('text/plain').props('modelValue')).toBe(false)
+    })
+
+    it('keeps the category checkbox fully checked while children render unchecked when only the category is stored', async () => {
       await seedCategoriesAndIndex()
 
       await findCategoryName('OTHER').vm.$emit('update:modelValue', true)
@@ -321,6 +336,89 @@ describe('FilterTypeFileTypes.vue', () => {
 
       expect(findCategoryName('OTHER').props('modelValue')).toBe(true)
       expect(findCategoryName('OTHER').props('indeterminate')).toBe(false)
+      expect(findCategoryItem('text/html').props('modelValue')).toBe(false)
+      expect(findCategoryItem('text/plain').props('modelValue')).toBe(false)
+    })
+
+    it('demotes a stored category to a single per-child selection when one of its children is clicked', async () => {
+      // The child renders unchecked when only its parent category is stored
+      // (US-001). Clicking it narrows the selection: the category is dropped
+      // and only the clicked child becomes individually selected — the other
+      // implicit siblings should NOT remain selected.
+      await seedCategoriesAndIndex()
+
+      await findCategoryName('OTHER').vm.$emit('update:modelValue', true)
+      await flushPromises()
+      expect(searchStore.values.contentTypeCategory).toEqual(['OTHER'])
+
+      await findCategoryItem('text/html').vm.$emit('update:modelValue', true)
+      await flushPromises()
+
+      expect(searchStore.values.contentTypeCategory ?? []).toEqual([])
+      expect(searchStore.values.contentType).toEqual(['text/html'])
+
+      expect(findCategoryName('OTHER').props('modelValue')).toBe(false)
+      expect(findCategoryName('OTHER').props('indeterminate')).toBe(true)
+      expect(findCategoryItem('text/html').props('modelValue')).toBe(true)
+      expect(findCategoryItem('text/plain').props('modelValue')).toBe(false)
+    })
+
+    it('demotes only the targeted category when other categories are also stored', async () => {
+      // Demoting one category must leave unrelated stored categories alone, so
+      // a multi-category selection narrows precisely where the user clicked.
+      api.getContentTypeCategories.mockResolvedValue({
+        DOCUMENT: ['application/pdf'],
+        IMAGE: ['image/jpeg', 'image/png'],
+        TEXT: ['text/html', 'text/plain']
+      })
+
+      await letData(es).have(new IndexedDocument('d1', index).withContentType('application/pdf')).commit()
+      await letData(es).have(new IndexedDocument('i1', index).withContentType('image/jpeg')).commit()
+      await letData(es).have(new IndexedDocument('i2', index).withContentType('image/png')).commit()
+      await letData(es).have(new IndexedDocument('h1', index).withContentType('text/html')).commit()
+      await letData(es).have(new IndexedDocument('t1', index).withContentType('text/plain')).commit()
+
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+
+      searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'IMAGE' })
+      searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'TEXT' })
+      // Unrelated explicit pick that must be preserved across the demote.
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      await flushPromises()
+
+      await findCategoryItem('image/jpeg').vm.$emit('update:modelValue', true)
+      await flushPromises()
+
+      expect(searchStore.values.contentTypeCategory ?? []).toEqual(['TEXT'])
+      expect(searchStore.values.contentType ?? []).toEqual(
+        expect.arrayContaining(['application/pdf', 'image/jpeg'])
+      )
+      expect(searchStore.values.contentType ?? []).not.toContain('image/png')
+      expect(searchStore.values.contentType ?? []).toHaveLength(2)
+    })
+
+    it('re-promotes to a stored category when every sibling is re-checked one by one after a demotion', async () => {
+      // Round-trip: demote → tick the remaining sibling. With every sibling
+      // now individually selected, the existing promotion path must fire and
+      // collapse the explicit picks back into a stored category.
+      await seedCategoriesAndIndex()
+
+      await findCategoryName('OTHER').vm.$emit('update:modelValue', true)
+      await flushPromises()
+      expect(searchStore.values.contentTypeCategory).toEqual(['OTHER'])
+
+      await findCategoryItem('text/html').vm.$emit('update:modelValue', true)
+      await flushPromises()
+      expect(searchStore.values.contentTypeCategory ?? []).toEqual([])
+      expect(searchStore.values.contentType).toEqual(['text/html'])
+
+      await findCategoryItem('text/plain').vm.$emit('update:modelValue', true)
+      await flushPromises()
+
+      expect(searchStore.values.contentTypeCategory).toEqual(['OTHER'])
+      expect(searchStore.values.contentType ?? []).not.toContain('text/html')
+      expect(searchStore.values.contentType ?? []).not.toContain('text/plain')
     })
 
     it('drops a lingering individual contentType value when the user unticks it while the category is also stored', async () => {
