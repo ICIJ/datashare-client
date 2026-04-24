@@ -22,9 +22,6 @@ const props = defineProps({
   filter: {
     type: Object,
     required: true
-  },
-  hideCount: {
-    type: Boolean
   }
 })
 
@@ -178,7 +175,7 @@ const categoryCount = types =>
 // Ordered [category, types] pairs derived from the selected sort option.
 // Never mutates the original `categories` record or `contentTypeCategories.json`.
 const sortedCategoryEntries = computed(() => {
-  const entries = Object.entries(categories.value)
+  const pairs = Object.entries(categories.value)
   const { sortBy, orderBy } = sort.value
   const direction = orderBy === 'asc' ? 1 : -1
 
@@ -205,7 +202,7 @@ const sortedCategoryEntries = computed(() => {
     return compare * direction
   }
 
-  return [...entries].sort(sortBy === '_key' ? byLabel : byCount)
+  return [...pairs].sort(sortBy === '_key' ? byLabel : byCount)
 })
 
 // Apply the same sort option to the MIME types nested inside a category so the
@@ -272,7 +269,7 @@ defineExpose({
             :key="category"
           >
             <content-types-category-name
-              :label="category"
+              :category="category"
               :count="categoryCount(types)"
               :model-value="categoryAllSelected(category, types)"
               :indeterminate="categoryIndeterminate(category, types)"

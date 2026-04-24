@@ -5,7 +5,7 @@ export default {
   title: 'Components/ContentTypes/ContentTypesCategories/ContentTypesCategoryName',
   component: ContentTypesCategoryName,
   args: {
-    label: 'Documents',
+    category: 'DOCUMENT',
     count: 1586,
     modelValue: false,
     indeterminate: false

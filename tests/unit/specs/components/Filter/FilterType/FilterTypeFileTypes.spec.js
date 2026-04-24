@@ -80,8 +80,8 @@ describe('FilterTypeFileTypes.vue', () => {
 
   it('should render category groups when entries are aggregated in grouped mode', async () => {
     api.getContentTypeCategories.mockResolvedValue({
-      Documents: ['application/pdf'],
-      Other: ['text/html', 'other']
+      DOCUMENT: ['application/pdf'],
+      OTHER: ['text/html', 'other']
     })
 
     await letData(es).have(new IndexedDocument('document_01', index).withContentType('application/pdf')).commit()
@@ -160,13 +160,13 @@ describe('FilterTypeFileTypes.vue', () => {
   })
 
   describe('smart combine selection', () => {
-    // Shared fixture: two categories (`Documents` with one MIME type, `Other`
+    // Shared fixture: two categories (`DOCUMENT` with one MIME type, `OTHER`
     // with two) so we can exercise full/partial/mixed transitions without
     // rebuilding the dataset in every test.
     const seedCategoriesAndIndex = async () => {
       api.getContentTypeCategories.mockResolvedValue({
-        Documents: ['application/pdf'],
-        Other: ['text/html', 'text/plain']
+        DOCUMENT: ['application/pdf'],
+        OTHER: ['text/html', 'text/plain']
       })
 
       await letData(es).have(new IndexedDocument('document_01', index).withContentType('application/pdf')).commit()
@@ -177,9 +177,9 @@ describe('FilterTypeFileTypes.vue', () => {
       await flushPromises()
     }
 
-    const findCategoryName = (label) => {
+    const findCategoryName = (category) => {
       const names = wrapper.findAllComponents(ContentTypesCategoryName)
-      return names.find(node => node.props('label') === label)
+      return names.find(node => node.props('category') === category)
     }
 
     const findCategoryItem = (contentType) => {
@@ -190,10 +190,10 @@ describe('FilterTypeFileTypes.vue', () => {
     it('writes contentTypeCategory and clears individual contentType values on none→all transition', async () => {
       await seedCategoriesAndIndex()
 
-      await findCategoryName('Other').vm.$emit('update:modelValue', true)
+      await findCategoryName('OTHER').vm.$emit('update:modelValue', true)
       await flushPromises()
 
-      expect(searchStore.values.contentTypeCategory).toEqual(['Other'])
+      expect(searchStore.values.contentTypeCategory).toEqual(['OTHER'])
       expect(searchStore.values.contentType ?? []).not.toContain('text/html')
       expect(searchStore.values.contentType ?? []).not.toContain('text/plain')
     })
@@ -202,12 +202,12 @@ describe('FilterTypeFileTypes.vue', () => {
       await seedCategoriesAndIndex()
 
       // First pick the whole category.
-      await findCategoryName('Other').vm.$emit('update:modelValue', true)
+      await findCategoryName('OTHER').vm.$emit('update:modelValue', true)
       await flushPromises()
-      expect(searchStore.values.contentTypeCategory).toEqual(['Other'])
+      expect(searchStore.values.contentTypeCategory).toEqual(['OTHER'])
 
       // Then untick the whole category.
-      await findCategoryName('Other').vm.$emit('update:modelValue', false)
+      await findCategoryName('OTHER').vm.$emit('update:modelValue', false)
       await flushPromises()
 
       expect(searchStore.values.contentTypeCategory ?? []).toEqual([])
@@ -219,9 +219,9 @@ describe('FilterTypeFileTypes.vue', () => {
       await seedCategoriesAndIndex()
 
       // Start from a stored category.
-      await findCategoryName('Other').vm.$emit('update:modelValue', true)
+      await findCategoryName('OTHER').vm.$emit('update:modelValue', true)
       await flushPromises()
-      expect(searchStore.values.contentTypeCategory).toEqual(['Other'])
+      expect(searchStore.values.contentTypeCategory).toEqual(['OTHER'])
 
       // Untick one type inside the stored category.
       await findCategoryItem('text/html').vm.$emit('update:modelValue', false)
@@ -242,10 +242,10 @@ describe('FilterTypeFileTypes.vue', () => {
       expect(searchStore.values.contentType).toEqual(expect.arrayContaining(['text/html', 'text/plain']))
 
       // Now tick the category checkbox.
-      await findCategoryName('Other').vm.$emit('update:modelValue', true)
+      await findCategoryName('OTHER').vm.$emit('update:modelValue', true)
       await flushPromises()
 
-      expect(searchStore.values.contentTypeCategory).toEqual(['Other'])
+      expect(searchStore.values.contentTypeCategory).toEqual(['OTHER'])
       expect(searchStore.values.contentType ?? []).not.toContain('text/html')
       expect(searchStore.values.contentType ?? []).not.toContain('text/plain')
     })
@@ -264,26 +264,26 @@ describe('FilterTypeFileTypes.vue', () => {
       await seedCategoriesAndIndex()
 
       // Unchecked: nothing is selected.
-      expect(findCategoryName('Other').props('modelValue')).toBe(false)
-      expect(findCategoryName('Other').props('indeterminate')).toBe(false)
+      expect(findCategoryName('OTHER').props('modelValue')).toBe(false)
+      expect(findCategoryName('OTHER').props('indeterminate')).toBe(false)
 
       // Indeterminate: only some individual types are ticked.
       await findCategoryItem('text/html').vm.$emit('update:modelValue', true)
       await flushPromises()
-      expect(findCategoryName('Other').props('modelValue')).toBe(false)
-      expect(findCategoryName('Other').props('indeterminate')).toBe(true)
+      expect(findCategoryName('OTHER').props('modelValue')).toBe(false)
+      expect(findCategoryName('OTHER').props('indeterminate')).toBe(true)
 
       // Fully-selected: every individual type is ticked (but category not stored yet).
       await findCategoryItem('text/plain').vm.$emit('update:modelValue', true)
       await flushPromises()
-      expect(findCategoryName('Other').props('modelValue')).toBe(true)
-      expect(findCategoryName('Other').props('indeterminate')).toBe(false)
+      expect(findCategoryName('OTHER').props('modelValue')).toBe(true)
+      expect(findCategoryName('OTHER').props('indeterminate')).toBe(false)
     })
 
     it('renders entry checkmarks as checked when the category is stored as contentTypeCategory', async () => {
       await seedCategoriesAndIndex()
 
-      await findCategoryName('Other').vm.$emit('update:modelValue', true)
+      await findCategoryName('OTHER').vm.$emit('update:modelValue', true)
       await flushPromises()
 
       expect(findCategoryItem('text/html').props('modelValue')).toBe(true)
@@ -295,11 +295,11 @@ describe('FilterTypeFileTypes.vue', () => {
     it('keeps the category checkbox fully checked when contentTypeCategory is stored', async () => {
       await seedCategoriesAndIndex()
 
-      await findCategoryName('Other').vm.$emit('update:modelValue', true)
+      await findCategoryName('OTHER').vm.$emit('update:modelValue', true)
       await flushPromises()
 
-      expect(findCategoryName('Other').props('modelValue')).toBe(true)
-      expect(findCategoryName('Other').props('indeterminate')).toBe(false)
+      expect(findCategoryName('OTHER').props('modelValue')).toBe(true)
+      expect(findCategoryName('OTHER').props('indeterminate')).toBe(false)
     })
   })
 
@@ -328,7 +328,7 @@ describe('FilterTypeFileTypes.vue', () => {
     }
 
     const categoryOrder = () =>
-      wrapper.findAllComponents(ContentTypesCategoryName).map(node => node.props('label'))
+      wrapper.findAllComponents(ContentTypesCategoryName).map(node => node.props('category'))
 
     it('orders categories by count desc (highest first) by default', async () => {
       await seedSortableCategories()
@@ -424,7 +424,7 @@ describe('FilterTypeFileTypes.vue', () => {
     //   text/html       (1 doc,  label "HTML document")
     const seedBucketsInCategory = async () => {
       api.getContentTypeCategories.mockResolvedValue({
-        Documents: ['application/pdf', 'text/html', 'text/plain']
+        DOCUMENT: ['application/pdf', 'text/html', 'text/plain']
       })
 
       await letData(es).have(new IndexedDocument('d1', index).withContentType('application/pdf')).commit()
