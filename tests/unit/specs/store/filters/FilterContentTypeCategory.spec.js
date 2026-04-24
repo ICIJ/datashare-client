@@ -21,19 +21,19 @@ describe('FilterContentTypeCategory.js', () => {
   describe('itemLabel', () => {
     const filter = new FilterContentTypeCategory({ name: 'contentTypeCategory', key: 'contentTypeCategory' })
 
-    it('resolves the human-readable label for a known category', () => {
-      expect(filter.itemLabel({ key: 'AUDIO' })).toBe('Audio')
+    it('returns the i18n translation key for the category so labelToHuman can resolve it', () => {
+      expect(filter.itemLabel({ key: 'AUDIO' })).toBe('filter.contentTypeCategory.AUDIO')
     })
 
-    it('falls back to the raw key for unknown categories', () => {
-      expect(filter.itemLabel({ key: 'UNKNOWN' })).toBe('UNKNOWN')
+    it('returns an i18n key even for unknown categories so the caller can still render a sensible fallback', () => {
+      expect(filter.itemLabel({ key: 'UNKNOWN' })).toBe('filter.contentTypeCategory.UNKNOWN')
     })
   })
 
   describe('keyAliases', () => {
     const filter = new FilterContentTypeCategory({ name: 'contentTypeCategory', key: 'contentTypeCategory' })
 
-    it('matches a category key from a lowercased label fragment', () => {
+    it('matches a category key from a lowercased fragment', () => {
       const aliases = filter.keyAliases('audi')
       expect(aliases).toContain('AUDIO')
     })

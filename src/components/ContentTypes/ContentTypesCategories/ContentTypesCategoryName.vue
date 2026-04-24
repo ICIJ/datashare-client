@@ -1,8 +1,8 @@
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPanelSectionFilterEntry'
-import categories from '@/utils/contentTypeCategories.json'
 
 const modelValue = defineModel({ type: Boolean, default: false })
 
@@ -20,9 +20,14 @@ const props = defineProps({
   }
 })
 
-// Resolve the human-readable category label via `contentTypeCategories.json`;
-// fall back to the raw category key when it doesn't match any known category.
-const resolvedLabel = computed(() => categories[props.category]?.label ?? props.category)
+const { t, te } = useI18n()
+
+// Resolve the human-readable label via i18n; fall back to the raw category key
+// when no translation is registered (e.g. a new category the frontend doesn't know).
+const resolvedLabel = computed(() => {
+  const key = `filter.contentTypeCategory.${props.category}`
+  return te(key) ? t(key) : props.category
+})
 </script>
 
 <template>
