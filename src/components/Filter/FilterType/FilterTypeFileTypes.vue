@@ -178,13 +178,14 @@ defineExpose({
     :hide-search="grouped"
     :hide-sort="grouped"
   >
-    <template #all />
+    <template #all>
+      <content-types-all
+        v-model="allSelected"
+        :count="totalCount"
+      />
+    </template>
     <template #default="{ entries: slotEntries }">
       <content-types-categories>
-        <content-types-all
-          v-model="allSelected"
-          :count="totalCount"
-        />
         <template v-if="grouped">
           <content-types-category
             v-for="(types, category) in categories"
