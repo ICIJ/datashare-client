@@ -84,10 +84,10 @@ const matchesCategory = (category) => {
   return categoryHaystacks.value.get(category)?.includes(normalizedQuery.value) ?? false
 }
 
-// Keep selected types visible while typing so the user doesn't appear to
-// "lose" a selection.
+// Keep selected and category-implied types visible while typing so the user
+// doesn't appear to "lose" a selection.
 const isContentTypeVisible = contentType =>
-  matchesContentType(contentType) || isEntrySelected(contentType)
+  matchesContentType(contentType) || isEntryRetainedDuringSearch(contentType)
 
 // A category-label hit short-circuits per-type filtering: every type the API
 // returned for that category stays visible, even those that don't individually
@@ -140,9 +140,12 @@ const currentCategories = () => getFilterValuesByName(CONTENT_TYPE_CATEGORY_FILT
 
 const isCategoryStored = category => currentCategories().includes(category)
 
-// Aggregate the two filter dimensions into a single set so `isEntrySelected`
-// becomes O(1) and the per-bucket template loop stays cheap.
-const selectedContentTypeSet = computed(() => {
+// Explicit-only set so a category-implied child still renders unchecked.
+const selectedContentTypeSet = computed(() => new Set(currentContentTypes()))
+
+// Superset including category-implied children, used only by the search box
+// so a category-covered row stays visible when its label stops matching.
+const retainedContentTypeSet = computed(() => {
   const set = new Set(currentContentTypes())
   currentCategories().forEach((category) => {
     const types = categories.value[category] ?? []
@@ -152,6 +155,7 @@ const selectedContentTypeSet = computed(() => {
 })
 
 const isEntrySelected = contentType => selectedContentTypeSet.value.has(contentType)
+const isEntryRetainedDuringSearch = contentType => retainedContentTypeSet.value.has(contentType)
 
 const categorySelectedCount = types => types.filter(isEntrySelected).length
 
@@ -198,6 +202,16 @@ const toggleCategory = (category, types, checked) => {
   writeCategories(checked ? [...remainingCategories, category] : remainingCategories)
 }
 
+// Drop `category` and replace any explicit child it covered with `keepFromCategory`.
+// Shared by demote (keep just the clicked child) and uncheck-with-stored-category
+// (keep the surviving siblings).
+const dropCategoryAnd = (category, keepFromCategory) => {
+  const categoryTypes = categories.value[category] ?? []
+  const others = currentContentTypes().filter(value => !categoryTypes.includes(value))
+  writeCategories(currentCategories().filter(value => value !== category))
+  writeContentTypes([...others, ...keepFromCategory])
+}
+
 // True when checking `contentType` would tick every remaining sibling of its
 // category, so the selection can be promoted to a single hidden-filter value.
 const shouldPromoteToCategory = (category, contentType, currentTypes) => {
@@ -213,6 +227,12 @@ const toggleEntry = (contentType, checked) => {
 
   if (checked) {
     const currentTypes = currentContentTypes()
+    // Demote: clicking a child of a stored category narrows the selection to
+    // that single child.
+    if (category && isCategoryStored(category)) {
+      dropCategoryAnd(category, [contentType])
+      return
+    }
     if (shouldPromoteToCategory(category, contentType, currentTypes)) {
       const categoryTypes = categories.value[category] ?? []
       writeContentTypes(currentTypes.filter(value => !categoryTypes.includes(value)))
@@ -223,13 +243,12 @@ const toggleEntry = (contentType, checked) => {
     return
   }
 
+  // Defensive: URL-tamper or race may store both the category and an explicit
+  // child. Normal flow now hits the demote branch above, so this only fires
+  // for tampered state.
   if (category && isCategoryStored(category)) {
     const siblings = (categories.value[category] ?? []).filter(type => type !== contentType)
-    // Drop the unchecked type too, in case URL tampering left it stored
-    // under both contentType and an overlapping contentTypeCategory.
-    const others = currentContentTypes().filter(value => value !== contentType)
-    writeCategories(currentCategories().filter(value => value !== category))
-    writeContentTypes([...others, ...siblings])
+    dropCategoryAnd(category, siblings)
     return
   }
 
