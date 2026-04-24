@@ -36,7 +36,7 @@ const entries = computed(() => filterTypeRef.value?.entries ?? [])
 const contentTypes = computed(() => entries.value.map(entry => entry.item.key))
 
 const { categories } = useContentTypeCategories(contentTypes)
-const { hasFilterValue, toggleFilterValue, getFilterByName, computedAll } = useSearchFilter()
+const { hasFilterValue, toggleFilterValue, getFilterByName, computedAll, computedTotal } = useSearchFilter()
 const searchStore = useSearchStore.inject()
 
 // Read the sort option directly from the search store so the grouped category
@@ -56,9 +56,9 @@ const categoryLabelFor = (category) => {
 const categoryFilter = computed(() => getFilterByName(CATEGORY_FILTER_NAME))
 
 const allSelected = computedAll(toRef(props, 'filter'))
-const totalCount = computed(() =>
-  entries.value.reduce((sum, entry) => sum + (entry.item.doc_count ?? 0), 0)
-)
+// Mirror FilterTypeAll: show the unfiltered hit total when no selection is
+// active, and hide the count (null) once the user has picked anything.
+const totalCount = computedTotal(toRef(props, 'filter'))
 
 const entryFor = contentType => entries.value.find(entry => entry.item.key === contentType)
 
@@ -171,8 +171,11 @@ const toggleEntry = (contentType, checked) => {
 
   if (category && isCategoryStored(category)) {
     const remaining = categories.value[category].filter(type => type !== contentType)
+    // Drop the unchecked type too, in case a URL-tampering edge case left it
+    // stored both under contentType and implicitly under contentTypeCategory.
+    const others = currentContentTypes().filter(value => value !== contentType)
     writeCategories(currentCategories().filter(value => value !== category))
-    writeContentTypes([...currentContentTypes(), ...remaining])
+    writeContentTypes([...others, ...remaining])
     return
   }
 
