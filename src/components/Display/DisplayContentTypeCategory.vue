@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
-import { useI18n } from 'vue-i18n'
+
+import { useContentTypeCategoryLabel } from '@/composables/useContentTypeCategoryLabel'
 
 const props = defineProps({
   value: {
@@ -9,14 +10,8 @@ const props = defineProps({
   }
 })
 
-const { t, te } = useI18n()
-
-// Resolve the human-readable label via i18n; fall back to the raw key
-// when the value doesn't match any registered category translation.
-const label = computed(() => {
-  const key = `filter.contentTypeCategory.${props.value}`
-  return te(key) ? t(key) : props.value
-})
+const categoryLabel = useContentTypeCategoryLabel()
+const label = computed(() => categoryLabel(props.value))
 </script>
 
 <template>

@@ -17,9 +17,10 @@ import IPhCalendarPlus from '~icons/ph/calendar-plus'
 
 import { MODE_NAME } from '@/mode/index'
 import { namedEntityCategoryTranslation } from '@/store/filters/FilterEntity'
+import { CONTENT_TYPE_CATEGORY_FILTER_NAME } from '@/store/filters/FilterContentTypeCategory'
 
 export { default as FilterContentType } from './FilterContentType'
-export { default as FilterContentTypeCategory } from './FilterContentTypeCategory'
+export { default as FilterContentTypeCategory, CONTENT_TYPE_CATEGORY_FILTER_NAME } from './FilterContentTypeCategory'
 export { default as FilterDate } from './FilterDate'
 export { default as FilterDateRange } from './FilterDateRange'
 export { default as FilterExtractionLevel } from './FilterExtractionLevel'
@@ -128,8 +129,8 @@ export default [
     // and breadcrumb without appearing in the filters panel.
     type: 'FilterContentTypeCategory',
     options: {
-      name: 'contentTypeCategory',
-      key: 'contentTypeCategory',
+      name: CONTENT_TYPE_CATEGORY_FILTER_NAME,
+      key: CONTENT_TYPE_CATEGORY_FILTER_NAME,
       order: 45,
       section: 'documentsInfo',
       hidden: true
