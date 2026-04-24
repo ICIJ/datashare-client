@@ -232,16 +232,34 @@ describe('FilterTypeFileTypes.vue', () => {
       expect(searchStore.values.contentType ?? []).not.toContain('text/html')
     })
 
-    it('collapses individual contentType values back into contentTypeCategory on mixed→all transition', async () => {
+    it('auto-promotes to contentTypeCategory when ticking the last individual type completes a category', async () => {
       await seedCategoriesAndIndex()
 
-      // Build up a mixed state by selecting individual types first.
+      // Tick one of two types in OTHER — still mixed, nothing promoted yet.
       await findCategoryItem('text/html').vm.$emit('update:modelValue', true)
+      await flushPromises()
+      expect(searchStore.values.contentType).toEqual(['text/html'])
+      expect(searchStore.values.contentTypeCategory ?? []).toEqual([])
+
+      // Ticking the last one completes the category: promote to the hidden filter
+      // and drop the individual contentType values that now live under the category.
       await findCategoryItem('text/plain').vm.$emit('update:modelValue', true)
       await flushPromises()
-      expect(searchStore.values.contentType).toEqual(expect.arrayContaining(['text/html', 'text/plain']))
 
-      // Now tick the category checkbox.
+      expect(searchStore.values.contentTypeCategory).toEqual(['OTHER'])
+      expect(searchStore.values.contentType ?? []).not.toContain('text/html')
+      expect(searchStore.values.contentType ?? []).not.toContain('text/plain')
+    })
+
+    it('collapses individual contentType values into contentTypeCategory when the category checkbox is ticked from a mixed state', async () => {
+      await seedCategoriesAndIndex()
+
+      // Leave it mixed: only one of two types ticked.
+      await findCategoryItem('text/html').vm.$emit('update:modelValue', true)
+      await flushPromises()
+      expect(searchStore.values.contentType).toEqual(['text/html'])
+
+      // Tick the category checkbox to collapse into the hidden filter.
       await findCategoryName('OTHER').vm.$emit('update:modelValue', true)
       await flushPromises()
 
@@ -273,11 +291,13 @@ describe('FilterTypeFileTypes.vue', () => {
       expect(findCategoryName('OTHER').props('modelValue')).toBe(false)
       expect(findCategoryName('OTHER').props('indeterminate')).toBe(true)
 
-      // Fully-selected: every individual type is ticked (but category not stored yet).
+      // Fully-selected: the second tick completes the category and auto-promotes
+      // to the hidden contentTypeCategory filter.
       await findCategoryItem('text/plain').vm.$emit('update:modelValue', true)
       await flushPromises()
       expect(findCategoryName('OTHER').props('modelValue')).toBe(true)
       expect(findCategoryName('OTHER').props('indeterminate')).toBe(false)
+      expect(searchStore.values.contentTypeCategory).toEqual(['OTHER'])
     })
 
     it('renders entry checkmarks as checked when the category is stored as contentTypeCategory', async () => {
