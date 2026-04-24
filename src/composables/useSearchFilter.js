@@ -14,6 +14,7 @@ import FilterTypeProject from '@/components/Filter/FilterType/FilterTypeProject'
 import FilterTypeRecommendedBy from '@/components/Filter/FilterType/FilterTypeRecommendedBy'
 import FilterTypeStarred from '@/components/Filter/FilterType/FilterTypeStarred'
 import FilterText from '@/store/filters/FilterText.js'
+import { getCanonicalDimension, getPairedDimension, getPairedDimensions } from '@/store/filters/pairedDimensions'
 import { useAppStore, useRecommendedStore, useSearchStore } from '@/store/modules'
 
 export function useSearchFilter() {
@@ -106,6 +107,25 @@ export function useSearchFilter() {
 
   function getFilterByName(name) {
     return searchStore.getFilter({ name })
+  }
+
+  function resolveFilterName(filter) {
+    const value = toValue(filter)
+    if (value instanceof FilterText) {
+      return value.name
+    }
+    if (isObject(value)) {
+      return value.name
+    }
+    return value
+  }
+
+  function getFilterPairedDimension(filter) {
+    return getPairedDimension(resolveFilterName(filter))
+  }
+
+  function getFilterPairedDimensions(filter) {
+    return getPairedDimensions(resolveFilterName(filter))
   }
 
   function getFilterValuesByName(name) {
@@ -261,11 +281,30 @@ export function useSearchFilter() {
   }
 
   function toggleExcludeFilter({ name }, checked) {
-    return searchStore.toggleFilter(name, checked)
+    for (const dimension of getPairedDimensions(name)) {
+      searchStore.toggleFilter(dimension, checked)
+    }
   }
 
   function isFilterExcluded({ name }) {
-    return searchStore.isFilterExcluded(name)
+    const dimensions = getPairedDimensions(name)
+    if (dimensions.length === 1) {
+      return searchStore.isFilterExcluded(name)
+    }
+    // Reconcile paired dimensions by trusting the canonical one and writing
+    // the rest back into lockstep so the two dimensions never drift on read.
+    const canonical = getCanonicalDimension(name)
+    const canonicalValue = searchStore.isFilterExcluded(canonical)
+    for (const dimension of dimensions) {
+      if (dimension === canonical) {
+        continue
+      }
+      if (searchStore.isFilterExcluded(dimension) === canonicalValue) {
+        continue
+      }
+      searchStore.toggleFilter(dimension, canonicalValue)
+    }
+    return canonicalValue
   }
 
   function computedExcludeFilter(filter, { get = null, set = null } = {}) {
@@ -275,14 +314,42 @@ export function useSearchFilter() {
   }
 
   function toggleContextualizeFilter({ name }, checked) {
-    if (checked) {
-      return searchStore.contextualizeFilter(name)
+    for (const dimension of getPairedDimensions(name)) {
+      if (checked) {
+        searchStore.contextualizeFilter(dimension)
+      }
+      else if (searchStore.isFilterContextualized(dimension)) {
+        // Guard the call — the store's decontextualizeFilter does splice(-1, 1)
+        // when the name is absent, which would pop an unrelated filter.
+        searchStore.decontextualizeFilter(dimension)
+      }
     }
-    return searchStore.decontextualizeFilter(name)
   }
 
   function isFilterContextualized({ name }) {
-    return searchStore.isFilterContextualized(name)
+    const dimensions = getPairedDimensions(name)
+    if (dimensions.length === 1) {
+      return searchStore.isFilterContextualized(name)
+    }
+    // Reconcile paired dimensions by trusting the canonical one and writing
+    // the rest back into lockstep so the two dimensions never drift on read.
+    const canonical = getCanonicalDimension(name)
+    const canonicalValue = searchStore.isFilterContextualized(canonical)
+    for (const dimension of dimensions) {
+      if (dimension === canonical) {
+        continue
+      }
+      if (searchStore.isFilterContextualized(dimension) === canonicalValue) {
+        continue
+      }
+      if (canonicalValue) {
+        searchStore.contextualizeFilter(dimension)
+      }
+      else {
+        searchStore.decontextualizeFilter(dimension)
+      }
+    }
+    return canonicalValue
   }
 
   function computedContextualizeFilter(filter, { get = null, set = null } = {}) {
@@ -382,6 +449,8 @@ export function useSearchFilter() {
     computedTotal,
     getFilterByName,
     getFilterComponent,
+    getFilterPairedDimension,
+    getFilterPairedDimensions,
     getFilterValues,
     getFilterValuesByName,
     getTotal,

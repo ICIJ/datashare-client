@@ -32,6 +32,12 @@ export { default as FilterRecommendedBy } from './FilterRecommendedBy'
 export { default as FilterStarred } from './FilterStarred'
 export { default as FilterTag } from './FilterTag'
 export { default as FilterText } from './FilterText'
+export {
+  PAIRED_DIMENSIONS,
+  getCanonicalDimension,
+  getPairedDimension,
+  getPairedDimensions
+} from './pairedDimensions'
 
 export default [
   {

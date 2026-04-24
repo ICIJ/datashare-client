@@ -21,6 +21,7 @@ import { useRouter } from 'vue-router'
 
 import EsDocList from '@/api/resources/EsDocList'
 import filterDefs, * as filterTypes from '@/store/filters'
+import { getPairedDimensions } from '@/store/filters/pairedDimensions'
 import { useAppStore, useSearchBreadcrumbStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
 import { defineSuffixedStore } from '@/store/defineSuffixedStore'
@@ -85,7 +86,11 @@ export const useSearchStore = defineSuffixedStore('search', () => {
       // We don't add filterValue that match with any existing filters
       // defined in the `aggregation` store.
       if (filter && filter.values.length > 0) {
-        const key = filter.excluded ? `f[-${filter.name}]` : `f[${filter.name}]`
+        // Paired dimensions share the excluded flag in the URL: if any side
+        // is excluded, both emit the `f[-name]` prefix. Protects against
+        // in-store drift leaking into the URL.
+        const excluded = getPairedDimensions(filter.name).some(dim => excludeFilters.value.includes(dim))
+        const key = excluded ? `f[-${filter.name}]` : `f[${filter.name}]`
         memo[key] = compact(filter.values)
       }
       return memo
@@ -768,6 +773,31 @@ export const useSearchStore = defineSuffixedStore('search', () => {
       withRouteQuery(`f[${filter.name}]`, key => addFilterValue(filter.itemParam({ key })))
       withRouteQuery(`f[-${filter.name}]`, key => addFilterValue(filter.itemParam({ key })))
       withRouteQuery(`f[-${filter.name}]`, () => excludeFilter(filter.name))
+    })
+    reconcilePairedExcludeFilters()
+  }
+
+  /**
+   * Walk each paired-dimension group and propagate the exclude flag across
+   * both sides so a URL that only marked one dimension still hydrates into
+   * a unified store state. `excludeFilter` is idempotent, so re-applying to
+   * a dimension that is already excluded is a safe no-op.
+   */
+  function reconcilePairedExcludeFilters() {
+    const visited = new Set()
+    instantiatedFilters.value.forEach((filter) => {
+      const paired = getPairedDimensions(filter.name)
+      if (paired.length < 2) {
+        return
+      }
+      const groupKey = [...paired].sort().join('|')
+      if (visited.has(groupKey)) {
+        return
+      }
+      visited.add(groupKey)
+      if (paired.some(dim => excludeFilters.value.includes(dim))) {
+        paired.forEach(dim => excludeFilter(dim))
+      }
     })
   }
 
