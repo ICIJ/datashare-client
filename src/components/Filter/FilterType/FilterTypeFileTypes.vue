@@ -1,7 +1,6 @@
 <script setup>
 import { computed, ref, toRef, useTemplateRef } from 'vue'
-import { uniq } from 'lodash'
-import { useI18n } from 'vue-i18n'
+import { isEqual } from 'lodash'
 
 import ButtonToggleContentTypesView from '@/components/Button/ButtonToggleContentTypesView.vue'
 import ContentTypesAll from '@/components/ContentTypes/ContentTypesCategories/ContentTypesAll.vue'
@@ -15,12 +14,10 @@ import contentTypeCategoriesJson from '@/utils/contentTypeCategories.json'
 import settings from '@/utils/settings'
 import { getDocumentTypeLabel } from '@/utils/utils'
 import { useContentTypeCategories } from '@/composables/useContentTypeCategories'
+import { useContentTypeCategoryLabel } from '@/composables/useContentTypeCategoryLabel'
 import { useSearchFilter } from '@/composables/useSearchFilter'
 import { useSearchStore } from '@/store/modules'
-
-const { t, te } = useI18n()
-
-const CATEGORY_FILTER_NAME = 'contentTypeCategory'
+import { CONTENT_TYPE_CATEGORY_FILTER_NAME } from '@/store/filters/FilterContentTypeCategory'
 
 const props = defineProps({
   filter: {
@@ -36,64 +33,66 @@ const entries = computed(() => filterTypeRef.value?.entries ?? [])
 const contentTypes = computed(() => entries.value.map(entry => entry.item.key))
 
 const { categories } = useContentTypeCategories(contentTypes)
-const { hasFilterValue, toggleFilterValue, getFilterByName, computedAll, computedTotal } = useSearchFilter()
+const {
+  toggleFilterValue,
+  hasFilterValue,
+  getFilterByName,
+  getFilterValuesByName,
+  computedAll,
+  computedTotal
+} = useSearchFilter()
 const searchStore = useSearchStore.inject()
+const categoryLabelFor = useContentTypeCategoryLabel()
 
-// Read the sort option directly from the search store so the grouped category
-// order reacts to dropdown changes in FilterType.vue without any prop plumbing.
 const sort = computed(() => searchStore.sortFilters[props.filter.name] ?? {
   sortBy: settings.filter.sortBy,
   orderBy: settings.filter.orderBy
 })
 const categoryJsonOrder = Object.keys(contentTypeCategoriesJson)
-const categoryLabelFor = (category) => {
-  const key = `filter.contentTypeCategory.${category}`
-  return te(key) ? t(key) : category
-}
 
-// The hidden companion filter (`contentTypeCategory`) holds the high-level
-// category selection whenever every MIME type in a category is picked.
-const categoryFilter = computed(() => getFilterByName(CATEGORY_FILTER_NAME))
+const categoryFilter = computed(() => getFilterByName(CONTENT_TYPE_CATEGORY_FILTER_NAME))
 
 const allSelected = computedAll(toRef(props, 'filter'))
-// Mirror FilterTypeAll: show the unfiltered hit total when no selection is
-// active, and hide the count (null) once the user has picked anything.
 const totalCount = computedTotal(toRef(props, 'filter'))
 
-const entryFor = contentType => entries.value.find(entry => entry.item.key === contentType)
+// O(1) lookups derived from `entries` and `categories` so the template loop
+// and sort comparator don't pay linear-search costs per call.
+const entryCountMap = computed(() => {
+  const map = new Map()
+  entries.value.forEach(entry => map.set(entry.item.key, entry.item.doc_count ?? 0))
+  return map
+})
+const categoryByContentType = computed(() => {
+  const map = new Map()
+  Object.entries(categories.value).forEach(([category, types]) => {
+    types.forEach(type => map.set(type, category))
+  })
+  return map
+})
 
-const entryCount = contentType => entryFor(contentType)?.item.doc_count ?? 0
+const entryCount = contentType => entryCountMap.value.get(contentType) ?? 0
+const categoryForContentType = contentType => categoryByContentType.value.get(contentType) ?? null
 
-// Reverse-lookup: returns the category key (e.g. "DOCUMENT") that owns a
-// given MIME type, or `null` when the type is not grouped.
-const categoryForContentType = (contentType) => {
-  const match = Object.entries(categories.value).find(([, types]) => types.includes(contentType))
-  return match ? match[0] : null
-}
+const currentContentTypes = () => getFilterValuesByName(props.filter.name)
+const currentCategories = () => getFilterValuesByName(CONTENT_TYPE_CATEGORY_FILTER_NAME)
 
-const isCategoryStored = (category) => {
-  if (!categoryFilter.value) {
-    return false
-  }
-  return hasFilterValue(categoryFilter.value, { key: category })
-}
+const isCategoryStored = category => currentCategories().includes(category)
 
-// A type is "selected" either because it appears in the `contentType` filter
-// or because the entire category it belongs to is stored in `contentTypeCategory`.
-const isEntrySelected = (contentType) => {
-  const entry = entryFor(contentType)
-  if (entry && hasFilterValue(props.filter, entry.item)) {
-    return true
-  }
-  const category = categoryForContentType(contentType)
-  return !!category && isCategoryStored(category)
-}
+// Aggregate the two filter dimensions into a single set so `isEntrySelected`
+// becomes O(1) and the per-bucket template loop stays cheap.
+const selectedContentTypeSet = computed(() => {
+  const set = new Set(currentContentTypes())
+  currentCategories().forEach((category) => {
+    const types = categories.value[category] ?? []
+    types.forEach(type => set.add(type))
+  })
+  return set
+})
 
-const categorySelectedCount = types =>
-  types.filter(contentType => isEntrySelected(contentType)).length
+const isEntrySelected = contentType => selectedContentTypeSet.value.has(contentType)
 
-// Fully-selected means either the category lives in the hidden category filter
-// OR every individual type inside the category is ticked in the `contentType` filter.
+const categorySelectedCount = types => types.filter(isEntrySelected).length
+
 const categoryAllSelected = (category, types) => {
   if (isCategoryStored(category)) {
     return true
@@ -102,8 +101,6 @@ const categoryAllSelected = (category, types) => {
   return selected > 0 && selected === types.length
 }
 
-// Indeterminate: some (but not all) individual types are ticked and the category
-// is not stored in the hidden filter (a stored category is always fully checked).
 const categoryIndeterminate = (category, types) => {
   if (isCategoryStored(category)) {
     return false
@@ -112,70 +109,65 @@ const categoryIndeterminate = (category, types) => {
   return selected > 0 && selected < types.length
 }
 
-const currentContentTypes = () => searchStore.values[props.filter.name] ?? []
-const currentCategories = () => searchStore.values[CATEGORY_FILTER_NAME] ?? []
-
+// Guard against no-op writes so downstream watchers (route sync, query
+// refresh) don't fire when the user's action produced no actual change.
 const writeContentTypes = (values) => {
-  searchStore.setFilterValue({ name: props.filter.name, value: uniq(values) })
+  const next = [...new Set(values)]
+  if (isEqual([...next].sort(), [...currentContentTypes()].sort())) {
+    return
+  }
+  searchStore.setFilterValue({ name: props.filter.name, value: next })
 }
 
 const writeCategories = (values) => {
   if (!categoryFilter.value) {
     return
   }
-  searchStore.setFilterValue({ name: CATEGORY_FILTER_NAME, value: uniq(values) })
+  const next = [...new Set(values)]
+  if (isEqual([...next].sort(), [...currentCategories()].sort())) {
+    return
+  }
+  searchStore.setFilterValue({ name: CONTENT_TYPE_CATEGORY_FILTER_NAME, value: next })
 }
 
-// Smart category toggle — a single write per affected filter instead of N:
-//   * checked   → remove every individual `contentType` value in the category
-//                 and write a single `contentTypeCategory` value instead.
-//   * unchecked → remove the `contentTypeCategory` value and clear every
-//                 individual `contentType` value that belonged to the category.
 const toggleCategory = (category, types, checked) => {
-  const remainingTypes = currentContentTypes().filter(value => !types.includes(value))
-  writeContentTypes(remainingTypes)
-
-  const categoriesSet = currentCategories().filter(value => value !== category)
-  writeCategories(checked ? [...categoriesSet, category] : categoriesSet)
+  writeContentTypes(currentContentTypes().filter(value => !types.includes(value)))
+  const remainingCategories = currentCategories().filter(value => value !== category)
+  writeCategories(checked ? [...remainingCategories, category] : remainingCategories)
 }
 
-// Smart entry toggle:
-//   * Checking the last remaining type in a category promotes the selection
-//     to a single `contentTypeCategory` value (auto-collapse).
-//   * Un-ticking a type inside a category that is currently stored expands the
-//     category back into the remaining individual `contentType` values.
-//   * Otherwise, we just flip the individual `contentType` value.
+// True when checking `contentType` would tick every remaining sibling of its
+// category, so the selection can be promoted to a single hidden-filter value.
+const shouldPromoteToCategory = (category, contentType, currentTypes) => {
+  if (!category || currentCategories().includes(category)) {
+    return false
+  }
+  const siblings = (categories.value[category] ?? []).filter(type => type !== contentType)
+  return siblings.length > 0 && siblings.every(type => currentTypes.includes(type))
+}
+
 const toggleEntry = (contentType, checked) => {
   const category = categoryForContentType(contentType)
 
   if (checked) {
-    const categoryTypes = category ? categories.value[category] ?? [] : []
     const currentTypes = currentContentTypes()
-    const siblings = categoryTypes.filter(type => type !== contentType)
-    const categoryAlreadyStored = category && currentCategories().includes(category)
-    const completesCategory
-      = category
-        && !categoryAlreadyStored
-        && siblings.length > 0
-        && siblings.every(type => currentTypes.includes(type))
-
-    if (completesCategory) {
+    if (shouldPromoteToCategory(category, contentType, currentTypes)) {
+      const categoryTypes = categories.value[category] ?? []
       writeContentTypes(currentTypes.filter(value => !categoryTypes.includes(value)))
       writeCategories([...currentCategories(), category])
       return
     }
-
     writeContentTypes([...currentTypes, contentType])
     return
   }
 
   if (category && isCategoryStored(category)) {
-    const remaining = categories.value[category].filter(type => type !== contentType)
-    // Drop the unchecked type too, in case a URL-tampering edge case left it
-    // stored both under contentType and implicitly under contentTypeCategory.
+    const siblings = categories.value[category].filter(type => type !== contentType)
+    // Drop the unchecked type too, in case URL tampering left it stored
+    // under both contentType and an overlapping contentTypeCategory.
     const others = currentContentTypes().filter(value => value !== contentType)
     writeCategories(currentCategories().filter(value => value !== category))
-    writeContentTypes([...others, ...remaining])
+    writeContentTypes([...others, ...siblings])
     return
   }
 
@@ -185,8 +177,6 @@ const toggleEntry = (contentType, checked) => {
 const categoryCount = types =>
   types.reduce((sum, contentType) => sum + entryCount(contentType), 0)
 
-// Ordered [category, types] pairs derived from the selected sort option.
-// Never mutates the original `categories` record or `contentTypeCategories.json`.
 const sortedCategoryEntries = computed(() => {
   const pairs = Object.entries(categories.value)
   const { sortBy, orderBy } = sort.value
@@ -202,7 +192,6 @@ const sortedCategoryEntries = computed(() => {
     if (diff !== 0) {
       return diff * direction
     }
-    // Stable tie-break: fall back to the order defined in contentTypeCategories.json.
     return jsonPosition(aKey) - jsonPosition(bKey)
   }
 
@@ -218,9 +207,6 @@ const sortedCategoryEntries = computed(() => {
   return [...pairs].sort(sortBy === '_key' ? byLabel : byCount)
 })
 
-// Apply the same sort option to the MIME types nested inside a category so the
-// two levels stay consistent. Mirrors `sortedCategoryEntries` but operates on
-// bucket `doc_count` and the label returned by `getDocumentTypeLabel`.
 const sortedTypesFor = (types) => {
   const { sortBy, orderBy } = sort.value
   const direction = orderBy === 'asc' ? 1 : -1
@@ -230,7 +216,6 @@ const sortedTypesFor = (types) => {
     if (diff !== 0) {
       return diff * direction
     }
-    // Stable tie-break by label so equal counts land in a deterministic order.
     return getDocumentTypeLabel(aType).localeCompare(
       getDocumentTypeLabel(bType),
       undefined,
