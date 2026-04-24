@@ -38,7 +38,10 @@ export function useSearchFilter() {
   const indices = computed(() => searchStore.indices)
   const allProjectsSelected = computed(() => indices.value.length === core.projectIds.length)
 
-  function getFilterComponent({ component }) {
+  function getFilterComponent({ component, hidden = false }) {
+    if (hidden) {
+      return null
+    }
     return filterTypes[component]
   }
 
