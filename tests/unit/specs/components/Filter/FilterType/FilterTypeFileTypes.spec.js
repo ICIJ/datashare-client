@@ -321,6 +321,23 @@ describe('FilterTypeFileTypes.vue', () => {
       expect(findCategoryName('OTHER').props('modelValue')).toBe(true)
       expect(findCategoryName('OTHER').props('indeterminate')).toBe(false)
     })
+
+    it('drops a lingering individual contentType value when the user unticks it while the category is also stored', async () => {
+      // URL-tamper / race scenario: contentTypeCategory=OTHER and contentType=text/html
+      // are both stored at the same time. Unticking text/html must drop it and
+      // expand only the remaining siblings, not re-introduce it alongside them.
+      await seedCategoriesAndIndex()
+      searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'OTHER' })
+      searchStore.addFilterValue({ name: 'contentType', value: 'text/html' })
+      await flushPromises()
+
+      await findCategoryItem('text/html').vm.$emit('update:modelValue', false)
+      await flushPromises()
+
+      expect(searchStore.values.contentTypeCategory ?? []).toEqual([])
+      expect(searchStore.values.contentType ?? []).not.toContain('text/html')
+      expect(searchStore.values.contentType ?? []).toContain('text/plain')
+    })
   })
 
   describe('category sorting', () => {
