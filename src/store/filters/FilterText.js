@@ -32,6 +32,8 @@ export default class FilterText {
    * @param {string[]} [options.modes=null] - Restrict this filter to specific Datashare modes.
    * @param {number|null} [options.pagelessBucketSize=null] - When set, fetch this many buckets in one
    *   aggregation request and disable infinite scroll. When `null`, paginate with the default size.
+   * @param {boolean} [options.hidden=false] - Hide the filter from the filters panel entirely.
+   *   The filter still participates in URL/breadcrumb sync and can be set programmatically.
    */
   constructor({
     name,
@@ -49,7 +51,8 @@ export default class FilterText {
     preference = '_local',
     forceExclude = false,
     modes = null,
-    pagelessBucketSize = null
+    pagelessBucketSize = null,
+    hidden = false
   } = {}) {
     this.name = name
     this.key = key
@@ -68,6 +71,7 @@ export default class FilterText {
     this.forceExclude = forceExclude
     this.modes = modes
     this.pagelessBucketSize = pagelessBucketSize
+    this.hidden = hidden
   }
 
   /**
