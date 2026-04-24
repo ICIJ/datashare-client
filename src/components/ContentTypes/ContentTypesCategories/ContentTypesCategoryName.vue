@@ -7,7 +7,7 @@ import categories from '@/utils/contentTypeCategories.json'
 const modelValue = defineModel({ type: Boolean, default: false })
 
 const props = defineProps({
-  label: {
+  category: {
     type: String,
     required: true
   },
@@ -21,8 +21,8 @@ const props = defineProps({
 })
 
 // Resolve the human-readable category label via `contentTypeCategories.json`;
-// fall back to the raw prop value when it doesn't match any known category key.
-const resolvedLabel = computed(() => categories[props.label]?.label ?? props.label)
+// fall back to the raw category key when it doesn't match any known category.
+const resolvedLabel = computed(() => categories[props.category]?.label ?? props.category)
 </script>
 
 <template>

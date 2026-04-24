@@ -15,7 +15,7 @@ export default {
     setup: () => ({ args }),
     template: `
       <content-types-category v-bind="args">
-        <content-types-category-name label="Documents" :count="1586" indeterminate />
+        <content-types-category-name category="DOCUMENT" :count="1586" indeterminate />
         <content-types-category-item content-type="PDF" :count="1552" model-value />
         <content-types-category-item content-type="Word" :count="34" />
       </content-types-category>
