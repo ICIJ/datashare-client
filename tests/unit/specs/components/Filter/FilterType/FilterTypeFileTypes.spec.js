@@ -96,15 +96,42 @@ describe('FilterTypeFileTypes.vue', () => {
     expect(wrapper.findAllComponents(ContentTypesEntry)).toHaveLength(0)
   })
 
-  it('should hide the sort control in grouped mode', () => {
-    expect(wrapper.findComponent(FiltersPanelSectionFilterTitleSort).exists()).toBe(false)
+  it('should show the sort control in grouped mode', () => {
+    expect(wrapper.findComponent(FiltersPanelSectionFilterTitleSort).exists()).toBe(true)
   })
 
-  it('should show the sort control when grouped is toggled off', async () => {
+  it('should keep the sort control visible when grouped is toggled off', async () => {
     await wrapper.findComponent(ButtonToggleContentTypesView).trigger('click')
     await flushPromises()
 
     expect(wrapper.findComponent(FiltersPanelSectionFilterTitleSort).exists()).toBe(true)
+  })
+
+  it('renders the sort dropdown wired to the section filter sort model', () => {
+    // The dropdown receives its modelValue from the parent section filter, which
+    // bridges it to the filter's sort accessor (ultimately searchStore.sortFilters).
+    // Checking its presence + a well-formed modelValue proves the wiring is in
+    // place for the categories view.
+    const sortDropdown = wrapper.findComponent(FiltersPanelSectionFilterTitleSort)
+
+    expect(sortDropdown.exists()).toBe(true)
+    expect(sortDropdown.props('modelValue')).toEqual({
+      sortBy: expect.any(String),
+      orderBy: expect.any(String)
+    })
+  })
+
+  it('persists a user-selected sort option to searchStore.sortFilters', async () => {
+    // Round-trip: the dropdown emits the selected option and the store records it,
+    // which is the "reflects searchStore.sortFilter" contract from the user side.
+    const sortDropdown = wrapper.findComponent(FiltersPanelSectionFilterTitleSort)
+    sortDropdown.vm.$emit('update:modelValue', { sortBy: '_key', orderBy: 'asc' })
+    await flushPromises()
+
+    expect(searchStore.sortFilters.contentType).toEqual({
+      sortBy: '_key',
+      orderBy: 'asc'
+    })
   })
 
   it('should render flat entries when grouped is toggled off', async () => {
@@ -273,6 +300,270 @@ describe('FilterTypeFileTypes.vue', () => {
 
       expect(findCategoryName('Other').props('modelValue')).toBe(true)
       expect(findCategoryName('Other').props('indeterminate')).toBe(false)
+    })
+  })
+
+  describe('category sorting', () => {
+    // Seed three categories whose keys exist in contentTypeCategories.json so the
+    // sort-by-name test exercises the resolved (human-readable) labels.
+    //   VIDEO    → 1 doc  (label: "Video")
+    //   IMAGE    → 2 docs (label: "Image")
+    //   DOCUMENT → 3 docs (label: "Document")
+    const seedSortableCategories = async () => {
+      api.getContentTypeCategories.mockResolvedValue({
+        DOCUMENT: ['application/pdf'],
+        IMAGE: ['image/jpeg'],
+        VIDEO: ['video/mp4']
+      })
+
+      await letData(es).have(new IndexedDocument('d1', index).withContentType('application/pdf')).commit()
+      await letData(es).have(new IndexedDocument('d2', index).withContentType('application/pdf')).commit()
+      await letData(es).have(new IndexedDocument('d3', index).withContentType('application/pdf')).commit()
+      await letData(es).have(new IndexedDocument('i1', index).withContentType('image/jpeg')).commit()
+      await letData(es).have(new IndexedDocument('i2', index).withContentType('image/jpeg')).commit()
+      await letData(es).have(new IndexedDocument('v1', index).withContentType('video/mp4')).commit()
+
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+    }
+
+    const categoryOrder = () =>
+      wrapper.findAllComponents(ContentTypesCategoryName).map(node => node.props('label'))
+
+    it('orders categories by count desc (highest first) by default', async () => {
+      await seedSortableCategories()
+
+      expect(categoryOrder()).toEqual(['DOCUMENT', 'IMAGE', 'VIDEO'])
+    })
+
+    it('orders categories by count asc (lowest first) when orderBy is asc', async () => {
+      searchStore.sortFilter({ name: 'contentType', sortBy: '_count', orderBy: 'asc' })
+      await seedSortableCategories()
+
+      expect(categoryOrder()).toEqual(['VIDEO', 'IMAGE', 'DOCUMENT'])
+    })
+
+    it('orders categories alphabetically A→Z using resolved labels when sortBy is _key and orderBy is asc', async () => {
+      searchStore.sortFilter({ name: 'contentType', sortBy: '_key', orderBy: 'asc' })
+      await seedSortableCategories()
+
+      // Labels: "Document", "Image", "Video" → alphabetical A→Z.
+      expect(categoryOrder()).toEqual(['DOCUMENT', 'IMAGE', 'VIDEO'])
+    })
+
+    it('orders categories alphabetically Z→A using resolved labels when sortBy is _key and orderBy is desc', async () => {
+      searchStore.sortFilter({ name: 'contentType', sortBy: '_key', orderBy: 'desc' })
+      await seedSortableCategories()
+
+      expect(categoryOrder()).toEqual(['VIDEO', 'IMAGE', 'DOCUMENT'])
+    })
+
+    it('updates the category order immediately when the sort option changes', async () => {
+      await seedSortableCategories()
+      expect(categoryOrder()).toEqual(['DOCUMENT', 'IMAGE', 'VIDEO'])
+
+      searchStore.sortFilter({ name: 'contentType', sortBy: '_count', orderBy: 'asc' })
+      await flushPromises()
+
+      expect(categoryOrder()).toEqual(['VIDEO', 'IMAGE', 'DOCUMENT'])
+    })
+
+    it('keeps categories with a count of 0 visible and interleaves them by count', async () => {
+      api.getContentTypeCategories.mockResolvedValue({
+        DOCUMENT: ['application/pdf'],
+        IMAGE: ['image/jpeg'],
+        VIDEO: ['video/mp4']
+      })
+
+      // Only VIDEO has indexed documents; IMAGE and DOCUMENT end up with count 0.
+      await letData(es).have(new IndexedDocument('v1', index).withContentType('video/mp4')).commit()
+
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+
+      // All three categories remain visible; VIDEO leads on count desc.
+      expect(categoryOrder()).toHaveLength(3)
+      expect(categoryOrder()[0]).toBe('VIDEO')
+      expect(categoryOrder()).toEqual(expect.arrayContaining(['DOCUMENT', 'IMAGE', 'VIDEO']))
+    })
+
+    it('falls back to the JSON order to break ties when counts are equal', async () => {
+      // IMAGE and VIDEO both have 1 doc → ties; JSON order is VIDEO before IMAGE.
+      api.getContentTypeCategories.mockResolvedValue({
+        IMAGE: ['image/jpeg'],
+        VIDEO: ['video/mp4']
+      })
+
+      await letData(es).have(new IndexedDocument('i1', index).withContentType('image/jpeg')).commit()
+      await letData(es).have(new IndexedDocument('v1', index).withContentType('video/mp4')).commit()
+
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+
+      // JSON declares VIDEO before IMAGE; ties preserve that declared order.
+      expect(categoryOrder()).toEqual(['VIDEO', 'IMAGE'])
+    })
+
+    it('does not drop or duplicate categories when sorting', async () => {
+      await seedSortableCategories()
+
+      searchStore.sortFilter({ name: 'contentType', sortBy: '_count', orderBy: 'asc' })
+      await flushPromises()
+
+      const order = categoryOrder()
+      expect(order).toHaveLength(3)
+      expect(new Set(order)).toEqual(new Set(['DOCUMENT', 'IMAGE', 'VIDEO']))
+    })
+  })
+
+  describe('nested bucket sorting', () => {
+    // Single category holding three MIME types with distinct counts and labels so
+    // we can verify both _count and _key ordering within the same category.
+    //   application/pdf (3 docs, label "Portable Document Format (PDF)")
+    //   text/plain      (2 docs, label "Plain text document")
+    //   text/html       (1 doc,  label "HTML document")
+    const seedBucketsInCategory = async () => {
+      api.getContentTypeCategories.mockResolvedValue({
+        Documents: ['application/pdf', 'text/html', 'text/plain']
+      })
+
+      await letData(es).have(new IndexedDocument('d1', index).withContentType('application/pdf')).commit()
+      await letData(es).have(new IndexedDocument('d2', index).withContentType('application/pdf')).commit()
+      await letData(es).have(new IndexedDocument('d3', index).withContentType('application/pdf')).commit()
+      await letData(es).have(new IndexedDocument('t1', index).withContentType('text/plain')).commit()
+      await letData(es).have(new IndexedDocument('t2', index).withContentType('text/plain')).commit()
+      await letData(es).have(new IndexedDocument('h1', index).withContentType('text/html')).commit()
+
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+    }
+
+    const bucketOrder = () =>
+      wrapper.findAllComponents(ContentTypesCategoryItem).map(node => node.props('contentType'))
+
+    it('orders buckets by doc_count desc (highest first) by default', async () => {
+      await seedBucketsInCategory()
+
+      expect(bucketOrder()).toEqual(['application/pdf', 'text/plain', 'text/html'])
+    })
+
+    it('orders buckets by doc_count asc (lowest first) when orderBy is asc', async () => {
+      searchStore.sortFilter({ name: 'contentType', sortBy: '_count', orderBy: 'asc' })
+      await seedBucketsInCategory()
+
+      expect(bucketOrder()).toEqual(['text/html', 'text/plain', 'application/pdf'])
+    })
+
+    it('orders buckets A→Z using resolved labels when sortBy is _key and orderBy is asc', async () => {
+      searchStore.sortFilter({ name: 'contentType', sortBy: '_key', orderBy: 'asc' })
+      await seedBucketsInCategory()
+
+      // Labels: "HTML document" < "Plain text document" < "Portable Document Format (PDF)".
+      expect(bucketOrder()).toEqual(['text/html', 'text/plain', 'application/pdf'])
+    })
+
+    it('orders buckets Z→A using resolved labels when sortBy is _key and orderBy is desc', async () => {
+      searchStore.sortFilter({ name: 'contentType', sortBy: '_key', orderBy: 'desc' })
+      await seedBucketsInCategory()
+
+      expect(bucketOrder()).toEqual(['application/pdf', 'text/plain', 'text/html'])
+    })
+
+    it('updates nested bucket order immediately when the sort option changes', async () => {
+      await seedBucketsInCategory()
+      expect(bucketOrder()).toEqual(['application/pdf', 'text/plain', 'text/html'])
+
+      searchStore.sortFilter({ name: 'contentType', sortBy: '_key', orderBy: 'asc' })
+      await flushPromises()
+
+      expect(bucketOrder()).toEqual(['text/html', 'text/plain', 'application/pdf'])
+    })
+
+    it('does not drop or duplicate buckets when sorting', async () => {
+      await seedBucketsInCategory()
+
+      searchStore.sortFilter({ name: 'contentType', sortBy: '_key', orderBy: 'asc' })
+      await flushPromises()
+
+      const order = bucketOrder()
+      expect(order).toHaveLength(3)
+      expect(new Set(order)).toEqual(new Set(['application/pdf', 'text/html', 'text/plain']))
+    })
+
+    it('keeps the aggregated category total unchanged when bucket order changes', async () => {
+      await seedBucketsInCategory()
+
+      const totalBefore = wrapper.findAllComponents(ContentTypesCategoryName)[0].props('count')
+      expect(totalBefore).toBe(6)
+
+      searchStore.sortFilter({ name: 'contentType', sortBy: '_key', orderBy: 'asc' })
+      await flushPromises()
+
+      const totalAfter = wrapper.findAllComponents(ContentTypesCategoryName)[0].props('count')
+      expect(totalAfter).toBe(totalBefore)
+    })
+  })
+
+  describe('non-grouped (flat) view', () => {
+    // Exercise the flat view explicitly: the categories-view changes from US-001/2/3
+    // must not alter how the underlying FilterType renders a flat list of entries.
+    const seedAndFlatten = async () => {
+      api.getContentTypeCategories.mockResolvedValue({
+        DOCUMENT: ['application/pdf'],
+        IMAGE: ['image/jpeg'],
+        VIDEO: ['video/mp4']
+      })
+
+      await letData(es).have(new IndexedDocument('d1', index).withContentType('application/pdf')).commit()
+      await letData(es).have(new IndexedDocument('d2', index).withContentType('application/pdf')).commit()
+      await letData(es).have(new IndexedDocument('d3', index).withContentType('application/pdf')).commit()
+      await letData(es).have(new IndexedDocument('i1', index).withContentType('image/jpeg')).commit()
+      await letData(es).have(new IndexedDocument('i2', index).withContentType('image/jpeg')).commit()
+      await letData(es).have(new IndexedDocument('v1', index).withContentType('video/mp4')).commit()
+
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+      // Flip to the flat view.
+      await wrapper.findComponent(ButtonToggleContentTypesView).trigger('click')
+      await flushPromises()
+    }
+
+    it('renders flat entries and no category components when grouped is off', async () => {
+      await seedAndFlatten()
+
+      expect(wrapper.findAllComponents(ContentTypesEntry)).toHaveLength(3)
+      expect(wrapper.findAllComponents(ContentTypesCategory)).toHaveLength(0)
+      expect(wrapper.findAllComponents(ContentTypesCategoryName)).toHaveLength(0)
+      expect(wrapper.findAllComponents(ContentTypesCategoryItem)).toHaveLength(0)
+    })
+
+    it('keeps the sort dropdown wired to searchStore in the flat view', async () => {
+      await seedAndFlatten()
+
+      // Round-trip through the dropdown: the flat view must still write back to
+      // searchStore.sortFilters the same way the categories view does.
+      const sortDropdown = wrapper.findComponent(FiltersPanelSectionFilterTitleSort)
+      sortDropdown.vm.$emit('update:modelValue', { sortBy: '_key', orderBy: 'asc' })
+      await flushPromises()
+
+      expect(searchStore.sortFilters.contentType).toEqual({
+        sortBy: '_key',
+        orderBy: 'asc'
+      })
+    })
+
+    it('still renders every aggregated entry when a non-default sort is active in flat mode', async () => {
+      // Set a non-default sort before aggregating so the grouped-view-specific
+      // sort logic has a chance to leak — it should not.
+      searchStore.sortFilter({ name: 'contentType', sortBy: '_key', orderBy: 'asc' })
+      await seedAndFlatten()
+
+      const entries = wrapper.findAllComponents(ContentTypesEntry)
+      expect(entries).toHaveLength(3)
+
+      // All three aggregated content types are rendered — none dropped or duplicated.
+      const contentTypes = entries.map(node => node.props('contentType'))
+      expect(new Set(contentTypes)).toEqual(new Set(['application/pdf', 'image/jpeg', 'video/mp4']))
     })
   })
 })
