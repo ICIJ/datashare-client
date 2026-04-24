@@ -19,6 +19,7 @@ import { MODE_NAME } from '@/mode/index'
 import { namedEntityCategoryTranslation } from '@/store/filters/FilterEntity'
 
 export { default as FilterContentType } from './FilterContentType'
+export { default as FilterContentTypeCategory } from './FilterContentTypeCategory'
 export { default as FilterDate } from './FilterDate'
 export { default as FilterDateRange } from './FilterDateRange'
 export { default as FilterExtractionLevel } from './FilterExtractionLevel'
@@ -119,6 +120,19 @@ export default [
       section: 'documentsInfo',
       preference: 'filter-content-type',
       pagelessBucketSize: 1000
+    }
+  },
+  {
+    // Hidden companion filter for FilterContentType: tracks the high-level
+    // category selection (AUDIO, VIDEO, ...) so it round-trips through the URL
+    // and breadcrumb without appearing in the filters panel.
+    type: 'FilterContentTypeCategory',
+    options: {
+      name: 'contentTypeCategory',
+      key: 'contentTypeCategory',
+      order: 45,
+      section: 'documentsInfo',
+      hidden: true
     }
   },
   {
