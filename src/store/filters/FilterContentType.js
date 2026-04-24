@@ -1,4 +1,4 @@
-import { reduce, toLower } from 'lodash'
+import { pickBy, toLower } from 'lodash'
 
 import FilterText from './FilterText'
 
@@ -23,12 +23,7 @@ export default class FilterContentType extends FilterText {
    * @returns {string[]} MIME keys whose label contains the query.
    */
   keyAliases(query) {
-    return reduce(types, (acc, item, key) => {
-      if (toLower(item.label).includes(query)) {
-        acc.push(key)
-      }
-      return acc
-    }, [])
+    return Object.keys(pickBy(types, item => toLower(item.label).includes(query)))
   }
 
   /**
