@@ -20,6 +20,11 @@ const { t } = useI18n()
 const q = ref('')
 const filters = computed(() => {
   return searchStore.instantiatedFilters.filter((filter) => {
+    // Skip filters flagged as hidden — they still sync to URL and breadcrumb
+    // but must not appear in the filters panel.
+    if (filter.hidden) {
+      return false
+    }
     // We apply a first filter to remove filters that are not available in the current mode
     return !filter.modes || filter.modes.some(isMode)
   })
