@@ -68,10 +68,10 @@ describe('SearchStore', () => {
       expect(searchStore.q).toBeDefined()
     })
 
-    it('should instantiate the default 14 filters, with order', () => {
+    it('should instantiate the default 15 filters, with order', () => {
       const filters = searchStore.instantiatedFilters
 
-      expect(filters).toHaveLength(14)
+      expect(filters).toHaveLength(15)
       expect(find(filters, { name: 'contentType' }).order).toBe(40)
     })
   })
@@ -471,6 +471,37 @@ describe('SearchStore', () => {
         searchStore.updateFromRouteQuery({})
 
         expect(searchStore.field).toBe('author')
+      })
+    })
+
+    describe('hidden contentTypeCategory filter', () => {
+      it('is registered among instantiated filters even though it is hidden', () => {
+        const filter = searchStore.getFilter({ name: 'contentTypeCategory' })
+        expect(filter).toBeDefined()
+        expect(filter.hidden).toBe(true)
+      })
+
+      it('serializes its values into the URL like any other filter', () => {
+        searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'AUDIO' })
+
+        expect(searchStore.toRouteQuery).toMatchObject({
+          'f[contentTypeCategory]': ['AUDIO']
+        })
+      })
+
+      it('restores its values from the URL', () => {
+        searchStore.updateFromRouteQuery({ 'f[contentTypeCategory]': ['VIDEO'] })
+        expect(searchStore.getFilter({ name: 'contentTypeCategory' }).values).toEqual(['VIDEO'])
+      })
+
+      it('round-trips through URL serialization and deserialization', () => {
+        searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'DOCUMENT' })
+        const query = searchStore.toRouteQuery
+
+        const anotherStore = useSearchStore.create('round-trip')
+        anotherStore.updateFromRouteQuery(query)
+
+        expect(anotherStore.getFilter({ name: 'contentTypeCategory' }).values).toEqual(['DOCUMENT'])
       })
     })
   })
