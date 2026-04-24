@@ -1,14 +1,15 @@
 <script setup>
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPanelSectionFilterEntry'
 
 const modelValue = defineModel({ type: Boolean, default: false })
 
-defineProps({
+const props = defineProps({
   count: {
     type: Number,
-    default: 0
+    default: null
   },
   label: {
     type: String,
@@ -17,6 +18,9 @@ defineProps({
 })
 
 const { t } = useI18n()
+// Hide the badge when no count is available (e.g. after the user makes a
+// selection and `computedTotal` switches to null).
+const hideCount = computed(() => props.count === null)
 </script>
 
 <template>
@@ -24,7 +28,8 @@ const { t } = useI18n()
     v-model="modelValue"
     class="content-types-all"
     :label="label ?? t('filterTypeAll.label')"
-    :count="count"
+    :count="count ?? 0"
+    :hide-count="hideCount"
     :disabled="modelValue"
   />
 </template>
