@@ -12,6 +12,8 @@ import FilterType from './FilterType.vue'
 import { useContentTypeCategories } from '@/composables/useContentTypeCategories'
 import { useSearchFilter } from '@/composables/useSearchFilter'
 
+const CATEGORY_FILTER_NAME = 'contentTypeCategory'
+
 const props = defineProps({
   filter: {
     type: Object,
@@ -29,7 +31,11 @@ const entries = computed(() => filterTypeRef.value?.entries ?? [])
 const contentTypes = computed(() => entries.value.map(entry => entry.item.key))
 
 const { categories } = useContentTypeCategories(contentTypes)
-const { hasFilterValue, toggleFilterValue, computedAll } = useSearchFilter()
+const { hasFilterValue, toggleFilterValue, getFilterByName, computedAll } = useSearchFilter()
+
+// The hidden companion filter (`contentTypeCategory`) holds the high-level
+// category selection whenever every MIME type in a category is picked.
+const categoryFilter = computed(() => getFilterByName(CATEGORY_FILTER_NAME))
 
 const allSelected = computedAll(toRef(props, 'filter'))
 const totalCount = computed(() =>
@@ -40,41 +46,129 @@ const entryFor = contentType => entries.value.find(entry => entry.item.key === c
 
 const entryCount = contentType => entryFor(contentType)?.item.doc_count ?? 0
 
-const isEntrySelected = (contentType) => {
-  const entry = entryFor(contentType)
-  return entry ? hasFilterValue(props.filter, entry.item) : false
+// Reverse-lookup: returns the category key (e.g. "DOCUMENT") that owns a
+// given MIME type, or `null` when the type is not grouped.
+const categoryForContentType = (contentType) => {
+  const match = Object.entries(categories.value).find(([, types]) => types.includes(contentType))
+  return match ? match[0] : null
 }
 
-const toggleEntry = async (contentType, checked) => {
-  const entry = entryFor(contentType)
-  if (entry) {
-    await toggleFilterValue(props.filter, entry.item, checked)
+const isCategoryStored = (category) => {
+  if (!categoryFilter.value) {
+    return false
   }
+  return hasFilterValue(categoryFilter.value, { key: category })
+}
+
+// A type is "selected" either because it appears in the `contentType` filter
+// or because the entire category it belongs to is stored in `contentTypeCategory`.
+const isEntrySelected = (contentType) => {
+  const entry = entryFor(contentType)
+  if (entry && hasFilterValue(props.filter, entry.item)) {
+    return true
+  }
+  const category = categoryForContentType(contentType)
+  return !!category && isCategoryStored(category)
+}
+
+const categorySelectedCount = types =>
+  types.filter(contentType => isEntrySelected(contentType)).length
+
+// Fully-selected means either the category lives in the hidden category filter
+// OR every individual type inside the category is ticked in the `contentType` filter.
+const categoryAllSelected = (category, types) => {
+  if (isCategoryStored(category)) {
+    return true
+  }
+  const selected = categorySelectedCount(types)
+  return selected > 0 && selected === types.length
+}
+
+// Indeterminate: some (but not all) individual types are ticked and the category
+// is not stored in the hidden filter (a stored category is always fully checked).
+const categoryIndeterminate = (category, types) => {
+  if (isCategoryStored(category)) {
+    return false
+  }
+  const selected = categorySelectedCount(types)
+  return selected > 0 && selected < types.length
+}
+
+// Clear any individual `contentType` values whose MIME type lives in `types`.
+// Used on both branches of a category toggle (none→all collapses, all→none clears).
+const clearIndividualTypes = async (types) => {
+  for (const contentType of types) {
+    const item = entryFor(contentType)?.item ?? { key: contentType }
+    if (hasFilterValue(props.filter, item)) {
+      await toggleFilterValue(props.filter, item, false)
+    }
+  }
+}
+
+const toggleCategoryStored = async (category, checked) => {
+  if (!categoryFilter.value) {
+    return
+  }
+  if (isCategoryStored(category) === checked) {
+    return
+  }
+  await toggleFilterValue(categoryFilter.value, { key: category }, checked)
+}
+
+// Smart category toggle:
+//   * checked   → remove every individual `contentType` value in the category
+//                 and write a single `contentTypeCategory` value instead.
+//   * unchecked → remove the `contentTypeCategory` value and clear every
+//                 individual `contentType` value that belonged to the category.
+const toggleCategory = async (category, types, checked) => {
+  if (checked) {
+    await clearIndividualTypes(types)
+    await toggleCategoryStored(category, true)
+  }
+  else {
+    await toggleCategoryStored(category, false)
+    await clearIndividualTypes(types)
+  }
+}
+
+// Smart entry toggle:
+//   * Un-ticking a type inside a category that is currently stored expands the
+//     category back into the remaining individual `contentType` values.
+//   * Otherwise, we just flip the individual `contentType` value.
+const toggleEntry = async (contentType, checked) => {
+  const item = entryFor(contentType)?.item ?? { key: contentType }
+  if (checked) {
+    await toggleFilterValue(props.filter, item, true)
+    return
+  }
+
+  const category = categoryForContentType(contentType)
+  if (category && isCategoryStored(category)) {
+    await toggleCategoryStored(category, false)
+    const remaining = categories.value[category].filter(type => type !== contentType)
+    for (const remainingType of remaining) {
+      const remainingItem = entryFor(remainingType)?.item ?? { key: remainingType }
+      if (!hasFilterValue(props.filter, remainingItem)) {
+        await toggleFilterValue(props.filter, remainingItem, true)
+      }
+    }
+    return
+  }
+
+  await toggleFilterValue(props.filter, item, false)
 }
 
 const categoryCount = types =>
   types.reduce((sum, contentType) => sum + entryCount(contentType), 0)
 
-const categorySelectedCount = types =>
-  types.filter(contentType => isEntrySelected(contentType)).length
-
-const categoryAllSelected = (types) => {
-  const selected = categorySelectedCount(types)
-  return selected > 0 && selected === types.length
-}
-
-const categoryIndeterminate = (types) => {
-  const selected = categorySelectedCount(types)
-  return selected > 0 && selected < types.length
-}
-
-const toggleCategory = async (types, checked) => {
-  for (const contentType of types) {
-    if (isEntrySelected(contentType) !== checked) {
-      await toggleEntry(contentType, checked)
-    }
-  }
-}
+defineExpose({
+  grouped,
+  categoryAllSelected,
+  categoryIndeterminate,
+  isEntrySelected,
+  toggleCategory,
+  toggleEntry
+})
 </script>
 
 <template>
@@ -82,6 +176,7 @@ const toggleCategory = async (types, checked) => {
     ref="filterTypeRef"
     :filter="props.filter"
     :hide-search="grouped"
+    :hide-sort="grouped"
   >
     <template #all />
     <template #default="{ entries: slotEntries }">
@@ -98,9 +193,9 @@ const toggleCategory = async (types, checked) => {
             <content-types-category-name
               :label="category"
               :count="categoryCount(types)"
-              :model-value="categoryAllSelected(types)"
-              :indeterminate="categoryIndeterminate(types)"
-              @update:model-value="toggleCategory(types, $event)"
+              :model-value="categoryAllSelected(category, types)"
+              :indeterminate="categoryIndeterminate(category, types)"
+              @update:model-value="toggleCategory(category, types, $event)"
             />
             <content-types-category-item
               v-for="contentType in types"
