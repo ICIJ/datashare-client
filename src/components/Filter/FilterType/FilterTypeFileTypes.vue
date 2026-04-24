@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref, toRef, useTemplateRef } from 'vue'
 import { uniq } from 'lodash'
+import { useI18n } from 'vue-i18n'
 
 import ButtonToggleContentTypesView from '@/components/Button/ButtonToggleContentTypesView.vue'
 import ContentTypesAll from '@/components/ContentTypes/ContentTypesCategories/ContentTypesAll.vue'
@@ -16,6 +17,8 @@ import { getDocumentTypeLabel } from '@/utils/utils'
 import { useContentTypeCategories } from '@/composables/useContentTypeCategories'
 import { useSearchFilter } from '@/composables/useSearchFilter'
 import { useSearchStore } from '@/store/modules'
+
+const { t, te } = useI18n()
 
 const CATEGORY_FILTER_NAME = 'contentTypeCategory'
 
@@ -43,7 +46,10 @@ const sort = computed(() => searchStore.sortFilters[props.filter.name] ?? {
   orderBy: settings.filter.orderBy
 })
 const categoryJsonOrder = Object.keys(contentTypeCategoriesJson)
-const categoryLabelFor = category => contentTypeCategoriesJson[category]?.label ?? category
+const categoryLabelFor = (category) => {
+  const key = `filter.contentTypeCategory.${category}`
+  return te(key) ? t(key) : category
+}
 
 // The hidden companion filter (`contentTypeCategory`) holds the high-level
 // category selection whenever every MIME type in a category is picked.

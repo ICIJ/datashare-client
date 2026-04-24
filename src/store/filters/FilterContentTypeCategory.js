@@ -7,19 +7,22 @@ import categories from '@/utils/contentTypeCategories.json'
 
 /**
  * Filter on high-level content-type categories (AUDIO, VIDEO, DOCUMENT, ...).
- * Resolves human-readable labels via `contentTypeCategories.json`. This filter
- * is hidden from the filters panel — its values are only exposed in the URL
- * query string and in the breadcrumb.
+ * Labels are resolved via i18n (`filter.contentTypeCategory.<KEY>`); the JSON
+ * payload only carries ordering and icons. This filter is hidden from the
+ * filters panel — its values are only exposed in the URL query string and
+ * in the breadcrumb.
  */
 export default class FilterContentTypeCategory extends FilterText {
   /**
-   * Map a label-based search query to matching category keys.
+   * Map a search query to matching category keys. Matches on the raw key
+   * (lower-cased) since filter classes run outside i18n context; the filter
+   * is hidden from the panel so this method is rarely exercised.
    * @param {string} query - Lowercased user query.
-   * @returns {string[]} Category keys whose label contains the query.
+   * @returns {string[]} Category keys whose key contains the query.
    */
   keyAliases(query) {
-    return reduce(categories, (acc, item, key) => {
-      if (toLower(item.label).includes(query)) {
+    return reduce(categories, (acc, _value, key) => {
+      if (toLower(key).includes(query)) {
         acc.push(key)
       }
       return acc
@@ -28,10 +31,10 @@ export default class FilterContentTypeCategory extends FilterText {
 
   /**
    * @param {{key: string}} item - Bucket with the category key.
-   * @returns {string} Human-readable label for the category.
+   * @returns {string} i18n key resolved by `labelToHuman` to render the label.
    */
   itemLabel(item) {
-    return categories[item.key]?.label ?? item.key
+    return `filter.contentTypeCategory.${item.key}`
   }
 
   /** @returns {object} Display component used to render selected values. */

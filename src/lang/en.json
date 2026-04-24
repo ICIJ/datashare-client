@@ -503,6 +503,16 @@
   "filter": {
     "project": "Projects",
     "contentType": "File types",
+    "contentTypeCategory": {
+      "AUDIO": "Audio",
+      "VIDEO": "Video",
+      "IMAGE": "Image",
+      "DOCUMENT": "Document",
+      "EMAIL": "Email",
+      "PRESENTATION": "Presentation",
+      "SPREADSHEET": "Spreadsheet",
+      "OTHER": "Other"
+    },
     "language": "Languages",
     "namedEntityPerson": "People",
     "namedEntityLocation": "Locations",
