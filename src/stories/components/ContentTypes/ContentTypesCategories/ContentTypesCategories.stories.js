@@ -24,18 +24,18 @@ export const Grouped = {
       <content-types-categories>
         <content-types-all :count="2344" />
         <content-types-category>
-          <content-types-category-name label="Documents" :count="1586" indeterminate />
+          <content-types-category-name category="DOCUMENT" :count="1586" indeterminate />
           <content-types-category-item content-type="PDF" :count="1552" model-value />
           <content-types-category-item content-type="Word" :count="34" />
         </content-types-category>
         <content-types-category>
-          <content-types-category-name label="Images" :count="648" />
+          <content-types-category-name category="IMAGE" :count="648" />
           <content-types-category-item content-type="PNG" :count="489" />
           <content-types-category-item content-type="JPEG" :count="124" />
           <content-types-category-item content-type="TIFF" :count="35" />
         </content-types-category>
         <content-types-category>
-          <content-types-category-name label="Spreadsheets" :count="110" />
+          <content-types-category-name category="SPREADSHEET" :count="110" />
           <content-types-category-item content-type="CSV" :count="98" />
           <content-types-category-item content-type="Excel" :count="12" />
         </content-types-category>
