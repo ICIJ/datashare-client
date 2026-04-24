@@ -518,6 +518,95 @@ describe('SearchStore', () => {
         expect(anotherStore.getFilter({ name: 'contentTypeCategory' }).values).toEqual(['DOCUMENT'])
       })
     })
+
+    describe('paired contentType / contentTypeCategory exclude flag', () => {
+      it('writes both paired dimensions with the `-` prefix when contentType is excluded', () => {
+        searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+        searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'DOCUMENT' })
+        searchStore.excludeFilter('contentType')
+        searchStore.excludeFilter('contentTypeCategory')
+
+        const query = searchStore.toRouteQuery
+        expect(query['f[-contentType]']).toEqual(['application/pdf'])
+        expect(query['f[-contentTypeCategory]']).toEqual(['DOCUMENT'])
+        expect(query['f[contentType]']).toBeUndefined()
+        expect(query['f[contentTypeCategory]']).toBeUndefined()
+      })
+
+      it('emits the `-` prefix for the pair even when only the canonical side is marked excluded in the store', () => {
+        // Simulate store drift: only contentType is marked excluded, but both have values.
+        searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+        searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'DOCUMENT' })
+        searchStore.excludeFilter('contentType')
+
+        const query = searchStore.toRouteQuery
+        expect(query['f[-contentType]']).toEqual(['application/pdf'])
+        expect(query['f[-contentTypeCategory]']).toEqual(['DOCUMENT'])
+      })
+
+      it('emits the `-` prefix for the pair even when only the paired side is marked excluded in the store', () => {
+        // Simulate store drift: only contentTypeCategory is marked excluded.
+        searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+        searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'DOCUMENT' })
+        searchStore.excludeFilter('contentTypeCategory')
+
+        const query = searchStore.toRouteQuery
+        expect(query['f[-contentType]']).toEqual(['application/pdf'])
+        expect(query['f[-contentTypeCategory]']).toEqual(['DOCUMENT'])
+      })
+
+      it('propagates the exclude flag to contentTypeCategory when only f[-contentType] is in the URL', () => {
+        searchStore.updateFromRouteQuery({ 'f[-contentType]': ['application/pdf'] })
+
+        expect(searchStore.isFilterExcluded('contentType')).toBe(true)
+        expect(searchStore.isFilterExcluded('contentTypeCategory')).toBe(true)
+      })
+
+      it('propagates the exclude flag to contentType when only f[-contentTypeCategory] is in the URL', () => {
+        searchStore.updateFromRouteQuery({ 'f[-contentTypeCategory]': ['DOCUMENT'] })
+
+        expect(searchStore.isFilterExcluded('contentType')).toBe(true)
+        expect(searchStore.isFilterExcluded('contentTypeCategory')).toBe(true)
+      })
+
+      it('leaves both dimensions included when the URL carries neither with an exclude flag', () => {
+        searchStore.updateFromRouteQuery({
+          'f[contentType]': ['application/pdf'],
+          'f[contentTypeCategory]': ['DOCUMENT']
+        })
+
+        expect(searchStore.isFilterExcluded('contentType')).toBe(false)
+        expect(searchStore.isFilterExcluded('contentTypeCategory')).toBe(false)
+      })
+
+      it('unifies divergent URL flags by propagating exclude to both sides', () => {
+        // The paired side has the flag but canonical does not — unify by keeping
+        // the stricter state (excluded) so user intent is preserved.
+        searchStore.updateFromRouteQuery({
+          'f[contentType]': ['application/pdf'],
+          'f[-contentTypeCategory]': ['DOCUMENT']
+        })
+
+        expect(searchStore.isFilterExcluded('contentType')).toBe(true)
+        expect(searchStore.isFilterExcluded('contentTypeCategory')).toBe(true)
+      })
+
+      it('round-trips both paired dimensions through URL when excluded together', () => {
+        searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+        searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'DOCUMENT' })
+        searchStore.excludeFilter('contentType')
+        searchStore.excludeFilter('contentTypeCategory')
+        const query = searchStore.toRouteQuery
+
+        const anotherStore = useSearchStore.create('paired-round-trip')
+        anotherStore.updateFromRouteQuery(query)
+
+        expect(anotherStore.isFilterExcluded('contentType')).toBe(true)
+        expect(anotherStore.isFilterExcluded('contentTypeCategory')).toBe(true)
+        expect(anotherStore.getFilter({ name: 'contentType' }).values).toEqual(['application/pdf'])
+        expect(anotherStore.getFilter({ name: 'contentTypeCategory' }).values).toEqual(['DOCUMENT'])
+      })
+    })
   })
 
   describe('Delete query terms', () => {
