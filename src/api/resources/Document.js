@@ -9,7 +9,6 @@ import EsDoc from '@/api/resources/EsDoc'
 import humanSize from '@/utils/humanSize'
 import { findContentTypeIcon } from '@/utils/iconFiles'
 import types from '@/utils/contentTypes.json'
-import typeCategories from '@/utils/contentTypeCategories.json'
 
 const _parent = '_PARENT'
 const _root = '_ROOT'
@@ -262,7 +261,8 @@ export default class Document extends EsDoc {
   }
 
   get contentTypeCategoryLabel() {
-    return get(typeCategories, [this.contentTypeCategory, 'label'], null)
+    // i18n translation key; the caller translates it against the active locale.
+    return `filter.contentTypeCategory.${this.contentTypeCategory}`
   }
 
   get contentTypeLabel() {
