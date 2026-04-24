@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref, toRef, useTemplateRef } from 'vue'
+import { uniq } from 'lodash'
 
 import ButtonToggleContentTypesView from '@/components/Button/ButtonToggleContentTypesView.vue'
 import ContentTypesAll from '@/components/ContentTypes/ContentTypesCategories/ContentTypesAll.vue'
@@ -105,68 +106,71 @@ const categoryIndeterminate = (category, types) => {
   return selected > 0 && selected < types.length
 }
 
-// Clear any individual `contentType` values whose MIME type lives in `types`.
-// Used on both branches of a category toggle (none→all collapses, all→none clears).
-const clearIndividualTypes = async (types) => {
-  for (const contentType of types) {
-    const item = entryFor(contentType)?.item ?? { key: contentType }
-    if (hasFilterValue(props.filter, item)) {
-      await toggleFilterValue(props.filter, item, false)
-    }
-  }
+const currentContentTypes = () => searchStore.values[props.filter.name] ?? []
+const currentCategories = () => searchStore.values[CATEGORY_FILTER_NAME] ?? []
+
+const writeContentTypes = (values) => {
+  searchStore.setFilterValue({ name: props.filter.name, value: uniq(values) })
 }
 
-const toggleCategoryStored = async (category, checked) => {
+const writeCategories = (values) => {
   if (!categoryFilter.value) {
     return
   }
-  if (isCategoryStored(category) === checked) {
-    return
-  }
-  await toggleFilterValue(categoryFilter.value, { key: category }, checked)
+  searchStore.setFilterValue({ name: CATEGORY_FILTER_NAME, value: uniq(values) })
 }
 
-// Smart category toggle:
+// Smart category toggle — a single write per affected filter instead of N:
 //   * checked   → remove every individual `contentType` value in the category
 //                 and write a single `contentTypeCategory` value instead.
 //   * unchecked → remove the `contentTypeCategory` value and clear every
 //                 individual `contentType` value that belonged to the category.
-const toggleCategory = async (category, types, checked) => {
-  if (checked) {
-    await clearIndividualTypes(types)
-    await toggleCategoryStored(category, true)
-  }
-  else {
-    await toggleCategoryStored(category, false)
-    await clearIndividualTypes(types)
-  }
+const toggleCategory = (category, types, checked) => {
+  const remainingTypes = currentContentTypes().filter(value => !types.includes(value))
+  writeContentTypes(remainingTypes)
+
+  const categoriesSet = currentCategories().filter(value => value !== category)
+  writeCategories(checked ? [...categoriesSet, category] : categoriesSet)
 }
 
 // Smart entry toggle:
+//   * Checking the last remaining type in a category promotes the selection
+//     to a single `contentTypeCategory` value (auto-collapse).
 //   * Un-ticking a type inside a category that is currently stored expands the
 //     category back into the remaining individual `contentType` values.
 //   * Otherwise, we just flip the individual `contentType` value.
-const toggleEntry = async (contentType, checked) => {
-  const item = entryFor(contentType)?.item ?? { key: contentType }
-  if (checked) {
-    await toggleFilterValue(props.filter, item, true)
-    return
-  }
-
+const toggleEntry = (contentType, checked) => {
   const category = categoryForContentType(contentType)
-  if (category && isCategoryStored(category)) {
-    await toggleCategoryStored(category, false)
-    const remaining = categories.value[category].filter(type => type !== contentType)
-    for (const remainingType of remaining) {
-      const remainingItem = entryFor(remainingType)?.item ?? { key: remainingType }
-      if (!hasFilterValue(props.filter, remainingItem)) {
-        await toggleFilterValue(props.filter, remainingItem, true)
-      }
+
+  if (checked) {
+    const categoryTypes = category ? categories.value[category] ?? [] : []
+    const currentTypes = currentContentTypes()
+    const siblings = categoryTypes.filter(type => type !== contentType)
+    const categoryAlreadyStored = category && currentCategories().includes(category)
+    const completesCategory
+      = category
+        && !categoryAlreadyStored
+        && siblings.length > 0
+        && siblings.every(type => currentTypes.includes(type))
+
+    if (completesCategory) {
+      writeContentTypes(currentTypes.filter(value => !categoryTypes.includes(value)))
+      writeCategories([...currentCategories(), category])
+      return
     }
+
+    writeContentTypes([...currentTypes, contentType])
     return
   }
 
-  await toggleFilterValue(props.filter, item, false)
+  if (category && isCategoryStored(category)) {
+    const remaining = categories.value[category].filter(type => type !== contentType)
+    writeCategories(currentCategories().filter(value => value !== category))
+    writeContentTypes([...currentContentTypes(), ...remaining])
+    return
+  }
+
+  writeContentTypes(currentContentTypes().filter(value => value !== contentType))
 }
 
 const categoryCount = types =>
