@@ -39,7 +39,7 @@ describe('FilterContentTypeCategory.js', () => {
     })
 
     it('returns no matches when the query matches nothing', () => {
-      const aliases = filter.keyAliases('zzz').filter(Boolean)
+      const aliases = filter.keyAliases('zzz')
       expect(aliases).toHaveLength(0)
     })
   })
