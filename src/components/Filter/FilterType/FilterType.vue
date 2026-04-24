@@ -176,11 +176,9 @@ const entries = computed(() => {
 const infiniteId = ref(uniqueId('infinite-search-filter-'))
 const reachedBucketsEnd = computed(() => pages.length && lastPageBuckets.value.length < size.value)
 
-const noInfiniteScroll = computed(
-  () => filter.pagelessBucketSize != null
-    || !pages.length
-    || reachedBucketsEnd.value
-)
+const isPageless = computed(() => filter.pagelessBucketSize != null)
+const hasNoPages = computed(() => !pages.length)
+const noInfiniteScroll = computed(() => isPageless.value || hasNoPages.value || reachedBucketsEnd.value)
 const noBucketTranslation = computed(() => filter?.noBucketTranslation ?? false)
 const fromElasticSearch = computed(() => filter?.fromElasticSearch ?? false)
 const count = computed(() => filter.values.length)
