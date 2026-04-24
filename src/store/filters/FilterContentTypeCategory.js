@@ -1,9 +1,11 @@
-import { reduce, toLower } from 'lodash'
+import { pickBy, toLower } from 'lodash'
 
 import FilterText from './FilterText'
 
 import DisplayContentTypeCategory from '@/components/Display/DisplayContentTypeCategory'
 import categories from '@/utils/contentTypeCategories.json'
+
+export const CONTENT_TYPE_CATEGORY_FILTER_NAME = 'contentTypeCategory'
 
 /**
  * Filter on high-level content-type categories (AUDIO, VIDEO, DOCUMENT, ...).
@@ -15,18 +17,13 @@ import categories from '@/utils/contentTypeCategories.json'
 export default class FilterContentTypeCategory extends FilterText {
   /**
    * Map a search query to matching category keys. Matches on the raw key
-   * (lower-cased) since filter classes run outside i18n context; the filter
-   * is hidden from the panel so this method is rarely exercised.
+   * since filter classes run outside i18n context; the filter is hidden
+   * from the panel so this method is rarely exercised.
    * @param {string} query - Lowercased user query.
    * @returns {string[]} Category keys whose key contains the query.
    */
   keyAliases(query) {
-    return reduce(categories, (acc, _value, key) => {
-      if (toLower(key).includes(query)) {
-        acc.push(key)
-      }
-      return acc
-    }, [])
+    return Object.keys(pickBy(categories, (_value, key) => toLower(key).includes(query)))
   }
 
   /**
