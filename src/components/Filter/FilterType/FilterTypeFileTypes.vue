@@ -162,7 +162,7 @@ const toggleEntry = (contentType, checked) => {
   }
 
   if (category && isCategoryStored(category)) {
-    const siblings = categories.value[category].filter(type => type !== contentType)
+    const siblings = (categories.value[category] ?? []).filter(type => type !== contentType)
     // Drop the unchecked type too, in case URL tampering left it stored
     // under both contentType and an overlapping contentTypeCategory.
     const others = currentContentTypes().filter(value => value !== contentType)
