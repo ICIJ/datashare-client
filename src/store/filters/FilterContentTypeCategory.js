@@ -1,4 +1,4 @@
-import { map, toLower } from 'lodash'
+import { reduce, toLower } from 'lodash'
 
 import FilterText from './FilterText'
 
@@ -18,11 +18,12 @@ export default class FilterContentTypeCategory extends FilterText {
    * @returns {string[]} Category keys whose label contains the query.
    */
   keyAliases(query) {
-    return map(categories, (item, key) => {
+    return reduce(categories, (acc, item, key) => {
       if (toLower(item.label).includes(query)) {
-        return key
+        acc.push(key)
       }
-    })
+      return acc
+    }, [])
   }
 
   /**

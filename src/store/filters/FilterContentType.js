@@ -1,4 +1,4 @@
-import { map, toLower } from 'lodash'
+import { reduce, toLower } from 'lodash'
 
 import FilterText from './FilterText'
 
@@ -20,14 +20,15 @@ export default class FilterContentType extends FilterText {
   /**
    * Map a label-based search query to matching MIME keys.
    * @param {string} query - Lowercased user query.
-   * @returns {string[]} MIME keys whose label contains the query (may include `undefined`).
+   * @returns {string[]} MIME keys whose label contains the query.
    */
   keyAliases(query) {
-    return map(types, (item, key) => {
+    return reduce(types, (acc, item, key) => {
       if (toLower(item.label).includes(query)) {
-        return key
+        acc.push(key)
       }
-    })
+      return acc
+    }, [])
   }
 
   /**
