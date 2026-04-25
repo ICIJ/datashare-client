@@ -7,6 +7,7 @@ import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import FilterType from '@/components/Filter/FilterType/FilterType'
 import FilterTypeFileTypes from '@/components/Filter/FilterType/FilterTypeFileTypes'
 import ButtonToggleContentTypesView from '@/components/Button/ButtonToggleContentTypesView'
+import ContentTypesAll from '@/components/ContentTypes/ContentTypesCategories/ContentTypesAll'
 import ContentTypesCategory from '@/components/ContentTypes/ContentTypesCategories/ContentTypesCategory'
 import ContentTypesCategoryItem from '@/components/ContentTypes/ContentTypesCategories/ContentTypesCategoryItem'
 import ContentTypesCategoryName from '@/components/ContentTypes/ContentTypesCategories/ContentTypesCategoryName'
@@ -601,6 +602,296 @@ describe('FilterTypeFileTypes.vue', () => {
       // All three aggregated content types are rendered — none dropped or duplicated.
       const contentTypes = entries.map(node => node.props('contentType'))
       expect(new Set(contentTypes)).toEqual(new Set(['application/pdf', 'image/jpeg', 'video/mp4']))
+    })
+  })
+
+  describe('search preserves "All" row, counts, and current selection', () => {
+    // Seed a multi-category dataset so a query can match a single category
+    // while leaving selected items in *other* categories that the user
+    // expects to keep seeing.
+    //   DOCUMENT → application/pdf (3 docs)
+    //   IMAGE    → image/jpeg      (2 docs)
+    //   VIDEO    → video/mp4       (1 doc)
+    const seedMultiCategoryIndex = async () => {
+      api.getContentTypeCategories.mockResolvedValue({
+        DOCUMENT: ['application/pdf'],
+        IMAGE: ['image/jpeg'],
+        VIDEO: ['video/mp4']
+      })
+
+      await letData(es).have(new IndexedDocument('d1', index).withContentType('application/pdf')).commit()
+      await letData(es).have(new IndexedDocument('d2', index).withContentType('application/pdf')).commit()
+      await letData(es).have(new IndexedDocument('d3', index).withContentType('application/pdf')).commit()
+      await letData(es).have(new IndexedDocument('i1', index).withContentType('image/jpeg')).commit()
+      await letData(es).have(new IndexedDocument('i2', index).withContentType('image/jpeg')).commit()
+      await letData(es).have(new IndexedDocument('v1', index).withContentType('video/mp4')).commit()
+
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+    }
+
+    const setQuery = async (value) => {
+      wrapper.findComponent(FilterType).vm.$emit('update:query', value)
+      await flushPromises()
+    }
+
+    const findCategoryItem = (contentType) => {
+      const items = wrapper.findAllComponents(ContentTypesCategoryItem)
+      return items.find(node => node.props('contentType') === contentType)
+    }
+
+    const findCategoryName = (category) => {
+      const names = wrapper.findAllComponents(ContentTypesCategoryName)
+      return names.find(node => node.props('category') === category)
+    }
+
+    it('keeps the "All" row rendered when the query matches no category or type', async () => {
+      await seedMultiCategoryIndex()
+      await setQuery('zzz-no-match-anywhere')
+
+      expect(wrapper.findComponent(ContentTypesAll).exists()).toBe(true)
+    })
+
+    it('keeps the "All" row count tied to total aggregations, not the filtered subset', async () => {
+      await seedMultiCategoryIndex()
+
+      const totalBefore = wrapper.findComponent(ContentTypesAll).props('count')
+
+      await setQuery('image')
+
+      // The query only matches IMAGE, but the All count comes from the
+      // overall search total — it does NOT recompute from the visible subset.
+      expect(wrapper.findComponent(ContentTypesAll).props('count')).toBe(totalBefore)
+    })
+
+    it('keeps per-category and per-item counts unchanged when the query is active', async () => {
+      await seedMultiCategoryIndex()
+
+      const documentCountBefore = findCategoryName('DOCUMENT').props('count')
+      const pdfCountBefore = findCategoryItem('application/pdf').props('count')
+
+      await setQuery('pdf')
+
+      // DOCUMENT is the only category visible now, but its count and the pdf
+      // item count must still reflect the underlying aggregation.
+      expect(findCategoryName('DOCUMENT').props('count')).toBe(documentCountBefore)
+      expect(findCategoryItem('application/pdf').props('count')).toBe(pdfCountBefore)
+    })
+
+    it('keeps a selected item visible in the grouped view when the query no longer matches it', async () => {
+      await seedMultiCategoryIndex()
+
+      await findCategoryItem('video/mp4').vm.$emit('update:modelValue', true)
+      await flushPromises()
+
+      await setQuery('pdf')
+
+      // pdf is the matching item, but video/mp4 is selected so it stays.
+      expect(findCategoryItem('application/pdf')).toBeDefined()
+      expect(findCategoryItem('video/mp4')).toBeDefined()
+      // VIDEO category is kept because it owns a selected (visible) type,
+      // even though its label doesn't match.
+      expect(findCategoryName('VIDEO')).toBeDefined()
+    })
+
+    it('keeps a stored category and its items visible when the query no longer matches them', async () => {
+      api.getContentTypeCategories.mockResolvedValue({
+        DOCUMENT: ['application/pdf'],
+        OTHER: ['text/html', 'text/plain']
+      })
+
+      await letData(es).have(new IndexedDocument('d1', index).withContentType('application/pdf')).commit()
+      await letData(es).have(new IndexedDocument('h1', index).withContentType('text/html')).commit()
+      await letData(es).have(new IndexedDocument('t1', index).withContentType('text/plain')).commit()
+
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+
+      // User picks the whole OTHER category — text/html and text/plain are
+      // now selected via contentTypeCategory rather than individual values.
+      await findCategoryName('OTHER').vm.$emit('update:modelValue', true)
+      await flushPromises()
+      expect(searchStore.values.contentTypeCategory).toEqual(['OTHER'])
+
+      await setQuery('pdf')
+
+      // text/html and text/plain are selected (via the stored category) so
+      // they stay visible even though they don't match the query.
+      expect(findCategoryItem('text/html')).toBeDefined()
+      expect(findCategoryItem('text/plain')).toBeDefined()
+    })
+
+    it('keeps a selected item visible in the flat view when the query no longer matches it', async () => {
+      await seedMultiCategoryIndex()
+
+      await wrapper.findComponent(ButtonToggleContentTypesView).trigger('click')
+      await flushPromises()
+
+      const videoEntry = wrapper.findAllComponents(ContentTypesEntry)
+        .find(node => node.props('contentType') === 'video/mp4')
+      await videoEntry.vm.$emit('update:modelValue', true)
+      await flushPromises()
+
+      await setQuery('pdf')
+
+      const visibleTypes = wrapper.findAllComponents(ContentTypesEntry)
+        .map(node => node.props('contentType'))
+
+      expect(visibleTypes).toContain('application/pdf')
+      expect(visibleTypes).toContain('video/mp4')
+      expect(visibleTypes).not.toContain('image/jpeg')
+    })
+
+    it('does not change selection semantics: ticking a sibling under a query promotes to category', async () => {
+      api.getContentTypeCategories.mockResolvedValue({
+        OTHER: ['text/html', 'text/plain']
+      })
+
+      await letData(es).have(new IndexedDocument('h1', index).withContentType('text/html')).commit()
+      await letData(es).have(new IndexedDocument('t1', index).withContentType('text/plain')).commit()
+
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+
+      await findCategoryItem('text/html').vm.$emit('update:modelValue', true)
+      await flushPromises()
+      expect(searchStore.values.contentType).toEqual(['text/html'])
+
+      // Ticking the last sibling under an active query must still trigger
+      // the category-promotion path that toggleEntry implements.
+      await setQuery('plain')
+      await findCategoryItem('text/plain').vm.$emit('update:modelValue', true)
+      await flushPromises()
+
+      expect(searchStore.values.contentTypeCategory).toEqual(['OTHER'])
+      expect(searchStore.values.contentType ?? []).not.toContain('text/html')
+      expect(searchStore.values.contentType ?? []).not.toContain('text/plain')
+    })
+  })
+
+  describe('search filtering of the rendered structure', () => {
+    // Multi-category seed used to exercise structural filtering: each category
+    // owns enough types to distinguish "category-label match keeps siblings"
+    // from "type-label match hides siblings" in the same dataset.
+    //   DOCUMENT → application/pdf (label "Portable Document Format (PDF)")
+    //   DOCUMENT → text/html       (label "HTML document")
+    //   IMAGE    → image/jpeg      (label "JPEG image")
+    //   VIDEO    → video/mp4       (label "MP4 audio/video")
+    const seedStructuralCategories = async () => {
+      api.getContentTypeCategories.mockResolvedValue({
+        DOCUMENT: ['application/pdf', 'text/html'],
+        IMAGE: ['image/jpeg'],
+        VIDEO: ['video/mp4']
+      })
+
+      await letData(es).have(new IndexedDocument('d1', index).withContentType('application/pdf')).commit()
+      await letData(es).have(new IndexedDocument('h1', index).withContentType('text/html')).commit()
+      await letData(es).have(new IndexedDocument('i1', index).withContentType('image/jpeg')).commit()
+      await letData(es).have(new IndexedDocument('v1', index).withContentType('video/mp4')).commit()
+
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+    }
+
+    const setQuery = async (value) => {
+      wrapper.findComponent(FilterType).vm.$emit('update:query', value)
+      await flushPromises()
+    }
+
+    const visibleCategories = () =>
+      wrapper.findAllComponents(ContentTypesCategoryName).map(node => node.props('category'))
+
+    const visibleCategoryItems = () =>
+      wrapper.findAllComponents(ContentTypesCategoryItem).map(node => node.props('contentType'))
+
+    it('renders the unfiltered grouped structure when the query is empty', async () => {
+      await seedStructuralCategories()
+
+      // Empty query is a fast-path no-op: every aggregated category and item
+      // is rendered, alongside the "All" row.
+      expect(visibleCategories()).toEqual(expect.arrayContaining(['DOCUMENT', 'IMAGE', 'VIDEO']))
+      expect(visibleCategories()).toHaveLength(3)
+      expect(visibleCategoryItems()).toEqual(
+        expect.arrayContaining(['application/pdf', 'text/html', 'image/jpeg', 'video/mp4'])
+      )
+      expect(visibleCategoryItems()).toHaveLength(4)
+      expect(wrapper.findComponent(ContentTypesAll).exists()).toBe(true)
+    })
+
+    it('hides non-matching siblings and categories when the query matches a content type label', async () => {
+      await seedStructuralCategories()
+
+      // "html" matches text/html (key + "HTML document" label) but does NOT
+      // match any other type's key/label nor any category label, so DOCUMENT
+      // is kept solely because it owns text/html — its sibling application/pdf
+      // is hidden, and IMAGE / VIDEO disappear entirely.
+      await setQuery('html')
+
+      expect(visibleCategories()).toEqual(['DOCUMENT'])
+      expect(visibleCategoryItems()).toEqual(['text/html'])
+    })
+
+    it('matches a content type by raw MIME substring even when the label does not contain the query', async () => {
+      await seedStructuralCategories()
+
+      // "application" appears in the application/pdf MIME key but NOT in its
+      // label "Portable Document Format (PDF)" nor in any category label — so
+      // a positive match here proves the filter consults the raw key, not
+      // just the resolved label.
+      await setQuery('application')
+
+      expect(visibleCategoryItems()).toEqual(['application/pdf'])
+      expect(visibleCategories()).toEqual(['DOCUMENT'])
+    })
+
+    it('keeps every type in a category when the query matches the category label', async () => {
+      api.getContentTypeCategories.mockResolvedValue({
+        OTHER: ['application/pdf', 'image/jpeg']
+      })
+
+      await letData(es).have(new IndexedDocument('d1', index).withContentType('application/pdf')).commit()
+      await letData(es).have(new IndexedDocument('i1', index).withContentType('image/jpeg')).commit()
+
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+
+      // "other" matches the OTHER category label ("Other") but does NOT match
+      // either of its content-type keys or labels — so a category-label match
+      // must keep both children rendered, not narrow to the empty set.
+      await setQuery('other')
+
+      expect(visibleCategories()).toEqual(['OTHER'])
+      expect(visibleCategoryItems()).toEqual(
+        expect.arrayContaining(['application/pdf', 'image/jpeg'])
+      )
+      expect(visibleCategoryItems()).toHaveLength(2)
+    })
+
+    it('preserves the active query across a grouped → flat → grouped toggle', async () => {
+      await seedStructuralCategories()
+
+      // Apply a query that matches a single category so we can observe the
+      // same filter on both sides of the view toggle.
+      await setQuery('image')
+
+      expect(visibleCategories()).toEqual(['IMAGE'])
+      expect(visibleCategoryItems()).toEqual(['image/jpeg'])
+
+      // Flip to flat: the FilterType search input stays mounted, the local
+      // query ref is unchanged, and the flat list applies the same predicate.
+      await wrapper.findComponent(ButtonToggleContentTypesView).trigger('click')
+      await flushPromises()
+
+      const flatTypes = wrapper.findAllComponents(ContentTypesEntry)
+        .map(node => node.props('contentType'))
+      expect(flatTypes).toEqual(['image/jpeg'])
+
+      // Flip back to grouped: the same query still narrows the categories.
+      await wrapper.findComponent(ButtonToggleContentTypesView).trigger('click')
+      await flushPromises()
+
+      expect(visibleCategories()).toEqual(['IMAGE'])
+      expect(visibleCategoryItems()).toEqual(['image/jpeg'])
     })
   })
 })
