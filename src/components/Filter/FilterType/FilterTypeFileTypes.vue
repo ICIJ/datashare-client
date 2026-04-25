@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, toRef, useTemplateRef } from 'vue'
-import { isEqual } from 'lodash'
+import { deburr, isEqual } from 'lodash'
 
 import ButtonToggleContentTypesView from '@/components/Button/ButtonToggleContentTypesView.vue'
 import ContentTypesAll from '@/components/ContentTypes/ContentTypesCategories/ContentTypesAll.vue'
@@ -27,6 +27,7 @@ const props = defineProps({
 })
 
 const grouped = ref(true)
+const query = ref('')
 
 const filterTypeRef = useTemplateRef('filterTypeRef')
 const entries = computed(() => filterTypeRef.value?.entries ?? [])
@@ -43,6 +44,67 @@ const {
 } = useSearchFilter()
 const searchStore = useSearchStore.inject()
 const categoryLabelFor = useContentTypeCategoryLabel()
+
+const normalizeForSearch = value => deburr(String(value ?? '')).toLowerCase()
+const normalizedQuery = computed(() => normalizeForSearch(query.value))
+const hasQuery = computed(() => normalizedQuery.value !== '')
+
+// Precompute deburred haystacks once per (entries/categories/locale) change so
+// the per-keystroke filter doesn't redo deburr+lowercase across every label
+// and MIME key on every render.
+const categoryHaystacks = computed(() => {
+  const map = new Map()
+  Object.keys(categories.value).forEach((category) => {
+    map.set(category, normalizeForSearch(categoryLabelFor(category)))
+  })
+  return map
+})
+
+const contentTypeHaystacks = computed(() => {
+  const map = new Map()
+  contentTypes.value.forEach((contentType) => {
+    const key = normalizeForSearch(contentType)
+    const label = normalizeForSearch(getDocumentTypeLabel(contentType))
+    map.set(contentType, `${key}\n${label}`)
+  })
+  return map
+})
+
+const matchesContentType = (contentType) => {
+  if (!hasQuery.value) {
+    return true
+  }
+  return contentTypeHaystacks.value.get(contentType)?.includes(normalizedQuery.value) ?? false
+}
+
+const matchesCategory = (category) => {
+  if (!hasQuery.value) {
+    return true
+  }
+  return categoryHaystacks.value.get(category)?.includes(normalizedQuery.value) ?? false
+}
+
+// Keep selected types visible while typing so the user doesn't appear to
+// "lose" a selection.
+const isContentTypeVisible = contentType =>
+  matchesContentType(contentType) || isEntrySelected(contentType)
+
+// A category-label hit short-circuits per-type filtering: every type the API
+// returned for that category stays visible, even those that don't individually
+// match the query.
+const visibleTypesFor = (category, types) => {
+  if (!hasQuery.value || matchesCategory(category)) {
+    return types
+  }
+  return types.filter(isContentTypeVisible)
+}
+
+const visibleEntries = (slotEntries) => {
+  if (!hasQuery.value) {
+    return slotEntries
+  }
+  return slotEntries.filter(entry => isContentTypeVisible(entry.item.key))
+}
 
 const sort = computed(() => searchStore.sortFilters[props.filter.name] ?? {
   sortBy: settings.filter.sortBy,
@@ -177,8 +239,23 @@ const toggleEntry = (contentType, checked) => {
 const categoryCount = types =>
   types.reduce((sum, contentType) => sum + entryCount(contentType), 0)
 
-const sortedCategoryEntries = computed(() => {
+// Empty-query fast path returns the original pairs ref so the grouped view
+// re-renders identically when no filter is active.
+const filteredCategoryPairs = computed(() => {
   const pairs = Object.entries(categories.value)
+  if (!hasQuery.value) {
+    return pairs
+  }
+  return pairs.filter(([category, types]) => {
+    if (matchesCategory(category)) {
+      return true
+    }
+    return types.some(isContentTypeVisible)
+  })
+})
+
+const sortedCategoryEntries = computed(() => {
+  const pairs = filteredCategoryPairs.value
   const { sortBy, orderBy } = sort.value
   const direction = orderBy === 'asc' ? 1 : -1
 
@@ -250,8 +327,8 @@ defineExpose({
 <template>
   <filter-type
     ref="filterTypeRef"
+    v-model:query="query"
     :filter="props.filter"
-    :hide-search="grouped"
   >
     <template #all>
       <content-types-all
@@ -274,7 +351,7 @@ defineExpose({
               @update:model-value="toggleCategory(category, types, $event)"
             />
             <content-types-category-item
-              v-for="contentType in sortedTypesFor(types)"
+              v-for="contentType in sortedTypesFor(visibleTypesFor(category, types))"
               :key="contentType"
               :content-type="contentType"
               :count="entryCount(contentType)"
@@ -285,7 +362,7 @@ defineExpose({
         </template>
         <template v-else>
           <content-types-entry
-            v-for="entry in slotEntries"
+            v-for="entry in visibleEntries(slotEntries)"
             :key="entry.item.key"
             :content-type="entry.item.key"
             :count="entry.item.doc_count"
