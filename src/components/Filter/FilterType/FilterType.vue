@@ -120,7 +120,9 @@ const {
   computedSortFilter,
   computedContextualizeFilter,
   computedExcludeFilter,
-  toggleFilterValue
+  toggleFilterValue,
+  getFilterPairedDimensions,
+  getFilterValuesByName
 } = useSearchFilter()
 
 const exclude = computedExcludeFilter(filter)
@@ -181,9 +183,15 @@ const hasNoPages = computed(() => !pages.length)
 const noInfiniteScroll = computed(() => isPageless.value || hasNoPages.value || reachedBucketsEnd.value)
 const noBucketTranslation = computed(() => filter?.noBucketTranslation ?? false)
 const fromElasticSearch = computed(() => filter?.fromElasticSearch ?? false)
-const count = computed(() => filter.values.length)
 const offset = computed(() => buckets.value?.length ?? 0)
 const size = computed(() => filter.pagelessBucketSize ?? settings.filter.bucketSize)
+// Sum across paired dimensions so the closed-state badge matches the OR
+// semantics used in search; unpaired filters fall back to [name].
+const count = computed(() => {
+  return getFilterPairedDimensions(filter).reduce((sum, name) => {
+    return sum + getFilterValuesByName(name).length
+  }, 0)
+})
 
 const debouncedCollapse = computed({
   get: () => collapse.value,
@@ -227,7 +235,7 @@ onBeforeMount(async () => {
   watch(aggregationDependencies, aggregateIfVisible, { deep: false })
 })
 
-defineExpose({ entries, aggregateOver })
+defineExpose({ entries, aggregateOver, count })
 </script>
 
 <template>
