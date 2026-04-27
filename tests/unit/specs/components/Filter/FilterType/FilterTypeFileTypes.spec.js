@@ -582,6 +582,72 @@ describe('FilterTypeFileTypes.vue', () => {
     })
   })
 
+  describe('stale checkbox state on category promotion', () => {
+    // Other tests in this file shortcut clicks via `vm.$emit('update:modelValue')`
+    // on the ContentTypesCategoryItem wrapper, which bypasses the BFormCheckbox →
+    // FiltersPanelSectionFilterEntry v-model chain and cannot reveal the stale
+    // DOM-checked state when a click leaves `props.modelValue` unchanged on
+    // both sides. Driving the click through the rendered <input> exercises it.
+    const seedCategoriesAndIndex = async () => {
+      api.getContentTypeCategories.mockResolvedValue({
+        OTHER: ['text/html', 'text/plain']
+      })
+
+      await letData(es).have(new IndexedDocument('h1', index).withContentType('text/html')).commit()
+      await letData(es).have(new IndexedDocument('t1', index).withContentType('text/plain')).commit()
+
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+    }
+
+    const findCategoryItem = (contentType) => {
+      const items = wrapper.findAllComponents(ContentTypesCategoryItem)
+      return items.find(node => node.props('contentType') === contentType)
+    }
+
+    const findCategoryItemCheckbox = (contentType) => {
+      return findCategoryItem(contentType).find('input[type="checkbox"]')
+    }
+
+    const findCategoryName = (category) => {
+      const names = wrapper.findAllComponents(ContentTypesCategoryName)
+      return names.find(node => node.props('category') === category)
+    }
+
+    const findCategoryNameCheckbox = (category) => {
+      return findCategoryName(category).find('input[type="checkbox"]')
+    }
+
+    it('resets the just-clicked child checkbox to unchecked once its category is promoted', async () => {
+      await seedCategoriesAndIndex()
+
+      // Pre-select text/html so OTHER is one click away from being fully selected.
+      searchStore.addFilterValue({ name: 'contentType', value: 'text/html' })
+      await flushPromises()
+
+      expect(findCategoryItemCheckbox('text/html').element.checked).toBe(true)
+      expect(findCategoryItemCheckbox('text/plain').element.checked).toBe(false)
+      expect(findCategoryName('OTHER').props('modelValue')).toBe(false)
+      expect(findCategoryName('OTHER').props('indeterminate')).toBe(true)
+
+      await findCategoryItemCheckbox('text/plain').setValue(true)
+      await flushPromises()
+
+      expect(searchStore.values.contentTypeCategory).toEqual(['OTHER'])
+      expect(searchStore.values.contentType ?? []).not.toContain('text/html')
+      expect(searchStore.values.contentType ?? []).not.toContain('text/plain')
+
+      expect(findCategoryName('OTHER').props('modelValue')).toBe(true)
+      expect(findCategoryName('OTHER').props('indeterminate')).toBe(false)
+      expect(findCategoryNameCheckbox('OTHER').element.checked).toBe(true)
+
+      expect(findCategoryItem('text/html').props('modelValue')).toBe(false)
+      expect(findCategoryItem('text/plain').props('modelValue')).toBe(false)
+      expect(findCategoryItemCheckbox('text/html').element.checked).toBe(false)
+      expect(findCategoryItemCheckbox('text/plain').element.checked).toBe(false)
+    })
+  })
+
   describe('category sorting', () => {
     // Seed three categories whose keys exist in contentTypeCategories.json so the
     // sort-by-name test exercises the resolved (human-readable) labels.
