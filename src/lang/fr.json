@@ -119,7 +119,7 @@
     "dontShow": "Ne plus afficher"
   },
   "dismissableContentWarningToggler": {
-    "title": "Content Warning",
+    "title": "Content warning",
     "description": "This media may contain sensitive content that some people may find disturbing or offensive.",
     "toggle": "Show anyway"
   },
@@ -166,6 +166,7 @@
     "download": "Télécharger",
     "downloadWithoutMetadata": "Télécharger sans les métadonnées",
     "downloadExtractText": "Télécharger le texte",
+    "downloadTranslatedText": "Download text translation",
     "downloadRoot": "Télécharger le document à la racine",
     "sectionTitle": "Quel est le titre du document ?",
     "sectionContentType": "Quel est le type du document ?",
@@ -288,6 +289,14 @@
         "count": "fréquence"
       }
     }
+  },
+  "role": {
+    "instance_admin": "Instance admin",
+    "domain_admin": "Domain admin",
+    "project_admin": "Admin",
+    "project_editor": "Editor",
+    "project_member": "Member",
+    "project_visitor": "Visitor"
   },
   "searchFormControl": {
     "submitLabel": "Rechercher"
@@ -462,6 +471,18 @@
   },
   "documentViewerPdfNavDropdownEmbed": {
     "switch": "Switch to built-in viewer"
+  },
+  "displayRepositoryType": {
+    "fs": "file system",
+    "s3": "Amazon S3",
+    "azure": "Azure",
+    "gcs": "Google Cloud Storage",
+    "hdfs": "HDFS",
+    "url": "URL"
+  },
+  "displayEsDistribution": {
+    "elasticsearch": "Elasticsearch",
+    "opensearch": "OpenSearch"
   },
   "documentViewTabs": {
     "text": "Texte",
@@ -875,7 +896,11 @@
     "login": "Se connecter",
     "title": "Se connecter",
     "switchLanguage": "Changer de langue",
-    "tagline": "Le logiciel de recherche et d'analyse de données de l'ICIJ"
+    "tagline": "Le logiciel de recherche et d'analyse de données de l'ICIJ",
+    "username": "Username",
+    "password": "Password",
+    "submit": "Sign in",
+    "error": "Invalid username or password."
   },
   "loginLocaleDropdownSelector": {
     "label": "Changer de langue :"
@@ -1083,6 +1108,14 @@
           "size": "Taille",
           "state": "Statut",
           "id": "ID"
+        },
+        "truncatedAlert": {
+          "sizeLimit": "Results were truncated after reaching the {reason} ({limit}).",
+          "fileCountLimit": "Results were truncated after reaching the {reason} ({limit}).",
+          "reasons": {
+            "sizeLimit": "size limit",
+            "fileCountLimit": "maximum number of files"
+          }
         }
       }
     },
@@ -1358,6 +1391,10 @@
   },
   "projectViewEdit": {
     "title": "Modifier le projet",
+    "tabs": {
+      "details": "Details and documents",
+      "pathBanners": "Banners"
+    },
     "notify": {
       "update": {
         "succeed": "Le projet a été enregistré",
@@ -1366,7 +1403,51 @@
         "failedBody": "Une erreur est survenue lors de la modification du projet."
       }
     },
-    "submit": "Enregistrer"
+    "submit": "Enregistrer",
+    "pathBanners": {
+      "add": "Add banner",
+      "edit": "Edit",
+      "editTitle": "Edit banner",
+      "cancel": "Cancel",
+      "empty": "No banners yet. Click \"Add banner\" to create one.",
+      "save": "Save",
+      "reset": "Reset",
+      "description": "Use path banner to provide contextualized information at the top of each document under a specified path.",
+      "previewTitle": "Preview",
+      "noPathSelected": "No path selected",
+      "fields": {
+        "sensitiveContent": {
+          "label": "Sensitive content",
+          "description": "Sensitive banner adds a blurred overlay on top of the content of documents and ask users to confirm to view"
+        },
+        "path": {
+          "label": "Path",
+          "description": "Select on which path the banner will be displayed"
+        },
+        "text": {
+          "label": "Content",
+          "placeholder": "Text content for the banner",
+          "useDefaultText": "Use default text"
+        },
+        "variant": {
+          "label": "Type"
+        }
+      },
+      "notify": {
+        "create": {
+          "succeedBody": "Banner created.",
+          "failedBody": "Failed to create banner."
+        },
+        "update": {
+          "succeedBody": "Banner saved.",
+          "failedBody": "Failed to save banner."
+        },
+        "delete": {
+          "succeedBody": "Banner deleted.",
+          "failedBody": "Failed to delete banner."
+        }
+      }
+    }
   },
   "projectViewAddDocuments": {
     "title": "Ajouter des documents au projet",
@@ -1506,6 +1587,77 @@
           "description": "Les applications ou scripts utilisant cette clé ne seront plus en mesure d'accéder à l'API Datashare. Vous ne pourrez pas annuler cette action."
         }
       }
+    },
+    "snapshots": {
+      "title": "Backups",
+      "info": "Create and manage backups of your Datashare data. Backups can be restored in case of data loss.",
+      "noSnapshots": "No backups found. Create your first backup to protect your data.",
+      "repositoryPath": "Backup storage path",
+      "repositoryPathHint": "This path must be configured in Elasticsearch's path.repo setting.",
+      "repository": {
+        "type": "Type",
+        "location": "Location",
+        "description": "Backups are stored on a {type} repository located at {location}"
+      },
+      "setup": {
+        "title": "Configure Backup Storage",
+        "description": "Your snapshots must be stored in one of the predefined paths. Please select one of the available paths below.",
+        "loading": "Loading available paths...",
+        "noPathsTitle": "No Backup Paths Available",
+        "noPathsDescription": "No backup paths have been configured in Elasticsearch. Please configure the path.repo setting in your Elasticsearch configuration to enable backups.",
+        "selectPath": "Select the filesystem repository location:",
+        "submit": "Configure"
+      },
+      "refresh": "Refresh",
+      "create": "Create Backup",
+      "creating": "Creating...",
+      "list": {
+        "name": "Name",
+        "status": "Status",
+        "date": "Date",
+        "version": "Version",
+        "distribution": "Distribution",
+        "projects": "Projects",
+        "actions": "Actions"
+      },
+      "status": {
+        "SUCCESS": "Completed",
+        "IN_PROGRESS": "In progress",
+        "FAILED": "Failed",
+        "PARTIAL": "Partial"
+      },
+      "restore": {
+        "title": "Restore Backup",
+        "message": "This will restore all data from backup \"{name}\". Existing data may be overwritten.",
+        "warning": "This action cannot be undone.",
+        "confirm": "Restore",
+        "cancel": "Cancel"
+      },
+      "delete": {
+        "title": "Delete Backup",
+        "message": "Are you sure you want to delete backup \"{name}\"?",
+        "confirm": "Delete",
+        "cancel": "Cancel"
+      },
+      "deleteRepository": {
+        "label": "Delete repository",
+        "message": "Are you sure you want to delete the backup repository? Backups won't be available anymore."
+      },
+      "error": {
+        "repository": "Failed to access backup storage: {error}",
+        "repositoryDelete": "Failed to delete backup repository: {error}",
+        "fetch": "Failed to load backups: {error}",
+        "create": "Failed to create backup: {error}",
+        "delete": "Failed to delete backup: {error}",
+        "restore": "Failed to restore backup: {error}"
+      },
+      "success": {
+        "create": "Backup creation started",
+        "delete": "Backup deleted",
+        "restore": "Restore started",
+        "repositoryCreated": "Backup repository configured",
+        "repositoryDeleted": "Backup repository deleted"
+      }
     }
   },
   "serverSettings": {
@@ -1580,6 +1732,13 @@
       "TB": "% TO"
     }
   },
+  "variant": {
+    "info": "Info",
+    "warning": "Warning",
+    "danger": "Danger",
+    "success": "Success",
+    "sensitive": "Sensitive content"
+  },
   "batchDownload": {
     "title": "Téléchargements en lot",
     "noFile": "L'archive a expiré.",
@@ -1614,6 +1773,12 @@
     "search": {
       "label": "Voir les résultats de la recherche"
     }
+  },
+  "batchDownloadConfirmModal": {
+    "title": "Your download may be truncated",
+    "knownTruncation": "Your search matches approximately {estimatedCount} documents ({estimatedSize}). Batch downloads are limited to {maxFiles} files and {maxSize}, so only part of your results will be included.",
+    "unknownTruncation": "We couldn't verify your search size. Batch downloads are limited to {maxFiles} files and {maxSize}, so your download may be truncated.",
+    "question": "Do you want to proceed anyway?"
   },
   "widget": {
     "noData": "Pas de données",
