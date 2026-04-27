@@ -293,6 +293,37 @@ describe('FilterType.vue', () => {
       expect(wrapper.findAllComponents(FiltersPanelSectionFilterEntry)).toHaveLength(1)
       expect(wrapper.vm.lastPage.total).toBe(1)
     })
+
+    describe('closed-state count reflects paired-dimension union', () => {
+      // Mirrors the OR semantics used in the search query and the breadcrumb.
+      it('is zero when neither contentType nor contentTypeCategory has values', () => {
+        expect(wrapper.vm.count).toBe(0)
+      })
+
+      it('counts only contentType when contentTypeCategory is empty', async () => {
+        searchStore.addFilterValue({ name: 'contentType', value: 'text/javascript' })
+        searchStore.addFilterValue({ name: 'contentType', value: 'text/html' })
+        await wrapper.vm.$nextTick()
+
+        expect(wrapper.vm.count).toBe(2)
+      })
+
+      it('counts contentTypeCategory selections when contentType is empty', async () => {
+        searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'DOCUMENT' })
+        await wrapper.vm.$nextTick()
+
+        expect(wrapper.vm.count).toBe(1)
+      })
+
+      it('sums selections across both paired dimensions (OR-union)', async () => {
+        searchStore.addFilterValue({ name: 'contentType', value: 'text/javascript' })
+        searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'DOCUMENT' })
+        searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'IMAGE' })
+        await wrapper.vm.$nextTick()
+
+        expect(wrapper.vm.count).toBe(3)
+      })
+    })
   })
 
   describe('language', () => {
@@ -345,6 +376,17 @@ describe('FilterType.vue', () => {
 
       expect(wrapper.vm.entries).toHaveLength(1)
       expect(wrapper.vm.entries[0].item.key).toBe('ENGLISH')
+    })
+
+    it('counts only its own values for an unpaired filter', async () => {
+      // Sanity check: the union-aware count must collapse to the filter's own
+      // values when it has no paired dimension, so unrelated filters keep
+      // their existing closed-state behavior unchanged.
+      searchStore.addFilterValue({ name: 'language', value: 'ENGLISH' })
+      searchStore.addFilterValue({ name: 'language', value: 'FRENCH' })
+      await wrapper.vm.$nextTick()
+
+      expect(wrapper.vm.count).toBe(2)
     })
   })
 
