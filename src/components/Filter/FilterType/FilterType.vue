@@ -17,7 +17,7 @@ import { useSearchStore } from '@/store/modules'
 const query = defineModel('query', { type: String, default: '' })
 const collapse = defineModel('collapse', { type: Boolean, default: null })
 
-const { filter, modal, hideCount } = defineProps({
+const { filter, modal, hideCount, overlayShow } = defineProps({
   filter: {
     type: Object,
     required: true
@@ -27,6 +27,13 @@ const { filter, modal, hideCount } = defineProps({
   },
   hideCount: {
     type: Boolean
+  },
+  // Forwarded to FiltersPanelSectionFilter to surface an informational
+  // overlay on top of the filter content (search + entries) — never on the
+  // title, never while collapsed.
+  overlayShow: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -256,7 +263,17 @@ defineExpose({ entries, aggregateOver, count })
     :count="count"
     :loading="isLoading"
     :modal="modal"
+    :overlay-show="overlayShow"
   >
+    <template
+      v-if="$slots.overlay"
+      #overlay
+    >
+      <slot
+        name="overlay"
+        v-bind="{ filter, opened }"
+      />
+    </template>
     <slot
       name="all"
       v-bind="{ entries, filter, opened }"
