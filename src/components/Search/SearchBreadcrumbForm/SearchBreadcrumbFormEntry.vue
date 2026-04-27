@@ -51,7 +51,7 @@ const props = defineProps({
 
 const emit = defineEmits(['click:x'])
 
-const showOccurences = computed(() => {
+const showOccurrences = computed(() => {
   return !props.noOccurrences && props.occurrences !== null
 })
 
@@ -75,7 +75,7 @@ const showCaret = computed(() => {
     />
     <div class="text-nowrap">
       <search-breadcrumb-form-entry-occurrences
-        v-if="showOccurences"
+        v-if="showOccurrences"
         class="search-breadcrumb-form-entry__occurences"
         :occurrences="occurrences"
         :previous-occurrences="previousOccurrences"
