@@ -9,15 +9,12 @@ import ContentTypesCategoryName from '@/components/ContentTypes/ContentTypesCate
 import ContentTypesCategoryItem from '@/components/ContentTypes/ContentTypesCategories/ContentTypesCategoryItem.vue'
 import ContentTypesEntry from '@/components/ContentTypes/ContentTypesCategories/ContentTypesEntry.vue'
 import FilterType from './FilterType.vue'
-import contentTypeCategoriesJson from '@/utils/contentTypeCategories.json'
-import settings from '@/utils/settings'
-import { getDocumentTypeLabel } from '@/utils/utils'
 import { useContentTypeCategories } from '@/composables/useContentTypeCategories'
 import { useContentTypeCategoryLabel } from '@/composables/useContentTypeCategoryLabel'
 import { useContentTypeSearchFilter } from '@/composables/useContentTypeSearchFilter'
 import { useContentTypeSelection } from '@/composables/useContentTypeSelection'
+import { useContentTypeSort } from '@/composables/useContentTypeSort'
 import { useSearchFilter } from '@/composables/useSearchFilter'
-import { useSearchStore } from '@/store/modules'
 
 const props = defineProps({
   filter: {
@@ -40,7 +37,6 @@ const {
   computedAll,
   computedTotal
 } = useSearchFilter()
-const searchStore = useSearchStore.inject()
 const categoryLabelFor = useContentTypeCategoryLabel()
 
 const {
@@ -64,84 +60,20 @@ const {
   isContentTypeRetained: isEntryRetainedDuringSearch
 })
 
-const sort = computed(() => searchStore.sortFilters[props.filter.name] ?? {
-  sortBy: settings.filter.sortBy,
-  orderBy: settings.filter.orderBy
+const {
+  entryCount,
+  categoryCount,
+  sortedCategoryEntries,
+  sortedTypesFor
+} = useContentTypeSort({
+  entries,
+  filter: filterRef,
+  categoryLabelFor,
+  filteredCategoryPairs
 })
-const categoryJsonOrder = Object.keys(contentTypeCategoriesJson)
 
 const allSelected = computedAll(filterRef)
 const totalCount = computedTotal(filterRef)
-
-// O(1) lookup of doc counts so the template loop and sort comparator don't
-// pay linear-search costs per call.
-const entryCountMap = computed(() => {
-  const map = new Map()
-  entries.value.forEach(entry => map.set(entry.item.key, entry.item.doc_count ?? 0))
-  return map
-})
-
-const entryCount = contentType => entryCountMap.value.get(contentType) ?? 0
-const categoryCount = types =>
-  types.reduce((sum, contentType) => sum + entryCount(contentType), 0)
-
-const sortedCategoryEntries = computed(() => {
-  const pairs = filteredCategoryPairs.value
-  const { sortBy, orderBy } = sort.value
-  const direction = orderBy === 'asc' ? 1 : -1
-
-  const jsonPosition = (key) => {
-    const index = categoryJsonOrder.indexOf(key)
-    return index === -1 ? Number.POSITIVE_INFINITY : index
-  }
-
-  const byCount = ([aKey, aTypes], [bKey, bTypes]) => {
-    const diff = categoryCount(aTypes) - categoryCount(bTypes)
-    if (diff !== 0) {
-      return diff * direction
-    }
-    return jsonPosition(aKey) - jsonPosition(bKey)
-  }
-
-  const byLabel = ([aKey], [bKey]) => {
-    const compare = categoryLabelFor(aKey).localeCompare(
-      categoryLabelFor(bKey),
-      undefined,
-      { sensitivity: 'base' }
-    )
-    return compare * direction
-  }
-
-  return [...pairs].sort(sortBy === '_key' ? byLabel : byCount)
-})
-
-const sortedTypesFor = (types) => {
-  const { sortBy, orderBy } = sort.value
-  const direction = orderBy === 'asc' ? 1 : -1
-
-  const byCount = (aType, bType) => {
-    const diff = entryCount(aType) - entryCount(bType)
-    if (diff !== 0) {
-      return diff * direction
-    }
-    return getDocumentTypeLabel(aType).localeCompare(
-      getDocumentTypeLabel(bType),
-      undefined,
-      { sensitivity: 'base' }
-    )
-  }
-
-  const byLabel = (aType, bType) => {
-    const compare = getDocumentTypeLabel(aType).localeCompare(
-      getDocumentTypeLabel(bType),
-      undefined,
-      { sensitivity: 'base' }
-    )
-    return compare * direction
-  }
-
-  return [...types].sort(sortBy === '_key' ? byLabel : byCount)
-}
 
 defineExpose({
   grouped,
