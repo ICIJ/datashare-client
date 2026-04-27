@@ -1,19 +1,37 @@
+import { ref } from 'vue'
 import { mount } from '@vue/test-utils'
 import bodybuilder from 'bodybuilder'
 import { vi } from 'vitest'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import { useSearchFilter } from '@/composables/useSearchFilter'
+import { useContentTypeCategoryAvailability } from '@/composables/useContentTypeCategoryAvailability'
 import { useSearchStore } from '@/store/modules'
+
+vi.mock('@/composables/useContentTypeCategoryAvailability', () => ({
+  useContentTypeCategoryAvailability: vi.fn()
+}))
 
 describe('useSearchFilter composable', () => {
   let plugins, searchStore
 
   beforeEach(() => {
+    // Default to "modern index" so paired-dimension tests behave as before;
+    // the legacy/degraded tests override this per case.
+    useContentTypeCategoryAvailability.mockReturnValue({
+      isAvailable: ref(true),
+      isLoading: ref(false),
+      error: ref(null)
+    })
+
     const core = CoreSetup.init().useAll().useRouterWithoutGuards()
     plugins = core.plugins
     searchStore = useSearchStore()
     searchStore.reset()
+  })
+
+  afterEach(() => {
+    vi.clearAllMocks()
   })
 
   function mountComposable() {
@@ -559,6 +577,40 @@ describe('useSearchFilter composable', () => {
         expect(all.value).toBe(false)
 
         removeFilterValue({ name: 'contentTypeCategory' }, { key: 'DOCUMENT' })
+        expect(all.value).toBe(true)
+      })
+    })
+
+    describe('degraded mode (legacy index without contentTypeCategory mapping)', () => {
+      beforeEach(() => {
+        useContentTypeCategoryAvailability.mockReturnValue({
+          isAvailable: ref(false),
+          isLoading: ref(false),
+          error: ref(null)
+        })
+      })
+
+      it('reflects only the contentType filter when the paired dimension is unavailable', () => {
+        const { computedAll, getFilterPairedDimensions, addFilterValue } = mountComposable()
+        const pairedFilters = getFilterPairedDimensions({ name: 'contentType' })
+        const all = computedAll(pairedFilters)
+
+        expect(pairedFilters).toEqual(['contentType'])
+        expect(all.value).toBe(true)
+
+        addFilterValue({ name: 'contentType' }, { key: 'application/pdf' })
+        expect(all.value).toBe(false)
+      })
+
+      it('ignores stray contentTypeCategory selections in degraded mode', () => {
+        const { computedAll, getFilterPairedDimensions, addFilterValue } = mountComposable()
+        addFilterValue({ name: 'contentTypeCategory' }, { key: 'DOCUMENT' })
+
+        const pairedFilters = getFilterPairedDimensions({ name: 'contentType' })
+        const all = computedAll(pairedFilters)
+
+        // The category dimension is gone from the read layer, so a stale
+        // category value alone must not flip the contentType "All" off.
         expect(all.value).toBe(true)
       })
     })

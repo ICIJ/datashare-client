@@ -1,9 +1,19 @@
+import { ref } from 'vue'
+import { mount } from '@vue/test-utils'
+
+import CoreSetup from '~tests/unit/CoreSetup'
 import {
   PAIRED_DIMENSIONS,
   getCanonicalDimension,
   getPairedDimension,
   getPairedDimensions
 } from '@/store/filters/pairedDimensions'
+import { useSearchFilter } from '@/composables/useSearchFilter'
+import { useContentTypeCategoryAvailability } from '@/composables/useContentTypeCategoryAvailability'
+
+vi.mock('@/composables/useContentTypeCategoryAvailability', () => ({
+  useContentTypeCategoryAvailability: vi.fn()
+}))
 
 describe('pairedDimensions', () => {
   describe('PAIRED_DIMENSIONS', () => {
@@ -74,6 +84,92 @@ describe('pairedDimensions', () => {
         expect(getPairedDimensions(canonical)).toEqual([canonical, paired])
         expect(getPairedDimensions(paired)).toEqual([paired, canonical])
       })
+    })
+  })
+
+  describe('graceful degradation when contentTypeCategory mapping is unavailable', () => {
+    let plugins, wrapper
+
+    function mountComposable() {
+      let result
+      const TestComponent = {
+        setup() {
+          result = useSearchFilter()
+          return result
+        },
+        template: '<div></div>'
+      }
+      wrapper = mount(TestComponent, { global: { plugins } })
+      return result
+    }
+
+    beforeEach(() => {
+      const core = CoreSetup.init().useAll().useRouterWithoutGuards()
+      plugins = core.plugins
+    })
+
+    afterEach(() => {
+      if (wrapper) {
+        wrapper.unmount()
+        wrapper = null
+      }
+      vi.clearAllMocks()
+    })
+
+    it('keeps the static config intact — pairedDimensions.js still reports both dimensions', () => {
+      useContentTypeCategoryAvailability.mockReturnValue({
+        isAvailable: ref(false),
+        isLoading: ref(false),
+        error: ref(null)
+      })
+
+      // The static module is the source of truth; degradation lives in the
+      // composable read layer only.
+      expect(getPairedDimensions('contentType')).toEqual(['contentType', 'contentTypeCategory'])
+      expect(getPairedDimensions('contentTypeCategory')).toEqual(['contentTypeCategory', 'contentType'])
+    })
+
+    it('skips the union when the availability composable reports unavailable', () => {
+      useContentTypeCategoryAvailability.mockReturnValue({
+        isAvailable: ref(false),
+        isLoading: ref(false),
+        error: ref(null)
+      })
+
+      const { getFilterPairedDimensions } = mountComposable()
+
+      // The composable read layer treats the contentType filter as unpaired
+      // when its sibling dimension is missing from the index mapping, so
+      // downstream callers (computedAll, breadcrumb counts) stop referencing
+      // the absent dimension.
+      expect(getFilterPairedDimensions({ name: 'contentType' })).toEqual(['contentType'])
+    })
+
+    it('preserves the union when the availability composable reports available', () => {
+      useContentTypeCategoryAvailability.mockReturnValue({
+        isAvailable: ref(true),
+        isLoading: ref(false),
+        error: ref(null)
+      })
+
+      const { getFilterPairedDimensions } = mountComposable()
+
+      expect(getFilterPairedDimensions({ name: 'contentType' })).toEqual([
+        'contentType',
+        'contentTypeCategory'
+      ])
+    })
+
+    it('does not affect unpaired filters in degraded mode', () => {
+      useContentTypeCategoryAvailability.mockReturnValue({
+        isAvailable: ref(false),
+        isLoading: ref(false),
+        error: ref(null)
+      })
+
+      const { getFilterPairedDimensions } = mountComposable()
+
+      expect(getFilterPairedDimensions({ name: 'language' })).toEqual(['language'])
     })
   })
 })
