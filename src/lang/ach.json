@@ -482,6 +482,12 @@
     "project": "crwdns8040:0crwdne8040:0",
     "contentType": "crwdns8042:0crwdne8042:0",
     "contentTypeCategory": "File type categories",
+    "fileTypes": {
+      "legacyIndex": {
+        "title": "Category grouping unavailable",
+        "description": "Category grouping isn't available for this project. Switch to the flat view to browse all file types."
+      }
+    },
     "language": "crwdns8044:0crwdne8044:0",
     "namedEntityPerson": "crwdns8046:0crwdne8046:0",
     "namedEntityLocation": "crwdns8048:0crwdne8048:0",

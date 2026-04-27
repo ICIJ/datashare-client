@@ -482,6 +482,12 @@
     "project": "Projekte",
     "contentType": "Dateitypen",
     "contentTypeCategory": "Dateityp-Kategorien",
+    "fileTypes": {
+      "legacyIndex": {
+        "title": "Category grouping unavailable",
+        "description": "Category grouping isn't available for this project. Switch to the flat view to browse all file types."
+      }
+    },
     "language": "Sprachen",
     "namedEntityPerson": "Personen",
     "namedEntityLocation": "Orte",

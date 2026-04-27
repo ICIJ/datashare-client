@@ -1,6 +1,8 @@
 <script setup>
 import { computed, ref, toRef, useTemplateRef } from 'vue'
+import { useI18n } from 'vue-i18n'
 
+import AppSpinner from '@/components/AppSpinner/AppSpinner.vue'
 import ButtonToggleContentTypesView from '@/components/Button/ButtonToggleContentTypesView.vue'
 import ContentTypesAll from '@/components/ContentTypes/ContentTypesCategories/ContentTypesAll.vue'
 import ContentTypesCategories from '@/components/ContentTypes/ContentTypesCategories/ContentTypesCategories.vue'
@@ -10,6 +12,7 @@ import ContentTypesCategoryItem from '@/components/ContentTypes/ContentTypesCate
 import ContentTypesEntry from '@/components/ContentTypes/ContentTypesCategories/ContentTypesEntry.vue'
 import FilterType from './FilterType.vue'
 import { useContentTypeCategories } from '@/composables/useContentTypeCategories'
+import { useContentTypeCategoryAvailability } from '@/composables/useContentTypeCategoryAvailability'
 import { useContentTypeCategoryLabel } from '@/composables/useContentTypeCategoryLabel'
 import { useContentTypeSearchFilter } from '@/composables/useContentTypeSearchFilter'
 import { useContentTypeSelection } from '@/composables/useContentTypeSelection'
@@ -23,8 +26,22 @@ const props = defineProps({
   }
 })
 
+const collapse = defineModel('collapse', { type: Boolean, default: null })
+
+const { t } = useI18n()
+
 const grouped = ref(true)
 const filterRef = toRef(props, 'filter')
+
+// Detect indices that don't expose contentTypeCategory in their mapping;
+// legacy projects re-indexed before category grouping landed surface a
+// non-blocking informational overlay so users understand why category
+// grouping is disabled while keeping the underlying contentType list usable.
+const {
+  isAvailable: isCategoryAvailable,
+  isLoading: isCategoryAvailabilityLoading
+} = useContentTypeCategoryAvailability()
+const isLegacyIndexOverlayVisible = computed(() => !isCategoryAvailable.value)
 
 const filterTypeRef = useTemplateRef('filterTypeRef')
 const entries = computed(() => filterTypeRef.value?.entries ?? [])
@@ -95,8 +112,28 @@ defineExpose({
   <filter-type
     ref="filterTypeRef"
     v-model:query="query"
+    v-model:collapse="collapse"
     :filter="props.filter"
+    :overlay-show="grouped && (isLegacyIndexOverlayVisible || isCategoryAvailabilityLoading)"
+    class="filter-type-file-types"
   >
+    <template #overlay>
+      <app-spinner
+        v-if="isCategoryAvailabilityLoading"
+        class="filter-type-file-types__spinner"
+      />
+      <div
+        v-else
+        class="filter-type-file-types__legacy-index"
+      >
+        <p class="filter-type-file-types__legacy-index__title fw-bold mb-1">
+          {{ t('filter.fileTypes.legacyIndex.title') }}
+        </p>
+        <p class="filter-type-file-types__legacy-index__description small mb-0">
+          {{ t('filter.fileTypes.legacyIndex.description') }}
+        </p>
+      </div>
+    </template>
     <template #all>
       <content-types-all
         v-model="allSelected"
@@ -145,3 +182,17 @@ defineExpose({
     </template>
   </filter-type>
 </template>
+
+<style lang="scss" scoped>
+.filter-type-file-types {
+  &__spinner {
+    display: flex;
+    justify-content: center;
+    padding: $spacer;
+  }
+
+  &__legacy-index {
+    text-align: center;
+  }
+}
+</style>
