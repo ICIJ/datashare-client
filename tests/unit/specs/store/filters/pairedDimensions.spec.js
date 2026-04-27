@@ -65,4 +65,15 @@ describe('pairedDimensions', () => {
       expect(getCanonicalDimension('language')).toBe('language')
     })
   })
+
+  describe('iteration contract for query-builder consumers', () => {
+    it('exposes both sides via getPairedDimensions so the ES query builder can iterate without hard-coding names', () => {
+      // The Elasticsearch query builder relies on this to OR-combine paired
+      // dimensions generically — both sides must be reachable from either name.
+      Object.entries(PAIRED_DIMENSIONS).forEach(([canonical, paired]) => {
+        expect(getPairedDimensions(canonical)).toEqual([canonical, paired])
+        expect(getPairedDimensions(paired)).toEqual([paired, canonical])
+      })
+    })
+  })
 })

@@ -1,61 +1,45 @@
 import bodybuilder from 'bodybuilder'
 import { setActivePinia, createPinia } from 'pinia'
 
-import FilterContentTypeCategory from '@/store/filters/FilterContentTypeCategory'
-import DisplayContentTypeCategory from '@/components/Display/DisplayContentTypeCategory'
+import FilterContentType from '@/store/filters/FilterContentType'
+import DisplayContentType from '@/components/Display/DisplayContentType'
 import { apiInstance as api } from '@/api/apiInstance'
 import { useSearchStore } from '@/store/modules'
 
-describe('FilterContentTypeCategory.js', () => {
-  describe('hidden flag', () => {
-    it('defaults to false when not provided', () => {
-      const filter = new FilterContentTypeCategory({ name: 'contentTypeCategory', key: 'contentTypeCategory' })
-      expect(filter.hidden).toBe(false)
-    })
-
-    it('is stored when provided', () => {
-      const filter = new FilterContentTypeCategory({
-        name: 'contentTypeCategory',
-        key: 'contentTypeCategory',
-        hidden: true
-      })
-      expect(filter.hidden).toBe(true)
-    })
-  })
-
+describe('FilterContentType.js', () => {
   describe('itemLabel', () => {
-    const filter = new FilterContentTypeCategory({ name: 'contentTypeCategory', key: 'contentTypeCategory' })
+    const filter = new FilterContentType({ name: 'contentType', key: 'contentType' })
 
-    it('returns the i18n translation key for the category so labelToHuman can resolve it', () => {
-      expect(filter.itemLabel({ key: 'AUDIO' })).toBe('filter.contentTypeCategory.AUDIO')
+    it('returns the human-readable label for a known MIME type', () => {
+      expect(filter.itemLabel({ key: 'application/pdf' })).toBe('Portable Document Format (PDF)')
     })
 
-    it('returns an i18n key even for unknown categories so the caller can still render a sensible fallback', () => {
-      expect(filter.itemLabel({ key: 'UNKNOWN' })).toBe('filter.contentTypeCategory.UNKNOWN')
+    it('falls back to the raw MIME key when the type is unknown', () => {
+      expect(filter.itemLabel({ key: 'application/x-unknown' })).toBe('application/x-unknown')
     })
   })
 
   describe('keyAliases', () => {
-    const filter = new FilterContentTypeCategory({ name: 'contentTypeCategory', key: 'contentTypeCategory' })
+    const filter = new FilterContentType({ name: 'contentType', key: 'contentType' })
 
-    it('matches a category key from a lowercased fragment', () => {
-      const aliases = filter.keyAliases('audi')
-      expect(aliases).toContain('AUDIO')
+    it('matches a MIME key from a label-based search query', () => {
+      const aliases = filter.keyAliases('pdf')
+      expect(aliases).toContain('application/pdf')
     })
 
-    it('returns no matches when the query matches nothing', () => {
-      const aliases = filter.keyAliases('zzz')
+    it('returns an empty array when the query matches no label', () => {
+      const aliases = filter.keyAliases('this-label-does-not-exist')
       expect(aliases).toHaveLength(0)
     })
   })
 
   describe('static display', () => {
-    it('exposes DisplayContentTypeCategory for breadcrumb rendering', () => {
-      expect(FilterContentTypeCategory.display).toBe(DisplayContentTypeCategory)
+    it('exposes DisplayContentType for breadcrumb rendering', () => {
+      expect(FilterContentType.display).toBe(DisplayContentType)
     })
   })
 
-  describe('aggregation body invariant for the contentTypeCategory bucket request', () => {
+  describe('aggregation body invariant for the contentType bucket request', () => {
     let searchStore
 
     beforeEach(() => {
@@ -117,46 +101,46 @@ describe('FilterContentTypeCategory.js', () => {
       return null
     }
 
-    it('does not OR-combine the paired contentType when both have values', () => {
+    it('does not OR-combine the paired contentTypeCategory when both have values', () => {
       searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
       searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'DOCUMENT' })
 
-      const body = buildAggBody('contentTypeCategory')
+      const body = buildAggBody('contentType')
 
       // The agg body must not carry the US-001 OR-combine sub-query.
       expect(findBoolShould(body.query)).toBeNull()
     })
 
-    it('omits the bucket\'s own contentTypeCategory selection from the agg filter context', () => {
+    it('omits the bucket\'s own contentType selection from the agg filter context', () => {
       searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
       searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'DOCUMENT' })
 
-      const body = buildAggBody('contentTypeCategory')
+      const body = buildAggBody('contentType')
 
-      // contentTypeCategory is the bucket field — its current selection must not
+      // contentType is the bucket field — its current selection must not
       // restrict its own buckets, otherwise the user only ever sees the values
       // they already picked.
-      expect(findTermsClause(body.query, 'contentTypeCategory')).toBeNull()
+      expect(findTermsClause(body.query, 'contentType')).toBeNull()
     })
 
-    it('keeps the paired contentType selection as a regular AND filter on the agg', () => {
+    it('keeps the paired contentTypeCategory selection as a regular AND filter on the agg', () => {
       searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
       searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'DOCUMENT' })
 
-      const body = buildAggBody('contentTypeCategory')
+      const body = buildAggBody('contentType')
 
-      expect(findTermsClause(body.query, 'contentType')).toEqual(['application/pdf'])
+      expect(findTermsClause(body.query, 'contentTypeCategory')).toEqual(['DOCUMENT'])
     })
 
     it('produces an unconstrained agg body when only the bucket\'s own filter has values', () => {
-      searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'DOCUMENT' })
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
 
-      const body = buildAggBody('contentTypeCategory')
+      const body = buildAggBody('contentType')
 
       // No bucket-side terms (excluded) and no paired terms (no values), no OR-combine.
       expect(findBoolShould(body.query)).toBeNull()
-      expect(findTermsClause(body.query, 'contentTypeCategory')).toBeNull()
       expect(findTermsClause(body.query, 'contentType')).toBeNull()
+      expect(findTermsClause(body.query, 'contentTypeCategory')).toBeNull()
     })
   })
 })
