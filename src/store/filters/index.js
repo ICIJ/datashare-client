@@ -6,6 +6,7 @@ import IPhHash from '~icons/ph/hash'
 import IPhUsers from '~icons/ph/users'
 import IPhTreeStructure from '~icons/ph/tree-structure'
 import IPhFile from '~icons/ph/file'
+import IPhStack from '~icons/ph/stack'
 import IPhCalendarBlank from '~icons/ph/calendar-blank'
 import IPhGlobe from '~icons/ph/globe'
 import IPhUserSquare from '~icons/ph/user-square'
@@ -137,6 +138,7 @@ export default [
     options: {
       name: CONTENT_TYPE_CATEGORY_FILTER_NAME,
       key: CONTENT_TYPE_CATEGORY_FILTER_NAME,
+      icon: markRaw(IPhStack),
       order: 45,
       section: 'documentsInfo',
       hidden: true
