@@ -503,7 +503,8 @@
   "filter": {
     "project": "Projects",
     "contentType": "File types",
-    "contentTypeCategory": {
+    "contentTypeCategory": "File type categories",
+    "contentTypeCategoryItem": {
       "AUDIO": "Audio",
       "VIDEO": "Video",
       "IMAGE": "Image",

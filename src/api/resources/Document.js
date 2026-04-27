@@ -262,7 +262,7 @@ export default class Document extends EsDoc {
 
   get contentTypeCategoryLabel() {
     // i18n translation key; the caller translates it against the active locale.
-    return `filter.contentTypeCategory.${this.contentTypeCategory}`
+    return `filter.contentTypeCategoryItem.${this.contentTypeCategory}`
   }
 
   get contentTypeLabel() {
