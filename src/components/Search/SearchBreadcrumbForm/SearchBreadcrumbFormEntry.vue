@@ -46,6 +46,10 @@ const props = defineProps({
   },
   noXIcon: {
     type: Boolean
+  },
+  operator: {
+    type: String,
+    default: null
   }
 })
 
@@ -67,6 +71,7 @@ const showCaret = computed(() => {
       :icon="icon"
       :filter="filter"
       :no-icon="noIcon"
+      :operator="operator"
       :query="query"
       :size="size"
       :value="value"
