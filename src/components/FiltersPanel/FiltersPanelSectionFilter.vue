@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 
+import FilterTypeOverlay from '@/components/Filter/FilterType/FilterTypeOverlay'
 import FiltersPanelSectionFilterTitle from '@/components/FiltersPanel/FiltersPanelSectionFilterTitle'
 import FiltersPanelSectionFilterActions from '@/components/FiltersPanel/FiltersPanelSectionFilterActions'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
@@ -66,6 +67,13 @@ const props = defineProps({
   },
   footerClass: {
     type: [String, Object, Array]
+  },
+  // When true, an overlay (with the filter's own background and a slight
+  // backdrop blur) covers the content area so the title remains usable
+  // and the message never bleeds outside the section.
+  overlayShow: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -112,26 +120,34 @@ const isVisible = computed(() => props.modal || !collapse.value)
       </template>
     </filters-panel-section-filter-title>
     <b-collapse :model-value="isVisible">
-      <div
-        class="filters-panel-section-filter__content"
-        :class="contentClass"
-      >
-        <slot
-          name="search"
-          v-bind="{ search, searchPlaceholder }"
+      <filter-type-overlay :show="overlayShow">
+        <template
+          v-if="$slots.overlay"
+          #overlay
         >
-          <form-control-search
-            v-if="!hideSearch"
-            v-model="search"
-            :placeholder="searchPlaceholder"
-            clear-text
-            class="filters-panel-section-filter__content__search mb-3"
-          />
-        </slot>
-        <div :class="flush ? '' : 'px-2'">
-          <slot />
+          <slot name="overlay" />
+        </template>
+        <div
+          class="filters-panel-section-filter__content"
+          :class="contentClass"
+        >
+          <slot
+            name="search"
+            v-bind="{ search, searchPlaceholder }"
+          >
+            <form-control-search
+              v-if="!hideSearch"
+              v-model="search"
+              :placeholder="searchPlaceholder"
+              clear-text
+              class="filters-panel-section-filter__content__search mb-3"
+            />
+          </slot>
+          <div :class="flush ? '' : 'px-2'">
+            <slot />
+          </div>
         </div>
-      </div>
+      </filter-type-overlay>
       <slot name="footer">
         <filters-panel-section-filter-actions
           v-if="!actionsPositionTitle"
