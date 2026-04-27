@@ -35,7 +35,8 @@ const {
   toggleFilterValue,
   hasFilterValue,
   computedAll,
-  computedTotal
+  computedTotal,
+  getFilterPairedDimensions
 } = useSearchFilter()
 const categoryLabelFor = useContentTypeCategoryLabel()
 
@@ -72,7 +73,10 @@ const {
   filteredCategoryPairs
 })
 
-const allSelected = computedAll(filterRef)
+// "All-selected" must reflect the union of contentType and its paired
+// contentTypeCategory dimension — a selection in either keeps "All" enabled.
+const pairedFilters = computed(() => getFilterPairedDimensions(filterRef))
+const allSelected = computedAll(pairedFilters)
 const totalCount = computedTotal(filterRef)
 
 defineExpose({
