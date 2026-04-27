@@ -55,6 +55,44 @@ describe('FilterContentTypeCategory.js', () => {
     })
   })
 
+  describe('graceful behavior when category buckets are absent', () => {
+    // Legacy indices may be re-indexed without the contentTypeCategory field;
+    // the filter must keep working — silently producing no options — instead
+    // of throwing or warning, so the rest of the UI can stay live.
+    let filter, errorSpy, warnSpy
+
+    beforeEach(() => {
+      filter = new FilterContentTypeCategory({ name: 'contentTypeCategory', key: 'contentTypeCategory' })
+      errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    })
+
+    afterEach(() => {
+      errorSpy.mockRestore()
+      warnSpy.mockRestore()
+    })
+
+    it('does not throw when keyAliases is queried for an unknown fragment', () => {
+      expect(() => filter.keyAliases('zzz')).not.toThrow()
+      expect(filter.keyAliases('zzz')).toEqual([])
+      expect(errorSpy).not.toHaveBeenCalled()
+      expect(warnSpy).not.toHaveBeenCalled()
+    })
+
+    it('builds an aggregation body without throwing even though no buckets will come back', () => {
+      expect(() => filter.body(bodybuilder(), {}, 0, 8)).not.toThrow()
+      expect(errorSpy).not.toHaveBeenCalled()
+      expect(warnSpy).not.toHaveBeenCalled()
+    })
+
+    it('itemLabel falls back gracefully on a bucketless category', () => {
+      expect(() => filter.itemLabel({})).not.toThrow()
+      expect(filter.itemLabel({})).toBe('filter.contentTypeCategoryItem.undefined')
+      expect(errorSpy).not.toHaveBeenCalled()
+      expect(warnSpy).not.toHaveBeenCalled()
+    })
+  })
+
   describe('aggregation body invariant for the contentTypeCategory bucket request', () => {
     let searchStore
 

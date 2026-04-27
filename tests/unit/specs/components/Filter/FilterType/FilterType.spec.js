@@ -1,4 +1,5 @@
 import find from 'lodash/find'
+import { ref } from 'vue'
 import { shallowMount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 import { vi } from 'vitest'
@@ -8,7 +9,12 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPanelSectionFilterEntry'
 import FilterType from '@/components/Filter/FilterType/FilterType'
+import { useContentTypeCategoryAvailability } from '@/composables/useContentTypeCategoryAvailability'
 import { useSearchStore } from '@/store/modules'
+
+vi.mock('@/composables/useContentTypeCategoryAvailability', () => ({
+  useContentTypeCategoryAvailability: vi.fn()
+}))
 
 describe('FilterType.vue', () => {
   const { index, es } = esConnectionHelper.build('filter-type-a-')
@@ -21,6 +27,14 @@ describe('FilterType.vue', () => {
   })
 
   beforeEach(() => {
+    // Default to "modern index" so paired-dimension tests behave as before;
+    // legacy/degraded behavior is exercised in dedicated specs.
+    useContentTypeCategoryAvailability.mockReturnValue({
+      isAvailable: ref(true),
+      isLoading: ref(false),
+      error: ref(null)
+    })
+
     core = CoreSetup.init().useAll()
     searchStore = useSearchStore()
   })
