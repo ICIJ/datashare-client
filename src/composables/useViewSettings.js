@@ -70,6 +70,11 @@ export function useViewSettings() {
     table: computed(() => t('viewSettings.layout.table')),
     list: computed(() => t('viewSettings.layout.list'))
   }
+  const tSearchOperator = {
+    label: computed(() => t('viewSettings.searchOperator.label')),
+    or: computed(() => t('viewSettings.searchOperator.or')),
+    and: computed(() => t('viewSettings.searchOperator.and')),
+  }
 
   return {
     fieldsToPropertiesOptions,
@@ -78,6 +83,7 @@ export function useViewSettings() {
     sortByLabel,
     visiblePropertiesLabel,
     tLayout,
+    tSearchOperator,
     perPageLabel
   }
 }
