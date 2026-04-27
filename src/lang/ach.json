@@ -481,6 +481,7 @@
   "filter": {
     "project": "crwdns8040:0crwdne8040:0",
     "contentType": "crwdns8042:0crwdne8042:0",
+    "contentTypeCategory": "File type categories",
     "language": "crwdns8044:0crwdne8044:0",
     "namedEntityPerson": "crwdns8046:0crwdne8046:0",
     "namedEntityLocation": "crwdns8048:0crwdne8048:0",
