@@ -27,11 +27,11 @@ describe('FilterContentTypeCategory.js', () => {
     const filter = new FilterContentTypeCategory({ name: 'contentTypeCategory', key: 'contentTypeCategory' })
 
     it('returns the i18n translation key for the category so labelToHuman can resolve it', () => {
-      expect(filter.itemLabel({ key: 'AUDIO' })).toBe('filter.contentTypeCategory.AUDIO')
+      expect(filter.itemLabel({ key: 'AUDIO' })).toBe('filter.contentTypeCategoryItem.AUDIO')
     })
 
     it('returns an i18n key even for unknown categories so the caller can still render a sensible fallback', () => {
-      expect(filter.itemLabel({ key: 'UNKNOWN' })).toBe('filter.contentTypeCategory.UNKNOWN')
+      expect(filter.itemLabel({ key: 'UNKNOWN' })).toBe('filter.contentTypeCategoryItem.UNKNOWN')
     })
   })
 

@@ -9,7 +9,7 @@ export const CONTENT_TYPE_CATEGORY_FILTER_NAME = 'contentTypeCategory'
 
 /**
  * Filter on high-level content-type categories (AUDIO, VIDEO, DOCUMENT, ...).
- * Labels are resolved via i18n (`filter.contentTypeCategory.<KEY>`); the JSON
+ * Labels are resolved via i18n (`filter.contentTypeCategoryItem.<KEY>`); the JSON
  * payload only carries ordering and icons. This filter is hidden from the
  * filters panel — its values are only exposed in the URL query string and
  * in the breadcrumb.
@@ -31,7 +31,7 @@ export default class FilterContentTypeCategory extends FilterText {
    * @returns {string} i18n key resolved by `labelToHuman` to render the label.
    */
   itemLabel(item) {
-    return `filter.contentTypeCategory.${item.key}`
+    return `filter.contentTypeCategoryItem.${item.key}`
   }
 
   /** @returns {object} Display component used to render selected values. */

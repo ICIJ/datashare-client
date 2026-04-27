@@ -481,6 +481,7 @@
   "filter": {
     "project": "Projects",
     "contentType": "File types",
+    "contentTypeCategory": "File type categories",
     "language": "Languages",
     "namedEntityPerson": "People",
     "namedEntityLocation": "Locations",
