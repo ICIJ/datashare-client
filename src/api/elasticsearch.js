@@ -3,6 +3,7 @@ import bodybuilder from 'bodybuilder'
 import es from 'elasticsearch-browser'
 import { getCookie } from 'tiny-cookie'
 
+import { getPairedDimensions } from '@/store/filters/pairedDimensions'
 import { EventBus } from '@/utils/eventBus'
 import settings from '@/utils/settings'
 
@@ -54,6 +55,14 @@ function normalizeQuery(query) {
 function handleSearchError(error) {
   EventBus.emit('http::error', error)
   throw error
+}
+
+function isFilterIncludedWithValues(filter) {
+  return filter.hasValues() && !filter.excluded && !filter.forceExclude
+}
+
+function isFilterExcludedWithValues(filter) {
+  return (filter.excluded || filter.forceExclude) && filter.hasValues()
 }
 
 /**
@@ -186,7 +195,11 @@ export function datasharePlugin(Client) {
     let body = filter.body(bodybuilder(), options, from, size)
 
     if (contextualize) {
-      this._applyFilters(body, filters)
+      // Exclude the bucket's own filter from the agg context so the bucket
+      // selection does not constrain its own buckets and the paired-dimension
+      // OR-combine does not trigger (only one side of the pair remains here).
+      const otherFilters = filters.filter(other => other.name !== filter.name)
+      this._applyFilters(body, otherFilters)
       this._applyQueryString(body, normalizeQuery(query), fields)
     }
 
@@ -305,13 +318,56 @@ export function datasharePlugin(Client) {
   }
 
   /**
-   * Applies an array of filters to a body builder.
+   * Applies an array of filters to a body builder, OR-combining the include
+   * values of paired-dimension filters (e.g. contentType ↔ contentTypeCategory)
+   * into a single `bool.should` sub-query. Excluded sides of a pair still
+   * apply independently as `must_not`.
    * @private
-   * @param {Object} body - The bodybuilder instance
-   * @param {Array} filters - Array of filter objects
    */
   Client.prototype._applyFilters = function (body, filters) {
-    filters.forEach(filter => filter.addFilter(body))
+    const filterByName = new Map(filters.map(filter => [filter.name, filter]))
+    const handled = new Set()
+
+    filters.forEach((filter) => {
+      if (handled.has(filter.name)) {
+        return
+      }
+      const pair = getPairedDimensions(filter.name)
+        .map(name => filterByName.get(name))
+        .filter(Boolean)
+      pair.forEach(member => handled.add(member.name))
+      this._applyFilterPair(body, pair)
+    })
+  }
+
+  /**
+   * Applies one paired-dimension group to the body. When both sides contribute
+   * include values, they OR-combine; otherwise each filter applies via its own
+   * `applyTo`. Excluded sides always apply as `must_not` regardless.
+   * @private
+   */
+  Client.prototype._applyFilterPair = function (body, pair) {
+    const included = pair.filter(isFilterIncludedWithValues)
+    if (included.length < 2) {
+      pair.forEach(filter => filter.applyTo(body))
+      return
+    }
+    this._applyOrCombinedFilters(body, included)
+    pair.filter(isFilterExcludedWithValues).forEach(filter => filter.applyTo(body))
+  }
+
+  /**
+   * Builds a `bool.should` sub-query that OR-combines `terms` clauses for the
+   * given filters with `minimum_should_match: 1`.
+   * @private
+   */
+  Client.prototype._applyOrCombinedFilters = function (body, filters) {
+    body.query('bool', (sub) => {
+      filters.forEach((filter) => {
+        sub.orQuery('terms', filter.key, filter.values)
+      })
+      return sub.queryMinimumShouldMatch(1)
+    })
   }
 
   /**
@@ -348,8 +404,8 @@ export function datasharePlugin(Client) {
   Client.prototype._buildSearchBody = function ({ query, filters, fields, from, size, sort }) {
     const body = bodybuilder()
 
-    // Apply filters
-    filters.forEach(filter => filter.applyTo(body))
+    // Apply filters (handles paired-dimension OR combine)
+    this._applyFilters(body, filters)
 
     // Apply query string
     this._applyQueryString(body, query, fields)
@@ -424,7 +480,7 @@ export function datasharePlugin(Client) {
    * @param {Object} body - The bodybuilder instance
    */
   Client.prototype._addFiltersToBody = function (filters, body) {
-    filters.forEach(filter => filter.applyTo(body))
+    this._applyFilters(body, filters)
   }
 
   /**
