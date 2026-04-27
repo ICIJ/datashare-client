@@ -1331,4 +1331,154 @@ describe('SearchStore', () => {
       expect(result).toEqual({ estimatedCount: 7, estimatedSize: 999 })
     })
   })
+
+  describe('Paired-dimension OR-combine in the ES query body', () => {
+    function buildBody() {
+      return api.elasticsearch._buildSearchBody({
+        query: '*',
+        filters: searchStore.instantiatedFilters,
+        fields: [],
+        from: 0,
+        size: 25,
+        sort: { _score: { order: 'desc' } }
+      })
+    }
+
+    function findBoolShould(node) {
+      if (!node || typeof node !== 'object') {
+        return null
+      }
+      if (Array.isArray(node)) {
+        for (const child of node) {
+          const found = findBoolShould(child)
+          if (found) return found
+        }
+        return null
+      }
+      if (node.bool && Array.isArray(node.bool.should) && node.bool.should.length > 1) {
+        return node.bool
+      }
+      for (const value of Object.values(node)) {
+        const found = findBoolShould(value)
+        if (found) return found
+      }
+      return null
+    }
+
+    function findTermsClause(node, field) {
+      if (!node || typeof node !== 'object') {
+        return null
+      }
+      if (Array.isArray(node)) {
+        for (const child of node) {
+          const found = findTermsClause(child, field)
+          if (found) return found
+        }
+        return null
+      }
+      if (node.terms && Object.prototype.hasOwnProperty.call(node.terms, field)) {
+        return node.terms[field]
+      }
+      for (const value of Object.values(node)) {
+        const found = findTermsClause(value, field)
+        if (found) return found
+      }
+      return null
+    }
+
+    function findMustNotForField(node, field) {
+      if (!node || typeof node !== 'object') {
+        return null
+      }
+      if (Array.isArray(node)) {
+        for (const child of node) {
+          const found = findMustNotForField(child, field)
+          if (found) return found
+        }
+        return null
+      }
+      if (node.bool && node.bool.must_not) {
+        const mustNot = Array.isArray(node.bool.must_not) ? node.bool.must_not : [node.bool.must_not]
+        for (const clause of mustNot) {
+          if (clause.terms && Object.prototype.hasOwnProperty.call(clause.terms, field)) {
+            return clause.terms[field]
+          }
+        }
+      }
+      for (const value of Object.values(node)) {
+        const found = findMustNotForField(value, field)
+        if (found) return found
+      }
+      return null
+    }
+
+    it('OR-combines paired contentType and contentTypeCategory when both have values', () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'DOCUMENT' })
+
+      const body = buildBody()
+      const should = findBoolShould(body.query)
+      expect(should).not.toBeNull()
+      expect(should.minimum_should_match).toBe(1)
+      expect(should.should).toEqual(
+        expect.arrayContaining([
+          { terms: { contentType: ['application/pdf'] } },
+          { terms: { contentTypeCategory: ['DOCUMENT'] } }
+        ])
+      )
+    })
+
+    it('keeps a single must (filter) clause when only contentType has values', () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+
+      const body = buildBody()
+      // No bool.should sub-query expected, the contentType clause stays a plain terms filter.
+      expect(findBoolShould(body.query)).toBeNull()
+      expect(findTermsClause(body.query, 'contentType')).toEqual(['application/pdf'])
+      expect(findTermsClause(body.query, 'contentTypeCategory')).toBeNull()
+    })
+
+    it('keeps a single clause when only contentTypeCategory has values', () => {
+      searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'DOCUMENT' })
+
+      const body = buildBody()
+      expect(findBoolShould(body.query)).toBeNull()
+      expect(findTermsClause(body.query, 'contentTypeCategory')).toEqual(['DOCUMENT'])
+      expect(findTermsClause(body.query, 'contentType')).toBeNull()
+    })
+
+    it('keeps two unrelated filters AND-combined (no OR sub-query)', () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.addFilterValue({ name: 'language', value: 'ENGLISH' })
+
+      const body = buildBody()
+      expect(findBoolShould(body.query)).toBeNull()
+      expect(findTermsClause(body.query, 'contentType')).toEqual(['application/pdf'])
+      expect(findTermsClause(body.query, 'language')).toEqual(['ENGLISH'])
+    })
+
+    it('keeps excluded paired values as must_not and skips OR-combine when only one side is included', () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'DOCUMENT' })
+      // Only the category side is excluded — the include side stands alone, no OR-combine.
+      searchStore.excludeFilter('contentTypeCategory')
+
+      const body = buildBody()
+      expect(findBoolShould(body.query)).toBeNull()
+      expect(findTermsClause(body.query, 'contentType')).toEqual(['application/pdf'])
+      expect(findMustNotForField(body.query, 'contentTypeCategory')).toEqual(['DOCUMENT'])
+    })
+
+    it('keeps both excluded paired values as independent must_not clauses', () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'DOCUMENT' })
+      searchStore.excludeFilter('contentType')
+      searchStore.excludeFilter('contentTypeCategory')
+
+      const body = buildBody()
+      expect(findBoolShould(body.query)).toBeNull()
+      expect(findMustNotForField(body.query, 'contentType')).toEqual(['application/pdf'])
+      expect(findMustNotForField(body.query, 'contentTypeCategory')).toEqual(['DOCUMENT'])
+    })
+  })
 })
