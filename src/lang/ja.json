@@ -482,6 +482,12 @@
     "project": "プロジェクト",
     "contentType": "ファイルの種類",
     "contentTypeCategory": "ファイルの種類のカテゴリ",
+    "fileTypes": {
+      "legacyIndex": {
+        "title": "Category grouping unavailable",
+        "description": "Category grouping isn't available for this project. Switch to the flat view to browse all file types."
+      }
+    },
     "language": "言語",
     "namedEntityPerson": "人物",
     "namedEntityLocation": "地名",

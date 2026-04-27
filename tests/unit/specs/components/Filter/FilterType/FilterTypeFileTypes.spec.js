@@ -1,3 +1,4 @@
+import { ref } from 'vue'
 import { flushPromises, mount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 
@@ -14,6 +15,7 @@ import ContentTypesCategoryName from '@/components/ContentTypes/ContentTypesCate
 import ContentTypesEntry from '@/components/ContentTypes/ContentTypesCategories/ContentTypesEntry'
 import FiltersPanelSectionFilterTitleSort from '@/components/FiltersPanel/FiltersPanelSectionFilterTitleSort'
 import { apiInstance as api } from '@/api/apiInstance'
+import { useContentTypeCategoryAvailability } from '@/composables/useContentTypeCategoryAvailability'
 import { useSearchStore } from '@/store/modules'
 
 vi.mock('@/api/apiInstance', async (importOriginal) => {
@@ -26,6 +28,10 @@ vi.mock('@/api/apiInstance', async (importOriginal) => {
   }
 })
 
+vi.mock('@/composables/useContentTypeCategoryAvailability', () => ({
+  useContentTypeCategoryAvailability: vi.fn()
+}))
+
 describe('FilterTypeFileTypes.vue', () => {
   const { index, es } = esConnectionHelper.build()
   let core, wrapper, searchStore
@@ -37,6 +43,15 @@ describe('FilterTypeFileTypes.vue', () => {
   beforeEach(() => {
     api.getContentTypeCategories.mockClear()
     api.getContentTypeCategories.mockResolvedValue({})
+
+    // Default: modern index — category mapping is available, no overlay shown.
+    // Individual tests can override via useContentTypeCategoryAvailability.mockReturnValue
+    // before remounting to exercise the legacy-index code paths.
+    useContentTypeCategoryAvailability.mockReturnValue({
+      isAvailable: ref(true),
+      isLoading: ref(false),
+      error: ref(null)
+    })
 
     core = CoreSetup.init().useAll()
     searchStore = useSearchStore()
@@ -1351,6 +1366,90 @@ describe('FilterTypeFileTypes.vue', () => {
 
       expect(visibleCategories()).toEqual(['IMAGE'])
       expect(visibleCategoryItems()).toEqual(['image/jpeg'])
+    })
+  })
+
+  describe('legacy-index overlay', () => {
+    // The overlay drives the visual contract for projects whose mapping does
+    // not expose contentTypeCategory. The composable is mocked at module
+    // boundary so each test pins isAvailable/isLoading and asserts only on
+    // what the user sees: spinner during loading, warning when settled,
+    // nothing when the field is mapped. The overlay is gated by FilterType's
+    // expanded state so it never bleeds into adjacent collapsed filters.
+    const remountWithAvailability = ({ isAvailable, isLoading, collapse = false }) => {
+      wrapper.unmount()
+      useContentTypeCategoryAvailability.mockReturnValue({
+        isAvailable: ref(isAvailable),
+        isLoading: ref(isLoading),
+        error: ref(null)
+      })
+
+      const filter = searchStore.getFilter({ name: 'contentType' })
+      wrapper = mount(FilterTypeFileTypes, {
+        global: {
+          plugins: core.plugins
+        },
+        props: { filter, collapse }
+      })
+    }
+
+    it('does not render the overlay when category mapping is available', () => {
+      // Default mock from beforeEach: isAvailable=true, isLoading=false.
+      expect(wrapper.find('.filter-type-file-types__legacy-index').exists()).toBe(false)
+      expect(wrapper.find('.filter-type-file-types__spinner').exists()).toBe(false)
+    })
+
+    it('renders a spinner instead of the warning while the availability check is loading', () => {
+      remountWithAvailability({ isAvailable: false, isLoading: true })
+
+      expect(wrapper.find('.filter-type-file-types__spinner').exists()).toBe(true)
+      expect(wrapper.find('.filter-type-file-types__legacy-index').exists()).toBe(false)
+    })
+
+    it('renders the legacy-index warning when category mapping is missing and the check is settled', () => {
+      remountWithAvailability({ isAvailable: false, isLoading: false })
+
+      expect(wrapper.find('.filter-type-file-types__legacy-index').exists()).toBe(true)
+      expect(wrapper.find('.filter-type-file-types__spinner').exists()).toBe(false)
+      // Both translated copy fragments are rendered through the i18n keys
+      // added in US-002 — empty text would imply a key resolution failure.
+      expect(wrapper.find('.filter-type-file-types__legacy-index__title').text()).not.toBe('')
+      expect(wrapper.find('.filter-type-file-types__legacy-index__description').text()).not.toBe('')
+    })
+
+    it('hides the overlay while the filter is collapsed even when category mapping is missing', () => {
+      // The overlay lives inside the section's collapse so a tall warning
+      // can never bleed into adjacent filters in the panel — assert the
+      // collapse wrapper is not in its `show` state.
+      remountWithAvailability({ isAvailable: false, isLoading: false, collapse: true })
+
+      const collapseEl = wrapper.find('.collapse')
+      expect(collapseEl.exists()).toBe(true)
+      expect(collapseEl.classes()).not.toContain('show')
+    })
+
+    it('hides the overlay in flat view because the entries list works without category data', async () => {
+      // When the user toggles to flat view the missing-category warning
+      // is irrelevant — every contentType is still listable individually.
+      remountWithAvailability({ isAvailable: false, isLoading: false })
+      expect(wrapper.find('.filter-type-file-types__legacy-index').exists()).toBe(true)
+
+      await wrapper.findComponent(ButtonToggleContentTypesView).trigger('click')
+
+      expect(wrapper.findComponent(ButtonToggleContentTypesView).props('grouped')).toBe(false)
+      expect(wrapper.find('.filter-type-file-types__legacy-index').exists()).toBe(false)
+      expect(wrapper.find('.filter-type-file-types__spinner').exists()).toBe(false)
+    })
+
+    it('hides the warning once the check resolves to available even if it was missing during loading', async () => {
+      // Loading→available transition: a fresh mount with isAvailable=true,
+      // isLoading=false (the post-resolve state for a modern index) must
+      // render no overlay at all, proving the guard is purely on the
+      // resolved availability.
+      remountWithAvailability({ isAvailable: true, isLoading: false })
+
+      expect(wrapper.find('.filter-type-file-types__legacy-index').exists()).toBe(false)
+      expect(wrapper.find('.filter-type-file-types__spinner').exists()).toBe(false)
     })
   })
 })
