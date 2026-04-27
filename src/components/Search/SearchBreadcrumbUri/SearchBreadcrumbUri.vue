@@ -2,7 +2,6 @@
 import { computed } from 'vue'
 import { parseQuery } from 'vue-router'
 
-import SearchBreadcrumbFormEntry from '@/components/Search/SearchBreadcrumbForm/SearchBreadcrumbFormEntry'
 import SearchBreadcrumbFormList from '@/components/Search/SearchBreadcrumbForm/SearchBreadcrumbFormList'
 import { useSearchBreadcrumb } from '@/composables/useSearchBreadcrumb'
 import { useSearchStore } from '@/store/modules'
@@ -30,15 +29,12 @@ searchStore.updateFromRouteQuery(breadcrumbRouteQuery.value)
 </script>
 
 <template>
-  <search-breadcrumb-form-list>
+  <search-breadcrumb-form-list
+    :entries="entries"
+    no-x-icon
+  >
     <template #label>
       <slot name="label" />
     </template>
-    <search-breadcrumb-form-entry
-      v-for="(entry, i) in entries"
-      :key="i"
-      v-bind="entry"
-      no-x-icon
-    />
   </search-breadcrumb-form-list>
 </template>
