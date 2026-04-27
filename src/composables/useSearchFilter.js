@@ -6,6 +6,7 @@ import { useI18n } from 'vue-i18n'
 import settings from '@/utils/settings'
 import { SEARCH_OPERATORS } from '@/enums/searchOperators'
 import { useCore } from '@/composables/useCore'
+import { useContentTypeCategoryAvailability } from '@/composables/useContentTypeCategoryAvailability'
 import { onAfterRouteUpdate } from '@/composables/onAfterRouteUpdate'
 import FilterType from '@/components/Filter/FilterType/FilterType'
 import FilterTypeDateRange from '@/components/Filter/FilterType/FilterTypeDateRange'
@@ -14,6 +15,7 @@ import FilterTypePath from '@/components/Filter/FilterType/FilterTypePath'
 import FilterTypeProject from '@/components/Filter/FilterType/FilterTypeProject'
 import FilterTypeRecommendedBy from '@/components/Filter/FilterType/FilterTypeRecommendedBy'
 import FilterTypeStarred from '@/components/Filter/FilterType/FilterTypeStarred'
+import { CONTENT_TYPE_CATEGORY_FILTER_NAME } from '@/store/filters/FilterContentTypeCategory'
 import FilterText from '@/store/filters/FilterText.js'
 import { getCanonicalDimension, getPairedDimension, getPairedDimensions } from '@/store/filters/pairedDimensions'
 import { useAppStore, useRecommendedStore, useSearchStore } from '@/store/modules'
@@ -26,6 +28,11 @@ export function useSearchFilter() {
   const router = useRouter()
   const { t, te } = useI18n()
   const core = useCore()
+  // Drives the read-layer degradation in getFilterPairedDimensions: when the
+  // contentTypeCategory field is missing from the selected indices' mapping,
+  // the contentType filter falls back to single-dimension behavior so paired
+  // counts and the "All" checkbox stop referencing the absent dimension.
+  const { isAvailable: isCategoryAvailable } = useContentTypeCategoryAvailability()
 
   const filterTypes = {
     FilterType,
@@ -132,7 +139,19 @@ export function useSearchFilter() {
   }
 
   function getFilterPairedDimensions(filter) {
-    return getPairedDimensions(resolveFilterName(filter))
+    const name = resolveFilterName(filter)
+    // Graceful degradation for legacy indices: when the paired sibling is
+    // contentTypeCategory and the field isn't in the index mapping, treat the
+    // filter as unpaired so callers (computedAll, breadcrumb counts) skip the
+    // missing dimension. The static config in pairedDimensions.js stays the
+    // source of truth — only this read layer degrades.
+    if (
+      !isCategoryAvailable.value
+      && getPairedDimension(name) === CONTENT_TYPE_CATEGORY_FILTER_NAME
+    ) {
+      return [name]
+    }
+    return getPairedDimensions(name)
   }
 
   function getFilterValuesByName(name) {
