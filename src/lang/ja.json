@@ -481,6 +481,7 @@
   "filter": {
     "project": "プロジェクト",
     "contentType": "ファイルの種類",
+    "contentTypeCategory": "ファイルの種類のカテゴリ",
     "language": "言語",
     "namedEntityPerson": "人物",
     "namedEntityLocation": "地名",

@@ -481,6 +481,7 @@
   "filter": {
     "project": "Projekte",
     "contentType": "Dateitypen",
+    "contentTypeCategory": "Dateityp-Kategorien",
     "language": "Sprachen",
     "namedEntityPerson": "Personen",
     "namedEntityLocation": "Orte",
