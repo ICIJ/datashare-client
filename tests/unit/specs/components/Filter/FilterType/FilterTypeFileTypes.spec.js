@@ -160,6 +160,149 @@ describe('FilterTypeFileTypes.vue', () => {
     )
   })
 
+  describe('"All" disabled state for paired contentType/contentTypeCategory', () => {
+    // The "All" entry must reflect the *union* of both paired dimensions: it is
+    // only "all-selected" (and therefore disabled) when neither contentType nor
+    // contentTypeCategory has any value. A selection in either dimension must
+    // re-enable the entry so the user can click it to clear everything.
+    const seedCategoriesAndIndex = async () => {
+      api.getContentTypeCategories.mockResolvedValue({
+        DOCUMENT: ['application/pdf'],
+        OTHER: ['text/html', 'text/plain']
+      })
+
+      await letData(es).have(new IndexedDocument('document_01', index).withContentType('application/pdf')).commit()
+      await letData(es).have(new IndexedDocument('document_02', index).withContentType('text/html')).commit()
+      await letData(es).have(new IndexedDocument('document_03', index).withContentType('text/plain')).commit()
+
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+    }
+
+    it('disables "All" when both contentType and contentTypeCategory are empty', async () => {
+      await seedCategoriesAndIndex()
+
+      const all = wrapper.findComponent(ContentTypesAll)
+      expect(all.props('modelValue')).toBe(true)
+    })
+
+    it('keeps "All" enabled when only contentType has values', async () => {
+      await seedCategoriesAndIndex()
+
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      await flushPromises()
+
+      const all = wrapper.findComponent(ContentTypesAll)
+      expect(all.props('modelValue')).toBe(false)
+    })
+
+    it('keeps "All" enabled when only contentTypeCategory has values', async () => {
+      await seedCategoriesAndIndex()
+
+      searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'OTHER' })
+      await flushPromises()
+
+      const all = wrapper.findComponent(ContentTypesAll)
+      expect(all.props('modelValue')).toBe(false)
+    })
+
+    it('keeps "All" enabled when both contentType and contentTypeCategory have values', async () => {
+      await seedCategoriesAndIndex()
+
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'OTHER' })
+      await flushPromises()
+
+      const all = wrapper.findComponent(ContentTypesAll)
+      expect(all.props('modelValue')).toBe(false)
+    })
+  })
+
+  describe('"All" click resets paired contentType/contentTypeCategory', () => {
+    // Clicking the "All" entry must fully reset the categories view: every
+    // value across both paired dimensions is dropped, the entry itself flips
+    // back to "all-selected" / disabled, and unrelated filters stay intact.
+    const seedCategoriesAndIndex = async () => {
+      api.getContentTypeCategories.mockResolvedValue({
+        DOCUMENT: ['application/pdf'],
+        OTHER: ['text/html', 'text/plain']
+      })
+
+      await letData(es).have(new IndexedDocument('document_01', index).withContentType('application/pdf')).commit()
+      await letData(es).have(new IndexedDocument('document_02', index).withContentType('text/html')).commit()
+      await letData(es).have(new IndexedDocument('document_03', index).withContentType('text/plain')).commit()
+
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+    }
+
+    it('clears contentType values when "All" is clicked', async () => {
+      await seedCategoriesAndIndex()
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      await flushPromises()
+      expect(searchStore.values.contentType).toEqual(['application/pdf'])
+
+      await wrapper.findComponent(ContentTypesAll).vm.$emit('update:modelValue', true)
+      await flushPromises()
+
+      expect(searchStore.values.contentType ?? []).toEqual([])
+    })
+
+    it('clears contentTypeCategory values when "All" is clicked', async () => {
+      await seedCategoriesAndIndex()
+      searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'OTHER' })
+      await flushPromises()
+      expect(searchStore.values.contentTypeCategory).toEqual(['OTHER'])
+
+      await wrapper.findComponent(ContentTypesAll).vm.$emit('update:modelValue', true)
+      await flushPromises()
+
+      expect(searchStore.values.contentTypeCategory ?? []).toEqual([])
+    })
+
+    it('clears both dimensions in a single click when both are populated', async () => {
+      await seedCategoriesAndIndex()
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'OTHER' })
+      await flushPromises()
+
+      await wrapper.findComponent(ContentTypesAll).vm.$emit('update:modelValue', true)
+      await flushPromises()
+
+      expect(searchStore.values.contentType ?? []).toEqual([])
+      expect(searchStore.values.contentTypeCategory ?? []).toEqual([])
+    })
+
+    it('flips "All" back to disabled / all-selected after the click', async () => {
+      await seedCategoriesAndIndex()
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'OTHER' })
+      await flushPromises()
+
+      const all = wrapper.findComponent(ContentTypesAll)
+      expect(all.props('modelValue')).toBe(false)
+
+      await all.vm.$emit('update:modelValue', true)
+      await flushPromises()
+
+      expect(all.props('modelValue')).toBe(true)
+    })
+
+    it('does not affect unrelated filters when "All" is clicked', async () => {
+      await seedCategoriesAndIndex()
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'OTHER' })
+      // Unrelated filter that must survive the click.
+      searchStore.addFilterValue({ name: 'language', value: 'ENGLISH' })
+      await flushPromises()
+
+      await wrapper.findComponent(ContentTypesAll).vm.$emit('update:modelValue', true)
+      await flushPromises()
+
+      expect(searchStore.values.language).toEqual(['ENGLISH'])
+    })
+  })
+
   describe('smart combine selection', () => {
     // Shared fixture: two categories (`DOCUMENT` with one MIME type, `OTHER`
     // with two) so we can exercise full/partial/mixed transitions without
@@ -700,6 +843,158 @@ describe('FilterTypeFileTypes.vue', () => {
       // All three aggregated content types are rendered — none dropped or duplicated.
       const contentTypes = entries.map(node => node.props('contentType'))
       expect(new Set(contentTypes)).toEqual(new Set(['application/pdf', 'image/jpeg', 'video/mp4']))
+    })
+  })
+
+  describe('paired-filter "All" behavior in non-grouped (flat) view', () => {
+    // The "All" entry lives in the shared `#all` slot of FilterType, so the
+    // disabled-state and click-reset semantics introduced for the categories
+    // view in US-002/003 must apply identically in the flat view. These
+    // tests prove that parity end-to-end from the user's seam.
+    const seedAndFlatten = async () => {
+      api.getContentTypeCategories.mockResolvedValue({
+        DOCUMENT: ['application/pdf'],
+        OTHER: ['text/html', 'text/plain']
+      })
+
+      await letData(es).have(new IndexedDocument('document_01', index).withContentType('application/pdf')).commit()
+      await letData(es).have(new IndexedDocument('document_02', index).withContentType('text/html')).commit()
+      await letData(es).have(new IndexedDocument('document_03', index).withContentType('text/plain')).commit()
+
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+      // Flip to the flat view before exercising "All".
+      await wrapper.findComponent(ButtonToggleContentTypesView).trigger('click')
+      await flushPromises()
+    }
+
+    it('disables "All" when both contentType and contentTypeCategory are empty', async () => {
+      await seedAndFlatten()
+
+      const all = wrapper.findComponent(ContentTypesAll)
+      expect(all.props('modelValue')).toBe(true)
+    })
+
+    it('keeps "All" enabled when only contentType has values', async () => {
+      await seedAndFlatten()
+
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      await flushPromises()
+
+      const all = wrapper.findComponent(ContentTypesAll)
+      expect(all.props('modelValue')).toBe(false)
+    })
+
+    it('keeps "All" enabled when only contentTypeCategory has values', async () => {
+      await seedAndFlatten()
+
+      searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'OTHER' })
+      await flushPromises()
+
+      const all = wrapper.findComponent(ContentTypesAll)
+      expect(all.props('modelValue')).toBe(false)
+    })
+
+    it('keeps "All" enabled when both contentType and contentTypeCategory have values', async () => {
+      await seedAndFlatten()
+
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'OTHER' })
+      await flushPromises()
+
+      const all = wrapper.findComponent(ContentTypesAll)
+      expect(all.props('modelValue')).toBe(false)
+    })
+
+    it('clears both contentType and contentTypeCategory when "All" is clicked', async () => {
+      await seedAndFlatten()
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'OTHER' })
+      await flushPromises()
+
+      await wrapper.findComponent(ContentTypesAll).vm.$emit('update:modelValue', true)
+      await flushPromises()
+
+      expect(searchStore.values.contentType ?? []).toEqual([])
+      expect(searchStore.values.contentTypeCategory ?? []).toEqual([])
+    })
+
+    it('flips "All" back to disabled / all-selected after the click', async () => {
+      await seedAndFlatten()
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'OTHER' })
+      await flushPromises()
+
+      const all = wrapper.findComponent(ContentTypesAll)
+      expect(all.props('modelValue')).toBe(false)
+
+      await all.vm.$emit('update:modelValue', true)
+      await flushPromises()
+
+      expect(all.props('modelValue')).toBe(true)
+    })
+
+    it('does not affect unrelated filters when "All" is clicked', async () => {
+      await seedAndFlatten()
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'OTHER' })
+      // Unrelated filter that must survive the click.
+      searchStore.addFilterValue({ name: 'language', value: 'ENGLISH' })
+      await flushPromises()
+
+      await wrapper.findComponent(ContentTypesAll).vm.$emit('update:modelValue', true)
+      await flushPromises()
+
+      expect(searchStore.values.language).toEqual(['ENGLISH'])
+    })
+
+    it('produces the same final filter state whether "All" is clicked from grouped or flat view', async () => {
+      // Parity check from the user's seam: identical sequence (populate both
+      // paired filters → click "All") must reach the same store state in
+      // both views, so toggling the view is purely cosmetic.
+      api.getContentTypeCategories.mockResolvedValue({
+        DOCUMENT: ['application/pdf'],
+        OTHER: ['text/html', 'text/plain']
+      })
+
+      await letData(es).have(new IndexedDocument('document_01', index).withContentType('application/pdf')).commit()
+      await letData(es).have(new IndexedDocument('document_02', index).withContentType('text/html')).commit()
+      await letData(es).have(new IndexedDocument('document_03', index).withContentType('text/plain')).commit()
+
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+
+      // First run: stay in the default grouped view, populate, then click "All".
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'OTHER' })
+      await flushPromises()
+
+      await wrapper.findComponent(ContentTypesAll).vm.$emit('update:modelValue', true)
+      await flushPromises()
+
+      const groupedState = {
+        contentType: searchStore.values.contentType ?? [],
+        contentTypeCategory: searchStore.values.contentTypeCategory ?? []
+      }
+
+      // Second run: flip to flat, repeat the same user actions.
+      await wrapper.findComponent(ButtonToggleContentTypesView).trigger('click')
+      await flushPromises()
+
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'OTHER' })
+      await flushPromises()
+
+      await wrapper.findComponent(ContentTypesAll).vm.$emit('update:modelValue', true)
+      await flushPromises()
+
+      const flatState = {
+        contentType: searchStore.values.contentType ?? [],
+        contentTypeCategory: searchStore.values.contentTypeCategory ?? []
+      }
+
+      expect(flatState).toEqual(groupedState)
+      expect(flatState).toEqual({ contentType: [], contentTypeCategory: [] })
     })
   })
 
