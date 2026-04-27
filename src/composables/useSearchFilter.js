@@ -1,5 +1,5 @@
 import { computed, toValue, nextTick, watch } from 'vue'
-import { get, identity, isObject, range, random, toString, without } from 'lodash'
+import { castArray, get, identity, isObject, range, random, toString, without } from 'lodash'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
@@ -78,11 +78,17 @@ export function useSearchFilter() {
   function computedAll(filter) {
     return computed({
       get() {
-        return !hasAnyFilterValue(filter)
+        // Accept either a single filter or a list (used by paired dimensions),
+        // so "all-selected" reflects the absence of values across every entry.
+        const filters = castArray(toValue(filter))
+        return !filters.some(hasAnyFilterValue)
       },
       set(value) {
         if (value) {
-          removeFilterValues(filter)
+          const filters = castArray(toValue(filter))
+          for (const eachFilter of filters) {
+            removeFilterValues(eachFilter)
+          }
         }
       }
     })
@@ -209,7 +215,9 @@ export function useSearchFilter() {
   }
 
   const removeFilterValues = (filter) => {
-    return searchStore.setFilterValue(castFilter(filter), [])
+    // setFilterValue takes a single { name, value } arg; passing [] positionally writes [undefined].
+    const { name } = castFilter(filter)
+    return searchStore.setFilterValue({ name, value: [] })
   }
 
   const sortFilter = ({ name }, { sortBy, orderBy }) => {

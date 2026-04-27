@@ -1,6 +1,7 @@
 import { createApp, nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import bodybuilder from 'bodybuilder'
+import { vi } from 'vitest'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import { useSearchFilter } from '@/composables/useSearchFilter'
@@ -571,6 +572,120 @@ describe('useSearchFilter composable', () => {
 
       expect(getFilterPairedDimensions({ name: filter })).toEqual([filter])
       expect(getFilterPairedDimension({ name: filter })).toBeNull()
+    })
+  })
+
+  describe('computedAll', () => {
+    describe('single filter ref (existing API)', () => {
+      it('returns true when the filter has no values', () => {
+        const { computedAll } = mountComposable()
+        const all = computedAll({ name: 'language' })
+
+        expect(all.value).toBe(true)
+      })
+
+      it('returns false once the filter has at least one value', () => {
+        const { computedAll, addFilterValue } = mountComposable()
+        const all = computedAll({ name: 'language' })
+
+        addFilterValue({ name: 'language' }, { key: 'en' })
+
+        expect(all.value).toBe(false)
+      })
+
+      it('clears the filter when set to true', () => {
+        const { computedAll, addFilterValue } = mountComposable()
+        addFilterValue({ name: 'language' }, { key: 'en' })
+
+        const spy = vi.spyOn(searchStore, 'setFilterValue')
+        const all = computedAll({ name: 'language' })
+        all.value = true
+
+        const clearedFilters = spy.mock.calls.map(args => args[0]?.name)
+        expect(clearedFilters).toEqual(['language'])
+      })
+
+      it('does not clear the filter when set to false', () => {
+        const { computedAll, addFilterValue, hasAnyFilterValue } = mountComposable()
+        addFilterValue({ name: 'language' }, { key: 'en' })
+
+        const all = computedAll({ name: 'language' })
+        all.value = false
+
+        expect(hasAnyFilterValue({ name: 'language' })).toBe(true)
+        expect(all.value).toBe(false)
+      })
+    })
+
+    describe('paired filter list (new API)', () => {
+      it('returns true when every paired filter has no values', () => {
+        const { computedAll } = mountComposable()
+        const all = computedAll([
+          { name: 'contentType' },
+          { name: 'contentTypeCategory' }
+        ])
+
+        expect(all.value).toBe(true)
+      })
+
+      it('returns false when any paired filter has a value', () => {
+        const { computedAll, addFilterValue } = mountComposable()
+        addFilterValue({ name: 'contentTypeCategory' }, { key: 'DOCUMENT' })
+
+        const all = computedAll([
+          { name: 'contentType' },
+          { name: 'contentTypeCategory' }
+        ])
+
+        expect(all.value).toBe(false)
+      })
+
+      it('returns false when all paired filters have values', () => {
+        const { computedAll, addFilterValue } = mountComposable()
+        addFilterValue({ name: 'contentType' }, { key: 'application/pdf' })
+        addFilterValue({ name: 'contentTypeCategory' }, { key: 'DOCUMENT' })
+
+        const all = computedAll([
+          { name: 'contentType' },
+          { name: 'contentTypeCategory' }
+        ])
+
+        expect(all.value).toBe(false)
+      })
+
+      it('clears every paired filter when set to true', () => {
+        const { computedAll, addFilterValue } = mountComposable()
+        addFilterValue({ name: 'contentType' }, { key: 'application/pdf' })
+        addFilterValue({ name: 'contentTypeCategory' }, { key: 'DOCUMENT' })
+
+        const spy = vi.spyOn(searchStore, 'setFilterValue')
+        const all = computedAll([
+          { name: 'contentType' },
+          { name: 'contentTypeCategory' }
+        ])
+        all.value = true
+
+        const clearedFilters = spy.mock.calls.map(args => args[0]?.name)
+        expect(clearedFilters).toEqual(['contentType', 'contentTypeCategory'])
+      })
+
+      it('flips back to true once every paired filter is cleared', () => {
+        const { computedAll, addFilterValue, removeFilterValue } = mountComposable()
+        addFilterValue({ name: 'contentType' }, { key: 'application/pdf' })
+        addFilterValue({ name: 'contentTypeCategory' }, { key: 'DOCUMENT' })
+
+        const all = computedAll([
+          { name: 'contentType' },
+          { name: 'contentTypeCategory' }
+        ])
+        expect(all.value).toBe(false)
+
+        removeFilterValue({ name: 'contentType' }, { key: 'application/pdf' })
+        expect(all.value).toBe(false)
+
+        removeFilterValue({ name: 'contentTypeCategory' }, { key: 'DOCUMENT' })
+        expect(all.value).toBe(true)
+      })
     })
   })
 })
