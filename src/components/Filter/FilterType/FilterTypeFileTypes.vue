@@ -1,6 +1,5 @@
 <script setup>
 import { computed, ref, toRef, useTemplateRef } from 'vue'
-import { isEqual } from 'lodash'
 
 import ButtonToggleContentTypesView from '@/components/Button/ButtonToggleContentTypesView.vue'
 import ContentTypesAll from '@/components/ContentTypes/ContentTypesCategories/ContentTypesAll.vue'
@@ -16,9 +15,9 @@ import { getDocumentTypeLabel } from '@/utils/utils'
 import { useContentTypeCategories } from '@/composables/useContentTypeCategories'
 import { useContentTypeCategoryLabel } from '@/composables/useContentTypeCategoryLabel'
 import { useContentTypeSearchFilter } from '@/composables/useContentTypeSearchFilter'
+import { useContentTypeSelection } from '@/composables/useContentTypeSelection'
 import { useSearchFilter } from '@/composables/useSearchFilter'
 import { useSearchStore } from '@/store/modules'
-import { CONTENT_TYPE_CATEGORY_FILTER_NAME } from '@/store/filters/FilterContentTypeCategory'
 
 const props = defineProps({
   filter: {
@@ -28,6 +27,7 @@ const props = defineProps({
 })
 
 const grouped = ref(true)
+const filterRef = toRef(props, 'filter')
 
 const filterTypeRef = useTemplateRef('filterTypeRef')
 const entries = computed(() => filterTypeRef.value?.entries ?? [])
@@ -37,13 +37,20 @@ const { categories } = useContentTypeCategories(contentTypes)
 const {
   toggleFilterValue,
   hasFilterValue,
-  getFilterByName,
-  getFilterValuesByName,
   computedAll,
   computedTotal
 } = useSearchFilter()
 const searchStore = useSearchStore.inject()
 const categoryLabelFor = useContentTypeCategoryLabel()
+
+const {
+  isEntrySelected,
+  isEntryRetainedDuringSearch,
+  categoryAllSelected,
+  categoryIndeterminate,
+  toggleCategory,
+  toggleEntry
+} = useContentTypeSelection({ filter: filterRef, categories })
 
 const {
   query,
@@ -54,7 +61,7 @@ const {
   contentTypes,
   categories,
   categoryLabelFor,
-  isContentTypeRetained: contentType => isEntryRetainedDuringSearch(contentType)
+  isContentTypeRetained: isEntryRetainedDuringSearch
 })
 
 const sort = computed(() => searchStore.sortFilters[props.filter.name] ?? {
@@ -63,149 +70,18 @@ const sort = computed(() => searchStore.sortFilters[props.filter.name] ?? {
 })
 const categoryJsonOrder = Object.keys(contentTypeCategoriesJson)
 
-const categoryFilter = computed(() => getFilterByName(CONTENT_TYPE_CATEGORY_FILTER_NAME))
+const allSelected = computedAll(filterRef)
+const totalCount = computedTotal(filterRef)
 
-const allSelected = computedAll(toRef(props, 'filter'))
-const totalCount = computedTotal(toRef(props, 'filter'))
-
-// O(1) lookups derived from `entries` and `categories` so the template loop
-// and sort comparator don't pay linear-search costs per call.
+// O(1) lookup of doc counts so the template loop and sort comparator don't
+// pay linear-search costs per call.
 const entryCountMap = computed(() => {
   const map = new Map()
   entries.value.forEach(entry => map.set(entry.item.key, entry.item.doc_count ?? 0))
   return map
 })
-const categoryByContentType = computed(() => {
-  const map = new Map()
-  Object.entries(categories.value).forEach(([category, types]) => {
-    types.forEach(type => map.set(type, category))
-  })
-  return map
-})
 
 const entryCount = contentType => entryCountMap.value.get(contentType) ?? 0
-const categoryForContentType = contentType => categoryByContentType.value.get(contentType) ?? null
-
-const currentContentTypes = () => getFilterValuesByName(props.filter.name)
-const currentCategories = () => getFilterValuesByName(CONTENT_TYPE_CATEGORY_FILTER_NAME)
-
-const isCategoryStored = category => currentCategories().includes(category)
-
-// Explicit-only set so a category-implied child still renders unchecked.
-const selectedContentTypeSet = computed(() => new Set(currentContentTypes()))
-
-// Superset including category-implied children, used only by the search box
-// so a category-covered row stays visible when its label stops matching.
-const retainedContentTypeSet = computed(() => {
-  const set = new Set(currentContentTypes())
-  currentCategories().forEach((category) => {
-    const types = categories.value[category] ?? []
-    types.forEach(type => set.add(type))
-  })
-  return set
-})
-
-const isEntrySelected = contentType => selectedContentTypeSet.value.has(contentType)
-const isEntryRetainedDuringSearch = contentType => retainedContentTypeSet.value.has(contentType)
-
-const categorySelectedCount = types => types.filter(isEntrySelected).length
-
-const categoryAllSelected = (category, types) => {
-  if (isCategoryStored(category)) {
-    return true
-  }
-  const selected = categorySelectedCount(types)
-  return selected > 0 && selected === types.length
-}
-
-const categoryIndeterminate = (category, types) => {
-  if (isCategoryStored(category)) {
-    return false
-  }
-  const selected = categorySelectedCount(types)
-  return selected > 0 && selected < types.length
-}
-
-// Guard against no-op writes so downstream watchers (route sync, query
-// refresh) don't fire when the user's action produced no actual change.
-const writeContentTypes = (values) => {
-  const next = [...new Set(values)]
-  if (isEqual([...next].sort(), [...currentContentTypes()].sort())) {
-    return
-  }
-  searchStore.setFilterValue({ name: props.filter.name, value: next })
-}
-
-const writeCategories = (values) => {
-  if (!categoryFilter.value) {
-    return
-  }
-  const next = [...new Set(values)]
-  if (isEqual([...next].sort(), [...currentCategories()].sort())) {
-    return
-  }
-  searchStore.setFilterValue({ name: CONTENT_TYPE_CATEGORY_FILTER_NAME, value: next })
-}
-
-const toggleCategory = (category, types, checked) => {
-  writeContentTypes(currentContentTypes().filter(value => !types.includes(value)))
-  const remainingCategories = currentCategories().filter(value => value !== category)
-  writeCategories(checked ? [...remainingCategories, category] : remainingCategories)
-}
-
-// Drop `category` and replace any explicit child it covered with `keepFromCategory`.
-// Shared by demote (keep just the clicked child) and uncheck-with-stored-category
-// (keep the surviving siblings).
-const dropCategoryAnd = (category, keepFromCategory) => {
-  const categoryTypes = categories.value[category] ?? []
-  const others = currentContentTypes().filter(value => !categoryTypes.includes(value))
-  writeCategories(currentCategories().filter(value => value !== category))
-  writeContentTypes([...others, ...keepFromCategory])
-}
-
-// True when checking `contentType` would tick every remaining sibling of its
-// category, so the selection can be promoted to a single hidden-filter value.
-const shouldPromoteToCategory = (category, contentType, currentTypes) => {
-  if (!category || currentCategories().includes(category)) {
-    return false
-  }
-  const siblings = (categories.value[category] ?? []).filter(type => type !== contentType)
-  return siblings.length > 0 && siblings.every(type => currentTypes.includes(type))
-}
-
-const toggleEntry = (contentType, checked) => {
-  const category = categoryForContentType(contentType)
-
-  if (checked) {
-    const currentTypes = currentContentTypes()
-    // Demote: clicking a child of a stored category narrows the selection to
-    // that single child.
-    if (category && isCategoryStored(category)) {
-      dropCategoryAnd(category, [contentType])
-      return
-    }
-    if (shouldPromoteToCategory(category, contentType, currentTypes)) {
-      const categoryTypes = categories.value[category] ?? []
-      writeContentTypes(currentTypes.filter(value => !categoryTypes.includes(value)))
-      writeCategories([...currentCategories(), category])
-      return
-    }
-    writeContentTypes([...currentTypes, contentType])
-    return
-  }
-
-  // Defensive: URL-tamper or race may store both the category and an explicit
-  // child. Normal flow now hits the demote branch above, so this only fires
-  // for tampered state.
-  if (category && isCategoryStored(category)) {
-    const siblings = (categories.value[category] ?? []).filter(type => type !== contentType)
-    dropCategoryAnd(category, siblings)
-    return
-  }
-
-  writeContentTypes(currentContentTypes().filter(value => value !== contentType))
-}
-
 const categoryCount = types =>
   types.reduce((sum, contentType) => sum + entryCount(contentType), 0)
 
