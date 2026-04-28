@@ -485,7 +485,7 @@
     "fileTypes": {
       "legacyIndex": {
         "title": "Category grouping unavailable",
-        "description": "Category grouping isn't available for this project. Switch to the flat view to browse all file types."
+        "description": "This project was indexed without category data."
       }
     },
     "language": "Idiomas",
