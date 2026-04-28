@@ -16,14 +16,14 @@ describe('ButtonToggleContentTypesView.vue', () => {
     core = CoreSetup.init().useAll()
   })
 
-  it('uses "File types" as the tooltip/aria-label when grouped is true', () => {
+  it('uses "File types view" as the tooltip/aria-label when grouped is true', () => {
     const wrapper = mountButton({ grouped: true })
-    expect(wrapper.get('button').attributes('aria-label')).toBe('File types')
+    expect(wrapper.get('button').attributes('aria-label')).toBe('File types view')
   })
 
-  it('uses "File types by categories" as the tooltip/aria-label when grouped is false', () => {
+  it('uses "File types by categories view" as the tooltip/aria-label when grouped is false', () => {
     const wrapper = mountButton({ grouped: false })
-    expect(wrapper.get('button').attributes('aria-label')).toBe('File types by categories')
+    expect(wrapper.get('button').attributes('aria-label')).toBe('File types by categories view')
   })
 
   it('emits update:grouped with the flipped value when clicked', async () => {
@@ -34,9 +34,9 @@ describe('ButtonToggleContentTypesView.vue', () => {
 
   it('flips the tooltip from grouped to flat after the grouped prop changes', async () => {
     const wrapper = mountButton({ grouped: false })
-    expect(wrapper.get('button').attributes('aria-label')).toBe('File types by categories')
+    expect(wrapper.get('button').attributes('aria-label')).toBe('File types by categories view')
 
     await wrapper.setProps({ grouped: true })
-    expect(wrapper.get('button').attributes('aria-label')).toBe('File types')
+    expect(wrapper.get('button').attributes('aria-label')).toBe('File types view')
   })
 })
