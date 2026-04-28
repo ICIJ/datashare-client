@@ -61,8 +61,8 @@
     "tree": "Tree view"
   },
   "buttonToggleContentTypesView": {
-    "flat": "File types",
-    "grouped": "File types by categories"
+    "flat": "File types view",
+    "grouped": "File types by categories view"
   },
   "buttonToggleSettings": {
     "label": "Settings"
