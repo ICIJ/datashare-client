@@ -10,11 +10,7 @@ defineProps({
   },
   opacity: {
     type: Number,
-    default: 0.9
-  },
-  blur: {
-    type: String,
-    default: '4px'
+    default: 0.95
   }
 })
 </script>
@@ -24,7 +20,6 @@ defineProps({
     :show="show"
     :bg-color="bgColor"
     :opacity="opacity"
-    :blur="blur"
     no-center
     class="filter-type-overlay"
   >
@@ -32,8 +27,22 @@ defineProps({
       v-if="$slots.overlay"
       #overlay
     >
-      <slot name="overlay" />
+      <div class="filter-type-overlay__wrapper">
+        <slot name="overlay" />
+      </div>
     </template>
     <slot />
   </b-overlay>
 </template>
+
+<style lang="scss" scoped>
+.filter-type-overlay {
+  &__wrapper {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: $spacer-xs;
+  }
+}
+</style>
