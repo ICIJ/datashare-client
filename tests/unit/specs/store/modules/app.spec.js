@@ -1,6 +1,7 @@
 import { setActivePinia, createPinia } from 'pinia'
 
 import { useAppStore } from '@/store/modules'
+import { SEARCH_OPERATORS } from '@/enums/searchOperators'
 
 describe('AppStore', () => {
   let store
@@ -79,5 +80,15 @@ describe('AppStore', () => {
     store.setSettings('search', 'orderBy', ['relevance', 'desc'])
     store.resetSettings('search')
     expect(store.getSettings('search', 'orderBy')).toEqual(originalValue)
+  })
+
+  it('should default search operator to OR', () => {
+    expect(store.getSettings('search', 'searchOperator')).toBe(SEARCH_OPERATORS.OR)
+  })
+
+  it('should reset search operator to OR after change', () => {
+    store.setSettings('search', 'searchOperator', SEARCH_OPERATORS.AND)
+    store.resetSettings('search')
+    expect(store.getSettings('search', 'searchOperator')).toBe(SEARCH_OPERATORS.OR)
   })
 })

@@ -24,6 +24,7 @@ import filterDefs, * as filterTypes from '@/store/filters'
 import { useAppStore, useSearchBreadcrumbStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
 import { defineSuffixedStore } from '@/store/defineSuffixedStore'
+import { SEARCH_OPERATORS } from '@/enums/searchOperators'
 import settings from '@/utils/settings'
 
 export const useSearchStore = defineSuffixedStore('search', () => {
@@ -51,6 +52,8 @@ export const useSearchStore = defineSuffixedStore('search', () => {
       indices.value = [value]
     }
   })
+
+  const searchOperator = computed(() => appStore.getSettings('search', 'searchOperator') ?? SEARCH_OPERATORS.OR)
 
   const fields = computed(() => {
     return find(settings.searchFields, { key: field.value }).fields
@@ -142,7 +145,8 @@ export const useSearchStore = defineSuffixedStore('search', () => {
       from: from.value,
       perPage: perPage.value,
       sort: sort.value,
-      fields: fields.value
+      fields: fields.value,
+      operator: searchOperator.value
     }
   })
 
@@ -1006,6 +1010,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     instantiatedFilters,
     activeFilters,
     fields,
+    searchOperator,
     filterValuesAsRouteQuery,
     toBaseRouteQuery,
     toRouteQuery,
