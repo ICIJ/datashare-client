@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, toRef, useTemplateRef } from 'vue'
+import { computed, toRef, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import AppSpinner from '@/components/AppSpinner/AppSpinner.vue'
@@ -27,10 +27,10 @@ const props = defineProps({
 })
 
 const collapse = defineModel('collapse', { type: Boolean, default: null })
+const grouped = defineModel('grouped', { type: Boolean, default: false })
 
 const { t } = useI18n()
 
-const grouped = ref(true)
 const filterRef = toRef(props, 'filter')
 
 // Detect indices that don't expose contentTypeCategory in their mapping;

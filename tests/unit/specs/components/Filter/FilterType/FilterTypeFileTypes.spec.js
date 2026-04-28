@@ -65,7 +65,11 @@ describe('FilterTypeFileTypes.vue', () => {
       global: {
         plugins: core.plugins
       },
-      props: { filter, collapse: false }
+      props: {
+        filter,
+        collapse: false,
+        grouped: true
+      }
     })
   })
 
@@ -78,8 +82,14 @@ describe('FilterTypeFileTypes.vue', () => {
     expect(wrapper.findComponent(ButtonToggleContentTypesView).exists()).toBe(true)
   })
 
-  it('should have grouped set to true by default', () => {
-    expect(wrapper.findComponent(ButtonToggleContentTypesView).props('grouped')).toBe(true)
+  it('should have grouped set to false by default', () => {
+    wrapper.unmount()
+    const filter = searchStore.getFilter({ name: 'contentType' })
+    wrapper = mount(FilterTypeFileTypes, {
+      global: { plugins: core.plugins },
+      props: { filter, collapse: false }
+    })
+    expect(wrapper.findComponent(ButtonToggleContentTypesView).props('grouped')).toBe(false)
   })
 
   it('should toggle grouped to false when the button is clicked', async () => {
@@ -1376,7 +1386,7 @@ describe('FilterTypeFileTypes.vue', () => {
     // what the user sees: spinner during loading, warning when settled,
     // nothing when the field is mapped. The overlay is gated by FilterType's
     // expanded state so it never bleeds into adjacent collapsed filters.
-    const remountWithAvailability = ({ isAvailable, isLoading, collapse = false }) => {
+    const remountWithAvailability = ({ isAvailable, isLoading, collapse = false, grouped = true }) => {
       wrapper.unmount()
       useContentTypeCategoryAvailability.mockReturnValue({
         isAvailable: ref(isAvailable),
@@ -1389,7 +1399,11 @@ describe('FilterTypeFileTypes.vue', () => {
         global: {
           plugins: core.plugins
         },
-        props: { filter, collapse }
+        props: {
+          filter,
+          grouped,
+          collapse
+        }
       })
     }
 
