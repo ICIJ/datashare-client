@@ -17,7 +17,7 @@ import { useSearchStore } from '@/store/modules'
 const query = defineModel('query', { type: String, default: '' })
 const collapse = defineModel('collapse', { type: Boolean, default: null })
 
-const { filter, modal } = defineProps({
+const { filter, modal, hideCount, overlayShow } = defineProps({
   filter: {
     type: Object,
     required: true
@@ -27,6 +27,13 @@ const { filter, modal } = defineProps({
   },
   hideCount: {
     type: Boolean
+  },
+  // Forwarded to FiltersPanelSectionFilter to surface an informational
+  // overlay on top of the filter content (search + entries) — never on the
+  // title, never while collapsed.
+  overlayShow: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -120,7 +127,9 @@ const {
   computedSortFilter,
   computedContextualizeFilter,
   computedExcludeFilter,
-  toggleFilterValue
+  toggleFilterValue,
+  getFilterPairedDimensions,
+  getFilterValuesByName
 } = useSearchFilter()
 
 const exclude = computedExcludeFilter(filter)
@@ -181,9 +190,15 @@ const hasNoPages = computed(() => !pages.length)
 const noInfiniteScroll = computed(() => isPageless.value || hasNoPages.value || reachedBucketsEnd.value)
 const noBucketTranslation = computed(() => filter?.noBucketTranslation ?? false)
 const fromElasticSearch = computed(() => filter?.fromElasticSearch ?? false)
-const count = computed(() => filter.values.length)
 const offset = computed(() => buckets.value?.length ?? 0)
 const size = computed(() => filter.pagelessBucketSize ?? settings.filter.bucketSize)
+// Sum across paired dimensions so the closed-state badge matches the OR
+// semantics used in search; unpaired filters fall back to [name].
+const count = computed(() => {
+  return getFilterPairedDimensions(filter).reduce((sum, name) => {
+    return sum + getFilterValuesByName(name).length
+  }, 0)
+})
 
 const debouncedCollapse = computed({
   get: () => collapse.value,
@@ -226,6 +241,8 @@ onBeforeMount(async () => {
   // This reduces cascading API calls by debouncing all dependency changes
   watch(aggregationDependencies, aggregateIfVisible, { deep: false })
 })
+
+defineExpose({ entries, aggregateOver, count })
 </script>
 
 <template>
@@ -246,7 +263,17 @@ onBeforeMount(async () => {
     :count="count"
     :loading="isLoading"
     :modal="modal"
+    :overlay-show="overlayShow"
   >
+    <template
+      v-if="$slots.overlay"
+      #overlay
+    >
+      <slot
+        name="overlay"
+        v-bind="{ filter, opened }"
+      />
+    </template>
     <slot
       name="all"
       v-bind="{ entries, filter, opened }"

@@ -1,6 +1,5 @@
 <script setup>
 import SearchBreadcrumbForm from '@/components/Search/SearchBreadcrumbForm/SearchBreadcrumbForm'
-import SearchBreadcrumbFormEntry from '@/components/Search/SearchBreadcrumbForm/SearchBreadcrumbFormEntry'
 import { useSearchBreadcrumb } from '@/composables/useSearchBreadcrumb'
 import { useSearchSavingModal } from '@/composables/useSearchSavingModal'
 
@@ -23,6 +22,7 @@ const { show: showSearchSavingModal } = useSearchSavingModal()
 <template>
   <search-breadcrumb-form
     v-model:visible="visible"
+    :entries="entries"
     :disabled-clear-query="!hasQueryEntries"
     :disabled-clear-filters="!hasFiltersEntries"
     :disabled-clear-filters-and-query="!hasQueryAndFiltersEntries"
@@ -30,12 +30,6 @@ const { show: showSearchSavingModal } = useSearchSavingModal()
     @clear:query="clearQueryEntries"
     @clear:all="clearAll"
     @save:search="showSearchSavingModal"
-  >
-    <search-breadcrumb-form-entry
-      v-for="({ query, filter, value, noXIcon }, i) in entries"
-      v-bind="{ query, filter, value, noXIcon }"
-      :key="i"
-      @click:x="clearEntry($event, { query, filter, value })"
-    />
-  </search-breadcrumb-form>
+    @click:entry-x="clearEntry"
+  />
 </template>

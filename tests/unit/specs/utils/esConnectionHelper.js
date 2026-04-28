@@ -16,7 +16,7 @@ function slugger(value) {
 }
 
 function esConnectionHelper(indexOrIndices = [], ifWindows = false) {
-  vi.setConfig({ testTimeout: 1e4 })
+  vi.setConfig({ testTimeout: 1e4, hookTimeout: 3e4 })
   const indices = castArray(indexOrIndices)
 
   beforeAll(async () => {

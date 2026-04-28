@@ -8,9 +8,8 @@ import SearchBreadcrumbFormList from './SearchBreadcrumbFormList'
 
 const visible = defineModel('visible', { type: Boolean })
 const slots = useSlots()
-const isEmpty = computed(() => !slots.default)
 
-defineProps({
+const props = defineProps({
   disabledClearFilters: {
     type: Boolean
   },
@@ -29,10 +28,28 @@ defineProps({
   },
   wrapperClass: {
     type: [String, Array, Object]
+  },
+  /**
+   * Optional list of entry descriptors forwarded to `SearchBreadcrumbFormList`.
+   * Lets callers build the chips declaratively while still benefitting from
+   * the OR-badge wiring; the default slot remains supported for legacy use.
+   */
+  entries: {
+    type: Array,
+    default: () => []
   }
 })
 
-const emit = defineEmits(['clear:filters', 'clear:query', 'clear:all', 'save:search', 'create:alert'])
+const emit = defineEmits([
+  'clear:filters',
+  'clear:query',
+  'clear:all',
+  'save:search',
+  'create:alert',
+  'click:entry-x'
+])
+
+const isEmpty = computed(() => !slots.default && !props.entries.length)
 </script>
 
 <template>
@@ -59,7 +76,11 @@ const emit = defineEmits(['clear:filters', 'clear:query', 'clear:all', 'save:sea
             class="order-1 align-self-start"
             @click="visible = false"
           />
-          <search-breadcrumb-form-list class="flex-grow-1">
+          <search-breadcrumb-form-list
+            class="flex-grow-1"
+            :entries="entries"
+            @click:entry-x="(event, entry) => emit('click:entry-x', event, entry)"
+          >
             <slot />
           </search-breadcrumb-form-list>
         </div>

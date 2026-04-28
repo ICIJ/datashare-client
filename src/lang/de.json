@@ -481,6 +481,13 @@
   "filter": {
     "project": "Projekte",
     "contentType": "Dateitypen",
+    "contentTypeCategory": "Dateityp-Kategorien",
+    "fileTypes": {
+      "legacyIndex": {
+        "title": "Category grouping unavailable",
+        "description": "This project was indexed without category data."
+      }
+    },
     "language": "Sprachen",
     "namedEntityPerson": "Personen",
     "namedEntityLocation": "Orte",

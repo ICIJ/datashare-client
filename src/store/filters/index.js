@@ -6,6 +6,7 @@ import IPhHash from '~icons/ph/hash'
 import IPhUsers from '~icons/ph/users'
 import IPhTreeStructure from '~icons/ph/tree-structure'
 import IPhFile from '~icons/ph/file'
+import IPhStack from '~icons/ph/stack'
 import IPhCalendarBlank from '~icons/ph/calendar-blank'
 import IPhGlobe from '~icons/ph/globe'
 import IPhUserSquare from '~icons/ph/user-square'
@@ -17,8 +18,10 @@ import IPhCalendarPlus from '~icons/ph/calendar-plus'
 
 import { MODE_NAME } from '@/mode/index'
 import { namedEntityCategoryTranslation } from '@/store/filters/FilterEntity'
+import { CONTENT_TYPE_CATEGORY_FILTER_NAME } from '@/store/filters/FilterContentTypeCategory'
 
 export { default as FilterContentType } from './FilterContentType'
+export { default as FilterContentTypeCategory, CONTENT_TYPE_CATEGORY_FILTER_NAME } from './FilterContentTypeCategory'
 export { default as FilterDate } from './FilterDate'
 export { default as FilterDateRange } from './FilterDateRange'
 export { default as FilterExtractionLevel } from './FilterExtractionLevel'
@@ -30,6 +33,12 @@ export { default as FilterRecommendedBy } from './FilterRecommendedBy'
 export { default as FilterStarred } from './FilterStarred'
 export { default as FilterTag } from './FilterTag'
 export { default as FilterText } from './FilterText'
+export {
+  PAIRED_DIMENSIONS,
+  getCanonicalDimension,
+  getPairedDimension,
+  getPairedDimensions
+} from './pairedDimensions'
 
 export default [
   {
@@ -119,6 +128,20 @@ export default [
       section: 'documentsInfo',
       preference: 'filter-content-type',
       pagelessBucketSize: 1000
+    }
+  },
+  {
+    // Hidden companion filter for FilterContentType: tracks the high-level
+    // category selection (AUDIO, VIDEO, ...) so it round-trips through the URL
+    // and breadcrumb without appearing in the filters panel.
+    type: 'FilterContentTypeCategory',
+    options: {
+      name: CONTENT_TYPE_CATEGORY_FILTER_NAME,
+      key: CONTENT_TYPE_CATEGORY_FILTER_NAME,
+      icon: markRaw(IPhStack),
+      order: 45,
+      section: 'documentsInfo',
+      hidden: true
     }
   },
   {

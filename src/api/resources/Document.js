@@ -256,6 +256,15 @@ export default class Document extends EsDoc {
     return this.source.contentType || 'unknown'
   }
 
+  get contentTypeCategory() {
+    return this.source.contentTypeCategory || 'unknown'
+  }
+
+  get contentTypeCategoryLabel() {
+    // i18n translation key; the caller translates it against the active locale.
+    return `filter.contentTypeCategoryItem.${this.contentTypeCategory}`
+  }
+
   get contentTypeLabel() {
     return get(types, [this.contentType, 'label'], null)
   }

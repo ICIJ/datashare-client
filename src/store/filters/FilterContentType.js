@@ -1,4 +1,4 @@
-import { map, toLower } from 'lodash'
+import { pickBy, toLower } from 'lodash'
 
 import FilterText from './FilterText'
 
@@ -12,17 +12,18 @@ import { getDocumentTypeLabel } from '@/utils/utils'
  * or the translated label.
  */
 export default class FilterContentType extends FilterText {
+  constructor(options) {
+    super(options)
+    this.component = 'FilterTypeFileTypes'
+  }
+
   /**
    * Map a label-based search query to matching MIME keys.
    * @param {string} query - Lowercased user query.
-   * @returns {string[]} MIME keys whose label contains the query (may include `undefined`).
+   * @returns {string[]} MIME keys whose label contains the query.
    */
   keyAliases(query) {
-    return map(types, (item, key) => {
-      if (toLower(item.label).includes(query)) {
-        return key
-      }
-    })
+    return Object.keys(pickBy(types, item => toLower(item.label).includes(query)))
   }
 
   /**

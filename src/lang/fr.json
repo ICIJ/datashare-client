@@ -478,6 +478,13 @@
   "filter": {
     "project": "Projets",
     "contentType": "Types de fichiers",
+    "contentTypeCategory": "Catégories de types de fichiers",
+    "fileTypes": {
+      "legacyIndex": {
+        "title": "Regroupement par catégorie indisponible",
+        "description": "Ce projet a été indexé sans données de catégorie."
+      }
+    },
     "language": "Langues",
     "namedEntityPerson": "Personnes",
     "namedEntityLocation": "Lieux",
