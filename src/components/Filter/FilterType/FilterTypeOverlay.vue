@@ -24,6 +24,7 @@ defineProps({
     :show="show"
     :bg-color="bgColor"
     :opacity="opacity"
+    :blur="blur"
     no-center
     class="filter-type-overlay"
   >
@@ -36,14 +37,3 @@ defineProps({
     <slot />
   </b-overlay>
 </template>
-
-<style lang="scss" scoped>
-.filter-type-overlay {
-  // The colored backdrop is the first absolute child of `.b-overlay` —
-  // attach the blur there so it composes with the bg color above the
-  // (mostly hidden) underlying content.
-  :deep(.b-overlay > div:first-child) {
-    backdrop-filter: blur(v-bind(blur));
-  }
-}
-</style>
