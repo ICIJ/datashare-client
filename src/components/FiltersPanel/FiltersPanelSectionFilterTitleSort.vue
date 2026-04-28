@@ -45,11 +45,11 @@ const isOptionActive = ({ sortBy, orderBy }) => {
     class="filters-panel-section-filter-title-sort"
     variant="link"
     end
-    toggle-class="bg-action-subtle p-1"
+    toggle-class="bg-action-subtle text-action-emphasis-subtle p-1"
     no-caret
   >
     <template #button-content>
-      <app-icon height="1em">
+      <app-icon size="1.25em">
         <i-ph-sort-ascending />
       </app-icon>
       <span class="visually-hidden">Sort</span>
@@ -64,14 +64,3 @@ const isOptionActive = ({ sortBy, orderBy }) => {
     </b-dropdown-item>
   </b-dropdown>
 </template>
-
-<style lang="scss" scoped>
-.filters-panel-section-filter-title-sort {
-  &:deep(.dropdown-toggle) {
-    padding: 0 $spacer-xs;
-    line-height: 1;
-    display: inline-flex;
-    align-items: center;
-  }
-}
-</style>
