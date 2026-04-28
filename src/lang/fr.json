@@ -482,7 +482,7 @@
     "fileTypes": {
       "legacyIndex": {
         "title": "Regroupement par catégorie indisponible",
-        "description": "Le regroupement par catégorie n'est pas disponible pour ce projet. Passez à la vue à plat pour parcourir tous les types de fichiers."
+        "description": "Ce projet a été indexé sans données de catégorie."
       }
     },
     "language": "Langues",
