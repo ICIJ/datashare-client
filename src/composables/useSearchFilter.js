@@ -32,7 +32,9 @@ export function useSearchFilter() {
   // contentTypeCategory field is missing from the selected indices' mapping,
   // the contentType filter falls back to single-dimension behavior so paired
   // counts and the "All" checkbox stop referencing the absent dimension.
-  const { isAvailable: isCategoryAvailable } = useContentTypeCategoryAvailability()
+  // Tolerate an undefined return so a stubbed composable in tests doesn't
+  // crash unrelated mounts (FilterModal sits under every FilterType).
+  const { isAvailable: isCategoryAvailable } = useContentTypeCategoryAvailability() ?? {}
 
   const filterTypes = {
     FilterType,
@@ -146,7 +148,7 @@ export function useSearchFilter() {
     // missing dimension. The static config in pairedDimensions.js stays the
     // source of truth — only this read layer degrades.
     if (
-      !isCategoryAvailable.value
+      !isCategoryAvailable?.value
       && getPairedDimension(name) === CONTENT_TYPE_CATEGORY_FILTER_NAME
     ) {
       return [name]
