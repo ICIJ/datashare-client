@@ -4,6 +4,7 @@ import es from 'elasticsearch-browser'
 import { getCookie } from 'tiny-cookie'
 
 import { EventBus } from '@/utils/eventBus'
+import { SEARCH_OPERATORS } from '@/enums/searchOperators'
 import settings from '@/utils/settings'
 
 // Content fields to exclude from search results (large text fields)
@@ -145,7 +146,8 @@ export function datasharePlugin(Client) {
     from = 0,
     perPage = 25,
     sort = { _score: { order: 'desc' } },
-    fields = []
+    fields = [],
+    operator = SEARCH_OPERATORS.OR
   }) {
     const body = this._buildSearchBody({
       query: normalizeQuery(query),
@@ -153,7 +155,8 @@ export function datasharePlugin(Client) {
       fields,
       from,
       size: perPage,
-      sort
+      sort,
+      operator
     })
     return this._search({ index, body })
   }
@@ -320,15 +323,17 @@ export function datasharePlugin(Client) {
    * @param {Object} body - The bodybuilder instance
    * @param {string} query - The query string
    * @param {string[]} [fields=[]] - Fields to search in
+   * @param operator
    */
-  Client.prototype._applyQueryString = function (body, query, fields = []) {
+  Client.prototype._applyQueryString = function (body, query, fields = [], operator = undefined) {
     if (isEqual(fields, ['path'])) {
       query = replace(query, /\//g, '\\/')
     }
     body.query('match_all').addQuery('bool', b =>
       b.orQuery('query_string', {
         query,
-        fields: fields.length ? fields : undefined
+        fields: fields.length ? fields : undefined,
+        ...(operator ? { default_operator: operator } : {})
       })
     )
   }
@@ -345,14 +350,14 @@ export function datasharePlugin(Client) {
    * @param {Object} options.sort - Sort configuration
    * @returns {Object} The built search body
    */
-  Client.prototype._buildSearchBody = function ({ query, filters, fields, from, size, sort }) {
+  Client.prototype._buildSearchBody = function ({ query, filters, fields, from, size, sort, operator }) {
     const body = bodybuilder()
 
     // Apply filters
     filters.forEach(filter => filter.applyTo(body))
 
     // Apply query string
-    this._applyQueryString(body, query, fields)
+    this._applyQueryString(body, query, fields, operator)
 
     // Filter to documents only
     body.query('match', 'type', 'Document')

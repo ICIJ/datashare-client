@@ -3,6 +3,7 @@ import { ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
 
 import { LAYOUTS } from '@/enums/layouts'
+import { SEARCH_OPERATORS } from '@/enums/searchOperators'
 
 /**
  * Version of the settings schema. Increment this value when making changes to the settings structure which
@@ -31,7 +32,8 @@ export const useAppStore = defineStore(
           layout: LAYOUTS.LIST,
           orderBy: ['_score', 'desc'],
           perPage: '25',
-          properties: ['title', 'thumbnail', 'highlights', 'project']
+          properties: ['title', 'thumbnail', 'highlights', 'project'],
+          searchOperator: SEARCH_OPERATORS.OR
         },
         searchSavedList: {
           orderBy: ['creation_date', 'desc'],

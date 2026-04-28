@@ -89,6 +89,25 @@ describe('elasticsearch', () => {
     })
   })
 
+  it('should set default_operator to "AND" in ES query when operator is "AND"', async () => {
+    const spy = vi.spyOn(elasticsearch, 'search').mockResolvedValue({ hits: { hits: [] } })
+    await elasticsearch.searchDocs({ index, query: 'apple orange', operator: 'AND' })
+    const body = spy.mock.calls[0][0].body
+    const queryString = body.query.bool.must[1].bool.should[0].query_string
+    expect(queryString.default_operator).toBe('AND')
+    spy.mockRestore()
+  })
+
+  it('should default default_operator to "OR" when no operator is provided', async () => {
+    const spy = vi.spyOn(elasticsearch, 'search').mockResolvedValue({ hits: { hits: [] } })
+    await elasticsearch.searchDocs({ index, query: 'apple orange' })
+    const body = spy.mock.calls[0][0].body
+    const queryString = body.query.bool.must[1].bool.should[0].query_string
+    expect(queryString.default_operator).toBe('OR')
+    spy.mockRestore()
+  })
+
+
   it('should build a simple ES query and escape slash in it', async () => {
     const body = bodybuilder().from(0).size(25)
 
