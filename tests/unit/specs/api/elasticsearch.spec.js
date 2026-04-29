@@ -107,7 +107,6 @@ describe('elasticsearch', () => {
     spy.mockRestore()
   })
 
-
   it('should build a simple ES query and escape slash in it', async () => {
     const body = bodybuilder().from(0).size(25)
 
