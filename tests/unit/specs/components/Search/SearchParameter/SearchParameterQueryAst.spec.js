@@ -21,7 +21,7 @@ describe('SearchParameterQueryAst.vue', () => {
     })
   }
 
-  const term = (value) => ({ field: '<implicit>', term: value })
+  const term = value => ({ field: '<implicit>', term: value })
 
   describe('operator display', () => {
     it('shows OR operator between terms when ast.operator is implicit and store defaults to OR', () => {

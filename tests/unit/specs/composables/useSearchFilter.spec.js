@@ -13,9 +13,7 @@ describe('useSearchFilter', () => {
         return {}
       }
     })
-    plugins.forEach(plugin => {
-      Array.isArray(plugin) ? app.use(...plugin) : app.use(plugin)
-    })
+    plugins.forEach(plugin => app.use(plugin))
     app.mount(document.createElement('div'))
   }
 

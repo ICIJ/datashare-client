@@ -18,7 +18,7 @@ import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
 import { useAppStore, useSearchStore } from '@/store/modules'
 import { useSearchProperties } from '@/composables/useSearchProperties'
 import { useViewSettings, INPUT_CHECKBOX, INPUT_RADIO } from '@/composables/useViewSettings'
-import {SEARCH_OPERATORS} from "@/enums/searchOperators.js";
+import { SEARCH_OPERATORS } from '@/enums/searchOperators.js'
 
 const { t } = useI18n()
 const appStore = useAppStore()
@@ -134,7 +134,6 @@ const properties = ref({
     set: properties => appStore.setSettings(VIEW, { properties })
   })
 })
-
 
 defineProps({
   hide: {
