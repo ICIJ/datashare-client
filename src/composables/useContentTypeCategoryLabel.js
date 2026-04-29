@@ -1,5 +1,7 @@
 import { useI18n } from 'vue-i18n'
 
+const translationKeyFor = categoryKey => `filter.contentTypeCategoryItem.${categoryKey}`
+
 /**
  * Returns a resolver that maps a content-type category key (e.g. "DOCUMENT")
  * to its human-readable label via `filter.contentTypeCategoryItem.<KEY>`. Falls
@@ -7,8 +9,6 @@ import { useI18n } from 'vue-i18n'
  *
  * @returns {(categoryKey: string) => string}
  */
-const translationKeyFor = categoryKey => `filter.contentTypeCategoryItem.${categoryKey}`
-
 export function useContentTypeCategoryLabel() {
   const { t, te } = useI18n()
 
