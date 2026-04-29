@@ -35,19 +35,9 @@ const emit = defineEmits(['update:modelValue'])
 
 const checkboxRef = useTemplateRef('checkboxRef')
 
-// Why explicit props+emit instead of `defineModel` (which sibling checkbox
-// wrappers like ContentTypesCategoryItem and DocumentCardCheckbox use):
-// `defineModel` exposes a writable proxy ref that the inner `v-model` writes
-// through *locally* on every click. When the parent decides the click should
-// not change the prop (e.g. ticking the last child of a category promotes the
-// selection into `contentTypeCategory`, leaving this entry's `modelValue`
-// `false` on both sides), the proxy still holds the click's optimistic value
-// and the rendered checkbox stays visually checked. Driving the inner
-// `<b-form-checkbox>` as a fully controlled component (`:model-value` + manual
-// `@update:model-value`) lets us read the canonical `props.modelValue` after
-// the parent has handled the emit and force the DOM back in sync — Vue's
-// prop diff skips the patch on the no-change path, so `vModelCheckbox`'s
-// `beforeUpdate` never re-runs to revert `el.checked` for us.
+// Drive the checkbox as a fully controlled component: when the parent absorbs
+// the click (e.g. promoting the last child to a category) the prop stays put,
+// but Vue's no-op patch leaves the DOM `el.checked` ahead — manually re-sync.
 const onUpdateModelValue = async (value) => {
   emit('update:modelValue', value)
   await nextTick()
