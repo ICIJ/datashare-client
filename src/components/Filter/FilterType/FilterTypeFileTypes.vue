@@ -41,6 +41,9 @@ const {
   isLoading: isCategoryAvailabilityLoading
 } = useContentTypeCategoryAvailability()
 const isLegacyIndexOverlayVisible = computed(() => !isCategoryAvailable.value)
+const overlayVisible = computed(() => {
+  return grouped.value && (isLegacyIndexOverlayVisible.value || isCategoryAvailabilityLoading.value)
+})
 
 const filterTypeRef = useTemplateRef('filterTypeRef')
 const entries = computed(() => filterTypeRef.value?.entries ?? [])
@@ -102,7 +105,7 @@ const totalCount = computedTotal(filterRef)
     v-model:query="query"
     v-model:collapse="collapse"
     :filter="props.filter"
-    :overlay-show="grouped && (isLegacyIndexOverlayVisible || isCategoryAvailabilityLoading)"
+    :overlay-show="overlayVisible"
     class="filter-type-file-types"
   >
     <template #overlay>
