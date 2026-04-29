@@ -4,6 +4,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
 import settings from '@/utils/settings'
+import { SEARCH_OPERATORS } from '@/enums/searchOperators'
 import { useCore } from '@/composables/useCore'
 import { onAfterRouteUpdate } from '@/composables/onAfterRouteUpdate'
 import FilterType from '@/components/Filter/FilterType/FilterType'
@@ -229,9 +230,14 @@ export function useSearchFilter() {
     return router.push({ name, query })
   }
 
+  function toValidSearchOperator(value) {
+    return Object.values(SEARCH_OPERATORS).includes(value) ? value : SEARCH_OPERATORS.OR
+  }
+
   function refreshSearchFromRoute() {
     // Extract the query parameters that must be saved in the app state
-    const { perPage = getPerPage(), sort = getSort(), order = getOrder(), searchOperator = getSearchOperator() } = route.query
+    const { perPage = getPerPage(), sort = getSort(), order = getOrder() } = route.query
+    const searchOperator = toValidSearchOperator(route.query.searchOperator ?? getSearchOperator())
     appStore.setSettings('search', { perPage, orderBy: [sort, order], searchOperator })
     // Update the search store using the route query
     searchStore.updateFromRouteQuery(route.query)
@@ -241,7 +247,8 @@ export function useSearchFilter() {
 
   function refreshSearchFromRouteStart() {
     // Extract the query parameters that must be saved in the app state
-    const { perPage = getPerPage(), sort = getSort(), order = getOrder(), searchOperator = getSearchOperator() } = route.query
+    const { perPage = getPerPage(), sort = getSort(), order = getOrder() } = route.query
+    const searchOperator = toValidSearchOperator(route.query.searchOperator ?? getSearchOperator())
     appStore.setSettings('search', { perPage, orderBy: [sort, order], searchOperator })
     // Update the search store using the route query and reset the `from` parameter
     searchStore.updateFromRouteQuery({ ...route.query, from: 0 })
