@@ -340,5 +340,3 @@ export function useContentTypeSelection({ filter, categories }) {
     toggleEntry
   }
 }
-
-export default useContentTypeSelection
