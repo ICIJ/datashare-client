@@ -152,5 +152,3 @@ export function useContentTypeSearchFilter({
     filteredCategoryPairs
   }
 }
-
-export default useContentTypeSearchFilter
