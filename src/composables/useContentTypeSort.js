@@ -110,5 +110,3 @@ export function useContentTypeSort({ entries, filter, categoryLabelFor, filtered
     sortedTypesFor
   }
 }
-
-export default useContentTypeSort
