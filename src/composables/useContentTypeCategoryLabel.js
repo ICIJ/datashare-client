@@ -7,10 +7,18 @@ import { useI18n } from 'vue-i18n'
  *
  * @returns {(categoryKey: string) => string}
  */
+const translationKeyFor = categoryKey => `filter.contentTypeCategoryItem.${categoryKey}`
+
 export function useContentTypeCategoryLabel() {
   const { t, te } = useI18n()
-  return (categoryKey) => {
-    const key = `filter.contentTypeCategoryItem.${categoryKey}`
-    return te(key) ? t(key) : categoryKey
+
+  const resolveLabel = (categoryKey) => {
+    const key = translationKeyFor(categoryKey)
+    if (te(key)) {
+      return t(key)
+    }
+    return categoryKey
   }
+
+  return resolveLabel
 }
