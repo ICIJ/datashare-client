@@ -33,10 +33,9 @@ const { t } = useI18n()
 
 const filterRef = toRef(props, 'filter')
 
-// Detect indices that don't expose contentTypeCategory in their mapping;
-// legacy projects re-indexed before category grouping landed surface a
-// non-blocking informational overlay so users understand why category
-// grouping is disabled while keeping the underlying contentType list usable.
+// Legacy projects re-indexed before category grouping landed lack the
+// contentTypeCategory mapping — surface an overlay so the disabled grouped
+// view is explained.
 const {
   isAvailable: isCategoryAvailable,
   isLoading: isCategoryAvailabilityLoading
@@ -90,22 +89,11 @@ const {
   filteredCategoryPairs
 })
 
-// "All-selected" must reflect the union of contentType and its paired
-// contentTypeCategory dimension — a selection in either keeps "All" enabled.
+// "All-selected" reflects the union with the paired contentTypeCategory —
+// a selection in either dimension keeps "All" enabled.
 const pairedFilters = computed(() => getFilterPairedDimensions(filterRef))
 const allSelected = computedAll(pairedFilters)
 const totalCount = computedTotal(filterRef)
-
-defineExpose({
-  grouped,
-  categoryAllSelected,
-  categoryIndeterminate,
-  isEntrySelected,
-  sortedCategoryEntries,
-  sortedTypesFor,
-  toggleCategory,
-  toggleEntry
-})
 </script>
 
 <template>
