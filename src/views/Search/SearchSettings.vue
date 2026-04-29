@@ -23,7 +23,7 @@ import { SEARCH_OPERATORS } from '@/enums/searchOperators.js'
 const { t } = useI18n()
 const appStore = useAppStore()
 const searchStore = useSearchStore()
-const { tLayout, tSearchOperator } = useViewSettings(t)
+const { tLayout, tSearchOperator } = useViewSettings()
 const { propertiesOptions, sortByOptions } = useSearchProperties()
 const VIEW = 'search'
 
