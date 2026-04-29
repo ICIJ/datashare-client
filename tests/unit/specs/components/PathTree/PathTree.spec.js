@@ -130,6 +130,62 @@ describe('PathTree.vue', () => {
     })
   })
 
+  describe('compact mode (filter column)', () => {
+    const { index } = esConnectionHelper.build()
+    let core, searchSpy
+
+    const fullPageOfBuckets = Array.from({ length: 50 }, (_, i) => ({
+      key: `/home/foo/dir${String(i).padStart(2, '0')}`,
+      doc_count: 1,
+      size: { value: 100 }
+    }))
+
+    beforeEach(() => {
+      core = CoreSetup.init().useAll()
+      core.config.set('dataDir', '/home/foo')
+      api.tree.mockClear()
+      api.tree.mockResolvedValue(HOME_TREE)
+      searchSpy = vi.spyOn(api.elasticsearch, 'search').mockResolvedValue({
+        hits: { total: { value: 0 }, hits: [] },
+        aggregations: {
+          total_directories: { value: 201 },
+          dirname: { buckets: fullPageOfBuckets }
+        }
+      })
+    })
+
+    afterEach(() => {
+      searchSpy.mockRestore()
+    })
+
+    it('includes total_directories in ES query even in compact mode', async () => {
+      const wrapper = mount(PathTree, {
+        props: { projects: [index], path: '/home/foo', compact: true, noDocuments: true },
+        global: { plugins: core.plugins, renderStubDefaultSlot: true }
+      })
+
+      await wrapper.vm.loadData({ clearPages: true })
+      await flushPromises()
+
+      const { body } = searchSpy.mock.calls[0][0]
+      expect(body.aggs).toHaveProperty('total_directories')
+    })
+
+    it('shows remaining directory count in "show more" button in compact mode', async () => {
+      const wrapper = mount(PathTree, {
+        props: { projects: [index], path: '/home/foo', compact: true, noDocuments: true },
+        global: { plugins: core.plugins, renderStubDefaultSlot: true }
+      })
+
+      await wrapper.vm.loadData({ clearPages: true })
+      await flushPromises()
+
+      // Before the fix, compact mode omitted total_directories from ES query,
+      // causing totalDirectories=0 -> directoriesLeft=0 -> "No more directories"
+      expect(wrapper.find('.path-tree-view-entry-more').text()).toMatch(/Show \d+ of \d+ more director/)
+    })
+  })
+
   describe('Windows', () => {
     const { index, es } = esConnectionHelper.build('spec', true)
     let wrapper, core, searchStore
