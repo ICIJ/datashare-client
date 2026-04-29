@@ -5,7 +5,11 @@ import settings from '@/utils/settings'
 import { getDocumentTypeLabel } from '@/utils/utils'
 import { useSearchStore } from '@/store/modules'
 
+const SORT_BY_KEY = '_key'
 const categoryJsonOrder = Object.keys(contentTypeCategoriesJson)
+
+const compareLabels = (a, b) =>
+  a.localeCompare(b, undefined, { sensitivity: 'base' })
 
 /**
  * Sorted views for the file-types filter. Reads the user's sort preference
@@ -22,34 +26,17 @@ export function useContentTypeSort({ entries, filter, categoryLabelFor, filtered
     orderBy: settings.filter.orderBy
   })
 
-  /**
-   * O(1) lookup of `doc_count` per content type, derived from `entries`.
-   * @returns {Map<string, number>}
-   */
   const entryCountMap = computed(() => {
     const map = new Map()
     ;(toValue(entries) ?? []).forEach(entry => map.set(entry.item.key, entry.item.doc_count ?? 0))
     return map
   })
 
-  /**
-   * Document count for `contentType`, or 0 when missing.
-   * @param {string} contentType
-   * @returns {number}
-   */
   const entryCount = contentType => entryCountMap.value.get(contentType) ?? 0
-  /**
-   * Sum of document counts across `types`.
-   * @param {string[]} types
-   * @returns {number}
-   */
+
   const categoryCount = types =>
     types.reduce((sum, contentType) => sum + entryCount(contentType), 0)
 
-  /**
-   * Filtered category pairs sorted by the user's preference.
-   * @returns {Array<[string, string[]]>}
-   */
   const sortedCategoryEntries = computed(() => {
     const pairs = toValue(filteredCategoryPairs) ?? []
     const { sortBy, orderBy } = sort.value
@@ -68,23 +55,12 @@ export function useContentTypeSort({ entries, filter, categoryLabelFor, filtered
       return jsonPosition(aKey) - jsonPosition(bKey)
     }
 
-    const byLabel = ([aKey], [bKey]) => {
-      const compare = categoryLabelFor(aKey).localeCompare(
-        categoryLabelFor(bKey),
-        undefined,
-        { sensitivity: 'base' }
-      )
-      return compare * direction
-    }
+    const byLabel = ([aKey], [bKey]) =>
+      compareLabels(categoryLabelFor(aKey), categoryLabelFor(bKey)) * direction
 
-    return [...pairs].sort(sortBy === '_key' ? byLabel : byCount)
+    return [...pairs].sort(sortBy === SORT_BY_KEY ? byLabel : byCount)
   })
 
-  /**
-   * Sort `types` by the active preference, used per category in the template.
-   * @param {string[]} types
-   * @returns {string[]}
-   */
   const sortedTypesFor = (types) => {
     const { sortBy, orderBy } = sort.value
     const direction = orderBy === 'asc' ? 1 : -1
@@ -94,23 +70,13 @@ export function useContentTypeSort({ entries, filter, categoryLabelFor, filtered
       if (diff !== 0) {
         return diff * direction
       }
-      return getDocumentTypeLabel(aType).localeCompare(
-        getDocumentTypeLabel(bType),
-        undefined,
-        { sensitivity: 'base' }
-      )
+      return compareLabels(getDocumentTypeLabel(aType), getDocumentTypeLabel(bType))
     }
 
-    const byLabel = (aType, bType) => {
-      const compare = getDocumentTypeLabel(aType).localeCompare(
-        getDocumentTypeLabel(bType),
-        undefined,
-        { sensitivity: 'base' }
-      )
-      return compare * direction
-    }
+    const byLabel = (aType, bType) =>
+      compareLabels(getDocumentTypeLabel(aType), getDocumentTypeLabel(bType)) * direction
 
-    return [...types].sort(sortBy === '_key' ? byLabel : byCount)
+    return [...types].sort(sortBy === SORT_BY_KEY ? byLabel : byCount)
   }
 
   return {
