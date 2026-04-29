@@ -951,7 +951,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    */
   function runBatchDownload(uri = null) {
     const batchDownloadQuery = ['', null, undefined].indexOf(q.value) === -1 ? q.value : '*'
-    const { query } = api.elasticsearch.rootSearch(instantiatedFilters.value, batchDownloadQuery, fields.value).build()
+    const { query } = api.elasticsearch.rootSearch(instantiatedFilters.value, batchDownloadQuery, fields.value, searchOperator.value).build()
     return api.runBatchDownload({ projectIds: indices.value, query, uri })
   }
 
@@ -962,7 +962,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    */
   function estimateDownloadSize() {
     const estimateQuery = ['', null, undefined].indexOf(q.value) === -1 ? q.value : '*'
-    return api.elasticsearch.estimateDownloadSize(indices.value, instantiatedFilters.value, estimateQuery, fields.value)
+    return api.elasticsearch.estimateDownloadSize(indices.value, instantiatedFilters.value, estimateQuery, fields.value, searchOperator.value)
   }
 
   /**

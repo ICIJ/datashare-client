@@ -387,10 +387,11 @@ export function datasharePlugin(Client) {
    * @param {Array} filters - Array of filter objects
    * @param {string} [query='*'] - Query string
    * @param {string[]} [fields=[]] - Fields to search in
+   * @param {string} [operator = undefined] - Default search operator
    * @returns {Promise<{estimatedCount: number, estimatedSize: number}>} The estimated count and size
    */
-  Client.prototype.estimateDownloadSize = async function (index, filters, query = DEFAULT_QUERY, fields = []) {
-    const body = this.rootSearch(filters, normalizeQuery(query), fields)
+  Client.prototype.estimateDownloadSize = async function (index, filters, query = DEFAULT_QUERY, fields = [], operator = undefined) {
+    const body = this.rootSearch(filters, normalizeQuery(query), fields, operator)
     body.size(0)
     body.rawOption('track_total_hits', true)
     body.aggregation('sum', 'contentLength', 'total_content_length')
@@ -438,12 +439,13 @@ export function datasharePlugin(Client) {
    * @param {Array} filters - Array of filter objects
    * @param {string} query - The query string
    * @param {string[]} [fields=[]] - Fields to search in
+   * @param {string} [operator = undefined] - Default search operator
    * @returns {Object} The bodybuilder instance
    */
-  Client.prototype.rootSearch = function (filters, query, fields = []) {
+  Client.prototype.rootSearch = function (filters, query, fields = [], operator = undefined) {
     const body = bodybuilder()
     this._addFiltersToBody(filters, body)
-    this._addQueryToBody(query, body, fields)
+    this._applyQueryString(body, query, fields, operator)
     body.query('match', 'type', 'Document')
     return body
   }

@@ -276,5 +276,26 @@ describe('elasticsearch', () => {
 
       expect(result).toEqual({ estimatedCount: 0, estimatedSize: 0 })
     })
+
+    it('passes operator to default_operator in the query body', async () => {
+      searchSpy.mockResolvedValue({
+        hits: { total: { value: 0 } },
+        aggregations: { total_content_length: { value: 0 } }
+      })
+
+      await elasticsearch.estimateDownloadSize(index, [], 'foo bar', [], 'AND')
+
+      const body = searchSpy.mock.calls[0][0].body
+      const queryString = body.query.bool.must[1].bool.should[0].query_string
+      expect(queryString.default_operator).toBe('AND')
+    })
+  })
+
+  describe('rootSearch', () => {
+    it('passes operator to default_operator in the body', () => {
+      const body = elasticsearch.rootSearch([], 'foo bar', [], 'AND').build()
+      const queryString = body.query.bool.must[1].bool.should[0].query_string
+      expect(queryString.default_operator).toBe('AND')
+    })
   })
 })
