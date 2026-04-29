@@ -5,6 +5,12 @@ import { useSearchStore } from '@/store/modules'
 import { useSearchFilter } from '@/composables/useSearchFilter'
 import { CONTENT_TYPE_CATEGORY_FILTER_NAME } from '@/store/filters/FilterContentTypeCategory'
 
+const sameValueSet = (a, b) => isEqual([...a].sort(), [...b].sort())
+
+const uniqueValues = values => [...new Set(values)]
+
+const without = (list, value) => list.filter(item => item !== value)
+
 /**
  * Selection state and toggle handlers for the content-types filter. Keeps
  * the `contentType` and `contentTypeCategory` dimensions in lockstep, with
@@ -17,6 +23,19 @@ export function useContentTypeSelection({ filter, categories }) {
 
   const filterName = computed(() => toValue(filter)?.name)
   const categoryFilter = computed(() => getFilterByName(CONTENT_TYPE_CATEGORY_FILTER_NAME))
+
+  /**
+   * Resolve the static {category: types[]} mapping to a plain object.
+   * @returns {Record<string, string[]>}
+   */
+  const categoriesMap = () => toValue(categories) ?? {}
+
+  /**
+   * Children stored under `category`, or `[]` when the category is unknown.
+   * @param {string} category
+   * @returns {string[]}
+   */
+  const typesInCategory = category => categoriesMap()[category] ?? []
 
   /**
    * Current explicit `contentType` values stored in the search filter.
@@ -42,9 +61,11 @@ export function useContentTypeSelection({ filter, categories }) {
    */
   const categoryByContentType = computed(() => {
     const map = new Map()
-    Object.entries(toValue(categories) ?? {}).forEach(([category, types]) => {
-      types.forEach(type => map.set(type, category))
-    })
+    for (const [category, types] of Object.entries(categoriesMap())) {
+      for (const type of types) {
+        map.set(type, category)
+      }
+    }
     return map
   })
 
@@ -65,10 +86,11 @@ export function useContentTypeSelection({ filter, categories }) {
   /** @returns {Set<string>} */
   const retainedContentTypeSet = computed(() => {
     const set = new Set(currentContentTypes())
-    currentCategories().forEach((category) => {
-      const types = (toValue(categories) ?? {})[category] ?? []
-      types.forEach(type => set.add(type))
-    })
+    for (const category of currentCategories()) {
+      for (const type of typesInCategory(category)) {
+        set.add(type)
+      }
+    }
     return set
   })
 
@@ -103,7 +125,10 @@ export function useContentTypeSelection({ filter, categories }) {
       return true
     }
     const selected = categorySelectedCount(types)
-    return selected > 0 && selected === types.length
+    if (selected === 0) {
+      return false
+    }
+    return selected === types.length
   }
 
   /**
@@ -117,7 +142,10 @@ export function useContentTypeSelection({ filter, categories }) {
       return false
     }
     const selected = categorySelectedCount(types)
-    return selected > 0 && selected < types.length
+    if (selected === 0) {
+      return false
+    }
+    return selected < types.length
   }
 
   /**
@@ -126,8 +154,8 @@ export function useContentTypeSelection({ filter, categories }) {
    * @returns {void}
    */
   const writeContentTypes = (values) => {
-    const next = [...new Set(values)]
-    if (isEqual([...next].sort(), [...currentContentTypes()].sort())) {
+    const next = uniqueValues(values)
+    if (sameValueSet(next, currentContentTypes())) {
       return
     }
     searchStore.setFilterValue({ name: filterName.value, value: next })
@@ -142,8 +170,8 @@ export function useContentTypeSelection({ filter, categories }) {
     if (!categoryFilter.value) {
       return
     }
-    const next = [...new Set(values)]
-    if (isEqual([...next].sort(), [...currentCategories()].sort())) {
+    const next = uniqueValues(values)
+    if (sameValueSet(next, currentCategories())) {
       return
     }
     searchStore.setFilterValue({ name: CONTENT_TYPE_CATEGORY_FILTER_NAME, value: next })
@@ -158,10 +186,22 @@ export function useContentTypeSelection({ filter, categories }) {
    * @returns {void}
    */
   const dropCategoryAnd = (category, keepFromCategory) => {
-    const categoryTypes = (toValue(categories) ?? {})[category] ?? []
+    const categoryTypes = typesInCategory(category)
     const others = currentContentTypes().filter(value => !categoryTypes.includes(value))
-    writeCategories(currentCategories().filter(value => value !== category))
+    writeCategories(without(currentCategories(), category))
     writeContentTypes([...others, ...keepFromCategory])
+  }
+
+  /**
+   * Promote `category` by removing its explicit children and storing the
+   * category itself.
+   * @param {string} category
+   * @returns {void}
+   */
+  const promoteToCategory = (category) => {
+    const categoryTypes = typesInCategory(category)
+    writeContentTypes(currentContentTypes().filter(value => !categoryTypes.includes(value)))
+    writeCategories([...currentCategories(), category])
   }
 
   /**
@@ -172,11 +212,17 @@ export function useContentTypeSelection({ filter, categories }) {
    * @returns {boolean}
    */
   const shouldPromoteToCategory = (category, contentType, currentTypes) => {
-    if (!category || currentCategories().includes(category)) {
+    if (!category) {
       return false
     }
-    const siblings = ((toValue(categories) ?? {})[category] ?? []).filter(type => type !== contentType)
-    return siblings.length > 0 && siblings.every(type => currentTypes.includes(type))
+    if (isCategoryStored(category)) {
+      return false
+    }
+    const siblings = without(typesInCategory(category), contentType)
+    if (siblings.length === 0) {
+      return false
+    }
+    return siblings.every(type => currentTypes.includes(type))
   }
 
   /**
@@ -188,8 +234,87 @@ export function useContentTypeSelection({ filter, categories }) {
    */
   const toggleCategory = (category, types, checked) => {
     writeContentTypes(currentContentTypes().filter(value => !types.includes(value)))
-    const remainingCategories = currentCategories().filter(value => value !== category)
-    writeCategories(checked ? [...remainingCategories, category] : remainingCategories)
+    const remainingCategories = without(currentCategories(), category)
+    if (checked) {
+      writeCategories([...remainingCategories, category])
+      return
+    }
+    writeCategories(remainingCategories)
+  }
+
+  /**
+   * Handle a check on a child whose category is currently stored.
+   * Demotes the category to a single explicit selection.
+   * @param {string} category
+   * @param {string} contentType
+   * @returns {void}
+   */
+  const checkChildOfStoredCategory = (category, contentType) => {
+    dropCategoryAnd(category, [contentType])
+  }
+
+  /**
+   * Handle a check on a child that completes its category.
+   * Replaces the explicit children with the stored category.
+   * @param {string} category
+   * @returns {void}
+   */
+  const checkChildThatCompletesCategory = (category) => {
+    promoteToCategory(category)
+  }
+
+  /**
+   * Handle a check on a child without any category interaction.
+   * @param {string} contentType
+   * @returns {void}
+   */
+  const checkPlainChild = (contentType) => {
+    writeContentTypes([...currentContentTypes(), contentType])
+  }
+
+  /**
+   * Handle an uncheck on a child whose category is stored. Defensive against
+   * URL-tamper / race conditions where both the category and an explicit
+   * child are stored — the normal flow demotes earlier.
+   * @param {string} category
+   * @param {string} contentType
+   * @returns {void}
+   */
+  const uncheckChildOfStoredCategory = (category, contentType) => {
+    const siblings = without(typesInCategory(category), contentType)
+    dropCategoryAnd(category, siblings)
+  }
+
+  /**
+   * Handle an uncheck on a plain child (no stored category interaction).
+   * @param {string} contentType
+   * @returns {void}
+   */
+  const uncheckPlainChild = (contentType) => {
+    writeContentTypes(without(currentContentTypes(), contentType))
+  }
+
+  const handleEntryCheck = (contentType) => {
+    const category = categoryForContentType(contentType)
+    if (category && isCategoryStored(category)) {
+      checkChildOfStoredCategory(category, contentType)
+      return
+    }
+    const currentTypes = currentContentTypes()
+    if (shouldPromoteToCategory(category, contentType, currentTypes)) {
+      checkChildThatCompletesCategory(category)
+      return
+    }
+    checkPlainChild(contentType)
+  }
+
+  const handleEntryUncheck = (contentType) => {
+    const category = categoryForContentType(contentType)
+    if (category && isCategoryStored(category)) {
+      uncheckChildOfStoredCategory(category, contentType)
+      return
+    }
+    uncheckPlainChild(contentType)
   }
 
   /**
@@ -199,36 +324,11 @@ export function useContentTypeSelection({ filter, categories }) {
    * @returns {void}
    */
   const toggleEntry = (contentType, checked) => {
-    const category = categoryForContentType(contentType)
-
     if (checked) {
-      const currentTypes = currentContentTypes()
-      // Demote: clicking a child of a stored category narrows the selection
-      // to that single child.
-      if (category && isCategoryStored(category)) {
-        dropCategoryAnd(category, [contentType])
-        return
-      }
-      if (shouldPromoteToCategory(category, contentType, currentTypes)) {
-        const categoryTypes = (toValue(categories) ?? {})[category] ?? []
-        writeContentTypes(currentTypes.filter(value => !categoryTypes.includes(value)))
-        writeCategories([...currentCategories(), category])
-        return
-      }
-      writeContentTypes([...currentTypes, contentType])
+      handleEntryCheck(contentType)
       return
     }
-
-    // Defensive: URL-tamper or race may store both the category and an
-    // explicit child. Normal flow now hits the demote branch above, so this
-    // only fires for tampered state.
-    if (category && isCategoryStored(category)) {
-      const siblings = ((toValue(categories) ?? {})[category] ?? []).filter(type => type !== contentType)
-      dropCategoryAnd(category, siblings)
-      return
-    }
-
-    writeContentTypes(currentContentTypes().filter(value => value !== contentType))
+    handleEntryUncheck(contentType)
   }
 
   return {
