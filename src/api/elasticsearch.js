@@ -323,7 +323,7 @@ export function datasharePlugin(Client) {
    * @param {Object} body - The bodybuilder instance
    * @param {string} query - The query string
    * @param {string[]} [fields=[]] - Fields to search in
-   * @param operator
+   * @param {string} operator - Default search operator for the query string (AND or OR)
    */
   Client.prototype._applyQueryString = function (body, query, fields = [], operator = undefined) {
     if (isEqual(fields, ['path'])) {
@@ -348,6 +348,7 @@ export function datasharePlugin(Client) {
    * @param {number} options.from - Starting offset
    * @param {number} options.size - Number of results
    * @param {Object} options.sort - Sort configuration
+   * @param {string} options.operator - Default search operator for the query string (AND or OR)
    * @returns {Object} The built search body
    */
   Client.prototype._buildSearchBody = function ({ query, filters, fields, from, size, sort, operator }) {

@@ -73,7 +73,7 @@ export function useViewSettings() {
   const tSearchOperator = {
     label: computed(() => t('viewSettings.searchOperator.label')),
     or: computed(() => t('viewSettings.searchOperator.or')),
-    and: computed(() => t('viewSettings.searchOperator.and')),
+    and: computed(() => t('viewSettings.searchOperator.and'))
   }
 
   return {

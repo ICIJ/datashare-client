@@ -36,6 +36,25 @@ describe('useSearchFilter', () => {
       expect(callback).toHaveBeenCalledOnce()
     })
 
+    it('calls callback when search operator changes from AND to OR', async () => {
+      const core = CoreSetup.init().useAll().useRouterWithoutGuards()
+      const callback = vi.fn()
+
+      withSetup(() => {
+        const { watchOperator } = useSearchFilter()
+        watchOperator(callback)
+      }, core.plugins)
+
+      const appStore = useAppStore()
+      appStore.setSettings('search', 'searchOperator', SEARCH_OPERATORS.AND)
+      await nextTick()
+      callback.mockClear()
+      appStore.setSettings('search', 'searchOperator', SEARCH_OPERATORS.OR)
+      await nextTick()
+
+      expect(callback).toHaveBeenCalledOnce()
+    })
+
     it('does not call callback when an unrelated setting changes', async () => {
       const core = CoreSetup.init().useAll().useRouterWithoutGuards()
       const callback = vi.fn()
@@ -64,6 +83,45 @@ describe('useSearchFilter', () => {
       await refreshSearchFromRoute()
 
       expect(useAppStore().getSettings('search', 'searchOperator')).toBe(SEARCH_OPERATORS.AND)
+      vi.restoreAllMocks()
+    })
+
+    it('ignores invalid searchOperator values from route query', async () => {
+      const core = CoreSetup.init().useAll().useRouterWithoutGuards()
+      const { refreshSearchFromRoute } = withSetup(() => useSearchFilter(), core.plugins)
+      const searchStore = useSearchStore()
+      vi.spyOn(searchStore, 'query').mockResolvedValue(undefined)
+
+      await core.router.push({ name: 'search', query: { searchOperator: 'FOOBAR' } })
+      await refreshSearchFromRoute()
+
+      expect(useAppStore().getSettings('search', 'searchOperator')).toBe(SEARCH_OPERATORS.OR)
+      vi.restoreAllMocks()
+    })
+
+    it('restores searchOperator from route query using refreshSearchFromRouteStart', async () => {
+      const core = CoreSetup.init().useAll().useRouterWithoutGuards()
+      const { refreshSearchFromRouteStart } = withSetup(() => useSearchFilter(), core.plugins)
+      const searchStore = useSearchStore()
+      vi.spyOn(searchStore, 'query').mockResolvedValue(undefined)
+
+      await core.router.push({ name: 'search', query: { searchOperator: SEARCH_OPERATORS.AND } })
+      await refreshSearchFromRouteStart()
+
+      expect(useAppStore().getSettings('search', 'searchOperator')).toBe(SEARCH_OPERATORS.AND)
+      vi.restoreAllMocks()
+    })
+
+    it('ignores invalid searchOperator values from route query in refreshSearchFromRouteStart', async () => {
+      const core = CoreSetup.init().useAll().useRouterWithoutGuards()
+      const { refreshSearchFromRouteStart } = withSetup(() => useSearchFilter(), core.plugins)
+      const searchStore = useSearchStore()
+      vi.spyOn(searchStore, 'query').mockResolvedValue(undefined)
+
+      await core.router.push({ name: 'search', query: { searchOperator: 'FOOBAR' } })
+      await refreshSearchFromRouteStart()
+
+      expect(useAppStore().getSettings('search', 'searchOperator')).toBe(SEARCH_OPERATORS.OR)
       vi.restoreAllMocks()
     })
   })
