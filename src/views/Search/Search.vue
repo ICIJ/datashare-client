@@ -38,6 +38,7 @@ const {
   refreshSearchFromRouteStart,
   watchIndices,
   watchFilters,
+  watchOperator,
   onAfterRouteQueryUpdate,
   onAfterRouteQueryFromUpdate
 } = useSearchFilter()
@@ -105,6 +106,8 @@ const documentViewFloatingId = provideDocumentViewFloatingId()
 watchFilters(refreshRouteFromStart)
 // Refresh route query when projects change
 watchIndices(refreshRouteFromStart)
+// Refresh route query when search operator changes
+watchOperator(refreshRouteFromStart)
 // Refresh search when route query changes. Among all the "watcher" (it's a post-navigation filter)
 // of this view, it probably the most important one. It will trigger the search API call
 // when the route query changes which mean that **only route changes** can trigger a search. This
