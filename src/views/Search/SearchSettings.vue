@@ -66,15 +66,13 @@ const searchOperator = ref({
     {
       value: SEARCH_OPERATORS.OR,
       icon: IPhUniteSquare,
-      key: 'searchOperatorOr',
       text: tSearchOperator.or
     },
     {
       value: SEARCH_OPERATORS.AND,
       icon: IPhIntersectSquare,
-      key: 'searchOperatorAnd',
       text: tSearchOperator.and
-    },
+    }
   ]
 })
 
@@ -198,7 +196,7 @@ function reset() {
     <page-settings-section
       v-model="searchOperator.modelValue"
       v-model:open="searchOperator.open"
-      class="search-settings__section search-settings__section--properties"
+      class="search-settings__section search-settings__section--search-operator"
       :type="searchOperator.type"
       :options="searchOperator.options"
       :label="searchOperator.label"
