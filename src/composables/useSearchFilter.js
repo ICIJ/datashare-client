@@ -332,6 +332,10 @@ export function useSearchFilter() {
     return watch(() => JSON.stringify(searchStore.values), callback, options)
   }
 
+  function watchOperator(callback) {
+    return watch(() => searchStore.searchOperator, callback)
+  }
+
   function onAfterRouteQueryUpdate(callback, options) {
     return onAfterRouteUpdate((to, from) => {
       if (
@@ -411,6 +415,7 @@ export function useSearchFilter() {
     watchFilters,
     watchQuery,
     watchIndices,
+    watchOperator,
     onAfterRouteQueryUpdate,
     onAfterRouteQueryFromUpdate,
     watchValues,
