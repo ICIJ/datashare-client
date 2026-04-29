@@ -34,7 +34,7 @@ vi.mock('@/composables/useContentTypeCategoryAvailability', () => ({
 // FilterType.vue: a page with a `contentType` aggregation containing a
 // `buckets` array of `{ key, doc_count }`. Tests don't need real ES — they
 // need this shape.
-const aggregationPage = (buckets) => ({
+const aggregationPage = buckets => ({
   aggregations: { contentType: { buckets } }
 })
 
@@ -780,7 +780,6 @@ describe('FilterTypeFileTypes.vue', () => {
       // JSON declares VIDEO before IMAGE; ties preserve that declared order.
       expect(categoryOrder()).toEqual(['VIDEO', 'IMAGE'])
     })
-
   })
 
   describe('nested bucket sorting', () => {
