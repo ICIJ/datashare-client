@@ -6,10 +6,33 @@ import { getDocumentTypeLabel } from '@/utils/utils'
 import { useSearchStore } from '@/store/modules'
 
 const SORT_BY_KEY = '_key'
+const ASC = 'asc'
+
 const categoryJsonOrder = Object.keys(contentTypeCategoriesJson)
 
-const compareLabels = (a, b) =>
-  a.localeCompare(b, undefined, { sensitivity: 'base' })
+const compareLabels = (a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' })
+
+const compareTypeLabels = (a, b) => compareLabels(getDocumentTypeLabel(a), getDocumentTypeLabel(b))
+
+const directionFor = (orderBy) => {
+  if (orderBy === ASC) {
+    return 1
+  }
+  return -1
+}
+
+const categoryJsonPosition = (key) => {
+  const index = categoryJsonOrder.indexOf(key)
+  if (index === -1) {
+    return Number.POSITIVE_INFINITY
+  }
+  return index
+}
+
+const defaultSort = () => ({
+  sortBy: settings.filter.sortBy,
+  orderBy: settings.filter.orderBy
+})
 
 /**
  * Sorted views for the file-types filter. Reads the user's sort preference
@@ -20,64 +43,65 @@ export function useContentTypeSort({ entries, filter, categoryLabelFor, filtered
   const searchStore = useSearchStore.inject()
 
   const filterName = computed(() => toValue(filter)?.name)
-
-  const sort = computed(() => searchStore.sortFilters[filterName.value] ?? {
-    sortBy: settings.filter.sortBy,
-    orderBy: settings.filter.orderBy
-  })
+  const sort = computed(() => searchStore.sortFilters[filterName.value] ?? defaultSort())
 
   const entryCountMap = computed(() => {
     const map = new Map()
-    ;(toValue(entries) ?? []).forEach(entry => map.set(entry.item.key, entry.item.doc_count ?? 0))
+    for (const { item } of toValue(entries) ?? []) {
+      map.set(item.key, item.doc_count ?? 0)
+    }
     return map
   })
 
   const entryCount = contentType => entryCountMap.value.get(contentType) ?? 0
+  const categoryCount = types => types.reduce((sum, type) => sum + entryCount(type), 0)
 
-  const categoryCount = types =>
-    types.reduce((sum, contentType) => sum + entryCount(contentType), 0)
+  const compareCategoriesByCount = direction => ([aKey, aTypes], [bKey, bTypes]) => {
+    const diff = categoryCount(aTypes) - categoryCount(bTypes)
+    if (diff !== 0) {
+      return diff * direction
+    }
+    return categoryJsonPosition(aKey) - categoryJsonPosition(bKey)
+  }
+
+  const compareCategoriesByLabel = direction => ([aKey], [bKey]) => {
+    return compareLabels(categoryLabelFor(aKey), categoryLabelFor(bKey)) * direction
+  }
+
+  const categoryComparator = ({ sortBy, orderBy }) => {
+    const direction = directionFor(orderBy)
+    if (sortBy === SORT_BY_KEY) {
+      return compareCategoriesByLabel(direction)
+    }
+    return compareCategoriesByCount(direction)
+  }
+
+  const compareTypesByCount = direction => (aType, bType) => {
+    const diff = entryCount(aType) - entryCount(bType)
+    if (diff !== 0) {
+      return diff * direction
+    }
+    return compareTypeLabels(aType, bType)
+  }
+
+  const compareTypesByLabel = direction => (aType, bType) => {
+    return compareTypeLabels(aType, bType) * direction
+  }
+
+  const typesComparator = ({ sortBy, orderBy }) => {
+    const direction = directionFor(orderBy)
+    if (sortBy === SORT_BY_KEY) {
+      return compareTypesByLabel(direction)
+    }
+    return compareTypesByCount(direction)
+  }
 
   const sortedCategoryEntries = computed(() => {
     const pairs = toValue(filteredCategoryPairs) ?? []
-    const { sortBy, orderBy } = sort.value
-    const direction = orderBy === 'asc' ? 1 : -1
-
-    const jsonPosition = (key) => {
-      const index = categoryJsonOrder.indexOf(key)
-      return index === -1 ? Number.POSITIVE_INFINITY : index
-    }
-
-    const byCount = ([aKey, aTypes], [bKey, bTypes]) => {
-      const diff = categoryCount(aTypes) - categoryCount(bTypes)
-      if (diff !== 0) {
-        return diff * direction
-      }
-      return jsonPosition(aKey) - jsonPosition(bKey)
-    }
-
-    const byLabel = ([aKey], [bKey]) =>
-      compareLabels(categoryLabelFor(aKey), categoryLabelFor(bKey)) * direction
-
-    return [...pairs].sort(sortBy === SORT_BY_KEY ? byLabel : byCount)
+    return [...pairs].sort(categoryComparator(sort.value))
   })
 
-  const sortedTypesFor = (types) => {
-    const { sortBy, orderBy } = sort.value
-    const direction = orderBy === 'asc' ? 1 : -1
-
-    const byCount = (aType, bType) => {
-      const diff = entryCount(aType) - entryCount(bType)
-      if (diff !== 0) {
-        return diff * direction
-      }
-      return compareLabels(getDocumentTypeLabel(aType), getDocumentTypeLabel(bType))
-    }
-
-    const byLabel = (aType, bType) =>
-      compareLabels(getDocumentTypeLabel(aType), getDocumentTypeLabel(bType)) * direction
-
-    return [...types].sort(sortBy === SORT_BY_KEY ? byLabel : byCount)
-  }
+  const sortedTypesFor = types => [...types].sort(typesComparator(sort.value))
 
   return {
     entryCount,
