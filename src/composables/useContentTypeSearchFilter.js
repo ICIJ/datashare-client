@@ -3,7 +3,30 @@ import { deburr } from 'lodash'
 
 import { getDocumentTypeLabel } from '@/utils/utils'
 
+const HAYSTACK_SEPARATOR = '\n'
+
 const normalizeForSearch = value => deburr(String(value ?? '')).toLowerCase()
+
+const haystackForContentType = (contentType) => {
+  const key = normalizeForSearch(contentType)
+  const label = normalizeForSearch(getDocumentTypeLabel(contentType))
+  return `${key}${HAYSTACK_SEPARATOR}${label}`
+}
+
+const buildHaystackMap = (keys, valueFor) => {
+  const map = new Map()
+  for (const key of keys) {
+    map.set(key, valueFor(key))
+  }
+  return map
+}
+
+const haystackIncludes = (haystack, needle) => {
+  if (!haystack) {
+    return false
+  }
+  return haystack.includes(needle)
+}
 
 /**
  * Client-side query filter for the content-types panel. Returns the search
@@ -25,11 +48,8 @@ export function useContentTypeSearchFilter({
    * @returns {Map<string, string>}
    */
   const categoryHaystacks = computed(() => {
-    const map = new Map()
-    Object.keys(toValue(categories) ?? {}).forEach((category) => {
-      map.set(category, normalizeForSearch(categoryLabelFor(category)))
-    })
-    return map
+    const keys = Object.keys(toValue(categories) ?? {})
+    return buildHaystackMap(keys, category => normalizeForSearch(categoryLabelFor(category)))
   })
 
   /**
@@ -37,13 +57,8 @@ export function useContentTypeSearchFilter({
    * @returns {Map<string, string>}
    */
   const contentTypeHaystacks = computed(() => {
-    const map = new Map()
-    ;(toValue(contentTypes) ?? []).forEach((contentType) => {
-      const key = normalizeForSearch(contentType)
-      const label = normalizeForSearch(getDocumentTypeLabel(contentType))
-      map.set(contentType, `${key}\n${label}`)
-    })
-    return map
+    const keys = toValue(contentTypes) ?? []
+    return buildHaystackMap(keys, haystackForContentType)
   })
 
   /**
@@ -55,7 +70,7 @@ export function useContentTypeSearchFilter({
     if (!hasQuery.value) {
       return true
     }
-    return contentTypeHaystacks.value.get(contentType)?.includes(normalizedQuery.value) ?? false
+    return haystackIncludes(contentTypeHaystacks.value.get(contentType), normalizedQuery.value)
   }
 
   /**
@@ -67,7 +82,7 @@ export function useContentTypeSearchFilter({
     if (!hasQuery.value) {
       return true
     }
-    return categoryHaystacks.value.get(category)?.includes(normalizedQuery.value) ?? false
+    return haystackIncludes(categoryHaystacks.value.get(category), normalizedQuery.value)
   }
 
   /**
@@ -75,8 +90,12 @@ export function useContentTypeSearchFilter({
    * @param {string} contentType
    * @returns {boolean}
    */
-  const isContentTypeVisible = contentType =>
-    matchesContentType(contentType) || isContentTypeRetained(contentType)
+  const isContentTypeVisible = (contentType) => {
+    if (matchesContentType(contentType)) {
+      return true
+    }
+    return isContentTypeRetained(contentType)
+  }
 
   /**
    * Types to render under `category`. A category-label hit keeps every child.
@@ -85,7 +104,10 @@ export function useContentTypeSearchFilter({
    * @returns {string[]}
    */
   const visibleTypesFor = (category, types) => {
-    if (!hasQuery.value || matchesCategory(category)) {
+    if (!hasQuery.value) {
+      return types
+    }
+    if (matchesCategory(category)) {
       return types
     }
     return types.filter(isContentTypeVisible)
@@ -103,6 +125,13 @@ export function useContentTypeSearchFilter({
     return slotEntries.filter(entry => isContentTypeVisible(entry.item.key))
   }
 
+  const categoryHasVisibleType = ([category, types]) => {
+    if (matchesCategory(category)) {
+      return true
+    }
+    return types.some(isContentTypeVisible)
+  }
+
   // Empty-query fast path returns the original pairs ref so the grouped
   // view re-renders identically when no filter is active.
   /** @returns {Array<[string, string[]]>} */
@@ -111,12 +140,7 @@ export function useContentTypeSearchFilter({
     if (!hasQuery.value) {
       return pairs
     }
-    return pairs.filter(([category, types]) => {
-      if (matchesCategory(category)) {
-        return true
-      }
-      return types.some(isContentTypeVisible)
-    })
+    return pairs.filter(categoryHasVisibleType)
   })
 
   return {
