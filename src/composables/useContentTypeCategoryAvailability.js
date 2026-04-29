@@ -2,25 +2,13 @@ import { computed, ref, watch } from 'vue'
 
 import { apiInstance as api } from '@/api/apiInstance'
 import { useWait } from '@/composables/useWait'
+import { CONTENT_TYPE_CATEGORY_FILTER_NAME } from '@/store/filters/FilterContentTypeCategory'
 import { useSearchStore } from '@/store/modules'
-
-const FIELD = 'contentTypeCategory'
 
 /**
  * Reports whether the contentTypeCategory field is mapped on every
- * currently selected index.
- *
- * The result is conservative: any missing index, network error, or parse
+ * currently selected index. Any missing index, network error, or parse
  * error resolves to false so paired-dimension UI can fall back gracefully.
- *
- * Per-index results are cached so toggling projects on and off within a
- * session does not trigger redundant mapping requests.
- *
- * @returns {{
- *   isAvailable: import('vue').Ref<boolean>,
- *   isLoading: import('vue').Ref<boolean>,
- *   error: import('vue').Ref<Error|null>
- * }}
  */
 export function useContentTypeCategoryAvailability() {
   const searchStore = useSearchStore.inject()
@@ -35,7 +23,7 @@ export function useContentTypeCategoryAvailability() {
   }
 
   function isFieldPresent(parsed, indexName) {
-    const mapping = parsed?.[indexName]?.mappings?.[FIELD]
+    const mapping = parsed?.[indexName]?.mappings?.[CONTENT_TYPE_CATEGORY_FILTER_NAME]
     return !!mapping && Object.keys(mapping).length > 0
   }
 
@@ -52,7 +40,7 @@ export function useContentTypeCategoryAvailability() {
 
     if (uncached.length > 0) {
       try {
-        const payload = await api.getMappingsByFields(uncached.join(','), FIELD)
+        const payload = await api.getMappingsByFields(uncached.join(','), CONTENT_TYPE_CATEGORY_FILTER_NAME)
         const parsed = parseMappings(payload)
         for (const name of uncached) {
           cache.set(name, isFieldPresent(parsed, name))
@@ -68,7 +56,7 @@ export function useContentTypeCategoryAvailability() {
     isAvailable.value = list.every(name => cache.get(name) === true)
   })
 
-  watch(() => indices.value.join(','), fetchAvailability, { immediate: true })
+  watch(() => [...indices.value].sort().join('\0'), fetchAvailability, { immediate: true })
 
   return { isAvailable, isLoading, error }
 }
