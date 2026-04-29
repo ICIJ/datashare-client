@@ -312,10 +312,11 @@ function getDirectoriesBodybuilder({ from = 0, size = PER_PAGE } = {}) {
   if (!props.includeChildrenDocuments) {
     bb.andQuery('match', 'extractionLevel', 0)
   }
-  // In "full" mode (not compact), add top-level totals across all buckets
+  // Always include total_directories for pagination label computation (even in compact mode)
+  bb.agg('cardinality', 'dirname', 'total_directories')
+  // In "full" mode (not compact), also add size total
   if (!props.compact || props.noStats) {
     bb.agg('sum', 'contentLength', 'total_size')
-    bb.agg('cardinality', 'dirname', 'total_directories')
   }
   // Allow any last-minute tweaks (e.g. additional filters),
   // then return the configured bodybuilder instance
@@ -649,7 +650,7 @@ defineExpose({ isLoading, loadData, loadDataWithSpinner, reloadData })
           :layout="layout"
           :flat="flat"
           :level="nextLevel"
-          :per-page="perPage"
+          :per-page="PER_PAGE"
           :page="page"
           :total="totalDirectories"
           @click="nextLoadData"
