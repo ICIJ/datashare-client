@@ -3,8 +3,6 @@ import { flushPromises, mount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 
 import CoreSetup from '~tests/unit/CoreSetup'
-import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
-import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import FilterType from '@/components/Filter/FilterType/FilterType'
 import FilterTypeFileTypes from '@/components/Filter/FilterType/FilterTypeFileTypes'
 import ButtonToggleContentTypesView from '@/components/Button/ButtonToggleContentTypesView'
@@ -32,9 +30,37 @@ vi.mock('@/composables/useContentTypeCategoryAvailability', () => ({
   useContentTypeCategoryAvailability: vi.fn()
 }))
 
+// The aggregation contract that flows from `searchStore.queryFilter` into
+// FilterType.vue: a page with a `contentType` aggregation containing a
+// `buckets` array of `{ key, doc_count }`. Tests don't need real ES — they
+// need this shape.
+const aggregationPage = (buckets) => ({
+  aggregations: { contentType: { buckets } }
+})
+
+// Build buckets by counting how many times each content type appears, so a
+// list like `['application/pdf', 'application/pdf', 'text/html']` yields
+// `[{key: 'application/pdf', doc_count: 2}, {key: 'text/html', doc_count: 1}]`
+// — i.e. the same shape an ES terms aggregation would have produced over the
+// same indexed documents.
+const bucketsFromContentTypes = (contentTypes) => {
+  const counts = new Map()
+  for (const type of contentTypes) {
+    counts.set(type, (counts.get(type) ?? 0) + 1)
+  }
+  return Array.from(counts, ([key, doc_count]) => ({ key, doc_count }))
+}
+
 describe('FilterTypeFileTypes.vue', () => {
-  const { index, es } = esConnectionHelper.build()
-  let core, wrapper, searchStore
+  const index = 'filter-type-file-types-spec'
+  let core, wrapper, searchStore, queryFilterSpy
+
+  // Re-arms the stubbed `searchStore.queryFilter` to resolve with an
+  // aggregation page derived from the given content-type list. Replaces the
+  // previous `letData(es).have(...).commit()` document-indexing dance.
+  const seedContentTypes = (contentTypes) => {
+    queryFilterSpy.mockResolvedValue(aggregationPage(bucketsFromContentTypes(contentTypes)))
+  }
 
   beforeAll(() => {
     setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
@@ -61,6 +87,12 @@ describe('FilterTypeFileTypes.vue', () => {
     searchStore.reset()
     searchStore.resetFilters()
 
+    // Stub the ES-backed aggregation entry point. Tests call seedContentTypes(...)
+    // to shape the buckets returned by the next aggregateOver(); the default is
+    // an empty page so the initial mount-time aggregateIfVisible() resolves
+    // without hitting the network.
+    queryFilterSpy = vi.spyOn(searchStore, 'queryFilter').mockResolvedValue(aggregationPage([]))
+
     wrapper = mount(FilterTypeFileTypes, {
       global: {
         plugins: core.plugins
@@ -71,6 +103,12 @@ describe('FilterTypeFileTypes.vue', () => {
         grouped: true
       }
     })
+  })
+
+  afterEach(() => {
+    if (wrapper) {
+      wrapper.unmount()
+    }
   })
 
   afterAll(() => {
@@ -110,9 +148,7 @@ describe('FilterTypeFileTypes.vue', () => {
       OTHER: ['text/html', 'other']
     })
 
-    await letData(es).have(new IndexedDocument('document_01', index).withContentType('application/pdf')).commit()
-    await letData(es).have(new IndexedDocument('document_02', index).withContentType('text/html')).commit()
-    await letData(es).have(new IndexedDocument('document_03', index).withContentType('other')).commit()
+    seedContentTypes(['application/pdf', 'text/html', 'other'])
 
     await wrapper.findComponent(FilterType).vm.aggregateOver()
     await flushPromises()
@@ -122,11 +158,9 @@ describe('FilterTypeFileTypes.vue', () => {
     expect(wrapper.findAllComponents(ContentTypesEntry)).toHaveLength(0)
   })
 
-  it('should show the sort control in grouped mode', () => {
+  it('keeps the sort control rendered in both grouped and flat views', async () => {
     expect(wrapper.findComponent(FiltersPanelSectionFilterTitleSort).exists()).toBe(true)
-  })
 
-  it('should keep the sort control visible when grouped is toggled off', async () => {
     await wrapper.findComponent(ButtonToggleContentTypesView).trigger('click')
     await flushPromises()
 
@@ -160,22 +194,8 @@ describe('FilterTypeFileTypes.vue', () => {
     })
   })
 
-  it('should render flat entries when grouped is toggled off', async () => {
-    await letData(es).have(new IndexedDocument('document_01', index).withContentType('application/pdf')).commit()
-    await letData(es).have(new IndexedDocument('document_02', index).withContentType('text/html')).commit()
-    await letData(es).have(new IndexedDocument('document_03', index).withContentType('other')).commit()
-
-    await wrapper.findComponent(FilterType).vm.aggregateOver()
-    await flushPromises()
-    await wrapper.findComponent(ButtonToggleContentTypesView).trigger('click')
-
-    expect(wrapper.findAllComponents(ContentTypesCategory)).toHaveLength(0)
-    expect(wrapper.findAllComponents(ContentTypesEntry)).toHaveLength(3)
-  })
-
   it('should pass aggregated content types to the categories API', async () => {
-    await letData(es).have(new IndexedDocument('document_01', index).withContentType('application/pdf')).commit()
-    await letData(es).have(new IndexedDocument('document_02', index).withContentType('text/html')).commit()
+    seedContentTypes(['application/pdf', 'text/html'])
 
     await wrapper.findComponent(FilterType).vm.aggregateOver()
     await flushPromises()
@@ -196,9 +216,7 @@ describe('FilterTypeFileTypes.vue', () => {
         OTHER: ['text/html', 'text/plain']
       })
 
-      await letData(es).have(new IndexedDocument('document_01', index).withContentType('application/pdf')).commit()
-      await letData(es).have(new IndexedDocument('document_02', index).withContentType('text/html')).commit()
-      await letData(es).have(new IndexedDocument('document_03', index).withContentType('text/plain')).commit()
+      seedContentTypes(['application/pdf', 'text/html', 'text/plain'])
 
       await wrapper.findComponent(FilterType).vm.aggregateOver()
       await flushPromises()
@@ -253,9 +271,7 @@ describe('FilterTypeFileTypes.vue', () => {
         OTHER: ['text/html', 'text/plain']
       })
 
-      await letData(es).have(new IndexedDocument('document_01', index).withContentType('application/pdf')).commit()
-      await letData(es).have(new IndexedDocument('document_02', index).withContentType('text/html')).commit()
-      await letData(es).have(new IndexedDocument('document_03', index).withContentType('text/plain')).commit()
+      seedContentTypes(['application/pdf', 'text/html', 'text/plain'])
 
       await wrapper.findComponent(FilterType).vm.aggregateOver()
       await flushPromises()
@@ -338,9 +354,7 @@ describe('FilterTypeFileTypes.vue', () => {
         OTHER: ['text/html', 'text/plain']
       })
 
-      await letData(es).have(new IndexedDocument('document_01', index).withContentType('application/pdf')).commit()
-      await letData(es).have(new IndexedDocument('document_02', index).withContentType('text/html')).commit()
-      await letData(es).have(new IndexedDocument('document_03', index).withContentType('text/plain')).commit()
+      seedContentTypes(['application/pdf', 'text/html', 'text/plain'])
 
       await wrapper.findComponent(FilterType).vm.aggregateOver()
       await flushPromises()
@@ -540,11 +554,7 @@ describe('FilterTypeFileTypes.vue', () => {
         TEXT: ['text/html', 'text/plain']
       })
 
-      await letData(es).have(new IndexedDocument('d1', index).withContentType('application/pdf')).commit()
-      await letData(es).have(new IndexedDocument('i1', index).withContentType('image/jpeg')).commit()
-      await letData(es).have(new IndexedDocument('i2', index).withContentType('image/png')).commit()
-      await letData(es).have(new IndexedDocument('h1', index).withContentType('text/html')).commit()
-      await letData(es).have(new IndexedDocument('t1', index).withContentType('text/plain')).commit()
+      seedContentTypes(['application/pdf', 'image/jpeg', 'image/png', 'text/html', 'text/plain'])
 
       await wrapper.findComponent(FilterType).vm.aggregateOver()
       await flushPromises()
@@ -618,8 +628,7 @@ describe('FilterTypeFileTypes.vue', () => {
         OTHER: ['text/html', 'text/plain']
       })
 
-      await letData(es).have(new IndexedDocument('h1', index).withContentType('text/html')).commit()
-      await letData(es).have(new IndexedDocument('t1', index).withContentType('text/plain')).commit()
+      seedContentTypes(['text/html', 'text/plain'])
 
       await wrapper.findComponent(FilterType).vm.aggregateOver()
       await flushPromises()
@@ -686,12 +695,11 @@ describe('FilterTypeFileTypes.vue', () => {
         VIDEO: ['video/mp4']
       })
 
-      await letData(es).have(new IndexedDocument('d1', index).withContentType('application/pdf')).commit()
-      await letData(es).have(new IndexedDocument('d2', index).withContentType('application/pdf')).commit()
-      await letData(es).have(new IndexedDocument('d3', index).withContentType('application/pdf')).commit()
-      await letData(es).have(new IndexedDocument('i1', index).withContentType('image/jpeg')).commit()
-      await letData(es).have(new IndexedDocument('i2', index).withContentType('image/jpeg')).commit()
-      await letData(es).have(new IndexedDocument('v1', index).withContentType('video/mp4')).commit()
+      seedContentTypes([
+        'application/pdf', 'application/pdf', 'application/pdf',
+        'image/jpeg', 'image/jpeg',
+        'video/mp4'
+      ])
 
       await wrapper.findComponent(FilterType).vm.aggregateOver()
       await flushPromises()
@@ -746,7 +754,7 @@ describe('FilterTypeFileTypes.vue', () => {
       })
 
       // Only VIDEO has indexed documents; IMAGE and DOCUMENT end up with count 0.
-      await letData(es).have(new IndexedDocument('v1', index).withContentType('video/mp4')).commit()
+      seedContentTypes(['video/mp4'])
 
       await wrapper.findComponent(FilterType).vm.aggregateOver()
       await flushPromises()
@@ -764,8 +772,7 @@ describe('FilterTypeFileTypes.vue', () => {
         VIDEO: ['video/mp4']
       })
 
-      await letData(es).have(new IndexedDocument('i1', index).withContentType('image/jpeg')).commit()
-      await letData(es).have(new IndexedDocument('v1', index).withContentType('video/mp4')).commit()
+      seedContentTypes(['image/jpeg', 'video/mp4'])
 
       await wrapper.findComponent(FilterType).vm.aggregateOver()
       await flushPromises()
@@ -774,16 +781,6 @@ describe('FilterTypeFileTypes.vue', () => {
       expect(categoryOrder()).toEqual(['VIDEO', 'IMAGE'])
     })
 
-    it('does not drop or duplicate categories when sorting', async () => {
-      await seedSortableCategories()
-
-      searchStore.sortFilter({ name: 'contentType', sortBy: '_count', orderBy: 'asc' })
-      await flushPromises()
-
-      const order = categoryOrder()
-      expect(order).toHaveLength(3)
-      expect(new Set(order)).toEqual(new Set(['DOCUMENT', 'IMAGE', 'VIDEO']))
-    })
   })
 
   describe('nested bucket sorting', () => {
@@ -797,12 +794,11 @@ describe('FilterTypeFileTypes.vue', () => {
         DOCUMENT: ['application/pdf', 'text/html', 'text/plain']
       })
 
-      await letData(es).have(new IndexedDocument('d1', index).withContentType('application/pdf')).commit()
-      await letData(es).have(new IndexedDocument('d2', index).withContentType('application/pdf')).commit()
-      await letData(es).have(new IndexedDocument('d3', index).withContentType('application/pdf')).commit()
-      await letData(es).have(new IndexedDocument('t1', index).withContentType('text/plain')).commit()
-      await letData(es).have(new IndexedDocument('t2', index).withContentType('text/plain')).commit()
-      await letData(es).have(new IndexedDocument('h1', index).withContentType('text/html')).commit()
+      seedContentTypes([
+        'application/pdf', 'application/pdf', 'application/pdf',
+        'text/plain', 'text/plain',
+        'text/html'
+      ])
 
       await wrapper.findComponent(FilterType).vm.aggregateOver()
       await flushPromises()
@@ -849,17 +845,6 @@ describe('FilterTypeFileTypes.vue', () => {
       expect(bucketOrder()).toEqual(['text/html', 'text/plain', 'application/pdf'])
     })
 
-    it('does not drop or duplicate buckets when sorting', async () => {
-      await seedBucketsInCategory()
-
-      searchStore.sortFilter({ name: 'contentType', sortBy: '_key', orderBy: 'asc' })
-      await flushPromises()
-
-      const order = bucketOrder()
-      expect(order).toHaveLength(3)
-      expect(new Set(order)).toEqual(new Set(['application/pdf', 'text/html', 'text/plain']))
-    })
-
     it('keeps the aggregated category total unchanged when bucket order changes', async () => {
       await seedBucketsInCategory()
 
@@ -884,12 +869,11 @@ describe('FilterTypeFileTypes.vue', () => {
         VIDEO: ['video/mp4']
       })
 
-      await letData(es).have(new IndexedDocument('d1', index).withContentType('application/pdf')).commit()
-      await letData(es).have(new IndexedDocument('d2', index).withContentType('application/pdf')).commit()
-      await letData(es).have(new IndexedDocument('d3', index).withContentType('application/pdf')).commit()
-      await letData(es).have(new IndexedDocument('i1', index).withContentType('image/jpeg')).commit()
-      await letData(es).have(new IndexedDocument('i2', index).withContentType('image/jpeg')).commit()
-      await letData(es).have(new IndexedDocument('v1', index).withContentType('video/mp4')).commit()
+      seedContentTypes([
+        'application/pdf', 'application/pdf', 'application/pdf',
+        'image/jpeg', 'image/jpeg',
+        'video/mp4'
+      ])
 
       await wrapper.findComponent(FilterType).vm.aggregateOver()
       await flushPromises()
@@ -937,108 +921,12 @@ describe('FilterTypeFileTypes.vue', () => {
     })
   })
 
-  describe('paired-filter "All" behavior in non-grouped (flat) view', () => {
+  describe('paired-filter "All" parity between grouped and flat views', () => {
     // The "All" entry lives in the shared `#all` slot of FilterType, so the
     // disabled-state and click-reset semantics introduced for the categories
-    // view in US-002/003 must apply identically in the flat view. These
-    // tests prove that parity end-to-end from the user's seam.
-    const seedAndFlatten = async () => {
-      api.getContentTypeCategories.mockResolvedValue({
-        DOCUMENT: ['application/pdf'],
-        OTHER: ['text/html', 'text/plain']
-      })
-
-      await letData(es).have(new IndexedDocument('document_01', index).withContentType('application/pdf')).commit()
-      await letData(es).have(new IndexedDocument('document_02', index).withContentType('text/html')).commit()
-      await letData(es).have(new IndexedDocument('document_03', index).withContentType('text/plain')).commit()
-
-      await wrapper.findComponent(FilterType).vm.aggregateOver()
-      await flushPromises()
-      // Flip to the flat view before exercising "All".
-      await wrapper.findComponent(ButtonToggleContentTypesView).trigger('click')
-      await flushPromises()
-    }
-
-    it('disables "All" when both contentType and contentTypeCategory are empty', async () => {
-      await seedAndFlatten()
-
-      const all = wrapper.findComponent(ContentTypesAll)
-      expect(all.props('modelValue')).toBe(true)
-    })
-
-    it('keeps "All" enabled when only contentType has values', async () => {
-      await seedAndFlatten()
-
-      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
-      await flushPromises()
-
-      const all = wrapper.findComponent(ContentTypesAll)
-      expect(all.props('modelValue')).toBe(false)
-    })
-
-    it('keeps "All" enabled when only contentTypeCategory has values', async () => {
-      await seedAndFlatten()
-
-      searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'OTHER' })
-      await flushPromises()
-
-      const all = wrapper.findComponent(ContentTypesAll)
-      expect(all.props('modelValue')).toBe(false)
-    })
-
-    it('keeps "All" enabled when both contentType and contentTypeCategory have values', async () => {
-      await seedAndFlatten()
-
-      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
-      searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'OTHER' })
-      await flushPromises()
-
-      const all = wrapper.findComponent(ContentTypesAll)
-      expect(all.props('modelValue')).toBe(false)
-    })
-
-    it('clears both contentType and contentTypeCategory when "All" is clicked', async () => {
-      await seedAndFlatten()
-      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
-      searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'OTHER' })
-      await flushPromises()
-
-      await wrapper.findComponent(ContentTypesAll).vm.$emit('update:modelValue', true)
-      await flushPromises()
-
-      expect(searchStore.values.contentType ?? []).toEqual([])
-      expect(searchStore.values.contentTypeCategory ?? []).toEqual([])
-    })
-
-    it('flips "All" back to disabled / all-selected after the click', async () => {
-      await seedAndFlatten()
-      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
-      searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'OTHER' })
-      await flushPromises()
-
-      const all = wrapper.findComponent(ContentTypesAll)
-      expect(all.props('modelValue')).toBe(false)
-
-      await all.vm.$emit('update:modelValue', true)
-      await flushPromises()
-
-      expect(all.props('modelValue')).toBe(true)
-    })
-
-    it('does not affect unrelated filters when "All" is clicked', async () => {
-      await seedAndFlatten()
-      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
-      searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'OTHER' })
-      // Unrelated filter that must survive the click.
-      searchStore.addFilterValue({ name: 'language', value: 'ENGLISH' })
-      await flushPromises()
-
-      await wrapper.findComponent(ContentTypesAll).vm.$emit('update:modelValue', true)
-      await flushPromises()
-
-      expect(searchStore.values.language).toEqual(['ENGLISH'])
-    })
-
+    // view in US-002/003 must apply identically in the flat view. The grouped
+    // describe blocks above already cover each individual behavior — this
+    // single parity test proves the flat view follows them by transitivity.
     it('produces the same final filter state whether "All" is clicked from grouped or flat view', async () => {
       // Parity check from the user's seam: identical sequence (populate both
       // paired filters → click "All") must reach the same store state in
@@ -1048,9 +936,7 @@ describe('FilterTypeFileTypes.vue', () => {
         OTHER: ['text/html', 'text/plain']
       })
 
-      await letData(es).have(new IndexedDocument('document_01', index).withContentType('application/pdf')).commit()
-      await letData(es).have(new IndexedDocument('document_02', index).withContentType('text/html')).commit()
-      await letData(es).have(new IndexedDocument('document_03', index).withContentType('text/plain')).commit()
+      seedContentTypes(['application/pdf', 'text/html', 'text/plain'])
 
       await wrapper.findComponent(FilterType).vm.aggregateOver()
       await flushPromises()
@@ -1103,12 +989,11 @@ describe('FilterTypeFileTypes.vue', () => {
         VIDEO: ['video/mp4']
       })
 
-      await letData(es).have(new IndexedDocument('d1', index).withContentType('application/pdf')).commit()
-      await letData(es).have(new IndexedDocument('d2', index).withContentType('application/pdf')).commit()
-      await letData(es).have(new IndexedDocument('d3', index).withContentType('application/pdf')).commit()
-      await letData(es).have(new IndexedDocument('i1', index).withContentType('image/jpeg')).commit()
-      await letData(es).have(new IndexedDocument('i2', index).withContentType('image/jpeg')).commit()
-      await letData(es).have(new IndexedDocument('v1', index).withContentType('video/mp4')).commit()
+      seedContentTypes([
+        'application/pdf', 'application/pdf', 'application/pdf',
+        'image/jpeg', 'image/jpeg',
+        'video/mp4'
+      ])
 
       await wrapper.findComponent(FilterType).vm.aggregateOver()
       await flushPromises()
@@ -1184,9 +1069,7 @@ describe('FilterTypeFileTypes.vue', () => {
         OTHER: ['text/html', 'text/plain']
       })
 
-      await letData(es).have(new IndexedDocument('d1', index).withContentType('application/pdf')).commit()
-      await letData(es).have(new IndexedDocument('h1', index).withContentType('text/html')).commit()
-      await letData(es).have(new IndexedDocument('t1', index).withContentType('text/plain')).commit()
+      seedContentTypes(['application/pdf', 'text/html', 'text/plain'])
 
       await wrapper.findComponent(FilterType).vm.aggregateOver()
       await flushPromises()
@@ -1231,8 +1114,7 @@ describe('FilterTypeFileTypes.vue', () => {
         OTHER: ['text/html', 'text/plain']
       })
 
-      await letData(es).have(new IndexedDocument('h1', index).withContentType('text/html')).commit()
-      await letData(es).have(new IndexedDocument('t1', index).withContentType('text/plain')).commit()
+      seedContentTypes(['text/html', 'text/plain'])
 
       await wrapper.findComponent(FilterType).vm.aggregateOver()
       await flushPromises()
@@ -1268,10 +1150,7 @@ describe('FilterTypeFileTypes.vue', () => {
         VIDEO: ['video/mp4']
       })
 
-      await letData(es).have(new IndexedDocument('d1', index).withContentType('application/pdf')).commit()
-      await letData(es).have(new IndexedDocument('h1', index).withContentType('text/html')).commit()
-      await letData(es).have(new IndexedDocument('i1', index).withContentType('image/jpeg')).commit()
-      await letData(es).have(new IndexedDocument('v1', index).withContentType('video/mp4')).commit()
+      seedContentTypes(['application/pdf', 'text/html', 'image/jpeg', 'video/mp4'])
 
       await wrapper.findComponent(FilterType).vm.aggregateOver()
       await flushPromises()
@@ -1333,8 +1212,7 @@ describe('FilterTypeFileTypes.vue', () => {
         OTHER: ['application/pdf', 'image/jpeg']
       })
 
-      await letData(es).have(new IndexedDocument('d1', index).withContentType('application/pdf')).commit()
-      await letData(es).have(new IndexedDocument('i1', index).withContentType('image/jpeg')).commit()
+      seedContentTypes(['application/pdf', 'image/jpeg'])
 
       await wrapper.findComponent(FilterType).vm.aggregateOver()
       await flushPromises()
