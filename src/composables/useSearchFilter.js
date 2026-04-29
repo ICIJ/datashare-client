@@ -128,6 +128,10 @@ export function useSearchFilter() {
     return getOrderBy()[1]
   }
 
+  function getSearchOperator() {
+    return appStore.getSettings('search', 'searchOperator')
+  }
+
   async function getTotal({ query = 'type:Document' } = {}) {
     const index = indices.value
     const body = { track_total_hits: true, query: { query_string: { query } } }
@@ -227,8 +231,8 @@ export function useSearchFilter() {
 
   function refreshSearchFromRoute() {
     // Extract the query parameters that must be saved in the app state
-    const { perPage = getPerPage(), sort = getSort(), order = getOrder() } = route.query
-    appStore.setSettings('search', { perPage, orderBy: [sort, order] })
+    const { perPage = getPerPage(), sort = getSort(), order = getOrder(), searchOperator = getSearchOperator() } = route.query
+    appStore.setSettings('search', { perPage, orderBy: [sort, order], searchOperator })
     // Update the search store using the route query
     searchStore.updateFromRouteQuery(route.query)
     // And finally, refresh the search if t
@@ -237,8 +241,8 @@ export function useSearchFilter() {
 
   function refreshSearchFromRouteStart() {
     // Extract the query parameters that must be saved in the app state
-    const { perPage = getPerPage(), sort = getSort(), order = getOrder() } = route.query
-    appStore.setSettings('search', { perPage, orderBy: [sort, order] })
+    const { perPage = getPerPage(), sort = getSort(), order = getOrder(), searchOperator = getSearchOperator() } = route.query
+    appStore.setSettings('search', { perPage, orderBy: [sort, order], searchOperator })
     // Update the search store using the route query and reset the `from` parameter
     searchStore.updateFromRouteQuery({ ...route.query, from: 0 })
     // And finally, refresh the search if t

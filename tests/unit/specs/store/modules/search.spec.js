@@ -3,6 +3,7 @@ import { setActivePinia, createPinia } from 'pinia'
 
 import { IndexedDocument, IndexedDocuments, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
+import { SEARCH_OPERATORS } from '@/enums/searchOperators'
 import Document from '@/api/resources/Document'
 import EsDocList from '@/api/resources/EsDocList'
 import NamedEntity from '@/api/resources/NamedEntity'
@@ -361,6 +362,15 @@ describe('SearchStore', () => {
         perPage: '25',
         from: '0'
       })
+    })
+
+    it('should include searchOperator in the route query', () => {
+      expect(searchStore.toRouteQuery).toMatchObject({ searchOperator: SEARCH_OPERATORS.OR })
+    })
+
+    it('should reflect AND searchOperator in the route query when set', () => {
+      appStore.setSettings('search', 'searchOperator', SEARCH_OPERATORS.AND)
+      expect(searchStore.toRouteQuery).toMatchObject({ searchOperator: SEARCH_OPERATORS.AND })
     })
 
     it('should return an advanced and filtered query parameters', () => {
@@ -1102,19 +1112,25 @@ describe('SearchStore', () => {
     it('should pass the selected field to the elasticsearch query', async () => {
       searchStore.setField('content')
       await searchStore.runBatchDownload()
-      expect(rootSearchSpy).toHaveBeenCalledWith(expect.anything(), expect.anything(), ['content'])
+      expect(rootSearchSpy).toHaveBeenCalledWith(expect.anything(), expect.anything(), ['content'], expect.anything())
     })
 
     it('should pass empty fields when searching in all fields', async () => {
       searchStore.setField('all')
       await searchStore.runBatchDownload()
-      expect(rootSearchSpy).toHaveBeenCalledWith(expect.anything(), expect.anything(), [])
+      expect(rootSearchSpy).toHaveBeenCalledWith(expect.anything(), expect.anything(), [], expect.anything())
     })
 
     it('should pass the field-specific fields array to the batch download query', async () => {
       searchStore.setField('path')
       await searchStore.runBatchDownload()
-      expect(rootSearchSpy).toHaveBeenCalledWith(expect.anything(), expect.anything(), ['path'])
+      expect(rootSearchSpy).toHaveBeenCalledWith(expect.anything(), expect.anything(), ['path'], expect.anything())
+    })
+
+    it('passes the search operator to the elasticsearch query', async () => {
+      appStore.setSettings('search', 'searchOperator', SEARCH_OPERATORS.AND)
+      await searchStore.runBatchDownload()
+      expect(rootSearchSpy).toHaveBeenCalledWith(expect.anything(), expect.anything(), expect.anything(), SEARCH_OPERATORS.AND)
     })
   })
 
@@ -1138,44 +1154,51 @@ describe('SearchStore', () => {
         searchStore.indices,
         searchStore.instantiatedFilters,
         '*',
-        []
+        [],
+        SEARCH_OPERATORS.OR
       )
     })
 
     it('passes "*" when the query is empty', async () => {
       searchStore.setQuery('')
       await searchStore.estimateDownloadSize()
-      expect(estimateSpy).toHaveBeenCalledWith(expect.anything(), expect.anything(), '*', expect.anything())
+      expect(estimateSpy).toHaveBeenCalledWith(expect.anything(), expect.anything(), '*', expect.anything(), expect.anything())
     })
 
     it('passes "*" when the query is null', async () => {
       searchStore.setQuery(null)
       await searchStore.estimateDownloadSize()
-      expect(estimateSpy).toHaveBeenCalledWith(expect.anything(), expect.anything(), '*', expect.anything())
+      expect(estimateSpy).toHaveBeenCalledWith(expect.anything(), expect.anything(), '*', expect.anything(), expect.anything())
     })
 
     it('passes "*" when the query is undefined', async () => {
       searchStore.setQuery(undefined)
       await searchStore.estimateDownloadSize()
-      expect(estimateSpy).toHaveBeenCalledWith(expect.anything(), expect.anything(), '*', expect.anything())
+      expect(estimateSpy).toHaveBeenCalledWith(expect.anything(), expect.anything(), '*', expect.anything(), expect.anything())
     })
 
     it('passes the literal query when set', async () => {
       searchStore.setQuery('hello world')
       await searchStore.estimateDownloadSize()
-      expect(estimateSpy).toHaveBeenCalledWith(expect.anything(), expect.anything(), 'hello world', expect.anything())
+      expect(estimateSpy).toHaveBeenCalledWith(expect.anything(), expect.anything(), 'hello world', expect.anything(), expect.anything())
     })
 
     it('passes the selected field as the fields array', async () => {
       searchStore.setField('content')
       await searchStore.estimateDownloadSize()
-      expect(estimateSpy).toHaveBeenCalledWith(expect.anything(), expect.anything(), expect.anything(), ['content'])
+      expect(estimateSpy).toHaveBeenCalledWith(expect.anything(), expect.anything(), expect.anything(), ['content'], expect.anything())
     })
 
     it('passes an empty fields array when searching all fields', async () => {
       searchStore.setField('all')
       await searchStore.estimateDownloadSize()
-      expect(estimateSpy).toHaveBeenCalledWith(expect.anything(), expect.anything(), expect.anything(), [])
+      expect(estimateSpy).toHaveBeenCalledWith(expect.anything(), expect.anything(), expect.anything(), [], expect.anything())
+    })
+
+    it('passes the search operator to the elasticsearch client', async () => {
+      appStore.setSettings('search', 'searchOperator', SEARCH_OPERATORS.AND)
+      await searchStore.estimateDownloadSize()
+      expect(estimateSpy).toHaveBeenCalledWith(expect.anything(), expect.anything(), expect.anything(), expect.anything(), SEARCH_OPERATORS.AND)
     })
 
     it('forwards the API response', async () => {

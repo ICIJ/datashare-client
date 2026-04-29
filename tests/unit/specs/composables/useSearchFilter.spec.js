@@ -2,19 +2,21 @@ import { createApp, nextTick } from 'vue'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import { useSearchFilter } from '@/composables/useSearchFilter'
-import { useAppStore } from '@/store/modules'
+import { useAppStore, useSearchStore } from '@/store/modules'
 import { SEARCH_OPERATORS } from '@/enums/searchOperators'
 
 describe('useSearchFilter', () => {
   function withSetup(composable, plugins) {
+    let result
     const app = createApp({
       setup() {
-        composable()
+        result = composable()
         return {}
       }
     })
     plugins.forEach(plugin => app.use(plugin))
     app.mount(document.createElement('div'))
+    return result
   }
 
   describe('watchOperator', () => {
@@ -48,6 +50,21 @@ describe('useSearchFilter', () => {
       await nextTick()
 
       expect(callback).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('refreshSearchFromRoute', () => {
+    it('restores searchOperator from route query to app settings', async () => {
+      const core = CoreSetup.init().useAll().useRouterWithoutGuards()
+      const { refreshSearchFromRoute } = withSetup(() => useSearchFilter(), core.plugins)
+      const searchStore = useSearchStore()
+      vi.spyOn(searchStore, 'query').mockResolvedValue(undefined)
+
+      await core.router.push({ name: 'search', query: { searchOperator: SEARCH_OPERATORS.AND } })
+      await refreshSearchFromRoute()
+
+      expect(useAppStore().getSettings('search', 'searchOperator')).toBe(SEARCH_OPERATORS.AND)
+      vi.restoreAllMocks()
     })
   })
 })

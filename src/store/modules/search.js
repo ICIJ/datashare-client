@@ -110,6 +110,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
       perPage: `${perPage.value}`,
       sort: sortBy.value,
       order: orderBy.value,
+      searchOperator: searchOperator.value,
       ...toBaseRouteQuery.value
     }
   })
