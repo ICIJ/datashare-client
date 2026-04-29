@@ -5,6 +5,25 @@ import { useWait } from '@/composables/useWait'
 import { CONTENT_TYPE_CATEGORY_FILTER_NAME } from '@/store/filters/FilterContentTypeCategory'
 import { useSearchStore } from '@/store/modules'
 
+const INDEX_SIGNATURE_SEPARATOR = '\0'
+
+const parseMappings = (payload) => {
+  if (typeof payload === 'string') {
+    return JSON.parse(payload)
+  }
+  return payload
+}
+
+const isFieldPresent = (parsed, indexName) => {
+  const mapping = parsed?.[indexName]?.mappings?.[CONTENT_TYPE_CATEGORY_FILTER_NAME]
+  if (!mapping) {
+    return false
+  }
+  return Object.keys(mapping).length > 0
+}
+
+const indexSignature = indices => [...indices].sort().join(INDEX_SIGNATURE_SEPARATOR)
+
 /**
  * Reports whether the contentTypeCategory field is mapped on every
  * currently selected index. Any missing index, network error, or parse
@@ -18,45 +37,50 @@ export function useContentTypeCategoryAvailability() {
   const cache = new Map()
   const { waitFor, isLoading } = useWait()
 
-  function parseMappings(payload) {
-    return typeof payload === 'string' ? JSON.parse(payload) : payload
+  const uncachedIndices = list => list.filter(name => !cache.has(name))
+
+  const cacheMappingsFor = (parsed, names) => {
+    for (const name of names) {
+      cache.set(name, isFieldPresent(parsed, name))
+    }
   }
 
-  function isFieldPresent(parsed, indexName) {
-    const mapping = parsed?.[indexName]?.mappings?.[CONTENT_TYPE_CATEGORY_FILTER_NAME]
-    return !!mapping && Object.keys(mapping).length > 0
+  const refreshCacheFor = async (names) => {
+    const payload = await api.getMappingsByFields(names.join(','), CONTENT_TYPE_CATEGORY_FILTER_NAME)
+    cacheMappingsFor(parseMappings(payload), names)
+  }
+
+  const allIndicesHaveField = list => list.every(name => cache.get(name) === true)
+
+  const recordError = (err) => {
+    error.value = err
+    isAvailable.value = false
   }
 
   const fetchAvailability = waitFor(async () => {
     error.value = null
     const list = indices.value
 
-    if (!list.length) {
+    if (list.length === 0) {
       isAvailable.value = false
       return
     }
 
-    const uncached = list.filter(name => !cache.has(name))
-
-    if (uncached.length > 0) {
+    const missing = uncachedIndices(list)
+    if (missing.length > 0) {
       try {
-        const payload = await api.getMappingsByFields(uncached.join(','), CONTENT_TYPE_CATEGORY_FILTER_NAME)
-        const parsed = parseMappings(payload)
-        for (const name of uncached) {
-          cache.set(name, isFieldPresent(parsed, name))
-        }
+        await refreshCacheFor(missing)
       }
       catch (err) {
-        error.value = err
-        isAvailable.value = false
+        recordError(err)
         return
       }
     }
 
-    isAvailable.value = list.every(name => cache.get(name) === true)
+    isAvailable.value = allIndicesHaveField(list)
   })
 
-  watch(() => [...indices.value].sort().join('\0'), fetchAvailability, { immediate: true })
+  watch(() => indexSignature(indices.value), fetchAvailability, { immediate: true })
 
   return { isAvailable, isLoading, error }
 }
