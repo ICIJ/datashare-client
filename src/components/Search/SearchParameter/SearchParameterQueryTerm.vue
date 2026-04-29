@@ -72,7 +72,7 @@ const style = computed(() => {
 })
 
 const showOperator = computed(() => {
-  return props.operator === 'AND'
+  return !!props.operator
 })
 </script>
 
