@@ -64,6 +64,9 @@ const getValue = (value) => {
 }
 
 const filteredOptions = computed(() => {
+  if (!props.inputValue) {
+    return availableOptions.value.slice(0, props.limit).map(item => ({ item }))
+  }
   return fuse.value.search(props.inputValue).slice(0, props.limit)
 })
 
@@ -99,7 +102,9 @@ const addTag = (tag) => {
 }
 
 watch(filteredOptions, (filteredOptions) => {
-  emit('update:show', !!filteredOptions.length)
+  if (props.inputValue) {
+    emit('update:show', !!filteredOptions.length)
+  }
 })
 
 watch(
