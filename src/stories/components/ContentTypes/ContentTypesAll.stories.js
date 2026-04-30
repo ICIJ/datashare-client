@@ -1,8 +1,8 @@
-import ContentTypesAll from '@/components/ContentTypes/ContentTypesCategories/ContentTypesAll'
+import ContentTypesAll from '@/components/ContentTypes/ContentTypesAll'
 
 export default {
   tags: ['autodocs'],
-  title: 'Components/ContentTypes/ContentTypesCategories/ContentTypesAll',
+  title: 'Components/ContentTypes/ContentTypesAll',
   component: ContentTypesAll,
   args: {
     count: 2344,
