@@ -122,6 +122,24 @@ describe('FormControlTag', () => {
     expect(wrapper.vm.tagValidator('invalidTag')).toBeFalsy()
   })
 
+  it('should remove a tag when an active dropdown option is clicked', async () => {
+    const wrapper = mount(FormControlTag, {
+      global: { plugins },
+      props: {
+        modelValue: ['tag1', 'tag2'],
+        options: ['tag1', 'tag2', 'tag3'],
+        noDuplicates: true,
+        inputValue: ''
+      }
+    })
+
+    wrapper.vm.showDropdown = true
+    await wrapper.vm.$nextTick()
+    const dropdown = wrapper.findComponent({ name: 'FormControlTagDropdown' })
+    await dropdown.vm.addOption({ item: 'tag1' })
+    expect(wrapper.emitted()['update:modelValue'][0]).toEqual([['tag2']])
+  })
+
   it('should compute class list correctly', async () => {
     const wrapper = mount(FormControlTag, {
       global: {
