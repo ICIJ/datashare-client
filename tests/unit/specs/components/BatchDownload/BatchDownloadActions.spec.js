@@ -1,4 +1,4 @@
-import { mount, flushPromises } from '@vue/test-utils'
+import { shallowMount, flushPromises } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import BatchDownloadActions from '@/components/BatchDownload/BatchDownloadActions'
@@ -50,7 +50,7 @@ describe('BatchDownloadActions.vue', () => {
     it('should emit a refresh when the relaunch is done', async () => {
       const query = { query: '{ }' }
       const props = mockRunBatchDownload('id', 'task', { projects, query })
-      const wrapper = mount(BatchDownloadActions, { props, global: { plugins } })
+      const wrapper = shallowMount(BatchDownloadActions, { props, global: { plugins } })
       expect(wrapper.emitted().refresh).toBeUndefined()
       await wrapper.vm.relaunch()
       expect(wrapper.emitted().refresh).toBeDefined()
@@ -59,7 +59,7 @@ describe('BatchDownloadActions.vue', () => {
     it('should call the API with a parsed query', async () => {
       const query = { query: '{ "foo": "bar" }' }
       const props = mockRunBatchDownload('id', 'task', { projects, query })
-      const wrapper = mount(BatchDownloadActions, { props, global: { plugins } })
+      const wrapper = shallowMount(BatchDownloadActions, { props, global: { plugins } })
       await wrapper.vm.relaunch()
       expect(api.runBatchDownload).toHaveBeenCalledWith(expect.objectContaining({ query: { foo: 'bar' } }))
     })
@@ -67,7 +67,7 @@ describe('BatchDownloadActions.vue', () => {
     it('should call the API with a list of projects', async () => {
       const props = mockRunBatchDownload('id', 'task', { projects })
       const projectIds = ['project']
-      const wrapper = mount(BatchDownloadActions, { props, global: { plugins } })
+      const wrapper = shallowMount(BatchDownloadActions, { props, global: { plugins } })
       await wrapper.vm.relaunch()
       expect(api.runBatchDownload).toHaveBeenCalledWith(expect.objectContaining({ projectIds }))
     })
@@ -76,7 +76,7 @@ describe('BatchDownloadActions.vue', () => {
   describe('removeTask method', () => {
     it('should emit a refresh when the delete', async () => {
       const props = mockDeleteBatchDownload('id', 'successful')
-      const wrapper = mount(BatchDownloadActions, { props, global: { plugins } })
+      const wrapper = shallowMount(BatchDownloadActions, { props, global: { plugins } })
       expect(wrapper.emitted().refresh).toBeUndefined()
       await wrapper.vm.remove()
       expect(wrapper.emitted().refresh).toBeDefined()
@@ -87,14 +87,14 @@ describe('BatchDownloadActions.vue', () => {
     it('should route to the search with query params from the stored uri', () => {
       const uri = '/#/?q=*pdf&indices=local-datashare&field=title&from=0'
       const props = mockRunBatchDownload('id', 'task', { projects, uri })
-      const wrapper = mount(BatchDownloadActions, { props, global: { plugins } })
+      const wrapper = shallowMount(BatchDownloadActions, { props, global: { plugins } })
       expect(wrapper.vm.searchRoute).toMatchObject({ name: 'search', query: { q: '*pdf', field: 'title', indices: 'local-datashare' } })
     })
 
     it('should not put the uri in the hash property of the route', () => {
       const uri = '/#/?q=*pdf&indices=local-datashare&field=title&from=0'
       const props = mockRunBatchDownload('id', 'task', { projects, uri })
-      const wrapper = mount(BatchDownloadActions, { props, global: { plugins } })
+      const wrapper = shallowMount(BatchDownloadActions, { props, global: { plugins } })
       expect(wrapper.vm.searchRoute).not.toHaveProperty('hash')
     })
   })
