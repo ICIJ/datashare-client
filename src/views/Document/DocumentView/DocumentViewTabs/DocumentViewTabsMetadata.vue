@@ -167,9 +167,13 @@ const metadataItems = computed(() => {
 
 const availableItems = computed(() => {
   // Merge canonical items with metadata items and only keep items with a value
-  return [...canonicalItems.value, ...metadataItems.value].filter(property('value')).map((item) => {
-    return { ...item, pinned: !!pinned.value[item.name] }
-  })
+  return [...canonicalItems.value, ...metadataItems.value]
+    .filter((item) => {
+      return property('value')(item) || item.name === 'extractionLevel'
+    })
+    .map((item) => {
+      return { ...item, pinned: !!pinned.value[item.name] }
+    })
 })
 
 const sortedItems = computed(() => orderBy(availableItems.value, ['pinned'], ['desc']))

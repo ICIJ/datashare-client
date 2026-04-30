@@ -35,7 +35,7 @@ describe('DocumentViewTabsMetadata.vue', () => {
     documentStore.reset()
   })
 
-  it('should display document with 7 metadata', async () => {
+  it('should display document with 8 metadata', async () => {
     const id = '/home/datashare/data/foo.txt'
     await letData(es).have(new IndexedDocument(id, index)).commit()
     await documentStore.getDocument({ id, index })
@@ -47,10 +47,28 @@ describe('DocumentViewTabsMetadata.vue', () => {
     })
 
     const inputs = wrapper.findAll('.document-view-tabs-metadata__entry')
-    expect(inputs).toHaveLength(7)
+    expect(inputs).toHaveLength(8)
   })
 
-  it('should display document with 7 metadata (including language)', async () => {
+  it('should display "File on disk" when extractionLevel metadata is missing', async () => {
+    const id = '/home/datashare/data/foo.txt'
+    await letData(es).have(new IndexedDocument(id, index)).commit()
+    await documentStore.getDocument({ id, index })
+
+    wrapper = mount(DocumentViewTabsMetadata, {
+      global: {
+        plugins: core.plugins
+      }
+    })
+
+    const extractionLevelEntry = wrapper.findAll('.document-view-tabs-metadata__entry')
+      .find(el => el.text().includes('Extraction level'))
+
+    expect(extractionLevelEntry).toBeDefined()
+    expect(extractionLevelEntry.text()).toContain('File on disk')
+  })
+
+  it('should display document with 8 metadata (including language)', async () => {
     const id = '/home/datashare/data/foo.txt'
     const document = new IndexedDocument(id, index).withLanguage('FRENCH')
     await letData(es).have(document).commit()
@@ -82,6 +100,6 @@ describe('DocumentViewTabsMetadata.vue', () => {
     wrapper.vm.q = 'language'
     await wrapper.vm.$nextTick()
     const inputs = wrapper.findAll('.document-view-tabs-metadata__entry')
-    expect(inputs).toHaveLength(7)
+    expect(inputs).toHaveLength(8)
   })
 })
