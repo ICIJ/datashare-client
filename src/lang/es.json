@@ -1674,6 +1674,11 @@
       "table": "Tabla",
       "list": "Lista"
     },
+    "searchOperator": {
+      "label": "Search operator",
+      "and": "AND",
+      "or": "OR"
+    },
     "sortBy": {
       "label": "Ordenar por",
       "format": "{name} ({order})"
