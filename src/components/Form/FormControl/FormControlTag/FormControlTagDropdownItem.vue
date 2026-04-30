@@ -15,7 +15,13 @@ defineProps({
 <template>
   <b-dropdown-item :active="active">
     <slot v-bind="{ active, value, item }">
-      {{ value }}
+      <b-form-checkbox
+        :model-value="active"
+        class="pe-none"
+        tabindex="-1"
+      >
+        {{ value }}
+      </b-form-checkbox>
     </slot>
   </b-dropdown-item>
 </template>
