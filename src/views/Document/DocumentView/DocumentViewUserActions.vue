@@ -56,8 +56,11 @@ const deleteTag = (label) => {
   return documentStore.deleteTag({ documents: [document.value], label })
 }
 
-const addTags = (labels) => {
-  return documentStore.addTags({ documents: [document.value], labels })
+const addTags = async (labels) => {
+  await documentStore.addTags({ documents: [document.value], labels })
+  // Keep the local tag suggestions in sync by appending only labels that are not already present.
+  const newLabels = labels.filter(l => !allTags.value.some(t => t.label === l))
+  allTags.value = [...allTags.value, ...newLabels.map(label => ({ label }))]
 }
 
 const { fetchAllTagsByIndex } = useElasticSearchQuery()
