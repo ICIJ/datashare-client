@@ -75,7 +75,7 @@ watch(() => document.value, async () => {
   if (document.value?.index) {
     allTags.value = await fetchAllTagsByIndex(document.value.index)
   }
-})
+}, { immediate: true })
 
 </script>
 
