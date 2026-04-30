@@ -1674,6 +1674,11 @@
       "table": "Tableau",
       "list": "Liste"
     },
+    "searchOperator": {
+      "label": "Search operator",
+      "and": "AND",
+      "or": "OR"
+    },
     "sortBy": {
       "label": "Trier par",
       "format": "{name} ({order})"
