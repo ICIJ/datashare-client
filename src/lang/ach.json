@@ -1674,6 +1674,11 @@
       "table": "crwdns9430:0crwdne9430:0",
       "list": "crwdns9432:0crwdne9432:0"
     },
+    "searchOperator": {
+      "label": "crwdns10258:0crwdne10258:0",
+      "and": "crwdns10260:0crwdne10260:0",
+      "or": "crwdns10262:0crwdne10262:0"
+    },
     "sortBy": {
       "label": "crwdns9434:0crwdne9434:0",
       "format": "crwdns9436:0{name}crwdnd9436:0{order}crwdne9436:0"
