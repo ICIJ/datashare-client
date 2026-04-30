@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import ColumnChartPicker from '@/components/ColumnChartPicker'
@@ -8,7 +8,7 @@ describe('ColumnChartPicker.vue', () => {
   let wrapper
 
   beforeEach(() => {
-    wrapper = mount(ColumnChartPicker, {
+    wrapper = shallowMount(ColumnChartPicker, {
       global: {
         plugins
       },

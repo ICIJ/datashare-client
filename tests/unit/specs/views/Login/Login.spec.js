@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import Login from '@/views/Login/Login'
@@ -10,7 +10,7 @@ describe('Login.vue', () => {
 
   beforeEach(() => {
     core = CoreSetup.init().useAll()
-    wrapper = mount(Login, { global: { plugins: core.plugins } })
+    wrapper = shallowMount(Login, { global: { plugins: core.plugins } })
   })
 
   it('should show the welcome layout by default', () => {
@@ -24,7 +24,7 @@ describe('Login.vue', () => {
   describe('when authFilter is FormAuthFilter', () => {
     beforeEach(() => {
       core.config.set('authFilter', 'org.icij.datashare.session.FormAuthFilter')
-      wrapper = mount(Login, { global: { plugins: core.plugins } })
+      wrapper = shallowMount(Login, { global: { plugins: core.plugins } })
     })
 
     it('should show the card layout', () => {

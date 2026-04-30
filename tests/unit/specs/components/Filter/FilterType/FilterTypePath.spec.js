@@ -1,4 +1,4 @@
-import { mount, flushPromises } from '@vue/test-utils'
+import { shallowMount, flushPromises } from '@vue/test-utils'
 
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import FilterPath from '@/components/Filter/FilterType/FilterTypePath'
@@ -32,7 +32,7 @@ describe('FilterTypePath.vue', () => {
 
     const filter = searchStore.getFilter({ name: 'path' })
 
-    wrapper = mount(FilterPath, {
+    wrapper = shallowMount(FilterPath, {
       global: {
         plugins: core.plugins
       },

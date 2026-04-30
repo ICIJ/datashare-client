@@ -1,10 +1,10 @@
-import { mount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
 import DisplayEmpty from '@/components/Display/DisplayEmpty'
 
 describe('DisplayEmpty', () => {
   function mountComponent(props = {}, slots = {}) {
-    return mount(DisplayEmpty, {
+    return shallowMount(DisplayEmpty, {
       props,
       slots
     })

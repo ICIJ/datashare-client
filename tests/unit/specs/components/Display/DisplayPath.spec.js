@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import DisplayPath from '@/components/Display/DisplayPath'
@@ -14,7 +14,7 @@ describe('DisplayPath', () => {
   })
 
   function mountComponent(props = {}) {
-    return mount(DisplayPath, {
+    return shallowMount(DisplayPath, {
       props,
       global: { plugins: core.plugins }
     })

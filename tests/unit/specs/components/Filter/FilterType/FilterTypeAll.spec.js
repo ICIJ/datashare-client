@@ -1,4 +1,4 @@
-import { flushPromises, mount } from '@vue/test-utils'
+import { flushPromises, shallowMount } from '@vue/test-utils'
 import { setActivePinia, createPinia } from 'pinia'
 
 import CoreSetup from '~tests/unit/CoreSetup'
@@ -14,7 +14,7 @@ describe('FilterTypeAll.vue', () => {
     core = CoreSetup.init().useAll().useRouterWithoutGuards()
     searchStore = useSearchStore()
     filter = searchStore.getFilter({ name: 'contentType' })
-    wrapper = mount(FilterTypeAll, {
+    wrapper = shallowMount(FilterTypeAll, {
       global: { plugins: core.plugins },
       props: { filter }
     })

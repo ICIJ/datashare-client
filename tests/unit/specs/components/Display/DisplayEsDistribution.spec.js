@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import DisplayEsDistribution from '@/components/Display/DisplayEsDistribution'
@@ -13,7 +13,7 @@ describe('DisplayEsDistribution', () => {
   })
 
   function mountComponent(props = {}) {
-    return mount(DisplayEsDistribution, {
+    return shallowMount(DisplayEsDistribution, {
       global: { plugins },
       props
     })
