@@ -30,6 +30,14 @@ const emit = defineEmits(['delete', 'add'])
 const { t } = useI18n()
 const { isServer } = useMode()
 const tagsLabels = computed(() => tags.map(property('label')))
+
+const onActionUpdate = (newLabels) => {
+  // Compare the updated selection with current tags to emit only the needed add/delete actions.
+  const added = newLabels.filter(l => !tagsLabels.value.includes(l))
+  const removed = tagsLabels.value.filter(l => !newLabels.includes(l))
+  added.forEach(l => emit('add', [l]))
+  removed.forEach(l => emit('delete', l))
+}
 const allTagsLabels = computed(() => allTags.map(property('label')))
 const matchesUsername = computed(() => matchesProperty('user.id', username))
 const yourTags = computed(() => tags.filter(matchesUsername.value))
@@ -73,7 +81,7 @@ const count = computed(() => tags.length)
         :model-value="tagsLabels"
         :options="allTagsLabels"
         class="d-inline-flex"
-        @update:model-value="emit('add', $event)"
+        @update:model-value="onActionUpdate($event)"
       />
     </template>
   </document-user-actions-card>
