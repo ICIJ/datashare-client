@@ -38,7 +38,8 @@ function esConnectionHelper(indexOrIndices = [], ifWindows = false) {
       body: { query: { match_all: {} } }
     })
     // Easy Tiger! Elasticsearch can hardly follow
-    setTimeout(noop, 1e3 * indices.length)
+    await new Promise((_) => setTimeout(_, 1e3 * indices.length));
+
   })
 
   afterAll(async () => {
