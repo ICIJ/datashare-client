@@ -109,6 +109,11 @@ function focus() {
   inputElement.value.focus()
 }
 
+const onFocus = (e) => {
+  if (props.options?.length) showDropdown.value = true
+  emit('focus', e)
+}
+
 const inputTag = (tag) => {
   focusIndex.value = -1
   inputValueTrigger.value = tag
@@ -228,7 +233,7 @@ defineExpose({ focus })
       @remove-last-tag="removeLastTag()"
       @keydown.down.prevent="focusIndex = 0"
       @keydown.esc="onEsc"
-      @focus="$emit('focus', $event)"
+      @focus="onFocus"
       @blur="$emit('blur', $event)"
     >
       <!-- eslint-disable-next-line vue/no-template-shadow -->
