@@ -258,6 +258,7 @@ defineExpose({ focus })
       @update:focus-index="focusIndex = $event"
       @update:show="showDropdown = $event"
       @add-tag="addTag($event)"
+      @remove-tag="removeTag($event)"
       @keydown.esc="onEsc"
     />
   </div>

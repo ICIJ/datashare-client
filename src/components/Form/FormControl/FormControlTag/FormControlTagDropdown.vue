@@ -26,7 +26,7 @@ const props = defineProps({
   },
   trackBy: {
     type: [String, Function],
-    default: identity
+    default: () => identity
   },
   limit: {
     type: Number,
@@ -63,6 +63,10 @@ const getValue = (value) => {
   return get(value, props.trackBy)
 }
 
+const availableOptions = computed(() => {
+  return [...props.options].sort((a, b) => String(getValue(a)).localeCompare(String(getValue(b))))
+})
+
 const filteredOptions = computed(() => {
   if (!props.inputValue) {
     return availableOptions.value.slice(0, props.limit).map(item => ({ item }))
@@ -70,25 +74,24 @@ const filteredOptions = computed(() => {
   return fuse.value.search(props.inputValue).slice(0, props.limit)
 })
 
-const availableOptions = computed(() => {
-  if (props.noDuplicates) {
-    return props.options.filter(option => !hasOption(option))
-  }
-  return props.options
-})
-
 const fuse = computed(() => {
   return new Fuse(availableOptions.value, {
     distance: 100,
+    threshold: 0.4,
     shouldSort: true,
     keys: props.searchKeys
   })
 })
 
-const emit = defineEmits(['addTag', 'update:show', 'update:tag'])
+const emit = defineEmits(['addTag', 'removeTag', 'update:show', 'update:tag'])
 
 const addOption = (option) => {
-  addTag(getOptionValue(option))
+  if (props.noDuplicates && hasOption(option)) {
+    emit('removeTag', getOptionValue(option))
+  }
+  else {
+    addTag(getOptionValue(option))
+  }
 }
 
 const addFocusOption = () => {
