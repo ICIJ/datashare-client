@@ -1,4 +1,4 @@
-import ContentTypesAll from '@/components/ContentTypes/ContentTypesCategories/ContentTypesAll'
+import ContentTypesAll from '@/components/ContentTypes/ContentTypesAll'
 import ContentTypesCategories from '@/components/ContentTypes/ContentTypesCategories/ContentTypesCategories'
 import ContentTypesCategory from '@/components/ContentTypes/ContentTypesCategories/ContentTypesCategory'
 import ContentTypesCategoryName from '@/components/ContentTypes/ContentTypesCategories/ContentTypesCategoryName'

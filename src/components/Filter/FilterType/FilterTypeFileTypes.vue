@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 
 import AppSpinner from '@/components/AppSpinner/AppSpinner.vue'
 import ButtonToggleContentTypesView from '@/components/Button/ButtonToggleContentTypesView.vue'
-import ContentTypesAll from '@/components/ContentTypes/ContentTypesCategories/ContentTypesAll.vue'
+import ContentTypesAll from '@/components/ContentTypes/ContentTypesAll.vue'
 import ContentTypesCategories from '@/components/ContentTypes/ContentTypesCategories/ContentTypesCategories.vue'
 import ContentTypesCategory from '@/components/ContentTypes/ContentTypesCategories/ContentTypesCategory.vue'
 import ContentTypesCategoryName from '@/components/ContentTypes/ContentTypesCategories/ContentTypesCategoryName.vue'
