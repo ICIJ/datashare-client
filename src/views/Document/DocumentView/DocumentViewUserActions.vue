@@ -57,7 +57,12 @@ const deleteTag = (label) => {
 }
 
 const addTags = async (labels) => {
-  await documentStore.addTags({ documents: [document.value], labels })
+  try {
+    await documentStore.addTags({ documents: [document.value], labels })
+  }
+  catch {
+    return
+  }
   // Keep the local tag suggestions in sync by appending only labels that are not already present.
   const newLabels = labels.filter(l => !allTags.value.some(t => t.label === l))
   allTags.value = [...allTags.value, ...newLabels.map(label => ({ label }))]
