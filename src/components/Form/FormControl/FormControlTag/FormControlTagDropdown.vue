@@ -49,7 +49,8 @@ const nextFocusIndex = computed(() => {
 })
 
 const hasOption = (option) => {
-  return modelValue.value.includes(getOptionValue(option))
+  const value = getOptionValue(option).toLowerCase()
+  return modelValue.value.some(v => v.toLowerCase() === value)
 }
 
 const getOptionValue = ({ item }) => {
