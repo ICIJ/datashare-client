@@ -48,9 +48,13 @@ const nextFocusIndex = computed(() => {
   return Math.min(filteredOptions.value.length - 1, focusIndex.value + 1)
 })
 
+const modelValueLowercasedSet = computed(() => {
+  return new Set((modelValue.value || []).map(v => String(v).toLowerCase()))
+})
+
 const hasOption = (option) => {
-  const value = getOptionValue(option).toLowerCase()
-  return modelValue.value.some(v => v.toLowerCase() === value)
+  const value = String(getOptionValue(option)).toLowerCase()
+  return modelValueLowercasedSet.value.has(value)
 }
 
 const getOptionValue = ({ item }) => {
