@@ -416,7 +416,8 @@
     "noTags": "crwdns7998:0crwdne7998:0"
   },
   "documentUserTagsAction": {
-    "placeholder": "crwdns8000:0crwdne8000:0"
+    "placeholder": "crwdns8000:0crwdne8000:0",
+    "addError": "crwdns10264:0crwdne10264:0"
   },
   "documentMetadataActions": {
     "copy": "crwdns10000:0crwdne10000:0",
