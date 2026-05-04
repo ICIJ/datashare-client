@@ -142,7 +142,7 @@ const tagValidator = (tag) => {
 }
 
 const tagDuplicatesValidator = (tag) => {
-  return !props.noDuplicates || !props.modelValue.includes(tag.toLowerCase())
+  return !props.noDuplicates || !props.modelValue.some(t => t.toLowerCase() === tag.toLowerCase())
 }
 
 const tagCreateValidator = (tag) => {
@@ -199,7 +199,7 @@ watch(useActiveElement(), async (activeElement) => {
 
 watch(() => props.options, (options) => {
   if (hasFocus.value && options.length) showDropdown.value = true
-})
+}, { deep: true })
 
 watch(focusIndex, (value) => {
   if (value === -1) {
