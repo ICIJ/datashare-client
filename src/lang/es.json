@@ -416,7 +416,8 @@
     "noTags": "Aún no se han añadido etiquetas."
   },
   "documentUserTagsAction": {
-    "placeholder": "Añadir etiquetas"
+    "placeholder": "Añadir etiquetas",
+    "addError": "Failed to add tags"
   },
   "documentMetadataActions": {
     "copy": "Copiar este valor de metadatos",
