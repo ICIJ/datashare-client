@@ -193,4 +193,15 @@ describe('FormControlTag', () => {
     expect(wrapper.vm.tagDuplicatesValidator('Tag1')).toBe(false)
     expect(wrapper.vm.tagDuplicatesValidator('tag2')).toBe(true)
   })
+
+  it('should accept a tag that matches an option regardless of case when noCreate is set', () => {
+    const wrapper = mount(FormControlTag, {
+      global: { plugins },
+      props: { modelValue: [], options: ['Tag1', 'tag2'], noCreate: true }
+    })
+
+    expect(wrapper.vm.tagCreateValidator('TAG1')).toBe(true)
+    expect(wrapper.vm.tagCreateValidator('TAG2')).toBe(true)
+    expect(wrapper.vm.tagCreateValidator('tag3')).toBe(false)
+  })
 })

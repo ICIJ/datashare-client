@@ -146,7 +146,7 @@ const tagDuplicatesValidator = (tag) => {
 }
 
 const tagCreateValidator = (tag) => {
-  return !props.noCreate || props.options.map(getValue).includes(tag)
+  return !props.noCreate || props.options.map(getValue).some(v => v.toLowerCase() === tag.toLowerCase())
 }
 
 const removeTag = (tag) => {
@@ -200,7 +200,7 @@ watch(useActiveElement(), async (activeElement) => {
 
 watch(() => props.options, (options) => {
   if (hasFocus.value && options.length) showDropdown.value = true
-}, { deep: true })
+})
 
 watch(focusIndex, (value) => {
   if (value === -1) {
@@ -208,7 +208,7 @@ watch(focusIndex, (value) => {
   }
 })
 
-defineExpose({ focus })
+defineExpose({ focus, showDropdown, hasFocus, onFocus, tagDuplicatesValidator, tagCreateValidator, classList })
 </script>
 
 <template>
