@@ -6,7 +6,7 @@ import FormControlTagDropdown from '@/components/Form/FormControl/FormControlTag
 describe('FormControlTagDropdown', () => {
   let plugins
 
-  beforeAll(() => {
+  beforeEach(() => {
     const core = CoreSetup.init().useAll()
     plugins = core.plugins
   })
