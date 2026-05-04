@@ -50,7 +50,8 @@ const props = defineProps({
     default: null
   },
   options: {
-    type: Array
+    type: Array,
+    default: () => []
   },
   searchKeys: {
     type: Array,

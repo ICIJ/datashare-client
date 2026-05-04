@@ -54,4 +54,24 @@ describe('FormControlTagDropdown', () => {
     await wrapper.setProps({ inputValue: 'zzz' })
     expect(wrapper.emitted('update:show')?.at(-1)).toEqual([false])
   })
+
+  it('emits update:show true when input is cleared after a no-match search', async () => {
+    const wrapper = mount(FormControlTagDropdown, {
+      global: { plugins },
+      props: { options, modelValue: [], inputValue: 'zzz', show: false }
+    })
+
+    await wrapper.setProps({ inputValue: '' })
+    expect(wrapper.emitted('update:show')?.at(-1)).toEqual([true])
+  })
+
+  it('includes already-selected options in filteredOptions when input is empty', () => {
+    const wrapper = mount(FormControlTagDropdown, {
+      global: { plugins },
+      props: { options, modelValue: ['apple'], inputValue: '', show: true, noDuplicates: true }
+    })
+
+    const items = wrapper.vm.filteredOptions.map(o => o.item)
+    expect(items).toContain('apple')
+  })
 })

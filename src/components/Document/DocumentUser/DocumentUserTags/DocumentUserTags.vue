@@ -29,19 +29,19 @@ const { tags, allTags, username } = defineProps({
 const emit = defineEmits(['delete', 'add'])
 const { t } = useI18n()
 const { isServer } = useMode()
-const tagsLabels = computed(() => tags.map(property('label')))
+const matchesUsername = computed(() => matchesProperty('user.id', username))
+const yourTags = computed(() => tags.filter(matchesUsername.value))
+const othersTags = computed(() => tags.filter(negate(matchesUsername.value)))
+const yourTagsLabels = computed(() => yourTags.value.map(property('label')))
 
 const onActionUpdate = (newLabels) => {
-  // Compare the updated selection with current tags to emit only the needed add/delete actions.
-  const added = newLabels.filter(l => !tagsLabels.value.includes(l))
-  const removed = tagsLabels.value.filter(l => !newLabels.includes(l))
+  // Compare against the current user's own tags only to avoid emitting delete for other users' tags.
+  const added = newLabels.filter(l => !yourTagsLabels.value.includes(l))
+  const removed = yourTagsLabels.value.filter(l => !newLabels.includes(l))
   added.forEach(l => emit('add', [l]))
   removed.forEach(l => emit('delete', l))
 }
 const allTagsLabels = computed(() => allTags.map(property('label')))
-const matchesUsername = computed(() => matchesProperty('user.id', username))
-const yourTags = computed(() => tags.filter(matchesUsername.value))
-const othersTags = computed(() => tags.filter(negate(matchesUsername.value)))
 const count = computed(() => tags.length)
 </script>
 
@@ -78,7 +78,7 @@ const count = computed(() => tags.length)
     </template>
     <template #action>
       <document-user-tags-action
-        :model-value="tagsLabels"
+        :model-value="yourTagsLabels"
         :options="allTagsLabels"
         class="d-inline-flex"
         @update:model-value="onActionUpdate($event)"
