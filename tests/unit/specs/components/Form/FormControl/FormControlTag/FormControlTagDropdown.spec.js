@@ -22,15 +22,6 @@ describe('FormControlTagDropdown', () => {
     expect(wrapper.vm.filteredOptions.map(o => o.item)).toEqual([...options].sort())
   })
 
-  it('shows all options when input is empty', () => {
-    const wrapper = mount(FormControlTagDropdown, {
-      global: { plugins },
-      props: { options, modelValue: [], inputValue: '', show: true }
-    })
-
-    expect(wrapper.vm.filteredOptions.map(o => o.item)).toEqual([...options].sort())
-  })
-
   it('filters options by the typed input value', async () => {
     const wrapper = mount(FormControlTagDropdown, {
       global: { plugins },
