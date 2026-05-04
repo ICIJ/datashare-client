@@ -416,7 +416,8 @@
     "noTags": "Aucun tag n'a encore été ajouté."
   },
   "documentUserTagsAction": {
-    "placeholder": "Ajouter des tags"
+    "placeholder": "Ajouter des tags",
+    "addError": "Failed to add tags"
   },
   "documentMetadataActions": {
     "copy": "Copier la valeur de cette métadonnée",
