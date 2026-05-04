@@ -61,4 +61,27 @@ describe('DocumentViewUserActions', () => {
 
     expect(fetchAllTagsByIndex).not.toHaveBeenCalled()
   })
+
+  it('calls fetchAllTagsByIndex immediately on mount when document is set', async () => {
+    shallowMount(DocumentViewUserActions, {
+      global: { plugins }
+    })
+
+    await flushPromises()
+
+    expect(fetchAllTagsByIndex).toHaveBeenCalledWith('test-index')
+  })
+
+  it('does not add labels to allTags when the store call fails', async () => {
+    vi.spyOn(documentStore, 'addTags').mockRejectedValue(new Error('network error'))
+
+    const wrapper = shallowMount(DocumentViewUserActions, {
+      global: { plugins }
+    })
+
+    await wrapper.vm.addTags(['failed-tag'])
+    await flushPromises()
+
+    expect(wrapper.vm.allTags.some(t => t.label === 'failed-tag')).toBe(false)
+  })
 })

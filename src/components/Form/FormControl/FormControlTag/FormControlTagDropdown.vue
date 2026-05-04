@@ -83,7 +83,7 @@ const fuse = computed(() => {
   })
 })
 
-const emit = defineEmits(['addTag', 'removeTag', 'update:show', 'update:tag'])
+const emit = defineEmits(['addTag', 'removeTag', 'update:show'])
 
 const addOption = (option) => {
   if (props.noDuplicates && hasOption(option)) {
@@ -105,9 +105,7 @@ const addTag = (tag) => {
 }
 
 watch(filteredOptions, (filteredOptions) => {
-  if (props.inputValue) {
-    emit('update:show', !!filteredOptions.length)
-  }
+  emit('update:show', !!filteredOptions.length)
 })
 
 watch(
