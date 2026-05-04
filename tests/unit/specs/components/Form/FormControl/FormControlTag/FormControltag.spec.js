@@ -151,4 +151,25 @@ describe('FormControlTag', () => {
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.classList).toEqual({ 'form-control-tag--show-dropdown': true })
   })
+
+  it('should open the dropdown on focus when options are available', async () => {
+    const wrapper = mount(FormControlTag, {
+      global: { plugins },
+      props: { modelValue: [], options: ['tag1', 'tag2'] }
+    })
+
+    await wrapper.vm.onFocus(new Event('focus'))
+    expect(wrapper.vm.showDropdown).toBe(true)
+  })
+
+  it('should open the dropdown when options arrive after focus', async () => {
+    const wrapper = mount(FormControlTag, {
+      global: { plugins },
+      props: { modelValue: [], options: [] }
+    })
+
+    wrapper.vm.hasFocus = true
+    await wrapper.setProps({ options: ['tag1', 'tag2'] })
+    expect(wrapper.vm.showDropdown).toBe(true)
+  })
 })
