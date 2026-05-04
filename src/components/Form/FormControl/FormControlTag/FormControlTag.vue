@@ -84,6 +84,7 @@ const inputElement = useTemplateRef('inputElement')
 
 const inputValueTrigger = ref('')
 const showDropdown = ref(false)
+const hasFocus = ref(false)
 const focusIndex = ref(-1)
 
 const emit = defineEmits(['update:modelValue', 'update:inputValue', 'update:focusIndex', 'blur', 'focus'])
@@ -111,7 +112,8 @@ function focus() {
 }
 
 const onFocus = (e) => {
-  if (props.options?.length) showDropdown.value = true
+  hasFocus.value = true
+  if (props.options.length) showDropdown.value = true
   emit('focus', e)
 }
 
@@ -190,7 +192,13 @@ watch(inputValue, value => (inputValueTrigger.value = value), { immediate: true 
 watch(inputValueTrigger, value => emit('update:inputValue', value))
 
 watch(useActiveElement(), async (activeElement) => {
-  showDropdown.value = showDropdown.value && element.value.contains(activeElement)
+  const contained = element.value.contains(activeElement)
+  hasFocus.value = contained
+  showDropdown.value = showDropdown.value && contained
+})
+
+watch(() => props.options, (options) => {
+  if (hasFocus.value && options.length) showDropdown.value = true
 })
 
 watch(focusIndex, (value) => {
