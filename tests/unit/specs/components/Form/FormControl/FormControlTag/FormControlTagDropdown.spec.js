@@ -74,4 +74,14 @@ describe('FormControlTagDropdown', () => {
     const items = wrapper.vm.filteredOptions.map(o => o.item)
     expect(items).toContain('apple')
   })
+
+  it('includes already-selected options in Fuse search results with noDuplicates', async () => {
+    const wrapper = mount(FormControlTagDropdown, {
+      global: { plugins },
+      props: { options, modelValue: ['apple'], inputValue: 'ap', show: true, noDuplicates: true }
+    })
+
+    const items = wrapper.vm.filteredOptions.map(o => o.item)
+    expect(items).toContain('apple')
+  })
 })
