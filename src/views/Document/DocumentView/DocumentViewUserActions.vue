@@ -65,11 +65,12 @@ const addTags = async (labels) => {
     await toastedPromise(documentStore.addTags({ documents: [document.value], labels }), {
       errorMessage: t('documentUserTagsAction.addError')
     })
-  } catch {
+  }
+  catch {
     return
   }
   // Keep the local tag suggestions in sync by appending only labels that are not already present.
-  const newLabels = labels.filter(l => !allTags.value.some(t => t.label === l))
+  const newLabels = labels.filter(l => !allTags.value.some(t => t.label.toLowerCase() === l.toLowerCase()))
   allTags.value = [...allTags.value, ...newLabels.map(label => ({ label }))]
 }
 
