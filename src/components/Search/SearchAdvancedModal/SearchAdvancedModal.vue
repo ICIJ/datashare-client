@@ -7,201 +7,218 @@
     :cancel-title="t('searchAdvancedModal.cancel')"
     @ok="handleSearch"
   >
-    <template #header>
-      <app-modal-header
-        :title="t('searchAdvancedModal.title')"
-        no-header-close
-        @close="isVisible = false"
-      >
-        <template #title>
-          <div class="d-flex align-items-center gap-3">
-            <h5 class="mb-0 fw-bold">
-              {{ t('searchAdvancedModal.title') }}
-            </h5>
-            <ph-eyeglasses
-              :size="24"
-              weight="regular"
-              class="text-secondary"
-            />
-          </div>
-        </template>
-      </app-modal-header>
+    <template #title>
+      <span class="search-advanced-modal__title">
+        {{ t('searchAdvancedModal.title') }}
+        <i-ph-eyeglasses class="search-advanced-modal__title__icon" />
+      </span>
     </template>
 
     <div class="search-advanced-modal">
-      <!-- Dismissable Alert -->
-      <b-alert
-        v-if="showAlert"
-        variant="info"
-        dismissible
-        class="search-advanced-modal__alert d-flex align-items-center justify-content-between"
-        @dismissed="showAlert = false"
+      <!-- Form: wrapped in a real <form> so pressing Enter inside any input
+           triggers the same submit handler as clicking the Search button. -->
+      <form
+        :key="formKey"
+        class="search-advanced-modal__form"
+        novalidate
+        @submit.prevent="handleSearch"
       >
-        <div class="d-flex align-items-center gap-3">
-          <ph-smiley
-            :size="20"
-            weight="bold"
-          />
-          <span>{{ t('searchAdvancedModal.alertMessage') }}</span>
-        </div>
-        <b-button
-          variant="outline-info"
-          size="sm"
-          @click="handleDismissAlert"
-        >
-          {{ t('searchAdvancedModal.alertButton') }}
-        </b-button>
-      </b-alert>
-
-      <!-- Form -->
-      <div class="search-advanced-modal__form">
         <!-- Any of these words (OR) -->
         <search-advanced-modal-field
           :label="t('searchAdvancedModal.anyOfTheseWords')"
-          :icon="PhSquare"
+          :icon="IPhUniteSquare"
         >
           <form-control-tag
+            ref="firstInput"
             v-model="form.anyWords"
-            :placeholder="t('searchAdvancedModal.placeholder')"
+            placeholder=""
+            add-button-text=""
+            no-placeholder-icon
             no-duplicates
           />
-          <p class="search-advanced-modal__field__example">
-            {{ t('searchAdvancedModal.anyOfTheseWordsExample') }}
-          </p>
+          <template #example>
+            <p class="search-advanced-modal__example">
+              <span class="search-advanced-modal__example__prefix">
+                {{ t('searchAdvancedModal.eg') }}
+              </span>
+              <span class="search-advanced-modal__example__value">
+                {{ t('searchAdvancedModal.anyOfTheseWordsExample') }}
+              </span>
+            </p>
+          </template>
         </search-advanced-modal-field>
 
         <!-- All these words (AND) -->
         <search-advanced-modal-field
           :label="t('searchAdvancedModal.allTheseWords')"
-          :icon="PhSquare"
+          :icon="IPhIntersectSquare"
         >
           <form-control-tag
             v-model="form.allWords"
-            :placeholder="t('searchAdvancedModal.placeholder')"
+            placeholder=""
+            add-button-text=""
+            no-placeholder-icon
             no-duplicates
           />
-          <div class="d-flex gap-3 text-secondary small">
-            <p class="fst-italic mb-0">
-              {{ t('searchAdvancedModal.allTheseWordsExample1') }}
+          <template #example>
+            <p class="search-advanced-modal__example">
+              <span class="search-advanced-modal__example__prefix">
+                {{ t('searchAdvancedModal.eg') }}
+              </span>
+              <span class="search-advanced-modal__example__value">
+                {{ t('searchAdvancedModal.allTheseWordsExample1') }}
+              </span>
+              <span class="search-advanced-modal__example__break" />
+              <span class="search-advanced-modal__example__prefix">
+                {{ t('searchAdvancedModal.or') }}
+              </span>
+              <span class="search-advanced-modal__example__value">
+                {{ t('searchAdvancedModal.allTheseWordsExample2') }}
+              </span>
             </p>
-            <p class="mb-0">
-              {{ t('searchAdvancedModal.or') }}
-            </p>
-            <p class="fst-italic mb-0">
-              {{ t('searchAdvancedModal.allTheseWordsExample2') }}
-            </p>
-          </div>
+          </template>
         </search-advanced-modal-field>
 
         <!-- This exact word or phrase -->
         <search-advanced-modal-field
           :label="t('searchAdvancedModal.exactPhrase')"
-          :icon="PhQuotes"
+          :icon="IPhQuotes"
         >
           <form-control-tag
             v-model="form.exactPhrase"
-            :placeholder="t('searchAdvancedModal.placeholder')"
+            placeholder=""
+            add-button-text=""
+            no-placeholder-icon
             no-duplicates
           />
-          <p class="search-advanced-modal__field__example">
-            {{ t('searchAdvancedModal.exactPhraseExample') }}
-          </p>
+          <template #example>
+            <p class="search-advanced-modal__example">
+              <span class="search-advanced-modal__example__prefix">
+                {{ t('searchAdvancedModal.eg') }}
+              </span>
+              <span class="search-advanced-modal__example__value">
+                {{ t('searchAdvancedModal.exactPhraseExample') }}
+              </span>
+            </p>
+          </template>
         </search-advanced-modal-field>
 
         <!-- None of these words (NOT) -->
         <search-advanced-modal-field
           :label="t('searchAdvancedModal.noneOfTheseWords')"
-          :icon="PhTextStrikethrough"
+          :icon="IPhTextStrikethrough"
         >
           <form-control-tag
             v-model="form.noneWords"
-            :placeholder="t('searchAdvancedModal.placeholder')"
+            placeholder=""
+            add-button-text=""
+            no-placeholder-icon
             no-duplicates
           />
-          <div class="d-flex gap-3 text-secondary small">
-            <p class="fst-italic mb-0">
-              {{ t('searchAdvancedModal.noneOfTheseWordsExample1') }}
+          <template #example>
+            <p class="search-advanced-modal__example">
+              <span class="search-advanced-modal__example__prefix">
+                {{ t('searchAdvancedModal.eg') }}
+              </span>
+              <span class="search-advanced-modal__example__value">
+                {{ t('searchAdvancedModal.noneOfTheseWordsExample1') }}
+              </span>
+              <span class="search-advanced-modal__example__break" />
+              <span class="search-advanced-modal__example__prefix">
+                {{ t('searchAdvancedModal.or') }}
+              </span>
+              <span class="search-advanced-modal__example__value">
+                {{ t('searchAdvancedModal.noneOfTheseWordsExample2') }}
+              </span>
             </p>
-            <p class="mb-0">
-              {{ t('searchAdvancedModal.or') }}
-            </p>
-            <p class="fst-italic mb-0">
-              {{ t('searchAdvancedModal.noneOfTheseWordsExample2') }}
-            </p>
-          </div>
+          </template>
         </search-advanced-modal-field>
 
         <!-- Any word with 1 character between (?) -->
         <search-advanced-modal-field
           :label="t('searchAdvancedModal.singleCharWildcard')"
-          :icon="PhQuestion"
+          :icon="IPhQuestion"
         >
           <div class="d-flex align-items-center gap-2">
             <b-form-input
               v-model="form.singleWildcardStart"
-              :placeholder="t('searchAdvancedModal.placeholder')"
             />
             <span class="text-secondary">
               {{ t('searchAdvancedModal.and') }}
             </span>
             <b-form-input
               v-model="form.singleWildcardEnd"
-              :placeholder="t('searchAdvancedModal.placeholder')"
             />
           </div>
-          <p class="search-advanced-modal__field__example">
-            {{ t('searchAdvancedModal.singleCharWildcardExample') }}
-          </p>
+          <template #example>
+            <p class="search-advanced-modal__example">
+              <span class="search-advanced-modal__example__prefix">
+                {{ t('searchAdvancedModal.eg') }}
+              </span>
+              <span class="search-advanced-modal__example__value">
+                {{ t('searchAdvancedModal.singleCharWildcardExample') }}
+              </span>
+            </p>
+          </template>
         </search-advanced-modal-field>
 
         <!-- Any word with multiple characters between (*) -->
         <search-advanced-modal-field
           :label="t('searchAdvancedModal.multiCharWildcard')"
-          :icon="PhAsterisk"
+          :icon="IPhAsterisk"
         >
           <div class="d-flex align-items-center gap-2">
             <b-form-input
               v-model="form.multiWildcardStart"
-              :placeholder="t('searchAdvancedModal.placeholder')"
             />
             <span class="text-secondary">
               {{ t('searchAdvancedModal.and') }}
             </span>
             <b-form-input
               v-model="form.multiWildcardEnd"
-              :placeholder="t('searchAdvancedModal.placeholder')"
             />
           </div>
-          <p class="search-advanced-modal__field__example">
-            {{ t('searchAdvancedModal.multiCharWildcardExample') }}
-          </p>
+          <template #example>
+            <p class="search-advanced-modal__example">
+              <span class="search-advanced-modal__example__prefix">
+                {{ t('searchAdvancedModal.eg') }}
+              </span>
+              <span class="search-advanced-modal__example__value">
+                {{ t('searchAdvancedModal.multiCharWildcardExample') }}
+              </span>
+            </p>
+          </template>
         </search-advanced-modal-field>
 
         <!-- With spelling changes (Fuzzy) -->
         <div class="search-advanced-modal__field-group">
           <search-advanced-modal-field
             :label="t('searchAdvancedModal.fuzzySearch')"
-            :icon="PhTextAa"
+            :icon="IPhTextAa"
           >
             <b-form-input
               v-model="form.fuzzyTerm"
-              :placeholder="t('searchAdvancedModal.placeholder')"
             />
-            <div class="d-flex gap-3 align-items-center mt-3">
-              <label class="mb-0 text-primary">
-                {{ t('searchAdvancedModal.charactersDifferent') }}
-              </label>
-              <form-control-range
-                v-model="form.fuzzyDistance"
-                :min="0"
-                :max="2"
-                :step="1"
-              />
-            </div>
-            <p class="search-advanced-modal__field__example">
-              {{ t('searchAdvancedModal.fuzzySearchExample') }}
-            </p>
           </search-advanced-modal-field>
+          <div class="search-advanced-modal__slider">
+            <label class="search-advanced-modal__slider__label text-action">
+              {{ t('searchAdvancedModal.charactersDifferent') }}
+            </label>
+            <form-control-range
+              v-model="form.fuzzyDistance"
+              :min="0"
+              :max="2"
+              :step="1"
+            />
+          </div>
+          <p class="search-advanced-modal__example search-advanced-modal__example--offset">
+            <span class="search-advanced-modal__example__prefix">
+              {{ t('searchAdvancedModal.eg') }}
+            </span>
+            <span class="search-advanced-modal__example__value">
+              {{ t('searchAdvancedModal.fuzzySearchExample') }}
+            </span>
+          </p>
           <div class="search-advanced-modal__explanation">
             <p class="mb-2">
               {{ t('searchAdvancedModal.fuzzySearchExplanation1') }}
@@ -216,27 +233,31 @@
         <div class="search-advanced-modal__field-group">
           <search-advanced-modal-field
             :label="t('searchAdvancedModal.proximitySearch')"
-            :icon="PhArrowsOutLineHorizontal"
+            :icon="IPhArrowsOutLineHorizontal"
           >
             <b-form-input
               v-model="form.proximityPhrase"
-              :placeholder="t('searchAdvancedModal.placeholder')"
             />
-            <div class="d-flex gap-3 align-items-center mt-3">
-              <label class="mb-0 text-primary">
-                {{ t('searchAdvancedModal.maxWordsApart') }}
-              </label>
-              <form-control-range
-                v-model="form.proximityDistance"
-                :min="0"
-                :max="6"
-                :step="1"
-              />
-            </div>
-            <p class="search-advanced-modal__field__example">
-              {{ t('searchAdvancedModal.proximitySearchExample') }}
-            </p>
           </search-advanced-modal-field>
+          <div class="search-advanced-modal__slider">
+            <label class="search-advanced-modal__slider__label text-action">
+              {{ t('searchAdvancedModal.maxWordsApart') }}
+            </label>
+            <form-control-range
+              v-model="form.proximityDistance"
+              :min="0"
+              :max="6"
+              :step="1"
+            />
+          </div>
+          <p class="search-advanced-modal__example search-advanced-modal__example--offset">
+            <span class="search-advanced-modal__example__prefix">
+              {{ t('searchAdvancedModal.eg') }}
+            </span>
+            <span class="search-advanced-modal__example__value">
+              {{ t('searchAdvancedModal.proximitySearchExample') }}
+            </span>
+          </p>
           <div class="search-advanced-modal__explanation">
             <p class="mb-2">
               {{ t('searchAdvancedModal.proximitySearchExplanation1') }}
@@ -256,81 +277,96 @@
         <!-- Search in specific fields -->
         <search-advanced-modal-field
           :label="t('searchAdvancedModal.searchInFields')"
-          :icon="PhMagnifyingGlass"
+          :icon="IPhMagnifyingGlass"
+          align-top
         >
           <div class="search-advanced-modal__field__checkboxes">
-            <div class="form-check">
-              <input
-                id="field-all"
-                v-model="form.fieldAll"
-                type="checkbox"
-                class="form-check-input"
-                @change="handleFieldAllChange"
-              >
-              <label
-                for="field-all"
-                class="form-check-label fw-medium"
-              >
-                {{ t('searchAdvancedModal.allFields') }}
-              </label>
-            </div>
-            <div
+            <b-form-checkbox
+              v-model="form.fieldAll"
+              class="search-advanced-modal__field__checkboxes__all fw-medium"
+              @change="handleFieldAllChange"
+            >
+              {{ t('searchAdvancedModal.allFields') }}
+            </b-form-checkbox>
+            <b-form-checkbox
               v-for="field in fields"
               :key="field.value"
-              class="form-check"
+              v-model="form.selectedFields"
+              :value="field.value"
+              class="search-advanced-modal__field__checkboxes__item"
+              @change="handleFieldChange"
             >
-              <input
-                :id="`field-${field.value}`"
-                v-model="form.selectedFields"
-                type="checkbox"
-                class="form-check-input"
-                :value="field.value"
-                @change="handleFieldChange"
-              >
-              <label
-                :for="`field-${field.value}`"
-                class="form-check-label d-flex align-items-center gap-2"
-              >
-                <component
-                  :is="field.icon"
-                  :size="24"
-                  class="text-secondary"
-                />
-                <span class="text-secondary">{{ t(field.label) }}</span>
-              </label>
-            </div>
+              <span class="d-inline-flex align-items-center gap-2 text-secondary">
+                <app-icon class="search-advanced-modal__field__checkboxes__item__icon">
+                  <component :is="field.icon" />
+                </app-icon>
+                {{ t(field.label) }}
+              </span>
+            </b-form-checkbox>
           </div>
         </search-advanced-modal-field>
-      </div>
+        <!-- Hidden submit so pressing Enter in any input triggers the form
+             handler even when the focused control swallows the event. -->
+        <button
+          type="submit"
+          class="visually-hidden"
+          tabindex="-1"
+          aria-hidden="true"
+        >
+          {{ t('searchAdvancedModal.search') }}
+        </button>
+      </form>
     </div>
+
+    <template #footer="{ cancel, ok }">
+      <form-actions end>
+        <button-icon
+          variant="outline-secondary"
+          @click="cancel"
+        >
+          {{ t('searchAdvancedModal.cancel') }}
+        </button-icon>
+        <button-icon
+          variant="outline-secondary"
+          @click="handleReset"
+        >
+          {{ t('searchAdvancedModal.reset') }}
+        </button-icon>
+        <button-icon
+          variant="action"
+          :disabled="isFormEmpty"
+          @click="ok"
+        >
+          {{ t('searchAdvancedModal.search') }}
+        </button-icon>
+      </form-actions>
+    </template>
   </app-modal>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, nextTick, watch, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
-import {
-  PhEyeglasses,
-  PhSmiley,
-  PhSquare,
-  PhQuotes,
-  PhTextStrikethrough,
-  PhQuestion,
-  PhAsterisk,
-  PhTextAa,
-  PhArrowsOutLineHorizontal,
-  PhMagnifyingGlass,
-  PhNoteBlank,
-  PhHash,
-  PhFileText,
-  PhUserList,
-  PhUserSquare,
-  PhTextColumns,
-  PhTreeStructure,
-  PhChatsTeardrop
-} from '@phosphor-icons/vue'
+import { AppIcon, ButtonIcon } from '@icij/murmur-next'
+import IPhUniteSquare from '~icons/ph/unite-square'
+import IPhIntersectSquare from '~icons/ph/intersect-square'
+import IPhQuotes from '~icons/ph/quotes'
+import IPhTextStrikethrough from '~icons/ph/text-strikethrough'
+import IPhQuestion from '~icons/ph/question'
+import IPhAsterisk from '~icons/ph/asterisk'
+import IPhTextAa from '~icons/ph/text-aa'
+import IPhArrowsOutLineHorizontal from '~icons/ph/arrows-out-line-horizontal'
+import IPhMagnifyingGlass from '~icons/ph/magnifying-glass'
+import IPhHash from '~icons/ph/hash'
+import IPhFileText from '~icons/ph/file-text'
+import IPhUserList from '~icons/ph/user-list'
+import IPhUserSquare from '~icons/ph/user-square'
+import IPhTextColumns from '~icons/ph/text-columns'
+import IPhTreeStructure from '~icons/ph/tree-structure'
+import IPhChatsTeardrop from '~icons/ph/chats-teardrop'
+
 import AppModal from '@/components/AppModal/AppModal.vue'
-import AppModalHeader from '@/components/AppModal/AppModalHeader.vue'
+import FormActions from '@/components/Form/FormActions/FormActions.vue'
 import FormControlTag from '@/components/Form/FormControl/FormControlTag/FormControlTag.vue'
 import FormControlRange from '@/components/Form/FormControl/FormControlRange/FormControlRange.vue'
 import SearchAdvancedModalField from './SearchAdvancedModalField.vue'
@@ -353,53 +389,89 @@ const isVisible = computed({
   set: value => emit('update:modelValue', value)
 })
 
-const showAlert = ref(true)
+function getInitialForm() {
+  return {
+    anyWords: [],
+    allWords: [],
+    exactPhrase: [],
+    noneWords: [],
+    singleWildcardStart: '',
+    singleWildcardEnd: '',
+    multiWildcardStart: '',
+    multiWildcardEnd: '',
+    fuzzyTerm: '',
+    fuzzyDistance: 0,
+    proximityPhrase: '',
+    proximityDistance: 0,
+    fieldAll: true,
+    selectedFields: []
+  }
+}
 
-const form = ref({
-  anyWords: [],
-  allWords: [],
-  exactPhrase: [],
-  noneWords: [],
-  singleWildcardStart: '',
-  singleWildcardEnd: '',
-  multiWildcardStart: '',
-  multiWildcardEnd: '',
-  fuzzyTerm: '',
-  fuzzyDistance: 0,
-  proximityPhrase: '',
-  proximityDistance: 0,
-  fieldAll: true,
-  selectedFields: []
+const form = ref(getInitialForm())
+// Bumped on Reset to remount inputs and discard their internal state
+// (e.g. unsubmitted text in the FormControlTag input field).
+const formKey = ref(0)
+const firstInput = useTemplateRef('firstInput')
+
+/**
+ * The form is considered empty when none of its inputs would contribute to
+ * a Lucene query — empty arrays for tag inputs, empty strings for text
+ * inputs, and the default zero values for both sliders. The Search button
+ * stays disabled in that state to prevent a no-op search.
+ */
+const isFormEmpty = computed(() => {
+  const f = form.value
+  return f.anyWords.length === 0
+    && f.allWords.length === 0
+    && f.exactPhrase.length === 0
+    && f.noneWords.length === 0
+    && f.singleWildcardStart === ''
+    && f.singleWildcardEnd === ''
+    && f.multiWildcardStart === ''
+    && f.multiWildcardEnd === ''
+    && f.fuzzyTerm === ''
+    && f.proximityPhrase === ''
+})
+
+// Autofocus the first tag input when the modal becomes visible so users can
+// start typing right away (and screen readers announce the labelled field).
+watch(isVisible, async (visible) => {
+  if (!visible) return
+  await nextTick()
+  firstInput.value?.focus?.()
 })
 
 const fields = [
-  { value: 'content', label: 'searchAdvancedModal.fields.notes', icon: PhNoteBlank },
-  { value: 'tags', label: 'searchAdvancedModal.fields.tags', icon: PhHash },
-  { value: 'path', label: 'searchAdvancedModal.fields.documentsNames', icon: PhFileText },
-  { value: 'contentAuthor', label: 'searchAdvancedModal.fields.authorsNames', icon: PhUserList },
-  { value: 'contentRecipient', label: 'searchAdvancedModal.fields.recipientsNames', icon: PhUserSquare },
-  { value: 'content', label: 'searchAdvancedModal.fields.documentsContents', icon: PhTextColumns },
-  { value: 'dirname', label: 'searchAdvancedModal.fields.documentsPaths', icon: PhTreeStructure },
-  { value: 'contentThreadId', label: 'searchAdvancedModal.fields.threadsIds', icon: PhChatsTeardrop }
+  { value: 'tags', label: 'searchAdvancedModal.fields.tags', icon: IPhHash },
+  { value: 'path', label: 'searchAdvancedModal.fields.name', icon: IPhFileText },
+  { value: 'contentAuthor', label: 'searchAdvancedModal.fields.author', icon: IPhUserList },
+  { value: 'contentRecipient', label: 'searchAdvancedModal.fields.recipients', icon: IPhUserSquare },
+  { value: 'content', label: 'searchAdvancedModal.fields.content', icon: IPhTextColumns },
+  { value: 'dirname', label: 'searchAdvancedModal.fields.path', icon: IPhTreeStructure },
+  { value: 'contentThreadId', label: 'searchAdvancedModal.fields.threadId', icon: IPhChatsTeardrop }
 ]
 
-function handleDismissAlert() {
-  showAlert.value = false
-}
-
-function handleFieldAllChange() {
-  if (form.value.fieldAll) {
+/**
+ * "All fields" and individual field checkboxes are mutually exclusive:
+ * - Selecting an individual field deselects "All".
+ * - Deselecting the last individual field re-selects "All".
+ * - Selecting "All" clears every individual field; it cannot be unticked
+ *   directly (the user must pick an individual field to leave the "all"
+ *   state), which avoids landing in an empty state.
+ */
+function handleFieldAllChange(checked) {
+  if (checked) {
     form.value.selectedFields = []
+  }
+  else {
+    // Prevent the user from unselecting "All" with no field selected.
+    form.value.fieldAll = true
   }
 }
 
 function handleFieldChange() {
-  if (form.value.selectedFields.length > 0) {
-    form.value.fieldAll = false
-  }
-  else {
-    form.value.fieldAll = true
-  }
+  form.value.fieldAll = form.value.selectedFields.length === 0
 }
 
 function handleSearch() {
@@ -407,6 +479,15 @@ function handleSearch() {
   emit('search', query)
   isVisible.value = false
 }
+
+function handleReset() {
+  form.value = getInitialForm()
+  formKey.value += 1
+}
+
+// Expose form state and handlers so tests can drive the component without
+// reaching into the rendered child components.
+defineExpose({ form, isFormEmpty, handleSearch, handleReset })
 </script>
 
 <style lang="scss" scoped>
@@ -415,10 +496,14 @@ function handleSearch() {
   flex-direction: column;
   gap: $spacer * 2;
 
-  &__alert {
-    background-color: var(--bs-info-bg-subtle);
-    border-color: var(--bs-info-border-subtle);
-    color: var(--bs-body-color);
+  &__title {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacer * 0.5;
+
+    &__icon {
+      color: var(--bs-secondary-color);
+    }
   }
 
   &__form {
@@ -433,32 +518,146 @@ function handleSearch() {
     gap: $spacer * 0.5;
   }
 
-  &__field__example {
-    font-style: italic;
-    font-size: $font-size-base;
-    color: var(--bs-secondary-color);
+  // Slider rows live outside SearchAdvancedModalField so their label aligns
+  // with the slider track itself instead of the form-input above. They sit
+  // below the input column starting at the same x-offset (245px label
+  // column + 16px gap) to stay visually anchored under the input.
+  &__slider {
+    display: flex;
+    align-items: flex-start;
+    gap: $spacer;
+
+    @include media-breakpoint-up(md) {
+      padding-left: calc(245px + #{$spacer});
+    }
+
+    &__label {
+      // Vertically aligned with the slider track (top of the FormControlRange
+      // wrapper) rather than centered with the ticks below.
+      margin: 0;
+      white-space: nowrap;
+      // The track sits at `padding-top: $spacer-xs` inside the range
+      // wrapper; offsetting the label by the same amount keeps both on the
+      // same horizontal baseline without restyling the DS component.
+      padding-top: $spacer-xs;
+    }
+  }
+
+  &__example {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: $spacer;
+    row-gap: 2px;
     margin: 0;
+    font-size: $small-font-size;
+    line-height: $line-height-sm;
+
+    &__prefix {
+      color: var(--bs-secondary-color);
+    }
+
+    &__value {
+      color: var(--bs-body-color);
+    }
+
+    &__break {
+      flex-basis: 100%;
+      height: 0;
+    }
+
+    // Offset variant aligns the example block with the slider column
+    // (label + gap) when it lives outside SearchAdvancedModalField.
+    &--offset {
+      @include media-breakpoint-up(md) {
+        padding-left: calc(245px + #{$spacer});
+      }
+    }
   }
 
   &__field__checkboxes {
     display: flex;
     flex-direction: column;
-    gap: $spacer;
+    gap: $spacer * 0.25;
 
-    .form-check {
+    :deep(.form-check) {
       margin: 0;
+      padding-left: 1.75rem;
     }
 
-    .form-check-label {
-      cursor: pointer;
+    &__item__icon {
+      flex-shrink: 0;
     }
   }
 
   &__explanation {
-    padding-left: calc(368px + $spacer);
-    font-size: $font-size-base;
+    font-size: $small-font-size;
+    line-height: $line-height-sm;
     color: var(--bs-secondary-color);
-    line-height: 1.25;
+    // Visually separate the explanation from the inline example above it.
+    margin-top: $spacer;
+
+    @include media-breakpoint-up(md) {
+      padding-left: calc(245px + $spacer);
+    }
+  }
+}
+</style>
+
+<style lang="scss">
+// Global overrides for the modal teleported into <body>. We target
+// `.modal-body:has(.search-advanced-modal)` rather than `.app-modal:has(...)`
+// because BSV-Next does not always forward the `class` prop to the same
+// wrapper across versions, so the `.modal-body` ancestor is the most
+// reliable anchor.
+//
+// — make the dialog wider than the default xl size (1140px) without
+//   horizontal scroll;
+// — keep header and footer opaque while body scrolls;
+// — left-align the modal title instead of the centered DS default;
+// — hide the inline "Add" button on the form-control-tag inputs.
+.modal-dialog:has(.search-advanced-modal) {
+  &.modal-xl {
+    max-width: min(1400px, calc(100vw - 2 * #{$modal-dialog-margin}));
+  }
+
+  .modal-content {
+    max-height: calc(100vh - 2 * #{$modal-dialog-margin});
+  }
+
+  .modal-body {
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-top: 0;
+  }
+
+  .modal-header + .modal-body {
+    padding-top: 0;
+  }
+
+  .modal-header {
+    padding-bottom: $spacer * 0.5;
+  }
+
+  .modal-header,
+  .modal-footer {
+    background-color: var(--bs-modal-bg);
+    z-index: 1;
+  }
+
+  .app-modal-header {
+    text-align: start;
+    align-items: flex-start;
+
+    &__title {
+      text-align: start;
+    }
+  }
+
+  // Hide the integrated "Add" submit button inside form-control-tag — tags
+  // are confirmed via Enter / separator, no inline button needed here.
+  .form-control-tag-input__form__submit {
+    display: none;
   }
 }
 </style>

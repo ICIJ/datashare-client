@@ -15,14 +15,15 @@ export function useAdvancedSearchQuery() {
       const orTerms = formData.anyWords.join(' ')
       if (formData.anyWords.length > 1) {
         parts.push(`(${orTerms})`)
-      } else {
+      }
+      else {
         parts.push(orTerms)
       }
     }
 
     // ALL these words (AND) - use + prefix
     if (formData.allWords && formData.allWords.length > 0) {
-      const andTerms = formData.allWords.map((word) => `+${word}`).join(' ')
+      const andTerms = formData.allWords.map(word => `+${word}`).join(' ')
       parts.push(andTerms)
     }
 
@@ -35,7 +36,7 @@ export function useAdvancedSearchQuery() {
 
     // NONE of these words (NOT) - use - prefix
     if (formData.noneWords && formData.noneWords.length > 0) {
-      const notTerms = formData.noneWords.map((word) => `-${word}`).join(' ')
+      const notTerms = formData.noneWords.map(word => `-${word}`).join(' ')
       parts.push(notTerms)
     }
 
@@ -55,7 +56,8 @@ export function useAdvancedSearchQuery() {
     if (formData.fuzzyTerm && formData.fuzzyDistance > 0) {
       const fuzzyTerm = `${formData.fuzzyTerm}~${formData.fuzzyDistance}`
       parts.push(fuzzyTerm)
-    } else if (formData.fuzzyTerm && formData.fuzzyDistance === 0) {
+    }
+    else if (formData.fuzzyTerm && formData.fuzzyDistance === 0) {
       parts.push(formData.fuzzyTerm)
     }
 
@@ -63,7 +65,8 @@ export function useAdvancedSearchQuery() {
     if (formData.proximityPhrase && formData.proximityDistance > 0) {
       const proximityTerm = `"${formData.proximityPhrase}"~${formData.proximityDistance}`
       parts.push(proximityTerm)
-    } else if (formData.proximityPhrase && formData.proximityDistance === 0) {
+    }
+    else if (formData.proximityPhrase && formData.proximityDistance === 0) {
       parts.push(`"${formData.proximityPhrase}"`)
     }
 
@@ -79,7 +82,7 @@ export function useAdvancedSearchQuery() {
         }
         return ''
       })
-      query = fieldQueries.filter((q) => q).join(' OR ')
+      query = fieldQueries.filter(q => q).join(' OR ')
     }
 
     return query.trim()
