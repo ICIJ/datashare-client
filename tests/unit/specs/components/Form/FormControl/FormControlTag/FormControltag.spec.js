@@ -6,7 +6,7 @@ import FormControlTag from '@/components/Form/FormControl/FormControlTag/FormCon
 describe('FormControlTag', () => {
   let plugins
 
-  beforeAll(() => {
+  beforeEach(() => {
     const core = CoreSetup.init().useAll()
     plugins = core.plugins
   })
@@ -171,5 +171,26 @@ describe('FormControlTag', () => {
     wrapper.vm.hasFocus = true
     await wrapper.setProps({ options: ['tag1', 'tag2'] })
     expect(wrapper.vm.showDropdown).toBe(true)
+  })
+
+  it('should not open the dropdown on focus when options are empty', async () => {
+    const wrapper = mount(FormControlTag, {
+      global: { plugins },
+      props: { modelValue: [], options: [] }
+    })
+
+    await wrapper.vm.onFocus(new Event('focus'))
+    expect(wrapper.vm.showDropdown).toBe(false)
+  })
+
+  it('should reject a duplicate tag regardless of case', () => {
+    const wrapper = mount(FormControlTag, {
+      global: { plugins },
+      props: { modelValue: ['TAG1'], options: [], noDuplicates: true }
+    })
+
+    expect(wrapper.vm.tagDuplicatesValidator('tag1')).toBe(false)
+    expect(wrapper.vm.tagDuplicatesValidator('Tag1')).toBe(false)
+    expect(wrapper.vm.tagDuplicatesValidator('tag2')).toBe(true)
   })
 })
