@@ -9,7 +9,6 @@ import ButtonToggleSidebar from '@/components/Button/ButtonToggleSidebar'
 import SearchAdvancedModal from '@/components/Search/SearchAdvancedModal/SearchAdvancedModal'
 import SearchBar from '@/components/Search/SearchBar/SearchBar'
 import { useCompact } from '@/composables/useCompact'
-import { mapStores } from 'pinia'
 import { useSearchStore } from '@/store/modules/search'
 
 const toggleSidebar = defineModel('toggleSidebar', { type: Boolean })
