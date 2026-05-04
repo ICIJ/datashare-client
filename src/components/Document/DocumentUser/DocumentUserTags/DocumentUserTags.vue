@@ -38,7 +38,7 @@ const onActionUpdate = (newLabels) => {
   // Compare against the current user's own tags only to avoid emitting delete for other users' tags.
   const added = newLabels.filter(l => !yourTagsLabels.value.includes(l))
   const removed = yourTagsLabels.value.filter(l => !newLabels.includes(l))
-  added.forEach(l => emit('add', [l]))
+  if (added.length) emit('add', added)
   removed.forEach(l => emit('delete', l))
 }
 const allTagsLabels = computed(() => allTags.map(property('label')))
@@ -70,7 +70,6 @@ const count = computed(() => tags.length)
         v-for="{ label } in othersTags"
         :key="label"
         :label="label"
-        @delete="emit('delete', label)"
       />
     </template>
     <template #action-warning>
