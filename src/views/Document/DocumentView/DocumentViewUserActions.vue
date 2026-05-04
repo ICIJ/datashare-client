@@ -1,10 +1,12 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import { useAuth } from '@/composables/useAuth'
 import { useMode } from '@/composables/useMode'
 import { useElementObserver } from '@/composables/useElementObserver'
 import { useElasticSearchQuery } from '@/composables/useElasticSearchQuery'
+import { useToast } from '@/composables/useToast'
 import { useDocument } from '@/composables/useDocument'
 import { DOCUMENT_USER_ACTIONS } from '@/enums/documentUserActions'
 import DocumentUserActions from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActions'
@@ -23,6 +25,8 @@ defineProps({
 const recommendedStore = useRecommendedStore()
 const documentStore = useDocumentStore()
 const { document, documentViewFloatingSelector } = useDocument()
+const { t } = useI18n()
+const { toastedPromise } = useToast()
 const { username } = useAuth()
 const { isServer } = useMode()
 const { waitForElementCreated } = useElementObserver()
@@ -58,9 +62,10 @@ const deleteTag = (label) => {
 
 const addTags = async (labels) => {
   try {
-    await documentStore.addTags({ documents: [document.value], labels })
-  }
-  catch {
+    await toastedPromise(documentStore.addTags({ documents: [document.value], labels }), {
+      errorMessage: t('documentUserTagsAction.addError')
+    })
+  } catch {
     return
   }
   // Keep the local tag suggestions in sync by appending only labels that are not already present.
