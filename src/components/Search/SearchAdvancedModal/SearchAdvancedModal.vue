@@ -28,13 +28,9 @@
           :label="t('searchAdvancedModal.anyOfTheseWords')"
           :icon="IPhUniteSquare"
         >
-          <form-control-tag
+          <b-form-input
             ref="firstInput"
             v-model="form.anyWords"
-            placeholder=""
-            add-button-text=""
-            no-placeholder-icon
-            no-duplicates
           />
           <template #example>
             <p class="search-advanced-modal__example">
@@ -53,12 +49,8 @@
           :label="t('searchAdvancedModal.allTheseWords')"
           :icon="IPhIntersectSquare"
         >
-          <form-control-tag
+          <b-form-input
             v-model="form.allWords"
-            placeholder=""
-            add-button-text=""
-            no-placeholder-icon
-            no-duplicates
           />
           <template #example>
             <p class="search-advanced-modal__example">
@@ -84,12 +76,8 @@
           :label="t('searchAdvancedModal.exactPhrase')"
           :icon="IPhQuotes"
         >
-          <form-control-tag
+          <b-form-input
             v-model="form.exactPhrase"
-            placeholder=""
-            add-button-text=""
-            no-placeholder-icon
-            no-duplicates
           />
           <template #example>
             <p class="search-advanced-modal__example">
@@ -108,12 +96,8 @@
           :label="t('searchAdvancedModal.noneOfTheseWords')"
           :icon="IPhTextStrikethrough"
         >
-          <form-control-tag
+          <b-form-input
             v-model="form.noneWords"
-            placeholder=""
-            add-button-text=""
-            no-placeholder-icon
-            no-duplicates
           />
           <template #example>
             <p class="search-advanced-modal__example">
@@ -367,7 +351,6 @@ import IPhChatsTeardrop from '~icons/ph/chats-teardrop'
 
 import AppModal from '@/components/AppModal/AppModal.vue'
 import FormActions from '@/components/Form/FormActions/FormActions.vue'
-import FormControlTag from '@/components/Form/FormControl/FormControlTag/FormControlTag.vue'
 import FormControlRange from '@/components/Form/FormControl/FormControlRange/FormControlRange.vue'
 import SearchAdvancedModalField from './SearchAdvancedModalField.vue'
 import { useAdvancedSearchQuery } from '@/composables/useAdvancedSearchQuery'
@@ -391,10 +374,10 @@ const isVisible = computed({
 
 function getInitialForm() {
   return {
-    anyWords: [],
-    allWords: [],
-    exactPhrase: [],
-    noneWords: [],
+    anyWords: '',
+    allWords: '',
+    exactPhrase: '',
+    noneWords: '',
     singleWildcardStart: '',
     singleWildcardEnd: '',
     multiWildcardStart: '',
@@ -409,29 +392,30 @@ function getInitialForm() {
 }
 
 const form = ref(getInitialForm())
-// Bumped on Reset to remount inputs and discard their internal state
-// (e.g. unsubmitted text in the FormControlTag input field).
+// Bumped on Reset to remount inputs and force-clear any leftover internal
+// state (e.g. native input selection, validation classes).
 const formKey = ref(0)
 const firstInput = useTemplateRef('firstInput')
 
 /**
- * The form is considered empty when none of its inputs would contribute to
- * a Lucene query — empty arrays for tag inputs, empty strings for text
- * inputs, and the default zero values for both sliders. The Search button
- * stays disabled in that state to prevent a no-op search.
+ * The form is considered empty when no input would contribute to a Lucene
+ * query. The Search button stays disabled in that state to prevent a no-op
+ * search.
  */
 const isFormEmpty = computed(() => {
   const f = form.value
-  return f.anyWords.length === 0
-    && f.allWords.length === 0
-    && f.exactPhrase.length === 0
-    && f.noneWords.length === 0
-    && f.singleWildcardStart === ''
-    && f.singleWildcardEnd === ''
-    && f.multiWildcardStart === ''
-    && f.multiWildcardEnd === ''
-    && f.fuzzyTerm === ''
-    && f.proximityPhrase === ''
+  return Object.values({
+    anyWords: f.anyWords,
+    allWords: f.allWords,
+    exactPhrase: f.exactPhrase,
+    noneWords: f.noneWords,
+    singleWildcardStart: f.singleWildcardStart,
+    singleWildcardEnd: f.singleWildcardEnd,
+    multiWildcardStart: f.multiWildcardStart,
+    multiWildcardEnd: f.multiWildcardEnd,
+    fuzzyTerm: f.fuzzyTerm,
+    proximityPhrase: f.proximityPhrase
+  }).every(v => v.trim() === '')
 })
 
 // Autofocus the first tag input when the modal becomes visible so users can
@@ -474,8 +458,24 @@ function handleFieldChange() {
   form.value.fieldAll = form.value.selectedFields.length === 0
 }
 
+/**
+ * Convert the form's string-typed fields into the array shape expected by
+ * `useAdvancedSearchQuery.generateQuery` — words are split on whitespace,
+ * the exact phrase is kept as a single entry.
+ */
+function toQueryShape(f) {
+  const words = s => s.trim().split(/\s+/).filter(Boolean)
+  return {
+    ...f,
+    anyWords: words(f.anyWords),
+    allWords: words(f.allWords),
+    noneWords: words(f.noneWords),
+    exactPhrase: f.exactPhrase.trim() ? [f.exactPhrase.trim()] : []
+  }
+}
+
 function handleSearch() {
-  const query = generateQuery(form.value)
+  const query = generateQuery(toQueryShape(form.value))
   emit('search', query)
   isVisible.value = false
 }
@@ -614,8 +614,7 @@ defineExpose({ form, isFormEmpty, handleSearch, handleReset })
 // — make the dialog wider than the default xl size (1140px) without
 //   horizontal scroll;
 // — keep header and footer opaque while body scrolls;
-// — left-align the modal title instead of the centered DS default;
-// — hide the inline "Add" button on the form-control-tag inputs.
+// — left-align the modal title instead of the centered DS default.
 .modal-dialog:has(.search-advanced-modal) {
   &.modal-xl {
     max-width: min(1400px, calc(100vw - 2 * #{$modal-dialog-margin}));
@@ -627,12 +626,13 @@ defineExpose({ form, isFormEmpty, handleSearch, handleReset })
 
   .modal-body {
     overflow-y: auto;
-    overflow-x: hidden;
-    padding-top: 0;
+    // Just enough top padding to keep the focus ring of the first input
+    // from being clipped by the body's scrollable boundary.
+    padding-top: $spacer-xs;
   }
 
   .modal-header + .modal-body {
-    padding-top: 0;
+    padding-top: $spacer-xs;
   }
 
   .modal-header {
@@ -654,10 +654,5 @@ defineExpose({ form, isFormEmpty, handleSearch, handleReset })
     }
   }
 
-  // Hide the integrated "Add" submit button inside form-control-tag — tags
-  // are confirmed via Enter / separator, no inline button needed here.
-  .form-control-tag-input__form__submit {
-    display: none;
-  }
 }
 </style>
