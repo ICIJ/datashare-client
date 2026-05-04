@@ -150,7 +150,8 @@ const tagCreateValidator = (tag) => {
 }
 
 const removeTag = (tag) => {
-  const modelValue = props.modelValue.filter(t => t !== tag)
+  const lower = tag.toLowerCase()
+  const modelValue = props.modelValue.filter(t => t.toLowerCase() !== lower)
   emit('update:modelValue', modelValue)
   focus()
 }
