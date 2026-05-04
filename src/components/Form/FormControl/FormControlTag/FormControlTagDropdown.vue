@@ -106,7 +106,9 @@ const addTag = (tag) => {
 }
 
 watch(filteredOptions, (filteredOptions) => {
-  emit('update:show', !!filteredOptions.length)
+  if (props.inputValue || filteredOptions.length) {
+    emit('update:show', !!filteredOptions.length)
+  }
 })
 
 watch(
