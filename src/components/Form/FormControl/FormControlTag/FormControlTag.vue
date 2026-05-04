@@ -196,9 +196,6 @@ watch(focusIndex, (value) => {
   if (value === -1) {
     focus()
   }
-  else {
-    showDropdown.value = !!inputValueTrigger.value
-  }
 })
 
 defineExpose({ focus })
