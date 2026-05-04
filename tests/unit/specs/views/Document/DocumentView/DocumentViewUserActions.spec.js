@@ -50,6 +50,18 @@ describe('DocumentViewUserActions', () => {
     expect(wrapper.vm.allTags.filter(t => t.label === 'existing-tag').length).toBe(1)
   })
 
+  it('does not add a label to allTags when it already exists with different casing', async () => {
+    const wrapper = shallowMount(DocumentViewUserActions, {
+      global: { plugins }
+    })
+
+    wrapper.vm.allTags = [{ label: 'existing-tag' }]
+    await wrapper.vm.addTags(['EXISTING-TAG'])
+    await flushPromises()
+
+    expect(wrapper.vm.allTags.length).toBe(1)
+  })
+
   it('does not refresh allTags after deleting a tag', async () => {
     const wrapper = shallowMount(DocumentViewUserActions, {
       global: { plugins }

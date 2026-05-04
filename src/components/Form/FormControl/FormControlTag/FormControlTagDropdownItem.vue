@@ -19,6 +19,7 @@ defineProps({
     :class="{ 'form-control-tag-dropdown-item--active': active }"
   >
     <slot v-bind="{ active, value, item }">
+      <!-- pe-none + tabindex="-1": purely decorative; interaction is handled by the parent b-dropdown-item -->
       <b-form-checkbox
         :model-value="active"
         class="pe-none"

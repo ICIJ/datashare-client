@@ -58,6 +58,5 @@ describe('DocumentUserTags', () => {
     await action.vm.$emit('update:modelValue', [])
 
     expect(wrapper.emitted('delete')).toEqual([['my-tag']])
-    expect(wrapper.emitted('delete')?.flat()).not.toContain('other-tag')
   })
 })
