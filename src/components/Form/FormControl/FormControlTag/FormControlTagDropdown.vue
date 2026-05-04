@@ -105,10 +105,9 @@ const addTag = (tag) => {
   emit('addTag', tag)
 }
 
-watch(filteredOptions, (filteredOptions) => {
-  if (props.inputValue || filteredOptions.length) {
-    emit('update:show', !!filteredOptions.length)
-  }
+watch(filteredOptions, (newVal, oldVal) => {
+  if (!props.inputValue && !newVal.length && !oldVal.length) return
+  emit('update:show', !!newVal.length)
 })
 
 watch(
