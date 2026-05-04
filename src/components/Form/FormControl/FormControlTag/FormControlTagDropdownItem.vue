@@ -32,6 +32,7 @@ defineProps({
 
 <style lang="scss" scoped>
 .form-control-tag-dropdown-item--active {
+  // Couples to Bootstrap's .dropdown-item and .form-check-input class names.
   :deep(.dropdown-item:hover .form-check-input) {
     --bs-form-check-bg-image: #{escape-svg($form-check-input-indeterminate-bg-image)};
     background-color: $form-check-input-indeterminate-bg-color;

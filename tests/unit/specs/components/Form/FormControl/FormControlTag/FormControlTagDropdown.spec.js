@@ -84,4 +84,14 @@ describe('FormControlTagDropdown', () => {
     const items = wrapper.vm.filteredOptions.map(o => o.item)
     expect(items).toContain('apple')
   })
+
+  it('marks an option as active regardless of case', () => {
+    const wrapper = mount(FormControlTagDropdown, {
+      global: { plugins },
+      props: { options, modelValue: ['APPLE'], inputValue: '', show: true }
+    })
+
+    const appleOption = wrapper.vm.filteredOptions.find(o => o.item === 'apple')
+    expect(wrapper.vm.hasOption(appleOption)).toBe(true)
+  })
 })
