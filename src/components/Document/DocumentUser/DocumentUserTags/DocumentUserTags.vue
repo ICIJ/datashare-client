@@ -36,8 +36,8 @@ const yourTagsLabels = computed(() => yourTags.value.map(property('label')))
 
 const onActionUpdate = (newLabels) => {
   // Compare against the current user's own tags only to avoid emitting delete for other users' tags.
-  const added = newLabels.filter(l => !yourTagsLabels.value.includes(l))
-  const removed = yourTagsLabels.value.filter(l => !newLabels.includes(l))
+  const added = newLabels.filter(l => !yourTagsLabels.value.some(t => t.toLowerCase() === l.toLowerCase()))
+  const removed = yourTagsLabels.value.filter(l => !newLabels.some(t => t.toLowerCase() === l.toLowerCase()))
   if (added.length) emit('add', added)
   removed.forEach(l => emit('delete', l))
 }
