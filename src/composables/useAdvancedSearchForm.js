@@ -49,8 +49,8 @@ export function getInitialForm() {
 
 /**
  * Convert the form's string-typed word inputs into the array shape
- * `useAdvancedSearchQuery.generateQuery` expects. Splits on whitespace
- * for word lists and keeps the exact phrase as a single quoted entry.
+ * `generateLuceneQuery` expects. Splits on whitespace for word lists
+ * and keeps the exact phrase as a single quoted entry.
  */
 export function toQueryShape(f) {
   const words = s => s.trim().split(/\s+/).filter(Boolean)
