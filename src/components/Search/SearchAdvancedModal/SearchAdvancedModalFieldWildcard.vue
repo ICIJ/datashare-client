@@ -4,17 +4,11 @@
     :icon="icon"
   >
     <div class="d-flex align-items-center gap-2">
-      <b-form-input
-        :model-value="start"
-        @update:model-value="$emit('update:start', $event)"
-      />
+      <b-form-input v-model="start" />
       <span class="text-secondary">
         {{ t('searchAdvancedModal.and') }}
       </span>
-      <b-form-input
-        :model-value="end"
-        @update:model-value="$emit('update:end', $event)"
-      />
+      <b-form-input v-model="end" />
     </div>
     <template #example>
       <p class="search-advanced-modal__example">
@@ -43,21 +37,14 @@ defineProps({
     type: [Object, Function],
     required: true
   },
-  start: {
-    type: String,
-    default: ''
-  },
-  end: {
-    type: String,
-    default: ''
-  },
   example: {
     type: String,
     required: true
   }
 })
 
-defineEmits(['update:start', 'update:end'])
+const start = defineModel('start', { type: String, default: '' })
+const end = defineModel('end', { type: String, default: '' })
 
 const { t } = useI18n()
 </script>
