@@ -1,4 +1,4 @@
-import { ref, reactive, computed } from 'vue'
+import { reactive, computed } from 'vue'
 
 import IPhHash from '~icons/ph/hash'
 import IPhFileText from '~icons/ph/file-text'
@@ -70,9 +70,6 @@ export function toQueryShape(f) {
  */
 export function useAdvancedSearchForm() {
   const form = reactive(getInitialForm())
-  // Bumped on reset to remount inputs and force-clear any leftover
-  // internal state (e.g. native input selection, validation classes).
-  const formKey = ref(0)
 
   /**
    * The form is considered empty when no input would contribute to a
@@ -117,12 +114,10 @@ export function useAdvancedSearchForm() {
 
   function reset() {
     Object.assign(form, getInitialForm())
-    formKey.value += 1
   }
 
   return {
     form,
-    formKey,
     fields: ADVANCED_SEARCH_FIELDS,
     isFormEmpty,
     setFieldAll,

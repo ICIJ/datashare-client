@@ -102,19 +102,17 @@ describe('useAdvancedSearchForm', () => {
   })
 
   describe('reset', () => {
-    it('clears every entry, restores defaults, and bumps formKey', () => {
-      const { form, formKey, reset } = useAdvancedSearchForm()
+    it('clears every entry and restores defaults', () => {
+      const { form, reset } = useAdvancedSearchForm()
       form.anyWords = 'foo'
       form.fuzzyDistance = 2
       form.fieldAll = false
       form.selectedFields = ['tags']
-      const before = formKey.value
       reset()
       expect(form.anyWords).toBe('')
       expect(form.fuzzyDistance).toBe(1)
       expect(form.fieldAll).toBe(true)
       expect(form.selectedFields).toEqual([])
-      expect(formKey.value).toBe(before + 1)
     })
   })
 

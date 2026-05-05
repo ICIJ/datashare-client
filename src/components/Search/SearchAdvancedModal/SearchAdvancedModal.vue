@@ -18,7 +18,6 @@
       <!-- Form: wrapped in a real <form> so pressing Enter inside any input
            triggers the same submit handler as clicking the Search button. -->
       <form
-        :key="formKey"
         class="search-advanced-modal__form"
         novalidate
         @submit.prevent="handleSearch"
@@ -157,7 +156,6 @@ const emit = defineEmits(['search'])
 const { t } = useI18n()
 const {
   form,
-  formKey,
   fields,
   isFormEmpty,
   setFieldAll,
