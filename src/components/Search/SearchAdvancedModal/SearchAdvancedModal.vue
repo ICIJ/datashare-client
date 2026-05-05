@@ -429,11 +429,11 @@ watch(isVisible, async (visible) => {
 const fields = [
   { value: 'tags', label: 'searchAdvancedModal.fields.tags', icon: IPhHash },
   { value: 'path', label: 'searchAdvancedModal.fields.name', icon: IPhFileText },
-  { value: 'contentAuthor', label: 'searchAdvancedModal.fields.author', icon: IPhUserList },
-  { value: 'contentRecipient', label: 'searchAdvancedModal.fields.recipients', icon: IPhUserSquare },
+  { value: 'metadata.tika_metadata_dc_creator', label: 'searchAdvancedModal.fields.author', icon: IPhUserList },
+  { value: 'metadata.tika_metadata_message_to', label: 'searchAdvancedModal.fields.recipients', icon: IPhUserSquare },
   { value: 'content', label: 'searchAdvancedModal.fields.content', icon: IPhTextColumns },
   { value: 'dirname', label: 'searchAdvancedModal.fields.path', icon: IPhTreeStructure },
-  { value: 'contentThreadId', label: 'searchAdvancedModal.fields.threadId', icon: IPhChatsTeardrop }
+  { value: 'metadata.tika_metadata_message_raw_header_thread_index', label: 'searchAdvancedModal.fields.threadId', icon: IPhChatsTeardrop }
 ]
 
 /**
