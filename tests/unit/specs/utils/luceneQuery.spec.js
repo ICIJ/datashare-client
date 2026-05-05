@@ -1,10 +1,8 @@
 import { describe, it, expect } from 'vitest'
-import { useAdvancedSearchQuery } from '@/composables/useAdvancedSearchQuery'
+import { generateLuceneQuery as generateQuery } from '@/utils/luceneQuery'
 
-describe('useAdvancedSearchQuery', () => {
-  const { generateQuery } = useAdvancedSearchQuery()
-
-  describe('generateQuery', () => {
+describe('luceneQuery', () => {
+  describe('generateLuceneQuery', () => {
     it('should generate empty query for empty form', () => {
       const formData = {
         anyWords: [],

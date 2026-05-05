@@ -155,13 +155,12 @@ import SearchAdvancedModalFieldWildcard from './SearchAdvancedModalFieldWildcard
 import SearchAdvancedModalFieldsSelect from './SearchAdvancedModalFieldsSelect.vue'
 import SearchAdvancedModalFooter from './SearchAdvancedModalFooter.vue'
 import { useAdvancedSearchForm } from '@/composables/useAdvancedSearchForm'
-import { useAdvancedSearchQuery } from '@/composables/useAdvancedSearchQuery'
+import { generateLuceneQuery } from '@/utils/luceneQuery'
 
 const isVisible = defineModel({ type: Boolean, default: false })
 const emit = defineEmits(['search'])
 
 const { t } = useI18n()
-const { generateQuery } = useAdvancedSearchQuery()
 const {
   form,
   formKey,
@@ -214,7 +213,7 @@ function handleSearch() {
   // Pressing Enter inside an input also submits the form, so guard here
   // rather than relying on the visible Search button being disabled.
   if (isFormEmpty.value) return
-  const query = generateQuery(toQueryShape(form.value))
+  const query = generateLuceneQuery(toQueryShape(form.value))
   emit('search', query)
   isVisible.value = false
 }
