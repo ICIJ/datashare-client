@@ -6,6 +6,10 @@ import DocumentThreadEntry from '@/components/Document/DocumentThread/DocumentTh
 describe('DocumentThreadEntry.vue', () => {
   let core
 
+  beforeAll(() => {
+    core = CoreSetup.init().useAll()
+  })
+
   const mockEmail = {
     id: 'email_01',
     messageFrom: 'sender@example.com',
@@ -36,7 +40,7 @@ describe('DocumentThreadEntry.vue', () => {
   }
 
   beforeEach(() => {
-    core = CoreSetup.init().useAll()
+    core.createPinia()
   })
 
   it('should show DocumentTranslation when expanded', () => {

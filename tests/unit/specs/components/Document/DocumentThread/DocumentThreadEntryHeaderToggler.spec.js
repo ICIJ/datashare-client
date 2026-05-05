@@ -6,6 +6,10 @@ import DocumentThreadEntryHeaderToggler from '@/components/Document/DocumentThre
 describe('DocumentThreadEntryHeaderToggler.vue', () => {
   let core
 
+  beforeAll(() => {
+    core = CoreSetup.init().useAll()
+  })
+
   function createWrapper(props = {}) {
     return shallowMount(DocumentThreadEntryHeaderToggler, {
       global: {
@@ -16,7 +20,7 @@ describe('DocumentThreadEntryHeaderToggler.vue', () => {
   }
 
   beforeEach(() => {
-    core = CoreSetup.init().useAll()
+    core.createPinia()
   })
 
   it('should render the toggler element', () => {

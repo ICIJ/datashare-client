@@ -5,10 +5,14 @@ import DisplayEsDistribution from '@/components/Display/DisplayEsDistribution'
 import { ES_DISTRIBUTION } from '@/enums/esDistributions'
 
 describe('DisplayEsDistribution', () => {
-  let plugins
+  let core, plugins
+
+  beforeAll(() => {
+    core = CoreSetup.init().useAll()
+  })
 
   beforeEach(() => {
-    const core = CoreSetup.init().useAll()
+    core.createPinia()
     plugins = core.plugins
   })
 

@@ -7,7 +7,7 @@ import ButtonRowActionDelete from '@/components/Button/ButtonRowAction/ButtonRow
 import DisplayStatus from '@/components/Display/DisplayStatus.vue'
 
 describe('PathBannersListEntry.vue', () => {
-  let global
+  let core, global
 
   const banner = Object.freeze({
     note: 'Test banner text',
@@ -16,8 +16,12 @@ describe('PathBannersListEntry.vue', () => {
     blurSensitiveMedia: false
   })
 
+  beforeAll(() => {
+    core = CoreSetup.init().useAll()
+  })
+
   beforeEach(() => {
-    const core = CoreSetup.init().useAll()
+    core.createPinia()
     global = { plugins: core.plugins, renderStubDefaultSlot: true }
   })
 

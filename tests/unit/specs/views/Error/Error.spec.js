@@ -19,8 +19,12 @@ describe('Error.vue', () => {
   let plugins
   let core
 
-  beforeEach(() => {
+  beforeAll(() => {
     core = CoreSetup.init().useAll()
+  })
+
+  beforeEach(() => {
+    core.createPinia()
     plugins = core.plugins
   })
 

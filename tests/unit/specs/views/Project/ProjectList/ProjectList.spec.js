@@ -24,8 +24,13 @@ describe('ProjectList.vue', () => {
     { name: 'baz', label: 'Baz', description: 'minerals' }
   ]
 
-  beforeEach(async () => {
+  beforeAll(() => {
     core = CoreSetup.init().useAll().useRouterWithoutGuards()
+  })
+
+  beforeEach(async () => {
+    core.createPinia()
+    await core.router.replace('/')
     core.config.set('projects', projects)
 
     api.elasticsearch.countByProject.mockResolvedValue({ aggregations: { index: { buckets: [] } } })

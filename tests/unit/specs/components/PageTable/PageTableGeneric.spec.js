@@ -15,10 +15,14 @@ describe('PageTableGeneric.vue', () => {
     `
   }
 
-  let plugins
+  let core, plugins
+
+  beforeAll(() => {
+    core = CoreSetup.init().useAll().useRouterWithoutGuards()
+  })
 
   beforeEach(() => {
-    const core = CoreSetup.init().useAll().useRouterWithoutGuards()
+    core.createPinia()
     plugins = core.plugins
   })
 

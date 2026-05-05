@@ -6,6 +6,10 @@ import DocumentThreadEntryExcerpt from '@/components/Document/DocumentThread/Doc
 describe('DocumentThreadEntryExcerpt.vue', () => {
   let core
 
+  beforeAll(() => {
+    core = CoreSetup.init().useAll()
+  })
+
   const mockEmail = {
     id: 'email_01',
     excerpt: 'This is an email excerpt...'
@@ -24,7 +28,7 @@ describe('DocumentThreadEntryExcerpt.vue', () => {
   }
 
   beforeEach(() => {
-    core = CoreSetup.init().useAll()
+    core.createPinia()
   })
 
   it('should render the excerpt text', () => {

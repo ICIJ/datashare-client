@@ -18,10 +18,14 @@ const DismissableAlertStub = defineComponent({
 })
 
 describe('DismissableAlertEditable.vue', () => {
-  let global
+  let core, global
+
+  beforeAll(() => {
+    core = CoreSetup.init().useAll()
+  })
 
   beforeEach(() => {
-    const core = CoreSetup.init().useAll()
+    core.createPinia()
     global = {
       plugins: core.plugins,
       stubs: { DismissableAlert: DismissableAlertStub },

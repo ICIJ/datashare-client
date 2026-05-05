@@ -7,11 +7,15 @@ import CoreSetup from '~tests/unit/CoreSetup'
 describe('useBatchDownloadEstimation composable', () => {
   let core, plugins
 
-  beforeEach(() => {
+  beforeAll(() => {
     core = CoreSetup.init().useAll()
+  })
+
+  beforeEach(() => {
+    core.createPinia()
+    plugins = core.plugins
     core.config.set('batchDownloadMaxNbFiles', 10)
     core.config.set('batchDownloadMaxSize', '1K')
-    plugins = core.plugins
   })
 
   afterEach(() => {

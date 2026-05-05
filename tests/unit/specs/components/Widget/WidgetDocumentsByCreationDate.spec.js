@@ -13,10 +13,16 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
   let wrapper
 
   describe('with one valid creation date', () => {
+    let core
+
+    beforeAll(() => {
+      core = CoreSetup.init().useAll()
+    })
+
     beforeEach(() => {
-      const { plugins } = CoreSetup.init().useAll()
+      core.createPinia()
       const insightsStore = useInsightsStore()
-      const global = { plugins, renderStubDefaultSlot: true }
+      const global = { plugins: core.plugins, renderStubDefaultSlot: true }
       insightsStore.setProject(project)
       wrapper = shallowMount(WidgetDocumentsByCreationDate, { props, global })
     })
@@ -45,10 +51,16 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
   })
 
   describe('with 3 valid creation date', () => {
+    let core
+
+    beforeAll(() => {
+      core = CoreSetup.init().useAll()
+    })
+
     beforeEach(() => {
-      const { plugins } = CoreSetup.init().useAll()
+      core.createPinia()
       const insightsStore = useInsightsStore()
-      const global = { plugins, renderStubDefaultSlot: true }
+      const global = { plugins: core.plugins, renderStubDefaultSlot: true }
       insightsStore.setProject(anotherProject)
       wrapper = shallowMount(WidgetDocumentsByCreationDate, { global, props })
     })

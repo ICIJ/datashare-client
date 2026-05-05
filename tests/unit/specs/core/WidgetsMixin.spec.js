@@ -5,8 +5,12 @@ import { useInsightsStore } from '@/store/modules'
 describe('WidgetsMixin', () => {
   let core, store
 
-  beforeEach(async () => {
+  beforeAll(() => {
     core = CoreSetup.init().useAll()
+  })
+
+  beforeEach(async () => {
+    core.createPinia()
     core.clearWidgets()
     store = useInsightsStore()
     store.setProject('local-project')

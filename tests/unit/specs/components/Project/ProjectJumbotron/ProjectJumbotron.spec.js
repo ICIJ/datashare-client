@@ -6,10 +6,15 @@ import ProjectJumbotron from '@/components/Project/ProjectJumbotron/ProjectJumbo
 import DisplayRole from '@/components/Display/DisplayRole'
 
 describe('ProjectJumbotron.vue', () => {
-  let plugins
+  let core, plugins
+
+  beforeAll(() => {
+    core = CoreSetup.init().useAll()
+  })
 
   beforeEach(() => {
-    plugins = CoreSetup.init().useAll().plugins
+    core.createPinia()
+    plugins = core.plugins
   })
 
   afterEach(() => {

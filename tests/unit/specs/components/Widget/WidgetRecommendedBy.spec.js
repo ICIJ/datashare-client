@@ -30,9 +30,10 @@ describe('WidgetRecommendedBy.vue', () => {
     { user, document: foo }
   ]
 
-  let wrapper
+  let core, wrapper
 
   beforeAll(() => {
+    core = CoreSetup.init().useAll().useRouterWithoutGuards()
     // Mock list of recommendation
     api.getDocumentUserRecommendations.mockResolvedValue(recommendations)
     // Mock all elasticsearch search calls using a mock
@@ -47,7 +48,8 @@ describe('WidgetRecommendedBy.vue', () => {
   })
 
   beforeEach(async () => {
-    const { plugins } = CoreSetup.init().useAll().useRouterWithoutGuards()
+    core.createPinia()
+    const plugins = core.plugins
     const insightsStore = useInsightsStore()
     const global = { plugins }
     const widget = new widgets.WidgetRecommendedBy({ card: true })

@@ -25,10 +25,15 @@ vi.mock('@/api/apiInstance', () => {
 
 describe('FormControlExtractingLanguage.vue', () => {
   describe('Has languages available', () => {
-    let wrapper
+    let wrapper, core
+
+    beforeAll(() => {
+      core = CoreSetup.init().useAll()
+    })
 
     beforeEach(async () => {
-      const { plugins } = CoreSetup.init().createPinia().useAll()
+      core.createPinia()
+      const plugins = core.plugins
       wrapper = mount(FormControlExtractingLanguage, { global: { plugins } })
       await flushPromises()
     })
@@ -59,11 +64,16 @@ describe('FormControlExtractingLanguage.vue', () => {
   })
 
   describe('When a fetching error occurs', () => {
-    let wrapper
+    let wrapper, core
+
+    beforeAll(() => {
+      core = CoreSetup.init().useAll()
+    })
 
     beforeEach(async () => {
+      core.createPinia()
       api.textLanguages.mockRejectedValue()
-      const { plugins } = CoreSetup.init().createPinia().useAll()
+      const plugins = core.plugins
       wrapper = mount(FormControlExtractingLanguage, { global: { plugins } })
       await flushPromises()
     })

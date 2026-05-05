@@ -48,8 +48,12 @@ describe('EntityInContext.vue', () => {
     return { entity, excerptLength, visiblePopover: true }
   }
 
-  beforeEach(async () => {
+  beforeAll(() => {
     core = CoreSetup.init().useAll()
+  })
+
+  beforeEach(async () => {
+    core.createPinia()
     searchStore = useSearchStore()
     searchStore.setIndex(index)
     documentStore = useDocumentStore()

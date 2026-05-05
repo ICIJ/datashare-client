@@ -18,8 +18,13 @@ vi.mock('@/api/apiInstance', () => {
 describe('ProjectViewEditDetails.vue', () => {
   let core
 
-  beforeEach(() => {
+  beforeAll(() => {
     core = CoreSetup.init().useAll().useRouterWithoutGuards()
+  })
+
+  beforeEach(async () => {
+    core.createPinia()
+    await core.router.replace('/')
     core.config.set('projects', [{ name: 'local-datashare', label: 'Default', sourcePath: '/' }])
   })
 

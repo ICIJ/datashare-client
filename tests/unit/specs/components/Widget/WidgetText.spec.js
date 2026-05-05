@@ -4,10 +4,14 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import WidgetText from '@/components/Widget/WidgetText'
 
 describe('WidgetText.vue', () => {
-  let plugins
+  let core, plugins
+
+  beforeAll(() => {
+    core = CoreSetup.init().useAll()
+  })
 
   beforeEach(() => {
-    const core = CoreSetup.init().useAll()
+    core.createPinia()
     plugins = core.plugins
   })
 

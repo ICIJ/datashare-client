@@ -22,8 +22,15 @@ vi.mock('@/api/apiInstance', () => {
 
 describe('Task.vue', () => {
   const props = { pageName: 'task' }
+  let core, plugins
+
+  beforeAll(() => {
+    core = CoreSetup.init().useAll().useRouterWithoutGuards()
+  })
 
   beforeEach(() => {
+    core.createPinia()
+    plugins = core.plugins
     vi.clearAllMocks()
   })
 
@@ -32,15 +39,11 @@ describe('Task.vue', () => {
   })
 
   it('renders correctly', () => {
-    const { plugins } = CoreSetup.init().useAll().useRouterWithoutGuards()
-
     const wrapper = shallowMount(TaskPage, { global: { plugins } })
     expect(wrapper.exists()).toBe(true)
   })
 
   it('show a page header with task actions', () => {
-    const { plugins } = CoreSetup.init().useAll().useRouterWithoutGuards()
-
     const wrapper = mount(TaskPage, { global: { plugins, renderStubDefaultSlot: true }, props })
     const actions = wrapper.findComponent(TaskActions)
     expect(actions.exists()).toBe(true)
@@ -48,14 +51,12 @@ describe('Task.vue', () => {
 
   it('should fetch tasks on mount', async () => {
     api.getTasks.mockResolvedValue({ items: [{ state: 'DONE' }] })
-    const { plugins } = CoreSetup.init().useAll().useRouterWithoutGuards()
     shallowMount(TaskPage, { global: { plugins }, props })
     await flushPromises()
     expect(api.getTasks).toHaveBeenCalledTimes(1)
   })
 
   it('should call delete done tasks when the delete action is triggered', async () => {
-    const { plugins } = CoreSetup.init().useAll().useRouterWithoutGuards()
     const wrapper = mount(TaskPage, { global: { plugins, renderStubDefaultSlot: true }, props })
     const actions = wrapper.findComponent(TaskActions)
     const spy = vi.spyOn(wrapper.vm, 'removeDoneTasks')
@@ -66,8 +67,6 @@ describe('Task.vue', () => {
   })
 
   it('should stop pending tasks when the stop pending action is triggered', async () => {
-    const { plugins } = CoreSetup.init().useAll().useRouterWithoutGuards()
-
     const wrapper = mount(TaskPage, { global: { plugins, renderStubDefaultSlot: true }, props })
     const actions = wrapper.findComponent(TaskActions)
     const spy = vi.spyOn(wrapper.vm, 'stopPendingTasks')

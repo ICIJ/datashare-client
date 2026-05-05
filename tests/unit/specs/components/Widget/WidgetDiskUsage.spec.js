@@ -9,10 +9,15 @@ import { useInsightsStore } from '@/store/modules/insights'
 describe('WidgetDiskUsage.vue', () => {
   const { index: project, es } = esConnectionHelper.build()
   const props = { widget: { title: 'Hello world' } }
-  let wrapper
+  let wrapper, core
+
+  beforeAll(() => {
+    core = CoreSetup.init().useAll()
+  })
 
   beforeEach(() => {
-    const { plugins, config } = CoreSetup.init().useAll()
+    core.createPinia()
+    const { plugins, config } = core
     const insightsStore = useInsightsStore()
     insightsStore.setProject(project)
     config.merge({ dataDir: 'dataDir' })
