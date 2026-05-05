@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
-import { dirname } from 'path'
 
 import CoreSetup from '~tests/unit/CoreSetup'
+import RawDocBuilder from '~tests/unit/RawDocBuilder'
 import DocumentViewTabsMetadata from '@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsMetadata'
 import { useDocumentStore } from '@/store/modules'
 
@@ -23,29 +23,6 @@ describe('DocumentViewTabsMetadata.vue', () => {
 
   const stubs = { DocumentViewTabsMetadataLinkedDocumentsCard: true }
 
-  function makeRawDoc(overrides = {}) {
-    return {
-      _id: id,
-      _index: index,
-      _source: {
-        type: 'Document',
-        path: id,
-        dirname: dirname(id),
-        title: id,
-        language: 'ENGLISH',
-        extractionLevel: 0,
-        metadata: {
-          tika_metadata_resourcename: id,
-          tika_metadata_another_metadata: null,
-          tika_metadata_content_type: null,
-          tika_metadata_dcterms_created: null,
-          tika_metadata_dc_creator: null
-        },
-        ...overrides
-      }
-    }
-  }
-
   beforeAll(() => {
     core = CoreSetup.init().useAll()
     documentStore = useDocumentStore()
@@ -61,7 +38,7 @@ describe('DocumentViewTabsMetadata.vue', () => {
   })
 
   it('should display document with 8 metadata', () => {
-    documentStore.setDocument(makeRawDoc())
+    documentStore.setDocument(RawDocBuilder.build(id, index).toRaw())
 
     wrapper = mount(DocumentViewTabsMetadata, { global: { plugins: core.plugins, stubs } })
 
@@ -70,7 +47,7 @@ describe('DocumentViewTabsMetadata.vue', () => {
   })
 
   it('should display "File on disk" when extractionLevel metadata is missing', () => {
-    documentStore.setDocument(makeRawDoc())
+    documentStore.setDocument(RawDocBuilder.build(id, index).toRaw())
 
     wrapper = mount(DocumentViewTabsMetadata, { global: { plugins: core.plugins, stubs } })
 
@@ -82,7 +59,7 @@ describe('DocumentViewTabsMetadata.vue', () => {
   })
 
   it('should display document with 8 metadata (including language)', () => {
-    documentStore.setDocument(makeRawDoc({ language: 'FRENCH' }))
+    documentStore.setDocument(RawDocBuilder.build(id, index).withLanguage('FRENCH').toRaw())
 
     wrapper = mount(DocumentViewTabsMetadata, { global: { plugins: core.plugins, stubs } })
 
@@ -92,7 +69,7 @@ describe('DocumentViewTabsMetadata.vue', () => {
   })
 
   it('should filter the list with a query', async () => {
-    documentStore.setDocument(makeRawDoc())
+    documentStore.setDocument(RawDocBuilder.build(id, index).toRaw())
 
     wrapper = mount(DocumentViewTabsMetadata, { global: { plugins: core.plugins, stubs } })
 
