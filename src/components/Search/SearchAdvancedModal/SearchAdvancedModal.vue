@@ -118,36 +118,19 @@
         />
 
         <!-- Search in specific fields -->
-        <search-advanced-modal-field
-          :label="t('searchAdvancedModal.searchInFields')"
-          :icon="IPhMagnifyingGlass"
-          align-top
-        >
-          <div class="search-advanced-modal__field__checkboxes">
-            <b-form-checkbox
-              v-model="form.fieldAll"
-              class="search-advanced-modal__field__checkboxes__all fw-medium"
-              @change="handleFieldAllChange"
-            >
-              {{ t('searchAdvancedModal.allFields') }}
-            </b-form-checkbox>
-            <b-form-checkbox
-              v-for="field in fields"
-              :key="field.value"
-              v-model="form.selectedFields"
-              :value="field.value"
-              class="search-advanced-modal__field__checkboxes__item"
-              @change="handleFieldChange"
-            >
-              <span class="d-inline-flex align-items-center gap-2 text-secondary">
-                <app-icon class="search-advanced-modal__field__checkboxes__item__icon">
-                  <component :is="field.icon" />
-                </app-icon>
-                {{ t(field.label) }}
-              </span>
-            </b-form-checkbox>
-          </div>
-        </search-advanced-modal-field>
+        <search-advanced-modal-fields-select
+          :all="form.fieldAll"
+          :selected="form.selectedFields"
+          :fields="fields"
+          @update:all="(value) => {
+            form.fieldAll = value
+            handleFieldAllChange(value)
+          }"
+          @update:selected="(value) => {
+            form.selectedFields = value
+            handleFieldChange()
+          }"
+        />
         <!-- Hidden submit so pressing Enter in any input triggers the form
              handler even when the focused control swallows the event. -->
         <button
@@ -190,7 +173,7 @@
 <script setup>
 import { computed, nextTick, watch, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { AppIcon, ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur-next'
 import IPhUniteSquare from '~icons/ph/unite-square'
 import IPhIntersectSquare from '~icons/ph/intersect-square'
 import IPhQuotes from '~icons/ph/quotes'
@@ -199,14 +182,13 @@ import IPhQuestion from '~icons/ph/question'
 import IPhAsterisk from '~icons/ph/asterisk'
 import IPhTextAa from '~icons/ph/text-aa'
 import IPhArrowsOutLineHorizontal from '~icons/ph/arrows-out-line-horizontal'
-import IPhMagnifyingGlass from '~icons/ph/magnifying-glass'
 
 import AppModal from '@/components/AppModal/AppModal.vue'
 import FormActions from '@/components/Form/FormActions/FormActions.vue'
-import SearchAdvancedModalField from './SearchAdvancedModalField.vue'
 import SearchAdvancedModalFieldRange from './SearchAdvancedModalFieldRange.vue'
 import SearchAdvancedModalFieldText from './SearchAdvancedModalFieldText.vue'
 import SearchAdvancedModalFieldWildcard from './SearchAdvancedModalFieldWildcard.vue'
+import SearchAdvancedModalFieldsSelect from './SearchAdvancedModalFieldsSelect.vue'
 import { useAdvancedSearchForm } from '@/composables/useAdvancedSearchForm'
 import { useAdvancedSearchQuery } from '@/composables/useAdvancedSearchQuery'
 
