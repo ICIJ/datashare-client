@@ -61,30 +61,26 @@
 
         <!-- Any word with 1 character between (?) -->
         <search-advanced-modal-field-wildcard
-          :start="form.singleWildcardStart"
-          :end="form.singleWildcardEnd"
+          v-model:start="form.singleWildcardStart"
+          v-model:end="form.singleWildcardEnd"
           :label="t('searchAdvancedModal.singleCharWildcard')"
           :icon="IPhQuestion"
           :example="t('searchAdvancedModal.singleCharWildcardExample')"
-          @update:start="form.singleWildcardStart = $event"
-          @update:end="form.singleWildcardEnd = $event"
         />
 
         <!-- Any word with multiple characters between (*) -->
         <search-advanced-modal-field-wildcard
-          :start="form.multiWildcardStart"
-          :end="form.multiWildcardEnd"
+          v-model:start="form.multiWildcardStart"
+          v-model:end="form.multiWildcardEnd"
           :label="t('searchAdvancedModal.multiCharWildcard')"
           :icon="IPhAsterisk"
           :example="t('searchAdvancedModal.multiCharWildcardExample')"
-          @update:start="form.multiWildcardStart = $event"
-          @update:end="form.multiWildcardEnd = $event"
         />
 
         <!-- With spelling changes (Fuzzy) -->
         <search-advanced-modal-field-range
-          :term="form.fuzzyTerm"
-          :distance="form.fuzzyDistance"
+          v-model:term="form.fuzzyTerm"
+          v-model:distance="form.fuzzyDistance"
           :max="2"
           :label="t('searchAdvancedModal.fuzzySearch')"
           :icon="IPhTextAa"
@@ -94,14 +90,12 @@
             t('searchAdvancedModal.fuzzySearchExplanation1'),
             t('searchAdvancedModal.fuzzySearchExplanation2')
           ]"
-          @update:term="form.fuzzyTerm = $event"
-          @update:distance="form.fuzzyDistance = $event"
         />
 
         <!-- With phrase changes (Proximity) -->
         <search-advanced-modal-field-range
-          :term="form.proximityPhrase"
-          :distance="form.proximityDistance"
+          v-model:term="form.proximityPhrase"
+          v-model:distance="form.proximityDistance"
           :max="6"
           :label="t('searchAdvancedModal.proximitySearch')"
           :icon="IPhArrowsOutLineHorizontal"
@@ -113,8 +107,6 @@
             t('searchAdvancedModal.proximitySearchExplanation3'),
             t('searchAdvancedModal.proximitySearchExplanation4')
           ]"
-          @update:term="form.proximityPhrase = $event"
-          @update:distance="form.proximityDistance = $event"
         />
 
         <!-- Search in specific fields -->
