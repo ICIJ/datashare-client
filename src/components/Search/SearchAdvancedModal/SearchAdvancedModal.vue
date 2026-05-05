@@ -60,60 +60,26 @@
         />
 
         <!-- Any word with 1 character between (?) -->
-        <search-advanced-modal-field
+        <search-advanced-modal-field-wildcard
+          :start="form.singleWildcardStart"
+          :end="form.singleWildcardEnd"
           :label="t('searchAdvancedModal.singleCharWildcard')"
           :icon="IPhQuestion"
-        >
-          <div class="d-flex align-items-center gap-2">
-            <b-form-input
-              v-model="form.singleWildcardStart"
-            />
-            <span class="text-secondary">
-              {{ t('searchAdvancedModal.and') }}
-            </span>
-            <b-form-input
-              v-model="form.singleWildcardEnd"
-            />
-          </div>
-          <template #example>
-            <p class="search-advanced-modal__example">
-              <span class="search-advanced-modal__example__prefix">
-                {{ t('searchAdvancedModal.eg') }}
-              </span>
-              <span class="search-advanced-modal__example__value">
-                {{ t('searchAdvancedModal.singleCharWildcardExample') }}
-              </span>
-            </p>
-          </template>
-        </search-advanced-modal-field>
+          :example="t('searchAdvancedModal.singleCharWildcardExample')"
+          @update:start="form.singleWildcardStart = $event"
+          @update:end="form.singleWildcardEnd = $event"
+        />
 
         <!-- Any word with multiple characters between (*) -->
-        <search-advanced-modal-field
+        <search-advanced-modal-field-wildcard
+          :start="form.multiWildcardStart"
+          :end="form.multiWildcardEnd"
           :label="t('searchAdvancedModal.multiCharWildcard')"
           :icon="IPhAsterisk"
-        >
-          <div class="d-flex align-items-center gap-2">
-            <b-form-input
-              v-model="form.multiWildcardStart"
-            />
-            <span class="text-secondary">
-              {{ t('searchAdvancedModal.and') }}
-            </span>
-            <b-form-input
-              v-model="form.multiWildcardEnd"
-            />
-          </div>
-          <template #example>
-            <p class="search-advanced-modal__example">
-              <span class="search-advanced-modal__example__prefix">
-                {{ t('searchAdvancedModal.eg') }}
-              </span>
-              <span class="search-advanced-modal__example__value">
-                {{ t('searchAdvancedModal.multiCharWildcardExample') }}
-              </span>
-            </p>
-          </template>
-        </search-advanced-modal-field>
+          :example="t('searchAdvancedModal.multiCharWildcardExample')"
+          @update:start="form.multiWildcardStart = $event"
+          @update:end="form.multiWildcardEnd = $event"
+        />
 
         <!-- With spelling changes (Fuzzy) -->
         <div class="search-advanced-modal__field-group">
@@ -288,6 +254,7 @@ import FormActions from '@/components/Form/FormActions/FormActions.vue'
 import FormControlRange from '@/components/Form/FormControl/FormControlRange/FormControlRange.vue'
 import SearchAdvancedModalField from './SearchAdvancedModalField.vue'
 import SearchAdvancedModalFieldText from './SearchAdvancedModalFieldText.vue'
+import SearchAdvancedModalFieldWildcard from './SearchAdvancedModalFieldWildcard.vue'
 import { useAdvancedSearchForm } from '@/composables/useAdvancedSearchForm'
 import { useAdvancedSearchQuery } from '@/composables/useAdvancedSearchQuery'
 
