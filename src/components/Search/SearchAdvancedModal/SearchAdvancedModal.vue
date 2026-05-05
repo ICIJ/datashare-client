@@ -213,7 +213,7 @@ function handleSearch() {
   // Pressing Enter inside an input also submits the form, so guard here
   // rather than relying on the visible Search button being disabled.
   if (isFormEmpty.value) return
-  const query = generateLuceneQuery(toQueryShape(form.value))
+  const query = generateLuceneQuery(toQueryShape(form))
   emit('search', query)
   isVisible.value = false
 }

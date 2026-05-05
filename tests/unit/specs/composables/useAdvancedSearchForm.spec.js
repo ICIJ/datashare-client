@@ -51,21 +51,21 @@ describe('useAdvancedSearchForm', () => {
     it('starts true and flips to false on any word input', () => {
       const { form, isFormEmpty } = useAdvancedSearchForm()
       expect(isFormEmpty.value).toBe(true)
-      form.value.anyWords = 'foo'
+      form.anyWords = 'foo'
       expect(isFormEmpty.value).toBe(false)
     })
 
     it('treats whitespace-only inputs as empty', () => {
       const { form, isFormEmpty } = useAdvancedSearchForm()
-      form.value.anyWords = '   '
-      form.value.exactPhrase = '\t\n'
+      form.anyWords = '   '
+      form.exactPhrase = '\t\n'
       expect(isFormEmpty.value).toBe(true)
     })
 
     it('does not consider distance values when deciding emptiness', () => {
       const { form, isFormEmpty } = useAdvancedSearchForm()
-      form.value.fuzzyDistance = 2
-      form.value.proximityDistance = 4
+      form.fuzzyDistance = 2
+      form.proximityDistance = 4
       expect(isFormEmpty.value).toBe(true)
     })
   })
@@ -73,47 +73,47 @@ describe('useAdvancedSearchForm', () => {
   describe('field mutual exclusion', () => {
     it('clears individual fields when "All" is checked', () => {
       const { form, handleFieldAllChange } = useAdvancedSearchForm()
-      form.value.fieldAll = false
-      form.value.selectedFields = ['tags', 'content']
+      form.fieldAll = false
+      form.selectedFields = ['tags', 'content']
       handleFieldAllChange(true)
-      expect(form.value.selectedFields).toEqual([])
+      expect(form.selectedFields).toEqual([])
     })
 
     it('forces "All" back on when the user tries to untick it directly', () => {
       const { form, handleFieldAllChange } = useAdvancedSearchForm()
       handleFieldAllChange(false)
-      expect(form.value.fieldAll).toBe(true)
+      expect(form.fieldAll).toBe(true)
     })
 
     it('toggles "All" off when at least one individual field is selected', () => {
       const { form, handleFieldChange } = useAdvancedSearchForm()
-      form.value.selectedFields = ['tags']
+      form.selectedFields = ['tags']
       handleFieldChange()
-      expect(form.value.fieldAll).toBe(false)
+      expect(form.fieldAll).toBe(false)
     })
 
     it('re-selects "All" when the last individual field is unticked', () => {
       const { form, handleFieldChange } = useAdvancedSearchForm()
-      form.value.fieldAll = false
-      form.value.selectedFields = []
+      form.fieldAll = false
+      form.selectedFields = []
       handleFieldChange()
-      expect(form.value.fieldAll).toBe(true)
+      expect(form.fieldAll).toBe(true)
     })
   })
 
   describe('reset', () => {
     it('clears every entry, restores defaults, and bumps formKey', () => {
       const { form, formKey, reset } = useAdvancedSearchForm()
-      form.value.anyWords = 'foo'
-      form.value.fuzzyDistance = 2
-      form.value.fieldAll = false
-      form.value.selectedFields = ['tags']
+      form.anyWords = 'foo'
+      form.fuzzyDistance = 2
+      form.fieldAll = false
+      form.selectedFields = ['tags']
       const before = formKey.value
       reset()
-      expect(form.value.anyWords).toBe('')
-      expect(form.value.fuzzyDistance).toBe(1)
-      expect(form.value.fieldAll).toBe(true)
-      expect(form.value.selectedFields).toEqual([])
+      expect(form.anyWords).toBe('')
+      expect(form.fuzzyDistance).toBe(1)
+      expect(form.fieldAll).toBe(true)
+      expect(form.selectedFields).toEqual([])
       expect(formKey.value).toBe(before + 1)
     })
   })

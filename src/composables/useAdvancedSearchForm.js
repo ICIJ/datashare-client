@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue'
+import { ref, reactive, computed } from 'vue'
 
 import IPhHash from '~icons/ph/hash'
 import IPhFileText from '~icons/ph/file-text'
@@ -69,7 +69,7 @@ export function toQueryShape(f) {
  * and the reset key used to remount inputs on Reset.
  */
 export function useAdvancedSearchForm() {
-  const form = ref(getInitialForm())
+  const form = reactive(getInitialForm())
   // Bumped on reset to remount inputs and force-clear any leftover
   // internal state (e.g. native input selection, validation classes).
   const formKey = ref(0)
@@ -80,18 +80,17 @@ export function useAdvancedSearchForm() {
    * prevent a no-op search.
    */
   const isFormEmpty = computed(() => {
-    const f = form.value
     return [
-      f.anyWords,
-      f.allWords,
-      f.exactPhrase,
-      f.noneWords,
-      f.singleWildcardStart,
-      f.singleWildcardEnd,
-      f.multiWildcardStart,
-      f.multiWildcardEnd,
-      f.fuzzyTerm,
-      f.proximityPhrase
+      form.anyWords,
+      form.allWords,
+      form.exactPhrase,
+      form.noneWords,
+      form.singleWildcardStart,
+      form.singleWildcardEnd,
+      form.multiWildcardStart,
+      form.multiWildcardEnd,
+      form.fuzzyTerm,
+      form.proximityPhrase
     ].every(v => v.trim() === '')
   })
 
@@ -105,19 +104,19 @@ export function useAdvancedSearchForm() {
    */
   function handleFieldAllChange(checked) {
     if (checked) {
-      form.value.selectedFields = []
+      form.selectedFields = []
     }
     else {
-      form.value.fieldAll = true
+      form.fieldAll = true
     }
   }
 
   function handleFieldChange() {
-    form.value.fieldAll = form.value.selectedFields.length === 0
+    form.fieldAll = form.selectedFields.length === 0
   }
 
   function reset() {
-    form.value = getInitialForm()
+    Object.assign(form, getInitialForm())
     formKey.value += 1
   }
 
