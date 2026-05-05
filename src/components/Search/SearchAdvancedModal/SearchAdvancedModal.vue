@@ -24,92 +24,40 @@
         @submit.prevent="handleSearch"
       >
         <!-- Any of these words (OR) -->
-        <search-advanced-modal-field
+        <search-advanced-modal-field-text
+          ref="firstInput"
+          v-model="form.anyWords"
           :label="t('searchAdvancedModal.anyOfTheseWords')"
           :icon="IPhUniteSquare"
-        >
-          <b-form-input
-            ref="firstInput"
-            v-model="form.anyWords"
-          />
-          <template #example>
-            <p class="search-advanced-modal__example">
-              <span class="search-advanced-modal__example__prefix">
-                {{ t('searchAdvancedModal.eg') }}
-              </span>
-              <span class="search-advanced-modal__example__value">
-                {{ t('searchAdvancedModal.anyOfTheseWordsExample') }}
-              </span>
-            </p>
-          </template>
-        </search-advanced-modal-field>
+          :examples="[t('searchAdvancedModal.anyOfTheseWordsExample')]"
+        />
 
         <!-- All these words (AND) -->
-        <search-advanced-modal-field
+        <search-advanced-modal-field-text
+          v-model="form.allWords"
           :label="t('searchAdvancedModal.allTheseWords')"
           :icon="IPhIntersectSquare"
-        >
-          <b-form-input
-            v-model="form.allWords"
-          />
-          <template #example>
-            <p class="search-advanced-modal__example">
-              <span class="search-advanced-modal__example__prefix">
-                {{ t('searchAdvancedModal.eg') }}
-              </span>
-              <span class="search-advanced-modal__example__value">
-                {{ t('searchAdvancedModal.allTheseWordsExample') }}
-              </span>
-            </p>
-          </template>
-        </search-advanced-modal-field>
+          :examples="[t('searchAdvancedModal.allTheseWordsExample')]"
+        />
 
         <!-- This exact word or phrase -->
-        <search-advanced-modal-field
+        <search-advanced-modal-field-text
+          v-model="form.exactPhrase"
           :label="t('searchAdvancedModal.exactPhrase')"
           :icon="IPhQuotes"
-        >
-          <b-form-input
-            v-model="form.exactPhrase"
-          />
-          <template #example>
-            <p class="search-advanced-modal__example">
-              <span class="search-advanced-modal__example__prefix">
-                {{ t('searchAdvancedModal.eg') }}
-              </span>
-              <span class="search-advanced-modal__example__value">
-                {{ t('searchAdvancedModal.exactPhraseExample') }}
-              </span>
-            </p>
-          </template>
-        </search-advanced-modal-field>
+          :examples="[t('searchAdvancedModal.exactPhraseExample')]"
+        />
 
         <!-- None of these words (NOT) -->
-        <search-advanced-modal-field
+        <search-advanced-modal-field-text
+          v-model="form.noneWords"
           :label="t('searchAdvancedModal.noneOfTheseWords')"
           :icon="IPhTextStrikethrough"
-        >
-          <b-form-input
-            v-model="form.noneWords"
-          />
-          <template #example>
-            <p class="search-advanced-modal__example">
-              <span class="search-advanced-modal__example__prefix">
-                {{ t('searchAdvancedModal.eg') }}
-              </span>
-              <span class="search-advanced-modal__example__value">
-                {{ t('searchAdvancedModal.noneOfTheseWordsExample1') }}
-              </span>
-              <span class="search-advanced-modal__example__break" />
-              <span class="search-advanced-modal__example__prefix">
-                {{ t('searchAdvancedModal.or') }}
-              </span>
-              <span class="search-advanced-modal__example__value">
-                {{ t('searchAdvancedModal.noneOfTheseWordsExample2') }}
-              </span>
-            </p>
-          </template>
-        </search-advanced-modal-field>
+          :examples="[
+            t('searchAdvancedModal.noneOfTheseWordsExample1'),
+            t('searchAdvancedModal.noneOfTheseWordsExample2')
+          ]"
+        />
 
         <!-- Any word with 1 character between (?) -->
         <search-advanced-modal-field
@@ -339,6 +287,7 @@ import AppModal from '@/components/AppModal/AppModal.vue'
 import FormActions from '@/components/Form/FormActions/FormActions.vue'
 import FormControlRange from '@/components/Form/FormControl/FormControlRange/FormControlRange.vue'
 import SearchAdvancedModalField from './SearchAdvancedModalField.vue'
+import SearchAdvancedModalFieldText from './SearchAdvancedModalFieldText.vue'
 import { useAdvancedSearchForm } from '@/composables/useAdvancedSearchForm'
 import { useAdvancedSearchQuery } from '@/composables/useAdvancedSearchQuery'
 
