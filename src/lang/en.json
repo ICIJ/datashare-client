@@ -60,6 +60,10 @@
     "list": "List view",
     "tree": "Tree view"
   },
+  "buttonToggleContentTypesView": {
+    "flat": "File types view",
+    "grouped": "File types by categories view"
+  },
   "buttonToggleSettings": {
     "label": "Settings"
   },
@@ -500,6 +504,23 @@
   "filter": {
     "project": "Projects",
     "contentType": "File types",
+    "contentTypeCategory": "File type categories",
+    "contentTypeCategoryItem": {
+      "AUDIO": "Audio",
+      "VIDEO": "Video",
+      "IMAGE": "Image",
+      "DOCUMENT": "Document",
+      "EMAIL": "Email",
+      "PRESENTATION": "Presentation",
+      "SPREADSHEET": "Spreadsheet",
+      "OTHER": "Other"
+    },
+    "fileTypes": {
+      "legacyIndex": {
+        "title": "Category grouping unavailable",
+        "description": "This project was indexed without file type categories."
+      }
+    },
     "language": "Languages",
     "namedEntityPerson": "People",
     "namedEntityLocation": "Locations",

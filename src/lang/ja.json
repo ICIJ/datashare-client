@@ -481,6 +481,13 @@
   "filter": {
     "project": "プロジェクト",
     "contentType": "ファイルの種類",
+    "contentTypeCategory": "ファイルの種類のカテゴリ",
+    "fileTypes": {
+      "legacyIndex": {
+        "title": "Category grouping unavailable",
+        "description": "This project was indexed without file type categories."
+      }
+    },
     "language": "言語",
     "namedEntityPerson": "人物",
     "namedEntityLocation": "地名",

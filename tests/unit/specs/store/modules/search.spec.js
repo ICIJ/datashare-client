@@ -69,10 +69,10 @@ describe('SearchStore', () => {
       expect(searchStore.q).toBeDefined()
     })
 
-    it('should instantiate the default 14 filters, with order', () => {
+    it('should instantiate the default 15 filters, with order', () => {
       const filters = searchStore.instantiatedFilters
 
-      expect(filters).toHaveLength(14)
+      expect(filters).toHaveLength(15)
       expect(find(filters, { name: 'contentType' }).order).toBe(40)
     })
 
@@ -485,6 +485,126 @@ describe('SearchStore', () => {
         searchStore.updateFromRouteQuery({})
 
         expect(searchStore.field).toBe('author')
+      })
+    })
+
+    describe('hidden contentTypeCategory filter', () => {
+      it('is registered among instantiated filters even though it is hidden', () => {
+        const filter = searchStore.getFilter({ name: 'contentTypeCategory' })
+        expect(filter).toBeDefined()
+        expect(filter.hidden).toBe(true)
+      })
+
+      it('serializes its values into the URL like any other filter', () => {
+        searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'AUDIO' })
+
+        expect(searchStore.toRouteQuery).toMatchObject({
+          'f[contentTypeCategory]': ['AUDIO']
+        })
+      })
+
+      it('restores its values from the URL', () => {
+        searchStore.updateFromRouteQuery({ 'f[contentTypeCategory]': ['VIDEO'] })
+        expect(searchStore.getFilter({ name: 'contentTypeCategory' }).values).toEqual(['VIDEO'])
+      })
+
+      it('round-trips through URL serialization and deserialization', () => {
+        searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'DOCUMENT' })
+        const query = searchStore.toRouteQuery
+
+        const anotherStore = useSearchStore.create('round-trip')
+        anotherStore.updateFromRouteQuery(query)
+
+        expect(anotherStore.getFilter({ name: 'contentTypeCategory' }).values).toEqual(['DOCUMENT'])
+      })
+    })
+
+    describe('paired contentType / contentTypeCategory exclude flag', () => {
+      it('writes both paired dimensions with the `-` prefix when contentType is excluded', () => {
+        searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+        searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'DOCUMENT' })
+        searchStore.excludeFilter('contentType')
+        searchStore.excludeFilter('contentTypeCategory')
+
+        const query = searchStore.toRouteQuery
+        expect(query['f[-contentType]']).toEqual(['application/pdf'])
+        expect(query['f[-contentTypeCategory]']).toEqual(['DOCUMENT'])
+        expect(query['f[contentType]']).toBeUndefined()
+        expect(query['f[contentTypeCategory]']).toBeUndefined()
+      })
+
+      it('emits the `-` prefix for the pair even when only the canonical side is marked excluded in the store', () => {
+        // Simulate store drift: only contentType is marked excluded, but both have values.
+        searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+        searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'DOCUMENT' })
+        searchStore.excludeFilter('contentType')
+
+        const query = searchStore.toRouteQuery
+        expect(query['f[-contentType]']).toEqual(['application/pdf'])
+        expect(query['f[-contentTypeCategory]']).toEqual(['DOCUMENT'])
+      })
+
+      it('emits the `-` prefix for the pair even when only the paired side is marked excluded in the store', () => {
+        // Simulate store drift: only contentTypeCategory is marked excluded.
+        searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+        searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'DOCUMENT' })
+        searchStore.excludeFilter('contentTypeCategory')
+
+        const query = searchStore.toRouteQuery
+        expect(query['f[-contentType]']).toEqual(['application/pdf'])
+        expect(query['f[-contentTypeCategory]']).toEqual(['DOCUMENT'])
+      })
+
+      it('propagates the exclude flag to contentTypeCategory when only f[-contentType] is in the URL', () => {
+        searchStore.updateFromRouteQuery({ 'f[-contentType]': ['application/pdf'] })
+
+        expect(searchStore.isFilterExcluded('contentType')).toBe(true)
+        expect(searchStore.isFilterExcluded('contentTypeCategory')).toBe(true)
+      })
+
+      it('propagates the exclude flag to contentType when only f[-contentTypeCategory] is in the URL', () => {
+        searchStore.updateFromRouteQuery({ 'f[-contentTypeCategory]': ['DOCUMENT'] })
+
+        expect(searchStore.isFilterExcluded('contentType')).toBe(true)
+        expect(searchStore.isFilterExcluded('contentTypeCategory')).toBe(true)
+      })
+
+      it('leaves both dimensions included when the URL carries neither with an exclude flag', () => {
+        searchStore.updateFromRouteQuery({
+          'f[contentType]': ['application/pdf'],
+          'f[contentTypeCategory]': ['DOCUMENT']
+        })
+
+        expect(searchStore.isFilterExcluded('contentType')).toBe(false)
+        expect(searchStore.isFilterExcluded('contentTypeCategory')).toBe(false)
+      })
+
+      it('unifies divergent URL flags by propagating exclude to both sides', () => {
+        // The paired side has the flag but canonical does not — unify by keeping
+        // the stricter state (excluded) so user intent is preserved.
+        searchStore.updateFromRouteQuery({
+          'f[contentType]': ['application/pdf'],
+          'f[-contentTypeCategory]': ['DOCUMENT']
+        })
+
+        expect(searchStore.isFilterExcluded('contentType')).toBe(true)
+        expect(searchStore.isFilterExcluded('contentTypeCategory')).toBe(true)
+      })
+
+      it('round-trips both paired dimensions through URL when excluded together', () => {
+        searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+        searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'DOCUMENT' })
+        searchStore.excludeFilter('contentType')
+        searchStore.excludeFilter('contentTypeCategory')
+        const query = searchStore.toRouteQuery
+
+        const anotherStore = useSearchStore.create('paired-round-trip')
+        anotherStore.updateFromRouteQuery(query)
+
+        expect(anotherStore.isFilterExcluded('contentType')).toBe(true)
+        expect(anotherStore.isFilterExcluded('contentTypeCategory')).toBe(true)
+        expect(anotherStore.getFilter({ name: 'contentType' }).values).toEqual(['application/pdf'])
+        expect(anotherStore.getFilter({ name: 'contentTypeCategory' }).values).toEqual(['DOCUMENT'])
       })
     })
   })
@@ -1209,6 +1329,156 @@ describe('SearchStore', () => {
       estimateSpy.mockResolvedValue({ estimatedCount: 7, estimatedSize: 999 })
       const result = await searchStore.estimateDownloadSize()
       expect(result).toEqual({ estimatedCount: 7, estimatedSize: 999 })
+    })
+  })
+
+  describe('Paired-dimension OR-combine in the ES query body', () => {
+    function buildBody() {
+      return api.elasticsearch._buildSearchBody({
+        query: '*',
+        filters: searchStore.instantiatedFilters,
+        fields: [],
+        from: 0,
+        size: 25,
+        sort: { _score: { order: 'desc' } }
+      })
+    }
+
+    function findBoolShould(node) {
+      if (!node || typeof node !== 'object') {
+        return null
+      }
+      if (Array.isArray(node)) {
+        for (const child of node) {
+          const found = findBoolShould(child)
+          if (found) return found
+        }
+        return null
+      }
+      if (node.bool && Array.isArray(node.bool.should) && node.bool.should.length > 1) {
+        return node.bool
+      }
+      for (const value of Object.values(node)) {
+        const found = findBoolShould(value)
+        if (found) return found
+      }
+      return null
+    }
+
+    function findTermsClause(node, field) {
+      if (!node || typeof node !== 'object') {
+        return null
+      }
+      if (Array.isArray(node)) {
+        for (const child of node) {
+          const found = findTermsClause(child, field)
+          if (found) return found
+        }
+        return null
+      }
+      if (node.terms && Object.prototype.hasOwnProperty.call(node.terms, field)) {
+        return node.terms[field]
+      }
+      for (const value of Object.values(node)) {
+        const found = findTermsClause(value, field)
+        if (found) return found
+      }
+      return null
+    }
+
+    function findMustNotForField(node, field) {
+      if (!node || typeof node !== 'object') {
+        return null
+      }
+      if (Array.isArray(node)) {
+        for (const child of node) {
+          const found = findMustNotForField(child, field)
+          if (found) return found
+        }
+        return null
+      }
+      if (node.bool && node.bool.must_not) {
+        const mustNot = Array.isArray(node.bool.must_not) ? node.bool.must_not : [node.bool.must_not]
+        for (const clause of mustNot) {
+          if (clause.terms && Object.prototype.hasOwnProperty.call(clause.terms, field)) {
+            return clause.terms[field]
+          }
+        }
+      }
+      for (const value of Object.values(node)) {
+        const found = findMustNotForField(value, field)
+        if (found) return found
+      }
+      return null
+    }
+
+    it('OR-combines paired contentType and contentTypeCategory when both have values', () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'DOCUMENT' })
+
+      const body = buildBody()
+      const should = findBoolShould(body.query)
+      expect(should).not.toBeNull()
+      expect(should.minimum_should_match).toBe(1)
+      expect(should.should).toEqual(
+        expect.arrayContaining([
+          { terms: { contentType: ['application/pdf'] } },
+          { terms: { contentTypeCategory: ['DOCUMENT'] } }
+        ])
+      )
+    })
+
+    it('keeps a single must (filter) clause when only contentType has values', () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+
+      const body = buildBody()
+      // No bool.should sub-query expected, the contentType clause stays a plain terms filter.
+      expect(findBoolShould(body.query)).toBeNull()
+      expect(findTermsClause(body.query, 'contentType')).toEqual(['application/pdf'])
+      expect(findTermsClause(body.query, 'contentTypeCategory')).toBeNull()
+    })
+
+    it('keeps a single clause when only contentTypeCategory has values', () => {
+      searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'DOCUMENT' })
+
+      const body = buildBody()
+      expect(findBoolShould(body.query)).toBeNull()
+      expect(findTermsClause(body.query, 'contentTypeCategory')).toEqual(['DOCUMENT'])
+      expect(findTermsClause(body.query, 'contentType')).toBeNull()
+    })
+
+    it('keeps two unrelated filters AND-combined (no OR sub-query)', () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.addFilterValue({ name: 'language', value: 'ENGLISH' })
+
+      const body = buildBody()
+      expect(findBoolShould(body.query)).toBeNull()
+      expect(findTermsClause(body.query, 'contentType')).toEqual(['application/pdf'])
+      expect(findTermsClause(body.query, 'language')).toEqual(['ENGLISH'])
+    })
+
+    it('keeps excluded paired values as must_not and skips OR-combine when only one side is included', () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'DOCUMENT' })
+      // Only the category side is excluded — the include side stands alone, no OR-combine.
+      searchStore.excludeFilter('contentTypeCategory')
+
+      const body = buildBody()
+      expect(findBoolShould(body.query)).toBeNull()
+      expect(findTermsClause(body.query, 'contentType')).toEqual(['application/pdf'])
+      expect(findMustNotForField(body.query, 'contentTypeCategory')).toEqual(['DOCUMENT'])
+    })
+
+    it('keeps both excluded paired values as independent must_not clauses', () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'DOCUMENT' })
+      searchStore.excludeFilter('contentType')
+      searchStore.excludeFilter('contentTypeCategory')
+
+      const body = buildBody()
+      expect(findBoolShould(body.query)).toBeNull()
+      expect(findMustNotForField(body.query, 'contentType')).toEqual(['application/pdf'])
+      expect(findMustNotForField(body.query, 'contentTypeCategory')).toEqual(['DOCUMENT'])
     })
   })
 })

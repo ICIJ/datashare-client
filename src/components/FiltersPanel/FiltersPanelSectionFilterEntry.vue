@@ -1,15 +1,14 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, nextTick, useTemplateRef } from 'vue'
 import { EllipsisTooltip as vEllipsisTooltip } from '@icij/murmur-next'
 
 import DisplayNumber from '@/components/Display/DisplayNumber'
 
-const modelValue = defineModel({
-  type: Boolean,
-  default: null
-})
-
 const props = defineProps({
+  modelValue: {
+    type: Boolean,
+    default: null
+  },
   label: {
     type: String
   },
@@ -26,12 +25,32 @@ const props = defineProps({
   },
   hideCount: {
     type: Boolean
+  },
+  indeterminate: {
+    type: Boolean
   }
 })
 
+const emit = defineEmits(['update:modelValue'])
+
+const checkboxRef = useTemplateRef('checkboxRef')
+
+// Drive the checkbox as a fully controlled component: when the parent absorbs
+// the click (e.g. promoting the last child to a category) the prop stays put,
+// but Vue's no-op patch leaves the DOM `el.checked` ahead — manually re-sync.
+const onUpdateModelValue = async (value) => {
+  emit('update:modelValue', value)
+  await nextTick()
+  const input = checkboxRef.value?.element
+  const expected = Boolean(props.modelValue)
+  if (input && input.checked !== expected) {
+    input.checked = expected
+  }
+}
+
 const classList = computed(() => {
   return {
-    'filters-panel-section-filter-entry--checked': modelValue.value
+    'filters-panel-section-filter-entry--checked': props.modelValue
   }
 })
 
@@ -44,9 +63,12 @@ const showCount = computed(() => !props.hideCount && !isNaN(props.count))
     :class="classList"
   >
     <b-form-checkbox
-      v-model="modelValue"
+      ref="checkboxRef"
+      :model-value="props.modelValue"
       :value="value"
       :disabled="disabled"
+      :indeterminate="indeterminate"
+      @update:model-value="onUpdateModelValue"
     >
       <slot v-bind="{ label }">
         <span

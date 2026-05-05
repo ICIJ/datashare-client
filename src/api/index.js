@@ -70,6 +70,13 @@ export class Api {
     return this.sendAction(`/api/task/${id}`)
   }
 
+  getContentTypeCategories(contentTypes) {
+    return this.sendAction('/api/contentType/categories', {
+      method: Method.POST,
+      data: contentTypes,
+    })
+  }
+
   createIndex(index) {
     return this.sendActionAsText(`/api/index/${index}`, { method: Method.PUT })
   }

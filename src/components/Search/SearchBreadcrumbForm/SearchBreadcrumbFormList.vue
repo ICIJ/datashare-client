@@ -1,9 +1,13 @@
 <script setup>
+import { computed } from 'vue'
 import { AppIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 import IPhPath from '~icons/ph/path'
 
-defineProps({
+import SearchBreadcrumbFormEntry from '@/components/Search/SearchBreadcrumbForm/SearchBreadcrumbFormEntry'
+import { assembleEntries } from '@/composables/useSearchBreadcrumb'
+
+const props = defineProps({
   icon: {
     type: [String, Object, Array],
     default: () => IPhPath
@@ -14,9 +18,21 @@ defineProps({
   },
   labelClass: {
     type: [String, Array, Object]
+  },
+  entries: {
+    type: Array,
+    default: () => []
+  },
+  noXIcon: {
+    type: Boolean,
+    default: false
   }
 })
+
+const emit = defineEmits(['click:entry-x'])
 const { t } = useI18n()
+const assembledEntries = computed(() => assembleEntries(props.entries))
+const hasEntries = computed(() => assembledEntries.value.length > 0)
 </script>
 
 <template>
@@ -34,8 +50,17 @@ const { t } = useI18n()
         {{ t('searchBreadcrumbFormList.label') }}
       </slot>
     </div>
-    <div class="search-breadcrumb-form-list__entries d-flex flex-wrap row-gap-2 column-gap-2 align-items-baseline">
-      <slot />
+    <div class="search-breadcrumb-form-list__entries d-flex flex-wrap row-gap-2 column-gap-2 align-items-center">
+      <template v-if="hasEntries">
+        <search-breadcrumb-form-entry
+          v-for="(entry, i) in assembledEntries"
+          :key="i"
+          v-bind="entry"
+          :no-x-icon="noXIcon || entry.noXIcon"
+          @click:x="emit('click:entry-x', $event, entry)"
+        />
+      </template>
+      <slot v-else />
     </div>
   </div>
 </template>
