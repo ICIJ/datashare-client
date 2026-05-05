@@ -85,6 +85,13 @@ describe('SearchAdvancedModal.vue', () => {
     expect(wrapper.emitted('update:modelValue').at(-1)[0]).toBe(false)
   })
 
+  it('does not emit a search nor close when the form is empty', () => {
+    const wrapper = factory()
+    wrapper.vm.handleSearch()
+    expect(wrapper.emitted('search')).toBeFalsy()
+    expect(wrapper.emitted('update:modelValue')).toBeFalsy()
+  })
+
   it('Reset clears every entry and re-selects "All fields"', () => {
     const wrapper = factory()
     wrapper.vm.form.anyWords = 'foo'

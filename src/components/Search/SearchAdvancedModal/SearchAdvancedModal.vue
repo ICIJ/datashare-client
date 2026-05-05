@@ -475,6 +475,9 @@ function toQueryShape(f) {
 }
 
 function handleSearch() {
+  // Pressing Enter inside an input also submits the form, so guard here
+  // rather than relying on the visible Search button being disabled.
+  if (isFormEmpty.value) return
   const query = generateQuery(toQueryShape(form.value))
   emit('search', query)
   isVisible.value = false
