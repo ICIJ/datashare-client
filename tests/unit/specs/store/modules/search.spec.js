@@ -75,6 +75,10 @@ describe('SearchStore', () => {
       expect(filters).toHaveLength(14)
       expect(find(filters, { name: 'contentType' }).order).toBe(40)
     })
+
+    it('should not be ready until the first search completes', () => {
+      expect(searchStore.isReady).toBe(false)
+    })
   })
 
   describe('Reset state', () => {

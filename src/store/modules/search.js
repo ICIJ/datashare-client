@@ -33,7 +33,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   const filters = ref([...filterDefs])
   const from = ref(0)
   const indices = ref([])
-  const isReady = ref(true)
+  const isReady = ref(false)
   const q = ref('')
   const response = ref(EsDocList.none())
   const excludeFilters = ref([])
@@ -270,7 +270,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    */
   function resetForRouteChange() {
     from.value = 0
-    isReady.value = true
+    isReady.value = false
     q.value = ''
     excludeFilters.value = []
     values.value = {}
