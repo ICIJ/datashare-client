@@ -71,16 +71,19 @@ export function useAdvancedSearchQuery() {
       parts.push(notTerms)
     }
 
-    // Single character wildcard (?)
-    if (formData.singleWildcardStart && formData.singleWildcardEnd) {
-      const wildcardTerm = `${escapeTerm(formData.singleWildcardStart)}?${escapeTerm(formData.singleWildcardEnd)}`
-      parts.push(wildcardTerm)
+    // Single character wildcard (?). Either side alone is also a valid
+    // Lucene query (`Mer?` / `?es`), so only require at least one half.
+    if (formData.singleWildcardStart || formData.singleWildcardEnd) {
+      const start = escapeTerm(formData.singleWildcardStart || '')
+      const end = escapeTerm(formData.singleWildcardEnd || '')
+      parts.push(`${start}?${end}`)
     }
 
-    // Multiple character wildcard (*)
-    if (formData.multiWildcardStart && formData.multiWildcardEnd) {
-      const wildcardTerm = `${escapeTerm(formData.multiWildcardStart)}*${escapeTerm(formData.multiWildcardEnd)}`
-      parts.push(wildcardTerm)
+    // Multiple character wildcard (*) — same single-sided rule as `?`.
+    if (formData.multiWildcardStart || formData.multiWildcardEnd) {
+      const start = escapeTerm(formData.multiWildcardStart || '')
+      const end = escapeTerm(formData.multiWildcardEnd || '')
+      parts.push(`${start}*${end}`)
     }
 
     // Fuzzy search (spelling changes)

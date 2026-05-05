@@ -335,6 +335,50 @@ describe('useAdvancedSearchQuery', () => {
       expect(query).toBe('(Paris London) +France "United Kingdom" -spam Merced?s Mercedes~1')
     })
 
+    it('generates a single-sided single-char wildcard (suffix)', () => {
+      const formData = {
+        anyWords: [],
+        allWords: [],
+        exactPhrase: [],
+        noneWords: [],
+        singleWildcardStart: 'Merced',
+        singleWildcardEnd: '',
+        multiWildcardStart: '',
+        multiWildcardEnd: '',
+        fuzzyTerm: '',
+        fuzzyDistance: 0,
+        proximityPhrase: '',
+        proximityDistance: 0,
+        fieldAll: true,
+        selectedFields: []
+      }
+
+      const query = generateQuery(formData)
+      expect(query).toBe('Merced?')
+    })
+
+    it('generates a single-sided multi-char wildcard (prefix)', () => {
+      const formData = {
+        anyWords: [],
+        allWords: [],
+        exactPhrase: [],
+        noneWords: [],
+        singleWildcardStart: '',
+        singleWildcardEnd: '',
+        multiWildcardStart: '',
+        multiWildcardEnd: 'es',
+        fuzzyTerm: '',
+        fuzzyDistance: 0,
+        proximityPhrase: '',
+        proximityDistance: 0,
+        fieldAll: true,
+        selectedFields: []
+      }
+
+      const query = generateQuery(formData)
+      expect(query).toBe('*es')
+    })
+
     it('escapes Lucene operators in word inputs', () => {
       const formData = {
         anyWords: ['foo:bar', 'baz(qux)'],
