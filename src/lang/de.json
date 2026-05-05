@@ -173,7 +173,7 @@
     "sectionDescription": "Once downloaded, how do I open it?"
   },
   "documentDropdownReindexModalParent": {
-    "alert": "This document was extracted from another document. To reindex it, Datashare needs to reprocess the parent document. Depending on the file size and the selected options, this may take some time."
+    "alert": "This document was extracted from another document. To reindex it, Datashare needs to reprocess the parent document. Depending on the document size and the selected options, this may take some time."
   },
   "documentDropdownReindexModal": {
     "title": "Reindex this document",
@@ -438,11 +438,11 @@
   "linkedDocumentCard": {
     "siblings": {
       "title": "{n} documents in the same folder | {n} document in the same folder | {n} documents in the same folder",
-      "description": "Same extraction level as this document"
+      "description": "Same embedment level as this document"
     },
     "children": {
       "title": "{n} children documents | {n} children document | {n} children documents",
-      "description": "One extraction level below this document"
+      "description": "One embedment level below this document"
     }
   },
   "documentContent": {
@@ -873,7 +873,7 @@
   },
   "appSidebarFooter": {
     "signOut": "Sign out",
-    "signOutBasic": "To sign out from Datashare you must close your web browser.",
+    "signOutBasic": "To sign out from Datashare, you must close your web browser",
     "keyboardShortcuts": "Keyboard Shortcuts",
     "settings": "Einstellungen",
     "help": "Hilfe",
@@ -970,7 +970,7 @@
         },
         "entity-recognition": {
           "title": "Entity recognition",
-          "description": "Know quickly what’s in your files by asking Datashare to automatically recognize names of people, locations and organizations in your documents, as well as email addresses. ",
+          "description": "Know quickly what’s in your documents by asking Datashare to automatically recognize names of people, locations and organizations in your documents, as well as email addresses. ",
           "actionText": "Find entities"
         },
         "document-addition": {
@@ -1114,8 +1114,8 @@
           "sizeLimit": "Results were truncated after reaching the {reason} ({limit}).",
           "fileCountLimit": "Results were truncated after reaching the {reason} ({limit}).",
           "reasons": {
-            "sizeLimit": "size limit",
-            "fileCountLimit": "maximum number of files"
+            "sizeLimit": "Size limit",
+            "fileCountLimit": "Maximum number of documents"
           }
         }
       }
@@ -1181,7 +1181,7 @@
         },
         "csvString": {
           "label": "Or type your queries",
-          "placeholder": "Enter one search term per line here..."
+          "placeholder": "Enter one search term per line here"
         },
         "phraseChanges": {
           "label": "Sentence changes",
@@ -1413,13 +1413,13 @@
       "empty": "No banners yet. Click \"Add banner\" to create one.",
       "save": "Save",
       "reset": "Reset",
-      "description": "Use path banner to provide contextualized information at the top of each document under a specified path.",
+      "description": "Use banner to display contextualized information on top of all documents of a specified path.",
       "previewTitle": "Preview",
       "noPathSelected": "No path selected",
       "fields": {
         "sensitiveContent": {
           "label": "Sensitive content",
-          "description": "Sensitive banner adds a blurred overlay on top of the content of documents and ask users to confirm to view"
+          "description": "Sensitive-content banner adds a blurred overlay on top of the content of documents and asks users before viewing"
         },
         "path": {
           "label": "Path",
@@ -1436,16 +1436,16 @@
       },
       "notify": {
         "create": {
-          "succeedBody": "Banner created.",
-          "failedBody": "Failed to create banner."
+          "succeedBody": "Banner created",
+          "failedBody": "Failed to create banner"
         },
         "update": {
-          "succeedBody": "Banner saved.",
-          "failedBody": "Failed to save banner."
+          "succeedBody": "Banner saved",
+          "failedBody": "Failed to save banner"
         },
         "delete": {
-          "succeedBody": "Banner deleted.",
-          "failedBody": "Failed to delete banner."
+          "succeedBody": "Banner deleted",
+          "failedBody": "Failed to delete banner"
         }
       }
     }
@@ -1497,7 +1497,7 @@
       },
       "publisherName": {
         "label": "Name des Veröffentlichers",
-        "placeholder": "The name of the people or organization who published the files in this project"
+        "placeholder": "The name of the people or organization who published the documents in this project"
       },
       "maintainerName": {
         "label": "Name des Instandhalters",
@@ -1601,16 +1601,16 @@
         "description": "Backups are stored on a {type} repository located at {location}"
       },
       "setup": {
-        "title": "Configure Backup Storage",
+        "title": "Configure backup storage",
         "description": "Your snapshots must be stored in one of the predefined paths. Please select one of the available paths below.",
         "loading": "Loading available paths...",
-        "noPathsTitle": "No Backup Paths Available",
+        "noPathsTitle": "No backup paths available",
         "noPathsDescription": "No backup paths have been configured in Elasticsearch. Please configure the path.repo setting in your Elasticsearch configuration to enable backups.",
         "selectPath": "Select the filesystem repository location:",
         "submit": "Configure"
       },
       "refresh": "Refresh",
-      "create": "Create Backup",
+      "create": "Create backup",
       "creating": "Creating...",
       "list": {
         "name": "Name",
@@ -1628,14 +1628,14 @@
         "PARTIAL": "Partial"
       },
       "restore": {
-        "title": "Restore Backup",
+        "title": "Restore backup",
         "message": "This will restore all data from backup \"{name}\". Existing data may be overwritten.",
         "warning": "This action cannot be undone.",
         "confirm": "Restore",
         "cancel": "Cancel"
       },
       "delete": {
-        "title": "Delete Backup",
+        "title": "Delete backup",
         "message": "Are you sure you want to delete backup \"{name}\"?",
         "confirm": "Delete",
         "cancel": "Cancel"
@@ -1763,7 +1763,7 @@
       "failed": "Löschen nicht möglich",
       "failedBody": "Something happened when trying to delete this batch download."
     },
-    "limitations": "Batch downloads are limited to {maxNbFiles} files and {maxSize}B."
+    "limitations": "Batch downloads are limited to {maxNbFiles} documents and {maxSize}B."
   },
   "batchDownloadActions": {
     "remove": {
@@ -1782,8 +1782,8 @@
   },
   "batchDownloadConfirmModal": {
     "title": "Your download may be truncated",
-    "knownTruncation": "Your search matches approximately {estimatedCount} documents ({estimatedSize}). Batch downloads are limited to {maxFiles} files and {maxSize}, so only part of your results will be included.",
-    "unknownTruncation": "We couldn't verify your search size. Batch downloads are limited to {maxFiles} files and {maxSize}, so your download may be truncated.",
+    "knownTruncation": "Your search matches approximately {estimatedCount} documents ({estimatedSize}). Batch downloads are limited to {maxFiles} documents and {maxSize}, so only part of your results will be included.",
+    "unknownTruncation": "We couldn't verify your search size. Batch downloads are limited to {maxFiles} documents and {maxSize}, so your download may be truncated.",
     "question": "Do you want to proceed anyway?"
   },
   "widget": {
@@ -1964,7 +1964,7 @@
       "contentTextLength": "Text length",
       "contentType": "File type",
       "creationDate": "Created on",
-      "extractionLevel": "Extraction level",
+      "extractionLevel": "Embedment level",
       "extractionDate": "Indizierungsdatum",
       "language": "Language",
       "project": "Projekt"
@@ -1977,9 +1977,9 @@
     "action": "Action"
   },
   "documentEntriesHeader": {
-    "batchDownloadDocuments": "Batch download: downloading multiple files is limited to {maxSize}.",
-    "batchDownloadDocumentsWarning": "Batch download: downloading multiple files is limited to the first {maxFiles} files and {maxSize}.",
-    "batchDownloadError": "Something went wrong when attempt to download the files.",
+    "batchDownloadDocuments": "Batch download: downloading multiple documents is limited to {maxSize}.",
+    "batchDownloadDocumentsWarning": "Batch download: downloading multiple documents is limited to the first {maxFiles} documents and {maxSize}.",
+    "batchDownloadError": "Something went wrong while downloading the documents.",
     "batchDownloadCreated": "Your batch download is being prepared",
     "batchDownloadLink": "See all"
   },
