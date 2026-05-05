@@ -96,23 +96,23 @@ export function useAdvancedSearchForm() {
 
   /**
    * "All fields" and individual field checkboxes are mutually exclusive:
-   * - Selecting an individual field deselects "All".
+   * - Selecting "All" clears every individual field.
+   * - Selecting any individual field deselects "All".
    * - Deselecting the last individual field re-selects "All".
-   * - Selecting "All" clears every individual field; it cannot be
-   *   unticked directly (the user must pick an individual field to
-   *   leave the "all" state), which avoids landing in an empty state.
+   * - "All" cannot be unticked directly (the user must pick an
+   *   individual field to leave the "all" state), which avoids landing
+   *   in an empty state.
    */
-  function handleFieldAllChange(checked) {
-    if (checked) {
-      form.selectedFields = []
-    }
-    else {
+  function setFieldAll(value) {
+    if (value) {
       form.fieldAll = true
+      form.selectedFields = []
     }
   }
 
-  function handleFieldChange() {
-    form.fieldAll = form.selectedFields.length === 0
+  function setSelectedFields(values) {
+    form.selectedFields = values
+    form.fieldAll = values.length === 0
   }
 
   function reset() {
@@ -125,8 +125,8 @@ export function useAdvancedSearchForm() {
     formKey,
     fields: ADVANCED_SEARCH_FIELDS,
     isFormEmpty,
-    handleFieldAllChange,
-    handleFieldChange,
+    setFieldAll,
+    setSelectedFields,
     reset,
     toQueryShape
   }

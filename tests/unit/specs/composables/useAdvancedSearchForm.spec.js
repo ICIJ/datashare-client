@@ -72,31 +72,31 @@ describe('useAdvancedSearchForm', () => {
 
   describe('field mutual exclusion', () => {
     it('clears individual fields when "All" is checked', () => {
-      const { form, handleFieldAllChange } = useAdvancedSearchForm()
+      const { form, setFieldAll } = useAdvancedSearchForm()
       form.fieldAll = false
       form.selectedFields = ['tags', 'content']
-      handleFieldAllChange(true)
+      setFieldAll(true)
+      expect(form.fieldAll).toBe(true)
       expect(form.selectedFields).toEqual([])
     })
 
-    it('forces "All" back on when the user tries to untick it directly', () => {
-      const { form, handleFieldAllChange } = useAdvancedSearchForm()
-      handleFieldAllChange(false)
+    it('ignores attempts to untick "All" directly', () => {
+      const { form, setFieldAll } = useAdvancedSearchForm()
+      setFieldAll(false)
       expect(form.fieldAll).toBe(true)
     })
 
     it('toggles "All" off when at least one individual field is selected', () => {
-      const { form, handleFieldChange } = useAdvancedSearchForm()
-      form.selectedFields = ['tags']
-      handleFieldChange()
+      const { form, setSelectedFields } = useAdvancedSearchForm()
+      setSelectedFields(['tags'])
       expect(form.fieldAll).toBe(false)
+      expect(form.selectedFields).toEqual(['tags'])
     })
 
     it('re-selects "All" when the last individual field is unticked', () => {
-      const { form, handleFieldChange } = useAdvancedSearchForm()
+      const { form, setSelectedFields } = useAdvancedSearchForm()
       form.fieldAll = false
-      form.selectedFields = []
-      handleFieldChange()
+      setSelectedFields([])
       expect(form.fieldAll).toBe(true)
     })
   })

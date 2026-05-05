@@ -103,14 +103,8 @@
           :all="form.fieldAll"
           :selected="form.selectedFields"
           :fields="fields"
-          @update:all="(value) => {
-            form.fieldAll = value
-            handleFieldAllChange(value)
-          }"
-          @update:selected="(value) => {
-            form.selectedFields = value
-            handleFieldChange()
-          }"
+          @update:all="setFieldAll"
+          @update:selected="setSelectedFields"
         />
         <!-- Hidden submit so pressing Enter in any input triggers the form
              handler even when the focused control swallows the event. -->
@@ -166,8 +160,8 @@ const {
   formKey,
   fields,
   isFormEmpty,
-  handleFieldAllChange,
-  handleFieldChange,
+  setFieldAll,
+  setSelectedFields,
   reset: handleReset,
   toQueryShape
 } = useAdvancedSearchForm()
