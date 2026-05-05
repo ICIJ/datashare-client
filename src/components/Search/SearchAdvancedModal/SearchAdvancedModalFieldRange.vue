@@ -29,7 +29,6 @@
       <p
         v-for="(line, index) in explanations"
         :key="index"
-        :class="index === explanations.length - 1 ? 'mb-0' : 'mb-2'"
       >
         {{ line }}
       </p>
@@ -125,6 +124,14 @@ const { t } = useI18n()
 
     @include media-breakpoint-up(md) {
       padding-left: calc(var(--search-advanced-modal-label-col) + #{$spacer});
+    }
+
+    p {
+      margin-bottom: $spacer * 0.5;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
     }
   }
 }
