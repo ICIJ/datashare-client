@@ -5,8 +5,7 @@
   >
     <b-form-input
       ref="input"
-      :model-value="modelValue"
-      @update:model-value="$emit('update:modelValue', $event)"
+      v-model="model"
     />
     <template
       v-if="examples.length"
@@ -48,10 +47,6 @@ defineProps({
     type: [Object, Function],
     required: true
   },
-  modelValue: {
-    type: String,
-    default: ''
-  },
   /**
    * One or more example strings shown under the input. The first is
    * prefixed with "e.g.", subsequent lines with "or".
@@ -62,7 +57,7 @@ defineProps({
   }
 })
 
-defineEmits(['update:modelValue'])
+const model = defineModel({ type: String, default: '' })
 
 const { t } = useI18n()
 const input = useTemplateRef('input')
