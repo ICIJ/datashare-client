@@ -1,8 +1,7 @@
 import { flushPromises, shallowMount, mount } from '@vue/test-utils'
 import { uniqueId } from 'lodash'
 
-import { IndexedDocument, letData } from '~tests/unit/es_utils'
-import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
+import RawDocBuilder from '~tests/unit/RawDocBuilder'
 import CoreSetup from '~tests/unit/CoreSetup'
 import DocumentViewTabsEntities from '@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsEntities'
 import EntitySection from '@/components/Entity/EntitySection/EntitySection'
@@ -19,8 +18,32 @@ vi.mock('lodash', async (importOriginal) => {
 })
 
 describe('DocumentViewTabsEntities.vue', () => {
-  const { index, es: elasticsearch } = esConnectionHelper.build()
+  const index = 'test-index'
   let core, documentStore, id, wrapper, spy
+
+  function nerHit(mention, category, routing = id) {
+    return {
+      _index: index,
+      _type: '_doc',
+      _id: mention + '-' + category,
+      _score: 1,
+      _routing: routing,
+      _source: {
+        extractorLanguage: 'ENGLISH',
+        mentionNorm: mention.toLowerCase(),
+        mention,
+        offsets: [0],
+        category,
+        type: 'NamedEntity',
+        join: { parent: routing, name: 'NamedEntity' },
+        isHidden: false
+      }
+    }
+  }
+
+  function nerResponse(hits = []) {
+    return { hits: { total: { value: hits.length, relation: 'eq' }, max_score: 1, hits } }
+  }
 
   beforeEach(() => {
     const routes = [
@@ -30,6 +53,7 @@ describe('DocumentViewTabsEntities.vue', () => {
 
     id = uniqueId('document-')
     spy = vi.spyOn(api.elasticsearch, 'getDocumentNamedEntitiesInCategory')
+    spy.mockResolvedValue(nerResponse())
     core = CoreSetup.init().useAll().useRouter(routes)
     core.config.set('manageDocuments', true)
     documentStore = useDocumentStore()
@@ -70,17 +94,17 @@ describe('DocumentViewTabsEntities.vue', () => {
   })
 
   it('should display named entities in the dedicated tab', async () => {
-    await letData(elasticsearch)
-      .have(
-        new IndexedDocument(id, index)
-          .withPipeline('CORENLP')
-          .withNer('mention_01', 0, 'PERSON')
-          .withNer('mention_02', 0, 'ORGANIZATION')
-          .withNer('mention_03', 0, 'LOCATION')
-      )
-      .commit()
+    spy.mockImplementation((_idx, _docId, _routing, _from, _size, category) => {
+      const byCategory = {
+        PERSON: [nerHit('mention_01', 'PERSON')],
+        ORGANIZATION: [nerHit('mention_02', 'ORGANIZATION')],
+        LOCATION: [nerHit('mention_03', 'LOCATION')],
+        EMAIL: []
+      }
+      return Promise.resolve(nerResponse(byCategory[category] ?? []))
+    })
 
-    await documentStore.getDocument({ id, index })
+    documentStore.setDocument(RawDocBuilder.build(id, index).withPipeline('CORENLP').toRaw())
     await documentStore.getFirstPageForNamedEntityInAllCategories()
 
     wrapper = mount(DocumentViewTabsEntities, {
@@ -98,9 +122,7 @@ describe('DocumentViewTabsEntities.vue', () => {
   })
 
   it('should contains a specific text when no NER task has been run on that document', async () => {
-    await letData(elasticsearch).have(new IndexedDocument(id, index)).commit()
-
-    await documentStore.getDocument({ id, index })
+    documentStore.setDocument(RawDocBuilder.build(id, index).toRaw())
     await documentStore.getFirstPageForNamedEntityInAllCategories()
 
     wrapper = shallowMount(DocumentViewTabsEntities, {
@@ -116,9 +138,7 @@ describe('DocumentViewTabsEntities.vue', () => {
   })
 
   it('should display an error message if no named entities has been found after names finding task', async () => {
-    await letData(elasticsearch).have(new IndexedDocument(id, index).withPipeline('CORENLP')).commit()
-
-    await documentStore.getDocument({ id, index })
+    documentStore.setDocument(RawDocBuilder.build(id, index).withPipeline('CORENLP').toRaw())
     await documentStore.getFirstPageForNamedEntityInAllCategories()
 
     wrapper = shallowMount(DocumentViewTabsEntities, {
@@ -173,16 +193,7 @@ describe('DocumentViewTabsEntities.vue', () => {
     })
 
     it('should call the api to get named entities', async () => {
-      await letData(elasticsearch)
-        .have(
-          new IndexedDocument(id, index)
-            .withPipeline('CORENLP')
-            .withNer('london', 0, 'LOCATION')
-            .withNer('london', 10, 'LOCATION')
-        )
-        .commit()
-
-      await documentStore.getDocument({ id, index })
+      documentStore.setDocument(RawDocBuilder.build(id, index).withPipeline('CORENLP').toRaw())
       await documentStore.getFirstPageForNamedEntityInAllCategories()
 
       spy.mockClear()
@@ -200,16 +211,7 @@ describe('DocumentViewTabsEntities.vue', () => {
     })
 
     it('should call the api to get filtered named entities', async () => {
-      await letData(elasticsearch)
-        .have(
-          new IndexedDocument(id, index)
-            .withPipeline('CORENLP')
-            .withNer('london', 0, 'LOCATION')
-            .withNer('london', 10, 'LOCATION')
-        )
-        .commit()
-
-      await documentStore.getDocument({ id, index })
+      documentStore.setDocument(RawDocBuilder.build(id, index).withPipeline('CORENLP').toRaw())
       await documentStore.getFirstPageForNamedEntityInAllCategories()
 
       spy.mockClear()
