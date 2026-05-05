@@ -148,7 +148,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, watch, useTemplateRef } from 'vue'
+import { nextTick, watch, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import IPhUniteSquare from '~icons/ph/unite-square'
 import IPhIntersectSquare from '~icons/ph/intersect-square'
@@ -168,14 +168,8 @@ import SearchAdvancedModalFooter from './SearchAdvancedModalFooter.vue'
 import { useAdvancedSearchForm } from '@/composables/useAdvancedSearchForm'
 import { useAdvancedSearchQuery } from '@/composables/useAdvancedSearchQuery'
 
-const props = defineProps({
-  modelValue: {
-    type: Boolean,
-    default: false
-  }
-})
-
-const emit = defineEmits(['update:modelValue', 'search'])
+const isVisible = defineModel({ type: Boolean, default: false })
+const emit = defineEmits(['search'])
 
 const { t } = useI18n()
 const { generateQuery } = useAdvancedSearchQuery()
@@ -189,11 +183,6 @@ const {
   reset: handleReset,
   toQueryShape
 } = useAdvancedSearchForm()
-
-const isVisible = computed({
-  get: () => props.modelValue,
-  set: value => emit('update:modelValue', value)
-})
 
 const firstInput = useTemplateRef('firstInput')
 
