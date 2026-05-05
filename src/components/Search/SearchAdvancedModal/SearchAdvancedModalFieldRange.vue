@@ -4,21 +4,17 @@
       :label="label"
       :icon="icon"
     >
-      <b-form-input
-        :model-value="term"
-        @update:model-value="$emit('update:term', $event)"
-      />
+      <b-form-input v-model="term" />
     </search-advanced-modal-field>
     <div class="search-advanced-modal__slider">
       <label class="search-advanced-modal__slider__label text-action">
         {{ rangeLabel }}
       </label>
       <form-control-range
-        :model-value="distance"
+        v-model="distance"
         :min="min"
         :max="max"
         :step="1"
-        @update:model-value="$emit('update:distance', $event)"
       />
     </div>
     <p class="search-advanced-modal__example search-advanced-modal__example--offset">
@@ -60,14 +56,6 @@ defineProps({
     type: String,
     required: true
   },
-  term: {
-    type: String,
-    default: ''
-  },
-  distance: {
-    type: Number,
-    default: 1
-  },
   min: {
     type: Number,
     default: 1
@@ -91,7 +79,8 @@ defineProps({
   }
 })
 
-defineEmits(['update:term', 'update:distance'])
+const term = defineModel('term', { type: String, default: '' })
+const distance = defineModel('distance', { type: Number, default: 1 })
 
 const { t } = useI18n()
 </script>
