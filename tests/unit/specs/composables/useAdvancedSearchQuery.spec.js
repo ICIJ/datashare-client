@@ -335,6 +335,50 @@ describe('useAdvancedSearchQuery', () => {
       expect(query).toBe('(Paris London) +France "United Kingdom" -spam Merced?s Mercedes~1')
     })
 
+    it('escapes Lucene operators in word inputs', () => {
+      const formData = {
+        anyWords: ['foo:bar', 'baz(qux)'],
+        allWords: ['+a'],
+        exactPhrase: [],
+        noneWords: ['-b'],
+        singleWildcardStart: '',
+        singleWildcardEnd: '',
+        multiWildcardStart: '',
+        multiWildcardEnd: '',
+        fuzzyTerm: '',
+        fuzzyDistance: 0,
+        proximityPhrase: '',
+        proximityDistance: 0,
+        fieldAll: true,
+        selectedFields: []
+      }
+
+      const query = generateQuery(formData)
+      expect(query).toBe('(foo\\:bar baz\\(qux\\)) +\\+a -\\-b')
+    })
+
+    it('escapes embedded quotes in exact phrase', () => {
+      const formData = {
+        anyWords: [],
+        allWords: [],
+        exactPhrase: ['He said "hi"'],
+        noneWords: [],
+        singleWildcardStart: '',
+        singleWildcardEnd: '',
+        multiWildcardStart: '',
+        multiWildcardEnd: '',
+        fuzzyTerm: '',
+        fuzzyDistance: 0,
+        proximityPhrase: '',
+        proximityDistance: 0,
+        fieldAll: true,
+        selectedFields: []
+      }
+
+      const query = generateQuery(formData)
+      expect(query).toBe('"He said \\"hi\\""')
+    })
+
     it('should handle single word in anyWords without parentheses', () => {
       const formData = {
         anyWords: ['Paris'],

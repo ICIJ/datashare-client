@@ -1,4 +1,35 @@
 /**
+ * Reserved characters that have special meaning in Lucene query syntax.
+ * They must be backslash-escaped when they appear inside a user-supplied
+ * term to avoid producing a malformed query.
+ *
+ * `&&` and `||` are bigrams handled separately below.
+ *
+ * Reference: https://lucene.apache.org/core/9_0_0/queryparser/org/apache/lucene/queryparser/classic/package-summary.html#Escaping_Special_Characters
+ */
+const LUCENE_RESERVED = /[+\-!(){}[\]^"~*?:\\/]/g
+
+/**
+ * Escape Lucene-reserved characters in a term so it is treated as plain
+ * text by the query parser. Used for word-list inputs (any/all/none).
+ */
+function escapeTerm(term) {
+  return String(term)
+    .replace(LUCENE_RESERVED, '\\$&')
+    .replace(/&&/g, '\\&\\&')
+    .replace(/\|\|/g, '\\|\\|')
+}
+
+/**
+ * Escape only the characters that would break out of a quoted phrase
+ * (`"` and `\`). Everything else inside double quotes is taken literally
+ * by Lucene, so leaving operators alone keeps the phrase readable.
+ */
+function escapePhrase(phrase) {
+  return String(phrase).replace(/[\\"]/g, '\\$&')
+}
+
+/**
  * Composable for generating Lucene query from advanced search form
  */
 export function useAdvancedSearchQuery() {
@@ -12,7 +43,7 @@ export function useAdvancedSearchQuery() {
 
     // ANY of these words (OR) - space-separated creates implicit OR
     if (formData.anyWords && formData.anyWords.length > 0) {
-      const orTerms = formData.anyWords.join(' ')
+      const orTerms = formData.anyWords.map(escapeTerm).join(' ')
       if (formData.anyWords.length > 1) {
         parts.push(`(${orTerms})`)
       }
@@ -23,51 +54,51 @@ export function useAdvancedSearchQuery() {
 
     // ALL these words (AND) - use + prefix
     if (formData.allWords && formData.allWords.length > 0) {
-      const andTerms = formData.allWords.map(word => `+${word}`).join(' ')
+      const andTerms = formData.allWords.map(word => `+${escapeTerm(word)}`).join(' ')
       parts.push(andTerms)
     }
 
     // Exact phrase - wrap in quotes
     if (formData.exactPhrase && formData.exactPhrase.length > 0) {
       formData.exactPhrase.forEach((phrase) => {
-        parts.push(`"${phrase}"`)
+        parts.push(`"${escapePhrase(phrase)}"`)
       })
     }
 
     // NONE of these words (NOT) - use - prefix
     if (formData.noneWords && formData.noneWords.length > 0) {
-      const notTerms = formData.noneWords.map(word => `-${word}`).join(' ')
+      const notTerms = formData.noneWords.map(word => `-${escapeTerm(word)}`).join(' ')
       parts.push(notTerms)
     }
 
     // Single character wildcard (?)
     if (formData.singleWildcardStart && formData.singleWildcardEnd) {
-      const wildcardTerm = `${formData.singleWildcardStart}?${formData.singleWildcardEnd}`
+      const wildcardTerm = `${escapeTerm(formData.singleWildcardStart)}?${escapeTerm(formData.singleWildcardEnd)}`
       parts.push(wildcardTerm)
     }
 
     // Multiple character wildcard (*)
     if (formData.multiWildcardStart && formData.multiWildcardEnd) {
-      const wildcardTerm = `${formData.multiWildcardStart}*${formData.multiWildcardEnd}`
+      const wildcardTerm = `${escapeTerm(formData.multiWildcardStart)}*${escapeTerm(formData.multiWildcardEnd)}`
       parts.push(wildcardTerm)
     }
 
     // Fuzzy search (spelling changes)
     if (formData.fuzzyTerm && formData.fuzzyDistance > 0) {
-      const fuzzyTerm = `${formData.fuzzyTerm}~${formData.fuzzyDistance}`
+      const fuzzyTerm = `${escapeTerm(formData.fuzzyTerm)}~${formData.fuzzyDistance}`
       parts.push(fuzzyTerm)
     }
     else if (formData.fuzzyTerm && formData.fuzzyDistance === 0) {
-      parts.push(formData.fuzzyTerm)
+      parts.push(escapeTerm(formData.fuzzyTerm))
     }
 
     // Proximity search (phrase changes)
     if (formData.proximityPhrase && formData.proximityDistance > 0) {
-      const proximityTerm = `"${formData.proximityPhrase}"~${formData.proximityDistance}`
+      const proximityTerm = `"${escapePhrase(formData.proximityPhrase)}"~${formData.proximityDistance}`
       parts.push(proximityTerm)
     }
     else if (formData.proximityPhrase && formData.proximityDistance === 0) {
-      parts.push(`"${formData.proximityPhrase}"`)
+      parts.push(`"${escapePhrase(formData.proximityPhrase)}"`)
     }
 
     // Combine all parts
