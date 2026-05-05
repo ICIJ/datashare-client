@@ -29,7 +29,7 @@
           v-model="form.anyWords"
           :label="t('searchAdvancedModal.anyOfTheseWords')"
           :icon="IPhUniteSquare"
-          :examples="[t('searchAdvancedModal.anyOfTheseWordsExample')]"
+          :examples="anyWordsExamples"
         />
 
         <!-- All these words (AND) -->
@@ -37,7 +37,7 @@
           v-model="form.allWords"
           :label="t('searchAdvancedModal.allTheseWords')"
           :icon="IPhIntersectSquare"
-          :examples="[t('searchAdvancedModal.allTheseWordsExample')]"
+          :examples="allWordsExamples"
         />
 
         <!-- This exact word or phrase -->
@@ -45,7 +45,7 @@
           v-model="form.exactPhrase"
           :label="t('searchAdvancedModal.exactPhrase')"
           :icon="IPhQuotes"
-          :examples="[t('searchAdvancedModal.exactPhraseExample')]"
+          :examples="exactPhraseExamples"
         />
 
         <!-- None of these words (NOT) -->
@@ -53,10 +53,7 @@
           v-model="form.noneWords"
           :label="t('searchAdvancedModal.noneOfTheseWords')"
           :icon="IPhTextStrikethrough"
-          :examples="[
-            t('searchAdvancedModal.noneOfTheseWordsExample1'),
-            t('searchAdvancedModal.noneOfTheseWordsExample2')
-          ]"
+          :examples="noneWordsExamples"
         />
 
         <!-- Any word with 1 character between (?) -->
@@ -86,10 +83,7 @@
           :icon="IPhTextAa"
           :range-label="t('searchAdvancedModal.charactersDifferent')"
           :example="t('searchAdvancedModal.fuzzySearchExample')"
-          :explanations="[
-            t('searchAdvancedModal.fuzzySearchExplanation1'),
-            t('searchAdvancedModal.fuzzySearchExplanation2')
-          ]"
+          :explanations="fuzzyExplanations"
         />
 
         <!-- With phrase changes (Proximity) -->
@@ -101,12 +95,7 @@
           :icon="IPhArrowsOutLineHorizontal"
           :range-label="t('searchAdvancedModal.maxWordsApart')"
           :example="t('searchAdvancedModal.proximitySearchExample')"
-          :explanations="[
-            t('searchAdvancedModal.proximitySearchExplanation1'),
-            t('searchAdvancedModal.proximitySearchExplanation2'),
-            t('searchAdvancedModal.proximitySearchExplanation3'),
-            t('searchAdvancedModal.proximitySearchExplanation4')
-          ]"
+          :explanations="proximityExplanations"
         />
 
         <!-- Search in specific fields -->
@@ -148,7 +137,7 @@
 </template>
 
 <script setup>
-import { nextTick, watch, useTemplateRef } from 'vue'
+import { computed, nextTick, watch, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import IPhUniteSquare from '~icons/ph/unite-square'
 import IPhIntersectSquare from '~icons/ph/intersect-square'
@@ -185,6 +174,28 @@ const {
 } = useAdvancedSearchForm()
 
 const firstInput = useTemplateRef('firstInput')
+
+// Hoist the per-field example/explanation lists into computeds so each
+// child receives a stable array reference across re-renders. Inline `[...]`
+// literals in the template would rebuild on every render and defeat
+// downstream prop equality checks.
+const anyWordsExamples = computed(() => [t('searchAdvancedModal.anyOfTheseWordsExample')])
+const allWordsExamples = computed(() => [t('searchAdvancedModal.allTheseWordsExample')])
+const exactPhraseExamples = computed(() => [t('searchAdvancedModal.exactPhraseExample')])
+const noneWordsExamples = computed(() => [
+  t('searchAdvancedModal.noneOfTheseWordsExample1'),
+  t('searchAdvancedModal.noneOfTheseWordsExample2')
+])
+const fuzzyExplanations = computed(() => [
+  t('searchAdvancedModal.fuzzySearchExplanation1'),
+  t('searchAdvancedModal.fuzzySearchExplanation2')
+])
+const proximityExplanations = computed(() => [
+  t('searchAdvancedModal.proximitySearchExplanation1'),
+  t('searchAdvancedModal.proximitySearchExplanation2'),
+  t('searchAdvancedModal.proximitySearchExplanation3'),
+  t('searchAdvancedModal.proximitySearchExplanation4')
+])
 
 // Reset the form on close so reopening always starts from a clean state
 // (cancel / ESC / backdrop / successful search all share this code path).
