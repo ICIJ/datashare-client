@@ -322,7 +322,7 @@
 </template>
 
 <script setup>
-import { ref, computed, nextTick, watch, useTemplateRef } from 'vue'
+import { computed, nextTick, watch, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { AppIcon, ButtonIcon } from '@icij/murmur-next'
 import IPhUniteSquare from '~icons/ph/unite-square'
@@ -334,18 +334,12 @@ import IPhAsterisk from '~icons/ph/asterisk'
 import IPhTextAa from '~icons/ph/text-aa'
 import IPhArrowsOutLineHorizontal from '~icons/ph/arrows-out-line-horizontal'
 import IPhMagnifyingGlass from '~icons/ph/magnifying-glass'
-import IPhHash from '~icons/ph/hash'
-import IPhFileText from '~icons/ph/file-text'
-import IPhUserList from '~icons/ph/user-list'
-import IPhUserSquare from '~icons/ph/user-square'
-import IPhTextColumns from '~icons/ph/text-columns'
-import IPhTreeStructure from '~icons/ph/tree-structure'
-import IPhChatsTeardrop from '~icons/ph/chats-teardrop'
 
 import AppModal from '@/components/AppModal/AppModal.vue'
 import FormActions from '@/components/Form/FormActions/FormActions.vue'
 import FormControlRange from '@/components/Form/FormControl/FormControlRange/FormControlRange.vue'
 import SearchAdvancedModalField from './SearchAdvancedModalField.vue'
+import { useAdvancedSearchForm } from '@/composables/useAdvancedSearchForm'
 import { useAdvancedSearchQuery } from '@/composables/useAdvancedSearchQuery'
 
 const props = defineProps({
@@ -359,57 +353,23 @@ const emit = defineEmits(['update:modelValue', 'search'])
 
 const { t } = useI18n()
 const { generateQuery } = useAdvancedSearchQuery()
+const {
+  form,
+  formKey,
+  fields,
+  isFormEmpty,
+  handleFieldAllChange,
+  handleFieldChange,
+  reset: handleReset,
+  toQueryShape
+} = useAdvancedSearchForm()
 
 const isVisible = computed({
   get: () => props.modelValue,
   set: value => emit('update:modelValue', value)
 })
 
-function getInitialForm() {
-  return {
-    anyWords: '',
-    allWords: '',
-    exactPhrase: '',
-    noneWords: '',
-    singleWildcardStart: '',
-    singleWildcardEnd: '',
-    multiWildcardStart: '',
-    multiWildcardEnd: '',
-    fuzzyTerm: '',
-    fuzzyDistance: 1,
-    proximityPhrase: '',
-    proximityDistance: 1,
-    fieldAll: true,
-    selectedFields: []
-  }
-}
-
-const form = ref(getInitialForm())
-// Bumped on Reset to remount inputs and force-clear any leftover internal
-// state (e.g. native input selection, validation classes).
-const formKey = ref(0)
 const firstInput = useTemplateRef('firstInput')
-
-/**
- * The form is considered empty when no input would contribute to a Lucene
- * query. The Search button stays disabled in that state to prevent a no-op
- * search.
- */
-const isFormEmpty = computed(() => {
-  const f = form.value
-  return Object.values({
-    anyWords: f.anyWords,
-    allWords: f.allWords,
-    exactPhrase: f.exactPhrase,
-    noneWords: f.noneWords,
-    singleWildcardStart: f.singleWildcardStart,
-    singleWildcardEnd: f.singleWildcardEnd,
-    multiWildcardStart: f.multiWildcardStart,
-    multiWildcardEnd: f.multiWildcardEnd,
-    fuzzyTerm: f.fuzzyTerm,
-    proximityPhrase: f.proximityPhrase
-  }).every(v => v.trim() === '')
-})
 
 // Reset the form on close so reopening always starts from a clean state
 // (cancel / ESC / backdrop / successful search all share this code path).
@@ -424,54 +384,6 @@ watch(isVisible, async (visible) => {
   firstInput.value?.focus?.()
 })
 
-const fields = [
-  { value: 'tags', label: 'searchAdvancedModal.fields.tags', icon: IPhHash },
-  { value: 'path', label: 'searchAdvancedModal.fields.name', icon: IPhFileText },
-  { value: 'metadata.tika_metadata_dc_creator', label: 'searchAdvancedModal.fields.author', icon: IPhUserList },
-  { value: 'metadata.tika_metadata_message_to', label: 'searchAdvancedModal.fields.recipients', icon: IPhUserSquare },
-  { value: 'content', label: 'searchAdvancedModal.fields.content', icon: IPhTextColumns },
-  { value: 'dirname', label: 'searchAdvancedModal.fields.path', icon: IPhTreeStructure },
-  { value: 'metadata.tika_metadata_message_raw_header_thread_index', label: 'searchAdvancedModal.fields.threadId', icon: IPhChatsTeardrop }
-]
-
-/**
- * "All fields" and individual field checkboxes are mutually exclusive:
- * - Selecting an individual field deselects "All".
- * - Deselecting the last individual field re-selects "All".
- * - Selecting "All" clears every individual field; it cannot be unticked
- *   directly (the user must pick an individual field to leave the "all"
- *   state), which avoids landing in an empty state.
- */
-function handleFieldAllChange(checked) {
-  if (checked) {
-    form.value.selectedFields = []
-  }
-  else {
-    // Prevent the user from unselecting "All" with no field selected.
-    form.value.fieldAll = true
-  }
-}
-
-function handleFieldChange() {
-  form.value.fieldAll = form.value.selectedFields.length === 0
-}
-
-/**
- * Convert the form's string-typed fields into the array shape expected by
- * `useAdvancedSearchQuery.generateQuery` — words are split on whitespace,
- * the exact phrase is kept as a single entry.
- */
-function toQueryShape(f) {
-  const words = s => s.trim().split(/\s+/).filter(Boolean)
-  return {
-    ...f,
-    anyWords: words(f.anyWords),
-    allWords: words(f.allWords),
-    noneWords: words(f.noneWords),
-    exactPhrase: f.exactPhrase.trim() ? [f.exactPhrase.trim()] : []
-  }
-}
-
 function handleSearch() {
   // Pressing Enter inside an input also submits the form, so guard here
   // rather than relying on the visible Search button being disabled.
@@ -479,11 +391,6 @@ function handleSearch() {
   const query = generateQuery(toQueryShape(form.value))
   emit('search', query)
   isVisible.value = false
-}
-
-function handleReset() {
-  form.value = getInitialForm()
-  formKey.value += 1
 }
 
 // Expose form state and handlers so tests can drive the component without
