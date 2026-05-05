@@ -4,7 +4,7 @@
       <app-icon class="search-advanced-modal-field__label__icon">
         <component :is="icon" />
       </app-icon>
-      <span class="text-secondary">
+      <span>
         {{ label }}
       </span>
     </div>
