@@ -82,10 +82,10 @@ function handleAdvancedSearch(queryString) {
         :compact="compact"
         class="search__main__search-bar flex-grow-1"
       />
-      <button-toggle-advanced-search
+<!--  <button-toggle-advanced-search
         v-model:active="showAdvancedSearch"
         class="search-toolbar__toggle-advanced-search"
-      />
+      />-->
       <button-toggle-settings
         v-model:active="toggleSettings"
         class="search__main__toggle-settings"
