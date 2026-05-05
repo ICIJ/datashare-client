@@ -32,8 +32,15 @@ describe('TaskDocumentsFormOcrAlert.vue', () => {
   let wrapper
 
   describe('OCR for italian language is not installed', () => {
+    let core
+
+    beforeAll(() => {
+      core = CoreSetup.init().useAll()
+    })
+
     beforeEach(async () => {
-      const { plugins } = CoreSetup.init().createPinia().useAll()
+      core.createPinia()
+      const plugins = core.plugins
 
       wrapper = mount(TaskDocumentsFormOcrAlert, {
         global: {
@@ -52,8 +59,15 @@ describe('TaskDocumentsFormOcrAlert.vue', () => {
   })
 
   describe('OCR for french language is installed', () => {
+    let core
+
+    beforeAll(() => {
+      core = CoreSetup.init().useAll()
+    })
+
     beforeEach(async () => {
-      const { plugins } = CoreSetup.init().createPinia().useAll()
+      core.createPinia()
+      const plugins = core.plugins
 
       wrapper = mount(TaskDocumentsFormOcrAlert, {
         global: {

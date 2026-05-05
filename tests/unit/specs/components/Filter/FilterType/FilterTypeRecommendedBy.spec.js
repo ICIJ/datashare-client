@@ -1,5 +1,4 @@
 import { mount } from '@vue/test-utils'
-import { setActivePinia, createPinia } from 'pinia'
 
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
@@ -44,14 +43,15 @@ describe('FilterTypeRecommendedBy.vue', () => {
   let core, wrapper, recommendedStore, searchStore
 
   beforeAll(async () => {
+    core = CoreSetup.init().useAll().useRouterWithoutGuards()
     await letData(es).have(new IndexedDocument('01', index)).commit()
     await letData(es).have(new IndexedDocument('02', index)).commit()
     await letData(es).have(new IndexedDocument('03', index)).commit()
   })
 
   beforeEach(async () => {
-    setActivePinia(createPinia())
-    core = CoreSetup.init().useAll().useRouterWithoutGuards()
+    core.createPinia()
+    const plugins = core.plugins
     recommendedStore = useRecommendedStore()
     searchStore = useSearchStore()
     searchStore.setIndex(index)
@@ -60,7 +60,7 @@ describe('FilterTypeRecommendedBy.vue', () => {
 
     const filter = searchStore.getFilter({ name: 'recommendedBy' })
     const props = { filter }
-    wrapper = await mount(FilterTypeRecommendedBy, { global: { plugins: core.plugins }, props })
+    wrapper = await mount(FilterTypeRecommendedBy, { global: { plugins }, props })
     await wrapper.findComponent(FilterType).vm.aggregate()
   })
 

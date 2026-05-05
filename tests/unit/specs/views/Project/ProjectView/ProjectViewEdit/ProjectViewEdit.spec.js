@@ -6,8 +6,12 @@ import ProjectViewEdit from '@/views/Project/ProjectView/ProjectViewEdit/Project
 describe('ProjectViewEdit.vue', () => {
   let core
 
-  beforeEach(() => {
+  beforeAll(() => {
     core = CoreSetup.init().useI18n()
+  })
+
+  beforeEach(() => {
+    core.createPinia()
     core.config.set('projects', [{ name: 'local-datashare', label: 'Default', sourcePath: '/' }])
   })
   it('renders two tab navigation entries', () => {

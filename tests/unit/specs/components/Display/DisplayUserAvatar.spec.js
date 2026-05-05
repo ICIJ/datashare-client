@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import DisplayUserAvatar from '@/components/Display/DisplayUserAvatar'
@@ -21,9 +21,11 @@ describe('DisplayUserAvatar.vue', () => {
   })
 
   beforeEach(async () => {
+    core.createPinia()
+    const plugins = core.plugins
     const props = { value: 'foo' }
-    const global = { plugins: core.plugins }
-    wrapper = mount(DisplayUserAvatar, { props, global })
+    const global = { plugins }
+    wrapper = shallowMount(DisplayUserAvatar, { props, global })
     await flushPromises()
   })
 

@@ -12,8 +12,12 @@ describe('DocumentViewTabsViewer.vue', () => {
   const disabled = true
   let core, documentStore
 
-  beforeEach(() => {
+  beforeAll(() => {
     core = CoreSetup.init().useAll()
+  })
+
+  beforeEach(() => {
+    core.createPinia()
     documentStore = useDocumentStore()
   })
 

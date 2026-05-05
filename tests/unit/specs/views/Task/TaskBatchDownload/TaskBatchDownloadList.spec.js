@@ -14,9 +14,15 @@ vi.mock('@/api/apiInstance', {
 })
 
 describe('TaskBatchDownloadList.vue', () => {
-  let plugins
+  let core, plugins
+
+  beforeAll(() => {
+    core = CoreSetup.init().useAll().useRouterWithoutGuards()
+  })
 
   beforeEach(async () => {
+    core.createPinia()
+    plugins = core.plugins
     api.getTasks.mockResolvedValue({
       items: [
         {
@@ -121,8 +127,6 @@ describe('TaskBatchDownloadList.vue', () => {
       ]
     })
 
-    const core = CoreSetup.init().useAll().useRouterWithoutGuards()
-    plugins = core.plugins
     core.config.set('batchDownloadMaxSize', '1G')
     core.config.set('batchDownloadMaxNbFiles', '10000')
   })

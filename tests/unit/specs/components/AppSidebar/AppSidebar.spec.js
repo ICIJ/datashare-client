@@ -10,22 +10,25 @@ vi.mock('@/api/apiInstance', () => ({
 }))
 
 describe('AppSidebar.vue', () => {
-  const { config, plugins, router } = CoreSetup.init().useAll().useRouterWithoutGuards()
-  const options = { global: { plugins, renderStubDefaultSlot: true, stubs: { LocalesMenu: false } }, router }
-
-  let wrapper
+  let core, plugins, wrapper
 
   function setServerMode() {
-    config.merge({ mode: 'SERVER' })
-    return shallowMount(AppSidebar, { ...options })
+    core.config.merge({ mode: 'SERVER' })
+    return shallowMount(AppSidebar, { global: { plugins, renderStubDefaultSlot: true, stubs: { LocalesMenu: false } }, router: core.router })
   }
 
   function setLocalMode() {
-    config.merge({ mode: 'LOCAL' })
-    return shallowMount(AppSidebar, { ...options })
+    core.config.merge({ mode: 'LOCAL' })
+    return shallowMount(AppSidebar, { global: { plugins, renderStubDefaultSlot: true, stubs: { LocalesMenu: false } }, router: core.router })
   }
 
+  beforeAll(() => {
+    core = CoreSetup.init().useAll().useRouterWithoutGuards()
+  })
+
   beforeEach(async () => {
+    core.createPinia()
+    plugins = core.plugins
     vi.clearAllMocks()
     wrapper = setLocalMode()
   })

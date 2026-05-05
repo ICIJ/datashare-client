@@ -12,8 +12,12 @@ describe('DocumentThread.vue', () => {
 
   let core, wrapper, documentStore
 
-  beforeEach(() => {
+  beforeAll(() => {
     core = CoreSetup.init().useAll()
+  })
+
+  beforeEach(() => {
+    core.createPinia()
     documentStore = useDocumentStore()
   })
 

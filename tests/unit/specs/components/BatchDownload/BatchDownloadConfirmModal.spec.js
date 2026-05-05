@@ -1,18 +1,22 @@
-import { mount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import BatchDownloadConfirmModal from '@/components/BatchDownload/BatchDownloadConfirmModal'
 
 describe('BatchDownloadConfirmModal.vue', () => {
-  let plugins
+  let core, plugins
+
+  beforeAll(() => {
+    core = CoreSetup.init().useAll()
+  })
 
   beforeEach(() => {
-    const core = CoreSetup.init().useAll()
+    core.createPinia()
     plugins = core.plugins
   })
 
   function factory(props) {
-    return mount(BatchDownloadConfirmModal, {
+    return shallowMount(BatchDownloadConfirmModal, {
       global: { plugins, stubs: { 'app-modal': { template: '<div><slot /></div>' } } },
       props
     })

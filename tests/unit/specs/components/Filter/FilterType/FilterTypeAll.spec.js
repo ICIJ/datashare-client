@@ -1,5 +1,4 @@
-import { flushPromises, mount } from '@vue/test-utils'
-import { setActivePinia, createPinia } from 'pinia'
+import { flushPromises, shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import FilterTypeAll from '@/components/Filter/FilterType/FilterTypeAll'
@@ -9,13 +8,17 @@ import { useSearchStore } from '@/store/modules'
 describe('FilterTypeAll.vue', () => {
   let core, wrapper, searchStore, filter
 
-  beforeEach(() => {
-    setActivePinia(createPinia())
+  beforeAll(() => {
     core = CoreSetup.init().useAll().useRouterWithoutGuards()
+  })
+
+  beforeEach(() => {
+    core.createPinia()
+    const plugins = core.plugins
     searchStore = useSearchStore()
     filter = searchStore.getFilter({ name: 'contentType' })
-    wrapper = mount(FilterTypeAll, {
-      global: { plugins: core.plugins },
+    wrapper = shallowMount(FilterTypeAll, {
+      global: { plugins },
       props: { filter }
     })
   })

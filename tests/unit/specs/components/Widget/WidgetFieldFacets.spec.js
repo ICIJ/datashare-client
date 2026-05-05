@@ -31,10 +31,15 @@ vi.mock('@/api/apiInstance', () => {
 describe('WidgetFieldFacets.vue', () => {
   const { index: project } = esConnectionHelper.build()
 
-  let wrapper
+  let core, wrapper
+
+  beforeAll(() => {
+    core = CoreSetup.init().useAll().useRouterWithoutGuards()
+  })
 
   beforeEach(async () => {
-    const { plugins } = CoreSetup.init().useAll().useRouterWithoutGuards()
+    core.createPinia()
+    const plugins = core.plugins
     const insightsStore = useInsightsStore()
     insightsStore.setProject(project)
 

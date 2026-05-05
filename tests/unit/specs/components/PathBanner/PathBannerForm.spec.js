@@ -6,7 +6,7 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import PathBannerForm from '@/components/PathBanner/PathBannerForm.vue'
 
 describe('PathBannerForm.vue', () => {
-  let global
+  let core, global
 
   const newBanner = Object.freeze({
     blurSensitiveMedia: false,
@@ -27,8 +27,12 @@ describe('PathBannerForm.vue', () => {
     blurSensitiveMedia: true
   })
 
+  beforeAll(() => {
+    core = CoreSetup.init().useAll()
+  })
+
   beforeEach(() => {
-    const core = CoreSetup.init().useAll()
+    core.createPinia()
     global = { plugins: core.plugins, renderStubDefaultSlot: true }
   })
 

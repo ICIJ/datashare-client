@@ -1,4 +1,4 @@
-import { flushPromises, mount } from '@vue/test-utils'
+import { flushPromises, shallowMount } from '@vue/test-utils'
 import { describe } from 'vitest'
 
 import CoreSetup from '~tests/unit/CoreSetup'
@@ -17,7 +17,7 @@ describe('ModeLocalOnly.vue', () => {
       core.config.set('mode', MODE_NAME.LOCAL)
       const slots = { default: 'foo' }
       const global = { plugins: core.plugins }
-      wrapper = mount(ModeLocalOnly, { global, slots })
+      wrapper = shallowMount(ModeLocalOnly, { global, slots })
     })
 
     it('should display "foo"', async () => {
@@ -43,7 +43,7 @@ describe('ModeLocalOnly.vue', () => {
       const slots = { default: 'foo' }
       const global = { plugins: core.plugins }
       const props = { strict: true }
-      wrapper = mount(ModeLocalOnly, { global, slots, props })
+      wrapper = shallowMount(ModeLocalOnly, { global, slots, props })
     })
 
     it('should display "foo"', async () => {
@@ -68,7 +68,7 @@ describe('ModeLocalOnly.vue', () => {
       core.config.set('mode', MODE_NAME.EMBEDDED)
       const slots = { default: 'foo' }
       const global = { plugins: core.plugins }
-      wrapper = mount(ModeLocalOnly, { global, slots })
+      wrapper = shallowMount(ModeLocalOnly, { global, slots })
     })
 
     it('should display "foo"', async () => {
@@ -93,7 +93,7 @@ describe('ModeLocalOnly.vue', () => {
       core.config.set('mode', MODE_NAME.SERVER)
       const slots = { default: 'foo' }
       const global = { plugins: core.plugins }
-      wrapper = mount(ModeLocalOnly, { global, slots })
+      wrapper = shallowMount(ModeLocalOnly, { global, slots })
     })
 
     it('should not display "foo"', async () => {

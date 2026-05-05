@@ -59,8 +59,12 @@ describe('DocumentGlobalSearchTerms.vue', () => {
   const { index, es } = esConnectionHelper.build()
   let core, documentStore, searchStore
 
-  beforeEach(() => {
+  beforeAll(() => {
     core = CoreSetup.init().useAll()
+  })
+
+  beforeEach(() => {
+    core.createPinia()
     documentStore = useDocumentStore()
     searchStore = useSearchStore()
   })

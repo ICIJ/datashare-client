@@ -1,4 +1,4 @@
-import { mount, flushPromises } from '@vue/test-utils'
+import { shallowMount, flushPromises } from '@vue/test-utils'
 
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import FilterPath from '@/components/Filter/FilterType/FilterTypePath'
@@ -22,8 +22,13 @@ describe('FilterTypePath.vue', () => {
 
   let core, searchStore, wrapper
 
-  beforeEach(() => {
+  beforeAll(() => {
     core = CoreSetup.init().useAll().useRouterWithoutGuards()
+  })
+
+  beforeEach(() => {
+    core.createPinia()
+    const plugins = core.plugins
     core.config.set('dataDir', '/data')
 
     searchStore = useSearchStore()
@@ -32,9 +37,9 @@ describe('FilterTypePath.vue', () => {
 
     const filter = searchStore.getFilter({ name: 'path' })
 
-    wrapper = mount(FilterPath, {
+    wrapper = shallowMount(FilterPath, {
       global: {
-        plugins: core.plugins
+        plugins
       },
       propsData: {
         filter,

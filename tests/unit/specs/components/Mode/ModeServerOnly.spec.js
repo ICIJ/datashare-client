@@ -1,4 +1,4 @@
-import { flushPromises, mount } from '@vue/test-utils'
+import { flushPromises, shallowMount } from '@vue/test-utils'
 import { describe } from 'vitest'
 
 import CoreSetup from '~tests/unit/CoreSetup'
@@ -17,7 +17,7 @@ describe('ModeServerOnly.vue', () => {
       core.config.set('mode', MODE_NAME.SERVER)
       const slots = { default: 'foo' }
       const global = { plugins: core.plugins }
-      wrapper = mount(ModeServerOnly, { global, slots })
+      wrapper = shallowMount(ModeServerOnly, { global, slots })
     })
 
     it('should display "foo"', async () => {
@@ -42,7 +42,7 @@ describe('ModeServerOnly.vue', () => {
       core.config.set('mode', MODE_NAME.LOCAL)
       const slots = { default: 'foo' }
       const global = { plugins: core.plugins }
-      wrapper = mount(ModeServerOnly, { global, slots })
+      wrapper = shallowMount(ModeServerOnly, { global, slots })
     })
 
     it('should not display "foo"', async () => {
@@ -61,7 +61,7 @@ describe('ModeServerOnly.vue', () => {
       core.config.set('mode', MODE_NAME.EMBEDDED)
       const slots = { default: 'foo' }
       const global = { plugins: core.plugins }
-      wrapper = mount(ModeServerOnly, { global, slots })
+      wrapper = shallowMount(ModeServerOnly, { global, slots })
     })
 
     it('should not display "foo"', async () => {

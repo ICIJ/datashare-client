@@ -6,8 +6,12 @@ import WidgetListGroup from '@/components/Widget/WidgetListGroup'
 describe('WidgetListGroup.vue', () => {
   let core, plugins
 
-  beforeEach(() => {
+  beforeAll(() => {
     core = CoreSetup.init().useAll()
+  })
+
+  beforeEach(() => {
+    core.createPinia()
     plugins = core.plugins
   })
 

@@ -4,10 +4,14 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import FormFieldset from '@/components/Form/FormFieldset/FormFieldset.vue'
 
 describe('FormFieldset.vue', () => {
-  let global
+  let core, global
+
+  beforeAll(() => {
+    core = CoreSetup.init().useAll()
+  })
 
   beforeEach(() => {
-    const core = CoreSetup.init().useAll()
+    core.createPinia()
     global = { plugins: core.plugins }
   })
 

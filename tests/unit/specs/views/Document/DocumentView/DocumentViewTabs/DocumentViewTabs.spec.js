@@ -7,8 +7,12 @@ import TabGroupNavigationEntry from '@/components/TabGroup/TabGroupNavigation/Ta
 describe('DocumentViewTabs.vue', () => {
   let core
 
-  beforeEach(() => {
+  beforeAll(() => {
     core = CoreSetup.init().useAll().useRouter([])
+  })
+
+  beforeEach(() => {
+    core.createPinia()
   })
 
   it('should display the component', async () => {

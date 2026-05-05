@@ -6,6 +6,10 @@ import DocumentThreadEntryHeader from '@/components/Document/DocumentThread/Docu
 describe('DocumentThreadEntryHeader.vue', () => {
   let core
 
+  beforeAll(() => {
+    core = CoreSetup.init().useAll()
+  })
+
   const mockEmail = {
     id: 'email_01',
     messageFrom: 'sender@example.com',
@@ -30,7 +34,7 @@ describe('DocumentThreadEntryHeader.vue', () => {
   }
 
   beforeEach(() => {
-    core = CoreSetup.init().useAll()
+    core.createPinia()
   })
 
   it('should emit toggle on click', async () => {

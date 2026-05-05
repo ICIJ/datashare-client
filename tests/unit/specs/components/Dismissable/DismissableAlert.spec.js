@@ -5,10 +5,14 @@ import ToastBody from '@/components/Dismissable/DismissableToastBody'
 import CoreSetup from '~tests/unit/CoreSetup'
 
 describe('DismissableAlert', () => {
-  let global
+  let core, global
+
+  beforeAll(() => {
+    core = CoreSetup.init().useAll()
+  })
 
   beforeEach(() => {
-    const core = CoreSetup.init().useAll()
+    core.createPinia()
     global = { plugins: core.plugins }
   })
 

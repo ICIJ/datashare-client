@@ -1,5 +1,4 @@
 import { shallowMount, mount } from '@vue/test-utils'
-import { setActivePinia, createPinia } from 'pinia'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import FormControlExtractingLanguage from '@/components/Form/FormControl/FormControlExtractingLanguage'
@@ -22,16 +21,16 @@ vi.mock('@/api/apiInstance', () => {
 
 // @todo file renamed but the tests have to be rewritten
 describe('TaskDocumentsForm.vue', () => {
-  let plugins
+  let core, plugins
 
-  beforeEach(() => {
-    setActivePinia(createPinia())
+  beforeAll(() => {
+    core = CoreSetup.init().useAll().useRouterWithoutGuards()
   })
 
   beforeEach(async () => {
-    vi.clearAllMocks()
-    const core = CoreSetup.init().useAll().useRouterWithoutGuards()
+    core.createPinia()
     plugins = core.plugins
+    vi.clearAllMocks()
     await core.config.set('defaultProject', 'local-datashare')
     await core.config.set('dataDir', '/data')
     await core.config.set('projects', [{ name: 'local-datashare' }])
