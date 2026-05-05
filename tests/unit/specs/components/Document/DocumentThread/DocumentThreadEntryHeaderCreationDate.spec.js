@@ -7,6 +7,10 @@ import DocumentThreadEntryHeaderCreationDate from '@/components/Document/Documen
 describe('DocumentThreadEntryHeaderCreationDate.vue', () => {
   let core
 
+  beforeAll(() => {
+    core = CoreSetup.init().useAll()
+  })
+
   const mockEmail = {
     id: 'email_01',
     creationDate: new Date('2020-12-04T00:00:01Z'),
@@ -30,7 +34,7 @@ describe('DocumentThreadEntryHeaderCreationDate.vue', () => {
   }
 
   beforeEach(() => {
-    core = CoreSetup.init().useAll()
+    core.createPinia()
   })
 
   it('should render a router-link when creationDate exists', () => {

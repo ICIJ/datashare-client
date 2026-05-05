@@ -51,17 +51,23 @@ vi.mock('@/api/apiInstance', () => {
 })
 
 describe('Search/SearchSaved/SearchSavedList.vue', () => {
-  let wrapper, router
+  let core, wrapper, router
+
+  beforeAll(() => {
+    core = CoreSetup.init().useAll().useRouterWithoutGuards()
+    router = core.router
+  })
 
   beforeEach(async () => {
-    const core = CoreSetup.init().useAll().useRouterWithoutGuards()
-    const global = { plugins: core.plugins }
-    router = core.router
+    core.createPinia()
+    const plugins = core.plugins
+    const global = { plugins }
     wrapper = mount(SearchSavedList, { global })
     await flushPromises()
   })
 
   afterEach(() => {
+    wrapper?.unmount()
     vi.clearAllMocks()
   })
 

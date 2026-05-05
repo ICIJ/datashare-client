@@ -15,10 +15,15 @@ vi.mock('@/api/apiInstance', async () => {
 })
 
 describe('DocumentViewerJson.vue', () => {
-  let wrapper
+  let core, wrapper
+
+  beforeAll(() => {
+    core = CoreSetup.init().useAll()
+  })
 
   beforeEach(async () => {
-    const { plugins } = CoreSetup.init().useAll()
+    core.createPinia()
+    const plugins = core.plugins
     wrapper = shallowMount(DocumentViewerJson, { global: { plugins }, props: { document: { url: 'document.json' } } })
     await flushPromises()
   })

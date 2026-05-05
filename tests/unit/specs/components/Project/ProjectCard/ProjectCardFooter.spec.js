@@ -6,10 +6,15 @@ import ProjectCardFooter from '@/components/Project/ProjectCard/ProjectCardFoote
 import DisplayRole from '@/components/Display/DisplayRole'
 
 describe('ProjectCardFooter.vue', () => {
-  let plugins
+  let core, plugins
+
+  beforeAll(() => {
+    core = CoreSetup.init().useAll()
+  })
 
   beforeEach(() => {
-    plugins = CoreSetup.init().useAll().plugins
+    core.createPinia()
+    plugins = core.plugins
   })
 
   afterEach(() => {

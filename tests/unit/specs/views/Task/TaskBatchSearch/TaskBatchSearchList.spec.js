@@ -93,10 +93,14 @@ vi.mock('@/api/apiInstance', () => {
 })
 
 describe('TaskBatchSearchList', () => {
-  let plugins
+  let core, plugins
+
+  beforeAll(() => {
+    core = CoreSetup.init().useAll().useRouterWithoutGuards()
+  })
 
   beforeEach(async () => {
-    const core = CoreSetup.init().useAll().useRouterWithoutGuards()
+    core.createPinia()
     plugins = core.plugins
   })
 

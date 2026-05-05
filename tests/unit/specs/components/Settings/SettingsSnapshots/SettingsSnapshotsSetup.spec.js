@@ -4,10 +4,14 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import SettingsSnapshotsSetup from '@/components/Settings/SettingsSnapshots/SettingsSnapshotsSetup'
 
 describe('SettingsSnapshotsSetup', () => {
-  let plugins
+  let core, plugins
+
+  beforeAll(() => {
+    core = CoreSetup.init().useAll()
+  })
 
   beforeEach(() => {
-    const core = CoreSetup.init().useAll()
+    core.createPinia()
     plugins = core.plugins
   })
 

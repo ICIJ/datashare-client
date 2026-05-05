@@ -31,9 +31,13 @@ vi.mock('@/api/apiInstance', () => {
 describe('SearchHistoryList.vue', () => {
   let core
 
-  beforeEach(async () => {
-    const index = 'local-datashare'
+  beforeAll(() => {
     core = CoreSetup.init().useAll().useRouterWithoutGuards()
+  })
+
+  beforeEach(async () => {
+    core.createPinia()
+    const index = 'local-datashare'
 
     api.elasticsearch.search.mockResolvedValue({
       hits: {

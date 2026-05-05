@@ -8,8 +8,12 @@ import LoginWelcome from '@/components/Login/LoginWelcome'
 describe('Login.vue', () => {
   let wrapper, core
 
-  beforeEach(() => {
+  beforeAll(() => {
     core = CoreSetup.init().useAll()
+  })
+
+  beforeEach(() => {
+    core.createPinia()
     wrapper = shallowMount(Login, { global: { plugins: core.plugins } })
   })
 

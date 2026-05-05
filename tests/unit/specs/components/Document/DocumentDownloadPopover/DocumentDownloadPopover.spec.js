@@ -8,8 +8,12 @@ import { apiInstance } from '@/api/apiInstance'
 describe('DocumentDownloadPopover.vue', () => {
   let core, plugins
 
-  beforeEach(() => {
+  beforeAll(() => {
     core = CoreSetup.init().useAll()
+  })
+
+  beforeEach(() => {
+    core.createPinia()
     plugins = core.plugins
     URL.createObjectURL = vi.fn().mockReturnValue('blob:fake-url')
   })

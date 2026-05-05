@@ -13,10 +13,15 @@ vi.mock('@/api/apiInstance', async () => {
 })
 
 describe('DocumentViewerLegacySpreadsheet.vue', () => {
-  let wrapper
+  let core, wrapper
+
+  beforeAll(() => {
+    core = CoreSetup.init().useAll()
+  })
 
   beforeEach(() => {
-    const { plugins } = CoreSetup.init().useAll()
+    core.createPinia()
+    const plugins = core.plugins
     wrapper = mount(DocumentViewerLegacySpreadsheet, { global: { plugins, renderStubDefaultSlot: true } })
   })
 

@@ -33,9 +33,13 @@ describe('ProjectViewEditPathBannersModal.vue', () => {
     })
   }
 
-  beforeEach(() => {
-    vi.clearAllMocks()
+  beforeAll(() => {
     core = CoreSetup.init().useAll().useRouterWithoutGuards()
+  })
+
+  beforeEach(() => {
+    core.createPinia()
+    vi.clearAllMocks()
     api.savePathBanner.mockResolvedValue({})
   })
 

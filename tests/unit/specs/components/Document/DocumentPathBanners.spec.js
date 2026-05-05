@@ -1,5 +1,4 @@
 import { flushPromises, shallowMount } from '@vue/test-utils'
-import { beforeAll } from 'vitest'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import DocumentPathBanners from '@/components/Document/DocumentPathBanners'
@@ -24,11 +23,12 @@ describe('DocumentPathBanners.vue', () => {
   let core, wrapper, plugins, documentStore, documentPathBannersStore, searchStore
 
   beforeAll(() => {
+    core = CoreSetup.init().useAll()
     api.getPathBanners.mockResolvedValue([])
   })
 
   beforeEach(() => {
-    core = CoreSetup.init().useAll()
+    core.createPinia()
     plugins = core.plugins
     searchStore = useSearchStore()
     searchStore.setIndex(project)

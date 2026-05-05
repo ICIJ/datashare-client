@@ -4,10 +4,14 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import SettingsGeneral from '@/components/Settings/SettingsGeneral/SettingsGeneral'
 
 describe('SettingsGeneral', () => {
-  let plugins
+  let core, plugins
+
+  beforeAll(() => {
+    core = CoreSetup.init().useAll()
+  })
 
   beforeEach(() => {
-    const core = CoreSetup.init().useAll()
+    core.createPinia()
     plugins = core.plugins
   })
 

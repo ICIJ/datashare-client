@@ -21,8 +21,10 @@ describe('DisplayUser.vue', () => {
   })
 
   beforeEach(async () => {
+    core.createPinia()
+    const plugins = core.plugins
     const props = { value: 'foo' }
-    const global = { plugins: core.plugins }
+    const global = { plugins }
     wrapper = mount(DisplayUser, { props, global })
     await flushPromises()
   })

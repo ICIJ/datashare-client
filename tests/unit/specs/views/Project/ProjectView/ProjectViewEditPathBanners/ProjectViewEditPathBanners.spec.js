@@ -18,7 +18,7 @@ vi.mock('@/composables/useConfirmModal', () => ({
 }))
 
 describe('ProjectViewEditPathBanners.vue', () => {
-  let core
+  let core, lastWrapper
   const props = { name: 'local-datashare' }
 
   const existingBanner = Object.freeze({
@@ -30,20 +30,29 @@ describe('ProjectViewEditPathBanners.vue', () => {
   })
 
   function shallowMountComponent() {
-    return shallowMount(ProjectViewEditPathBanners, {
+    lastWrapper = shallowMount(ProjectViewEditPathBanners, {
       global: { plugins: core.plugins, renderStubDefaultSlot: true },
       props
     })
+    return lastWrapper
   }
 
+  beforeAll(() => {
+    core = CoreSetup.init().useAll().useRouterWithoutGuards()
+  })
+
   beforeEach(async () => {
+    core.createPinia()
     vi.clearAllMocks()
     mockAfterConfirmation.mockImplementation(fn => fn())
-    core = CoreSetup.init().useAll().useRouterWithoutGuards()
     api.getPathBanners.mockResolvedValue([])
     api.deletePathBanner.mockResolvedValue({})
     await core.router.push({ name: 'project.view.edit.banners', params: { name: 'local-datashare' } })
     await flushPromises()
+  })
+
+  afterEach(() => {
+    lastWrapper?.unmount()
   })
 
   afterAll(() => {

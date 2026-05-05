@@ -6,10 +6,14 @@ import { useAppStore } from '@/store/modules'
 import { SEARCH_OPERATORS } from '@/enums/searchOperators'
 
 describe('SearchParameterQueryAst.vue', () => {
-  let plugins, appStore
+  let core, plugins, appStore
+
+  beforeAll(() => {
+    core = CoreSetup.init().useAll().useRouterWithoutGuards()
+  })
 
   beforeEach(() => {
-    const core = CoreSetup.init().useAll().useRouterWithoutGuards()
+    core.createPinia()
     plugins = core.plugins
     appStore = useAppStore()
   })

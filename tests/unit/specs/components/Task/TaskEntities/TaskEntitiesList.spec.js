@@ -11,9 +11,15 @@ vi.mock('@/api/apiInstance', {
 })
 
 describe('TaskEntitiesList.vue', () => {
-  let plugins
+  let core, plugins
+
+  beforeAll(() => {
+    core = CoreSetup.init().useAll().useRouterWithoutGuards()
+  })
 
   beforeEach(() => {
+    core.createPinia()
+    plugins = core.plugins
     api.getTasks.mockImplementation(({ name: names }) => {
       const items = names.split('|').map((name) => {
         return {
@@ -31,9 +37,6 @@ describe('TaskEntitiesList.vue', () => {
 
       return { items }
     })
-
-    const core = CoreSetup.init().useAll().useRouterWithoutGuards()
-    plugins = core.plugins
   })
 
   afterEach(async () => {

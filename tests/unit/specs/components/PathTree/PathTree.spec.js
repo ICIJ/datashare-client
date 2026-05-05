@@ -55,9 +55,13 @@ describe('PathTree.vue', () => {
     const { index, es } = esConnectionHelper.build()
     let wrapper, core, searchStore
 
-    beforeEach(() => {
+    beforeAll(() => {
       core = CoreSetup.init().useAll()
       core.config.set('dataDir', '/home/foo')
+    })
+
+    beforeEach(() => {
+      core.createPinia()
       searchStore = useSearchStore()
       searchStore.setIndex(index)
       api.tree.mockClear()
@@ -140,9 +144,13 @@ describe('PathTree.vue', () => {
       size: { value: 100 }
     }))
 
-    beforeEach(() => {
+    beforeAll(() => {
       core = CoreSetup.init().useAll()
       core.config.set('dataDir', '/home/foo')
+    })
+
+    beforeEach(() => {
+      core.createPinia()
       api.tree.mockClear()
       api.tree.mockResolvedValue(HOME_TREE)
       searchSpy = vi.spyOn(api.elasticsearch, 'search').mockResolvedValue({
@@ -190,12 +198,16 @@ describe('PathTree.vue', () => {
     const { index, es } = esConnectionHelper.build('spec', true)
     let wrapper, core, searchStore
 
-    beforeEach(() => {
+    beforeAll(() => {
       core = CoreSetup.init().useAll()
-      searchStore = useSearchStore()
-      searchStore.setIndex(index)
       core.config.set('dataDir', 'C:\\home\\foo')
       core.config.set('pathSeparator', '\\')
+    })
+
+    beforeEach(() => {
+      core.createPinia()
+      searchStore = useSearchStore()
+      searchStore.setIndex(index)
 
       api.tree.mockClear()
       api.tree.mockResolvedValue(HOME_TREE_WIN)

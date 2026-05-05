@@ -9,10 +9,15 @@ import { apiInstance } from '@/api/apiInstance'
 describe('useDocumentDownload composable', () => {
   let core, plugins
 
-  beforeEach(() => {
+  beforeAll(() => {
     core = CoreSetup.init().useAll()
+  })
+
+  beforeEach(() => {
+    core.createPinia()
     plugins = core.plugins
     URL.createObjectURL = vi.fn().mockReturnValue('blob:fake-url')
+    apiInstance.isDownloadAllowed = vi.fn().mockResolvedValue()
   })
 
   afterEach(() => {

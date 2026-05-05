@@ -7,9 +7,14 @@ import SearchBreadcrumbUri from '@/components/Search/SearchBreadcrumbUri/SearchB
 describe('SearchBreadcrumbUri.vue', () => {
   let core, global, wrapper
 
-  beforeEach(async () => {
+  beforeAll(() => {
     core = CoreSetup.init().useAll()
-    global = { plugins: core.plugins }
+  })
+
+  beforeEach(async () => {
+    core.createPinia()
+    const plugins = core.plugins
+    global = { plugins }
   })
 
   describe('a boolean query on one index', () => {
