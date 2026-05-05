@@ -99,15 +99,8 @@ export function generateLuceneQuery(formData) {
 
   let query = parts.join(' ')
 
-  // Apply field restrictions if not searching all fields
-  if (!formData.fieldAll && formData.selectedFields && formData.selectedFields.length > 0) {
-    const fieldQueries = formData.selectedFields.map((field) => {
-      if (query) {
-        return `${field}:(${query})`
-      }
-      return ''
-    })
-    query = fieldQueries.filter(q => q).join(' OR ')
+  if (query && !formData.fieldAll && formData.selectedFields?.length > 0) {
+    query = formData.selectedFields.map(field => `${field}:(${query})`).join(' OR ')
   }
 
   return query.trim()
