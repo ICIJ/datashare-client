@@ -181,7 +181,7 @@ describe('useAdvancedSearchQuery', () => {
       expect(query).toBe('Mercedes~1')
     })
 
-    it('should not add fuzzy distance when it is 0', () => {
+    it('should ignore the fuzzy term when distance is 0', () => {
       const formData = {
         anyWords: [],
         allWords: [],
@@ -200,7 +200,7 @@ describe('useAdvancedSearchQuery', () => {
       }
 
       const query = generateQuery(formData)
-      expect(query).toBe('Mercedes')
+      expect(query).toBe('')
     })
 
     it('should generate proximity search query', () => {
@@ -225,7 +225,7 @@ describe('useAdvancedSearchQuery', () => {
       expect(query).toBe('"Donald and Mercedes are in Paris"~2')
     })
 
-    it('should not add proximity distance when it is 0', () => {
+    it('should ignore the proximity phrase when distance is 0', () => {
       const formData = {
         anyWords: [],
         allWords: [],
@@ -244,7 +244,7 @@ describe('useAdvancedSearchQuery', () => {
       }
 
       const query = generateQuery(formData)
-      expect(query).toBe('"Donald and Mercedes"')
+      expect(query).toBe('')
     })
 
     it('should combine multiple query types', () => {

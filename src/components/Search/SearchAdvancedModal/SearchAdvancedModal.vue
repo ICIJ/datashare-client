@@ -190,7 +190,7 @@
             </label>
             <form-control-range
               v-model="form.fuzzyDistance"
-              :min="0"
+              :min="1"
               :max="2"
               :step="1"
             />
@@ -229,7 +229,7 @@
             </label>
             <form-control-range
               v-model="form.proximityDistance"
-              :min="0"
+              :min="1"
               :max="6"
               :step="1"
             />
@@ -383,9 +383,9 @@ function getInitialForm() {
     multiWildcardStart: '',
     multiWildcardEnd: '',
     fuzzyTerm: '',
-    fuzzyDistance: 0,
+    fuzzyDistance: 1,
     proximityPhrase: '',
-    proximityDistance: 0,
+    proximityDistance: 1,
     fieldAll: true,
     selectedFields: []
   }

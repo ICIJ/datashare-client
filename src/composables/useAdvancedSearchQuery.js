@@ -86,22 +86,19 @@ export function useAdvancedSearchQuery() {
       parts.push(`${start}*${end}`)
     }
 
-    // Fuzzy search (spelling changes)
+    // Fuzzy search (spelling changes). Distance 0 means the feature is
+    // disabled — a plain term lives in `anyWords` already, no point
+    // duplicating it here.
     if (formData.fuzzyTerm && formData.fuzzyDistance > 0) {
       const fuzzyTerm = `${escapeTerm(formData.fuzzyTerm)}~${formData.fuzzyDistance}`
       parts.push(fuzzyTerm)
     }
-    else if (formData.fuzzyTerm && formData.fuzzyDistance === 0) {
-      parts.push(escapeTerm(formData.fuzzyTerm))
-    }
 
-    // Proximity search (phrase changes)
+    // Proximity search (phrase changes). Same rule as fuzzy: distance 0
+    // is just an exact phrase, which is its own input above.
     if (formData.proximityPhrase && formData.proximityDistance > 0) {
       const proximityTerm = `"${escapePhrase(formData.proximityPhrase)}"~${formData.proximityDistance}`
       parts.push(proximityTerm)
-    }
-    else if (formData.proximityPhrase && formData.proximityDistance === 0) {
-      parts.push(`"${escapePhrase(formData.proximityPhrase)}"`)
     }
 
     // Combine all parts
