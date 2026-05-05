@@ -82,88 +82,40 @@
         />
 
         <!-- With spelling changes (Fuzzy) -->
-        <div class="search-advanced-modal__field-group">
-          <search-advanced-modal-field
-            :label="t('searchAdvancedModal.fuzzySearch')"
-            :icon="IPhTextAa"
-          >
-            <b-form-input
-              v-model="form.fuzzyTerm"
-            />
-          </search-advanced-modal-field>
-          <div class="search-advanced-modal__slider">
-            <label class="search-advanced-modal__slider__label text-action">
-              {{ t('searchAdvancedModal.charactersDifferent') }}
-            </label>
-            <form-control-range
-              v-model="form.fuzzyDistance"
-              :min="1"
-              :max="2"
-              :step="1"
-            />
-          </div>
-          <p class="search-advanced-modal__example search-advanced-modal__example--offset">
-            <span class="search-advanced-modal__example__prefix">
-              {{ t('searchAdvancedModal.eg') }}
-            </span>
-            <span class="search-advanced-modal__example__value">
-              {{ t('searchAdvancedModal.fuzzySearchExample') }}
-            </span>
-          </p>
-          <div class="search-advanced-modal__explanation">
-            <p class="mb-2">
-              {{ t('searchAdvancedModal.fuzzySearchExplanation1') }}
-            </p>
-            <p class="mb-0">
-              {{ t('searchAdvancedModal.fuzzySearchExplanation2') }}
-            </p>
-          </div>
-        </div>
+        <search-advanced-modal-field-range
+          :term="form.fuzzyTerm"
+          :distance="form.fuzzyDistance"
+          :max="2"
+          :label="t('searchAdvancedModal.fuzzySearch')"
+          :icon="IPhTextAa"
+          :range-label="t('searchAdvancedModal.charactersDifferent')"
+          :example="t('searchAdvancedModal.fuzzySearchExample')"
+          :explanations="[
+            t('searchAdvancedModal.fuzzySearchExplanation1'),
+            t('searchAdvancedModal.fuzzySearchExplanation2')
+          ]"
+          @update:term="form.fuzzyTerm = $event"
+          @update:distance="form.fuzzyDistance = $event"
+        />
 
         <!-- With phrase changes (Proximity) -->
-        <div class="search-advanced-modal__field-group">
-          <search-advanced-modal-field
-            :label="t('searchAdvancedModal.proximitySearch')"
-            :icon="IPhArrowsOutLineHorizontal"
-          >
-            <b-form-input
-              v-model="form.proximityPhrase"
-            />
-          </search-advanced-modal-field>
-          <div class="search-advanced-modal__slider">
-            <label class="search-advanced-modal__slider__label text-action">
-              {{ t('searchAdvancedModal.maxWordsApart') }}
-            </label>
-            <form-control-range
-              v-model="form.proximityDistance"
-              :min="1"
-              :max="6"
-              :step="1"
-            />
-          </div>
-          <p class="search-advanced-modal__example search-advanced-modal__example--offset">
-            <span class="search-advanced-modal__example__prefix">
-              {{ t('searchAdvancedModal.eg') }}
-            </span>
-            <span class="search-advanced-modal__example__value">
-              {{ t('searchAdvancedModal.proximitySearchExample') }}
-            </span>
-          </p>
-          <div class="search-advanced-modal__explanation">
-            <p class="mb-2">
-              {{ t('searchAdvancedModal.proximitySearchExplanation1') }}
-            </p>
-            <p class="mb-2">
-              {{ t('searchAdvancedModal.proximitySearchExplanation2') }}
-            </p>
-            <p class="mb-2">
-              {{ t('searchAdvancedModal.proximitySearchExplanation3') }}
-            </p>
-            <p class="mb-0">
-              {{ t('searchAdvancedModal.proximitySearchExplanation4') }}
-            </p>
-          </div>
-        </div>
+        <search-advanced-modal-field-range
+          :term="form.proximityPhrase"
+          :distance="form.proximityDistance"
+          :max="6"
+          :label="t('searchAdvancedModal.proximitySearch')"
+          :icon="IPhArrowsOutLineHorizontal"
+          :range-label="t('searchAdvancedModal.maxWordsApart')"
+          :example="t('searchAdvancedModal.proximitySearchExample')"
+          :explanations="[
+            t('searchAdvancedModal.proximitySearchExplanation1'),
+            t('searchAdvancedModal.proximitySearchExplanation2'),
+            t('searchAdvancedModal.proximitySearchExplanation3'),
+            t('searchAdvancedModal.proximitySearchExplanation4')
+          ]"
+          @update:term="form.proximityPhrase = $event"
+          @update:distance="form.proximityDistance = $event"
+        />
 
         <!-- Search in specific fields -->
         <search-advanced-modal-field
@@ -251,8 +203,8 @@ import IPhMagnifyingGlass from '~icons/ph/magnifying-glass'
 
 import AppModal from '@/components/AppModal/AppModal.vue'
 import FormActions from '@/components/Form/FormActions/FormActions.vue'
-import FormControlRange from '@/components/Form/FormControl/FormControlRange/FormControlRange.vue'
 import SearchAdvancedModalField from './SearchAdvancedModalField.vue'
+import SearchAdvancedModalFieldRange from './SearchAdvancedModalFieldRange.vue'
 import SearchAdvancedModalFieldText from './SearchAdvancedModalFieldText.vue'
 import SearchAdvancedModalFieldWildcard from './SearchAdvancedModalFieldWildcard.vue'
 import { useAdvancedSearchForm } from '@/composables/useAdvancedSearchForm'
@@ -314,7 +266,12 @@ function handleSearch() {
 defineExpose({ form, isFormEmpty, handleSearch, handleReset })
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+// Not scoped: every rule lives under `.search-advanced-modal`, and the
+// shared structural styles (example/slider/explanation/field-group) are
+// applied inside the SearchAdvancedModalField{Text,Wildcard,Range} child
+// atoms, which would not inherit a Vue scoped data-attribute from this
+// SFC. The BEM prefix already prevents leakage.
 .search-advanced-modal {
   // Width of the label column shared with SearchAdvancedModalField. Exposed as
   // a CSS custom property so the field component (and offset blocks below)
