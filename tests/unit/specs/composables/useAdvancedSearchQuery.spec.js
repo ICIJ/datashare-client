@@ -291,6 +291,31 @@ describe('useAdvancedSearchQuery', () => {
       expect(query).toBe('content:(Paris) OR path:(Paris)')
     })
 
+    it('preserves +/- operators inside the field restriction wrapper', () => {
+      // `field:(+a -b)` is interpreted by Lucene as "must have a, must
+      // not have b in field" — the wrapper does not strip operator
+      // semantics. Pin that down so future refactors don't regress it.
+      const formData = {
+        anyWords: [],
+        allWords: ['France'],
+        exactPhrase: [],
+        noneWords: ['spam'],
+        singleWildcardStart: '',
+        singleWildcardEnd: '',
+        multiWildcardStart: '',
+        multiWildcardEnd: '',
+        fuzzyTerm: '',
+        fuzzyDistance: 0,
+        proximityPhrase: '',
+        proximityDistance: 0,
+        fieldAll: false,
+        selectedFields: ['content']
+      }
+
+      const query = generateQuery(formData)
+      expect(query).toBe('content:(+France -spam)')
+    })
+
     it('should not apply field restriction when all fields is selected', () => {
       const formData = {
         anyWords: ['Paris'],
