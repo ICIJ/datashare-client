@@ -493,6 +493,11 @@ defineExpose({ form, isFormEmpty, handleSearch, handleReset })
 
 <style lang="scss" scoped>
 .search-advanced-modal {
+  // Width of the label column shared with SearchAdvancedModalField. Exposed as
+  // a CSS custom property so the field component (and offset blocks below)
+  // can read the same value without re-declaring it.
+  --search-advanced-modal-label-col: 245px;
+
   display: flex;
   flex-direction: column;
   gap: $spacer * 2;
@@ -521,15 +526,15 @@ defineExpose({ form, isFormEmpty, handleSearch, handleReset })
 
   // Slider rows live outside SearchAdvancedModalField so their label aligns
   // with the slider track itself instead of the form-input above. They sit
-  // below the input column starting at the same x-offset (245px label
-  // column + 16px gap) to stay visually anchored under the input.
+  // below the input column starting at the same x-offset (label column +
+  // gap) to stay visually anchored under the input.
   &__slider {
     display: flex;
     align-items: flex-start;
     gap: $spacer;
 
     @include media-breakpoint-up(md) {
-      padding-left: calc(245px + #{$spacer});
+      padding-left: calc(var(--search-advanced-modal-label-col) + #{$spacer});
     }
 
     &__label {
@@ -571,7 +576,7 @@ defineExpose({ form, isFormEmpty, handleSearch, handleReset })
     // (label + gap) when it lives outside SearchAdvancedModalField.
     &--offset {
       @include media-breakpoint-up(md) {
-        padding-left: calc(245px + #{$spacer});
+        padding-left: calc(var(--search-advanced-modal-label-col) + #{$spacer});
       }
     }
   }
@@ -599,7 +604,7 @@ defineExpose({ form, isFormEmpty, handleSearch, handleReset })
     margin-top: $spacer;
 
     @include media-breakpoint-up(md) {
-      padding-left: calc(245px + $spacer);
+      padding-left: calc(var(--search-advanced-modal-label-col) + #{$spacer});
     }
   }
 }

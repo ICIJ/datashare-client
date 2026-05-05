@@ -52,7 +52,9 @@ defineProps({
   row-gap: $spacer * 0.5;
 
   @include media-breakpoint-up(md) {
-    grid-template-columns: 245px 1fr;
+    // Inherits `--search-advanced-modal-label-col` from SearchAdvancedModal
+    // so the label column and the parent's offset blocks stay in sync.
+    grid-template-columns: var(--search-advanced-modal-label-col, 245px) 1fr;
   }
 
   &__label {
