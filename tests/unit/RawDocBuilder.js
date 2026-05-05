@@ -1,5 +1,10 @@
 import { uniqueId } from 'lodash'
-import { win32 } from 'path'
+
+// Polyfill for win32.dirname for browser environments
+const dirname = (p) => {
+  const lastSlash = p.lastIndexOf('/')
+  return lastSlash === -1 ? p : p.substring(0, lastSlash)
+}
 
 export default class RawDocBuilder {
   constructor(path = uniqueId('/path/to/document/'), index = 'default-index') {
@@ -8,7 +13,7 @@ export default class RawDocBuilder {
     this._source = {
       type: 'Document',
       path,
-      dirname: win32.dirname(path),
+      dirname: dirname(path),
       join: { name: 'Document' },
       language: 'ENGLISH',
       title: path,
