@@ -58,14 +58,7 @@
                 {{ t('searchAdvancedModal.eg') }}
               </span>
               <span class="search-advanced-modal__example__value">
-                {{ t('searchAdvancedModal.allTheseWordsExample1') }}
-              </span>
-              <span class="search-advanced-modal__example__break" />
-              <span class="search-advanced-modal__example__prefix">
-                {{ t('searchAdvancedModal.or') }}
-              </span>
-              <span class="search-advanced-modal__example__value">
-                {{ t('searchAdvancedModal.allTheseWordsExample2') }}
+                {{ t('searchAdvancedModal.allTheseWordsExample') }}
               </span>
             </p>
           </template>
