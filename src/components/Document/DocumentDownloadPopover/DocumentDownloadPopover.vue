@@ -1,5 +1,5 @@
 <script setup>
-import { ref, useTemplateRef, nextTick, computed } from 'vue'
+import { ref, useTemplateRef, nextTick, computed, markRaw } from 'vue'
 import { whenever } from '@vueuse/core'
 import { AppIcon, ButtonIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
@@ -7,6 +7,7 @@ import IPhDownloadSimple from '~icons/ph/download-simple'
 
 import DocumentDownloadPopoverSection from './DocumentDownloadPopoverSection'
 
+import { findContentTypeIcon } from '@/utils/iconFiles'
 import { useDocumentDownload } from '@/composables/useDocumentDownload'
 import AppPopover from '@/components/AppPopover/AppPopover'
 import DisplayContentType from '@/components/Display/DisplayContentType'
@@ -53,6 +54,7 @@ const {
   downloadTranslatedContent,
   fetchStatuses
 } = useDocumentDownload(props.document, { immediate: !props.lazy })
+const contentTypeIcon = computed(() => markRaw(findContentTypeIcon(props.document.contentType)))
 const mounted = computed(() => !props.lazy || activated.value)
 
 // Activate when modelValue becomes true
@@ -139,7 +141,7 @@ defineExpose({
         />
         <document-download-popover-section :title="t('documentDownloadPopover.sectionContentType')">
           <app-icon
-            :name="document.contentTypeIcon"
+            :name="contentTypeIcon"
             class="me-2"
           />
           <display-content-type :value="document.contentType" />
