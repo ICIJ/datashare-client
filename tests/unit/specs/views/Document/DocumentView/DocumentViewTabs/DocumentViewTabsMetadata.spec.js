@@ -21,6 +21,9 @@ describe('DocumentViewTabsMetadata.vue', () => {
   const { index, es } = esConnectionHelper.build()
   let wrapper, core, documentStore
 
+  // Stub LinkedDocumentsCard to prevent it from firing real ES queries on every mount
+  const stubs = { DocumentViewTabsMetadataLinkedDocumentsCard: true }
+
   beforeAll(() => {
     core = CoreSetup.init().useAll()
     documentStore = useDocumentStore()
@@ -42,7 +45,8 @@ describe('DocumentViewTabsMetadata.vue', () => {
 
     wrapper = mount(DocumentViewTabsMetadata, {
       global: {
-        plugins: core.plugins
+        plugins: core.plugins,
+        stubs
       }
     })
 
@@ -57,7 +61,8 @@ describe('DocumentViewTabsMetadata.vue', () => {
 
     wrapper = mount(DocumentViewTabsMetadata, {
       global: {
-        plugins: core.plugins
+        plugins: core.plugins,
+        stubs
       }
     })
 
@@ -76,7 +81,8 @@ describe('DocumentViewTabsMetadata.vue', () => {
 
     wrapper = mount(DocumentViewTabsMetadata, {
       global: {
-        plugins: core.plugins
+        plugins: core.plugins,
+        stubs
       }
     })
 
@@ -93,7 +99,8 @@ describe('DocumentViewTabsMetadata.vue', () => {
 
     wrapper = mount(DocumentViewTabsMetadata, {
       global: {
-        plugins: core.plugins
+        plugins: core.plugins,
+        stubs
       }
     })
 

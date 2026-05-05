@@ -27,7 +27,7 @@ export default defineConfig(configEnv =>
           }
         },
         testTimeout: 10000,
-        maxWorkers: 1,
+        maxWorkers: 4,
         minWorkers: 1
       }
     })
