@@ -145,27 +145,12 @@
     </div>
 
     <template #footer="{ cancel, ok }">
-      <form-actions end>
-        <button-icon
-          variant="outline-secondary"
-          @click="cancel"
-        >
-          {{ t('searchAdvancedModal.cancel') }}
-        </button-icon>
-        <button-icon
-          variant="outline-secondary"
-          @click="handleReset"
-        >
-          {{ t('searchAdvancedModal.reset') }}
-        </button-icon>
-        <button-icon
-          variant="action"
-          :disabled="isFormEmpty"
-          @click="ok"
-        >
-          {{ t('searchAdvancedModal.search') }}
-        </button-icon>
-      </form-actions>
+      <search-advanced-modal-footer
+        :search-disabled="isFormEmpty"
+        @cancel="cancel"
+        @reset="handleReset"
+        @search="ok"
+      />
     </template>
   </app-modal>
 </template>
@@ -173,7 +158,6 @@
 <script setup>
 import { computed, nextTick, watch, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ButtonIcon } from '@icij/murmur-next'
 import IPhUniteSquare from '~icons/ph/unite-square'
 import IPhIntersectSquare from '~icons/ph/intersect-square'
 import IPhQuotes from '~icons/ph/quotes'
@@ -184,11 +168,11 @@ import IPhTextAa from '~icons/ph/text-aa'
 import IPhArrowsOutLineHorizontal from '~icons/ph/arrows-out-line-horizontal'
 
 import AppModal from '@/components/AppModal/AppModal.vue'
-import FormActions from '@/components/Form/FormActions/FormActions.vue'
 import SearchAdvancedModalFieldRange from './SearchAdvancedModalFieldRange.vue'
 import SearchAdvancedModalFieldText from './SearchAdvancedModalFieldText.vue'
 import SearchAdvancedModalFieldWildcard from './SearchAdvancedModalFieldWildcard.vue'
 import SearchAdvancedModalFieldsSelect from './SearchAdvancedModalFieldsSelect.vue'
+import SearchAdvancedModalFooter from './SearchAdvancedModalFooter.vue'
 import { useAdvancedSearchForm } from '@/composables/useAdvancedSearchForm'
 import { useAdvancedSearchQuery } from '@/composables/useAdvancedSearchQuery'
 
