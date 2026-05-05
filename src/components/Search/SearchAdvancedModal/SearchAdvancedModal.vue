@@ -418,10 +418,15 @@ const isFormEmpty = computed(() => {
   }).every(v => v.trim() === '')
 })
 
-// Autofocus the first tag input when the modal becomes visible so users can
-// start typing right away (and screen readers announce the labelled field).
+// Reset the form on close so reopening always starts from a clean state
+// (cancel / ESC / backdrop / successful search all share this code path).
+// Autofocus the first input on open so users can start typing right away
+// and screen readers announce the labelled field.
 watch(isVisible, async (visible) => {
-  if (!visible) return
+  if (!visible) {
+    handleReset()
+    return
+  }
   await nextTick()
   firstInput.value?.focus?.()
 })
