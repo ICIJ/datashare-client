@@ -69,3 +69,20 @@ defineEmits(['update:all', 'update:selected'])
 
 const { t } = useI18n()
 </script>
+
+<style lang="scss" scoped>
+.search-advanced-modal__field__checkboxes {
+  display: flex;
+  flex-direction: column;
+  gap: $spacer * 0.25;
+
+  :deep(.form-check) {
+    margin: 0;
+    padding-left: 1.75rem;
+  }
+
+  &__item__icon {
+    flex-shrink: 0;
+  }
+}
+</style>

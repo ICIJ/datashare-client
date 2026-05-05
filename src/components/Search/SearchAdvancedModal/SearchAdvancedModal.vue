@@ -233,15 +233,14 @@ defineExpose({ form, isFormEmpty, handleSearch, handleReset })
 </script>
 
 <style lang="scss">
-// Not scoped: every rule lives under `.search-advanced-modal`, and the
-// shared structural styles (example/slider/explanation/field-group) are
-// applied inside the SearchAdvancedModalField{Text,Wildcard,Range} child
-// atoms, which would not inherit a Vue scoped data-attribute from this
-// SFC. The BEM prefix already prevents leakage.
+// Not scoped: the shared example styles below (used by the FieldText,
+// FieldWildcard, and FieldRange atoms) are applied inside child component
+// templates that would not inherit a Vue scoped data-attribute from this
+// SFC. The .search-advanced-modal BEM prefix prevents global leakage.
 .search-advanced-modal {
-  // Width of the label column shared with SearchAdvancedModalField. Exposed as
-  // a CSS custom property so the field component (and offset blocks below)
-  // can read the same value without re-declaring it.
+  // Width of the label column shared with SearchAdvancedModalField and
+  // every offset block below. Exposed as a custom property so atoms can
+  // read it through the cascade without re-declaring the value.
   --search-advanced-modal-label-col: 245px;
 
   display: flex;
@@ -264,37 +263,9 @@ defineExpose({ form, isFormEmpty, handleSearch, handleReset })
     gap: $spacer * 1.5;
   }
 
-  &__field-group {
-    display: flex;
-    flex-direction: column;
-    gap: $spacer * 0.5;
-  }
-
-  // Slider rows live outside SearchAdvancedModalField so their label aligns
-  // with the slider track itself instead of the form-input above. They sit
-  // below the input column starting at the same x-offset (label column +
-  // gap) to stay visually anchored under the input.
-  &__slider {
-    display: flex;
-    align-items: flex-start;
-    gap: $spacer;
-
-    @include media-breakpoint-up(md) {
-      padding-left: calc(var(--search-advanced-modal-label-col) + #{$spacer});
-    }
-
-    &__label {
-      // Vertically aligned with the slider track (top of the FormControlRange
-      // wrapper) rather than centered with the ticks below.
-      margin: 0;
-      white-space: nowrap;
-      // The track sits at `padding-top: $spacer-xs` inside the range
-      // wrapper; offsetting the label by the same amount keeps both on the
-      // same horizontal baseline without restyling the DS component.
-      padding-top: $spacer-xs;
-    }
-  }
-
+  // The "e.g." block under each input. Shared across the three field
+  // atoms (FieldText, FieldWildcard, FieldRange) so it lives here rather
+  // than being duplicated three ways.
   &__example {
     display: flex;
     flex-wrap: wrap;
@@ -319,38 +290,13 @@ defineExpose({ form, isFormEmpty, handleSearch, handleReset })
     }
 
     // Offset variant aligns the example block with the slider column
-    // (label + gap) when it lives outside SearchAdvancedModalField.
+    // (label + gap) when it lives outside SearchAdvancedModalField — used
+    // by the FieldRange atom, which renders its example outside the
+    // labelled field grid.
     &--offset {
       @include media-breakpoint-up(md) {
         padding-left: calc(var(--search-advanced-modal-label-col) + #{$spacer});
       }
-    }
-  }
-
-  &__field__checkboxes {
-    display: flex;
-    flex-direction: column;
-    gap: $spacer * 0.25;
-
-    :deep(.form-check) {
-      margin: 0;
-      padding-left: 1.75rem;
-    }
-
-    &__item__icon {
-      flex-shrink: 0;
-    }
-  }
-
-  &__explanation {
-    font-size: $small-font-size;
-    line-height: $line-height-sm;
-    color: var(--bs-secondary-color);
-    // Visually separate the explanation from the inline example above it.
-    margin-top: $spacer;
-
-    @include media-breakpoint-up(md) {
-      padding-left: calc(var(--search-advanced-modal-label-col) + #{$spacer});
     }
   }
 }
