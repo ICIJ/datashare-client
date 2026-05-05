@@ -54,7 +54,7 @@
     "label": "Ajouter"
   },
   "buttonBackToSearch": {
-    "label": "Back"
+    "label": "Précédent"
   },
   "buttonTogglePathTreeView": {
     "list": "Vue liste",
@@ -119,9 +119,9 @@
     "dontShow": "Ne plus afficher"
   },
   "dismissableContentWarningToggler": {
-    "title": "Content warning",
-    "description": "This media may contain sensitive content that some people may find disturbing or offensive.",
-    "toggle": "Show anyway"
+    "title": "Avertissement",
+    "description": "Ce média peut contenir du contenu sensible que certaines personnes peuvent trouver dérangeant ou offensant.",
+    "toggle": "Afficher quand même"
   },
   "dismissableToastBody": {
     "close": "Fermer"
@@ -144,8 +144,8 @@
     "danger": "Échec",
     "warning": "Avertissement",
     "info": "Information",
-    "pending": "Pending",
-    "created": "Pending",
+    "pending": "En attente",
+    "created": "En attente",
     "queued": "En attente",
     "running": "En cours",
     "draft": "Brouillon"
@@ -166,19 +166,19 @@
     "download": "Télécharger",
     "downloadWithoutMetadata": "Télécharger sans les métadonnées",
     "downloadExtractText": "Télécharger le texte",
-    "downloadTranslatedText": "Download text translation",
+    "downloadTranslatedText": "Télécharger la traduction de texte",
     "downloadRoot": "Télécharger le document à la racine",
     "sectionTitle": "Quel est le titre du document ?",
     "sectionContentType": "Quel est le type du document ?",
     "sectionDescription": "Une fois téléchargé, comment puis-je l'ouvrir ?"
   },
   "documentDropdownReindexModalParent": {
-    "alert": "This document was extracted from another document. To reindex it, Datashare needs to reprocess the parent document. Depending on the file size and the selected options, this may take some time."
+    "alert": "Ce document a été extrait d'un autre document. Pour le réindexer, Datashare doit retraiter le document parent. Selon la taille du fichier et les options sélectionnées, cela peut prendre un certain temps."
   },
   "documentDropdownReindexModal": {
-    "title": "Reindex this document",
-    "okTitle": "Reindex",
-    "formLanguage": "Document language",
+    "title": "Réindexer ce document",
+    "okTitle": "Réindexation",
+    "formLanguage": "Langue du document",
     "formOcr": "Extract text from images and PDFs (OCR)"
   },
   "entityPopoverInfo": {
