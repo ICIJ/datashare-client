@@ -1,7 +1,5 @@
-import lodash from 'lodash'
+import { uniqueId } from 'lodash'
 import { win32 } from 'path'
-
-const { uniqueId } = lodash
 
 export default class RawDocBuilder {
   constructor(path = uniqueId('/path/to/document/'), index = 'default-index') {
