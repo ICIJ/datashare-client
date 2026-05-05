@@ -612,10 +612,15 @@ defineExpose({ form, isFormEmpty, handleSearch, handleReset })
 
 <style lang="scss">
 // Global overrides for the modal teleported into <body>. We target
-// `.modal-body:has(.search-advanced-modal)` rather than `.app-modal:has(...)`
+// `.modal-dialog:has(.search-advanced-modal)` rather than `.app-modal:has(...)`
 // because BSV-Next does not always forward the `class` prop to the same
-// wrapper across versions, so the `.modal-body` ancestor is the most
+// wrapper across versions, so the `.modal-dialog` ancestor is the most
 // reliable anchor.
+//
+// `:has()` is supported across the project's browser matrix (Chrome 105+,
+// Safari 15.4+, Firefox 121+ — see package.json `browserslist`). If that
+// list ever loosens to older Firefox releases, fall back to a class-based
+// hook on `.modal-dialog`.
 //
 // — make the dialog wider than the default xl size (1140px) without
 //   horizontal scroll;
