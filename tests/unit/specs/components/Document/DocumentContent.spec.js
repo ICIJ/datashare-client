@@ -1,8 +1,7 @@
 import { mount, shallowMount, flushPromises } from '@vue/test-utils'
 
-import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
-import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import { letTextContent } from '~tests/unit/api_mock'
+import RawDocBuilder from '~tests/unit/RawDocBuilder'
 import CoreSetup from '~tests/unit/CoreSetup'
 import DocumentContent from '@/components/Document/DocumentContent'
 import { apiInstance as api } from '@/api/apiInstance'
@@ -34,7 +33,7 @@ window.HTMLElement.prototype.scrollIntoView = vi.fn()
 
 describe('DocumentContent.vue', () => {
   let core, documentStore
-  const { index, es } = esConnectionHelper.build()
+  const index = 'test-index'
   const id = 'document'
 
   beforeEach(() => {
@@ -49,18 +48,14 @@ describe('DocumentContent.vue', () => {
 
   async function mockDocumentContentSlice(content = '', { language = 'ENGLISH' } = {}) {
     const contentSlice = letTextContent().withContent(content).getResponse()
-    // Index the document
-    await letData(es).have(new IndexedDocument(id, index).withContent(content).withLanguage(language)).commit()
-    // Mock the `getDocumentSlice` method
+    documentStore.setDocument(
+      RawDocBuilder.build(id, index).withContent(content).withLanguage(language).toRaw()
+    )
     api.getDocumentSlice.mockImplementation(async (project, documentId, offset, limit) => {
-      // Modify the returned content according to passed parameters
-      const content = contentSlice.content.substring(offset, offset + limit)
-      return { ...contentSlice, content, offset, limit }
+      const slicedContent = contentSlice.content.substring(offset, offset + limit)
+      return { ...contentSlice, content: slicedContent, offset, limit }
     })
-    // Get the document from the store
-    await documentStore.getDocument({ id, index })
     const document = documentStore.document
-    // Finally flush all promises and return all necessary values
     await flushPromises()
     return { content, contentSlice, document }
   }
