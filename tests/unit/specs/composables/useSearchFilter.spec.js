@@ -85,6 +85,19 @@ describe('useSearchFilter', () => {
   })
 
   describe('refreshSearchFromRoute', () => {
+    // Resolve the lazy-imported view components referenced by the 'search'
+    // route once up-front. Without this, the first test in this block pays
+    // ~14s of cold dynamic-import cost during router.push and intermittently
+    // exceeds the 10s testTimeout.
+    beforeAll(async () => {
+      await Promise.all([
+        import('@/views/App'),
+        import('@/views/Search/Search'),
+        import('@/views/Search/SearchFilters'),
+        import('@/views/Search/SearchSettings')
+      ])
+    }, 60000)
+
     beforeEach(() => {
       vi.spyOn(useSearchStore(), 'query').mockResolvedValue(undefined)
     })
