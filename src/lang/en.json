@@ -499,7 +499,7 @@
   },
   "filter": {
     "project": "Projects",
-    "contentType": "File types",
+    "contentType": "Document types",
     "language": "Languages",
     "namedEntityPerson": "People",
     "namedEntityLocation": "Locations",
@@ -1836,7 +1836,7 @@
       "title": "Languages"
     },
     "contentTypes": {
-      "title": "File types"
+      "title": "Document types"
     },
     "authors": {
       "title": "Authors"
@@ -1962,7 +1962,7 @@
       "tags": "Tags",
       "contentLength": "File size",
       "contentTextLength": "Text length",
-      "contentType": "File type",
+      "contentType": "Document type",
       "creationDate": "Created on",
       "extractionLevel": "Embedment level",
       "extractionDate": "Indexing date",
