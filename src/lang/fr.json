@@ -759,7 +759,7 @@
     "namedEntityFilter": "Rechercher des entités",
     "starred": "Les documents ont été placés dans les favoris.",
     "unstarred": "Les documents ont été enlevés des favoris.",
-    "notAvailable": "L'aperçu n'est pas disponible pour ce document.",
+    "notAvailable": "L'aperçu n'est pas disponible pour ce type de document.",
     "namedEntitiesNotFound": "Aucune entité trouvée.",
     "namedEntitiesNotSearched": "Document non analysé. Pour trouver les entités nommées, {link}.",
     "namedEntitiesNotSearchedLink": "démarrer une nouvelle tâche",
