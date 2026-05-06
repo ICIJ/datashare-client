@@ -499,7 +499,7 @@
   },
   "filter": {
     "project": "Projets",
-    "contentType": "Types de fichiers",
+    "contentType": "Types de documents",
     "language": "Langues",
     "namedEntityPerson": "Personnes",
     "namedEntityLocation": "Lieux",
@@ -1836,7 +1836,7 @@
       "title": "Langues"
     },
     "contentTypes": {
-      "title": "Type de fichiers"
+      "title": "Type de documents"
     },
     "authors": {
       "title": "Auteur•ices"
@@ -1962,7 +1962,7 @@
       "tags": "Tags",
       "contentLength": "Taille du ficher",
       "contentTextLength": "Longueur du texte",
-      "contentType": "Type de fichier",
+      "contentType": "Type de document",
       "creationDate": "Créé le",
       "extractionLevel": "Niveau d'enchâssement",
       "extractionDate": "Date d'indexation",
