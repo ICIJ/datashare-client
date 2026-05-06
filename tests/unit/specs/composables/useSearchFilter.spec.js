@@ -299,6 +299,32 @@ describe('useSearchFilter composable', () => {
       expect(isFilterContextualized({ name: 'language' })).toBe(true)
       expect(isFilterContextualized({ name: 'tags' })).toBe(false)
     })
+
+    it('does not write to the store when called as a computed getter with divergent state', () => {
+      // Divergent: non-canonical contextualized, canonical is not.
+      // The OLD implementation called contextualizeFilter/decontextualizeFilter
+      // directly inside the getter body, which caused store mutations during
+      // Vue rendering (computed getter = read path).
+      searchStore.contextualizeFilter('contentTypeCategory')
+
+      const contextualizeFilterSpy = vi.spyOn(searchStore, 'contextualizeFilter')
+      const decontextualizeFilterSpy = vi.spyOn(searchStore, 'decontextualizeFilter')
+
+      // Mount: the reconciliation watchEffect fires synchronously and may call
+      // the store methods to fix the divergence. That is expected and correct.
+      const { computedContextualizeFilter } = mountComposable()
+
+      // Clear after mount so we only observe what the getter itself does from here.
+      contextualizeFilterSpy.mockClear()
+      decontextualizeFilterSpy.mockClear()
+
+      // Reading the computed must be a pure read — no store mutation.
+      const contextualized = computedContextualizeFilter({ name: 'contentType' })
+      void contextualized.value
+
+      expect(contextualizeFilterSpy).not.toHaveBeenCalled()
+      expect(decontextualizeFilterSpy).not.toHaveBeenCalled()
+    })
   })
 
   describe('computedContextualizeFilter', () => {
@@ -433,6 +459,29 @@ describe('useSearchFilter composable', () => {
 
       expect(isFilterExcluded({ name: 'language' })).toBe(true)
       expect(isFilterExcluded({ name: 'tags' })).toBe(false)
+    })
+
+    it('does not write to the store when called as a computed getter with divergent state', () => {
+      // Divergent: non-canonical excluded, canonical is not.
+      // The OLD implementation called toggleFilter directly inside the getter
+      // body, which caused store mutations during Vue rendering (computed
+      // getter = read path) and could trigger recursive update cycles.
+      searchStore.excludeFilter('contentTypeCategory')
+
+      const toggleSpy = vi.spyOn(searchStore, 'toggleFilter')
+
+      // Mount: the reconciliation watchEffect fires synchronously and may call
+      // toggleFilter to fix the divergence. That is expected and correct.
+      const { computedExcludeFilter } = mountComposable()
+
+      // Clear after mount so we only observe what the getter itself does from here.
+      toggleSpy.mockClear()
+
+      // Reading the computed must be a pure read — no store mutation.
+      const excluded = computedExcludeFilter({ name: 'contentType' })
+      void excluded.value
+
+      expect(toggleSpy).not.toHaveBeenCalled()
     })
   })
 

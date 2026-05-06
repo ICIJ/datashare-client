@@ -48,8 +48,9 @@ const overlayVisible = computed(() => {
 const filterTypeRef = useTemplateRef('filterTypeRef')
 const entries = computed(() => filterTypeRef.value?.entries ?? [])
 const contentTypes = computed(() => entries.value.map(entry => entry.item.key))
+const groupedContentTypes = computed(() => grouped.value ? contentTypes.value : [])
 
-const { categories } = useContentTypeCategories(contentTypes)
+const { categories } = useContentTypeCategories(groupedContentTypes)
 const {
   toggleFilterValue,
   hasFilterValue,

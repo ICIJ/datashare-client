@@ -1,4 +1,4 @@
-import { computed, toValue, nextTick, watch } from 'vue'
+import { computed, toValue, nextTick, watch, watchEffect } from 'vue'
 import { castArray, get, identity, isObject, range, random, toString, without } from 'lodash'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -17,7 +17,7 @@ import FilterTypeRecommendedBy from '@/components/Filter/FilterType/FilterTypeRe
 import FilterTypeStarred from '@/components/Filter/FilterType/FilterTypeStarred'
 import { CONTENT_TYPE_CATEGORY_FILTER_NAME } from '@/store/filters/FilterContentTypeCategory'
 import FilterText from '@/store/filters/FilterText.js'
-import { getCanonicalDimension, getPairedDimension, getPairedDimensions } from '@/store/filters/pairedDimensions'
+import { PAIRED_DIMENSIONS, getCanonicalDimension, getPairedDimension, getPairedDimensions } from '@/store/filters/pairedDimensions'
 import { useAppStore, useRecommendedStore, useSearchStore } from '@/store/modules'
 
 export function useSearchFilter() {
@@ -35,6 +35,35 @@ export function useSearchFilter() {
   // Tolerate an undefined return so a stubbed composable in tests doesn't
   // crash unrelated mounts (FilterModal sits under every FilterType).
   const { isAvailable: isCategoryAvailable } = useContentTypeCategoryAvailability() ?? {}
+
+  // Keep non-canonical paired dimensions in lockstep with their canonical.
+  // flush:'sync' ensures reconciliation runs within the same tick as setup,
+  // not deferred to the next render, so URL-restored drift is corrected before
+  // any computed getter or template ever reads the store.
+  watchEffect(() => {
+    for (const [canonical, paired] of Object.entries(PAIRED_DIMENSIONS)) {
+      const value = searchStore.isFilterExcluded(canonical)
+      if (searchStore.isFilterExcluded(paired) !== value) {
+        searchStore.toggleFilter(paired, value)
+      }
+    }
+  }, { flush: 'sync' })
+
+  watchEffect(() => {
+    for (const [canonical, paired] of Object.entries(PAIRED_DIMENSIONS)) {
+      const value = searchStore.isFilterContextualized(canonical)
+      if (searchStore.isFilterContextualized(paired) !== value) {
+        if (value) {
+          searchStore.contextualizeFilter(paired)
+        }
+        else {
+          // Guard: decontextualizeFilter does splice(-1,1) when absent, popping
+          // an unrelated filter — only call it when the filter is actually present.
+          searchStore.decontextualizeFilter(paired)
+        }
+      }
+    }
+  }, { flush: 'sync' })
 
   const filterTypes = {
     FilterType,
@@ -331,20 +360,7 @@ export function useSearchFilter() {
     if (dimensions.length === 1) {
       return searchStore.isFilterExcluded(name)
     }
-    // Reconcile paired dimensions by trusting the canonical one and writing
-    // the rest back into lockstep so the two dimensions never drift on read.
-    const canonical = getCanonicalDimension(name)
-    const canonicalValue = searchStore.isFilterExcluded(canonical)
-    for (const dimension of dimensions) {
-      if (dimension === canonical) {
-        continue
-      }
-      if (searchStore.isFilterExcluded(dimension) === canonicalValue) {
-        continue
-      }
-      searchStore.toggleFilter(dimension, canonicalValue)
-    }
-    return canonicalValue
+    return searchStore.isFilterExcluded(getCanonicalDimension(name))
   }
 
   function computedExcludeFilter(filter, { get = null, set = null } = {}) {
@@ -371,25 +387,7 @@ export function useSearchFilter() {
     if (dimensions.length === 1) {
       return searchStore.isFilterContextualized(name)
     }
-    // Reconcile paired dimensions by trusting the canonical one and writing
-    // the rest back into lockstep so the two dimensions never drift on read.
-    const canonical = getCanonicalDimension(name)
-    const canonicalValue = searchStore.isFilterContextualized(canonical)
-    for (const dimension of dimensions) {
-      if (dimension === canonical) {
-        continue
-      }
-      if (searchStore.isFilterContextualized(dimension) === canonicalValue) {
-        continue
-      }
-      if (canonicalValue) {
-        searchStore.contextualizeFilter(dimension)
-      }
-      else {
-        searchStore.decontextualizeFilter(dimension)
-      }
-    }
-    return canonicalValue
+    return searchStore.isFilterContextualized(getCanonicalDimension(name))
   }
 
   function computedContextualizeFilter(filter, { get = null, set = null } = {}) {
