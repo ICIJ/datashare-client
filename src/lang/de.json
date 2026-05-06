@@ -1836,7 +1836,7 @@
       "title": "Languages"
     },
     "contentTypes": {
-      "title": "File types"
+      "title": "Document types"
     },
     "authors": {
       "title": "Authors"
@@ -1962,7 +1962,7 @@
       "tags": "Tags",
       "contentLength": "Dateigröße",
       "contentTextLength": "Text length",
-      "contentType": "File type",
+      "contentType": "Document type",
       "creationDate": "Created on",
       "extractionLevel": "Embedment level",
       "extractionDate": "Indizierungsdatum",
