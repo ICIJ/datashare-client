@@ -29,7 +29,5 @@ const icon = computed(() => {
     :icon-left="icon"
     :label="title"
     @click="toggle"
-  >
-    {{ title }}
-  </button-subtle-action>
+  />
 </template>
