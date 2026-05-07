@@ -8,11 +8,9 @@ import ContentTypesAll from '@/components/ContentTypes/ContentTypesAll.vue'
 import ContentTypesCategories from '@/components/ContentTypes/ContentTypesCategories/ContentTypesCategories.vue'
 import ContentTypesCategory from '@/components/ContentTypes/ContentTypesCategories/ContentTypesCategory.vue'
 import ContentTypesCategoryName from '@/components/ContentTypes/ContentTypesCategories/ContentTypesCategoryName.vue'
-import ContentTypesCategoryItem from '@/components/ContentTypes/ContentTypesCategories/ContentTypesCategoryItem.vue'
 import ContentTypesEntry from '@/components/ContentTypes/ContentTypesCategories/ContentTypesEntry.vue'
 import FilterType from './FilterType.vue'
 import { useContentTypeCategories } from '@/composables/useContentTypeCategories'
-import { useContentTypeCategoryAvailability } from '@/composables/useContentTypeCategoryAvailability'
 import { useContentTypeCategoryLabel } from '@/composables/useContentTypeCategoryLabel'
 import { useContentTypeSearchFilter } from '@/composables/useContentTypeSearchFilter'
 import { useContentTypeSelection } from '@/composables/useContentTypeSelection'
@@ -33,18 +31,6 @@ const { t } = useI18n()
 
 const filterRef = toRef(props, 'filter')
 
-// Legacy projects re-indexed before category grouping landed lack the
-// contentTypeCategory mapping — surface an overlay so the disabled grouped
-// view is explained.
-const {
-  isAvailable: isCategoryAvailable,
-  isLoading: isCategoryAvailabilityLoading
-} = useContentTypeCategoryAvailability()
-const isLegacyIndexOverlayVisible = computed(() => !isCategoryAvailable.value)
-const overlayVisible = computed(() => {
-  return grouped.value && (isLegacyIndexOverlayVisible.value || isCategoryAvailabilityLoading.value)
-})
-
 const filterTypeRef = useTemplateRef('filterTypeRef')
 const entries = computed(() => filterTypeRef.value?.entries ?? [])
 const contentTypes = computed(() => entries.value.map(entry => entry.item.key))
@@ -56,8 +42,18 @@ const {
   hasFilterValue,
   computedAll,
   computedTotal,
-  getFilterPairedDimensions
+  getFilterPairedDimensions,
+  isCategoryAvailable,
+  isCategoryAvailabilityLoading
 } = useSearchFilter()
+
+// Legacy projects re-indexed before category grouping landed lack the
+// contentTypeCategory mapping — surface an overlay so the disabled grouped
+// view is explained.
+const isLegacyIndexOverlayVisible = computed(() => !isCategoryAvailable?.value)
+const overlayVisible = computed(() => {
+  return grouped.value && (isLegacyIndexOverlayVisible.value || isCategoryAvailabilityLoading?.value)
+})
 const categoryLabelFor = useContentTypeCategoryLabel()
 
 const {
@@ -146,7 +142,7 @@ const totalCount = computedTotal(filterRef)
               :indeterminate="categoryIndeterminate(category, types)"
               @update:model-value="toggleCategory(category, types, $event)"
             />
-            <content-types-category-item
+            <content-types-entry
               v-for="contentType in sortedTypesFor(visibleTypesFor(category, types))"
               :key="contentType"
               :content-type="contentType"

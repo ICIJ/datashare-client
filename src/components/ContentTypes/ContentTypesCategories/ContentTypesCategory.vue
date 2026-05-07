@@ -6,7 +6,7 @@
 
 <style lang="scss" scoped>
 .content-types-category {
-  > :deep(.content-types-category-item) {
+  > :deep(.content-types-entry) {
     padding-inline-start: $spacer;
   }
 }
