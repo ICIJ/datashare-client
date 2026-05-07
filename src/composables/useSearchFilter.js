@@ -34,7 +34,10 @@ export function useSearchFilter() {
   // counts and the "All" checkbox stop referencing the absent dimension.
   // Tolerate an undefined return so a stubbed composable in tests doesn't
   // crash unrelated mounts (FilterModal sits under every FilterType).
-  const { isAvailable: isCategoryAvailable } = useContentTypeCategoryAvailability() ?? {}
+  const {
+    isAvailable: isCategoryAvailable,
+    isLoading: isCategoryAvailabilityLoading
+  } = useContentTypeCategoryAvailability() ?? {}
 
   // Keep non-canonical paired dimensions in lockstep with their canonical.
   // flush:'sync' ensures reconciliation runs within the same tick as setup,
@@ -531,6 +534,8 @@ export function useSearchFilter() {
     onAfterRouteQueryUpdate,
     onAfterRouteQueryFromUpdate,
     watchValues,
-    whenFilterContextualized
+    whenFilterContextualized,
+    isCategoryAvailable,
+    isCategoryAvailabilityLoading
   }
 }
