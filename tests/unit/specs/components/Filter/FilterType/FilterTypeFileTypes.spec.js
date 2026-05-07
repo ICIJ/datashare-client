@@ -8,7 +8,6 @@ import FilterTypeFileTypes from '@/components/Filter/FilterType/FilterTypeFileTy
 import ButtonToggleContentTypesView from '@/components/Button/ButtonToggleContentTypesView'
 import ContentTypesAll from '@/components/ContentTypes/ContentTypesAll'
 import ContentTypesCategory from '@/components/ContentTypes/ContentTypesCategories/ContentTypesCategory'
-import ContentTypesCategoryItem from '@/components/ContentTypes/ContentTypesCategories/ContentTypesCategoryItem'
 import ContentTypesCategoryName from '@/components/ContentTypes/ContentTypesCategories/ContentTypesCategoryName'
 import ContentTypesEntry from '@/components/ContentTypes/ContentTypesCategories/ContentTypesEntry'
 import FiltersPanelSectionFilterTitleSort from '@/components/FiltersPanel/FiltersPanelSectionFilterTitleSort'
@@ -154,8 +153,7 @@ describe('FilterTypeFileTypes.vue', () => {
     await flushPromises()
 
     expect(wrapper.findAllComponents(ContentTypesCategory)).toHaveLength(2)
-    expect(wrapper.findAllComponents(ContentTypesCategoryItem)).toHaveLength(3)
-    expect(wrapper.findAllComponents(ContentTypesEntry)).toHaveLength(0)
+    expect(wrapper.findAllComponents(ContentTypesEntry)).toHaveLength(3)
   })
 
   it('keeps the sort control rendered in both grouped and flat views', async () => {
@@ -366,7 +364,7 @@ describe('FilterTypeFileTypes.vue', () => {
     }
 
     const findCategoryItem = (contentType) => {
-      const items = wrapper.findAllComponents(ContentTypesCategoryItem)
+      const items = wrapper.findAllComponents(ContentTypesEntry)
       return items.find(node => node.props('contentType') === contentType)
     }
 
@@ -619,7 +617,7 @@ describe('FilterTypeFileTypes.vue', () => {
 
   describe('stale checkbox state on category promotion', () => {
     // Other tests in this file shortcut clicks via `vm.$emit('update:modelValue')`
-    // on the ContentTypesCategoryItem wrapper, which bypasses the BFormCheckbox →
+    // on the ContentTypesEntry wrapper, which bypasses the BFormCheckbox →
     // FiltersPanelSectionFilterEntry v-model chain and cannot reveal the stale
     // DOM-checked state when a click leaves `props.modelValue` unchanged on
     // both sides. Driving the click through the rendered <input> exercises it.
@@ -635,7 +633,7 @@ describe('FilterTypeFileTypes.vue', () => {
     }
 
     const findCategoryItem = (contentType) => {
-      const items = wrapper.findAllComponents(ContentTypesCategoryItem)
+      const items = wrapper.findAllComponents(ContentTypesEntry)
       return items.find(node => node.props('contentType') === contentType)
     }
 
@@ -804,7 +802,7 @@ describe('FilterTypeFileTypes.vue', () => {
     }
 
     const bucketOrder = () =>
-      wrapper.findAllComponents(ContentTypesCategoryItem).map(node => node.props('contentType'))
+      wrapper.findAllComponents(ContentTypesEntry).map(node => node.props('contentType'))
 
     it('orders buckets by doc_count desc (highest first) by default', async () => {
       await seedBucketsInCategory()
@@ -887,7 +885,6 @@ describe('FilterTypeFileTypes.vue', () => {
       expect(wrapper.findAllComponents(ContentTypesEntry)).toHaveLength(3)
       expect(wrapper.findAllComponents(ContentTypesCategory)).toHaveLength(0)
       expect(wrapper.findAllComponents(ContentTypesCategoryName)).toHaveLength(0)
-      expect(wrapper.findAllComponents(ContentTypesCategoryItem)).toHaveLength(0)
     })
 
     it('keeps the sort dropdown wired to searchStore in the flat view', async () => {
@@ -1004,7 +1001,7 @@ describe('FilterTypeFileTypes.vue', () => {
     }
 
     const findCategoryItem = (contentType) => {
-      const items = wrapper.findAllComponents(ContentTypesCategoryItem)
+      const items = wrapper.findAllComponents(ContentTypesEntry)
       return items.find(node => node.props('contentType') === contentType)
     }
 
@@ -1164,7 +1161,7 @@ describe('FilterTypeFileTypes.vue', () => {
       wrapper.findAllComponents(ContentTypesCategoryName).map(node => node.props('category'))
 
     const visibleCategoryItems = () =>
-      wrapper.findAllComponents(ContentTypesCategoryItem).map(node => node.props('contentType'))
+      wrapper.findAllComponents(ContentTypesEntry).map(node => node.props('contentType'))
 
     it('renders the unfiltered grouped structure when the query is empty', async () => {
       await seedStructuralCategories()
