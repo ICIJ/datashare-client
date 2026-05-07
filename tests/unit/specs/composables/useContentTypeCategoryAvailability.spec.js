@@ -1,7 +1,7 @@
 import { mount, flushPromises } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
-import { useContentTypeCategoryAvailability } from '@/composables/useContentTypeCategoryAvailability'
+import { useContentTypeCategoryAvailability, useMappingCacheStore } from '@/composables/useContentTypeCategoryAvailability'
 import { useSearchStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
 
@@ -34,6 +34,7 @@ describe('useContentTypeCategoryAvailability composable', () => {
       wrapper.unmount()
       wrapper = null
     }
+    useMappingCacheStore().clear()
     vi.restoreAllMocks()
   })
 
