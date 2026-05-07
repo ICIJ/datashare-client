@@ -101,7 +101,8 @@ export function useContentTypeSort({ entries, filter, categoryLabelFor, filtered
     return [...pairs].sort(categoryComparator(sort.value))
   })
 
-  const sortedTypesFor = types => [...types].sort(typesComparator(sort.value))
+  const currentTypesComparator = computed(() => typesComparator(sort.value))
+  const sortedTypesFor = types => [...types].sort(currentTypesComparator.value)
 
   return {
     entryCount,
