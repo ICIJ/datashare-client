@@ -452,6 +452,15 @@ export const routes = [
                     meta: {
                       breadcrumb: false,
                     }
+                  },
+                  {
+                    name: 'project.view.edit.users',
+                    path: 'users',
+                    props: true,
+                    component: () => import('@/views/Project/ProjectView/ProjectViewEdit/ProjectViewEditUsers.vue'),
+                    meta: {
+                      breadcrumb: false,
+                    }
                   }
                 ]
               }
