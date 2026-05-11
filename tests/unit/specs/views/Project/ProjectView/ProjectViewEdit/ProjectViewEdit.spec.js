@@ -10,13 +10,14 @@ describe('ProjectViewEdit.vue', () => {
     core = CoreSetup.init().useI18n()
     core.config.set('projects', [{ name: 'local-datashare', label: 'Default', sourcePath: '/' }])
   })
-  it('renders two tab navigation entries', () => {
+
+  it('renders three tab navigation entries', () => {
     const props = { name: 'local-datashare' }
     const wrapper = shallowMount(ProjectViewEdit, {
       global: { plugins: core.plugins, renderStubDefaultSlot: true },
       props
     })
-    expect(wrapper.findAllComponents({ name: 'TabGroupNavigationEntry' })).toHaveLength(2)
+    expect(wrapper.findAllComponents({ name: 'TabGroupNavigationEntry' })).toHaveLength(3)
   })
 
   it('first tab links to project.view.edit.details', () => {
@@ -37,5 +38,15 @@ describe('ProjectViewEdit.vue', () => {
     })
     const entries = wrapper.findAllComponents({ name: 'TabGroupNavigationEntry' })
     expect(entries[1].props('to')).toMatchObject({ name: 'project.view.edit.banners' })
+  })
+
+  it('third tab links to project.view.edit.users', () => {
+    const props = { name: 'local-datashare' }
+    const wrapper = shallowMount(ProjectViewEdit, {
+      global: { plugins: core.plugins, renderStubDefaultSlot: true },
+      props
+    })
+    const entries = wrapper.findAllComponents({ name: 'TabGroupNavigationEntry' })
+    expect(entries[2].props('to')).toMatchObject({ name: 'project.view.edit.users' })
   })
 })
