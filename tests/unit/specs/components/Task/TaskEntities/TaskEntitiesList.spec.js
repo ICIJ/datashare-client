@@ -1,17 +1,20 @@
 import { flushPromises, mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
+import { useTaskTimerSetup } from '~tests/unit/useTaskTimerSetup'
 import TaskEntitiesList from '@/views/Task/TaskEntities/TaskEntitiesList'
 import { apiInstance as api } from '@/api/apiInstance'
 
-vi.mock('@/api/apiInstance', {
+vi.mock('@/api/apiInstance', () => ({
   apiInstance: {
     getTasks: vi.fn().mockResolvedValue({ items: [] })
   }
-})
+}))
 
 describe('TaskEntitiesList.vue', () => {
-  let core, plugins
+  let core, plugins, wrapper
+
+  useTaskTimerSetup()
 
   beforeAll(() => {
     core = CoreSetup.init().useAll().useRouterWithoutGuards()
@@ -40,6 +43,7 @@ describe('TaskEntitiesList.vue', () => {
   })
 
   afterEach(async () => {
+    wrapper?.unmount()
     await flushPromises()
   })
 
@@ -48,7 +52,7 @@ describe('TaskEntitiesList.vue', () => {
   })
 
   it('renders correctly', () => {
-    const wrapper = mount(TaskEntitiesList, { global: { plugins } })
+    wrapper = mount(TaskEntitiesList, { global: { plugins } })
     expect(wrapper.exists()).toBe(true)
     expect(api.getTasks).toBeCalled()
     expect(api.getTasks).toBeCalledWith(
@@ -59,13 +63,13 @@ describe('TaskEntitiesList.vue', () => {
   })
 
   it('should display 1 ExtractNlpTask and 1 EnqueueFromIndexTask task', async () => {
-    const wrapper = mount(TaskEntitiesList, { global: { plugins } })
+    wrapper = mount(TaskEntitiesList, { global: { plugins } })
     await flushPromises()
     expect(wrapper.findAll('.page-table-generic__row')).toHaveLength(2)
   })
 
   it('should display the correct values in the correct columns for row 1', async () => {
-    const wrapper = mount(TaskEntitiesList, { global: { plugins } })
+    wrapper = mount(TaskEntitiesList, { global: { plugins } })
     await flushPromises()
     const firstRow = wrapper.find('.page-table-generic__row')
     const columns = firstRow.findAll('.page-table-generic__row__field')
