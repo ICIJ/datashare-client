@@ -93,15 +93,21 @@ vi.mock('@/api/apiInstance', () => {
 })
 
 describe('TaskBatchSearchList', () => {
-  let core, plugins
+  let core, plugins, wrapper
 
   beforeAll(() => {
     core = CoreSetup.init().useAll().useRouterWithoutGuards()
   })
 
   beforeEach(async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'setInterval', 'clearTimeout', 'clearInterval'] })
     core.createPinia()
     plugins = core.plugins
+  })
+
+  afterEach(() => {
+    wrapper?.unmount()
+    vi.useRealTimers()
   })
 
   afterAll(() => {
@@ -109,7 +115,7 @@ describe('TaskBatchSearchList', () => {
   })
 
   it('should display 2 batch searches', async () => {
-    const wrapper = mount(TaskBatchSearchList, { global: { plugins } })
+    wrapper = mount(TaskBatchSearchList, { global: { plugins } })
     await flushPromises()
     const rows = wrapper.findAll('.page-table-generic__row')
     expect(rows).toHaveLength(2)
@@ -117,7 +123,7 @@ describe('TaskBatchSearchList', () => {
 
   it('should not display actions if I m not the owner of the batch search', async () => {
     setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'local' }, JSON.stringify)
-    const wrapper = mount(TaskBatchSearchList, { global: { plugins } })
+    wrapper = mount(TaskBatchSearchList, { global: { plugins } })
     await flushPromises()
     const rows = wrapper.findAll('.page-table-generic__row')
     expect(rows.at(0).find('.batch-search-actions').exists()).toBe(true)
