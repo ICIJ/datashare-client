@@ -49,8 +49,8 @@ const sortedUsers = computed(() => {
         />
       </template>
       <tr
-        v-for="user in sortedUsers"
-        :key="user.name"
+        v-for="(user, index) in sortedUsers"
+        :key="user.name ?? index"
       >
         <td>{{ user.name }}</td>
         <td>{{ user.role }}</td>
