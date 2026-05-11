@@ -17,11 +17,16 @@ vi.mock('lodash', async (importOriginal) => {
 })
 
 vi.mock('@/api/apiInstance', async (importOriginal) => {
-  const { apiInstance } = await importOriginal()
+  const {
+    apiInstance: { elasticsearch }
+  } = await importOriginal()
 
   return {
     apiInstance: {
-      ...apiInstance,
+      elasticsearch: {
+        ...elasticsearch,
+        search: vi.fn().mockResolvedValue({ hits: { hits: [], total: { value: 0 } } })
+      },
       getDocumentSlice: vi.fn(),
       getPages: vi.fn().mockResolvedValue([]),
       searchDocument: vi.fn()
