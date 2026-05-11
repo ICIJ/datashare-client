@@ -1,27 +1,29 @@
 import { mount, flushPromises } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
+import { useTaskTimerSetup } from '~tests/unit/useTaskTimerSetup'
 import TaskBatchDownloadList from '@/views/Task/TaskBatchDownload/TaskBatchDownloadList'
 import { apiInstance as api } from '@/api/apiInstance'
 import BatchDownloadActions from '@/components/BatchDownload/BatchDownloadActions'
 import BatchDownloadTruncatedAlert from '@/components/BatchDownload/BatchDownloadTruncatedAlert'
 
-vi.mock('@/api/apiInstance', {
+vi.mock('@/api/apiInstance', () => ({
   apiInstance: {
     isDownloadAllowed: vi.fn().mockResolvedValue(),
     getTasks: vi.fn().mockResolvedValue({ items: [] })
   }
-})
+}))
 
 describe('TaskBatchDownloadList.vue', () => {
   let core, plugins, wrapper
+
+  useTaskTimerSetup()
 
   beforeAll(() => {
     core = CoreSetup.init().useAll().useRouterWithoutGuards()
   })
 
   beforeEach(async () => {
-    vi.useFakeTimers({ toFake: ['setTimeout', 'setInterval', 'clearTimeout', 'clearInterval'] })
     core.createPinia()
     plugins = core.plugins
     api.getTasks.mockResolvedValue({
@@ -134,7 +136,6 @@ describe('TaskBatchDownloadList.vue', () => {
 
   afterEach(() => {
     wrapper?.unmount()
-    vi.useRealTimers()
   })
 
   afterAll(() => {

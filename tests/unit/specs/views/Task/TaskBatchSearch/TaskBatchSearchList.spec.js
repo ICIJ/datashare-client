@@ -2,6 +2,7 @@ import { setCookie } from 'tiny-cookie'
 import { flushPromises, mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
+import { useTaskTimerSetup } from '~tests/unit/useTaskTimerSetup'
 import TaskBatchSearchList from '@/views/Task/TaskBatchSearch/TaskBatchSearchList'
 
 vi.mock('@/api/apiInstance', () => {
@@ -95,19 +96,19 @@ vi.mock('@/api/apiInstance', () => {
 describe('TaskBatchSearchList', () => {
   let core, plugins, wrapper
 
+  useTaskTimerSetup()
+
   beforeAll(() => {
     core = CoreSetup.init().useAll().useRouterWithoutGuards()
   })
 
   beforeEach(async () => {
-    vi.useFakeTimers({ toFake: ['setTimeout', 'setInterval', 'clearTimeout', 'clearInterval'] })
     core.createPinia()
     plugins = core.plugins
   })
 
   afterEach(() => {
     wrapper?.unmount()
-    vi.useRealTimers()
   })
 
   afterAll(() => {
