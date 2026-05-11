@@ -1402,7 +1402,8 @@
     "title": "Edit project",
     "tabs": {
       "details": "Details and documents",
-      "pathBanners": "Banners"
+      "pathBanners": "Banners",
+      "users": "Users"
     },
     "notify": {
       "update": {
@@ -1455,6 +1456,13 @@
           "succeedBody": "Banner deleted.",
           "failedBody": "Failed to delete banner."
         }
+      }
+    },
+    "users": {
+      "empty": "No users yet.",
+      "fields": {
+        "name": { "label": "Name" },
+        "role": { "label": "Role" }
       }
     }
   },
