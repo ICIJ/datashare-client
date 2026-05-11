@@ -224,7 +224,7 @@ class IndexedDocument {
 
   toRaw() {
     // Exclude `index` (becomes _index), `parent` and `root` (IndexedDocument sub-instances, not ES fields)
-    const { index, parent, root, ...source } = this
+    const { index, ...source } = this
     return { _id: this.path, _index: index, _source: source }
   }
 

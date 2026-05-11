@@ -34,7 +34,7 @@ vi.mock('@/router', async (importOriginal) => {
   const stub = { template: '<div />' }
 
   function replaceComponents(routeList) {
-    return routeList.map(route => {
+    return routeList.map((route) => {
       const result = { ...route }
       if (result.component) result.component = stub
       if (result.components) {

@@ -4,7 +4,7 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import SettingsSnapshotsList from '@/components/Settings/SettingsSnapshots/SettingsSnapshotsList'
 
 describe('SettingsSnapshotsList', () => {
-  let core, plugins
+  let core, plugins, wrapper
 
   beforeAll(() => {
     core = CoreSetup.init().useAll()
@@ -15,15 +15,23 @@ describe('SettingsSnapshotsList', () => {
     plugins = core.plugins
   })
 
+  afterEach(() => {
+    wrapper?.unmount()
+  })
+
   function mountComponent(props = {}) {
-    return mount(SettingsSnapshotsList, {
-      global: { plugins },
+    wrapper = mount(SettingsSnapshotsList, {
+      global: {
+        plugins,
+        stubs: { SettingsSnapshotsActions: true }
+      },
       props: {
         snapshots: [],
         isLoading: false,
         ...props
       }
     })
+    return wrapper
   }
 
   it('should render the list component', () => {
