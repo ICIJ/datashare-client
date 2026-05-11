@@ -1,4 +1,4 @@
-import { flushPromises, mount } from '@vue/test-utils'
+import { flushPromises, mount, shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import SearchSavedEntries from '@/components/Search/SearchSavedEntries/SearchSavedEntries'
@@ -51,40 +51,36 @@ vi.mock('@/api/apiInstance', () => {
 })
 
 describe('Search/SearchSaved/SearchSavedList.vue', () => {
-  let core, wrapper, router
+  let core, router
 
   beforeAll(() => {
     core = CoreSetup.init().useAll().useRouterWithoutGuards()
     router = core.router
   })
 
-  beforeEach(async () => {
-    core.createPinia()
-    const plugins = core.plugins
-    const global = { plugins }
-    wrapper = mount(SearchSavedList, { global })
-    await flushPromises()
-  })
-
-  afterEach(() => {
-    wrapper?.unmount()
-    vi.clearAllMocks()
-  })
-
   afterAll(() => {
     vi.resetAllMocks()
   })
 
-  it('should display a list of 2 saved search', () => {
+  it('should display a list of 2 saved search', async () => {
+    core.createPinia()
+    const wrapper = mount(SearchSavedList, { global: { plugins: core.plugins } })
+    await flushPromises()
     const entries = wrapper.findComponent(SearchSavedEntries)
     expect(entries.exists()).toBeTruthy()
     const tr = entries.findAll('.page-table-generic__row')
     expect(tr).toHaveLength(2)
+    wrapper.unmount()
   })
 
   it('should display load next page', async () => {
+    core.createPinia()
+    vi.clearAllMocks()
+    const wrapper = shallowMount(SearchSavedList, { global: { plugins: core.plugins } })
+    await flushPromises()
     expect(api.getHistoryEvents).toBeCalledTimes(1)
     await router.push({ name: 'search.saved.list', query: { page: '2' } })
     expect(api.getHistoryEvents).toBeCalledTimes(2)
+    wrapper.unmount()
   })
 })
