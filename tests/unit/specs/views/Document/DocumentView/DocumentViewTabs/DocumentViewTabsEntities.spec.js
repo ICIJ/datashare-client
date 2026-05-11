@@ -19,6 +19,10 @@ vi.mock('lodash', async (importOriginal) => {
 
 describe('DocumentViewTabsEntities.vue', () => {
   const index = 'test-index'
+  const routes = [
+    { name: 'document', path: '/' },
+    { name: 'task.entities.new', path: '/task/entities/new' }
+  ]
   let core, documentStore, id, wrapper, spy
 
   function nerHit(mention, category, routing = id) {
@@ -45,17 +49,16 @@ describe('DocumentViewTabsEntities.vue', () => {
     return { hits: { total: { value: hits.length, relation: 'eq' }, max_score: 1, hits } }
   }
 
-  beforeEach(() => {
-    const routes = [
-      { name: 'document', path: '/' },
-      { name: 'task.entities.new', path: '/task/entities/new' }
-    ]
-
-    id = uniqueId('document-')
-    spy = vi.spyOn(api.elasticsearch, 'getDocumentNamedEntitiesInCategory')
-    spy.mockResolvedValue(nerResponse())
+  beforeAll(() => {
     core = CoreSetup.init().useAll().useRouter(routes)
     core.config.set('manageDocuments', true)
+  })
+
+  beforeEach(() => {
+    id = uniqueId('document-')
+    core.createPinia()
+    spy = vi.spyOn(api.elasticsearch, 'getDocumentNamedEntitiesInCategory')
+    spy.mockResolvedValue(nerResponse())
     documentStore = useDocumentStore()
   })
 
