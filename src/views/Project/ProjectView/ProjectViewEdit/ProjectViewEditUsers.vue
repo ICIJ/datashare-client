@@ -3,6 +3,7 @@ import { ROLE } from '@/enums/roles.js'
 
 import ProjectUsersList from '@/components/ProjectUsers/ProjectUsersList.vue'
 
+// TODO: replace with real API call to fetch project users
 const users = [
   { name: 'Alice Martin', role: ROLE.INSTANCE_ADMIN },
   { name: 'Bob Chen', role: ROLE.DOMAIN_ADMIN },
