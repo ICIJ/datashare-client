@@ -25,6 +25,10 @@ describe('DocumentViewerLegacySpreadsheet.vue', () => {
     wrapper = mount(DocumentViewerLegacySpreadsheet, { global: { plugins, renderStubDefaultSlot: true } })
   })
 
+  afterEach(() => {
+    wrapper?.unmount()
+  })
+
   afterAll(() => {
     vi.resetAllMocks()
   })
