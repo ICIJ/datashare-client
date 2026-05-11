@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 import { orderBy } from 'lodash'
 import { useI18n } from 'vue-i18n'
 
+import DisplayRole from '@/components/Display/DisplayRole.vue'
 import EmptyState from '@/components/EmptyState/EmptyState.vue'
 import PageTable from '@/components/PageTable/PageTable.vue'
 import PageTableTh from '@/components/PageTable/PageTableTh.vue'
@@ -53,7 +54,7 @@ const sortedUsers = computed(() => {
         :key="user.name ?? index"
       >
         <td>{{ user.name }}</td>
-        <td>{{ user.role }}</td>
+        <td><display-role :value="user.role" /></td>
       </tr>
     </page-table>
   </div>
