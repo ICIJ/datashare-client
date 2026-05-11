@@ -119,7 +119,7 @@
     "dontShow": "No volver a mostrar"
   },
   "dismissableContentWarningToggler": {
-    "title": "Content warning",
+    "title": "Content Warning",
     "description": "This media may contain sensitive content that some people may find disturbing or offensive.",
     "toggle": "Show anyway"
   },
@@ -173,7 +173,7 @@
     "sectionDescription": "Una vez descargado, ¿cómo puedo abrirlo?"
   },
   "documentDropdownReindexModalParent": {
-    "alert": "This document was extracted from another document. To reindex it, Datashare needs to reprocess the parent document. Depending on the document size and the selected options, this may take some time."
+    "alert": "This document was extracted from another document. To reindex it, Datashare needs to reprocess the parent document. Depending on the file size and the selected options, this may take some time."
   },
   "documentDropdownReindexModal": {
     "title": "Reindex this document",
@@ -873,7 +873,7 @@
   },
   "appSidebarFooter": {
     "signOut": "Cerrar sesión",
-    "signOutBasic": "To sign out from Datashare, you must close your web browser",
+    "signOutBasic": "To sign out from Datashare you must close your web browser.",
     "keyboardShortcuts": "Atajos de teclado",
     "settings": "Configuración",
     "help": "Ayuda",
@@ -1181,7 +1181,7 @@
         },
         "csvString": {
           "label": "O escribe tus consultas",
-          "placeholder": "Enter one search term per line here"
+          "placeholder": "Enter one search term per line here..."
         },
         "phraseChanges": {
           "label": "Cambios de frase",
