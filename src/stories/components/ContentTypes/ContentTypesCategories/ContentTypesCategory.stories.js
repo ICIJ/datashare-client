@@ -1,6 +1,6 @@
 import ContentTypesCategory from '@/components/ContentTypes/ContentTypesCategories/ContentTypesCategory'
 import ContentTypesCategoryName from '@/components/ContentTypes/ContentTypesCategories/ContentTypesCategoryName'
-import ContentTypesCategoryItem from '@/components/ContentTypes/ContentTypesCategories/ContentTypesCategoryItem'
+import ContentTypesEntry from '@/components/ContentTypes/ContentTypesCategories/ContentTypesEntry'
 
 export default {
   tags: ['autodocs'],
@@ -10,14 +10,14 @@ export default {
     components: {
       ContentTypesCategory,
       ContentTypesCategoryName,
-      ContentTypesCategoryItem
+      ContentTypesEntry
     },
     setup: () => ({ args }),
     template: `
       <content-types-category v-bind="args">
         <content-types-category-name category="DOCUMENT" :count="1586" indeterminate />
-        <content-types-category-item content-type="PDF" :count="1552" model-value />
-        <content-types-category-item content-type="Word" :count="34" />
+        <content-types-entry content-type="PDF" :count="1552" model-value />
+        <content-types-entry content-type="Word" :count="34" />
       </content-types-category>
     `
   })
