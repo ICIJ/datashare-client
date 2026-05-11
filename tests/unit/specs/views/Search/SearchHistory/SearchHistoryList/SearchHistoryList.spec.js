@@ -29,13 +29,14 @@ vi.mock('@/api/apiInstance', () => {
 })
 
 describe('SearchHistoryList.vue', () => {
-  let core
+  let core, wrapper
 
   beforeAll(() => {
     core = CoreSetup.init().useAll().useRouterWithoutGuards()
   })
 
   beforeEach(async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'setInterval', 'clearTimeout', 'clearInterval'] })
     core.createPinia()
     const index = 'local-datashare'
 
@@ -101,22 +102,26 @@ describe('SearchHistoryList.vue', () => {
   })
 
   afterEach(() => {
+    wrapper?.unmount()
     vi.clearAllMocks()
+    vi.useRealTimers()
   })
 
   afterAll(() => {
     vi.resetAllMocks()
   })
 
+  const stubs = { DocumentActionsGroup: true, DocumentCardProperties: true, DocumentThumbnail: true }
+
   it('should display a list of two documents', async () => {
-    const wrapper = mount(SearchHistoryList, { global: { plugins: core.plugins } })
+    wrapper = mount(SearchHistoryList, { global: { plugins: core.plugins, stubs } })
     await flushPromises()
     const cards = wrapper.findAllComponents(DocumentCard)
     expect(cards).toHaveLength(2)
   })
 
   it('should display a button for each day', async () => {
-    const wrapper = mount(SearchHistoryList, { global: { plugins: core.plugins } })
+    wrapper = mount(SearchHistoryList, { global: { plugins: core.plugins, stubs } })
     await flushPromises()
     const cards = wrapper.findAllComponents(ButtonToggleDay)
     expect(cards).toHaveLength(2)
