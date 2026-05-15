@@ -1,17 +1,38 @@
 <script setup>
-import { ROLE } from '@/enums/roles.js'
+import { onMounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import ProjectUsersList from '@/components/ProjectUsers/ProjectUsersList.vue'
+import { useCore } from '@/composables/useCore.js'
+import { useToast } from '@/composables/useToast.js'
 
-// TODO: replace with real API call to fetch project users
-const users = [
-  { name: 'Alice Martin', role: ROLE.INSTANCE_ADMIN },
-  { name: 'Bob Chen', role: ROLE.DOMAIN_ADMIN },
-  { name: 'Carol Dupont', role: ROLE.PROJECT_ADMIN },
-  { name: 'David Kim', role: ROLE.PROJECT_EDITOR },
-  { name: 'Eva Schmidt', role: ROLE.PROJECT_MEMBER },
-  { name: 'Frank Osei', role: ROLE.PROJECT_VISITOR }
-]
+const props = defineProps({
+  name: {
+    type: String,
+    required: true
+  }
+})
+
+const core = useCore()
+const { toast } = useToast()
+const { t } = useI18n()
+
+const users = ref([])
+const loading = ref(false)
+
+onMounted(async () => {
+  loading.value = true
+  try {
+    const { items } = await core.api.getProjectPolicies('default', props.name, { from: 0, to: 10 })
+    users.value = (items ?? []).map(({ v0: name, v1: role }) => ({ name, role }))
+  }
+  catch {
+    toast.error(t('projectViewEdit.users.fetchError'))
+  }
+  finally {
+    loading.value = false
+  }
+})
 </script>
 
 <template>

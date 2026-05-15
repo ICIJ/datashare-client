@@ -1456,6 +1456,7 @@
     },
     "users": {
       "empty": "No users yet.",
+      "fetchError": "Failed to load users for this project.",
       "fields": {
         "name": { "label": "Name" },
         "role": { "label": "Role" }
