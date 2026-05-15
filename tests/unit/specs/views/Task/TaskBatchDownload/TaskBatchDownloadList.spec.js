@@ -7,6 +7,17 @@ import { apiInstance as api } from '@/api/apiInstance'
 import BatchDownloadActions from '@/components/BatchDownload/BatchDownloadActions'
 import BatchDownloadTruncatedAlert from '@/components/BatchDownload/BatchDownloadTruncatedAlert'
 
+const stubs = {
+  BatchDownloadActions: true,
+  BatchDownloadTruncatedAlert: true,
+  DismissableAlert: true,
+  EmptyState: true,
+  PageHeader: true,
+  RowPaginationBatchDownloads: true,
+  SearchBreadcrumbUri: true,
+  TaskActions: true,
+}
+
 vi.mock('@/api/apiInstance', () => ({
   apiInstance: {
     isDownloadAllowed: vi.fn().mockResolvedValue(),
@@ -143,7 +154,7 @@ describe('TaskBatchDownloadList.vue', () => {
   })
 
   it('renders correctly', async () => {
-    wrapper = mount(TaskBatchDownloadList, { global: { plugins } })
+    wrapper = mount(TaskBatchDownloadList, { global: { plugins, stubs } })
     expect(wrapper.exists()).toBe(true)
     expect(api.getTasks).toBeCalledTimes(1)
     expect(api.getTasks).toBeCalledWith(
@@ -154,13 +165,13 @@ describe('TaskBatchDownloadList.vue', () => {
   })
 
   it('should display 2 batch download tasks', async () => {
-    wrapper = mount(TaskBatchDownloadList, { global: { plugins } })
+    wrapper = mount(TaskBatchDownloadList, { global: { plugins, stubs } })
     await flushPromises()
     expect(wrapper.findAll('.page-table-generic__row')).toHaveLength(2)
   })
 
   it('should display the correct values in the correct columns for row 1', async () => {
-    wrapper = mount(TaskBatchDownloadList, { global: { plugins } })
+    wrapper = mount(TaskBatchDownloadList, { global: { plugins, stubs } })
     await flushPromises()
     const firstRow = wrapper.find('.page-table-generic__row')
     const columns = firstRow.findAll('.page-table-generic__row__field')
@@ -173,14 +184,14 @@ describe('TaskBatchDownloadList.vue', () => {
   })
 
   it('should display batch download actions', async () => {
-    wrapper = mount(TaskBatchDownloadList, { global: { plugins } })
+    wrapper = mount(TaskBatchDownloadList, { global: { plugins, stubs } })
     await flushPromises()
     const firstRow = wrapper.find('.page-table-generic__row')
     expect(firstRow.findComponent(BatchDownloadActions).exists()).toBe(true)
   })
 
   it('should not show a truncated alert when truncationReason is absent', async () => {
-    wrapper = mount(TaskBatchDownloadList, { global: { plugins } })
+    wrapper = mount(TaskBatchDownloadList, { global: { plugins, stubs } })
     await flushPromises()
     expect(wrapper.find('.batch-download-truncated-alert').exists()).toBe(false)
   })
@@ -224,7 +235,7 @@ describe('TaskBatchDownloadList.vue', () => {
         }
       ]
     })
-    wrapper = mount(TaskBatchDownloadList, { global: { plugins } })
+    wrapper = mount(TaskBatchDownloadList, { global: { plugins, stubs } })
     await flushPromises()
     const alert = wrapper.findComponent(BatchDownloadTruncatedAlert)
     expect(alert.exists()).toBe(true)
