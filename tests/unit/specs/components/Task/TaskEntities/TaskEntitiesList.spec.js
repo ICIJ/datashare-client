@@ -1,4 +1,4 @@
-import { flushPromises, mount } from '@vue/test-utils'
+import { flushPromises, mount, shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import { useTaskTimerSetup } from '~tests/unit/useTaskTimerSetup'
@@ -10,6 +10,12 @@ vi.mock('@/api/apiInstance', () => ({
     getTasks: vi.fn().mockResolvedValue({ items: [] })
   }
 }))
+
+const stubs = {
+  DismissableAlert: true,
+  EmptyState: true,
+  EntityButton: true,
+}
 
 describe('TaskEntitiesList.vue', () => {
   let core, plugins, wrapper
@@ -52,7 +58,7 @@ describe('TaskEntitiesList.vue', () => {
   })
 
   it('renders correctly', () => {
-    wrapper = mount(TaskEntitiesList, { global: { plugins } })
+    wrapper = mount(TaskEntitiesList, { global: { plugins, stubs } })
     expect(wrapper.exists()).toBe(true)
     expect(api.getTasks).toBeCalled()
     expect(api.getTasks).toBeCalledWith(
@@ -63,13 +69,13 @@ describe('TaskEntitiesList.vue', () => {
   })
 
   it('should display 1 ExtractNlpTask and 1 EnqueueFromIndexTask task', async () => {
-    wrapper = mount(TaskEntitiesList, { global: { plugins } })
+    wrapper = mount(TaskEntitiesList, { global: { plugins, stubs } })
     await flushPromises()
     expect(wrapper.findAll('.page-table-generic__row')).toHaveLength(2)
   })
 
   it('should display the correct values in the correct columns for row 1', async () => {
-    wrapper = mount(TaskEntitiesList, { global: { plugins } })
+    wrapper = mount(TaskEntitiesList, { global: { plugins, stubs } })
     await flushPromises()
     const firstRow = wrapper.find('.page-table-generic__row')
     const columns = firstRow.findAll('.page-table-generic__row__field')

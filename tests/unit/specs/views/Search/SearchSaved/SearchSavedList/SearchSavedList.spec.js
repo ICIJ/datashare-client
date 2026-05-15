@@ -5,6 +5,24 @@ import SearchSavedEntries from '@/components/Search/SearchSavedEntries/SearchSav
 import SearchSavedList from '@/views/Search/SearchSaved/SearchSavedList/SearchSavedList'
 import { apiInstance as api } from '@/api/apiInstance'
 
+vi.mock('@/router', async (importOriginal) => {
+  const original = await importOriginal()
+  const stub = { template: '<div />' }
+  function replaceComponents(routeList) {
+    return routeList.map((route) => {
+      const result = { ...route }
+      if (result.component) result.component = stub
+      if (result.components) {
+        result.components = Object.fromEntries(Object.keys(result.components).map(k => [k, stub]))
+      }
+      if (result.children) result.children = replaceComponents(result.children)
+      return result
+    })
+  }
+  const routes = replaceComponents(original.routes)
+  return { routes, default: { routes } }
+})
+
 vi.mock('@/api/apiInstance', () => {
   return {
     apiInstance: {

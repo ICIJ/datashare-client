@@ -1,4 +1,4 @@
-import { mount, shallowMount, flushPromises } from '@vue/test-utils'
+import { shallowMount, flushPromises } from '@vue/test-utils'
 
 import { letTextContent } from '~tests/unit/api_mock'
 import RawDocBuilder from '~tests/unit/RawDocBuilder'
@@ -164,7 +164,7 @@ describe('DocumentContent.vue', () => {
         mockDocument = await mockDocumentContentSlice('this is a full full content')
         const { plugins } = core
         const props = { document: mockDocument.document, q: 'full' }
-        wrapper = mount(DocumentContent, { props, global: { plugins } })
+        wrapper = shallowMount(DocumentContent, { props, global: { plugins } })
         await flushPromises()
         await wrapper.vm.loadContentSlice()
       })
@@ -221,7 +221,7 @@ describe('DocumentContent.vue', () => {
         const { document } = await mockDocumentContentSlice(content)
         const { plugins } = core
         const props = { document, q: 'full' }
-        wrapper = mount(DocumentContent, { global: { plugins }, props })
+        wrapper = shallowMount(DocumentContent, { global: { plugins }, props })
         await flushPromises()
         await wrapper.vm.loadContentSlice()
       })
@@ -241,7 +241,7 @@ describe('DocumentContent.vue', () => {
       const { document } = await mockDocumentContentSlice(content)
       const { plugins } = core
       const props = { document }
-      const wrapper = mount(DocumentContent, { global: { plugins }, props })
+      const wrapper = shallowMount(DocumentContent, { global: { plugins }, props })
       await flushPromises()
       await wrapper.vm.loadContentSlice()
       expect(wrapper.vm.getContentSlice().content).toBe('this is a content')
@@ -254,7 +254,7 @@ describe('DocumentContent.vue', () => {
       const { plugins } = core
       const pageSize = 10
       const props = { document, pageSize }
-      const wrapper = mount(DocumentContent, { global: { plugins }, props })
+      const wrapper = shallowMount(DocumentContent, { global: { plugins }, props })
       await flushPromises()
       // Load the first slice
       await wrapper.vm.loadContentSlice({ offset: 0 })

@@ -8,8 +8,6 @@ import EntitySection from '@/components/Entity/EntitySection/EntitySection'
 import EntityButton from '@/components/Entity/EntityButton'
 import { useDocumentStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
-import { IndexedDocument, letData } from '~tests/unit/es_utils.js'
-import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper.js'
 
 vi.mock('lodash', async (importOriginal) => {
   const { default: actual } = await importOriginal()
@@ -20,7 +18,6 @@ vi.mock('lodash', async (importOriginal) => {
 })
 
 describe('DocumentViewTabsEntities.vue', () => {
-  const { es } = esConnectionHelper.build()
   const index = 'test-index'
   const routes = [
     { name: 'document', path: '/' },
@@ -223,7 +220,7 @@ describe('DocumentViewTabsEntities.vue', () => {
       spy.mockClear()
 
       wrapper = mount(DocumentViewTabsEntities, {
-        global: { plugins: core.plugins, renderStubDefaultSlot: true }
+        global: { plugins: core.plugins, renderStubDefaultSlot: true, stubs: { EntitySection: true } }
       })
 
       expect(spy).toBeCalledTimes(4)
