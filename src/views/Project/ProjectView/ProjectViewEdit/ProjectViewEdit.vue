@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 
 import IPhInfo from '~icons/ph/info'
 import IPhListDashes from '~icons/ph/list-dashes'
+import IPhUsersThree from '~icons/ph/users-three'
 
 import TabGroupNavigation from '@/components/TabGroup/TabGroupNavigation/TabGroupNavigation.vue'
 import TabGroupNavigationEntry from '@/components/TabGroup/TabGroupNavigation/TabGroupNavigationEntry.vue'
@@ -32,6 +33,12 @@ const params = computed(() => ({ name: props.name }))
         :to="{ name: 'project.view.edit.banners', params }"
       >
         {{ t('projectViewEdit.tabs.pathBanners') }}
+      </tab-group-navigation-entry>
+      <tab-group-navigation-entry
+        :icon="IPhUsersThree"
+        :to="{ name: 'project.view.edit.users', params }"
+      >
+        {{ t('projectViewEdit.tabs.users') }}
       </tab-group-navigation-entry>
     </tab-group-navigation>
     <router-view />
