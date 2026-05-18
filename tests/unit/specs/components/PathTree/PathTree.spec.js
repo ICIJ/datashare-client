@@ -33,16 +33,12 @@ const HOME_TREE_WIN = {
   ]
 }
 
-vi.mock('@/api/apiInstance', async (importOriginal) => {
-  const { apiInstance } = await importOriginal()
-
-  return {
-    apiInstance: {
-      ...apiInstance,
-      tree: vi.fn()
-    }
+vi.mock('@/api/apiInstance', () => ({
+  apiInstance: {
+    elasticsearch: { search: vi.fn() },
+    tree: vi.fn()
   }
-})
+}))
 
 describe('PathTree.vue', () => {
   afterAll(() => {

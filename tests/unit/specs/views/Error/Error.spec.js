@@ -1,4 +1,4 @@
-import { mount, flushPromises } from '@vue/test-utils'
+import { shallowMount, flushPromises } from '@vue/test-utils'
 import { setCookie, removeCookie } from 'tiny-cookie'
 
 import CoreSetup from '~tests/unit/CoreSetup'
@@ -35,7 +35,8 @@ describe('Error.vue', () => {
   describe('local mode', () => {
     it('should display a custom title', () => {
       const props = { title: 'This is wrong!' }
-      const wrapper = mount(Error, { props, global: { plugins } })
+      const stubs = { ModeServerOnly: { template: '<div><slot /></div>' } }
+      const wrapper = shallowMount(Error, { props, global: { plugins, stubs } })
       expect(wrapper.find('.error__container__heading').text()).toBe('This is wrong!')
     })
 
@@ -43,7 +44,8 @@ describe('Error.vue', () => {
       // Create the user session
       setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'foo' }, JSON.stringify)
       core.config.set('mode', 'SERVER')
-      const wrapper = mount(Error, { global: { plugins } })
+      const stubs = { ModeServerOnly: { template: '<div><slot /></div>' } }
+      const wrapper = shallowMount(Error, { global: { plugins, stubs } })
       await flushPromises()
       expect(wrapper.find('.error__container__links__item--logout').exists()).toBeTruthy()
     })
@@ -55,7 +57,8 @@ describe('Error.vue', () => {
       removeCookie(process.env.VITE_DS_COOKIE_NAME)
       const core = CoreSetup.init().useAll()
       core.config.set('mode', 'SERVER')
-      const wrapper = mount(Error, { global: { plugins: core.plugins } })
+      const stubs = { ModeServerOnly: { template: '<div><slot /></div>' } }
+      const wrapper = shallowMount(Error, { global: { plugins: core.plugins, stubs } })
       await flushPromises()
       expect(wrapper.find('.error__container__links__item--logout').exists()).toBeFalsy()
     })

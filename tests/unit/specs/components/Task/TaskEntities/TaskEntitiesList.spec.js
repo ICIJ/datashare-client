@@ -1,15 +1,41 @@
 import { flushPromises, mount } from '@vue/test-utils'
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import { useTaskTimerSetup } from '~tests/unit/useTaskTimerSetup'
 import TaskEntitiesList from '@/views/Task/TaskEntities/TaskEntitiesList'
 import { apiInstance as api } from '@/api/apiInstance'
+import DisplayStatusLabel from '@/components/Display/DisplayStatusLabel'
+import { fromNow } from '@/utils/humanDate'
 
 vi.mock('@/api/apiInstance', () => ({
   apiInstance: {
     getTasks: vi.fn().mockResolvedValue({ items: [] })
   }
 }))
+
+const stubs = {
+  DismissableAlert: true,
+  DisplayDatetimeFromNow: {
+    props: ['value'],
+    setup(props) {
+      const { locale } = useI18n()
+      const display = computed(() => fromNow(new Date(props.value), locale.value))
+      return { display }
+    },
+    template: '<span>{{ display }}</span>'
+  },
+  DisplayStatus: { props: ['value'], components: { DisplayStatusLabel }, template: '<display-status-label :value="value" />' },
+  EmptyState: true,
+  EntityButton: true,
+  PageHeader: true,
+  ProjectThumbnail: true,
+  RowPaginationTasks: true,
+  TaskActions: true,
+  ButtonRowActionStop: { inheritAttrs: false, template: '<button aria-label="Stop" v-bind="$attrs" />' },
+  ButtonRowActionDelete: { inheritAttrs: false, template: '<button aria-label="Delete" v-bind="$attrs" />' },
+}
 
 describe('TaskEntitiesList.vue', () => {
   let core, plugins, wrapper
@@ -52,7 +78,7 @@ describe('TaskEntitiesList.vue', () => {
   })
 
   it('renders correctly', () => {
-    wrapper = mount(TaskEntitiesList, { global: { plugins } })
+    wrapper = mount(TaskEntitiesList, { global: { plugins, stubs } })
     expect(wrapper.exists()).toBe(true)
     expect(api.getTasks).toBeCalled()
     expect(api.getTasks).toBeCalledWith(
@@ -63,13 +89,13 @@ describe('TaskEntitiesList.vue', () => {
   })
 
   it('should display 1 ExtractNlpTask and 1 EnqueueFromIndexTask task', async () => {
-    wrapper = mount(TaskEntitiesList, { global: { plugins } })
+    wrapper = mount(TaskEntitiesList, { global: { plugins, stubs } })
     await flushPromises()
     expect(wrapper.findAll('.page-table-generic__row')).toHaveLength(2)
   })
 
   it('should display the correct values in the correct columns for row 1', async () => {
-    wrapper = mount(TaskEntitiesList, { global: { plugins } })
+    wrapper = mount(TaskEntitiesList, { global: { plugins, stubs } })
     await flushPromises()
     const firstRow = wrapper.find('.page-table-generic__row')
     const columns = firstRow.findAll('.page-table-generic__row__field')

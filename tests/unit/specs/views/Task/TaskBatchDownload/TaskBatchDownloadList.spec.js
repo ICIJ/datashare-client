@@ -1,4 +1,6 @@
 import { mount, flushPromises } from '@vue/test-utils'
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import { useTaskTimerSetup } from '~tests/unit/useTaskTimerSetup'
@@ -6,13 +8,26 @@ import TaskBatchDownloadList from '@/views/Task/TaskBatchDownload/TaskBatchDownl
 import { apiInstance as api } from '@/api/apiInstance'
 import BatchDownloadActions from '@/components/BatchDownload/BatchDownloadActions'
 import BatchDownloadTruncatedAlert from '@/components/BatchDownload/BatchDownloadTruncatedAlert'
+import DisplayStatusLabel from '@/components/Display/DisplayStatusLabel'
+import { fromNow } from '@/utils/humanDate'
 
 const stubs = {
   BatchDownloadActions: true,
   BatchDownloadTruncatedAlert: true,
   DismissableAlert: true,
+  DisplayDatetimeFromNow: {
+    props: ['value'],
+    setup(props) {
+      const { locale } = useI18n()
+      const display = computed(() => fromNow(new Date(props.value), locale.value))
+      return { display }
+    },
+    template: '<span>{{ display }}</span>'
+  },
+  DisplayStatus: { props: ['value'], components: { DisplayStatusLabel }, template: '<display-status-label :value="value" />' },
   EmptyState: true,
   PageHeader: true,
+  ProjectThumbnail: true,
   RowPaginationBatchDownloads: true,
   SearchBreadcrumbUri: true,
   TaskActions: true,

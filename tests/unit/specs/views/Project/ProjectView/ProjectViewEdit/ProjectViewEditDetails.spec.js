@@ -1,4 +1,4 @@
-import { mount, flushPromises } from '@vue/test-utils'
+import { shallowMount, flushPromises } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup.js'
 import ProjectViewEditDetails from '@/views/Project/ProjectView/ProjectViewEdit/ProjectViewEditDetails.vue'
@@ -33,7 +33,8 @@ describe('ProjectViewEditDetails.vue', () => {
 
   it('updates values of a project when the form is submitted', async () => {
     const props = { name: 'local-datashare' }
-    const wrapper = mount(ProjectViewEditDetails, { global: { plugins: core.plugins }, props })
+    const stubs = { AppOverlay: { template: '<div><slot /></div>' } }
+    const wrapper = shallowMount(ProjectViewEditDetails, { global: { plugins: core.plugins, stubs }, props })
     await flushPromises()
     expect(wrapper.vm.$core.projects[0].label).toBe('Default')
     const projectFormValues = {

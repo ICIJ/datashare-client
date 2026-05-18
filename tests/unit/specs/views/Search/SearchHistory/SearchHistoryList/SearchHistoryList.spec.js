@@ -111,7 +111,25 @@ describe('SearchHistoryList.vue', () => {
     vi.resetAllMocks()
   })
 
-  const stubs = { DocumentActionsGroup: true, DocumentCardProperties: true, DocumentThumbnail: true }
+  const stubs = {
+    AppPlaceholder: true,
+    ButtonClearHistory: true,
+    ButtonToggleDay: true,
+    DocumentActionsGroup: true,
+    DocumentCard: true,
+    DocumentCardCheckbox: true,
+    DocumentCardPlaceholder: true,
+    DocumentCardProperties: true,
+    DocumentThumbnail: true,
+    DisplayTime: true,
+    EmptyState: true,
+    Hook: true,
+    NavigationBreadcrumbLink: true,
+    PageHeader: true,
+    ParentOverflowEntriesItem: true,
+    RowPaginationDocuments: true,
+    RouterLinkDocument: true,
+  }
 
   it('should display a list of two documents', async () => {
     wrapper = mount(SearchHistoryList, { global: { plugins: core.plugins, stubs } })

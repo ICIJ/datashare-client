@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import SearchBreadcrumbFormEntry from '@/components/Search/SearchBreadcrumbForm/SearchBreadcrumbFormEntry'
@@ -14,14 +14,16 @@ describe('SearchBreadcrumbUri.vue', () => {
   beforeEach(async () => {
     core.createPinia()
     const plugins = core.plugins
-    global = { plugins }
+    // Passthrough stub so the default slot (the entries) renders under shallowMount.
+    const stubs = { SearchBreadcrumbFormList: { template: '<div><slot /></div>' } }
+    global = { plugins, stubs }
   })
 
   describe('a boolean query on one index', () => {
     beforeEach(() => {
       const uri = '/?q=foo%20AND%20bar&from=0&size=25&sort=relevance&index=project&custom=baz'
       const props = { uri }
-      wrapper = mount(SearchBreadcrumbUri, { global, props })
+      wrapper = shallowMount(SearchBreadcrumbUri, { global, props })
     })
 
     it('should parse all fields from the URI', () => {
@@ -45,7 +47,7 @@ describe('SearchBreadcrumbUri.vue', () => {
     beforeEach(() => {
       const uri = '/?q=foo&from=0&size=25&index=banana,apple'
       const props = { uri }
-      wrapper = mount(SearchBreadcrumbUri, { global, props })
+      wrapper = shallowMount(SearchBreadcrumbUri, { global, props })
     })
 
     it('should parse all fields from the URI', () => {
@@ -76,7 +78,7 @@ describe('SearchBreadcrumbUri.vue', () => {
     beforeEach(() => {
       const uri = '/?q=foo&from=0&size=25&index=banana,apple&f[contentType]=application/pdf'
       const props = { uri }
-      wrapper = mount(SearchBreadcrumbUri, { global, props })
+      wrapper = shallowMount(SearchBreadcrumbUri, { global, props })
     })
 
     it('should parse all fields from the URI', () => {
@@ -113,7 +115,7 @@ describe('SearchBreadcrumbUri.vue', () => {
     beforeEach(() => {
       const uri = '/?q=bar&index=cherry&f[contentType]=application/pdf&f[contentType]=image/png'
       const props = { uri }
-      wrapper = mount(SearchBreadcrumbUri, { global, props })
+      wrapper = shallowMount(SearchBreadcrumbUri, { global, props })
     })
 
     it('should parse all fields from the URI', () => {
