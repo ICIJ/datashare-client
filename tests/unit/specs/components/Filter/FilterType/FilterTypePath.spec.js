@@ -5,16 +5,12 @@ import FilterPath from '@/components/Filter/FilterType/FilterTypePath'
 import CoreSetup from '~tests/unit/CoreSetup'
 import { useSearchStore } from '@/store/modules'
 
-vi.mock('@/api/apiInstance', async (importOriginal) => {
-  const { apiInstance } = await importOriginal()
-
-  return {
-    apiInstance: {
-      ...apiInstance,
-      tree: vi.fn()
-    }
+vi.mock('@/api/apiInstance', () => ({
+  apiInstance: {
+    elasticsearch: { search: vi.fn() },
+    tree: vi.fn()
   }
-})
+}))
 
 describe('FilterTypePath.vue', () => {
   const { index } = esConnectionHelper.build()

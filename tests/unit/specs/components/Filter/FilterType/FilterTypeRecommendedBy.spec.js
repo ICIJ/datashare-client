@@ -9,34 +9,21 @@ import FilterTypeRecommendedBy from '@/components/Filter/FilterType/FilterTypeRe
 import { useSearchStore, useRecommendedStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
 
-vi.mock('@/api/apiInstance', async (importOriginal) => {
-  const { apiInstance } = await importOriginal()
-
-  return {
-    apiInstance: {
-      ...apiInstance,
-      getDocumentsRecommendedBy: vi.fn(),
-      getUser: vi.fn().mockResolvedValue({ uid: 'local' }),
-      getRecommendationsByProject: vi.fn().mockResolvedValue({
-        totalCount: 42,
-        aggregates: [
-          {
-            item: { id: 'paul' },
-            count: 2
-          },
-          {
-            item: { id: 'local' },
-            count: 1
-          },
-          {
-            item: { id: 'anita' },
-            count: 3
-          }
-        ]
-      })
-    }
+vi.mock('@/api/apiInstance', () => ({
+  apiInstance: {
+    elasticsearch: { searchFilter: vi.fn(), search: vi.fn() },
+    getDocumentsRecommendedBy: vi.fn(),
+    getUser: vi.fn().mockResolvedValue({ uid: 'local' }),
+    getRecommendationsByProject: vi.fn().mockResolvedValue({
+      totalCount: 42,
+      aggregates: [
+        { item: { id: 'paul' }, count: 2 },
+        { item: { id: 'local' }, count: 1 },
+        { item: { id: 'anita' }, count: 3 }
+      ]
+    })
   }
-})
+}))
 
 describe('FilterTypeRecommendedBy.vue', () => {
   const { index, es } = esConnectionHelper.build()

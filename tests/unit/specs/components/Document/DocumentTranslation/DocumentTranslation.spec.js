@@ -8,23 +8,16 @@ import DocumentContent from '@/components/Document/DocumentContent'
 import { useDocumentStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
 
-vi.mock('@/api/apiInstance', async (importOriginal) => {
-  const {
-    apiInstance: { elasticsearch }
-  } = await importOriginal()
-
-  return {
-    apiInstance: {
-      elasticsearch: {
-        ...elasticsearch,
-        getSource: vi.fn(),
-        search: vi.fn().mockResolvedValue({ hits: { hits: [], total: { value: 0 } } })
-      },
-      getDocumentSlice: vi.fn(),
-      getPages: vi.fn().mockResolvedValue([])
-    }
+vi.mock('@/api/apiInstance', () => ({
+  apiInstance: {
+    elasticsearch: {
+      search: vi.fn().mockResolvedValue({ hits: { hits: [], total: { value: 0 } } }),
+      getSource: vi.fn()
+    },
+    getDocumentSlice: vi.fn(),
+    getPages: vi.fn().mockResolvedValue([])
   }
-})
+}))
 
 describe('DocumentTranslation.vue', () => {
   let core, plugins, documentStore

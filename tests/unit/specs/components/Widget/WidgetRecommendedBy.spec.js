@@ -7,18 +7,12 @@ import WidgetRecommendedBy from '@/components/Widget/WidgetRecommendedBy'
 import { apiInstance as api } from '@/api/apiInstance'
 import { useInsightsStore } from '@/store/modules/insights'
 
-vi.mock('@/api/apiInstance', async (importOriginal) => {
-  const {
-    apiInstance: { elasticsearch }
-  } = await importOriginal()
-
-  return {
-    apiInstance: {
-      elasticsearch,
-      getDocumentUserRecommendations: vi.fn()
-    }
+vi.mock('@/api/apiInstance', () => ({
+  apiInstance: {
+    elasticsearch: { search: vi.fn() },
+    getDocumentUserRecommendations: vi.fn()
   }
-})
+}))
 
 describe('WidgetRecommendedBy.vue', () => {
   const { index } = esConnectionHelper.build()
