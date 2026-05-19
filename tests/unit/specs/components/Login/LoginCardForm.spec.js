@@ -4,10 +4,14 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import LoginCardForm from '@/components/Login/LoginCardForm'
 
 describe('LoginCardForm.vue', () => {
-  let wrapper, global
+  let core, wrapper, global
+
+  beforeAll(() => {
+    core = CoreSetup.init().useAll()
+  })
 
   beforeEach(() => {
-    const core = CoreSetup.init().useAll()
+    core.createPinia()
     global = { plugins: core.plugins }
     wrapper = mount(LoginCardForm, { global })
   })

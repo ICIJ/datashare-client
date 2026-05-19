@@ -1,72 +1,69 @@
 import { mount, shallowMount, flushPromises } from '@vue/test-utils'
 
-import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
-import { IndexedDocument, letData } from '~tests/unit/es_utils'
+import RawDocBuilder from '~tests/unit/RawDocBuilder'
 import { letTextContent } from '~tests/unit/api_mock'
 import DocumentTranslation from '@/components/Document/DocumentTranslation/DocumentTranslation'
 import DocumentContent from '@/components/Document/DocumentContent'
 import { useDocumentStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
 
-vi.mock('@/api/apiInstance', async (importOriginal) => {
-  const { apiInstance } = await importOriginal()
-
-  return {
-    apiInstance: {
-      ...apiInstance,
-      getDocumentSlice: vi.fn(),
-      getPages: vi.fn().mockResolvedValue([])
-    }
+vi.mock('@/api/apiInstance', () => ({
+  apiInstance: {
+    elasticsearch: {
+      search: vi.fn().mockResolvedValue({ hits: { hits: [], total: { value: 0 } } }),
+      getSource: vi.fn()
+    },
+    getDocumentSlice: vi.fn(),
+    getPages: vi.fn().mockResolvedValue([])
   }
-})
+}))
 
 describe('DocumentTranslation.vue', () => {
   let core, plugins, documentStore
-  const { index, es } = esConnectionHelper.build()
+  const index = 'test-index'
 
   function mockedDocumentContentFactory(id, content = '') {
-    // Index the document
     const contentSlice = letTextContent().withContent(content)
-    const indexedDocument = new IndexedDocument(id, index).withContent(content)
+    const builder = RawDocBuilder.build(id, index).withContent(content)
 
     return {
-      indexedDocument,
+      indexedDocument: builder,
       content,
       contentSlice,
       async commit() {
-        // Mock the `getDocumentSlice` method
-        const getDocumentSlideMock = async (project, documentId, offset, limit, targetLanguage) => {
-          // Get the translation (if any)
-          const translation = this.indexedDocument.getContentTranslated({ targetLanguage })
-          // Modify the returned content according to passed parameters
-          const content = (translation || this.indexedDocument.content).substring(offset, offset + limit)
-          return { ...contentSlice, content, offset, limit }
-        }
-        api.getDocumentSlice.mockImplementation(getDocumentSlideMock)
-        // Index the document
-        await letData(es).have(this.indexedDocument).commit()
-        // Get the document from the store
-        await documentStore.getDocument({ id, index })
+        documentStore.setDocument(builder.toRaw())
+
+        const content_translated = builder._source.content_translated ?? null
+        api.elasticsearch.getSource.mockResolvedValue({ content_translated })
+
+        api.getDocumentSlice.mockImplementation(async (_project, _docId, offset, limit, targetLanguage) => {
+          const translations = builder._source.content_translated ?? []
+          const translation = translations.find(t => t.target_language === targetLanguage)
+          const text = translation?.content || content
+          return { ...contentSlice, content: text.substring(offset, offset + limit), offset, limit }
+        })
+
         const document = documentStore.document
-        // Finally flush all promises and return all necessary values
         await flushPromises()
         return { content, contentSlice, document, id }
       }
     }
   }
 
-  beforeEach(() => {
+  beforeAll(() => {
     core = CoreSetup.init().useAll()
+  })
+
+  beforeEach(() => {
+    core.createPinia()
     plugins = core.plugins
     documentStore = useDocumentStore()
     documentStore.toggleTranslatedContent(true)
   })
 
   afterEach(async () => {
-    // Ensure all promise are flushed...
     await flushPromises()
-    // Remove document
     documentStore.reset()
   })
 

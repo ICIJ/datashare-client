@@ -1,8 +1,6 @@
 import { flushPromises, mount } from '@vue/test-utils'
 
-import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
-import { IndexedDocuments, letData } from '~tests/unit/es_utils'
 import PathTree from '@/components/PathTree/PathTree'
 import { useSearchStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
@@ -35,16 +33,12 @@ const HOME_TREE_WIN = {
   ]
 }
 
-vi.mock('@/api/apiInstance', async (importOriginal) => {
-  const { apiInstance } = await importOriginal()
-
-  return {
-    apiInstance: {
-      ...apiInstance,
-      tree: vi.fn()
-    }
+vi.mock('@/api/apiInstance', () => ({
+  apiInstance: {
+    elasticsearch: { search: vi.fn() },
+    tree: vi.fn()
   }
-})
+}))
 
 describe('PathTree.vue', () => {
   afterAll(() => {
@@ -52,16 +46,36 @@ describe('PathTree.vue', () => {
   })
 
   describe('Posix', () => {
-    const { index, es } = esConnectionHelper.build()
-    let wrapper, core, searchStore
+    const index = 'local-datashare'
+    let wrapper, core, searchStore, searchSpy
 
-    beforeEach(() => {
+    beforeAll(() => {
       core = CoreSetup.init().useAll()
       core.config.set('dataDir', '/home/foo')
+    })
+
+    beforeEach(async () => {
+      core.createPinia()
       searchStore = useSearchStore()
       searchStore.setIndex(index)
       api.tree.mockClear()
       api.tree.mockResolvedValue(HOME_TREE)
+
+      // The ES include pattern is /home/foo/* so the root is never a bucket.
+      // The root entry is always rendered separately (line 543 in PathTree.vue)
+      // and gets its doc count from hits.total.value. 01FOO comes from api.tree.
+      searchSpy = vi.spyOn(api.elasticsearch, 'search').mockResolvedValue({
+        hits: { total: { value: 10 }, hits: [] },
+        aggregations: {
+          total_directories: { value: 2 },
+          dirname: {
+            buckets: [
+              { key: '/home/foo/bar', doc_count: 5, size: { value: 500 } },
+              { key: '/home/foo/baz', doc_count: 5, size: { value: 500 } }
+            ]
+          }
+        }
+      })
 
       wrapper = mount(PathTree, {
         props: {
@@ -78,35 +92,26 @@ describe('PathTree.vue', () => {
           renderStubDefaultSlot: true
         }
       })
+      // Let the immediate watcher's loadDataWithSpinner complete before each test.
+      await flushPromises()
+    })
+
+    afterEach(() => {
+      wrapper?.unmount()
+      searchSpy.mockRestore()
     })
 
     it('should be a Vue instance', () => {
       expect(wrapper).toBeTruthy()
     })
 
-    it('should display 4 directories including one from the tree', async () => {
-      await letData(es)
-        .have(new IndexedDocuments().setBaseName('/home/foo/bar/doc_01').withIndex(index).count(5))
-        .commit()
-      await letData(es)
-        .have(new IndexedDocuments().setBaseName('/home/foo/baz/doc_02').withIndex(index).count(5))
-        .commit()
-      await wrapper.vm.loadData({ clearPages: true })
-
+    it('should display 4 directories including one from the tree', () => {
       expect(wrapper.find('.path-tree-view-entry-stats-documents').exists()).toBeTruthy()
       expect(wrapper.find('.path-tree-view-entry-stats-documents').text()).toBe('10')
       expect(wrapper.findAll('.path-tree-view-entry-stats-documents')).toHaveLength(4)
     })
 
-    it('should be a display a correct basename', async () => {
-      await letData(es)
-        .have(new IndexedDocuments().setBaseName('/home/foo/bar/doc_01').withIndex(index).count(5))
-        .commit()
-      await letData(es)
-        .have(new IndexedDocuments().setBaseName('/home/foo/baz/doc_02').withIndex(index).count(5))
-        .commit()
-      await wrapper.vm.loadData({ clearPages: true })
-
+    it('should be a display a correct basename', () => {
       expect(wrapper.findAll('.path-tree-view-entry-name__value').at(0).text()).toBe('foo')
       expect(wrapper.findAll('.path-tree-view-entry-name__value').at(1).text()).toBe('bar')
       expect(wrapper.findAll('.path-tree-view-entry-name__value').at(2).text()).toBe('baz')
@@ -131,7 +136,7 @@ describe('PathTree.vue', () => {
   })
 
   describe('compact mode (filter column)', () => {
-    const { index } = esConnectionHelper.build()
+    const index = 'local-datashare'
     let core, searchSpy
 
     const fullPageOfBuckets = Array.from({ length: 50 }, (_, i) => ({
@@ -140,9 +145,13 @@ describe('PathTree.vue', () => {
       size: { value: 100 }
     }))
 
-    beforeEach(() => {
+    beforeAll(() => {
       core = CoreSetup.init().useAll()
       core.config.set('dataDir', '/home/foo')
+    })
+
+    beforeEach(() => {
+      core.createPinia()
       api.tree.mockClear()
       api.tree.mockResolvedValue(HOME_TREE)
       searchSpy = vi.spyOn(api.elasticsearch, 'search').mockResolvedValue({
@@ -187,18 +196,35 @@ describe('PathTree.vue', () => {
   })
 
   describe('Windows', () => {
-    const { index, es } = esConnectionHelper.build('spec', true)
-    let wrapper, core, searchStore
+    const index = 'local-datashare'
+    let wrapper, core, searchStore, searchSpy
 
-    beforeEach(() => {
+    beforeAll(() => {
       core = CoreSetup.init().useAll()
-      searchStore = useSearchStore()
-      searchStore.setIndex(index)
       core.config.set('dataDir', 'C:\\home\\foo')
       core.config.set('pathSeparator', '\\')
+    })
+
+    beforeEach(async () => {
+      core.createPinia()
+      searchStore = useSearchStore()
+      searchStore.setIndex(index)
 
       api.tree.mockClear()
       api.tree.mockResolvedValue(HOME_TREE_WIN)
+
+      searchSpy = vi.spyOn(api.elasticsearch, 'search').mockResolvedValue({
+        hits: { total: { value: 10 }, hits: [] },
+        aggregations: {
+          total_directories: { value: 2 },
+          dirname: {
+            buckets: [
+              { key: 'C:\\home\\foo\\bar', doc_count: 5, size: { value: 500 } },
+              { key: 'C:\\home\\foo\\baz', doc_count: 5, size: { value: 500 } }
+            ]
+          }
+        }
+      })
 
       wrapper = mount(PathTree, {
         props: {
@@ -214,32 +240,22 @@ describe('PathTree.vue', () => {
           renderStubDefaultSlot: true
         }
       })
+      await flushPromises()
     })
 
-    it('should be a display a correct basename on windows', async () => {
-      await letData(es)
-        .have(new IndexedDocuments().setBaseName('C:\\home\\foo\\bar\\doc_01').withIndex(index).count(5))
-        .commit()
-      await letData(es)
-        .have(new IndexedDocuments().setBaseName('C:\\home\\foo\\baz\\doc_02').withIndex(index).count(5))
-        .commit()
-      await wrapper.vm.loadData({ clearPages: true })
+    afterEach(() => {
+      wrapper?.unmount()
+      searchSpy.mockRestore()
+    })
 
+    it('should be a display a correct basename on windows', () => {
       expect(wrapper.findAll('.path-tree-view-entry-name__value').at(0).text()).toBe('foo')
       expect(wrapper.findAll('.path-tree-view-entry-name__value').at(1).text()).toBe('bar')
       expect(wrapper.findAll('.path-tree-view-entry-name__value').at(2).text()).toBe('baz')
       expect(wrapper.findAll('.path-tree-view-entry-name__value').at(3).text()).toBe('01FOO')
     })
 
-    it('should display 3 directories including one from the tree on windows', async () => {
-      await letData(es)
-        .have(new IndexedDocuments().setBaseName('C:\\home\\foo\\bar\\doc_01').withIndex(index).count(5))
-        .commit()
-      await letData(es)
-        .have(new IndexedDocuments().setBaseName('C:\\home\\foo\\baz\\doc_02').withIndex(index).count(5))
-        .commit()
-      await wrapper.vm.loadData({ clearPages: true })
-
+    it('should display 3 directories including one from the tree on windows', () => {
       expect(wrapper.find('.path-tree-view-entry-stats-documents').exists()).toBeTruthy()
       expect(wrapper.find('.path-tree-view-entry-stats-documents').text()).toBe('10')
       expect(wrapper.findAll('.path-tree-view-entry')).toHaveLength(4)

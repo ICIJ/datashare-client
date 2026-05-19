@@ -1,22 +1,57 @@
 import { mount, flushPromises } from '@vue/test-utils'
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import CoreSetup from '~tests/unit/CoreSetup'
+import { useTaskTimerSetup } from '~tests/unit/useTaskTimerSetup'
 import TaskBatchDownloadList from '@/views/Task/TaskBatchDownload/TaskBatchDownloadList'
 import { apiInstance as api } from '@/api/apiInstance'
 import BatchDownloadActions from '@/components/BatchDownload/BatchDownloadActions'
 import BatchDownloadTruncatedAlert from '@/components/BatchDownload/BatchDownloadTruncatedAlert'
+import DisplayStatusLabel from '@/components/Display/DisplayStatusLabel'
+import { fromNow } from '@/utils/humanDate'
 
-vi.mock('@/api/apiInstance', {
+const stubs = {
+  BatchDownloadActions: true,
+  BatchDownloadTruncatedAlert: true,
+  DismissableAlert: true,
+  DisplayDatetimeFromNow: {
+    props: ['value'],
+    setup(props) {
+      const { locale } = useI18n()
+      const display = computed(() => fromNow(new Date(props.value), locale.value))
+      return { display }
+    },
+    template: '<span>{{ display }}</span>'
+  },
+  DisplayStatus: { props: ['value'], components: { DisplayStatusLabel }, template: '<display-status-label :value="value" />' },
+  EmptyState: true,
+  PageHeader: true,
+  ProjectThumbnail: true,
+  RowPaginationBatchDownloads: true,
+  SearchBreadcrumbUri: true,
+  TaskActions: true,
+}
+
+vi.mock('@/api/apiInstance', () => ({
   apiInstance: {
     isDownloadAllowed: vi.fn().mockResolvedValue(),
     getTasks: vi.fn().mockResolvedValue({ items: [] })
   }
-})
+}))
 
 describe('TaskBatchDownloadList.vue', () => {
-  let plugins
+  let core, plugins, wrapper
+
+  useTaskTimerSetup()
+
+  beforeAll(() => {
+    core = CoreSetup.init().useAll().useRouterWithoutGuards()
+  })
 
   beforeEach(async () => {
+    core.createPinia()
+    plugins = core.plugins
     api.getTasks.mockResolvedValue({
       items: [
         {
@@ -121,14 +156,12 @@ describe('TaskBatchDownloadList.vue', () => {
       ]
     })
 
-    const core = CoreSetup.init().useAll().useRouterWithoutGuards()
-    plugins = core.plugins
     core.config.set('batchDownloadMaxSize', '1G')
     core.config.set('batchDownloadMaxNbFiles', '10000')
   })
 
   afterEach(() => {
-    vi.clearAllTimers()
+    wrapper?.unmount()
   })
 
   afterAll(() => {
@@ -136,7 +169,7 @@ describe('TaskBatchDownloadList.vue', () => {
   })
 
   it('renders correctly', async () => {
-    const wrapper = mount(TaskBatchDownloadList, { global: { plugins } })
+    wrapper = mount(TaskBatchDownloadList, { global: { plugins, stubs } })
     expect(wrapper.exists()).toBe(true)
     expect(api.getTasks).toBeCalledTimes(1)
     expect(api.getTasks).toBeCalledWith(
@@ -147,13 +180,13 @@ describe('TaskBatchDownloadList.vue', () => {
   })
 
   it('should display 2 batch download tasks', async () => {
-    const wrapper = mount(TaskBatchDownloadList, { global: { plugins } })
+    wrapper = mount(TaskBatchDownloadList, { global: { plugins, stubs } })
     await flushPromises()
     expect(wrapper.findAll('.page-table-generic__row')).toHaveLength(2)
   })
 
   it('should display the correct values in the correct columns for row 1', async () => {
-    const wrapper = mount(TaskBatchDownloadList, { global: { plugins } })
+    wrapper = mount(TaskBatchDownloadList, { global: { plugins, stubs } })
     await flushPromises()
     const firstRow = wrapper.find('.page-table-generic__row')
     const columns = firstRow.findAll('.page-table-generic__row__field')
@@ -166,14 +199,14 @@ describe('TaskBatchDownloadList.vue', () => {
   })
 
   it('should display batch download actions', async () => {
-    const wrapper = mount(TaskBatchDownloadList, { global: { plugins } })
+    wrapper = mount(TaskBatchDownloadList, { global: { plugins, stubs } })
     await flushPromises()
     const firstRow = wrapper.find('.page-table-generic__row')
     expect(firstRow.findComponent(BatchDownloadActions).exists()).toBe(true)
   })
 
   it('should not show a truncated alert when truncationReason is absent', async () => {
-    const wrapper = mount(TaskBatchDownloadList, { global: { plugins } })
+    wrapper = mount(TaskBatchDownloadList, { global: { plugins, stubs } })
     await flushPromises()
     expect(wrapper.find('.batch-download-truncated-alert').exists()).toBe(false)
   })
@@ -217,7 +250,7 @@ describe('TaskBatchDownloadList.vue', () => {
         }
       ]
     })
-    const wrapper = mount(TaskBatchDownloadList, { global: { plugins } })
+    wrapper = mount(TaskBatchDownloadList, { global: { plugins, stubs } })
     await flushPromises()
     const alert = wrapper.findComponent(BatchDownloadTruncatedAlert)
     expect(alert.exists()).toBe(true)

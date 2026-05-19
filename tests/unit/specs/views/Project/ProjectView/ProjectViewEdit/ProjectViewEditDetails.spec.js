@@ -1,7 +1,7 @@
-import { mount, flushPromises } from '@vue/test-utils'
+import { shallowMount, flushPromises } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup.js'
-import ProjectViewEdit from '@/views/Project/ProjectView/ProjectViewEdit/ProjectViewEdit.vue'
+import ProjectViewEditDetails from '@/views/Project/ProjectView/ProjectViewEdit/ProjectViewEditDetails.vue'
 import { apiInstance as api } from '@/api/apiInstance.js'
 
 vi.mock('@/api/apiInstance', () => {
@@ -18,8 +18,12 @@ vi.mock('@/api/apiInstance', () => {
 describe('ProjectViewEditDetails.vue', () => {
   let core
 
-  beforeEach(() => {
+  beforeAll(() => {
     core = CoreSetup.init().useAll().useRouterWithoutGuards()
+  })
+
+  beforeEach(() => {
+    core.createPinia()
     core.config.set('projects', [{ name: 'local-datashare', label: 'Default', sourcePath: '/' }])
   })
 
@@ -28,9 +32,9 @@ describe('ProjectViewEditDetails.vue', () => {
   })
 
   it('updates values of a project when the form is submitted', async () => {
-    await core.router.push({ name: 'project.view.edit.details', params: { name: 'local-datashare' } })
     const props = { name: 'local-datashare' }
-    const wrapper = mount(ProjectViewEdit, { global: { plugins: core.plugins }, props })
+    const stubs = { AppOverlay: { template: '<div><slot /></div>' } }
+    const wrapper = shallowMount(ProjectViewEditDetails, { global: { plugins: core.plugins, stubs }, props })
     await flushPromises()
     expect(wrapper.vm.$core.projects[0].label).toBe('Default')
     const projectFormValues = {

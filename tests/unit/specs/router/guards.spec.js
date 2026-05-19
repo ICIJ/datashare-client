@@ -26,6 +26,29 @@ vi.mock('@/composables/useNProgress', () => ({
   })
 }))
 
+// Replace every lazy-loaded route component with a lightweight stub so that
+// router.push() does not trigger Vite transforms for each view on first
+// navigation. Guards read `to.meta`, not components, so semantics are intact.
+vi.mock('@/router', async (importOriginal) => {
+  const original = await importOriginal()
+  const stub = { template: '<div />' }
+
+  function replaceComponents(routeList) {
+    return routeList.map((route) => {
+      const result = { ...route }
+      if (result.component) result.component = stub
+      if (result.components) {
+        result.components = Object.fromEntries(Object.keys(result.components).map(k => [k, stub]))
+      }
+      if (result.children) result.children = replaceComponents(result.children)
+      return result
+    })
+  }
+
+  const routes = replaceComponents(original.routes)
+  return { routes, default: { routes } }
+})
+
 describe('guards', () => {
   const { auth, router, plugins, config } = CoreSetup.init().useAll().useRouter()
 

@@ -29,11 +29,16 @@ vi.mock('@/api/apiInstance', () => {
 })
 
 describe('SearchHistoryList.vue', () => {
-  let core
+  let core, wrapper
+
+  beforeAll(() => {
+    core = CoreSetup.init().useAll().useRouterWithoutGuards()
+  })
 
   beforeEach(async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'setInterval', 'clearTimeout', 'clearInterval'] })
+    core.createPinia()
     const index = 'local-datashare'
-    core = CoreSetup.init().useAll().useRouterWithoutGuards()
 
     api.elasticsearch.search.mockResolvedValue({
       hits: {
@@ -97,22 +102,44 @@ describe('SearchHistoryList.vue', () => {
   })
 
   afterEach(() => {
+    wrapper?.unmount()
     vi.clearAllMocks()
+    vi.useRealTimers()
   })
 
   afterAll(() => {
     vi.resetAllMocks()
   })
 
+  const stubs = {
+    AppPlaceholder: true,
+    ButtonClearHistory: true,
+    ButtonToggleDay: true,
+    DocumentActionsGroup: true,
+    DocumentCard: true,
+    DocumentCardCheckbox: true,
+    DocumentCardPlaceholder: true,
+    DocumentCardProperties: true,
+    DocumentThumbnail: true,
+    DisplayTime: true,
+    EmptyState: true,
+    Hook: true,
+    NavigationBreadcrumbLink: true,
+    PageHeader: true,
+    ParentOverflowEntriesItem: true,
+    RowPaginationDocuments: true,
+    RouterLinkDocument: true,
+  }
+
   it('should display a list of two documents', async () => {
-    const wrapper = mount(SearchHistoryList, { global: { plugins: core.plugins } })
+    wrapper = mount(SearchHistoryList, { global: { plugins: core.plugins, stubs } })
     await flushPromises()
     const cards = wrapper.findAllComponents(DocumentCard)
     expect(cards).toHaveLength(2)
   })
 
   it('should display a button for each day', async () => {
-    const wrapper = mount(SearchHistoryList, { global: { plugins: core.plugins } })
+    wrapper = mount(SearchHistoryList, { global: { plugins: core.plugins, stubs } })
     await flushPromises()
     const cards = wrapper.findAllComponents(ButtonToggleDay)
     expect(cards).toHaveLength(2)

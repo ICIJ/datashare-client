@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onBeforeMount } from 'vue'
+import { ref, computed, markRaw, onBeforeMount } from 'vue'
 import bodybuilder from 'bodybuilder'
 import { AppIcon } from '@icij/murmur-next'
 import { flatten, get, sum } from 'lodash'
@@ -8,6 +8,7 @@ import { useI18n } from 'vue-i18n'
 import EsDocList from '@/api/resources/EsDocList'
 import { useWait } from '@/composables/useWait'
 import { apiInstance as api } from '@/api/apiInstance'
+import { findContentTypeIcon } from '@/utils/iconFiles'
 
 /**
  * A list of attachments for a document (usually, it's child documents)
@@ -24,6 +25,7 @@ const props = defineProps({
 
 const { t } = useI18n()
 const wait = useWait()
+const contentTypeIcon = computed(() => markRaw(findContentTypeIcon(props.document.contentType)))
 
 const pages = ref([])
 const size = ref(50)
@@ -93,7 +95,7 @@ onBeforeMount(() => {
           class="document-attachments__list__item__link d-flex-inline"
         >
           <app-icon
-            :name="document.contentTypeIcon"
+            :name="contentTypeIcon"
             class="me-1 mt-1"
           />
           <span>{{ attachment.slicedName.pop() }}</span>

@@ -7,18 +7,12 @@ import WidgetRecommendedBy from '@/components/Widget/WidgetRecommendedBy'
 import { apiInstance as api } from '@/api/apiInstance'
 import { useInsightsStore } from '@/store/modules/insights'
 
-vi.mock('@/api/apiInstance', async (importOriginal) => {
-  const {
-    apiInstance: { elasticsearch }
-  } = await importOriginal()
-
-  return {
-    apiInstance: {
-      elasticsearch,
-      getDocumentUserRecommendations: vi.fn()
-    }
+vi.mock('@/api/apiInstance', () => ({
+  apiInstance: {
+    elasticsearch: { search: vi.fn() },
+    getDocumentUserRecommendations: vi.fn()
   }
-})
+}))
 
 describe('WidgetRecommendedBy.vue', () => {
   const { index } = esConnectionHelper.build()
@@ -30,9 +24,10 @@ describe('WidgetRecommendedBy.vue', () => {
     { user, document: foo }
   ]
 
-  let wrapper
+  let core, wrapper
 
   beforeAll(() => {
+    core = CoreSetup.init().useAll().useRouterWithoutGuards()
     // Mock list of recommendation
     api.getDocumentUserRecommendations.mockResolvedValue(recommendations)
     // Mock all elasticsearch search calls using a mock
@@ -47,7 +42,8 @@ describe('WidgetRecommendedBy.vue', () => {
   })
 
   beforeEach(async () => {
-    const { plugins } = CoreSetup.init().useAll().useRouterWithoutGuards()
+    core.createPinia()
+    const plugins = core.plugins
     const insightsStore = useInsightsStore()
     const global = { plugins }
     const widget = new widgets.WidgetRecommendedBy({ card: true })

@@ -1,19 +1,23 @@
-import { mount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import DisplayEsDistribution from '@/components/Display/DisplayEsDistribution'
 import { ES_DISTRIBUTION } from '@/enums/esDistributions'
 
 describe('DisplayEsDistribution', () => {
-  let plugins
+  let core, plugins
+
+  beforeAll(() => {
+    core = CoreSetup.init().useAll()
+  })
 
   beforeEach(() => {
-    const core = CoreSetup.init().useAll()
+    core.createPinia()
     plugins = core.plugins
   })
 
   function mountComponent(props = {}) {
-    return mount(DisplayEsDistribution, {
+    return shallowMount(DisplayEsDistribution, {
       global: { plugins },
       props
     })

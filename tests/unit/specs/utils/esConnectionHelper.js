@@ -1,4 +1,4 @@
-import { castArray, join, noop, uniqueId } from 'lodash'
+import { castArray, join, uniqueId } from 'lodash'
 import elasticsearch from 'elasticsearch-browser'
 
 import esMapping from './datashare_index_mappings.json'
@@ -37,8 +37,6 @@ function esConnectionHelper(indexOrIndices = [], ifWindows = false) {
       refresh: true,
       body: { query: { match_all: {} } }
     })
-    // Easy Tiger! Elasticsearch can hardly follow
-    setTimeout(noop, 1e3 * indices.length)
   })
 
   afterAll(async () => {

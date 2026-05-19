@@ -6,10 +6,14 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import DismissableContentWarningToggler from '@/components/Dismissable/DismissableContentWarningToggler.vue'
 
 describe('DismissableContentWarningToggler.vue', () => {
-  let global
+  let core, global
+
+  beforeAll(() => {
+    core = CoreSetup.init().useAll()
+  })
 
   beforeEach(() => {
-    const core = CoreSetup.init().useAll()
+    core.createPinia()
     global = { plugins: core.plugins, renderStubDefaultSlot: true }
   })
 

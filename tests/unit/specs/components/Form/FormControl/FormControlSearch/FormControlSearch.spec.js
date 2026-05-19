@@ -4,10 +4,14 @@ import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 import CoreSetup from '~tests/unit/CoreSetup'
 
 describe('FormControlSearch', () => {
-  let global
+  let core, global
+
+  beforeAll(() => {
+    core = CoreSetup.init().useAll()
+  })
 
   beforeEach(() => {
-    const core = CoreSetup.init().useAll()
+    core.createPinia()
     global = { plugins: core.plugins }
   })
 

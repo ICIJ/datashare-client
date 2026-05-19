@@ -7,16 +7,12 @@ import FilterTypeStarred from '@/components/Filter/FilterType/FilterTypeStarred'
 import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPanelSectionFilterEntry'
 import CoreSetup from '~tests/unit/CoreSetup'
 
-vi.mock('@/api/apiInstance', async (importOriginal) => {
-  const { apiInstance } = await importOriginal()
-
-  return {
-    apiInstance: {
-      elasticsearch: apiInstance.elasticsearch,
-      getStarredDocuments: vi.fn().mockResolvedValue([])
-    }
+vi.mock('@/api/apiInstance', () => ({
+  apiInstance: {
+    elasticsearch: { search: vi.fn() },
+    getStarredDocuments: vi.fn().mockResolvedValue([])
   }
-})
+}))
 
 describe('FilterTypeStarred.vue', () => {
   const { index, es } = esConnectionHelper.build()

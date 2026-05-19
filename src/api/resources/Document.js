@@ -1,5 +1,4 @@
 import { compact, endsWith, filter, find, get, keys, last, pick, startsWith, trim } from 'lodash'
-import { markRaw } from 'vue'
 import Murmur from '@icij/murmur-next'
 import dayjs from 'dayjs'
 import { extname } from 'path'
@@ -7,7 +6,6 @@ import { extname } from 'path'
 import { Api } from '@/api'
 import EsDoc from '@/api/resources/EsDoc'
 import humanSize from '@/utils/humanSize'
-import { findContentTypeIcon } from '@/utils/iconFiles'
 import types from '@/utils/contentTypes.json'
 
 const _parent = '_PARENT'
@@ -275,10 +273,6 @@ export default class Document extends EsDoc {
 
   get contentTypeWarning() {
     return get(types, [this.contentType, 'warning'], {})
-  }
-
-  get contentTypeIcon() {
-    return markRaw(findContentTypeIcon(this.contentType))
   }
 
   get rootContentType() {

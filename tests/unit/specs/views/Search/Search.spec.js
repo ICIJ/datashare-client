@@ -13,12 +13,18 @@ vi.mock('@/api/apiInstance', {
 describe('Search.vue', () => {
   let core, wrapper
 
-  beforeEach(() => {
+  beforeAll(() => {
     core = CoreSetup.init().useAll().useRouterWithoutGuards()
+  })
+
+  beforeEach(async () => {
+    core.createPinia()
+    await core.router.replace('/')
+    const plugins = core.plugins
 
     wrapper = shallowMount(Search, {
       global: {
-        plugins: core.plugins,
+        plugins,
         renderStubDefaultSlot: true
       }
     })

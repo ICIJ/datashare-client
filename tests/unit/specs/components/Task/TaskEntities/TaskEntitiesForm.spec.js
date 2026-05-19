@@ -14,15 +14,18 @@ vi.mock('@/api/apiInstance', () => {
 })
 
 describe('TaskEntitiesForm.vue', () => {
-  let plugins
+  let core, plugins
+
+  beforeAll(() => {
+    core = CoreSetup.init().useAll().useRouterWithoutGuards()
+  })
 
   beforeEach(() => {
-    vi.clearAllMocks()
-    const core = CoreSetup.init().useAll().useRouterWithoutGuards()
-    const config = core.config
+    core.createPinia()
     plugins = core.plugins
-    config.set('defaultProject', 'local-datashare')
-    config.set('projects', [{ name: 'local-datashare' }, { name: 'banana-papers' }])
+    vi.clearAllMocks()
+    core.config.set('defaultProject', 'local-datashare')
+    core.config.set('projects', [{ name: 'local-datashare' }, { name: 'banana-papers' }])
   })
 
   afterAll(() => {

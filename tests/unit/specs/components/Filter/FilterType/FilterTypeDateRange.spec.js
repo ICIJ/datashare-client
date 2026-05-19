@@ -10,10 +10,15 @@ describe('FilterTypeDateRange.vue', () => {
   const { index } = esConnectionHelper.build()
   const name = 'creationDate'
 
-  let wrapper, searchStore
+  let core, wrapper, searchStore
+
+  beforeAll(() => {
+    core = CoreSetup.init().useAll().useRouterWithoutGuards()
+  })
 
   beforeEach(() => {
-    const { plugins } = CoreSetup.init().useAll().useRouterWithoutGuards()
+    core.createPinia()
+    const plugins = core.plugins
     searchStore = useSearchStore()
     searchStore.reset()
     searchStore.decontextualizeFilter(name)

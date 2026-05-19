@@ -6,10 +6,14 @@ import LoginImage from '@/components/Login/LoginImage'
 import LoginLocaleDropdownSelector from '@/components/Login/LoginLocaleDropdownSelector'
 
 describe('LoginWelcome.vue', () => {
-  let wrapper, global
+  let core, wrapper, global
+
+  beforeAll(() => {
+    core = CoreSetup.init().useAll()
+  })
 
   beforeEach(() => {
-    const core = CoreSetup.init().useAll()
+    core.createPinia()
     global = { plugins: core.plugins }
     wrapper = mount(LoginWelcome, { global })
   })

@@ -17,18 +17,22 @@ vi.mock('@/api/apiInstance', () => {
 })
 
 describe('SettingsViewApi', () => {
-  let plugins
+  let core, plugins, wrapper
 
-  beforeEach(async () => {
-    api.getApiKey.mockResolvedValue({ hashedKey: null })
-    const core = CoreSetup.init().useAll()
+  beforeAll(() => {
+    core = CoreSetup.init().useAll()
+  })
+
+  beforeEach(() => {
+    core.createPinia()
     plugins = core.plugins
-
+    api.getApiKey.mockResolvedValue({ hashedKey: null })
     setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
     core.config.merge({ mode: MODE_NAME.SERVER })
   })
 
   afterEach(async () => {
+    wrapper?.unmount()
     removeCookie(process.env.VITE_DS_COOKIE_NAME)
     await flushPromises()
     vi.clearAllMocks()
@@ -39,19 +43,19 @@ describe('SettingsViewApi', () => {
   })
 
   it('should display a panel to generate the API key by default', () => {
-    const wrapper = mount(SettingsViewApi, { global: { plugins } })
+    wrapper = mount(SettingsViewApi, { global: { plugins } })
     expect(wrapper.find('.settings-view-api__create').exists()).toBeTruthy()
   })
 
   it('should display no keys by default', () => {
-    const wrapper = mount(SettingsViewApi, { global: { plugins } })
+    wrapper = mount(SettingsViewApi, { global: { plugins } })
     expect(wrapper.findAll('.settings-view-api__key')).toHaveLength(0)
   })
 
   it('should request the creation of the API key', async () => {
     api.getApiKey.mockResolvedValue({ apiKey: '123456abcdef', hashedKey: 'test' })
     api.createApiKey.mockResolvedValue({ apiKey: '123456abcdef', hashedKey: 'test' })
-    const wrapper = mount(SettingsViewApi, { global: { plugins } })
+    wrapper = mount(SettingsViewApi, { global: { plugins } })
     await wrapper.find('.settings-view-api__create__button').trigger('click')
     await flushPromises()
 
@@ -63,7 +67,7 @@ describe('SettingsViewApi', () => {
     api.createApiKey.mockResolvedValue({ apiKey: '123456abcdef', hashedKey: 'test' })
     api.getApiKey.mockResolvedValue({ apiKey: '123456abcdef', hashedKey: 'test' })
     api.removeApiKey.mockResolvedValue({})
-    const wrapper = mount(SettingsViewApi, { global: { plugins } })
+    wrapper = mount(SettingsViewApi, { global: { plugins } })
     expect(wrapper.findAll('.settings-view-api__show')).toHaveLength(0)
 
     await wrapper.vm.createApiKey()

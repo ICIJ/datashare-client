@@ -17,12 +17,16 @@ vi.mock('@/api/apiInstance', () => ({
 }))
 
 describe('TaskBatchSearchForm', () => {
-  let plugins
+  let core, plugins
+
+  beforeAll(() => {
+    core = CoreSetup.init().useAll().useRouterWithoutGuards()
+  })
 
   beforeEach(() => {
-    vi.clearAllMocks()
-    const core = CoreSetup.init().useAll().useRouterWithoutGuards()
+    core.createPinia()
     plugins = core.plugins
+    vi.clearAllMocks()
     core.config.set('projects', [{ name: 'local-datashare' }])
     core.config.set('defaultProject', 'local-datashare')
   })

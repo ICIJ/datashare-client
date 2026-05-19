@@ -5,10 +5,15 @@ import ProjectForm from '@/components/Project/ProjectForm'
 
 describe('ProjectForm.vue', () => {
   describe('without an existing project', () => {
-    let wrapper, plugins
+    let core, wrapper, plugins
+
+    beforeAll(() => {
+      core = CoreSetup.init().useAll()
+    })
 
     beforeEach(() => {
-      plugins = CoreSetup.init().useAll().plugins
+      core.createPinia()
+      plugins = core.plugins
       wrapper = mount(ProjectForm, { global: { plugins } })
     })
 
@@ -118,12 +123,17 @@ describe('ProjectForm.vue', () => {
   })
 
   describe('with an existing project', () => {
-    let wrapper, plugins
+    let core, wrapper, plugins
+
+    beforeAll(() => {
+      core = CoreSetup.init().useAll()
+    })
 
     beforeEach(() => {
+      core.createPinia()
+      plugins = core.plugins
       const values = { name: 'foo', description: 'A description' }
       const props = { values, edit: true }
-      plugins = CoreSetup.init().useAll().plugins
       wrapper = mount(ProjectForm, { global: { plugins }, props })
     })
 

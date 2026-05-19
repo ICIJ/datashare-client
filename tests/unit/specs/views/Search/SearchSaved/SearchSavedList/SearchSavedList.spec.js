@@ -1,9 +1,32 @@
-import { flushPromises, mount } from '@vue/test-utils'
+import { flushPromises, mount, shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import SearchSavedEntries from '@/components/Search/SearchSavedEntries/SearchSavedEntries'
 import SearchSavedList from '@/views/Search/SearchSaved/SearchSavedList/SearchSavedList'
 import { apiInstance as api } from '@/api/apiInstance'
+
+vi.mock('@/router', () => {
+  const stub = { template: '<div />' }
+  const routes = [
+    {
+      path: '/',
+      component: stub,
+      children: [
+        {
+          name: 'search',
+          path: '',
+          component: stub
+        },
+        {
+          name: 'search.saved.list',
+          path: 'search/saved',
+          component: stub
+        }
+      ]
+    }
+  ]
+  return { routes, default: { routes } }
+})
 
 vi.mock('@/api/apiInstance', () => {
   return {
@@ -51,34 +74,36 @@ vi.mock('@/api/apiInstance', () => {
 })
 
 describe('Search/SearchSaved/SearchSavedList.vue', () => {
-  let wrapper, router
+  let core, router
 
-  beforeEach(async () => {
-    const core = CoreSetup.init().useAll().useRouterWithoutGuards()
-    const global = { plugins: core.plugins }
+  beforeAll(() => {
+    core = CoreSetup.init().useAll().useRouterWithoutGuards()
     router = core.router
-    wrapper = mount(SearchSavedList, { global })
-    await flushPromises()
-  })
-
-  afterEach(() => {
-    vi.clearAllMocks()
   })
 
   afterAll(() => {
     vi.resetAllMocks()
   })
 
-  it('should display a list of 2 saved search', () => {
+  it('should display a list of 2 saved search', async () => {
+    core.createPinia()
+    const wrapper = mount(SearchSavedList, { global: { plugins: core.plugins } })
+    await flushPromises()
     const entries = wrapper.findComponent(SearchSavedEntries)
     expect(entries.exists()).toBeTruthy()
     const tr = entries.findAll('.page-table-generic__row')
     expect(tr).toHaveLength(2)
+    wrapper.unmount()
   })
 
   it('should display load next page', async () => {
+    core.createPinia()
+    vi.clearAllMocks()
+    const wrapper = shallowMount(SearchSavedList, { global: { plugins: core.plugins } })
+    await flushPromises()
     expect(api.getHistoryEvents).toBeCalledTimes(1)
     await router.push({ name: 'search.saved.list', query: { page: '2' } })
     expect(api.getHistoryEvents).toBeCalledTimes(2)
+    wrapper.unmount()
   })
 })

@@ -1,5 +1,4 @@
 import { mount } from '@vue/test-utils'
-import { setActivePinia, createPinia } from 'pinia'
 
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
@@ -10,48 +9,36 @@ import FilterTypeRecommendedBy from '@/components/Filter/FilterType/FilterTypeRe
 import { useSearchStore, useRecommendedStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
 
-vi.mock('@/api/apiInstance', async (importOriginal) => {
-  const { apiInstance } = await importOriginal()
-
-  return {
-    apiInstance: {
-      ...apiInstance,
-      getDocumentsRecommendedBy: vi.fn(),
-      getUser: vi.fn().mockResolvedValue({ uid: 'local' }),
-      getRecommendationsByProject: vi.fn().mockResolvedValue({
-        totalCount: 42,
-        aggregates: [
-          {
-            item: { id: 'paul' },
-            count: 2
-          },
-          {
-            item: { id: 'local' },
-            count: 1
-          },
-          {
-            item: { id: 'anita' },
-            count: 3
-          }
-        ]
-      })
-    }
+vi.mock('@/api/apiInstance', () => ({
+  apiInstance: {
+    elasticsearch: { searchFilter: vi.fn(), search: vi.fn() },
+    getDocumentsRecommendedBy: vi.fn(),
+    getUser: vi.fn().mockResolvedValue({ uid: 'local' }),
+    getRecommendationsByProject: vi.fn().mockResolvedValue({
+      totalCount: 42,
+      aggregates: [
+        { item: { id: 'paul' }, count: 2 },
+        { item: { id: 'local' }, count: 1 },
+        { item: { id: 'anita' }, count: 3 }
+      ]
+    })
   }
-})
+}))
 
 describe('FilterTypeRecommendedBy.vue', () => {
   const { index, es } = esConnectionHelper.build()
   let core, wrapper, recommendedStore, searchStore
 
   beforeAll(async () => {
+    core = CoreSetup.init().useAll().useRouterWithoutGuards()
     await letData(es).have(new IndexedDocument('01', index)).commit()
     await letData(es).have(new IndexedDocument('02', index)).commit()
     await letData(es).have(new IndexedDocument('03', index)).commit()
   })
 
   beforeEach(async () => {
-    setActivePinia(createPinia())
-    core = CoreSetup.init().useAll().useRouterWithoutGuards()
+    core.createPinia()
+    const plugins = core.plugins
     recommendedStore = useRecommendedStore()
     searchStore = useSearchStore()
     searchStore.setIndex(index)
@@ -60,7 +47,7 @@ describe('FilterTypeRecommendedBy.vue', () => {
 
     const filter = searchStore.getFilter({ name: 'recommendedBy' })
     const props = { filter }
-    wrapper = await mount(FilterTypeRecommendedBy, { global: { plugins: core.plugins }, props })
+    wrapper = await mount(FilterTypeRecommendedBy, { global: { plugins }, props })
     await wrapper.findComponent(FilterType).vm.aggregate()
   })
 

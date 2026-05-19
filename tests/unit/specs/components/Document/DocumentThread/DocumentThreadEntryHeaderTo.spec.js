@@ -6,6 +6,10 @@ import DocumentThreadEntryHeaderTo from '@/components/Document/DocumentThread/Do
 describe('DocumentThreadEntryHeaderTo.vue', () => {
   let core
 
+  beforeAll(() => {
+    core = CoreSetup.init().useAll()
+  })
+
   function createWrapper(props = {}) {
     return shallowMount(DocumentThreadEntryHeaderTo, {
       global: {
@@ -22,7 +26,7 @@ describe('DocumentThreadEntryHeaderTo.vue', () => {
   }
 
   beforeEach(() => {
-    core = CoreSetup.init().useAll()
+    core.createPinia()
   })
 
   it('should render the "to" label', () => {

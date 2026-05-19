@@ -1,20 +1,16 @@
-import { mount, flushPromises } from '@vue/test-utils'
+import { shallowMount, flushPromises } from '@vue/test-utils'
 
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import FilterPath from '@/components/Filter/FilterType/FilterTypePath'
 import CoreSetup from '~tests/unit/CoreSetup'
 import { useSearchStore } from '@/store/modules'
 
-vi.mock('@/api/apiInstance', async (importOriginal) => {
-  const { apiInstance } = await importOriginal()
-
-  return {
-    apiInstance: {
-      ...apiInstance,
-      tree: vi.fn()
-    }
+vi.mock('@/api/apiInstance', () => ({
+  apiInstance: {
+    elasticsearch: { search: vi.fn() },
+    tree: vi.fn()
   }
-})
+}))
 
 describe('FilterTypePath.vue', () => {
   const { index } = esConnectionHelper.build()
@@ -22,8 +18,13 @@ describe('FilterTypePath.vue', () => {
 
   let core, searchStore, wrapper
 
-  beforeEach(() => {
+  beforeAll(() => {
     core = CoreSetup.init().useAll().useRouterWithoutGuards()
+  })
+
+  beforeEach(() => {
+    core.createPinia()
+    const plugins = core.plugins
     core.config.set('dataDir', '/data')
 
     searchStore = useSearchStore()
@@ -32,9 +33,9 @@ describe('FilterTypePath.vue', () => {
 
     const filter = searchStore.getFilter({ name: 'path' })
 
-    wrapper = mount(FilterPath, {
+    wrapper = shallowMount(FilterPath, {
       global: {
-        plugins: core.plugins
+        plugins
       },
       propsData: {
         filter,

@@ -2,7 +2,25 @@ import { setCookie } from 'tiny-cookie'
 import { flushPromises, mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
+import { useTaskTimerSetup } from '~tests/unit/useTaskTimerSetup'
 import TaskBatchSearchList from '@/views/Task/TaskBatchSearch/TaskBatchSearchList'
+import BatchSearchActions from '@/components/BatchSearch/BatchSearchActions/BatchSearchActions'
+
+const stubs = {
+  BatchSearchActions: true,
+  DismissableAlert: true,
+  DisplayDatetimeFromNow: true,
+  DisplayNumber: true,
+  DisplayProgress: true,
+  DisplayProjectList: true,
+  DisplayUser: true,
+  DisplayVisibility: true,
+  EmptyState: true,
+  PageHeader: true,
+  RowPaginationBatchSearches: true,
+  RouterLinkBatchSearch: true,
+  TaskStatus: true,
+}
 
 vi.mock('@/api/apiInstance', () => {
   return {
@@ -93,11 +111,21 @@ vi.mock('@/api/apiInstance', () => {
 })
 
 describe('TaskBatchSearchList', () => {
-  let plugins
+  let core, plugins, wrapper
+
+  useTaskTimerSetup()
+
+  beforeAll(() => {
+    core = CoreSetup.init().useAll().useRouterWithoutGuards()
+  })
 
   beforeEach(async () => {
-    const core = CoreSetup.init().useAll().useRouterWithoutGuards()
+    core.createPinia()
     plugins = core.plugins
+  })
+
+  afterEach(() => {
+    wrapper?.unmount()
   })
 
   afterAll(() => {
@@ -105,7 +133,7 @@ describe('TaskBatchSearchList', () => {
   })
 
   it('should display 2 batch searches', async () => {
-    const wrapper = mount(TaskBatchSearchList, { global: { plugins } })
+    wrapper = mount(TaskBatchSearchList, { global: { plugins, stubs } })
     await flushPromises()
     const rows = wrapper.findAll('.page-table-generic__row')
     expect(rows).toHaveLength(2)
@@ -113,10 +141,10 @@ describe('TaskBatchSearchList', () => {
 
   it('should not display actions if I m not the owner of the batch search', async () => {
     setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'local' }, JSON.stringify)
-    const wrapper = mount(TaskBatchSearchList, { global: { plugins } })
+    wrapper = mount(TaskBatchSearchList, { global: { plugins, stubs } })
     await flushPromises()
     const rows = wrapper.findAll('.page-table-generic__row')
-    expect(rows.at(0).find('.batch-search-actions').exists()).toBe(true)
-    expect(rows.at(1).find('.batch-search-actions').exists()).toBe(false)
+    expect(rows.at(0).findComponent(BatchSearchActions).exists()).toBe(true)
+    expect(rows.at(1).findComponent(BatchSearchActions).exists()).toBe(false)
   })
 })

@@ -5,15 +5,19 @@ import PathBannersList from '@/components/PathBanner/PathBannersList.vue'
 import EmptyState from '@/components/EmptyState/EmptyState.vue'
 
 describe('PathBannersList.vue', () => {
-  let global
+  let core, global
 
   const banners = [
     { note: 'Banner one', variant: 'info', path: '/a' },
     { note: 'Banner two', variant: 'warning', path: '/b' }
   ]
 
+  beforeAll(() => {
+    core = CoreSetup.init().useAll()
+  })
+
   beforeEach(() => {
-    const core = CoreSetup.init().useAll()
+    core.createPinia()
     global = { plugins: core.plugins, renderStubDefaultSlot: true }
   })
 

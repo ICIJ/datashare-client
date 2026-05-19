@@ -6,6 +6,10 @@ import DocumentThreadEntryHeaderFrom from '@/components/Document/DocumentThread/
 describe('DocumentThreadEntryHeaderFrom.vue', () => {
   let core
 
+  beforeAll(() => {
+    core = CoreSetup.init().useAll()
+  })
+
   const mockEmail = {
     id: 'email_01',
     messageFrom: 'sender@example.com'
@@ -24,7 +28,7 @@ describe('DocumentThreadEntryHeaderFrom.vue', () => {
   }
 
   beforeEach(() => {
-    core = CoreSetup.init().useAll()
+    core.createPinia()
   })
 
   it('should render a DisplayEmail component', () => {
