@@ -37,6 +37,6 @@ onMounted(async () => {
 
 <template>
   <div class="project-view-edit-users p-4">
-    <project-users-list :users="users" />
+    <project-users-list :users="users" :project-name="name" />
   </div>
 </template>
