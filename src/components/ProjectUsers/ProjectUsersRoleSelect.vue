@@ -88,8 +88,7 @@ defineExpose({ selectedRole, committedRole, dirty, saved, saving, confirm, cance
     <b-dropdown
       :disabled="saving"
       size="sm"
-      variant="outline-secondary"
-      no-caret
+      variant="link"
     >
       <template #button-content>
         <display-role :value="selectedRole" />
