@@ -8,6 +8,7 @@ import EmptyState from '@/components/EmptyState/EmptyState.vue'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch.vue'
 import PageTable from '@/components/PageTable/PageTable.vue'
 import PageTableTh from '@/components/PageTable/PageTableTh.vue'
+import ProjectUsersActions from '@/components/ProjectUsers/ProjectUsersActions.vue'
 import ProjectUsersRoleSelect from '@/components/ProjectUsers/ProjectUsersRoleSelect.vue'
 
 const props = defineProps({
@@ -35,6 +36,10 @@ watch(() => props.users, (newUsers) => {
 function onRoleSaved({ name, role }) {
   const user = localUsers.value.find(u => u.name === name)
   if (user) user.role = role
+}
+
+function onUserDeleted({ name }) {
+  localUsers.value = localUsers.value.filter(u => u.name !== name)
 }
 
 const filteredUsers = computed(() => {
@@ -84,6 +89,7 @@ const emptyLabel = computed(() =>
           style="width: 16rem"
           :label="t('projectViewEdit.users.fields.role.label')"
         />
+        <page-table-th compact />
       </template>
       <tr
         v-for="(user, index) in sortedUsers"
@@ -95,6 +101,13 @@ const emptyLabel = computed(() =>
             :user="user"
             :project-name="projectName"
             @role:saved="onRoleSaved"
+          />
+        </td>
+        <td>
+          <project-users-actions
+            :user="user"
+            :project-name="projectName"
+            @user:deleted="onUserDeleted"
           />
         </td>
       </tr>

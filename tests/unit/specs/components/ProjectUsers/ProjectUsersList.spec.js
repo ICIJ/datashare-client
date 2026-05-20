@@ -2,6 +2,7 @@ import { shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import ProjectUsersList from '@/components/ProjectUsers/ProjectUsersList.vue'
+import ProjectUsersActions from '@/components/ProjectUsers/ProjectUsersActions.vue'
 import ProjectUsersRoleSelect from '@/components/ProjectUsers/ProjectUsersRoleSelect.vue'
 import EmptyState from '@/components/EmptyState/EmptyState.vue'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch.vue'
@@ -80,5 +81,17 @@ describe('ProjectUsersList.vue', () => {
     await roleSelects[0].trigger('role:saved', { name: 'Alice Martin', role: 'PROJECT_MEMBER' })
     // After update, the first role select should receive the updated user
     expect(roleSelects[0].props('user').role).toBe('PROJECT_MEMBER')
+  })
+
+  it('renders a ProjectUsersActions in each row', () => {
+    const wrapper = shallowMount(ProjectUsersList, { global, props: { users, projectName } })
+    expect(wrapper.findAllComponents(ProjectUsersActions)).toHaveLength(users.length)
+  })
+
+  it('removes a user from the list when user:deleted is emitted', async () => {
+    const wrapper = shallowMount(ProjectUsersList, { global, props: { users, projectName } })
+    const actions = wrapper.findAllComponents(ProjectUsersActions)
+    await actions[0].trigger('user:deleted', { name: 'Alice Martin' })
+    expect(wrapper.findAll('tr')).toHaveLength(1)
   })
 })
