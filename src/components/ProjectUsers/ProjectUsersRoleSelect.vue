@@ -103,32 +103,31 @@ defineExpose({ selectedRole, committedRole, dirty, saved, saving, confirm, cance
         <display-role :value="role.value" />
       </b-dropdown-item>
     </b-dropdown>
-    <template v-if="dirty">
-      <button-icon
-        hide-label
-        variant="outline-success"
-        size="sm"
-        :icon-left="IPhCheck"
-        :disabled="saving"
-        @click="confirm"
-      >
-        {{ t('projectViewEdit.users.roleSelect.confirm') }}
-      </button-icon>
-      <button-icon
-        hide-label
-        variant="outline-secondary"
-        size="sm"
-        :icon-left="IPhX"
-        :disabled="saving"
-        @click="cancel"
-      >
-        {{ t('projectViewEdit.users.roleSelect.cancel') }}
-      </button-icon>
-    </template>
+    <button-icon
+      hide-label
+      variant="outline-success"
+      size="sm"
+      :style="{ visibility: dirty ? 'visible' : 'hidden' }"
+      :icon-left="IPhCheck"
+      :disabled="saving"
+      @click="confirm"
+    >
+      {{ t('projectViewEdit.users.roleSelect.confirm') }}
+    </button-icon>
+    <button-icon
+      hide-label
+      variant="outline-secondary"
+      size="sm"
+      :style="{ visibility: dirty ? 'visible' : 'hidden' }"
+      :icon-left="IPhX"
+      :disabled="saving"
+      @click="cancel"
+    >
+      {{ t('projectViewEdit.users.roleSelect.cancel') }}
+    </button-icon>
     <app-icon
-      v-if="saved && !dirty"
       :name="IPhCheckCircle"
-      style="color: var(--bs-success)"
+      :style="{ visibility: saved && !dirty ? 'visible' : 'hidden', color: 'var(--bs-success)' }"
     />
   </div>
 </template>

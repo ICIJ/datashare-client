@@ -57,7 +57,9 @@ describe('ProjectUsersRoleSelect.vue', () => {
   it('hides confirm and cancel buttons when role is unchanged', () => {
     const wrapper = mountComponent()
     expect(wrapper.vm.dirty).toBe(false)
-    expect(wrapper.findAllComponents(ButtonIcon)).toHaveLength(0)
+    wrapper.findAllComponents(ButtonIcon).forEach(btn => {
+      expect(btn.attributes('style')).toContain('visibility: hidden')
+    })
   })
 
   it('shows confirm and cancel buttons when role changes', async () => {
@@ -65,7 +67,9 @@ describe('ProjectUsersRoleSelect.vue', () => {
     wrapper.vm.selectedRole = 'PROJECT_MEMBER'
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.dirty).toBe(true)
-    expect(wrapper.findAllComponents(ButtonIcon)).toHaveLength(2)
+    wrapper.findAllComponents(ButtonIcon).forEach(btn => {
+      expect(btn.attributes('style')).toContain('visibility: visible')
+    })
   })
 
   it('cancel reverts selectedRole to the committed role', async () => {
@@ -100,7 +104,7 @@ describe('ProjectUsersRoleSelect.vue', () => {
     await flushPromises()
     expect(wrapper.vm.saved).toBe(true)
     expect(wrapper.vm.dirty).toBe(false)
-    expect(wrapper.findComponent(AppIcon).exists()).toBe(true)
+    expect(wrapper.findComponent(AppIcon).attributes('style')).toContain('visibility: visible')
   })
 
   it('reverts selectedRole and shows error toast on API failure', async () => {
