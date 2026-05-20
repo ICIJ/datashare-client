@@ -1106,4 +1106,8 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     estimateDownloadSize,
     sameAppliedQuery
   }
+}, {
+  persist: {
+    pick: ['indices']
+  }
 })
