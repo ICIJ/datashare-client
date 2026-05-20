@@ -29,7 +29,7 @@ describe('DisplayRole.vue', () => {
     ['PROJECT_ADMIN',  IPhPersonSimpleWalk, '#FF6699'],
     ['PROJECT_EDITOR', IPhPersonSimpleHike, '#FFB53E'],
     ['PROJECT_MEMBER', IPhPersonSimpleSwim, '#45C4FF'],
-    ['PROJECT_VISITOR',IPhPersonSimpleTaiChi,'#6F6F6F'],
+    ['PROJECT_VISITOR', IPhPersonSimpleTaiChi, '#6F6F6F'],
   ])('renders correct icon and color for %s', (role, expectedIcon, expectedColor) => {
     const wrapper = shallowMount(DisplayRole, { global, props: { value: role } })
     expect(wrapper.vm.icon).toBe(expectedIcon)
