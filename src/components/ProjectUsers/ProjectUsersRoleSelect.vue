@@ -90,6 +90,7 @@ defineExpose({ selectedRole, committedRole, dirty, saved, saving, confirm, cance
       size="sm"
       variant="link"
       teleport-to="body"
+      toggle-class="project-users-role-select__toggle"
     >
       <template #button-content>
         <display-role :value="selectedRole" />
@@ -131,3 +132,10 @@ defineExpose({ selectedRole, committedRole, dirty, saved, saving, confirm, cance
     />
   </div>
 </template>
+
+<style scoped>
+.project-users-role-select__toggle {
+  width: 9rem;
+  justify-content: space-between;
+}
+</style>
