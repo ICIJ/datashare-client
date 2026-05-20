@@ -24,12 +24,12 @@ describe('DisplayRole.vue', () => {
   })
 
   it.each([
-    ['INSTANCE_ADMIN', IPhPersonSimpleBike, '#DC3545'],
-    ['DOMAIN_ADMIN',   IPhPersonSimpleRun,  '#00BB84'],
-    ['PROJECT_ADMIN',  IPhPersonSimpleWalk, '#FF6699'],
-    ['PROJECT_EDITOR', IPhPersonSimpleHike, '#FFB53E'],
-    ['PROJECT_MEMBER', IPhPersonSimpleSwim, '#45C4FF'],
-    ['PROJECT_VISITOR', IPhPersonSimpleTaiChi, '#6F6F6F'],
+    ['INSTANCE_ADMIN', IPhPersonSimpleBike, 'var(--bs-danger)'],
+    ['DOMAIN_ADMIN',   IPhPersonSimpleRun,  'var(--bs-success)'],
+    ['PROJECT_ADMIN',  IPhPersonSimpleWalk, 'var(--bs-category-person)'],
+    ['PROJECT_EDITOR', IPhPersonSimpleHike, 'var(--bs-warning)'],
+    ['PROJECT_MEMBER', IPhPersonSimpleSwim, 'var(--bs-info)'],
+    ['PROJECT_VISITOR', IPhPersonSimpleTaiChi, 'var(--bs-secondary)'],
   ])('renders correct icon and color for %s', (role, expectedIcon, expectedColor) => {
     const wrapper = shallowMount(DisplayRole, { global, props: { value: role } })
     expect(wrapper.vm.icon).toBe(expectedIcon)
