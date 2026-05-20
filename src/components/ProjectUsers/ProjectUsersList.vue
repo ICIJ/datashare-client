@@ -1,18 +1,23 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { orderBy } from 'lodash'
 import { useI18n } from 'vue-i18n'
 
-import DisplayRole from '@/components/Display/DisplayRole.vue'
+import DisplayUser from '@/components/Display/DisplayUser.vue'
 import EmptyState from '@/components/EmptyState/EmptyState.vue'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch.vue'
 import PageTable from '@/components/PageTable/PageTable.vue'
 import PageTableTh from '@/components/PageTable/PageTableTh.vue'
+import ProjectUsersRoleSelect from '@/components/ProjectUsers/ProjectUsersRoleSelect.vue'
 
 const props = defineProps({
   users: {
     type: Array,
     default: () => []
+  },
+  projectName: {
+    type: String,
+    required: true
   }
 })
 
@@ -21,10 +26,21 @@ const sort = ref(null)
 const order = ref('asc')
 const query = ref('')
 
+const localUsers = ref([...props.users])
+
+watch(() => props.users, (newUsers) => {
+  localUsers.value = [...newUsers]
+}, { deep: true })
+
+function onRoleSaved({ name, role }) {
+  const user = localUsers.value.find(u => u.name === name)
+  if (user) user.role = role
+}
+
 const filteredUsers = computed(() => {
-  if (!query.value) return props.users
+  if (!query.value) return localUsers.value
   const q = query.value.toLowerCase()
-  return props.users.filter(u => u.name?.toLowerCase().includes(q))
+  return localUsers.value.filter(u => u.name?.toLowerCase().includes(q))
 })
 
 const sortedUsers = computed(() => {
@@ -72,8 +88,14 @@ const emptyLabel = computed(() =>
         v-for="(user, index) in sortedUsers"
         :key="user.name ?? index"
       >
-        <td>{{ user.name }}</td>
-        <td><display-role :value="user.role" /></td>
+        <td><display-user :value="user.name" /></td>
+        <td>
+          <project-users-role-select
+            :user="user"
+            :project-name="projectName"
+            @role:saved="onRoleSaved"
+          />
+        </td>
       </tr>
     </page-table>
   </div>
