@@ -81,6 +81,7 @@ const emptyLabel = computed(() =>
         <page-table-th
           sortable
           name="role"
+          style="width: 16rem"
           :label="t('projectViewEdit.users.fields.role.label')"
         />
       </template>
