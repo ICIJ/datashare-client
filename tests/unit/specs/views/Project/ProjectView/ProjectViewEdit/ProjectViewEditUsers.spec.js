@@ -100,4 +100,10 @@ describe('ProjectViewEditUsers.vue', () => {
     expect(wrapper.findComponent(ProjectUsersList).exists()).toBe(true)
     expect(wrapper.findComponent(ProjectUsersList).props('users')).toEqual([])
   })
+
+  it('passes the project name to ProjectUsersList', async () => {
+    const wrapper = shallowMountComponent()
+    await flushPromises()
+    expect(wrapper.findComponent(ProjectUsersList).props('projectName')).toBe('local-datashare')
+  })
 })
