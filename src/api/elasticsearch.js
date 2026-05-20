@@ -22,8 +22,12 @@ const PREFERENCE = Object.freeze({
   MAX_EXTRACTION_DATE: 'max-extraction-date-by-project'
 })
 
-// Highlight configuration for search results
+// Highlight configuration for search results.
+// `max_analyzed_offset` caps how far into long fields the highlighter analyzes,
+// preventing shard failures on docs whose content exceeds the index's
+// `index.highlight.max_analyzed_offset` limit (default 1,000,000).
 const HIGHLIGHT_CONFIG = Object.freeze({
+  max_analyzed_offset: 999999,
   fields: {
     'content': {
       fragment_size: 280,
