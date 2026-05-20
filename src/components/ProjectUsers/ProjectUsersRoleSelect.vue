@@ -3,6 +3,8 @@ import { computed, ref, watch } from 'vue'
 import { AppIcon, ButtonIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 
+import DisplayRole from '@/components/Display/DisplayRole.vue'
+
 import IPhCheck from '~icons/ph/check'
 import IPhCheckCircle from '~icons/ph/check-circle'
 import IPhX from '~icons/ph/x'
@@ -83,12 +85,24 @@ defineExpose({ selectedRole, committedRole, dirty, saved, saving, confirm, cance
 
 <template>
   <div class="project-users-role-select d-inline-flex align-items-center gap-2">
-    <b-form-select
-      v-model="selectedRole"
-      :options="availableRoles"
+    <b-dropdown
       :disabled="saving"
       size="sm"
-    />
+      variant="outline-secondary"
+      no-caret
+    >
+      <template #button-content>
+        <display-role :value="selectedRole" />
+      </template>
+      <b-dropdown-item
+        v-for="role in availableRoles"
+        :key="role.value"
+        :active="role.value === selectedRole"
+        @click="selectedRole = role.value"
+      >
+        <display-role :value="role.value" />
+      </b-dropdown-item>
+    </b-dropdown>
     <template v-if="dirty">
       <button-icon
         hide-label

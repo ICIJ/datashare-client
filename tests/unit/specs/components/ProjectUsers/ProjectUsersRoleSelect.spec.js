@@ -49,9 +49,9 @@ describe('ProjectUsersRoleSelect.vue', () => {
     })
   }
 
-  it('renders a b-form-select', () => {
+  it('renders a b-dropdown', () => {
     const wrapper = mountComponent()
-    expect(wrapper.find('b-form-select-stub').exists()).toBe(true)
+    expect(wrapper.find('b-dropdown-stub').exists()).toBe(true)
   })
 
   it('hides confirm and cancel buttons when role is unchanged', () => {
