@@ -1465,6 +1465,11 @@
       "fields": {
         "name": { "label": "Name" },
         "role": { "label": "Role" }
+      },
+      "roleSelect": {
+        "confirm": "Confirm role change",
+        "cancel": "Cancel role change",
+        "saveError": "Failed to update role. Please try again."
       }
     }
   },
