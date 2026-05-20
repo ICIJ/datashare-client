@@ -24,12 +24,12 @@ const ROLE_ICON = {
 }
 
 const ROLE_COLOR = {
-  [ROLE.INSTANCE_ADMIN]: '#DC3545',
-  [ROLE.DOMAIN_ADMIN]:   '#00BB84',
-  [ROLE.PROJECT_ADMIN]:  '#FF6699',
-  [ROLE.PROJECT_EDITOR]: '#FFB53E',
-  [ROLE.PROJECT_MEMBER]: '#45C4FF',
-  [ROLE.PROJECT_VISITOR]: '#6F6F6F',
+  [ROLE.INSTANCE_ADMIN]: 'var(--bs-danger)',
+  [ROLE.DOMAIN_ADMIN]:   'var(--bs-success)',
+  [ROLE.PROJECT_ADMIN]:  'var(--bs-category-person)',
+  [ROLE.PROJECT_EDITOR]: 'var(--bs-warning)',
+  [ROLE.PROJECT_MEMBER]: 'var(--bs-info)',
+  [ROLE.PROJECT_VISITOR]: 'var(--bs-secondary)',
 }
 
 const FALLBACK_ICON = markRaw(IPhUserSquare)
