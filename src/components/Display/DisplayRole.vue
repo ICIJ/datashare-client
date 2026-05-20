@@ -20,7 +20,7 @@ const ROLE_ICON = {
   [ROLE.PROJECT_ADMIN]:  markRaw(IPhPersonSimpleWalk),
   [ROLE.PROJECT_EDITOR]: markRaw(IPhPersonSimpleHike),
   [ROLE.PROJECT_MEMBER]: markRaw(IPhPersonSimpleSwim),
-  [ROLE.PROJECT_VISITOR]:markRaw(IPhPersonSimpleTaiChi),
+  [ROLE.PROJECT_VISITOR]: markRaw(IPhPersonSimpleTaiChi),
 }
 
 const ROLE_COLOR = {
@@ -29,7 +29,7 @@ const ROLE_COLOR = {
   [ROLE.PROJECT_ADMIN]:  '#FF6699',
   [ROLE.PROJECT_EDITOR]: '#FFB53E',
   [ROLE.PROJECT_MEMBER]: '#45C4FF',
-  [ROLE.PROJECT_VISITOR]:'#6F6F6F',
+  [ROLE.PROJECT_VISITOR]: '#6F6F6F',
 }
 
 const FALLBACK_ICON = markRaw(IPhUserSquare)
