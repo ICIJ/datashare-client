@@ -41,25 +41,19 @@ defineExpose({ confirmDeletion })
 </script>
 
 <template>
-  <div class="project-users-delete-modal">
-    <span
-      aria-hidden="true"
-      class="project-users-delete-modal__subject visually-hidden"
-    >{{ user.name }}</span>
-    <app-modal
-      v-model="modelValue"
-      :image="image"
-      :image-dark="imageDark"
-      :ok-title="t('projectViewEdit.users.actions.deleteModal.confirm')"
-      ok-variant="primary"
-      @ok="confirmDeletion"
-    >
-      <template #title>
-        <i18n-t keypath="projectViewEdit.users.actions.deleteModal.title">
-          <template #name>{{ user.name }}</template>
-        </i18n-t>
-      </template>
-      {{ t('projectViewEdit.users.actions.deleteModal.body') }}
-    </app-modal>
-  </div>
+  <app-modal
+    v-model="modelValue"
+    :image="image"
+    :image-dark="imageDark"
+    :ok-title="t('projectViewEdit.users.actions.deleteModal.confirm')"
+    ok-variant="primary"
+    @ok="confirmDeletion"
+  >
+    <template #title>
+      <i18n-t keypath="projectViewEdit.users.actions.deleteModal.title">
+        <template #name>{{ user.name }}</template>
+      </i18n-t>
+    </template>
+    {{ t('projectViewEdit.users.actions.deleteModal.body') }}
+  </app-modal>
 </template>
