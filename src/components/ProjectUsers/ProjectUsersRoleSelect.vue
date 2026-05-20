@@ -89,6 +89,7 @@ defineExpose({ selectedRole, committedRole, dirty, saved, saving, confirm, cance
       :disabled="saving"
       size="sm"
       variant="link"
+      teleport-to="body"
     >
       <template #button-content>
         <display-role :value="selectedRole" />
