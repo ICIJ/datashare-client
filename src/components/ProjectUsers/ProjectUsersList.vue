@@ -2,6 +2,9 @@
 import { computed, ref, watch } from 'vue'
 import { orderBy } from 'lodash'
 import { useI18n } from 'vue-i18n'
+import { ButtonIcon } from '@icij/murmur-next'
+
+import IPhUserPlus from '~icons/ph/user-plus'
 
 import DisplayUser from '@/components/Display/DisplayUser.vue'
 import EmptyState from '@/components/EmptyState/EmptyState.vue'
@@ -9,6 +12,7 @@ import FormControlSearch from '@/components/Form/FormControl/FormControlSearch.v
 import PageTable from '@/components/PageTable/PageTable.vue'
 import PageTableTh from '@/components/PageTable/PageTableTh.vue'
 import ProjectUsersActions from '@/components/ProjectUsers/ProjectUsersActions.vue'
+import ProjectUsersCreateModal from '@/components/ProjectUsers/ProjectUsersCreateModal.vue'
 import ProjectUsersRoleSelect from '@/components/ProjectUsers/ProjectUsersRoleSelect.vue'
 
 const props = defineProps({
@@ -26,6 +30,7 @@ const { t } = useI18n()
 const sort = ref(null)
 const order = ref('asc')
 const query = ref('')
+const showCreateModal = ref(false)
 
 const localUsers = ref([...props.users])
 
@@ -40,6 +45,10 @@ function onRoleSaved({ name, role }) {
 
 function onUserDeleted({ name }) {
   localUsers.value = localUsers.value.filter(u => u.name !== name)
+}
+
+function onUserCreated({ name, role }) {
+  localUsers.value.push({ name, role })
 }
 
 const filteredUsers = computed(() => {
@@ -62,10 +71,25 @@ const emptyLabel = computed(() =>
 
 <template>
   <div class="project-users-list">
-    <form-control-search
-      v-model="query"
-      clear-text
-      class="mb-3"
+    <div class="d-flex justify-content-end align-items-center gap-2 mb-3">
+      <button-icon
+        :icon-left="IPhUserPlus"
+        size="sm"
+        variant="primary"
+        @click="showCreateModal = true"
+      >
+        {{ t('projectViewEdit.users.create.button') }}
+      </button-icon>
+      <form-control-search
+        v-model="query"
+        clear-text
+        class="flex-grow-1"
+      />
+    </div>
+    <project-users-create-modal
+      v-model="showCreateModal"
+      :project-name="projectName"
+      @user:created="onUserCreated"
     />
     <empty-state
       v-if="sortedUsers.length === 0"
