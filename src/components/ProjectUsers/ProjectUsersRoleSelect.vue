@@ -13,6 +13,7 @@ import { useCore } from '@/composables/useCore.js'
 import { usePolicies } from '@/composables/usePolicies.js'
 import { useToast } from '@/composables/useToast.js'
 import { ROLE, ROLE_BIT, ROLE_HIERARCHY } from '@/enums/roles.js'
+import { BDropdown } from 'bootstrap-vue-next'
 
 const props = defineProps({
   user: {
@@ -68,10 +69,12 @@ async function confirm() {
     committedRole.value = selectedRole.value
     saved.value = true
     emit('role:saved', { name: props.user.name, role: selectedRole.value })
-  } catch {
+  }
+  catch {
     selectedRole.value = committedRole.value
     toast.error(t('projectViewEdit.users.roleSelect.saveError'))
-  } finally {
+  }
+  finally {
     saving.value = false
   }
 }
@@ -86,14 +89,21 @@ defineExpose({ selectedRole, committedRole, dirty, saved, saving, confirm, cance
 <template>
   <div class="project-users-role-select d-inline-flex align-items-center gap-2">
     <b-dropdown
+      class="search-bar-input-dropdown"
       :disabled="saving"
-      size="sm"
-      variant="link"
+      :options="availableRoles"
+      no-caret
+      variant="body"
       teleport-to="body"
       toggle-class="project-users-role-select__toggle"
     >
       <template #button-content>
-        <display-role :value="selectedRole" />
+        <div class="project-users-role-select__content d-flex justify-content-between rounded-1">
+          <display-role :value="selectedRole" />
+          <app-icon class="ms-2">
+            <i-ph-caret-down />
+          </app-icon>
+        </div>
       </template>
       <b-dropdown-item
         v-for="role in availableRoles"
@@ -133,9 +143,19 @@ defineExpose({ selectedRole, committedRole, dirty, saved, saving, confirm, cance
   </div>
 </template>
 
-<style scoped>
-.project-users-role-select__toggle {
-  width: 9rem;
-  justify-content: space-between;
+<style scoped lang="scss">
+.project-users-role-select {
+  & .search-bar-input-dropdown{
+    border-radius: $btn-border-radius;
+    border:1px solid $border-color;
+  }
+  &__toggle {
+    width: 9rem;
+    justify-content: space-between;
+  }
+  :deep(.project-users-role-select__content){
+    width: 11rem;
+
+  }
 }
 </style>
