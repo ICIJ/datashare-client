@@ -1,8 +1,10 @@
 import { shallowMount } from '@vue/test-utils'
+import { ButtonIcon } from '@icij/murmur-next'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import ProjectUsersList from '@/components/ProjectUsers/ProjectUsersList.vue'
 import ProjectUsersActions from '@/components/ProjectUsers/ProjectUsersActions.vue'
+import ProjectUsersCreateModal from '@/components/ProjectUsers/ProjectUsersCreateModal.vue'
 import ProjectUsersRoleSelect from '@/components/ProjectUsers/ProjectUsersRoleSelect.vue'
 import EmptyState from '@/components/EmptyState/EmptyState.vue'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch.vue'
@@ -93,5 +95,16 @@ describe('ProjectUsersList.vue', () => {
     const actions = wrapper.findAllComponents(ProjectUsersActions)
     await actions[0].trigger('user:deleted', { name: 'Alice Martin' })
     expect(wrapper.findAll('tr')).toHaveLength(1)
+  })
+
+  it('renders a create user ButtonIcon', () => {
+    const wrapper = shallowMount(ProjectUsersList, { global, props: { users, projectName } })
+    expect(wrapper.findComponent(ButtonIcon).exists()).toBe(true)
+  })
+
+  it('adds a new user to the list when user:created is emitted', async () => {
+    const wrapper = shallowMount(ProjectUsersList, { global, props: { users, projectName } })
+    await wrapper.findComponent(ProjectUsersCreateModal).trigger('user:created', { name: 'Charlie', role: 'PROJECT_MEMBER' })
+    expect(wrapper.findAll('tr')).toHaveLength(users.length + 1)
   })
 })
