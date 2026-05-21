@@ -1481,6 +1481,21 @@
           "confirm": "Yes, delete",
           "error": "Failed to remove user. Please try again."
         }
+      },
+      "create": {
+        "button": "Create user",
+        "title": "Create a user",
+        "confirm": "Create",
+        "saveError": "Failed to create user. Please try again.",
+        "fields": {
+          "username": {
+            "label": "Username",
+            "placeholder": "Type username"
+          },
+          "role": {
+            "label": "Role"
+          }
+        }
       }
     }
   },
