@@ -1,19 +1,8 @@
-import { shallowMount, flushPromises } from '@vue/test-utils'
-import { AppIcon, ButtonIcon } from '@icij/murmur-next'
+import { shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import ProjectUsersRoleSelect from '@/components/ProjectUsers/ProjectUsersRoleSelect.vue'
-import { apiInstance as api } from '@/api/apiInstance.js'
 import { usePolicies } from '@/composables/usePolicies.js'
-
-vi.mock('@/api/apiInstance', () => ({
-  apiInstance: { saveProjectPolicy: vi.fn() }
-}))
-
-const mockToast = { error: vi.fn() }
-vi.mock('@/composables/useToast', () => ({
-  useToast: () => ({ toast: mockToast })
-}))
 
 vi.mock('@/composables/usePolicies', () => ({
   usePolicies: vi.fn(() => ({
@@ -25,7 +14,6 @@ vi.mock('@/composables/usePolicies', () => ({
 describe('ProjectUsersRoleSelect.vue', () => {
   let core, global
 
-  const user = { name: 'alice@icij.org', role: 'PROJECT_ADMIN' }
   const projectName = 'local-datashare'
 
   beforeAll(() => {
@@ -35,7 +23,7 @@ describe('ProjectUsersRoleSelect.vue', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     core.createPinia()
-    global = { plugins: core.plugins }
+    global = { plugins: core.plugins, renderStubDefaultSlot: true }
     vi.mocked(usePolicies).mockReturnValue({
       getRoleByProject: vi.fn().mockReturnValue('INSTANCE_ADMIN'),
       formatRole: (_t, role) => role
@@ -45,7 +33,7 @@ describe('ProjectUsersRoleSelect.vue', () => {
   function mountComponent(props = {}) {
     return shallowMount(ProjectUsersRoleSelect, {
       global,
-      props: { user, projectName, ...props }
+      props: { projectName, modelValue: 'PROJECT_ADMIN', dirty: false, ...props }
     })
   }
 
@@ -54,83 +42,60 @@ describe('ProjectUsersRoleSelect.vue', () => {
     expect(wrapper.find('b-dropdown-stub').exists()).toBe(true)
   })
 
-  it('hides confirm and cancel buttons when role is unchanged', () => {
-    const wrapper = mountComponent()
-    expect(wrapper.vm.dirty).toBe(false)
-    wrapper.findAllComponents(ButtonIcon).forEach(btn => {
-      expect(btn.attributes('style')).toContain('visibility: hidden')
-    })
+  it('displays the modelValue role in the button content', () => {
+    const wrapper = mountComponent({ modelValue: 'PROJECT_MEMBER' })
+    expect(wrapper.find('display-role-stub').attributes('value')).toBe('PROJECT_MEMBER')
   })
 
-  it('shows confirm and cancel buttons when role changes', async () => {
+  it('emits update:modelValue with the selected role when a dropdown item is clicked', async () => {
     const wrapper = mountComponent()
-    wrapper.vm.selectedRole = 'PROJECT_MEMBER'
-    await wrapper.vm.$nextTick()
-    expect(wrapper.vm.dirty).toBe(true)
-    wrapper.findAllComponents(ButtonIcon).forEach(btn => {
-      expect(btn.attributes('style')).toContain('visibility: visible')
-    })
+    await wrapper.findAll('b-dropdown-item-stub')[0].trigger('click')
+    expect(wrapper.emitted('update:modelValue')).toBeTruthy()
+    expect(wrapper.emitted('update:modelValue')[0][0]).toBe(wrapper.vm.availableRoles[0].value)
   })
 
-  it('cancel reverts selectedRole to the committed role', async () => {
-    const wrapper = mountComponent()
-    wrapper.vm.selectedRole = 'PROJECT_MEMBER'
-    await wrapper.vm.$nextTick()
-    wrapper.vm.cancel()
-    await wrapper.vm.$nextTick()
-    expect(wrapper.vm.selectedRole).toBe('PROJECT_ADMIN')
-    expect(wrapper.vm.dirty).toBe(false)
+  it('applies dirty class when dirty prop is true', () => {
+    const wrapper = mountComponent({ dirty: true })
+    expect(wrapper.classes()).toContain('project-users-role-select--dirty')
   })
 
-  it('confirm calls saveProjectPolicy with correct arguments', async () => {
-    api.saveProjectPolicy.mockResolvedValue(undefined)
-    const wrapper = mountComponent()
-    wrapper.vm.selectedRole = 'PROJECT_MEMBER'
-    await wrapper.vm.$nextTick()
-    await wrapper.vm.confirm()
-    await flushPromises()
-    expect(api.saveProjectPolicy).toHaveBeenCalledWith('default', projectName, {
-      user: user.name,
-      role: 'PROJECT_MEMBER'
-    })
+  it('does not apply dirty class when dirty prop is false', () => {
+    const wrapper = mountComponent({ dirty: false })
+    expect(wrapper.classes()).not.toContain('project-users-role-select--dirty')
   })
 
-  it('shows success AppIcon and clears dirty after a successful save', async () => {
-    api.saveProjectPolicy.mockResolvedValue(undefined)
-    const wrapper = mountComponent()
-    wrapper.vm.selectedRole = 'PROJECT_MEMBER'
-    await wrapper.vm.$nextTick()
-    await wrapper.vm.confirm()
-    await flushPromises()
-    expect(wrapper.vm.saved).toBe(true)
-    expect(wrapper.vm.dirty).toBe(false)
-    expect(wrapper.findComponent(AppIcon).attributes('style')).toContain('visibility: visible')
-  })
-
-  it('reverts selectedRole and shows error toast on API failure', async () => {
-    api.saveProjectPolicy.mockRejectedValue(new Error('forbidden'))
-    const wrapper = mountComponent()
-    wrapper.vm.selectedRole = 'PROJECT_MEMBER'
-    await wrapper.vm.$nextTick()
-    await wrapper.vm.confirm()
-    await flushPromises()
-    expect(wrapper.vm.selectedRole).toBe('PROJECT_ADMIN')
-    expect(wrapper.vm.saved).toBe(false)
-    expect(mockToast.error).toHaveBeenCalledOnce()
-  })
-
-  it('only includes roles available to the current user', () => {
-    vi.mocked(usePolicies).mockReturnValue({
-      getRoleByProject: vi.fn().mockReturnValue('PROJECT_ADMIN'),
-      formatRole: (_t, role) => role
-    })
-    const wrapper = mountComponent()
-    const roleValues = wrapper.vm.availableRoles.map(r => r.value)
-    // PROJECT_ADMIN hierarchy (bits 0b001111) includes PROJECT_VISITOR, PROJECT_MEMBER,
-    // PROJECT_EDITOR, PROJECT_ADMIN but NOT DOMAIN_ADMIN or INSTANCE_ADMIN
-    expect(roleValues).toContain('PROJECT_ADMIN')
-    expect(roleValues).toContain('PROJECT_EDITOR')
-    expect(roleValues).not.toContain('DOMAIN_ADMIN')
-    expect(roleValues).not.toContain('INSTANCE_ADMIN')
-  })
+  it.each([
+    [
+      'INSTANCE_ADMIN',
+      ['INSTANCE_ADMIN', 'DOMAIN_ADMIN', 'PROJECT_ADMIN', 'PROJECT_EDITOR', 'PROJECT_MEMBER', 'PROJECT_VISITOR'],
+      []
+    ],
+    [
+      'DOMAIN_ADMIN',
+      ['DOMAIN_ADMIN', 'PROJECT_ADMIN', 'PROJECT_EDITOR', 'PROJECT_MEMBER', 'PROJECT_VISITOR'],
+      ['INSTANCE_ADMIN']
+    ],
+    [
+      'PROJECT_ADMIN',
+      ['PROJECT_ADMIN', 'PROJECT_EDITOR', 'PROJECT_MEMBER', 'PROJECT_VISITOR'],
+      ['DOMAIN_ADMIN', 'INSTANCE_ADMIN']
+    ],
+    [
+      'PROJECT_EDITOR',
+      ['PROJECT_EDITOR', 'PROJECT_MEMBER', 'PROJECT_VISITOR'],
+      ['PROJECT_ADMIN', 'DOMAIN_ADMIN', 'INSTANCE_ADMIN']
+    ],
+  ])(
+    'when current user is %s, available roles are correctly bounded',
+    (currentRole, mustInclude, mustExclude) => {
+      vi.mocked(usePolicies).mockReturnValue({
+        getRoleByProject: vi.fn().mockReturnValue(currentRole),
+        formatRole: (_t, role) => role
+      })
+      const wrapper = mountComponent()
+      const roleValues = wrapper.vm.availableRoles.map(r => r.value)
+      mustInclude.forEach(role => expect(roleValues).toContain(role))
+      mustExclude.forEach(role => expect(roleValues).not.toContain(role))
+    }
+  )
 })
