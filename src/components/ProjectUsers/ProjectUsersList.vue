@@ -16,7 +16,7 @@ import PageTableTh from '@/components/PageTable/PageTableTh.vue'
 import ProjectUsersActions from '@/components/ProjectUsers/ProjectUsersActions.vue'
 import ProjectUsersAdminPromotionModal from '@/components/ProjectUsers/ProjectUsersAdminPromotionModal.vue'
 import ProjectUsersCreateModal from '@/components/ProjectUsers/ProjectUsersCreateModal.vue'
-import ProjectUsersRoleSelect from '@/components/ProjectUsers/ProjectUsersRoleSelect.vue'
+import ProjectUsersRoleDropdown from '@/components/ProjectUsers/ProjectUsersRoleDropdown.vue'
 
 import { useCore } from '@/composables/useCore.js'
 import { useToast } from '@/composables/useToast.js'
@@ -195,7 +195,7 @@ defineExpose({ localUsers, pendingChanges, saving, showAdminModal, saveRoles, ca
       >
         <td><display-user :value="user.name" /></td>
         <td>
-          <project-users-role-select
+          <project-users-role-dropdown
             :model-value="pendingChanges[user.name] ?? user.role"
             :dirty="!!pendingChanges[user.name]"
             :project-name="projectName"
