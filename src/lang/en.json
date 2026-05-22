@@ -1467,9 +1467,17 @@
         "role": { "label": "Role" }
       },
       "roleSelect": {
-        "confirm": "Confirm role change",
-        "cancel": "Cancel role change",
-        "saveError": "Failed to update role. Please try again."
+        "save": "Save",
+        "cancel": "Cancel",
+        "saveSuccess": "Roles updated successfully",
+        "saveError": "Failed to update roles. Please try again.",
+        "changedCount": "0 roles changed | 1 role changed | {count} roles changed"
+      },
+      "adminPromotionModal": {
+        "title": "Confirm admin promotions",
+        "body": "The following users will be granted administrator access:",
+        "confirm": "Confirm",
+        "cancel": "Cancel"
       },
       "actions": {
         "copy": "Copy username",
