@@ -33,7 +33,7 @@ describe('ProjectUsersRoleDropdown.vue', () => {
   function mountComponent(props = {}) {
     return shallowMount(ProjectUsersRoleDropdown, {
       global,
-      props: { modelValue: 'PROJECT_MEMBER', projectName, ...props }
+      props: { modelValue: 'PROJECT_MEMBER', projectName, dirty: false, ...props }
     })
   }
 
@@ -42,17 +42,60 @@ describe('ProjectUsersRoleDropdown.vue', () => {
     expect(wrapper.find('b-dropdown-stub').exists()).toBe(true)
   })
 
-  it('availableRoles is non-empty when current user is INSTANCE_ADMIN', () => {
-    const wrapper = mountComponent()
-    expect(wrapper.vm.availableRoles.length).toBeGreaterThan(0)
+  it('displays the modelValue role in the button content', () => {
+    const wrapper = mountComponent({ modelValue: 'PROJECT_MEMBER' })
+    expect(wrapper.find('display-role-stub').attributes('value')).toBe('PROJECT_MEMBER')
   })
 
   it('emits update:modelValue with the selected role when a dropdown item is clicked', async () => {
     const wrapper = mountComponent()
-    const item = wrapper.find('b-dropdown-item-stub')
-    await item.trigger('click')
+    await wrapper.findAll('b-dropdown-item-stub')[0].trigger('click')
     expect(wrapper.emitted('update:modelValue')).toBeTruthy()
-    const emittedRole = wrapper.emitted('update:modelValue')[0][0]
-    expect(wrapper.vm.availableRoles.map(r => r.value)).toContain(emittedRole)
+    expect(wrapper.emitted('update:modelValue')[0][0]).toBe(wrapper.vm.availableRoles[0].value)
   })
+
+  it('applies dirty class when dirty prop is true', () => {
+    const wrapper = mountComponent({ dirty: true })
+    expect(wrapper.classes()).toContain('project-users-role-dropdown--dirty')
+  })
+
+  it('does not apply dirty class when dirty prop is false', () => {
+    const wrapper = mountComponent({ dirty: false })
+    expect(wrapper.classes()).not.toContain('project-users-role-dropdown--dirty')
+  })
+
+  it.each([
+    [
+      'INSTANCE_ADMIN',
+      ['INSTANCE_ADMIN', 'DOMAIN_ADMIN', 'PROJECT_ADMIN', 'PROJECT_EDITOR', 'PROJECT_MEMBER', 'PROJECT_VISITOR'],
+      []
+    ],
+    [
+      'DOMAIN_ADMIN',
+      ['DOMAIN_ADMIN', 'PROJECT_ADMIN', 'PROJECT_EDITOR', 'PROJECT_MEMBER', 'PROJECT_VISITOR'],
+      ['INSTANCE_ADMIN']
+    ],
+    [
+      'PROJECT_ADMIN',
+      ['PROJECT_ADMIN', 'PROJECT_EDITOR', 'PROJECT_MEMBER', 'PROJECT_VISITOR'],
+      ['DOMAIN_ADMIN', 'INSTANCE_ADMIN']
+    ],
+    [
+      'PROJECT_EDITOR',
+      ['PROJECT_EDITOR', 'PROJECT_MEMBER', 'PROJECT_VISITOR'],
+      ['PROJECT_ADMIN', 'DOMAIN_ADMIN', 'INSTANCE_ADMIN']
+    ],
+  ])(
+    'when current user is %s, available roles are correctly bounded',
+    (currentRole, mustInclude, mustExclude) => {
+      vi.mocked(usePolicies).mockReturnValue({
+        getRoleByProject: vi.fn().mockReturnValue(currentRole),
+        formatRole: (_t, role) => role
+      })
+      const wrapper = mountComponent()
+      const roleValues = wrapper.vm.availableRoles.map(r => r.value)
+      mustInclude.forEach(role => expect(roleValues).toContain(role))
+      mustExclude.forEach(role => expect(roleValues).not.toContain(role))
+    }
+  )
 })
