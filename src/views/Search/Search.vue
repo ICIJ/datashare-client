@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, toValue, onUnmounted } from 'vue'
+import { computed, ref, toValue } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
@@ -23,6 +23,7 @@ import { useUrlPageFromWithStore } from '@/composables/useUrlPageFromWithStore'
 import { useSearchFilter } from '@/composables/useSearchFilter'
 import { useSearchBreadcrumb } from '@/composables/useSearchBreadcrumb'
 import { useSearchNav } from '@/composables/useSearchNav'
+import { useSearchExecution } from '@/composables/useSearchExecution'
 import { useViews } from '@/composables/useViews'
 import { LAYOUTS } from '@/enums/layouts'
 import { DISPLAY as ENTRIES_DISPLAY } from '@/enums/documentFloating'
@@ -48,8 +49,10 @@ const { hasCarousel } = useSearchNav()
 const { t } = useI18n()
 const appStore = useAppStore()
 const searchStore = useSearchStore()
-onUnmounted(() => searchStore.cancelActiveSearch())
 const route = useRoute()
+
+// Cancel the in-flight async search when leaving the search view.
+useSearchExecution()
 
 const entries = computed(() => searchStore.response.hits)
 const properties = computed(() => appStore.getSettings('search', 'properties'))
