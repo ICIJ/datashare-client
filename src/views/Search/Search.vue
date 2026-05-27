@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, toValue } from 'vue'
+import { computed, ref, toValue, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
@@ -48,6 +48,7 @@ const { hasCarousel } = useSearchNav()
 const { t } = useI18n()
 const appStore = useAppStore()
 const searchStore = useSearchStore()
+onUnmounted(() => searchStore.cancelActiveSearch())
 const route = useRoute()
 
 const entries = computed(() => searchStore.response.hits)
