@@ -8,12 +8,13 @@ vi.mock('@/api/asyncSearch', () => ({
 }))
 
 function deferred() {
-  let resolve, reject
-  const promise = new Promise((res, rej) => {
-    resolve = res
-    reject = rej
+  let resolveFn
+  let rejectFn
+  const promise = new Promise((resolve, reject) => {
+    resolveFn = resolve
+    rejectFn = reject
   })
-  return { promise, resolve, reject }
+  return { promise, resolve: resolveFn, reject: rejectFn }
 }
 
 describe('SearchStore async search wiring', () => {
