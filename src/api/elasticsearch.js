@@ -73,39 +73,58 @@ function handleSearchError(error) {
 }
 
 /**
- * Wraps an async-search transport request so cancellation behaves correctly:
- * - forwards the AbortSignal to the in-flight HTTP request so a superseded or
- *   cancelled search stops promptly instead of finishing its long-poll;
- * - on failure, re-throws but only emits the global `http::error` when the
- *   request was NOT aborted, so a search the caller has already discarded never
- *   raises a user-facing error (e.g. the 401 "logged out" toast).
+ * Forwards an AbortSignal to an in-flight transport request so a superseded or
+ * cancelled search stops promptly instead of finishing its long-poll. Returns a
+ * teardown that detaches the listener once the request has settled.
+ * @param {Promise} request - The transport request promise (exposes `.abort`).
+ * @param {AbortSignal} [signal]
+ * @returns {Function} Detaches the abort listener.
+ */
+function forwardAbortSignal(request, signal) {
+  const abortRequest = () => request.abort?.()
+  if (!signal) {
+    return () => {}
+  }
+  // Already cancelled: abort immediately, nothing left to listen for.
+  if (signal.aborted) {
+    abortRequest()
+    return () => {}
+  }
+  signal.addEventListener('abort', abortRequest)
+  return () => signal.removeEventListener('abort', abortRequest)
+}
+
+/**
+ * Emits the global search error for genuine failures only. A request the caller
+ * has already cancelled must not raise a user-facing error (e.g. the 401
+ * "logged out" toast) for a result that will be discarded.
+ * @param {Error} error
+ * @param {AbortSignal} [signal]
+ */
+function emitSearchErrorUnlessAborted(error, signal) {
+  if (!signal?.aborted) {
+    EventBus.emit('http::error', error)
+  }
+}
+
+/**
+ * Awaits an async-search transport request with cancellation wired in: the
+ * signal aborts the in-flight request, and only genuine failures surface.
  * @param {Promise} request - The transport request promise (exposes `.abort`).
  * @param {AbortSignal} [signal]
  * @returns {Promise<Object>} The response body.
  */
 async function abortableSearchRequest(request, signal) {
-  const onAbort = () => request.abort?.()
-  if (signal) {
-    if (signal.aborted) {
-      onAbort()
-    }
-    else {
-      signal.addEventListener('abort', onAbort)
-    }
-  }
+  const stopForwardingAbort = forwardAbortSignal(request, signal)
   try {
     return await request
   }
   catch (error) {
-    // A request the caller has already cancelled must not raise a user-facing
-    // error (e.g. the 401 "logged out" toast); only genuine failures surface.
-    if (!signal?.aborted) {
-      EventBus.emit('http::error', error)
-    }
+    emitSearchErrorUnlessAborted(error, signal)
     throw error
   }
   finally {
-    signal?.removeEventListener('abort', onAbort)
+    stopForwardingAbort()
   }
 }
 

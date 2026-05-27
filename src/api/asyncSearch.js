@@ -12,8 +12,25 @@ function createAbortError() {
 }
 
 /**
- * Resolves after `ms`, or early if the signal aborts. Never rejects; the
- * caller re-checks `signal.aborted` after awaiting.
+ * Fills in the configured async-search defaults for any option the caller omits.
+ * Uses nullish coalescing so an explicit `0` (e.g. `maxWait: 0`) is honored.
+ * @param {Object} options
+ * @returns {Object} The resolved options.
+ */
+function resolveAsyncSearchOptions(options) {
+  const asyncSearchSettings = settings.elasticsearch.asyncSearch
+  return {
+    signal: options.signal,
+    waitForCompletionTimeout: options.waitForCompletionTimeout ?? asyncSearchSettings.waitForCompletionTimeout,
+    keepAlive: options.keepAlive ?? asyncSearchSettings.keepAlive,
+    pollInterval: options.pollInterval ?? asyncSearchSettings.pollInterval,
+    maxWait: options.maxWait ?? asyncSearchSettings.maxWait
+  }
+}
+
+/**
+ * Resolves after `ms`, or early if the signal aborts. Never rejects; the caller
+ * re-checks `signal.aborted` after awaiting.
  * @param {number} ms
  * @param {AbortSignal} [signal]
  * @returns {Promise<void>}
@@ -39,12 +56,79 @@ function abortableDelay(ms, signal) {
  * Fire-and-forget deletion of a stored async search. Swallows errors: a failed
  * cleanup must never surface to the user (the result expires via keep_alive).
  * @param {Object} client
- * @param {string} [id]
+ * @param {string} [storedSearchId]
  */
-function deleteStoredSearch(client, id) {
-  if (id) {
-    client.deleteAsyncSearch(id).catch(() => {})
+function deleteStoredSearch(client, storedSearchId) {
+  if (storedSearchId) {
+    client.deleteAsyncSearch(storedSearchId).catch(() => {})
   }
+}
+
+/**
+ * Stops the search when it has been superseded or cancelled: frees the stored
+ * result, then throws an AbortError the caller can ignore.
+ * @param {Object} client
+ * @param {AbortSignal} [signal]
+ * @param {string} [storedSearchId]
+ */
+function throwIfAborted(client, signal, storedSearchId) {
+  if (signal?.aborted) {
+    deleteStoredSearch(client, storedSearchId)
+    throw createAbortError()
+  }
+}
+
+/**
+ * Stops the search once the client-side ceiling has elapsed, freeing the stored
+ * result so it does not linger on the server beyond keep_alive.
+ * @param {Object} client
+ * @param {number} deadline - Epoch ms after which the search is abandoned.
+ * @param {string} [storedSearchId]
+ */
+function throwIfDeadlineExceeded(client, deadline, storedSearchId) {
+  if (Date.now() >= deadline) {
+    deleteStoredSearch(client, storedSearchId)
+    throw new Error('Async search exceeded the maximum wait time')
+  }
+}
+
+/**
+ * Awaits an async-search request, converting an abort-triggered rejection (the
+ * forwarded signal cancelled the in-flight request) into a clean AbortError and
+ * freeing any stored result. Genuine failures propagate unchanged.
+ * @param {Object} client
+ * @param {AbortSignal} [signal]
+ * @param {Function} performRequest - Issues the request and returns its promise.
+ * @param {string} [storedSearchId]
+ * @returns {Promise<Object>} The async search envelope.
+ */
+async function requestOrAbort(client, signal, performRequest, storedSearchId) {
+  try {
+    return await performRequest()
+  }
+  catch (error) {
+    throwIfAborted(client, signal, storedSearchId)
+    throw error
+  }
+}
+
+/**
+ * Submits the search and returns its first envelope: a completed result or a
+ * running handle to poll.
+ * @returns {Promise<Object>} The async search envelope.
+ */
+function submitSearch(client, { index, body }, { signal, waitForCompletionTimeout, keepAlive }) {
+  return requestOrAbort(client, signal, () =>
+    client.submitAsyncSearch({ index, body, waitForCompletionTimeout, keepAlive, signal }))
+}
+
+/**
+ * Polls a running search once for its latest envelope.
+ * @returns {Promise<Object>} The async search envelope.
+ */
+function pollSearch(client, storedSearchId, { signal, waitForCompletionTimeout }) {
+  return requestOrAbort(client, signal, () =>
+    client.getAsyncSearch(storedSearchId, { waitForCompletionTimeout, signal }), storedSearchId)
 }
 
 /**
@@ -69,55 +153,20 @@ function deleteStoredSearch(client, id) {
  * @returns {Promise<Object>} The inner search response
  */
 export async function runAsyncSearch(client, { index, body }, options = {}) {
-  const asyncSearchSettings = settings.elasticsearch.asyncSearch
-  const {
-    signal,
-    waitForCompletionTimeout = asyncSearchSettings.waitForCompletionTimeout,
-    keepAlive = asyncSearchSettings.keepAlive,
-    pollInterval = asyncSearchSettings.pollInterval,
-    maxWait = asyncSearchSettings.maxWait
-  } = options
+  const resolvedOptions = resolveAsyncSearchOptions(options)
+  const { signal, pollInterval, maxWait } = resolvedOptions
+  const deadline = Date.now() + maxWait
 
-  // Runs an async-search request, converting an abort-triggered rejection (the
-  // forwarded signal cancels the in-flight HTTP request) into a clean AbortError
-  // and freeing any stored result, so the caller can treat it as a cancellation.
-  const requestOrAbort = async (performRequest, id) => {
-    try {
-      return await performRequest()
-    }
-    catch (error) {
-      if (signal?.aborted) {
-        deleteStoredSearch(client, id)
-        throw createAbortError()
-      }
-      throw error
-    }
-  }
+  // Kick off the search; a fast query already comes back complete on this call.
+  let envelope = await submitSearch(client, { index, body }, resolvedOptions)
 
-  const start = Date.now()
-  let envelope = await requestOrAbort(
-    () => client.submitAsyncSearch({ index, body, waitForCompletionTimeout, keepAlive, signal })
-  )
-
+  // Otherwise poll until the result is ready, bailing out on cancel or ceiling.
   while (envelope.is_running) {
-    if (signal?.aborted) {
-      deleteStoredSearch(client, envelope.id)
-      throw createAbortError()
-    }
-    if (Date.now() - start >= maxWait) {
-      deleteStoredSearch(client, envelope.id)
-      throw new Error('Async search exceeded the maximum wait time')
-    }
+    throwIfAborted(client, signal, envelope.id)
+    throwIfDeadlineExceeded(client, deadline, envelope.id)
     await abortableDelay(pollInterval, signal)
-    if (signal?.aborted) {
-      deleteStoredSearch(client, envelope.id)
-      throw createAbortError()
-    }
-    const currentId = envelope.id
-    envelope = await requestOrAbort(
-      () => client.getAsyncSearch(currentId, { waitForCompletionTimeout, signal }),
-      currentId
-    )
+    throwIfAborted(client, signal, envelope.id)
+    envelope = await pollSearch(client, envelope.id, resolvedOptions)
   }
 
   deleteStoredSearch(client, envelope.id)
