@@ -86,6 +86,40 @@ describe('elasticsearch async search wrappers', () => {
     })
   })
 
+  describe('abort handling', () => {
+    it('does not emit http::error when the request fails after the signal aborted', async () => {
+      vi.spyOn(elasticsearch.transport, 'request').mockRejectedValue(new Error('boom'))
+      const onError = vi.fn()
+      EventBus.on('http::error', onError)
+      const controller = new AbortController()
+      controller.abort()
+
+      await expect(
+        elasticsearch.getAsyncSearch('abc', { waitForCompletionTimeout: '1s', signal: controller.signal })
+      ).rejects.toThrow('boom')
+      expect(onError).not.toHaveBeenCalled()
+
+      EventBus.off('http::error', onError)
+    })
+
+    it('aborts the in-flight transport request when the signal fires', async () => {
+      const abort = vi.fn()
+      const request = Promise.resolve({ is_running: true, id: 'abc' })
+      request.abort = abort
+      vi.spyOn(elasticsearch.transport, 'request').mockReturnValue(request)
+      const controller = new AbortController()
+
+      const promise = elasticsearch.getAsyncSearch('abc', {
+        waitForCompletionTimeout: '1s',
+        signal: controller.signal
+      })
+      controller.abort()
+      await promise
+
+      expect(abort).toHaveBeenCalledTimes(1)
+    })
+  })
+
   describe('deleteAsyncSearch', () => {
     it('DELETEs the URL-encoded id', async () => {
       const spy = vi.spyOn(elasticsearch.transport, 'request').mockResolvedValue({ acknowledged: true })

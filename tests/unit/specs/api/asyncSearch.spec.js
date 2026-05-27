@@ -65,6 +65,22 @@ describe('runAsyncSearch', () => {
     expect(client.deleteAsyncSearch).toHaveBeenCalledWith('abc')
   })
 
+  it('aborted in-flight poll: rejects with an AbortError and deletes the id', async () => {
+    const client = makeClient()
+    const controller = new AbortController()
+    client.submitAsyncSearch.mockResolvedValue({ is_running: true, id: 'abc' })
+    // The poll request rejects because the signal aborted while it was in flight.
+    client.getAsyncSearch.mockImplementation(() => {
+      controller.abort()
+      return Promise.reject(new Error('aborted transport'))
+    })
+
+    await expect(
+      runAsyncSearch(client, { index: 'idx', body: {} }, { ...opts, signal: controller.signal })
+    ).rejects.toMatchObject({ name: 'AbortError' })
+    expect(client.deleteAsyncSearch).toHaveBeenCalledWith('abc')
+  })
+
   it('ceiling: rejects when maxWait is exceeded and deletes the id', async () => {
     const client = makeClient()
     client.submitAsyncSearch.mockResolvedValue({ is_running: true, id: 'abc' })
