@@ -735,6 +735,10 @@ export const useSearchStore = defineSuffixedStore('search', () => {
       setResponse({ raw, roots })
     }
     catch (error) {
+      // A superseded run must never touch shared state, even on a real error.
+      if (gen !== generation) {
+        return
+      }
       // Aborts are intentional (supersede / unmount); a newer search or
       // navigation is already in control, so leave the state untouched.
       if (error?.name === 'AbortError') {
@@ -752,12 +756,13 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   }
 
   /**
-   * Search for documents in the Elasticsearch index based on the current search parameters.
+   * Search for documents using Elasticsearch async search.
    *
-   * This function uses the `api.elasticsearch.searchDocs` method to perform the search
-   * and returns a promise that resolves to the search results.
-   * @param {Object} searchParams - The search parameters to use for the query.
-   * @returns {Promise<EsDocList>} - A promise that resolves to an instance of EsDocList containing the search results.
+   * Builds the search body with `api.elasticsearch.buildSearchDocsBody` and runs it
+   * through `runAsyncSearch`, which submits, polls, and cleans up the async search.
+   * @param {Object} [searchParams=toSearchParams.value] - The search parameters to use for the query.
+   * @param {AbortSignal} [signal] - Aborts the in-flight async search (supersede / unmount).
+   * @returns {Promise<Object>} - A promise that resolves to the raw Elasticsearch search response.
    */
   function searchDocuments(searchParams = toSearchParams.value, signal) {
     const body = api.elasticsearch.buildSearchDocsBody(searchParams)
