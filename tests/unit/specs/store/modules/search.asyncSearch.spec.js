@@ -33,13 +33,14 @@ describe('SearchStore async search wiring', () => {
     runAsyncSearchMock.mockReturnValue(d.promise)
 
     searchStore.setQuery('alpha')
-    searchStore.refresh()
+    const p = searchStore.refresh()
 
     const [, , options] = runAsyncSearchMock.mock.calls[0]
     expect(options.signal).toBeInstanceOf(AbortSignal)
     expect(options.signal.aborted).toBe(false)
 
     d.resolve({ hits: { hits: [], total: { value: 0 } } })
+    await p
   })
 
   it('aborts the previous search when a new one supersedes it', async () => {
@@ -48,16 +49,17 @@ describe('SearchStore async search wiring', () => {
     runAsyncSearchMock.mockReturnValueOnce(first.promise).mockReturnValueOnce(second.promise)
 
     searchStore.setQuery('alpha')
-    searchStore.refresh()
+    const p1 = searchStore.refresh()
     const firstSignal = runAsyncSearchMock.mock.calls[0][2].signal
 
     searchStore.setQuery('beta')
-    searchStore.refresh()
+    const p2 = searchStore.refresh()
 
     expect(firstSignal.aborted).toBe(true)
 
     second.resolve({ hits: { hits: [], total: { value: 0 } } })
     first.resolve({ hits: { hits: [], total: { value: 0 } } })
+    await Promise.all([p1, p2])
   })
 
   it('does not clobber the current response with a superseded result', async () => {
@@ -93,6 +95,7 @@ describe('SearchStore async search wiring', () => {
     await p
 
     expect(searchStore.error).toBeNull()
+    expect(searchStore.isReady).toBe(true)
   })
 
   it('sets the error state on a real failure', async () => {
