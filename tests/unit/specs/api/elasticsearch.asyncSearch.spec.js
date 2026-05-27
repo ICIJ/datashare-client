@@ -16,9 +16,9 @@ describe('elasticsearch async search wrappers', () => {
     })
 
     it('normalizes an empty query to the default', () => {
-      const body = elasticsearch.buildSearchDocsBody({ index: 'idx', query: '' })
-      const json = JSON.stringify(body)
-      expect(json).toContain('"query":"*"')
+      const emptyBody = elasticsearch.buildSearchDocsBody({ index: 'idx', query: '' })
+      const starBody = elasticsearch.buildSearchDocsBody({ index: 'idx', query: '*' })
+      expect(emptyBody).toEqual(starBody)
     })
   })
 
@@ -70,6 +70,18 @@ describe('elasticsearch async search wrappers', () => {
         method: 'GET',
         path: '/_async_search/a%2Fb%3D',
         query: { wait_for_completion_timeout: '1s' }
+      })
+    })
+
+    it('omits the completion timeout from the query when not provided', async () => {
+      const spy = vi.spyOn(elasticsearch.transport, 'request').mockResolvedValue({ is_running: false })
+
+      await elasticsearch.getAsyncSearch('abc')
+
+      expect(spy).toHaveBeenCalledWith({
+        method: 'GET',
+        path: '/_async_search/abc',
+        query: {}
       })
     })
   })

@@ -54,6 +54,16 @@ function normalizeQuery(query) {
 }
 
 /**
+ * Drops keys whose value is undefined so the query string omits them rather
+ * than serializing them as empty (the bundled client stringifies undefined as '').
+ * @param {Object} params
+ * @returns {Object}
+ */
+function compactQuery(params) {
+  return Object.fromEntries(Object.entries(params).filter(([, value]) => value !== undefined))
+}
+
+/**
  * Emits an error event and re-throws the error.
  * @param {Error} error - The error to handle
  */
@@ -198,7 +208,7 @@ export function datasharePlugin(Client) {
       .request({
         method: 'POST',
         path: `/${index}/_async_search`,
-        query: { wait_for_completion_timeout: waitForCompletionTimeout, keep_alive: keepAlive },
+        query: compactQuery({ wait_for_completion_timeout: waitForCompletionTimeout, keep_alive: keepAlive }),
         body
       })
       .then(data => data, handleSearchError)
@@ -216,7 +226,7 @@ export function datasharePlugin(Client) {
       .request({
         method: 'GET',
         path: `/_async_search/${encodeURIComponent(id)}`,
-        query: { wait_for_completion_timeout: waitForCompletionTimeout }
+        query: compactQuery({ wait_for_completion_timeout: waitForCompletionTimeout })
       })
       .then(data => data, handleSearchError)
   }
