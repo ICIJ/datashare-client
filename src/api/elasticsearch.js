@@ -141,6 +141,32 @@ export function datasharePlugin(Client) {
   }
 
   /**
+   * Builds the search body for a document search (filters, query, pagination,
+   * highlighting). Exposed so async search can reuse the exact same body.
+   * @param {Object} options - Same shape as searchDocs options.
+   * @returns {Object} The built Elasticsearch search body.
+   */
+  Client.prototype.buildSearchDocsBody = function ({
+    query = DEFAULT_QUERY,
+    filters = [],
+    from = 0,
+    perPage = 25,
+    sort = { _score: { order: 'desc' } },
+    fields = [],
+    operator = SEARCH_OPERATORS.OR
+  } = {}) {
+    return this._buildSearchBody({
+      query: normalizeQuery(query),
+      filters,
+      fields,
+      from,
+      size: perPage,
+      sort,
+      operator
+    })
+  }
+
+  /**
    * Searches for documents with filters, pagination, and highlighting.
    * @param {Object} options - Search options
    * @param {string} options.index - The index name
@@ -152,26 +178,61 @@ export function datasharePlugin(Client) {
    * @param {string[]} [options.fields=[]] - Fields to search in
    * @returns {Promise<Object>} Search results
    */
-  Client.prototype.searchDocs = function ({
-    index,
-    query = DEFAULT_QUERY,
-    filters = [],
-    from = 0,
-    perPage = 25,
-    sort = { _score: { order: 'desc' } },
-    fields = [],
-    operator = SEARCH_OPERATORS.OR
-  }) {
-    const body = this._buildSearchBody({
-      query: normalizeQuery(query),
-      filters,
-      fields,
-      from,
-      size: perPage,
-      sort,
-      operator
+  Client.prototype.searchDocs = function (options) {
+    const body = this.buildSearchDocsBody(options)
+    return this._search({ index: options.index, body })
+  }
+
+  /**
+   * Submits an async search. Returns the async envelope: either a completed
+   * result (is_running:false) or a running handle ({ id, is_running:true }).
+   * @param {Object} options
+   * @param {string} options.index - Comma-separated index list
+   * @param {Object} options.body - The search body (from buildSearchDocsBody)
+   * @param {string} options.waitForCompletionTimeout - ES duration, e.g. '1s'
+   * @param {string} options.keepAlive - ES duration, e.g. '5m'
+   * @returns {Promise<Object>} The async search envelope
+   */
+  Client.prototype.submitAsyncSearch = function ({ index, body, waitForCompletionTimeout, keepAlive }) {
+    return this.transport
+      .request({
+        method: 'POST',
+        path: `/${index}/_async_search`,
+        query: { wait_for_completion_timeout: waitForCompletionTimeout, keep_alive: keepAlive },
+        body
+      })
+      .then(data => data, handleSearchError)
+  }
+
+  /**
+   * Polls a running async search by id.
+   * @param {string} id - The async search id
+   * @param {Object} [options]
+   * @param {string} [options.waitForCompletionTimeout] - ES duration, e.g. '1s'
+   * @returns {Promise<Object>} The async search envelope
+   */
+  Client.prototype.getAsyncSearch = function (id, { waitForCompletionTimeout } = {}) {
+    return this.transport
+      .request({
+        method: 'GET',
+        path: `/_async_search/${encodeURIComponent(id)}`,
+        query: { wait_for_completion_timeout: waitForCompletionTimeout }
+      })
+      .then(data => data, handleSearchError)
+  }
+
+  /**
+   * Deletes a stored async search to free its server-side storage. Used for
+   * fire-and-forget cleanup, so it deliberately does NOT emit http::error;
+   * callers should swallow rejections.
+   * @param {string} id - The async search id
+   * @returns {Promise<Object>} The deletion acknowledgement
+   */
+  Client.prototype.deleteAsyncSearch = function (id) {
+    return this.transport.request({
+      method: 'DELETE',
+      path: `/_async_search/${encodeURIComponent(id)}`
     })
-    return this._search({ index, body })
   }
 
   /**
