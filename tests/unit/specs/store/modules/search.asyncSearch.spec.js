@@ -81,6 +81,26 @@ describe('SearchStore async search wiring', () => {
     expect(searchStore.total).toBe(2)
   })
 
+  it('does not clobber or error the current response when a superseded run fails', async () => {
+    const first = deferred()
+    const second = deferred()
+    runAsyncSearchMock.mockReturnValueOnce(first.promise).mockReturnValueOnce(second.promise)
+
+    searchStore.setQuery('alpha')
+    const p1 = searchStore.refresh()
+    searchStore.setQuery('beta')
+    const p2 = searchStore.refresh()
+
+    // beta (current) succeeds; the superseded alpha then fails with a real error.
+    second.resolve({ hits: { hits: [], total: { value: 2 } } })
+    await p2
+    first.reject(new Error('boom'))
+    await p1
+
+    expect(searchStore.total).toBe(2)
+    expect(searchStore.error).toBeNull()
+  })
+
   it('ignores an AbortError without setting the error state', async () => {
     const d = deferred()
     runAsyncSearchMock.mockReturnValue(d.promise)
