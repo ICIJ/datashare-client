@@ -131,4 +131,12 @@ describe('SearchStore async search wiring', () => {
     expect(searchStore.error).toBeInstanceOf(Error)
     expect(searchStore.error.message).toBe('boom')
   })
+
+  it('runs the search only once for concurrent identical queries', async () => {
+    runAsyncSearchMock.mockResolvedValue({ hits: { hits: [], total: { value: 0 } } })
+
+    await Promise.all([searchStore.query('bar'), searchStore.query('bar')])
+
+    expect(runAsyncSearchMock).toHaveBeenCalledTimes(1)
+  })
 })

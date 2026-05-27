@@ -135,7 +135,9 @@ describe('SearchStore', () => {
 
     it('should only search once when query is called concurrently with the same parameters', async () => {
       await letData(es).have(new IndexedDocument('document', index).withContent('bar')).commit()
-      const spy = vi.spyOn(api.elasticsearch, 'searchDocs')
+      // The main search now goes through async search, so submitAsyncSearch is
+      // the request that must fire exactly once for a deduplicated query burst.
+      const spy = vi.spyOn(api.elasticsearch, 'submitAsyncSearch')
 
       await Promise.all([searchStore.query('bar'), searchStore.query('bar')])
 
