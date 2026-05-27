@@ -9,12 +9,14 @@ export function useBatchSearchErrorModal() {
   function show({ errorMessage, errorQuery } = {}) {
     return new Promise((resolve) => {
       const component = h(BatchSearchErrorModal, {
+        errorMessage,
+        errorQuery,
         onOk: resolve,
         onClose: resolve,
         onCancel: resolve
       })
 
-      create({ component, errorMessage, errorQuery }).show()
+      create({ component, modelValue: true }).show()
     })
   }
 
