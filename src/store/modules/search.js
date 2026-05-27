@@ -20,6 +20,7 @@ import { ref, computed, toRaw } from 'vue'
 import { useRouter } from 'vue-router'
 
 import EsDocList from '@/api/resources/EsDocList'
+import { runAsyncSearch } from '@/api/asyncSearch'
 import filterDefs, * as filterTypes from '@/store/filters'
 import { getPairedDimensions } from '@/store/filters/pairedDimensions'
 import { useAppStore, useSearchBreadcrumbStore } from '@/store/modules'
@@ -662,6 +663,10 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   // (e.g. when both onBeforeRouteUpdate and the fullPath watcher fire
   // for the same navigation).
   let refreshPromise = null
+  // Controls cancellation of the in-flight async search and guards against a
+  // superseded search clobbering newer state.
+  let activeController = null
+  let generation = 0
 
   /**
    * Refresh the search results based on the current search parameters.
@@ -704,25 +709,45 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * @returns {Promise<void>} - A promise that resolves when the search is complete.
    */
   async function doRefresh(save) {
+    // A new search supersedes any in-flight one: abort it so the runner stops
+    // polling and frees the stored async result.
+    activeController?.abort()
+    const controller = new AbortController()
+    activeController = controller
+    const gen = ++generation
+
     setIsReady(false)
     setError()
 
     try {
       saveAppliedQuery()
-      const raw = await searchDocuments()
+      const raw = await searchDocuments(toSearchParams.value, controller.signal)
+      if (gen !== generation) {
+        return
+      }
       const roots = await searchRootDocuments(raw)
+      if (gen !== generation) {
+        return
+      }
       if (save) {
         searchBreadcrumbStore.pushSearchQuery(toBaseRouteQuery.value)
       }
       setResponse({ raw, roots })
     }
     catch (error) {
+      // Aborts are intentional (supersede / unmount); a newer search or
+      // navigation is already in control, so leave the state untouched.
+      if (error?.name === 'AbortError') {
+        return
+      }
       setResponse()
       setError(error)
     }
     finally {
-      setIsReady(true)
-      refreshPromise = null
+      if (gen === generation) {
+        setIsReady(true)
+        refreshPromise = null
+      }
     }
   }
 
@@ -734,8 +759,17 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * @param {Object} searchParams - The search parameters to use for the query.
    * @returns {Promise<EsDocList>} - A promise that resolves to an instance of EsDocList containing the search results.
    */
-  function searchDocuments(searchParams = toSearchParams.value) {
-    return api.elasticsearch.searchDocs(searchParams)
+  function searchDocuments(searchParams = toSearchParams.value, signal) {
+    const body = api.elasticsearch.buildSearchDocsBody(searchParams)
+    return runAsyncSearch(api.elasticsearch, { index: searchParams.index, body }, { signal })
+  }
+
+  /**
+   * Cancels the in-flight async search (if any). Called when leaving the search
+   * view so the backend stops polling and frees the stored result.
+   */
+  function cancelActiveSearch() {
+    activeController?.abort()
   }
 
   /**
@@ -1091,6 +1125,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     refresh,
     refreshStamp,
     searchDocuments,
+    cancelActiveSearch,
     searchRootDocuments,
     updateFromRouteQuery,
     query,
