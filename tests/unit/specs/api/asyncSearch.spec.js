@@ -22,6 +22,18 @@ describe('runAsyncSearch', () => {
     expect(client.deleteAsyncSearch).not.toHaveBeenCalled()
   })
 
+  it('completed-with-id path: returns the response and deletes the id without polling', async () => {
+    const client = makeClient()
+    client.submitAsyncSearch.mockResolvedValue({ is_running: false, id: 'abc', response: { hits: {} } })
+
+    const res = await runAsyncSearch(client, { index: 'idx', body: {} }, opts)
+
+    expect(res).toEqual({ hits: {} })
+    expect(client.getAsyncSearch).not.toHaveBeenCalled()
+    expect(client.deleteAsyncSearch).toHaveBeenCalledTimes(1)
+    expect(client.deleteAsyncSearch).toHaveBeenCalledWith('abc')
+  })
+
   it('polled path: polls until done, returns response, deletes the id once', async () => {
     vi.useFakeTimers()
     const client = makeClient()
