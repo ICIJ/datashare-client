@@ -4,6 +4,11 @@ import { flushPromises, mount } from '@vue/test-utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import TaskBatchSearchList from '@/views/Task/TaskBatchSearch/TaskBatchSearchList'
 
+const showBatchSearchErrorModalMock = vi.fn()
+vi.mock('@/composables/useBatchSearchErrorModal.js', () => ({
+  useBatchSearchErrorModal: () => ({ show: showBatchSearchErrorModalMock, hide: vi.fn() })
+}))
+
 vi.mock('@/api/apiInstance', () => {
   return {
     apiInstance: {
@@ -98,6 +103,7 @@ describe('TaskBatchSearchList', () => {
   beforeEach(async () => {
     const core = CoreSetup.init().useAll().useRouterWithoutGuards()
     plugins = core.plugins
+    showBatchSearchErrorModalMock.mockReset()
   })
 
   afterAll(() => {
@@ -118,5 +124,47 @@ describe('TaskBatchSearchList', () => {
     const rows = wrapper.findAll('.page-table-generic__row')
     expect(rows.at(0).find('.batch-search-actions').exists()).toBe(true)
     expect(rows.at(1).find('.batch-search-actions').exists()).toBe(false)
+  })
+
+  it('should open the error modal with errorMessage and errorQuery when clicking a failure status', async () => {
+    const { apiInstance } = await import('@/api/apiInstance')
+    vi.mocked(apiInstance.getTasks).mockResolvedValueOnce({
+      items: [
+        {
+          id: 'failure-id',
+          name: 'org.icij.datashare.tasks.BatchSearchRunner',
+          state: 'FAILURE',
+          progress: 0,
+          createdAt: '2025-03-06T06:47:19.857+00:00',
+          args: {
+            batchRecord: {
+              uuid: 'failure-id',
+              projects: ['local-datashare'],
+              name: 'failed batch',
+              description: '',
+              nbQueries: 1,
+              date: '2025-03-06T06:47:19.820+00:00',
+              state: 'FAILURE',
+              user: { id: 'local', name: null, email: null, provider: 'local' },
+              nbResults: 0,
+              published: false,
+              errorMessage: 'Something went wrong',
+              errorQuery: 'bad query'
+            },
+            user: { id: 'local' }
+          }
+        }
+      ]
+    })
+
+    const wrapper = mount(TaskBatchSearchList, { global: { plugins } })
+    await flushPromises()
+
+    await wrapper.find('.page-table-generic__row button').trigger('click')
+
+    expect(showBatchSearchErrorModalMock).toHaveBeenCalledWith({
+      errorMessage: 'Something went wrong',
+      errorQuery: 'bad query'
+    })
   })
 })
