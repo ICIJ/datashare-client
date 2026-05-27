@@ -83,7 +83,7 @@ function handleSearchError(error) {
  * @param {AbortSignal} [signal]
  * @returns {Promise<Object>} The response body.
  */
-function abortableSearchRequest(request, signal) {
+async function abortableSearchRequest(request, signal) {
   const onAbort = () => request.abort?.()
   if (signal) {
     if (signal.aborted) {
@@ -93,20 +93,20 @@ function abortableSearchRequest(request, signal) {
       signal.addEventListener('abort', onAbort)
     }
   }
-  const stopListening = () => signal?.removeEventListener('abort', onAbort)
-  return request.then(
-    (data) => {
-      stopListening()
-      return data
-    },
-    (error) => {
-      stopListening()
-      if (!signal?.aborted) {
-        EventBus.emit('http::error', error)
-      }
-      throw error
+  try {
+    return await request
+  }
+  catch (error) {
+    // A request the caller has already cancelled must not raise a user-facing
+    // error (e.g. the 401 "logged out" toast); only genuine failures surface.
+    if (!signal?.aborted) {
+      EventBus.emit('http::error', error)
     }
-  )
+    throw error
+  }
+  finally {
+    signal?.removeEventListener('abort', onAbort)
+  }
 }
 
 function isFilterIncludedWithValues(filter) {

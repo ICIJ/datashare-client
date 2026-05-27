@@ -41,7 +41,7 @@ function abortableDelay(ms, signal) {
  * @param {Object} client
  * @param {string} [id]
  */
-function cleanup(client, id) {
+function deleteStoredSearch(client, id) {
   if (id) {
     client.deleteAsyncSearch(id).catch(() => {})
   }
@@ -69,25 +69,25 @@ function cleanup(client, id) {
  * @returns {Promise<Object>} The inner search response
  */
 export async function runAsyncSearch(client, { index, body }, options = {}) {
-  const cfg = settings.elasticsearch.asyncSearch
+  const asyncSearchSettings = settings.elasticsearch.asyncSearch
   const {
     signal,
-    waitForCompletionTimeout = cfg.waitForCompletionTimeout,
-    keepAlive = cfg.keepAlive,
-    pollInterval = cfg.pollInterval,
-    maxWait = cfg.maxWait
+    waitForCompletionTimeout = asyncSearchSettings.waitForCompletionTimeout,
+    keepAlive = asyncSearchSettings.keepAlive,
+    pollInterval = asyncSearchSettings.pollInterval,
+    maxWait = asyncSearchSettings.maxWait
   } = options
 
   // Runs an async-search request, converting an abort-triggered rejection (the
   // forwarded signal cancels the in-flight HTTP request) into a clean AbortError
   // and freeing any stored result, so the caller can treat it as a cancellation.
-  const requestOrAbort = async (request, id) => {
+  const requestOrAbort = async (performRequest, id) => {
     try {
-      return await request()
+      return await performRequest()
     }
     catch (error) {
       if (signal?.aborted) {
-        cleanup(client, id)
+        deleteStoredSearch(client, id)
         throw createAbortError()
       }
       throw error
@@ -101,16 +101,16 @@ export async function runAsyncSearch(client, { index, body }, options = {}) {
 
   while (envelope.is_running) {
     if (signal?.aborted) {
-      cleanup(client, envelope.id)
+      deleteStoredSearch(client, envelope.id)
       throw createAbortError()
     }
     if (Date.now() - start >= maxWait) {
-      cleanup(client, envelope.id)
+      deleteStoredSearch(client, envelope.id)
       throw new Error('Async search exceeded the maximum wait time')
     }
     await abortableDelay(pollInterval, signal)
     if (signal?.aborted) {
-      cleanup(client, envelope.id)
+      deleteStoredSearch(client, envelope.id)
       throw createAbortError()
     }
     const currentId = envelope.id
@@ -120,6 +120,6 @@ export async function runAsyncSearch(client, { index, body }, options = {}) {
     )
   }
 
-  cleanup(client, envelope.id)
+  deleteStoredSearch(client, envelope.id)
   return envelope.response
 }
