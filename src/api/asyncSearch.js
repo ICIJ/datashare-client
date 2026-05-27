@@ -78,8 +78,26 @@ export async function runAsyncSearch(client, { index, body }, options = {}) {
     maxWait = cfg.maxWait
   } = options
 
+  // Runs an async-search request, converting an abort-triggered rejection (the
+  // forwarded signal cancels the in-flight HTTP request) into a clean AbortError
+  // and freeing any stored result, so the caller can treat it as a cancellation.
+  const requestOrAbort = async (request, id) => {
+    try {
+      return await request()
+    }
+    catch (error) {
+      if (signal?.aborted) {
+        cleanup(client, id)
+        throw createAbortError()
+      }
+      throw error
+    }
+  }
+
   const start = Date.now()
-  let envelope = await client.submitAsyncSearch({ index, body, waitForCompletionTimeout, keepAlive })
+  let envelope = await requestOrAbort(
+    () => client.submitAsyncSearch({ index, body, waitForCompletionTimeout, keepAlive, signal })
+  )
 
   while (envelope.is_running) {
     if (signal?.aborted) {
@@ -95,7 +113,11 @@ export async function runAsyncSearch(client, { index, body }, options = {}) {
       cleanup(client, envelope.id)
       throw createAbortError()
     }
-    envelope = await client.getAsyncSearch(envelope.id, { waitForCompletionTimeout })
+    const currentId = envelope.id
+    envelope = await requestOrAbort(
+      () => client.getAsyncSearch(currentId, { waitForCompletionTimeout, signal }),
+      currentId
+    )
   }
 
   cleanup(client, envelope.id)

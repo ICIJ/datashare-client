@@ -72,6 +72,43 @@ function handleSearchError(error) {
   throw error
 }
 
+/**
+ * Wraps an async-search transport request so cancellation behaves correctly:
+ * - forwards the AbortSignal to the in-flight HTTP request so a superseded or
+ *   cancelled search stops promptly instead of finishing its long-poll;
+ * - on failure, re-throws but only emits the global `http::error` when the
+ *   request was NOT aborted, so a search the caller has already discarded never
+ *   raises a user-facing error (e.g. the 401 "logged out" toast).
+ * @param {Promise} request - The transport request promise (exposes `.abort`).
+ * @param {AbortSignal} [signal]
+ * @returns {Promise<Object>} The response body.
+ */
+function abortableSearchRequest(request, signal) {
+  const onAbort = () => request.abort?.()
+  if (signal) {
+    if (signal.aborted) {
+      onAbort()
+    }
+    else {
+      signal.addEventListener('abort', onAbort)
+    }
+  }
+  const stopListening = () => signal?.removeEventListener('abort', onAbort)
+  return request.then(
+    (data) => {
+      stopListening()
+      return data
+    },
+    (error) => {
+      stopListening()
+      if (!signal?.aborted) {
+        EventBus.emit('http::error', error)
+      }
+      throw error
+    }
+  )
+}
+
 function isFilterIncludedWithValues(filter) {
   return filter.hasValues() && !filter.excluded && !filter.forceExclude
 }
@@ -201,17 +238,17 @@ export function datasharePlugin(Client) {
    * @param {Object} options.body - The search body (from buildSearchDocsBody)
    * @param {string} options.waitForCompletionTimeout - ES duration, e.g. '1s'
    * @param {string} options.keepAlive - ES duration, e.g. '5m'
+   * @param {AbortSignal} [options.signal] - Cancels the in-flight request.
    * @returns {Promise<Object>} The async search envelope
    */
-  Client.prototype.submitAsyncSearch = function ({ index, body, waitForCompletionTimeout, keepAlive }) {
-    return this.transport
-      .request({
-        method: 'POST',
-        path: `/${index}/_async_search`,
-        query: compactQuery({ wait_for_completion_timeout: waitForCompletionTimeout, keep_alive: keepAlive }),
-        body
-      })
-      .then(data => data, handleSearchError)
+  Client.prototype.submitAsyncSearch = function ({ index, body, waitForCompletionTimeout, keepAlive, signal }) {
+    const request = this.transport.request({
+      method: 'POST',
+      path: `/${index}/_async_search`,
+      query: compactQuery({ wait_for_completion_timeout: waitForCompletionTimeout, keep_alive: keepAlive }),
+      body
+    })
+    return abortableSearchRequest(request, signal)
   }
 
   /**
@@ -219,16 +256,16 @@ export function datasharePlugin(Client) {
    * @param {string} id - The async search id
    * @param {Object} [options]
    * @param {string} [options.waitForCompletionTimeout] - ES duration, e.g. '1s'
+   * @param {AbortSignal} [options.signal] - Cancels the in-flight request.
    * @returns {Promise<Object>} The async search envelope
    */
-  Client.prototype.getAsyncSearch = function (id, { waitForCompletionTimeout } = {}) {
-    return this.transport
-      .request({
-        method: 'GET',
-        path: `/_async_search/${encodeURIComponent(id)}`,
-        query: compactQuery({ wait_for_completion_timeout: waitForCompletionTimeout })
-      })
-      .then(data => data, handleSearchError)
+  Client.prototype.getAsyncSearch = function (id, { waitForCompletionTimeout, signal } = {}) {
+    const request = this.transport.request({
+      method: 'GET',
+      path: `/_async_search/${encodeURIComponent(id)}`,
+      query: compactQuery({ wait_for_completion_timeout: waitForCompletionTimeout })
+    })
+    return abortableSearchRequest(request, signal)
   }
 
   /**
