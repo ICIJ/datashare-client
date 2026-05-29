@@ -10,7 +10,7 @@ import { SEARCH_OPERATORS } from '@/enums/searchOperators'
  * will require resetting user settings to defaults. This is useful if for instance you add new settings
  * or change the structure of existing settings and want to ensure users get the latest defaults.
  */
-const SETTINGS_VERSION = 1
+const SETTINGS_VERSION = 2
 
 /**
  * Defines the application-wide store for managing UI state and user preferences.
@@ -40,7 +40,7 @@ export const useAppStore = defineStore(
           perPage: '25'
         },
         searchHistoryList: {
-          orderBy: ['creation_date', 'desc'],
+          orderBy: ['modification_date', 'desc'],
           perPage: '25',
           properties: ['title', 'thumbnail', 'path', 'creationDate']
         },
