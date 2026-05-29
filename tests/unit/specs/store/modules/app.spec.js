@@ -91,4 +91,8 @@ describe('AppStore', () => {
     store.resetSettings('search')
     expect(store.getSettings('search', 'searchOperator')).toBe(SEARCH_OPERATORS.OR)
   })
+
+  it('should default searchHistoryList order to modification_date desc', () => {
+    expect(store.getSettings('searchHistoryList', 'orderBy')).toEqual(['modification_date', 'desc'])
+  })
 })
