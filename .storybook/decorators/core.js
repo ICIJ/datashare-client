@@ -16,7 +16,9 @@ export function getStorybookCore() {
     projects: [{ name: 'local-datashare', label: 'Local Datashare' }],
     defaultProject: 'local-datashare',
     dataDir: '/home/datashare/data',
-    previewHost: null
+    previewHost: null,
+    batchDownloadMaxNbFiles: 10000,
+    batchDownloadMaxSize: '100G'
   })
   if (typeof window !== 'undefined') {
     window.datashare = core

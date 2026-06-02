@@ -19,6 +19,9 @@ export default {
           'Inter Ikea Holding S.A._C4.135848_2011_CIT.MBT.NWT Return_EN.pdf'
         ])
       },
+      index: 'banana-papers',
+      id: 'doc-id-carousel-entry-1',
+      routerParams: { index: 'banana-papers', id: 'doc-id-carousel-entry-1' },
       extractionLevel: 0,
       author: 'Pierre Romera Zhang <hello@pirhoo.com>',
       project: 'banana-papers',

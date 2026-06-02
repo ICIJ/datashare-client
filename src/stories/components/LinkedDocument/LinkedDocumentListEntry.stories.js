@@ -1,19 +1,15 @@
-import { vueRouter } from 'storybook-vue3-router'
-
 import LinkedDocumentListEntry from '@/components/LinkedDocument/LinkedDocumentListEntry'
 
-const routes = [{ path: '/' }]
 export default {
-  decorators: [vueRouter(routes)],
   title: 'Components/LinkedDocument/LinkedDocumentListEntry',
   tags: ['autodocs'],
   component: LinkedDocumentListEntry,
   args: {
     contentType: 'application/pdf',
     name: 'This is my document',
-    id: '',
+    id: 'doc-id-1',
     routing: '',
-    index: ''
+    index: 'local-datashare'
   }
 }
 

@@ -13,6 +13,8 @@ export default {
   args: {
     document: {
       id: '5f5b3b3b-7b3b-4b3b-8b3b-3b3b3b3b3b3b',
+      index: 'banana-papers',
+      routerParams: { index: 'banana-papers', id: '5f5b3b3b-7b3b-4b3b-8b3b-3b3b3b3b3b3b' },
       title: 'Inter IKEA Investment S.à r.l._cover letter 2010-2011 tax returns.pdf',
       extractionLevel: 0,
       project: 'banana-papers',
