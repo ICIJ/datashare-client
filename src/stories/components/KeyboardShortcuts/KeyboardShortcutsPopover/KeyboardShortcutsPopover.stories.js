@@ -1,18 +1,14 @@
 import { uniqueId } from 'lodash'
 import { AppIcon, ButtonIcon } from '@icij/murmur-next'
-import { vueRouter } from 'storybook-vue3-router'
 
 import IPhArrowLeft from '~icons/ph/arrow-left'
 import IPhKeyboard from '~icons/ph/keyboard'
 import KeyboardShortcutsPopover from '@/components/KeyboardShortcuts/KeyboardShortcutsPopover/KeyboardShortcutsPopover'
 import KeyboardShortcutsSectionEntry from '@/components/KeyboardShortcuts/KeyboardShortcutsSection/KeyboardShortcutsSectionEntry'
 
-const routes = [{ path: '/', name: 'keyboard-shortcuts' }]
-
 export default {
   title: 'Components/KeyboardShortcuts/KeyboardShortcutsPopover/KeyboardShortcutsPopover',
   tags: ['autodocs'],
-  decorators: [vueRouter(routes)],
   component: KeyboardShortcutsPopover,
   render: args => ({
     components: {

@@ -1,21 +1,7 @@
-import { vueRouter } from 'storybook-vue3-router'
-
 import ProjectCard from '@/components/Project/ProjectCard/ProjectCard'
-
-const routes = [
-  {
-    path: '/project/:name',
-    name: 'project.view.overview.insights'
-  },
-  {
-    path: '/search',
-    name: 'search'
-  }
-]
 
 export default {
   title: 'Components/Project/ProjectCard/ProjectCard',
-  decorators: [vueRouter(routes)],
   tags: ['autodocs'],
   component: ProjectCard,
   args: {
@@ -49,7 +35,6 @@ export const WithLongDescription = {
 }
 
 export const MutlipleCards = {
-  decorators: [vueRouter(routes)],
   args: {
     projects: [
       {

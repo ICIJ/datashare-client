@@ -1,17 +1,4 @@
-import { vueRouter } from 'storybook-vue3-router'
-
 import BatchSearchCard from '@/components/BatchSearch/BatchSeachCard/BatchSearchCard'
-
-const routes = [
-  {
-    path: '/project/:name',
-    name: 'project.view'
-  },
-  {
-    path: '/:indices/:uuid',
-    name: 'batch-tasks.view.results'
-  }
-]
 
 const batchSearch = {
   uuid: 'aabc',
@@ -49,7 +36,6 @@ const batchSearchNoResults = {
 }
 
 export default {
-  decorators: [vueRouter(routes)],
   title: 'Components/BatchSearch/BatchSearchCard',
   component: BatchSearchCard,
   tags: ['autodocs'],
