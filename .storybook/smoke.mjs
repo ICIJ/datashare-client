@@ -15,28 +15,60 @@
  *
  * Usage: `yarn storybook` in one terminal, then `yarn test-storybook`.
  * Override the target with STORYBOOK_URL (e.g. the static build on port 6007).
+ *
+ * We deliberately avoid `waitUntil: 'networkidle'`: a story that fires a failing
+ * request never reaches network-idle and would block on a 30s timeout. Instead
+ * we load to `domcontentloaded` and poll briefly for the story to settle —
+ * either it rendered content into `#storybook-root` or it populated
+ * `#error-message`. This caps per-story time at ~2.5s.
  */
 import { chromium } from 'playwright'
 
 const BASE = (process.env.STORYBOOK_URL || 'http://127.0.0.1:6006').replace(/\/$/, '')
+const SETTLE_MS = 2500
 
 const index = await fetch(`${BASE}/index.json`).then((response) => response.json())
+// Smoke only `story` entries: they render into `#storybook-root`, so a clean
+// render is detected in milliseconds. Autodocs (`docs`) pages render the same
+// components into a different container and would force the full settle timeout
+// on every page; their health is already covered by the underlying stories.
+//
+// Optional STORYBOOK_IDS (comma-separated story ids) narrows the run to a
+// subset — handy for quickly re-checking the stories a change was meant to fix
+// without paying for the whole suite.
+const only = (process.env.STORYBOOK_IDS ?? '').split(',').map((id) => id.trim()).filter(Boolean)
+const onlySet = new Set(only)
 const entries = Object.values(index.entries ?? index.stories ?? {})
+  .filter((entry) => entry.type === 'story')
+  .filter((entry) => onlySet.size === 0 || onlySet.has(entry.id))
 
 const browser = await chromium.launch()
 const page = await browser.newPage()
 const failures = []
 
 for (const entry of entries) {
-  const viewMode = entry.type === 'docs' ? 'docs' : 'story'
-  const url = `${BASE}/iframe.html?id=${entry.id}&viewMode=${viewMode}`
-  await page.goto(url, { waitUntil: 'networkidle' }).catch(() => {})
-  const error = await page.evaluate(async () => {
-    // Give async setup()/onMounted hooks a tick to throw before we read.
-    await new Promise((resolve) => setTimeout(resolve, 300))
-    const message = document.querySelector('#error-message')
-    return message ? message.textContent.trim() : ''
-  })
+  const url = `${BASE}/iframe.html?id=${entry.id}&viewMode=story`
+  await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 15000 }).catch(() => {})
+  const error = await page.evaluate(async (settleMs) => {
+    const read = () => {
+      const message = document.querySelector('#error-message')
+      const text = message ? message.textContent.trim() : ''
+      const root = document.querySelector('#storybook-root')
+      return { text, rendered: !!root && root.children.length > 0 }
+    }
+    const deadline = Date.now() + settleMs
+    while (Date.now() < deadline) {
+      const state = read()
+      if (state.text) return state.text
+      if (state.rendered) {
+        // Rendered something — wait one more tick for a late async throw.
+        await new Promise((resolve) => setTimeout(resolve, 150))
+        return read().text
+      }
+      await new Promise((resolve) => setTimeout(resolve, 100))
+    }
+    return read().text
+  }, SETTLE_MS)
   if (error) {
     failures.push({ id: entry.id, label: `${entry.title} / ${entry.name}`, error: error.slice(0, 200) })
     process.stdout.write('✗')
