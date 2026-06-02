@@ -46,6 +46,18 @@ export default [
     }
   },
 
+  // Storybook config, decorators and the render smoke script run in both the
+  // browser (preview) and Node (the smoke harness) contexts.
+  {
+    files: ['.storybook/**/*.{js,mjs}'],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      }
+    }
+  },
+
   // Vitest are written for the browser and must include browser globals
   {
     files: [
