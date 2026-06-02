@@ -12,13 +12,14 @@ import AutodocsTemplate from '~storybook/templates/AutodocsTemplate.mdx'
 
 import './preview.scss'
 
-initialize(
-  {
-    onUnhandledRequest: 'bypass',
-    serviceWorker: { url: `${import.meta.env.BASE_URL || '/'}mockServiceWorker.js` }
-  },
-  defaultHandlers
-)
+// Register the worker. We omit `onUnhandledRequest` so msw-storybook-addon's
+// smart filter applies: it lets static assets / HMR through silently but warns
+// on genuinely unhandled `/api` requests (a missing handler we should add).
+// The baseline handlers live in `parameters.msw.handlers` below — the single
+// source of truth applied to every story — so they are NOT also passed here.
+initialize({
+  serviceWorker: { url: `${import.meta.env.BASE_URL || '/'}mockServiceWorker.js` }
+})
 
 setup((app) => {
   installCore(app)
