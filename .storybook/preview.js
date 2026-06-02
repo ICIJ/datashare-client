@@ -4,10 +4,21 @@ import { useArgs } from 'storybook/preview-api'
 import { styled } from 'storybook/theming'
 import { withThemeByDataAttribute } from '@storybook/addon-themes'
 import { installCore } from './decorators/core'
+import { initialize, mswLoader } from 'msw-storybook-addon'
+
+import { defaultHandlers } from './msw/handlers'
 
 import AutodocsTemplate from '~storybook/templates/AutodocsTemplate.mdx'
 
 import './preview.scss'
+
+initialize(
+  {
+    onUnhandledRequest: 'bypass',
+    serviceWorker: { url: `${import.meta.env.BASE_URL || '/'}mockServiceWorker.js` }
+  },
+  defaultHandlers
+)
 
 setup((app) => {
   installCore(app)
@@ -70,7 +81,9 @@ const aStyle = {
 
 const preview = {
   decorators,
+  loaders: [mswLoader],
   parameters: {
+    msw: { handlers: defaultHandlers },
     docs: {
       page: AutodocsTemplate,
       components: {
