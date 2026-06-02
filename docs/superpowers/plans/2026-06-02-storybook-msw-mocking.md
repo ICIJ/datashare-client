@@ -554,9 +554,9 @@ Run (background):
 ```bash
 npx http-server storybook-static -p 6007 --silent
 ```
-Then:
+Then (the smoke harness reads its target from `STORYBOOK_URL`):
 ```bash
-yarn test-storybook --url http://127.0.0.1:6007
+STORYBOOK_URL=http://127.0.0.1:6007 yarn test-storybook
 ```
 Expected: PASS — confirms the worker registers under a base path and fixtures resolve in the production-style build, matching GitHub Pages.
 
@@ -579,6 +579,17 @@ git commit -m "test(storybook): verify msw mocking on static build" || echo "not
 ```
 
 ---
+
+## Execution deviations (recorded during implementation)
+
+- **Verification harness:** `@storybook/test-runner` (named in Tasks 1–2) proved
+  incompatible with this toolchain — its Jest stack calls `require('strip-ansi')`,
+  but under yarn-v1 hoisting on Node 22 that resolves to the ESM-only v7 and
+  crashes `@jest/reporters`. Replaced with a small Playwright smoke script,
+  `.storybook/smoke.mjs`, run via `yarn test-storybook` (target overridable with
+  `STORYBOOK_URL`). It reads `index.json` and fails any entry whose
+  `#error-message` is populated. `playwright` is a direct devDependency;
+  `@storybook/test-runner` was removed. Validated RED baseline: 83/563 entries error.
 
 ## Self-review notes
 
