@@ -1,7 +1,6 @@
 import { vueRouter } from 'storybook-vue3-router'
 
 import BatchSearchCard from '@/components/BatchSearch/BatchSeachCard/BatchSearchCard'
-import { withPinia } from '~storybook/decorators/pinia'
 
 const routes = [
   {
@@ -50,7 +49,7 @@ const batchSearchNoResults = {
 }
 
 export default {
-  decorators: [vueRouter(routes), withPinia()],
+  decorators: [vueRouter(routes)],
   title: 'Components/BatchSearch/BatchSearchCard',
   component: BatchSearchCard,
   tags: ['autodocs'],

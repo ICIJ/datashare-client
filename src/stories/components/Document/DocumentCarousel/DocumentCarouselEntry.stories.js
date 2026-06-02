@@ -2,12 +2,10 @@ import { markRaw } from 'vue'
 import { sample } from 'lodash'
 
 import IPhFilePdf from '~icons/ph/file-pdf'
-import { withMurmur } from '~storybook/decorators/murmur'
 import DocumentCarouselEntry from '@/components/Document/DocumentCarousel/DocumentCarouselEntry'
 
 export default {
   title: 'Components/Document/DocumentCarousel/DocumentCarouselEntry',
-  decorators: [withMurmur({ previewHost: null })],
   component: DocumentCarouselEntry,
   tags: ['autodocs'],
   args: {

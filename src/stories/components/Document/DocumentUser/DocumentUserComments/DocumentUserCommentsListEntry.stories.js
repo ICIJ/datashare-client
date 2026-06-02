@@ -1,9 +1,7 @@
 import DocumentUserCommentsListEntry from '@/components/Document/DocumentUser/DocumentUserComments/DocumentUserCommentsListEntry'
-import { withPinia } from '~storybook/decorators/pinia'
 
 export default {
   title: 'Components/Document/DocumentUser/DocumentUserComments/DocumentUserCommentsListEntry',
-  decorators: [withPinia()],
   tags: ['autodocs'],
   component: DocumentUserCommentsListEntry,
   args: {
