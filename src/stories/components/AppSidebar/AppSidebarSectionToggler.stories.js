@@ -1,11 +1,6 @@
-import { vueRouter } from 'storybook-vue3-router'
-
 import AppSidebarSectionToggler from '@/components/AppSidebar/AppSidebarSectionToggler'
 
-const routes = [{ path: '/', name: 'home' }]
-
 export default {
-  decorators: [vueRouter(routes)],
   title: 'Components/AppSidebar/AppSidebarSectionToggler',
   tags: ['autodocs'],
   component: AppSidebarSectionToggler,
@@ -23,7 +18,8 @@ export default {
   args: {
     icon: 'rocket-launch',
     title: 'Tasks',
-    active: true
+    active: true,
+    to: { path: '/' }
   },
   render: args => ({
     components: {
