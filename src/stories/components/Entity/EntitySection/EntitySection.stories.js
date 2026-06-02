@@ -1,11 +1,23 @@
 import EntitySection from '@/components/Entity/EntitySection/EntitySection'
 import { entityCategoriesArgType } from '~storybook/utils'
 import { ENTITY_CATEGORY } from '@/enums/entityCategories'
+import { useDocumentStore } from '@/store/modules'
 
 export default {
   title: 'Components/Entity/EntitySection/EntitySection',
   tags: ['autodocs'],
   component: EntitySection,
+  decorators: [
+    () => ({
+      setup() {
+        const documentStore = useDocumentStore()
+        if (!documentStore.document) {
+          documentStore.document = { contentTextLength: 100000, language: 'ENGLISH' }
+        }
+      },
+      template: '<story />'
+    })
+  ],
   argTypes: {
     category: entityCategoriesArgType
   },
