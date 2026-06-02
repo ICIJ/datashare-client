@@ -3,8 +3,6 @@ import { vueRouter } from 'storybook-vue3-router'
 
 import IPhFilePdf from '~icons/ph/file-pdf'
 
-import { withMurmur } from '~storybook/decorators/murmur'
-import { withPinia } from '~storybook/decorators/pinia'
 import DocumentCard from '@/components/Document/DocumentCard/DocumentCard'
 
 const routes = [
@@ -24,7 +22,7 @@ const routes = [
 
 export default {
   title: 'Components/Document/DocumentCard/DocumentCard',
-  decorators: [withMurmur({ previewHost: null }), vueRouter(routes), withPinia()],
+  decorators: [vueRouter(routes)],
   component: DocumentCard,
   tags: ['autodocs'],
   argTypes: {

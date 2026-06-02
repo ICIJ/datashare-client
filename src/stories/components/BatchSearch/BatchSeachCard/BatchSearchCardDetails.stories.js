@@ -1,7 +1,6 @@
 import { vueRouter } from 'storybook-vue3-router'
 
 import BatchSearchCardDetails from '@/components/BatchSearch/BatchSeachCard/BatchSearchCardDetails'
-import { withPinia } from '~storybook/decorators/pinia'
 
 const routes = [
   {
@@ -14,7 +13,7 @@ const routes = [
   }
 ]
 export default {
-  decorators: [vueRouter(routes), withPinia()],
+  decorators: [vueRouter(routes)],
   title: 'Components/BatchSearch/BatchSearchCardDetails',
   component: BatchSearchCardDetails,
   tags: ['autodocs'],

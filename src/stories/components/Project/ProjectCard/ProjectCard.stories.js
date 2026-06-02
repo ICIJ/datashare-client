@@ -1,6 +1,5 @@
 import { vueRouter } from 'storybook-vue3-router'
 
-import { withPinia } from '~storybook/decorators/pinia'
 import ProjectCard from '@/components/Project/ProjectCard/ProjectCard'
 
 const routes = [
@@ -16,7 +15,7 @@ const routes = [
 
 export default {
   title: 'Components/Project/ProjectCard/ProjectCard',
-  decorators: [vueRouter(routes), withPinia()],
+  decorators: [vueRouter(routes)],
   tags: ['autodocs'],
   component: ProjectCard,
   args: {

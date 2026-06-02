@@ -1,8 +1,6 @@
 import BadgeFilter from '@/components/Badge/BadgeFilter'
-import { withPinia } from '~storybook/decorators/pinia'
 
 export default {
-  decorators: [withPinia()],
   title: 'Components/Badge/BadgeFilter',
   component: BadgeFilter,
   tags: ['autodocs'],

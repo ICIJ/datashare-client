@@ -3,47 +3,14 @@ import { setup } from '@storybook/vue3-vite'
 import { useArgs } from 'storybook/preview-api'
 import { styled } from 'storybook/theming'
 import { withThemeByDataAttribute } from '@storybook/addon-themes'
-import { createBootstrap } from 'bootstrap-vue-next'
-import { createI18n } from 'vue-i18n'
-import Vue3Toastify from 'vue3-toastify'
+import { installCore } from './decorators/core'
 
-import messages from '@/lang/en'
-import settings from '@/utils/settings'
 import AutodocsTemplate from '~storybook/templates/AutodocsTemplate.mdx'
 
 import './preview.scss'
 
 setup((app) => {
-  const bootstrap = createBootstrap({
-    directives: true,
-    components: {
-      BPopover: {
-        offset: '16px'
-      },
-      BTooltip: {
-        offset: '6px',
-        delay: {
-          show: 500,
-          hide: 0
-        }
-      }
-    }
-  })
-  const i18n = createI18n({
-    warnHtmlInMessage: 'off',
-    warnHtmlMessage: 'off',
-    globalInjection: true,
-    allowComposition: true,
-    legacy: true,
-    locale: settings.defaultLocale,
-    fallbackLocale: settings.defaultLocale,
-    messages: {
-      [settings.defaultLocale]: messages
-    }
-  })
-  app.use(bootstrap)
-  app.use(i18n)
-  app.use(Vue3Toastify)
+  installCore(app)
 })
 
 const decorators = [

@@ -11,7 +11,6 @@ import IPhFileTxt from '~icons/ph/file-txt'
 import { BPlaceholderTable } from 'bootstrap-vue-next'
 
 import { layoutArgType } from '~storybook/utils'
-import { withMurmur } from '~storybook/decorators/murmur'
 import { LAYOUTS } from '@/enums/layouts'
 import DocumentEntries from '@/components/Document/DocumentEntries/DocumentEntries'
 
@@ -34,7 +33,7 @@ const routes = [
 
 export default {
   title: 'Components/Document/DocumentEntries/DocumentEntries',
-  decorators: [withMurmur({ previewHost: null }), vueRouter(routes)],
+  decorators: [vueRouter(routes)],
   component: DocumentEntries,
   argTypes: {
     entries: {
