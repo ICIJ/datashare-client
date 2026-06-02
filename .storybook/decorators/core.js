@@ -33,7 +33,8 @@ export function installCore(app) {
   for (const plugin of built.plugins) {
     if (Array.isArray(plugin)) {
       app.use(...plugin)
-    } else {
+    }
+    else {
       app.use(plugin)
     }
   }

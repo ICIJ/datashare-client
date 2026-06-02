@@ -12,7 +12,8 @@ const MswProbe = defineComponent({
     onMounted(async () => {
       try {
         tags.value = await core.api.getTags('local-datashare', 'doc_01')
-      } catch (e) {
+      }
+      catch (e) {
         error.value = String(e?.message ?? e)
       }
     })
