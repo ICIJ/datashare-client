@@ -43,6 +43,7 @@ src/stories/03-widgets.mdx
 .cursor/
 .aider*
 graphify-out/
+docs/superpowers/
 
 # MSW service worker — regenerated on install via the `msw.workerDirectory`
 # postinstall hook (see package.json). Not edited by hand; do not commit.
