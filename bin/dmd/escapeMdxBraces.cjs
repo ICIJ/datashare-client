@@ -17,7 +17,7 @@
  */
 const { readFileSync, writeFileSync } = require('fs')
 
-const FENCE = /^(\s*)(`{3,}|~{3,})/
+const FENCE = /^\s*(`{3,}|~{3,})/
 
 function escapeProse(text) {
   let out = ''
@@ -61,7 +61,7 @@ function escapeMdx(source) {
     .map((line) => {
       const match = line.match(FENCE)
       if (match) {
-        const marker = match[2][0]
+        const marker = match[1][0]
         if (!inFence) {
           inFence = true
           fenceMarker = marker
