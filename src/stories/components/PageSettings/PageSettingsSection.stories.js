@@ -5,6 +5,7 @@ import { INPUT_CHECKBOX } from '@/composables/useViewSettings'
 export default {
   title: 'Components/PageSettings/Section',
   tags: ['autodocs'],
+  component: PageSettingsSection,
   argTypes: {
     type: {
       control: { type: 'radio' },
