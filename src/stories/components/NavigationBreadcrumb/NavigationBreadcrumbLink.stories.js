@@ -33,7 +33,7 @@ export default {
   },
   args: {
     to: { name: 'projects' },
-    icon: 'dots-nine',
+    icon: markRaw(IPhDotsNine),
     title: 'All projects',
     noCaret: true,
     active: true

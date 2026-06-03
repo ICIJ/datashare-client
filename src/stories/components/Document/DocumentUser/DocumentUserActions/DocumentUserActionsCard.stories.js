@@ -55,7 +55,7 @@ export const IsServer = {
 }
 export const SplitContentExample = {
   args: {
-    icon: 'tag',
+    icon: markRaw(IPhTag),
     title: '27 Tags',
     isSplit: false,
     showWarning: false,
@@ -91,7 +91,7 @@ export const SplitContentExample = {
 }
 export const DefaultContentSlot = {
   args: {
-    icon: 'chats-teardrop',
+    icon: markRaw(IPhChatsTeardrop),
     title: '27 Comments',
     showWarning: true
   },

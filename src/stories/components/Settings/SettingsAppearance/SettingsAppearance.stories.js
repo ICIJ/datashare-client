@@ -9,18 +9,18 @@ export default {
     modelValue: 'light',
     options: [
       {
-        icon: 'paint',
+        icon: markRaw(IPhPaintBrush),
         name: 'automatic',
         label: 'Automatic'
       },
       {
-        icon: 'sun',
+        icon: markRaw(IPhSun),
         name: 'light',
         label: 'Light mode',
         thumbnail: 'https://placehold.co/169x95'
       },
       {
-        icon: 'moon',
+        icon: markRaw(IPhMoon),
         name: 'dark',
         label: 'Dark mode',
         thumbnail: 'https://placehold.co/169x95'

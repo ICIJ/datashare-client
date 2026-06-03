@@ -6,7 +6,7 @@ export default {
   args: {
     label: 'Name',
     required: true,
-    icon: 'text-aa'
+    icon: markRaw(IPhTextAa)
   },
   parameters: {
     slots: {

@@ -8,7 +8,7 @@ export default {
   args: {
     name: 'path',
     value: '/vault/luxleaks/importantfolder/',
-    icon: 'tree-structure',
+    icon: markRaw(IPhTreeStructure),
     color: null
   }
 }
@@ -19,7 +19,7 @@ export const UnknownFilter = {
   args: {
     name: 'hipsDontLie',
     value: 'Shakira',
-    icon: 'music-notes',
+    icon: markRaw(IPhMusicNotes),
     color: '#a50000'
   }
 }

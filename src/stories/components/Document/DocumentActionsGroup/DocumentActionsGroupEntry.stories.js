@@ -10,7 +10,7 @@ export default {
 
 export const Default = {
   args: {
-    icon: 'star',
+    icon: markRaw(IPhStar),
     label: 'Star',
     tooltipPlacement: PLACEMENT.RIGHT,
     tooltipLabel: 'Test',
@@ -21,7 +21,7 @@ export const Default = {
 
 export const Filled = {
   args: {
-    icon: 'star',
+    icon: markRaw(IPhStar),
     label: 'Star',
     tooltipLabel: 'Test',
     tooltipPlacement: PLACEMENT.RIGHT,

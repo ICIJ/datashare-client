@@ -25,7 +25,7 @@ export default {
     }
   },
   args: {
-    icon: 'circles-three-plus',
+    icon: markRaw(IPhCirclesThreePlus),
     title: 'Projects',
     active: true,
     compact: false

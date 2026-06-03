@@ -6,7 +6,7 @@ export default {
   component: LinkedDocumentSection,
   args: {
     title: 'documents in the same folder',
-    icon: 'files',
+    icon: markRaw(IPhFiles),
     description: 'Same extraction level as this document',
     documents: [
       { contentType: 'application/pdf', name: 'This is my document', id: 'doc-id-1', routing: '', index: 'local-datashare' },

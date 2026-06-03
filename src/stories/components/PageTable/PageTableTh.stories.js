@@ -12,7 +12,7 @@ export default {
   },
   args: {
     label: 'Name of the column',
-    icon: 'circles-three-plus',
+    icon: markRaw(IPhCirclesThreePlus),
     sortable: true,
     sorted: true,
     order: 'desc'

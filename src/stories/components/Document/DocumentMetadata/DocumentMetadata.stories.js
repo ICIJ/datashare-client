@@ -12,7 +12,7 @@ export default {
     pinned: false,
     label: 'Document directory',
     value: '/vault/luxleaks/v1/2001 and before',
-    icon: 'folder-open',
+    icon: markRaw(IPhFolderOpen),
     description: 'The document directory is the path to the document in Datashare.'
   },
   render: args => ({
@@ -34,7 +34,7 @@ export const WithDatetime = {
   args: {
     label: 'Created',
     value: '2021-01-01T00:00:00Z',
-    icon: 'calendar-blank'
+    icon: markRaw(IPhCalendarBlank)
   },
   render: args => ({
     components: {
@@ -54,7 +54,7 @@ export const WithContentLength = {
   args: {
     label: 'File size',
     value: 123456,
-    icon: 'floppy-disk-back'
+    icon: markRaw(IPhFloppyDiskBack)
   },
   render: args => ({
     components: {
@@ -74,7 +74,7 @@ export const WithProjectButton = {
   args: {
     label: 'Project',
     value: 'Luxleaks',
-    icon: 'circles-three-plus'
+    icon: markRaw(IPhCirclesThreePlus)
   },
   render: args => ({
     components: {
@@ -94,7 +94,7 @@ export const WithLanguage = {
   args: {
     label: 'Content language',
     value: 'CHINESE',
-    icon: 'globe-hemisphere-west'
+    icon: markRaw(IPhGlobeHemisphereWest)
   },
   render: args => ({
     components: {

@@ -36,22 +36,22 @@ const props = {
     {
       value: 'thumbnail',
       text: 'Thumbnail',
-      icon: 'image-square'
+      icon: markRaw(IPhImageSquare)
     },
     {
       value: 'path',
       text: 'Path',
-      icon: 'tree-structure'
+      icon: markRaw(IPhTreeStructure)
     },
     {
       value: 'creation-date',
       text: 'Creation date',
-      icon: 'calendar-blank'
+      icon: markRaw(IPhCalendarBlank)
     },
     {
       value: 'highlight',
       text: 'Highlight',
-      icon: 'quotes'
+      icon: markRaw(IPhQuotes)
     }
   ]
 }

@@ -9,7 +9,7 @@ export default {
   component: LinkedDocumentCard,
   args: {
     title: 'documents in the same folder',
-    icon: 'files',
+    icon: markRaw(IPhFiles),
     description: 'Same extraction level as this document',
     modelValue: true,
     siblings: [

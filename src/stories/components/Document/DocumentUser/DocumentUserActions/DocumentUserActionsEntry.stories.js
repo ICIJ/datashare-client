@@ -8,9 +8,9 @@ export default {
 }
 
 export const Default = {
-  args: { icon: 'tag', label: '3 tags', value: '3' }
+  args: { icon: markRaw(IPhTag), label: '3 tags', value: '3' }
 }
 
 export const ShorterLabel = {
-  args: { icon: 'tag', shorterLabel: true, hideTooltip: false, label: '3 tags', value: '3' }
+  args: { icon: markRaw(IPhTag), shorterLabel: true, hideTooltip: false, label: '3 tags', value: '3' }
 }

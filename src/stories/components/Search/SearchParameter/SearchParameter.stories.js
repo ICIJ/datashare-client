@@ -63,7 +63,7 @@ export const FilterWithColor = {
     query: '',
     filter: 'namedEntityPerson',
     value: 'Shakira',
-    icon: 'music-notes',
+    icon: markRaw(IPhMusicNotes),
     color: '#a50000'
   }
 }

@@ -5,7 +5,7 @@ export default {
   title: 'Components/Button/ButtonRowAction',
   component: ButtonRowAction,
   args: {
-    icon: 'pencil',
+    icon: markRaw(IPhPencil),
     label: 'Edit'
   }
 }

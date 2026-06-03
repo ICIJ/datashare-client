@@ -6,7 +6,7 @@ export default {
   tags: ['autodocs'],
   component: SettingsAppearanceOption,
   args: {
-    icon: 'sun',
+    icon: markRaw(IPhSun),
     label: 'light',
     text: 'Light mode',
     thumbnail: 'https://placehold.co/60x40'

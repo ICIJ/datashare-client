@@ -71,6 +71,19 @@ export default [
     }
   },
 
+  // Storybook stories reference icon components (`IPh*`) and `markRaw`, both
+  // injected at build time by unplugin-auto-import (see vite.config.js). ESLint
+  // can't see those build-time globals, and the icon names are resolved
+  // dynamically so they can't be enumerated as globals. Genuinely undefined
+  // identifiers are still caught at runtime by the render smoke test
+  // (`yarn test-storybook`).
+  {
+    files: ['**/*.stories.{js,mjs,ts}'],
+    rules: {
+      'no-undef': 'off'
+    }
+  },
+
   // Specific rules for the project
   {
     languageOptions: {

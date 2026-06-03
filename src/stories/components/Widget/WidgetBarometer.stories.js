@@ -14,7 +14,7 @@ export default {
     variant: variantsArgType
   },
   args: {
-    icon: 'floppy-disk',
+    icon: markRaw(IPhFloppyDisk),
     label: 'records',
     value: 30000,
     variant: 'action'

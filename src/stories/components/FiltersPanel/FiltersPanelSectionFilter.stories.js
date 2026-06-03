@@ -13,7 +13,7 @@ export default {
   argTypes: {},
   args: {
     title: 'Tags',
-    icon: 'tag',
+    icon: markRaw(IPhTag),
     collapse: false,
     flush: false,
     hideContextualize: false,
@@ -67,7 +67,7 @@ export const Default = {}
 export const ForPath = {
   args: {
     title: 'Tags',
-    icon: 'tag',
+    icon: markRaw(IPhTag),
     collapse: false,
     flush: true,
     hideContextualize: false,
