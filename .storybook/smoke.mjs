@@ -1,92 +1,174 @@
 /**
- * Storybook render smoke test.
+ * Storybook render smoke test: load every story and fail if any throws while
+ * rendering. A clean story leaves `#error-message` empty; a throwing one fills
+ * it (or leaves `#storybook-root` empty).
  *
- * Loads every story (and autodocs page) from a running Storybook and fails if
- * any of them throws while rendering. This is the red/green signal for the
- * `$core` + MSW work: a clean story leaves Storybook's `#error-message`
- * element empty, while a story that throws populates it with the error — true
- * both when the body flips to `sb-show-errordisplay` and when the root is left
- * empty.
- *
- * We use Playwright directly (rather than @storybook/test-runner) to keep the
- * harness transparent and free of the heavy Jest stack, which is incompatible
- * with this toolchain (Node's require() of the ESM-only `strip-ansi` breaks
- * @jest/reporters under yarn-v1 hoisting).
+ * Uses Playwright directly rather than @storybook/test-runner, whose Jest stack
+ * is incompatible with this toolchain (ESM-only `strip-ansi` under yarn-v1).
  *
  * Usage: `yarn storybook` in one terminal, then `yarn test-storybook`.
- * Override the target with STORYBOOK_URL (e.g. the static build on port 6007).
- *
- * We deliberately avoid `waitUntil: 'networkidle'`: a story that fires a failing
- * request never reaches network-idle and would block on a 30s timeout. Instead
- * we load to `domcontentloaded` and poll briefly for the story to settle —
- * either it rendered content into `#storybook-root` or it populated
- * `#error-message`. This caps per-story time at ~2.5s.
+ * Override the target with STORYBOOK_URL, or narrow it with STORYBOOK_IDS
+ * (comma-separated ids) to re-check a subset.
  */
 import { chromium } from 'playwright'
 
-const BASE = (process.env.STORYBOOK_URL || 'http://127.0.0.1:6006').replace(/\/$/, '')
+const DEFAULT_STORYBOOK_URL = 'http://127.0.0.1:6006'
 const SETTLE_MS = 2500
+const POLL_INTERVAL_MS = 100
+const LATE_THROW_GRACE_MS = 150
+const GOTO_TIMEOUT_MS = 15000
+const ERROR_PREVIEW_LENGTH = 200
 
-const index = await fetch(`${BASE}/index.json`).then(response => response.json())
-// Smoke only `story` entries: they render into `#storybook-root`, so a clean
-// render is detected in milliseconds. Autodocs (`docs`) pages render the same
-// components into a different container and would force the full settle timeout
-// on every page; their health is already covered by the underlying stories.
-//
-// Optional STORYBOOK_IDS (comma-separated story ids) narrows the run to a
-// subset — handy for quickly re-checking the stories a change was meant to fix
-// without paying for the whole suite.
-const only = (process.env.STORYBOOK_IDS ?? '').split(',').map(id => id.trim()).filter(Boolean)
-const onlySet = new Set(only)
-const entries = Object.values(index.entries ?? index.stories ?? {})
-  .filter(entry => entry.type === 'story')
-  .filter(entry => onlySet.size === 0 || onlySet.has(entry.id))
-
-const browser = await chromium.launch()
-const page = await browser.newPage()
-const failures = []
-
-for (const entry of entries) {
-  const url = `${BASE}/iframe.html?id=${entry.id}&viewMode=story`
-  await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 15000 }).catch(() => {})
-  const error = await page.evaluate(async (settleMs) => {
-    const read = () => {
-      const message = document.querySelector('#error-message')
-      const text = message ? message.textContent.trim() : ''
-      const root = document.querySelector('#storybook-root')
-      return { text, rendered: !!root && root.children.length > 0 }
-    }
-    const deadline = Date.now() + settleMs
-    while (Date.now() < deadline) {
-      const state = read()
-      if (state.text) return state.text
-      if (state.rendered) {
-        // Rendered something — wait one more tick for a late async throw.
-        await new Promise(resolve => setTimeout(resolve, 150))
-        return read().text
-      }
-      await new Promise(resolve => setTimeout(resolve, 100))
-    }
-    return read().text
-  }, SETTLE_MS)
-  if (error) {
-    failures.push({ id: entry.id, label: `${entry.title} / ${entry.name}`, error: error.slice(0, 200) })
-    process.stdout.write('✗')
-  }
-  else {
-    process.stdout.write('.')
-  }
+/**
+ * Storybook base URL, trailing slash stripped.
+ * @returns {string}
+ */
+function resolveBaseUrl() {
+  return (process.env.STORYBOOK_URL || DEFAULT_STORYBOOK_URL).replace(/\/$/, '')
 }
 
-process.stdout.write('\n')
-await browser.close()
+/**
+ * Story ids to restrict the run to; empty means every story.
+ * @returns {Set<string>}
+ */
+function resolveStoryIdFilter() {
+  const ids = (process.env.STORYBOOK_IDS ?? '').split(',').map(id => id.trim()).filter(Boolean)
+  return new Set(ids)
+}
 
-if (failures.length) {
-  console.error(`\n${failures.length}/${entries.length} stories errored:\n`)
+/**
+ * Fetch the entries to smoke. Only `story` entries render into
+ * `#storybook-root`; autodocs pages are covered by their underlying stories.
+ * @param {string} baseUrl
+ * @param {Set<string>} idFilter
+ * @returns {Promise<Array<{ id: string, title: string, name: string }>>}
+ */
+async function fetchStoryEntries(baseUrl, idFilter) {
+  const index = await fetch(`${baseUrl}/index.json`).then(response => response.json())
+  const entries = Object.values(index.entries ?? index.stories ?? {})
+  return entries
+    .filter(entry => entry.type === 'story')
+    .filter(entry => idFilter.size === 0 || idFilter.has(entry.id))
+}
+
+/**
+ * @param {string} baseUrl
+ * @param {string} id
+ * @returns {string}
+ */
+function storyIframeUrl(baseUrl, id) {
+  return `${baseUrl}/iframe.html?id=${id}&viewMode=story`
+}
+
+/**
+ * Poll the rendered story for an error, in the browser. Returns the
+ * `#error-message` text (empty when clean). Avoids `networkidle` — a story
+ * firing a failing request never reaches it.
+ * @param {{ settleMs: number, pollMs: number, graceMs: number }} timings
+ * @returns {Promise<string>}
+ */
+async function detectRenderError({ settleMs, pollMs, graceMs }) {
+  const readState = () => {
+    const message = document.querySelector('#error-message')
+    const text = message ? message.textContent.trim() : ''
+    const root = document.querySelector('#storybook-root')
+    return { text, rendered: !!root && root.children.length > 0 }
+  }
+  const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
+
+  const deadline = Date.now() + settleMs
+  while (Date.now() < deadline) {
+    const state = readState()
+    if (state.text) {
+      return state.text
+    }
+    // Rendered something: wait one tick for a late async throw, then re-read.
+    if (state.rendered) {
+      await wait(graceMs)
+      return readState().text
+    }
+    await wait(pollMs)
+  }
+  return readState().text
+}
+
+/**
+ * Load one story and return its render error (empty string if clean).
+ * @param {import('playwright').Page} page
+ * @param {string} baseUrl
+ * @param {{ id: string }} entry
+ * @returns {Promise<string>}
+ */
+async function renderStoryError(page, baseUrl, entry) {
+  const url = storyIframeUrl(baseUrl, entry.id)
+  await page.goto(url, { waitUntil: 'domcontentloaded', timeout: GOTO_TIMEOUT_MS }).catch(() => {})
+  return page.evaluate(detectRenderError, {
+    settleMs: SETTLE_MS,
+    pollMs: POLL_INTERVAL_MS,
+    graceMs: LATE_THROW_GRACE_MS,
+  })
+}
+
+/**
+ * Smoke every entry, printing a dot per pass and a cross per failure.
+ * @param {import('playwright').Page} page
+ * @param {string} baseUrl
+ * @param {Array<{ id: string, title: string, name: string }>} entries
+ * @returns {Promise<Array<{ id: string, label: string, error: string }>>}
+ */
+async function smokeStories(page, baseUrl, entries) {
+  const failures = []
+  for (const entry of entries) {
+    const error = await renderStoryError(page, baseUrl, entry)
+    if (error) {
+      const label = `${entry.title} / ${entry.name}`
+      failures.push({ id: entry.id, label, error: error.slice(0, ERROR_PREVIEW_LENGTH) })
+      process.stdout.write('✗')
+    }
+    else {
+      process.stdout.write('.')
+    }
+  }
+  process.stdout.write('\n')
+  return failures
+}
+
+/**
+ * @param {Array<{ id: string, label: string, error: string }>} failures
+ * @param {number} total
+ * @returns {void}
+ */
+function reportFailures(failures, total) {
+  console.error(`\n${failures.length}/${total} stories errored:\n`)
   for (const failure of failures) {
     console.error(`  ✗ ${failure.label} [${failure.id}]\n      ${failure.error}`)
   }
-  process.exit(1)
 }
 
-console.log(`\nAll ${entries.length} stories rendered without errors.`)
+/**
+ * Run the suite and exit non-zero if any story errored.
+ * @returns {Promise<void>}
+ */
+async function main() {
+  const baseUrl = resolveBaseUrl()
+  const entries = await fetchStoryEntries(baseUrl, resolveStoryIdFilter())
+
+  const browser = await chromium.launch()
+  let failures = []
+  // Always close the browser, even if a render throws mid-suite.
+  try {
+    const page = await browser.newPage()
+    failures = await smokeStories(page, baseUrl, entries)
+  }
+  finally {
+    await browser.close()
+  }
+
+  if (failures.length) {
+    reportFailures(failures, entries.length)
+    process.exit(1)
+  }
+  console.log(`\nAll ${entries.length} stories rendered without errors.`)
+}
+
+await main()
