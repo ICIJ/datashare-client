@@ -1,5 +1,21 @@
 import { describe, it, expect } from 'vitest'
-import { generateLuceneQuery as generateQuery } from '@/utils/luceneQuery'
+import { generateLuceneQuery as generateQuery, parseLuceneQuery } from '@/utils/luceneQuery'
+
+/**
+ * Lift a form to the array shape expected by `generateLuceneQuery` — same
+ * helper as `toQueryShape` in useAdvancedSearchForm, duplicated here so the
+ * round-trip tests stay independent of that module.
+ */
+function toQueryShape(f) {
+  const words = s => (s || '').trim().split(/\s+/).filter(Boolean)
+  return {
+    ...f,
+    anyWords: words(f.anyWords),
+    allWords: words(f.allWords),
+    noneWords: words(f.noneWords),
+    exactPhrase: f.exactPhrase?.trim() ? [f.exactPhrase.trim()] : []
+  }
+}
 
 describe('luceneQuery', () => {
   describe('generateLuceneQuery', () => {
@@ -466,6 +482,171 @@ describe('luceneQuery', () => {
 
       const query = generateQuery(formData)
       expect(query).toBe('Paris')
+    })
+  })
+
+  describe('parseLuceneQuery', () => {
+    it('returns an empty form for empty input', () => {
+      const f = parseLuceneQuery('')
+      expect(f.anyWords).toBe('')
+      expect(f.allWords).toBe('')
+      expect(f.exactPhrase).toBe('')
+      expect(f.noneWords).toBe('')
+      expect(f.fuzzyTerm).toBe('')
+      expect(f.proximityPhrase).toBe('')
+      expect(f.fuzzyDistance).toBe(1)
+      expect(f.proximityDistance).toBe(1)
+      expect(f.fieldAll).toBe(true)
+      expect(f.selectedFields).toEqual([])
+    })
+
+    it('returns an empty form for null / whitespace input', () => {
+      expect(parseLuceneQuery(null).anyWords).toBe('')
+      expect(parseLuceneQuery('   ').anyWords).toBe('')
+    })
+
+    it('parses a single bare word into anyWords', () => {
+      expect(parseLuceneQuery('Paris').anyWords).toBe('Paris')
+    })
+
+    it('parses a parenthesised OR group into anyWords', () => {
+      expect(parseLuceneQuery('(Paris London)').anyWords).toBe('Paris London')
+    })
+
+    it('parses `+word +word` into allWords', () => {
+      const f = parseLuceneQuery('+Paris +London')
+      expect(f.allWords).toBe('Paris London')
+      expect(f.anyWords).toBe('')
+    })
+
+    it('parses `-word -word` into noneWords', () => {
+      const f = parseLuceneQuery('-Paris -London')
+      expect(f.noneWords).toBe('Paris London')
+    })
+
+    it('parses a quoted phrase into exactPhrase', () => {
+      expect(parseLuceneQuery('"Société SAS"').exactPhrase).toBe('Société SAS')
+    })
+
+    it('parses `term~N` into fuzzy', () => {
+      const f = parseLuceneQuery('Mercedes~2')
+      expect(f.fuzzyTerm).toBe('Mercedes')
+      expect(f.fuzzyDistance).toBe(2)
+    })
+
+    it('parses `"phrase"~N` into proximity', () => {
+      const f = parseLuceneQuery('"John and Mercedes"~3')
+      expect(f.proximityPhrase).toBe('John and Mercedes')
+      expect(f.proximityDistance).toBe(3)
+    })
+
+    it('parses single-character wildcard `a?b`', () => {
+      const f = parseLuceneQuery('Mer?es')
+      expect(f.singleWildcardStart).toBe('Mer')
+      expect(f.singleWildcardEnd).toBe('es')
+    })
+
+    it('parses multi-character wildcard `a*b`', () => {
+      const f = parseLuceneQuery('Mer*es')
+      expect(f.multiWildcardStart).toBe('Mer')
+      expect(f.multiWildcardEnd).toBe('es')
+    })
+
+    it('parses field-restricted queries into selectedFields + inner query', () => {
+      const f = parseLuceneQuery('tags:(Paris) OR content:(Paris)')
+      expect(f.fieldAll).toBe(false)
+      expect(f.selectedFields).toEqual(['tags', 'content'])
+      expect(f.anyWords).toBe('Paris')
+    })
+
+    it('parses field-restricted dotted ES field paths', () => {
+      const f = parseLuceneQuery('metadata.tika_metadata_dc_creator:(Paris)')
+      expect(f.selectedFields).toEqual(['metadata.tika_metadata_dc_creator'])
+    })
+
+    it('keeps a query it cannot recognise in anyWords so the user can still edit it', () => {
+      const f = parseLuceneQuery('weirdField:value AND other:value')
+      // Falls through to plain-text tokens — at minimum nothing is lost.
+      expect(f.anyWords.length).toBeGreaterThan(0)
+    })
+
+    it('round-trips a representative full form through generate → parse', () => {
+      const initial = {
+        anyWords: 'Paris London',
+        allWords: 'Macron Emmanuel',
+        exactPhrase: 'Société SAS',
+        noneWords: 'Jo',
+        singleWildcardStart: 'Mer',
+        singleWildcardEnd: 'es',
+        multiWildcardStart: '',
+        multiWildcardEnd: '',
+        fuzzyTerm: 'Mercedes',
+        fuzzyDistance: 2,
+        proximityPhrase: 'John and Mercedes are in Paris',
+        proximityDistance: 3,
+        fieldAll: true,
+        selectedFields: []
+      }
+      const query = generateQuery(toQueryShape(initial))
+      const round = parseLuceneQuery(query)
+      expect(round.anyWords).toBe('Paris London')
+      expect(round.allWords).toBe('Macron Emmanuel')
+      expect(round.exactPhrase).toBe('Société SAS')
+      expect(round.noneWords).toBe('Jo')
+      expect(round.singleWildcardStart).toBe('Mer')
+      expect(round.singleWildcardEnd).toBe('es')
+      expect(round.fuzzyTerm).toBe('Mercedes')
+      expect(round.fuzzyDistance).toBe(2)
+      expect(round.proximityPhrase).toBe('John and Mercedes are in Paris')
+      expect(round.proximityDistance).toBe(3)
+    })
+
+    it('round-trips a field-restricted query', () => {
+      const initial = {
+        anyWords: 'Paris',
+        allWords: '',
+        exactPhrase: '',
+        noneWords: '',
+        singleWildcardStart: '',
+        singleWildcardEnd: '',
+        multiWildcardStart: '',
+        multiWildcardEnd: '',
+        fuzzyTerm: '',
+        fuzzyDistance: 1,
+        proximityPhrase: '',
+        proximityDistance: 1,
+        fieldAll: false,
+        selectedFields: ['tags', 'content']
+      }
+      const query = generateQuery(toQueryShape(initial))
+      const round = parseLuceneQuery(query)
+      expect(round.fieldAll).toBe(false)
+      expect(round.selectedFields).toEqual(['tags', 'content'])
+      expect(round.anyWords).toBe('Paris')
+    })
+
+    it('unescapes Lucene-reserved characters round-trip', () => {
+      const initial = {
+        anyWords: 'foo:bar',
+        allWords: '',
+        exactPhrase: '',
+        noneWords: '',
+        singleWildcardStart: '',
+        singleWildcardEnd: '',
+        multiWildcardStart: '',
+        multiWildcardEnd: '',
+        fuzzyTerm: '',
+        fuzzyDistance: 1,
+        proximityPhrase: '',
+        proximityDistance: 1,
+        fieldAll: true,
+        selectedFields: []
+      }
+      const query = generateQuery(toQueryShape(initial))
+      // Generator escapes the colon: `foo\:bar`
+      expect(query).toContain('\\:')
+      const round = parseLuceneQuery(query)
+      expect(round.anyWords).toBe('foo:bar')
     })
   })
 })

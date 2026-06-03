@@ -93,6 +93,7 @@ function handleAdvancedSearch(queryString) {
     </div>
     <search-advanced-modal
       v-model="showAdvancedSearch"
+      :initial-query="searchStore.q"
       @search="handleAdvancedSearch"
     />
   </div>
