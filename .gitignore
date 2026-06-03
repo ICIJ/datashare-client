@@ -32,7 +32,17 @@ src/stories/03-widgets.mdx
 *.iml
 
 *storybook.log
+
+# Coding agent artifacts (Claude Code, superpowers, gstack, Codex, Gemini, Cursor, Aider, etc.)
+# Note: AGENTS.md is intentionally tracked as shared project documentation.
+.claude/
+.superpowers/
 .gstack/
+.codex/
+.gemini/
+.cursor/
+.aider*
+graphify-out/
 
 # MSW service worker — regenerated on install via the `msw.workerDirectory`
 # postinstall hook (see package.json). Not edited by hand; do not commit.
