@@ -26,8 +26,6 @@ const ESM_STATEMENT = /^\s*(import\b[\s\S]*\bfrom\s+['"]|import\s+['"]|export\s+
 // Char that can follow `<` to make it a tag rather than a bare prose `<`.
 const TAG_NAME_START = /[a-zA-Z/]/
 
-// --- Atomic predicates --------------------------------------------------------
-
 /**
  * @param {string} char
  * @returns {boolean}
@@ -55,9 +53,6 @@ function isBackslashEscaped(text, index) {
 function opensHtmlTag(text, index) {
   return text[index] === '<' && TAG_NAME_START.test(text[index + 1] ?? '')
 }
-
-// --- Single-step consumers ----------------------------------------------------
-// Each reads one construct at `index`; null means "not my construct".
 
 /**
  * Read an inline code span. A run of N backticks closes on the next N; an
@@ -112,8 +107,6 @@ function consumeProseChar(text, index) {
   }
   return { output: char, end: index + 1 }
 }
-
-// --- Line and document walks --------------------------------------------------
 
 /**
  * Escape stray braces in a prose line, dispatching each position to the first
