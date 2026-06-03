@@ -27,4 +27,13 @@ describe('WidgetDocuments.vue', () => {
     await wrapper.vm.loadData()
     expect(wrapper.find('.widget-barometer__value').text()).toBe('10 documents')
   })
+
+  it('countDuplicates queries the Duplicate type and loadData stores the result', async () => {
+    const spy = vi.spyOn(wrapper.vm, 'count').mockResolvedValue(7)
+    const result = await wrapper.vm.countDuplicates()
+    expect(spy).toHaveBeenCalledWith('type:Duplicate')
+    expect(result).toBe(7)
+    await wrapper.vm.loadData()
+    expect(wrapper.vm.duplicates).toBe(7)
+  })
 })

@@ -4,6 +4,7 @@
       :to="toSearch"
       :nb-documents="total"
       :nb-documents-on-disks="onDisk"
+      :nb-duplicates="duplicates"
     />
   </div>
 </template>
@@ -38,7 +39,8 @@ export default {
   data() {
     return {
       onDisk: null,
-      total: null
+      total: null,
+      duplicates: null
     }
   },
   computed: {
@@ -67,9 +69,14 @@ export default {
       const q = 'type:Document AND extractionLevel:0'
       return this.count(q)
     },
+    countDuplicates() {
+      const q = 'type:Duplicate'
+      return this.count(q)
+    },
     async loadData() {
       this.total = await this.countTotal()
       this.onDisk = await this.countOnDisk()
+      this.duplicates = await this.countDuplicates()
     }
   }
 }
