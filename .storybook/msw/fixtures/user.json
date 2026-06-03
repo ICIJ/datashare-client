@@ -1,1 +1,6 @@
-{ "uid": "local", "name": "Local User", "email": "local@icij.org", "groups_by_applications": {} }
+{
+  "uid": "local",
+  "name": "Local User",
+  "email": "local@icij.org",
+  "groups_by_applications": {}
+}
