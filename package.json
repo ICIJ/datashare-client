@@ -20,9 +20,9 @@
     "lint:modified": "yarn lint $(git diff --name-only HEAD | xargs)",
     "lint:fix": "yarn lint --fix",
     "doc": "yarn doc:api && yarn doc:hooks && yarn doc:widgets && yarn doc:storybook && yarn doc:title",
-    "doc:api": "npx jsdoc-to-markdown --plugin bin/dmd/plugin.cjs --separators --template bin/dmd/api.hbs src/core/*.js > src/stories/01-api.mdx",
-    "doc:hooks": "node bin/generateHook.cjs > src/stories/02-hooks.mdx",
-    "doc:widgets": "npx jsdoc-to-markdown --plugin bin/dmd/plugin.cjs --separators --template bin/dmd/widgets.hbs src/store/widgets/*.js > src/stories/03-widgets.mdx",
+    "doc:api": "npx jsdoc-to-markdown --plugin bin/dmd/plugin.cjs --separators --template bin/dmd/api.hbs src/core/*.js > src/stories/01-api.mdx && node bin/dmd/escapeMdxBraces.cjs src/stories/01-api.mdx",
+    "doc:hooks": "node bin/generateHook.cjs > src/stories/02-hooks.mdx && node bin/dmd/escapeMdxBraces.cjs src/stories/02-hooks.mdx",
+    "doc:widgets": "npx jsdoc-to-markdown --plugin bin/dmd/plugin.cjs --separators --template bin/dmd/widgets.hbs src/store/widgets/*.js > src/stories/03-widgets.mdx && node bin/dmd/escapeMdxBraces.cjs src/stories/03-widgets.mdx",
     "doc:storybook": "storybook build",
     "doc:title": "sed -i 's|@storybook/core - Storybook|Design System - Datashare|' storybook-static/index.html"
   },

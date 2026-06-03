@@ -346,7 +346,7 @@ class Core extends Behaviors {
   }
 
   /**
-   * Map a CasbinRule (from /api/users/me/permissions) to a { domainId, projectId, role } policy object.
+   * Map a CasbinRule (from /api/users/me/permissions) to a `{ domainId, projectId, role }` policy object.
    * Only grouping rules (ptype === 'g') are processed; policy rules (ptype === 'p') are ignored.
    * Wildcard entries (e.g. *::* for instance-wide, domain::* for domain-wide) are included
    * and used for wildcard role resolution in usePolicies helpers.
