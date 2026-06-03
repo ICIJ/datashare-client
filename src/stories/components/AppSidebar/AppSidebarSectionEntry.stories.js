@@ -48,7 +48,7 @@ export const WithAction = {
   args: {
     content: 'Batch search',
     icon: markRaw(IPhListMagnifyingGlass),
-    actionIcon: 'plus',
+    actionIcon: markRaw(IPhPlus),
     actionTitle: 'Add batch search',
     actionTo: { name: 'home' }
   }
