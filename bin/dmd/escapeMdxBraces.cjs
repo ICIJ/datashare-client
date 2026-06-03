@@ -24,77 +24,86 @@ const FENCE_DELIMITER = /^\s*(`{3,}|~{3,})/
 
 // A real ESM statement, as MDX emits at the top of a doc: an import with a
 // `from '...'` clause, a bare side-effect import, or an export declaration.
-// The shape requirement is what keeps prose that merely starts with the word
+// The shape requirement keeps prose that merely starts with the word
 // "import"/"export" from being mistaken for code.
 const ESM_STATEMENT = /^\s*(import\b[\s\S]*\bfrom\s+['"]|import\s+['"]|export\s+(?:default|const|let|var|function|class|\{|\*))/
 
 // A `<` only opens a tag when the next char could start a tag name (or is a
-// closing-tag slash). A bare `<` in prose ("when a < b") must not be read as a
-// tag, or it would disable brace escaping for the rest of the line.
+// closing-tag slash). A bare `<` in prose ("when a < b") is not a tag.
 const TAG_NAME_START = /[a-zA-Z/]/
 
-// Read the inline code span beginning at `start` (a backtick). A span opens
-// with a run of N backticks and closes on the next identical run. An
-// unterminated run is treated as a single literal backtick rather than code
-// running to end-of-line, so a stray backtick never swallows later braces.
-function readInlineCodeSpan(text, start) {
-  let runLength = 0
-  while (text[start + runLength] === '`') {
-    runLength += 1
-  }
-  const openingRun = text.slice(start, start + runLength)
-  const closingIndex = text.indexOf(openingRun, start + runLength)
-  if (closingIndex === -1) {
-    return { span: openingRun, end: start + runLength }
-  }
-  const end = closingIndex + runLength
-  return { span: text.slice(start, end), end }
+// --- Atomic predicates --------------------------------------------------------
+
+function isBrace(char) {
+  return char === '{' || char === '}'
 }
 
-// Whether the char at `index` opens an HTML/JSX tag (vs. a bare prose `<`).
+function isBackslashEscaped(text, index) {
+  return text[index - 1] === '\\'
+}
+
 function opensHtmlTag(text, index) {
   return text[index] === '<' && TAG_NAME_START.test(text[index + 1] ?? '')
 }
 
-// A brace that MDX would evaluate: not already backslash-escaped at the source.
-function isUnescapedBrace(text, index) {
-  const char = text[index]
-  return (char === '{' || char === '}') && text[index - 1] !== '\\'
+// --- Single-step consumers (each returns `{ output, end }` or null) -----------
+//
+// A consumer reads one construct starting at `index` and reports the text to
+// emit plus the index to resume from. Returning null means "not my construct".
+
+// Inline code is opaque. A span opens with a run of N backticks and closes on
+// the next identical run; an unterminated run is a single literal backtick, so
+// a stray ` never swallows the rest of the line.
+function consumeInlineCode(text, index) {
+  if (text[index] !== '`') {
+    return null
+  }
+  let runLength = 0
+  while (text[index + runLength] === '`') {
+    runLength += 1
+  }
+  const openingRun = text.slice(index, index + runLength)
+  const closingIndex = text.indexOf(openingRun, index + runLength)
+  if (closingIndex === -1) {
+    return { output: openingRun, end: index + runLength }
+  }
+  const end = closingIndex + runLength
+  return { output: text.slice(index, end), end }
 }
 
-// Escape stray braces in a single line of prose, stepping over inline code
-// spans and the contents of HTML/JSX tags (e.g. `src={img}`) so their braces
-// stay verbatim.
+// An HTML/JSX tag is copied whole so its attribute expressions (`src={img}`)
+// survive. An unclosed tag runs to end-of-line, matching how MDX treats it.
+function consumeHtmlTag(text, index) {
+  if (!opensHtmlTag(text, index)) {
+    return null
+  }
+  const closingIndex = text.indexOf('>', index)
+  const end = closingIndex === -1 ? text.length : closingIndex + 1
+  return { output: text.slice(index, end), end }
+}
+
+// A single prose char: escape an unescaped brace, otherwise pass it through.
+function consumeProseChar(text, index) {
+  const char = text[index]
+  if (isBrace(char) && !isBackslashEscaped(text, index)) {
+    return { output: `\\${char}`, end: index + 1 }
+  }
+  return { output: char, end: index + 1 }
+}
+
+// --- Line and document walks --------------------------------------------------
+
+// Escape stray braces in a single prose line by dispatching each position to
+// the first consumer that claims it.
 function escapeBracesInProse(line) {
   let result = ''
   let index = 0
-  let insideTag = false
   while (index < line.length) {
-    const char = line[index]
-
-    // Inline code is opaque: copy the whole span and resume after it.
-    if (char === '`') {
-      const { span, end } = readInlineCodeSpan(line, index)
-      result += span
-      index = end
-      continue
-    }
-
-    // Track tag boundaries so attribute expressions are preserved.
-    if (opensHtmlTag(line, index)) {
-      insideTag = true
-    }
-    else if (char === '>') {
-      insideTag = false
-    }
-
-    if (!insideTag && isUnescapedBrace(line, index)) {
-      result += `\\${char}`
-    }
-    else {
-      result += char
-    }
-    index += 1
+    const step = consumeInlineCode(line, index)
+      ?? consumeHtmlTag(line, index)
+      ?? consumeProseChar(line, index)
+    result += step.output
+    index = step.end
   }
   return result
 }
@@ -105,36 +114,45 @@ function fenceMarkerOf(line) {
   return match ? match[1][0] : null
 }
 
-// Walk the document line by line, escaping prose braces while leaving fenced
-// code blocks and the ESM header untouched. Fence state is the only thing that
-// must carry across lines, so the walk is an explicit fold over that marker.
+// Next open-fence marker after seeing a fence delimiter line.
+function toggleFence(openFenceMarker, marker) {
+  // No block open yet: this delimiter opens one.
+  if (openFenceMarker === null) {
+    return marker
+  }
+  // Same marker as the open block: it closes.
+  if (marker === openFenceMarker) {
+    return null
+  }
+  // A different marker inside a block is just content.
+  return openFenceMarker
+}
+
+// Escape one line in the context of the currently open fence, reporting the
+// line to emit and the fence state to carry forward.
+function escapeLine(line, openFenceMarker) {
+  // Fence delimiters toggle the block and are themselves never escaped.
+  const marker = fenceMarkerOf(line)
+  if (marker) {
+    return { output: line, openFenceMarker: toggleFence(openFenceMarker, marker) }
+  }
+  // Inside a fenced block, or on an ESM statement, the line stays verbatim.
+  if (openFenceMarker !== null || ESM_STATEMENT.test(line)) {
+    return { output: line, openFenceMarker }
+  }
+  // Everything else is prose.
+  return { output: escapeBracesInProse(line), openFenceMarker }
+}
+
+// Walk the document line by line; fence state is the only thing carried across.
 function escapeMdx(source) {
   const escapedLines = []
   let openFenceMarker = null
-
   for (const line of source.split('\n')) {
-    const marker = fenceMarkerOf(line)
-
-    // Fence delimiters toggle the code block and are themselves never escaped.
-    if (marker) {
-      if (openFenceMarker === null) {
-        openFenceMarker = marker
-      }
-      else if (marker === openFenceMarker) {
-        openFenceMarker = null
-      }
-      escapedLines.push(line)
-    }
-    // Inside a fenced block, or on an ESM statement, the line stays verbatim.
-    else if (openFenceMarker !== null || ESM_STATEMENT.test(line)) {
-      escapedLines.push(line)
-    }
-    // Everything else is prose.
-    else {
-      escapedLines.push(escapeBracesInProse(line))
-    }
+    const step = escapeLine(line, openFenceMarker)
+    escapedLines.push(step.output)
+    openFenceMarker = step.openFenceMarker
   }
-
   return escapedLines.join('\n')
 }
 
