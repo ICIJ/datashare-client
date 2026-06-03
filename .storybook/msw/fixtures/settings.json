@@ -1,1 +1,11 @@
-{ "mode": "LOCAL", "projects": [{ "name": "local-datashare", "label": "Local Datashare" }], "defaultProject": "local-datashare", "dataDir": "/home/datashare/data" }
+{
+  "mode": "LOCAL",
+  "projects": [
+    {
+      "name": "local-datashare",
+      "label": "Local Datashare"
+    }
+  ],
+  "defaultProject": "local-datashare",
+  "dataDir": "/home/datashare/data"
+}

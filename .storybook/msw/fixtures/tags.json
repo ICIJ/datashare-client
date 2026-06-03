@@ -1,1 +1,8 @@
-[{ "label": "tag_01" }, { "label": "tag_02" }]
+[
+  {
+    "label": "tag_01"
+  },
+  {
+    "label": "tag_02"
+  }
+]
