@@ -148,9 +148,20 @@ import SearchAdvancedModalFieldWildcard from './SearchAdvancedModalFieldWildcard
 import SearchAdvancedModalFieldsSelect from './SearchAdvancedModalFieldsSelect.vue'
 import SearchAdvancedModalFooter from './SearchAdvancedModalFooter.vue'
 import { useAdvancedSearchForm } from '@/composables/useAdvancedSearchForm'
-import { generateLuceneQuery } from '@/utils/luceneQuery'
+import { generateLuceneQuery, parseLuceneQuery } from '@/utils/luceneQuery'
 
 const isVisible = defineModel({ type: Boolean, default: false })
+/**
+ * Lucene query to pre-populate the form with when the modal opens. Lets
+ * the user edit the active search instead of starting from scratch — the
+ * parent typically passes the search store's `q`.
+ */
+const props = defineProps({
+  initialQuery: {
+    type: String,
+    default: ''
+  }
+})
 const emit = defineEmits(['search'])
 
 const { t } = useI18n()
@@ -188,14 +199,21 @@ const proximityExplanations = computed(() => [
   t('searchAdvancedModal.proximitySearchExplanation4')
 ])
 
-// Reset the form on close so reopening always starts from a clean state
-// (cancel / ESC / backdrop / successful search all share this code path).
-// Autofocus the first input on open so users can start typing right away
-// and screen readers announce the labelled field.
+/**
+ * Pre-populate the form with the parsed `initialQuery` whenever the modal
+ * opens so the user can edit the active search rather than starting from
+ * scratch. Reset on close so the next open is clean if the parent stops
+ * passing a query. Autofocus the first input on open in both cases so
+ * users can start typing right away and screen readers announce the
+ * labelled field.
+ */
 watch(isVisible, async (visible) => {
   if (!visible) {
     handleReset()
     return
+  }
+  if (props.initialQuery) {
+    Object.assign(form, parseLuceneQuery(props.initialQuery))
   }
   await nextTick()
   firstInput.value?.focus?.()

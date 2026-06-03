@@ -1,3 +1,4 @@
+import { nextTick } from 'vue'
 import { shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
@@ -103,5 +104,40 @@ describe('SearchAdvancedModal.vue', () => {
     expect(wrapper.vm.form.fuzzyTerm).toBe('')
     expect(wrapper.vm.form.fieldAll).toBe(true)
     expect(wrapper.vm.form.selectedFields).toEqual([])
+  })
+
+  it('pre-populates the form from initialQuery when the modal opens', async () => {
+    const wrapper = shallowMount(SearchAdvancedModal, {
+      props: { modelValue: false, initialQuery: '+Paris +London' },
+      global: { plugins, renderStubDefaultSlot: true }
+    })
+    await wrapper.setProps({ modelValue: true })
+    await nextTick()
+    expect(wrapper.vm.form.allWords).toBe('Paris London')
+  })
+
+  it('pre-populates a field-restricted query into the right buckets', async () => {
+    const wrapper = shallowMount(SearchAdvancedModal, {
+      props: { modelValue: false, initialQuery: 'tags:(Paris) OR content:(Paris)' },
+      global: { plugins, renderStubDefaultSlot: true }
+    })
+    await wrapper.setProps({ modelValue: true })
+    await nextTick()
+    expect(wrapper.vm.form.anyWords).toBe('Paris')
+    expect(wrapper.vm.form.fieldAll).toBe(false)
+    expect(wrapper.vm.form.selectedFields).toEqual(['tags', 'content'])
+  })
+
+  it('resets to the initial form when the modal closes', async () => {
+    const wrapper = shallowMount(SearchAdvancedModal, {
+      props: { modelValue: true, initialQuery: '+Paris' },
+      global: { plugins, renderStubDefaultSlot: true }
+    })
+    await nextTick()
+    wrapper.vm.form.fuzzyTerm = 'Mercedes'
+    await wrapper.setProps({ modelValue: false })
+    await nextTick()
+    expect(wrapper.vm.form.allWords).toBe('')
+    expect(wrapper.vm.form.fuzzyTerm).toBe('')
   })
 })

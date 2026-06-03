@@ -105,3 +105,225 @@ export function generateLuceneQuery(formData) {
 
   return query.trim()
 }
+
+/**
+ * Default form shape returned by `parseLuceneQuery` when the input is empty
+ * or unparseable. Word inputs are blank strings, distances default to 1
+ * (mirroring `getInitialForm` in useAdvancedSearchForm).
+ */
+function emptyForm() {
+  return {
+    anyWords: '',
+    allWords: '',
+    exactPhrase: '',
+    noneWords: '',
+    singleWildcardStart: '',
+    singleWildcardEnd: '',
+    multiWildcardStart: '',
+    multiWildcardEnd: '',
+    fuzzyTerm: '',
+    fuzzyDistance: 1,
+    proximityPhrase: '',
+    proximityDistance: 1,
+    fieldAll: true,
+    selectedFields: []
+  }
+}
+
+/**
+ * Reverse of `escapeTerm` — turn `\X` back into `X`. Lossy on purpose:
+ * we don't try to distinguish reserved chars from accidental backslashes.
+ */
+function unescapeTerm(term) {
+  return String(term).replace(/\\(.)/g, '$1')
+}
+
+const unescapePhrase = unescapeTerm
+
+/**
+ * Split a Lucene query on top-level whitespace while keeping quoted phrases
+ * and parenthesised groups (including their trailing `~N` modifier) as
+ * single tokens. Handles backslash escapes inside both.
+ */
+function tokenize(query) {
+  const tokens = []
+  let current = ''
+  let inQuotes = false
+  let parenDepth = 0
+  let escape = false
+
+  const flush = () => {
+    if (current) {
+      tokens.push(current)
+      current = ''
+    }
+  }
+
+  for (const ch of query) {
+    if (escape) {
+      current += ch
+      escape = false
+      continue
+    }
+    if (ch === '\\') {
+      current += ch
+      escape = true
+      continue
+    }
+    if (ch === '"') {
+      current += ch
+      inQuotes = !inQuotes
+      continue
+    }
+    if (!inQuotes && ch === '(') {
+      current += ch
+      parenDepth++
+      continue
+    }
+    if (!inQuotes && ch === ')') {
+      current += ch
+      parenDepth--
+      continue
+    }
+    if (!inQuotes && parenDepth === 0 && /\s/.test(ch)) {
+      flush()
+      continue
+    }
+    current += ch
+  }
+  flush()
+  return tokens
+}
+
+/**
+ * Parse a Lucene query string back into the advanced-search form shape.
+ *
+ * Only patterns produced by `generateLuceneQuery` are recognised verbatim;
+ * anything else falls into `anyWords` as plain text so the user can still
+ * edit it instead of starting from scratch. The mapping is intentionally
+ * round-trip safe for the queries this modal emits.
+ *
+ * @param {string} query
+ * @returns {Object} A form-shaped object compatible with `getInitialForm`.
+ */
+export function parseLuceneQuery(query) {
+  const form = emptyForm()
+  if (!query || !String(query).trim()) return form
+
+  let remaining = String(query).trim()
+
+  // Detect the `field1:(inner) OR field2:(inner) …` wrapper produced when
+  // specific fields are picked. All branches share the same `inner`, so
+  // grab one and continue parsing it.
+  const fieldRestrictedRe = /^[\w.]+:\(.+\)( OR [\w.]+:\(.+\))*$/
+  if (fieldRestrictedRe.test(remaining)) {
+    const branches = remaining.split(/ OR (?=[\w.]+:\()/)
+    const fields = []
+    let inner = null
+    for (const branch of branches) {
+      const m = branch.match(/^([\w.]+):\((.+)\)$/)
+      if (!m) {
+        // Bail out: the outer wrap doesn't perfectly match what we generate.
+        fields.length = 0
+        inner = null
+        break
+      }
+      fields.push(m[1])
+      inner = inner ?? m[2]
+    }
+    if (fields.length > 0 && inner !== null) {
+      form.fieldAll = false
+      form.selectedFields = fields
+      remaining = inner
+    }
+  }
+
+  const tokens = tokenize(remaining)
+
+  const anyWords = []
+  const allWords = []
+  const noneWords = []
+  const exactPhrases = []
+  // Plain words mixed into the OR bucket are appended last so positional
+  // order is preserved across a round-trip.
+  const fallbackAnyWords = []
+
+  for (const token of tokens) {
+    // "phrase"~N → proximity
+    const proximity = token.match(/^"(.+)"~(\d+)$/)
+    if (proximity) {
+      form.proximityPhrase = unescapePhrase(proximity[1])
+      form.proximityDistance = Number(proximity[2]) || 1
+      continue
+    }
+
+    // term~N → fuzzy
+    const fuzzy = token.match(/^([^"\s]+)~(\d+)$/)
+    if (fuzzy) {
+      form.fuzzyTerm = unescapeTerm(fuzzy[1])
+      form.fuzzyDistance = Number(fuzzy[2]) || 1
+      continue
+    }
+
+    // "phrase" (no ~N) → exactPhrase
+    const phrase = token.match(/^"(.+)"$/)
+    if (phrase) {
+      exactPhrases.push(unescapePhrase(phrase[1]))
+      continue
+    }
+
+    // (a b c) → anyWords OR group
+    const group = token.match(/^\((.+)\)$/)
+    if (group) {
+      const inner = tokenize(group[1])
+      for (const w of inner) anyWords.push(unescapeTerm(w))
+      continue
+    }
+
+    // +word → allWords
+    if (token.startsWith('+') && token.length > 1) {
+      allWords.push(unescapeTerm(token.slice(1)))
+      continue
+    }
+
+    // -word → noneWords
+    if (token.startsWith('-') && token.length > 1) {
+      noneWords.push(unescapeTerm(token.slice(1)))
+      continue
+    }
+
+    // word with a single `?` → singleWildcard (both sides optional)
+    if (token.includes('?') && !token.includes('*')) {
+      const [start, ...rest] = token.split('?')
+      form.singleWildcardStart = unescapeTerm(start)
+      form.singleWildcardEnd = unescapeTerm(rest.join('?'))
+      continue
+    }
+
+    // word with a single `*` → multiWildcard
+    if (token.includes('*') && !token.includes('?')) {
+      const [start, ...rest] = token.split('*')
+      form.multiWildcardStart = unescapeTerm(start)
+      form.multiWildcardEnd = unescapeTerm(rest.join('*'))
+      continue
+    }
+
+    // Plain word — drop it in the OR bucket so it stays editable.
+    fallbackAnyWords.push(unescapeTerm(token))
+  }
+
+  form.anyWords = [...anyWords, ...fallbackAnyWords].join(' ')
+  form.allWords = allWords.join(' ')
+  form.noneWords = noneWords.join(' ')
+  // The form only carries one phrase; surplus phrases survive as plain
+  // text in the OR field so nothing is silently dropped.
+  if (exactPhrases.length > 0) {
+    form.exactPhrase = exactPhrases[0]
+    if (exactPhrases.length > 1) {
+      const extras = exactPhrases.slice(1).map(p => `"${p}"`).join(' ')
+      form.anyWords = form.anyWords ? `${form.anyWords} ${extras}` : extras
+    }
+  }
+
+  return form
+}
