@@ -1635,7 +1635,8 @@
     },
     "barometer": {
       "document": "crwdns9556:0{n}crwdnd9556:0{n}crwdne9556:0",
-      "amongWhichOnDisk": "crwdns9558:0{n}crwdne9558:0"
+      "amongWhichOnDisk": "crwdns9558:0{n}crwdne9558:0",
+      "duplicate": "No duplicates were detected during indexation | {n} duplicate ignored during indexation | {n} duplicates ignored during indexation"
     },
     "diskUsage": {
       "details": "crwdns9560:0crwdne9560:0"

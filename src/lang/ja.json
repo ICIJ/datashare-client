@@ -1635,7 +1635,8 @@
     },
     "barometer": {
       "document": "no documents | 1 document | {total} documents",
-      "amongWhichOnDisk": "among which {n} on disk"
+      "amongWhichOnDisk": "among which {n} on disk",
+      "duplicate": "No duplicates were detected during indexation | {n} duplicate ignored during indexation | {n} duplicates ignored during indexation"
     },
     "diskUsage": {
       "details": "See disk usage"

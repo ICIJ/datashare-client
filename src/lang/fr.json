@@ -1632,7 +1632,8 @@
     },
     "barometer": {
       "document": "aucun document | 1 document | {total} documents",
-      "amongWhichOnDisk": "dont {n} sur le disque"
+      "amongWhichOnDisk": "dont {n} sur le disque",
+      "duplicate": "No duplicates were detected during indexation | {n} duplicate ignored during indexation | {n} duplicates ignored during indexation"
     },
     "diskUsage": {
       "details": "Voir l'utilisation du disque"

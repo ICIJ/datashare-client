@@ -1635,7 +1635,8 @@
     },
     "barometer": {
       "document": "no hay archivos | 1 archivo | {total} archivos",
-      "amongWhichOnDisk": "de los cuales {n} en el disco"
+      "amongWhichOnDisk": "de los cuales {n} en el disco",
+      "duplicate": "No duplicates were detected during indexation | {n} duplicate ignored during indexation | {n} duplicates ignored during indexation"
     },
     "diskUsage": {
       "details": "Ver el uso del disco"
