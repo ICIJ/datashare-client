@@ -18,6 +18,14 @@
         >∞</span>
       </template>
     </i18n-t>
+    <span
+      v-if="nbDuplicates !== null"
+      v-b-tooltip.body.top="{ delay: tooltipDelay }"
+      class="widget-barometer-documents__duplicates ms-1"
+      :title="duplicatesTitle"
+    >
+      <app-icon :name="IPhInfo" />
+    </span>
     <template
       v-if="nbDocumentsOnDisks !== null"
       #label
@@ -35,12 +43,17 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { AppIcon } from '@icij/murmur-next'
 import IPhFiles from '~icons/ph/files'
+import IPhInfo from '~icons/ph/info'
 
 import DisplayNumberHuman from '@/components/Display/DisplayNumberHuman'
 import WidgetBarometer from '@/components/Widget/WidgetBarometer'
+import humanNumber from '@/utils/humanNumber'
 
-defineProps({
+const props = defineProps({
   nbDocuments: {
     type: Number,
     default: 0
@@ -49,9 +62,20 @@ defineProps({
     type: Number,
     default: 0
   },
+  nbDuplicates: {
+    type: Number,
+    default: 0
+  },
   tooltipDelay: {
     type: Object,
     default: () => ({ show: 0, hide: 0 })
   }
+})
+
+const { t, tm, n } = useI18n()
+
+const duplicatesTitle = computed(() => {
+  const count = props.nbDuplicates ?? 0
+  return t('widget.barometer.duplicate', { n: humanNumber(count, tm('human.number'), n) }, count)
 })
 </script>
