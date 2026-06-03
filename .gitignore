@@ -32,3 +32,4 @@ src/stories/03-widgets.mdx
 *.iml
 
 *storybook.log
+.gstack/
