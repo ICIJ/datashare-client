@@ -33,3 +33,7 @@ src/stories/03-widgets.mdx
 
 *storybook.log
 .gstack/
+
+# MSW service worker — regenerated on install via the `msw.workerDirectory`
+# postinstall hook (see package.json). Not edited by hand; do not commit.
+.storybook/static/mockServiceWorker.js
