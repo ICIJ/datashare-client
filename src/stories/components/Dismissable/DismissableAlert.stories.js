@@ -45,7 +45,7 @@ export const Default = {
 export const CustomSlots = {
   args: {
     variant: VARIANT.INFO,
-    icon: 'book'
+    icon: markRaw(IPhBook)
   },
   render: args => ({
     components: {

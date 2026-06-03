@@ -55,7 +55,21 @@ export default ({ mode }) => {
        */
       AutoImport({
         dts: false,
-        vueTemplate: true
+        vueTemplate: true,
+        /**
+         * Auto-import `~icons/ph/*` components when referenced by their PascalCase
+         * name (e.g. `IPhRocketLaunch`) in `.js`/`.vue` files. This lets Storybook
+         * stories pass an icon component to `icon` props without an import line,
+         * mirroring how SFC templates use `<i-ph-*>`. `markRaw` is auto-imported so
+         * icons passed as Storybook args don't trigger Vue's reactive-component warning.
+         */
+        imports: [{ vue: ['markRaw'] }],
+        resolvers: [
+          IconsResolver({
+            prefix: 'i',
+            enabledCollections: ['ph']
+          })
+        ]
       })
     ],
     resolve: {

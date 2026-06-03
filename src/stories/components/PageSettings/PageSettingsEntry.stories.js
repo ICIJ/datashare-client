@@ -9,14 +9,14 @@ export const Default = {
   args: {
     text: 'Path',
     value: 'path',
-    icon: 'tree-structure'
+    icon: markRaw(IPhTreeStructure)
   }
 }
 export const Checked = {
   args: {
     text: 'Path',
     value: 'path',
-    icon: 'tree-structure',
+    icon: markRaw(IPhTreeStructure),
     class: 'page-settings-entry-checked'
   }
 }

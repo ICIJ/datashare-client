@@ -1,6 +1,3 @@
-import { markRaw } from 'vue'
-import IPhRocketLaunch from '~icons/ph/rocket-launch'
-
 import AppSidebarSectionToggler from '@/components/AppSidebar/AppSidebarSectionToggler'
 
 export default {
