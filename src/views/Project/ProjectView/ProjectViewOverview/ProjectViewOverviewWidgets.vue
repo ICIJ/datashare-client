@@ -42,7 +42,9 @@ whenever(toRef(props, 'name'), insightsStore.setProject, { immediate: true })
         <b-col
           v-for="(widget, index) in widgets"
           :key="index"
+          cols="12"
           :lg="widget.cols"
+          :xxl="widget.colsXxl ?? widget.cols"
         >
           <div
             class="project-view-overview-widgets__container__widget"
