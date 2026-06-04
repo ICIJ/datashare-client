@@ -107,6 +107,26 @@ export function generateLuceneQuery(formData) {
 }
 
 /**
+ * Maximum edit distance for fuzzy search. Lucene caps fuzzy similarity at
+ * two character changes; the modal's distance slider and the parser's
+ * fidelity check share this bound.
+ */
+export const FUZZY_DISTANCE_MAX = 2
+
+/**
+ * Maximum word distance for proximity search, shared by the modal's
+ * distance slider and the parser's fidelity check.
+ */
+export const PROXIMITY_DISTANCE_MAX = 6
+
+/**
+ * Uppercase boolean keywords are Lucene operators, not words: a form that
+ * displayed them as editable plain words would change what they mean on
+ * re-submit.
+ */
+const LUCENE_BOOLEAN_OPERATORS = Object.freeze(['AND', 'OR', 'NOT'])
+
+/**
  * Default advanced-search form shape. Word inputs hold strings (whitespace
  * splitting is deferred to submit time), distances default to 1 — distance
  * 0 is the disabled state and the slider's `min` enforces that floor.
@@ -155,6 +175,25 @@ function unescapeTerm(term) {
 }
 
 const unescapePhrase = unescapeTerm
+
+/**
+ * A raw (still-escaped) term is representable in the form only when
+ * unescaping then re-escaping it reproduces the original token — i.e. it
+ * is escaped exactly the way `generateLuceneQuery` would emit it. Anything
+ * else (an unescaped `:`, `[`, `(`, `~`…) carries Lucene syntax the form
+ * cannot hold without changing its meaning on re-submit.
+ */
+function isFaithfulTerm(raw) {
+  return escapeTerm(unescapeTerm(raw)) === raw
+}
+
+/**
+ * Same fidelity rule as `isFaithfulTerm`, but with the laxer quoted-phrase
+ * escaping (only `"` and `\` are escaped inside quotes).
+ */
+function isFaithfulPhrase(raw) {
+  return escapePhrase(unescapePhrase(raw)) === raw
+}
 
 class QueryTokenizer {
   constructor(query) {
@@ -280,10 +319,11 @@ function findUnescapedChar(str, char) {
  * the query is not field-restricted at all, the single resulting "branch"
  * fails the per-branch match and we bail out with the query unchanged.
  *
- * If the wrapper is symmetric (all fields share the exact same inner query),
- * returns the fields and the inner query. Otherwise, returns null fields and original query.
+ * If the wrapper is symmetric (all branches share the exact same inner
+ * query) and every field is allowed, returns the fields and the inner
+ * query. Otherwise, returns null fields and the original query.
  */
-function extractFieldRestrictions(query) {
+function extractFieldRestrictions(query, allowedFields = null) {
   const remaining = String(query).trim()
   const branches = remaining.split(/ OR (?=[\w.]+:\()/)
   const fields = []
@@ -294,9 +334,16 @@ function extractFieldRestrictions(query) {
     if (!m) {
       return { fields: null, innerQuery: remaining }
     }
-    // Asymmetric query protection: if different branches have different inner queries,
-    // we cannot represent this in the modal settings, so bail out.
+    // Asymmetric query protection: if different branches have different
+    // inner queries, we cannot represent this in the modal settings, so
+    // bail out.
     if (inner !== null && inner !== m[2]) {
+      return { fields: null, innerQuery: remaining }
+    }
+    // Unknown field protection: a restriction to a field the modal does
+    // not offer would be invisible in the checkbox group, so bail out and
+    // let the fidelity checks below reject the query as a whole.
+    if (allowedFields && !allowedFields.includes(m[1])) {
       return { fields: null, innerQuery: remaining }
     }
     fields.push(m[1])
@@ -306,134 +353,225 @@ function extractFieldRestrictions(query) {
   return { fields, innerQuery: inner }
 }
 
-function tryParseProximity(token, form) {
+function tryParseProximity(token, ctx) {
   const m = token.match(/^"(.+)"~(\d+)$/)
-  if (!m) return false
-  form.proximityPhrase = unescapePhrase(m[1])
-  form.proximityDistance = Number(m[2]) || 1
+  if (!m) {
+    return false
+  }
+  const distance = Number(m[2])
+  // The form has a single proximity slot and a bounded slider: a second
+  // clause or an out-of-range distance cannot be represented.
+  if (ctx.form.proximityPhrase || !isFaithfulPhrase(m[1]) || distance < 1 || distance > PROXIMITY_DISTANCE_MAX) {
+    ctx.lossy = true
+  }
+  ctx.form.proximityPhrase = unescapePhrase(m[1])
+  ctx.form.proximityDistance = distance || 1
   return true
 }
 
-function tryParseFuzzy(token, form) {
+function tryParseFuzzy(token, ctx) {
   const m = token.match(/^([^"\s]+)~(\d+)$/)
-  if (!m) return false
-  form.fuzzyTerm = unescapeTerm(m[1])
-  form.fuzzyDistance = Number(m[2]) || 1
+  if (!m) {
+    return false
+  }
+  const distance = Number(m[2])
+  // Same single-slot and bounded-slider rules as proximity.
+  if (ctx.form.fuzzyTerm || !isFaithfulTerm(m[1]) || distance < 1 || distance > FUZZY_DISTANCE_MAX) {
+    ctx.lossy = true
+  }
+  ctx.form.fuzzyTerm = unescapeTerm(m[1])
+  ctx.form.fuzzyDistance = distance || 1
   return true
 }
 
-function tryParseExactPhrase(token, exactPhrases) {
+function tryParseExactPhrase(token, ctx) {
   const m = token.match(/^"(.+)"$/)
-  if (!m) return false
-  exactPhrases.push(unescapePhrase(m[1]))
+  if (!m) {
+    return false
+  }
+  if (!isFaithfulPhrase(m[1])) {
+    ctx.lossy = true
+  }
+  ctx.exactPhrases.push(unescapePhrase(m[1]))
   return true
 }
 
-function tryParseOrGroup(token, anyWords) {
+function tryParseOrGroup(token, ctx) {
   const m = token.match(/^\((.+)\)$/)
-  if (!m) return false
-  const inner = tokenize(m[1])
-  for (const w of inner) anyWords.push(unescapeTerm(w))
+  if (!m) {
+    return false
+  }
+  for (const word of tokenize(m[1])) {
+    if (!isFaithfulTerm(word)) {
+      ctx.lossy = true
+    }
+    ctx.anyWords.push(unescapeTerm(word))
+  }
   return true
 }
 
-function tryParseAllWords(token, allWords) {
-  if (token.startsWith('+') && token.length > 1) {
-    allWords.push(unescapeTerm(token.slice(1)))
-    return true
+function tryParseAllWords(token, ctx) {
+  if (!token.startsWith('+') || token.length === 1) {
+    return false
   }
-  return false
+  const raw = token.slice(1)
+  if (!isFaithfulTerm(raw)) {
+    ctx.lossy = true
+  }
+  ctx.allWords.push(unescapeTerm(raw))
+  return true
 }
 
-function tryParseNoneWords(token, noneWords) {
-  if (token.startsWith('-') && token.length > 1) {
-    noneWords.push(unescapeTerm(token.slice(1)))
-    return true
+function tryParseNoneWords(token, ctx) {
+  if (!token.startsWith('-') || token.length === 1) {
+    return false
   }
-  return false
+  const raw = token.slice(1)
+  if (!isFaithfulTerm(raw)) {
+    ctx.lossy = true
+  }
+  ctx.noneWords.push(unescapeTerm(raw))
+  return true
 }
 
-function tryParseSingleWildcard(token, form) {
+/**
+ * Shared by both wildcard parsers: split the token around its single
+ * unescaped wildcard character and fill the matching form slot.
+ */
+function applyWildcard(token, idx, ctx, startKey, endKey) {
+  const start = token.slice(0, idx)
+  const end = token.slice(idx + 1)
+  // A bare wildcard (no half at all) regenerates to an empty query, a
+  // second clause has no slot left, and a half that is not faithfully
+  // escaped (e.g. a second wildcard char in `a?b?c`) would be re-escaped
+  // into a literal on submit. All three lose information.
+  const slotTaken = ctx.form[startKey] || ctx.form[endKey]
+  if (slotTaken || (!start && !end) || !isFaithfulTerm(start) || !isFaithfulTerm(end)) {
+    ctx.lossy = true
+  }
+  ctx.form[startKey] = unescapeTerm(start)
+  ctx.form[endKey] = unescapeTerm(end)
+}
+
+function tryParseSingleWildcard(token, ctx) {
   const idx = findUnescapedChar(token, '?')
-  if (idx !== -1 && findUnescapedChar(token, '*') === -1) {
-    const start = token.slice(0, idx)
-    const end = token.slice(idx + 1)
-    form.singleWildcardStart = unescapeTerm(start)
-    form.singleWildcardEnd = unescapeTerm(end)
-    return true
+  if (idx === -1 || findUnescapedChar(token, '*') !== -1) {
+    return false
   }
-  return false
+  applyWildcard(token, idx, ctx, 'singleWildcardStart', 'singleWildcardEnd')
+  return true
 }
 
-function tryParseMultiWildcard(token, form) {
+function tryParseMultiWildcard(token, ctx) {
   const idx = findUnescapedChar(token, '*')
-  if (idx !== -1 && findUnescapedChar(token, '?') === -1) {
-    const start = token.slice(0, idx)
-    const end = token.slice(idx + 1)
-    form.multiWildcardStart = unescapeTerm(start)
-    form.multiWildcardEnd = unescapeTerm(end)
-    return true
+  if (idx === -1 || findUnescapedChar(token, '?') !== -1) {
+    return false
   }
-  return false
+  applyWildcard(token, idx, ctx, 'multiWildcardStart', 'multiWildcardEnd')
+  return true
+}
+
+/**
+ * Fallback for tokens no pattern recognised: keep the word in the OR
+ * bucket. Boolean operators and terms carrying unescaped Lucene syntax
+ * make the parse lossy — re-submitting them as escaped plain words would
+ * change the query's meaning.
+ */
+function parseFallbackWord(token, ctx) {
+  if (LUCENE_BOOLEAN_OPERATORS.includes(token) || !isFaithfulTerm(token)) {
+    ctx.lossy = true
+  }
+  ctx.fallbackAnyWords.push(unescapeTerm(token))
+}
+
+/**
+ * Recognised token patterns, tried in order. The first parser to match
+ * consumes the token.
+ */
+const TOKEN_PARSERS = Object.freeze([
+  tryParseProximity,
+  tryParseFuzzy,
+  tryParseExactPhrase,
+  tryParseOrGroup,
+  tryParseAllWords,
+  tryParseNoneWords,
+  tryParseSingleWildcard,
+  tryParseMultiWildcard
+])
+
+function parseToken(token, ctx) {
+  for (const tryParse of TOKEN_PARSERS) {
+    if (tryParse(token, ctx)) {
+      return
+    }
+  }
+  parseFallbackWord(token, ctx)
+}
+
+/**
+ * Flush the accumulated word buckets into the form's string inputs. Plain
+ * words mixed into the OR bucket are appended after group words so the
+ * generated query keeps them in one group.
+ */
+function applyWordBuckets(ctx) {
+  ctx.form.anyWords = [...ctx.anyWords, ...ctx.fallbackAnyWords].join(' ')
+  ctx.form.allWords = ctx.allWords.join(' ')
+  ctx.form.noneWords = ctx.noneWords.join(' ')
+  // The form carries a single exact phrase; a surplus one cannot be moved
+  // to the OR words without breaking it apart on submit (the words input
+  // splits on whitespace), so it makes the parse lossy instead.
+  if (ctx.exactPhrases.length > 0) {
+    ctx.form.exactPhrase = ctx.exactPhrases[0]
+    if (ctx.exactPhrases.length > 1) {
+      ctx.lossy = true
+    }
+  }
 }
 
 /**
  * Parse a Lucene query string back into the advanced-search form shape.
  *
- * Only patterns produced by `generateLuceneQuery` are recognised verbatim;
- * anything else falls into `anyWords` as plain text so the user can still
- * edit it instead of starting from scratch. The mapping is intentionally
- * round-trip safe for the queries this modal emits.
+ * Only patterns produced by `generateLuceneQuery` are recognised. When any
+ * part of the query cannot be represented by the form without changing its
+ * meaning on re-submit — field syntax, boolean operators, ranges, a second
+ * fuzzy/proximity/wildcard clause, an out-of-range distance, a restriction
+ * to an unknown field — the function returns `null` so callers can skip
+ * pre-population instead of silently rewriting the user's query.
  *
  * @param {string} query
- * @returns {Object} A form-shaped object compatible with `getInitialForm`.
+ * @param {Object} [options]
+ * @param {string[]|null} [options.fields] - Allowed values for field
+ *   restrictions. When omitted, any `[\w.]+` field name is accepted.
+ * @returns {Object|null} A form-shaped object compatible with
+ *   `getInitialForm`, or `null` when the query is not representable.
  */
-export function parseLuceneQuery(query) {
+export function parseLuceneQuery(query, { fields: allowedFields = null } = {}) {
   const form = getInitialForm()
-  if (!query || !String(query).trim()) return form
+  if (!query || !String(query).trim()) {
+    return form
+  }
 
-  const { fields, innerQuery } = extractFieldRestrictions(query)
+  const { fields, innerQuery } = extractFieldRestrictions(query, allowedFields)
   if (fields) {
     form.fieldAll = false
     form.selectedFields = fields
   }
 
-  const tokens = tokenize(innerQuery)
-
-  const anyWords = []
-  const allWords = []
-  const noneWords = []
-  const exactPhrases = []
-  // Plain words mixed into the OR bucket are appended last so positional
-  // order is preserved across a round-trip.
-  const fallbackAnyWords = []
-
-  for (const token of tokens) {
-    if (tryParseProximity(token, form)) continue
-    if (tryParseFuzzy(token, form)) continue
-    if (tryParseExactPhrase(token, exactPhrases)) continue
-    if (tryParseOrGroup(token, anyWords)) continue
-    if (tryParseAllWords(token, allWords)) continue
-    if (tryParseNoneWords(token, noneWords)) continue
-    if (tryParseSingleWildcard(token, form)) continue
-    if (tryParseMultiWildcard(token, form)) continue
-
-    // Plain word — drop it in the OR bucket so it stays editable.
-    fallbackAnyWords.push(unescapeTerm(token))
+  const ctx = {
+    form,
+    lossy: false,
+    anyWords: [],
+    allWords: [],
+    noneWords: [],
+    exactPhrases: [],
+    fallbackAnyWords: []
   }
 
-  form.anyWords = [...anyWords, ...fallbackAnyWords].join(' ')
-  form.allWords = allWords.join(' ')
-  form.noneWords = noneWords.join(' ')
-  // The form only carries one phrase; surplus phrases survive as plain
-  // text in the OR field so nothing is silently dropped.
-  if (exactPhrases.length > 0) {
-    form.exactPhrase = exactPhrases[0]
-    if (exactPhrases.length > 1) {
-      const extras = exactPhrases.slice(1).map(p => `"${p}"`).join(' ')
-      form.anyWords = form.anyWords ? `${form.anyWords} ${extras}` : extras
-    }
+  for (const token of tokenize(innerQuery)) {
+    parseToken(token, ctx)
   }
 
-  return form
+  applyWordBuckets(ctx)
+
+  return ctx.lossy ? null : form
 }

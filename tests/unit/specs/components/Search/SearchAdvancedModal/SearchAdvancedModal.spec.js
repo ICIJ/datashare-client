@@ -128,6 +128,30 @@ describe('SearchAdvancedModal.vue', () => {
     expect(wrapper.vm.form.selectedFields).toEqual(['tags', 'content'])
   })
 
+  it('opens blank when initialQuery cannot be faithfully represented', async () => {
+    // A hand-written field query would be silently rewritten into a
+    // literal-text search on re-submit, so the form must not pre-populate.
+    const wrapper = shallowMount(SearchAdvancedModal, {
+      props: { modelValue: false, initialQuery: 'content:cat' },
+      global: { plugins, renderStubDefaultSlot: true }
+    })
+    await wrapper.setProps({ modelValue: true })
+    await nextTick()
+    expect(wrapper.vm.form.anyWords).toBe('')
+    expect(wrapper.vm.isFormEmpty).toBe(true)
+  })
+
+  it('opens blank when initialQuery restricts to a field the modal does not offer', async () => {
+    const wrapper = shallowMount(SearchAdvancedModal, {
+      props: { modelValue: false, initialQuery: 'author:(Paris)' },
+      global: { plugins, renderStubDefaultSlot: true }
+    })
+    await wrapper.setProps({ modelValue: true })
+    await nextTick()
+    expect(wrapper.vm.form.fieldAll).toBe(true)
+    expect(wrapper.vm.form.selectedFields).toEqual([])
+  })
+
   it('resets to the initial form when the modal closes', async () => {
     const wrapper = shallowMount(SearchAdvancedModal, {
       props: { modelValue: true, initialQuery: '+Paris' },

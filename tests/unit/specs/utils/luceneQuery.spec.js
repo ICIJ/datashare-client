@@ -568,17 +568,16 @@ describe('luceneQuery', () => {
       expect(f.selectedFields).toEqual(['metadata.tika_metadata_dc_creator'])
     })
 
-    it('bails out to anyWords if a field-restricted query has asymmetric inner queries', () => {
-      const f = parseLuceneQuery('tags:(Paris) OR content:(London)')
-      expect(f.fieldAll).toBe(true)
-      expect(f.selectedFields).toEqual([])
-      expect(f.anyWords).toBe('tags:(Paris) OR content:(London)')
+    it('returns null if a field-restricted query has asymmetric inner queries', () => {
+      // The form cannot hold a different inner query per field; editing a
+      // mangled version would silently drop one of the branches.
+      expect(parseLuceneQuery('tags:(Paris) OR content:(London)')).toBeNull()
     })
 
-    it('keeps a query it cannot recognise in anyWords so the user can still edit it', () => {
-      const f = parseLuceneQuery('weirdField:value AND other:value')
-      // Falls through to plain-text tokens — at minimum nothing is lost.
-      expect(f.anyWords.length).toBeGreaterThan(0)
+    it('returns null for a query it cannot faithfully represent', () => {
+      // Re-submitting these as escaped plain words would change their
+      // meaning, so the modal must open blank instead.
+      expect(parseLuceneQuery('weirdField:value AND other:value')).toBeNull()
     })
 
     it('round-trips a representative full form through generate → parse', () => {
@@ -658,6 +657,75 @@ describe('luceneQuery', () => {
       expect(query).toContain('\\:')
       const round = parseLuceneQuery(query)
       expect(round.anyWords).toBe('foo:bar')
+    })
+  })
+
+  describe('parseLuceneQuery non-representable queries', () => {
+    it('returns null for a field:value query', () => {
+      // Escaping the colon on re-submit would turn the field search into
+      // a literal-text search.
+      expect(parseLuceneQuery('content:cat')).toBeNull()
+    })
+
+    it('returns null for boolean operators', () => {
+      expect(parseLuceneQuery('Paris OR London')).toBeNull()
+      expect(parseLuceneQuery('cat AND dog')).toBeNull()
+      expect(parseLuceneQuery('Paris NOT London')).toBeNull()
+    })
+
+    it('returns null for a range query', () => {
+      expect(parseLuceneQuery('date:[2020 TO 2021]')).toBeNull()
+    })
+
+    it('returns null when a second fuzzy clause would be dropped', () => {
+      expect(parseLuceneQuery('roam~2 jakarta~1')).toBeNull()
+    })
+
+    it('returns null when a second proximity clause would be dropped', () => {
+      expect(parseLuceneQuery('"a b"~3 "c d"~5')).toBeNull()
+    })
+
+    it('returns null when a second wildcard clause would be dropped', () => {
+      expect(parseLuceneQuery('a* b*')).toBeNull()
+      expect(parseLuceneQuery('wom?n m?n')).toBeNull()
+    })
+
+    it('returns null when a second exact phrase would be dropped', () => {
+      expect(parseLuceneQuery('"Paris match" "Société SAS"')).toBeNull()
+    })
+
+    it('returns null for a bare wildcard query', () => {
+      // `*` regenerates to an empty query — the match-all would be lost.
+      expect(parseLuceneQuery('*')).toBeNull()
+      expect(parseLuceneQuery('?')).toBeNull()
+    })
+
+    it('returns null for a token with several wildcards', () => {
+      // Only the first `?` fits the form; the second would be re-escaped
+      // into a literal on submit.
+      expect(parseLuceneQuery('a?b?c')).toBeNull()
+      expect(parseLuceneQuery('a?b*c')).toBeNull()
+    })
+
+    it('returns null for out-of-range distances', () => {
+      // The sliders cap fuzzy at 2 and proximity at 6; clamping would
+      // silently change the user's distance.
+      expect(parseLuceneQuery('foo~3')).toBeNull()
+      expect(parseLuceneQuery('"a b"~7')).toBeNull()
+      expect(parseLuceneQuery('foo~0')).toBeNull()
+    })
+
+    it('returns null for a restriction to a field the modal does not offer', () => {
+      const fields = ['tags', 'content']
+      expect(parseLuceneQuery('author:(Paris)', { fields })).toBeNull()
+      expect(parseLuceneQuery('tags:(Paris)', { fields })).not.toBeNull()
+    })
+
+    it('parses a long crafted field-restricted query without pathological backtracking', () => {
+      // Regression guard: the previous wrapper-detection regex had nested
+      // quantifiers and froze the main thread on this exact shape.
+      const query = 'f:(x)' + ' OR f:(x)'.repeat(40) + ' zzzz'
+      expect(parseLuceneQuery(query)).toBeNull()
     })
   })
 })
