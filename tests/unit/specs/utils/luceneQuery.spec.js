@@ -552,6 +552,26 @@ describe('luceneQuery', () => {
       expect(f.multiWildcardEnd).toBe('es')
     })
 
+    it('does not parse escaped wildcard characters as wildcards', () => {
+      const f = parseLuceneQuery('abc\\?def')
+      expect(f.singleWildcardStart).toBe('')
+      expect(f.singleWildcardEnd).toBe('')
+      expect(f.anyWords).toBe('abc?def')
+    })
+
+    it('does not parse escaped asterisk characters as wildcards', () => {
+      const f = parseLuceneQuery('abc\\*def')
+      expect(f.multiWildcardStart).toBe('')
+      expect(f.multiWildcardEnd).toBe('')
+      expect(f.anyWords).toBe('abc*def')
+    })
+
+    it('parses a wildcard following an escaped backslash', () => {
+      const f = parseLuceneQuery('abc\\\\?def')
+      expect(f.singleWildcardStart).toBe('abc\\')
+      expect(f.singleWildcardEnd).toBe('def')
+    })
+
     it('parses field-restricted queries into selectedFields + inner query', () => {
       const f = parseLuceneQuery('tags:(Paris) OR content:(Paris)')
       expect(f.fieldAll).toBe(false)
