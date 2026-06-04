@@ -661,6 +661,14 @@ describe('luceneQuery', () => {
   })
 
   describe('parseLuceneQuery non-representable queries', () => {
+    it('returns null for a query the shared lucene grammar rejects', () => {
+      // The search bar, breadcrumb and store all read `q` through the
+      // `lucene` package; a query it cannot parse is not representable.
+      expect(parseLuceneQuery('"unclosed')).toBeNull()
+      expect(parseLuceneQuery('(unclosed')).toBeNull()
+      expect(parseLuceneQuery(')stray(')).toBeNull()
+    })
+
     it('returns null for a field:value query', () => {
       // Escaping the colon on re-submit would turn the field search into
       // a literal-text search.

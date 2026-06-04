@@ -1,3 +1,5 @@
+import lucene from 'lucene'
+
 /**
  * Reserved characters that have special meaning in Lucene query syntax.
  * They must be backslash-escaped when they appear inside a user-supplied
@@ -175,6 +177,23 @@ function unescapeTerm(term) {
 }
 
 const unescapePhrase = unescapeTerm
+
+/**
+ * The rest of the app (search bar, breadcrumb, search store) reads `q`
+ * through the `lucene` package's grammar. A query that grammar rejects
+ * (unbalanced quotes or parentheses, stray operators…) cannot be claimed
+ * representable by the form either, so it is screened out before our own
+ * pattern matching runs.
+ */
+function isParseableLuceneQuery(query) {
+  try {
+    lucene.parse(query)
+    return true
+  }
+  catch {
+    return false
+  }
+}
 
 /**
  * A raw (still-escaped) term is representable in the form only when
@@ -533,10 +552,11 @@ function applyWordBuckets(ctx) {
  *
  * Only patterns produced by `generateLuceneQuery` are recognised. When any
  * part of the query cannot be represented by the form without changing its
- * meaning on re-submit — field syntax, boolean operators, ranges, a second
- * fuzzy/proximity/wildcard clause, an out-of-range distance, a restriction
- * to an unknown field — the function returns `null` so callers can skip
- * pre-population instead of silently rewriting the user's query.
+ * meaning on re-submit — malformed syntax, field syntax, boolean operators,
+ * ranges, a second fuzzy/proximity/wildcard clause, an out-of-range
+ * distance, a restriction to an unknown field — the function returns `null`
+ * so callers can skip pre-population instead of silently rewriting the
+ * user's query.
  *
  * @param {string} query
  * @param {Object} [options]
@@ -549,6 +569,10 @@ export function parseLuceneQuery(query, { fields: allowedFields = null } = {}) {
   const form = getInitialForm()
   if (!query || !String(query).trim()) {
     return form
+  }
+
+  if (!isParseableLuceneQuery(query)) {
+    return null
   }
 
   const { fields, innerQuery } = extractFieldRestrictions(query, allowedFields)
