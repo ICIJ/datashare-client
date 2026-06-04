@@ -130,8 +130,9 @@
 </template>
 
 <script setup>
-import { computed, nextTick, watch, useTemplateRef } from 'vue'
+import { computed, nextTick, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { whenever } from '@vueuse/core'
 import IPhUniteSquare from '~icons/ph/unite-square'
 import IPhIntersectSquare from '~icons/ph/intersect-square'
 import IPhQuotes from '~icons/ph/quotes'
@@ -240,7 +241,8 @@ async function handleOpen() {
 
 // Open pre-populates and focuses; close resets so the next open starts
 // clean if the parent stops passing a query.
-watch(isVisible, visible => (visible ? handleOpen() : handleReset()))
+whenever(isVisible, handleOpen)
+whenever(() => !isVisible.value, handleReset)
 
 function handleSearch() {
   // Pressing Enter inside an input also submits the form, so guard here
