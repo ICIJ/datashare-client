@@ -273,17 +273,18 @@ function findUnescapedChar(str, char) {
 /**
  * Attempt to extract field restrictions from the query wrapper.
  * E.g., "tags:(Paris) OR content:(Paris)"
+ *
+ * The split + per-branch match below is the sole validator — a dedicated
+ * "does this look field-restricted" regex would need nested quantifiers
+ * and is susceptible to catastrophic backtracking on crafted input. When
+ * the query is not field-restricted at all, the single resulting "branch"
+ * fails the per-branch match and we bail out with the query unchanged.
+ *
  * If the wrapper is symmetric (all fields share the exact same inner query),
  * returns the fields and the inner query. Otherwise, returns null fields and original query.
  */
 function extractFieldRestrictions(query) {
   const remaining = String(query).trim()
-  const fieldRestrictedRe = /^[\w.]+:\(.+\)( OR [\w.]+:\(.+\))*$/
-
-  if (!fieldRestrictedRe.test(remaining)) {
-    return { fields: null, innerQuery: remaining }
-  }
-
   const branches = remaining.split(/ OR (?=[\w.]+:\()/)
   const fields = []
   let inner = null
