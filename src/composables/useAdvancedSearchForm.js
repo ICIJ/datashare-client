@@ -1,5 +1,6 @@
 import { reactive, computed } from 'vue'
 
+import { getInitialForm, toQueryShape } from '@/utils/luceneQuery'
 import IPhHash from '~icons/ph/hash'
 import IPhFileText from '~icons/ph/file-text'
 import IPhUserList from '~icons/ph/user-list'
@@ -23,50 +24,15 @@ export const ADVANCED_SEARCH_FIELDS = [
   { value: 'metadata.tika_metadata_message_raw_header_thread_index', label: 'searchAdvancedModal.fields.threadId', icon: IPhChatsTeardrop }
 ]
 
-/**
- * Default form shape. Word inputs hold strings (whitespace splitting is
- * deferred to submit time), distances default to 1 — distance 0 is the
- * disabled state and the slider's `min` enforces that floor.
- */
-export function getInitialForm() {
-  return {
-    anyWords: '',
-    allWords: '',
-    exactPhrase: '',
-    noneWords: '',
-    singleWildcardStart: '',
-    singleWildcardEnd: '',
-    multiWildcardStart: '',
-    multiWildcardEnd: '',
-    fuzzyTerm: '',
-    fuzzyDistance: 1,
-    proximityPhrase: '',
-    proximityDistance: 1,
-    fieldAll: true,
-    selectedFields: []
-  }
-}
+// Re-exported so form-shape consumers keep a single import point even
+// though the helpers live with the query generator/parser they mirror.
+export { getInitialForm, toQueryShape }
 
 /**
- * Convert the form's string-typed word inputs into the array shape
- * `generateLuceneQuery` expects. Splits on whitespace for word lists
- * and keeps the exact phrase as a single quoted entry.
- */
-export function toQueryShape(f) {
-  const words = s => s.trim().split(/\s+/).filter(Boolean)
-  return {
-    ...f,
-    anyWords: words(f.anyWords),
-    allWords: words(f.allWords),
-    noneWords: words(f.noneWords),
-    exactPhrase: f.exactPhrase.trim() ? [f.exactPhrase.trim()] : []
-  }
-}
-
-/**
- * Owns the advanced-search modal's form state, the empty-form
- * derivation, the all-vs-individual-fields mutual-exclusion rules,
- * and the reset key used to remount inputs on Reset.
+ * Owns the advanced-search modal's form state, the all-vs-individual-fields
+ * mutual-exclusion rules, and the reset key used to remount inputs on
+ * Reset. The form shape itself is defined in `@/utils/luceneQuery`, next to
+ * the generate/parse pair that produces and consumes it.
  */
 export function useAdvancedSearchForm() {
   const form = reactive(getInitialForm())

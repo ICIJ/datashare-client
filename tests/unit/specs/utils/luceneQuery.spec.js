@@ -1,21 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { generateLuceneQuery as generateQuery, parseLuceneQuery } from '@/utils/luceneQuery'
-
-/**
- * Lift a form to the array shape expected by `generateLuceneQuery` — same
- * helper as `toQueryShape` in useAdvancedSearchForm, duplicated here so the
- * round-trip tests stay independent of that module.
- */
-function toQueryShape(f) {
-  const words = s => (s || '').trim().split(/\s+/).filter(Boolean)
-  return {
-    ...f,
-    anyWords: words(f.anyWords),
-    allWords: words(f.allWords),
-    noneWords: words(f.noneWords),
-    exactPhrase: f.exactPhrase?.trim() ? [f.exactPhrase.trim()] : []
-  }
-}
+import { generateLuceneQuery as generateQuery, parseLuceneQuery, toQueryShape } from '@/utils/luceneQuery'
 
 describe('luceneQuery', () => {
   describe('generateLuceneQuery', () => {
