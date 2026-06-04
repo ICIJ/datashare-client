@@ -564,6 +564,13 @@ describe('luceneQuery', () => {
       expect(f.selectedFields).toEqual(['metadata.tika_metadata_dc_creator'])
     })
 
+    it('bails out to anyWords if a field-restricted query has asymmetric inner queries', () => {
+      const f = parseLuceneQuery('tags:(Paris) OR content:(London)')
+      expect(f.fieldAll).toBe(true)
+      expect(f.selectedFields).toEqual([])
+      expect(f.anyWords).toBe('tags:(Paris) OR content:(London)')
+    })
+
     it('keeps a query it cannot recognise in anyWords so the user can still edit it', () => {
       const f = parseLuceneQuery('weirdField:value AND other:value')
       // Falls through to plain-text tokens — at minimum nothing is lost.

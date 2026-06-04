@@ -218,6 +218,11 @@ function extractFieldRestrictions(query) {
     if (!m) {
       return { fields: null, innerQuery: remaining }
     }
+    // Asymmetric query protection: if different branches have different inner queries,
+    // we cannot represent this in the modal settings, so bail out.
+    if (inner !== null && inner !== m[2]) {
+      return { fields: null, innerQuery: remaining }
+    }
     fields.push(m[1])
     inner = inner ?? m[2]
   }
