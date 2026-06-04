@@ -77,7 +77,7 @@
         <search-advanced-modal-field-range
           v-model:term="form.fuzzyTerm"
           v-model:distance="form.fuzzyDistance"
-          :max="2"
+          :max="FUZZY_DISTANCE_MAX"
           :label="t('searchAdvancedModal.fuzzySearch')"
           :icon="IPhTextAa"
           :range-label="t('searchAdvancedModal.charactersDifferent')"
@@ -89,7 +89,7 @@
         <search-advanced-modal-field-range
           v-model:term="form.proximityPhrase"
           v-model:distance="form.proximityDistance"
-          :max="6"
+          :max="PROXIMITY_DISTANCE_MAX"
           :label="t('searchAdvancedModal.proximitySearch')"
           :icon="IPhArrowsOutLineHorizontal"
           :range-label="t('searchAdvancedModal.maxWordsApart')"
@@ -148,7 +148,12 @@ import SearchAdvancedModalFieldWildcard from './SearchAdvancedModalFieldWildcard
 import SearchAdvancedModalFieldsSelect from './SearchAdvancedModalFieldsSelect.vue'
 import SearchAdvancedModalFooter from './SearchAdvancedModalFooter.vue'
 import { useAdvancedSearchForm } from '@/composables/useAdvancedSearchForm'
-import { generateLuceneQuery, parseLuceneQuery } from '@/utils/luceneQuery'
+import {
+  generateLuceneQuery,
+  parseLuceneQuery,
+  FUZZY_DISTANCE_MAX,
+  PROXIMITY_DISTANCE_MAX
+} from '@/utils/luceneQuery'
 
 const isVisible = defineModel({ type: Boolean, default: false })
 /**
@@ -202,10 +207,13 @@ const proximityExplanations = computed(() => [
 /**
  * Pre-populate the form with the parsed `initialQuery` whenever the modal
  * opens so the user can edit the active search rather than starting from
- * scratch. Reset on close so the next open is clean if the parent stops
- * passing a query. Autofocus the first input on open in both cases so
- * users can start typing right away and screen readers announce the
- * labelled field.
+ * scratch. The parse returns `null` for queries the form cannot faithfully
+ * represent (hand-written field syntax, boolean operators, ranges…) — in
+ * that case the form opens blank instead of silently rewriting the query
+ * on the next search. Reset on close so the next open is clean if the
+ * parent stops passing a query. Autofocus the first input on open in both
+ * cases so users can start typing right away and screen readers announce
+ * the labelled field.
  */
 watch(isVisible, async (visible) => {
   if (!visible) {
@@ -213,7 +221,11 @@ watch(isVisible, async (visible) => {
     return
   }
   if (props.initialQuery) {
-    Object.assign(form, parseLuceneQuery(props.initialQuery))
+    const allowedFields = fields.map(({ value }) => value)
+    const parsed = parseLuceneQuery(props.initialQuery, { fields: allowedFields })
+    if (parsed) {
+      Object.assign(form, parsed)
+    }
   }
   await nextTick()
   firstInput.value?.focus?.()
