@@ -205,31 +205,42 @@ const proximityExplanations = computed(() => [
 ])
 
 /**
- * Pre-populate the form with the parsed `initialQuery` whenever the modal
- * opens so the user can edit the active search rather than starting from
- * scratch. The parse returns `null` for queries the form cannot faithfully
- * represent (hand-written field syntax, boolean operators, ranges…) — in
- * that case the form opens blank instead of silently rewriting the query
- * on the next search. Reset on close so the next open is clean if the
- * parent stops passing a query. Autofocus the first input on open in both
- * cases so users can start typing right away and screen readers announce
- * the labelled field.
+ * Pre-populate the form with the parsed `initialQuery` so the user can
+ * edit the active search rather than starting from scratch. The parse
+ * returns `null` for queries the form cannot faithfully represent
+ * (hand-written field syntax, boolean operators, ranges…) — in that case
+ * the form stays blank instead of silently rewriting the query on the
+ * next search.
  */
-watch(isVisible, async (visible) => {
-  if (!visible) {
-    handleReset()
+function populateFromInitialQuery() {
+  if (!props.initialQuery) {
     return
   }
-  if (props.initialQuery) {
-    const allowedFields = fields.map(({ value }) => value)
-    const parsed = parseLuceneQuery(props.initialQuery, { fields: allowedFields })
-    if (parsed) {
-      Object.assign(form, parsed)
-    }
+  const allowedFields = fields.map(({ value }) => value)
+  const parsed = parseLuceneQuery(props.initialQuery, { fields: allowedFields })
+  if (parsed) {
+    Object.assign(form, parsed)
   }
+}
+
+/**
+ * Autofocus the first input so users can start typing right away and
+ * screen readers announce the labelled field. Waits a tick so the modal
+ * content is rendered before focusing.
+ */
+async function focusFirstInput() {
   await nextTick()
   firstInput.value?.focus?.()
-})
+}
+
+async function handleOpen() {
+  populateFromInitialQuery()
+  await focusFirstInput()
+}
+
+// Open pre-populates and focuses; close resets so the next open starts
+// clean if the parent stops passing a query.
+watch(isVisible, visible => (visible ? handleOpen() : handleReset()))
 
 function handleSearch() {
   // Pressing Enter inside an input also submits the form, so guard here
