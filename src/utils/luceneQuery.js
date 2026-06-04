@@ -196,6 +196,28 @@ function tokenize(query) {
 }
 
 /**
+ * Find the index of the first occurrence of a character in a string that is
+ * not preceded by an unescaped backslash escape sequence.
+ */
+function findUnescapedChar(str, char) {
+  let escape = false
+  for (let i = 0; i < str.length; i++) {
+    if (escape) {
+      escape = false
+      continue
+    }
+    if (str[i] === '\\') {
+      escape = true
+      continue
+    }
+    if (str[i] === char) {
+      return i
+    }
+  }
+  return -1
+}
+
+/**
  * Attempt to extract field restrictions from the query wrapper.
  * E.g., "tags:(Paris) OR content:(Paris)"
  * If the wrapper is symmetric (all fields share the exact same inner query),
@@ -278,20 +300,24 @@ function tryParseNoneWords(token, noneWords) {
 }
 
 function tryParseSingleWildcard(token, form) {
-  if (token.includes('?') && !token.includes('*')) {
-    const [start, ...rest] = token.split('?')
+  const idx = findUnescapedChar(token, '?')
+  if (idx !== -1 && findUnescapedChar(token, '*') === -1) {
+    const start = token.slice(0, idx)
+    const end = token.slice(idx + 1)
     form.singleWildcardStart = unescapeTerm(start)
-    form.singleWildcardEnd = unescapeTerm(rest.join('?'))
+    form.singleWildcardEnd = unescapeTerm(end)
     return true
   }
   return false
 }
 
 function tryParseMultiWildcard(token, form) {
-  if (token.includes('*') && !token.includes('?')) {
-    const [start, ...rest] = token.split('*')
+  const idx = findUnescapedChar(token, '*')
+  if (idx !== -1 && findUnescapedChar(token, '?') === -1) {
+    const start = token.slice(0, idx)
+    const end = token.slice(idx + 1)
     form.multiWildcardStart = unescapeTerm(start)
-    form.multiWildcardEnd = unescapeTerm(rest.join('*'))
+    form.multiWildcardEnd = unescapeTerm(end)
     return true
   }
   return false
