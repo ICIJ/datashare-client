@@ -107,11 +107,11 @@ export function generateLuceneQuery(formData) {
 }
 
 /**
- * Default form shape returned by `parseLuceneQuery` when the input is empty
- * or unparseable. Word inputs are blank strings, distances default to 1
- * (mirroring `getInitialForm` in useAdvancedSearchForm).
+ * Default advanced-search form shape. Word inputs hold strings (whitespace
+ * splitting is deferred to submit time), distances default to 1 — distance
+ * 0 is the disabled state and the slider's `min` enforces that floor.
  */
-function emptyForm() {
+export function getInitialForm() {
   return {
     anyWords: '',
     allWords: '',
@@ -127,6 +127,22 @@ function emptyForm() {
     proximityDistance: 1,
     fieldAll: true,
     selectedFields: []
+  }
+}
+
+/**
+ * Convert the form's string-typed word inputs into the array shape
+ * `generateLuceneQuery` expects. Splits on whitespace for word lists
+ * and keeps the exact phrase as a single quoted entry.
+ */
+export function toQueryShape(f) {
+  const words = s => s.trim().split(/\s+/).filter(Boolean)
+  return {
+    ...f,
+    anyWords: words(f.anyWords),
+    allWords: words(f.allWords),
+    noneWords: words(f.noneWords),
+    exactPhrase: f.exactPhrase.trim() ? [f.exactPhrase.trim()] : []
   }
 }
 
@@ -372,7 +388,7 @@ function tryParseMultiWildcard(token, form) {
  * @returns {Object} A form-shaped object compatible with `getInitialForm`.
  */
 export function parseLuceneQuery(query) {
-  const form = emptyForm()
+  const form = getInitialForm()
   if (!query || !String(query).trim()) return form
 
   const { fields, innerQuery } = extractFieldRestrictions(query)
