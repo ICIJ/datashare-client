@@ -9,6 +9,7 @@ import { useCore } from '@/composables/useCore'
 import { useAuth } from '@/composables/useAuth'
 
 const FORM_AUTH_FILTER = 'org.icij.datashare.session.FormAuthFilter'
+const FORM_AUTH = 'form'
 
 const core = useCore()
 const { username } = useAuth()
@@ -19,7 +20,7 @@ const isFormAuth = computed(() => {
   // `authFilter` setting. When `auth` is set, it alone decides the layout.
   const auth = core.config.get('auth')
   if (auth !== undefined && auth !== null) {
-    return auth === 'form'
+    return auth === FORM_AUTH
   }
   return core.config.get('authFilter') === FORM_AUTH_FILTER
 })
