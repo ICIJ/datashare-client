@@ -14,7 +14,15 @@ const core = useCore()
 const { username } = useAuth()
 const router = useRouter()
 
-const isFormAuth = computed(() => core.config.get('authFilter') === FORM_AUTH_FILTER)
+const isFormAuth = computed(() => {
+  // The `auth` setting (e.g. `--auth form`) takes precedence over the legacy
+  // `authFilter` setting. When `auth` is set, it alone decides the layout.
+  const auth = core.config.get('auth')
+  if (auth !== undefined && auth !== null) {
+    return auth === 'form'
+  }
+  return core.config.get('authFilter') === FORM_AUTH_FILTER
+})
 
 // This ensures the login page can only be accessed by unauthenticated users
 whenever(username, () => router.push({ name: 'landing' }))

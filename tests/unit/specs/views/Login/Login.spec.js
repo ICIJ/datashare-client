@@ -39,4 +39,35 @@ describe('Login.vue', () => {
       expect(wrapper.find('.login--form-auth').exists()).toBe(true)
     })
   })
+
+  describe('when auth is "form"', () => {
+    beforeEach(() => {
+      core.config.set('auth', 'form')
+      wrapper = mount(Login, { global: { plugins: core.plugins } })
+    })
+
+    it('should show the card layout', () => {
+      expect(wrapper.findComponent(LoginCard).exists()).toBe(true)
+    })
+
+    it('should not show the welcome layout', () => {
+      expect(wrapper.findComponent(LoginWelcome).exists()).toBe(false)
+    })
+  })
+
+  describe('when auth takes precedence over authFilter', () => {
+    it('should show the card layout when auth is "form" even without authFilter', () => {
+      core.config.set('auth', 'form')
+      wrapper = mount(Login, { global: { plugins: core.plugins } })
+      expect(wrapper.findComponent(LoginCard).exists()).toBe(true)
+    })
+
+    it('should show the welcome layout when auth is not "form" even if authFilter is FormAuthFilter', () => {
+      core.config.set('auth', 'oauth')
+      core.config.set('authFilter', 'org.icij.datashare.session.FormAuthFilter')
+      wrapper = mount(Login, { global: { plugins: core.plugins } })
+      expect(wrapper.findComponent(LoginWelcome).exists()).toBe(true)
+      expect(wrapper.findComponent(LoginCard).exists()).toBe(false)
+    })
+  })
 })
