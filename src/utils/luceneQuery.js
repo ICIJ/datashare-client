@@ -140,59 +140,96 @@ function unescapeTerm(term) {
 
 const unescapePhrase = unescapeTerm
 
+class QueryTokenizer {
+  constructor(query) {
+    this.query = query
+    this.tokens = []
+    this.current = ''
+    this.inQuotes = false
+    this.parenDepth = 0
+    this.escape = false
+  }
+
+  tokenize() {
+    for (const ch of this.query) {
+      this.handleChar(ch)
+    }
+    this.flush()
+    return this.tokens
+  }
+
+  flush() {
+    if (this.current) {
+      this.tokens.push(this.current)
+      this.current = ''
+    }
+  }
+
+  handleChar(ch) {
+    if (this.escape) {
+      this.handleEscaped(ch)
+    }
+    else if (ch === '\\') {
+      this.handleEscapeChar(ch)
+    }
+    else if (ch === '"') {
+      this.handleQuote(ch)
+    }
+    else if (!this.inQuotes && ch === '(') {
+      this.handleOpenParen(ch)
+    }
+    else if (!this.inQuotes && ch === ')') {
+      this.handleCloseParen(ch)
+    }
+    else if (!this.inQuotes && this.parenDepth === 0 && /\s/.test(ch)) {
+      this.handleWhitespace()
+    }
+    else {
+      this.handleDefault(ch)
+    }
+  }
+
+  handleEscaped(ch) {
+    this.current += ch
+    this.escape = false
+  }
+
+  handleEscapeChar(ch) {
+    this.current += ch
+    this.escape = true
+  }
+
+  handleQuote(ch) {
+    this.current += ch
+    this.inQuotes = !this.inQuotes
+  }
+
+  handleOpenParen(ch) {
+    this.current += ch
+    this.parenDepth++
+  }
+
+  handleCloseParen(ch) {
+    this.current += ch
+    this.parenDepth--
+  }
+
+  handleWhitespace() {
+    this.flush()
+  }
+
+  handleDefault(ch) {
+    this.current += ch
+  }
+}
+
 /**
  * Split a Lucene query on top-level whitespace while keeping quoted phrases
  * and parenthesised groups (including their trailing `~N` modifier) as
  * single tokens. Handles backslash escapes inside both.
  */
 function tokenize(query) {
-  const tokens = []
-  let current = ''
-  let inQuotes = false
-  let parenDepth = 0
-  let escape = false
-
-  const flush = () => {
-    if (current) {
-      tokens.push(current)
-      current = ''
-    }
-  }
-
-  for (const ch of query) {
-    if (escape) {
-      current += ch
-      escape = false
-      continue
-    }
-    if (ch === '\\') {
-      current += ch
-      escape = true
-      continue
-    }
-    if (ch === '"') {
-      current += ch
-      inQuotes = !inQuotes
-      continue
-    }
-    if (!inQuotes && ch === '(') {
-      current += ch
-      parenDepth++
-      continue
-    }
-    if (!inQuotes && ch === ')') {
-      current += ch
-      parenDepth--
-      continue
-    }
-    if (!inQuotes && parenDepth === 0 && /\s/.test(ch)) {
-      flush()
-      continue
-    }
-    current += ch
-  }
-  flush()
-  return tokens
+  return new QueryTokenizer(query).tokenize()
 }
 
 /**
