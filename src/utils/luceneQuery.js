@@ -196,6 +196,103 @@ function tokenize(query) {
 }
 
 /**
+ * Attempt to extract field restrictions from the query wrapper.
+ * E.g., "tags:(Paris) OR content:(Paris)"
+ * If the wrapper is symmetric (all fields share the exact same inner query),
+ * returns the fields and the inner query. Otherwise, returns null fields and original query.
+ */
+function extractFieldRestrictions(query) {
+  const remaining = String(query).trim()
+  const fieldRestrictedRe = /^[\w.]+:\(.+\)( OR [\w.]+:\(.+\))*$/
+
+  if (!fieldRestrictedRe.test(remaining)) {
+    return { fields: null, innerQuery: remaining }
+  }
+
+  const branches = remaining.split(/ OR (?=[\w.]+:\()/)
+  const fields = []
+  let inner = null
+
+  for (const branch of branches) {
+    const m = branch.match(/^([\w.]+):\((.+)\)$/)
+    if (!m) {
+      return { fields: null, innerQuery: remaining }
+    }
+    fields.push(m[1])
+    inner = inner ?? m[2]
+  }
+
+  return { fields, innerQuery: inner }
+}
+
+function tryParseProximity(token, form) {
+  const m = token.match(/^"(.+)"~(\d+)$/)
+  if (!m) return false
+  form.proximityPhrase = unescapePhrase(m[1])
+  form.proximityDistance = Number(m[2]) || 1
+  return true
+}
+
+function tryParseFuzzy(token, form) {
+  const m = token.match(/^([^"\s]+)~(\d+)$/)
+  if (!m) return false
+  form.fuzzyTerm = unescapeTerm(m[1])
+  form.fuzzyDistance = Number(m[2]) || 1
+  return true
+}
+
+function tryParseExactPhrase(token, exactPhrases) {
+  const m = token.match(/^"(.+)"$/)
+  if (!m) return false
+  exactPhrases.push(unescapePhrase(m[1]))
+  return true
+}
+
+function tryParseOrGroup(token, anyWords) {
+  const m = token.match(/^\((.+)\)$/)
+  if (!m) return false
+  const inner = tokenize(m[1])
+  for (const w of inner) anyWords.push(unescapeTerm(w))
+  return true
+}
+
+function tryParseAllWords(token, allWords) {
+  if (token.startsWith('+') && token.length > 1) {
+    allWords.push(unescapeTerm(token.slice(1)))
+    return true
+  }
+  return false
+}
+
+function tryParseNoneWords(token, noneWords) {
+  if (token.startsWith('-') && token.length > 1) {
+    noneWords.push(unescapeTerm(token.slice(1)))
+    return true
+  }
+  return false
+}
+
+function tryParseSingleWildcard(token, form) {
+  if (token.includes('?') && !token.includes('*')) {
+    const [start, ...rest] = token.split('?')
+    form.singleWildcardStart = unescapeTerm(start)
+    form.singleWildcardEnd = unescapeTerm(rest.join('?'))
+    return true
+  }
+  return false
+}
+
+function tryParseMultiWildcard(token, form) {
+  if (token.includes('*') && !token.includes('?')) {
+    const [start, ...rest] = token.split('*')
+    form.multiWildcardStart = unescapeTerm(start)
+    form.multiWildcardEnd = unescapeTerm(rest.join('*'))
+    return true
+  }
+  return false
+}
+
+/**
  * Parse a Lucene query string back into the advanced-search form shape.
  *
  * Only patterns produced by `generateLuceneQuery` are recognised verbatim;
@@ -210,35 +307,13 @@ export function parseLuceneQuery(query) {
   const form = emptyForm()
   if (!query || !String(query).trim()) return form
 
-  let remaining = String(query).trim()
-
-  // Detect the `field1:(inner) OR field2:(inner) …` wrapper produced when
-  // specific fields are picked. All branches share the same `inner`, so
-  // grab one and continue parsing it.
-  const fieldRestrictedRe = /^[\w.]+:\(.+\)( OR [\w.]+:\(.+\))*$/
-  if (fieldRestrictedRe.test(remaining)) {
-    const branches = remaining.split(/ OR (?=[\w.]+:\()/)
-    const fields = []
-    let inner = null
-    for (const branch of branches) {
-      const m = branch.match(/^([\w.]+):\((.+)\)$/)
-      if (!m) {
-        // Bail out: the outer wrap doesn't perfectly match what we generate.
-        fields.length = 0
-        inner = null
-        break
-      }
-      fields.push(m[1])
-      inner = inner ?? m[2]
-    }
-    if (fields.length > 0 && inner !== null) {
-      form.fieldAll = false
-      form.selectedFields = fields
-      remaining = inner
-    }
+  const { fields, innerQuery } = extractFieldRestrictions(query)
+  if (fields) {
+    form.fieldAll = false
+    form.selectedFields = fields
   }
 
-  const tokens = tokenize(remaining)
+  const tokens = tokenize(innerQuery)
 
   const anyWords = []
   const allWords = []
@@ -249,64 +324,14 @@ export function parseLuceneQuery(query) {
   const fallbackAnyWords = []
 
   for (const token of tokens) {
-    // "phrase"~N → proximity
-    const proximity = token.match(/^"(.+)"~(\d+)$/)
-    if (proximity) {
-      form.proximityPhrase = unescapePhrase(proximity[1])
-      form.proximityDistance = Number(proximity[2]) || 1
-      continue
-    }
-
-    // term~N → fuzzy
-    const fuzzy = token.match(/^([^"\s]+)~(\d+)$/)
-    if (fuzzy) {
-      form.fuzzyTerm = unescapeTerm(fuzzy[1])
-      form.fuzzyDistance = Number(fuzzy[2]) || 1
-      continue
-    }
-
-    // "phrase" (no ~N) → exactPhrase
-    const phrase = token.match(/^"(.+)"$/)
-    if (phrase) {
-      exactPhrases.push(unescapePhrase(phrase[1]))
-      continue
-    }
-
-    // (a b c) → anyWords OR group
-    const group = token.match(/^\((.+)\)$/)
-    if (group) {
-      const inner = tokenize(group[1])
-      for (const w of inner) anyWords.push(unescapeTerm(w))
-      continue
-    }
-
-    // +word → allWords
-    if (token.startsWith('+') && token.length > 1) {
-      allWords.push(unescapeTerm(token.slice(1)))
-      continue
-    }
-
-    // -word → noneWords
-    if (token.startsWith('-') && token.length > 1) {
-      noneWords.push(unescapeTerm(token.slice(1)))
-      continue
-    }
-
-    // word with a single `?` → singleWildcard (both sides optional)
-    if (token.includes('?') && !token.includes('*')) {
-      const [start, ...rest] = token.split('?')
-      form.singleWildcardStart = unescapeTerm(start)
-      form.singleWildcardEnd = unescapeTerm(rest.join('?'))
-      continue
-    }
-
-    // word with a single `*` → multiWildcard
-    if (token.includes('*') && !token.includes('?')) {
-      const [start, ...rest] = token.split('*')
-      form.multiWildcardStart = unescapeTerm(start)
-      form.multiWildcardEnd = unescapeTerm(rest.join('*'))
-      continue
-    }
+    if (tryParseProximity(token, form)) continue
+    if (tryParseFuzzy(token, form)) continue
+    if (tryParseExactPhrase(token, exactPhrases)) continue
+    if (tryParseOrGroup(token, anyWords)) continue
+    if (tryParseAllWords(token, allWords)) continue
+    if (tryParseNoneWords(token, noneWords)) continue
+    if (tryParseSingleWildcard(token, form)) continue
+    if (tryParseMultiWildcard(token, form)) continue
 
     // Plain word — drop it in the OR bucket so it stays editable.
     fallbackAnyWords.push(unescapeTerm(token))
