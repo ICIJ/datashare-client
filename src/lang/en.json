@@ -501,7 +501,8 @@
     "fileTypes": {
       "legacyIndex": {
         "title": "Category grouping unavailable",
-        "description": "This project was indexed without file type categories."
+        "description": "This project was indexed without file type categories.",
+        "descriptionPlural": "Some of these projects were indexed without file type categories."
       }
     },
     "language": "Languages",

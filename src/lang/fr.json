@@ -482,7 +482,8 @@
     "fileTypes": {
       "legacyIndex": {
         "title": "Regroupement par catégorie indisponible",
-        "description": "Ce projet a été indexé sans données de catégorie."
+        "description": "Ce projet a été indexé sans données de catégorie.",
+        "descriptionPlural": "Some of these projects were indexed without file type categories."
       }
     },
     "language": "Langues",
