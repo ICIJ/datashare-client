@@ -76,6 +76,7 @@ const {
 
 const {
   query,
+  hasQuery,
   visibleTypesFor,
   visibleEntries,
   filteredCategoryPairs
@@ -101,8 +102,10 @@ const {
 const { isCollapsed, toggleCollapse } = useContentTypeCategoryCollapse()
 
 // Search overrides collapse: a non-empty query narrows the grouped view, so
-// matching categories must force-expand without mutating persisted state.
-const isCategoryExpanded = category => !isCollapsed(category) || Boolean(query.value)
+// matching categories must force-expand without mutating persisted state. Reuse
+// the same `hasQuery` that drives which categories/types are rendered, so the
+// force-expand decision can never diverge from the search-narrowing logic.
+const isCategoryExpanded = category => !isCollapsed(category) || hasQuery.value
 
 // "All-selected" reflects the union with the paired contentTypeCategory —
 // a selection in either dimension keeps "All" enabled.
