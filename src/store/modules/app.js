@@ -33,7 +33,8 @@ export const useAppStore = defineStore(
           orderBy: ['_score', 'desc'],
           perPage: '25',
           properties: ['title', 'thumbnail', 'highlights', 'project'],
-          searchOperator: SEARCH_OPERATORS.OR
+          searchOperator: SEARCH_OPERATORS.OR,
+          expandedContentTypeCategories: []
         },
         searchSavedList: {
           orderBy: ['creation_date', 'desc'],
