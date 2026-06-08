@@ -1,9 +1,8 @@
 <script setup>
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ButtonIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur-next'
 
-import IPhCaretRight from '~icons/ph/caret-right'
 import IPhCaretDown from '~icons/ph/caret-down'
 
 import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPanelSectionFilterEntry'
@@ -29,7 +28,6 @@ const props = defineProps({
 const { t } = useI18n()
 const categoryLabel = useContentTypeCategoryLabel()
 const resolvedLabel = computed(() => categoryLabel(props.category))
-const collapseIcon = computed(() => (collapse.value ? IPhCaretRight : IPhCaretDown))
 // Category-specific so each caret has a distinct accessible name (a screen
 // reader otherwise hears the same generic "Toggle" label on every row).
 const collapseLabel = computed(() => t('contentTypesCategoryName.toggle', { category: resolvedLabel.value }))
@@ -37,17 +35,22 @@ const collapseLabel = computed(() => t('contentTypesCategoryName.toggle', { cate
 
 <template>
   <div class="content-types-category-name d-flex align-items-center">
-    <button-icon
+    <!-- Bare caret mirroring PathTreeViewEntryNameCaret so the file-types tree
+         reads like the path filter: a light icon in a flush-left gutter that
+         rotates from down (expanded) to right (collapsed). -->
+    <button
+      type="button"
       class="content-types-category-name__toggler"
-      variant="link"
-      size="sm"
-      :icon-left="collapseIcon"
-      icon-left-weight="bold"
-      :label="collapseLabel"
-      hide-label
-      hide-tooltip
+      :class="{ 'content-types-category-name__toggler--collapse': collapse }"
+      :aria-label="collapseLabel"
+      :aria-expanded="!collapse"
       @click="collapse = !collapse"
-    />
+    >
+      <app-icon
+        :name="IPhCaretDown"
+        class="content-types-category-name__toggler__icon"
+      />
+    </button>
     <filters-panel-section-filter-entry
       v-model="modelValue"
       class="content-types-category-name__entry flex-grow-1"
@@ -61,14 +64,31 @@ const collapseLabel = computed(() => t('contentTypesCategoryName.toggle', { cate
 <style lang="scss" scoped>
 .content-types-category-name {
   &__toggler {
-    // Fixed-width gutter: the caret glyph sits flush at the row's start (no
-    // indent before the caret) while the category checkbox lands at $spacer-lg
-    // — the same offset ContentTypesCategory indents the entries to, so the
-    // category checkbox and its entry checkboxes line up.
+    // Flush-left gutter that lines up with the path filter's caret column: the
+    // glyph starts at the row's edge (no indent before the caret) and the
+    // category checkbox lands at $spacer-lg — the same offset
+    // ContentTypesCategory indents the entries to, so all checkboxes align.
     flex: none;
-    width: $spacer-lg;
+    display: inline-flex;
+    align-items: center;
     justify-content: flex-start;
-    padding-inline: 0;
+    width: $spacer-lg;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--bs-primary);
+
+    &__icon {
+      transition: $transition-base;
+    }
+
+    &--collapse {
+      color: var(--bs-tertiary);
+
+      .content-types-category-name__toggler__icon {
+        transform: rotate(-90deg);
+      }
+    }
   }
 
   &__entry {
