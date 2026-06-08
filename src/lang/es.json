@@ -219,6 +219,9 @@
   "filtersPanelSectionFilterTitleToggler": {
     "toggle": "Conmutar filtro"
   },
+  "contentTypesCategoryName": {
+    "toggle": "Toggle the {category} category"
+  },
   "filtersPanelSearch": {
     "placeholder": "Filtros de búsqueda"
   },

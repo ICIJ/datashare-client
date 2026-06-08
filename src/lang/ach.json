@@ -219,6 +219,9 @@
   "filtersPanelSectionFilterTitleToggler": {
     "toggle": "crwdns7744:0crwdne7744:0"
   },
+  "contentTypesCategoryName": {
+    "toggle": "Toggle the {category} category"
+  },
   "filtersPanelSearch": {
     "placeholder": "crwdns9816:0crwdne9816:0"
   },

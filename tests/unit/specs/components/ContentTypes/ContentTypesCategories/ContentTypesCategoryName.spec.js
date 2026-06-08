@@ -21,6 +21,13 @@ describe('ContentTypesCategoryName.vue', () => {
     expect(wrapper.findComponent(ButtonIcon).exists()).toBe(true)
   })
 
+  it('gives the caret a category-specific accessible label', () => {
+    const wrapper = factory({ collapse: true })
+    // The label must name the category so each per-row caret is distinguishable
+    // to assistive technology (not a generic "Toggle filter").
+    expect(wrapper.findComponent(ButtonIcon).props('label')).toBe('Toggle the Document category')
+  })
+
   it('emits update:collapse with the inverted value when the caret is clicked', async () => {
     const wrapper = factory({ collapse: true })
     await wrapper.findComponent(ButtonIcon).trigger('click')

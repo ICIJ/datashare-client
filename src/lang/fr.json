@@ -216,6 +216,9 @@
   "filtersPanelSectionFilterTitleToggler": {
     "toggle": "Filtres"
   },
+  "contentTypesCategoryName": {
+    "toggle": "Toggle the {category} category"
+  },
   "filtersPanelSearch": {
     "placeholder": "Chercher dans les filtres"
   },

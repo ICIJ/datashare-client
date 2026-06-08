@@ -30,6 +30,9 @@ const { t } = useI18n()
 const categoryLabel = useContentTypeCategoryLabel()
 const resolvedLabel = computed(() => categoryLabel(props.category))
 const collapseIcon = computed(() => (collapse.value ? IPhCaretRight : IPhCaretDown))
+// Category-specific so each caret has a distinct accessible name (a screen
+// reader otherwise hears the same generic "Toggle" label on every row).
+const collapseLabel = computed(() => t('contentTypesCategoryName.toggle', { category: resolvedLabel.value }))
 </script>
 
 <template>
@@ -40,7 +43,7 @@ const collapseIcon = computed(() => (collapse.value ? IPhCaretRight : IPhCaretDo
       size="sm"
       :icon-left="collapseIcon"
       icon-left-weight="bold"
-      :label="t('filtersPanelSectionFilterTitleToggler.toggle')"
+      :label="collapseLabel"
       hide-label
       hide-tooltip
       @click="collapse = !collapse"
