@@ -301,14 +301,14 @@ defineExpose({ form, isFormEmpty, handleSearch, handleReset })
     margin: 0;
     font-size: $small-font-size;
     line-height: $line-height-sm;
-    // Both the "e.g." prefix and the example value share the same secondary
-    // gray; the markup is kept so future variants can re-tint either side.
-    color: var(--bs-secondary-color);
 
     &__prefix {
       // Reserve the width of the widest prefix ("e.g.") so the value column
       // lines up across rows in multi-line examples (AND… stacked over +…).
       min-width: 2.5em;
+      // Only the "e.g." prefix is muted (per the wireframe); the example
+      // value keeps the default body colour so it reads as the focal content.
+      color: var(--bs-secondary-color);
     }
 
     &__break {
