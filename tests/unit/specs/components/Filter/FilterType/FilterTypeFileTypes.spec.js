@@ -14,7 +14,7 @@ import FiltersPanelSectionFilterTitleSort from '@/components/FiltersPanel/Filter
 import { BCollapse } from 'bootstrap-vue-next'
 import { apiInstance as api } from '@/api/apiInstance'
 import { useContentTypeCategoryAvailability } from '@/composables/useContentTypeCategoryAvailability'
-import { useAppStore, useSearchStore } from '@/store/modules'
+import { useSearchStore } from '@/store/modules'
 
 vi.mock('@/api/apiInstance', async (importOriginal) => {
   const { apiInstance } = await importOriginal()
