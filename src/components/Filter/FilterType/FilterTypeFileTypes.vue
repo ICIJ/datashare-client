@@ -122,6 +122,7 @@ const totalCount = computedTotal(filterRef)
     :filter="props.filter"
     :overlay-show="overlayVisible"
     class="filter-type-file-types"
+    flush
   >
     <template #overlay>
       <app-spinner
