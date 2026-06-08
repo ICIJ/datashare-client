@@ -11,9 +11,10 @@ import ContentTypesCategory from '@/components/ContentTypes/ContentTypesCategori
 import ContentTypesCategoryName from '@/components/ContentTypes/ContentTypesCategories/ContentTypesCategoryName'
 import ContentTypesEntry from '@/components/ContentTypes/ContentTypesCategories/ContentTypesEntry'
 import FiltersPanelSectionFilterTitleSort from '@/components/FiltersPanel/FiltersPanelSectionFilterTitleSort'
+import { BCollapse } from 'bootstrap-vue-next'
 import { apiInstance as api } from '@/api/apiInstance'
 import { useContentTypeCategoryAvailability } from '@/composables/useContentTypeCategoryAvailability'
-import { useSearchStore } from '@/store/modules'
+import { useAppStore, useSearchStore } from '@/store/modules'
 
 vi.mock('@/api/apiInstance', async (importOriginal) => {
   const { apiInstance } = await importOriginal()
@@ -1250,6 +1251,64 @@ describe('FilterTypeFileTypes.vue', () => {
 
       expect(visibleCategories()).toEqual(['IMAGE'])
       expect(visibleCategoryItems()).toEqual(['image/jpeg'])
+    })
+  })
+
+  describe('collapsible categories', () => {
+    // Shared fixture: two categories so each collapse/expand test starts from a
+    // consistent state without polluting other describe blocks.
+    const seedCollapsibleCategories = async () => {
+      api.getContentTypeCategories.mockResolvedValue({
+        DOCUMENT: ['application/pdf'],
+        OTHER: ['text/html', 'text/plain']
+      })
+
+      seedContentTypes(['application/pdf', 'text/html', 'text/plain'])
+
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+    }
+
+    // Helper: find all category-level BCollapse wrappers (one per category).
+    const categoryCollapses = () =>
+      wrapper.findAllComponents(ContentTypesCategory)
+        .map(cat => cat.findComponent(BCollapse))
+        .filter(c => c.exists())
+
+    it('hides all entries by default because categories are collapsed', async () => {
+      await seedCollapsibleCategories()
+
+      // No category has been expanded yet — every category's BCollapse must
+      // have model-value false (collapsed).
+      const collapses = categoryCollapses()
+      expect(collapses.length).toBeGreaterThan(0)
+      expect(collapses.every(c => c.props('modelValue') === false)).toBe(true)
+    })
+
+    it('shows entries for a category after emitting update:collapse false on its name row', async () => {
+      await seedCollapsibleCategories()
+
+      // Emit the "expanded" signal on the first ContentTypesCategoryName.
+      wrapper.findComponent(ContentTypesCategoryName).vm.$emit('update:collapse', false)
+      await flushPromises()
+
+      // At least one category BCollapse must now have model-value true (expanded).
+      const collapses = categoryCollapses()
+      expect(collapses.some(c => c.props('modelValue') === true)).toBe(true)
+    })
+
+    it('force-expands matching categories when the in-filter query is non-empty', async () => {
+      await seedCollapsibleCategories()
+
+      // Set a query the same way the existing search tests do.
+      wrapper.findComponent(FilterType).vm.$emit('update:query', 'pdf')
+      await flushPromises()
+
+      // The query force-expands without toggling persisted state — every visible
+      // category BCollapse receives model-value true.
+      const collapses = categoryCollapses()
+      expect(collapses.length).toBeGreaterThan(0)
+      expect(collapses.every(c => c.props('modelValue') === true)).toBe(true)
     })
   })
 

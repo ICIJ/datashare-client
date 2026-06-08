@@ -14,6 +14,7 @@ import { useContentTypeCategories } from '@/composables/useContentTypeCategories
 import { useContentTypeCategoryLabel } from '@/composables/useContentTypeCategoryLabel'
 import { useContentTypeSearchFilter } from '@/composables/useContentTypeSearchFilter'
 import { useContentTypeSelection } from '@/composables/useContentTypeSelection'
+import { useContentTypeCategoryCollapse } from '@/composables/useContentTypeCategoryCollapse'
 import { useContentTypeSort } from '@/composables/useContentTypeSort'
 import { useSearchFilter } from '@/composables/useSearchFilter'
 import { useSearchStore } from '@/store/modules'
@@ -97,6 +98,12 @@ const {
   filteredCategoryPairs
 })
 
+const { isCollapsed, toggleCollapse } = useContentTypeCategoryCollapse()
+
+// Search overrides collapse: a non-empty query narrows the grouped view, so
+// matching categories must force-expand without mutating persisted state.
+const isCategoryExpanded = category => !isCollapsed(category) || Boolean(query.value)
+
 // "All-selected" reflects the union with the paired contentTypeCategory —
 // a selection in either dimension keeps "All" enabled.
 const pairedFilters = computed(() => getFilterPairedDimensions(filterRef))
@@ -148,16 +155,20 @@ const totalCount = computedTotal(filterRef)
               :count="categoryCount(types)"
               :model-value="categoryAllSelected(category, types)"
               :indeterminate="categoryIndeterminate(category, types)"
+              :collapse="!isCategoryExpanded(category)"
               @update:model-value="toggleCategory(category, types, $event)"
+              @update:collapse="toggleCollapse(category, $event)"
             />
-            <content-types-entry
-              v-for="contentType in sortedTypesFor(visibleTypesFor(category, types))"
-              :key="contentType"
-              :content-type="contentType"
-              :count="entryCount(contentType)"
-              :model-value="isEntrySelected(contentType)"
-              @update:model-value="toggleEntry(contentType, $event)"
-            />
+            <b-collapse :model-value="isCategoryExpanded(category)">
+              <content-types-entry
+                v-for="contentType in sortedTypesFor(visibleTypesFor(category, types))"
+                :key="contentType"
+                :content-type="contentType"
+                :count="entryCount(contentType)"
+                :model-value="isEntrySelected(contentType)"
+                @update:model-value="toggleEntry(contentType, $event)"
+              />
+            </b-collapse>
           </content-types-category>
         </template>
         <template v-else>
