@@ -48,6 +48,7 @@ const collapseLabel = computed(() => t('contentTypesCategoryName.toggle', { cate
     >
       <app-icon
         :name="IPhCaretDown"
+        aria-hidden="true"
         class="content-types-category-name__toggler__icon"
       />
     </button>
@@ -66,17 +67,25 @@ const collapseLabel = computed(() => t('contentTypesCategoryName.toggle', { cate
   &__toggler {
     // Flush-left gutter that lines up with the path filter's caret column: the
     // glyph starts at the row's edge (no indent before the caret) and the
-    // category checkbox lands at $spacer-lg — the same offset
-    // ContentTypesCategory indents the entries to, so all checkboxes align.
+    // category checkbox lands at $spacer-lg. ContentTypesCategory indents the
+    // entries one step further ($spacer-lg + $spacer) so they nest visually
+    // inside the category row rather than aligning with its checkbox.
     flex: none;
     display: inline-flex;
     align-items: center;
     justify-content: flex-start;
     width: $spacer-lg;
+    min-height: $spacer-lg;
     padding: 0;
     border: 0;
     background: none;
     color: var(--bs-primary);
+    cursor: pointer;
+
+    &:focus-visible {
+      outline: 2px solid var(--bs-primary);
+      outline-offset: 2px;
+    }
 
     &__icon {
       transition: $transition-base;

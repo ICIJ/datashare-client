@@ -14,7 +14,7 @@ import FiltersPanelSectionFilterTitleSort from '@/components/FiltersPanel/Filter
 import { BCollapse } from 'bootstrap-vue-next'
 import { apiInstance as api } from '@/api/apiInstance'
 import { useContentTypeCategoryAvailability } from '@/composables/useContentTypeCategoryAvailability'
-import { useSearchStore } from '@/store/modules'
+import { useAppStore, useSearchStore } from '@/store/modules'
 
 vi.mock('@/api/apiInstance', async (importOriginal) => {
   const { apiInstance } = await importOriginal()
@@ -1255,6 +1255,13 @@ describe('FilterTypeFileTypes.vue', () => {
   })
 
   describe('collapsible categories', () => {
+    // appStore persists `expandedContentTypeCategories` to localStorage, which a
+    // fresh Pinia rehydrates between tests. Reset it so every test starts from
+    // the collapsed-by-default baseline instead of inheriting a prior expansion.
+    beforeEach(() => {
+      useAppStore().setSettings('search', 'expandedContentTypeCategories', [])
+    })
+
     // Shared fixture: two categories so each collapse/expand test starts from a
     // consistent state without polluting other describe blocks.
     const seedCollapsibleCategories = async () => {
@@ -1309,6 +1316,23 @@ describe('FilterTypeFileTypes.vue', () => {
       const collapses = categoryCollapses()
       expect(collapses.length).toBeGreaterThan(0)
       expect(collapses.every(c => c.props('modelValue') === true)).toBe(true)
+    })
+
+    it('force-expand on query is purely visual — it does not persist expanded state', async () => {
+      await seedCollapsibleCategories()
+      const appStore = useAppStore()
+      // Baseline: nothing persisted, so the collapsed-by-default state holds.
+      expect(appStore.getSettings('search', 'expandedContentTypeCategories')).toEqual([])
+
+      wrapper.findComponent(FilterType).vm.$emit('update:query', 'pdf')
+      await flushPromises()
+      // Visually expanded, but the persisted set must stay untouched.
+      expect(appStore.getSettings('search', 'expandedContentTypeCategories')).toEqual([])
+
+      // Clearing the query collapses everything back (no lingering expansion).
+      wrapper.findComponent(FilterType).vm.$emit('update:query', '')
+      await flushPromises()
+      expect(categoryCollapses().every(c => c.props('modelValue') === false)).toBe(true)
     })
   })
 

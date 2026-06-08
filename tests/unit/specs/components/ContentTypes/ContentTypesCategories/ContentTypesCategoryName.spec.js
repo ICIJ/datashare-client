@@ -41,6 +41,12 @@ describe('ContentTypesCategoryName.vue', () => {
     expect(wrapper.emitted('update:collapse')).toStrictEqual([[false]])
   })
 
+  it('emits update:collapse with true when the caret is clicked while expanded', async () => {
+    const wrapper = factory({ collapse: false })
+    await wrapper.find('button.content-types-category-name__toggler').trigger('click')
+    expect(wrapper.emitted('update:collapse')).toStrictEqual([[true]])
+  })
+
   it('emits update:modelValue (selection) without touching collapse when the checkbox changes', async () => {
     const wrapper = factory({ collapse: true, modelValue: false })
     const entry = wrapper.findComponent(FiltersPanelSectionFilterEntry)
