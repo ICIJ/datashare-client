@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref, useTemplateRef, toRef } from 'vue'
 
-// import ButtonToggleAdvancedSearch from '@/components/Button/ButtonToggleAdvancedSearch'
+import ButtonToggleAdvancedSearch from '@/components/Button/ButtonToggleAdvancedSearch'
 import ButtonToggleFilters from '@/components/Button/ButtonToggleFilters'
 import ButtonToggleSearchBreadcrumb from '@/components/Button/ButtonToggleSearchBreadcrumb'
 import ButtonToggleSettings from '@/components/Button/ButtonToggleSettings'
@@ -82,10 +82,10 @@ function handleAdvancedSearch(queryString) {
         :compact="compact"
         class="search__main__search-bar flex-grow-1"
       />
-      <!--  <button-toggle-advanced-search
+      <button-toggle-advanced-search
         v-model:active="showAdvancedSearch"
         class="search-toolbar__toggle-advanced-search"
-      />-->
+      />
       <button-toggle-settings
         v-model:active="toggleSettings"
         class="search__main__toggle-settings"
