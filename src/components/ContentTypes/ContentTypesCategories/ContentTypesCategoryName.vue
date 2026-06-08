@@ -60,6 +60,17 @@ const collapseLabel = computed(() => t('contentTypesCategoryName.toggle', { cate
 
 <style lang="scss" scoped>
 .content-types-category-name {
+  &__toggler {
+    // Fixed-width gutter: the caret glyph sits flush at the row's start (no
+    // indent before the caret) while the category checkbox lands at $spacer-lg
+    // — the same offset ContentTypesCategory indents the entries to, so the
+    // category checkbox and its entry checkboxes line up.
+    flex: none;
+    width: $spacer-lg;
+    justify-content: flex-start;
+    padding-inline: 0;
+  }
+
   &__entry {
     min-width: 0;
   }
