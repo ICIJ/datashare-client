@@ -16,6 +16,7 @@ import { useContentTypeSearchFilter } from '@/composables/useContentTypeSearchFi
 import { useContentTypeSelection } from '@/composables/useContentTypeSelection'
 import { useContentTypeSort } from '@/composables/useContentTypeSort'
 import { useSearchFilter } from '@/composables/useSearchFilter'
+import { useSearchStore } from '@/store/modules'
 
 const props = defineProps({
   filter: {
@@ -30,6 +31,13 @@ const grouped = defineModel('grouped', { type: Boolean, default: false })
 const { t } = useI18n()
 
 const filterRef = toRef(props, 'filter')
+const searchStore = useSearchStore.inject()
+const legacyIndexDescription = computed(() => {
+  const key = searchStore.indices.length > 1
+    ? 'filter.fileTypes.legacyIndex.descriptionPlural'
+    : 'filter.fileTypes.legacyIndex.description'
+  return t(key)
+})
 
 const filterTypeRef = useTemplateRef('filterTypeRef')
 const entries = computed(() => filterTypeRef.value?.entries ?? [])
@@ -118,7 +126,7 @@ const totalCount = computedTotal(filterRef)
           {{ t('filter.fileTypes.legacyIndex.title') }}
         </p>
         <p class="filter-type-file-types__legacy-index__description small mb-0">
-          {{ t('filter.fileTypes.legacyIndex.description') }}
+          {{ legacyIndexDescription }}
         </p>
       </div>
     </template>

@@ -1339,5 +1339,19 @@ describe('FilterTypeFileTypes.vue', () => {
       expect(wrapper.find('.filter-type-file-types__legacy-index').exists()).toBe(false)
       expect(wrapper.find('.filter-type-file-types__spinner').exists()).toBe(false)
     })
+
+    it('shows the singular legacy-index message when a single project is selected', () => {
+      searchStore.setIndices([index])
+      remountWithAvailability({ isAvailable: false, isLoading: false })
+      const text = wrapper.find('.filter-type-file-types__legacy-index__description').text()
+      expect(text).toBe('This project was indexed without file type categories.')
+    })
+
+    it('shows the plural legacy-index message when several projects are selected', () => {
+      searchStore.setIndices([index, `${index}-second`])
+      remountWithAvailability({ isAvailable: false, isLoading: false })
+      const text = wrapper.find('.filter-type-file-types__legacy-index__description').text()
+      expect(text).toBe('Some of these projects were indexed without file type categories.')
+    })
   })
 })
