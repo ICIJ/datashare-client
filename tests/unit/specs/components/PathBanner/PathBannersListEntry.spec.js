@@ -5,6 +5,7 @@ import PathBannersListEntry from '@/components/PathBanner/PathBannersListEntry.v
 import ButtonRowActionEdit from '@/components/Button/ButtonRowAction/ButtonRowActionEdit.vue'
 import ButtonRowActionDelete from '@/components/Button/ButtonRowAction/ButtonRowActionDelete.vue'
 import DisplayStatus from '@/components/Display/DisplayStatus.vue'
+import DisplayPath from '@/components/Display/DisplayPath.vue'
 
 describe('PathBannersListEntry.vue', () => {
   let global
@@ -35,7 +36,7 @@ describe('PathBannersListEntry.vue', () => {
 
   it('renders the banner path', () => {
     const wrapper = shallowMountComponent()
-    expect(wrapper.find('code').text()).toBe(banner.path)
+    expect(wrapper.findComponent(DisplayPath).props('value')).toBe(banner.path)
   })
 
   describe('blurSensitiveMedia badge', () => {
