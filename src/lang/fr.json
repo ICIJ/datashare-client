@@ -1271,11 +1271,6 @@
       "error": "Impossible de relancer la recherche en lot"
     }
   },
-  "batchSearchActionsEditModal": {
-    "title": "Modifier la recherche en lot",
-    "name": "Nom",
-    "description": "Description"
-  },
   "batchSearchActionsRelaunchModal": {
     "title": "Relancer la recherche en lot",
     "name": "Nom",
