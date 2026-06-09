@@ -1274,11 +1274,6 @@
       "error": "No se puede relanzar la búsqueda por lotes"
     }
   },
-  "batchSearchActionsEditModal": {
-    "title": "Editar búsqueda por lotes",
-    "name": "Nombre",
-    "description": "Descripción"
-  },
   "batchSearchActionsRelaunchModal": {
     "title": "Reiniciar la búsqueda masiva",
     "name": "Nombre",

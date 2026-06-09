@@ -1274,11 +1274,6 @@
       "error": "Unable to relaunch the batch search"
     }
   },
-  "batchSearchActionsEditModal": {
-    "title": "Edit batch search",
-    "name": "名称",
-    "description": "詳細"
-  },
   "batchSearchActionsRelaunchModal": {
     "title": "Relaunch batch search",
     "name": "名称",
