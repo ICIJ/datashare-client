@@ -31,6 +31,10 @@ defineProps({
     type: Boolean,
     default: false
   },
+  hideProjects: {
+    type: Boolean,
+    default: false
+  },
   hideVisibilityHint: {
     type: Boolean,
     default: false
@@ -62,6 +66,7 @@ const allProjects = computed(() => core.projects)
       />
     </form-fieldset-i18n>
     <form-fieldset-i18n
+      v-if="!hideProjects"
       name="projects"
       translation-key="task.batch-search.form.projects"
       :icon="IPhCirclesThreePlus"

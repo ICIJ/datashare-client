@@ -75,7 +75,7 @@ async function submit() {
       v-model:selected-projects="selectedProjects"
       disabled-name
       disabled-description
-      disabled-projects
+      hide-projects
       hide-visibility-hint
     />
   </form-creation>
