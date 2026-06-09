@@ -82,7 +82,7 @@ async function relaunchPromptModal() {
 </script>
 
 <template>
-  <div class="batch-search-actions flex-nowrap d-flex gap-2">
+  <div class="batch-search-actions">
     <batch-search-actions-edit
       :hide-label="hideLabels"
       :square="hideLabels"
@@ -107,3 +107,11 @@ async function relaunchPromptModal() {
     />
   </div>
 </template>
+
+<style scoped lang="scss">
+.batch-search-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacer-sm;
+}
+</style>
