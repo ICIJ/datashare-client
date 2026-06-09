@@ -128,8 +128,8 @@ function canManageBatchSearch(item) {
         </template>
         <template #row-actions="{ item }">
           <batch-search-actions
-            class="flex-nowrap"
             v-if="canManageBatchSearch(item)"
+            class="flex-nowrap"
             :batch-search="item.args.batchRecord"
             hide-labels
             @refresh="refresh"
