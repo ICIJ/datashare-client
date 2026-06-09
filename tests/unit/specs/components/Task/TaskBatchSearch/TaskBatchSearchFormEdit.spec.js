@@ -48,7 +48,21 @@ describe('TaskBatchSearchFormEdit', () => {
     expect(wrapper.vm.$.setupState.name).toBe('My batch')
   })
 
-  it('saves visibility and shows a success toast on submit', async () => {
+  it('seeds the editable name and description from the batch search', async () => {
+    const wrapper = await mountEdit()
+    expect(wrapper.vm.$.setupState.description).toBe('A description')
+    // The form is valid because the loaded name is non-empty.
+    expect(wrapper.find('form-creation-stub').attributes('valid')).toBe('true')
+  })
+
+  it('is invalid when the name is emptied', async () => {
+    const wrapper = await mountEdit()
+    wrapper.vm.$.setupState.name = '   '
+    await flushPromises()
+    expect(wrapper.find('form-creation-stub').attributes('valid')).toBe('false')
+  })
+
+  it('saves name, description and visibility and shows a success toast on submit', async () => {
     api.updateBatchSearch.mockResolvedValue()
     const wrapper = await mountEdit()
     vi.spyOn(wrapper.vm.$router, 'push').mockResolvedValue()
@@ -58,7 +72,11 @@ describe('TaskBatchSearchFormEdit', () => {
     await wrapper.find('form-creation-stub').trigger('submit')
     await flushPromises()
 
-    expect(api.updateBatchSearch).toHaveBeenCalledWith('uuid-1', true)
+    expect(api.updateBatchSearch).toHaveBeenCalledWith('uuid-1', {
+      name: 'My batch',
+      description: 'A description',
+      published: true
+    })
     expect(wrapper.vm.$toast.success).toHaveBeenCalledOnce()
     expect(wrapper.vm.$toast.error).not.toHaveBeenCalled()
     expect(wrapper.vm.$router.push).toHaveBeenCalledWith({

@@ -294,8 +294,8 @@ export class Api {
     return this.sendActionAsText('/api/batch/search', { method: Method.DELETE })
   }
 
-  updateBatchSearch(batchId, published) {
-    const data = { published }
+  updateBatchSearch(batchId, { name, description, published }) {
+    const data = { name, description, published }
     return this.sendAction(`/api/batch/search/${batchId}`, { method: 'PATCH', data: { data } })
   }
 

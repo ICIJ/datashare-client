@@ -98,7 +98,8 @@ describe('TaskStore', () => {
   })
 
   it('should delegate updateBatchSearch to the api', async () => {
-    await store.updateBatchSearch('uuid-1', true)
-    expect(api.updateBatchSearch).toBeCalledWith('uuid-1', true)
+    const fields = { name: 'New name', description: 'New description', published: true }
+    await store.updateBatchSearch('uuid-1', fields)
+    expect(api.updateBatchSearch).toBeCalledWith('uuid-1', fields)
   })
 })
