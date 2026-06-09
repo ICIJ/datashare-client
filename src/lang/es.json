@@ -1181,10 +1181,15 @@
         },
         "submit": "Crear",
         "submitError": "Algo salió mal, no se puede ejecutar la búsqueda por lotes.",
-        "submitSuccess": "Búsqueda por lote creada con éxito."
+        "submitSuccess": "Búsqueda por lote creada con éxito.",
+        "editError": "Algo salió mal, no se puede actualizar la búsqueda por lotes.",
+        "editSuccess": "Búsqueda por lote actualizada con éxito."
       },
       "new": {
         "title": "Crear nueva búsqueda por lotes"
+      },
+      "edit": {
+        "title": "Editar búsqueda por lotes"
       }
     },
     "batch-search-queries": {

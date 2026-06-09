@@ -1181,10 +1181,15 @@
         },
         "submit": "crwdns9016:0crwdne9016:0",
         "submitError": "crwdns9018:0crwdne9018:0",
-        "submitSuccess": "crwdns9020:0crwdne9020:0"
+        "submitSuccess": "crwdns9020:0crwdne9020:0",
+        "editError": "Something went wrong, unable to update the batch search.",
+        "editSuccess": "Batch search updated successfully."
       },
       "new": {
         "title": "crwdns9022:0crwdne9022:0"
+      },
+      "edit": {
+        "title": "Edit batch search"
       }
     },
     "batch-search-queries": {

@@ -1178,10 +1178,15 @@
         },
         "submit": "Valider",
         "submitError": "Une erreur s'est produite, impossible d'exécuter la recherche en lot.",
-        "submitSuccess": "La recherche en lot a été créée."
+        "submitSuccess": "La recherche en lot a été créée.",
+        "editError": "Une erreur s'est produite, impossible de mettre à jour la recherche en lot.",
+        "editSuccess": "La recherche en lot a été mise à jour."
       },
       "new": {
         "title": "Créer une recherche en lot"
+      },
+      "edit": {
+        "title": "Modifier la recherche en lot"
       }
     },
     "batch-search-queries": {
