@@ -8,6 +8,7 @@ import PageTableTdActions from '@/components/PageTable/PageTableTdActions.vue'
 import PageTableToggleDetailsButton from '@/components/PageTable/PageTableToggleDetailsButton.vue'
 import PageTableTr from '@/components/PageTable/PageTableTr.vue'
 import PathBanner from '@/components/PathBanner/PathBanner.vue'
+import DisplayPath from '@/components/Display/DisplayPath.vue'
 import DisplayStatus from '@/components/Display/DisplayStatus.vue'
 import { variantOptions } from '@/enums/variants.js'
 import IPhEyeSlash from '~icons/ph/eye-slash'
@@ -43,13 +44,15 @@ const sensitiveVariant = { key: 'variant.sensitive', icon: IPhEyeSlash }
       />
     </b-td>
     <b-td>
-      <code class="small">{{ banner.path }}</code>
+      <code class="text-truncate">
+        <display-path :value="banner.path" />
+      </code>
     </b-td>
     <b-td
       class="text-truncate"
       style="max-width: 18rem"
     >
-      <span class="text-muted small">{{ banner.note || '-' }}</span>
+      <span class="text-muted">{{ banner.note || '-' }}</span>
     </b-td>
     <page-table-td-actions>
       <button-row-action-edit @click="emit('banner:edit', index)" />
