@@ -71,6 +71,18 @@ describe('TaskBatchSearchFormDetails', () => {
     expect(wrapper.findComponent(ProjectDropdownSelector).attributes('disabled')).toBe('true')
   })
 
+  it('renders the projects fieldset by default', () => {
+    const wrapper = mountWith()
+    expect(wrapper.find('[data-name="projects"]').exists()).toBe(true)
+    expect(wrapper.findComponent(ProjectDropdownSelector).exists()).toBe(true)
+  })
+
+  it('hides the projects fieldset entirely when hideProjects is true', () => {
+    const wrapper = mountWith({ hideProjects: true })
+    expect(wrapper.find('[data-name="projects"]').exists()).toBe(false)
+    expect(wrapper.findComponent(ProjectDropdownSelector).exists()).toBe(false)
+  })
+
   it('suppresses the visibility hint when hideVisibilityHint is true', () => {
     const wrapper = mountWith({ hideVisibilityHint: true })
     const visibilityFieldset = wrapper.find('[data-name="visibility"]')
