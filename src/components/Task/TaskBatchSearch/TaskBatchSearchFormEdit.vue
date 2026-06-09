@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 
@@ -43,13 +43,19 @@ async function load() {
 
 onMounted(load)
 
+const isValid = computed(() => name.value.trim().length > 0)
+
 function reset() {
   load()
 }
 
 async function submit() {
   try {
-    await taskStore.updateBatchSearch(uuid, visibility.value)
+    await taskStore.updateBatchSearch(uuid, {
+      name: name.value,
+      description: description.value,
+      published: visibility.value
+    })
     await router.push({ name: 'task.batch-search-queries.list', params: { indices, uuid } })
     toast.success(t('task.batch-search.form.editSuccess'))
   }
@@ -63,6 +69,7 @@ async function submit() {
   <form-creation
     class="task-batch-search-form-edit d-flex flex-column gap-4"
     content-class-list="d-flex flex-column gap-3"
+    :valid="isValid"
     :submit-label="t('global.save')"
     :submit-icon="IPhFloppyDiskBack"
     @reset="reset"
@@ -73,8 +80,6 @@ async function submit() {
       v-model:description="description"
       v-model:visibility="visibility"
       v-model:selected-projects="selectedProjects"
-      disabled-name
-      disabled-description
       hide-projects
       hide-visibility-hint
     />
