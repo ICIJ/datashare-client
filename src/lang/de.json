@@ -1180,10 +1180,15 @@
         },
         "submit": "Create",
         "submitError": "Something went wrong, unable to run the batch search.",
-        "submitSuccess": "Batch search created successfully."
+        "submitSuccess": "Batch search created successfully.",
+        "editError": "Something went wrong, unable to update the batch search.",
+        "editSuccess": "Batch search updated successfully."
       },
       "new": {
         "title": "Create new batch search"
+      },
+      "edit": {
+        "title": "Edit batch search"
       }
     },
     "batch-search-queries": {
