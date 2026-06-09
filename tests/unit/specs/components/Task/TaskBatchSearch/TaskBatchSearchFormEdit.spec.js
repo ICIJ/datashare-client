@@ -62,7 +62,7 @@ describe('TaskBatchSearchFormEdit', () => {
     expect(wrapper.vm.$toast.success).toHaveBeenCalledOnce()
     expect(wrapper.vm.$toast.error).not.toHaveBeenCalled()
     expect(wrapper.vm.$router.push).toHaveBeenCalledWith({
-      name: 'task.batch-search-results.list',
+      name: 'task.batch-search-queries.list',
       params: { indices: 'local-datashare', uuid: 'uuid-1' }
     })
   })
