@@ -50,7 +50,7 @@ function reset() {
 async function submit() {
   try {
     await taskStore.updateBatchSearch(uuid, visibility.value)
-    await router.push({ name: 'task.batch-search-results.list', params: { indices, uuid } })
+    await router.push({ name: 'task.batch-search-queries.list', params: { indices, uuid } })
     toast.success(t('task.batch-search.form.editSuccess'))
   }
   catch {
