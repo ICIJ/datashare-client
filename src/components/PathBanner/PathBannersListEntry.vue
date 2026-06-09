@@ -30,19 +30,17 @@ const sensitiveVariant = { key: 'variant.sensitive', icon: IPhEyeSlash }
 <template>
   <page-table-tr data-testid="banner-card">
     <b-td>
-      <div class="d-flex gap-2">
-        <display-status
-          v-if="banner.blurSensitiveMedia"
-          variant="primary"
-          :icon="sensitiveVariant.icon"
-          :title="t(sensitiveVariant.key)"
-        />
-        <display-status
-          v-else
-          :value="banner.variant"
-          :title="t(variant.key)"
-        />
-      </div>
+      <display-status
+        v-if="banner.blurSensitiveMedia"
+        variant="primary"
+        :icon="sensitiveVariant.icon"
+        :title="t(sensitiveVariant.key)"
+      />
+      <display-status
+        v-else
+        :value="banner.variant"
+        :title="t(variant.key)"
+      />
     </b-td>
     <b-td>
       <code class="small">{{ banner.path }}</code>
