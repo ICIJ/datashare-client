@@ -138,7 +138,7 @@ export class Api {
   }
 
   setSettings(settings) {
-    const headers = { 'Content-Type': 'application/json' }
+    const headers = { 'Content-Type': 'application/json; charset=utf-8' }
     const responseType = 'text'
     return this.sendAction('/api/settings', { method: 'PATCH', data: { data: settings }, headers, responseType })
   }
