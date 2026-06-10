@@ -14,6 +14,7 @@
     :teleport-to="teleportTo"
     :teleport-disabled="teleportDisabled"
     @selected="reset"
+    @shown="pinSelected"
     @hidden="emit('hidden', $event)"
     @changed="emit('changed', $event)"
   >

@@ -2,6 +2,7 @@ import { mount } from '@vue/test-utils'
 
 import ProjectDropdownSelector from '@/components/Project/ProjectDropdownSelector/ProjectDropdownSelector'
 import ProjectDropdownSelectorSearch from '@/components/Project/ProjectDropdownSelector/ProjectDropdownSelectorSearch'
+import SearchBarInputDropdown from '@/components/Search/SearchBar/SearchBarInputDropdown'
 import CoreSetup from '~tests/unit/CoreSetup'
 
 describe('ProjectDropdownSelector.vue', function () {
@@ -79,5 +80,17 @@ describe('ProjectDropdownSelector.vue', function () {
     expect(items.at(0).text().trim()).toBe('Bar')
     expect(items.at(1).text().trim()).toBe('Default')
     expect(items.at(2).text().trim()).toBe('Foo')
+  })
+
+  it('should re-pin the current selection each time the dropdown opens', async () => {
+    const props = { modelValue: [{ name: 'bar' }], projects, teleportDisabled: true }
+    const wrapper = mount(ProjectDropdownSelector, { props, global: { plugins } })
+    // Selection changes to foo while open; snapshot is still [bar]
+    await wrapper.setProps({ modelValue: [{ name: 'foo' }] })
+    expect(wrapper.findAll('.dropdown-item').at(0).text().trim()).toBe('Bar')
+    // Re-open: the snapshot refreshes to the live selection
+    wrapper.findComponent(SearchBarInputDropdown).vm.$emit('shown')
+    await wrapper.vm.$nextTick()
+    expect(wrapper.findAll('.dropdown-item').at(0).text().trim()).toBe('Foo')
   })
 })
