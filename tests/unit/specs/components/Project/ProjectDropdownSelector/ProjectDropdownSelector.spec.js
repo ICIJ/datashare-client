@@ -1,6 +1,7 @@
 import { mount } from '@vue/test-utils'
 
 import ProjectDropdownSelector from '@/components/Project/ProjectDropdownSelector/ProjectDropdownSelector'
+import ProjectDropdownSelectorSearch from '@/components/Project/ProjectDropdownSelector/ProjectDropdownSelectorSearch'
 import CoreSetup from '~tests/unit/CoreSetup'
 
 describe('ProjectDropdownSelector.vue', function () {
@@ -40,5 +41,43 @@ describe('ProjectDropdownSelector.vue', function () {
     const props = { modelValue: [{ name: 'local-datashare' }, { name: 'foo' }], projects, teleportDisabled: true }
     const wrapper = mount(ProjectDropdownSelector, { props, global: { plugins } })
     expect(wrapper.find('.dropdown-toggle').text().trim()).toBe('2 projects')
+  })
+
+  it('should render the selected project first in single-select mode', () => {
+    const props = { modelValue: { name: 'bar' }, projects, teleportDisabled: true }
+    const wrapper = mount(ProjectDropdownSelector, { props, global: { plugins } })
+    const items = wrapper.findAll('.dropdown-item')
+    expect(items.at(0).text().trim()).toBe('Bar')
+  })
+
+  it('should render selected projects first, in original order, in multi-select mode', () => {
+    const props = { modelValue: [{ name: 'bar' }, { name: 'foo' }], projects, teleportDisabled: true }
+    const wrapper = mount(ProjectDropdownSelector, { props, global: { plugins } })
+    const items = wrapper.findAll('.dropdown-item')
+    // "original order" = order within the projects prop (foo precedes bar there), not modelValue order
+    expect(items.at(0).text().trim()).toBe('Foo')
+    expect(items.at(1).text().trim()).toBe('Bar')
+    expect(items.at(2).text().trim()).toBe('Default')
+  })
+
+  it('should keep the selected project on top while a query filters the list', async () => {
+    const props = { modelValue: [{ name: 'bar' }], projects, teleportDisabled: true }
+    const wrapper = mount(ProjectDropdownSelector, { props, global: { plugins } })
+    wrapper.findComponent(ProjectDropdownSelectorSearch).vm.$emit('update:model-value', 'a')
+    await wrapper.vm.$nextTick()
+    const items = wrapper.findAll('.dropdown-item')
+    expect(items).toHaveLength(2)
+    expect(items.at(0).text().trim()).toBe('Bar')
+    expect(items.at(1).text().trim()).toBe('Default')
+  })
+
+  it('should not reorder while open when the selection changes', async () => {
+    const props = { modelValue: [{ name: 'bar' }], projects, teleportDisabled: true }
+    const wrapper = mount(ProjectDropdownSelector, { props, global: { plugins } })
+    await wrapper.setProps({ modelValue: [{ name: 'bar' }, { name: 'foo' }] })
+    const items = wrapper.findAll('.dropdown-item')
+    expect(items.at(0).text().trim()).toBe('Bar')
+    expect(items.at(1).text().trim()).toBe('Default')
+    expect(items.at(2).text().trim()).toBe('Foo')
   })
 })
