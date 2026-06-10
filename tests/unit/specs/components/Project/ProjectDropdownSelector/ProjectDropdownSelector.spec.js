@@ -82,14 +82,15 @@ describe('ProjectDropdownSelector.vue', function () {
     expect(items.at(2).text().trim()).toBe('Foo')
   })
 
-  it('should re-pin the current selection each time the dropdown opens', async () => {
+  it('should re-pin the current selection after the dropdown closes', async () => {
     const props = { modelValue: [{ name: 'bar' }], projects, teleportDisabled: true }
     const wrapper = mount(ProjectDropdownSelector, { props, global: { plugins } })
     // Selection changes to foo while open; snapshot is still [bar]
     await wrapper.setProps({ modelValue: [{ name: 'foo' }] })
     expect(wrapper.findAll('.dropdown-item').at(0).text().trim()).toBe('Bar')
-    // Re-open: the snapshot refreshes to the live selection
-    wrapper.findComponent(SearchBarInputDropdown).vm.$emit('shown')
+    // Closing re-pins to the live selection, so the reorder happens while the
+    // menu is hidden — the next open is already ordered, with no visible flash
+    wrapper.findComponent(SearchBarInputDropdown).vm.$emit('hidden')
     await wrapper.vm.$nextTick()
     expect(wrapper.findAll('.dropdown-item').at(0).text().trim()).toBe('Foo')
   })

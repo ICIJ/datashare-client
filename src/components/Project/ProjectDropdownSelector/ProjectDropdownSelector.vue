@@ -14,8 +14,7 @@
     :teleport-to="teleportTo"
     :teleport-disabled="teleportDisabled"
     @selected="reset"
-    @shown="pinSelected"
-    @hidden="emit('hidden', $event)"
+    @hidden="onHidden"
     @changed="emit('changed', $event)"
   >
     <template #above="{ visible }">
@@ -206,6 +205,13 @@ function pinSelected() {
 
 // Snapshot the initial selection so the first open already shows it on top
 pinSelected()
+
+// Re-pin on close (not open) so the reorder happens while the menu is hidden,
+// avoiding a visible flash of items reordering when the dropdown is opened.
+function onHidden($event) {
+  pinSelected()
+  emit('hidden', $event)
+}
 
 /**
  * Watch

@@ -16,7 +16,7 @@
     :teleport-to="teleportTo"
     :teleport-disabled="teleportDisabled"
     variant="outline-tertiary"
-    @shown="$emit('shown', $event)"
+    @hidden="$emit('hidden', $event)"
   >
     <template #button-content>
       <slot
@@ -149,7 +149,7 @@ export default {
       type: Boolean
     }
   },
-  emits: ['hide', 'changed', 'selected', 'shown', 'update:modelValue'],
+  emits: ['hide', 'changed', 'selected', 'hidden', 'update:modelValue'],
   setup() {
     const { t } = useI18n()
     return { t }
