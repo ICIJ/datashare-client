@@ -1402,7 +1402,8 @@
     "title": "Edit project",
     "tabs": {
       "details": "Details and documents",
-      "pathBanners": "Banners"
+      "pathBanners": "Banners",
+      "users": "Users"
     },
     "notify": {
       "update": {
@@ -1454,6 +1455,54 @@
         "delete": {
           "succeedBody": "Banner deleted.",
           "failedBody": "Failed to delete banner."
+        }
+      }
+    },
+    "users": {
+      "empty": "No users yet.",
+      "fetchError": "Failed to load users for this project.",
+      "noResults": "No users match your search.",
+      "fields": {
+        "name": { "label": "Name" },
+        "role": { "label": "Role" }
+      },
+      "roleSelect": {
+        "save": "Save",
+        "cancel": "Cancel",
+        "saveSuccess": "Roles updated successfully",
+        "saveError": "Failed to update roles. Please try again.",
+        "changedCount": "0 roles changed | 1 role changed | {count} roles changed"
+      },
+      "adminPromotionModal": {
+        "title": "Confirm admin promotions",
+        "body": "The following users will be granted administrator access:",
+        "confirm": "Confirm",
+        "cancel": "Cancel"
+      },
+      "actions": {
+        "copy": "Copy username",
+        "delete": "Delete user",
+        "copySuccess": "Username copied to clipboard",
+        "deleteModal": {
+          "title": "Delete user '{name}' ?",
+          "body": "This will:\n- cut their access to the project\n- delete all their tasks (batch searches, etc) for them and other users of the project",
+          "confirm": "Yes, delete",
+          "error": "Failed to remove user. Please try again."
+        }
+      },
+      "create": {
+        "button": "Create user",
+        "title": "Create a user",
+        "confirm": "Create",
+        "saveError": "Failed to create user. Please try again.",
+        "fields": {
+          "username": {
+            "label": "Username",
+            "placeholder": "Type username"
+          },
+          "role": {
+            "label": "Role"
+          }
         }
       }
     }

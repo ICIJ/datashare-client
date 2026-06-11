@@ -8,6 +8,7 @@ import ButtonRowActionEdit from '@/components/Button/ButtonRowAction/ButtonRowAc
 import ButtonRowActionDelete from '@/components/Button/ButtonRowAction/ButtonRowActionDelete'
 import ButtonTogglePin from '@/components/Button/ButtonTogglePin'
 import ModeLocalOnly from '@/components/Mode/ModeLocalOnly'
+import PolicyOnly from '@/components/Policy/PolicyOnly'
 
 const props = defineProps({
   project: {
@@ -32,11 +33,13 @@ const toProjectEdit = computed(() => ({
 <template>
   <div class="project-actions d-flex gap-2">
     <slot>
-      <mode-local-only>
+      <policy-only :project="project">
         <button-row-action-edit
           :label="t('projectRowActions.edit')"
           :to="toProjectEdit"
         />
+      </policy-only>
+      <mode-local-only>
         <button-row-action-delete
           :label="t('projectRowActions.delete')"
           @click="showProjectDeletionModal"
