@@ -106,15 +106,46 @@ function buildCanonical(node, inheritedField = null) {
   // Field-only wrapper node (e.g. the outer node of `content:(a AND b)`).
   if (node.left && !node.right) return buildCanonical(node.left, field)
 
-  return {
+  const leaf = {
     leaf: {
       field: field || '*',
       term: node.term ?? '',
       quoted: Boolean(node.quoted),
       similarity: node.similarity ?? null,
-      proximity: node.proximity ?? null
+      proximity: node.proximity ?? null,
+      boost: node.boost ?? null
     }
   }
+  // A `+`/`-` prefix on a bare term carries its occurrence. Inside an operator
+  // chain `clauseOccur` already consumes it, but a top-level `-a` or a sole
+  // `(-a)` has no surrounding clause, so wrap it here. `flattenCanonical`
+  // collapses the wrapper back out when the prefix matches the parent
+  // occurrence, so `+a +b` still canonicalises identically to `a AND b`.
+  if (node.prefix === '+') return { bool: [{ occur: MUST, node: leaf }] }
+  if (node.prefix === '-') return { bool: [{ occur: MUST_NOT, node: leaf }] }
+  return leaf
+}
+
+/**
+ * Collapse a nested clause into its parent when the subgroup's members all
+ * share the clause's own occurrence — associativity makes such a group
+ * transparent (`(a OR b)` inside an OR, a `+a +b` wrapper under MUST). A group
+ * whose occurrence differs from its members (e.g. a SHOULD group required by
+ * an AND) stays nested, so `(a OR b) AND c` does NOT collapse into `(a b) +c`.
+ */
+function flattenCanonical(node) {
+  if (!node || node.leaf) return node
+  const clauses = []
+  for (const clause of node.bool) {
+    const child = flattenCanonical(clause.node)
+    if (child && child.bool && child.bool.every(c => c.occur === clause.occur)) {
+      clauses.push(...child.bool)
+    }
+    else {
+      clauses.push({ occur: clause.occur, node: child })
+    }
+  }
+  return { bool: clauses }
 }
 
 /**
@@ -125,13 +156,14 @@ function serializeCanonical(node) {
   if (!node) return 'nil'
   if (node.leaf) {
     const l = node.leaf
-    return `L:${l.field}:${l.quoted ? `"${l.term}"` : l.term}:s${l.similarity}:p${l.proximity}`
+    const term = l.quoted ? `"${l.term}"` : l.term
+    return `L:${JSON.stringify(l.field)}:${JSON.stringify(term)}:s${l.similarity}:p${l.proximity}:b${l.boost}`
   }
   return `B(${node.bool.map(c => `${c.occur}:${serializeCanonical(c.node)}`).sort().join(',')})`
 }
 
 function normalizeQuery(query) {
-  return serializeCanonical(buildCanonical(lucene.parse(query)))
+  return serializeCanonical(flattenCanonical(buildCanonical(lucene.parse(query))))
 }
 
 /**
@@ -583,12 +615,11 @@ function tryParseOrGroup(token, ctx) {
   if (!m) {
     return false
   }
-  for (const word of tokenize(m[1])) {
-    if (!isFaithfulTerm(word)) {
-      ctx.lossy = true
-    }
-    ctx.anyWords.push(unescapeTerm(word))
-  }
+  // Route the group's contents like a top-level query so boolean operators
+  // inside the group become bucket hints instead of literal words, and
+  // structural tokens (phrases, nested groups) keep their intrinsic bucket.
+  const { operands, hints } = routeBooleanOperators(tokenize(m[1]))
+  operands.forEach((word, i) => parseToken(word, ctx, hints[i]))
   return true
 }
 
