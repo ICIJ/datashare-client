@@ -240,13 +240,6 @@ export const FUZZY_DISTANCE_MAX = 2
 export const PROXIMITY_DISTANCE_MAX = 6
 
 /**
- * Uppercase boolean keywords are Lucene operators, not words: a form that
- * displayed them as editable plain words would change what they mean on
- * re-submit.
- */
-const LUCENE_BOOLEAN_OPERATORS = Object.freeze(['AND', 'OR', 'NOT'])
-
-/**
  * Default advanced-search form shape. Word inputs hold strings (whitespace
  * splitting is deferred to submit time), distances default to 1 — distance
  * 0 is the disabled state and the slider's `min` enforces that floor.
@@ -422,6 +415,56 @@ class QueryTokenizer {
  */
 function tokenize(query) {
   return new QueryTokenizer(query).tokenize()
+}
+
+/**
+ * Boolean keywords that act as separators between operands rather than as
+ * searchable words.
+ */
+const BOOLEAN_OPERATORS = new Set(['AND', 'OR', 'NOT'])
+
+/**
+ * Split a top-level token list into operands and per-operand bucket hints
+ * derived from the boolean operators between them:
+ * - an operand reached through `NOT` → `none`
+ * - an operand reached through `AND` (and the operand before it) → `all`
+ * - everything else → `any`
+ *
+ * The hint only steers plain words; structural tokens (groups, phrases,
+ * wildcards, `+`/`-` terms) keep their intrinsic bucket. Mixed-operator
+ * queries produce a best-effort routing that the round-trip equivalence check
+ * in `parseLuceneQuery` rejects, so over-eager hints can never silently
+ * rewrite a query.
+ */
+function routeBooleanOperators(tokens) {
+  const operands = []
+  const opsBefore = []
+  let pending = []
+  for (const token of tokens) {
+    if (BOOLEAN_OPERATORS.has(token)) {
+      pending.push(token)
+      continue
+    }
+    operands.push(token)
+    opsBefore.push(pending)
+    pending = []
+  }
+
+  const hints = operands.map(() => 'any')
+  for (let i = 0; i < operands.length; i++) {
+    const ops = opsBefore[i]
+    if (ops.includes('NOT')) {
+      hints[i] = 'none'
+    }
+    else if (ops.includes('AND')) {
+      hints[i] = 'all'
+    }
+    if (ops.includes('AND') && i > 0 && hints[i - 1] === 'any') {
+      hints[i - 1] = 'all'
+    }
+  }
+
+  return { operands, hints }
 }
 
 /**
@@ -609,16 +652,24 @@ function tryParseMultiWildcard(token, ctx) {
 }
 
 /**
- * Fallback for tokens no pattern recognised: keep the word in the OR
- * bucket. Boolean operators and terms carrying unescaped Lucene syntax
- * make the parse lossy — re-submitting them as escaped plain words would
- * change the query's meaning.
+ * Fallback for tokens no pattern recognised: a plain word. The bucket hint
+ * (from `routeBooleanOperators`) decides whether it is an all/none/any word;
+ * a term carrying unescaped Lucene syntax still makes the parse lossy.
  */
-function parseFallbackWord(token, ctx) {
-  if (LUCENE_BOOLEAN_OPERATORS.includes(token) || !isFaithfulTerm(token)) {
+function parseFallbackWord(token, ctx, hint = 'any') {
+  if (!isFaithfulTerm(token)) {
     ctx.lossy = true
   }
-  ctx.fallbackAnyWords.push(unescapeTerm(token))
+  const word = unescapeTerm(token)
+  if (hint === 'all') {
+    ctx.allWords.push(word)
+  }
+  else if (hint === 'none') {
+    ctx.noneWords.push(word)
+  }
+  else {
+    ctx.fallbackAnyWords.push(word)
+  }
 }
 
 /**
@@ -636,13 +687,13 @@ const TOKEN_PARSERS = Object.freeze([
   tryParseMultiWildcard
 ])
 
-function parseToken(token, ctx) {
+function parseToken(token, ctx, hint = 'any') {
   for (const tryParse of TOKEN_PARSERS) {
     if (tryParse(token, ctx)) {
       return
     }
   }
-  parseFallbackWord(token, ctx)
+  parseFallbackWord(token, ctx, hint)
 }
 
 /**
@@ -709,11 +760,24 @@ export function parseLuceneQuery(query, { fields: allowedFields = null } = {}) {
     fallbackAnyWords: []
   }
 
-  for (const token of tokenize(innerQuery)) {
-    parseToken(token, ctx)
-  }
+  const { operands, hints } = routeBooleanOperators(tokenize(innerQuery))
+  operands.forEach((token, i) => parseToken(token, ctx, hints[i]))
 
   applyWordBuckets(ctx)
 
-  return ctx.lossy ? null : form
+  if (ctx.lossy) {
+    return null
+  }
+
+  // Faithfulness gate: the form is only a valid representation of the query if
+  // regenerating it reproduces an equivalent query. This is what lets the
+  // operator routing above be liberal — anything it gets wrong (mixed
+  // operators, grouping the flat form can't hold) fails to round-trip and
+  // blanks the modal instead of silently rewriting the user's query.
+  const regenerated = generateLuceneQuery(toQueryShape(form))
+  if (!queriesEquivalent(query, regenerated)) {
+    return null
+  }
+
+  return form
 }

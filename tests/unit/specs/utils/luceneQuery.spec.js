@@ -497,6 +497,31 @@ describe('luceneQuery', () => {
       expect(parseLuceneQuery('(Paris London)').anyWords).toBe('Paris London')
     })
 
+    it('parses `a AND b` into allWords', () => {
+      const f = parseLuceneQuery('Paris AND London')
+      expect(f.allWords).toBe('Paris London')
+      expect(f.anyWords).toBe('')
+    })
+
+    it('parses `a OR b` into anyWords', () => {
+      const f = parseLuceneQuery('Paris OR London')
+      expect(f.anyWords).toBe('Paris London')
+      expect(f.allWords).toBe('')
+    })
+
+    it('parses `a AND b AND NOT c` into allWords + noneWords', () => {
+      const f = parseLuceneQuery('Paris AND London AND NOT Berlin')
+      expect(f.allWords).toBe('Paris London')
+      expect(f.noneWords).toBe('Berlin')
+    })
+
+    it('parses a field-restricted boolean query', () => {
+      const f = parseLuceneQuery('content:(Paris AND London)')
+      expect(f.fieldAll).toBe(false)
+      expect(f.selectedFields).toEqual(['content'])
+      expect(f.allWords).toBe('Paris London')
+    })
+
     it('parses `+word +word` into allWords', () => {
       const f = parseLuceneQuery('+Paris +London')
       expect(f.allWords).toBe('Paris London')
@@ -675,10 +700,11 @@ describe('luceneQuery', () => {
       expect(parseLuceneQuery('content:cat')).toBeNull()
     })
 
-    it('returns null for boolean operators', () => {
-      expect(parseLuceneQuery('Paris OR London')).toBeNull()
-      expect(parseLuceneQuery('cat AND dog')).toBeNull()
-      expect(parseLuceneQuery('Paris NOT London')).toBeNull()
+    it('returns null for mixed AND/OR operators it cannot represent', () => {
+      // The flat form has no place for operator precedence, so a query that
+      // mixes AND and OR must open the modal blank rather than be rewritten.
+      expect(parseLuceneQuery('a AND b OR c')).toBeNull()
+      expect(parseLuceneQuery('(Paris OR Lyon) AND France')).toBeNull()
     })
 
     it('returns null for a range query', () => {
