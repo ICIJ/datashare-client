@@ -668,6 +668,31 @@ describe('luceneQuery', () => {
       expect(round.anyWords).toBe('Paris')
     })
 
+    it('pre-populates a group beside a loose word into anyWords', () => {
+      const f = parseLuceneQuery('(a b) c')
+      expect(f).not.toBeNull()
+      expect(f.anyWords).toBe('a b c')
+    })
+
+    it('routes an explicit OR group beside a loose word into anyWords', () => {
+      const f = parseLuceneQuery('(red OR blue) sky')
+      expect(f).not.toBeNull()
+      expect(f.anyWords).toBe('red blue sky')
+    })
+
+    it('routes a boolean operator inside a group instead of capturing it as a word', () => {
+      const f = parseLuceneQuery('(a AND b)')
+      expect(f).not.toBeNull()
+      expect(f.allWords).toBe('a b')
+      expect(f.anyWords).toBe('')
+    })
+
+    it('parses a comma-bearing term without delimiter collisions', () => {
+      const f = parseLuceneQuery('Smith,John')
+      expect(f).not.toBeNull()
+      expect(f.anyWords).toBe('Smith,John')
+    })
+
     it('unescapes Lucene-reserved characters round-trip', () => {
       const initial = {
         anyWords: 'foo:bar',
@@ -785,7 +810,9 @@ describe('luceneQuery', () => {
       ['Mercedes~2', 'Mercedes~2'],
       ['"John Mercedes"~3', '"John Mercedes"~3'],
       ['single', 'single'],
-      ['tags:(Paris) OR content:(Paris)', 'tags:(Paris) OR content:(Paris)']
+      ['tags:(Paris) OR content:(Paris)', 'tags:(Paris) OR content:(Paris)'],
+      ['(a b) c', '(a b c)'],
+      ['(red OR blue) sky', '(red blue sky)']
     ])('treats %s and %s as equivalent', (a, b) => {
       expect(queriesEquivalent(a, b)).toBe(true)
     })
@@ -796,7 +823,11 @@ describe('luceneQuery', () => {
       ['a OR b AND c', '(a b) +c'],
       ['a AND b', 'a OR b'],
       ['roam~2 jakarta~1', 'jakarta~1'],
-      ['"a b"~3 "c d"~5', '"c d"~5']
+      ['"a b"~3 "c d"~5', '"c d"~5'],
+      ['-a', 'a'],
+      ['+a', 'a'],
+      ['(-a)', '(a)'],
+      ['a^2', 'a']
     ])('treats %s and %s as NOT equivalent', (a, b) => {
       expect(queriesEquivalent(a, b)).toBe(false)
     })
