@@ -451,7 +451,11 @@ function tokenize(query) {
 
 /**
  * Boolean keywords that act as separators between operands rather than as
- * searchable words.
+ * searchable words. These are the single tokens the whitespace tokenizer
+ * emits, so this list is distinct from `AND_FAMILY` above: that one classifies
+ * the multi-word operators the `lucene` AST reports (`AND NOT`, `OR NOT`) and
+ * belongs to the canonical-AST layer, whereas this one belongs to the
+ * token-routing layer.
  */
 const BOOLEAN_OPERATORS = new Set(['AND', 'OR', 'NOT'])
 
@@ -809,6 +813,14 @@ export function parseLuceneQuery(query, { fields: allowedFields = null } = {}) {
   // operator routing above be liberal — anything it gets wrong (mixed
   // operators, grouping the flat form can't hold) fails to round-trip and
   // blanks the modal instead of silently rewriting the user's query.
+  //
+  // By design there are two views of a query here: the token-routing
+  // extraction that fills the form, and the canonical-AST model
+  // (`buildCanonical`) used only to compare meaning. They are deliberately
+  // kept separate — the extraction stays simple and the gate is the single
+  // authority on "are these the same query". The cost is that operator
+  // semantics live in both layers; the gate makes any drift fail safe (blank),
+  // never unsafe (rewrite).
   const regenerated = generateLuceneQuery(toQueryShape(form))
   if (!queriesEquivalent(query, regenerated)) {
     return null
