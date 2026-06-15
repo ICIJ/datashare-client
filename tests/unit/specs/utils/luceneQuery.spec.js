@@ -522,6 +522,14 @@ describe('luceneQuery', () => {
       expect(f.allWords).toBe('Paris London')
     })
 
+    it('treats a query that is only a boolean operator as empty', () => {
+      // A lone operator has no operands to route, so the form opens blank.
+      const f = parseLuceneQuery('AND')
+      expect(f).not.toBeNull()
+      expect(f.anyWords).toBe('')
+      expect(f.allWords).toBe('')
+    })
+
     it('parses `+word +word` into allWords', () => {
       const f = parseLuceneQuery('+Paris +London')
       expect(f.allWords).toBe('Paris London')

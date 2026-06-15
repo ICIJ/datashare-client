@@ -459,6 +459,8 @@ function routeBooleanOperators(tokens) {
     else if (ops.includes('AND')) {
       hints[i] = 'all'
     }
+    // The left operand of an AND also belongs in `all`, unless a stronger
+    // hint (none/all) already claimed it.
     if (ops.includes('AND') && i > 0 && hints[i - 1] === 'any') {
       hints[i - 1] = 'all'
     }
