@@ -128,6 +128,17 @@ describe('SearchAdvancedModal.vue', () => {
     expect(wrapper.vm.form.selectedFields).toEqual(['tags', 'content'])
   })
 
+  it('pre-populates an AND query into allWords', async () => {
+    const wrapper = shallowMount(SearchAdvancedModal, {
+      props: { modelValue: false, initialQuery: 'pierre AND romera' },
+      global: { plugins, renderStubDefaultSlot: true }
+    })
+    await wrapper.setProps({ modelValue: true })
+    await nextTick()
+    expect(wrapper.vm.form.allWords).toBe('pierre romera')
+    expect(wrapper.vm.form.anyWords).toBe('')
+  })
+
   it('opens blank when initialQuery cannot be faithfully represented', async () => {
     // A hand-written field query would be silently rewritten into a
     // literal-text search on re-submit, so the form must not pre-populate.
