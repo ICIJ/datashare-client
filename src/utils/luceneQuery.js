@@ -721,13 +721,15 @@ function applyWordBuckets(ctx) {
 /**
  * Parse a Lucene query string back into the advanced-search form shape.
  *
- * Only patterns produced by `generateLuceneQuery` are recognised. When any
- * part of the query cannot be represented by the form without changing its
- * meaning on re-submit — malformed syntax, field syntax, boolean operators,
- * ranges, a second fuzzy/proximity/wildcard clause, an out-of-range
- * distance, a restriction to an unknown field — the function returns `null`
- * so callers can skip pre-population instead of silently rewriting the
- * user's query.
+ * Flat boolean queries map onto the form's any/all/none buckets (`a AND b`,
+ * `a OR b`, `a AND NOT c`). When any part of the query cannot be represented
+ * by the form without changing its meaning on re-submit — malformed syntax,
+ * field syntax, boolean precedence the flat form cannot hold (mixed AND/OR,
+ * grouped sub-expressions), ranges, a second fuzzy/proximity/wildcard clause,
+ * an out-of-range distance, a restriction to an unknown field — the function
+ * returns `null` so callers can skip pre-population instead of silently
+ * rewriting the user's query. Faithfulness is enforced by regenerating the
+ * query from the filled form and checking it stays equivalent to the input.
  *
  * @param {string} query
  * @param {Object} [options]
