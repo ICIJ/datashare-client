@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { generateLuceneQuery as generateQuery, parseLuceneQuery, toQueryShape } from '@/utils/luceneQuery'
+import { generateLuceneQuery as generateQuery, parseLuceneQuery, queriesEquivalent, toQueryShape } from '@/utils/luceneQuery'
 
 describe('luceneQuery', () => {
   describe('generateLuceneQuery', () => {
@@ -734,6 +734,42 @@ describe('luceneQuery', () => {
       // quantifiers and froze the main thread on this exact shape.
       const query = 'f:(x)' + ' OR f:(x)'.repeat(40) + ' zzzz'
       expect(parseLuceneQuery(query)).toBeNull()
+    })
+  })
+
+  describe('queriesEquivalent', () => {
+    it.each([
+      ['pierre AND romera', '+pierre +romera'],
+      ['pierre OR romera', '(pierre romera)'],
+      ['pierre romera', '(pierre romera)'],
+      ['a AND b AND c', '+a +b +c'],
+      ['x OR y OR z', '(x y z)'],
+      ['a AND b AND NOT c', '+a +b -c'],
+      ['a AND NOT c', '+a -c'],
+      ['Paris NOT London', 'Paris -London'],
+      ['content:(a AND b)', 'content:(+a +b)'],
+      ['Mercedes~2', 'Mercedes~2'],
+      ['"John Mercedes"~3', '"John Mercedes"~3'],
+      ['single', 'single'],
+      ['tags:(Paris) OR content:(Paris)', 'tags:(Paris) OR content:(Paris)']
+    ])('treats %s and %s as equivalent', (a, b) => {
+      expect(queriesEquivalent(a, b)).toBe(true)
+    })
+
+    it.each([
+      ['(pierre OR jean) AND romera', '(pierre jean) +romera'],
+      ['a AND b OR c', '+a +b (c)'],
+      ['a OR b AND c', '(a b) +c'],
+      ['a AND b', 'a OR b'],
+      ['roam~2 jakarta~1', 'jakarta~1'],
+      ['"a b"~3 "c d"~5', '"c d"~5']
+    ])('treats %s and %s as NOT equivalent', (a, b) => {
+      expect(queriesEquivalent(a, b)).toBe(false)
+    })
+
+    it('returns false when either side is unparseable', () => {
+      expect(queriesEquivalent('(unclosed', 'a')).toBe(false)
+      expect(queriesEquivalent('a', ')stray(')).toBe(false)
     })
   })
 })

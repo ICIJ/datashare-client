@@ -32,6 +32,124 @@ function escapePhrase(phrase) {
 }
 
 /**
+ * Lucene boolean occurrence kinds. AND/`+` compile to MUST, OR/default to
+ * SHOULD, NOT/`-` to MUST_NOT — the same model Lucene itself uses, which lets
+ * `a AND b` and `+a +b` canonicalise to the same thing.
+ */
+const MUST = 'must'
+const SHOULD = 'should'
+const MUST_NOT = 'must_not'
+
+// Operators that combine clauses conjunctively (the others are disjunctive).
+const AND_FAMILY = new Set(['AND', 'AND NOT'])
+
+function operatorFamily(operator) {
+  return AND_FAMILY.has(operator) ? 'AND' : 'OR'
+}
+
+function operatorOccur(operator, side) {
+  switch (operator) {
+    case 'AND': return MUST
+    case 'OR': return SHOULD
+    case 'AND NOT': return side === 'right' ? MUST_NOT : MUST
+    case 'OR NOT': return side === 'right' ? MUST_NOT : SHOULD
+    case 'NOT': return side === 'right' ? MUST_NOT : SHOULD
+    default: return SHOULD // <implicit> (default operator)
+  }
+}
+
+/**
+ * A clause's occurrence comes from its own `+`/`-` prefix when present,
+ * otherwise from the operator that joins it to the chain.
+ */
+function clauseOccur(node, operator, side) {
+  if (node && node.prefix === '+') return MUST
+  if (node && node.prefix === '-') return MUST_NOT
+  return operatorOccur(operator, side)
+}
+
+const isBinaryNode = node => Boolean(node && node.left && node.right)
+const isParenthesised = node => Boolean(node && node.parenthesized === true)
+
+/**
+ * Turn a `lucene` AST node into a canonical tree of occurrence-tagged
+ * clauses. A right-leaning chain of the *same* operator family is linearised
+ * into one flat clause list (so `a AND b AND c` and `+a +b +c` match), while a
+ * parenthesised group or an operator-family change stays an atomic nested
+ * clause (so `(a OR b) AND c` does NOT collapse into `(a b) +c`).
+ */
+function buildCanonical(node, inheritedField = null) {
+  if (!node) return null
+  const field = node.field && node.field !== '<implicit>' ? node.field : inheritedField
+
+  if (node.start === 'NOT' && node.left && !node.right) {
+    return { bool: [{ occur: MUST_NOT, node: buildCanonical(node.left, field) }] }
+  }
+
+  if (isBinaryNode(node)) {
+    const family = operatorFamily(node.operator)
+    const clauses = [{ occur: clauseOccur(node.left, node.operator, 'left'), node: buildCanonical(node.left, field) }]
+    let current = node
+    while (true) {
+      const right = current.right
+      if (isBinaryNode(right) && !isParenthesised(right) && operatorFamily(right.operator) === family) {
+        clauses.push({ occur: clauseOccur(right.left, current.operator, 'right'), node: buildCanonical(right.left, field) })
+        current = right
+        continue
+      }
+      clauses.push({ occur: clauseOccur(right, current.operator, 'right'), node: buildCanonical(right, field) })
+      break
+    }
+    return { bool: clauses }
+  }
+
+  // Field-only wrapper node (e.g. the outer node of `content:(a AND b)`).
+  if (node.left && !node.right) return buildCanonical(node.left, field)
+
+  return {
+    leaf: {
+      field: field || '*',
+      term: node.term ?? '',
+      quoted: Boolean(node.quoted),
+      similarity: node.similarity ?? null,
+      proximity: node.proximity ?? null
+    }
+  }
+}
+
+/**
+ * Serialise a canonical tree to a string with sibling clauses sorted, so two
+ * queries that differ only in operand order serialise identically.
+ */
+function serializeCanonical(node) {
+  if (!node) return 'nil'
+  if (node.leaf) {
+    const l = node.leaf
+    return `L:${l.field}:${l.quoted ? `"${l.term}"` : l.term}:s${l.similarity}:p${l.proximity}`
+  }
+  return `B(${node.bool.map(c => `${c.occur}:${serializeCanonical(c.node)}`).sort().join(',')})`
+}
+
+function normalizeQuery(query) {
+  return serializeCanonical(buildCanonical(lucene.parse(query)))
+}
+
+/**
+ * True when two Lucene query strings are semantically equivalent under the
+ * advanced-search form's representable shape. Used by `parseLuceneQuery` to
+ * verify a regenerated query still means what the user typed. Bias is to blank
+ * on any doubt: an unparseable side or a thrown error counts as not equivalent.
+ */
+export function queriesEquivalent(a, b) {
+  try {
+    return normalizeQuery(a) === normalizeQuery(b)
+  }
+  catch {
+    return false
+  }
+}
+
+/**
  * Generate a Lucene query string from the advanced search form data.
  * @param {Object} formData - The form data object
  * @returns {string} - The generated Lucene query
