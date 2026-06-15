@@ -138,7 +138,7 @@ function flattenCanonical(node) {
   const clauses = []
   for (const clause of node.bool) {
     const child = flattenCanonical(clause.node)
-    if (child && child.bool && child.bool.every(c => c.occur === clause.occur)) {
+    if (child && child.bool && child.bool.every(childClause => childClause.occur === clause.occur)) {
       clauses.push(...child.bool)
     }
     else {
@@ -155,11 +155,11 @@ function flattenCanonical(node) {
 function serializeCanonical(node) {
   if (!node) return 'nil'
   if (node.leaf) {
-    const l = node.leaf
-    const term = l.quoted ? `"${l.term}"` : l.term
-    return `L:${JSON.stringify(l.field)}:${JSON.stringify(term)}:s${l.similarity}:p${l.proximity}:b${l.boost}`
+    const leaf = node.leaf
+    const term = leaf.quoted ? `"${leaf.term}"` : leaf.term
+    return `L:${JSON.stringify(leaf.field)}:${JSON.stringify(term)}:s${leaf.similarity}:p${leaf.proximity}:b${leaf.boost}`
   }
-  return `B(${node.bool.map(c => `${c.occur}:${serializeCanonical(c.node)}`).sort().join(',')})`
+  return `B(${node.bool.map(clause => `${clause.occur}:${serializeCanonical(clause.node)}`).sort().join(',')})`
 }
 
 function normalizeQuery(query) {
