@@ -15,6 +15,7 @@ import { useContentTypeCategoryLabel } from '@/composables/useContentTypeCategor
 import { useContentTypeSearchFilter } from '@/composables/useContentTypeSearchFilter'
 import { useContentTypeSelection } from '@/composables/useContentTypeSelection'
 import { useContentTypeCategoryCollapse } from '@/composables/useContentTypeCategoryCollapse'
+import { useContentTypeGroupedView } from '@/composables/useContentTypeGroupedView'
 import { useContentTypeSort } from '@/composables/useContentTypeSort'
 import { useSearchFilter } from '@/composables/useSearchFilter'
 import { useSearchStore } from '@/store/modules'
@@ -27,7 +28,7 @@ const props = defineProps({
 })
 
 const collapse = defineModel('collapse', { type: Boolean, default: null })
-const grouped = defineModel('grouped', { type: Boolean, default: false })
+const grouped = useContentTypeGroupedView()
 
 const { t } = useI18n()
 
