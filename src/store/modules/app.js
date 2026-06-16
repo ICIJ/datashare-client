@@ -34,7 +34,8 @@ export const useAppStore = defineStore(
           perPage: '25',
           properties: ['title', 'thumbnail', 'highlights', 'project'],
           searchOperator: SEARCH_OPERATORS.OR,
-          expandedContentTypeCategories: []
+          expandedContentTypeCategories: [],
+          groupedContentTypeView: false
         },
         searchSavedList: {
           orderBy: ['creation_date', 'desc'],
