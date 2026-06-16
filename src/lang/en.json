@@ -1160,7 +1160,7 @@
           "operators": "Selecting 'do phrase matches' prevent from using operators like <code>AND</code>, <code>OR</code>, <code>NOT</code>, <code>*</code>, <code>?</code>, <code>!</code>, <code>+</code>, <code>-</code> or Regexes between 2 slashes in the queries."
         },
         "sections": {
-          "general": "Name, project(s) and description",
+          "general": "Details",
           "queries": "Queries",
           "operators": "Search operators",
           "filters": "Filters"

@@ -1132,7 +1132,7 @@
           "operators": "Al seleccionar 'hacer frases coincidentes' se evita el uso de operadores como <code>AND</code>, <code>OR</code>, <code>NOT</code>, <code>*</code>, <code>?</code>, <code>!</code>, <code>+</code>, <code>-</code> o expresiones regulares entre 2 barras en las consultas."
         },
         "sections": {
-          "general": "Nombre, proyecto(s) y descripción",
+          "general": "Detalles",
           "queries": "Consultas",
           "operators": "Buscar operadores",
           "filters": "Filtros"
