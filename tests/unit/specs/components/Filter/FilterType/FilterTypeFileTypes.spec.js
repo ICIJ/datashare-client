@@ -93,14 +93,19 @@ describe('FilterTypeFileTypes.vue', () => {
     // without hitting the network.
     queryFilterSpy = vi.spyOn(searchStore, 'queryFilter').mockResolvedValue(aggregationPage([]))
 
+    // The grouped/flat view is now driven by the persisted `groupedContentTypeView`
+    // setting (not a prop). Seed it to `true` so the default mount is grouped,
+    // matching the previous `grouped: true` prop default. This also resets the
+    // setting between tests, since it otherwise persists to localStorage.
+    useAppStore().setSettings('search', 'groupedContentTypeView', true)
+
     wrapper = mount(FilterTypeFileTypes, {
       global: {
         plugins: core.plugins
       },
       props: {
         filter,
-        collapse: false,
-        grouped: true
+        collapse: false
       }
     })
   })
@@ -122,6 +127,7 @@ describe('FilterTypeFileTypes.vue', () => {
 
   it('should have grouped set to false by default', () => {
     wrapper.unmount()
+    useAppStore().setSettings('search', 'groupedContentTypeView', false)
     const filter = searchStore.getFilter({ name: 'contentType' })
     wrapper = mount(FilterTypeFileTypes, {
       global: { plugins: core.plugins },
@@ -1352,13 +1358,13 @@ describe('FilterTypeFileTypes.vue', () => {
       })
 
       const filter = searchStore.getFilter({ name: 'contentType' })
+      useAppStore().setSettings('search', 'groupedContentTypeView', grouped)
       wrapper = mount(FilterTypeFileTypes, {
         global: {
           plugins: core.plugins
         },
         props: {
           filter,
-          grouped,
           collapse
         }
       })
