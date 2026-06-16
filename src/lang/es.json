@@ -1189,7 +1189,8 @@
         "title": "Crear nueva búsqueda por lotes"
       },
       "edit": {
-        "title": "Editar búsqueda por lotes"
+        "title": "Editar búsqueda por lotes",
+        "breadcrumb": "Editar"
       }
     },
     "batch-search-queries": {

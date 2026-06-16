@@ -1186,7 +1186,8 @@
         "title": "Créer une recherche en lot"
       },
       "edit": {
-        "title": "Modifier la recherche en lot"
+        "title": "Modifier la recherche en lot",
+        "breadcrumb": "Modifier"
       }
     },
     "batch-search-queries": {

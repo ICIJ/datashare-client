@@ -60,4 +60,11 @@ describe('TaskBatchSearchEdit', () => {
     const wrapper = await mountEdit()
     expect(wrapper.find('.navigation-breadcrumb').text()).toContain('My batch')
   })
+
+  it('renders a short "Edit" leaf rather than the verbose page title', async () => {
+    const wrapper = await mountEdit()
+    const breadcrumb = wrapper.find('.navigation-breadcrumb').text()
+    expect(breadcrumb).toContain('Edit')
+    expect(breadcrumb).not.toContain('Edit batch search')
+  })
 })

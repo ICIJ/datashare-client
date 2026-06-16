@@ -1,5 +1,6 @@
 <script setup>
 import { onBeforeMount, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import AppSpinner from '@/components/AppSpinner/AppSpinner'
 import PageContainer from '@/components/PageContainer/PageContainer'
@@ -18,6 +19,7 @@ const { indices, uuid } = defineProps({
   }
 })
 
+const { t } = useI18n()
 const core = useCore()
 const batchSearch = ref(null)
 
@@ -46,6 +48,9 @@ onBeforeMount(fetchBatchSearch)
         {{ batchSearch.name }}
       </template>
       <app-spinner v-else />
+    </template>
+    <template #entry-label(task.batch-search.edit)>
+      {{ t('task.batch-search.edit.breadcrumb') }}
     </template>
   </page-header>
   <page-container fluid>

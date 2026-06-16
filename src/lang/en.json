@@ -1217,7 +1217,8 @@
         "title": "Create new batch search"
       },
       "edit": {
-        "title": "Edit batch search"
+        "title": "Edit batch search",
+        "breadcrumb": "Edit"
       }
     },
     "batch-search-queries": {

@@ -1189,7 +1189,8 @@
         "title": "crwdns9022:0crwdne9022:0"
       },
       "edit": {
-        "title": "Edit batch search"
+        "title": "Edit batch search",
+        "breadcrumb": "Edit"
       }
     },
     "batch-search-queries": {
