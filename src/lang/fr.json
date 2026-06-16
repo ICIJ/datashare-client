@@ -1129,7 +1129,7 @@
           "operators": "Si vous optez pour 'Phrase exacte', les opérateurs comme <code>AND</code>, <code>OR</code>, <code>NOT</code>, <code>*</code>, <code>?</code>, <code>!</code>, <code>+</code>, <code>-</code> ou les regex (expressions régulières) ne seront pas prises en compte."
         },
         "sections": {
-          "general": "Nom, projet(s) et description",
+          "general": "Détails",
           "queries": "Requêtes",
           "operators": "Opérateurs de recherche",
           "filters": "Filtres"
