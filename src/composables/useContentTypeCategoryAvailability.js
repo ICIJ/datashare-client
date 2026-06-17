@@ -140,6 +140,11 @@ export const useMappingCacheStore = defineSuffixedStore('contentTypeMappingCache
 export function useContentTypeCategoryAvailability() {
   const searchSuffix = inject(SEARCH_SUFFIX_PROVIDE_KEY, null)
   const searchStore = useSearchStore.inject()
+  // A suffixed store binds to a disposable search context (e.g. the batch-search
+  // form). It intentionally outlives that context's $dispose: the watcher tears
+  // down with this component, leaving only a small inert cache + refs. This is a
+  // bounded per-form-open leak we accept rather than reference-count disposal
+  // across the sibling FilterType consumers that share the suffixed store.
   const store = searchSuffix ? useMappingCacheStore.create(searchSuffix) : useMappingCacheStore()
   watch(
     () => indexSignature(searchStore.indices),
