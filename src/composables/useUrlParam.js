@@ -11,12 +11,8 @@ import { toRoute } from '@/utils/toRoute'
  */
 let batchedUpdates = {}
 
-/**
- * Tracks the resolved route name of the current batch context.
- * Used to detect when a call comes from a different route context and
- * discard stale accumulated updates to prevent cross-route contamination.
- */
-let batchedUpdatesContextName = undefined
+// Used to detect when a new call targets a different route context so stale updates aren't carried over.
+let batchedUpdatesContextName = null
 
 /**
  * Debounced function to apply batched updates to the query parameters
@@ -39,7 +35,7 @@ const applyBatchedUpdates = debounce((router, route, to) => {
     }
     // Reset the batch after applying
     batchedUpdates = {}
-    batchedUpdatesContextName = undefined
+    batchedUpdatesContextName = null
   }
 }, 50)
 
@@ -55,13 +51,14 @@ const applyBatchedUpdates = debounce((router, route, to) => {
  */
 export function batchQueryParamUpdate(router, route, to = null, queryParams = [], values = {}) {
   const { name } = toRoute(to)
-  // When the route context changes (e.g. search → task), discard accumulated
-  // updates from the previous context to prevent cross-route contamination.
-  if (batchedUpdatesContextName !== undefined && name !== batchedUpdatesContextName) {
-    batchedUpdates = {}
+  // Different route contexts must never share accumulated URL param updates,
+  // otherwise stale params (e.g. a search page's sort=_score) can leak into
+  // an unrelated route's push (e.g. a task page), see incident notes.
+  if (name !== batchedUpdatesContextName) {
     applyBatchedUpdates.cancel()
+    batchedUpdates = {}
+    batchedUpdatesContextName = name
   }
-  batchedUpdatesContextName = name
   queryParams.forEach((param, index) => {
     batchedUpdates[param] = values[index]
   })
