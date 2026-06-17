@@ -1,3 +1,4 @@
+/* eslint-disable vue/one-component-per-file */
 import { mount, flushPromises } from '@vue/test-utils'
 import { defineComponent, nextTick } from 'vue'
 
@@ -264,5 +265,43 @@ describe('useContentTypeCategoryAvailability composable', () => {
     expect(formResult.isAvailable.value).toBe(false)
     expect(api.getMappingsByFields).toHaveBeenCalledWith('idx-a', 'contentTypeCategory')
     expect(api.getMappingsByFields).toHaveBeenCalledWith('idx-b', 'contentTypeCategory')
+  })
+
+  it('does not let a superseded in-flight request overwrite a newer (empty) selection', async () => {
+    searchStore.setIndices(['idx-a'])
+    let resolveFirst
+    api.getMappingsByFields.mockImplementationOnce(
+      () => new Promise((resolve) => { resolveFirst = resolve })
+    )
+
+    const { isAvailable } = mountComposable() // fetch(['idx-a']) -> in-flight
+
+    await nextTick()
+    // Deselect everything while the idx-a request is still pending.
+    searchStore.setIndices([])
+    await nextTick()
+    expect(isAvailable.value).toBe(false)
+
+    // The stale idx-a request resolves with the field present — it must NOT flip
+    // availability back to true, because nothing is selected anymore.
+    resolveFirst(buildMappingPayload({ 'idx-a': true }))
+    await flushPromises()
+
+    expect(isAvailable.value).toBe(false)
+  })
+
+  it('clear() resets availability and error, not just the entry cache', async () => {
+    searchStore.setIndices(['idx-a'])
+    api.getMappingsByFields.mockResolvedValueOnce(
+      buildMappingPayload({ 'idx-a': true })
+    )
+
+    const { isAvailable } = mountComposable()
+    await flushPromises()
+    expect(isAvailable.value).toBe(true)
+
+    useMappingCacheStore().clear()
+
+    expect(isAvailable.value).toBe(false)
   })
 })

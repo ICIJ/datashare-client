@@ -1,5 +1,6 @@
-import { inject, reactive, ref, watch } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
+import { createSingletonPromise } from '@vueuse/shared'
 
 import { apiInstance as api } from '@/api/apiInstance'
 import { useWait } from '@/composables/useWait'
@@ -8,14 +9,6 @@ import { defineSuffixedStore } from '@/store/defineSuffixedStore'
 import { useSearchStore } from '@/store/modules'
 
 const INDEX_SIGNATURE_SEPARATOR = '\0'
-
-// Provide key under which defineSuffixedStore('search', …) exposes the active
-// search-store suffix (camelCase('searchSuffix')). The composable reads it in
-// component context — where Vue injection resolves the component hierarchy,
-// unlike a Pinia store setup, which only sees app-level provides — to bind the
-// mapping store to the matching search context. Each context (main search, the
-// disposable batch-search form, …) then owns its own availability state.
-const SEARCH_SUFFIX_PROVIDE_KEY = 'searchSuffix'
 
 const parseMappings = (payload) => {
   if (typeof payload === 'string') {
@@ -37,60 +30,62 @@ const indexSignature = indices => [...indices].sort().join(INDEX_SIGNATURE_SEPAR
 // Per-search-context owner of the contentTypeCategory mapping cache and the
 // derived availability state. Exposes a fetchAvailability(indices) action; the
 // watcher that drives it lives in the composable (component context). Concurrent
-// callers are coalesced by the in-flight guard below, so the many FilterType
-// components that mount together issue a single request — this is what removes
-// the request herd. Suffixed so each search context keeps isolated state and so
-// the cache resets between tests when each test installs a fresh Pinia instance.
+// callers for the same missing-index set are coalesced into one request, so the
+// many FilterType components that mount together issue a single request — this
+// is what removes the request herd. Suffixed so each search context keeps
+// isolated state and so the cache resets between tests when each test installs a
+// fresh Pinia instance.
 export const useMappingCacheStore = defineSuffixedStore('contentTypeMappingCache', () => {
   const { waitFor, isLoading } = useWait()
 
-  const entries = reactive({})
+  const entries = ref({})
   const isAvailable = ref(false)
   const error = ref(null)
 
-  // Coalesce overlapping requests for an identical missing-index set so the many
-  // components mounting at once — and rapid signature flips like [A] -> [] -> [A]
-  // — reuse one pending request instead of duplicating it.
-  let inFlightSignature = null
-  let inFlightPromise = null
+  // Coalesce overlapping requests for an identical missing-index set, keyed by
+  // signature, reusing one pending request (createSingletonPromise) for the many
+  // components mounting at once and rapid signature flips like [A] -> [] -> [A].
+  // The slot is freed on settle so a later identical selection re-fetches fresh.
+  const inflightBySignature = new Map()
 
-  const has = name => name in entries
-  const get = name => entries[name]
-  const set = (name, value) => {
-    entries[name] = value
-  }
-  const clear = () => Object.keys(entries).forEach(key => delete entries[key])
+  // Monotonic token: each fetchAvailability run captures one and commits its
+  // result only if it is still the latest, so a superseded slow response cannot
+  // overwrite a newer run's state (e.g. [A] in flight, deselect to [], then [A]
+  // resolves must not flip availability back on for an empty selection).
+  let latestRun = 0
 
-  const uncachedIndices = list => list.filter(name => !has(name))
+  const uncachedIndices = list => list.filter(name => !(name in entries.value))
 
   const cacheMappingsFor = (parsed, names) => {
     for (const name of names) {
-      set(name, isFieldPresent(parsed, name))
+      entries.value[name] = isFieldPresent(parsed, name)
     }
+  }
+
+  // Resets the cache AND the derived/in-flight state, so callers that invalidate
+  // the cache don't leave a stale isAvailable, a stale error, or a pending
+  // request that later repopulates just-cleared entries.
+  const clear = () => {
+    entries.value = {}
+    isAvailable.value = false
+    error.value = null
+    inflightBySignature.clear()
   }
 
   const requestMappingsFor = (names) => {
     const signature = indexSignature(names)
-    if (inFlightSignature === signature && inFlightPromise) {
-      return inFlightPromise
+    if (!inflightBySignature.has(signature)) {
+      const singleton = createSingletonPromise(
+        () => api.getMappingsByFields(names.join(','), CONTENT_TYPE_CATEGORY_FILTER_NAME)
+      )
+      inflightBySignature.set(signature, singleton)
+      // Free the slot once settled (resolve or reject); swallow the rejection
+      // here because the awaiting caller handles it via the returned promise.
+      singleton()
+        .finally(() => inflightBySignature.delete(signature))
+        .catch(() => {})
     }
-    const promise = api.getMappingsByFields(names.join(','), CONTENT_TYPE_CATEGORY_FILTER_NAME)
-    inFlightSignature = signature
-    inFlightPromise = promise
-    promise
-      .finally(() => {
-        // Only clear when this request is still the current one, so a slow
-        // earlier request resolving late does not wipe a newer request's guard.
-        if (inFlightPromise === promise) {
-          inFlightSignature = null
-          inFlightPromise = null
-        }
-      })
-      // The .finally() chain rejects when `promise` rejects; the rejection is
-      // handled by the awaiting caller via the returned `promise`, so swallow it
-      // here to avoid an unhandled-rejection warning.
-      .catch(() => {})
-    return promise
+    return inflightBySignature.get(signature)()
   }
 
   const refreshCacheFor = async (names) => {
@@ -98,14 +93,11 @@ export const useMappingCacheStore = defineSuffixedStore('contentTypeMappingCache
     cacheMappingsFor(parseMappings(payload), names)
   }
 
-  const allIndicesHaveField = list => list.every(name => get(name) === true)
-
-  const recordError = (err) => {
-    error.value = err
-    isAvailable.value = false
-  }
+  const allIndicesHaveField = list => list.every(name => entries.value[name] === true)
 
   const fetchAvailability = waitFor(async (list) => {
+    const run = ++latestRun
+    const isLatest = () => run === latestRun
     error.value = null
 
     if (list.length === 0) {
@@ -119,38 +111,48 @@ export const useMappingCacheStore = defineSuffixedStore('contentTypeMappingCache
         await refreshCacheFor(missing)
       }
       catch (err) {
-        recordError(err)
+        if (isLatest()) {
+          error.value = err
+          isAvailable.value = false
+        }
         return
       }
     }
 
-    isAvailable.value = allIndicesHaveField(list)
+    if (isLatest()) {
+      isAvailable.value = allIndicesHaveField(list)
+    }
   })
 
-  return { entries, has, get, set, clear, isAvailable, isLoading, error, fetchAvailability }
+  return { clear, isAvailable, isLoading, error, fetchAvailability }
 })
 
 /**
  * Reports whether the contentTypeCategory field is mapped on every currently
  * selected index. Owns the watcher (in component context, so Vue injection
- * resolves the active search-store suffix correctly) and delegates fetching and
- * state to the per-context mapping store. Any missing index, network error, or
- * parse error resolves to false so paired-dimension UI can fall back gracefully.
+ * resolves the active search-store suffix correctly — a Pinia store setup only
+ * sees app-level provides) and delegates fetching and state to the per-context
+ * mapping store. Any missing index, network error, or parse error resolves to
+ * false so paired-dimension UI can fall back gracefully.
  */
 export function useContentTypeCategoryAvailability() {
-  const searchSuffix = inject(SEARCH_SUFFIX_PROVIDE_KEY, null)
   const searchStore = useSearchStore.inject()
-  // A suffixed store binds to a disposable search context (e.g. the batch-search
-  // form). It intentionally outlives that context's $dispose: the watcher tears
-  // down with this component, leaving only a small inert cache + refs. This is a
-  // bounded per-form-open leak we accept rather than reference-count disposal
-  // across the sibling FilterType consumers that share the suffixed store.
-  const store = searchSuffix ? useMappingCacheStore.create(searchSuffix) : useMappingCacheStore()
-  watch(
-    () => indexSignature(searchStore.indices),
-    () => store.fetchAvailability(searchStore.indices),
-    { immediate: true }
-  )
+  // Bind the mapping store to the active search context by suffix. We read the
+  // suffix via useSearchStore.provideKey (no hardcoded key) and retrieve the
+  // store with `.use` so this component does not re-provide the suffix into its
+  // own subtree. A suffixed store binds to a disposable search context (e.g. the
+  // batch-search form) and intentionally outlives that context's $dispose: the
+  // watcher tears down with this component, leaving only a small inert cache +
+  // refs — a bounded per-form-open leak we accept rather than reference-count
+  // disposal across the sibling FilterType consumers that share the store.
+  const searchSuffix = inject(useSearchStore.provideKey, null)
+  const store = useMappingCacheStore.use(searchSuffix)
+  // Memoize the sorted indices and their signature so the watcher key and the
+  // fetch argument share a single sort/join per change instead of recomputing
+  // on every reactive tick.
+  const sortedIndices = computed(() => [...searchStore.indices].sort())
+  const signature = computed(() => sortedIndices.value.join(INDEX_SIGNATURE_SEPARATOR))
+  watch(signature, () => store.fetchAvailability(sortedIndices.value), { immediate: true })
   const { isAvailable, isLoading, error } = storeToRefs(store)
   return { isAvailable, isLoading, error }
 }

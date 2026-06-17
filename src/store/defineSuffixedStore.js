@@ -46,6 +46,10 @@ export const defineSuffixedStore = (id, storeSetup, options) => {
   // Create a unique provide key for this store
   const defaultProvideKey = camelCase(`${id}Suffix`)
 
+  // Expose the provide key so consumers can inject the active suffix without
+  // hardcoding the camelCase(`${id}Suffix`) derivation rule.
+  useSuffixedStore.provideKey = defaultProvideKey
+
   /**
    * Add a closure function to create a new store with the same id
    * and the given suffix. This is useful when you want to pass the
@@ -72,6 +76,21 @@ export const defineSuffixedStore = (id, storeSetup, options) => {
    */
   useSuffixedStore.create = (suffix, provideKey = defaultProvideKey) => {
     return useSuffixedStore.withSuffix(suffix, provideKey).call()
+  }
+
+  /**
+   * Retrieve the store for the given suffix WITHOUT providing the suffix to
+   * descendants. Use when a consumer must bind to an externally-determined
+   * suffix but must not itself become a provider for it.
+   *
+   * @param {string} suffix - The suffix to append to the store id (falsy = default store).
+   * @returns {Store} - The store instance for the suffix.
+   */
+  useSuffixedStore.use = (suffix) => {
+    if (!suffix) {
+      return useSuffixedStore()
+    }
+    return createSuffixedStore(suffix).call()
   }
 
   /**
