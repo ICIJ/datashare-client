@@ -564,4 +564,66 @@ describe('whenDifferentRoute', () => {
 
     expect(callback).not.toHaveBeenCalled()
   })
+
+  describe('batchQueryParamUpdate', () => {
+    let router
+    let route
+    let batchQueryParamUpdate
+
+    beforeEach(async () => {
+      vi.useFakeTimers()
+      // The file-level vi.mock replaces lodash debounce with an identity function,
+      // which makes applyBatchedUpdates fire immediately on every call and prevents
+      // batching. We reset modules and re-import with real lodash debounce so the
+      // fake timers can control when the debounce fires.
+      vi.resetModules()
+      vi.doMock('lodash', async (importOriginal) => {
+        const { default: actual } = await importOriginal()
+        return { ...actual }
+      })
+      ;({ batchQueryParamUpdate } = await import('@/composables/useUrlParam'))
+      router = { push: vi.fn() }
+      route = { query: {}, name: 'current-route' }
+    })
+
+    afterEach(() => {
+      // Fire any pending debounce to reset module-level state for the next test
+      vi.advanceTimersByTime(100)
+      vi.useRealTimers()
+      vi.resetModules()
+    })
+
+    it('accumulates params from the same route context and pushes them together', () => {
+      const to = { name: 'search' }
+      batchQueryParamUpdate(router, route, to, ['sort', 'order'], ['_score', 'desc'])
+      batchQueryParamUpdate(router, route, to, ['perPage'], ['25'])
+
+      vi.advanceTimersByTime(50)
+
+      expect(router.push).toHaveBeenCalledOnce()
+      expect(router.push).toHaveBeenCalledWith(
+        expect.objectContaining({
+          query: expect.objectContaining({ sort: '_score', order: 'desc', perPage: '25' })
+        })
+      )
+    })
+
+    it('does not apply params from a previous route context when the context changes', () => {
+      // Simulate search page writing sort=_score with a named route context
+      batchQueryParamUpdate(router, route, { name: 'search' }, ['sort', 'order'], ['_score', 'desc'])
+
+      // Simulate task page writing perPage=10 with no route context (different context)
+      // This resets the debounce with to=null but must NOT inherit sort=_score
+      batchQueryParamUpdate(router, route, null, ['perPage'], ['10'])
+
+      vi.advanceTimersByTime(50)
+
+      // Only one push should occur (task context), and it must not carry sort=_score
+      expect(router.push).toHaveBeenCalledOnce()
+      const [pushArg] = router.push.mock.calls[0]
+      expect(pushArg.query).not.toHaveProperty('sort')
+      expect(pushArg.query).not.toHaveProperty('order')
+      expect(pushArg.query).toHaveProperty('perPage', '10')
+    })
+  })
 })
