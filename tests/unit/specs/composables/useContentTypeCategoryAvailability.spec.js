@@ -163,4 +163,31 @@ describe('useContentTypeCategoryAvailability composable', () => {
     expect(error.value).toBeNull()
     expect(api.getMappingsByFields).not.toHaveBeenCalled()
   })
+
+  it('issues a single mapping request when many components mount at once', async () => {
+    searchStore.setIndices(['idx-a', 'idx-b'])
+    api.getMappingsByFields.mockResolvedValueOnce(
+      buildMappingPayload({ 'idx-a': true, 'idx-b': true })
+    )
+
+    const results = []
+    const TestComponent = {
+      setup() {
+        const result = useContentTypeCategoryAvailability()
+        results.push(result)
+        return result
+      },
+      template: '<div></div>'
+    }
+    // Three sibling consumers under one app, mirroring the search page where
+    // every FilterType* component instantiates the composable in the same tick.
+    wrapper = mount(
+      { components: { TestComponent }, template: '<div><TestComponent /><TestComponent /><TestComponent /></div>' },
+      { global: { plugins } }
+    )
+    await flushPromises()
+
+    expect(api.getMappingsByFields).toHaveBeenCalledTimes(1)
+    expect(results.every(({ isAvailable }) => isAvailable.value === true)).toBe(true)
+  })
 })

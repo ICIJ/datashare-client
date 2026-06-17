@@ -1,4 +1,5 @@
 import { computed, reactive, ref, watch } from 'vue'
+import { storeToRefs } from 'pinia'
 
 import { apiInstance as api } from '@/api/apiInstance'
 import { useWait } from '@/composables/useWait'
@@ -7,20 +8,6 @@ import { defineSuffixedStore } from '@/store/defineSuffixedStore'
 import { useSearchStore } from '@/store/modules'
 
 const INDEX_SIGNATURE_SEPARATOR = '\0'
-
-// Pinia-scoped so the cache is shared across composable instances within an
-// app but reset automatically between tests when each test installs a fresh
-// Pinia instance.
-export const useMappingCacheStore = defineSuffixedStore('contentTypeMappingCache', () => {
-  const entries = reactive({})
-  const has = name => name in entries
-  const get = name => entries[name]
-  const set = (name, value) => {
-    entries[name] = value
-  }
-  const clear = () => Object.keys(entries).forEach(key => delete entries[key])
-  return { entries, has, get, set, clear }
-})
 
 const parseMappings = (payload) => {
   if (typeof payload === 'string') {
@@ -39,24 +26,34 @@ const isFieldPresent = (parsed, indexName) => {
 
 const indexSignature = indices => [...indices].sort().join(INDEX_SIGNATURE_SEPARATOR)
 
-/**
- * Reports whether the contentTypeCategory field is mapped on every
- * currently selected index. Any missing index, network error, or parse
- * error resolves to false so paired-dimension UI can fall back gracefully.
- */
-export function useContentTypeCategoryAvailability() {
+// Single owner of the contentTypeCategory mapping cache AND the derived
+// availability state. A Pinia setup store runs its setup once per instance, so
+// the lone watcher below fires one fetch per index-signature change no matter
+// how many components read the store — this is what removes the request herd.
+// Suffixed so the cache resets between tests when each test installs a fresh
+// Pinia instance.
+export const useMappingCacheStore = defineSuffixedStore('contentTypeMappingCache', () => {
   const searchStore = useSearchStore.inject()
-  const mappingCache = useMappingCacheStore()
-  const indices = computed(() => searchStore.indices)
-  const isAvailable = ref(false)
-  const error = ref(null)
   const { waitFor, isLoading } = useWait()
 
-  const uncachedIndices = list => list.filter(name => !mappingCache.has(name))
+  const entries = reactive({})
+  const isAvailable = ref(false)
+  const error = ref(null)
+
+  const has = name => name in entries
+  const get = name => entries[name]
+  const set = (name, value) => {
+    entries[name] = value
+  }
+  const clear = () => Object.keys(entries).forEach(key => delete entries[key])
+
+  const indices = computed(() => searchStore.indices)
+
+  const uncachedIndices = list => list.filter(name => !has(name))
 
   const cacheMappingsFor = (parsed, names) => {
     for (const name of names) {
-      mappingCache.set(name, isFieldPresent(parsed, name))
+      set(name, isFieldPresent(parsed, name))
     }
   }
 
@@ -65,7 +62,7 @@ export function useContentTypeCategoryAvailability() {
     cacheMappingsFor(parseMappings(payload), names)
   }
 
-  const allIndicesHaveField = list => list.every(name => mappingCache.get(name) === true)
+  const allIndicesHaveField = list => list.every(name => get(name) === true)
 
   const recordError = (err) => {
     error.value = err
@@ -97,5 +94,18 @@ export function useContentTypeCategoryAvailability() {
 
   watch(() => indexSignature(indices.value), fetchAvailability, { immediate: true })
 
+  return { entries, has, get, set, clear, isAvailable, isLoading, error, fetchAvailability }
+})
+
+/**
+ * Reports whether the contentTypeCategory field is mapped on every currently
+ * selected index. Thin adapter over the shared store: returns the store's
+ * reactive refs so every consumer observes the same single fetch lifecycle.
+ * Any missing index, network error, or parse error resolves to false so
+ * paired-dimension UI can fall back gracefully.
+ */
+export function useContentTypeCategoryAvailability() {
+  const store = useMappingCacheStore()
+  const { isAvailable, isLoading, error } = storeToRefs(store)
   return { isAvailable, isLoading, error }
 }
