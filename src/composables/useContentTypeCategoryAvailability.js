@@ -1,4 +1,4 @@
-import { computed, reactive, ref, watch } from 'vue'
+import { computed, getCurrentInstance, inject, reactive, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import { apiInstance as api } from '@/api/apiInstance'
@@ -8,6 +8,13 @@ import { defineSuffixedStore } from '@/store/defineSuffixedStore'
 import { useSearchStore } from '@/store/modules'
 
 const INDEX_SIGNATURE_SEPARATOR = '\0'
+
+// Provide key under which defineSuffixedStore('search', …) exposes the active
+// search-store suffix (camelCase('searchSuffix')). Binding the mapping store to
+// the same suffix gives each search context (main search, the disposable
+// batch-search form, …) its own watcher and availability state. Per-index cache
+// semantics are unchanged.
+const SEARCH_SUFFIX_PROVIDE_KEY = 'searchSuffix'
 
 const parseMappings = (payload) => {
   if (typeof payload === 'string') {
@@ -33,7 +40,21 @@ const indexSignature = indices => [...indices].sort().join(INDEX_SIGNATURE_SEPAR
 // Suffixed so the cache resets between tests when each test installs a fresh
 // Pinia instance.
 export const useMappingCacheStore = defineSuffixedStore('contentTypeMappingCache', () => {
-  const searchStore = useSearchStore.inject()
+  // Pinia runs its store setup inside pinia._a.runWithContext which sets currentApp
+  // and causes Vue's inject() to resolve against app-level provides only, not the
+  // component hierarchy. To reach a component-provided searchSuffix we traverse
+  // the current instance's parent provides chain directly, which IS accessible.
+  const instance = getCurrentInstance()
+  let parentSearchSuffix = null
+  let current = instance?.parent
+  while (current) {
+    if (current.provides && SEARCH_SUFFIX_PROVIDE_KEY in current.provides) {
+      parentSearchSuffix = current.provides[SEARCH_SUFFIX_PROVIDE_KEY]
+      break
+    }
+    current = current.parent
+  }
+  const searchStore = parentSearchSuffix ? useSearchStore.create(parentSearchSuffix) : useSearchStore()
   const { waitFor, isLoading } = useWait()
 
   const entries = reactive({})
@@ -68,14 +89,21 @@ export const useMappingCacheStore = defineSuffixedStore('contentTypeMappingCache
     if (inFlightSignature === signature && inFlightPromise) {
       return inFlightPromise
     }
+    const promise = api.getMappingsByFields(names.join(','), CONTENT_TYPE_CATEGORY_FILTER_NAME)
     inFlightSignature = signature
-    inFlightPromise = api
-      .getMappingsByFields(names.join(','), CONTENT_TYPE_CATEGORY_FILTER_NAME)
-      .finally(() => {
+    inFlightPromise = promise
+    promise.finally(() => {
+      // Only clear when this request is still the current one, so a slow
+      // earlier request resolving late does not wipe a newer request's guard.
+      if (inFlightPromise === promise) {
         inFlightSignature = null
         inFlightPromise = null
-      })
-    return inFlightPromise
+      }
+    // The .finally() chain rejects if `promise` rejected; the rejection is
+    // handled by the caller via the original `promise` reference below, so
+    // we swallow it here to prevent an unhandled-rejection warning.
+    }).catch(() => {})
+    return promise
   }
 
   const refreshCacheFor = async (names) => {
@@ -126,7 +154,8 @@ export const useMappingCacheStore = defineSuffixedStore('contentTypeMappingCache
  * paired-dimension UI can fall back gracefully.
  */
 export function useContentTypeCategoryAvailability() {
-  const store = useMappingCacheStore()
+  const searchSuffix = inject(SEARCH_SUFFIX_PROVIDE_KEY, null)
+  const store = searchSuffix ? useMappingCacheStore.create(searchSuffix) : useMappingCacheStore()
   const { isAvailable, isLoading, error } = storeToRefs(store)
   return { isAvailable, isLoading, error }
 }

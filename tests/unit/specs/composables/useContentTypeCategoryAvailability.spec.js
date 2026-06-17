@@ -1,5 +1,5 @@
 import { mount, flushPromises } from '@vue/test-utils'
-import { nextTick } from 'vue'
+import { defineComponent, nextTick } from 'vue'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import { useContentTypeCategoryAvailability, useMappingCacheStore } from '@/composables/useContentTypeCategoryAvailability'
@@ -212,5 +212,57 @@ describe('useContentTypeCategoryAvailability composable', () => {
     await flushPromises()
 
     expect(api.getMappingsByFields).toHaveBeenCalledTimes(1)
+  })
+
+  it('binds availability to the active search-context suffix, isolating disposable contexts', async () => {
+    // Main (default) context selects an index that HAS the field.
+    searchStore.setIndices(['idx-a'])
+    // Resolve each context's request independently by the indices it asks for.
+    api.getMappingsByFields.mockImplementation((projectIds) => {
+      if (projectIds === 'idx-a') {
+        return Promise.resolve(buildMappingPayload({ 'idx-a': true }))
+      }
+      return Promise.resolve(buildMappingPayload({ 'idx-b': false }))
+    })
+
+    let mainResult
+    let formResult
+
+    const MainHarness = defineComponent({
+      setup() {
+        mainResult = useContentTypeCategoryAvailability()
+        return {}
+      },
+      template: '<div />'
+    })
+    const FormHarness = defineComponent({
+      setup() {
+        formResult = useContentTypeCategoryAvailability()
+        return {}
+      },
+      template: '<div />'
+    })
+    const FormContext = defineComponent({
+      components: { FormHarness },
+      setup() {
+        const formSearchStore = useSearchStore.disposable()
+        formSearchStore.setIndices(['idx-b'])
+        return {}
+      },
+      template: '<form-harness />'
+    })
+    const Parent = defineComponent({
+      components: { MainHarness, FormContext },
+      template: '<div><main-harness /><form-context /></div>'
+    })
+
+    wrapper = mount(Parent, { global: { plugins } })
+    await flushPromises()
+
+    // Each context derives availability from its OWN indices, not a shared binding.
+    expect(mainResult.isAvailable.value).toBe(true)
+    expect(formResult.isAvailable.value).toBe(false)
+    expect(api.getMappingsByFields).toHaveBeenCalledWith('idx-a', 'contentTypeCategory')
+    expect(api.getMappingsByFields).toHaveBeenCalledWith('idx-b', 'contentTypeCategory')
   })
 })
