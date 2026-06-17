@@ -1,4 +1,5 @@
 import { mount, flushPromises } from '@vue/test-utils'
+import { nextTick } from 'vue'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import { useContentTypeCategoryAvailability, useMappingCacheStore } from '@/composables/useContentTypeCategoryAvailability'
@@ -189,5 +190,27 @@ describe('useContentTypeCategoryAvailability composable', () => {
 
     expect(api.getMappingsByFields).toHaveBeenCalledTimes(1)
     expect(results.every(({ isAvailable }) => isAvailable.value === true)).toBe(true)
+  })
+
+  it('shares one in-flight request when the same indices are re-requested before it resolves', async () => {
+    searchStore.setIndices(['idx-a'])
+    let resolveFirst
+    api.getMappingsByFields.mockImplementationOnce(
+      () => new Promise((resolve) => { resolveFirst = resolve })
+    )
+
+    mountComposable() // instantiates the store; the watcher fires fetch(['idx-a']) -> in-flight
+
+    await nextTick()
+    // Toggle away and back to the same set while the first request is pending.
+    searchStore.setIndices([])
+    await nextTick()
+    searchStore.setIndices(['idx-a'])
+    await nextTick()
+
+    resolveFirst(buildMappingPayload({ 'idx-a': true }))
+    await flushPromises()
+
+    expect(api.getMappingsByFields).toHaveBeenCalledTimes(1)
   })
 })

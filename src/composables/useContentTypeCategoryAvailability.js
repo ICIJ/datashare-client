@@ -40,6 +40,12 @@ export const useMappingCacheStore = defineSuffixedStore('contentTypeMappingCache
   const isAvailable = ref(false)
   const error = ref(null)
 
+  // Coalesce overlapping requests for an identical missing-index set so a
+  // rapid signature flip (e.g. [A] -> [] -> [A]) reuses the pending promise
+  // instead of issuing a duplicate request.
+  let inFlightSignature = null
+  let inFlightPromise = null
+
   const has = name => name in entries
   const get = name => entries[name]
   const set = (name, value) => {
@@ -57,8 +63,23 @@ export const useMappingCacheStore = defineSuffixedStore('contentTypeMappingCache
     }
   }
 
+  const requestMappingsFor = (names) => {
+    const signature = indexSignature(names)
+    if (inFlightSignature === signature && inFlightPromise) {
+      return inFlightPromise
+    }
+    inFlightSignature = signature
+    inFlightPromise = api
+      .getMappingsByFields(names.join(','), CONTENT_TYPE_CATEGORY_FILTER_NAME)
+      .finally(() => {
+        inFlightSignature = null
+        inFlightPromise = null
+      })
+    return inFlightPromise
+  }
+
   const refreshCacheFor = async (names) => {
-    const payload = await api.getMappingsByFields(names.join(','), CONTENT_TYPE_CATEGORY_FILTER_NAME)
+    const payload = await requestMappingsFor(names)
     cacheMappingsFor(parseMappings(payload), names)
   }
 
