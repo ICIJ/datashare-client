@@ -1,7 +1,8 @@
 import { shallowMount } from '@vue/test-utils'
 
 import TaskActions from '@/components/Task/TaskActions'
-vi.mock('vue-i18n', () => ({
+vi.mock('vue-i18n', async importOriginal => ({
+  ...(await importOriginal()),
   useI18n: () => ({
     t: key => key
   })
