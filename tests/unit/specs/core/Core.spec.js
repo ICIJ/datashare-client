@@ -1,4 +1,4 @@
-import Murmur from '@icij/murmur-next'
+import Murmur from '@icij/murmur'
 
 import { Core } from '@/core'
 import { apiInstance as api } from '@/api/apiInstance'

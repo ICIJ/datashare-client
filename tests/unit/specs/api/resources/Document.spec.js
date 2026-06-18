@@ -1,4 +1,4 @@
-import Murmur from '@icij/murmur-next'
+import Murmur from '@icij/murmur'
 
 import Document from '@/api/resources/Document'
 
