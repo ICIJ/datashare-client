@@ -200,7 +200,7 @@ Components follow a modular structure in `src/components/`:
 ## Styling
 
 - **Bootstrap 5** via `bootstrap-vue-next`
-- **ICIJ Murmur**: Design system library (`@icij/murmur-next`)
+- **ICIJ Murmur**: Design system library (`@icij/murmur`)
 - **SCSS**: Preprocessor with global settings
 - **Theme**: Supports light/dark mode via `useTheme` composable
 
