@@ -25,7 +25,7 @@ import DocumentContentMarkdown from '@/components/Document/DocumentContentMarkdo
 import DocumentGlobalSearchTerms from '@/components/Document/DocumentGlobalSearchTerms/DocumentGlobalSearchTerms'
 import DocumentLocalSearch from '@/components/Document/DocumentLocalSearch/DocumentLocalSearch'
 import Hook from '@/components/Hook/Hook'
-import { usePipelinesStore, useSearchStore } from '@/store/modules'
+import { useHooksStore, usePipelinesStore, useSearchStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
 
 const props = defineProps({
@@ -51,6 +51,8 @@ const props = defineProps({
 const config = useConfig()
 const { t } = useI18n()
 const { isServer } = useMode()
+const hooksStore = useHooksStore()
+const hasContentBodyHook = computed(() => hooksStore.filterComponentsByTarget('document.content.body:before').length > 0)
 
 const pipelinesStore = usePipelinesStore()
 const searchStore = useSearchStore.inject()
@@ -699,7 +701,7 @@ async function loadContentSliceAround(desiredOffset) {
         v-html="currentContentPage"
       />
       <div
-        v-else-if="loadedOnce"
+        v-else-if="loadedOnce && !hasContentBodyHook"
         class="document-content__body document-content__body--no-content text-center p-3"
       >
         {{ t('documentContent.noContent') }}
