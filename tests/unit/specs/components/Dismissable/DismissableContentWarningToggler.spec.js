@@ -1,6 +1,6 @@
 import { shallowMount } from '@vue/test-utils'
 
-import { ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import DismissableContentWarningToggler from '@/components/Dismissable/DismissableContentWarningToggler.vue'

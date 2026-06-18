@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
-import Murmur from '@icij/murmur-next'
+import Murmur from '@icij/murmur'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import ProjectCardFooter from '@/components/Project/ProjectCard/ProjectCardFooter'
