@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { AppIcon, ButtonIcon } from '@icij/murmur-next'
+import { AppIcon, ButtonIcon } from '@icij/murmur'
 
 import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
 import DisplayProgress from '@/components/Display/DisplayProgress'

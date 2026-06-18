@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 import IPhPlus from '~icons/ph/plus'
 
 const props = defineProps({

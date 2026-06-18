@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { random } from 'lodash'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 import IPhCaretDown from '~icons/ph/caret-down'
 import IPhCaretRight from '~icons/ph/caret-right'
 

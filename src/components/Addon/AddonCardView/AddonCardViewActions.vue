@@ -1,7 +1,7 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
-import { ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur'
 import IPhArrowsClockwise from '~icons/ph/arrows-clockwise'
 import IPhTrash from '~icons/ph/trash'
 import IPhCloudArrowDown from '~icons/ph/cloud-arrow-down'

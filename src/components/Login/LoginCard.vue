@@ -1,7 +1,7 @@
 <script setup>
 import { shallowRef, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur'
 
 import LoginImage from '@/components/Login/LoginImage'
 import LoginCardForm from '@/components/Login/LoginCardForm'

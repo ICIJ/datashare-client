@@ -1,6 +1,6 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
-import { ButtonIcon, ImageMode } from '@icij/murmur-next'
+import { ButtonIcon, ImageMode } from '@icij/murmur'
 import IPhX from '~icons/ph/x'
 
 defineProps({

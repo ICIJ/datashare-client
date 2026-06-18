@@ -1,7 +1,7 @@
 <script setup>
 import { reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur'
 import IPhSignIn from '~icons/ph/sign-in'
 
 const { t } = useI18n()

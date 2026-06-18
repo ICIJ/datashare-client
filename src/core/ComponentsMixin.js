@@ -1,6 +1,6 @@
 import { compact, find, keys, kebabCase, iteratee, uniq } from 'lodash'
 
-import Murmur from '@icij/murmur-next'
+import Murmur from '@icij/murmur'
 
 import { slugger } from '@/utils/strings'
 
@@ -19,7 +19,7 @@ const ComponentMixin = superclass =>
   class extends superclass {
     /**
      * Asynchronously find a component in the lazyComponents object by its name.
-     * Supports "Murmur/" prefix to retrieve components from @icij/murmur-next.
+     * Supports "Murmur/" prefix to retrieve components from @icij/murmur.
      * @async
      * @function
      * @param {string} name - The name of the component to find.
@@ -41,7 +41,7 @@ const ComponentMixin = superclass =>
     }
 
     /**
-     * Check if name has "Murmur/" prefix and return the component from @icij/murmur-next.
+     * Check if name has "Murmur/" prefix and return the component from @icij/murmur.
      * @function
      * @param {string} name - The name of the component to retrieve, potentially with "Murmur/" prefix.
      * @returns {Promise.<Object>} - The found Murmur component, or null if not a Murmur component or not found.
@@ -82,7 +82,7 @@ const ComponentMixin = superclass =>
 
     /**
      * Asynchronously get a component by trying each finder in order.
-     * Supports "Murmur/" prefix to retrieve components from @icij/murmur-next.
+     * Supports "Murmur/" prefix to retrieve components from @icij/murmur.
      * @async
      * @function
      * @param {string} name - The name of the component to retrieve.

@@ -25,7 +25,7 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n'
-import { ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur'
 import IPhArrowCounterClockwise from '~icons/ph/arrow-counter-clockwise'
 defineProps({
   fieldChanged: {

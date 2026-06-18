@@ -1,7 +1,7 @@
 <script setup>
 import { useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur'
 import IPhUser from '~icons/ph/user'
 
 import LoginImage from '@/components/Login/LoginImage'

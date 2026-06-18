@@ -1,7 +1,7 @@
 <script setup>
 import { computed, reactive, watch, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur'
 import IPhFolderOpen from '~icons/ph/folder-open'
 import IPhInfo from '~icons/ph/info'
 import IPhTextAa from '~icons/ph/text-aa'

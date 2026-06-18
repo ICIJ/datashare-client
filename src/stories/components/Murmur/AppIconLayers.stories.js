@@ -1,4 +1,4 @@
-import { AppIcon, AppIconLayers } from '@icij/murmur-next'
+import { AppIcon, AppIconLayers } from '@icij/murmur'
 
 export default {
   title: 'Components/Murmur/AppIconLayers',

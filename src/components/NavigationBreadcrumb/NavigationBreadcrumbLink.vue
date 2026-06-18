@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 
 import DisplayRoute from '@/components/Display/DisplayRoute'
 

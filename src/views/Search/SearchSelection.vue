@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { property } from 'lodash'
 import { useI18n } from 'vue-i18n'
-import { ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur'
 
 import { useToast } from '@/composables/useToast'
 import { useSearchStore, useStarredStore, useDocumentStore } from '@/store/modules'

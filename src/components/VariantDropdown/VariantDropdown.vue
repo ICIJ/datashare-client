@@ -1,6 +1,6 @@
 <script setup>
 
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 import { BDropdown, BDropdownItem } from 'bootstrap-vue-next'
 import { computed } from 'vue'
 

@@ -67,7 +67,7 @@
 import bodybuilder from 'bodybuilder'
 import { camelCase, flatten, get, iteratee, noop, uniqueId } from 'lodash'
 import InfiniteLoading from 'v3-infinite-loading'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 import { useI18n } from 'vue-i18n'
 import { markRaw, toRaw, toRef } from 'vue'
 

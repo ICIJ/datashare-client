@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { isFunction, kebabCase } from 'lodash'
 import { useI18n } from 'vue-i18n'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 
 import IPhNotepad from '~icons/ph/notepad'
 import IPhFolder from '~icons/ph/folder'

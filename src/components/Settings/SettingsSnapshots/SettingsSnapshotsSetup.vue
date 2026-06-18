@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ButtonIcon, AppIcon } from '@icij/murmur-next'
+import { ButtonIcon, AppIcon } from '@icij/murmur'
 
 import IPhWarning from '~icons/ph/warning'
 

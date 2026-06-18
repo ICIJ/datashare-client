@@ -72,7 +72,7 @@
 
 <script>
 import { castArray, cloneDeep, includes, isEqual, without } from 'lodash'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 import { useI18n } from 'vue-i18n'
 
 /**

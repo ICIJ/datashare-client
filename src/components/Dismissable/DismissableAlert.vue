@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import IPhX from '~icons/ph/x'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 
 import ToastBody from '@/components/Dismissable/DismissableToastBody'
 import { BAlert } from 'bootstrap-vue-next'

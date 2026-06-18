@@ -1,6 +1,6 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
-import { AppIcon, ButtonIcon } from '@icij/murmur-next'
+import { AppIcon, ButtonIcon } from '@icij/murmur'
 import { computed } from 'vue'
 import IPhEyeSlash from '~icons/ph/eye-slash'
 

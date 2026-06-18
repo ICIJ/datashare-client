@@ -1,5 +1,5 @@
 import { isEmpty } from 'lodash'
-import Murmur from '@icij/murmur-next'
+import Murmur from '@icij/murmur'
 
 import settings from '@/utils/settings'
 /**

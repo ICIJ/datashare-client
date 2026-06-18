@@ -1,6 +1,6 @@
 <script setup>
 import { computed, useTemplateRef, toRef } from 'vue'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 
 import { VARIANT_PLAIN, variantValidator } from '@/enums/variants'
 import { useCompact } from '@/composables/useCompact'

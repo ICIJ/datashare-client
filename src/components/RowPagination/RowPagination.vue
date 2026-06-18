@@ -1,5 +1,5 @@
 <script setup>
-import { TinyPagination } from '@icij/murmur-next'
+import { TinyPagination } from '@icij/murmur'
 import { computed } from 'vue'
 
 import DisplayNumber from '@/components/Display/DisplayNumber'

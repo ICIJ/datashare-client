@@ -1,5 +1,5 @@
 <script setup>
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 
 import { ROTATIONS_COUNTERWISE } from '@/enums/documentViewerPdf'
 

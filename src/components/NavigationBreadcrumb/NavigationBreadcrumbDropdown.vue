@@ -1,5 +1,5 @@
 <script setup>
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 import IPhDotsThreeOutline from '~icons/ph/dots-three-outline'
 
 import AppDropdown from '@/components/AppDropdown/AppDropdown'

@@ -1,5 +1,5 @@
 <script setup>
-import { AppIcon, EllipsisTooltip as vEllipsisTooltip } from '@icij/murmur-next'
+import { AppIcon, EllipsisTooltip as vEllipsisTooltip } from '@icij/murmur'
 
 import IPhInfo from '~icons/ph/info'
 

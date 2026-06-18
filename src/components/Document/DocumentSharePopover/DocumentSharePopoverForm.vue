@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { AdvancedLinkForm } from '@icij/murmur-next'
+import { AdvancedLinkForm } from '@icij/murmur'
 
 const { document } = defineProps({
   /**

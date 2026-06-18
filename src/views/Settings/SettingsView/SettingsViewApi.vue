@@ -1,7 +1,7 @@
 <script setup>
 import { whenever } from '@vueuse/core'
 import { ref, computed } from 'vue'
-import { AppIcon, HapticCopy, ButtonIcon } from '@icij/murmur-next'
+import { AppIcon, HapticCopy, ButtonIcon } from '@icij/murmur'
 import { useI18n } from 'vue-i18n'
 
 import IPhPlus from '~icons/ph/plus'

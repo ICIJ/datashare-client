@@ -1,6 +1,6 @@
 <script setup>
 import { computed, useSlots } from 'vue'
-import { AppIcon, ButtonIcon } from '@icij/murmur-next'
+import { AppIcon, ButtonIcon } from '@icij/murmur'
 import { useI18n } from 'vue-i18n'
 import IPhX from '~icons/ph/x'
 

@@ -1,6 +1,6 @@
 <script setup>
 import { computed, nextTick, useTemplateRef } from 'vue'
-import { EllipsisTooltip as vEllipsisTooltip } from '@icij/murmur-next'
+import { EllipsisTooltip as vEllipsisTooltip } from '@icij/murmur'
 
 import DisplayNumber from '@/components/Display/DisplayNumber'
 

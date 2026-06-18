@@ -1,4 +1,4 @@
-import { TinyPagination } from '@icij/murmur-next'
+import { TinyPagination } from '@icij/murmur'
 
 import { buttonSizesArgType } from '~storybook/utils'
 import { SIZE } from '@/enums/sizes'

@@ -1,6 +1,6 @@
 <script setup>
 import { computed, inject } from 'vue'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 
 import DisplayNumber from '@/components/Display/DisplayNumber'
 

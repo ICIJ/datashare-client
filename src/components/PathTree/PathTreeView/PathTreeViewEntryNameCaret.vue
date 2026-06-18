@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 
 import IPhCaretDown from '~icons/ph/caret-down'
 import IPhCircleNotch from '~icons/ph/circle-notch'

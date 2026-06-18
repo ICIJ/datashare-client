@@ -1,5 +1,5 @@
 import { computed } from 'vue'
-import { useColorMode } from '@icij/murmur-next'
+import { useColorMode } from '@icij/murmur'
 
 export function useContrastVariant({ dark = 'dark', light = 'light' } = {}) {
   const { colorMode } = useColorMode()
