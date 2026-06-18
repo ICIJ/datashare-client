@@ -1,7 +1,7 @@
 <script setup>
 import { computed, useAttrs } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ImageModeSource } from '@icij/murmur-next'
+import { ImageModeSource } from '@icij/murmur'
 
 import AppModal from '@/components/AppModal/AppModal'
 import JsonFormatter from '@/components/JsonFormatter'

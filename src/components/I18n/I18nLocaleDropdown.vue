@@ -1,6 +1,6 @@
 <script setup>
 import { useTemplateRef } from 'vue'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 
 import { useLocale } from '@/composables/useLocale'
 import { PLACEMENT, placementValidator } from '@/enums/placements'

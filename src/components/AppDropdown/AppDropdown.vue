@@ -1,5 +1,5 @@
 <script setup>
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 import IPhDotsThreeOutlineVerticalFill from '~icons/ph/dots-three-outline-vertical-fill'
 import { VARIANT, variantValidator } from '@/enums/variants'
 

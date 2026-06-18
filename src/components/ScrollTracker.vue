@@ -1,6 +1,6 @@
 <script>
 import { toValue, markRaw } from 'vue'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 import IPhArrowFatUpFill from '~icons/ph/arrow-fat-up-fill'
 import IPhArrowFatDownFill from '~icons/ph/arrow-fat-down-fill'
 

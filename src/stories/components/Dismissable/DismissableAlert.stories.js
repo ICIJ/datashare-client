@@ -1,5 +1,5 @@
 import { uniqueId } from 'lodash'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 
 import IPhArrowSquareOut from '~icons/ph/arrow-square-out'
 import DismissableAlert from '@/components/Dismissable/DismissableAlert'

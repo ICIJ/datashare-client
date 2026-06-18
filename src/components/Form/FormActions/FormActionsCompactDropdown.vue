@@ -1,6 +1,6 @@
 <script setup>
 import { computed, provide, watch } from 'vue'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 import IPhDotsThreeOutlineVerticalFill from '~icons/ph/dots-three-outline-vertical-fill'
 
 import { useScrollParent } from '@/composables/useScrollParent'

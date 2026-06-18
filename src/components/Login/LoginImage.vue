@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue'
-import { ImageMode, ImageModeSource } from '@icij/murmur-next'
+import { ImageMode, ImageModeSource } from '@icij/murmur'
 
 import image from '@/assets/images/illustrations/login-image-dark.svg'
 import imageDark from '@/assets/images/illustrations/login-image-light.svg'

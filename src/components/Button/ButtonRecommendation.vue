@@ -1,5 +1,5 @@
 <script setup>
-import { ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur'
 
 import DisplayUser from '@/components/Display/DisplayUser'
 

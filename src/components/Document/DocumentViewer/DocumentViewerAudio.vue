@@ -50,7 +50,7 @@
 
 <script>
 import { mapWritableState } from 'pinia'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 import { useI18n } from 'vue-i18n'
 
 import { usePlayerStore } from '@/store/modules/player'

@@ -1,5 +1,5 @@
 <script setup>
-import { AppIcon, ButtonIcon } from '@icij/murmur-next'
+import { AppIcon, ButtonIcon } from '@icij/murmur'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import IPhX from '~icons/ph/x'

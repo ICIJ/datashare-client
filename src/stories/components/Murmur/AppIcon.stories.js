@@ -1,4 +1,4 @@
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 
 import { variantsPlainArgType } from '~storybook/utils'
 

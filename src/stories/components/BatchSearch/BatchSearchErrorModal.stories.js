@@ -1,4 +1,4 @@
-import { ImageModeSource } from '@icij/murmur-next'
+import { ImageModeSource } from '@icij/murmur'
 
 import { breakpointSizeArgType } from '~storybook/utils'
 import BatchSearchErrorModal from '@/components/BatchSearch/BatchSearchErrorModal'

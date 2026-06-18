@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 
 import IPhCommand from '~icons/ph/command'
 import IPhWindowsLogoFill from '~icons/ph/windows-logo-fill'

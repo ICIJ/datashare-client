@@ -1,4 +1,4 @@
-import { AppIcon, ButtonIcon } from '@icij/murmur-next'
+import { AppIcon, ButtonIcon } from '@icij/murmur'
 import { BButton } from 'bootstrap-vue-next'
 
 import IPhTag from '~icons/ph/tag'

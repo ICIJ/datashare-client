@@ -78,7 +78,7 @@ import { ref, computed, onMounted } from 'vue'
 import bodybuilder from 'bodybuilder'
 import { compact, get, property, find, flatten, noop, uniqueId } from 'lodash'
 import InfiniteLoading from 'v3-infinite-loading'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 import { useI18n } from 'vue-i18n'
 
 import { useCore } from '@/composables/useCore'

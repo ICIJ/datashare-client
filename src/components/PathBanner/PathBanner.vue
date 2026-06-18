@@ -3,7 +3,7 @@ import DismissableAlert from '@/components/Dismissable/DismissableAlert.vue'
 import DismissableContentWarningToggler from '@/components/Dismissable/DismissableContentWarningToggler.vue'
 import { computed } from 'vue'
 import { VARIANT, variantOptions } from '@/enums/variants.js'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 
 const props = defineProps({
   path: { type: String, default: '' },

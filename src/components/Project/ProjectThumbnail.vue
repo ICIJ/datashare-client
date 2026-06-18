@@ -22,7 +22,7 @@
 import stringToColor from 'string-to-color'
 import { compact } from 'lodash'
 import { computed } from 'vue'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 
 import { getConsonants, slugger } from '@/utils/strings'
 

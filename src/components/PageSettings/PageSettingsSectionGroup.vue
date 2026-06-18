@@ -24,7 +24,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 
 import IPhCaretUp from '~icons/ph/caret-up'
 import IPhCaretDown from '~icons/ph/caret-down'

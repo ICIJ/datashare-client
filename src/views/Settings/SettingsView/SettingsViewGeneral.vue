@@ -1,6 +1,6 @@
 <script setup>
 import { computed, onBeforeMount, reactive, ref } from 'vue'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 import { useI18n } from 'vue-i18n'
 import Fuse from 'fuse.js'
 

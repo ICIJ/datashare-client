@@ -1,6 +1,6 @@
 <script setup>
 import { LAYOUTS, layoutValidator } from '@/enums/pathTree'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 
 const modelValue = defineModel('modelValue', {
   type: String,

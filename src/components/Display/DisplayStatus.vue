@@ -1,7 +1,7 @@
 <script setup>
 import { slugger } from '@/utils/strings'
 import { computed, useTemplateRef } from 'vue'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 
 import IPhFloppyDiskBack from '~icons/ph/floppy-disk-back'
 import IPhClockCountdown from '~icons/ph/clock-countdown'

@@ -2,7 +2,7 @@
 import { computed, nextTick, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
-import { ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur'
 
 import AppModal from '@/components/AppModal/AppModal.vue'
 import AppOverlay from '@/components/AppOverlay/AppOverlay.vue'

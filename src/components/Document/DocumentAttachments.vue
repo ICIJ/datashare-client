@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, onBeforeMount } from 'vue'
 import bodybuilder from 'bodybuilder'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 import { flatten, get, sum } from 'lodash'
 import { useI18n } from 'vue-i18n'
 

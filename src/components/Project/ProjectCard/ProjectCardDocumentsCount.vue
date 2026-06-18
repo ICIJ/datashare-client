@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { isNumber } from 'lodash'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 import { useI18n } from 'vue-i18n'
 
 import DisplayNumber from '@/components/Display/DisplayNumber.vue'

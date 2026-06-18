@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 
 import { usePolicies } from '@/composables/usePolicies.js'
 import { useI18n } from 'vue-i18n'

@@ -1,5 +1,5 @@
 <script setup>
-import { ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur'
 
 import { SIZE, buttonSizeValidator } from '@/enums/sizes'
 import { ICON_WEIGHT, iconWeightValidator } from '@/enums/iconWeights'

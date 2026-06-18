@@ -1,6 +1,6 @@
 import { compact, endsWith, filter, find, get, keys, last, pick, startsWith, trim } from 'lodash'
 import { markRaw } from 'vue'
-import Murmur from '@icij/murmur-next'
+import Murmur from '@icij/murmur'
 import dayjs from 'dayjs'
 import { extname } from 'path'
 

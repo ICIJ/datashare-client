@@ -1,7 +1,7 @@
 <script setup>
 import { computed, useTemplateRef } from 'vue'
 import { DatePicker } from 'v-calendar'
-import { AppIcon, useColorMode } from '@icij/murmur-next'
+import { AppIcon, useColorMode } from '@icij/murmur'
 
 import { inputSizeValidator, SIZE } from '@/enums/sizes'
 

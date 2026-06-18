@@ -1,5 +1,5 @@
 <script setup>
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 import { basename } from 'path'
 import { computed } from 'vue'
 import get from 'lodash/get'

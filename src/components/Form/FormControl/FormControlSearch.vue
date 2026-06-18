@@ -1,6 +1,6 @@
 <script setup>
 import { computed, toRef, useTemplateRef, watch } from 'vue'
-import { AppIcon, ButtonIcon } from '@icij/murmur-next'
+import { AppIcon, ButtonIcon } from '@icij/murmur'
 import { useI18n } from 'vue-i18n'
 
 import IPhCircleNotch from '~icons/ph/circle-notch'

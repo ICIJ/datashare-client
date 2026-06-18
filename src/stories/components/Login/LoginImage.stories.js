@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur'
 
 import IPhSpinnerGap from '~icons/ph/spinner-gap'
 

@@ -2,7 +2,7 @@
 import { computed, ref, toRef, watch } from 'vue'
 import { isArray } from 'lodash'
 import { useI18n } from 'vue-i18n'
-import { ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur'
 
 import IPhMagnifyingGlass from '~icons/ph/magnifying-glass'
 import IPhFolderOpen from '~icons/ph/folder-open'
