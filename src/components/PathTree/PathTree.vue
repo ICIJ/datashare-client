@@ -264,16 +264,15 @@ function collapseDirectory(key) {
 }
 
 /**
- * Compute the number of sub-directories for a given directory key.
- * Adjusts when the current folder is empty to avoid counting itself.
+ * Count the descendant directories that contain documents directly, below a key.
  * @param {string} key - Directory key path.
- * @return {number} Count of sub-directories.
+ * @return {number} Count of doc-containing directories strictly under the key.
  */
 function getDirectoryCount(key) {
   // Recursive count = doc-containing directories strictly under `key`.
   // The trailing separator makes the match strict, excluding `key` itself.
   const prefix = key + pathSeparator.value
-  return directoryPaths.value.filter(path => path.startsWith(prefix)).length
+  return directoryPaths.value.filter(descendantPath => descendantPath.startsWith(prefix)).length
 }
 
 /**
@@ -330,7 +329,8 @@ function getDirectoriesBodybuilder({ from = 0, size = PER_PAGE } = {}) {
 }
 
 /**
- * Fetch one page of directory buckets from Elasticsearch and compute emptiness map.
+ * Fetch one page of directory buckets from Elasticsearch, warning if the
+ * directory-paths aggregation hit its cap.
  * @param {Object} [options] - Options for fetching.
  * @param {boolean} [options.clearPages=false] - If true, start from offset 0.
  * @return {Promise<any>} Elasticsearch response with aggregations.
