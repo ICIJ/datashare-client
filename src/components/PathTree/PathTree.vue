@@ -109,8 +109,6 @@ const pages = ref([])
 const tree = ref([])
 // Child entry refs for reloads.
 const entriesRefs = reactive({})
-// Map dirname -> hasDocs (to adjust directory counts).
-const directoryIsEmpty = ref({})
 
 // Page size constant.
 const PER_PAGE = 50
@@ -349,59 +347,7 @@ async function fetchDirectories({ clearPages = false } = {}) {
       console.warn(`PathTree: "directory_paths" aggregation hit the ${DIRECTORY_PATHS_LIMIT} cap for "${trimmedPath.value}"; recursive directory counts may be undercounted.`)
     }
   }
-  if (!props.compact) {
-    const dirs = res.aggregations.dirname.buckets.map(property('key'))
-    await fetchEmptyDirectories(dirs)
-  }
   return res
-}
-
-/**
- * Build an Elasticsearch body to count documents per provided dirname.
- * @param {string[]} [dirs=[]] - List of dirnames to check.
- * @return {any} Configured bodybuilder instance (call .build()).
- */
-function getEmptyDirectoriesBodybuilder(dirs = []) {
-  const bb = bodybuilder().size(0)
-  // Only include Document-type entries on disk
-  bb.andQuery('match', 'type', 'Document')
-  bb.andQuery('match', 'extractionLevel', 0)
-  bb.rawOption('aggregations', {
-    doc_count_by_dirname: {
-      filters: {
-        filters: dirs.reduce((acc, dirname) => {
-          return {
-            ...acc,
-            [dirname]: {
-              term: {
-                dirname
-              }
-            }
-          }
-        }, {})
-      }
-    }
-  })
-  return bb
-}
-
-/**
- * Populate the directoryIsEmpty map using Elasticsearch counts for each dirname.
- * @param {string[]} [dirs=[]] - List of dirnames to check.
- * @return {Promise<void>} Resolves when the map has been updated.
- */
-async function fetchEmptyDirectories(dirs = []) {
-  if (!dirs.length) {
-    return
-  }
-  const index = props.projects.join(',')
-  const preference = 'tree-view-empty-directories'
-  const body = getEmptyDirectoriesBodybuilder(dirs).build()
-  const res = await api.elasticsearch.search({ index, body, preference })
-  const buckets = get(res, 'aggregations.doc_count_by_dirname.buckets', {})
-  Object.entries(buckets).forEach(([key, { doc_count }]) => {
-    directoryIsEmpty.value[key] = !!doc_count
-  })
 }
 
 /**
