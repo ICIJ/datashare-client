@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, reactive, toRef, watch } from 'vue'
-import { flatten, get, matches, identity, orderBy as sortOrderBy, property, trim, trimEnd, uniqBy } from 'lodash'
+import { flatten, get, identity, orderBy as sortOrderBy, property, trim, trimEnd, uniqBy } from 'lodash'
 import bodybuilder from 'bodybuilder'
 
 import Document from '@/api/resources/Document'
@@ -272,11 +272,10 @@ function collapseDirectory(key) {
  * @return {number} Count of sub-directories.
  */
 function getDirectoryCount(key) {
-  const bucket = directories.value.find(matches({ key }))
-  if (bucket?.directories) {
-    return Math.max(0, bucket.directories.value - (directoryIsEmpty.value[key] ?? 0))
-  }
-  return 0
+  // Recursive count = doc-containing directories strictly under `key`.
+  // The trailing separator makes the match strict, excluding `key` itself.
+  const prefix = key + pathSeparator.value
+  return directoryPaths.value.filter(path => path.startsWith(prefix)).length
 }
 
 /**

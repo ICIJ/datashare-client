@@ -128,6 +128,29 @@ describe('PathTree.vue', () => {
       await flushPromises()
       expect(wrapper.find('.path-tree-view-search').exists()).toBeFalsy()
     })
+
+    it('counts only descendant folders that contain documents directly (recursive, pass-through excluded)', async () => {
+      // /home/foo/deep is a pass-through folder: its only documents live in /home/foo/deep/leaf.
+      await letData(es)
+        .have(new IndexedDocuments().setBaseName('/home/foo/deep/leaf/doc_01').withIndex(index).count(3))
+        .commit()
+      // /home/foo/bar contains documents directly and has no subfolders.
+      await letData(es)
+        .have(new IndexedDocuments().setBaseName('/home/foo/bar/doc_02').withIndex(index).count(3))
+        .commit()
+
+      await wrapper.setProps({ noTree: true })
+      await wrapper.vm.loadData({ clearPages: true })
+      await flushPromises()
+
+      // Entries render in KEY-asc order: [root /home/foo, bar, deep].
+      // Directory-count stat is shown for each (non-compact mode).
+      const counts = wrapper.findAll('.path-tree-view-entry-stats-directories')
+      // index 1 = bar: no subfolders -> 0
+      expect(counts.at(1).text()).toBe('0')
+      // index 2 = deep: one descendant folder with direct docs (deep/leaf) -> 1
+      expect(counts.at(2).text()).toBe('1')
+    })
   })
 
   describe('compact mode (filter column)', () => {
