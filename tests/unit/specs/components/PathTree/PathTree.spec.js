@@ -249,6 +249,19 @@ describe('PathTree.vue', () => {
       // keys only: no metric/bucket sub-aggregations
       expect(body.aggs.directory_paths.aggs).toBeUndefined()
     })
+
+    it('no longer requests a per-bucket cardinality sub-aggregation', async () => {
+      const wrapper = mount(PathTree, {
+        props: { projects: [index], path: '/home/foo', noDocuments: true },
+        global: { plugins: core.plugins, renderStubDefaultSlot: true }
+      })
+
+      await wrapper.vm.loadData({ clearPages: true })
+      await flushPromises()
+
+      const { body } = searchSpy.mock.calls[0][0]
+      expect(body.aggs.dirname.aggs).not.toHaveProperty('directories')
+    })
   })
 
   describe('Windows', () => {

@@ -306,10 +306,6 @@ function getDirectoriesBodybuilder({ from = 0, size = PER_PAGE } = {}) {
     inner.agg('bucket_sort', { size, from }, 'bucket_truncate')
     // We need the size of each directory for sorting
     inner.agg('sum', 'contentLength', 'size')
-    // In "full" mode (not compact), add directory-count sub-aggs
-    if (!props.compact || props.noStats) {
-      inner.agg('cardinality', 'dirname', 'directories')
-    }
     return inner
   })
   // If we only want top-level extractions, filter out child documents
