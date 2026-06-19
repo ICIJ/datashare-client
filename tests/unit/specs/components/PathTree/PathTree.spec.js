@@ -186,6 +186,48 @@ describe('PathTree.vue', () => {
     })
   })
 
+  describe('directory_paths aggregation', () => {
+    const { index } = esConnectionHelper.build()
+    let core, searchSpy
+
+    beforeEach(() => {
+      core = CoreSetup.init().useAll()
+      core.config.set('dataDir', '/home/foo')
+      api.tree.mockClear()
+      api.tree.mockResolvedValue(HOME_TREE)
+      searchSpy = vi.spyOn(api.elasticsearch, 'search').mockResolvedValue({
+        hits: { total: { value: 0 }, hits: [] },
+        aggregations: {
+          total_directories: { value: 1 },
+          total_size: { value: 0 },
+          dirname: { buckets: [] },
+          directory_paths: { buckets: [] }
+        }
+      })
+    })
+
+    afterEach(() => {
+      searchSpy.mockRestore()
+    })
+
+    it('requests a keys-only directory_paths terms agg on the exact dirname field', async () => {
+      const wrapper = mount(PathTree, {
+        props: { projects: [index], path: '/home/foo', noDocuments: true },
+        global: { plugins: core.plugins, renderStubDefaultSlot: true }
+      })
+
+      await wrapper.vm.loadData({ clearPages: true })
+      await flushPromises()
+
+      const { body } = searchSpy.mock.calls[0][0]
+      expect(body.aggs).toHaveProperty('directory_paths')
+      expect(body.aggs.directory_paths.terms.field).toBe('dirname')
+      expect(body.aggs.directory_paths.terms.size).toBe(10000)
+      // keys only: no metric/bucket sub-aggregations
+      expect(body.aggs.directory_paths.aggs).toBeUndefined()
+    })
+  })
+
   describe('Windows', () => {
     const { index, es } = esConnectionHelper.build('spec', true)
     let wrapper, core, searchStore
