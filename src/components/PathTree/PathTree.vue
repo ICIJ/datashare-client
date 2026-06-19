@@ -99,6 +99,7 @@ const ES = Object.freeze({
   TOTAL_DIRS: 'directories.aggregations.total_directories.value',
   TOTAL_SIZE: 'directories.aggregations.total_size.value',
   DIR_BUCKETS: 'directories.aggregations.dirname.buckets',
+  DIR_PATHS: 'directories.aggregations.directory_paths.buckets',
   DOC_HITS: 'documents.hits.hits'
 })
 
@@ -113,6 +114,8 @@ const directoryIsEmpty = ref({})
 
 // Page size constant.
 const PER_PAGE = 50
+// Max number of directory paths fetched for in-code recursive count.
+const DIRECTORY_PATHS_LIMIT = 10000
 // Current total loaded items offset.
 const offset = computed(() => (directories.value.length + documents.value.length) || 0)
 // Next offset to request from ES.
@@ -121,6 +124,8 @@ const nextOffset = computed(() => offset.value + PER_PAGE)
 const page = computed(() => Math.floor(offset.value / PER_PAGE))
 // First aggregated ES page.
 const firstPage = computed(() => pages.value[0] || {})
+// Doc-containing directory paths under the current folder (level-scoped, from first page).
+const directoryPaths = computed(() => get(firstPage.value, ES.DIR_PATHS, []).map(property('key')))
 // Last aggregated ES page.
 const lastPage = computed(() => pages.value[pages.value.length - 1] || {})
 // Last page directory buckets.
@@ -318,6 +323,14 @@ function getDirectoriesBodybuilder({ from = 0, size = PER_PAGE } = {}) {
   if (!props.compact || props.noStats) {
     bb.agg('sum', 'contentLength', 'total_size')
   }
+  // Recursive directory counts are derived in code from the set of
+  // doc-containing directory paths under the current folder. Fetch them once
+  // per level (from === 0), keys only, gated like the (removed) per-bucket
+  // cardinality so compact mode stays cheap.
+  if ((!props.compact || props.noStats) && from === 0) {
+    const descendantPaths = [trimmedPath.value, '*'].join(pathSeparator.value)
+    bb.agg('terms', 'dirname', { include: wildcardRegExpPattern(descendantPaths), size: DIRECTORY_PATHS_LIMIT }, 'directory_paths')
+  }
   // Allow any last-minute tweaks (e.g. additional filters),
   // then return the configured bodybuilder instance
   return props.preBodyBuild(bb)
@@ -335,6 +348,12 @@ async function fetchDirectories({ clearPages = false } = {}) {
   const body = getDirectoriesBodybuilder({ from }).build()
   const preference = 'tree-view-directories'
   const res = await api.elasticsearch.search({ index, body, preference })
+  if (from === 0) {
+    const paths = get(res, 'aggregations.directory_paths.buckets', [])
+    if (paths.length >= DIRECTORY_PATHS_LIMIT) {
+      console.warn(`PathTree: "directory_paths" aggregation hit the ${DIRECTORY_PATHS_LIMIT} cap for "${trimmedPath.value}"; recursive directory counts may be undercounted.`)
+    }
+  }
   if (!props.compact) {
     const dirs = res.aggregations.dirname.buckets.map(property('key'))
     await fetchEmptyDirectories(dirs)
