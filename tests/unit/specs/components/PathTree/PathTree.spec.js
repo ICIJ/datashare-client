@@ -151,6 +151,21 @@ describe('PathTree.vue', () => {
       // index 2 = deep: one descendant folder with direct docs (deep/leaf) -> 1
       expect(counts.at(2).text()).toBe('1')
     })
+
+    it('makes a single Elasticsearch request per level (no empty-directories probe)', async () => {
+      await letData(es)
+        .have(new IndexedDocuments().setBaseName('/home/foo/bar/doc_01').withIndex(index).count(3))
+        .commit()
+
+      const searchSpy = vi.spyOn(api.elasticsearch, 'search')
+      await wrapper.setProps({ noTree: true })
+      await wrapper.vm.loadData({ clearPages: true })
+      await flushPromises()
+
+      // noDocuments is true on this wrapper, so the only ES call is the directories aggregation.
+      expect(searchSpy).toHaveBeenCalledTimes(1)
+      searchSpy.mockRestore()
+    })
   })
 
   describe('compact mode (filter column)', () => {
