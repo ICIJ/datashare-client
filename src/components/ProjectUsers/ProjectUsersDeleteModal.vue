@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import image from '@/assets/images/illustrations/app-modal-default-light.svg'
@@ -27,17 +28,25 @@ const core = useCore()
 const { toast } = useToast()
 const { t } = useI18n()
 
+const AUTH_MODE_PWD = ['form', 'basic']
+const isPasswordProvider = computed(() => AUTH_MODE_PWD.includes(core.config.get('auth')))
+
 async function confirmDeletion() {
   try {
-    await core.api.removeProjectPolicy('default', props.projectName, { user: props.user.name })
+    if (isPasswordProvider.value) {
+      await core.api.deleteUser(props.user.name)
+    } else {
+      await core.api.removeProjectPolicy('default', props.projectName, { user: props.user.name })
+    }
     emit('user:deleted', { name: props.user.name })
     modelValue.value = false
-  } catch {
+  }
+  catch {
     toast.error(t('projectViewEdit.users.actions.deleteModal.error'))
   }
 }
 
-defineExpose({ confirmDeletion })
+defineExpose({ confirmDeletion, isPasswordProvider })
 </script>
 
 <template>
@@ -51,7 +60,9 @@ defineExpose({ confirmDeletion })
   >
     <template #title>
       <i18n-t keypath="projectViewEdit.users.actions.deleteModal.title">
-        <template #name>{{ user.name }}</template>
+        <template #name>
+          {{ user.name }}
+        </template>
       </i18n-t>
     </template>
     {{ t('projectViewEdit.users.actions.deleteModal.body') }}

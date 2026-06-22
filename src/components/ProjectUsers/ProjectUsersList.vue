@@ -37,6 +37,9 @@ const { t } = useI18n()
 const core = useCore()
 const { toast } = useToast()
 
+const AUTH_MODE_PWD = ['form', 'basic']
+const isPasswordProvider = computed(() => AUTH_MODE_PWD.includes(core.config.get('auth')))
+
 const sort = ref(null)
 const order = ref('asc')
 const query = defineModel('query', { type: String, default: '' })
@@ -140,6 +143,7 @@ defineExpose({ localUsers, pendingChanges, saving, showAdminModal, saveRoles, ca
   <div class="project-users-list">
     <div class="d-flex justify-content-end align-items-center gap-2 mb-3">
       <button-icon
+        v-if="isPasswordProvider"
         :icon-left="IPhUserPlus"
         size="sm"
         variant="action"

@@ -27,6 +27,17 @@ vi.mock('@/composables/usePolicies', () => ({
   }))
 }))
 
+const mockConfigGet = vi.fn()
+
+vi.mock('@/composables/useCore', () => ({
+  useCore: () => ({
+    api: apiInstance,
+    config: { get: mockConfigGet }
+  })
+}))
+
+import { apiInstance } from '@/api/apiInstance.js'
+
 describe('ProjectUsersList.vue', () => {
   let core, global
 
@@ -44,6 +55,8 @@ describe('ProjectUsersList.vue', () => {
     vi.clearAllMocks()
     core.createPinia()
     global = { plugins: core.plugins, renderStubDefaultSlot: true }
+    // Default: form auth so create button is visible
+    mockConfigGet.mockImplementation(key => key === 'auth' ? 'form' : undefined)
   })
 
   function mountComponent(props = {}) {
@@ -103,9 +116,15 @@ describe('ProjectUsersList.vue', () => {
     expect(wrapper.findAll('tr')).toHaveLength(1)
   })
 
-  it('renders a create user ButtonIcon', () => {
+  it('renders a create user ButtonIcon when auth is form', () => {
     const wrapper = mountComponent()
     expect(wrapper.findComponent(ButtonIcon).exists()).toBe(true)
+  })
+
+  it('hides the create user ButtonIcon when auth is oauth', () => {
+    mockConfigGet.mockImplementation(key => key === 'auth' ? 'oauth' : undefined)
+    const wrapper = mountComponent()
+    expect(wrapper.findComponent(ButtonIcon).exists()).toBe(false)
   })
 
   it('adds a new user to the list when user:created is emitted', async () => {
