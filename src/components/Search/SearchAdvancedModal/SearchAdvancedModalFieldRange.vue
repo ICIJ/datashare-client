@@ -112,12 +112,16 @@ const { t } = useI18n()
       // dark mode.
       color: var(--bs-secondary-color);
       font-size: $font-size-base;
-      // The 1px slider track sits $spacer-xs below the row top (the range
-      // wrapper's padding-top). Collapse the label's line box and pull it up
-      // by half a line so its text optically centres on the track instead of
-      // hanging a half-line below it.
+      // Centre the label on the slider track without magic offsets: give it
+      // the thumb's height and centre its line box, then push it down by the
+      // range wrapper's own `padding-top` so the two bands line up. Both
+      // metrics are the Bootstrap variables the slider itself uses, so the
+      // alignment follows any change to the track geometry.
+      display: flex;
+      align-items: center;
+      height: $form-range-thumb-height;
+      margin-top: $spacer-xs;
       line-height: 1;
-      margin-top: calc(#{$spacer-xs} - 0.5em);
     }
   }
 
