@@ -827,7 +827,14 @@ describe('luceneQuery', () => {
       ['-a', 'a'],
       ['+a', 'a'],
       ['(-a)', '(a)'],
-      ['a^2', 'a']
+      ['a^2', 'a'],
+      // The canonical leaf must keep every meaning-bearing attribute, so a
+      // range, a regex, or a differing range bound never collapses onto a
+      // plain term (the serializer used to drop these).
+      ['[1 TO 5]', '[2 TO 9]'],
+      ['[1 TO 5]', '{1 TO 5}'],
+      ['/foo/', 'foo'],
+      ['content:[1 TO 5]', 'content:foo']
     ])('treats %s and %s as NOT equivalent', (a, b) => {
       expect(queriesEquivalent(a, b)).toBe(false)
     })
