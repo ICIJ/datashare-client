@@ -75,17 +75,11 @@ describe('ProjectUsersList.vue', () => {
     expect(wrapper.findComponent(FormControlSearch).exists()).toBe(true)
   })
 
-  it('filters rows by name (case-insensitive substring)', async () => {
+  it('emits update:query when the search input changes', async () => {
     const wrapper = mountComponent()
     await wrapper.findComponent(FormControlSearch).setValue('alice')
-    expect(wrapper.findAll('tr')).toHaveLength(1)
-  })
-
-  it('shows EmptyState with noResults label when query matches nothing', async () => {
-    const wrapper = mountComponent()
-    await wrapper.findComponent(FormControlSearch).setValue('zzz')
-    expect(wrapper.findComponent(EmptyState).exists()).toBe(true)
-    expect(wrapper.findComponent(EmptyState).props('label')).toContain('match')
+    expect(wrapper.emitted('update:query')).toBeTruthy()
+    expect(wrapper.emitted('update:query')[0]).toEqual(['alice'])
   })
 
   it('shows FormControlSearch even when users list is empty', () => {
