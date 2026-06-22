@@ -63,8 +63,12 @@ function operatorOccur(operator, side) {
  * otherwise from the operator that joins it to the chain.
  */
 function clauseOccur(node, operator, side) {
-  if (node && node.prefix === '+') return MUST
-  if (node && node.prefix === '-') return MUST_NOT
+  if (node && node.prefix === '+') {
+    return MUST
+  }
+  if (node && node.prefix === '-') {
+    return MUST_NOT
+  }
   return operatorOccur(operator, side)
 }
 
@@ -79,7 +83,9 @@ const isParenthesised = node => Boolean(node && node.parenthesized === true)
  * clause (so `(a OR b) AND c` does NOT collapse into `(a b) +c`).
  */
 function buildCanonical(node, inheritedField = null) {
-  if (!node) return null
+  if (!node) {
+    return null
+  }
   const field = node.field && node.field !== '<implicit>' ? node.field : inheritedField
 
   if (node.start === 'NOT' && node.left && !node.right) {
@@ -104,16 +110,26 @@ function buildCanonical(node, inheritedField = null) {
   }
 
   // Field-only wrapper node (e.g. the outer node of `content:(a AND b)`).
-  if (node.left && !node.right) return buildCanonical(node.left, field)
+  if (node.left && !node.right) {
+    return buildCanonical(node.left, field)
+  }
 
+  // Capture every attribute that distinguishes one leaf's meaning from
+  // another so the equivalence check can never silently treat two different
+  // terms as equal: a range bound, a regex flag, or a boost left out here
+  // would collapse distinct queries to the same canonical key.
   const leaf = {
     leaf: {
       field: field || '*',
       term: node.term ?? '',
       quoted: Boolean(node.quoted),
+      regex: Boolean(node.regex),
       similarity: node.similarity ?? null,
       proximity: node.proximity ?? null,
-      boost: node.boost ?? null
+      boost: node.boost ?? null,
+      rangeMin: node.term_min ?? null,
+      rangeMax: node.term_max ?? null,
+      rangeInclusive: node.inclusive ?? null
     }
   }
   // A `+`/`-` prefix on a bare term carries its occurrence. Inside an operator
@@ -121,8 +137,12 @@ function buildCanonical(node, inheritedField = null) {
   // `(-a)` has no surrounding clause, so wrap it here. `flattenCanonical`
   // collapses the wrapper back out when the prefix matches the parent
   // occurrence, so `+a +b` still canonicalises identically to `a AND b`.
-  if (node.prefix === '+') return { bool: [{ occur: MUST, node: leaf }] }
-  if (node.prefix === '-') return { bool: [{ occur: MUST_NOT, node: leaf }] }
+  if (node.prefix === '+') {
+    return { bool: [{ occur: MUST, node: leaf }] }
+  }
+  if (node.prefix === '-') {
+    return { bool: [{ occur: MUST_NOT, node: leaf }] }
+  }
   return leaf
 }
 
@@ -134,7 +154,9 @@ function buildCanonical(node, inheritedField = null) {
  * an AND) stays nested, so `(a OR b) AND c` does NOT collapse into `(a b) +c`.
  */
 function flattenCanonical(node) {
-  if (!node || node.leaf) return node
+  if (!node || node.leaf) {
+    return node
+  }
   const clauses = []
   for (const clause of node.bool) {
     const child = flattenCanonical(clause.node)
@@ -150,20 +172,27 @@ function flattenCanonical(node) {
 
 /**
  * Serialise a canonical tree to a string with sibling clauses sorted, so two
- * queries that differ only in operand order serialise identically.
+ * queries that differ only in operand order serialise identically. The leaf
+ * is JSON-stringified whole — every key built by `buildCanonical` always
+ * appears in the same order, so the encoding is injective without any
+ * hand-rolled delimiter that a `:` inside a term could break.
  */
 function serializeCanonical(node) {
-  if (!node) return 'nil'
+  if (!node) {
+    return 'nil'
+  }
   if (node.leaf) {
-    const leaf = node.leaf
-    const term = leaf.quoted ? `"${leaf.term}"` : leaf.term
-    return `L:${JSON.stringify(leaf.field)}:${JSON.stringify(term)}:s${leaf.similarity}:p${leaf.proximity}:b${leaf.boost}`
+    return `L:${JSON.stringify(node.leaf)}`
   }
   return `B(${node.bool.map(clause => `${clause.occur}:${serializeCanonical(clause.node)}`).sort().join(',')})`
 }
 
+function normalizeAst(ast) {
+  return serializeCanonical(flattenCanonical(buildCanonical(ast)))
+}
+
 function normalizeQuery(query) {
-  return serializeCanonical(flattenCanonical(buildCanonical(lucene.parse(query))))
+  return normalizeAst(lucene.parse(query))
 }
 
 /**
@@ -175,6 +204,20 @@ function normalizeQuery(query) {
 export function queriesEquivalent(a, b) {
   try {
     return normalizeQuery(a) === normalizeQuery(b)
+  }
+  catch {
+    return false
+  }
+}
+
+/**
+ * Same equivalence test as `queriesEquivalent`, but for the already-parsed AST
+ * of the original query — so `parseLuceneQuery` reuses its single parse of the
+ * input and only parses the regenerated string. Same blank-on-doubt bias.
+ */
+function regeneratedMatchesQuery(ast, regenerated) {
+  try {
+    return normalizeAst(ast) === normalizeQuery(regenerated)
   }
   catch {
     return false
@@ -322,19 +365,19 @@ function unescapeTerm(term) {
 const unescapePhrase = unescapeTerm
 
 /**
- * The rest of the app (search bar, breadcrumb, search store) reads `q`
- * through the `lucene` package's grammar. A query that grammar rejects
- * (unbalanced quotes or parentheses, stray operators…) cannot be claimed
- * representable by the form either, so it is screened out before our own
- * pattern matching runs.
+ * Parse a query through the `lucene` package's grammar, returning the AST
+ * or `null` when the grammar rejects it (unbalanced quotes or parentheses,
+ * stray operators…). The rest of the app reads `q` through that same grammar,
+ * so a query it rejects cannot be claimed representable by the form either.
+ * Returning the AST lets `parseLuceneQuery` reuse this single parse for the
+ * faithfulness gate instead of re-parsing the same string.
  */
-function isParseableLuceneQuery(query) {
+function parseQueryOrNull(query) {
   try {
-    lucene.parse(query)
-    return true
+    return lucene.parse(query)
   }
   catch {
-    return false
+    return null
   }
 }
 
@@ -705,7 +748,7 @@ function parseFallbackWord(token, ctx, hint = 'any') {
     ctx.noneWords.push(word)
   }
   else {
-    ctx.fallbackAnyWords.push(word)
+    ctx.anyWords.push(word)
   }
 }
 
@@ -734,12 +777,12 @@ function parseToken(token, ctx, hint = 'any') {
 }
 
 /**
- * Flush the accumulated word buckets into the form's string inputs. Plain
- * words mixed into the OR bucket are appended after group words so the
- * generated query keeps them in one group.
+ * Flush the accumulated word buckets into the form's string inputs. Every
+ * plain "any" word (loose or routed out of a group) lands in a single bucket,
+ * so the generated query keeps them together in one OR group.
  */
 function applyWordBuckets(ctx) {
-  ctx.form.anyWords = [...ctx.anyWords, ...ctx.fallbackAnyWords].join(' ')
+  ctx.form.anyWords = ctx.anyWords.join(' ')
   ctx.form.allWords = ctx.allWords.join(' ')
   ctx.form.noneWords = ctx.noneWords.join(' ')
   // The form carries a single exact phrase; a surplus one cannot be moved
@@ -779,7 +822,11 @@ export function parseLuceneQuery(query, { fields: allowedFields = null } = {}) {
     return form
   }
 
-  if (!isParseableLuceneQuery(query)) {
+  // Parse once and reuse the AST: it both screens out grammar-invalid queries
+  // here and feeds the faithfulness gate below, so the original query is never
+  // re-parsed.
+  const ast = parseQueryOrNull(query)
+  if (!ast) {
     return null
   }
 
@@ -795,8 +842,7 @@ export function parseLuceneQuery(query, { fields: allowedFields = null } = {}) {
     anyWords: [],
     allWords: [],
     noneWords: [],
-    exactPhrases: [],
-    fallbackAnyWords: []
+    exactPhrases: []
   }
 
   const { operands, hints } = routeBooleanOperators(tokenize(innerQuery))
@@ -817,12 +863,13 @@ export function parseLuceneQuery(query, { fields: allowedFields = null } = {}) {
   // By design there are two views of a query here: the token-routing
   // extraction that fills the form, and the canonical-AST model
   // (`buildCanonical`) used only to compare meaning. They are deliberately
-  // kept separate — the extraction stays simple and the gate is the single
-  // authority on "are these the same query". The cost is that operator
-  // semantics live in both layers; the gate makes any drift fail safe (blank),
-  // never unsafe (rewrite).
-  const regenerated = generateLuceneQuery(toQueryShape(form))
-  if (!queriesEquivalent(query, regenerated)) {
+  // kept separate — the extraction stays simple and the canonical model is the
+  // single authority on "are these the same query". Operator semantics live in
+  // both layers, but the gate makes any drift fail safe (blank), never unsafe
+  // (rewrite): the canonical leaf keeps every meaning-bearing attribute, so the
+  // comparison can never pass two genuinely different queries, and the input is
+  // parsed once (`ast`) and reused on both sides.
+  if (!regeneratedMatchesQuery(ast, generateLuceneQuery(toQueryShape(form)))) {
     return null
   }
 
