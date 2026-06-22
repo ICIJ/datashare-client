@@ -24,6 +24,18 @@ vi.mock('@/composables/usePolicies', () => ({
   }))
 }))
 
+const mockConfigGet = vi.fn()
+
+vi.mock('@/composables/useCore', () => ({
+  useCore: () => ({
+    api: apiInstance,
+    config: { get: mockConfigGet }
+  })
+}))
+
+// apiInstance is the mocked module — import after vi.mock so the reference resolves
+import { apiInstance } from '@/api/apiInstance.js'
+
 describe('ProjectUsersCreateModal.vue', () => {
   let core, global
 
@@ -37,6 +49,8 @@ describe('ProjectUsersCreateModal.vue', () => {
     vi.clearAllMocks()
     core.createPinia()
     global = { plugins: core.plugins }
+    // Default: form auth → password fields shown
+    mockConfigGet.mockImplementation(key => key === 'auth' ? 'form' : undefined)
     vi.mocked(usePolicies).mockReturnValue({
       getRoleByProject: vi.fn().mockReturnValue('INSTANCE_ADMIN'),
       formatRole: (_t, role) => role
@@ -186,5 +200,45 @@ describe('ProjectUsersCreateModal.vue', () => {
     await wrapper.vm.createUser()
     await flushPromises()
     expect(mockToast.error).toHaveBeenCalledWith('A user with this username already exists.')
+  })
+
+  describe('isPasswordProvider', () => {
+    it('is true when auth is "form"', () => {
+      mockConfigGet.mockImplementation(key => key === 'auth' ? 'form' : undefined)
+      const wrapper = mountComponent()
+      expect(wrapper.vm.isPasswordProvider).toBe(true)
+    })
+
+    it('is true when auth is "basic"', () => {
+      mockConfigGet.mockImplementation(key => key === 'auth' ? 'basic' : undefined)
+      const wrapper = mountComponent()
+      expect(wrapper.vm.isPasswordProvider).toBe(true)
+    })
+
+    it('is false when auth is "oauth"', () => {
+      mockConfigGet.mockImplementation(key => key === 'auth' ? 'oauth' : undefined)
+      const wrapper = mountComponent()
+      expect(wrapper.vm.isPasswordProvider).toBe(false)
+    })
+
+    it('isValid is true with only a username when auth is "oauth"', async () => {
+      mockConfigGet.mockImplementation(key => key === 'auth' ? 'oauth' : undefined)
+      const wrapper = mountComponent()
+      wrapper.vm.username = 'alice'
+      await wrapper.vm.$nextTick()
+      expect(wrapper.vm.isValid).toBe(true)
+    })
+
+    it('createUser omits password from payload when auth is "oauth"', async () => {
+      mockConfigGet.mockImplementation(key => key === 'auth' ? 'oauth' : undefined)
+      api.createUser.mockResolvedValue({})
+      api.saveProjectPolicy.mockResolvedValue(undefined)
+      const wrapper = mountComponent()
+      wrapper.vm.username = 'alice'
+      await wrapper.vm.$nextTick()
+      await wrapper.vm.createUser()
+      await flushPromises()
+      expect(api.createUser).toHaveBeenCalledWith(expect.not.objectContaining({ password: expect.anything() }))
+    })
   })
 })

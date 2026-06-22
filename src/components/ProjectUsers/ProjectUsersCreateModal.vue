@@ -42,6 +42,12 @@ const saving = ref(false)
 
 const currentUserRole = computed(() => getRoleByProject(props.projectName))
 
+const AUTH_MODE_PWD = ['form', 'basic']
+
+const isPasswordProvider = computed(() =>
+  AUTH_MODE_PWD.includes(core.config.get('auth'))
+)
+
 const availableRoles = computed(() =>
   Object.values(ROLE)
     .filter(role => (ROLE_HIERARCHY[currentUserRole.value] & ROLE_BIT[role]) !== 0)
@@ -53,11 +59,11 @@ const passwordMismatch = computed(() =>
   confirmPassword.value.length > 0 && password.value !== confirmPassword.value
 )
 
-const isValid = computed(() =>
-  username.value.trim().length > 0 &&
-  password.value.length > 0 &&
-  password.value === confirmPassword.value
-)
+const isValid = computed(() => {
+  if (!username.value.trim().length) return false
+  if (!isPasswordProvider.value) return true
+  return password.value.length > 0 && password.value === confirmPassword.value
+})
 
 function resetForm() {
   username.value = ''
@@ -75,7 +81,7 @@ async function createUser() {
       login: username.value.trim(),
       email: email.value.trim(),
       name: name.value.trim(),
-      password: password.value,
+      ...(isPasswordProvider.value ? { password: password.value } : {}),
       provider: 'local',
       groups: [props.projectName]
     })
@@ -98,7 +104,7 @@ async function createUser() {
   }
 }
 
-defineExpose({ username, email, name, password, confirmPassword, selectedRole, isValid, passwordMismatch, saving, createUser, availableRoles })
+defineExpose({ username, email, name, password, confirmPassword, selectedRole, isValid, isPasswordProvider, passwordMismatch, saving, createUser, availableRoles })
 </script>
 
 <template>
@@ -149,7 +155,10 @@ defineExpose({ username, email, name, password, confirmPassword, selectedRole, i
           :disabled="saving"
         />
       </div>
-      <div class="d-flex align-items-center gap-3">
+      <div
+        v-if="isPasswordProvider"
+        class="d-flex align-items-center gap-3"
+      >
         <label class="d-flex align-items-center gap-1 text-secondary text-nowrap">
           <app-icon :name="IPhLock" />
           {{ t('projectViewEdit.users.create.fields.password.label') }}
@@ -161,7 +170,10 @@ defineExpose({ username, email, name, password, confirmPassword, selectedRole, i
           :disabled="saving"
         />
       </div>
-      <div class="d-flex flex-column gap-1">
+      <div
+        v-if="isPasswordProvider"
+        class="d-flex flex-column gap-1"
+      >
         <div class="d-flex align-items-center gap-3">
           <label class="d-flex align-items-center gap-1 text-secondary text-nowrap">
             <app-icon :name="IPhLock" />
