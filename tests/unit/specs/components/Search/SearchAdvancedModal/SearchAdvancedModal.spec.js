@@ -93,6 +93,28 @@ describe('SearchAdvancedModal.vue', () => {
     expect(wrapper.emitted('update:modelValue')).toBeFalsy()
   })
 
+  it('re-emits the original query text when the form was not meaningfully changed', async () => {
+    // Opening on `Pierre AND Romera` fills allWords; submitting unchanged
+    // would regenerate `+Pierre +Romera`. Since that means the same thing,
+    // the modal must re-emit the user's original text, not rewrite the bar.
+    const wrapper = factory({ modelValue: false, initialQuery: 'Pierre AND Romera' })
+    await wrapper.setProps({ modelValue: true })
+    await nextTick()
+    wrapper.vm.handleSearch()
+    const [[query]] = wrapper.emitted('search')
+    expect(query).toBe('Pierre AND Romera')
+  })
+
+  it('emits the regenerated query when the user edits the pre-populated form', async () => {
+    const wrapper = factory({ modelValue: false, initialQuery: 'Pierre AND Romera' })
+    await wrapper.setProps({ modelValue: true })
+    await nextTick()
+    wrapper.vm.form.allWords = 'Pierre'
+    wrapper.vm.handleSearch()
+    const [[query]] = wrapper.emitted('search')
+    expect(query).toBe('+Pierre')
+  })
+
   it('Reset clears every entry and re-selects "All fields"', () => {
     const wrapper = factory()
     wrapper.vm.form.anyWords = 'foo'
