@@ -152,6 +152,7 @@ import { useAdvancedSearchForm } from '@/composables/useAdvancedSearchForm'
 import {
   generateLuceneQuery,
   parseLuceneQuery,
+  queriesEquivalent,
   FUZZY_DISTANCE_MAX,
   PROXIMITY_DISTANCE_MAX
 } from '@/utils/luceneQuery'
@@ -247,9 +248,16 @@ whenever(() => !isVisible.value, handleReset)
 function handleSearch() {
   // Pressing Enter inside an input also submits the form, so guard here
   // rather than relying on the visible Search button being disabled.
-  if (isFormEmpty.value) return
+  if (isFormEmpty.value) {
+    return
+  }
   const query = generateLuceneQuery(toQueryShape(form))
-  emit('search', query)
+  // The form canonicalises the query (e.g. `Paris AND London` regenerates as
+  // `+Paris +London`). When the user opened the modal on a query and never
+  // changed its meaning, re-emit the original text so the search bar is not
+  // silently rewritten for an edit the user did not make.
+  const preservesOriginal = props.initialQuery && queriesEquivalent(query, props.initialQuery)
+  emit('search', preservesOriginal ? props.initialQuery : query)
   isVisible.value = false
 }
 
