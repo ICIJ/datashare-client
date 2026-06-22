@@ -3,6 +3,7 @@ import { shallowMount, flushPromises } from '@vue/test-utils'
 import CoreSetup from '~tests/unit/CoreSetup.js'
 import ProjectViewEditUsers from '@/views/Project/ProjectView/ProjectViewEdit/ProjectViewEditUsers.vue'
 import ProjectUsersList from '@/components/ProjectUsers/ProjectUsersList.vue'
+import RowPaginationUsers from '@/components/RowPagination/RowPaginationUsers.vue'
 import { apiInstance as api } from '@/api/apiInstance.js'
 
 vi.mock('@/api/apiInstance', () => ({
@@ -48,7 +49,7 @@ describe('ProjectViewEditUsers.vue', () => {
   it('calls getProjectPolicies with domain "default" and the project name on mount', async () => {
     shallowMountComponent()
     await flushPromises()
-    expect(api.getProjectPolicies).toBeCalledWith('default', 'local-datashare', { from: 0, to: 10 })
+    expect(api.getProjectPolicies).toBeCalledWith('default', 'local-datashare', expect.objectContaining({ from: 0, to: 10 }))
   })
 
   it('renders a ProjectUsersList', () => {
@@ -105,5 +106,86 @@ describe('ProjectViewEditUsers.vue', () => {
     const wrapper = shallowMountComponent()
     await flushPromises()
     expect(wrapper.findComponent(ProjectUsersList).props('projectName')).toBe('local-datashare')
+  })
+
+  it('renders a RowPaginationUsers component', async () => {
+    const wrapper = shallowMountComponent()
+    await flushPromises()
+    expect(wrapper.findComponent(RowPaginationUsers).exists()).toBe(true)
+  })
+
+  it('passes totalRows from pagination.total to RowPaginationUsers', async () => {
+    const wrapper = shallowMountComponent()
+    await flushPromises()
+    expect(wrapper.findComponent(RowPaginationUsers).attributes('total-rows')).toBe('2')
+  })
+
+  it('sets totalRows to 0 when pagination is missing', async () => {
+    api.getProjectPolicies.mockResolvedValue({ items: [] })
+    const wrapper = shallowMountComponent()
+    await flushPromises()
+    expect(wrapper.findComponent(RowPaginationUsers).attributes('total-rows')).toBe('0')
+  })
+
+  it('refetches users with updated from/to when page changes', async () => {
+    const wrapper = shallowMountComponent()
+    await flushPromises()
+    expect(api.getProjectPolicies).toBeCalledWith('default', 'local-datashare', expect.objectContaining({ from: 0, to: 10 }))
+
+    await wrapper.findComponent(RowPaginationUsers).vm.$emit('update:page', 2)
+    await flushPromises()
+    expect(api.getProjectPolicies).toBeCalledWith('default', 'local-datashare', expect.objectContaining({ from: 10, to: 20 }))
+  })
+
+  describe('server-side search', () => {
+    beforeEach(() => {
+      vi.useFakeTimers()
+    })
+
+    afterEach(() => {
+      vi.useRealTimers()
+    })
+
+    it('passes query as the user filter to getProjectPolicies when ProjectUsersList emits update:query', async () => {
+      const wrapper = shallowMountComponent()
+      vi.runAllTimers()
+      await flushPromises()
+      api.getProjectPolicies.mockClear()
+
+      wrapper.findComponent(ProjectUsersList).vm.$emit('update:query', 'alice')
+      vi.advanceTimersByTime(300)
+      await flushPromises()
+
+      expect(api.getProjectPolicies).toHaveBeenCalledWith('default', 'local-datashare', expect.objectContaining({ user: 'alice' }))
+    })
+
+    it('resets page to 1 when query changes', async () => {
+      const wrapper = shallowMountComponent()
+      vi.runAllTimers()
+      await flushPromises()
+
+      wrapper.findComponent(RowPaginationUsers).vm.$emit('update:page', 2)
+      await flushPromises()
+
+      api.getProjectPolicies.mockClear()
+      wrapper.findComponent(ProjectUsersList).vm.$emit('update:query', 'bob')
+      vi.advanceTimersByTime(300)
+      await flushPromises()
+
+      expect(api.getProjectPolicies).toHaveBeenCalledWith('default', 'local-datashare', expect.objectContaining({ from: 0 }))
+    })
+
+    it('passes null as user filter when query is empty', async () => {
+      const wrapper = shallowMountComponent()
+      vi.runAllTimers()
+      await flushPromises()
+      api.getProjectPolicies.mockClear()
+
+      wrapper.findComponent(ProjectUsersList).vm.$emit('update:query', '')
+      vi.advanceTimersByTime(300)
+      await flushPromises()
+
+      expect(api.getProjectPolicies).toHaveBeenCalledWith('default', 'local-datashare', expect.objectContaining({ user: null }))
+    })
   })
 })

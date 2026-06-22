@@ -39,7 +39,7 @@ const { toast } = useToast()
 
 const sort = ref(null)
 const order = ref('asc')
-const query = ref('')
+const query = defineModel('query', { type: String, default: '' })
 const showCreateModal = ref(false)
 const showAdminModal = ref(false)
 const saving = ref(false)
@@ -56,7 +56,8 @@ function onRoleChanged(name, role) {
   const next = { ...pendingChanges.value }
   if (role === original) {
     delete next[name]
-  } else {
+  }
+  else {
     next[name] = role
   }
   pendingChanges.value = next
@@ -98,10 +99,12 @@ async function saveRoles() {
     })
     pendingChanges.value = {}
     toast.success(t('projectViewEdit.users.roleSelect.saveSuccess'))
-  } catch {
+  }
+  catch {
     pendingChanges.value = {}
     toast.error(t('projectViewEdit.users.roleSelect.saveError'))
-  } finally {
+  }
+  finally {
     saving.value = false
   }
 }
@@ -113,20 +116,15 @@ function cancelChanges() {
 function onSaveClicked() {
   if (adminPromotions.value.length > 0) {
     showAdminModal.value = true
-  } else {
+  }
+  else {
     saveRoles()
   }
 }
 
-const filteredUsers = computed(() => {
-  if (!query.value) return localUsers.value
-  const q = query.value.toLowerCase()
-  return localUsers.value.filter(u => u.name?.toLowerCase().includes(q))
-})
-
 const sortedUsers = computed(() => {
-  if (!sort.value) return filteredUsers.value
-  return orderBy(filteredUsers.value, [sort.value], [order.value])
+  if (!sort.value) return localUsers.value
+  return orderBy(localUsers.value, [sort.value], [order.value])
 })
 
 const emptyLabel = computed(() =>
@@ -144,7 +142,7 @@ defineExpose({ localUsers, pendingChanges, saving, showAdminModal, saveRoles, ca
       <button-icon
         :icon-left="IPhUserPlus"
         size="sm"
-        variant="primary"
+        variant="action"
         @click="showCreateModal = true"
       >
         {{ t('projectViewEdit.users.create.button') }}
