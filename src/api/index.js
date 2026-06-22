@@ -117,6 +117,10 @@ export class Api {
     return this.sendActionAsText(`/api/policies/${domain}/${project}`, { method: Method.PUT, params })
   }
 
+  createUser({ login, email, name, password, provider = 'local', groups = [] } = {}) {
+    return this.sendAction('/api/users', { method: Method.POST, data: { login, email, name, password, provider, groups } })
+  }
+
   getPathBanners(project) {
     return this.sendAction(`/api/${project}/pathBanners`)
   }
