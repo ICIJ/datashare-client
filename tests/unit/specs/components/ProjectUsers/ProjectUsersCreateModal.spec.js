@@ -6,7 +6,10 @@ import { apiInstance as api } from '@/api/apiInstance.js'
 import { usePolicies } from '@/composables/usePolicies.js'
 
 vi.mock('@/api/apiInstance', () => ({
-  apiInstance: { saveProjectPolicy: vi.fn() }
+  apiInstance: {
+    createUser: vi.fn(),
+    saveProjectPolicy: vi.fn()
+  }
 }))
 
 const mockToast = { error: vi.fn(), success: vi.fn() }
@@ -47,9 +50,9 @@ describe('ProjectUsersCreateModal.vue', () => {
     })
   }
 
-  it('renders a b-form-input for the username', () => {
+  it('renders b-form-inputs for all fields', () => {
     const wrapper = mountComponent()
-    expect(wrapper.find('b-form-input-stub').exists()).toBe(true)
+    expect(wrapper.findAll('b-form-input-stub').length).toBeGreaterThanOrEqual(1)
   })
 
   it('renders a b-form-select with available roles', () => {
@@ -60,42 +63,128 @@ describe('ProjectUsersCreateModal.vue', () => {
 
   it('isValid is false when username is empty', () => {
     const wrapper = mountComponent()
-    expect(wrapper.vm.username).toBe('')
     expect(wrapper.vm.isValid).toBe(false)
   })
 
-  it('isValid is true when username is non-empty', async () => {
+  it('isValid is false when username is set but password is empty', async () => {
     const wrapper = mountComponent()
-    wrapper.vm.username = 'alice@icij.org'
+    wrapper.vm.username = 'alice'
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.isValid).toBe(false)
+  })
+
+  it('isValid is false when passwords do not match', async () => {
+    const wrapper = mountComponent()
+    wrapper.vm.username = 'alice'
+    wrapper.vm.password = 'secret'
+    wrapper.vm.confirmPassword = 'different'
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.isValid).toBe(false)
+  })
+
+  it('isValid is true when username, password, and confirmPassword all match', async () => {
+    const wrapper = mountComponent()
+    wrapper.vm.username = 'alice'
+    wrapper.vm.password = 'secret'
+    wrapper.vm.confirmPassword = 'secret'
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.isValid).toBe(true)
   })
 
-  it('createUser calls saveProjectPolicy, emits user:created, closes modal, resets form', async () => {
+  it('passwordMismatch is false when confirmPassword is empty', async () => {
+    const wrapper = mountComponent()
+    wrapper.vm.password = 'secret'
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.passwordMismatch).toBe(false)
+  })
+
+  it('passwordMismatch is true when confirmPassword differs from password', async () => {
+    const wrapper = mountComponent()
+    wrapper.vm.password = 'secret'
+    wrapper.vm.confirmPassword = 'other'
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.passwordMismatch).toBe(true)
+  })
+
+  it('createUser calls createUser API with correct payload', async () => {
+    api.createUser.mockResolvedValue({})
     api.saveProjectPolicy.mockResolvedValue(undefined)
     const wrapper = mountComponent()
-    wrapper.vm.username = 'alice@icij.org'
+    wrapper.vm.username = 'alice'
+    wrapper.vm.email = 'alice@example.org'
+    wrapper.vm.name = 'Alice'
+    wrapper.vm.password = 'secret'
+    wrapper.vm.confirmPassword = 'secret'
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.createUser()
+    await flushPromises()
+    expect(api.createUser).toHaveBeenCalledWith({
+      login: 'alice',
+      email: 'alice@example.org',
+      name: 'Alice',
+      password: 'secret',
+      provider: 'local',
+      groups: [projectName]
+    })
+  })
+
+  it('createUser calls saveProjectPolicy after createUser succeeds', async () => {
+    api.createUser.mockResolvedValue({})
+    api.saveProjectPolicy.mockResolvedValue(undefined)
+    const wrapper = mountComponent()
+    wrapper.vm.username = 'alice'
+    wrapper.vm.password = 'secret'
+    wrapper.vm.confirmPassword = 'secret'
     await wrapper.vm.$nextTick()
     await wrapper.vm.createUser()
     await flushPromises()
     expect(api.saveProjectPolicy).toHaveBeenCalledWith('default', projectName, {
-      user: 'alice@icij.org',
+      user: 'alice',
       role: 'PROJECT_MEMBER'
     })
-    expect(wrapper.emitted('user:created')).toEqual([[{ name: 'alice@icij.org', role: 'PROJECT_MEMBER' }]])
-    expect(wrapper.emitted('update:modelValue')).toEqual([[false]])
-    expect(wrapper.vm.username).toBe('')
   })
 
-  it('shows error toast and keeps modal open on API failure', async () => {
-    api.saveProjectPolicy.mockRejectedValue(new Error('forbidden'))
+  it('emits user:created, closes modal, resets form on success', async () => {
+    api.createUser.mockResolvedValue({})
+    api.saveProjectPolicy.mockResolvedValue(undefined)
     const wrapper = mountComponent()
-    wrapper.vm.username = 'alice@icij.org'
+    wrapper.vm.username = 'alice'
+    wrapper.vm.password = 'secret'
+    wrapper.vm.confirmPassword = 'secret'
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.createUser()
+    await flushPromises()
+    expect(wrapper.emitted('user:created')).toEqual([[{ name: 'alice', role: 'PROJECT_MEMBER' }]])
+    expect(wrapper.emitted('update:modelValue')).toEqual([[false]])
+    expect(wrapper.vm.username).toBe('')
+    expect(wrapper.vm.password).toBe('')
+  })
+
+  it('shows generic error toast and keeps modal open on API failure', async () => {
+    api.createUser.mockRejectedValue(new Error('server error'))
+    const wrapper = mountComponent()
+    wrapper.vm.username = 'alice'
+    wrapper.vm.password = 'secret'
+    wrapper.vm.confirmPassword = 'secret'
     await wrapper.vm.$nextTick()
     await wrapper.vm.createUser()
     await flushPromises()
     expect(mockToast.error).toHaveBeenCalledOnce()
     expect(wrapper.emitted('update:modelValue')).toBeFalsy()
-    expect(wrapper.vm.username).toBe('alice@icij.org')
+    expect(wrapper.vm.username).toBe('alice')
+  })
+
+  it('shows conflict error toast on 409 response', async () => {
+    const err = new Error('conflict')
+    err.response = { status: 409 }
+    api.createUser.mockRejectedValue(err)
+    const wrapper = mountComponent()
+    wrapper.vm.username = 'alice'
+    wrapper.vm.password = 'secret'
+    wrapper.vm.confirmPassword = 'secret'
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.createUser()
+    await flushPromises()
+    expect(mockToast.error).toHaveBeenCalledWith('A user with this username already exists.')
   })
 })

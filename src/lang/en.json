@@ -1498,10 +1498,28 @@
         "title": "Create a user",
         "confirm": "Create",
         "saveError": "Failed to create user. Please try again.",
+        "saveErrorConflict": "A user with this username already exists.",
         "fields": {
           "username": {
             "label": "Username",
             "placeholder": "Type username"
+          },
+          "email": {
+            "label": "Email",
+            "placeholder": "Type email address"
+          },
+          "name": {
+            "label": "Display name",
+            "placeholder": "Type display name"
+          },
+          "password": {
+            "label": "Password",
+            "placeholder": "Type password"
+          },
+          "confirmPassword": {
+            "label": "Confirm password",
+            "placeholder": "Confirm password",
+            "mismatch": "Passwords do not match."
           },
           "role": {
             "label": "Role"
@@ -2137,6 +2155,11 @@
     "rowRange": "to {to} of 0 tasks | to {to} of 1 task | to {to} of {total} tasks",
     "rowRangeFewer": "of 0 tasks | of 1 task | to {total} tasks",
     "rowRangeCompact": "of 0 tasks | of 1 task | of {total} tasks"
+  },
+  "rowPaginationUsers": {
+    "rowRange": "to {to} of 0 users | to {to} of 1 user | to {to} of {total} users",
+    "rowRangeFewer": "of 0 users | of 1 user | to {total} users",
+    "rowRangeCompact": "of 0 users | of 1 user | of {total} users"
   },
   "themes": {
     "dark": "Dark mode",

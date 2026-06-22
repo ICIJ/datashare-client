@@ -4,6 +4,9 @@ import { AppIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 
 import IPhTextAa from '~icons/ph/text-aa'
+import IPhEnvelopeSimple from '~icons/ph/envelope-simple'
+import IPhUser from '~icons/ph/user'
+import IPhLock from '~icons/ph/lock'
 
 import image from '@/assets/images/illustrations/app-modal-default-light.svg'
 import imageDark from '@/assets/images/illustrations/app-modal-default-dark.svg'
@@ -30,6 +33,10 @@ const { toast } = useToast()
 const { t } = useI18n()
 
 const username = ref('')
+const email = ref('')
+const name = ref('')
+const password = ref('')
+const confirmPassword = ref('')
 const selectedRole = ref(DEFAULT_ROLE)
 const saving = ref(false)
 
@@ -42,27 +49,56 @@ const availableRoles = computed(() =>
     .map(role => ({ value: role, text: formatRole(t, role) }))
 )
 
-const isValid = computed(() => username.value.trim().length > 0)
+const passwordMismatch = computed(() =>
+  confirmPassword.value.length > 0 && password.value !== confirmPassword.value
+)
+
+const isValid = computed(() =>
+  username.value.trim().length > 0 &&
+  password.value.length > 0 &&
+  password.value === confirmPassword.value
+)
+
+function resetForm() {
+  username.value = ''
+  email.value = ''
+  name.value = ''
+  password.value = ''
+  confirmPassword.value = ''
+  selectedRole.value = DEFAULT_ROLE
+}
 
 async function createUser() {
   saving.value = true
   try {
+    await core.api.createUser({
+      login: username.value.trim(),
+      email: email.value.trim(),
+      name: name.value.trim(),
+      password: password.value,
+      provider: 'local',
+      groups: [props.projectName]
+    })
     await core.api.saveProjectPolicy('default', props.projectName, {
       user: username.value.trim(),
       role: selectedRole.value
     })
     emit('user:created', { name: username.value.trim(), role: selectedRole.value })
-    username.value = ''
-    selectedRole.value = DEFAULT_ROLE
+    resetForm()
     modelValue.value = false
-  } catch {
-    toast.error(t('projectViewEdit.users.create.saveError'))
+  } catch (err) {
+    const status = err?.response?.status ?? err?.request?.response?.status
+    if (status === 409) {
+      toast.error(t('projectViewEdit.users.create.saveErrorConflict'))
+    } else {
+      toast.error(t('projectViewEdit.users.create.saveError'))
+    }
   } finally {
     saving.value = false
   }
 }
 
-defineExpose({ username, selectedRole, isValid, saving, createUser, availableRoles })
+defineExpose({ username, email, name, password, confirmPassword, selectedRole, isValid, passwordMismatch, saving, createUser, availableRoles })
 </script>
 
 <template>
@@ -89,6 +125,62 @@ defineExpose({ username, selectedRole, isValid, saving, createUser, availableRol
           :disabled="saving"
           autofocus
         />
+      </div>
+      <div class="d-flex align-items-center gap-3">
+        <label class="d-flex align-items-center gap-1 text-secondary text-nowrap">
+          <app-icon :name="IPhEnvelopeSimple" />
+          {{ t('projectViewEdit.users.create.fields.email.label') }}
+        </label>
+        <b-form-input
+          v-model="email"
+          type="email"
+          :placeholder="t('projectViewEdit.users.create.fields.email.placeholder')"
+          :disabled="saving"
+        />
+      </div>
+      <div class="d-flex align-items-center gap-3">
+        <label class="d-flex align-items-center gap-1 text-secondary text-nowrap">
+          <app-icon :name="IPhUser" />
+          {{ t('projectViewEdit.users.create.fields.name.label') }}
+        </label>
+        <b-form-input
+          v-model="name"
+          :placeholder="t('projectViewEdit.users.create.fields.name.placeholder')"
+          :disabled="saving"
+        />
+      </div>
+      <div class="d-flex align-items-center gap-3">
+        <label class="d-flex align-items-center gap-1 text-secondary text-nowrap">
+          <app-icon :name="IPhLock" />
+          {{ t('projectViewEdit.users.create.fields.password.label') }}
+        </label>
+        <b-form-input
+          v-model="password"
+          type="password"
+          :placeholder="t('projectViewEdit.users.create.fields.password.placeholder')"
+          :disabled="saving"
+        />
+      </div>
+      <div class="d-flex flex-column gap-1">
+        <div class="d-flex align-items-center gap-3">
+          <label class="d-flex align-items-center gap-1 text-secondary text-nowrap">
+            <app-icon :name="IPhLock" />
+            {{ t('projectViewEdit.users.create.fields.confirmPassword.label') }}
+          </label>
+          <b-form-input
+            v-model="confirmPassword"
+            type="password"
+            :placeholder="t('projectViewEdit.users.create.fields.confirmPassword.placeholder')"
+            :disabled="saving"
+            :state="confirmPassword.length > 0 ? !passwordMismatch : null"
+          />
+        </div>
+        <small
+          v-if="passwordMismatch"
+          class="text-danger ms-auto"
+        >
+          {{ t('projectViewEdit.users.create.fields.confirmPassword.mismatch') }}
+        </small>
       </div>
       <div class="d-flex align-items-center gap-3">
         <label class="d-flex align-items-center gap-1 text-secondary text-nowrap">
