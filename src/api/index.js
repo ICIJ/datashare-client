@@ -121,6 +121,10 @@ export class Api {
     return this.sendAction('/api/users', { method: Method.POST, data: { login, email, name, password, provider, groups } })
   }
 
+  deleteUser(login) {
+    return this.sendActionAsText(`/api/users/${encodeURIComponent(login)}`, { method: Method.DELETE })
+  }
+
   getPathBanners(project) {
     return this.sendAction(`/api/${project}/pathBanners`)
   }
