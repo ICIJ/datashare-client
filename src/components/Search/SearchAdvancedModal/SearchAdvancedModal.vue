@@ -253,11 +253,9 @@ whenever(isVisible, handleOpen)
 whenever(() => !isVisible.value, handleReset)
 
 function handleSearch() {
-  // Pressing Enter inside an input also submits the form, so guard here
-  // rather than relying on the visible Search button being disabled.
-  if (isFormEmpty.value) {
-    return
-  }
+  // Always resubmit — even an empty or unchanged query — so clicking Search
+  // behaves like pressing Enter in the search bar, which forces a fresh search
+  // through a new stamp.
   const query = generateLuceneQuery(toQueryShape(form))
   // The form canonicalises the query (e.g. `Paris AND London` regenerates as
   // `+Paris +London`). When the user opened the modal on a query and never

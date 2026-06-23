@@ -86,11 +86,12 @@ describe('SearchAdvancedModal.vue', () => {
     expect(wrapper.emitted('update:modelValue').at(-1)[0]).toBe(false)
   })
 
-  it('does not emit a search nor close when the form is empty', () => {
+  it('still emits a search and closes when the form is empty so the search is always resubmitted', () => {
     const wrapper = factory()
     wrapper.vm.handleSearch()
-    expect(wrapper.emitted('search')).toBeFalsy()
-    expect(wrapper.emitted('update:modelValue')).toBeFalsy()
+    expect(wrapper.emitted('search')).toBeTruthy()
+    expect(wrapper.emitted('search')[0][0]).toBe('')
+    expect(wrapper.emitted('update:modelValue').at(-1)[0]).toBe(false)
   })
 
   it('re-emits the original query text when the form was not meaningfully changed', async () => {
