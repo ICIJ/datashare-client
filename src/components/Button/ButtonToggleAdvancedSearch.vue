@@ -20,6 +20,9 @@ const props = defineProps({
   compactBreakpoint: {
     type: String,
     default: 'md'
+  },
+  reduced: {
+    type: Boolean
   }
 })
 
@@ -36,7 +39,7 @@ const variant = computed(() => {
 const { breakpointDown } = useBreakpoints()
 
 const compact = computed(() => {
-  return breakpointDown.value[props.compactBreakpoint]
+  return props.reduced || breakpointDown.value[props.compactBreakpoint]
 })
 </script>
 
