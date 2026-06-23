@@ -55,10 +55,7 @@ defineProps({
 <style lang="scss" scoped>
 .form-control-range {
   padding-top: $spacer-xs;
-  overflow: hidden;
-
-  &__wrapper {
-    margin: 0 -1 * math.div($spacer-xl, 2);
-  }
+  // The slider track and the ticks row share the same width, so the bullet
+  // (centred at (i + 0.5)/N of the track) lines up with each tick centre.
 }
 </style>
