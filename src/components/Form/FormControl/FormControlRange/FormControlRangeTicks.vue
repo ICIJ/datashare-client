@@ -29,13 +29,14 @@ const style = computed(() => {
 </script>
 
 <template>
-  <div class="form-control-range-ticks d-flex flex-row gap-1 gap-sm-3 mx-3">
+  <div class="form-control-range-ticks d-flex flex-row">
     <form-control-range-ticks-entry
       v-for="s in steps"
       :key="s"
       :value="s"
       :active="modelValue === s"
       :style="style"
+      class="mx-1 mx-sm-2"
       @click="modelValue = s"
     />
   </div>
