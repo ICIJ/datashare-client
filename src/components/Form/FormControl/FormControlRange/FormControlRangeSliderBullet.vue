@@ -42,7 +42,8 @@ const style = computed(() => {
 const drag = ({ detail: x }) => {
   active.value = true
   const index = Math.round(steps.value.length * (x / 100))
-  modelValue.value = steps.value[index]
+  const clamped = Math.min(steps.value.length - 1, Math.max(0, index))
+  modelValue.value = steps.value[clamped]
 }
 
 const dragend = () => {
