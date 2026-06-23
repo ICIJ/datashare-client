@@ -374,7 +374,11 @@ defineExpose({ form, isFormEmpty, handleSearch, handleReset })
   }
 
   .modal-header {
-    padding-bottom: $spacer * 0.5;
+    // Balance the vertical padding so the title and close button sit
+    // vertically centered in the header band — Bootstrap's default large-top
+    // / zero-bottom inset otherwise pushes them low.
+    padding-top: $spacer;
+    padding-bottom: $spacer;
   }
 
   .modal-header,
@@ -388,6 +392,11 @@ defineExpose({ form, isFormEmpty, handleSearch, handleReset })
     align-items: flex-start;
 
     &__title {
+      // The base header gives the title flex-grow: 1, which stretches the h3
+      // vertically in the column-flex header; as a block its single text line
+      // would otherwise sit at the top of that stretched box. Center it.
+      display: flex;
+      align-items: center;
       text-align: start;
     }
   }
