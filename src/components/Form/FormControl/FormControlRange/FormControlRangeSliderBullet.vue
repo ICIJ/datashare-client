@@ -60,7 +60,7 @@ const classList = computed(() => {
 <template>
   <a
     ref="target"
-    v-draggable.relative.percent="{ target }"
+    v-draggable.relative.percent="{ target, expandThreshold: -Infinity, reduceThreshold: Infinity }"
     class="form-control-range-slider-bullet"
     :class="classList"
     :style="style"
