@@ -24,6 +24,17 @@ describe('FormControlRangeSliderBullet.vue', () => {
     })
   })
 
+  describe('draggable directive', () => {
+    it('disables the resizable-panel thresholds so it always emits drag', () => {
+      const wrapper = factory()
+      const dirs = wrapper.vm.$.subTree.dirs ?? []
+      const binding = dirs.map(d => d.value).find(v => v && 'target' in v)
+      expect(binding).toBeTruthy()
+      expect(binding.expandThreshold).toBe(-Infinity)
+      expect(binding.reduceThreshold).toBe(Infinity)
+    })
+  })
+
   describe('dragging', () => {
     it('selects the last step when dragged to the far right', async () => {
       const wrapper = factory({ modelValue: 0 })
