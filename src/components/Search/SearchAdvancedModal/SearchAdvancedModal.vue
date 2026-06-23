@@ -127,10 +127,7 @@
           {{ t('searchAdvancedModal.cancel') }}
         </button-icon>
         <button-reset @click="handleReset" />
-        <button-search
-          :disabled="isFormEmpty"
-          @click="ok"
-        />
+        <button-search @click="ok" />
       </form-actions>
     </template>
   </app-modal>
