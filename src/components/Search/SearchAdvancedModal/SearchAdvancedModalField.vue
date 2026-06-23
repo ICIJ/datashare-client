@@ -4,7 +4,7 @@
       <app-icon class="search-advanced-modal-field__label__icon">
         <component :is="icon" />
       </app-icon>
-      <span>
+      <span class="text-body-emphasis">
         {{ label }}
       </span>
     </div>
@@ -62,7 +62,6 @@ defineProps({
     align-items: flex-start;
     align-self: center;
     gap: $spacer * 0.5;
-    color: var(--bs-secondary-color);
     font-size: $font-size-base;
 
     &__icon {
