@@ -2050,7 +2050,7 @@
     "proximitySearchExplanation2": "The maximum distance with which words can be further apart or in a different order in the phrase.",
     "proximitySearchExplanation3": "\"John and Mercedes are in Paris\"~1 will find: \"and John Mercedes are in Paris\"",
     "proximitySearchExplanation4": "\"John and Mercedes are in Paris\"~2 will find: \"Mercedes and John are in Paris\"",
-    "searchInFields": "Search in the following field(s):",
+    "searchInFields": "Search in field:",
     "allFields": "All fields",
     "fields": {
       "tags": "Tags",

@@ -60,16 +60,16 @@ describe('SearchToolbar.vue', () => {
     expect(wrapper.findComponent({ name: 'SearchAdvancedModal' }).props('initialQuery')).toBe('+Paris')
   })
 
-  it('runs a store query when the modal emits a search', () => {
+  it('runs a store query with the emitted query and field', () => {
     const wrapper = factory()
-    wrapper.findComponent({ name: 'SearchAdvancedModal' }).vm.$emit('search', '+Paris +London')
-    expect(searchStore.query).toHaveBeenCalledWith('+Paris +London')
+    wrapper.findComponent({ name: 'SearchAdvancedModal' }).vm.$emit('search', { query: '+Paris +London', field: 'tags' })
+    expect(searchStore.query).toHaveBeenCalledWith({ query: '+Paris +London', field: 'tags' })
   })
 
   it('runs a store query even when the modal emits an empty search so it is always resubmitted', () => {
     const wrapper = factory()
-    wrapper.findComponent({ name: 'SearchAdvancedModal' }).vm.$emit('search', '')
-    expect(searchStore.query).toHaveBeenCalledWith('')
+    wrapper.findComponent({ name: 'SearchAdvancedModal' }).vm.$emit('search', { query: '', field: 'all' })
+    expect(searchStore.query).toHaveBeenCalledWith({ query: '', field: 'all' })
   })
 
   it('reduces the advanced-search toggle when the toolbar is compact', () => {

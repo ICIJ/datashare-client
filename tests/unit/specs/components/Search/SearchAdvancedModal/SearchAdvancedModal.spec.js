@@ -29,8 +29,7 @@ describe('SearchAdvancedModal.vue', () => {
     expect(f.fuzzyDistance).toBe(1)
     expect(f.proximityPhrase).toBe('')
     expect(f.proximityDistance).toBe(1)
-    expect(f.fieldAll).toBe(true)
-    expect(f.selectedFields).toEqual([])
+    expect(f.field).toBe('all')
   })
 
   it('flags isFormEmpty true on the initial state', () => {
@@ -65,7 +64,7 @@ describe('SearchAdvancedModal.vue', () => {
     wrapper.vm.form.anyWords = 'foo bar'
     wrapper.vm.handleSearch()
     expect(wrapper.emitted('search')).toBeTruthy()
-    const [[query]] = wrapper.emitted('search')
+    const [[{ query }]] = wrapper.emitted('search')
     expect(query).toContain('foo')
     expect(query).toContain('bar')
   })
@@ -74,8 +73,17 @@ describe('SearchAdvancedModal.vue', () => {
     const wrapper = factory()
     wrapper.vm.form.exactPhrase = 'Société SAS'
     wrapper.vm.handleSearch()
-    const [[query]] = wrapper.emitted('search')
+    const [[{ query }]] = wrapper.emitted('search')
     expect(query).toContain('"Société SAS"')
+  })
+
+  it('emits the selected field alongside the query', () => {
+    const wrapper = factory()
+    wrapper.vm.form.anyWords = 'foo'
+    wrapper.vm.form.field = 'tags'
+    wrapper.vm.handleSearch()
+    const [[payload]] = wrapper.emitted('search')
+    expect(payload.field).toBe('tags')
   })
 
   it('closes the modal after a successful search', () => {
@@ -90,7 +98,7 @@ describe('SearchAdvancedModal.vue', () => {
     const wrapper = factory()
     wrapper.vm.handleSearch()
     expect(wrapper.emitted('search')).toBeTruthy()
-    expect(wrapper.emitted('search')[0][0]).toBe('')
+    expect(wrapper.emitted('search')[0][0].query).toBe('')
     expect(wrapper.emitted('update:modelValue').at(-1)[0]).toBe(false)
   })
 
@@ -102,7 +110,7 @@ describe('SearchAdvancedModal.vue', () => {
     await wrapper.setProps({ modelValue: true })
     await nextTick()
     wrapper.vm.handleSearch()
-    const [[query]] = wrapper.emitted('search')
+    const [[{ query }]] = wrapper.emitted('search')
     expect(query).toBe('Pierre AND Romera')
   })
 
@@ -112,21 +120,19 @@ describe('SearchAdvancedModal.vue', () => {
     await nextTick()
     wrapper.vm.form.allWords = 'Pierre'
     wrapper.vm.handleSearch()
-    const [[query]] = wrapper.emitted('search')
+    const [[{ query }]] = wrapper.emitted('search')
     expect(query).toBe('+Pierre')
   })
 
-  it('Reset clears every entry and re-selects "All fields"', () => {
+  it('Reset clears every entry and re-selects the "all" field', () => {
     const wrapper = factory()
     wrapper.vm.form.anyWords = 'foo'
     wrapper.vm.form.fuzzyTerm = 'Mercedes'
-    wrapper.vm.form.fieldAll = false
-    wrapper.vm.form.selectedFields = ['tags']
+    wrapper.vm.form.field = 'tags'
     wrapper.vm.handleReset()
     expect(wrapper.vm.form.anyWords).toBe('')
     expect(wrapper.vm.form.fuzzyTerm).toBe('')
-    expect(wrapper.vm.form.fieldAll).toBe(true)
-    expect(wrapper.vm.form.selectedFields).toEqual([])
+    expect(wrapper.vm.form.field).toBe('all')
   })
 
   it('pre-populates the form from initialQuery when the modal opens', async () => {
@@ -139,16 +145,25 @@ describe('SearchAdvancedModal.vue', () => {
     expect(wrapper.vm.form.allWords).toBe('Paris London')
   })
 
-  it('pre-populates a field-restricted query into the right buckets', async () => {
+  it('opens blank on a field-restricted query — fields are no longer baked into the query', async () => {
     const wrapper = shallowMount(SearchAdvancedModal, {
       props: { modelValue: false, initialQuery: 'tags:(Paris) OR content:(Paris)' },
       global: { plugins, renderStubDefaultSlot: true }
     })
     await wrapper.setProps({ modelValue: true })
     await nextTick()
-    expect(wrapper.vm.form.anyWords).toBe('Paris')
-    expect(wrapper.vm.form.fieldAll).toBe(false)
-    expect(wrapper.vm.form.selectedFields).toEqual(['tags', 'content'])
+    expect(wrapper.vm.form.anyWords).toBe('')
+    expect(wrapper.vm.isFormEmpty).toBe(true)
+  })
+
+  it('pre-selects the field from initialField when the modal opens', async () => {
+    const wrapper = shallowMount(SearchAdvancedModal, {
+      props: { modelValue: false, initialField: 'tags' },
+      global: { plugins, renderStubDefaultSlot: true }
+    })
+    await wrapper.setProps({ modelValue: true })
+    await nextTick()
+    expect(wrapper.vm.form.field).toBe('tags')
   })
 
   it('pre-populates an AND query into allWords', async () => {
@@ -175,15 +190,15 @@ describe('SearchAdvancedModal.vue', () => {
     expect(wrapper.vm.isFormEmpty).toBe(true)
   })
 
-  it('opens blank when initialQuery restricts to a field the modal does not offer', async () => {
+  it('opens blank when initialQuery restricts to any field', async () => {
     const wrapper = shallowMount(SearchAdvancedModal, {
       props: { modelValue: false, initialQuery: 'author:(Paris)' },
       global: { plugins, renderStubDefaultSlot: true }
     })
     await wrapper.setProps({ modelValue: true })
     await nextTick()
-    expect(wrapper.vm.form.fieldAll).toBe(true)
-    expect(wrapper.vm.form.selectedFields).toEqual([])
+    expect(wrapper.vm.form.anyWords).toBe('')
+    expect(wrapper.vm.form.field).toBe('all')
   })
 
   it('resets to the initial form when the modal closes', async () => {
