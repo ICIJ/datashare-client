@@ -360,19 +360,7 @@ defineExpose({ form, isFormEmpty, handleSearch, handleReset })
 // Safari 15.4+, Firefox 121+ — see package.json `browserslist`). If that
 // list ever loosens to older Firefox releases, fall back to a class-based
 // hook on `.modal-dialog`.
-//
-// — make the dialog wider than the default xl size (1140px) without
-//   horizontal scroll;
-// — keep header and footer opaque while body scrolls;
-// — left-align the modal title instead of the centered DS default.
 .modal-dialog:has(.search-advanced-modal) {
-  &.modal-xl {
-    max-width: min(1400px, calc(100vw - 2 * #{$modal-dialog-margin}));
-  }
-
-  .modal-content {
-    max-height: calc(100vh - 2 * #{$modal-dialog-margin});
-  }
 
   .modal-body {
     overflow-y: auto;
@@ -397,6 +385,13 @@ defineExpose({ form, isFormEmpty, handleSearch, handleReset })
   .modal-footer {
     background-color: var(--bs-modal-bg);
     z-index: 1;
+  }
+
+  .modal-footer {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    padding-top: $spacer;
   }
 
   .app-modal-header {
