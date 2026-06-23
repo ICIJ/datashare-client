@@ -391,7 +391,7 @@ defineExpose({ form, isFormEmpty, handleSearch, handleReset })
     position: sticky;
     bottom: 0;
     left: 0;
-    padding-top: $spacer;
+    padding-block: $spacer;
   }
 
   .app-modal-header {
