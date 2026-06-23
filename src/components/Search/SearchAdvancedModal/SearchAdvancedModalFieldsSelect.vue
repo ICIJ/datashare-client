@@ -4,60 +4,43 @@
     :icon="IPhMagnifyingGlass"
     align-top
   >
-    <div class="search-advanced-modal__field__checkboxes">
-      <b-form-checkbox
-        :model-value="all"
-        class="search-advanced-modal__field__checkboxes__all fw-medium"
-        @update:model-value="$emit('update:all', $event)"
+    <b-form-radio-group
+      :model-value="field"
+      class="search-advanced-modal__field__radios"
+      name="advanced-search-field"
+      stacked
+      @update:model-value="$emit('update:field', $event)"
+    >
+      <b-form-radio
+        v-for="option in fields"
+        :key="option.value"
+        :value="option.value"
+        class="search-advanced-modal__field__radios__item"
       >
-        {{ t('searchAdvancedModal.allFields') }}
-      </b-form-checkbox>
-      <b-form-checkbox
-        v-for="field in fields"
-        :key="field.value"
-        :model-value="selected"
-        :value="field.value"
-        class="search-advanced-modal__field__checkboxes__item"
-        @update:model-value="$emit('update:selected', $event)"
-      >
-        <span class="d-inline-flex align-items-center gap-2 text-secondary">
-          <app-icon class="search-advanced-modal__field__checkboxes__item__icon">
-            <component :is="field.icon" />
-          </app-icon>
-          {{ t(field.label) }}
-        </span>
-      </b-form-checkbox>
-    </div>
+        {{ t(option.label) }}
+      </b-form-radio>
+    </b-form-radio-group>
   </search-advanced-modal-field>
 </template>
 
 <script setup>
 import { useI18n } from 'vue-i18n'
-import { AppIcon } from '@icij/murmur-next'
 import IPhMagnifyingGlass from '~icons/ph/magnifying-glass'
 
 import SearchAdvancedModalField from './SearchAdvancedModalField.vue'
 
 defineProps({
   /**
-   * Whether the "All fields" master checkbox is ticked. Mutually
-   * exclusive with `selected` — the parent enforces the rule.
+   * Currently selected field key (one of `fields` value strings). `'all'`
+   * means an unscoped search.
    */
-  all: {
-    type: Boolean,
-    default: true
+  field: {
+    type: String,
+    default: 'all'
   },
   /**
-   * Currently selected individual field values (subset of `fields`
-   * value strings).
-   */
-  selected: {
-    type: Array,
-    default: () => []
-  },
-  /**
-   * Field options to render. Each entry is `{ value, label, icon }`
-   * where `value` is the ES field path emitted in the query.
+   * Field options to render. Each entry is `{ value, label }` where `value`
+   * is a search store `field` key and `label` an i18n key.
    */
   fields: {
     type: Array,
@@ -65,13 +48,13 @@ defineProps({
   }
 })
 
-defineEmits(['update:all', 'update:selected'])
+defineEmits(['update:field'])
 
 const { t } = useI18n()
 </script>
 
 <style lang="scss" scoped>
-.search-advanced-modal__field__checkboxes {
+.search-advanced-modal__field__radios {
   display: flex;
   flex-direction: column;
   gap: $spacer * 0.25;
@@ -79,10 +62,6 @@ const { t } = useI18n()
   :deep(.form-check) {
     margin: 0;
     padding-left: 1.75rem;
-  }
-
-  &__item__icon {
-    flex-shrink: 0;
   }
 }
 </style>

@@ -97,13 +97,11 @@
           :explanations="proximityExplanations"
         />
 
-        <!-- Search in specific fields -->
+        <!-- Search in a specific field -->
         <search-advanced-modal-fields-select
-          :all="form.fieldAll"
-          :selected="form.selectedFields"
+          :field="form.field"
           :fields="fields"
-          @update:all="setFieldAll"
-          @update:selected="setSelectedFields"
+          @update:field="setField"
         />
         <!-- Hidden submit so pressing Enter in any input triggers the form
              handler even when the focused control swallows the event. -->
@@ -174,6 +172,14 @@ const props = defineProps({
   initialQuery: {
     type: String,
     default: ''
+  },
+  /**
+   * Search field the form opens on, mirroring the active search's `field`.
+   * Pre-selects the matching radio so the modal reflects the current scope.
+   */
+  initialField: {
+    type: String,
+    default: 'all'
   }
 })
 const emit = defineEmits(['search'])
@@ -183,8 +189,7 @@ const {
   form,
   fields,
   isFormEmpty,
-  setFieldAll,
-  setSelectedFields,
+  setField,
   reset: handleReset,
   toQueryShape
 } = useAdvancedSearchForm()
@@ -222,14 +227,16 @@ const proximityExplanations = computed(() => [
  * next search.
  */
 function populateFromInitialQuery() {
-  if (!props.initialQuery) {
-    return
+  if (props.initialQuery) {
+    const parsed = parseLuceneQuery(props.initialQuery)
+    if (parsed) {
+      Object.assign(form, parsed)
+    }
   }
-  const allowedFields = fields.map(({ value }) => value)
-  const parsed = parseLuceneQuery(props.initialQuery, { fields: allowedFields })
-  if (parsed) {
-    Object.assign(form, parsed)
-  }
+  // The field is tracked on the search store, not in the query string, so it
+  // is restored from `initialField` (after the parse, which would otherwise
+  // reset it to the default) rather than parsed out of the query.
+  setField(props.initialField)
 }
 
 /**
@@ -262,7 +269,7 @@ function handleSearch() {
   // changed its meaning, re-emit the original text so the search bar is not
   // silently rewritten for an edit the user did not make.
   const preservesOriginal = props.initialQuery && queriesEquivalent(query, props.initialQuery)
-  emit('search', preservesOriginal ? props.initialQuery : query)
+  emit('search', { query: preservesOriginal ? props.initialQuery : query, field: form.field })
   isVisible.value = false
 }
 
