@@ -45,9 +45,9 @@ const classList = computed(() => {
 })
 
 function handleAdvancedSearch(queryString) {
-  if (queryString) {
-    searchStore.query(queryString)
-  }
+  // Always run the query — even an empty one — so it resubmits with a fresh
+  // stamp, matching the search bar's submit behaviour.
+  searchStore.query(queryString)
 }
 </script>
 
