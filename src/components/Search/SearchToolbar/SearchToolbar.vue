@@ -44,10 +44,11 @@ const classList = computed(() => {
   }
 })
 
-function handleAdvancedSearch(queryString) {
+function handleAdvancedSearch({ query, field }) {
   // Always run the query — even an empty one — so it resubmits with a fresh
-  // stamp, matching the search bar's submit behaviour.
-  searchStore.query(queryString)
+  // stamp, matching the search bar's submit behaviour. The field is applied
+  // to the store's single search `field` rather than baked into the query.
+  searchStore.query({ query, field })
 }
 </script>
 
@@ -96,6 +97,7 @@ function handleAdvancedSearch(queryString) {
     <search-advanced-modal
       v-model="showAdvancedSearch"
       :initial-query="searchStore.q"
+      :initial-field="searchStore.field"
       @search="handleAdvancedSearch"
     />
   </div>

@@ -267,7 +267,9 @@ describe('luceneQuery', () => {
       expect(query).toBe('(Paris London) +France -spam')
     })
 
-    it('should apply field restriction when specific fields are selected', () => {
+    it('never bakes the field into the query — scoping is applied via the store field', () => {
+      // The selected field sets the search store's `field`; it is no longer
+      // wrapped into the query string (`content:(Paris)`).
       const formData = {
         anyWords: ['Paris'],
         allWords: [],
@@ -281,37 +283,11 @@ describe('luceneQuery', () => {
         fuzzyDistance: 0,
         proximityPhrase: '',
         proximityDistance: 0,
-        fieldAll: false,
-        selectedFields: ['content', 'path']
+        field: 'content'
       }
 
       const query = generateQuery(formData)
-      expect(query).toBe('content:(Paris) OR path:(Paris)')
-    })
-
-    it('preserves +/- operators inside the field restriction wrapper', () => {
-      // `field:(+a -b)` is interpreted by Lucene as "must have a, must
-      // not have b in field" — the wrapper does not strip operator
-      // semantics. Pin that down so future refactors don't regress it.
-      const formData = {
-        anyWords: [],
-        allWords: ['France'],
-        exactPhrase: [],
-        noneWords: ['spam'],
-        singleWildcardStart: '',
-        singleWildcardEnd: '',
-        multiWildcardStart: '',
-        multiWildcardEnd: '',
-        fuzzyTerm: '',
-        fuzzyDistance: 0,
-        proximityPhrase: '',
-        proximityDistance: 0,
-        fieldAll: false,
-        selectedFields: ['content']
-      }
-
-      const query = generateQuery(formData)
-      expect(query).toBe('content:(+France -spam)')
+      expect(query).toBe('Paris')
     })
 
     it('should not apply field restriction when all fields is selected', () => {
@@ -480,8 +456,7 @@ describe('luceneQuery', () => {
       expect(f.proximityPhrase).toBe('')
       expect(f.fuzzyDistance).toBe(1)
       expect(f.proximityDistance).toBe(1)
-      expect(f.fieldAll).toBe(true)
-      expect(f.selectedFields).toEqual([])
+      expect(f.field).toBe('all')
     })
 
     it('returns an empty form for null / whitespace input', () => {
@@ -515,11 +490,10 @@ describe('luceneQuery', () => {
       expect(f.noneWords).toBe('Berlin')
     })
 
-    it('parses a field-restricted boolean query', () => {
-      const f = parseLuceneQuery('content:(Paris AND London)')
-      expect(f.fieldAll).toBe(false)
-      expect(f.selectedFields).toEqual(['content'])
-      expect(f.allWords).toBe('Paris London')
+    it('returns null for a field-restricted query (no longer representable)', () => {
+      // The form scopes via the store `field`, not in the query string, so a
+      // field-restricted query cannot be faithfully edited and blanks the modal.
+      expect(parseLuceneQuery('content:(Paris AND London)')).toBeNull()
     })
 
     it('treats a query that is only a boolean operator as empty', () => {
@@ -589,16 +563,12 @@ describe('luceneQuery', () => {
       expect(f.singleWildcardEnd).toBe('def')
     })
 
-    it('parses field-restricted queries into selectedFields + inner query', () => {
-      const f = parseLuceneQuery('tags:(Paris) OR content:(Paris)')
-      expect(f.fieldAll).toBe(false)
-      expect(f.selectedFields).toEqual(['tags', 'content'])
-      expect(f.anyWords).toBe('Paris')
+    it('returns null for a multi-field-restricted query (no longer representable)', () => {
+      expect(parseLuceneQuery('tags:(Paris) OR content:(Paris)')).toBeNull()
     })
 
-    it('parses field-restricted dotted ES field paths', () => {
-      const f = parseLuceneQuery('metadata.tika_metadata_dc_creator:(Paris)')
-      expect(f.selectedFields).toEqual(['metadata.tika_metadata_dc_creator'])
+    it('returns null for a dotted-ES-field-restricted query (no longer representable)', () => {
+      expect(parseLuceneQuery('metadata.tika_metadata_dc_creator:(Paris)')).toBeNull()
     })
 
     it('returns null if a field-restricted query has asymmetric inner queries', () => {
@@ -642,30 +612,6 @@ describe('luceneQuery', () => {
       expect(round.fuzzyDistance).toBe(2)
       expect(round.proximityPhrase).toBe('John and Mercedes are in Paris')
       expect(round.proximityDistance).toBe(3)
-    })
-
-    it('round-trips a field-restricted query', () => {
-      const initial = {
-        anyWords: 'Paris',
-        allWords: '',
-        exactPhrase: '',
-        noneWords: '',
-        singleWildcardStart: '',
-        singleWildcardEnd: '',
-        multiWildcardStart: '',
-        multiWildcardEnd: '',
-        fuzzyTerm: '',
-        fuzzyDistance: 1,
-        proximityPhrase: '',
-        proximityDistance: 1,
-        fieldAll: false,
-        selectedFields: ['tags', 'content']
-      }
-      const query = generateQuery(toQueryShape(initial))
-      const round = parseLuceneQuery(query)
-      expect(round.fieldAll).toBe(false)
-      expect(round.selectedFields).toEqual(['tags', 'content'])
-      expect(round.anyWords).toBe('Paris')
     })
 
     it('pre-populates a group beside a loose word into anyWords', () => {
@@ -782,10 +728,11 @@ describe('luceneQuery', () => {
       expect(parseLuceneQuery('foo~0')).toBeNull()
     })
 
-    it('returns null for a restriction to a field the modal does not offer', () => {
-      const fields = ['tags', 'content']
-      expect(parseLuceneQuery('author:(Paris)', { fields })).toBeNull()
-      expect(parseLuceneQuery('tags:(Paris)', { fields })).not.toBeNull()
+    it('returns null for any field restriction, offered field or not', () => {
+      // In-query field scoping is no longer representable; the field is set on
+      // the store instead, so every `field:(…)` query blanks the modal.
+      expect(parseLuceneQuery('author:(Paris)')).toBeNull()
+      expect(parseLuceneQuery('tags:(Paris)')).toBeNull()
     })
 
     it('parses a long crafted field-restricted query without pathological backtracking', () => {

@@ -292,13 +292,9 @@ export function generateLuceneQuery(formData) {
     parts.push(proximityTerm)
   }
 
-  let query = parts.join(' ')
-
-  if (query && !formData.fieldAll && formData.selectedFields?.length > 0) {
-    query = formData.selectedFields.map(field => `${field}:(${query})`).join(' OR ')
-  }
-
-  return query.trim()
+  // Field scoping is applied through the search store's `field`, not baked
+  // into the query string, so nothing field-related is emitted here.
+  return parts.join(' ').trim()
 }
 
 /**
@@ -333,8 +329,10 @@ export function getInitialForm() {
     fuzzyDistance: 1,
     proximityPhrase: '',
     proximityDistance: 1,
-    fieldAll: true,
-    selectedFields: []
+    // Single search field key (one of settings.searchFields keys, e.g. 'all',
+    // 'tags', 'content'). It sets the search store's `field` rather than being
+    // baked into the query string, so the generator/parser ignore it.
+    field: 'all'
   }
 }
 
@@ -830,10 +828,12 @@ export function parseLuceneQuery(query, { fields: allowedFields = null } = {}) {
     return null
   }
 
+  // The form no longer represents in-query field scoping — it sets the search
+  // store's `field` separately — so a field-restricted query (e.g. `tags:(x)`)
+  // can't be faithfully edited. Blank the modal in that case.
   const { fields, innerQuery } = extractFieldRestrictions(query, allowedFields)
   if (fields) {
-    form.fieldAll = false
-    form.selectedFields = fields
+    return null
   }
 
   const ctx = {

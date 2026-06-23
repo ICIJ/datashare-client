@@ -1,28 +1,18 @@
 import { reactive, computed } from 'vue'
 
 import { getInitialForm, toQueryShape } from '@/utils/luceneQuery'
-import IPhHash from '~icons/ph/hash'
-import IPhFileText from '~icons/ph/file-text'
-import IPhUserList from '~icons/ph/user-list'
-import IPhUserSquare from '~icons/ph/user-square'
-import IPhTextColumns from '~icons/ph/text-columns'
-import IPhTreeStructure from '~icons/ph/tree-structure'
-import IPhChatsTeardrop from '~icons/ph/chats-teardrop'
+import settings from '@/utils/settings'
 
 /**
- * Searchable fields offered in the "Search in fields" checkbox group.
- * Values are the real Elasticsearch field paths used elsewhere in the
- * codebase (see src/utils/settings.js, DocumentThread, DisplayEmail).
+ * Field options offered in the "Search in fields" radio group. Mirrors the
+ * search bar's field dropdown (settings.searchFields) so the selected value
+ * is a valid search store `field` key, and reuses the same `search.field.*`
+ * translations.
  */
-export const ADVANCED_SEARCH_FIELDS = [
-  { value: 'tags', label: 'searchAdvancedModal.fields.tags', icon: IPhHash },
-  { value: 'path', label: 'searchAdvancedModal.fields.name', icon: IPhFileText },
-  { value: 'metadata.tika_metadata_dc_creator', label: 'searchAdvancedModal.fields.author', icon: IPhUserList },
-  { value: 'metadata.tika_metadata_message_to', label: 'searchAdvancedModal.fields.recipients', icon: IPhUserSquare },
-  { value: 'content', label: 'searchAdvancedModal.fields.content', icon: IPhTextColumns },
-  { value: 'dirname', label: 'searchAdvancedModal.fields.path', icon: IPhTreeStructure },
-  { value: 'metadata.tika_metadata_message_raw_header_thread_index', label: 'searchAdvancedModal.fields.threadId', icon: IPhChatsTeardrop }
-]
+export const ADVANCED_SEARCH_FIELDS = settings.searchFields.map(({ key }) => ({
+  value: key,
+  label: `search.field.${key}`
+}))
 
 // Re-exported so form-shape consumers keep a single import point even
 // though the helpers live with the query generator/parser they mirror.
@@ -58,24 +48,12 @@ export function useAdvancedSearchForm() {
   })
 
   /**
-   * "All fields" and individual field checkboxes are mutually exclusive:
-   * - Selecting "All" clears every individual field.
-   * - Selecting any individual field deselects "All".
-   * - Deselecting the last individual field re-selects "All".
-   * - "All" cannot be unticked directly (the user must pick an
-   *   individual field to leave the "all" state), which avoids landing
-   *   in an empty state.
+   * Select the single search field. The value is one of the
+   * `ADVANCED_SEARCH_FIELDS` keys ('all' for an unscoped search) and is
+   * applied to the search store's `field` at submit time.
    */
-  function setFieldAll(value) {
-    if (value) {
-      form.fieldAll = true
-      form.selectedFields = []
-    }
-  }
-
-  function setSelectedFields(values) {
-    form.selectedFields = values
-    form.fieldAll = values.length === 0
+  function setField(value) {
+    form.field = value
   }
 
   function reset() {
@@ -86,8 +64,7 @@ export function useAdvancedSearchForm() {
     form,
     fields: ADVANCED_SEARCH_FIELDS,
     isFormEmpty,
-    setFieldAll,
-    setSelectedFields,
+    setField,
     reset,
     toQueryShape
   }
