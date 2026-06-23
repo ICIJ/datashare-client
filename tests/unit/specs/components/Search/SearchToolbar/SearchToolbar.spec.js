@@ -66,10 +66,10 @@ describe('SearchToolbar.vue', () => {
     expect(searchStore.query).toHaveBeenCalledWith('+Paris +London')
   })
 
-  it('does not run a query when the modal emits an empty search', () => {
+  it('runs a store query even when the modal emits an empty search so it is always resubmitted', () => {
     const wrapper = factory()
     wrapper.findComponent({ name: 'SearchAdvancedModal' }).vm.$emit('search', '')
-    expect(searchStore.query).not.toHaveBeenCalled()
+    expect(searchStore.query).toHaveBeenCalledWith('')
   })
 
   it('reduces the advanced-search toggle when the toolbar is compact', () => {
