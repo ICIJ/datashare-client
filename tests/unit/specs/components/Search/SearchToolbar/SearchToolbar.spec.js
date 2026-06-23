@@ -5,6 +5,14 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import SearchToolbar from '@/components/Search/SearchToolbar/SearchToolbar'
 import { useSearchStore } from '@/store/modules'
 
+// useCompact relies on the element's measured width, which jsdom always
+// reports as 0; mock it so we can drive the toolbar's compact state directly.
+const compactState = vi.hoisted(() => ({ value: false }))
+vi.mock('@/composables/useCompact', async () => {
+  const { computed } = await vi.importActual('vue')
+  return { useCompact: () => ({ compact: computed(() => compactState.value) }) }
+})
+
 describe('SearchToolbar.vue', () => {
   const { plugins } = CoreSetup.init().useAll().useRouterWithoutGuards()
 
@@ -18,6 +26,7 @@ describe('SearchToolbar.vue', () => {
   }
 
   beforeEach(() => {
+    compactState.value = false
     searchStore = useSearchStore()
     searchStore.reset()
     // query() would call refresh() and hit Elasticsearch; stub it.
@@ -61,5 +70,17 @@ describe('SearchToolbar.vue', () => {
     const wrapper = factory()
     wrapper.findComponent({ name: 'SearchAdvancedModal' }).vm.$emit('search', '')
     expect(searchStore.query).not.toHaveBeenCalled()
+  })
+
+  it('reduces the advanced-search toggle when the toolbar is compact', () => {
+    compactState.value = true
+    const wrapper = factory()
+    expect(wrapper.findComponent({ name: 'ButtonToggleAdvancedSearch' }).props('reduced')).toBe(true)
+  })
+
+  it('does not reduce the advanced-search toggle when the toolbar has room', () => {
+    compactState.value = false
+    const wrapper = factory()
+    expect(wrapper.findComponent({ name: 'ButtonToggleAdvancedSearch' }).props('reduced')).toBe(false)
   })
 })
