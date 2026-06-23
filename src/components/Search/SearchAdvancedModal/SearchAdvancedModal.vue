@@ -119,12 +119,19 @@
     </div>
 
     <template #footer="{ cancel, ok }">
-      <search-advanced-modal-footer
-        :search-disabled="isFormEmpty"
-        @cancel="cancel"
-        @reset="handleReset"
-        @search="ok"
-      />
+      <form-actions end>
+        <button-icon
+          variant="outline-secondary"
+          @click="cancel"
+        >
+          {{ t('searchAdvancedModal.cancel') }}
+        </button-icon>
+        <button-reset @click="handleReset" />
+        <button-search
+          :disabled="isFormEmpty"
+          @click="ok"
+        />
+      </form-actions>
     </template>
   </app-modal>
 </template>
@@ -133,6 +140,7 @@
 import { computed, nextTick, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { whenever } from '@vueuse/core'
+import { ButtonIcon } from '@icij/murmur-next'
 import IPhUniteSquare from '~icons/ph/unite-square'
 import IPhIntersectSquare from '~icons/ph/intersect-square'
 import IPhQuotes from '~icons/ph/quotes'
@@ -147,7 +155,9 @@ import SearchAdvancedModalFieldRange from './SearchAdvancedModalFieldRange.vue'
 import SearchAdvancedModalFieldText from './SearchAdvancedModalFieldText.vue'
 import SearchAdvancedModalFieldWildcard from './SearchAdvancedModalFieldWildcard.vue'
 import SearchAdvancedModalFieldsSelect from './SearchAdvancedModalFieldsSelect.vue'
-import SearchAdvancedModalFooter from './SearchAdvancedModalFooter.vue'
+import ButtonReset from '@/components/Button/ButtonReset.vue'
+import ButtonSearch from '@/components/Button/ButtonSearch.vue'
+import FormActions from '@/components/Form/FormActions/FormActions.vue'
 import { useAdvancedSearchForm } from '@/composables/useAdvancedSearchForm'
 import {
   generateLuceneQuery,
