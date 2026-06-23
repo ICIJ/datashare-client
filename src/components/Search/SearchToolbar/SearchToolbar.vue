@@ -84,6 +84,7 @@ function handleAdvancedSearch(queryString) {
       />
       <button-toggle-advanced-search
         v-model:active="showAdvancedSearch"
+        :reduced="compact"
         class="search-toolbar__toggle-advanced-search"
       />
       <button-toggle-settings
