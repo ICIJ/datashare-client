@@ -55,7 +55,7 @@ onMounted(async () => {
     <!-- eslint-disable-next-line vue/no-v-html -->
     <div
       v-else
-      class="markdown-viewer__content"
+      class="markdown-viewer__content shadow-sm border p-3 mx-auto"
       v-html="html"
     />
   </div>
@@ -67,6 +67,8 @@ onMounted(async () => {
   overflow-x: auto;
 
   &__content {
+    max-width: 1012px;
+
     h1,
     h2,
     h3,
