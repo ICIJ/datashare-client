@@ -35,6 +35,23 @@ describe('Document', () => {
     })
   })
 
+  describe('check if document is of Markdown type', () => {
+    it('should be a Markdown file (x-web-markdown)', () => {
+      const doc = new Document({ _source: { contentType: 'text/x-web-markdown' } })
+      expect(doc.isMarkdown).toBeTruthy()
+    })
+
+    it('should be a Markdown file (text/markdown)', () => {
+      const doc = new Document({ _source: { contentType: 'text/markdown' } })
+      expect(doc.isMarkdown).toBeTruthy()
+    })
+
+    it('should NOT be a Markdown file', () => {
+      const doc = new Document({ _source: { contentType: 'text/plain' } })
+      expect(doc.isMarkdown).toBeFalsy()
+    })
+  })
+
   describe('check if document is of audio type', () => {
     it('should be an audio file', () => {
       const doc = new Document({ _source: { contentType: 'audio/mp3' } })
