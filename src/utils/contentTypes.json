@@ -565,6 +565,18 @@
     },
     "preview": "yes"
   },
+  "text/markdown": {
+    "label": "Markdown document",
+    "icon": "text",
+    "extensions": [
+      ".md",
+      ".markdown"
+    ],
+    "description": {
+      "en": "A lightweight markup document. Rendered as formatted text in Datashare."
+    },
+    "preview": "yes"
+  },
   "text/csv": {
     "label": "CSV file",
     "icon": "csv",
