@@ -50,6 +50,21 @@ describe('Document', () => {
       const doc = new Document({ _source: { contentType: 'text/plain' } })
       expect(doc.isMarkdown).toBeFalsy()
     })
+
+    it('should be a Markdown file when text/plain has a .md extension', () => {
+      const doc = new Document({ _source: { contentType: 'text/plain', path: '/data/readme.md' } })
+      expect(doc.isMarkdown).toBeTruthy()
+    })
+
+    it('should be a Markdown file when text/plain has a .markdown extension', () => {
+      const doc = new Document({ _source: { contentType: 'text/plain', path: '/data/notes.markdown' } })
+      expect(doc.isMarkdown).toBeTruthy()
+    })
+
+    it('should NOT be a Markdown file when text/plain has a .txt extension', () => {
+      const doc = new Document({ _source: { contentType: 'text/plain', path: '/data/notes.txt' } })
+      expect(doc.isMarkdown).toBeFalsy()
+    })
   })
 
   describe('Markdown content-type registry', () => {

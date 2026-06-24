@@ -454,7 +454,12 @@ export default class Document extends EsDoc {
   }
 
   get isMarkdown() {
-    return ['text/x-web-markdown', 'text/markdown'].includes(this.contentType)
+    if (['text/x-web-markdown', 'text/markdown'].includes(this.contentType)) {
+      return true
+    }
+    // Markdown is frequently detected as plain text by the extractor, so also
+    // treat text/plain files with a markdown extension as markdown.
+    return this.contentType === 'text/plain' && ['.md', '.markdown'].includes(this.extension)
   }
 
   get hasTranslations() {
