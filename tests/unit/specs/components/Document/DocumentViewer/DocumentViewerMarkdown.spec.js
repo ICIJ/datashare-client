@@ -36,6 +36,8 @@ describe('DocumentViewerMarkdown.vue', () => {
     expect(content.exists()).toBe(true)
     expect(content.html()).toContain('<h1>Hello</h1>')
     expect(content.html()).not.toContain('<script')
+    // Rendered like the PDF view: bordered, elevated, padded card, centered.
+    expect(content.classes()).toEqual(expect.arrayContaining(['shadow-sm', 'border', 'p-3', 'mx-auto']))
   })
 
   it('shows the not-found error message when the source returns a 404', async () => {
