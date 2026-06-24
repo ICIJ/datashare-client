@@ -10,7 +10,7 @@ import { visit } from 'unist-util-visit'
 // removed (no remote-image tracking/exfiltration) and rel/target allowed on
 // anchors so the link-hardening plugin's attributes survive sanitization.
 const schema = structuredClone(defaultSchema)
-schema.tagNames = schema.tagNames.filter((tag) => tag !== 'img')
+schema.tagNames = schema.tagNames.filter(tag => tag !== 'img')
 delete schema.attributes.img
 schema.attributes.a = [...(schema.attributes.a || []), 'target', 'rel']
 
