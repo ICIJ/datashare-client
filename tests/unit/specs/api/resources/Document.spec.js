@@ -72,6 +72,11 @@ describe('Document', () => {
       const doc = new Document({ _source: { contentType: 'text/x-web-markdown' } })
       expect(doc.contentTypeLabel).toBe('Markdown document')
     })
+
+    it('exposes a human label for the IANA text/markdown type recognised by isMarkdown', () => {
+      const doc = new Document({ _source: { contentType: 'text/markdown' } })
+      expect(doc.contentTypeLabel).toBe('Markdown document')
+    })
   })
 
   describe('check if document is of audio type', () => {
