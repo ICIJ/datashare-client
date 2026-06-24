@@ -453,6 +453,10 @@ export default class Document extends EsDoc {
     return this.contentType.indexOf('application/json') === 0
   }
 
+  get isMarkdown() {
+    return ['text/x-web-markdown', 'text/markdown'].includes(this.contentType)
+  }
+
   get hasTranslations() {
     return this.translations.length > 0
   }
