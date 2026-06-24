@@ -12,7 +12,6 @@ import { visit } from 'unist-util-visit'
 const schema = structuredClone(defaultSchema)
 schema.tagNames = schema.tagNames.filter((tag) => tag !== 'img')
 delete schema.attributes.img
-schema.attributes = schema.attributes || {}
 schema.attributes.a = [...(schema.attributes.a || []), 'target', 'rel']
 
 // Force every surviving anchor to open safely.

@@ -12,6 +12,12 @@ describe('renderMarkdown', () => {
     expect(html).toContain('href="https://example.org/report"')
   })
 
+  it('renders GFM footnotes', () => {
+    const html = renderMarkdown('A claim.[^1]\n\n[^1]: The footnote body.')
+    expect(html).toContain('class="footnotes"')
+    expect(html).toContain('The footnote body')
+  })
+
   it('strips dangerous HTML, schemes and remote images', () => {
     const html = renderMarkdown(
       ['<script>alert(1)</script>', '<img src="x" onerror="alert(1)">', '<iframe src="https://evil.example"></iframe>', '[x](javascript:alert(1))', '![p](https://evil.example/track.png)'].join('\n\n')
@@ -21,6 +27,11 @@ describe('renderMarkdown', () => {
     expect(html).not.toContain('<iframe')
     expect(html).not.toContain('javascript:')
     expect(html).not.toContain('<img')
+  })
+
+  it('strips the data: link scheme', () => {
+    const html = renderMarkdown('[x](data:text/html;base64,PHNjcmlwdD4=)')
+    expect(html).not.toContain('data:')
   })
 
   it('hardens links with rel and target', () => {
