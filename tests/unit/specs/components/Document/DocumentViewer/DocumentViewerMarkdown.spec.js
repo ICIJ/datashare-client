@@ -46,7 +46,7 @@ describe('DocumentViewerMarkdown.vue', () => {
   })
 
   it('re-fetches and re-renders when the document prop changes', async () => {
-    apiInstance.getSource.mockImplementation((document) => Promise.resolve(`# ${document.url}`))
+    apiInstance.getSource.mockImplementation(document => Promise.resolve(`# ${document.url}`))
     const { plugins } = CoreSetup.init().useAll()
     const wrapper = shallowMount(DocumentViewerMarkdown, {
       global: { plugins },
