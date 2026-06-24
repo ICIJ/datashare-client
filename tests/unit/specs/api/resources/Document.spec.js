@@ -52,6 +52,13 @@ describe('Document', () => {
     })
   })
 
+  describe('Markdown content-type registry', () => {
+    it('exposes a human label for markdown', () => {
+      const doc = new Document({ _source: { contentType: 'text/x-web-markdown' } })
+      expect(doc.contentTypeLabel).toBe('Markdown document')
+    })
+  })
+
   describe('check if document is of audio type', () => {
     it('should be an audio file', () => {
       const doc = new Document({ _source: { contentType: 'audio/mp3' } })
