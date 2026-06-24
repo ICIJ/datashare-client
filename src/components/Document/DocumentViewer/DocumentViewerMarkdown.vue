@@ -1,8 +1,7 @@
 <script setup>
-import { onMounted, ref } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { ref, watch } from 'vue'
 
-import { useCore } from '@/composables/useCore'
+import { useDocumentSource } from '@/composables/useDocumentSource'
 import { renderMarkdown } from '@/utils/markdown'
 
 /**
@@ -18,26 +17,33 @@ const props = defineProps({
   }
 })
 
-const { t } = useI18n()
-const core = useCore()
+const { fetchSource } = useDocumentSource()
 
 const html = ref('')
 const error = ref(null)
+const loading = ref(false)
 
-onMounted(async () => {
+async function load(document) {
+  if (!document) {
+    return
+  }
+  loading.value = true
+  error.value = null
   try {
-    const source = await core.api.getSource(props.document, { responseType: 'text' })
-    html.value = renderMarkdown(source)
+    const source = await fetchSource(document, { responseType: 'text' })
+    html.value = await renderMarkdown(source)
   }
   catch (e) {
-    if (e?.response?.status === 404) {
-      error.value = t('document.errorNotFound')
-    }
-    else {
-      error.value = t('document.notAvailable')
-    }
+    error.value = e.message
   }
-})
+  finally {
+    loading.value = false
+  }
+}
+
+// Re-fetch whenever the document changes, not only on mount, so navigating
+// between markdown documents in the same viewer instance updates the content.
+watch(() => props.document, load, { immediate: true })
 </script>
 
 <template>
@@ -47,6 +53,12 @@ onMounted(async () => {
       class="markdown-viewer__error p-3 text-center"
     >
       {{ error }}
+    </div>
+    <div
+      v-else-if="loading"
+      class="markdown-viewer__loading p-3 text-center"
+    >
+      <b-spinner />
     </div>
     <!--
       Safe to use v-html here: `html` is the output of renderMarkdown(), which
@@ -99,10 +111,6 @@ onMounted(async () => {
       margin: 0;
       padding-left: $spacer;
       border-left: 4px solid var(--bs-border-color);
-    }
-
-    img {
-      max-width: 100%;
     }
   }
 }
