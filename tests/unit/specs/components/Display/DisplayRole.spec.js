@@ -25,8 +25,8 @@ describe('DisplayRole.vue', () => {
 
   it.each([
     ['INSTANCE_ADMIN', IPhPersonSimpleBike, 'var(--bs-danger)'],
-    ['DOMAIN_ADMIN',   IPhPersonSimpleRun,  'var(--bs-success)'],
-    ['PROJECT_ADMIN',  IPhPersonSimpleWalk, 'var(--bs-category-person)'],
+    ['DOMAIN_ADMIN', IPhPersonSimpleRun, 'var(--bs-success)'],
+    ['PROJECT_ADMIN', IPhPersonSimpleWalk, 'var(--bs-category-person)'],
     ['PROJECT_EDITOR', IPhPersonSimpleHike, 'var(--bs-warning)'],
     ['PROJECT_MEMBER', IPhPersonSimpleSwim, 'var(--bs-info)'],
     ['PROJECT_VISITOR', IPhPersonSimpleTaiChi, 'var(--bs-secondary)'],
