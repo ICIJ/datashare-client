@@ -16,8 +16,8 @@ import { ROLE } from '@/enums/roles.js'
 
 const ROLE_ICON = {
   [ROLE.INSTANCE_ADMIN]: markRaw(IPhPersonSimpleBike),
-  [ROLE.DOMAIN_ADMIN]:   markRaw(IPhPersonSimpleRun),
-  [ROLE.PROJECT_ADMIN]:  markRaw(IPhPersonSimpleWalk),
+  [ROLE.DOMAIN_ADMIN]: markRaw(IPhPersonSimpleRun),
+  [ROLE.PROJECT_ADMIN]: markRaw(IPhPersonSimpleWalk),
   [ROLE.PROJECT_EDITOR]: markRaw(IPhPersonSimpleHike),
   [ROLE.PROJECT_MEMBER]: markRaw(IPhPersonSimpleSwim),
   [ROLE.PROJECT_VISITOR]: markRaw(IPhPersonSimpleTaiChi),
@@ -25,8 +25,8 @@ const ROLE_ICON = {
 
 const ROLE_COLOR = {
   [ROLE.INSTANCE_ADMIN]: 'var(--bs-danger)',
-  [ROLE.DOMAIN_ADMIN]:   'var(--bs-success)',
-  [ROLE.PROJECT_ADMIN]:  'var(--bs-category-person)',
+  [ROLE.DOMAIN_ADMIN]: 'var(--bs-success)',
+  [ROLE.PROJECT_ADMIN]: 'var(--bs-category-person)',
   [ROLE.PROJECT_EDITOR]: 'var(--bs-warning)',
   [ROLE.PROJECT_MEMBER]: 'var(--bs-info)',
   [ROLE.PROJECT_VISITOR]: 'var(--bs-secondary)',
