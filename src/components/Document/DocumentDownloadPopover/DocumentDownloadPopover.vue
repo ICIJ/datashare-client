@@ -86,6 +86,7 @@ defineExpose({
     v-model="modelValue"
     hide-header
     class="document-download-popover"
+    :hide-margin="16"
   >
     <template #target>
       <slot name="target" />
