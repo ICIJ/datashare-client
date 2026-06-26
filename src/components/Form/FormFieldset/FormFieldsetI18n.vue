@@ -17,7 +17,19 @@ const props = defineProps({
   },
   forceCompact: {
     type: Boolean
-  }
+  },
+  labelColsSm: {
+    type: Number,
+    default: 12
+  },
+  labelColsMd: {
+    type: Number,
+    default: 4
+  },
+  labelColsLg: {
+    type: Number,
+    default: 3
+  },
 })
 
 const { te, t } = useI18n()
@@ -38,6 +50,9 @@ const description = computed(() => (te(descriptionKey) ? t(descriptionKey) : nul
     :label-for="labelFor"
     :description="description"
     :compact-threshold="forceCompact ? 10000 : 0"
+    :label-cols-sm="labelColsSm"
+    :label-cols-md="labelColsMd"
+    :label-cols-lg="labelColsLg"
   >
     <slot v-bind="{ name: labelFor, ...slotProps }" />
   </form-fieldset>
