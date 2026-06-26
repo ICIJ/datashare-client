@@ -15,9 +15,11 @@ import EmptyState from '@/components/EmptyState/EmptyState'
 import RouterLinkBatchDownload from '@/components/RouterLink/RouterLinkBatchDownload'
 import BatchDownloadActions from '@/components/BatchDownload/BatchDownloadActions'
 import BatchDownloadTruncatedAlert from '@/components/BatchDownload/BatchDownloadTruncatedAlert'
+import BatchDownloadUnavailableAlert from '@/components/BatchDownload/BatchDownloadUnavailableAlert'
 import SearchBreadcrumbUri from '@/components/Search/SearchBreadcrumbUri/SearchBreadcrumbUri'
 import RowPaginationBatchDownloads from '@/components/RowPagination/RowPaginationBatchDownloads'
 import { TASK_NAME } from '@/enums/taskNames'
+import { TASK_STATUS } from '@/enums/taskStatus'
 import TaskPage from '@/views/Task/TaskPage'
 
 const { t } = useI18n()
@@ -30,6 +32,18 @@ function hasZipSize(item) {
 
 function getBatchDownloadRecord(item, key, defaultValue) {
   return get(item, key ? `args.batchDownload.${key}` : 'args.batchDownload', defaultValue)
+}
+
+function isDone(item) {
+  return item.state?.toLowerCase() === TASK_STATUS.DONE
+}
+
+function isUnavailable(item) {
+  return isDone(item) && !!item.result?.value?.uri && getBatchDownloadRecord(item, 'exists', true) === false
+}
+
+function isTruncated(item) {
+  return isDone(item) && !isUnavailable(item) && !!item.result?.value?.truncationReason
 }
 </script>
 
@@ -74,7 +88,11 @@ function getBatchDownloadRecord(item, key, defaultValue) {
         </template>
         <template #cell(name)="{ item }">
           <router-link-batch-download :item="item" />
-          <batch-download-truncated-alert :truncation-reason="item.result?.value?.truncationReason" />
+          <batch-download-unavailable-alert v-if="isUnavailable(item)" />
+          <batch-download-truncated-alert
+            v-else-if="isTruncated(item)"
+            :truncation-reason="item.result?.value?.truncationReason"
+          />
         </template>
         <template #cell(projects)="{ item }">
           <display-project-list :values="getBatchDownloadRecord(item, 'projects')" />
