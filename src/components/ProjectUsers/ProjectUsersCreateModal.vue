@@ -16,6 +16,10 @@ import { useCore } from '@/composables/useCore.js'
 import { usePolicies } from '@/composables/usePolicies.js'
 import { useToast } from '@/composables/useToast.js'
 import { DEFAULT_ROLE, ROLE, ROLE_BIT, ROLE_HIERARCHY } from '@/enums/roles.js'
+import FormCreation from '@/components/Form/FormCreation.vue'
+import FormFieldsetI18n from '@/components/Form/FormFieldset/FormFieldsetI18n.vue'
+import { BFormInput } from 'bootstrap-vue-next'
+import FormFieldset from '@/components/Form/FormFieldset/FormFieldset.vue'
 
 const props = defineProps({
   projectName: {
@@ -73,38 +77,49 @@ function resetForm() {
   confirmPassword.value = ''
   selectedRole.value = DEFAULT_ROLE
 }
+const createUser = () => {
+  return core.api.createUser({
+    login: username.value.trim(),
+    email: email.value.trim(),
+    name: name.value.trim(),
+    ...(isPasswordProvider.value ? { password: password.value } : {}),
+    provider: 'local',
+    groups: [props.projectName],
+    project: props.projectName
+  })
+}
 
-async function createUser() {
+const saveProjectPolicy = () => {
+  return core.api.saveProjectPolicy('default', props.projectName, {
+    user: username.value.trim(),
+    role: selectedRole.value
+  })
+}
+
+async function saveUser() {
   saving.value = true
   try {
-    await core.api.createUser({
-      login: username.value.trim(),
-      email: email.value.trim(),
-      name: name.value.trim(),
-      ...(isPasswordProvider.value ? { password: password.value } : {}),
-      provider: 'local',
-      groups: [props.projectName]
-    })
-    await core.api.saveProjectPolicy('default', props.projectName, {
-      user: username.value.trim(),
-      role: selectedRole.value
-    })
+    await createUser()
+    await saveProjectPolicy()
     emit('user:created', { name: username.value.trim(), role: selectedRole.value })
     resetForm()
     modelValue.value = false
-  } catch (err) {
+  }
+  catch (err) {
     const status = err?.response?.status ?? err?.request?.response?.status
     if (status === 409) {
       toast.error(t('projectViewEdit.users.create.saveErrorConflict'))
-    } else {
+    }
+    else {
       toast.error(t('projectViewEdit.users.create.saveError'))
     }
-  } finally {
+  }
+  finally {
     saving.value = false
   }
 }
-
-defineExpose({ username, email, name, password, confirmPassword, selectedRole, isValid, isPasswordProvider, passwordMismatch, saving, createUser, availableRoles })
+const labelCol = 4
+defineExpose({ username, email, name, password, confirmPassword, selectedRole, isValid, isPasswordProvider, passwordMismatch, saving, saveUser, availableRoles })
 </script>
 
 <template>
@@ -115,95 +130,117 @@ defineExpose({ username, email, name, password, confirmPassword, selectedRole, i
     :title="t('projectViewEdit.users.create.title')"
     :ok-title="t('projectViewEdit.users.create.confirm')"
     :ok-disabled="!isValid || saving"
-    ok-variant="primary"
-    ok-only
-    @ok="createUser"
+    size="lg"
+    @ok="saveUser"
   >
-    <div class="d-flex flex-column gap-3">
-      <div class="d-flex align-items-center gap-3">
-        <label class="d-flex align-items-center gap-1 text-secondary text-nowrap">
-          <app-icon :name="IPhTextAa" />
-          {{ t('projectViewEdit.users.create.fields.username.label') }}
-        </label>
-        <b-form-input
-          v-model="username"
-          :placeholder="t('projectViewEdit.users.create.fields.username.placeholder')"
-          :disabled="saving"
-          autofocus
-        />
-      </div>
-      <div class="d-flex align-items-center gap-3">
-        <label class="d-flex align-items-center gap-1 text-secondary text-nowrap">
-          <app-icon :name="IPhEnvelopeSimple" />
-          {{ t('projectViewEdit.users.create.fields.email.label') }}
-        </label>
-        <b-form-input
-          v-model="email"
-          type="email"
-          :placeholder="t('projectViewEdit.users.create.fields.email.placeholder')"
-          :disabled="saving"
-        />
-      </div>
-      <div class="d-flex align-items-center gap-3">
-        <label class="d-flex align-items-center gap-1 text-secondary text-nowrap">
-          <app-icon :name="IPhUser" />
-          {{ t('projectViewEdit.users.create.fields.name.label') }}
-        </label>
-        <b-form-input
-          v-model="name"
-          :placeholder="t('projectViewEdit.users.create.fields.name.placeholder')"
-          :disabled="saving"
-        />
-      </div>
-      <div
-        v-if="isPasswordProvider"
-        class="d-flex align-items-center gap-3"
+    <form-fieldset-i18n
+      :label-cols-sm="labelCol"
+      :label-cols-md="labelCol"
+      :label-cols-lg="labelCol"
+      required
+      name="uid"
+      translation-key="projectViewEdit.users.create.fields.username"
+      :icon="IPhTextAa"
+    >
+      <b-form-input
+        v-model="username"
+        :placeholder="t('projectViewEdit.users.create.fields.username.placeholder')"
+        :disabled="saving"
+        autofocus
+        name="uid"
+      />
+    </form-fieldset-i18n>
+
+    <form-fieldset-i18n
+      :label-cols-sm="labelCol"
+      :label-cols-md="labelCol"
+      :label-cols-lg="labelCol"
+      required
+      name="email"
+      translation-key="projectViewEdit.users.create.fields.email"
+      :icon="IPhEnvelopeSimple"
+    >
+      <b-form-input
+        v-model="email"
+        :placeholder="t('projectViewEdit.users.create.fields.email.placeholder')"
+        :disabled="saving"
+        type="email"
+        name="email"
+      />
+    </form-fieldset-i18n>
+
+    <form-fieldset-i18n
+      :label-cols-sm="labelCol"
+      :label-cols-md="labelCol"
+      :label-cols-lg="labelCol"
+      required
+
+      name="name"
+      translation-key="projectViewEdit.users.create.fields.name"
+      :icon="IPhUser"
+    >
+      <b-form-input
+        v-model="name"
+        :placeholder="t('projectViewEdit.users.create.fields.name.placeholder')"
+        :disabled="saving"
+        name="name"
+      />
+    </form-fieldset-i18n>
+
+    <form-fieldset-i18n
+
+      :label-cols-sm="labelCol"
+      :label-cols-md="labelCol"
+      :label-cols-lg="labelCol"
+      required
+      name="password"
+      translation-key="projectViewEdit.users.create.fields.password"
+      :icon="IPhLock"
+    >
+      <b-form-input
+        v-model="password"
+        :placeholder="t('projectViewEdit.users.create.fields.password.placeholder')"
+        :disabled="saving"
+        name="password"
+      />
+    </form-fieldset-i18n>
+    <form-fieldset-i18n
+
+      :label-cols-sm="labelCol"
+      :label-cols-md="labelCol"
+      :label-cols-lg="labelCol"
+      required
+      name="confirmPassword"
+      translation-key="projectViewEdit.users.create.fields.confirmPassword"
+      :icon="IPhLock"
+    >
+      <b-form-input
+        v-model="confirmPassword"
+        :placeholder="t('projectViewEdit.users.create.fields.confirmPassword.placeholder')"
+        :disabled="saving"
+        name="confirmPassword"
+        :state="confirmPassword.length > 0 ? !passwordMismatch : null"
+      />
+      <small
+        v-if="passwordMismatch"
+        class="text-danger ms-auto"
       >
-        <label class="d-flex align-items-center gap-1 text-secondary text-nowrap">
-          <app-icon :name="IPhLock" />
-          {{ t('projectViewEdit.users.create.fields.password.label') }}
-        </label>
-        <b-form-input
-          v-model="password"
-          type="password"
-          :placeholder="t('projectViewEdit.users.create.fields.password.placeholder')"
-          :disabled="saving"
-        />
-      </div>
-      <div
-        v-if="isPasswordProvider"
-        class="d-flex flex-column gap-1"
-      >
-        <div class="d-flex align-items-center gap-3">
-          <label class="d-flex align-items-center gap-1 text-secondary text-nowrap">
-            <app-icon :name="IPhLock" />
-            {{ t('projectViewEdit.users.create.fields.confirmPassword.label') }}
-          </label>
-          <b-form-input
-            v-model="confirmPassword"
-            type="password"
-            :placeholder="t('projectViewEdit.users.create.fields.confirmPassword.placeholder')"
-            :disabled="saving"
-            :state="confirmPassword.length > 0 ? !passwordMismatch : null"
-          />
-        </div>
-        <small
-          v-if="passwordMismatch"
-          class="text-danger ms-auto"
-        >
-          {{ t('projectViewEdit.users.create.fields.confirmPassword.mismatch') }}
-        </small>
-      </div>
-      <div class="d-flex align-items-center gap-3">
-        <label class="d-flex align-items-center gap-1 text-secondary text-nowrap">
-          {{ t('projectViewEdit.users.create.fields.role.label') }}
-        </label>
-        <b-form-select
-          v-model="selectedRole"
-          :options="availableRoles"
-          :disabled="saving"
-        />
-      </div>
-    </div>
+        {{ t('projectViewEdit.users.create.fields.confirmPassword.mismatch') }}
+      </small>
+    </form-fieldset-i18n>
+    <form-fieldset-i18n
+
+      :label-cols-sm="labelCol"
+      :label-cols-md="labelCol"
+      :label-cols-lg="labelCol"
+      name="role"
+      translation-key="projectViewEdit.users.create.fields.role"
+    >
+      <b-form-select
+        v-model="selectedRole"
+        :options="availableRoles"
+        :disabled="saving"
+      />
+    </form-fieldset-i18n>
   </app-modal>
 </template>
