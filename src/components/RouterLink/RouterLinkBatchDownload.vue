@@ -15,7 +15,7 @@ const filename = computed(() => get(props, 'item.args.batchDownload.filename', '
 const text = computed(() => decodeURI(basename(filename.value)))
 const href = computed(() => `/api/task/${props.item.id}/result`)
 const hasResult = computed(() => !!get(props, 'item.result.value.uri', false))
-const fileExists = computed(() => get(props, 'item.args.batchDownload.exists', true))
+const fileExists = computed(() => get(props, 'item.args.batchDownload.exists', true) !== false)
 const exists = computed(() => hasResult.value && fileExists.value)
 const tag = computed(() => (exists.value ? 'a' : 'span'))
 const attrs = computed(() => (exists.value ? { href: href.value, target: '_blank' } : {}))
