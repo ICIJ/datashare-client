@@ -5,6 +5,7 @@ import TaskBatchDownloadList from '@/views/Task/TaskBatchDownload/TaskBatchDownl
 import { apiInstance as api } from '@/api/apiInstance'
 import BatchDownloadActions from '@/components/BatchDownload/BatchDownloadActions'
 import BatchDownloadTruncatedAlert from '@/components/BatchDownload/BatchDownloadTruncatedAlert'
+import BatchDownloadUnavailableAlert from '@/components/BatchDownload/BatchDownloadUnavailableAlert'
 
 vi.mock('@/api/apiInstance', {
   apiInstance: {
@@ -222,5 +223,61 @@ describe('TaskBatchDownloadList.vue', () => {
     const alert = wrapper.findComponent(BatchDownloadTruncatedAlert)
     expect(alert.exists()).toBe(true)
     expect(alert.props('truncationReason')).toBe(truncationReason)
+  })
+  function doneTask(overrides = {}) {
+    const { exists = true, truncationReason, state = 'DONE', uri = 'file:///tmp/archive.zip' } = overrides
+    const resultValue = { '@type': 'UriResult', 'uri': uri, 'size': 78398589 }
+    if (truncationReason) {
+      resultValue.truncationReason = truncationReason
+    }
+    return {
+      id: 'fixture-task',
+      name: 'org.icij.datashare.tasks.BatchDownloadRunner',
+      state,
+      progress: 1.0,
+      result: uri ? { value: resultValue } : undefined,
+      args: {
+        batchDownload: {
+          '@type': 'org.icij.datashare.batch.BatchDownload',
+          'uuid': '1fff1f1d-5881-4bb3-9d47-207a99878298',
+          'projects': [{ name: 'notnot', sourcePath: 'file:///vault/notnot', label: 'notnot' }],
+          'filename': 'file:///tmp/archive.zip',
+          'query': { query: '{"bool":{"must":[]}}' },
+          'uri': '/?q=&from=0&size=25&indices=notnot',
+          'user': { id: 'local', name: null, email: null, provider: 'local' },
+          'encrypted': false,
+          exists
+        },
+        user: { id: 'local', name: null, email: null, provider: 'local' },
+        group: { id: 'Java' }
+      },
+      retriesLeft: 3,
+      createdAt: new Date()
+    }
+  }
+
+  it('shows the unavailable alert and a disabled link for a done task whose file is gone', async () => {
+    api.getTasks.mockResolvedValue({ items: [doneTask({ exists: false })] })
+    const wrapper = mount(TaskBatchDownloadList, { global: { plugins } })
+    await flushPromises()
+    expect(wrapper.findComponent(BatchDownloadUnavailableAlert).exists()).toBe(true)
+    expect(wrapper.findComponent(BatchDownloadTruncatedAlert).exists()).toBe(false)
+    expect(wrapper.find('.router-link-batch-download--disabled').exists()).toBe(true)
+  })
+
+  it('shows only the unavailable alert when a done task is both truncated and missing', async () => {
+    api.getTasks.mockResolvedValue({ items: [doneTask({ exists: false, truncationReason: 'SIZE_LIMIT' })] })
+    const wrapper = mount(TaskBatchDownloadList, { global: { plugins } })
+    await flushPromises()
+    expect(wrapper.findComponent(BatchDownloadUnavailableAlert).exists()).toBe(true)
+    expect(wrapper.findComponent(BatchDownloadTruncatedAlert).exists()).toBe(false)
+  })
+
+  it('shows neither alert for a non-done task', async () => {
+    api.getTasks.mockResolvedValue({ items: [doneTask({ state: 'RUNNING', exists: false, uri: null })] })
+    const wrapper = mount(TaskBatchDownloadList, { global: { plugins } })
+    await flushPromises()
+    expect(wrapper.findComponent(BatchDownloadUnavailableAlert).exists()).toBe(false)
+    expect(wrapper.findComponent(BatchDownloadTruncatedAlert).exists()).toBe(false)
   })
 }, 10e3)
