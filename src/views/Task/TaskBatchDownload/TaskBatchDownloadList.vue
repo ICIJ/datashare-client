@@ -19,7 +19,8 @@ import BatchDownloadUnavailableAlert from '@/components/BatchDownload/BatchDownl
 import SearchBreadcrumbUri from '@/components/Search/SearchBreadcrumbUri/SearchBreadcrumbUri'
 import RowPaginationBatchDownloads from '@/components/RowPagination/RowPaginationBatchDownloads'
 import { TASK_NAME } from '@/enums/taskNames'
-import { TASK_STATUS } from '@/enums/taskStatus'
+import { isDoneStatus } from '@/enums/taskStatus'
+import { isBatchDownloadMissing } from '@/utils/batchDownload'
 import TaskPage from '@/views/Task/TaskPage'
 
 const { t } = useI18n()
@@ -35,11 +36,11 @@ function getBatchDownloadRecord(item, key, defaultValue) {
 }
 
 function isDone(item) {
-  return item.state?.toLowerCase() === TASK_STATUS.DONE
+  return isDoneStatus(item.state)
 }
 
 function isUnavailable(item) {
-  return isDone(item) && !!item.result?.value?.uri && getBatchDownloadRecord(item, 'exists', true) === false
+  return isDone(item) && isBatchDownloadMissing(item)
 }
 
 function isTruncated(item) {
