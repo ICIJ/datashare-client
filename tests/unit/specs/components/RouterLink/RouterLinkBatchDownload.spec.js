@@ -61,4 +61,13 @@ describe('RouterLinkBatchDownload.vue', () => {
     expect(wrapper.find('a').exists()).toBe(false)
     expect(wrapper.find('.router-link-batch-download--disabled').exists()).toBe(true)
   })
+
+  it('only treats a strict false as missing (a non-boolean falsy exists keeps the link active)', () => {
+    const wrapper = mount(RouterLinkBatchDownload, {
+      global: { plugins },
+      props: { item: itemWith({ exists: null }) }
+    })
+    expect(wrapper.find('a.router-link-batch-download').exists()).toBe(true)
+    expect(wrapper.find('.router-link-batch-download--disabled').exists()).toBe(false)
+  })
 })
