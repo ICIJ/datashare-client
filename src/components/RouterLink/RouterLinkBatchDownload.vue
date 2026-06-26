@@ -4,6 +4,8 @@ import { basename } from 'path'
 import { computed } from 'vue'
 import get from 'lodash/get'
 
+import { isBatchDownloadAvailable } from '@/utils/batchDownload'
+
 const props = defineProps({
   item: {
     type: Object,
@@ -14,9 +16,7 @@ const props = defineProps({
 const filename = computed(() => get(props, 'item.args.batchDownload.filename', ''))
 const text = computed(() => decodeURI(basename(filename.value)))
 const href = computed(() => `/api/task/${props.item.id}/result`)
-const hasResult = computed(() => !!get(props, 'item.result.value.uri', false))
-const fileExists = computed(() => get(props, 'item.args.batchDownload.exists', true) !== false)
-const exists = computed(() => hasResult.value && fileExists.value)
+const exists = computed(() => isBatchDownloadAvailable(props.item))
 const tag = computed(() => (exists.value ? 'a' : 'span'))
 const attrs = computed(() => (exists.value ? { href: href.value, target: '_blank' } : {}))
 const classList = computed(() => ({ 'router-link-batch-download--disabled': !exists.value }))

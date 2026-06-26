@@ -3,7 +3,7 @@ import { ref, computed } from 'vue'
 import { find, property } from 'lodash'
 
 import { apiInstance as api } from '@/api/apiInstance'
-import { TASK_STATUS } from '@/enums/taskStatus'
+import { TASK_STATUS, isDoneStatus } from '@/enums/taskStatus'
 import { TASK_NAME } from '@/enums/taskNames'
 
 export const useTaskStore = defineStore('task', () => {
@@ -89,7 +89,7 @@ export const useTaskStore = defineStore('task', () => {
   }
 
   const isDone = (id) => {
-    return getTaskState(id) === TASK_STATUS.DONE || getTaskState(id) === TASK_STATUS.SUCCESS || getTaskState(id) === TASK_STATUS.OK
+    return isDoneStatus(getTaskState(id))
   }
 
   const isFailed = (id) => {

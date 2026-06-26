@@ -280,4 +280,20 @@ describe('TaskBatchDownloadList.vue', () => {
     expect(wrapper.findComponent(BatchDownloadUnavailableAlert).exists()).toBe(false)
     expect(wrapper.findComponent(BatchDownloadTruncatedAlert).exists()).toBe(false)
   })
+
+  it.each(['SUCCESS', 'OK'])('treats %s as done: shows the unavailable alert for a missing file', async (state) => {
+    api.getTasks.mockResolvedValue({ items: [doneTask({ state, exists: false })] })
+    const wrapper = mount(TaskBatchDownloadList, { global: { plugins } })
+    await flushPromises()
+    expect(wrapper.findComponent(BatchDownloadUnavailableAlert).exists()).toBe(true)
+    expect(wrapper.find('.router-link-batch-download--disabled').exists()).toBe(true)
+  })
+
+  it.each(['SUCCESS', 'OK'])('treats %s as done: shows the truncated alert', async (state) => {
+    api.getTasks.mockResolvedValue({ items: [doneTask({ state, truncationReason: 'SIZE_LIMIT' })] })
+    const wrapper = mount(TaskBatchDownloadList, { global: { plugins } })
+    await flushPromises()
+    expect(wrapper.findComponent(BatchDownloadTruncatedAlert).exists()).toBe(true)
+    expect(wrapper.findComponent(BatchDownloadUnavailableAlert).exists()).toBe(false)
+  })
 }, 10e3)
