@@ -1087,6 +1087,7 @@
         "emptyStateAction": "Rechercher",
         "info": "Les téléchargements en lot sont des fichiers protégés par un mot de passe contenant tous les documents d'une de vos recherches.",
         "searchPlaceholder": "Rechercher des téléchargements en lot",
+        "unavailableAlert": "Ce téléchargement n'est plus disponible.",
         "properties": {
           "name": "Nom",
           "createdAt": "Créé le",
