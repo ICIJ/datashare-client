@@ -618,9 +618,11 @@ function tryParseProximity(token, ctx) {
     return false
   }
   const distance = Number(m[2])
-  // The form has a single proximity slot and a bounded slider: a second
-  // clause or an out-of-range distance cannot be represented.
-  if (ctx.form.proximityPhrase || !isFaithfulPhrase(m[1]) || distance < 1 || distance > PROXIMITY_DISTANCE_MAX) {
+  // The form has a single proximity slot: a second clause cannot be
+  // represented. An out-of-range distance is preserved instead (the slider
+  // widens to show it), so only a second clause, an unfaithful phrase, or a
+  // sub-1 distance makes the parse lossy.
+  if (ctx.form.proximityPhrase || !isFaithfulPhrase(m[1]) || distance < 1) {
     ctx.lossy = true
   }
   ctx.form.proximityPhrase = unescapePhrase(m[1])
@@ -634,8 +636,9 @@ function tryParseFuzzy(token, ctx) {
     return false
   }
   const distance = Number(m[2])
-  // Same single-slot and bounded-slider rules as proximity.
-  if (ctx.form.fuzzyTerm || !isFaithfulTerm(m[1]) || distance < 1 || distance > FUZZY_DISTANCE_MAX) {
+  // Same single-slot rules as proximity; an out-of-range distance is
+  // preserved rather than blanking the form.
+  if (ctx.form.fuzzyTerm || !isFaithfulTerm(m[1]) || distance < 1) {
     ctx.lossy = true
   }
   ctx.form.fuzzyTerm = unescapeTerm(m[1])
