@@ -61,6 +61,30 @@ describe('FormControlRangeSliderBullet.vue', () => {
       expect(events.at(-1)[0]).toBe(0)
     })
   })
+
+  describe('overflow value (beyond max)', () => {
+    const overflow = (props = {}) => factory({ min: 1, max: 6, step: 1, ...props })
+
+    it('places the bullet on the appended custom slot', () => {
+      const wrapper = overflow({ modelValue: 8 })
+      // steps become [1,2,3,4,5,6,8] -> 7 slots, custom slot is index 6
+      expect(wrapper.vm.style.left).toBe(`${(100 / 7) * 6}%`)
+      expect(wrapper.vm.style.width).toBe(`${100 / 7}%`)
+    })
+
+    it('selects the custom value when dragged to the far right', async () => {
+      const wrapper = overflow({ modelValue: 8 })
+      await wrapper.find('.form-control-range-slider-bullet').trigger('drag', { detail: 100 })
+      expect(wrapper.emitted('update:modelValue').at(-1)[0]).toBe(8)
+    })
+
+    it('snaps to the max (never an intermediate value) when dragged off the custom slot', async () => {
+      const wrapper = overflow({ modelValue: 8 })
+      await wrapper.find('.form-control-range-slider-bullet').trigger('drag', { detail: 70 })
+      // round(7 * 0.70) = 5 -> steps[5] = 6, with no value 7 in between
+      expect(wrapper.emitted('update:modelValue').at(-1)[0]).toBe(6)
+    })
+  })
 })
 
 describe('FormControlRangeTicks.vue', () => {
@@ -85,5 +109,21 @@ describe('FormControlRangeTicks.vue', () => {
     const entry = factory().find('.form-control-range-ticks-entry').classes()
     expect(entry).toContain('mx-1')
     expect(entry).toContain('mx-sm-2')
+  })
+
+  describe('overflow value (beyond max)', () => {
+    const ticksFactory = (props = {}) =>
+      mount(FormControlRangeTicks, { props: { min: 1, max: 6, step: 1, modelValue: 0, ...props } })
+
+    it('renders an extra tick for the out-of-range value', () => {
+      const wrapper = ticksFactory({ modelValue: 8 })
+      const labels = wrapper.findAll('.form-control-range-ticks-entry').map(e => e.text())
+      expect(labels).toEqual(['1', '2', '3', '4', '5', '6', '8'])
+    })
+
+    it('renders only the normal ticks when the value is within bounds', () => {
+      const wrapper = ticksFactory({ modelValue: 3 })
+      expect(wrapper.findAll('.form-control-range-ticks-entry')).toHaveLength(6)
+    })
   })
 })
