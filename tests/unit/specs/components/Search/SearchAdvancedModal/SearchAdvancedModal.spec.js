@@ -213,4 +213,16 @@ describe('SearchAdvancedModal.vue', () => {
     expect(wrapper.vm.form.allWords).toBe('')
     expect(wrapper.vm.form.fuzzyTerm).toBe('')
   })
+
+  it('remounts the range sliders each session by bumping formKey on open and reset', async () => {
+    const wrapper = factory({ modelValue: false })
+    const initial = wrapper.vm.formKey
+
+    await wrapper.setProps({ modelValue: true })
+    await nextTick()
+    expect(wrapper.vm.formKey).toBe(initial + 1)
+
+    wrapper.vm.handleReset()
+    expect(wrapper.vm.formKey).toBe(initial + 2)
+  })
 })
