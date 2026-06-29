@@ -201,7 +201,10 @@ const firstInput = useTemplateRef('firstInput')
 // literals in the template would rebuild on every render and defeat
 // downstream prop equality checks.
 const anyWordsExamples = computed(() => [t('searchAdvancedModal.anyOfTheseWordsExample')])
-const allWordsExamples = computed(() => [t('searchAdvancedModal.allTheseWordsExample')])
+const allWordsExamples = computed(() => [
+  t('searchAdvancedModal.allTheseWordsExample1'),
+  t('searchAdvancedModal.allTheseWordsExample2')
+])
 const exactPhraseExamples = computed(() => [t('searchAdvancedModal.exactPhraseExample')])
 const noneWordsExamples = computed(() => [
   t('searchAdvancedModal.noneOfTheseWordsExample1'),
