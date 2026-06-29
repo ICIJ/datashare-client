@@ -720,12 +720,25 @@ describe('luceneQuery', () => {
       expect(parseLuceneQuery('a?b*c')).toBeNull()
     })
 
-    it('returns null for out-of-range distances', () => {
-      // The sliders cap fuzzy at 2 and proximity at 6; clamping would
-      // silently change the user's distance.
-      expect(parseLuceneQuery('foo~3')).toBeNull()
-      expect(parseLuceneQuery('"a b"~7')).toBeNull()
+    it('returns null for a zero distance', () => {
+      // Distance 0 cannot be represented: the slider has no 0 and `~0` is
+      // not equivalent to the smallest slider value.
       expect(parseLuceneQuery('foo~0')).toBeNull()
+      expect(parseLuceneQuery('"a b"~0')).toBeNull()
+    })
+
+    it('preserves out-of-range distances instead of blanking', () => {
+      // Above the slider max the value is kept verbatim (the slider widens to
+      // show it) so the modal still represents the query.
+      const fuzzy = parseLuceneQuery('foo~3')
+      expect(fuzzy).not.toBeNull()
+      expect(fuzzy.fuzzyTerm).toBe('foo')
+      expect(fuzzy.fuzzyDistance).toBe(3)
+
+      const proximity = parseLuceneQuery('"a b"~7')
+      expect(proximity).not.toBeNull()
+      expect(proximity.proximityPhrase).toBe('a b')
+      expect(proximity.proximityDistance).toBe(7)
     })
 
     it('returns null for any field restriction, offered field or not', () => {
