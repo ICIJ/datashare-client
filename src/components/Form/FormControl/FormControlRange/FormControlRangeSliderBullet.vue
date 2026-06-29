@@ -1,8 +1,9 @@
 <script setup>
-import { range } from 'd3'
 import { computed, ref } from 'vue'
 
+import { useRangeSteps } from '@/composables/useRangeSteps'
 import { draggable as vDraggable } from '@/directives/draggable'
+
 const modelValue = defineModel({
   type: Number
 })
@@ -21,9 +22,12 @@ const props = defineProps({
 const target = ref(null)
 const active = ref(false)
 
-const steps = computed(() => {
-  return range(props.min, props.max + props.step, props.step)
-})
+const { steps } = useRangeSteps(
+  () => props.min,
+  () => props.max,
+  () => props.step,
+  modelValue
+)
 
 const modelValueStep = computed(() => {
   return steps.value.indexOf(modelValue.value)
