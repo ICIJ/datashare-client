@@ -75,6 +75,7 @@
 
         <!-- With spelling changes (Fuzzy) -->
         <search-advanced-modal-field-range
+          :key="`fuzzy-${formKey}`"
           v-model:term="form.fuzzyTerm"
           v-model:distance="form.fuzzyDistance"
           :max="FUZZY_DISTANCE_MAX"
@@ -87,6 +88,7 @@
 
         <!-- With phrase changes (Proximity) -->
         <search-advanced-modal-field-range
+          :key="`proximity-${formKey}`"
           v-model:term="form.proximityPhrase"
           v-model:distance="form.proximityDistance"
           :max="PROXIMITY_DISTANCE_MAX"
@@ -132,7 +134,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, useTemplateRef } from 'vue'
+import { computed, nextTick, ref, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { whenever } from '@vueuse/core'
 import { ButtonIcon } from '@icij/murmur'
@@ -190,11 +192,16 @@ const {
   fields,
   isFormEmpty,
   setField,
-  reset: handleReset,
+  reset: resetForm,
   toQueryShape
 } = useAdvancedSearchForm()
 
 const firstInput = useTemplateRef('firstInput')
+
+// Bumping this key on open (after populate) and on reset remounts the range
+// sliders so each editing session re-captures its own out-of-range "initial
+// max" value and a previous session's persisted value does not leak in.
+const formKey = ref(0)
 
 // Hoist the per-field example/explanation lists into computeds so each
 // child receives a stable array reference across re-renders. Inline `[...]`
@@ -254,7 +261,17 @@ async function focusFirstInput() {
 
 async function handleOpen() {
   populateFromInitialQuery()
+  // Remount the sliders after the form is populated so each picks up this
+  // query's distance as its persisted out-of-range value.
+  formKey.value++
   await focusFirstInput()
+}
+
+// Wrap the form reset so resetting also remounts the sliders, dropping any
+// persisted out-of-range value along with the rest of the form state.
+function handleReset() {
+  resetForm()
+  formKey.value++
 }
 
 // Open pre-populates and focuses; close resets so the next open starts
@@ -278,7 +295,7 @@ function handleSearch() {
 
 // Expose form state and handlers so tests can drive the component without
 // reaching into the rendered child components.
-defineExpose({ form, isFormEmpty, handleSearch, handleReset })
+defineExpose({ form, isFormEmpty, handleSearch, handleReset, formKey })
 </script>
 
 <style lang="scss">
