@@ -79,6 +79,14 @@ describe('FormControlRangeSliderBullet.vue', () => {
       // round(7 * 0.70) = 5 -> steps[5] = 6, with no value 7 in between
       expect(wrapper.emitted('update:modelValue').at(-1)[0]).toBe(6)
     })
+
+    it('keeps the custom slot and moves the bullet there when the value drops below max', async () => {
+      const wrapper = overflow({ modelValue: 8 })
+      await wrapper.setProps({ modelValue: 3 })
+      // steps stay [1,2,3,4,5,6,8] -> 7 slots; value 3 is index 2
+      expect(wrapper.vm.style.left).toBe(`${(100 / 7) * 2}%`)
+      expect(wrapper.vm.style.width).toBe(`${100 / 7}%`)
+    })
   })
 })
 
@@ -120,6 +128,13 @@ describe('FormControlRangeTicks.vue', () => {
       const wrapper = ticksFactory({ modelValue: 3 })
       expect(wrapper.findAll('.form-control-range-ticks-entry')).toHaveLength(6)
     })
+
+    it('keeps the extra tick after the value drops below the max', async () => {
+      const wrapper = ticksFactory({ modelValue: 8 })
+      await wrapper.setProps({ modelValue: 3 })
+      const labels = wrapper.findAll('.form-control-range-ticks-entry').map(e => e.text())
+      expect(labels).toEqual(['1', '2', '3', '4', '5', '6', '8'])
+    })
   })
 })
 
@@ -143,6 +158,13 @@ describe('FormControlRangeSlider.vue', () => {
     expect(parseFloat(wrapper.vm.solidWidth)).toBeCloseTo((5.5 / 7) * 100)
     expect(parseFloat(wrapper.vm.dashStyle.left)).toBeCloseTo((5.5 / 7) * 100)
     expect(parseFloat(wrapper.vm.dashStyle.width)).toBeCloseTo((1 / 7) * 100)
+    expect(wrapper.find('.form-control-range-slider__track--dashed').exists()).toBe(true)
+  })
+
+  it('keeps the dashed tail after the value drops below the max', async () => {
+    const wrapper = factory({ modelValue: 8 })
+    await wrapper.setProps({ modelValue: 3 })
+    expect(wrapper.vm.hasOverflow).toBe(true)
     expect(wrapper.find('.form-control-range-slider__track--dashed').exists()).toBe(true)
   })
 })

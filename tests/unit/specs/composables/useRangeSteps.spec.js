@@ -34,4 +34,18 @@ describe('useRangeSteps', () => {
     expect(steps.value).toEqual([1, 2, 3, 4, 5, 6, 8])
     expect(hasOverflow.value).toBe(true)
   })
+
+  it('keeps the custom step after the value drops back below the max', () => {
+    const value = ref(3)
+    const { steps, hasOverflow } = useRangeSteps(1, 6, 1, value)
+
+    value.value = 8
+    expect(steps.value).toEqual([1, 2, 3, 4, 5, 6, 8])
+    expect(hasOverflow.value).toBe(true)
+
+    value.value = 3
+    // The slot is anchored to the high-water mark, so it persists.
+    expect(steps.value).toEqual([1, 2, 3, 4, 5, 6, 8])
+    expect(hasOverflow.value).toBe(true)
+  })
 })
