@@ -27,7 +27,7 @@ const classList = computed(() => {
   >
     <td
       v-show="selectMode"
-      class="page-table-tr__select"
+      class="page-table-tr__select above-stretched-link"
     >
       <b-form-checkbox v-model="selected" />
     </td>
