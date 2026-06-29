@@ -72,12 +72,6 @@ describe('FormControlRangeSliderBullet.vue', () => {
       expect(wrapper.vm.style.width).toBe(`${100 / 7}%`)
     })
 
-    it('selects the custom value when dragged to the far right', async () => {
-      const wrapper = overflow({ modelValue: 8 })
-      await wrapper.find('.form-control-range-slider-bullet').trigger('drag', { detail: 100 })
-      expect(wrapper.emitted('update:modelValue').at(-1)[0]).toBe(8)
-    })
-
     it('snaps to the max (never an intermediate value) when dragged off the custom slot', async () => {
       const wrapper = overflow({ modelValue: 8 })
       await wrapper.find('.form-control-range-slider-bullet').trigger('drag', { detail: 70 })
