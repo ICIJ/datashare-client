@@ -1,5 +1,6 @@
 import { mount } from '@vue/test-utils'
 
+import FormControlRangeSlider from '@/components/Form/FormControl/FormControlRange/FormControlRangeSlider'
 import FormControlRangeSliderBullet from '@/components/Form/FormControl/FormControlRange/FormControlRangeSliderBullet'
 import FormControlRangeTicks from '@/components/Form/FormControl/FormControlRange/FormControlRangeTicks'
 
@@ -119,5 +120,29 @@ describe('FormControlRangeTicks.vue', () => {
       const wrapper = ticksFactory({ modelValue: 3 })
       expect(wrapper.findAll('.form-control-range-ticks-entry')).toHaveLength(6)
     })
+  })
+})
+
+describe('FormControlRangeSlider.vue', () => {
+  const factory = (props = {}) =>
+    mount(FormControlRangeSlider, {
+      props: { min: 1, max: 6, step: 1, modelValue: 3, ...props }
+    })
+
+  it('draws a single full-width solid track when the value is within bounds', () => {
+    const wrapper = factory({ modelValue: 3 })
+    expect(wrapper.vm.hasOverflow).toBe(false)
+    expect(wrapper.vm.solidWidth).toBe('100%')
+    expect(wrapper.find('.form-control-range-slider__track--dashed').exists()).toBe(false)
+  })
+
+  it('draws a dashed tail from the max tick to the custom tick when out of bounds', () => {
+    const wrapper = factory({ modelValue: 8 })
+    // steps [1,2,3,4,5,6,8] -> 7 slots; max tick index 5, custom tick index 6.
+    expect(wrapper.vm.hasOverflow).toBe(true)
+    expect(parseFloat(wrapper.vm.solidWidth)).toBeCloseTo((5.5 / 7) * 100)
+    expect(parseFloat(wrapper.vm.dashStyle.left)).toBeCloseTo((5.5 / 7) * 100)
+    expect(parseFloat(wrapper.vm.dashStyle.width)).toBeCloseTo((1 / 7) * 100)
+    expect(wrapper.find('.form-control-range-slider__track--dashed').exists()).toBe(true)
   })
 })
