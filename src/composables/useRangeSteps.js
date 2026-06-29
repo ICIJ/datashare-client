@@ -19,8 +19,7 @@ export function useRangeSteps(min, max, step, value) {
       if (current > ceiling.value) {
         ceiling.value = current
       }
-    },
-    { flush: 'sync' }
+    }
   )
 
   const steps = computed(() => {

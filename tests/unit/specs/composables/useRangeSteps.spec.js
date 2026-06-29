@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { nextTick, ref } from 'vue'
 
 import { useRangeSteps } from '@/composables/useRangeSteps'
 
@@ -26,24 +26,27 @@ describe('useRangeSteps', () => {
     expect(steps.value).toEqual([1, 2, 3, 4, 5, 6, 9])
   })
 
-  it('accepts reactive inputs and recomputes when the value changes', () => {
+  it('accepts reactive inputs and recomputes when the value changes', async () => {
     const value = ref(3)
     const { steps, hasOverflow } = useRangeSteps(1, 6, 1, value)
     expect(hasOverflow.value).toBe(false)
     value.value = 8
+    await nextTick()
     expect(steps.value).toEqual([1, 2, 3, 4, 5, 6, 8])
     expect(hasOverflow.value).toBe(true)
   })
 
-  it('keeps the custom step after the value drops back below the max', () => {
+  it('keeps the custom step after the value drops back below the max', async () => {
     const value = ref(3)
     const { steps, hasOverflow } = useRangeSteps(1, 6, 1, value)
 
     value.value = 8
+    await nextTick()
     expect(steps.value).toEqual([1, 2, 3, 4, 5, 6, 8])
     expect(hasOverflow.value).toBe(true)
 
     value.value = 3
+    await nextTick()
     // The slot is anchored to the high-water mark, so it persists.
     expect(steps.value).toEqual([1, 2, 3, 4, 5, 6, 8])
     expect(hasOverflow.value).toBe(true)
