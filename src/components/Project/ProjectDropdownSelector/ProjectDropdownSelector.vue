@@ -10,11 +10,11 @@
     }"
     :disabled="disabled"
     :no-caret="noCaret"
-    :options="options"
+    :options="orderedOptions"
     :teleport-to="teleportTo"
     :teleport-disabled="teleportDisabled"
     @selected="reset"
-    @hidden="emit('hidden', $event)"
+    @hidden="onHidden"
     @changed="emit('changed', $event)"
   >
     <template #above="{ visible }">
@@ -133,6 +133,7 @@ const inputDropdown = ref(null)
  */
 const query = ref(null)
 const focusIndex = ref(-1)
+const pinnedNames = ref([])
 
 /**
  * Computed properties
@@ -193,11 +194,30 @@ const selectAll = computed({
   }
 })
 
+const orderedOptions = computed(() => {
+  const isPinned = ({ name } = {}) => pinnedNames.value.includes(name)
+  return [...options.value].sort((a, b) => Number(isPinned(b)) - Number(isPinned(a)))
+})
+
+function pinSelected() {
+  pinnedNames.value = selectedProjects.value.map(({ name }) => name)
+}
+
+// Snapshot the initial selection so the first open already shows it on top
+pinSelected()
+
+// Re-pin on close (not open) so the reorder happens while the menu is hidden,
+// avoiding a visible flash of items reordering when the dropdown is opened.
+function onHidden($event) {
+  pinSelected()
+  emit('hidden', $event)
+}
+
 /**
  * Watch
  */
 watch(query, () => {
-  focusIndex.value = query.value && options.value.length ? 0 : -1
+  focusIndex.value = query.value && orderedOptions.value.length ? 0 : -1
 })
 
 /**
@@ -209,7 +229,7 @@ function moveFocusUp() {
 }
 
 function moveFocusDown() {
-  focusIndex.value = Math.min(options.value.length - 1, focusIndex.value + 1)
+  focusIndex.value = Math.min(orderedOptions.value.length - 1, focusIndex.value + 1)
   moveFocusIntoView()
 }
 
@@ -222,7 +242,7 @@ async function moveFocusIntoView() {
 
 function selectFocusValue($event) {
   if (focusIndex.value > -1) {
-    inputDropdown.value.toggleUniqueValue($event, options.value[focusIndex.value])
+    inputDropdown.value.toggleUniqueValue($event, orderedOptions.value[focusIndex.value])
     inputDropdown.value.hide()
   }
 }

@@ -35,6 +35,10 @@ export const useTaskStore = defineStore('task', () => {
     await api.relaunchBatchSearch(id, title, description)
   }
 
+  const updateBatchSearch = async (id, { name, description, published }) => {
+    await api.updateBatchSearch(id, { name, description, published })
+  }
+
   const removeTask = async (id) => {
     await api.removeTask(id)
     setTasks(tasks.value.filter(task => task.id !== id))
@@ -134,6 +138,7 @@ export const useTaskStore = defineStore('task', () => {
     isQueued,
     isOver,
     relaunchBatchSearch,
+    updateBatchSearch,
     reset,
     getTask,
     getBatchSearchRecord,

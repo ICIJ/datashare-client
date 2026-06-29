@@ -4,6 +4,7 @@
     "yes": "Yes",
     "no": "No",
     "submit": "Submit",
+    "save": "Save",
     "reset": "Reset",
     "search": "Search",
     "you": "{username} (you)",
@@ -221,6 +222,9 @@
   },
   "filtersPanelSectionFilterTitleToggler": {
     "toggle": "Toggle filter"
+  },
+  "contentTypesCategoryName": {
+    "toggle": "Toggle the {category} category"
   },
   "filtersPanelSearch": {
     "placeholder": "Search filters"
@@ -502,7 +506,8 @@
     "fileTypes": {
       "legacyIndex": {
         "title": "Category grouping unavailable",
-        "description": "This project was indexed without file type categories."
+        "description": "This project was indexed without file type categories.",
+        "descriptionPlural": "Some of these projects were indexed without file type categories."
       }
     },
     "language": "Languages",
@@ -1156,7 +1161,7 @@
           "operators": "Selecting 'do phrase matches' prevent from using operators like <code>AND</code>, <code>OR</code>, <code>NOT</code>, <code>*</code>, <code>?</code>, <code>!</code>, <code>+</code>, <code>-</code> or Regexes between 2 slashes in the queries."
         },
         "sections": {
-          "general": "Name, project(s) and description",
+          "general": "Details",
           "queries": "Queries",
           "operators": "Search operators",
           "filters": "Filters"
@@ -1205,10 +1210,16 @@
         },
         "submit": "Create",
         "submitError": "Something went wrong, unable to run the batch search.",
-        "submitSuccess": "Batch search created successfully."
+        "submitSuccess": "Batch search created successfully.",
+        "editError": "Something went wrong, unable to update the batch search.",
+        "editSuccess": "Batch search updated successfully."
       },
       "new": {
         "title": "Create new batch search"
+      },
+      "edit": {
+        "title": "Edit batch search",
+        "breadcrumb": "Edit"
       }
     },
     "batch-search-queries": {
@@ -1292,11 +1303,6 @@
       "success": "The batch search was relaunched",
       "error": "Unable to relaunch the batch search"
     }
-  },
-  "batchSearchActionsEditModal": {
-    "title": "Edit batch search",
-    "name": "Name",
-    "description": "Description"
   },
   "batchSearchActionsRelaunchModal": {
     "title": "Relaunch batch search",

@@ -13,6 +13,7 @@ vi.mock('@/api/apiInstance', () => {
       stopTask: vi.fn(),
       removeDoneTasks: vi.fn(),
       getNerPipelines: vi.fn(),
+      updateBatchSearch: vi.fn(),
       getTasks: vi.fn().mockResolvedValue({
         pagination: {
           total: 3,
@@ -94,5 +95,11 @@ describe('TaskStore', () => {
 
   it('should indicate task 57 as not over', () => {
     expect(store.isOver('57')).toBe(false)
+  })
+
+  it('should delegate updateBatchSearch to the api', async () => {
+    const fields = { name: 'New name', description: 'New description', published: true }
+    await store.updateBatchSearch('uuid-1', fields)
+    expect(api.updateBatchSearch).toBeCalledWith('uuid-1', fields)
   })
 })

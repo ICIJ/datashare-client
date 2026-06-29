@@ -1,6 +1,6 @@
 <script setup>
 import { computed, markRaw } from 'vue'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 
 import IPhFile from '~icons/ph/file'
 import IPhFilesFill from '~icons/ph/files-fill'

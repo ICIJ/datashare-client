@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 
 defineOptions({ name: 'LinkedDocumentSection' })
 

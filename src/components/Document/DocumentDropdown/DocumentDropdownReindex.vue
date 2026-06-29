@@ -1,6 +1,6 @@
 <script setup>
 import { useModal } from 'bootstrap-vue-next'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 
 import { useDocument } from '@/composables/useDocument'
 import DocumentDropdownReindexModal from '@/components/Document/DocumentDropdown/DocumentDropdownReindexModal'

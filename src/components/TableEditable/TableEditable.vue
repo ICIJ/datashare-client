@@ -53,7 +53,7 @@
 
 <script setup>
 import { reactive } from 'vue'
-import { ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur'
 import IPhTrash from '~icons/ph/trash'
 
 import RowEditable from './RowEditable.vue'

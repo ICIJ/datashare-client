@@ -1,6 +1,6 @@
 import { compact, endsWith, filter, find, get, keys, last, pick, startsWith, trim } from 'lodash'
 import { markRaw } from 'vue'
-import Murmur from '@icij/murmur-next'
+import Murmur from '@icij/murmur'
 import dayjs from 'dayjs'
 import { extname } from 'path'
 
@@ -451,6 +451,17 @@ export default class Document extends EsDoc {
 
   get isJson() {
     return this.contentType.indexOf('application/json') === 0
+  }
+
+  get isMarkdown() {
+    if (['text/x-web-markdown', 'text/markdown'].includes(this.contentType)) {
+      return true
+    }
+    // Markdown is frequently detected as plain text by the extractor, so also
+    // treat text/plain files with a markdown extension as markdown. The
+    // extension list is sourced from the registry to stay in one place.
+    const markdownExtensions = get(types, ['text/x-web-markdown', 'extensions'], [])
+    return this.contentType === 'text/plain' && markdownExtensions.includes(this.extension)
   }
 
   get hasTranslations() {

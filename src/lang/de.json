@@ -4,6 +4,7 @@
     "yes": "Ja",
     "no": "Nein",
     "submit": "Absenden",
+    "save": "Speichern",
     "reset": "Reset",
     "you": "Du",
     "building": "Our team is still crafting something awesome for this page. Stay tuned!"
@@ -218,6 +219,9 @@
   },
   "filtersPanelSectionFilterTitleToggler": {
     "toggle": "Toggle filter"
+  },
+  "contentTypesCategoryName": {
+    "toggle": "Toggle the {category} category"
   },
   "filtersPanelSearch": {
     "placeholder": "Search filters"
@@ -485,7 +489,8 @@
     "fileTypes": {
       "legacyIndex": {
         "title": "Category grouping unavailable",
-        "description": "This project was indexed without file type categories."
+        "description": "This project was indexed without file type categories.",
+        "descriptionPlural": "Some of these projects were indexed without file type categories."
       }
     },
     "language": "Sprachen",
@@ -1176,10 +1181,16 @@
         },
         "submit": "Create",
         "submitError": "Something went wrong, unable to run the batch search.",
-        "submitSuccess": "Batch search created successfully."
+        "submitSuccess": "Batch search created successfully.",
+        "editError": "Something went wrong, unable to update the batch search.",
+        "editSuccess": "Batch search updated successfully."
       },
       "new": {
         "title": "Create new batch search"
+      },
+      "edit": {
+        "title": "Edit batch search",
+        "breadcrumb": "Edit"
       }
     },
     "batch-search-queries": {
@@ -1263,11 +1274,6 @@
       "success": "The batch search was relaunched",
       "error": "Unable to relaunch the batch search"
     }
-  },
-  "batchSearchActionsEditModal": {
-    "title": "Edit batch search",
-    "name": "Name",
-    "description": "Beschreibung"
   },
   "batchSearchActionsRelaunchModal": {
     "title": "Batch-Suche neu starten",

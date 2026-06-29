@@ -1,4 +1,4 @@
-import Murmur from '@icij/murmur-next'
+import Murmur from '@icij/murmur'
 
 import Document from '@/api/resources/Document'
 
@@ -32,6 +32,50 @@ describe('Document', () => {
     it('should NOT be a JSON file', () => {
       const doc = new Document({ _source: { contentType: 'application/pdf' } })
       expect(doc.isJson).toBeFalsy()
+    })
+  })
+
+  describe('check if document is of Markdown type', () => {
+    it('should be a Markdown file (x-web-markdown)', () => {
+      const doc = new Document({ _source: { contentType: 'text/x-web-markdown' } })
+      expect(doc.isMarkdown).toBeTruthy()
+    })
+
+    it('should be a Markdown file (text/markdown)', () => {
+      const doc = new Document({ _source: { contentType: 'text/markdown' } })
+      expect(doc.isMarkdown).toBeTruthy()
+    })
+
+    it('should NOT be a Markdown file', () => {
+      const doc = new Document({ _source: { contentType: 'text/plain' } })
+      expect(doc.isMarkdown).toBeFalsy()
+    })
+
+    it('should be a Markdown file when text/plain has a .md extension', () => {
+      const doc = new Document({ _source: { contentType: 'text/plain', path: '/data/readme.md' } })
+      expect(doc.isMarkdown).toBeTruthy()
+    })
+
+    it('should be a Markdown file when text/plain has a .markdown extension', () => {
+      const doc = new Document({ _source: { contentType: 'text/plain', path: '/data/notes.markdown' } })
+      expect(doc.isMarkdown).toBeTruthy()
+    })
+
+    it('should NOT be a Markdown file when text/plain has a .txt extension', () => {
+      const doc = new Document({ _source: { contentType: 'text/plain', path: '/data/notes.txt' } })
+      expect(doc.isMarkdown).toBeFalsy()
+    })
+  })
+
+  describe('Markdown content-type registry', () => {
+    it('exposes a human label for markdown', () => {
+      const doc = new Document({ _source: { contentType: 'text/x-web-markdown' } })
+      expect(doc.contentTypeLabel).toBe('Markdown document')
+    })
+
+    it('exposes a human label for the IANA text/markdown type recognised by isMarkdown', () => {
+      const doc = new Document({ _source: { contentType: 'text/markdown' } })
+      expect(doc.contentTypeLabel).toBe('Markdown document')
     })
   })
 

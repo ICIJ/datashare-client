@@ -1,7 +1,7 @@
 <script setup>
 import { supportsPDFs as embeddable } from 'pdfobject'
 import { useI18n } from 'vue-i18n'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 
 const modelValue = defineModel({ type: Boolean, default: false })
 

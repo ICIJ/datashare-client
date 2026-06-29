@@ -1,4 +1,4 @@
-import { ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur'
 
 import IPhArrowClockwise from '~icons/ph/arrow-clockwise'
 import IPhArrowsOutSimple from '~icons/ph/arrows-out-simple'

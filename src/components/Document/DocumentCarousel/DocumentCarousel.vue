@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { TinyPagination } from '@icij/murmur-next'
+import { TinyPagination } from '@icij/murmur'
 import { useI18n } from 'vue-i18n'
 
 import IPhCaretLeft from '~icons/ph/caret-left'

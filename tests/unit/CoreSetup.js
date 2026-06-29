@@ -1,4 +1,4 @@
-import Murmur from '@icij/murmur-next'
+import Murmur from '@icij/murmur'
 import VCalendar from 'v-calendar'
 import VueScrollTo from 'vue-scrollto'
 import { createWebHashHistory, createRouter } from 'vue-router'

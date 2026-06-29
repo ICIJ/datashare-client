@@ -45,7 +45,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 import IPhFiles from '~icons/ph/files'
 import IPhInfo from '~icons/ph/info'
 

@@ -16,6 +16,7 @@
     :teleport-to="teleportTo"
     :teleport-disabled="teleportDisabled"
     variant="outline-tertiary"
+    @hidden="$emit('hidden', $event)"
   >
     <template #button-content>
       <slot
@@ -71,7 +72,7 @@
 
 <script>
 import { castArray, cloneDeep, includes, isEqual, without } from 'lodash'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 import { useI18n } from 'vue-i18n'
 
 /**
@@ -148,7 +149,7 @@ export default {
       type: Boolean
     }
   },
-  emits: ['hide', 'changed', 'selected', 'update:modelValue'],
+  emits: ['hide', 'changed', 'selected', 'hidden', 'update:modelValue'],
   setup() {
     const { t } = useI18n()
     return { t }

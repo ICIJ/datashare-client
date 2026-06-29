@@ -1,7 +1,7 @@
 <script setup>
 import { computed, useSlots } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur'
 import IPhX from '~icons/ph/x'
 
 defineOptions({ name: 'AppPopoverTitle' })

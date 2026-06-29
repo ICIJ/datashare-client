@@ -1,7 +1,7 @@
 <script setup>
 import { computed, nextTick, onMounted, ref, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { AppIcon, ButtonIcon } from '@icij/murmur-next'
+import { AppIcon, ButtonIcon } from '@icij/murmur'
 import IPhHash from '~icons/ph/hash'
 import IPhX from '~icons/ph/x'
 

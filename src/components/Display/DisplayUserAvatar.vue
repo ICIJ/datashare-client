@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, toRef, watch } from 'vue'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 
 import { usePipelinesStore } from '@/store/modules/pipelines'
 

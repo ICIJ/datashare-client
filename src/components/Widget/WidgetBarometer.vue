@@ -35,7 +35,7 @@
 import { isString, isObject } from 'lodash'
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 
 import DisplayNumberHuman from '@/components/Display/DisplayNumberHuman'
 import { variantValidator } from '@/enums/variants'

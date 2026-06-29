@@ -2,7 +2,7 @@
 import { ref, computed, onBeforeMount } from 'vue'
 import { flatten, map } from 'lodash'
 import { useI18n } from 'vue-i18n'
-import { ImageModeSource } from '@icij/murmur-next'
+import { ImageModeSource } from '@icij/murmur'
 
 import imageLight from '@/assets/images/illustrations/app-modal-tag-add-light.svg'
 import imageDark from '@/assets/images/illustrations/app-modal-tag-add-dark.svg'

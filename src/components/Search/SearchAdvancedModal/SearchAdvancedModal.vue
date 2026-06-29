@@ -137,7 +137,7 @@
 import { computed, nextTick, ref, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { whenever } from '@vueuse/core'
-import { ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur'
 import IPhUniteSquare from '~icons/ph/unite-square'
 import IPhIntersectSquare from '~icons/ph/intersect-square'
 import IPhQuotes from '~icons/ph/quotes'

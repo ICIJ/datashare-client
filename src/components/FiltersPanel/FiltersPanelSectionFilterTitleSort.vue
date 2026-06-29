@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 import { useI18n } from 'vue-i18n'
 
 import settings from '@/utils/settings'

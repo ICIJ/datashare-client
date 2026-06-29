@@ -53,7 +53,7 @@
 <script>
 import { castArray, trimEnd } from 'lodash'
 import { useI18n } from 'vue-i18n'
-import { ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur'
 import { toRef } from 'vue'
 
 import IPhTreeStructure from '~icons/ph/tree-structure'

@@ -1,4 +1,4 @@
-import { ImageModeSource } from '@icij/murmur-next'
+import { ImageModeSource } from '@icij/murmur'
 
 import { breakpointSizeArgType, inputTypeArgType } from '~storybook/utils'
 import AppModalPrompt from '@/components/AppModal/AppModalPrompt'

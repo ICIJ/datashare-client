@@ -258,6 +258,15 @@ export const routes = [
                 }
               },
               {
+                path: ':indices/:uuid/edit',
+                name: 'task.batch-search.edit',
+                props: true,
+                component: () => import('@/views/Task/TaskBatchSearch/TaskBatchSearchEdit'),
+                meta: {
+                  title: 'task.batch-search.edit.title'
+                }
+              },
+              {
                 path: ':indices/:uuid',
                 props: true,
                 name: 'task.batch-search-results.list',

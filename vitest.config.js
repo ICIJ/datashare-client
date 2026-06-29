@@ -18,6 +18,13 @@ export default defineConfig(configEnv =>
           }
         },
         exclude: [...configDefaults.exclude, 'e2e/**'],
+        server: {
+          deps: {
+            // Inline @icij/murmur so its per-component CSS imports are handled
+            // by Vite's transform pipeline instead of Node's native loader.
+            inline: ['@icij/murmur']
+          }
+        },
         root: fileURLToPath(new URL('./', import.meta.url)),
         setupFiles: [resolve(__dirname, 'tests/unit/setup.js')],
         pool: 'forks',

@@ -18,6 +18,29 @@ const description = defineModel('description', { type: String, required: false }
 const visibility = defineModel('visibility', { type: Boolean, required: true })
 const selectedProjects = defineModel('selectedProjects', { type: Array, required: true })
 
+defineProps({
+  disabledName: {
+    type: Boolean,
+    default: false
+  },
+  disabledDescription: {
+    type: Boolean,
+    default: false
+  },
+  disabledProjects: {
+    type: Boolean,
+    default: false
+  },
+  hideProjects: {
+    type: Boolean,
+    default: false
+  },
+  hideVisibilityHint: {
+    type: Boolean,
+    default: false
+  }
+})
+
 const { t } = useI18n()
 const core = useCore()
 const allProjects = computed(() => core.projects)
@@ -38,10 +61,12 @@ const allProjects = computed(() => core.projects)
         v-model="name"
         type="text"
         name="name"
+        :disabled="disabledName"
         :placeholder="t('task.batch-search.form.name.placeholder')"
       />
     </form-fieldset-i18n>
     <form-fieldset-i18n
+      v-if="!hideProjects"
       name="projects"
       translation-key="task.batch-search.form.projects"
       :icon="IPhCirclesThreePlus"
@@ -49,6 +74,7 @@ const allProjects = computed(() => core.projects)
       <project-dropdown-selector
         v-model="selectedProjects"
         :projects="allProjects"
+        :disabled="disabledProjects"
       />
     </form-fieldset-i18n>
     <form-fieldset-i18n
@@ -61,6 +87,7 @@ const allProjects = computed(() => core.projects)
         name="description"
         :rows="2"
         :max-rows="8"
+        :disabled="disabledDescription"
         :placeholder="t('task.batch-search.form.description.placeholder')"
       />
     </form-fieldset-i18n>
@@ -71,6 +98,7 @@ const allProjects = computed(() => core.projects)
         translation-key="task.batch-search.form.visibility"
         label-class="pt-md-0"
         :icon="IPhQuotes"
+        :description-key="hideVisibilityHint ? '' : undefined"
       >
         <b-form-radio-group
           v-model="visibility"

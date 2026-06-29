@@ -2,7 +2,7 @@
 import { isString } from 'lodash'
 import { computed, useSlots } from 'vue'
 import { useRouter } from 'vue-router'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 
 import IPhDotsThreeOutline from '~icons/ph/dots-three-outline'
 

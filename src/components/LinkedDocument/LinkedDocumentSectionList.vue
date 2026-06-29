@@ -38,7 +38,7 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n'
-import { ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur'
 import IPhMagnifyingGlass from '~icons/ph/magnifying-glass'
 
 import LinkedDocumentList from '@/components/LinkedDocument/LinkedDocumentList'

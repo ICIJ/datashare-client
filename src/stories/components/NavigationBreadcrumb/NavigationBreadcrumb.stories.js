@@ -1,5 +1,5 @@
 import { vueRouter } from 'storybook-vue3-router'
-import { ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur'
 
 import IPhDownloadSimple from '~icons/ph/download-simple'
 import IPhPlus from '~icons/ph/plus'

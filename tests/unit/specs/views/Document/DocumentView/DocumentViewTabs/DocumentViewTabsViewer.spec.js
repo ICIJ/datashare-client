@@ -123,4 +123,39 @@ describe('DocumentViewTabsViewer.vue', () => {
 
     expect(wrapper.vm.previewComponent).toBe('DocumentViewerVideo')
   })
+
+  it('should call the DocumentViewerMarkdown component for Markdown document', async () => {
+    const document = await letData(es)
+      .have(new IndexedDocument(id, index).withContentType('text/x-web-markdown'))
+      .commitAndGetLastDocument()
+    await documentStore.getDocument({ id, index })
+
+    const wrapper = shallowMount(DocumentViewTabsViewer, {
+      global: {
+        plugins: core.plugins,
+        renderStubDefaultSlot: true
+      },
+      props: { document, disabled }
+    })
+
+    expect(wrapper.vm.previewComponent).toBe('DocumentViewerMarkdown')
+  })
+
+  it('should call the DocumentViewerMarkdown component for a text/plain .md document', async () => {
+    const mdId = 'notes.md'
+    const document = await letData(es)
+      .have(new IndexedDocument(mdId, index).withContentType('text/plain'))
+      .commitAndGetLastDocument()
+    await documentStore.getDocument({ id: mdId, index })
+
+    const wrapper = shallowMount(DocumentViewTabsViewer, {
+      global: {
+        plugins: core.plugins,
+        renderStubDefaultSlot: true
+      },
+      props: { document, disabled }
+    })
+
+    expect(wrapper.vm.previewComponent).toBe('DocumentViewerMarkdown')
+  })
 })

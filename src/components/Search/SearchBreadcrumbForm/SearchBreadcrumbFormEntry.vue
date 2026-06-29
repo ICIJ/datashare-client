@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 import IPhCaretRightFill from '~icons/ph/caret-right-fill'
 
 import SearchBreadcrumbFormEntryOccurrences from '@/components/Search/SearchBreadcrumbForm/SearchBreadcrumbFormEntryOccurrences'

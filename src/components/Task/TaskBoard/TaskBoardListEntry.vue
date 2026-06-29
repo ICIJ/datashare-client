@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { AppIcon, ButtonIcon } from '@icij/murmur-next'
+import { AppIcon, ButtonIcon } from '@icij/murmur'
 import IPhPlus from '~icons/ph/plus'
 
 import { useBreakpoints } from '@/composables/useBreakpoints'

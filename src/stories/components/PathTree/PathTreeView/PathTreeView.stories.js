@@ -1,4 +1,4 @@
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 
 import IPhCirclesThreePlus from '~icons/ph/circles-three-plus'
 import PathTreeView from '@/components/PathTree/PathTreeView/PathTreeView'

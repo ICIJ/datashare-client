@@ -1,7 +1,7 @@
 <script setup>
 import { ref, useTemplateRef, nextTick, computed } from 'vue'
 import { whenever } from '@vueuse/core'
-import { AppIcon, ButtonIcon } from '@icij/murmur-next'
+import { AppIcon, ButtonIcon } from '@icij/murmur'
 import { useI18n } from 'vue-i18n'
 import IPhDownloadSimple from '~icons/ph/download-simple'
 
@@ -86,6 +86,7 @@ defineExpose({
     v-model="modelValue"
     hide-header
     class="document-download-popover"
+    :hide-margin="16"
   >
     <template #target>
       <slot name="target" />

@@ -1,5 +1,5 @@
 import { BTooltip } from 'bootstrap-vue-next'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 
 import IPhCrosshair from '~icons/ph/crosshair'
 import { PLACEMENTS } from '@/enums/placements'

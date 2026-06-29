@@ -2,7 +2,7 @@
 import 'mutationobserver-shim'
 
 import compose from 'lodash/fp/compose'
-import Murmur from '@icij/murmur-next'
+import Murmur from '@icij/murmur'
 import VCalendar from 'v-calendar'
 import VueScrollTo from 'vue-scrollto'
 import Vue3Toastify, { toast } from 'vue3-toastify'

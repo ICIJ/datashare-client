@@ -1,6 +1,6 @@
 <script setup>
 import { computed, inject } from 'vue'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 
 import IPhFile from '~icons/ph/file'
 import IPhFolderFill from '~icons/ph/folder-fill'

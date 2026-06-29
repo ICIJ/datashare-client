@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur'
 
 import IPhSortDescending from '~icons/ph/sort-descending'
 import IPhSortAscending from '~icons/ph/sort-ascending'

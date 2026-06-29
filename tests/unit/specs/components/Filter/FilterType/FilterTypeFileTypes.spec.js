@@ -11,9 +11,10 @@ import ContentTypesCategory from '@/components/ContentTypes/ContentTypesCategori
 import ContentTypesCategoryName from '@/components/ContentTypes/ContentTypesCategories/ContentTypesCategoryName'
 import ContentTypesEntry from '@/components/ContentTypes/ContentTypesCategories/ContentTypesEntry'
 import FiltersPanelSectionFilterTitleSort from '@/components/FiltersPanel/FiltersPanelSectionFilterTitleSort'
+import { BCollapse } from 'bootstrap-vue-next'
 import { apiInstance as api } from '@/api/apiInstance'
 import { useContentTypeCategoryAvailability } from '@/composables/useContentTypeCategoryAvailability'
-import { useSearchStore } from '@/store/modules'
+import { useAppStore, useSearchStore } from '@/store/modules'
 
 vi.mock('@/api/apiInstance', async (importOriginal) => {
   const { apiInstance } = await importOriginal()
@@ -92,14 +93,19 @@ describe('FilterTypeFileTypes.vue', () => {
     // without hitting the network.
     queryFilterSpy = vi.spyOn(searchStore, 'queryFilter').mockResolvedValue(aggregationPage([]))
 
+    // The grouped/flat view is now driven by the persisted `groupedContentTypeView`
+    // setting (not a prop). Seed it to `true` so the default mount is grouped,
+    // matching the previous `grouped: true` prop default. This also resets the
+    // setting between tests, since it otherwise persists to localStorage.
+    useAppStore().setSettings('search', 'groupedContentTypeView', true)
+
     wrapper = mount(FilterTypeFileTypes, {
       global: {
         plugins: core.plugins
       },
       props: {
         filter,
-        collapse: false,
-        grouped: true
+        collapse: false
       }
     })
   })
@@ -121,6 +127,7 @@ describe('FilterTypeFileTypes.vue', () => {
 
   it('should have grouped set to false by default', () => {
     wrapper.unmount()
+    useAppStore().setSettings('search', 'groupedContentTypeView', false)
     const filter = searchStore.getFilter({ name: 'contentType' })
     wrapper = mount(FilterTypeFileTypes, {
       global: { plugins: core.plugins },
@@ -1253,6 +1260,88 @@ describe('FilterTypeFileTypes.vue', () => {
     })
   })
 
+  describe('collapsible categories', () => {
+    // appStore persists `expandedContentTypeCategories` to localStorage, which a
+    // fresh Pinia rehydrates between tests. Reset it so every test starts from
+    // the collapsed-by-default baseline instead of inheriting a prior expansion.
+    beforeEach(() => {
+      useAppStore().setSettings('search', 'expandedContentTypeCategories', [])
+    })
+
+    // Shared fixture: two categories so each collapse/expand test starts from a
+    // consistent state without polluting other describe blocks.
+    const seedCollapsibleCategories = async () => {
+      api.getContentTypeCategories.mockResolvedValue({
+        DOCUMENT: ['application/pdf'],
+        OTHER: ['text/html', 'text/plain']
+      })
+
+      seedContentTypes(['application/pdf', 'text/html', 'text/plain'])
+
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+    }
+
+    // Helper: find all category-level BCollapse wrappers (one per category).
+    const categoryCollapses = () =>
+      wrapper.findAllComponents(ContentTypesCategory)
+        .map(cat => cat.findComponent(BCollapse))
+        .filter(c => c.exists())
+
+    it('hides all entries by default because categories are collapsed', async () => {
+      await seedCollapsibleCategories()
+
+      // No category has been expanded yet — every category's BCollapse must
+      // have model-value false (collapsed).
+      const collapses = categoryCollapses()
+      expect(collapses.length).toBeGreaterThan(0)
+      expect(collapses.every(c => c.props('modelValue') === false)).toBe(true)
+    })
+
+    it('shows entries for a category after emitting update:collapse false on its name row', async () => {
+      await seedCollapsibleCategories()
+
+      // Emit the "expanded" signal on the first ContentTypesCategoryName.
+      wrapper.findComponent(ContentTypesCategoryName).vm.$emit('update:collapse', false)
+      await flushPromises()
+
+      // At least one category BCollapse must now have model-value true (expanded).
+      const collapses = categoryCollapses()
+      expect(collapses.some(c => c.props('modelValue') === true)).toBe(true)
+    })
+
+    it('force-expands matching categories when the in-filter query is non-empty', async () => {
+      await seedCollapsibleCategories()
+
+      // Set a query the same way the existing search tests do.
+      wrapper.findComponent(FilterType).vm.$emit('update:query', 'pdf')
+      await flushPromises()
+
+      // The query force-expands without toggling persisted state — every visible
+      // category BCollapse receives model-value true.
+      const collapses = categoryCollapses()
+      expect(collapses.length).toBeGreaterThan(0)
+      expect(collapses.every(c => c.props('modelValue') === true)).toBe(true)
+    })
+
+    it('force-expand on query is purely visual — it does not persist expanded state', async () => {
+      await seedCollapsibleCategories()
+      const appStore = useAppStore()
+      // Baseline: nothing persisted, so the collapsed-by-default state holds.
+      expect(appStore.getSettings('search', 'expandedContentTypeCategories')).toEqual([])
+
+      wrapper.findComponent(FilterType).vm.$emit('update:query', 'pdf')
+      await flushPromises()
+      // Visually expanded, but the persisted set must stay untouched.
+      expect(appStore.getSettings('search', 'expandedContentTypeCategories')).toEqual([])
+
+      // Clearing the query collapses everything back (no lingering expansion).
+      wrapper.findComponent(FilterType).vm.$emit('update:query', '')
+      await flushPromises()
+      expect(categoryCollapses().every(c => c.props('modelValue') === false)).toBe(true)
+    })
+  })
+
   describe('legacy-index overlay', () => {
     // The overlay drives the visual contract for projects whose mapping does
     // not expose contentTypeCategory. The composable is mocked at module
@@ -1269,13 +1358,13 @@ describe('FilterTypeFileTypes.vue', () => {
       })
 
       const filter = searchStore.getFilter({ name: 'contentType' })
+      useAppStore().setSettings('search', 'groupedContentTypeView', grouped)
       wrapper = mount(FilterTypeFileTypes, {
         global: {
           plugins: core.plugins
         },
         props: {
           filter,
-          grouped,
           collapse
         }
       })
@@ -1338,6 +1427,20 @@ describe('FilterTypeFileTypes.vue', () => {
 
       expect(wrapper.find('.filter-type-file-types__legacy-index').exists()).toBe(false)
       expect(wrapper.find('.filter-type-file-types__spinner').exists()).toBe(false)
+    })
+
+    it('shows the singular legacy-index message when a single project is selected', () => {
+      searchStore.setIndices([index])
+      remountWithAvailability({ isAvailable: false, isLoading: false })
+      const text = wrapper.find('.filter-type-file-types__legacy-index__description').text()
+      expect(text).toBe('This project was indexed without file type categories.')
+    })
+
+    it('shows the plural legacy-index message when several projects are selected', () => {
+      searchStore.setIndices([index, `${index}-second`])
+      remountWithAvailability({ isAvailable: false, isLoading: false })
+      const text = wrapper.find('.filter-type-file-types__legacy-index__description').text()
+      expect(text).toBe('Some of these projects were indexed without file type categories.')
     })
   })
 })

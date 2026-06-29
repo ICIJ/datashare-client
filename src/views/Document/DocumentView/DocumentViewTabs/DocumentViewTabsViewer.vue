@@ -30,6 +30,8 @@ const previewComponent = computed(() => {
       return 'DocumentViewerPdf'
     case document.value.isJson:
       return 'DocumentViewerJson'
+    case document.value.isMarkdown:
+      return 'DocumentViewerMarkdown'
     case isPaginated.value:
       return 'DocumentViewerPaginated'
     case document.value.isTiff:

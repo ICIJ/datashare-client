@@ -1,12 +1,21 @@
 import bodybuilder from 'bodybuilder'
 import { setActivePinia, createPinia } from 'pinia'
 
+import IPhFiles from '~icons/ph/files'
+import filtersDefs from '@/store/filters'
 import FilterContentTypeCategory from '@/store/filters/FilterContentTypeCategory'
 import DisplayContentTypeCategory from '@/components/Display/DisplayContentTypeCategory'
 import { apiInstance as api } from '@/api/apiInstance'
 import { useSearchStore } from '@/store/modules'
 
 describe('FilterContentTypeCategory.js', () => {
+  describe('breadcrumb icon', () => {
+    it('uses the files icon so the breadcrumb chip reads as file types', () => {
+      const def = filtersDefs.find(d => d.options.name === 'contentTypeCategory')
+      expect(def.options.icon).toBe(IPhFiles)
+    })
+  })
+
   describe('hidden flag', () => {
     it('defaults to false when not provided', () => {
       const filter = new FilterContentTypeCategory({ name: 'contentTypeCategory', key: 'contentTypeCategory' })

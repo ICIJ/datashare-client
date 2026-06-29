@@ -1,5 +1,5 @@
 import { uniqueId } from 'lodash'
-import { AppIcon, ButtonIcon } from '@icij/murmur-next'
+import { AppIcon, ButtonIcon } from '@icij/murmur'
 
 import IPhArrowLeft from '~icons/ph/arrow-left'
 import IPhKeyboard from '~icons/ph/keyboard'
