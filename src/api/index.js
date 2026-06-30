@@ -124,13 +124,12 @@ export class Api {
 
   createUser({ login, email, name, provider, password, domain, index } = {}) {
     const data = { login, email, name, provider, password, domain, index }
-    console.log(data)
     return this.sendAction('/api/users', { method: Method.POST, data })
   }
 
-  deleteUser(login, { project = null } = {}) {
-    const params = omitBy({ project }, isNull)
-    return this.sendActionAsText(`/api/users/${encodeURIComponent(login)}`, { method: Method.DELETE, params })
+  deleteUser(login, { domain, index } = {}) {
+    const data = { domain, index }
+    return this.sendActionAsText(`/api/users/${encodeURIComponent(login)}`, { method: Method.DELETE, data})
   }
 
   getPathBanners(project) {
