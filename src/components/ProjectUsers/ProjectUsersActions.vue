@@ -15,7 +15,7 @@ const props = defineProps({
     type: Object,
     required: true
   },
-  projectName: {
+  project: {
     type: String,
     required: true
   }
@@ -53,7 +53,7 @@ function onUserDeleted({ name }) {
     <project-users-delete-modal
       v-model="showDeleteModal"
       :user="user"
-      :project-name="projectName"
+      :project="project"
       @user:deleted="onUserDeleted"
     />
   </div>

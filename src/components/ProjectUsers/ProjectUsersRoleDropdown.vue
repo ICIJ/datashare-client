@@ -13,7 +13,7 @@ const props = defineProps({
     type: String,
     required: true
   },
-  projectName: {
+  project: {
     type: String,
     required: true
   },
@@ -28,7 +28,7 @@ const emit = defineEmits(['update:modelValue'])
 const { getRoleByProject, formatRole } = usePolicies()
 const { t } = useI18n()
 
-const currentUserRole = computed(() => getRoleByProject(props.projectName))
+const currentUserRole = computed(() => getRoleByProject(props.project))
 
 const availableRoles = computed(() =>
   Object.values(ROLE)
@@ -60,7 +60,11 @@ defineExpose({ availableRoles })
           </app-icon>
         </div>
       </template>
-      <display-role :value="modelValue" class="project-users-role-dropdown__value d-none" aria-hidden="true" />
+      <display-role
+        :value="modelValue"
+        class="project-users-role-dropdown__value d-none"
+        aria-hidden="true"
+      />
       <b-dropdown-item
         v-for="role in availableRoles"
         :key="role.value"

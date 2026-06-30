@@ -1,33 +1,27 @@
 <script setup>
-import { computed, ref, watch } from 'vue'
-import { orderBy } from 'lodash'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur-next'
 
-import IPhUserPlus from '~icons/ph/user-plus'
-import IPhFloppyDisk from '~icons/ph/floppy-disk'
-import IPhX from '~icons/ph/x'
-
 import DisplayUser from '@/components/Display/DisplayUser.vue'
 import EmptyState from '@/components/EmptyState/EmptyState.vue'
-import FormControlSearch from '@/components/Form/FormControl/FormControlSearch.vue'
 import PageTable from '@/components/PageTable/PageTable.vue'
 import PageTableTh from '@/components/PageTable/PageTableTh.vue'
 import ProjectUsersActions from '@/components/ProjectUsers/ProjectUsersActions.vue'
 import ProjectUsersAdminPromotionModal from '@/components/ProjectUsers/ProjectUsersAdminPromotionModal.vue'
-import ProjectUsersCreateModal from '@/components/ProjectUsers/ProjectUsersCreateModal.vue'
 import ProjectUsersRoleDropdown from '@/components/ProjectUsers/ProjectUsersRoleDropdown.vue'
 
 import { useCore } from '@/composables/useCore.js'
 import { useToast } from '@/composables/useToast.js'
 import { ROLE, ROLE_BIT } from '@/enums/roles.js'
+import ButtonReset from '@/components/Button/ButtonReset'
 
 const props = defineProps({
   users: {
     type: Array,
     default: () => []
   },
-  projectName: {
+  project: {
     type: String,
     required: true
   }
@@ -37,49 +31,28 @@ const { t } = useI18n()
 const core = useCore()
 const { toast } = useToast()
 
-const AUTH_MODE_PWD = ['form', 'basic']
-const isPasswordProvider = computed(() => AUTH_MODE_PWD.includes(core.config.get('auth')))
-
-const sort = ref(null)
-const order = ref('asc')
+const sort = defineModel('sort', { type: String, default: null })
+const order = defineModel('order', { type: String, default: 'asc' })
 const query = defineModel('query', { type: String, default: '' })
-const showCreateModal = ref(false)
 const showAdminModal = ref(false)
 const saving = ref(false)
 
-const localUsers = ref(props.users.map(u => ({ ...u })))
 const pendingChanges = ref({})
 
+/*
 watch(() => props.users, (newUsers) => {
   localUsers.value = newUsers.map(u => ({ ...u }))
 }, { deep: true })
+*/
 
-function onRoleChanged(name, role) {
-  const original = localUsers.value.find(u => u.name === name)?.role
-  const next = { ...pendingChanges.value }
-  if (role === original) {
-    delete next[name]
-  }
-  else {
-    next[name] = role
-  }
-  pendingChanges.value = next
-}
-
-function onUserDeleted({ name }) {
-  localUsers.value = localUsers.value.filter(u => u.name !== name)
-}
-
-function onUserCreated({ name, role }) {
-  localUsers.value.push({ name, role })
-}
+const emit = defineEmits(['user:deleted'])
 
 const ADMIN_ROLES = new Set([ROLE.PROJECT_ADMIN, ROLE.DOMAIN_ADMIN, ROLE.INSTANCE_ADMIN])
 
 const adminPromotions = computed(() =>
   Object.entries(pendingChanges.value)
     .filter(([name, newRole]) => {
-      const currentRole = localUsers.value.find(u => u.name === name)?.role
+      const currentRole = props.users.find(u => u.name === name)?.role
       return ADMIN_ROLES.has(newRole) && ROLE_BIT[newRole] > ROLE_BIT[currentRole]
     })
     .map(([name, newRole]) => ({ name, newRole }))
@@ -93,11 +66,11 @@ async function saveRoles() {
   try {
     await Promise.all(
       Object.entries(pendingChanges.value).map(([name, role]) =>
-        core.api.saveProjectPolicy('default', props.projectName, { user: name, role })
+        core.api.saveProjectPolicy('default', props.project, { user: name, role })
       )
     )
     Object.entries(pendingChanges.value).forEach(([name, role]) => {
-      const user = localUsers.value.find(u => u.name === name)
+      const user = props.users.find(u => u.name === name)
       if (user) user.role = role
     })
     pendingChanges.value = {}
@@ -124,51 +97,39 @@ function onSaveClicked() {
     saveRoles()
   }
 }
-
-const sortedUsers = computed(() => {
-  if (!sort.value) return localUsers.value
-  return orderBy(localUsers.value, [sort.value], [order.value])
-})
-
+function onRoleChanged(name, role) {
+  const original = props.users.find(u => u.name === name)?.role
+  const next = { ...pendingChanges.value }
+  if (role === original) {
+    delete next[name]
+  }
+  else {
+    next[name] = role
+  }
+  pendingChanges.value = next
+}
 const emptyLabel = computed(() =>
   query.value
     ? t('projectViewEdit.users.noResults')
     : t('projectViewEdit.users.empty')
 )
 
-defineExpose({ localUsers, pendingChanges, saving, showAdminModal, saveRoles, cancelChanges, onSaveClicked })
+function onUserDeleted({ name }) {
+  emit('user:deleted', { name })
+}
+
+defineExpose({ pendingChanges, saving, showAdminModal, saveRoles, cancelChanges, onSaveClicked })
 </script>
 
 <template>
   <div class="project-users-list">
-    <div class="d-flex justify-content-end align-items-center gap-2 mb-3">
-      <button-icon
-        v-if="isPasswordProvider"
-        :icon-left="IPhUserPlus"
-        size="sm"
-        variant="action"
-        @click="showCreateModal = true"
-      >
-        {{ t('projectViewEdit.users.create.button') }}
-      </button-icon>
-      <form-control-search
-        v-model="query"
-        clear-text
-        class="flex-grow-1"
-      />
-    </div>
-    <project-users-create-modal
-      v-model="showCreateModal"
-      :project-name="projectName"
-      @user:created="onUserCreated"
-    />
     <project-users-admin-promotion-modal
       v-model="showAdminModal"
       :promotions="adminPromotions"
       @confirm="saveRoles"
     />
     <empty-state
-      v-if="sortedUsers.length === 0"
+      v-if="users.length === 0"
       :label="emptyLabel"
     />
     <page-table
@@ -192,7 +153,7 @@ defineExpose({ localUsers, pendingChanges, saving, showAdminModal, saveRoles, ca
         <page-table-th compact />
       </template>
       <tr
-        v-for="(user, index) in sortedUsers"
+        v-for="(user, index) in users"
         :key="user.name ?? index"
       >
         <td><display-user :value="user.name" /></td>
@@ -200,14 +161,14 @@ defineExpose({ localUsers, pendingChanges, saving, showAdminModal, saveRoles, ca
           <project-users-role-dropdown
             :model-value="pendingChanges[user.name] ?? user.role"
             :dirty="!!pendingChanges[user.name]"
-            :project-name="projectName"
+            :project="project"
             @update:model-value="onRoleChanged(user.name, $event)"
           />
         </td>
         <td>
           <project-users-actions
             :user="user"
-            :project-name="projectName"
+            :project="project"
             @user:deleted="onUserDeleted"
           />
         </td>
@@ -217,22 +178,18 @@ defineExpose({ localUsers, pendingChanges, saving, showAdminModal, saveRoles, ca
       v-if="hasPendingChanges"
       class="project-users-list__sticky-bar d-flex justify-content-end align-items-center gap-2 p-3"
     >
-      <span class="text-secondary small">
+      <span class="text-secondary ">
         {{ t('projectViewEdit.users.roleSelect.changedCount', pendingCount, { count: pendingCount }) }}
       </span>
-      <button-icon
-        variant="outline-secondary"
-        size="sm"
-        :icon-left="IPhX"
+      <button-reset
         :disabled="saving"
         @click="cancelChanges"
       >
         {{ t('projectViewEdit.users.roleSelect.cancel') }}
-      </button-icon>
+      </button-reset>
+
       <button-icon
         variant="action"
-        size="sm"
-        :icon-left="IPhFloppyDisk"
         :disabled="saving"
         @click="onSaveClicked"
       >

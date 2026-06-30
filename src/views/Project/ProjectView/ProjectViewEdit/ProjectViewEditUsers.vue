@@ -55,9 +55,9 @@ async function fetchUsers() {
       desc
     })
     users.value = (items ?? []).map(({ uid, permissions }) => ({
-        name: uid,
-        role: permissions?.[0]?.v1 ?? null
-      }))
+      name: uid,
+      role: permissions?.[0]?.v1 ?? null
+    }))
     totalRows.value = pagination?.total ?? 0
   }
   catch {
@@ -85,6 +85,7 @@ const showCreateModal = ref(false)
 function onUserDeleted({ name }) {
   localUsers.value = localUsers.value.filter(u => u.name !== name)
 }
+// eslint-disable-next-line @stylistic/max-statements-per-line
 watch([sort, order], () => { page.value = 1 })
 watch(() => route.query, fetchUsers, { deep: true, immediate: true })
 
@@ -127,7 +128,7 @@ watch(() => route.query, fetchUsers, { deep: true, immediate: true })
       v-model:sort="sort"
       v-model:order="order"
       :users="users"
-      :project-name="name"
+      :project="name"
       @update:query="onQueryUpdate"
       @user:deleted="onUserDeleted"
     />
