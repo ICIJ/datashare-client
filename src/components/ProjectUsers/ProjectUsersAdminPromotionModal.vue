@@ -32,7 +32,9 @@ function onConfirm() {
     ok-variant="primary"
     @ok="onConfirm"
   >
-    <p class="mb-3">{{ t('projectViewEdit.users.adminPromotionModal.body') }}</p>
+    <p class="mb-3">
+      {{ t('projectViewEdit.users.adminPromotionModal.body') }}
+    </p>
     <ul class="list-unstyled d-flex flex-column gap-2">
       <li
         v-for="promotion in promotions"

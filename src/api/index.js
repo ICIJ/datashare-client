@@ -129,7 +129,7 @@ export class Api {
 
   deleteUser(login, { domain, index } = {}) {
     const data = { domain, index }
-    return this.sendActionAsText(`/api/users/${encodeURIComponent(login)}`, { method: Method.DELETE, data})
+    return this.sendActionAsText(`/api/users/${encodeURIComponent(login)}`, { method: Method.DELETE, data })
   }
 
   getPathBanners(project) {

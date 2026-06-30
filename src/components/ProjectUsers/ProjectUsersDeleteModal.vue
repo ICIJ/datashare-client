@@ -34,8 +34,9 @@ const DEFAULT_DOMAIN = 'default'
 async function confirmDeletion() {
   try {
     if (isPasswordProvider.value) {
-      await core.api.deleteUser(props.user.name, { domain:DEFAULT_DOMAIN, index: props.project })
-    } else {
+      await core.api.deleteUser(props.user.name, { domain: DEFAULT_DOMAIN, index: props.project })
+    }
+    else {
       await core.api.removeProjectPolicy('default', props.project, { user: props.user.name })
     }
     emit('user:deleted', { name: props.user.name })
