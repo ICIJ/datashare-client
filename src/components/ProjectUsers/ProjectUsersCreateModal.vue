@@ -1,6 +1,5 @@
 <script setup>
 import { computed, ref } from 'vue'
-import { AppIcon } from '@icij/murmur-next'
 import { useI18n } from 'vue-i18n'
 
 import IPhTextAa from '~icons/ph/text-aa'
@@ -16,10 +15,8 @@ import { useCore } from '@/composables/useCore.js'
 import { usePolicies } from '@/composables/usePolicies.js'
 import { useToast } from '@/composables/useToast.js'
 import { DEFAULT_ROLE, ROLE, ROLE_BIT, ROLE_HIERARCHY } from '@/enums/roles.js'
-import FormCreation from '@/components/Form/FormCreation.vue'
 import FormFieldsetI18n from '@/components/Form/FormFieldset/FormFieldsetI18n.vue'
 import { BFormInput } from 'bootstrap-vue-next'
-import FormFieldset from '@/components/Form/FormFieldset/FormFieldset.vue'
 
 const props = defineProps({
   projectName: {
@@ -77,20 +74,22 @@ function resetForm() {
   confirmPassword.value = ''
   selectedRole.value = DEFAULT_ROLE
 }
+
+const DEFAULT_DOMAIN = 'default'
 const createUser = () => {
   return core.api.createUser({
     login: username.value.trim(),
     email: email.value.trim(),
     name: name.value.trim(),
+    provider: 'external',
     ...(isPasswordProvider.value ? { password: password.value } : {}),
-    provider: 'local',
-    groups: [props.projectName],
-    project: props.projectName
+    domain: DEFAULT_DOMAIN,
+    index: props.projectName
   })
 }
 
 const saveProjectPolicy = () => {
-  return core.api.saveProjectPolicy('default', props.projectName, {
+  return core.api.saveProjectPolicy(DEFAULT_DOMAIN, props.projectName, {
     user: username.value.trim(),
     role: selectedRole.value
   })
