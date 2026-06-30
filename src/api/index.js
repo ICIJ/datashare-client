@@ -107,22 +107,30 @@ export class Api {
     return this.sendAction(`/api/policies/${domain}/${project}`, { method: Method.GET, params })
   }
 
+  getUsers({ project = null, sort = null, desc = null, from = 0, size = 10 } = {}) {
+    const params = omitBy({ index: project, sort, desc, from, size }, isNull)
+    return this.sendAction('/api/users', { method: Method.GET, params })
+  }
+
   removeProjectPolicy(domain, project, { user, role } = {}) {
-    const params = { user, role }
+    const params = { user, role, project }
     return this.sendActionAsText(`/api/policies/${domain}/${project}`, { method: Method.DELETE, params })
   }
 
   saveProjectPolicy(domain, project, { user, role } = {}) {
-    const params = { user, role }
+    const params = { user, role, project }
     return this.sendActionAsText(`/api/policies/${domain}/${project}`, { method: Method.PUT, params })
   }
 
-  createUser({ login, email, name, password, provider = 'local', groups = [] } = {}) {
-    return this.sendAction('/api/users', { method: Method.POST, data: { login, email, name, password, provider, groups } })
+  createUser({ login, email, name, provider, password, domain, index } = {}) {
+    const data = { login, email, name, provider, password, domain, index }
+    console.log(data)
+    return this.sendAction('/api/users', { method: Method.POST, data })
   }
 
-  deleteUser(login) {
-    return this.sendActionAsText(`/api/users/${encodeURIComponent(login)}`, { method: Method.DELETE })
+  deleteUser(login, { project = null } = {}) {
+    const params = omitBy({ project }, isNull)
+    return this.sendActionAsText(`/api/users/${encodeURIComponent(login)}`, { method: Method.DELETE, params })
   }
 
   getPathBanners(project) {

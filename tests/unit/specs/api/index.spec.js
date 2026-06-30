@@ -538,7 +538,7 @@ describe('Datashare backend client', () => {
         expect.objectContaining({
           url: Api.getFullUrl('/api/policies/local/my-project'),
           method: 'DELETE',
-          params: { user: 'alice', role: 'PROJECT_MEMBER' }
+          params: expect.objectContaining({ user: 'alice', role: 'PROJECT_MEMBER' })
         })
       )
     })
@@ -549,9 +549,34 @@ describe('Datashare backend client', () => {
         expect.objectContaining({
           url: Api.getFullUrl('/api/policies/local/my-project'),
           method: 'PUT',
-          params: { user: 'alice', role: 'PROJECT_EDITOR' }
+          params: expect.objectContaining({ user: 'alice', role: 'PROJECT_EDITOR' })
         })
       )
     })
+  })
+
+  it('should call createUser with data and project index', async () => {
+    const userData = {
+      login: 'jdoe',
+      email: 'jdoe@example.com',
+      name: 'John Doe',
+      password: 'secret-password',
+      provider: 'local'
+    }
+    await api.createUser({ ...userData, index: 'my-project' })
+    expect(axios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/users'),
+        method: 'POST',
+        data: expect.objectContaining({
+          login: 'jdoe',
+          email: 'jdoe@example.com',
+          name: 'John Doe',
+          password: 'secret-password',
+          provider: 'local',
+          index: 'my-project'
+        })
+      })
+    )
   })
 })
