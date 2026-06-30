@@ -19,7 +19,7 @@ import FormFieldsetI18n from '@/components/Form/FormFieldset/FormFieldsetI18n.vu
 import { BFormInput } from 'bootstrap-vue-next'
 
 const props = defineProps({
-  projectName: {
+  project: {
     type: String,
     required: true
   }
@@ -41,7 +41,7 @@ const confirmPassword = ref('')
 const selectedRole = ref(DEFAULT_ROLE)
 const saving = ref(false)
 
-const currentUserRole = computed(() => getRoleByProject(props.projectName))
+const currentUserRole = computed(() => getRoleByProject(props.project))
 
 const AUTH_MODE_PWD = ['form', 'basic']
 
@@ -84,12 +84,12 @@ const createUser = () => {
     provider: 'external',
     ...(isPasswordProvider.value ? { password: password.value } : {}),
     domain: DEFAULT_DOMAIN,
-    index: props.projectName
+    index: props.project
   })
 }
 
 const saveProjectPolicy = () => {
-  return core.api.saveProjectPolicy(DEFAULT_DOMAIN, props.projectName, {
+  return core.api.saveProjectPolicy(DEFAULT_DOMAIN, props.project, {
     user: username.value.trim(),
     role: selectedRole.value
   })
