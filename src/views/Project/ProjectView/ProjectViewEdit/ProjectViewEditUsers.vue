@@ -1,6 +1,5 @@
 <script setup>
-import { computed, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import ProjectUsersList from '@/components/ProjectUsers/ProjectUsersList.vue'
@@ -11,6 +10,7 @@ import { useUrlParam } from '@/composables/useUrlParam.js'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch.vue'
 import ProjectUsersCreateModal from '@/components/ProjectUsers/ProjectUsersCreateModal.vue'
 import IPhUserPlus from '~icons/ph/user-plus'
+import { apiInstance as api } from '@/api/apiInstance.js'
 
 const props = defineProps({
   name: {
@@ -22,23 +22,20 @@ const props = defineProps({
 const core = useCore()
 const { toast } = useToast()
 const { t } = useI18n()
-const route = useRoute()
 
 const PER_PAGE = 10
-const SORT_FIELD_MAP = { name: 'uid' }
 
 const users = ref([])
 const loading = ref(false)
 const totalRows = ref(0)
 const query = ref('')
+const page = ref(1)
 
 const sort = useUrlParam('sort', null)
 const order = useUrlParam('order', 'asc')
-const page = useUrlParam('page', { transform: v => parseInt(v) || 1, initialValue: 1 })
 
 let debounceTimer = null
 
-const apiSort = computed(() => (sort.value ? (SORT_FIELD_MAP[sort.value] ?? sort.value) : null))
 const AUTH_MODE_PWD = ['form', 'basic']
 const isPasswordProvider = computed(() => AUTH_MODE_PWD.includes(core.config.get('auth')))
 
@@ -46,18 +43,13 @@ async function fetchUsers() {
   loading.value = true
   try {
     const from = (page.value - 1) * PER_PAGE
-    const desc = order.value === 'desc' ? true : null
-    const { items, pagination } = await core.api.getUsers({
-      project: props.name,
+    const to = from + PER_PAGE
+    const { items, pagination } = await api.getProjectPolicies('default', props.name, {
       from,
-      size: PER_PAGE,
-      sort: apiSort.value,
-      desc
+      to,
+      user: query.value || null
     })
-    users.value = (items ?? []).map(({ uid, permissions }) => ({
-      name: uid,
-      role: permissions?.[0]?.v1 ?? null
-    }))
+    users.value = (items ?? []).map(({ v0, v1 }) => ({ name: v0, role: v1 }))
     totalRows.value = pagination?.total ?? 0
   }
   catch {
@@ -68,6 +60,11 @@ async function fetchUsers() {
   }
 }
 
+function onPageChange(newPage) {
+  page.value = newPage
+  fetchUsers()
+}
+
 function onQueryUpdate(value) {
   query.value = value
   page.value = 1
@@ -75,7 +72,7 @@ function onQueryUpdate(value) {
   debounceTimer = setTimeout(fetchUsers, 300)
 }
 
-const localUsers = ref(users.value.map(u => ({ ...u })))
+const localUsers = ref([])
 function onUserCreated({ name, role }) {
   localUsers.value.push({ name, role })
 }
@@ -85,9 +82,8 @@ const showCreateModal = ref(false)
 function onUserDeleted({ name }) {
   localUsers.value = localUsers.value.filter(u => u.name !== name)
 }
-// eslint-disable-next-line @stylistic/max-statements-per-line
-watch([sort, order], () => { page.value = 1 })
-watch(() => route.query, fetchUsers, { deep: true, immediate: true })
+
+onMounted(fetchUsers)
 
 </script>
 
@@ -107,10 +103,11 @@ watch(() => route.query, fetchUsers, { deep: true, immediate: true })
       </div>
       <div class="d-flex justify-content-between  flex-grow-1 ">
         <row-pagination-users
-          v-model:page="page"
+          :page="page"
           :total-rows="totalRows"
           :per-page="PER_PAGE"
           class="d-flex"
+          @update:page="onPageChange"
         />
         <form-control-search
           v-model="query"
@@ -120,7 +117,7 @@ watch(() => route.query, fetchUsers, { deep: true, immediate: true })
     </div>
     <project-users-create-modal
       v-model="showCreateModal"
-      :project-name="name"
+      :project="name"
       @user:created="onUserCreated"
     />
     <project-users-list

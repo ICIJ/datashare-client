@@ -105,7 +105,7 @@ describe('ProjectViewEditUsers.vue', () => {
   it('passes the project name to ProjectUsersList', async () => {
     const wrapper = shallowMountComponent()
     await flushPromises()
-    expect(wrapper.findComponent(ProjectUsersList).props('projectName')).toBe('local-datashare')
+    expect(wrapper.findComponent(ProjectUsersList).props('project')).toBe('local-datashare')
   })
 
   it('renders a RowPaginationUsers component', async () => {
