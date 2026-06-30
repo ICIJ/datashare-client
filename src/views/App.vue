@@ -56,7 +56,9 @@ const { t } = useI18n()
 const route = useRoute()
 const sidebar = useTemplateRef('sidebar')
 
-const signinUrl = computed(() => import.meta.env.VITE_DS_AUTH_SIGNIN)
+const signinUrl = computed(() => {
+  return core.config.get('auth') === 'form' ? '/auth/login' : import.meta.env.VITE_DS_AUTH_SIGNIN
+})
 
 // Function to handle HTTP errors
 const handleHttpError = (err) => {
