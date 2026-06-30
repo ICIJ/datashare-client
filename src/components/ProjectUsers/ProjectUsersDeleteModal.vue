@@ -14,7 +14,7 @@ const props = defineProps({
     type: Object,
     required: true
   },
-  projectName: {
+  project: {
     type: String,
     required: true
   }
@@ -30,13 +30,13 @@ const { t } = useI18n()
 
 const AUTH_MODE_PWD = ['form', 'basic']
 const isPasswordProvider = computed(() => AUTH_MODE_PWD.includes(core.config.get('auth')))
-
+const DEFAULT_DOMAIN = 'default'
 async function confirmDeletion() {
   try {
     if (isPasswordProvider.value) {
-      await core.api.deleteUser(props.user.name)
+      await core.api.deleteUser(props.user.name, { domain:DEFAULT_DOMAIN, index: props.project })
     } else {
-      await core.api.removeProjectPolicy('default', props.projectName, { user: props.user.name })
+      await core.api.removeProjectPolicy('default', props.project, { user: props.user.name })
     }
     emit('user:deleted', { name: props.user.name })
     modelValue.value = false
