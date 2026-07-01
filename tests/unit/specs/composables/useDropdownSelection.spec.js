@@ -34,28 +34,28 @@ describe('useDropdownSelection', () => {
   it('adds and removes values in multiple mode', () => {
     const { modelValue, api } = setup([{ name: 'a' }], true)
     api.toggleValue({ stopPropagation() {} }, { name: 'b' })
-    expect(modelValue.value.map((v) => v.name)).toEqual(['a', 'b'])
+    expect(modelValue.value.map(v => v.name)).toEqual(['a', 'b'])
     api.toggleValue({ stopPropagation() {} }, { name: 'a' })
-    expect(modelValue.value.map((v) => v.name)).toEqual(['b'])
+    expect(modelValue.value.map(v => v.name)).toEqual(['b'])
   })
 
   it('never removes the last value in multiple mode', () => {
     const { modelValue, api } = setup([{ name: 'a' }], true)
     api.toggleValue({ stopPropagation() {} }, { name: 'a' })
-    expect(modelValue.value.map((v) => v.name)).toEqual(['a'])
+    expect(modelValue.value.map(v => v.name)).toEqual(['a'])
   })
 
   it('toggleUniqueValue selects a single value even in multiple mode', () => {
     const { modelValue, api } = setup([{ name: 'a' }, { name: 'b' }], true)
     api.toggleUniqueValue(null, { name: 'c' })
-    expect(modelValue.value.map((v) => v.name)).toEqual(['c'])
+    expect(modelValue.value.map(v => v.name)).toEqual(['c'])
   })
 
   it('selectAll selects every option, unselectAll keeps the first', () => {
     const { modelValue, api } = setup([{ name: 'a' }], true)
     api.selectAll()
-    expect(modelValue.value.map((v) => v.name)).toEqual(['a', 'b', 'c'])
+    expect(modelValue.value.map(v => v.name)).toEqual(['a', 'b', 'c'])
     api.unselectAll()
-    expect(modelValue.value.map((v) => v.name)).toEqual(['a'])
+    expect(modelValue.value.map(v => v.name)).toEqual(['a'])
   })
 })

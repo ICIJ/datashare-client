@@ -23,7 +23,7 @@ function resolveKey(option, optionKey) {
  * @param {String|Function} config.optionKey how to derive a key from an option
  */
 export function useDropdownSelection(modelValue, allOptions, { multiple, optionKey }) {
-  const keyOf = (option) => resolveKey(option, optionKey)
+  const keyOf = option => resolveKey(option, optionKey)
 
   // Current selection as an array, regardless of single/multiple mode.
   const selectedValues = computed(() => {
@@ -37,7 +37,7 @@ export function useDropdownSelection(modelValue, allOptions, { multiple, optionK
 
   const isSelected = (option) => {
     const key = keyOf(option)
-    return selectedKeys.value.some((selectedKey) => isEqual(selectedKey, key))
+    return selectedKeys.value.some(selectedKey => isEqual(selectedKey, key))
   }
 
   // Replace the whole model value, honouring single vs multiple mode.
@@ -57,7 +57,7 @@ export function useDropdownSelection(modelValue, allOptions, { multiple, optionK
   const unselectValue = (option) => {
     // A multiple selection must always keep at least one value.
     if (multiple.value && selectedValues.value.length > 1) {
-      const remaining = selectedValues.value.filter((value) => !isEqual(keyOf(value), keyOf(option)))
+      const remaining = selectedValues.value.filter(value => !isEqual(keyOf(value), keyOf(option)))
       setSelection(remaining)
     }
   }
