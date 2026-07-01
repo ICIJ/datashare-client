@@ -1,265 +1,137 @@
-<template>
-  <search-bar-input-dropdown
-    ref="inputDropdown"
-    v-model="selectedProjects"
-    class="project-dropdown-selector"
-    :multiple="multiple"
-    flush-items
-    :class="{
-      'project-dropdown-selector--multiple': hasMultipleProjects
-    }"
-    :disabled="disabled"
-    :no-caret="noCaret"
-    :options="orderedOptions"
-    :teleport-to="teleportTo"
-    :teleport-disabled="teleportDisabled"
-    @selected="reset"
-    @hidden="onHidden"
-    @changed="emit('changed', $event)"
-  >
-    <template #above="{ visible }">
-      <project-dropdown-selector-search
-        v-model="query"
-        :autofocus="visible"
-        :has-matches="hasMatches"
-        @blur="resetFocus"
-        @up="moveFocusUp"
-        @down="moveFocusDown"
-        @enter="selectFocusValue"
-        @click.stop
-      />
-      <project-dropdown-selector-all
-        v-if="hasMatches && multiple"
-        v-model="selectAll"
-        @click.stop
-      />
-    </template>
-    <template #button-content>
-      <project-dropdown-selector-button-content
-        :slice-size="sliceSize"
-        :selected-projects="selectedProjects"
-        :projects="projects"
-      />
-    </template>
-    <template #dropdown-item="{ option: project, index, hasValue, toggleUniqueValue, toggleValue }">
-      <project-dropdown-selector-entry
-        :project="project"
-        :focus="focusIndex === index"
-        :selected="hasValue(project)"
-        :no-checkbox="!multiple"
-        @toggle-value="toggleValue($event, project)"
-        @toggle-unique-value="toggleUniqueValue($event, project)"
-      />
-    </template>
-  </search-bar-input-dropdown>
-</template>
-
 <script setup>
-import { ref, computed, watch, nextTick } from 'vue'
+import { computed } from 'vue'
 import { compact, find, isArray, trim } from 'lodash'
+import { useI18n } from 'vue-i18n'
 
-import ProjectDropdownSelectorAll from './ProjectDropdownSelectorAll'
 import ProjectDropdownSelectorButtonContent from './ProjectDropdownSelectorButtonContent'
 import ProjectDropdownSelectorEntry from './ProjectDropdownSelectorEntry'
-import ProjectDropdownSelectorSearch from './ProjectDropdownSelectorSearch'
 
-import SearchBarInputDropdown from '@/components/Search/SearchBar/SearchBarInputDropdown'
+import DropdownSelector from '@/components/DropdownSelector/DropdownSelector'
 import { iwildcardMatch } from '@/utils/strings'
 
-/**
- * Props definition
- */
+defineOptions({ name: 'ProjectDropdownSelector' })
+
 const props = defineProps({
   /**
-   * List of selected projects (multiple selection), or object (single selection)
+   * Selected projects (array for multiple selection) or a single project object.
    */
   modelValue: {
     type: [Array, Object],
     default: () => []
   },
   /**
-   * Limit the number of visible project thumbnails
+   * Limit the number of visible project thumbnails in the button.
    */
   sliceSize: {
     type: Number,
     default: 3
   },
   /**
-   * The dropdown toggler must be disabled.
+   * Disable the dropdown toggler.
    */
   disabled: {
     type: Boolean
   },
   /**
-   * The caret in the dropdown toggler must be hidden.
+   * Hide the caret in the toggler.
    */
   noCaret: {
     type: Boolean
   },
   /**
-   * List of projects
+   * List of available projects.
    */
   projects: {
     type: Array,
     default: () => []
   },
   /**
-   * Teleport the dropdown to a different element.
+   * Teleport the menu to a different element.
    */
   teleportTo: {
     type: [String, Object],
     default: 'body'
   },
   /**
-   * Disable teleporting the dropdown to a different element.
+   * Disable teleporting the menu.
    */
   teleportDisabled: {
     type: Boolean
   }
 })
 
-/**
- * Emits definition
- */
-const emit = defineEmits(['hidden', 'changed', 'selected', 'update:modelValue'])
+const emit = defineEmits(['hidden', 'changed', 'update:modelValue'])
+const { t } = useI18n()
 
-/**
- * Template refs
- */
-const inputDropdown = ref(null)
+const multiple = computed(() => isArray(props.modelValue))
 
-/**
- * State
- */
-const query = ref(null)
-const focusIndex = ref(-1)
-const pinnedNames = ref([])
-
-/**
- * Computed properties
- */
-const hasQuery = computed(() => {
-  return !!query.value
-})
-
-const hasMatches = computed(() => {
-  return !hasQuery.value || options.value.length > 0
-})
-
-const wildcardQuery = computed(() => {
-  if (hasQuery.value) {
-    // This ensures the query ends and starts
-    // with one (and only one) wildcard
-    return '*' + trim(query.value, '*') + '*'
-  }
-  return '*'
-})
-
-const multiple = computed(() => {
-  return isArray(props.modelValue)
-})
-
+// Resolve the model value (which may carry only { name }) to full project
+// objects from the catalog, so labels and thumbnails render.
 const selectedProjects = computed({
   get() {
     if (!multiple.value) {
-      return [props.modelValue]
+      if (!props.modelValue) {
+        return null
+      }
+      return find(props.projects, { name: props.modelValue.name }) ?? props.modelValue
     }
-    return compact(
-      props.modelValue.map(({ name }) => {
-        return find(props.projects, { name })
-      })
-    )
+    return compact(props.modelValue.map(({ name }) => find(props.projects, { name })))
   },
   set(value) {
     emit('update:modelValue', value)
   }
 })
 
-const options = computed(() => {
-  return props.projects.filter(({ label = '', name = '' } = {}) => {
-    return iwildcardMatch(label, wildcardQuery.value) || iwildcardMatch(name, wildcardQuery.value)
-  })
-})
+const hasMultipleProjects = computed(() => multiple.value && props.modelValue.length > 1)
 
-const hasMultipleProjects = computed(() => {
-  return selectedProjects.value?.length > 1
-})
-
-const selectAll = computed({
-  get() {
-    return selectedProjects.value?.length === props.projects.length
-  },
-  set(value) {
-    selectedProjects.value = value ? props.projects : props.projects.slice(0, 1)
-  }
-})
-
-const orderedOptions = computed(() => {
-  const isPinned = ({ name } = {}) => pinnedNames.value.includes(name)
-  return [...options.value].sort((a, b) => Number(isPinned(b)) - Number(isPinned(a)))
-})
-
-function pinSelected() {
-  pinnedNames.value = selectedProjects.value.map(({ name }) => name)
-}
-
-// Snapshot the initial selection so the first open already shows it on top
-pinSelected()
-
-// Re-pin on close (not open) so the reorder happens while the menu is hidden,
-// avoiding a visible flash of items reordering when the dropdown is opened.
-function onHidden($event) {
-  pinSelected()
-  emit('hidden', $event)
-}
-
-/**
- * Watch
- */
-watch(query, () => {
-  focusIndex.value = query.value && orderedOptions.value.length ? 0 : -1
-})
-
-/**
- * Methods
- */
-function moveFocusUp() {
-  focusIndex.value = Math.max(-1, focusIndex.value - 1)
-  moveFocusIntoView()
-}
-
-function moveFocusDown() {
-  focusIndex.value = Math.min(orderedOptions.value.length - 1, focusIndex.value + 1)
-  moveFocusIntoView()
-}
-
-async function moveFocusIntoView() {
-  await nextTick()
-  const selector = '.project-dropdown-selector__item--focus'
-  const options = { behavior: 'instant', block: 'end' }
-  inputDropdown.value.$el.querySelector(selector)?.scrollIntoView(false, options)
-}
-
-function selectFocusValue($event) {
-  if (focusIndex.value > -1) {
-    inputDropdown.value.toggleUniqueValue($event, orderedOptions.value[focusIndex.value])
-    inputDropdown.value.hide()
-  }
-}
-
-function resetFocus() {
-  focusIndex.value = -1
-}
-
-function resetQuery() {
-  query.value = null
-}
-
-function reset() {
-  resetFocus()
-  resetQuery()
+// A project matches when its label OR its name matches the wildcard query.
+function filterProject(project, query) {
+  const wildcard = '*' + trim(query, '*') + '*'
+  return iwildcardMatch(project.label ?? '', wildcard) || iwildcardMatch(project.name ?? '', wildcard)
 }
 </script>
+
+<template>
+  <dropdown-selector
+    v-model="selectedProjects"
+    class="project-dropdown-selector"
+    :class="{ 'project-dropdown-selector--multiple': hasMultipleProjects }"
+    :multiple="multiple"
+    option-key="name"
+    searchable
+    :option-filter="filterProject"
+    :allow-select-all="multiple"
+    pin-selected
+    :disabled="disabled"
+    :no-caret="noCaret"
+    :options="projects"
+    :teleport-to="teleportTo"
+    :teleport-disabled="teleportDisabled"
+    :search-placeholder="t('projectDropdownSelectorSearch.placeholder')"
+    :no-matches-label="t('projectDropdownSelectorSearch.noMatches')"
+    :select-all-label="t('projectDropdownSelectorAll.label')"
+    @change="emit('changed', $event)"
+    @hidden="emit('hidden', $event)"
+  >
+    <template #button-content="{ selectedOptions }">
+      <project-dropdown-selector-button-content
+        :slice-size="sliceSize"
+        :selected-projects="selectedOptions"
+        :projects="projects"
+      />
+    </template>
+    <template #item="{ option: project, selected, focused, toggle, toggleUnique }">
+      <project-dropdown-selector-entry
+        :project="project"
+        :focus="focused"
+        :selected="selected"
+        :no-checkbox="!multiple"
+        @toggle-value="toggle($event)"
+        @toggle-unique-value="toggleUnique($event)"
+      />
+    </template>
+  </dropdown-selector>
+</template>
 
 <style lang="scss" scoped>
 .project-dropdown-selector {

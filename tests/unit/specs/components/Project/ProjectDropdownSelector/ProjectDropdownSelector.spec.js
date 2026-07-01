@@ -1,9 +1,12 @@
 import { mount } from '@vue/test-utils'
 
 import ProjectDropdownSelector from '@/components/Project/ProjectDropdownSelector/ProjectDropdownSelector'
-import ProjectDropdownSelectorSearch from '@/components/Project/ProjectDropdownSelector/ProjectDropdownSelectorSearch'
-import SearchBarInputDropdown from '@/components/Search/SearchBar/SearchBarInputDropdown'
+import DropdownSelectorSearch from '@/components/DropdownSelector/DropdownSelectorSearch'
 import CoreSetup from '~tests/unit/CoreSetup'
+
+// jsdom doesn't implement scrollIntoView; the generic DropdownSelector calls it
+// when a query focuses the first match, so stub it like DropdownSelector.spec.js.
+window.HTMLElement.prototype.scrollIntoView = vi.fn()
 
 describe('ProjectDropdownSelector.vue', function () {
   const { plugins } = CoreSetup.init().useAll().useRouterWithoutGuards()
@@ -64,7 +67,7 @@ describe('ProjectDropdownSelector.vue', function () {
   it('should keep the selected project on top while a query filters the list', async () => {
     const props = { modelValue: [{ name: 'bar' }], projects, teleportDisabled: true }
     const wrapper = mount(ProjectDropdownSelector, { props, global: { plugins } })
-    wrapper.findComponent(ProjectDropdownSelectorSearch).vm.$emit('update:model-value', 'a')
+    wrapper.findComponent(DropdownSelectorSearch).vm.$emit('update:modelValue', 'a')
     await wrapper.vm.$nextTick()
     const items = wrapper.findAll('.dropdown-item')
     expect(items).toHaveLength(2)
@@ -90,7 +93,7 @@ describe('ProjectDropdownSelector.vue', function () {
     expect(wrapper.findAll('.dropdown-item').at(0).text().trim()).toBe('Bar')
     // Closing re-pins to the live selection, so the reorder happens while the
     // menu is hidden — the next open is already ordered, with no visible flash
-    wrapper.findComponent(SearchBarInputDropdown).vm.$emit('hidden')
+    wrapper.findComponent({ name: 'BDropdown' }).vm.$emit('hidden')
     await wrapper.vm.$nextTick()
     expect(wrapper.findAll('.dropdown-item').at(0).text().trim()).toBe('Foo')
   })
