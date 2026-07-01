@@ -72,15 +72,14 @@ function onQueryUpdate(value) {
   debounceTimer = setTimeout(fetchUsers, 300)
 }
 
-const localUsers = ref([])
-function onUserCreated({ name, role }) {
-  localUsers.value.push({ name, role })
-}
-
 const showCreateModal = ref(false)
 
-function onUserDeleted({ name }) {
-  localUsers.value = localUsers.value.filter(u => u.name !== name)
+function onUserCreated() {
+  fetchUsers()
+}
+
+function onUserDeleted() {
+  fetchUsers()
 }
 
 onMounted(fetchUsers)
