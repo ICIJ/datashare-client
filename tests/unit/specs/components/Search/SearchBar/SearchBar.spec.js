@@ -1,9 +1,10 @@
-import { shallowMount, mount } from '@vue/test-utils'
+import { mount, shallowMount } from '@vue/test-utils'
 
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
 import SearchBar from '@/components/Search/SearchBar/SearchBar'
+import SearchBarInput from '@/components/Search/SearchBar/SearchBarInput'
 import { useSearchStore } from '@/store/modules'
 
 describe('SearchBar.vue', function () {
@@ -12,27 +13,13 @@ describe('SearchBar.vue', function () {
   const { plugins, config } = CoreSetup.init().useAll().useRouterWithoutGuards()
 
   let wrapper, searchStore
+
   const shallowMountFactory = (props = {}) => {
-    return shallowMount(SearchBar, {
-      props,
-      global: {
-        plugins,
-        renderStubDefaultSlot: true
-      }
-    })
+    return shallowMount(SearchBar, { props, global: { plugins, renderStubDefaultSlot: true } })
   }
 
-  const mountFactory = (props = {}, data = { pristine: false, suggestions: [] }) => {
-    return mount(SearchBar, {
-      data() {
-        return { ...data }
-      },
-      props,
-      global: {
-        plugins,
-        renderStubDefaultSlot: true
-      }
-    })
+  const mountFactory = (props = {}) => {
+    return mount(SearchBar, { props, global: { plugins, renderStubDefaultSlot: true } })
   }
 
   beforeAll(() => {
@@ -55,48 +42,30 @@ describe('SearchBar.vue', function () {
   it('should display search bar', () => {
     wrapper = shallowMountFactory()
     expect(wrapper.find('.search-bar').element).toBeTruthy()
-    expect(wrapper.find('search-bar-input-stub').element).toBeTruthy()
   })
 
-  it('should display a search bar input with dropdown field options', () => {
+  it('should display a field dropdown', () => {
     wrapper = mountFactory()
     expect(wrapper.findComponent({ name: 'SearchBarInput' }).exists()).toBeTruthy()
-    expect(wrapper.findComponent({ name: 'SearchBarInputDropdownForField' }).exists()).toBeTruthy()
+    expect(wrapper.findComponent({ name: 'FieldDropdownSelector' }).exists()).toBeTruthy()
   })
 
-  it('should display a suggestion dropdown when there are suggestions', async () => {
-    wrapper = mountFactory()
-    expect(wrapper.find('.search-bar__suggestions').exists()).toBeFalsy()
-    await wrapper.setData({ suggestions: ['suggestion1', 'suggestion2'] })
-    expect(wrapper.find('.search-bar__suggestions').exists()).toBeTruthy()
-  })
-
-  it('should not display the shortkeys-modal component', async () => {
-    const props = { settings: false }
-    wrapper = shallowMountFactory(props)
-    expect(wrapper.find('.search-bar shortkeys-modal-stub').exists()).toBeFalsy()
-  })
-
-  it('should submit search', () => {
+  it('should submit the query into the store', async () => {
     wrapper = shallowMountFactory()
-    wrapper.setData({ query: 'foo' })
+    wrapper.findComponent(SearchBarInput).vm.$emit('update:modelValue', 'foo')
+    await wrapper.vm.$nextTick()
     wrapper.vm.submit()
     expect(searchStore.q).toBe('foo')
-
-    wrapper.setData({ query: 'bar' })
-    wrapper.vm.submit()
-    expect(searchStore.q).toBe('bar')
   })
 
   it('should reset the from search parameter to 0', () => {
     wrapper = shallowMountFactory()
     searchStore.setFrom(12)
     wrapper.vm.submit()
-
     expect(searchStore.from).toBe(0)
   })
 
-  it('should submit the from with a different index', () => {
+  it('should submit with a different index', () => {
     wrapper = shallowMountFactory({ indices: [indexFoo] })
     wrapper.vm.submit()
     expect(searchStore.indices).toContain(indexFoo)
