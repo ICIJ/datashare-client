@@ -206,6 +206,7 @@ defineExpose({ submit, suggestTerms, query, field, suggestions })
             v-if="!hideFieldDropdown"
             v-model="field"
             :disabled="!!indices"
+            :offset="6"
             @changed="focusOnSearchInput"
           />
           <search-bar-input-dropdown-for-projects
@@ -213,6 +214,7 @@ defineExpose({ submit, suggestTerms, query, field, suggestions })
             v-model="selectedProjects"
             :disabled="!!indices"
             :no-caret="!!indices"
+            :offset="6"
           />
         </template>
         <template #suggestions>

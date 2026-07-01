@@ -66,6 +66,13 @@ const props = defineProps({
     type: Boolean
   },
   /**
+   * Remove the default padding on each item link, letting the item slot own
+   * its layout (used when the slot renders a custom row, e.g. project entries).
+   */
+  flushItems: {
+    type: Boolean
+  },
+  /**
    * Disable the dropdown toggler.
    */
   disabled: {
@@ -326,7 +333,7 @@ defineExpose({ hide, focus })
       v-for="(option, index) in orderedOptions"
       :key="index"
       :active="isSelected(option)"
-      :link-class="{ 'p-0': true, 'dropdown-selector__item--focus': focusIndex === index }"
+      :link-class="{ 'p-0': flushItems, 'dropdown-selector__item--focus': focusIndex === index }"
       class="dropdown-selector__item"
     >
       <slot

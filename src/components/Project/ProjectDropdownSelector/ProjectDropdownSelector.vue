@@ -102,6 +102,7 @@ function filterProject(project, query) {
     :option-filter="filterProject"
     :allow-select-all="multiple"
     pin-selected
+    flush-items
     :disabled="disabled"
     :no-caret="noCaret"
     :options="projects"
