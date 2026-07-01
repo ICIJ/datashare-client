@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import IPhClipboard from '~icons/ph/clipboard'
@@ -8,6 +8,7 @@ import IPhTrash from '~icons/ph/trash'
 import ButtonRowAction from '@/components/Button/ButtonRowAction/ButtonRowAction.vue'
 import ProjectUsersDeleteModal from '@/components/ProjectUsers/ProjectUsersDeleteModal.vue'
 
+import { useAuth } from '@/composables/useAuth.js'
 import { useToast } from '@/composables/useToast.js'
 
 const props = defineProps({
@@ -25,8 +26,10 @@ const emit = defineEmits(['user:deleted'])
 
 const { toast } = useToast()
 const { t } = useI18n()
+const { username } = useAuth()
 
 const showDeleteModal = ref(false)
+const isCurrentUser = computed(() => username.value === props.user.name)
 
 async function copyUsername() {
   await navigator.clipboard.writeText(props.user.name)
@@ -48,6 +51,7 @@ function onUserDeleted({ name }) {
     <button-row-action
       :icon="IPhTrash"
       :label="t('projectViewEdit.users.actions.delete')"
+      :disabled="isCurrentUser"
       @click="showDeleteModal = true"
     />
     <project-users-delete-modal
