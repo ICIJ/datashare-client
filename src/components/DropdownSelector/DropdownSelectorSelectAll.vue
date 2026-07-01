@@ -1,5 +1,5 @@
 <script setup>
-defineOptions({ name: 'AppDropdownSelectAll' })
+defineOptions({ name: 'DropdownSelectorSelectAll' })
 
 const modelValue = defineModel({ type: Boolean, default: false })
 
@@ -15,7 +15,7 @@ defineProps({
 </script>
 
 <template>
-  <li class="app-dropdown-select-all">
+  <li class="dropdown-selector-select-all">
     <b-form-checkbox v-model="modelValue">
       {{ label }}
     </b-form-checkbox>
@@ -23,7 +23,7 @@ defineProps({
 </template>
 
 <style lang="scss" scoped>
-.app-dropdown-select-all {
+.dropdown-selector-select-all {
   display: flex;
 
   &:deep(.form-check) {

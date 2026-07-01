@@ -1,7 +1,7 @@
 <script setup>
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 
-defineOptions({ name: 'AppDropdownSearch' })
+defineOptions({ name: 'DropdownSelectorSearch' })
 
 const modelValue = defineModel({ type: String, default: '' })
 
@@ -39,7 +39,7 @@ const emit = defineEmits(['up', 'down', 'enter', 'blur'])
 </script>
 
 <template>
-  <li class="app-dropdown-search">
+  <li class="dropdown-selector-search">
     <div class="b-dropdown-form pt-1 mb-3">
       <form-control-search
         v-model="modelValue"

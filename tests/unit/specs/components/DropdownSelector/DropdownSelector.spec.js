@@ -2,13 +2,13 @@ import { mount } from '@vue/test-utils'
 import { h } from 'vue'
 
 import CoreSetup from '~tests/unit/CoreSetup'
-import AppDropdown from '@/components/AppDropdown/AppDropdown'
-import AppDropdownSearch from '@/components/AppDropdown/AppDropdownSearch'
+import DropdownSelector from '@/components/DropdownSelector/DropdownSelector'
+import DropdownSelectorSearch from '@/components/DropdownSelector/DropdownSelectorSearch'
 
 // jsdom doesn't implement scrollIntoView; stub it like DocumentContent.spec.js does.
 window.HTMLElement.prototype.scrollIntoView = vi.fn()
 
-describe('AppDropdown.vue', () => {
+describe('DropdownSelector.vue', () => {
   const { plugins } = CoreSetup.init().useAll()
   const options = [
     { name: 'a', label: 'A' },
@@ -18,7 +18,7 @@ describe('AppDropdown.vue', () => {
 
   // Mount with slots that expose the option name so we can assert on text.
   function mountComponent(props = {}) {
-    return mount(AppDropdown, {
+    return mount(DropdownSelector, {
       props: { options, optionKey: 'name', teleportDisabled: true, ...props },
       global: { plugins },
       slots: {
@@ -48,7 +48,7 @@ describe('AppDropdown.vue', () => {
   it('filters options with a custom optionFilter when searchable', async () => {
     const optionFilter = (option, query) => option.name.includes(query)
     const wrapper = mountComponent({ modelValue: { name: 'a' }, searchable: true, optionFilter })
-    wrapper.findComponent(AppDropdownSearch).vm.$emit('update:modelValue', 'b')
+    wrapper.findComponent(DropdownSelectorSearch).vm.$emit('update:modelValue', 'b')
     await wrapper.vm.$nextTick()
     const items = wrapper.findAll('.dropdown-item')
     expect(items).toHaveLength(1)
@@ -73,7 +73,7 @@ describe('AppDropdown.vue', () => {
   })
 
   it('teleports the menu to body by default', () => {
-    const wrapper = mount(AppDropdown, {
+    const wrapper = mount(DropdownSelector, {
       props: { options, optionKey: 'name', modelValue: { name: 'a' } },
       global: { plugins },
       slots: { 'button-content': () => 'x', 'item': ({ option }) => option.name }

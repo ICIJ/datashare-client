@@ -1,14 +1,14 @@
 import { mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
-import AppDropdownSearch from '@/components/AppDropdown/AppDropdownSearch'
+import DropdownSelectorSearch from '@/components/DropdownSelector/DropdownSelectorSearch'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 
-describe('AppDropdownSearch.vue', () => {
+describe('DropdownSelectorSearch.vue', () => {
   const { plugins } = CoreSetup.init().useAll()
 
   it('emits the typed query through v-model', async () => {
-    const wrapper = mount(AppDropdownSearch, { global: { plugins }, props: { modelValue: '' } })
+    const wrapper = mount(DropdownSelectorSearch, { global: { plugins }, props: { modelValue: '' } })
     wrapper.findComponent(FormControlSearch).vm.$emit('update:modelValue', 'foo')
     await wrapper.vm.$nextTick()
     expect(wrapper.emitted('update:modelValue')).toEqual([['foo']])
@@ -16,12 +16,12 @@ describe('AppDropdownSearch.vue', () => {
 
   it('shows the no-matches label when hasMatches is false', () => {
     const props = { modelValue: 'x', hasMatches: false, noMatchesLabel: 'Nothing here' }
-    const wrapper = mount(AppDropdownSearch, { global: { plugins }, props })
+    const wrapper = mount(DropdownSelectorSearch, { global: { plugins }, props })
     expect(wrapper.text()).toContain('Nothing here')
   })
 
   it('forwards keyboard events', () => {
-    const wrapper = mount(AppDropdownSearch, { global: { plugins }, props: { modelValue: '' } })
+    const wrapper = mount(DropdownSelectorSearch, { global: { plugins }, props: { modelValue: '' } })
     const search = wrapper.findComponent(FormControlSearch)
     search.vm.$emit('up')
     search.vm.$emit('down')
