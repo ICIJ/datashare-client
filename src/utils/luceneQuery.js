@@ -32,6 +32,199 @@ function escapePhrase(phrase) {
 }
 
 /**
+ * Lucene boolean occurrence kinds. AND/`+` compile to MUST, OR/default to
+ * SHOULD, NOT/`-` to MUST_NOT — the same model Lucene itself uses, which lets
+ * `a AND b` and `+a +b` canonicalise to the same thing.
+ */
+const MUST = 'must'
+const SHOULD = 'should'
+const MUST_NOT = 'must_not'
+
+// Operators that combine clauses conjunctively (the others are disjunctive).
+const AND_FAMILY = new Set(['AND', 'AND NOT'])
+
+function operatorFamily(operator) {
+  return AND_FAMILY.has(operator) ? 'AND' : 'OR'
+}
+
+function operatorOccur(operator, side) {
+  switch (operator) {
+    case 'AND': return MUST
+    case 'OR': return SHOULD
+    case 'AND NOT': return side === 'right' ? MUST_NOT : MUST
+    case 'OR NOT': return side === 'right' ? MUST_NOT : SHOULD
+    case 'NOT': return side === 'right' ? MUST_NOT : SHOULD
+    default: return SHOULD // <implicit> (default operator)
+  }
+}
+
+/**
+ * A clause's occurrence comes from its own `+`/`-` prefix when present,
+ * otherwise from the operator that joins it to the chain.
+ */
+function clauseOccur(node, operator, side) {
+  if (node && node.prefix === '+') {
+    return MUST
+  }
+  if (node && node.prefix === '-') {
+    return MUST_NOT
+  }
+  return operatorOccur(operator, side)
+}
+
+const isBinaryNode = node => Boolean(node && node.left && node.right)
+const isParenthesised = node => Boolean(node && node.parenthesized === true)
+
+/**
+ * Turn a `lucene` AST node into a canonical tree of occurrence-tagged
+ * clauses. A right-leaning chain of the *same* operator family is linearised
+ * into one flat clause list (so `a AND b AND c` and `+a +b +c` match), while a
+ * parenthesised group or an operator-family change stays an atomic nested
+ * clause (so `(a OR b) AND c` does NOT collapse into `(a b) +c`).
+ */
+function buildCanonical(node, inheritedField = null) {
+  if (!node) {
+    return null
+  }
+  const field = node.field && node.field !== '<implicit>' ? node.field : inheritedField
+
+  if (node.start === 'NOT' && node.left && !node.right) {
+    return { bool: [{ occur: MUST_NOT, node: buildCanonical(node.left, field) }] }
+  }
+
+  if (isBinaryNode(node)) {
+    const family = operatorFamily(node.operator)
+    const clauses = [{ occur: clauseOccur(node.left, node.operator, 'left'), node: buildCanonical(node.left, field) }]
+    let current = node
+    while (true) {
+      const right = current.right
+      if (isBinaryNode(right) && !isParenthesised(right) && operatorFamily(right.operator) === family) {
+        clauses.push({ occur: clauseOccur(right.left, current.operator, 'right'), node: buildCanonical(right.left, field) })
+        current = right
+        continue
+      }
+      clauses.push({ occur: clauseOccur(right, current.operator, 'right'), node: buildCanonical(right, field) })
+      break
+    }
+    return { bool: clauses }
+  }
+
+  // Field-only wrapper node (e.g. the outer node of `content:(a AND b)`).
+  if (node.left && !node.right) {
+    return buildCanonical(node.left, field)
+  }
+
+  // Capture every attribute that distinguishes one leaf's meaning from
+  // another so the equivalence check can never silently treat two different
+  // terms as equal: a range bound, a regex flag, or a boost left out here
+  // would collapse distinct queries to the same canonical key.
+  const leaf = {
+    leaf: {
+      field: field || '*',
+      term: node.term ?? '',
+      quoted: Boolean(node.quoted),
+      regex: Boolean(node.regex),
+      similarity: node.similarity ?? null,
+      proximity: node.proximity ?? null,
+      boost: node.boost ?? null,
+      rangeMin: node.term_min ?? null,
+      rangeMax: node.term_max ?? null,
+      rangeInclusive: node.inclusive ?? null
+    }
+  }
+  // A `+`/`-` prefix on a bare term carries its occurrence. Inside an operator
+  // chain `clauseOccur` already consumes it, but a top-level `-a` or a sole
+  // `(-a)` has no surrounding clause, so wrap it here. `flattenCanonical`
+  // collapses the wrapper back out when the prefix matches the parent
+  // occurrence, so `+a +b` still canonicalises identically to `a AND b`.
+  if (node.prefix === '+') {
+    return { bool: [{ occur: MUST, node: leaf }] }
+  }
+  if (node.prefix === '-') {
+    return { bool: [{ occur: MUST_NOT, node: leaf }] }
+  }
+  return leaf
+}
+
+/**
+ * Collapse a nested clause into its parent when the subgroup's members all
+ * share the clause's own occurrence — associativity makes such a group
+ * transparent (`(a OR b)` inside an OR, a `+a +b` wrapper under MUST). A group
+ * whose occurrence differs from its members (e.g. a SHOULD group required by
+ * an AND) stays nested, so `(a OR b) AND c` does NOT collapse into `(a b) +c`.
+ */
+function flattenCanonical(node) {
+  if (!node || node.leaf) {
+    return node
+  }
+  const clauses = []
+  for (const clause of node.bool) {
+    const child = flattenCanonical(clause.node)
+    if (child && child.bool && child.bool.every(childClause => childClause.occur === clause.occur)) {
+      clauses.push(...child.bool)
+    }
+    else {
+      clauses.push({ occur: clause.occur, node: child })
+    }
+  }
+  return { bool: clauses }
+}
+
+/**
+ * Serialise a canonical tree to a string with sibling clauses sorted, so two
+ * queries that differ only in operand order serialise identically. The leaf
+ * is JSON-stringified whole — every key built by `buildCanonical` always
+ * appears in the same order, so the encoding is injective without any
+ * hand-rolled delimiter that a `:` inside a term could break.
+ */
+function serializeCanonical(node) {
+  if (!node) {
+    return 'nil'
+  }
+  if (node.leaf) {
+    return `L:${JSON.stringify(node.leaf)}`
+  }
+  return `B(${node.bool.map(clause => `${clause.occur}:${serializeCanonical(clause.node)}`).sort().join(',')})`
+}
+
+function normalizeAst(ast) {
+  return serializeCanonical(flattenCanonical(buildCanonical(ast)))
+}
+
+function normalizeQuery(query) {
+  return normalizeAst(lucene.parse(query))
+}
+
+/**
+ * True when two Lucene query strings are semantically equivalent under the
+ * advanced-search form's representable shape. Used by `parseLuceneQuery` to
+ * verify a regenerated query still means what the user typed. Bias is to blank
+ * on any doubt: an unparseable side or a thrown error counts as not equivalent.
+ */
+export function queriesEquivalent(a, b) {
+  try {
+    return normalizeQuery(a) === normalizeQuery(b)
+  }
+  catch {
+    return false
+  }
+}
+
+/**
+ * Same equivalence test as `queriesEquivalent`, but for the already-parsed AST
+ * of the original query — so `parseLuceneQuery` reuses its single parse of the
+ * input and only parses the regenerated string. Same blank-on-doubt bias.
+ */
+function regeneratedMatchesQuery(ast, regenerated) {
+  try {
+    return normalizeAst(ast) === normalizeQuery(regenerated)
+  }
+  catch {
+    return false
+  }
+}
+
+/**
  * Generate a Lucene query string from the advanced search form data.
  * @param {Object} formData - The form data object
  * @returns {string} - The generated Lucene query
@@ -99,13 +292,9 @@ export function generateLuceneQuery(formData) {
     parts.push(proximityTerm)
   }
 
-  let query = parts.join(' ')
-
-  if (query && !formData.fieldAll && formData.selectedFields?.length > 0) {
-    query = formData.selectedFields.map(field => `${field}:(${query})`).join(' OR ')
-  }
-
-  return query.trim()
+  // Field scoping is applied through the search store's `field`, not baked
+  // into the query string, so nothing field-related is emitted here.
+  return parts.join(' ').trim()
 }
 
 /**
@@ -120,13 +309,6 @@ export const FUZZY_DISTANCE_MAX = 2
  * distance slider and the parser's fidelity check.
  */
 export const PROXIMITY_DISTANCE_MAX = 6
-
-/**
- * Uppercase boolean keywords are Lucene operators, not words: a form that
- * displayed them as editable plain words would change what they mean on
- * re-submit.
- */
-const LUCENE_BOOLEAN_OPERATORS = Object.freeze(['AND', 'OR', 'NOT'])
 
 /**
  * Default advanced-search form shape. Word inputs hold strings (whitespace
@@ -147,8 +329,10 @@ export function getInitialForm() {
     fuzzyDistance: 1,
     proximityPhrase: '',
     proximityDistance: 1,
-    fieldAll: true,
-    selectedFields: []
+    // Single search field key (one of settings.searchFields keys, e.g. 'all',
+    // 'tags', 'content'). It sets the search store's `field` rather than being
+    // baked into the query string, so the generator/parser ignore it.
+    field: 'all'
   }
 }
 
@@ -179,19 +363,19 @@ function unescapeTerm(term) {
 const unescapePhrase = unescapeTerm
 
 /**
- * The rest of the app (search bar, breadcrumb, search store) reads `q`
- * through the `lucene` package's grammar. A query that grammar rejects
- * (unbalanced quotes or parentheses, stray operators…) cannot be claimed
- * representable by the form either, so it is screened out before our own
- * pattern matching runs.
+ * Parse a query through the `lucene` package's grammar, returning the AST
+ * or `null` when the grammar rejects it (unbalanced quotes or parentheses,
+ * stray operators…). The rest of the app reads `q` through that same grammar,
+ * so a query it rejects cannot be claimed representable by the form either.
+ * Returning the AST lets `parseLuceneQuery` reuse this single parse for the
+ * faithfulness gate instead of re-parsing the same string.
  */
-function isParseableLuceneQuery(query) {
+function parseQueryOrNull(query) {
   try {
-    lucene.parse(query)
-    return true
+    return lucene.parse(query)
   }
   catch {
-    return false
+    return null
   }
 }
 
@@ -307,6 +491,62 @@ function tokenize(query) {
 }
 
 /**
+ * Boolean keywords that act as separators between operands rather than as
+ * searchable words. These are the single tokens the whitespace tokenizer
+ * emits, so this list is distinct from `AND_FAMILY` above: that one classifies
+ * the multi-word operators the `lucene` AST reports (`AND NOT`, `OR NOT`) and
+ * belongs to the canonical-AST layer, whereas this one belongs to the
+ * token-routing layer.
+ */
+const BOOLEAN_OPERATORS = new Set(['AND', 'OR', 'NOT'])
+
+/**
+ * Split a top-level token list into operands and per-operand bucket hints
+ * derived from the boolean operators between them:
+ * - an operand reached through `NOT` → `none`
+ * - an operand reached through `AND` (and the operand before it) → `all`
+ * - everything else → `any`
+ *
+ * The hint only steers plain words; structural tokens (groups, phrases,
+ * wildcards, `+`/`-` terms) keep their intrinsic bucket. Mixed-operator
+ * queries produce a best-effort routing that the round-trip equivalence check
+ * in `parseLuceneQuery` rejects, so over-eager hints can never silently
+ * rewrite a query.
+ */
+function routeBooleanOperators(tokens) {
+  const operands = []
+  const opsBefore = []
+  let pending = []
+  for (const token of tokens) {
+    if (BOOLEAN_OPERATORS.has(token)) {
+      pending.push(token)
+      continue
+    }
+    operands.push(token)
+    opsBefore.push(pending)
+    pending = []
+  }
+
+  const hints = operands.map(() => 'any')
+  for (let i = 0; i < operands.length; i++) {
+    const ops = opsBefore[i]
+    if (ops.includes('NOT')) {
+      hints[i] = 'none'
+    }
+    else if (ops.includes('AND')) {
+      hints[i] = 'all'
+    }
+    // The left operand of an AND also belongs in `all`, unless a stronger
+    // hint (none/all) already claimed it.
+    if (ops.includes('AND') && i > 0 && hints[i - 1] === 'any') {
+      hints[i - 1] = 'all'
+    }
+  }
+
+  return { operands, hints }
+}
+
+/**
  * Find the index of the first occurrence of a character in a string that is
  * not preceded by an unescaped backslash escape sequence.
  */
@@ -378,9 +618,11 @@ function tryParseProximity(token, ctx) {
     return false
   }
   const distance = Number(m[2])
-  // The form has a single proximity slot and a bounded slider: a second
-  // clause or an out-of-range distance cannot be represented.
-  if (ctx.form.proximityPhrase || !isFaithfulPhrase(m[1]) || distance < 1 || distance > PROXIMITY_DISTANCE_MAX) {
+  // The form has a single proximity slot: a second clause cannot be
+  // represented. An out-of-range distance is preserved instead (the slider
+  // widens to show it), so only a second clause, an unfaithful phrase, or a
+  // sub-1 distance makes the parse lossy.
+  if (ctx.form.proximityPhrase || !isFaithfulPhrase(m[1]) || distance < 1) {
     ctx.lossy = true
   }
   ctx.form.proximityPhrase = unescapePhrase(m[1])
@@ -394,8 +636,9 @@ function tryParseFuzzy(token, ctx) {
     return false
   }
   const distance = Number(m[2])
-  // Same single-slot and bounded-slider rules as proximity.
-  if (ctx.form.fuzzyTerm || !isFaithfulTerm(m[1]) || distance < 1 || distance > FUZZY_DISTANCE_MAX) {
+  // Same single-slot rules as proximity; an out-of-range distance is
+  // preserved rather than blanking the form.
+  if (ctx.form.fuzzyTerm || !isFaithfulTerm(m[1]) || distance < 1) {
     ctx.lossy = true
   }
   ctx.form.fuzzyTerm = unescapeTerm(m[1])
@@ -420,12 +663,11 @@ function tryParseOrGroup(token, ctx) {
   if (!m) {
     return false
   }
-  for (const word of tokenize(m[1])) {
-    if (!isFaithfulTerm(word)) {
-      ctx.lossy = true
-    }
-    ctx.anyWords.push(unescapeTerm(word))
-  }
+  // Route the group's contents like a top-level query so boolean operators
+  // inside the group become bucket hints instead of literal words, and
+  // structural tokens (phrases, nested groups) keep their intrinsic bucket.
+  const { operands, hints } = routeBooleanOperators(tokenize(m[1]))
+  operands.forEach((word, i) => parseToken(word, ctx, hints[i]))
   return true
 }
 
@@ -491,16 +733,24 @@ function tryParseMultiWildcard(token, ctx) {
 }
 
 /**
- * Fallback for tokens no pattern recognised: keep the word in the OR
- * bucket. Boolean operators and terms carrying unescaped Lucene syntax
- * make the parse lossy — re-submitting them as escaped plain words would
- * change the query's meaning.
+ * Fallback for tokens no pattern recognised: a plain word. The bucket hint
+ * (from `routeBooleanOperators`) decides whether it is an all/none/any word;
+ * a term carrying unescaped Lucene syntax still makes the parse lossy.
  */
-function parseFallbackWord(token, ctx) {
-  if (LUCENE_BOOLEAN_OPERATORS.includes(token) || !isFaithfulTerm(token)) {
+function parseFallbackWord(token, ctx, hint = 'any') {
+  if (!isFaithfulTerm(token)) {
     ctx.lossy = true
   }
-  ctx.fallbackAnyWords.push(unescapeTerm(token))
+  const word = unescapeTerm(token)
+  if (hint === 'all') {
+    ctx.allWords.push(word)
+  }
+  else if (hint === 'none') {
+    ctx.noneWords.push(word)
+  }
+  else {
+    ctx.anyWords.push(word)
+  }
 }
 
 /**
@@ -518,22 +768,22 @@ const TOKEN_PARSERS = Object.freeze([
   tryParseMultiWildcard
 ])
 
-function parseToken(token, ctx) {
+function parseToken(token, ctx, hint = 'any') {
   for (const tryParse of TOKEN_PARSERS) {
     if (tryParse(token, ctx)) {
       return
     }
   }
-  parseFallbackWord(token, ctx)
+  parseFallbackWord(token, ctx, hint)
 }
 
 /**
- * Flush the accumulated word buckets into the form's string inputs. Plain
- * words mixed into the OR bucket are appended after group words so the
- * generated query keeps them in one group.
+ * Flush the accumulated word buckets into the form's string inputs. Every
+ * plain "any" word (loose or routed out of a group) lands in a single bucket,
+ * so the generated query keeps them together in one OR group.
  */
 function applyWordBuckets(ctx) {
-  ctx.form.anyWords = [...ctx.anyWords, ...ctx.fallbackAnyWords].join(' ')
+  ctx.form.anyWords = ctx.anyWords.join(' ')
   ctx.form.allWords = ctx.allWords.join(' ')
   ctx.form.noneWords = ctx.noneWords.join(' ')
   // The form carries a single exact phrase; a surplus one cannot be moved
@@ -550,13 +800,15 @@ function applyWordBuckets(ctx) {
 /**
  * Parse a Lucene query string back into the advanced-search form shape.
  *
- * Only patterns produced by `generateLuceneQuery` are recognised. When any
- * part of the query cannot be represented by the form without changing its
- * meaning on re-submit — malformed syntax, field syntax, boolean operators,
- * ranges, a second fuzzy/proximity/wildcard clause, an out-of-range
- * distance, a restriction to an unknown field — the function returns `null`
- * so callers can skip pre-population instead of silently rewriting the
- * user's query.
+ * Flat boolean queries map onto the form's any/all/none buckets (`a AND b`,
+ * `a OR b`, `a AND NOT c`). When any part of the query cannot be represented
+ * by the form without changing its meaning on re-submit — malformed syntax,
+ * field syntax, boolean precedence the flat form cannot hold (mixed AND/OR,
+ * grouped sub-expressions), ranges, a second fuzzy/proximity/wildcard clause,
+ * an out-of-range distance, a restriction to an unknown field — the function
+ * returns `null` so callers can skip pre-population instead of silently
+ * rewriting the user's query. Faithfulness is enforced by regenerating the
+ * query from the filled form and checking it stays equivalent to the input.
  *
  * @param {string} query
  * @param {Object} [options]
@@ -571,14 +823,20 @@ export function parseLuceneQuery(query, { fields: allowedFields = null } = {}) {
     return form
   }
 
-  if (!isParseableLuceneQuery(query)) {
+  // Parse once and reuse the AST: it both screens out grammar-invalid queries
+  // here and feeds the faithfulness gate below, so the original query is never
+  // re-parsed.
+  const ast = parseQueryOrNull(query)
+  if (!ast) {
     return null
   }
 
+  // The form no longer represents in-query field scoping — it sets the search
+  // store's `field` separately — so a field-restricted query (e.g. `tags:(x)`)
+  // can't be faithfully edited. Blank the modal in that case.
   const { fields, innerQuery } = extractFieldRestrictions(query, allowedFields)
   if (fields) {
-    form.fieldAll = false
-    form.selectedFields = fields
+    return null
   }
 
   const ctx = {
@@ -587,15 +845,36 @@ export function parseLuceneQuery(query, { fields: allowedFields = null } = {}) {
     anyWords: [],
     allWords: [],
     noneWords: [],
-    exactPhrases: [],
-    fallbackAnyWords: []
+    exactPhrases: []
   }
 
-  for (const token of tokenize(innerQuery)) {
-    parseToken(token, ctx)
-  }
+  const { operands, hints } = routeBooleanOperators(tokenize(innerQuery))
+  operands.forEach((token, i) => parseToken(token, ctx, hints[i]))
 
   applyWordBuckets(ctx)
 
-  return ctx.lossy ? null : form
+  if (ctx.lossy) {
+    return null
+  }
+
+  // Faithfulness gate: the form is only a valid representation of the query if
+  // regenerating it reproduces an equivalent query. This is what lets the
+  // operator routing above be liberal — anything it gets wrong (mixed
+  // operators, grouping the flat form can't hold) fails to round-trip and
+  // blanks the modal instead of silently rewriting the user's query.
+  //
+  // By design there are two views of a query here: the token-routing
+  // extraction that fills the form, and the canonical-AST model
+  // (`buildCanonical`) used only to compare meaning. They are deliberately
+  // kept separate — the extraction stays simple and the canonical model is the
+  // single authority on "are these the same query". Operator semantics live in
+  // both layers, but the gate makes any drift fail safe (blank), never unsafe
+  // (rewrite): the canonical leaf keeps every meaning-bearing attribute, so the
+  // comparison can never pass two genuinely different queries, and the input is
+  // parsed once (`ast`) and reused on both sides.
+  if (!regeneratedMatchesQuery(ast, generateLuceneQuery(toQueryShape(form)))) {
+    return null
+  }
+
+  return form
 }

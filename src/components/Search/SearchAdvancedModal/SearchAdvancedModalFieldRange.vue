@@ -7,7 +7,7 @@
       <b-form-input v-model="term" />
     </search-advanced-modal-field>
     <div class="search-advanced-modal-field-range__slider">
-      <label class="search-advanced-modal-field-range__slider__label text-action">
+      <label class="search-advanced-modal-field-range__slider__label">
         {{ rangeLabel }}
       </label>
       <form-control-range
@@ -104,14 +104,24 @@ const { t } = useI18n()
     }
 
     &__label {
-      // Vertically aligned with the slider track (top of the FormControlRange
-      // wrapper) rather than centered with the ticks below.
       margin: 0;
       white-space: nowrap;
-      // The track sits at `padding-top: $spacer-xs` inside the range wrapper;
-      // offsetting the label by the same amount keeps both on the same
-      // horizontal baseline without restyling the DS component.
-      padding-top: $spacer-xs;
+      // Match the sibling field labels (SearchAdvancedModalField__label)
+      // rather than `text-action`: that utility paints the label in the
+      // slider-track accent colour, which falls below readable contrast in
+      // dark mode.
+      color: var(--bs-secondary-color);
+      font-size: $font-size-base;
+      // Centre the label on the slider track without magic offsets: give it
+      // the thumb's height and centre its line box, then push it down by the
+      // range wrapper's own `padding-top` so the two bands line up. Both
+      // metrics are the Bootstrap variables the slider itself uses, so the
+      // alignment follows any change to the track geometry.
+      display: flex;
+      align-items: center;
+      height: $form-range-thumb-height;
+      margin-top: $spacer-xs;
+      line-height: 1;
     }
   }
 

@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref, useTemplateRef, toRef } from 'vue'
 
-// import ButtonToggleAdvancedSearch from '@/components/Button/ButtonToggleAdvancedSearch'
+import ButtonToggleAdvancedSearch from '@/components/Button/ButtonToggleAdvancedSearch'
 import ButtonToggleFilters from '@/components/Button/ButtonToggleFilters'
 import ButtonToggleSearchBreadcrumb from '@/components/Button/ButtonToggleSearchBreadcrumb'
 import ButtonToggleSettings from '@/components/Button/ButtonToggleSettings'
@@ -44,10 +44,11 @@ const classList = computed(() => {
   }
 })
 
-function handleAdvancedSearch(queryString) {
-  if (queryString) {
-    searchStore.query(queryString)
-  }
+function handleAdvancedSearch({ query, field }) {
+  // Always run the query — even an empty one — so it resubmits with a fresh
+  // stamp, matching the search bar's submit behaviour. The field is applied
+  // to the store's single search `field` rather than baked into the query.
+  searchStore.query({ query, field })
 }
 </script>
 
@@ -82,10 +83,11 @@ function handleAdvancedSearch(queryString) {
         :compact="compact"
         class="search__main__search-bar flex-grow-1"
       />
-      <!--  <button-toggle-advanced-search
+      <button-toggle-advanced-search
         v-model:active="showAdvancedSearch"
+        :reduced="compact"
         class="search-toolbar__toggle-advanced-search"
-      />-->
+      />
       <button-toggle-settings
         v-model:active="toggleSettings"
         class="search__main__toggle-settings"
@@ -94,6 +96,7 @@ function handleAdvancedSearch(queryString) {
     <search-advanced-modal
       v-model="showAdvancedSearch"
       :initial-query="searchStore.q"
+      :initial-field="searchStore.field"
       @search="handleAdvancedSearch"
     />
   </div>

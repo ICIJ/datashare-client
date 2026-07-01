@@ -1,10 +1,11 @@
 import { describe, it, expect } from 'vitest'
 
 import { useAdvancedSearchForm, getInitialForm, toQueryShape, ADVANCED_SEARCH_FIELDS } from '@/composables/useAdvancedSearchForm'
+import settings from '@/utils/settings'
 
 describe('useAdvancedSearchForm', () => {
   describe('getInitialForm', () => {
-    it('starts with empty word inputs and "All fields" selected', () => {
+    it('starts with empty word inputs and the "all" field selected', () => {
       const f = getInitialForm()
       expect(f.anyWords).toBe('')
       expect(f.allWords).toBe('')
@@ -12,8 +13,7 @@ describe('useAdvancedSearchForm', () => {
       expect(f.noneWords).toBe('')
       expect(f.fuzzyTerm).toBe('')
       expect(f.proximityPhrase).toBe('')
-      expect(f.fieldAll).toBe(true)
-      expect(f.selectedFields).toEqual([])
+      expect(f.field).toBe('all')
     })
 
     it('defaults distance sliders to 1 (the disabled-state floor)', () => {
@@ -70,34 +70,18 @@ describe('useAdvancedSearchForm', () => {
     })
   })
 
-  describe('field mutual exclusion', () => {
-    it('clears individual fields when "All" is checked', () => {
-      const { form, setFieldAll } = useAdvancedSearchForm()
-      form.fieldAll = false
-      form.selectedFields = ['tags', 'content']
-      setFieldAll(true)
-      expect(form.fieldAll).toBe(true)
-      expect(form.selectedFields).toEqual([])
+  describe('setField', () => {
+    it('selects a single field', () => {
+      const { form, setField } = useAdvancedSearchForm()
+      setField('tags')
+      expect(form.field).toBe('tags')
     })
 
-    it('ignores attempts to untick "All" directly', () => {
-      const { form, setFieldAll } = useAdvancedSearchForm()
-      setFieldAll(false)
-      expect(form.fieldAll).toBe(true)
-    })
-
-    it('toggles "All" off when at least one individual field is selected', () => {
-      const { form, setSelectedFields } = useAdvancedSearchForm()
-      setSelectedFields(['tags'])
-      expect(form.fieldAll).toBe(false)
-      expect(form.selectedFields).toEqual(['tags'])
-    })
-
-    it('re-selects "All" when the last individual field is unticked', () => {
-      const { form, setSelectedFields } = useAdvancedSearchForm()
-      form.fieldAll = false
-      setSelectedFields([])
-      expect(form.fieldAll).toBe(true)
+    it('switches back to "all"', () => {
+      const { form, setField } = useAdvancedSearchForm()
+      setField('content')
+      setField('all')
+      expect(form.field).toBe('all')
     })
   })
 
@@ -106,28 +90,21 @@ describe('useAdvancedSearchForm', () => {
       const { form, reset } = useAdvancedSearchForm()
       form.anyWords = 'foo'
       form.fuzzyDistance = 2
-      form.fieldAll = false
-      form.selectedFields = ['tags']
+      form.field = 'tags'
       reset()
       expect(form.anyWords).toBe('')
       expect(form.fuzzyDistance).toBe(1)
-      expect(form.fieldAll).toBe(true)
-      expect(form.selectedFields).toEqual([])
+      expect(form.field).toBe('all')
     })
   })
 
   describe('ADVANCED_SEARCH_FIELDS', () => {
-    it('exposes only real Elasticsearch field paths', () => {
-      // Catch a regression where alias-style values like `contentAuthor`
-      // (which match no document) sneak back in.
-      const known = new Set([
-        'tags', 'path', 'content', 'dirname',
-        'metadata.tika_metadata_dc_creator',
-        'metadata.tika_metadata_message_to',
-        'metadata.tika_metadata_message_raw_header_thread_index'
-      ])
+    it('mirrors the search bar field keys so the value is a valid store field', () => {
+      const known = new Set(settings.searchFields.map(({ key }) => key))
+      expect(ADVANCED_SEARCH_FIELDS.length).toBe(settings.searchFields.length)
       for (const field of ADVANCED_SEARCH_FIELDS) {
         expect(known.has(field.value)).toBe(true)
+        expect(field.label).toBe(`search.field.${field.value}`)
       }
     })
   })

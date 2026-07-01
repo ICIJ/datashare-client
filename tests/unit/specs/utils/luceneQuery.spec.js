@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { generateLuceneQuery as generateQuery, parseLuceneQuery, toQueryShape } from '@/utils/luceneQuery'
+import { generateLuceneQuery as generateQuery, parseLuceneQuery, queriesEquivalent, toQueryShape } from '@/utils/luceneQuery'
 
 describe('luceneQuery', () => {
   describe('generateLuceneQuery', () => {
@@ -267,7 +267,9 @@ describe('luceneQuery', () => {
       expect(query).toBe('(Paris London) +France -spam')
     })
 
-    it('should apply field restriction when specific fields are selected', () => {
+    it('never bakes the field into the query — scoping is applied via the store field', () => {
+      // The selected field sets the search store's `field`; it is no longer
+      // wrapped into the query string (`content:(Paris)`).
       const formData = {
         anyWords: ['Paris'],
         allWords: [],
@@ -281,37 +283,11 @@ describe('luceneQuery', () => {
         fuzzyDistance: 0,
         proximityPhrase: '',
         proximityDistance: 0,
-        fieldAll: false,
-        selectedFields: ['content', 'path']
+        field: 'content'
       }
 
       const query = generateQuery(formData)
-      expect(query).toBe('content:(Paris) OR path:(Paris)')
-    })
-
-    it('preserves +/- operators inside the field restriction wrapper', () => {
-      // `field:(+a -b)` is interpreted by Lucene as "must have a, must
-      // not have b in field" — the wrapper does not strip operator
-      // semantics. Pin that down so future refactors don't regress it.
-      const formData = {
-        anyWords: [],
-        allWords: ['France'],
-        exactPhrase: [],
-        noneWords: ['spam'],
-        singleWildcardStart: '',
-        singleWildcardEnd: '',
-        multiWildcardStart: '',
-        multiWildcardEnd: '',
-        fuzzyTerm: '',
-        fuzzyDistance: 0,
-        proximityPhrase: '',
-        proximityDistance: 0,
-        fieldAll: false,
-        selectedFields: ['content']
-      }
-
-      const query = generateQuery(formData)
-      expect(query).toBe('content:(+France -spam)')
+      expect(query).toBe('Paris')
     })
 
     it('should not apply field restriction when all fields is selected', () => {
@@ -480,8 +456,7 @@ describe('luceneQuery', () => {
       expect(f.proximityPhrase).toBe('')
       expect(f.fuzzyDistance).toBe(1)
       expect(f.proximityDistance).toBe(1)
-      expect(f.fieldAll).toBe(true)
-      expect(f.selectedFields).toEqual([])
+      expect(f.field).toBe('all')
     })
 
     it('returns an empty form for null / whitespace input', () => {
@@ -495,6 +470,38 @@ describe('luceneQuery', () => {
 
     it('parses a parenthesised OR group into anyWords', () => {
       expect(parseLuceneQuery('(Paris London)').anyWords).toBe('Paris London')
+    })
+
+    it('parses `a AND b` into allWords', () => {
+      const f = parseLuceneQuery('Paris AND London')
+      expect(f.allWords).toBe('Paris London')
+      expect(f.anyWords).toBe('')
+    })
+
+    it('parses `a OR b` into anyWords', () => {
+      const f = parseLuceneQuery('Paris OR London')
+      expect(f.anyWords).toBe('Paris London')
+      expect(f.allWords).toBe('')
+    })
+
+    it('parses `a AND b AND NOT c` into allWords + noneWords', () => {
+      const f = parseLuceneQuery('Paris AND London AND NOT Berlin')
+      expect(f.allWords).toBe('Paris London')
+      expect(f.noneWords).toBe('Berlin')
+    })
+
+    it('returns null for a field-restricted query (no longer representable)', () => {
+      // The form scopes via the store `field`, not in the query string, so a
+      // field-restricted query cannot be faithfully edited and blanks the modal.
+      expect(parseLuceneQuery('content:(Paris AND London)')).toBeNull()
+    })
+
+    it('treats a query that is only a boolean operator as empty', () => {
+      // A lone operator has no operands to route, so the form opens blank.
+      const f = parseLuceneQuery('AND')
+      expect(f).not.toBeNull()
+      expect(f.anyWords).toBe('')
+      expect(f.allWords).toBe('')
     })
 
     it('parses `+word +word` into allWords', () => {
@@ -556,16 +563,12 @@ describe('luceneQuery', () => {
       expect(f.singleWildcardEnd).toBe('def')
     })
 
-    it('parses field-restricted queries into selectedFields + inner query', () => {
-      const f = parseLuceneQuery('tags:(Paris) OR content:(Paris)')
-      expect(f.fieldAll).toBe(false)
-      expect(f.selectedFields).toEqual(['tags', 'content'])
-      expect(f.anyWords).toBe('Paris')
+    it('returns null for a multi-field-restricted query (no longer representable)', () => {
+      expect(parseLuceneQuery('tags:(Paris) OR content:(Paris)')).toBeNull()
     })
 
-    it('parses field-restricted dotted ES field paths', () => {
-      const f = parseLuceneQuery('metadata.tika_metadata_dc_creator:(Paris)')
-      expect(f.selectedFields).toEqual(['metadata.tika_metadata_dc_creator'])
+    it('returns null for a dotted-ES-field-restricted query (no longer representable)', () => {
+      expect(parseLuceneQuery('metadata.tika_metadata_dc_creator:(Paris)')).toBeNull()
     })
 
     it('returns null if a field-restricted query has asymmetric inner queries', () => {
@@ -611,28 +614,29 @@ describe('luceneQuery', () => {
       expect(round.proximityDistance).toBe(3)
     })
 
-    it('round-trips a field-restricted query', () => {
-      const initial = {
-        anyWords: 'Paris',
-        allWords: '',
-        exactPhrase: '',
-        noneWords: '',
-        singleWildcardStart: '',
-        singleWildcardEnd: '',
-        multiWildcardStart: '',
-        multiWildcardEnd: '',
-        fuzzyTerm: '',
-        fuzzyDistance: 1,
-        proximityPhrase: '',
-        proximityDistance: 1,
-        fieldAll: false,
-        selectedFields: ['tags', 'content']
-      }
-      const query = generateQuery(toQueryShape(initial))
-      const round = parseLuceneQuery(query)
-      expect(round.fieldAll).toBe(false)
-      expect(round.selectedFields).toEqual(['tags', 'content'])
-      expect(round.anyWords).toBe('Paris')
+    it('pre-populates a group beside a loose word into anyWords', () => {
+      const f = parseLuceneQuery('(a b) c')
+      expect(f).not.toBeNull()
+      expect(f.anyWords).toBe('a b c')
+    })
+
+    it('routes an explicit OR group beside a loose word into anyWords', () => {
+      const f = parseLuceneQuery('(red OR blue) sky')
+      expect(f).not.toBeNull()
+      expect(f.anyWords).toBe('red blue sky')
+    })
+
+    it('routes a boolean operator inside a group instead of capturing it as a word', () => {
+      const f = parseLuceneQuery('(a AND b)')
+      expect(f).not.toBeNull()
+      expect(f.allWords).toBe('a b')
+      expect(f.anyWords).toBe('')
+    })
+
+    it('parses a comma-bearing term without delimiter collisions', () => {
+      const f = parseLuceneQuery('Smith,John')
+      expect(f).not.toBeNull()
+      expect(f.anyWords).toBe('Smith,John')
     })
 
     it('unescapes Lucene-reserved characters round-trip', () => {
@@ -675,10 +679,11 @@ describe('luceneQuery', () => {
       expect(parseLuceneQuery('content:cat')).toBeNull()
     })
 
-    it('returns null for boolean operators', () => {
-      expect(parseLuceneQuery('Paris OR London')).toBeNull()
-      expect(parseLuceneQuery('cat AND dog')).toBeNull()
-      expect(parseLuceneQuery('Paris NOT London')).toBeNull()
+    it('returns null for mixed AND/OR operators it cannot represent', () => {
+      // The flat form has no place for operator precedence, so a query that
+      // mixes AND and OR must open the modal blank rather than be rewritten.
+      expect(parseLuceneQuery('a AND b OR c')).toBeNull()
+      expect(parseLuceneQuery('(Paris OR Lyon) AND France')).toBeNull()
     })
 
     it('returns null for a range query', () => {
@@ -715,18 +720,32 @@ describe('luceneQuery', () => {
       expect(parseLuceneQuery('a?b*c')).toBeNull()
     })
 
-    it('returns null for out-of-range distances', () => {
-      // The sliders cap fuzzy at 2 and proximity at 6; clamping would
-      // silently change the user's distance.
-      expect(parseLuceneQuery('foo~3')).toBeNull()
-      expect(parseLuceneQuery('"a b"~7')).toBeNull()
+    it('returns null for a zero distance', () => {
+      // Distance 0 cannot be represented: the slider has no 0 and `~0` is
+      // not equivalent to the smallest slider value.
       expect(parseLuceneQuery('foo~0')).toBeNull()
+      expect(parseLuceneQuery('"a b"~0')).toBeNull()
     })
 
-    it('returns null for a restriction to a field the modal does not offer', () => {
-      const fields = ['tags', 'content']
-      expect(parseLuceneQuery('author:(Paris)', { fields })).toBeNull()
-      expect(parseLuceneQuery('tags:(Paris)', { fields })).not.toBeNull()
+    it('preserves out-of-range distances instead of blanking', () => {
+      // Above the slider max the value is kept verbatim (the slider widens to
+      // show it) so the modal still represents the query.
+      const fuzzy = parseLuceneQuery('foo~3')
+      expect(fuzzy).not.toBeNull()
+      expect(fuzzy.fuzzyTerm).toBe('foo')
+      expect(fuzzy.fuzzyDistance).toBe(3)
+
+      const proximity = parseLuceneQuery('"a b"~7')
+      expect(proximity).not.toBeNull()
+      expect(proximity.proximityPhrase).toBe('a b')
+      expect(proximity.proximityDistance).toBe(7)
+    })
+
+    it('returns null for any field restriction, offered field or not', () => {
+      // In-query field scoping is no longer representable; the field is set on
+      // the store instead, so every `field:(…)` query blanks the modal.
+      expect(parseLuceneQuery('author:(Paris)')).toBeNull()
+      expect(parseLuceneQuery('tags:(Paris)')).toBeNull()
     })
 
     it('parses a long crafted field-restricted query without pathological backtracking', () => {
@@ -734,6 +753,55 @@ describe('luceneQuery', () => {
       // quantifiers and froze the main thread on this exact shape.
       const query = 'f:(x)' + ' OR f:(x)'.repeat(40) + ' zzzz'
       expect(parseLuceneQuery(query)).toBeNull()
+    })
+  })
+
+  describe('queriesEquivalent', () => {
+    it.each([
+      ['pierre AND romera', '+pierre +romera'],
+      ['pierre OR romera', '(pierre romera)'],
+      ['pierre romera', '(pierre romera)'],
+      ['a AND b AND c', '+a +b +c'],
+      ['x OR y OR z', '(x y z)'],
+      ['a AND b AND NOT c', '+a +b -c'],
+      ['a AND NOT c', '+a -c'],
+      ['Paris NOT London', 'Paris -London'],
+      ['content:(a AND b)', 'content:(+a +b)'],
+      ['Mercedes~2', 'Mercedes~2'],
+      ['"John Mercedes"~3', '"John Mercedes"~3'],
+      ['single', 'single'],
+      ['tags:(Paris) OR content:(Paris)', 'tags:(Paris) OR content:(Paris)'],
+      ['(a b) c', '(a b c)'],
+      ['(red OR blue) sky', '(red blue sky)']
+    ])('treats %s and %s as equivalent', (a, b) => {
+      expect(queriesEquivalent(a, b)).toBe(true)
+    })
+
+    it.each([
+      ['(pierre OR jean) AND romera', '(pierre jean) +romera'],
+      ['a AND b OR c', '+a +b (c)'],
+      ['a OR b AND c', '(a b) +c'],
+      ['a AND b', 'a OR b'],
+      ['roam~2 jakarta~1', 'jakarta~1'],
+      ['"a b"~3 "c d"~5', '"c d"~5'],
+      ['-a', 'a'],
+      ['+a', 'a'],
+      ['(-a)', '(a)'],
+      ['a^2', 'a'],
+      // The canonical leaf must keep every meaning-bearing attribute, so a
+      // range, a regex, or a differing range bound never collapses onto a
+      // plain term (the serializer used to drop these).
+      ['[1 TO 5]', '[2 TO 9]'],
+      ['[1 TO 5]', '{1 TO 5}'],
+      ['/foo/', 'foo'],
+      ['content:[1 TO 5]', 'content:foo']
+    ])('treats %s and %s as NOT equivalent', (a, b) => {
+      expect(queriesEquivalent(a, b)).toBe(false)
+    })
+
+    it('returns false when either side is unparseable', () => {
+      expect(queriesEquivalent('(unclosed', 'a')).toBe(false)
+      expect(queriesEquivalent('a', ')stray(')).toBe(false)
     })
   })
 })

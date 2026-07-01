@@ -75,6 +75,7 @@
 
         <!-- With spelling changes (Fuzzy) -->
         <search-advanced-modal-field-range
+          :key="`fuzzy-${formKey}`"
           v-model:term="form.fuzzyTerm"
           v-model:distance="form.fuzzyDistance"
           :max="FUZZY_DISTANCE_MAX"
@@ -87,6 +88,7 @@
 
         <!-- With phrase changes (Proximity) -->
         <search-advanced-modal-field-range
+          :key="`proximity-${formKey}`"
           v-model:term="form.proximityPhrase"
           v-model:distance="form.proximityDistance"
           :max="PROXIMITY_DISTANCE_MAX"
@@ -97,13 +99,11 @@
           :explanations="proximityExplanations"
         />
 
-        <!-- Search in specific fields -->
+        <!-- Search in a specific field -->
         <search-advanced-modal-fields-select
-          :all="form.fieldAll"
-          :selected="form.selectedFields"
+          :field="form.field"
           :fields="fields"
-          @update:all="setFieldAll"
-          @update:selected="setSelectedFields"
+          @update:field="setField"
         />
         <!-- Hidden submit so pressing Enter in any input triggers the form
              handler even when the focused control swallows the event. -->
@@ -119,20 +119,25 @@
     </div>
 
     <template #footer="{ cancel, ok }">
-      <search-advanced-modal-footer
-        :search-disabled="isFormEmpty"
-        @cancel="cancel"
-        @reset="handleReset"
-        @search="ok"
-      />
+      <form-actions end>
+        <button-icon
+          variant="outline-secondary"
+          @click="cancel"
+        >
+          {{ t('searchAdvancedModal.cancel') }}
+        </button-icon>
+        <button-reset @click="handleReset" />
+        <button-search @click="ok" />
+      </form-actions>
     </template>
   </app-modal>
 </template>
 
 <script setup>
-import { computed, nextTick, useTemplateRef } from 'vue'
+import { computed, nextTick, ref, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { whenever } from '@vueuse/core'
+import { ButtonIcon } from '@icij/murmur'
 import IPhUniteSquare from '~icons/ph/unite-square'
 import IPhIntersectSquare from '~icons/ph/intersect-square'
 import IPhQuotes from '~icons/ph/quotes'
@@ -147,11 +152,14 @@ import SearchAdvancedModalFieldRange from './SearchAdvancedModalFieldRange.vue'
 import SearchAdvancedModalFieldText from './SearchAdvancedModalFieldText.vue'
 import SearchAdvancedModalFieldWildcard from './SearchAdvancedModalFieldWildcard.vue'
 import SearchAdvancedModalFieldsSelect from './SearchAdvancedModalFieldsSelect.vue'
-import SearchAdvancedModalFooter from './SearchAdvancedModalFooter.vue'
+import ButtonReset from '@/components/Button/ButtonReset.vue'
+import ButtonSearch from '@/components/Button/ButtonSearch.vue'
+import FormActions from '@/components/Form/FormActions/FormActions.vue'
 import { useAdvancedSearchForm } from '@/composables/useAdvancedSearchForm'
 import {
   generateLuceneQuery,
   parseLuceneQuery,
+  queriesEquivalent,
   FUZZY_DISTANCE_MAX,
   PROXIMITY_DISTANCE_MAX
 } from '@/utils/luceneQuery'
@@ -166,6 +174,14 @@ const props = defineProps({
   initialQuery: {
     type: String,
     default: ''
+  },
+  /**
+   * Search field the form opens on, mirroring the active search's `field`.
+   * Pre-selects the matching radio so the modal reflects the current scope.
+   */
+  initialField: {
+    type: String,
+    default: 'all'
   }
 })
 const emit = defineEmits(['search'])
@@ -175,20 +191,27 @@ const {
   form,
   fields,
   isFormEmpty,
-  setFieldAll,
-  setSelectedFields,
-  reset: handleReset,
+  setField,
+  reset: resetForm,
   toQueryShape
 } = useAdvancedSearchForm()
 
 const firstInput = useTemplateRef('firstInput')
+
+// Bumping this key on open (after populate) and on reset remounts the range
+// sliders so each editing session re-captures its own out-of-range "initial
+// max" value and a previous session's persisted value does not leak in.
+const formKey = ref(0)
 
 // Hoist the per-field example/explanation lists into computeds so each
 // child receives a stable array reference across re-renders. Inline `[...]`
 // literals in the template would rebuild on every render and defeat
 // downstream prop equality checks.
 const anyWordsExamples = computed(() => [t('searchAdvancedModal.anyOfTheseWordsExample')])
-const allWordsExamples = computed(() => [t('searchAdvancedModal.allTheseWordsExample')])
+const allWordsExamples = computed(() => [
+  t('searchAdvancedModal.allTheseWordsExample1'),
+  t('searchAdvancedModal.allTheseWordsExample2')
+])
 const exactPhraseExamples = computed(() => [t('searchAdvancedModal.exactPhraseExample')])
 const noneWordsExamples = computed(() => [
   t('searchAdvancedModal.noneOfTheseWordsExample1'),
@@ -214,14 +237,16 @@ const proximityExplanations = computed(() => [
  * next search.
  */
 function populateFromInitialQuery() {
-  if (!props.initialQuery) {
-    return
+  if (props.initialQuery) {
+    const parsed = parseLuceneQuery(props.initialQuery)
+    if (parsed) {
+      Object.assign(form, parsed)
+    }
   }
-  const allowedFields = fields.map(({ value }) => value)
-  const parsed = parseLuceneQuery(props.initialQuery, { fields: allowedFields })
-  if (parsed) {
-    Object.assign(form, parsed)
-  }
+  // The field is tracked on the search store, not in the query string, so it
+  // is restored from `initialField` (after the parse, which would otherwise
+  // reset it to the default) rather than parsed out of the query.
+  setField(props.initialField)
 }
 
 /**
@@ -236,7 +261,17 @@ async function focusFirstInput() {
 
 async function handleOpen() {
   populateFromInitialQuery()
+  // Remount the sliders after the form is populated so each picks up this
+  // query's distance as its persisted out-of-range value.
+  formKey.value++
   await focusFirstInput()
+}
+
+// Wrap the form reset so resetting also remounts the sliders, dropping any
+// persisted out-of-range value along with the rest of the form state.
+function handleReset() {
+  resetForm()
+  formKey.value++
 }
 
 // Open pre-populates and focuses; close resets so the next open starts
@@ -245,17 +280,22 @@ whenever(isVisible, handleOpen)
 whenever(() => !isVisible.value, handleReset)
 
 function handleSearch() {
-  // Pressing Enter inside an input also submits the form, so guard here
-  // rather than relying on the visible Search button being disabled.
-  if (isFormEmpty.value) return
+  // Always resubmit — even an empty or unchanged query — so clicking Search
+  // behaves like pressing Enter in the search bar, which forces a fresh search
+  // through a new stamp.
   const query = generateLuceneQuery(toQueryShape(form))
-  emit('search', query)
+  // The form canonicalises the query (e.g. `Paris AND London` regenerates as
+  // `+Paris +London`). When the user opened the modal on a query and never
+  // changed its meaning, re-emit the original text so the search bar is not
+  // silently rewritten for an edit the user did not make.
+  const preservesOriginal = props.initialQuery && queriesEquivalent(query, props.initialQuery)
+  emit('search', { query: preservesOriginal ? props.initialQuery : query, field: form.field })
   isVisible.value = false
 }
 
 // Expose form state and handlers so tests can drive the component without
 // reaching into the rendered child components.
-defineExpose({ form, isFormEmpty, handleSearch, handleReset })
+defineExpose({ form, isFormEmpty, handleSearch, handleReset, formKey })
 </script>
 
 <style lang="scss">
@@ -301,14 +341,14 @@ defineExpose({ form, isFormEmpty, handleSearch, handleReset })
     margin: 0;
     font-size: $small-font-size;
     line-height: $line-height-sm;
-    // Both the "e.g." prefix and the example value share the same secondary
-    // gray; the markup is kept so future variants can re-tint either side.
-    color: var(--bs-secondary-color);
 
     &__prefix {
       // Reserve the width of the widest prefix ("e.g.") so the value column
       // lines up across rows in multi-line examples (AND… stacked over +…).
       min-width: 2.5em;
+      // Only the "e.g." prefix is muted (per the wireframe); the example
+      // value keeps the default body colour so it reads as the focal content.
+      color: var(--bs-secondary-color);
     }
 
     &__break {
@@ -340,19 +380,7 @@ defineExpose({ form, isFormEmpty, handleSearch, handleReset })
 // Safari 15.4+, Firefox 121+ — see package.json `browserslist`). If that
 // list ever loosens to older Firefox releases, fall back to a class-based
 // hook on `.modal-dialog`.
-//
-// — make the dialog wider than the default xl size (1140px) without
-//   horizontal scroll;
-// — keep header and footer opaque while body scrolls;
-// — left-align the modal title instead of the centered DS default.
 .modal-dialog:has(.search-advanced-modal) {
-  &.modal-xl {
-    max-width: min(1400px, calc(100vw - 2 * #{$modal-dialog-margin}));
-  }
-
-  .modal-content {
-    max-height: calc(100vh - 2 * #{$modal-dialog-margin});
-  }
 
   .modal-body {
     overflow-y: auto;
@@ -366,7 +394,11 @@ defineExpose({ form, isFormEmpty, handleSearch, handleReset })
   }
 
   .modal-header {
-    padding-bottom: $spacer * 0.5;
+    // Balance the vertical padding so the title and close button sit
+    // vertically centered in the header band — Bootstrap's default large-top
+    // / zero-bottom inset otherwise pushes them low.
+    padding-top: $spacer;
+    padding-bottom: $spacer;
   }
 
   .modal-header,
@@ -375,11 +407,23 @@ defineExpose({ form, isFormEmpty, handleSearch, handleReset })
     z-index: 1;
   }
 
+  .modal-footer {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    padding-block: $spacer;
+  }
+
   .app-modal-header {
     text-align: start;
     align-items: flex-start;
 
     &__title {
+      // The base header gives the title flex-grow: 1, which stretches the h3
+      // vertically in the column-flex header; as a block its single text line
+      // would otherwise sit at the top of that stretched box. Center it.
+      display: flex;
+      align-items: center;
       text-align: start;
     }
   }

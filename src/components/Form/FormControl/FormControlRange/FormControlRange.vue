@@ -28,37 +28,32 @@ defineProps({
 
 <template>
   <div class="form-control-range d-inline-block">
-    <div class="form-control-range__wrapper">
-      <form-control-range-slider
-        v-model="modelValue"
-        class="mb-3"
-        :min="min"
-        :max="max"
-        :step="step"
-      />
-      <form-control-range-ticks
-        v-model="modelValue"
-        :min="min"
-        :max="max"
-        :step="step"
-      />
-      <input
-        v-if="name"
-        type="hidden"
-        :name="name"
-        :value="modelValue"
-      >
-    </div>
+    <form-control-range-slider
+      v-model="modelValue"
+      class="mb-3"
+      :min="min"
+      :max="max"
+      :step="step"
+    />
+    <form-control-range-ticks
+      v-model="modelValue"
+      :min="min"
+      :max="max"
+      :step="step"
+    />
+    <input
+      v-if="name"
+      type="hidden"
+      :name="name"
+      :value="modelValue"
+    >
   </div>
 </template>
 
 <style lang="scss" scoped>
 .form-control-range {
   padding-top: $spacer-xs;
-  overflow: hidden;
-
-  &__wrapper {
-    margin: 0 -1 * math.div($spacer-xl, 2);
-  }
+  // The slider track and the ticks row share the same width, so the bullet
+  // (centred at (i + 0.5)/N of the track) lines up with each tick centre.
 }
 </style>
