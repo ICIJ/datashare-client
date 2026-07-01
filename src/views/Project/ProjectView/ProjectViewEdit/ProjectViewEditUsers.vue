@@ -68,6 +68,7 @@ function onPageChange(newPage) {
 function onQueryUpdate(value) {
   query.value = value
   page.value = 1
+  loading.value = true
   clearTimeout(debounceTimer)
   debounceTimer = setTimeout(fetchUsers, 300)
 }
@@ -109,8 +110,9 @@ onMounted(fetchUsers)
           @update:page="onPageChange"
         />
         <form-control-search
-          v-model="query"
+          :model-value="query"
           clear-text
+          @update:model-value="onQueryUpdate"
         />
       </div>
     </div>
@@ -125,7 +127,7 @@ onMounted(fetchUsers)
       v-model:order="order"
       :users="users"
       :project="name"
-      @update:query="onQueryUpdate"
+      :loading="loading"
       @user:deleted="onUserDeleted"
     />
   </div>
