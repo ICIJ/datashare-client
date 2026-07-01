@@ -16,6 +16,6 @@ describe('BatchDownloadUnavailableAlert.vue', () => {
     const alert = wrapper.find('.batch-download-unavailable-alert')
     expect(alert.exists()).toBe(true)
     expect(alert.classes()).toContain('text-muted')
-    expect(alert.text()).toBe('This download is no longer available.')
+    expect(alert.text()).toBe('This download has expired per your admin\'s retention settings')
   })
 })

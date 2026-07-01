@@ -1119,7 +1119,7 @@
           "state": "State",
           "id": "Id"
         },
-        "unavailableAlert": "This download is no longer available.",
+        "unavailableAlert": "This download has expired per your admin's retention settings",
         "truncatedAlert": {
           "sizeLimit": "Results were truncated after reaching the {reason} ({limit}).",
           "fileCountLimit": "Results were truncated after reaching the {reason} ({limit}).",
