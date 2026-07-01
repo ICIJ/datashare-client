@@ -41,6 +41,7 @@ async function confirmDeletion() {
     }
     emit('user:deleted', { name: props.user.name })
     modelValue.value = false
+    toast.success(t('projectViewEdit.users.actions.deleteModal.success'))
   }
   catch {
     toast.error(t('projectViewEdit.users.actions.deleteModal.error'))
