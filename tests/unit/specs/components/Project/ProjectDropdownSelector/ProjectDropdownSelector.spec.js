@@ -97,4 +97,21 @@ describe('ProjectDropdownSelector.vue', function () {
     await wrapper.vm.$nextTick()
     expect(wrapper.findAll('.dropdown-item').at(0).text().trim()).toBe('Foo')
   })
+
+  it('disables the checkbox of the only selected project', () => {
+    const props = { modelValue: [{ name: 'foo' }], projects, teleportDisabled: true }
+    const wrapper = mount(ProjectDropdownSelector, { props, global: { plugins } })
+    const activeInput = wrapper.find('.dropdown-item.active input[type=checkbox]')
+    expect(activeInput.attributes('disabled')).toBeDefined()
+  })
+
+  it('does not disable checkboxes when two projects are selected', () => {
+    const props = { modelValue: [{ name: 'foo' }, { name: 'bar' }], projects, teleportDisabled: true }
+    const wrapper = mount(ProjectDropdownSelector, { props, global: { plugins } })
+    const activeInputs = wrapper.findAll('.dropdown-item.active input[type=checkbox]')
+    expect(activeInputs).toHaveLength(2)
+    activeInputs.forEach((input) => {
+      expect(input.attributes('disabled')).toBeUndefined()
+    })
+  })
 })

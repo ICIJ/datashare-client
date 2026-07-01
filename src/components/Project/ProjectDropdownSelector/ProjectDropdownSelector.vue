@@ -121,11 +121,12 @@ function filterProject(project, query) {
         :projects="projects"
       />
     </template>
-    <template #item="{ option: project, selected, focused, toggle, toggleUnique }">
+    <template #item="{ option: project, selected, selectionRequired, focused, toggle, toggleUnique }">
       <project-dropdown-selector-entry
         :project="project"
         :focus="focused"
         :selected="selected"
+        :selection-required="selectionRequired"
         :no-checkbox="!multiple"
         @toggle-value="toggle($event)"
         @toggle-unique-value="toggleUnique($event)"
