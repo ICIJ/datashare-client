@@ -3,10 +3,15 @@ import { shallowMount } from '@vue/test-utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import ProjectUsersActions from '@/components/ProjectUsers/ProjectUsersActions.vue'
 import ProjectUsersDeleteModal from '@/components/ProjectUsers/ProjectUsersDeleteModal.vue'
+import { useAuth } from '@/composables/useAuth.js'
 
 const mockToast = { success: vi.fn(), error: vi.fn() }
 vi.mock('@/composables/useToast', () => ({
   useToast: () => ({ toast: mockToast })
+}))
+
+vi.mock('@/composables/useAuth.js', () => ({
+  useAuth: vi.fn()
 }))
 
 const mockWriteText = vi.fn()
@@ -29,6 +34,7 @@ describe('ProjectUsersActions.vue', () => {
     vi.clearAllMocks()
     core.createPinia()
     global = { plugins: core.plugins }
+    useAuth.mockReturnValue({ username: { value: 'someone-else@icij.org' } })
   })
 
   function mountComponent(props = {}) {
@@ -64,5 +70,23 @@ describe('ProjectUsersActions.vue', () => {
     const wrapper = mountComponent()
     await wrapper.findComponent(ProjectUsersDeleteModal).trigger('user:deleted', { name: user.name })
     expect(wrapper.emitted('user:deleted')).toEqual([[{ name: user.name }]])
+  })
+
+  it('disables the delete button when the user is the current logged-in user', () => {
+    useAuth.mockReturnValue({ username: { value: user.name } })
+    const wrapper = mountComponent()
+    expect(wrapper.findAll('button-row-action-stub')[1].attributes('disabled')).toBe('true')
+  })
+
+  it('does not disable the delete button for another user', () => {
+    useAuth.mockReturnValue({ username: { value: 'someone-else@icij.org' } })
+    const wrapper = mountComponent()
+    expect(wrapper.findAll('button-row-action-stub')[1].attributes('disabled')).toBe('false')
+  })
+
+  it('does not disable the copy button for the current logged-in user', () => {
+    useAuth.mockReturnValue({ username: { value: user.name } })
+    const wrapper = mountComponent()
+    expect(wrapper.findAll('button-row-action-stub')[0].attributes('disabled')).toBeUndefined()
   })
 })
