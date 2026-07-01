@@ -1,12 +1,13 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { orderBy as orderArrayBy } from 'lodash'
 import { ButtonIcon } from '@icij/murmur-next'
 
 import DisplayUser from '@/components/Display/DisplayUser.vue'
-import EmptyState from '@/components/EmptyState/EmptyState.vue'
 import PageTable from '@/components/PageTable/PageTable.vue'
 import PageTableTh from '@/components/PageTable/PageTableTh.vue'
+import PageTableTrPlaceholder from '@/components/PageTable/PageTableTrPlaceholder.vue'
 import ProjectUsersActions from '@/components/ProjectUsers/ProjectUsersActions.vue'
 import ProjectUsersAdminPromotionModal from '@/components/ProjectUsers/ProjectUsersAdminPromotionModal.vue'
 import ProjectUsersRoleDropdown from '@/components/ProjectUsers/ProjectUsersRoleDropdown.vue'
@@ -24,6 +25,10 @@ const props = defineProps({
   project: {
     type: String,
     required: true
+  },
+  loading: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -60,6 +65,8 @@ const adminPromotions = computed(() =>
 
 const pendingCount = computed(() => Object.keys(pendingChanges.value).length)
 const hasPendingChanges = computed(() => pendingCount.value > 0)
+
+const sortedUsers = computed(() => orderArrayBy(props.users, [sort.value ?? 'name'], [order.value]))
 
 async function saveRoles() {
   saving.value = true
@@ -128,14 +135,10 @@ defineExpose({ pendingChanges, saving, showAdminModal, saveRoles, cancelChanges,
       :promotions="adminPromotions"
       @confirm="saveRoles"
     />
-    <empty-state
-      v-if="users.length === 0"
-      :label="emptyLabel"
-    />
     <page-table
-      v-else
       v-model:sort="sort"
       v-model:order="order"
+      :loading="loading"
     >
       <template #thead>
         <page-table-th
@@ -152,8 +155,24 @@ defineExpose({ pendingChanges, saving, showAdminModal, saveRoles, cancelChanges,
         />
         <page-table-th compact />
       </template>
+      <template #waiting>
+        <page-table-tr-placeholder
+          :repeat="3"
+          :properties="['name', 'role']"
+        >
+          <td />
+        </page-table-tr-placeholder>
+      </template>
+      <tr v-if="sortedUsers.length === 0">
+        <td
+          colspan="3"
+          class="project-users-list__no-result text-center"
+        >
+          {{ emptyLabel }}
+        </td>
+      </tr>
       <tr
-        v-for="(user, index) in users"
+        v-for="(user, index) in sortedUsers"
         :key="user.name ?? index"
       >
         <td><display-user :value="user.name" /></td>
