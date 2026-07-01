@@ -5,9 +5,7 @@ import { orderBy as orderArrayBy } from 'lodash'
 import { ButtonIcon } from '@icij/murmur-next'
 
 import DisplayUser from '@/components/Display/DisplayUser.vue'
-import PageTable from '@/components/PageTable/PageTable.vue'
-import PageTableTh from '@/components/PageTable/PageTableTh.vue'
-import PageTableTrPlaceholder from '@/components/PageTable/PageTableTrPlaceholder.vue'
+import PageTableGeneric from '@/components/PageTable/PageTableGeneric.vue'
 import ProjectUsersActions from '@/components/ProjectUsers/ProjectUsersActions.vue'
 import ProjectUsersAdminPromotionModal from '@/components/ProjectUsers/ProjectUsersAdminPromotionModal.vue'
 import ProjectUsersRoleDropdown from '@/components/ProjectUsers/ProjectUsersRoleDropdown.vue'
@@ -67,6 +65,11 @@ const pendingCount = computed(() => Object.keys(pendingChanges.value).length)
 const hasPendingChanges = computed(() => pendingCount.value > 0)
 
 const sortedUsers = computed(() => orderArrayBy(props.users, [sort.value ?? 'name'], [order.value]))
+
+const fields = computed(() => [
+  { key: 'name', text: t('projectViewEdit.users.fields.name.label'), sortable: true, emphasis: true },
+  { key: 'role', text: t('projectViewEdit.users.fields.role.label'), sortable: true, thStyle: 'width: 16rem' }
+])
 
 async function saveRoles() {
   saving.value = true
@@ -135,64 +138,36 @@ defineExpose({ pendingChanges, saving, showAdminModal, saveRoles, cancelChanges,
       :promotions="adminPromotions"
       @confirm="saveRoles"
     />
-    <page-table
+    <page-table-generic
       v-model:sort="sort"
       v-model:order="order"
+      :items="sortedUsers"
+      :fields="fields"
       :loading="loading"
+      primary-key="name"
     >
-      <template #thead>
-        <page-table-th
-          emphasis
-          sortable
-          name="name"
-          :label="t('projectViewEdit.users.fields.name.label')"
-        />
-        <page-table-th
-          sortable
-          name="role"
-          style="width: 16rem"
-          :label="t('projectViewEdit.users.fields.role.label')"
-        />
-        <page-table-th compact />
+      <template #cell(name)="{ item }">
+        <display-user :value="item.name" />
       </template>
-      <template #waiting>
-        <page-table-tr-placeholder
-          :repeat="3"
-          :properties="['name', 'role']"
-        >
-          <td />
-        </page-table-tr-placeholder>
+      <template #cell(role)="{ item }">
+        <project-users-role-dropdown
+          :model-value="pendingChanges[item.name] ?? item.role"
+          :dirty="!!pendingChanges[item.name]"
+          :project="project"
+          @update:model-value="onRoleChanged(item.name, $event)"
+        />
       </template>
-      <tr v-if="sortedUsers.length === 0">
-        <td
-          colspan="3"
-          class="project-users-list__no-result text-center"
-        >
-          {{ emptyLabel }}
-        </td>
-      </tr>
-      <tr
-        v-for="(user, index) in sortedUsers"
-        :key="user.name ?? index"
-      >
-        <td><display-user :value="user.name" /></td>
-        <td>
-          <project-users-role-dropdown
-            :model-value="pendingChanges[user.name] ?? user.role"
-            :dirty="!!pendingChanges[user.name]"
-            :project="project"
-            @update:model-value="onRoleChanged(user.name, $event)"
-          />
-        </td>
-        <td>
-          <project-users-actions
-            :user="user"
-            :project="project"
-            @user:deleted="onUserDeleted"
-          />
-        </td>
-      </tr>
-    </page-table>
+      <template #row-actions="{ item }">
+        <project-users-actions
+          :user="item"
+          :project="project"
+          @user:deleted="onUserDeleted"
+        />
+      </template>
+      <template #empty>
+        {{ emptyLabel }}
+      </template>
+    </page-table-generic>
     <div
       v-if="hasPendingChanges"
       class="project-users-list__sticky-bar d-flex justify-content-end align-items-center gap-2 p-3"
