@@ -149,8 +149,17 @@ const multiple = computed(() => props.multiple || isArray(modelValue.value))
 /**
  * Selection
  */
-const { keyOf, selectedValues, selectedKeys, isSelected, toggleValue, toggleUniqueValue, selectAll, unselectAll }
-  = useDropdownSelection(modelValue, toRef(props, 'options'), { multiple, optionKey: props.optionKey })
+const {
+  keyOf,
+  selectedValues,
+  selectedKeys,
+  isSelected,
+  isRequiredSelection,
+  toggleValue,
+  toggleUniqueValue,
+  selectAll,
+  unselectAll
+} = useDropdownSelection(modelValue, toRef(props, 'options'), { multiple, optionKey: props.optionKey })
 
 /**
  * Filtering
@@ -342,6 +351,7 @@ defineExpose({ hide, focus })
           option,
           index,
           selected: isSelected(option),
+          selectionRequired: isRequiredSelection(option),
           focused: focusIndex === index,
           toggle: (event) => toggleValue(event, option),
           toggleUnique: (event) => toggleUniqueValue(event, option)
