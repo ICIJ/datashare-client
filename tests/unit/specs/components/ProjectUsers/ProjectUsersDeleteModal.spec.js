@@ -32,7 +32,7 @@ describe('ProjectUsersDeleteModal.vue', () => {
   let core, global
 
   const user = { name: 'alice@icij.org', role: 'PROJECT_ADMIN' }
-  const projectName = 'local-datashare'
+  const project = 'local-datashare'
 
   beforeAll(() => {
     core = CoreSetup.init().useAll()
@@ -49,7 +49,7 @@ describe('ProjectUsersDeleteModal.vue', () => {
   function mountComponent(props = {}) {
     return shallowMount(ProjectUsersDeleteModal, {
       global,
-      props: { user, projectName, modelValue: true, ...props }
+      props: { user, project, modelValue: true, ...props }
     })
   }
 
@@ -65,7 +65,7 @@ describe('ProjectUsersDeleteModal.vue', () => {
       const wrapper = mountComponent()
       await wrapper.vm.confirmDeletion()
       await flushPromises()
-      expect(api.deleteUser).toHaveBeenCalledWith(user.name)
+      expect(api.deleteUser).toHaveBeenCalledWith(user.name, { domain: 'default', index: project })
       expect(api.removeProjectPolicy).not.toHaveBeenCalled()
     })
 
@@ -98,7 +98,7 @@ describe('ProjectUsersDeleteModal.vue', () => {
       const wrapper = mountComponent()
       await wrapper.vm.confirmDeletion()
       await flushPromises()
-      expect(api.removeProjectPolicy).toHaveBeenCalledWith('default', projectName, { user: user.name })
+      expect(api.removeProjectPolicy).toHaveBeenCalledWith('default', project, { user: user.name })
       expect(api.deleteUser).not.toHaveBeenCalled()
     })
 

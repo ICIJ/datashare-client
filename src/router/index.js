@@ -442,6 +442,7 @@ export const routes = [
                     component: () => import('@/views/Project/ProjectView/ProjectViewEdit/ProjectViewEditDetails.vue'),
                     meta: {
                       breadcrumb: false,
+                      settings: false
                     }
                   },
                   {
@@ -451,13 +452,17 @@ export const routes = [
                     component: () => import('@/views/Project/ProjectView/ProjectViewEdit/ProjectViewEditPathBanners/ProjectViewEditPathBanners.vue'),
                     meta: {
                       breadcrumb: false,
+                      settings: false
                     }
                   },
                   {
                     name: 'project.view.edit.users',
                     path: 'users',
                     props: true,
-                    component: () => import('@/views/Project/ProjectView/ProjectViewEdit/ProjectViewEditUsers.vue'),
+                    components: {
+                      default: () => import('@/views/Project/ProjectView/ProjectViewEdit/ProjectViewEditUsers.vue'),
+                      settings: () => import('@/views/Project/ProjectView/ProjectViewEdit/ProjectViewEditUsersSettings.vue')
+                    },
                     meta: {
                       breadcrumb: false,
                     }

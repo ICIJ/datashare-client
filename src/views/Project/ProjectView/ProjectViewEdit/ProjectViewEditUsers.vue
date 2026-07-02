@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { debounce } from 'lodash'
 
@@ -7,8 +7,11 @@ import ProjectUsersList from '@/components/ProjectUsers/ProjectUsersList.vue'
 import RowPaginationUsers from '@/components/RowPagination/RowPaginationUsers.vue'
 import { useAuth } from '@/composables/useAuth.js'
 import { useToast } from '@/composables/useToast.js'
+import { useUrlParamWithStore } from '@/composables/useUrlParamWithStore.js'
+import { useUrlParamsWithStore } from '@/composables/useUrlParamsWithStore.js'
 import { useUrlParam } from '@/composables/useUrlParam.js'
 import { useUrlPageParam } from '@/composables/useUrlPageParam.js'
+import { useAppStore } from '@/store/modules'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch.vue'
 import ProjectUsersCreateModal from '@/components/ProjectUsers/ProjectUsersCreateModal.vue'
 import IPhUserPlus from '~icons/ph/user-plus'
@@ -24,23 +27,39 @@ const props = defineProps({
 const { toast } = useToast()
 const { t } = useI18n()
 const { isUsersProvider } = useAuth()
+const appStore = useAppStore()
 
-const PER_PAGE = 10
+const VIEW = 'projectUsersList'
 
 const users = ref([])
 const loading = ref(false)
 const totalRows = ref(0)
 
-const sort = useUrlParam('sort', null)
-const order = useUrlParam('order', 'asc')
+const sortOrder = useUrlParamsWithStore(['sort', 'order'], {
+  get: () => appStore.getSettings(VIEW, 'orderBy'),
+  set: (sort, order) => appStore.setSettings(VIEW, { orderBy: [sort, order] })
+})
+const sort = computed({
+  get: () => sortOrder.value?.[0] ?? null,
+  set: value => (sortOrder.value = [value, order.value])
+})
+const order = computed({
+  get: () => sortOrder.value?.[1] ?? 'asc',
+  set: value => (sortOrder.value = [sort.value, value])
+})
+const perPage = useUrlParamWithStore('perPage', {
+  transform: value => Math.max(10, parseInt(value)),
+  get: () => appStore.getSettings(VIEW, 'perPage'),
+  set: perPage => appStore.setSettings(VIEW, { perPage })
+})
 const query = useUrlParam('q', '')
 const page = useUrlPageParam()
 
 async function fetchUsers() {
   loading.value = true
   try {
-    const from = (page.value - 1) * PER_PAGE
-    const to = from + PER_PAGE
+    const from = (page.value - 1) * Number(perPage.value)
+    const to = from + Number(perPage.value)
     const { items, pagination } = await api.getProjectPolicies('default', props.name, {
       from,
       to,
@@ -61,14 +80,17 @@ const debouncedFetchUsers = debounce(fetchUsers, 200)
 
 let skipNextPageWatch = false
 
-watch(query, () => {
+function resetToFirstPage() {
   loading.value = true
   if (page.value !== 1) {
     skipNextPageWatch = true
     page.value = 1
   }
   debouncedFetchUsers()
-})
+}
+
+watch(query, resetToFirstPage)
+watch(perPage, resetToFirstPage)
 
 watch(page, () => {
   if (skipNextPageWatch) {
@@ -112,7 +134,7 @@ onMounted(fetchUsers)
         <row-pagination-users
           v-model:page="page"
           :total-rows="totalRows"
-          :per-page="PER_PAGE"
+          :per-page="perPage"
           class="d-flex"
         />
         <form-control-search
