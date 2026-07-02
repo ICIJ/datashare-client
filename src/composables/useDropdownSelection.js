@@ -40,6 +40,11 @@ export function useDropdownSelection(modelValue, allOptions, { multiple, optionK
     return selectedKeys.value.some(selectedKey => isEqual(selectedKey, key))
   }
 
+  // A selected option in multiple mode can't be unselected if it's the last one.
+  const isRequiredSelection = (option) => {
+    return multiple.value && isSelected(option) && selectedValues.value.length <= 1
+  }
+
   // Replace the whole model value, honouring single vs multiple mode.
   const setSelection = (values) => {
     modelValue.value = multiple.value ? values : (values[0] ?? null)
@@ -99,6 +104,7 @@ export function useDropdownSelection(modelValue, allOptions, { multiple, optionK
     selectedValues,
     selectedKeys,
     isSelected,
+    isRequiredSelection,
     selectValue,
     unselectValue,
     toggleValue,

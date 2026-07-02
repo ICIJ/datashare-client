@@ -58,4 +58,25 @@ describe('useDropdownSelection', () => {
     api.unselectAll()
     expect(modelValue.value.map(v => v.name)).toEqual(['a'])
   })
+
+  it('isRequiredSelection is true for the only selected option in multiple mode', () => {
+    const { api } = setup([{ name: 'a' }], true)
+    expect(api.isRequiredSelection({ name: 'a' })).toBe(true)
+  })
+
+  it('isRequiredSelection is false when more than one option is selected', () => {
+    const { api } = setup([{ name: 'a' }, { name: 'b' }], true)
+    expect(api.isRequiredSelection({ name: 'a' })).toBe(false)
+    expect(api.isRequiredSelection({ name: 'b' })).toBe(false)
+  })
+
+  it('isRequiredSelection is false for an unselected option', () => {
+    const { api } = setup([{ name: 'a' }], true)
+    expect(api.isRequiredSelection({ name: 'b' })).toBe(false)
+  })
+
+  it('isRequiredSelection is false in single-select mode', () => {
+    const { api } = setup({ name: 'a' }, false)
+    expect(api.isRequiredSelection({ name: 'a' })).toBe(false)
+  })
 })

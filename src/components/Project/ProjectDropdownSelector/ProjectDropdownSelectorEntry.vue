@@ -15,6 +15,9 @@ const props = defineProps({
   selected: {
     type: Boolean
   },
+  selectionRequired: {
+    type: Boolean
+  },
   noCheckbox: {
     type: Boolean
   }
@@ -45,6 +48,7 @@ const emit = defineEmits(['toggleValue', 'toggleUniqueValue'])
     <project-dropdown-selector-checkbox
       v-if="!noCheckbox"
       :model-value="selected"
+      :disabled="selectionRequired"
     />
     <project-label
       class="pe-1 py-2"
