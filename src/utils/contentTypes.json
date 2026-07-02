@@ -485,7 +485,7 @@
     }
   },
   "message/rfc822": {
-    "label": "Internet Message Format (email)",
+    "label": "Internet Message Format",
     "extensions": [
       ".eml"
     ],
@@ -1304,6 +1304,13 @@
     ],
     "description": {
       "en": "An Outlook PST mailbox archive that may contain multiple emails."
+    },
+    "model": "Email"
+  },
+  "application/x-tika-pst-mail-item": {
+    "label": "Outlook mailbox email",
+    "description": {
+      "en": "An individual email extracted from an Outlook mailbox archive (PST or OST)."
     },
     "model": "Email"
   },
