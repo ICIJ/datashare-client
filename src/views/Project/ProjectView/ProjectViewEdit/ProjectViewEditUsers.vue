@@ -1,12 +1,14 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { debounce } from 'lodash'
 
 import ProjectUsersList from '@/components/ProjectUsers/ProjectUsersList.vue'
 import RowPaginationUsers from '@/components/RowPagination/RowPaginationUsers.vue'
 import { useAuth } from '@/composables/useAuth.js'
 import { useToast } from '@/composables/useToast.js'
 import { useUrlParam } from '@/composables/useUrlParam.js'
+import { useUrlPageParam } from '@/composables/useUrlPageParam.js'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch.vue'
 import ProjectUsersCreateModal from '@/components/ProjectUsers/ProjectUsersCreateModal.vue'
 import IPhUserPlus from '~icons/ph/user-plus'
@@ -28,13 +30,11 @@ const PER_PAGE = 10
 const users = ref([])
 const loading = ref(false)
 const totalRows = ref(0)
-const query = ref('')
-const page = ref(1)
 
 const sort = useUrlParam('sort', null)
 const order = useUrlParam('order', 'asc')
-
-let debounceTimer = null
+const query = useUrlParam('q', '')
+const page = useUrlPageParam()
 
 async function fetchUsers() {
   loading.value = true
@@ -57,18 +57,26 @@ async function fetchUsers() {
   }
 }
 
-function onPageChange(newPage) {
-  page.value = newPage
-  fetchUsers()
-}
+const debouncedFetchUsers = debounce(fetchUsers, 200)
 
-function onQueryUpdate(value) {
-  query.value = value
-  page.value = 1
+let skipNextPageWatch = false
+
+watch(query, () => {
   loading.value = true
-  clearTimeout(debounceTimer)
-  debounceTimer = setTimeout(fetchUsers, 300)
-}
+  if (page.value !== 1) {
+    skipNextPageWatch = true
+    page.value = 1
+  }
+  debouncedFetchUsers()
+})
+
+watch(page, () => {
+  if (skipNextPageWatch) {
+    skipNextPageWatch = false
+    return
+  }
+  fetchUsers()
+})
 
 const showCreateModal = ref(false)
 
@@ -87,7 +95,10 @@ onMounted(fetchUsers)
 <template>
   <div class="project-view-edit-users p-4">
     <div class="d-flex flex-column gap-2 mb-3">
-      <div v-if="isUsersProvider" class="d-flex justify-content-end">
+      <div
+        v-if="isUsersProvider"
+        class="d-flex justify-content-end"
+      >
         <button-icon
           :icon-left="IPhUserPlus"
           variant="action"
@@ -99,16 +110,14 @@ onMounted(fetchUsers)
       </div>
       <div class="d-flex justify-content-between  flex-grow-1 ">
         <row-pagination-users
-          :page="page"
+          v-model:page="page"
           :total-rows="totalRows"
           :per-page="PER_PAGE"
           class="d-flex"
-          @update:page="onPageChange"
         />
         <form-control-search
-          :model-value="query"
+          v-model="query"
           clear-text
-          @update:model-value="onQueryUpdate"
         />
       </div>
     </div>

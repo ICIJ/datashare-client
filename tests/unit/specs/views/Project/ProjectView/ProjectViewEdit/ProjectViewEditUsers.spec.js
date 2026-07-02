@@ -36,9 +36,10 @@ describe('ProjectViewEditUsers.vue', () => {
     })
   }
 
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.clearAllMocks()
     core = CoreSetup.init().useAll().useRouterWithoutGuards()
+    await core.router.replace({ query: {} })
     api.getProjectPolicies.mockResolvedValue(policies)
   })
 
@@ -127,17 +128,7 @@ describe('ProjectViewEditUsers.vue', () => {
     expect(wrapper.findComponent(RowPaginationUsers).attributes('total-rows')).toBe('0')
   })
 
-  it('refetches users with updated from/to when page changes', async () => {
-    const wrapper = shallowMountComponent()
-    await flushPromises()
-    expect(api.getProjectPolicies).toBeCalledWith('default', 'local-datashare', expect.objectContaining({ from: 0, to: 10 }))
-
-    await wrapper.findComponent(RowPaginationUsers).vm.$emit('update:page', 2)
-    await flushPromises()
-    expect(api.getProjectPolicies).toBeCalledWith('default', 'local-datashare', expect.objectContaining({ from: 10, to: 20 }))
-  })
-
-  describe('server-side search', () => {
+  describe('url-driven pagination and search', () => {
     beforeEach(() => {
       vi.useFakeTimers()
     })
@@ -146,44 +137,59 @@ describe('ProjectViewEditUsers.vue', () => {
       vi.useRealTimers()
     })
 
+    it('refetches users with updated from/to when page changes', async () => {
+      const wrapper = shallowMountComponent()
+      await vi.runAllTimersAsync()
+      expect(api.getProjectPolicies).toBeCalledWith('default', 'local-datashare', expect.objectContaining({ from: 0, to: 10 }))
+
+      wrapper.findComponent(RowPaginationUsers).vm.$emit('update:page', 2)
+      await vi.runAllTimersAsync()
+      expect(api.getProjectPolicies).toBeCalledWith('default', 'local-datashare', expect.objectContaining({ from: 10, to: 20 }))
+    })
+
+    it('reflects the page from the URL query on mount', async () => {
+      await core.router.push({ query: { page: '3' } })
+      const wrapper = shallowMountComponent()
+      await vi.runAllTimersAsync()
+      expect(wrapper.findComponent(RowPaginationUsers).attributes('page')).toBe('3')
+      expect(api.getProjectPolicies).toBeCalledWith('default', 'local-datashare', expect.objectContaining({ from: 20, to: 30 }))
+    })
+
     it('passes query as the user filter to getProjectPolicies when ProjectUsersList emits update:query', async () => {
       const wrapper = shallowMountComponent()
-      vi.runAllTimers()
-      await flushPromises()
+      await vi.runAllTimersAsync()
       api.getProjectPolicies.mockClear()
 
       wrapper.findComponent(ProjectUsersList).vm.$emit('update:query', 'alice')
-      vi.advanceTimersByTime(300)
-      await flushPromises()
+      await vi.runAllTimersAsync()
 
       expect(api.getProjectPolicies).toHaveBeenCalledWith('default', 'local-datashare', expect.objectContaining({ user: 'alice' }))
     })
 
     it('resets page to 1 when query changes', async () => {
       const wrapper = shallowMountComponent()
-      vi.runAllTimers()
-      await flushPromises()
+      await vi.runAllTimersAsync()
 
       wrapper.findComponent(RowPaginationUsers).vm.$emit('update:page', 2)
-      await flushPromises()
+      await vi.runAllTimersAsync()
 
       api.getProjectPolicies.mockClear()
       wrapper.findComponent(ProjectUsersList).vm.$emit('update:query', 'bob')
-      vi.advanceTimersByTime(300)
-      await flushPromises()
+      await vi.runAllTimersAsync()
 
       expect(api.getProjectPolicies).toHaveBeenCalledWith('default', 'local-datashare', expect.objectContaining({ from: 0 }))
     })
 
-    it('passes null as user filter when query is empty', async () => {
+    it('passes null as user filter when query is cleared', async () => {
       const wrapper = shallowMountComponent()
-      vi.runAllTimers()
-      await flushPromises()
+      await vi.runAllTimersAsync()
+
+      wrapper.findComponent(ProjectUsersList).vm.$emit('update:query', 'alice')
+      await vi.runAllTimersAsync()
       api.getProjectPolicies.mockClear()
 
       wrapper.findComponent(ProjectUsersList).vm.$emit('update:query', '')
-      vi.advanceTimersByTime(300)
-      await flushPromises()
+      await vi.runAllTimersAsync()
 
       expect(api.getProjectPolicies).toHaveBeenCalledWith('default', 'local-datashare', expect.objectContaining({ user: null }))
     })
