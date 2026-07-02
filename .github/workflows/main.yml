@@ -8,9 +8,15 @@ permissions:
   pages: write
   id-token: write
 
+# Serialise Pages deployments. A re-run that only re-runs the deploy job then reuses the
+# single artifact built by the storybook job instead of producing a duplicate.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
 jobs:
   storybook:
-    name: Publish Storybook
+    name: Build Storybook
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
@@ -33,7 +39,17 @@ jobs:
         with:
           path: storybook-static
 
+  deploy:
+    name: Deploy Storybook to GitHub Pages
+    if: github.ref == 'refs/heads/main'
+    needs: storybook
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Deploy artifact to Github Pages
+        id: deployment
         uses: actions/deploy-pages@v4
 
   test:
