@@ -40,7 +40,7 @@ import { apiInstance } from '@/api/apiInstance.js'
 describe('ProjectUsersCreateModal.vue', () => {
   let core, global
 
-  const projectName = 'local-datashare'
+  const project = 'local-datashare'
 
   beforeAll(() => {
     core = CoreSetup.init().useAll()
@@ -61,7 +61,7 @@ describe('ProjectUsersCreateModal.vue', () => {
   function mountComponent(props = {}) {
     return shallowMount(ProjectUsersCreateModal, {
       global: { ...global, renderStubDefaultSlot: true },
-      props: { projectName, modelValue: true, ...props }
+      props: { project, modelValue: true, ...props }
     })
   }
 
@@ -137,9 +137,10 @@ describe('ProjectUsersCreateModal.vue', () => {
       login: 'alice',
       email: 'alice@example.org',
       name: 'Alice',
+      provider: 'external',
       password: 'secret',
-      provider: 'local',
-      groups: [projectName]
+      domain: 'default',
+      index: project
     })
   })
 
@@ -151,9 +152,9 @@ describe('ProjectUsersCreateModal.vue', () => {
     wrapper.vm.password = 'secret'
     wrapper.vm.confirmPassword = 'secret'
     await wrapper.vm.$nextTick()
-    await wrapper.vm.createUser()
+    await wrapper.vm.saveUser()
     await flushPromises()
-    expect(api.saveProjectPolicy).toHaveBeenCalledWith('default', projectName, {
+    expect(api.saveProjectPolicy).toHaveBeenCalledWith('default', project, {
       user: 'alice',
       role: 'PROJECT_MEMBER'
     })
@@ -167,7 +168,7 @@ describe('ProjectUsersCreateModal.vue', () => {
     wrapper.vm.password = 'secret'
     wrapper.vm.confirmPassword = 'secret'
     await wrapper.vm.$nextTick()
-    await wrapper.vm.createUser()
+    await wrapper.vm.saveUser()
     await flushPromises()
     expect(wrapper.emitted('user:created')).toEqual([[{ name: 'alice', role: 'PROJECT_MEMBER' }]])
     expect(wrapper.emitted('update:modelValue')).toEqual([[false]])
@@ -182,7 +183,7 @@ describe('ProjectUsersCreateModal.vue', () => {
     wrapper.vm.password = 'secret'
     wrapper.vm.confirmPassword = 'secret'
     await wrapper.vm.$nextTick()
-    await wrapper.vm.createUser()
+    await wrapper.vm.saveUser()
     await flushPromises()
     expect(mockToast.error).toHaveBeenCalledOnce()
     expect(wrapper.emitted('update:modelValue')).toBeFalsy()
@@ -198,9 +199,11 @@ describe('ProjectUsersCreateModal.vue', () => {
     wrapper.vm.password = 'secret'
     wrapper.vm.confirmPassword = 'secret'
     await wrapper.vm.$nextTick()
-    await wrapper.vm.createUser()
+    await wrapper.vm.saveUser()
     await flushPromises()
-    expect(mockToast.error).toHaveBeenCalledWith('A user with this username already exists.')
+    expect(mockToast.error).toHaveBeenCalledWith(
+      core.i18n.global.t('projectViewEdit.users.create.saveErrorConflict')
+    )
   })
 
   describe('isUsersProvider', () => {
