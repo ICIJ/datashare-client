@@ -1,10 +1,10 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import ProjectUsersList from '@/components/ProjectUsers/ProjectUsersList.vue'
 import RowPaginationUsers from '@/components/RowPagination/RowPaginationUsers.vue'
-import { useCore } from '@/composables/useCore.js'
+import { useAuth } from '@/composables/useAuth.js'
 import { useToast } from '@/composables/useToast.js'
 import { useUrlParam } from '@/composables/useUrlParam.js'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch.vue'
@@ -19,9 +19,9 @@ const props = defineProps({
   }
 })
 
-const core = useCore()
 const { toast } = useToast()
 const { t } = useI18n()
+const { isUsersProvider } = useAuth()
 
 const PER_PAGE = 10
 
@@ -35,9 +35,6 @@ const sort = useUrlParam('sort', null)
 const order = useUrlParam('order', 'asc')
 
 let debounceTimer = null
-
-const AUTH_MODE_PWD = ['form', 'basic']
-const isPasswordProvider = computed(() => AUTH_MODE_PWD.includes(core.config.get('auth')))
 
 async function fetchUsers() {
   loading.value = true
@@ -90,9 +87,8 @@ onMounted(fetchUsers)
 <template>
   <div class="project-view-edit-users p-4">
     <div class="d-flex flex-column gap-2 mb-3">
-      <div class="d-flex justify-content-end">
+      <div v-if="isUsersProvider" class="d-flex justify-content-end">
         <button-icon
-          v-if="isPasswordProvider"
           :icon-left="IPhUserPlus"
           variant="action"
           class=" d-flex "

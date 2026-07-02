@@ -1,11 +1,11 @@
 <script setup>
-import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import image from '@/assets/images/illustrations/app-modal-default-light.svg'
 import imageDark from '@/assets/images/illustrations/app-modal-default-dark.svg'
 import AppModal from '@/components/AppModal/AppModal.vue'
 
+import { useAuth } from '@/composables/useAuth.js'
 import { useCore } from '@/composables/useCore.js'
 import { useToast } from '@/composables/useToast.js'
 
@@ -27,13 +27,12 @@ const emit = defineEmits(['user:deleted'])
 const core = useCore()
 const { toast } = useToast()
 const { t } = useI18n()
+const { isUsersProvider } = useAuth()
 
-const AUTH_MODE_PWD = ['form', 'basic']
-const isPasswordProvider = computed(() => AUTH_MODE_PWD.includes(core.config.get('auth')))
 const DEFAULT_DOMAIN = 'default'
 async function confirmDeletion() {
   try {
-    if (isPasswordProvider.value) {
+    if (isUsersProvider.value) {
       await core.api.deleteUser(props.user.name, { domain: DEFAULT_DOMAIN, index: props.project })
     }
     else {
@@ -48,7 +47,7 @@ async function confirmDeletion() {
   }
 }
 
-defineExpose({ confirmDeletion, isPasswordProvider })
+defineExpose({ confirmDeletion, isUsersProvider })
 </script>
 
 <template>
