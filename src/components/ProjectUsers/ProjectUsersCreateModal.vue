@@ -11,6 +11,7 @@ import image from '@/assets/images/illustrations/app-modal-default-light.svg'
 import imageDark from '@/assets/images/illustrations/app-modal-default-dark.svg'
 import AppModal from '@/components/AppModal/AppModal.vue'
 
+import { useAuth } from '@/composables/useAuth.js'
 import { useCore } from '@/composables/useCore.js'
 import { usePolicies } from '@/composables/usePolicies.js'
 import { useToast } from '@/composables/useToast.js'
@@ -32,6 +33,7 @@ const core = useCore()
 const { getRoleByProject, formatRole } = usePolicies()
 const { toast } = useToast()
 const { t } = useI18n()
+const { isUsersProvider } = useAuth()
 
 const username = ref('')
 const email = ref('')
@@ -42,12 +44,6 @@ const selectedRole = ref(DEFAULT_ROLE)
 const saving = ref(false)
 
 const currentUserRole = computed(() => getRoleByProject(props.project))
-
-const AUTH_MODE_PWD = ['form', 'basic']
-
-const isPasswordProvider = computed(() =>
-  AUTH_MODE_PWD.includes(core.config.get('auth'))
-)
 
 const availableRoles = computed(() =>
   Object.values(ROLE)
@@ -62,7 +58,7 @@ const passwordMismatch = computed(() =>
 
 const isValid = computed(() => {
   if (!username.value.trim().length) return false
-  if (!isPasswordProvider.value) return true
+  if (!isUsersProvider.value) return true
   return password.value.length > 0 && password.value === confirmPassword.value
 })
 
@@ -82,7 +78,7 @@ const createUser = () => {
     email: email.value.trim(),
     name: name.value.trim(),
     provider: 'external',
-    ...(isPasswordProvider.value ? { password: password.value } : {}),
+    ...(isUsersProvider.value ? { password: password.value } : {}),
     domain: DEFAULT_DOMAIN,
     index: props.project
   })
@@ -118,7 +114,7 @@ async function saveUser() {
   }
 }
 const labelCol = 4
-defineExpose({ username, email, name, password, confirmPassword, selectedRole, isValid, isPasswordProvider, passwordMismatch, saving, saveUser, availableRoles })
+defineExpose({ username, email, name, password, confirmPassword, selectedRole, isValid, isUsersProvider, passwordMismatch, saving, saveUser, availableRoles })
 </script>
 
 <template>

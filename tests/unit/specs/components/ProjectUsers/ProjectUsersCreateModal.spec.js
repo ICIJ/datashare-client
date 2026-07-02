@@ -29,7 +29,8 @@ const mockConfigGet = vi.fn()
 vi.mock('@/composables/useCore', () => ({
   useCore: () => ({
     api: apiInstance,
-    config: { get: mockConfigGet }
+    config: { get: mockConfigGet },
+    auth: { getUsername: vi.fn().mockResolvedValue(null), isBasicAuth: vi.fn().mockResolvedValue(false) }
   })
 }))
 
@@ -202,23 +203,23 @@ describe('ProjectUsersCreateModal.vue', () => {
     expect(mockToast.error).toHaveBeenCalledWith('A user with this username already exists.')
   })
 
-  describe('isPasswordProvider', () => {
+  describe('isUsersProvider', () => {
     it('is true when auth is "form"', () => {
       mockConfigGet.mockImplementation(key => key === 'auth' ? 'form' : undefined)
       const wrapper = mountComponent()
-      expect(wrapper.vm.isPasswordProvider).toBe(true)
+      expect(wrapper.vm.isUsersProvider).toBe(true)
     })
 
     it('is true when auth is "basic"', () => {
       mockConfigGet.mockImplementation(key => key === 'auth' ? 'basic' : undefined)
       const wrapper = mountComponent()
-      expect(wrapper.vm.isPasswordProvider).toBe(true)
+      expect(wrapper.vm.isUsersProvider).toBe(true)
     })
 
     it('is false when auth is "oauth"', () => {
       mockConfigGet.mockImplementation(key => key === 'auth' ? 'oauth' : undefined)
       const wrapper = mountComponent()
-      expect(wrapper.vm.isPasswordProvider).toBe(false)
+      expect(wrapper.vm.isUsersProvider).toBe(false)
     })
 
     it('isValid is true with only a username when auth is "oauth"', async () => {

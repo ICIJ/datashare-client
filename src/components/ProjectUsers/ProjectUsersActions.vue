@@ -26,7 +26,7 @@ const emit = defineEmits(['user:deleted'])
 
 const { toast } = useToast()
 const { t } = useI18n()
-const { username } = useAuth()
+const { username, isUsersProvider } = useAuth()
 
 const showDeleteModal = ref(false)
 const isCurrentUser = computed(() => username.value === props.user.name)
@@ -49,6 +49,7 @@ function onUserDeleted({ name }) {
       @click="copyUsername"
     />
     <button-row-action
+      v-if="isUsersProvider"
       :icon="IPhTrash"
       :label="t('projectViewEdit.users.actions.delete')"
       :disabled="isCurrentUser"

@@ -21,7 +21,8 @@ const mockConfigGet = vi.fn()
 vi.mock('@/composables/useCore', () => ({
   useCore: () => ({
     api: apiInstance,
-    config: { get: mockConfigGet }
+    config: { get: mockConfigGet },
+    auth: { getUsername: vi.fn().mockResolvedValue(null), isBasicAuth: vi.fn().mockResolvedValue(false) }
   })
 }))
 
