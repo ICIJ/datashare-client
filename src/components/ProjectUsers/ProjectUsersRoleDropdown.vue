@@ -50,10 +50,10 @@ defineExpose({ availableRoles })
       no-caret
       variant="body"
       teleport-to="body"
-      toggle-class="project-users-role-dropdown__toggle"
+      toggle-class="project-users-role-dropdown__toggle  border border-subtle"
     >
       <template #button-content>
-        <div class="project-users-role-dropdown__content d-flex justify-content-between rounded-1">
+        <div class="project-users-role-dropdown__content d-flex justify-content-between ">
           <display-role :value="modelValue" />
           <app-icon class="ms-2">
             <i-ph-caret-down />
@@ -79,18 +79,8 @@ defineExpose({ availableRoles })
 
 <style scoped lang="scss">
 .project-users-role-dropdown {
-  &__dropdown {
-    border-radius: $btn-border-radius;
-    border: 1px solid $border-color;
-  }
-
-  &__toggle {
-    width: 9rem;
-    justify-content: space-between;
-  }
-
   :deep(.project-users-role-dropdown__content) {
-    width: 11rem;
+    width: 8rem;
   }
 
   &--dirty &__dropdown {
