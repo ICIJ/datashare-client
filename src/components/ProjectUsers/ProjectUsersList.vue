@@ -165,7 +165,7 @@ defineExpose({ pendingChanges, saving, showAdminModal, saveRoles, cancelChanges,
         />
       </template>
       <template #empty>
-        {{ emptyLabel }}
+        <p class="text-secondary small m-3">{{ emptyLabel }}</p>
       </template>
     </page-table-generic>
     <div
