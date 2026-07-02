@@ -283,7 +283,7 @@ describe('FilterType.vue', () => {
       await letData(es).have(new IndexedDocument('document_02', index).withContentType('another_type')).commit()
       await letData(es).have(new IndexedDocument('document_03', index).withContentType('message/rfc822')).commit()
 
-      wrapper.vm.query = 'EMAIL'
+      wrapper.vm.query = 'MESSAGE'
 
       await wrapper.vm.aggregateOver()
 
