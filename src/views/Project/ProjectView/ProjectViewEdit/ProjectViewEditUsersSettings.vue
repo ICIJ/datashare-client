@@ -1,6 +1,6 @@
 <script setup>
 import { noop } from 'lodash'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { useUrlParamWithStore } from '@/composables/useUrlParamWithStore'
@@ -30,8 +30,8 @@ const { fieldsToSortByOptions, sortByLabel, perPageLabel } = useViewSettings(t)
 const appStore = useAppStore()
 
 const fields = [
-  { key: 'name', text: t('projectViewEdit.users.fields.name.label'), sortable: true },
-  { key: 'role', text: t('projectViewEdit.users.fields.role.label'), sortable: true }
+  { key: 'uid', text: computed(() => t('projectViewEdit.users.fields.uid.label')), sortable: true },
+  { key: 'role', text: computed(() => t('projectViewEdit.users.fields.role.label')), sortable: true }
 ]
 
 const sortBy = ref({
