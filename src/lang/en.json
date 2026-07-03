@@ -1466,8 +1466,9 @@
       "fetchError": "Failed to load users for this project.",
       "noResults": "No users match your search.",
       "fields": {
-        "uid": { "label": "User Id" },
+        "login": { "label": "Username" },
         "name": { "label": "Name" },
+        "email": { "label": "Email" },
         "role": { "label": "Role" }
       },
       "roleSelect": {

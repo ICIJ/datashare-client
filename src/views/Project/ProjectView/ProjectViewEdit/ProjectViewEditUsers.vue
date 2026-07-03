@@ -30,6 +30,7 @@ const { isUsersProvider } = useAuth()
 const appStore = useAppStore()
 
 const VIEW = 'projectUsersList'
+const DEFAULT_DOMAIN = 'default'
 
 const users = ref([])
 const loading = ref(false)
@@ -55,17 +56,30 @@ const perPage = useUrlParamWithStore('perPage', {
 const query = useUrlParam('q', '')
 const page = useUrlPageParam()
 
+function roleForCurrentProject(permissions) {
+  const permission = (permissions ?? []).find(({ v2 }) => v2 === `${DEFAULT_DOMAIN}::${props.name}`)
+  return permission?.v1 ?? null
+}
+
 async function fetchUsers() {
   loading.value = true
   try {
     const from = (page.value - 1) * Number(perPage.value)
-    const to = from + Number(perPage.value)
-    const { items, pagination } = await api.getProjectPolicies('default', props.name, {
+    const { items, pagination } = await api.getUsers({
+      domain: DEFAULT_DOMAIN,
+      project: props.name,
+      user: query.value || null,
+      sort: sort.value,
+      desc: order.value === 'desc',
       from,
-      to,
-      user: query.value || null
+      size: Number(perPage.value)
     })
-    users.value = (items ?? []).map(({ v0, v1 }) => ({ name: v0, role: v1 }))
+    users.value = (items ?? []).map(({ uid, name, email, permissions }) => ({
+      login: uid,
+      name: name ?? '',
+      email: email ?? '',
+      role: roleForCurrentProject(permissions)
+    }))
     totalRows.value = pagination?.total ?? 0
   }
   catch {

@@ -38,10 +38,10 @@ function onConfirm() {
     <ul class="list-unstyled d-flex flex-column gap-2">
       <li
         v-for="promotion in promotions"
-        :key="promotion.name"
+        :key="promotion.login"
         class="d-flex align-items-center gap-2"
       >
-        <display-user :value="promotion.name" />
+        <display-user :value="promotion.login" />
         <display-role :value="promotion.newRole" />
       </li>
     </ul>

@@ -8,7 +8,7 @@ import { apiInstance as api } from '@/api/apiInstance.js'
 
 vi.mock('@/api/apiInstance', () => ({
   apiInstance: {
-    getProjectPolicies: vi.fn()
+    getUsers: vi.fn()
   }
 }))
 
@@ -21,10 +21,20 @@ describe('ProjectViewEditUsers.vue', () => {
   let core
   const props = { name: 'local-datashare' }
 
-  const policies = {
+  const usersResponse = {
     items: [
-      { ptype: 'g', v0: 'alice@icij.org', v1: 'PROJECT_ADMIN', v2: 'default::local-datashare' },
-      { ptype: 'g', v0: 'bob@icij.org', v1: 'PROJECT_MEMBER', v2: 'default::local-datashare' }
+      {
+        uid: 'alice@icij.org',
+        name: 'Alice A',
+        email: 'alice@icij.org',
+        permissions: [{ v1: 'PROJECT_ADMIN', v2: 'default::local-datashare' }]
+      },
+      {
+        uid: 'bob@icij.org',
+        name: 'Bob B',
+        email: 'bob@icij.org',
+        permissions: [{ v1: 'PROJECT_MEMBER', v2: 'default::local-datashare' }]
+      }
     ],
     pagination: { count: 2, from: 0, size: 10, total: 2 }
   }
@@ -40,17 +50,11 @@ describe('ProjectViewEditUsers.vue', () => {
     vi.clearAllMocks()
     core = CoreSetup.init().useAll().useRouterWithoutGuards()
     await core.router.replace({ query: {} })
-    api.getProjectPolicies.mockResolvedValue(policies)
+    api.getUsers.mockResolvedValue({ items: [] })
   })
 
   afterAll(() => {
     vi.resetAllMocks()
-  })
-
-  it('calls getProjectPolicies with domain "default" and the project name on mount', async () => {
-    shallowMountComponent()
-    await flushPromises()
-    expect(api.getProjectPolicies).toBeCalledWith('default', 'local-datashare', expect.objectContaining({ from: 0, to: 10 }))
   })
 
   it('renders a ProjectUsersList', () => {
@@ -58,13 +62,14 @@ describe('ProjectViewEditUsers.vue', () => {
     expect(wrapper.findComponent(ProjectUsersList).exists()).toBe(true)
   })
 
-  it('maps v0/v1 fields to { name, role } and passes them to ProjectUsersList', async () => {
+  it('maps getUsers items to { uid, name, email } and extracts role from permissions', async () => {
+    api.getUsers.mockResolvedValue(usersResponse)
     const wrapper = shallowMountComponent()
     await flushPromises()
     const list = wrapper.findComponent(ProjectUsersList)
     expect(list.props('users')).toEqual([
-      { name: 'alice@icij.org', role: 'PROJECT_ADMIN' },
-      { name: 'bob@icij.org', role: 'PROJECT_MEMBER' }
+      { uid: 'alice@icij.org', name: 'Alice A', email: 'alice@icij.org', role: 'PROJECT_ADMIN' },
+      { uid: 'bob@icij.org', name: 'Bob B', email: 'bob@icij.org', role: 'PROJECT_MEMBER' }
     ])
   })
 
@@ -75,28 +80,28 @@ describe('ProjectViewEditUsers.vue', () => {
   })
 
   it('passes an empty users array when the API returns an empty items list', async () => {
-    api.getProjectPolicies.mockResolvedValue({ items: [], pagination: { count: 0, from: 0, size: 10, total: 0 } })
+    api.getUsers.mockResolvedValue({ items: [], pagination: { count: 0, from: 0, size: 10, total: 0 } })
     const wrapper = shallowMountComponent()
     await flushPromises()
     expect(wrapper.findComponent(ProjectUsersList).props('users')).toEqual([])
   })
 
   it('passes an empty users array when items is null', async () => {
-    api.getProjectPolicies.mockResolvedValue({ items: null })
+    api.getUsers.mockResolvedValue({ items: null })
     const wrapper = shallowMountComponent()
     await flushPromises()
     expect(wrapper.findComponent(ProjectUsersList).props('users')).toEqual([])
   })
 
   it('shows a toast error when the API call fails', async () => {
-    api.getProjectPolicies.mockRejectedValue(new Error('Network error'))
+    api.getUsers.mockRejectedValue(new Error('Network error'))
     shallowMountComponent()
     await flushPromises()
     expect(mockToast.error).toHaveBeenCalledOnce()
   })
 
   it('still renders ProjectUsersList with empty users after a failed API call', async () => {
-    api.getProjectPolicies.mockRejectedValue(new Error('Network error'))
+    api.getUsers.mockRejectedValue(new Error('Network error'))
     const wrapper = shallowMountComponent()
     await flushPromises()
     expect(wrapper.findComponent(ProjectUsersList).exists()).toBe(true)
@@ -115,14 +120,15 @@ describe('ProjectViewEditUsers.vue', () => {
     expect(wrapper.findComponent(RowPaginationUsers).exists()).toBe(true)
   })
 
-  it('passes totalRows from pagination.total to RowPaginationUsers', async () => {
+  it('passes totalRows from getUsers pagination.total to RowPaginationUsers', async () => {
+    api.getUsers.mockResolvedValue(usersResponse)
     const wrapper = shallowMountComponent()
     await flushPromises()
     expect(wrapper.findComponent(RowPaginationUsers).attributes('total-rows')).toBe('2')
   })
 
   it('sets totalRows to 0 when pagination is missing', async () => {
-    api.getProjectPolicies.mockResolvedValue({ items: [] })
+    api.getUsers.mockResolvedValue({ items: [] })
     const wrapper = shallowMountComponent()
     await flushPromises()
     expect(wrapper.findComponent(RowPaginationUsers).attributes('total-rows')).toBe('0')
@@ -137,14 +143,14 @@ describe('ProjectViewEditUsers.vue', () => {
       vi.useRealTimers()
     })
 
-    it('refetches users with updated from/to when page changes', async () => {
+    it('refetches users with updated from/size when page changes', async () => {
       const wrapper = shallowMountComponent()
       await vi.runAllTimersAsync()
-      expect(api.getProjectPolicies).toBeCalledWith('default', 'local-datashare', expect.objectContaining({ from: 0, to: 10 }))
+      expect(api.getUsers).toBeCalledWith(expect.objectContaining({ from: 0, size: 10 }))
 
       wrapper.findComponent(RowPaginationUsers).vm.$emit('update:page', 2)
       await vi.runAllTimersAsync()
-      expect(api.getProjectPolicies).toBeCalledWith('default', 'local-datashare', expect.objectContaining({ from: 10, to: 20 }))
+      expect(api.getUsers).toBeCalledWith(expect.objectContaining({ from: 10, size: 10 }))
     })
 
     it('reflects the page from the URL query on mount', async () => {
@@ -152,18 +158,18 @@ describe('ProjectViewEditUsers.vue', () => {
       const wrapper = shallowMountComponent()
       await vi.runAllTimersAsync()
       expect(wrapper.findComponent(RowPaginationUsers).attributes('page')).toBe('3')
-      expect(api.getProjectPolicies).toBeCalledWith('default', 'local-datashare', expect.objectContaining({ from: 20, to: 30 }))
+      expect(api.getUsers).toBeCalledWith(expect.objectContaining({ from: 20, size: 10 }))
     })
 
-    it('passes query as the user filter to getProjectPolicies when ProjectUsersList emits update:query', async () => {
+    it('passes query as the user filter to getUsers when ProjectUsersList emits update:query', async () => {
       const wrapper = shallowMountComponent()
       await vi.runAllTimersAsync()
-      api.getProjectPolicies.mockClear()
+      api.getUsers.mockClear()
 
       wrapper.findComponent(ProjectUsersList).vm.$emit('update:query', 'alice')
       await vi.runAllTimersAsync()
 
-      expect(api.getProjectPolicies).toHaveBeenCalledWith('default', 'local-datashare', expect.objectContaining({ user: 'alice' }))
+      expect(api.getUsers).toHaveBeenCalledWith(expect.objectContaining({ user: 'alice' }))
     })
 
     it('resets page to 1 when query changes', async () => {
@@ -173,11 +179,11 @@ describe('ProjectViewEditUsers.vue', () => {
       wrapper.findComponent(RowPaginationUsers).vm.$emit('update:page', 2)
       await vi.runAllTimersAsync()
 
-      api.getProjectPolicies.mockClear()
+      api.getUsers.mockClear()
       wrapper.findComponent(ProjectUsersList).vm.$emit('update:query', 'bob')
       await vi.runAllTimersAsync()
 
-      expect(api.getProjectPolicies).toHaveBeenCalledWith('default', 'local-datashare', expect.objectContaining({ from: 0 }))
+      expect(api.getUsers).toHaveBeenCalledWith(expect.objectContaining({ from: 0 }))
     })
 
     it('passes null as user filter when query is cleared', async () => {
@@ -186,12 +192,12 @@ describe('ProjectViewEditUsers.vue', () => {
 
       wrapper.findComponent(ProjectUsersList).vm.$emit('update:query', 'alice')
       await vi.runAllTimersAsync()
-      api.getProjectPolicies.mockClear()
+      api.getUsers.mockClear()
 
       wrapper.findComponent(ProjectUsersList).vm.$emit('update:query', '')
       await vi.runAllTimersAsync()
 
-      expect(api.getProjectPolicies).toHaveBeenCalledWith('default', 'local-datashare', expect.objectContaining({ user: null }))
+      expect(api.getUsers).toHaveBeenCalledWith(expect.objectContaining({ user: null }))
     })
   })
 })

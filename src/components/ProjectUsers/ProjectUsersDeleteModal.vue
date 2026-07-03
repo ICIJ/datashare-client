@@ -33,12 +33,12 @@ const DEFAULT_DOMAIN = 'default'
 async function confirmDeletion() {
   try {
     if (isUsersProvider.value) {
-      await core.api.deleteUser(props.user.name, { domain: DEFAULT_DOMAIN, index: props.project })
+      await core.api.deleteUser(props.user.login, { domain: DEFAULT_DOMAIN, index: props.project })
     }
     else {
-      await core.api.removeProjectPolicy('default', props.project, { user: props.user.name })
+      await core.api.removeProjectPolicy('default', props.project, { user: props.user.login })
     }
-    emit('user:deleted', { name: props.user.name })
+    emit('user:deleted', { login: props.user.login })
     modelValue.value = false
     toast.success(t('projectViewEdit.users.actions.deleteModal.success'))
   }
@@ -62,7 +62,7 @@ defineExpose({ confirmDeletion, isUsersProvider })
     <template #title>
       <i18n-t keypath="projectViewEdit.users.actions.deleteModal.title">
         <template #name>
-          {{ user.name }}
+          {{ user.login }}
         </template>
       </i18n-t>
     </template>

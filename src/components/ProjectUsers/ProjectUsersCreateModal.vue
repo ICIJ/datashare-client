@@ -96,7 +96,7 @@ async function saveUser() {
   try {
     await createUser()
     await saveProjectPolicy()
-    emit('user:created', { name: username.value.trim(), role: selectedRole.value })
+    emit('user:created', { login: username.value.trim(), role: selectedRole.value })
     resetForm()
     modelValue.value = false
   }

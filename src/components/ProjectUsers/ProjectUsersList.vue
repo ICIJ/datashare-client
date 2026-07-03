@@ -54,20 +54,22 @@ const ADMIN_ROLES = new Set([ROLE.PROJECT_ADMIN, ROLE.DOMAIN_ADMIN, ROLE.INSTANC
 
 const adminPromotions = computed(() =>
   Object.entries(pendingChanges.value)
-    .filter(([name, newRole]) => {
-      const currentRole = props.users.find(u => u.name === name)?.role
+    .filter(([login, newRole]) => {
+      const currentRole = props.users.find(u => u.login === login)?.role
       return ADMIN_ROLES.has(newRole) && ROLE_BIT[newRole] > ROLE_BIT[currentRole]
     })
-    .map(([name, newRole]) => ({ name, newRole }))
+    .map(([login, newRole]) => ({ login, newRole }))
 )
 
 const pendingCount = computed(() => Object.keys(pendingChanges.value).length)
 const hasPendingChanges = computed(() => pendingCount.value > 0)
 
-const sortedUsers = computed(() => orderArrayBy(props.users, [sort.value ?? 'name'], [order.value]))
+const sortedUsers = computed(() => orderArrayBy(props.users, [sort.value ?? 'login'], [order.value]))
 
 const fields = computed(() => [
-  { key: 'name', text: t('projectViewEdit.users.fields.name.label'), sortable: true, emphasis: true },
+  { key: 'login', text: t('projectViewEdit.users.fields.login.label'), sortable: true, emphasis: true },
+  { key: 'name', text: t('projectViewEdit.users.fields.name.label'), sortable: true },
+  { key: 'email', text: t('projectViewEdit.users.fields.email.label'), sortable: true },
   { key: 'role', text: t('projectViewEdit.users.fields.role.label'), sortable: true, thStyle: 'width: 16rem' }
 ])
 
@@ -75,12 +77,12 @@ async function saveRoles() {
   saving.value = true
   try {
     await Promise.all(
-      Object.entries(pendingChanges.value).map(([name, role]) =>
-        core.api.saveProjectPolicy('default', props.project, { user: name, role })
+      Object.entries(pendingChanges.value).map(([login, role]) =>
+        core.api.saveProjectPolicy('default', props.project, { user: login, role })
       )
     )
-    Object.entries(pendingChanges.value).forEach(([name, role]) => {
-      const user = props.users.find(u => u.name === name)
+    Object.entries(pendingChanges.value).forEach(([login, role]) => {
+      const user = props.users.find(u => u.login === login)
       if (user) user.role = role
     })
     pendingChanges.value = {}
@@ -107,14 +109,14 @@ function onSaveClicked() {
     saveRoles()
   }
 }
-function onRoleChanged(name, role) {
-  const original = props.users.find(u => u.name === name)?.role
+function onRoleChanged(login, role) {
+  const original = props.users.find(u => u.login === login)?.role
   const next = { ...pendingChanges.value }
   if (role === original) {
-    delete next[name]
+    delete next[login]
   }
   else {
-    next[name] = role
+    next[login] = role
   }
   pendingChanges.value = next
 }
@@ -124,8 +126,8 @@ const emptyLabel = computed(() =>
     : t('projectViewEdit.users.empty')
 )
 
-function onUserDeleted({ name }) {
-  emit('user:deleted', { name })
+function onUserDeleted({ login }) {
+  emit('user:deleted', { login })
 }
 
 defineExpose({ pendingChanges, saving, showAdminModal, saveRoles, cancelChanges, onSaveClicked })
@@ -144,17 +146,17 @@ defineExpose({ pendingChanges, saving, showAdminModal, saveRoles, cancelChanges,
       :items="sortedUsers"
       :fields="fields"
       :loading="loading"
-      primary-key="name"
+      primary-key="login"
     >
-      <template #cell(name)="{ item }">
-        <display-user :value="item.name" />
+      <template #cell(login)="{ item }">
+        <display-user :value="item.login" />
       </template>
       <template #cell(role)="{ item }">
         <project-users-role-dropdown
-          :model-value="pendingChanges[item.name] ?? item.role"
-          :dirty="!!pendingChanges[item.name]"
+          :model-value="pendingChanges[item.login] ?? item.role"
+          :dirty="!!pendingChanges[item.login]"
           :project="project"
-          @update:model-value="onRoleChanged(item.name, $event)"
+          @update:model-value="onRoleChanged(item.login, $event)"
         />
       </template>
       <template #row-actions="{ item }">

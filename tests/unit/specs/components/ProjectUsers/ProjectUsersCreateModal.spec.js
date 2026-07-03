@@ -170,7 +170,7 @@ describe('ProjectUsersCreateModal.vue', () => {
     await wrapper.vm.$nextTick()
     await wrapper.vm.saveUser()
     await flushPromises()
-    expect(wrapper.emitted('user:created')).toEqual([[{ name: 'alice', role: 'PROJECT_MEMBER' }]])
+    expect(wrapper.emitted('user:created')).toEqual([[{ uid: 'alice', role: 'PROJECT_MEMBER' }]])
     expect(wrapper.emitted('update:modelValue')).toEqual([[false]])
     expect(wrapper.vm.username).toBe('')
     expect(wrapper.vm.password).toBe('')

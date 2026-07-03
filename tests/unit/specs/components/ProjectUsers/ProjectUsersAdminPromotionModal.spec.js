@@ -10,8 +10,8 @@ describe('ProjectUsersAdminPromotionModal.vue', () => {
   let core, global
 
   const promotions = [
-    { name: 'alice@icij.org', newRole: 'PROJECT_ADMIN' },
-    { name: 'bob@icij.org', newRole: 'DOMAIN_ADMIN' }
+    { uid: 'alice@icij.org', newRole: 'PROJECT_ADMIN' },
+    { uid: 'bob@icij.org', newRole: 'DOMAIN_ADMIN' }
   ]
 
   beforeAll(() => {

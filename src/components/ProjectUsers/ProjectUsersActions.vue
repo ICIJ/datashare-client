@@ -29,15 +29,15 @@ const { t } = useI18n()
 const { username, isUsersProvider } = useAuth()
 
 const showDeleteModal = ref(false)
-const isCurrentUser = computed(() => username.value === props.user.name)
+const isCurrentUser = computed(() => username.value === props.user.login)
 
 async function copyUsername() {
-  await navigator.clipboard.writeText(props.user.name)
+  await navigator.clipboard.writeText(props.user.login)
   toast.success(t('projectViewEdit.users.actions.copySuccess'))
 }
 
-function onUserDeleted({ name }) {
-  emit('user:deleted', { name })
+function onUserDeleted({ login }) {
+  emit('user:deleted', { login })
 }
 </script>
 
