@@ -84,11 +84,15 @@ export function useDocumentDownload(document, { immediate = true } = {}) {
     }
   }
 
+  const hasTextContent = computed(() => {
+    return documentRef.value.contentTextLength > 0
+  })
+
   async function downloadTextContent() {
+    if (!hasTextContent.value) return
     if (!documentRef.value.content) {
       await documentStore.getContent()
     }
-
     const { content, title } = documentRef.value
     const a = window.document.createElement('a')
     a.href = URL.createObjectURL(new Blob([content], { type: 'text/plain;charset=UTF-8' }))
@@ -155,6 +159,7 @@ export function useDocumentDownload(document, { immediate = true } = {}) {
     rootContentLength,
     maxRootContentLength,
     downloadTextContent,
+    hasTextContent,
     hasTranslations,
     downloadTranslatedContent
   }
