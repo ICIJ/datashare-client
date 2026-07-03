@@ -49,6 +49,7 @@ const {
   hasCleanableContentType,
   isRootTooBig,
   downloadTextContent,
+  hasTextContent,
   hasTranslations,
   downloadTranslatedContent,
   fetchStatuses
@@ -114,6 +115,7 @@ defineExpose({
         :label="t('documentDownloadPopover.downloadExtractText')"
         variant="outline-action"
         class="document-download-popover__body__button"
+        :disabled="!hasTextContent"
         @click="downloadTextContent"
       />
       <button-icon
