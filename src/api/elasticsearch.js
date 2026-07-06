@@ -496,11 +496,13 @@ export function datasharePlugin(Client) {
    * @private
    */
   Client.prototype._applyOrCombinedFilters = function (body, filters) {
-    body.query('bool', (sub) => {
+    body.query('bool', (combinedQuery) => {
+      // Each filter contributes a `terms` clause per candidate field; a document
+      // matches when any one of them does.
       filters.forEach((filter) => {
-        sub.orQuery('terms', filter.key, filter.values)
+        filter.matchAnyField(combinedQuery, filter.values, 'orQuery')
       })
-      return sub.queryMinimumShouldMatch(1)
+      return combinedQuery.queryMinimumShouldMatch(1)
     })
   }
 

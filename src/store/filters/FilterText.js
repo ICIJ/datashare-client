@@ -85,6 +85,19 @@ export default class FilterText {
   }
 
   /**
+   * Elasticsearch fields a selected value is matched against. Defaults to the
+   * single aggregated field; subclasses override when a value must be tried
+   * against several candidate fields (e.g. a `text` field's `.keyword`
+   * sub-field alongside the bare field). Drives both the include/exclude
+   * clause builders and the paired-dimension OR-combine, so they stay
+   * consistent.
+   * @returns {string[]} Candidate fields, in match order.
+   */
+  get matchFields() {
+    return [this.key]
+  }
+
+  /**
    * Extra bucket-key tokens matched against when the user searches within the
    * filter. Override in subclasses that want label-based matching.
    * @returns {string[]} List of regex-escaped token candidates.
@@ -105,13 +118,59 @@ export default class FilterText {
   }
 
   /**
-   * Restrict the query to documents whose field contains any of the selected values.
+   * @returns {boolean} `true` when a selected value must be tried against more
+   *   than one candidate field, so clauses need a `bool.should` wrapper.
+   */
+  get hasMultipleMatchFields() {
+    return this.matchFields.length > 1
+  }
+
+  /**
+   * OR-combine one `terms` clause per candidate field onto a bodybuilder
+   * sub-query, so a selected value matches whichever field actually carries it
+   * across the heterogeneous mappings a search may span. `combineMethod` picks
+   * the bodybuilder context: `orFilter` stays in the cached filter context,
+   * `orQuery` in the scored query context used inside `has_parent`.
+   * @param {object} subQuery - Bodybuilder sub-query being built.
+   * @param {string[]} values - Selected values to match.
+   * @param {string} combineMethod - `orFilter` or `orQuery`.
+   * @returns {object} The mutated sub-query.
+   */
+  matchAnyField(subQuery, values, combineMethod) {
+    return this.matchFields.reduce((query, field) => {
+      return query[combineMethod]('terms', field, values)
+    }, subQuery)
+  }
+
+  /**
+   * Build the `bool` sub-query callback that matches `values` on any candidate
+   * field, ready to hand to a bodybuilder clause method. `combineMethod` picks
+   * the context: `orFilter` for the cached filter context, `orQuery` for the
+   * scored query context used inside `has_parent`.
+   * @param {string[]} values - Selected values to match.
+   * @param {string} combineMethod - `orFilter` or `orQuery`.
+   * @returns {(subQuery: object) => object} Bodybuilder sub-query callback.
+   */
+  whereAnyFieldMatches(values, combineMethod) {
+    return subQuery => this.matchAnyField(subQuery, values, combineMethod)
+  }
+
+  /**
+   * Restrict the query to documents whose field contains any of the selected
+   * values. A single match field emits a plain `terms` filter; several fields
+   * OR-combine into a `bool.should` (see `matchFields`), staying in the cached
+   * filter context either way.
    * @param {object} body - Bodybuilder instance being mutated.
    * @param {{values: string[]}} param - Current selection.
    * @returns {object} The mutated body (chainable).
    */
   addChildIncludeFilter(body, param) {
-    return body.addFilter('terms', this.key, param.values)
+    // A single field needs no bool wrapper: keep the plain, cache-friendly filter.
+    if (!this.hasMultipleMatchFields) {
+      return body.addFilter('terms', this.matchFields[0], param.values)
+    }
+    // Several candidate fields: match the value against any of them, in filter context.
+    return body.filter('bool', this.whereAnyFieldMatches(param.values, 'orFilter'))
   }
 
   /**
@@ -122,7 +181,12 @@ export default class FilterText {
    * @returns {object} The mutated body.
    */
   addParentIncludeFilter(body, param) {
-    return body.query('has_parent', { parent_type: 'Document' }, q => q.query('terms', this.key, param.values))
+    return body.query('has_parent', { parent_type: 'Document' }, (parentQuery) => {
+      if (!this.hasMultipleMatchFields) {
+        return parentQuery.query('terms', this.matchFields[0], param.values)
+      }
+      return parentQuery.query('bool', this.whereAnyFieldMatches(param.values, 'orQuery'))
+    })
   }
 
   /**
@@ -132,7 +196,12 @@ export default class FilterText {
    * @returns {object} The mutated body.
    */
   addParentExcludeFilter(body, param) {
-    return body.query('has_parent', { parent_type: 'Document' }, q => q.notQuery('terms', this.key, param.values))
+    return body.query('has_parent', { parent_type: 'Document' }, (parentQuery) => {
+      if (!this.hasMultipleMatchFields) {
+        return parentQuery.notQuery('terms', this.matchFields[0], param.values)
+      }
+      return parentQuery.notQuery('bool', this.whereAnyFieldMatches(param.values, 'orQuery'))
+    })
   }
 
   /**
@@ -142,7 +211,10 @@ export default class FilterText {
    * @returns {object} The mutated body.
    */
   addChildExcludeFilter(body, param) {
-    return body.notFilter('terms', this.key, param.values)
+    if (!this.hasMultipleMatchFields) {
+      return body.notFilter('terms', this.matchFields[0], param.values)
+    }
+    return body.notFilter('bool', this.whereAnyFieldMatches(param.values, 'orFilter'))
   }
 
   /**

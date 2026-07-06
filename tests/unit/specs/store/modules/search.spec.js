@@ -3,6 +3,7 @@ import { setActivePinia, createPinia } from 'pinia'
 
 import { IndexedDocument, IndexedDocuments, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
+import { findBoolShould, findTermsClause, findMustNotForField } from '~tests/unit/specs/utils/esQueryBody'
 import { SEARCH_OPERATORS } from '@/enums/searchOperators'
 import Document from '@/api/resources/Document'
 import EsDocList from '@/api/resources/EsDocList'
@@ -1346,74 +1347,6 @@ describe('SearchStore', () => {
       })
     }
 
-    function findBoolShould(node) {
-      if (!node || typeof node !== 'object') {
-        return null
-      }
-      if (Array.isArray(node)) {
-        for (const child of node) {
-          const found = findBoolShould(child)
-          if (found) return found
-        }
-        return null
-      }
-      if (node.bool && Array.isArray(node.bool.should) && node.bool.should.length > 1) {
-        return node.bool
-      }
-      for (const value of Object.values(node)) {
-        const found = findBoolShould(value)
-        if (found) return found
-      }
-      return null
-    }
-
-    function findTermsClause(node, field) {
-      if (!node || typeof node !== 'object') {
-        return null
-      }
-      if (Array.isArray(node)) {
-        for (const child of node) {
-          const found = findTermsClause(child, field)
-          if (found) return found
-        }
-        return null
-      }
-      if (node.terms && Object.prototype.hasOwnProperty.call(node.terms, field)) {
-        return node.terms[field]
-      }
-      for (const value of Object.values(node)) {
-        const found = findTermsClause(value, field)
-        if (found) return found
-      }
-      return null
-    }
-
-    function findMustNotForField(node, field) {
-      if (!node || typeof node !== 'object') {
-        return null
-      }
-      if (Array.isArray(node)) {
-        for (const child of node) {
-          const found = findMustNotForField(child, field)
-          if (found) return found
-        }
-        return null
-      }
-      if (node.bool && node.bool.must_not) {
-        const mustNot = Array.isArray(node.bool.must_not) ? node.bool.must_not : [node.bool.must_not]
-        for (const clause of mustNot) {
-          if (clause.terms && Object.prototype.hasOwnProperty.call(clause.terms, field)) {
-            return clause.terms[field]
-          }
-        }
-      }
-      for (const value of Object.values(node)) {
-        const found = findMustNotForField(value, field)
-        if (found) return found
-      }
-      return null
-    }
-
     it('OR-combines paired contentType and contentTypeCategory when both have values', () => {
       searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
       searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'DOCUMENT' })
@@ -1440,10 +1373,12 @@ describe('SearchStore', () => {
       expect(findTermsClause(body.query, 'contentTypeCategory')).toBeNull()
     })
 
-    it('keeps a single clause when only contentTypeCategory has values', () => {
+    it('does not cross-dimension OR-combine when only contentTypeCategory has values', () => {
       searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'DOCUMENT' })
 
       const body = buildBody()
+      // The category clause matches on both its field variants, but it must not
+      // OR-combine with the (empty) contentType side.
       expect(findBoolShould(body.query)).toBeNull()
       expect(findTermsClause(body.query, 'contentTypeCategory')).toEqual(['DOCUMENT'])
       expect(findTermsClause(body.query, 'contentType')).toBeNull()
@@ -1462,7 +1397,7 @@ describe('SearchStore', () => {
     it('keeps excluded paired values as must_not and skips OR-combine when only one side is included', () => {
       searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
       searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'DOCUMENT' })
-      // Only the category side is excluded — the include side stands alone, no OR-combine.
+      // Only the category side is excluded, so the include side stands alone, no OR-combine.
       searchStore.excludeFilter('contentTypeCategory')
 
       const body = buildBody()

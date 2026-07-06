@@ -5,7 +5,7 @@ import { setCookie, removeCookie } from 'tiny-cookie'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import { elasticsearch, csrfPlugin } from '@/api/elasticsearch'
-import { FilterText, FilterEntity } from '@/store/filters'
+import { FilterText, FilterEntity, FilterContentTypeCategory } from '@/store/filters'
 import { EventBus } from '@/utils/eventBus'
 import settings from '@/utils/settings'
 
@@ -55,6 +55,27 @@ describe('elasticsearch', () => {
         }
       }
     })
+  })
+
+  it('OR-combines paired dimensions, matching the category value on both its keyword sub-field and the bare field', () => {
+    // contentTypeCategory values are stored uppercase and only match a `terms`
+    // query on the raw value: `.keyword` on text+keyword indices, the bare
+    // field on pure-keyword indices. The OR-combine must carry both so the
+    // paired-dimension query stays correct across heterogeneous mappings.
+    const emptyStore = { values: {}, excludeFilters: [], contextualizeFilters: [], sortFilters: {} }
+    const contentType = new FilterText({ name: 'contentType', key: 'contentType' })
+    const category = new FilterContentTypeCategory({ name: 'contentTypeCategory', key: 'contentTypeCategory' })
+    contentType.bindStore(emptyStore).setValues(['application/pdf'])
+    category.bindStore(emptyStore).setValues(['IMAGE'])
+
+    const body = bodybuilder()
+    elasticsearch._applyFilters(body, [contentType, category])
+    const should = body.build().query.bool.should
+
+    expect(should).toContainEqual({ terms: { contentType: ['application/pdf'] } })
+    expect(should).toContainEqual({ terms: { 'contentTypeCategory.keyword': ['IMAGE'] } })
+    expect(should).toContainEqual({ terms: { contentTypeCategory: ['IMAGE'] } })
+    expect(body.build().query.bool.minimum_should_match).toBe(1)
   })
 
   it('should build a simple ES query', async () => {

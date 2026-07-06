@@ -5,6 +5,7 @@ import FilterContentType from '@/store/filters/FilterContentType'
 import DisplayContentType from '@/components/Display/DisplayContentType'
 import { apiInstance as api } from '@/api/apiInstance'
 import { useSearchStore } from '@/store/modules'
+import { findBoolShould, findTermsClause } from '~tests/unit/specs/utils/esQueryBody'
 
 describe('FilterContentType.js', () => {
   describe('itemLabel', () => {
@@ -57,48 +58,6 @@ describe('FilterContentType.js', () => {
       api.elasticsearch._applyFilters(body, otherFilters)
       api.elasticsearch._applyQueryString(body, '*', [])
       return body.size(0).rawOption('track_total_hits', true).build()
-    }
-
-    function findBoolShould(node) {
-      if (!node || typeof node !== 'object') {
-        return null
-      }
-      if (Array.isArray(node)) {
-        for (const child of node) {
-          const found = findBoolShould(child)
-          if (found) return found
-        }
-        return null
-      }
-      if (node.bool && Array.isArray(node.bool.should) && node.bool.should.length > 1) {
-        return node.bool
-      }
-      for (const value of Object.values(node)) {
-        const found = findBoolShould(value)
-        if (found) return found
-      }
-      return null
-    }
-
-    function findTermsClause(node, field) {
-      if (!node || typeof node !== 'object') {
-        return null
-      }
-      if (Array.isArray(node)) {
-        for (const child of node) {
-          const found = findTermsClause(child, field)
-          if (found) return found
-        }
-        return null
-      }
-      if (node.terms && Object.prototype.hasOwnProperty.call(node.terms, field)) {
-        return node.terms[field]
-      }
-      for (const value of Object.values(node)) {
-        const found = findTermsClause(value, field)
-        if (found) return found
-      }
-      return null
     }
 
     it('does not OR-combine the paired contentTypeCategory when both have values', () => {

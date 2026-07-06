@@ -27,6 +27,22 @@ export default class FilterContentTypeCategory extends FilterText {
   }
 
   /**
+   * Fields the include/exclude clauses match against. Category values are
+   * stored uppercase (`IMAGE`), which only matches with a `terms` query on a
+   * non-analysed field. Older indices map `contentTypeCategory` as `text` with
+   * a `.keyword` sub-field (the raw value lives in the sub-field); newer ones
+   * map it directly as `keyword` (the raw value lives on the field itself, with
+   * no sub-field). We `should`-combine both so a single query stays correct
+   * across the heterogeneous mappings a search may span: the field absent from
+   * a given index simply contributes no match there.
+   * @override
+   * @returns {string[]} `[<key>.keyword, <key>]`.
+   */
+  get matchFields() {
+    return [`${this.key}.keyword`, this.key]
+  }
+
+  /**
    * @param {{key: string}} item - Bucket with the category key.
    * @returns {string} i18n key resolved by `labelToHuman` to render the label.
    */

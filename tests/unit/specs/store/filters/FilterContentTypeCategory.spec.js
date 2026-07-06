@@ -7,6 +7,7 @@ import FilterContentTypeCategory from '@/store/filters/FilterContentTypeCategory
 import DisplayContentTypeCategory from '@/components/Display/DisplayContentTypeCategory'
 import { apiInstance as api } from '@/api/apiInstance'
 import { useSearchStore } from '@/store/modules'
+import { findBoolShould, findTermsClause } from '~tests/unit/specs/utils/esQueryBody'
 
 describe('FilterContentTypeCategory.js', () => {
   describe('breadcrumb icon', () => {
@@ -102,6 +103,47 @@ describe('FilterContentTypeCategory.js', () => {
     })
   })
 
+  describe('include/exclude query fields', () => {
+    // Category values are stored uppercase (IMAGE). A `terms` query on the
+    // analysed `text` field never matches uppercase, so we query the raw value:
+    // `.keyword` on text+keyword indices, the bare field on pure-keyword indices.
+    // Both are OR-combined so one query stays correct across both mappings.
+    const filter = new FilterContentTypeCategory({ name: 'contentTypeCategory', key: 'contentTypeCategory' })
+    const param = { name: 'contentTypeCategory', values: ['IMAGE'] }
+
+    it('includes documents matching the raw value on either the keyword sub-field or the bare field', () => {
+      const body = filter.addChildIncludeFilter(bodybuilder(), param).build()
+      const should = body.query.bool.filter.bool.should
+      expect(should).toContainEqual({ terms: { 'contentTypeCategory.keyword': ['IMAGE'] } })
+      expect(should).toContainEqual({ terms: { contentTypeCategory: ['IMAGE'] } })
+    })
+
+    it('excludes documents matching the raw value on either field, in the cached filter context', () => {
+      const body = filter.addChildExcludeFilter(bodybuilder(), param).build()
+      // must_not lives inside the filter context (like every other exclude),
+      // wrapping a both-fields should.
+      const should = body.query.bool.filter.bool.must_not[0].bool.should
+      expect(should).toContainEqual({ terms: { 'contentTypeCategory.keyword': ['IMAGE'] } })
+      expect(should).toContainEqual({ terms: { contentTypeCategory: ['IMAGE'] } })
+    })
+
+    it('wraps the parent include clause in has_parent, querying both fields', () => {
+      const body = filter.addParentIncludeFilter(bodybuilder(), param).build()
+      const hasParent = body.query.has_parent
+      expect(hasParent.parent_type).toBe('Document')
+      const should = hasParent.query.bool.should
+      expect(should).toContainEqual({ terms: { 'contentTypeCategory.keyword': ['IMAGE'] } })
+      expect(should).toContainEqual({ terms: { contentTypeCategory: ['IMAGE'] } })
+    })
+
+    it('wraps the parent exclude clause in has_parent with a negated both-fields bool', () => {
+      const body = filter.addParentExcludeFilter(bodybuilder(), param).build()
+      const should = body.query.has_parent.query.bool.must_not[0].bool.should
+      expect(should).toContainEqual({ terms: { 'contentTypeCategory.keyword': ['IMAGE'] } })
+      expect(should).toContainEqual({ terms: { contentTypeCategory: ['IMAGE'] } })
+    })
+  })
+
   describe('aggregation body invariant for the contentTypeCategory bucket request', () => {
     let searchStore
 
@@ -120,48 +162,6 @@ describe('FilterContentTypeCategory.js', () => {
       api.elasticsearch._applyFilters(body, otherFilters)
       api.elasticsearch._applyQueryString(body, '*', [])
       return body.size(0).rawOption('track_total_hits', true).build()
-    }
-
-    function findBoolShould(node) {
-      if (!node || typeof node !== 'object') {
-        return null
-      }
-      if (Array.isArray(node)) {
-        for (const child of node) {
-          const found = findBoolShould(child)
-          if (found) return found
-        }
-        return null
-      }
-      if (node.bool && Array.isArray(node.bool.should) && node.bool.should.length > 1) {
-        return node.bool
-      }
-      for (const value of Object.values(node)) {
-        const found = findBoolShould(value)
-        if (found) return found
-      }
-      return null
-    }
-
-    function findTermsClause(node, field) {
-      if (!node || typeof node !== 'object') {
-        return null
-      }
-      if (Array.isArray(node)) {
-        for (const child of node) {
-          const found = findTermsClause(child, field)
-          if (found) return found
-        }
-        return null
-      }
-      if (node.terms && Object.prototype.hasOwnProperty.call(node.terms, field)) {
-        return node.terms[field]
-      }
-      for (const value of Object.values(node)) {
-        const found = findTermsClause(value, field)
-        if (found) return found
-      }
-      return null
     }
 
     it('does not OR-combine the paired contentType when both have values', () => {
