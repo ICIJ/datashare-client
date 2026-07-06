@@ -157,7 +157,7 @@ defineExpose({ focus, blur, clear: clearInput })
         @blur="emit('blur', $event)"
         @focus="emit('focus', $event)"
       />
-      <span class="form-control-search__end input-group-text px-1 py-0 border-start-0">
+      <span class="form-control-search__end input-group-text ps-0 pe-1 py-0 border-start-0">
         <button-icon
           v-if="clearText"
           :icon-left="IPhX"
