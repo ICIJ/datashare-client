@@ -80,6 +80,7 @@ function handleAdvancedSearch(queryString) {
       />
       <search-bar
         :compact="compact"
+        :show-submit="!compact"
         class="search__main__search-bar flex-grow-1"
       />
       <!--  <button-toggle-advanced-search
