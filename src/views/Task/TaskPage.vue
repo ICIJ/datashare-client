@@ -11,7 +11,7 @@ import { useTaskHeader } from '@/composables/useTaskHeader'
 import { useTaskPolling } from '@/composables/useTaskPolling'
 
 const props = defineProps({
-  taskFilter: {
+  taskTypes: {
     type: Array,
     default: () => []
   },
@@ -44,7 +44,7 @@ const { addToRoute, addLabel, searchQuery, page, perPage, sortBy, searchPlacehol
 )
 
 const { noTasks, fetchTasks, hasPendingTasks, hasDoneTasks, stopPendingTasks, removeDoneTasks, isLoading }
-  = useTaskPolling({ names: props.taskFilter, searchQuery, sortBy, page, perPage })
+  = useTaskPolling({ types: props.taskTypes, searchQuery, sortBy, page, perPage })
 
 const setSort = value => (sort.value = value)
 
