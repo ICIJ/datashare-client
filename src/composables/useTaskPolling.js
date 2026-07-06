@@ -5,7 +5,7 @@ import { usePolling } from '@/composables/usePolling'
 import { useWait } from '@/composables/useWait'
 import { useTaskStore } from '@/store/modules'
 
-export function useTaskPolling({ names = [], sortBy = [], perPage = null, page = 1, searchQuery = null } = {}) {
+export function useTaskPolling({ types = [], sortBy = [], perPage = null, page = 1, searchQuery = null } = {}) {
   const taskStore = useTaskStore()
   const { waitFor, isLoading } = useWait()
   const { unregisteredPoll, registerPollOnce } = usePolling()
@@ -21,19 +21,19 @@ export function useTaskPolling({ names = [], sortBy = [], perPage = null, page =
   const noTasks = computed(() => !toValue(tasks).length)
 
   async function stopPendingTasks() {
-    await taskStore.stopPendingTasks({ names: toValue(names) })
+    await taskStore.stopPendingTasks({ types: toValue(types) })
     await fetchTasks()
   }
 
   async function removeDoneTasks() {
-    await taskStore.removeDoneTasks({ names: toValue(names) })
+    await taskStore.removeDoneTasks({ types: toValue(types) })
     await fetchTasks()
   }
 
   async function fetchTasks() {
     const query = toValue(searchQuery)
     await taskStore.fetchTasks({
-      names: toValue(names),
+      types: toValue(types),
       sort: toValue(sortBy)?.[0],
       order: toValue(sortBy)?.[1] ?? 'asc',
       // Only include the search filter when query is non-empty to avoid
@@ -57,7 +57,7 @@ export function useTaskPolling({ names = [], sortBy = [], perPage = null, page =
     return (await fn()) && registerPollOnce({ fn, timeout })
   }
 
-  watch(() => [names, sortBy, searchQuery, page, perPage], startPollingTasksWithLoader, { immediate: true, deep: true })
+  watch(() => [types, sortBy, searchQuery, page, perPage], startPollingTasksWithLoader, { immediate: true, deep: true })
   onBeforeUnmount(taskStore.reset)
 
   return { tasks, noTasks, fetchTasks, hasPendingTasks, hasRunningTasks, hasDoneTasks, stopPendingTasks, removeDoneTasks, isLoading }
