@@ -17,7 +17,7 @@ import RowPaginationBatchSearches from '@/components/RowPagination/RowPagination
 import { useTaskSettings } from '@/composables/useTaskSettings'
 import { useAuth } from '@/composables/useAuth'
 import { useBatchSearchErrorModal } from '@/composables/useBatchSearchErrorModal.js'
-import { TASK_NAME } from '@/enums/taskNames'
+import { TASK_TYPE } from '@/enums/taskTypes'
 import TaskPage from '@/views/Task/TaskPage'
 import TaskStatus from '@/views/Task/TaskStatus.vue'
 
@@ -51,7 +51,7 @@ function canManageBatchSearch(item) {
 
 <template>
   <task-page
-    :task-filter="[TASK_NAME.BATCH_SEARCH, TASK_NAME.BATCH_SEARCH_PROXY]"
+    :task-types="[TASK_TYPE.BATCH_SEARCH]"
     page-name="batch-search"
     show-add
     searchable

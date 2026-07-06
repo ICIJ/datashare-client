@@ -11,7 +11,7 @@ import EmptyState from '@/components/EmptyState/EmptyState'
 import EntityButton from '@/components/Entity/EntityButton'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import { ENTITY_CATEGORY } from '@/enums/entityCategories'
-import { TASK_NAME } from '@/enums/taskNames'
+import { TASK_TYPE } from '@/enums/taskTypes'
 import TaskPage from '@/views/Task/TaskPage'
 import ButtonRowActionStop from '@/components/Button/ButtonRowAction/ButtonRowActionStop.vue'
 import ButtonRowActionDelete from '@/components/Button/ButtonRowAction/ButtonRowActionDelete.vue'
@@ -54,7 +54,7 @@ function removeWithConfirmation(id, callback) {
 
 <template>
   <task-page
-    :task-filter="[TASK_NAME.EXTRACT_NLP, TASK_NAME.ENQUEUE_FROM_INDEX]"
+    :task-types="[TASK_TYPE.EXTRACT_NLP, TASK_TYPE.ENQUEUE_FROM_INDEX]"
     page-name="entities"
     show-add
   >
