@@ -25,9 +25,9 @@ export const useTaskStore = defineStore('task', () => {
     await api.stopTask(id)
   }
 
-  const stopPendingTasks = async ({ names = [], ...params } = {}) => {
-    const name = names.join('|')
-    await api.stopPendingTasks({ name, ...params })
+  const stopPendingTasks = async ({ types = [], ...params } = {}) => {
+    const type = types.length ? types.join('|') : null
+    await api.stopPendingTasks({ type, ...params })
     setTasks(tasks.value.filter(({ id }) => isPending(id)))
   }
 
@@ -54,9 +54,9 @@ export const useTaskStore = defineStore('task', () => {
     }
   }
 
-  const removeDoneTasks = async ({ names = [], ...params } = {}) => {
-    const name = names.join('|')
-    await api.removeDoneTasks({ name, ...params })
+  const removeDoneTasks = async ({ types = [], ...params } = {}) => {
+    const type = types.length ? types.join('|') : null
+    await api.removeDoneTasks({ type, ...params })
     setTasks(tasks.value.filter(({ id }) => !isOver(id)))
   }
 
@@ -108,9 +108,9 @@ export const useTaskStore = defineStore('task', () => {
     return getTask(id)?.args?.batchDownload ?? {}
   }
 
-  const fetchTasks = async ({ names = [], ...params } = {}) => {
-    const name = names.join('|')
-    const { items = [], pagination = DEFAULT_PAGINATION } = await api.getTasks({ name, ...params })
+  const fetchTasks = async ({ types = [], ...params } = {}) => {
+    const type = types.length ? types.join('|') : null
+    const { items = [], pagination = DEFAULT_PAGINATION } = await api.getTasks({ type, ...params })
     return setTasks(items, pagination)
   }
 
