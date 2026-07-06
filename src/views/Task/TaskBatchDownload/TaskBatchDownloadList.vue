@@ -18,7 +18,7 @@ import BatchDownloadTruncatedAlert from '@/components/BatchDownload/BatchDownloa
 import BatchDownloadUnavailableAlert from '@/components/BatchDownload/BatchDownloadUnavailableAlert'
 import SearchBreadcrumbUri from '@/components/Search/SearchBreadcrumbUri/SearchBreadcrumbUri'
 import RowPaginationBatchDownloads from '@/components/RowPagination/RowPaginationBatchDownloads'
-import { TASK_NAME } from '@/enums/taskNames'
+import { TASK_TYPE } from '@/enums/taskTypes'
 import { isDoneStatus } from '@/enums/taskStatus'
 import { isBatchDownloadMissing } from '@/utils/batchDownload'
 import TaskPage from '@/views/Task/TaskPage'
@@ -50,7 +50,7 @@ function isTruncated(item) {
 
 <template>
   <task-page
-    :task-filter="[TASK_NAME.BATCH_DOWNLOAD]"
+    :task-types="[TASK_TYPE.BATCH_DOWNLOAD]"
     page-name="batch-download"
     hide-clear-done
     hide-stop-pending
