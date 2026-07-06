@@ -111,15 +111,23 @@ function focus() {
   inputElement.value.focus()
 }
 
+// Suggestions only make sense once the user has typed at least one character.
+// An empty input (which is exactly the state right after submitting a tag)
+// never shows the dropdown, so it cannot pop back open on its own.
+const canSuggest = () => props.options.length > 0 && inputValueTrigger.value.length > 0
+
 const onFocus = (e) => {
   hasFocus.value = true
-  if (props.options.length) showDropdown.value = true
+  if (canSuggest()) showDropdown.value = true
   emit('focus', e)
 }
 
 const inputTag = (tag) => {
   focusIndex.value = -1
   inputValueTrigger.value = tag
+  // Show the suggestions as soon as there is something to match, hide them
+  // again once the field is emptied.
+  showDropdown.value = canSuggest()
   if (endWithSeparator(tag)) {
     return addTag(tag)
   }
@@ -134,6 +142,8 @@ const addTag = (tag) => {
   }
   emit('update:modelValue', [...props.modelValue, ...tags])
   inputValueTrigger.value = ''
+  // The input is now empty, so there is nothing to suggest anymore.
+  showDropdown.value = false
   focus()
 }
 
@@ -198,8 +208,8 @@ watch(useActiveElement(), async (activeElement) => {
   showDropdown.value = showDropdown.value && contained
 })
 
-watch(() => props.options, (options) => {
-  if (hasFocus.value && options.length) showDropdown.value = true
+watch(() => props.options, () => {
+  if (hasFocus.value && canSuggest()) showDropdown.value = true
 })
 
 watch(focusIndex, (value) => {

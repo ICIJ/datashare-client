@@ -73,8 +73,11 @@ const availableOptions = computed(() => {
 })
 
 const filteredOptions = computed(() => {
+  // Only suggest once the user has typed at least one character; an empty input
+  // (including right after submitting a tag) has nothing to match, so the
+  // dropdown stays closed instead of listing every existing tag.
   if (!props.inputValue) {
-    return availableOptions.value.slice(0, props.limit).map(item => ({ item }))
+    return []
   }
   return fuse.value.search(props.inputValue).slice(0, props.limit)
 })
@@ -124,7 +127,9 @@ watch(
 
 const classList = computed(() => {
   return {
-    'form-control-tag-dropdown--show': props.show,
+    // Never render an empty dropdown: it only shows when asked to and when there
+    // is at least one suggestion to display.
+    'form-control-tag-dropdown--show': props.show && filteredOptions.value.length > 0,
     [`form-control-tag-dropdown--${placement.value}`]: true
   }
 })

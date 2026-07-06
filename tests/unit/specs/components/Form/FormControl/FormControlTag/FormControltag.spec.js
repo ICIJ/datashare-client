@@ -152,20 +152,31 @@ describe('FormControlTag', () => {
     expect(wrapper.vm.classList).toEqual({ 'form-control-tag--show-dropdown': true })
   })
 
-  it('should open the dropdown on focus when options are available', async () => {
+  it('does not open the dropdown on focus while the input is empty', async () => {
+    // Suggestions only appear once the user types at least one character.
     const wrapper = mount(FormControlTag, {
       global: { plugins },
       props: { modelValue: [], options: ['tag1', 'tag2'] }
     })
 
     await wrapper.vm.onFocus(new Event('focus'))
+    expect(wrapper.vm.showDropdown).toBe(false)
+  })
+
+  it('opens the dropdown on focus once the input has at least one character', async () => {
+    const wrapper = mount(FormControlTag, {
+      global: { plugins },
+      props: { modelValue: [], options: ['tag1', 'tag2'], inputValue: 'ta' }
+    })
+
+    await wrapper.vm.onFocus(new Event('focus'))
     expect(wrapper.vm.showDropdown).toBe(true)
   })
 
-  it('should open the dropdown when options arrive after focus', async () => {
+  it('opens the dropdown when options arrive while the user is typing', async () => {
     const wrapper = mount(FormControlTag, {
       global: { plugins },
-      props: { modelValue: [], options: [] }
+      props: { modelValue: [], options: [], inputValue: 'ta' }
     })
 
     wrapper.vm.hasFocus = true
@@ -176,11 +187,46 @@ describe('FormControlTag', () => {
   it('should not open the dropdown on focus when options are empty', async () => {
     const wrapper = mount(FormControlTag, {
       global: { plugins },
-      props: { modelValue: [], options: [] }
+      props: { modelValue: [], options: [], inputValue: 'ta' }
     })
 
     await wrapper.vm.onFocus(new Event('focus'))
     expect(wrapper.vm.showDropdown).toBe(false)
+  })
+
+  it('closes the dropdown after adding a tag and does not reopen it when the options list refreshes', async () => {
+    const wrapper = mount(FormControlTag, {
+      global: { plugins },
+      props: { modelValue: [], options: ['tag1'], inputValue: 'test' }
+    })
+
+    // The dropdown is open while the user types.
+    wrapper.vm.hasFocus = true
+    wrapper.vm.showDropdown = true
+    await wrapper.vm.$nextTick()
+
+    // Submitting the tag closes the dropdown; the parent then refreshes the
+    // options (e.g. appending the just-added tag), which must not reopen it.
+    wrapper.vm.addTag('test')
+    await wrapper.setProps({ options: ['tag1', 'test'] })
+
+    expect(wrapper.vm.showDropdown).toBe(false)
+  })
+
+  it('reopens the dropdown when the user types again after adding a tag', async () => {
+    const wrapper = mount(FormControlTag, {
+      global: { plugins },
+      props: { modelValue: [], options: ['tag1'] }
+    })
+
+    wrapper.vm.hasFocus = true
+    wrapper.vm.addTag('test')
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.showDropdown).toBe(false)
+
+    wrapper.vm.inputTag('ta')
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.showDropdown).toBe(true)
   })
 
   it('should reject a duplicate tag regardless of case', () => {
