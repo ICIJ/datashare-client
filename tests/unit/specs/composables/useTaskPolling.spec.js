@@ -36,7 +36,7 @@ describe('useTaskPolling', () => {
   it('should not send args.batchRecord.name filter when searchQuery is empty', async () => {
     const searchQuery = ref('')
     mountComposable({
-      names: ['org.icij.datashare.tasks.BatchSearchRunner'],
+      types: ['BATCH_SEARCH'],
       searchQuery,
       sortBy: ref(['createdAt', 'desc']),
       perPage: ref(10),
@@ -52,7 +52,7 @@ describe('useTaskPolling', () => {
   it('should not send args.batchRecord.name filter when searchQuery is null', async () => {
     const searchQuery = ref(null)
     mountComposable({
-      names: ['org.icij.datashare.tasks.BatchSearchRunner'],
+      types: ['BATCH_SEARCH'],
       searchQuery,
       sortBy: ref(['createdAt', 'desc']),
       perPage: ref(10),
@@ -68,7 +68,7 @@ describe('useTaskPolling', () => {
   it('should send args.batchRecord.name filter when searchQuery has a value', async () => {
     const searchQuery = ref('my search')
     mountComposable({
-      names: ['org.icij.datashare.tasks.BatchSearchRunner'],
+      types: ['BATCH_SEARCH'],
       searchQuery,
       sortBy: ref(['createdAt', 'desc']),
       perPage: ref(10),
@@ -79,5 +79,20 @@ describe('useTaskPolling', () => {
     expect(api.getTasks).toHaveBeenCalled()
     const callArgs = api.getTasks.mock.calls[0][0]
     expect(callArgs['args.batchRecord.name']).toBe('my search')
+  })
+
+  it('should forward types to the store as a joined type param', async () => {
+    mountComposable({
+      types: ['INDEX', 'SCAN'],
+      searchQuery: ref(''),
+      sortBy: ref(['createdAt', 'desc']),
+      perPage: ref(10),
+      page: ref(1)
+    })
+    await flushPromises()
+
+    expect(api.getTasks).toHaveBeenCalled()
+    const callArgs = api.getTasks.mock.calls[0][0]
+    expect(callArgs.type).toBe('INDEX|SCAN')
   })
 })
