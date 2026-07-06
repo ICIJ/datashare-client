@@ -142,7 +142,7 @@ describe('TaskBatchDownloadList.vue', () => {
     expect(api.getTasks).toBeCalledTimes(1)
     expect(api.getTasks).toBeCalledWith(
       expect.objectContaining({
-        name: 'org.icij.datashare.tasks.BatchDownloadRunner'
+        type: 'BATCH_DOWNLOAD'
       })
     )
   })
