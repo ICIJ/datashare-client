@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
+import { uniqBy } from 'lodash'
 import { useI18n } from 'vue-i18n'
 
 import { useAuth } from '@/composables/useAuth'
@@ -85,9 +86,19 @@ const waitForFloatingElement = async () => {
 
 watch(documentViewFloatingSelector, waitForFloatingElement, { immediate: true })
 
+// Merge two tag lists, keeping one entry per label case-insensitively and
+// preferring the first occurrence (the canonical Elasticsearch casing).
+const mergeTagsByLabel = (...tagLists) => {
+  return uniqBy(tagLists.flat(), ({ label }) => label.toLowerCase())
+}
+
+// Rebuild the suggestion list on document change: the freshly-fetched tags plus
+// any tags added this session that Elasticsearch has not indexed yet, so a tag
+// just created on another document stays available here.
 watch(() => document.value, async () => {
   if (document.value?.index) {
-    allTags.value = await fetchAllTagsByIndex(document.value.index)
+    const fetched = await fetchAllTagsByIndex(document.value.index)
+    allTags.value = mergeTagsByLabel(fetched, documentStore.sessionTags(document.value.index))
   }
 }, { immediate: true })
 

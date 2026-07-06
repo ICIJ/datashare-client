@@ -84,6 +84,21 @@ describe('DocumentViewUserActions', () => {
     expect(fetchAllTagsByIndex).toHaveBeenCalledWith('test-index')
   })
 
+  it('merges session-added tags into the suggestions even when Elasticsearch has not refreshed yet', async () => {
+    // Simulate a tag added on another document this session that the ES
+    // aggregation does not yet reflect (near-real-time indexing delay).
+    fetchAllTagsByIndex.mockResolvedValue([])
+    vi.spyOn(documentStore, 'sessionTags').mockReturnValue([{ label: 'test' }])
+
+    const wrapper = shallowMount(DocumentViewUserActions, {
+      global: { plugins }
+    })
+
+    await flushPromises()
+
+    expect(wrapper.vm.allTags.some(t => t.label === 'test')).toBe(true)
+  })
+
   it('does not add labels to allTags when the store call fails', async () => {
     vi.spyOn(documentStore, 'addTags').mockRejectedValue(new Error('network error'))
 
