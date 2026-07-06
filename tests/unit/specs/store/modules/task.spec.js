@@ -102,4 +102,32 @@ describe('TaskStore', () => {
     await store.updateBatchSearch('uuid-1', fields)
     expect(api.updateBatchSearch).toBeCalledWith('uuid-1', fields)
   })
+
+  it('should send a joined type param when fetching with types', async () => {
+    await store.fetchTasks({ types: ['INDEX', 'SCAN'] })
+    expect(api.getTasks).toHaveBeenLastCalledWith(
+      expect.objectContaining({ type: 'INDEX|SCAN' })
+    )
+  })
+
+  it('should send type: null when fetching with no types', async () => {
+    await store.fetchTasks()
+    expect(api.getTasks).toHaveBeenLastCalledWith(
+      expect.objectContaining({ type: null })
+    )
+  })
+
+  it('should send a joined type param when stopping pending tasks', async () => {
+    await store.stopPendingTasks({ types: ['BATCH_SEARCH'] })
+    expect(api.stopPendingTasks).toHaveBeenLastCalledWith(
+      expect.objectContaining({ type: 'BATCH_SEARCH' })
+    )
+  })
+
+  it('should send a joined type param when removing done tasks', async () => {
+    await store.removeDoneTasks({ types: ['BATCH_DOWNLOAD'] })
+    expect(api.removeDoneTasks).toHaveBeenLastCalledWith(
+      expect.objectContaining({ type: 'BATCH_DOWNLOAD' })
+    )
+  })
 })
