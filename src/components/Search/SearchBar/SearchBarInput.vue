@@ -100,6 +100,7 @@ defineExpose({ focus, blur, clear })
         v-if="showSubmit"
         variant="action"
         class="search-bar-input__submit"
+        :class="{ 'search-bar-input__submit--lg': size === 'lg' }"
         type="submit"
         :disabled="disableSubmit"
       >
@@ -113,5 +114,13 @@ defineExpose({ focus, blur, clear })
 <style lang="scss" scoped>
 .search-bar-input:deep(.form-control-lg) {
   font-size: 1rem;
+}
+
+.search-bar-input__submit {
+  line-height: 0.8em;
+
+  &--lg {
+    line-height: 1.1em;
+  }
 }
 </style>
