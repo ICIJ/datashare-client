@@ -136,8 +136,16 @@ describe('Datashare backend client', () => {
     expect(json).toEqual({})
   })
 
-  it('should return backend response to getTasks', async () => {
-    json = await api.getTasks()
+  it('should call getTasks with a type param and no name param', async () => {
+    json = await api.getTasks({ type: 'SCAN|INDEX', from: 0, size: 10 })
+    expect(axios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/task'),
+        params: expect.objectContaining({ type: 'SCAN|INDEX' })
+      })
+    )
+    const params = axios.request.mock.calls[0][0].params
+    expect(params).not.toHaveProperty('name')
     expect(json).toEqual({})
   })
 

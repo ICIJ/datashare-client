@@ -43,8 +43,8 @@ export class Api {
     return this.sendActionAsText(`/api/task/findNames/${pipeline}`, { method: Method.POST, data })
   }
 
-  stopPendingTasks({ name = null, ...filters } = {}) {
-    const params = { ...filters, name }
+  stopPendingTasks({ type = null, ...filters } = {}) {
+    const params = { ...filters, type }
     return this.sendAction('/api/task/stop', { method: Method.PUT, params })
   }
 
@@ -56,13 +56,13 @@ export class Api {
     return this.sendAction(`/api/task/clean/${encodeURIComponent(name)}`, { method: Method.DELETE })
   }
 
-  removeDoneTasks({ name = null, ...filters } = {}) {
-    const params = { ...filters, name }
+  removeDoneTasks({ type = null, ...filters } = {}) {
+    const params = { ...filters, type }
     return this.sendAction('/api/task/clean', { method: Method.POST, params })
   }
 
-  getTasks({ name = null, from = 0, size = 10, order = 'asc', sort, ...filters } = {}) {
-    const params = { ...filters, name, from, size, order, sort }
+  getTasks({ type = null, from = 0, size = 10, order = 'asc', sort, ...filters } = {}) {
+    const params = { ...filters, type, from, size, order, sort }
     return this.sendAction('/api/task', { params })
   }
 
