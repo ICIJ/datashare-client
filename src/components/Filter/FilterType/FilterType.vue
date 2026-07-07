@@ -275,6 +275,7 @@ defineExpose({ entries, aggregateOver, count })
       />
     </template>
     <slot
+      v-if="!query"
       name="all"
       v-bind="{ entries, filter, opened }"
     >
