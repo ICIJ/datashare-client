@@ -36,7 +36,7 @@ const copyActionText = computed(() => t('projectViewEdit.users.actions.copy'))
 const deleteActionText = computed(() => t('projectViewEdit.users.actions.delete'))
 async function copyUsername() {
   await navigator.clipboard.writeText(props.user.login)
-  toast.success(copySuccessText)
+  toast.success(copySuccessText.value)
 }
 
 function onUserDeleted({ login }) {

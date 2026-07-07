@@ -17,7 +17,7 @@ import FormControlSearch from '@/components/Form/FormControl/FormControlSearch.v
 import ProjectUsersCreateModal from '@/components/ProjectUsers/ProjectUsersCreateModal.vue'
 import IPhUserPlus from '~icons/ph/user-plus'
 import { apiInstance as api } from '@/api/apiInstance.js'
-import {useWait} from "@/composables/useWait.js";
+import { useWait } from '@/composables/useWait.js'
 
 const props = defineProps({
   name: {
@@ -30,12 +30,12 @@ const { toast } = useToast()
 const { t } = useI18n()
 const { isUsersProvider } = useAuth()
 const appStore = useAppStore()
+const { waitFor, isLoading, start, loaderId } = useWait()
 
 const VIEW = 'projectUsersList'
 const DEFAULT_DOMAIN = 'default'
 
 const users = ref([])
-const loading = ref(false)
 const totalRows = ref(0)
 
 const sortOrder = useUrlParamsWithStore(['sort', 'order'], {
@@ -69,8 +69,7 @@ function roleForCurrentProject(permissions) {
 }
 const fetchErrorToastText = computed(() => t('projectViewEdit.users.fetchError'))
 
-async function fetchUsers() {
-  loading.value = true
+const fetchUsers = waitFor(async () => {
   try {
     const from = (page.value - 1) * Number(perPage.value)
     const { items, pagination } = await api.getUsers({
@@ -93,17 +92,14 @@ async function fetchUsers() {
   catch {
     toast.error(fetchErrorToastText.value)
   }
-  finally {
-    loading.value = false
-  }
-}
+})
 
 const debouncedFetchUsers = debounce(fetchUsers, 200)
 
 let skipNextPageWatch = false
 
 function resetToFirstPage() {
-  loading.value = true
+  start(loaderId)
   if (page.value !== 1) {
     skipNextPageWatch = true
     page.value = 1
@@ -180,7 +176,7 @@ onMounted(fetchUsers)
       :query="queryInput"
       :users="users"
       :project="name"
-      :loading="loading"
+      :loading="isLoading"
       @user:deleted="onUserDeleted"
     />
   </div>
