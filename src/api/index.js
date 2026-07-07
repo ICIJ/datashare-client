@@ -108,7 +108,7 @@ export class Api {
   }
 
   getUsers({ domain = 'default', project = null, user = null, sort = null, desc = null, from = 0, size = 10 } = {}) {
-    const params = omitBy({ domain, index: project, user, sort, desc, from, size }, isNull)
+    const params = omitBy({ domain, index: project, user, sort, desc, from, size, noRole:true }, isNull)
     return this.sendAction('/api/users', { method: Method.GET, params })
   }
 
@@ -120,6 +120,14 @@ export class Api {
   saveProjectPolicy(domain, project, { user, role } = {}) {
     const params = { user, role, project }
     return this.sendActionAsText(`/api/policies/${domain}/${project}`, { method: Method.PUT, params })
+  }
+
+  revokeUserRole(login, project, { ifExists = false } = {}) {
+    const params = { ifExists }
+    return this.sendActionAsText(`/api/users/${encodeURIComponent(login)}/index/${encodeURIComponent(project)}`, {
+      method: Method.DELETE,
+      params
+    })
   }
 
   createUser({ login, email, name, provider, password, domain, index } = {}) {

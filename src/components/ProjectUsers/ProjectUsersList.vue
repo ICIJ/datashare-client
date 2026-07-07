@@ -12,7 +12,7 @@ import ProjectUsersRoleDropdown from '@/components/ProjectUsers/ProjectUsersRole
 
 import { useCore } from '@/composables/useCore.js'
 import { useToast } from '@/composables/useToast.js'
-import { ROLE, ROLE_BIT } from '@/enums/roles.js'
+import { NO_ROLE, ROLE, ROLE_BIT } from '@/enums/roles.js'
 import ButtonReset from '@/components/Button/ButtonReset'
 
 const props = defineProps({
@@ -76,17 +76,24 @@ const fields = computed(() => [
 async function saveRoles() {
   saving.value = true
   try {
+    const entries = Object.entries(pendingChanges.value)
     await Promise.all(
-      Object.entries(pendingChanges.value).map(([login, role]) =>
-        core.api.saveProjectPolicy('default', props.project, { user: login, role })
+      entries.map(([login, role]) =>
+        role === NO_ROLE
+          ? core.api.revokeUserRole(login, props.project, { ifExists: true })
+          : core.api.saveProjectPolicy('default', props.project, { user: login, role })
       )
     )
-    Object.entries(pendingChanges.value).forEach(([login, role]) => {
-      const user = props.users.find(u => u.login === login)
-      if (user) user.role = role
-    })
+    const revokedLogins = entries.filter(([, role]) => role === NO_ROLE).map(([login]) => login)
+    entries
+      .filter(([, role]) => role !== NO_ROLE)
+      .forEach(([login, role]) => {
+        const user = props.users.find(u => u.login === login)
+        if (user) user.role = role
+      })
     pendingChanges.value = {}
     toast.success(t('projectViewEdit.users.roleSelect.saveSuccess'))
+    revokedLogins.forEach(login => emit('user:deleted', { login }))
   }
   catch {
     pendingChanges.value = {}

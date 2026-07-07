@@ -1,7 +1,7 @@
 import { useConfig } from '@/composables/useConfig.js'
 import { computed } from 'vue'
 import { upperFirst } from 'lodash'
-import { DEFAULT_ROLE, ROLE, ROLE_BIT, ROLE_HIERARCHY, ROLE_KEY } from '@/enums/roles.js'
+import { DEFAULT_ROLE, NO_ROLE, ROLE, ROLE_BIT, ROLE_HIERARCHY, ROLE_KEY } from '@/enums/roles.js'
 
 export function usePolicies() {
   const config = useConfig()
@@ -50,7 +50,7 @@ export function usePolicies() {
   }
 
   function formatRole(t, role) {
-    return upperFirst(t(ROLE_KEY[role] ?? DEFAULT_ROLE))
+    return upperFirst(t(ROLE_KEY[role] ?? ROLE_KEY[NO_ROLE]))
   }
 
   return { getRoleByProject, getHighestRoleFromList, getHighestRoleFromListForDomain, getHighestRoleFromListForProject, formatRole, isProjectAdmin, hasRole }

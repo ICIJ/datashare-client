@@ -8,7 +8,7 @@ import ProjectUsersRoleDropdown from '@/components/ProjectUsers/ProjectUsersRole
 import { apiInstance as api } from '@/api/apiInstance.js'
 
 vi.mock('@/api/apiInstance', () => ({
-  apiInstance: { saveProjectPolicy: vi.fn() }
+  apiInstance: { saveProjectPolicy: vi.fn(), revokeUserRole: vi.fn() }
 }))
 
 const mockToast = { success: vi.fn(), error: vi.fn() }
@@ -174,6 +174,41 @@ describe('ProjectUsersList.vue', () => {
       await flushPromises()
       expect(wrapper.vm.pendingChanges).toEqual({})
       expect(mockToast.error).toHaveBeenCalledOnce()
+    })
+
+    it('saveRoles calls revokeUserRole (not saveProjectPolicy) when the pending change is NO_ROLE', async () => {
+      api.revokeUserRole.mockResolvedValue(undefined)
+      const wrapper = mountComponent()
+      const { login } = wrapper.props('users')[0]
+      await wrapper.findAllComponents(ProjectUsersRoleDropdown)[0].vm.$emit('update:modelValue', 'NO_ROLE')
+      await wrapper.vm.saveRoles()
+      await flushPromises()
+      expect(api.revokeUserRole).toHaveBeenCalledWith(login, project, { ifExists: true })
+      expect(api.saveProjectPolicy).not.toHaveBeenCalled()
+    })
+
+    it('saveRoles emits user:deleted for a revoked user on success', async () => {
+      api.revokeUserRole.mockResolvedValue(undefined)
+      const wrapper = mountComponent()
+      const { login } = wrapper.props('users')[0]
+      await wrapper.findAllComponents(ProjectUsersRoleDropdown)[0].vm.$emit('update:modelValue', 'NO_ROLE')
+      await wrapper.vm.saveRoles()
+      await flushPromises()
+      expect(wrapper.emitted('user:deleted')).toEqual([[{ login }]])
+    })
+
+    it('saveRoles handles a mix of a role change and a revocation', async () => {
+      api.saveProjectPolicy.mockResolvedValue(undefined)
+      api.revokeUserRole.mockResolvedValue(undefined)
+      const wrapper = mountComponent()
+      const [userA, userB] = wrapper.props('users')
+      await wrapper.findAllComponents(ProjectUsersRoleDropdown)[0].vm.$emit('update:modelValue', 'PROJECT_MEMBER')
+      await wrapper.findAllComponents(ProjectUsersRoleDropdown)[1].vm.$emit('update:modelValue', 'NO_ROLE')
+      await wrapper.vm.saveRoles()
+      await flushPromises()
+      expect(api.saveProjectPolicy).toHaveBeenCalledWith('default', project, { user: userA.login, role: 'PROJECT_MEMBER' })
+      expect(api.revokeUserRole).toHaveBeenCalledWith(userB.login, project, { ifExists: true })
+      expect(wrapper.emitted('user:deleted')).toEqual([[{ login: userB.login }]])
     })
   })
 

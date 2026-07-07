@@ -553,6 +553,17 @@ describe('Datashare backend client', () => {
         })
       )
     })
+
+    it('should call revokeUserRole with login, project and ifExists', async () => {
+      await api.revokeUserRole('alice', 'my-project', { ifExists: true })
+      expect(axios.request).toBeCalledWith(
+        expect.objectContaining({
+          url: Api.getFullUrl('/api/users/alice/index/my-project'),
+          method: 'DELETE',
+          params: expect.objectContaining({ ifExists: true })
+        })
+      )
+    })
   })
 
   it('should call createUser with data and project index', async () => {
