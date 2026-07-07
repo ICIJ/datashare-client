@@ -1,7 +1,7 @@
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { debounce } from 'lodash'
+import { debounce, isEqual } from 'lodash'
 
 import ProjectUsersList from '@/components/ProjectUsers/ProjectUsersList.vue'
 import RowPaginationUsers from '@/components/RowPagination/RowPaginationUsers.vue'
@@ -112,7 +112,9 @@ watch(queryInput, (value) => {
   resetToFirstPage()
 })
 watch(perPage, resetToFirstPage)
-watch(sortOrder, fetchUsers)
+watch(sortOrder, (value, oldValue) => {
+  if (!isEqual(value, oldValue)) fetchUsers()
+})
 
 watch(page, () => {
   if (skipNextPageWatch) {
