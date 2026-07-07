@@ -14,7 +14,20 @@ vi.mock('@/api/apiInstance', () => ({
 
 const mockToast = { success: vi.fn(), error: vi.fn() }
 vi.mock('@/composables/useToast', () => ({
-  useToast: () => ({ toast: mockToast })
+  useToast: () => ({
+    toast: mockToast,
+    toastedPromise: (promise, { successMessage, errorMessage } = {}) =>
+      promise.then(
+        (data) => {
+          if (successMessage) mockToast.success(successMessage)
+          return data
+        },
+        (err) => {
+          if (errorMessage) mockToast.error(errorMessage)
+          throw err
+        }
+      )
+  })
 }))
 
 describe('ProjectViewEditUsers.vue', () => {
@@ -48,7 +61,9 @@ describe('ProjectViewEditUsers.vue', () => {
 
   beforeEach(async () => {
     vi.clearAllMocks()
-    core = CoreSetup.init().useAll().useRouterWithoutGuards()
+    core = CoreSetup.init()
+    core.createPinia()
+    core.useAll().useRouterWithoutGuards()
     await core.router.replace({ query: {} })
     api.getUsers.mockResolvedValue({ items: [] })
   })
@@ -186,10 +201,10 @@ describe('ProjectViewEditUsers.vue', () => {
       await vi.runAllTimersAsync()
       api.getUsers.mockClear()
 
-      wrapper.findComponent(ProjectUsersList).vm.$emit('update:sort', 'name')
+      wrapper.findComponent(ProjectUsersList).vm.$emit('update:sort', 'email')
       await vi.runAllTimersAsync()
 
-      expect(api.getUsers).toHaveBeenCalledWith(expect.objectContaining({ sort: 'name' }))
+      expect(api.getUsers).toHaveBeenCalledWith(expect.objectContaining({ sort: 'email' }))
     })
 
     it('refetches users with the new desc param when ProjectUsersList emits update:order', async () => {
@@ -211,7 +226,7 @@ describe('ProjectViewEditUsers.vue', () => {
       await vi.runAllTimersAsync()
 
       api.getUsers.mockClear()
-      wrapper.findComponent(ProjectUsersList).vm.$emit('update:sort', 'name')
+      wrapper.findComponent(ProjectUsersList).vm.$emit('update:sort', 'email')
       await vi.runAllTimersAsync()
 
       expect(api.getUsers).toHaveBeenCalledWith(expect.objectContaining({ from: 10 }))

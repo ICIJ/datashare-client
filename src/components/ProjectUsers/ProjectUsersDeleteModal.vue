@@ -8,6 +8,7 @@ import AppModal from '@/components/AppModal/AppModal.vue'
 import { useAuth } from '@/composables/useAuth.js'
 import { useCore } from '@/composables/useCore.js'
 import { useToast } from '@/composables/useToast.js'
+import { computed } from 'vue'
 
 const props = defineProps({
   user: {
@@ -28,6 +29,10 @@ const core = useCore()
 const { toast } = useToast()
 const { t } = useI18n()
 const { isUsersProvider } = useAuth()
+const deletionSuccessMessage = computed(() => t('projectViewEdit.users.actions.deleteModal.success'))
+const deletionErrorMessage = computed(() => t('projectViewEdit.users.actions.deleteModal.error'))
+const deleteModalTitle = computed(() => t('projectViewEdit.users.actions.deleteModal.title', { name: props.user.login }))
+const deleteModalBody = computed(() => t('projectViewEdit.users.actions.deleteModal.body'))
 
 const DEFAULT_DOMAIN = 'default'
 async function confirmDeletion() {
@@ -40,10 +45,10 @@ async function confirmDeletion() {
     }
     emit('user:deleted', { login: props.user.login })
     modelValue.value = false
-    toast.success(t('projectViewEdit.users.actions.deleteModal.success'))
+    toast.success(deletionSuccessMessage.value)
   }
   catch {
-    toast.error(t('projectViewEdit.users.actions.deleteModal.error'))
+    toast.error(deletionErrorMessage.value)
   }
 }
 
@@ -60,12 +65,8 @@ defineExpose({ confirmDeletion, isUsersProvider })
     @ok="confirmDeletion"
   >
     <template #title>
-      <i18n-t keypath="projectViewEdit.users.actions.deleteModal.title">
-        <template #name>
-          {{ user.login }}
-        </template>
-      </i18n-t>
+      {{ deleteModalTitle }}
     </template>
-    {{ t('projectViewEdit.users.actions.deleteModal.body') }}
+    {{ deleteModalBody }}
   </app-modal>
 </template>

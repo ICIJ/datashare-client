@@ -26,7 +26,7 @@ const props = defineProps({
   }
 })
 
-const { toast } = useToast()
+const { toastedPromise } = useToast()
 const { t } = useI18n()
 const { isUsersProvider } = useAuth()
 const appStore = useAppStore()
@@ -67,33 +67,31 @@ function roleForCurrentProject(permissions) {
   const permission = (permissions ?? []).find(({ v2 }) => v2 === `${DEFAULT_DOMAIN}::${props.name}`)
   return permission?.v1 ?? NO_ROLE
 }
-const fetchErrorToastText = computed(() => t('projectViewEdit.users.fetchError'))
+const createUserButtonText = computed(() => t('projectViewEdit.users.create.button'))
+const errorMessage = computed(() => t('projectViewEdit.users.fetchError'))
 
-const fetchUsers = waitFor(async () => {
-  try {
-    const from = (page.value - 1) * Number(perPage.value)
-    const { items, pagination } = await api.getUsers({
-      domain: DEFAULT_DOMAIN,
-      index: props.name,
-      q: queryInput.value || null,
-      sort: sort.value,
-      desc: order.value === 'desc',
-      from,
-      size: Number(perPage.value)
-    })
-    users.value = (items ?? []).map(({ uid, name, email, permissions }) => ({
-      login: uid,
-      name: name ?? '',
-      email: email ?? '',
-      role: roleForCurrentProject(permissions)
-    }))
-    totalRows.value = pagination?.total ?? 0
-  }
-  catch {
-    toast.error(fetchErrorToastText.value)
-  }
-})
-
+const retrieveUsers = async () => {
+  const from = (page.value - 1) * Number(perPage.value)
+  const { items, pagination } = await api.getUsers({
+    domain: DEFAULT_DOMAIN,
+    index: props.name,
+    q: queryInput.value || null,
+    sort: sort.value,
+    desc: order.value === 'desc',
+    from,
+    size: Number(perPage.value)
+  })
+  users.value = (items ?? []).map(({ uid, name, email, permissions }) => ({
+    login: uid,
+    name: name ?? '',
+    email: email ?? '',
+    role: roleForCurrentProject(permissions)
+  }))
+  totalRows.value = pagination?.total ?? 0
+}
+const fetchUsers = waitFor(() =>
+  toastedPromise(retrieveUsers(), { errorMessage: errorMessage.value }).catch(() => {})
+)
 const debouncedFetchUsers = debounce(fetchUsers, 200)
 
 let skipNextPageWatch = false
@@ -151,7 +149,7 @@ onMounted(fetchUsers)
           class=" d-flex "
           @click="showCreateModal = true"
         >
-          {{ t('projectViewEdit.users.create.button') }}
+          {{ createUserButtonText }}
         </button-icon>
       </div>
       <div class="d-flex justify-content-between  flex-grow-1 ">
