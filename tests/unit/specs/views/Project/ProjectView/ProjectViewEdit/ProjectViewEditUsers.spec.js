@@ -73,6 +73,26 @@ describe('ProjectViewEditUsers.vue', () => {
     ])
   })
 
+  it('maps a user with no permission for the current project to role NO_ROLE', async () => {
+    api.getUsers.mockResolvedValue({
+      items: [
+        {
+          uid: 'carol@icij.org',
+          name: 'Carol C',
+          email: 'carol@icij.org',
+          permissions: [{ v1: 'PROJECT_ADMIN', v2: 'default::other-project' }]
+        }
+      ],
+      pagination: { count: 1, from: 0, size: 10, total: 1 }
+    })
+    const wrapper = shallowMountComponent()
+    await flushPromises()
+    const list = wrapper.findComponent(ProjectUsersList)
+    expect(list.props('users')).toEqual([
+      { login: 'carol@icij.org', name: 'Carol C', email: 'carol@icij.org', role: 'NO_ROLE' }
+    ])
+  })
+
   it('passes an empty users array before the API resolves', () => {
     const wrapper = shallowMountComponent()
     const list = wrapper.findComponent(ProjectUsersList)

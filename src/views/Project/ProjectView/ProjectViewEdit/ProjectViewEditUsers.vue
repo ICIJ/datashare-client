@@ -12,6 +12,7 @@ import { useUrlParamsWithStore } from '@/composables/useUrlParamsWithStore.js'
 import { useUrlParam } from '@/composables/useUrlParam.js'
 import { useUrlPageParam } from '@/composables/useUrlPageParam.js'
 import { useAppStore } from '@/store/modules'
+import { NO_ROLE } from '@/enums/roles.js'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch.vue'
 import ProjectUsersCreateModal from '@/components/ProjectUsers/ProjectUsersCreateModal.vue'
 import IPhUserPlus from '~icons/ph/user-plus'
@@ -58,7 +59,7 @@ const page = useUrlPageParam()
 
 function roleForCurrentProject(permissions) {
   const permission = (permissions ?? []).find(({ v2 }) => v2 === `${DEFAULT_DOMAIN}::${props.name}`)
-  return permission?.v1 ?? null
+  return permission?.v1 ?? NO_ROLE
 }
 
 async function fetchUsers() {
