@@ -31,9 +31,12 @@ const { username, isUsersProvider } = useAuth()
 const showDeleteModal = ref(false)
 const isCurrentUser = computed(() => username.value === props.user.login)
 
+const copySuccessText = computed(() => t('projectViewEdit.users.actions.copySuccess'))
+const copyActionText = computed(() => t('projectViewEdit.users.actions.copy'))
+const deleteActionText = computed(() => t('projectViewEdit.users.actions.delete'))
 async function copyUsername() {
   await navigator.clipboard.writeText(props.user.login)
-  toast.success(t('projectViewEdit.users.actions.copySuccess'))
+  toast.success(copySuccessText)
 }
 
 function onUserDeleted({ login }) {
@@ -45,13 +48,13 @@ function onUserDeleted({ login }) {
   <div class="project-users-actions d-inline-flex gap-1">
     <button-row-action
       :icon="IPhClipboard"
-      :label="t('projectViewEdit.users.actions.copy')"
+      :label="copyActionText"
       @click="copyUsername"
     />
     <button-row-action
       v-if="isUsersProvider"
       :icon="IPhTrash"
-      :label="t('projectViewEdit.users.actions.delete')"
+      :label="deleteActionText"
       :disabled="isCurrentUser"
       @click="showDeleteModal = true"
     />
