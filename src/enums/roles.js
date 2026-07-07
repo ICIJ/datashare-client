@@ -33,10 +33,10 @@ export const ROLE_BIT = Object.freeze({
 
 // Cumulative: each role includes all roles below it
 export const ROLE_HIERARCHY = Object.freeze({
-  PROJECT_VISITOR: 0b000001, // 1  — visitor only
-  PROJECT_MEMBER: 0b000011, // 3  — member + visitor
-  PROJECT_EDITOR: 0b000111, // 7  — editor + member + visitor
-  PROJECT_ADMIN: 0b001111, // 15 — + editor + member + visitor
-  DOMAIN_ADMIN: 0b011111, // 31 — + project_admin + ...
-  INSTANCE_ADMIN: 0b111111, // 63 — all roles
+  PROJECT_VISITOR: 0b000001, // 1 - visitor only
+  PROJECT_MEMBER: 0b000011, // 3 - member + visitor
+  PROJECT_EDITOR: 0b000111, // 7 - editor + member + visitor
+  PROJECT_ADMIN: 0b001111, // 15 - + editor + member + visitor
+  DOMAIN_ADMIN: 0b011111, // 31 - + project_admin + ...
+  INSTANCE_ADMIN: 0b111111, // 63 - all roles
 })

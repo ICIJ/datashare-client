@@ -199,5 +199,41 @@ describe('ProjectViewEditUsers.vue', () => {
 
       expect(api.getUsers).toHaveBeenCalledWith(expect.objectContaining({ user: null }))
     })
+
+    it('refetches users with the new sort/desc params when ProjectUsersList emits update:sort', async () => {
+      const wrapper = shallowMountComponent()
+      await vi.runAllTimersAsync()
+      api.getUsers.mockClear()
+
+      wrapper.findComponent(ProjectUsersList).vm.$emit('update:sort', 'name')
+      await vi.runAllTimersAsync()
+
+      expect(api.getUsers).toHaveBeenCalledWith(expect.objectContaining({ sort: 'name' }))
+    })
+
+    it('refetches users with the new desc param when ProjectUsersList emits update:order', async () => {
+      const wrapper = shallowMountComponent()
+      await vi.runAllTimersAsync()
+      api.getUsers.mockClear()
+
+      wrapper.findComponent(ProjectUsersList).vm.$emit('update:order', 'desc')
+      await vi.runAllTimersAsync()
+
+      expect(api.getUsers).toHaveBeenCalledWith(expect.objectContaining({ desc: true }))
+    })
+
+    it('keeps the current page when sort changes', async () => {
+      const wrapper = shallowMountComponent()
+      await vi.runAllTimersAsync()
+
+      wrapper.findComponent(RowPaginationUsers).vm.$emit('update:page', 2)
+      await vi.runAllTimersAsync()
+
+      api.getUsers.mockClear()
+      wrapper.findComponent(ProjectUsersList).vm.$emit('update:sort', 'name')
+      await vi.runAllTimersAsync()
+
+      expect(api.getUsers).toHaveBeenCalledWith(expect.objectContaining({ from: 10 }))
+    })
   })
 })

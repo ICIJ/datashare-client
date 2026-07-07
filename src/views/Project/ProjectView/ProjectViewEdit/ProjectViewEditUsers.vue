@@ -105,6 +105,7 @@ function resetToFirstPage() {
 
 watch(query, resetToFirstPage)
 watch(perPage, resetToFirstPage)
+watch(sortOrder, fetchUsers)
 
 watch(page, () => {
   if (skipNextPageWatch) {
