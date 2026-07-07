@@ -17,6 +17,7 @@ import FormControlSearch from '@/components/Form/FormControl/FormControlSearch.v
 import ProjectUsersCreateModal from '@/components/ProjectUsers/ProjectUsersCreateModal.vue'
 import IPhUserPlus from '~icons/ph/user-plus'
 import { apiInstance as api } from '@/api/apiInstance.js'
+import {useWait} from "@/composables/useWait.js";
 
 const props = defineProps({
   name: {
@@ -66,6 +67,7 @@ function roleForCurrentProject(permissions) {
   const permission = (permissions ?? []).find(({ v2 }) => v2 === `${DEFAULT_DOMAIN}::${props.name}`)
   return permission?.v1 ?? NO_ROLE
 }
+const fetchErrorToastText = computed(() => t('projectViewEdit.users.fetchError'))
 
 async function fetchUsers() {
   loading.value = true
@@ -89,7 +91,7 @@ async function fetchUsers() {
     totalRows.value = pagination?.total ?? 0
   }
   catch {
-    toast.error(t('projectViewEdit.users.fetchError'))
+    toast.error(fetchErrorToastText.value)
   }
   finally {
     loading.value = false
