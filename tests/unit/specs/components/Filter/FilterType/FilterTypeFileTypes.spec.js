@@ -1017,23 +1017,12 @@ describe('FilterTypeFileTypes.vue', () => {
       return names.find(node => node.props('category') === category)
     }
 
-    it('keeps the "All" row rendered when the query matches no category or type', async () => {
+    it('hides the "All" row when a search query is active', async () => {
       await seedMultiCategoryIndex()
-      await setQuery('zzz-no-match-anywhere')
-
       expect(wrapper.findComponent(ContentTypesAll).exists()).toBe(true)
-    })
-
-    it('keeps the "All" row count tied to total aggregations, not the filtered subset', async () => {
-      await seedMultiCategoryIndex()
-
-      const totalBefore = wrapper.findComponent(ContentTypesAll).props('count')
 
       await setQuery('image')
-
-      // The query only matches IMAGE, but the All count comes from the
-      // overall search total — it does NOT recompute from the visible subset.
-      expect(wrapper.findComponent(ContentTypesAll).props('count')).toBe(totalBefore)
+      expect(wrapper.findComponent(ContentTypesAll).exists()).toBe(false)
     })
 
     it('keeps per-category and per-item counts unchanged when the query is active', async () => {
