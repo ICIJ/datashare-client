@@ -28,7 +28,7 @@ Object.defineProperty(navigator, 'clipboard', {
 describe('ProjectUsersActions.vue', () => {
   let core, global
 
-  const user = { uid: 'alice@icij.org', role: 'PROJECT_ADMIN' }
+  const user = { login: 'alice@icij.org', role: 'PROJECT_ADMIN' }
   const projectName = 'local-datashare'
 
   beforeAll(() => {
@@ -59,7 +59,7 @@ describe('ProjectUsersActions.vue', () => {
     mockWriteText.mockResolvedValue(undefined)
     const wrapper = mountComponent()
     await wrapper.findAll('button-row-action-stub')[0].trigger('click')
-    expect(mockWriteText).toHaveBeenCalledWith(user.uid)
+    expect(mockWriteText).toHaveBeenCalledWith(user.login)
     await Promise.resolve()
     expect(mockToast.success).toHaveBeenCalledOnce()
   })
@@ -73,12 +73,12 @@ describe('ProjectUsersActions.vue', () => {
 
   it('forwards user:deleted from the modal', async () => {
     const wrapper = mountComponent()
-    await wrapper.findComponent(ProjectUsersDeleteModal).trigger('user:deleted', { uid: user.uid })
-    expect(wrapper.emitted('user:deleted')).toEqual([[{ uid: user.uid }]])
+    await wrapper.findComponent(ProjectUsersDeleteModal).trigger('user:deleted', { login: user.login })
+    expect(wrapper.emitted('user:deleted')).toEqual([[{ login: user.login }]])
   })
 
   it('disables the delete button when the user is the current logged-in user', () => {
-    mockAuth({ username: user.uid })
+    mockAuth({ username: user.login })
     const wrapper = mountComponent()
     expect(wrapper.findAll('button-row-action-stub')[1].attributes('disabled')).toBe('true')
   })
@@ -90,7 +90,7 @@ describe('ProjectUsersActions.vue', () => {
   })
 
   it('does not disable the copy button for the current logged-in user', () => {
-    mockAuth({ username: user.uid })
+    mockAuth({ username: user.login })
     const wrapper = mountComponent()
     expect(wrapper.findAll('button-row-action-stub')[0].attributes('disabled')).toBeUndefined()
   })

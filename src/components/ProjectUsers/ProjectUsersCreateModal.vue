@@ -10,12 +10,12 @@ import IPhLock from '~icons/ph/lock'
 import image from '@/assets/images/illustrations/app-modal-default-light.svg'
 import imageDark from '@/assets/images/illustrations/app-modal-default-dark.svg'
 import AppModal from '@/components/AppModal/AppModal.vue'
+import ProjectUsersRoleDropdown from '@/components/ProjectUsers/ProjectUsersRoleDropdown.vue'
 
 import { useAuth } from '@/composables/useAuth.js'
 import { useCore } from '@/composables/useCore.js'
-import { usePolicies } from '@/composables/usePolicies.js'
 import { useToast } from '@/composables/useToast.js'
-import { DEFAULT_ROLE, ROLE, ROLE_BIT, ROLE_HIERARCHY } from '@/enums/roles.js'
+import { DEFAULT_ROLE } from '@/enums/roles.js'
 import FormFieldsetI18n from '@/components/Form/FormFieldset/FormFieldsetI18n.vue'
 import { BFormInput } from 'bootstrap-vue-next'
 
@@ -30,7 +30,6 @@ const modelValue = defineModel({ type: Boolean })
 const emit = defineEmits(['user:created'])
 
 const core = useCore()
-const { getRoleByProject, formatRole } = usePolicies()
 const { toast } = useToast()
 const { t } = useI18n()
 const { isUsersProvider } = useAuth()
@@ -42,15 +41,6 @@ const password = ref('')
 const confirmPassword = ref('')
 const selectedRole = ref(DEFAULT_ROLE)
 const saving = ref(false)
-
-const currentUserRole = computed(() => getRoleByProject(props.project))
-
-const availableRoles = computed(() =>
-  Object.values(ROLE)
-    .filter(role => (ROLE_HIERARCHY[currentUserRole.value] & ROLE_BIT[role]) !== 0)
-    .sort((a, b) => ROLE_BIT[b] - ROLE_BIT[a])
-    .map(role => ({ value: role, text: formatRole(t, role) }))
-)
 
 const passwordMismatch = computed(() =>
   confirmPassword.value.length > 0 && password.value !== confirmPassword.value
@@ -114,7 +104,7 @@ async function saveUser() {
   }
 }
 const labelCol = 4
-defineExpose({ username, email, name, password, confirmPassword, selectedRole, isValid, isUsersProvider, passwordMismatch, saving, saveUser, availableRoles })
+defineExpose({ username, email, name, password, confirmPassword, selectedRole, isValid, isUsersProvider, passwordMismatch, saving, saveUser })
 </script>
 
 <template>
@@ -231,10 +221,9 @@ defineExpose({ username, email, name, password, confirmPassword, selectedRole, i
       name="role"
       translation-key="projectViewEdit.users.create.fields.role"
     >
-      <b-form-select
+      <project-users-role-dropdown
         v-model="selectedRole"
-        :options="availableRoles"
-        :disabled="saving"
+        :project="project"
       />
     </form-fieldset-i18n>
   </app-modal>

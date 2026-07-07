@@ -62,14 +62,14 @@ describe('ProjectViewEditUsers.vue', () => {
     expect(wrapper.findComponent(ProjectUsersList).exists()).toBe(true)
   })
 
-  it('maps getUsers items to { uid, name, email } and extracts role from permissions', async () => {
+  it('maps getUsers items to { login, name, email } and extracts role from permissions', async () => {
     api.getUsers.mockResolvedValue(usersResponse)
     const wrapper = shallowMountComponent()
     await flushPromises()
     const list = wrapper.findComponent(ProjectUsersList)
     expect(list.props('users')).toEqual([
-      { uid: 'alice@icij.org', name: 'Alice A', email: 'alice@icij.org', role: 'PROJECT_ADMIN' },
-      { uid: 'bob@icij.org', name: 'Bob B', email: 'bob@icij.org', role: 'PROJECT_MEMBER' }
+      { login: 'alice@icij.org', name: 'Alice A', email: 'alice@icij.org', role: 'PROJECT_ADMIN' },
+      { login: 'bob@icij.org', name: 'Bob B', email: 'bob@icij.org', role: 'PROJECT_MEMBER' }
     ])
   })
 

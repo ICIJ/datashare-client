@@ -3,7 +3,6 @@ import { shallowMount, flushPromises } from '@vue/test-utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import ProjectUsersCreateModal from '@/components/ProjectUsers/ProjectUsersCreateModal.vue'
 import { apiInstance as api } from '@/api/apiInstance.js'
-import { usePolicies } from '@/composables/usePolicies.js'
 
 vi.mock('@/api/apiInstance', () => ({
   apiInstance: {
@@ -15,13 +14,6 @@ vi.mock('@/api/apiInstance', () => ({
 const mockToast = { error: vi.fn(), success: vi.fn() }
 vi.mock('@/composables/useToast', () => ({
   useToast: () => ({ toast: mockToast })
-}))
-
-vi.mock('@/composables/usePolicies', () => ({
-  usePolicies: vi.fn(() => ({
-    getRoleByProject: vi.fn().mockReturnValue('INSTANCE_ADMIN'),
-    formatRole: (_t, role) => role
-  }))
 }))
 
 const mockConfigGet = vi.fn()
@@ -52,10 +44,6 @@ describe('ProjectUsersCreateModal.vue', () => {
     global = { plugins: core.plugins }
     // Default: form auth → password fields shown
     mockConfigGet.mockImplementation(key => key === 'auth' ? 'form' : undefined)
-    vi.mocked(usePolicies).mockReturnValue({
-      getRoleByProject: vi.fn().mockReturnValue('INSTANCE_ADMIN'),
-      formatRole: (_t, role) => role
-    })
   })
 
   function mountComponent(props = {}) {
@@ -70,10 +58,11 @@ describe('ProjectUsersCreateModal.vue', () => {
     expect(wrapper.findAll('b-form-input-stub').length).toBeGreaterThanOrEqual(1)
   })
 
-  it('renders a b-form-select with available roles', () => {
+  it('renders a project-users-role-dropdown bound to the project and selectedRole', () => {
     const wrapper = mountComponent()
-    expect(wrapper.find('b-form-select-stub').exists()).toBe(true)
-    expect(wrapper.vm.availableRoles.length).toBeGreaterThan(0)
+    const dropdown = wrapper.find('project-users-role-dropdown-stub')
+    expect(dropdown.exists()).toBe(true)
+    expect(dropdown.attributes('project')).toBe(project)
   })
 
   it('isValid is false when username is empty', () => {
@@ -170,7 +159,7 @@ describe('ProjectUsersCreateModal.vue', () => {
     await wrapper.vm.$nextTick()
     await wrapper.vm.saveUser()
     await flushPromises()
-    expect(wrapper.emitted('user:created')).toEqual([[{ uid: 'alice', role: 'PROJECT_MEMBER' }]])
+    expect(wrapper.emitted('user:created')).toEqual([[{ login: 'alice', role: 'PROJECT_MEMBER' }]])
     expect(wrapper.emitted('update:modelValue')).toEqual([[false]])
     expect(wrapper.vm.username).toBe('')
     expect(wrapper.vm.password).toBe('')

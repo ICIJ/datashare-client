@@ -23,8 +23,8 @@ describe('ProjectUsersList.vue', () => {
 
   function makeUsers() {
     return [
-      { uid: 'alice@icij.org', role: 'PROJECT_EDITOR' },
-      { uid: 'bob@icij.org', role: 'DOMAIN_ADMIN' }
+      { login: 'alice@icij.org', role: 'PROJECT_EDITOR' },
+      { login: 'bob@icij.org', role: 'DOMAIN_ADMIN' }
     ]
   }
 
@@ -72,8 +72,8 @@ describe('ProjectUsersList.vue', () => {
 
   it('forwards user:deleted from ProjectUsersActions', async () => {
     const wrapper = mountComponent()
-    await wrapper.findAllComponents(ProjectUsersActions)[0].trigger('user:deleted', { uid: 'alice@icij.org' })
-    expect(wrapper.emitted('user:deleted')).toEqual([[{ uid: 'alice@icij.org' }]])
+    await wrapper.findAllComponents(ProjectUsersActions)[0].trigger('user:deleted', { login: 'alice@icij.org' })
+    expect(wrapper.emitted('user:deleted')).toEqual([[{ login: 'alice@icij.org' }]])
   })
 
   it('renders ProjectUsersAdminPromotionModal', () => {
@@ -96,9 +96,9 @@ describe('ProjectUsersList.vue', () => {
 
     it('updates pendingChanges when update:modelValue is emitted by a role select', async () => {
       const wrapper = mountComponent()
-      const { uid } = wrapper.props('users')[0]
+      const { login } = wrapper.props('users')[0]
       await wrapper.findAllComponents(ProjectUsersRoleDropdown)[0].vm.$emit('update:modelValue', 'PROJECT_MEMBER')
-      expect(wrapper.vm.pendingChanges[uid]).toBe('PROJECT_MEMBER')
+      expect(wrapper.vm.pendingChanges[login]).toBe('PROJECT_MEMBER')
     })
 
     it('passes dirty=true and updated modelValue after a role change', async () => {
@@ -112,11 +112,11 @@ describe('ProjectUsersList.vue', () => {
 
     it('removes entry from pendingChanges when role reverts to original', async () => {
       const wrapper = mountComponent()
-      const { uid, role } = wrapper.props('users')[0]
+      const { login, role } = wrapper.props('users')[0]
       const roleSelect = wrapper.findAllComponents(ProjectUsersRoleDropdown)[0]
       await roleSelect.vm.$emit('update:modelValue', 'PROJECT_MEMBER')
       await roleSelect.vm.$emit('update:modelValue', role)
-      expect(wrapper.vm.pendingChanges[uid]).toBeUndefined()
+      expect(wrapper.vm.pendingChanges[login]).toBeUndefined()
     })
   })
 
@@ -137,12 +137,12 @@ describe('ProjectUsersList.vue', () => {
     it('saveRoles calls saveProjectPolicy for each pending change', async () => {
       api.saveProjectPolicy.mockResolvedValue(undefined)
       const wrapper = mountComponent()
-      const { uid } = wrapper.props('users')[0]
+      const { login } = wrapper.props('users')[0]
       await wrapper.findAllComponents(ProjectUsersRoleDropdown)[0].vm.$emit('update:modelValue', 'PROJECT_MEMBER')
       await wrapper.vm.saveRoles()
       await flushPromises()
       expect(api.saveProjectPolicy).toHaveBeenCalledWith('default', project, {
-        user: uid,
+        user: login,
         role: 'PROJECT_MEMBER'
       })
     })
