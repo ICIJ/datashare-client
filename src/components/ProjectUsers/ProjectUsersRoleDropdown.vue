@@ -6,7 +6,7 @@ import { useI18n } from 'vue-i18n'
 import DisplayRole from '@/components/Display/DisplayRole.vue'
 
 import { usePolicies } from '@/composables/usePolicies.js'
-import { ROLE, ROLE_BIT, ROLE_HIERARCHY } from '@/enums/roles.js'
+import { NO_ROLE, ROLE, ROLE_BIT, ROLE_HIERARCHY } from '@/enums/roles.js'
 
 const props = defineProps({
   modelValue: {
@@ -20,6 +20,10 @@ const props = defineProps({
   dirty: {
     type: Boolean,
     default: false
+  },
+  noRole: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -30,12 +34,13 @@ const { t } = useI18n()
 
 const currentUserRole = computed(() => getRoleByProject(props.project))
 
-const availableRoles = computed(() =>
-  Object.values(ROLE)
+const availableRoles = computed(() => [
+  ...Object.values(ROLE)
     .filter(role => (ROLE_HIERARCHY[currentUserRole.value] & ROLE_BIT[role]) !== 0)
     .sort((a, b) => ROLE_BIT[b] - ROLE_BIT[a])
-    .map(role => ({ value: role, text: formatRole(t, role) }))
-)
+    .map(role => ({ value: role, text: formatRole(t, role) })),
+  ...(props.noRole ? [{ value: NO_ROLE, text: formatRole(t, NO_ROLE) }] : [])
+])
 
 defineExpose({ availableRoles })
 </script>
@@ -51,6 +56,7 @@ defineExpose({ availableRoles })
       variant="body"
       teleport-to="body"
       toggle-class="project-users-role-dropdown__toggle  border border-subtle"
+      menu-class="project-users-role-dropdown__menu"
     >
       <template #button-content>
         <div class="project-users-role-dropdown__content d-flex justify-content-between ">
@@ -90,5 +96,14 @@ defineExpose({ availableRoles })
   &--dirty :deep(.project-users-role-dropdown__toggle) {
     background-color: var(--bs-primary-bg-subtle) !important;
   }
+}
+
+// Teleported to <body> (teleport-to="body"), so it's no longer a DOM
+// descendant of anything carrying this component's scope attribute —
+// :deep() would never match here. Use :global() and rely on the
+// component-specific class name to avoid leaking styles elsewhere.
+:global(.project-users-role-dropdown__menu) {
+  // Must clear Bootstrap's modal z-index (1055) when opened inside AppModal.
+  z-index: 1071;
 }
 </style>

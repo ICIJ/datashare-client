@@ -9,13 +9,16 @@ export const ROLE = Object.freeze({
 
 export const DEFAULT_ROLE = ROLE.PROJECT_MEMBER
 
+export const NO_ROLE = 'NO_ROLE'
+
 export const ROLE_KEY = Object.freeze({
   INSTANCE_ADMIN: 'role.instance_admin',
   DOMAIN_ADMIN: 'role.domain_admin',
   PROJECT_ADMIN: 'role.project_admin',
   PROJECT_EDITOR: 'role.project_editor',
   PROJECT_MEMBER: 'role.project_member',
-  PROJECT_VISITOR: 'role.project_visitor'
+  PROJECT_VISITOR: 'role.project_visitor',
+  NO_ROLE: 'role.no_role'
 })
 
 // Each role is a single bit flag (position in hierarchy)

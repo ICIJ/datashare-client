@@ -287,7 +287,8 @@
     "project_admin": "Admin",
     "project_editor":"Editor",
     "project_member": "Member",
-    "project_visitor":"Visitor"
+    "project_visitor":"Visitor",
+    "no_role": "No role"
   },
   "searchFormControl": {
     "submitLabel": "Search"

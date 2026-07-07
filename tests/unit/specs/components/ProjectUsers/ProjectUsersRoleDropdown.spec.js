@@ -33,7 +33,7 @@ describe('ProjectUsersRoleDropdown.vue', () => {
   function mountComponent(props = {}) {
     return shallowMount(ProjectUsersRoleDropdown, {
       global,
-      props: { modelValue: 'PROJECT_MEMBER', projectName, dirty: false, ...props }
+      props: { modelValue: 'PROJECT_MEMBER', projectName, dirty: false, noRole: true, ...props }
     })
   }
 
@@ -67,22 +67,22 @@ describe('ProjectUsersRoleDropdown.vue', () => {
   it.each([
     [
       'INSTANCE_ADMIN',
-      ['INSTANCE_ADMIN', 'DOMAIN_ADMIN', 'PROJECT_ADMIN', 'PROJECT_EDITOR', 'PROJECT_MEMBER', 'PROJECT_VISITOR'],
+      ['INSTANCE_ADMIN', 'DOMAIN_ADMIN', 'PROJECT_ADMIN', 'PROJECT_EDITOR', 'PROJECT_MEMBER', 'PROJECT_VISITOR', 'NO_ROLE'],
       []
     ],
     [
       'DOMAIN_ADMIN',
-      ['DOMAIN_ADMIN', 'PROJECT_ADMIN', 'PROJECT_EDITOR', 'PROJECT_MEMBER', 'PROJECT_VISITOR'],
+      ['DOMAIN_ADMIN', 'PROJECT_ADMIN', 'PROJECT_EDITOR', 'PROJECT_MEMBER', 'PROJECT_VISITOR', 'NO_ROLE'],
       ['INSTANCE_ADMIN']
     ],
     [
       'PROJECT_ADMIN',
-      ['PROJECT_ADMIN', 'PROJECT_EDITOR', 'PROJECT_MEMBER', 'PROJECT_VISITOR'],
+      ['PROJECT_ADMIN', 'PROJECT_EDITOR', 'PROJECT_MEMBER', 'PROJECT_VISITOR', 'NO_ROLE'],
       ['DOMAIN_ADMIN', 'INSTANCE_ADMIN']
     ],
     [
       'PROJECT_EDITOR',
-      ['PROJECT_EDITOR', 'PROJECT_MEMBER', 'PROJECT_VISITOR'],
+      ['PROJECT_EDITOR', 'PROJECT_MEMBER', 'PROJECT_VISITOR', 'NO_ROLE'],
       ['PROJECT_ADMIN', 'DOMAIN_ADMIN', 'INSTANCE_ADMIN']
     ],
   ])(
@@ -98,4 +98,25 @@ describe('ProjectUsersRoleDropdown.vue', () => {
       mustExclude.forEach(role => expect(roleValues).not.toContain(role))
     }
   )
+
+  it('appends NO_ROLE as the last available role when noRole is true', () => {
+    const wrapper = mountComponent({ noRole: true })
+    const roleValues = wrapper.vm.availableRoles.map(r => r.value)
+    expect(roleValues.at(-1)).toBe('NO_ROLE')
+  })
+
+  it('does not include NO_ROLE when noRole is false', () => {
+    const wrapper = mountComponent({ noRole: false })
+    const roleValues = wrapper.vm.availableRoles.map(r => r.value)
+    expect(roleValues).not.toContain('NO_ROLE')
+  })
+
+  it('defaults noRole to false', () => {
+    const wrapper = shallowMount(ProjectUsersRoleDropdown, {
+      global,
+      props: { modelValue: 'PROJECT_MEMBER', projectName, dirty: false }
+    })
+    const roleValues = wrapper.vm.availableRoles.map(r => r.value)
+    expect(roleValues).not.toContain('NO_ROLE')
+  })
 })
