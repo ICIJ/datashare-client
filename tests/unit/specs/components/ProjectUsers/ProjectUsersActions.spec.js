@@ -10,20 +10,9 @@ function mockAuth({ username = 'someone-else@icij.org', isUsersProvider = true }
   useAuth.mockReturnValue({ username: ref(username), isUsersProvider: ref(isUsersProvider) })
 }
 
-const mockToast = { success: vi.fn(), error: vi.fn() }
-vi.mock('@/composables/useToast', () => ({
-  useToast: () => ({ toast: mockToast })
-}))
-
 vi.mock('@/composables/useAuth.js', () => ({
   useAuth: vi.fn()
 }))
-
-const mockWriteText = vi.fn()
-Object.defineProperty(navigator, 'clipboard', {
-  value: { writeText: mockWriteText },
-  writable: true
-})
 
 describe('ProjectUsersActions.vue', () => {
   let core, global
@@ -51,23 +40,20 @@ describe('ProjectUsersActions.vue', () => {
 
   it('renders a copy button and a delete button', () => {
     const wrapper = mountComponent()
-    const buttons = wrapper.findAll('button-row-action-stub')
-    expect(buttons).toHaveLength(2)
+    expect(wrapper.findAll('haptic-copy-stub')).toHaveLength(1)
+    expect(wrapper.findAll('button-row-action-stub')).toHaveLength(1)
   })
 
-  it('copy button writes user name to clipboard and shows success toast', async () => {
-    mockWriteText.mockResolvedValue(undefined)
+  it('copy button is a haptic-copy configured to copy the user login', () => {
     const wrapper = mountComponent()
-    await wrapper.findAll('button-row-action-stub')[0].trigger('click')
-    expect(mockWriteText).toHaveBeenCalledWith(user.login)
-    await Promise.resolve()
-    expect(mockToast.success).toHaveBeenCalledOnce()
+    const hapticCopy = wrapper.find('haptic-copy-stub')
+    expect(hapticCopy.attributes('text')).toBe(user.login)
   })
 
   it('delete button opens the delete modal', async () => {
     const wrapper = mountComponent()
     expect(wrapper.findComponent(ProjectUsersDeleteModal).props('modelValue')).toBe(false)
-    await wrapper.findAll('button-row-action-stub')[1].trigger('click')
+    await wrapper.find('button-row-action-stub').trigger('click')
     expect(wrapper.findComponent(ProjectUsersDeleteModal).props('modelValue')).toBe(true)
   })
 
@@ -80,24 +66,24 @@ describe('ProjectUsersActions.vue', () => {
   it('disables the delete button when the user is the current logged-in user', () => {
     mockAuth({ username: user.login })
     const wrapper = mountComponent()
-    expect(wrapper.findAll('button-row-action-stub')[1].attributes('disabled')).toBe('true')
+    expect(wrapper.find('button-row-action-stub').attributes('disabled')).toBe('true')
   })
 
   it('does not disable the delete button for another user', () => {
     mockAuth({ username: 'someone-else@icij.org' })
     const wrapper = mountComponent()
-    expect(wrapper.findAll('button-row-action-stub')[1].attributes('disabled')).toBe('false')
+    expect(wrapper.find('button-row-action-stub').attributes('disabled')).toBe('false')
   })
 
   it('does not disable the copy button for the current logged-in user', () => {
     mockAuth({ username: user.login })
     const wrapper = mountComponent()
-    expect(wrapper.findAll('button-row-action-stub')[0].attributes('disabled')).toBeUndefined()
+    expect(wrapper.find('haptic-copy-stub').attributes('disabled')).toBeUndefined()
   })
 
   it('hides the delete button when the auth provider is not a users provider', () => {
     mockAuth({ isUsersProvider: false })
     const wrapper = mountComponent()
-    expect(wrapper.findAll('button-row-action-stub')).toHaveLength(1)
+    expect(wrapper.findAll('button-row-action-stub')).toHaveLength(0)
   })
 })

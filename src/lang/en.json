@@ -1488,7 +1488,6 @@
       "actions": {
         "copy": "Copy username",
         "delete": "Delete user",
-        "copySuccess": "Username copied to clipboard",
         "deleteModal": {
           "title": "Delete user '{name}' ?",
           "body": "This will:\n- cut their access to the project\n- delete all their tasks (batch searches, etc) for them and other users of the project",

@@ -1,15 +1,14 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { HapticCopy } from '@icij/murmur-next'
 
-import IPhClipboard from '~icons/ph/clipboard'
 import IPhTrash from '~icons/ph/trash'
 
 import ButtonRowAction from '@/components/Button/ButtonRowAction/ButtonRowAction.vue'
 import ProjectUsersDeleteModal from '@/components/ProjectUsers/ProjectUsersDeleteModal.vue'
 
 import { useAuth } from '@/composables/useAuth.js'
-import { useToast } from '@/composables/useToast.js'
 
 const props = defineProps({
   user: {
@@ -24,20 +23,14 @@ const props = defineProps({
 
 const emit = defineEmits(['user:deleted'])
 
-const { toast } = useToast()
 const { t } = useI18n()
 const { username, isUsersProvider } = useAuth()
 
 const showDeleteModal = ref(false)
 const isCurrentUser = computed(() => username.value === props.user.login)
 
-const copySuccessText = computed(() => t('projectViewEdit.users.actions.copySuccess'))
 const copyActionText = computed(() => t('projectViewEdit.users.actions.copy'))
 const deleteActionText = computed(() => t('projectViewEdit.users.actions.delete'))
-async function copyUsername() {
-  await navigator.clipboard.writeText(props.user.login)
-  toast.success(copySuccessText.value)
-}
 
 function onUserDeleted({ login }) {
   emit('user:deleted', { login })
@@ -46,10 +39,11 @@ function onUserDeleted({ login }) {
 
 <template>
   <div class="project-users-actions d-inline-flex gap-1">
-    <button-row-action
-      :icon="IPhClipboard"
+    <haptic-copy
+      :tag="ButtonRowAction"
+      :text="user.login"
       :label="copyActionText"
-      @click="copyUsername"
+      hide-label
     />
     <button-row-action
       v-if="isUsersProvider"
