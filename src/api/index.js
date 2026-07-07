@@ -107,8 +107,8 @@ export class Api {
     return this.sendAction(`/api/policies/${domain}/${project}`, { method: Method.GET, params })
   }
 
-  getUsers({ domain = 'default', project = null, user = null, sort = null, desc = null, from = 0, size = 10 } = {}) {
-    const params = omitBy({ domain, index: project, user, sort, desc, from, size, noRole:true }, isNull)
+  getUsers({ domain = 'default', index = null, q = null, sort = null, desc = null, from = 0, size = 10 } = {}) {
+    const params = omitBy({ domain, index, q, sort, desc, from, size, noRole: true }, isNull)
     return this.sendAction('/api/users', { method: Method.GET, params })
   }
 

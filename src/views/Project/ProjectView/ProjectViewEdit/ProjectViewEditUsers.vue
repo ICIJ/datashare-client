@@ -55,6 +55,11 @@ const perPage = useUrlParamWithStore('perPage', {
   set: perPage => appStore.setSettings(VIEW, { perPage })
 })
 const query = useUrlParam('q', '')
+const queryInput = ref(query.value)
+watch(query, (value) => {
+  if (value !== queryInput.value) queryInput.value = value
+})
+
 const page = useUrlPageParam()
 
 function roleForCurrentProject(permissions) {
@@ -68,8 +73,8 @@ async function fetchUsers() {
     const from = (page.value - 1) * Number(perPage.value)
     const { items, pagination } = await api.getUsers({
       domain: DEFAULT_DOMAIN,
-      project: props.name,
-      user: query.value || null,
+      index: props.name,
+      q: queryInput.value || null,
       sort: sort.value,
       desc: order.value === 'desc',
       from,
@@ -104,7 +109,10 @@ function resetToFirstPage() {
   debouncedFetchUsers()
 }
 
-watch(query, resetToFirstPage)
+watch(queryInput, (value) => {
+  query.value = value
+  resetToFirstPage()
+})
 watch(perPage, resetToFirstPage)
 watch(sortOrder, fetchUsers)
 
@@ -154,7 +162,7 @@ onMounted(fetchUsers)
           class="d-flex"
         />
         <form-control-search
-          v-model="query"
+          v-model="queryInput"
           clear-text
         />
       </div>
@@ -165,9 +173,9 @@ onMounted(fetchUsers)
       @user:created="onUserCreated"
     />
     <project-users-list
-      v-model:query="query"
       v-model:sort="sort"
       v-model:order="order"
+      :query="queryInput"
       :users="users"
       :project="name"
       :loading="loading"

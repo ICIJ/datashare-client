@@ -27,6 +27,10 @@ const props = defineProps({
   loading: {
     type: Boolean,
     default: false
+  },
+  query: {
+    type: String,
+    default: ''
   }
 })
 
@@ -36,7 +40,6 @@ const { toast } = useToast()
 
 const sort = defineModel('sort', { type: String, default: null })
 const order = defineModel('order', { type: String, default: 'asc' })
-const query = defineModel('query', { type: String, default: '' })
 const showAdminModal = ref(false)
 const saving = ref(false)
 
@@ -128,7 +131,7 @@ function onRoleChanged(login, role) {
   pendingChanges.value = next
 }
 const emptyLabel = computed(() =>
-  query.value
+  props.query
     ? t('projectViewEdit.users.noResults')
     : t('projectViewEdit.users.empty')
 )

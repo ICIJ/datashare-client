@@ -502,6 +502,21 @@ describe('Datashare backend client', () => {
     )
   })
 
+  describe('getUsers', () => {
+    it('sends the search text as "q" and the project as "index"', async () => {
+      await api.getUsers({ index: 'my-project', q: 'alice' })
+      expect(axios.request).toBeCalledWith(
+        expect.objectContaining({
+          url: Api.getFullUrl('/api/users'),
+          method: 'GET',
+          params: expect.objectContaining({ q: 'alice', index: 'my-project' })
+        })
+      )
+      expect(axios.request.mock.calls[0][0].params).not.toHaveProperty('user')
+      expect(axios.request.mock.calls[0][0].params).not.toHaveProperty('project')
+    })
+  })
+
   describe('project policies', () => {
     it('should call getProjectPolicies with domain and project', async () => {
       await api.getProjectPolicies('local', 'my-project')

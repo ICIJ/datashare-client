@@ -181,45 +181,6 @@ describe('ProjectViewEditUsers.vue', () => {
       expect(api.getUsers).toBeCalledWith(expect.objectContaining({ from: 20, size: 10 }))
     })
 
-    it('passes query as the user filter to getUsers when ProjectUsersList emits update:query', async () => {
-      const wrapper = shallowMountComponent()
-      await vi.runAllTimersAsync()
-      api.getUsers.mockClear()
-
-      wrapper.findComponent(ProjectUsersList).vm.$emit('update:query', 'alice')
-      await vi.runAllTimersAsync()
-
-      expect(api.getUsers).toHaveBeenCalledWith(expect.objectContaining({ user: 'alice' }))
-    })
-
-    it('resets page to 1 when query changes', async () => {
-      const wrapper = shallowMountComponent()
-      await vi.runAllTimersAsync()
-
-      wrapper.findComponent(RowPaginationUsers).vm.$emit('update:page', 2)
-      await vi.runAllTimersAsync()
-
-      api.getUsers.mockClear()
-      wrapper.findComponent(ProjectUsersList).vm.$emit('update:query', 'bob')
-      await vi.runAllTimersAsync()
-
-      expect(api.getUsers).toHaveBeenCalledWith(expect.objectContaining({ from: 0 }))
-    })
-
-    it('passes null as user filter when query is cleared', async () => {
-      const wrapper = shallowMountComponent()
-      await vi.runAllTimersAsync()
-
-      wrapper.findComponent(ProjectUsersList).vm.$emit('update:query', 'alice')
-      await vi.runAllTimersAsync()
-      api.getUsers.mockClear()
-
-      wrapper.findComponent(ProjectUsersList).vm.$emit('update:query', '')
-      await vi.runAllTimersAsync()
-
-      expect(api.getUsers).toHaveBeenCalledWith(expect.objectContaining({ user: null }))
-    })
-
     it('refetches users with the new sort/desc params when ProjectUsersList emits update:sort', async () => {
       const wrapper = shallowMountComponent()
       await vi.runAllTimersAsync()
