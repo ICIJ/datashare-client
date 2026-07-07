@@ -69,7 +69,7 @@ const isProjectSelected = (id) => {
     :count="selected.length"
   >
     <template #all>
-      <filter-type-project-all />
+      <filter-type-project-all v-if="!query" />
     </template>
     <template #search>
       <form-control-search
