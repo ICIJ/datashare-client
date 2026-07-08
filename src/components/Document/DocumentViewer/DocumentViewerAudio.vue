@@ -56,6 +56,7 @@ import { mapWritableState } from 'pinia'
 import { AppIcon } from '@icij/murmur'
 import { useI18n } from 'vue-i18n'
 
+import Hook from '@/components/Hook/Hook'
 import { usePlayerStore } from '@/store/modules/player'
 
 /**
@@ -65,7 +66,7 @@ export default {
   name: 'DocumentViewerAudio',
   components: {
     AppIcon,
-    Hook: () => import('@/components/Hook/Hook')
+    Hook
   },
   props: {
     /**
