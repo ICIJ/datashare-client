@@ -1,60 +1,63 @@
 <template>
-  <b-card
-    class="video-viewer align-self-center w-100 overflow-hidden my-3"
-    :footer-bg-variant="cardVariant"
-    :border-variant="cardVariant"
-    no-body
-  >
-    <dismissable-content-warning
-      v-model:show="blurred"
-      :description="blurredContent"
+  <div class="video-viewer-container">
+    <b-card
+      class="video-viewer align-self-center w-100 overflow-hidden my-3"
+      :footer-bg-variant="cardVariant"
+      :border-variant="cardVariant"
+      no-body
     >
-      <video
-        controls
-        :autoplay="autoplay"
-        :loop="loop"
-        class="video-viewer__player w-100"
+      <dismissable-content-warning
+        v-model:show="blurred"
+        :description="blurredContent"
       >
-        <source
-          :src="document.inlineFullUrl"
-          :type="document.contentType"
+        <video
+          controls
+          :autoplay="autoplay"
+          :loop="loop"
+          class="video-viewer__player w-100"
         >
-      </video>
-    </dismissable-content-warning>
-    <template #footer>
-      <div class="d-lg-flex">
-        <div
-          switches
-          class="my-auto d-flex"
-        >
-          <b-form-checkbox
-            v-model="autoplay"
-            switch
-            class="my-2 me-3"
+          <source
+            :src="document.inlineFullUrl"
+            :type="document.contentType"
           >
-            {{ t('document.player.autoplay') }}
-          </b-form-checkbox>
-          <b-form-checkbox
-            v-model="loop"
-            switch
-            class="my-2 me-3"
+        </video>
+      </dismissable-content-warning>
+      <template #footer>
+        <div class="d-lg-flex">
+          <div
+            switches
+            class="my-auto d-flex"
           >
-            {{ t('document.player.loop') }}
-          </b-form-checkbox>
+            <b-form-checkbox
+              v-model="autoplay"
+              switch
+              class="my-2 me-3"
+            >
+              {{ t('document.player.autoplay') }}
+            </b-form-checkbox>
+            <b-form-checkbox
+              v-model="loop"
+              switch
+              class="my-2 me-3"
+            >
+              {{ t('document.player.loop') }}
+            </b-form-checkbox>
+          </div>
+          <b-alert
+            :model-value="cannotPlayVideoFormat"
+            variant="warning"
+            class="ms-auto mt-3 mb-0 my-lg-auto"
+          >
+            <app-icon class="me-2">
+              <i-ph-warning />
+            </app-icon>
+            {{ t('document.player.video.unknownFormat') }}
+          </b-alert>
         </div>
-        <b-alert
-          :model-value="cannotPlayVideoFormat"
-          variant="warning"
-          class="ms-auto mt-3 mb-0 my-lg-auto"
-        >
-          <app-icon class="me-2">
-            <i-ph-warning />
-          </app-icon>
-          {{ t('document.player.video.unknownFormat') }}
-        </b-alert>
-      </div>
-    </template>
-  </b-card>
+      </template>
+    </b-card>
+    <hook name="document.viewer.video:after" :bind="{ document }" />
+  </div>
 </template>
 
 <script>
@@ -73,7 +76,8 @@ export default {
   name: 'DocumentViewerVideo',
   components: {
     DismissableContentWarning,
-    AppIcon
+    AppIcon,
+    Hook: () => import('@/components/Hook/Hook')
   },
   props: {
     /**
