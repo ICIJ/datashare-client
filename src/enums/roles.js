@@ -1,3 +1,6 @@
+import IPhUserSquare from '~icons/ph/user-square'
+import { markRaw } from 'vue'
+
 export const ROLE = Object.freeze({
   INSTANCE_ADMIN: 'INSTANCE_ADMIN',
   DOMAIN_ADMIN: 'DOMAIN_ADMIN',
@@ -40,3 +43,5 @@ export const ROLE_HIERARCHY = Object.freeze({
   DOMAIN_ADMIN: 0b011111, // 31 - + project_admin + ...
   INSTANCE_ADMIN: 0b111111, // 63 - all roles
 })
+
+export const ROLE_ICON_DEFAULT = markRaw(IPhUserSquare)

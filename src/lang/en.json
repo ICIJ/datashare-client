@@ -1356,7 +1356,7 @@
     "updatedOn": "Updated on",
     "links": "Links",
     "actions": "Actions",
-    "userRoles": "Your role"
+    "userRole": "Your role"
   },
   "projectRowActions": {
     "edit": "Edit project",
@@ -1525,7 +1525,8 @@
             "mismatch": "Passwords do not match."
           },
           "role": {
-            "label": "Role"
+            "label": "Role",
+            "inProject": "in {project}"
           }
         }
       }

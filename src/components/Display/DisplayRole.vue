@@ -9,10 +9,9 @@ import IPhPersonSimpleWalk from '~icons/ph/person-simple-walk'
 import IPhPersonSimpleHike from '~icons/ph/person-simple-hike'
 import IPhPersonSimpleSwim from '~icons/ph/person-simple-swim'
 import IPhPersonSimpleTaiChi from '~icons/ph/person-simple-tai-chi'
-import IPhUserSquare from '~icons/ph/user-square'
 
 import { usePolicies } from '@/composables/usePolicies.js'
-import { ROLE } from '@/enums/roles.js'
+import { ROLE, ROLE_ICON_DEFAULT } from '@/enums/roles.js'
 
 const ROLE_ICON = {
   [ROLE.INSTANCE_ADMIN]: markRaw(IPhPersonSimpleBike),
@@ -21,6 +20,7 @@ const ROLE_ICON = {
   [ROLE.PROJECT_EDITOR]: markRaw(IPhPersonSimpleHike),
   [ROLE.PROJECT_MEMBER]: markRaw(IPhPersonSimpleSwim),
   [ROLE.PROJECT_VISITOR]: markRaw(IPhPersonSimpleTaiChi),
+  [ROLE.NO_ROLE]: ROLE_ICON_DEFAULT,
 }
 
 const ROLE_COLOR = {
@@ -31,8 +31,6 @@ const ROLE_COLOR = {
   [ROLE.PROJECT_MEMBER]: 'var(--bs-info)',
   [ROLE.PROJECT_VISITOR]: 'var(--bs-secondary)',
 }
-
-const FALLBACK_ICON = markRaw(IPhUserSquare)
 
 const props = defineProps({
   value: {
@@ -51,7 +49,7 @@ const props = defineProps({
 const { formatRole } = usePolicies()
 const { t } = useI18n()
 const role = computed(() => formatRole(t, props.value))
-const icon = computed(() => ROLE_ICON[props.value] ?? FALLBACK_ICON)
+const icon = computed(() => ROLE_ICON[props.value] ?? ROLE_ICON_DEFAULT)
 const iconStyle = computed(() => ({ color: ROLE_COLOR[props.value] ?? 'inherit' }))
 
 defineExpose({ icon, iconStyle })
