@@ -16,13 +16,9 @@ vi.mock('@/composables/useToast', () => ({
   useToast: () => ({ toast: mockToast })
 }))
 
-const mockConfigGet = vi.fn()
-
 vi.mock('@/composables/useCore', () => ({
   useCore: () => ({
-    api: apiInstance,
-    config: { get: mockConfigGet },
-    auth: { getUsername: vi.fn().mockResolvedValue(null), isBasicAuth: vi.fn().mockResolvedValue(false) }
+    api: apiInstance
   })
 }))
 
@@ -42,8 +38,6 @@ describe('ProjectUsersCreateModal.vue', () => {
     vi.clearAllMocks()
     core.createPinia()
     global = { plugins: core.plugins }
-    // Default: form auth → password fields shown
-    mockConfigGet.mockImplementation(key => key === 'auth' ? 'form' : undefined)
   })
 
   function mountComponent(props = {}) {
@@ -51,6 +45,16 @@ describe('ProjectUsersCreateModal.vue', () => {
       global: { ...global, renderStubDefaultSlot: true },
       props: { project, modelValue: true, ...props }
     })
+  }
+
+  function stubFormValidity(wrapper, valid) {
+    wrapper.vm.form = {
+      element: {
+        checkValidity: vi.fn().mockReturnValue(valid),
+        reportValidity: vi.fn()
+      }
+    }
+    return wrapper.vm.form.element
   }
 
   it('renders b-form-inputs for all fields', () => {
@@ -86,9 +90,11 @@ describe('ProjectUsersCreateModal.vue', () => {
     expect(wrapper.vm.isValid).toBe(false)
   })
 
-  it('isValid is true when username, password, and confirmPassword all match', async () => {
+  it('isValid is true when username, email, name, password, and confirmPassword are all set and match', async () => {
     const wrapper = mountComponent()
     wrapper.vm.username = 'alice'
+    wrapper.vm.email = 'alice@example.org'
+    wrapper.vm.name = 'Alice'
     wrapper.vm.password = 'secret'
     wrapper.vm.confirmPassword = 'secret'
     await wrapper.vm.$nextTick()
@@ -137,6 +143,7 @@ describe('ProjectUsersCreateModal.vue', () => {
     api.createUser.mockResolvedValue({})
     api.saveProjectPolicy.mockResolvedValue(undefined)
     const wrapper = mountComponent()
+    stubFormValidity(wrapper, true)
     wrapper.vm.username = 'alice'
     wrapper.vm.password = 'secret'
     wrapper.vm.confirmPassword = 'secret'
@@ -153,6 +160,7 @@ describe('ProjectUsersCreateModal.vue', () => {
     api.createUser.mockResolvedValue({})
     api.saveProjectPolicy.mockResolvedValue(undefined)
     const wrapper = mountComponent()
+    stubFormValidity(wrapper, true)
     wrapper.vm.username = 'alice'
     wrapper.vm.password = 'secret'
     wrapper.vm.confirmPassword = 'secret'
@@ -168,6 +176,7 @@ describe('ProjectUsersCreateModal.vue', () => {
   it('shows generic error toast and keeps modal open on API failure', async () => {
     api.createUser.mockRejectedValue(new Error('server error'))
     const wrapper = mountComponent()
+    stubFormValidity(wrapper, true)
     wrapper.vm.username = 'alice'
     wrapper.vm.password = 'secret'
     wrapper.vm.confirmPassword = 'secret'
@@ -184,6 +193,7 @@ describe('ProjectUsersCreateModal.vue', () => {
     err.response = { status: 409 }
     api.createUser.mockRejectedValue(err)
     const wrapper = mountComponent()
+    stubFormValidity(wrapper, true)
     wrapper.vm.username = 'alice'
     wrapper.vm.password = 'secret'
     wrapper.vm.confirmPassword = 'secret'
@@ -195,43 +205,40 @@ describe('ProjectUsersCreateModal.vue', () => {
     )
   })
 
-  describe('isUsersProvider', () => {
-    it('is true when auth is "form"', () => {
-      mockConfigGet.mockImplementation(key => key === 'auth' ? 'form' : undefined)
-      const wrapper = mountComponent()
-      expect(wrapper.vm.isUsersProvider).toBe(true)
-    })
+  it('saveUser does not call createUser when the form is invalid', async () => {
+    const wrapper = mountComponent()
+    const element = stubFormValidity(wrapper, false)
+    wrapper.vm.username = 'alice'
+    wrapper.vm.password = 'secret'
+    wrapper.vm.confirmPassword = 'secret'
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.saveUser()
+    await flushPromises()
+    expect(element.reportValidity).toHaveBeenCalledOnce()
+    expect(api.createUser).not.toHaveBeenCalled()
+    expect(wrapper.vm.saving).toBe(false)
+  })
 
-    it('is true when auth is "basic"', () => {
-      mockConfigGet.mockImplementation(key => key === 'auth' ? 'basic' : undefined)
-      const wrapper = mountComponent()
-      expect(wrapper.vm.isUsersProvider).toBe(true)
-    })
+  it('saveUser calls createUser when the form is valid', async () => {
+    api.createUser.mockResolvedValue({})
+    api.saveProjectPolicy.mockResolvedValue(undefined)
+    const wrapper = mountComponent()
+    stubFormValidity(wrapper, true)
+    wrapper.vm.username = 'alice'
+    wrapper.vm.email = 'alice@example.org'
+    wrapper.vm.password = 'secret'
+    wrapper.vm.confirmPassword = 'secret'
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.saveUser()
+    await flushPromises()
+    expect(api.createUser).toHaveBeenCalledOnce()
+  })
 
-    it('is false when auth is "oauth"', () => {
-      mockConfigGet.mockImplementation(key => key === 'auth' ? 'oauth' : undefined)
-      const wrapper = mountComponent()
-      expect(wrapper.vm.isUsersProvider).toBe(false)
-    })
-
-    it('isValid is true with only a username when auth is "oauth"', async () => {
-      mockConfigGet.mockImplementation(key => key === 'auth' ? 'oauth' : undefined)
-      const wrapper = mountComponent()
-      wrapper.vm.username = 'alice'
-      await wrapper.vm.$nextTick()
-      expect(wrapper.vm.isValid).toBe(true)
-    })
-
-    it('createUser omits password from payload when auth is "oauth"', async () => {
-      mockConfigGet.mockImplementation(key => key === 'auth' ? 'oauth' : undefined)
-      api.createUser.mockResolvedValue({})
-      api.saveProjectPolicy.mockResolvedValue(undefined)
-      const wrapper = mountComponent()
-      wrapper.vm.username = 'alice'
-      await wrapper.vm.$nextTick()
-      await wrapper.vm.createUser()
-      await flushPromises()
-      expect(api.createUser).toHaveBeenCalledWith(expect.not.objectContaining({ password: expect.anything() }))
-    })
+  it('saveUser prevents the modal default ok behavior so it does not auto-close regardless of validity', async () => {
+    const wrapper = mountComponent()
+    stubFormValidity(wrapper, false)
+    const bvModalEvent = { preventDefault: vi.fn() }
+    await wrapper.vm.saveUser(bvModalEvent)
+    expect(bvModalEvent.preventDefault).toHaveBeenCalledOnce()
   })
 })

@@ -12,12 +12,13 @@ import imageDark from '@/assets/images/illustrations/app-modal-default-dark.svg'
 import AppModal from '@/components/AppModal/AppModal.vue'
 import ProjectUsersRoleDropdown from '@/components/ProjectUsers/ProjectUsersRoleDropdown.vue'
 
-import { useAuth } from '@/composables/useAuth.js'
 import { useCore } from '@/composables/useCore.js'
 import { useToast } from '@/composables/useToast.js'
-import { DEFAULT_ROLE } from '@/enums/roles.js'
+import { DEFAULT_ROLE, ROLE_ICON_DEFAULT } from '@/enums/roles.js'
 import FormFieldsetI18n from '@/components/Form/FormFieldset/FormFieldsetI18n.vue'
 import { BFormInput } from 'bootstrap-vue-next'
+import ProjectLabel from '@/components/Project/ProjectLabel.vue'
+import FormInputPassword from '@/components/Form/FormInputPassword.vue'
 
 const props = defineProps({
   project: {
@@ -32,7 +33,6 @@ const emit = defineEmits(['user:created'])
 const core = useCore()
 const { toast } = useToast()
 const { t } = useI18n()
-const { isUsersProvider } = useAuth()
 
 const username = ref('')
 const email = ref('')
@@ -48,7 +48,10 @@ const passwordMismatch = computed(() =>
 
 const isValid = computed(() => {
   if (!username.value.trim().length) return false
-  if (!isUsersProvider.value) return true
+  if (!email.value.trim().length) return false
+  if (!name.value.trim().length) return false
+  if (!password.value.trim().length) return false
+  if (!confirmPassword.value.trim().length) return false
   return password.value.length > 0 && password.value === confirmPassword.value
 })
 
@@ -68,7 +71,7 @@ const createUser = () => {
     email: email.value.trim(),
     name: name.value.trim(),
     provider: 'external',
-    ...(isUsersProvider.value ? { password: password.value } : {}),
+    password: password.value,
     domain: DEFAULT_DOMAIN,
     index: props.project
   })
@@ -80,8 +83,13 @@ const saveProjectPolicy = () => {
     role: selectedRole.value
   })
 }
-
-async function saveUser() {
+const form = ref(null)
+async function saveUser(bvModalEvent) {
+  bvModalEvent?.preventDefault()
+  if (!form.value.element.checkValidity()) {
+    form.value.element.reportValidity()
+    return
+  }
   saving.value = true
   try {
     await createUser()
@@ -104,7 +112,7 @@ async function saveUser() {
   }
 }
 const labelCol = 4
-defineExpose({ username, email, name, password, confirmPassword, selectedRole, isValid, isUsersProvider, passwordMismatch, saving, saveUser })
+defineExpose({ username, email, name, password, confirmPassword, selectedRole, isValid, passwordMismatch, saving, saveUser, form })
 </script>
 
 <template>
@@ -118,113 +126,124 @@ defineExpose({ username, email, name, password, confirmPassword, selectedRole, i
     size="lg"
     @ok="saveUser"
   >
-    <form-fieldset-i18n
-      :label-cols-sm="labelCol"
-      :label-cols-md="labelCol"
-      :label-cols-lg="labelCol"
-      required
-      name="uid"
-      translation-key="projectViewEdit.users.create.fields.username"
-      :icon="IPhTextAa"
-    >
-      <b-form-input
-        v-model="username"
-        :placeholder="t('projectViewEdit.users.create.fields.username.placeholder')"
-        :disabled="saving"
-        autofocus
+    <b-form ref="form">
+      <form-fieldset-i18n
+        :label-cols-sm="labelCol"
+        :label-cols-md="labelCol"
+        :label-cols-lg="labelCol"
+        required
         name="uid"
-      />
-    </form-fieldset-i18n>
-
-    <form-fieldset-i18n
-      :label-cols-sm="labelCol"
-      :label-cols-md="labelCol"
-      :label-cols-lg="labelCol"
-      required
-      name="email"
-      translation-key="projectViewEdit.users.create.fields.email"
-      :icon="IPhEnvelopeSimple"
-    >
-      <b-form-input
-        v-model="email"
-        :placeholder="t('projectViewEdit.users.create.fields.email.placeholder')"
-        :disabled="saving"
-        type="email"
-        name="email"
-      />
-    </form-fieldset-i18n>
-
-    <form-fieldset-i18n
-      :label-cols-sm="labelCol"
-      :label-cols-md="labelCol"
-      :label-cols-lg="labelCol"
-      required
-
-      name="name"
-      translation-key="projectViewEdit.users.create.fields.name"
-      :icon="IPhUser"
-    >
-      <b-form-input
-        v-model="name"
-        :placeholder="t('projectViewEdit.users.create.fields.name.placeholder')"
-        :disabled="saving"
-        name="name"
-      />
-    </form-fieldset-i18n>
-
-    <form-fieldset-i18n
-
-      :label-cols-sm="labelCol"
-      :label-cols-md="labelCol"
-      :label-cols-lg="labelCol"
-      required
-      name="password"
-      translation-key="projectViewEdit.users.create.fields.password"
-      :icon="IPhLock"
-    >
-      <b-form-input
-        v-model="password"
-        :placeholder="t('projectViewEdit.users.create.fields.password.placeholder')"
-        :disabled="saving"
-        name="password"
-      />
-    </form-fieldset-i18n>
-    <form-fieldset-i18n
-
-      :label-cols-sm="labelCol"
-      :label-cols-md="labelCol"
-      :label-cols-lg="labelCol"
-      required
-      name="confirmPassword"
-      translation-key="projectViewEdit.users.create.fields.confirmPassword"
-      :icon="IPhLock"
-    >
-      <b-form-input
-        v-model="confirmPassword"
-        :placeholder="t('projectViewEdit.users.create.fields.confirmPassword.placeholder')"
-        :disabled="saving"
-        name="confirmPassword"
-        :state="confirmPassword.length > 0 ? !passwordMismatch : null"
-      />
-      <small
-        v-if="passwordMismatch"
-        class="text-danger ms-auto"
+        translation-key="projectViewEdit.users.create.fields.username"
+        :icon="IPhTextAa"
       >
-        {{ t('projectViewEdit.users.create.fields.confirmPassword.mismatch') }}
-      </small>
-    </form-fieldset-i18n>
-    <form-fieldset-i18n
+        <b-form-input
+          v-model="username"
+          :placeholder="t('projectViewEdit.users.create.fields.username.placeholder')"
+          :disabled="saving"
+          autofocus
+          name="uid"
+        />
+      </form-fieldset-i18n>
 
-      :label-cols-sm="labelCol"
-      :label-cols-md="labelCol"
-      :label-cols-lg="labelCol"
-      name="role"
-      translation-key="projectViewEdit.users.create.fields.role"
-    >
-      <project-users-role-dropdown
-        v-model="selectedRole"
-        :project="project"
-      />
-    </form-fieldset-i18n>
+      <form-fieldset-i18n
+        :label-cols-sm="labelCol"
+        :label-cols-md="labelCol"
+        :label-cols-lg="labelCol"
+        required
+        name="email"
+        translation-key="projectViewEdit.users.create.fields.email"
+        :icon="IPhEnvelopeSimple"
+      >
+        <b-form-input
+          v-model="email"
+          :placeholder="t('projectViewEdit.users.create.fields.email.placeholder')"
+          :disabled="saving"
+          aria-required="true"
+          type="email"
+          name="email"
+        />
+      </form-fieldset-i18n>
+
+      <form-fieldset-i18n
+        :label-cols-sm="labelCol"
+        :label-cols-md="labelCol"
+        :label-cols-lg="labelCol"
+        required
+        name="name"
+        translation-key="projectViewEdit.users.create.fields.name"
+        :icon="IPhUser"
+      >
+        <b-form-input
+          v-model="name"
+          :placeholder="t('projectViewEdit.users.create.fields.name.placeholder')"
+          :disabled="saving"
+          name="name"
+        />
+      </form-fieldset-i18n>
+
+      <form-fieldset-i18n
+
+        :label-cols-sm="labelCol"
+        :label-cols-md="labelCol"
+        :label-cols-lg="labelCol"
+        required
+        name="password"
+        translation-key="projectViewEdit.users.create.fields.password"
+        :icon="IPhLock"
+      >
+        <form-input-password
+          v-model="password"
+          :placeholder="t('projectViewEdit.users.create.fields.password.placeholder')"
+          :disabled="saving"
+          type="password"
+          name="password"
+        />
+      </form-fieldset-i18n>
+      <form-fieldset-i18n
+
+        :label-cols-sm="labelCol"
+        :label-cols-md="labelCol"
+        :label-cols-lg="labelCol"
+        required
+        name="confirmPassword"
+        translation-key="projectViewEdit.users.create.fields.confirmPassword"
+        :icon="IPhLock"
+      >
+        <form-input-password
+          v-model="confirmPassword"
+          :placeholder="t('projectViewEdit.users.create.fields.confirmPassword.placeholder')"
+          :disabled="saving"
+          type="password"
+          name="confirmPassword"
+          :state="confirmPassword.length > 0 ? !passwordMismatch : null"
+        />
+        <small
+          v-if="passwordMismatch"
+          class="text-danger ms-auto"
+        >
+          {{ t('projectViewEdit.users.create.fields.confirmPassword.mismatch') }}
+        </small>
+      </form-fieldset-i18n>
+      <form-fieldset-i18n
+        :label-cols-sm="labelCol"
+        :label-cols-md="labelCol"
+        :label-cols-lg="labelCol"
+        :icon="ROLE_ICON_DEFAULT"
+        name="role"
+        translation-key="projectViewEdit.users.create.fields.role"
+      >
+        <div class="d-flex align-items-center gap-2">
+          <project-users-role-dropdown
+            v-model="selectedRole"
+            :project="project"
+          />
+          <i18n-t keypath="projectViewEdit.users.create.fields.role.inProject">
+            <template #project>
+              <project-label :project="project" />
+            </template>
+          </i18n-t>
+        </div>
+      </form-fieldset-i18n>
+    </b-form>
   </app-modal>
 </template>
