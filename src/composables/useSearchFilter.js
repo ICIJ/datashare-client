@@ -482,6 +482,24 @@ export function useSearchFilter() {
     }, options)
   }
 
+  function onConsumeNoRefresh(options) {
+    // `noRefresh` is a one-shot flag set when returning to search from a
+    // document, telling the refresh guards to skip a reload. Once those guards
+    // have observed it for this navigation, strip it from the URL so it never
+    // persists into the next navigation (page/sort/perPage changes copy the
+    // current route query forward via batchQueryParamUpdate, which would
+    // otherwise keep re-applying the flag and suppress the refresh).
+    //
+    // This consumer MUST be registered after the refresh guards so its
+    // queued microtask runs last and the guards read `noRefresh` first.
+    return onAfterRouteUpdate((to) => {
+      if (to.name === 'search' && to.query?.noRefresh) {
+        const { noRefresh: _noRefresh, ...query } = to.query
+        router.replace({ name: 'search', query })
+      }
+    }, options)
+  }
+
   return {
     indices,
     allProjectsSelected,
@@ -533,6 +551,7 @@ export function useSearchFilter() {
     watchOperator,
     onAfterRouteQueryUpdate,
     onAfterRouteQueryFromUpdate,
+    onConsumeNoRefresh,
     watchValues,
     whenFilterContextualized,
     isCategoryAvailable,

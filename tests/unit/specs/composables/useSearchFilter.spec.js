@@ -1,5 +1,5 @@
 import { createApp, nextTick, ref } from 'vue'
-import { mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@vue/test-utils'
 import bodybuilder from 'bodybuilder'
 import { vi } from 'vitest'
 
@@ -144,6 +144,54 @@ describe('useSearchFilter', () => {
       await refreshSearchFromRouteStart()
 
       expect(useAppStore().getSettings('search', 'searchOperator')).toBe(SEARCH_OPERATORS.OR)
+    })
+  })
+
+  describe('onConsumeNoRefresh', () => {
+    it('strips noRefresh from the search route while preserving other params', async () => {
+      const core = CoreSetup.init().useAll().useRouterWithoutGuards()
+      withSetup(() => {
+        const { onConsumeNoRefresh } = useSearchFilter()
+        onConsumeNoRefresh()
+      }, core.plugins)
+
+      await core.router.push({ name: 'search', query: { q: 'foo', noRefresh: 1 } })
+      await flushPromises()
+      await flushPromises()
+
+      const { query } = core.router.currentRoute.value
+      expect(query.noRefresh).toBeUndefined()
+      expect(query.q).toBe('foo')
+    })
+
+    it('leaves the query untouched when noRefresh is absent', async () => {
+      const core = CoreSetup.init().useAll().useRouterWithoutGuards()
+      withSetup(() => {
+        const { onConsumeNoRefresh } = useSearchFilter()
+        onConsumeNoRefresh()
+      }, core.plugins)
+
+      await core.router.push({ name: 'search', query: { q: 'foo' } })
+      await flushPromises()
+      await flushPromises()
+
+      const { query } = core.router.currentRoute.value
+      expect(query.q).toBe('foo')
+      expect(query.noRefresh).toBeUndefined()
+    })
+
+    it('does not strip noRefresh outside the search route', async () => {
+      const core = CoreSetup.init().useAll().useRouterWithoutGuards()
+      withSetup(() => {
+        const { onConsumeNoRefresh } = useSearchFilter()
+        onConsumeNoRefresh()
+      }, core.plugins)
+
+      await core.router.push({ name: 'document-standalone', params: { index: 'test', id: 'doc1' }, query: { noRefresh: 1 } })
+      await flushPromises()
+      await flushPromises()
+
+      expect(core.router.currentRoute.value.query.noRefresh).toBe('1')
     })
   })
 })
