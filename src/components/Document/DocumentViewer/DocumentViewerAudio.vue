@@ -1,51 +1,54 @@
 <template>
-  <b-card
-    class="audio-viewer my-3 w-100"
-    overflow-hidden
-    :border-variant="cardVariant"
-  >
-    <audio
-      controls
-      :autoplay="autoplay"
-      :loop="loop"
-      :src="document.inlineFullUrl"
-      :type="document.contentType"
-      class="audio-viewer__player w-100 d-inline-block"
-    />
-    <template #footer>
-      <div class="d-lg-flex">
-        <div
-          switches
-          class="my-auto d-flex"
-        >
-          <b-form-checkbox
-            v-model="autoplay"
-            switch
-            class="my-2 me-3"
+  <div class="audio-viewer-container">
+    <b-card
+      class="audio-viewer my-3 w-100"
+      overflow-hidden
+      :border-variant="cardVariant"
+    >
+      <audio
+        controls
+        :autoplay="autoplay"
+        :loop="loop"
+        :src="document.inlineFullUrl"
+        :type="document.contentType"
+        class="audio-viewer__player w-100 d-inline-block"
+      />
+      <template #footer>
+        <div class="d-lg-flex">
+          <div
+            switches
+            class="my-auto d-flex"
           >
-            {{ t('document.player.autoplay') }}
-          </b-form-checkbox>
-          <b-form-checkbox
-            v-model="loop"
-            switch
-            class="my-2 me-3"
+            <b-form-checkbox
+              v-model="autoplay"
+              switch
+              class="my-2 me-3"
+            >
+              {{ t('document.player.autoplay') }}
+            </b-form-checkbox>
+            <b-form-checkbox
+              v-model="loop"
+              switch
+              class="my-2 me-3"
+            >
+              {{ t('document.player.loop') }}
+            </b-form-checkbox>
+          </div>
+          <b-alert
+            :model-value="cannotPlayAudioFormat"
+            variant="warning"
+            class="ms-auto mt-3 mb-0 my-lg-auto"
           >
-            {{ t('document.player.loop') }}
-          </b-form-checkbox>
+            <app-icon class="me-2">
+              <i-ph-warning />
+            </app-icon>
+            {{ t('document.player.audio.unknownFormat') }}
+          </b-alert>
         </div>
-        <b-alert
-          :model-value="cannotPlayAudioFormat"
-          variant="warning"
-          class="ms-auto mt-3 mb-0 my-lg-auto"
-        >
-          <app-icon class="me-2">
-            <i-ph-warning />
-          </app-icon>
-          {{ t('document.player.audio.unknownFormat') }}
-        </b-alert>
-      </div>
-    </template>
-  </b-card>
+      </template>
+    </b-card>
+    <hook name="document.viewer.audio:after" :bind="{ document }" />
+  </div>
 </template>
 
 <script>
@@ -61,7 +64,8 @@ import { usePlayerStore } from '@/store/modules/player'
 export default {
   name: 'DocumentViewerAudio',
   components: {
-    AppIcon
+    AppIcon,
+    Hook: () => import('@/components/Hook/Hook')
   },
   props: {
     /**
