@@ -90,6 +90,7 @@ watchDocument(scrollDocumentCardIntoView)
             <slot name="header" />
           </div>
           <div class="document-entries-list__start__list">
+            <hook name="document-entries-list:before" />
             <template v-if="loading">
               <document-card-placeholder
                 :properties="properties"
