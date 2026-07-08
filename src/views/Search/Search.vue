@@ -41,7 +41,8 @@ const {
   watchFilters,
   watchOperator,
   onAfterRouteQueryUpdate,
-  onAfterRouteQueryFromUpdate
+  onAfterRouteQueryFromUpdate,
+  onConsumeNoRefresh
 } = useSearchFilter()
 const { count: searchBreadcrumbCounter, anyFilters } = useSearchBreadcrumb()
 const { hasCarousel } = useSearchNav()
@@ -122,6 +123,10 @@ onAfterRouteQueryUpdate(refreshSearchFromRouteStart)
 // change the "from" query parameter to the first page. If the current route is the search route, it
 // will also trigger the search API call immediately.
 onAfterRouteQueryFromUpdate(refreshSearchFromRoute, { immediate: route.name === 'search' })
+// Consume the one-shot `noRefresh` flag. MUST be registered after the two
+// refresh guards above so it runs last and they observe the flag before it is
+// stripped from the URL.
+onConsumeNoRefresh({ immediate: route.name === 'search' })
 </script>
 
 <template>

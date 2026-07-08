@@ -1,4 +1,4 @@
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount, flushPromises } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import Search from '@/views/Search/Search'
@@ -41,5 +41,15 @@ describe('Search.vue', () => {
     wrapper.unmount()
 
     expect(spy).toHaveBeenCalledTimes(1)
+  })
+
+  it('strips the noRefresh flag from the URL after returning to search', async () => {
+    await core.router.push({ name: 'search', query: { q: 'foo', noRefresh: 1 } })
+    await flushPromises()
+    await flushPromises()
+
+    const { query } = core.router.currentRoute.value
+    expect(query.noRefresh).toBeUndefined()
+    expect(query.q).toBe('foo')
   })
 })
