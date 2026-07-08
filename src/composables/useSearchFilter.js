@@ -495,7 +495,12 @@ export function useSearchFilter() {
     return onAfterRouteUpdate((to) => {
       if (to.name === 'search' && to.query?.noRefresh) {
         const { noRefresh: _noRefresh, ...query } = to.query
-        router.replace({ name: 'search', query })
+        // Stripping `noRefresh` here re-triggers `onAfterRouteQueryUpdate` (it is NOT
+        // gated on `from`), which is what runs the initial search when a shared
+        // `noRefresh=1` URL is loaded/reloaded directly — do not add a `from` guard there,
+        // or reloading such a URL would leave the results blank.
+        // `.catch` swallows the benign rejection from a concurrent navigation superseding this replace.
+        router.replace({ name: 'search', query }).catch(() => {})
       }
     }, options)
   }
