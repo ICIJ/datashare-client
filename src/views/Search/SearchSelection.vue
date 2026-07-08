@@ -14,6 +14,7 @@ import { usePromptModal } from '@/composables/usePromptModal'
 import SearchSelectionAddTagsModal from '@/views/Search/SearchSelectionAddTagsModal'
 import { ICON_WEIGHT } from '@/enums/iconWeights.js'
 
+import Hook from '@/components/Hook/Hook'
 import IPhStarFill from '~icons/ph/star-fill'
 import IPhStar from '~icons/ph/star'
 import IPhHash from '~icons/ph/hash'
@@ -136,6 +137,7 @@ const tagSelection = async (documents, labels) => {
         :disabled="noSelection"
         @click="addTagsModal"
       />
+      <hook name="search-selection.compact:after" :bind="{ selectionEntries, noSelection }" />
     </template>
   </form-actions>
 </template>
