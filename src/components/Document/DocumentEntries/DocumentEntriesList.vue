@@ -6,6 +6,7 @@ import VueScrollTo from 'vue-scrollto'
 import DocumentCard from '@/components/Document/DocumentCard/DocumentCard'
 import DocumentCardPlaceholder from '@/components/Document/DocumentCard/DocumentCardPlaceholder'
 import DocumentFloating from '@/components/Document/DocumentFloating'
+import Hook from '@/components/Hook/Hook'
 import { useDocument } from '@/composables/useDocument'
 import { useDocumentEntryMemo } from '@/composables/useDocumentEntryMemo'
 import { useSelection } from '@/composables/useSelection'
@@ -82,6 +83,7 @@ watchDocument(scrollDocumentCardIntoView)
           <slot name="header" />
         </div>
         <div class="document-entries-list__start__list">
+          <hook name="document-entries-list:before" />
           <template v-if="loading">
             <document-card-placeholder
               :properties="properties"
