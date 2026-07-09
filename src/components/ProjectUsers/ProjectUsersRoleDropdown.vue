@@ -7,6 +7,7 @@ import DisplayRole from '@/components/Display/DisplayRole.vue'
 
 import { usePolicies } from '@/composables/usePolicies.js'
 import { NO_ROLE, ROLE, ROLE_BIT, ROLE_HIERARCHY } from '@/enums/roles.js'
+import { BDropdown } from 'bootstrap-vue-next'
 
 const props = defineProps({
   modelValue: {
@@ -48,7 +49,6 @@ defineExpose({ availableRoles })
 <template>
   <div
     class="project-users-role-dropdown"
-    :class="{ 'project-users-role-dropdown--dirty': dirty }"
   >
     <b-dropdown
       class="project-users-role-dropdown__dropdown"
@@ -60,7 +60,13 @@ defineExpose({ availableRoles })
     >
       <template #button-content>
         <div class="project-users-role-dropdown__content d-flex justify-content-between ">
-          <display-role :value="modelValue" />
+          <display-role :value="modelValue" /><app-icon
+            v-if="dirty"
+            class="ms-2"
+            variant="primary"
+          >
+            <i-ph-arrows-clockwise />
+          </app-icon>
           <app-icon class="ms-2">
             <i-ph-caret-down />
           </app-icon>
