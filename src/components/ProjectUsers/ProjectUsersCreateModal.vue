@@ -78,10 +78,7 @@ const createUser = () => {
 }
 
 const saveProjectPolicy = () => {
-  return core.api.saveProjectPolicy(DEFAULT_DOMAIN, props.project, {
-    user: username.value.trim(),
-    role: selectedRole.value
-  })
+  return core.api.grantUserRole(username.value.trim(), props.project, selectedRole.value)
 }
 const form = ref(null)
 async function saveUser(bvModalEvent) {

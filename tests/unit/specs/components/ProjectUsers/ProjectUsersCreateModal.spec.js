@@ -7,7 +7,7 @@ import { apiInstance as api } from '@/api/apiInstance.js'
 vi.mock('@/api/apiInstance', () => ({
   apiInstance: {
     createUser: vi.fn(),
-    saveProjectPolicy: vi.fn()
+    grantUserRole: vi.fn()
   }
 }))
 
@@ -118,7 +118,7 @@ describe('ProjectUsersCreateModal.vue', () => {
 
   it('createUser calls createUser API with correct payload', async () => {
     api.createUser.mockResolvedValue({})
-    api.saveProjectPolicy.mockResolvedValue(undefined)
+    api.grantUserRole.mockResolvedValue(undefined)
     const wrapper = mountComponent()
     wrapper.vm.username = 'alice'
     wrapper.vm.email = 'alice@example.org'
@@ -139,9 +139,9 @@ describe('ProjectUsersCreateModal.vue', () => {
     })
   })
 
-  it('createUser calls saveProjectPolicy after createUser succeeds', async () => {
+  it('createUser calls grantUserRole after createUser succeeds', async () => {
     api.createUser.mockResolvedValue({})
-    api.saveProjectPolicy.mockResolvedValue(undefined)
+    api.grantUserRole.mockResolvedValue(undefined)
     const wrapper = mountComponent()
     stubFormValidity(wrapper, true)
     wrapper.vm.username = 'alice'
@@ -150,15 +150,12 @@ describe('ProjectUsersCreateModal.vue', () => {
     await wrapper.vm.$nextTick()
     await wrapper.vm.saveUser()
     await flushPromises()
-    expect(api.saveProjectPolicy).toHaveBeenCalledWith('default', project, {
-      user: 'alice',
-      role: 'PROJECT_MEMBER'
-    })
+    expect(api.grantUserRole).toHaveBeenCalledWith('alice', project, 'PROJECT_MEMBER')
   })
 
   it('emits user:created, closes modal, resets form on success', async () => {
     api.createUser.mockResolvedValue({})
-    api.saveProjectPolicy.mockResolvedValue(undefined)
+    api.grantUserRole.mockResolvedValue(undefined)
     const wrapper = mountComponent()
     stubFormValidity(wrapper, true)
     wrapper.vm.username = 'alice'
@@ -221,7 +218,7 @@ describe('ProjectUsersCreateModal.vue', () => {
 
   it('saveUser calls createUser when the form is valid', async () => {
     api.createUser.mockResolvedValue({})
-    api.saveProjectPolicy.mockResolvedValue(undefined)
+    api.grantUserRole.mockResolvedValue(undefined)
     const wrapper = mountComponent()
     stubFormValidity(wrapper, true)
     wrapper.vm.username = 'alice'

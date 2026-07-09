@@ -84,7 +84,7 @@ async function saveRoles() {
       entries.map(([login, role]) =>
         role === NO_ROLE
           ? core.api.revokeUserRole(login, props.project, { ifExists: true })
-          : core.api.saveProjectPolicy('default', props.project, { user: login, role })
+          : core.api.grantUserRole(login, props.project, role)
       )
     )
     const revokedLogins = entries.filter(([, role]) => role === NO_ROLE).map(([login]) => login)

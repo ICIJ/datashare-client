@@ -8,7 +8,7 @@ import ProjectUsersRoleDropdown from '@/components/ProjectUsers/ProjectUsersRole
 import { apiInstance as api } from '@/api/apiInstance.js'
 
 vi.mock('@/api/apiInstance', () => ({
-  apiInstance: { saveProjectPolicy: vi.fn(), revokeUserRole: vi.fn() }
+  apiInstance: { grantUserRole: vi.fn(), revokeUserRole: vi.fn() }
 }))
 
 const mockToast = { success: vi.fn(), error: vi.fn() }
@@ -134,21 +134,18 @@ describe('ProjectUsersList.vue', () => {
     })
   })
   describe('Save users', () => {
-    it('saveRoles calls saveProjectPolicy for each pending change', async () => {
-      api.saveProjectPolicy.mockResolvedValue(undefined)
+    it('saveRoles calls grantUserRole for each pending change', async () => {
+      api.grantUserRole.mockResolvedValue(undefined)
       const wrapper = mountComponent()
       const { login } = wrapper.props('users')[0]
       await wrapper.findAllComponents(ProjectUsersRoleDropdown)[0].vm.$emit('update:modelValue', 'PROJECT_MEMBER')
       await wrapper.vm.saveRoles()
       await flushPromises()
-      expect(api.saveProjectPolicy).toHaveBeenCalledWith('default', project, {
-        user: login,
-        role: 'PROJECT_MEMBER'
-      })
+      expect(api.grantUserRole).toHaveBeenCalledWith(login, project, 'PROJECT_MEMBER')
     })
 
     it('saveRoles updates the user role and clears pendingChanges on success', async () => {
-      api.saveProjectPolicy.mockResolvedValue(undefined)
+      api.grantUserRole.mockResolvedValue(undefined)
       const wrapper = mountComponent()
       await wrapper.findAllComponents(ProjectUsersRoleDropdown)[0].vm.$emit('update:modelValue', 'PROJECT_MEMBER')
       await wrapper.vm.saveRoles()
@@ -158,7 +155,7 @@ describe('ProjectUsersList.vue', () => {
     })
 
     it('saveRoles shows success toast on success', async () => {
-      api.saveProjectPolicy.mockResolvedValue(undefined)
+      api.grantUserRole.mockResolvedValue(undefined)
       const wrapper = mountComponent()
       await wrapper.findAllComponents(ProjectUsersRoleDropdown)[0].vm.$emit('update:modelValue', 'PROJECT_MEMBER')
       await wrapper.vm.saveRoles()
@@ -167,7 +164,7 @@ describe('ProjectUsersList.vue', () => {
     })
 
     it('saveRoles clears pendingChanges and shows error toast on API failure', async () => {
-      api.saveProjectPolicy.mockRejectedValue(new Error('forbidden'))
+      api.grantUserRole.mockRejectedValue(new Error('forbidden'))
       const wrapper = mountComponent()
       await wrapper.findAllComponents(ProjectUsersRoleDropdown)[0].vm.$emit('update:modelValue', 'PROJECT_MEMBER')
       await wrapper.vm.saveRoles()
@@ -176,7 +173,7 @@ describe('ProjectUsersList.vue', () => {
       expect(mockToast.error).toHaveBeenCalledOnce()
     })
 
-    it('saveRoles calls revokeUserRole (not saveProjectPolicy) when the pending change is NO_ROLE', async () => {
+    it('saveRoles calls revokeUserRole (not grantUserRole) when the pending change is NO_ROLE', async () => {
       api.revokeUserRole.mockResolvedValue(undefined)
       const wrapper = mountComponent()
       const { login } = wrapper.props('users')[0]
@@ -184,7 +181,7 @@ describe('ProjectUsersList.vue', () => {
       await wrapper.vm.saveRoles()
       await flushPromises()
       expect(api.revokeUserRole).toHaveBeenCalledWith(login, project, { ifExists: true })
-      expect(api.saveProjectPolicy).not.toHaveBeenCalled()
+      expect(api.grantUserRole).not.toHaveBeenCalled()
     })
 
     it('saveRoles emits user:deleted for a revoked user on success', async () => {
@@ -198,7 +195,7 @@ describe('ProjectUsersList.vue', () => {
     })
 
     it('saveRoles handles a mix of a role change and a revocation', async () => {
-      api.saveProjectPolicy.mockResolvedValue(undefined)
+      api.grantUserRole.mockResolvedValue(undefined)
       api.revokeUserRole.mockResolvedValue(undefined)
       const wrapper = mountComponent()
       const [userA, userB] = wrapper.props('users')
@@ -206,7 +203,7 @@ describe('ProjectUsersList.vue', () => {
       await wrapper.findAllComponents(ProjectUsersRoleDropdown)[1].vm.$emit('update:modelValue', 'NO_ROLE')
       await wrapper.vm.saveRoles()
       await flushPromises()
-      expect(api.saveProjectPolicy).toHaveBeenCalledWith('default', project, { user: userA.login, role: 'PROJECT_MEMBER' })
+      expect(api.grantUserRole).toHaveBeenCalledWith(userA.login, project, 'PROJECT_MEMBER')
       expect(api.revokeUserRole).toHaveBeenCalledWith(userB.login, project, { ifExists: true })
       expect(wrapper.emitted('user:deleted')).toEqual([[{ login: userB.login }]])
     })
@@ -233,13 +230,13 @@ describe('ProjectUsersList.vue', () => {
     })
 
     it('onSaveClicked saves directly when pending changes contain no admin promotions', async () => {
-      api.saveProjectPolicy.mockResolvedValue(undefined)
+      api.grantUserRole.mockResolvedValue(undefined)
       // users[1] is DOMAIN_ADMIN; changing to PROJECT_MEMBER is a demotion — no modal
       const wrapper = mountComponent()
       await wrapper.findAllComponents(ProjectUsersRoleDropdown)[1].vm.$emit('update:modelValue', 'PROJECT_MEMBER')
       wrapper.vm.onSaveClicked()
       await flushPromises()
-      expect(api.saveProjectPolicy).toHaveBeenCalled()
+      expect(api.grantUserRole).toHaveBeenCalled()
       expect(wrapper.vm.showAdminModal).toBe(false)
     })
   })

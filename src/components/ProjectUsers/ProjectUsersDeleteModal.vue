@@ -41,7 +41,7 @@ async function confirmDeletion() {
       await core.api.deleteUser(props.user.login, { domain: DEFAULT_DOMAIN, index: props.project })
     }
     else {
-      await core.api.removeProjectPolicy('default', props.project, { user: props.user.login })
+      await core.api.revokeUserRole(props.user.login, props.project)
     }
     emit('user:deleted', { login: props.user.login })
     modelValue.value = false

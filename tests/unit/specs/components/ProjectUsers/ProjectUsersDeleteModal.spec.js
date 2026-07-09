@@ -6,7 +6,7 @@ import { apiInstance as api } from '@/api/apiInstance.js'
 
 vi.mock('@/api/apiInstance', () => ({
   apiInstance: {
-    removeProjectPolicy: vi.fn(),
+    revokeUserRole: vi.fn(),
     deleteUser: vi.fn()
   }
 }))
@@ -66,7 +66,7 @@ describe('ProjectUsersDeleteModal.vue', () => {
       await wrapper.vm.confirmDeletion()
       await flushPromises()
       expect(api.deleteUser).toHaveBeenCalledWith(user.login, { domain: 'default', index: project })
-      expect(api.removeProjectPolicy).not.toHaveBeenCalled()
+      expect(api.revokeUserRole).not.toHaveBeenCalled()
     })
 
     it('emits user:deleted and closes modal on success', async () => {
@@ -94,16 +94,16 @@ describe('ProjectUsersDeleteModal.vue', () => {
     })
 
     it('calls removeProjectPolicy (not deleteUser) on confirm', async () => {
-      api.removeProjectPolicy.mockResolvedValue(undefined)
+      api.revokeUserRole.mockResolvedValue(undefined)
       const wrapper = mountComponent()
       await wrapper.vm.confirmDeletion()
       await flushPromises()
-      expect(api.removeProjectPolicy).toHaveBeenCalledWith('default', project, { user: user.login })
+      expect(api.revokeUserRole).toHaveBeenCalledWith(user.login, project)
       expect(api.deleteUser).not.toHaveBeenCalled()
     })
 
     it('emits user:deleted and closes modal on success', async () => {
-      api.removeProjectPolicy.mockResolvedValue(undefined)
+      api.revokeUserRole.mockResolvedValue(undefined)
       const wrapper = mountComponent()
       await wrapper.vm.confirmDeletion()
       await flushPromises()
@@ -112,7 +112,7 @@ describe('ProjectUsersDeleteModal.vue', () => {
     })
 
     it('shows error toast and keeps modal open on failure', async () => {
-      api.removeProjectPolicy.mockRejectedValue(new Error('forbidden'))
+      api.revokeUserRole.mockRejectedValue(new Error('forbidden'))
       const wrapper = mountComponent()
       await wrapper.vm.confirmDeletion()
       await flushPromises()

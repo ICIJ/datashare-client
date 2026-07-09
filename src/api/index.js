@@ -102,24 +102,16 @@ export class Api {
     return this.sendAction(`/api/project/${project}`)
   }
 
-  getProjectPolicies(domain, project, { user = null, from = 0, to = 0 } = {}) {
-    const params = omitBy({ user, from, to }, isNull)
-    return this.sendAction(`/api/policies/${domain}/${project}`, { method: Method.GET, params })
-  }
-
   getUsers({ domain = 'default', index = null, q = null, sort = null, desc = null, from = 0, size = 10 } = {}) {
     const params = omitBy({ domain, index, q, sort, desc, from, size, noRole: true }, isNull)
     return this.sendAction('/api/users', { method: Method.GET, params })
   }
 
-  removeProjectPolicy(domain, project, { user, role } = {}) {
-    const params = { user, role, project }
-    return this.sendActionAsText(`/api/policies/${domain}/${project}`, { method: Method.DELETE, params })
-  }
-
-  saveProjectPolicy(domain, project, { user, role } = {}) {
-    const params = { user, role, project }
-    return this.sendActionAsText(`/api/policies/${domain}/${project}`, { method: Method.PUT, params })
+  grantUserRole(login, project, role) {
+    return this.sendActionAsText(
+      `/api/users/${encodeURIComponent(login)}/index/${encodeURIComponent(project)}?role=${encodeURIComponent(role)}`,
+      { method: Method.PUT }
+    )
   }
 
   revokeUserRole(login, project, { ifExists = false } = {}) {
