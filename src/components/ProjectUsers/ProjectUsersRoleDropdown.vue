@@ -22,6 +22,10 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  disabled: {
+    type: Boolean,
+    default: false
+  },
   noRole: {
     type: Boolean,
     default: false
@@ -52,6 +56,7 @@ defineExpose({ availableRoles })
   >
     <b-dropdown
       class="project-users-role-dropdown__dropdown"
+      :disabled="disabled"
       no-caret
       variant="body"
       teleport-to="body"
@@ -93,14 +98,6 @@ defineExpose({ availableRoles })
 .project-users-role-dropdown {
   :deep(.project-users-role-dropdown__content) {
     width: 8rem;
-  }
-
-  &--dirty &__dropdown {
-    border-color: var(--bs-primary);
-  }
-
-  &--dirty :deep(.project-users-role-dropdown__toggle) {
-    background-color: var(--bs-primary-bg-subtle) !important;
   }
 }
 

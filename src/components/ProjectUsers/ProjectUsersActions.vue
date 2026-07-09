@@ -8,9 +8,7 @@ import IPhTrash from '~icons/ph/trash'
 import ButtonRowAction from '@/components/Button/ButtonRowAction/ButtonRowAction.vue'
 import ProjectUsersDeleteModal from '@/components/ProjectUsers/ProjectUsersDeleteModal.vue'
 
-import { useAuth } from '@/composables/useAuth.js'
-
-const props = defineProps({
+defineProps({
   user: {
     type: Object,
     required: true
@@ -18,16 +16,22 @@ const props = defineProps({
   project: {
     type: String,
     required: true
+  },
+  disableDelete: {
+    type: Boolean,
+    default: false
+  },
+  hideDelete: {
+    type: Boolean,
+    default: false
   }
 })
 
 const emit = defineEmits(['user:deleted'])
 
 const { t } = useI18n()
-const { username, isUsersProvider } = useAuth()
 
 const showDeleteModal = ref(false)
-const isCurrentUser = computed(() => username.value === props.user.login)
 
 const copyActionText = computed(() => t('projectViewEdit.users.actions.copy'))
 const deleteActionText = computed(() => t('projectViewEdit.users.actions.delete'))
@@ -46,13 +50,14 @@ function onUserDeleted({ login }) {
       hide-label
     />
     <button-row-action
-      v-if="isUsersProvider"
+      v-if="!hideDelete"
       :icon="IPhTrash"
       :label="deleteActionText"
-      :disabled="isCurrentUser"
+      :disabled="disableDelete"
       @click="showDeleteModal = true"
     />
     <project-users-delete-modal
+      v-if="!hideDelete || disableDelete"
       v-model="showDeleteModal"
       :user="user"
       :project="project"

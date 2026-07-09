@@ -10,14 +10,14 @@ export function useAuth() {
   const username = ref(null)
   const isBasicAuth = ref(null)
   const isAuthenticated = computed(() => !!username.value)
-  const isUsersProvider = computed(() => AUTH_MODE_PWD.includes(core.config.get('auth')))
+  const isAuthWithUsersProvider = computed(() => AUTH_MODE_PWD.includes(core.config.get('auth')))
 
   onBeforeMount(async () => {
     username.value = await core?.auth.getUsername()
     isBasicAuth.value = await core?.auth.isBasicAuth()
   })
 
-  return { username, isBasicAuth, isAuthenticated, isUsersProvider }
+  return { username, isBasicAuth, isAuthenticated, isAuthWithUsersProvider }
 }
 
 export default useAuth

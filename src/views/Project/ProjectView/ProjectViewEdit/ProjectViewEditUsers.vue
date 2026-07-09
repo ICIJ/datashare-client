@@ -28,7 +28,7 @@ const props = defineProps({
 
 const { toastedPromise } = useToast()
 const { t } = useI18n()
-const { isUsersProvider } = useAuth()
+const { isAuthWithUsersProvider } = useAuth()
 const appStore = useAppStore()
 const { waitFor, isLoading, start, loaderId } = useWait()
 
@@ -140,7 +140,7 @@ onMounted(fetchUsers)
   <div class="project-view-edit-users p-4">
     <div class="d-flex flex-column gap-2 mb-3">
       <div
-        v-if="isUsersProvider"
+        v-if="isAuthWithUsersProvider"
         class="d-flex justify-content-end"
       >
         <button-icon

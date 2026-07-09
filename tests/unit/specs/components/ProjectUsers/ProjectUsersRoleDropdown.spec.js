@@ -54,16 +54,6 @@ describe('ProjectUsersRoleDropdown.vue', () => {
     expect(wrapper.emitted('update:modelValue')[0][0]).toBe(wrapper.vm.availableRoles[0].value)
   })
 
-  it('applies dirty class when dirty prop is true', () => {
-    const wrapper = mountComponent({ dirty: true })
-    expect(wrapper.classes()).toContain('project-users-role-dropdown--dirty')
-  })
-
-  it('does not apply dirty class when dirty prop is false', () => {
-    const wrapper = mountComponent({ dirty: false })
-    expect(wrapper.classes()).not.toContain('project-users-role-dropdown--dirty')
-  })
-
   it.each([
     [
       'INSTANCE_ADMIN',

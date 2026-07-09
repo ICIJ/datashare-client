@@ -28,7 +28,7 @@ const emit = defineEmits(['user:deleted'])
 const core = useCore()
 const { toast } = useToast()
 const { t } = useI18n()
-const { isUsersProvider } = useAuth()
+const { isAuthWithUsersProvider } = useAuth()
 const deletionSuccessMessage = computed(() => t('projectViewEdit.users.actions.deleteModal.success'))
 const deletionErrorMessage = computed(() => t('projectViewEdit.users.actions.deleteModal.error'))
 const deleteModalTitle = computed(() => t('projectViewEdit.users.actions.deleteModal.title', { name: props.user.login }))
@@ -37,7 +37,7 @@ const deleteModalBody = computed(() => t('projectViewEdit.users.actions.deleteMo
 const DEFAULT_DOMAIN = 'default'
 async function confirmDeletion() {
   try {
-    if (isUsersProvider.value) {
+    if (isAuthWithUsersProvider.value) {
       await core.api.deleteUser(props.user.login, { domain: DEFAULT_DOMAIN, index: props.project })
     }
     else {
@@ -52,7 +52,7 @@ async function confirmDeletion() {
   }
 }
 
-defineExpose({ confirmDeletion, isUsersProvider })
+defineExpose({ confirmDeletion, isAuthWithUsersProvider })
 </script>
 
 <template>

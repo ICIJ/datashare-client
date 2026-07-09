@@ -14,6 +14,7 @@ import { useCore } from '@/composables/useCore.js'
 import { useToast } from '@/composables/useToast.js'
 import { NO_ROLE, ROLE, ROLE_BIT } from '@/enums/roles.js'
 import ButtonReset from '@/components/Button/ButtonReset'
+import useAuth from '@/composables/useAuth.js'
 
 const props = defineProps({
   users: {
@@ -44,12 +45,6 @@ const showAdminModal = ref(false)
 const saving = ref(false)
 
 const pendingChanges = ref({})
-
-/*
-watch(() => props.users, (newUsers) => {
-  localUsers.value = newUsers.map(u => ({ ...u }))
-}, { deep: true })
-*/
 
 const emit = defineEmits(['user:deleted'])
 
@@ -139,6 +134,10 @@ const emptyLabel = computed(() =>
 function onUserDeleted({ login }) {
   emit('user:deleted', { login })
 }
+const { username, isAuthWithUsersProvider } = useAuth()
+function isCurrentUser(login) {
+  return username.value === login
+}
 
 defineExpose({ pendingChanges, saving, showAdminModal, saveRoles, cancelChanges, onSaveClicked })
 </script>
@@ -163,10 +162,10 @@ defineExpose({ pendingChanges, saving, showAdminModal, saveRoles, cancelChanges,
       </template>
       <template #cell(role)="{ item }">
         <project-users-role-dropdown
+          :disabled="isCurrentUser(item.login)"
           :model-value="pendingChanges[item.login] ?? item.role"
           :dirty="!!pendingChanges[item.login]"
           :project="project"
-          no-role
           @update:model-value="onRoleChanged(item.login, $event)"
         />
       </template>
@@ -174,11 +173,15 @@ defineExpose({ pendingChanges, saving, showAdminModal, saveRoles, cancelChanges,
         <project-users-actions
           :user="item"
           :project="project"
+          :disable-delete="isCurrentUser(item.login)"
+          :hide-delete="!isAuthWithUsersProvider"
           @user:deleted="onUserDeleted"
         />
       </template>
       <template #empty>
-        <p class="text-secondary small m-3">{{ emptyLabel }}</p>
+        <p class="text-secondary small m-3">
+          {{ emptyLabel }}
+        </p>
       </template>
     </page-table-generic>
     <div
