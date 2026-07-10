@@ -540,7 +540,6 @@ describe('Datashare backend client', () => {
     )
   })
 
-
   it('should call createUser with data and project index', async () => {
     const userData = {
       login: 'jdoe',

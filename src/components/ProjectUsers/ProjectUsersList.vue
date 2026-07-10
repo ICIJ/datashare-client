@@ -12,7 +12,7 @@ import ProjectUsersRoleDropdown from '@/components/ProjectUsers/ProjectUsersRole
 
 import { useCore } from '@/composables/useCore.js'
 import { useToast } from '@/composables/useToast.js'
-import {NO_ROLE, ROLE, ROLE_BIT, ROLE_LOWERCASE} from '@/enums/roles.js'
+import { NO_ROLE, ROLE, ROLE_BIT, ROLE_LOWERCASE } from '@/enums/roles.js'
 import ButtonReset from '@/components/Button/ButtonReset'
 import useAuth from '@/composables/useAuth.js'
 

@@ -150,7 +150,7 @@ describe('ProjectUsersCreateModal.vue', () => {
     await wrapper.vm.$nextTick()
     await wrapper.vm.saveUser()
     await flushPromises()
-    expect(api.grantUserRole).toHaveBeenCalledWith('alice', project, 'PROJECT_MEMBER')
+    expect(api.grantUserRole).toHaveBeenCalledWith('alice', project, 'member')
   })
 
   it('emits user:created, closes modal, resets form on success', async () => {
