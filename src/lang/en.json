@@ -1493,7 +1493,7 @@
           "body": {
             "intro": "This action cannot be undone. Deleting this user will:",
             "accessRevoked": "revoke their access to {allProjects};",
-            "dataDeleted": "delete all their personal data (favorites, history, tags, saved searches etc.) across {allProjects};",
+            "dataDeleted": "delete all their personal data (stars, history, tags, saved searches etc.) across {allProjects};",
             "tasksDeleted": "not delete their tasks and results.",
             "allProjects": "all projects"
           },

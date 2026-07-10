@@ -79,7 +79,8 @@ const retrieveUsers = async () => {
     sort: sort.value,
     desc: order.value === 'desc',
     from,
-    size: Number(perPage.value)
+    size: Number(perPage.value),
+    noRole: isAuthWithUsersProvider.value
   })
   users.value = (items ?? []).map(({ uid, name, email, permissions }) => ({
     login: uid,
