@@ -1492,8 +1492,9 @@
           "title": "Delete user '{name}' ?",
           "body": {
             "intro": "This action cannot be undone. Deleting this user will:",
-            "accessRevoked": "remove their access to {allProjects}",
-            "tasksDeleted": "delete all their tasks (even shared batch searches) across {allProjects}",
+            "accessRevoked": "revoke their access to {allProjects};",
+            "dataDeleted": "delete all their personal data (favorites, history, tags, saved searches etc.) across {allProjects};",
+            "tasksDeleted": "not delete their tasks and results.",
             "allProjects": "all projects"
           },
           "confirm": "Delete user",

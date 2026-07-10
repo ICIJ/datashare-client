@@ -77,11 +77,14 @@ defineExpose({ confirmDeletion, isAuthWithUsersProvider })
           </i18n-t>
         </li>
         <li>
-          <i18n-t keypath="projectViewEdit.users.actions.deleteModal.body.tasksDeleted">
+          <i18n-t keypath="projectViewEdit.users.actions.deleteModal.body.dataDeleted">
             <template #allProjects>
               <b>{{ t('projectViewEdit.users.actions.deleteModal.body.allProjects') }}</b>
             </template>
           </i18n-t>
+        </li>
+        <li>
+          <i18n-t keypath="projectViewEdit.users.actions.deleteModal.body.tasksDeleted"/>
         </li>
       </ul>
     </p>
