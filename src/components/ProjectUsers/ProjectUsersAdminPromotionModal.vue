@@ -29,7 +29,7 @@ function onConfirm() {
     :title="t('projectViewEdit.users.adminPromotionModal.title')"
     :ok-title="t('projectViewEdit.users.adminPromotionModal.confirm')"
     :cancel-title="t('projectViewEdit.users.adminPromotionModal.cancel')"
-    ok-variant="primary"
+    ok-variant="action"
     @ok="onConfirm"
   >
     <p class="mb-3">
