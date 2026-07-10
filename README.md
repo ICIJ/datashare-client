@@ -22,7 +22,7 @@ Web Client for Datashare
 
 ## Datashare **Client**
 
-You need [Yarn](https://yarnpkg.com/lang/en/docs/install/) installed on your machine (tested with version 1.22) and Node.js 18 or above (tested with version 18.19).
+You need [Yarn](https://yarnpkg.com/lang/en/docs/install/) installed on your machine (tested with version 1.22) and Node.js 20 or above (tested with version 20.19.2).
 
 * Install dependencies:
 
