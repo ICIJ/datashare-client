@@ -12,7 +12,7 @@ import ProjectUsersRoleDropdown from '@/components/ProjectUsers/ProjectUsersRole
 
 import { useCore } from '@/composables/useCore.js'
 import { useToast } from '@/composables/useToast.js'
-import { NO_ROLE, ROLE, ROLE_BIT } from '@/enums/roles.js'
+import {NO_ROLE, ROLE, ROLE_BIT, ROLE_LOWERCASE} from '@/enums/roles.js'
 import ButtonReset from '@/components/Button/ButtonReset'
 import useAuth from '@/composables/useAuth.js'
 
@@ -79,7 +79,7 @@ async function saveRoles() {
       entries.map(([login, role]) =>
         role === NO_ROLE
           ? core.api.revokeUserRole(login, props.project, { ifExists: true })
-          : core.api.grantUserRole(login, props.project, role)
+          : core.api.grantUserRole(login, props.project, ROLE_LOWERCASE[role])
       )
     )
     const revokedLogins = entries.filter(([, role]) => role === NO_ROLE).map(([login]) => login)

@@ -10,6 +10,15 @@ export const ROLE = Object.freeze({
   PROJECT_VISITOR: 'PROJECT_VISITOR'
 })
 
+export const ROLE_LOWERCASE = Object.freeze({
+  INSTANCE_ADMIN: 'instance_admin',
+  DOMAIN_ADMIN: 'domain_admin',
+  PROJECT_ADMIN: 'admin',
+  PROJECT_EDITOR: 'editor',
+  PROJECT_MEMBER: 'member',
+  PROJECT_VISITOR: 'visitor'
+})
+
 export const DEFAULT_ROLE = ROLE.PROJECT_MEMBER
 
 export const NO_ROLE = 'NO_ROLE'
