@@ -32,7 +32,6 @@ const { isAuthWithUsersProvider } = useAuth()
 const deletionSuccessMessage = computed(() => t('projectViewEdit.users.actions.deleteModal.success'))
 const deletionErrorMessage = computed(() => t('projectViewEdit.users.actions.deleteModal.error'))
 const deleteModalTitle = computed(() => t('projectViewEdit.users.actions.deleteModal.title', { name: props.user.login }))
-const deleteModalBody = computed(() => t('projectViewEdit.users.actions.deleteModal.body'))
 
 const DEFAULT_DOMAIN = 'default'
 async function confirmDeletion() {
@@ -61,12 +60,30 @@ defineExpose({ confirmDeletion, isAuthWithUsersProvider })
     :image="image"
     :image-dark="imageDark"
     :ok-title="t('projectViewEdit.users.actions.deleteModal.confirm')"
-    ok-variant="primary"
+    ok-variant="danger"
     @ok="confirmDeletion"
   >
     <template #title>
       {{ deleteModalTitle }}
     </template>
-    {{ deleteModalBody }}
+    <p>
+      {{ t('projectViewEdit.users.actions.deleteModal.body.intro') }}
+      <ul>
+        <li>
+          <i18n-t keypath="projectViewEdit.users.actions.deleteModal.body.accessRevoked">
+            <template #allProjects>
+              <b>{{ t('projectViewEdit.users.actions.deleteModal.body.allProjects') }}</b>
+            </template>
+          </i18n-t>
+        </li>
+        <li>
+          <i18n-t keypath="projectViewEdit.users.actions.deleteModal.body.tasksDeleted">
+            <template #allProjects>
+              <b>{{ t('projectViewEdit.users.actions.deleteModal.body.allProjects') }}</b>
+            </template>
+          </i18n-t>
+        </li>
+      </ul>
+    </p>
   </app-modal>
 </template>

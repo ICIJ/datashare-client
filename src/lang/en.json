@@ -1490,8 +1490,13 @@
         "delete": "Delete user",
         "deleteModal": {
           "title": "Delete user '{name}' ?",
-          "body": "This will:\n- cut their access to the project\n- delete all their tasks (batch searches, etc) for them and other users of the project",
-          "confirm": "Yes, delete",
+          "body": {
+            "intro": "This action cannot be undone. Deleting this user will:",
+            "accessRevoked": "remove their access to {allProjects}",
+            "tasksDeleted": "delete all their tasks (even shared batch searches) across {allProjects}",
+            "allProjects": "all projects"
+          },
+          "confirm": "Delete user",
           "success": "User deleted successfully",
           "error": "Failed to remove user. Please try again."
         }
