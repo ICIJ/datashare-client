@@ -518,7 +518,7 @@ describe('Datashare backend client', () => {
   })
 
   describe('project policies', () => {
-    it('should call revokeUserRole with login, project and ifExists', async () => {
+    it('should call revokeUserRole with userId (uid), project and ifExists', async () => {
       await api.revokeUserRole('alice', 'my-project', { ifExists: true })
       expect(axios.request).toBeCalledWith(
         expect.objectContaining({
@@ -530,7 +530,7 @@ describe('Datashare backend client', () => {
     })
   })
 
-  it('should call grantUserRole with login, project and role', async () => {
+  it('should call grantUserRole with userId (uid), project and role', async () => {
     await api.grantUserRole('alice', 'my-project', 'PROJECT_ADMIN')
     expect(axios.request).toBeCalledWith(
       expect.objectContaining({
@@ -542,11 +542,13 @@ describe('Datashare backend client', () => {
 
   it('should call createUser with data and project index', async () => {
     const userData = {
-      login: 'jdoe',
+      uid: 'jdoe',
       email: 'jdoe@example.com',
       name: 'John Doe',
       password: 'secret-password',
-      provider: 'local'
+      provider: 'local',
+      domain: 'default',
+      index: 'my-project'
     }
     await api.createUser({ ...userData, index: 'my-project' })
     expect(axios.request).toBeCalledWith(
@@ -559,6 +561,7 @@ describe('Datashare backend client', () => {
           name: 'John Doe',
           password: 'secret-password',
           provider: 'local',
+          domain: 'default',
           index: 'my-project'
         })
       })

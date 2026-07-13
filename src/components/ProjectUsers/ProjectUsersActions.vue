@@ -45,7 +45,7 @@ function onUserDeleted({ uid }) {
   <div class="project-users-actions d-inline-flex gap-1">
     <haptic-copy
       :tag="ButtonRowAction"
-      :text="user.login"
+      :text="user.uid"
       :label="copyActionText"
       hide-label
     />

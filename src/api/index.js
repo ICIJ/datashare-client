@@ -107,16 +107,16 @@ export class Api {
     return this.sendAction('/api/users', { method: Method.GET, params })
   }
 
-  grantUserRole(login, project, role) {
+  grantUserRole(uid, project, role) {
     return this.sendActionAsText(
-      `/api/users/${encodeURIComponent(login)}/index/${encodeURIComponent(project)}?role=${encodeURIComponent(role)}`,
+      `/api/users/${encodeURIComponent(uid)}/index/${encodeURIComponent(project)}?role=${encodeURIComponent(role)}`,
       { method: Method.PUT }
     )
   }
 
-  revokeUserRole(login, project, { ifExists = false } = {}) {
+  revokeUserRole(uid, project, { ifExists = false } = {}) {
     const params = { ifExists }
-    return this.sendActionAsText(`/api/users/${encodeURIComponent(login)}/index/${encodeURIComponent(project)}`, {
+    return this.sendActionAsText(`/api/users/${encodeURIComponent(uid)}/index/${encodeURIComponent(project)}`, {
       method: Method.DELETE,
       params
     })
@@ -127,9 +127,9 @@ export class Api {
     return this.sendAction('/api/users', { method: Method.POST, data })
   }
 
-  deleteUser(login, { domain, index } = {}) {
+  deleteUser(uid, { domain, index } = {}) {
     const data = { domain, index }
-    return this.sendActionAsText(`/api/users/${encodeURIComponent(login)}`, { method: Method.DELETE, data })
+    return this.sendActionAsText(`/api/users/${encodeURIComponent(uid)}`, { method: Method.DELETE, data })
   }
 
   getPathBanners(project) {

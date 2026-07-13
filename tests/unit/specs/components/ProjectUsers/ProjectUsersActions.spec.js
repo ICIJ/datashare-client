@@ -7,7 +7,7 @@ import ProjectUsersDeleteModal from '@/components/ProjectUsers/ProjectUsersDelet
 describe('ProjectUsersActions.vue', () => {
   let core, global
 
-  const user = { login: 'alice@icij.org', role: 'PROJECT_ADMIN' }
+  const user = { uid: 'alice@icij.org', role: 'PROJECT_ADMIN' }
   const project = 'local-datashare'
 
   beforeAll(() => {
@@ -33,10 +33,10 @@ describe('ProjectUsersActions.vue', () => {
     expect(wrapper.findAll('button-row-action-stub')).toHaveLength(1)
   })
 
-  it('copy button is a haptic-copy configured to copy the user login', () => {
+  it('copy button is a haptic-copy configured to copy the user id', () => {
     const wrapper = mountComponent()
     const hapticCopy = wrapper.find('haptic-copy-stub')
-    expect(hapticCopy.attributes('text')).toBe(user.login)
+    expect(hapticCopy.attributes('text')).toBe(user.uid)
   })
 
   it('delete button opens the delete modal', async () => {
@@ -48,8 +48,8 @@ describe('ProjectUsersActions.vue', () => {
 
   it('forwards user:deleted from the modal', async () => {
     const wrapper = mountComponent()
-    await wrapper.findComponent(ProjectUsersDeleteModal).trigger('user:deleted', { login: user.login })
-    expect(wrapper.emitted('user:deleted')).toEqual([[{ login: user.login }]])
+    await wrapper.findComponent(ProjectUsersDeleteModal).trigger('user:deleted', { uid: user.uid })
+    expect(wrapper.emitted('user:deleted')).toEqual([[{ uid: user.uid }]])
   })
 
   it('disables the delete button when disableDelete is true', () => {
