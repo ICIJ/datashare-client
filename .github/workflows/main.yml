@@ -86,6 +86,14 @@ jobs:
       - name: Install dependencies
         run: make install
 
+      - name: Cache Vite/Vitest dep-optimizer
+        uses: actions/cache@v4
+        with:
+          path: node_modules/.vite
+          key: vite-deps-${{ runner.os }}-${{ hashFiles('yarn.lock', 'vitest.config.js', 'vite.config.js') }}
+          restore-keys: |
+            vite-deps-${{ runner.os }}-
+
       - name: Run unit tests
         run: yarn test:unit --silent --minWorkers 1 --maxWorkers 2
         env:
