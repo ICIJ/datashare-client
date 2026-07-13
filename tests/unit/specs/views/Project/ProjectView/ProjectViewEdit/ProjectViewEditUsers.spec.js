@@ -37,15 +37,15 @@ describe('ProjectViewEditUsers.vue', () => {
   const usersResponse = {
     items: [
       {
-        uid: 'alice@icij.org',
+        uid: 'alice@example.org',
         name: 'Alice A',
-        email: 'alice@icij.org',
+        email: 'alice@example.org',
         permissions: [{ v1: 'PROJECT_ADMIN', v2: 'default::local-datashare' }]
       },
       {
-        uid: 'bob@icij.org',
+        uid: 'bob@example.org',
         name: 'Bob B',
-        email: 'bob@icij.org',
+        email: 'bob@example.org',
         permissions: [{ v1: 'PROJECT_MEMBER', v2: 'default::local-datashare' }]
       }
     ],
@@ -83,8 +83,8 @@ describe('ProjectViewEditUsers.vue', () => {
     await flushPromises()
     const list = wrapper.findComponent(ProjectUsersList)
     expect(list.props('users')).toEqual([
-      { login: 'alice@icij.org', name: 'Alice A', email: 'alice@icij.org', role: 'PROJECT_ADMIN' },
-      { login: 'bob@icij.org', name: 'Bob B', email: 'bob@icij.org', role: 'PROJECT_MEMBER' }
+      { login: 'alice@example.org', name: 'Alice A', email: 'alice@example.org', role: 'PROJECT_ADMIN' },
+      { login: 'bob@example.org', name: 'Bob B', email: 'bob@example.org', role: 'PROJECT_MEMBER' }
     ])
   })
 
@@ -92,9 +92,9 @@ describe('ProjectViewEditUsers.vue', () => {
     api.getUsers.mockResolvedValue({
       items: [
         {
-          uid: 'carol@icij.org',
-          name: 'Carol C',
-          email: 'carol@icij.org',
+          uid: 'jdoe',
+          name: 'Jane D',
+          email: 'jdoe@example.org',
           permissions: [{ v1: 'PROJECT_ADMIN', v2: 'default::other-project' }]
         }
       ],
@@ -104,7 +104,7 @@ describe('ProjectViewEditUsers.vue', () => {
     await flushPromises()
     const list = wrapper.findComponent(ProjectUsersList)
     expect(list.props('users')).toEqual([
-      { login: 'carol@icij.org', name: 'Carol C', email: 'carol@icij.org', role: 'NO_ROLE' }
+      { login: 'jdoe', name: 'Jane D', email: 'jdoe@example.org', role: 'NO_ROLE' }
     ])
   })
 
@@ -229,6 +229,69 @@ describe('ProjectViewEditUsers.vue', () => {
       wrapper.findComponent(ProjectUsersList).vm.$emit('update:sort', 'email')
       await vi.runAllTimersAsync()
 
+      expect(api.getUsers).toHaveBeenCalledWith(expect.objectContaining({ from: 10 }))
+    })
+  })
+
+  describe('pagination adjustment on user:deleted', () => {
+    beforeEach(() => {
+      vi.useFakeTimers()
+    })
+
+    afterEach(() => {
+      vi.useRealTimers()
+    })
+
+    it('goes back one page when the deleted user was the only one on a page > 1', async () => {
+      api.getUsers.mockResolvedValue(usersResponse)
+      const wrapper = shallowMountComponent()
+      await vi.runAllTimersAsync()
+
+      api.getUsers.mockResolvedValueOnce({
+        items: [{ uid: 'jdoe@example.org', name: 'Jane D', email: 'jdoe@example.org', permissions: [] }],
+        pagination: { count: 1, from: 10, size: 10, total: 11 }
+      })
+      wrapper.findComponent(RowPaginationUsers).vm.$emit('update:page', 2)
+      await vi.runAllTimersAsync()
+
+      api.getUsers.mockClear()
+      api.getUsers.mockResolvedValue(usersResponse)
+      wrapper.findComponent(ProjectUsersList).vm.$emit('user:deleted', { login: 'jdoe@example.org' })
+      await vi.runAllTimersAsync()
+
+      expect(wrapper.findComponent(RowPaginationUsers).attributes('page')).toBe('1')
+      expect(api.getUsers).toHaveBeenCalledWith(expect.objectContaining({ from: 0 }))
+    })
+
+    it('stays on page 1 when the deleted user was the only one on page 1', async () => {
+      api.getUsers.mockResolvedValue({
+        items: [{ uid: 'jdoe@example.org', name: 'Jane D', email: 'jdoe@example.org', permissions: [] }],
+        pagination: { count: 1, from: 0, size: 10, total: 1 }
+      })
+      const wrapper = shallowMountComponent()
+      await vi.runAllTimersAsync()
+
+      api.getUsers.mockClear()
+      wrapper.findComponent(ProjectUsersList).vm.$emit('user:deleted', { login: 'jdoe@example.org' })
+      await vi.runAllTimersAsync()
+
+      expect(wrapper.findComponent(RowPaginationUsers).attributes('page')).toBe('1')
+      expect(api.getUsers).toHaveBeenCalledWith(expect.objectContaining({ from: 0 }))
+    })
+
+    it('does not change page when other users remain on the current page after deletion', async () => {
+      api.getUsers.mockResolvedValue(usersResponse)
+      const wrapper = shallowMountComponent()
+      await vi.runAllTimersAsync()
+
+      wrapper.findComponent(RowPaginationUsers).vm.$emit('update:page', 2)
+      await vi.runAllTimersAsync()
+
+      api.getUsers.mockClear()
+      wrapper.findComponent(ProjectUsersList).vm.$emit('user:deleted', { login: 'alice@example.org' })
+      await vi.runAllTimersAsync()
+
+      expect(wrapper.findComponent(RowPaginationUsers).attributes('page')).toBe('2')
       expect(api.getUsers).toHaveBeenCalledWith(expect.objectContaining({ from: 10 }))
     })
   })

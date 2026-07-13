@@ -36,8 +36,8 @@ const showDeleteModal = ref(false)
 const copyActionText = computed(() => t('projectViewEdit.users.actions.copy'))
 const deleteActionText = computed(() => t('projectViewEdit.users.actions.delete'))
 
-function onUserDeleted({ login }) {
-  emit('user:deleted', { login })
+function onUserDeleted({ uid }) {
+  emit('user:deleted', { uid })
 }
 </script>
 

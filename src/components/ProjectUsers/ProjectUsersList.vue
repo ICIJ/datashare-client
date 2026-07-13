@@ -131,8 +131,8 @@ const emptyLabel = computed(() =>
     : t('projectViewEdit.users.empty')
 )
 
-function onUserDeleted({ login }) {
-  emit('user:deleted', { login })
+function onUserDeleted({ uid }) {
+  emit('user:deleted', { uid })
 }
 const { username, isAuthWithUsersProvider } = useAuth()
 function isCurrentUser(login) {

@@ -130,7 +130,12 @@ function onUserCreated() {
 }
 
 function onUserDeleted() {
-  fetchUsers()
+  if (page.value > 1 && users.value.length === 1) {
+    page.value -= 1
+  }
+  else {
+    fetchUsers()
+  }
 }
 
 onMounted(fetchUsers)

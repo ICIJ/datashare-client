@@ -42,7 +42,7 @@ async function confirmDeletion() {
     else {
       await core.api.revokeUserRole(props.user.login, props.project)
     }
-    emit('user:deleted', { login: props.user.login })
+    emit('user:deleted', { uid: props.user.login })
     modelValue.value = false
     toast.success(deletionSuccessMessage.value)
   }
@@ -68,25 +68,25 @@ defineExpose({ confirmDeletion, isAuthWithUsersProvider })
     </template>
     <p>
       {{ t('projectViewEdit.users.actions.deleteModal.body.intro') }}
-      <ul>
-        <li>
-          <i18n-t keypath="projectViewEdit.users.actions.deleteModal.body.accessRevoked">
-            <template #allProjects>
-              <b>{{ t('projectViewEdit.users.actions.deleteModal.body.allProjects') }}</b>
-            </template>
-          </i18n-t>
-        </li>
-        <li>
-          <i18n-t keypath="projectViewEdit.users.actions.deleteModal.body.dataDeleted">
-            <template #allProjects>
-              <b>{{ t('projectViewEdit.users.actions.deleteModal.body.allProjects') }}</b>
-            </template>
-          </i18n-t>
-        </li>
-        <li>
-          <i18n-t keypath="projectViewEdit.users.actions.deleteModal.body.tasksDeleted" />
-        </li>
-      </ul>
     </p>
+    <ul>
+      <li>
+        <i18n-t keypath="projectViewEdit.users.actions.deleteModal.body.accessRevoked">
+          <template #allProjects>
+            <b>{{ t('projectViewEdit.users.actions.deleteModal.body.allProjects') }}</b>
+          </template>
+        </i18n-t>
+      </li>
+      <li>
+        <i18n-t keypath="projectViewEdit.users.actions.deleteModal.body.dataDeleted">
+          <template #allProjects>
+            <b>{{ t('projectViewEdit.users.actions.deleteModal.body.allProjects') }}</b>
+          </template>
+        </i18n-t>
+      </li>
+      <li>
+        <i18n-t keypath="projectViewEdit.users.actions.deleteModal.body.tasksDeleted" />
+      </li>
+    </ul>
   </app-modal>
 </template>
