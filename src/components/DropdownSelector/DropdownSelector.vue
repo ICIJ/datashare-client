@@ -326,7 +326,7 @@ defineExpose({ hide, focus })
     />
 
     <dropdown-selector-select-all
-      v-if="allowSelectAll && multiple && hasMatches"
+      v-if="allowSelectAll && multiple && hasMatches && !hasQuery"
       v-model="selectAllModel"
       :label="selectAllLabel"
       @click.stop

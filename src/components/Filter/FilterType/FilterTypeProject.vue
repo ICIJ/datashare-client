@@ -1,6 +1,6 @@
 <script setup>
 import Fuse from 'fuse.js'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 import { useSearchFilter } from '@/composables/useSearchFilter'
 import { useCore } from '@/composables/useCore'
@@ -22,7 +22,7 @@ defineProps({
 
 const { computedProjects, allProjectsSelected } = useSearchFilter()
 const core = useCore()
-const query = defineModel('query', { type: String, default: '' })
+const query = ref('')
 
 const selectedProjects = computedProjects()
 
