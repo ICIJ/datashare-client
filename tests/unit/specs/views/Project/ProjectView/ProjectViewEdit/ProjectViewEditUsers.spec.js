@@ -77,14 +77,14 @@ describe('ProjectViewEditUsers.vue', () => {
     expect(wrapper.findComponent(ProjectUsersList).exists()).toBe(true)
   })
 
-  it('maps getUsers items to { login, name, email } and extracts role from permissions', async () => {
+  it('maps getUsers items to { uid, name, email } and extracts role from permissions', async () => {
     api.getUsers.mockResolvedValue(usersResponse)
     const wrapper = shallowMountComponent()
     await flushPromises()
     const list = wrapper.findComponent(ProjectUsersList)
     expect(list.props('users')).toEqual([
-      { login: 'alice@example.org', name: 'Alice A', email: 'alice@example.org', role: 'PROJECT_ADMIN' },
-      { login: 'bob@example.org', name: 'Bob B', email: 'bob@example.org', role: 'PROJECT_MEMBER' }
+      { uid: 'alice@example.org', name: 'Alice A', email: 'alice@example.org', role: 'PROJECT_ADMIN' },
+      { uid: 'bob@example.org', name: 'Bob B', email: 'bob@example.org', role: 'PROJECT_MEMBER' }
     ])
   })
 
@@ -104,7 +104,7 @@ describe('ProjectViewEditUsers.vue', () => {
     await flushPromises()
     const list = wrapper.findComponent(ProjectUsersList)
     expect(list.props('users')).toEqual([
-      { login: 'jdoe', name: 'Jane D', email: 'jdoe@example.org', role: 'NO_ROLE' }
+      { uid: 'jdoe', name: 'Jane D', email: 'jdoe@example.org', role: 'NO_ROLE' }
     ])
   })
 
@@ -256,7 +256,7 @@ describe('ProjectViewEditUsers.vue', () => {
 
       api.getUsers.mockClear()
       api.getUsers.mockResolvedValue(usersResponse)
-      wrapper.findComponent(ProjectUsersList).vm.$emit('user:deleted', { login: 'jdoe@example.org' })
+      wrapper.findComponent(ProjectUsersList).vm.$emit('user:deleted', { uid: 'jdoe@example.org' })
       await vi.runAllTimersAsync()
 
       expect(wrapper.findComponent(RowPaginationUsers).attributes('page')).toBe('1')
@@ -272,7 +272,7 @@ describe('ProjectViewEditUsers.vue', () => {
       await vi.runAllTimersAsync()
 
       api.getUsers.mockClear()
-      wrapper.findComponent(ProjectUsersList).vm.$emit('user:deleted', { login: 'jdoe@example.org' })
+      wrapper.findComponent(ProjectUsersList).vm.$emit('user:deleted', { uid: 'jdoe@example.org' })
       await vi.runAllTimersAsync()
 
       expect(wrapper.findComponent(RowPaginationUsers).attributes('page')).toBe('1')
@@ -288,7 +288,7 @@ describe('ProjectViewEditUsers.vue', () => {
       await vi.runAllTimersAsync()
 
       api.getUsers.mockClear()
-      wrapper.findComponent(ProjectUsersList).vm.$emit('user:deleted', { login: 'alice@example.org' })
+      wrapper.findComponent(ProjectUsersList).vm.$emit('user:deleted', { uid: 'alice@example.org' })
       await vi.runAllTimersAsync()
 
       expect(wrapper.findComponent(RowPaginationUsers).attributes('page')).toBe('2')
