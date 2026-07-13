@@ -12,7 +12,6 @@ import imageDark from '@/assets/images/illustrations/app-modal-default-dark.svg'
 import AppModal from '@/components/AppModal/AppModal.vue'
 import ProjectUsersRoleDropdown from '@/components/ProjectUsers/ProjectUsersRoleDropdown.vue'
 
-import { useCore } from '@/composables/useCore.js'
 import { useToast } from '@/composables/useToast.js'
 import { DEFAULT_ROLE, ROLE_ICON_DEFAULT, ROLE_LOWERCASE } from '@/enums/roles.js'
 import FormFieldsetI18n from '@/components/Form/FormFieldset/FormFieldsetI18n.vue'
