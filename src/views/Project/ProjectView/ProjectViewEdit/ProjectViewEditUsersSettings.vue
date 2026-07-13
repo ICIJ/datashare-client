@@ -30,7 +30,7 @@ const { fieldsToSortByOptions, sortByLabel, perPageLabel } = useViewSettings(t)
 const appStore = useAppStore()
 
 const fields = [
-  { key: 'login', text: computed(() => t('projectViewEdit.users.fields.login.label')), sortable: true },
+  { key: 'uid', text: computed(() => t('projectViewEdit.users.fields.uid.label')), sortable: true, sortingKey: 'uid' },
   { key: 'name', text: computed(() => t('projectViewEdit.users.fields.name.label')), sortable: true },
   { key: 'email', text: computed(() => t('projectViewEdit.users.fields.email.label')), sortable: true },
   { key: 'role', text: computed(() => t('projectViewEdit.users.fields.role.label')), sortable: true }

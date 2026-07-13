@@ -31,18 +31,18 @@ const { t } = useI18n()
 const { isAuthWithUsersProvider } = useAuth()
 const deletionSuccessMessage = computed(() => t('projectViewEdit.users.actions.deleteModal.success'))
 const deletionErrorMessage = computed(() => t('projectViewEdit.users.actions.deleteModal.error'))
-const deleteModalTitle = computed(() => t('projectViewEdit.users.actions.deleteModal.title', { name: props.user.login }))
+const deleteModalTitle = computed(() => t('projectViewEdit.users.actions.deleteModal.title', { name: props.user.uid }))
 
 const DEFAULT_DOMAIN = 'default'
 async function confirmDeletion() {
   try {
     if (isAuthWithUsersProvider.value) {
-      await core.api.deleteUser(props.user.login, { domain: DEFAULT_DOMAIN, index: props.project })
+      await core.api.deleteUser(props.user.uid, { domain: DEFAULT_DOMAIN, index: props.project })
     }
     else {
-      await core.api.revokeUserRole(props.user.login, props.project)
+      await core.api.revokeUserRole(props.user.uid, props.project)
     }
-    emit('user:deleted', { uid: props.user.login })
+    emit('user:deleted', { uid: props.user.uid })
     modelValue.value = false
     toast.success(deletionSuccessMessage.value)
   }

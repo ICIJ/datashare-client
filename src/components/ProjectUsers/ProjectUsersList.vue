@@ -52,20 +52,20 @@ const ADMIN_ROLES = new Set([ROLE.PROJECT_ADMIN, ROLE.DOMAIN_ADMIN, ROLE.INSTANC
 
 const adminPromotions = computed(() =>
   Object.entries(pendingChanges.value)
-    .filter(([login, newRole]) => {
-      const currentRole = props.users.find(u => u.login === login)?.role
+    .filter(([uid, newRole]) => {
+      const currentRole = props.users.find(u => u.uid === uid)?.role
       return ADMIN_ROLES.has(newRole) && ROLE_BIT[newRole] > ROLE_BIT[currentRole]
     })
-    .map(([login, newRole]) => ({ login, newRole }))
+    .map(([uid, newRole]) => ({ uid, newRole }))
 )
 
 const pendingCount = computed(() => Object.keys(pendingChanges.value).length)
 const hasPendingChanges = computed(() => pendingCount.value > 0)
 
-const sortedUsers = computed(() => orderArrayBy(props.users, [sort.value ?? 'login'], [order.value]))
+const sortedUsers = computed(() => orderArrayBy(props.users, [sort.value ?? 'uid'], [order.value]))
 
 const fields = computed(() => [
-  { key: 'login', text: t('projectViewEdit.users.fields.login.label'), sortable: true, emphasis: true },
+  { key: 'uid', text: t('projectViewEdit.users.fields.uid.label'), sortable: true, emphasis: true },
   { key: 'name', text: t('projectViewEdit.users.fields.name.label'), sortable: true },
   { key: 'email', text: t('projectViewEdit.users.fields.email.label'), sortable: true },
   { key: 'role', text: t('projectViewEdit.users.fields.role.label'), sortable: true, thStyle: 'width: 16rem' }
@@ -76,22 +76,22 @@ async function saveRoles() {
   try {
     const entries = Object.entries(pendingChanges.value)
     await Promise.all(
-      entries.map(([login, role]) =>
+      entries.map(([uid, role]) =>
         role === NO_ROLE
-          ? core.api.revokeUserRole(login, props.project, { ifExists: true })
-          : core.api.grantUserRole(login, props.project, ROLE_LOWERCASE[role])
+          ? core.api.revokeUserRole(uid, props.project, { ifExists: true })
+          : core.api.grantUserRole(uid, props.project, ROLE_LOWERCASE[role])
       )
     )
-    const revokedLogins = entries.filter(([, role]) => role === NO_ROLE).map(([login]) => login)
+    const revokedUids = entries.filter(([, role]) => role === NO_ROLE).map(([uid]) => uid)
     entries
       .filter(([, role]) => role !== NO_ROLE)
-      .forEach(([login, role]) => {
-        const user = props.users.find(u => u.login === login)
+      .forEach(([uid, role]) => {
+        const user = props.users.find(u => u.uid === uid)
         if (user) user.role = role
       })
     pendingChanges.value = {}
     toast.success(t('projectViewEdit.users.roleSelect.saveSuccess'))
-    revokedLogins.forEach(login => emit('user:deleted', { login }))
+    revokedUids.forEach(uid => emit('user:deleted', { uid }))
   }
   catch {
     pendingChanges.value = {}
@@ -114,14 +114,14 @@ function onSaveClicked() {
     saveRoles()
   }
 }
-function onRoleChanged(login, role) {
-  const original = props.users.find(u => u.login === login)?.role
+function onRoleChanged(uid, role) {
+  const original = props.users.find(u => u.uid === uid)?.role
   const next = { ...pendingChanges.value }
   if (role === original) {
-    delete next[login]
+    delete next[uid]
   }
   else {
-    next[login] = role
+    next[uid] = role
   }
   pendingChanges.value = next
 }
@@ -135,8 +135,8 @@ function onUserDeleted({ uid }) {
   emit('user:deleted', { uid })
 }
 const { username, isAuthWithUsersProvider } = useAuth()
-function isCurrentUser(login) {
-  return username.value === login
+function isCurrentUser(uid) {
+  return username.value === uid
 }
 
 defineExpose({ pendingChanges, saving, showAdminModal, saveRoles, cancelChanges, onSaveClicked })
@@ -155,25 +155,25 @@ defineExpose({ pendingChanges, saving, showAdminModal, saveRoles, cancelChanges,
       :items="sortedUsers"
       :fields="fields"
       :loading="loading"
-      primary-key="login"
+      primary-key="uid"
     >
-      <template #cell(login)="{ item }">
-        <display-user :value="item.login" />
+      <template #cell(uid)="{ item }">
+        <display-user :value="item.uid" />
       </template>
       <template #cell(role)="{ item }">
         <project-users-role-dropdown
-          :disabled="isCurrentUser(item.login)"
-          :model-value="pendingChanges[item.login] ?? item.role"
-          :dirty="!!pendingChanges[item.login]"
+          :disabled="isCurrentUser(item.uid)"
+          :model-value="pendingChanges[item.uid] ?? item.role"
+          :dirty="!!pendingChanges[item.uid]"
           :project="project"
-          @update:model-value="onRoleChanged(item.login, $event)"
+          @update:model-value="onRoleChanged(item.uid, $event)"
         />
       </template>
       <template #row-actions="{ item }">
         <project-users-actions
           :user="item"
           :project="project"
-          :disable-delete="isCurrentUser(item.login)"
+          :disable-delete="isCurrentUser(item.uid)"
           :hide-delete="!isAuthWithUsersProvider"
           @user:deleted="onUserDeleted"
         />

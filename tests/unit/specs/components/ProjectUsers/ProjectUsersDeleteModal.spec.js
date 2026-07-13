@@ -31,7 +31,7 @@ import { apiInstance } from '@/api/apiInstance.js'
 describe('ProjectUsersDeleteModal.vue', () => {
   let core, global
 
-  const user = { login: 'alice@icij.org', role: 'PROJECT_ADMIN' }
+  const user = { uid: 'alice@icij.org', role: 'PROJECT_ADMIN' }
   const project = 'local-datashare'
 
   beforeAll(() => {
@@ -60,12 +60,12 @@ describe('ProjectUsersDeleteModal.vue', () => {
   })
 
   describe('form/basic auth mode (password provider)', () => {
-    it('calls deleteUser with the login on confirm', async () => {
+    it('calls deleteUser with the user id on confirm', async () => {
       api.deleteUser.mockResolvedValue(undefined)
       const wrapper = mountComponent()
       await wrapper.vm.confirmDeletion()
       await flushPromises()
-      expect(api.deleteUser).toHaveBeenCalledWith(user.login, { domain: 'default', index: project })
+      expect(api.deleteUser).toHaveBeenCalledWith(user.uid, { domain: 'default', index: project })
       expect(api.revokeUserRole).not.toHaveBeenCalled()
     })
 
@@ -74,7 +74,7 @@ describe('ProjectUsersDeleteModal.vue', () => {
       const wrapper = mountComponent()
       await wrapper.vm.confirmDeletion()
       await flushPromises()
-      expect(wrapper.emitted('user:deleted')).toEqual([[{ login: user.login }]])
+      expect(wrapper.emitted('user:deleted')).toEqual([[{ uid: user.uid }]])
       expect(wrapper.emitted('update:modelValue')).toEqual([[false]])
     })
 
@@ -98,7 +98,7 @@ describe('ProjectUsersDeleteModal.vue', () => {
       const wrapper = mountComponent()
       await wrapper.vm.confirmDeletion()
       await flushPromises()
-      expect(api.revokeUserRole).toHaveBeenCalledWith(user.login, project)
+      expect(api.revokeUserRole).toHaveBeenCalledWith(user.uid, project)
       expect(api.deleteUser).not.toHaveBeenCalled()
     })
 
@@ -107,7 +107,7 @@ describe('ProjectUsersDeleteModal.vue', () => {
       const wrapper = mountComponent()
       await wrapper.vm.confirmDeletion()
       await flushPromises()
-      expect(wrapper.emitted('user:deleted')).toEqual([[{ login: user.login }]])
+      expect(wrapper.emitted('user:deleted')).toEqual([[{ uid: user.uid }]])
       expect(wrapper.emitted('update:modelValue')).toEqual([[false]])
     })
 

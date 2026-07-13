@@ -122,8 +122,8 @@ export class Api {
     })
   }
 
-  createUser({ login, email, name, provider, password, domain, index } = {}) {
-    const data = { login, email, name, provider, password, domain, index }
+  createUser({ uid, email, name, provider, password, domain, index } = {}) {
+    const data = { login: uid, email, name, provider, password, domain, index }
     return this.sendAction('/api/users', { method: Method.POST, data })
   }
 

@@ -30,7 +30,6 @@ const props = defineProps({
 const modelValue = defineModel({ type: Boolean })
 const emit = defineEmits(['user:created'])
 
-const core = useCore()
 const { toast } = useToast()
 const { t } = useI18n()
 
@@ -65,21 +64,7 @@ function resetForm() {
 }
 
 const DEFAULT_DOMAIN = 'default'
-const createUser = () => {
-  return core.api.createUser({
-    login: username.value.trim(),
-    email: email.value.trim(),
-    name: name.value.trim(),
-    provider: 'external',
-    password: password.value,
-    domain: DEFAULT_DOMAIN,
-    index: props.project
-  })
-}
 
-const saveProjectPolicy = () => {
-  return core.api.grantUserRole(username.value.trim(), props.project, ROLE_LOWERCASE[selectedRole.value])
-}
 const form = ref(null)
 async function saveUser(bvModalEvent) {
   bvModalEvent?.preventDefault()
@@ -89,9 +74,15 @@ async function saveUser(bvModalEvent) {
   }
   saving.value = true
   try {
-    await createUser()
-    await saveProjectPolicy()
-    emit('user:created', { login: username.value.trim(), role: selectedRole.value })
+    emit('user:created', {
+      uid: username.value.trim(),
+      email: email.value.trim(),
+      name: name.value.trim(),
+      password: password.value,
+      domain: DEFAULT_DOMAIN,
+      index: props.project,
+      role: ROLE_LOWERCASE[selectedRole.value]
+    })
     resetForm()
     modelValue.value = false
   }

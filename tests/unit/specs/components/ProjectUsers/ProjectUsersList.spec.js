@@ -23,8 +23,8 @@ describe('ProjectUsersList.vue', () => {
 
   function makeUsers() {
     return [
-      { login: 'alice@icij.org', role: 'PROJECT_EDITOR' },
-      { login: 'bob@icij.org', role: 'DOMAIN_ADMIN' }
+      { uid: 'alice@icij.org', role: 'PROJECT_EDITOR' },
+      { uid: 'bob@icij.org', role: 'DOMAIN_ADMIN' }
     ]
   }
 
@@ -72,8 +72,8 @@ describe('ProjectUsersList.vue', () => {
 
   it('forwards user:deleted from ProjectUsersActions', async () => {
     const wrapper = mountComponent()
-    await wrapper.findAllComponents(ProjectUsersActions)[0].trigger('user:deleted', { login: 'alice@icij.org' })
-    expect(wrapper.emitted('user:deleted')).toEqual([[{ login: 'alice@icij.org' }]])
+    await wrapper.findAllComponents(ProjectUsersActions)[0].trigger('user:deleted', { uid: 'alice@icij.org' })
+    expect(wrapper.emitted('user:deleted')).toEqual([[{ uid: 'alice@icij.org' }]])
   })
 
   it('renders ProjectUsersAdminPromotionModal', () => {
@@ -96,9 +96,9 @@ describe('ProjectUsersList.vue', () => {
 
     it('updates pendingChanges when update:modelValue is emitted by a role select', async () => {
       const wrapper = mountComponent()
-      const { login } = wrapper.props('users')[0]
+      const { uid } = wrapper.props('users')[0]
       await wrapper.findAllComponents(ProjectUsersRoleDropdown)[0].vm.$emit('update:modelValue', 'PROJECT_MEMBER')
-      expect(wrapper.vm.pendingChanges[login]).toBe('PROJECT_MEMBER')
+      expect(wrapper.vm.pendingChanges[uid]).toBe('PROJECT_MEMBER')
     })
 
     it('passes dirty=true and updated modelValue after a role change', async () => {
@@ -112,11 +112,11 @@ describe('ProjectUsersList.vue', () => {
 
     it('removes entry from pendingChanges when role reverts to original', async () => {
       const wrapper = mountComponent()
-      const { login, role } = wrapper.props('users')[0]
+      const { uid, role } = wrapper.props('users')[0]
       const roleSelect = wrapper.findAllComponents(ProjectUsersRoleDropdown)[0]
       await roleSelect.vm.$emit('update:modelValue', 'PROJECT_MEMBER')
       await roleSelect.vm.$emit('update:modelValue', role)
-      expect(wrapper.vm.pendingChanges[login]).toBeUndefined()
+      expect(wrapper.vm.pendingChanges[uid]).toBeUndefined()
     })
   })
 
@@ -137,11 +137,11 @@ describe('ProjectUsersList.vue', () => {
     it('saveRoles calls grantUserRole for each pending change', async () => {
       api.grantUserRole.mockResolvedValue(undefined)
       const wrapper = mountComponent()
-      const { login } = wrapper.props('users')[0]
+      const { uid } = wrapper.props('users')[0]
       await wrapper.findAllComponents(ProjectUsersRoleDropdown)[0].vm.$emit('update:modelValue', 'PROJECT_MEMBER')
       await wrapper.vm.saveRoles()
       await flushPromises()
-      expect(api.grantUserRole).toHaveBeenCalledWith(login, project, 'member')
+      expect(api.grantUserRole).toHaveBeenCalledWith(uid, project, 'member')
     })
 
     it('saveRoles updates the user role and clears pendingChanges on success', async () => {
@@ -176,22 +176,22 @@ describe('ProjectUsersList.vue', () => {
     it('saveRoles calls revokeUserRole (not grantUserRole) when the pending change is NO_ROLE', async () => {
       api.revokeUserRole.mockResolvedValue(undefined)
       const wrapper = mountComponent()
-      const { login } = wrapper.props('users')[0]
+      const { uid } = wrapper.props('users')[0]
       await wrapper.findAllComponents(ProjectUsersRoleDropdown)[0].vm.$emit('update:modelValue', 'NO_ROLE')
       await wrapper.vm.saveRoles()
       await flushPromises()
-      expect(api.revokeUserRole).toHaveBeenCalledWith(login, project, { ifExists: true })
+      expect(api.revokeUserRole).toHaveBeenCalledWith(uid, project, { ifExists: true })
       expect(api.grantUserRole).not.toHaveBeenCalled()
     })
 
     it('saveRoles emits user:deleted for a revoked user on success', async () => {
       api.revokeUserRole.mockResolvedValue(undefined)
       const wrapper = mountComponent()
-      const { login } = wrapper.props('users')[0]
+      const { uid } = wrapper.props('users')[0]
       await wrapper.findAllComponents(ProjectUsersRoleDropdown)[0].vm.$emit('update:modelValue', 'NO_ROLE')
       await wrapper.vm.saveRoles()
       await flushPromises()
-      expect(wrapper.emitted('user:deleted')).toEqual([[{ login }]])
+      expect(wrapper.emitted('user:deleted')).toEqual([[{ uid }]])
     })
 
     it('saveRoles handles a mix of a role change and a revocation', async () => {
@@ -203,9 +203,9 @@ describe('ProjectUsersList.vue', () => {
       await wrapper.findAllComponents(ProjectUsersRoleDropdown)[1].vm.$emit('update:modelValue', 'NO_ROLE')
       await wrapper.vm.saveRoles()
       await flushPromises()
-      expect(api.grantUserRole).toHaveBeenCalledWith(userA.login, project, 'member')
-      expect(api.revokeUserRole).toHaveBeenCalledWith(userB.login, project, { ifExists: true })
-      expect(wrapper.emitted('user:deleted')).toEqual([[{ login: userB.login }]])
+      expect(api.grantUserRole).toHaveBeenCalledWith(userA.uid, project, 'member')
+      expect(api.revokeUserRole).toHaveBeenCalledWith(userB.uid, project, { ifExists: true })
+      expect(wrapper.emitted('user:deleted')).toEqual([[{ uid: userB.uid }]])
     })
   })
 

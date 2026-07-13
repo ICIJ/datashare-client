@@ -18,6 +18,7 @@ import ProjectUsersCreateModal from '@/components/ProjectUsers/ProjectUsersCreat
 import IPhUserPlus from '~icons/ph/user-plus'
 import { apiInstance as api } from '@/api/apiInstance.js'
 import { useWait } from '@/composables/useWait.js'
+import { useCore } from '@/composables/useCore.js'
 
 const props = defineProps({
   name: {
@@ -28,6 +29,7 @@ const props = defineProps({
 
 const { toastedPromise } = useToast()
 const { t } = useI18n()
+const core = useCore()
 const { isAuthWithUsersProvider } = useAuth()
 const appStore = useAppStore()
 const { waitFor, isLoading, start, loaderId } = useWait()
@@ -83,7 +85,7 @@ const retrieveUsers = async () => {
     noRole: isAuthWithUsersProvider.value
   })
   users.value = (items ?? []).map(({ uid, name, email, permissions }) => ({
-    login: uid,
+    uid,
     name: name ?? '',
     email: email ?? '',
     role: roleForCurrentProject(permissions)
@@ -124,9 +126,25 @@ watch(page, () => {
 })
 
 const showCreateModal = ref(false)
+const createUser = (uid, email, name, password, domain, index) => {
+  return core.api.createUser({
+    uid,
+    email,
+    name,
+    provider: 'external',
+    password,
+    domain,
+    index
+  })
+}
 
-function onUserCreated() {
-  fetchUsers()
+const grantUserRole = (uid, index, role) => {
+  return core.api.grantUserRole(uid, index, role)
+}
+async function onUserCreated({ uid, email, name, password, domain, index, role }) {
+  await createUser(uid, email, name, password, domain, index)
+  await grantUserRole(uid, index, role)
+  return fetchUsers()
 }
 
 function onUserDeleted() {
