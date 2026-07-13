@@ -1,6 +1,6 @@
 <script setup>
 import { computed, markRaw } from 'vue'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 import { useI18n } from 'vue-i18n'
 
 import IPhPersonSimpleBike from '~icons/ph/person-simple-bike'

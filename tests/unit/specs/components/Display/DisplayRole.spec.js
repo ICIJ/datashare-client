@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import DisplayRole from '@/components/Display/DisplayRole.vue'

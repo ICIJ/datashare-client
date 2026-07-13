@@ -1,5 +1,5 @@
 import { mount, shallowMount } from '@vue/test-utils'
-import { ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur'
 
 import ButtonRowAction from '@/components/Button/ButtonRowAction/ButtonRowAction.vue'
 import IPhTrash from '~icons/ph/trash'

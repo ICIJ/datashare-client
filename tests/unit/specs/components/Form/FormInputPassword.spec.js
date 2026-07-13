@@ -1,5 +1,5 @@
 import { shallowMount, mount } from '@vue/test-utils'
-import { ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur'
 
 import FormInputPassword from '@/components/Form/FormInputPassword'
 import CoreSetup from '~tests/unit/CoreSetup'

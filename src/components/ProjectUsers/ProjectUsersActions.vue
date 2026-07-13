@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { HapticCopy } from '@icij/murmur-next'
+import { HapticCopy } from '@icij/murmur'
 
 import IPhTrash from '~icons/ph/trash'
 

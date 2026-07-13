@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { orderBy as orderArrayBy } from 'lodash'
-import { ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur'
 
 import DisplayUser from '@/components/Display/DisplayUser.vue'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric.vue'
