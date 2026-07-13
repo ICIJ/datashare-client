@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, toValue } from 'vue'
+import { computed, ref, toValue, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
@@ -67,6 +67,10 @@ const isEmpty = computed(() => isSearchRoute.value && !isLoading.value && !total
 const selection = ref([])
 const toggleSearchBreadcrumb = ref(false)
 const selectMode = ref(false)
+
+watch(selectMode, (value) => {
+  if (!value) selection.value = []
+})
 
 // The this value is used to know if the floating document view has enough space to be displayed
 // next to the search results. It is updated by the DocumentEntries component which itself gets it
