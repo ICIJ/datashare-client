@@ -25,6 +25,16 @@ export default defineConfig(configEnv =>
             inline: ['@icij/murmur']
           }
         },
+        deps: {
+          optimizer: {
+            ssr: {
+              enabled: true,
+              // Pre-bundle @icij/murmur with esbuild instead of transforming
+              // its ~500 individual component/CSS files one by one.
+              include: ['@icij/murmur']
+            }
+          }
+        },
         root: fileURLToPath(new URL('./', import.meta.url)),
         setupFiles: [resolve(__dirname, 'tests/unit/setup.js')],
         pool: 'forks',
