@@ -68,6 +68,8 @@ const selection = ref([])
 const toggleSearchBreadcrumb = ref(false)
 const selectMode = ref(false)
 
+// Clear selected documents when leaving selection mode so stale
+// selections don't persist across separate selection sessions.
 watch(selectMode, (value) => {
   if (!value) selection.value = []
 })
