@@ -1,7 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { orderBy as orderArrayBy } from 'lodash'
 import { ButtonIcon } from '@icij/murmur'
 
 import DisplayUser from '@/components/Display/DisplayUser.vue'
@@ -61,8 +60,6 @@ const adminPromotions = computed(() =>
 
 const pendingCount = computed(() => Object.keys(pendingChanges.value).length)
 const hasPendingChanges = computed(() => pendingCount.value > 0)
-
-const sortedUsers = computed(() => orderArrayBy(props.users, [sort.value ?? 'uid'], [order.value]))
 
 const fields = computed(() => [
   { key: 'uid', text: t('projectViewEdit.users.fields.uid.label'), sortable: true, emphasis: true },
@@ -152,7 +149,7 @@ defineExpose({ pendingChanges, saving, showAdminModal, saveRoles, cancelChanges,
     <page-table-generic
       v-model:sort="sort"
       v-model:order="order"
-      :items="sortedUsers"
+      :items="users"
       :fields="fields"
       :loading="loading"
       primary-key="uid"
