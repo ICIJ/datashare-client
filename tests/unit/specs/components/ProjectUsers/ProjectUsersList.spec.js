@@ -286,5 +286,13 @@ describe('ProjectUsersList.vue', () => {
       expect(api.grantUserRole).toHaveBeenCalled()
       expect(wrapper.vm.showAdminModal).toBe(false)
     })
+
+    it('onSaveClicked opens admin modal when promoting a NO_ROLE (role-less) user straight to admin', async () => {
+      const wrapper = mountComponent({ users: [{ uid: 'noone@example.org', role: 'NO_ROLE' }] })
+      await wrapper.findAllComponents(ProjectUsersRoleDropdown)[0].vm.$emit('update:modelValue', 'PROJECT_ADMIN')
+      wrapper.vm.onSaveClicked()
+      await wrapper.vm.$nextTick()
+      expect(wrapper.vm.showAdminModal).toBe(true)
+    })
   })
 })

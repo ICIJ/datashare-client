@@ -53,7 +53,7 @@ const adminPromotions = computed(() =>
   Object.entries(pendingChanges.value)
     .filter(([uid, newRole]) => {
       const currentRole = props.users.find(u => u.uid === uid)?.role
-      return ADMIN_ROLES.has(newRole) && ROLE_BIT[newRole] > ROLE_BIT[currentRole]
+      return ADMIN_ROLES.has(newRole) && ROLE_BIT[newRole] > (ROLE_BIT[currentRole] ?? 0)
     })
     .map(([uid, newRole]) => ({ uid, newRole }))
 )
