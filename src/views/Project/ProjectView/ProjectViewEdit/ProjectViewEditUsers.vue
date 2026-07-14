@@ -156,6 +156,15 @@ function onUserDeleted() {
   }
 }
 
+function onRolesRevoked(uids) {
+  if (page.value > 1 && users.value.length === uids.length) {
+    page.value -= 1
+  }
+  else {
+    fetchUsers()
+  }
+}
+
 onMounted(fetchUsers)
 
 </script>
@@ -202,6 +211,7 @@ onMounted(fetchUsers)
       :project="name"
       :loading="isLoading"
       @user:deleted="onUserDeleted"
+      @roles:revoked="onRolesRevoked"
       @roles:saved="fetchUsers"
     />
   </div>

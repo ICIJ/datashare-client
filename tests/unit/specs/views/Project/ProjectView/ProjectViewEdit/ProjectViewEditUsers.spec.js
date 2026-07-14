@@ -296,6 +296,62 @@ describe('ProjectViewEditUsers.vue', () => {
     })
   })
 
+  describe('pagination adjustment on roles:revoked (batch revoke)', () => {
+    beforeEach(() => {
+      vi.useFakeTimers()
+    })
+
+    afterEach(() => {
+      vi.useRealTimers()
+    })
+
+    it('refetches users exactly once when several roles are revoked in a single save', async () => {
+      api.getUsers.mockResolvedValue(usersResponse)
+      const wrapper = shallowMountComponent()
+      await vi.runAllTimersAsync()
+
+      api.getUsers.mockClear()
+      wrapper.findComponent(ProjectUsersList).vm.$emit('roles:revoked', ['alice@example.org', 'bob@example.org'])
+      await vi.runAllTimersAsync()
+
+      expect(api.getUsers).toHaveBeenCalledOnce()
+    })
+
+    it('goes back one page when every user on a page > 1 was revoked in one save', async () => {
+      api.getUsers.mockResolvedValue(usersResponse)
+      const wrapper = shallowMountComponent()
+      await vi.runAllTimersAsync()
+
+      api.getUsers.mockResolvedValueOnce(usersResponse)
+      wrapper.findComponent(RowPaginationUsers).vm.$emit('update:page', 2)
+      await vi.runAllTimersAsync()
+
+      api.getUsers.mockClear()
+      api.getUsers.mockResolvedValue(usersResponse)
+      wrapper.findComponent(ProjectUsersList).vm.$emit('roles:revoked', ['alice@example.org', 'bob@example.org'])
+      await vi.runAllTimersAsync()
+
+      expect(wrapper.findComponent(RowPaginationUsers).attributes('page')).toBe('1')
+      expect(api.getUsers).toHaveBeenCalledWith(expect.objectContaining({ from: 0 }))
+    })
+
+    it('does not change page when some users remain on the current page after a batch revoke', async () => {
+      api.getUsers.mockResolvedValue(usersResponse)
+      const wrapper = shallowMountComponent()
+      await vi.runAllTimersAsync()
+
+      wrapper.findComponent(RowPaginationUsers).vm.$emit('update:page', 2)
+      await vi.runAllTimersAsync()
+
+      api.getUsers.mockClear()
+      wrapper.findComponent(ProjectUsersList).vm.$emit('roles:revoked', ['alice@example.org'])
+      await vi.runAllTimersAsync()
+
+      expect(wrapper.findComponent(RowPaginationUsers).attributes('page')).toBe('2')
+      expect(api.getUsers).toHaveBeenCalledWith(expect.objectContaining({ from: 10 }))
+    })
+  })
+
   describe('refetch on roles:saved', () => {
     beforeEach(() => {
       vi.useFakeTimers()

@@ -45,7 +45,7 @@ const saving = ref(false)
 
 const pendingChanges = ref({})
 
-const emit = defineEmits(['user:deleted', 'roles:saved'])
+const emit = defineEmits(['user:deleted', 'roles:revoked', 'roles:saved'])
 
 const ADMIN_ROLES = new Set([ROLE.PROJECT_ADMIN, ROLE.DOMAIN_ADMIN, ROLE.INSTANCE_ADMIN])
 
@@ -93,8 +93,12 @@ async function saveRoles() {
       toast.success(t('projectViewEdit.users.roleSelect.saveSuccess'))
     }
 
-    revokedUids.forEach(uid => emit('user:deleted', { uid }))
-    if (hasGranted) emit('roles:saved')
+    if (revokedUids.length > 0) {
+      emit('roles:revoked', revokedUids)
+    }
+    else if (hasGranted) {
+      emit('roles:saved')
+    }
   }
   finally {
     saving.value = false

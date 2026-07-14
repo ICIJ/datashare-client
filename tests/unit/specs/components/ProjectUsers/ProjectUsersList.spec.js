@@ -219,14 +219,14 @@ describe('ProjectUsersList.vue', () => {
       expect(api.grantUserRole).not.toHaveBeenCalled()
     })
 
-    it('saveRoles emits user:deleted for a revoked user on success', async () => {
+    it('saveRoles emits a single roles:revoked with the revoked uid on success', async () => {
       api.revokeUserRole.mockResolvedValue(undefined)
       const wrapper = mountComponent()
       const { uid } = wrapper.props('users')[0]
       await wrapper.findAllComponents(ProjectUsersRoleDropdown)[0].vm.$emit('update:modelValue', 'NO_ROLE')
       await wrapper.vm.saveRoles()
       await flushPromises()
-      expect(wrapper.emitted('user:deleted')).toEqual([[{ uid }]])
+      expect(wrapper.emitted('roles:revoked')).toEqual([[[uid]]])
     })
 
     it('saveRoles handles a mix of a role change and a revocation', async () => {
@@ -240,7 +240,19 @@ describe('ProjectUsersList.vue', () => {
       await flushPromises()
       expect(api.grantUserRole).toHaveBeenCalledWith(userA.uid, project, 'member')
       expect(api.revokeUserRole).toHaveBeenCalledWith(userB.uid, project, { ifExists: true })
-      expect(wrapper.emitted('user:deleted')).toEqual([[{ uid: userB.uid }]])
+      expect(wrapper.emitted('roles:revoked')).toEqual([[[userB.uid]]])
+    })
+
+    it('saveRoles emits a single roles:revoked event listing all revoked uids when multiple roles are revoked', async () => {
+      api.revokeUserRole.mockResolvedValue(undefined)
+      const wrapper = mountComponent()
+      const [userA, userB] = wrapper.props('users')
+      await wrapper.findAllComponents(ProjectUsersRoleDropdown)[0].vm.$emit('update:modelValue', 'NO_ROLE')
+      await wrapper.findAllComponents(ProjectUsersRoleDropdown)[1].vm.$emit('update:modelValue', 'NO_ROLE')
+      await wrapper.vm.saveRoles()
+      await flushPromises()
+      expect(wrapper.emitted('roles:revoked')).toEqual([[[userA.uid, userB.uid]]])
+      expect(wrapper.emitted('roles:saved')).toBeUndefined()
     })
   })
 
