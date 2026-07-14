@@ -10,8 +10,8 @@ describe('ProjectUsersAdminPromotionModal.vue', () => {
   let core, global
 
   const promotions = [
-    { login: 'alice@icij.org', newRole: 'PROJECT_ADMIN' },
-    { login: 'bob@icij.org', newRole: 'DOMAIN_ADMIN' }
+    { uid: 'alice@example.com', newRole: 'PROJECT_ADMIN' },
+    { uid: 'bob@example.com', newRole: 'DOMAIN_ADMIN' }
   ]
 
   beforeAll(() => {
@@ -38,6 +38,12 @@ describe('ProjectUsersAdminPromotionModal.vue', () => {
   it('renders one display-role per promotion', () => {
     const wrapper = mountComponent()
     expect(wrapper.findAllComponents(DisplayRole)).toHaveLength(promotions.length)
+  })
+
+  it('passes each promotion uid to the corresponding display-user', () => {
+    const wrapper = mountComponent()
+    const values = wrapper.findAllComponents(DisplayUser).map(c => c.props('value'))
+    expect(values).toEqual(promotions.map(p => p.uid))
   })
 
   it('emits confirm when the modal ok event fires', async () => {
