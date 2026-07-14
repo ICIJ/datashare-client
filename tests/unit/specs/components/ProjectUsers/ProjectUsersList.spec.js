@@ -144,14 +144,24 @@ describe('ProjectUsersList.vue', () => {
       expect(api.grantUserRole).toHaveBeenCalledWith(uid, project, 'member')
     })
 
-    it('saveRoles updates the user role and clears pendingChanges on success', async () => {
+    it('clears pendingChanges on success without mutating the users prop', async () => {
+      api.grantUserRole.mockResolvedValue(undefined)
+      const wrapper = mountComponent()
+      const originalRole = wrapper.props('users')[0].role
+      await wrapper.findAllComponents(ProjectUsersRoleDropdown)[0].vm.$emit('update:modelValue', 'PROJECT_MEMBER')
+      await wrapper.vm.saveRoles()
+      await flushPromises()
+      expect(wrapper.vm.pendingChanges).toEqual({})
+      expect(wrapper.props('users')[0].role).toBe(originalRole)
+    })
+
+    it('emits roles:saved when a grant succeeds, so the parent can refetch', async () => {
       api.grantUserRole.mockResolvedValue(undefined)
       const wrapper = mountComponent()
       await wrapper.findAllComponents(ProjectUsersRoleDropdown)[0].vm.$emit('update:modelValue', 'PROJECT_MEMBER')
       await wrapper.vm.saveRoles()
       await flushPromises()
-      expect(wrapper.vm.pendingChanges).toEqual({})
-      expect(wrapper.props('users')[0].role).toBe('PROJECT_MEMBER')
+      expect(wrapper.emitted('roles:saved')).toHaveLength(1)
     })
 
     it('saveRoles shows success toast on success', async () => {
@@ -163,14 +173,39 @@ describe('ProjectUsersList.vue', () => {
       expect(mockToast.success).toHaveBeenCalledOnce()
     })
 
-    it('saveRoles clears pendingChanges and shows error toast on API failure', async () => {
+    it('keeps the failed change in pendingChanges and shows error toast on API failure', async () => {
+      api.grantUserRole.mockRejectedValue(new Error('forbidden'))
+      const wrapper = mountComponent()
+      const { uid } = wrapper.props('users')[0]
+      await wrapper.findAllComponents(ProjectUsersRoleDropdown)[0].vm.$emit('update:modelValue', 'PROJECT_MEMBER')
+      await wrapper.vm.saveRoles()
+      await flushPromises()
+      expect(wrapper.vm.pendingChanges).toEqual({ [uid]: 'PROJECT_MEMBER' })
+      expect(mockToast.error).toHaveBeenCalledOnce()
+    })
+
+    it('does not emit roles:saved when all grants fail', async () => {
       api.grantUserRole.mockRejectedValue(new Error('forbidden'))
       const wrapper = mountComponent()
       await wrapper.findAllComponents(ProjectUsersRoleDropdown)[0].vm.$emit('update:modelValue', 'PROJECT_MEMBER')
       await wrapper.vm.saveRoles()
       await flushPromises()
-      expect(wrapper.vm.pendingChanges).toEqual({})
+      expect(wrapper.emitted('roles:saved')).toBeUndefined()
+    })
+
+    it('on a partial failure, clears only the succeeded change, keeps the failed one pending, and still emits roles:saved', async () => {
+      api.grantUserRole.mockResolvedValueOnce(undefined).mockRejectedValueOnce(new Error('forbidden'))
+      const wrapper = mountComponent()
+      const [userA, userB] = wrapper.props('users')
+      await wrapper.findAllComponents(ProjectUsersRoleDropdown)[0].vm.$emit('update:modelValue', 'PROJECT_MEMBER')
+      await wrapper.findAllComponents(ProjectUsersRoleDropdown)[1].vm.$emit('update:modelValue', 'PROJECT_MEMBER')
+      await wrapper.vm.saveRoles()
+      await flushPromises()
+      expect(wrapper.vm.pendingChanges).toEqual({ [userB.uid]: 'PROJECT_MEMBER' })
+      expect(userA.role).not.toBe('PROJECT_MEMBER')
       expect(mockToast.error).toHaveBeenCalledOnce()
+      expect(mockToast.success).not.toHaveBeenCalled()
+      expect(wrapper.emitted('roles:saved')).toHaveLength(1)
     })
 
     it('saveRoles calls revokeUserRole (not grantUserRole) when the pending change is NO_ROLE', async () => {

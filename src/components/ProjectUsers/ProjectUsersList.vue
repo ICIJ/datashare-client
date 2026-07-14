@@ -45,7 +45,7 @@ const saving = ref(false)
 
 const pendingChanges = ref({})
 
-const emit = defineEmits(['user:deleted'])
+const emit = defineEmits(['user:deleted', 'roles:saved'])
 
 const ADMIN_ROLES = new Set([ROLE.PROJECT_ADMIN, ROLE.DOMAIN_ADMIN, ROLE.INSTANCE_ADMIN])
 
@@ -72,27 +72,29 @@ async function saveRoles() {
   saving.value = true
   try {
     const entries = Object.entries(pendingChanges.value)
-    await Promise.all(
+    const results = await Promise.allSettled(
       entries.map(([uid, role]) =>
         role === NO_ROLE
           ? core.api.revokeUserRole(uid, props.project, { ifExists: true })
           : core.api.grantUserRole(uid, props.project, ROLE_LOWERCASE[role])
       )
     )
-    const revokedUids = entries.filter(([, role]) => role === NO_ROLE).map(([uid]) => uid)
-    entries
-      .filter(([, role]) => role !== NO_ROLE)
-      .forEach(([uid, role]) => {
-        const user = props.users.find(u => u.uid === uid)
-        if (user) user.role = role
-      })
-    pendingChanges.value = {}
-    toast.success(t('projectViewEdit.users.roleSelect.saveSuccess'))
+    const succeeded = entries.filter((_, index) => results[index].status === 'fulfilled')
+    const failed = entries.filter((_, index) => results[index].status === 'rejected')
+    const revokedUids = succeeded.filter(([, role]) => role === NO_ROLE).map(([uid]) => uid)
+    const hasGranted = succeeded.some(([, role]) => role !== NO_ROLE)
+
+    pendingChanges.value = Object.fromEntries(failed)
+
+    if (failed.length > 0) {
+      toast.error(t('projectViewEdit.users.roleSelect.saveError'))
+    }
+    else {
+      toast.success(t('projectViewEdit.users.roleSelect.saveSuccess'))
+    }
+
     revokedUids.forEach(uid => emit('user:deleted', { uid }))
-  }
-  catch {
-    pendingChanges.value = {}
-    toast.error(t('projectViewEdit.users.roleSelect.saveError'))
+    if (hasGranted) emit('roles:saved')
   }
   finally {
     saving.value = false

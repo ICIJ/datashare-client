@@ -202,6 +202,7 @@ onMounted(fetchUsers)
       :project="name"
       :loading="isLoading"
       @user:deleted="onUserDeleted"
+      @roles:saved="fetchUsers"
     />
   </div>
 </template>

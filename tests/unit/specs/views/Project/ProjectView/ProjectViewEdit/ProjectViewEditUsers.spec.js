@@ -295,4 +295,26 @@ describe('ProjectViewEditUsers.vue', () => {
       expect(api.getUsers).toHaveBeenCalledWith(expect.objectContaining({ from: 10 }))
     })
   })
+
+  describe('refetch on roles:saved', () => {
+    beforeEach(() => {
+      vi.useFakeTimers()
+    })
+
+    afterEach(() => {
+      vi.useRealTimers()
+    })
+
+    it('refetches users when ProjectUsersList emits roles:saved', async () => {
+      api.getUsers.mockResolvedValue(usersResponse)
+      const wrapper = shallowMountComponent()
+      await vi.runAllTimersAsync()
+
+      api.getUsers.mockClear()
+      wrapper.findComponent(ProjectUsersList).vm.$emit('roles:saved')
+      await vi.runAllTimersAsync()
+
+      expect(api.getUsers).toHaveBeenCalledOnce()
+    })
+  })
 })
