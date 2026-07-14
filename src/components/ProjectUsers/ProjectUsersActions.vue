@@ -6,7 +6,7 @@ import { HapticCopy } from '@icij/murmur'
 import IPhTrash from '~icons/ph/trash'
 
 import ButtonRowAction from '@/components/Button/ButtonRowAction/ButtonRowAction.vue'
-import ProjectUsersDeleteModal from '@/components/ProjectUsers/ProjectUsersDeleteModal.vue'
+import ProjectViewEditUsersDeleteModal from '@/views/Project/ProjectView/ProjectViewEdit/ProjectViewEditUsersDeleteModal.vue'
 
 defineProps({
   user: {
@@ -56,7 +56,7 @@ function onUserDeleted({ uid }) {
       :disabled="disableDelete"
       @click="showDeleteModal = true"
     />
-    <project-users-delete-modal
+    <project-view-edit-users-delete-modal
       v-if="!hideDelete && !disableDelete"
       v-model="showDeleteModal"
       :user="user"

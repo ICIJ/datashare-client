@@ -1,14 +1,19 @@
 import { shallowMount } from '@vue/test-utils'
 
-import CoreSetup from '~tests/unit/CoreSetup'
-import ProjectUsersCreateModal from '@/components/ProjectUsers/ProjectUsersCreateModal.vue'
+import CoreSetup from '~tests/unit/CoreSetup.js'
+import ProjectViewEditUsersCreateModal from '@/views/Project/ProjectView/ProjectViewEdit/ProjectViewEditUsersCreateModal.vue'
 
 const mockToast = { error: vi.fn(), success: vi.fn() }
 vi.mock('@/composables/useToast', () => ({
   useToast: () => ({ toast: mockToast })
 }))
 
-describe('ProjectUsersCreateModal.vue', () => {
+const mockApi = { createUser: vi.fn(), grantUserRole: vi.fn() }
+vi.mock('@/composables/useCore', () => ({
+  useCore: () => ({ api: mockApi })
+}))
+
+describe('ProjectViewEditUsersCreateModal.vue', () => {
   let core, global
 
   const project = 'local-datashare'
@@ -19,12 +24,14 @@ describe('ProjectUsersCreateModal.vue', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
+    mockApi.createUser.mockResolvedValue(undefined)
+    mockApi.grantUserRole.mockResolvedValue(undefined)
     core.createPinia()
     global = { plugins: core.plugins }
   })
 
   function mountComponent(props = {}) {
-    return shallowMount(ProjectUsersCreateModal, {
+    return shallowMount(ProjectViewEditUsersCreateModal, {
       global: { ...global, renderStubDefaultSlot: true },
       props: { project, modelValue: true, ...props }
     })
@@ -99,7 +106,7 @@ describe('ProjectUsersCreateModal.vue', () => {
     expect(wrapper.vm.passwordMismatch).toBe(true)
   })
 
-  it('emits user:created with the full user payload, closes modal, resets form on success', async () => {
+  it('calls createUser and grantUserRole, emits user:created, closes modal, resets form and shows a success toast', async () => {
     const wrapper = mountComponent()
     stubFormValidity(wrapper, true)
     wrapper.vm.username = 'alice'
@@ -108,22 +115,55 @@ describe('ProjectUsersCreateModal.vue', () => {
     wrapper.vm.password = 'secret'
     wrapper.vm.confirmPassword = 'secret'
     await wrapper.vm.saveUser()
-    expect(wrapper.emitted('user:created')).toEqual([
-      [
-        {
-          uid: 'alice',
-          email: 'alice@example.org',
-          name: 'Alice',
-          password: 'secret',
-          domain: 'default',
-          index: project,
-          role: 'member'
-        }
-      ]
-    ])
+    expect(mockApi.createUser).toHaveBeenCalledWith({
+      uid: 'alice',
+      email: 'alice@example.org',
+      name: 'Alice',
+      provider: 'external',
+      password: 'secret',
+      domain: 'default',
+      index: project
+    })
+    expect(mockApi.grantUserRole).toHaveBeenCalledWith('alice', project, 'member')
+    expect(wrapper.emitted('user:created')).toEqual([[{ uid: 'alice' }]])
     expect(wrapper.emitted('update:modelValue')).toEqual([[false]])
     expect(wrapper.vm.username).toBe('')
     expect(wrapper.vm.password).toBe('')
+    expect(mockToast.success).toHaveBeenCalledOnce()
+  })
+
+  it('does not emit user:created, close, reset, or toast success when createUser fails with a conflict', async () => {
+    mockApi.createUser.mockRejectedValue({ response: { status: 409 } })
+    const wrapper = mountComponent()
+    stubFormValidity(wrapper, true)
+    wrapper.vm.username = 'alice'
+    wrapper.vm.email = 'alice@example.org'
+    wrapper.vm.name = 'Alice'
+    wrapper.vm.password = 'secret'
+    wrapper.vm.confirmPassword = 'secret'
+    await wrapper.vm.saveUser()
+    expect(mockApi.grantUserRole).not.toHaveBeenCalled()
+    expect(wrapper.emitted('user:created')).toBeFalsy()
+    expect(wrapper.emitted('update:modelValue')).toBeFalsy()
+    expect(wrapper.vm.username).toBe('alice')
+    expect(mockToast.success).not.toHaveBeenCalled()
+    expect(mockToast.error).toHaveBeenCalledOnce()
+  })
+
+  it('shows the generic error toast when grantUserRole fails with a non-conflict error', async () => {
+    mockApi.grantUserRole.mockRejectedValue({ response: { status: 500 } })
+    const wrapper = mountComponent()
+    stubFormValidity(wrapper, true)
+    wrapper.vm.username = 'alice'
+    wrapper.vm.email = 'alice@example.org'
+    wrapper.vm.name = 'Alice'
+    wrapper.vm.password = 'secret'
+    wrapper.vm.confirmPassword = 'secret'
+    await wrapper.vm.saveUser()
+    expect(wrapper.emitted('user:created')).toBeFalsy()
+    expect(wrapper.emitted('update:modelValue')).toBeFalsy()
+    expect(mockToast.success).not.toHaveBeenCalled()
+    expect(mockToast.error).toHaveBeenCalledOnce()
   })
 
   it('saveUser does not emit user:created when the form is invalid', async () => {

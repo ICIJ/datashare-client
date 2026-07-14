@@ -12,6 +12,7 @@ import imageDark from '@/assets/images/illustrations/app-modal-default-dark.svg'
 import AppModal from '@/components/AppModal/AppModal.vue'
 import ProjectUsersRoleDropdown from '@/components/ProjectUsers/ProjectUsersRoleDropdown.vue'
 
+import { useCore } from '@/composables/useCore.js'
 import { useToast } from '@/composables/useToast.js'
 import { DEFAULT_ROLE, ROLE_ICON_DEFAULT, ROLE_LOWERCASE } from '@/enums/roles.js'
 import FormFieldsetI18n from '@/components/Form/FormFieldset/FormFieldsetI18n.vue'
@@ -29,6 +30,7 @@ const props = defineProps({
 const modelValue = defineModel({ type: Boolean })
 const emit = defineEmits(['user:created'])
 
+const core = useCore()
 const { toast } = useToast()
 const { t } = useI18n()
 
@@ -73,15 +75,19 @@ async function saveUser(bvModalEvent) {
   }
   saving.value = true
   try {
-    emit('user:created', {
-      uid: username.value.trim(),
+    const uid = username.value.trim()
+    await core.api.createUser({
+      uid,
       email: email.value.trim(),
       name: name.value.trim(),
+      provider: 'external',
       password: password.value,
       domain: DEFAULT_DOMAIN,
-      index: props.project,
-      role: ROLE_LOWERCASE[selectedRole.value]
+      index: props.project
     })
+    await core.api.grantUserRole(uid, props.project, ROLE_LOWERCASE[selectedRole.value])
+    toast.success(t('projectViewEdit.users.create.saveSuccess'))
+    emit('user:created', { uid })
     resetForm()
     modelValue.value = false
   }

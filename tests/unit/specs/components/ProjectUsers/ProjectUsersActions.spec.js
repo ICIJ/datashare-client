@@ -2,7 +2,7 @@ import { shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import ProjectUsersActions from '@/components/ProjectUsers/ProjectUsersActions.vue'
-import ProjectUsersDeleteModal from '@/components/ProjectUsers/ProjectUsersDeleteModal.vue'
+import ProjectViewEditUsersDeleteModal from '@/views/Project/ProjectView/ProjectViewEdit/ProjectViewEditUsersDeleteModal.vue'
 
 describe('ProjectUsersActions.vue', () => {
   let core, global
@@ -41,14 +41,14 @@ describe('ProjectUsersActions.vue', () => {
 
   it('delete button opens the delete modal', async () => {
     const wrapper = mountComponent()
-    expect(wrapper.findComponent(ProjectUsersDeleteModal).props('modelValue')).toBe(false)
+    expect(wrapper.findComponent(ProjectViewEditUsersDeleteModal).props('modelValue')).toBe(false)
     await wrapper.find('button-row-action-stub').trigger('click')
-    expect(wrapper.findComponent(ProjectUsersDeleteModal).props('modelValue')).toBe(true)
+    expect(wrapper.findComponent(ProjectViewEditUsersDeleteModal).props('modelValue')).toBe(true)
   })
 
   it('forwards user:deleted from the modal', async () => {
     const wrapper = mountComponent()
-    await wrapper.findComponent(ProjectUsersDeleteModal).trigger('user:deleted', { uid: user.uid })
+    await wrapper.findComponent(ProjectViewEditUsersDeleteModal).trigger('user:deleted', { uid: user.uid })
     expect(wrapper.emitted('user:deleted')).toEqual([[{ uid: user.uid }]])
   })
 
@@ -74,21 +74,21 @@ describe('ProjectUsersActions.vue', () => {
 
   it('mounts the delete modal when the delete button is neither hidden nor disabled', () => {
     const wrapper = mountComponent({ hideDelete: false, disableDelete: false })
-    expect(wrapper.findComponent(ProjectUsersDeleteModal).exists()).toBe(true)
+    expect(wrapper.findComponent(ProjectViewEditUsersDeleteModal).exists()).toBe(true)
   })
 
   it('does not mount the delete modal when hideDelete is true', () => {
     const wrapper = mountComponent({ hideDelete: true, disableDelete: false })
-    expect(wrapper.findComponent(ProjectUsersDeleteModal).exists()).toBe(false)
+    expect(wrapper.findComponent(ProjectViewEditUsersDeleteModal).exists()).toBe(false)
   })
 
   it('does not mount the delete modal when disableDelete is true', () => {
     const wrapper = mountComponent({ hideDelete: false, disableDelete: true })
-    expect(wrapper.findComponent(ProjectUsersDeleteModal).exists()).toBe(false)
+    expect(wrapper.findComponent(ProjectViewEditUsersDeleteModal).exists()).toBe(false)
   })
 
   it('does not mount the delete modal when both hideDelete and disableDelete are true', () => {
     const wrapper = mountComponent({ hideDelete: true, disableDelete: true })
-    expect(wrapper.findComponent(ProjectUsersDeleteModal).exists()).toBe(false)
+    expect(wrapper.findComponent(ProjectViewEditUsersDeleteModal).exists()).toBe(false)
   })
 })

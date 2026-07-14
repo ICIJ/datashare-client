@@ -1,7 +1,7 @@
 import { shallowMount, flushPromises } from '@vue/test-utils'
 
-import CoreSetup from '~tests/unit/CoreSetup'
-import ProjectUsersDeleteModal from '@/components/ProjectUsers/ProjectUsersDeleteModal.vue'
+import CoreSetup from '~tests/unit/CoreSetup.js'
+import ProjectViewEditUsersDeleteModal from '@/views/Project/ProjectView/ProjectViewEdit/ProjectViewEditUsersDeleteModal.vue'
 import { apiInstance as api } from '@/api/apiInstance.js'
 
 vi.mock('@/api/apiInstance', () => ({
@@ -28,7 +28,7 @@ vi.mock('@/composables/useCore', () => ({
 
 import { apiInstance } from '@/api/apiInstance.js'
 
-describe('ProjectUsersDeleteModal.vue', () => {
+describe('ProjectViewEditUsersDeleteModal.vue', () => {
   let core, global
 
   const user = { uid: 'alice@icij.org', role: 'PROJECT_ADMIN' }
@@ -47,7 +47,7 @@ describe('ProjectUsersDeleteModal.vue', () => {
   })
 
   function mountComponent(props = {}) {
-    return shallowMount(ProjectUsersDeleteModal, {
+    return shallowMount(ProjectViewEditUsersDeleteModal, {
       global,
       props: { user, project, modelValue: true, ...props }
     })

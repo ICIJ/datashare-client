@@ -1506,6 +1506,7 @@
         "button": "Create user",
         "title": "Create a user",
         "confirm": "Create",
+        "saveSuccess": "User created successfully.",
         "saveError": "Failed to create user. Please try again.",
         "saveErrorConflict": "A user with this username already exists.",
         "fields": {
