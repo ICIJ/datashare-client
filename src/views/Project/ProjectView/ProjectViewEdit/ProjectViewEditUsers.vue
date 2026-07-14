@@ -157,7 +157,8 @@ function onUserDeleted() {
 }
 
 function onRolesRevoked(uids) {
-  if (page.value > 1 && users.value.length === uids.length) {
+  const revokedUsersDroppedFromList = !isAuthWithUsersProvider.value
+  if (revokedUsersDroppedFromList && page.value > 1 && users.value.length === uids.length) {
     page.value -= 1
   }
   else {

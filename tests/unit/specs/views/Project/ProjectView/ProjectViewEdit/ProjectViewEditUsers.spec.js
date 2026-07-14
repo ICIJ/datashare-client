@@ -350,6 +350,25 @@ describe('ProjectViewEditUsers.vue', () => {
       expect(wrapper.findComponent(RowPaginationUsers).attributes('page')).toBe('2')
       expect(api.getUsers).toHaveBeenCalledWith(expect.objectContaining({ from: 10 }))
     })
+
+    it('does not step back a page with a users-provider auth, since revoked users stay listed with NO_ROLE', async () => {
+      core.config.set('auth', 'form')
+      api.getUsers.mockResolvedValue(usersResponse)
+      const wrapper = shallowMountComponent()
+      await vi.runAllTimersAsync()
+
+      api.getUsers.mockResolvedValueOnce(usersResponse)
+      wrapper.findComponent(RowPaginationUsers).vm.$emit('update:page', 2)
+      await vi.runAllTimersAsync()
+
+      api.getUsers.mockClear()
+      api.getUsers.mockResolvedValue(usersResponse)
+      wrapper.findComponent(ProjectUsersList).vm.$emit('roles:revoked', ['alice@example.org', 'bob@example.org'])
+      await vi.runAllTimersAsync()
+
+      expect(wrapper.findComponent(RowPaginationUsers).attributes('page')).toBe('2')
+      expect(api.getUsers).toHaveBeenCalledWith(expect.objectContaining({ from: 10 }))
+    })
   })
 
   describe('refetch on roles:saved', () => {
