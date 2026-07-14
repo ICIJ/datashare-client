@@ -1324,7 +1324,7 @@
     "updatedOn": "Modifié le",
     "links": "Liens",
     "actions": "Actions",
-    "userRoles": "Your role"
+    "userRole": "Your role"
   },
   "projectRowActions": {
     "edit": "Modifier le projet",
