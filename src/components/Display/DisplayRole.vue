@@ -11,7 +11,7 @@ import IPhPersonSimpleSwim from '~icons/ph/person-simple-swim'
 import IPhPersonSimpleTaiChi from '~icons/ph/person-simple-tai-chi'
 
 import { usePolicies } from '@/composables/usePolicies.js'
-import { ROLE, ROLE_ICON_DEFAULT } from '@/enums/roles.js'
+import { ROLE, ROLE_ICON_DEFAULT, NO_ROLE } from '@/enums/roles.js'
 
 const ROLE_ICON = {
   [ROLE.INSTANCE_ADMIN]: markRaw(IPhPersonSimpleBike),
@@ -20,7 +20,7 @@ const ROLE_ICON = {
   [ROLE.PROJECT_EDITOR]: markRaw(IPhPersonSimpleHike),
   [ROLE.PROJECT_MEMBER]: markRaw(IPhPersonSimpleSwim),
   [ROLE.PROJECT_VISITOR]: markRaw(IPhPersonSimpleTaiChi),
-  [ROLE.NO_ROLE]: ROLE_ICON_DEFAULT,
+  [NO_ROLE]: ROLE_ICON_DEFAULT,
 }
 
 const ROLE_COLOR = {

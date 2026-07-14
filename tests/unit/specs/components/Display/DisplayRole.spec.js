@@ -3,6 +3,7 @@ import { AppIcon } from '@icij/murmur'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import DisplayRole from '@/components/Display/DisplayRole.vue'
+import { NO_ROLE } from '@/enums/roles.js'
 import IPhPersonSimpleBike from '~icons/ph/person-simple-bike'
 import IPhPersonSimpleRun from '~icons/ph/person-simple-run'
 import IPhPersonSimpleWalk from '~icons/ph/person-simple-walk'
@@ -34,6 +35,12 @@ describe('DisplayRole.vue', () => {
     const wrapper = shallowMount(DisplayRole, { global, props: { value: role } })
     expect(wrapper.vm.icon).toBe(expectedIcon)
     expect(wrapper.vm.iconStyle).toEqual({ color: expectedColor })
+  })
+
+  it('renders user-square icon with inherit color for NO_ROLE', () => {
+    const wrapper = shallowMount(DisplayRole, { global, props: { value: NO_ROLE } })
+    expect(wrapper.vm.icon).toBe(IPhUserSquare)
+    expect(wrapper.vm.iconStyle).toEqual({ color: 'inherit' })
   })
 
   it('falls back to user-square icon with inherit color for unknown role', () => {
