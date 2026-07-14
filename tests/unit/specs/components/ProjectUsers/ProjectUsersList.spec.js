@@ -266,6 +266,17 @@ describe('ProjectUsersList.vue', () => {
     })
   })
 
+  describe('Username resolution race condition', () => {
+    it('disables the role dropdown and delete action for every row until the username resolves', async () => {
+      const wrapper = mountComponent()
+      expect(wrapper.findAllComponents(ProjectUsersRoleDropdown)[0].props('disabled')).toBe(true)
+      expect(wrapper.findAllComponents(ProjectUsersActions)[0].props('disableDelete')).toBe(true)
+      await flushPromises()
+      expect(wrapper.findAllComponents(ProjectUsersRoleDropdown)[0].props('disabled')).toBe(false)
+      expect(wrapper.findAllComponents(ProjectUsersActions)[0].props('disableDelete')).toBe(false)
+    })
+  })
+
   describe('Admin promotion modal', () => {
     it('onSaveClicked opens admin modal when a pending change promotes to an admin role', async () => {
       // users[0] is PROJECT_EDITOR; promoting to PROJECT_ADMIN triggers the modal

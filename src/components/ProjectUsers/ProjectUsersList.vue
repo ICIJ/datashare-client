@@ -137,9 +137,9 @@ const emptyLabel = computed(() =>
 function onUserDeleted({ uid }) {
   emit('user:deleted', { uid })
 }
-const { username, isAuthWithUsersProvider } = useAuth()
+const { username, isUsernameResolved, isAuthWithUsersProvider } = useAuth()
 function isCurrentUser(uid) {
-  return username.value === uid
+  return !isUsernameResolved.value || username.value === uid
 }
 
 defineExpose({ pendingChanges, saving, showAdminModal, saveRoles, cancelChanges, onSaveClicked })
