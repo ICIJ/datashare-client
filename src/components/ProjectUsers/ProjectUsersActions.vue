@@ -57,7 +57,7 @@ function onUserDeleted({ uid }) {
       @click="showDeleteModal = true"
     />
     <project-users-delete-modal
-      v-if="!hideDelete || disableDelete"
+      v-if="!hideDelete && !disableDelete"
       v-model="showDeleteModal"
       :user="user"
       :project="project"

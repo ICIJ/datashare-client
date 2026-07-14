@@ -71,4 +71,24 @@ describe('ProjectUsersActions.vue', () => {
     const wrapper = mountComponent({ hideDelete: true })
     expect(wrapper.findAll('button-row-action-stub')).toHaveLength(0)
   })
+
+  it('mounts the delete modal when the delete button is neither hidden nor disabled', () => {
+    const wrapper = mountComponent({ hideDelete: false, disableDelete: false })
+    expect(wrapper.findComponent(ProjectUsersDeleteModal).exists()).toBe(true)
+  })
+
+  it('does not mount the delete modal when hideDelete is true', () => {
+    const wrapper = mountComponent({ hideDelete: true, disableDelete: false })
+    expect(wrapper.findComponent(ProjectUsersDeleteModal).exists()).toBe(false)
+  })
+
+  it('does not mount the delete modal when disableDelete is true', () => {
+    const wrapper = mountComponent({ hideDelete: false, disableDelete: true })
+    expect(wrapper.findComponent(ProjectUsersDeleteModal).exists()).toBe(false)
+  })
+
+  it('does not mount the delete modal when both hideDelete and disableDelete are true', () => {
+    const wrapper = mountComponent({ hideDelete: true, disableDelete: true })
+    expect(wrapper.findComponent(ProjectUsersDeleteModal).exists()).toBe(false)
+  })
 })
