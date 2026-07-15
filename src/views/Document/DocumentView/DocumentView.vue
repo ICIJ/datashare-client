@@ -7,6 +7,7 @@ import { useElementSize, useScroll, useWindowSize } from '@vueuse/core'
 
 import IPhTextAlignLeft from '~icons/ph/text-align-left'
 import IPhFile from '~icons/ph/file'
+import IPhHeadphones from '~icons/ph/headphones'
 import IPhInfo from '~icons/ph/info'
 import IPhUsersThree from '~icons/ph/users-three'
 
@@ -79,6 +80,8 @@ replaceUrlParamValue({ name: 'tab', oldValue: 'named-entities', newValue: 'entit
 // Each tab is associated with a component that is dynamically imported when the tab is activated.
 // The "tab" route query parameter is used to determine which tab is currently active.
 // This approach allows us to maintain the active tab state in the URL, enabling deep linking and bookmarking of specific tabs.
+const isAudioVideo = computed(() => document.value?.isAudio || document.value?.isVideo)
+
 const tabs = computed(() => {
   return [
     {
@@ -88,9 +91,9 @@ const tabs = computed(() => {
       tab: 'text'
     },
     {
-      title: t('documentViewTabs.viewer'),
+      title: isAudioVideo.value ? t('documentViewTabs.play') : t('documentViewTabs.viewer'),
       component: () => import('@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsViewer.vue'),
-      icon: IPhFile,
+      icon: isAudioVideo.value ? IPhHeadphones : IPhFile,
       tab: 'viewer'
     },
     {
