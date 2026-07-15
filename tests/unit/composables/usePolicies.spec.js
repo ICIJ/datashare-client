@@ -46,6 +46,22 @@ describe('usePolicies', () => {
     expect(isProjectAdmin('unknown')).toBe(false)
   })
 
+  it('isInstanceAdmin returns false when the user is only a project admin', () => {
+    const { isInstanceAdmin } = usePolicies()
+    expect(isInstanceAdmin()).toBe(false)
+  })
+
+  it('isInstanceAdmin returns true when the user holds an INSTANCE_ADMIN policy', () => {
+    configGet = vi.fn((key, fallback) =>
+      key === 'policies'
+        ? [{ projectId: '*', domainId: '*', role: 'INSTANCE_ADMIN' }]
+        : fallback
+    )
+    vi.spyOn(useConfigModule, 'useConfig').mockReturnValue({ get: configGet })
+    const { isInstanceAdmin } = usePolicies()
+    expect(isInstanceAdmin()).toBe(true)
+  })
+
   it('check role hierarchy with bit to see if a role has at least PROJECT_EDITOR capability', () => {
     const { hasRole } = usePolicies()
     expect(hasRole(ROLE.PROJECT_ADMIN, ROLE.PROJECT_EDITOR)).toBe(true)// true

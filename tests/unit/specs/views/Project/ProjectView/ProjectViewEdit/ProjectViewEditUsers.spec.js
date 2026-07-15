@@ -77,6 +77,39 @@ describe('ProjectViewEditUsers.vue', () => {
     expect(wrapper.findComponent(ProjectUsersList).exists()).toBe(true)
   })
 
+  describe('Create user control visibility', () => {
+    const INSTANCE_ADMIN_POLICIES = [{ projectId: '*', domainId: '*', role: 'INSTANCE_ADMIN' }]
+    const PROJECT_ADMIN_POLICIES = [{ projectId: 'local-datashare', domainId: 'default', role: 'PROJECT_ADMIN' }]
+
+    function mountWithSlots() {
+      return shallowMount(ProjectViewEditUsers, {
+        global: { plugins: core.plugins, renderStubDefaultSlot: true },
+        props
+      })
+    }
+
+    it('shows the create button for an instance admin using a users-provider auth', () => {
+      core.config.set('auth', 'form')
+      core.config.set('policies', INSTANCE_ADMIN_POLICIES)
+      const wrapper = mountWithSlots()
+      expect(wrapper.text()).toContain(core.i18n.global.t('projectViewEdit.users.create.button'))
+    })
+
+    it('hides the create button from a project admin who is not an instance admin', () => {
+      core.config.set('auth', 'form')
+      core.config.set('policies', PROJECT_ADMIN_POLICIES)
+      const wrapper = mountWithSlots()
+      expect(wrapper.text()).not.toContain(core.i18n.global.t('projectViewEdit.users.create.button'))
+    })
+
+    it('hides the create button when auth is not a users-provider even for an instance admin', () => {
+      core.config.set('auth', 'oauth')
+      core.config.set('policies', INSTANCE_ADMIN_POLICIES)
+      const wrapper = mountWithSlots()
+      expect(wrapper.text()).not.toContain(core.i18n.global.t('projectViewEdit.users.create.button'))
+    })
+  })
+
   it('maps getUsers items to { uid, name, email } and extracts role from permissions', async () => {
     api.getUsers.mockResolvedValue(usersResponse)
     const wrapper = shallowMountComponent()

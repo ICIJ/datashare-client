@@ -10,6 +10,7 @@ import ProjectUsersAdminPromotionModal from '@/components/ProjectUsers/ProjectUs
 import ProjectUsersRoleDropdown from '@/components/ProjectUsers/ProjectUsersRoleDropdown.vue'
 
 import { useCore } from '@/composables/useCore.js'
+import { usePolicies } from '@/composables/usePolicies.js'
 import { useToast } from '@/composables/useToast.js'
 import { NO_ROLE, ROLE, ROLE_BIT, ROLE_LOWERCASE } from '@/enums/roles.js'
 import ButtonReset from '@/components/Button/ButtonReset'
@@ -138,6 +139,10 @@ function onUserDeleted({ uid }) {
   emit('user:deleted', { uid })
 }
 const { username, isUsernameResolved, isAuthWithUsersProvider } = useAuth()
+const { isInstanceAdmin } = usePolicies()
+// Deleting a user account removes it from every project (see the delete modal's warning) and the
+// backend requires INSTANCE_ADMIN, so hide the action from project admins who are not instance admins.
+const canDeleteUsers = computed(() => isAuthWithUsersProvider.value && isInstanceAdmin())
 function isCurrentUser(uid) {
   return !isUsernameResolved.value || username.value === uid
 }
@@ -177,7 +182,7 @@ defineExpose({ pendingChanges, saving, showAdminModal, saveRoles, cancelChanges,
           :user="item"
           :project="project"
           :disable-delete="isCurrentUser(item.uid)"
-          :hide-delete="!isAuthWithUsersProvider"
+          :hide-delete="!canDeleteUsers"
           @user:deleted="onUserDeleted"
         />
       </template>

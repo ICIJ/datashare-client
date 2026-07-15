@@ -6,6 +6,7 @@ import { debounce, isEqual } from 'lodash'
 import ProjectUsersList from '@/components/ProjectUsers/ProjectUsersList.vue'
 import RowPaginationUsers from '@/components/RowPagination/RowPaginationUsers.vue'
 import { useAuth } from '@/composables/useAuth.js'
+import { usePolicies } from '@/composables/usePolicies.js'
 import { useToast } from '@/composables/useToast.js'
 import { useUrlParamWithStore } from '@/composables/useUrlParamWithStore.js'
 import { useUrlParamsWithStore } from '@/composables/useUrlParamsWithStore.js'
@@ -29,6 +30,10 @@ const props = defineProps({
 const { toastedPromise } = useToast()
 const { t } = useI18n()
 const { isAuthWithUsersProvider } = useAuth()
+const { isInstanceAdmin } = usePolicies()
+// Creating a user account is an instance-wide operation (the backend requires INSTANCE_ADMIN),
+// so only expose the control to instance admins.
+const canManageUsers = computed(() => isAuthWithUsersProvider.value && isInstanceAdmin())
 const appStore = useAppStore()
 const { waitFor, isLoading, start, loaderId } = useWait()
 
@@ -155,7 +160,7 @@ onMounted(fetchUsers)
   <div class="project-view-edit-users p-4">
     <div class="d-flex flex-column gap-2 mb-3">
       <div
-        v-if="isAuthWithUsersProvider"
+        v-if="canManageUsers"
         class="d-flex justify-content-end"
       >
         <button-icon
