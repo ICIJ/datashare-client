@@ -5,7 +5,6 @@ import image from '@/assets/images/illustrations/app-modal-default-light.svg'
 import imageDark from '@/assets/images/illustrations/app-modal-default-dark.svg'
 import AppModal from '@/components/AppModal/AppModal.vue'
 
-import { useAuth } from '@/composables/useAuth.js'
 import { useCore } from '@/composables/useCore.js'
 import { useToast } from '@/composables/useToast.js'
 import { computed } from 'vue'
@@ -28,7 +27,6 @@ const emit = defineEmits(['user:deleted'])
 const core = useCore()
 const { toast } = useToast()
 const { t } = useI18n()
-const { isAuthWithUsersProvider } = useAuth()
 const deletionSuccessMessage = computed(() => t('projectViewEdit.users.actions.deleteModal.success'))
 const deletionErrorMessage = computed(() => t('projectViewEdit.users.actions.deleteModal.error'))
 const deleteModalTitle = computed(() => t('projectViewEdit.users.actions.deleteModal.title', { name: props.user.uid }))
@@ -36,12 +34,7 @@ const deleteModalTitle = computed(() => t('projectViewEdit.users.actions.deleteM
 const DEFAULT_DOMAIN = 'default'
 async function confirmDeletion() {
   try {
-    if (isAuthWithUsersProvider.value) {
-      await core.api.deleteUser(props.user.uid, { domain: DEFAULT_DOMAIN, index: props.project })
-    }
-    else {
-      await core.api.revokeUserRole(props.user.uid, props.project)
-    }
+    await core.api.deleteUser(props.user.uid, { domain: DEFAULT_DOMAIN, index: props.project })
     emit('user:deleted', { uid: props.user.uid })
     modelValue.value = false
     toast.success(deletionSuccessMessage.value)
@@ -51,7 +44,7 @@ async function confirmDeletion() {
   }
 }
 
-defineExpose({ confirmDeletion, isAuthWithUsersProvider })
+defineExpose({ confirmDeletion })
 </script>
 
 <template>

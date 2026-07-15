@@ -6,7 +6,6 @@ import { apiInstance as api } from '@/api/apiInstance.js'
 
 vi.mock('@/api/apiInstance', () => ({
   apiInstance: {
-    revokeUserRole: vi.fn(),
     deleteUser: vi.fn()
   }
 }))
@@ -59,65 +58,29 @@ describe('ProjectViewEditUsersDeleteModal.vue', () => {
     expect(wrapper.props('user')).toEqual(user)
   })
 
-  describe('form/basic auth mode (password provider)', () => {
-    it('calls deleteUser with the user id on confirm', async () => {
-      api.deleteUser.mockResolvedValue(undefined)
-      const wrapper = mountComponent()
-      await wrapper.vm.confirmDeletion()
-      await flushPromises()
-      expect(api.deleteUser).toHaveBeenCalledWith(user.uid, { domain: 'default', index: project })
-      expect(api.revokeUserRole).not.toHaveBeenCalled()
-    })
-
-    it('emits user:deleted and closes modal on success', async () => {
-      api.deleteUser.mockResolvedValue(undefined)
-      const wrapper = mountComponent()
-      await wrapper.vm.confirmDeletion()
-      await flushPromises()
-      expect(wrapper.emitted('user:deleted')).toEqual([[{ uid: user.uid }]])
-      expect(wrapper.emitted('update:modelValue')).toEqual([[false]])
-    })
-
-    it('shows error toast and keeps modal open on failure', async () => {
-      api.deleteUser.mockRejectedValue(new Error('forbidden'))
-      const wrapper = mountComponent()
-      await wrapper.vm.confirmDeletion()
-      await flushPromises()
-      expect(mockToast.error).toHaveBeenCalledOnce()
-      expect(wrapper.emitted('update:modelValue')).toBeFalsy()
-    })
+  it('calls deleteUser with the user id on confirm', async () => {
+    api.deleteUser.mockResolvedValue(undefined)
+    const wrapper = mountComponent()
+    await wrapper.vm.confirmDeletion()
+    await flushPromises()
+    expect(api.deleteUser).toHaveBeenCalledWith(user.uid, { domain: 'default', index: project })
   })
 
-  describe('oauth mode', () => {
-    beforeEach(() => {
-      mockConfigGet.mockImplementation(key => key === 'auth' ? 'oauth' : undefined)
-    })
+  it('emits user:deleted and closes modal on success', async () => {
+    api.deleteUser.mockResolvedValue(undefined)
+    const wrapper = mountComponent()
+    await wrapper.vm.confirmDeletion()
+    await flushPromises()
+    expect(wrapper.emitted('user:deleted')).toEqual([[{ uid: user.uid }]])
+    expect(wrapper.emitted('update:modelValue')).toEqual([[false]])
+  })
 
-    it('calls removeProjectPolicy (not deleteUser) on confirm', async () => {
-      api.revokeUserRole.mockResolvedValue(undefined)
-      const wrapper = mountComponent()
-      await wrapper.vm.confirmDeletion()
-      await flushPromises()
-      expect(api.revokeUserRole).toHaveBeenCalledWith(user.uid, project)
-      expect(api.deleteUser).not.toHaveBeenCalled()
-    })
-
-    it('emits user:deleted and closes modal on success', async () => {
-      api.revokeUserRole.mockResolvedValue(undefined)
-      const wrapper = mountComponent()
-      await wrapper.vm.confirmDeletion()
-      await flushPromises()
-      expect(wrapper.emitted('user:deleted')).toEqual([[{ uid: user.uid }]])
-      expect(wrapper.emitted('update:modelValue')).toEqual([[false]])
-    })
-
-    it('shows error toast and keeps modal open on failure', async () => {
-      api.revokeUserRole.mockRejectedValue(new Error('forbidden'))
-      const wrapper = mountComponent()
-      await wrapper.vm.confirmDeletion()
-      await flushPromises()
-      expect(mockToast.error).toHaveBeenCalledOnce()
-      expect(wrapper.emitted('update:modelValue')).toBeFalsy()
-    })
+  it('shows error toast and keeps modal open on failure', async () => {
+    api.deleteUser.mockRejectedValue(new Error('forbidden'))
+    const wrapper = mountComponent()
+    await wrapper.vm.confirmDeletion()
+    await flushPromises()
+    expect(mockToast.error).toHaveBeenCalledOnce()
+    expect(wrapper.emitted('update:modelValue')).toBeFalsy()
   })
 })
