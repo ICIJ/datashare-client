@@ -102,19 +102,34 @@ export class Api {
     return this.sendAction(`/api/project/${project}`)
   }
 
-  getProjectPolicies(domain, project, { user = null, from = 0, to = 0 } = {}) {
-    const params = omitBy({ user, from, to }, isNull)
-    return this.sendAction(`/api/policies/${domain}/${project}`, { method: Method.GET, params })
+  getUsers({ domain = 'default', index = null, q = null, sort = null, desc = null, from = 0, size = 10, noRole = true } = {}) {
+    const params = omitBy({ domain, index, q, sort, desc, from, size, noRole }, isNull)
+    return this.sendAction('/api/users', { method: Method.GET, params })
   }
 
-  removeProjectPolicy(domain, project, { user, role } = {}) {
-    const params = { user, role }
-    return this.sendActionAsText(`/api/policies/${domain}/${project}`, { method: Method.DELETE, params })
+  grantUserRole(uid, project, role) {
+    return this.sendActionAsText(
+      `/api/users/${encodeURIComponent(uid)}/index/${encodeURIComponent(project)}?role=${encodeURIComponent(role)}`,
+      { method: Method.PUT }
+    )
   }
 
-  saveProjectPolicy(domain, project, { user, role } = {}) {
-    const params = { user, role }
-    return this.sendActionAsText(`/api/policies/${domain}/${project}`, { method: Method.PUT, params })
+  revokeUserRole(uid, project, { ifExists = false } = {}) {
+    const params = { ifExists }
+    return this.sendActionAsText(`/api/users/${encodeURIComponent(uid)}/index/${encodeURIComponent(project)}`, {
+      method: Method.DELETE,
+      params
+    })
+  }
+
+  createUser({ uid, email, name, provider, password, domain, index } = {}) {
+    const data = { login: uid, email, name, provider, password, domain, index }
+    return this.sendAction('/api/users', { method: Method.POST, data })
+  }
+
+  deleteUser(uid, { domain, index } = {}) {
+    const data = { domain, index }
+    return this.sendActionAsText(`/api/users/${encodeURIComponent(uid)}`, { method: Method.DELETE, data })
   }
 
   getPathBanners(project) {

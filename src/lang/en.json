@@ -287,7 +287,8 @@
     "project_admin": "Admin",
     "project_editor":"Editor",
     "project_member": "Member",
-    "project_visitor":"Visitor"
+    "project_visitor":"Visitor",
+    "no_role": "No role"
   },
   "searchFormControl": {
     "submitLabel": "Search"
@@ -1355,7 +1356,7 @@
     "updatedOn": "Updated on",
     "links": "Links",
     "actions": "Actions",
-    "userRoles": "Your role"
+    "userRole": "Your role"
   },
   "projectRowActions": {
     "edit": "Edit project",
@@ -1405,7 +1406,8 @@
     "title": "Edit project",
     "tabs": {
       "details": "Details and documents",
-      "pathBanners": "Banners"
+      "pathBanners": "Banners",
+      "users": "Users"
     },
     "notify": {
       "update": {
@@ -1457,6 +1459,82 @@
         "delete": {
           "succeedBody": "Banner deleted.",
           "failedBody": "Failed to delete banner."
+        }
+      }
+    },
+    "users": {
+      "empty": "No users yet.",
+      "fetchError": "Failed to load users for this project.",
+      "noResults": "No users match your search.",
+      "fields": {
+        "uid": { "label": "Username" },
+        "name": { "label": "Name" },
+        "email": { "label": "Email" },
+        "role": { "label": "Role" }
+      },
+      "roleSelect": {
+        "save": "Save",
+        "cancel": "Cancel",
+        "saveSuccess": "Roles updated successfully",
+        "saveError": "Failed to update roles. Please try again.",
+        "changedCount": "0 roles changed | 1 role changed | {count} roles changed"
+      },
+      "adminPromotionModal": {
+        "title": "Confirm admin promotions",
+        "body": "The following users will be granted administrator access:",
+        "confirm": "Confirm",
+        "cancel": "Cancel"
+      },
+      "actions": {
+        "copy": "Copy username",
+        "delete": "Delete user",
+        "deleteModal": {
+          "title": "Delete user '{name}' ?",
+          "body": {
+            "intro": "This action cannot be undone. Deleting this user will:",
+            "accessRevoked": "revoke their access to {allProjects};",
+            "dataDeleted": "delete all their personal data (stars, history, tags, saved searches etc.) across {allProjects};",
+            "tasksDeleted": "not delete their tasks and results.",
+            "allProjects": "all projects"
+          },
+          "confirm": "Delete user",
+          "success": "User deleted successfully",
+          "error": "Failed to remove user. Please try again."
+        }
+      },
+      "create": {
+        "button": "Create user",
+        "title": "Create a user",
+        "confirm": "Create",
+        "saveSuccess": "User created successfully.",
+        "saveError": "Failed to create user. Please try again.",
+        "saveErrorConflict": "A user with this username already exists.",
+        "fields": {
+          "username": {
+            "label": "Username",
+            "placeholder": "Type username"
+          },
+          "email": {
+            "label": "Email",
+            "placeholder": "Type email address"
+          },
+          "name": {
+            "label": "Display name",
+            "placeholder": "Type display name"
+          },
+          "password": {
+            "label": "Password",
+            "placeholder": "Type password"
+          },
+          "confirmPassword": {
+            "label": "Confirm password",
+            "placeholder": "Confirm password",
+            "mismatch": "Passwords do not match."
+          },
+          "role": {
+            "label": "Role",
+            "inProject": "in {project}"
+          }
         }
       }
     }
@@ -2088,6 +2166,11 @@
     "rowRange": "to {to} of 0 tasks | to {to} of 1 task | to {to} of {total} tasks",
     "rowRangeFewer": "of 0 tasks | of 1 task | to {total} tasks",
     "rowRangeCompact": "of 0 tasks | of 1 task | of {total} tasks"
+  },
+  "rowPaginationUsers": {
+    "rowRange": "to {to} of 0 users | to {to} of 1 user | to {to} of {total} users",
+    "rowRangeFewer": "of 0 users | of 1 user | to {total} users",
+    "rowRangeCompact": "of 0 users | of 1 user | of {total} users"
   },
   "themes": {
     "dark": "Dark mode",

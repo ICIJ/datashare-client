@@ -502,56 +502,69 @@ describe('Datashare backend client', () => {
     )
   })
 
-  describe('project policies', () => {
-    it('should call getProjectPolicies with domain and project', async () => {
-      await api.getProjectPolicies('local', 'my-project')
+  describe('getUsers', () => {
+    it('sends the search text as "q" and the project as "index"', async () => {
+      await api.getUsers({ index: 'my-project', q: 'alice' })
       expect(axios.request).toBeCalledWith(
         expect.objectContaining({
-          url: Api.getFullUrl('/api/policies/local/my-project'),
+          url: Api.getFullUrl('/api/users'),
           method: 'GET',
-          params: { from: 0, to: 0 }
+          params: expect.objectContaining({ q: 'alice', index: 'my-project' })
         })
       )
+      expect(axios.request.mock.calls[0][0].params).not.toHaveProperty('user')
+      expect(axios.request.mock.calls[0][0].params).not.toHaveProperty('project')
     })
+  })
 
-    it('should pass user filter to getProjectPolicies', async () => {
-      await api.getProjectPolicies('local', 'my-project', { user: 'alice' })
+  describe('project policies', () => {
+    it('should call revokeUserRole with userId (uid), project and ifExists', async () => {
+      await api.revokeUserRole('alice', 'my-project', { ifExists: true })
       expect(axios.request).toBeCalledWith(
         expect.objectContaining({
-          params: expect.objectContaining({ user: 'alice' })
-        })
-      )
-    })
-
-    it('should pass pagination params to getProjectPolicies', async () => {
-      await api.getProjectPolicies('local', 'my-project', { from: 5, to: 10 })
-      expect(axios.request).toBeCalledWith(
-        expect.objectContaining({
-          params: { from: 5, to: 10 }
-        })
-      )
-    })
-
-    it('should call removeProjectPolicy with domain, project, user and role', async () => {
-      await api.removeProjectPolicy('local', 'my-project', { user: 'alice', role: 'PROJECT_MEMBER' })
-      expect(axios.request).toBeCalledWith(
-        expect.objectContaining({
-          url: Api.getFullUrl('/api/policies/local/my-project'),
+          url: Api.getFullUrl('/api/users/alice/index/my-project'),
           method: 'DELETE',
-          params: { user: 'alice', role: 'PROJECT_MEMBER' }
+          params: expect.objectContaining({ ifExists: true })
         })
       )
     })
+  })
 
-    it('should call saveProjectPolicy with domain, project, user and role', async () => {
-      await api.saveProjectPolicy('local', 'my-project', { user: 'alice', role: 'PROJECT_EDITOR' })
-      expect(axios.request).toBeCalledWith(
-        expect.objectContaining({
-          url: Api.getFullUrl('/api/policies/local/my-project'),
-          method: 'PUT',
-          params: { user: 'alice', role: 'PROJECT_EDITOR' }
+  it('should call grantUserRole with userId (uid), project and role', async () => {
+    await api.grantUserRole('alice', 'my-project', 'PROJECT_ADMIN')
+    expect(axios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/users/alice/index/my-project?role=PROJECT_ADMIN'),
+        method: 'PUT',
+      })
+    )
+  })
+
+  it('should call createUser with data and project index', async () => {
+    const userData = {
+      uid: 'jdoe',
+      email: 'jdoe@example.com',
+      name: 'John Doe',
+      password: 'secret-password',
+      provider: 'local',
+      domain: 'default',
+      index: 'my-project'
+    }
+    await api.createUser({ ...userData, index: 'my-project' })
+    expect(axios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/users'),
+        method: 'POST',
+        data: expect.objectContaining({
+          login: 'jdoe',
+          email: 'jdoe@example.com',
+          name: 'John Doe',
+          password: 'secret-password',
+          provider: 'local',
+          domain: 'default',
+          index: 'my-project'
         })
-      )
-    })
+      })
+    )
   })
 })

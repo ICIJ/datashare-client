@@ -1,3 +1,6 @@
+import IPhUserSquare from '~icons/ph/user-square'
+import { markRaw } from 'vue'
+
 export const ROLE = Object.freeze({
   INSTANCE_ADMIN: 'INSTANCE_ADMIN',
   DOMAIN_ADMIN: 'DOMAIN_ADMIN',
@@ -7,7 +10,18 @@ export const ROLE = Object.freeze({
   PROJECT_VISITOR: 'PROJECT_VISITOR'
 })
 
+export const ROLE_LOWERCASE = Object.freeze({
+  INSTANCE_ADMIN: 'instance_admin',
+  DOMAIN_ADMIN: 'domain_admin',
+  PROJECT_ADMIN: 'admin',
+  PROJECT_EDITOR: 'editor',
+  PROJECT_MEMBER: 'member',
+  PROJECT_VISITOR: 'visitor'
+})
+
 export const DEFAULT_ROLE = ROLE.PROJECT_MEMBER
+
+export const NO_ROLE = 'NO_ROLE'
 
 export const ROLE_KEY = Object.freeze({
   INSTANCE_ADMIN: 'role.instance_admin',
@@ -15,7 +29,8 @@ export const ROLE_KEY = Object.freeze({
   PROJECT_ADMIN: 'role.project_admin',
   PROJECT_EDITOR: 'role.project_editor',
   PROJECT_MEMBER: 'role.project_member',
-  PROJECT_VISITOR: 'role.project_visitor'
+  PROJECT_VISITOR: 'role.project_visitor',
+  NO_ROLE: 'role.no_role'
 })
 
 // Each role is a single bit flag (position in hierarchy)
@@ -30,10 +45,12 @@ export const ROLE_BIT = Object.freeze({
 
 // Cumulative: each role includes all roles below it
 export const ROLE_HIERARCHY = Object.freeze({
-  PROJECT_VISITOR: 0b000001, // 1  — visitor only
-  PROJECT_MEMBER: 0b000011, // 3  — member + visitor
-  PROJECT_EDITOR: 0b000111, // 7  — editor + member + visitor
-  PROJECT_ADMIN: 0b001111, // 15 — + editor + member + visitor
-  DOMAIN_ADMIN: 0b011111, // 31 — + project_admin + ...
-  INSTANCE_ADMIN: 0b111111, // 63 — all roles
+  PROJECT_VISITOR: 0b000001, // 1 - visitor only
+  PROJECT_MEMBER: 0b000011, // 3 - member + visitor
+  PROJECT_EDITOR: 0b000111, // 7 - editor + member + visitor
+  PROJECT_ADMIN: 0b001111, // 15 - + editor + member + visitor
+  DOMAIN_ADMIN: 0b011111, // 31 - + project_admin + ...
+  INSTANCE_ADMIN: 0b111111, // 63 - all roles
 })
+
+export const ROLE_ICON_DEFAULT = markRaw(IPhUserSquare)

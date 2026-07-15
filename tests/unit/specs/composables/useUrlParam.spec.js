@@ -12,12 +12,20 @@ import { useUrlParamsWithStore } from '@/composables/useUrlParamsWithStore'
 import { useUrlParams } from '@/composables/useUrlParams'
 import { useUrlPageFrom } from '@/composables/useUrlPageFrom'
 import { replaceUrlParam } from '@/composables/replaceUrlParam'
+import { batchQueryParamUpdate } from '@/composables/useUrlParam'
+
+const { debounceFlags } = vi.hoisted(() => ({ debounceFlags: { useReal: false } }))
 
 vi.mock('lodash', async (importOriginal) => {
   const { default: actual } = await importOriginal()
   return {
     ...actual,
-    debounce: cb => cb
+    debounce: (fn, wait) => {
+      const real = actual.debounce(fn, wait)
+      const wrapper = (...args) => (debounceFlags.useReal ? real(...args) : fn(...args))
+      wrapper.cancel = (...args) => real.cancel(...args)
+      return wrapper
+    }
   }
 })
 
@@ -568,20 +576,10 @@ describe('whenDifferentRoute', () => {
   describe('batchQueryParamUpdate', () => {
     let router
     let route
-    let batchQueryParamUpdate
 
-    beforeEach(async () => {
+    beforeEach(() => {
       vi.useFakeTimers()
-      // The file-level vi.mock replaces lodash debounce with an identity function,
-      // which makes applyBatchedUpdates fire immediately on every call and prevents
-      // batching. We reset modules and re-import with real lodash debounce so the
-      // fake timers can control when the debounce fires.
-      vi.resetModules()
-      vi.doMock('lodash', async (importOriginal) => {
-        const { default: actual } = await importOriginal()
-        return { ...actual }
-      })
-      ;({ batchQueryParamUpdate } = await import('@/composables/useUrlParam'))
+      debounceFlags.useReal = true
       router = { push: vi.fn() }
       route = { query: {}, name: 'current-route' }
     })
@@ -589,8 +587,8 @@ describe('whenDifferentRoute', () => {
     afterEach(() => {
       // Fire any pending debounce to reset module-level state for the next test
       vi.advanceTimersByTime(100)
+      debounceFlags.useReal = false
       vi.useRealTimers()
-      vi.resetModules()
     })
 
     it('accumulates params from the same route context and pushes them together', () => {
