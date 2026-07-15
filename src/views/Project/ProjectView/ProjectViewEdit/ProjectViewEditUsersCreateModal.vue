@@ -14,7 +14,7 @@ import ProjectUsersRoleDropdown from '@/components/ProjectUsers/ProjectUsersRole
 
 import { useCore } from '@/composables/useCore.js'
 import { useToast } from '@/composables/useToast.js'
-import { DEFAULT_ROLE, ROLE_ICON_DEFAULT, ROLE_LOWERCASE } from '@/enums/roles.js'
+import { DEFAULT_ROLE, ROLE, ROLE_ICON_DEFAULT, ROLE_LOWERCASE } from '@/enums/roles.js'
 import FormFieldsetI18n from '@/components/Form/FormFieldset/FormFieldsetI18n.vue'
 import { BFormInput } from 'bootstrap-vue-next'
 import ProjectLabel from '@/components/Project/ProjectLabel.vue'
@@ -229,6 +229,7 @@ defineExpose({ username, email, name, password, confirmPassword, selectedRole, i
           <project-users-role-dropdown
             v-model="selectedRole"
             :project="project"
+            :hidden-roles="[ROLE.DOMAIN_ADMIN, ROLE.INSTANCE_ADMIN]"
           />
           <i18n-t keypath="projectViewEdit.users.create.fields.role.inProject">
             <template #project>

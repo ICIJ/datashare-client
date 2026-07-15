@@ -59,6 +59,12 @@ describe('ProjectViewEditUsersCreateModal.vue', () => {
     expect(dropdown.attributes('project')).toBe(project)
   })
 
+  it('hides the domain admin and instance admin options in the role dropdown', () => {
+    const wrapper = mountComponent()
+    const dropdown = wrapper.findComponent({ name: 'ProjectUsersRoleDropdown' })
+    expect(dropdown.props('hiddenRoles')).toEqual(['DOMAIN_ADMIN', 'INSTANCE_ADMIN'])
+  })
+
   it('isValid is false when username is empty', () => {
     const wrapper = mountComponent()
     expect(wrapper.vm.isValid).toBe(false)

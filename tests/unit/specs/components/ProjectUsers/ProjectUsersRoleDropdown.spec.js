@@ -101,6 +101,36 @@ describe('ProjectUsersRoleDropdown.vue', () => {
     expect(roleValues).not.toContain('NO_ROLE')
   })
 
+  it('excludes roles listed in hiddenRoles from available roles', () => {
+    const wrapper = mountComponent({ hiddenRoles: ['DOMAIN_ADMIN', 'INSTANCE_ADMIN'] })
+    const roleValues = wrapper.vm.availableRoles.map(r => r.value)
+    expect(roleValues).not.toContain('DOMAIN_ADMIN')
+    expect(roleValues).not.toContain('INSTANCE_ADMIN')
+    expect(roleValues).toContain('PROJECT_ADMIN')
+  })
+
+  it('keeps roles listed in disabledRoles visible but flags them as disabled', () => {
+    const wrapper = mountComponent({ disabledRoles: ['DOMAIN_ADMIN', 'INSTANCE_ADMIN'] })
+    const byValue = Object.fromEntries(wrapper.vm.availableRoles.map(r => [r.value, r.disabled]))
+    expect(byValue.DOMAIN_ADMIN).toBe(true)
+    expect(byValue.INSTANCE_ADMIN).toBe(true)
+    expect(byValue.PROJECT_ADMIN).toBe(false)
+  })
+
+  it('marks the dropdown items of disabledRoles as disabled', () => {
+    const wrapper = mountComponent({ disabledRoles: ['INSTANCE_ADMIN'] })
+    const index = wrapper.vm.availableRoles.findIndex(r => r.value === 'INSTANCE_ADMIN')
+    const item = wrapper.findAll('b-dropdown-item-stub')[index]
+    expect(item.attributes('disabled')).toBe('true')
+  })
+
+  it('does not emit update:modelValue when a disabled role is clicked', async () => {
+    const wrapper = mountComponent({ disabledRoles: ['INSTANCE_ADMIN'] })
+    const index = wrapper.vm.availableRoles.findIndex(r => r.value === 'INSTANCE_ADMIN')
+    await wrapper.findAll('b-dropdown-item-stub')[index].trigger('click')
+    expect(wrapper.emitted('update:modelValue')).toBeFalsy()
+  })
+
   it('defaults noRole to false', () => {
     const wrapper = shallowMount(ProjectUsersRoleDropdown, {
       global,

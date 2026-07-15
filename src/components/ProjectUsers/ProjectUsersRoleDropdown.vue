@@ -29,6 +29,14 @@ const props = defineProps({
   noRole: {
     type: Boolean,
     default: false
+  },
+  disabledRoles: {
+    type: Array,
+    default: () => []
+  },
+  hiddenRoles: {
+    type: Array,
+    default: () => []
   }
 })
 
@@ -42,9 +50,10 @@ const currentUserRole = computed(() => getRoleByProject(props.project))
 const availableRoles = computed(() => [
   ...Object.values(ROLE)
     .filter(role => (ROLE_HIERARCHY[currentUserRole.value] & ROLE_BIT[role]) !== 0)
+    .filter(role => !props.hiddenRoles.includes(role))
     .sort((a, b) => ROLE_BIT[b] - ROLE_BIT[a])
-    .map(role => ({ value: role, text: formatRole(t, role) })),
-  ...(props.noRole ? [{ value: NO_ROLE, text: formatRole(t, NO_ROLE) }] : [])
+    .map(role => ({ value: role, text: formatRole(t, role), disabled: props.disabledRoles.includes(role) })),
+  ...(props.noRole ? [{ value: NO_ROLE, text: formatRole(t, NO_ROLE), disabled: props.disabledRoles.includes(NO_ROLE) }] : [])
 ])
 
 defineExpose({ availableRoles })
@@ -86,7 +95,8 @@ defineExpose({ availableRoles })
         v-for="role in availableRoles"
         :key="role.value"
         :active="role.value === modelValue"
-        @click="emit('update:modelValue', role.value)"
+        :disabled="role.disabled"
+        @click="role.disabled || emit('update:modelValue', role.value)"
       >
         <display-role :value="role.value" />
       </b-dropdown-item>
@@ -97,7 +107,7 @@ defineExpose({ availableRoles })
 <style scoped lang="scss">
 .project-users-role-dropdown {
   :deep(.project-users-role-dropdown__content) {
-    width: 8rem;
+    width: 10rem;
   }
 }
 

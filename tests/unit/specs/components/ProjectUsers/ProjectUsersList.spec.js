@@ -65,6 +65,13 @@ describe('ProjectUsersList.vue', () => {
     expect(wrapper.findAllComponents(ProjectUsersRoleDropdown)).toHaveLength(2)
   })
 
+  it('disables the domain admin and instance admin options in each role dropdown', () => {
+    const wrapper = mountComponent()
+    for (const dropdown of wrapper.findAllComponents(ProjectUsersRoleDropdown)) {
+      expect(dropdown.props('disabledRoles')).toEqual(['DOMAIN_ADMIN', 'INSTANCE_ADMIN'])
+    }
+  })
+
   it('renders a ProjectUsersActions in each row', () => {
     const wrapper = mountComponent()
     expect(wrapper.findAllComponents(ProjectUsersActions)).toHaveLength(2)

@@ -174,6 +174,7 @@ defineExpose({ pendingChanges, saving, showAdminModal, saveRoles, cancelChanges,
           :model-value="pendingChanges[item.uid] ?? item.role"
           :dirty="!!pendingChanges[item.uid]"
           :project="project"
+          :disabled-roles="[ROLE.DOMAIN_ADMIN, ROLE.INSTANCE_ADMIN]"
           @update:model-value="onRoleChanged(item.uid, $event)"
         />
       </template>
