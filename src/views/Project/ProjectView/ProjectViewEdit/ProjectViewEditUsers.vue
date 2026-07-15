@@ -30,7 +30,7 @@ const props = defineProps({
 const { toastedPromise } = useToast()
 const { t } = useI18n()
 const { isAuthWithUsersProvider } = useAuth()
-const { isInstanceAdmin } = usePolicies()
+const { isInstanceAdmin, getHighestRoleFromList } = usePolicies()
 // Creating a user account is an instance-wide operation (the backend requires INSTANCE_ADMIN),
 // so only expose the control to instance admins.
 const canManageUsers = computed(() => isAuthWithUsersProvider.value && isInstanceAdmin())
@@ -69,8 +69,14 @@ watch(query, (value) => {
 const page = useUrlPageParam()
 
 function roleForCurrentProject(permissions) {
-  const permission = (permissions ?? []).find(({ v2 }) => v2 === `${DEFAULT_DOMAIN}::${props.name}`)
-  return permission?.v1 ?? NO_ROLE
+  // Permissions are "<domain>::<project>" pairs where either side can be the "*" wildcard
+  // (e.g. "*::*" for instance admins, "default::*" for domain admins).
+  const matching = (permissions ?? []).filter(({ v2 }) => {
+    const [domain, project] = String(v2).split('::')
+    return (domain === DEFAULT_DOMAIN || domain === '*') && (project === props.name || project === '*')
+  })
+  if (!matching.length) return NO_ROLE
+  return getHighestRoleFromList(matching.map(({ v1 }) => ({ role: v1 })))
 }
 const createUserButtonText = computed(() => t('projectViewEdit.users.create.button'))
 const errorMessage = computed(() => t('projectViewEdit.users.fetchError'))

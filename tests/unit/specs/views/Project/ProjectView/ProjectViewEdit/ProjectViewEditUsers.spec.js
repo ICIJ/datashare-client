@@ -141,6 +141,59 @@ describe('ProjectViewEditUsers.vue', () => {
     ])
   })
 
+  it.each([
+    ['INSTANCE_ADMIN', [{ v1: 'INSTANCE_ADMIN', v2: '*::*' }]],
+    ['DOMAIN_ADMIN', [{ v1: 'DOMAIN_ADMIN', v2: 'default::*' }]]
+  ])('maps a wildcard-scoped %s permission to that role', async (role, permissions) => {
+    api.getUsers.mockResolvedValue({
+      items: [{ uid: 'jdoe', name: 'Jane D', email: 'jdoe@example.org', permissions }],
+      pagination: { count: 1, from: 0, size: 10, total: 1 }
+    })
+    const wrapper = shallowMountComponent()
+    await flushPromises()
+    const list = wrapper.findComponent(ProjectUsersList)
+    expect(list.props('users')).toEqual([{ uid: 'jdoe', name: 'Jane D', email: 'jdoe@example.org', role }])
+  })
+
+  it('keeps the highest role when several permissions match the current project', async () => {
+    api.getUsers.mockResolvedValue({
+      items: [
+        {
+          uid: 'jdoe',
+          name: 'Jane D',
+          email: 'jdoe@example.org',
+          permissions: [
+            { v1: 'PROJECT_MEMBER', v2: 'default::local-datashare' },
+            { v1: 'INSTANCE_ADMIN', v2: '*::*' }
+          ]
+        }
+      ],
+      pagination: { count: 1, from: 0, size: 10, total: 1 }
+    })
+    const wrapper = shallowMountComponent()
+    await flushPromises()
+    const list = wrapper.findComponent(ProjectUsersList)
+    expect(list.props('users')[0].role).toBe('INSTANCE_ADMIN')
+  })
+
+  it('ignores a wildcard permission scoped to another domain', async () => {
+    api.getUsers.mockResolvedValue({
+      items: [
+        {
+          uid: 'jdoe',
+          name: 'Jane D',
+          email: 'jdoe@example.org',
+          permissions: [{ v1: 'DOMAIN_ADMIN', v2: 'other-domain::*' }]
+        }
+      ],
+      pagination: { count: 1, from: 0, size: 10, total: 1 }
+    })
+    const wrapper = shallowMountComponent()
+    await flushPromises()
+    const list = wrapper.findComponent(ProjectUsersList)
+    expect(list.props('users')[0].role).toBe('NO_ROLE')
+  })
+
   it('passes an empty users array before the API resolves', () => {
     const wrapper = shallowMountComponent()
     const list = wrapper.findComponent(ProjectUsersList)
