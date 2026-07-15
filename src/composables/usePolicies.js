@@ -49,9 +49,13 @@ export function usePolicies() {
     return hasRole(getRoleByProject(projectName), ROLE.PROJECT_ADMIN)
   }
 
+  function isInstanceAdmin() {
+    return hasRole(getHighestRoleFromList(policies.value), ROLE.INSTANCE_ADMIN)
+  }
+
   function formatRole(t, role) {
     return upperFirst(t(ROLE_KEY[role] ?? ROLE_KEY[NO_ROLE]))
   }
 
-  return { getRoleByProject, getHighestRoleFromList, getHighestRoleFromListForDomain, getHighestRoleFromListForProject, formatRole, isProjectAdmin, hasRole }
+  return { getRoleByProject, getHighestRoleFromList, getHighestRoleFromListForDomain, getHighestRoleFromListForProject, formatRole, isProjectAdmin, isInstanceAdmin, hasRole }
 }

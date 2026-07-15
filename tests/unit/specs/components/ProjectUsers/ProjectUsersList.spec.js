@@ -76,6 +76,29 @@ describe('ProjectUsersList.vue', () => {
     expect(wrapper.emitted('user:deleted')).toEqual([[{ uid: 'alice@icij.org' }]])
   })
 
+  describe('Delete action visibility (hide-delete)', () => {
+    it('shows the delete action for an instance admin using a users-provider auth', () => {
+      core.config.set('auth', 'form')
+      core.config.set('policies', [{ projectId: '*', domainId: '*', role: 'INSTANCE_ADMIN' }])
+      const wrapper = mountComponent()
+      expect(wrapper.findAllComponents(ProjectUsersActions)[0].props('hideDelete')).toBe(false)
+    })
+
+    it('hides the delete action from a project admin who is not an instance admin', () => {
+      core.config.set('auth', 'form')
+      core.config.set('policies', [{ projectId: project, domainId: 'default', role: 'PROJECT_ADMIN' }])
+      const wrapper = mountComponent()
+      expect(wrapper.findAllComponents(ProjectUsersActions)[0].props('hideDelete')).toBe(true)
+    })
+
+    it('hides the delete action when auth is not a users-provider even for an instance admin', () => {
+      core.config.set('auth', 'oauth')
+      core.config.set('policies', [{ projectId: '*', domainId: '*', role: 'INSTANCE_ADMIN' }])
+      const wrapper = mountComponent()
+      expect(wrapper.findAllComponents(ProjectUsersActions)[0].props('hideDelete')).toBe(true)
+    })
+  })
+
   it('renders ProjectUsersAdminPromotionModal', () => {
     const wrapper = mountComponent()
     expect(wrapper.findComponent(ProjectUsersAdminPromotionModal).exists()).toBe(true)
