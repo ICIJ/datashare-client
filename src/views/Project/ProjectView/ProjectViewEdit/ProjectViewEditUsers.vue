@@ -13,7 +13,7 @@ import { useUrlParamsWithStore } from '@/composables/useUrlParamsWithStore.js'
 import { useUrlParam } from '@/composables/useUrlParam.js'
 import { useUrlPageParam } from '@/composables/useUrlPageParam.js'
 import { useAppStore } from '@/store/modules'
-import { NO_ROLE } from '@/enums/roles.js'
+import { NO_ROLE, ROLE_BIT } from '@/enums/roles.js'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch.vue'
 import ProjectViewEditUsersCreateModal from '@/views/Project/ProjectView/ProjectViewEdit/ProjectViewEditUsersCreateModal.vue'
 import IPhUserPlus from '~icons/ph/user-plus'
@@ -75,8 +75,9 @@ function roleForCurrentProject(permissions) {
     const [domain, project] = String(v2).split('::')
     return (domain === DEFAULT_DOMAIN || domain === '*') && (project === props.name || project === '*')
   })
-  if (!matching.length) return NO_ROLE
-  return getHighestRoleFromList(matching.map(({ v1 }) => ({ role: v1 })))
+  const recognized = matching.filter(({ v1 }) => v1 in ROLE_BIT)
+  if (!recognized.length) return NO_ROLE
+  return getHighestRoleFromList(recognized.map(({ v1 }) => ({ role: v1 })))
 }
 const createUserButtonText = computed(() => t('projectViewEdit.users.create.button'))
 const errorMessage = computed(() => t('projectViewEdit.users.fetchError'))
