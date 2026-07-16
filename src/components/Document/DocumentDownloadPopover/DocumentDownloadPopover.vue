@@ -6,6 +6,7 @@ import { useI18n } from 'vue-i18n'
 import IPhDownloadSimple from '~icons/ph/download-simple'
 
 import DocumentDownloadPopoverSection from './DocumentDownloadPopoverSection'
+import Hook from '@/components/Hook/Hook'
 
 import { useDocumentDownload } from '@/composables/useDocumentDownload'
 import AppPopover from '@/components/AppPopover/AppPopover'
@@ -135,6 +136,7 @@ defineExpose({
         class="document-download-popover__body__button"
         download
       />
+      <hook name="document-download-popover.buttons:after" :bind="{ document }" />
       <div class="document-download-popover__body__sections">
         <document-download-popover-section
           :title="t('documentDownloadPopover.sectionTitle')"
