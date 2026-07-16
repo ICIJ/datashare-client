@@ -139,12 +139,16 @@ function onUserDeleted({ uid }) {
   emit('user:deleted', { uid })
 }
 const { username, isUsernameResolved, isAuthWithUsersProvider } = useAuth()
-const { isInstanceAdmin } = usePolicies()
+const { isInstanceAdmin, getRoleByProject, hasRole } = usePolicies()
 // Deleting a user account removes it from every project (see the delete modal's warning) and the
 // backend requires INSTANCE_ADMIN, so hide the action from project admins who are not instance admins.
 const canDeleteUsers = computed(() => isAuthWithUsersProvider.value && isInstanceAdmin())
+const viewerRole = computed(() => getRoleByProject(props.project))
 function isCurrentUser(uid) {
   return !isUsernameResolved.value || username.value === uid
+}
+function outranksViewer(role) {
+  return !hasRole(viewerRole.value, role)
 }
 
 defineExpose({ pendingChanges, saving, showAdminModal, saveRoles, cancelChanges, onSaveClicked })
@@ -170,7 +174,7 @@ defineExpose({ pendingChanges, saving, showAdminModal, saveRoles, cancelChanges,
       </template>
       <template #cell(role)="{ item }">
         <project-users-role-dropdown
-          :disabled="isCurrentUser(item.uid)"
+          :disabled="isCurrentUser(item.uid) || outranksViewer(item.role)"
           :model-value="pendingChanges[item.uid] ?? item.role"
           :dirty="!!pendingChanges[item.uid]"
           :project="project"

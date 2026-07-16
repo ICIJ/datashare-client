@@ -307,6 +307,35 @@ describe('ProjectUsersList.vue', () => {
     })
   })
 
+  describe('Locking the dropdown for rows that outrank the viewer', () => {
+    it('disables the whole dropdown for a row whose current role outranks what a project admin viewer may assign', async () => {
+      core.config.set('auth', 'form')
+      core.config.set('policies', [{ projectId: project, domainId: 'default', role: 'PROJECT_ADMIN' }])
+      const wrapper = mountComponent({
+        users: [
+          { uid: 'alice@example.org', role: 'PROJECT_EDITOR' },
+          { uid: 'bob@example.org', role: 'DOMAIN_ADMIN' },
+          { uid: 'carole@example.org', role: 'INSTANCE_ADMIN' }
+        ]
+      })
+      await flushPromises()
+      const dropdowns = wrapper.findAllComponents(ProjectUsersRoleDropdown)
+      expect(dropdowns[0].props('disabled')).toBe(false)
+      expect(dropdowns[1].props('disabled')).toBe(true)
+      expect(dropdowns[2].props('disabled')).toBe(true)
+    })
+
+    it('does not disable the dropdown for a row whose current role is within the viewer own hierarchy', async () => {
+      core.config.set('auth', 'form')
+      core.config.set('policies', [{ projectId: '*', domainId: '*', role: 'INSTANCE_ADMIN' }])
+      const wrapper = mountComponent({
+        users: [{ uid: 'bob@example.org', role: 'DOMAIN_ADMIN' }]
+      })
+      await flushPromises()
+      expect(wrapper.findAllComponents(ProjectUsersRoleDropdown)[0].props('disabled')).toBe(false)
+    })
+  })
+
   describe('Admin promotion modal', () => {
     it('onSaveClicked opens admin modal when a pending change promotes to an admin role', async () => {
       // users[0] is PROJECT_EDITOR; promoting to PROJECT_ADMIN triggers the modal
