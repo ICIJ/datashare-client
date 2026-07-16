@@ -75,6 +75,7 @@ const showTitle = computed(() => props.properties?.includes('title'))
         :document="document"
         size="md"
         crop
+        lazy
         clickable
         :active="hover"
         class="mx-auto above-stretched-link"
