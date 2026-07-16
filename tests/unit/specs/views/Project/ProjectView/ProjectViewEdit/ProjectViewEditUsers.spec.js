@@ -176,6 +176,24 @@ describe('ProjectViewEditUsers.vue', () => {
     expect(list.props('users')[0].role).toBe('INSTANCE_ADMIN')
   })
 
+  it('maps an unrecognized role value on a matching permission to NO_ROLE instead of defaulting to PROJECT_MEMBER', async () => {
+    api.getUsers.mockResolvedValue({
+      items: [
+        {
+          uid: 'jdoe',
+          name: 'Jane D',
+          email: 'jdoe@example.org',
+          permissions: [{ v1: '', v2: 'default::local-datashare' }]
+        }
+      ],
+      pagination: { count: 1, from: 0, size: 10, total: 1 }
+    })
+    const wrapper = shallowMountComponent()
+    await flushPromises()
+    const list = wrapper.findComponent(ProjectUsersList)
+    expect(list.props('users')[0].role).toBe('NO_ROLE')
+  })
+
   it('ignores a wildcard permission scoped to another domain', async () => {
     api.getUsers.mockResolvedValue({
       items: [
