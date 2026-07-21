@@ -43,11 +43,23 @@ export const HUMAN_TASK_NAME = Object.freeze({
 })
 export const TASK_NAME_LIST = Object.values(TASK_NAME)
 
-export const taskNameValidator = v => TASK_NAME_LIST.includes(v)
+const customTaskNames = new Map()
+
+export function registerTaskName(name, { icon, title, listRoute, linkTitle, getProjects } = {}) {
+  customTaskNames.set(name, { icon, title, listRoute, linkTitle, getProjects })
+}
+
+export function getRegisteredTaskName(name) {
+  return customTaskNames.get(name)
+}
+
+export const taskNameValidator = v => TASK_NAME_LIST.includes(v) || customTaskNames.has(v)
 
 export function getTaskName(longName) {
   return longName.split('.').pop()
 }
 export function getHumanTaskName(longName) {
-  return taskNameValidator(longName) ? HUMAN_TASK_NAME[longName] : HUMAN_TASK_NAME.UNKNOWN_TASK
+  const custom = customTaskNames.get(longName)
+  if (custom?.title) return custom.title
+  return TASK_NAME_LIST.includes(longName) ? HUMAN_TASK_NAME[longName] : HUMAN_TASK_NAME.UNKNOWN_TASK
 }
