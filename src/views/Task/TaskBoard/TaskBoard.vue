@@ -1,6 +1,7 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 
+import Hook from '@/components/Hook/Hook'
 import ModeLocalOnly from '@/components/Mode/ModeLocalOnly'
 import PageContainer from '@/components/PageContainer/PageContainer'
 import PageHeader from '@/components/PageHeader/PageHeader'
@@ -50,6 +51,7 @@ const { t } = useI18n()
             :action-text="t('task.task-board.entries.entity-recognition.actionText')"
           />
         </mode-local-only>
+        <hook name="task-board-list:after" />
       </task-board-list>
     </page-container>
   </div>
