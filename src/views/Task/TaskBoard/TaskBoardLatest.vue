@@ -11,7 +11,7 @@ import DisplayUser from '@/components/Display/DisplayUser'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import RouterLinkBatchDownload from '@/components/RouterLink/RouterLinkBatchDownload'
 import RouterLinkBatchSearch from '@/components/RouterLink/RouterLinkBatchSearch'
-import { getHumanTaskName, TASK_NAME, TASK_NAME_ICON } from '@/enums/taskNames'
+import { getHumanTaskName, getRegisteredTaskName, TASK_NAME, TASK_NAME_ICON } from '@/enums/taskNames'
 import { useMode } from '@/composables/useMode'
 import { useTaskPolling } from '@/composables/useTaskPolling'
 import { useTaskProperties } from '@/composables/useTaskProperties'
@@ -60,9 +60,11 @@ function getProjects(item) {
     case TASK_NAME.SCAN:
     case TASK_NAME.INDEX:
       return [item.args?.defaultProject]
-    default:
-      console.error('Unknown task', item)
+    default: {
+      const custom = getRegisteredTaskName(item.name)
+      if (custom?.getProjects) return custom.getProjects(item)
       return []
+    }
   }
 }
 
@@ -96,8 +98,11 @@ function getTaskLinkTitle(item) {
     case TASK_NAME.ENQUEUE_FROM_INDEX:
     case TASK_NAME.EXTRACT_NLP:
       return `${path}.entityTask`
-    default:
+    default: {
+      const custom = getRegisteredTaskName(item.name)
+      if (custom?.linkTitle) return custom.linkTitle
       return `${path}.unknownTask`
+    }
   }
 }
 
@@ -114,12 +119,17 @@ function getTaskLinkRoute(item) {
     case TASK_NAME.ENQUEUE_FROM_INDEX:
     case TASK_NAME.EXTRACT_NLP:
       return { name: 'task.entities.list' }
-    default:
+    default: {
+      const custom = getRegisteredTaskName(item.name)
+      if (custom?.listRoute) return custom.listRoute
       return null
+    }
   }
 }
 
 function getTaskIcon(item) {
+  const custom = getRegisteredTaskName(item.name)
+  if (custom?.icon) return custom.icon
   return TASK_NAME_ICON[item.name]
 }
 </script>

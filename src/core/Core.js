@@ -31,6 +31,7 @@ import guards from '@/router/guards'
 import messages from '@/lang/en'
 import settings from '@/utils/settings'
 import { getTheme, setTheme } from '@/composables/useTheme'
+import { registerTaskName } from '@/enums/taskNames'
 import * as stores from '@/store/modules'
 
 class Base {}
@@ -619,6 +620,20 @@ class Core extends Behaviors {
    */
   set pageTitle(title) {
     this._pageContext.title = title ?? null
+  }
+
+  /**
+   * Register a custom task name for display in the task board.
+   * @param {String} name - The task name identifier (e.g. 'asr.transcription')
+   * @param {Object} config - Task display configuration
+   * @param {Object} config.icon - Vue component for the task icon
+   * @param {String} config.title - i18n key for the human-readable task name
+   * @param {Object} config.listRoute - Vue Router route object for the task list page
+   * @param {String} config.linkTitle - i18n key for the icon link tooltip
+   * @param {Function} config.getProjects - Function (item) => string[] to extract projects
+   */
+  registerTaskName(name, config) {
+    registerTaskName(name, config)
   }
 
   /**
