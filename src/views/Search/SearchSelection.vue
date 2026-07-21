@@ -137,7 +137,10 @@ const tagSelection = async (documents, labels) => {
         :disabled="noSelection"
         @click="addTagsModal"
       />
-      <hook name="search-selection.compact:after" :bind="{ selectionEntries, noSelection }" />
+      <hook
+        name="search-selection.compact:after"
+        :bind="{ selectionEntries, noSelection }"
+      />
     </template>
   </form-actions>
 </template>
