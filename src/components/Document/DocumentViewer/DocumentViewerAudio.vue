@@ -49,7 +49,10 @@
         </div>
       </template>
     </b-card>
-    <hook name="document.viewer.audio:after" :bind="{ document }" />
+    <hook
+      name="document.viewer.audio:after"
+      :bind="{ document }"
+    />
   </div>
 </template>
 
