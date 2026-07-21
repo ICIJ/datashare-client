@@ -45,8 +45,8 @@ export const TASK_NAME_LIST = Object.values(TASK_NAME)
 
 const customTaskNames = new Map()
 
-export function registerTaskName(name, { icon, title, listRoute, linkTitle, getProjects } = {}) {
-  customTaskNames.set(name, { icon, title, listRoute, linkTitle, getProjects })
+export function registerTaskName(name, { icon, title, listRoute, linkTitle, getProjects, getTitle } = {}) {
+  customTaskNames.set(name, { icon, title, listRoute, linkTitle, getProjects, getTitle })
 }
 
 export function getRegisteredTaskName(name) {
