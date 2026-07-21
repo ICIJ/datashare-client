@@ -79,8 +79,12 @@ function getTitle(item) {
     case TASK_NAME.INDEX:
     case TASK_NAME.ENQUEUE_FROM_INDEX:
     case TASK_NAME.EXTRACT_NLP:
-    default:
       return getHumanTaskName(item.name)
+    default: {
+      const custom = getRegisteredTaskName(item.name)
+      if (custom?.getTitle) return custom.getTitle(item)
+      return getHumanTaskName(item.name)
+    }
   }
 }
 
