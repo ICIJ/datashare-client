@@ -1,5 +1,5 @@
-import Murmur from '@icij/murmur'
+import { config } from '@icij/murmur'
 
 export function useConfig() {
-  return Murmur.config
+  return config
 }

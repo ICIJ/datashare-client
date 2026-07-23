@@ -1,5 +1,5 @@
 import { isEmpty } from 'lodash'
-import Murmur from '@icij/murmur'
+import { i18n as murmurI18n } from '@icij/murmur'
 
 import settings from '@/utils/settings'
 /**
@@ -54,7 +54,7 @@ const I18nMixin = superclass =>
         const messages = await import(`../lang/${locale}.json`).then(m => m.default)
         this.i18n.global.setLocaleMessage(locale, messages)
       }
-      const murmurMessages = Murmur.i18n.global.getLocaleMessage(locale)
+      const murmurMessages = murmurI18n.global.getLocaleMessage(locale)
       this.i18n.global.mergeLocaleMessage(locale, murmurMessages)
       return this.setI18nLocale(locale)
     }

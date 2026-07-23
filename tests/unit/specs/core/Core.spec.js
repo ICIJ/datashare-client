@@ -1,4 +1,4 @@
-import Murmur from '@icij/murmur'
+import { config } from '@icij/murmur'
 
 import { Core } from '@/core'
 import { apiInstance as api } from '@/api/apiInstance'
@@ -69,7 +69,7 @@ describe('Core', () => {
     })
 
     it('should expose the config from Murmur', () => {
-      expect(core.config).toBe(Murmur.config)
+      expect(core.config).toBe(config)
     })
 
     it('should mount the app on a specific element', () => {

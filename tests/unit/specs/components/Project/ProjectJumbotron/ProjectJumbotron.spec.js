@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
-import Murmur from '@icij/murmur'
+import { config } from '@icij/murmur'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import ProjectJumbotron from '@/components/Project/ProjectJumbotron/ProjectJumbotron'
@@ -13,8 +13,8 @@ describe('ProjectJumbotron.vue', () => {
   })
 
   afterEach(() => {
-    Murmur.config.set('mode', null)
-    Murmur.config.set('policies', [])
+    config.set('mode', null)
+    config.set('policies', [])
   })
 
   it('should render without errors', () => {
@@ -27,11 +27,11 @@ describe('ProjectJumbotron.vue', () => {
     const project = { name: 'citrus-confidential' }
 
     beforeEach(() => {
-      Murmur.config.set('mode', 'SERVER')
+      config.set('mode', 'SERVER')
     })
 
     it('shows the role from policies for the current project', () => {
-      Murmur.config.set('policies', [{ projectId: 'citrus-confidential', role: 'PROJECT_ADMIN' }])
+      config.set('policies', [{ projectId: 'citrus-confidential', role: 'PROJECT_ADMIN' }])
       const wrapper = shallowMount(ProjectJumbotron, {
         global: {
           plugins,
@@ -43,7 +43,7 @@ describe('ProjectJumbotron.vue', () => {
     })
 
     it('shows default role when no policy exists for the project', () => {
-      Murmur.config.set('policies', [{ projectId: 'other-project', role: 'PROJECT_ADMIN' }])
+      config.set('policies', [{ projectId: 'other-project', role: 'PROJECT_ADMIN' }])
       const wrapper = shallowMount(ProjectJumbotron, {
         global: {
           plugins,
@@ -55,7 +55,7 @@ describe('ProjectJumbotron.vue', () => {
     })
 
     it('shows PROJECT_EDITOR role when policy has PROJECT_EDITOR', () => {
-      Murmur.config.set('policies', [{ projectId: 'citrus-confidential', role: 'PROJECT_EDITOR' }])
+      config.set('policies', [{ projectId: 'citrus-confidential', role: 'PROJECT_EDITOR' }])
       const wrapper = shallowMount(ProjectJumbotron, {
         global: {
           plugins,

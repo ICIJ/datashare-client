@@ -2,7 +2,7 @@
 import 'mutationobserver-shim'
 
 import compose from 'lodash/fp/compose'
-import Murmur from '@icij/murmur'
+import { config } from '@icij/murmur'
 import VCalendar from 'v-calendar'
 import VueScrollTo from 'vue-scrollto'
 import Vue3Toastify, { toast } from 'vue3-toastify'
@@ -180,9 +180,6 @@ class Core extends Behaviors {
     // dynamic chunk import with third party modules.
     // @see https://github.com/nathanreyes/v-calendar/issues/413#issuecomment-530633437
     this.use(VCalendar, { componentPrefix: 'vc' })
-    // Murmur is loaded without installing Vue i18n and Bootstrap Vue
-    // to avoid adding them twice to the Vue instance.
-    this.use(Murmur, { useI18n: false, useBootstrap: false })
     // Vue Toastify uses as separated vue instance so we must install vue-i18n
     // separately to ensure vue-i18n's methods and components are available in the toastify plugin.
     this.use(Vue3Toastify, {
@@ -570,7 +567,7 @@ class Core extends Behaviors {
    * @type {Object}
    */
   get config() {
-    return Murmur.config
+    return config
   }
 
   /**
