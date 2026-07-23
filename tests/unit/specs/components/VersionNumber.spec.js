@@ -23,8 +23,11 @@ describe('VersionNumber.vue', () => {
     return container
   }
 
-  beforeAll(() => {
+  beforeAll(async () => {
     core = Core.init().useAll()
+    // Merge Murmur's locale messages, as the real app does in initializeI18n(),
+    // so components like HapticCopy can resolve their translated label.
+    await core.loadI18Locale('en')
   })
 
   beforeEach(() => {
@@ -58,7 +61,8 @@ describe('VersionNumber.vue', () => {
   it('should display git sha1 in a tooltip', async () => {
     await wrapper.vm.setVersion()
     const body = attachTo.closest('body')
-    const abbrev = body.querySelector('.version-number__tooltip__server__value')?.textContent?.trim()
+    // Only the leading text node holds the hash; the rest is the HapticCopy button (with its a11y label).
+    const abbrev = body.querySelector('.version-number__tooltip__server__value')?.firstChild?.textContent?.trim()
     expect(abbrev).toBe('sha1_abbrev')
   })
 })

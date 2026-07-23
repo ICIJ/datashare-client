@@ -2,6 +2,7 @@
 import { computed, nextTick, onMounted, reactive, ref, toRef, useTemplateRef, watch } from 'vue'
 import { clamp, entries, findLastIndex, get, isEmpty, iteratee, minBy, range, throttle } from 'lodash'
 import { useI18n } from 'vue-i18n'
+import { PaginationTiny } from '@icij/murmur'
 
 import { addLocalSearchMarksClassByOffsets } from '@/utils/strings'
 import { useCompact } from '@/composables/useCompact'
@@ -394,7 +395,7 @@ async function loadContentSliceAround(desiredOffset) {
           v-if="showPagination"
           class="document-content__toolbox__pagination"
         >
-          <tiny-pagination
+          <pagination-tiny
             v-model="page"
             :per-page="1"
             :total-rows="nbPages"

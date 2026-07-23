@@ -3,6 +3,7 @@ import { ref, computed, watch, nextTick, useTemplateRef } from 'vue'
 import { isEqual, iteratee, sortBy, uniqueId } from 'lodash'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
+import { SelectableDropdown } from '@icij/murmur'
 
 import SearchBarInput from '@/components/Search/SearchBar/SearchBarInput'
 import FieldDropdownSelector from '@/components/FieldDropdownSelector/FieldDropdownSelector'
