@@ -1,6 +1,6 @@
 import { compact, endsWith, filter, find, get, keys, last, pick, startsWith, trim } from 'lodash'
 import { markRaw } from 'vue'
-import Murmur from '@icij/murmur'
+import { config } from '@icij/murmur'
 import dayjs from 'dayjs'
 import { extname } from 'path'
 
@@ -122,7 +122,7 @@ export default class Document extends EsDoc {
 
   get folder() {
     // Extract location parts
-    const pathSeparator = Murmur.config.get('pathSeparator', _separator)
+    const pathSeparator = config.get('pathSeparator', _separator)
     const parts = this.path.split(pathSeparator)
     // Remove the file name
     parts.splice(-1, 1)
@@ -131,11 +131,11 @@ export default class Document extends EsDoc {
   }
 
   get location() {
-    return this.folder.split(Murmur.config.get('dataDir', import.meta.env.VITE_DATA_PREFIX)).pop()
+    return this.folder.split(config.get('dataDir', import.meta.env.VITE_DATA_PREFIX)).pop()
   }
 
   get basename() {
-    return last(this.path.split(Murmur.config.get('pathSeparator', _separator)))
+    return last(this.path.split(config.get('pathSeparator', _separator)))
   }
 
   get extension() {

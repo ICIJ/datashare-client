@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
-import Murmur from '@icij/murmur'
+import { config } from '@icij/murmur'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import ProjectCardFooter from '@/components/Project/ProjectCard/ProjectCardFooter'
@@ -13,8 +13,8 @@ describe('ProjectCardFooter.vue', () => {
   })
 
   afterEach(() => {
-    Murmur.config.set('mode', null)
-    Murmur.config.set('policies', [])
+    config.set('mode', null)
+    config.set('policies', [])
   })
 
   it('should render without errors', () => {
@@ -27,11 +27,11 @@ describe('ProjectCardFooter.vue', () => {
     const project = { name: 'banana-papers' }
 
     beforeEach(() => {
-      Murmur.config.set('mode', 'SERVER')
+      config.set('mode', 'SERVER')
     })
 
     it('shows default role when no policy exists for the project', () => {
-      Murmur.config.set('policies', [{ projectId: 'other-project', role: 'PROJECT_ADMIN' }])
+      config.set('policies', [{ projectId: 'other-project', role: 'PROJECT_ADMIN' }])
       const wrapper = shallowMount(ProjectCardFooter, {
         global: {
           plugins,
@@ -43,7 +43,7 @@ describe('ProjectCardFooter.vue', () => {
     })
 
     it('shows PROJECT_EDITOR role when policy has PROJECT_EDITOR', () => {
-      Murmur.config.set('policies', [{ projectId: 'banana-papers', role: 'PROJECT_EDITOR' }])
+      config.set('policies', [{ projectId: 'banana-papers', role: 'PROJECT_EDITOR' }])
       const wrapper = shallowMount(ProjectCardFooter, {
         global: {
           plugins,

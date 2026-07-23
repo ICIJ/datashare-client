@@ -1,4 +1,4 @@
-import Murmur from '@icij/murmur'
+import { config } from '@icij/murmur'
 
 import Document from '@/api/resources/Document'
 
@@ -224,7 +224,7 @@ describe('Document', () => {
   })
 
   it('should return the correct basename on Windows', () => {
-    Murmur.config.set('pathSeparator', '\\')
+    config.set('pathSeparator', '\\')
     const doc = new Document({ _source: { path: 'C:\\this\\is\\a\\specific.file' } })
 
     expect(doc.basename).toBe('specific.file')

@@ -1,4 +1,3 @@
-import Murmur from '@icij/murmur'
 import VCalendar from 'v-calendar'
 import VueScrollTo from 'vue-scrollto'
 import { createWebHashHistory, createRouter } from 'vue-router'
@@ -15,16 +14,11 @@ class CoreSetup extends Core {
       this.plugin,
       this.bootstrapVue,
       this.i18n,
-      [this.murmur, { useI18n: false, useBootstrap: false }],
       this.pinia,
       this.vueScrollTo,
       this.vCalendar,
       this.router
     ]
-  }
-
-  get murmur() {
-    return Murmur
   }
 
   get vueScrollTo() {
