@@ -86,14 +86,14 @@ describe('ComponentsMixin', () => {
       }
     })
 
-    it('should get Murmur component directly with getMurmurComponent', () => {
-      const ButtonIcon = core.getMurmurComponent('ButtonIcon')
+    it('should get Murmur component directly with getMurmurComponent', async () => {
+      const ButtonIcon = await core.getMurmurComponent('ButtonIcon')
       expect(ButtonIcon).not.toBeNull()
       expect(ButtonIcon.name).toBe('ButtonIcon')
     })
 
-    it('should return null for unknown component with getMurmurComponent', () => {
-      expect(core.getMurmurComponent('NonExistentComponent')).toBeNull()
+    it('should return null for unknown component with getMurmurComponent', async () => {
+      expect(await core.getMurmurComponent('NonExistentComponent')).toBeNull()
     })
   })
 })
