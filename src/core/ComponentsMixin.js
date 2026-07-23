@@ -1,7 +1,5 @@
 import { compact, find, keys, kebabCase, iteratee, uniq } from 'lodash'
 
-import Murmur from '@icij/murmur'
-
 import { slugger } from '@/utils/strings'
 
 /**
@@ -32,26 +30,31 @@ const ComponentMixin = superclass =>
     /**
      * Get a component from Murmur by its name.
      * Searches in Murmur.components, Murmur.datavisualisations, and Murmur.maps.
+     * Murmur is imported dynamically so its full component barrel is only
+     * loaded (as a separate chunk) if this lookup is actually used.
+     * @async
      * @function
      * @param {string} name - The name of the Murmur component to retrieve.
-     * @returns {Object} - The found component object, or null if not found.
+     * @returns {Promise.<Object>} - The found component object, or null if not found.
      */
-    getMurmurComponent(name) {
-      return Murmur.components[name] ?? Murmur.datavisualisations[name] ?? Murmur.maps[name] ?? null
+    async getMurmurComponent(name) {
+      const { components, datavisualisations, maps } = (await import('@icij/murmur')).default
+      return components[name] ?? datavisualisations[name] ?? maps[name] ?? null
     }
 
     /**
      * Check if name has "Murmur/" prefix and return the component from @icij/murmur.
+     * @async
      * @function
      * @param {string} name - The name of the component to retrieve, potentially with "Murmur/" prefix.
      * @returns {Promise.<Object>} - The found Murmur component, or null if not a Murmur component or not found.
      */
-    findMurmurComponentByPrefix(name) {
+    async findMurmurComponentByPrefix(name) {
       if (name.toLowerCase().startsWith(MURMUR_PREFIX)) {
         const murmurName = name.slice(MURMUR_PREFIX.length)
-        return Promise.resolve(this.getMurmurComponent(murmurName))
+        return this.getMurmurComponent(murmurName)
       }
-      return Promise.resolve(null)
+      return null
     }
 
     /**
