@@ -1,4 +1,6 @@
 <script setup>
+import { PaginationTiny } from '@icij/murmur'
+
 const page = defineModel('page', { type: Number, default: 1 })
 
 defineProps({
@@ -11,7 +13,7 @@ defineProps({
 </script>
 
 <template>
-  <tiny-pagination
+  <pagination-tiny
     :key="totalRows"
     v-model="page"
     :per-page="1"

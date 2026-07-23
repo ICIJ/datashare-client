@@ -1,12 +1,17 @@
 <script>
 import { cloneDeep, defaultTo, iteratee, isNumber, last, throttle } from 'lodash'
 import * as d3 from 'd3'
+import { ColumnChart, RangePicker } from '@icij/murmur'
 
 /**
  * Widget to display the number of file by creation date on the insights page.
  */
 export default {
   name: 'ColumnChartPicker',
+  components: {
+    ColumnChart,
+    RangePicker
+  },
   props: {
     /**
      * Initial values of the range bounds. Should contain two timestamps.
