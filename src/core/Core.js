@@ -212,6 +212,7 @@ class Core extends Behaviors {
     return class VueCore {
       static install(app) {
         app.config.globalProperties.$core = core
+        app.config.globalProperties.$config = core.config
         app.config.compilerOptions.whitespace = 'preserve'
         // inject a globally available $toast object
         app.config.globalProperties.$toast = {
