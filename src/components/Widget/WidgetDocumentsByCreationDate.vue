@@ -97,6 +97,7 @@ import { computed, nextTick, ref, useTemplateRef, watch, toRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { whenever } from '@vueuse/core'
+import { ColumnChart } from '@icij/murmur'
 
 import IPhMagnifyingGlassBold from '~icons/ph/magnifying-glass-bold'
 
