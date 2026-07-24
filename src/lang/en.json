@@ -4,9 +4,7 @@
     "yes": "Yes",
     "no": "No",
     "submit": "Submit",
-    "save": "Save",
     "reset": "Reset",
-    "search": "Search",
     "you": "{username} (you)",
     "building": "Our team is still crafting something awesome for this page. Stay tuned!"
   },
@@ -61,10 +59,6 @@
   "buttonTogglePathTreeView": {
     "list": "List view",
     "tree": "Tree view"
-  },
-  "buttonToggleContentTypesView": {
-    "flat": "File types view",
-    "grouped": "File types by categories view"
   },
   "buttonToggleSettings": {
     "label": "Settings"
@@ -223,9 +217,6 @@
   "filtersPanelSectionFilterTitleToggler": {
     "toggle": "Toggle filter"
   },
-  "contentTypesCategoryName": {
-    "toggle": "Toggle the {category} category"
-  },
   "filtersPanelSearch": {
     "placeholder": "Search filters"
   },
@@ -279,7 +270,24 @@
       "batchDownloadSubmit": "You are about to download 1 document. | You are about to download {total} documents.",
       "warningNumber": "You cannot download more than {number} documents.",
       "warningSize": "You cannot download more than {size}B.",
-      "warningConfirm": "Do you still want to download the first documents of this search?"
+      "warningConfirm": "Do you still want to download the first documents of this search?",
+      "sort": {
+        "sortLabel": "Sort",
+        "sort": "Sort by",
+        "relevance": "Relevance",
+        "dateNewest": "Indexing date (recent first)",
+        "dateOldest": "Indexing date (old first)",
+        "creationDateNewest": "Creation date (recent first)",
+        "creationDateOldest": "Creation date (old first)",
+        "sizeLargest": "Size (decreasing)",
+        "sizeSmallest": "Size (increasing)",
+        "path": "File path (A to Z)",
+        "pathReverse": "File path (Z to A)",
+        "titleNorm": "File name (A to Z)",
+        "titleNormReverse": "File name (Z to A)",
+        "default": "default",
+        "count": "frequency"
+      }
     }
   },
   "role": {
@@ -288,8 +296,7 @@
     "project_admin": "Admin",
     "project_editor": "Editor",
     "project_member": "Member",
-    "project_visitor": "Visitor",
-    "no_role": "No role"
+    "project_visitor": "Visitor"
   },
   "searchFormControl": {
     "submitLabel": "Search"
@@ -493,24 +500,6 @@
   "filter": {
     "project": "Projects",
     "contentType": "Document types",
-    "contentTypeCategory": "File type categories",
-    "contentTypeCategoryItem": {
-      "AUDIO": "Audio",
-      "VIDEO": "Video",
-      "IMAGE": "Image",
-      "DOCUMENT": "Document",
-      "EMAIL": "Email",
-      "PRESENTATION": "Presentation",
-      "SPREADSHEET": "Spreadsheet",
-      "OTHER": "Other"
-    },
-    "fileTypes": {
-      "legacyIndex": {
-        "title": "Category grouping unavailable",
-        "description": "This project was indexed without file type categories.",
-        "descriptionPlural": "Some of these projects were indexed without file type categories."
-      }
-    },
     "language": "Languages",
     "namedEntityPerson": "People",
     "namedEntityLocation": "Locations",
@@ -1121,7 +1110,6 @@
           "state": "State",
           "id": "Id"
         },
-        "unavailableAlert": "This download has expired per your admin's retention settings",
         "truncatedAlert": {
           "sizeLimit": "Results were truncated after reaching the {reason} ({limit}).",
           "fileCountLimit": "Results were truncated after reaching the {reason} ({limit}).",
@@ -1157,13 +1145,13 @@
         "queries": {
           "onlyCSV": "Only CSV format is accepted.",
           "onlyUTF8": "Export your spreadsheet as a CSV using encoding UTF-8",
-          "queriesLimits": "Your CSV file should not contain more than 60,000 queries",
+          "queriesLimist": "Your CSV file should not contain more than 60,000 queries",
           "firstColumn": "The first and only column should contain the terms to search",
           "lineBreaks": "No line break(s) in cells",
           "operators": "Selecting 'do phrase matches' prevent from using operators like <code>AND</code>, <code>OR</code>, <code>NOT</code>, <code>*</code>, <code>?</code>, <code>!</code>, <code>+</code>, <code>-</code> or Regexes between 2 slashes in the queries."
         },
         "sections": {
-          "general": "Details",
+          "general": "Name, project(s) and description",
           "queries": "Queries",
           "operators": "Search operators",
           "filters": "Filters"
@@ -1212,16 +1200,10 @@
         },
         "submit": "Create",
         "submitError": "Something went wrong, unable to run the batch search.",
-        "submitSuccess": "Batch search created successfully.",
-        "editError": "Something went wrong, unable to update the batch search.",
-        "editSuccess": "Batch search updated successfully."
+        "submitSuccess": "Batch search created successfully."
       },
       "new": {
         "title": "Create new batch search"
-      },
-      "edit": {
-        "title": "Edit batch search",
-        "breadcrumb": "Edit"
       }
     },
     "batch-search-queries": {
@@ -1306,6 +1288,11 @@
       "error": "Unable to relaunch the batch search"
     }
   },
+  "batchSearchActionsEditModal": {
+    "title": "Edit batch search",
+    "name": "Name",
+    "description": "Description"
+  },
   "batchSearchActionsRelaunchModal": {
     "title": "Relaunch batch search",
     "name": "Name",
@@ -1357,7 +1344,7 @@
     "updatedOn": "Updated on",
     "links": "Links",
     "actions": "Actions",
-    "userRole": "Your role"
+    "userRoles": "Your role"
   },
   "projectRowActions": {
     "edit": "Edit project",
@@ -1407,8 +1394,7 @@
     "title": "Edit project",
     "tabs": {
       "details": "Details and documents",
-      "pathBanners": "Banners",
-      "users": "Users"
+      "pathBanners": "Banners"
     },
     "notify": {
       "update": {
@@ -1460,82 +1446,6 @@
         "delete": {
           "succeedBody": "Banner deleted",
           "failedBody": "Failed to delete banner"
-        }
-      }
-    },
-    "users": {
-      "empty": "No users yet.",
-      "fetchError": "Failed to load users for this project.",
-      "noResults": "No users match your search.",
-      "fields": {
-        "uid": { "label": "Username" },
-        "name": { "label": "Name" },
-        "email": { "label": "Email" },
-        "role": { "label": "Role" }
-      },
-      "roleSelect": {
-        "save": "Save",
-        "cancel": "Cancel",
-        "saveSuccess": "Roles updated successfully",
-        "saveError": "Failed to update roles. Please try again.",
-        "changedCount": "0 roles changed | 1 role changed | {count} roles changed"
-      },
-      "adminPromotionModal": {
-        "title": "Confirm admin promotions",
-        "body": "The following users will be granted administrator access:",
-        "confirm": "Confirm",
-        "cancel": "Cancel"
-      },
-      "actions": {
-        "copy": "Copy username",
-        "delete": "Delete user",
-        "deleteModal": {
-          "title": "Delete user '{name}' ?",
-          "body": {
-            "intro": "This action cannot be undone. Deleting this user will:",
-            "accessRevoked": "revoke their access to {allProjects};",
-            "dataDeleted": "delete all their personal data (stars, history, tags, saved searches etc.) across {allProjects};",
-            "tasksDeleted": "not delete their tasks and results.",
-            "allProjects": "all projects"
-          },
-          "confirm": "Delete user",
-          "success": "User deleted successfully",
-          "error": "Failed to remove user. Please try again."
-        }
-      },
-      "create": {
-        "button": "Create user",
-        "title": "Create a user",
-        "confirm": "Create",
-        "saveSuccess": "User created successfully.",
-        "saveError": "Failed to create user. Please try again.",
-        "saveErrorConflict": "A user with this username already exists.",
-        "fields": {
-          "username": {
-            "label": "Username",
-            "placeholder": "Type username"
-          },
-          "email": {
-            "label": "Email",
-            "placeholder": "Type email address"
-          },
-          "name": {
-            "label": "Display name",
-            "placeholder": "Type display name"
-          },
-          "password": {
-            "label": "Password",
-            "placeholder": "Type password"
-          },
-          "confirmPassword": {
-            "label": "Confirm password",
-            "placeholder": "Confirm password",
-            "mismatch": "Passwords do not match."
-          },
-          "role": {
-            "label": "Role",
-            "inProject": "in {project}"
-          }
         }
       }
     }
@@ -1886,8 +1796,7 @@
     },
     "barometer": {
       "document": "no documents | {n} document | {n} documents",
-      "amongWhichOnDisk": "among which {n} on disk",
-      "duplicate": "No duplicates were detected during indexation | {n} duplicate ignored during indexation | {n} duplicates ignored during indexation"
+      "amongWhichOnDisk": "among which {n} on disk"
     },
     "diskUsage": {
       "details": "See disk usage"
@@ -2017,52 +1926,6 @@
       "link": "Saved searches"
     }
   },
-  "searchAdvancedModal": {
-    "title": "Advanced search",
-    "search": "Search",
-    "cancel": "Cancel",
-    "reset": "Reset",
-    "eg": "e.g.",
-    "and": "and",
-    "or": "or",
-    "anyOfTheseWords": "Any of these words",
-    "anyOfTheseWordsExample": "Paris Henry Coca",
-    "allTheseWords": "All these words",
-    "allTheseWordsExample1": "AND Paris AND Henry AND Coca",
-    "allTheseWordsExample2": "+Paris +Henry +Coca",
-    "exactPhrase": "This exact phrase",
-    "exactPhraseExample": "\"Paris Henry Coca\"",
-    "noneOfTheseWords": "None of these words",
-    "noneOfTheseWordsExample1": "NOT Paris NOT Henry NOT Coca",
-    "noneOfTheseWordsExample2": "-Paris -Henry -Coca",
-    "singleCharWildcard": "Any word with 1 character between",
-    "singleCharWildcardExample": "Hen?y",
-    "multiCharWildcard": "Any word with multiple characters between",
-    "multiCharWildcardExample": "H*y",
-    "fuzzySearch": "With spelling changes",
-    "charactersDifferent": "Characters different",
-    "fuzzySearchExample": "Henry~1",
-    "fuzzySearchExplanation1": "Also called fuzziness.",
-    "fuzzySearchExplanation2": "Number of change(s) in the characters in the words: insertions, deletions or substitutions of a single character, or transposition of 2 adjacent characters.",
-    "proximitySearch": "With phrase changes",
-    "maxWordsApart": "Max words apart",
-    "proximitySearchExample": "\"Marie and Henry are in Paris\"~2",
-    "proximitySearchExplanation1": "Also called proximity search.",
-    "proximitySearchExplanation2": "The maximum distance with which words can be further apart or in a different order in the phrase.",
-    "proximitySearchExplanation3": "\"Marie and Henry are in Paris\"~1 will find: \"and Marie Henry are in Paris\"",
-    "proximitySearchExplanation4": "\"Marie and Henry are in Paris\"~2 will find: \"Henry and Marie are in Paris\"",
-    "searchInFields": "Search in field",
-    "allFields": "All fields",
-    "fields": {
-      "tags": "Tags",
-      "name": "Name",
-      "author": "Author",
-      "recipients": "Recipients",
-      "content": "Content",
-      "path": "Path",
-      "threadId": "Thread ID"
-    }
-  },
   "searchSelection": {
     "count": "No selected documents | 1 selected document | {count} selected documents",
     "star": "Star",
@@ -2168,11 +2031,6 @@
     "rowRange": "to {to} of 0 tasks | to {to} of 1 task | to {to} of {total} tasks",
     "rowRangeFewer": "of 0 tasks | of 1 task | to {total} tasks",
     "rowRangeCompact": "of 0 tasks | of 1 task | of {total} tasks"
-  },
-  "rowPaginationUsers": {
-    "rowRange": "to {to} of 0 users | to {to} of 1 user | to {to} of {total} users",
-    "rowRangeFewer": "of 0 users | of 1 user | to {total} users",
-    "rowRangeCompact": "of 0 users | of 1 user | of {total} users"
   },
   "themes": {
     "dark": "Dark mode",
