@@ -4,8 +4,9 @@
     "yes": "crwdns7546:0crwdne7546:0",
     "no": "crwdns7548:0crwdne7548:0",
     "submit": "crwdns7550:0crwdne7550:0",
-    "save": "Save",
+    "save": "crwdns10265:0crwdne10265:0",
     "reset": "crwdns7552:0crwdne7552:0",
+    "search": "crwdns10267:0crwdne10267:0",
     "you": "crwdns7554:0{username}crwdne7554:0",
     "building": "crwdns7556:0crwdne7556:0"
   },
@@ -60,6 +61,10 @@
   "buttonTogglePathTreeView": {
     "list": "crwdns9940:0crwdne9940:0",
     "tree": "crwdns9942:0crwdne9942:0"
+  },
+  "buttonToggleContentTypesView": {
+    "flat": "crwdns10269:0crwdne10269:0",
+    "grouped": "crwdns10271:0crwdne10271:0"
   },
   "buttonToggleSettings": {
     "label": "crwdns7604:0crwdne7604:0"
@@ -219,7 +224,7 @@
     "toggle": "crwdns7744:0crwdne7744:0"
   },
   "contentTypesCategoryName": {
-    "toggle": "Toggle the {category} category"
+    "toggle": "crwdns10273:0{category}crwdne10273:0"
   },
   "filtersPanelSearch": {
     "placeholder": "crwdns9816:0crwdne9816:0"
@@ -274,24 +279,7 @@
       "batchDownloadSubmit": "crwdns7836:0{total}crwdne7836:0",
       "warningNumber": "crwdns7838:0{number}crwdne7838:0",
       "warningSize": "crwdns7840:0{size}crwdne7840:0",
-      "warningConfirm": "crwdns7842:0crwdne7842:0",
-      "sort": {
-        "sortLabel": "crwdns7844:0crwdne7844:0",
-        "sort": "crwdns7846:0crwdne7846:0",
-        "relevance": "crwdns7848:0crwdne7848:0",
-        "dateNewest": "crwdns7850:0crwdne7850:0",
-        "dateOldest": "crwdns7852:0crwdne7852:0",
-        "creationDateNewest": "crwdns7854:0crwdne7854:0",
-        "creationDateOldest": "crwdns7856:0crwdne7856:0",
-        "sizeLargest": "crwdns7858:0crwdne7858:0",
-        "sizeSmallest": "crwdns7860:0crwdne7860:0",
-        "path": "crwdns7862:0crwdne7862:0",
-        "pathReverse": "crwdns7864:0crwdne7864:0",
-        "titleNorm": "crwdns7866:0crwdne7866:0",
-        "titleNormReverse": "crwdns7868:0crwdne7868:0",
-        "default": "crwdns7870:0crwdne7870:0",
-        "count": "crwdns7872:0crwdne7872:0"
-      }
+      "warningConfirm": "crwdns7842:0crwdne7842:0"
     }
   },
   "role": {
@@ -300,7 +288,8 @@
     "project_admin": "crwdns10162:0crwdne10162:0",
     "project_editor": "crwdns10164:0crwdne10164:0",
     "project_member": "crwdns10166:0crwdne10166:0",
-    "project_visitor": "crwdns10168:0crwdne10168:0"
+    "project_visitor": "crwdns10168:0crwdne10168:0",
+    "no_role": "crwdns10275:0crwdne10275:0"
   },
   "searchFormControl": {
     "submitLabel": "crwdns7874:0crwdne7874:0"
@@ -504,12 +493,22 @@
   "filter": {
     "project": "crwdns8040:0crwdne8040:0",
     "contentType": "crwdns8042:0crwdne8042:0",
-    "contentTypeCategory": "File type categories",
+    "contentTypeCategory": "crwdns10277:0crwdne10277:0",
+    "contentTypeCategoryItem": {
+      "AUDIO": "crwdns10279:0crwdne10279:0",
+      "VIDEO": "crwdns10281:0crwdne10281:0",
+      "IMAGE": "crwdns10283:0crwdne10283:0",
+      "DOCUMENT": "crwdns10285:0crwdne10285:0",
+      "EMAIL": "crwdns10287:0crwdne10287:0",
+      "PRESENTATION": "crwdns10289:0crwdne10289:0",
+      "SPREADSHEET": "crwdns10291:0crwdne10291:0",
+      "OTHER": "crwdns10293:0crwdne10293:0"
+    },
     "fileTypes": {
       "legacyIndex": {
-        "title": "Category grouping unavailable",
-        "description": "This project was indexed without file type categories.",
-        "descriptionPlural": "Some of these projects were indexed without file type categories."
+        "title": "crwdns10295:0crwdne10295:0",
+        "description": "crwdns10297:0crwdne10297:0",
+        "descriptionPlural": "crwdns10299:0crwdne10299:0"
       }
     },
     "language": "crwdns8044:0crwdne8044:0",
@@ -1122,6 +1121,7 @@
           "state": "crwdns8932:0crwdne8932:0",
           "id": "crwdns8934:0crwdne8934:0"
         },
+        "unavailableAlert": "crwdns10301:0crwdne10301:0",
         "truncatedAlert": {
           "sizeLimit": "crwdns10178:0{reason}crwdnd10178:0{limit}crwdne10178:0",
           "fileCountLimit": "crwdns10180:0{reason}crwdnd10180:0{limit}crwdne10180:0",
@@ -1157,13 +1157,13 @@
         "queries": {
           "onlyCSV": "crwdns9818:0crwdne9818:0",
           "onlyUTF8": "crwdns9820:0crwdne9820:0",
-          "queriesLimist": "crwdns9822:0crwdne9822:0",
+          "queriesLimits": "crwdns10303:0crwdne10303:0",
           "firstColumn": "crwdns9824:0crwdne9824:0",
           "lineBreaks": "crwdns9826:0crwdne9826:0",
           "operators": "crwdns9828:0crwdne9828:0"
         },
         "sections": {
-          "general": "crwdns8968:0crwdne8968:0",
+          "general": "crwdns10305:0crwdne10305:0",
           "queries": "crwdns8970:0crwdne8970:0",
           "operators": "crwdns8972:0crwdne8972:0",
           "filters": "crwdns8974:0crwdne8974:0"
@@ -1213,15 +1213,15 @@
         "submit": "crwdns9016:0crwdne9016:0",
         "submitError": "crwdns9018:0crwdne9018:0",
         "submitSuccess": "crwdns9020:0crwdne9020:0",
-        "editError": "Something went wrong, unable to update the batch search.",
-        "editSuccess": "Batch search updated successfully."
+        "editError": "crwdns10307:0crwdne10307:0",
+        "editSuccess": "crwdns10309:0crwdne10309:0"
       },
       "new": {
         "title": "crwdns9022:0crwdne9022:0"
       },
       "edit": {
-        "title": "Edit batch search",
-        "breadcrumb": "Edit"
+        "title": "crwdns10311:0crwdne10311:0",
+        "breadcrumb": "crwdns10313:0crwdne10313:0"
       }
     },
     "batch-search-queries": {
@@ -1357,7 +1357,7 @@
     "updatedOn": "crwdns9186:0crwdne9186:0",
     "links": "crwdns9188:0crwdne9188:0",
     "actions": "crwdns9190:0crwdne9190:0",
-    "userRole": "crwdns10028:0crwdne10028:0"
+    "userRole": "crwdns10315:0crwdne10315:0"
   },
   "projectRowActions": {
     "edit": "crwdns9192:0crwdne9192:0",
@@ -1407,7 +1407,8 @@
     "title": "crwdns9244:0crwdne9244:0",
     "tabs": {
       "details": "crwdns10188:0crwdne10188:0",
-      "pathBanners": "crwdns10190:0crwdne10190:0"
+      "pathBanners": "crwdns10190:0crwdne10190:0",
+      "users": "crwdns10317:0crwdne10317:0"
     },
     "notify": {
       "update": {
@@ -1459,6 +1460,90 @@
         "delete": {
           "succeedBody": "crwdns10236:0crwdne10236:0",
           "failedBody": "crwdns10238:0crwdne10238:0"
+        }
+      }
+    },
+    "users": {
+      "empty": "crwdns10319:0crwdne10319:0",
+      "fetchError": "crwdns10321:0crwdne10321:0",
+      "noResults": "crwdns10323:0crwdne10323:0",
+      "fields": {
+        "uid": {
+          "label": "crwdns10325:0crwdne10325:0"
+        },
+        "name": {
+          "label": "crwdns10327:0crwdne10327:0"
+        },
+        "email": {
+          "label": "crwdns10329:0crwdne10329:0"
+        },
+        "role": {
+          "label": "crwdns10331:0crwdne10331:0"
+        }
+      },
+      "roleSelect": {
+        "save": "crwdns10333:0crwdne10333:0",
+        "cancel": "crwdns10335:0crwdne10335:0",
+        "saveSuccess": "crwdns10337:0crwdne10337:0",
+        "saveError": "crwdns10339:0crwdne10339:0",
+        "changedCount": "crwdns10341:0{count}crwdne10341:0"
+      },
+      "adminPromotionModal": {
+        "title": "crwdns10343:0crwdne10343:0",
+        "body": "crwdns10345:0crwdne10345:0",
+        "confirm": "crwdns10347:0crwdne10347:0",
+        "cancel": "crwdns10349:0crwdne10349:0"
+      },
+      "actions": {
+        "copy": "crwdns10351:0crwdne10351:0",
+        "delete": "crwdns10353:0crwdne10353:0",
+        "deleteModal": {
+          "title": "crwdns10355:0{name}crwdne10355:0",
+          "body": {
+            "intro": "crwdns10357:0crwdne10357:0",
+            "accessRevoked": "crwdns10359:0{allProjects}crwdne10359:0",
+            "dataDeleted": "crwdns10361:0{allProjects}crwdne10361:0",
+            "tasksDeleted": "crwdns10363:0crwdne10363:0",
+            "allProjects": "crwdns10365:0crwdne10365:0"
+          },
+          "confirm": "crwdns10367:0crwdne10367:0",
+          "success": "crwdns10369:0crwdne10369:0",
+          "error": "crwdns10371:0crwdne10371:0"
+        }
+      },
+      "create": {
+        "button": "crwdns10373:0crwdne10373:0",
+        "title": "crwdns10375:0crwdne10375:0",
+        "confirm": "crwdns10377:0crwdne10377:0",
+        "saveSuccess": "crwdns10379:0crwdne10379:0",
+        "saveError": "crwdns10381:0crwdne10381:0",
+        "saveErrorConflict": "crwdns10383:0crwdne10383:0",
+        "fields": {
+          "username": {
+            "label": "crwdns10385:0crwdne10385:0",
+            "placeholder": "crwdns10387:0crwdne10387:0"
+          },
+          "email": {
+            "label": "crwdns10389:0crwdne10389:0",
+            "placeholder": "crwdns10391:0crwdne10391:0"
+          },
+          "name": {
+            "label": "crwdns10393:0crwdne10393:0",
+            "placeholder": "crwdns10395:0crwdne10395:0"
+          },
+          "password": {
+            "label": "crwdns10397:0crwdne10397:0",
+            "placeholder": "crwdns10399:0crwdne10399:0"
+          },
+          "confirmPassword": {
+            "label": "crwdns10401:0crwdne10401:0",
+            "placeholder": "crwdns10403:0crwdne10403:0",
+            "mismatch": "crwdns10405:0crwdne10405:0"
+          },
+          "role": {
+            "label": "crwdns10407:0crwdne10407:0",
+            "inProject": "crwdns10409:0{project}crwdne10409:0"
+          }
         }
       }
     }
@@ -1810,7 +1895,7 @@
     "barometer": {
       "document": "crwdns9556:0{n}crwdnd9556:0{n}crwdne9556:0",
       "amongWhichOnDisk": "crwdns9558:0{n}crwdne9558:0",
-      "duplicate": "No duplicates were detected during indexation | {n} duplicate ignored during indexation | {n} duplicates ignored during indexation"
+      "duplicate": "crwdns10411:0{n}crwdnd10411:0{n}crwdne10411:0"
     },
     "diskUsage": {
       "details": "crwdns9560:0crwdne9560:0"
@@ -1940,6 +2025,52 @@
       "link": "crwdns9668:0crwdne9668:0"
     }
   },
+  "searchAdvancedModal": {
+    "title": "crwdns10413:0crwdne10413:0",
+    "search": "crwdns10415:0crwdne10415:0",
+    "cancel": "crwdns10417:0crwdne10417:0",
+    "reset": "crwdns10419:0crwdne10419:0",
+    "eg": "crwdns10421:0crwdne10421:0",
+    "and": "crwdns10423:0crwdne10423:0",
+    "or": "crwdns10425:0crwdne10425:0",
+    "anyOfTheseWords": "crwdns10427:0crwdne10427:0",
+    "anyOfTheseWordsExample": "crwdns10429:0crwdne10429:0",
+    "allTheseWords": "crwdns10431:0crwdne10431:0",
+    "allTheseWordsExample1": "crwdns10433:0crwdne10433:0",
+    "allTheseWordsExample2": "crwdns10435:0crwdne10435:0",
+    "exactPhrase": "crwdns10437:0crwdne10437:0",
+    "exactPhraseExample": "crwdns10439:0crwdne10439:0",
+    "noneOfTheseWords": "crwdns10441:0crwdne10441:0",
+    "noneOfTheseWordsExample1": "crwdns10443:0crwdne10443:0",
+    "noneOfTheseWordsExample2": "crwdns10445:0crwdne10445:0",
+    "singleCharWildcard": "crwdns10447:0crwdne10447:0",
+    "singleCharWildcardExample": "crwdns10449:0crwdne10449:0",
+    "multiCharWildcard": "crwdns10451:0crwdne10451:0",
+    "multiCharWildcardExample": "crwdns10453:0crwdne10453:0",
+    "fuzzySearch": "crwdns10455:0crwdne10455:0",
+    "charactersDifferent": "crwdns10457:0crwdne10457:0",
+    "fuzzySearchExample": "crwdns10459:0crwdne10459:0",
+    "fuzzySearchExplanation1": "crwdns10461:0crwdne10461:0",
+    "fuzzySearchExplanation2": "crwdns10463:0crwdne10463:0",
+    "proximitySearch": "crwdns10465:0crwdne10465:0",
+    "maxWordsApart": "crwdns10467:0crwdne10467:0",
+    "proximitySearchExample": "crwdns10469:0crwdne10469:0",
+    "proximitySearchExplanation1": "crwdns10471:0crwdne10471:0",
+    "proximitySearchExplanation2": "crwdns10473:0crwdne10473:0",
+    "proximitySearchExplanation3": "crwdns10475:0crwdne10475:0",
+    "proximitySearchExplanation4": "crwdns10477:0crwdne10477:0",
+    "searchInFields": "crwdns10479:0crwdne10479:0",
+    "allFields": "crwdns10481:0crwdne10481:0",
+    "fields": {
+      "tags": "crwdns10483:0crwdne10483:0",
+      "name": "crwdns10485:0crwdne10485:0",
+      "author": "crwdns10487:0crwdne10487:0",
+      "recipients": "crwdns10489:0crwdne10489:0",
+      "content": "crwdns10491:0crwdne10491:0",
+      "path": "crwdns10493:0crwdne10493:0",
+      "threadId": "crwdns10495:0crwdne10495:0"
+    }
+  },
   "searchSelection": {
     "count": "crwdns9934:0{count}crwdne9934:0",
     "star": "crwdns9672:0crwdne9672:0",
@@ -2045,6 +2176,11 @@
     "rowRange": "crwdns9800:0{to}crwdnd9800:0{to}crwdnd9800:0{to}crwdnd9800:0{total}crwdne9800:0",
     "rowRangeFewer": "crwdns9802:0{total}crwdne9802:0",
     "rowRangeCompact": "crwdns9804:0{total}crwdne9804:0"
+  },
+  "rowPaginationUsers": {
+    "rowRange": "crwdns10497:0{to}crwdnd10497:0{to}crwdnd10497:0{to}crwdnd10497:0{total}crwdne10497:0",
+    "rowRangeFewer": "crwdns10499:0{total}crwdne10499:0",
+    "rowRangeCompact": "crwdns10501:0{total}crwdne10501:0"
   },
   "themes": {
     "dark": "crwdns9838:0crwdne9838:0",
