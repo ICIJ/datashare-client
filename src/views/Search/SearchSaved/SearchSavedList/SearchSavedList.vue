@@ -101,13 +101,19 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
       :total-rows="pagination?.total ?? 0"
     >
       <template #breadcrumb>
-        <parent-overflow-entries-item>
+        <parent-overflow-entries-item
+          label="search"
+          :context="searchRoute"
+        >
           <navigation-breadcrumb-link
             :to="searchRoute"
             :title="t('appSidebar.search')"
           />
         </parent-overflow-entries-item>
-        <parent-overflow-entries-item>
+        <parent-overflow-entries-item
+          label="search.saved.list"
+          :context="{ name: 'search.saved.list' }"
+        >
           <navigation-breadcrumb-link
             :to="{ name: 'search.saved.list' }"
             no-caret
