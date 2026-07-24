@@ -155,7 +155,8 @@ export const routes = [
             path: 'entities',
             meta: {
               title: 'task.entities.title',
-              icon: markRaw(IPhUsersThree)
+              icon: markRaw(IPhUsersThree),
+              allowedModes: [MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]
             },
             children: [
               {

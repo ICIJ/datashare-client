@@ -161,6 +161,24 @@ describe('guards', () => {
       expect(router.currentRoute.value.name).not.toBe('error')
     })
 
+    it('should redirect task.entities.list to error in SERVER mode', async () => {
+      config.set('mode', 'SERVER')
+      await router.push({ name: 'task.entities.list' })
+      expect(router.currentRoute.value.name).toBe('error')
+    })
+
+    it('should redirect task.entities.new to error in SERVER mode', async () => {
+      config.set('mode', 'SERVER')
+      await router.push({ name: 'task.entities.new' })
+      expect(router.currentRoute.value.name).toBe('error')
+    })
+
+    it('should not redirect task.entities.list to error in LOCAL mode', async () => {
+      config.set('mode', 'LOCAL')
+      await router.push({ name: 'task.entities.list' })
+      expect(router.currentRoute.value.name).not.toBe('error')
+    })
+
     it('should redirect project.new to error in SERVER mode', async () => {
       config.set('mode', 'SERVER')
       await router.push({ name: 'project.new' })
