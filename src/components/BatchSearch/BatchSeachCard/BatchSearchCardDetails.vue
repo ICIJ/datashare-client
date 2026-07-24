@@ -44,7 +44,6 @@ const {
   nbQueries,
   nbQueriesWithoutResults,
   phraseMatches,
-  proximity,
   fuzziness,
   date,
   user,
@@ -85,7 +84,7 @@ const phraseMatchOff = computed(() => t('batchSearchCardDetails.phraseMatchOff')
 const phraseMatchValue = phraseMatches ? phraseMatchOn : phraseMatchOff
 
 const fuzzinessValue = computed(() => t('batchSearchCardDetails.fuzzinessValue', { n: fuzziness }))
-const proximityValue = computed(() => t('batchSearchCardDetails.proximityValue', { n: proximity }))
+const proximityValue = computed(() => t('batchSearchCardDetails.proximityValue', { n: fuzziness }))
 
 const { parseFiltersEntries } = useSearchBreadcrumb()
 
@@ -228,7 +227,7 @@ const showError = () => showBatchSearchErrorModal(batchSearch)
           :value="phraseMatchValue"
         />
       </li>
-      <li v-if="phraseMatch">
+      <li v-if="phraseMatches">
         <batch-search-card-details-entry
           :label="t('batchSearchCardDetails.proximity')"
           :icon="IPhArrowsOutLineHorizontal"
