@@ -1,6 +1,6 @@
 <script setup>
 import { computed, toValue } from 'vue'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 
 import { useSearchProperties } from '@/composables/useSearchProperties'
 
@@ -38,7 +38,7 @@ const display = computed(() => {
       :title="display"
     >
       <app-icon
-        size="1em"
+        size="1.25em"
         :name="icon ?? items[property].icon ?? property"
       />
     </div>

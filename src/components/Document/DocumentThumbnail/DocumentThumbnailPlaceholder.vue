@@ -28,6 +28,7 @@ const style = computed(() => {
     <display-content-type-icon
       :value="document.contentType"
       colorize
+      size="1.25em"
     />
   </span>
 </template>

@@ -16,16 +16,24 @@ import RouterLinkBatchSearch from '@/components/RouterLink/RouterLinkBatchSearch
 import RowPaginationBatchSearches from '@/components/RowPagination/RowPaginationBatchSearches'
 import { useTaskSettings } from '@/composables/useTaskSettings'
 import { useAuth } from '@/composables/useAuth'
-import { TASK_NAME } from '@/enums/taskNames'
+import { useBatchSearchErrorModal } from '@/composables/useBatchSearchErrorModal.js'
+import { TASK_TYPE } from '@/enums/taskTypes'
 import TaskPage from '@/views/Task/TaskPage'
 import TaskStatus from '@/views/Task/TaskStatus.vue'
 
 const { t } = useI18n()
 const { propertiesModelValueOptions } = useTaskSettings('batch-search')
 const { username } = useAuth()
+const { show: showBatchSearchErrorModal } = useBatchSearchErrorModal()
 
 function getBatchSearchRecord(item, key, defaultValue = null) {
   return get(item, ['args', 'batchRecord', key].join('.'), defaultValue)
+}
+
+function showError(item) {
+  const errorMessage = getBatchSearchRecord(item, 'errorMessage') ?? item.error?.message ?? null
+  const errorQuery = getBatchSearchRecord(item, 'errorQuery') ?? null
+  showBatchSearchErrorModal({ errorMessage, errorQuery })
 }
 
 function getBatchSearchResult(item, defaultValue = 0) {
@@ -43,7 +51,7 @@ function canManageBatchSearch(item) {
 
 <template>
   <task-page
-    :task-filter="[TASK_NAME.BATCH_SEARCH, TASK_NAME.BATCH_SEARCH_PROXY]"
+    :task-types="[TASK_TYPE.BATCH_SEARCH]"
     page-name="batch-search"
     show-add
     searchable
@@ -85,7 +93,11 @@ function canManageBatchSearch(item) {
           </p>
         </template>
         <template #cell(state)="{ item }">
-          <task-status :status="item.state" />
+          <task-status
+            :status="item.state"
+            with-click
+            @error="showError(item)"
+          />
         </template>
         <template #cell(privacy)="{ item }">
           <display-visibility :value="getBatchSearchRecord(item, 'published')" />
@@ -117,6 +129,7 @@ function canManageBatchSearch(item) {
         <template #row-actions="{ item }">
           <batch-search-actions
             v-if="canManageBatchSearch(item)"
+            class="flex-nowrap"
             :batch-search="item.args.batchRecord"
             hide-labels
             @refresh="refresh"

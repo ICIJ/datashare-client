@@ -1,7 +1,7 @@
 <script setup>
 import { computed, inject } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur'
 
 import IPhCaretDown from '~icons/ph/caret-down'
 
@@ -129,6 +129,10 @@ const size = computed(() => (compactOrInjected.value ? 'sm' : 'md'))
     --path-tree-view-entry-more-padding-x: 0;
     --path-tree-view-entry-more-padding-y: 0;
     --path-tree-view-entry-more-justify-content: center;
+  }
+
+  & > .above-stretched-link {
+    z-index: $stretched-link-z-index + 1;
   }
 }
 </style>

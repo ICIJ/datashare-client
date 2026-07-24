@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, toRef, watch } from 'vue'
+import { toRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPanelSectionFilterEntry'
@@ -13,24 +13,16 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
-const { computedAll, computedTotal, searchStore } = useSearchFilter()
+const { computedAll } = useSearchFilter()
 
 const all = computedAll(toRef(props, 'filter'))
-// We track if the total was already visible before to avoid flickering
-// when hidding it (e.g. when the search is not ready).
-const hadTotal = ref(false)
-const total = computedTotal(toRef(props, 'filter'))
-const hideTotal = computed(() => total.value === null || !hadTotal.value)
-// We need to update hadTotal after the search is ready and a total is given
-watch(toRef(searchStore, 'isReady'), value => (hadTotal.value = value && total.value !== null))
 </script>
 
 <template>
   <filters-panel-section-filter-entry
     v-model="all"
-    :count="total"
     :disabled="all"
-    :hide-count="hideTotal"
+    hide-count
     :label="t('filterTypeAll.label')"
   />
 </template>

@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 import { useI18n } from 'vue-i18n'
 
 import ProjectJumbotronPin from './ProjectJumbotronPin'
@@ -15,9 +15,11 @@ import Hook from '@/components/Hook/Hook'
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
 import ProjectLabel from '@/components/Project/ProjectLabel'
 import ProjectThumbnail from '@/components/Project/ProjectThumbnail'
-import ModeLocalOnly from '@/components/Mode/ModeLocalOnly'
 import ModeServerOnly from '@/components/Mode/ModeServerOnly.vue'
-import DisplayRoles from '@/components/Display/DisplayRoles.vue'
+import DisplayRole from '@/components/Display/DisplayRole.vue'
+import PolicyOnly from '@/components/Policy/PolicyOnly.vue'
+import ModeLocalOnly from '@/components/Mode/ModeLocalOnly.vue'
+import { usePolicies } from '@/composables/usePolicies.js'
 
 const { breakpointDown } = useBreakpoints()
 const router = useRouter()
@@ -40,6 +42,9 @@ const props = defineProps({
 
 const { t } = useI18n()
 const { show: showProjectDeletionModal } = useProjectDeletionModal(props.project)
+const { getRoleByProject } = usePolicies()
+
+const userRole = computed(() => getRoleByProject(props.project.name))
 
 const toEdit = computed(() => ({
   name: 'project.view.edit',
@@ -68,6 +73,7 @@ const promptProjectDeletion = async () => {
     router.push({ name: 'project.list' })
   }
 }
+
 </script>
 
 <template>
@@ -91,24 +97,30 @@ const promptProjectDeletion = async () => {
           :bind="{ project }"
         />
       </h3>
-      <mode-local-only>
-        <button-row-action-delete
-          class="ms-auto"
-          size="md"
-          :hide-label="false"
-          :square="false"
-          :label="t('projectJumbotron.delete')"
-          @click="promptProjectDeletion"
-        />
-        <button-row-action-edit
-          size="md"
-          :hide-label="false"
-          :square="false"
-          :to="toEdit"
-          :label="t('projectJumbotron.edit')"
-        />
-      </mode-local-only>
-      <project-jumbotron-pin v-model:pinned="pinned" />
+      <div class="d-flex gap-2">
+        <mode-local-only>
+          <button-row-action-delete
+            size="md"
+            :hide-label="false"
+            :square="false"
+            :label="t('projectJumbotron.delete')"
+            @click="promptProjectDeletion"
+          />
+        </mode-local-only>
+        <policy-only
+          admin
+          :project="project"
+        >
+          <button-row-action-edit
+            size="md"
+            :hide-label="false"
+            :square="false"
+            :to="toEdit"
+            :label="t('projectJumbotron.edit')"
+          />
+        </policy-only>
+        <project-jumbotron-pin v-model:pinned="pinned" />
+      </div>
     </div>
     <div class="project-jumbotron__content d-flex gap-3 align-items-start">
       <hook
@@ -137,7 +149,7 @@ const promptProjectDeletion = async () => {
           <div class="d-flex flex-wrap gap-3 text-body-secondary">
             <span
               v-if="creationDate"
-              class="text-nowrap"
+              class="text-nowrap d-inline-flex align-items-center gap-1"
             >
               <app-icon><i-ph-calendar-blank /></app-icon>
               {{ t('projectJumbotron.creationDate') }}
@@ -145,17 +157,16 @@ const promptProjectDeletion = async () => {
             </span>
             <span
               v-if="updateDate"
-              class="text-nowrap"
+              class="text-nowrap d-inline-flex align-items-center gap-1"
             >
-              <app-icon><i-ph-calendar-check /></app-icon>
+              <app-icon>
+                <i-ph-calendar-check />
+              </app-icon>
               {{ t('projectJumbotron.updateDate') }}
               <display-datetime :value="updateDate" />
             </span>
             <mode-server-only>
-              <display-roles
-                :project="project"
-                class="text-body-secondary"
-              />
+              <display-role :value="userRole" />
             </mode-server-only>
           </div>
 

@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur'
 
 const props = defineProps({
   icon: {

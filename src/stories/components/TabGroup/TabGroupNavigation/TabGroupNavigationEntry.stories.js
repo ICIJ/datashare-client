@@ -7,7 +7,7 @@ export default {
   args: {
     active: true,
     default: 'Entities',
-    icon: 'users',
+    icon: markRaw(IPhUsers),
     count: 8,
     target: '_self'
   },

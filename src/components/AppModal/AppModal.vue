@@ -133,6 +133,12 @@ defineProps({
   .modal-footer {
     --bs-modal-padding: #{$spacer-xl};
 
+    // Bootstrap's .modal-header reads --bs-modal-header-padding (not
+    // --bs-modal-padding), so the responsive value below never reached the
+    // header and its title stayed indented past the body on narrow screens.
+    // Re-derive it from --bs-modal-padding, keeping the 0 bottom.
+    --bs-modal-header-padding: var(--bs-modal-padding) var(--bs-modal-padding) 0;
+
     @include media-breakpoint-down(lg) {
       --bs-modal-padding: #{$spacer};
     }

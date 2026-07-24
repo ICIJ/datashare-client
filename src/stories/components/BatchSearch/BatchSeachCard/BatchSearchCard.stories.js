@@ -1,18 +1,4 @@
-import { vueRouter } from 'storybook-vue3-router'
-
 import BatchSearchCard from '@/components/BatchSearch/BatchSeachCard/BatchSearchCard'
-import { withPinia } from '~storybook/decorators/pinia'
-
-const routes = [
-  {
-    path: '/project/:name',
-    name: 'project.view'
-  },
-  {
-    path: '/:indices/:uuid',
-    name: 'batch-tasks.view.results'
-  }
-]
 
 const batchSearch = {
   uuid: 'aabc',
@@ -50,7 +36,6 @@ const batchSearchNoResults = {
 }
 
 export default {
-  decorators: [vueRouter(routes), withPinia()],
   title: 'Components/BatchSearch/BatchSearchCard',
   component: BatchSearchCard,
   tags: ['autodocs'],

@@ -4,6 +4,7 @@
     "yes": "crwdns7546:0crwdne7546:0",
     "no": "crwdns7548:0crwdne7548:0",
     "submit": "crwdns7550:0crwdne7550:0",
+    "save": "Save",
     "reset": "crwdns7552:0crwdne7552:0",
     "you": "crwdns7554:0{username}crwdne7554:0",
     "building": "crwdns7556:0crwdne7556:0"
@@ -216,6 +217,9 @@
   },
   "filtersPanelSectionFilterTitleToggler": {
     "toggle": "crwdns7744:0crwdne7744:0"
+  },
+  "contentTypesCategoryName": {
+    "toggle": "Toggle the {category} category"
   },
   "filtersPanelSearch": {
     "placeholder": "crwdns9816:0crwdne9816:0"
@@ -500,6 +504,14 @@
   "filter": {
     "project": "crwdns8040:0crwdne8040:0",
     "contentType": "crwdns8042:0crwdne8042:0",
+    "contentTypeCategory": "File type categories",
+    "fileTypes": {
+      "legacyIndex": {
+        "title": "Category grouping unavailable",
+        "description": "This project was indexed without file type categories.",
+        "descriptionPlural": "Some of these projects were indexed without file type categories."
+      }
+    },
     "language": "crwdns8044:0crwdne8044:0",
     "namedEntityPerson": "crwdns8046:0crwdne8046:0",
     "namedEntityLocation": "crwdns8048:0crwdne8048:0",
@@ -1200,10 +1212,16 @@
         },
         "submit": "crwdns9016:0crwdne9016:0",
         "submitError": "crwdns9018:0crwdne9018:0",
-        "submitSuccess": "crwdns9020:0crwdne9020:0"
+        "submitSuccess": "crwdns9020:0crwdne9020:0",
+        "editError": "Something went wrong, unable to update the batch search.",
+        "editSuccess": "Batch search updated successfully."
       },
       "new": {
         "title": "crwdns9022:0crwdne9022:0"
+      },
+      "edit": {
+        "title": "Edit batch search",
+        "breadcrumb": "Edit"
       }
     },
     "batch-search-queries": {
@@ -1288,11 +1306,6 @@
       "error": "crwdns9126:0crwdne9126:0"
     }
   },
-  "batchSearchActionsEditModal": {
-    "title": "crwdns9128:0crwdne9128:0",
-    "name": "crwdns9130:0crwdne9130:0",
-    "description": "crwdns9132:0crwdne9132:0"
-  },
   "batchSearchActionsRelaunchModal": {
     "title": "crwdns9134:0crwdne9134:0",
     "name": "crwdns9136:0crwdne9136:0",
@@ -1344,7 +1357,7 @@
     "updatedOn": "crwdns9186:0crwdne9186:0",
     "links": "crwdns9188:0crwdne9188:0",
     "actions": "crwdns9190:0crwdne9190:0",
-    "userRoles": "crwdns10028:0crwdne10028:0"
+    "userRole": "crwdns10028:0crwdne10028:0"
   },
   "projectRowActions": {
     "edit": "crwdns9192:0crwdne9192:0",
@@ -1796,7 +1809,8 @@
     },
     "barometer": {
       "document": "crwdns9556:0{n}crwdnd9556:0{n}crwdne9556:0",
-      "amongWhichOnDisk": "crwdns9558:0{n}crwdne9558:0"
+      "amongWhichOnDisk": "crwdns9558:0{n}crwdne9558:0",
+      "duplicate": "No duplicates were detected during indexation | {n} duplicate ignored during indexation | {n} duplicates ignored during indexation"
     },
     "diskUsage": {
       "details": "crwdns9560:0crwdne9560:0"

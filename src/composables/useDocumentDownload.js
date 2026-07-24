@@ -1,4 +1,4 @@
-import { computed, toRef, watchEffect } from 'vue'
+import { computed, ref, toRef, watchEffect } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { useCore } from '@/composables/useCore'
@@ -6,7 +6,7 @@ import { useDocumentDownloadStore, useDocumentStore } from '@/store/modules'
 import settings from '@/utils/settings'
 import byteSize from '@/utils/byteSize'
 
-export function useDocumentDownload(document) {
+export function useDocumentDownload(document, { immediate = true } = {}) {
   const documentStore = useDocumentStore()
   const documentDownloadStore = useDocumentDownloadStore()
   const core = useCore()
@@ -75,7 +75,7 @@ export function useDocumentDownload(document) {
     return byteSize(embeddedDocumentDownloadMaxSize.value)
   })
 
-  async function fetchStatus() {
+  async function fetchDownloadStatus() {
     const { index = null } = documentRef.value
     // If the index is null, this means the document is not loaded yet
     // and therefore, we should not fetch the status
@@ -84,11 +84,15 @@ export function useDocumentDownload(document) {
     }
   }
 
+  const hasTextContent = computed(() => {
+    return documentRef.value.contentTextLength > 0
+  })
+
   async function downloadTextContent() {
+    if (!hasTextContent.value) return
     if (!documentRef.value.content) {
       await documentStore.getContent()
     }
-
     const { content, title } = documentRef.value
     const a = window.document.createElement('a')
     a.href = URL.createObjectURL(new Blob([content], { type: 'text/plain;charset=UTF-8' }))
@@ -96,9 +100,50 @@ export function useDocumentDownload(document) {
     a.click()
   }
 
-  watchEffect(fetchStatus)
+  const availableTranslations = ref([])
+
+  const hasTranslations = computed(() => {
+    return availableTranslations.value.length > 0
+  })
+
+  async function fetchTranslationStatus() {
+    const { index, id, routing } = documentRef.value
+    if (!index || !id) return
+    try {
+      const _source = 'content_translated.target_language'
+      const data = await core.api.elasticsearch.getSource({ index, id, routing, _source })
+      availableTranslations.value = (data.content_translated || []).filter(t => t.target_language)
+    }
+    catch {
+      availableTranslations.value = []
+    }
+  }
+
+  async function downloadTranslatedContent() {
+    if (!documentRef.value.content) {
+      await documentStore.getContent()
+    }
+
+    const { translations, title } = documentRef.value
+    const targetLanguage = translations[0]?.target_language ?? availableTranslations.value[0]?.target_language
+    const translatedContent = documentRef.value.translatedContentIn(targetLanguage)
+    const a = window.document.createElement('a')
+    a.href = URL.createObjectURL(new Blob([translatedContent], { type: 'text/plain;charset=UTF-8' }))
+    a.download = `${title}.txt`
+    a.click()
+  }
+
+  async function fetchStatuses() {
+    await Promise.all([fetchDownloadStatus(), fetchTranslationStatus()])
+  }
+
+  if (immediate) {
+    watchEffect(fetchDownloadStatus)
+    watchEffect(fetchTranslationStatus)
+  }
 
   return {
+    fetchStatuses,
     extensionWarning,
     description,
     showExtensionWarning,
@@ -113,6 +158,9 @@ export function useDocumentDownload(document) {
     isDownloadAllowed,
     rootContentLength,
     maxRootContentLength,
-    downloadTextContent
+    downloadTextContent,
+    hasTextContent,
+    hasTranslations,
+    downloadTranslatedContent
   }
 }

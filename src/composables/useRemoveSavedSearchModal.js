@@ -1,10 +1,10 @@
-import { useModalController } from 'bootstrap-vue-next'
+import { useModal } from 'bootstrap-vue-next'
 
 import { useConfirmModal } from '@/composables/useConfirmModal'
 import { useHistoryEvents } from '@/composables/useHistoryEvents'
 
 export function useRemoveSavedSearchModal() {
-  const modalController = useModalController()
+  const { hide } = useModal()
   const { remove } = useHistoryEvents('SEARCH')
   const { confirm: showConfirmModal } = useConfirmModal()
 
@@ -12,10 +12,6 @@ export function useRemoveSavedSearchModal() {
     if (await showConfirmModal(props)) {
       return remove({ id })
     }
-  }
-
-  function hide() {
-    return modalController.hide()
   }
 
   return { show, hide }

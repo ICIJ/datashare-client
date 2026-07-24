@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 import IPhCaretRightFill from '~icons/ph/caret-right-fill'
 
 import SearchBreadcrumbFormEntryOccurrences from '@/components/Search/SearchBreadcrumbForm/SearchBreadcrumbFormEntryOccurrences'
@@ -46,12 +46,16 @@ const props = defineProps({
   },
   noXIcon: {
     type: Boolean
+  },
+  operator: {
+    type: String,
+    default: null
   }
 })
 
 const emit = defineEmits(['click:x'])
 
-const showOccurences = computed(() => {
+const showOccurrences = computed(() => {
   return !props.noOccurrences && props.occurrences !== null
 })
 
@@ -67,6 +71,7 @@ const showCaret = computed(() => {
       :icon="icon"
       :filter="filter"
       :no-icon="noIcon"
+      :operator="operator"
       :query="query"
       :size="size"
       :value="value"
@@ -75,7 +80,7 @@ const showCaret = computed(() => {
     />
     <div class="text-nowrap">
       <search-breadcrumb-form-entry-occurrences
-        v-if="showOccurences"
+        v-if="showOccurrences"
         class="search-breadcrumb-form-entry__occurences"
         :occurrences="occurrences"
         :previous-occurrences="previousOccurrences"

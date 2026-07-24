@@ -24,6 +24,7 @@ import { checkSearchOrder } from '@/router/guards/checkSearchOrder'
 import { checkSearchSort } from '@/router/guards/checkSearchSort'
 import { prefillSearchStore } from '@/router/guards/prefillSearchStore'
 import { replaceSizeToPerPage } from '@/router/guards/replaceSizeToPerPage'
+import { ROLE } from '@/enums/roles.js'
 
 export const routes = [
   {
@@ -154,7 +155,8 @@ export const routes = [
             path: 'entities',
             meta: {
               title: 'task.entities.title',
-              icon: markRaw(IPhUsersThree)
+              icon: markRaw(IPhUsersThree),
+              allowedModes: [MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]
             },
             children: [
               {
@@ -254,6 +256,15 @@ export const routes = [
                       path: 'all/batch-search-documents'
                     }
                   ]
+                }
+              },
+              {
+                path: ':indices/:uuid/edit',
+                name: 'task.batch-search.edit',
+                props: true,
+                component: () => import('@/views/Task/TaskBatchSearch/TaskBatchSearchEdit'),
+                meta: {
+                  title: 'task.batch-search.edit.title'
                 }
               },
               {
@@ -425,12 +436,48 @@ export const routes = [
                 name: 'project.view.edit',
                 path: 'edit',
                 props: true,
-                component: () => import('@/views/Project/ProjectView/ProjectViewEdit'),
+                component: () => import('@/views/Project/ProjectView/ProjectViewEdit/ProjectViewEdit.vue'),
+                redirect: { name: 'project.view.edit.details' },
                 meta: {
                   icon: markRaw(IPhPencilSimple),
                   title: 'projectViewEdit.title',
-                  allowedModes: [MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]
-                }
+                  allowedRole: ROLE.PROJECT_ADMIN,
+                  projectParam: 'name'
+                },
+                children: [
+                  {
+                    name: 'project.view.edit.details',
+                    path: 'details',
+                    props: true,
+                    component: () => import('@/views/Project/ProjectView/ProjectViewEdit/ProjectViewEditDetails.vue'),
+                    meta: {
+                      breadcrumb: false,
+                      settings: false
+                    }
+                  },
+                  {
+                    name: 'project.view.edit.banners',
+                    path: 'banners/:bannerId?',
+                    props: true,
+                    component: () => import('@/views/Project/ProjectView/ProjectViewEdit/ProjectViewEditPathBanners/ProjectViewEditPathBanners.vue'),
+                    meta: {
+                      breadcrumb: false,
+                      settings: false
+                    }
+                  },
+                  {
+                    name: 'project.view.edit.users',
+                    path: 'users',
+                    props: true,
+                    components: {
+                      default: () => import('@/views/Project/ProjectView/ProjectViewEdit/ProjectViewEditUsers.vue'),
+                      settings: () => import('@/views/Project/ProjectView/ProjectViewEdit/ProjectViewEditUsersSettings.vue')
+                    },
+                    meta: {
+                      breadcrumb: false,
+                    }
+                  }
+                ]
               }
             ]
           }
@@ -513,6 +560,16 @@ export const routes = [
               breadcrumb: false,
               allowedModes: [MODE_NAME.SERVER]
             }
+          },
+          {
+            name: 'settings.snapshots',
+            path: 'snapshots',
+            component: () => import('@/views/Settings/SettingsView/SettingsViewSnapshots'),
+            meta: {
+              title: 'settings.snapshots.title',
+              breadcrumb: false,
+              allowedModes: [MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]
+            }
           }
         ]
       },
@@ -552,7 +609,10 @@ export const routes = [
     name: 'error',
     path: '/:pathMatch(.*)*',
     component: () => import('@/views/Error/Error'),
-    props: true,
+    props: () => {
+      const { title, description, error, code } = window.history?.state ?? {}
+      return { title, description, error, code }
+    },
     meta: {
       skipsAuth: true,
       title: 'error.title'

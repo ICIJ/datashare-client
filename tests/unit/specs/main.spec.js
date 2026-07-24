@@ -1,3 +1,5 @@
+import { getCookie, setCookie } from 'tiny-cookie'
+
 import { createCore } from '@/core'
 import { useHooksStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
@@ -81,5 +83,26 @@ describe('main', () => {
     core.resetHook('baz')
     expect(hooksStore.filterComponentsByTarget('foo')).toHaveLength(1)
     expect(hooksStore.filterComponentsByTarget('baz')).toHaveLength(0)
+  })
+
+  describe('when configure fails with a 401', () => {
+    it('should delete the session cookie on auth reset', async () => {
+      const cookieName = import.meta.env.VITE_DS_COOKIE_NAME
+      setCookie(cookieName, { login: 'doe' }, JSON.stringify)
+      expect(getCookie(cookieName)).not.toBeNull()
+
+      api.getUser.mockRejectedValue({ response: { status: 401 } })
+
+      document.body.appendChild(createContainer())
+      const failingCore = createCore()
+
+      await failingCore.ready.catch((error) => {
+        if (error?.response?.status === 401) {
+          failingCore.auth.reset()
+        }
+      })
+
+      expect(getCookie(cookieName)).toBeNull()
+    })
   })
 })

@@ -2,6 +2,9 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+import IPhEye from '~icons/ph/eye'
+import IPhEyeSlash from '~icons/ph/eye-slash'
+
 import DisplayStatus from './DisplayStatus'
 
 const { t } = useI18n()
@@ -13,7 +16,7 @@ const props = defineProps({
 })
 
 const icon = computed(() => {
-  return props.value ? 'eye' : 'eye-slash'
+  return props.value ? IPhEye : IPhEyeSlash
 })
 
 const title = computed(() => {

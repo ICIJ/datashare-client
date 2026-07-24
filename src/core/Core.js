@@ -2,7 +2,7 @@
 import 'mutationobserver-shim'
 
 import compose from 'lodash/fp/compose'
-import Murmur from '@icij/murmur-next'
+import { config } from '@icij/murmur'
 import VCalendar from 'v-calendar'
 import VueScrollTo from 'vue-scrollto'
 import Vue3Toastify, { toast } from 'vue3-toastify'
@@ -180,9 +180,6 @@ class Core extends Behaviors {
     // dynamic chunk import with third party modules.
     // @see https://github.com/nathanreyes/v-calendar/issues/413#issuecomment-530633437
     this.use(VCalendar, { componentPrefix: 'vc' })
-    // Murmur is loaded without installing Vue i18n and Bootstrap Vue
-    // to avoid adding them twice to the Vue instance.
-    this.use(Murmur, { useI18n: false, useBootstrap: false })
     // Vue Toastify uses as separated vue instance so we must install vue-i18n
     // separately to ensure vue-i18n's methods and components are available in the toastify plugin.
     this.use(Vue3Toastify, {
@@ -215,6 +212,7 @@ class Core extends Behaviors {
     return class VueCore {
       static install(app) {
         app.config.globalProperties.$core = core
+        app.config.globalProperties.$config = core.config
         app.config.compilerOptions.whitespace = 'preserve'
         // inject a globally available $toast object
         app.config.globalProperties.$toast = {
@@ -315,11 +313,13 @@ class Core extends Behaviors {
    */
   defer() {
     this._ready = new Promise((resolve, reject) => {
-      this._readyResolve = resolve
+      this._readyResolve = (value) => {
+        this.dispatch('ready')
+        resolve(value)
+      }
       this._readyReject = reject
     })
-    // Notify the document the core is ready
-    return this._ready.then(() => this.dispatch('ready'))
+    return this._ready
   }
 
   /**
@@ -344,6 +344,23 @@ class Core extends Behaviors {
   }
 
   /**
+   * Map a CasbinRule (from /api/users/me/permissions) to a `{ domainId, projectId, role }` policy object.
+   * Only grouping rules (ptype === 'g') are processed; policy rules (ptype === 'p') are ignored.
+   * Wildcard entries (e.g. *::* for instance-wide, domain::* for domain-wide) are included
+   * and used for wildcard role resolution in usePolicies helpers.
+   * @param {Object} rule - CasbinRule object with ptype, v1 (role) and v2 (domain::project)
+   * @returns {{ domainId: string, projectId: string, role: string }|null}
+   */
+  casbinRuleToPolicy({ ptype, v0, v1, v2 } = {}) {
+    if (ptype !== 'g') return null
+    if (!v0 || !v1 || !v2 || !v2.includes('::')) return null
+    const [domainId, projectId] = v2.split('::')
+    if (!projectId) return null
+    if (!domainId) return null
+    return { domainId, projectId, role: v1 }
+  }
+
+  /**
    * Get and update user definition in place
    * @async
    * @returns {Promise}
@@ -351,6 +368,15 @@ class Core extends Behaviors {
   async loadUser() {
     // Load the user
     this.config.merge(await this.getUser())
+    // Load and store user permissions as project policies
+    try {
+      const rules = (await this.api.getUserPermissions?.()) ?? []
+      const policies = rules.map(this.casbinRuleToPolicy).filter(Boolean)
+      this.config.set('policies', policies)
+    }
+    catch {
+      this.config.set('policies', [])
+    }
   }
 
   /**
@@ -361,13 +387,14 @@ class Core extends Behaviors {
   async loadSettings() {
     // Get the config object
     const serverSettings = await this.api.getSettings()
-    // Load the user and update the settings accordingly
-    await this.loadUser()
     // Murmur exposes a config attribute which shares a Config object
     // with the current vue instance.
     this.config.merge(getMode(serverSettings.mode))
     // The backend can yet override some configuration
+    // (merged before loadUser so settings like authFilter are available even if auth fails)
     this.config.merge(serverSettings)
+    // Load the user and update the settings accordingly
+    await this.loadUser()
   }
 
   /**
@@ -541,7 +568,7 @@ class Core extends Behaviors {
    * @type {Object}
    */
   get config() {
-    return Murmur.config
+    return config
   }
 
   /**

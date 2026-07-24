@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, reactive, computed } from 'vue'
-import { compact, findIndex, flattenDeep, get, map, groupBy, sortBy, sumBy, uniqBy } from 'lodash'
+import { compact, findIndex, flattenDeep, get, map, groupBy, sortBy, sumBy, uniq, uniqBy } from 'lodash'
 
 import EsDocList from '@/api/resources/EsDocList'
 import { apiInstance as api } from '@/api/apiInstance'
@@ -38,6 +38,12 @@ export const useDocumentStore = defineStore(
     const showTranslatedContent = ref(true)
     // Array of tags.
     const tags = ref([])
+    // Tag labels added during this session, keyed by index. Elasticsearch is
+    // near-real-time, so a freshly added tag is not yet returned by the tags
+    // aggregation that powers the suggestion list. Keeping the labels here lets
+    // suggestions include them across document navigation until ES catches up.
+    // This survives `reset()` on purpose: it is session state, not per-document.
+    const sessionTagsByIndex = ref({})
     // List user's actions states
     const userActions = reactive({
       [DOCUMENT_USER_ACTIONS.TAGS]: false,
@@ -493,8 +499,33 @@ export const useDocumentStore = defineStore(
       const grouped = groupBy(documents, 'index')
       for (const [index, subset] of Object.entries(grouped)) {
         await api.tagDocuments(index, map(subset, 'id'), labels)
+        rememberSessionTags(index, labels)
       }
       await getTags()
+    }
+
+    /**
+     * Records labels added this session for an index so tag suggestions can
+     * surface them before Elasticsearch reflects them.
+     * @param {string} index - The index the tags were added to.
+     * @param {string[]} labels - The tag labels that were added.
+     */
+    function rememberSessionTags(index, labels) {
+      const existing = sessionTagsByIndex.value[index] ?? []
+      sessionTagsByIndex.value = {
+        ...sessionTagsByIndex.value,
+        [index]: uniq([...existing, ...labels])
+      }
+    }
+
+    /**
+     * Returns the session tags for an index, shaped like aggregation buckets so
+     * they can be merged straight into the suggestion list.
+     * @param {string} index - The index to read session tags for.
+     * @returns {Array<{label: string}>} The session tag labels for that index.
+     */
+    function sessionTags(index) {
+      return (sessionTagsByIndex.value[index] ?? []).map(label => ({ label }))
     }
 
     /**
@@ -622,6 +653,7 @@ export const useDocumentStore = defineStore(
       getTags,
       addTag,
       addTags,
+      sessionTags,
       deleteTag,
       toggleAsRecommended,
       getRecommendationsByDocuments,

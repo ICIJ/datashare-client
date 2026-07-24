@@ -7,7 +7,7 @@ export default {
   args: {
     loading: false,
     disabled: false,
-    iconLeft: 'arrows-out-simple'
+    iconLeft: markRaw(IPhArrowsOutSimple)
   }
 }
 

@@ -1,11 +1,11 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 
 import { useToast } from '@/composables/useToast'
 import BatchSearchActionsDelete from '@/components/BatchSearch/BatchSearchActions/BatchSearchActionsDelete'
 import BatchSearchActionsEdit from '@/components/BatchSearch/BatchSearchActions/BatchSearchActionsEdit'
-import BatchSearchActionsEditModal from '@/components/BatchSearch/BatchSearchActions/BatchSearchActionsEditModal'
 import BatchSearchActionsStop from '@/components/BatchSearch/BatchSearchActions/BatchSearchActionsStop'
 import BatchSearchActionsRelaunch from '@/components/BatchSearch/BatchSearchActions/BatchSearchActionsRelaunch'
 import BatchSearchActionsRelaunchModal from '@/components/BatchSearch/BatchSearchActions/BatchSearchActionsRelaunchModal'
@@ -29,8 +29,8 @@ const { batchSearch } = defineProps({
 const emit = defineEmits(['refresh'])
 
 const { t } = useI18n()
+const router = useRouter()
 const { afterConfirmation } = useConfirmModal()
-const { prompt: showEditModal } = usePromptModal(BatchSearchActionsEditModal)
 const { prompt: showRelaunchModal } = usePromptModal(BatchSearchActionsRelaunchModal)
 
 const { toastedPromise } = useToast()
@@ -65,8 +65,9 @@ async function relaunch({ name, description, deleteAfterRelaunch }) {
   emit('refresh')
 }
 
-async function edit() {
-  console.log('Not implemented yet')
+function goToEdit() {
+  const indices = (batchSearch.projects ?? []).join(',')
+  router.push({ name: 'task.batch-search.edit', params: { indices, uuid: batchSearch.uuid } })
 }
 
 async function relaunchPromptModal() {
@@ -78,23 +79,14 @@ async function relaunchPromptModal() {
   }
 }
 
-async function editPromptModal() {
-  const { name, description } = batchSearch
-  const values = await showEditModal({ name, description })
-  // Only a valid submit returns value. Cancel or modal hide returns null.
-  if (values) {
-    await edit(values)
-  }
-}
 </script>
 
 <template>
-  <div class="batch-search-actions flex-nowrap d-flex gap-2">
+  <div class="batch-search-actions">
     <batch-search-actions-edit
-      v-if="false"
       :hide-label="hideLabels"
       :square="hideLabels"
-      @click="editPromptModal()"
+      @click="goToEdit()"
     />
     <batch-search-actions-relaunch
       :disabled="!isOver"
@@ -115,3 +107,11 @@ async function editPromptModal() {
     />
   </div>
 </template>
+
+<style scoped lang="scss">
+.batch-search-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacer-sm;
+}
+</style>

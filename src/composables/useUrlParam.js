@@ -11,6 +11,9 @@ import { toRoute } from '@/utils/toRoute'
  */
 let batchedUpdates = {}
 
+// Used to detect when a new call targets a different route context so stale updates aren't carried over.
+let batchedUpdatesContextName = null
+
 /**
  * Debounced function to apply batched updates to the query parameters
  * Updates are only applied after a 50ms delay to group multiple updates together.
@@ -32,6 +35,7 @@ const applyBatchedUpdates = debounce((router, route, to) => {
     }
     // Reset the batch after applying
     batchedUpdates = {}
+    batchedUpdatesContextName = null
   }
 }, 50)
 
@@ -46,6 +50,15 @@ const applyBatchedUpdates = debounce((router, route, to) => {
  * @param {*} value - The new values for each query parameter
  */
 export function batchQueryParamUpdate(router, route, to = null, queryParams = [], values = {}) {
+  const { name } = toRoute(to)
+  // Different route contexts must never share accumulated URL param updates,
+  // otherwise stale params (e.g. a search page's sort=_score) can leak into
+  // an unrelated route's push (e.g. a task page), see incident notes.
+  if (name !== batchedUpdatesContextName) {
+    applyBatchedUpdates.cancel()
+    batchedUpdates = {}
+    batchedUpdatesContextName = name
+  }
   queryParams.forEach((param, index) => {
     batchedUpdates[param] = values[index]
   })

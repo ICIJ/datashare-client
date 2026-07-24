@@ -31,10 +31,15 @@ defineProps({
 
 <style lang="scss" scoped>
 .path-tree-view-entry-name-checkbox {
+  z-index: $stretched-link-z-index + 1;
+
   &:deep(.form-check-input:checked) {
     border-color: currentColor;
   }
 
+  &:deep(.form-check-input) {
+    margin-top:0.1rem
+  }
   /**
    * Temporary fix of the indeterminate state:
    * @see https://github.com/bootstrap-vue-next/bootstrap-vue-next/issues/2271

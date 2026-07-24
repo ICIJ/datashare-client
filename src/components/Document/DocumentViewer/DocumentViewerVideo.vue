@@ -5,7 +5,10 @@
     :border-variant="cardVariant"
     no-body
   >
-    <dismissable-content-warning v-model:show="blurred">
+    <dismissable-content-warning
+      v-model:show="blurred"
+      :description="blurredContent"
+    >
       <video
         controls
         :autoplay="autoplay"
@@ -56,7 +59,7 @@
 
 <script>
 import { mapWritableState } from 'pinia'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 import { useI18n } from 'vue-i18n'
 
 import { usePlayerStore } from '@/store/modules'
@@ -82,12 +85,13 @@ export default {
   },
   setup() {
     const { t } = useI18n()
-    const { isBlurred } = useDocumentPreview()
-    return { t, isBlurred }
+    const { isBlurred, getBlurredContentBanner } = useDocumentPreview()
+    return { t, isBlurred, getBlurredContentBanner }
   },
   data() {
     return {
-      blurred: true
+      blurred: true,
+      blurredContent: null
     }
   },
   computed: {
@@ -104,6 +108,9 @@ export default {
   },
   async mounted() {
     this.blurred = await this.isBlurred(this.document)
+    if (this.blurred) {
+      this.blurredContent = await this.getBlurredContentBanner(this.document)
+    }
   }
 }
 </script>

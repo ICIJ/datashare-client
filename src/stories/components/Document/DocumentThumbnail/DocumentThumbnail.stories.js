@@ -1,4 +1,3 @@
-import { withMurmur } from '~storybook/decorators/murmur'
 import DocumentThumbnail from '@/components/Document/DocumentThumbnail/DocumentThumbnail'
 import { breakpointSizeArgType } from '~storybook/utils'
 import { SIZE } from '@/enums/sizes'
@@ -8,7 +7,6 @@ export default {
   component: DocumentThumbnail,
   tags: ['autodocs'],
   decorators: [
-    withMurmur({ previewHost: null }),
     () => ({
       template: `
         <div class="bg-tertiary-subtle p-5">

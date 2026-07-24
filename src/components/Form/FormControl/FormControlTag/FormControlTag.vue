@@ -50,7 +50,8 @@ const props = defineProps({
     default: null
   },
   options: {
-    type: Array
+    type: Array,
+    default: () => []
   },
   searchKeys: {
     type: Array,
@@ -83,6 +84,7 @@ const inputElement = useTemplateRef('inputElement')
 
 const inputValueTrigger = ref('')
 const showDropdown = ref(false)
+const hasFocus = ref(false)
 const focusIndex = ref(-1)
 
 const emit = defineEmits(['update:modelValue', 'update:inputValue', 'update:focusIndex', 'blur', 'focus'])
@@ -109,9 +111,23 @@ function focus() {
   inputElement.value.focus()
 }
 
+// Suggestions only make sense once the user has typed at least one character.
+// An empty input (which is exactly the state right after submitting a tag)
+// never shows the dropdown, so it cannot pop back open on its own.
+const canSuggest = () => props.options.length > 0 && inputValueTrigger.value.length > 0
+
+const onFocus = (e) => {
+  hasFocus.value = true
+  if (canSuggest()) showDropdown.value = true
+  emit('focus', e)
+}
+
 const inputTag = (tag) => {
   focusIndex.value = -1
   inputValueTrigger.value = tag
+  // Show the suggestions as soon as there is something to match, hide them
+  // again once the field is emptied.
+  showDropdown.value = canSuggest()
   if (endWithSeparator(tag)) {
     return addTag(tag)
   }
@@ -126,6 +142,8 @@ const addTag = (tag) => {
   }
   emit('update:modelValue', [...props.modelValue, ...tags])
   inputValueTrigger.value = ''
+  // The input is now empty, so there is nothing to suggest anymore.
+  showDropdown.value = false
   focus()
 }
 
@@ -134,15 +152,16 @@ const tagValidator = (tag) => {
 }
 
 const tagDuplicatesValidator = (tag) => {
-  return !props.noDuplicates || !props.modelValue.includes(tag.toLowerCase())
+  return !props.noDuplicates || !props.modelValue.some(t => t.toLowerCase() === tag.toLowerCase())
 }
 
 const tagCreateValidator = (tag) => {
-  return !props.noCreate || props.options.map(getValue).includes(tag)
+  return !props.noCreate || props.options.map(getValue).some(v => v.toLowerCase() === tag.toLowerCase())
 }
 
 const removeTag = (tag) => {
-  const modelValue = props.modelValue.filter(t => t !== tag)
+  const lower = tag.toLowerCase()
+  const modelValue = props.modelValue.filter(t => t.toLowerCase() !== lower)
   emit('update:modelValue', modelValue)
   focus()
 }
@@ -184,19 +203,22 @@ watch(inputValue, value => (inputValueTrigger.value = value), { immediate: true 
 watch(inputValueTrigger, value => emit('update:inputValue', value))
 
 watch(useActiveElement(), async (activeElement) => {
-  showDropdown.value = showDropdown.value && element.value.contains(activeElement)
+  const contained = element.value.contains(activeElement)
+  hasFocus.value = contained
+  showDropdown.value = showDropdown.value && contained
+})
+
+watch(() => props.options, () => {
+  if (hasFocus.value && canSuggest()) showDropdown.value = true
 })
 
 watch(focusIndex, (value) => {
   if (value === -1) {
     focus()
   }
-  else {
-    showDropdown.value = !!inputValueTrigger.value
-  }
 })
 
-defineExpose({ focus })
+defineExpose({ focus, showDropdown, hasFocus, onFocus, tagDuplicatesValidator, tagCreateValidator, classList })
 </script>
 
 <template>
@@ -228,7 +250,7 @@ defineExpose({ focus })
       @remove-last-tag="removeLastTag()"
       @keydown.down.prevent="focusIndex = 0"
       @keydown.esc="onEsc"
-      @focus="$emit('focus', $event)"
+      @focus="onFocus"
       @blur="$emit('blur', $event)"
     >
       <!-- eslint-disable-next-line vue/no-template-shadow -->
@@ -253,6 +275,7 @@ defineExpose({ focus })
       @update:focus-index="focusIndex = $event"
       @update:show="showDropdown = $event"
       @add-tag="addTag($event)"
+      @remove-tag="removeTag($event)"
       @keydown.esc="onEsc"
     />
   </div>

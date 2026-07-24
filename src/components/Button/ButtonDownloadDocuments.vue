@@ -1,10 +1,17 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
-import { ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur'
 
 import IPhDownloadSimple from '~icons/ph/download-simple'
 
 import { ICON_WEIGHT } from '@/enums/iconWeights'
+
+defineProps({
+  loading: {
+    type: Boolean,
+    default: false
+  }
+})
 
 const iconLeftHoverWeight = ICON_WEIGHT.BOLD
 const { t } = useI18n()
@@ -19,6 +26,7 @@ const { t } = useI18n()
     :icon-left="IPhDownloadSimple"
     :icon-left-hover-weight="iconLeftHoverWeight"
     :square="true"
+    :loading="loading"
   />
 </template>
 

@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur'
 
 import IPhSidebarSimple from '~icons/ph/sidebar-simple'
 import IPhSidebarSimpleFill from '~icons/ph/sidebar-simple-fill'
@@ -27,7 +27,7 @@ const icon = computed(() => {
   <button-icon
     tooltip-placement="right"
     :icon-left="icon"
-    icon-left-size="1.2rem"
+    icon-left-size="1.25rem"
     square
     hide-label
     variant="primary"

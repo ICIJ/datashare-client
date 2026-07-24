@@ -1,6 +1,6 @@
 <script setup>
 import { computed, toRef, useTemplateRef, watch } from 'vue'
-import { AppIcon, ButtonIcon } from '@icij/murmur-next'
+import { AppIcon, ButtonIcon } from '@icij/murmur'
 import { useI18n } from 'vue-i18n'
 
 import IPhCircleNotch from '~icons/ph/circle-notch'
@@ -135,8 +135,9 @@ defineExpose({ focus, blur, clear: clearInput })
           <app-icon
             v-if="!noIcon"
             :name="icon"
-            square
             :spin="loading"
+            square
+            size="1.25em"
           />
         </slot>
       </span>
@@ -156,7 +157,7 @@ defineExpose({ focus, blur, clear: clearInput })
         @blur="emit('blur', $event)"
         @focus="emit('focus', $event)"
       />
-      <span class="form-control-search__end input-group-text px-1 py-0 border-start-0">
+      <span class="form-control-search__end input-group-text ps-0 pe-1 py-0 border-start-0">
         <button-icon
           v-if="clearText"
           :icon-left="IPhX"

@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 
 import { useFeatures } from '@/composables/useFeatures'
 import { useDocument } from '@/composables/useDocument'
-import DocumentNotes from '@/components/Document/DocumentNotes'
+import DocumentPathBanners from '@/components/Document/DocumentPathBanners'
 
 const { t } = useI18n()
 const { document } = useDocument()
@@ -30,6 +30,8 @@ const previewComponent = computed(() => {
       return 'DocumentViewerPdf'
     case document.value.isJson:
       return 'DocumentViewerJson'
+    case document.value.isMarkdown:
+      return 'DocumentViewerMarkdown'
     case isPaginated.value:
       return 'DocumentViewerPaginated'
     case document.value.isTiff:
@@ -62,7 +64,7 @@ const asyncPreviewComponent = computed(() => {
 
 <template>
   <div class="d-flex flex-grow-1 flex-column document__preview">
-    <document-notes
+    <document-path-banners
       :document="document"
       class="mt-3"
     />

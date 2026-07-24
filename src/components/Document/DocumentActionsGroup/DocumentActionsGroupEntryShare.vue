@@ -40,9 +40,10 @@ const blur = () => nextTick(() => window.document?.activeElement.blur())
 
 <template>
   <document-share-popover
+    close-on-hide
+    lazy
     :offset="16"
     :boundary-padding="32"
-    close-on-hide
     :document="document"
     :placement="tooltipPlacement"
   >

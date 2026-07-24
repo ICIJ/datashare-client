@@ -2,6 +2,8 @@
 import { computed, ref, onBeforeMount, toRef, useTemplateRef, watch } from 'vue'
 import { useElementVisibility, whenever } from '@vueuse/core'
 
+import IPhEyeSlash from '~icons/ph/eye-slash'
+import IPhEye from '~icons/ph/eye'
 import DocumentThumbnailImage from '@/components/Document/DocumentThumbnail/DocumentThumbnailImage'
 import DocumentThumbnailPlaceholder from '@/components/Document/DocumentThumbnail/DocumentThumbnailPlaceholder'
 import DocumentThumbnailOverlay from '@/components/Document/DocumentThumbnail/DocumentThumbnailOverlay'
@@ -96,7 +98,7 @@ const thumbnailUrl = computed(() => {
 })
 
 const alt = computed(() => `${props.document.basename} preview`)
-const overlayIcon = computed(() => (errored.value ? 'eye-slash' : 'eye'))
+const overlayIcon = computed(() => (errored.value ? IPhEyeSlash : IPhEye))
 
 const activated = computed(() => canPreview(props.document))
 const showImage = computed(() => !!thumbnail.value)
@@ -137,7 +139,7 @@ whenever(isVisible, enter, { immediate: props.lazy, once: true })
 watch(toRef(props, 'rotation'), fetchThumbnail)
 
 onBeforeMount(async () => {
-  // Set the blurred state according to document notes
+  // Set the blurred state according to document banners
   blurred.value = props.noBlur ? false : await isBlurred(props.document)
   // This component can be lazy loaded
   if (props.lazy) return

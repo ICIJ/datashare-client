@@ -51,7 +51,7 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon, HapticCopy } from '@icij/murmur'
 import { useI18n } from 'vue-i18n'
 
 import { apiInstance as api } from '@/api/apiInstance'

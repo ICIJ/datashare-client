@@ -1,7 +1,7 @@
 export { useSearchStore } from './search' // Must be at the top to avoid circular dependenceis
 export { useAppStore } from './app'
 export { useDocumentStore } from './document'
-export { useDocumentNotesStore } from './documentNotes'
+export { useDocumentPathBannersStore } from './documentPathBanners'
 export { useDocumentDownloadStore } from './documentDownload'
 export { useDocumentViewStore } from './documentView'
 export { useHooksStore } from './hooks'

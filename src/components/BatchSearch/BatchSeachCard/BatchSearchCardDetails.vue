@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { stringifyQuery, parseQuery } from 'vue-router'
 import { omit } from 'lodash'
-import { ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur'
 import IPhList from '~icons/ph/list'
 import IPhCaretRight from '~icons/ph/caret-right'
 import IPhDownloadSimple from '~icons/ph/download-simple'
@@ -44,13 +44,12 @@ const {
   nbQueries,
   nbQueriesWithoutResults,
   phraseMatches,
-  proximity,
   fuzziness,
   date,
   user,
   projects,
   state,
-  visibility,
+  published,
   uri
 } = batchSearch
 
@@ -75,17 +74,17 @@ const noResultsQueries = computed(() => {
 const noResultsQueriesDownload = computed(() => t('batchSearchCard.noResultsQueriesDownload'))
 const noResultsQueriesLabel = hasQueriesWithoutResultsNumber ? noResultsQueries : noResultsQueriesDownload
 
-const visibilityIcon = visibility ? IPhEye : IPhEyeSlash
+const visibilityIcon = published ? IPhEye : IPhEyeSlash
 const visibilityPrivate = computed(() => t('batchSearchCardDetails.visibilityPrivate'))
 const visibilityShared = computed(() => t('batchSearchCardDetails.visibilityShared'))
-const visibilityValue = visibility ? visibilityShared : visibilityPrivate
+const visibilityValue = published ? visibilityShared : visibilityPrivate
 
 const phraseMatchOn = computed(() => t('batchSearchCardDetails.phraseMatchOn'))
 const phraseMatchOff = computed(() => t('batchSearchCardDetails.phraseMatchOff'))
 const phraseMatchValue = phraseMatches ? phraseMatchOn : phraseMatchOff
 
 const fuzzinessValue = computed(() => t('batchSearchCardDetails.fuzzinessValue', { n: fuzziness }))
-const proximityValue = computed(() => t('batchSearchCardDetails.proximityValue', { n: proximity }))
+const proximityValue = computed(() => t('batchSearchCardDetails.proximityValue', { n: fuzziness }))
 
 const { parseFiltersEntries } = useSearchBreadcrumb()
 
@@ -228,7 +227,7 @@ const showError = () => showBatchSearchErrorModal(batchSearch)
           :value="phraseMatchValue"
         />
       </li>
-      <li v-if="phraseMatch">
+      <li v-if="phraseMatches">
         <batch-search-card-details-entry
           :label="t('batchSearchCardDetails.proximity')"
           :icon="IPhArrowsOutLineHorizontal"

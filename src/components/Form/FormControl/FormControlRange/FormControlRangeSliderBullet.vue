@@ -1,8 +1,9 @@
 <script setup>
-import { range } from 'd3'
 import { computed, ref } from 'vue'
 
+import { useRangeSteps } from '@/composables/useRangeSteps'
 import { draggable as vDraggable } from '@/directives/draggable'
+
 const modelValue = defineModel({
   type: Number
 })
@@ -21,9 +22,12 @@ const props = defineProps({
 const target = ref(null)
 const active = ref(false)
 
-const steps = computed(() => {
-  return range(props.min, props.max + props.step, props.step)
-})
+const { steps } = useRangeSteps(
+  () => props.min,
+  () => props.max,
+  () => props.step,
+  modelValue
+)
 
 const modelValueStep = computed(() => {
   return steps.value.indexOf(modelValue.value)
@@ -42,7 +46,8 @@ const style = computed(() => {
 const drag = ({ detail: x }) => {
   active.value = true
   const index = Math.round(steps.value.length * (x / 100))
-  modelValue.value = steps.value[index]
+  const clamped = Math.min(steps.value.length - 1, Math.max(0, index))
+  modelValue.value = steps.value[clamped]
 }
 
 const dragend = () => {
@@ -59,7 +64,7 @@ const classList = computed(() => {
 <template>
   <a
     ref="target"
-    v-draggable.relative.percent="{ target }"
+    v-draggable.relative.percent="{ target, expandThreshold: -Infinity, reduceThreshold: Infinity }"
     class="form-control-range-slider-bullet"
     :class="classList"
     :style="style"

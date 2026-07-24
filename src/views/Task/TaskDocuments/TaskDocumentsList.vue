@@ -12,7 +12,8 @@ import DisplayStatus from '@/components/Display/DisplayStatus'
 import EmptyState from '@/components/EmptyState/EmptyState'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import { useTaskSettings } from '@/composables/useTaskSettings'
-import { getHumanTaskName, TASK_NAME } from '@/enums/taskNames'
+import { getHumanTaskName } from '@/enums/taskNames'
+import { TASK_TYPE } from '@/enums/taskTypes'
 import { TASK_STATUS } from '@/enums/taskStatus'
 import { useTaskStore } from '@/store/modules'
 import TaskPage from '@/views/Task/TaskPage'
@@ -55,7 +56,7 @@ function removeWithConfirmation(id, callback) {
 
 <template>
   <task-page
-    :task-filter="[TASK_NAME.INDEX, TASK_NAME.SCAN]"
+    :task-types="[TASK_TYPE.INDEX, TASK_TYPE.SCAN]"
     page-name="documents"
     show-add
   >

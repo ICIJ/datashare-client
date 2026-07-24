@@ -1,7 +1,7 @@
 <script setup>
 import { computed, nextTick, onMounted, ref, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { AppIcon, ButtonIcon } from '@icij/murmur-next'
+import { AppIcon, ButtonIcon } from '@icij/murmur'
 import IPhHash from '~icons/ph/hash'
 import IPhX from '~icons/ph/x'
 
@@ -133,6 +133,7 @@ defineExpose({
       <app-icon
         v-if="showPlaceholderIcon"
         :name="placeholderIcon"
+        size="1.25em"
         class="form-control-tag-input__form__icon text-secondary ms-2 me-1"
       />
       <b-input

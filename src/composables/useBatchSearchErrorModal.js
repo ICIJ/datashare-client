@@ -1,27 +1,23 @@
 import { h } from 'vue'
-import { useModalController } from 'bootstrap-vue-next'
+import { useModal } from 'bootstrap-vue-next'
 
 import BatchSearchErrorModal from '@/components/BatchSearch/BatchSearchErrorModal'
 
 export function useBatchSearchErrorModal() {
-  const modalController = useModalController()
+  const { create, hide } = useModal()
 
   function show({ errorMessage, errorQuery } = {}) {
-    const props = { errorMessage, errorQuery }
-
     return new Promise((resolve) => {
       const component = h(BatchSearchErrorModal, {
+        errorMessage,
+        errorQuery,
         onOk: resolve,
         onClose: resolve,
         onCancel: resolve
       })
 
-      modalController.create({ component, props })
+      create({ component, modelValue: true }).show()
     })
-  }
-
-  function hide() {
-    return modalController.hide()
   }
 
   return { show, hide }

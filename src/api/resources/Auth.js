@@ -1,6 +1,6 @@
 import get from 'lodash/get'
 import { ref } from 'vue'
-import { getCookie } from 'tiny-cookie'
+import { getCookie, removeCookie } from 'tiny-cookie'
 import { apiInstance as api } from '@/api/apiInstance'
 
 export default class Auth {
@@ -28,6 +28,7 @@ export default class Auth {
   }
 
   reset() {
+    this._removeCookie()
     this.me.value = null
   }
 
@@ -57,5 +58,9 @@ export default class Auth {
   _getCookieUsername() {
     const cookie = getCookie(import.meta.env.VITE_DS_COOKIE_NAME, JSON.parse)
     return get(cookie, 'login', null)
+  }
+
+  _removeCookie() {
+    removeCookie(import.meta.env.VITE_DS_COOKIE_NAME)
   }
 }

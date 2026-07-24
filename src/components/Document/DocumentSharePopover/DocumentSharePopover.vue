@@ -1,34 +1,56 @@
 <script setup>
-import { useTemplateRef, computed } from 'vue'
+import { ref, useTemplateRef, computed, nextTick } from 'vue'
+import { useParentElement, whenever } from '@vueuse/core'
 
 import DocumentSharePopoverForm from './DocumentSharePopoverForm'
 
 import AppPopover from '@/components/AppPopover/AppPopover'
-import { useParentElement } from '@vueuse/core'
 
 /**
  * Toggle value when the popover is open
  */
 const modelValue = defineModel({ type: Boolean })
 
-defineProps({
+const props = defineProps({
   /**
    * The selected document
    */
   document: {
     type: Object
+  },
+  /**
+   * Lazy mount the popover only on first activation
+   */
+  lazy: {
+    type: Boolean,
+    default: false
   }
 })
 
 const popoverRef = useTemplateRef('popover')
 
+// Lazy rendering: only mount the popover after it's been opened once
+const activated = ref(false)
+const mounted = computed(() => !props.lazy || activated.value)
+
+// Activate when modelValue becomes true
+whenever(modelValue, () => (activated.value = true), { once: true })
+
+async function activate() {
+  activated.value = true
+  await nextTick()
+  modelValue.value = true
+}
+
 defineExpose({
   popoverRef,
   hide() {
-    popoverRef.value.hide()
+    popoverRef.value?.hide()
   },
-  show() {
-    popoverRef.value.show()
+  async show() {
+    activated.value = true
+    await nextTick()
+    popoverRef.value?.show()
   }
 })
 
@@ -43,20 +65,25 @@ const teleportTo = computed(() => {
 
 <template>
   <app-popover
+    v-if="mounted"
     ref="popover"
     v-model="modelValue"
     hide-header
     class="document-share-popover"
     :teleport-to="teleportTo"
   >
-    <template #target="binding">
-      <slot
-        name="target"
-        v-bind="binding"
-      />
+    <template #target>
+      <slot name="target" />
     </template>
     <document-share-popover-form :document="document" />
   </app-popover>
+  <!-- Render target independently when popover not yet mounted -->
+  <span
+    v-else
+    @click="activate"
+  >
+    <slot name="target" />
+  </span>
 </template>
 
 <style lang="scss">

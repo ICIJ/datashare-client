@@ -1,7 +1,12 @@
 import { mount } from '@vue/test-utils'
 
 import ProjectDropdownSelector from '@/components/Project/ProjectDropdownSelector/ProjectDropdownSelector'
+import DropdownSelectorSearch from '@/components/DropdownSelector/DropdownSelectorSearch'
 import CoreSetup from '~tests/unit/CoreSetup'
+
+// jsdom doesn't implement scrollIntoView; the generic DropdownSelector calls it
+// when a query focuses the first match, so stub it like DropdownSelector.spec.js.
+window.HTMLElement.prototype.scrollIntoView = vi.fn()
 
 describe('ProjectDropdownSelector.vue', function () {
   const { plugins } = CoreSetup.init().useAll().useRouterWithoutGuards()
@@ -40,5 +45,73 @@ describe('ProjectDropdownSelector.vue', function () {
     const props = { modelValue: [{ name: 'local-datashare' }, { name: 'foo' }], projects, teleportDisabled: true }
     const wrapper = mount(ProjectDropdownSelector, { props, global: { plugins } })
     expect(wrapper.find('.dropdown-toggle').text().trim()).toBe('2 projects')
+  })
+
+  it('should render the selected project first in single-select mode', () => {
+    const props = { modelValue: { name: 'bar' }, projects, teleportDisabled: true }
+    const wrapper = mount(ProjectDropdownSelector, { props, global: { plugins } })
+    const items = wrapper.findAll('.dropdown-item')
+    expect(items.at(0).text().trim()).toBe('Bar')
+  })
+
+  it('should render selected projects first, in original order, in multi-select mode', () => {
+    const props = { modelValue: [{ name: 'bar' }, { name: 'foo' }], projects, teleportDisabled: true }
+    const wrapper = mount(ProjectDropdownSelector, { props, global: { plugins } })
+    const items = wrapper.findAll('.dropdown-item')
+    // "original order" = order within the projects prop (foo precedes bar there), not modelValue order
+    expect(items.at(0).text().trim()).toBe('Foo')
+    expect(items.at(1).text().trim()).toBe('Bar')
+    expect(items.at(2).text().trim()).toBe('Default')
+  })
+
+  it('should keep the selected project on top while a query filters the list', async () => {
+    const props = { modelValue: [{ name: 'bar' }], projects, teleportDisabled: true }
+    const wrapper = mount(ProjectDropdownSelector, { props, global: { plugins } })
+    wrapper.findComponent(DropdownSelectorSearch).vm.$emit('update:modelValue', 'a')
+    await wrapper.vm.$nextTick()
+    const items = wrapper.findAll('.dropdown-item')
+    expect(items).toHaveLength(2)
+    expect(items.at(0).text().trim()).toBe('Bar')
+    expect(items.at(1).text().trim()).toBe('Default')
+  })
+
+  it('should not reorder while open when the selection changes', async () => {
+    const props = { modelValue: [{ name: 'bar' }], projects, teleportDisabled: true }
+    const wrapper = mount(ProjectDropdownSelector, { props, global: { plugins } })
+    await wrapper.setProps({ modelValue: [{ name: 'bar' }, { name: 'foo' }] })
+    const items = wrapper.findAll('.dropdown-item')
+    expect(items.at(0).text().trim()).toBe('Bar')
+    expect(items.at(1).text().trim()).toBe('Default')
+    expect(items.at(2).text().trim()).toBe('Foo')
+  })
+
+  it('should re-pin the current selection after the dropdown closes', async () => {
+    const props = { modelValue: [{ name: 'bar' }], projects, teleportDisabled: true }
+    const wrapper = mount(ProjectDropdownSelector, { props, global: { plugins } })
+    // Selection changes to foo while open; snapshot is still [bar]
+    await wrapper.setProps({ modelValue: [{ name: 'foo' }] })
+    expect(wrapper.findAll('.dropdown-item').at(0).text().trim()).toBe('Bar')
+    // Closing re-pins to the live selection, so the reorder happens while the
+    // menu is hidden — the next open is already ordered, with no visible flash
+    wrapper.findComponent({ name: 'BDropdown' }).vm.$emit('hidden')
+    await wrapper.vm.$nextTick()
+    expect(wrapper.findAll('.dropdown-item').at(0).text().trim()).toBe('Foo')
+  })
+
+  it('disables the checkbox of the only selected project', () => {
+    const props = { modelValue: [{ name: 'foo' }], projects, teleportDisabled: true }
+    const wrapper = mount(ProjectDropdownSelector, { props, global: { plugins } })
+    const activeInput = wrapper.find('.dropdown-item.active input[type=checkbox]')
+    expect(activeInput.attributes('disabled')).toBeDefined()
+  })
+
+  it('does not disable checkboxes when two projects are selected', () => {
+    const props = { modelValue: [{ name: 'foo' }, { name: 'bar' }], projects, teleportDisabled: true }
+    const wrapper = mount(ProjectDropdownSelector, { props, global: { plugins } })
+    const activeInputs = wrapper.findAll('.dropdown-item.active input[type=checkbox]')
+    expect(activeInputs).toHaveLength(2)
+    activeInputs.forEach((input) => {
+      expect(input.attributes('disabled')).toBeUndefined()
+    })
   })
 })

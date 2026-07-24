@@ -25,7 +25,8 @@ const widgets = [
     name: 'docuents-and-disk-usage',
     order: 20,
     card: false,
-    cols: 5,
+    cols: 12,
+    colsXxl: 5,
     type: 'WidgetNested',
     widgets: [
       {
@@ -46,7 +47,8 @@ const widgets = [
     name: 'entities',
     order: 30,
     card: false,
-    cols: 7,
+    cols: 12,
+    colsXxl: 7,
     type: 'WidgetEntities'
   },
   {

@@ -180,6 +180,37 @@ describe('DocumentStore', () => {
       expect(orderBy(documentStore.tags, ['label'])[0].label).toBe('tag_01')
       expect(orderBy(documentStore.tags, ['label'])[1].label).toBe('tag_02')
     })
+
+    describe('session tags (labels added this session, per index)', () => {
+      beforeEach(() => {
+        api.getTags.mockResolvedValue([])
+      })
+
+      it('records added tag labels as session tags for their index', async () => {
+        await documentStore.addTags({ documents: [{ id: 'doc_01', index }], labels: ['test'] })
+
+        expect(documentStore.sessionTags(index)).toEqual([{ label: 'test' }])
+      })
+
+      it('keeps session tags after the store is reset for another document', async () => {
+        await documentStore.addTags({ documents: [{ id: 'doc_01', index }], labels: ['test'] })
+        // Navigating to another document resets the per-document state; session tags must survive.
+        documentStore.reset()
+
+        expect(documentStore.sessionTags(index)).toEqual([{ label: 'test' }])
+      })
+
+      it('deduplicates session tag labels for an index', async () => {
+        await documentStore.addTags({ documents: [{ id: 'doc_01', index }], labels: ['test'] })
+        await documentStore.addTags({ documents: [{ id: 'doc_01', index }], labels: ['test', 'other'] })
+
+        expect(documentStore.sessionTags(index)).toEqual([{ label: 'test' }, { label: 'other' }])
+      })
+
+      it('returns an empty list for an index that never got a session tag', () => {
+        expect(documentStore.sessionTags('other-index')).toEqual([])
+      })
+    })
   })
 
   describe('Manage isRecommended status', () => {

@@ -14,10 +14,15 @@ describe('TaskEntitiesList.vue', () => {
   let plugins
 
   beforeEach(() => {
-    api.getTasks.mockImplementation(({ name: names }) => {
-      const items = names.split('|').map((name) => {
+    const CLASS_NAME_BY_TYPE = {
+      EXTRACT_NLP: 'org.icij.datashare.tasks.ExtractNlpTask',
+      ENQUEUE_FROM_INDEX: 'org.icij.datashare.tasks.EnqueueFromIndexTask'
+    }
+
+    api.getTasks.mockImplementation(({ type }) => {
+      const items = type.split('|').map((taskType) => {
         return {
-          name,
+          name: CLASS_NAME_BY_TYPE[taskType],
           id: '6a32bb59-8a23-491c-a441-8447ff7517dc',
           state: 'RUNNING',
           progress: 0,
@@ -50,7 +55,7 @@ describe('TaskEntitiesList.vue', () => {
     expect(api.getTasks).toBeCalled()
     expect(api.getTasks).toBeCalledWith(
       expect.objectContaining({
-        name: 'org.icij.datashare.tasks.ExtractNlpTask|org.icij.datashare.tasks.EnqueueFromIndexTask'
+        type: 'EXTRACT_NLP|ENQUEUE_FROM_INDEX'
       })
     )
   })

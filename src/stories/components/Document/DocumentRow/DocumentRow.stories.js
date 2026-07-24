@@ -3,8 +3,6 @@ import { vueRouter } from 'storybook-vue3-router'
 
 import IPhFilePdf from '~icons/ph/file-pdf'
 
-import { withMurmur } from '~storybook/decorators/murmur'
-import { withPinia } from '~storybook/decorators/pinia'
 import PageTable from '@/components/PageTable/PageTable'
 import DocumentRow from '@/components/Document/DocumentRow/DocumentRow'
 
@@ -26,8 +24,6 @@ const routes = [
 export default {
   title: 'Components/Document/DocumentRow/DocumentRow',
   decorators: [
-    withPinia(),
-    withMurmur({ previewHost: null }),
     vueRouter(routes),
     () => ({
       components: { PageTable },

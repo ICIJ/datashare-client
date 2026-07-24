@@ -1,4 +1,4 @@
-import { flushPromises, mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { setActivePinia, createPinia } from 'pinia'
 
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
@@ -82,12 +82,12 @@ describe('FilterTypeRecommendedBy.vue', () => {
   })
 
   it('should sort options to have the current user first', async () => {
-    await flushPromises()
+    await wrapper.vm.fetch()
     expect(wrapper.findAllComponents(DisplayUser).at(0).text()).toBe('local (you)')
   })
 
   it('should sort options by decreasing order', async () => {
-    await flushPromises()
+    await wrapper.vm.fetch()
     expect(wrapper.findAllComponents(DisplayUser).at(0).text()).toBe('local (you)')
     expect(wrapper.findAllComponents(DisplayUser).at(1).text()).toBe('anita')
     expect(wrapper.findAllComponents(DisplayUser).at(2).text()).toBe('paul')
@@ -95,7 +95,7 @@ describe('FilterTypeRecommendedBy.vue', () => {
 
   it('should select no users', async () => {
     searchStore.addFilterValue({ name: 'recommendedBy', value: [] })
-    await flushPromises()
+    await wrapper.vm.fetch()
     expect(api.getDocumentsRecommendedBy).toBeCalledTimes(0)
     expect(recommendedStore.documents).toEqual([])
   })

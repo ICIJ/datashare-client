@@ -6,7 +6,7 @@ export default {
   component: PathTreeViewLabel,
   args: {
     label: 'Path',
-    icon: 'tree-structure'
+    icon: markRaw(IPhTreeStructure)
   }
 }
 

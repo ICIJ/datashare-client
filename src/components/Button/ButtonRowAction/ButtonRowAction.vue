@@ -1,5 +1,5 @@
 <script setup>
-import { ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur'
 
 import { SIZE, buttonSizeValidator } from '@/enums/sizes'
 import { ICON_WEIGHT, iconWeightValidator } from '@/enums/iconWeights'
@@ -23,7 +23,7 @@ defineProps({
 
 <template>
   <button-icon
-    :icon-left="icon"
+    :icon-left="$slots.default ? undefined : icon"
     :icon-left-hover-weight="iconWeight"
     :size="size"
     hide-label
@@ -31,5 +31,12 @@ defineProps({
     square
     variant="outline-secondary"
     class="border-0"
-  />
+  >
+    <template
+      v-if="$slots.default"
+      #start
+    >
+      <slot />
+    </template>
+  </button-icon>
 </template>

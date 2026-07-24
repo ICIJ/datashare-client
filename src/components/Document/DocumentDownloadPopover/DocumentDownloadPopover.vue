@@ -1,6 +1,7 @@
 <script setup>
-import { useTemplateRef } from 'vue'
-import { AppIcon, ButtonIcon } from '@icij/murmur-next'
+import { ref, useTemplateRef, nextTick, computed } from 'vue'
+import { whenever } from '@vueuse/core'
+import { AppIcon, ButtonIcon } from '@icij/murmur'
 import { useI18n } from 'vue-i18n'
 import IPhDownloadSimple from '~icons/ph/download-simple'
 
@@ -22,9 +23,21 @@ const props = defineProps({
    */
   document: {
     type: Object
+  },
+  /**
+   * Lazy mount the popover only on first activation
+   */
+  lazy: {
+    type: Boolean,
+    default: false
   }
 })
 const { t } = useI18n()
+
+const popoverRef = useTemplateRef('popover')
+
+// Lazy rendering: only mount the popover after it's been opened once
+const activated = ref(false)
 
 const {
   description,
@@ -35,34 +48,49 @@ const {
   hasRoot,
   hasCleanableContentType,
   isRootTooBig,
-  downloadTextContent
-} = useDocumentDownload(props.document)
+  downloadTextContent,
+  hasTextContent,
+  hasTranslations,
+  downloadTranslatedContent,
+  fetchStatuses
+} = useDocumentDownload(props.document, { immediate: !props.lazy })
+const mounted = computed(() => !props.lazy || activated.value)
 
-const popoverRef = useTemplateRef('popover')
+// Activate when modelValue becomes true
+whenever(modelValue, () => (activated.value = true), { once: true })
+// Fetch download status and translations when activated
+whenever(activated, fetchStatuses, { once: true })
+
+async function activate() {
+  activated.value = true
+  await nextTick()
+  modelValue.value = true
+}
 
 defineExpose({
   popoverRef,
   hide() {
-    popoverRef.value.hide()
+    popoverRef.value?.hide()
   },
-  show() {
-    popoverRef.value.show()
+  async show() {
+    activated.value = true
+    await nextTick()
+    popoverRef.value?.show()
   }
 })
 </script>
 
 <template>
   <app-popover
+    v-if="mounted"
     ref="popover"
     v-model="modelValue"
     hide-header
     class="document-download-popover"
+    :hide-margin="16"
   >
-    <template #target="binding">
-      <slot
-        name="target"
-        v-bind="binding"
-      />
+    <template #target>
+      <slot name="target" />
     </template>
     <div class="document-download-popover__body">
       <button-icon
@@ -87,7 +115,16 @@ defineExpose({
         :label="t('documentDownloadPopover.downloadExtractText')"
         variant="outline-action"
         class="document-download-popover__body__button"
+        :disabled="!hasTextContent"
         @click="downloadTextContent"
+      />
+      <button-icon
+        v-if="hasTranslations"
+        :icon-left="IPhDownloadSimple"
+        :label="t('documentDownloadPopover.downloadTranslatedText')"
+        variant="outline-action"
+        class="document-download-popover__body__button"
+        @click="downloadTranslatedContent"
       />
       <button-icon
         v-if="hasRoot"
@@ -130,6 +167,13 @@ defineExpose({
       </div>
     </div>
   </app-popover>
+  <!-- Render target independently when popover not yet mounted -->
+  <span
+    v-else
+    @click="activate"
+  >
+    <slot name="target" />
+  </span>
 </template>
 
 <style lang="scss">

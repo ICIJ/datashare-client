@@ -8,32 +8,22 @@ permissions:
   pages: write
   id-token: write
 
+# Serialise Pages deployments. A re-run that only re-runs the deploy job then reuses the
+# single artifact built by the storybook job instead of producing a duplicate.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
 jobs:
-  prepare:
-    name: Prepare
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node 20
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20.19.2'
-          cache: 'yarn'
-
-      - name: Install dependencies
-        run: make install
-
   storybook:
-    name: Publish Storybook
-    needs: prepare
+    name: Build Storybook
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
       - name: Setup Node 20
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '20.19.2'
           cache: 'yarn'
@@ -42,19 +32,28 @@ jobs:
         run: make install
 
       - name: Generate doc pages
-        run: yarn doc
+        run: make doc
 
       - name: Upload storybook artifacts
         uses: actions/upload-pages-artifact@v3
         with:
           path: storybook-static
 
+  deploy:
+    name: Deploy Storybook to GitHub Pages
+    if: github.ref == 'refs/heads/main'
+    needs: storybook
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Deploy artifact to Github Pages
+        id: deployment
         uses: actions/deploy-pages@v4
 
   test:
     name: Unit tests
-    needs: prepare
     runs-on: ubuntu-latest
     services:
       elasticsearch:
@@ -79,7 +78,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Setup Node 20
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '20.19.2'
           cache: 'yarn'
@@ -87,24 +86,31 @@ jobs:
       - name: Install dependencies
         run: make install
 
+      - name: Cache Vite/Vitest dep-optimizer
+        uses: actions/cache@v4
+        with:
+          path: node_modules/.vite
+          key: vite-deps-${{ runner.os }}-${{ hashFiles('yarn.lock', 'vitest.config.js', 'vite.config.js') }}
+          restore-keys: |
+            vite-deps-${{ runner.os }}-
+
       - name: Run unit tests
         run: yarn test:unit --silent --minWorkers 1 --maxWorkers 2
         env:
           VITE_ES_HOST: http://localhost:9200
           NODE_OPTIONS: --max_old_space_size=4096
 
-      - name: Make distribution
-        run: make dist
+      - name: Build
+        run: make build
 
   lint:
-    runs-on: ubuntu-latest
     name: Lint
-    needs: prepare
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
       - name: Setup Node 20
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '20.19.2'
           cache: 'yarn'
@@ -113,4 +119,4 @@ jobs:
         run: make install
 
       - name: Run linter
-        run: yarn lint
+        run: make lint

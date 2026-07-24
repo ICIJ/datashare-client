@@ -2,6 +2,7 @@
 import { property } from 'lodash'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { parseQuery } from 'vue-router'
 
 import IPhArrowClockwise from '~icons/ph/arrow-clockwise'
 import IPhMagnifyingGlass from '~icons/ph/magnifying-glass'
@@ -55,12 +56,13 @@ const emit = defineEmits(['refresh', 'relaunch', 'relaunchFailed', 'delete', 'de
 const isTaskRunning = computed(() => props.state.toLowerCase() === TASK_STATUS.RUNNING)
 const projectIds = computed(() => props.value?.projects?.map(property('name')) || [])
 const query = computed(() => JSON.parse(props.value?.query?.query || null) ?? {})
-const uri = computed(() => {
-  if (props.value?.uri?.startsWith('/')) {
-    return props.value.uri.substring(1)
+const searchRoute = computed(() => {
+  if (!props.value?.uri) {
+    return null
   }
-
-  return props.value.uri
+  const query = parseQuery(props.value.uri.split('?').pop())
+  const name = 'search'
+  return { name, query }
 })
 
 async function remove() {
@@ -73,7 +75,7 @@ async function remove() {
 async function relaunch() {
   const successMessage = t('batchDownloadActions.relaunch.success')
   const errorMessage = t('batchDownloadActions.relaunch.error')
-  const promise = core.api.runBatchDownload({ projectIds: projectIds.value, query: query.value, uri: uri.value })
+  const promise = core.api.runBatchDownload({ projectIds: projectIds.value, query: query.value, uri: props.value?.uri })
   await toastedPromise(promise, { successMessage, errorMessage })
   emit('refresh')
 }
@@ -89,8 +91,8 @@ async function relaunch() {
     <button-row-action
       :icon="IPhMagnifyingGlass"
       tag="router-link"
-      :disabled="!uri"
-      :to="{ hash: uri, name: 'search' }"
+      :disabled="!searchRoute"
+      :to="searchRoute"
       :label="t('batchDownloadActions.search.label')"
     />
     <button-row-action-delete

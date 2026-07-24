@@ -1,4 +1,4 @@
-import { ImageModeSource } from '@icij/murmur-next'
+import { ImageModeSource } from '@icij/murmur'
 
 import AppModal from '@/components/AppModal/AppModal'
 import image from '@/assets/images/illustrations/app-modal-default-light.svg'

@@ -167,11 +167,23 @@ export default {
     running: 'info',
     warning: 'warning',
     cancelled: 'warning',
-    created: 'info'
+    created: 'info',
+    in_progress: 'info',
+    partial: 'warning'
+  },
+  csrf: {
+    cookieName: '_ds_csrf_token',
+    headerName: 'X-DS-CSRF-TOKEN'
   },
   elasticsearch: {
     waitForAnswer: 700,
-    requestTimeout: 60000
+    requestTimeout: 60000,
+    asyncSearch: {
+      waitForCompletionTimeout: '1s', // long-poll window per request (ES duration string)
+      pollInterval: 1000, // ms paused between polls
+      keepAlive: '5m', // ES retention for the stored async result (keep_alive param)
+      maxWait: 300000 // ms client-side ceiling; kept equal to keepAlive
+    }
   },
   filter: {
     bucketSize: 25,

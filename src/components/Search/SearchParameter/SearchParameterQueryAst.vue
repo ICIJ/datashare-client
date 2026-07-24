@@ -5,6 +5,7 @@ import SearchParameterFilter from './SearchParameterFilter'
 import SearchParameterQueryTerm from './SearchParameterQueryTerm'
 
 import { VARIANT, variantValidator } from '@/enums/variants'
+import { useSearchStore } from '@/store/modules'
 
 defineOptions({
   name: 'SearchParameterQueryAst'
@@ -47,10 +48,16 @@ const props = defineProps({
 
 const emit = defineEmits(['click:x'])
 
+const searchStore = useSearchStore()
+
 const isLeft = computed(() => !!props.ast.left)
 const isRight = computed(() => !!props.ast.right)
 const isFilter = computed(() => props.ast.field !== '<implicit>' && !!props.ast.term)
 const isTerm = computed(() => !!props.ast.term && !isFilter.value)
+const effectiveRightOperator = computed(() => {
+  const op = props.ast.operator
+  return op === '<implicit>' ? searchStore.searchOperator : op
+})
 </script>
 
 <template>
@@ -103,7 +110,7 @@ const isTerm = computed(() => !!props.ast.term && !isFilter.value)
       v-bind="$attrs"
       :ast="ast.right"
       :counter="counter"
-      :operator="ast.operator"
+      :operator="effectiveRightOperator"
       :no-icon="noIcon"
       :no-x-icon="noXIcon"
       :size="size"

@@ -1,6 +1,6 @@
 import { compact, endsWith, filter, find, get, keys, last, pick, startsWith, trim } from 'lodash'
 import { markRaw } from 'vue'
-import Murmur from '@icij/murmur-next'
+import { config } from '@icij/murmur'
 import dayjs from 'dayjs'
 import { extname } from 'path'
 
@@ -18,8 +18,16 @@ const _separator = '/'
 export default class Document extends EsDoc {
   static esName = 'Document'
 
-  constructor(raw, parent = null, root = null, position = 0) {
-    super(raw)
+  /**
+   * Creates a Document instance.
+   * @param {Object} raw - The raw ES document data
+   * @param {Object|null} [parent=null] - Parent document raw data
+   * @param {Object|null} [root=null] - Root document raw data
+   * @param {number} [position=0] - Position in search results
+   * @param {Object} [options={}] - Options passed to EsDoc
+   */
+  constructor(raw, parent = null, root = null, position = 0, options = {}) {
+    super(raw, options)
     this.parent = parent
     this.root = root
     this.position = position
@@ -71,7 +79,8 @@ export default class Document extends EsDoc {
   }
 
   set parent(parent) {
-    this[_parent] = parent ? new Document(parent) : null
+    // Skip cloning for parent refs - they're read-only
+    this[_parent] = parent ? new Document(parent, null, null, 0, { clone: false }) : null
   }
 
   get parent() {
@@ -79,7 +88,8 @@ export default class Document extends EsDoc {
   }
 
   set root(root) {
-    this[_root] = root ? new Document(root) : null
+    // Skip cloning for root refs - they're read-only
+    this[_root] = root ? new Document(root, null, null, 0, { clone: false }) : null
   }
 
   get root() {
@@ -112,7 +122,7 @@ export default class Document extends EsDoc {
 
   get folder() {
     // Extract location parts
-    const pathSeparator = Murmur.config.get('pathSeparator', _separator)
+    const pathSeparator = config.get('pathSeparator', _separator)
     const parts = this.path.split(pathSeparator)
     // Remove the file name
     parts.splice(-1, 1)
@@ -121,11 +131,11 @@ export default class Document extends EsDoc {
   }
 
   get location() {
-    return this.folder.split(Murmur.config.get('dataDir', import.meta.env.VITE_DATA_PREFIX)).pop()
+    return this.folder.split(config.get('dataDir', import.meta.env.VITE_DATA_PREFIX)).pop()
   }
 
   get basename() {
-    return last(this.path.split(Murmur.config.get('pathSeparator', _separator)))
+    return last(this.path.split(config.get('pathSeparator', _separator)))
   }
 
   get extension() {
@@ -244,6 +254,15 @@ export default class Document extends EsDoc {
 
   get contentType() {
     return this.source.contentType || 'unknown'
+  }
+
+  get contentTypeCategory() {
+    return this.source.contentTypeCategory || 'unknown'
+  }
+
+  get contentTypeCategoryLabel() {
+    // i18n translation key; the caller translates it against the active locale.
+    return `filter.contentTypeCategoryItem.${this.contentTypeCategory}`
   }
 
   get contentTypeLabel() {
@@ -432,6 +451,17 @@ export default class Document extends EsDoc {
 
   get isJson() {
     return this.contentType.indexOf('application/json') === 0
+  }
+
+  get isMarkdown() {
+    if (['text/x-web-markdown', 'text/markdown'].includes(this.contentType)) {
+      return true
+    }
+    // Markdown is frequently detected as plain text by the extractor, so also
+    // treat text/plain files with a markdown extension as markdown. The
+    // extension list is sourced from the registry to stay in one place.
+    const markdownExtensions = get(types, ['text/x-web-markdown', 'extensions'], [])
+    return this.contentType === 'text/plain' && markdownExtensions.includes(this.extension)
   }
 
   get hasTranslations() {

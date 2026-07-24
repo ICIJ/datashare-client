@@ -7,6 +7,9 @@ import IPhList from '~icons/ph/list'
 import IPhDotsNine from '~icons/ph/dots-nine'
 import IPhTable from '~icons/ph/table'
 
+import IPhUniteSquare from '~icons/ph/unite-square-fill'
+import IPhIntersectSquare from '~icons/ph/intersect-square-fill'
+
 import { LAYOUTS } from '@/enums/layouts'
 import { useUrlParamWithStore } from '@/composables/useUrlParamWithStore'
 import { useUrlParamsWithStore } from '@/composables/useUrlParamsWithStore'
@@ -15,11 +18,12 @@ import PageSettingsSection from '@/components/PageSettings/PageSettingsSection'
 import { useAppStore, useSearchStore } from '@/store/modules'
 import { useSearchProperties } from '@/composables/useSearchProperties'
 import { useViewSettings, INPUT_CHECKBOX, INPUT_RADIO } from '@/composables/useViewSettings'
+import { SEARCH_OPERATORS } from '@/enums/searchOperators.js'
 
 const { t } = useI18n()
 const appStore = useAppStore()
 const searchStore = useSearchStore()
-const { tLayout } = useViewSettings(t)
+const { tLayout, tSearchOperator } = useViewSettings()
 const { propertiesOptions, sortByOptions } = useSearchProperties()
 const VIEW = 'search'
 
@@ -46,6 +50,28 @@ const layout = ref({
       value: LAYOUTS.TABLE,
       text: tLayout.table,
       icon: IPhTable
+    }
+  ]
+})
+
+const searchOperator = ref({
+  label: tSearchOperator.label,
+  type: INPUT_RADIO,
+  open: true,
+  modelValue: computed({
+    get: () => appStore.getSettings(VIEW, 'searchOperator'),
+    set: searchOperator => appStore.setSettings(VIEW, { searchOperator })
+  }),
+  options: [
+    {
+      value: SEARCH_OPERATORS.OR,
+      icon: IPhUniteSquare,
+      text: tSearchOperator.or
+    },
+    {
+      value: SEARCH_OPERATORS.AND,
+      icon: IPhIntersectSquare,
+      text: tSearchOperator.and
     }
   ]
 })
@@ -166,6 +192,14 @@ function reset() {
       :type="properties.type"
       :options="properties.options"
       :label="properties.label"
+    />
+    <page-settings-section
+      v-model="searchOperator.modelValue"
+      v-model:open="searchOperator.open"
+      class="search-settings__section search-settings__section--search-operator"
+      :type="searchOperator.type"
+      :options="searchOperator.options"
+      :label="searchOperator.label"
     />
   </page-settings>
 </template>

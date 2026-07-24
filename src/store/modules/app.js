@@ -3,13 +3,14 @@ import { ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
 
 import { LAYOUTS } from '@/enums/layouts'
+import { SEARCH_OPERATORS } from '@/enums/searchOperators'
 
 /**
  * Version of the settings schema. Increment this value when making changes to the settings structure which
  * will require resetting user settings to defaults. This is useful if for instance you add new settings
  * or change the structure of existing settings and want to ensure users get the latest defaults.
  */
-const SETTINGS_VERSION = 0
+const SETTINGS_VERSION = 3
 
 /**
  * Defines the application-wide store for managing UI state and user preferences.
@@ -27,18 +28,25 @@ export const useAppStore = defineStore(
           orderBy: ['name', 'asc'],
           perPage: '25'
         },
+        projectUsersList: {
+          orderBy: ['name', 'asc'],
+          perPage: '10'
+        },
         search: {
           layout: LAYOUTS.LIST,
           orderBy: ['_score', 'desc'],
           perPage: '25',
-          properties: ['title', 'thumbnail', 'highlights', 'project']
+          properties: ['title', 'thumbnail', 'highlights', 'project'],
+          searchOperator: SEARCH_OPERATORS.OR,
+          expandedContentTypeCategories: [],
+          groupedContentTypeView: false
         },
         searchSavedList: {
           orderBy: ['creation_date', 'desc'],
           perPage: '25'
         },
         searchHistoryList: {
-          orderBy: ['creation_date', 'desc'],
+          orderBy: ['modification_date', 'desc'],
           perPage: '25',
           properties: ['title', 'thumbnail', 'path', 'creationDate']
         },
@@ -82,12 +90,12 @@ export const useAppStore = defineStore(
         },
         batchSearchQueries: {
           orderBy: ['query', 'asc'],
-          perPage: '100',
+          perPage: '25',
           properties: ['query', 'count']
         },
         batchSearchResults: {
           orderBy: ['doc_nb', 'asc'],
-          perPage: '100',
+          perPage: '25',
           properties: ['query', 'documentNumber', 'documentName', 'contentType', 'project']
         },
         documentView: {

@@ -46,6 +46,10 @@ const canManageBatchSearch = computed(() => batchSearch.user.id === username.val
 
 <style lang="scss" scoped>
 .batch-search-card {
+  // Cap the minimum width to the available space so the card never exceeds its
+  // column (e.g. col lg-4 on narrower viewports) and overflows the page width.
+  min-width: min(300px, 100%);
+
   &:deep(.batch-search-card__title) {
     padding: $spacer-xxs 0;
   }

@@ -4,11 +4,26 @@ import { expect } from 'vitest'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import { apiInstance as api } from '@/api/apiInstance'
+import { useAppStore } from '@/store/modules'
 
 vi.mock('@/api/apiInstance', () => ({
   apiInstance: {
     getUser: vi.fn().mockResolvedValue({ uid: 'local' })
   }
+}))
+
+// Mock useNProgress to avoid real NProgress timers outliving the jsdom
+// environment (see nprogress.js:98,256 — chained setTimeouts try to touch
+// `document` after test teardown and throw "document is not defined").
+vi.mock('@/composables/useNProgress', () => ({
+  useNProgress: () => ({
+    start: vi.fn(),
+    done: vi.fn(),
+    remove: vi.fn(),
+    toggle: vi.fn(),
+    isLoading: { value: false },
+    progress: { value: null }
+  })
 }))
 
 describe('guards', () => {
@@ -29,11 +44,29 @@ describe('guards', () => {
       await router.replace({ name: 'pub' }).catch(vi.fn())
     })
 
+    describe('when the route skips auth', () => {
+      it('should allow navigation to a skipsAuth route without a cookie', async () => {
+        removeCookie(process.env.VITE_DS_COOKIE_NAME)
+        auth.reset()
+        api.getUser.mockRejectedValue()
+        await router.push({ name: 'login' })
+        expect(router.currentRoute.value.name).toBe('login')
+      })
+    })
+
     describe('when the user is authenticated', () => {
       it('should not redirect to /login when we have the right cookie', async () => {
         setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'yolo' }, JSON.stringify)
         await router.push({ name: 'settings' })
         expect(router.currentRoute.value.name).toBe('settings')
+      })
+
+      it('should redirect to stored path after login', async () => {
+        setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'yolo' }, JSON.stringify)
+        const appStore = useAppStore()
+        appStore.setRedirectAfterLogin('/settings/appearance')
+        await router.push({ name: 'project.list' })
+        expect(router.currentRoute.value.path).toBe('/settings/appearance')
       })
     })
 
@@ -60,6 +93,46 @@ describe('guards', () => {
         await router.push({ name: 'settings' })
         expect(router.currentRoute.value.name).toBe('login')
       })
+
+      it('should not redirect to /login when already on /login', async () => {
+        removeCookie(process.env.VITE_DS_COOKIE_NAME)
+        await router.replace({ name: 'login' })
+        await router.push({ name: 'login' })
+        expect(router.currentRoute.value.name).toBe('login')
+      })
+    })
+  })
+
+  describe('checkUserProjects', () => {
+    beforeEach(async () => {
+      setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'yolo' }, JSON.stringify)
+      config.set('mode', 'SERVER')
+      config.set('projects', ['local-datashare'])
+      router.addRoute({ path: '/pub', name: 'pub', meta: { skipsAuth: true } })
+      shallowMount({ template: '<router-view />' }, { global: { plugins } })
+      await flushPromises()
+      await router.replace({ name: 'pub' })
+    })
+
+    it('should redirect to error when user has no projects', async () => {
+      config.set('projects', [])
+      await router.push({ name: 'settings' })
+      expect(router.currentRoute.value.name).toBe('error')
+    })
+
+    it('should allow navigation when user has projects', async () => {
+      config.set('projects', ['local-datashare'])
+      await router.push({ name: 'settings' })
+      expect(router.currentRoute.value.name).toBe('settings')
+    })
+
+    it('should allow navigation to /login even with no projects', async () => {
+      config.set('projects', [])
+      auth.reset()
+      api.getUser.mockRejectedValue()
+      removeCookie(process.env.VITE_DS_COOKIE_NAME)
+      await router.push({ name: 'login' })
+      expect(router.currentRoute.value.name).toBe('login')
     })
   })
 
@@ -76,15 +149,33 @@ describe('guards', () => {
       await router.replace({ name: 'pub' })
     })
 
-    it('should redirect task.analysis.list to error in SERVER mode', async () => {
+    it('should redirect task.documents.list to error in SERVER mode', async () => {
       config.set('mode', 'SERVER')
       await router.push({ name: 'task.documents.list' })
       expect(router.currentRoute.value.name).toBe('error')
     })
 
-    it('should not redirect task.analysis.list to error in LOCAL mode', async () => {
+    it('should not redirect task.documents.list to error in LOCAL mode', async () => {
       config.set('mode', 'LOCAL')
       await router.push({ name: 'task.documents.list' })
+      expect(router.currentRoute.value.name).not.toBe('error')
+    })
+
+    it('should redirect task.entities.list to error in SERVER mode', async () => {
+      config.set('mode', 'SERVER')
+      await router.push({ name: 'task.entities.list' })
+      expect(router.currentRoute.value.name).toBe('error')
+    })
+
+    it('should redirect task.entities.new to error in SERVER mode', async () => {
+      config.set('mode', 'SERVER')
+      await router.push({ name: 'task.entities.new' })
+      expect(router.currentRoute.value.name).toBe('error')
+    })
+
+    it('should not redirect task.entities.list to error in LOCAL mode', async () => {
+      config.set('mode', 'LOCAL')
+      await router.push({ name: 'task.entities.list' })
       expect(router.currentRoute.value.name).not.toBe('error')
     })
 
@@ -103,6 +194,84 @@ describe('guards', () => {
     it('should not redirect project.new to error in EMBEDDED mode', async () => {
       wrapper.vm.$config.set('mode', 'EMBEDDED')
       await router.push({ name: 'project.new' })
+      expect(router.currentRoute.value.name).not.toBe('error')
+    })
+
+    it('should not redirect settings.api to error in SERVER mode', async () => {
+      config.set('mode', 'SERVER')
+      await router.push({ name: 'settings.api' })
+      expect(router.currentRoute.value.name).not.toBe('error')
+    })
+
+    it('should redirect settings.api to error in LOCAL mode', async () => {
+      config.set('mode', 'LOCAL')
+      await router.push({ name: 'settings.api' })
+      expect(router.currentRoute.value.name).toBe('error')
+    })
+
+    it('should not redirect routes without allowedModes', async () => {
+      config.set('mode', 'SERVER')
+      await router.push({ name: 'settings' })
+      expect(router.currentRoute.value.name).not.toBe('error')
+    })
+  })
+
+  describe('checkUserRole', () => {
+    beforeEach(async () => {
+      setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'yolo' }, JSON.stringify)
+      config.set('mode', 'SERVER')
+      config.set('projects', ['local-datashare'])
+      router.addRoute({ path: '/pub', name: 'pub', meta: { skipsAuth: true } })
+      shallowMount({ template: '<router-view />' }, { global: { plugins } })
+      await flushPromises()
+      await router.replace({ name: 'pub' })
+    })
+
+    it('should allow access to project.view.edit when user has ADMIN role', async () => {
+      config.set('policies', [{ projectId: 'local-datashare', role: 'PROJECT_ADMIN' }])
+      await router.push({ name: 'project.view.edit', params: { name: 'local-datashare' } })
+      expect(router.currentRoute.value.name).toBe('project.view.edit.details')
+    })
+
+    it('should redirect to error when user lacks ADMIN role', async () => {
+      config.set('policies', [{ projectId: 'local-datashare', role: 'PROJECT_MEMBER' }])
+      await router.push({ name: 'project.view.edit', params: { name: 'local-datashare' } })
+      expect(router.currentRoute.value.name).toBe('error')
+    })
+
+    it('should redirect to error when user has no policy for the project', async () => {
+      config.set('policies', [{ projectId: 'other-project', role: 'PROJECT_ADMIN' }])
+      await router.push({ name: 'project.view.edit', params: { name: 'local-datashare' } })
+      expect(router.currentRoute.value.name).toBe('error')
+    })
+
+    it('should check roles for the correct project from route params', async () => {
+      config.set('projects', ['local-datashare', 'other-project'])
+      config.set('policies', [
+        { projectId: 'local-datashare', role: 'PROJECT_MEMBER' },
+        { projectId: 'other-project', role: 'PROJECT_ADMIN' }
+      ])
+      await router.push({ name: 'project.view.edit', params: { name: 'other-project' } })
+      expect(router.currentRoute.value.name).toBe('project.view.edit.details')
+    })
+
+    it('should skip role check in LOCAL mode', async () => {
+      config.set('mode', 'LOCAL')
+      config.set('policies', [])
+      await router.push({ name: 'project.view.edit', params: { name: 'local-datashare' } })
+      expect(router.currentRoute.value.name).not.toBe('error')
+    })
+
+    it('should skip role check in EMBEDDED mode', async () => {
+      config.set('mode', 'EMBEDDED')
+      config.set('policies', [])
+      await router.push({ name: 'project.view.edit', params: { name: 'local-datashare' } })
+      expect(router.currentRoute.value.name).not.toBe('error')
+    })
+
+    it('should not redirect routes without allowedRole', async () => {
+      config.set('policies', [])
+      await router.push({ name: 'project.view.overview', params: { name: 'local-datashare' } })
       expect(router.currentRoute.value.name).not.toBe('error')
     })
   })

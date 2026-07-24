@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, toValue } from 'vue'
+import { computed, ref, toValue, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
@@ -23,6 +23,7 @@ import { useUrlPageFromWithStore } from '@/composables/useUrlPageFromWithStore'
 import { useSearchFilter } from '@/composables/useSearchFilter'
 import { useSearchBreadcrumb } from '@/composables/useSearchBreadcrumb'
 import { useSearchNav } from '@/composables/useSearchNav'
+import { useSearchExecution } from '@/composables/useSearchExecution'
 import { useViews } from '@/composables/useViews'
 import { LAYOUTS } from '@/enums/layouts'
 import { DISPLAY as ENTRIES_DISPLAY } from '@/enums/documentFloating'
@@ -38,8 +39,10 @@ const {
   refreshSearchFromRouteStart,
   watchIndices,
   watchFilters,
+  watchOperator,
   onAfterRouteQueryUpdate,
-  onAfterRouteQueryFromUpdate
+  onAfterRouteQueryFromUpdate,
+  onConsumeNoRefresh
 } = useSearchFilter()
 const { count: searchBreadcrumbCounter, anyFilters } = useSearchBreadcrumb()
 const { hasCarousel } = useSearchNav()
@@ -48,6 +51,9 @@ const { t } = useI18n()
 const appStore = useAppStore()
 const searchStore = useSearchStore()
 const route = useRoute()
+
+// Cancel the in-flight async search when leaving the search view.
+useSearchExecution()
 
 const entries = computed(() => searchStore.response.hits)
 const properties = computed(() => appStore.getSettings('search', 'properties'))
@@ -61,6 +67,12 @@ const isEmpty = computed(() => isSearchRoute.value && !isLoading.value && !total
 const selection = ref([])
 const toggleSearchBreadcrumb = ref(false)
 const selectMode = ref(false)
+
+// Clear selected documents when leaving selection mode so stale
+// selections don't persist across separate selection sessions.
+watch(selectMode, (value) => {
+  if (!value) selection.value = []
+})
 
 // The this value is used to know if the floating document view has enough space to be displayed
 // next to the search results. It is updated by the DocumentEntries component which itself gets it
@@ -83,7 +95,7 @@ const renderDocumentInModal = computed(() => !isListLayout.value || route.query.
 const total = computed(() => parseInt(searchStore.response.total))
 const perPage = computed(() => parseInt(appStore.getSettings('search', 'perPage')))
 const page = useUrlPageFromWithStore({
-  perPage: toValue(perPage),
+  perPage,
   // The "to" parameter is used to ensure that when the page is changed, the route query is updated
   // to be on a given route. Here we use the store's `toRouteQuery` to ensure that the route query is updated
   // with the current search parameters. This allows us to navigate from child routes where the query parameters
@@ -105,6 +117,8 @@ const documentViewFloatingId = provideDocumentViewFloatingId()
 watchFilters(refreshRouteFromStart)
 // Refresh route query when projects change
 watchIndices(refreshRouteFromStart)
+// Refresh route query when search operator changes
+watchOperator(refreshRouteFromStart)
 // Refresh search when route query changes. Among all the "watcher" (it's a post-navigation filter)
 // of this view, it probably the most important one. It will trigger the search API call
 // when the route query changes which mean that **only route changes** can trigger a search. This
@@ -115,6 +129,10 @@ onAfterRouteQueryUpdate(refreshSearchFromRouteStart)
 // change the "from" query parameter to the first page. If the current route is the search route, it
 // will also trigger the search API call immediately.
 onAfterRouteQueryFromUpdate(refreshSearchFromRoute, { immediate: route.name === 'search' })
+// Consume the one-shot `noRefresh` flag. MUST be registered after the two
+// refresh guards above so it runs last and they observe the flag before it is
+// stripped from the URL.
+onConsumeNoRefresh({ immediate: route.name === 'search' })
 </script>
 
 <template>

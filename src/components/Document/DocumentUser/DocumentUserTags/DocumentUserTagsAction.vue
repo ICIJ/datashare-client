@@ -24,7 +24,7 @@ const { t } = useI18n()
     v-model="modelValue"
     :disabled="disabled"
     :options="options"
-    class="document-user-tags-actions w-100"
+    class="document-user-tags-action w-100"
     autofocus
     no-duplicates
     no-tags

@@ -1,5 +1,5 @@
 <script setup>
-import { AppIcon, EllipsisTooltip as vEllipsisTooltip } from '@icij/murmur-next'
+import { AppIcon, EllipsisTooltip as vEllipsisTooltip } from '@icij/murmur'
 
 import IPhInfo from '~icons/ph/info'
 
@@ -39,6 +39,7 @@ defineProps({
   <div class="document-metadata">
     <app-icon
       class="document-metadata__icon"
+      size="1.25em"
       :name="icon"
     />
     <div class="document-metadata__label">

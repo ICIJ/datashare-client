@@ -26,7 +26,7 @@ const props = defineProps({
   },
   trackBy: {
     type: [String, Function],
-    default: identity
+    default: () => identity
   },
   limit: {
     type: Number,
@@ -48,8 +48,13 @@ const nextFocusIndex = computed(() => {
   return Math.min(filteredOptions.value.length - 1, focusIndex.value + 1)
 })
 
+const modelValueLowercasedSet = computed(() => {
+  return new Set((modelValue.value || []).map(v => String(v).toLowerCase()))
+})
+
 const hasOption = (option) => {
-  return modelValue.value.includes(getOptionValue(option))
+  const value = String(getOptionValue(option)).toLowerCase()
+  return modelValueLowercasedSet.value.has(value)
 }
 
 const getOptionValue = ({ item }) => {
@@ -63,29 +68,38 @@ const getValue = (value) => {
   return get(value, props.trackBy)
 }
 
-const filteredOptions = computed(() => {
-  return fuse.value.search(props.inputValue).slice(0, props.limit)
+const availableOptions = computed(() => {
+  return [...props.options].sort((a, b) => String(getValue(a)).localeCompare(String(getValue(b))))
 })
 
-const availableOptions = computed(() => {
-  if (props.noDuplicates) {
-    return props.options.filter(option => !hasOption(option))
+const filteredOptions = computed(() => {
+  // Only suggest once the user has typed at least one character; an empty input
+  // (including right after submitting a tag) has nothing to match, so the
+  // dropdown stays closed instead of listing every existing tag.
+  if (!props.inputValue) {
+    return []
   }
-  return props.options
+  return fuse.value.search(props.inputValue).slice(0, props.limit)
 })
 
 const fuse = computed(() => {
   return new Fuse(availableOptions.value, {
     distance: 100,
+    threshold: 0.4,
     shouldSort: true,
     keys: props.searchKeys
   })
 })
 
-const emit = defineEmits(['addTag', 'update:show', 'update:tag'])
+const emit = defineEmits(['addTag', 'removeTag', 'update:show'])
 
 const addOption = (option) => {
-  addTag(getOptionValue(option))
+  if (props.noDuplicates && hasOption(option)) {
+    emit('removeTag', getOptionValue(option))
+  }
+  else {
+    addTag(getOptionValue(option))
+  }
 }
 
 const addFocusOption = () => {
@@ -98,8 +112,9 @@ const addTag = (tag) => {
   emit('addTag', tag)
 }
 
-watch(filteredOptions, (filteredOptions) => {
-  emit('update:show', !!filteredOptions.length)
+watch(filteredOptions, (newVal, oldVal) => {
+  if (!props.inputValue && !newVal.length && !oldVal.length) return
+  emit('update:show', !!newVal.length)
 })
 
 watch(
@@ -112,7 +127,9 @@ watch(
 
 const classList = computed(() => {
   return {
-    'form-control-tag-dropdown--show': props.show,
+    // Never render an empty dropdown: it only shows when asked to and when there
+    // is at least one suggestion to display.
+    'form-control-tag-dropdown--show': props.show && filteredOptions.value.length > 0,
     [`form-control-tag-dropdown--${placement.value}`]: true
   }
 })

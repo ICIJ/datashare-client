@@ -25,7 +25,7 @@ export default {
     }
   },
   args: {
-    icon: 'circles-three-plus',
+    icon: markRaw(IPhCirclesThreePlus),
     title: 'Projects',
     active: true,
     compact: false
@@ -36,7 +36,9 @@ export default {
       AppSidebarSectionEntry
     },
     setup() {
-      return { args }
+      // Icon props are rendered via `<component :is>`, so the template binds
+      // icon components (auto-imported) rather than string names.
+      return { args, IPhDotsNine: markRaw(IPhDotsNine), IPhPushPin: markRaw(IPhPushPin) }
     },
     computed: {
       style() {
@@ -48,13 +50,13 @@ export default {
     template: `
       <div :style="style">
         <app-sidebar-section v-bind="args" :to="{ name: 'home' }">
-          <app-sidebar-section-entry icon="dots-nine" :to="{ name: 'home' }" :action-to="{ name: 'home' }" action-title="Add project">
+          <app-sidebar-section-entry :icon="IPhDotsNine" :to="{ name: 'home' }" :action-to="{ name: 'home' }" action-title="Add project">
             All projects
           </app-sidebar-section-entry>
-          <app-sidebar-section-entry :to="{ name: 'home' }" :active="args.active" icon="push-pin">
+          <app-sidebar-section-entry :to="{ name: 'home' }" :active="args.active" :icon="IPhPushPin">
             Banana Papers
           </app-sidebar-section-entry>
-          <app-sidebar-section-entry :to="{ name: 'home' }" icon="push-pin">
+          <app-sidebar-section-entry :to="{ name: 'home' }" :icon="IPhPushPin">
             Citrus Confidential
           </app-sidebar-section-entry>
         </app-sidebar-section>

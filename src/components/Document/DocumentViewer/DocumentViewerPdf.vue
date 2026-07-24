@@ -42,12 +42,13 @@ const src = computed(() => (documentViewStore.embeddedPdf ? null : props.documen
 const { pdf, numPages, sizes, findHighlights, loaderId: pdfLoaderId } = usePDF(src)
 const { waitFor, isLoading } = useWait()
 const { t } = useI18n()
-const { isBlurred } = useDocumentPreview()
+const { isBlurred, getBlurredContentBanner } = useDocumentPreview()
 
 const currentPage = ref(1)
 const rotation = documentViewStore.computedDocumentRotation(props.document)
 const scale = ref(SCALE_FIT)
 const blurred = ref(null)
+const blurredContent = ref(null)
 const pageElements = useTemplateRef('pages')
 const toolboxElement = useTemplateRef('toolbox')
 const { height: toolboxHeight } = useElementBounding(toolboxElement)
@@ -58,7 +59,7 @@ const highlightIndex = ref(0)
 const highlightMatches = ref([])
 const highlightOccurrences = computed(() => highlightMatches.value.length)
 const isHighlightDebouncing = computed(() => highlightTextDebounced.value !== highlightText.value)
-const isHightlightLoading = computed(() => isLoading.value || isHighlightDebouncing.value)
+const isHighlightLoading = computed(() => isLoading.value || isHighlightDebouncing.value)
 
 const pageScale = computed(() => (isNaN(scale.value) ? 1 : Number(scale.value)))
 const pageFitParent = computed(() => scale.value === SCALE_FIT || scale.value === SCALE_WIDTH)
@@ -106,6 +107,9 @@ whenever(highlightTextDebounced, waitFor(async (value) => {
 
 watch(src, async () => {
   blurred.value ??= await isBlurred(props.document)
+  if (blurred.value) {
+    blurredContent.value = await getBlurredContentBanner(props.document)
+  }
 }, { immediate: true })
 </script>
 
@@ -130,7 +134,7 @@ watch(src, async () => {
           v-model="highlightText"
           v-model:active-index="highlightIndex"
           :compact="toolboxCompact"
-          :loading="isHightlightLoading"
+          :loading="isHighlightLoading"
           :occurrences="highlightOccurrences"
           class="flex-grow-1"
         />
@@ -161,6 +165,7 @@ watch(src, async () => {
     <dismissable-content-warning-toggler
       v-if="blurred"
       v-model="blurred"
+      :description="blurredContent"
     />
     <app-wait
       v-else

@@ -46,6 +46,18 @@ export default [
     }
   },
 
+  // Storybook config, decorators and the render smoke script run in both the
+  // browser (preview) and Node (the smoke harness) contexts.
+  {
+    files: ['.storybook/**/*.{js,mjs}'],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      }
+    }
+  },
+
   // Vitest are written for the browser and must include browser globals
   {
     files: [
@@ -56,6 +68,19 @@ export default [
       globals: {
         ...globals.browser,
       }
+    }
+  },
+
+  // Storybook stories reference icon components (`IPh*`) and `markRaw`, both
+  // injected at build time by unplugin-auto-import (see vite.config.js). ESLint
+  // can't see those build-time globals, and the icon names are resolved
+  // dynamically so they can't be enumerated as globals. Genuinely undefined
+  // identifiers are still caught at runtime by the render smoke test
+  // (`yarn test-storybook`).
+  {
+    files: ['**/*.stories.{js,mjs,ts}'],
+    rules: {
+      'no-undef': 'off'
     }
   },
 

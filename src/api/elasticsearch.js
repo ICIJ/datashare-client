@@ -1,61 +1,357 @@
 import { isEqual, replace } from 'lodash'
 import bodybuilder from 'bodybuilder'
 import es from 'elasticsearch-browser'
+import { getCookie } from 'tiny-cookie'
 
+import { getPairedDimensions } from '@/store/filters/pairedDimensions'
 import { EventBus } from '@/utils/eventBus'
+import { SEARCH_OPERATORS } from '@/enums/searchOperators'
 import settings from '@/utils/settings'
 
-// Custom API for datashare
-// @see https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/16.x/extending_core_components.html
+// Content fields to exclude from search results (large text fields)
+const CONTENT_FIELDS = ['content', 'content_translated']
+
+// Default query when none is provided
+const DEFAULT_QUERY = '*'
+
+// Search preferences for caching
+const PREFERENCE = Object.freeze({
+  DOCUMENTS_COUNT: 'project-documents-count',
+  TAGS_COUNT: 'project-tags-count',
+  COUNT_BY_PROJECT: 'count-by-project',
+  MAX_EXTRACTION_DATE: 'max-extraction-date-by-project'
+})
+
+// Highlight configuration for search results.
+// `max_analyzed_offset` caps how far into long fields the highlighter analyzes,
+// preventing shard failures on docs whose content exceeds the index's
+// `index.highlight.max_analyzed_offset` limit (default 1,000,000).
+const HIGHLIGHT_CONFIG = Object.freeze({
+  max_analyzed_offset: 999999,
+  fields: {
+    'content': {
+      fragment_size: 280,
+      number_of_fragments: 2,
+      pre_tags: ['<mark>'],
+      post_tags: ['</mark>']
+    },
+    'content_translated.content': {
+      fragment_size: 280,
+      number_of_fragments: 2,
+      pre_tags: ['<mark>'],
+      post_tags: ['</mark>']
+    }
+  }
+})
+
+/**
+ * Normalizes a query string, returning the default query for empty values.
+ * @param {string} query - The query string to normalize
+ * @returns {string} The normalized query
+ */
+function normalizeQuery(query) {
+  return [null, undefined, ''].includes(query) ? DEFAULT_QUERY : query
+}
+
+/**
+ * Drops keys whose value is undefined so the query string omits them rather
+ * than serializing them as empty (the bundled client stringifies undefined as '').
+ * @param {Object} params
+ * @returns {Object}
+ */
+function compactQuery(params) {
+  return Object.fromEntries(Object.entries(params).filter(([, value]) => value !== undefined))
+}
+
+/**
+ * Emits an error event and re-throws the error.
+ * @param {Error} error - The error to handle
+ */
+function handleSearchError(error) {
+  EventBus.emit('http::error', error)
+  throw error
+}
+
+/**
+ * Forwards an AbortSignal to an in-flight transport request so a superseded or
+ * cancelled search stops promptly instead of finishing its long-poll. Returns a
+ * teardown that detaches the listener once the request has settled.
+ * @param {Promise} request - The transport request promise (exposes `.abort`).
+ * @param {AbortSignal} [signal]
+ * @returns {Function} Detaches the abort listener.
+ */
+function forwardAbortSignal(request, signal) {
+  const abortRequest = () => request.abort?.()
+  if (!signal) {
+    return () => {}
+  }
+  // Already cancelled: abort immediately, nothing left to listen for.
+  if (signal.aborted) {
+    abortRequest()
+    return () => {}
+  }
+  signal.addEventListener('abort', abortRequest)
+  return () => signal.removeEventListener('abort', abortRequest)
+}
+
+/**
+ * Emits the global search error for genuine failures only. A request the caller
+ * has already cancelled must not raise a user-facing error (e.g. the 401
+ * "logged out" toast) for a result that will be discarded.
+ * @param {Error} error
+ * @param {AbortSignal} [signal]
+ */
+function emitSearchErrorUnlessAborted(error, signal) {
+  if (!signal?.aborted) {
+    EventBus.emit('http::error', error)
+  }
+}
+
+/**
+ * Awaits an async-search transport request with cancellation wired in: the
+ * signal aborts the in-flight request, and only genuine failures surface.
+ * @param {Promise} request - The transport request promise (exposes `.abort`).
+ * @param {AbortSignal} [signal]
+ * @returns {Promise<Object>} The response body.
+ */
+async function abortableSearchRequest(request, signal) {
+  const stopForwardingAbort = forwardAbortSignal(request, signal)
+  try {
+    return await request
+  }
+  catch (error) {
+    emitSearchErrorUnlessAborted(error, signal)
+    throw error
+  }
+  finally {
+    stopForwardingAbort()
+  }
+}
+
+function isFilterIncludedWithValues(filter) {
+  return filter.hasValues() && !filter.excluded && !filter.forceExclude
+}
+
+function isFilterExcludedWithValues(filter) {
+  return (filter.excluded || filter.forceExclude) && filter.hasValues()
+}
+
+/**
+ * Custom API plugin for Datashare extending the Elasticsearch client.
+ * @see https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/16.x/extending_core_components.html
+ */
 export function datasharePlugin(Client) {
+  /**
+   * Retrieves a document by ID.
+   * @param {string} index - The index name
+   * @param {string} id - The document ID
+   * @param {string|null} [routing=null] - Optional routing value
+   * @param {Object} [params={}] - Additional parameters
+   * @returns {Promise<Object>} The document
+   */
   Client.prototype.getDocument = function (index, id, routing = null, params = {}) {
     try {
       return this.get({ index, id, routing, ...params })
     }
     catch (error) {
-      EventBus.emit('http::error', error)
-      throw error
+      handleSearchError(error)
     }
   }
 
+  /**
+   * Retrieves a document without its content fields.
+   * @param {string} index - The index name
+   * @param {string} id - The document ID
+   * @param {string|null} [routing=null] - Optional routing value
+   * @returns {Promise<Object>} The document without content
+   */
   Client.prototype.getDocumentWithoutContent = async function (index, id, routing = null) {
-    const sourceExclude = 'content,content_translated'
-    return this.getDocument(index, id, routing, { _source_excludes: sourceExclude })
+    return this.getDocument(index, id, routing, {
+      _source_excludes: CONTENT_FIELDS.join(',')
+    })
   }
 
+  /**
+   * Retrieves a document with only its content fields.
+   * @param {string} index - The index name
+   * @param {string} id - The document ID
+   * @param {string|null} [routing=null] - Optional routing value
+   * @returns {Promise<Object>} The document with content only
+   */
   Client.prototype.getDocumentWithContent = async function (index, id, routing = null) {
-    const source = 'content,content_translated'
-    return this.getDocument(index, id, routing, { _source: source })
+    return this.getDocument(index, id, routing, {
+      _source: CONTENT_FIELDS.join(',')
+    })
   }
 
+  /**
+   * Retrieves multiple documents by their IDs.
+   * @param {string} index - The index name
+   * @param {string[]} [ids=[]] - Array of document IDs
+   * @param {string|null} [source=null] - Source filtering
+   * @returns {Promise<Object>} Search results containing the documents
+   */
+  Client.prototype.getDocumentsByIds = function (index, ids = [], source = null) {
+    const body = { query: { ids: { values: ids } } }
+    return this._search({ index, size: ids.length, body, _source: source })
+  }
+
+  /**
+   * Internal search method with error handling.
+   * @private
+   * @param {Object} params - Search parameters
+   * @returns {Promise<Object>} Search results
+   */
   Client.prototype._search = function (params) {
-    return this.search({ ...params }).then(
-      data => data,
-      (error) => {
-        EventBus.emit('http::error', error)
-        throw error
-      }
-    )
+    return this.search({ ...params }).then(data => data, handleSearchError)
   }
 
-  Client.prototype.countDocuments = async function (index) {
-    const query = 'type:Document'
-    const body = { query: { query_string: { query } } }
-    const preference = 'project-documents-count'
-    const res = await this.count({ index, body, preference })
-    return res?.count || 0
+  /**
+   * Builds the search body for a document search (filters, query, pagination,
+   * highlighting). Exposed so async search can reuse the exact same body.
+   * @param {Object} options - Same shape as searchDocs options.
+   * @returns {Object} The built Elasticsearch search body.
+   */
+  Client.prototype.buildSearchDocsBody = function ({
+    query = DEFAULT_QUERY,
+    filters = [],
+    from = 0,
+    perPage = 25,
+    sort = { _score: { order: 'desc' } },
+    fields = [],
+    operator = SEARCH_OPERATORS.OR
+  } = {}) {
+    return this._buildSearchBody({
+      query: normalizeQuery(query),
+      filters,
+      fields,
+      from,
+      size: perPage,
+      sort,
+      operator
+    })
   }
 
-  Client.prototype.countTags = async function (index) {
-    const size = 0
-    const cardinality = { field: 'tags' }
-    const aggs = { count: { cardinality } }
-    const body = { size, aggs }
-    const preference = 'project-tags-count'
-    const res = await this.search({ index, body, preference })
-    return res?.aggregations?.count?.value || 0
+  /**
+   * Searches for documents with filters, pagination, and highlighting.
+   * @param {Object} options - Search options
+   * @param {string} options.index - The index name
+   * @param {string} [options.query='*'] - Query string
+   * @param {Array} [options.filters=[]] - Array of filter objects
+   * @param {number} [options.from=0] - Starting offset for pagination
+   * @param {number} [options.perPage=25] - Number of results per page
+   * @param {Object} [options.sort] - Sort configuration
+   * @param {string[]} [options.fields=[]] - Fields to search in
+   * @returns {Promise<Object>} Search results
+   */
+  Client.prototype.searchDocs = function (options) {
+    const body = this.buildSearchDocsBody(options)
+    return this._search({ index: options.index, body })
   }
 
+  /**
+   * Submits an async search. Returns the async envelope: either a completed
+   * result (is_running:false) or a running handle ({ id, is_running:true }).
+   * @param {Object} options
+   * @param {string} options.index - Comma-separated index list
+   * @param {Object} options.body - The search body (from buildSearchDocsBody)
+   * @param {string} options.waitForCompletionTimeout - ES duration, e.g. '1s'
+   * @param {string} options.keepAlive - ES duration, e.g. '5m'
+   * @param {AbortSignal} [options.signal] - Cancels the in-flight request.
+   * @returns {Promise<Object>} The async search envelope
+   */
+  Client.prototype.submitAsyncSearch = function ({ index, body, waitForCompletionTimeout, keepAlive, signal }) {
+    const request = this.transport.request({
+      method: 'POST',
+      path: `/${index}/_async_search`,
+      query: compactQuery({ wait_for_completion_timeout: waitForCompletionTimeout, keep_alive: keepAlive }),
+      body
+    })
+    return abortableSearchRequest(request, signal)
+  }
+
+  /**
+   * Polls a running async search by id.
+   * @param {string} id - The async search id
+   * @param {Object} [options]
+   * @param {string} [options.waitForCompletionTimeout] - ES duration, e.g. '1s'
+   * @param {AbortSignal} [options.signal] - Cancels the in-flight request.
+   * @returns {Promise<Object>} The async search envelope
+   */
+  Client.prototype.getAsyncSearch = function (id, { waitForCompletionTimeout, signal } = {}) {
+    const request = this.transport.request({
+      method: 'GET',
+      path: `/_async_search/${encodeURIComponent(id)}`,
+      query: compactQuery({ wait_for_completion_timeout: waitForCompletionTimeout })
+    })
+    return abortableSearchRequest(request, signal)
+  }
+
+  /**
+   * Deletes a stored async search to free its server-side storage. Used for
+   * fire-and-forget cleanup, so it deliberately does NOT emit http::error;
+   * callers should swallow rejections.
+   * @param {string} id - The async search id
+   * @returns {Promise<Object>} The deletion acknowledgement
+   */
+  Client.prototype.deleteAsyncSearch = function (id) {
+    return this.transport.request({
+      method: 'DELETE',
+      path: `/_async_search/${encodeURIComponent(id)}`
+    })
+  }
+
+  /**
+   * Searches within a specific filter context.
+   * @param {string} index - The index name
+   * @param {Object} filter - The filter object
+   * @param {string} [query='*'] - Query string
+   * @param {Array} [filters=[]] - Additional filters
+   * @param {boolean} [contextualize=true] - Whether to apply context filters
+   * @param {Object} [options={}] - Filter options
+   * @param {string[]} [fields=[]] - Fields to search in
+   * @param {number} [from=0] - Starting offset
+   * @param {number} [size=8] - Number of results
+   * @returns {Promise<Object>} Search results
+   */
+  Client.prototype.searchFilter = function (
+    index,
+    filter,
+    query = DEFAULT_QUERY,
+    filters = [],
+    contextualize = true,
+    options = {},
+    fields = [],
+    from = 0,
+    size = 8
+  ) {
+    const { preference } = filter
+    let body = filter.body(bodybuilder(), options, from, size)
+
+    if (contextualize) {
+      // Exclude the bucket's own filter from the agg context so the bucket
+      // selection does not constrain its own buckets and the paired-dimension
+      // OR-combine does not trigger (only one side of the pair remains here).
+      const otherFilters = filters.filter(other => other.name !== filter.name)
+      this._applyFilters(body, otherFilters)
+      this._applyQueryString(body, normalizeQuery(query), fields)
+    }
+
+    body = body.size(0).rawOption('track_total_hits', true).build()
+    return this._search({ index, body, preference })
+  }
+
+  /**
+   * Retrieves named entities for a document filtered by category.
+   * @param {string} index - The index name
+   * @param {string} docId - The parent document ID
+   * @param {string|null} [routing=null] - Optional routing value
+   * @param {number} [from=0] - Starting offset for pagination
+   * @param {number} [size=200] - Number of results
+   * @param {string|null} [category=null] - Entity category filter
+   * @param {string|null} [filterToken=null] - Token to filter entity mentions
+   * @returns {Promise<Object>} Search results with named entities
+   */
   Client.prototype.getDocumentNamedEntitiesInCategory = async function (
     index,
     docId,
@@ -65,171 +361,328 @@ export function datasharePlugin(Client) {
     category = null,
     filterToken = null
   ) {
+    const frequencySort = {
+      _script: {
+        type: 'number',
+        script: { source: 'doc[\'offsets\'].size()' },
+        order: 'desc'
+      }
+    }
+
+    const mentionSort = { mentionNorm: 'asc' }
+
     const body = bodybuilder()
       .size(size)
       .from(from)
-      .query('parent_id', {
-        type: 'NamedEntity',
-        id: docId
-      })
-      .rawOption('runtime_mappings', {
-        frequency: {
-          type: 'long',
-          script: {
-            source: 'emit(doc.offsets.length)'
-          }
-        }
-      })
-      .sort([{ frequency: 'desc' }, { mentionNorm: 'asc' }])
-      .addQuery('bool', (bool) => {
-        if (filterToken) {
-          const fields = ['mentionNorm', 'mention']
-          const query = `*${filterToken}*`
-          bool.orQuery('query_string', { fields, query })
-        }
-        return bool
-      })
+      .query('parent_id', { type: 'NamedEntity', id: docId })
+      .sort([frequencySort, mentionSort])
       .filter('term', 'isHidden', 'false')
       .filter('term', 'category', category)
-      .build()
-    return this._search({ index, routing, body })
+      .rawOption('track_total_hits', true)
+
+    if (filterToken) {
+      const fields = ['mentionNorm', 'mention']
+      const query = `*${filterToken}*`
+      body.query('query_string', { fields, query })
+    }
+
+    return this._search({ index, routing, body: body.build() })
   }
 
-  Client.prototype.addQueryToFilter = function (query, body, fields = []) {
-    body.query('match_all').addQuery('bool', b =>
-      b
-        // Add the query string to the body
-        .orQuery('query_string', {
-          query,
-          fields: fields.length ? fields : undefined
-        })
-    )
+  /**
+   * Counts the total number of documents in an index.
+   * @param {string} index - The index name
+   * @returns {Promise<number>} The document count
+   */
+  Client.prototype.countDocuments = async function (index) {
+    const body = { query: { query_string: { query: 'type:Document' } } }
+    const res = await this.count({ index, body, preference: PREFERENCE.DOCUMENTS_COUNT })
+    return res?.count ?? 0
   }
 
-  Client.prototype.searchFilter = function (
-    index,
-    filter,
-    query = '*',
-    filters = [],
-    contextualize = true,
-    options = {},
-    fields = [],
-    from = 0,
-    size = 8
-  ) {
-    const { preference } = filter
-    // Avoid searching for nothing
-    query = ['', null, undefined].indexOf(query) === -1 ? query : '*'
-    let body = filter.body(bodybuilder(), options, from, size)
-    if (contextualize) {
-      for (const filter of filters) {
-        filter.addFilter(body)
+  /**
+   * Counts the number of unique tags in an index.
+   * @param {string} index - The index name
+   * @returns {Promise<number>} The unique tag count
+   */
+  Client.prototype.countTags = async function (index) {
+    const body = {
+      size: 0,
+      aggs: { count: { cardinality: { field: 'tags' } } }
+    }
+    const res = await this.search({ index, body, preference: PREFERENCE.TAGS_COUNT })
+    return res?.aggregations?.count?.value ?? 0
+  }
+
+  /**
+   * Counts documents grouped by project/index.
+   * @param {string} index - The index pattern
+   * @param {Object} [query=undefined] - Optional query filter
+   * @param {number} [size=1000] - Maximum number of buckets
+   * @returns {Promise<Object>} Aggregation results with counts per project
+   */
+  Client.prototype.countByProject = function (index, query = undefined, size = 1000) {
+    const body = {
+      size: 0,
+      query,
+      aggs: { index: { terms: { field: '_index', size } } }
+    }
+    return this._search({ index, body, preference: PREFERENCE.COUNT_BY_PROJECT })
+  }
+
+  /**
+   * Gets the maximum extraction date for each project/index.
+   * @param {string} index - The index pattern
+   * @param {Object} [query=undefined] - Optional query filter
+   * @param {number} [size=1000] - Maximum number of buckets
+   * @returns {Promise<Object>} Aggregation results with max extraction dates
+   */
+  Client.prototype.maxExtractionDateByProject = function (index, query = undefined, size = 1000) {
+    const body = {
+      size: 0,
+      query,
+      aggs: {
+        index: {
+          terms: { field: '_index', size },
+          aggs: { maxExtractionDate: { max: { field: 'extractionDate' } } }
+        }
       }
-      this.addQueryToFilter(query, body, fields)
     }
-    body = body.size(0).rawOption('track_total_hits', true).build()
-    return this._search({ index, body, preference })
+    return this._search({ index, body, preference: PREFERENCE.MAX_EXTRACTION_DATE })
   }
 
-  Client.prototype._addFiltersToBody = function (filters, body) {
-    for (const filter of filters) {
-      filter.applyTo(body)
-    }
+  /**
+   * Applies an array of filters to a body builder, OR-combining the include
+   * values of paired-dimension filters (e.g. contentType ↔ contentTypeCategory)
+   * into a single `bool.should` sub-query. Excluded sides of a pair still
+   * apply independently as `must_not`.
+   * @private
+   */
+  Client.prototype._applyFilters = function (body, filters) {
+    const filterByName = new Map(filters.map(filter => [filter.name, filter]))
+    const handled = new Set()
+
+    filters.forEach((filter) => {
+      if (handled.has(filter.name)) {
+        return
+      }
+      const pair = getPairedDimensions(filter.name)
+        .map(name => filterByName.get(name))
+        .filter(Boolean)
+      pair.forEach(member => handled.add(member.name))
+      this._applyFilterPair(body, pair)
+    })
   }
 
-  Client.prototype._addQueryToBody = function (query, body, fields = []) {
-    if (isEqual(fields, ['path'])) replace(query, /\//g, '\\/')
+  /**
+   * Applies one paired-dimension group to the body. When both sides contribute
+   * include values, they OR-combine; otherwise each filter applies via its own
+   * `applyTo`. Excluded sides always apply as `must_not` regardless.
+   * @private
+   */
+  Client.prototype._applyFilterPair = function (body, pair) {
+    const included = pair.filter(isFilterIncludedWithValues)
+    if (included.length < 2) {
+      pair.forEach(filter => filter.applyTo(body))
+      return
+    }
+    this._applyOrCombinedFilters(body, included)
+    pair.filter(isFilterExcludedWithValues).forEach(filter => filter.applyTo(body))
+  }
+
+  /**
+   * Builds a `bool.should` sub-query that OR-combines `terms` clauses for the
+   * given filters with `minimum_should_match: 1`.
+   * @private
+   */
+  Client.prototype._applyOrCombinedFilters = function (body, filters) {
+    body.query('bool', (combinedQuery) => {
+      // Each filter contributes a `terms` clause per candidate field; a document
+      // matches when any one of them does.
+      filters.forEach((filter) => {
+        filter.matchAnyField(combinedQuery, filter.values, 'orQuery')
+      })
+      return combinedQuery.queryMinimumShouldMatch(1)
+    })
+  }
+
+  /**
+   * Applies a query string to a body builder.
+   * @private
+   * @param {Object} body - The bodybuilder instance
+   * @param {string} query - The query string
+   * @param {string[]} [fields=[]] - Fields to search in
+   * @param {string} operator - Default search operator for the query string (AND or OR)
+   */
+  Client.prototype._applyQueryString = function (body, query, fields = [], operator = undefined) {
+    if (isEqual(fields, ['path'])) {
+      query = replace(query, /\//g, '\\/')
+    }
     body.query('match_all').addQuery('bool', b =>
       b.orQuery('query_string', {
         query,
-        fields: fields.length ? fields : undefined
+        fields: fields.length ? fields : undefined,
+        ...(operator ? { default_operator: operator } : {})
       })
     )
   }
 
-  Client.prototype.rootSearch = function (filters, query, fields = []) {
+  /**
+   * Builds a complete search body with filters, query, pagination, and highlighting.
+   * @private
+   * @param {Object} options - Build options
+   * @param {string} options.query - The query string
+   * @param {Array} options.filters - Array of filter objects
+   * @param {string[]} options.fields - Fields to search in
+   * @param {number} options.from - Starting offset
+   * @param {number} options.size - Number of results
+   * @param {Object} options.sort - Sort configuration
+   * @param {string} options.operator - Default search operator for the query string (AND or OR)
+   * @returns {Object} The built search body
+   */
+  Client.prototype._buildSearchBody = function ({ query, filters, fields, from, size, sort, operator }) {
+    const body = bodybuilder()
+
+    // Apply filters (handles paired-dimension OR combine)
+    this._applyFilters(body, filters)
+
+    // Apply query string
+    this._applyQueryString(body, query, fields, operator)
+
+    // Filter to documents only
+    body.query('match', 'type', 'Document')
+
+    // Pagination and sorting
+    body.from(from).size(size).sort(sort)
+
+    // Exclude large content fields from response
+    body.rawOption('_source', {
+      includes: ['*'],
+      excludes: CONTENT_FIELDS
+    })
+
+    // Add highlighting
+    body.rawOption('highlight', HIGHLIGHT_CONFIG)
+
+    // Ensure accurate total hits count (ES 8+ compatibility)
+    body.rawOption('track_total_hits', true)
+
+    return body.build()
+  }
+
+  /**
+   * Estimates the total file count and total size for a search query.
+   * Used to compare against batch download limits.
+   * @param {string} index - The index name
+   * @param {Array} filters - Array of filter objects
+   * @param {string} [query='*'] - Query string
+   * @param {string[]} [fields=[]] - Fields to search in
+   * @param {string} [operator = undefined] - Default search operator
+   * @returns {Promise<{estimatedCount: number, estimatedSize: number}>} The estimated count and size
+   */
+  Client.prototype.estimateDownloadSize = async function (index, filters, query = DEFAULT_QUERY, fields = [], operator = undefined) {
+    const body = this.rootSearch(filters, normalizeQuery(query), fields, operator)
+    body.size(0)
+    body.rawOption('track_total_hits', true)
+    body.aggregation('sum', 'contentLength', 'total_content_length')
+    const res = await this._search({ index, body: body.build() })
+    const estimatedCount = res?.hits?.total?.value ?? 0
+    const estimatedSize = res?.aggregations?.total_content_length?.value ?? 0
+    return { estimatedCount, estimatedSize }
+  }
+
+  /**
+   * @deprecated Use getDocumentsByIds instead
+   * @alias getDocumentsByIds
+   */
+  Client.prototype.ids = Client.prototype.getDocumentsByIds
+
+  /**
+   * @deprecated Use _applyQueryString instead
+   * Wrapper to maintain backward compatibility with old signature (query, body, fields)
+   */
+  Client.prototype.addQueryToFilter = function (query, body, fields = []) {
+    return this._applyQueryString(body, query, fields)
+  }
+
+  /**
+   * @deprecated Use _applyQueryString instead
+   * Wrapper to maintain backward compatibility with old signature (query, body, fields)
+   */
+  Client.prototype._addQueryToBody = function (query, body, fields = []) {
+    return this._applyQueryString(body, query, fields)
+  }
+
+  /**
+   * Applies filters to a body builder using applyTo method.
+   * @deprecated
+   * @param {Array} filters - Array of filter objects
+   * @param {Object} body - The bodybuilder instance
+   */
+  Client.prototype._addFiltersToBody = function (filters, body) {
+    this._applyFilters(body, filters)
+  }
+
+  /**
+   * Creates a base search body for documents.
+   * @deprecated Use _buildSearchBody instead
+   * @param {Array} filters - Array of filter objects
+   * @param {string} query - The query string
+   * @param {string[]} [fields=[]] - Fields to search in
+   * @param {string} [operator = undefined] - Default search operator
+   * @returns {Object} The bodybuilder instance
+   */
+  Client.prototype.rootSearch = function (filters, query, fields = [], operator = undefined) {
     const body = bodybuilder()
     this._addFiltersToBody(filters, body)
-    this._addQueryToBody(query, body, fields)
+    this._applyQueryString(body, query, fields, operator)
     body.query('match', 'type', 'Document')
     return body
   }
 
+  /**
+   * Builds a search body with pagination and highlighting.
+   * @deprecated Use _buildSearchBody instead
+   * @param {number} from - Starting offset
+   * @param {number} size - Number of results
+   * @param {Array} filters - Array of filter objects
+   * @param {string} query - The query string
+   * @param {Object} sort - Sort configuration
+   * @param {string[]} [fields=[]] - Fields to search in
+   * @returns {Object} The bodybuilder instance
+   */
   Client.prototype._buildBody = function (from, size, filters, query, sort, fields = []) {
     const body = this.rootSearch(filters, query, fields)
-
-    body.from(from).size(size)
-    body.sort(sort)
-    // Select only the Documents and not the NamedEntities
-    // Add an option to exclude the content
-    body.rawOption('_source', { includes: ['*'], excludes: ['content', 'content_translated'] })
-    // Add an option to highlight fragments in the results
-    body.rawOption('highlight', {
-      fields: {
-        'content': {
-          fragment_size: 280,
-          number_of_fragments: 2,
-          pre_tags: ['<mark>'],
-          post_tags: ['</mark>']
-        },
-        'content_translated.content': {
-          fragment_size: 280,
-          number_of_fragments: 2,
-          pre_tags: ['<mark>'],
-          post_tags: ['</mark>']
-        }
-      }
-    })
+    body.from(from).size(size).sort(sort)
+    body.rawOption('_source', { includes: ['*'], excludes: CONTENT_FIELDS })
+    body.rawOption('highlight', HIGHLIGHT_CONFIG)
     return body
   }
+}
 
-  Client.prototype.searchDocs = function ({
-    index,
-    query = '*',
-    filters = [],
-    from = 0,
-    perPage = 25,
-    sort = { _score: { order: 'desc' } },
-    fields = []
-  }) {
-    // Avoid searching for nothing
-    query = ['', null, undefined].indexOf(query) === -1 ? query : '*'
-    const builder = this._buildBody(from, perPage, filters, query, sort, fields)
-    const body = builder.rawOption('track_total_hits', true).build()
-    return this._search({ index, body })
-  }
-
-  Client.prototype.ids = function (index, values = [], _source = null) {
-    const size = values.length
-    const body = { query: { ids: { values } } }
-    return this._search({ index, size, body, _source })
-  }
-
-  Client.prototype.countByProject = function (index, query = undefined, size = 1000) {
-    const aggs = { index: { terms: { field: '_index', size } } }
-    const body = { size: 0, query, aggs }
-    const preference = 'count-by-project'
-    return this._search({ index, body, preference })
-  }
-
-  Client.prototype.maxExtractionDateByProject = function (index, query = undefined, size = 1000) {
-    const aggs = {
-      index: {
-        terms: { field: '_index', size },
-        aggs: {
-          maxExtractionDate: { max: { field: 'extractionDate' } }
-        }
-      }
+/**
+ * Plugin that injects the CSRF token from the `_ds_csrf_token` cookie
+ * as an `X-DS-CSRF-TOKEN` header on every Elasticsearch request.
+ *
+ * @param {Object} Client - The Elasticsearch client constructor
+ * @param {Object} config - Plugin configuration (not used)
+ * @param {Object} components - Elasticsearch client components
+ * @param {Object} components.Transport - The transport component to override
+ */
+export function csrfPlugin(Client, config, components) {
+  const originalRequest = components.Transport.prototype.request
+  components.Transport.prototype.request = function (params, cb) {
+    const token = getCookie(settings.csrf.cookieName)
+    if (token) {
+      params.headers = { ...params.headers, [settings.csrf.headerName]: token }
     }
-    const body = { size: 0, query, aggs }
-    const preference = 'max-extraction-date-by-project'
-    return this._search({ index, body, preference })
+    return originalRequest.call(this, params, cb)
   }
 }
 
 const elasticsearch = new es.Client({
-  host: import.meta.env.VITE_ES_HOST || window.location.hostname + ':' + window.location.port + '/api/index/search',
-  plugins: [datasharePlugin],
+  host: import.meta.env.VITE_ES_HOST || `${window.location.hostname}:${window.location.port}/api/index/search`,
+  plugins: [datasharePlugin, csrfPlugin],
   requestTimeout: settings.elasticsearch.requestTimeout
 })
 

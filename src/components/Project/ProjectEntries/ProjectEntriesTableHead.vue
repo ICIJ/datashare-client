@@ -6,11 +6,11 @@ import IPhCirclesThreePlus from '~icons/ph/circles-three-plus'
 import IPhFiles from '~icons/ph/files'
 import IPhCalendarBlank from '~icons/ph/calendar-blank'
 import IPhTextAlignLeft from '~icons/ph/text-align-left'
-import IPhUserSquare from '~icons/ph/user-square'
 
 import PageTableTh from '@/components/PageTable/PageTableTh'
 import { useBreakpoints } from '@/composables/useBreakpoints'
 import ModeServerOnly from '@/components/Mode/ModeServerOnly'
+import { ROLE_ICON_DEFAULT } from '@/enums/roles.js'
 
 const { breakpointDown } = useBreakpoints()
 
@@ -57,8 +57,8 @@ const compact = computed(() => {
   />
   <mode-server-only>
     <page-table-th
-      :label="t('projectEntriesTableHead.userRoles')"
-      :icon="IPhUserSquare"
+      :label="t('projectEntriesTableHead.userRole')"
+      :icon="ROLE_ICON_DEFAULT"
       sortable
       name="userRoles"
     />

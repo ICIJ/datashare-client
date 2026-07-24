@@ -1,18 +1,24 @@
 <script setup>
-import { computed, useTemplateRef, toRef } from 'vue'
+import { computed, ref, useTemplateRef, toRef } from 'vue'
 
+import ButtonToggleAdvancedSearch from '@/components/Button/ButtonToggleAdvancedSearch'
 import ButtonToggleFilters from '@/components/Button/ButtonToggleFilters'
 import ButtonToggleSearchBreadcrumb from '@/components/Button/ButtonToggleSearchBreadcrumb'
 import ButtonToggleSettings from '@/components/Button/ButtonToggleSettings'
 import ButtonToggleSidebar from '@/components/Button/ButtonToggleSidebar'
+import SearchAdvancedModal from '@/components/Search/SearchAdvancedModal/SearchAdvancedModal'
 import SearchBar from '@/components/Search/SearchBar/SearchBar'
 import { useCompact } from '@/composables/useCompact'
+import { useSearchStore } from '@/store/modules/search'
 
 const toggleSidebar = defineModel('toggleSidebar', { type: Boolean })
 const toggleFilters = defineModel('toggleFilters', { type: Boolean })
 const toggleSearchBreadcrumb = defineModel('toggleSearchBreadcrumb', { type: Boolean })
 const toggleSettings = defineModel('toggleSettings', { type: Boolean })
 const isFiltersClosed = defineModel('isFiltersClosed', { type: Boolean })
+
+const showAdvancedSearch = ref(false)
+const searchStore = useSearchStore()
 
 const props = defineProps({
   searchBreadcrumbCounter: {
@@ -37,6 +43,13 @@ const classList = computed(() => {
     'search-toolbar--no-search-filters': props.noSearchFilters
   }
 })
+
+function handleAdvancedSearch({ query, field }) {
+  // Always run the query — even an empty one — so it resubmits with a fresh
+  // stamp, matching the search bar's submit behaviour. The field is applied
+  // to the store's single search `field` rather than baked into the query.
+  searchStore.query({ query, field })
+}
 </script>
 
 <template>
@@ -68,13 +81,25 @@ const classList = computed(() => {
       />
       <search-bar
         :compact="compact"
+        :show-submit="!compact"
         class="search__main__search-bar flex-grow-1"
+      />
+      <button-toggle-advanced-search
+        v-model:active="showAdvancedSearch"
+        :reduced="compact"
+        class="search-toolbar__toggle-advanced-search"
       />
       <button-toggle-settings
         v-model:active="toggleSettings"
         class="search__main__toggle-settings"
       />
     </div>
+    <search-advanced-modal
+      v-model="showAdvancedSearch"
+      :initial-query="searchStore.q"
+      :initial-field="searchStore.field"
+      @search="handleAdvancedSearch"
+    />
   </div>
 </template>
 

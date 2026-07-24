@@ -8,6 +8,7 @@ import IPhGlobeHemisphereWest from '~icons/ph/globe-hemisphere-west'
 import IPhMonitor from '~icons/ph/monitor'
 import IPhDatabase from '~icons/ph/database'
 import IPhKey from '~icons/ph/key'
+import IPhCloudArrowDown from '~icons/ph/cloud-arrow-down'
 
 import PageHeader from '@/components/PageHeader/PageHeader'
 import TabGroupNavigation from '@/components/TabGroup/TabGroupNavigation/TabGroupNavigation'
@@ -55,6 +56,12 @@ const tabs = computed(() => [
     title: t('settings.api.title'),
     name: 'settings.api',
     modes: [MODE_NAME.SERVER]
+  },
+  {
+    icon: IPhCloudArrowDown,
+    title: t('settings.snapshots.title'),
+    name: 'settings.snapshots',
+    modes: [MODE_NAME.LOCAL, MODE_NAME.EMBEDDED]
   }
 ])
 

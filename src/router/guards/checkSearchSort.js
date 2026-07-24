@@ -14,8 +14,10 @@ export const checkSearchSort = (to) => {
   const { name, params } = to
   const { property: sort = null, desc } = find(settings.legacySearchSortFields, { name: to.query.sort }) ?? {}
   const order = desc ? 'desc' : 'asc'
-  // Only redirect if the sort field is found
-  if (sort) {
+  // Only redirect if the sort field is found and the query would actually change.
+  // Without the second check, a legacy name that maps to the same property (e.g. "path" → "path")
+  // would redirect to an identical URL, causing an infinite navigation loop.
+  if (sort && (sort !== to.query.sort || order !== to.query.order)) {
     const query = { ...to.query, sort, order }
     return { name, params, query }
   }

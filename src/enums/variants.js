@@ -1,3 +1,8 @@
+import IPhInfo from '~icons/ph/info'
+import IPhWarning from '~icons/ph/warning'
+import IPhX from '~icons/ph/x'
+import IPhCheck from '~icons/ph/check'
+
 const ACTION = 'action'
 const PRIMARY = 'primary'
 const SECONDARY = 'secondary'
@@ -83,3 +88,10 @@ export const variantPlainValidator = v => VARIANTS_PLAIN.includes(v)
 
 export const VARIANTS = Object.values(VARIANT)
 export const variantValidator = v => VARIANTS.includes(v)
+
+export const variantOptions = Object.freeze({
+  [VARIANT.INFO]: { key: 'variant.info', icon: IPhInfo },
+  [VARIANT.WARNING]: { key: 'variant.warning', icon: IPhWarning },
+  [VARIANT.DANGER]: { key: 'variant.danger', icon: IPhX },
+  [VARIANT.SUCCESS]: { key: 'variant.success', icon: IPhCheck }
+})

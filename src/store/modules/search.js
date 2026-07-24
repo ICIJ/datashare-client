@@ -20,10 +20,13 @@ import { ref, computed, toRaw } from 'vue'
 import { useRouter } from 'vue-router'
 
 import EsDocList from '@/api/resources/EsDocList'
+import { runAsyncSearch } from '@/api/asyncSearch'
 import filterDefs, * as filterTypes from '@/store/filters'
+import { getPairedDimensions } from '@/store/filters/pairedDimensions'
 import { useAppStore, useSearchBreadcrumbStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
 import { defineSuffixedStore } from '@/store/defineSuffixedStore'
+import { SEARCH_OPERATORS } from '@/enums/searchOperators'
 import settings from '@/utils/settings'
 
 export const useSearchStore = defineSuffixedStore('search', () => {
@@ -32,7 +35,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   const filters = ref([...filterDefs])
   const from = ref(0)
   const indices = ref([])
-  const isReady = ref(true)
+  const isReady = ref(false)
   const q = ref('')
   const response = ref(EsDocList.none())
   const excludeFilters = ref([])
@@ -52,12 +55,25 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     }
   })
 
+  const searchOperator = computed(() => appStore.getSettings('search', 'searchOperator') ?? SEARCH_OPERATORS.OR)
+
   const fields = computed(() => {
     return find(settings.searchFields, { key: field.value }).fields
   })
 
+  // Simple computed that creates filter instances from definitions
+  // Note: Filter instances are recreated each time because their bindStore() getters
+  // are evaluated at instantiation time. Caching would break reactivity since the
+  // cached filters would hold stale references to the values object.
   const instantiatedFilters = computed(() => {
-    return orderArray(filters.value.map(instantiateFilter), 'order', 'asc')
+    // Filter out undefined values (from array holes created by removeFilter using delete)
+    const validFilters = filters.value.filter(Boolean)
+    return orderArray(validFilters.map(instantiateFilter), 'order', 'asc')
+  })
+
+  // O(1) lookup map for filters by name - avoids O(n) find() calls
+  const filterByName = computed(() => {
+    return new Map(instantiatedFilters.value.map(f => [f.name, f]))
   })
 
   const activeFilters = computed(() => {
@@ -74,7 +90,11 @@ export const useSearchStore = defineSuffixedStore('search', () => {
       // We don't add filterValue that match with any existing filters
       // defined in the `aggregation` store.
       if (filter && filter.values.length > 0) {
-        const key = filter.excluded ? `f[-${filter.name}]` : `f[${filter.name}]`
+        // Paired dimensions share the excluded flag in the URL: if any side
+        // is excluded, both emit the `f[-name]` prefix. Protects against
+        // in-store drift leaking into the URL.
+        const excluded = getPairedDimensions(filter.name).some(dim => excludeFilters.value.includes(dim))
+        const key = excluded ? `f[-${filter.name}]` : `f[${filter.name}]`
         memo[key] = compact(filter.values)
       }
       return memo
@@ -96,16 +116,33 @@ export const useSearchStore = defineSuffixedStore('search', () => {
       perPage: `${perPage.value}`,
       sort: sortBy.value,
       order: orderBy.value,
+      searchOperator: searchOperator.value,
       ...toBaseRouteQuery.value
     }
   })
 
+  // Stable stamp that only changes when explicitly refreshed via refreshStamp()
+  const queryStamp = ref(generateStamp())
+
   const toRouteQueryWithStamp = computed(() => {
-    // A random string of 6 chars
-    const seed = range(6).map(() => random(97, 122))
-    const stamp = String.fromCharCode.apply(null, seed)
-    return { ...toRouteQuery.value, stamp }
+    return { ...toRouteQuery.value, stamp: queryStamp.value }
   })
+
+  /**
+   * Generates a random 6-character stamp string.
+   * @returns {string} A random stamp
+   */
+  function generateStamp() {
+    const seed = range(6).map(() => random(97, 122))
+    return String.fromCharCode.apply(null, seed)
+  }
+
+  /**
+   * Refreshes the query stamp to force a new search even with same parameters.
+   */
+  function refreshStamp() {
+    queryStamp.value = generateStamp()
+  }
 
   const toSearchParams = computed(() => {
     return {
@@ -115,7 +152,8 @@ export const useSearchStore = defineSuffixedStore('search', () => {
       from: from.value,
       perPage: perPage.value,
       sort: sort.value,
-      fields: fields.value
+      fields: fields.value,
+      operator: searchOperator.value
     }
   })
 
@@ -238,7 +276,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    */
   function resetForRouteChange() {
     from.value = 0
-    isReady.value = true
+    isReady.value = false
     q.value = ''
     excludeFilters.value = []
     values.value = {}
@@ -399,9 +437,9 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * @returns {boolean} - Returns true if the filter value exists, false otherwise.
    */
   function hasFilterValue(item) {
-    return !!instantiatedFilters.value.find(({ name, values }) => {
-      return name === item.name && values.indexOf(item.value) > -1
-    })
+    // O(1) lookup using filterByName Map
+    const filter = filterByName.value.get(item.name)
+    return filter ? filter.values.indexOf(item.value) > -1 : false
   }
 
   /**
@@ -478,10 +516,15 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   /**
    * Get a filter by its name or a predicate function.
    *
-   * @param {Function|string} predicate - The predicate function to find the filter or the name of the filter.
+   * @param {Function|string|Object} predicate - The predicate function to find the filter, an object with name property, or the name of the filter.
    * @return {Object|null} - Returns the filter object if found, otherwise null.
    */
   function getFilter(predicate) {
+    // Fast path: O(1) lookup when predicate is a plain object with name property
+    if (typeof predicate === 'object' && predicate !== null && 'name' in predicate) {
+      return filterByName.value.get(predicate.name)
+    }
+    // Fallback to find for other predicate types (functions, etc.)
     return find(instantiatedFilters.value, predicate)
   }
 
@@ -616,6 +659,15 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     return includeFilter(name)
   }
 
+  // In-flight refresh promise, used to deduplicate concurrent calls
+  // (e.g. when both onBeforeRouteUpdate and the fullPath watcher fire
+  // for the same navigation).
+  let refreshPromise = null
+  // Controls cancellation of the in-flight async search and guards against a
+  // superseded search clobbering newer state.
+  let activeController = null
+  let generation = 0
+
   /**
    * Refresh the search results based on the current search parameters.
    *
@@ -627,42 +679,102 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * @returns {Promise<void>} - A promise that resolves when the search is complete.
    */
   async function refresh(save = true) {
+    // Generate a new stamp to ensure this refresh is unique
+    refreshStamp()
     // This check is to avoid unnecessary searches when the query has not changed.
     // We compare the current route query with the last applied query, which is stored
     // in the `lastAppliedQuery` ref. If they are the same, we skip the refresh.
-    if (sameAppliedQuery(toRouteQueryWithStamp.value)) return
+    if (sameAppliedQuery(toRouteQueryWithStamp.value)) {
+      return
+    }
+    // If a refresh is already in flight for the same search parameters,
+    // return the existing promise to avoid duplicate API calls. The stamp
+    // is excluded because it changes on every call and would prevent
+    // deduplication. When the query differs (e.g. user started a new search),
+    // we let it through so the new search is not blocked by the previous one.
+    if (refreshPromise && sameAppliedQuery(toRouteQueryWithStamp.value, ['stamp'])) {
+      return refreshPromise
+    }
+
+    refreshPromise = doRefresh(save)
+    return refreshPromise
+  }
+
+  /**
+   * Internal implementation of refresh. Performs the actual search query,
+   * fetches root documents, and updates the response state.
+   * Called exclusively by refresh() which handles deduplication.
+   *
+   * @param {boolean} save - Whether to save the current query state in the search breadcrumb store.
+   * @returns {Promise<void>} - A promise that resolves when the search is complete.
+   */
+  async function doRefresh(save) {
+    // A new search supersedes any in-flight one: abort it so the runner stops
+    // polling and frees the stored async result.
+    activeController?.abort()
+    const controller = new AbortController()
+    activeController = controller
+    const gen = ++generation
 
     setIsReady(false)
     setError()
 
     try {
       saveAppliedQuery()
-      const raw = await searchDocuments()
+      const raw = await searchDocuments(toSearchParams.value, controller.signal)
+      if (gen !== generation) {
+        return
+      }
       const roots = await searchRootDocuments(raw)
+      if (gen !== generation) {
+        return
+      }
       if (save) {
         searchBreadcrumbStore.pushSearchQuery(toBaseRouteQuery.value)
       }
       setResponse({ raw, roots })
     }
     catch (error) {
+      // A superseded run must never touch shared state, even on a real error.
+      if (gen !== generation) {
+        return
+      }
+      // Aborts are intentional (supersede / unmount); a newer search or
+      // navigation is already in control, so leave the state untouched.
+      if (error?.name === 'AbortError') {
+        return
+      }
       setResponse()
       setError(error)
     }
     finally {
-      setIsReady(true)
+      if (gen === generation) {
+        setIsReady(true)
+        refreshPromise = null
+      }
     }
   }
 
   /**
-   * Search for documents in the Elasticsearch index based on the current search parameters.
+   * Search for documents using Elasticsearch async search.
    *
-   * This function uses the `api.elasticsearch.searchDocs` method to perform the search
-   * and returns a promise that resolves to the search results.
-   * @param {Object} searchParams - The search parameters to use for the query.
-   * @returns {Promise<EsDocList>} - A promise that resolves to an instance of EsDocList containing the search results.
+   * Builds the search body with `api.elasticsearch.buildSearchDocsBody` and runs it
+   * through `runAsyncSearch`, which submits, polls, and cleans up the async search.
+   * @param {Object} [searchParams=toSearchParams.value] - The search parameters to use for the query.
+   * @param {AbortSignal} [signal] - Aborts the in-flight async search (supersede / unmount).
+   * @returns {Promise<Object>} - A promise that resolves to the raw Elasticsearch search response.
    */
-  function searchDocuments(searchParams = toSearchParams.value) {
-    return api.elasticsearch.searchDocs(searchParams)
+  function searchDocuments(searchParams = toSearchParams.value, signal) {
+    const body = api.elasticsearch.buildSearchDocsBody(searchParams)
+    return runAsyncSearch(api.elasticsearch, { index: searchParams.index, body }, { signal })
+  }
+
+  /**
+   * Cancels the in-flight async search (if any). Called when leaving the search
+   * view so the backend stops polling and frees the stored result.
+   */
+  function cancelActiveSearch() {
+    activeController?.abort()
   }
 
   /**
@@ -675,9 +787,9 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    */
   async function searchRootDocuments(raw) {
     const embedded = get(raw, 'hits.hits', []).filter(hit => hit._source.extractionLevel > 0)
-    const ids = compact(embedded.map(hit => hit._source.rootDocument))
+    const ids = uniq(compact(embedded.map(hit => hit._source.rootDocument)))
     const source = ['contentType', 'contentLength', 'title', 'path']
-    return ids.length ? api.elasticsearch.ids(indices.value.join(','), ids, source) : EsDocList.none()
+    return ids.length ? api.elasticsearch.getDocumentsByIds(indices.value.join(','), ids, source) : EsDocList.none()
   }
 
   /**
@@ -705,6 +817,31 @@ export const useSearchStore = defineSuffixedStore('search', () => {
       withRouteQuery(`f[${filter.name}]`, key => addFilterValue(filter.itemParam({ key })))
       withRouteQuery(`f[-${filter.name}]`, key => addFilterValue(filter.itemParam({ key })))
       withRouteQuery(`f[-${filter.name}]`, () => excludeFilter(filter.name))
+    })
+    reconcilePairedExcludeFilters()
+  }
+
+  /**
+   * Walk each paired-dimension group and propagate the exclude flag across
+   * both sides so a URL that only marked one dimension still hydrates into
+   * a unified store state. `excludeFilter` is idempotent, so re-applying to
+   * a dimension that is already excluded is a safe no-op.
+   */
+  function reconcilePairedExcludeFilters() {
+    const visited = new Set()
+    instantiatedFilters.value.forEach((filter) => {
+      const paired = getPairedDimensions(filter.name)
+      if (paired.length < 2) {
+        return
+      }
+      const groupKey = [...paired].sort().join('|')
+      if (visited.has(groupKey)) {
+        return
+      }
+      visited.add(groupKey)
+      if (paired.some(dim => excludeFilters.value.includes(dim))) {
+        paired.forEach(dim => excludeFilter(dim))
+      }
     })
   }
 
@@ -884,8 +1021,18 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    */
   function runBatchDownload(uri = null) {
     const batchDownloadQuery = ['', null, undefined].indexOf(q.value) === -1 ? q.value : '*'
-    const { query } = api.elasticsearch.rootSearch(instantiatedFilters.value, batchDownloadQuery).build()
+    const { query } = api.elasticsearch.rootSearch(instantiatedFilters.value, batchDownloadQuery, fields.value, searchOperator.value).build()
     return api.runBatchDownload({ projectIds: indices.value, query, uri })
+  }
+
+  /**
+   * Estimate the total file count and total size for the current search query.
+   * Reuses the same query/filters as runBatchDownload.
+   * @returns {Promise<{estimatedCount: number, estimatedSize: number}>}
+   */
+  function estimateDownloadSize() {
+    const estimateQuery = ['', null, undefined].indexOf(q.value) === -1 ? q.value : '*'
+    return api.elasticsearch.estimateDownloadSize(indices.value, instantiatedFilters.value, estimateQuery, fields.value, searchOperator.value)
   }
 
   /**
@@ -933,6 +1080,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     instantiatedFilters,
     activeFilters,
     fields,
+    searchOperator,
     filterValuesAsRouteQuery,
     toBaseRouteQuery,
     toRouteQuery,
@@ -950,7 +1098,6 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     hits,
     // Actions
     reset,
-    resetForRouteChange,
     resetFilters,
     resetFilterValues,
     resetQuery,
@@ -981,7 +1128,9 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     includeFilter,
     toggleFilter,
     refresh,
+    refreshStamp,
     searchDocuments,
+    cancelActiveSearch,
     searchRootDocuments,
     updateFromRouteQuery,
     query,
@@ -994,6 +1143,11 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     queryNextPage,
     queryDeleteQueryTerm,
     runBatchDownload,
+    estimateDownloadSize,
     sameAppliedQuery
+  }
+}, {
+  persist: {
+    pick: ['indices']
   }
 })

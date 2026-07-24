@@ -20,6 +20,11 @@ export default ({ mode }) => {
   // https://github.com/storybookjs/storybook/issues/32462
   const isStorybook = process.argv[1]?.includes('storybook')
 
+  // Single source of truth for the Phosphor icon resolver, shared by the
+  // Components plugin (`<i-ph-*>` in SFC templates) and AutoImport (`IPh*`
+  // identifiers in stories) so the prefix/collection can't drift between them.
+  const iconsResolver = IconsResolver({ prefix: 'i', enabledCollections: ['ph'] })
+
   return defineConfig({
     base: process.env.VITE_BASE,
     plugins: [
@@ -43,10 +48,7 @@ export default ({ mode }) => {
         dirs: [],
         resolvers: [
           BootstrapVueNextResolver(),
-          IconsResolver({
-            prefix: 'i',
-            enabledCollections: ['ph']
-          })
+          iconsResolver
         ]
       }),
       /**
@@ -55,7 +57,19 @@ export default ({ mode }) => {
        */
       AutoImport({
         dts: false,
-        vueTemplate: true
+        vueTemplate: true,
+        /**
+         * Scoped to Storybook stories only: auto-import `~icons/ph/*` components
+         * referenced by their PascalCase name (e.g. `IPhRocketLaunch`) plus
+         * `markRaw`, so stories pass an icon component to `icon` props without an
+         * import line — mirroring how SFC templates use `<i-ph-*>`. The rest of the
+         * app keeps its explicit-import convention (and `no-undef` coverage); only
+         * stories opt into this magic. `markRaw` avoids Vue's reactive-component
+         * warning when an icon is passed as a Storybook arg.
+         */
+        include: [/\.stories\.[jt]sx?$/],
+        imports: [{ vue: ['markRaw'] }],
+        resolvers: [iconsResolver]
       })
     ],
     resolve: {

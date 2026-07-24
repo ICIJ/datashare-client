@@ -1,18 +1,23 @@
-import { computed, toValue, nextTick, watch } from 'vue'
-import { get, identity, isObject, range, random, toString, without } from 'lodash'
+import { computed, toValue, nextTick, watch, watchEffect } from 'vue'
+import { castArray, get, identity, isObject, range, random, toString, without } from 'lodash'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
 import settings from '@/utils/settings'
+import { SEARCH_OPERATORS } from '@/enums/searchOperators'
 import { useCore } from '@/composables/useCore'
+import { useContentTypeCategoryAvailability } from '@/composables/useContentTypeCategoryAvailability'
 import { onAfterRouteUpdate } from '@/composables/onAfterRouteUpdate'
 import FilterType from '@/components/Filter/FilterType/FilterType'
 import FilterTypeDateRange from '@/components/Filter/FilterType/FilterTypeDateRange'
+import FilterTypeFileTypes from '@/components/Filter/FilterType/FilterTypeFileTypes'
 import FilterTypePath from '@/components/Filter/FilterType/FilterTypePath'
 import FilterTypeProject from '@/components/Filter/FilterType/FilterTypeProject'
 import FilterTypeRecommendedBy from '@/components/Filter/FilterType/FilterTypeRecommendedBy'
 import FilterTypeStarred from '@/components/Filter/FilterType/FilterTypeStarred'
+import { CONTENT_TYPE_CATEGORY_FILTER_NAME } from '@/store/filters/FilterContentTypeCategory'
 import FilterText from '@/store/filters/FilterText.js'
+import { PAIRED_DIMENSIONS, getCanonicalDimension, getPairedDimension, getPairedDimensions } from '@/store/filters/pairedDimensions'
 import { useAppStore, useRecommendedStore, useSearchStore } from '@/store/modules'
 
 export function useSearchFilter() {
@@ -23,6 +28,45 @@ export function useSearchFilter() {
   const router = useRouter()
   const { t, te } = useI18n()
   const core = useCore()
+  // Drives the read-layer degradation in getFilterPairedDimensions: when the
+  // contentTypeCategory field is missing from the selected indices' mapping,
+  // the contentType filter falls back to single-dimension behavior so paired
+  // counts and the "All" checkbox stop referencing the absent dimension.
+  // Tolerate an undefined return so a stubbed composable in tests doesn't
+  // crash unrelated mounts (FilterModal sits under every FilterType).
+  const {
+    isAvailable: isCategoryAvailable,
+    isLoading: isCategoryAvailabilityLoading
+  } = useContentTypeCategoryAvailability() ?? {}
+
+  // Keep non-canonical paired dimensions in lockstep with their canonical.
+  // flush:'sync' ensures reconciliation runs within the same tick as setup,
+  // not deferred to the next render, so URL-restored drift is corrected before
+  // any computed getter or template ever reads the store.
+  watchEffect(() => {
+    for (const [canonical, paired] of Object.entries(PAIRED_DIMENSIONS)) {
+      const value = searchStore.isFilterExcluded(canonical)
+      if (searchStore.isFilterExcluded(paired) !== value) {
+        searchStore.toggleFilter(paired, value)
+      }
+    }
+  }, { flush: 'sync' })
+
+  watchEffect(() => {
+    for (const [canonical, paired] of Object.entries(PAIRED_DIMENSIONS)) {
+      const value = searchStore.isFilterContextualized(canonical)
+      if (searchStore.isFilterContextualized(paired) !== value) {
+        if (value) {
+          searchStore.contextualizeFilter(paired)
+        }
+        else {
+          // Guard: decontextualizeFilter does splice(-1,1) when absent, popping
+          // an unrelated filter — only call it when the filter is actually present.
+          searchStore.decontextualizeFilter(paired)
+        }
+      }
+    }
+  }, { flush: 'sync' })
 
   const filterTypes = {
     FilterType,
@@ -30,13 +74,17 @@ export function useSearchFilter() {
     FilterTypeStarred,
     FilterTypeRecommendedBy,
     FilterTypePath,
-    FilterTypeProject
+    FilterTypeProject,
+    FilterTypeFileTypes,
   }
 
   const indices = computed(() => searchStore.indices)
   const allProjectsSelected = computed(() => indices.value.length === core.projectIds.length)
 
-  function getFilterComponent({ component }) {
+  function getFilterComponent({ component, hidden = false }) {
+    if (hidden) {
+      return null
+    }
     return filterTypes[component]
   }
 
@@ -71,11 +119,17 @@ export function useSearchFilter() {
   function computedAll(filter) {
     return computed({
       get() {
-        return !hasAnyFilterValue(filter)
+        // Accept either a single filter or a list (used by paired dimensions),
+        // so "all-selected" reflects the absence of values across every entry.
+        const filters = castArray(toValue(filter))
+        return !filters.some(hasAnyFilterValue)
       },
       set(value) {
         if (value) {
-          removeFilterValues(filter)
+          const filters = castArray(toValue(filter))
+          for (const eachFilter of filters) {
+            removeFilterValues(eachFilter)
+          }
         }
       }
     })
@@ -103,6 +157,37 @@ export function useSearchFilter() {
     return searchStore.getFilter({ name })
   }
 
+  function resolveFilterName(filter) {
+    const value = toValue(filter)
+    if (value instanceof FilterText) {
+      return value.name
+    }
+    if (isObject(value)) {
+      return value.name
+    }
+    return value
+  }
+
+  function getFilterPairedDimension(filter) {
+    return getPairedDimension(resolveFilterName(filter))
+  }
+
+  function getFilterPairedDimensions(filter) {
+    const name = resolveFilterName(filter)
+    // Graceful degradation for legacy indices: when the paired sibling is
+    // contentTypeCategory and the field isn't in the index mapping, treat the
+    // filter as unpaired so callers (computedAll, breadcrumb counts) skip the
+    // missing dimension. The static config in pairedDimensions.js stays the
+    // source of truth — only this read layer degrades.
+    if (
+      !isCategoryAvailable?.value
+      && getPairedDimension(name) === CONTENT_TYPE_CATEGORY_FILTER_NAME
+    ) {
+      return [name]
+    }
+    return getPairedDimensions(name)
+  }
+
   function getFilterValuesByName(name) {
     return get(searchStore, `values.${name}`, [])
   }
@@ -126,6 +211,10 @@ export function useSearchFilter() {
 
   function getOrder() {
     return getOrderBy()[1]
+  }
+
+  function getSearchOperator() {
+    return appStore.getSettings('search', 'searchOperator')
   }
 
   async function getTotal({ query = 'type:Document' } = {}) {
@@ -179,7 +268,9 @@ export function useSearchFilter() {
   }
 
   const removeFilterValues = (filter) => {
-    return searchStore.setFilterValue(castFilter(filter), [])
+    // setFilterValue takes a single { name, value } arg; passing [] positionally writes [undefined].
+    const { name } = castFilter(filter)
+    return searchStore.setFilterValue({ name, value: [] })
   }
 
   const sortFilter = ({ name }, { sortBy, orderBy }) => {
@@ -225,10 +316,15 @@ export function useSearchFilter() {
     return router.push({ name, query })
   }
 
+  function toValidSearchOperator(value) {
+    return Object.values(SEARCH_OPERATORS).includes(value) ? value : SEARCH_OPERATORS.OR
+  }
+
   function refreshSearchFromRoute() {
     // Extract the query parameters that must be saved in the app state
     const { perPage = getPerPage(), sort = getSort(), order = getOrder() } = route.query
-    appStore.setSettings('search', { perPage, orderBy: [sort, order] })
+    const searchOperator = toValidSearchOperator(route.query.searchOperator ?? getSearchOperator())
+    appStore.setSettings('search', { perPage, orderBy: [sort, order], searchOperator })
     // Update the search store using the route query
     searchStore.updateFromRouteQuery(route.query)
     // And finally, refresh the search if t
@@ -238,7 +334,8 @@ export function useSearchFilter() {
   function refreshSearchFromRouteStart() {
     // Extract the query parameters that must be saved in the app state
     const { perPage = getPerPage(), sort = getSort(), order = getOrder() } = route.query
-    appStore.setSettings('search', { perPage, orderBy: [sort, order] })
+    const searchOperator = toValidSearchOperator(route.query.searchOperator ?? getSearchOperator())
+    appStore.setSettings('search', { perPage, orderBy: [sort, order], searchOperator })
     // Update the search store using the route query and reset the `from` parameter
     searchStore.updateFromRouteQuery({ ...route.query, from: 0 })
     // And finally, refresh the search if t
@@ -256,11 +353,17 @@ export function useSearchFilter() {
   }
 
   function toggleExcludeFilter({ name }, checked) {
-    return searchStore.toggleFilter(name, checked)
+    for (const dimension of getPairedDimensions(name)) {
+      searchStore.toggleFilter(dimension, checked)
+    }
   }
 
   function isFilterExcluded({ name }) {
-    return searchStore.isFilterExcluded(name)
+    const dimensions = getPairedDimensions(name)
+    if (dimensions.length === 1) {
+      return searchStore.isFilterExcluded(name)
+    }
+    return searchStore.isFilterExcluded(getCanonicalDimension(name))
   }
 
   function computedExcludeFilter(filter, { get = null, set = null } = {}) {
@@ -270,14 +373,24 @@ export function useSearchFilter() {
   }
 
   function toggleContextualizeFilter({ name }, checked) {
-    if (checked) {
-      return searchStore.contextualizeFilter(name)
+    for (const dimension of getPairedDimensions(name)) {
+      if (checked) {
+        searchStore.contextualizeFilter(dimension)
+      }
+      else if (searchStore.isFilterContextualized(dimension)) {
+        // Guard the call — the store's decontextualizeFilter does splice(-1, 1)
+        // when the name is absent, which would pop an unrelated filter.
+        searchStore.decontextualizeFilter(dimension)
+      }
     }
-    return searchStore.decontextualizeFilter(name)
   }
 
   function isFilterContextualized({ name }) {
-    return searchStore.isFilterContextualized(name)
+    const dimensions = getPairedDimensions(name)
+    if (dimensions.length === 1) {
+      return searchStore.isFilterContextualized(name)
+    }
+    return searchStore.isFilterContextualized(getCanonicalDimension(name))
   }
 
   function computedContextualizeFilter(filter, { get = null, set = null } = {}) {
@@ -332,6 +445,10 @@ export function useSearchFilter() {
     return watch(() => JSON.stringify(searchStore.values), callback, options)
   }
 
+  function watchOperator(callback) {
+    return watch(() => searchStore.searchOperator, callback)
+  }
+
   function onAfterRouteQueryUpdate(callback, options) {
     return onAfterRouteUpdate((to, from) => {
       if (
@@ -365,6 +482,29 @@ export function useSearchFilter() {
     }, options)
   }
 
+  function onConsumeNoRefresh(options) {
+    // `noRefresh` is a one-shot flag set when returning to search from a
+    // document, telling the refresh guards to skip a reload. Once those guards
+    // have observed it for this navigation, strip it from the URL so it never
+    // persists into the next navigation (page/sort/perPage changes copy the
+    // current route query forward via batchQueryParamUpdate, which would
+    // otherwise keep re-applying the flag and suppress the refresh).
+    //
+    // This consumer MUST be registered after the refresh guards so its
+    // queued microtask runs last and the guards read `noRefresh` first.
+    return onAfterRouteUpdate((to) => {
+      if (to.name === 'search' && to.query?.noRefresh) {
+        const { noRefresh: _noRefresh, ...query } = to.query
+        // Stripping `noRefresh` here re-triggers `onAfterRouteQueryUpdate` (it is NOT
+        // gated on `from`), which is what runs the initial search when a shared
+        // `noRefresh=1` URL is loaded/reloaded directly — do not add a `from` guard there,
+        // or reloading such a URL would leave the results blank.
+        // `.catch` swallows the benign rejection from a concurrent navigation superseding this replace.
+        router.replace({ name: 'search', query }).catch(() => {})
+      }
+    }, options)
+  }
+
   return {
     indices,
     allProjectsSelected,
@@ -377,6 +517,8 @@ export function useSearchFilter() {
     computedTotal,
     getFilterByName,
     getFilterComponent,
+    getFilterPairedDimension,
+    getFilterPairedDimensions,
     getFilterValues,
     getFilterValuesByName,
     getTotal,
@@ -411,9 +553,13 @@ export function useSearchFilter() {
     watchFilters,
     watchQuery,
     watchIndices,
+    watchOperator,
     onAfterRouteQueryUpdate,
     onAfterRouteQueryFromUpdate,
+    onConsumeNoRefresh,
     watchValues,
-    whenFilterContextualized
+    whenFilterContextualized,
+    isCategoryAvailable,
+    isCategoryAvailabilityLoading
   }
 }

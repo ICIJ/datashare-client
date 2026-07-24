@@ -21,7 +21,7 @@ export default {
     }
   },
   args: {
-    icon: 'clock-counter-clockwise',
+    icon: markRaw(IPhClockCounterClockwise),
     content: 'History',
     active: false
   },
@@ -47,8 +47,8 @@ export const Default = {}
 export const WithAction = {
   args: {
     content: 'Batch search',
-    icon: 'list-magnifying-glass',
-    actionIcon: 'plus',
+    icon: markRaw(IPhListMagnifyingGlass),
+    actionIcon: markRaw(IPhPlus),
     actionTitle: 'Add batch search',
     actionTo: { name: 'home' }
   }

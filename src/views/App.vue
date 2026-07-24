@@ -56,7 +56,9 @@ const { t } = useI18n()
 const route = useRoute()
 const sidebar = useTemplateRef('sidebar')
 
-const signinUrl = computed(() => import.meta.env.VITE_DS_AUTH_SIGNIN)
+const signinUrl = computed(() => {
+  return core.config.get('auth') === 'form' ? '/auth/login' : import.meta.env.VITE_DS_AUTH_SIGNIN
+})
 
 // Function to handle HTTP errors
 const handleHttpError = (err) => {
@@ -118,7 +120,9 @@ onBeforeUnmount(() => {
     max-width: calc(100vw - var(--app-sidebar-width));
 
     &:has(.table-responsive) {
-      overflow-x: hidden;
+      // Use `clip` instead of `hidden` so the element does not become a scroll container,
+      // which would break `position: sticky` for the pagination header and filters panel.
+      overflow-x: clip;
     }
   }
 

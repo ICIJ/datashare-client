@@ -3,6 +3,12 @@ import { compact, find, keys, kebabCase, iteratee, uniq } from 'lodash'
 import { slugger } from '@/utils/strings'
 
 /**
+ * Prefix used to identify Murmur components in findComponent/getComponent calls.
+ * @constant {string}
+ */
+const MURMUR_PREFIX = 'murmur/'
+
+/**
  * Mixin class extending the core to add helpers for components.
  * @mixin
  * @typicalname datashare
@@ -11,30 +17,87 @@ const ComponentMixin = superclass =>
   class extends superclass {
     /**
      * Asynchronously find a component in the lazyComponents object by its name.
+     * Supports "Murmur/" prefix to retrieve components from @icij/murmur.
      * @async
      * @function
      * @param {string} name - The name of the component to find.
-     * @returns {Promise<object|null>} - A promise that resolves with the found component object, or null if not found.
+     * @returns {Promise.<Object>} - A promise that resolves with the found component object, or null if not found.
      */
     findComponent(name) {
       return this.getComponent(name).catch(() => null)
     }
 
     /**
-     * Asynchronously get a component from the lazyComponents object based on its name.
+     * Get a component from Murmur by its name.
+     * Searches in Murmur.components, Murmur.datavisualisations, and Murmur.maps.
+     * Murmur is imported dynamically so its full component barrel is only
+     * loaded (as a separate chunk) if this lookup is actually used.
      * @async
      * @function
-     * @param {string} name - The name of the component to retrieve.
-     * @returns {Promise<object|Error>} - A promise that resolves with the found component object, or rejects with an Error if not found.
+     * @param {string} name - The name of the Murmur component to retrieve.
+     * @returns {Promise.<Object>} - The found component object, or null if not found.
      */
-    async getComponent(name) {
-      // Find the component name key in lazyComponents object that matches the given name when slugified.
+    async getMurmurComponent(name) {
+      const { components, datavisualisations, maps } = (await import('@icij/murmur')).default
+      return components[name] ?? datavisualisations[name] ?? maps[name] ?? null
+    }
+
+    /**
+     * Check if name has "Murmur/" prefix and return the component from @icij/murmur.
+     * @async
+     * @function
+     * @param {string} name - The name of the component to retrieve, potentially with "Murmur/" prefix.
+     * @returns {Promise.<Object>} - The found Murmur component, or null if not a Murmur component or not found.
+     */
+    async findMurmurComponentByPrefix(name) {
+      if (name.toLowerCase().startsWith(MURMUR_PREFIX)) {
+        const murmurName = name.slice(MURMUR_PREFIX.length)
+        return this.getMurmurComponent(murmurName)
+      }
+      return null
+    }
+
+    /**
+     * Find a component in the lazyComponents object by its name.
+     * @function
+     * @param {string} name - The name of the component to retrieve.
+     * @returns {Promise.<Object>} - The found component, or null if not found.
+     */
+    findLocalComponentByName(name) {
       const key = find(keys(this.lazyComponents), key => this.sameComponentNames(name, key))
-      // If a matching key is found, return the component object from the lazyComponents object.
       if (key) {
         return this.lazyComponents[key]?.().then(iteratee('default'))
       }
-      // Otherwise, return an Error indicating that the component cannot be found.
+      return Promise.resolve(null)
+    }
+
+    /**
+     * List of component finder functions to try in order.
+     * Each finder takes a name and returns a Promise that resolves to an object or null.
+     * @returns {Array.<Function>} - Array of finder functions.
+     */
+    get componentFinders() {
+      return [
+        name => this.findMurmurComponentByPrefix(name),
+        name => this.findLocalComponentByName(name)
+      ]
+    }
+
+    /**
+     * Asynchronously get a component by trying each finder in order.
+     * Supports "Murmur/" prefix to retrieve components from @icij/murmur.
+     * @async
+     * @function
+     * @param {string} name - The name of the component to retrieve.
+     * @returns {Promise.<Object>} - A promise that resolves with the found component object, or rejects with an Error if not found.
+     */
+    async getComponent(name) {
+      for (const finder of this.componentFinders) {
+        const component = await finder(name)
+        if (component) {
+          return component
+        }
+      }
       throw new Error(`Cannot find component '${name}'`)
     }
 

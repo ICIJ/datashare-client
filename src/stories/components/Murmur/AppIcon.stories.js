@@ -1,4 +1,4 @@
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 
 import { variantsPlainArgType } from '~storybook/utils'
 
@@ -35,7 +35,7 @@ export const Default = {
     size: '32px'
   },
   render: args => ({
-    components: { AppIcon },
+    components: { AppIcon, IPhUser },
     setup() {
       return { args }
     },
@@ -52,7 +52,7 @@ export const WeightBold = {
     size: '32px'
   },
   render: args => ({
-    components: { AppIcon },
+    components: { AppIcon, IPhUserBold },
     setup() {
       return { args }
     },
@@ -69,7 +69,7 @@ export const WeightFill = {
     size: '32px'
   },
   render: args => ({
-    components: { AppIcon },
+    components: { AppIcon, IPhUserFill },
     setup() {
       return { args }
     },
@@ -86,7 +86,7 @@ export const WeightDuotone = {
     size: '32px'
   },
   render: args => ({
-    components: { AppIcon },
+    components: { AppIcon, IPhUserDuotone },
     setup() {
       return { args }
     },
@@ -105,7 +105,7 @@ export const HoverVariant = {
     size: '2xl'
   },
   render: args => ({
-    components: { AppIcon },
+    components: { AppIcon, IPhTrash },
     setup() {
       return { args }
     },
@@ -123,7 +123,7 @@ export const Spinning = {
     spin: true
   },
   render: args => ({
-    components: { AppIcon },
+    components: { AppIcon, IPhCircleNotch },
     setup() {
       return { args }
     },
@@ -142,7 +142,7 @@ export const Beating = {
     variant: 'danger'
   },
   render: args => ({
-    components: { AppIcon },
+    components: { AppIcon, IPhHeartFill },
     setup() {
       return { args }
     },
@@ -162,7 +162,7 @@ export const Fading = {
     variant: 'success'
   },
   render: args => ({
-    components: { AppIcon },
+    components: { AppIcon, IPhAlienDuotone },
     setup() {
       return { args }
     },
@@ -180,7 +180,7 @@ export const VariantPrimary = {
     size: '32px'
   },
   render: args => ({
-    components: { AppIcon },
+    components: { AppIcon, IPhRocket },
     setup() {
       return { args }
     },
@@ -198,7 +198,7 @@ export const VariantSecondary = {
     size: '32px'
   },
   render: args => ({
-    components: { AppIcon },
+    components: { AppIcon, IPhRocket },
     setup() {
       return { args }
     },

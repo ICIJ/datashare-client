@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur'
 
 import IPhMagnifyingGlass from '~icons/ph/magnifying-glass'
 
@@ -40,3 +40,9 @@ const to = computed(() => {
     class="path-tree-view-entry-search-link above-stretched-link"
   />
 </template>
+
+<style lang="scss" scoped>
+.path-tree-view-entry-search-link {
+  z-index: $stretched-link-z-index + 1;
+}
+</style>

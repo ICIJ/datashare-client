@@ -1,4 +1,4 @@
-import { AppIcon, AppIconLayers } from '@icij/murmur-next'
+import { AppIcon, AppIconLayers } from '@icij/murmur'
 
 export default {
   title: 'Components/Murmur/AppIconLayers',
@@ -13,10 +13,7 @@ export default {
     size: '44px'
   },
   render: args => ({
-    components: {
-      AppIcon,
-      AppIconLayers
-    },
+    components: { AppIcon, AppIconLayers, IPhArrowCounterClockwise, IPhArrowClockwiseBold },
     setup() {
       return {
         args

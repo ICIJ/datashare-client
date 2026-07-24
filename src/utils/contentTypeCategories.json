@@ -1,0 +1,24 @@
+{
+    "AUDIO" : {
+      "icon": "audio"
+    },
+    "VIDEO" : {
+      "icon": "video"
+    },
+    "IMAGE" : {
+      "icon": "image"
+    },
+    "DOCUMENT" : {
+      "icon": "doc"
+    },
+    "EMAIL" : {
+      "icon": "email"
+    },
+    "PRESENTATION" : {
+      "icon": "ppt"
+    },
+    "SPREADSHEET" : {
+      "icon": "xls"
+    },
+    "OTHER" : {}
+}

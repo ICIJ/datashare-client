@@ -1,6 +1,6 @@
 <script setup>
 import { computed, inject } from 'vue'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 
 import DisplayNumber from '@/components/Display/DisplayNumber'
 
@@ -156,6 +156,7 @@ const classList = computed(() => {
   }
 
   &__link {
+    z-index: $stretched-link-z-index + 1;
     border-radius: var(--bs-border-radius);
     line-height: 1;
     color: inherit;

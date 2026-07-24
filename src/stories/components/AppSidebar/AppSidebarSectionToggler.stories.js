@@ -1,17 +1,15 @@
-import { vueRouter } from 'storybook-vue3-router'
-
 import AppSidebarSectionToggler from '@/components/AppSidebar/AppSidebarSectionToggler'
 
-const routes = [{ path: '/', name: 'home' }]
-
 export default {
-  decorators: [vueRouter(routes)],
   title: 'Components/AppSidebar/AppSidebarSectionToggler',
   tags: ['autodocs'],
   component: AppSidebarSectionToggler,
   argTypes: {
+    // `icon` is rendered via `<component :is="icon" />`, so it expects an icon
+    // component (e.g. `~icons/ph/*`), not a string. Disable the control rather
+    // than expose a text field that can't resolve to a component at runtime.
     icon: {
-      control: { type: 'text' }
+      control: false
     },
     title: {
       control: { type: 'text' }
@@ -21,9 +19,10 @@ export default {
     }
   },
   args: {
-    icon: 'rocket-launch',
+    icon: markRaw(IPhRocketLaunch),
     title: 'Tasks',
-    active: true
+    active: true,
+    to: { path: '/' }
   },
   render: args => ({
     components: {

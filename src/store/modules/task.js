@@ -3,7 +3,7 @@ import { ref, computed } from 'vue'
 import { find, property } from 'lodash'
 
 import { apiInstance as api } from '@/api/apiInstance'
-import { TASK_STATUS } from '@/enums/taskStatus'
+import { TASK_STATUS, isDoneStatus } from '@/enums/taskStatus'
 import { TASK_NAME } from '@/enums/taskNames'
 
 export const useTaskStore = defineStore('task', () => {
@@ -25,14 +25,18 @@ export const useTaskStore = defineStore('task', () => {
     await api.stopTask(id)
   }
 
-  const stopPendingTasks = async ({ names = [], ...params } = {}) => {
-    const name = names.join('|')
-    await api.stopPendingTasks({ name, ...params })
+  const stopPendingTasks = async ({ types = [], ...params } = {}) => {
+    const type = types.length ? types.join('|') : null
+    await api.stopPendingTasks({ type, ...params })
     setTasks(tasks.value.filter(({ id }) => isPending(id)))
   }
 
   const relaunchBatchSearch = async (id, title, description) => {
     await api.relaunchBatchSearch(id, title, description)
+  }
+
+  const updateBatchSearch = async (id, { name, description, published }) => {
+    await api.updateBatchSearch(id, { name, description, published })
   }
 
   const removeTask = async (id) => {
@@ -50,9 +54,9 @@ export const useTaskStore = defineStore('task', () => {
     }
   }
 
-  const removeDoneTasks = async ({ names = [], ...params } = {}) => {
-    const name = names.join('|')
-    await api.removeDoneTasks({ name, ...params })
+  const removeDoneTasks = async ({ types = [], ...params } = {}) => {
+    const type = types.length ? types.join('|') : null
+    await api.removeDoneTasks({ type, ...params })
     setTasks(tasks.value.filter(({ id }) => !isOver(id)))
   }
 
@@ -85,7 +89,7 @@ export const useTaskStore = defineStore('task', () => {
   }
 
   const isDone = (id) => {
-    return getTaskState(id) === TASK_STATUS.DONE || getTaskState(id) === TASK_STATUS.SUCCESS || getTaskState(id) === TASK_STATUS.OK
+    return isDoneStatus(getTaskState(id))
   }
 
   const isFailed = (id) => {
@@ -104,9 +108,9 @@ export const useTaskStore = defineStore('task', () => {
     return getTask(id)?.args?.batchDownload ?? {}
   }
 
-  const fetchTasks = async ({ names = [], ...params } = {}) => {
-    const name = names.join('|')
-    const { items = [], pagination = DEFAULT_PAGINATION } = await api.getTasks({ name, ...params })
+  const fetchTasks = async ({ types = [], ...params } = {}) => {
+    const type = types.length ? types.join('|') : null
+    const { items = [], pagination = DEFAULT_PAGINATION } = await api.getTasks({ type, ...params })
     return setTasks(items, pagination)
   }
 
@@ -134,6 +138,7 @@ export const useTaskStore = defineStore('task', () => {
     isQueued,
     isOver,
     relaunchBatchSearch,
+    updateBatchSearch,
     reset,
     getTask,
     getBatchSearchRecord,

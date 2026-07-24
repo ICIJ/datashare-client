@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { AppIcon, ButtonIcon } from '@icij/murmur-next'
+import { AppIcon, ButtonIcon } from '@icij/murmur'
 import IPhPlus from '~icons/ph/plus'
 
 import { useBreakpoints } from '@/composables/useBreakpoints'
@@ -8,7 +8,7 @@ import { SIZE } from '@/enums/sizes'
 
 defineProps({
   title: { type: String, default: '' },
-  icon: { type: String },
+  icon: { type: [String, Object, Function] },
   description: { type: String, default: '' },
   listLink: { type: [String, Object] },
   actionLink: { type: [String, Object] },

@@ -1,11 +1,13 @@
 import bodybuilder from 'bodybuilder'
 import { setActivePinia, createPinia } from 'pinia'
+import { setCookie, removeCookie } from 'tiny-cookie'
 
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
-import { elasticsearch } from '@/api/elasticsearch'
-import { FilterText, FilterEntity } from '@/store/filters'
+import { elasticsearch, csrfPlugin } from '@/api/elasticsearch'
+import { FilterText, FilterEntity, FilterContentTypeCategory } from '@/store/filters'
 import { EventBus } from '@/utils/eventBus'
+import settings from '@/utils/settings'
 
 describe('elasticsearch', () => {
   const { index, es } = esConnectionHelper.build()
@@ -55,6 +57,27 @@ describe('elasticsearch', () => {
     })
   })
 
+  it('OR-combines paired dimensions, matching the category value on both its keyword sub-field and the bare field', () => {
+    // contentTypeCategory values are stored uppercase and only match a `terms`
+    // query on the raw value: `.keyword` on text+keyword indices, the bare
+    // field on pure-keyword indices. The OR-combine must carry both so the
+    // paired-dimension query stays correct across heterogeneous mappings.
+    const emptyStore = { values: {}, excludeFilters: [], contextualizeFilters: [], sortFilters: {} }
+    const contentType = new FilterText({ name: 'contentType', key: 'contentType' })
+    const category = new FilterContentTypeCategory({ name: 'contentTypeCategory', key: 'contentTypeCategory' })
+    contentType.bindStore(emptyStore).setValues(['application/pdf'])
+    category.bindStore(emptyStore).setValues(['IMAGE'])
+
+    const body = bodybuilder()
+    elasticsearch._applyFilters(body, [contentType, category])
+    const should = body.build().query.bool.should
+
+    expect(should).toContainEqual({ terms: { contentType: ['application/pdf'] } })
+    expect(should).toContainEqual({ terms: { 'contentTypeCategory.keyword': ['IMAGE'] } })
+    expect(should).toContainEqual({ terms: { contentTypeCategory: ['IMAGE'] } })
+    expect(body.build().query.bool.minimum_should_match).toBe(1)
+  })
+
   it('should build a simple ES query', async () => {
     const body = bodybuilder().from(0).size(25)
 
@@ -85,6 +108,24 @@ describe('elasticsearch', () => {
         }
       }
     })
+  })
+
+  it('should set default_operator to "AND" in ES query when operator is "AND"', async () => {
+    const spy = vi.spyOn(elasticsearch, 'search').mockResolvedValue({ hits: { hits: [] } })
+    await elasticsearch.searchDocs({ index, query: 'apple orange', operator: 'AND' })
+    const body = spy.mock.calls[0][0].body
+    const queryString = body.query.bool.must[1].bool.should[0].query_string
+    expect(queryString.default_operator).toBe('AND')
+    spy.mockRestore()
+  })
+
+  it('should default default_operator to "OR" when no operator is provided', async () => {
+    const spy = vi.spyOn(elasticsearch, 'search').mockResolvedValue({ hits: { hits: [] } })
+    await elasticsearch.searchDocs({ index, query: 'apple orange' })
+    const body = spy.mock.calls[0][0].body
+    const queryString = body.query.bool.must[1].bool.should[0].query_string
+    expect(queryString.default_operator).toBe('OR')
+    spy.mockRestore()
   })
 
   it('should build a simple ES query and escape slash in it', async () => {
@@ -167,5 +208,115 @@ describe('elasticsearch', () => {
     expect(response.hits.hits[0]._id).toEqual('document_03')
     expect(response.hits.hits[1]._id).toEqual('DOCUMENT_02')
     expect(response.hits.hits[2]._id).toEqual('document_01')
+  })
+
+  describe('csrfPlugin', () => {
+    let originalRequest
+    let transport
+
+    beforeEach(() => {
+      originalRequest = vi.fn()
+      transport = { prototype: { request: originalRequest } }
+      csrfPlugin(null, null, { Transport: transport })
+    })
+
+    afterEach(() => {
+      removeCookie(settings.csrf.cookieName)
+    })
+
+    it('should add the CSRF header when the cookie is set', () => {
+      setCookie(settings.csrf.cookieName, 'test-csrf-token')
+      const params = { method: 'POST', body: '{}' }
+      transport.prototype.request(params, vi.fn())
+      expect(originalRequest).toHaveBeenCalledOnce()
+      expect(params.headers).toEqual({ [settings.csrf.headerName]: 'test-csrf-token' })
+    })
+
+    it('should not add the CSRF header when the cookie is absent', () => {
+      removeCookie(settings.csrf.cookieName)
+      const params = { method: 'GET' }
+      transport.prototype.request(params, vi.fn())
+      expect(originalRequest).toHaveBeenCalledOnce()
+      expect(params.headers).toBeUndefined()
+    })
+
+    it('should preserve existing headers when adding the CSRF header', () => {
+      setCookie(settings.csrf.cookieName, 'test-csrf-token')
+      const params = { method: 'POST', headers: { 'Content-Type': 'application/json' } }
+      transport.prototype.request(params, vi.fn())
+      expect(params.headers).toEqual({
+        'Content-Type': 'application/json',
+        [settings.csrf.headerName]: 'test-csrf-token'
+      })
+    })
+  })
+
+  describe('estimateDownloadSize', () => {
+    let searchSpy
+
+    beforeEach(() => {
+      searchSpy = vi.spyOn(elasticsearch, '_search')
+    })
+
+    afterEach(() => {
+      searchSpy.mockRestore()
+    })
+
+    it('builds a query with size 0, track_total_hits and a sum aggregation on contentLength', async () => {
+      searchSpy.mockResolvedValue({
+        hits: { total: { value: 0 } },
+        aggregations: { total_content_length: { value: 0 } }
+      })
+
+      await elasticsearch.estimateDownloadSize(index, [], '*', [])
+
+      expect(searchSpy).toHaveBeenCalledTimes(1)
+      const body = searchSpy.mock.calls[0][0].body
+      expect(body.size).toBe(0)
+      expect(body.track_total_hits).toBe(true)
+      expect(body.aggs).toEqual({
+        total_content_length: { sum: { field: 'contentLength' } }
+      })
+    })
+
+    it('returns the estimated count and size from the response', async () => {
+      searchSpy.mockResolvedValue({
+        hits: { total: { value: 42 } },
+        aggregations: { total_content_length: { value: 1024 } }
+      })
+
+      const result = await elasticsearch.estimateDownloadSize(index, [], '*', [])
+
+      expect(result).toEqual({ estimatedCount: 42, estimatedSize: 1024 })
+    })
+
+    it('defaults estimated count and size to 0 when fields are missing', async () => {
+      searchSpy.mockResolvedValue({})
+
+      const result = await elasticsearch.estimateDownloadSize(index, [], '*', [])
+
+      expect(result).toEqual({ estimatedCount: 0, estimatedSize: 0 })
+    })
+
+    it('passes operator to default_operator in the query body', async () => {
+      searchSpy.mockResolvedValue({
+        hits: { total: { value: 0 } },
+        aggregations: { total_content_length: { value: 0 } }
+      })
+
+      await elasticsearch.estimateDownloadSize(index, [], 'foo bar', [], 'AND')
+
+      const body = searchSpy.mock.calls[0][0].body
+      const queryString = body.query.bool.must[1].bool.should[0].query_string
+      expect(queryString.default_operator).toBe('AND')
+    })
+  })
+
+  describe('rootSearch', () => {
+    it('passes operator to default_operator in the body', () => {
+      const body = elasticsearch.rootSearch([], 'foo bar', [], 'AND').build()
+      const queryString = body.query.bool.must[1].bool.should[0].query_string
+      expect(queryString.default_operator).toBe('AND')
+    })
   })
 })

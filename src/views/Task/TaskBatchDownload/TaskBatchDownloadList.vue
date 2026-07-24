@@ -14,9 +14,13 @@ import DisplayProjectList from '@/components/Display/DisplayProjectList'
 import EmptyState from '@/components/EmptyState/EmptyState'
 import RouterLinkBatchDownload from '@/components/RouterLink/RouterLinkBatchDownload'
 import BatchDownloadActions from '@/components/BatchDownload/BatchDownloadActions'
+import BatchDownloadTruncatedAlert from '@/components/BatchDownload/BatchDownloadTruncatedAlert'
+import BatchDownloadUnavailableAlert from '@/components/BatchDownload/BatchDownloadUnavailableAlert'
 import SearchBreadcrumbUri from '@/components/Search/SearchBreadcrumbUri/SearchBreadcrumbUri'
 import RowPaginationBatchDownloads from '@/components/RowPagination/RowPaginationBatchDownloads'
-import { TASK_NAME } from '@/enums/taskNames'
+import { TASK_TYPE } from '@/enums/taskTypes'
+import { isDoneStatus } from '@/enums/taskStatus'
+import { isBatchDownloadMissing } from '@/utils/batchDownload'
 import TaskPage from '@/views/Task/TaskPage'
 
 const { t } = useI18n()
@@ -30,11 +34,23 @@ function hasZipSize(item) {
 function getBatchDownloadRecord(item, key, defaultValue) {
   return get(item, key ? `args.batchDownload.${key}` : 'args.batchDownload', defaultValue)
 }
+
+function isDone(item) {
+  return isDoneStatus(item.state)
+}
+
+function isUnavailable(item) {
+  return isDone(item) && isBatchDownloadMissing(item)
+}
+
+function isTruncated(item) {
+  return isDone(item) && !isUnavailable(item) && !!item.result?.value?.truncationReason
+}
 </script>
 
 <template>
   <task-page
-    :task-filter="[TASK_NAME.BATCH_DOWNLOAD]"
+    :task-types="[TASK_TYPE.BATCH_DOWNLOAD]"
     page-name="batch-download"
     hide-clear-done
     hide-stop-pending
@@ -73,6 +89,11 @@ function getBatchDownloadRecord(item, key, defaultValue) {
         </template>
         <template #cell(name)="{ item }">
           <router-link-batch-download :item="item" />
+          <batch-download-unavailable-alert v-if="isUnavailable(item)" />
+          <batch-download-truncated-alert
+            v-else-if="isTruncated(item)"
+            :truncation-reason="item.result?.value?.truncationReason"
+          />
         </template>
         <template #cell(projects)="{ item }">
           <display-project-list :values="getBatchDownloadRecord(item, 'projects')" />

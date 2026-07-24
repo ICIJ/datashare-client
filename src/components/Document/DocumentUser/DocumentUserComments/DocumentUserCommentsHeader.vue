@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { AppIcon, ButtonIcon } from '@icij/murmur-next'
+import { AppIcon, ButtonIcon } from '@icij/murmur'
 import IPhEyeClosed from '~icons/ph/eye-closed'
 import IPhEyeClosedFill from '~icons/ph/eye-closed-fill'
 
@@ -54,7 +54,6 @@ const noHeader = computed(() => noToggler && noSort)
       variant="outline-link"
       :icon-left="iconLeft"
       :label="displayComments"
-      :tooltip-delay="tooltipDelay"
       @click="toggle"
     />
   </header>

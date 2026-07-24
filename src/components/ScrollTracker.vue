@@ -1,6 +1,6 @@
 <script>
 import { toValue, markRaw } from 'vue'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 import IPhArrowFatUpFill from '~icons/ph/arrow-fat-up-fill'
 import IPhArrowFatDownFill from '~icons/ph/arrow-fat-down-fill'
 
@@ -49,8 +49,8 @@ export default {
       this.icon = markRaw(this.isTargetAbove() ? IPhArrowFatDownFill : IPhArrowFatUpFill)
       this.visible = true
       this.setTimeout()
-      // Hide the tracker on scroll
-      window.addEventListener('scroll', this.hide)
+      // Hide the tracker on scroll - passive for better scroll performance
+      window.addEventListener('scroll', this.hide, { passive: true })
     },
     hide() {
       this.visible = false

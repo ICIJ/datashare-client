@@ -44,7 +44,7 @@ describe('BatchSearchActions.vue', () => {
     let wrapper
 
     beforeEach(() => {
-      const props = { batchSearch: { uuid: '12' } }
+      const props = { batchSearch: { uuid: '12', projects: ['local-datashare'] } }
       wrapper = shallowMount(BatchSearchActions, { props, global: { plugins } })
     })
 
@@ -53,8 +53,17 @@ describe('BatchSearchActions.vue', () => {
       expect(wrapper.findComponent(BatchSearchActionsRelaunch).attributes('disabled')).toBe('false')
     })
 
-    it.skip('should display a button to edit the batchSearch', async () => {
+    it('should display a button to edit the batchSearch', () => {
       expect(wrapper.findComponent(BatchSearchActionsEdit).exists()).toBe(true)
+    })
+
+    it('navigates to the edit page when the edit button is clicked', async () => {
+      const push = vi.spyOn(wrapper.vm.$router, 'push').mockResolvedValue()
+      await wrapper.findComponent(BatchSearchActionsEdit).vm.$emit('click')
+      expect(push).toHaveBeenCalledWith({
+        name: 'task.batch-search.edit',
+        params: { indices: 'local-datashare', uuid: '12' }
+      })
     })
 
     it('should display a button to delete the batchSearch', async () => {

@@ -1,6 +1,6 @@
 <script setup>
 import { computed, inject } from 'vue'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 
 import PageTableThSort from './PageTableThSort'
 
@@ -72,6 +72,7 @@ const labelClassList = computed(() => {
         <app-icon
           v-if="icon"
           :name="icon"
+          size="1.25em"
           class="me-1 my-2"
         />
         <span :class="labelClassList">{{ label }}</span>

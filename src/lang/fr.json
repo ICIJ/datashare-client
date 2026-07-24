@@ -4,6 +4,7 @@
     "yes": "Oui",
     "no": "Non",
     "submit": "Valider",
+    "save": "Enregistrer",
     "reset": "Réinitialiser",
     "you": "{username} (vous)",
     "building": "Notre équipe prépare de nouvelles fonctionnalités pour cette page. À suivre !"
@@ -216,6 +217,9 @@
   },
   "filtersPanelSectionFilterTitleToggler": {
     "toggle": "Filtres"
+  },
+  "contentTypesCategoryName": {
+    "toggle": "Toggle the {category} category"
   },
   "filtersPanelSearch": {
     "placeholder": "Chercher dans les filtres"
@@ -500,6 +504,14 @@
   "filter": {
     "project": "Projets",
     "contentType": "Types de documents",
+    "contentTypeCategory": "Catégories de types de fichiers",
+    "fileTypes": {
+      "legacyIndex": {
+        "title": "Regroupement par catégorie indisponible",
+        "description": "Ce projet a été indexé sans données de catégorie.",
+        "descriptionPlural": "Some of these projects were indexed without file type categories."
+      }
+    },
     "language": "Langues",
     "namedEntityPerson": "Personnes",
     "namedEntityLocation": "Lieux",
@@ -1101,6 +1113,7 @@
         "emptyStateAction": "Rechercher",
         "info": "Les téléchargements en lot sont des fichiers protégés par un mot de passe contenant tous les documents d'une de vos recherches.",
         "searchPlaceholder": "Rechercher des téléchargements en lot",
+        "unavailableAlert": "Ce téléchargement a expiré selon les paramètres de rétention de votre administrateur",
         "properties": {
           "name": "Nom",
           "createdAt": "Créé le",
@@ -1151,7 +1164,7 @@
           "operators": "Si vous optez pour 'Phrase exacte', les opérateurs comme <code>AND</code>, <code>OR</code>, <code>NOT</code>, <code>*</code>, <code>?</code>, <code>!</code>, <code>+</code>, <code>-</code> ou les regex (expressions régulières) ne seront pas prises en compte."
         },
         "sections": {
-          "general": "Nom, projet(s) et description",
+          "general": "Détails",
           "queries": "Requêtes",
           "operators": "Opérateurs de recherche",
           "filters": "Filtres"
@@ -1200,10 +1213,16 @@
         },
         "submit": "Valider",
         "submitError": "Une erreur s'est produite, impossible d'exécuter la recherche en lot.",
-        "submitSuccess": "La recherche en lot a été créée."
+        "submitSuccess": "La recherche en lot a été créée.",
+        "editError": "Une erreur s'est produite, impossible de mettre à jour la recherche en lot.",
+        "editSuccess": "La recherche en lot a été mise à jour."
       },
       "new": {
         "title": "Créer une recherche en lot"
+      },
+      "edit": {
+        "title": "Modifier la recherche en lot",
+        "breadcrumb": "Modifier"
       }
     },
     "batch-search-queries": {
@@ -1288,11 +1307,6 @@
       "error": "Impossible de relancer la recherche en lot"
     }
   },
-  "batchSearchActionsEditModal": {
-    "title": "Modifier la recherche en lot",
-    "name": "Nom",
-    "description": "Description"
-  },
   "batchSearchActionsRelaunchModal": {
     "title": "Relancer la recherche en lot",
     "name": "Nom",
@@ -1344,7 +1358,7 @@
     "updatedOn": "Modifié le",
     "links": "Liens",
     "actions": "Actions",
-    "userRoles": "Votre rôle"
+    "userRole": "Votre rôle"
   },
   "projectRowActions": {
     "edit": "Modifier le projet",
@@ -1796,7 +1810,8 @@
     },
     "barometer": {
       "document": "aucun document | 1 document | {total} documents",
-      "amongWhichOnDisk": "dont {n} sur le disque"
+      "amongWhichOnDisk": "dont {n} sur le disque",
+      "duplicate": "No duplicates were detected during indexation | {n} duplicate ignored during indexation | {n} duplicates ignored during indexation"
     },
     "diskUsage": {
       "details": "Voir l'utilisation du disque"

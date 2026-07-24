@@ -6,7 +6,7 @@ import FormControlTag from '@/components/Form/FormControl/FormControlTag/FormCon
 describe('FormControlTag', () => {
   let plugins
 
-  beforeAll(() => {
+  beforeEach(() => {
     const core = CoreSetup.init().useAll()
     plugins = core.plugins
   })
@@ -122,6 +122,24 @@ describe('FormControlTag', () => {
     expect(wrapper.vm.tagValidator('invalidTag')).toBeFalsy()
   })
 
+  it('should remove a tag when an active dropdown option is clicked', async () => {
+    const wrapper = mount(FormControlTag, {
+      global: { plugins },
+      props: {
+        modelValue: ['tag1', 'tag2'],
+        options: ['tag1', 'tag2', 'tag3'],
+        noDuplicates: true,
+        inputValue: ''
+      }
+    })
+
+    wrapper.vm.showDropdown = true
+    await wrapper.vm.$nextTick()
+    const dropdown = wrapper.findComponent({ name: 'FormControlTagDropdown' })
+    await dropdown.vm.addOption({ item: 'tag1' })
+    expect(wrapper.emitted()['update:modelValue'][0]).toEqual([['tag2']])
+  })
+
   it('should compute class list correctly', async () => {
     const wrapper = mount(FormControlTag, {
       global: {
@@ -132,5 +150,104 @@ describe('FormControlTag', () => {
     wrapper.vm.showDropdown = true
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.classList).toEqual({ 'form-control-tag--show-dropdown': true })
+  })
+
+  it('does not open the dropdown on focus while the input is empty', async () => {
+    // Suggestions only appear once the user types at least one character.
+    const wrapper = mount(FormControlTag, {
+      global: { plugins },
+      props: { modelValue: [], options: ['tag1', 'tag2'] }
+    })
+
+    await wrapper.vm.onFocus(new Event('focus'))
+    expect(wrapper.vm.showDropdown).toBe(false)
+  })
+
+  it('opens the dropdown on focus once the input has at least one character', async () => {
+    const wrapper = mount(FormControlTag, {
+      global: { plugins },
+      props: { modelValue: [], options: ['tag1', 'tag2'], inputValue: 'ta' }
+    })
+
+    await wrapper.vm.onFocus(new Event('focus'))
+    expect(wrapper.vm.showDropdown).toBe(true)
+  })
+
+  it('opens the dropdown when options arrive while the user is typing', async () => {
+    const wrapper = mount(FormControlTag, {
+      global: { plugins },
+      props: { modelValue: [], options: [], inputValue: 'ta' }
+    })
+
+    wrapper.vm.hasFocus = true
+    await wrapper.setProps({ options: ['tag1', 'tag2'] })
+    expect(wrapper.vm.showDropdown).toBe(true)
+  })
+
+  it('should not open the dropdown on focus when options are empty', async () => {
+    const wrapper = mount(FormControlTag, {
+      global: { plugins },
+      props: { modelValue: [], options: [], inputValue: 'ta' }
+    })
+
+    await wrapper.vm.onFocus(new Event('focus'))
+    expect(wrapper.vm.showDropdown).toBe(false)
+  })
+
+  it('closes the dropdown after adding a tag and does not reopen it when the options list refreshes', async () => {
+    const wrapper = mount(FormControlTag, {
+      global: { plugins },
+      props: { modelValue: [], options: ['tag1'], inputValue: 'test' }
+    })
+
+    // The dropdown is open while the user types.
+    wrapper.vm.hasFocus = true
+    wrapper.vm.showDropdown = true
+    await wrapper.vm.$nextTick()
+
+    // Submitting the tag closes the dropdown; the parent then refreshes the
+    // options (e.g. appending the just-added tag), which must not reopen it.
+    wrapper.vm.addTag('test')
+    await wrapper.setProps({ options: ['tag1', 'test'] })
+
+    expect(wrapper.vm.showDropdown).toBe(false)
+  })
+
+  it('reopens the dropdown when the user types again after adding a tag', async () => {
+    const wrapper = mount(FormControlTag, {
+      global: { plugins },
+      props: { modelValue: [], options: ['tag1'] }
+    })
+
+    wrapper.vm.hasFocus = true
+    wrapper.vm.addTag('test')
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.showDropdown).toBe(false)
+
+    wrapper.vm.inputTag('ta')
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.showDropdown).toBe(true)
+  })
+
+  it('should reject a duplicate tag regardless of case', () => {
+    const wrapper = mount(FormControlTag, {
+      global: { plugins },
+      props: { modelValue: ['TAG1'], options: [], noDuplicates: true }
+    })
+
+    expect(wrapper.vm.tagDuplicatesValidator('tag1')).toBe(false)
+    expect(wrapper.vm.tagDuplicatesValidator('Tag1')).toBe(false)
+    expect(wrapper.vm.tagDuplicatesValidator('tag2')).toBe(true)
+  })
+
+  it('should accept a tag that matches an option regardless of case when noCreate is set', () => {
+    const wrapper = mount(FormControlTag, {
+      global: { plugins },
+      props: { modelValue: [], options: ['Tag1', 'tag2'], noCreate: true }
+    })
+
+    expect(wrapper.vm.tagCreateValidator('TAG1')).toBe(true)
+    expect(wrapper.vm.tagCreateValidator('TAG2')).toBe(true)
+    expect(wrapper.vm.tagCreateValidator('tag3')).toBe(false)
   })
 })

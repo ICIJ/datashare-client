@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur'
 
 import IPhSortDescending from '~icons/ph/sort-descending'
 import IPhSortAscending from '~icons/ph/sort-ascending'
@@ -43,7 +43,7 @@ const toggleOrder = () => {
     :class="classList"
     class="page-table-th-sort"
     variant="outline-tertiary"
-    icon-left-size="sm"
+    icon-left-size="1em"
     hide-label
     @click="toggleOrder"
   />

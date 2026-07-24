@@ -18,7 +18,7 @@ export default {
     }
   },
   args: {
-    icon: 'rocket-launch',
+    icon: markRaw(IPhRocketLaunch),
     title: 'Tasks'
   },
   render: args => ({

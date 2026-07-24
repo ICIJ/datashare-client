@@ -1,4 +1,4 @@
-import { removeCookie, setCookie } from 'tiny-cookie'
+import { getCookie, removeCookie, setCookie } from 'tiny-cookie'
 
 import { Core } from '@/core'
 import { apiInstance as api } from '@/api/apiInstance'
@@ -68,6 +68,21 @@ describe('auth backend client', () => {
     it('should return user login if user is authenticated', async () => {
       setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
       expect(await auth.getUsername()).toBe('doe')
+    })
+  })
+
+  describe('reset', () => {
+    it('should clear the session cookie', () => {
+      setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
+      auth.reset()
+      expect(getCookie(process.env.VITE_DS_COOKIE_NAME)).toBeNull()
+    })
+
+    it('should clear the cached username', async () => {
+      setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
+      await auth.getUsername()
+      auth.reset()
+      expect(auth.me.value).toBeNull()
     })
   })
 })

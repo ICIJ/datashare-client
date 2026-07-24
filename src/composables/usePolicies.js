@@ -1,19 +1,61 @@
 import { useConfig } from '@/composables/useConfig.js'
 import { computed } from 'vue'
-import { camelCase, find, upperFirst } from 'lodash'
+import { upperFirst } from 'lodash'
+import { DEFAULT_ROLE, NO_ROLE, ROLE, ROLE_BIT, ROLE_HIERARCHY, ROLE_KEY } from '@/enums/roles.js'
 
-const DEFAULT_ROLE = 'VIEWER'
 export function usePolicies() {
   const config = useConfig()
-  const userPolicies = computed(() => config.get('policies', []))
-  function getRolesByProject(projectName) {
-    return find(userPolicies.value, p => p.projectId === projectName)?.roles ?? [DEFAULT_ROLE]
+  const policies = computed(() => config.get('policies', []))
+
+  function hasRole(userRole, minimumRole) {
+    return (ROLE_HIERARCHY[userRole] & ROLE_BIT[minimumRole]) !== 0
   }
-  function formatRole(role) {
-    return upperFirst(camelCase(role))
+
+  function resolveHighestRole(filtered) {
+    if (!filtered?.length) return DEFAULT_ROLE
+    // OR all individual role bits to get a combined capability mask
+    const combined = filtered.reduce((bits, { role }) => bits | (ROLE_BIT[role] ?? 0), 0)
+    if (!combined) return DEFAULT_ROLE
+    // Find highest set bit position via hardware-level count-leading-zeros
+    const highestBit = 31 - Math.clz32(combined)
+    // Map bit position back to role name
+    return Object.keys(ROLE_BIT).find(role => ROLE_BIT[role] === (1 << highestBit)) ?? DEFAULT_ROLE
   }
-  function formatRoles(roles) {
-    return roles.map(formatRole).join(', ')
+
+  function getHighestRoleFromList(policyList) {
+    return resolveHighestRole(policyList)
   }
-  return { getRolesByProject, formatRole, formatRoles }
+
+  function getHighestRoleFromListForDomain(policyList, domainId) {
+    const filtered = policyList?.filter(p => p.domainId === domainId || p.domainId === '*')
+    return resolveHighestRole(filtered)
+  }
+
+  function getHighestRoleFromListForProject(policyList, domainId, projectId) {
+    const filtered = policyList?.filter(p =>
+      (p.domainId === domainId || p.domainId === '*')
+      && (p.projectId === projectId || p.projectId === '*')
+    )
+    return resolveHighestRole(filtered)
+  }
+
+  function getRoleByProject(projectId, domainId = null) {
+    return domainId
+      ? getHighestRoleFromListForProject(policies.value, domainId, projectId)
+      : getHighestRoleFromList(policies.value.filter(p => p.projectId === projectId || p.projectId === '*'))
+  }
+
+  function isProjectAdmin(projectName) {
+    return hasRole(getRoleByProject(projectName), ROLE.PROJECT_ADMIN)
+  }
+
+  function isInstanceAdmin() {
+    return hasRole(getHighestRoleFromList(policies.value), ROLE.INSTANCE_ADMIN)
+  }
+
+  function formatRole(t, role) {
+    return upperFirst(t(ROLE_KEY[role] ?? ROLE_KEY[NO_ROLE]))
+  }
+
+  return { getRoleByProject, getHighestRoleFromList, getHighestRoleFromListForDomain, getHighestRoleFromListForProject, formatRole, isProjectAdmin, isInstanceAdmin, hasRole }
 }

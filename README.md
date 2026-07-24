@@ -11,7 +11,6 @@ Web Client for Datashare
 | | Status |
 | --: | :-- |
 | **CI checks** | [![Github Actions](https://img.shields.io/github/actions/workflow/status/icij/datashare-client/main.yml?style=shield)](https://github.com/ICIJ/datashare-client/actions/workflows/main.yml) |
-| **Code Climate** | [![Code Climate](https://api.codeclimate.com/v1/badges/0437a49c2dfcbf7d0af7/maintainability)](https://codeclimate.com/github/ICIJ/datashare-client/maintainability) |
 | **Latest version** | [![Latest version](https://img.shields.io/github/v/tag/icij/datashare-client?style=shield)](https://github.com/ICIJ/datashare-client/releases/latest) |
 | **Release date** | [![Release date](https://img.shields.io/github/release-date/icij/datashare-client?style=shield)](https://github.com/ICIJ/datashare-client/releases/latest) |
 | **Open issues** | [![Open issues](https://img.shields.io/github/issues/icij/datashare?style=shield&color=success)](https://github.com/ICIJ/datashare/issues/) |
@@ -23,7 +22,7 @@ Web Client for Datashare
 
 ## Datashare **Client**
 
-You need [Yarn](https://yarnpkg.com/lang/en/docs/install/) installed on your machine (tested with version 1.22) and Node.js 18 or above (tested with version 18.19).
+You need [Yarn](https://yarnpkg.com/lang/en/docs/install/) installed on your machine (tested with version 1.22) and Node.js 20 or above (tested with version 20.19.2).
 
 * Install dependencies:
 

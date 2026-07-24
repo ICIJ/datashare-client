@@ -1,5 +1,4 @@
 import { markRaw } from 'vue'
-import { vueRouter } from 'storybook-vue3-router'
 
 import IPhFile from '~icons/ph/file'
 import IPhFilePdf from '~icons/ph/file-pdf'
@@ -11,30 +10,11 @@ import IPhFileTxt from '~icons/ph/file-txt'
 import { BPlaceholderTable } from 'bootstrap-vue-next'
 
 import { layoutArgType } from '~storybook/utils'
-import { withMurmur } from '~storybook/decorators/murmur'
 import { LAYOUTS } from '@/enums/layouts'
 import DocumentEntries from '@/components/Document/DocumentEntries/DocumentEntries'
 
-const routes = [
-  {
-    path: '/',
-    name: 'search',
-    children: [
-      {
-        path: 'd/:index/:id/:routing?',
-        name: 'document'
-      }
-    ]
-  },
-  {
-    path: '/project/:name',
-    name: 'project.view'
-  }
-]
-
 export default {
   title: 'Components/Document/DocumentEntries/DocumentEntries',
-  decorators: [withMurmur({ previewHost: null }), vueRouter(routes)],
   component: DocumentEntries,
   argTypes: {
     entries: {
@@ -90,6 +70,7 @@ export default {
         extractionLevel: 0,
         author: 'Pierre Romera Zhang <hello@pirhoo.com>',
         project: 'banana-papers',
+        index: 'banana-papers',
         id: '1',
         routerParams: { index: 'banana-papers', id: '1' },
         creationDate: new Date(),
@@ -113,6 +94,7 @@ export default {
         extractionLevel: 0,
         author: 'Pierre Romera Zhang <hello@pirhoo.com>',
         project: 'banana-papers',
+        index: 'banana-papers',
         id: '2',
         routerParams: { index: 'banana-papers', id: '2' },
         creationDate: new Date(),
@@ -132,6 +114,7 @@ export default {
         extractionLevel: 1,
         author: 'John Doe <john.doe@example.com>',
         project: 'banana-papers',
+        index: 'banana-papers',
         id: '3',
         routerParams: { index: 'banana-papers', id: '3' },
         creationDate: new Date(),
@@ -154,6 +137,7 @@ export default {
         extractionLevel: 2,
         author: 'Jane Smith <jane.smith@example.com>',
         project: 'banana-papers',
+        index: 'banana-papers',
         id: '4',
         routerParams: { index: 'banana-papers', id: '4' },
         creationDate: new Date(),
@@ -176,6 +160,7 @@ export default {
         extractionLevel: 0,
         author: 'Alex Johnson <alex.johnson@example.com>',
         project: 'banana-papers',
+        index: 'banana-papers',
         id: '5',
         routerParams: { index: 'banana-papers', id: '5' },
         creationDate: new Date(),
@@ -198,6 +183,7 @@ export default {
         extractionLevel: 1,
         author: 'Emily Davis <emily.davis@example.com>',
         project: 'banana-papers',
+        index: 'banana-papers',
         id: '6',
         routerParams: { index: 'banana-papers', id: '6' },
         creationDate: new Date(),
@@ -220,6 +206,7 @@ export default {
         extractionLevel: 2,
         author: 'Dr. Alan Turing <alan.turing@example.com>',
         project: 'banana-papers',
+        index: 'banana-papers',
         id: '7',
         routerParams: { index: 'banana-papers', id: '7' },
         creationDate: new Date(),
@@ -242,6 +229,7 @@ export default {
         extractionLevel: 1,
         author: 'Marketing Team <marketing@example.com>',
         project: 'banana-papers',
+        index: 'banana-papers',
         id: '8',
         routerParams: { index: 'banana-papers', id: '8' },
         creationDate: new Date(),
@@ -261,6 +249,7 @@ export default {
         extractionLevel: 0,
         author: 'Sales Department <sales@example.com>',
         project: 'banana-papers',
+        index: 'banana-papers',
         id: '9',
         routerParams: { index: 'banana-papers', id: '9' },
         creationDate: new Date(),
@@ -283,6 +272,7 @@ export default {
         extractionLevel: 2,
         author: 'Procurement Team <procurement@example.com>',
         project: 'banana-papers',
+        index: 'banana-papers',
         id: '10',
         routerParams: { index: 'banana-papers', id: '10' },
         creationDate: new Date(),
@@ -305,6 +295,7 @@ export default {
         extractionLevel: 2,
         author: 'Legal Department <legal@example.com>',
         project: 'banana-papers',
+        index: 'banana-papers',
         id: '11',
         routerParams: { index: 'banana-papers', id: '11' },
         creationDate: new Date(),
@@ -327,6 +318,7 @@ export default {
         extractionLevel: 1,
         author: 'Training Department <training@example.com>',
         project: 'banana-papers',
+        index: 'banana-papers',
         id: '12',
         routerParams: { index: 'banana-papers', id: '12' },
         creationDate: new Date(),

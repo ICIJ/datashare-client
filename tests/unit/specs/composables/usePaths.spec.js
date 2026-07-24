@@ -173,4 +173,48 @@ describe('usePath', () => {
       expect(selected.value).toEqual(['/b/'])
     })
   })
+
+  describe('getAncestorPaths', () => {
+    it('returns all intermediate paths between base and target', () => {
+      const { getAncestorPaths } = usePath(ref([]))
+      const result = getAncestorPaths('/home/dev/Datashare/Mail/arnold-j/inbox', '/home/dev/Datashare')
+      expect(result).toEqual([
+        '/home/dev/Datashare/Mail',
+        '/home/dev/Datashare/Mail/arnold-j',
+        '/home/dev/Datashare/Mail/arnold-j/inbox'
+      ])
+    })
+
+    it('handles trailing separators on target path', () => {
+      const { getAncestorPaths } = usePath(ref([]))
+      const result = getAncestorPaths('/home/dev/Datashare/Mail/', '/home/dev/Datashare')
+      expect(result).toEqual(['/home/dev/Datashare/Mail'])
+    })
+
+    it('handles trailing separators on base path', () => {
+      const { getAncestorPaths } = usePath(ref([]))
+      const result = getAncestorPaths('/home/dev/Datashare/Mail', '/home/dev/Datashare/')
+      expect(result).toEqual(['/home/dev/Datashare/Mail'])
+    })
+
+    it('returns empty array when target does not start with base', () => {
+      const { getAncestorPaths } = usePath(ref([]))
+      expect(getAncestorPaths('/other/path', '/home/dev')).toEqual([])
+    })
+
+    it('returns empty array when target equals base', () => {
+      const { getAncestorPaths } = usePath(ref([]))
+      expect(getAncestorPaths('/home/dev', '/home/dev')).toEqual([])
+    })
+
+    it('works with Windows-style paths', () => {
+      useConfig().set('pathSeparator', '\\')
+      const { getAncestorPaths } = usePath(ref([]))
+      const result = getAncestorPaths('C:\\Users\\dev\\Data\\sub', 'C:\\Users\\dev')
+      expect(result).toEqual([
+        'C:\\Users\\dev\\Data',
+        'C:\\Users\\dev\\Data\\sub'
+      ])
+    })
+  })
 })

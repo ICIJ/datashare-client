@@ -276,7 +276,7 @@ const hasChildren = computed(() => !!slots.default)
   --path-tree-view-entry-cursor: default;
   --path-tree-view-entry-margin-top: 1px;
   --path-tree-view-entry-header-height: 3.5rem;
-  --path-tree-view-entry-header-line-height: 1;
+  --path-tree-view-entry-header-line-height: 1.2rem;
   --path-tree-view-entry-header-padding: #{$spacer-sm} #{$spacer};
   --path-tree-view-entry-header-bg: transparent;
   --path-tree-view-entry-header-color: inherit;

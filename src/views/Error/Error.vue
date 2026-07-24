@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 import { useI18n } from 'vue-i18n'
 
 import { Api } from '@/api'
@@ -120,7 +120,6 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
             <li class="list-inline-item error__container__links__item error__container__links__item--logout">
               <a
                 :href="logoutLink"
-                target="_blank"
               >
                 <app-icon class="error__container__links__item__icon me-1">
                   <i-ph-sign-out-duotone />

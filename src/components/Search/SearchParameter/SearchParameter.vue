@@ -40,6 +40,9 @@ const props = defineProps({
   size: {
     type: String
   },
+  operator: {
+    type: String
+  },
   noIcon: {
     type: Boolean
   },
@@ -59,7 +62,7 @@ const componentProps = computed(() => {
 const filterComponentProps = computed(() => {
   return {
     name: props.filter,
-    ...pick(props, ['value', 'icon', 'color', 'counter', 'counterVariant', 'counterStyle', 'noIcon', 'noXIcon', 'size'])
+    ...pick(props, ['value', 'icon', 'color', 'counter', 'counterVariant', 'counterStyle', 'noIcon', 'noXIcon', 'operator', 'size'])
   }
 })
 

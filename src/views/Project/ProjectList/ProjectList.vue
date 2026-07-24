@@ -80,12 +80,12 @@ const extendedProjects = computed(() => {
   return core.projects.map(({ name, ...project }) => {
     const documentsCount = documentsCountByProject.value?.[name] ?? 0
     const updateDate = new Date(maxExtractionDateByProject.value?.[name] ?? project.updateDate ?? project.creationDate)
-    return { ...project, name, [DOCUMENTS_COUNT_FIELD]: documentsCount, [MAX_EXTRACTION_DATE_FIELD]: updateDate }
+    return { ...project, name, documentsCount, updateDate }
   })
 })
 
 const fuse = computed(() => {
-  const keys = ['name', 'label']
+  const keys = ['name', 'label', 'description']
   const options = { shouldSort: false, threshold: 0.1, keys }
   return new Fuse(extendedProjects.value, options)
 })

@@ -101,17 +101,17 @@ const props3 = {
     {
       value: 'grid',
       text: 'Grid',
-      icon: 'image-square'
+      icon: markRaw(IPhImageSquare)
     },
     {
       value: 'list',
       text: 'List',
-      icon: 'tree-structure'
+      icon: markRaw(IPhTreeStructure)
     },
     {
       value: 'table',
       text: 'Table',
-      icon: 'calendar-blank'
+      icon: markRaw(IPhCalendarBlank)
     }
   ]
 }
@@ -125,22 +125,22 @@ const props4 = {
     {
       value: 'thumbnail',
       text: 'Thumbnail',
-      icon: 'image-square'
+      icon: markRaw(IPhImageSquare)
     },
     {
       value: 'path',
       text: 'Path',
-      icon: 'tree-structure'
+      icon: markRaw(IPhTreeStructure)
     },
     {
       value: 'creation-date',
       text: 'Creation date',
-      icon: 'calendar-blank'
+      icon: markRaw(IPhCalendarBlank)
     },
     {
       value: 'highlight',
       text: 'Highlight',
-      icon: 'quotes'
+      icon: markRaw(IPhQuotes)
     }
   ]
 }

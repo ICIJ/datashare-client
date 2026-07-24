@@ -31,7 +31,7 @@ describe('TaskEntitiesForm.vue', () => {
 
   it('should display selected project "local-datashare" by default', async () => {
     const wrapper = mount(TaskEntitiesForm, { global: { plugins } })
-    expect(wrapper.find('.search-bar__field--selected').text()).toBe('local-datashare')
+    expect(wrapper.find('.project-dropdown-selector .dropdown-toggle').text()).toBe('local-datashare')
   })
 
   it('reactively updates content when project changes', async () => {
@@ -42,10 +42,10 @@ describe('TaskEntitiesForm.vue', () => {
       }
     })
 
-    expect(wrapper.find('.search-bar__field--selected').text()).toBe('banana-papers')
+    expect(wrapper.find('.project-dropdown-selector .dropdown-toggle').text()).toBe('banana-papers')
     await wrapper.setProps({ project: 'local-datashare' })
     await flushPromises()
-    expect(wrapper.find('.search-bar__field--selected').text()).toBe('local-datashare')
+    expect(wrapper.find('.project-dropdown-selector .dropdown-toggle').text()).toBe('local-datashare')
   })
 
   it('should load NER pipelines on component mounted', async () => {

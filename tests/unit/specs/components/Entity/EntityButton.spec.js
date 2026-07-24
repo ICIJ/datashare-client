@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
-import { ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur'
 
 import EntityButton from '@/components/Entity/EntityButton'
 import EntityOccurrences from '@/components/Entity/EntityOccurrences'

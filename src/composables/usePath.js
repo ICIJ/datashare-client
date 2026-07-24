@@ -122,6 +122,30 @@ export function usePath(selectedPathsRef, { multiple = false } = {}) {
     }
   }
 
+  /**
+   * Returns all ancestor directory paths between a base path and a target path.
+   * Useful for pre-opening tree nodes to reveal a deeply nested selected path.
+   *
+   * @param {string} targetPath - The full path to compute ancestors for.
+   * @param {string} basePath - The root path of the tree.
+   * @returns {string[]} Array of ancestor paths (without trailing separator), from shallowest to deepest.
+   */
+  function getAncestorPaths(targetPath, basePath) {
+    const sep = pathSeparator.value
+    const trimmedTarget = trimDirectory(targetPath)
+    const trimmedBase = trimDirectory(basePath)
+    if (!trimmedTarget.startsWith(trimmedBase)) return []
+    const relative = trimmedTarget.slice(trimmedBase.length)
+    const segments = relative.split(sep).filter(Boolean)
+    const ancestors = []
+    let current = trimmedBase
+    for (const segment of segments) {
+      current = current + sep + segment
+      ancestors.push(current)
+    }
+    return ancestors
+  }
+
   return {
     pathSeparator,
     getBasename,
@@ -132,6 +156,7 @@ export function usePath(selectedPathsRef, { multiple = false } = {}) {
     selectPath,
     unselectPath,
     togglePath,
+    getAncestorPaths,
     selectedPaths,
   }
 }

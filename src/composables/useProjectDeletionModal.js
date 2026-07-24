@@ -1,26 +1,21 @@
-import { toValue } from 'vue'
-import { useModalController } from 'bootstrap-vue-next'
+import { h, toValue } from 'vue'
+import { useModal } from 'bootstrap-vue-next'
 
 import ProjectDeletionModal from '@/components/Project/ProjectDeletionModal'
 
 export function useProjectDeletionModal(project) {
-  const modalController = useModalController()
+  const { create, hide } = useModal()
 
   function show() {
     return new Promise((resolve) => {
-      modalController.create({
-        component: ProjectDeletionModal,
-        modelValue: true,
-        project: toValue(project),
+      const component = h(ProjectDeletionModal, {
         onOk: resolve,
         onClose: resolve,
         onCancel: resolve
       })
-    })
-  }
 
-  function hide() {
-    return modalController.hide()
+      create({ component, modelValue: true, project: toValue(project) }).show()
+    })
   }
 
   return { show, hide }

@@ -7,7 +7,6 @@ import IPhTextAa from '~icons/ph/text-aa'
 import IPhTextAlignLeft from '~icons/ph/text-align-left'
 import IPhFolderOpen from '~icons/ph/folder-open'
 import IPhImage from '~icons/ph/image'
-import IPhUserSquare from '~icons/ph/user-square'
 import IPhLink from '~icons/ph/link'
 
 import FormCreation from '@/components/Form/FormCreation'
@@ -15,6 +14,7 @@ import FormControlPath from '@/components/Form/FormControl/FormControlPath'
 import FormFieldset from '@/components/Form/FormFieldset/FormFieldset'
 import { isUrl, slugger } from '@/utils/strings'
 import { useCore } from '@/composables/useCore'
+import { ROLE_ICON_DEFAULT } from '@/enums/roles.js'
 
 const props = defineProps({
   disabled: {
@@ -186,7 +186,7 @@ const submitLabel = computed(() => t('projectForm.submit'))
       </form-fieldset>
       <form-fieldset
         class="project-form__group project-form__group--maintainer-name"
-        :icon="IPhUserSquare"
+        :icon="ROLE_ICON_DEFAULT"
         :label="t('projectForm.form.maintainerName.label')"
         :disabled="disabled"
         :validated="isPresent(form.maintainerName)"
@@ -200,7 +200,7 @@ const submitLabel = computed(() => t('projectForm.submit'))
       </form-fieldset>
       <form-fieldset
         class="project-form__group project-form__group--publisher-name"
-        :icon="IPhUserSquare"
+        :icon="ROLE_ICON_DEFAULT"
         :label="t('projectForm.form.publisherName.label')"
         :disabled="disabled"
         :validated="isPresent(form.publisherName)"

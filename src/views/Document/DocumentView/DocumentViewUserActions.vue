@@ -1,10 +1,13 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
+import { uniqBy } from 'lodash'
+import { useI18n } from 'vue-i18n'
 
 import { useAuth } from '@/composables/useAuth'
 import { useMode } from '@/composables/useMode'
 import { useElementObserver } from '@/composables/useElementObserver'
 import { useElasticSearchQuery } from '@/composables/useElasticSearchQuery'
+import { useToast } from '@/composables/useToast'
 import { useDocument } from '@/composables/useDocument'
 import { DOCUMENT_USER_ACTIONS } from '@/enums/documentUserActions'
 import DocumentUserActions from '@/components/Document/DocumentUser/DocumentUserActions/DocumentUserActions'
@@ -23,6 +26,8 @@ defineProps({
 const recommendedStore = useRecommendedStore()
 const documentStore = useDocumentStore()
 const { document, documentViewFloatingSelector } = useDocument()
+const { t } = useI18n()
+const { toastedPromise } = useToast()
 const { username } = useAuth()
 const { isServer } = useMode()
 const { waitForElementCreated } = useElementObserver()
@@ -56,8 +61,18 @@ const deleteTag = (label) => {
   return documentStore.deleteTag({ documents: [document.value], label })
 }
 
-const addTags = (labels) => {
-  return documentStore.addTags({ documents: [document.value], labels })
+const addTags = async (labels) => {
+  try {
+    await toastedPromise(documentStore.addTags({ documents: [document.value], labels }), {
+      errorMessage: t('documentUserTagsAction.addError')
+    })
+  }
+  catch {
+    return
+  }
+  // Keep the local tag suggestions in sync by appending only labels that are not already present.
+  const newLabels = labels.filter(l => !allTags.value.some(t => t.label.toLowerCase() === l.toLowerCase()))
+  allTags.value = [...allTags.value, ...newLabels.map(label => ({ label }))]
 }
 
 const { fetchAllTagsByIndex } = useElasticSearchQuery()
@@ -71,11 +86,21 @@ const waitForFloatingElement = async () => {
 
 watch(documentViewFloatingSelector, waitForFloatingElement, { immediate: true })
 
+// Merge two tag lists, keeping one entry per label case-insensitively and
+// preferring the first occurrence (the canonical Elasticsearch casing).
+const mergeTagsByLabel = (...tagLists) => {
+  return uniqBy(tagLists.flat(), ({ label }) => label.toLowerCase())
+}
+
+// Rebuild the suggestion list on document change: the freshly-fetched tags plus
+// any tags added this session that Elasticsearch has not indexed yet, so a tag
+// just created on another document stays available here.
 watch(() => document.value, async () => {
   if (document.value?.index) {
-    allTags.value = await fetchAllTagsByIndex(document.value.index)
+    const fetched = await fetchAllTagsByIndex(document.value.index)
+    allTags.value = mergeTagsByLabel(fetched, documentStore.sessionTags(document.value.index))
   }
-})
+}, { immediate: true })
 
 </script>
 

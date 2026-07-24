@@ -1,4 +1,4 @@
-import { get, isNull, join, omitBy, replace, toLower, trim } from 'lodash'
+import { get, isNull, join, omitBy, toLower, trim } from 'lodash'
 
 import settings from '@/utils/settings'
 
@@ -43,8 +43,8 @@ export class Api {
     return this.sendActionAsText(`/api/task/findNames/${pipeline}`, { method: Method.POST, data })
   }
 
-  stopPendingTasks({ name = null, ...filters } = {}) {
-    const params = { ...filters, name }
+  stopPendingTasks({ type = null, ...filters } = {}) {
+    const params = { ...filters, type }
     return this.sendAction('/api/task/stop', { method: Method.PUT, params })
   }
 
@@ -56,18 +56,25 @@ export class Api {
     return this.sendAction(`/api/task/clean/${encodeURIComponent(name)}`, { method: Method.DELETE })
   }
 
-  removeDoneTasks({ name = null, ...filters } = {}) {
-    const params = { ...filters, name }
+  removeDoneTasks({ type = null, ...filters } = {}) {
+    const params = { ...filters, type }
     return this.sendAction('/api/task/clean', { method: Method.POST, params })
   }
 
-  getTasks({ name = null, from = 0, size = 10, order = 'asc', sort, ...filters } = {}) {
-    const params = { ...filters, name, from, size, order, sort }
+  getTasks({ type = null, from = 0, size = 10, order = 'asc', sort, ...filters } = {}) {
+    const params = { ...filters, type, from, size, order, sort }
     return this.sendAction('/api/task', { params })
   }
 
   getTask(id) {
     return this.sendAction(`/api/task/${id}`)
+  }
+
+  getContentTypeCategories(contentTypes) {
+    return this.sendAction('/api/contentType/categories', {
+      method: Method.POST,
+      data: contentTypes,
+    })
   }
 
   createIndex(index) {
@@ -95,6 +102,48 @@ export class Api {
     return this.sendAction(`/api/project/${project}`)
   }
 
+  getUsers({ domain = 'default', index = null, q = null, sort = null, desc = null, from = 0, size = 10, noRole = true } = {}) {
+    const params = omitBy({ domain, index, q, sort, desc, from, size, noRole }, isNull)
+    return this.sendAction('/api/users', { method: Method.GET, params })
+  }
+
+  grantUserRole(uid, project, role) {
+    return this.sendActionAsText(
+      `/api/users/${encodeURIComponent(uid)}/index/${encodeURIComponent(project)}?role=${encodeURIComponent(role)}`,
+      { method: Method.PUT }
+    )
+  }
+
+  revokeUserRole(uid, project, { ifExists = false } = {}) {
+    const params = { ifExists }
+    return this.sendActionAsText(`/api/users/${encodeURIComponent(uid)}/index/${encodeURIComponent(project)}`, {
+      method: Method.DELETE,
+      params
+    })
+  }
+
+  createUser({ uid, email, name, provider, password, domain, index } = {}) {
+    const data = { login: uid, email, name, provider, password, domain, index }
+    return this.sendAction('/api/users', { method: Method.POST, data })
+  }
+
+  deleteUser(uid, { domain, index } = {}) {
+    const data = { domain, index }
+    return this.sendActionAsText(`/api/users/${encodeURIComponent(uid)}`, { method: Method.DELETE, data })
+  }
+
+  getPathBanners(project) {
+    return this.sendAction(`/api/${project}/pathBanners`)
+  }
+
+  savePathBanner(project, path, data) {
+    return this.sendAction(`/api/${project}/pathBanners${path}`, { method: Method.PUT, data })
+  }
+
+  deletePathBanner(project, path) {
+    return this.sendActionAsText(`/api/${project}/pathBanners${path}`, { method: Method.DELETE })
+  }
+
   getVersion() {
     return this.sendAction('/version')
   }
@@ -104,7 +153,7 @@ export class Api {
   }
 
   setSettings(settings) {
-    const headers = { 'Content-Type': 'application/json' }
+    const headers = { 'Content-Type': 'application/json; charset=utf-8' }
     const responseType = 'text'
     return this.sendAction('/api/settings', { method: 'PATCH', data: { data: settings }, headers, responseType })
   }
@@ -260,8 +309,8 @@ export class Api {
     return this.sendActionAsText('/api/batch/search', { method: Method.DELETE })
   }
 
-  updateBatchSearch(batchId, published) {
-    const data = { published }
+  updateBatchSearch(batchId, { name, description, published }) {
+    const data = { name, description, published }
     return this.sendAction(`/api/batch/search/${batchId}`, { method: 'PATCH', data: { data } })
   }
 
@@ -275,12 +324,19 @@ export class Api {
     return this.sendActionAsText(`/api/project/isDownloadAllowed/${project}`)
   }
 
-  retrieveNotes(project) {
-    return this.sendAction(replace(`/api/${project}/notes`, '//', '/'))
+  login(username, password) {
+    return this.sendAction('/auth/login', {
+      method: Method.POST,
+      data: { username, password }
+    })
   }
 
   getUser() {
     return this.sendAction('/api/users/me')
+  }
+
+  getUserPermissions() {
+    return this.sendAction('/api/users/me/permissions')
   }
 
   getHistoryEvents(type, from, size, sort, desc, projects) {
@@ -394,6 +450,81 @@ export class Api {
 
   getMappingsByFields(projectIds, fields) {
     return this.sendActionAsText(`/api/index/search/${projectIds}/_mapping/field/${fields}`, { method: Method.GET })
+  }
+
+  // Elasticsearch info endpoint
+  getElasticsearchInfo() {
+    return this.sendAction('/api/index')
+  }
+
+  // Snapshot Repository endpoints
+  getSnapshotRepositories() {
+    return this.sendAction('/api/index/_snapshot')
+  }
+
+  getSnapshotRepository(repository) {
+    return this.sendAction(`/api/index/_snapshot/${encodeURIComponent(repository)}`)
+  }
+
+  createSnapshotRepository(repository, config = {}) {
+    return this.sendAction(`/api/index/_snapshot/${encodeURIComponent(repository)}`, {
+      method: Method.PUT,
+      data: config
+    })
+  }
+
+  deleteSnapshotRepository(repository) {
+    return this.sendAction(`/api/index/_snapshot/${encodeURIComponent(repository)}`, {
+      method: Method.DELETE
+    })
+  }
+
+  // Snapshot endpoints
+  getSnapshots(repository) {
+    return this.sendAction(`/api/index/_snapshot/${encodeURIComponent(repository)}/_all`)
+  }
+
+  createSnapshot(repository, snapshot, options = {}) {
+    const params = options.waitForCompletion ? { wait_for_completion: true } : {}
+    return this.sendAction(`/api/index/_snapshot/${encodeURIComponent(repository)}/${encodeURIComponent(snapshot)}`, {
+      method: Method.PUT,
+      params,
+      data: options.body || {}
+    })
+  }
+
+  deleteSnapshot(repository, snapshot) {
+    return this.sendAction(`/api/index/_snapshot/${encodeURIComponent(repository)}/${encodeURIComponent(snapshot)}`, {
+      method: Method.DELETE
+    })
+  }
+
+  restoreSnapshot(repository, snapshot, options = {}) {
+    const params = options.waitForCompletion ? { wait_for_completion: true } : {}
+    return this.sendAction(`/api/index/_snapshot/${encodeURIComponent(repository)}/${encodeURIComponent(snapshot)}/_restore`, {
+      method: Method.POST,
+      params,
+      data: options.body || {}
+    })
+  }
+
+  // Index management endpoints
+  closeIndex(index) {
+    return this.sendAction(`/api/index/${encodeURIComponent(index)}/_close`, {
+      method: Method.POST,
+      params: { ignore_unavailable: true }
+    })
+  }
+
+  openIndex(index) {
+    return this.sendAction(`/api/index/${encodeURIComponent(index)}/_open`, {
+      method: Method.POST,
+      params: { ignore_unavailable: true }
+    })
+  }
+
+  getClusterNodesSettings() {
+    return this.sendAction('/api/index/_nodes/settings')
   }
 
   async sendAction(url, config = {}) {

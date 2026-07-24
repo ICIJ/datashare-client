@@ -1,4 +1,4 @@
-import Murmur from '@icij/murmur-next'
+import { config } from '@icij/murmur'
 
 import { Core } from '@/core'
 import { apiInstance as api } from '@/api/apiInstance'
@@ -9,6 +9,7 @@ vi.mock('@/api/apiInstance', () => {
       createProject: vi.fn(),
       isDownloadAllowed: vi.fn(),
       getUser: vi.fn(),
+      getUserPermissions: vi.fn(),
       getSettings: vi.fn(),
       getProject: vi.fn()
     }
@@ -68,7 +69,7 @@ describe('Core', () => {
     })
 
     it('should expose the config from Murmur', () => {
-      expect(core.config).toBe(Murmur.config)
+      expect(core.config).toBe(config)
     })
 
     it('should mount the app on a specific element', () => {
@@ -100,6 +101,22 @@ describe('Core', () => {
       // For `ready` to be resolved, the core must configure
       await core.configure()
       await expect(core.ready).resolves.toBe(core)
+    })
+
+    it('should set policies in config from getUserPermissions after loadUser', async () => {
+      api.getUser.mockResolvedValueOnce({})
+      api.getUserPermissions.mockResolvedValueOnce([
+        { ptype: 'g', v0: 'user1', v1: 'PROJECT_ADMIN', v2: 'local::citrus-confidential', v3: '', v4: '', v5: '' },
+        { ptype: 'g', v0: 'user1', v1: 'PROJECT_MEMBER', v2: 'local::banana-papers', v3: '', v4: '', v5: '' },
+        { ptype: 'g', v0: 'user1', v1: 'INSTANCE_ADMIN', v2: '*::*', v3: '', v4: '', v5: '' },
+        { ptype: 'p', v0: 'user1', v1: 'read', v2: 'local::citrus-confidential', v3: '', v4: '', v5: '' }
+      ])
+      await core.loadUser()
+      expect(core.config.get('policies')).toEqual([
+        { domainId: 'local', projectId: 'citrus-confidential', role: 'PROJECT_ADMIN' },
+        { domainId: 'local', projectId: 'banana-papers', role: 'PROJECT_MEMBER' },
+        { domainId: '*', projectId: '*', role: 'INSTANCE_ADMIN' }
+      ])
     })
 
     it('should return empty string if user has no projects', () => {

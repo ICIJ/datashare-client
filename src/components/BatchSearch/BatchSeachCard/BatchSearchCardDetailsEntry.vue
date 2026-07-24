@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { AppIcon } from '@icij/murmur-next'
+import { AppIcon } from '@icij/murmur'
 
 defineOptions({ name: 'BatchSearchCardDetailsEntry' })
 
@@ -36,6 +36,7 @@ const classList = computed(() => {
     <div class="d-flex flex-nowrap align-items-start gap-2">
       <app-icon
         v-if="icon"
+        size="1.25em"
         :name="icon"
         class="batch-search-card-details-entry__icon text-secondary-emphasis flex-shrink-0"
       />

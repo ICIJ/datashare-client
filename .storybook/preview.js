@@ -3,47 +3,26 @@ import { setup } from '@storybook/vue3-vite'
 import { useArgs } from 'storybook/preview-api'
 import { styled } from 'storybook/theming'
 import { withThemeByDataAttribute } from '@storybook/addon-themes'
-import { createBootstrap } from 'bootstrap-vue-next'
-import { createI18n } from 'vue-i18n'
-import Vue3Toastify from 'vue3-toastify'
+import { installCore } from './decorators/core'
+import { initialize, mswLoader } from 'msw-storybook-addon'
 
-import messages from '@/lang/en'
-import settings from '@/utils/settings'
+import { defaultHandlers } from './msw/handlers'
+
 import AutodocsTemplate from '~storybook/templates/AutodocsTemplate.mdx'
 
 import './preview.scss'
 
+// Register the worker. We omit `onUnhandledRequest` so msw-storybook-addon's
+// smart filter applies: it lets static assets / HMR through silently but warns
+// on genuinely unhandled `/api` requests (a missing handler we should add).
+// The baseline handlers live in `parameters.msw.handlers` below — the single
+// source of truth applied to every story — so they are NOT also passed here.
+initialize({
+  serviceWorker: { url: `${import.meta.env.BASE_URL || '/'}mockServiceWorker.js` }
+})
+
 setup((app) => {
-  const bootstrap = createBootstrap({
-    directives: true,
-    components: {
-      BPopover: {
-        offset: '16px'
-      },
-      BTooltip: {
-        offset: '6px',
-        delay: {
-          show: 500,
-          hide: 0
-        }
-      }
-    }
-  })
-  const i18n = createI18n({
-    warnHtmlInMessage: 'off',
-    warnHtmlMessage: 'off',
-    globalInjection: true,
-    allowComposition: true,
-    legacy: true,
-    locale: settings.defaultLocale,
-    fallbackLocale: settings.defaultLocale,
-    messages: {
-      [settings.defaultLocale]: messages
-    }
-  })
-  app.use(bootstrap)
-  app.use(i18n)
-  app.use(Vue3Toastify)
+  installCore(app)
 })
 
 const decorators = [
@@ -103,7 +82,9 @@ const aStyle = {
 
 const preview = {
   decorators,
+  loaders: [mswLoader],
   parameters: {
+    msw: { handlers: defaultHandlers },
     docs: {
       page: AutodocsTemplate,
       components: {

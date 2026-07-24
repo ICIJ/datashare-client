@@ -1,5 +1,5 @@
 import { vueRouter } from 'storybook-vue3-router'
-import { ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur'
 
 import IPhDownloadSimple from '~icons/ph/download-simple'
 import IPhPlus from '~icons/ph/plus'
@@ -16,14 +16,14 @@ const routes = [
         path: '/tasks',
         name: 'tasks',
         meta: {
-          icon: 'rocket-launch'
+          icon: markRaw(IPhRocketLaunch)
         },
         children: [
           {
             path: '/tasks/batch-searches',
             name: 'tasks.batch-searches',
             meta: {
-              icon: 'list-magnifying-glass'
+              icon: markRaw(IPhListMagnifyingGlass)
             },
             children: [
               {

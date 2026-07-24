@@ -1,0 +1,11 @@
+{
+  "aggregates": [
+    {
+      "item": {
+        "id": "local"
+      },
+      "count": 3
+    }
+  ],
+  "totalCount": 3
+}

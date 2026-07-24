@@ -16,7 +16,6 @@ import IPhPaperclip from '~icons/ph/paperclip'
 import IPhGlobeHemisphereWest from '~icons/ph/globe-hemisphere-west'
 import IPhCirclesThreePlus from '~icons/ph/circles-three-plus'
 import IPhFiles from '~icons/ph/files'
-
 import { useViewProperties } from '@/composables/useViewProperties'
 import { SORT_TYPE_KEY, useViewSettings } from '@/composables/useViewSettings'
 

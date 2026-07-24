@@ -485,7 +485,7 @@
     }
   },
   "message/rfc822": {
-    "label": "Internet Message Format (email)",
+    "label": "Internet Message Format",
     "extensions": [
       ".eml"
     ],
@@ -552,6 +552,30 @@
     },
     "preview": "yes",
     "model": "PlainText"
+  },
+  "text/x-web-markdown": {
+    "label": "Markdown document",
+    "icon": "text",
+    "extensions": [
+      ".md",
+      ".markdown"
+    ],
+    "description": {
+      "en": "A lightweight markup document. Rendered as formatted text in Datashare."
+    },
+    "preview": "yes"
+  },
+  "text/markdown": {
+    "label": "Markdown document",
+    "icon": "text",
+    "extensions": [
+      ".md",
+      ".markdown"
+    ],
+    "description": {
+      "en": "A lightweight markup document. Rendered as formatted text in Datashare."
+    },
+    "preview": "yes"
   },
   "text/csv": {
     "label": "CSV file",
@@ -1283,6 +1307,13 @@
     },
     "model": "Email"
   },
+  "application/x-tika-pst-mail-item": {
+    "label": "Outlook mailbox email",
+    "description": {
+      "en": "An individual email extracted from an Outlook mailbox archive (PST or OST)."
+    },
+    "model": "Email"
+  },
   "application/mbox": {
     "label": "Mbox database",
     "description": {
@@ -1350,5 +1381,340 @@
     "extensions": [
       ".pdb"
     ]
+  },
+  "text/x-actionscript": {
+    "label": "ActionScript source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-ada": {
+    "label": "Ada source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-applescript": {
+    "label": "AppleScript source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-asciidoc": {
+    "label": "AsciiDoc document",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-aspectj": {
+    "label": "AspectJ source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-assembly": {
+    "label": "Assembly source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-awk": {
+    "label": "AWK script",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-basic": {
+    "label": "BASIC source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-cgi": {
+    "label": "CGI script",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-c++hdr": {
+    "label": "C++ header",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-chdr": {
+    "label": "C header",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-clojure": {
+    "label": "Clojure source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-cobol": {
+    "label": "COBOL source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-coffeescript": {
+    "label": "CoffeeScript source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-coldfusion": {
+    "label": "ColdFusion source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-common-lisp": {
+    "label": "Common Lisp source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-config": {
+    "label": "Configuration file",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-csharp": {
+    "label": "C# source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-c++src": {
+    "label": "C++ source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-csrc": {
+    "label": "C source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-d": {
+    "label": "D source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-diff": {
+    "label": "Diff / patch file",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-eiffel": {
+    "label": "Eiffel source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-emacs-lisp": {
+    "label": "Emacs Lisp source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-erlang": {
+    "label": "Erlang source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-expect": {
+    "label": "Expect script",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-forth": {
+    "label": "Forth source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-fortran": {
+    "label": "Fortran source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-go": {
+    "label": "Go source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-groovy": {
+    "label": "Groovy source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-haml": {
+    "label": "Haml template",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-haskell": {
+    "label": "Haskell source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-haxe": {
+    "label": "Haxe source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-idl": {
+    "label": "IDL source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-java-properties": {
+    "label": "Java properties file",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-java-source": {
+    "label": "Java source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-less": {
+    "label": "Less stylesheet",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-lex": {
+    "label": "Lex source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-lua": {
+    "label": "Lua source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-makefile": {
+    "label": "Makefile",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-matlab": {
+    "label": "MATLAB source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-ml": {
+    "label": "ML source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-modula": {
+    "label": "Modula source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-objcsrc": {
+    "label": "Objective-C source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-ocaml": {
+    "label": "OCaml source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-pascal": {
+    "label": "Pascal source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-perl": {
+    "label": "Perl script",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-prolog": {
+    "label": "Prolog source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-python": {
+    "label": "Python source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-rexx": {
+    "label": "REXX source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-robots": {
+    "label": "robots.txt file",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-rsrc": {
+    "label": "R source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-rst": {
+    "label": "reStructuredText document",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-ruby": {
+    "label": "Ruby source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-scala": {
+    "label": "Scala source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-scheme": {
+    "label": "Scheme source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-sed": {
+    "label": "sed script",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-setext": {
+    "label": "Setext document",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-stsrc": {
+    "label": "Smalltalk source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-tcl": {
+    "label": "Tcl script",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-tika-text-based-message": {
+    "label": "Text-based message",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-uuencode": {
+    "label": "uuencoded file",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-vcalendar": {
+    "label": "vCalendar file",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-verilog": {
+    "label": "Verilog source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-vhdl": {
+    "label": "VHDL source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-yacc": {
+    "label": "Yacc source",
+    "icon": "code",
+    "model": "PlainText"
+  },
+  "text/x-yaml": {
+    "label": "YAML document",
+    "icon": "code",
+    "model": "PlainText"
   }
 }

@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
-import { ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur'
 import IPhGear from '~icons/ph/gear'
 import IPhQuestion from '~icons/ph/question'
 import IPhTrash from '~icons/ph/trash'

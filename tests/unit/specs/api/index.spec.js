@@ -136,8 +136,16 @@ describe('Datashare backend client', () => {
     expect(json).toEqual({})
   })
 
-  it('should return backend response to getTasks', async () => {
-    json = await api.getTasks()
+  it('should call getTasks with a type param and no name param', async () => {
+    json = await api.getTasks({ type: 'SCAN|INDEX', from: 0, size: 10 })
+    expect(axios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/task'),
+        params: expect.objectContaining({ type: 'SCAN|INDEX' })
+      })
+    )
+    const params = axios.request.mock.calls[0][0].params
+    expect(params).not.toHaveProperty('name')
     expect(json).toEqual({})
   })
 
@@ -482,5 +490,81 @@ describe('Datashare backend client', () => {
 
     expect(mockCallback.mock.calls).toHaveLength(1)
     expect(mockCallback.mock.calls[0][0]).toEqual(error)
+  })
+
+  it('should call getUserPermissions', async () => {
+    json = await api.getUserPermissions()
+    expect(json).toEqual({})
+    expect(axios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/users/me/permissions')
+      })
+    )
+  })
+
+  describe('getUsers', () => {
+    it('sends the search text as "q" and the project as "index"', async () => {
+      await api.getUsers({ index: 'my-project', q: 'alice' })
+      expect(axios.request).toBeCalledWith(
+        expect.objectContaining({
+          url: Api.getFullUrl('/api/users'),
+          method: 'GET',
+          params: expect.objectContaining({ q: 'alice', index: 'my-project' })
+        })
+      )
+      expect(axios.request.mock.calls[0][0].params).not.toHaveProperty('user')
+      expect(axios.request.mock.calls[0][0].params).not.toHaveProperty('project')
+    })
+  })
+
+  describe('project policies', () => {
+    it('should call revokeUserRole with userId (uid), project and ifExists', async () => {
+      await api.revokeUserRole('alice', 'my-project', { ifExists: true })
+      expect(axios.request).toBeCalledWith(
+        expect.objectContaining({
+          url: Api.getFullUrl('/api/users/alice/index/my-project'),
+          method: 'DELETE',
+          params: expect.objectContaining({ ifExists: true })
+        })
+      )
+    })
+  })
+
+  it('should call grantUserRole with userId (uid), project and role', async () => {
+    await api.grantUserRole('alice', 'my-project', 'PROJECT_ADMIN')
+    expect(axios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/users/alice/index/my-project?role=PROJECT_ADMIN'),
+        method: 'PUT',
+      })
+    )
+  })
+
+  it('should call createUser with data and project index', async () => {
+    const userData = {
+      uid: 'jdoe',
+      email: 'jdoe@example.com',
+      name: 'John Doe',
+      password: 'secret-password',
+      provider: 'local',
+      domain: 'default',
+      index: 'my-project'
+    }
+    await api.createUser({ ...userData, index: 'my-project' })
+    expect(axios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/users'),
+        method: 'POST',
+        data: expect.objectContaining({
+          login: 'jdoe',
+          email: 'jdoe@example.com',
+          name: 'John Doe',
+          password: 'secret-password',
+          provider: 'local',
+          domain: 'default',
+          index: 'my-project'
+        })
+      })
+    )
   })
 })

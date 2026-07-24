@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ButtonIcon } from '@icij/murmur-next'
+import { ButtonIcon } from '@icij/murmur'
 
 import IPhEyeglasses from '~icons/ph/eyeglasses'
 
@@ -20,6 +20,9 @@ const props = defineProps({
   compactBreakpoint: {
     type: String,
     default: 'md'
+  },
+  reduced: {
+    type: Boolean
   }
 })
 
@@ -36,7 +39,7 @@ const variant = computed(() => {
 const { breakpointDown } = useBreakpoints()
 
 const compact = computed(() => {
-  return breakpointDown.value[props.compactBreakpoint]
+  return props.reduced || breakpointDown.value[props.compactBreakpoint]
 })
 </script>
 

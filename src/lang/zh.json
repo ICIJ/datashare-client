@@ -4,6 +4,7 @@
     "yes": "是",
     "no": "否",
     "submit": "提交",
+    "save": "Save",
     "reset": "重置",
     "you": "{username}（您）",
     "building": "我们的团队仍在为这个页面精心打造一些精彩内容。敬请期待！"
@@ -216,6 +217,9 @@
   },
   "filtersPanelSectionFilterTitleToggler": {
     "toggle": "切换筛选"
+  },
+  "contentTypesCategoryName": {
+    "toggle": "Toggle the {category} category"
   },
   "filtersPanelSearch": {
     "placeholder": "搜索筛选"
@@ -500,6 +504,14 @@
   "filter": {
     "project": "Projects",
     "contentType": "File types",
+    "contentTypeCategory": "File type categories",
+    "fileTypes": {
+      "legacyIndex": {
+        "title": "Category grouping unavailable",
+        "description": "This project was indexed without file type categories.",
+        "descriptionPlural": "Some of these projects were indexed without file type categories."
+      }
+    },
     "language": "Languages",
     "namedEntityPerson": "People",
     "namedEntityLocation": "Locations",
@@ -1200,10 +1212,16 @@
         },
         "submit": "Create",
         "submitError": "Something went wrong, unable to run the batch search.",
-        "submitSuccess": "Batch search created successfully."
+        "submitSuccess": "Batch search created successfully.",
+        "editError": "Something went wrong, unable to update the batch search.",
+        "editSuccess": "Batch search updated successfully."
       },
       "new": {
         "title": "Create new batch search"
+      },
+      "edit": {
+        "title": "Edit batch search",
+        "breadcrumb": "Edit"
       }
     },
     "batch-search-queries": {
@@ -1288,11 +1306,6 @@
       "error": "Unable to relaunch the batch search"
     }
   },
-  "batchSearchActionsEditModal": {
-    "title": "Edit batch search",
-    "name": "Name",
-    "description": "Description"
-  },
   "batchSearchActionsRelaunchModal": {
     "title": "Relaunch batch search",
     "name": "Name",
@@ -1344,7 +1357,7 @@
     "updatedOn": "Updated on",
     "links": "Links",
     "actions": "Actions",
-    "userRoles": "Your role"
+    "userRole": "Your role"
   },
   "projectRowActions": {
     "edit": "Edit project",
@@ -1796,7 +1809,8 @@
     },
     "barometer": {
       "document": "no documents | 1 document | {total} documents",
-      "amongWhichOnDisk": "among which {n} on disk"
+      "amongWhichOnDisk": "among which {n} on disk",
+      "duplicate": "No duplicates were detected during indexation | {n} duplicate ignored during indexation | {n} duplicates ignored during indexation"
     },
     "diskUsage": {
       "details": "See disk usage"

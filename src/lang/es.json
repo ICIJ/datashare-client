@@ -4,6 +4,7 @@
     "yes": "Sí",
     "no": "No",
     "submit": "Guardar",
+    "save": "Guardar",
     "reset": "Reiniciar",
     "you": "{username} (tú)",
     "building": "Nuestro equipo todavía está fabricando algo impresionante para esta página. ¡Vuelve más tarde!"
@@ -216,6 +217,9 @@
   },
   "filtersPanelSectionFilterTitleToggler": {
     "toggle": "Conmutar filtro"
+  },
+  "contentTypesCategoryName": {
+    "toggle": "Toggle the {category} category"
   },
   "filtersPanelSearch": {
     "placeholder": "Filtros de búsqueda"
@@ -500,6 +504,14 @@
   "filter": {
     "project": "Proyectos",
     "contentType": "Tipo de archivo",
+    "contentTypeCategory": "Categorías de tipos de archivo",
+    "fileTypes": {
+      "legacyIndex": {
+        "title": "Category grouping unavailable",
+        "description": "This project was indexed without file type categories.",
+        "descriptionPlural": "Some of these projects were indexed without file type categories."
+      }
+    },
     "language": "Idiomas",
     "namedEntityPerson": "Persona",
     "namedEntityLocation": "Ubicaciones",
@@ -1151,7 +1163,7 @@
           "operators": "Al seleccionar 'hacer frases coincidentes' se evita el uso de operadores como <code>AND</code>, <code>OR</code>, <code>NOT</code>, <code>*</code>, <code>?</code>, <code>!</code>, <code>+</code>, <code>-</code> o expresiones regulares entre 2 barras en las consultas."
         },
         "sections": {
-          "general": "Nombre, proyecto(s) y descripción",
+          "general": "Detalles",
           "queries": "Consultas",
           "operators": "Buscar operadores",
           "filters": "Filtros"
@@ -1200,10 +1212,16 @@
         },
         "submit": "Crear",
         "submitError": "Algo salió mal, no se puede ejecutar la búsqueda por lotes.",
-        "submitSuccess": "Búsqueda por lote creada con éxito."
+        "submitSuccess": "Búsqueda por lote creada con éxito.",
+        "editError": "Algo salió mal, no se puede actualizar la búsqueda por lotes.",
+        "editSuccess": "Búsqueda por lote actualizada con éxito."
       },
       "new": {
         "title": "Crear nueva búsqueda por lotes"
+      },
+      "edit": {
+        "title": "Editar búsqueda por lotes",
+        "breadcrumb": "Editar"
       }
     },
     "batch-search-queries": {
@@ -1288,11 +1306,6 @@
       "error": "No se puede relanzar la búsqueda por lotes"
     }
   },
-  "batchSearchActionsEditModal": {
-    "title": "Editar búsqueda por lotes",
-    "name": "Nombre",
-    "description": "Descripción"
-  },
   "batchSearchActionsRelaunchModal": {
     "title": "Reiniciar la búsqueda masiva",
     "name": "Nombre",
@@ -1344,7 +1357,7 @@
     "updatedOn": "Actualizado el",
     "links": "Enlaces",
     "actions": "Acciones",
-    "userRoles": "Your role"
+    "userRole": "Your role"
   },
   "projectRowActions": {
     "edit": "Editar proyecto",
@@ -1796,7 +1809,8 @@
     },
     "barometer": {
       "document": "no hay archivos | 1 archivo | {total} archivos",
-      "amongWhichOnDisk": "de los cuales {n} en el disco"
+      "amongWhichOnDisk": "de los cuales {n} en el disco",
+      "duplicate": "No duplicates were detected during indexation | {n} duplicate ignored during indexation | {n} duplicates ignored during indexation"
     },
     "diskUsage": {
       "details": "Ver el uso del disco"

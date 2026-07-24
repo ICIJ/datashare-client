@@ -24,7 +24,7 @@ import DisplayDatetime from '@/components/Display/DisplayDatetime'
 import DisplayExtractionLevel from '@/components/Display/DisplayExtractionLevel'
 import DisplayLanguage from '@/components/Display/DisplayLanguage'
 import DisplayNumber from '@/components/Display/DisplayNumber'
-import DocumentNotes from '@/components/Document/DocumentNotes'
+import DocumentPathBanners from '@/components/Document/DocumentPathBanners'
 import DocumentMetadata from '@/components/Document/DocumentMetadata/DocumentMetadata'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 import ProjectLink from '@/components/Project/ProjectLink'
@@ -167,9 +167,13 @@ const metadataItems = computed(() => {
 
 const availableItems = computed(() => {
   // Merge canonical items with metadata items and only keep items with a value
-  return [...canonicalItems.value, ...metadataItems.value].filter(property('value')).map((item) => {
-    return { ...item, pinned: !!pinned.value[item.name] }
-  })
+  return [...canonicalItems.value, ...metadataItems.value]
+    .filter((item) => {
+      return property('value')(item) || item.name === 'extractionLevel'
+    })
+    .map((item) => {
+      return { ...item, pinned: !!pinned.value[item.name] }
+    })
 })
 
 const sortedItems = computed(() => orderBy(availableItems.value, ['pinned'], ['desc']))
@@ -221,7 +225,7 @@ const classList = computed(() => {
     class="document-view-tabs-metadata w-100 d-flex flex-column gap-3 pt-3"
     :class="classList"
   >
-    <document-notes :document="document" />
+    <document-path-banners :document="document" />
     <document-view-tabs-metadata-linked-documents-card />
     <div class="bg-body py-3 sticky-top">
       <form-control-search

@@ -9,6 +9,10 @@ const show = defineModel('show', { type: Boolean, default: true })
 
 const props = defineProps({
   /**
+   * Overlay description content
+   */
+  description: { type: String },
+  /**
    * Background color of the overlay
    */
   bgColor: {
@@ -75,6 +79,7 @@ const style = computed(() => {
       <dismissable-content-warning-toggler
         ref="overlay"
         v-model="show"
+        :description="description"
       />
     </template>
   </app-overlay>

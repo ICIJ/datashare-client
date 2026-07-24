@@ -65,7 +65,7 @@ import DocumentCardCheckbox from '@/components/Document/DocumentCard/DocumentCar
 import Hook from '@/components/Hook/Hook'
 import { PLACEMENT, placementValidator } from '@/enums/placements'
 import { breakpointSizeValidator, SIZE } from '@/enums/sizes'
-import { useModalController } from 'bootstrap-vue-next'
+import { useModal } from 'bootstrap-vue-next'
 import { useRouter } from 'vue-router'
 import useSearchNav from '@/composables/useSearchNav'
 
@@ -127,13 +127,13 @@ const classList = computed(() => {
   }
 })
 
-const modalController = useModalController()
+const { hide } = useModal()
 const { searchRouteWithoutRefresh } = useSearchNav()
 const router = useRouter()
 
 async function onClose() {
   if (modal) {
-    return modalController.hide()
+    return hide()
   }
   return router.push(searchRouteWithoutRefresh.value)
 }

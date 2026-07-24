@@ -36,6 +36,7 @@ const { name } = defineProps({
 const config = useConfig()
 const hooksStore = useHooksStore()
 const components = computed(() => hooksStore.filterComponentsByTarget(name))
+const hasComponents = computed(() => components.value.length > 0)
 const title = computed(() => `${name} (${components.value.length})`)
 const isDebug = computed(() => config.is('hooksDebug'))
 </script>
@@ -47,7 +48,8 @@ const isDebug = computed(() => config.is('hooksDebug'))
     class="hook-debug"
     :title="title"
   />
-  <suspense>
+  <!-- Only render Suspense when there are actually hooked components -->
+  <suspense v-if="hasComponents">
     <component
       :is="component"
       v-for="({ component }, i) of components"

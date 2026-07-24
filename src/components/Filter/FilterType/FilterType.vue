@@ -17,7 +17,7 @@ import { useSearchStore } from '@/store/modules'
 const query = defineModel('query', { type: String, default: '' })
 const collapse = defineModel('collapse', { type: Boolean, default: null })
 
-const { filter, modal } = defineProps({
+const { filter, modal, hideCount, overlayShow } = defineProps({
   filter: {
     type: Object,
     required: true
@@ -27,6 +27,13 @@ const { filter, modal } = defineProps({
   },
   hideCount: {
     type: Boolean
+  },
+  // Forwarded to FiltersPanelSectionFilter to surface an informational
+  // overlay on top of the filter content (search + entries) — never on the
+  // title, never while collapsed.
+  overlayShow: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -75,8 +82,8 @@ const hasFilterQuery = computed(() => {
   // The filter has a query if:
   //   * it is searchable
   //   * the query is not empty
-  //   * it has an "alternativeSearch" function to generate query tokens
-  return !filter.hideSearch && query.value !== '' && !!filter.alternativeSearch
+  //   * it has a "keyAliases" function to generate additional bucket-key tokens
+  return !filter.hideSearch && query.value !== '' && !!filter.keyAliases
 })
 
 const lastPage = computed(() => pages[pages.length - 1])
@@ -88,8 +95,8 @@ const lastPageBuckets = computed(() => {
 })
 
 const aggregationInclude = computed(() => {
-  const alternativeSearch = compact(filter.alternativeSearch(query.value.toLowerCase()))
-  return '.*(' + concat(alternativeSearch, queryTokens.value).join('|') + ').*'
+  const aliases = compact(filter.keyAliases(query.value.toLowerCase()))
+  return '.*(' + concat(aliases, queryTokens.value).join('|') + ').*'
 })
 
 const aggregationOptions = computed(() => {
@@ -121,14 +128,8 @@ const {
   computedContextualizeFilter,
   computedExcludeFilter,
   toggleFilterValue,
-  watchFilterContextualized,
-  watchFilterSort,
-  watchFilterValues,
-  watchFilterExcluded,
-  watchQuery,
-  watchIndices,
-  watchValues,
-  whenFilterContextualized
+  getFilterPairedDimensions,
+  getFilterValuesByName
 } = useSearchFilter()
 
 const exclude = computedExcludeFilter(filter)
@@ -184,12 +185,20 @@ const entries = computed(() => {
 const infiniteId = ref(uniqueId('infinite-search-filter-'))
 const reachedBucketsEnd = computed(() => pages.length && lastPageBuckets.value.length < size.value)
 
-const noInfiniteScroll = computed(() => filter.noInfiniteScroll || !pages.length || reachedBucketsEnd.value)
+const isPageless = computed(() => filter.pagelessBucketSize != null)
+const hasNoPages = computed(() => !pages.length)
+const noInfiniteScroll = computed(() => isPageless.value || hasNoPages.value || reachedBucketsEnd.value)
 const noBucketTranslation = computed(() => filter?.noBucketTranslation ?? false)
 const fromElasticSearch = computed(() => filter?.fromElasticSearch ?? false)
-const count = computed(() => filter.values.length)
 const offset = computed(() => buckets.value?.length ?? 0)
-const size = computed(() => settings.filter.bucketSize)
+const size = computed(() => filter.pagelessBucketSize ?? settings.filter.bucketSize)
+// Sum across paired dimensions so the closed-state badge matches the OR
+// semantics used in search; unpaired filters fall back to [name].
+const count = computed(() => {
+  return getFilterPairedDimensions(filter).reduce((sum, name) => {
+    return sum + getFilterValuesByName(name).length
+  }, 0)
+})
 
 const debouncedCollapse = computed({
   get: () => collapse.value,
@@ -205,25 +214,35 @@ const debouncedCollapse = computed({
   }
 })
 
+// Computed that tracks all dependencies that should trigger aggregation
+// Consolidates 8 separate watchers into one to reduce cascading API calls
+const aggregationDependencies = computed(() => {
+  return {
+    query: query.value,
+    indices: searchStore.indices.join(','),
+    sort: JSON.stringify(sort.value),
+    contextualize: contextualize.value,
+    // Only include these when contextualized
+    ...(contextualize.value && {
+      filterValues: JSON.stringify(filter.values),
+      excluded: exclude.value,
+      allValues: JSON.stringify(searchStore.values),
+      searchQuery: searchStore.q
+    })
+  }
+})
+
 onBeforeMount(async () => {
   // Show the filter by default if it has a value
   collapse.value = collapse.value ?? !hasAnyValue.value
   // Only load data on mount if the filter is visible (not collapsed)
   await aggregateIfVisible()
-  // Query value (in the search field) that trigger an update of the data
-  watch(query, aggregateIfVisible)
-  // General values that might trigger an update of the data
-  watchIndices(aggregateIfVisible)
-  // Filter values that trigger an update of the data
-  watchFilterSort(filter, aggregateIfVisible)
-  watchFilterContextualized(filter, aggregateIfVisible)
-  // Filter values that trigger an update of the data only if the filter is contextualized
-  watchFilterValues(filter, whenFilterContextualized(filter, aggregateIfVisible))
-  watchFilterExcluded(filter, whenFilterContextualized(filter, aggregateIfVisible))
-  // Values from all filters that trigger an update of the data only if the filter is contextualized
-  watchValues(whenFilterContextualized(filter, aggregateIfVisible))
-  watchQuery(whenFilterContextualized(filter, aggregateIfVisible))
+  // Single watcher that consolidates all 8 previous watchers
+  // This reduces cascading API calls by debouncing all dependency changes
+  watch(aggregationDependencies, aggregateIfVisible, { deep: false })
 })
+
+defineExpose({ entries, aggregateOver, count })
 </script>
 
 <template>
@@ -244,8 +263,19 @@ onBeforeMount(async () => {
     :count="count"
     :loading="isLoading"
     :modal="modal"
+    :overlay-show="overlayShow"
   >
+    <template
+      v-if="$slots.overlay"
+      #overlay
+    >
+      <slot
+        name="overlay"
+        v-bind="{ filter, opened }"
+      />
+    </template>
     <slot
+      v-if="!query"
       name="all"
       v-bind="{ entries, filter, opened }"
     >

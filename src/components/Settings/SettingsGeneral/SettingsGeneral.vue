@@ -6,6 +6,8 @@ import { isEqual } from 'lodash'
 import SettingsGeneralLabel from '@/components/Settings/SettingsGeneral/SettingsGeneralLabel'
 import ButtonReset from '@/components/Button/ButtonReset'
 
+const OBFUSCATED_VALUE = '******'
+
 const props = defineProps({
   settings: {
     type: Object,
@@ -21,6 +23,10 @@ const hasNotChanged = computed(() => isEqual(props.settings, replica))
 
 const emit = defineEmits(['save'])
 
+function isObfuscated(field) {
+  return String(props.settings[field]).includes(OBFUSCATED_VALUE)
+}
+
 function fieldChanged(field) {
   return props.settings[field] !== replica[field]
 }
@@ -34,7 +40,9 @@ function reset() {
 }
 
 function save() {
-  emit('save', toRaw(replica))
+  const raw = toRaw(replica)
+  const filtered = Object.fromEntries(Object.entries(raw).filter(([key]) => !isObfuscated(key)))
+  emit('save', filtered)
 }
 </script>
 
@@ -61,6 +69,7 @@ function save() {
       <b-form-input
         :id="`input-settings-${name}`"
         v-model="replica[name]"
+        :disabled="isObfuscated(name)"
       />
     </b-form-group>
     <div class="d-flex gap-3 justify-content-end">
