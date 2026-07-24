@@ -6,7 +6,8 @@
     "submit": "提交",
     "save": "Save",
     "reset": "重置",
-    "you": "{username}（您）",
+    "search": "Search",
+    "you": "You",
     "building": "我们的团队仍在为这个页面精心打造一些精彩内容。敬请期待！"
   },
   "addonCard": {
@@ -60,6 +61,10 @@
   "buttonTogglePathTreeView": {
     "list": "列表视图",
     "tree": "树视图"
+  },
+  "buttonToggleContentTypesView": {
+    "flat": "File types view",
+    "grouped": "File types by categories view"
   },
   "buttonToggleSettings": {
     "label": "设置"
@@ -147,7 +152,7 @@
     "info": "信息",
     "pending": "待定",
     "created": "待定",
-    "queued": "待定",
+    "queued": "Queued",
     "running": "运行中",
     "draft": "草稿"
   },
@@ -225,7 +230,7 @@
     "placeholder": "搜索筛选"
   },
   "search": {
-    "title": "搜索文档",
+    "title": "Search",
     "errorStateLabel": "我们无法执行您的搜索。这可能是由于服务器错误或您的查询语句存在语法错误。",
     "emptyStateLabel": "噢，这里好冷清……此项目目前还没有任何文档。",
     "emptyStateAction": "添加文档",
@@ -250,7 +255,7 @@
       "thread": "主题 ID",
       "description": "描述"
     },
-    "placeholder": "键入查询语句、使用运算符或键入正则表达式…",
+    "placeholder": "Search in documents...",
     "buttonLabel": "搜索",
     "searchIn": "筛选 {plural}…",
     "hideFilters": "隐藏筛选",
@@ -259,8 +264,8 @@
     "contextualizeFiltersDescription": "左侧面板的筛选将根据搜索结果进行更新。",
     "tips": "改善搜索的技巧",
     "settings": {
-      "title": "结果设置",
-      "resultsPerPage": "每页文档数"
+      "title": "Search settings",
+      "resultsPerPage": "Number of results by page"
     },
     "results": {
       "match": "文档中匹配",
@@ -274,24 +279,7 @@
       "batchDownloadSubmit": "您即将下载 1 个文档。| 您即将下载 {total} 个文档。",
       "warningNumber": "您最多只能下载 {number} 个文档。",
       "warningSize": "您最多只能下载 {size}B 的文件。",
-      "warningConfirm": "您仍然想要下载本次搜索结果的首批文档吗？",
-      "sort": {
-        "sortLabel": "排序",
-        "sort": "排序方式",
-        "relevance": "相关程度",
-        "dateNewest": "索引日期（最近的在前）",
-        "dateOldest": "索引日期（最早的在前）",
-        "creationDateNewest": "创建日期（最近的在前）",
-        "creationDateOldest": "创建日期（最早的在前）",
-        "sizeLargest": "大小（降序）",
-        "sizeSmallest": "大小（升序）",
-        "path": "文件路径（A 到 Z）",
-        "pathReverse": "文件路径（Z 到 A）",
-        "titleNorm": "文件名（A 到 Z）",
-        "titleNormReverse": "文件名（Z 到 A）",
-        "default": "默认",
-        "count": "频率"
-      }
+      "warningConfirm": "您仍然想要下载本次搜索结果的首批文档吗？"
     }
   },
   "role": {
@@ -300,7 +288,8 @@
     "project_admin": "Admin",
     "project_editor": "Editor",
     "project_member": "Member",
-    "project_visitor": "Visitor"
+    "project_visitor": "Visitor",
+    "no_role": "No role"
   },
   "searchFormControl": {
     "submitLabel": "搜索"
@@ -311,7 +300,7 @@
   "searchSavedList": {
     "title": "保存的搜索",
     "allRemoved": "所有已保存的搜索均已删除。",
-    "emptyStateLabel": "没有已保存的搜索。请前往搜索页面保存重要的搜索。",
+    "emptyStateLabel": "There are no saved searches. Go to search to save important searches",
     "emptyStateAction": "转到搜索"
   },
   "searchSavedEntries": {
@@ -505,6 +494,16 @@
     "project": "Projects",
     "contentType": "File types",
     "contentTypeCategory": "File type categories",
+    "contentTypeCategoryItem": {
+      "AUDIO": "Audio",
+      "VIDEO": "Video",
+      "IMAGE": "Image",
+      "DOCUMENT": "Document",
+      "EMAIL": "Email",
+      "PRESENTATION": "Presentation",
+      "SPREADSHEET": "Spreadsheet",
+      "OTHER": "Other"
+    },
     "fileTypes": {
       "legacyIndex": {
         "title": "Category grouping unavailable",
@@ -1122,6 +1121,7 @@
           "state": "State",
           "id": "Id"
         },
+        "unavailableAlert": "This download has expired per your admin's retention settings",
         "truncatedAlert": {
           "sizeLimit": "Results were truncated after reaching the {reason} ({limit}).",
           "fileCountLimit": "Results were truncated after reaching the {reason} ({limit}).",
@@ -1157,7 +1157,7 @@
         "queries": {
           "onlyCSV": "Only CSV format is accepted.",
           "onlyUTF8": "Export your spreadsheet as a CSV using encoding UTF-8",
-          "queriesLimist": "Your CSV file should not contain more than 60,000 queries",
+          "queriesLimits": "Your CSV file should not contain more than 60,000 queries",
           "firstColumn": "The first and only column should contain the terms to search",
           "lineBreaks": "No line break(s) in cells",
           "operators": "Selecting 'do phrase matches' prevent from using operators like <code>AND</code>, <code>OR</code>, <code>NOT</code>, <code>*</code>, <code>?</code>, <code>!</code>, <code>+</code>, <code>-</code> or Regexes between 2 slashes in the queries."
@@ -1407,7 +1407,8 @@
     "title": "Edit project",
     "tabs": {
       "details": "Details and documents",
-      "pathBanners": "Banners"
+      "pathBanners": "Banners",
+      "users": "Users"
     },
     "notify": {
       "update": {
@@ -1459,6 +1460,90 @@
         "delete": {
           "succeedBody": "Banner deleted",
           "failedBody": "Failed to delete banner"
+        }
+      }
+    },
+    "users": {
+      "empty": "No users yet.",
+      "fetchError": "Failed to load users for this project.",
+      "noResults": "No users match your search.",
+      "fields": {
+        "uid": {
+          "label": "Username"
+        },
+        "name": {
+          "label": "Name"
+        },
+        "email": {
+          "label": "Email"
+        },
+        "role": {
+          "label": "Role"
+        }
+      },
+      "roleSelect": {
+        "save": "Save",
+        "cancel": "Cancel",
+        "saveSuccess": "Roles updated successfully",
+        "saveError": "Failed to update roles. Please try again.",
+        "changedCount": "0 roles changed | 1 role changed | {count} roles changed"
+      },
+      "adminPromotionModal": {
+        "title": "Confirm admin promotions",
+        "body": "The following users will be granted administrator access:",
+        "confirm": "Confirm",
+        "cancel": "Cancel"
+      },
+      "actions": {
+        "copy": "Copy username",
+        "delete": "Delete user",
+        "deleteModal": {
+          "title": "Delete user '{name}' ?",
+          "body": {
+            "intro": "This action cannot be undone. Deleting this user will:",
+            "accessRevoked": "revoke their access to {allProjects};",
+            "dataDeleted": "delete all their personal data (stars, history, tags, saved searches etc.) across {allProjects};",
+            "tasksDeleted": "not delete their tasks and results.",
+            "allProjects": "all projects"
+          },
+          "confirm": "Delete user",
+          "success": "User deleted successfully",
+          "error": "Failed to remove user. Please try again."
+        }
+      },
+      "create": {
+        "button": "Create user",
+        "title": "Create a user",
+        "confirm": "Create",
+        "saveSuccess": "User created successfully.",
+        "saveError": "Failed to create user. Please try again.",
+        "saveErrorConflict": "A user with this username already exists.",
+        "fields": {
+          "username": {
+            "label": "Username",
+            "placeholder": "Type username"
+          },
+          "email": {
+            "label": "Email",
+            "placeholder": "Type email address"
+          },
+          "name": {
+            "label": "Display name",
+            "placeholder": "Type display name"
+          },
+          "password": {
+            "label": "Password",
+            "placeholder": "Type password"
+          },
+          "confirmPassword": {
+            "label": "Confirm password",
+            "placeholder": "Confirm password",
+            "mismatch": "Passwords do not match."
+          },
+          "role": {
+            "label": "Role",
+            "inProject": "in {project}"
+          }
         }
       }
     }
@@ -1940,6 +2025,52 @@
       "link": "Saved searches"
     }
   },
+  "searchAdvancedModal": {
+    "title": "Advanced search",
+    "search": "Search",
+    "cancel": "Cancel",
+    "reset": "Reset",
+    "eg": "e.g.",
+    "and": "and",
+    "or": "or",
+    "anyOfTheseWords": "Any of these words",
+    "anyOfTheseWordsExample": "Paris Henry Coca",
+    "allTheseWords": "All these words",
+    "allTheseWordsExample1": "AND Paris AND Henry AND Coca",
+    "allTheseWordsExample2": "+Paris +Henry +Coca",
+    "exactPhrase": "This exact phrase",
+    "exactPhraseExample": "\"Paris Henry Coca\"",
+    "noneOfTheseWords": "None of these words",
+    "noneOfTheseWordsExample1": "NOT Paris NOT Henry NOT Coca",
+    "noneOfTheseWordsExample2": "-Paris -Henry -Coca",
+    "singleCharWildcard": "Any word with 1 character between",
+    "singleCharWildcardExample": "Hen?y",
+    "multiCharWildcard": "Any word with multiple characters between",
+    "multiCharWildcardExample": "H*y",
+    "fuzzySearch": "With spelling changes",
+    "charactersDifferent": "Characters different",
+    "fuzzySearchExample": "Henry~1",
+    "fuzzySearchExplanation1": "Also called fuzziness.",
+    "fuzzySearchExplanation2": "Number of change(s) in the characters in the words: insertions, deletions or substitutions of a single character, or transposition of 2 adjacent characters.",
+    "proximitySearch": "With phrase changes",
+    "maxWordsApart": "Max words apart",
+    "proximitySearchExample": "\"Marie and Henry are in Paris\"~2",
+    "proximitySearchExplanation1": "Also called proximity search.",
+    "proximitySearchExplanation2": "The maximum distance with which words can be further apart or in a different order in the phrase.",
+    "proximitySearchExplanation3": "\"Marie and Henry are in Paris\"~1 will find: \"and Marie Henry are in Paris\"",
+    "proximitySearchExplanation4": "\"Marie and Henry are in Paris\"~2 will find: \"Henry and Marie are in Paris\"",
+    "searchInFields": "Search in field",
+    "allFields": "All fields",
+    "fields": {
+      "tags": "Tags",
+      "name": "Name",
+      "author": "Author",
+      "recipients": "Recipients",
+      "content": "Content",
+      "path": "Path",
+      "threadId": "Thread ID"
+    }
+  },
   "searchSelection": {
     "count": "No selected documents | 1 selected document | {count} selected documents",
     "star": "Star",
@@ -2045,6 +2176,11 @@
     "rowRange": "to {to} of 0 tasks | to {to} of 1 task | to {to} of {total} tasks",
     "rowRangeFewer": "of 0 tasks | of 1 task | to {total} tasks",
     "rowRangeCompact": "of 0 tasks | of 1 task | of {total} tasks"
+  },
+  "rowPaginationUsers": {
+    "rowRange": "to {to} of 0 users | to {to} of 1 user | to {to} of {total} users",
+    "rowRangeFewer": "of 0 users | of 1 user | to {total} users",
+    "rowRangeCompact": "of 0 users | of 1 user | of {total} users"
   },
   "themes": {
     "dark": "Dark mode",
