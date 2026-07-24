@@ -55,7 +55,7 @@
     "label": "Ajouter"
   },
   "buttonBackToSearch": {
-    "label": "Back"
+    "label": "Précédent"
   },
   "buttonTogglePathTreeView": {
     "list": "Vue liste",
@@ -100,7 +100,7 @@
     "label": "Filtres"
   },
   "buttonToggleSearchBreadcrumb": {
-    "label": "Afficher / Masquer le fil de recherches"
+    "label": "Fil de recherches"
   },
   "buttonToggleRecommendation": {
     "mark": "Marquer comme recommandé",
@@ -120,9 +120,9 @@
     "dontShow": "Ne plus afficher"
   },
   "dismissableContentWarningToggler": {
-    "title": "Content Warning",
-    "description": "This media may contain sensitive content that some people may find disturbing or offensive.",
-    "toggle": "Show anyway"
+    "title": "Avertissement",
+    "description": "Ce média peut contenir du contenu sensible que certaines personnes peuvent trouver dérangeant ou offensant.",
+    "toggle": "Afficher quand même"
   },
   "dismissableToastBody": {
     "close": "Fermer"
@@ -145,8 +145,8 @@
     "danger": "Échec",
     "warning": "Avertissement",
     "info": "Information",
-    "pending": "Pending",
-    "created": "Pending",
+    "pending": "En attente",
+    "created": "En attente",
     "queued": "En attente",
     "running": "En cours",
     "draft": "Brouillon"
@@ -167,19 +167,20 @@
     "download": "Télécharger",
     "downloadWithoutMetadata": "Télécharger sans les métadonnées",
     "downloadExtractText": "Télécharger le texte",
+    "downloadTranslatedText": "Télécharger la traduction de texte",
     "downloadRoot": "Télécharger le document à la racine",
     "sectionTitle": "Quel est le titre du document ?",
     "sectionContentType": "Quel est le type du document ?",
     "sectionDescription": "Une fois téléchargé, comment puis-je l'ouvrir ?"
   },
   "documentDropdownReindexModalParent": {
-    "alert": "This document was extracted from another document. To reindex it, Datashare needs to reprocess the parent document. Depending on the file size and the selected options, this may take some time."
+    "alert": "Ce document a été extrait d'un autre document. Pour le réindexer, Datashare doit processer à nouveau le document parent. Selon la taille du document et les options sélectionnées, cela peut prendre un certain temps."
   },
   "documentDropdownReindexModal": {
-    "title": "Reindex this document",
-    "okTitle": "Reindex",
-    "formLanguage": "Document language",
-    "formOcr": "Extract text from images and PDFs (OCR)"
+    "title": "Réindexer ce document",
+    "okTitle": "Réindexation",
+    "formLanguage": "Langue du document",
+    "formOcr": "Extraire du texte des images et des PDF (OCR)"
   },
   "entityPopoverInfo": {
     "content": "Cette entité a été extraite avec :",
@@ -292,6 +293,14 @@
         "count": "fréquence"
       }
     }
+  },
+  "role": {
+    "instance_admin": "Administrateur•ice de l'instance",
+    "domain_admin": "Administrateur•ice du domaine",
+    "project_admin": "Administrateur•ice",
+    "project_editor": "Éditeur•ice",
+    "project_member": "Membre",
+    "project_visitor": "Visiteur•ice"
   },
   "searchFormControl": {
     "submitLabel": "Rechercher"
@@ -411,12 +420,13 @@
     "noTags": "Aucun tag n'a encore été ajouté."
   },
   "documentUserTagsAction": {
-    "placeholder": "Ajouter des tags"
+    "placeholder": "Ajouter des tags",
+    "addError": "Impossible d'ajouter des tags"
   },
   "documentMetadataActions": {
     "copy": "Copier la valeur de cette métadonnée",
-    "copyKey": "Copy metadata key",
-    "copySearch": "Copy metadata as search query",
+    "copyKey": "Copier la clé de cette métadonnée",
+    "copySearch": "Copier les métadonnées sous forme de requête",
     "search": "Rechercher la valeur de cette métadonnée",
     "pin": "Épingler cette métadonnée"
   },
@@ -432,40 +442,52 @@
   "linkedDocumentCard": {
     "siblings": {
       "title": "aucun document dans le même dossier | {n} document dans le même dossier | {n} documents dans le même dossier",
-      "description": "Même niveau d'extraction que ce document"
+      "description": "Même niveau d'enchâssement que ce document"
     },
     "children": {
       "title": "aucun document enfant | 1 document enfant | {n} documents enfants",
-      "description": "Un niveau d'extraction en dessous de ce document"
+      "description": "Un niveau d'enchâssement en dessous de ce document"
     }
   },
   "documentContent": {
     "noContent": "Aucun contenu extrait pour ce document"
   },
   "documentViewerImage": {
-    "rotateCounterClockwise": "Rotate 90° to the left",
-    "rotateClockwise": "Rotate 90° to the right"
+    "rotateCounterClockwise": "Tourner 90° à gauche",
+    "rotateClockwise": "Tourner 90° à droite"
   },
   "documentViewerPdf": {
     "rotation": {
-      "clockwise": "Rotate clockwise",
-      "counterClockwise": "Rotate counterclockwise"
+      "clockwise": "Tourner dans le sens horaire",
+      "counterClockwise": "Tourner dans le sens antihoraire"
     },
     "scale": {
-      "fit": "Fit to page",
-      "width": "Fit to width",
+      "fit": "Ajuster à la page",
+      "width": "Ajuster à la largeur",
       "zoom": "Zoom",
-      "zoomIn": "Zoom in",
-      "zoomOut": "Zoom out"
+      "zoomIn": "Zoom avant",
+      "zoomOut": "Zoom arrière"
     },
-    "error": "Something went wrong while loading the PDF document.",
-    "switch": "Switch to built-in viewer"
+    "error": "Une erreur s'est produite lors du chargement du document PDF.",
+    "switch": "Basculer vers la vue intégrée"
   },
   "documentViewerPdfEmbedded": {
-    "switch": "Switch to Datashare viewer"
+    "switch": "Basculer vers la vue Datashare"
   },
   "documentViewerPdfNavDropdownEmbed": {
-    "switch": "Switch to built-in viewer"
+    "switch": "Basculer vers la vue intégrée"
+  },
+  "displayRepositoryType": {
+    "fs": "système de fichiers",
+    "s3": "Amazon S3",
+    "azure": "Azure",
+    "gcs": "Google Cloud Storage",
+    "hdfs": "HDFS",
+    "url": "URL"
+  },
+  "displayEsDistribution": {
+    "elasticsearch": "Elasticsearch",
+    "opensearch": "OpenSearch"
   },
   "documentViewTabs": {
     "text": "Texte",
@@ -481,7 +503,7 @@
   },
   "filter": {
     "project": "Projets",
-    "contentType": "Types de fichiers",
+    "contentType": "Types de documents",
     "contentTypeCategory": "Catégories de types de fichiers",
     "fileTypes": {
       "legacyIndex": {
@@ -497,7 +519,7 @@
     "namedEntityEmail": "Adresses e-mails",
     "path": "Chemins du fichier",
     "indexingDate": "Dates d'indexation",
-    "extractionLevel": "Niveaux d'extraction",
+    "extractionLevel": "Niveaux d'enchâssement",
     "creationDate": "Dates de création",
     "projects": "Projets",
     "starred": "Favoris",
@@ -718,7 +740,7 @@
     },
     "level": {
       "all": "Tous",
-      "level00": "Fichier sur disque",
+      "level00": "Document sur disque",
       "level01": "1er",
       "level02": "2ème",
       "level03": "3ème",
@@ -749,7 +771,7 @@
     "namedEntityFilter": "Rechercher des entités",
     "starred": "Les documents ont été placés dans les favoris.",
     "unstarred": "Les documents ont été enlevés des favoris.",
-    "notAvailable": "L'aperçu n'est pas disponible pour ce document.",
+    "notAvailable": "L'aperçu n'est pas disponible pour ce type de document.",
     "namedEntitiesNotFound": "Aucune entité trouvée.",
     "namedEntitiesNotSearched": "Document non analysé. Pour trouver les entités nommées, {link}.",
     "namedEntitiesNotSearchedLink": "démarrer une nouvelle tâche",
@@ -863,7 +885,7 @@
   },
   "appSidebarFooter": {
     "signOut": "Se déconnecter",
-    "signOutBasic": "To sign out from Datashare you must close your web browser.",
+    "signOutBasic": "Pour vous déconnecter de Datashare, vous devez fermer votre navigateur",
     "keyboardShortcuts": "Raccourcis clavier",
     "settings": "Paramètres",
     "help": "Aide",
@@ -887,7 +909,11 @@
     "login": "Se connecter",
     "title": "Se connecter",
     "switchLanguage": "Changer de langue",
-    "tagline": "Le logiciel de recherche et d'analyse de données de l'ICIJ"
+    "tagline": "Le logiciel de recherche et d'analyse de données de l'ICIJ",
+    "username": "Nom d'utilisateur•ice",
+    "password": "Mot de passe",
+    "submit": "Connexion",
+    "error": "Nom d'utilisateur ou mot de passe invalide."
   },
   "loginLocaleDropdownSelector": {
     "label": "Changer de langue :"
@@ -912,8 +938,8 @@
     "noResults": "Pas de résultat.",
     "emptyStateLabel": "Vous n'avez pas encore lancé de tâche. {link}",
     "emptyStateLabelLink": "En savoir plus.",
-    "removeSuccess": "Task has been removed",
-    "removeError": "Task has not been removed",
+    "removeSuccess": "La tâche a été supprimée",
+    "removeError": "La tâche n'a pas été supprimée",
     "settings": {
       "createdAt": "Créé le",
       "name": "Nom",
@@ -1096,6 +1122,14 @@
           "size": "Taille",
           "state": "Statut",
           "id": "ID"
+        },
+        "truncatedAlert": {
+          "sizeLimit": "Les résultats ont été tronqués après avoir atteint {reason} ({limit}).",
+          "fileCountLimit": "Les résultats ont été tronqués après avoir atteint {reason} ({limit}).",
+          "reasons": {
+            "sizeLimit": "Limite de taille",
+            "fileCountLimit": "Nombre maximum de documents"
+          }
         }
       }
     },
@@ -1160,7 +1194,7 @@
         },
         "csvString": {
           "label": "Ou tapez vos requêtes",
-          "placeholder": "Enter one search term per line here..."
+          "placeholder": "Tapez un terme de recherche par ligne ici"
         },
         "phraseChanges": {
           "label": "Changements de phrase",
@@ -1292,7 +1326,7 @@
   },
   "pageSettings": {
     "title": "Paramètres de la page",
-    "reset": "Reset all"
+    "reset": "Tout réinitialiser"
   },
   "pageSettingsSectionGroupAll": {
     "label": "Tout"
@@ -1324,7 +1358,7 @@
     "updatedOn": "Modifié le",
     "links": "Liens",
     "actions": "Actions",
-    "userRole": "Your role"
+    "userRole": "Votre rôle"
   },
   "projectRowActions": {
     "edit": "Modifier le projet",
@@ -1372,6 +1406,10 @@
   },
   "projectViewEdit": {
     "title": "Modifier le projet",
+    "tabs": {
+      "details": "Détails et documents",
+      "pathBanners": "Bannières"
+    },
     "notify": {
       "update": {
         "succeed": "Le projet a été enregistré",
@@ -1380,7 +1418,51 @@
         "failedBody": "Une erreur est survenue lors de la modification du projet."
       }
     },
-    "submit": "Enregistrer"
+    "submit": "Enregistrer",
+    "pathBanners": {
+      "add": "Ajouter une bannière",
+      "edit": "Modifier",
+      "editTitle": "Modifier la bannière",
+      "cancel": "Annuler",
+      "empty": "Pas encore de bannière. Cliquez sur \"Ajouter une bannière\" pour en créer une.",
+      "save": "Enregistrer",
+      "reset": "Réinitialiser",
+      "description": "Utilisez une bannière pour afficher un message contextualisé au-dessus de tous les documents d'un chemin donné.",
+      "previewTitle": "Prévisualisation",
+      "noPathSelected": "Aucun chemin sélectionné",
+      "fields": {
+        "sensitiveContent": {
+          "label": "Contenu sensible",
+          "description": "La bannière \"Avertissement de contenu\" floute le contenu des documents et demande aux utilisateurs de confirmer pour voir le contenu"
+        },
+        "path": {
+          "label": "Chemin",
+          "description": "Sélectionnez pour quel chemin la bannière sera affichée"
+        },
+        "text": {
+          "label": "Contenu",
+          "placeholder": "Texte de la bannière",
+          "useDefaultText": "Utiliser le texte par défaut"
+        },
+        "variant": {
+          "label": "Type"
+        }
+      },
+      "notify": {
+        "create": {
+          "succeedBody": "Bannière créée",
+          "failedBody": "Impossible de créer la bannière"
+        },
+        "update": {
+          "succeedBody": "Bannière enregistrée",
+          "failedBody": "Impossible d'enregistrer la bannière"
+        },
+        "delete": {
+          "succeedBody": "Bannière supprimée",
+          "failedBody": "Impossible de supprimer la bannière"
+        }
+      }
+    }
   },
   "projectViewAddDocuments": {
     "title": "Ajouter des documents au projet",
@@ -1429,7 +1511,7 @@
       },
       "publisherName": {
         "label": "Nom de l'éditeur·ice",
-        "placeholder": "Le nom des personnes ou de l'organisation qui ont publié les fichiers dans ce projet"
+        "placeholder": "Le nom des personnes ou de l'organisation qui ont publié les documents dans ce projet"
       },
       "maintainerName": {
         "label": "Nom du responsable",
@@ -1520,6 +1602,77 @@
           "description": "Les applications ou scripts utilisant cette clé ne seront plus en mesure d'accéder à l'API Datashare. Vous ne pourrez pas annuler cette action."
         }
       }
+    },
+    "snapshots": {
+      "title": "Sauvegardes",
+      "info": "Créez et gérez des sauvegardes de vos données Datashare. Les sauvegardes peuvent être restaurées en cas de perte de données.",
+      "noSnapshots": "Aucune sauvegarde trouvée. Créez votre première sauvegarde pour protéger vos données.",
+      "repositoryPath": "Chemin du stockage de sauvegarde",
+      "repositoryPathHint": "Ce chemin doit être configuré dans le paramètre path.repo d'Elasticsearch.",
+      "repository": {
+        "type": "Type",
+        "location": "Localisation",
+        "description": "Les sauvegardes sont stockées dans un dépôt {type} situé à {location}"
+      },
+      "setup": {
+        "title": "Configurer le stockage de sauvegarde",
+        "description": "Vos snapshots doivent être stockés dans l'un des chemins prédéfinis. Veuillez sélectionner l'un des chemins disponibles ci-dessous.",
+        "loading": "Chargement des chemins disponibles...",
+        "noPathsTitle": "Aucun chemin de sauvegarde disponible",
+        "noPathsDescription": "Aucun chemin de sauvegarde n'a été configuré dans Elasticsearch. Veuillez configurer le paramètre path.repo dans votre configuration Elasticsearch pour autoriser les sauvegardes.",
+        "selectPath": "Sélectionnez l'emplacement du dépôt du système de fichiers :",
+        "submit": "Configurer"
+      },
+      "refresh": "Actualiser",
+      "create": "Créer une sauvegarde",
+      "creating": "Création en cours...",
+      "list": {
+        "name": "Nom",
+        "status": "Statut",
+        "date": "Date",
+        "version": "Version",
+        "distribution": "Distribution",
+        "projects": "Projets",
+        "actions": "Actions"
+      },
+      "status": {
+        "SUCCESS": "Terminé",
+        "IN_PROGRESS": "En cours",
+        "FAILED": "Échec",
+        "PARTIAL": "Partiel"
+      },
+      "restore": {
+        "title": "Restaurer la sauvegarde",
+        "message": "Cela va restaurer toutes les données de la sauvegarde \"{name}\". Les données existantes pourraient être écrasées.",
+        "warning": "Cette action ne peut pas être annulée.",
+        "confirm": "Restaurer",
+        "cancel": "Annuler"
+      },
+      "delete": {
+        "title": "Supprimer la sauvegarde",
+        "message": "Êtes-vous sûr•e de vouloir supprimer la sauvegarde \"{name} \" ?",
+        "confirm": "Supprimer",
+        "cancel": "Annuler"
+      },
+      "deleteRepository": {
+        "label": "Supprimer le recueil",
+        "message": "Êtes-vous sûr•e de vouloir supprimer le recueil de sauvegarde ? Les sauvegardes ne seront plus disponibles."
+      },
+      "error": {
+        "repository": "Impossible d'accéder au stockage de sauvegarde: {error}",
+        "repositoryDelete": "Impossible de supprimer le recueil de sauvegarde : {error}",
+        "fetch": "Impossible de charger les sauvegardes : {error}",
+        "create": "Échec de la création de la sauvegarde : {error}",
+        "delete": "Impossible de supprimer la sauvegarde : {error}",
+        "restore": "Impossible de restaurer la sauvegarde : {error}"
+      },
+      "success": {
+        "create": "La création de la sauvegarde a commencé",
+        "delete": "Sauvegarde supprimée",
+        "restore": "La restauration a démarré",
+        "repositoryCreated": "Recueil de sauvegarde configuré",
+        "repositoryDeleted": "Recueil de sauvegarde supprimé"
+      }
     }
   },
   "serverSettings": {
@@ -1535,6 +1688,11 @@
       "grid": "Grille",
       "table": "Tableau",
       "list": "Liste"
+    },
+    "searchOperator": {
+      "label": "Opérateur de recherche",
+      "and": "AND",
+      "or": "OR"
     },
     "sortBy": {
       "label": "Trier par",
@@ -1594,6 +1752,13 @@
       "TB": "% TO"
     }
   },
+  "variant": {
+    "info": "Information",
+    "warning": "Avertissement",
+    "danger": "Danger",
+    "success": "Succès",
+    "sensitive": "Contenu sensible"
+  },
   "batchDownload": {
     "title": "Téléchargements en lot",
     "noFile": "L'archive a expiré.",
@@ -1612,7 +1777,7 @@
       "failed": "Impossible de supprimer",
       "failedBody": "Une erreur est survenue lorsque le téléchargement en lot a été supprimé."
     },
-    "limitations": "Les téléchargements en lot sont limités à {maxNbFiles} fichiers et {maxSize} o."
+    "limitations": "Les téléchargements en lot sont limités à {maxNbFiles} documents et {maxSize}o."
   },
   "batchDownloadActions": {
     "remove": {
@@ -1628,6 +1793,12 @@
     "search": {
       "label": "Voir les résultats de la recherche"
     }
+  },
+  "batchDownloadConfirmModal": {
+    "title": "Votre téléchargement pourrait être tronqué",
+    "knownTruncation": "Votre recherche correspond à environ {estimatedCount} documents ({estimatedSize}). Les téléchargements par lots sont limités à {maxFiles} documents et {maxSize}, donc seule une partie des documents sera téléchargée.",
+    "unknownTruncation": "Nous n'avons pas pu identifier la taille des résultats de votre recherche. Les téléchargements par lots sont limités à {maxFiles} documents et {maxSize} donc votre téléchargement sera peut-être tronqué.",
+    "question": "Voulez-vous quand même continuer ?"
   },
   "widget": {
     "noData": "Pas de données",
@@ -1680,7 +1851,7 @@
       "title": "Langues"
     },
     "contentTypes": {
-      "title": "Type de fichiers"
+      "title": "Type de documents"
     },
     "authors": {
       "title": "Auteur•ices"
@@ -1690,15 +1861,15 @@
     "title": "Nombre de documents par date de création"
   },
   "pathTreeLayouts": {
-    "tree": "Tree view",
-    "list": "List view",
-    "grid": "Folder view"
+    "tree": "Vue en arborescence",
+    "list": "Vue liste",
+    "grid": "Vue dossier"
   },
   "pathTreeBreadcrumb": {
     "datadir": "Accueil"
   },
   "pathTreeViewEntrySearchLink": {
-    "label": "Search in this folder"
+    "label": "Rechercher dans ce dossier"
   },
   "projectCardUpdateDate": {
     "label": "Modifié le"
@@ -1806,9 +1977,9 @@
       "tags": "Tags",
       "contentLength": "Taille du ficher",
       "contentTextLength": "Longueur du texte",
-      "contentType": "Type de fichier",
+      "contentType": "Type de document",
       "creationDate": "Créé le",
-      "extractionLevel": "Niveau d'extraction",
+      "extractionLevel": "Niveau d'enchâssement",
       "extractionDate": "Date d'indexation",
       "language": "Langue",
       "project": "Projet"
@@ -1821,9 +1992,9 @@
     "action": "Action"
   },
   "documentEntriesHeader": {
-    "batchDownloadDocuments": "Téléchargement en lot : le téléchargement de plusieurs fichiers est limité à {maxSize}.",
-    "batchDownloadDocumentsWarning": "Téléchargement en lot : le téléchargement de plusieurs fichiers est limité aux {maxFiles} premiers fichiers et à {maxSize}.",
-    "batchDownloadError": "Une erreur s'est produite lors du téléchargement des fichiers.",
+    "batchDownloadDocuments": "Téléchargement en lot : le téléchargement de plusieurs documents est limité à {maxSize}.",
+    "batchDownloadDocumentsWarning": "Téléchargement en lot : le téléchargement de plusieurs documents est limité aux {maxFiles} premiers documents et à {maxSize}.",
+    "batchDownloadError": "Une erreur s'est produite lors du téléchargement des documents.",
     "batchDownloadCreated": "Votre téléchargement en lot est en cours de préparation",
     "batchDownloadLink": "Voir tout"
   },
