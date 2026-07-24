@@ -8,7 +8,7 @@ import { SIZE } from '@/enums/sizes'
 
 defineProps({
   title: { type: String, default: '' },
-  icon: { type: String },
+  icon: { type: [String, Object, Function] },
   description: { type: String, default: '' },
   listLink: { type: [String, Object] },
   actionLink: { type: [String, Object] },
