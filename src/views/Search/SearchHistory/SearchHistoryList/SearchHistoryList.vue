@@ -100,13 +100,19 @@ watch(toRef(route, 'query'), fetch, { deep: true, immediate: true })
       :total-rows="pagination.total"
     >
       <template #breadcrumb>
-        <parent-overflow-entries-item>
+        <parent-overflow-entries-item
+          label="search"
+          :context="searchRoute"
+        >
           <navigation-breadcrumb-link
             :to="searchRoute"
             :title="t('appSidebar.search')"
           />
         </parent-overflow-entries-item>
-        <parent-overflow-entries-item>
+        <parent-overflow-entries-item
+          label="search.history.list"
+          :context="{ name: 'search.history.list' }"
+        >
           <navigation-breadcrumb-link
             :to="{ name: 'search.history.list' }"
             no-caret
