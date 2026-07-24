@@ -6,6 +6,7 @@
     "submit": "Valider",
     "save": "Enregistrer",
     "reset": "Réinitialiser",
+    "search": "Search",
     "you": "{username} (vous)",
     "building": "Notre équipe prépare de nouvelles fonctionnalités pour cette page. À suivre !"
   },
@@ -61,6 +62,10 @@
     "list": "Vue liste",
     "tree": "Vue en arborescence"
   },
+  "buttonToggleContentTypesView": {
+    "flat": "File types view",
+    "grouped": "File types by categories view"
+  },
   "buttonToggleSettings": {
     "label": "Paramètres"
   },
@@ -100,7 +105,7 @@
     "label": "Filtres"
   },
   "buttonToggleSearchBreadcrumb": {
-    "label": "Fil de recherches"
+    "label": "Afficher / Masquer le fil de recherches"
   },
   "buttonToggleRecommendation": {
     "mark": "Marquer comme recommandé",
@@ -120,7 +125,7 @@
     "dontShow": "Ne plus afficher"
   },
   "dismissableContentWarningToggler": {
-    "title": "Avertissement",
+    "title": "Content Warning",
     "description": "Ce média peut contenir du contenu sensible que certaines personnes peuvent trouver dérangeant ou offensant.",
     "toggle": "Afficher quand même"
   },
@@ -174,7 +179,7 @@
     "sectionDescription": "Une fois téléchargé, comment puis-je l'ouvrir ?"
   },
   "documentDropdownReindexModalParent": {
-    "alert": "Ce document a été extrait d'un autre document. Pour le réindexer, Datashare doit processer à nouveau le document parent. Selon la taille du document et les options sélectionnées, cela peut prendre un certain temps."
+    "alert": "This document was extracted from another document. To reindex it, Datashare needs to reprocess the parent document. Depending on the file size and the selected options, this may take some time."
   },
   "documentDropdownReindexModal": {
     "title": "Réindexer ce document",
@@ -274,24 +279,7 @@
       "batchDownloadSubmit": "Vous êtes sur le point de télécharger 1 document. | Vous êtes sur le point de télécharger {total} documents.",
       "warningNumber": "Vous ne pouvez pas télécharger plus de {number} documents.",
       "warningSize": "Vous ne pouvez pas télécharger plus de {size} o.",
-      "warningConfirm": "Voulez-vous toujours télécharger les premiers documents de cette recherche ?",
-      "sort": {
-        "sortLabel": "Trier",
-        "sort": "Trier par",
-        "relevance": "Pertinence",
-        "dateNewest": "Date d'ajout (plus récent)",
-        "dateOldest": "Date d'ajout (plus ancien)",
-        "creationDateNewest": "Date de création (plus récent)",
-        "creationDateOldest": "Date de création (plus ancien)",
-        "sizeLargest": "Taille (décroissante)",
-        "sizeSmallest": "Taille (croissante)",
-        "path": "Chemin du fichier (A à Z)",
-        "pathReverse": "Chemin du fichier (Z à A)",
-        "titleNorm": "Nom du document (A à Z)",
-        "titleNormReverse": "Nom du document (Z à A)",
-        "default": "par défaut",
-        "count": "fréquence"
-      }
+      "warningConfirm": "Voulez-vous toujours télécharger les premiers documents de cette recherche ?"
     }
   },
   "role": {
@@ -300,7 +288,8 @@
     "project_admin": "Administrateur•ice",
     "project_editor": "Éditeur•ice",
     "project_member": "Membre",
-    "project_visitor": "Visiteur•ice"
+    "project_visitor": "Visiteur•ice",
+    "no_role": "No role"
   },
   "searchFormControl": {
     "submitLabel": "Rechercher"
@@ -442,11 +431,11 @@
   "linkedDocumentCard": {
     "siblings": {
       "title": "aucun document dans le même dossier | {n} document dans le même dossier | {n} documents dans le même dossier",
-      "description": "Même niveau d'enchâssement que ce document"
+      "description": "Même niveau d'extraction que ce document"
     },
     "children": {
       "title": "aucun document enfant | 1 document enfant | {n} documents enfants",
-      "description": "Un niveau d'enchâssement en dessous de ce document"
+      "description": "Un niveau d'extraction en dessous de ce document"
     }
   },
   "documentContent": {
@@ -503,8 +492,18 @@
   },
   "filter": {
     "project": "Projets",
-    "contentType": "Types de documents",
+    "contentType": "Types de fichiers",
     "contentTypeCategory": "Catégories de types de fichiers",
+    "contentTypeCategoryItem": {
+      "AUDIO": "Audio",
+      "VIDEO": "Video",
+      "IMAGE": "Image",
+      "DOCUMENT": "Document",
+      "EMAIL": "Email",
+      "PRESENTATION": "Presentation",
+      "SPREADSHEET": "Spreadsheet",
+      "OTHER": "Other"
+    },
     "fileTypes": {
       "legacyIndex": {
         "title": "Regroupement par catégorie indisponible",
@@ -519,7 +518,7 @@
     "namedEntityEmail": "Adresses e-mails",
     "path": "Chemins du fichier",
     "indexingDate": "Dates d'indexation",
-    "extractionLevel": "Niveaux d'enchâssement",
+    "extractionLevel": "Niveaux d'extraction",
     "creationDate": "Dates de création",
     "projects": "Projets",
     "starred": "Favoris",
@@ -740,7 +739,7 @@
     },
     "level": {
       "all": "Tous",
-      "level00": "Document sur disque",
+      "level00": "Fichier sur disque",
       "level01": "1er",
       "level02": "2ème",
       "level03": "3ème",
@@ -771,7 +770,7 @@
     "namedEntityFilter": "Rechercher des entités",
     "starred": "Les documents ont été placés dans les favoris.",
     "unstarred": "Les documents ont été enlevés des favoris.",
-    "notAvailable": "L'aperçu n'est pas disponible pour ce type de document.",
+    "notAvailable": "L'aperçu n'est pas disponible pour ce document.",
     "namedEntitiesNotFound": "Aucune entité trouvée.",
     "namedEntitiesNotSearched": "Document non analysé. Pour trouver les entités nommées, {link}.",
     "namedEntitiesNotSearchedLink": "démarrer une nouvelle tâche",
@@ -885,7 +884,7 @@
   },
   "appSidebarFooter": {
     "signOut": "Se déconnecter",
-    "signOutBasic": "Pour vous déconnecter de Datashare, vous devez fermer votre navigateur",
+    "signOutBasic": "To sign out from Datashare you must close your web browser.",
     "keyboardShortcuts": "Raccourcis clavier",
     "settings": "Paramètres",
     "help": "Aide",
@@ -1113,7 +1112,6 @@
         "emptyStateAction": "Rechercher",
         "info": "Les téléchargements en lot sont des fichiers protégés par un mot de passe contenant tous les documents d'une de vos recherches.",
         "searchPlaceholder": "Rechercher des téléchargements en lot",
-        "unavailableAlert": "Ce téléchargement a expiré selon les paramètres de rétention de votre administrateur",
         "properties": {
           "name": "Nom",
           "createdAt": "Créé le",
@@ -1123,6 +1121,7 @@
           "state": "Statut",
           "id": "ID"
         },
+        "unavailableAlert": "Ce téléchargement a expiré selon les paramètres de rétention de votre administrateur",
         "truncatedAlert": {
           "sizeLimit": "Les résultats ont été tronqués après avoir atteint {reason} ({limit}).",
           "fileCountLimit": "Les résultats ont été tronqués après avoir atteint {reason} ({limit}).",
@@ -1158,7 +1157,7 @@
         "queries": {
           "onlyCSV": "Seul le format CSV est accepté.",
           "onlyUTF8": "Exporter votre feuille de calcul au format CSV en utilisant l'encodage UTF-8",
-          "queriesLimist": "Votre fichier CSV ne peut pas contenir plus de 60 000 requêtes",
+          "queriesLimits": "Your CSV file should not contain more than 60,000 queries",
           "firstColumn": "Seule la première colonne doit contenir les termes à rechercher",
           "lineBreaks": "Aucun saut de ligne dans les cellules",
           "operators": "Si vous optez pour 'Phrase exacte', les opérateurs comme <code>AND</code>, <code>OR</code>, <code>NOT</code>, <code>*</code>, <code>?</code>, <code>!</code>, <code>+</code>, <code>-</code> ou les regex (expressions régulières) ne seront pas prises en compte."
@@ -1194,7 +1193,7 @@
         },
         "csvString": {
           "label": "Ou tapez vos requêtes",
-          "placeholder": "Tapez un terme de recherche par ligne ici"
+          "placeholder": "Enter one search term per line here..."
         },
         "phraseChanges": {
           "label": "Changements de phrase",
@@ -1408,7 +1407,8 @@
     "title": "Modifier le projet",
     "tabs": {
       "details": "Détails et documents",
-      "pathBanners": "Bannières"
+      "pathBanners": "Bannières",
+      "users": "Users"
     },
     "notify": {
       "update": {
@@ -1462,6 +1462,90 @@
           "failedBody": "Impossible de supprimer la bannière"
         }
       }
+    },
+    "users": {
+      "empty": "No users yet.",
+      "fetchError": "Failed to load users for this project.",
+      "noResults": "No users match your search.",
+      "fields": {
+        "uid": {
+          "label": "Username"
+        },
+        "name": {
+          "label": "Name"
+        },
+        "email": {
+          "label": "Email"
+        },
+        "role": {
+          "label": "Role"
+        }
+      },
+      "roleSelect": {
+        "save": "Save",
+        "cancel": "Cancel",
+        "saveSuccess": "Roles updated successfully",
+        "saveError": "Failed to update roles. Please try again.",
+        "changedCount": "0 roles changed | 1 role changed | {count} roles changed"
+      },
+      "adminPromotionModal": {
+        "title": "Confirm admin promotions",
+        "body": "The following users will be granted administrator access:",
+        "confirm": "Confirm",
+        "cancel": "Cancel"
+      },
+      "actions": {
+        "copy": "Copy username",
+        "delete": "Delete user",
+        "deleteModal": {
+          "title": "Delete user '{name}' ?",
+          "body": {
+            "intro": "This action cannot be undone. Deleting this user will:",
+            "accessRevoked": "revoke their access to {allProjects};",
+            "dataDeleted": "delete all their personal data (stars, history, tags, saved searches etc.) across {allProjects};",
+            "tasksDeleted": "not delete their tasks and results.",
+            "allProjects": "all projects"
+          },
+          "confirm": "Delete user",
+          "success": "User deleted successfully",
+          "error": "Failed to remove user. Please try again."
+        }
+      },
+      "create": {
+        "button": "Create user",
+        "title": "Create a user",
+        "confirm": "Create",
+        "saveSuccess": "User created successfully.",
+        "saveError": "Failed to create user. Please try again.",
+        "saveErrorConflict": "A user with this username already exists.",
+        "fields": {
+          "username": {
+            "label": "Username",
+            "placeholder": "Type username"
+          },
+          "email": {
+            "label": "Email",
+            "placeholder": "Type email address"
+          },
+          "name": {
+            "label": "Display name",
+            "placeholder": "Type display name"
+          },
+          "password": {
+            "label": "Password",
+            "placeholder": "Type password"
+          },
+          "confirmPassword": {
+            "label": "Confirm password",
+            "placeholder": "Confirm password",
+            "mismatch": "Passwords do not match."
+          },
+          "role": {
+            "label": "Role",
+            "inProject": "in {project}"
+          }
+        }
+      }
     }
   },
   "projectViewAddDocuments": {
@@ -1511,7 +1595,7 @@
       },
       "publisherName": {
         "label": "Nom de l'éditeur·ice",
-        "placeholder": "Le nom des personnes ou de l'organisation qui ont publié les documents dans ce projet"
+        "placeholder": "Le nom des personnes ou de l'organisation qui ont publié les fichiers dans ce projet"
       },
       "maintainerName": {
         "label": "Nom du responsable",
@@ -1777,7 +1861,7 @@
       "failed": "Impossible de supprimer",
       "failedBody": "Une erreur est survenue lorsque le téléchargement en lot a été supprimé."
     },
-    "limitations": "Les téléchargements en lot sont limités à {maxNbFiles} documents et {maxSize}o."
+    "limitations": "Les téléchargements en lot sont limités à {maxNbFiles} fichiers et {maxSize} o."
   },
   "batchDownloadActions": {
     "remove": {
@@ -1851,7 +1935,7 @@
       "title": "Langues"
     },
     "contentTypes": {
-      "title": "Type de documents"
+      "title": "Type de fichiers"
     },
     "authors": {
       "title": "Auteur•ices"
@@ -1941,6 +2025,52 @@
       "link": "Recherches sauvegardées"
     }
   },
+  "searchAdvancedModal": {
+    "title": "Advanced search",
+    "search": "Search",
+    "cancel": "Cancel",
+    "reset": "Reset",
+    "eg": "e.g.",
+    "and": "and",
+    "or": "or",
+    "anyOfTheseWords": "Any of these words",
+    "anyOfTheseWordsExample": "Paris Henry Coca",
+    "allTheseWords": "All these words",
+    "allTheseWordsExample1": "AND Paris AND Henry AND Coca",
+    "allTheseWordsExample2": "+Paris +Henry +Coca",
+    "exactPhrase": "This exact phrase",
+    "exactPhraseExample": "\"Paris Henry Coca\"",
+    "noneOfTheseWords": "None of these words",
+    "noneOfTheseWordsExample1": "NOT Paris NOT Henry NOT Coca",
+    "noneOfTheseWordsExample2": "-Paris -Henry -Coca",
+    "singleCharWildcard": "Any word with 1 character between",
+    "singleCharWildcardExample": "Hen?y",
+    "multiCharWildcard": "Any word with multiple characters between",
+    "multiCharWildcardExample": "H*y",
+    "fuzzySearch": "With spelling changes",
+    "charactersDifferent": "Characters different",
+    "fuzzySearchExample": "Henry~1",
+    "fuzzySearchExplanation1": "Also called fuzziness.",
+    "fuzzySearchExplanation2": "Number of change(s) in the characters in the words: insertions, deletions or substitutions of a single character, or transposition of 2 adjacent characters.",
+    "proximitySearch": "With phrase changes",
+    "maxWordsApart": "Max words apart",
+    "proximitySearchExample": "\"Marie and Henry are in Paris\"~2",
+    "proximitySearchExplanation1": "Also called proximity search.",
+    "proximitySearchExplanation2": "The maximum distance with which words can be further apart or in a different order in the phrase.",
+    "proximitySearchExplanation3": "\"Marie and Henry are in Paris\"~1 will find: \"and Marie Henry are in Paris\"",
+    "proximitySearchExplanation4": "\"Marie and Henry are in Paris\"~2 will find: \"Henry and Marie are in Paris\"",
+    "searchInFields": "Search in field",
+    "allFields": "All fields",
+    "fields": {
+      "tags": "Tags",
+      "name": "Name",
+      "author": "Author",
+      "recipients": "Recipients",
+      "content": "Content",
+      "path": "Path",
+      "threadId": "Thread ID"
+    }
+  },
   "searchSelection": {
     "count": "0 document sélectionné | 1 document sélectionné | {count} documents sélectionnés",
     "star": "Mettre en favoris",
@@ -1977,9 +2107,9 @@
       "tags": "Tags",
       "contentLength": "Taille du ficher",
       "contentTextLength": "Longueur du texte",
-      "contentType": "Type de document",
+      "contentType": "Type de fichier",
       "creationDate": "Créé le",
-      "extractionLevel": "Niveau d'enchâssement",
+      "extractionLevel": "Niveau d'extraction",
       "extractionDate": "Date d'indexation",
       "language": "Langue",
       "project": "Projet"
@@ -1992,9 +2122,9 @@
     "action": "Action"
   },
   "documentEntriesHeader": {
-    "batchDownloadDocuments": "Téléchargement en lot : le téléchargement de plusieurs documents est limité à {maxSize}.",
-    "batchDownloadDocumentsWarning": "Téléchargement en lot : le téléchargement de plusieurs documents est limité aux {maxFiles} premiers documents et à {maxSize}.",
-    "batchDownloadError": "Une erreur s'est produite lors du téléchargement des documents.",
+    "batchDownloadDocuments": "Téléchargement en lot : le téléchargement de plusieurs fichiers est limité à {maxSize}.",
+    "batchDownloadDocumentsWarning": "Téléchargement en lot : le téléchargement de plusieurs fichiers est limité aux {maxFiles} premiers fichiers et à {maxSize}.",
+    "batchDownloadError": "Une erreur s'est produite lors du téléchargement des fichiers.",
     "batchDownloadCreated": "Votre téléchargement en lot est en cours de préparation",
     "batchDownloadLink": "Voir tout"
   },
@@ -2046,6 +2176,11 @@
     "rowRange": "à {to} sur 0 tâche | à {to} sur 1 tâche | à {to} sur {total} tâches",
     "rowRangeFewer": "sur 0 tâche | sur 1 tâche | sur {total} tâches",
     "rowRangeCompact": "sur 0 tâche | sur 1 tâche | sur {total} tâches"
+  },
+  "rowPaginationUsers": {
+    "rowRange": "to {to} of 0 users | to {to} of 1 user | to {to} of {total} users",
+    "rowRangeFewer": "of 0 users | of 1 user | to {total} users",
+    "rowRangeCompact": "of 0 users | of 1 user | of {total} users"
   },
   "themes": {
     "dark": "Mode sombre",
