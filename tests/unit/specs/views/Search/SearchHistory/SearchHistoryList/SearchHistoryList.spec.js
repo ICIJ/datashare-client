@@ -3,6 +3,7 @@ import { mount, flushPromises } from '@vue/test-utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import ButtonToggleDay from '@/components/Button/ButtonToggleDay'
 import DocumentCard from '@/components/Document/DocumentCard/DocumentCard'
+import ParentOverflowEntriesItem from '@/components/ParentOverflow/ParentOverflowEntriesItem'
 import SearchHistoryList from '@/views/Search/SearchHistory/SearchHistoryList/SearchHistoryList'
 import { apiInstance as api } from '@/api/apiInstance'
 
@@ -116,5 +117,16 @@ describe('SearchHistoryList.vue', () => {
     await flushPromises()
     const cards = wrapper.findAllComponents(ButtonToggleDay)
     expect(cards).toHaveLength(2)
+  })
+
+  it('should give each breadcrumb entry a label and a route context so it can be shown in the overflow dropdown', async () => {
+    const wrapper = mount(SearchHistoryList, { global: { plugins: core.plugins } })
+    await flushPromises()
+    const entries = wrapper.findAllComponents(ParentOverflowEntriesItem)
+    expect(entries.length).toBeGreaterThan(0)
+    entries.forEach((entry) => {
+      expect(entry.props('label')).toBeTruthy()
+      expect(entry.props('context')).not.toBeNull()
+    })
   })
 })

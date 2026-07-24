@@ -1,6 +1,7 @@
 import { flushPromises, mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
+import ParentOverflowEntriesItem from '@/components/ParentOverflow/ParentOverflowEntriesItem'
 import SearchSavedEntries from '@/components/Search/SearchSavedEntries/SearchSavedEntries'
 import SearchSavedList from '@/views/Search/SearchSaved/SearchSavedList/SearchSavedList'
 import { apiInstance as api } from '@/api/apiInstance'
@@ -80,5 +81,14 @@ describe('Search/SearchSaved/SearchSavedList.vue', () => {
     expect(api.getHistoryEvents).toBeCalledTimes(1)
     await router.push({ name: 'search.saved.list', query: { page: '2' } })
     expect(api.getHistoryEvents).toBeCalledTimes(2)
+  })
+
+  it('should give each breadcrumb entry a label and a route context so it can be shown in the overflow dropdown', () => {
+    const entries = wrapper.findAllComponents(ParentOverflowEntriesItem)
+    expect(entries.length).toBeGreaterThan(0)
+    entries.forEach((entry) => {
+      expect(entry.props('label')).toBeTruthy()
+      expect(entry.props('context')).not.toBeNull()
+    })
   })
 })
