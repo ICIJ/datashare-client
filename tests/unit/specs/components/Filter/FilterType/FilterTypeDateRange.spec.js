@@ -52,4 +52,20 @@ describe('FilterTypeDateRange.vue', () => {
     const endAttr = elementEnd.attributes()
     expect(endAttr.placeholder).toBe('MM/DD/YYYY')
   })
+
+  it('passes a valid size value to the underlying inputs without a Vue warning', () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+
+    const inputs = wrapper.findAll('input[type=text]')
+    inputs.forEach((input) => {
+      expect(input.classes()).toContain('form-control-sm')
+    })
+
+    const invalidSizeWarning = warnSpy.mock.calls.find(([message]) => {
+      return typeof message === 'string' && message.includes('Invalid prop') && message.includes('size')
+    })
+    expect(invalidSizeWarning).toBeUndefined()
+
+    warnSpy.mockRestore()
+  })
 })
