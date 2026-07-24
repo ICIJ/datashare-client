@@ -1,4 +1,4 @@
-import { shallowMount } from '@vue/test-utils'
+import { mount, shallowMount } from '@vue/test-utils'
 
 import esConnectionHelper from '../../utils/esConnectionHelper.js'
 
@@ -23,6 +23,20 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
 
     it('should be a Vue instance', () => {
       expect(wrapper).toBeTruthy()
+    })
+
+    it('should resolve the column-chart component without a Vue warning', async () => {
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+      const { plugins } = CoreSetup.init().useAll()
+      const global = { plugins, renderStubDefaultSlot: true }
+      mount(WidgetDocumentsByCreationDate, { props, global })
+      await new Promise(resolve => setTimeout(resolve))
+
+      const resolveWarning = warnSpy.mock.calls.find(([message]) => {
+        return typeof message === 'string' && message.includes('Failed to resolve component: column-chart')
+      })
+      expect(resolveWarning).toBeUndefined()
+      warnSpy.mockRestore()
     })
 
     it('should display no message if no data are missing', async () => {
