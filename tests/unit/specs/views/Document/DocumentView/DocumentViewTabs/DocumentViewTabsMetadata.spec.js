@@ -50,7 +50,7 @@ describe('DocumentViewTabsMetadata.vue', () => {
     expect(inputs).toHaveLength(8)
   })
 
-  it('should display "File on disk" when extractionLevel metadata is missing', async () => {
+  it('should display "Document on disk" when extractionLevel metadata is missing', async () => {
     const id = '/home/datashare/data/foo.txt'
     await letData(es).have(new IndexedDocument(id, index)).commit()
     await documentStore.getDocument({ id, index })
@@ -62,10 +62,10 @@ describe('DocumentViewTabsMetadata.vue', () => {
     })
 
     const extractionLevelEntry = wrapper.findAll('.document-view-tabs-metadata__entry')
-      .find(el => el.text().includes('Extraction level'))
+      .find(el => el.text().includes('Embedment level'))
 
     expect(extractionLevelEntry).toBeDefined()
-    expect(extractionLevelEntry.text()).toContain('File on disk')
+    expect(extractionLevelEntry.text()).toContain('Document on disk')
   })
 
   it('should display document with 8 metadata (including language)', async () => {

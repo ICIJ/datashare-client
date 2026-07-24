@@ -434,7 +434,7 @@ describe('FilterType.vue', () => {
 
       const entries = wrapper.findAllComponents(FiltersPanelSectionFilterEntry)
       expect(entries).toHaveLength(2)
-      expect(entries.at(0).attributes('label')).toBe('File on disk')
+      expect(entries.at(0).attributes('label')).toBe('Document on disk')
     })
 
     it('should display the extraction level filter with correct labels in French', async () => {
@@ -449,7 +449,7 @@ describe('FilterType.vue', () => {
 
       const entries = wrapper.findAllComponents(FiltersPanelSectionFilterEntry)
       expect(entries).toHaveLength(2)
-      expect(entries.at(0).attributes('label')).toBe('Fichier sur disque')
+      expect(entries.at(0).attributes('label')).toBe('Document sur disque')
     })
   })
 

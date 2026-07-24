@@ -109,22 +109,22 @@ describe('ProjectViewEditPathBannersModal.vue', () => {
       expect(wrapper.emitted('banner:save')).toBeTruthy()
     })
 
-    it('shows a "Banner created." toast when creating a new banner', async () => {
+    it('shows a "Banner created" toast when creating a new banner', async () => {
       await core.router.push({ name: 'project.view.edit.banners', params: { name: 'local-datashare', bannerId: 'new' } })
       await flushPromises()
       const wrapper = shallowMountComponent()
       await wrapper.vm.onModalSave({ ...existingBanner })
       await flushPromises()
-      expect(mockToast.success).toBeCalledWith('Banner created.')
+      expect(mockToast.success).toBeCalledWith('Banner created')
     })
 
-    it('shows a "Banner saved." toast when updating an existing banner', async () => {
+    it('shows a "Banner saved" toast when updating an existing banner', async () => {
       await core.router.push({ name: 'project.view.edit.banners', params: { name: 'local-datashare', bannerId: '0' } })
       await flushPromises()
       const wrapper = shallowMountComponent({ banner: existingBanner })
       await wrapper.vm.onModalSave(existingBanner)
       await flushPromises()
-      expect(mockToast.success).toBeCalledWith('Banner saved.')
+      expect(mockToast.success).toBeCalledWith('Banner saved')
     })
 
     it('navigates back after a successful save', async () => {
@@ -154,7 +154,7 @@ describe('ProjectViewEditPathBannersModal.vue', () => {
       const wrapper = shallowMountComponent()
       await wrapper.vm.onModalSave({ ...existingBanner })
       await flushPromises()
-      expect(mockToast.error).toBeCalledWith('Failed to create banner.')
+      expect(mockToast.error).toBeCalledWith('Failed to create banner')
     })
 
     it('shows an error toast on failed update', async () => {
@@ -164,7 +164,7 @@ describe('ProjectViewEditPathBannersModal.vue', () => {
       const wrapper = shallowMountComponent({ banner: existingBanner })
       await wrapper.vm.onModalSave(existingBanner)
       await flushPromises()
-      expect(mockToast.error).toBeCalledWith('Failed to save banner.')
+      expect(mockToast.error).toBeCalledWith('Failed to save banner')
     })
 
     it('does not navigate back when save fails', async () => {
