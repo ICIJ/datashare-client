@@ -100,6 +100,7 @@
     "msw": "^2.14.6",
     "msw-storybook-addon": "^2.0.7",
     "playwright": "^1.60.0",
+    "rollup-plugin-visualizer": "5.14.0",
     "sass": "^1.97.2",
     "storybook": "^10.1.11",
     "storybook-addon-pseudo-states": "^10.1.11",
