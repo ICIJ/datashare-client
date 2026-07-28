@@ -5,7 +5,7 @@ vi.mock('@/api/apiInstance', () => {
   return {
     apiInstance: {
       createProject: vi.fn(),
-      isDownloadAllowed: vi.fn(),
+      isDocumentDownloadable: vi.fn().mockResolvedValue(true),
       getUser: vi.fn(),
       getSettings: vi.fn().mockResolvedValue({}),
       getProject: vi.fn().mockResolvedValue({})

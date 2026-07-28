@@ -321,10 +321,6 @@ export class Api {
     return url.href
   }
 
-  isDownloadAllowed(project) {
-    return this.sendActionAsText(`/api/project/isDownloadAllowed/${project}`)
-  }
-
   /**
    * Probe whether a document's source can be downloaded.
    *
