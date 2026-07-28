@@ -35,20 +35,19 @@ describe('handleBootFailure', () => {
 
   it('should store the requested URL and redirect to login on a 401', async () => {
     window.history.replaceState({}, '', '/settings?foo=bar#appearance')
-    handleBootFailure(core, { response: { status: 401 } })
-    // Wait for the router's (only) pending navigation, triggered by
-    // handleBootFailure's push, to settle rather than relying on
-    // microtask-only flushPromises, since the route's async component
-    // import takes longer than a microtask flush.
-    await core.router.isReady()
+    // Await the redirect navigation itself (handleBootFailure returns the
+    // router.push promise) rather than router.isReady(), which resolves as
+    // soon as ANY pending navigation settles — including the automatic one
+    // vue-router kicks off when the router is installed — and would give a
+    // false positive if a future change inserted an await before the push.
+    await handleBootFailure(core, { response: { status: 401 } })
     const appStore = useAppStore(core.pinia)
     expect(appStore.redirectAfterLogin).toBe('/settings?foo=bar#appearance')
     expect(core.router.currentRoute.value.name).toBe('login')
   })
 
   it('should redirect to the error page on a non-401 failure', async () => {
-    handleBootFailure(core, new Error('boom'))
-    await core.router.isReady()
+    await handleBootFailure(core, new Error('boom'))
     expect(core.router.currentRoute.value.name).toBe('error')
   })
 })
