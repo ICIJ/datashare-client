@@ -3,9 +3,18 @@ import { defineStore } from 'pinia'
 
 import { apiInstance as api } from '@/api/apiInstance'
 
+function extractTranslations(source = {}) {
+  return (source.content_translated || []).filter(translation => translation.target_language)
+}
+
+function translationCacheKey({ index, id }) {
+  return `${index}:${id}`
+}
+
 export const useDocumentDownloadStore = defineStore('documentDownload', () => {
   const downloadableFor = reactive({})
   const fetchPromises = {} // this doesnt need to be reactive
+  const translationsFor = reactive({})
 
   /**
    * Build the memoization key of a document
@@ -49,5 +58,32 @@ export const useDocumentDownloadStore = defineStore('documentDownload', () => {
     }
   })
 
-  return { fetchDocumentStatus, isDownloadable }
+  /**
+   * Fetch the translation status for a single document.
+   *
+   * @param {Object} options
+   * @param {string} options.index - The document's index
+   * @param {string} options.id - The document's id
+   * @param {string} options.routing - The document's routing
+   * @returns {Promise<Array>} The document's available translations
+   */
+  const fetchTranslationStatus = async ({ index, id, routing }) => {
+    const key = translationCacheKey({ index, id })
+    if (key in translationsFor) return translationsFor[key]
+    try {
+      const _source = 'content_translated.target_language'
+      const data = await api.elasticsearch.getSource({ index, id, routing, _source })
+      translationsFor[key] = extractTranslations(data)
+    }
+    catch {
+      translationsFor[key] = []
+    }
+    return translationsFor[key]
+  }
+
+  return {
+    fetchDocumentStatus,
+    isDownloadable,
+    fetchTranslationStatus
+  }
 })
