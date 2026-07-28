@@ -6,8 +6,9 @@ import { vi } from 'vitest'
 import CoreSetup from '~tests/unit/CoreSetup'
 import { useSearchFilter } from '@/composables/useSearchFilter'
 import { useContentTypeCategoryAvailability } from '@/composables/useContentTypeCategoryAvailability'
-import { useAppStore, useSearchStore } from '@/store/modules'
+import { useAppStore, useSearchStore, useRecommendedStore } from '@/store/modules'
 import { SEARCH_OPERATORS } from '@/enums/searchOperators'
+import { MODE_NAME } from '@/mode'
 
 vi.mock('@/views/App', () => ({ default: { template: '<router-view />' } }))
 vi.mock('@/views/Search/Search', () => ({ default: { template: '<div />' } }))
@@ -847,5 +848,69 @@ describe('useSearchFilter composable', () => {
         expect(all.value).toBe(true)
       })
     })
+  })
+})
+
+describe('useSearchFilter refreshSearch with recommendations gated to server mode', () => {
+  let plugins, core, searchStore, recommendedStore
+
+  beforeEach(() => {
+    useContentTypeCategoryAvailability.mockReturnValue({
+      isAvailable: ref(true),
+      isLoading: ref(false),
+      error: ref(null)
+    })
+
+    core = CoreSetup.init().useAll().useRouterWithoutGuards()
+    plugins = core.plugins
+    searchStore = useSearchStore()
+    searchStore.reset()
+    recommendedStore = useRecommendedStore()
+    vi.spyOn(searchStore, 'query').mockResolvedValue()
+    vi.spyOn(recommendedStore, 'getDocumentsRecommendedBy').mockResolvedValue()
+  })
+
+  afterEach(() => {
+    vi.clearAllMocks()
+  })
+
+  function mountComposable() {
+    let result
+    const TestComponent = {
+      setup() {
+        result = useSearchFilter()
+        return result
+      },
+      template: '<div></div>'
+    }
+    mount(TestComponent, { global: { plugins } })
+    return result
+  }
+
+  it('does not fetch recommendations in local mode', async () => {
+    core.config.set('mode', MODE_NAME.LOCAL)
+    const { refreshSearch } = mountComposable()
+
+    await refreshSearch()
+
+    expect(recommendedStore.getDocumentsRecommendedBy).not.toHaveBeenCalled()
+  })
+
+  it('does not fetch recommendations in embedded mode', async () => {
+    core.config.set('mode', MODE_NAME.EMBEDDED)
+    const { refreshSearch } = mountComposable()
+
+    await refreshSearch()
+
+    expect(recommendedStore.getDocumentsRecommendedBy).not.toHaveBeenCalled()
+  })
+
+  it('fetches recommendations in server mode', async () => {
+    core.config.set('mode', MODE_NAME.SERVER)
+    const { refreshSearch } = mountComposable()
+
+    await refreshSearch()
+
+    expect(recommendedStore.getDocumentsRecommendedBy).toHaveBeenCalledOnce()
   })
 })
