@@ -12,8 +12,12 @@ import { useAppStore } from '@/store/modules'
 export function handleBootFailure(core, error) {
   const unauthorized = error?.response?.status === 401
   if (unauthorized) {
-    const { pathname, search, hash } = window.location
-    useAppStore(core.pinia).setRedirectAfterLogin(pathname + search + hash)
+    // The router uses createWebHashHistory (see Core.js), so the requested
+    // route lives entirely in the URL hash (e.g. `#/settings?foo=bar`), not
+    // in pathname/search. Slicing off the leading `#` yields the route path
+    // the router guard expects (`/settings?foo=bar`).
+    const route = window.location.hash.slice(1) || '/'
+    useAppStore(core.pinia).setRedirectAfterLogin(route)
     core.auth.reset()
   }
   core.useRouter().mount()

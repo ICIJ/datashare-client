@@ -34,7 +34,10 @@ describe('handleBootFailure', () => {
   })
 
   it('should store the requested URL and redirect to login on a 401', async () => {
-    window.history.replaceState({}, '', '/settings?foo=bar#appearance')
+    // The router uses createWebHashHistory, so a real deep link is shaped
+    // like `https://host/#/settings?foo=bar`: the route lives entirely in
+    // the hash, not in pathname/search.
+    window.history.replaceState({}, '', '/#/settings?foo=bar')
     // Await the redirect navigation itself (handleBootFailure returns the
     // router.push promise) rather than router.isReady(), which resolves as
     // soon as ANY pending navigation settles — including the automatic one
@@ -42,7 +45,20 @@ describe('handleBootFailure', () => {
     // false positive if a future change inserted an await before the push.
     await handleBootFailure(core, { response: { status: 401 } })
     const appStore = useAppStore(core.pinia)
-    expect(appStore.redirectAfterLogin).toBe('/settings?foo=bar#appearance')
+    expect(appStore.redirectAfterLogin).toBe('/settings?foo=bar')
+    expect(core.router.currentRoute.value.name).toBe('login')
+  })
+
+  it('should keep the stored redirect intact after the boot-failure flow settles', async () => {
+    window.history.replaceState({}, '', '/#/settings?foo=bar')
+    await handleBootFailure(core, { response: { status: 401 } })
+    // handleBootFailure's own push has resolved above, but this guards
+    // against the router guards (which run their own auth check and login
+    // push as part of mount()'s initial navigation) overwriting the value
+    // stored here with something else once everything has settled.
+    await core.router.isReady()
+    const appStore = useAppStore(core.pinia)
+    expect(appStore.redirectAfterLogin).toBe('/settings?foo=bar')
     expect(core.router.currentRoute.value.name).toBe('login')
   })
 
