@@ -602,9 +602,34 @@ describe('Datashare backend client', () => {
       expect(await api.isDocumentDownloadable('foo', 'doc-id', 'root-id')).toBe(false)
     })
 
-    it('should not be downloadable when the request fails', async () => {
+    it('should stay downloadable when the request fails', async () => {
       axios.request.mockRejectedValue(new Error('Network Error'))
-      expect(await api.isDocumentDownloadable('foo', 'doc-id', 'root-id')).toBe(false)
+      expect(await api.isDocumentDownloadable('foo', 'doc-id', 'root-id')).toBe(true)
+    })
+
+    it('should stay downloadable when the server does not route HEAD', async () => {
+      axios.request.mockResolvedValue({ status: 405 })
+      expect(await api.isDocumentDownloadable('foo', 'doc-id', 'root-id')).toBe(true)
+    })
+
+    it('should stay downloadable when the backend answers 500', async () => {
+      axios.request.mockResolvedValue({ status: 500 })
+      expect(await api.isDocumentDownloadable('foo', 'doc-id', 'root-id')).toBe(true)
+    })
+
+    it('should stay downloadable when the session expired', async () => {
+      axios.request.mockResolvedValue({ status: 401 })
+      expect(await api.isDocumentDownloadable('foo', 'doc-id', 'root-id')).toBe(true)
+    })
+
+    it('should emit an http error when the session expired', async () => {
+      axios.request.mockResolvedValue({ status: 401 })
+      const mockCallback = vi.fn()
+      EventBus.on('http::error', mockCallback)
+      await api.isDocumentDownloadable('foo', 'doc-id', 'root-id')
+      EventBus.off('http::error', mockCallback)
+      expect(mockCallback).toBeCalledTimes(1)
+      expect(mockCallback.mock.calls[0][0]).toEqual({ response: { status: 401 } })
     })
 
     it('should not emit an http error when the document is not downloadable', async () => {

@@ -53,7 +53,7 @@ const {
   hasTranslations,
   downloadTranslatedContent,
   fetchStatuses
-} = useDocumentDownload(props.document, { immediate: !props.lazy })
+} = useDocumentDownload(() => props.document, { immediate: !props.lazy })
 const mounted = computed(() => !props.lazy || activated.value)
 
 // Activate when modelValue becomes true
@@ -103,6 +103,7 @@ defineExpose({
       />
       <button-icon
         v-if="hasCleanableContentType"
+        :disabled="!isDownloadAllowed"
         :icon-left="IPhDownloadSimple"
         :href="documentFullUrlWithoutMetadata"
         :label="t('documentDownloadPopover.downloadWithoutMetadata')"

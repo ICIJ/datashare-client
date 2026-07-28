@@ -7,10 +7,12 @@ import BatchDownloadActions from '@/components/BatchDownload/BatchDownloadAction
 import BatchDownloadTruncatedAlert from '@/components/BatchDownload/BatchDownloadTruncatedAlert'
 import BatchDownloadUnavailableAlert from '@/components/BatchDownload/BatchDownloadUnavailableAlert'
 
-vi.mock('@/api/apiInstance', {
-  apiInstance: {
-    isDocumentDownloadable: vi.fn().mockResolvedValue(true),
-    getTasks: vi.fn().mockResolvedValue({ items: [] })
+vi.mock('@/api/apiInstance', () => {
+  return {
+    apiInstance: {
+      isDocumentDownloadable: vi.fn().mockResolvedValue(true),
+      getTasks: vi.fn().mockResolvedValue({ items: [] })
+    }
   }
 })
 

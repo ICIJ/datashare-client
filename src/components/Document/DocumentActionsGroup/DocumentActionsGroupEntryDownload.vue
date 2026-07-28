@@ -1,6 +1,5 @@
 <script setup>
-import { computed, nextTick, useTemplateRef } from 'vue'
-import { whenever } from '@vueuse/core'
+import { computed, nextTick, useTemplateRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import IPhDownloadSimple from '~icons/ph/download-simple'
@@ -41,8 +40,15 @@ const { t } = useI18n()
 
 const element = useTemplateRef('element')
 const isVisible = useElementVisibilityOnce(element)
-const { isDownloadAllowed, documentFullUrl, fetchStatuses } = useDocumentDownload(document, { immediate: false })
-whenever(isVisible, fetchStatuses, { once: true })
+const { isDownloadAllowed, documentFullUrl, fetchStatuses } = useDocumentDownload(() => document, { immediate: false })
+// Probe once the row scrolls into view, and again whenever a recycled row is
+// handed a different document while it stays mounted. The store memoizes per
+// document, so re-probing a document already seen costs nothing.
+watch([isVisible, () => document?.id], ([visible]) => {
+  if (visible) {
+    fetchStatuses()
+  }
+})
 const href = computed(() => (isDownloadAllowed.value ? documentFullUrl.value : null))
 const blur = () => nextTick(() => window.document?.activeElement.blur())
 </script>
@@ -57,6 +63,12 @@ const blur = () => nextTick(() => window.document?.activeElement.blur())
     :placement="tooltipPlacement"
   >
     <template #target>
+      <!--
+        Never disabled: this button opens the download popover, which still
+        offers the extracted text, the translations and the root document even
+        when the source itself cannot be served. Only the direct-download href
+        is withheld.
+      -->
       <document-actions-group-entry
         ref="element"
         class="document-actions-group-entry-download"
@@ -65,7 +77,6 @@ const blur = () => nextTick(() => window.document?.activeElement.blur())
         hide-tooltip
         :size="size"
         :label="t('documentActionsGroup.download')"
-        :disabled="!isDownloadAllowed"
         :href="href"
         @click.exact.prevent
         @focus="blur"
