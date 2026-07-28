@@ -7,6 +7,7 @@ import { useAppStore } from '@/store/modules'
  * error redirects to the error page.
  * @param {import('@/core/Core').default} core - The core instance whose `ready` promise rejected.
  * @param {Error} error - The boot error.
+ * @returns {Promise} Resolves once the redirect navigation has settled.
  */
 export function handleBootFailure(core, error) {
   const unauthorized = error?.response?.status === 401
@@ -17,9 +18,7 @@ export function handleBootFailure(core, error) {
   }
   core.useRouter().mount()
   if (unauthorized) {
-    core.router.push({ name: 'login' })
+    return core.router.push({ name: 'login' })
   }
-  else {
-    core.router.push({ name: 'error', state: { error } })
-  }
+  return core.router.push({ name: 'error', state: { error } })
 }
