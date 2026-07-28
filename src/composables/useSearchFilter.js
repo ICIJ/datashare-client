@@ -6,6 +6,7 @@ import { useI18n } from 'vue-i18n'
 import settings from '@/utils/settings'
 import { SEARCH_OPERATORS } from '@/enums/searchOperators'
 import { useCore } from '@/composables/useCore'
+import { useMode } from '@/composables/useMode'
 import { useContentTypeCategoryAvailability } from '@/composables/useContentTypeCategoryAvailability'
 import { onAfterRouteUpdate } from '@/composables/onAfterRouteUpdate'
 import FilterType from '@/components/Filter/FilterType/FilterType'
@@ -28,6 +29,7 @@ export function useSearchFilter() {
   const router = useRouter()
   const { t, te } = useI18n()
   const core = useCore()
+  const { isServer } = useMode(core)
   // Drives the read-layer degradation in getFilterPairedDimensions: when the
   // contentTypeCategory field is missing from the selected indices' mapping,
   // the contentType filter falls back to single-dimension behavior so paired
@@ -343,6 +345,12 @@ export function useSearchFilter() {
   }
 
   function refreshRecommendedBy() {
+    // Recommendations are a server-mode-only feature (see widget
+    // registration's `modes: [MODE_NAME.SERVER]` in store/widgets/index.js).
+    // Skip the fetch entirely in local/embedded mode instead of relying on
+    // getDocumentsRecommendedBy's incidental `indices.length + users.length
+    // > 1` guard, which doesn't actually check mode.
+    if (!isServer.value) return
     const users = getFilterValues({ name: 'recommendedBy' })
     return recommendedStore.getDocumentsRecommendedBy(indices.value, users)
   }

@@ -4,6 +4,7 @@ import { find, matches, overSome } from 'lodash'
 import { useModal } from 'bootstrap-vue-next'
 
 import { useCore } from '@/composables/useCore'
+import { useMode } from '@/composables/useMode'
 import { useWait } from '@/composables/useWait'
 import DocumentViewerModal from '@/components/Document/DocumentViewerModal/DocumentViewerModal'
 import { useDocumentStore } from '@/store/modules'
@@ -15,6 +16,7 @@ export const useDocument = function (element) {
   const route = useRoute()
   const router = useRouter()
   const core = useCore()
+  const { isServer } = useMode(core)
   const { waitFor, loaderId } = useWait()
 
   const fetchDocument = waitFor(async function ({ index, id, routing } = {}) {
@@ -22,7 +24,12 @@ export const useDocument = function (element) {
     await documentStore.getParentDocument()
     await documentStore.getRootDocument()
     await documentStore.getTags()
-    await documentStore.getRecommendationsByDocuments(await core.auth.getUsername())
+    // Recommendations are a server-mode-only feature (see widget
+    // registration's `modes: [MODE_NAME.SERVER]` in store/widgets/index.js
+    // and the same guard in useSearchFilter.js's refreshRecommendedBy).
+    if (isServer.value) {
+      await documentStore.getRecommendationsByDocuments(await core.auth.getUsername())
+    }
 
     if (document.value) {
       const { route, slicedNameToString } = document.value

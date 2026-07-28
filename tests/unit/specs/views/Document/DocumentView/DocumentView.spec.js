@@ -6,6 +6,7 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import DocumentView from '@/views/Document/DocumentView/DocumentView'
 import { useDocumentStore } from '@/store/modules'
+import { MODE_NAME } from '@/mode'
 
 vi.mock('@/api/apiInstance', async (importOriginal) => {
   const { apiInstance } = await importOriginal()
@@ -106,7 +107,9 @@ describe('DocumentView.vue', () => {
     expect(api.getTags).toBeCalledWith(project, id)
   })
 
-  it('should call the API to retrieve document recommendations', async () => {
+  it('should call the API to retrieve document recommendations in server mode', async () => {
+    core.config.set('mode', MODE_NAME.SERVER)
+
     shallowMount(DocumentView, {
       global: {
         plugins: core.plugins,
@@ -118,6 +121,22 @@ describe('DocumentView.vue', () => {
     await flushPromises()
 
     expect(api.getRecommendationsByDocuments).toBeCalledWith(project, id)
+  })
+
+  it('should not call the API to retrieve document recommendations in local mode', async () => {
+    core.config.set('mode', MODE_NAME.LOCAL)
+
+    shallowMount(DocumentView, {
+      global: {
+        plugins: core.plugins,
+        renderStubDefaultSlot: true
+      },
+      props
+    })
+
+    await flushPromises()
+
+    expect(api.getRecommendationsByDocuments).not.toHaveBeenCalled()
   })
 
   it('should display a document', async () => {

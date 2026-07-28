@@ -9,6 +9,7 @@ import AppModal from '@/components/AppModal/AppModal'
 import DisplayNumber from '@/components/Display/DisplayNumber'
 import ProjectLabel from '@/components/Project/ProjectLabel'
 import { useProjectMetrics } from '@/composables/useProjectMetrics'
+import { useMode } from '@/composables/useMode'
 import { useWait } from '@/composables/useWait'
 import { useCore } from '@/composables/useCore'
 import { useToast } from '@/composables/useToast'
@@ -29,6 +30,7 @@ const recommendationsCount = ref(0)
 
 const { waitFor, loaderId } = useWait()
 const core = useCore()
+const { isServer } = useMode(core)
 const { toast } = useToast()
 const { fetchDocumentsCount, fetchTagsCount, fetchRecommendationsCount } = useProjectMetrics(toRef(props, 'project'))
 
@@ -52,7 +54,10 @@ onBeforeMount(
   waitFor(async () => {
     documentsCount.value = await fetchDocumentsCount()
     tagsCount.value = await fetchTagsCount()
-    recommendationsCount.value = await fetchRecommendationsCount()
+    // Recommendations are a server-mode-only feature
+    if (isServer.value) {
+      recommendationsCount.value = await fetchRecommendationsCount()
+    }
   })
 )
 </script>
