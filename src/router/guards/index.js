@@ -38,8 +38,8 @@ export default (core) => {
   function proceedAuthenticated(to, next) {
     const appStore = useAppStore()
     const path = appStore.popRedirectAfterLogin()
-    if (to.path !== path && path !== null) {
-      next({ path })
+    if (path !== null && to.fullPath !== path) {
+      next(path)
     }
     else {
       next()
@@ -56,7 +56,7 @@ export default (core) => {
   function proceedUnauthenticated(to, from, next) {
     const appStore = useAppStore()
     if (from.name !== 'login' && to.name !== 'login') {
-      appStore.setRedirectAfterLogin(to.path)
+      appStore.setRedirectAfterLogin(to.fullPath)
       next({ name: 'login' })
     }
     else {
