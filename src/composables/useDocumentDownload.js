@@ -4,7 +4,6 @@ import { useI18n } from 'vue-i18n'
 import { useCore } from '@/composables/useCore'
 import { useDocumentDownloadStore, useDocumentStore } from '@/store/modules'
 import settings from '@/utils/settings'
-import byteSize from '@/utils/byteSize'
 
 export function useDocumentDownload(document, { immediate = true } = {}) {
   const documentStore = useDocumentStore()
@@ -54,33 +53,16 @@ export function useDocumentDownload(document, { immediate = true } = {}) {
     return settings.cleanableContentTypes.includes(documentRef.value.contentType)
   })
 
-  const embeddedDocumentDownloadMaxSize = computed(() => {
-    return core?.config?.get('embeddedDocumentDownloadMaxSize')
-  })
-
-  const isRootTooBig = computed(() => {
-    return hasRoot.value && rootContentLength.value > maxRootContentLength.value
-  })
-
   const isDownloadAllowed = computed(() => {
-    // Use nullish coalescing operator to allow download if the store/getter is undefined
-    return documentDownloadStore.isAllowed(documentRef.value.index) ?? true
-  })
-
-  const rootContentLength = computed(() => {
-    return documentRef.value?.root?.contentLength
-  })
-
-  const maxRootContentLength = computed(() => {
-    return byteSize(embeddedDocumentDownloadMaxSize.value)
+    return documentDownloadStore.isDownloadable(documentRef.value)
   })
 
   async function fetchDownloadStatus() {
-    const { index = null } = documentRef.value
-    // If the index is null, this means the document is not loaded yet
-    // and therefore, we should not fetch the status
-    if (index) {
-      await documentDownloadStore.fetchIndexStatus(index)
+    const { index = null, id = null } = documentRef.value
+    // If the index or the id is null, this means the document is not loaded
+    // yet and therefore, we should not probe its download status
+    if (index && id) {
+      await documentDownloadStore.fetchDocumentStatus(documentRef.value)
     }
   }
 
@@ -153,11 +135,7 @@ export function useDocumentDownload(document, { immediate = true } = {}) {
     rootDocumentFullUrl,
     hasRoot,
     hasCleanableContentType,
-    embeddedDocumentDownloadMaxSize,
-    isRootTooBig,
     isDownloadAllowed,
-    rootContentLength,
-    maxRootContentLength,
     downloadTextContent,
     hasTextContent,
     hasTranslations,

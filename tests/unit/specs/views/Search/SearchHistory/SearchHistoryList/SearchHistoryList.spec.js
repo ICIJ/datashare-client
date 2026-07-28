@@ -13,7 +13,7 @@ vi.mock('@/api/apiInstance', () => {
       elasticsearch: {
         search: vi.fn()
       },
-      isDownloadAllowed: vi.fn().mockResolvedValue(),
+      isDocumentDownloadable: vi.fn().mockResolvedValue(true),
       removeHistoryEvent: vi.fn().mockResolvedValue({}),
       getStarredDocuments: vi.fn().mockResolvedValue([]),
       getPathBanners: vi.fn().mockResolvedValue([]),

@@ -11,6 +11,9 @@ describe('useDocumentDownload composable', () => {
 
   beforeEach(() => {
     core = CoreSetup.init().useAll()
+    // Force a fresh Pinia so the document download store isn't memoized
+    // across tests sharing the same document index/id/routing
+    core.createPinia()
     plugins = core.plugins
     URL.createObjectURL = vi.fn().mockReturnValue('blob:fake-url')
   })
@@ -38,7 +41,7 @@ describe('useDocumentDownload composable', () => {
 
   describe('fetchStatuses', () => {
     it('should not fetch download status when immediate is false', async () => {
-      apiInstance.isDownloadAllowed = vi.fn().mockResolvedValue()
+      apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(true)
       mockGetSource({ content_translated: [] })
       const doc = new Document({
         _id: 'doc1',
@@ -47,11 +50,11 @@ describe('useDocumentDownload composable', () => {
       })
       mountComposable(doc, { immediate: false })
       await flushPromises()
-      expect(apiInstance.isDownloadAllowed).not.toHaveBeenCalled()
+      expect(apiInstance.isDocumentDownloadable).not.toHaveBeenCalled()
     })
 
     it('should fetch download status and translations when fetchStatuses is called', async () => {
-      apiInstance.isDownloadAllowed = vi.fn().mockResolvedValue()
+      apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(true)
       mockGetSource({ content_translated: [{ target_language: 'ENGLISH' }] })
       const doc = new Document({
         _id: 'doc1',
@@ -60,13 +63,65 @@ describe('useDocumentDownload composable', () => {
       })
       const { fetchStatuses, hasTranslations } = mountComposable(doc, { immediate: false })
       await flushPromises()
-      expect(apiInstance.isDownloadAllowed).not.toHaveBeenCalled()
+      expect(apiInstance.isDocumentDownloadable).not.toHaveBeenCalled()
       expect(hasTranslations.value).toBe(false)
 
       await fetchStatuses()
       await flushPromises()
-      expect(apiInstance.isDownloadAllowed).toHaveBeenCalledWith('test-index')
+      expect(apiInstance.isDocumentDownloadable).toHaveBeenCalledWith('test-index', 'doc1', 'doc1')
       expect(hasTranslations.value).toBe(true)
+    })
+
+    it('should not fetch download status when the document has no id', async () => {
+      apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(true)
+      mockGetSource({ content_translated: [] })
+      const doc = new Document({ _index: 'test-index', _source: { title: 'test' } })
+      const { fetchStatuses } = mountComposable(doc, { immediate: false })
+      await fetchStatuses()
+      await flushPromises()
+      expect(apiInstance.isDocumentDownloadable).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('isDownloadAllowed', () => {
+    it('should be true before the status is fetched', async () => {
+      apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(false)
+      mockGetSource({ content_translated: [] })
+      const doc = new Document({
+        _id: 'doc1',
+        _index: 'test-index',
+        _source: { title: 'test' }
+      })
+      const { isDownloadAllowed } = mountComposable(doc, { immediate: false })
+      expect(isDownloadAllowed.value).toBe(true)
+    })
+
+    it('should be false once the backend refuses the download', async () => {
+      apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(false)
+      mockGetSource({ content_translated: [] })
+      const doc = new Document({
+        _id: 'doc1',
+        _index: 'test-index',
+        _source: { title: 'test' }
+      })
+      const { isDownloadAllowed, fetchStatuses } = mountComposable(doc, { immediate: false })
+      await fetchStatuses()
+      await flushPromises()
+      expect(isDownloadAllowed.value).toBe(false)
+    })
+
+    it('should stay true when the backend allows the download', async () => {
+      apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(true)
+      mockGetSource({ content_translated: [] })
+      const doc = new Document({
+        _id: 'doc1',
+        _index: 'test-index',
+        _source: { title: 'test' }
+      })
+      const { isDownloadAllowed, fetchStatuses } = mountComposable(doc, { immediate: false })
+      await fetchStatuses()
+      await flushPromises()
+      expect(isDownloadAllowed.value).toBe(true)
     })
   })
 

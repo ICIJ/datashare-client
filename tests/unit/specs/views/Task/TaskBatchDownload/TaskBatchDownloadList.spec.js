@@ -9,7 +9,7 @@ import BatchDownloadUnavailableAlert from '@/components/BatchDownload/BatchDownl
 
 vi.mock('@/api/apiInstance', {
   apiInstance: {
-    isDownloadAllowed: vi.fn().mockResolvedValue(),
+    isDocumentDownloadable: vi.fn().mockResolvedValue(true),
     getTasks: vi.fn().mockResolvedValue({ items: [] })
   }
 })
