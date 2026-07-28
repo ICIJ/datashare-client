@@ -7,7 +7,8 @@ const Method = Object.freeze({
   PUT: 'PUT',
   UPDATE: 'UPDATE',
   DELETE: 'DELETE',
-  GET: 'GET'
+  GET: 'GET',
+  HEAD: 'HEAD'
 })
 
 export class Api {
@@ -322,6 +323,32 @@ export class Api {
 
   isDownloadAllowed(project) {
     return this.sendActionAsText(`/api/project/isDownloadAllowed/${project}`)
+  }
+
+  /**
+   * Probe whether a document's source can be downloaded.
+   *
+   * This deliberately bypasses `sendAction`: 403, 413 and 404 are expected
+   * answers from this endpoint, and `sendAction` would emit an `http::error`
+   * on the event bus for each one, spraying error notifications across a
+   * results page. Any non-200 status, and any transport failure, means the
+   * document cannot be downloaded.
+   *
+   * @param {string} index - The project index of the document
+   * @param {string} id - The document id
+   * @param {string} routing - The routing (the root document id)
+   * @returns {Promise<boolean>} True when the backend answers 200
+   */
+  async isDocumentDownloadable(index, id, routing) {
+    const url = Api.getFullUrl(`/api/${index}/documents/src/${id}`)
+    const validateStatus = () => true
+    try {
+      const { status } = await this.axios.request({ url, method: Method.HEAD, params: { routing }, validateStatus })
+      return status === 200
+    }
+    catch {
+      return false
+    }
   }
 
   login(username, password) {

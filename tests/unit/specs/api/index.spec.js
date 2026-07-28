@@ -567,4 +567,53 @@ describe('Datashare backend client', () => {
       })
     )
   })
+
+  describe('isDocumentDownloadable', () => {
+    it('should send a HEAD request on the document source url', async () => {
+      axios.request.mockResolvedValue({ status: 200 })
+      await api.isDocumentDownloadable('foo', 'doc-id', 'root-id')
+      expect(axios.request).toBeCalledWith(
+        expect.objectContaining({
+          url: Api.getFullUrl('/api/foo/documents/src/doc-id'),
+          method: 'HEAD',
+          params: { routing: 'root-id' },
+          validateStatus: expect.any(Function)
+        })
+      )
+    })
+
+    it('should be downloadable when the backend answers 200', async () => {
+      axios.request.mockResolvedValue({ status: 200 })
+      expect(await api.isDocumentDownloadable('foo', 'doc-id', 'root-id')).toBe(true)
+    })
+
+    it('should not be downloadable when the backend answers 403', async () => {
+      axios.request.mockResolvedValue({ status: 403 })
+      expect(await api.isDocumentDownloadable('foo', 'doc-id', 'root-id')).toBe(false)
+    })
+
+    it('should not be downloadable when the backend answers 413', async () => {
+      axios.request.mockResolvedValue({ status: 413 })
+      expect(await api.isDocumentDownloadable('foo', 'doc-id', 'root-id')).toBe(false)
+    })
+
+    it('should not be downloadable when the backend answers 404', async () => {
+      axios.request.mockResolvedValue({ status: 404 })
+      expect(await api.isDocumentDownloadable('foo', 'doc-id', 'root-id')).toBe(false)
+    })
+
+    it('should not be downloadable when the request fails', async () => {
+      axios.request.mockRejectedValue(new Error('Network Error'))
+      expect(await api.isDocumentDownloadable('foo', 'doc-id', 'root-id')).toBe(false)
+    })
+
+    it('should not emit an http error when the document is not downloadable', async () => {
+      axios.request.mockResolvedValue({ status: 403 })
+      const mockCallback = vi.fn()
+      EventBus.on('http::error', mockCallback)
+      await api.isDocumentDownloadable('foo', 'doc-id', 'root-id')
+      EventBus.off('http::error', mockCallback)
+      expect(mockCallback).not.toBeCalled()
+    })
+  })
 })
