@@ -232,8 +232,8 @@ export default (core) => {
   }
 
   router.beforeEach(checkMode)
-  router.beforeEach(checkUserRole)
   router.beforeEach(checkUserAuthentication)
+  router.beforeEach(checkUserRole)
   router.beforeEach(checkUserProjects)
   router.beforeEach(preparePageContext)
   router.beforeEach(startProgress)

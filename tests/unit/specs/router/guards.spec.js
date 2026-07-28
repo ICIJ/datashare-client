@@ -291,5 +291,17 @@ describe('guards', () => {
       await router.push({ name: 'project.view.overview', params: { name: 'local-datashare' } })
       expect(router.currentRoute.value.name).not.toBe('error')
     })
+
+    it('should redirect an unauthenticated user to login instead of error', async () => {
+      removeCookie(process.env.VITE_DS_COOKIE_NAME)
+      auth.reset()
+      api.getUser.mockRejectedValue()
+      config.set('policies', [])
+      const appStore = useAppStore()
+      appStore.setRedirectAfterLogin(null)
+      await router.push({ name: 'project.view.edit', params: { name: 'local-datashare' } })
+      expect(router.currentRoute.value.name).toBe('login')
+      expect(appStore.redirectAfterLogin).toContain('/local-datashare/')
+    })
   })
 })
