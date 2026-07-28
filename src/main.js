@@ -1,6 +1,7 @@
 import '@/main.scss'
 import '@/utils/shared'
 import { createCore } from '@/core'
+import { handleBootFailure } from '@/core/handleBootFailure'
 
 if (import.meta.env.MODE !== 'test' && window) {
   const datashare = createCore()
@@ -8,19 +9,8 @@ if (import.meta.env.MODE !== 'test' && window) {
   datashare.ready
     // Everything is fine
     .then(() => datashare.useRouter().mount())
-    // Redirect to the error page
-    .catch((error) => {
-      datashare.useRouter().mount()
-      // Unauthenticated error during initialization:
-      // redirect the user to the login page
-      if (error?.response?.status === 401) {
-        datashare.auth.reset()
-        datashare.router.push('login')
-      }
-      else {
-        datashare.router.push({ name: 'error', state: { error } })
-      }
-    })
+    // Store the requested URL (on 401) and redirect to login or error
+    .catch(error => handleBootFailure(datashare, error))
   // Register the core globally (so plugins can use it)
   window.datashare = datashare
 }
