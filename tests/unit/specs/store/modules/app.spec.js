@@ -123,6 +123,18 @@ describe('AppStore', () => {
       expect(store.redirectAfterLogin).toBe('/settings')
     })
 
+    it('setRedirectAfterLogin should ignore protocol-relative paths', () => {
+      store.setRedirectAfterLogin('/settings')
+      store.setRedirectAfterLogin('//evil.example.com/')
+      expect(store.redirectAfterLogin).toBe('/settings')
+    })
+
+    it('setRedirectAfterLogin should ignore backslash-prefixed paths', () => {
+      store.setRedirectAfterLogin('/settings')
+      store.setRedirectAfterLogin('/\\evil.example.com/')
+      expect(store.redirectAfterLogin).toBe('/settings')
+    })
+
     it('setRedirectAfterLogin should clear the value when passed null', () => {
       store.setRedirectAfterLogin('/settings')
       store.setRedirectAfterLogin(null)
