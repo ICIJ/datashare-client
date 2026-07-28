@@ -11,6 +11,10 @@ const Method = Object.freeze({
   HEAD: 'HEAD'
 })
 
+// The only statuses that mean "this document's source will not be served".
+// See Api#isDocumentDownloadable.
+const DOWNLOAD_REFUSED_STATUSES = [403, 404, 413]
+
 export class Api {
   constructor(_axios, _EventBus, _elasticsearch) {
     this.axios = _axios
@@ -324,26 +328,38 @@ export class Api {
   /**
    * Probe whether a document's source can be downloaded.
    *
-   * This deliberately bypasses `sendAction`: 403, 413 and 404 are expected
+   * This deliberately bypasses `sendAction`: 403, 404 and 413 are expected
    * answers from this endpoint, and `sendAction` would emit an `http::error`
    * on the event bus for each one, spraying error notifications across a
-   * results page. Any non-200 status, and any transport failure, means the
-   * document cannot be downloaded.
+   * results page.
+   *
+   * Only those three statuses count as a refusal. Anything else the probe
+   * cannot interpret — a server or proxy that doesn't route HEAD, a 5xx, a
+   * transport failure — leaves the document downloadable, so a probe we
+   * cannot read never hides a download that would in fact work.
    *
    * @param {string} index - The project index of the document
    * @param {string} id - The document id
    * @param {string} routing - The routing (the root document id)
-   * @returns {Promise<boolean>} True when the backend answers 200
+   * @returns {Promise<boolean>} False only when the backend explicitly refuses
    */
   async isDocumentDownloadable(index, id, routing) {
     const url = Api.getFullUrl(`/api/${index}/documents/src/${id}`)
     const validateStatus = () => true
     try {
-      const { status } = await this.axios.request({ url, method: Method.HEAD, params: { routing }, validateStatus })
-      return status === 200
+      const response = await this.axios.request({ url, method: Method.HEAD, params: { routing }, validateStatus })
+      const { status } = response
+      // An expired session says nothing about the document. Report it like any
+      // other request so the app can offer to log back in, and leave the
+      // document downloadable rather than greying out the whole page.
+      if (status === 401) {
+        this.eventBus?.emit('http::error', { response })
+        return true
+      }
+      return !DOWNLOAD_REFUSED_STATUSES.includes(status)
     }
     catch {
-      return false
+      return true
     }
   }
 

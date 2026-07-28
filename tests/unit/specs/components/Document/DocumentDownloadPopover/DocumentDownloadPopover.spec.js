@@ -120,6 +120,20 @@ describe('DocumentDownloadPopover.vue', () => {
     expect(downloadButton.attributes('disabled')).toBe('true')
   })
 
+  // It targets the same source endpoint as the main download button, only with
+  // filter_metadata=true, so the backend refuses it for the same reasons.
+  it('should disable the download-without-metadata button when the backend refuses the download', async () => {
+    apiInstance.elasticsearch.getSource = vi.fn().mockResolvedValue({ content_translated: [] })
+    apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(false)
+    const wrapper = mountPopover(createDocument())
+    await flushPromises()
+    const buttons = wrapper.findAll('.document-download-popover__body__button')
+    const label = 'Download without metadata'
+    const withoutMetadataButton = buttons.find(btn => btn.attributes('label') === label)
+    expect(withoutMetadataButton.exists()).toBe(true)
+    expect(withoutMetadataButton.attributes('disabled')).toBe('true')
+  })
+
   it('should keep the download button enabled when the backend allows the download', async () => {
     apiInstance.elasticsearch.getSource = vi.fn().mockResolvedValue({ content_translated: [] })
     apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(true)

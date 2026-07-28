@@ -57,32 +57,50 @@ describe('DocumentActionsGroupEntryDownload.vue', () => {
     return wrapper.find('.document-actions-group-entry-download')
   }
 
-  it('should enable the download button and set its href while the HEAD probe is still in flight', () => {
+  it('should set the download href while the HEAD probe is still in flight', () => {
     apiInstance.isDocumentDownloadable = vi.fn(() => new Promise(() => {}))
     const doc = createDocument()
     const wrapper = mountDownload(doc)
-    const button = findButton(wrapper)
-    expect(button.attributes('disabled')).toBe('false')
-    expect(button.attributes('href')).toBe(doc.fullUrl)
+    expect(findButton(wrapper).attributes('href')).toBe(doc.fullUrl)
   })
 
-  it('should disable the download button and clear its href when the backend refuses the download', async () => {
+  it('should clear the download href when the backend refuses the download', async () => {
     apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(false)
     const doc = createDocument()
     await useDocumentDownloadStore().fetchDocumentStatus(doc)
     const wrapper = mountDownload(doc)
-    const button = findButton(wrapper)
-    expect(button.attributes('disabled')).toBe('true')
-    expect(button.attributes('href')).toBeFalsy()
+    expect(findButton(wrapper).attributes('href')).toBeFalsy()
   })
 
-  it('should enable the download button and set its href when the backend allows the download', async () => {
+  it('should set the download href when the backend allows the download', async () => {
     apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(true)
     const doc = createDocument()
     await useDocumentDownloadStore().fetchDocumentStatus(doc)
     const wrapper = mountDownload(doc)
-    const button = findButton(wrapper)
-    expect(button.attributes('disabled')).toBe('false')
-    expect(button.attributes('href')).toBe(doc.fullUrl)
+    expect(findButton(wrapper).attributes('href')).toBe(doc.fullUrl)
+  })
+
+  // The button is the popover's trigger: the popover still offers the extracted
+  // text, the translations and the root document when the source is refused, so
+  // disabling the trigger would put those out of reach.
+  it('should never disable the download button, even when the backend refuses the download', async () => {
+    apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(false)
+    const doc = createDocument()
+    await useDocumentDownloadStore().fetchDocumentStatus(doc)
+    const wrapper = mountDownload(doc)
+    expect(findButton(wrapper).attributes('disabled')).toBe('false')
+  })
+
+  it('should follow the document when a recycled row is handed another one', async () => {
+    apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(true)
+    const doc = createDocument()
+    const otherDoc = new Document({
+      _id: 'other-doc-id',
+      _index: 'test-index',
+      _source: { title: 'other-doc', contentType: 'application/pdf' }
+    })
+    const wrapper = mountDownload(doc)
+    await wrapper.setProps({ document: otherDoc })
+    expect(findButton(wrapper).attributes('href')).toBe(otherDoc.fullUrl)
   })
 })
