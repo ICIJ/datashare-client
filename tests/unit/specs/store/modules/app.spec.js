@@ -95,4 +95,48 @@ describe('AppStore', () => {
   it('should default searchHistoryList order to modification_date desc', () => {
     expect(store.getSettings('searchHistoryList', 'orderBy')).toEqual(['modification_date', 'desc'])
   })
+
+  describe('redirectAfterLogin', () => {
+    it('should be null initially', () => {
+      expect(store.redirectAfterLogin).toBeNull()
+    })
+
+    it('setRedirectAfterLogin should store a path starting with a slash', () => {
+      store.setRedirectAfterLogin('/settings/appearance')
+      expect(store.redirectAfterLogin).toBe('/settings/appearance')
+    })
+
+    it('setRedirectAfterLogin should store a full path with query and hash', () => {
+      store.setRedirectAfterLogin('/settings?foo=bar#appearance')
+      expect(store.redirectAfterLogin).toBe('/settings?foo=bar#appearance')
+    })
+
+    it('setRedirectAfterLogin should ignore the login page', () => {
+      store.setRedirectAfterLogin('/settings')
+      store.setRedirectAfterLogin('/login')
+      expect(store.redirectAfterLogin).toBe('/settings')
+    })
+
+    it('setRedirectAfterLogin should ignore values not starting with a slash', () => {
+      store.setRedirectAfterLogin('/settings')
+      store.setRedirectAfterLogin('https://evil.example.com/')
+      expect(store.redirectAfterLogin).toBe('/settings')
+    })
+
+    it('setRedirectAfterLogin should clear the value when passed null', () => {
+      store.setRedirectAfterLogin('/settings')
+      store.setRedirectAfterLogin(null)
+      expect(store.redirectAfterLogin).toBeNull()
+    })
+
+    it('popRedirectAfterLogin should return the value and clear it', () => {
+      store.setRedirectAfterLogin('/settings?foo=bar')
+      expect(store.popRedirectAfterLogin()).toBe('/settings?foo=bar')
+      expect(store.redirectAfterLogin).toBeNull()
+    })
+
+    it('popRedirectAfterLogin should return null when nothing is stored', () => {
+      expect(store.popRedirectAfterLogin()).toBeNull()
+    })
+  })
 })
