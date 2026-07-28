@@ -68,6 +68,14 @@ describe('guards', () => {
         await router.push({ name: 'project.list' })
         expect(router.currentRoute.value.path).toBe('/settings/appearance')
       })
+
+      it('should restore query and hash of the stored path after login', async () => {
+        setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'yolo' }, JSON.stringify)
+        const appStore = useAppStore()
+        appStore.setRedirectAfterLogin('/settings/appearance?search=test#overview')
+        await router.push({ name: 'project.list' })
+        expect(router.currentRoute.value.fullPath).toBe('/settings/appearance?search=test#overview')
+      })
     })
 
     describe('when the user is not authenticated', () => {
@@ -99,6 +107,15 @@ describe('guards', () => {
         await router.replace({ name: 'login' })
         await router.push({ name: 'login' })
         expect(router.currentRoute.value.name).toBe('login')
+      })
+
+      it('should store the full path including query and hash before redirecting to login', async () => {
+        removeCookie(process.env.VITE_DS_COOKIE_NAME)
+        const appStore = useAppStore()
+        appStore.setRedirectAfterLogin(null)
+        await router.push('/settings?search=test#overview')
+        expect(router.currentRoute.value.name).toBe('login')
+        expect(appStore.redirectAfterLogin).toBe('/settings/appearance?search=test#overview')
       })
     })
   })
