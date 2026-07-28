@@ -59,7 +59,6 @@ export default {
   args: {
     selected: false,
     selectMode: false,
-    isDownloadAllowed: true,
     to: { name: 'document' },
     properties: ['title', 'contentLength', 'contentType', 'project'],
     document: {

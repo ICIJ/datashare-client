@@ -32,9 +32,6 @@ const props = defineProps({
   selected: {
     type: Boolean
   },
-  isDownloadAllowed: {
-    type: Boolean
-  },
   routeName: {
     type: String,
     default: 'document'
@@ -132,7 +129,6 @@ const showTitle = computed(() => props.properties?.includes('title'))
           :document="document"
           vertical
           no-close
-          :is-download-allowed="isDownloadAllowed"
         />
       </slot>
     </div>
