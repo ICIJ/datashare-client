@@ -6,7 +6,7 @@
     "submit": "Valider",
     "save": "Enregistrer",
     "reset": "Réinitialiser",
-    "search": "Search",
+    "search": "Rechercher",
     "you": "{username} (vous)",
     "building": "Notre équipe prépare de nouvelles fonctionnalités pour cette page. À suivre !"
   },
@@ -63,8 +63,8 @@
     "tree": "Vue en arborescence"
   },
   "buttonToggleContentTypesView": {
-    "flat": "File types view",
-    "grouped": "File types by categories view"
+    "flat": "Affichage des types de documents",
+    "grouped": "Affichage des catégories de types de documents"
   },
   "buttonToggleSettings": {
     "label": "Paramètres"
@@ -224,7 +224,7 @@
     "toggle": "Filtres"
   },
   "contentTypesCategoryName": {
-    "toggle": "Toggle the {category} category"
+    "toggle": "Activer/désactiver la catégorie {category}"
   },
   "filtersPanelSearch": {
     "placeholder": "Chercher dans les filtres"
@@ -289,7 +289,7 @@
     "project_editor": "Éditeur•ice",
     "project_member": "Membre",
     "project_visitor": "Visiteur•ice",
-    "no_role": "No role"
+    "no_role": "Aucun rôle"
   },
   "searchFormControl": {
     "submitLabel": "Rechercher"
@@ -496,19 +496,19 @@
     "contentTypeCategory": "Catégories de types de fichiers",
     "contentTypeCategoryItem": {
       "AUDIO": "Audio",
-      "VIDEO": "Video",
+      "VIDEO": "Vidéo",
       "IMAGE": "Image",
       "DOCUMENT": "Document",
       "EMAIL": "Email",
-      "PRESENTATION": "Presentation",
-      "SPREADSHEET": "Spreadsheet",
-      "OTHER": "Other"
+      "PRESENTATION": "Présentation",
+      "SPREADSHEET": "Tableur",
+      "OTHER": "Autres"
     },
     "fileTypes": {
       "legacyIndex": {
         "title": "Regroupement par catégorie indisponible",
-        "description": "Ce projet a été indexé sans données de catégorie.",
-        "descriptionPlural": "Some of these projects were indexed without file type categories."
+        "description": "Ce projet a été indexé sans les catégories de types de documents.",
+        "descriptionPlural": "Certains de ces projets ont été indexés sans les catégories de types de documents."
       }
     },
     "language": "Langues",
@@ -1121,7 +1121,7 @@
           "state": "Statut",
           "id": "ID"
         },
-        "unavailableAlert": "Ce téléchargement a expiré selon les paramètres de rétention de votre administrateur",
+        "unavailableAlert": "Ce téléchargement a expiré en raison des paramètres de rétention de votre administrateur",
         "truncatedAlert": {
           "sizeLimit": "Les résultats ont été tronqués après avoir atteint {reason} ({limit}).",
           "fileCountLimit": "Les résultats ont été tronqués après avoir atteint {reason} ({limit}).",
@@ -1157,7 +1157,7 @@
         "queries": {
           "onlyCSV": "Seul le format CSV est accepté.",
           "onlyUTF8": "Exporter votre feuille de calcul au format CSV en utilisant l'encodage UTF-8",
-          "queriesLimits": "Your CSV file should not contain more than 60,000 queries",
+          "queriesLimits": "Votre fichier CSV ne peut pas contenir plus de 60 000 requêtes",
           "firstColumn": "Seule la première colonne doit contenir les termes à rechercher",
           "lineBreaks": "Aucun saut de ligne dans les cellules",
           "operators": "Si vous optez pour 'Phrase exacte', les opérateurs comme <code>AND</code>, <code>OR</code>, <code>NOT</code>, <code>*</code>, <code>?</code>, <code>!</code>, <code>+</code>, <code>-</code> ou les regex (expressions régulières) ne seront pas prises en compte."
@@ -1408,7 +1408,7 @@
     "tabs": {
       "details": "Détails et documents",
       "pathBanners": "Bannières",
-      "users": "Users"
+      "users": "Utilisateur•ices"
     },
     "notify": {
       "update": {
@@ -1464,84 +1464,84 @@
       }
     },
     "users": {
-      "empty": "No users yet.",
-      "fetchError": "Failed to load users for this project.",
-      "noResults": "No users match your search.",
+      "empty": "Pas encore d'utilisateur•ices.",
+      "fetchError": "Impossible de charger les utilisateur•ices pour ce projet.",
+      "noResults": "Aucun•e utilisateur•ice ne correspond à votre recherche.",
       "fields": {
         "uid": {
-          "label": "Username"
+          "label": "Nom d'utilisateur•ice"
         },
         "name": {
-          "label": "Name"
+          "label": "Nom"
         },
         "email": {
-          "label": "Email"
+          "label": "Adresse e-mail"
         },
         "role": {
-          "label": "Role"
+          "label": "Rôle"
         }
       },
       "roleSelect": {
-        "save": "Save",
-        "cancel": "Cancel",
-        "saveSuccess": "Roles updated successfully",
-        "saveError": "Failed to update roles. Please try again.",
-        "changedCount": "0 roles changed | 1 role changed | {count} roles changed"
+        "save": "Enregistrer",
+        "cancel": "Annuler",
+        "saveSuccess": "Rôles mis à jour avec succès",
+        "saveError": "Échec de la mise à jour des rôles. Veuillez réessayer.",
+        "changedCount": "0 rôle modifié | 1 rôle modifié | {count} rôles modifiés"
       },
       "adminPromotionModal": {
-        "title": "Confirm admin promotions",
-        "body": "The following users will be granted administrator access:",
-        "confirm": "Confirm",
-        "cancel": "Cancel"
+        "title": "Confirmer les promotions en tant qu'admin(s)",
+        "body": "Les utilisateur•ices suivant•es auront des droits d'administrateur•ices :",
+        "confirm": "Confirmer",
+        "cancel": "Annuler"
       },
       "actions": {
-        "copy": "Copy username",
-        "delete": "Delete user",
+        "copy": "Copier le nom d'utilisateur•ice",
+        "delete": "Supprimer l’utilisateur•ice",
         "deleteModal": {
-          "title": "Delete user '{name}' ?",
+          "title": "Supprimer l'utilisateur•ice '{name}' ?",
           "body": {
-            "intro": "This action cannot be undone. Deleting this user will:",
-            "accessRevoked": "revoke their access to {allProjects};",
-            "dataDeleted": "delete all their personal data (stars, history, tags, saved searches etc.) across {allProjects};",
-            "tasksDeleted": "not delete their tasks and results.",
-            "allProjects": "all projects"
+            "intro": "Cette action ne peut pas être annulée. La suppression de cet utilisateur•ice va :",
+            "accessRevoked": "supprimer leur accès à {allProjects};",
+            "dataDeleted": "supprimer toutes leurs données personnelles (favoris, historique, tags, recherches enregistrées, etc.) dans {allProjects};",
+            "tasksDeleted": "ne pas supprimer leurs tâches et les résultats de leurs tâches.",
+            "allProjects": "tous les projets"
           },
-          "confirm": "Delete user",
-          "success": "User deleted successfully",
-          "error": "Failed to remove user. Please try again."
+          "confirm": "Supprimer l’utilisateur•ice",
+          "success": "Utilisateur•ice supprimé•e avec succès",
+          "error": "Impossible de supprimer l'utilisateur•ice. Veuillez réessayer."
         }
       },
       "create": {
-        "button": "Create user",
-        "title": "Create a user",
-        "confirm": "Create",
-        "saveSuccess": "User created successfully.",
-        "saveError": "Failed to create user. Please try again.",
-        "saveErrorConflict": "A user with this username already exists.",
+        "button": "Créer un•e utilisateur•ice",
+        "title": "Créer un•e utilisateur•ice",
+        "confirm": "Créer",
+        "saveSuccess": "Utilisateur•ice créé•e avec succès.",
+        "saveError": "Impossible de créer l'utilisateur•ice. Veuillez réessayer.",
+        "saveErrorConflict": "Un·e utilisateur·rice avec ce nom d’utilisateur·rice existe déjà.",
         "fields": {
           "username": {
-            "label": "Username",
-            "placeholder": "Type username"
+            "label": "Nom d'utilisateur•ice",
+            "placeholder": "Saisir le nom d'utilisateur•ice"
           },
           "email": {
-            "label": "Email",
-            "placeholder": "Type email address"
+            "label": "Adresse e-mail",
+            "placeholder": "Entrez l'adresse e-mail"
           },
           "name": {
-            "label": "Display name",
-            "placeholder": "Type display name"
+            "label": "Nom affiché",
+            "placeholder": "Entrez le nom affiché"
           },
           "password": {
-            "label": "Password",
-            "placeholder": "Type password"
+            "label": "Mot de passe",
+            "placeholder": "Saisissez le mot de passe"
           },
           "confirmPassword": {
-            "label": "Confirm password",
-            "placeholder": "Confirm password",
-            "mismatch": "Passwords do not match."
+            "label": "Confirmez le mot de passe",
+            "placeholder": "Confirmez le mot de passe",
+            "mismatch": "Le mot de passe ne correspond pas à sa confirmation."
           },
           "role": {
-            "label": "Role",
+            "label": "Rôle",
             "inProject": "in {project}"
           }
         }
@@ -2064,11 +2064,11 @@
     "fields": {
       "tags": "Tags",
       "name": "Name",
-      "author": "Author",
-      "recipients": "Recipients",
-      "content": "Content",
-      "path": "Path",
-      "threadId": "Thread ID"
+      "author": "Auteur·ice",
+      "recipients": "Destinataires",
+      "content": "Contenu",
+      "path": "Chemin",
+      "threadId": "ID du fil de discussion"
     }
   },
   "searchSelection": {
@@ -2178,9 +2178,9 @@
     "rowRangeCompact": "sur 0 tâche | sur 1 tâche | sur {total} tâches"
   },
   "rowPaginationUsers": {
-    "rowRange": "to {to} of 0 users | to {to} of 1 user | to {to} of {total} users",
-    "rowRangeFewer": "of 0 users | of 1 user | to {total} users",
-    "rowRangeCompact": "of 0 users | of 1 user | of {total} users"
+    "rowRange": "à {to} sur 0 utilisateur•ice | à {to} sur 1 utilisateur•ice | à {to} sur {total} utilisateur•ices",
+    "rowRangeFewer": "sur 0 utilisateur•ice | sur 1 utilisateur•ice | sur {total} utilisateur•ices",
+    "rowRangeCompact": "sur 0 utilisateur•ice | sur 1 utilisateur•ice | sur {total} utilisateur•ices"
   },
   "themes": {
     "dark": "Mode sombre",
