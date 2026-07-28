@@ -175,9 +175,9 @@ export const useAppStore = defineStore(
     }
 
     /**
-     * Sets the redirect path to be used after login. Only relative paths
-     * (starting with `/`) are accepted, and never the login page itself.
-     * Passing a falsy value clears the stored path.
+     * Sets the redirect path to be used after login. Only same-origin relative paths
+     * (starting with `/`, but not `//` or `/\` which are protocol-relative) are accepted,
+     * and never the login page itself. Passing a falsy value clears the stored path.
      *
      * @param {string|null} [path=null] - Redirect path.
      */
@@ -185,7 +185,7 @@ export const useAppStore = defineStore(
       if (!path) {
         redirectAfterLogin.value = null
       }
-      else if (path.startsWith('/') && !path.startsWith('/login')) {
+      else if (path.startsWith('/') && !path.startsWith('//') && !path.startsWith('/\\') && !path.startsWith('/login')) {
         redirectAfterLogin.value = path
       }
     }
