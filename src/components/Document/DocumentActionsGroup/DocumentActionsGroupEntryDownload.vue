@@ -41,10 +41,9 @@ const { t } = useI18n()
 
 const element = useTemplateRef('element')
 const isVisible = useElementVisibilityOnce(element)
-const { isDownloadAllowed, isRootTooBig, documentFullUrl, fetchStatuses } = useDocumentDownload(document, { immediate: false })
+const { isDownloadAllowed, documentFullUrl, fetchStatuses } = useDocumentDownload(document, { immediate: false })
 whenever(isVisible, fetchStatuses, { once: true })
-const hasDownload = computed(() => isDownloadAllowed.value && !isRootTooBig.value)
-const href = computed(() => (hasDownload.value ? documentFullUrl.value : null))
+const href = computed(() => (isDownloadAllowed.value ? documentFullUrl.value : null))
 const blur = () => nextTick(() => window.document?.activeElement.blur())
 </script>
 

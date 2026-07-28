@@ -47,7 +47,7 @@ const {
   rootDocumentFullUrl,
   hasRoot,
   hasCleanableContentType,
-  isRootTooBig,
+  isDownloadAllowed,
   downloadTextContent,
   hasTextContent,
   hasTranslations,
@@ -94,7 +94,7 @@ defineExpose({
     </template>
     <div class="document-download-popover__body">
       <button-icon
-        :disabled="isRootTooBig"
+        :disabled="!isDownloadAllowed"
         :href="documentFullUrl"
         :label="t('documentDownloadPopover.download')"
         :icon-left="IPhDownloadSimple"

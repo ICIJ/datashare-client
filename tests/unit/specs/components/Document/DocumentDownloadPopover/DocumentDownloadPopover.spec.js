@@ -10,6 +10,7 @@ describe('DocumentDownloadPopover.vue', () => {
 
   beforeEach(() => {
     core = CoreSetup.init().useAll()
+    core.createPinia()
     plugins = core.plugins
     URL.createObjectURL = vi.fn().mockReturnValue('blob:fake-url')
   })
@@ -53,6 +54,7 @@ describe('DocumentDownloadPopover.vue', () => {
     apiInstance.elasticsearch.getSource = vi.fn().mockResolvedValue({
       content_translated: [{ target_language: 'ENGLISH' }]
     })
+    apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(true)
     const doc = createDocument()
     const wrapper = mountPopover(doc)
     await flushPromises()
@@ -65,6 +67,7 @@ describe('DocumentDownloadPopover.vue', () => {
     apiInstance.elasticsearch.getSource = vi.fn().mockResolvedValue({
       content_translated: []
     })
+    apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(true)
     const doc = createDocument()
     const wrapper = mountPopover(doc)
     await flushPromises()
@@ -77,6 +80,7 @@ describe('DocumentDownloadPopover.vue', () => {
     apiInstance.elasticsearch.getSource = vi.fn().mockResolvedValue({
       content_translated: [{ target_language: 'ENGLISH' }]
     })
+    apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(true)
     const doc = createDocument({
       content_translated: [{ content: 'translated text', target_language: 'ENGLISH' }]
     })
@@ -95,5 +99,34 @@ describe('DocumentDownloadPopover.vue', () => {
     expect(translationButton.exists()).toBe(true)
     await translationButton.trigger('click')
     expect(fakeAnchor.click).toHaveBeenCalled()
+  })
+
+  it('should enable the download button while the download status is unknown', async () => {
+    apiInstance.elasticsearch.getSource = vi.fn().mockResolvedValue({ content_translated: [] })
+    apiInstance.isDocumentDownloadable = vi.fn(() => new Promise(() => {}))
+    const wrapper = mountPopover(createDocument())
+    const buttons = wrapper.findAll('.document-download-popover__body__button')
+    const downloadButton = buttons.find(btn => btn.attributes('label') === 'Download')
+    expect(downloadButton.attributes('disabled')).toBe('false')
+  })
+
+  it('should disable the download button when the backend refuses the download', async () => {
+    apiInstance.elasticsearch.getSource = vi.fn().mockResolvedValue({ content_translated: [] })
+    apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(false)
+    const wrapper = mountPopover(createDocument())
+    await flushPromises()
+    const buttons = wrapper.findAll('.document-download-popover__body__button')
+    const downloadButton = buttons.find(btn => btn.attributes('label') === 'Download')
+    expect(downloadButton.attributes('disabled')).toBe('true')
+  })
+
+  it('should keep the download button enabled when the backend allows the download', async () => {
+    apiInstance.elasticsearch.getSource = vi.fn().mockResolvedValue({ content_translated: [] })
+    apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(true)
+    const wrapper = mountPopover(createDocument())
+    await flushPromises()
+    const buttons = wrapper.findAll('.document-download-popover__body__button')
+    const downloadButton = buttons.find(btn => btn.attributes('label') === 'Download')
+    expect(downloadButton.attributes('disabled')).toBe('false')
   })
 })
