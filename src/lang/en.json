@@ -431,11 +431,11 @@
   "linkedDocumentCard": {
     "siblings": {
       "title": "{n} documents in the same folder | {n} document in the same folder | {n} documents in the same folder",
-      "description": "Same embedment level as this document"
+      "description": "Same embedding level as this document"
     },
     "children": {
       "title": "{n} children documents | {n} children document | {n} children documents",
-      "description": "One embedment level below this document"
+      "description": "One embedding level below this document"
     }
   },
   "documentContent": {
@@ -518,7 +518,7 @@
     "namedEntityEmail": "Emails",
     "path": "Paths",
     "indexingDate": "Indexing dates",
-    "extractionLevel": "Embedment levels",
+    "extractionLevel": "Embedding levels ",
     "creationDate": "Creation dates",
     "projects": "Projects",
     "starred": "Starred",
@@ -1468,10 +1468,18 @@
       "fetchError": "Failed to load users for this project.",
       "noResults": "No users match your search.",
       "fields": {
-        "uid": { "label": "Username" },
-        "name": { "label": "Name" },
-        "email": { "label": "Email" },
-        "role": { "label": "Role" }
+        "uid": {
+          "label": "Username"
+        },
+        "name": {
+          "label": "Name"
+        },
+        "email": {
+          "label": "Email"
+        },
+        "role": {
+          "label": "Role"
+        }
       },
       "roleSelect": {
         "save": "Save",
@@ -2101,7 +2109,7 @@
       "contentTextLength": "Text length",
       "contentType": "Document type",
       "creationDate": "Created on",
-      "extractionLevel": "Embedment level",
+      "extractionLevel": "Embedding level",
       "extractionDate": "Indexing date",
       "language": "Language",
       "project": "Project"
