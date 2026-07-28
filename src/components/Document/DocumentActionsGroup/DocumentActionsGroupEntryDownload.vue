@@ -40,13 +40,13 @@ const { t } = useI18n()
 
 const element = useTemplateRef('element')
 const isVisible = useElementVisibilityOnce(element)
-const { isDownloadAllowed, documentFullUrl, fetchStatuses } = useDocumentDownload(() => document, { immediate: false })
+const { isDownloadAllowed, documentFullUrl, fetchDownloadStatus } = useDocumentDownload(() => document, { immediate: false })
 // Probe once the row scrolls into view, and again whenever a recycled row is
 // handed a different document while it stays mounted. The store memoizes per
 // document, so re-probing a document already seen costs nothing.
 watch([isVisible, () => document?.id], ([visible]) => {
   if (visible) {
-    fetchStatuses()
+    fetchDownloadStatus()
   }
 })
 const href = computed(() => (isDownloadAllowed.value ? documentFullUrl.value : null))

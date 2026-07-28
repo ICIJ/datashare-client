@@ -19,9 +19,9 @@ describe('DocumentDownloadPopover.vue', () => {
     vi.restoreAllMocks()
   })
 
-  function createDocument(overrides = {}) {
+  function createDocument(overrides = {}, id = 'test-doc-id') {
     return new Document({
-      _id: 'test-doc-id',
+      _id: id,
       _index: 'test-index',
       _source: {
         title: 'test-doc',
@@ -55,7 +55,7 @@ describe('DocumentDownloadPopover.vue', () => {
       content_translated: [{ target_language: 'ENGLISH' }]
     })
     apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(true)
-    const doc = createDocument()
+    const doc = createDocument({}, 'test-doc-id-with-translations')
     const wrapper = mountPopover(doc)
     await flushPromises()
     const buttons = wrapper.findAll('.document-download-popover__body__button')
@@ -68,7 +68,7 @@ describe('DocumentDownloadPopover.vue', () => {
       content_translated: []
     })
     apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(true)
-    const doc = createDocument()
+    const doc = createDocument({}, 'test-doc-id-without-translations')
     const wrapper = mountPopover(doc)
     await flushPromises()
     const buttons = wrapper.findAll('.document-download-popover__body__button')
@@ -81,9 +81,10 @@ describe('DocumentDownloadPopover.vue', () => {
       content_translated: [{ target_language: 'ENGLISH' }]
     })
     apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(true)
-    const doc = createDocument({
-      content_translated: [{ content: 'translated text', target_language: 'ENGLISH' }]
-    })
+    const doc = createDocument(
+      { content_translated: [{ content: 'translated text', target_language: 'ENGLISH' }] },
+      'test-doc-id-translation-click'
+    )
 
     const fakeAnchor = { href: '', download: '', click: vi.fn() }
     const originalCreateElement = window.document.createElement.bind(window.document)

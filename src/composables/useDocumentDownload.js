@@ -91,14 +91,7 @@ export function useDocumentDownload(document, { immediate = true } = {}) {
   async function fetchTranslationStatus() {
     const { index, id, routing } = documentRef.value
     if (!index || !id) return
-    try {
-      const _source = 'content_translated.target_language'
-      const data = await core.api.elasticsearch.getSource({ index, id, routing, _source })
-      availableTranslations.value = (data.content_translated || []).filter(t => t.target_language)
-    }
-    catch {
-      availableTranslations.value = []
-    }
+    availableTranslations.value = await documentDownloadStore.fetchTranslationStatus({ index, id, routing })
   }
 
   async function downloadTranslatedContent() {
@@ -126,6 +119,8 @@ export function useDocumentDownload(document, { immediate = true } = {}) {
 
   return {
     fetchStatuses,
+    fetchDownloadStatus,
+    fetchTranslationStatus,
     extensionWarning,
     description,
     showExtensionWarning,

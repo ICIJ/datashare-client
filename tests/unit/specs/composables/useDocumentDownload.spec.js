@@ -129,7 +129,7 @@ describe('useDocumentDownload composable', () => {
     it('should be true when API returns translations', async () => {
       mockGetSource({ content_translated: [{ target_language: 'ENGLISH' }] })
       const doc = new Document({
-        _id: 'doc1',
+        _id: 'doc-with-translations',
         _index: 'test-index',
         _source: { title: 'test' }
       })
