@@ -54,7 +54,6 @@ export default {
     active: false,
     selected: false,
     selectMode: false,
-    isDownloadAllowed: true,
     to: { name: 'document' },
     properties: ['title', 'thumbnail', 'path', 'creationDate', 'project'],
     document: {

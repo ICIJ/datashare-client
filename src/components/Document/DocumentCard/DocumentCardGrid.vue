@@ -29,9 +29,6 @@ const props = defineProps({
   selectMode: {
     type: Boolean
   },
-  isDownloadAllowed: {
-    type: Boolean
-  },
   routeName: {
     type: String,
     default: 'document'
@@ -111,7 +108,6 @@ const showTitle = computed(() => props.properties?.includes('title'))
     <document-actions-group
       v-model:selected="selected"
       :document="document"
-      :is-download-allowed="isDownloadAllowed"
       :select-mode="selectMode"
       name="checkbox"
       class="ms-auto flex-shrink-0 p-3 above-stretched-link"
