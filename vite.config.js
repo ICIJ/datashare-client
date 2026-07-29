@@ -128,33 +128,44 @@ export default ({ mode }) => {
           /**
            * No vendor-chunking strategy existed before this: heavy,
            * rarely-changing dependencies got bundled into whichever route
-           * chunk first imported them (see log.md 2026-07-24/27 bundle
-           * analysis). Grouping them into their own chunks lets the browser
-           * cache them independently of app-code deploys and keeps them out
-           * of the search route's critical path.
+           * chunk first imported them. Grouping the ones that are eagerly
+           * reachable anyway into their own chunks lets the browser cache
+           * them independently of app-code deploys.
+           *
+           * This does not defer anything: a group is downloaded on first
+           * paint as soon as one member is statically reachable from the
+           * entry. Deferring needs a dynamic import at the call site, not a
+           * chunk name here.
            */
           manualChunks(id) {
             if (!id.includes('node_modules')) return
 
-            const match = id.match(/node_modules\/((?:@[^/]+\/)?[^/]+)/)
+            const scope = id.slice(id.lastIndexOf('node_modules/') + 'node_modules/'.length)
+            const match = scope.match(/^((?:@[^/]+\/)?[^/]+)/)
             const pkg = match?.[1]
             if (!pkg) return
 
-            // Search/ES client stack — single biggest dependency (log.md:
-            // elasticsearch-browser alone is ~1.6MB raw).
+            // Search/ES client stack — elasticsearch-browser alone is
+            // ~1.6 MB raw, the single biggest dependency in the app.
             if (['elasticsearch-browser', 'bodybuilder', 'lucene'].includes(pkg)) {
               return 'vendor-search'
             }
 
-            // Charting/geo/calendar — mostly project-overview widgets, not
-            // needed on the search route itself.
+            // Charting/geo/calendar. Despite the name, this is not deferred
+            // to project-overview: ColumnChartPicker.vue imports d3 directly
+            // and is statically reachable from the search route itself (via
+            // FilterTypeDateRange.vue -> FilterDateRange.js ->
+            // store/filters/index.js -> search.js), which the eager store
+            // barrel in Core.js pulls in on every page..
+            // Isolating it here still lets it cache independently of
+            // app-code deploys; actually deferring it needs breaking that
+            // eager import chain, not a chunk name.
             if (pkg === 'd3' || pkg.startsWith('d3-') || pkg === 'v-calendar' || pkg.startsWith('topojson')) {
               return 'vendor-charts'
             }
 
             // UI kit — bootstrap-vue-next and @icij/murmur share a large
-            // amount of code (see log.md 2026-07-27) and are used across
-            // nearly every view.
+            // amount of code and are used across nearly every view.
             if (['bootstrap-vue-next', '@icij/murmur', 'bootstrap'].includes(pkg) || pkg.startsWith('@floating-ui')) {
               return 'vendor-ui'
             }
@@ -165,35 +176,31 @@ export default ({ mode }) => {
             }
 
             // NOTE: pdfjs-dist/@tato30/vue-pdf/image-js/tiff/jpeg-js were
-            // tried as their own "vendor-viewer" chunk (log.md 2026-07-24
-            // bundle analysis flagged them as document-viewer-only, not
-            // needed on generic app load) but that grouping produced a
-            // "Cannot access '<var>' before initialization" runtime error —
-            // a circular chunk dependency between that group and other
-            // chunks. Verified in a real browser via claude-in-chrome (build
-            // succeeds either way; only runtime testing catches this).
-            // Left in the catch-all `vendor` chunk below; revisit only with
-            // careful cycle analysis, not a blind re-split.
+            // tried as their own "vendor-viewer" chunk (document-viewer-only,
+            // not needed on generic app load) but that grouping produced a
+            // "Cannot access '<var>' before initialization" runtime error, a
+            // circular chunk dependency between that group and other chunks.
+            // Verified in a real browser (build succeeds either way; only
+            // runtime testing catches this). Left ungrouped below so Rollup
+            // keeps them in their existing lazy route chunks; revisit only
+            // with careful cycle analysis, not a blind re-split.
 
             // Spreadsheet export — feature-specific, not needed app-wide.
             if (pkg === 'xlsx') {
               return 'vendor-export'
             }
 
-            // Markdown rendering stack (micromark/mdast/unified/hast) — used
-            // for rendering release-notes/help content, not core navigation.
-            if (['micromark', 'unified', 'vfile', 'property-information'].includes(pkg) || pkg.startsWith('micromark-') || pkg.startsWith('mdast-') || pkg.startsWith('hast-') || pkg.startsWith('unist-') || pkg.startsWith('remark-')) {
-              return 'vendor-markdown'
-            }
-
-            // lodash + the standalone lodash.* packages (log.md: 885 kB raw,
+            // lodash + the standalone lodash.* packages (885 kB raw,
             // duplicated logic across lodash and lodash.merge/clonedeep/unset)
             // — isolate so it caches independently of unrelated vendor code.
             if (pkg === 'lodash' || pkg.startsWith('lodash.')) {
               return 'vendor-lodash'
             }
 
-            return 'vendor'
+            // Anything else keeps Rollup's default placement: lazily
+            // imported deps (e.g. the markdown stack, PDF/TIFF viewers) stay
+            // in their route-specific async chunks instead of being pulled
+            // into a preloaded catch-all.
           }
         }
       }
