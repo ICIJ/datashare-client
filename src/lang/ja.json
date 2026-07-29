@@ -43,7 +43,7 @@
     "description": "This action cannot be undone."
   },
   "appModalHeader": {
-    "close": "Close"
+    "close": "閉じる"
   },
   "appModalFooter": {
     "cancelTitle": "Cancel",
@@ -902,15 +902,15 @@
   },
   "login": {
     "welcome": "データシェアにようこそ",
-    "account": "Login",
+    "account": "ログイン",
     "askHelp": "ヘルプを求める",
     "logout": "You have been logged out from Datashare.",
     "login": "Login to continue",
-    "title": "Login",
+    "title": "ログイン",
     "switchLanguage": "Switch language",
     "tagline": "ICIJ search and discovery platform",
     "username": "Username",
-    "password": "Password",
+    "password": "パスワード",
     "submit": "Sign in",
     "error": "Invalid username or password."
   },
@@ -1321,7 +1321,7 @@
   },
   "textTruncate": {
     "seeLess": "See less",
-    "seeMore": "See more"
+    "seeMore": "もっと見る"
   },
   "pageSettings": {
     "title": "Page settings",
@@ -1532,7 +1532,7 @@
             "placeholder": "Type display name"
           },
           "password": {
-            "label": "Password",
+            "label": "パスワード",
             "placeholder": "Type password"
           },
           "confirmPassword": {
