@@ -7,7 +7,10 @@ import { apiInstance as api } from '@/api/apiInstance'
 vi.mock('@/api/apiInstance', () => {
   return {
     apiInstance: {
-      isDocumentDownloadable: vi.fn().mockResolvedValue(true)
+      isDocumentDownloadable: vi.fn().mockResolvedValue(true),
+      elasticsearch: {
+        getSource: vi.fn()
+      }
     }
   }
 })
@@ -92,6 +95,36 @@ describe('DocumentDownloadStore', () => {
       documentDownloadStore.fetchDocumentStatus(sameIdOtherIndex)
       await flushPromises()
       expect(api.isDocumentDownloadable).toBeCalledTimes(2)
+    })
+  })
+
+  describe('fetchTranslationStatus', () => {
+    it('should return the available translations', async () => {
+      api.elasticsearch.getSource.mockResolvedValue({ content_translated: [{ target_language: 'fr' }] })
+      const translations = await documentDownloadStore.fetchTranslationStatus(document)
+      expect(translations).toEqual([{ target_language: 'fr' }])
+    })
+
+    it('should memoize a successful probe', async () => {
+      api.elasticsearch.getSource.mockResolvedValue({ content_translated: [] })
+      await documentDownloadStore.fetchTranslationStatus(document)
+      await documentDownloadStore.fetchTranslationStatus(document)
+      expect(api.elasticsearch.getSource).toBeCalledTimes(1)
+    })
+
+    it('should return an empty array when the probe fails', async () => {
+      api.elasticsearch.getSource.mockRejectedValue(new Error('network error'))
+      const translations = await documentDownloadStore.fetchTranslationStatus(document)
+      expect(translations).toEqual([])
+    })
+
+    it('should not memoize a failed probe, retrying it on the next call', async () => {
+      api.elasticsearch.getSource.mockRejectedValueOnce(new Error('network error'))
+      api.elasticsearch.getSource.mockResolvedValueOnce({ content_translated: [{ target_language: 'fr' }] })
+      await documentDownloadStore.fetchTranslationStatus(document)
+      const translations = await documentDownloadStore.fetchTranslationStatus(document)
+      expect(api.elasticsearch.getSource).toBeCalledTimes(2)
+      expect(translations).toEqual([{ target_language: 'fr' }])
     })
   })
 })
