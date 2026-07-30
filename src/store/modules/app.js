@@ -188,6 +188,9 @@ export const useAppStore = defineStore(
       else if (path.startsWith('/') && !path.startsWith('//') && !path.startsWith('/\\') && !path.startsWith('/login')) {
         redirectAfterLogin.value = path
       }
+      else { 
+          redirectAfterLogin.value = null
+      }
     }
 
     /**
