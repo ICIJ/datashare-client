@@ -5,7 +5,7 @@ import { useAppStore } from '@/store/modules'
  * mode), stores the URL the user originally requested so the router guard
  * can restore it after login, then redirects to the login page. Any other
  * error redirects to the error page.
- * @param {import('@/core/Core').default} core - The core instance whose `ready` promise rejected.
+ * @param {Core} core - The core instance whose `ready` promise rejected.
  * @param {Error} error - The boot error.
  * @returns {Promise} Resolves once the redirect navigation has settled.
  */
