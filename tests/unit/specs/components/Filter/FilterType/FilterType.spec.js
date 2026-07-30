@@ -11,6 +11,8 @@ import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPan
 import FilterType from '@/components/Filter/FilterType/FilterType'
 import { useContentTypeCategoryAvailability } from '@/composables/useContentTypeCategoryAvailability'
 import { useSearchStore } from '@/store/modules'
+import en from '@/lang/en.json'
+import fr from '@/lang/fr.json'
 
 vi.mock('@/composables/useContentTypeCategoryAvailability', () => ({
   useContentTypeCategoryAvailability: vi.fn()
@@ -434,7 +436,7 @@ describe('FilterType.vue', () => {
 
       const entries = wrapper.findAllComponents(FiltersPanelSectionFilterEntry)
       expect(entries).toHaveLength(2)
-      expect(entries.at(0).attributes('label')).toBe('Document on disk')
+      expect(entries.at(0).attributes('label')).toBe(en.filter.level.level00)
     })
 
     it('should display the extraction level filter with correct labels in French', async () => {
@@ -449,7 +451,7 @@ describe('FilterType.vue', () => {
 
       const entries = wrapper.findAllComponents(FiltersPanelSectionFilterEntry)
       expect(entries).toHaveLength(2)
-      expect(entries.at(0).attributes('label')).toBe('Document sur disque')
+      expect(entries.at(0).attributes('label')).toBe(fr.filter.level.level00)
     })
   })
 

@@ -4,7 +4,9 @@ import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import DocumentViewTabsMetadata from '@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsMetadata'
+import DocumentMetadata from '@/components/Document/DocumentMetadata/DocumentMetadata'
 import { useDocumentStore } from '@/store/modules'
+import en from '@/lang/en.json'
 
 vi.mock('@/api/apiInstance', async (importOriginal) => {
   const { apiInstance } = await importOriginal()
@@ -50,7 +52,7 @@ describe('DocumentViewTabsMetadata.vue', () => {
     expect(inputs).toHaveLength(8)
   })
 
-  it('should display "Document on disk" when extractionLevel metadata is missing', async () => {
+  it('should display the level-zero label when extractionLevel metadata is missing', async () => {
     const id = '/home/datashare/data/foo.txt'
     await letData(es).have(new IndexedDocument(id, index)).commit()
     await documentStore.getDocument({ id, index })
@@ -61,11 +63,11 @@ describe('DocumentViewTabsMetadata.vue', () => {
       }
     })
 
-    const extractionLevelEntry = wrapper.findAll('.document-view-tabs-metadata__entry')
-      .find(el => el.text().includes('Embedment level'))
+    const extractionLevelEntry = wrapper.findAllComponents(DocumentMetadata)
+      .find(entry => entry.props('name') === 'extractionLevel')
 
     expect(extractionLevelEntry).toBeDefined()
-    expect(extractionLevelEntry.text()).toContain('Document on disk')
+    expect(extractionLevelEntry.text()).toContain(en.filter.level.level00)
   })
 
   it('should display document with 8 metadata (including language)', async () => {
