@@ -111,28 +111,28 @@ describe('AppStore', () => {
       expect(store.redirectAfterLogin).toBe('/settings?foo=bar#appearance')
     })
 
-    it('setRedirectAfterLogin should ignore the login page', () => {
+    it('setRedirectAfterLogin should reject the login page', () => {
       store.setRedirectAfterLogin('/settings')
       store.setRedirectAfterLogin('/login')
-      expect(store.redirectAfterLogin).toBe('/settings')
+      expect(store.redirectAfterLogin).toBeNull()
     })
 
-    it('setRedirectAfterLogin should ignore values not starting with a slash', () => {
+    it('setRedirectAfterLogin should reject values not starting with a slash', () => {
       store.setRedirectAfterLogin('/settings')
       store.setRedirectAfterLogin('https://evil.example.com/')
-      expect(store.redirectAfterLogin).toBe('/settings')
+      expect(store.redirectAfterLogin).toBeNull()
     })
 
-    it('setRedirectAfterLogin should ignore protocol-relative paths', () => {
+    it('setRedirectAfterLogin should reject protocol-relative paths', () => {
       store.setRedirectAfterLogin('/settings')
       store.setRedirectAfterLogin('//evil.example.com/')
-      expect(store.redirectAfterLogin).toBe('/settings')
+      expect(store.redirectAfterLogin).toBeNull()
     })
 
-    it('setRedirectAfterLogin should ignore backslash-prefixed paths', () => {
+    it('setRedirectAfterLogin should reject backslash-prefixed paths', () => {
       store.setRedirectAfterLogin('/settings')
       store.setRedirectAfterLogin('/\\evil.example.com/')
-      expect(store.redirectAfterLogin).toBe('/settings')
+      expect(store.redirectAfterLogin).toBeNull()
     })
 
     it('setRedirectAfterLogin should clear the value when passed null', () => {
