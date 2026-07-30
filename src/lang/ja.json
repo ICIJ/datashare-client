@@ -67,7 +67,7 @@
     "grouped": "File types by categories view"
   },
   "buttonToggleSettings": {
-    "label": "Settings"
+    "label": "設定"
   },
   "buttonToggleSidebar": {
     "expand": "Expand menu",
@@ -317,7 +317,7 @@
     "delete": "Delete"
   },
   "searchHistoryList": {
-    "title": "History",
+    "title": "履歴",
     "allRemoved": "History of all visited documents have been removed.",
     "emptyStateLabel": "There is no history of visited documents. Do you want to read documents?",
     "emptyStateAction": "Go to search"
@@ -879,14 +879,14 @@
     "allProjects": "All projects",
     "search": "検索",
     "searchDocuments": "Documents",
-    "history": "History",
+    "history": "履歴",
     "savedSearches": "Saved searches"
   },
   "appSidebarFooter": {
     "signOut": "Sign out",
     "signOutBasic": "To sign out from Datashare you must close your web browser.",
     "keyboardShortcuts": "Keyboard Shortcuts",
-    "settings": "Settings",
+    "settings": "設定",
     "help": "Help",
     "removeAll": {
       "link": "Remove all",
@@ -1395,7 +1395,7 @@
       "paths": "パス",
       "graph": "Graph",
       "details": "詳細",
-      "history": "History"
+      "history": "履歴"
     }
   },
   "projectViewOverviewGraph": {
