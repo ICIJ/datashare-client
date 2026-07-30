@@ -6,7 +6,7 @@
     "submit": "Submit",
     "save": "Save",
     "reset": "Reset",
-    "search": "Search",
+    "search": "検索",
     "you": "You",
     "building": "Our team is still crafting something awesome for this page. Stay tuned!"
   },
@@ -207,7 +207,7 @@
     "description": "An error has occurred. Please try again later or contact your administrator if the problem persists.",
     "noProjects": "Your project list is empty. Please contact your administrator.",
     "notFound": "Page not found.",
-    "logout": "Log out",
+    "logout": "ログアウト",
     "faq": "よくある質問",
     "userGuides": "ユーザーガイド",
     "help": "ヘルプを求める"
