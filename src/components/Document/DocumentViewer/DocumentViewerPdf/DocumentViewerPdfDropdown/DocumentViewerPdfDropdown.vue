@@ -14,7 +14,10 @@ const embed = defineModel('embed', { type: Boolean, default: false })
 </script>
 
 <template>
-  <app-dropdown>
+  <app-dropdown
+    teleport-to="body"
+    boundary="viewport"
+  >
     <document-viewer-pdf-dropdown-rotation-clockwise v-model="rotation" />
     <document-viewer-pdf-dropdown-rotation-counter-clockwise v-model="rotation" />
     <b-dropdown-divider />
