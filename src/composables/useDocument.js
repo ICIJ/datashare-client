@@ -24,9 +24,7 @@ export const useDocument = function (element) {
     await documentStore.getParentDocument()
     await documentStore.getRootDocument()
     await documentStore.getTags()
-    // Recommendations are a server-mode-only feature (see widget
-    // registration's `modes: [MODE_NAME.SERVER]` in store/widgets/index.js
-    // and the same guard in useSearchFilter.js's refreshRecommendedBy).
+    // Recommendations are a server-mode-only feature
     if (isServer.value) {
       await documentStore.getRecommendationsByDocuments(await core.auth.getUsername())
     }
