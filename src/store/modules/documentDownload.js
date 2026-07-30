@@ -70,15 +70,21 @@ export const useDocumentDownloadStore = defineStore('documentDownload', () => {
   const fetchTranslationStatus = async ({ index, id, routing }) => {
     const key = translationCacheKey({ index, id })
     if (key in translationsFor) return translationsFor[key]
-    try {
-      const _source = 'content_translated.target_language'
-      const data = await api.elasticsearch.getSource({ index, id, routing, _source })
-      translationsFor[key] = extractTranslations(data)
+    fetchPromises[key] ??= (async () => {
+      try {
+        const _source = 'content_translated.target_language'
+        const data = await api.elasticsearch.getSource({ index, id, routing, _source })
+        translationsFor[key] = extractTranslations(data)
+      }
+      catch {
+        return []
+      }
+      finally {
+        delete fetchPromises[key]
+      }
       return translationsFor[key]
-    }
-    catch {
-      return []
-    }
+    })()
+    return fetchPromises[key]
   }
 
   return {
