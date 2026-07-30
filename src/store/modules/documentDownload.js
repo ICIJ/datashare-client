@@ -74,11 +74,11 @@ export const useDocumentDownloadStore = defineStore('documentDownload', () => {
       const _source = 'content_translated.target_language'
       const data = await api.elasticsearch.getSource({ index, id, routing, _source })
       translationsFor[key] = extractTranslations(data)
+      return translationsFor[key]
     }
     catch {
-      translationsFor[key] = []
+      return []
     }
-    return translationsFor[key]
   }
 
   return {
