@@ -126,5 +126,25 @@ describe('DocumentDownloadStore', () => {
       expect(api.elasticsearch.getSource).toBeCalledTimes(2)
       expect(translations).toEqual([{ target_language: 'fr' }])
     })
+
+    it('should not send two requests for two concurrent probes of the same document', async () => {
+      api.elasticsearch.getSource.mockResolvedValue({ content_translated: [{ target_language: 'fr' }] })
+      const [first, second] = await Promise.all([
+        documentDownloadStore.fetchTranslationStatus(document),
+        documentDownloadStore.fetchTranslationStatus(document)
+      ])
+      expect(api.elasticsearch.getSource).toBeCalledTimes(1)
+      expect(first).toEqual([{ target_language: 'fr' }])
+      expect(second).toEqual([{ target_language: 'fr' }])
+    })
+
+    it('should send two requests for two concurrent probes of different documents', async () => {
+      api.elasticsearch.getSource.mockResolvedValue({ content_translated: [] })
+      await Promise.all([
+        documentDownloadStore.fetchTranslationStatus(document),
+        documentDownloadStore.fetchTranslationStatus(anotherDocument)
+      ])
+      expect(api.elasticsearch.getSource).toBeCalledTimes(2)
+    })
   })
 })
