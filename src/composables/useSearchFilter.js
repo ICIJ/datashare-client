@@ -345,11 +345,7 @@ export function useSearchFilter() {
   }
 
   function refreshRecommendedBy() {
-    // Recommendations are a server-mode-only feature (see widget
-    // registration's `modes: [MODE_NAME.SERVER]` in store/widgets/index.js).
-    // Skip the fetch entirely in local/embedded mode instead of relying on
-    // getDocumentsRecommendedBy's incidental `indices.length + users.length
-    // > 1` guard, which doesn't actually check mode.
+    // Recommendations are a server-mode-only feature
     if (!isServer.value) return
     const users = getFilterValues({ name: 'recommendedBy' })
     return recommendedStore.getDocumentsRecommendedBy(indices.value, users)
