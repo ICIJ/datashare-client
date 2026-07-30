@@ -151,8 +151,8 @@ export function useSearchProperties() {
     creationDate,
     extractionLevel,
     language,
-    project,
-    numberOfPages
+    numberOfPages,
+    project
   }
 
   const fields = Object.values(items)
