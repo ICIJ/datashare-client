@@ -1,14 +1,12 @@
 import { computed, ref, toRef, watchEffect } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import { useCore } from '@/composables/useCore'
 import { useDocumentDownloadStore, useDocumentStore } from '@/store/modules'
 import settings from '@/utils/settings'
 
 export function useDocumentDownload(document, { immediate = true } = {}) {
   const documentStore = useDocumentStore()
   const documentDownloadStore = useDocumentDownloadStore()
-  const core = useCore()
   const { locale, t } = useI18n()
 
   const documentRef = toRef(document)
