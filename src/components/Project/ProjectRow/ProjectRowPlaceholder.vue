@@ -1,6 +1,5 @@
 <script setup>
-import { random } from 'lodash'
-
+import random from 'lodash/random'
 import AppPlaceholder from '@/components/AppPlaceholder/AppPlaceholder'
 import PageTableTr from '@/components/PageTable/PageTableTr'
 

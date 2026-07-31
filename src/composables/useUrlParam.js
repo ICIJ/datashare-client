@@ -1,7 +1,9 @@
 import { computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { debounce, identity, isObject, toNumber } from 'lodash'
-
+import debounce from 'lodash/debounce'
+import identity from 'lodash/identity'
+import isObject from 'lodash/isObject'
+import toNumber from 'lodash/toNumber'
 import { whenIsRoute } from '@/composables/whenIsRoute'
 import { toRoute } from '@/utils/toRoute'
 

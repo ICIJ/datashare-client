@@ -3,7 +3,6 @@ import { AppIcon } from '@icij/murmur'
 import { basename } from 'path'
 import { computed } from 'vue'
 import get from 'lodash/get'
-
 import { isBatchDownloadAvailable } from '@/utils/batchDownload'
 
 const props = defineProps({

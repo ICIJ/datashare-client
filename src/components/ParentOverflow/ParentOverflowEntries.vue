@@ -1,5 +1,6 @@
 <script setup>
-import { isNumber, isString } from 'lodash'
+import isNumber from 'lodash/isNumber'
+import isString from 'lodash/isString'
 import { computed, useTemplateRef, reactive, provide } from 'vue'
 import { useElementSize } from '@vueuse/core'
 import { vElementSize } from '@vueuse/components'

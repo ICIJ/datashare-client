@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
-import { compact, trim } from 'lodash'
-
+import compact from 'lodash/compact'
+import trim from 'lodash/trim'
 const props = defineProps({
   label: {
     type: String,

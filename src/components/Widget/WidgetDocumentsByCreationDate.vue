@@ -91,7 +91,8 @@
 
 <script setup>
 import bodybuilder from 'bodybuilder'
-import { clamp, get } from 'lodash'
+import clamp from 'lodash/clamp'
+import get from 'lodash/get'
 import * as d3 from 'd3'
 import { computed, nextTick, ref, useTemplateRef, watch, toRef } from 'vue'
 import { useI18n } from 'vue-i18n'

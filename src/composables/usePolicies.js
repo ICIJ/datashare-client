@@ -1,6 +1,6 @@
 import { useConfig } from '@/composables/useConfig.js'
 import { computed } from 'vue'
-import { upperFirst } from 'lodash'
+import upperFirst from 'lodash/upperFirst'
 import { DEFAULT_ROLE, NO_ROLE, ROLE, ROLE_BIT, ROLE_HIERARCHY, ROLE_KEY } from '@/enums/roles.js'
 
 export function usePolicies() {

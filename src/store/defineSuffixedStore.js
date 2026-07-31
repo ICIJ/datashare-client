@@ -1,4 +1,5 @@
-import { camelCase, uniqueId } from 'lodash'
+import camelCase from 'lodash/camelCase'
+import uniqueId from 'lodash/uniqueId'
 import { provide, inject, onUnmounted } from 'vue'
 import { defineStore } from 'pinia'
 

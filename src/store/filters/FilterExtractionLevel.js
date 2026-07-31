@@ -1,5 +1,4 @@
 import get from 'lodash/get'
-
 import FilterText from './FilterText'
 
 import DisplayExtractionLevel from '@/components/Display/DisplayExtractionLevel'

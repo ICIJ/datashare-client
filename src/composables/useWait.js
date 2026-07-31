@@ -1,6 +1,6 @@
 import { computed, useId, toRef, getCurrentInstance } from 'vue'
-import { debounce, noop } from 'lodash'
-
+import debounce from 'lodash/debounce'
+import noop from 'lodash/noop'
 import { useWaitStore } from '@/store/modules/wait'
 
 export function useWait({ throttle = 0, scoped = false } = {}) {

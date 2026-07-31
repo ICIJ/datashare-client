@@ -1,5 +1,5 @@
 <script setup>
-import { property } from 'lodash'
+import property from 'lodash/property'
 import { computed } from 'vue'
 
 import DocumentEntriesTableBody from './DocumentEntriesTableBody'

@@ -1,7 +1,6 @@
 // BootstrapVue recommends using this
 import 'mutationobserver-shim'
 
-import compose from 'lodash/fp/compose'
 import { config } from '@icij/murmur'
 import VCalendar from 'v-calendar'
 import VueScrollTo from 'vue-scrollto'
@@ -10,8 +9,9 @@ import { createBootstrap, BApp } from 'bootstrap-vue-next'
 import { createApp, defineComponent, toValue, reactive, watchEffect, h } from 'vue'
 import { createI18n } from 'vue-i18n'
 import { createRouter, createWebHashHistory } from 'vue-router'
-import { iteratee, get } from 'lodash'
-
+import iteratee from 'lodash/iteratee'
+import get from 'lodash/get'
+import flowRight from 'lodash/flowRight'
 import ComponentsMixin from './ComponentsMixin'
 import FiltersMixin from './FiltersMixin'
 import HooksMixin from './HooksMixin'
@@ -34,7 +34,7 @@ import { getTheme, setTheme } from '@/composables/useTheme'
 import * as stores from '@/store/modules'
 
 class Base {}
-const Behaviors = compose(
+const Behaviors = flowRight(
   ComponentsMixin,
   FiltersMixin,
   HooksMixin,

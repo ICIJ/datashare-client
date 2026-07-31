@@ -2,7 +2,8 @@
 import { computed, inject, markRaw, onBeforeMount, ref, useTemplateRef, watch } from 'vue'
 import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { matches, property } from 'lodash'
+import matches from 'lodash/matches'
+import property from 'lodash/property'
 import { useElementSize, useScroll, useWindowSize } from '@vueuse/core'
 
 import IPhTextAlignLeft from '~icons/ph/text-align-left'

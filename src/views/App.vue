@@ -39,7 +39,9 @@
 
 <script setup>
 import { computed, onMounted, onBeforeUnmount, useTemplateRef } from 'vue'
-import { compact, get, property } from 'lodash'
+import compact from 'lodash/compact'
+import get from 'lodash/get'
+import property from 'lodash/property'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 

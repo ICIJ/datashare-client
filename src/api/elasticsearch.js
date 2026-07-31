@@ -1,4 +1,5 @@
-import { isEqual, replace } from 'lodash'
+import isEqual from 'lodash/isEqual'
+import replace from 'lodash/replace'
 import bodybuilder from 'bodybuilder'
 import es from 'elasticsearch-browser'
 import { getCookie } from 'tiny-cookie'

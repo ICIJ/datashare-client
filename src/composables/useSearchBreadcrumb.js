@@ -1,5 +1,11 @@
 import { computed } from 'vue'
-import { castArray, compact, map, omit, orderBy, trimStart, unset } from 'lodash'
+import castArray from 'lodash/castArray'
+import compact from 'lodash/compact'
+import map from 'lodash/map'
+import omit from 'lodash/omit'
+import orderBy from 'lodash/orderBy'
+import trimStart from 'lodash/trimStart'
+import unset from 'lodash/unset'
 import lucene from 'lucene'
 
 import { useSearchFilter } from '@/composables/useSearchFilter'

@@ -1,6 +1,5 @@
 import { flushPromises, shallowMount, mount } from '@vue/test-utils'
-import { uniqueId } from 'lodash'
-
+import uniqueId from 'lodash/uniqueId'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
@@ -10,13 +9,9 @@ import EntityButton from '@/components/Entity/EntityButton'
 import { useDocumentStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
 
-vi.mock('lodash', async (importOriginal) => {
-  const { default: actual } = await importOriginal()
-  return {
-    ...actual,
-    throttle: cb => cb
-  }
-})
+vi.mock('lodash/throttle', () => ({
+  default: cb => cb
+}))
 
 describe('DocumentViewTabsEntities.vue', () => {
   const { index, es: elasticsearch } = esConnectionHelper.build()
