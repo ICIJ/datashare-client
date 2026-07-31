@@ -1,5 +1,5 @@
 <script setup>
-import { pickBy } from 'lodash'
+import pickBy from 'lodash/pickBy'
 import { ref, useAttrs, useSlots } from 'vue'
 
 import AppModal from './AppModal'

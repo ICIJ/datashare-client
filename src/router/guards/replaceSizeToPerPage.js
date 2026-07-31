@@ -1,5 +1,4 @@
-import { omit } from 'lodash'
-
+import omit from 'lodash/omit'
 /**
  * This navigation guard replace the 'size' query parameter with 'perPage' in the route.
  *

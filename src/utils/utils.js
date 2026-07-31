@@ -1,5 +1,4 @@
-import { get } from 'lodash'
-
+import get from 'lodash/get'
 import IPhX from '~icons/ph/x'
 import IPhInfo from '~icons/ph/info'
 import IPhCheck from '~icons/ph/check'

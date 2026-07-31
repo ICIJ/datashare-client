@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { matchesProperty } from 'lodash'
+import matchesProperty from 'lodash/matchesProperty'
 import { useI18n } from 'vue-i18n'
 import { AppIcon } from '@icij/murmur'
 import IPhMinus from '~icons/ph/minus'

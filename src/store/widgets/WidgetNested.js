@@ -1,5 +1,4 @@
-import { castArray } from 'lodash'
-
+import castArray from 'lodash/castArray'
 import WidgetEmpty from './WidgetEmpty'
 
 import Component from '@/components/Widget/WidgetNested'

@@ -1,7 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { pick } from 'lodash'
-
+import pick from 'lodash/pick'
 import { VARIANT, variantValidator } from '@/enums/variants'
 import SearchParameterQuery from '@/components/Search/SearchParameter/SearchParameterQuery'
 import SearchParameterFilter from '@/components/Search/SearchParameter/SearchParameterFilter'

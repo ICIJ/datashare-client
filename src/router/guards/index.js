@@ -1,5 +1,6 @@
-import { get, isString, isFunction } from 'lodash'
-
+import get from 'lodash/get'
+import isString from 'lodash/isString'
+import isFunction from 'lodash/isFunction'
 import { useAppStore } from '@/store/modules'
 import { useNProgress } from '@/composables/useNProgress'
 import { usePolicies } from '@/composables/usePolicies.js'

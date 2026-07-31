@@ -1,5 +1,5 @@
 <script setup>
-import { uniqueId } from 'lodash'
+import uniqueId from 'lodash/uniqueId'
 import { computed } from 'vue'
 import { BFormCheckbox, BFormCheckboxGroup, BFormRadio, BFormRadioGroup } from 'bootstrap-vue-next'
 

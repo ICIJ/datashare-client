@@ -65,7 +65,12 @@
 
 <script>
 import bodybuilder from 'bodybuilder'
-import { camelCase, flatten, get, iteratee, noop, uniqueId } from 'lodash'
+import camelCase from 'lodash/camelCase'
+import flatten from 'lodash/flatten'
+import get from 'lodash/get'
+import iteratee from 'lodash/iteratee'
+import noop from 'lodash/noop'
+import uniqueId from 'lodash/uniqueId'
 import InfiniteLoading from 'v3-infinite-loading'
 import { AppIcon } from '@icij/murmur'
 import { useI18n } from 'vue-i18n'

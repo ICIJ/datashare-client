@@ -1,6 +1,9 @@
 <script setup>
 import { computed } from 'vue'
-import { compact, find, isArray, trim } from 'lodash'
+import compact from 'lodash/compact'
+import find from 'lodash/find'
+import isArray from 'lodash/isArray'
+import trim from 'lodash/trim'
 import { useI18n } from 'vue-i18n'
 
 import ProjectDropdownSelectorButtonContent from './ProjectDropdownSelectorButtonContent'

@@ -1,7 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { isString } from 'lodash'
-
+import isString from 'lodash/isString'
 import ProjectLink from '@/components/Project/ProjectLink'
 
 const props = defineProps({

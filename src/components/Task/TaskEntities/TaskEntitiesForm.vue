@@ -1,8 +1,10 @@
 <script setup>
 import { ref, computed, onMounted, watch, toRef } from 'vue'
-import { filter, orderBy, values } from 'lodash'
-import { useI18n } from 'vue-i18n'
+import filter from 'lodash/filter'
 import includes from 'lodash/includes'
+import orderBy from 'lodash/orderBy'
+import values from 'lodash/values'
+import { useI18n } from 'vue-i18n'
 
 import AppWait from '@/components/AppWait/AppWait'
 import FormCreation from '@/components/Form/FormCreation'

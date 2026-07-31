@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { round } from 'lodash'
+import round from 'lodash/round'
 import { AppIcon } from '@icij/murmur'
 
 import DisplayNumber from '@/components/Display/DisplayNumber'

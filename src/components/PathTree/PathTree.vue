@@ -1,6 +1,13 @@
 <script setup>
 import { computed, ref, reactive, toRef, watch } from 'vue'
-import { flatten, get, identity, orderBy as sortOrderBy, property, trim, trimEnd, uniqBy } from 'lodash'
+import flatten from 'lodash/flatten'
+import get from 'lodash/get'
+import identity from 'lodash/identity'
+import sortOrderBy from 'lodash/orderBy'
+import property from 'lodash/property'
+import trim from 'lodash/trim'
+import trimEnd from 'lodash/trimEnd'
+import uniqBy from 'lodash/uniqBy'
 import bodybuilder from 'bodybuilder'
 
 import Document from '@/api/resources/Document'

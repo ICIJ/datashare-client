@@ -1,5 +1,6 @@
-import { escapeRegExp, some, trimEnd } from 'lodash'
-
+import escapeRegExp from 'lodash/escapeRegExp'
+import some from 'lodash/some'
+import trimEnd from 'lodash/trimEnd'
 /**
  * Slugify a string value.
  *

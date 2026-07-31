@@ -1,7 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { property } from 'lodash'
-
+import property from 'lodash/property'
 import { useSearchFilter } from '@/composables/useSearchFilter'
 import ColumnChartPicker from '@/components/ColumnChartPicker'
 import FilterType from '@/components/Filter/FilterType/FilterType'

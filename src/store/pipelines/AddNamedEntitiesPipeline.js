@@ -1,5 +1,5 @@
-import { reduce, template } from 'lodash'
-
+import reduce from 'lodash/reduce'
+import template from 'lodash/template'
 import IdentityPipeline from './IdentityPipeline'
 
 import { Highlight } from '@/utils/highlight'

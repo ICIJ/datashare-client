@@ -1,8 +1,8 @@
 <script setup>
 import Fuse from 'fuse.js'
 import { computed, onBeforeMount } from 'vue'
-import { property, sortBy } from 'lodash'
-
+import property from 'lodash/property'
+import sortBy from 'lodash/sortBy'
 import { useConfig } from '@/composables/useConfig'
 import { useSearchFilter } from '@/composables/useSearchFilter'
 import { useRecommendedStore } from '@/store/modules'

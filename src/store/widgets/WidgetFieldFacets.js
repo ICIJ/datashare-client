@@ -1,4 +1,5 @@
-import { iteratee, isFunction } from 'lodash'
+import iteratee from 'lodash/iteratee'
+import isFunction from 'lodash/isFunction'
 import { markRaw } from 'vue'
 
 import WidgetListGroup from '@/store/widgets/WidgetListGroup'

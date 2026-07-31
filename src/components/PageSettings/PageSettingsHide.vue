@@ -1,5 +1,5 @@
 <script setup>
-import { noop } from 'lodash'
+import noop from 'lodash/noop'
 import { ButtonIcon } from '@icij/murmur'
 import IPhX from '~icons/ph/x'
 

@@ -1,4 +1,6 @@
-import { indexOf, orderBy, uniqueId } from 'lodash'
+import indexOf from 'lodash/indexOf'
+import orderBy from 'lodash/orderBy'
+import uniqueId from 'lodash/uniqueId'
 import { setActivePinia, createPinia } from 'pinia'
 
 import { IndexedDocument, letData } from '~tests/unit/es_utils'

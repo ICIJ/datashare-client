@@ -1,7 +1,7 @@
 <script setup>
 import { computed, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { isEmpty } from 'lodash'
+import isEmpty from 'lodash/isEmpty'
 import { useRoute, useRouter } from 'vue-router'
 
 import IPhTextAa from '~icons/ph/text-aa'

@@ -1,5 +1,4 @@
 import get from 'lodash/get'
-
 /**
  * Whether a batch-download task produced a downloadable result (i.e. it
  * completed and recorded a result URI).

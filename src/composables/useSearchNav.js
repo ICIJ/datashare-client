@@ -1,7 +1,7 @@
 import { computed, inject, toRef, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { clamp, matches } from 'lodash'
-
+import clamp from 'lodash/clamp'
+import matches from 'lodash/matches'
 import EsDocList from '@/api/resources/EsDocList'
 import { useBreakpoints } from '@/composables/useBreakpoints'
 import { useCore } from '@/composables/useCore'
