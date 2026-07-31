@@ -1,7 +1,6 @@
 <script setup>
 import { computed, ref, useTemplateRef, watch } from 'vue'
-import { uniq } from 'lodash'
-
+import uniq from 'lodash/uniq'
 import ButtonTogglePathTreeView from '@/components/Button/ButtonTogglePathTreeView'
 import FilterType from '@/components/Filter/FilterType/FilterType'
 import PathTree from '@/components/PathTree/PathTree'

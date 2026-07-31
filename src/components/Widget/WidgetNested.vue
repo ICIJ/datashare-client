@@ -26,8 +26,7 @@
 </template>
 
 <script>
-import { sortBy } from 'lodash'
-
+import sortBy from 'lodash/sortBy'
 import { useInsightsStore } from '@/store/modules'
 
 /**

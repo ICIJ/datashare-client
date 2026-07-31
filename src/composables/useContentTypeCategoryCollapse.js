@@ -1,6 +1,5 @@
 import { computed } from 'vue'
-import { without } from 'lodash'
-
+import without from 'lodash/without'
 import { useAppStore } from '@/store/modules'
 
 const SETTINGS_VIEW = 'search'

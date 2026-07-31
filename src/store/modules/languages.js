@@ -1,4 +1,4 @@
-import { castArray } from 'lodash'
+import castArray from 'lodash/castArray'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 

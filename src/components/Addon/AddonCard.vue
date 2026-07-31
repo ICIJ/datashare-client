@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
-import { camelCase, startCase } from 'lodash'
+import camelCase from 'lodash/camelCase'
+import startCase from 'lodash/startCase'
 import { useI18n } from 'vue-i18n'
 
 import AddonCardView from '@/components/Addon/AddonCardView/AddonCardView'

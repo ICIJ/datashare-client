@@ -1,4 +1,5 @@
-import { isString, isObject } from 'lodash'
+import isString from 'lodash/isString'
+import isObject from 'lodash/isObject'
 import { toValue } from 'vue'
 
 /**

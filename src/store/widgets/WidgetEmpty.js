@@ -1,5 +1,4 @@
 import uniqueId from 'lodash/uniqueId'
-
 import Component from '@/components/Widget/WidgetEmpty'
 
 /**

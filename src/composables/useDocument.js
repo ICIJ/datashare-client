@@ -1,6 +1,8 @@
 import { computed, inject, provide, useId, watch, h } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { find, matches, overSome } from 'lodash'
+import find from 'lodash/find'
+import matches from 'lodash/matches'
+import overSome from 'lodash/overSome'
 import { useModal } from 'bootstrap-vue-next'
 
 import { useCore } from '@/composables/useCore'

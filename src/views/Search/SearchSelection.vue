@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { property } from 'lodash'
+import property from 'lodash/property'
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur'
 

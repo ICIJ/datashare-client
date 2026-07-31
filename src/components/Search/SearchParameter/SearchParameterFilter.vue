@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { trimStart } from 'lodash'
+import trimStart from 'lodash/trimStart'
 import { useI18n } from 'vue-i18n'
 
 import IPhMagnifyingGlass from '~icons/ph/magnifying-glass'

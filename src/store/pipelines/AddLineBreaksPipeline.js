@@ -1,5 +1,4 @@
 import trim from 'lodash/trim'
-
 import IdentityPipeline from './IdentityPipeline'
 
 class AddLineBreaksPipeline extends IdentityPipeline {

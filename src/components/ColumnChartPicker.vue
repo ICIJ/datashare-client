@@ -1,5 +1,10 @@
 <script>
-import { cloneDeep, defaultTo, iteratee, isNumber, last, throttle } from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
+import defaultTo from 'lodash/defaultTo'
+import iteratee from 'lodash/iteratee'
+import isNumber from 'lodash/isNumber'
+import last from 'lodash/last'
+import throttle from 'lodash/throttle'
 import * as d3 from 'd3'
 import { ColumnChart, RangePicker } from '@icij/murmur'
 

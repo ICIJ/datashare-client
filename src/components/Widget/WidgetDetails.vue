@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
-import { isFunction, kebabCase } from 'lodash'
+import isFunction from 'lodash/isFunction'
+import kebabCase from 'lodash/kebabCase'
 import { useI18n } from 'vue-i18n'
 import { AppIcon } from '@icij/murmur'
 

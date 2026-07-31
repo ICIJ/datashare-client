@@ -1,6 +1,5 @@
 import { getCurrentInstance } from 'vue'
-import { isFunction } from 'lodash'
-
+import isFunction from 'lodash/isFunction'
 export function useToast() {
   // `getCurrentInstance` is a Vue Composition API function that gives us access to the current component instance.
   // This is essential because we need the instance to access global properties like `$toast`.

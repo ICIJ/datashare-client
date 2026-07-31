@@ -1,7 +1,8 @@
 <script setup>
 import { toRef, ref, computed, watch, onBeforeMount } from 'vue'
-import { get, keys, orderBy } from 'lodash'
-
+import get from 'lodash/get'
+import keys from 'lodash/keys'
+import orderBy from 'lodash/orderBy'
 import DocumentGlobalSearchTermsEntry from './DocumentGlobalSearchTermsEntry'
 
 import { useCore } from '@/composables/useCore'

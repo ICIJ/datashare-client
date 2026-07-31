@@ -1,7 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { pick } from 'lodash'
-
+import pick from 'lodash/pick'
 import EntityPopoverTabGroup from './EntityPopoverTabGroup'
 
 const modelValue = defineModel({ type: Boolean })

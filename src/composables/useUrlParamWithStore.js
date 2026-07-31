@@ -1,4 +1,6 @@
-import { noop, identity, isEqual } from 'lodash'
+import noop from 'lodash/noop'
+import identity from 'lodash/identity'
+import isEqual from 'lodash/isEqual'
 import { computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 

@@ -1,6 +1,6 @@
 import { computed } from 'vue'
-import { castArray, isEqual } from 'lodash'
-
+import castArray from 'lodash/castArray'
+import isEqual from 'lodash/isEqual'
 // Resolve a stable key from an option. `optionKey` is either a property
 // name (string), a getter function, or null/undefined for identity.
 function resolveKey(option, optionKey) {

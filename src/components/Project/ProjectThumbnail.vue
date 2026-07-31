@@ -20,7 +20,7 @@
 
 <script setup>
 import stringToColor from 'string-to-color'
-import { compact } from 'lodash'
+import compact from 'lodash/compact'
 import { computed } from 'vue'
 import { AppIcon } from '@icij/murmur'
 

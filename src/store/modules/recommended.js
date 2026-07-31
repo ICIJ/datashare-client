@@ -1,7 +1,9 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { castArray, flatten, map, sumBy } from 'lodash'
-
+import castArray from 'lodash/castArray'
+import flatten from 'lodash/flatten'
+import map from 'lodash/map'
+import sumBy from 'lodash/sumBy'
 import { apiInstance as api } from '@/api/apiInstance'
 
 export const useRecommendedStore = defineStore('recommended', () => {

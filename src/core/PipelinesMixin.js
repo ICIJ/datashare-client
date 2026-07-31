@@ -1,5 +1,6 @@
-import { findIndex, uniqueId, cloneDeep } from 'lodash'
-
+import findIndex from 'lodash/findIndex'
+import uniqueId from 'lodash/uniqueId'
+import cloneDeep from 'lodash/cloneDeep'
 import { usePipelinesStore } from '@/store/modules'
 
 /**

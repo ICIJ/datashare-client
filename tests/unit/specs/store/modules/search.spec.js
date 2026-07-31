@@ -1,4 +1,4 @@
-import { find } from 'lodash'
+import find from 'lodash/find'
 import { setActivePinia, createPinia } from 'pinia'
 
 import { IndexedDocument, IndexedDocuments, letData } from '~tests/unit/es_utils'

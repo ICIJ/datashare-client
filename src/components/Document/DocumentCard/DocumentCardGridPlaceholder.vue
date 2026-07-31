@@ -1,5 +1,5 @@
 <script setup>
-import { random } from 'lodash'
+import random from 'lodash/random'
 import { computed } from 'vue'
 
 import AppPlaceholder from '@/components/AppPlaceholder/AppPlaceholder'

@@ -1,5 +1,4 @@
 import includes from 'lodash/includes'
-
 import FilterType from './FilterType'
 
 import { ENTITY_CATEGORY } from '@/enums/entityCategories'

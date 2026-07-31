@@ -1,4 +1,4 @@
-import { isInteger } from 'lodash'
+import isInteger from 'lodash/isInteger'
 import dayjs from 'dayjs'
 
 import FilterDate from './FilterDate'

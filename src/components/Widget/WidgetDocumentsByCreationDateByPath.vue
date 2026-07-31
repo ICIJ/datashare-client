@@ -51,7 +51,8 @@
 </template>
 
 <script>
-import { castArray, trimEnd } from 'lodash'
+import castArray from 'lodash/castArray'
+import trimEnd from 'lodash/trimEnd'
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur'
 import { toRef } from 'vue'
