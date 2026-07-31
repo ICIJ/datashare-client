@@ -50,7 +50,7 @@
     "okTitle": "Yes"
   },
   "appPopoverHeader": {
-    "close": "Close"
+    "close": "閉じる"
   },
   "buttonAdd": {
     "label": "Add new"
@@ -121,7 +121,7 @@
     "open": "Open anyway"
   },
   "dismissableAlert": {
-    "close": "Close",
+    "close": "閉じる",
     "dontShow": "Don't show this again"
   },
   "dismissableContentWarningToggler": {
@@ -130,7 +130,7 @@
     "toggle": "Show anyway"
   },
   "dismissableToastBody": {
-    "close": "Close"
+    "close": "閉じる"
   },
   "displayBoolean": {
     "yes": "Yes",
@@ -331,7 +331,7 @@
     "download": "ダウンロード",
     "share": "Share",
     "expand": "Expand",
-    "close": "Close"
+    "close": "閉じる"
   },
   "documentCardCheckbox": {
     "selectDocument": "Select this document"
@@ -358,7 +358,7 @@
     "notes": "0 notes | 1 note | {n} notes"
   },
   "documentUserActionsCard": {
-    "close": "Close"
+    "close": "閉じる"
   },
   "documentUserActionsCardRecommendations": {
     "title": "0 recommendations | 1 recommendation | {count} recommendations",
@@ -369,8 +369,8 @@
     "info": "Tags are public to all project’s members."
   },
   "documentUserCommentsList": {
-    "hideComments": "Hide comments",
-    "showComments": "Show comments",
+    "hideComments": "コメントの非表示",
+    "showComments": "コメントの表示",
     "sortingText": "Oldest to newest",
     "goToOldest": "Go to oldest",
     "goToRecent": "Go to newest"
@@ -382,8 +382,8 @@
     "label": "Go to oldest"
   },
   "documentUserCommentsHeader": {
-    "hideComments": "Hide comments",
-    "showComments": "Show comments",
+    "hideComments": "コメントの非表示",
+    "showComments": "コメントの表示",
     "sortingText": "Oldest to newest"
   },
   "documentUserComments": {
@@ -885,7 +885,7 @@
   "appSidebarFooter": {
     "signOut": "Sign out",
     "signOutBasic": "To sign out from Datashare you must close your web browser.",
-    "keyboardShortcuts": "Keyboard Shortcuts",
+    "keyboardShortcuts": "キーボードショートカット",
     "settings": "設定",
     "help": "Help",
     "removeAll": {
@@ -1611,7 +1611,7 @@
     "label": "See all shortcuts"
   },
   "keyboardShortcutsPopoverTitle": {
-    "label": "Keyboard shortcuts"
+    "label": "キーボード ショートカット"
   },
   "shortkeys": {
     "goToPreviousDocument": "前の文書に移動",
@@ -2011,7 +2011,7 @@
     "createAlert": "Create alert"
   },
   "searchBreadcrumbFormToggler": {
-    "close": "Close"
+    "close": "閉じる"
   },
   "searchSavingModal": {
     "title": "Name your saved search",
@@ -2129,7 +2129,7 @@
     "batchDownloadLink": "See all"
   },
   "shortcutsView": {
-    "title": "Keyboard shortcuts",
+    "title": "キーボード ショートカット",
     "searchPlaceholder": "Search keyboard shortcuts"
   },
   "rowPagination": {
