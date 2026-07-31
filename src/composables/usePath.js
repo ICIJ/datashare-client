@@ -1,4 +1,4 @@
-import { trimEnd } from 'lodash'
+import trimEnd from 'lodash/trimEnd'
 import { computed, toRef } from 'vue'
 
 import { useConfig } from '@/composables/useConfig'

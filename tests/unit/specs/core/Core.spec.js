@@ -51,6 +51,15 @@ describe('Core', () => {
     expect(core.i18n).toBeUndefined()
   })
 
+  it('should compose all the core mixins onto the instance', () => {
+    expect(core.findComponent).toBeInstanceOf(Function)
+    expect(core.registerFilter).toBeInstanceOf(Function)
+    expect(core.registerHook).toBeInstanceOf(Function)
+    expect(core.registerPipeline).toBeInstanceOf(Function)
+    expect(core.findProject).toBeInstanceOf(Function)
+    expect(core.registerWidget).toBeInstanceOf(Function)
+  })
+
   describe('Call useAll on Core', () => {
     beforeEach(() => {
       core.useAll()

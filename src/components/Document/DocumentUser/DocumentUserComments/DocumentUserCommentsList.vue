@@ -1,6 +1,5 @@
 <script setup>
-import { noop } from 'lodash'
-
+import noop from 'lodash/noop'
 import DocumentUserCommentsListEntry from '@/components/Document/DocumentUser/DocumentUserComments/DocumentUserCommentsListEntry'
 import DocumentUserCommentsListNewest from '@/components/Document/DocumentUser/DocumentUserComments/DocumentUserCommentsListNewest'
 import DocumentUserCommentsListOldest from '@/components/Document/DocumentUser/DocumentUserComments/DocumentUserCommentsListOldest'

@@ -1,8 +1,10 @@
 <script setup>
 import { ref, computed, watch, nextTick, toRef, useTemplateRef } from 'vue'
 import { AppIcon } from '@icij/murmur'
-import { cloneDeep, isArray, isEqual, trim } from 'lodash'
-
+import cloneDeep from 'lodash/cloneDeep'
+import isArray from 'lodash/isArray'
+import isEqual from 'lodash/isEqual'
+import trim from 'lodash/trim'
 import DropdownSelectorSearch from '@/components/DropdownSelector/DropdownSelectorSearch'
 import DropdownSelectorSelectAll from '@/components/DropdownSelector/DropdownSelectorSelectAll'
 import { useDropdownSelection } from '@/composables/useDropdownSelection'

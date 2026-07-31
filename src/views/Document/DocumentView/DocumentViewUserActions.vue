@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { uniqBy } from 'lodash'
+import uniqBy from 'lodash/uniqBy'
 import { useI18n } from 'vue-i18n'
 
 import { useAuth } from '@/composables/useAuth'

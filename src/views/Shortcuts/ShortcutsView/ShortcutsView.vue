@@ -1,6 +1,8 @@
 <script setup>
 import { computed } from 'vue'
-import { castArray, groupBy, property } from 'lodash'
+import castArray from 'lodash/castArray'
+import groupBy from 'lodash/groupBy'
+import property from 'lodash/property'
 import { useI18n } from 'vue-i18n'
 import Fuse from 'fuse.js'
 

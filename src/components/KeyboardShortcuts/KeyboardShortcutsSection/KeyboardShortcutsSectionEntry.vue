@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
-import { isArray, trim } from 'lodash'
-
+import isArray from 'lodash/isArray'
+import trim from 'lodash/trim'
 import KeyboardShortcutsSectionEntryKey from './KeyboardShortcutsSectionEntryKey'
 
 import { getShortkeyOS } from '@/utils/utils'

@@ -1,6 +1,9 @@
 <script setup>
 import { computed } from 'vue'
-import { matchesProperty, negate, property, uniq } from 'lodash'
+import matchesProperty from 'lodash/matchesProperty'
+import negate from 'lodash/negate'
+import property from 'lodash/property'
+import uniq from 'lodash/uniq'
 import { useI18n } from 'vue-i18n'
 
 import IPhHash from '~icons/ph/hash'

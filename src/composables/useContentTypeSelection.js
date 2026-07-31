@@ -1,6 +1,5 @@
 import { computed, toValue } from 'vue'
-import { isEqual } from 'lodash'
-
+import isEqual from 'lodash/isEqual'
 import { useSearchStore } from '@/store/modules'
 import { useSearchFilter } from '@/composables/useSearchFilter'
 import { CONTENT_TYPE_CATEGORY_FILTER_NAME } from '@/store/filters/FilterContentTypeCategory'

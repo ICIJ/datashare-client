@@ -1,5 +1,6 @@
 <script setup>
-import { castArray, compact } from 'lodash'
+import castArray from 'lodash/castArray'
+import compact from 'lodash/compact'
 import { computed, onBeforeMount, ref, toRef, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'

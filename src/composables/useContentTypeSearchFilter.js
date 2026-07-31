@@ -1,6 +1,5 @@
 import { computed, ref, toValue } from 'vue'
-import { deburr } from 'lodash'
-
+import deburr from 'lodash/deburr'
 import { getDocumentTypeLabel } from '@/utils/utils'
 
 const HAYSTACK_SEPARATOR = '\n'

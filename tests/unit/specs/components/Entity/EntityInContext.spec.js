@@ -1,7 +1,6 @@
 import { shallowMount, flushPromises } from '@vue/test-utils'
 import { beforeEach } from 'vitest'
-import { find } from 'lodash'
-
+import find from 'lodash/find'
 import CoreSetup from '~tests/unit/CoreSetup'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'

@@ -1,6 +1,6 @@
 <script setup>
 import { computed, onBeforeMount, ref } from 'vue'
-import { castArray } from 'lodash'
+import castArray from 'lodash/castArray'
 import { useI18n } from 'vue-i18n'
 
 import { useSearchFilter } from '@/composables/useSearchFilter'

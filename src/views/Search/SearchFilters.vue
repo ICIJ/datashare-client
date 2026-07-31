@@ -1,7 +1,9 @@
 <script setup>
 import Fuse from 'fuse.js'
 import { computed, ref } from 'vue'
-import { uniq, groupBy, property } from 'lodash'
+import uniq from 'lodash/uniq'
+import groupBy from 'lodash/groupBy'
+import property from 'lodash/property'
 import { useI18n } from 'vue-i18n'
 
 import { useViews } from '@/composables/useViews'

@@ -1,5 +1,11 @@
-import { find, get, isEmpty, map, orderBy, remove, set, uniqBy } from 'lodash'
-
+import find from 'lodash/find'
+import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
+import map from 'lodash/map'
+import orderBy from 'lodash/orderBy'
+import remove from 'lodash/remove'
+import set from 'lodash/set'
+import uniqBy from 'lodash/uniqBy'
 import Document from '@/api/resources/Document'
 import NamedEntity from '@/api/resources/NamedEntity'
 

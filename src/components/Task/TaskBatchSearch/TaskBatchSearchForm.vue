@@ -1,5 +1,5 @@
 <script setup>
-import { property } from 'lodash'
+import property from 'lodash/property'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { computed, ref, toValue } from 'vue'

@@ -1,4 +1,4 @@
-import { isEmpty } from 'lodash'
+import isEmpty from 'lodash/isEmpty'
 import { i18n as murmurI18n } from '@icij/murmur'
 
 import settings from '@/utils/settings'

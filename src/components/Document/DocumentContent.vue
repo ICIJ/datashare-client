@@ -1,6 +1,14 @@
 <script setup>
 import { computed, nextTick, onMounted, reactive, ref, toRef, useTemplateRef, watch } from 'vue'
-import { clamp, entries, findLastIndex, get, isEmpty, iteratee, minBy, range, throttle } from 'lodash'
+import clamp from 'lodash/clamp'
+import entries from 'lodash/entries'
+import findLastIndex from 'lodash/findLastIndex'
+import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
+import iteratee from 'lodash/iteratee'
+import minBy from 'lodash/minBy'
+import range from 'lodash/range'
+import throttle from 'lodash/throttle'
 import { useI18n } from 'vue-i18n'
 import { PaginationTiny } from '@icij/murmur'
 

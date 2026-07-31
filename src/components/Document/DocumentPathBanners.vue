@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import { isEmpty } from 'lodash'
+import isEmpty from 'lodash/isEmpty'
 import { computed, ref, onBeforeMount } from 'vue'
 
 import { useDocumentPathBannersStore } from '@/store/modules'

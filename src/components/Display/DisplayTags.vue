@@ -1,7 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { castArray } from 'lodash'
-
+import castArray from 'lodash/castArray'
 const props = defineProps({
   value: {
     type: [Array, String]
