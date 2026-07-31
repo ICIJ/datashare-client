@@ -1,6 +1,6 @@
 {
   "global": {
-    "cancel": "Cancel",
+    "cancel": "キャンセル",
     "yes": "Yes",
     "no": "No",
     "submit": "Submit",
@@ -26,7 +26,7 @@
   },
   "addonUrlInput": {
     "installFromUrl": "Install from a URL",
-    "install": "Install",
+    "install": "インストール",
     "enterCorrectUrl": "Please enter a correct URL."
   },
   "addonCardViewActions": {
@@ -46,7 +46,7 @@
     "close": "閉じる"
   },
   "appModalFooter": {
-    "cancelTitle": "Cancel",
+    "cancelTitle": "キャンセル",
     "okTitle": "Yes"
   },
   "appPopoverHeader": {
@@ -820,7 +820,7 @@
     }
   },
   "entitySectionActions": {
-    "copy": "Copy",
+    "copy": "コピー",
     "download": "ダウンロード"
   },
   "entitySectionMore": {
@@ -1423,7 +1423,7 @@
       "add": "Add banner",
       "edit": "Edit",
       "editTitle": "Edit banner",
-      "cancel": "Cancel",
+      "cancel": "キャンセル",
       "empty": "No banners yet. Click \"Add banner\" to create one.",
       "save": "Save",
       "reset": "Reset",
@@ -1483,7 +1483,7 @@
       },
       "roleSelect": {
         "save": "Save",
-        "cancel": "Cancel",
+        "cancel": "キャンセル",
         "saveSuccess": "Roles updated successfully",
         "saveError": "Failed to update roles. Please try again.",
         "changedCount": "0 roles changed | 1 role changed | {count} roles changed"
@@ -1492,7 +1492,7 @@
         "title": "Confirm admin promotions",
         "body": "The following users will be granted administrator access:",
         "confirm": "Confirm",
-        "cancel": "Cancel"
+        "cancel": "キャンセル"
       },
       "actions": {
         "copy": "Copy username",
@@ -1675,7 +1675,7 @@
       "description": "An API key allows you to interact with Datashare <a href=\"https://icij.gitbook.io/datashare/developers/backend/api\" target=\"_blank\">through the API</a>, using tools like <a href=\"https://github.com/ICIJ/datashare-tarentula\" target=\"_blank\">Tarentula</a> or your own scripts.",
       "key": {
         "badge": "Key",
-        "copy": "Copy",
+        "copy": "コピー",
         "hash": "Hash: {hash}",
         "created": "API key created",
         "warning": "Please copy this key in a safe place, you won't be able to access it again on Datashare.",
@@ -1730,13 +1730,13 @@
         "message": "This will restore all data from backup \"{name}\". Existing data may be overwritten.",
         "warning": "This action cannot be undone.",
         "confirm": "Restore",
-        "cancel": "Cancel"
+        "cancel": "キャンセル"
       },
       "delete": {
         "title": "Delete backup",
         "message": "Are you sure you want to delete backup \"{name}\"?",
         "confirm": "Delete",
-        "cancel": "Cancel"
+        "cancel": "キャンセル"
       },
       "deleteRepository": {
         "label": "Delete repository",
@@ -2028,7 +2028,7 @@
   "searchAdvancedModal": {
     "title": "Advanced search",
     "search": "Search",
-    "cancel": "Cancel",
+    "cancel": "キャンセル",
     "reset": "Reset",
     "eg": "e.g.",
     "and": "and",
