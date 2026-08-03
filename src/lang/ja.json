@@ -887,7 +887,7 @@
     "signOutBasic": "To sign out from Datashare you must close your web browser.",
     "keyboardShortcuts": "キーボードショートカット",
     "settings": "設定",
-    "help": "Help",
+    "help": "ヘルプ",
     "removeAll": {
       "link": "Remove all",
       "title": "Are you sure you want to delete all your projects?",
@@ -1932,7 +1932,7 @@
   },
   "widgetFieldFacets": {
     "languages": {
-      "title": "Languages"
+      "title": "言語"
     },
     "contentTypes": {
       "title": "File types"
@@ -2111,7 +2111,7 @@
       "creationDate": "Created on",
       "extractionLevel": "Extraction level",
       "extractionDate": "インデックスの日付",
-      "language": "Language",
+      "language": "言語",
       "project": "Project"
     }
   },
