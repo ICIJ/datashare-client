@@ -2036,7 +2036,7 @@
     "anyOfTheseWords": "Au moins l'un de ces mots",
     "anyOfTheseWordsExample": "Paris Henry Coca",
     "allTheseWords": "Tous ces mots",
-    "allTheseWordsExample1": "AND Paris AND Henry AND Coca",
+    "allTheseWordsExample1": "Paris AND Henry AND Coca",
     "allTheseWordsExample2": "+Paris +Henry +Coca",
     "exactPhrase": "Cette phrase exacte",
     "exactPhraseExample": "\"Paris Henry Coca\"",
