@@ -1,12 +1,12 @@
 {
   "global": {
-    "cancel": "Cancel",
+    "cancel": "キャンセル",
     "yes": "Yes",
     "no": "No",
     "submit": "Submit",
     "save": "Save",
     "reset": "Reset",
-    "search": "Search",
+    "search": "検索",
     "you": "You",
     "building": "Our team is still crafting something awesome for this page. Stay tuned!"
   },
@@ -26,7 +26,7 @@
   },
   "addonUrlInput": {
     "installFromUrl": "Install from a URL",
-    "install": "Install",
+    "install": "インストール",
     "enterCorrectUrl": "Please enter a correct URL."
   },
   "addonCardViewActions": {
@@ -43,14 +43,14 @@
     "description": "This action cannot be undone."
   },
   "appModalHeader": {
-    "close": "Close"
+    "close": "閉じる"
   },
   "appModalFooter": {
-    "cancelTitle": "Cancel",
+    "cancelTitle": "キャンセル",
     "okTitle": "Yes"
   },
   "appPopoverHeader": {
-    "close": "Close"
+    "close": "閉じる"
   },
   "buttonAdd": {
     "label": "Add new"
@@ -67,7 +67,7 @@
     "grouped": "File types by categories view"
   },
   "buttonToggleSettings": {
-    "label": "Settings"
+    "label": "設定"
   },
   "buttonToggleSidebar": {
     "expand": "Expand menu",
@@ -121,7 +121,7 @@
     "open": "Open anyway"
   },
   "dismissableAlert": {
-    "close": "Close",
+    "close": "閉じる",
     "dontShow": "Don't show this again"
   },
   "dismissableContentWarningToggler": {
@@ -130,7 +130,7 @@
     "toggle": "Show anyway"
   },
   "dismissableToastBody": {
-    "close": "Close"
+    "close": "閉じる"
   },
   "displayBoolean": {
     "yes": "Yes",
@@ -207,7 +207,7 @@
     "description": "An error has occurred. Please try again later or contact your administrator if the problem persists.",
     "noProjects": "Your project list is empty. Please contact your administrator.",
     "notFound": "Page not found.",
-    "logout": "Log out",
+    "logout": "ログアウト",
     "faq": "よくある質問",
     "userGuides": "ユーザーガイド",
     "help": "ヘルプを求める"
@@ -230,7 +230,7 @@
     "placeholder": "Search filters"
   },
   "search": {
-    "title": "Search",
+    "title": "文書検索",
     "errorStateLabel": "We were unable to perform your search. This might be due to a server error or a syntax error in your query.",
     "emptyStateLabel": "Oh, it’s lonely in here... This project has no documents yet.",
     "emptyStateAction": "Add documents",
@@ -253,7 +253,7 @@
       "content": "内容",
       "path": "パス",
       "thread": "スレッドID",
-      "description": "Description"
+      "description": "詳細"
     },
     "placeholder": "文書内の検索",
     "buttonLabel": "検索",
@@ -292,7 +292,7 @@
     "no_role": "No role"
   },
   "searchFormControl": {
-    "submitLabel": "Search"
+    "submitLabel": "検索"
   },
   "searchParameterQuery": {
     "title": "Unable to parse the query"
@@ -317,7 +317,7 @@
     "delete": "Delete"
   },
   "searchHistoryList": {
-    "title": "History",
+    "title": "履歴",
     "allRemoved": "History of all visited documents have been removed.",
     "emptyStateLabel": "There is no history of visited documents. Do you want to read documents?",
     "emptyStateAction": "Go to search"
@@ -331,7 +331,7 @@
     "download": "ダウンロード",
     "share": "Share",
     "expand": "Expand",
-    "close": "Close"
+    "close": "閉じる"
   },
   "documentCardCheckbox": {
     "selectDocument": "Select this document"
@@ -358,7 +358,7 @@
     "notes": "0 notes | 1 note | {n} notes"
   },
   "documentUserActionsCard": {
-    "close": "Close"
+    "close": "閉じる"
   },
   "documentUserActionsCardRecommendations": {
     "title": "0 recommendations | 1 recommendation | {count} recommendations",
@@ -369,8 +369,8 @@
     "info": "Tags are public to all project’s members."
   },
   "documentUserCommentsList": {
-    "hideComments": "Hide comments",
-    "showComments": "Show comments",
+    "hideComments": "コメントの非表示",
+    "showComments": "コメントの表示",
     "sortingText": "Oldest to newest",
     "goToOldest": "Go to oldest",
     "goToRecent": "Go to newest"
@@ -382,8 +382,8 @@
     "label": "Go to oldest"
   },
   "documentUserCommentsHeader": {
-    "hideComments": "Hide comments",
-    "showComments": "Show comments",
+    "hideComments": "コメントの非表示",
+    "showComments": "コメントの表示",
     "sortingText": "Oldest to newest"
   },
   "documentUserComments": {
@@ -482,7 +482,7 @@
     "text": "Text",
     "viewer": "View",
     "metadata": "Metadata",
-    "entities": "Entities"
+    "entities": "固有表現"
   },
   "documentViewTabsMetadata": {
     "search": "Search metadata"
@@ -498,7 +498,7 @@
       "AUDIO": "Audio",
       "VIDEO": "Video",
       "IMAGE": "Image",
-      "DOCUMENT": "Document",
+      "DOCUMENT": "文書",
       "EMAIL": "Email",
       "PRESENTATION": "Presentation",
       "SPREADSHEET": "Spreadsheet",
@@ -527,7 +527,7 @@
     "sections": {
       "documentsInfo": "Documents info",
       "userData": "User data",
-      "entities": "Entities"
+      "entities": "固有表現"
     },
     "sortByDropdown": {
       "toggler": "Sort",
@@ -601,7 +601,7 @@
       "GEORGIAN": "グルジア語",
       "GERMAN": "ドイツ語",
       "GREEK": "ギリシャ語",
-      "MODERN GREEK (1453-)": "Greek",
+      "MODERN GREEK (1453-)": "ギリシャ語",
       "GUARANI": "パラグアイ グアラニー",
       "GUJARATI": "グジャラート語",
       "HAITIAN": "ハイチ語",
@@ -681,7 +681,7 @@
       "PORTUGUESE": "ポルトガル語",
       "QUECHUA": "ケチュア語",
       "ROMANSH": "ロマンシュ語",
-      "ROMANIAN": "Romanian",
+      "ROMANIAN": "ルーマニア語",
       "RUNDI": "ルンディ語",
       "MOLDAVIAN": "モルダビア語",
       "RUSSIAN": "ロシア語",
@@ -754,13 +754,13 @@
     "tags": "タグ"
   },
   "document": {
-    "title": "Document",
-    "document": "Document",
+    "title": "文書",
+    "document": "文書",
     "name": "Document name",
     "path": "Document path",
     "dirname": "Document directory",
-    "id": "Document ID",
-    "project": "Project",
+    "id": "文書ID",
+    "project": "プロジェクト",
     "creationDate": "作成日時",
     "size": "ファイルサイズ",
     "contentLanguage": "内容の言語",
@@ -820,15 +820,15 @@
     }
   },
   "entitySectionActions": {
-    "copy": "Copy",
+    "copy": "コピー",
     "download": "ダウンロード"
   },
   "entitySectionMore": {
     "label": "Show more {category}",
     "category": {
-      "person": "people",
-      "location": "locations",
-      "organization": "organizations",
+      "person": "人物",
+      "location": "地名",
+      "organization": "組織名",
       "email": "emails"
     }
   },
@@ -876,18 +876,18 @@
   },
   "appSidebar": {
     "projects": "プロジェクト",
-    "allProjects": "All projects",
+    "allProjects": "すべてのプロジェクト",
     "search": "検索",
-    "searchDocuments": "Documents",
-    "history": "History",
+    "searchDocuments": "文書",
+    "history": "履歴",
     "savedSearches": "Saved searches"
   },
   "appSidebarFooter": {
     "signOut": "Sign out",
     "signOutBasic": "To sign out from Datashare you must close your web browser.",
-    "keyboardShortcuts": "Keyboard Shortcuts",
-    "settings": "Settings",
-    "help": "Help",
+    "keyboardShortcuts": "キーボードショートカット",
+    "settings": "設定",
+    "help": "ヘルプ",
     "removeAll": {
       "link": "Remove all",
       "title": "Are you sure you want to delete all your projects?",
@@ -902,15 +902,15 @@
   },
   "login": {
     "welcome": "データシェアにようこそ",
-    "account": "Login",
+    "account": "ログイン",
     "askHelp": "ヘルプを求める",
     "logout": "You have been logged out from Datashare.",
-    "login": "Login to continue",
-    "title": "Login",
+    "login": "ログイン",
+    "title": "ログイン",
     "switchLanguage": "Switch language",
     "tagline": "ICIJ search and discovery platform",
     "username": "Username",
-    "password": "Password",
+    "password": "パスワード",
     "submit": "Sign in",
     "error": "Invalid username or password."
   },
@@ -921,7 +921,7 @@
     "searchPlaceholder": "Search in this page"
   },
   "taskNames": {
-    "batchSearch": "Batch search",
+    "batchSearch": "まとめて検索",
     "batchDownload": "Batch download",
     "scan": "Scan folders",
     "index": "Index documents",
@@ -969,7 +969,7 @@
       "entries": {
         "seeAll": "See all",
         "batch-search": {
-          "title": "Batch search",
+          "title": "まとめて検索",
           "description": "Get the results of each query of a list, all at once. For instance, instead of searching for all the politicians of your country one after the other, just upload the list and see the results for each one.",
           "nbPublic": "No shared batch searches | 1 shared batch search | {n} shared batch searches",
           "nbPrivate": "no private batch searches | 1 shared batch search | {n} private batch search",
@@ -992,7 +992,7 @@
       }
     },
     "entities": {
-      "title": "Entities",
+      "title": "固有表現",
       "list": {
         "emptyStateLabel": "There are no entity recognitions. Do you want to find entities?",
         "emptyStateAction": "Find entities",
@@ -1004,7 +1004,7 @@
           "name": "名称",
           "entitiesToFind": "Entities to find",
           "pipeline": "Model",
-          "project": "Project",
+          "project": "プロジェクト",
           "createdAt": "Created on",
           "progress": "Progress",
           "result": "Result",
@@ -1037,7 +1037,7 @@
           "label": "Find",
           "options": {
             "emails": "メール",
-            "named-entities": "People, organisations and locations"
+            "named-entities": "人物、組織名、地名"
           }
         },
         "offline": {
@@ -1053,7 +1053,7 @@
       }
     },
     "documents": {
-      "title": "Documents",
+      "title": "文書",
       "list": {
         "emptyStateLabel": "Do you want to add documents?",
         "emptyStateAction": "Add documents",
@@ -1063,8 +1063,8 @@
         "properties": {
           "id": "Id",
           "name": "名称",
-          "documents": "Documents",
-          "project": "Project",
+          "documents": "文書",
+          "project": "プロジェクト",
           "createdAt": "Created on",
           "progress": "Progress",
           "result": "Result",
@@ -1144,7 +1144,7 @@
         "properties": {
           "privacy": "Privacy",
           "queries": "検索語",
-          "documents": "Documents",
+          "documents": "文書",
           "projects": "プロジェクト",
           "author": "筆者",
           "name": "名称",
@@ -1173,7 +1173,7 @@
           "placeholder": "Type the name of your batch search"
         },
         "projects": {
-          "label": "Project(s)"
+          "label": "プロジェクト"
         },
         "description": {
           "label": "詳細",
@@ -1230,14 +1230,14 @@
         "noMatches": "No queries matches your search.",
         "fields": {
           "query": "検索語",
-          "count": "Documents",
+          "count": "文書",
           "queryNumber": "Query position"
         }
       }
     },
     "batch-search-results": {
       "list": {
-        "title": "All documents",
+        "title": "すべての文書",
         "emptyStateLabel": "None of the queries had matches."
       },
       "show": {
@@ -1247,7 +1247,7 @@
           "query": "検索語",
           "documentNumber": "ランク",
           "documentName": "Document name",
-          "project": "Project",
+          "project": "プロジェクト",
           "contentType": "Type",
           "contentLength": "サイズ",
           "documentPath": "パス",
@@ -1321,7 +1321,7 @@
   },
   "textTruncate": {
     "seeLess": "See less",
-    "seeMore": "See more"
+    "seeMore": "もっと見る"
   },
   "pageSettings": {
     "title": "Page settings",
@@ -1353,7 +1353,7 @@
   "projectEntriesTableHead": {
     "name": "Name of the project",
     "description": "詳細",
-    "documents": "Documents",
+    "documents": "文書",
     "updatedOn": "Updated on",
     "links": "Links",
     "actions": "Actions",
@@ -1370,8 +1370,8 @@
     "updateDate": "Updated:"
   },
   "projectList": {
-    "title": "Projects",
-    "searchPlaceholder": "Search projects",
+    "title": "プロジェクト",
+    "searchPlaceholder": "プロジェクトを検索",
     "fields": {
       "label": "Label",
       "updateDate": "Updated"
@@ -1395,7 +1395,7 @@
       "paths": "パス",
       "graph": "Graph",
       "details": "詳細",
-      "history": "History"
+      "history": "履歴"
     }
   },
   "projectViewOverviewGraph": {
@@ -1423,7 +1423,7 @@
       "add": "Add banner",
       "edit": "Edit",
       "editTitle": "Edit banner",
-      "cancel": "Cancel",
+      "cancel": "キャンセル",
       "empty": "No banners yet. Click \"Add banner\" to create one.",
       "save": "Save",
       "reset": "Reset",
@@ -1436,11 +1436,11 @@
           "description": "Sensitive-content banner adds a blurred overlay on top of the content of documents and asks users before viewing"
         },
         "path": {
-          "label": "Path",
+          "label": "パス",
           "description": "Select on which path the banner will be displayed"
         },
         "text": {
-          "label": "Content",
+          "label": "内容",
           "placeholder": "Text content for the banner",
           "useDefaultText": "Use default text"
         },
@@ -1483,7 +1483,7 @@
       },
       "roleSelect": {
         "save": "Save",
-        "cancel": "Cancel",
+        "cancel": "キャンセル",
         "saveSuccess": "Roles updated successfully",
         "saveError": "Failed to update roles. Please try again.",
         "changedCount": "0 roles changed | 1 role changed | {count} roles changed"
@@ -1492,7 +1492,7 @@
         "title": "Confirm admin promotions",
         "body": "The following users will be granted administrator access:",
         "confirm": "Confirm",
-        "cancel": "Cancel"
+        "cancel": "キャンセル"
       },
       "actions": {
         "copy": "Copy username",
@@ -1504,7 +1504,7 @@
             "accessRevoked": "revoke their access to {allProjects};",
             "dataDeleted": "delete all their personal data (stars, history, tags, saved searches etc.) across {allProjects};",
             "tasksDeleted": "not delete their tasks and results.",
-            "allProjects": "all projects"
+            "allProjects": "すべてのプロジェクト"
           },
           "confirm": "Delete user",
           "success": "User deleted successfully",
@@ -1532,7 +1532,7 @@
             "placeholder": "Type display name"
           },
           "password": {
-            "label": "Password",
+            "label": "パスワード",
             "placeholder": "Type password"
           },
           "confirmPassword": {
@@ -1578,7 +1578,7 @@
         "invalidFeedback": "The label \"{label}\" is a reserved word."
       },
       "description": {
-        "label": "Description",
+        "label": "詳細",
         "placeholder": ""
       },
       "sourcePath": {
@@ -1611,7 +1611,7 @@
     "label": "See all shortcuts"
   },
   "keyboardShortcutsPopoverTitle": {
-    "label": "Keyboard shortcuts"
+    "label": "キーボード ショートカット"
   },
   "shortkeys": {
     "goToPreviousDocument": "前の文書に移動",
@@ -1675,7 +1675,7 @@
       "description": "An API key allows you to interact with Datashare <a href=\"https://icij.gitbook.io/datashare/developers/backend/api\" target=\"_blank\">through the API</a>, using tools like <a href=\"https://github.com/ICIJ/datashare-tarentula\" target=\"_blank\">Tarentula</a> or your own scripts.",
       "key": {
         "badge": "Key",
-        "copy": "Copy",
+        "copy": "コピー",
         "hash": "Hash: {hash}",
         "created": "API key created",
         "warning": "Please copy this key in a safe place, you won't be able to access it again on Datashare.",
@@ -1730,13 +1730,13 @@
         "message": "This will restore all data from backup \"{name}\". Existing data may be overwritten.",
         "warning": "This action cannot be undone.",
         "confirm": "Restore",
-        "cancel": "Cancel"
+        "cancel": "キャンセル"
       },
       "delete": {
         "title": "Delete backup",
         "message": "Are you sure you want to delete backup \"{name}\"?",
         "confirm": "Delete",
-        "cancel": "Cancel"
+        "cancel": "キャンセル"
       },
       "deleteRepository": {
         "label": "Delete repository",
@@ -1795,7 +1795,7 @@
       "pipeline": "Model",
       "entitiesToFind": "Entities to find",
       "queries": "検索語",
-      "documents": "Documents",
+      "documents": "文書",
       "size": "サイズ",
       "id": "Id"
     },
@@ -1904,9 +1904,9 @@
       "filterPath": "Filter by folder",
       "selectPath": "Select folder",
       "intervals": {
-        "year": "Year",
-        "month": "Month",
-        "day": "Day"
+        "year": "年",
+        "month": "月",
+        "day": "日"
       },
       "document": "no documents | 1 document | {total} documents",
       "missing": "No documents have no or wrong creation date.| 1 document has no or wrong creation date.| {total} documents have no or wrong creation date.",
@@ -1932,13 +1932,13 @@
   },
   "widgetFieldFacets": {
     "languages": {
-      "title": "Languages"
+      "title": "言語"
     },
     "contentTypes": {
       "title": "File types"
     },
     "authors": {
-      "title": "Authors"
+      "title": "筆者"
     }
   },
   "widgetDocumentsByCreationDateByPath": {
@@ -1968,17 +1968,17 @@
   "projectCards": {
     "documentsCount": "No documents | 1 document | {count} documents",
     "about": "About",
-    "search": "Search"
+    "search": "検索"
   },
   "projectSelector": {
     "noMatches": "No matches"
   },
   "projectDropdownSelectorSearch": {
-    "placeholder": "Search projects",
+    "placeholder": "プロジェクトを検索",
     "noMatches": "No matches"
   },
   "projectDropdownSelectorAll": {
-    "label": "All projects"
+    "label": "すべてのプロジェクト"
   },
   "pathViewEntryMore": {
     "label": "No more directories | Show 1 more directory | Show {nextPageSize} of {directoriesLeft} more directories"
@@ -2011,7 +2011,7 @@
     "createAlert": "Create alert"
   },
   "searchBreadcrumbFormToggler": {
-    "close": "Close"
+    "close": "閉じる"
   },
   "searchSavingModal": {
     "title": "Name your saved search",
@@ -2027,8 +2027,8 @@
   },
   "searchAdvancedModal": {
     "title": "Advanced search",
-    "search": "Search",
-    "cancel": "Cancel",
+    "search": "検索",
+    "cancel": "キャンセル",
     "reset": "Reset",
     "eg": "e.g.",
     "and": "and",
@@ -2036,7 +2036,7 @@
     "anyOfTheseWords": "Any of these words",
     "anyOfTheseWordsExample": "Paris Henry Coca",
     "allTheseWords": "All these words",
-    "allTheseWordsExample1": "AND Paris AND Henry AND Coca",
+    "allTheseWordsExample1": "Paris AND Henry AND Coca",
     "allTheseWordsExample2": "+Paris +Henry +Coca",
     "exactPhrase": "This exact phrase",
     "exactPhraseExample": "\"Paris Henry Coca\"",
@@ -2060,15 +2060,15 @@
     "proximitySearchExplanation3": "\"Marie and Henry are in Paris\"~1 will find: \"and Marie Henry are in Paris\"",
     "proximitySearchExplanation4": "\"Marie and Henry are in Paris\"~2 will find: \"Henry and Marie are in Paris\"",
     "searchInFields": "Search in field",
-    "allFields": "All fields",
+    "allFields": "すべてのフィールド",
     "fields": {
-      "tags": "Tags",
+      "tags": "タグ",
       "name": "Name",
-      "author": "Author",
+      "author": "筆者",
       "recipients": "Recipients",
-      "content": "Content",
-      "path": "Path",
-      "threadId": "Thread ID"
+      "content": "内容",
+      "path": "パス",
+      "threadId": "スレッドID"
     }
   },
   "searchSelection": {
@@ -2111,8 +2111,8 @@
       "creationDate": "Created on",
       "extractionLevel": "Extraction level",
       "extractionDate": "インデックスの日付",
-      "language": "Language",
-      "project": "Project"
+      "language": "言語",
+      "project": "プロジェクト"
     }
   },
   "documentEntries": {
@@ -2129,7 +2129,7 @@
     "batchDownloadLink": "See all"
   },
   "shortcutsView": {
-    "title": "Keyboard shortcuts",
+    "title": "キーボード ショートカット",
     "searchPlaceholder": "Search keyboard shortcuts"
   },
   "rowPagination": {
