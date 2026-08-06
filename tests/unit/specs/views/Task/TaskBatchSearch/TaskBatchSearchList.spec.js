@@ -126,6 +126,43 @@ describe('TaskBatchSearchList', () => {
     expect(rows.at(1).find('.batch-search-actions').exists()).toBe(false)
   })
 
+  it('should display the batch record documents count when the task has no result', async () => {
+    const { apiInstance } = await import('@/api/apiInstance')
+    vi.mocked(apiInstance.getTasks).mockResolvedValueOnce({
+      items: [
+        {
+          id: 'failure-with-results-id',
+          name: 'org.icij.datashare.tasks.BatchSearchRunner',
+          state: 'FAILURE',
+          progress: 0,
+          createdAt: '2025-03-06T06:47:19.857+00:00',
+          args: {
+            batchRecord: {
+              uuid: 'failure-with-results-id',
+              projects: ['local-datashare'],
+              name: 'failed batch with results',
+              description: '',
+              nbQueries: 3,
+              date: '2025-03-06T06:47:19.820+00:00',
+              state: 'FAILURE',
+              user: { id: 'local', name: null, email: null, provider: 'local' },
+              nbResults: 5,
+              published: false,
+              errorMessage: 'Something went wrong',
+              errorQuery: 'bad query'
+            },
+            user: { id: 'local' }
+          }
+        }
+      ]
+    })
+
+    const wrapper = mount(TaskBatchSearchList, { global: { plugins } })
+    await flushPromises()
+
+    expect(wrapper.find('.page-table-generic__row__field--documents').text()).toBe('5')
+  })
+
   it('should open the error modal with errorMessage and errorQuery when clicking a failure status', async () => {
     const { apiInstance } = await import('@/api/apiInstance')
     vi.mocked(apiInstance.getTasks).mockResolvedValueOnce({

@@ -36,8 +36,11 @@ function showError(item) {
   showBatchSearchErrorModal({ errorMessage, errorQuery })
 }
 
+// A failed task carries no result, and an older one reports the number of results as a
+// bare number, so the batch record is the last resort to know how many were saved.
 function getBatchSearchResult(item, defaultValue = 0) {
-  return get(item, 'result.value.nbResults', get(item, 'result.value', defaultValue))
+  const recordResult = getBatchSearchRecord(item, 'nbResults', defaultValue)
+  return get(item, 'result.value.nbResults', get(item, 'result.value', recordResult))
 }
 
 function getBatchSearchProjects(item) {
