@@ -168,6 +168,52 @@ describe('PathTree.vue', () => {
     })
   })
 
+  describe('root path', () => {
+    const { index, es } = esConnectionHelper.build()
+    let wrapper, core
+
+    beforeEach(() => {
+      core = CoreSetup.init().useAll()
+      core.config.set('dataDir', '/home/foo')
+      api.tree.mockClear()
+      api.tree.mockResolvedValue(HOME_TREE)
+
+      wrapper = mount(PathTree, {
+        props: {
+          projects: [index],
+          path: '/',
+          noTree: true
+        },
+        global: {
+          plugins: core.plugins,
+          renderStubDefaultSlot: true
+        }
+      })
+    })
+
+    it('lists the first-level directory of documents nested far below the root', async () => {
+      await letData(es)
+        .have(new IndexedDocuments().setBaseName('/home/foo/bar/doc_01').withIndex(index).count(3))
+        .commit()
+      await wrapper.vm.loadData({ clearPages: true })
+      await flushPromises()
+
+      const names = wrapper.findAll('.path-tree-view-entry-name__value').map(name => name.text())
+      expect(names).toContain('home')
+    })
+
+    it('lists documents stored directly at the root', async () => {
+      await letData(es)
+        .have(new IndexedDocuments().setBaseName('/doc').withIndex(index).count(1))
+        .commit()
+      await wrapper.vm.loadData({ clearPages: true })
+      await flushPromises()
+
+      const names = wrapper.findAll('.path-tree-view-entry-name__value').map(name => name.text())
+      expect(names).toContain('/doc_1')
+    })
+  })
+
   describe('compact mode (filter column)', () => {
     const { index } = esConnectionHelper.build()
     let core, searchSpy

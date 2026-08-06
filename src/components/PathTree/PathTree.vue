@@ -136,6 +136,8 @@ const nextLevel = computed(() => (props.flat ? 0 : props.level + 1))
 const hasQuery = computed(() => Boolean(query.value && trim(query.value)))
 // Normalized current path without trailing separator.
 const trimmedPath = computed(() => trimDirectory(path.value))
+// Whether the tree is rooted at the filesystem root, which trims down to an empty string.
+const isRootPath = computed(() => trimmedPath.value === '')
 // Wildcard version of the query (lowercased).
 const wildcardQuery = computed(() => (hasQuery.value ? `*${query.value.toLowerCase()}*` : '*'))
 // Whether the last fetched page is shorter than PER_PAGE.
@@ -291,7 +293,12 @@ function getDirectoriesBodybuilder({ from = 0, size = PER_PAGE } = {}) {
   // Filter to all dirname values matching our wildcard pattern (case-insensitive),
   // this include the current path and all sub-paths.
   bb.andQuery('wildcard', 'dirname', { value: wildcardQuery.value, case_insensitive: true })
-  bb.andQuery('term', 'dirname.tree', trimmedPath.value)
+  // Restrict to the descendants of the current path. The path analyzer emits no token
+  // for the filesystem root, so at the root we keep every document instead: they are
+  // all descendants of it anyway.
+  if (!isRootPath.value) {
+    bb.andQuery('term', 'dirname.tree', trimmedPath.value)
+  }
   // Aggregate by directory tree, with pagination and optional sub-aggs:
   // * "terms" is the aggregation type
   // * "dirname.tree" is the field to aggregate on
@@ -360,8 +367,10 @@ async function fetchDirectories({ clearPages = false } = {}) {
 function getDocumentsBodybuilder({ from = 0, size = PER_PAGE } = {}) {
   const bb = bodybuilder().from(from).size(size)
   bb.rawOption('sort', orderDocuments.value)
-  // Filter to the current path only
-  bb.andQuery('term', 'dirname', trimmedPath.value)
+  // Filter to the current path only. Documents sitting at the root are indexed with the
+  // separator as their dirname, which the trimmed (empty) path would never match.
+  const dirname = isRootPath.value ? pathSeparator.value : trimmedPath.value
+  bb.andQuery('term', 'dirname', dirname)
   // Only include Document-type entries on disk
   bb.andQuery('match', 'extractionLevel', 0)
   bb.andQuery('match', 'type', 'Document')
