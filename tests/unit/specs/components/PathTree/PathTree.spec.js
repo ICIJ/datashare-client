@@ -4,6 +4,7 @@ import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
 import { IndexedDocuments, letData } from '~tests/unit/es_utils'
 import PathTree from '@/components/PathTree/PathTree'
+import PathTreeViewEntry from '@/components/PathTree/PathTreeView/PathTreeViewEntry'
 import { useSearchStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
 
@@ -130,9 +131,14 @@ describe('PathTree.vue', () => {
     })
 
     it('counts only descendant folders that contain documents directly (recursive, pass-through excluded)', async () => {
-      // /home/foo/deep is a pass-through folder: its only documents live in /home/foo/deep/leaf.
+      // /home/foo/deep/leaf is a pass-through folder: its only documents live one level below,
+      // in /home/foo/deep/leaf/a and /home/foo/deep/leaf/b. The single-child chain
+      // /home/foo/deep -> /home/foo/deep/leaf is folded into one entry.
       await letData(es)
-        .have(new IndexedDocuments().setBaseName('/home/foo/deep/leaf/doc_01').withIndex(index).count(3))
+        .have(new IndexedDocuments().setBaseName('/home/foo/deep/leaf/a/doc_01').withIndex(index).count(3))
+        .commit()
+      await letData(es)
+        .have(new IndexedDocuments().setBaseName('/home/foo/deep/leaf/b/doc_03').withIndex(index).count(3))
         .commit()
       // /home/foo/bar contains documents directly and has no subfolders.
       await letData(es)
@@ -143,13 +149,14 @@ describe('PathTree.vue', () => {
       await wrapper.vm.loadData({ clearPages: true })
       await flushPromises()
 
-      // Entries render in KEY-asc order: [root /home/foo, bar, deep].
+      // Entries render in KEY-asc order: [root /home/foo, bar, deep/leaf].
       // Directory-count stat is shown for each (non-compact mode).
       const counts = wrapper.findAll('.path-tree-view-entry-stats-directories')
       // index 1 = bar: no subfolders -> 0
       expect(counts.at(1).text()).toBe('0')
-      // index 2 = deep: one descendant folder with direct docs (deep/leaf) -> 1
-      expect(counts.at(2).text()).toBe('1')
+      // index 2 = deep/leaf: two descendant folders with direct docs (a and b), and
+      // leaf itself is a pass-through folder so it is not counted -> 2
+      expect(counts.at(2).text()).toBe('2')
     })
 
     it('makes a single Elasticsearch request per level (no empty-directories probe)', async () => {
@@ -198,8 +205,10 @@ describe('PathTree.vue', () => {
       await wrapper.vm.loadData({ clearPages: true })
       await flushPromises()
 
+      // The whole chain below the root is a single child at every level, so it is
+      // folded into one entry instead of one entry per level.
       const names = wrapper.findAll('.path-tree-view-entry-name__value').map(name => name.text())
-      expect(names).toContain('home')
+      expect(names).toContain('home/foo/bar')
     })
 
     it('lists documents stored directly at the root', async () => {
@@ -322,6 +331,170 @@ describe('PathTree.vue', () => {
 
       const { body } = searchSpy.mock.calls[0][0]
       expect(body.aggs.dirname.aggs).not.toHaveProperty('directories')
+    })
+  })
+
+  describe('folded directory chains', () => {
+    const { index, es } = esConnectionHelper.build()
+    let core, wrapper
+
+    function mountAtHome(props = {}) {
+      wrapper = mount(PathTree, {
+        props: {
+          projects: [index],
+          path: '/home/foo',
+          noTree: true,
+          noDocuments: true,
+          // Without this, a still-running load from the immediate `path` watcher
+          // swaps the entries for the loading placeholder and the assertions see nothing.
+          noPlaceholder: true,
+          ...props
+        },
+        global: {
+          plugins: core.plugins,
+          renderStubDefaultSlot: true
+        }
+      })
+      return wrapper
+    }
+
+    beforeEach(() => {
+      core = CoreSetup.init().useAll()
+      core.config.set('dataDir', '/home/foo')
+      api.tree.mockClear()
+      api.tree.mockResolvedValue(HOME_TREE)
+    })
+
+    // A left-over tree reacts to the next test's CoreSetup.init() and fetches again,
+    // which lands on a deleted index once this block is over.
+    afterEach(() => {
+      wrapper?.unmount()
+      wrapper = null
+    })
+
+    it('renders a chain of single-child directories as one entry', async () => {
+      await letData(es)
+        .have(new IndexedDocuments().setBaseName('/home/foo/data/docs/a/b/c/doc_01').withIndex(index).count(2))
+        .commit()
+
+      mountAtHome()
+      await wrapper.vm.loadData({ clearPages: true })
+      await flushPromises()
+
+      const names = wrapper.findAll('.path-tree-view-entry-name__value').map(name => name.text())
+      expect(names).toEqual(['foo', 'data/docs/a/b/c'])
+    })
+
+    it('stops folding where the chain branches', async () => {
+      await letData(es)
+        .have(new IndexedDocuments().setBaseName('/home/foo/data/docs/a/doc_01').withIndex(index).count(2))
+        .commit()
+      await letData(es)
+        .have(new IndexedDocuments().setBaseName('/home/foo/data/docs/b/doc_02').withIndex(index).count(2))
+        .commit()
+
+      mountAtHome()
+      await wrapper.vm.loadData({ clearPages: true })
+      await flushPromises()
+
+      const names = wrapper.findAll('.path-tree-view-entry-name__value').map(name => name.text())
+      expect(names).toEqual(['foo', 'data/docs'])
+    })
+
+    it('stops folding on a directory holding documents directly', async () => {
+      await letData(es)
+        .have(new IndexedDocuments().setBaseName('/home/foo/data/doc_01').withIndex(index).count(2))
+        .commit()
+      await letData(es)
+        .have(new IndexedDocuments().setBaseName('/home/foo/data/docs/a/doc_02').withIndex(index).count(2))
+        .commit()
+
+      mountAtHome()
+      await wrapper.vm.loadData({ clearPages: true })
+      await flushPromises()
+
+      const names = wrapper.findAll('.path-tree-view-entry-name__value').map(name => name.text())
+      expect(names).toEqual(['foo', 'data'])
+    })
+
+    it('folds chains inside an expanded directory, not only at the root of the tree', async () => {
+      // /home/foo/bar branches, so it doesn't fold. One of its children is a chain.
+      await letData(es)
+        .have(new IndexedDocuments().setBaseName('/home/foo/bar/deep/a/b/doc_01').withIndex(index).count(2))
+        .commit()
+      await letData(es)
+        .have(new IndexedDocuments().setBaseName('/home/foo/bar/other/doc_02').withIndex(index).count(2))
+        .commit()
+
+      mountAtHome({ openPaths: ['/home/foo/bar'] })
+      await wrapper.vm.loadData({ clearPages: true })
+      await flushPromises()
+
+      // The nested PathTree rendered for /home/foo/bar mounts after its parent and runs
+      // its own Elasticsearch round trip, so wait for it rather than a single flush.
+      await vi.waitFor(() => {
+        const names = wrapper.findAll('.path-tree-view-entry-name__value').map(name => name.text())
+        // The nested level runs its own directory_paths aggregation, so the chain
+        // deep -> a -> b is folded one level down too.
+        expect(names).toEqual(['foo', 'bar', 'deep/a/b', 'other'])
+      })
+    })
+
+    it('gives the folded entry the deepest real directory path', async () => {
+      await letData(es)
+        .have(new IndexedDocuments().setBaseName('/home/foo/data/docs/a/b/c/doc_01').withIndex(index).count(2))
+        .commit()
+
+      mountAtHome()
+      await wrapper.vm.loadData({ clearPages: true })
+      await flushPromises()
+
+      const paths = wrapper.findAllComponents(PathTreeViewEntry).map(entry => entry.props('path'))
+      expect(paths).toEqual(['/home/foo', '/home/foo/data/docs/a/b/c'])
+    })
+  })
+
+  describe('folded directory chains on Windows', () => {
+    const { index, es } = esConnectionHelper.build('spec', true)
+    let core, wrapper
+
+    beforeEach(() => {
+      core = CoreSetup.init().useAll()
+      core.config.set('dataDir', 'C:\\home\\foo')
+      core.config.set('pathSeparator', '\\')
+      api.tree.mockClear()
+      api.tree.mockResolvedValue(HOME_TREE_WIN)
+    })
+
+    afterEach(() => {
+      wrapper?.unmount()
+      wrapper = null
+    })
+
+    it('renders a chain of single-child directories as one entry', async () => {
+      await letData(es)
+        .have(new IndexedDocuments().setBaseName('C:\\home\\foo\\data\\docs\\a\\doc_01').withIndex(index).count(2))
+        .commit()
+
+      wrapper = mount(PathTree, {
+        props: {
+          projects: [index],
+          path: 'C:\\home\\foo',
+          noTree: true,
+          noDocuments: true,
+          noPlaceholder: true
+        },
+        global: {
+          plugins: core.plugins,
+          renderStubDefaultSlot: true
+        }
+      })
+
+      await wrapper.vm.loadData({ clearPages: true })
+      await flushPromises()
+
+      const names = wrapper.findAll('.path-tree-view-entry-name__value').map(name => name.text())
+      expect(names).toEqual(['foo', 'data\\docs\\a'])
     })
   })
 

@@ -90,7 +90,7 @@ const props = defineProps({
 // App services and utilities.
 const core = useCore()
 const { waitFor, isLoading } = useWait()
-const { pathSeparator, getBasename, isSelectedPath, isIndeterminateDirectory, trimDirectory, togglePath } = usePath(selectedPaths, props)
+const { pathSeparator, getBasename, isSelectedPath, isIndeterminateDirectory, normalizeDirectory, trimDirectory, togglePath } = usePath(selectedPaths, props)
 const { isServer } = useMode()
 
 // Elasticsearch response paths.
@@ -236,6 +236,59 @@ const directories = computed(() => {
 // Documents merged from ES pages and client /tree.
 const pagesDocuments = computed(() => flatFromPages(ES.DOC_HITS).map(Document.create))
 const documents = computed(() => (props.noDocuments ? [] : uniqBy([...pagesDocuments.value, ...treeAsDocuments.value], 'path')))
+
+/**
+ * Return the deepest directory path shared by every given path.
+ * @param {string[]} paths - Directory paths sharing at least their first segment.
+ * @return {string} The common prefix, without trailing separator.
+ */
+function getCommonPathPrefix(paths) {
+  const [first, ...others] = paths.map(path => path.split(pathSeparator.value))
+  let common = first.length
+  for (const segments of others) {
+    let index = 0
+    while (index < common && segments[index] === first[index]) {
+      index++
+    }
+    common = index
+  }
+  return first.slice(0, common).join(pathSeparator.value)
+}
+
+/**
+ * Fold a chain of single-child directories into the deepest directory it leads to,
+ * the way GitHub and VS Code compact folders. The chain stops as soon as a directory
+ * holds documents directly or branches into several children.
+ * @param {string} key - Directory key path, a direct child of the current path.
+ * @return {string} The deepest path of the chain, or the key itself when it doesn't fold.
+ */
+function getFoldedPath(key) {
+  const prefix = key + pathSeparator.value
+  const descendants = directoryPaths.value.filter(path => path === key || path.startsWith(prefix))
+  // Without the directory_paths aggregation (compact mode) or for directories only
+  // known from the on-disk tree, there is nothing to fold with.
+  if (!descendants.length) {
+    return key
+  }
+  return getCommonPathPrefix(descendants)
+}
+
+/**
+ * Return the label of a directory entry, relative to the current path, so a folded
+ * chain reads as `data/docs/a/b/c` instead of only its last segment.
+ * @param {string} key - Directory key path.
+ * @return {string} The path segments between the current path and the key.
+ */
+function getRelativeName(key) {
+  return trimDirectory(key).slice(normalizeDirectory(trimmedPath.value).length)
+}
+
+// Directories with their single-child chains folded into a single entry.
+const foldedDirectories = computed(() => directories.value.map((directory) => {
+  const key = getFoldedPath(directory.key)
+  const name = getRelativeName(key)
+  return { ...directory, key, name }
+}))
 
 /**
  * Return whether a directory is currently collapsed.
@@ -540,10 +593,10 @@ defineExpose({ isLoading, loadData, loadDataWithSpinner, reloadData })
           />
         </template>
         <path-tree-view-entry
-          v-for="directory in directories"
+          v-for="directory in foldedDirectories"
           :key="directory.key"
           :loading="!!entriesRefs[directory.key]?.isLoading"
-          :name="getBasename(directory.key)"
+          :name="directory.name"
           :path="directory.key"
           :projects="projects"
           :documents="directory.doc_count"
