@@ -188,12 +188,16 @@ describe('useSearchFilter', () => {
         onConsumeNoRefresh()
       }, core.plugins)
 
+      // 'document-standalone' cold-resolves DocumentStandalone's whole component
+      // graph, which now also reaches useSearchFilter.js's async FilterType*
+      // chunks for the first time — same cold-dynamic-import cost documented in
+      // the 'refreshSearchFromRoute' beforeAll above, just via a different route.
       await core.router.push({ name: 'document-standalone', params: { index: 'test', id: 'doc1' }, query: { noRefresh: 1 } })
       await flushPromises()
       await flushPromises()
 
       expect(core.router.currentRoute.value.query.noRefresh).toBe('1')
-    })
+    }, 20000)
   })
 })
 
