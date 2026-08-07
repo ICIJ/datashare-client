@@ -1,15 +1,16 @@
 <script setup>
-import { computed, ref, useTemplateRef, toRef } from 'vue'
+import { computed, defineAsyncComponent, ref, useTemplateRef, toRef, watchEffect } from 'vue'
 
 import ButtonToggleAdvancedSearch from '@/components/Button/ButtonToggleAdvancedSearch'
 import ButtonToggleFilters from '@/components/Button/ButtonToggleFilters'
 import ButtonToggleSearchBreadcrumb from '@/components/Button/ButtonToggleSearchBreadcrumb'
 import ButtonToggleSettings from '@/components/Button/ButtonToggleSettings'
 import ButtonToggleSidebar from '@/components/Button/ButtonToggleSidebar'
-import SearchAdvancedModal from '@/components/Search/SearchAdvancedModal/SearchAdvancedModal'
 import SearchBar from '@/components/Search/SearchBar/SearchBar'
 import { useCompact } from '@/composables/useCompact'
 import { useSearchStore } from '@/store/modules/search'
+
+const SearchAdvancedModal = defineAsyncComponent(() => import('@/components/Search/SearchAdvancedModal/SearchAdvancedModal'))
 
 const toggleSidebar = defineModel('toggleSidebar', { type: Boolean })
 const toggleFilters = defineModel('toggleFilters', { type: Boolean })
@@ -19,6 +20,16 @@ const isFiltersClosed = defineModel('isFiltersClosed', { type: Boolean })
 
 const showAdvancedSearch = ref(false)
 const searchStore = useSearchStore()
+
+// Defer mounting (and thus loading) the advanced search modal's chunk until
+// it's opened for the first time, then keep it mounted so in-progress form
+// input isn't lost if the user closes without submitting.
+const hasOpenedAdvancedSearch = ref(false)
+watchEffect(() => {
+  if (showAdvancedSearch.value) {
+    hasOpenedAdvancedSearch.value = true
+  }
+})
 
 const props = defineProps({
   searchBreadcrumbCounter: {
@@ -95,6 +106,7 @@ function handleAdvancedSearch({ query, field }) {
       />
     </div>
     <search-advanced-modal
+      v-if="hasOpenedAdvancedSearch"
       v-model="showAdvancedSearch"
       :initial-query="searchStore.q"
       :initial-field="searchStore.field"

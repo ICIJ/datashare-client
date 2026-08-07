@@ -1,4 +1,4 @@
-import { uniqueId } from 'lodash'
+import uniqueId from 'lodash/uniqueId'
 import { AppIcon, ButtonIcon } from '@icij/murmur'
 
 import IPhArrowLeft from '~icons/ph/arrow-left'

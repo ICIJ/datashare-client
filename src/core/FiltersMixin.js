@@ -1,7 +1,6 @@
 import cloneDeep from 'lodash/cloneDeep'
 import findIndex from 'lodash/findIndex'
 import uniqueId from 'lodash/uniqueId'
-
 import { useSearchStore } from '@/store/modules'
 
 /**

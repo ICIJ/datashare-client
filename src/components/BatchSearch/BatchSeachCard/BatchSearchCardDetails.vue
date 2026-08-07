@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { stringifyQuery, parseQuery } from 'vue-router'
-import { omit } from 'lodash'
+import omit from 'lodash/omit'
 import { ButtonIcon } from '@icij/murmur'
 import IPhList from '~icons/ph/list'
 import IPhCaretRight from '~icons/ph/caret-right'

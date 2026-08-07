@@ -1,6 +1,5 @@
 import { computed, toValue, watch, onBeforeUnmount } from 'vue'
-import { random } from 'lodash'
-
+import random from 'lodash/random'
 import { usePolling } from '@/composables/usePolling'
 import { useWait } from '@/composables/useWait'
 import { useTaskStore } from '@/store/modules'

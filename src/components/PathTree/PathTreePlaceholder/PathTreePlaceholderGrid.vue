@@ -1,7 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { random } from 'lodash'
-
+import random from 'lodash/random'
 import AppPlaceholder from '@/components/AppPlaceholder/AppPlaceholder'
 import PathTreePlaceholderListEntry from './PathTreePlaceholderListEntry'
 

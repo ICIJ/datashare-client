@@ -1,7 +1,8 @@
 <script setup>
 import { basename } from 'path'
 import { computed } from 'vue'
-import { isArray, last } from 'lodash'
+import isArray from 'lodash/isArray'
+import last from 'lodash/last'
 import { useI18n } from 'vue-i18n'
 import { AppIcon } from '@icij/murmur'
 

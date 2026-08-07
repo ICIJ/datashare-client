@@ -1,5 +1,5 @@
 <script setup>
-import { noop } from 'lodash'
+import noop from 'lodash/noop'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { computed, ref } from 'vue'

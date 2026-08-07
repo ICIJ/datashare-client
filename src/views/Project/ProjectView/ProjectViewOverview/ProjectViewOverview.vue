@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, watch, toRef } from 'vue'
-import { get } from 'lodash'
+import get from 'lodash/get'
 import { useI18n } from 'vue-i18n'
 
 import IPhChartBar from '~icons/ph/chart-bar'

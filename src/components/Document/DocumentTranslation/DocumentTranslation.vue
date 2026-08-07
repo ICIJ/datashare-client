@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { find, join } from 'lodash'
-
+import find from 'lodash/find'
+import join from 'lodash/join'
 import DocumentTranslationAlert from './DocumentTranslationAlert/DocumentTranslationAlert'
 
 import { useCore } from '@/composables/useCore'

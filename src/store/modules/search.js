@@ -1,20 +1,18 @@
-import {
-  castArray,
-  compact,
-  endsWith,
-  find,
-  get,
-  has,
-  isEqual,
-  isString,
-  method,
-  orderBy as orderArray,
-  property,
-  random,
-  range,
-  toString,
-  uniq
-} from 'lodash'
+import castArray from 'lodash/castArray'
+import compact from 'lodash/compact'
+import endsWith from 'lodash/endsWith'
+import find from 'lodash/find'
+import get from 'lodash/get'
+import has from 'lodash/has'
+import isEqual from 'lodash/isEqual'
+import isString from 'lodash/isString'
+import method from 'lodash/method'
+import orderArray from 'lodash/orderBy'
+import property from 'lodash/property'
+import random from 'lodash/random'
+import range from 'lodash/range'
+import toString from 'lodash/toString'
+import uniq from 'lodash/uniq'
 import lucene from 'lucene'
 import { ref, computed, toRaw } from 'vue'
 import { useRouter } from 'vue-router'

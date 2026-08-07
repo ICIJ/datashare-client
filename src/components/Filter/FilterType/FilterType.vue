@@ -1,6 +1,13 @@
 <script setup>
 import { computed, nextTick, onBeforeMount, reactive, ref, watch } from 'vue'
-import { compact, concat, escapeRegExp, flatten, get, noop, setWith, uniqueId } from 'lodash'
+import compact from 'lodash/compact'
+import concat from 'lodash/concat'
+import escapeRegExp from 'lodash/escapeRegExp'
+import flatten from 'lodash/flatten'
+import get from 'lodash/get'
+import noop from 'lodash/noop'
+import setWith from 'lodash/setWith'
+import uniqueId from 'lodash/uniqueId'
 import InfiniteLoading from 'v3-infinite-loading'
 import { useI18n } from 'vue-i18n'
 

@@ -1,5 +1,5 @@
 import { computed, toRef, shallowRef, watch } from 'vue'
-import { escapeRegExp } from 'lodash'
+import escapeRegExp from 'lodash/escapeRegExp'
 import * as PDFJS from 'pdfjs-dist'
 import workerSrc from 'pdfjs-dist/build/pdf.worker.min?url'
 

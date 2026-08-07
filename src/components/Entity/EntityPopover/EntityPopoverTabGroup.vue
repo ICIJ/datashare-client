@@ -1,8 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { pick } from 'lodash'
-
+import pick from 'lodash/pick'
 import IPhListMagnifyingGlass from '~icons/ph/list-magnifying-glass'
 import IPhInfo from '~icons/ph/info'
 

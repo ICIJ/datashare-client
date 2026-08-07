@@ -1,7 +1,7 @@
 <script setup>
 import { computed, nextTick, onMounted, reactive, ref, useTemplateRef } from 'vue'
 import { onBeforeRouteUpdate } from 'vue-router'
-import { reduce } from 'lodash'
+import reduce from 'lodash/reduce'
 import bodybuilder from 'bodybuilder'
 
 import { useCore } from '@/composables/useCore'

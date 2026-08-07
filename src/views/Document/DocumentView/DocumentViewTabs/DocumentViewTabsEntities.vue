@@ -1,6 +1,12 @@
 <script setup>
 import { computed, inject, onMounted, ref, watch } from 'vue'
-import { flatten, get, mapValues, pickBy, property, sumBy, throttle } from 'lodash'
+import flatten from 'lodash/flatten'
+import get from 'lodash/get'
+import mapValues from 'lodash/mapValues'
+import pickBy from 'lodash/pickBy'
+import property from 'lodash/property'
+import sumBy from 'lodash/sumBy'
+import throttle from 'lodash/throttle'
 import { useI18n } from 'vue-i18n'
 
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'

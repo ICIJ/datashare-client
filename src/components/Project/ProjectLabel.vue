@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
-import { isObject, startCase } from 'lodash'
-
+import isObject from 'lodash/isObject'
+import startCase from 'lodash/startCase'
 import { useCore } from '@/composables/useCore'
 import ProjectThumbnail from '@/components/Project/ProjectThumbnail'
 

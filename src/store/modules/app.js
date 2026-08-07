@@ -1,4 +1,7 @@
-import { cloneDeep, get, isObject, isString } from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
+import get from 'lodash/get'
+import isObject from 'lodash/isObject'
+import isString from 'lodash/isString'
 import { ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
 

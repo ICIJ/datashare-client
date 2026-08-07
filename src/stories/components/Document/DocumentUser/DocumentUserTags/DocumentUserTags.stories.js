@@ -1,5 +1,4 @@
 import uniqueId from 'lodash/uniqueId'
-
 import DocumentUserTags from '@/components/Document/DocumentUser/DocumentUserTags/DocumentUserTags'
 
 export default {

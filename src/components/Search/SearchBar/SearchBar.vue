@@ -1,6 +1,9 @@
 <script setup>
 import { ref, computed, watch, nextTick, useTemplateRef } from 'vue'
-import { isEqual, iteratee, sortBy, uniqueId } from 'lodash'
+import isEqual from 'lodash/isEqual'
+import iteratee from 'lodash/iteratee'
+import sortBy from 'lodash/sortBy'
+import uniqueId from 'lodash/uniqueId'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { SelectableDropdown } from '@icij/murmur'

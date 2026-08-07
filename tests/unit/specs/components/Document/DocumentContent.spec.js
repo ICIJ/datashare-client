@@ -9,13 +9,9 @@ import { apiInstance as api } from '@/api/apiInstance'
 import { useDocumentStore } from '@/store/modules'
 
 // Disable lodash throttle to avoid side-effect
-vi.mock('lodash', async (importOriginal) => {
-  const { default: actual } = await importOriginal()
-  return {
-    ...actual,
-    throttle: cb => cb
-  }
-})
+vi.mock('lodash/throttle', () => ({
+  default: cb => cb
+}))
 
 vi.mock('@/api/apiInstance', async (importOriginal) => {
   const { apiInstance } = await importOriginal()

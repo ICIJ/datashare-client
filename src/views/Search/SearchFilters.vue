@@ -1,7 +1,8 @@
 <script setup>
-import Fuse from 'fuse.js'
-import { computed, ref } from 'vue'
-import { uniq, groupBy, property } from 'lodash'
+import { computed, ref, shallowRef, watch } from 'vue'
+import uniq from 'lodash/uniq'
+import groupBy from 'lodash/groupBy'
+import property from 'lodash/property'
 import { useI18n } from 'vue-i18n'
 
 import { useViews } from '@/composables/useViews'
@@ -31,8 +32,15 @@ const filters = computed(() => {
 })
 
 const filtersTitles = computed(() => filters.value.map(filter => ({ filter, title: t(`filter.${filter.name}`) })))
-const fuse = computed(() => new Fuse(filtersTitles.value, { threshold: 0.1, shouldSort: false, keys: ['title'] }))
-const fuseFilters = computed(() => fuse.value.search(q.value).map(property('item.filter')))
+
+// Fuse.js is only needed once the user actually searches the filter list, so
+// defer loading its chunk until the first keystroke instead of importing it
+// eagerly for every search-page load.
+const Fuse = shallowRef(null)
+watch(q, () => import('fuse.js').then(module => (Fuse.value = module.default)), { once: true })
+
+const fuse = computed(() => Fuse.value && new Fuse.value(filtersTitles.value, { threshold: 0.1, shouldSort: false, keys: ['title'] }))
+const fuseFilters = computed(() => (fuse.value ? fuse.value.search(q.value).map(property('item.filter')) : filters.value))
 const displayedFilters = computed(() => (q.value ? fuseFilters.value : filters.value))
 const filtersBySection = computed(() => groupBy(displayedFilters.value, 'section'))
 const sections = computed(() => uniq(displayedFilters.value.map(filter => filter.section)))

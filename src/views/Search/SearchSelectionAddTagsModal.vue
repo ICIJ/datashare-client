@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, onBeforeMount } from 'vue'
-import { flatten, map } from 'lodash'
+import flatten from 'lodash/flatten'
+import map from 'lodash/map'
 import { useI18n } from 'vue-i18n'
 import { ImageModeSource } from '@icij/murmur'
 

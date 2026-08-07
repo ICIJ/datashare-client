@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { castArray, random } from 'lodash'
-
+import castArray from 'lodash/castArray'
+import random from 'lodash/random'
 import { useCore } from '@/composables/useCore'
 import { usePolling } from '@/composables/usePolling'
 import { useWait } from '@/composables/useWait'

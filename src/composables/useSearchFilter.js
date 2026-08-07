@@ -1,5 +1,12 @@
 import { computed, toValue, nextTick, watch, watchEffect } from 'vue'
-import { castArray, get, identity, isObject, range, random, toString, without } from 'lodash'
+import castArray from 'lodash/castArray'
+import get from 'lodash/get'
+import identity from 'lodash/identity'
+import isObject from 'lodash/isObject'
+import range from 'lodash/range'
+import random from 'lodash/random'
+import toString from 'lodash/toString'
+import without from 'lodash/without'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 

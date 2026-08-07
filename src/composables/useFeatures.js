@@ -1,5 +1,4 @@
 import camelCase from 'lodash/camelCase'
-
 import { useCore } from '@/composables/useCore'
 
 export function useFeatures() {

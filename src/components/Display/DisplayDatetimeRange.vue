@@ -1,5 +1,5 @@
 <script setup>
-import { isArray } from 'lodash'
+import isArray from 'lodash/isArray'
 import { computed } from 'vue'
 
 import DisplayDatetime from './DisplayDatetime'

@@ -1,8 +1,7 @@
 <script setup>
 import { computed, toRaw, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { isEqual } from 'lodash'
-
+import isEqual from 'lodash/isEqual'
 import SettingsGeneralLabel from '@/components/Settings/SettingsGeneral/SettingsGeneralLabel'
 import ButtonReset from '@/components/Button/ButtonReset'
 

@@ -1,5 +1,9 @@
-import { get, isNull, join, omitBy, toLower, trim } from 'lodash'
-
+import get from 'lodash/get'
+import isNull from 'lodash/isNull'
+import join from 'lodash/join'
+import omitBy from 'lodash/omitBy'
+import toLower from 'lodash/toLower'
+import trim from 'lodash/trim'
 import settings from '@/utils/settings'
 
 const Method = Object.freeze({

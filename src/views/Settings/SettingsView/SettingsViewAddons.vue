@@ -1,7 +1,7 @@
 <script setup>
 import { computed, watch, toRef, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ary } from 'lodash'
+import ary from 'lodash/ary'
 import Fuse from 'fuse.js'
 import { AppIcon } from '@icij/murmur'
 
