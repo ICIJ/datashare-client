@@ -1,5 +1,5 @@
 import find from 'lodash/find'
-import { flushPromises, mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
@@ -95,8 +95,11 @@ describe('FilterTypeDateRange.vue', () => {
       },
       props: { filter: searchStore.getFilter({ name }) }
     })
-    await flushPromises()
 
-    expect(stubbedWrapper.findComponent({ name: 'ColumnChartPicker' }).exists()).toBe(true)
+    // The chart chunk's first dynamic import can take real wall-clock time
+    // to transform in the test pipeline, so poll instead of a single flush.
+    await vi.waitFor(() => {
+      expect(stubbedWrapper.findComponent({ name: 'ColumnChartPicker' }).exists()).toBe(true)
+    })
   })
 })
