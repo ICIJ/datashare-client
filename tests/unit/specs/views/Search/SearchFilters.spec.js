@@ -1,4 +1,4 @@
-import { flushPromises, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import SearchFilters from '@/views/Search/SearchFilters'
@@ -57,8 +57,11 @@ describe('SearchFilters.vue', () => {
 
   it('filters the panel by search term once fuse.js has loaded', async () => {
     wrapper.findComponent({ name: 'FiltersPanel' }).vm.$emit('update:q', 'nonexistent-filter-name')
-    await flushPromises()
 
-    expect(renderedFilterNames()).not.toContain('contentType')
+    // fuse.js's first dynamic import pays real transform time in the Vitest
+    // pipeline (not just a microtask tick), same as the async FilterType*
+    // chunks elsewhere in this composable — flushPromises() alone isn't
+    // enough, poll instead.
+    await vi.waitFor(() => expect(renderedFilterNames()).not.toContain('contentType'))
   })
 })
