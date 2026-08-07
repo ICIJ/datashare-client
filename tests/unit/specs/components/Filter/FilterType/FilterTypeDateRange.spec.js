@@ -1,5 +1,5 @@
 import find from 'lodash/find'
-import { mount } from '@vue/test-utils'
+import { flushPromises, mount } from '@vue/test-utils'
 
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
@@ -67,5 +67,36 @@ describe('FilterTypeDateRange.vue', () => {
     expect(invalidSizeWarning).toBeUndefined()
 
     warnSpy.mockRestore()
+  })
+
+  it('does not load the date chart chunk while the filter is collapsed, even with multiple entries', () => {
+    // FilterType is stubbed with fixed slot scope so this exercises the
+    // `opened` gate in isolation, without needing real aggregation buckets.
+    const stubbedWrapper = mount(FilterDateRange, {
+      global: {
+        plugins: CoreSetup.init().useAll().useRouterWithoutGuards().plugins,
+        stubs: {
+          FilterType: { template: '<slot :entries="[{ item: 1 }, { item: 2 }]" :opened="false" />' }
+        }
+      },
+      props: { filter: searchStore.getFilter({ name }) }
+    })
+
+    expect(stubbedWrapper.findComponent({ name: 'ColumnChartPicker' }).exists()).toBe(false)
+  })
+
+  it('loads the date chart chunk once the filter is opened with multiple entries', async () => {
+    const stubbedWrapper = mount(FilterDateRange, {
+      global: {
+        plugins: CoreSetup.init().useAll().useRouterWithoutGuards().plugins,
+        stubs: {
+          FilterType: { template: '<slot :entries="[{ item: 1 }, { item: 2 }]" :opened="true" />' }
+        }
+      },
+      props: { filter: searchStore.getFilter({ name }) }
+    })
+    await flushPromises()
+
+    expect(stubbedWrapper.findComponent({ name: 'ColumnChartPicker' }).exists()).toBe(true)
   })
 })
