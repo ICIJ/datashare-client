@@ -1,6 +1,8 @@
+import { defineAsyncComponent } from 'vue'
 import WidgetEmpty from './WidgetEmpty'
 
-import Component from '@/components/Widget/WidgetListGroup'
+// See WidgetEmpty.js for why this is lazy.
+const Component = defineAsyncComponent(() => import('@/components/Widget/WidgetListGroup'))
 
 /**
  * Widget to display a list of items or links on the insights page

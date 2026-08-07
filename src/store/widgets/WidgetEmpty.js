@@ -1,5 +1,10 @@
+import { defineAsyncComponent } from 'vue'
 import uniqueId from 'lodash/uniqueId'
-import Component from '@/components/Widget/WidgetEmpty'
+
+// Loaded lazily so the `store/widgets` barrel (eagerly imported at boot via
+// Core.js's store barrel) doesn't drag every widget's Vue component — and
+// their own dependencies — into the main bundle.
+const Component = defineAsyncComponent(() => import('@/components/Widget/WidgetEmpty'))
 
 /**
  * Class representing the Empty widget. This widget is not intended to be used directly.
