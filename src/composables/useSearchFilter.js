@@ -1,4 +1,4 @@
-import { computed, toValue, nextTick, watch, watchEffect } from 'vue'
+import { computed, defineAsyncComponent, toValue, nextTick, watch, watchEffect } from 'vue'
 import castArray from 'lodash/castArray'
 import get from 'lodash/get'
 import identity from 'lodash/identity'
@@ -17,12 +17,18 @@ import { useMode } from '@/composables/useMode'
 import { useContentTypeCategoryAvailability } from '@/composables/useContentTypeCategoryAvailability'
 import { onAfterRouteUpdate } from '@/composables/onAfterRouteUpdate'
 import FilterType from '@/components/Filter/FilterType/FilterType'
-import FilterTypeDateRange from '@/components/Filter/FilterType/FilterTypeDateRange'
 import FilterTypeFileTypes from '@/components/Filter/FilterType/FilterTypeFileTypes'
-import FilterTypePath from '@/components/Filter/FilterType/FilterTypePath'
-import FilterTypeProject from '@/components/Filter/FilterType/FilterTypeProject'
-import FilterTypeRecommendedBy from '@/components/Filter/FilterType/FilterTypeRecommendedBy'
-import FilterTypeStarred from '@/components/Filter/FilterType/FilterTypeStarred'
+
+// FilterType (the generic base, used by most filters: date, tag, entity,
+// etc.) and FilterTypeFileTypes (the always-on contentType facet) are
+// imported statically since both are on by default for every project. The
+// specialized types below are each only relevant to a project enabling that
+// specific facet, so they're loaded on demand.
+const FilterTypeDateRange = defineAsyncComponent(() => import('@/components/Filter/FilterType/FilterTypeDateRange'))
+const FilterTypePath = defineAsyncComponent(() => import('@/components/Filter/FilterType/FilterTypePath'))
+const FilterTypeProject = defineAsyncComponent(() => import('@/components/Filter/FilterType/FilterTypeProject'))
+const FilterTypeRecommendedBy = defineAsyncComponent(() => import('@/components/Filter/FilterType/FilterTypeRecommendedBy'))
+const FilterTypeStarred = defineAsyncComponent(() => import('@/components/Filter/FilterType/FilterTypeStarred'))
 import { CONTENT_TYPE_CATEGORY_FILTER_NAME } from '@/store/filters/FilterContentTypeCategory'
 import FilterText from '@/store/filters/FilterText.js'
 import { PAIRED_DIMENSIONS, getCanonicalDimension, getPairedDimension, getPairedDimensions } from '@/store/filters/pairedDimensions'
