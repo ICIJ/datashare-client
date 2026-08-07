@@ -151,15 +151,13 @@ export default ({ mode }) => {
               return 'vendor-search'
             }
 
-            // Charting/geo/calendar. Despite the name, this is not deferred
-            // to project-overview: ColumnChartPicker.vue imports d3 directly
-            // and is statically reachable from the search route itself (via
-            // FilterTypeDateRange.vue -> FilterDateRange.js ->
-            // store/filters/index.js -> search.js), which the eager store
-            // barrel in Core.js pulls in on every page..
-            // Isolating it here still lets it cache independently of
-            // app-code deploys; actually deferring it needs breaking that
-            // eager import chain, not a chunk name.
+            // Charting/geo/calendar. d3 (via ColumnChartPicker.vue) and
+            // v-calendar (via FormControlDateRange.vue) are both now deferred
+            // at their call sites (defineAsyncComponent / no longer installed
+            // as an eager global plugin in Core.js), so this group is only
+            // downloaded once one of those lazy chunks actually loads — this
+            // is purely a caching optimization for chunks that already ship
+            // together, not an eager download.
             if (pkg === 'd3' || pkg.startsWith('d3-') || pkg === 'v-calendar' || pkg.startsWith('topojson')) {
               return 'vendor-charts'
             }
