@@ -1,10 +1,14 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, defineAsyncComponent } from 'vue'
 import property from 'lodash/property'
 import { useSearchFilter } from '@/composables/useSearchFilter'
-import ColumnChartPicker from '@/components/ColumnChartPicker'
 import FilterType from '@/components/Filter/FilterType/FilterType'
 import FormControlDateRange from '@/components/Form/FormControl/FormControlDateRange/FormControlDateRange'
+
+// d3 (pulled in via ColumnChartPicker) is only needed once the date-range
+// filter is actually expanded, so defer its chunk until first open instead
+// of loading it eagerly on every search-page render.
+const ColumnChartPicker = defineAsyncComponent(() => import('@/components/ColumnChartPicker'))
 
 const props = defineProps({
   filter: {
@@ -47,13 +51,13 @@ const selected = computed({
     :filter="filter"
     flush
   >
-    <template #default="{ entries }">
+    <template #default="{ entries, opened }">
       <form-control-date-range
         v-model="selected"
         size="sm"
       />
       <column-chart-picker
-        v-if="entries.length > 1"
+        v-if="opened && entries.length > 1"
         v-model="selected"
         class="mx-1 mt-3"
         :data="entries.map(property('item'))"
