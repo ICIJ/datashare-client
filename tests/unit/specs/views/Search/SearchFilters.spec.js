@@ -1,4 +1,4 @@
-import { shallowMount } from '@vue/test-utils'
+import { flushPromises, shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import SearchFilters from '@/views/Search/SearchFilters'
@@ -53,5 +53,12 @@ describe('SearchFilters.vue', () => {
   it('keeps the hidden filter in the search store for URL and breadcrumb sync', () => {
     const names = searchStore.instantiatedFilters.map(filter => filter.name)
     expect(names).toContain('contentTypeCategory')
+  })
+
+  it('filters the panel by search term once fuse.js has loaded', async () => {
+    wrapper.findComponent({ name: 'FiltersPanel' }).vm.$emit('update:q', 'nonexistent-filter-name')
+    await flushPromises()
+
+    expect(renderedFilterNames()).not.toContain('contentType')
   })
 })
