@@ -1,9 +1,11 @@
+import { defineAsyncComponent, markRaw } from 'vue'
 import iteratee from 'lodash/iteratee'
 import isFunction from 'lodash/isFunction'
-import { markRaw } from 'vue'
 
 import WidgetListGroup from '@/store/widgets/WidgetListGroup'
-import Component from '@/components/Widget/WidgetFieldFacets'
+
+// See WidgetEmpty.js for why this is lazy.
+const Component = defineAsyncComponent(() => import('@/components/Widget/WidgetFieldFacets'))
 
 function castFunction(value) {
   if (isFunction(value)) {

@@ -55,7 +55,7 @@ import castArray from 'lodash/castArray'
 import trimEnd from 'lodash/trimEnd'
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur'
-import { toRef } from 'vue'
+import { defineAsyncComponent, toRef } from 'vue'
 
 import IPhTreeStructure from '~icons/ph/tree-structure'
 
@@ -63,7 +63,11 @@ import { useInsightsStore } from '@/store/modules'
 import AppModal from '@/components/AppModal/AppModal'
 import PathTreeBreadcrumb from '@/components/PathTree/PathTreeBreadcrumb/PathTreeBreadcrumb'
 import PathTree from '@/components/PathTree/PathTree'
-import WidgetDocumentsByCreationDate from '@/components/Widget/WidgetDocumentsByCreationDate'
+
+// Loaded lazily so this widget's own bundle graph doesn't pull in
+// ColumnChartPicker/d3 (see WidgetDocumentsByCreationDate.js for the same
+// treatment on the store-side import of this same component).
+const WidgetDocumentsByCreationDate = defineAsyncComponent(() => import('@/components/Widget/WidgetDocumentsByCreationDate'))
 
 /**
  * Widget to display number of files by creation date by path
