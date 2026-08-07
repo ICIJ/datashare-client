@@ -1,7 +1,9 @@
+import { defineAsyncComponent } from 'vue'
 import castArray from 'lodash/castArray'
 import WidgetEmpty from './WidgetEmpty'
 
-import Component from '@/components/Widget/WidgetNested'
+// See WidgetEmpty.js for why this is lazy.
+const Component = defineAsyncComponent(() => import('@/components/Widget/WidgetNested'))
 
 /**
  * Widget to display nested widgets
