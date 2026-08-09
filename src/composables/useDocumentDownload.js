@@ -1,6 +1,7 @@
 import { computed, ref, toRef, watchEffect } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+import { apiInstance as api } from '@/api/apiInstance'
 import { useDocumentDownloadStore, useDocumentStore } from '@/store/modules'
 import settings from '@/utils/settings'
 
@@ -92,6 +93,19 @@ export function useDocumentDownload(document, { immediate = true } = {}) {
     availableTranslations.value = await documentDownloadStore.fetchTranslationStatus({ index, id, routing })
   }
 
+  const structureManifest = ref(null)
+
+  const hasMarkdown = computed(() => {
+    const { pages = 0, formats = [] } = structureManifest.value ?? {}
+    return pages > 0 && formats.includes('md')
+  })
+
+  async function fetchMarkdownStatus() {
+    const { index, id, routing } = documentRef.value
+    if (!index || !id) return
+    structureManifest.value = await api.getStructureManifest(index, id, routing)
+  }
+
   async function downloadTranslatedContent() {
     if (!documentRef.value.content) {
       await documentStore.getContent()
@@ -107,18 +121,20 @@ export function useDocumentDownload(document, { immediate = true } = {}) {
   }
 
   async function fetchStatuses() {
-    await Promise.all([fetchDownloadStatus(), fetchTranslationStatus()])
+    await Promise.all([fetchDownloadStatus(), fetchTranslationStatus(), fetchMarkdownStatus()])
   }
 
   if (immediate) {
     watchEffect(fetchDownloadStatus)
     watchEffect(fetchTranslationStatus)
+    watchEffect(fetchMarkdownStatus)
   }
 
   return {
     fetchStatuses,
     fetchDownloadStatus,
     fetchTranslationStatus,
+    fetchMarkdownStatus,
     extensionWarning,
     description,
     showExtensionWarning,
@@ -132,6 +148,8 @@ export function useDocumentDownload(document, { immediate = true } = {}) {
     downloadTextContent,
     hasTextContent,
     hasTranslations,
-    downloadTranslatedContent
+    downloadTranslatedContent,
+    structureManifest,
+    hasMarkdown
   }
 }
