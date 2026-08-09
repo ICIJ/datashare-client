@@ -168,6 +168,24 @@ describe('DocumentDownloadPopover.vue', () => {
     expect(labels).not.toContain('Download markdown')
   })
 
+  it('should put the markdown button in a loading state while the pages are fetched', async () => {
+    apiInstance.elasticsearch.getSource = vi.fn().mockResolvedValue({ content_translated: [] })
+    apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(true)
+    apiInstance.getStructureManifest = vi.fn().mockResolvedValue({ pages: 1, formats: ['md'] })
+    apiInstance.getStructurePage = vi.fn(() => new Promise(() => {}))
+
+    const wrapper = mountPopover(createDocument({}, 'test-doc-id-markdown-loading'))
+    await flushPromises()
+    const markdownButton = () => wrapper
+      .findAll('.document-download-popover__body__button')
+      .find(btn => btn.attributes('label') === 'Download markdown')
+
+    expect(markdownButton().attributes('loading')).toBe('false')
+    await markdownButton().trigger('click')
+    expect(markdownButton().attributes('loading')).toBe('true')
+    expect(markdownButton().attributes('disabled')).toBe('true')
+  })
+
   it('should trigger a download when the markdown button is clicked', async () => {
     apiInstance.elasticsearch.getSource = vi.fn().mockResolvedValue({ content_translated: [] })
     apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(true)

@@ -109,6 +109,8 @@ export function useDocumentDownload(document, { immediate = true } = {}) {
     structureManifest.value = await api.getStructureManifest(index, id, routing)
   }
 
+  const isDownloadingMarkdown = ref(false)
+
   async function downloadMarkdown() {
     if (!hasMarkdown.value) return
     const { index, id, routing, title } = documentRef.value
@@ -116,6 +118,7 @@ export function useDocumentDownload(document, { immediate = true } = {}) {
     // No hand-rolled concurrency limit: the browser's per-host connection cap
     // already throttles these, and a document rarely has more than a few pages.
     const numbers = range(1, pages + 1)
+    isDownloadingMarkdown.value = true
     const promise = Promise.all(numbers.map(page => api.getStructurePage(index, id, page, routing)))
     try {
       const contents = await toastedPromise(promise, { errorMessage: t('documentDownloadPopover.downloadMarkdownError') })
@@ -127,6 +130,9 @@ export function useDocumentDownload(document, { immediate = true } = {}) {
     catch {
       // toastedPromise already reported the error; swallow the rejection so it
       // doesn't escape the template click handler.
+    }
+    finally {
+      isDownloadingMarkdown.value = false
     }
   }
 
@@ -175,6 +181,7 @@ export function useDocumentDownload(document, { immediate = true } = {}) {
     downloadTranslatedContent,
     structureManifest,
     hasMarkdown,
-    downloadMarkdown
+    downloadMarkdown,
+    isDownloadingMarkdown
   }
 }

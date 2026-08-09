@@ -382,4 +382,66 @@ describe('useDocumentDownload composable', () => {
       expect(URL.createObjectURL).not.toHaveBeenCalled()
     })
   })
+
+  describe('isDownloadingMarkdown', () => {
+    function stubAnchor() {
+      const anchor = { href: '', download: '', click: vi.fn() }
+      const originalCreateElement = window.document.createElement.bind(window.document)
+      vi.spyOn(window.document, 'createElement').mockImplementation((tag) => {
+        if (tag === 'a') return anchor
+        return originalCreateElement(tag)
+      })
+      return anchor
+    }
+
+    it('should be false before any download starts', async () => {
+      mockGetSource({ content_translated: [] })
+      apiInstance.getStructureManifest = vi.fn().mockResolvedValue({ pages: 1, formats: ['md'] })
+      const doc = new Document({ _id: 'md-idle', _index: 'test-index', _source: { title: 'test' } })
+      const { isDownloadingMarkdown } = mountComposable(doc)
+      await flushPromises()
+      expect(isDownloadingMarkdown.value).toBe(false)
+    })
+
+    it('should be true while the pages are being fetched', async () => {
+      mockGetSource({ content_translated: [] })
+      apiInstance.getStructureManifest = vi.fn().mockResolvedValue({ pages: 2, formats: ['md'] })
+      // Every page must be resolvable: Promise.all only settles once the last
+      // one does, so keeping a single resolver would hang the download.
+      const resolvers = []
+      apiInstance.getStructurePage = vi.fn(() => new Promise(resolve => resolvers.push(resolve)))
+      stubAnchor()
+      const doc = new Document({ _id: 'md-pending-download', _index: 'test-index', _source: { title: 'test' } })
+      const { downloadMarkdown, isDownloadingMarkdown } = mountComposable(doc)
+      await flushPromises()
+      const pending = downloadMarkdown()
+      await flushPromises()
+      expect(isDownloadingMarkdown.value).toBe(true)
+      resolvers.forEach(resolve => resolve('# Page'))
+      await pending
+      expect(isDownloadingMarkdown.value).toBe(false)
+    })
+
+    it('should be false again once a page fails', async () => {
+      mockGetSource({ content_translated: [] })
+      apiInstance.getStructureManifest = vi.fn().mockResolvedValue({ pages: 1, formats: ['md'] })
+      apiInstance.getStructurePage = vi.fn().mockRejectedValue(new Error('boom'))
+      stubAnchor()
+      const doc = new Document({ _id: 'md-failed-download', _index: 'test-index', _source: { title: 'test' } })
+      const { downloadMarkdown, isDownloadingMarkdown } = mountComposable(doc)
+      await flushPromises()
+      await downloadMarkdown()
+      expect(isDownloadingMarkdown.value).toBe(false)
+    })
+
+    it('should stay false when the document has no markdown', async () => {
+      mockGetSource({ content_translated: [] })
+      apiInstance.getStructureManifest = vi.fn().mockResolvedValue(null)
+      const doc = new Document({ _id: 'md-no-artifact', _index: 'test-index', _source: { title: 'test' } })
+      const { downloadMarkdown, isDownloadingMarkdown } = mountComposable(doc)
+      await flushPromises()
+      await downloadMarkdown()
+      expect(isDownloadingMarkdown.value).toBe(false)
+    })
+  })
 })
