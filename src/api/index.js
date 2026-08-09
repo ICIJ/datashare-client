@@ -372,12 +372,8 @@ export class Api {
    * `sendAction`, which would push every 404 onto the `http::error` bus.
    *
    * Unlike `isDocumentDownloadable`, a probe we cannot read fails closed: a
-   * button that 404s on click is worse than no button at all.
-   *
-   * @param {string} index - The project index of the document
-   * @param {string} id - The document id
-   * @param {string} routing - The routing (the root document id)
-   * @returns {Promise<Object|null>} The manifest, or null when there is none
+   * button that 404s on click is worse than no button at all. Returns the
+   * manifest, or null when there is none.
    */
   async getStructureManifest(index, id, routing) {
     const url = Api.getFullUrl(`/api/${index}/artifacts/structure/${id}`)
@@ -399,7 +395,7 @@ export class Api {
   }
 
   /**
-   * Fetch one page of a document's structure artifact, as Markdown.
+   * Fetch one page (1-based) of a document's structure artifact, as Markdown.
    *
    * The `format` parameter is omitted on purpose: `md` is the server-side
    * default, and it is the only format this client asks for.
@@ -408,12 +404,6 @@ export class Api {
    * `http::error` for every rejection: a download fans out one request per
    * page, so a single expired session would stack one sticky notification per
    * page. The caller reports the failed download once instead.
-   *
-   * @param {string} index - The project index of the document
-   * @param {string} id - The document id
-   * @param {number} page - The 1-based page number
-   * @param {string} routing - The routing (the root document id)
-   * @returns {Promise<string>} The page content
    */
   async getStructurePage(index, id, page, routing) {
     const url = Api.getFullUrl(`/api/${index}/artifacts/structure/${id}/${page}`)
