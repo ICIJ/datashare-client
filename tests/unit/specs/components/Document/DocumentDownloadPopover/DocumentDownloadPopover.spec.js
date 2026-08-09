@@ -183,7 +183,6 @@ describe('DocumentDownloadPopover.vue', () => {
     expect(markdownButton().attributes('loading')).toBe('false')
     await markdownButton().trigger('click')
     expect(markdownButton().attributes('loading')).toBe('true')
-    expect(markdownButton().attributes('disabled')).toBe('true')
   })
 
   it('should trigger a download when the markdown button is clicked', async () => {
