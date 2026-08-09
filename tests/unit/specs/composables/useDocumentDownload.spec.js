@@ -17,11 +17,13 @@ describe('useDocumentDownload composable', () => {
     core.createPinia()
     plugins = core.plugins
     URL.createObjectURL = vi.fn().mockReturnValue('blob:fake-url')
-    apiInstance.getStructureManifest = vi.fn().mockResolvedValue(null)
     // Plain property assignments on the api singleton survive
     // `vi.restoreAllMocks`, so every probe is stubbed here rather than relying
-    // on a stub set by an earlier test to leak into the next one
+    // on a stub set by an earlier test to leak into the next one. Tests that
+    // need another answer than "nothing to download" override their own.
+    apiInstance.getStructureManifest = vi.fn().mockResolvedValue(null)
     apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(true)
+    mockGetSource({ content_translated: [] })
   })
 
   afterEach(() => {
@@ -30,6 +32,18 @@ describe('useDocumentDownload composable', () => {
 
   function mockGetSource(response) {
     apiInstance.elasticsearch.getSource = vi.fn().mockResolvedValue(response)
+  }
+
+  function stubAnchor() {
+    const anchor = { href: '', download: '', click: vi.fn() }
+    const originalCreateElement = window.document.createElement.bind(window.document)
+    vi.spyOn(window.document, 'createElement').mockImplementation((tag) => {
+      if (tag === 'a') {
+        return anchor
+      }
+      return originalCreateElement(tag)
+    })
+    return anchor
   }
 
   function mountComposable(document, options) {
@@ -47,8 +61,6 @@ describe('useDocumentDownload composable', () => {
 
   describe('fetchStatuses', () => {
     it('should not fetch download status when immediate is false', async () => {
-      apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(true)
-      mockGetSource({ content_translated: [] })
       const doc = new Document({
         _id: 'doc1',
         _index: 'test-index',
@@ -60,7 +72,6 @@ describe('useDocumentDownload composable', () => {
     })
 
     it('should fetch download status and translations when fetchStatuses is called', async () => {
-      apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(true)
       mockGetSource({ content_translated: [{ target_language: 'ENGLISH' }] })
       const doc = new Document({
         _id: 'doc1',
@@ -79,8 +90,6 @@ describe('useDocumentDownload composable', () => {
     })
 
     it('should not fetch download status when the document has no id', async () => {
-      apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(true)
-      mockGetSource({ content_translated: [] })
       const doc = new Document({ _index: 'test-index', _source: { title: 'test' } })
       const { fetchStatuses } = mountComposable(doc, { immediate: false })
       await fetchStatuses()
@@ -92,7 +101,6 @@ describe('useDocumentDownload composable', () => {
   describe('isDownloadAllowed', () => {
     it('should be true before the status is fetched', async () => {
       apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(false)
-      mockGetSource({ content_translated: [] })
       const doc = new Document({
         _id: 'doc1',
         _index: 'test-index',
@@ -104,7 +112,6 @@ describe('useDocumentDownload composable', () => {
 
     it('should be false once the backend refuses the download', async () => {
       apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(false)
-      mockGetSource({ content_translated: [] })
       const doc = new Document({
         _id: 'doc1',
         _index: 'test-index',
@@ -117,8 +124,6 @@ describe('useDocumentDownload composable', () => {
     })
 
     it('should stay true when the backend allows the download', async () => {
-      apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(true)
-      mockGetSource({ content_translated: [] })
       const doc = new Document({
         _id: 'doc1',
         _index: 'test-index',
@@ -145,7 +150,6 @@ describe('useDocumentDownload composable', () => {
     })
 
     it('should be false when API returns no translations', async () => {
-      mockGetSource({ content_translated: [] })
       const doc = new Document({
         _id: 'doc2',
         _index: 'test-index',
@@ -224,22 +228,18 @@ describe('useDocumentDownload composable', () => {
     }
 
     it('should be false before the manifest is fetched', () => {
-      mockGetSource({ content_translated: [] })
       apiInstance.getStructureManifest = vi.fn(() => new Promise(() => {}))
       const { hasMarkdown } = mountComposable(markdownDocument('md-pending'))
       expect(hasMarkdown.value).toBe(false)
     })
 
     it('should be false when the document has no structure artifact', async () => {
-      mockGetSource({ content_translated: [] })
-      apiInstance.getStructureManifest = vi.fn().mockResolvedValue(null)
       const { hasMarkdown } = mountComposable(markdownDocument('md-none'))
       await flushPromises()
       expect(hasMarkdown.value).toBe(false)
     })
 
     it('should be false when the manifest reports zero pages', async () => {
-      mockGetSource({ content_translated: [] })
       apiInstance.getStructureManifest = vi.fn().mockResolvedValue({ pages: 0, formats: ['md'] })
       const { hasMarkdown } = mountComposable(markdownDocument('md-empty'))
       await flushPromises()
@@ -247,7 +247,6 @@ describe('useDocumentDownload composable', () => {
     })
 
     it('should be false when markdown is not among the available formats', async () => {
-      mockGetSource({ content_translated: [] })
       apiInstance.getStructureManifest = vi.fn().mockResolvedValue({ pages: 3, formats: ['xhtml'] })
       const { hasMarkdown } = mountComposable(markdownDocument('md-xhtml-only'))
       await flushPromises()
@@ -255,7 +254,6 @@ describe('useDocumentDownload composable', () => {
     })
 
     it('should be true when the manifest reports markdown pages', async () => {
-      mockGetSource({ content_translated: [] })
       apiInstance.getStructureManifest = vi.fn().mockResolvedValue({ pages: 3, formats: ['md', 'xhtml'] })
       const { hasMarkdown } = mountComposable(markdownDocument('md-available'))
       await flushPromises()
@@ -265,7 +263,6 @@ describe('useDocumentDownload composable', () => {
     // A recycled component keeps its manifest when it is handed another
     // document: the page count of the previous one must never be reused
     it('should be false again when the document changes', async () => {
-      mockGetSource({ content_translated: [] })
       apiInstance.getStructureManifest = vi.fn().mockResolvedValue({ pages: 3, formats: ['md'] })
       const document = ref(markdownDocument('md-first'))
       const { hasMarkdown, fetchStatuses } = mountComposable(document, { immediate: false })
@@ -279,8 +276,6 @@ describe('useDocumentDownload composable', () => {
 
   describe('fetchMarkdownStatus', () => {
     it('should not probe the manifest when immediate is false', async () => {
-      mockGetSource({ content_translated: [] })
-      apiInstance.getStructureManifest = vi.fn().mockResolvedValue(null)
       const doc = new Document({ _id: 'md-lazy', _index: 'test-index', _source: { title: 'test' } })
       mountComposable(doc, { immediate: false })
       await flushPromises()
@@ -288,7 +283,6 @@ describe('useDocumentDownload composable', () => {
     })
 
     it('should probe the manifest when fetchStatuses is called', async () => {
-      mockGetSource({ content_translated: [] })
       apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(true)
       apiInstance.getStructureManifest = vi.fn().mockResolvedValue({ pages: 1, formats: ['md'] })
       const doc = new Document({ _id: 'md-explicit', _index: 'test-index', _source: { title: 'test' } })
@@ -300,8 +294,6 @@ describe('useDocumentDownload composable', () => {
     })
 
     it('should not probe the manifest when the document has no id', async () => {
-      mockGetSource({ content_translated: [] })
-      apiInstance.getStructureManifest = vi.fn().mockResolvedValue(null)
       const doc = new Document({ _index: 'test-index', _source: { title: 'test' } })
       const { fetchStatuses } = mountComposable(doc, { immediate: false })
       await fetchStatuses()
@@ -311,18 +303,6 @@ describe('useDocumentDownload composable', () => {
   })
 
   describe('downloadMarkdown', () => {
-    function stubAnchor() {
-      const anchor = { href: '', download: '', click: vi.fn() }
-      const originalCreateElement = window.document.createElement.bind(window.document)
-      vi.spyOn(window.document, 'createElement').mockImplementation((tag) => {
-        if (tag === 'a') {
-          return anchor
-        }
-        return originalCreateElement(tag)
-      })
-      return anchor
-    }
-
     // jsdom's Blob doesn't implement `text()`; read it via FileReader instead.
     function readBlob(blob) {
       return new Promise((resolve, reject) => {
@@ -334,7 +314,6 @@ describe('useDocumentDownload composable', () => {
     }
 
     it('should request every page of the artifact', async () => {
-      mockGetSource({ content_translated: [] })
       apiInstance.getStructureManifest = vi.fn().mockResolvedValue({ pages: 3, formats: ['md'] })
       apiInstance.getStructurePage = vi.fn().mockResolvedValue('page')
       stubAnchor()
@@ -349,7 +328,6 @@ describe('useDocumentDownload composable', () => {
     })
 
     it('should join the pages with a horizontal rule', async () => {
-      mockGetSource({ content_translated: [] })
       apiInstance.getStructureManifest = vi.fn().mockResolvedValue({ pages: 2, formats: ['md'] })
       apiInstance.getStructurePage = vi.fn((index, id, page) => Promise.resolve(`# Page ${page}`))
       stubAnchor()
@@ -363,7 +341,6 @@ describe('useDocumentDownload composable', () => {
     })
 
     it('should name the file after the document title', async () => {
-      mockGetSource({ content_translated: [] })
       apiInstance.getStructureManifest = vi.fn().mockResolvedValue({ pages: 1, formats: ['md'] })
       apiInstance.getStructurePage = vi.fn().mockResolvedValue('# Only page')
       const anchor = stubAnchor()
@@ -376,8 +353,6 @@ describe('useDocumentDownload composable', () => {
     })
 
     it('should do nothing when the document has no markdown', async () => {
-      mockGetSource({ content_translated: [] })
-      apiInstance.getStructureManifest = vi.fn().mockResolvedValue(null)
       apiInstance.getStructurePage = vi.fn().mockResolvedValue('# Nope')
       const anchor = stubAnchor()
       const doc = new Document({ _id: 'md-absent', _index: 'test-index', _source: { title: 'test' } })
@@ -389,7 +364,6 @@ describe('useDocumentDownload composable', () => {
     })
 
     it('should resolve without downloading when a page fails to load', async () => {
-      mockGetSource({ content_translated: [] })
       apiInstance.getStructureManifest = vi.fn().mockResolvedValue({ pages: 2, formats: ['md'] })
       apiInstance.getStructurePage = vi.fn((index, id, page) => {
         return page === 2 ? Promise.reject(new Error('boom')) : Promise.resolve('# Page 1')
@@ -404,7 +378,6 @@ describe('useDocumentDownload composable', () => {
     })
 
     it('should report an error toast when a page fails to load', async () => {
-      mockGetSource({ content_translated: [] })
       apiInstance.getStructureManifest = vi.fn().mockResolvedValue({ pages: 1, formats: ['md'] })
       apiInstance.getStructurePage = vi.fn().mockRejectedValue(new Error('boom'))
       stubAnchor()
@@ -417,7 +390,6 @@ describe('useDocumentDownload composable', () => {
     })
 
     it('should ignore a second call while the pages are still being fetched', async () => {
-      mockGetSource({ content_translated: [] })
       apiInstance.getStructureManifest = vi.fn().mockResolvedValue({ pages: 1, formats: ['md'] })
       const resolvers = []
       apiInstance.getStructurePage = vi.fn(() => new Promise(resolve => resolvers.push(resolve)))
@@ -435,20 +407,7 @@ describe('useDocumentDownload composable', () => {
   })
 
   describe('isDownloadingMarkdown', () => {
-    function stubAnchor() {
-      const anchor = { href: '', download: '', click: vi.fn() }
-      const originalCreateElement = window.document.createElement.bind(window.document)
-      vi.spyOn(window.document, 'createElement').mockImplementation((tag) => {
-        if (tag === 'a') {
-          return anchor
-        }
-        return originalCreateElement(tag)
-      })
-      return anchor
-    }
-
     it('should be false before any download starts', async () => {
-      mockGetSource({ content_translated: [] })
       apiInstance.getStructureManifest = vi.fn().mockResolvedValue({ pages: 1, formats: ['md'] })
       const doc = new Document({ _id: 'md-idle', _index: 'test-index', _source: { title: 'test' } })
       const { isDownloadingMarkdown } = mountComposable(doc)
@@ -457,7 +416,6 @@ describe('useDocumentDownload composable', () => {
     })
 
     it('should be true while the pages are being fetched', async () => {
-      mockGetSource({ content_translated: [] })
       apiInstance.getStructureManifest = vi.fn().mockResolvedValue({ pages: 2, formats: ['md'] })
       // Every page must be resolvable: Promise.all only settles once the last
       // one does, so keeping a single resolver would hang the download.
@@ -476,7 +434,6 @@ describe('useDocumentDownload composable', () => {
     })
 
     it('should be false again once a page fails', async () => {
-      mockGetSource({ content_translated: [] })
       apiInstance.getStructureManifest = vi.fn().mockResolvedValue({ pages: 1, formats: ['md'] })
       apiInstance.getStructurePage = vi.fn().mockRejectedValue(new Error('boom'))
       stubAnchor()
@@ -488,8 +445,6 @@ describe('useDocumentDownload composable', () => {
     })
 
     it('should stay false when the document has no markdown', async () => {
-      mockGetSource({ content_translated: [] })
-      apiInstance.getStructureManifest = vi.fn().mockResolvedValue(null)
       const doc = new Document({ _id: 'md-no-artifact', _index: 'test-index', _source: { title: 'test' } })
       const { downloadMarkdown, isDownloadingMarkdown } = mountComposable(doc)
       await flushPromises()
