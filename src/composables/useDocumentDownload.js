@@ -4,11 +4,13 @@ import { useI18n } from 'vue-i18n'
 
 import { apiInstance as api } from '@/api/apiInstance'
 import { useDocumentDownloadStore, useDocumentStore } from '@/store/modules'
+import { useToast } from '@/composables/useToast'
 import settings from '@/utils/settings'
 
 export function useDocumentDownload(document, { immediate = true } = {}) {
   const documentStore = useDocumentStore()
   const documentDownloadStore = useDocumentDownloadStore()
+  const { toastedPromise } = useToast()
   const { locale, t } = useI18n()
 
   const documentRef = toRef(document)
@@ -114,11 +116,18 @@ export function useDocumentDownload(document, { immediate = true } = {}) {
     // No hand-rolled concurrency limit: the browser's per-host connection cap
     // already throttles these, and a document rarely has more than a few pages.
     const numbers = range(1, pages + 1)
-    const contents = await Promise.all(numbers.map(page => api.getStructurePage(index, id, page, routing)))
-    const a = window.document.createElement('a')
-    a.href = URL.createObjectURL(new Blob([contents.join('\n\n')], { type: 'text/markdown;charset=UTF-8' }))
-    a.download = `${title}.md`
-    a.click()
+    const promise = Promise.all(numbers.map(page => api.getStructurePage(index, id, page, routing)))
+    try {
+      const contents = await toastedPromise(promise, { errorMessage: t('documentDownloadPopover.downloadMarkdownError') })
+      const a = window.document.createElement('a')
+      a.href = URL.createObjectURL(new Blob([contents.join('\n\n')], { type: 'text/markdown;charset=UTF-8' }))
+      a.download = `${title}.md`
+      a.click()
+    }
+    catch {
+      // toastedPromise already reported the error; swallow the rejection so it
+      // doesn't escape the template click handler.
+    }
   }
 
   async function downloadTranslatedContent() {
