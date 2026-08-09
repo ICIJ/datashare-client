@@ -363,6 +363,58 @@ export class Api {
     }
   }
 
+  /**
+   * Probe the structure artifact manifest of a document.
+   *
+   * A document with no structure artifact is the common case, and the backend
+   * says so with a 404. That is not an error worth a toast, so this probe goes
+   * straight to axios with a permissive `validateStatus` instead of through
+   * `sendAction`, which would push every 404 onto the `http::error` bus.
+   *
+   * Unlike `isDocumentDownloadable`, a probe we cannot read fails closed: a
+   * button that 404s on click is worse than no button at all.
+   *
+   * @param {string} index - The project index of the document
+   * @param {string} id - The document id
+   * @param {string} routing - The routing (the root document id)
+   * @returns {Promise<Object|null>} The manifest, or null when there is none
+   */
+  async getStructureManifest(index, id, routing) {
+    const url = Api.getFullUrl(`/api/${index}/artifacts/structure/${id}`)
+    const validateStatus = () => true
+    try {
+      const response = await this.axios.request({ url, method: Method.GET, params: { routing }, validateStatus })
+      const { status, data } = response
+      // An expired session says nothing about the artifact. Report it so the
+      // app can offer to log back in, and hide the button either way.
+      if (status === 401) {
+        this.eventBus?.emit('http::error', { response })
+        return null
+      }
+      return status === 200 ? data : null
+    }
+    catch {
+      return null
+    }
+  }
+
+  /**
+   * Fetch one page of a document's structure artifact, as Markdown.
+   *
+   * The `format` parameter is omitted on purpose: `md` is the server-side
+   * default, and it is the only format this client asks for.
+   *
+   * @param {string} index - The project index of the document
+   * @param {string} id - The document id
+   * @param {number} page - The 1-based page number
+   * @param {string} routing - The routing (the root document id)
+   * @returns {Promise<string>} The page content
+   */
+  getStructurePage(index, id, page, routing) {
+    const url = `/api/${index}/artifacts/structure/${id}/${page}`
+    return this.sendAction(url, { method: Method.GET, params: { routing }, responseType: 'text' })
+  }
+
   login(username, password) {
     return this.sendAction('/auth/login', {
       method: Method.POST,
