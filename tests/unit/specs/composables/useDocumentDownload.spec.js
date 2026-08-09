@@ -290,4 +290,71 @@ describe('useDocumentDownload composable', () => {
       expect(apiInstance.getStructureManifest).not.toHaveBeenCalled()
     })
   })
+
+  describe('downloadMarkdown', () => {
+    function stubAnchor() {
+      const anchor = { href: '', download: '', click: vi.fn() }
+      const originalCreateElement = window.document.createElement.bind(window.document)
+      vi.spyOn(window.document, 'createElement').mockImplementation((tag) => {
+        if (tag === 'a') return anchor
+        return originalCreateElement(tag)
+      })
+      return anchor
+    }
+
+    it('should request every page of the artifact', async () => {
+      mockGetSource({ content_translated: [] })
+      apiInstance.getStructureManifest = vi.fn().mockResolvedValue({ pages: 3, formats: ['md'] })
+      apiInstance.getStructurePage = vi.fn().mockResolvedValue('page')
+      stubAnchor()
+      const doc = new Document({ _id: 'md-pages', _index: 'test-index', _source: { title: 'test' } })
+      const { downloadMarkdown } = mountComposable(doc)
+      await flushPromises()
+      await downloadMarkdown()
+      expect(apiInstance.getStructurePage).toHaveBeenCalledTimes(3)
+      expect(apiInstance.getStructurePage).toHaveBeenCalledWith('test-index', 'md-pages', 1, 'md-pages')
+      expect(apiInstance.getStructurePage).toHaveBeenCalledWith('test-index', 'md-pages', 2, 'md-pages')
+      expect(apiInstance.getStructurePage).toHaveBeenCalledWith('test-index', 'md-pages', 3, 'md-pages')
+    })
+
+    it('should join the pages with a blank line', async () => {
+      mockGetSource({ content_translated: [] })
+      apiInstance.getStructureManifest = vi.fn().mockResolvedValue({ pages: 2, formats: ['md'] })
+      apiInstance.getStructurePage = vi.fn((index, id, page) => Promise.resolve(`# Page ${page}`))
+      stubAnchor()
+      const doc = new Document({ _id: 'md-join', _index: 'test-index', _source: { title: 'test' } })
+      const { downloadMarkdown } = mountComposable(doc)
+      await flushPromises()
+      await downloadMarkdown()
+      const [blob] = URL.createObjectURL.mock.calls.at(-1)
+      expect(blob.type).toBe('text/markdown;charset=utf-8')
+      await expect(blob.text()).resolves.toBe('# Page 1\n\n# Page 2')
+    })
+
+    it('should name the file after the document title', async () => {
+      mockGetSource({ content_translated: [] })
+      apiInstance.getStructureManifest = vi.fn().mockResolvedValue({ pages: 1, formats: ['md'] })
+      apiInstance.getStructurePage = vi.fn().mockResolvedValue('# Only page')
+      const anchor = stubAnchor()
+      const doc = new Document({ _id: 'md-name', _index: 'test-index', _source: { title: 'my-doc' } })
+      const { downloadMarkdown } = mountComposable(doc)
+      await flushPromises()
+      await downloadMarkdown()
+      expect(anchor.download).toBe('my-doc.md')
+      expect(anchor.click).toHaveBeenCalled()
+    })
+
+    it('should do nothing when the document has no markdown', async () => {
+      mockGetSource({ content_translated: [] })
+      apiInstance.getStructureManifest = vi.fn().mockResolvedValue(null)
+      apiInstance.getStructurePage = vi.fn().mockResolvedValue('# Nope')
+      const anchor = stubAnchor()
+      const doc = new Document({ _id: 'md-absent', _index: 'test-index', _source: { title: 'test' } })
+      const { downloadMarkdown } = mountComposable(doc)
+      await flushPromises()
+      await downloadMarkdown()
+      expect(apiInstance.getStructurePage).not.toHaveBeenCalled()
+      expect(anchor.click).not.toHaveBeenCalled()
+    })
+  })
 })

@@ -1,3 +1,4 @@
+import { range } from 'lodash'
 import { computed, ref, toRef, watchEffect } from 'vue'
 import { useI18n } from 'vue-i18n'
 
@@ -106,6 +107,20 @@ export function useDocumentDownload(document, { immediate = true } = {}) {
     structureManifest.value = await api.getStructureManifest(index, id, routing)
   }
 
+  async function downloadMarkdown() {
+    if (!hasMarkdown.value) return
+    const { index, id, routing, title } = documentRef.value
+    const { pages } = structureManifest.value
+    // No hand-rolled concurrency limit: the browser's per-host connection cap
+    // already throttles these, and a document rarely has more than a few pages.
+    const numbers = range(1, pages + 1)
+    const contents = await Promise.all(numbers.map(page => api.getStructurePage(index, id, page, routing)))
+    const a = window.document.createElement('a')
+    a.href = URL.createObjectURL(new Blob([contents.join('\n\n')], { type: 'text/markdown;charset=UTF-8' }))
+    a.download = `${title}.md`
+    a.click()
+  }
+
   async function downloadTranslatedContent() {
     if (!documentRef.value.content) {
       await documentStore.getContent()
@@ -150,6 +165,7 @@ export function useDocumentDownload(document, { immediate = true } = {}) {
     hasTranslations,
     downloadTranslatedContent,
     structureManifest,
-    hasMarkdown
+    hasMarkdown,
+    downloadMarkdown
   }
 }
