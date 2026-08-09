@@ -54,6 +54,7 @@ const {
   downloadTranslatedContent,
   hasMarkdown,
   downloadMarkdown,
+  isDownloadingMarkdown,
   fetchStatuses
 } = useDocumentDownload(() => props.document, { immediate: !props.lazy })
 const mounted = computed(() => !props.lazy || activated.value)
@@ -121,10 +122,17 @@ defineExpose({
         :disabled="!hasTextContent"
         @click="downloadTextContent"
       />
+      <!--
+        `loading` only swaps the icon for a spinner in murmur's ButtonIcon, so
+        `disabled` is what actually stops a second click starting a duplicate
+        download while the pages are still being fetched.
+      -->
       <button-icon
         v-if="hasMarkdown"
         :icon-left="IPhDownloadSimple"
         :label="t('documentDownloadPopover.downloadMarkdown')"
+        :loading="isDownloadingMarkdown"
+        :disabled="isDownloadingMarkdown"
         variant="outline-action"
         class="document-download-popover__body__button"
         @click="downloadMarkdown"
