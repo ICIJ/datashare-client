@@ -16,6 +16,7 @@ describe('useDocumentDownload composable', () => {
     core.createPinia()
     plugins = core.plugins
     URL.createObjectURL = vi.fn().mockReturnValue('blob:fake-url')
+    apiInstance.getStructureManifest = vi.fn().mockResolvedValue(null)
   })
 
   afterEach(() => {
@@ -205,6 +206,88 @@ describe('useDocumentDownload composable', () => {
       await downloadTranslatedContent()
 
       expect(getContentSpy).toHaveBeenCalled()
+    })
+  })
+
+  describe('hasMarkdown', () => {
+    function markdownDocument(id) {
+      return new Document({
+        _id: id,
+        _index: 'test-index',
+        _source: { title: 'test' }
+      })
+    }
+
+    it('should be false before the manifest is fetched', () => {
+      mockGetSource({ content_translated: [] })
+      apiInstance.getStructureManifest = vi.fn(() => new Promise(() => {}))
+      const { hasMarkdown } = mountComposable(markdownDocument('md-pending'))
+      expect(hasMarkdown.value).toBe(false)
+    })
+
+    it('should be false when the document has no structure artifact', async () => {
+      mockGetSource({ content_translated: [] })
+      apiInstance.getStructureManifest = vi.fn().mockResolvedValue(null)
+      const { hasMarkdown } = mountComposable(markdownDocument('md-none'))
+      await flushPromises()
+      expect(hasMarkdown.value).toBe(false)
+    })
+
+    it('should be false when the manifest reports zero pages', async () => {
+      mockGetSource({ content_translated: [] })
+      apiInstance.getStructureManifest = vi.fn().mockResolvedValue({ pages: 0, formats: ['md'] })
+      const { hasMarkdown } = mountComposable(markdownDocument('md-empty'))
+      await flushPromises()
+      expect(hasMarkdown.value).toBe(false)
+    })
+
+    it('should be false when markdown is not among the available formats', async () => {
+      mockGetSource({ content_translated: [] })
+      apiInstance.getStructureManifest = vi.fn().mockResolvedValue({ pages: 3, formats: ['xhtml'] })
+      const { hasMarkdown } = mountComposable(markdownDocument('md-xhtml-only'))
+      await flushPromises()
+      expect(hasMarkdown.value).toBe(false)
+    })
+
+    it('should be true when the manifest reports markdown pages', async () => {
+      mockGetSource({ content_translated: [] })
+      apiInstance.getStructureManifest = vi.fn().mockResolvedValue({ pages: 3, formats: ['md', 'xhtml'] })
+      const { hasMarkdown } = mountComposable(markdownDocument('md-available'))
+      await flushPromises()
+      expect(hasMarkdown.value).toBe(true)
+    })
+  })
+
+  describe('fetchMarkdownStatus', () => {
+    it('should not probe the manifest when immediate is false', async () => {
+      mockGetSource({ content_translated: [] })
+      apiInstance.getStructureManifest = vi.fn().mockResolvedValue(null)
+      const doc = new Document({ _id: 'md-lazy', _index: 'test-index', _source: { title: 'test' } })
+      mountComposable(doc, { immediate: false })
+      await flushPromises()
+      expect(apiInstance.getStructureManifest).not.toHaveBeenCalled()
+    })
+
+    it('should probe the manifest when fetchStatuses is called', async () => {
+      mockGetSource({ content_translated: [] })
+      apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(true)
+      apiInstance.getStructureManifest = vi.fn().mockResolvedValue({ pages: 1, formats: ['md'] })
+      const doc = new Document({ _id: 'md-explicit', _index: 'test-index', _source: { title: 'test' } })
+      const { fetchStatuses, hasMarkdown } = mountComposable(doc, { immediate: false })
+      await fetchStatuses()
+      await flushPromises()
+      expect(apiInstance.getStructureManifest).toHaveBeenCalledWith('test-index', 'md-explicit', 'md-explicit')
+      expect(hasMarkdown.value).toBe(true)
+    })
+
+    it('should not probe the manifest when the document has no id', async () => {
+      mockGetSource({ content_translated: [] })
+      apiInstance.getStructureManifest = vi.fn().mockResolvedValue(null)
+      const doc = new Document({ _index: 'test-index', _source: { title: 'test' } })
+      const { fetchStatuses } = mountComposable(doc, { immediate: false })
+      await fetchStatuses()
+      await flushPromises()
+      expect(apiInstance.getStructureManifest).not.toHaveBeenCalled()
     })
   })
 })
