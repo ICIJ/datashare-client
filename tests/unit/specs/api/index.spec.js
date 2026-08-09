@@ -641,4 +641,84 @@ describe('Datashare backend client', () => {
       expect(mockCallback).not.toBeCalled()
     })
   })
+
+  describe('getStructureManifest', () => {
+    it('should send a GET request on the structure artifact url', async () => {
+      axios.request.mockResolvedValue({ status: 200, data: { pages: 2, formats: ['md'] } })
+      await api.getStructureManifest('foo', 'doc-id', 'root-id')
+      expect(axios.request).toBeCalledWith(
+        expect.objectContaining({
+          url: Api.getFullUrl('/api/foo/artifacts/structure/doc-id'),
+          method: 'GET',
+          params: { routing: 'root-id' },
+          validateStatus: expect.any(Function)
+        })
+      )
+    })
+
+    it('should return the manifest when the backend answers 200', async () => {
+      axios.request.mockResolvedValue({ status: 200, data: { pages: 2, formats: ['md', 'xhtml'] } })
+      const manifest = await api.getStructureManifest('foo', 'doc-id', 'root-id')
+      expect(manifest).toEqual({ pages: 2, formats: ['md', 'xhtml'] })
+    })
+
+    it('should return null when the backend answers 404', async () => {
+      axios.request.mockResolvedValue({ status: 404, data: {} })
+      expect(await api.getStructureManifest('foo', 'doc-id', 'root-id')).toBeNull()
+    })
+
+    it('should return null when the backend answers 403', async () => {
+      axios.request.mockResolvedValue({ status: 403, data: {} })
+      expect(await api.getStructureManifest('foo', 'doc-id', 'root-id')).toBeNull()
+    })
+
+    it('should return null when the backend answers 500', async () => {
+      axios.request.mockResolvedValue({ status: 500, data: {} })
+      expect(await api.getStructureManifest('foo', 'doc-id', 'root-id')).toBeNull()
+    })
+
+    it('should return null when the request fails', async () => {
+      axios.request.mockRejectedValue(new Error('Network Error'))
+      expect(await api.getStructureManifest('foo', 'doc-id', 'root-id')).toBeNull()
+    })
+
+    it('should not emit an http error when the artifact is missing', async () => {
+      axios.request.mockResolvedValue({ status: 404, data: {} })
+      const mockCallback = vi.fn()
+      EventBus.on('http::error', mockCallback)
+      await api.getStructureManifest('foo', 'doc-id', 'root-id')
+      EventBus.off('http::error', mockCallback)
+      expect(mockCallback).not.toBeCalled()
+    })
+
+    it('should return null and emit an http error when the session expired', async () => {
+      axios.request.mockResolvedValue({ status: 401, data: {} })
+      const mockCallback = vi.fn()
+      EventBus.on('http::error', mockCallback)
+      const manifest = await api.getStructureManifest('foo', 'doc-id', 'root-id')
+      EventBus.off('http::error', mockCallback)
+      expect(manifest).toBeNull()
+      expect(mockCallback).toBeCalledTimes(1)
+    })
+  })
+
+  describe('getStructurePage', () => {
+    it('should request a single page as text', async () => {
+      axios.request.mockResolvedValue({ data: '# Page three' })
+      await api.getStructurePage('foo', 'doc-id', 3, 'root-id')
+      expect(axios.request).toBeCalledWith(
+        expect.objectContaining({
+          url: Api.getFullUrl('/api/foo/artifacts/structure/doc-id/3'),
+          method: 'GET',
+          params: { routing: 'root-id' },
+          responseType: 'text'
+        })
+      )
+    })
+
+    it('should return the page content', async () => {
+      axios.request.mockResolvedValue({ data: '# Page three' })
+      expect(await api.getStructurePage('foo', 'doc-id', 3, 'root-id')).toBe('# Page three')
+    })
+  })
 })
