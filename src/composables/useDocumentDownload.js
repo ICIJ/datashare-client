@@ -123,7 +123,9 @@ export function useDocumentDownload(document, { immediate = true } = {}) {
     try {
       const contents = await toastedPromise(promise, { errorMessage: t('documentDownloadPopover.downloadMarkdownError') })
       const a = window.document.createElement('a')
-      a.href = URL.createObjectURL(new Blob([contents.join('\n\n')], { type: 'text/markdown;charset=UTF-8' }))
+      // Blank lines on both sides of the rule: `---` directly under a text line
+      // is a setext heading underline, not a page break.
+      a.href = URL.createObjectURL(new Blob([contents.join('\n\n---\n\n')], { type: 'text/markdown;charset=UTF-8' }))
       a.download = `${title}.md`
       a.click()
     }

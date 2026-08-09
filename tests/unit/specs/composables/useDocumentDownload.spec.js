@@ -327,7 +327,7 @@ describe('useDocumentDownload composable', () => {
       expect(apiInstance.getStructurePage).toHaveBeenCalledWith('test-index', 'md-pages', 3, 'md-pages')
     })
 
-    it('should join the pages with a blank line', async () => {
+    it('should join the pages with a horizontal rule', async () => {
       mockGetSource({ content_translated: [] })
       apiInstance.getStructureManifest = vi.fn().mockResolvedValue({ pages: 2, formats: ['md'] })
       apiInstance.getStructurePage = vi.fn((index, id, page) => Promise.resolve(`# Page ${page}`))
@@ -338,7 +338,7 @@ describe('useDocumentDownload composable', () => {
       await downloadMarkdown()
       const [blob] = URL.createObjectURL.mock.calls.at(-1)
       expect(blob.type).toBe('text/markdown;charset=utf-8')
-      await expect(readBlob(blob)).resolves.toBe('# Page 1\n\n# Page 2')
+      await expect(readBlob(blob)).resolves.toBe('# Page 1\n\n---\n\n# Page 2')
     })
 
     it('should name the file after the document title', async () => {
