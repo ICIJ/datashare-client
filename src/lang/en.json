@@ -173,6 +173,7 @@
     "downloadWithoutMetadata": "Download without metadata",
     "downloadExtractText": "Download text",
     "downloadMarkdown": "Download markdown",
+    "downloadMarkdownError": "The markdown could not be downloaded.",
     "downloadTranslatedText": "Download text translation",
     "downloadRoot": "Download root",
     "sectionTitle": "What's the document's title?",

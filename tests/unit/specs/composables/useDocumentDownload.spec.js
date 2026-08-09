@@ -366,5 +366,20 @@ describe('useDocumentDownload composable', () => {
       expect(apiInstance.getStructurePage).not.toHaveBeenCalled()
       expect(anchor.click).not.toHaveBeenCalled()
     })
+
+    it('should resolve without downloading when a page fails to load', async () => {
+      mockGetSource({ content_translated: [] })
+      apiInstance.getStructureManifest = vi.fn().mockResolvedValue({ pages: 2, formats: ['md'] })
+      apiInstance.getStructurePage = vi.fn((index, id, page) => {
+        return page === 2 ? Promise.reject(new Error('boom')) : Promise.resolve('# Page 1')
+      })
+      const anchor = stubAnchor()
+      const doc = new Document({ _id: 'md-failing-page', _index: 'test-index', _source: { title: 'test' } })
+      const { downloadMarkdown } = mountComposable(doc)
+      await flushPromises()
+      await expect(downloadMarkdown()).resolves.toBeUndefined()
+      expect(anchor.click).not.toHaveBeenCalled()
+      expect(URL.createObjectURL).not.toHaveBeenCalled()
+    })
   })
 })
