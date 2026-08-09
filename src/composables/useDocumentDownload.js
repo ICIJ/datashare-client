@@ -96,46 +96,54 @@ export function useDocumentDownload(document, { immediate = true } = {}) {
     availableTranslations.value = await documentDownloadStore.fetchTranslationStatus({ index, id, routing })
   }
 
+  // The manifest carries the id of the document it describes: a component
+  // handed another document (a recycled row, a slow probe resolving after the
+  // user moved on) must not offer the page count of the previous one.
   const structureManifest = ref(null)
 
   const hasMarkdown = computed(() => {
-    const { pages = 0, formats = [] } = structureManifest.value ?? {}
-    return pages > 0 && formats.includes('md')
+    const { documentId, pages = 0, formats = [] } = structureManifest.value ?? {}
+    return documentId === documentRef.value.id && pages > 0 && formats.includes('md')
   })
 
   async function fetchMarkdownStatus() {
     const { index, id, routing } = documentRef.value
-    if (!index || !id) return
-    structureManifest.value = await api.getStructureManifest(index, id, routing)
+    if (!index || !id) {
+      return
+    }
+    const manifest = await api.getStructureManifest(index, id, routing)
+    structureManifest.value = { ...manifest, documentId: id }
   }
 
   const isDownloadingMarkdown = ref(false)
 
   async function downloadMarkdown() {
-    if (!hasMarkdown.value) return
+    if (!hasMarkdown.value || isDownloadingMarkdown.value) {
+      return
+    }
     const { index, id, routing, title } = documentRef.value
     const { pages } = structureManifest.value
-    // No hand-rolled concurrency limit: the browser's per-host connection cap
-    // already throttles these, and a document rarely has more than a few pages.
     const numbers = range(1, pages + 1)
     isDownloadingMarkdown.value = true
     const promise = Promise.all(numbers.map(page => api.getStructurePage(index, id, page, routing)))
+    let contents
     try {
-      const contents = await toastedPromise(promise, { errorMessage: t('documentDownloadPopover.downloadMarkdownError') })
-      const a = window.document.createElement('a')
-      // Blank lines on both sides of the rule: `---` directly under a text line
-      // is a setext heading underline, not a page break.
-      a.href = URL.createObjectURL(new Blob([contents.join('\n\n---\n\n')], { type: 'text/markdown;charset=UTF-8' }))
-      a.download = `${title}.md`
-      a.click()
+      contents = await toastedPromise(promise, { errorMessage: t('documentDownloadPopover.downloadMarkdownError') })
     }
     catch {
       // toastedPromise already reported the error; swallow the rejection so it
       // doesn't escape the template click handler.
+      return
     }
     finally {
       isDownloadingMarkdown.value = false
     }
+    const a = window.document.createElement('a')
+    // Blank lines on both sides of the rule: `---` directly under a text line
+    // is a setext heading underline, not a page break.
+    a.href = URL.createObjectURL(new Blob([contents.join('\n\n---\n\n')], { type: 'text/markdown;charset=UTF-8' }))
+    a.download = `${title}.md`
+    a.click()
   }
 
   async function downloadTranslatedContent() {
@@ -181,7 +189,6 @@ export function useDocumentDownload(document, { immediate = true } = {}) {
     hasTextContent,
     hasTranslations,
     downloadTranslatedContent,
-    structureManifest,
     hasMarkdown,
     downloadMarkdown,
     isDownloadingMarkdown

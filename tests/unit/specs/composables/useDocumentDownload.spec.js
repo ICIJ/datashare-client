@@ -1,3 +1,4 @@
+import { ref } from 'vue'
 import { mount, flushPromises } from '@vue/test-utils'
 
 import { useDocumentDownload } from '@/composables/useDocumentDownload'
@@ -7,7 +8,7 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import { apiInstance } from '@/api/apiInstance'
 
 describe('useDocumentDownload composable', () => {
-  let core, plugins
+  let core, plugins, wrapper
 
   beforeEach(() => {
     core = CoreSetup.init().useAll()
@@ -17,6 +18,10 @@ describe('useDocumentDownload composable', () => {
     plugins = core.plugins
     URL.createObjectURL = vi.fn().mockReturnValue('blob:fake-url')
     apiInstance.getStructureManifest = vi.fn().mockResolvedValue(null)
+    // Plain property assignments on the api singleton survive
+    // `vi.restoreAllMocks`, so every probe is stubbed here rather than relying
+    // on a stub set by an earlier test to leak into the next one
+    apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(true)
   })
 
   afterEach(() => {
@@ -36,7 +41,7 @@ describe('useDocumentDownload composable', () => {
       },
       template: '<div></div>'
     }
-    mount(TestComponent, { global: { plugins } })
+    wrapper = mount(TestComponent, { global: { plugins } })
     return result
   }
 
@@ -256,6 +261,20 @@ describe('useDocumentDownload composable', () => {
       await flushPromises()
       expect(hasMarkdown.value).toBe(true)
     })
+
+    // A recycled component keeps its manifest when it is handed another
+    // document: the page count of the previous one must never be reused
+    it('should be false again when the document changes', async () => {
+      mockGetSource({ content_translated: [] })
+      apiInstance.getStructureManifest = vi.fn().mockResolvedValue({ pages: 3, formats: ['md'] })
+      const document = ref(markdownDocument('md-first'))
+      const { hasMarkdown, fetchStatuses } = mountComposable(document, { immediate: false })
+      await fetchStatuses()
+      await flushPromises()
+      expect(hasMarkdown.value).toBe(true)
+      document.value = markdownDocument('md-second')
+      expect(hasMarkdown.value).toBe(false)
+    })
   })
 
   describe('fetchMarkdownStatus', () => {
@@ -296,7 +315,9 @@ describe('useDocumentDownload composable', () => {
       const anchor = { href: '', download: '', click: vi.fn() }
       const originalCreateElement = window.document.createElement.bind(window.document)
       vi.spyOn(window.document, 'createElement').mockImplementation((tag) => {
-        if (tag === 'a') return anchor
+        if (tag === 'a') {
+          return anchor
+        }
         return originalCreateElement(tag)
       })
       return anchor
@@ -381,6 +402,36 @@ describe('useDocumentDownload composable', () => {
       expect(anchor.click).not.toHaveBeenCalled()
       expect(URL.createObjectURL).not.toHaveBeenCalled()
     })
+
+    it('should report an error toast when a page fails to load', async () => {
+      mockGetSource({ content_translated: [] })
+      apiInstance.getStructureManifest = vi.fn().mockResolvedValue({ pages: 1, formats: ['md'] })
+      apiInstance.getStructurePage = vi.fn().mockRejectedValue(new Error('boom'))
+      stubAnchor()
+      const doc = new Document({ _id: 'md-toasted-page', _index: 'test-index', _source: { title: 'test' } })
+      const { downloadMarkdown } = mountComposable(doc)
+      await flushPromises()
+      const toastError = vi.spyOn(wrapper.vm.$toast, 'error')
+      await downloadMarkdown()
+      expect(toastError).toHaveBeenCalledWith('The markdown could not be downloaded.')
+    })
+
+    it('should ignore a second call while the pages are still being fetched', async () => {
+      mockGetSource({ content_translated: [] })
+      apiInstance.getStructureManifest = vi.fn().mockResolvedValue({ pages: 1, formats: ['md'] })
+      const resolvers = []
+      apiInstance.getStructurePage = vi.fn(() => new Promise(resolve => resolvers.push(resolve)))
+      const anchor = stubAnchor()
+      const doc = new Document({ _id: 'md-double-click', _index: 'test-index', _source: { title: 'test' } })
+      const { downloadMarkdown } = mountComposable(doc)
+      await flushPromises()
+      const pending = downloadMarkdown()
+      await downloadMarkdown()
+      expect(apiInstance.getStructurePage).toHaveBeenCalledTimes(1)
+      resolvers.forEach(resolve => resolve('# Page'))
+      await pending
+      expect(anchor.click).toHaveBeenCalledTimes(1)
+    })
   })
 
   describe('isDownloadingMarkdown', () => {
@@ -388,7 +439,9 @@ describe('useDocumentDownload composable', () => {
       const anchor = { href: '', download: '', click: vi.fn() }
       const originalCreateElement = window.document.createElement.bind(window.document)
       vi.spyOn(window.document, 'createElement').mockImplementation((tag) => {
-        if (tag === 'a') return anchor
+        if (tag === 'a') {
+          return anchor
+        }
         return originalCreateElement(tag)
       })
       return anchor

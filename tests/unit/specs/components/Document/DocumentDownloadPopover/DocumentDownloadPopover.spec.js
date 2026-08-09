@@ -195,7 +195,9 @@ describe('DocumentDownloadPopover.vue', () => {
     const fakeAnchor = { href: '', download: '', click: vi.fn() }
     const originalCreateElement = window.document.createElement.bind(window.document)
     vi.spyOn(window.document, 'createElement').mockImplementation((tag) => {
-      if (tag === 'a') return fakeAnchor
+      if (tag === 'a') {
+        return fakeAnchor
+      }
       return originalCreateElement(tag)
     })
 
