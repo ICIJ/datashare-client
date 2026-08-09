@@ -1,5 +1,19 @@
 import 'whatwg-fetch'
 
+// jsdom's Blob implementation only exposes `slice`, `size` and `type`; it is
+// missing the standard `text()` method used by tests asserting on blob
+// contents. Polyfill it with `FileReader`, which jsdom does support.
+if (!Blob.prototype.text) {
+  Blob.prototype.text = function () {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = () => resolve(reader.result)
+      reader.onerror = () => reject(reader.error)
+      reader.readAsText(this)
+    })
+  }
+}
+
 // Node 22+ ships a native `localStorage` that throws on access unless the
 // runtime is launched with `--localstorage-file`. Some sandboxed CI
 // environments hit this at the very first access made by `@vue/devtools-kit`
