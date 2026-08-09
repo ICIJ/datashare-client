@@ -174,7 +174,6 @@ export function useDocumentDownload(document, { immediate = true } = {}) {
     fetchStatuses,
     fetchDownloadStatus,
     fetchTranslationStatus,
-    fetchMarkdownStatus,
     extensionWarning,
     description,
     showExtensionWarning,
