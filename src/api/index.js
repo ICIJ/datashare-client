@@ -404,15 +404,21 @@ export class Api {
    * The `format` parameter is omitted on purpose: `md` is the server-side
    * default, and it is the only format this client asks for.
    *
+   * Like the two probes above, this bypasses `sendAction`, which emits an
+   * `http::error` for every rejection: a download fans out one request per
+   * page, so a single expired session would stack one sticky notification per
+   * page. The caller reports the failed download once instead.
+   *
    * @param {string} index - The project index of the document
    * @param {string} id - The document id
    * @param {number} page - The 1-based page number
    * @param {string} routing - The routing (the root document id)
    * @returns {Promise<string>} The page content
    */
-  getStructurePage(index, id, page, routing) {
-    const url = `/api/${index}/artifacts/structure/${id}/${page}`
-    return this.sendAction(url, { method: Method.GET, params: { routing }, responseType: 'text' })
+  async getStructurePage(index, id, page, routing) {
+    const url = Api.getFullUrl(`/api/${index}/artifacts/structure/${id}/${page}`)
+    const { data } = await this.axios.request({ url, method: Method.GET, params: { routing }, responseType: 'text' })
+    return data
   }
 
   login(username, password) {

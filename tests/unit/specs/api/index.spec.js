@@ -720,5 +720,16 @@ describe('Datashare backend client', () => {
       axios.request.mockResolvedValue({ data: '# Page three' })
       expect(await api.getStructurePage('foo', 'doc-id', 3, 'root-id')).toBe('# Page three')
     })
+
+    // A download fans out one request per page: pushing each failure onto the
+    // bus would stack one notification per page for a single failed download.
+    it('should not emit an http error when the page request fails', async () => {
+      axios.request.mockRejectedValue(new Error('Network Error'))
+      const mockCallback = vi.fn()
+      EventBus.on('http::error', mockCallback)
+      await expect(api.getStructurePage('foo', 'doc-id', 3, 'root-id')).rejects.toThrow('Network Error')
+      EventBus.off('http::error', mockCallback)
+      expect(mockCallback).not.toBeCalled()
+    })
   })
 })
