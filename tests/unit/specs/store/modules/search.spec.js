@@ -145,6 +145,21 @@ describe('SearchStore', () => {
       expect(spy).toHaveBeenCalledTimes(1)
     })
 
+    it('does not mark a cancelled query as applied, so returning to it retries the search', () => {
+      const spy = vi.spyOn(api.elasticsearch, 'submitAsyncSearch')
+
+      // Never settles, so the assertion below must hold synchronously -
+      // before any abort rejection could unwind through doRefresh.
+      spy.mockImplementationOnce(() => new Promise(() => {}))
+
+      searchStore.query('bar')
+      searchStore.cancelActiveSearch()
+
+      // Same check useSearchFilter's route guards use to decide whether to
+      // refetch on route re-entry: a cancelled query must not count as applied.
+      expect(searchStore.sameAppliedQuery(searchStore.toRouteQuery, ['from'])).toBe(false)
+    })
+
     it('should return document from local project', async () => {
       await letData(es).have(new IndexedDocument('document', index).withContent('bar')).commit()
       await searchStore.query('bar')
@@ -446,6 +461,25 @@ describe('SearchStore', () => {
         searchStore.updateFromRouteQuery({ from: 0 })
         expect(searchStore.index).toBe('local')
         expect(searchStore.indices).toEqual(['local', 'project'])
+      })
+
+      it('does not reset isReady when re-entering the route with an already-applied query', async () => {
+        await letData(es).have(new IndexedDocument('document', index).withContent('bar')).commit()
+        await searchStore.query('bar')
+        expect(searchStore.isReady).toBe(true)
+
+        // Simulates re-entering the route with an unchanged query (e.g.
+        // History → Documents) — no refetch should follow, so isReady must stay.
+        searchStore.updateFromRouteQuery(searchStore.toRouteQuery)
+        expect(searchStore.isReady).toBe(true)
+      })
+
+      it('still resets isReady when re-entering the route with a genuinely new query', async () => {
+        await searchStore.query('bar')
+        expect(searchStore.isReady).toBe(true)
+
+        searchStore.updateFromRouteQuery({ q: 'something-else' })
+        expect(searchStore.isReady).toBe(false)
       })
     })
 
