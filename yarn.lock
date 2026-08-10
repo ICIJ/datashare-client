@@ -806,10 +806,10 @@
     typescript-eslint "^8.38.0"
     vue-eslint-parser "^10.2.0"
 
-"@icij/murmur@5.1.1":
-  version "5.1.1"
-  resolved "https://registry.yarnpkg.com/@icij/murmur/-/murmur-5.1.1.tgz#c6119e4ba360a17ffcd480b9790972caf42a2775"
-  integrity sha512-lvJ9tq2DwV/Jdw/Cpnk0zo7fvROBdXS8gO5z06AqwmObhB+ENq6hxkY6m17B4X45ntWiy539cJqcmIXzuvieUQ==
+"@icij/murmur@5.1.2":
+  version "5.1.2"
+  resolved "https://registry.yarnpkg.com/@icij/murmur/-/murmur-5.1.2.tgz#85402112651f5daab95c75bc448168acb6f337f6"
+  integrity sha512-HQBPPDqIg3kseDPSFPzg8gwFH3kUQWDhvhQ8OOqeE6RcXNixRlIAz7qb4TmHmaX+VoVd4VKGJdv8pPnSEm8mAQ==
   dependencies:
     "@floating-ui/vue" "2.0.1"
     "@storybook/preset-scss" "^1.0.3"
