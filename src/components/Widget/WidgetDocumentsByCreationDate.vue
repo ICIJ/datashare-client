@@ -93,7 +93,10 @@
 import bodybuilder from 'bodybuilder'
 import clamp from 'lodash/clamp'
 import get from 'lodash/get'
-import * as d3 from 'd3'
+import { extent, histogram, sum } from 'd3-array'
+import { scaleUtc } from 'd3-scale'
+import { utcMonth, utcMonths, utcYear, utcYears } from 'd3-time'
+import { utcFormat } from 'd3-time-format'
 import { computed, nextTick, ref, useTemplateRef, watch, toRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
@@ -140,20 +143,20 @@ const router = useRouter()
 const data = ref([])
 const intervals = {
   year: {
-    xAxisFormat: d3.utcFormat('%Y'),
-    tooltipFormat: d3.utcFormat('%Y'),
-    time: d3.utcYear,
-    bins: d3.utcYears
+    xAxisFormat: utcFormat('%Y'),
+    tooltipFormat: utcFormat('%Y'),
+    time: utcYear,
+    bins: utcYears
   },
   month: {
     xAxisFormat: (date) => {
       if (date.getMonth() === 0) {
-        return d3.utcFormat('%Y')(date)
+        return utcFormat('%Y')(date)
       }
     },
-    tooltipFormat: d3.utcFormat('%B, %Y'),
-    time: d3.utcMonth,
-    bins: d3.utcMonths
+    tooltipFormat: utcFormat('%B, %Y'),
+    time: utcMonth,
+    bins: utcMonths
   }
 }
 const dataKey = ref(0)
@@ -178,7 +181,7 @@ const selectedIntervalBins = computed(() => {
 })
 const datesExtent = computed(() => {
   if (data.value.length) {
-    return d3.extent(cleanData.value, d => d.date)
+    return extent(cleanData.value, d => d.date)
   }
   return []
 })
@@ -191,7 +194,7 @@ const hasData = computed(() => {
   return data.value.length > 0
 })
 const datesScale = computed(() => {
-  return d3.scaleUtc().domain(intervalDatesExtent.value)
+  return scaleUtc().domain(intervalDatesExtent.value)
 })
 const widthScale = computed(() => {
   return datesScale.value.copy().rangeRound([0, chartWidth.value])
@@ -204,12 +207,11 @@ const datesHistogram = computed(() => {
   const maxTime = selectedIntervalTime.value.offset(datesExtent.value[1], 1)
   const bins = selectedIntervalBins.value(minTime, maxTime)
   // set the parameters for the histogram
-  const histogram = d3
-    .histogram()
+  const buildHistogram = histogram()
     .value(d => d.date)
     .domain(widthScale.value.domain())
     .thresholds(widthScale.value.copy().ticks(bins.length))
-  return histogram(cleanData.value)
+  return buildHistogram(cleanData.value)
 })
 const datesHistogramSlice = computed(() => {
   return datesHistogram.value.slice(startTick.value, endTick.value)
@@ -226,7 +228,7 @@ const endTick = computed(() => {
 
 const aggregatedDataSlice = computed(() => {
   return datesHistogramSlice.value.map((bin) => {
-    return { date: bin.x0, value: d3.sum(bin, d => d.doc_count) }
+    return { date: bin.x0, value: sum(bin, d => d.doc_count) }
   })
 })
 const aggDateHistogramOptions = computed(() => {

@@ -5,7 +5,10 @@ import iteratee from 'lodash/iteratee'
 import isNumber from 'lodash/isNumber'
 import last from 'lodash/last'
 import throttle from 'lodash/throttle'
-import * as d3 from 'd3'
+import { extent, histogram, sum } from 'd3-array'
+import { scaleLinear, scaleUtc } from 'd3-scale'
+import { utcDay, utcDays, utcMonth, utcMonths, utcYear, utcYears } from 'd3-time'
+import { utcFormat } from 'd3-time-format'
 import { ColumnChart, RangePicker } from '@icij/murmur'
 
 /**
@@ -80,19 +83,19 @@ export default {
     return {
       intervals: {
         year: {
-          format: d3.utcFormat('%Y'),
-          time: d3.utcYear,
-          bins: d3.utcYears
+          format: utcFormat('%Y'),
+          time: utcYear,
+          bins: utcYears
         },
         month: {
-          format: d3.utcFormat('%b. %Y'),
-          time: d3.utcMonth,
-          bins: d3.utcMonths
+          format: utcFormat('%b. %Y'),
+          time: utcMonth,
+          bins: utcMonths
         },
         day: {
-          format: d3.utcFormat('%B %d, %Y'),
-          time: d3.utcDay,
-          bins: d3.utcDays
+          format: utcFormat('%B %d, %Y'),
+          time: utcDay,
+          bins: utcDays
         }
       }
     }
@@ -122,7 +125,7 @@ export default {
       }, this.throttle)
     },
     rangeScale() {
-      return d3.scaleLinear(this.intervalTimesExtent, [0, 1])
+      return scaleLinear(this.intervalTimesExtent, [0, 1])
     },
     rangeStart() {
       return this.modelValue?.start ? this.rangeScale(this.modelValue.start) : null
@@ -163,7 +166,7 @@ export default {
       return [start, end]
     },
     datesExtent() {
-      return d3.extent(this.cleanData, iteratee('date'))
+      return extent(this.cleanData, iteratee('date'))
     },
     intervalDatesExtent() {
       const start = this.toIntervalStart(this.datesExtent[0] ?? new Date())
@@ -171,18 +174,17 @@ export default {
       return [start, end]
     },
     datesScale() {
-      return d3.scaleUtc().domain(this.intervalDatesExtent).rangeRound([0, this.chartWidth])
+      return scaleUtc().domain(this.intervalDatesExtent).rangeRound([0, this.chartWidth])
     },
     datesThresholds() {
       return this.datesScale.ticks(this.intervalBins.length)
     },
     datesHistogram() {
-      const histogram = d3
-        .histogram()
+      const buildHistogram = histogram()
         .value(iteratee('key'))
         .domain(this.datesScale.domain())
         .thresholds(this.datesThresholds)
-      return histogram(this.cleanData)
+      return buildHistogram(this.cleanData)
     },
     cleanData() {
       return this.data
@@ -195,7 +197,7 @@ export default {
     },
     aggregatedData() {
       return this.datesHistogram.map((bin) => {
-        return { date: bin.x0, value: d3.sum(bin, iteratee('doc_count')) }
+        return { date: bin.x0, value: sum(bin, iteratee('doc_count')) }
       })
     },
     minRangeDistance() {
