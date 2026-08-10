@@ -9,6 +9,9 @@ import { useDocument } from '@/composables/useDocument'
 import { useWait } from '@/composables/useWait'
 import EntitySection from '@/components/Entity/EntitySection/EntitySection'
 import { useDocumentStore } from '@/store/modules'
+import { downloadBlob } from '@/utils/download'
+
+const CSV_MIME_TYPE = 'text/csv;charset=UTF-8'
 
 const { t } = useI18n()
 const { document } = useDocument()
@@ -43,10 +46,8 @@ const hitsAsCsv = (hits = []) => {
 
 const downloadHitsAsCsv = (hits = [], category) => {
   const content = hitsAsCsv(hits)
-  const a = window.document.createElement('a')
-  a.href = URL.createObjectURL(new Blob([content], { type: 'text/csv;charset=UTF-8' }))
-  a.download = `${documentStore.document.title} - ${category}.csv`
-  a.click()
+  const filename = `${documentStore.document.title} - ${category}.csv`
+  downloadBlob(content, filename, CSV_MIME_TYPE)
 }
 
 const copyHits = (hits = []) => {

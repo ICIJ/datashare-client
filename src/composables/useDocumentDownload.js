@@ -1,11 +1,20 @@
-import { range } from 'lodash'
 import { computed, ref, toRef, watchEffect } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { range } from 'lodash'
 
 import { apiInstance as api } from '@/api/apiInstance'
 import { useDocumentDownloadStore, useDocumentStore } from '@/store/modules'
 import { useToast } from '@/composables/useToast'
+import { downloadBlob } from '@/utils/download'
 import settings from '@/utils/settings'
+
+const TEXT_MIME_TYPE = 'text/plain;charset=UTF-8'
+const MARKDOWN_MIME_TYPE = 'text/markdown;charset=UTF-8'
+const MARKDOWN_FORMAT = 'md'
+
+// Blank lines on both sides of the rule: `---` directly under a text line is a
+// setext heading underline, not a page break.
+const MARKDOWN_PAGE_SEPARATOR = '\n\n---\n\n'
 
 export function useDocumentDownload(document, { immediate = true } = {}) {
   const documentStore = useDocumentStore()
@@ -73,15 +82,14 @@ export function useDocumentDownload(document, { immediate = true } = {}) {
   })
 
   async function downloadTextContent() {
-    if (!hasTextContent.value) return
+    if (!hasTextContent.value) {
+      return
+    }
     if (!documentRef.value.content) {
       await documentStore.getContent()
     }
     const { content, title } = documentRef.value
-    const a = window.document.createElement('a')
-    a.href = URL.createObjectURL(new Blob([content], { type: 'text/plain;charset=UTF-8' }))
-    a.download = `${title}.txt`
-    a.click()
+    downloadBlob(content, `${title}.txt`, TEXT_MIME_TYPE)
   }
 
   const availableTranslations = ref([])
@@ -92,7 +100,9 @@ export function useDocumentDownload(document, { immediate = true } = {}) {
 
   async function fetchTranslationStatus() {
     const { index, id, routing } = documentRef.value
-    if (!index || !id) return
+    if (!index || !id) {
+      return
+    }
     availableTranslations.value = await documentDownloadStore.fetchTranslationStatus({ index, id, routing })
   }
 
@@ -103,7 +113,7 @@ export function useDocumentDownload(document, { immediate = true } = {}) {
 
   const hasMarkdown = computed(() => {
     const { documentId, pages = 0, formats = [] } = structureManifest.value ?? {}
-    return documentId === documentRef.value.id && pages > 0 && formats.includes('md')
+    return documentId === documentRef.value.id && pages > 0 && formats.includes(MARKDOWN_FORMAT)
   })
 
   async function fetchMarkdownStatus() {
@@ -138,12 +148,7 @@ export function useDocumentDownload(document, { immediate = true } = {}) {
     finally {
       isDownloadingMarkdown.value = false
     }
-    const a = window.document.createElement('a')
-    // Blank lines on both sides of the rule: `---` directly under a text line
-    // is a setext heading underline, not a page break.
-    a.href = URL.createObjectURL(new Blob([contents.join('\n\n---\n\n')], { type: 'text/markdown;charset=UTF-8' }))
-    a.download = `${title}.md`
-    a.click()
+    downloadBlob(contents.join(MARKDOWN_PAGE_SEPARATOR), `${title}.md`, MARKDOWN_MIME_TYPE)
   }
 
   async function downloadTranslatedContent() {
@@ -154,10 +159,7 @@ export function useDocumentDownload(document, { immediate = true } = {}) {
     const { translations, title } = documentRef.value
     const targetLanguage = translations[0]?.target_language ?? availableTranslations.value[0]?.target_language
     const translatedContent = documentRef.value.translatedContentIn(targetLanguage)
-    const a = window.document.createElement('a')
-    a.href = URL.createObjectURL(new Blob([translatedContent], { type: 'text/plain;charset=UTF-8' }))
-    a.download = `${title}.txt`
-    a.click()
+    downloadBlob(translatedContent, `${title}.txt`, TEXT_MIME_TYPE)
   }
 
   async function fetchStatuses() {
