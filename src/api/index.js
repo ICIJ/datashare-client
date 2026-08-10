@@ -364,16 +364,14 @@ export class Api {
   }
 
   /**
-   * Probe the structure artifact manifest of a document.
+   * Probe the structure artifact manifest of a document, or null when there is
+   * none.
    *
-   * A document with no structure artifact is the common case, and the backend
-   * says so with a 404. That is not an error worth a toast, so this probe goes
-   * straight to axios with a permissive `validateStatus` instead of through
-   * `sendAction`, which would push every 404 onto the `http::error` bus.
-   *
-   * Unlike `isDocumentDownloadable`, a probe we cannot read fails closed: a
-   * button that 404s on click is worse than no button at all. Returns the
-   * manifest, or null when there is none.
+   * The structure endpoints bypass `sendAction`, which pushes every rejection
+   * onto the `http::error` bus: a document with no artifact answers 404, which
+   * is the common case and not an error worth a toast. Unlike
+   * `isDocumentDownloadable`, a probe we cannot read fails closed, because a
+   * button that 404s on click is worse than no button at all.
    */
   async getStructureManifest(index, id, routing) {
     const url = Api.getFullUrl(`/api/${index}/artifacts/structure/${id}`)
@@ -396,14 +394,10 @@ export class Api {
 
   /**
    * Fetch one page (1-based) of a document's structure artifact, as Markdown.
-   *
-   * The `format` parameter is omitted on purpose: `md` is the server-side
-   * default, and it is the only format this client asks for.
-   *
-   * Like the two probes above, this bypasses `sendAction`, which emits an
-   * `http::error` for every rejection: a download fans out one request per
-   * page, so a single expired session would stack one sticky notification per
-   * page. The caller reports the failed download once instead.
+   * Bypasses `sendAction` for the reason given on `getStructureManifest`, all
+   * the more so as a download fans out one request per page: the caller reports
+   * a failure once instead of once per page. The `format` parameter is omitted
+   * because `md` is the server-side default.
    */
   async getStructurePage(index, id, page, routing) {
     const url = Api.getFullUrl(`/api/${index}/artifacts/structure/${id}/${page}`)
