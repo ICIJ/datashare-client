@@ -272,9 +272,13 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * This is useful when navigating to a new route
    * to ensure the search state is fresh.
    */
-  function resetForRouteChange() {
+  function resetForRouteChange(routeQuery = {}) {
     from.value = 0
-    isReady.value = false
+    // Only force loading state for a genuinely new query, or a same-query
+    // route re-entry (e.g. History → Documents) leaves it stuck forever.
+    if (!sameAppliedQuery(routeQuery, ['from'])) {
+      isReady.value = false
+    }
     q.value = ''
     excludeFilters.value = []
     values.value = {}
@@ -770,8 +774,14 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   /**
    * Cancels the in-flight async search (if any). Called when leaving the search
    * view so the backend stops polling and frees the stored result.
+   *
+   * Also clears the optimistic "applied" mark synchronously, so a cancelled
+   * search's query isn't wrongly treated as already satisfied on return.
    */
   function cancelActiveSearch() {
+    if (!isReady.value) {
+      lastAppliedQuery.value = {}
+    }
     activeController?.abort()
   }
 
@@ -800,7 +810,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    */
   function updateFromRouteQuery(routeQuery) {
     // Reset the state except for the given keys
-    resetForRouteChange()
+    resetForRouteChange(routeQuery)
     // Create a helper function that call the setter only if the key exists in the routeQuery
     const withRouteQuery = (key, setter) => key in routeQuery && setter(routeQuery[key])
     // This is all the key that can be found in the URL (apart from filters keys)
