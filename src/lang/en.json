@@ -2112,6 +2112,7 @@
       "extractionLevel": "Embedding level",
       "extractionDate": "Indexing date",
       "language": "Language",
+      "ocrConfidence": "OCR confidence",
       "project": "Project"
     }
   },
