@@ -71,7 +71,7 @@ describe('DocumentEntriesHeader.vue — runBatchDownload orchestration', () => {
     vi.restoreAllMocks()
   })
 
-  function factory() {
+  function factory(props = {}) {
     return mount(DocumentEntriesHeader, {
       global: {
         plugins,
@@ -80,7 +80,7 @@ describe('DocumentEntriesHeader.vue — runBatchDownload orchestration', () => {
           'row-pagination-documents': true
         }
       },
-      props: { total: 10 }
+      props: { total: 10, ...props }
     })
   }
 
@@ -167,5 +167,19 @@ describe('DocumentEntriesHeader.vue — runBatchDownload orchestration', () => {
 
     expect(toastErrorMock).toHaveBeenCalledTimes(1)
     expect(toastSuccessMock).not.toHaveBeenCalled()
+  })
+
+  describe('disabled state', () => {
+    it('disables the batch download button when there are no results', () => {
+      const wrapper = factory({ total: 0 })
+      const button = wrapper.findComponent({ name: 'ButtonDownloadDocuments' })
+      expect(button.attributes('disabled')).toBeDefined()
+    })
+
+    it('enables the batch download button when there are results', () => {
+      const wrapper = factory({ total: 10 })
+      const button = wrapper.findComponent({ name: 'ButtonDownloadDocuments' })
+      expect(button.attributes('disabled')).toBeUndefined()
+    })
   })
 })
