@@ -26,6 +26,9 @@
     "doc:storybook": "storybook build",
     "doc:title": "sed -i 's|@storybook/core - Storybook|Design System - Datashare|' storybook-static/index.html"
   },
+  "resolutions": {
+    "d3-format": "^3.1.0"
+  },
   "dependencies": {
     "@floating-ui/vue": "^1.1.9",
     "@icij/murmur": "5.1.2",
