@@ -127,28 +127,33 @@ export function useDocumentDownload(document, { immediate = true } = {}) {
 
   const isDownloadingMarkdown = ref(false)
 
+  async function fetchMarkdownPages() {
+    const { index, id, routing } = documentRef.value
+    const { pages } = structureManifest.value
+    const requests = range(1, pages + 1).map(page => api.getStructurePage(index, id, page, routing))
+    const errorMessage = t('documentDownloadPopover.downloadMarkdownError')
+    return toastedPromise(Promise.all(requests), { errorMessage })
+  }
+
   async function downloadMarkdown() {
     if (!hasMarkdown.value || isDownloadingMarkdown.value) {
       return
     }
-    const { index, id, routing, title } = documentRef.value
-    const { pages } = structureManifest.value
-    const numbers = range(1, pages + 1)
+    // Captured before the fetch: the pages belong to the document that was
+    // clicked, so the filename must not follow a later document.
+    const { title } = documentRef.value
     isDownloadingMarkdown.value = true
-    const promise = Promise.all(numbers.map(page => api.getStructurePage(index, id, page, routing)))
-    let contents
     try {
-      contents = await toastedPromise(promise, { errorMessage: t('documentDownloadPopover.downloadMarkdownError') })
+      const pages = await fetchMarkdownPages()
+      downloadBlob(pages.join(MARKDOWN_PAGE_SEPARATOR), `${title}.md`, MARKDOWN_MIME_TYPE)
     }
     catch {
-      // toastedPromise already reported the error; swallow the rejection so it
-      // doesn't escape the template click handler.
-      return
+      // toastedPromise already reported the failure; swallow the rejection so
+      // it doesn't escape the template's click handler.
     }
     finally {
       isDownloadingMarkdown.value = false
     }
-    downloadBlob(contents.join(MARKDOWN_PAGE_SEPARATOR), `${title}.md`, MARKDOWN_MIME_TYPE)
   }
 
   async function downloadTranslatedContent() {
