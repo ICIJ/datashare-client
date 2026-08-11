@@ -5,6 +5,8 @@ import Document from '@/api/resources/Document'
 import DocumentDownloadPopover from '@/components/Document/DocumentDownloadPopover/DocumentDownloadPopover'
 import { apiInstance } from '@/api/apiInstance'
 
+const MARKDOWN_MANIFEST = Object.freeze({ pages: 1, formats: ['md'] })
+
 describe('DocumentDownloadPopover.vue', () => {
   let core, plugins
 
@@ -149,7 +151,7 @@ describe('DocumentDownloadPopover.vue', () => {
   it('should show the markdown download button when the document has a markdown artifact', async () => {
     apiInstance.elasticsearch.getSource = vi.fn().mockResolvedValue({ content_translated: [] })
     apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(true)
-    apiInstance.getStructureManifest = vi.fn().mockResolvedValue({ pages: 1, formats: ['md'] })
+    apiInstance.getStructureManifest = vi.fn().mockResolvedValue(MARKDOWN_MANIFEST)
     const wrapper = mountPopover(createDocument({}, 'test-doc-id-with-markdown'))
     await flushPromises()
     const buttons = wrapper.findAll('.document-download-popover__body__button')
@@ -171,7 +173,7 @@ describe('DocumentDownloadPopover.vue', () => {
   it('should put the markdown button in a loading state while the pages are fetched', async () => {
     apiInstance.elasticsearch.getSource = vi.fn().mockResolvedValue({ content_translated: [] })
     apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(true)
-    apiInstance.getStructureManifest = vi.fn().mockResolvedValue({ pages: 1, formats: ['md'] })
+    apiInstance.getStructureManifest = vi.fn().mockResolvedValue(MARKDOWN_MANIFEST)
     apiInstance.getStructurePage = vi.fn(() => new Promise(() => {}))
 
     const wrapper = mountPopover(createDocument({}, 'test-doc-id-markdown-loading'))
@@ -188,7 +190,7 @@ describe('DocumentDownloadPopover.vue', () => {
   it('should trigger a download when the markdown button is clicked', async () => {
     apiInstance.elasticsearch.getSource = vi.fn().mockResolvedValue({ content_translated: [] })
     apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(true)
-    apiInstance.getStructureManifest = vi.fn().mockResolvedValue({ pages: 1, formats: ['md'] })
+    apiInstance.getStructureManifest = vi.fn().mockResolvedValue(MARKDOWN_MANIFEST)
     apiInstance.getStructurePage = vi.fn().mockResolvedValue('# Hello')
 
     const fakeAnchor = { href: '', download: '', click: vi.fn() }
