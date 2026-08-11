@@ -1,6 +1,6 @@
 import { computed, ref, toRef, watchEffect } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { range } from 'lodash'
+import range from 'lodash/range'
 
 import { apiInstance as api } from '@/api/apiInstance'
 import { useDocumentDownloadStore, useDocumentStore } from '@/store/modules'
