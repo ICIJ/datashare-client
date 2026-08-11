@@ -4,6 +4,7 @@ import { AppIcon } from '@icij/murmur'
 import { useI18n } from 'vue-i18n'
 
 import filters from '@/store/filters'
+import builtinFilterIcons from '@/store/filters/icons'
 
 const props = defineProps({
   name: {
@@ -18,7 +19,7 @@ const filter = computed(() => {
 })
 
 const icon = computed(() => {
-  return filter.value.options.icon
+  return filter.value.options.icon ?? builtinFilterIcons[props.name]
 })
 </script>
 
