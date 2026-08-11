@@ -2,7 +2,7 @@ import { shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import SearchFilters from '@/views/Search/SearchFilters'
-import { useSearchStore } from '@/store/modules'
+import { useSearchStore, useAppStore } from '@/store/modules'
 
 // Lightweight stub that exposes the filter name via a DOM attribute so we can
 // assert which filters the panel actually rendered.
@@ -11,28 +11,36 @@ const FilterStub = {
   template: '<div class="filter-stub" :data-filter-name="filter && filter.name" />'
 }
 
+const mountSearchFilters = (core) => {
+  return shallowMount(SearchFilters, {
+    global: {
+      plugins: core.plugins,
+      renderStubDefaultSlot: true,
+      stubs: {
+        FilterType: FilterStub,
+        FilterTypeDateRange: FilterStub,
+        FilterTypeStarred: FilterStub,
+        FilterTypeRecommendedBy: FilterStub,
+        FilterTypePath: FilterStub,
+        FilterTypeProject: FilterStub,
+        FilterTypeFileTypes: FilterStub
+      }
+    }
+  })
+}
+
 describe('SearchFilters.vue', () => {
-  let core, wrapper, searchStore
+  let core, wrapper, searchStore, appStore
 
   beforeEach(() => {
     core = CoreSetup.init().useAll().useRouterWithoutGuards()
     searchStore = useSearchStore()
+    appStore = useAppStore()
+    // Steady-state default for the existing behavioral tests below: panel
+    // closed (the app default) but the current search has already finished.
+    searchStore.isReady = true
 
-    wrapper = shallowMount(SearchFilters, {
-      global: {
-        plugins: core.plugins,
-        renderStubDefaultSlot: true,
-        stubs: {
-          FilterType: FilterStub,
-          FilterTypeDateRange: FilterStub,
-          FilterTypeStarred: FilterStub,
-          FilterTypeRecommendedBy: FilterStub,
-          FilterTypePath: FilterStub,
-          FilterTypeProject: FilterStub,
-          FilterTypeFileTypes: FilterStub
-        }
-      }
-    })
+    wrapper = mountSearchFilters(core)
   })
 
   const renderedFilterNames = () => {
@@ -63,5 +71,41 @@ describe('SearchFilters.vue', () => {
     // chunks elsewhere in this composable — flushPromises() alone isn't
     // enough, poll instead.
     await vi.waitFor(() => expect(renderedFilterNames()).not.toContain('contentType'))
+  })
+
+  describe('deferred loading when the panel starts closed', () => {
+    beforeEach(() => {
+      appStore.filters.closed = true
+      searchStore.isReady = false
+      wrapper = mountSearchFilters(core)
+    })
+
+    it('does not render any filter while the panel is closed and the search is not ready', () => {
+      expect(renderedFilterNames()).toEqual([])
+    })
+
+    it('renders the filters once the current search finishes', async () => {
+      searchStore.isReady = true
+      await wrapper.vm.$nextTick()
+
+      expect(renderedFilterNames()).toContain('contentType')
+    })
+
+    it('renders the filters immediately if the user opens the panel before the search finishes', async () => {
+      appStore.filters.closed = false
+      await wrapper.vm.$nextTick()
+
+      expect(renderedFilterNames()).toContain('contentType')
+    })
+  })
+
+  describe('when the panel starts open', () => {
+    it('renders filters immediately even though the search is not ready', () => {
+      appStore.filters.closed = false
+      searchStore.isReady = false
+      wrapper = mountSearchFilters(core)
+
+      expect(renderedFilterNames()).toContain('contentType')
+    })
   })
 })
