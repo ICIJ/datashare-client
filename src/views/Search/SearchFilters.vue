@@ -1,5 +1,6 @@
 <script setup>
-import { computed, ref, shallowRef, watch } from 'vue'
+import { computed, ref, shallowRef, toRef, watch } from 'vue'
+import { whenever } from '@vueuse/core'
 import uniq from 'lodash/uniq'
 import groupBy from 'lodash/groupBy'
 import property from 'lodash/property'
@@ -13,10 +14,26 @@ import FiltersPanelSection from '@/components/FiltersPanel/FiltersPanelSection'
 import { useSearchStore } from '@/store/modules'
 
 const searchStore = useSearchStore.inject()
-const { toggleFilters } = useViews()
+const { toggleFilters, isFiltersClosed } = useViews()
 const { isMode } = useMode()
 const { getFilterComponent } = useSearchFilter()
 const { t } = useI18n()
+
+// The filter panel can start closed (the app default). In that case, don't
+// mount — and thus don't chunk-load — the filter components until the
+// current search has finished, so their dynamic imports never compete with
+// the search fetch/render for network or main-thread time. If the panel is
+// open at mount, or the user opens it before the search finishes, render
+// right away instead of making them wait on either.
+const shouldRenderFilters = ref(!isFiltersClosed.value || searchStore.isReady)
+if (isFiltersClosed.value) {
+  whenever(toRef(searchStore, 'isReady'), () => (shouldRenderFilters.value = true), { once: true })
+}
+watch(isFiltersClosed, (closed) => {
+  if (!closed) {
+    shouldRenderFilters.value = true
+  }
+})
 
 const q = ref('')
 const filters = computed(() => {
@@ -52,17 +69,19 @@ const closeFilters = () => (toggleFilters.value = false)
     v-model:q="q"
     @close="closeFilters"
   >
-    <filters-panel-section
-      v-for="section in sections"
-      :key="section"
-      :title="t(`filter.sections.${section}`)"
-    >
-      <component
-        :is="getFilterComponent(filter)"
-        v-for="filter in filtersBySection[section]"
-        :key="filter.name"
-        :filter="filter"
-      />
-    </filters-panel-section>
+    <template v-if="shouldRenderFilters">
+      <filters-panel-section
+        v-for="section in sections"
+        :key="section"
+        :title="t(`filter.sections.${section}`)"
+      >
+        <component
+          :is="getFilterComponent(filter)"
+          v-for="filter in filtersBySection[section]"
+          :key="filter.name"
+          :filter="filter"
+        />
+      </filters-panel-section>
+    </template>
   </filters-panel>
 </template>
