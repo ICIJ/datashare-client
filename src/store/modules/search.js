@@ -43,7 +43,6 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   const lastAppliedQuery = ref({})
 
   const appStore = useAppStore()
-  const router = useRouter()
   const searchBreadcrumbStore = useSearchBreadcrumbStore()
 
   const index = computed({
@@ -158,6 +157,13 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   const stringifyBaseRouteQuery = computed(() => {
     const name = 'search'
     const query = toBaseRouteQuery.value
+    // Router is resolved lazily here (rather than eagerly at store-setup
+    // time) because this store is instantiated during Core.configure(),
+    // before the router plugin is installed on the app — calling
+    // useRouter() at setup time throws a "Symbol(router) not found"
+    // injection warning on every boot. By the time anything actually reads
+    // this computed, the app (and router) are fully mounted.
+    const router = useRouter()
     const { href = null } = router?.resolve({ name, query }) ?? {}
     return href
   })
