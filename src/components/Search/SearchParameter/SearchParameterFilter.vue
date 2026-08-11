@@ -10,6 +10,7 @@ import SearchParameterQueryTerm from './SearchParameterQueryTerm'
 import { VARIANT, variantValidator } from '@/enums/variants'
 import * as types from '@/store/filters'
 import filtersDefs from '@/store/filters'
+import builtinFilterIcons from '@/store/filters/icons'
 
 const props = defineProps({
   name: {
@@ -83,7 +84,7 @@ const term = computed(() => {
 })
 
 const icon = computed(() => {
-  return props.icon ?? filter.value?.options?.icon ?? IPhMagnifyingGlass
+  return props.icon ?? filter.value?.options?.icon ?? builtinFilterIcons[field.value] ?? IPhMagnifyingGlass
 })
 
 const iconLabel = computed(() => {

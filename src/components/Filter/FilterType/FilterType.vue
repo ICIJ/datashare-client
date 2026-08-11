@@ -20,6 +20,7 @@ import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPan
 import FilterTypeAll from '@/components/Filter/FilterType/FilterTypeAll'
 import settings from '@/utils/settings'
 import { useSearchStore } from '@/store/modules'
+import builtinFilterIcons from '@/store/filters/icons'
 
 const query = defineModel('query', { type: String, default: '' })
 const collapse = defineModel('collapse', { type: Boolean, default: null })
@@ -46,6 +47,8 @@ const { filter, modal, hideCount, overlayShow } = defineProps({
 
 const opened = refWhenever(collapse, value => value === false || modal === true)
 const { t } = useI18n()
+
+const icon = computed(() => filter.icon ?? builtinFilterIcons[filter.name])
 
 const pages = reactive([])
 const expand = ref(false)
@@ -266,7 +269,7 @@ defineExpose({ entries, aggregateOver, count })
     :hide-exclude="filter.hideExclude"
     :hide-expand="filter.hideExpand"
     :title="t(`filter.${filter.name}`)"
-    :icon="filter.icon"
+    :icon="icon"
     :count="count"
     :loading="isLoading"
     :modal="modal"
