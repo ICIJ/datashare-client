@@ -35,6 +35,27 @@ describe('elasticsearch', () => {
     spy.mockRestore()
   })
 
+  it('propagates a real backend error unchanged, not re-wrapped into a different shape', async () => {
+    // No mocking here: goes through the real Transport/axios call so a genuine
+    // AxiosError (not a plain Error) is what reaches the caller and the event
+    // bus. Nothing in the app depends on this shape today, but a future change
+    // that silently re-wraps or swallows errors should fail this test.
+    const mockCallback = vi.fn()
+    EventBus.on('http::error', mockCallback)
+
+    const body = { query: { this_clause_does_not_exist: {} } }
+    const rejection = elasticsearch._search({ index, body })
+    await expect(rejection).rejects.toThrow()
+
+    const [emittedError] = mockCallback.mock.calls[0]
+    const thrownError = await rejection.catch(error => error)
+    expect(emittedError).toBe(thrownError)
+    expect(emittedError.isAxiosError).toBe(true)
+    expect(emittedError.response.status).toBe(400)
+
+    EventBus.off('http::error', mockCallback)
+  })
+
   it('should build an ES query with filters', async () => {
     const filters = [new FilterText({ name: 'contentType', key: 'contentType', isSearchable: true })]
     filters[0].values = ['value_01', 'value_02', 'value_03']
