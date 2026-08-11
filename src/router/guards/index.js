@@ -89,7 +89,9 @@ export default (core) => {
       }
     }
     catch (error) {
-      next({ name: 'error', state: { error } })
+      // history.state must be structured-clonable; axios errors carry
+      // non-cloneable functions on `error.config`, so forward the message only.
+      next({ name: 'error', state: { error: error?.message ?? String(error) } })
     }
   }
 
