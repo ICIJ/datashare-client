@@ -1,8 +1,9 @@
 import isEqual from 'lodash/isEqual'
 import replace from 'lodash/replace'
 import bodybuilder from 'bodybuilder'
-import es from 'elasticsearch-browser'
 import { getCookie } from 'tiny-cookie'
+
+import { Client } from '@/api/elasticsearchClient'
 
 import { getPairedDimensions } from '@/store/filters/pairedDimensions'
 import { EventBus } from '@/utils/eventBus'
@@ -681,7 +682,7 @@ export function csrfPlugin(Client, config, components) {
   }
 }
 
-const elasticsearch = new es.Client({
+const elasticsearch = new Client({
   host: import.meta.env.VITE_ES_HOST || `${window.location.hostname}:${window.location.port}/api/index/search`,
   plugins: [datasharePlugin, csrfPlugin],
   requestTimeout: settings.elasticsearch.requestTimeout
