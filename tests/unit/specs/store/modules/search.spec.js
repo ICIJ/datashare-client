@@ -103,6 +103,19 @@ describe('SearchStore', () => {
       await searchStore.query('bar')
       expect(searchStore.q).toBe('bar')
     })
+
+    it('should keep the same indices array reference when setIndices is a no-op', () => {
+      const before = searchStore.indices
+      searchStore.setIndices([index])
+      expect(searchStore.indices).toBe(before)
+    })
+
+    it('should update the indices array reference when the value actually changes', () => {
+      const before = searchStore.indices
+      searchStore.setIndices([anotherIndex])
+      expect(searchStore.indices).not.toBe(before)
+      expect(searchStore.indices).toEqual([anotherIndex])
+    })
   })
 
   describe('Search response', () => {

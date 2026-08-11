@@ -366,7 +366,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * @param {string} value - The index to set for the search.
    */
   function setIndex(value) {
-    indices.value = [value]
+    setIndices([value])
   }
 
   /**
@@ -380,7 +380,17 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     const cleaned = compact(castArray(value))
       .map(str => str.split(','))
       .flat()
-    indices.value = cleaned
+    // Keep the existing array reference when the value doesn't actually
+    // change. updateFromRouteQuery() calls this on every route round-trip
+    // (every filter edit re-applies `index`/`indices` from the URL), so an
+    // unconditional reassignment churns `indices.value`'s identity even
+    // when the project selection is unchanged. Consumers that watch
+    // `searchStore.indices` by reference (e.g. PathTree.vue, via
+    // `projects = computed(() => searchStore.indices)`) then see a false
+    // "changed" signal and reload/flash their content for no reason.
+    if (!isEqual(indices.value, cleaned)) {
+      indices.value = cleaned
+    }
   }
 
   /**
