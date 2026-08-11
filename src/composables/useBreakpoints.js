@@ -20,6 +20,10 @@ const BREAKPOINT_VARIABLES = {
 
 // Function to get the CSS variable value
 const getCssBreakpointValue = (variable) => {
+  // ponytail: guards a real race, not a hypothetical one — this module is reached via
+  // lazy-loaded route chunks, and vitest can tear down jsdom (removing getComputedStyle)
+  // before such a pending import settles, throwing an unhandled ReferenceError in CI.
+  if (typeof document === 'undefined' || typeof getComputedStyle !== 'function') return 0
   return parseInt(getComputedStyle(document.documentElement).getPropertyValue(variable), 10)
 }
 
