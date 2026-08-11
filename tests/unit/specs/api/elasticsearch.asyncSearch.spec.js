@@ -1,3 +1,5 @@
+import { IndexedDocument, letData } from '~tests/unit/es_utils'
+import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import { elasticsearch } from '@/api/elasticsearch'
 import { EventBus } from '@/utils/eventBus'
 
@@ -117,6 +119,40 @@ describe('elasticsearch async search wrappers', () => {
       await promise
 
       expect(abort).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  // Everything above mocks `elasticsearch.transport.request`, so it never
+  // touches the real Transport/axios wiring. These tests go through the real
+  // transport against a live ES, the only place a wire-format regression
+  // (e.g. a malformed query string) would actually surface.
+  describe('against a live Elasticsearch cluster', () => {
+    const { index, es } = esConnectionHelper.build()
+
+    it('round-trips a real search through submit, poll and delete', async () => {
+      await letData(es).have(new IndexedDocument('document_01', index).withContent('this is a document')).commit()
+
+      const body = { query: { match_all: {} } }
+      let envelope = await elasticsearch.submitAsyncSearch({
+        index,
+        body,
+        waitForCompletionTimeout: '5s',
+        keepAlive: '30s'
+      })
+
+      while (envelope.is_running) {
+        envelope = await elasticsearch.getAsyncSearch(envelope.id, { waitForCompletionTimeout: '5s' })
+      }
+
+      expect(envelope.response.hits.hits).toHaveLength(1)
+      expect(envelope.response.hits.hits[0]._id).toBe('document_01')
+
+      // ES only assigns an id (and stores the result) when the search outlives
+      // wait_for_completion_timeout; a search this small usually completes
+      // inline with no id, so there is nothing to delete in that case.
+      if (envelope.id) {
+        await expect(elasticsearch.deleteAsyncSearch(envelope.id)).resolves.toBeDefined()
+      }
     })
   })
 

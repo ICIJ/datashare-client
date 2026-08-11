@@ -23,13 +23,49 @@ function compactQuery(params = {}) {
 }
 
 /**
+ * elasticsearch-browser silently retried every request up to 3 times by
+ * default on connection-level failures (never on an actual HTTP error
+ * response), all transport-side with no app-code opt-in. Number of retries
+ * beyond the initial attempt, matching that default.
+ */
+const DEFAULT_MAX_RETRIES = 3
+
+/**
+ * Whether a failed request is worth retrying: only connection-level failures
+ * (timeout, DNS, dropped connection - axios sets no `.response` for these),
+ * never an actual HTTP error response like a 400 or 500, which elasticsearch
+ * itself answered and won't answer differently on replay.
+ */
+function isRetryable(error) {
+  return !error?.response
+}
+
+/**
+ * Issues one attempt, retrying on connection-level failure until `attemptsLeft`
+ * is exhausted or the shared signal has been aborted.
+ */
+async function requestWithRetries(config, attemptsLeft) {
+  try {
+    const response = await axios(config)
+    return response.data
+  }
+  catch (error) {
+    if (config.signal.aborted || attemptsLeft <= 0 || !isRetryable(error)) {
+      throw error
+    }
+    return requestWithRetries(config, attemptsLeft - 1)
+  }
+}
+
+/**
  * Issues raw HTTP requests to the ES endpoint. The one seam `csrfPlugin`
  * patches (`Transport.prototype.request`) to inject a header on every call.
  */
 export class Transport {
-  constructor({ host, requestTimeout } = {}) {
+  constructor({ host, requestTimeout, maxRetries = DEFAULT_MAX_RETRIES } = {}) {
     this.baseURL = /^https?:\/\//.test(host) ? host : `${window.location.protocol}//${host}`
     this.requestTimeout = requestTimeout
+    this.maxRetries = maxRetries
   }
 
   /**
@@ -40,21 +76,27 @@ export class Transport {
    * @param {Object} [params.body] - JSON request body
    * @param {Object} [params.headers]
    * @returns {Promise & { abort: Function }} Resolves with the response body;
-   *   `.abort()` cancels the in-flight request (mirrors the old client's
-   *   abortable-promise return value, which callers already rely on).
+   *   `.abort()` cancels the in-flight request, including any retry still to
+   *   come (mirrors the old client's abortable-promise return value, which
+   *   callers already rely on).
    */
   request({ method = 'GET', path, query, body, headers } = {}) {
     const controller = new AbortController()
-    const promise = axios({
+    const config = {
       method,
       baseURL: this.baseURL,
       url: path,
       params: compactQuery(query),
+      // ES rejects axios' default `key[]=val` array format ("unrecognized
+      // parameter: [_source[]]"); `indexes: null` serializes repeated params
+      // as `key=val1&key=val2` instead, which ES's _source/fields params expect.
+      paramsSerializer: { indexes: null },
       data: body,
       headers,
       timeout: this.requestTimeout,
       signal: controller.signal
-    }).then(response => response.data)
+    }
+    const promise = requestWithRetries(config, this.maxRetries)
     promise.abort = () => controller.abort()
     return promise
   }
@@ -66,8 +108,8 @@ export class Transport {
  * the async_search endpoints the plain client doesn't wrap.
  */
 export class Client {
-  constructor({ host, requestTimeout, plugins = [] } = {}) {
-    this.transport = new Transport({ host, requestTimeout })
+  constructor({ host, requestTimeout, maxRetries, plugins = [] } = {}) {
+    this.transport = new Transport({ host, requestTimeout, maxRetries })
     plugins.forEach(plugin => plugin(Client, {}, { Transport }))
   }
 
@@ -75,6 +117,14 @@ export class Client {
     return this.transport.request({
       method: 'GET',
       path: `/${index}/_doc/${encodeURIComponent(id)}`,
+      query: params
+    })
+  }
+
+  getSource({ index, id, ...params }) {
+    return this.transport.request({
+      method: 'GET',
+      path: `/${index}/_source/${encodeURIComponent(id)}`,
       query: params
     })
   }
