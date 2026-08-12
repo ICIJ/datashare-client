@@ -445,7 +445,7 @@
     }
   },
   "documentContent": {
-    "noContent": "Aucun contenu extrait pour ce document",
+    "noContent": "Aucun contenu extrait pour ce document.",
     "view": {
       "markdown": "Mise en forme",
       "text": "Texte brut",
