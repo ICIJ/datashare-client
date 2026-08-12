@@ -54,7 +54,14 @@ const filtersTitles = computed(() => filters.value.map(filter => ({ filter, titl
 // defer loading its chunk until the first keystroke instead of importing it
 // eagerly for every search-page load.
 const Fuse = shallowRef(null)
-watch(q, () => import('fuse.js').then(module => (Fuse.value = module.default)), { once: true })
+watch(q, () => {
+  if (!Fuse.value) {
+    // A failed chunk load leaves Fuse.value null, so the next keystroke
+    // retries the import, no .catch() needed.
+    // eslint-disable-next-line promise/catch-or-return
+    import('fuse.js').then(module => (Fuse.value = module.default))
+  }
+})
 
 const fuse = computed(() => Fuse.value && new Fuse.value(filtersTitles.value, { threshold: 0.1, shouldSort: false, keys: ['title'] }))
 const fuseFilters = computed(() => (fuse.value ? fuse.value.search(q.value).map(property('item.filter')) : filters.value))
