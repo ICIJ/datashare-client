@@ -63,7 +63,7 @@ describe('elasticsearchClient', () => {
       await expect(transport.request({ path: '/my-index/_search' })).resolves.toEqual({ hits: { total: 0 } })
     })
 
-    it('rejects with the raw axios error unchanged, not a re-wrapped one', async () => {
+    it('rejects with the same error object, decorated in place rather than re-wrapped', async () => {
       const axiosError = Object.assign(new Error('Request failed with status code 400'), {
         isAxiosError: true,
         response: { status: 400 }
@@ -72,6 +72,67 @@ describe('elasticsearchClient', () => {
 
       const transport = new Transport({ host: 'http://elasticsearch:9200' })
       await expect(transport.request({ path: '/my-index/_search' })).rejects.toBe(axiosError)
+    })
+
+    it('decorates an HTTP error response with status, displayName and the ES error message', async () => {
+      const axiosError = Object.assign(new Error('Request failed with status code 404'), {
+        isAxiosError: true,
+        response: {
+          status: 404,
+          statusText: 'Not Found',
+          data: { error: { root_cause: [{ type: 'index_not_found_exception', reason: 'no such index [x]' }] } }
+        }
+      })
+      axios.mockRejectedValue(axiosError)
+
+      const transport = new Transport({ host: 'http://elasticsearch:9200' })
+      await expect(transport.request({ path: '/my-index/_search' })).rejects.toMatchObject({
+        status: 404,
+        displayName: 'NotFound',
+        message: '[index_not_found_exception] no such index [x]'
+      })
+    })
+
+    it('decorates an HTTP error response without touching the message when ES sends no error body', async () => {
+      const axiosError = Object.assign(new Error('Request failed with status code 400'), {
+        isAxiosError: true,
+        response: { status: 400, statusText: 'Bad Request' }
+      })
+      axios.mockRejectedValue(axiosError)
+
+      const transport = new Transport({ host: 'http://elasticsearch:9200' })
+      await expect(transport.request({ path: '/my-index/_search' })).rejects.toMatchObject({
+        status: 400,
+        displayName: 'BadRequest',
+        message: 'Request failed with status code 400'
+      })
+    })
+
+    it('decorates a timeout with displayName RequestTimeout', async () => {
+      const timeoutError = Object.assign(new Error('timeout of 60000ms exceeded'), { code: 'ECONNABORTED' })
+      axios.mockRejectedValue(timeoutError)
+
+      const transport = new Transport({ host: 'http://elasticsearch:9200' })
+      await expect(transport.request({ path: '/my-index/_search' })).rejects.toMatchObject({ displayName: 'RequestTimeout' })
+    })
+
+    it('decorates a network-level failure with displayName ConnectionFault once retries are exhausted', async () => {
+      const networkError = Object.assign(new Error('Network Error'), { isAxiosError: true })
+      axios.mockRejectedValue(networkError)
+
+      const transport = new Transport({ host: 'http://elasticsearch:9200', maxRetries: 0 })
+      await expect(transport.request({ path: '/my-index/_search' })).rejects.toMatchObject({ displayName: 'ConnectionFault' })
+    })
+
+    it('does not decorate an aborted request', async () => {
+      const networkError = Object.assign(new Error('Network Error'), { isAxiosError: true, name: 'AbortError' })
+      axios.mockRejectedValue(networkError)
+
+      const transport = new Transport({ host: 'http://elasticsearch:9200' })
+      const promise = transport.request({ path: '/my-index/_search' })
+      promise.abort()
+
+      await expect(promise).rejects.not.toHaveProperty('displayName')
     })
 
     it('does not retry an HTTP error response (e.g. a 400)', async () => {

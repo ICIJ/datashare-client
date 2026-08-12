@@ -42,6 +42,28 @@ function isRetryable(error) {
 }
 
 /**
+ * Decorates a failed request with elasticsearch-browser's error shape
+ * (`.status`, `.displayName`, and a `.message` built from ES's own error
+ * body) so code written against that shape keeps working unchanged.
+ */
+function decorateError(error) {
+  const { response } = error
+  if (response) {
+    error.status = response.status
+    error.displayName = response.statusText ? response.statusText.replace(/\s+/g, '') : undefined
+    const rootCause = response.data?.error?.root_cause
+    if (Array.isArray(rootCause) && rootCause.length) {
+      error.message = rootCause.map(({ type, reason }) => `[${type}] ${reason}`).join(' (and) ')
+    }
+  }
+  else {
+    const timedOut = error.code === 'ECONNABORTED' || error.code === 'ETIMEDOUT'
+    error.displayName = timedOut ? 'RequestTimeout' : 'ConnectionFault'
+  }
+  return error
+}
+
+/**
  * Issues one attempt, retrying on connection-level failure until `attemptsLeft`
  * is exhausted or the shared signal has been aborted.
  */
@@ -51,8 +73,11 @@ async function requestWithRetries(config, attemptsLeft) {
     return response.data
   }
   catch (error) {
-    if (config.signal.aborted || attemptsLeft <= 0 || !isRetryable(error)) {
+    if (config.signal.aborted) {
       throw error
+    }
+    if (attemptsLeft <= 0 || !isRetryable(error)) {
+      throw decorateError(error)
     }
     return requestWithRetries(config, attemptsLeft - 1)
   }
