@@ -1121,7 +1121,7 @@
           "state": "Estado",
           "id": "Id"
         },
-        "unavailableAlert": "This download has expired per your admin's retention settings",
+        "unavailableAlert": "This download has expired per your admin's retention settings.",
         "truncatedAlert": {
           "sizeLimit": "Results were truncated after reaching the {reason} ({limit}).",
           "fileCountLimit": "Results were truncated after reaching the {reason} ({limit}).",
@@ -1157,7 +1157,7 @@
         "queries": {
           "onlyCSV": "Solo se acepta el formato CSV.",
           "onlyUTF8": "Exportar su hoja de cálculo como CSV usando la codificación UTF-8",
-          "queriesLimits": "Your CSV file should not contain more than 60,000 queries",
+          "queriesLimits": "Your CSV file should not contain more than 60,000 queries.",
           "firstColumn": "La primera y única columna debe contener los términos de búsqueda",
           "lineBreaks": "No hay salto(s) de línea en celdas",
           "operators": "Al seleccionar 'hacer frases coincidentes' se evita el uso de operadores como <code>AND</code>, <code>OR</code>, <code>NOT</code>, <code>*</code>, <code>?</code>, <code>!</code>, <code>+</code>, <code>-</code> o expresiones regulares entre 2 barras en las consultas."
@@ -1433,11 +1433,11 @@
       "fields": {
         "sensitiveContent": {
           "label": "Sensitive content",
-          "description": "Sensitive-content banner adds a blurred overlay on top of the content of documents and asks users before viewing"
+          "description": "Sensitive-content banner adds a blurred overlay on top of the content of documents and asks users before viewing."
         },
         "path": {
           "label": "Path",
-          "description": "Select on which path the banner will be displayed"
+          "description": "Select on which path the banner will be displayed."
         },
         "text": {
           "label": "Content",
@@ -1696,13 +1696,13 @@
       "repository": {
         "type": "Type",
         "location": "Location",
-        "description": "Backups are stored on a {type} repository located at {location}"
+        "description": "Backups are stored on a {type} repository located at {location}."
       },
       "setup": {
         "title": "Configure backup storage",
         "description": "Your snapshots must be stored in one of the predefined paths. Please select one of the available paths below.",
         "loading": "Loading available paths...",
-        "noPathsTitle": "No backup paths available",
+        "noPathsTitle": "No backup paths available.",
         "noPathsDescription": "No backup paths have been configured in Elasticsearch. Please configure the path.repo setting in your Elasticsearch configuration to enable backups.",
         "selectPath": "Select the filesystem repository location:",
         "submit": "Configure"
@@ -1751,11 +1751,11 @@
         "restore": "Failed to restore backup: {error}"
       },
       "success": {
-        "create": "Backup creation started",
+        "create": "Backup creation started.",
         "delete": "Backup deleted",
-        "restore": "Restore started",
-        "repositoryCreated": "Backup repository configured",
-        "repositoryDeleted": "Backup repository deleted"
+        "restore": "Restore started.",
+        "repositoryCreated": "Backup repository configured.",
+        "repositoryDeleted": "Backup repository deleted."
       }
     }
   },
@@ -1879,7 +1879,7 @@
     }
   },
   "batchDownloadConfirmModal": {
-    "title": "Your download may be truncated",
+    "title": "Your download may be truncated.",
     "knownTruncation": "Your search matches approximately {estimatedCount} documents ({estimatedSize}). Batch downloads are limited to {maxFiles} documents and {maxSize}, so only part of your results will be included.",
     "unknownTruncation": "We couldn't verify your search size. Batch downloads are limited to {maxFiles} documents and {maxSize}, so your download may be truncated.",
     "question": "Do you want to proceed anyway?"
@@ -2057,8 +2057,8 @@
     "proximitySearchExample": "\"Marie and Henry are in Paris\"~2",
     "proximitySearchExplanation1": "Also called proximity search.",
     "proximitySearchExplanation2": "The maximum distance with which words can be further apart or in a different order in the phrase.",
-    "proximitySearchExplanation3": "\"Marie and Henry are in Paris\"~1 will find: \"and Marie Henry are in Paris\"",
-    "proximitySearchExplanation4": "\"Marie and Henry are in Paris\"~2 will find: \"Henry and Marie are in Paris\"",
+    "proximitySearchExplanation3": "\"Marie and Henry are in Paris\"~1 will find: \"and Marie Henry are in Paris\".",
+    "proximitySearchExplanation4": "\"Marie and Henry are in Paris\"~2 will find: \"Henry and Marie are in Paris\".",
     "searchInFields": "Search in field",
     "allFields": "All fields",
     "fields": {
