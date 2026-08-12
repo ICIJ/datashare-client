@@ -276,7 +276,8 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     from.value = 0
     // Only force loading state for a genuinely new query, or a same-query
     // route re-entry (e.g. History → Documents) leaves it stuck forever.
-    if (!sameAppliedQuery(routeQuery, ['from'])) {
+    const sameQuery = Object.keys(routeQuery).length && sameAppliedQuery(routeQuery, ['from', 'stamp'])
+    if (!sameQuery) {
       isReady.value = false
     }
     q.value = ''
@@ -1053,11 +1054,10 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    */
   function sameAppliedQuery(query = {}, omit = []) {
     return Object.keys(query).every((key) => {
-      // The last applied query value can be an array, so we use isEqual to compare
-      // it with the current query value. Lodash's isEqual will handle the comparison
-      // correctly, regardless of the type of the value (string or array of strings).
-      // In addition, we use toRaw to ensure we are not comparing a reactive proxy.
-      return omit.includes(key) || isEqual(query[key], toRaw(lastAppliedQuery.value[key]))
+      // A single-valued filter round-trips through the URL as a scalar while
+      // lastAppliedQuery holds an array, so castArray both sides before
+      // comparing. toRaw ensures we are not comparing a reactive proxy.
+      return omit.includes(key) || isEqual(castArray(query[key]), castArray(toRaw(lastAppliedQuery.value[key])))
     })
   }
 
