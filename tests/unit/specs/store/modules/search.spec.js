@@ -375,6 +375,33 @@ describe('SearchStore', () => {
     })
   })
 
+  describe('updateFromRouteQuery / stuck-loading regression', () => {
+    it('forces isReady false on an empty route query, instead of the vacuous match', () => {
+      searchStore.isReady = true
+      searchStore.updateFromRouteQuery({})
+      expect(searchStore.isReady).toBe(false)
+    })
+
+    it('keeps isReady true on a same-query route re-entry despite a differing stamp', async () => {
+      await searchStore.query('bar')
+
+      searchStore.updateFromRouteQuery({ ...searchStore.toRouteQuery, stamp: 'another-stamp' })
+
+      expect(searchStore.isReady).toBe(true)
+    })
+
+    it('treats a scalar filter value as equal to its single-item array form', async () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'pdf' })
+      await searchStore.query('bar')
+
+      // A single-valued filter round-trips through the URL as a scalar,
+      // while lastAppliedQuery holds it as an array.
+      searchStore.updateFromRouteQuery({ ...searchStore.toRouteQuery, 'f[contentType]': 'pdf' })
+
+      expect(searchStore.isReady).toBe(true)
+    })
+  })
+
   describe('Build route query', () => {
     it('should return the default query parameters', () => {
       expect(searchStore.toRouteQuery).toMatchObject({
