@@ -15,11 +15,13 @@ import axios from 'axios'
  */
 
 /**
- * Drops undefined values so axios' query-string serializer omits the key
- * entirely rather than serializing it as an empty string.
+ * Joins array values into comma-separated lists (`_source=a,b`): ES keeps
+ * only the last value of a repeated query param. Axios already drops
+ * undefined/null values from the query string.
  */
 function compactQuery(params = {}) {
-  return Object.fromEntries(Object.entries(params).filter(([, value]) => value !== undefined))
+  const joinArrays = ([key, value]) => [key, Array.isArray(value) ? value.join(',') : value]
+  return Object.fromEntries(Object.entries(params).map(joinArrays))
 }
 
 /**
@@ -87,10 +89,6 @@ export class Transport {
       baseURL: this.baseURL,
       url: path,
       params: compactQuery(query),
-      // ES rejects axios' default `key[]=val` array format ("unrecognized
-      // parameter: [_source[]]"); `indexes: null` serializes repeated params
-      // as `key=val1&key=val2` instead, which ES's _source/fields params expect.
-      paramsSerializer: { indexes: null },
       data: body,
       headers,
       timeout: this.requestTimeout,

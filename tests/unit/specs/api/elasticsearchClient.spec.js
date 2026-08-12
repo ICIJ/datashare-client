@@ -36,16 +36,11 @@ describe('elasticsearchClient', () => {
       )
     })
 
-    it('serializes array query params as repeated keys instead of axios default brackets', async () => {
+    it('serializes array query params as comma-separated lists', async () => {
       const transport = new Transport({ host: 'http://elasticsearch:9200' })
       await transport.request({ path: '/my-index/_search', query: { _source: ['title', 'path'] } })
 
-      const { params, paramsSerializer } = axios.mock.calls[0][0]
-      expect(params).toEqual({ _source: ['title', 'path'] })
-      // This is the actual bug that shipped: without `indexes: null`, axios'
-      // default serializer produces `_source[]=title&_source[]=path`, which
-      // ES rejects as an "unrecognized parameter".
-      expect(paramsSerializer).toEqual({ indexes: null })
+      expect(axios.mock.calls[0][0].params).toEqual({ _source: 'title,path' })
     })
 
     it('drops undefined query params instead of serializing them as empty', async () => {
