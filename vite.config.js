@@ -151,14 +151,15 @@ export default ({ mode }) => {
               return 'vendor-search'
             }
 
-            // Charting/geo/calendar. d3 (via ColumnChartPicker.vue) and
-            // v-calendar (via FormControlDateRange.vue) are both now deferred
-            // at their call sites (defineAsyncComponent / no longer installed
-            // as an eager global plugin in Core.js), so this group is only
-            // downloaded once one of those lazy chunks actually loads — this
-            // is purely a caching optimization for chunks that already ship
-            // together, not an eager download.
-            if (pkg === 'd3' || pkg.startsWith('d3-') || pkg === 'v-calendar' || pkg.startsWith('topojson')) {
+            // Calendar, now only reachable through FormControlDateRange.vue's
+            // own import since Core.js no longer installs the plugin globally.
+            if (pkg === 'v-calendar') {
+              return 'vendor-calendar'
+            }
+
+            // Charting/geo. Not deferred: @icij/murmur (vendor-ui) statically
+            // imports d3-geo/d3-scale, so this group is preloaded everywhere.
+            if (pkg === 'd3' || pkg.startsWith('d3-') || pkg.startsWith('topojson')) {
               return 'vendor-charts'
             }
 
