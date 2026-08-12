@@ -34,7 +34,7 @@
     "@icij/murmur": "5.1.2",
     "@popperjs/core": "^2.11.8",
     "@tato30/vue-pdf": "^1.11.5",
-    "@vueuse/components": "^14.1.0",
+    "@vueuse/components": "^14.4.0",
     "axios": "^1.13.2",
     "bodybuilder": "^2.5.0",
     "bootstrap": "^5.3.8",
