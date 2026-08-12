@@ -1048,7 +1048,7 @@
             "no": "Nein"
           }
         },
-        "success": "Find entities task is launched",
+        "success": "Find entities task is launched.",
         "error": "An error occurred when creating the task: {error}"
       }
     },
@@ -1101,7 +1101,7 @@
           }
         },
         "submit": "Add",
-        "success": "Add document task is launched",
+        "success": "Add document task is launched.",
         "error": "An error occurred when creating the task: {error}"
       }
     },
@@ -1121,7 +1121,7 @@
           "state": "Status",
           "id": "Id"
         },
-        "unavailableAlert": "This download has expired per your admin's retention settings",
+        "unavailableAlert": "This download has expired per your admin's retention settings.",
         "truncatedAlert": {
           "sizeLimit": "Results were truncated after reaching the {reason} ({limit}).",
           "fileCountLimit": "Results were truncated after reaching the {reason} ({limit}).",
@@ -1156,10 +1156,10 @@
       "form": {
         "queries": {
           "onlyCSV": "Only CSV format is accepted.",
-          "onlyUTF8": "Export your spreadsheet as a CSV using encoding UTF-8",
-          "queriesLimits": "Your CSV file should not contain more than 60,000 queries",
-          "firstColumn": "The first and only column should contain the terms to search",
-          "lineBreaks": "No line break(s) in cells",
+          "onlyUTF8": "Export your spreadsheet as a CSV using encoding UTF-8.",
+          "queriesLimits": "Your CSV file should not contain more than 60,000 queries.",
+          "firstColumn": "The first and only column should contain the terms to search.",
+          "lineBreaks": "No line break(s) in cells.",
           "operators": "Selecting 'do phrase matches' prevent from using operators like <code>AND</code>, <code>OR</code>, <code>NOT</code>, <code>*</code>, <code>?</code>, <code>!</code>, <code>+</code>, <code>-</code> or Regexes between 2 slashes in the queries."
         },
         "sections": {
@@ -1258,7 +1258,7 @@
   },
   "batchSearchErrorModal": {
     "okTitle": "Ok",
-    "errorQuery": "There is an error on the following query",
+    "errorQuery": "There is an error on the following query.",
     "errorTitle": "The error is",
     "text": "how to fix the most common errors",
     "description": "The system encountered a problem. Syntax errors in the CSV are the usual suspects (see {link})."
@@ -1294,16 +1294,16 @@
   },
   "batchSearchActions": {
     "remove": {
-      "success": "The batch search was removed",
-      "error": "Unable to remove the batch search"
+      "success": "The batch search was removed.",
+      "error": "Unable to remove the batch search."
     },
     "stop": {
-      "success": "The batch search was stopped",
-      "error": "Unable to stop the batch search"
+      "success": "The batch search was stopped.",
+      "error": "Unable to stop the batch search."
     },
     "relaunch": {
-      "success": "The batch search was relaunched",
-      "error": "Unable to relaunch the batch search"
+      "success": "The batch search was relaunched.",
+      "error": "Unable to relaunch the batch search."
     }
   },
   "batchSearchActionsRelaunchModal": {
@@ -1433,11 +1433,11 @@
       "fields": {
         "sensitiveContent": {
           "label": "Sensitive content",
-          "description": "Sensitive-content banner adds a blurred overlay on top of the content of documents and asks users before viewing"
+          "description": "Sensitive-content banner adds a blurred overlay on top of the content of documents and asks users before viewing."
         },
         "path": {
           "label": "Path",
-          "description": "Select on which path the banner will be displayed"
+          "description": "Select on which path the banner will be displayed."
         },
         "text": {
           "label": "Content",
@@ -1628,7 +1628,7 @@
     "layout": {
       "infoDismiss": "Got it, don't show again",
       "searchPlaceholder": "Filter the list",
-      "noResults": "No matching result for the query '{query}'"
+      "noResults": "No matching result for the query '{query}'."
     },
     "title": "Einstellungen",
     "description": {
@@ -1696,13 +1696,13 @@
       "repository": {
         "type": "Type",
         "location": "Location",
-        "description": "Backups are stored on a {type} repository located at {location}"
+        "description": "Backups are stored on a {type} repository located at {location}."
       },
       "setup": {
         "title": "Configure backup storage",
         "description": "Your snapshots must be stored in one of the predefined paths. Please select one of the available paths below.",
         "loading": "Loading available paths...",
-        "noPathsTitle": "No backup paths available",
+        "noPathsTitle": "No backup paths available.",
         "noPathsDescription": "No backup paths have been configured in Elasticsearch. Please configure the path.repo setting in your Elasticsearch configuration to enable backups.",
         "selectPath": "Select the filesystem repository location:",
         "submit": "Configure"
@@ -1751,11 +1751,11 @@
         "restore": "Failed to restore backup: {error}"
       },
       "success": {
-        "create": "Backup creation started",
+        "create": "Backup creation started.",
         "delete": "Backup deleted",
-        "restore": "Restore started",
-        "repositoryCreated": "Backup repository configured",
-        "repositoryDeleted": "Backup repository deleted"
+        "restore": "Restore started.",
+        "repositoryCreated": "Backup repository configured.",
+        "repositoryDeleted": "Backup repository deleted."
       }
     }
   },
@@ -1866,20 +1866,20 @@
   "batchDownloadActions": {
     "remove": {
       "label": "Löschen",
-      "success": "The batch download was removed",
-      "error": "Unable to remove the batch download"
+      "success": "The batch download was removed.",
+      "error": "Unable to remove the batch download."
     },
     "relaunch": {
       "label": "Neustart",
-      "success": "The batch download was relaunched",
-      "error": "Unable to relaunch the batch download"
+      "success": "The batch download was relaunched.",
+      "error": "Unable to relaunch the batch download."
     },
     "search": {
       "label": "Suchresultate ansehen"
     }
   },
   "batchDownloadConfirmModal": {
-    "title": "Your download may be truncated",
+    "title": "Your download may be truncated.",
     "knownTruncation": "Your search matches approximately {estimatedCount} documents ({estimatedSize}). Batch downloads are limited to {maxFiles} documents and {maxSize}, so only part of your results will be included.",
     "unknownTruncation": "We couldn't verify your search size. Batch downloads are limited to {maxFiles} documents and {maxSize}, so your download may be truncated.",
     "question": "Do you want to proceed anyway?"
@@ -2057,8 +2057,8 @@
     "proximitySearchExample": "\"Marie and Henry are in Paris\"~2",
     "proximitySearchExplanation1": "Also called proximity search.",
     "proximitySearchExplanation2": "The maximum distance with which words can be further apart or in a different order in the phrase.",
-    "proximitySearchExplanation3": "\"Marie and Henry are in Paris\"~1 will find: \"and Marie Henry are in Paris\"",
-    "proximitySearchExplanation4": "\"Marie and Henry are in Paris\"~2 will find: \"Henry and Marie are in Paris\"",
+    "proximitySearchExplanation3": "\"Marie and Henry are in Paris\"~1 will find: \"and Marie Henry are in Paris\".",
+    "proximitySearchExplanation4": "\"Marie and Henry are in Paris\"~2 will find: \"Henry and Marie are in Paris\".",
     "searchInFields": "Search in field",
     "allFields": "All fields",
     "fields": {
@@ -2125,7 +2125,7 @@
     "batchDownloadDocuments": "Batch download: downloading multiple files is limited to {maxSize}.",
     "batchDownloadDocumentsWarning": "Batch download: downloading multiple files is limited to the first {maxFiles} files and {maxSize}.",
     "batchDownloadError": "Something went wrong when attempt to download the files.",
-    "batchDownloadCreated": "Your batch download is being prepared",
+    "batchDownloadCreated": "Your batch download is being prepared.",
     "batchDownloadLink": "See all"
   },
   "shortcutsView": {
