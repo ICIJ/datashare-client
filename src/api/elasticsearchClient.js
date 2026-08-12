@@ -33,13 +33,13 @@ function compactQuery(params = {}) {
 const DEFAULT_MAX_RETRIES = 3
 
 /**
- * Whether a failed request is worth retrying: only connection-level failures
- * (timeout, DNS, dropped connection - axios sets no `.response` for these),
- * never an actual HTTP error response like a 400 or 500, which elasticsearch
- * itself answered and won't answer differently on replay.
+ * Whether a failed request is worth retrying: connection-level failures only
+ * (DNS, dropped connection), never a timeout or an actual HTTP error
+ * response - none of those get a different answer on replay.
  */
 function isRetryable(error) {
-  return !error?.response
+  const timedOut = error?.code === 'ECONNABORTED' || error?.code === 'ETIMEDOUT'
+  return !error?.response && !timedOut
 }
 
 /**
