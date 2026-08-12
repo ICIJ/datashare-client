@@ -1,11 +1,10 @@
 <script setup>
-import { computed, useId, useTemplateRef } from 'vue'
+import { computed, defineAsyncComponent, useId, useTemplateRef } from 'vue'
 import { useRoute } from 'vue-router'
 import { useModal } from 'bootstrap-vue-next'
 
 import AppModal from '@/components/AppModal/AppModal'
 import DocumentFloating from '@/components/Document/DocumentFloating'
-import DocumentView from '@/views/Document/DocumentView/DocumentView'
 import { onRouteLeaveNotMatch } from '@/composables/onRouteLeaveNotMatch'
 import { onRouteUpdateNotMatch } from '@/composables/onRouteUpdateNotMatch'
 import { useCompact } from '@/composables/useCompact'
@@ -28,6 +27,11 @@ defineProps({
     default: ''
   }
 })
+
+// Lazy so the viewer stays out of the search chunk graph, matching the
+// `document` route's own lazy loader (`src/router/index.js`) instead of
+// duplicating it into a static import here.
+const DocumentView = defineAsyncComponent(() => import('@/views/Document/DocumentView/DocumentView'))
 
 const route = useRoute()
 const modalId = useId()
