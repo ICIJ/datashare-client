@@ -36,6 +36,13 @@ describe('elasticsearchClient', () => {
       )
     })
 
+    it('defaults requestTimeout to 30000 when omitted', async () => {
+      const transport = new Transport({ host: 'http://elasticsearch:9200' })
+      await transport.request({ path: '/my-index/_search' })
+
+      expect(axios.mock.calls[0][0].timeout).toBe(30000)
+    })
+
     it('serializes array query params as comma-separated lists', async () => {
       const transport = new Transport({ host: 'http://elasticsearch:9200' })
       await transport.request({ path: '/my-index/_search', query: { _source: ['title', 'path'] } })

@@ -64,7 +64,7 @@ async function requestWithRetries(config, attemptsLeft) {
  * patches (`Transport.prototype.request`) to inject a header on every call.
  */
 export class Transport {
-  constructor({ host, requestTimeout, maxRetries = DEFAULT_MAX_RETRIES } = {}) {
+  constructor({ host, requestTimeout = 30000, maxRetries = DEFAULT_MAX_RETRIES } = {}) {
     this.baseURL = /^https?:\/\//.test(host) ? host : `${window.location.protocol}//${host}`
     this.requestTimeout = requestTimeout
     this.maxRetries = maxRetries
