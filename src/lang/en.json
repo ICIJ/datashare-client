@@ -446,7 +446,7 @@
     }
   },
   "documentContent": {
-    "noContent": "No content extracted for this document",
+    "noContent": "No content extracted for this document.",
     "view": {
       "markdown": "Formatted",
       "text": "Plain text",
