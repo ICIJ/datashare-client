@@ -21,6 +21,11 @@ describe('elasticsearchClient', () => {
       expect(transport.baseURL).toBe('http://elasticsearch:9200')
     })
 
+    it('resolves a bare hostname without a port to the current page protocol', () => {
+      const transport = new Transport({ host: 'elasticsearch.example.com' })
+      expect(transport.baseURL).toBe(`${window.location.protocol}//elasticsearch.example.com`)
+    })
+
     it('issues the request with method, baseURL, path, body and timeout', async () => {
       const transport = new Transport({ host: 'http://elasticsearch:9200', requestTimeout: 30000 })
       await transport.request({ method: 'POST', path: '/my-index/_search', body: { query: {} } })
