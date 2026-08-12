@@ -190,13 +190,5 @@ describe('elasticsearchClient', () => {
         expect.objectContaining({ method: 'POST', url: '/my-index/_count', data: body })
       )
     })
-
-    it('applies constructor plugins to the Client prototype', () => {
-      const plugin = vi.fn()
-
-      new Client({ host: 'http://elasticsearch:9200', plugins: [plugin] })
-
-      expect(plugin).toHaveBeenCalledWith(Client, {}, { Transport })
-    })
   })
 })

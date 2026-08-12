@@ -8,10 +8,9 @@ import axios from 'axios'
  * multi-transport support is used, so none of it needs to ship to the browser.
  *
  * Implements just enough of the classic client's shape (`Client.prototype`,
- * `components.Transport.prototype`, a `plugins` constructor option) that
- * `datasharePlugin`/`csrfPlugin` in elasticsearch.js keep working completely
- * unchanged — only this file and elasticsearch.js's final `new es.Client(...)`
- * call differ from the elasticsearch-browser-based version.
+ * `components.Transport.prototype`) that `datasharePlugin`/`csrfPlugin` in
+ * elasticsearch.js keep working unchanged, applied once at module scope
+ * there rather than per-instance (nothing here clones the prototype).
  */
 
 /**
@@ -106,9 +105,8 @@ export class Transport {
  * the async_search endpoints the plain client doesn't wrap.
  */
 export class Client {
-  constructor({ host, requestTimeout, maxRetries, plugins = [] } = {}) {
+  constructor({ host, requestTimeout, maxRetries } = {}) {
     this.transport = new Transport({ host, requestTimeout, maxRetries })
-    plugins.forEach(plugin => plugin(Client, {}, { Transport }))
   }
 
   get({ index, id, ...params }) {
