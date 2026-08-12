@@ -3,6 +3,8 @@ import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { ButtonIcon } from '@icij/murmur'
 
+import { preload as vPreload } from '@/directives/preload'
+
 const props = defineProps({
   active: {
     type: Boolean
@@ -34,6 +36,7 @@ const classList = computed(() => {
 
 <template>
   <button-icon
+    v-preload="{ to, router }"
     :icon-left="icon"
     square
     hide-label
