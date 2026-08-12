@@ -666,6 +666,9 @@ export function datasharePlugin(Client) {
  * Plugin that injects the CSRF token from the `_ds_csrf_token` cookie
  * as an `X-DS-CSRF-TOKEN` header on every Elasticsearch request.
  *
+ * apiInstance's axios.defaults.xsrf* already does this, but only for
+ * same-origin requests; keeps a cross-origin VITE_ES_HOST in dev covered too.
+ *
  * @param {Object} Client - The Elasticsearch client constructor
  * @param {Object} config - Plugin configuration (not used)
  * @param {Object} components - Elasticsearch client components
