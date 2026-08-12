@@ -275,8 +275,10 @@ function handleReset() {
 }
 
 // Open pre-populates and focuses; close resets so the next open starts
-// clean if the parent stops passing a query.
-whenever(isVisible, handleOpen)
+// clean if the parent stops passing a query. `immediate` covers the parent
+// mounting this component with `isVisible` already true (SearchToolbar only
+// renders it after the first open), which a plain `whenever` would miss.
+whenever(isVisible, handleOpen, { immediate: true })
 whenever(() => !isVisible.value, handleReset)
 
 function handleSearch() {

@@ -135,6 +135,15 @@ describe('SearchAdvancedModal.vue', () => {
     expect(wrapper.vm.form.field).toBe('all')
   })
 
+  it('pre-populates the form from initialQuery when mounted already open', async () => {
+    const wrapper = shallowMount(SearchAdvancedModal, {
+      props: { modelValue: true, initialQuery: '+Paris +London' },
+      global: { plugins, renderStubDefaultSlot: true }
+    })
+    await nextTick()
+    expect(wrapper.vm.form.allWords).toBe('Paris London')
+  })
+
   it('pre-populates the form from initialQuery when the modal opens', async () => {
     const wrapper = shallowMount(SearchAdvancedModal, {
       props: { modelValue: false, initialQuery: '+Paris +London' },
