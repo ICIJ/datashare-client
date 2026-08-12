@@ -76,6 +76,15 @@ describe('elasticsearchClient', () => {
       expect(axios).toHaveBeenCalledTimes(1)
     })
 
+    it('does not retry a timeout', async () => {
+      const timeoutError = Object.assign(new Error('timeout of 60000ms exceeded'), { code: 'ECONNABORTED' })
+      axios.mockRejectedValue(timeoutError)
+
+      const transport = new Transport({ host: 'http://elasticsearch:9200' })
+      await expect(transport.request({ path: '/my-index/_search' })).rejects.toBe(timeoutError)
+      expect(axios).toHaveBeenCalledTimes(1)
+    })
+
     it('retries a network-level failure (no response) and resolves once a retry succeeds', async () => {
       const networkError = Object.assign(new Error('Network Error'), { isAxiosError: true })
       axios.mockRejectedValueOnce(networkError).mockRejectedValueOnce(networkError).mockResolvedValueOnce({ data: { ok: true } })
