@@ -4,13 +4,13 @@ import range from 'lodash/range'
 
 import { apiInstance as api } from '@/api/apiInstance'
 import { useDocumentDownloadStore, useDocumentStore } from '@/store/modules'
+import { useStructureArtifact } from '@/composables/useStructureArtifact'
 import { useToast } from '@/composables/useToast'
 import { downloadBlob } from '@/utils/download'
 import settings from '@/utils/settings'
 
 const TEXT_MIME_TYPE = 'text/plain;charset=UTF-8'
 const MARKDOWN_MIME_TYPE = 'text/markdown;charset=UTF-8'
-const MARKDOWN_FORMAT = 'md'
 
 // Blank lines on both sides of the rule: `---` directly under a text line is a
 // setext heading underline, not a page break.
@@ -106,24 +106,10 @@ export function useDocumentDownload(document, { immediate = true } = {}) {
     availableTranslations.value = await documentDownloadStore.fetchTranslationStatus({ index, id, routing })
   }
 
-  // The manifest carries the id of the document it describes: a component
-  // handed another document (a recycled row, a slow probe resolving after the
-  // user moved on) must not offer the page count of the previous one.
-  const structureManifest = ref(null)
-
-  const hasMarkdown = computed(() => {
-    const { documentId, pages = 0, formats = [] } = structureManifest.value ?? {}
-    return documentId === documentRef.value.id && pages > 0 && formats.includes(MARKDOWN_FORMAT)
-  })
-
-  async function fetchMarkdownStatus() {
-    const { index, id, routing } = documentRef.value
-    if (!index || !id) {
-      return
-    }
-    const manifest = await api.getStructureManifest(index, id, routing)
-    structureManifest.value = { ...manifest, documentId: id }
-  }
+  // Shared with the download button: `useStructureArtifact` probes the
+  // structure manifest once and both this composable and the Text tab read
+  // from it.
+  const { manifest: structureManifest, hasMarkdown, fetchManifest: fetchMarkdownStatus } = useStructureArtifact(documentRef)
 
   const isDownloadingMarkdown = ref(false)
 
