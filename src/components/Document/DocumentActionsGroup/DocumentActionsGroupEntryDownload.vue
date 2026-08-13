@@ -1,5 +1,5 @@
 <script setup>
-import { computed, nextTick, useTemplateRef, watch } from 'vue'
+import { computed, useTemplateRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import IPhDownloadSimple from '~icons/ph/download-simple'
@@ -50,7 +50,6 @@ watch([isVisible, () => document?.id], ([visible]) => {
   }
 })
 const href = computed(() => (isDownloadAllowed.value ? documentFullUrl.value : null))
-const blur = () => nextTick(() => window.document?.activeElement.blur())
 </script>
 
 <template>
@@ -79,7 +78,6 @@ const blur = () => nextTick(() => window.document?.activeElement.blur())
         :label="t('documentActionsGroup.download')"
         :href="href"
         @click.exact.prevent
-        @focus="blur"
       />
     </template>
   </document-download-popover>

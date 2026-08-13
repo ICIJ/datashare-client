@@ -97,6 +97,7 @@ const qSent = computed(() => {
 <style lang="scss">
 .display-email {
   display: inline-block;
+  cursor: pointer;
 
   &__popover {
     min-width: 450px;
