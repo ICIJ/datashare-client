@@ -1,11 +1,11 @@
 <script setup>
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import isString from 'lodash/isString'
 
 import AppPopover from '@/components/AppPopover/AppPopover'
 import ProjectButton from '@/components/Project/ProjectButton'
 import ProjectThumbnailStack from '@/components/Project/ProjectThumbnailStack'
+import { toProjectList } from '@/utils/projects'
 
 defineOptions({ name: 'ProjectsButton' })
 
@@ -21,13 +21,14 @@ const props = defineProps({
 
 const { t } = useI18n()
 
-const projectList = computed(() => {
-  return isString(props.projects) ? [props.projects] : props.projects
-})
+const projectList = computed(() => toProjectList(props.projects))
 
 const hasSingleProject = computed(() => projectList.value.length === 1)
 const hasPopover = computed(() => projectList.value.length > 1)
-const label = computed(() => t('projectsButton.projectsCount', projectList.value.length))
+
+const label = computed(() => {
+  return t('searchBarInputDropdownForProjects.projectsCount', projectList.value.length)
+})
 </script>
 
 <template>
@@ -42,7 +43,7 @@ const label = computed(() => t('projectsButton.projectsCount', projectList.value
   >
     <template #target="{ visible }">
       <b-button
-        class="projects-button"
+        class="project-button projects-button"
         variant="outline-secondary"
         :aria-expanded="visible"
       >
@@ -66,19 +67,10 @@ const label = computed(() => t('projectsButton.projectsCount', projectList.value
 </template>
 
 <style lang="scss">
+// The anchor also carries `.project-button`, which supplies the shared button
+// colours and layout. Only what differs from it belongs here.
 .projects-button {
-  --bs-btn-color: var(--bs-body-color);
-  --bs-btn-border-color: var(--bs-light);
-  --bs-btn-bg: var(--bs-body-bg);
-  --bs-btn-hover-bg: var(--bs-btn-bg);
-  --bs-btn-hover-color: var(--bs-btn-color);
-  --bs-btn-hover-border-color: var(--bs-primary);
-
-  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  white-space: nowrap;
-  flex-wrap: nowrap;
 
   // Three columns of project buttons on a wide viewport. The vw ceiling is what makes
   // the list collapse to a single column on narrow screens, per the responsive frame.
