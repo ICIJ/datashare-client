@@ -441,7 +441,12 @@
     }
   },
   "documentContent": {
-    "noContent": "No content extracted for this document"
+    "noContent": "No content extracted for this document",
+    "view": {
+      "markdown": "Formatted",
+      "text": "Plain text",
+      "translationTooltip": "Translations are only available as plain text"
+    }
   },
   "documentContentMarkdown": {
     "error": "The formatted view of this page could not be loaded.",

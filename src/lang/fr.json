@@ -441,7 +441,12 @@
     }
   },
   "documentContent": {
-    "noContent": "Aucun contenu extrait pour ce document"
+    "noContent": "Aucun contenu extrait pour ce document",
+    "view": {
+      "markdown": "Mise en forme",
+      "text": "Texte brut",
+      "translationTooltip": "Les traductions ne sont disponibles qu'en texte brut"
+    }
   },
   "documentContentMarkdown": {
     "error": "Impossible de charger la mise en forme de cette page.",

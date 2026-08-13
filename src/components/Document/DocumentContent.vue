@@ -16,8 +16,10 @@ import { addLocalSearchMarksClassByOffsets } from '@/utils/strings'
 import { useCompact } from '@/composables/useCompact'
 import { useConfig } from '@/composables/useConfig'
 import { useMode } from '@/composables/useMode'
+import { useStructureArtifact } from '@/composables/useStructureArtifact'
 import { useWait } from '@/composables/useWait'
 import DocumentAttachments from '@/components/Document/DocumentAttachments'
+import DocumentContentMarkdown from '@/components/Document/DocumentContentMarkdown'
 import DocumentGlobalSearchTerms from '@/components/Document/DocumentGlobalSearchTerms/DocumentGlobalSearchTerms'
 import DocumentLocalSearch from '@/components/Document/DocumentLocalSearch/DocumentLocalSearch'
 import Hook from '@/components/Hook/Hook'
@@ -53,6 +55,22 @@ const searchStore = useSearchStore.inject()
 const elementRef = useTemplateRef('element')
 const { compact } = useCompact(elementRef, { threshold: toRef(props, 'compactThreshold') })
 const { waitFor, isLoading } = useWait()
+const { hasMarkdown, pages: markdownPagesCount, fetchManifest } = useStructureArtifact(toRef(props, 'document'))
+
+const preferMarkdown = ref(true)
+const markdownPage = ref(1)
+
+const isTranslation = computed(() => {
+  return !!props.targetLanguage && props.targetLanguage !== 'original'
+})
+
+const isMarkdownMode = computed(() => {
+  return hasMarkdown.value && !isTranslation.value && preferMarkdown.value
+})
+
+// Task 6 replaces this with the real match logic; kept as a placeholder so
+// the template compiles before markdown-native search exists.
+const activeMarkdownMatch = computed(() => 0)
 
 const docIndex = computed(() => props.document?.index)
 const docId = computed(() => props.document?.id)
@@ -100,7 +118,7 @@ const activeTermOffset = computed(() => {
 })
 
 const showPagination = computed(() => {
-  return nbPages.value > 1 && loadedOnce.value
+  return nbPages.value > 1 && (isMarkdownMode.value || loadedOnce.value)
 })
 
 const hasLocalSearchTerms = computed(() => {
@@ -115,16 +133,24 @@ const isRightToLeft = computed(() => {
 const classList = computed(() => {
   return {
     'document-content--paginated': showPagination.value,
+    'document-content--markdown': isMarkdownMode.value,
     'document-content--rtl': isRightToLeft.value
   }
 })
 
 const page = computed({
   get() {
+    if (isMarkdownMode.value) {
+      return markdownPage.value
+    }
     return offsets.value.indexOf(activeContentSliceOffset.value) + 1 || 1
   },
   set(value) {
     scrollToDocumentStart()
+    if (isMarkdownMode.value) {
+      markdownPage.value = value
+      return
+    }
     activeContentSliceOffset.value = offsets.value[value - 1] || 0
   }
 })
@@ -137,6 +163,9 @@ const maxOffset = computed(() => {
 })
 
 const nbPages = computed(() => {
+  if (isMarkdownMode.value) {
+    return markdownPagesCount.value
+  }
   if (syncedPages.value?.length) {
     return syncedPages.value.length
   }
@@ -173,8 +202,15 @@ watch(toRef(props, 'targetLanguage'), async (value) => {
 })
 
 watch(page, async () => {
+  if (isMarkdownMode.value) {
+    return
+  }
   const offset = activeContentSliceOffset.value
   await activateContentSlice({ offset })
+})
+
+watch(isMarkdownMode, (markdown) => {
+  syncPagePosition(markdown)
 })
 
 watch(contentPipeline, async () => {
@@ -183,7 +219,7 @@ watch(contentPipeline, async () => {
 })
 
 onMounted(async () => {
-  await loadMaxOffset()
+  await Promise.all([loadMaxOffset(), fetchManifest()])
   await syncPages()
   if (props.q) {
     await retrieveOccurrencesAndUpdateContent()
@@ -192,6 +228,19 @@ onMounted(async () => {
     await activateContentSlice({ offset: 0 })
   }
 })
+
+// Both paginations describe the same physical pages when their counts match,
+// so the page number survives the toggle; anything else has no page
+// correspondence and goes back to the first page.
+function syncPagePosition(markdown) {
+  const aligned = !!syncedPages.value?.length && syncedPages.value.length === markdownPagesCount.value
+  if (markdown) {
+    markdownPage.value = aligned ? offsets.value.indexOf(activeContentSliceOffset.value) + 1 || 1 : 1
+  }
+  else {
+    activeContentSliceOffset.value = aligned ? offsets.value[markdownPage.value - 1] ?? 0 : 0
+  }
+}
 
 const loadMaxOffset = waitFor(async function (targetLanguage = props.targetLanguage) {
   const key = targetLanguage ?? 'original'
@@ -424,6 +473,23 @@ async function loadContentSliceAround(desiredOffset) {
         name="document.content.togglers:before"
         x-class="d-flex flex-row justify-content-end align-items-center"
       />
+      <b-form-radio-group
+        v-if="hasMarkdown"
+        v-model="preferMarkdown"
+        buttons
+        button-variant="outline-secondary"
+        size="sm"
+        :disabled="isTranslation"
+        :title="isTranslation ? t('documentContent.view.translationTooltip') : undefined"
+        class="document-content__togglers__view"
+      >
+        <b-form-radio :value="true">
+          {{ t('documentContent.view.markdown') }}
+        </b-form-radio>
+        <b-form-radio :value="false">
+          {{ t('documentContent.view.text') }}
+        </b-form-radio>
+      </b-form-radio-group>
       <hook
         name="document.content.togglers:after"
         x-class="d-flex flex-row justify-content-end align-items-center"
@@ -432,8 +498,17 @@ async function loadContentSliceAround(desiredOffset) {
     <div class="document-content__wrapper">
       <slot name="before-content" />
       <hook name="document.content.body:before" />
+      <document-content-markdown
+        v-if="isMarkdownMode"
+        class="document-content__body document-content__body--markdown"
+        :document="document"
+        :page="markdownPage"
+        :term="localSearchTerm"
+        :active-match="activeMarkdownMatch"
+        @fallback="preferMarkdown = false"
+      />
       <div
-        v-if="hasExtractedContent"
+        v-else-if="hasExtractedContent"
         class="document-content__body"
         v-html="currentContentPage"
       />
@@ -476,6 +551,10 @@ async function loadContentSliceAround(desiredOffset) {
 
   &__body {
     word-break: break-all;
+  }
+
+  &__body--markdown {
+    word-break: normal;
   }
 
   &--rtl &__body {
