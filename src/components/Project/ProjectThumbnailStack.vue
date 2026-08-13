@@ -1,10 +1,10 @@
 <script setup>
 import { computed } from 'vue'
 import isObject from 'lodash/isObject'
-import isString from 'lodash/isString'
 
 import ProjectThumbnail from '@/components/Project/ProjectThumbnail'
 import { useCore } from '@/composables/useCore'
+import { toProjectList } from '@/utils/projects'
 
 defineOptions({ name: 'ProjectThumbnailStack' })
 
@@ -37,9 +37,7 @@ const props = defineProps({
 
 const core = useCore()
 
-const projectList = computed(() => {
-  return isString(props.projects) ? [props.projects] : props.projects
-})
+const projectList = computed(() => toProjectList(props.projects))
 
 const visibleProjects = computed(() => projectList.value.slice(0, props.max))
 
