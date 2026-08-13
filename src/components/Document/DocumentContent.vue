@@ -242,15 +242,25 @@ watch(contentPipeline, async () => {
 })
 
 onMounted(async () => {
-  await Promise.all([loadMaxOffset(), fetchManifest()])
-  await syncPages()
-  if (props.q) {
-    await retrieveOccurrencesAndUpdateContent()
+  // A rejected mount step (a transient network failure, most plausibly from
+  // `loadMaxOffset`'s or `syncPages`' own API calls) must not leave the flag
+  // stuck `false` forever: that would silently suppress every later,
+  // legitimate mode-flip search for this component instance's whole
+  // lifetime. `finally` sets it regardless of how the body finished, without
+  // swallowing the failure itself.
+  try {
+    await Promise.all([loadMaxOffset(), fetchManifest()])
+    await syncPages()
+    if (props.q) {
+      await retrieveOccurrencesAndUpdateContent()
+    }
+    else {
+      await activateContentSlice({ offset: 0 })
+    }
   }
-  else {
-    await activateContentSlice({ offset: 0 })
+  finally {
+    isMounted.value = true
   }
-  isMounted.value = true
 })
 
 // Both paginations describe the same physical pages when their counts match,

@@ -588,6 +588,23 @@ describe('DocumentContent.vue', () => {
         expect(wrapper.vm.localSearchIndexes).toEqual([5])
         expect(wrapper.vm.localSearchIndex).toBe(1)
       })
+
+      it('still re-runs a later mode-flip search even if the initial mount sequence failed', async () => {
+        const { document } = await mockDocumentContentSlice('Hello world')
+        const { plugins } = core
+        // A transient mount-time failure (here, `loadMaxOffset`'s own call to
+        // `getDocumentSlice`, which is awaited inside `onMounted`'s
+        // `Promise.all` with no catch) must not permanently disable later,
+        // legitimate mode-flip searches.
+        api.getDocumentSlice.mockRejectedValueOnce(new Error('Network Error'))
+        api.searchDocument.mockResolvedValue({ count: 1, offsets: [0] })
+        const wrapper = shallowMount(DocumentContent, { props: { document, q: 'hello' }, global: { plugins } })
+        await flushPromises()
+        wrapper.vm.preferMarkdown = false
+        await flushPromises()
+        const [project, documentId, query] = api.searchDocument.mock.calls[0]
+        expect([project, documentId, query]).toEqual([index, 'document', 'hello'])
+      })
     })
   })
 })
