@@ -1,0 +1,95 @@
+import { mount, flushPromises } from '@vue/test-utils'
+
+import CoreSetup from '~tests/unit/CoreSetup'
+import DocumentContentMarkdown from '@/components/Document/DocumentContentMarkdown'
+import { apiInstance as api } from '@/api/apiInstance'
+
+vi.mock('@/api/apiInstance', async (importOriginal) => {
+  const { apiInstance } = await importOriginal()
+
+  return {
+    apiInstance: {
+      ...apiInstance,
+      getStructurePage: vi.fn()
+    }
+  }
+})
+
+window.HTMLElement.prototype.scrollIntoView = vi.fn()
+
+describe('DocumentContentMarkdown.vue', () => {
+  const document = { index: 'foo', id: 'doc-id', routing: 'root-id' }
+
+  let core
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+    core = CoreSetup.init().useAll()
+    api.getStructurePage.mockResolvedValue('# Hello *world*')
+  })
+
+  async function mountComponent(props = {}) {
+    const { plugins } = core
+    const wrapper = mount(DocumentContentMarkdown, { props: { document, page: 1, ...props }, global: { plugins } })
+    await flushPromises()
+    await flushPromises()
+    return wrapper
+  }
+
+  it('fetches and renders the markdown page as sanitized html', async () => {
+    const wrapper = await mountComponent()
+    expect(api.getStructurePage).toBeCalledWith('foo', 'doc-id', 1, 'root-id')
+    expect(wrapper.find('h1').text()).toBe('Hello world')
+    expect(wrapper.find('em').text()).toBe('world')
+  })
+
+  it('fetches a page only once', async () => {
+    const wrapper = await mountComponent()
+    await wrapper.setProps({ page: 2 })
+    await flushPromises()
+    await wrapper.setProps({ page: 1 })
+    await flushPromises()
+    const firstPageCalls = api.getStructurePage.mock.calls.filter(([, , page]) => page === 1)
+    expect(firstPageCalls).toHaveLength(1)
+  })
+
+  it('marks the term occurrences in the rendered page', async () => {
+    api.getStructurePage.mockResolvedValue('# Hello world\n\nhello again')
+    const wrapper = await mountComponent({ term: 'hello' })
+    expect(wrapper.findAll('mark.local-search-term')).toHaveLength(2)
+  })
+
+  it('activates the nth mark and scrolls to it', async () => {
+    api.getStructurePage.mockResolvedValue('hello and hello')
+    const wrapper = await mountComponent({ term: 'hello', activeMatch: 2 })
+    const marks = wrapper.findAll('mark.local-search-term')
+    expect(marks[0].classes()).not.toContain('local-search-term--active')
+    expect(marks[1].classes()).toContain('local-search-term--active')
+  })
+
+  it('clamps the active mark to the marks the dom actually shows', async () => {
+    api.getStructurePage.mockResolvedValue('a single hello')
+    const wrapper = await mountComponent({ term: 'hello', activeMatch: 5 })
+    const marks = wrapper.findAll('mark.local-search-term')
+    expect(marks).toHaveLength(1)
+    expect(marks[0].classes()).toContain('local-search-term--active')
+  })
+
+  it('shows an inline error with a retry button when the page fetch fails', async () => {
+    api.getStructurePage.mockRejectedValue(new Error('Network Error'))
+    const wrapper = await mountComponent()
+    expect(wrapper.find('.document-content-markdown__error').exists()).toBe(true)
+    api.getStructurePage.mockResolvedValue('# Recovered')
+    await wrapper.find('.document-content-markdown__error__retry').trigger('click')
+    await flushPromises()
+    await flushPromises()
+    expect(wrapper.find('h1').text()).toBe('Recovered')
+  })
+
+  it('emits fallback when the user asks for the plain text view', async () => {
+    api.getStructurePage.mockRejectedValue(new Error('Network Error'))
+    const wrapper = await mountComponent()
+    await wrapper.find('.document-content-markdown__error__fallback').trigger('click')
+    expect(wrapper.emitted('fallback')).toHaveLength(1)
+  })
+})

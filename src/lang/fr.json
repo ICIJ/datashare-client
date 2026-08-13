@@ -443,6 +443,11 @@
   "documentContent": {
     "noContent": "Aucun contenu extrait pour ce document"
   },
+  "documentContentMarkdown": {
+    "error": "Impossible de charger la mise en forme de cette page.",
+    "retry": "Réessayer",
+    "fallback": "Afficher en texte brut"
+  },
   "documentViewerImage": {
     "rotateCounterClockwise": "Tourner 90° à gauche",
     "rotateClockwise": "Tourner 90° à droite"
