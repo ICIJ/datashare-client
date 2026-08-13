@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { AppIcon } from '@icij/murmur'
 import trim from 'lodash/trim'
 import { useI18n } from 'vue-i18n'
@@ -18,6 +18,12 @@ const props = defineProps({
   }
 })
 const { t } = useI18n()
+
+// The target is a span or a strong rather than a button, so Enter and Space do
+// not raise a click of their own. Popovers open on click only, which would
+// leave this one unreachable by keyboard without an explicit toggle.
+const isPopoverVisible = ref(false)
+const togglePopover = () => (isPopoverVisible.value = !isPopoverVisible.value)
 
 const nameWithoutEmail = computed(() => {
   const matches = String(props.value).match(EMAIL_REGEX)
@@ -50,6 +56,7 @@ const qSent = computed(() => {
 
 <template>
   <b-popover
+    v-model="isPopoverVisible"
     teleport-to="body"
     class="display-email__popover"
     placement="bottom"
@@ -59,6 +66,11 @@ const qSent = computed(() => {
       <component
         :is="tag"
         class="display-email"
+        role="button"
+        tabindex="0"
+        :aria-expanded="isPopoverVisible"
+        @keydown.enter.prevent="togglePopover"
+        @keydown.space.prevent="togglePopover"
       >
         {{ nameOrRawEmail }}
       </component>
