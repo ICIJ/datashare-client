@@ -52,6 +52,12 @@ describe('ProjectsButton.vue', () => {
     expect(wrapper.find('.projects-button__label').text()).toBe('3 projects')
   })
 
+  it('should render a popover for exactly two projects, the hasPopover boundary', () => {
+    const wrapper = mountButton(['banana-papers', 'lux-leaks'])
+    expect(wrapper.find('.app-popover-stub').exists()).toBe(true)
+    expect(wrapper.find('.projects-button__label').text()).toBe('2 projects')
+  })
+
   it('should render exactly two thumbnails on the anchor whatever the project count', () => {
     const wrapper = mountButton(['banana-papers', 'lux-leaks', 'citrus-confidential'])
     const thumbnails = wrapper.findAll('.projects-button__thumbnails__item')
@@ -69,5 +75,25 @@ describe('ProjectsButton.vue', () => {
     const wrapper = mountButton(['banana-papers', 'lux-leaks'])
     const [first] = wrapper.find('.projects-button__list').findAllComponents({ name: 'ProjectButton' })
     expect(first.props('project')).toBe('banana-papers')
+  })
+
+  // Unlike the other tests, this one mounts the real AppPopover (no stub) because the
+  // close-button check needs the real AppPopoverHeader, which the stub never renders.
+  // The popover content is teleported into `document.body` regardless of visibility, so
+  // the header can be found there even though jsdom never toggles it to `display: block`.
+  it('should render a popover header with no close button', () => {
+    const projects = ['banana-papers', 'lux-leaks', 'citrus-confidential']
+    const wrapper = mount(ProjectsButton, {
+      attachTo: document.body,
+      global: { plugins },
+      props: { projects }
+    })
+
+    const header = document.body.querySelector('.app-popover-header')
+    expect(header).not.toBeNull()
+    expect(document.body.querySelector('.app-popover-header__close')).toBeNull()
+
+    wrapper.unmount()
+    document.body.innerHTML = ''
   })
 })

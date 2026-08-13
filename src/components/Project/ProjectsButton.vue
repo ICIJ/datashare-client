@@ -80,6 +80,11 @@ const resolveProject = (project) => {
         :project="project"
       />
     </div>
+    <template #close>
+      <!-- Must render a non-empty node: AppPopoverHeader falls back to its own
+           close button the moment the forwarded #close slot renders nothing. -->
+      <span />
+    </template>
   </app-popover>
 </template>
 
