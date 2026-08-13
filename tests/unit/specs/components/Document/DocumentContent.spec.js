@@ -311,6 +311,15 @@ describe('DocumentContent.vue', () => {
       expect(wrapper.find('.document-content__togglers__view').exists()).toBe(false)
     })
 
+    it('never disables the local search input in markdown mode, even without extracted text', async () => {
+      const { document } = await mockDocumentContentSlice('')
+      const { plugins } = core
+      const wrapper = shallowMount(DocumentContent, { props: { document }, global: { plugins, renderStubDefaultSlot: true } })
+      await flushPromises()
+      const input = wrapper.find('document-local-search-stub')
+      expect(input.attributes('disabled')).toBe('false')
+    })
+
     it('renders the plain text body once the toggle is set to text', async () => {
       const { document } = await mockDocumentContentSlice('Hello world')
       const { plugins } = core
@@ -433,6 +442,79 @@ describe('DocumentContent.vue', () => {
         await flushPromises()
         expect(wrapper.vm.page).toBe(1)
         expect(wrapper.vm.activeContentSliceOffset).toBe(0)
+      })
+    })
+
+    describe('local search', () => {
+      beforeEach(() => {
+        api.searchStructurePages.mockResolvedValue({
+          count: 3,
+          pages: 3,
+          scanned: 3,
+          hits: [
+            { page: 2, count: 1 },
+            { page: 3, count: 2 }
+          ]
+        })
+      })
+
+      it('searches the structure pages instead of the raw content', async () => {
+        const { document } = await mockDocumentContentSlice('Hello world')
+        const { plugins } = core
+        shallowMount(DocumentContent, { props: { document, q: ' hello ' }, global: { plugins } })
+        await flushPromises()
+        // Assert on the leading arguments only: the routing value depends on how the
+        // fixture document was indexed, and this test is about the trimmed query.
+        const [project, documentId, query] = api.searchStructurePages.mock.calls[0]
+        expect([project, documentId, query]).toEqual([index, 'document', 'hello'])
+        expect(api.searchDocument).not.toBeCalled()
+      })
+
+      it('lands on the first hit page with the occurrences count', async () => {
+        const { document } = await mockDocumentContentSlice('Hello world')
+        const { plugins } = core
+        const wrapper = shallowMount(DocumentContent, { props: { document, q: 'hello' }, global: { plugins } })
+        await flushPromises()
+        expect(wrapper.vm.localSearchOccurrences).toBe(3)
+        expect(wrapper.vm.localSearchIndex).toBe(1)
+        expect(wrapper.vm.markdownPage).toBe(2)
+      })
+
+      it('navigates to the next occurrence page and match', async () => {
+        const { document } = await mockDocumentContentSlice('Hello world')
+        const { plugins } = core
+        const wrapper = shallowMount(DocumentContent, { props: { document, q: 'hello' }, global: { plugins } })
+        await flushPromises()
+        wrapper.vm.localSearchIndex = 2
+        await flushPromises()
+        expect(wrapper.vm.markdownPage).toBe(3)
+        expect(wrapper.vm.activeMarkdownMatch).toBe(1)
+        wrapper.vm.localSearchIndex = 3
+        await flushPromises()
+        expect(wrapper.vm.markdownPage).toBe(3)
+        expect(wrapper.vm.activeMarkdownMatch).toBe(2)
+      })
+
+      it('degrades to zero occurrences when the search fails', async () => {
+        api.searchStructurePages.mockRejectedValue(new Error('Network Error'))
+        const { document } = await mockDocumentContentSlice('Hello world')
+        const { plugins } = core
+        const wrapper = shallowMount(DocumentContent, { props: { document, q: 'hello' }, global: { plugins } })
+        await flushPromises()
+        expect(wrapper.vm.localSearchOccurrences).toBe(0)
+        expect(wrapper.vm.localSearchIndex).toBe(0)
+      })
+
+      it('re-runs the search through the raw content when toggling to plain text', async () => {
+        api.searchDocument.mockResolvedValue({ count: 1, offsets: [0] })
+        const { document } = await mockDocumentContentSlice('Hello world')
+        const { plugins } = core
+        const wrapper = shallowMount(DocumentContent, { props: { document, q: 'hello' }, global: { plugins } })
+        await flushPromises()
+        wrapper.vm.preferMarkdown = false
+        await flushPromises()
+        const [project, documentId, query] = api.searchDocument.mock.calls[0]
+        expect([project, documentId, query]).toEqual([index, 'document', 'hello'])
       })
     })
   })
