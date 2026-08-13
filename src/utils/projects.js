@@ -1,17 +1,21 @@
-import isString from 'lodash/isString'
+import isObject from 'lodash/isObject'
 
 /**
- * Normalize a project prop into a list. Components accept either a bare project
- * name, a project object, or a list of them, so callers share this coercion
- * rather than each repeating it.
- *
- * @param {Array|String|Object} projects
- * @returns {Array} the projects as a list
+ * Normalize a project prop, which may be a bare name, a project object, or a
+ * list of either, into a list.
  */
 export function toProjectList(projects) {
-  if (isString(projects)) {
-    return [projects]
+  return [].concat(projects ?? [])
+}
+
+/**
+ * Resolve a project name or object against the configured projects, so labels
+ * and logos render consistently wherever a project is displayed.
+ */
+export function resolveProject(project, core) {
+  if (isObject(project)) {
+    return core?.findProject(project.name) ?? project
   }
 
-  return projects ?? []
+  return core?.findProject(project) ?? { name: project }
 }

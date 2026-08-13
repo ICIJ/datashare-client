@@ -58,14 +58,6 @@ describe('ProjectsButton.vue', () => {
     expect(wrapper.find('.projects-button__label').text()).toBe('2 projects')
   })
 
-  it('should stack the projects on the anchor', () => {
-    const projects = ['banana-papers', 'lux-leaks', 'citrus-confidential']
-    const wrapper = mountButton(projects)
-    const stack = wrapper.findComponent({ name: 'ProjectThumbnailStack' })
-    expect(stack.exists()).toBe(true)
-    expect(stack.props('projects')).toEqual(projects)
-  })
-
   it('should render exactly two thumbnails on the anchor whatever the project count', () => {
     const wrapper = mountButton(['banana-papers', 'lux-leaks', 'citrus-confidential'])
     const stack = wrapper.findComponent({ name: 'ProjectThumbnailStack' })

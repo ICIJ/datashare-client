@@ -1,9 +1,9 @@
 <script setup>
 import { computed } from 'vue'
-import isObject from 'lodash/isObject'
 import startCase from 'lodash/startCase'
 import { useCore } from '@/composables/useCore'
 import ProjectThumbnail from '@/components/Project/ProjectThumbnail'
+import { resolveProject } from '@/utils/projects'
 
 const props = defineProps({
   /**
@@ -38,12 +38,7 @@ const props = defineProps({
 
 const core = useCore()
 
-const resolvedProject = computed(() => {
-  if (isObject(props.project)) {
-    return core?.findProject(props.project.name) ?? props.project
-  }
-  return core?.findProject(props.project) ?? { name: props.project }
-})
+const resolvedProject = computed(() => resolveProject(props.project, core))
 
 const showThumbnail = computed(() => !props.hideThumbnail)
 

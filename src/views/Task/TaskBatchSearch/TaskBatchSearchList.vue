@@ -7,7 +7,7 @@ import BatchSearchActions from '@/components/BatchSearch/BatchSearchActions/Batc
 import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
 import DisplayNumber from '@/components/Display/DisplayNumber'
 import DisplayProgress from '@/components/Display/DisplayProgress'
-import DisplayProjectList from '@/components/Display/DisplayProjectList'
+import ProjectsButton from '@/components/Project/ProjectsButton'
 import DisplayUser from '@/components/Display/DisplayUser'
 import DisplayVisibility from '@/components/Display/DisplayVisibility'
 import EmptyState from '@/components/EmptyState/EmptyState'
@@ -115,7 +115,7 @@ function canManageBatchSearch(item) {
           <display-number :value="getBatchSearchResult(item, 0)" />
         </template>
         <template #cell(projects)="{ item }">
-          <display-project-list :values="getBatchSearchProjects(item)" />
+          <projects-button :projects="getBatchSearchProjects(item)" />
         </template>
         <template #cell(author)="{ item }">
           <display-user

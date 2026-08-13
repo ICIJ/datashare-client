@@ -5,7 +5,7 @@ import { AppIcon, ButtonIcon } from '@icij/murmur'
 
 import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
 import DisplayProgress from '@/components/Display/DisplayProgress'
-import DisplayProjectList from '@/components/Display/DisplayProjectList'
+import ProjectsButton from '@/components/Project/ProjectsButton'
 import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayUser from '@/components/Display/DisplayUser'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
@@ -179,7 +179,7 @@ function getTaskIcon(item) {
           />
         </template>
         <template #cell(projects)="{ item }">
-          <display-project-list :values="getProjects(item)" />
+          <projects-button :projects="getProjects(item)" />
         </template>
         <template #cell(progress)="{ item }">
           <display-progress :value="item.progress" />
