@@ -409,6 +409,18 @@ export class Api {
     return data
   }
 
+  /**
+   * Count a query's occurrences in a document's markdown structure pages,
+   * per page. Bypasses `sendAction` because it runs on every (throttled)
+   * keystroke: the caller degrades a failure to zero occurrences instead of
+   * toasting it.
+   */
+  async searchStructurePages(index, id, query, routing) {
+    const url = Api.getFullUrl(`/api/${index}/artifacts/structure/search/${id}`)
+    const { data } = await this.axios.request({ url, method: Method.GET, params: { query, routing } })
+    return data
+  }
+
   login(username, password) {
     return this.sendAction('/auth/login', {
       method: Method.POST,

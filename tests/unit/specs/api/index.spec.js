@@ -732,4 +732,35 @@ describe('Datashare backend client', () => {
       expect(mockCallback).not.toBeCalled()
     })
   })
+
+  describe('searchStructurePages', () => {
+    it('should send a GET request on the structure search url with the query', async () => {
+      axios.request.mockResolvedValue({ data: { count: 0, pages: 2, scanned: 2, hits: [] } })
+      await api.searchStructurePages('foo', 'doc-id', 'needle', 'root-id')
+      expect(axios.request).toBeCalledWith(
+        expect.objectContaining({
+          url: Api.getFullUrl('/api/foo/artifacts/structure/search/doc-id'),
+          method: 'GET',
+          params: { query: 'needle', routing: 'root-id' }
+        })
+      )
+    })
+
+    it('should return the hits payload', async () => {
+      const data = { count: 3, pages: 4, scanned: 4, hits: [{ page: 2, count: 1 }, { page: 3, count: 2 }] }
+      axios.request.mockResolvedValue({ data })
+      expect(await api.searchStructurePages('foo', 'doc-id', 'needle', 'root-id')).toEqual(data)
+    })
+
+    // The search runs on every (throttled) keystroke: a transient failure must degrade
+    // silently in the caller instead of stacking one error toast per keystroke.
+    it('should not emit an http error when the search fails', async () => {
+      axios.request.mockRejectedValue(new Error('Network Error'))
+      const mockCallback = vi.fn()
+      EventBus.on('http::error', mockCallback)
+      await expect(api.searchStructurePages('foo', 'doc-id', 'needle', 'root-id')).rejects.toThrow('Network Error')
+      EventBus.off('http::error', mockCallback)
+      expect(mockCallback).not.toBeCalled()
+    })
+  })
 })
