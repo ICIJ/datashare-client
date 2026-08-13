@@ -41,6 +41,9 @@ defineProps({
   okDisabled: {
     type: Boolean
   },
+  okLoading: {
+    type: Boolean
+  },
   okOnly: {
     type: Boolean
   },
@@ -112,6 +115,7 @@ defineProps({
           :cancel-title="cancelTitle"
           :cancel-variant="cancelVariant"
           :ok-disabled="okDisabled"
+          :ok-loading="okLoading"
           :ok-only="okOnly"
           :ok-title="okTitle"
           :ok-variant="okVariant"
