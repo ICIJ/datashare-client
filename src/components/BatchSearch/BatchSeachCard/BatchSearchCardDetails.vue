@@ -22,7 +22,7 @@ import IPhFunnel from '~icons/ph/funnel'
 import BatchSearchCardDetailsEntry from '@/components/BatchSearch/BatchSeachCard/BatchSearchCardDetailsEntry'
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
 import DisplayUser from '@/components/Display/DisplayUser'
-import ProjectButton from '@/components/Project/ProjectButton'
+import ProjectsButton from '@/components/Project/ProjectsButton'
 import SearchBreadcrumbUri from '@/components/Search/SearchBreadcrumbUri/SearchBreadcrumbUri'
 import humanNumber from '@/utils/humanNumber'
 import TaskStatus from '@/views/Task/TaskStatus.vue'
@@ -247,13 +247,7 @@ const showError = () => showBatchSearchErrorModal(batchSearch)
           :icon="IPhCirclesThreePlus"
           buttons
         >
-          <div class="d-flex flex-wrap gap-2">
-            <project-button
-              v-for="(project, index) in projects"
-              :key="index"
-              :project="project"
-            />
-          </div>
+          <projects-button :projects="projects" />
         </batch-search-card-details-entry>
       </li>
       <li v-if="hasUriWithFilters">
