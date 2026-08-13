@@ -143,7 +143,11 @@ class Core extends Behaviors {
    * @returns {Core} the current instance of Core
    */
   useBootstrapVue() {
-    this._bootstrapVue = createBootstrap({ components: true, directives: true })
+    // `components` doubles as bootstrap-vue-next's global defaults registry. Popovers
+    // default to hover and focus triggers, and only wire click-outside dismissal when
+    // the click trigger is active, so this one default makes every popover in the
+    // application open on click and close on click outside.
+    this._bootstrapVue = createBootstrap({ components: { BPopover: { click: true } }, directives: true })
     this.use(this.bootstrapVue)
     return this
   }
