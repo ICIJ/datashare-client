@@ -63,6 +63,95 @@ export function addLocalSearchMarksClassByOffsets({ content = '', term = '', off
 }
 
 /**
+ * Fold a string roughly the way the backend artifact search does: lowercase,
+ * NFKD-decompose and strip combining marks. Returns the folded string plus, for
+ * each folded char, the index of the source char it came from, so a match found
+ * in folded text can be mapped back to the original string even when the fold
+ * changes its length (a ligature expands, a combining mark disappears).
+ *
+ * @param {string} [value=''] - The string to fold.
+ * @return {Object} - An object with the `folded` string and its `sourceIndexes` map.
+ */
+export function foldWithSourceIndexes(value = '') {
+  const folded = []
+  const sourceIndexes = []
+  for (let index = 0; index < value.length; index++) {
+    const decomposed = value[index].toLowerCase().normalize('NFKD').replace(/\p{M}/gu, '')
+    for (const character of decomposed) {
+      folded.push(character)
+      sourceIndexes.push(index)
+    }
+  }
+  return { folded: folded.join(''), sourceIndexes }
+}
+
+/**
+ * Find every folded-term match in a text string, mapped back to source offsets.
+ *
+ * @param {string} text - The source text to search in.
+ * @param {string} foldedTerm - The already-folded term to search for.
+ * @return {Object[]} - A list of `{ start, end }` source ranges.
+ */
+function findFoldedMatches(text, foldedTerm) {
+  const { folded, sourceIndexes } = foldWithSourceIndexes(text)
+  const matches = []
+  let at = folded.indexOf(foldedTerm)
+  while (at !== -1) {
+    const start = sourceIndexes[at]
+    const end = sourceIndexes[at + foldedTerm.length - 1] + 1
+    matches.push({ start, end })
+    at = folded.indexOf(foldedTerm, at + foldedTerm.length)
+  }
+  return matches
+}
+
+/**
+ * Wrap each matched range of a text node in a mark tag. Ranges are applied last
+ * to first so earlier offsets stay valid while the node is being split.
+ *
+ * @param {Text} node - The text node to mark.
+ * @param {Object[]} matches - The `{ start, end }` ranges to wrap.
+ */
+function wrapTextNodeMatches(node, matches) {
+  for (const { start, end } of [...matches].reverse()) {
+    const range = node.ownerDocument.createRange()
+    range.setStart(node, start)
+    range.setEnd(node, end)
+    const mark = node.ownerDocument.createElement('mark')
+    mark.className = 'local-search-term'
+    range.surroundContents(mark)
+  }
+}
+
+/**
+ * Highlight term occurrences inside an HTML string, matching text nodes only
+ * (never attributes, never across element boundaries), with the same case and
+ * diacritic folding as the backend artifact search.
+ *
+ * @param {string} [html=''] - The HTML content to mark.
+ * @param {string} [term=''] - The search term.
+ * @return {string} - The HTML with `<mark class="local-search-term">` around matches.
+ */
+export function addLocalSearchMarksClassInHtml(html = '', term = '') {
+  const trimmedTerm = term.trim()
+  if (!trimmedTerm) {
+    return html
+  }
+  const { folded: foldedTerm } = foldWithSourceIndexes(trimmedTerm)
+  const parsed = new DOMParser().parseFromString(html, 'text/html')
+  const walker = parsed.createTreeWalker(parsed.body, NodeFilter.SHOW_TEXT)
+  // Collect first: wrapping mutates the tree and would derail a live walker
+  const textNodes = []
+  while (walker.nextNode()) {
+    textNodes.push(walker.currentNode)
+  }
+  for (const node of textNodes) {
+    wrapTextNodeMatches(node, findFoldedMatches(node.nodeValue, foldedTerm))
+  }
+  return parsed.body.innerHTML
+}
+
+/**
  * Highlight search term occurrences in the given content.
  *
  * @param {string} [content='<div></div>'] - The HTML content to search in.

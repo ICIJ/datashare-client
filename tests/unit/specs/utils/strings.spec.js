@@ -1,4 +1,4 @@
-import { addLocalSearchMarksClass, addLocalSearchMarksClassByOffsets, isUrl, getConsonants } from '@/utils/strings'
+import { addLocalSearchMarksClass, addLocalSearchMarksClassByOffsets, isUrl, getConsonants, foldWithSourceIndexes, addLocalSearchMarksClassInHtml } from '@/utils/strings'
 
 describe('strings', () => {
   describe('addLocalSearchMarksClass', () => {
@@ -179,6 +179,56 @@ describe('strings', () => {
 
     it('get 0 consonants from `oui` string', () => {
       expect(getConsonants('oui')).toHaveLength(0)
+    })
+  })
+
+  describe('foldWithSourceIndexes', () => {
+    it('lowercases and strips diacritics', () => {
+      expect(foldWithSourceIndexes('Société').folded).toBe('societe')
+    })
+
+    it('maps every folded char back to its source index', () => {
+      const { folded, sourceIndexes } = foldWithSourceIndexes('Où')
+      expect(folded).toBe('ou')
+      expect(sourceIndexes).toEqual([0, 1])
+    })
+
+    it('keeps the map aligned when the fold expands a ligature', () => {
+      const { folded, sourceIndexes } = foldWithSourceIndexes('aﬀb')
+      expect(folded).toBe('affb')
+      expect(sourceIndexes).toEqual([0, 1, 1, 2])
+    })
+  })
+
+  describe('addLocalSearchMarksClassInHtml', () => {
+    it('wraps a case-insensitive match in a mark tag', () => {
+      const html = '<p>Hello World</p>'
+      const marked = addLocalSearchMarksClassInHtml(html, 'world')
+      expect(marked).toBe('<p>Hello <mark class="local-search-term">World</mark></p>')
+    })
+
+    it('marks a diacritic variant of the term', () => {
+      const html = '<p>La société écran</p>'
+      const marked = addLocalSearchMarksClassInHtml(html, 'societe')
+      expect(marked).toContain('<mark class="local-search-term">société</mark>')
+    })
+
+    it('marks every occurrence across elements', () => {
+      const html = '<h1>data</h1><p>data and data</p>'
+      const marked = addLocalSearchMarksClassInHtml(html, 'data')
+      expect(marked.match(/<mark class="local-search-term">/g)).toHaveLength(3)
+    })
+
+    it('never matches across element boundaries or inside attributes', () => {
+      const html = '<p><a href="https://data.example.org" title="data">a link</a></p>'
+      const marked = addLocalSearchMarksClassInHtml(html, 'data')
+      expect(marked).toBe(html)
+    })
+
+    it('returns the html untouched for a blank term', () => {
+      const html = '<p>Hello</p>'
+      expect(addLocalSearchMarksClassInHtml(html, '  ')).toBe(html)
+      expect(addLocalSearchMarksClassInHtml(html, '')).toBe(html)
     })
   })
 })
