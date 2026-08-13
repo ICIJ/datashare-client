@@ -366,7 +366,12 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * @param {string} value - The index to set for the search.
    */
   function setIndex(value) {
-    setIndices([value])
+    // Direct assign (not setIndices) — setIndices' compact() drops falsy
+    // entries, turning setIndex('') into indices.value = [] instead of [''].
+    // Core.js relies on setIndex('') when a user has no projects.
+    if (!isEqual(indices.value, [value])) {
+      indices.value = [value]
+    }
   }
 
   /**
