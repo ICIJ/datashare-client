@@ -96,21 +96,22 @@ function findFoldedMatches(text, foldedTerm) {
   const { folded, sourceIndexes } = foldWithSourceIndexes(text)
   const matches = []
   // A single source character whose fold repeats the term (e.g. the 'ﬀ'
-  // ligature folding to 'ff', matched twice by the term 'f') can produce two
-  // folded matches that map back to the very same source range. Wrapping
-  // that range twice would nest one mark inside another (and, once the first
-  // wrap splits the text node, the second wrap's offsets would no longer
-  // even exist), so duplicate ranges are dropped here before they reach the
-  // wrapper.
-  const seenRanges = new Set()
+  // ligature folding to 'ff', matched twice by the term 'f', or the 'Ⅲ'
+  // roman numeral folding to 'iii', matched twice by the term 'ii') can
+  // produce folded matches that map back to identical or overlapping source
+  // ranges. Wrapping an overlapping range would let the wider range's
+  // `surroundContents` empty the text node the narrower range still expects
+  // to address, throwing once `wrapTextNodeMatches` reaches it; each
+  // candidate's start is compared against the last kept range's end, so this
+  // also catches a narrower range nested entirely inside a wider one.
+  let lastKeptEnd = -1
   let at = folded.indexOf(foldedTerm)
   while (at !== -1) {
     const start = sourceIndexes[at]
     const end = sourceIndexes[at + foldedTerm.length - 1] + 1
-    const rangeKey = `${start}:${end}`
-    if (!seenRanges.has(rangeKey)) {
-      seenRanges.add(rangeKey)
+    if (start >= lastKeptEnd) {
       matches.push({ start, end })
+      lastKeptEnd = end
     }
     at = folded.indexOf(foldedTerm, at + foldedTerm.length)
   }

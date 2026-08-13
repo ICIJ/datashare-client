@@ -141,6 +141,13 @@ describe('normalizeHeaderlessTables', () => {
     expect(normalizeHeaderlessTables(source)).toBe(source)
   })
 
+  it('does not touch a headerless-looking delimiter row inside a 4-space-indented code block', () => {
+    // 4+ leading spaces make this an indented code block, not a table, even
+    // though the line right above it is blank.
+    const source = ['    some code', '', '    |---|---|', ''].join('\n')
+    expect(normalizeHeaderlessTables(source)).toBe(source)
+  })
+
   it('makes renderMarkdown produce a <table> for a real headerless GFM table', async () => {
     const html = await renderMarkdown('|---|---|\n| a | b |\n| c | d |\n')
     expect(html).toContain('<table>')

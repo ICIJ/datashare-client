@@ -78,6 +78,28 @@ describe('DocumentViewerMarkdown.vue', () => {
     expect(error.text()).not.toBe(messages.document.notAvailable)
   })
 
+  it('renders ordinary markdown, including a table with a header row, unchanged', async () => {
+    // `renderMarkdown` (and its headerless-table normalization) is shared
+    // with the Text tab's markdown page; this pins the View tab's output for
+    // a normal document so a future change to that shared normalizer cannot
+    // silently alter it here.
+    const source = ['# Title', '', '| a | b |', '| - | - |', '| 1 | 2 |', '', 'Some prose about it.'].join('\n')
+    apiInstance.getSource.mockResolvedValue(source)
+    const { plugins } = CoreSetup.init().useAll()
+    const wrapper = shallowMount(DocumentViewerMarkdown, {
+      global: { plugins },
+      props: { document: { url: 'doc.md' } }
+    })
+    await flushPromises()
+
+    const content = wrapper.find('.markdown-viewer__content')
+    expect(content.html()).toContain('<h1>Title</h1>')
+    expect(content.find('table').exists()).toBe(true)
+    expect(content.find('th').text()).toBe('a')
+    expect(content.find('td').text()).toBe('1')
+    expect(content.html()).toContain('<p>Some prose about it.</p>')
+  })
+
   it('shows the generic not-available message for non-404 failures', async () => {
     apiInstance.getSource.mockRejectedValue({ response: { status: 500 } })
     const { plugins } = CoreSetup.init().useAll()

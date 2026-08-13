@@ -243,5 +243,22 @@ describe('strings', () => {
       expect(marked.match(/<mark class="local-search-term">/g)).toHaveLength(1)
       expect(marked).not.toContain('<mark class="local-search-term"><mark')
     })
+
+    it('does not throw on overlapping (non-identical) folded ranges from a ligature', () => {
+      // 'ﬀ' folds to 'ff', so the term 'ff' matches at offsets 0 and 1 inside
+      // the single source character, producing overlapping (not identical)
+      // ranges [{0,2},{1,3}] that must not both be wrapped.
+      expect(() => addLocalSearchMarksClassInHtml('<p>fﬀf</p>', 'ff')).not.toThrow()
+      const marked = addLocalSearchMarksClassInHtml('<p>fﬀf</p>', 'ff')
+      expect(marked.match(/<mark class="local-search-term">/g)).toHaveLength(1)
+    })
+
+    it('does not throw on overlapping (non-identical) folded ranges from a roman numeral', () => {
+      // 'Ⅲ' folds to 'iii', so the term 'ii' matches at offsets 0 and 1 inside
+      // the single source character, producing overlapping ranges [{0,1},{0,2}].
+      expect(() => addLocalSearchMarksClassInHtml('<p>Ⅲi</p>', 'ii')).not.toThrow()
+      const marked = addLocalSearchMarksClassInHtml('<p>Ⅲi</p>', 'ii')
+      expect(marked.match(/<mark class="local-search-term">/g)).toHaveLength(1)
+    })
   })
 })
