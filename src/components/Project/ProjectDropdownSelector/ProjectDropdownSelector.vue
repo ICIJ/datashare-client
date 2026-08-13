@@ -121,7 +121,6 @@ function filterProject(project, query) {
       <project-dropdown-selector-button-content
         :slice-size="sliceSize"
         :selected-projects="selectedOptions"
-        :projects="projects"
       />
     </template>
     <template #item="{ option: project, selected, selectionRequired, focused, toggle, toggleUnique }">
