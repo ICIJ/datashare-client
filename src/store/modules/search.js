@@ -26,6 +26,17 @@ import { defineSuffixedStore } from '@/store/defineSuffixedStore'
 import { SEARCH_OPERATORS } from '@/enums/searchOperators'
 import settings from '@/utils/settings'
 
+/**
+ * Assign `value` to `ref` only if it actually changed, to avoid churning the
+ * ref's identity (and false-triggering reference-watching consumers) when
+ * called with an equivalent value.
+ */
+function assignIfChanged(target, value) {
+  if (!isEqual(target.value, value)) {
+    target.value = value
+  }
+}
+
 export const useSearchStore = defineSuffixedStore('search', () => {
   const error = ref(null)
   const field = ref(settings.defaultSearchField)
@@ -352,9 +363,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     // Direct assign (not setIndices) — setIndices' compact() drops falsy
     // entries, turning setIndex('') into indices.value = [] instead of [''].
     // Core.js relies on setIndex('') when a user has no projects.
-    if (!isEqual(indices.value, [value])) {
-      indices.value = [value]
-    }
+    assignIfChanged(indices, [value])
   }
 
   /**
@@ -373,12 +382,10 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     // (every filter edit re-applies `index`/`indices` from the URL), so an
     // unconditional reassignment churns `indices.value`'s identity even
     // when the project selection is unchanged. Consumers that watch
-    // `searchStore.indices` by reference (e.g. PathTree.vue, via
+    // `searchStore.indices` by reference (e.g. FilterTypePath.vue, via
     // `projects = computed(() => searchStore.indices)`) then see a false
     // "changed" signal and reload/flash their content for no reason.
-    if (!isEqual(indices.value, cleaned)) {
-      indices.value = cleaned
-    }
+    assignIfChanged(indices, cleaned)
   }
 
   /**
