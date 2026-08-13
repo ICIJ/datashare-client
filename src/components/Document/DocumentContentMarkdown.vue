@@ -63,17 +63,36 @@ const markedHtml = computed(() => {
   return addLocalSearchMarksClassInHtml(renderedPages[cacheKeyFor(props.page)] ?? '', props.term)
 })
 
+// A legitimately empty structure page renders to an empty string, which is
+// still a cache hit: falling back to it here (rather than re-deriving
+// emptiness from `cookedHtml`, which updates only after the async pipeline
+// resolves) keeps the no-content message free of the pipeline's own timing.
+const hasPageContent = computed(() => !!renderedPages[cacheKeyFor(props.page)])
+
+let lastPageLoad = 0
+
 async function loadPage() {
+  // A page switch (or a document switch, or a retry click) can start a new
+  // `loadPage` while a previous one is still in flight. This counter mirrors
+  // `lastContentSliceActivation`/`lastOccurrencesRetrieval` in
+  // `DocumentContent.vue`: a superseded call's failure must not replace the
+  // page the user is actually looking at, and its `finally` must not clear
+  // the loading state of the call that superseded it.
+  const load = ++lastPageLoad
   error.value = null
   loading.value = true
   try {
     await renderPageOnce()
   }
   catch (loadError) {
-    error.value = loadError
+    if (load === lastPageLoad) {
+      error.value = loadError
+    }
   }
   finally {
-    loading.value = false
+    if (load === lastPageLoad) {
+      loading.value = false
+    }
   }
 }
 
@@ -83,7 +102,9 @@ async function renderPageOnce() {
   // fetch was in flight, and would write the response under the wrong key.
   const targetPage = props.page
   const targetCacheKey = cacheKeyFor(targetPage)
-  if (renderedPages[targetCacheKey]) {
+  // `in` (rather than a truthiness check) treats an already-cached empty
+  // page as a hit instead of re-fetching it on every visit.
+  if (targetCacheKey in renderedPages) {
     return
   }
   const { index, id, routing } = props.document
@@ -160,6 +181,12 @@ watch(toRef(props, 'activeMatch'), activateMatch, { flush: 'post' })
         </b-button>
       </div>
     </b-alert>
+    <div
+      v-else-if="!hasPageContent"
+      class="document-content-markdown__no-content text-center p-3"
+    >
+      {{ t('documentContent.noContent') }}
+    </div>
     <!--
       Safe to use v-html here: `cookedHtml` derives from renderMarkdown(), which
       sanitizes the content (no raw HTML, no remote images, hardened links),

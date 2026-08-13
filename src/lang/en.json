@@ -445,7 +445,8 @@
     "view": {
       "markdown": "Formatted",
       "text": "Plain text",
-      "translationTooltip": "Translations are only available as plain text"
+      "translationTooltip": "Translations are only available as plain text",
+      "ariaLabel": "Text rendering"
     }
   },
   "documentContentMarkdown": {

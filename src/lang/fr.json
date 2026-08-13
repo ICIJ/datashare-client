@@ -445,7 +445,8 @@
     "view": {
       "markdown": "Mise en forme",
       "text": "Texte brut",
-      "translationTooltip": "Les traductions ne sont disponibles qu'en texte brut"
+      "translationTooltip": "Les traductions ne sont disponibles qu'en texte brut",
+      "ariaLabel": "Rendu du texte"
     }
   },
   "documentContentMarkdown": {
