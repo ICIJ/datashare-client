@@ -99,7 +99,7 @@ defineExpose({ focus, blur, clear })
       <b-button
         v-if="showSubmit"
         variant="action"
-        class="search-bar-input__submit"
+        class="search-bar-input__submit ms-1"
         :class="{ 'search-bar-input__submit--lg': size === 'lg' }"
         type="submit"
         :disabled="disableSubmit"
