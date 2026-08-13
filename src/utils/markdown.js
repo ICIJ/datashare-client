@@ -56,6 +56,84 @@ const processor = unified()
   .use(rehypeSanitize, schema)
   .use(rehypeStringify)
 
+// A line made solely of pipes, dashes, colons and whitespace, with at least
+// one pipe and one dash, is a GFM table delimiter row (e.g. "|---|---|"). A
+// bare "---" or "***" has no pipe, so it stays a thematic break, not a match.
+const delimiterRowPattern = /^[\s|:-]+$/
+
+// The opening (or closing) line of a fenced code block: up to 3 leading
+// spaces, then 3+ backticks or 3+ tildes.
+const fenceLinePattern = /^\s{0,3}(`{3,}|~{3,})/
+
+function isDelimiterRow(line) {
+  return line.includes('|') && line.includes('-') && delimiterRowPattern.test(line)
+}
+
+// Count the cells a GFM delimiter row declares, so a synthesized header can
+// match it exactly (GFM requires the header and delimiter row cell counts to
+// be equal, or the table is rejected).
+function countDelimiterCells(line) {
+  const trimmedLine = line.trim()
+  const withoutEdgePipes = trimmedLine.replace(/^\|/, '').replace(/\|$/, '')
+  return withoutEdgePipes.split('|').length
+}
+
+// An empty-cell header row with the same cell count as the delimiter row it
+// will sit above, so the pair together forms a syntactically valid GFM table.
+function buildEmptyHeaderRow(cellCount) {
+  return `|${new Array(cellCount).fill(' ').join('|')}|`
+}
+
+/**
+ * Insert a synthesized empty header row above any GFM table delimiter row
+ * that starts a table block without one. remark-gfm requires a header row
+ * above the delimiter row to recognize a table at all; some real-world
+ * documents omit it, so those lines would otherwise render as a plain
+ * paragraph instead of a table.
+ *
+ * @param {string} source - Raw markdown text.
+ * @returns {string} Markdown text with missing table headers synthesized.
+ */
+export function normalizeHeaderlessTables(source) {
+  const lines = source.split('\n')
+  const normalizedLines = []
+  // Fence state, tracked so a delimiter-looking line inside a fenced code
+  // block (a code sample, not an actual table) is never touched.
+  let fenceChar = null
+  let fenceMinLength = 0
+
+  lines.forEach((line, index) => {
+    if (fenceChar) {
+      const closesFence = new RegExp(`^\\s{0,3}${fenceChar}{${fenceMinLength},}\\s*$`).test(line)
+      if (closesFence) {
+        fenceChar = null
+      }
+      normalizedLines.push(line)
+      return
+    }
+
+    const fenceOpenMatch = line.match(fenceLinePattern)
+    if (fenceOpenMatch) {
+      fenceChar = fenceOpenMatch[1][0]
+      fenceMinLength = fenceOpenMatch[1].length
+      normalizedLines.push(line)
+      return
+    }
+
+    // A table block is headerless when its delimiter row is preceded by a
+    // blank line (or nothing, at the very start of the document): a real
+    // header line would be the non-blank line right above it instead.
+    const previousLine = lines[index - 1]
+    const startsHeaderlessTable = isDelimiterRow(line) && (previousLine === undefined || previousLine.trim() === '')
+    if (startsHeaderlessTable) {
+      normalizedLines.push(buildEmptyHeaderRow(countDelimiterCells(line)))
+    }
+    normalizedLines.push(line)
+  })
+
+  return normalizedLines.join('\n')
+}
+
 /**
  * Convert Markdown source to sanitized, safe-to-render HTML.
  *
@@ -68,5 +146,5 @@ export async function renderMarkdown(source) {
   if (!source) {
     return ''
   }
-  return String(await processor.process(source))
+  return String(await processor.process(normalizeHeaderlessTables(source)))
 }
