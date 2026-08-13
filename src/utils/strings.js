@@ -95,11 +95,23 @@ export function foldWithSourceIndexes(value = '') {
 function findFoldedMatches(text, foldedTerm) {
   const { folded, sourceIndexes } = foldWithSourceIndexes(text)
   const matches = []
+  // A single source character whose fold repeats the term (e.g. the 'ﬀ'
+  // ligature folding to 'ff', matched twice by the term 'f') can produce two
+  // folded matches that map back to the very same source range. Wrapping
+  // that range twice would nest one mark inside another (and, once the first
+  // wrap splits the text node, the second wrap's offsets would no longer
+  // even exist), so duplicate ranges are dropped here before they reach the
+  // wrapper.
+  const seenRanges = new Set()
   let at = folded.indexOf(foldedTerm)
   while (at !== -1) {
     const start = sourceIndexes[at]
     const end = sourceIndexes[at + foldedTerm.length - 1] + 1
-    matches.push({ start, end })
+    const rangeKey = `${start}:${end}`
+    if (!seenRanges.has(rangeKey)) {
+      seenRanges.add(rangeKey)
+      matches.push({ start, end })
+    }
     at = folded.indexOf(foldedTerm, at + foldedTerm.length)
   }
   return matches

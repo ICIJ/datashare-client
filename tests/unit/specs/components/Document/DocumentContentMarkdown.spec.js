@@ -74,6 +74,53 @@ describe('DocumentContentMarkdown.vue', () => {
     expect(wrapper.find('h1').text()).toBe('Page two')
   })
 
+  it('fetches an empty page only once across two visits', async () => {
+    api.getStructurePage.mockResolvedValue('')
+    const wrapper = await mountComponent()
+    await wrapper.setProps({ page: 2 })
+    await flushPromises()
+    await wrapper.setProps({ page: 1 })
+    await flushPromises()
+    const firstPageCalls = api.getStructurePage.mock.calls.filter(([, , page]) => page === 1)
+    expect(firstPageCalls).toHaveLength(1)
+  })
+
+  it('shows the no-content message instead of an empty body for an empty page', async () => {
+    api.getStructurePage.mockResolvedValue('')
+    const wrapper = await mountComponent()
+    expect(wrapper.find('.document-content-markdown__body').exists()).toBe(false)
+    expect(wrapper.text()).toContain('No content extracted for this document')
+  })
+
+  it('does not let a superseded page fetch fail over a newer page that already loaded', async () => {
+    let resolvePageTwo
+    const pageTwoPromise = new Promise((resolve) => {
+      resolvePageTwo = resolve
+    })
+    let rejectPageOne
+    const pageOnePromise = new Promise((_resolve, reject) => {
+      rejectPageOne = reject
+    })
+    api.getStructurePage.mockImplementation((index, id, page) => {
+      return page === 1 ? pageOnePromise : pageTwoPromise
+    })
+    const wrapper = mount(DocumentContentMarkdown, { props: { document, page: 1 }, global: { plugins: core.plugins } })
+    await flushPromises()
+    await wrapper.setProps({ page: 2 })
+    await flushPromises()
+    // Page 2 (the page the user is now looking at) resolves successfully first
+    resolvePageTwo('# Page two')
+    await flushPromises()
+    await flushPromises()
+    expect(wrapper.find('h1').text()).toBe('Page two')
+    // Page 1's stale, superseded request fails only after page 2 has rendered
+    rejectPageOne(new Error('Network Error'))
+    await flushPromises()
+    await flushPromises()
+    expect(wrapper.find('h1').text()).toBe('Page two')
+    expect(wrapper.find('.document-content-markdown__error').exists()).toBe(false)
+  })
+
   it('reloads when the document changes even if the page number stays the same', async () => {
     const wrapper = await mountComponent()
     api.getStructurePage.mockResolvedValue('# Other document')

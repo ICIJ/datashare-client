@@ -335,6 +335,15 @@ describe('DocumentContent.vue', () => {
       expect(input.attributes('disabled')).toBe('false')
     })
 
+    it('gives the view toggle radiogroup an accessible name', async () => {
+      const { document } = await mockDocumentContentSlice('Hello world')
+      const { plugins } = core
+      const wrapper = shallowMount(DocumentContent, { props: { document }, global: { plugins } })
+      await flushPromises()
+      const toggle = wrapper.find('.document-content__togglers__view')
+      expect(toggle.attributes('aria-label')).toBeTruthy()
+    })
+
     it('renders the plain text body once the toggle is set to text', async () => {
       const { document } = await mockDocumentContentSlice('Hello world')
       const { plugins } = core

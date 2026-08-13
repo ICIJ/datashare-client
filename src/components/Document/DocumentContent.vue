@@ -598,6 +598,7 @@ async function loadContentSliceAround(desiredOffset) {
         size="sm"
         :disabled="isTranslation"
         :title="isTranslation ? t('documentContent.view.translationTooltip') : undefined"
+        :aria-label="t('documentContent.view.ariaLabel')"
         class="document-content__togglers__view"
       >
         <b-form-radio :value="true">

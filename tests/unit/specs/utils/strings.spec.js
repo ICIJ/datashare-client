@@ -234,5 +234,14 @@ describe('strings', () => {
     it('returns the html untouched when the search term folds to nothing', () => {
       expect(addLocalSearchMarksClassInHtml('<p>Hello</p>', '́')).toBe('<p>Hello</p>')
     })
+
+    it('does not nest marks when a ligature folds to a repeated term', () => {
+      // 'ﬀ' folds to 'ff', so the term 'f' matches twice inside it, both
+      // mapping back to the same source range: that must produce one mark,
+      // not one nested inside the other.
+      const marked = addLocalSearchMarksClassInHtml('<p>aﬀb</p>', 'f')
+      expect(marked.match(/<mark class="local-search-term">/g)).toHaveLength(1)
+      expect(marked).not.toContain('<mark class="local-search-term"><mark')
+    })
   })
 })
