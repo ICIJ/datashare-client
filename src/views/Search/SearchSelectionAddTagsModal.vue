@@ -2,6 +2,7 @@
 import { ref, computed, onBeforeMount } from 'vue'
 import flatten from 'lodash/flatten'
 import map from 'lodash/map'
+import uniq from 'lodash/uniq'
 import { useI18n } from 'vue-i18n'
 import { ImageModeSource } from '@icij/murmur'
 
@@ -34,9 +35,22 @@ const { fetchAllTagsByIndex } = useElasticSearchQuery()
 
 const hasTags = computed(() => tags.value.length > 0)
 
+// The suggestion dropdown matches plain strings, so the aggregated tags are
+// reduced to their labels. The same tag can exist in several indices, hence the
+// deduplication.
 async function fetchAllTags() {
   const results = await Promise.all(map(props.indices, index => fetchAllTagsByIndex(index)))
-  allTags.value = flatten(results)
+  allTags.value = uniq(map(flatten(results), 'label'))
+}
+
+// Enter on a non-empty input adds the tag being typed, and Enter on a focused
+// suggestion picks it, so it only confirms the modal when it is pressed on the
+// empty text field with at least one tag added.
+const submitOnEnter = ({ target }, ok) => {
+  const isEmptyTextField = target.tagName === 'INPUT' && target.value === ''
+  if (isEmptyTextField && hasTags.value) {
+    ok()
+  }
 }
 
 const closeAllowed = ref(true)
@@ -68,7 +82,7 @@ onBeforeMount(fetchAllTags)
         color-mode="dark"
       />
     </template>
-    <template #default="{ visible }">
+    <template #default="{ ok, visible }">
       <div class="d-flex flex-column gap-3">
         <form-control-tag
           v-if="visible"
@@ -82,6 +96,7 @@ onBeforeMount(fetchAllTags)
           no-clear
           @focus="closeAllowed = false"
           @blur="closeAllowed = false"
+          @keydown.enter="submitOnEnter($event, ok)"
         />
         {{ t('searchSelectionAddTagsModal.description') }}
         <p
