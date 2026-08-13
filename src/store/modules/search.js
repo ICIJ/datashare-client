@@ -15,7 +15,6 @@ import toString from 'lodash/toString'
 import uniq from 'lodash/uniq'
 import lucene from 'lucene'
 import { ref, computed, toRaw } from 'vue'
-import { useRouter } from 'vue-router'
 
 import EsDocList from '@/api/resources/EsDocList'
 import { runAsyncSearch } from '@/api/asyncSearch'
@@ -150,20 +149,6 @@ export const useSearchStore = defineSuffixedStore('search', () => {
       fields: fields.value,
       operator: searchOperator.value
     }
-  })
-
-  const stringifyBaseRouteQuery = computed(() => {
-    const name = 'search'
-    const query = toBaseRouteQuery.value
-    // Router is resolved lazily here (rather than eagerly at store-setup
-    // time) because this store is instantiated during Core.configure(),
-    // before the router plugin is installed on the app — calling
-    // useRouter() at setup time throws a "Symbol(router) not found"
-    // injection warning on every boot. By the time anything actually reads
-    // this computed, the app (and router) are fully mounted.
-    const router = useRouter()
-    const { href = null } = router?.resolve({ name, query }) ?? {}
-    return href
   })
 
   const retrieveQueryTerms = computed(() => {
@@ -1113,7 +1098,6 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     toRouteQuery,
     toRouteQueryWithStamp,
     toSearchParams,
-    stringifyBaseRouteQuery,
     retrieveQueryTerms,
     retrieveContentQueryTerms,
     page,
