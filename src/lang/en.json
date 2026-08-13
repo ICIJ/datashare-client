@@ -443,6 +443,11 @@
   "documentContent": {
     "noContent": "No content extracted for this document"
   },
+  "documentContentMarkdown": {
+    "error": "The formatted view of this page could not be loaded.",
+    "retry": "Try again",
+    "fallback": "View as plain text"
+  },
   "documentViewerImage": {
     "rotateCounterClockwise": "Rotate 90° to the left",
     "rotateClockwise": "Rotate 90° to the right"
