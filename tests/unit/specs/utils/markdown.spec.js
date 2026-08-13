@@ -1,4 +1,4 @@
-import { renderMarkdown } from '@/utils/markdown'
+import { renderMarkdown, normalizeHeaderlessTables } from '@/utils/markdown'
 
 describe('renderMarkdown', () => {
   it('renders GFM features', async () => {
@@ -62,5 +62,89 @@ describe('renderMarkdown', () => {
 
   it('returns an empty string for empty input', async () => {
     expect(await renderMarkdown('')).toBe('')
+  })
+})
+
+describe('normalizeHeaderlessTables', () => {
+  it('synthesizes an empty header row above a delimiter row that starts a table block', () => {
+    const source = '|---|---|\n| a | b |\n'
+    expect(normalizeHeaderlessTables(source)).toBe('| | |\n|---|---|\n| a | b |\n')
+  })
+
+  it('synthesizes a header row with the same cell count as the delimiter row', () => {
+    const source = '|---|---|---|\n| a | b | c |\n'
+    const normalized = normalizeHeaderlessTables(source)
+    const [headerLine, delimiterLine] = normalized.split('\n')
+    expect(headerLine).toBe('| | | |')
+    expect(delimiterLine).toBe('|---|---|---|')
+  })
+
+  it('fixes multiple headerless tables in the same document', () => {
+    const source = ['|---|---|', '| a | b |', '', '|--|--|--|', '| 1 | 2 | 3 |', ''].join('\n')
+    const normalized = normalizeHeaderlessTables(source)
+    expect(normalized).toBe(['| | |', '|---|---|', '| a | b |', '', '| | | |', '|--|--|--|', '| 1 | 2 | 3 |', ''].join('\n'))
+  })
+
+  it('fires when the delimiter row is the very first line of the document', () => {
+    // index 0 has no preceding line at all; that must still count as "headerless".
+    const source = '|---|---|\n| a | b |\n'
+    expect(normalizeHeaderlessTables(source).startsWith('| | |\n')).toBe(true)
+  })
+
+  it('fires when the delimiter row is the very last line, with no data rows after it', () => {
+    const source = 'Intro.\n\n|---|---|'
+    expect(normalizeHeaderlessTables(source)).toBe('Intro.\n\n| | |\n|---|---|')
+  })
+
+  it('does not touch a delimiter row that already has a header above it', () => {
+    const source = '| a | b |\n|---|---|\n| 1 | 2 |\n'
+    expect(normalizeHeaderlessTables(source)).toBe(source)
+  })
+
+  it('does not treat a bare thematic break as a delimiter row', () => {
+    // "---" has no pipe: it is a thematic break, not a table delimiter.
+    const source = 'Above.\n\n---\n\nBelow.\n'
+    expect(normalizeHeaderlessTables(source)).toBe(source)
+  })
+
+  it('does not treat a pipe-containing line without dashes as a delimiter row', () => {
+    const source = '| not a delimiter |\n'
+    expect(normalizeHeaderlessTables(source)).toBe(source)
+  })
+
+  it('does not touch a headerless-looking table inside a fenced code block (backtick fence)', () => {
+    const source = ['```', '|---|---|', '| a | b |', '```', ''].join('\n')
+    expect(normalizeHeaderlessTables(source)).toBe(source)
+  })
+
+  it('does not touch a headerless-looking table inside a fenced code block (tilde fence)', () => {
+    const source = ['~~~', '|---|---|', '| a | b |', '~~~', ''].join('\n')
+    expect(normalizeHeaderlessTables(source)).toBe(source)
+  })
+
+  it('leaves a headerless table nested in a blockquote untouched (not corrupted, not fixed)', () => {
+    // The leading "> " breaks the plain-delimiter pattern, so this is a known
+    // limitation rather than a regression: the source passes through unchanged.
+    const source = '> |---|---|\n> | a | b |\n'
+    expect(normalizeHeaderlessTables(source)).toBe(source)
+  })
+
+  it('is idempotent: running it twice has the same effect as running it once', () => {
+    const source = '|---|---|\n| a | b |\n'
+    const once = normalizeHeaderlessTables(source)
+    const twice = normalizeHeaderlessTables(once)
+    expect(twice).toBe(once)
+  })
+
+  it('leaves markdown with no headerless tables byte-identical', () => {
+    const source = ['# Title', '', '| a | b |', '| - | - |', '| 1 | 2 |', '', 'Some prose about it.', ''].join('\n')
+    expect(normalizeHeaderlessTables(source)).toBe(source)
+  })
+
+  it('makes renderMarkdown produce a <table> for a real headerless GFM table', async () => {
+    const html = await renderMarkdown('|---|---|\n| a | b |\n| c | d |\n')
+    expect(html).toContain('<table>')
+    expect(html).toContain('<th></th>')
+    expect(html).toContain('<td>a</td>')
   })
 })
