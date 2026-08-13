@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, onBeforeUnmount, onMounted } from 'vue'
 
 import AppPopoverHeader from './AppPopoverHeader.vue'
 
@@ -24,6 +24,23 @@ const visible = computed(() => !!modelValue.value)
 const show = () => (modelValue.value = true)
 const hide = () => (modelValue.value = false)
 const toggle = () => (modelValue.value = !modelValue.value)
+
+// The popover content is teleported to document.body, so a template-level
+// @keydown here would never catch the key. bootstrap-vue-next's floating UI
+// wires no keyboard handling at all, so Escape-to-close is added by hand.
+const handleKeydown = (event) => {
+  if (event.key === 'Escape' && visible.value) {
+    hide()
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('keydown', handleKeydown)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('keydown', handleKeydown)
+})
 </script>
 
 <template>
