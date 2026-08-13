@@ -230,5 +230,9 @@ describe('strings', () => {
       expect(addLocalSearchMarksClassInHtml(html, '  ')).toBe(html)
       expect(addLocalSearchMarksClassInHtml(html, '')).toBe(html)
     })
+
+    it('returns the html untouched when the search term folds to nothing', () => {
+      expect(addLocalSearchMarksClassInHtml('<p>Hello</p>', '́')).toBe('<p>Hello</p>')
+    })
   })
 })

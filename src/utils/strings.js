@@ -138,6 +138,9 @@ export function addLocalSearchMarksClassInHtml(html = '', term = '') {
     return html
   }
   const { folded: foldedTerm } = foldWithSourceIndexes(trimmedTerm)
+  if (!foldedTerm) {
+    return html
+  }
   const parsed = new DOMParser().parseFromString(html, 'text/html')
   const walker = parsed.createTreeWalker(parsed.body, NodeFilter.SHOW_TEXT)
   // Collect first: wrapping mutates the tree and would derail a live walker
