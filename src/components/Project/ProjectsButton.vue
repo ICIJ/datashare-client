@@ -23,9 +23,6 @@ const { t } = useI18n()
 
 const projectList = computed(() => toProjectList(props.projects))
 
-const hasSingleProject = computed(() => projectList.value.length === 1)
-const hasPopover = computed(() => projectList.value.length > 1)
-
 const label = computed(() => {
   return t('searchBarInputDropdownForProjects.projectsCount', projectList.value.length)
 })
@@ -33,11 +30,11 @@ const label = computed(() => {
 
 <template>
   <project-button
-    v-if="hasSingleProject"
+    v-if="projectList.length === 1"
     :project="projectList[0]"
   />
   <app-popover
-    v-else-if="hasPopover"
+    v-else-if="projectList.length > 1"
     :title="label"
     class="projects-button__popover"
   >

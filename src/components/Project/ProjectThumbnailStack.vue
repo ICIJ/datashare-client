@@ -1,14 +1,11 @@
 <script setup>
 import { computed } from 'vue'
-import isObject from 'lodash/isObject'
 
 import ProjectThumbnail from '@/components/Project/ProjectThumbnail'
 import { useCore } from '@/composables/useCore'
-import { toProjectList } from '@/utils/projects'
+import { resolveProject, toProjectList } from '@/utils/projects'
 
 defineOptions({ name: 'ProjectThumbnailStack' })
-
-const THUMBNAIL_WIDTH = '1.25em'
 
 const props = defineProps({
   /**
@@ -44,15 +41,6 @@ const visibleProjects = computed(() => projectList.value.slice(0, props.max))
 const hasOverflow = computed(() => {
   return props.overflow && projectList.value.length > props.max
 })
-
-// Entries can be plain names, so they are resolved against the configured projects
-// to give the thumbnail the label and logo it needs to render consistently.
-const resolveProject = (project) => {
-  if (isObject(project)) {
-    return core?.findProject(project.name) ?? project
-  }
-  return core?.findProject(project) ?? { name: project }
-}
 </script>
 
 <template>
@@ -60,8 +48,8 @@ const resolveProject = (project) => {
     <project-thumbnail
       v-for="(project, index) in visibleProjects"
       :key="index"
-      :project="resolveProject(project)"
-      :width="THUMBNAIL_WIDTH"
+      :project="resolveProject(project, core)"
+      width="1.25em"
       :rounded="1"
       no-caption
       class="project-thumbnail-stack__item"
@@ -76,6 +64,8 @@ const resolveProject = (project) => {
 </template>
 
 <style lang="scss" scoped>
+$thumbnail-size: 1.25em;
+
 .project-thumbnail-stack {
   display: inline-flex;
   align-items: center;
@@ -89,8 +79,8 @@ const resolveProject = (project) => {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 1.25em;
-    height: 1.25em;
+    width: $thumbnail-size;
+    height: $thumbnail-size;
     color: var(--bs-body-bg);
     background: var(--bs-secondary-color);
   }

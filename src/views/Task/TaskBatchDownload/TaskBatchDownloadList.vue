@@ -10,7 +10,7 @@ import DisplayProgress from '@/components/Display/DisplayProgress'
 import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
 import DisplayContentLength from '@/components/Display/DisplayContentLength'
-import DisplayProjectList from '@/components/Display/DisplayProjectList'
+import ProjectsButton from '@/components/Project/ProjectsButton'
 import EmptyState from '@/components/EmptyState/EmptyState'
 import RouterLinkBatchDownload from '@/components/RouterLink/RouterLinkBatchDownload'
 import BatchDownloadActions from '@/components/BatchDownload/BatchDownloadActions'
@@ -96,7 +96,7 @@ function isTruncated(item) {
           />
         </template>
         <template #cell(projects)="{ item }">
-          <display-project-list :values="getBatchDownloadRecord(item, 'projects')" />
+          <projects-button :projects="getBatchDownloadRecord(item, 'projects')" />
         </template>
         <template #cell(createdAt)="{ item }">
           <display-datetime-from-now :value="item.createdAt" />

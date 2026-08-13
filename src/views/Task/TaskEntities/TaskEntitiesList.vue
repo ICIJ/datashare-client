@@ -5,7 +5,7 @@ import tasksEntitiesEmpty from '@/assets/images/illustrations/tasks-entities-emp
 import { useTaskSettings } from '@/composables/useTaskSettings'
 import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
 import DisplayProgress from '@/components/Display/DisplayProgress'
-import DisplayProjectList from '@/components/Display/DisplayProjectList'
+import ProjectsButton from '@/components/Project/ProjectsButton'
 import DisplayStatus from '@/components/Display/DisplayStatus'
 import EmptyState from '@/components/EmptyState/EmptyState'
 import EntityButton from '@/components/Entity/EntityButton'
@@ -100,7 +100,7 @@ function removeWithConfirmation(id, callback) {
           {{ item.args.nlpPipeline }}
         </template>
         <template #cell(project)="{ item }">
-          <display-project-list :values="getProject(item)" />
+          <projects-button :projects="getProject(item)" />
         </template>
         <template #cell(progress)="{ item }">
           <display-progress :value="item.progress" />
