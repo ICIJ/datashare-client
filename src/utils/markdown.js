@@ -46,6 +46,44 @@ function rehypeHardenLinks() {
   }
 }
 
+// The text a header cell renders, with any inline formatting collapsed to
+// its plain text. A synthesized header cell has no children at all, and a
+// literal "| |" in the source can also leave a single whitespace text node,
+// so both must be checked the same way.
+function headerCellText(cellNode) {
+  let text = ''
+  visit(cellNode, 'text', (textNode) => {
+    text += textNode.value
+  })
+  return text
+}
+
+// normalizeHeaderlessTables synthesizes a header row purely so remark-gfm's
+// grammar accepts the table; that row carries no real data and must not
+// reach the reader. Drop a <thead> only when every one of its header cells
+// is empty (or whitespace-only, which is what the synthesized row produces)
+// so a table with even partially real header text keeps its thead intact.
+function rehypeDropEmptyTableHeader() {
+  return (tree) => {
+    visit(tree, 'element', (node, index, parent) => {
+      if (node.tagName !== 'thead' || parent === undefined || index === undefined) {
+        return
+      }
+      const headerCells = []
+      visit(node, 'element', (cellNode) => {
+        if (cellNode.tagName === 'th') {
+          headerCells.push(cellNode)
+        }
+      })
+      const allCellsEmpty = headerCells.length > 0 && headerCells.every(cell => headerCellText(cell).trim() === '')
+      if (allCellsEmpty) {
+        parent.children.splice(index, 1)
+        return index
+      }
+    })
+  }
+}
+
 // Built once and reused. remarkRehype defaults allowDangerousHtml:false, so raw
 // HTML embedded in the markdown is dropped before it can reach the output.
 const processor = unified()
@@ -53,6 +91,7 @@ const processor = unified()
   .use(remarkGfm)
   .use(remarkRehype)
   .use(rehypeHardenLinks)
+  .use(rehypeDropEmptyTableHeader)
   .use(rehypeSanitize, schema)
   .use(rehypeStringify)
 
