@@ -52,8 +52,15 @@ const cookedHtml = ref('')
 const error = ref(null)
 const loading = ref(false)
 
+// The cache is keyed by document identity as well as page number, so a
+// document swap can never serve another document's cached page, and a
+// response for a page/document pair can never land under a different one.
+function cacheKeyFor(page) {
+  return `${props.document.id}:${page}`
+}
+
 const markedHtml = computed(() => {
-  return addLocalSearchMarksClassInHtml(renderedPages[props.page] ?? '', props.term)
+  return addLocalSearchMarksClassInHtml(renderedPages[cacheKeyFor(props.page)] ?? '', props.term)
 })
 
 async function loadPage() {
@@ -71,12 +78,17 @@ async function loadPage() {
 }
 
 async function renderPageOnce() {
-  if (renderedPages[props.page]) {
+  // Capture the page and document once: re-reading `props` after the
+  // `await` below could pick up values changed by navigation while this
+  // fetch was in flight, and would write the response under the wrong key.
+  const targetPage = props.page
+  const targetCacheKey = cacheKeyFor(targetPage)
+  if (renderedPages[targetCacheKey]) {
     return
   }
   const { index, id, routing } = props.document
-  const markdown = await api.getStructurePage(index, id, props.page, routing)
-  renderedPages[props.page] = await renderMarkdown(markdown)
+  const markdown = await api.getStructurePage(index, id, targetPage, routing)
+  renderedPages[targetCacheKey] = await renderMarkdown(markdown)
 }
 
 // Plugins can transform the markdown body through the `markdown-text`
@@ -103,6 +115,10 @@ function activateMatch() {
 }
 
 watch(toRef(props, 'page'), loadPage, { immediate: true })
+// The page number can stay the same while the document itself changes (e.g.
+// switching documents while both are on page 1), so the document identity
+// needs its own watcher to trigger a reload.
+watch(() => props.document?.id, loadPage)
 watch(markedHtml, cookHtml, { immediate: true })
 watch(toRef(props, 'activeMatch'), activateMatch, { flush: 'post' })
 </script>

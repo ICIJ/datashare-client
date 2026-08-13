@@ -53,6 +53,37 @@ describe('DocumentContentMarkdown.vue', () => {
     expect(firstPageCalls).toHaveLength(1)
   })
 
+  it('does not let a stale in-flight fetch for a previous page overwrite the current page', async () => {
+    let resolvePageOne
+    const pageOnePromise = new Promise((resolve) => {
+      resolvePageOne = resolve
+    })
+    api.getStructurePage.mockImplementation((index, id, page) => {
+      return page === 1 ? pageOnePromise : Promise.resolve('# Page two')
+    })
+    const wrapper = mount(DocumentContentMarkdown, { props: { document, page: 1 }, global: { plugins: core.plugins } })
+    await flushPromises()
+    await wrapper.setProps({ page: 2 })
+    await flushPromises()
+    await flushPromises()
+    expect(wrapper.find('h1').text()).toBe('Page two')
+    // The page-1 fetch resolves only now, after navigation moved on to page 2
+    resolvePageOne('# Page one (stale)')
+    await flushPromises()
+    await flushPromises()
+    expect(wrapper.find('h1').text()).toBe('Page two')
+  })
+
+  it('reloads when the document changes even if the page number stays the same', async () => {
+    const wrapper = await mountComponent()
+    api.getStructurePage.mockResolvedValue('# Other document')
+    await wrapper.setProps({ document: { index: 'foo', id: 'other-doc-id', routing: 'root-id' } })
+    await flushPromises()
+    await flushPromises()
+    expect(api.getStructurePage).toBeCalledWith('foo', 'other-doc-id', 1, 'root-id')
+    expect(wrapper.find('h1').text()).toBe('Other document')
+  })
+
   it('marks the term occurrences in the rendered page', async () => {
     api.getStructurePage.mockResolvedValue('# Hello world\n\nhello again')
     const wrapper = await mountComponent({ term: 'hello' })
