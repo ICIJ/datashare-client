@@ -59,6 +59,7 @@ const { hasMarkdown, pages: markdownPagesCount, fetchManifest } = useStructureAr
 
 const preferMarkdown = ref(true)
 const markdownPage = ref(1)
+const markdownMatches = ref([])
 
 const isTranslation = computed(() => {
   return !!props.targetLanguage && props.targetLanguage !== 'original'
@@ -68,9 +69,13 @@ const isMarkdownMode = computed(() => {
   return hasMarkdown.value && !isTranslation.value && preferMarkdown.value
 })
 
-// Task 6 replaces this with the real match logic; kept as a placeholder so
-// the template compiles before markdown-native search exists.
-const activeMarkdownMatch = computed(() => 0)
+const activeMarkdownMatch = computed(() => {
+  const match = markdownMatches.value[localSearchIndex.value - 1]
+  if (match && match.page === markdownPage.value) {
+    return match.nth
+  }
+  return 0
+})
 
 const docIndex = computed(() => props.document?.index)
 const docId = computed(() => props.document?.id)
@@ -211,6 +216,9 @@ watch(page, async () => {
 
 watch(isMarkdownMode, async (markdown) => {
   await syncPagePosition(markdown)
+  if (hasLocalSearchTerms.value) {
+    await retrieveOccurrencesAndUpdateContent()
+  }
 })
 
 watch(contentPipeline, async () => {
@@ -367,11 +375,28 @@ async function retrieveOccurrencesAndUpdateContent() {
 }
 
 async function updateContent() {
+  if (isMarkdownMode.value) {
+    return updateMarkdownContent()
+  }
   await activateContentSliceAround()
   await jumpToActiveLocalSearchTerm()
 }
 
+function updateMarkdownContent() {
+  const match = markdownMatches.value[localSearchIndex.value - 1]
+  if (match) {
+    markdownPage.value = match.page
+  }
+}
+
 async function retrieveTotalOccurrences() {
+  if (isMarkdownMode.value) {
+    return retrieveMarkdownOccurrences()
+  }
+  return retrieveTextOccurrences()
+}
+
+async function retrieveTextOccurrences() {
   try {
     if (!hasLocalSearchTerms.value) {
       throw new Error('No local search terms')
@@ -388,6 +413,33 @@ async function retrieveTotalOccurrences() {
     localSearchOccurrences.value = 0
     localSearchIndex.value = 0
   }
+}
+
+async function retrieveMarkdownOccurrences() {
+  try {
+    // The endpoint answers 400 to a blank query, so trim before asking
+    const query = localSearchTerm.value?.trim()
+    if (!query) {
+      throw new Error('No local search terms')
+    }
+    const { count, hits } = await api.searchStructurePages(docIndex.value, docId.value, query, docRouting.value)
+    markdownMatches.value = flattenPageHits(hits)
+    localSearchOccurrences.value = count
+    localSearchIndex.value = Number(!!count)
+  }
+  catch {
+    markdownMatches.value = []
+    localSearchOccurrences.value = 0
+    localSearchIndex.value = 0
+  }
+}
+
+// One entry per occurrence, in page order, so the flat local search index
+// maps straight to a page and a 1-based rank within that page.
+function flattenPageHits(hits = []) {
+  return hits.flatMap(({ page, count }) => {
+    return range(count).map(nth => ({ page, nth: nth + 1 }))
+  })
 }
 
 async function activateContentSliceAround(desiredOffset = activeTermOffset.value) {
@@ -463,7 +515,7 @@ async function loadContentSliceAround(desiredOffset) {
           v-model:active-index="localSearchIndex"
           :compact="compact"
           :loading="isLoading"
-          :disabled="!hasExtractedContent"
+          :disabled="!hasExtractedContent && !isMarkdownMode"
           :occurrences="localSearchOccurrences"
           class="flex-grow-1"
         />
@@ -524,7 +576,7 @@ async function loadContentSliceAround(desiredOffset) {
         class="document-content__body document-content__body--markdown"
         :document="document"
         :page="markdownPage"
-        :term="localSearchTerm"
+        :term="localSearchTerm?.trim() ?? ''"
         :active-match="activeMarkdownMatch"
         @fallback="preferMarkdown = false"
       />
