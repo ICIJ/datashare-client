@@ -4,13 +4,13 @@ import { createCore } from '@/core'
 import { useHooksStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
 
-vi.mock('@/api/apiInstance', {
+vi.mock('@/api/apiInstance', () => ({
   apiInstance: {
     getUser: vi.fn(),
     getSettings: vi.fn(),
     getProject: vi.fn()
   }
-})
+}))
 
 describe('main', () => {
   let core, vm, hooksStore

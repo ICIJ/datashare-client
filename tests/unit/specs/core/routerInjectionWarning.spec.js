@@ -1,13 +1,13 @@
 import { createCore } from '@/core'
 import { apiInstance as api } from '@/api/apiInstance'
 
-vi.mock('@/api/apiInstance', {
+vi.mock('@/api/apiInstance', () => ({
   apiInstance: {
     getUser: vi.fn(),
     getSettings: vi.fn(),
     getProject: vi.fn()
   }
-})
+}))
 
 // Regression test for search.js calling vue-router's useRouter() eagerly at
 // store-setup time. Core.configure() (src/core/Core.js) eagerly instantiates
