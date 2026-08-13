@@ -91,7 +91,7 @@ onBeforeMount(fetchAllTags)
           autofocus
           :placeholder="t('searchSelectionAddTagsModal.placeholder')"
           :options="allTags"
-          class="document-user-tags-ac tions w-100"
+          class="document-user-tags-action w-100"
           no-duplicates
           no-clear
           @focus="closeAllowed = false"
