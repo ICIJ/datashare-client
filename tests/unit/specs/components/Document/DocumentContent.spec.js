@@ -5,6 +5,7 @@ import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import { letTextContent } from '~tests/unit/api_mock'
 import CoreSetup from '~tests/unit/CoreSetup'
 import DocumentContent from '@/components/Document/DocumentContent'
+import DocumentLocalSearch from '@/components/Document/DocumentLocalSearch/DocumentLocalSearch'
 import { apiInstance as api } from '@/api/apiInstance'
 import { useDocumentStore } from '@/store/modules'
 
@@ -34,6 +35,17 @@ vi.mock('@/api/apiInstance', async (importOriginal) => {
 })
 
 window.HTMLElement.prototype.scrollIntoView = vi.fn()
+
+// A promise whose resolution is controlled from the outside, so a test can
+// resolve two competing requests in a deterministic, arbitrary order instead
+// of relying on timers.
+function createDeferredPromise() {
+  const deferred = {}
+  deferred.promise = new Promise((resolve) => {
+    deferred.resolve = resolve
+  })
+  return deferred
+}
 
 describe('DocumentContent.vue', () => {
   let core, documentStore
@@ -314,9 +326,12 @@ describe('DocumentContent.vue', () => {
     it('never disables the local search input in markdown mode, even without extracted text', async () => {
       const { document } = await mockDocumentContentSlice('')
       const { plugins } = core
-      const wrapper = shallowMount(DocumentContent, { props: { document }, global: { plugins, renderStubDefaultSlot: true } })
+      const wrapper = shallowMount(DocumentContent, { props: { document }, global: { plugins } })
       await flushPromises()
-      const input = wrapper.find('document-local-search-stub')
+      // `disabled` is a fallthrough attribute on `DocumentLocalSearch` (not a
+      // declared prop), so it cannot be read through `.props()`; assert
+      // through the component locator instead of a raw tag/class selector.
+      const input = wrapper.findComponent(DocumentLocalSearch)
       expect(input.attributes('disabled')).toBe('false')
     })
 
@@ -461,13 +476,21 @@ describe('DocumentContent.vue', () => {
       it('searches the structure pages instead of the raw content', async () => {
         const { document } = await mockDocumentContentSlice('Hello world')
         const { plugins } = core
-        shallowMount(DocumentContent, { props: { document, q: ' hello ' }, global: { plugins } })
+        const wrapper = shallowMount(DocumentContent, { props: { document, q: ' hello ' }, global: { plugins } })
         await flushPromises()
         // Assert on the leading arguments only: the routing value depends on how the
         // fixture document was indexed, and this test is about the trimmed query.
         const [project, documentId, query] = api.searchStructurePages.mock.calls[0]
         expect([project, documentId, query]).toEqual([index, 'document', 'hello'])
         expect(api.searchDocument).not.toBeCalled()
+        // A markdown document opened with `q` must search exactly once: the mode
+        // watcher firing during `onMounted`'s manifest probe must not duplicate
+        // the search `onMounted`'s own `q` branch already issues.
+        expect(api.searchStructurePages).toBeCalledTimes(1)
+        // The same trimmed term that was sent to the endpoint must be the one
+        // used to mark matches, so the DOM marks match what the backend counted.
+        const markdownBody = wrapper.findComponent({ name: 'DocumentContentMarkdown' })
+        expect(markdownBody.props('term')).toBe('hello')
       })
 
       it('lands on the first hit page with the occurrences count', async () => {
@@ -515,6 +538,55 @@ describe('DocumentContent.vue', () => {
         await flushPromises()
         const [project, documentId, query] = api.searchDocument.mock.calls[0]
         expect([project, documentId, query]).toEqual([index, 'document', 'hello'])
+      })
+
+      // Ruling 1's actual scenario: a translation forces text mode (rather than
+      // the user toggling `preferMarkdown` directly), and the search MUST
+      // switch from `searchStructurePages` back to `searchDocument`.
+      it('re-runs the search through the raw content when a translation forces plain text', async () => {
+        api.searchDocument.mockResolvedValue({ count: 1, offsets: [0] })
+        const { document } = await mockDocumentContentSlice('Hello world')
+        const { plugins } = core
+        const wrapper = shallowMount(DocumentContent, { props: { document, q: 'hello' }, global: { plugins } })
+        await flushPromises()
+        await wrapper.setProps({ targetLanguage: 'ENGLISH' })
+        await flushPromises()
+        expect(wrapper.vm.isMarkdownMode).toBe(false)
+        const [project, documentId, query] = api.searchDocument.mock.calls[0]
+        expect([project, documentId, query]).toEqual([index, 'document', 'hello'])
+      })
+
+      it('keeps only the newest occurrence retrieval when a mode flip interleaves two responses', async () => {
+        const { document } = await mockDocumentContentSlice('Hello world')
+        const { plugins } = core
+        const wrapper = shallowMount(DocumentContent, { props: { document }, global: { plugins } })
+        await flushPromises()
+
+        const markdownDeferred = createDeferredPromise()
+        const textDeferred = createDeferredPromise()
+        api.searchStructurePages.mockReturnValue(markdownDeferred.promise)
+        api.searchDocument.mockReturnValue(textDeferred.promise)
+
+        // Start a markdown search that stays in flight (the server-side page
+        // scan is slow)...
+        wrapper.vm.localSearchTerm = 'foo'
+        await flushPromises()
+        // ...then flip to plain text before it resolves: this starts a second,
+        // competing retrieval through the raw-content endpoint.
+        wrapper.vm.preferMarkdown = false
+        await flushPromises()
+
+        // The newer (text) request wins the race by resolving first.
+        textDeferred.resolve({ count: 1, offsets: [5] })
+        await flushPromises()
+        // The stale markdown response lands after: it must not clobber the
+        // already-written, consistent text-mode result.
+        markdownDeferred.resolve({ count: 9, pages: 9, scanned: 9, hits: [{ page: 1, count: 9 }] })
+        await flushPromises()
+
+        expect(wrapper.vm.localSearchOccurrences).toBe(1)
+        expect(wrapper.vm.localSearchIndexes).toEqual([5])
+        expect(wrapper.vm.localSearchIndex).toBe(1)
       })
     })
   })

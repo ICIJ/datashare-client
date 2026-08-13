@@ -60,6 +60,10 @@ const { hasMarkdown, pages: markdownPagesCount, fetchManifest } = useStructureAr
 const preferMarkdown = ref(true)
 const markdownPage = ref(1)
 const markdownMatches = ref([])
+// Set at the end of `onMounted`, so the mode watcher can tell a real, later
+// mode flip apart from the manifest probe settling `isMarkdownMode` during
+// the initial mount.
+const isMounted = ref(false)
 
 const isTranslation = computed(() => {
   return !!props.targetLanguage && props.targetLanguage !== 'original'
@@ -129,6 +133,11 @@ const showPagination = computed(() => {
 const hasLocalSearchTerms = computed(() => {
   return localSearchTerm.value && localSearchTerm.value.length > 0
 })
+
+// The structure-pages endpoint answers 400 to a blank query, and the marks
+// rendered by `DocumentContentMarkdown` must match what it counted, so both
+// the request and the template read this single, trimmed value.
+const markdownSearchTerm = computed(() => localSearchTerm.value?.trim() ?? '')
 
 const isRightToLeft = computed(() => {
   const language = props.targetLanguage ?? get(props.document, 'source.language', null)
@@ -216,7 +225,13 @@ watch(page, async () => {
 
 watch(isMarkdownMode, async (markdown) => {
   await syncPagePosition(markdown)
-  if (hasLocalSearchTerms.value) {
+  // `hasMarkdown` flips during `onMounted`'s manifest probe, which fires this
+  // watcher before the mount has even chosen whether to run a search at all;
+  // gating on `isMounted` keeps that flip from duplicating the search that
+  // `onMounted`'s own `q` branch is about to issue. Real mode flips (a user
+  // toggle, or a translation forcing text mode) all happen after mount, so
+  // this gate never blocks them.
+  if (isMounted.value && hasLocalSearchTerms.value) {
     await retrieveOccurrencesAndUpdateContent()
   }
 })
@@ -235,6 +250,7 @@ onMounted(async () => {
   else {
     await activateContentSlice({ offset: 0 })
   }
+  isMounted.value = true
 })
 
 // Both paginations describe the same physical pages when their counts match,
@@ -389,14 +405,21 @@ function updateMarkdownContent() {
   }
 }
 
+let lastOccurrencesRetrieval = 0
+
 async function retrieveTotalOccurrences() {
+  // A mode flip mid-flight can start the other path's retrieval before this
+  // one's response lands; this counter mirrors `lastContentSliceActivation`
+  // so only the newest retrieval is allowed to write its results, whichever
+  // response arrives last.
+  const retrieval = ++lastOccurrencesRetrieval
   if (isMarkdownMode.value) {
-    return retrieveMarkdownOccurrences()
+    return retrieveMarkdownOccurrences(retrieval)
   }
-  return retrieveTextOccurrences()
+  return retrieveTextOccurrences(retrieval)
 }
 
-async function retrieveTextOccurrences() {
+async function retrieveTextOccurrences(retrieval) {
   try {
     if (!hasLocalSearchTerms.value) {
       throw new Error('No local search terms')
@@ -404,30 +427,41 @@ async function retrieveTextOccurrences() {
     const query = localSearchTerm.value
     const targetLanguage = props.targetLanguage
     const { count, offsets } = await api.searchDocument(docIndex.value, docId.value, query, targetLanguage, docRouting.value)
+    if (retrieval !== lastOccurrencesRetrieval) {
+      return
+    }
     localSearchIndexes.value = offsets
     localSearchOccurrences.value = count
     localSearchIndex.value = Number(!!count)
   }
   catch {
+    if (retrieval !== lastOccurrencesRetrieval) {
+      return
+    }
     localSearchIndexes.value = []
     localSearchOccurrences.value = 0
     localSearchIndex.value = 0
   }
 }
 
-async function retrieveMarkdownOccurrences() {
+async function retrieveMarkdownOccurrences(retrieval) {
   try {
-    // The endpoint answers 400 to a blank query, so trim before asking
-    const query = localSearchTerm.value?.trim()
+    const query = markdownSearchTerm.value
     if (!query) {
       throw new Error('No local search terms')
     }
     const { count, hits } = await api.searchStructurePages(docIndex.value, docId.value, query, docRouting.value)
+    if (retrieval !== lastOccurrencesRetrieval) {
+      return
+    }
     markdownMatches.value = flattenPageHits(hits)
     localSearchOccurrences.value = count
     localSearchIndex.value = Number(!!count)
   }
   catch {
+    if (retrieval !== lastOccurrencesRetrieval) {
+      return
+    }
     markdownMatches.value = []
     localSearchOccurrences.value = 0
     localSearchIndex.value = 0
@@ -576,7 +610,7 @@ async function loadContentSliceAround(desiredOffset) {
         class="document-content__body document-content__body--markdown"
         :document="document"
         :page="markdownPage"
-        :term="localSearchTerm?.trim() ?? ''"
+        :term="markdownSearchTerm"
         :active-match="activeMarkdownMatch"
         @fallback="preferMarkdown = false"
       />
