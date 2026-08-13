@@ -621,7 +621,7 @@ async function loadContentSliceAround(desiredOffset) {
         class="document-content__body document-content__body--markdown"
         :document="document"
         :page="markdownPage"
-        :term="markdownSearchTerm"
+        :term="localSearchOccurrences ? markdownSearchTerm : ''"
         :active-match="activeMarkdownMatch"
         @fallback="preferMarkdown = false"
       />
@@ -640,7 +640,7 @@ async function loadContentSliceAround(desiredOffset) {
       <slot name="after-content" />
     </div>
     <document-attachments
-      v-show="loadedOnce"
+      v-show="loadedOnce || isMarkdownMode"
       :document="document"
     />
     <hook name="document.content:after" />

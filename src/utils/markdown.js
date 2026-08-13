@@ -69,6 +69,14 @@ function isDelimiterRow(line) {
   return line.includes('|') && line.includes('-') && delimiterRowPattern.test(line)
 }
 
+// 4+ leading spaces (or a leading tab) make a line part of an indented code
+// block, not a table, regardless of what precedes it.
+const indentedCodePattern = /^(?: {4}|\t)/
+
+function isIndentedCode(line) {
+  return indentedCodePattern.test(line)
+}
+
 // Count the cells a GFM delimiter row declares, so a synthesized header can
 // match it exactly (GFM requires the header and delimiter row cell counts to
 // be equal, or the table is rejected).
@@ -98,15 +106,18 @@ export function normalizeHeaderlessTables(source) {
   const lines = source.split('\n')
   const normalizedLines = []
   // Fence state, tracked so a delimiter-looking line inside a fenced code
-  // block (a code sample, not an actual table) is never touched.
+  // block (a code sample, not an actual table) is never touched. The
+  // closing-fence pattern only ever changes when a new fence opens, so it is
+  // built once here rather than once per line while inside the fence.
   let fenceChar = null
   let fenceMinLength = 0
+  let closeFencePattern = null
 
   lines.forEach((line, index) => {
     if (fenceChar) {
-      const closesFence = new RegExp(`^\\s{0,3}${fenceChar}{${fenceMinLength},}\\s*$`).test(line)
-      if (closesFence) {
+      if (closeFencePattern.test(line)) {
         fenceChar = null
+        closeFencePattern = null
       }
       normalizedLines.push(line)
       return
@@ -116,15 +127,18 @@ export function normalizeHeaderlessTables(source) {
     if (fenceOpenMatch) {
       fenceChar = fenceOpenMatch[1][0]
       fenceMinLength = fenceOpenMatch[1].length
+      closeFencePattern = new RegExp(`^\\s{0,3}${fenceChar}{${fenceMinLength},}\\s*$`)
       normalizedLines.push(line)
       return
     }
 
     // A table block is headerless when its delimiter row is preceded by a
     // blank line (or nothing, at the very start of the document): a real
-    // header line would be the non-blank line right above it instead.
+    // header line would be the non-blank line right above it instead. A
+    // 4+-space indent makes the line an indented code block instead, even
+    // when the line above it is blank.
     const previousLine = lines[index - 1]
-    const startsHeaderlessTable = isDelimiterRow(line) && (previousLine === undefined || previousLine.trim() === '')
+    const startsHeaderlessTable = !isIndentedCode(line) && isDelimiterRow(line) && (previousLine === undefined || previousLine.trim() === '')
     if (startsHeaderlessTable) {
       normalizedLines.push(buildEmptyHeaderRow(countDelimiterCells(line)))
     }

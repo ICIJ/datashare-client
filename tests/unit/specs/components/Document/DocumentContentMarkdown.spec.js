@@ -2,6 +2,7 @@ import { mount, flushPromises } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import DocumentContentMarkdown from '@/components/Document/DocumentContentMarkdown'
+import { usePipelinesStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
 
 vi.mock('@/api/apiInstance', async (importOriginal) => {
@@ -169,5 +170,24 @@ describe('DocumentContentMarkdown.vue', () => {
     const wrapper = await mountComponent()
     await wrapper.find('.document-content-markdown__error__fallback').trigger('click')
     expect(wrapper.emitted('fallback')).toHaveLength(1)
+  })
+
+  describe('sanitization boundary', () => {
+    it('runs a plugin registered under the markdown-text category on the rendered body', async () => {
+      const pipelinesStore = usePipelinesStore()
+      pipelinesStore.register({ category: 'markdown-text', type: html => html.replace('Hello', 'Bonjour') })
+      const wrapper = await mountComponent()
+      expect(wrapper.find('h1').text()).toBe('Bonjour world')
+    })
+
+    it('does not route the markdown body through the extracted-text pipeline chain', async () => {
+      // The repo's own SanitizeHtml pipeline whitelists only `mark` and `p`:
+      // if the markdown body ever flowed through the `extracted-text:post`
+      // chain, this would strip the `<h1>` down to plain text.
+      const pipelinesStore = usePipelinesStore()
+      pipelinesStore.register({ name: 'extracted-text-sanitize-html', type: 'SanitizeHtml', category: 'extracted-text:post' })
+      const wrapper = await mountComponent()
+      expect(wrapper.find('h1').exists()).toBe(true)
+    })
   })
 })

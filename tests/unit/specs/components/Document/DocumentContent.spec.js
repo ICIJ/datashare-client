@@ -502,6 +502,16 @@ describe('DocumentContent.vue', () => {
         expect(markdownBody.props('term')).toBe('hello')
       })
 
+      it('keeps the attachments block visible when markdown mode is entered through the q prop', async () => {
+        const { document } = await mockDocumentContentSlice('Hello world')
+        const { plugins } = core
+        const wrapper = shallowMount(DocumentContent, { props: { document, q: 'hello' }, global: { plugins } })
+        await flushPromises()
+        const attachments = wrapper.findComponent({ name: 'DocumentAttachments' })
+        expect(attachments.exists()).toBe(true)
+        expect(attachments.attributes('style')).not.toContain('display: none')
+      })
+
       it('lands on the first hit page with the occurrences count', async () => {
         const { document } = await mockDocumentContentSlice('Hello world')
         const { plugins } = core
@@ -535,6 +545,17 @@ describe('DocumentContent.vue', () => {
         await flushPromises()
         expect(wrapper.vm.localSearchOccurrences).toBe(0)
         expect(wrapper.vm.localSearchIndex).toBe(0)
+      })
+
+      it('does not pass the search term down to the markdown body when the search finds zero occurrences', async () => {
+        api.searchStructurePages.mockResolvedValue({ count: 0, pages: 0, scanned: 3, hits: [] })
+        const { document } = await mockDocumentContentSlice('Hello world')
+        const { plugins } = core
+        const wrapper = shallowMount(DocumentContent, { props: { document, q: 'hello' }, global: { plugins } })
+        await flushPromises()
+        expect(wrapper.vm.localSearchOccurrences).toBe(0)
+        const markdownBody = wrapper.findComponent({ name: 'DocumentContentMarkdown' })
+        expect(markdownBody.props('term')).toBe('')
       })
 
       it('re-runs the search through the raw content when toggling to plain text', async () => {
@@ -616,6 +637,9 @@ describe('DocumentContent.vue', () => {
         const wrapper = shallowMount(DocumentContent, { props: { document, q: 'hello' }, global })
         await flushPromises()
         expect(errorHandler).toBeCalledWith(new Error('Network Error'), expect.anything(), expect.anything())
+        // A second, unrelated Vue-dispatched error inside this test must not
+        // slip by unnoticed just because the expected error also occurred.
+        expect(errorHandler).toBeCalledTimes(1)
         wrapper.vm.preferMarkdown = false
         await flushPromises()
         const [project, documentId, query] = api.searchDocument.mock.calls[0]
