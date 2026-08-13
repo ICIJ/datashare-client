@@ -1,18 +1,24 @@
 import bodybuilder from 'bodybuilder'
 import { setActivePinia, createPinia } from 'pinia'
+import { shallowMount } from '@vue/test-utils'
+import { AppIcon } from '@icij/murmur'
 
 import IPhFiles from '~icons/ph/files'
 import FilterContentTypeCategory, { CONTENT_TYPE_CATEGORY_FILTER_NAME } from '@/store/filters/FilterContentTypeCategory'
-import builtinFilterIcons from '@/store/filters/icons'
 import DisplayContentTypeCategory from '@/components/Display/DisplayContentTypeCategory'
+import FilterModalTitle from '@/components/Filter/FilterModal/FilterModalTitle'
 import { apiInstance as api } from '@/api/apiInstance'
 import { useSearchStore } from '@/store/modules'
 import { findBoolShould, findTermsClause } from '~tests/unit/specs/utils/esQueryBody'
+import CoreSetup from '~tests/unit/CoreSetup'
 
 describe('FilterContentTypeCategory.js', () => {
   describe('breadcrumb icon', () => {
-    it('uses the files icon so the breadcrumb chip reads as file types', () => {
-      expect(builtinFilterIcons[CONTENT_TYPE_CATEGORY_FILTER_NAME]).toBe(IPhFiles)
+    it('renders the files icon on FilterModalTitle so the breadcrumb chip reads as file types', () => {
+      const { plugins } = CoreSetup.init().useAll()
+      const filter = { name: CONTENT_TYPE_CATEGORY_FILTER_NAME, hideSort: true }
+      const wrapper = shallowMount(FilterModalTitle, { global: { plugins }, props: { filter } })
+      expect(wrapper.findComponent(AppIcon).props('name')).toBe(IPhFiles)
     })
   })
 
