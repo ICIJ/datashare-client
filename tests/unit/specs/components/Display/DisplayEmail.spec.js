@@ -57,4 +57,37 @@ describe('DisplayEmail.vue', () => {
 
     expect(wrapper.text()).toBe('Pierre Romera')
   })
+
+  describe('keyboard access', () => {
+    const mountEmail = () => {
+      const props = { value: 'ICIJ <contact@icij.org>' }
+      return mount(DisplayEmail, { global: { plugins }, props })
+    }
+
+    it('exposes the target as a focusable button to assistive technologies', () => {
+      const target = mountEmail().find('.display-email')
+      expect(target.attributes('role')).toBe('button')
+      expect(target.attributes('tabindex')).toBe('0')
+      expect(target.attributes('aria-expanded')).toBe('false')
+    })
+
+    it('opens the popover on Enter', async () => {
+      const wrapper = mountEmail()
+      await wrapper.find('.display-email').trigger('keydown.enter')
+      expect(wrapper.find('.display-email').attributes('aria-expanded')).toBe('true')
+    })
+
+    it('opens the popover on Space', async () => {
+      const wrapper = mountEmail()
+      await wrapper.find('.display-email').trigger('keydown.space')
+      expect(wrapper.find('.display-email').attributes('aria-expanded')).toBe('true')
+    })
+
+    it('closes the popover on a second Enter', async () => {
+      const wrapper = mountEmail()
+      await wrapper.find('.display-email').trigger('keydown.enter')
+      await wrapper.find('.display-email').trigger('keydown.enter')
+      expect(wrapper.find('.display-email').attributes('aria-expanded')).toBe('false')
+    })
+  })
 })

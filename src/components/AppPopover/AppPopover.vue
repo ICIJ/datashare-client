@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onBeforeUnmount, onMounted } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 import AppPopoverHeader from './AppPopoverHeader.vue'
 
@@ -25,12 +25,30 @@ const show = () => (modelValue.value = true)
 const hide = () => (modelValue.value = false)
 const toggle = () => (modelValue.value = !modelValue.value)
 
+// The element focused when the popover opened, so Escape can hand focus back.
+const elementFocusedBeforeOpening = ref(null)
+
+watch(modelValue, (isVisible) => {
+  if (isVisible) {
+    elementFocusedBeforeOpening.value = document.activeElement
+  }
+})
+
+// The content is teleported into document.body, so focus may sit inside it when
+// Escape is pressed. Closing would then strand focus on <body>, since the
+// library does no focus management of its own.
+const restoreFocus = () => {
+  elementFocusedBeforeOpening.value?.focus?.()
+  elementFocusedBeforeOpening.value = null
+}
+
 // The popover content is teleported to document.body, so a template-level
 // @keydown here would never catch the key. bootstrap-vue-next's floating UI
 // wires no keyboard handling at all, so Escape-to-close is added by hand.
 const handleKeydown = (event) => {
   if (event.key === 'Escape' && visible.value) {
     hide()
+    restoreFocus()
   }
 }
 

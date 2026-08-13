@@ -44,4 +44,31 @@ describe('AppPopover.vue', () => {
     expect(wrapper.emitted('update:modelValue')).toBeUndefined()
     wrapper.unmount()
   })
+
+  it('should hand focus back to the opener on Escape', async () => {
+    const wrapper = mount(AppPopover, {
+      global: { plugins },
+      props: { modelValue: false },
+      slots: { target: '<button class="opener">Target</button>' },
+      attachTo: document.body
+    })
+
+    const opener = wrapper.find('.opener').element
+    opener.focus()
+    expect(document.activeElement).toBe(opener)
+
+    // Opening moves focus into the teleported content, which is where a keyboard
+    // user would press Escape from. Blurring stands in for that here, since the
+    // popover body is not focusable under jsdom.
+    await wrapper.setProps({ modelValue: true })
+    opener.blur()
+    expect(document.activeElement).not.toBe(opener)
+
+    pressEscape()
+    await wrapper.vm.$nextTick()
+
+    expect(document.activeElement).toBe(opener)
+    wrapper.unmount()
+    document.body.innerHTML = ''
+  })
 })
