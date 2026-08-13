@@ -61,7 +61,7 @@ const effectiveRightOperator = computed(() => {
 </script>
 
 <template>
-  <span class="search-parameter-query-ast d-inline-flex flex-wrap flex-wrap column-gap-1 row-gap-2">
+  <span class="search-parameter-query-ast d-inline-flex flex-wrap column-gap-2 row-gap-2">
     <search-parameter-query-ast
       v-if="isLeft"
       :ast="ast.left"
