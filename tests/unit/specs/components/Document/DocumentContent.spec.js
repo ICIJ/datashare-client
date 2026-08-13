@@ -21,7 +21,10 @@ vi.mock('@/api/apiInstance', async (importOriginal) => {
       ...apiInstance,
       getDocumentSlice: vi.fn(),
       getPages: vi.fn().mockResolvedValue([]),
-      searchDocument: vi.fn()
+      searchDocument: vi.fn(),
+      getStructureManifest: vi.fn().mockResolvedValue(null),
+      getStructurePage: vi.fn().mockResolvedValue(''),
+      searchStructurePages: vi.fn().mockResolvedValue({ count: 0, pages: 0, scanned: 0, hits: [] })
     }
   }
 })
@@ -258,6 +261,99 @@ describe('DocumentContent.vue', () => {
       // Continue to load content
       await wrapper.vm.loadContentSlice({ offset: 10 })
       expect(wrapper.vm.getContentSlice({ offset: 10 }).content).toBe('content fr')
+    })
+  })
+
+  describe('markdown mode', () => {
+    beforeEach(() => {
+      api.getStructureManifest.mockResolvedValue({ pages: 3, formats: ['md'] })
+      api.getStructurePage.mockResolvedValue('# Hello world')
+    })
+
+    it('renders the markdown body by default when the document has markdown', async () => {
+      const { document } = await mockDocumentContentSlice('Hello world')
+      const { plugins } = core
+      const wrapper = shallowMount(DocumentContent, { props: { document }, global: { plugins } })
+      await flushPromises()
+      expect(wrapper.findComponent({ name: 'DocumentContentMarkdown' }).exists()).toBe(true)
+      expect(wrapper.find('div.document-content__body').exists()).toBe(false)
+    })
+
+    it('renders the plain text body when the document has no markdown', async () => {
+      api.getStructureManifest.mockResolvedValue(null)
+      const { document } = await mockDocumentContentSlice('Hello world')
+      const { plugins } = core
+      const wrapper = shallowMount(DocumentContent, { props: { document }, global: { plugins } })
+      await flushPromises()
+      expect(wrapper.findComponent({ name: 'DocumentContentMarkdown' }).exists()).toBe(false)
+      expect(wrapper.find('div.document-content__body').exists()).toBe(true)
+    })
+
+    it('shows the view toggle only when the document has markdown', async () => {
+      const { document } = await mockDocumentContentSlice('Hello world')
+      const { plugins } = core
+      const wrapper = shallowMount(DocumentContent, { props: { document }, global: { plugins } })
+      await flushPromises()
+      expect(wrapper.find('.document-content__togglers__view').exists()).toBe(true)
+    })
+
+    it('hides the view toggle when the document has no markdown', async () => {
+      api.getStructureManifest.mockResolvedValue(null)
+      const { document } = await mockDocumentContentSlice('Hello world')
+      const { plugins } = core
+      const wrapper = shallowMount(DocumentContent, { props: { document }, global: { plugins } })
+      await flushPromises()
+      expect(wrapper.find('.document-content__togglers__view').exists()).toBe(false)
+    })
+
+    it('renders the plain text body once the toggle is set to text', async () => {
+      const { document } = await mockDocumentContentSlice('Hello world')
+      const { plugins } = core
+      const wrapper = shallowMount(DocumentContent, { props: { document }, global: { plugins } })
+      await flushPromises()
+      wrapper.vm.preferMarkdown = false
+      await flushPromises()
+      expect(wrapper.findComponent({ name: 'DocumentContentMarkdown' }).exists()).toBe(false)
+      expect(wrapper.find('div.document-content__body').exists()).toBe(true)
+    })
+
+    it('forces the plain text body when a translation is selected', async () => {
+      const { document } = await mockDocumentContentSlice('Hello world')
+      const { plugins } = core
+      const props = { document, targetLanguage: 'ENGLISH' }
+      const wrapper = shallowMount(DocumentContent, { props, global: { plugins } })
+      await flushPromises()
+      expect(wrapper.findComponent({ name: 'DocumentContentMarkdown' }).exists()).toBe(false)
+    })
+
+    it('paginates by the manifest page count in markdown mode', async () => {
+      const { document } = await mockDocumentContentSlice('Hello world')
+      const { plugins } = core
+      const wrapper = shallowMount(DocumentContent, { props: { document }, global: { plugins } })
+      await flushPromises()
+      expect(wrapper.vm.nbPages).toBe(3)
+    })
+
+    it('navigates markdown pages through the page model', async () => {
+      const { document } = await mockDocumentContentSlice('Hello world')
+      const { plugins } = core
+      const wrapper = shallowMount(DocumentContent, { props: { document }, global: { plugins } })
+      await flushPromises()
+      wrapper.vm.page = 2
+      await flushPromises()
+      expect(wrapper.vm.markdownPage).toBe(2)
+    })
+
+    it('goes back to the first page when toggling to unaligned plain text', async () => {
+      const { document } = await mockDocumentContentSlice('Hello world')
+      const { plugins } = core
+      const wrapper = shallowMount(DocumentContent, { props: { document }, global: { plugins } })
+      await flushPromises()
+      wrapper.vm.page = 2
+      await flushPromises()
+      wrapper.vm.preferMarkdown = false
+      await flushPromises()
+      expect(wrapper.vm.page).toBe(1)
     })
   })
 })
