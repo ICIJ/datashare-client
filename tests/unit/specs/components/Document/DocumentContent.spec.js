@@ -595,11 +595,18 @@ describe('DocumentContent.vue', () => {
         // A transient mount-time failure (here, `loadMaxOffset`'s own call to
         // `getDocumentSlice`, which is awaited inside `onMounted`'s
         // `Promise.all` with no catch) must not permanently disable later,
-        // legitimate mode-flip searches.
+        // legitimate mode-flip searches. `onMounted`'s rejection is expected
+        // and asserted below through an app-level error handler, rather than
+        // left to escape as an unhandled rejection: Vue delivers it there
+        // (`runtime-core.cjs.js`'s `handleError`) before it would otherwise
+        // log-and-rethrow.
         api.getDocumentSlice.mockRejectedValueOnce(new Error('Network Error'))
         api.searchDocument.mockResolvedValue({ count: 1, offsets: [0] })
-        const wrapper = shallowMount(DocumentContent, { props: { document, q: 'hello' }, global: { plugins } })
+        const errorHandler = vi.fn()
+        const global = { plugins, config: { errorHandler } }
+        const wrapper = shallowMount(DocumentContent, { props: { document, q: 'hello' }, global })
         await flushPromises()
+        expect(errorHandler).toBeCalledWith(new Error('Network Error'), expect.anything(), expect.anything())
         wrapper.vm.preferMarkdown = false
         await flushPromises()
         const [project, documentId, query] = api.searchDocument.mock.calls[0]
