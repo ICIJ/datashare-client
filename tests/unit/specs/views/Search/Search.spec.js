@@ -53,6 +53,17 @@ describe('Search.vue', () => {
     expect(query.q).toBe('foo')
   })
 
+  it('leaves select mode and clears the selection when the query changes', async () => {
+    wrapper.vm.selectMode = true
+    wrapper.vm.selection = ['document-id']
+
+    await core.router.push({ name: 'search', query: { q: 'selectModeResetTest' } })
+    await flushPromises()
+
+    expect(wrapper.vm.selectMode).toBe(false)
+    expect(wrapper.vm.selection).toEqual([])
+  })
+
   it('runs the initial search when a reloaded noRefresh URL is stripped', async () => {
     // Same active pinia as the mounted component, so this is the same store instance.
     const searchStore = useSearchStore()

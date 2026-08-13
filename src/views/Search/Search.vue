@@ -124,6 +124,11 @@ watchOperator(refreshRouteFromStart)
 // when the route query changes which mean that **only route changes** can trigger a search. This
 // particular one will also change the "from" query parameter to the first page.
 onAfterRouteQueryUpdate(refreshSearchFromRouteStart)
+// Leave selection mode when the query or the filters change: the result set is
+// different so the current selection is stale. Leaving the mode clears it.
+onAfterRouteQueryUpdate(() => {
+  selectMode.value = false
+})
 // Refresh search when route query "from" parameter changes. This is different from the previous watcher
 // because it will only trigger the search API call when the "from" parameter changes and therefore, will not
 // change the "from" query parameter to the first page. If the current route is the search route, it
