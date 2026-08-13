@@ -151,7 +151,59 @@ describe('normalizeHeaderlessTables', () => {
   it('makes renderMarkdown produce a <table> for a real headerless GFM table', async () => {
     const html = await renderMarkdown('|---|---|\n| a | b |\n| c | d |\n')
     expect(html).toContain('<table>')
-    expect(html).toContain('<th></th>')
     expect(html).toContain('<td>a</td>')
+  })
+})
+
+describe('renderMarkdown table header stripping', () => {
+  it('drops the synthesized thead entirely, leaving the data rows intact as tbody rows', async () => {
+    const html = await renderMarkdown('|---|---|\n| a | b |\n| c | d |\n')
+    expect(html).toContain('<table>')
+    expect(html).not.toContain('<thead>')
+    expect(html).not.toContain('<th>')
+    expect(html).toContain('<tbody>')
+    expect(html).toContain('<td>a</td>')
+    expect(html).toContain('<td>b</td>')
+    expect(html).toContain('<td>c</td>')
+    expect(html).toContain('<td>d</td>')
+  })
+
+  it('drops a thead whose header cells are whitespace-only, not just literally empty', async () => {
+    // A header row that is present in the source but made only of spaces must
+    // be treated the same as a fully empty one: it carries no real data.
+    const html = await renderMarkdown('|   |   |\n|---|---|\n| a | b |\n')
+    expect(html).not.toContain('<thead>')
+    expect(html).toContain('<td>a</td>')
+  })
+
+  it('keeps a thead whose header cells all have real text', async () => {
+    const html = await renderMarkdown('| a | b |\n|---|---|\n| 1 | 2 |\n')
+    expect(html).toContain('<thead>')
+    expect(html).toContain('<th>a</th>')
+    expect(html).toContain('<th>b</th>')
+  })
+
+  it('keeps a thead when only some of its header cells are empty', async () => {
+    // Dropping the thead here would lose the real "b" header data.
+    const html = await renderMarkdown('|  | b |\n|---|---|\n| 1 | 2 |\n')
+    expect(html).toContain('<thead>')
+    expect(html).toContain('<th></th>')
+    expect(html).toContain('<th>b</th>')
+  })
+
+  it('does not affect an unrelated part of the document', async () => {
+    const html = await renderMarkdown(['# Title', '', '|---|---|', '| a | b |', '', 'Some prose.', ''].join('\n'))
+    expect(html).toContain('<h1>Title</h1>')
+    expect(html).not.toContain('<thead>')
+    expect(html).toContain('<p>Some prose.</p>')
+  })
+
+  it('handles a headerless table and a normal table in the same document independently', async () => {
+    const source = ['|---|---|', '| a | b |', '', '| x | y |', '|---|---|', '| 1 | 2 |', ''].join('\n')
+    const html = await renderMarkdown(source)
+    const [firstTable, secondTable] = html.split('</table>')
+    expect(firstTable).not.toContain('<thead>')
+    expect(secondTable).toContain('<thead>')
+    expect(secondTable).toContain('<th>x</th>')
   })
 })
