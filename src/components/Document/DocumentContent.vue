@@ -209,8 +209,8 @@ watch(page, async () => {
   await activateContentSlice({ offset })
 })
 
-watch(isMarkdownMode, (markdown) => {
-  syncPagePosition(markdown)
+watch(isMarkdownMode, async (markdown) => {
+  await syncPagePosition(markdown)
 })
 
 watch(contentPipeline, async () => {
@@ -232,14 +232,25 @@ onMounted(async () => {
 // Both paginations describe the same physical pages when their counts match,
 // so the page number survives the toggle; anything else has no page
 // correspondence and goes back to the first page.
-function syncPagePosition(markdown) {
+async function syncPagePosition(markdown) {
+  // A translation forces text mode through its own contract (start at offset
+  // 0, handled by the targetLanguage watcher): its offsets describe another
+  // language than the one `syncedPages`/`offsets` were computed for, so this
+  // function must not touch the page position in that case.
+  if (isTranslation.value) {
+    return
+  }
   const aligned = !!syncedPages.value?.length && syncedPages.value.length === markdownPagesCount.value
   if (markdown) {
     markdownPage.value = aligned ? offsets.value.indexOf(activeContentSliceOffset.value) + 1 || 1 : 1
+    return
   }
-  else {
-    activeContentSliceOffset.value = aligned ? offsets.value[markdownPage.value - 1] ?? 0 : 0
-  }
+  // The restored page needs its text slice loaded, and going through
+  // `activateContentSlice` also registers this offset as the current
+  // activation, so the activation the mode flip triggered for the previous
+  // offset cannot clobber it once it resolves.
+  const offset = aligned ? offsets.value[markdownPage.value - 1] ?? 0 : 0
+  await activateContentSlice({ offset })
 }
 
 const loadMaxOffset = waitFor(async function (targetLanguage = props.targetLanguage) {
@@ -384,9 +395,19 @@ async function activateContentSliceAround(desiredOffset = activeTermOffset.value
   return activateContentSlice({ offset })
 }
 
+let lastContentSliceActivation = 0
+
 const activateContentSlice = waitFor(async function ({ offset = 0 } = {}) {
+  const activation = ++lastContentSliceActivation
   await loadContentSliceOnce({ offset })
   await cookAllContentSlices()
+  // A newer activation was requested while this one was loading: `page` is
+  // derived from the active offset and the page watcher activates it back, so
+  // writing a superseded offset here makes the two activations overwrite each
+  // other forever instead of settling on the offset the user asked for.
+  if (activation !== lastContentSliceActivation) {
+    return
+  }
   activeContentSliceOffset.value = offset
   const { cookedContent = null } = getContentSlice({ offset: activeContentSliceOffset.value }) ?? {}
   currentContentPage.value = cookedContent
