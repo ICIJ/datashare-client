@@ -20,7 +20,10 @@ import { CONTENT_TYPE_CATEGORY_FILTER_NAME } from '@/store/filters/FilterContent
 
 // Icons for the built-in filters, keyed by filter `name`. Kept out of
 // `store/filters/index.js` so they don't ship in the eager core chunk.
-export default {
+// Object.create(null): consumers index this map with user-typed field
+// names (e.g. SearchParameterFilter.vue), and a plain {} would resolve
+// prototype keys like `toString`/`constructor` instead of undefined.
+export default Object.assign(Object.create(null), {
   project: markRaw(IPhCirclesThreePlus),
   starred: markRaw(IPhStar),
   tags: markRaw(IPhHash),
@@ -36,4 +39,4 @@ export default {
   namedEntityEmail: markRaw(IPhEnvelope),
   extractionLevel: markRaw(IPhPaperclip),
   indexingDate: markRaw(IPhCalendarPlus)
-}
+})
