@@ -88,7 +88,10 @@ const queryTemplate = computed(() => {
   return JSON.stringify(query)
 })
 
-const uri = computed(() => formSearchStore.stringifyBaseRouteQuery)
+const uri = computed(() => {
+  const { href = null } = router.resolve({ name: 'search', query: formSearchStore.toBaseRouteQuery }) ?? {}
+  return href
+})
 
 const isValid = computed(() => name.value.trim(' ').length > 0 && csv.value !== null)
 
