@@ -47,9 +47,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
 
   const index = computed({
     get: () => indices.value[0],
-    set: (value) => {
-      indices.value = [value]
-    }
+    set: setIndex
   })
 
   const searchOperator = computed(() => appStore.getSettings('search', 'searchOperator') ?? SEARCH_OPERATORS.OR)
