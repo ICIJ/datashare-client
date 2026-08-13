@@ -24,7 +24,11 @@ vi.mock('@/api/apiInstance', async (importOriginal) => {
       searchDocument: vi.fn(),
       getStructureManifest: vi.fn().mockResolvedValue(null),
       getStructurePage: vi.fn().mockResolvedValue(''),
-      searchStructurePages: vi.fn().mockResolvedValue({ count: 0, pages: 0, scanned: 0, hits: [] })
+      searchStructurePages: vi.fn().mockResolvedValue({ count: 0, pages: 0, scanned: 0, hits: [] }),
+      // Only consulted by `sameTikaVersion` when a document is a PDF; the
+      // resolved version must match the `PDF_ARTIFACT_TIKA_VERSION` metadata
+      // set by `withPdfArtifactMetadata` below for `mustSyncPages` to pass.
+      getVersion: vi.fn().mockResolvedValue({ ds: { extractorVersion: '1.2.3' } })
     }
   }
 })
@@ -46,10 +50,11 @@ describe('DocumentContent.vue', () => {
     vi.resetAllMocks()
   })
 
-  async function mockDocumentContentSlice(content = '', { language = 'ENGLISH' } = {}) {
+  async function mockDocumentContentSlice(content = '', { language = 'ENGLISH', configureDocument = document => document } = {}) {
     const contentSlice = letTextContent().withContent(content).getResponse()
     // Index the document
-    await letData(es).have(new IndexedDocument(id, index).withContent(content).withLanguage(language)).commit()
+    const indexedDocument = configureDocument(new IndexedDocument(id, index).withContent(content).withLanguage(language))
+    await letData(es).have(indexedDocument).commit()
     // Mock the `getDocumentSlice` method
     api.getDocumentSlice.mockImplementation(async (project, documentId, offset, limit) => {
       // Modify the returned content according to passed parameters
@@ -324,6 +329,12 @@ describe('DocumentContent.vue', () => {
       const wrapper = shallowMount(DocumentContent, { props, global: { plugins } })
       await flushPromises()
       expect(wrapper.findComponent({ name: 'DocumentContentMarkdown' }).exists()).toBe(false)
+      // The toggle must stay visible (so the user understands why they are
+      // stuck in plain text) but disabled while a translation is selected.
+      const toggle = wrapper.find('.document-content__togglers__view')
+      expect(toggle.exists()).toBe(true)
+      expect(toggle.attributes('disabled')).toBe('true')
+      expect(toggle.attributes('title')).toBe('Translations are only available as plain text')
     })
 
     it('paginates by the manifest page count in markdown mode', async () => {
@@ -354,6 +365,75 @@ describe('DocumentContent.vue', () => {
       wrapper.vm.preferMarkdown = false
       await flushPromises()
       expect(wrapper.vm.page).toBe(1)
+    })
+
+    it('does not fetch a text slice while paginating in markdown mode', async () => {
+      const { document } = await mockDocumentContentSlice('Hello world')
+      const { plugins } = core
+      const wrapper = shallowMount(DocumentContent, { props: { document }, global: { plugins } })
+      await flushPromises()
+      const callsBeforePaginating = api.getDocumentSlice.mock.calls.length
+      wrapper.vm.page = 2
+      await flushPromises()
+      expect(api.getDocumentSlice.mock.calls.length).toBe(callsBeforePaginating)
+    })
+
+    // The page-sync logic only ever runs against a real, non-empty
+    // `syncedPages` when `mustSyncPages` gates it open, which requires a PDF
+    // document, a configured `artifactDir`, and a Tika version matching the
+    // mocked `getVersion` response. Without this, `syncedPages` stays `[]`
+    // and every assertion below would hold trivially regardless of whether
+    // the sync logic exists at all.
+    describe('page position sync against a real pdf pagination', () => {
+      const PDF_ARTIFACT_TIKA_VERSION = '1.2.3'
+
+      function withPdfArtifactMetadata(document) {
+        return document
+          .withContentType('application/pdf')
+          .withMetadata({ tika_metadata_tika_version: PDF_ARTIFACT_TIKA_VERSION })
+      }
+
+      beforeEach(() => {
+        core.config.set('artifactDir', '/artifacts')
+      })
+
+      afterEach(() => {
+        core.config.set('artifactDir', undefined)
+      })
+
+      it('keeps the page position when toggling to an aligned plain text pagination', async () => {
+        api.getPages.mockResolvedValue({ pages: [[0, 19], [20, 39], [40, 59]] })
+        const { document } = await mockDocumentContentSlice('x'.repeat(60), { configureDocument: withPdfArtifactMetadata })
+        const { plugins } = core
+        const wrapper = shallowMount(DocumentContent, { props: { document }, global: { plugins } })
+        await flushPromises()
+        wrapper.vm.page = 2
+        await flushPromises()
+        wrapper.vm.preferMarkdown = false
+        await flushPromises()
+        expect(wrapper.vm.page).toBe(2)
+        // The kept page must also be the activated text slice, otherwise the
+        // pagination says page 2 while the body still shows page 1.
+        expect(wrapper.vm.activeContentSliceOffset).toBe(20)
+      })
+
+      it('resets an unaligned plain text pagination back to the first page', async () => {
+        api.getPages.mockResolvedValue({ pages: [[0, 29], [30, 59]] })
+        const { document } = await mockDocumentContentSlice('x'.repeat(60), { configureDocument: withPdfArtifactMetadata })
+        const { plugins } = core
+        const wrapper = shallowMount(DocumentContent, { props: { document }, global: { plugins } })
+        await flushPromises()
+        wrapper.vm.page = 2
+        await flushPromises()
+        // Manufacture a stale, non-zero offset a real navigation could have
+        // left behind, so the assertion below actually exercises the reset
+        // instead of trivially matching an offset that never moved.
+        wrapper.vm.activeContentSliceOffset = 30
+        wrapper.vm.preferMarkdown = false
+        await flushPromises()
+        expect(wrapper.vm.page).toBe(1)
+        expect(wrapper.vm.activeContentSliceOffset).toBe(0)
+      })
     })
   })
 })
