@@ -222,6 +222,10 @@
     "contextualize": "Contextualize",
     "exclude": "Exclude"
   },
+  "filtersPanelSectionFilterEntry": {
+    "lock": "Lock this filter value",
+    "unlock": "Unlock this filter value"
+  },
   "filtersPanelSectionFilterTitleToggler": {
     "toggle": "Toggle filter"
   },
