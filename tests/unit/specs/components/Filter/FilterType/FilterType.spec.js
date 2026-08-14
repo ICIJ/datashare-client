@@ -433,6 +433,35 @@ describe('FilterType.vue', () => {
       expect(entry.props('count')).toBe(0)
       expect(entry.props('locked')).toBe(true)
     })
+
+    it('drops the synthetic locked-but-missing entry once it is unlocked', async () => {
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/removed', label: 'Removed Type' })
+      await wrapper.vm.aggregateOver()
+      expect(wrapper.vm.entries.some(({ label }) => label === 'Removed Type')).toBe(true)
+
+      lockedFiltersStore.unlock({ name: 'contentType', value: 'application/removed' })
+      await wrapper.vm.aggregateOver()
+
+      expect(wrapper.vm.entries.some(({ label }) => label === 'Removed Type')).toBe(false)
+      expect(
+        wrapper.findAllComponents(FiltersPanelSectionFilterEntry).some(w => w.props('label') === 'Removed Type')
+      ).toBe(false)
+    })
+
+    it('renders a ticked+excluded+locked value only once, even with no matching aggregation bucket', async () => {
+      // No document indexed with this contentType — it is "missing" from both
+      // excludedBucketsPage (ticked+excluded synthesis) and, absent dedup,
+      // missingLockedBucketsPage (locked-but-missing synthesis) at once.
+      searchStore.contextualizeFilter('contentType')
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.excludeFilter('contentType')
+      lockedFiltersStore.lock({ name: '-contentType', value: 'application/pdf', label: 'PDF' })
+
+      await wrapper.vm.aggregateOver()
+
+      const matches = wrapper.vm.entries.filter(({ value }) => value === 'application/pdf')
+      expect(matches).toHaveLength(1)
+    })
   })
 
   describe('language', () => {
