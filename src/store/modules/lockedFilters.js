@@ -3,6 +3,31 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
 /**
+ * Convert a bare filter name plus its current exclude state into the
+ * `-`-prefixed name convention used by locked filter entries (and by route
+ * params: `f[name]` / `f[-name]`).
+ *
+ * @param {string} name - The bare filter name (no `-` prefix).
+ * @param {boolean} excluded - Whether the filter is currently in exclude mode.
+ * @returns {string}
+ */
+export function toLockedName(name, excluded) {
+  return excluded ? `-${name}` : name
+}
+
+/**
+ * Parse a lock entry's `-`-prefixed name back into its bare name and
+ * exclude state.
+ *
+ * @param {string} lockedName - The name as stored on a lock entry.
+ * @returns {{ name: string, excluded: boolean }}
+ */
+export function parseLockedName(lockedName) {
+  const excluded = lockedName.startsWith('-')
+  return { name: excluded ? lockedName.slice(1) : lockedName, excluded }
+}
+
+/**
  * Store for managing the user's personal, cross-project locked filters.
  *
  * A lock entry is `{ name, value, label }`. `name` already carries the

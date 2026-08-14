@@ -21,6 +21,7 @@ import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPan
 import FilterTypeAll from '@/components/Filter/FilterType/FilterTypeAll'
 import settings from '@/utils/settings'
 import { useSearchStore, useLockedFiltersStore } from '@/store/modules'
+import { toLockedName } from '@/store/modules/lockedFilters'
 import builtinFilterIcons from '@/store/filters/icons'
 
 const query = defineModel('query', { type: String, default: '' })
@@ -148,7 +149,10 @@ const exclude = computedExcludeFilter(filter)
 // The store key for this filter's locks: the filter's own current
 // include/exclude mode, never a paired dimension's — locking a chip on one
 // side of a paired filter must never lock or affect the other side.
-const lockedName = computed(() => (exclude.value ? `-${filter.name}` : filter.name))
+// TODO(locked-filters): filter types overriding FilterType's default slot
+// (FilterTypeFileTypes, FilterTypePath, FilterTypeProject, FilterTypeStarred,
+// FilterTypeRecommendedBy) don't receive lock/unlock support yet — see follow-up issue.
+const lockedName = computed(() => toLockedName(filter.name, exclude.value))
 const sort = computedSortFilter(filter)
 const contextualize = computedContextualizeFilter(filter)
 
@@ -184,6 +188,9 @@ function toggleLock(item, locked) {
 }
 
 const bucketLabel = (bucket) => {
+  // The label is frozen at lock time and intentionally does not re-translate
+  // if the UI language changes later — the bucket is gone, so there's
+  // nothing left to re-resolve the label against.
   if (bucket?.__lockedLabel != null) {
     return bucket.__lockedLabel
   }
@@ -213,6 +220,10 @@ const excludedBucketsPage = computed(() => {
 // that is ticked + excluded + contextualized is already rendered by that
 // mechanism regardless of locking, and de-duping here (rather than there)
 // keeps excludedBucketsPage's own semantics untouched.
+// Like excludedBucketsPage above, this does not filter against the panel's
+// search box: a locked-but-missing value always stays visible regardless of
+// what the user is searching for. Consistent with existing behavior, not a
+// new gap.
 const missingLockedBucketsPage = computed(() => {
   const excludedKeys = getPageBuckets(excludedBucketsPage.value).map(item => toString(item.key))
   const realKeys = [...buckets.value.map(item => toString(item.key)), ...excludedKeys]
