@@ -161,10 +161,10 @@ const hasAnyValue = computed(() => {
 })
 
 const toggleValue = async (item, checked) => {
+  // Unlocking on removal is handled centrally by useSearchFilter's
+  // removeFilterValue/removeFilterValues, so every removal path (this
+  // checkbox, the "All" toggle, breadcrumb chip removal) unlocks alike.
   await toggleFilterValue(filter, item, checked)
-  if (!checked) {
-    lockedFiltersStore.unlock({ name: lockedName.value, value: item.key })
-  }
   if (contextualize.value) {
     await aggregateOver()
   }
@@ -209,8 +209,13 @@ const excludedBucketsPage = computed(() => {
 // matching real aggregation bucket (a deleted tag, a re-indexed path).
 // Uses the exact same shape/insertion mechanism as excludedBucketsPage
 // above so it flows through bucketsWithExcludedValues unchanged.
+// Also excludes keys already synthesized by excludedBucketsPage: a value
+// that is ticked + excluded + contextualized is already rendered by that
+// mechanism regardless of locking, and de-duping here (rather than there)
+// keeps excludedBucketsPage's own semantics untouched.
 const missingLockedBucketsPage = computed(() => {
-  const realKeys = buckets.value.map(item => toString(item.key))
+  const excludedKeys = getPageBuckets(excludedBucketsPage.value).map(item => toString(item.key))
+  const realKeys = [...buckets.value.map(item => toString(item.key)), ...excludedKeys]
   const missing = lockedFiltersStore.entries
     .filter(entry => entry.name === lockedName.value && !realKeys.includes(entry.value))
     .map(entry => ({ key: entry.value, doc_count: 0, __lockedLabel: entry.label }))
