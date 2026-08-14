@@ -32,9 +32,16 @@ const { t } = useI18n()
 <template>
   <div class="app-modal-header w-100">
     <slot name="close">
+      <!-- `pressed` is explicitly undefined so BButton does not treat the
+           close button as a toggle: in toggle mode it flips its own `pressed`
+           model on every click, and nothing here controls it back, so the
+           button stays `.active` (and aria-pressed) once clicked. Murmur's
+           ButtonIcon casts an absent `pressed` to false, which is enough to
+           opt into that mode, hence the explicit undefined. -->
       <button-icon
         v-if="!noHeaderClose"
         :icon-left="IPhX"
+        :pressed="undefined"
         hide-label
         hide-tooltip
         tooltip-placement="right"

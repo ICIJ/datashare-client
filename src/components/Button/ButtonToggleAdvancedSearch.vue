@@ -44,10 +44,18 @@ const compact = computed(() => {
 </script>
 
 <template>
+  <!-- `pressed` is explicitly undefined so BButton does not treat this as a
+       toggle button: in toggle mode it flips its own `pressed` model on every
+       click and keeps the resulting `.active` class, which outlives the modal
+       and leaves the button looking pressed once it is closed. The pressed
+       state is carried by `variant` instead. Murmur's ButtonIcon casts an
+       absent `pressed` to false, which is enough to opt into that mode, hence
+       the explicit undefined. -->
   <button-icon
     :hide-label="compact"
     :label="t('buttonToggleAdvancedSearch.label')"
     :loading="loading"
+    :pressed="undefined"
     :square="compact"
     :variant="variant"
     class="button-toggle-advanced-search"
