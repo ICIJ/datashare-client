@@ -10,7 +10,7 @@ import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPanelSectionFilterEntry'
 import FilterType from '@/components/Filter/FilterType/FilterType'
 import { useContentTypeCategoryAvailability } from '@/composables/useContentTypeCategoryAvailability'
-import { useSearchStore } from '@/store/modules'
+import { useSearchStore, useLockedFiltersStore } from '@/store/modules'
 import en from '@/lang/en.json'
 import fr from '@/lang/fr.json'
 
@@ -339,6 +339,99 @@ describe('FilterType.vue', () => {
 
         expect(wrapper.vm.count).toBe(3)
       })
+    })
+  })
+
+  describe('locked filters', () => {
+    let lockedFiltersStore
+
+    beforeEach(() => {
+      const name = 'contentType'
+      const filter = searchStore.getFilter({ name })
+
+      wrapper = shallowMount(FilterType, {
+        global: {
+          plugins: core.plugins,
+          renderStubDefaultSlot: true
+        },
+        props: {
+          filter
+        }
+      })
+
+      searchStore.decontextualizeFilter(name)
+      searchStore.setIndex(index)
+      searchStore.reset()
+      searchStore.resetFilters()
+      lockedFiltersStore = useLockedFiltersStore()
+    })
+
+    it('reports a ticked value as unlocked by default', async () => {
+      await letData(es).have(new IndexedDocument('document_01', index).withContentType('application/pdf')).commit()
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+
+      await wrapper.vm.aggregateOver()
+
+      expect(wrapper.findComponent(FiltersPanelSectionFilterEntry).props('locked')).toBe(false)
+    })
+
+    it('locks a value when the entry emits update:locked with true', async () => {
+      await letData(es).have(new IndexedDocument('document_01', index).withContentType('application/pdf')).commit()
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+
+      await wrapper.vm.aggregateOver()
+      await wrapper.findComponent(FiltersPanelSectionFilterEntry).vm.$emit('update:locked', true)
+
+      expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'application/pdf' })).toBe(true)
+      expect(wrapper.findComponent(FiltersPanelSectionFilterEntry).props('locked')).toBe(true)
+    })
+
+    it('unlocks a value when the entry emits update:locked with false', async () => {
+      await letData(es).have(new IndexedDocument('document_01', index).withContentType('application/pdf')).commit()
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'PDF' })
+
+      await wrapper.vm.aggregateOver()
+      await wrapper.findComponent(FiltersPanelSectionFilterEntry).vm.$emit('update:locked', false)
+
+      expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'application/pdf' })).toBe(false)
+    })
+
+    it('locks under the "-" prefixed name when the filter is currently excluded', async () => {
+      await letData(es).have(new IndexedDocument('document_01', index).withContentType('application/pdf')).commit()
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.excludeFilter('contentType')
+
+      await wrapper.vm.aggregateOver()
+      await wrapper.findComponent(FiltersPanelSectionFilterEntry).vm.$emit('update:locked', true)
+
+      expect(lockedFiltersStore.isLocked({ name: '-contentType', value: 'application/pdf' })).toBe(true)
+      expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'application/pdf' })).toBe(false)
+    })
+
+    it('removes the lock when the value is unticked', async () => {
+      await letData(es).have(new IndexedDocument('document_01', index).withContentType('application/pdf')).commit()
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'PDF' })
+
+      await wrapper.vm.aggregateOver()
+      await wrapper.findComponent(FiltersPanelSectionFilterEntry).vm.$emit('update:model-value', false)
+
+      expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'application/pdf' })).toBe(false)
+    })
+
+    it('still renders a locked value with no matching aggregation bucket, at zero count', async () => {
+      // No document with this contentType exists — simulates a deleted/re-indexed value.
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/removed', label: 'Removed Type' })
+
+      await wrapper.vm.aggregateOver()
+
+      const entry = wrapper.findAllComponents(FiltersPanelSectionFilterEntry).find(
+        w => w.props('label') === 'Removed Type'
+      )
+      expect(entry).toBeTruthy()
+      expect(entry.props('count')).toBe(0)
+      expect(entry.props('locked')).toBe(true)
     })
   })
 
