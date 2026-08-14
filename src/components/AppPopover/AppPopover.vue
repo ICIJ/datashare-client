@@ -18,6 +18,13 @@ defineProps({
   },
   hideHeader: {
     type: Boolean
+  },
+  /**
+   * Keep the header but drop its close button, for a popover closed by clicking
+   * its target again.
+   */
+  hideClose: {
+    type: Boolean
   }
 })
 
@@ -92,6 +99,7 @@ useEventListener(() => (visible.value ? document : null), 'keydown', handleKeydo
         <app-popover-header
           v-if="!hideHeader"
           :title="title"
+          :hide-close="hideClose"
           class="mb-3"
           @hide="hide"
         >
