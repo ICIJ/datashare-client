@@ -151,7 +151,8 @@ const exclude = computedExcludeFilter(filter)
 // side of a paired filter must never lock or affect the other side.
 // TODO(locked-filters): filter types overriding FilterType's default slot
 // (FilterTypeFileTypes, FilterTypePath, FilterTypeProject, FilterTypeStarred,
-// FilterTypeRecommendedBy) don't receive lock/unlock support yet — see follow-up issue.
+// FilterTypeRecommendedBy) don't receive lock/unlock support yet — see
+// icij/datashare#2336.
 const lockedName = computed(() => toLockedName(filter.name, exclude.value))
 const sort = computedSortFilter(filter)
 const contextualize = computedContextualizeFilter(filter)
