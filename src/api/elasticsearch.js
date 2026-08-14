@@ -456,10 +456,10 @@ export function datasharePlugin(Client) {
    * @returns {Array} The filters to apply to the aggregation body
    */
   Client.prototype._contextFilters = function (filter, filters) {
-    if (!getPairedDimension(filter.name)) {
-      return filters
+    if (getPairedDimension(filter.name)) {
+      return filters.filter(other => other.name !== filter.name)
     }
-    return filters.filter(other => other.name !== filter.name)
+    return filters
   }
 
   /**
