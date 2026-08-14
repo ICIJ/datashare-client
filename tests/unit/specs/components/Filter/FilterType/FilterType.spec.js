@@ -342,11 +342,17 @@ describe('FilterType.vue', () => {
     })
   })
 
+  // NOTE: this suite uses the `language` filter (rather than `contentType`)
+  // because `contentType` is rendered via FilterTypeFileTypes, which overrides
+  // FilterType's default slot entirely and does not (yet) receive lock/unlock
+  // bindings. `language` uses FilterType's own default slot unmodified, which
+  // is the only case lock/unlock support covers today — see the TODO above
+  // `lockedName` in FilterType.vue.
   describe('locked filters', () => {
     let lockedFiltersStore
 
     beforeEach(() => {
-      const name = 'contentType'
+      const name = 'language'
       const filter = searchStore.getFilter({ name })
 
       wrapper = shallowMount(FilterType, {
@@ -367,8 +373,8 @@ describe('FilterType.vue', () => {
     })
 
     it('reports a ticked value as unlocked by default', async () => {
-      await letData(es).have(new IndexedDocument('document_01', index).withContentType('application/pdf')).commit()
-      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      await letData(es).have(new IndexedDocument('document_01', index).withLanguage('ENGLISH')).commit()
+      searchStore.addFilterValue({ name: 'language', value: 'ENGLISH' })
 
       await wrapper.vm.aggregateOver()
 
@@ -376,58 +382,58 @@ describe('FilterType.vue', () => {
     })
 
     it('locks a value when the entry emits update:locked with true', async () => {
-      await letData(es).have(new IndexedDocument('document_01', index).withContentType('application/pdf')).commit()
-      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      await letData(es).have(new IndexedDocument('document_01', index).withLanguage('ENGLISH')).commit()
+      searchStore.addFilterValue({ name: 'language', value: 'ENGLISH' })
 
       await wrapper.vm.aggregateOver()
       await wrapper.findComponent(FiltersPanelSectionFilterEntry).vm.$emit('update:locked', true)
 
-      expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'application/pdf' })).toBe(true)
+      expect(lockedFiltersStore.isLocked({ name: 'language', value: 'ENGLISH' })).toBe(true)
       expect(wrapper.findComponent(FiltersPanelSectionFilterEntry).props('locked')).toBe(true)
     })
 
     it('unlocks a value when the entry emits update:locked with false', async () => {
-      await letData(es).have(new IndexedDocument('document_01', index).withContentType('application/pdf')).commit()
-      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
-      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'PDF' })
+      await letData(es).have(new IndexedDocument('document_01', index).withLanguage('ENGLISH')).commit()
+      searchStore.addFilterValue({ name: 'language', value: 'ENGLISH' })
+      lockedFiltersStore.lock({ name: 'language', value: 'ENGLISH', label: 'English' })
 
       await wrapper.vm.aggregateOver()
       await wrapper.findComponent(FiltersPanelSectionFilterEntry).vm.$emit('update:locked', false)
 
-      expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'application/pdf' })).toBe(false)
+      expect(lockedFiltersStore.isLocked({ name: 'language', value: 'ENGLISH' })).toBe(false)
     })
 
     it('locks under the "-" prefixed name when the filter is currently excluded', async () => {
-      await letData(es).have(new IndexedDocument('document_01', index).withContentType('application/pdf')).commit()
-      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
-      searchStore.excludeFilter('contentType')
+      await letData(es).have(new IndexedDocument('document_01', index).withLanguage('ENGLISH')).commit()
+      searchStore.addFilterValue({ name: 'language', value: 'ENGLISH' })
+      searchStore.excludeFilter('language')
 
       await wrapper.vm.aggregateOver()
       await wrapper.findComponent(FiltersPanelSectionFilterEntry).vm.$emit('update:locked', true)
 
-      expect(lockedFiltersStore.isLocked({ name: '-contentType', value: 'application/pdf' })).toBe(true)
-      expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'application/pdf' })).toBe(false)
+      expect(lockedFiltersStore.isLocked({ name: '-language', value: 'ENGLISH' })).toBe(true)
+      expect(lockedFiltersStore.isLocked({ name: 'language', value: 'ENGLISH' })).toBe(false)
     })
 
     it('removes the lock when the value is unticked', async () => {
-      await letData(es).have(new IndexedDocument('document_01', index).withContentType('application/pdf')).commit()
-      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
-      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'PDF' })
+      await letData(es).have(new IndexedDocument('document_01', index).withLanguage('ENGLISH')).commit()
+      searchStore.addFilterValue({ name: 'language', value: 'ENGLISH' })
+      lockedFiltersStore.lock({ name: 'language', value: 'ENGLISH', label: 'English' })
 
       await wrapper.vm.aggregateOver()
       await wrapper.findComponent(FiltersPanelSectionFilterEntry).vm.$emit('update:model-value', false)
 
-      expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'application/pdf' })).toBe(false)
+      expect(lockedFiltersStore.isLocked({ name: 'language', value: 'ENGLISH' })).toBe(false)
     })
 
     it('still renders a locked value with no matching aggregation bucket, at zero count', async () => {
-      // No document with this contentType exists — simulates a deleted/re-indexed value.
-      lockedFiltersStore.lock({ name: 'contentType', value: 'application/removed', label: 'Removed Type' })
+      // No document with this language exists — simulates a deleted/re-indexed value.
+      lockedFiltersStore.lock({ name: 'language', value: 'KLINGON', label: 'Removed Language' })
 
       await wrapper.vm.aggregateOver()
 
       const entry = wrapper.findAllComponents(FiltersPanelSectionFilterEntry).find(
-        w => w.props('label') === 'Removed Type'
+        w => w.props('label') === 'Removed Language'
       )
       expect(entry).toBeTruthy()
       expect(entry.props('count')).toBe(0)
@@ -435,31 +441,31 @@ describe('FilterType.vue', () => {
     })
 
     it('drops the synthetic locked-but-missing entry once it is unlocked', async () => {
-      lockedFiltersStore.lock({ name: 'contentType', value: 'application/removed', label: 'Removed Type' })
+      lockedFiltersStore.lock({ name: 'language', value: 'KLINGON', label: 'Removed Language' })
       await wrapper.vm.aggregateOver()
-      expect(wrapper.vm.entries.some(({ label }) => label === 'Removed Type')).toBe(true)
+      expect(wrapper.vm.entries.some(({ label }) => label === 'Removed Language')).toBe(true)
 
-      lockedFiltersStore.unlock({ name: 'contentType', value: 'application/removed' })
+      lockedFiltersStore.unlock({ name: 'language', value: 'KLINGON' })
       await wrapper.vm.aggregateOver()
 
-      expect(wrapper.vm.entries.some(({ label }) => label === 'Removed Type')).toBe(false)
+      expect(wrapper.vm.entries.some(({ label }) => label === 'Removed Language')).toBe(false)
       expect(
-        wrapper.findAllComponents(FiltersPanelSectionFilterEntry).some(w => w.props('label') === 'Removed Type')
+        wrapper.findAllComponents(FiltersPanelSectionFilterEntry).some(w => w.props('label') === 'Removed Language')
       ).toBe(false)
     })
 
     it('renders a ticked+excluded+locked value only once, even with no matching aggregation bucket', async () => {
-      // No document indexed with this contentType — it is "missing" from both
+      // No document indexed with this language — it is "missing" from both
       // excludedBucketsPage (ticked+excluded synthesis) and, absent dedup,
       // missingLockedBucketsPage (locked-but-missing synthesis) at once.
-      searchStore.contextualizeFilter('contentType')
-      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
-      searchStore.excludeFilter('contentType')
-      lockedFiltersStore.lock({ name: '-contentType', value: 'application/pdf', label: 'PDF' })
+      searchStore.contextualizeFilter('language')
+      searchStore.addFilterValue({ name: 'language', value: 'ENGLISH' })
+      searchStore.excludeFilter('language')
+      lockedFiltersStore.lock({ name: '-language', value: 'ENGLISH', label: 'English' })
 
       await wrapper.vm.aggregateOver()
 
-      const matches = wrapper.vm.entries.filter(({ value }) => value === 'application/pdf')
+      const matches = wrapper.vm.entries.filter(({ value }) => value === 'ENGLISH')
       expect(matches).toHaveLength(1)
     })
   })
