@@ -212,11 +212,13 @@ onConsumeNoRefresh({ immediate: route.name === 'search' })
                   :model-value="!!Component"
                   @hide="refreshRoute"
                 >
-                  <search-carousel v-if="hasCarousel" />
-                  <component
-                    :is="Component"
-                    :compact="!enoughFloatingSpace"
-                  />
+                  <template #default="{ compact }">
+                    <search-carousel v-if="hasCarousel" />
+                    <component
+                      :is="Component"
+                      :compact="compact"
+                    />
+                  </template>
                 </document-modal>
                 <component
                   :is="Component"

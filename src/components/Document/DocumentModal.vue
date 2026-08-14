@@ -63,7 +63,7 @@ onRouteUpdateNotMatch(route.name, () => hide())
       no-reduce
       no-expand
     >
-      <slot>
+      <slot v-bind="{ compact }">
         <document-view
           :id="id"
           :routing="routing"
