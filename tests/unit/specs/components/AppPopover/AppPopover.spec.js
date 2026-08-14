@@ -25,6 +25,25 @@ describe('AppPopover.vue', () => {
     })
   }
 
+  // Same as mountPopover, but attached to the document with a reactive v-model,
+  // for the specs asserting where the focus actually lands.
+  function mountAttachedPopover() {
+    const wrapper = mount(AppPopover, {
+      global: { plugins },
+      props: {
+        'modelValue': false,
+        'onUpdate:modelValue': modelValue => wrapper.setProps({ modelValue })
+      },
+      slots: { target: '<button class="opener">Target</button>' },
+      attachTo: document.body
+    })
+    return wrapper
+  }
+
+  afterEach(() => {
+    document.body.innerHTML = ''
+  })
+
   it('should close the popover on Escape when it is visible', async () => {
     const wrapper = mountPopover({ modelValue: true })
 
@@ -45,14 +64,26 @@ describe('AppPopover.vue', () => {
     wrapper.unmount()
   })
 
-  it('should hand focus back to the opener on Escape', async () => {
-    const wrapper = mount(AppPopover, {
-      global: { plugins },
-      props: { modelValue: false },
-      slots: { target: '<button class="opener">Target</button>' },
-      attachTo: document.body
-    })
+  it('should consume Escape before it reaches a surrounding modal-style listener', async () => {
+    // BModal closes on an Escape listener scoped to its own element, so an open
+    // popover inside a modal must stop the key before it bubbles up to it.
+    const modalKeydown = vi.fn()
+    document.body.addEventListener('keydown', modalKeydown)
+    const wrapper = mountAttachedPopover()
+    await wrapper.setProps({ modelValue: true })
 
+    const opener = wrapper.find('.opener').element
+    opener.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.props('modelValue')).toBe(false)
+    expect(modalKeydown).not.toHaveBeenCalled()
+    document.body.removeEventListener('keydown', modalKeydown)
+    wrapper.unmount()
+  })
+
+  it('should hand focus back to the opener on Escape', async () => {
+    const wrapper = mountAttachedPopover()
     const opener = wrapper.find('.opener').element
     opener.focus()
     expect(document.activeElement).toBe(opener)
@@ -69,6 +100,52 @@ describe('AppPopover.vue', () => {
 
     expect(document.activeElement).toBe(opener)
     wrapper.unmount()
-    document.body.innerHTML = ''
+  })
+
+  it('should hand focus back to the opener no matter how the popover is closed', async () => {
+    const wrapper = mountAttachedPopover()
+    const opener = wrapper.find('.opener').element
+    opener.focus()
+
+    await wrapper.setProps({ modelValue: true })
+    opener.blur()
+
+    // Closing through the v-model covers every non-Escape path (a click
+    // outside or the header close button both end up flipping it).
+    await wrapper.setProps({ modelValue: false })
+
+    expect(document.activeElement).toBe(opener)
+    wrapper.unmount()
+  })
+
+  it('should leave focus alone when the user moved it to another control', async () => {
+    const input = document.createElement('input')
+    document.body.appendChild(input)
+    const wrapper = mountAttachedPopover()
+    const opener = wrapper.find('.opener').element
+    opener.focus()
+
+    await wrapper.setProps({ modelValue: true })
+    // A click outside on a focusable control focuses it before the popover
+    // closes: handing focus back to the opener would steal it from the user.
+    input.focus()
+    await wrapper.setProps({ modelValue: false })
+
+    expect(document.activeElement).toBe(input)
+    wrapper.unmount()
+  })
+
+  it('should capture the opener even when mounted already open', async () => {
+    const opener = document.createElement('button')
+    document.body.appendChild(opener)
+    opener.focus()
+
+    const wrapper = mountPopover({ modelValue: true })
+    opener.blur()
+    pressEscape()
+    await wrapper.vm.$nextTick()
+
+    expect(document.activeElement).toBe(opener)
+    wrapper.unmount()
   })
 })
