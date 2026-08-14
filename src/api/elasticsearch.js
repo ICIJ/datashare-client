@@ -5,7 +5,7 @@ import { getCookie } from 'tiny-cookie'
 
 import { Client, Transport } from '@/api/elasticsearchClient'
 
-import { getPairedDimensions } from '@/store/filters/pairedDimensions'
+import { getPairedDimension, getPairedDimensions } from '@/store/filters/pairedDimensions'
 import { EventBus } from '@/utils/eventBus'
 import { SEARCH_OPERATORS } from '@/enums/searchOperators'
 import settings from '@/utils/settings'
@@ -321,11 +321,7 @@ export function datasharePlugin(Client) {
     let body = filter.body(bodybuilder(), options, from, size)
 
     if (contextualize) {
-      // Exclude the bucket's own filter from the agg context so the bucket
-      // selection does not constrain its own buckets and the paired-dimension
-      // OR-combine does not trigger (only one side of the pair remains here).
-      const otherFilters = filters.filter(other => other.name !== filter.name)
-      this._applyFilters(body, otherFilters)
+      this._applyFilters(body, this._contextFilters(filter, filters))
       this._applyQueryString(body, normalizeQuery(query), fields)
     }
 
@@ -441,6 +437,29 @@ export function datasharePlugin(Client) {
       }
     }
     return this._search({ index, body, preference: PREFERENCE.MAX_EXTRACTION_DATE })
+  }
+
+  /**
+   * The filters constraining a bucket aggregation when the filter is
+   * contextualized.
+   *
+   * A paired filter (contentType ↔ contentTypeCategory) drops its own
+   * selection: its buckets would otherwise collapse to the values already
+   * picked, and its sibling keeps constraining the aggregation anyway.
+   *
+   * Every other filter keeps its own selection, so its buckets describe the
+   * current search results, which is what contextualizing is for. Without it,
+   * contextualizing a filter that is the only active one is a no-op.
+   * @private
+   * @param {Object} filter - The filter being aggregated on
+   * @param {Array} filters - Every instantiated filter
+   * @returns {Array} The filters to apply to the aggregation body
+   */
+  Client.prototype._contextFilters = function (filter, filters) {
+    if (!getPairedDimension(filter.name)) {
+      return filters
+    }
+    return filters.filter(other => other.name !== filter.name)
   }
 
   /**

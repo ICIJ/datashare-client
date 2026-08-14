@@ -160,11 +160,11 @@ describe('FilterContentTypeCategory.js', () => {
 
     function buildAggBody(filterName) {
       // Mirrors the body construction performed by `searchFilter`: build the
-      // bucket's own aggregation, then apply the other filters and the query.
+      // bucket's own aggregation, then apply the context filters and the query.
       const filter = searchStore.getFilter({ name: filterName })
-      const otherFilters = searchStore.instantiatedFilters.filter(other => other.name !== filter.name)
+      const contextFilters = api.elasticsearch._contextFilters(filter, searchStore.instantiatedFilters)
       const body = filter.body(bodybuilder(), {}, 0, 8)
-      api.elasticsearch._applyFilters(body, otherFilters)
+      api.elasticsearch._applyFilters(body, contextFilters)
       api.elasticsearch._applyQueryString(body, '*', [])
       return body.size(0).rawOption('track_total_hits', true).build()
     }
