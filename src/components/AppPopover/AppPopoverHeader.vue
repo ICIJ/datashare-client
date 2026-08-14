@@ -13,6 +13,12 @@ const props = defineProps({
   tag: {
     type: String,
     default: 'h3'
+  },
+  /**
+   * Render no close button, for a popover closed by clicking its target again.
+   */
+  hideClose: {
+    type: Boolean
   }
 })
 const { t } = useI18n()
@@ -37,6 +43,7 @@ const showHeader = computed(() => props.title || slots.title || slots.close)
     </component>
     <slot name="close">
       <button-icon
+        v-if="!hideClose"
         :icon-left="IPhX"
         hide-label
         hide-tooltip

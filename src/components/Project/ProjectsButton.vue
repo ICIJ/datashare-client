@@ -36,6 +36,7 @@ const label = computed(() => {
   <app-popover
     v-else-if="projectList.length > 1"
     :title="label"
+    hide-close
     class="projects-button__popover"
   >
     <template #target="{ visible }">
@@ -55,11 +56,6 @@ const label = computed(() => {
         :project="project"
       />
     </div>
-    <template #close>
-      <!-- Must render a non-empty node: AppPopoverHeader falls back to its own
-           close button the moment the forwarded #close slot renders nothing. -->
-      <span />
-    </template>
   </app-popover>
 </template>
 
