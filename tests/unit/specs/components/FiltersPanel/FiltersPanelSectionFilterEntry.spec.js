@@ -78,10 +78,10 @@ describe('FiltersPanelSectionFilterEntry.vue', () => {
     expect(wrapper.find('.filters-panel-section-filter-entry__count').exists()).toBe(false)
   })
 
-  it('hides the count badge while ticked, even when not locked, since the lock button takes its place', () => {
+  it('shows the count badge while ticked but not locked', () => {
     const props = { label: 'Confidential', modelValue: true, locked: false, count: 5 }
     const wrapper = mount(FiltersPanelSectionFilterEntry, { global, props })
-    expect(wrapper.find('.filters-panel-section-filter-entry__count').exists()).toBe(false)
+    expect(wrapper.find('.filters-panel-section-filter-entry__count').exists()).toBe(true)
   })
 
   it('shows the count badge while unticked and unlocked', () => {
