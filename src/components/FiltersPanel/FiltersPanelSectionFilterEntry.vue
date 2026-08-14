@@ -67,7 +67,7 @@ const classList = computed(() => {
 // can be locked while unticked (e.g. after "Clear filters", which preserves
 // locks but unticks the value), and the user still needs a way to unlock it.
 const showLockButton = computed(() => Boolean(props.modelValue) || props.locked)
-const showCount = computed(() => !props.hideCount && !isNaN(props.count) && !showLockButton.value)
+const showCount = computed(() => !props.hideCount && !isNaN(props.count) && !props.locked)
 const lockLabel = computed(() => t(props.locked ? 'filtersPanelSectionFilterEntry.unlock' : 'filtersPanelSectionFilterEntry.lock'))
 </script>
 
