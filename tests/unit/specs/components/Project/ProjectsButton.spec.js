@@ -35,10 +35,19 @@ describe('ProjectsButton.vue', () => {
     expect(wrapper.find('.app-popover-stub').exists()).toBe(false)
   })
 
-  it('should render nothing for zero projects', () => {
+  it('should render a placeholder for zero projects', () => {
     const wrapper = mountButton([])
     expect(wrapper.findAllComponents({ name: 'ProjectButton' })).toHaveLength(0)
     expect(wrapper.find('.app-popover-stub').exists()).toBe(false)
+    expect(wrapper.find('.projects-button__empty').text()).toBe('-')
+  })
+
+  // A task without a project yields a list of holes, as in [item.args?.defaultProject],
+  // which used to reach ProjectButton as an undefined project and throw.
+  it('should render a placeholder for a list of missing projects', () => {
+    const wrapper = mountButton([undefined])
+    expect(wrapper.findAllComponents({ name: 'ProjectButton' })).toHaveLength(0)
+    expect(wrapper.find('.projects-button__empty').text()).toBe('-')
   })
 
   it('should accept a bare string as a single project', () => {
