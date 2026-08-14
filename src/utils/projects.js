@@ -1,11 +1,16 @@
+import castArray from 'lodash/castArray'
 import isObject from 'lodash/isObject'
 
 /**
  * Normalize a project prop, which may be a bare name, a project object, or a
  * list of either, into a list.
+ *
+ * Missing entries are dropped rather than kept as holes: task lists build their
+ * project list positionally, as in `[item.args?.defaultProject]`, so a blank or
+ * absent project would otherwise render as a nameless project.
  */
 export function toProjectList(projects) {
-  return [].concat(projects ?? [])
+  return castArray(projects).filter(Boolean)
 }
 
 /**
