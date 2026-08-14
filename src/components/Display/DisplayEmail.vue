@@ -1,9 +1,10 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { AppIcon } from '@icij/murmur'
 import trim from 'lodash/trim'
 import { useI18n } from 'vue-i18n'
 
+import AppPopover from '@/components/AppPopover/AppPopover'
 import { useSearchStore } from '@/store/modules'
 
 const EMAIL_REGEX = /(.+)<(.+)>/i
@@ -18,12 +19,6 @@ const props = defineProps({
   }
 })
 const { t } = useI18n()
-
-// The target is a span or a strong rather than a button, so Enter and Space do
-// not raise a click of their own. Popovers open on click only, which would
-// leave this one unreachable by keyboard without an explicit toggle.
-const isPopoverVisible = ref(false)
-const togglePopover = () => (isPopoverVisible.value = !isPopoverVisible.value)
 
 const nameWithoutEmail = computed(() => {
   const matches = String(props.value).match(EMAIL_REGEX)
@@ -55,25 +50,24 @@ const qSent = computed(() => {
 </script>
 
 <template>
-  <b-popover
-    v-model="isPopoverVisible"
-    teleport-to="body"
+  <app-popover
+    hide-header
     class="display-email__popover"
     placement="bottom"
     :boundary-padding="16"
   >
-    <template #target>
-      <component
-        :is="tag"
+    <!-- The target is a real button so Enter, Space and assistive technologies
+         all raise a single native click, handled once by the click trigger. -->
+    <template #target="{ visible }">
+      <button
+        type="button"
         class="display-email"
-        role="button"
-        tabindex="0"
-        :aria-expanded="isPopoverVisible"
-        @keydown.enter.prevent="togglePopover"
-        @keydown.space.prevent="togglePopover"
+        :aria-expanded="visible"
       >
-        {{ nameOrRawEmail }}
-      </component>
+        <component :is="tag">
+          {{ nameOrRawEmail }}
+        </component>
+      </button>
     </template>
     <div class="display-email__popover__content">
       <div class="h6 m-0">
@@ -103,12 +97,17 @@ const qSent = computed(() => {
         </router-link>
       </div>
     </div>
-  </b-popover>
+  </app-popover>
 </template>
 
 <style lang="scss">
 .display-email {
   display: inline-block;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
   cursor: pointer;
 
   &__popover {
