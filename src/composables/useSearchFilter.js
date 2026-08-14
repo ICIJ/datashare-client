@@ -32,6 +32,7 @@ import { CONTENT_TYPE_CATEGORY_FILTER_NAME } from '@/store/filters/FilterContent
 import FilterText from '@/store/filters/FilterText.js'
 import { PAIRED_DIMENSIONS, getCanonicalDimension, getPairedDimension, getPairedDimensions } from '@/store/filters/pairedDimensions'
 import { useAppStore, useLockedFiltersStore, useRecommendedStore, useSearchStore } from '@/store/modules'
+import { toLockedName } from '@/store/modules/lockedFilters'
 
 export function useSearchFilter() {
   const appStore = useAppStore()
@@ -281,7 +282,7 @@ export function useSearchFilter() {
   // below so unlocking never leaks across a paired filter's other side.
   function lockedNameFor(filter) {
     const instance = castFilter(filter)
-    return isFilterExcluded(instance) ? `-${instance.name}` : instance.name
+    return toLockedName(instance.name, isFilterExcluded(instance))
   }
 
   const removeFilterValue = (filter, item) => {
