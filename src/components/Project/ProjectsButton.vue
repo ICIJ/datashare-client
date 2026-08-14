@@ -57,6 +57,14 @@ const label = computed(() => {
       />
     </div>
   </app-popover>
+  <!-- Consumers render this straight into a table cell, so an absent project
+       list needs a placeholder rather than collapsing the cell to nothing. -->
+  <span
+    v-else
+    class="projects-button__empty"
+  >
+    -
+  </span>
 </template>
 
 <style lang="scss">

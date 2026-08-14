@@ -108,11 +108,7 @@ function statusLabel(state) {
         <display-snapshot-distribution :value="item.snapshot" />
       </template>
       <template #cell(indices)="{ item }">
-        <projects-button
-          v-if="item.indices?.length > 0"
-          :projects="item.indices"
-        />
-        <span v-else>-</span>
+        <projects-button :projects="item.indices" />
       </template>
       <template #row-actions="{ item }">
         <settings-snapshots-actions
