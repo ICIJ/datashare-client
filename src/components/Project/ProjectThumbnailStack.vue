@@ -36,7 +36,9 @@ const core = useCore()
 
 const projectList = computed(() => toProjectList(props.projects))
 
-const visibleProjects = computed(() => projectList.value.slice(0, props.max))
+const visibleProjects = computed(() => {
+  return projectList.value.slice(0, props.max).map(project => resolveProject(project, core))
+})
 
 const hasOverflow = computed(() => {
   return props.overflow && projectList.value.length > props.max
@@ -48,7 +50,7 @@ const hasOverflow = computed(() => {
     <project-thumbnail
       v-for="(project, index) in visibleProjects"
       :key="index"
-      :project="resolveProject(project, core)"
+      :project="project"
       width="1.25em"
       :rounded="1"
       no-caption
