@@ -31,11 +31,12 @@ const FilterTypeStarred = defineAsyncComponent(() => import('@/components/Filter
 import { CONTENT_TYPE_CATEGORY_FILTER_NAME } from '@/store/filters/FilterContentTypeCategory'
 import FilterText from '@/store/filters/FilterText.js'
 import { PAIRED_DIMENSIONS, getCanonicalDimension, getPairedDimension, getPairedDimensions } from '@/store/filters/pairedDimensions'
-import { useAppStore, useRecommendedStore, useSearchStore } from '@/store/modules'
+import { useAppStore, useLockedFiltersStore, useRecommendedStore, useSearchStore } from '@/store/modules'
 
 export function useSearchFilter() {
   const appStore = useAppStore()
   const searchStore = useSearchStore.inject()
+  const lockedFiltersStore = useLockedFiltersStore()
   const recommendedStore = useRecommendedStore()
   const route = useRoute()
   const router = useRouter()
@@ -275,16 +276,29 @@ export function useSearchFilter() {
     return searchStore.addFilterValue({ ...instance, value })
   }
 
+  // The store key for a filter's locks: its own current include/exclude
+  // mode, never a paired dimension's — shared by every value-removal path
+  // below so unlocking never leaks across a paired filter's other side.
+  function lockedNameFor(filter) {
+    const instance = castFilter(filter)
+    return isFilterExcluded(instance) ? `-${instance.name}` : instance.name
+  }
+
   const removeFilterValue = (filter, item) => {
     const instance = castFilter(filter)
     const param = instance.itemParam(castFilterItem(item))
     const value = toString(param.value)
+    lockedFiltersStore.unlock({ name: lockedNameFor(filter), value })
     return searchStore.removeFilterValue({ ...instance, value })
   }
 
   const removeFilterValues = (filter) => {
     // setFilterValue takes a single { name, value } arg; passing [] positionally writes [undefined].
     const { name } = castFilter(filter)
+    const lockedName = lockedNameFor(filter)
+    for (const entry of lockedFiltersStore.entries.filter(entry => entry.name === lockedName)) {
+      lockedFiltersStore.unlock({ name: lockedName, value: entry.value })
+    }
     return searchStore.setFilterValue({ name, value: [] })
   }
 
