@@ -43,7 +43,7 @@ describe('SearchBreadcrumbFormEntry.vue', () => {
 
   describe('lock button', () => {
     function findLockButton(wrapper) {
-      return wrapper.find('.search-breadcrumb-form-entry__lock')
+      return wrapper.find('.search-parameter-query-term__lock')
     }
 
     it('renders an unlocked lock button for a filter chip', () => {
@@ -107,18 +107,18 @@ describe('SearchBreadcrumbFormEntry.vue', () => {
       expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'application/pdf' })).toBe(false)
     })
 
-    it('applies a locked visual class to a locked chip', () => {
+    it('applies a locked visual class to the chip pill when locked', () => {
       const lockedFiltersStore = useLockedFiltersStore()
       lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
       const props = { filter: 'contentType', value: 'application/pdf' }
       const wrapper = mount(SearchBreadcrumbFormEntry, { global, props })
-      expect(wrapper.classes()).toContain('search-breadcrumb-form-entry--locked')
+      expect(wrapper.find('.search-parameter-query-term').classes()).toContain('search-parameter-query-term--locked')
     })
 
-    it('does not apply the locked visual class to an unlocked chip', () => {
+    it('does not apply the locked visual class to the chip pill when unlocked', () => {
       const props = { filter: 'contentType', value: 'application/pdf' }
       const wrapper = mount(SearchBreadcrumbFormEntry, { global, props })
-      expect(wrapper.classes()).not.toContain('search-breadcrumb-form-entry--locked')
+      expect(wrapper.find('.search-parameter-query-term').classes()).not.toContain('search-parameter-query-term--locked')
     })
 
     it('does not render a lock button when the chip is read-only (noXIcon)', () => {
