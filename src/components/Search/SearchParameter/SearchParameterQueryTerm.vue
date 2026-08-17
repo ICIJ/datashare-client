@@ -186,10 +186,17 @@ const showOperator = computed(() => {
     margin-left: $spacer-xs;
     cursor: pointer;
     color: var(--bs-tertiary);
+    opacity: 0;
+    transition: opacity 0.15s ease;
 
     &:hover {
       color: var(--bs-body-color);
     }
+  }
+
+  &:hover &__lock,
+  &__lock:focus-visible {
+    opacity: 1;
   }
 
   &--locked {
@@ -199,6 +206,7 @@ const showOperator = computed(() => {
 
     .search-parameter-query-term__lock {
       color: var(--bs-action);
+      opacity: 1;
     }
   }
 }
