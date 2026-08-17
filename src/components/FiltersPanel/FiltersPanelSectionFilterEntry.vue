@@ -103,6 +103,7 @@ const lockLabel = computed(() => t(props.locked ? 'filtersPanelSectionFilterEntr
       variant="link"
       size="sm"
       class="filters-panel-section-filter-entry__lock"
+      :class="{ 'filters-panel-section-filter-entry__lock--locked': locked }"
       :icon-left="locked ? IPhLock : IPhLockOpen"
       :pressed="locked"
       :label="lockLabel"
@@ -153,6 +154,17 @@ const lockLabel = computed(() => t(props.locked ? 'filtersPanelSectionFilterEntr
   &__lock {
     flex-shrink: 0;
     margin-right: $spacer-xs;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+
+    &--locked {
+      opacity: 1;
+    }
+  }
+
+  &:hover &__lock,
+  &__lock:focus-visible {
+    opacity: 1;
   }
 
   &__count {
