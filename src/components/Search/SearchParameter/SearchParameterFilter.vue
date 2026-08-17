@@ -59,6 +59,14 @@ const props = defineProps({
   },
   noXIcon: {
     type: Boolean
+  },
+  locked: {
+    type: Boolean,
+    default: null
+  },
+  lockLabel: {
+    type: String,
+    default: null
   }
 })
 
@@ -112,6 +120,8 @@ const display = computed(() => {
     :color="color"
     :no-icon="noIcon"
     :no-x-icon="noXIcon"
+    :locked="locked"
+    :lock-label="lockLabel"
   >
     <component
       :is="display"

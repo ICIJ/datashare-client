@@ -1,10 +1,8 @@
 <script setup>
 import { computed } from 'vue'
-import { AppIcon, ButtonIcon } from '@icij/murmur'
+import { AppIcon } from '@icij/murmur'
 import { useI18n } from 'vue-i18n'
 import IPhCaretRightFill from '~icons/ph/caret-right-fill'
-import IPhLock from '~icons/ph/lock'
-import IPhLockOpen from '~icons/ph/lock-open'
 
 import SearchBreadcrumbFormEntryOccurrences from '@/components/Search/SearchBreadcrumbForm/SearchBreadcrumbFormEntryOccurrences'
 import SearchParameter from '@/components/Search/SearchParameter/SearchParameter'
@@ -87,13 +85,11 @@ const isLockable = computed(() => Boolean(props.filter) && props.filter !== 'pro
 // no separate mode-derivation needed here.
 const locked = computed(() => isLockable.value && lockedFiltersStore.isLocked({ name: props.filter, value: props.value }))
 
-const lockLabel = computed(() => t(locked.value ? 'searchBreadcrumbFormEntry.unlock' : 'searchBreadcrumbFormEntry.lock'))
+// `null` tells search-parameter/SearchParameterQueryTerm "not lockable, no
+// icon" — distinct from `false` ("lockable, currently unlocked").
+const lockedForDisplay = computed(() => (isLockable.value ? locked.value : null))
 
-const classList = computed(() => {
-  return {
-    'search-breadcrumb-form-entry--locked': locked.value
-  }
-})
+const lockLabel = computed(() => t(locked.value ? 'searchBreadcrumbFormEntry.unlock' : 'searchBreadcrumbFormEntry.lock'))
 
 function toggleLock() {
   if (locked.value) {
@@ -106,10 +102,7 @@ function toggleLock() {
 </script>
 
 <template>
-  <div
-    class="search-breadcrumb-form-entry d-inline-flex flex-wrap align-items-center"
-    :class="classList"
-  >
+  <div class="search-breadcrumb-form-entry d-inline-flex flex-wrap align-items-center">
     <search-parameter
       :color="color"
       :icon="icon"
@@ -120,19 +113,10 @@ function toggleLock() {
       :size="size"
       :value="value"
       :no-x-icon="noXIcon"
+      :locked="lockedForDisplay"
+      :lock-label="lockLabel"
       @click:x="emit('click:x', $event)"
-    />
-    <button-icon
-      v-if="isLockable"
-      square
-      hide-label
-      variant="link"
-      size="sm"
-      class="search-breadcrumb-form-entry__lock"
-      :icon-left="locked ? IPhLock : IPhLockOpen"
-      :pressed="locked"
-      :label="lockLabel"
-      @click="toggleLock"
+      @click:lock="toggleLock"
     />
     <div class="text-nowrap">
       <search-breadcrumb-form-entry-occurrences
@@ -157,15 +141,5 @@ function toggleLock() {
 .search-breadcrumb-form-entry {
   align-items: center;
   color: var(--bs-secondary);
-
-  &__lock {
-    flex-shrink: 0;
-    margin: 0 $spacer-xs;
-  }
-
-  &--locked :deep(.search-parameter-query-term) {
-    border-style: solid;
-    background: var(--bs-tertiary-bg-subtle);
-  }
 }
 </style>
