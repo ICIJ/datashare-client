@@ -159,6 +159,11 @@ const lockLabel = computed(() => t(props.locked ? 'filtersPanelSectionFilterEntr
 
     &--locked {
       opacity: 1;
+
+      // Same accent as the breadcrumb chip's locked lock icon.
+      &:deep(.button-icon__icon-left) {
+        color: var(--bs-action);
+      }
     }
   }
 
