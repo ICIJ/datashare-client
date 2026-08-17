@@ -25,7 +25,7 @@ const breadcrumbRouteQuery = computed(() => {
 
 const entries = computed(() => parseEntries(searchStore.toBaseRouteQuery))
 
-searchStore.updateFromRouteQuery(breadcrumbRouteQuery.value)
+searchStore.updateFromRouteQuery(breadcrumbRouteQuery.value, { mergeLocks: false })
 </script>
 
 <template>
