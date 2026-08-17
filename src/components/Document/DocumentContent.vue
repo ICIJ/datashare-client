@@ -58,6 +58,10 @@ const { waitFor, isLoading } = useWait()
 const { hasMarkdown, pages: markdownPagesCount, fetchManifest } = useStructureArtifact(toRef(props, 'document'))
 
 const preferMarkdown = ref(true)
+// An artifact can be listed in the manifest and still hold no markdown at all.
+// That only shows once its first page comes back empty, so the toggle is built
+// from the manifest and this runtime finding together.
+const isMarkdownEmpty = ref(false)
 const markdownPage = ref(1)
 const markdownMatches = ref([])
 // Set at the end of `onMounted`, so the mode watcher can tell a real, later
@@ -262,6 +266,11 @@ onMounted(async () => {
     isMounted.value = true
   }
 })
+
+function fallbackToTextForEmptyMarkdown() {
+  isMarkdownEmpty.value = true
+  preferMarkdown.value = false
+}
 
 // Both paginations describe the same physical pages when their counts match,
 // so the page number survives the toggle; anything else has no page
@@ -601,7 +610,11 @@ async function loadContentSliceAround(desiredOffset) {
         :aria-label="t('documentContent.view.ariaLabel')"
         class="document-content__togglers__view"
       >
-        <b-form-radio :value="true">
+        <b-form-radio
+          :value="true"
+          :disabled="isMarkdownEmpty"
+          class="document-content__togglers__view__markdown"
+        >
           {{ t('documentContent.view.markdown') }}
         </b-form-radio>
         <b-form-radio :value="false">
@@ -624,6 +637,7 @@ async function loadContentSliceAround(desiredOffset) {
         :term="localSearchOccurrences ? markdownSearchTerm : ''"
         :active-match="activeMarkdownMatch"
         @fallback="preferMarkdown = false"
+        @empty="fallbackToTextForEmptyMarkdown"
       />
       <div
         v-else-if="hasExtractedContent"
