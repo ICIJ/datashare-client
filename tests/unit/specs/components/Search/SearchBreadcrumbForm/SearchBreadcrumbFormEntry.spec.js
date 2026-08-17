@@ -120,5 +120,19 @@ describe('SearchBreadcrumbFormEntry.vue', () => {
       const wrapper = mount(SearchBreadcrumbFormEntry, { global, props })
       expect(wrapper.classes()).not.toContain('search-breadcrumb-form-entry--locked')
     })
+
+    it('does not render a lock button when the chip is read-only (noXIcon)', () => {
+      const props = { filter: 'contentType', value: 'application/pdf', noXIcon: true }
+      const wrapper = mount(SearchBreadcrumbFormEntry, { global, props })
+      expect(findLockButton(wrapper).exists()).toBe(false)
+    })
+
+    it('does not render a lock button when the chip is read-only, even if already locked', () => {
+      const lockedFiltersStore = useLockedFiltersStore()
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+      const props = { filter: 'contentType', value: 'application/pdf', noXIcon: true }
+      const wrapper = mount(SearchBreadcrumbFormEntry, { global, props })
+      expect(findLockButton(wrapper).exists()).toBe(false)
+    })
   })
 })
