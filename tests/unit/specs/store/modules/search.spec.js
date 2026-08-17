@@ -1559,5 +1559,35 @@ describe('SearchStore', () => {
 
       expect(searchStore.getFilter({ name: 'contentTypeCategory' })?.values ?? []).toEqual([])
     })
+
+    it('skips merging an included lock when the route excludes its paired dimension', () => {
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      searchStore.updateFromRouteQuery({ 'f[-contentTypeCategory]': ['DOCUMENT'] })
+
+      // The lock must not be silently merged in as an included value: the
+      // paired-dimension exclude mode conflicts with it, so it must simply be
+      // skipped (its value never lands in contentType's values), regardless
+      // of the fact that reconcilePairedExcludeFilters separately forces the
+      // (empty) contentType filter into excluded mode too.
+      expect(searchStore.getFilter({ name: 'contentType' })?.values ?? []).toEqual([])
+    })
+
+    it('skips merging an excluded lock when the route includes its paired dimension', () => {
+      lockedFiltersStore.lock({ name: '-contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      searchStore.updateFromRouteQuery({ 'f[contentTypeCategory]': ['DOCUMENT'] })
+
+      expect(searchStore.getFilter({ name: 'contentType' })?.values ?? []).toEqual([])
+      expect(searchStore.isFilterExcluded('contentTypeCategory')).toBe(false)
+    })
+
+    it('does not merge locked filters when mergeLocks is false', () => {
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      searchStore.updateFromRouteQuery({}, { mergeLocks: false })
+
+      expect(searchStore.getFilter({ name: 'contentType' })?.values ?? []).toEqual([])
+    })
   })
 })
