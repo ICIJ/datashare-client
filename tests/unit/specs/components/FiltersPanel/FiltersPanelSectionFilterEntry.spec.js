@@ -96,6 +96,12 @@ describe('FiltersPanelSectionFilterEntry.vue', () => {
     expect(wrapper.find('.filters-panel-section-filter-entry__count').exists()).toBe(true)
   })
 
+  it('shows the count badge while unticked but locked', () => {
+    const props = { label: 'Confidential', modelValue: false, locked: true, lockable: true, count: 5 }
+    const wrapper = mount(FiltersPanelSectionFilterEntry, { global, props })
+    expect(wrapper.find('.filters-panel-section-filter-entry__count').exists()).toBe(true)
+  })
+
   it('hides the count badge for a synthesized (NaN count) locked row', () => {
     const props = { label: 'Confidential', modelValue: false, locked: true, lockable: true, count: NaN }
     const wrapper = mount(FiltersPanelSectionFilterEntry, { global, props })
