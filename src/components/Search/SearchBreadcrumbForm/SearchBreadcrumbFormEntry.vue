@@ -1,10 +1,14 @@
 <script setup>
 import { computed } from 'vue'
-import { AppIcon } from '@icij/murmur'
+import { AppIcon, ButtonIcon } from '@icij/murmur'
+import { useI18n } from 'vue-i18n'
 import IPhCaretRightFill from '~icons/ph/caret-right-fill'
+import IPhLock from '~icons/ph/lock'
+import IPhLockOpen from '~icons/ph/lock-open'
 
 import SearchBreadcrumbFormEntryOccurrences from '@/components/Search/SearchBreadcrumbForm/SearchBreadcrumbFormEntryOccurrences'
 import SearchParameter from '@/components/Search/SearchParameter/SearchParameter'
+import { useLockedFiltersStore } from '@/store/modules'
 
 const props = defineProps({
   filter: {
@@ -55,6 +59,9 @@ const props = defineProps({
 
 const emit = defineEmits(['click:x'])
 
+const { t } = useI18n()
+const lockedFiltersStore = useLockedFiltersStore()
+
 const showOccurrences = computed(() => {
   return !props.noOccurrences && props.occurrences !== null
 })
@@ -62,10 +69,43 @@ const showOccurrences = computed(() => {
 const showCaret = computed(() => {
   return !props.noCaret && props.occurrences !== null
 })
+
+// Locks only apply to filter chips, never the free-text query chip, and
+// never the project chip — projects are keyed via `indices` rather than the
+// `f[name]`/`f[-name]` scheme locked filters merge against on hydration
+// (see icij/datashare#2336 for the same project-filter carve-out on the
+// Filters panel side).
+const isLockable = computed(() => Boolean(props.filter) && props.filter !== 'project')
+
+// `props.filter` already carries the `-` prefix for excluded filters (it's
+// read straight off the `f[name]`/`f[-name]` route param in
+// useSearchBreadcrumb.js), which is exactly the lock store's `name` format —
+// no separate mode-derivation needed here.
+const locked = computed(() => isLockable.value && lockedFiltersStore.isLocked({ name: props.filter, value: props.value }))
+
+const lockLabel = computed(() => t(locked.value ? 'searchBreadcrumbFormEntry.unlock' : 'searchBreadcrumbFormEntry.lock'))
+
+const classList = computed(() => {
+  return {
+    'search-breadcrumb-form-entry--locked': locked.value
+  }
+})
+
+function toggleLock() {
+  if (locked.value) {
+    lockedFiltersStore.unlock({ name: props.filter, value: props.value })
+  }
+  else {
+    lockedFiltersStore.lock({ name: props.filter, value: props.value, label: props.value })
+  }
+}
 </script>
 
 <template>
-  <div class="search-breadcrumb-form-entry d-inline-flex flex-wrap">
+  <div
+    class="search-breadcrumb-form-entry d-inline-flex flex-wrap align-items-center"
+    :class="classList"
+  >
     <search-parameter
       :color="color"
       :icon="icon"
@@ -77,6 +117,18 @@ const showCaret = computed(() => {
       :value="value"
       :no-x-icon="noXIcon"
       @click:x="emit('click:x', $event)"
+    />
+    <button-icon
+      v-if="isLockable"
+      square
+      hide-label
+      variant="link"
+      size="sm"
+      class="search-breadcrumb-form-entry__lock"
+      :icon-left="locked ? IPhLock : IPhLockOpen"
+      :pressed="locked"
+      :label="lockLabel"
+      @click="toggleLock"
     />
     <div class="text-nowrap">
       <search-breadcrumb-form-entry-occurrences
@@ -101,5 +153,15 @@ const showCaret = computed(() => {
 .search-breadcrumb-form-entry {
   align-items: center;
   color: var(--bs-secondary);
+
+  &__lock {
+    flex-shrink: 0;
+    margin: 0 $spacer-xs;
+  }
+
+  &--locked :deep(.search-parameter-query-term) {
+    border-style: solid;
+    background: var(--bs-tertiary-bg-subtle);
+  }
 }
 </style>
