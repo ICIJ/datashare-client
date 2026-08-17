@@ -26,7 +26,7 @@ import builtinFilterIcons from '@/store/filters/icons'
 const query = defineModel('query', { type: String, default: '' })
 const collapse = defineModel('collapse', { type: Boolean, default: null })
 
-const { filter, modal, hideCount, overlayShow } = defineProps({
+const { filter, modal, hideCount, hideLock, overlayShow } = defineProps({
   filter: {
     type: Object,
     required: true
@@ -35,6 +35,15 @@ const { filter, modal, hideCount, overlayShow } = defineProps({
     type: Boolean
   },
   hideCount: {
+    type: Boolean
+  },
+  // Suppresses the per-value lock button and locked-but-missing synthetic
+  // buckets entirely. Used by disposable/unrelated screens (e.g. the batch
+  // search creation form) that render this filter against a non-live search
+  // store: locking from there would write to the user's global personal lock
+  // store with no visibility into what it's actually affecting. See
+  // icij/datashare#2329.
+  hideLock: {
     type: Boolean
   },
   // Forwarded to FiltersPanelSectionFilter to surface an informational
@@ -240,7 +249,7 @@ const missingLocks = computed(() => {
 const toSyntheticBucket = entry => ({ key: entry.value, doc_count: NaN, __lockedLabel: entry.label })
 
 const missingLockedBucketsPage = computed(() => {
-  if (query.value !== '') {
+  if (hideLock || query.value !== '') {
     return []
   }
   const missing = missingLocks.value.map(toSyntheticBucket)
@@ -379,7 +388,7 @@ defineExpose({ entries, aggregateOver, count })
         :hide-count="hideCount"
         :model-value="hasValue(item)"
         :locked="isItemLocked(item)"
-        lockable
+        :lockable="!hideLock"
         @update:model-value="toggleValue(item, $event)"
         @update:locked="toggleLock(item, $event)"
       >
@@ -407,6 +416,7 @@ defineExpose({ entries, aggregateOver, count })
       v-model:sort="sort"
       :filter="filter"
       :hide-count="hideCount"
+      :hide-lock="hideLock"
       :modal="modal"
     />
   </filters-panel-section-filter>
