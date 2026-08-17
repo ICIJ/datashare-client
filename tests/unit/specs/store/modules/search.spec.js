@@ -8,7 +8,7 @@ import { SEARCH_OPERATORS } from '@/enums/searchOperators'
 import Document from '@/api/resources/Document'
 import EsDocList from '@/api/resources/EsDocList'
 import NamedEntity from '@/api/resources/NamedEntity'
-import { useAppStore, useSearchStore } from '@/store/modules'
+import { useAppStore, useLockedFiltersStore, useSearchStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
 
 describe('SearchStore', () => {
@@ -1490,6 +1490,74 @@ describe('SearchStore', () => {
       expect(findBoolShould(body.query)).toBeNull()
       expect(findMustNotForField(body.query, 'contentType')).toEqual(['application/pdf'])
       expect(findMustNotForField(body.query, 'contentTypeCategory')).toEqual(['DOCUMENT'])
+    })
+  })
+
+  describe('locked filters silent auto-apply', () => {
+    let lockedFiltersStore
+
+    beforeEach(() => {
+      lockedFiltersStore = useLockedFiltersStore()
+    })
+
+    it('silently merges a locked value into a filter absent from the route', () => {
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      searchStore.updateFromRouteQuery({})
+
+      expect(searchStore.getFilter({ name: 'contentType' }).values).toEqual(['application/pdf'])
+      expect(searchStore.isFilterExcluded('contentType')).toBe(false)
+    })
+
+    it('silently merges a locked value alongside route-supplied values in the same mode', () => {
+      lockedFiltersStore.lock({ name: 'contentType', value: 'text/plain', label: 'text/plain' })
+
+      searchStore.updateFromRouteQuery({ 'f[contentType]': ['application/pdf'] })
+
+      expect(searchStore.getFilter({ name: 'contentType' }).values.slice().sort()).toEqual(['application/pdf', 'text/plain'])
+    })
+
+    it('applies the excluded mode when silently merging a locked excluded value into an absent filter', () => {
+      lockedFiltersStore.lock({ name: '-contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      searchStore.updateFromRouteQuery({})
+
+      expect(searchStore.getFilter({ name: 'contentType' }).values).toEqual(['application/pdf'])
+      expect(searchStore.isFilterExcluded('contentType')).toBe(true)
+    })
+
+    it('skips merging a locked value when the route has that filter in the opposite mode', () => {
+      lockedFiltersStore.lock({ name: 'contentType', value: 'text/plain', label: 'text/plain' })
+
+      searchStore.updateFromRouteQuery({ 'f[-contentType]': ['application/pdf'] })
+
+      expect(searchStore.getFilter({ name: 'contentType' }).values).toEqual(['application/pdf'])
+      expect(searchStore.isFilterExcluded('contentType')).toBe(true)
+    })
+
+    it('re-applies the locked value on every hydration, not just the first', () => {
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      searchStore.updateFromRouteQuery({ q: 'first' })
+      expect(searchStore.getFilter({ name: 'contentType' }).values).toEqual(['application/pdf'])
+
+      searchStore.updateFromRouteQuery({ q: 'second' })
+      expect(searchStore.getFilter({ name: 'contentType' }).values).toEqual(['application/pdf'])
+    })
+
+    it('ignores a locked entry whose filter no longer exists', () => {
+      lockedFiltersStore.lock({ name: 'notAFilter', value: 'x', label: 'x' })
+
+      expect(() => searchStore.updateFromRouteQuery({})).not.toThrow()
+      expect(searchStore.values.notAFilter).toBeUndefined()
+    })
+
+    it('does not cascade a locked value onto a paired dimension', () => {
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      searchStore.updateFromRouteQuery({})
+
+      expect(searchStore.getFilter({ name: 'contentTypeCategory' })?.values ?? []).toEqual([])
     })
   })
 })
