@@ -21,6 +21,9 @@ const { filter, modal } = defineProps({
   },
   hideCount: {
     type: Boolean
+  },
+  hideLock: {
+    type: Boolean
   }
 })
 
@@ -48,6 +51,7 @@ const hasExpandModal = computed(() => !modal && !filter.hideExpand)
       :is="getFilterComponent(filter)"
       :filter="filter"
       :hide-count="hideCount"
+      :hide-lock="hideLock"
       modal
     />
   </app-modal>
