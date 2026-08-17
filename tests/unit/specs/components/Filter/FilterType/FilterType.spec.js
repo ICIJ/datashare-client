@@ -470,6 +470,57 @@ describe('FilterType.vue', () => {
     })
   })
 
+  describe('hideLock prop', () => {
+    let lockedFiltersStore
+
+    beforeEach(() => {
+      const name = 'language'
+      const filter = searchStore.getFilter({ name })
+
+      wrapper = shallowMount(FilterType, {
+        global: {
+          plugins: core.plugins,
+          renderStubDefaultSlot: true
+        },
+        props: {
+          filter,
+          hideLock: true
+        }
+      })
+
+      searchStore.decontextualizeFilter(name)
+      searchStore.setIndex(index)
+      searchStore.reset()
+      searchStore.resetFilters()
+      lockedFiltersStore = useLockedFiltersStore()
+      // CoreSetup falls back to the app's singleton pinia (with the locked
+      // filters store's `persist: true`), so entries otherwise leak into
+      // later describe blocks (e.g. the "language" tests below).
+      lockedFiltersStore.unlockAll()
+    })
+
+    afterEach(() => {
+      lockedFiltersStore.unlockAll()
+    })
+
+    it('does not forward a lock control to a ticked entry', async () => {
+      await letData(es).have(new IndexedDocument('document_01', index).withLanguage('ENGLISH')).commit()
+      searchStore.addFilterValue({ name: 'language', value: 'ENGLISH' })
+
+      await wrapper.vm.aggregateOver()
+
+      expect(wrapper.findComponent(FiltersPanelSectionFilterEntry).props('hideLock')).toBe(true)
+    })
+
+    it('does not inject a synthetic locked-but-missing bucket even when a matching lock exists', async () => {
+      lockedFiltersStore.lock({ name: 'language', value: 'KLINGON', label: 'Removed Language' })
+
+      await wrapper.vm.aggregateOver()
+
+      expect(wrapper.vm.entries.some(({ label }) => label === 'Removed Language')).toBe(false)
+    })
+  })
+
   describe('language', () => {
     beforeEach(() => {
       const name = 'language'

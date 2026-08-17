@@ -27,7 +27,7 @@ import builtinFilterIcons from '@/store/filters/icons'
 const query = defineModel('query', { type: String, default: '' })
 const collapse = defineModel('collapse', { type: Boolean, default: null })
 
-const { filter, modal, hideCount, overlayShow } = defineProps({
+const { filter, modal, hideCount, hideLock, overlayShow } = defineProps({
   filter: {
     type: Object,
     required: true
@@ -36,6 +36,15 @@ const { filter, modal, hideCount, overlayShow } = defineProps({
     type: Boolean
   },
   hideCount: {
+    type: Boolean
+  },
+  // Suppresses the per-value lock button and locked-but-missing synthetic
+  // buckets entirely. Used by disposable/unrelated screens (e.g. the batch
+  // search creation form) that render this filter against a non-live search
+  // store: locking from there would write to the user's global personal lock
+  // store with no visibility into what it's actually affecting. See
+  // icij/datashare#2329.
+  hideLock: {
     type: Boolean
   },
   // Forwarded to FiltersPanelSectionFilter to surface an informational
@@ -226,6 +235,9 @@ const excludedBucketsPage = computed(() => {
 // what the user is searching for. Consistent with existing behavior, not a
 // new gap.
 const missingLockedBucketsPage = computed(() => {
+  if (hideLock) {
+    return []
+  }
   const excludedKeys = getPageBuckets(excludedBucketsPage.value).map(item => toString(item.key))
   const realKeys = [...buckets.value.map(item => toString(item.key)), ...excludedKeys]
   const missing = lockedFiltersStore.entries
@@ -364,6 +376,7 @@ defineExpose({ entries, aggregateOver, count })
         :label="label"
         :count="item.doc_count"
         :hide-count="hideCount"
+        :hide-lock="hideLock"
         :model-value="hasValue(item)"
         :locked="isItemLocked(item)"
         @update:model-value="toggleValue(item, $event)"
@@ -393,6 +406,7 @@ defineExpose({ entries, aggregateOver, count })
       v-model:sort="sort"
       :filter="filter"
       :hide-count="hideCount"
+      :hide-lock="hideLock"
       :modal="modal"
     />
   </filters-panel-section-filter>
