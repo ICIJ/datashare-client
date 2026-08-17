@@ -579,12 +579,6 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   /**
    * Remove a filter by its name.
    *
-   * The filter itself is going away, so unlock it under both include and
-   * exclude mode, not just whichever it's currently in. Every caller
-   * (FiltersMixin's unregisterFilter, useSearchFilter's removeFilter) routes
-   * through here, so fixing it here covers them all instead of duplicating
-   * the unlock in each one.
-   *
    * @param {string} name - The name of the filter to remove.
    */
   function removeFilter(name) {
@@ -688,7 +682,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * filter. Without this, flipping a filter's include/exclude toggle would
    * leave its locked values behind under the old mode string, silently
    * turning them into a conflict (and a stale-looking lock icon) instead of
-   * following the toggle the user just made. See icij/datashare#2332.
+   * following the toggle the user just made.
    *
    * @param {string} name - The bare filter name.
    * @param {boolean} wasExcluded - The filter's mode before the toggle.
@@ -907,7 +901,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    *   values into the hydrated state. Disposable stores that hydrate from a persisted,
    *   read-only query (e.g. SearchBreadcrumbUri.vue rendering a saved search/batch's
    *   breadcrumbs) must pass `false` here, otherwise the user's personal locks would leak
-   *   into a display of a query that never actually had them. See icij/datashare#2329.
+   *   into a display of a query that never actually had them.
    */
   function updateFromRouteQuery(routeQuery, { mergeLocks = true } = {}) {
     // Reset the state except for the given keys
@@ -930,8 +924,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     // Locks are reconciled here, on every hydration, not just once at
     // lock-creation time: resetForRouteChange (above) wipes values and
     // excludeFilters on every route entry, including the first search of a
-    // session — which is code-path-identical to opening an external shared
-    // link. See icij/datashare#2329.
+    // session
     if (mergeLocks) {
       mergeLockedFilters()
     }
@@ -948,8 +941,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * the first search of a session alike. If the filter is present in the
    * opposite mode (e.g. the route carries `f[-contentType]` but the lock is
    * for included `contentType`), the merge is skipped: surfacing that
-   * conflict via an explicit action is icij/datashare#2332's job, not this
-   * one.
+   * conflict via an explicit action.
    *
    * Writes go through this store's own addFilterValue/excludeFilter, never
    * useSearchFilter.js's paired-dimension-aware toggleFilterValue/
@@ -960,9 +952,8 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * reconcilePairedExcludeFilters() call right after this one — that's the
    * same invariant every other route change already goes through.
    */
-  // Shared by mergeLockedFilters (route hydration, skips a conflicting entry —
-  // icij/datashare#2329) and hasConflictingLocks/applyLockedFilters (an
-  // explicit user action that overrides a conflict — icij/datashare#2332), so
+  // Shared by mergeLockedFilters and hasConflictingLocks/applyLockedFilters (an
+  // explicit user action that overrides a conflict), so
   // the two never compute "does this lock conflict" differently.
   function getLockConflict({ name, value }, snapshot) {
     const { name: bareName, excluded } = parseLockedName(name)
@@ -985,10 +976,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     // into `values`/`excludeFilters` as it goes, so checking the live refs would
     // make an entry conflict with a lock this same pass already applied rather than
     // with anything the route actually supplied (e.g. two orphaned locks on the
-    // same filter in opposite modes, from a mode flip predating icij/datashare#2332's
-    // re-tagging fix, would silently drop whichever entry is processed second even
-    // though the route had nothing for that filter at all). Other callers check the
-    // live state directly.
+    // same filter in opposite modes)
     const isPresent = snapshot
       ? dims.some(dim => snapshot.presentDims.has(dim))
       : dims.some(dim => dim in values.value)
@@ -1020,7 +1008,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * Whether any locked entry currently conflicts with the live search state
    * (same conflict definition mergeLockedFilters uses to decide what to
    * silently skip). Drives the breadcrumb footer's "Apply locked filters"
-   * button — icij/datashare#2332.
+   * button.
    */
   const hasConflictingLocks = computed(() => {
     return lockedFiltersStore.entries.some(entry => getLockConflict(entry).hasConflict)
@@ -1030,8 +1018,8 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * Force-apply every locked value into the live search state, overriding
    * any conflicting mode — "locks win". Unlike mergeLockedFilters (which
    * silently skips a conflicting entry so a shared link is never silently
-   * rewritten), this is only ever invoked by an explicit user action (the
-   * "Apply locked filters" footer button, icij/datashare#2332), so
+   * rewritten), this is only ever invoked by an explicit user action (
+   * "Apply locked filters"), so
    * overriding the live state here is exactly what the user asked for.
    */
   function applyLockedFilters() {

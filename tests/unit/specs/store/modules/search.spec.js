@@ -689,64 +689,6 @@ describe('SearchStore', () => {
     })
   })
 
-  describe('runBatchDownload keeps locked values (icij/datashare#2331 reverted)', () => {
-    let rootSearchSpy, lockedFiltersStore
-
-    beforeEach(() => {
-      rootSearchSpy = vi.spyOn(api.elasticsearch, 'rootSearch')
-      vi.spyOn(api, 'runBatchDownload').mockResolvedValue({})
-      lockedFiltersStore = useLockedFiltersStore()
-    })
-
-    afterEach(() => {
-      vi.restoreAllMocks()
-    })
-
-    it('calls rootSearch with the live instantiatedFilters, including a locked value', async () => {
-      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
-      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
-
-      await searchStore.runBatchDownload()
-
-      expect(rootSearchSpy).toHaveBeenCalledWith(
-        searchStore.instantiatedFilters,
-        expect.anything(),
-        expect.anything(),
-        expect.anything()
-      )
-      const passedFilters = rootSearchSpy.mock.calls[0][0]
-      const contentTypeFilter = find(passedFilters, { name: 'contentType' })
-      expect(contentTypeFilter.values).toEqual(['application/pdf'])
-    })
-  })
-
-  describe('estimateDownloadSize keeps locked values (icij/datashare#2331 reverted)', () => {
-    let estimateSpy, lockedFiltersStore
-
-    beforeEach(() => {
-      estimateSpy = vi.spyOn(api.elasticsearch, 'estimateDownloadSize').mockResolvedValue({
-        estimatedCount: 0,
-        estimatedSize: 0
-      })
-      lockedFiltersStore = useLockedFiltersStore()
-    })
-
-    afterEach(() => {
-      vi.restoreAllMocks()
-    })
-
-    it('calls estimateDownloadSize with the live instantiatedFilters, including a locked value', async () => {
-      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
-      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
-
-      await searchStore.estimateDownloadSize()
-
-      const passedFilters = estimateSpy.mock.calls[0][1]
-      const contentTypeFilter = find(passedFilters, { name: 'contentType' })
-      expect(contentTypeFilter.values).toEqual(['application/pdf'])
-    })
-  })
-
   describe('Delete query terms', () => {
     it('should not delete the term from the query if it doesn\'t exist', async () => {
       searchStore.setQuery('*')
@@ -1766,16 +1708,18 @@ describe('SearchStore', () => {
       expect(searchStore.isFilterExcluded('contentTypeCategory')).toBe(false)
     })
 
-    it('applyLockedFilters resolves an unpaired filter mode by first lock, not last', () => {
-      // `language` has no pair, so its canonical dimension is itself: two locks
-      // on it disagreeing on mode must not let the second one silently win.
+    it('applyLockedFilters applies both values of an unpaired filter under its retagged mode', () => {
+      // `language` has no pair. lock() itself retags any existing opposite-mode
+      // entry on the same bare dimension to the newly locked mode (icij/datashare#2332),
+      // so two locks on `language` can no longer disagree by the time
+      // applyLockedFilters runs: both end up excluded here.
       lockedFiltersStore.lock({ name: 'language', value: 'ENGLISH', label: 'English' })
       lockedFiltersStore.lock({ name: '-language', value: 'FRENCH', label: 'French' })
 
       searchStore.applyLockedFilters()
 
-      // The first lock (included) wins, regardless of entry order.
-      expect(searchStore.isFilterExcluded('language')).toBe(false)
+      expect(searchStore.isFilterExcluded('language')).toBe(true)
+      expect(searchStore.getFilter({ name: 'language' }).values).toEqual(['ENGLISH', 'FRENCH'])
     })
 
     it('applyLockedFilters clears the whole paired group when the lock is include-mode', () => {
@@ -1837,6 +1781,74 @@ describe('SearchStore', () => {
       searchStore.toggleFilter('contentType', false)
 
       expect(lockedFiltersStore.entries).toEqual([{ name: 'contentType', value: 'application/pdf', label: 'application/pdf' }])
+    })
+  })
+
+  describe('locked filters silent auto-apply', () => {
+    let lockedFiltersStore
+
+    beforeEach(() => {
+      lockedFiltersStore = useLockedFiltersStore()
+    })
+
+    it('silently merges a locked value into a filter absent from the route', () => {
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      searchStore.updateFromRouteQuery({})
+
+      expect(searchStore.getFilter({ name: 'contentType' }).values).toEqual(['application/pdf'])
+      expect(searchStore.isFilterExcluded('contentType')).toBe(false)
+    })
+
+    it('silently merges a locked value alongside route-supplied values in the same mode', () => {
+      lockedFiltersStore.lock({ name: 'contentType', value: 'text/plain', label: 'text/plain' })
+
+      searchStore.updateFromRouteQuery({ 'f[contentType]': ['application/pdf'] })
+
+      expect(searchStore.getFilter({ name: 'contentType' }).values.slice().sort()).toEqual(['application/pdf', 'text/plain'])
+    })
+
+    it('applies the excluded mode when silently merging a locked excluded value into an absent filter', () => {
+      lockedFiltersStore.lock({ name: '-contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      searchStore.updateFromRouteQuery({})
+
+      expect(searchStore.getFilter({ name: 'contentType' }).values).toEqual(['application/pdf'])
+      expect(searchStore.isFilterExcluded('contentType')).toBe(true)
+    })
+
+    it('skips merging a locked value when the route has that filter in the opposite mode', () => {
+      lockedFiltersStore.lock({ name: 'contentType', value: 'text/plain', label: 'text/plain' })
+
+      searchStore.updateFromRouteQuery({ 'f[-contentType]': ['application/pdf'] })
+
+      expect(searchStore.getFilter({ name: 'contentType' }).values).toEqual(['application/pdf'])
+      expect(searchStore.isFilterExcluded('contentType')).toBe(true)
+    })
+
+    it('re-applies the locked value on every hydration, not just the first', () => {
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      searchStore.updateFromRouteQuery({ q: 'first' })
+      expect(searchStore.getFilter({ name: 'contentType' }).values).toEqual(['application/pdf'])
+
+      searchStore.updateFromRouteQuery({ q: 'second' })
+      expect(searchStore.getFilter({ name: 'contentType' }).values).toEqual(['application/pdf'])
+    })
+
+    it('ignores a locked entry whose filter no longer exists', () => {
+      lockedFiltersStore.lock({ name: 'notAFilter', value: 'x', label: 'x' })
+
+      expect(() => searchStore.updateFromRouteQuery({})).not.toThrow()
+      expect(searchStore.values.notAFilter).toBeUndefined()
+    })
+
+    it('does not cascade a locked value onto a paired dimension', () => {
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      searchStore.updateFromRouteQuery({})
+
+      expect(searchStore.getFilter({ name: 'contentTypeCategory' })?.values ?? []).toEqual([])
     })
   })
 })
