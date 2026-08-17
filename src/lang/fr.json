@@ -2016,6 +2016,10 @@
   "searchBreadcrumbFormEmpty": {
     "label": "Votre recherche n'a pas commencé. Utilisez la barre de recherche ou ajoutez des filtres."
   },
+  "searchBreadcrumbFormEntry": {
+    "lock": "Verrouiller cette valeur de filtre",
+    "unlock": "Déverrouiller cette valeur de filtre"
+  },
   "searchBreadcrumbFormEntryOccurrences": {
     "label": "0 document | 1 document | {occurrences} documents",
     "title": "Pas moins de documents avec ce filtre | 1 document de moins avec ce filtre | {lessOccurrences} documents de moins avec ce filtre"
