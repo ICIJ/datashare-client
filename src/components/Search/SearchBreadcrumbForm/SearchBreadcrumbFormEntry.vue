@@ -74,8 +74,12 @@ const showCaret = computed(() => {
 // never the project chip — projects are keyed via `indices` rather than the
 // `f[name]`/`f[-name]` scheme locked filters merge against on hydration
 // (see icij/datashare#2336 for the same project-filter carve-out on the
-// Filters panel side).
-const isLockable = computed(() => Boolean(props.filter) && props.filter !== 'project')
+// Filters panel side). Also never lockable when the chip is read-only
+// (`noXIcon`): read-only breadcrumbs render disposable/persisted queries
+// (saved searches, batch search/download overviews), and a clickable
+// padlock there would mutate the user's global lock store from a display
+// that isn't the live search. See icij/datashare#2329.
+const isLockable = computed(() => Boolean(props.filter) && props.filter !== 'project' && !props.noXIcon)
 
 // `props.filter` already carries the `-` prefix for excluded filters (it's
 // read straight off the `f[name]`/`f[-name]` route param in
