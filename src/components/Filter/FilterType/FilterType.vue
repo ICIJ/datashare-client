@@ -41,8 +41,7 @@ const { filter, modal, hideCount, hideLock, overlayShow } = defineProps({
   // buckets entirely. Used by disposable/unrelated screens (e.g. the batch
   // search creation form) that render this filter against a non-live search
   // store: locking from there would write to the user's global personal lock
-  // store with no visibility into what it's actually affecting. See
-  // icij/datashare#2329.
+  // store with no visibility into what it's actually affecting.
   hideLock: {
     type: Boolean
   },
