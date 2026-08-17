@@ -41,7 +41,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['fallback'])
+const emit = defineEmits(['fallback', 'empty'])
 
 const { t } = useI18n()
 const pipelinesStore = usePipelinesStore()
@@ -83,6 +83,9 @@ async function loadPage() {
   loading.value = true
   try {
     await renderPageOnce()
+    if (load === lastPageLoad) {
+      reportEmptyArtifact()
+    }
   }
   catch (loadError) {
     if (load === lastPageLoad) {
@@ -93,6 +96,19 @@ async function loadPage() {
     if (load === lastPageLoad) {
       loading.value = false
     }
+  }
+}
+
+// An artifact whose very first page renders to nothing has no markdown worth
+// showing at all, so the tab goes back to the plain text view instead of an
+// empty document. A later page can legitimately be blank (a blank page in a
+// PDF) without saying anything about the artifact, hence the page check.
+// This is `empty` rather than `fallback` because the two are not equivalent to
+// the parent: a fetch error can be retried, an empty artifact cannot.
+function reportEmptyArtifact() {
+  const isEmptyArtifact = props.page === 1 && !hasPageContent.value
+  if (isEmptyArtifact) {
+    emit('empty')
   }
 }
 

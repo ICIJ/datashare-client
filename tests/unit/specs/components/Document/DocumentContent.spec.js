@@ -370,6 +370,39 @@ describe('DocumentContent.vue', () => {
       expect(toggle.attributes('title')).toBe('Translations are only available as plain text')
     })
 
+    it('falls back to plain text and disables the formatted option when the artifact is empty', async () => {
+      const { document } = await mockDocumentContentSlice('Hello world')
+      const { plugins } = core
+      // The radio group must render its own slot here: the assertions are on
+      // the formatted option itself, not on the group.
+      const stubs = { BFormRadioGroup: false }
+      const wrapper = shallowMount(DocumentContent, { props: { document }, global: { plugins, stubs } })
+      await flushPromises()
+      wrapper.findComponent({ name: 'DocumentContentMarkdown' }).vm.$emit('empty')
+      await flushPromises()
+      expect(wrapper.findComponent({ name: 'DocumentContentMarkdown' }).exists()).toBe(false)
+      expect(wrapper.find('div.document-content__body').exists()).toBe(true)
+      // The toggle stays visible, only the formatted option is out of reach.
+      expect(wrapper.find('.document-content__togglers__view').exists()).toBe(true)
+      const markdownOption = wrapper.find('.document-content__togglers__view__markdown')
+      expect(markdownOption.attributes('disabled')).toBe('true')
+    })
+
+    it('keeps the formatted option available when the user falls back from a page error', async () => {
+      const { document } = await mockDocumentContentSlice('Hello world')
+      const { plugins } = core
+      // The radio group must render its own slot here: the assertions are on
+      // the formatted option itself, not on the group.
+      const stubs = { BFormRadioGroup: false }
+      const wrapper = shallowMount(DocumentContent, { props: { document }, global: { plugins, stubs } })
+      await flushPromises()
+      wrapper.findComponent({ name: 'DocumentContentMarkdown' }).vm.$emit('fallback')
+      await flushPromises()
+      expect(wrapper.findComponent({ name: 'DocumentContentMarkdown' }).exists()).toBe(false)
+      const markdownOption = wrapper.find('.document-content__togglers__view__markdown')
+      expect(markdownOption.attributes('disabled')).toBe('false')
+    })
+
     it('paginates by the manifest page count in markdown mode', async () => {
       const { document } = await mockDocumentContentSlice('Hello world')
       const { plugins } = core

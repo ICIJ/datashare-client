@@ -93,6 +93,31 @@ describe('DocumentContentMarkdown.vue', () => {
     expect(wrapper.text()).toContain('No content extracted for this document')
   })
 
+  it('emits empty when the first page is empty, so the tab goes back to plain text', async () => {
+    api.getStructurePage.mockResolvedValue('')
+    const wrapper = await mountComponent()
+    expect(wrapper.emitted('empty')).toHaveLength(1)
+  })
+
+  it('does not emit empty for an empty page in the middle of the document', async () => {
+    api.getStructurePage.mockImplementation((index, id, page) => {
+      return Promise.resolve(page === 1 ? '# Page one' : '')
+    })
+    const wrapper = await mountComponent()
+    await wrapper.setProps({ page: 2 })
+    await flushPromises()
+    expect(wrapper.text()).toContain('No content extracted for this document')
+    expect(wrapper.emitted('empty')).toBeUndefined()
+  })
+
+  // An empty artifact is permanent, a failed fetch is not: the parent disables
+  // the formatted option on the first and keeps it available on the second.
+  it('emits empty rather than fallback when the first page is empty', async () => {
+    api.getStructurePage.mockResolvedValue('')
+    const wrapper = await mountComponent()
+    expect(wrapper.emitted('fallback')).toBeUndefined()
+  })
+
   it('does not let a superseded page fetch fail over a newer page that already loaded', async () => {
     let resolvePageTwo
     const pageTwoPromise = new Promise((resolve) => {
