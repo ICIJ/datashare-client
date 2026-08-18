@@ -392,6 +392,18 @@ describe('FilterType.vue', () => {
       expect(wrapper.findComponent(FiltersPanelSectionFilterEntry).props('locked')).toBe(true)
     })
 
+    it('also selects an unticked value when the entry emits update:locked with true — one click both applies and locks it', async () => {
+      await letData(es).have(new IndexedDocument('document_01', index).withLanguage('ENGLISH')).commit()
+
+      await wrapper.vm.aggregateOver()
+      expect(searchStore.values.language ?? []).not.toContain('ENGLISH')
+
+      await wrapper.findComponent(FiltersPanelSectionFilterEntry).vm.$emit('update:locked', true)
+
+      expect(searchStore.values.language).toContain('ENGLISH')
+      expect(lockedFiltersStore.isLocked({ name: 'language', value: 'ENGLISH' })).toBe(true)
+    })
+
     it('unlocks a value when the entry emits update:locked with false', async () => {
       await letData(es).have(new IndexedDocument('document_01', index).withLanguage('ENGLISH')).commit()
       searchStore.addFilterValue({ name: 'language', value: 'ENGLISH' })
