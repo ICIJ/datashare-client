@@ -34,23 +34,6 @@ import { PAIRED_DIMENSIONS, getCanonicalDimension, getPairedDimension, getPaired
 import { useAppStore, useLockedFiltersStore, useRecommendedStore, useSearchStore } from '@/store/modules'
 import { toLockedName } from '@/store/modules/lockedFilters'
 
-// Module-level singleton (shared across every useSearchFilter() call, not
-// per-call state): a one-shot flag set by SearchBar.vue's submit() to mark
-// "this next search was an explicit user submission (Enter/Search button),
-// not a filter/index/operator watcher". Deliberately NOT round-tripped
-// through the route query string: pushing even a *complete* route query can
-// still trigger a same-tick cascade of corrective re-navigations from
-// independently registered watchers reacting to a resulting state change
-// (e.g. a locked-filter merge triggering watchFilters(refreshRouteFromStart)
-// with a freshly regenerated stamp) — and Vue's watch(route.fullPath)
-// coalesces multiple synchronous updates into a single firing for only the
-// *latest* value, so an arbitrary custom query param can be silently
-// dropped before any consumer ever observes it. A plain JS flag has no such
-// round-trip to survive. See icij/datashare#2332.
-//
-// Standalone module exports, not returned from useSearchFilter(): neither
-// function needs any Vue/router/store context, so callers (including tests)
-// can use them without mounting a component.
 let justSubmitted = false
 
 // Set by SearchBar.vue's submit() right before it pushes the route — marks
@@ -59,32 +42,12 @@ export function markJustSubmitted() {
   justSubmitted = true
 }
 
-// Reads and clears the flag in one step, so it's consumed exactly once no
-// matter how many route updates the resulting search triggers (e.g. a
-// locked-filter merge cascading into further re-navigations) — every one of
-// those sees the flag already cleared after the first check.
 export function consumeJustSubmitted() {
   const value = justSubmitted
   justSubmitted = false
   return value
 }
 
-// Same rationale and idiom as justSubmitted above, for a different one-shot
-// signal: set by SearchSavedEntries.vue right before navigating into a saved
-// search, so the hydration guards below can skip the otherwise-automatic
-// locked-filter merge for that one navigation. A saved search is a frozen
-// snapshot; a lock absent from it should not be silently re-injected the way
-// it would be for an ordinary link (the "silent-merge-unless-conflicting"
-// rule is deliberately bypassed here, not just its conflict branch). A URL
-// query flag was tried first and rejected for the same reason justSubmitted
-// isn't one: stripping it back out of the URL is itself a navigation, and
-// that navigation would re-hydrate with the flag already gone, silently
-// merging the lock right back in a tick later. See icij/datashare#2331.
-//
-// Two independent guards below (refreshSearchFromRoute and
-// refreshSearchFromRouteStart) both need to read this for the same
-// navigation, so reading does not consume it, only onConsumeSavedSearchOpened
-// does, and it must be registered after both so they observe it first.
 let savedSearchOpened = false
 
 export function markSavedSearchOpened() {
@@ -124,11 +87,7 @@ export function useSearchFilter() {
     isLoading: isCategoryAvailabilityLoading
   } = useContentTypeCategoryAvailability() ?? {}
 
-  // Note: unlike contextualize below, exclude has no dedicated sync watcher.
-  // Paired exclude updates are written one dimension at a time, so an eager
-  // watcher can observe transient half-updated states and either revert route
-  // hydration or re-apply an exclude while toggling off. Keep reconciliation
-  // lazy in isFilterExcluded, where it runs against the final written state.
+
   watchEffect(() => {
     for (const [canonical, paired] of Object.entries(PAIRED_DIMENSIONS)) {
       const value = searchStore.isFilterContextualized(canonical)
@@ -193,10 +152,6 @@ export function useSearchFilter() {
     return isObject(value) ? value : { key: value }
   }
 
-  // `skipUnlock` mirrors the option of the same name on removeFilterValue(s)
-  // below: components rendering against a non-live search store (e.g. the
-  // batch-search creation form via FilterType's hideLock) pass it through so
-  // "All" never writes to the user's real personal lock store.
   function computedAll(filter, { skipUnlock = false } = {}) {
     return computed({
       get() {
@@ -460,13 +415,6 @@ export function useSearchFilter() {
     // `filterValuesAsRouteQuery` and `reconcilePairedExcludeFilters` already
     // use in the store), rather than trusting one dimension over the other.
     const excluded = dimensions.some(dimension => searchStore.isFilterExcluded(dimension))
-    // Reconcile on read, additively only: propagate an exclude forward to
-    // any dimension that hasn't caught up yet (e.g. a direct store write to
-    // a single dimension that bypassed toggleExcludeFilter's own dual-write
-    // below). This only ever adds the flag, never removes it, and only runs
-    // when something actually calls this getter - unlike an eager
-    // `watchEffect` reconciler, it can't fire mid-write and observe (or
-    // act on) a transient, not-yet-finished state. See icij/datashare#2351.
     if (excluded) {
       dimensions.forEach((dimension) => {
         if (!searchStore.isFilterExcluded(dimension)) {
@@ -595,11 +543,7 @@ export function useSearchFilter() {
 
   function onConsumeNoRefresh(options) {
     // `noRefresh` is a one-shot flag set when returning to search from a
-    // document, telling the refresh guards to skip a reload. Once those guards
-    // have observed it for this navigation, strip it from the URL so it never
-    // persists into the next navigation (page/sort/perPage changes copy the
-    // current route query forward via batchQueryParamUpdate, which would
-    // otherwise keep re-applying the flag and suppress the refresh).
+    // document, telling the refresh guards to skip a reload.
     //
     // This consumer MUST be registered after the refresh guards so its
     // queued microtask runs last and the guards read `noRefresh` first.
@@ -617,12 +561,7 @@ export function useSearchFilter() {
   }
 
   function onConsumeSavedSearchOpened(options) {
-    // Clears the in-memory savedSearchOpened flag (see its declaration above
-    // for why it isn't a URL param). Bare onAfterRouteUpdate, not
-    // onAfterRouteQueryUpdate: the latter's sameAppliedQuery gate could skip
-    // this callback on a rare matching navigation, leaking the flag into an
-    // unrelated future one; this must run unconditionally on every 'search'
-    // navigation.
+    // Clears the in-memory savedSearchOpened flag
     //
     // This consumer MUST be registered after refreshSearchFromRouteStart and
     // refreshSearchFromRoute so its queued microtask runs last and both
