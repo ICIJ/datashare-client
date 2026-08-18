@@ -78,6 +78,26 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     return orderArray(validFilters.map(instantiateFilter), 'order', 'asc')
   })
 
+  // Outward/shareable variant (batch search, batch download) — icij/datashare#2331.
+  // Filter instances aren't plain objects (see instantiateFilter above), so a
+  // locked value can't be removed via object spread — {...filter, values: x}
+  // would drop every prototype method (hasValues(), applyTo(), etc.) that the
+  // Elasticsearch client calls on each filter. Instead, clone the instance
+  // (preserving its prototype and every own property) and call its own
+  // setValues() to override just the values, locally, without touching the
+  // live reactive store binding.
+  const instantiatedFiltersWithoutLocks = computed(() => {
+    return instantiatedFilters.value.map((filter) => {
+      const excluded = getPairedDimensions(filter.name).some(dim => excludeFilters.value.includes(dim))
+      const strippedValues = filter.values.filter(value => !isValueLocked(filter.name, value, excluded))
+      if (strippedValues.length === filter.values.length) {
+        return filter
+      }
+      const clone = Object.create(Object.getPrototypeOf(filter), Object.getOwnPropertyDescriptors(filter))
+      return clone.setValues(strippedValues)
+    })
+  })
+
   // O(1) lookup map for filters by name - avoids O(n) find() calls
   const filterByName = computed(() => {
     return new Map(instantiatedFilters.value.map(f => [f.name, f]))
@@ -1149,7 +1169,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    */
   function runBatchDownload(uri = null) {
     const batchDownloadQuery = ['', null, undefined].indexOf(q.value) === -1 ? q.value : '*'
-    const { query } = api.elasticsearch.rootSearch(instantiatedFilters.value, batchDownloadQuery, fields.value, searchOperator.value).build()
+    const { query } = api.elasticsearch.rootSearch(instantiatedFiltersWithoutLocks.value, batchDownloadQuery, fields.value, searchOperator.value).build()
     return api.runBatchDownload({ projectIds: indices.value, query, uri })
   }
 
@@ -1160,7 +1180,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    */
   function estimateDownloadSize() {
     const estimateQuery = ['', null, undefined].indexOf(q.value) === -1 ? q.value : '*'
-    return api.elasticsearch.estimateDownloadSize(indices.value, instantiatedFilters.value, estimateQuery, fields.value, searchOperator.value)
+    return api.elasticsearch.estimateDownloadSize(indices.value, instantiatedFiltersWithoutLocks.value, estimateQuery, fields.value, searchOperator.value)
   }
 
   /**
@@ -1205,6 +1225,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     values,
     // Getters
     instantiatedFilters,
+    instantiatedFiltersWithoutLocks,
     activeFilters,
     fields,
     searchOperator,
