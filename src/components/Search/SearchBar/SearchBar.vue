@@ -12,6 +12,7 @@ import FieldDropdownSelector from '@/components/FieldDropdownSelector/FieldDropd
 import SearchBarInputDropdownForProjects from '@/components/Search/SearchBar/SearchBarInputDropdownForProjects'
 import { useCore } from '@/composables/useCore'
 import { useMobileDetect } from '@/composables/useMobileDetect'
+import { markJustSubmitted } from '@/composables/useSearchFilter'
 import { useRefreshRouteFromStart } from '@/composables/useRefreshRouteFromStart'
 import { useSearchSuggestions } from '@/composables/useSearchSuggestions'
 import { useSearchStore } from '@/store/modules'
@@ -134,6 +135,7 @@ function submit() {
   // Reset synchronously so a caller checking the store right after submit()
   // (no route round-trip awaited) already sees page one.
   searchStore.setFrom(0)
+  markJustSubmitted()
   refreshRouteFromStart()
 }
 
