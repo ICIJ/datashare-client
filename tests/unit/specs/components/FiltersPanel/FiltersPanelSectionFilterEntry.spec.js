@@ -15,8 +15,14 @@ describe('FiltersPanelSectionFilterEntry.vue', () => {
     return wrapper.find('.filters-panel-section-filter-entry__lock')
   }
 
-  it('does not render a lock button when the row is unticked', () => {
+  it('still renders the lock button when the row is unticked (hidden via CSS opacity, not removed)', () => {
     const props = { label: 'Confidential', modelValue: false, locked: false }
+    const wrapper = mount(FiltersPanelSectionFilterEntry, { global, props })
+    expect(findLockButton(wrapper).exists()).toBe(true)
+  })
+
+  it('does not render a lock button when hideLock is set', () => {
+    const props = { label: 'Confidential', modelValue: true, locked: false, hideLock: true }
     const wrapper = mount(FiltersPanelSectionFilterEntry, { global, props })
     expect(findLockButton(wrapper).exists()).toBe(false)
   })
