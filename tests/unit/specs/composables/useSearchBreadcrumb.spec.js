@@ -1,11 +1,24 @@
 import { mount } from '@vue/test-utils'
+import { createRouter, createWebHashHistory } from 'vue-router'
+import { createPinia, setActivePinia } from 'pinia'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import { useSearchBreadcrumb } from '@/composables/useSearchBreadcrumb'
 import { useSearchStore } from '@/store/modules'
+import { routes } from '@/router'
 
 describe('useSearchBreadcrumb composable', () => {
   let core, plugins, searchStore
+
+  // The "search" route lazily imports the whole Search view subtree, whose
+  // setup() reads from the search store. Resolve it once here, on a
+  // throwaway router/pinia, so that cost isn't paid inside a single test's
+  // timeout.
+  beforeAll(async () => {
+    setActivePinia(createPinia())
+    const router = createRouter({ routes, history: createWebHashHistory() })
+    await router.push({ name: 'search' })
+  })
 
   beforeEach(() => {
     core = CoreSetup.init().useAll().useRouterWithoutGuards()
