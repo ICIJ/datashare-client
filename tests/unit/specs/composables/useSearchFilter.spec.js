@@ -4,7 +4,7 @@ import bodybuilder from 'bodybuilder'
 import { vi } from 'vitest'
 
 import CoreSetup from '~tests/unit/CoreSetup'
-import { useSearchFilter } from '@/composables/useSearchFilter'
+import { useSearchFilter, markJustSubmitted, consumeJustSubmitted } from '@/composables/useSearchFilter'
 import { useContentTypeCategoryAvailability } from '@/composables/useContentTypeCategoryAvailability'
 import { useAppStore, useLockedFiltersStore, useSearchStore, useRecommendedStore } from '@/store/modules'
 import { SEARCH_OPERATORS } from '@/enums/searchOperators'
@@ -198,6 +198,25 @@ describe('useSearchFilter', () => {
 
       expect(core.router.currentRoute.value.query.noRefresh).toBe('1')
     }, 20000)
+  })
+
+  describe('markJustSubmitted / consumeJustSubmitted (icij/datashare#2332)', () => {
+    // Real module-level state (deliberately, see useSearchFilter.js) — drain
+    // any leftover flag before each test so tests can't leak into each other.
+    beforeEach(() => {
+      consumeJustSubmitted()
+    })
+
+    it('reports true exactly once after being marked', () => {
+      markJustSubmitted()
+
+      expect(consumeJustSubmitted()).toBe(true)
+      expect(consumeJustSubmitted()).toBe(false)
+    })
+
+    it('reports false when never marked', () => {
+      expect(consumeJustSubmitted()).toBe(false)
+    })
   })
 })
 

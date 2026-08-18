@@ -13,6 +13,7 @@ import FieldDropdownSelector from '@/components/FieldDropdownSelector/FieldDropd
 import SearchBarInputDropdownForProjects from '@/components/Search/SearchBar/SearchBarInputDropdownForProjects'
 import { useCore } from '@/composables/useCore'
 import { useMobileDetect } from '@/composables/useMobileDetect'
+import { markJustSubmitted } from '@/composables/useSearchFilter'
 import { useSearchSuggestions } from '@/composables/useSearchSuggestions'
 import { useSearchStore } from '@/store/modules'
 
@@ -133,6 +134,7 @@ function submit() {
   searchStore.setQuery(query.value)
   searchStore.setFrom(0)
   searchStore.refreshStamp()
+  markJustSubmitted()
   router.push({ name: 'search', query: searchStore.toRouteQueryWithStamp })
 }
 

@@ -35,6 +35,41 @@ import { PAIRED_DIMENSIONS, getCanonicalDimension, getPairedDimension, getPaired
 import { useAppStore, useLockedFiltersStore, useRecommendedStore, useSearchStore } from '@/store/modules'
 import { toLockedName } from '@/store/modules/lockedFilters'
 
+// Module-level singleton (shared across every useSearchFilter() call, not
+// per-call state): a one-shot flag set by SearchBar.vue's submit() to mark
+// "this next search was an explicit user submission (Enter/Search button),
+// not a filter/index/operator watcher". Deliberately NOT round-tripped
+// through the route query string: pushing even a *complete* route query can
+// still trigger a same-tick cascade of corrective re-navigations from
+// independently registered watchers reacting to a resulting state change
+// (e.g. a locked-filter merge triggering watchFilters(refreshRouteFromStart)
+// with a freshly regenerated stamp) — and Vue's watch(route.fullPath)
+// coalesces multiple synchronous updates into a single firing for only the
+// *latest* value, so an arbitrary custom query param can be silently
+// dropped before any consumer ever observes it. A plain JS flag has no such
+// round-trip to survive. See icij/datashare#2332.
+//
+// Standalone module exports, not returned from useSearchFilter(): neither
+// function needs any Vue/router/store context, so callers (including tests)
+// can use them without mounting a component.
+let justSubmitted = false
+
+// Set by SearchBar.vue's submit() right before it pushes the route — marks
+// the upcoming search as an explicit user submission.
+export function markJustSubmitted() {
+  justSubmitted = true
+}
+
+// Reads and clears the flag in one step, so it's consumed exactly once no
+// matter how many route updates the resulting search triggers (e.g. a
+// locked-filter merge cascading into further re-navigations) — every one of
+// those sees the flag already cleared after the first check.
+export function consumeJustSubmitted() {
+  const value = justSubmitted
+  justSubmitted = false
+  return value
+}
+
 export function useSearchFilter() {
   const appStore = useAppStore()
   const searchStore = useSearchStore.inject()
