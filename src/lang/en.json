@@ -2028,6 +2028,7 @@
     "clearFilters": "Clear filters",
     "clearQuery": "Clear query",
     "clearFiltersAndQuery": "Clear  filters and query",
+    "unlockAll": "Unlock all ({count})",
     "saveSearch": "Save search",
     "createAlert": "Create alert"
   },
