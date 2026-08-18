@@ -92,6 +92,15 @@ describe('FilterTypeStarred.vue', () => {
       expect(findLockButtons(wrapper)).toHaveLength(2)
     })
 
+    it('also ticks an unticked entry when clicking its lock button — one click both applies and locks it', async () => {
+      const lockedFiltersStore = useLockedFiltersStore()
+
+      await findLockButtons(wrapper).at(0).trigger('click')
+
+      expect(wrapper.vm.selected).toEqual([true])
+      expect(lockedFiltersStore.isLocked({ name: 'starred', value: true })).toBe(true)
+    })
+
     it('locks the starred value when clicking the lock button on a ticked entry', async () => {
       const lockedFiltersStore = useLockedFiltersStore()
       await wrapper.findAll('.filters-panel-section-filter-entry .form-check-input').at(1).setChecked(true)

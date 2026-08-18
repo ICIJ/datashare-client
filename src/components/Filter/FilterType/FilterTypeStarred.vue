@@ -37,6 +37,11 @@ function isItemLocked(value) {
 
 function toggleLock(value, locked) {
   if (locked) {
+    // Locking an unticked value also selects it — a single click both
+    // applies and locks the filter.
+    if (!selected.value.includes(value)) {
+      selected.value = [...selected.value, value]
+    }
     const label = t(value ? 'filter.starred' : 'filter.notStarred')
     lockedFiltersStore.lock({ name: 'starred', value, label })
   }
