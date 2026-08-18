@@ -19,6 +19,7 @@ import { useMode } from '@/composables/useMode'
 import { useStructureArtifact } from '@/composables/useStructureArtifact'
 import { useWait } from '@/composables/useWait'
 import DocumentAttachments from '@/components/Document/DocumentAttachments'
+import DocumentContentDropdown from '@/components/Document/DocumentContentDropdown'
 import DocumentContentMarkdown from '@/components/Document/DocumentContentMarkdown'
 import DocumentGlobalSearchTerms from '@/components/Document/DocumentGlobalSearchTerms/DocumentGlobalSearchTerms'
 import DocumentLocalSearch from '@/components/Document/DocumentLocalSearch/DocumentLocalSearch'
@@ -586,6 +587,13 @@ async function loadContentSliceAround(desiredOffset) {
           />
         </div>
         <hook name="document.content.toolbox.pagination:after" />
+        <document-content-dropdown
+          v-if="hasMarkdown"
+          v-model="preferMarkdown"
+          :markdown-disabled="isMarkdownEmpty"
+          :translation="isTranslation"
+          class="flex-shrink-0 ms-auto"
+        />
       </div>
       <document-global-search-terms
         :document="document"
@@ -599,28 +607,6 @@ async function loadContentSliceAround(desiredOffset) {
         name="document.content.togglers:before"
         x-class="d-flex flex-row justify-content-end align-items-center"
       />
-      <b-form-radio-group
-        v-if="hasMarkdown"
-        v-model="preferMarkdown"
-        buttons
-        button-variant="outline-secondary"
-        size="sm"
-        :disabled="isTranslation"
-        :title="isTranslation ? t('documentContent.view.translationTooltip') : undefined"
-        :aria-label="t('documentContent.view.ariaLabel')"
-        class="document-content__togglers__view"
-      >
-        <b-form-radio
-          :value="true"
-          :disabled="isMarkdownEmpty"
-          class="document-content__togglers__view__markdown"
-        >
-          {{ t('documentContent.view.markdown') }}
-        </b-form-radio>
-        <b-form-radio :value="false">
-          {{ t('documentContent.view.text') }}
-        </b-form-radio>
-      </b-form-radio-group>
       <hook
         name="document.content.togglers:after"
         x-class="d-flex flex-row justify-content-end align-items-center"
