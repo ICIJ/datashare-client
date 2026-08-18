@@ -1,7 +1,8 @@
 import { computed, toValue } from 'vue'
 import isEqual from 'lodash/isEqual'
-import { useSearchStore } from '@/store/modules'
+import { useSearchStore, useLockedFiltersStore } from '@/store/modules'
 import { useSearchFilter } from '@/composables/useSearchFilter'
+import { toLockedName } from '@/store/modules/lockedFilters'
 import { CONTENT_TYPE_CATEGORY_FILTER_NAME } from '@/store/filters/FilterContentTypeCategory'
 
 const sameValueSet = (a, b) => isEqual([...a].sort(), [...b].sort())
@@ -18,10 +19,20 @@ const without = (list, value) => list.filter(item => item !== value)
  */
 export function useContentTypeSelection({ filter, categories }) {
   const searchStore = useSearchStore.inject()
-  const { getFilterByName, getFilterValuesByName } = useSearchFilter()
+  const { getFilterByName, getFilterValuesByName, isFilterExcluded } = useSearchFilter()
+  const lockedFiltersStore = useLockedFiltersStore()
 
   const filterName = computed(() => toValue(filter)?.name)
   const categoryFilter = computed(() => getFilterByName(CONTENT_TYPE_CATEGORY_FILTER_NAME))
+
+  // Unticking a content type unlocks it, same as every other filter's
+  // checkbox (useSearchFilter's removeFilterValue) — this composable writes
+  // the filter's value array directly rather than routing through that
+  // shared helper, so the unlock has to happen here instead.
+  const unlockContentType = (contentType) => {
+    const name = toLockedName(filterName.value, isFilterExcluded({ name: filterName.value }))
+    lockedFiltersStore.unlock({ name, value: contentType })
+  }
 
   /**
    * Resolve the static {category: types[]} mapping to a plain object.
@@ -187,6 +198,10 @@ export function useContentTypeSelection({ filter, categories }) {
   const dropCategoryAnd = (category, keepFromCategory) => {
     const categoryTypes = typesInCategory(category)
     const others = currentContentTypes().filter(value => !categoryTypes.includes(value))
+    // Unlock every type this category covered except the ones the caller
+    // asks to keep explicit (the clicked child on demote, the surviving
+    // siblings on uncheck-with-stored-category).
+    categoryTypes.filter(type => !keepFromCategory.includes(type)).forEach(unlockContentType)
     writeCategories(without(currentCategories(), category))
     writeContentTypes([...others, ...keepFromCategory])
   }
@@ -238,6 +253,7 @@ export function useContentTypeSelection({ filter, categories }) {
       writeCategories([...remainingCategories, category])
       return
     }
+    types.forEach(unlockContentType)
     writeCategories(remainingCategories)
   }
 
@@ -290,6 +306,7 @@ export function useContentTypeSelection({ filter, categories }) {
    * @returns {void}
    */
   const uncheckPlainChild = (contentType) => {
+    unlockContentType(contentType)
     writeContentTypes(without(currentContentTypes(), contentType))
   }
 
