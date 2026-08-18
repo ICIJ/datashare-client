@@ -130,6 +130,31 @@ describe('useSearchBreadcrumb composable', () => {
       expect(searchStore.q).toBe('')
       expect(searchStore.getFilter({ name: 'contentType' }).values).toEqual(['application/pdf'])
     })
+
+    it('does not flip an included lock into excluded mode when clearing while that filter is in exclude mode', () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.excludeFilter('contentType')
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      const { clearFiltersEntries } = mountComposable()
+      clearFiltersEntries()
+
+      expect(searchStore.getFilter({ name: 'contentType' }).values).toEqual(['application/pdf'])
+      expect(searchStore.isFilterExcluded('contentType')).toBe(false)
+    })
+
+    it('clearFiltersEntries removes everything when there are zero locks', () => {
+      // Locks persist to localStorage (persist: true) across the jsdom-shared
+      // localStorage instance, so a fresh pinia alone doesn't guarantee zero
+      // locks here — clear explicitly.
+      lockedFiltersStore.unlockAll()
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+
+      const { clearFiltersEntries } = mountComposable()
+      clearFiltersEntries()
+
+      expect(searchStore.getFilter({ name: 'contentType' }).values).toEqual([])
+    })
   })
 
   describe('unlockAll (icij/datashare#2330)', () => {
