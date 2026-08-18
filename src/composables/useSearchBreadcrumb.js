@@ -9,7 +9,7 @@ import unset from 'lodash/unset'
 import lucene from 'lucene'
 
 import { useSearchFilter } from '@/composables/useSearchFilter'
-import { useSearchBreadcrumbStore, useSearchStore } from '@/store/modules'
+import { useLockedFiltersStore, useSearchBreadcrumbStore, useSearchStore } from '@/store/modules'
 import { getCanonicalDimension, getPairedDimension } from '@/store/filters/pairedDimensions'
 import findPath from '@/utils/findPath'
 
@@ -109,6 +109,8 @@ export function useSearchBreadcrumb() {
   const searchStore = useSearchStore.inject()
   const searchBreadcrumbStore = useSearchBreadcrumbStore()
   const { setQuery, removeIndex, removeFilterValue, refreshRoute } = useSearchFilter()
+  const lockedFiltersStore = useLockedFiltersStore()
+  const lockedFiltersCount = computed(() => lockedFiltersStore.count)
 
   const count = computed(() => entries.value.length)
 
@@ -186,6 +188,9 @@ export function useSearchBreadcrumb() {
 
   const clearFiltersEntries = () => {
     searchStore.resetFilterValues()
+    // Locked values must survive a filter-wipe — re-merge them immediately
+    // rather than waiting for the next route hydration. See icij/datashare#2330.
+    searchStore.mergeLockedFilters()
     return refreshRoute()
   }
 
@@ -196,8 +201,13 @@ export function useSearchBreadcrumb() {
 
   const clearAll = () => {
     searchStore.resetFilterValues()
+    searchStore.mergeLockedFilters()
     searchStore.resetQuery()
     return refreshRoute()
+  }
+
+  const unlockAll = () => {
+    lockedFiltersStore.unlockAll()
   }
 
   return {
@@ -211,6 +221,8 @@ export function useSearchBreadcrumb() {
     clearFiltersEntries,
     clearQueryEntries,
     clearAll,
+    unlockAll,
+    lockedFiltersCount,
     count,
     hasQueryEntries,
     hasFiltersEntries,
