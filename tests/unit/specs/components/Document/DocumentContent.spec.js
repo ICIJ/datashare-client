@@ -5,6 +5,7 @@ import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import { letTextContent } from '~tests/unit/api_mock'
 import CoreSetup from '~tests/unit/CoreSetup'
 import DocumentContent from '@/components/Document/DocumentContent'
+import DocumentContentDropdown from '@/components/Document/DocumentContentDropdown'
 import DocumentLocalSearch from '@/components/Document/DocumentLocalSearch/DocumentLocalSearch'
 import { apiInstance as api } from '@/api/apiInstance'
 import { useDocumentStore } from '@/store/modules'
@@ -306,21 +307,21 @@ describe('DocumentContent.vue', () => {
       expect(wrapper.find('div.document-content__body').exists()).toBe(true)
     })
 
-    it('shows the view toggle only when the document has markdown', async () => {
+    it('shows the view dropdown only when the document has markdown', async () => {
       const { document } = await mockDocumentContentSlice('Hello world')
       const { plugins } = core
       const wrapper = shallowMount(DocumentContent, { props: { document }, global: { plugins } })
       await flushPromises()
-      expect(wrapper.find('.document-content__togglers__view').exists()).toBe(true)
+      expect(wrapper.findComponent(DocumentContentDropdown).exists()).toBe(true)
     })
 
-    it('hides the view toggle when the document has no markdown', async () => {
+    it('hides the view dropdown when the document has no markdown', async () => {
       api.getStructureManifest.mockResolvedValue(null)
       const { document } = await mockDocumentContentSlice('Hello world')
       const { plugins } = core
       const wrapper = shallowMount(DocumentContent, { props: { document }, global: { plugins } })
       await flushPromises()
-      expect(wrapper.find('.document-content__togglers__view').exists()).toBe(false)
+      expect(wrapper.findComponent(DocumentContentDropdown).exists()).toBe(false)
     })
 
     it('never disables the local search input in markdown mode, even without extracted text', async () => {
@@ -333,15 +334,6 @@ describe('DocumentContent.vue', () => {
       // through the component locator instead of a raw tag/class selector.
       const input = wrapper.findComponent(DocumentLocalSearch)
       expect(input.attributes('disabled')).toBe('false')
-    })
-
-    it('gives the view toggle radiogroup an accessible name', async () => {
-      const { document } = await mockDocumentContentSlice('Hello world')
-      const { plugins } = core
-      const wrapper = shallowMount(DocumentContent, { props: { document }, global: { plugins } })
-      await flushPromises()
-      const toggle = wrapper.find('.document-content__togglers__view')
-      expect(toggle.attributes('aria-label')).toBeTruthy()
     })
 
     it('renders the plain text body once the toggle is set to text', async () => {
@@ -362,45 +354,37 @@ describe('DocumentContent.vue', () => {
       const wrapper = shallowMount(DocumentContent, { props, global: { plugins } })
       await flushPromises()
       expect(wrapper.findComponent({ name: 'DocumentContentMarkdown' }).exists()).toBe(false)
-      // The toggle must stay visible (so the user understands why they are
-      // stuck in plain text) but disabled while a translation is selected.
-      const toggle = wrapper.find('.document-content__togglers__view')
-      expect(toggle.exists()).toBe(true)
-      expect(toggle.attributes('disabled')).toBe('true')
-      expect(toggle.attributes('title')).toBe('Translations are only available as plain text')
+      // The dropdown must stay visible (so the user understands why they are
+      // stuck in plain text) and say why, while a translation is selected.
+      const dropdown = wrapper.findComponent(DocumentContentDropdown)
+      expect(dropdown.exists()).toBe(true)
+      expect(dropdown.props('translation')).toBe(true)
     })
 
     it('falls back to plain text and disables the formatted option when the artifact is empty', async () => {
       const { document } = await mockDocumentContentSlice('Hello world')
       const { plugins } = core
-      // The radio group must render its own slot here: the assertions are on
-      // the formatted option itself, not on the group.
-      const stubs = { BFormRadioGroup: false }
-      const wrapper = shallowMount(DocumentContent, { props: { document }, global: { plugins, stubs } })
+      const wrapper = shallowMount(DocumentContent, { props: { document }, global: { plugins } })
       await flushPromises()
       wrapper.findComponent({ name: 'DocumentContentMarkdown' }).vm.$emit('empty')
       await flushPromises()
       expect(wrapper.findComponent({ name: 'DocumentContentMarkdown' }).exists()).toBe(false)
       expect(wrapper.find('div.document-content__body').exists()).toBe(true)
-      // The toggle stays visible, only the formatted option is out of reach.
-      expect(wrapper.find('.document-content__togglers__view').exists()).toBe(true)
-      const markdownOption = wrapper.find('.document-content__togglers__view__markdown')
-      expect(markdownOption.attributes('disabled')).toBe('true')
+      // The dropdown stays visible, only the formatted entry is out of reach.
+      const dropdown = wrapper.findComponent(DocumentContentDropdown)
+      expect(dropdown.exists()).toBe(true)
+      expect(dropdown.props('markdownDisabled')).toBe(true)
     })
 
     it('keeps the formatted option available when the user falls back from a page error', async () => {
       const { document } = await mockDocumentContentSlice('Hello world')
       const { plugins } = core
-      // The radio group must render its own slot here: the assertions are on
-      // the formatted option itself, not on the group.
-      const stubs = { BFormRadioGroup: false }
-      const wrapper = shallowMount(DocumentContent, { props: { document }, global: { plugins, stubs } })
+      const wrapper = shallowMount(DocumentContent, { props: { document }, global: { plugins } })
       await flushPromises()
       wrapper.findComponent({ name: 'DocumentContentMarkdown' }).vm.$emit('fallback')
       await flushPromises()
       expect(wrapper.findComponent({ name: 'DocumentContentMarkdown' }).exists()).toBe(false)
-      const markdownOption = wrapper.find('.document-content__togglers__view__markdown')
-      expect(markdownOption.attributes('disabled')).toBe('false')
+      expect(wrapper.findComponent(DocumentContentDropdown).props('markdownDisabled')).toBe(false)
     })
 
     it('paginates by the manifest page count in markdown mode', async () => {
