@@ -21,7 +21,7 @@ import { runAsyncSearch } from '@/api/asyncSearch'
 import filterDefs, * as filterTypes from '@/store/filters'
 import { getPairedDimensions } from '@/store/filters/pairedDimensions'
 import { useAppStore, useLockedFiltersStore, useSearchBreadcrumbStore } from '@/store/modules'
-import { parseLockedName, toLockedName } from '@/store/modules/lockedFilters'
+import { parseLockedName } from '@/store/modules/lockedFilters'
 import { apiInstance as api } from '@/api/apiInstance'
 import { defineSuffixedStore } from '@/store/defineSuffixedStore'
 import { SEARCH_OPERATORS } from '@/enums/searchOperators'
@@ -88,8 +88,11 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   // live reactive store binding.
   const instantiatedFiltersWithoutLocks = computed(() => {
     return instantiatedFilters.value.map((filter) => {
-      const excluded = getPairedDimensions(filter.name).some(dim => excludeFilters.value.includes(dim))
-      const strippedValues = filter.values.filter(value => !isValueLocked(filter.name, value, excluded))
+      const strippedValues = escalateStarredFullStrip(
+        filter.name,
+        filter.values,
+        filter.values.filter(value => !isValueLocked(filter.name, value))
+      )
       if (strippedValues.length === filter.values.length) {
         return filter
       }
@@ -107,12 +110,35 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     return instantiatedFilters.value.filter(method('hasValues'))
   })
 
-  // Whether `value` is currently locked under `filterName`, accounting for
-  // its current include/exclude mode — a lock's identity is `{name, value}`
-  // where `name` already carries the `-` prefix for excluded mode (see
-  // toLockedName/parseLockedName in lockedFilters.js).
-  function isValueLocked(filterName, value, excluded) {
-    return lockedFiltersStore.isLocked({ name: toLockedName(filterName, excluded), value })
+  // Whether `value` is currently locked under `filterName`, in EITHER
+  // include or exclude mode. Deliberately mode-agnostic (unlike the lock
+  // merge/conflict logic in mergeLockedFilters, which does care about mode):
+  // this is used only to decide whether to strip a value from an outward
+  // artifact (saved search, batch search, batch download), and a privacy
+  // feature must fail closed on ambiguity — stripping a value whose lock's
+  // mode has drifted from the filter's current mode is safe (the artifact
+  // is merely narrower); silently keeping it would be a leak. See
+  // icij/datashare#2331's final review.
+  function isValueLocked(filterName, value) {
+    const stringValue = toString(value)
+    return lockedFiltersStore.entries.some(
+      entry => parseLockedName(entry.name).name === filterName && entry.value === stringValue
+    )
+  }
+
+  // FilterStarred treats having both `true` and `false` selected as a no-op
+  // ("all documents", see FilterStarred.js#addChildIncludeFilter). If one of
+  // those two values is locked and gets stripped, the filter would be left
+  // with a single value — which is NOT a no-op, it's "only starred" or "only
+  // non-starred", silently narrowing an outward artifact (batch download,
+  // saved search) relative to what the live search shows. Escalate to
+  // stripping the whole filter instead. icij/datashare#2331's final review.
+  function escalateStarredFullStrip(filterName, originalValues, strippedValues) {
+    const isPartialStrip = strippedValues.length > 0 && strippedValues.length < originalValues.length
+    if (filterName === 'starred' && isPartialStrip) {
+      return []
+    }
+    return strippedValues
   }
 
   // Shared by filterValuesAsRouteQuery (internal navigation, keeps locks) and
@@ -133,7 +159,11 @@ export const useSearchStore = defineSuffixedStore('search', () => {
         // in-store drift leaking into the URL.
         const excluded = getPairedDimensions(filter.name).some(dim => excludeFilters.value.includes(dim))
         const filterValues = stripLocked
-          ? filter.values.filter(value => !isValueLocked(filter.name, value, excluded))
+          ? escalateStarredFullStrip(
+            filter.name,
+            filter.values,
+            filter.values.filter(value => !isValueLocked(filter.name, value))
+          )
           : filter.values
         if (filterValues.length > 0) {
           const key = excluded ? `f[-${filter.name}]` : `f[${filter.name}]`
