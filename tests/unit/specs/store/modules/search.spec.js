@@ -686,6 +686,81 @@ describe('SearchStore', () => {
     })
   })
 
+  describe('Build route query without locks (icij/datashare#2331)', () => {
+    let lockedFiltersStore
+
+    beforeEach(() => {
+      lockedFiltersStore = useLockedFiltersStore()
+    })
+
+    it('omits a locked-only value from filterValuesAsRouteQueryWithoutLocks but keeps it in filterValuesAsRouteQuery', () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      expect(searchStore.filterValuesAsRouteQuery).toEqual({ 'f[contentType]': ['application/pdf'] })
+      expect(searchStore.filterValuesAsRouteQueryWithoutLocks).toEqual({})
+    })
+
+    it('keeps a value that is ticked but not locked', () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+
+      expect(searchStore.filterValuesAsRouteQueryWithoutLocks).toEqual({ 'f[contentType]': ['application/pdf'] })
+    })
+
+    it('keeps the unlocked sibling value while stripping only the locked one from the same filter', () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.addFilterValue({ name: 'contentType', value: 'text/plain' })
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      expect(searchStore.filterValuesAsRouteQueryWithoutLocks).toEqual({ 'f[contentType]': ['text/plain'] })
+    })
+
+    it('strips a locked value even when it is also independently ticked as a normal filter (locked ⇒ always stripped, no exception)', () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      // The value is ticked (present in `values`) AND locked — still stripped.
+      expect(searchStore.hasFilterValue({ name: 'contentType', value: 'application/pdf' })).toBe(true)
+      expect(searchStore.filterValuesAsRouteQueryWithoutLocks).toEqual({})
+    })
+
+    it('respects exclude mode when checking whether a value is locked', () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.excludeFilter('contentType')
+      lockedFiltersStore.lock({ name: '-contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      expect(searchStore.filterValuesAsRouteQueryWithoutLocks).toEqual({})
+    })
+
+    it('does not strip a value locked in the opposite mode from the one currently applied', () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      // Locked while excluded, but the filter is currently included — different lock identity.
+      lockedFiltersStore.lock({ name: '-contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      expect(searchStore.filterValuesAsRouteQueryWithoutLocks).toEqual({ 'f[contentType]': ['application/pdf'] })
+    })
+
+    it('toBaseRouteQueryWithoutLocks omits a locked value while keeping q/indices/field', () => {
+      searchStore.setQuery('hello')
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      const query = searchStore.toBaseRouteQueryWithoutLocks
+      expect(query.q).toBe('hello')
+      expect(query['f[contentType]']).toBeUndefined()
+    })
+
+    it('toRouteQueryWithoutLocks omits a locked value while keeping pagination/sort fields', () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      const query = searchStore.toRouteQueryWithoutLocks
+      expect(query.from).toBe('0')
+      expect(query.sort).toBeDefined()
+      expect(query['f[contentType]']).toBeUndefined()
+    })
+  })
+
   describe('Delete query terms', () => {
     it('should not delete the term from the query if it doesn\'t exist', async () => {
       searchStore.setQuery('*')
