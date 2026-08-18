@@ -83,13 +83,13 @@ const csv = computed(() => {
 })
 
 const queryTemplate = computed(() => {
-  const { instantiatedFilters } = formSearchStore
-  const { query } = core.api.elasticsearch.rootSearch(instantiatedFilters, '<query>').build()
+  const { instantiatedFiltersWithoutLocks } = formSearchStore
+  const { query } = core.api.elasticsearch.rootSearch(instantiatedFiltersWithoutLocks, '<query>').build()
   return JSON.stringify(query)
 })
 
 const uri = computed(() => {
-  const { href = null } = router.resolve({ name: 'search', query: formSearchStore.toBaseRouteQuery }) ?? {}
+  const { href = null } = router.resolve({ name: 'search', query: formSearchStore.toBaseRouteQueryWithoutLocks }) ?? {}
   return href
 })
 
