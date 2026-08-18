@@ -2029,6 +2029,9 @@
     "clearQuery": "Clear query",
     "clearFiltersAndQuery": "Clear  filters and query",
     "unlockFilters": "Unlock filters ({count})",
+    "applyLockedFilters": "Apply locked filters",
+    "applyLockedFiltersSuccess": "Locked filters successfully applied",
+    "applyLockedFiltersError": "Locked filters couldn't be applied",
     "saveSearch": "Save search",
     "createAlert": "Create alert"
   },
