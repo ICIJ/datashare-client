@@ -74,7 +74,7 @@ const emit = defineEmits(['clear:filters', 'clear:query', 'clear:all', 'unlock:a
         :icon-left="IPhLockOpen"
         @click="emit('unlock:all')"
       >
-        {{ t('searchBreadcrumbFormFooter.unlockAll', { count: lockedFiltersCount }) }}
+        {{ t('searchBreadcrumbFormFooter.unlockFilters', { count: lockedFiltersCount }) }}
       </button-icon>
       <button-icon
         :disabled="disabledSaveSearch"
