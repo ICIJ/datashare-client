@@ -66,10 +66,10 @@ const classList = computed(() => {
   }
 })
 
-// Show the lock button when the value is ticked OR already locked: a value
-// can be locked while unticked (e.g. after "Clear filters", which preserves
-// locks but unticks the value), and the user still needs a way to unlock it.
-const showLockButton = computed(() => !props.hideLock && (Boolean(props.modelValue) || props.locked))
+// The lock button's slot is always reserved (visibility handled purely via
+// CSS opacity — hidden by default, revealed on hover or when locked) so the
+// count pill's position never jitters based on tick/lock state.
+const showLockButton = computed(() => !props.hideLock)
 const showCount = computed(() => !props.hideCount && !isNaN(props.count))
 const lockLabel = computed(() => t(props.locked ? 'filtersPanelSectionFilterEntry.unlock' : 'filtersPanelSectionFilterEntry.lock'))
 </script>
@@ -96,32 +96,34 @@ const lockLabel = computed(() => t(props.locked ? 'filtersPanelSectionFilterEntr
         </span>
       </slot>
     </b-form-checkbox>
-    <button-icon
-      v-if="showLockButton"
-      square
-      hide-label
-      variant="link"
-      size="sm"
-      class="filters-panel-section-filter-entry__lock"
-      :class="{ 'filters-panel-section-filter-entry__lock--locked': locked }"
-      :icon-left="locked ? IPhLock : IPhLockOpen"
-      :pressed="locked"
-      :label="lockLabel"
-      @click="emit('update:locked', !locked)"
-    />
-    <b-badge
-      v-if="showCount"
-      class="filters-panel-section-filter-entry__count"
-      pill
-      variant="link"
-    >
-      <slot
-        name="count"
-        v-bind="{ count }"
+    <div class="filters-panel-section-filter-entry__end">
+      <button-icon
+        v-if="showLockButton"
+        square
+        hide-label
+        variant="link"
+        size="sm"
+        class="filters-panel-section-filter-entry__lock"
+        :class="{ 'filters-panel-section-filter-entry__lock--locked': locked }"
+        :icon-left="locked ? IPhLock : IPhLockOpen"
+        :pressed="locked"
+        :label="lockLabel"
+        @click="emit('update:locked', !locked)"
+      />
+      <b-badge
+        v-if="showCount"
+        class="filters-panel-section-filter-entry__count"
+        pill
+        variant="link"
       >
-        <display-number :value="Number(count)" />
-      </slot>
-    </b-badge>
+        <slot
+          name="count"
+          v-bind="{ count }"
+        >
+          <display-number :value="Number(count)" />
+        </slot>
+      </b-badge>
+    </div>
   </div>
 </template>
 
@@ -133,6 +135,7 @@ const lockLabel = computed(() => t(props.locked ? 'filtersPanelSectionFilterEntr
 
   &:deep(.form-check) {
     display: flex;
+    flex: 1 1 auto;
     min-width: 0;
     margin-right: $spacer-xs;
     margin-bottom: 0;
@@ -151,9 +154,19 @@ const lockLabel = computed(() => t(props.locked ? 'filtersPanelSectionFilterEntr
     }
   }
 
+  // Lock + count pill, pinned flush to the row's right edge regardless of
+  // label length or lock visibility — only the pill's own width (digit
+  // count) shifts its left edge.
+  &__end {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: $spacer-xs;
+    margin-left: auto;
+  }
+
   &__lock {
     flex-shrink: 0;
-    margin-right: $spacer-xs;
     opacity: 0;
     transition: opacity 0.15s ease;
 
@@ -173,7 +186,6 @@ const lockLabel = computed(() => t(props.locked ? 'filtersPanelSectionFilterEntr
   }
 
   &__count {
-    margin-left: auto;
     color: var(--bs-body-bg);
     background: var(--bs-secondary);
   }
