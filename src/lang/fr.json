@@ -2029,6 +2029,9 @@
     "clearQuery": "Effacer la requête",
     "clearFiltersAndQuery": "Effacer filtres et requête",
     "unlockFilters": "Déverrouiller les filtres ({count})",
+    "applyLockedFilters": "Appliquer les filtres verrouillés",
+    "applyLockedFiltersSuccess": "Filtres verrouillés appliqués avec succès",
+    "applyLockedFiltersError": "Impossible d'appliquer les filtres verrouillés",
     "saveSearch": "Sauvegarder la recherche",
     "createAlert": "Créer une alerte"
   },
