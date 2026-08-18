@@ -21,7 +21,7 @@ import { runAsyncSearch } from '@/api/asyncSearch'
 import filterDefs, * as filterTypes from '@/store/filters'
 import { getPairedDimensions } from '@/store/filters/pairedDimensions'
 import { useAppStore, useLockedFiltersStore, useSearchBreadcrumbStore } from '@/store/modules'
-import { parseLockedName } from '@/store/modules/lockedFilters'
+import { parseLockedName, toLockedName } from '@/store/modules/lockedFilters'
 import { apiInstance as api } from '@/api/apiInstance'
 import { defineSuffixedStore } from '@/store/defineSuffixedStore'
 import { SEARCH_OPERATORS } from '@/enums/searchOperators'
@@ -754,6 +754,30 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   }
 
   /**
+   * Re-tag any lock entries under `name`'s current mode to the mode it's
+   * about to switch to, for exactly the values presently active on that
+   * filter. Without this, flipping a filter's include/exclude toggle would
+   * leave its locked values behind under the old mode string, silently
+   * turning them into a conflict (and a stale-looking lock icon) instead of
+   * following the toggle the user just made. See icij/datashare#2332.
+   *
+   * @param {string} name - The bare filter name.
+   * @param {boolean} wasExcluded - The filter's mode before the toggle.
+   * @param {boolean} excluded - The filter's mode after the toggle.
+   */
+  function relockFilterValues(name, wasExcluded, excluded) {
+    const oldName = toLockedName(name, wasExcluded)
+    const newName = toLockedName(name, excluded)
+    const filterValues = (values.value[name] ?? []).map(toString)
+    lockedFiltersStore.entries
+      .filter(entry => entry.name === oldName && filterValues.includes(entry.value))
+      .forEach(({ value, label }) => {
+        lockedFiltersStore.unlock({ name: oldName, value })
+        lockedFiltersStore.lock({ name: newName, value, label })
+      })
+  }
+
+  /**
    * Toggle a filter by its name.
    * This function checks if the filter is currently excluded.
    * If it is, it will exclude the filter; otherwise, it will include it.
@@ -762,7 +786,12 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * @returns {Object} - The result of the toggle action, either excluding or including the filter.
    */
   function toggleFilter(name, toggler = null) {
-    if (toggler ?? !isFilterExcluded(name)) {
+    const wasExcluded = isFilterExcluded(name)
+    const excluded = toggler ?? !wasExcluded
+    if (excluded !== wasExcluded) {
+      relockFilterValues(name, wasExcluded, excluded)
+    }
+    if (excluded) {
       return excludeFilter(name)
     }
     return includeFilter(name)
