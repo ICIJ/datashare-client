@@ -972,24 +972,36 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * reconcilePairedExcludeFilters() call right after this one — that's the
    * same invariant every other route change already goes through.
    */
+  // Shared by mergeLockedFilters (route hydration, skips a conflicting entry —
+  // icij/datashare#2329) and hasConflictingLocks/applyLockedFilters (an
+  // explicit user action that overrides a conflict — icij/datashare#2332), so
+  // the two never compute "does this lock conflict" differently.
+  function getLockConflict({ name, value }) {
+    const { name: bareName, excluded } = parseLockedName(name)
+    // A lock for a filter that no longer exists on this project/index
+    // (e.g. a stale lock from before a filter was removed) is inert: it's
+    // not a conflict, but callers that write values (mergeLockedFilters,
+    // applyLockedFilters) still must not act on it, so exists:false is
+    // reported separately from hasConflict.
+    if (!getFilter({ name: bareName })) {
+      return { bareName, value, excluded, exists: false, hasConflict: false }
+    }
+    // Conflict detection must look at the whole paired-dimension group, not just the
+    // bare filter name: reconcilePairedExcludeFilters() force-excludes every member
+    // of a paired group if any one of them is excluded, so a lock that looks
+    // conflict-free against the bare name alone could still get silently flipped by
+    // that reconciliation pass. See icij/datashare#2329.
+    const group = getPairedDimensions(bareName)
+    const dims = group.length > 1 ? group : [bareName]
+    const isPresent = dims.some(dim => dim in values.value)
+    const hasConflict = isPresent && dims.some(dim => excludeFilters.value.includes(dim)) !== excluded
+    return { bareName, value, excluded, exists: true, hasConflict }
+  }
+
   function mergeLockedFilters() {
-    lockedFiltersStore.entries.forEach(({ name, value }) => {
-      const { name: bareName, excluded } = parseLockedName(name)
-      // A lock for a filter that no longer exists on this project/index
-      // (e.g. a stale lock from before a filter was removed) is inert.
-      if (!getFilter({ name: bareName })) {
-        return
-      }
-      // Conflict detection must look at the whole paired-dimension group, not just the
-      // bare filter name: reconcilePairedExcludeFilters() (below) force-excludes every
-      // member of a paired group if any one of them is excluded, so a lock that looks
-      // conflict-free against the bare name alone could still get silently flipped by
-      // that reconciliation pass. See icij/datashare#2329.
-      const group = getPairedDimensions(bareName)
-      const dims = group.length > 1 ? group : [bareName]
-      const isPresent = dims.some(dim => dim in values.value)
-      const hasConflict = isPresent && dims.some(dim => excludeFilters.value.includes(dim)) !== excluded
-      if (hasConflict) {
+    lockedFiltersStore.entries.forEach((entry) => {
+      const { bareName, value, excluded, exists, hasConflict } = getLockConflict(entry)
+      if (!exists || hasConflict) {
         return
       }
       addFilterValue({ name: bareName, value })
@@ -997,6 +1009,41 @@ export const useSearchStore = defineSuffixedStore('search', () => {
         excludeFilter(bareName)
       }
     })
+  }
+
+  /**
+   * Whether any locked entry currently conflicts with the live search state
+   * (same conflict definition mergeLockedFilters uses to decide what to
+   * silently skip). Drives the breadcrumb footer's "Apply locked filters"
+   * button — icij/datashare#2332.
+   */
+  const hasConflictingLocks = computed(() => {
+    return lockedFiltersStore.entries.some(entry => getLockConflict(entry).hasConflict)
+  })
+
+  /**
+   * Force-apply every locked value into the live search state, overriding
+   * any conflicting mode — "locks win". Unlike mergeLockedFilters (which
+   * silently skips a conflicting entry so a shared link is never silently
+   * rewritten), this is only ever invoked by an explicit user action (the
+   * "Apply locked filters" footer button, icij/datashare#2332), so
+   * overriding the live state here is exactly what the user asked for.
+   */
+  function applyLockedFilters() {
+    lockedFiltersStore.entries.forEach(({ name, value }) => {
+      const { name: bareName, excluded } = parseLockedName(name)
+      if (!getFilter({ name: bareName })) {
+        return
+      }
+      addFilterValue({ name: bareName, value })
+      if (excluded) {
+        excludeFilter(bareName)
+      }
+      else {
+        includeFilter(bareName)
+      }
+    })
+    reconcilePairedExcludeFilters()
   }
 
   /**
@@ -1256,6 +1303,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     // Getters
     instantiatedFilters,
     instantiatedFiltersWithoutLocks,
+    hasConflictingLocks,
     activeFilters,
     fields,
     searchOperator,
@@ -1285,6 +1333,10 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     // preserving locks, icij/datashare#2330) can re-apply locked values
     // on demand, not just on the next updateFromRouteQuery.
     mergeLockedFilters,
+    // "Apply locked filters" (icij/datashare#2332) — forces every lock's
+    // value/mode onto the live search, overriding conflicts. mergeLockedFilters
+    // above is for silent route hydration; this is for an explicit user click.
+    applyLockedFilters,
     hasFilterValue,
     isFilterContextualized,
     isFilterExcluded,
