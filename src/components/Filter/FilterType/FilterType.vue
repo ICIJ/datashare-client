@@ -188,8 +188,14 @@ function isItemLocked(item) {
   return lockedFiltersStore.isLocked({ name: lockedName.value, value: item.key })
 }
 
-function toggleLock(item, locked) {
+async function toggleLock(item, locked) {
   if (locked) {
+    // Locking an unticked value also selects it — a single click both
+    // applies and locks the filter, rather than silently locking a value
+    // that has no visible effect on the current search.
+    if (!hasValue(item)) {
+      await toggleValue(item, true)
+    }
     lockedFiltersStore.lock({ name: lockedName.value, value: item.key, label: bucketLabel(item) })
   }
   else {
