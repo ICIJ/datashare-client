@@ -5,6 +5,7 @@ import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
 import SearchBar from '@/components/Search/SearchBar/SearchBar'
 import SearchBarInput from '@/components/Search/SearchBar/SearchBarInput'
+import { consumeJustSubmitted } from '@/composables/useSearchFilter'
 import { useSearchStore } from '@/store/modules'
 
 describe('SearchBar.vue', function () {
@@ -69,6 +70,14 @@ describe('SearchBar.vue', function () {
     wrapper = shallowMountFactory({ indices: [indexFoo] })
     wrapper.vm.submit()
     expect(searchStore.indices).toContain(indexFoo)
+  })
+
+  it('marks the search as an explicit submission (icij/datashare#2332)', () => {
+    wrapper = shallowMountFactory()
+
+    wrapper.vm.submit()
+
+    expect(consumeJustSubmitted()).toBe(true)
   })
 
   describe('search suggestions', () => {
