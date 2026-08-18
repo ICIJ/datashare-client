@@ -30,6 +30,10 @@ const props = defineProps({
     type: Number,
     default: 0
   },
+  hasConflictingLocks: {
+    type: Boolean,
+    default: false
+  },
   wrapperClass: {
     type: [String, Array, Object]
   },
@@ -49,6 +53,7 @@ const emit = defineEmits([
   'clear:query',
   'clear:all',
   'unlock:all',
+  'apply:locked-filters',
   'save:search',
   'create:alert',
   'click:entry-x'
@@ -96,10 +101,12 @@ const isEmpty = computed(() => !slots.default && !props.entries.length)
           :disabled-save-search="disabledSaveSearch"
           :disabled-create-alert="disabledCreateAlert"
           :locked-filters-count="lockedFiltersCount"
+          :has-conflicting-locks="hasConflictingLocks"
           @clear:filters="emit('clear:filters')"
           @clear:query="emit('clear:query')"
           @clear:all="emit('clear:all')"
           @unlock:all="emit('unlock:all')"
+          @apply:locked-filters="emit('apply:locked-filters')"
           @save:search="emit('save:search')"
           @create:alert="emit('create:alert')"
         />

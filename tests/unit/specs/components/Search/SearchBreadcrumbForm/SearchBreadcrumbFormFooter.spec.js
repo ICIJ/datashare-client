@@ -37,4 +37,37 @@ describe('SearchBreadcrumbFormFooter', () => {
 
     expect(wrapper.emitted('unlock:all')).toHaveLength(1)
   })
+
+  describe('Apply locked filters (icij/datashare#2332)', () => {
+    it('shows "Apply locked filters" instead of "Unlock filters" when locks conflict', () => {
+      const wrapper = mountFooter({ lockedFiltersCount: 1, hasConflictingLocks: true })
+
+      expect(wrapper.text()).toContain('Apply locked filters')
+      expect(wrapper.text()).not.toContain('Unlock filters')
+    })
+
+    it('shows "Unlock filters (N)" when locks exist and none conflict', () => {
+      const wrapper = mountFooter({ lockedFiltersCount: 2, hasConflictingLocks: false })
+
+      expect(wrapper.text()).toContain('Unlock filters (2)')
+      expect(wrapper.text()).not.toContain('Apply locked filters')
+    })
+
+    it('shows neither button when there are no locks and none conflict', () => {
+      const wrapper = mountFooter({ lockedFiltersCount: 0, hasConflictingLocks: false })
+
+      expect(wrapper.text()).not.toContain('Unlock filters')
+      expect(wrapper.text()).not.toContain('Apply locked filters')
+    })
+
+    it('emits apply:locked-filters when the button is clicked', async () => {
+      const wrapper = mountFooter({ lockedFiltersCount: 1, hasConflictingLocks: true })
+
+      const buttons = wrapper.findAllComponents(ButtonIcon)
+      const applyButton = buttons.find(button => button.text().includes('Apply locked filters'))
+      await applyButton.trigger('click')
+
+      expect(wrapper.emitted('apply:locked-filters')).toHaveLength(1)
+    })
+  })
 })
