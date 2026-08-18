@@ -21,7 +21,7 @@ import { runAsyncSearch } from '@/api/asyncSearch'
 import filterDefs, * as filterTypes from '@/store/filters'
 import { getPairedDimensions } from '@/store/filters/pairedDimensions'
 import { useAppStore, useLockedFiltersStore, useSearchBreadcrumbStore } from '@/store/modules'
-import { parseLockedName } from '@/store/modules/lockedFilters'
+import { parseLockedName, toLockedName } from '@/store/modules/lockedFilters'
 import { apiInstance as api } from '@/api/apiInstance'
 import { defineSuffixedStore } from '@/store/defineSuffixedStore'
 import { SEARCH_OPERATORS } from '@/enums/searchOperators'
@@ -87,7 +87,18 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     return instantiatedFilters.value.filter(method('hasValues'))
   })
 
-  const filterValuesAsRouteQuery = computed(() => {
+  // Whether `value` is currently locked under `filterName`, accounting for
+  // its current include/exclude mode — a lock's identity is `{name, value}`
+  // where `name` already carries the `-` prefix for excluded mode (see
+  // toLockedName/parseLockedName in lockedFilters.js).
+  function isValueLocked(filterName, value, excluded) {
+    return lockedFiltersStore.isLocked({ name: toLockedName(filterName, excluded), value })
+  }
+
+  // Shared by filterValuesAsRouteQuery (internal navigation, keeps locks) and
+  // filterValuesAsRouteQueryWithoutLocks (outward/shareable artifacts, strips
+  // locks) so the two never drift — icij/datashare#2331.
+  function buildFilterValuesAsRouteQuery(stripLocked) {
     return Object.keys(values.value).reduce((memo, name) => {
       // We need to look for the filter's definition in order to us its `id`
       // as key for the URL params. This was we track configured filter instead
@@ -101,12 +112,24 @@ export const useSearchStore = defineSuffixedStore('search', () => {
         // is excluded, both emit the `f[-name]` prefix. Protects against
         // in-store drift leaking into the URL.
         const excluded = getPairedDimensions(filter.name).some(dim => excludeFilters.value.includes(dim))
-        const key = excluded ? `f[-${filter.name}]` : `f[${filter.name}]`
-        memo[key] = compact(filter.values)
+        const filterValues = stripLocked
+          ? filter.values.filter(value => !isValueLocked(filter.name, value, excluded))
+          : filter.values
+        if (filterValues.length > 0) {
+          const key = excluded ? `f[-${filter.name}]` : `f[${filter.name}]`
+          memo[key] = compact(filterValues)
+        }
       }
       return memo
     }, {})
-  })
+  }
+
+  const filterValuesAsRouteQuery = computed(() => buildFilterValuesAsRouteQuery(false))
+
+  // Outward/shareable variant (saved searches, share links) — icij/datashare#2331.
+  // Locked ⇒ always stripped, full stop, even if the same value is also
+  // independently ticked as a normal filter.
+  const filterValuesAsRouteQueryWithoutLocks = computed(() => buildFilterValuesAsRouteQuery(true))
 
   const toBaseRouteQuery = computed(() => {
     return {
@@ -114,6 +137,15 @@ export const useSearchStore = defineSuffixedStore('search', () => {
       indices: indices.value.join(','),
       field: field.value,
       ...filterValuesAsRouteQuery.value
+    }
+  })
+
+  const toBaseRouteQueryWithoutLocks = computed(() => {
+    return {
+      q: q.value,
+      indices: indices.value.join(','),
+      field: field.value,
+      ...filterValuesAsRouteQueryWithoutLocks.value
     }
   })
 
@@ -125,6 +157,17 @@ export const useSearchStore = defineSuffixedStore('search', () => {
       order: orderBy.value,
       searchOperator: searchOperator.value,
       ...toBaseRouteQuery.value
+    }
+  })
+
+  const toRouteQueryWithoutLocks = computed(() => {
+    return {
+      from: `${from.value}`,
+      perPage: `${perPage.value}`,
+      sort: sortBy.value,
+      order: orderBy.value,
+      searchOperator: searchOperator.value,
+      ...toBaseRouteQueryWithoutLocks.value
     }
   })
 
@@ -1166,8 +1209,11 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     fields,
     searchOperator,
     filterValuesAsRouteQuery,
+    filterValuesAsRouteQueryWithoutLocks,
     toBaseRouteQuery,
+    toBaseRouteQueryWithoutLocks,
     toRouteQuery,
+    toRouteQueryWithoutLocks,
     toRouteQueryWithStamp,
     toSearchParams,
     retrieveQueryTerms,
