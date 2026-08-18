@@ -3,7 +3,8 @@ import { shallowMount, flushPromises } from '@vue/test-utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import Search from '@/views/Search/Search'
 import SearchToolbar from '@/components/Search/SearchToolbar/SearchToolbar'
-import { useSearchStore } from '@/store/modules'
+import { markJustSubmitted } from '@/composables/useSearchFilter'
+import { useSearchStore, useLockedFiltersStore } from '@/store/modules'
 
 vi.mock('@/api/apiInstance', {
   apiInstance: {
@@ -23,7 +24,19 @@ describe('Search.vue', () => {
   let core, wrapper
 
   beforeEach(() => {
+    // Every test's router uses createWebHashHistory, which listens on the
+    // single shared jsdom `window`/`location`. Without unmounting the
+    // previous wrapper first, its Search instance (and the onAfterRouteUpdate
+    // watchers it registered) stays alive and keeps reacting to hash changes
+    // fired by later tests' router.push calls — racing the current test's
+    // instance for one-shot module state like justSubmitted. See icij/datashare#2332.
+    wrapper?.unmount()
+
     core = CoreSetup.init().useAll().useRouterWithoutGuards()
+    // lockedFiltersStore is persisted to real localStorage (persist: true), which
+    // survives across tests in this file even with a fresh Pinia instance per test —
+    // clear it explicitly so lock-dependent tests below don't leak into each other.
+    useLockedFiltersStore().unlockAll()
 
     wrapper = shallowMount(Search, {
       global: {
@@ -107,6 +120,35 @@ describe('Search.vue', () => {
     await flushDebouncedRouterPush()
 
     expect(searchStore.q).toBe('+Berlin +Vienna')
+  })
+
+  it('opens the breadcrumb panel after an explicit submission when locks are active (icij/datashare#2332)', async () => {
+    const lockedFiltersStore = useLockedFiltersStore()
+    lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+    markJustSubmitted()
+    await core.router.push({ name: 'search', query: { q: 'lockedSubmitTest' } })
+    await flushPromises()
+
+    expect(wrapper.vm.toggleSearchBreadcrumb).toBe(true)
+  })
+
+  it('does not open the breadcrumb panel on a route update that was not marked as submitted (icij/datashare#2332)', async () => {
+    const lockedFiltersStore = useLockedFiltersStore()
+    lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+    await core.router.push({ name: 'search', query: { q: 'noSubmittedFlagTest' } })
+    await flushPromises()
+
+    expect(wrapper.vm.toggleSearchBreadcrumb).toBe(false)
+  })
+
+  it('does not open the breadcrumb panel on submission when no locks are active (icij/datashare#2332)', async () => {
+    markJustSubmitted()
+    await core.router.push({ name: 'search', query: { q: 'noLocksSubmitTest' } })
+    await flushPromises()
+
+    expect(wrapper.vm.toggleSearchBreadcrumb).toBe(false)
   })
 
   it('runs the initial search when a reloaded noRefresh URL is stripped', async () => {

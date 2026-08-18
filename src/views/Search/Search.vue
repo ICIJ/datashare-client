@@ -20,7 +20,7 @@ import DocumentEntries from '@/components/Document/DocumentEntries/DocumentEntri
 import Hook from '@/components/Hook/Hook'
 import { useDocument } from '@/composables/useDocument'
 import { useUrlPageFromWithStore } from '@/composables/useUrlPageFromWithStore'
-import { useSearchFilter } from '@/composables/useSearchFilter'
+import { useSearchFilter, consumeJustSubmitted } from '@/composables/useSearchFilter'
 import { useSearchBreadcrumb } from '@/composables/useSearchBreadcrumb'
 import { useSearchNav } from '@/composables/useSearchNav'
 import { useSearchExecution } from '@/composables/useSearchExecution'
@@ -44,7 +44,7 @@ const {
   onAfterRouteQueryFromUpdate,
   onConsumeNoRefresh
 } = useSearchFilter()
-const { count: searchBreadcrumbCounter, anyFilters } = useSearchBreadcrumb()
+const { count: searchBreadcrumbCounter, anyFilters, lockedFiltersCount } = useSearchBreadcrumb()
 const { hasCarousel } = useSearchNav()
 
 const { t } = useI18n()
@@ -152,6 +152,17 @@ onAfterRouteQueryFromUpdate(refreshSearchFromRoute, { immediate: route.name === 
 // refresh guards above so it runs last and they observe the flag before it is
 // stripped from the URL.
 onConsumeNoRefresh({ immediate: route.name === 'search' })
+// Auto-open the breadcrumb panel after an explicit search submission when
+// locks are active, so the user immediately sees what's locked. Gated on a
+// one-shot in-memory flag (set only by SearchBar's submit(), consumed here)
+// so paging, filter toggles, and project switches — which also push a
+// `search` route — never repeatedly reopen a panel the user just closed.
+// See icij/datashare#2332.
+onAfterRouteQueryUpdate(() => {
+  if (consumeJustSubmitted() && lockedFiltersCount.value > 0) {
+    toggleSearchBreadcrumb.value = true
+  }
+})
 </script>
 
 <template>
