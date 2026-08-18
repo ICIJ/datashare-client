@@ -43,6 +43,18 @@ const emit = defineEmits(['clear:filters', 'clear:query', 'clear:all', 'unlock:a
     compact-auto
   >
     <template #compact>
+      <!--
+        Whenever Story 6 (icij/datashare#2332) lands, this button's slot is
+        replaced by "Apply locked filters" while a lock conflicts with the
+        active search — see the spec's Story 4 section for the full rule.
+      -->
+      <button-icon
+        v-if="lockedFiltersCount > 0"
+        :icon-left="IPhLockOpen"
+        @click="emit('unlock:all')"
+      >
+        {{ t('searchBreadcrumbFormFooter.unlockFilters', { count: lockedFiltersCount }) }}
+      </button-icon>
       <button-icon
         :disabled="disabledClearFilters"
         :icon-left="IPhEraser"
@@ -63,18 +75,6 @@ const emit = defineEmits(['clear:filters', 'clear:query', 'clear:all', 'unlock:a
         @click="emit('clear:all')"
       >
         {{ t('searchBreadcrumbFormFooter.clearFiltersAndQuery') }}
-      </button-icon>
-      <!--
-        Whenever Story 6 (icij/datashare#2332) lands, this button's slot is
-        replaced by "Apply locked filters" while a lock conflicts with the
-        active search — see the spec's Story 4 section for the full rule.
-      -->
-      <button-icon
-        v-if="lockedFiltersCount > 0"
-        :icon-left="IPhLockOpen"
-        @click="emit('unlock:all')"
-      >
-        {{ t('searchBreadcrumbFormFooter.unlockFilters', { count: lockedFiltersCount }) }}
       </button-icon>
       <button-icon
         :disabled="disabledSaveSearch"
