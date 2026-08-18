@@ -12,6 +12,8 @@ const {
   clearQueryEntries,
   clearAll,
   unlockAll,
+  hasConflictingLocks,
+  applyLockedFilters,
   lockedFiltersCount,
   hasQueryEntries,
   hasFiltersEntries,
@@ -19,6 +21,14 @@ const {
 } = useSearchBreadcrumb()
 
 const { show: showSearchSavingModal } = useSearchSavingModal()
+
+// Force-open the panel when locks are applied so the diff is immediately
+// visible, independent of the post-submission auto-open trigger. See
+// icij/datashare#2332.
+async function onApplyLockedFilters() {
+  await applyLockedFilters()
+  visible.value = true
+}
 </script>
 
 <template>
@@ -29,10 +39,12 @@ const { show: showSearchSavingModal } = useSearchSavingModal()
     :disabled-clear-filters="!hasFiltersEntries"
     :disabled-clear-filters-and-query="!hasQueryAndFiltersEntries"
     :locked-filters-count="lockedFiltersCount"
+    :has-conflicting-locks="hasConflictingLocks"
     @clear:filters="clearFiltersEntries"
     @clear:query="clearQueryEntries"
     @clear:all="clearAll"
     @unlock:all="unlockAll"
+    @apply:locked-filters="onApplyLockedFilters"
     @save:search="showSearchSavingModal"
     @click:entry-x="clearEntry"
   />
