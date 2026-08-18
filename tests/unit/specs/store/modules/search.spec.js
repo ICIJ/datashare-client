@@ -761,6 +761,108 @@ describe('SearchStore', () => {
     })
   })
 
+  describe('instantiatedFiltersWithoutLocks (icij/datashare#2331)', () => {
+    let lockedFiltersStore
+
+    beforeEach(() => {
+      lockedFiltersStore = useLockedFiltersStore()
+    })
+
+    it('strips a locked value from the matching filter instance only', () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.addFilterValue({ name: 'contentType', value: 'text/plain' })
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      const stripped = find(searchStore.instantiatedFiltersWithoutLocks, { name: 'contentType' })
+      expect(stripped.values).toEqual(['text/plain'])
+    })
+
+    it('leaves the live instantiatedFilters untouched', () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      searchStore.instantiatedFiltersWithoutLocks
+      const live = find(searchStore.instantiatedFilters, { name: 'contentType' })
+      expect(live.values).toEqual(['application/pdf'])
+    })
+
+    it('returns filter instances that still expose hasValues() and applyTo()', () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      const stripped = find(searchStore.instantiatedFiltersWithoutLocks, { name: 'contentType' })
+      expect(typeof stripped.hasValues).toBe('function')
+      expect(stripped.hasValues()).toBe(false)
+    })
+
+    it('passes through a filter unchanged when none of its values are locked', () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'text/plain' })
+
+      const stripped = find(searchStore.instantiatedFiltersWithoutLocks, { name: 'contentType' })
+      expect(stripped.values).toEqual(['text/plain'])
+      expect(typeof stripped.hasValues).toBe('function')
+    })
+  })
+
+  describe('runBatchDownload strips locked values (icij/datashare#2331)', () => {
+    let rootSearchSpy, lockedFiltersStore
+
+    beforeEach(() => {
+      rootSearchSpy = vi.spyOn(api.elasticsearch, 'rootSearch')
+      vi.spyOn(api, 'runBatchDownload').mockResolvedValue({})
+      lockedFiltersStore = useLockedFiltersStore()
+    })
+
+    afterEach(() => {
+      vi.restoreAllMocks()
+    })
+
+    it('calls rootSearch with instantiatedFiltersWithoutLocks, not the live instantiatedFilters', async () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      await searchStore.runBatchDownload()
+
+      expect(rootSearchSpy).toHaveBeenCalledWith(
+        searchStore.instantiatedFiltersWithoutLocks,
+        expect.anything(),
+        expect.anything(),
+        expect.anything()
+      )
+      const passedFilters = rootSearchSpy.mock.calls[0][0]
+      const contentTypeFilter = find(passedFilters, { name: 'contentType' })
+      expect(contentTypeFilter.values).toEqual([])
+    })
+  })
+
+  describe('estimateDownloadSize strips locked values (icij/datashare#2331)', () => {
+    let estimateSpy, lockedFiltersStore
+
+    beforeEach(() => {
+      estimateSpy = vi.spyOn(api.elasticsearch, 'estimateDownloadSize').mockResolvedValue({
+        estimatedCount: 0,
+        estimatedSize: 0
+      })
+      lockedFiltersStore = useLockedFiltersStore()
+    })
+
+    afterEach(() => {
+      vi.restoreAllMocks()
+    })
+
+    it('calls estimateDownloadSize with instantiatedFiltersWithoutLocks, not the live instantiatedFilters', async () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      await searchStore.estimateDownloadSize()
+
+      const passedFilters = estimateSpy.mock.calls[0][1]
+      const contentTypeFilter = find(passedFilters, { name: 'contentType' })
+      expect(contentTypeFilter.values).toEqual([])
+    })
+  })
+
   describe('Delete query terms', () => {
     it('should not delete the term from the query if it doesn\'t exist', async () => {
       searchStore.setQuery('*')
@@ -1428,7 +1530,7 @@ describe('SearchStore', () => {
       await searchStore.estimateDownloadSize()
       expect(estimateSpy).toHaveBeenCalledWith(
         searchStore.indices,
-        searchStore.instantiatedFilters,
+        searchStore.instantiatedFiltersWithoutLocks,
         '*',
         [],
         SEARCH_OPERATORS.OR
