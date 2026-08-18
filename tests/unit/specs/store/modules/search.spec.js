@@ -732,12 +732,21 @@ describe('SearchStore', () => {
       expect(searchStore.filterValuesAsRouteQueryWithoutLocks).toEqual({})
     })
 
-    it('does not strip a value locked in the opposite mode from the one currently applied', () => {
+    it('strips a value even when its lock was recorded in a different exclude mode (fail-closed on mode drift)', () => {
       searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
-      // Locked while excluded, but the filter is currently included — different lock identity.
+      // Locked while excluded; the filter is now included (e.g. the user
+      // flipped modes after locking) — still stripped, not kept.
       lockedFiltersStore.lock({ name: '-contentType', value: 'application/pdf', label: 'application/pdf' })
 
-      expect(searchStore.filterValuesAsRouteQueryWithoutLocks).toEqual({ 'f[contentType]': ['application/pdf'] })
+      expect(searchStore.filterValuesAsRouteQueryWithoutLocks).toEqual({})
+    })
+
+    it('strips a locked value even when its own exclude flag disagrees with its paired dimension', () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.excludeFilter('contentTypeCategory')
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      expect(searchStore.filterValuesAsRouteQueryWithoutLocks).toEqual({})
     })
 
     it('toBaseRouteQueryWithoutLocks omits a locked value while keeping q/indices/field', () => {
@@ -802,6 +811,15 @@ describe('SearchStore', () => {
       const stripped = find(searchStore.instantiatedFiltersWithoutLocks, { name: 'contentType' })
       expect(stripped.values).toEqual(['text/plain'])
       expect(typeof stripped.hasValues).toBe('function')
+    })
+
+    it('strips the entire starred filter rather than leaving a semantically-different single value, when both pseudo-values were selected and one is locked', () => {
+      searchStore.addFilterValue({ name: 'starred', value: true })
+      searchStore.addFilterValue({ name: 'starred', value: false })
+      lockedFiltersStore.lock({ name: 'starred', value: true, label: 'Starred' })
+
+      const stripped = find(searchStore.instantiatedFiltersWithoutLocks, { name: 'starred' })
+      expect(stripped.values).toEqual([])
     })
   })
 
