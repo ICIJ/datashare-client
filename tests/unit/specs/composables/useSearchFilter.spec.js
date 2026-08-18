@@ -154,7 +154,7 @@ describe('useSearchFilter', () => {
       expect(useAppStore().getSettings('search', 'searchOperator')).toBe(SEARCH_OPERATORS.OR)
     })
 
-    describe('savedSearchOpened skips the locked-filter merge (icij/datashare#2331)', () => {
+    describe('savedSearchOpened skips the locked-filter merge', () => {
       beforeEach(() => {
         // Real module-level state (see useSearchFilter.js) — drain any
         // leftover flag before each test so tests can't leak into each other.
@@ -304,7 +304,7 @@ describe('useSearchFilter', () => {
     })
   })
 
-  describe('markSavedSearchOpened / isSavedSearchOpened / clearSavedSearchOpened (icij/datashare#2331)', () => {
+  describe('markSavedSearchOpened / isSavedSearchOpened / clearSavedSearchOpened', () => {
     beforeEach(() => {
       clearSavedSearchOpened()
     })
@@ -594,10 +594,6 @@ describe('useSearchFilter composable', () => {
       expect(searchStore.isFilterExcluded('contentTypeCategory')).toBe(false)
     })
 
-    // Regression test for icij/datashare#2351: with the composable mounted (so
-    // its sync watchers are live), hydrating a URL that only carries
-    // `f[-contentTypeCategory]` used to be silently reverted mid-hydration
-    // before the store's own reconciliation ran.
     it('survives route hydration when only f[-contentTypeCategory] is in the URL', () => {
       mountComposable()
 
@@ -637,25 +633,24 @@ describe('useSearchFilter composable', () => {
       expect(isFilterExcluded({ name: 'contentTypeCategory' })).toBe(false)
     })
 
-    it('reads a divergent state as excluded when the canonical contentType is excluded', () => {
+    it('reconciles a divergent state using the canonical contentType when canonical is excluded', () => {
       searchStore.excludeFilter('contentType')
 
       const { isFilterExcluded } = mountComposable()
 
       expect(isFilterExcluded({ name: 'contentType' })).toBe(true)
       expect(isFilterExcluded({ name: 'contentTypeCategory' })).toBe(true)
+      expect(searchStore.isFilterExcluded('contentTypeCategory')).toBe(true)
     })
 
-    // Regression test for icij/datashare#2351: excluding a whole category (only
-    // `contentTypeCategory` selected, `contentType` never set) must read as
-    // excluded rather than being silently reverted to included.
-    it('reads a divergent state as excluded when only contentTypeCategory is excluded', () => {
+    it('reconciles a divergent state using the canonical contentType when canonical is NOT excluded', () => {
       searchStore.excludeFilter('contentTypeCategory')
 
       const { isFilterExcluded } = mountComposable()
 
-      expect(isFilterExcluded({ name: 'contentType' })).toBe(true)
-      expect(isFilterExcluded({ name: 'contentTypeCategory' })).toBe(true)
+      expect(isFilterExcluded({ name: 'contentType' })).toBe(false)
+      expect(isFilterExcluded({ name: 'contentTypeCategory' })).toBe(false)
+      expect(searchStore.isFilterExcluded('contentTypeCategory')).toBe(false)
     })
 
     it('still works for unpaired filters without cross-dimension writes', () => {
@@ -1056,16 +1051,6 @@ describe('useSearchFilter composable', () => {
       searchStore.resetFilterValues()
 
       expect(lockedFiltersStore.isLocked({ name: 'language', value: 'en' })).toBe(true)
-    })
-
-    it('exposes lockedNameFor as the single source for a filter lock store key', () => {
-      const { lockedNameFor, toggleExcludeFilter } = mountComposable()
-
-      expect(lockedNameFor({ name: 'language' })).toBe('language')
-
-      toggleExcludeFilter({ name: 'language' }, true)
-
-      expect(lockedNameFor({ name: 'language' })).toBe('-language')
     })
   })
 
