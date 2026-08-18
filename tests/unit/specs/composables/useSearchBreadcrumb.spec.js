@@ -35,8 +35,8 @@ describe('useSearchBreadcrumb composable', () => {
       },
       template: '<div></div>'
     }
-    mount(TestComponent, { global: { plugins } })
-    return result
+    const wrapper = mount(TestComponent, { global: { plugins } })
+    return { ...result, wrapper }
   }
 
   describe('parseFiltersEntries (breadcrumb rendering for content type + category)', () => {
@@ -185,6 +185,45 @@ describe('useSearchBreadcrumb composable', () => {
       const { lockedFiltersCount } = mountComposable()
 
       expect(lockedFiltersCount.value).toBe(2)
+    })
+  })
+
+  describe('hasConflictingLocks and applyLockedFilters (icij/datashare#2332)', () => {
+    let lockedFiltersStore
+
+    beforeEach(() => {
+      lockedFiltersStore = useLockedFiltersStore()
+      // Locks persist to localStorage (persist: true) across the jsdom-shared
+      // localStorage instance, so a fresh pinia alone doesn't guarantee zero
+      // locks here — clear explicitly.
+      lockedFiltersStore.unlockAll()
+    })
+
+    it('reflects the store getter', () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.excludeFilter('contentType')
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      const { hasConflictingLocks } = mountComposable()
+
+      expect(hasConflictingLocks.value).toBe(true)
+    })
+
+    it('applies conflicting locks, refreshes the route, and toasts success', async () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.excludeFilter('contentType')
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      const { applyLockedFilters, wrapper } = mountComposable()
+      vi.spyOn(wrapper.vm.$toast, 'success')
+      vi.spyOn(wrapper.vm.$toast, 'error')
+
+      await applyLockedFilters()
+
+      expect(searchStore.getFilter({ name: 'contentType' }).values).toEqual(['application/pdf'])
+      expect(searchStore.isFilterExcluded('contentType')).toBe(false)
+      expect(wrapper.vm.$toast.success).toHaveBeenCalledOnce()
+      expect(wrapper.vm.$toast.error).not.toHaveBeenCalled()
     })
   })
 })
