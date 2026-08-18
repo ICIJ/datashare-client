@@ -1600,5 +1600,17 @@ describe('SearchStore', () => {
 
       expect(searchStore.getFilter({ name: 'contentType' })?.values ?? []).toEqual([])
     })
+
+    it('exposes mergeLockedFilters so callers can re-apply locks outside of hydration', () => {
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+      searchStore.addFilterValue({ name: 'contentType', value: 'text/plain' })
+
+      searchStore.resetFilterValues()
+      expect(searchStore.getFilter({ name: 'contentType' }).values).toEqual([])
+
+      searchStore.mergeLockedFilters()
+
+      expect(searchStore.getFilter({ name: 'contentType' }).values).toEqual(['application/pdf'])
+    })
   })
 })
