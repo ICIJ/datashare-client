@@ -88,13 +88,8 @@ describe('FilterTypeStarred.vue', () => {
   })
 
   describe('locking', () => {
-    it('does not render a lock button when neither ticked nor locked', () => {
-      expect(findLockButtons(wrapper)).toHaveLength(0)
-    })
-
-    it('renders a lock button once the entry is ticked', async () => {
-      await wrapper.findAll('.filters-panel-section-filter-entry .form-check-input').at(1).setChecked(true)
-      expect(findLockButtons(wrapper)).toHaveLength(1)
+    it('renders a lock button for Starred and Not starred even when neither ticked nor locked (reserved slot, hidden via CSS)', () => {
+      expect(findLockButtons(wrapper)).toHaveLength(2)
     })
 
     it('locks the starred value when clicking the lock button on a ticked entry', async () => {
@@ -106,12 +101,13 @@ describe('FilterTypeStarred.vue', () => {
       expect(lockedFiltersStore.isLocked({ name: 'starred', value: true })).toBe(true)
     })
 
-    it('still renders a lock button for a locked-but-unticked entry', async () => {
+    it('still renders a locked lock button for a locked-but-unticked entry', async () => {
       const lockedFiltersStore = useLockedFiltersStore()
       lockedFiltersStore.lock({ name: 'starred', value: false, label: 'Not starred' })
       wrapper = mount(FilterTypeStarred, { props: { filter: searchStore.getFilter({ name: 'starred' }) }, global: { plugins: core.plugins } })
 
-      expect(findLockButtons(wrapper)).toHaveLength(1)
+      const notStarredLock = findLockButtons(wrapper).at(1)
+      expect(notStarredLock.attributes('aria-pressed')).toBe('true')
     })
 
     it('unlocks the starred value when unticking a locked entry', async () => {
