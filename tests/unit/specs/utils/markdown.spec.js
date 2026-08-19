@@ -81,6 +81,20 @@ describe('renderMarkdown', () => {
     expect(html).toContain('href="mailto:someone@example.org"')
   })
 
+  it('unlinks a scheme the sanitizer strips, so no dead link is left behind', async () => {
+    // `tel:` is not in the sanitizer's href allowlist: keeping the anchor would
+    // leave an element styled like a link with nothing to navigate to.
+    const html = await renderMarkdown('[Call us](tel:+33123456789)')
+    expect(html).not.toContain('<a')
+    expect(html).toContain('Call us')
+  })
+
+  it('leaves no anchor at all for a dangerous scheme', async () => {
+    const html = await renderMarkdown('[x](javascript:alert(1))')
+    expect(html).not.toContain('<a')
+    expect(html).not.toContain('javascript:')
+  })
+
   it('unlinks an href it cannot parse rather than failing the whole document', async () => {
     const html = await renderMarkdown('[broken](http://%) and text after it')
     expect(html).not.toContain('<a')

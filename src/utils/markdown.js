@@ -30,6 +30,11 @@ schema.clobberPrefix = ''
 // application (mailto:, xmpp:) the way the remaining allowed ones do.
 const webProtocols = ['http:', 'https:']
 
+// The schemes the sanitizer keeps on an href, derived from the schema so the
+// two cannot drift: any other one loses its href there, which would leave an
+// element styled like a link with nothing behind it.
+const linkableProtocols = schema.protocols.href.map(protocol => `${protocol}:`)
+
 // An href resolved against the page showing the document, or null when the
 // document's author wrote something that is not a URL at all. Authors control
 // this string, and an unparseable one thrown from here would fail the whole
@@ -66,9 +71,10 @@ function rehypeConstrainLinks() {
         return
       }
       const url = resolveHref(href)
-      // Not a URL, so not a working link either: treated like the same-host
-      // links below rather than left for the reader to click on in vain.
-      if (url === null) {
+      // Neither a URL nor a scheme that survives sanitization is a working
+      // link: both are treated like the same-host ones below rather than left
+      // for the reader to click on in vain.
+      if (url === null || !linkableProtocols.includes(url.protocol)) {
         return unwrapLink(node, index, parent)
       }
       if (!webProtocols.includes(url.protocol)) {
