@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { parseQuery } from 'vue-router'
 
 import IPhListChecks from '~icons/ph/list-checks'
 import IPhCalendarBlank from '~icons/ph/calendar-blank'
@@ -47,7 +48,7 @@ function searchParamsFromURI(uri) {
 }
 
 function searchParamsQuery(uri) {
-  return Object.fromEntries(searchParamsFromURI(uri))
+  return parseQuery(searchParamsFromURI(uri).toString())
 }
 </script>
 
