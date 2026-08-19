@@ -2,8 +2,9 @@
 import { computed, nextTick, reactive, ref, toRef, useTemplateRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import { addLocalSearchMarksClassInHtml } from '@/utils/strings'
+import { addSearchMarksClassInHtml } from '@/utils/strings'
 import { renderMarkdown } from '@/utils/markdown'
+import { useUtils } from '@/composables/useUtils'
 import { usePipelinesStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
 
@@ -38,12 +39,20 @@ const props = defineProps({
   activeMatch: {
     type: Number,
     default: 0
+  },
+  /**
+   * Terms of the global search to mark in the rendered page
+   */
+  globalSearchTerms: {
+    type: Array,
+    default: () => []
   }
 })
 
 const emit = defineEmits(['fallback', 'empty'])
 
 const { t } = useI18n()
+const { getTermIndexColor } = useUtils()
 const pipelinesStore = usePipelinesStore()
 const elementRef = useTemplateRef('element')
 
@@ -60,7 +69,16 @@ function cacheKeyFor(page) {
 }
 
 const markedHtml = computed(() => {
-  return addLocalSearchMarksClassInHtml(renderedPages[cacheKeyFor(props.page)] ?? '', props.term)
+  const html = renderedPages[cacheKeyFor(props.page)] ?? ''
+  const locallyMarked = addSearchMarksClassInHtml(html, props.term)
+  // Global marks go on last so they nest inside the local ones, the order the
+  // `extracted-text` pipeline chain produces for the plain text view. Unlike that
+  // chain, a `regex` term is matched literally: this marker walks text nodes so it
+  // never marks inside an href, which a regex over rendered HTML would.
+  return props.globalSearchTerms.reduce((marked, { label }, index) => {
+    const style = `border-color: ${getTermIndexColor(index)}`
+    return addSearchMarksClassInHtml(marked, label, { className: 'global-search-term', style })
+  }, locallyMarked)
 })
 
 // A legitimately empty structure page renders to an empty string, which is
@@ -75,39 +93,37 @@ async function loadPage() {
   // A page switch (or a document switch, or a retry click) can start a new
   // `loadPage` while a previous one is still in flight. This counter mirrors
   // `lastContentSliceActivation`/`lastOccurrencesRetrieval` in
-  // `DocumentContent.vue`: a superseded call's failure must not replace the
-  // page the user is actually looking at, and its `finally` must not clear
-  // the loading state of the call that superseded it.
+  // `DocumentContent.vue`: only the newest load may write the error and the
+  // loading state, so a superseded one cannot clear the spinner of the call
+  // that superseded it, nor report its failure over the page now on screen.
   const load = ++lastPageLoad
   error.value = null
   loading.value = true
+  let loadError = null
   try {
     await renderPageOnce()
-    if (load === lastPageLoad) {
-      reportEmptyArtifact()
-    }
   }
-  catch (loadError) {
-    if (load === lastPageLoad) {
-      error.value = loadError
-    }
+  catch (failure) {
+    loadError = failure
   }
-  finally {
-    if (load === lastPageLoad) {
-      loading.value = false
-    }
+  if (load !== lastPageLoad) {
+    return
+  }
+  error.value = loadError
+  loading.value = false
+  if (!loadError) {
+    reportEmptyPage()
   }
 }
 
-// An artifact whose very first page renders to nothing has no markdown worth
-// showing at all, so the tab goes back to the plain text view instead of an
-// empty document. A later page can legitimately be blank (a blank page in a
-// PDF) without saying anything about the artifact, hence the page check.
+// A page can legitimately be blank (a blank cover page in a scanned PDF) without
+// saying anything about the artifact as a whole, so this only reports what it
+// knows: the page it shows has no content. Whether that means the artifact holds
+// no markdown at all is the parent's call, since it knows the page count.
 // This is `empty` rather than `fallback` because the two are not equivalent to
 // the parent: a fetch error can be retried, an empty artifact cannot.
-function reportEmptyArtifact() {
-  const isEmptyArtifact = props.page === 1 && !hasPageContent.value
-  if (isEmptyArtifact) {
+function reportEmptyPage() {
+  if (!hasPageContent.value) {
     emit('empty')
   }
 }
@@ -128,9 +144,9 @@ async function renderPageOnce() {
   renderedPages[targetCacheKey] = await renderMarkdown(markdown)
 }
 
-// Plugins can transform the markdown body through the `markdown-text`
-// category; core registers nothing under it, so by default this resolves
-// to the marked HTML unchanged.
+// Plugins can transform the markdown body through the `markdown-text` category;
+// core registers nothing under it, so by default this resolves to the marked
+// HTML unchanged.
 async function cookHtml(html) {
   cookedHtml.value = await pipelinesStore.applyPipelineChainByCategory('markdown-text')(html)
   await nextTick()
@@ -151,11 +167,17 @@ function activateMatch() {
   active.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' })
 }
 
-watch(toRef(props, 'page'), loadPage, { immediate: true })
-// The page number can stay the same while the document itself changes (e.g.
-// switching documents while both are on page 1), so the document identity
-// needs its own watcher to trigger a reload.
-watch(() => props.document?.id, loadPage)
+// The page number can stay the same while the document itself changes (both on
+// page 1), and the page can change on its own, so the pair is watched together:
+// two watchers would fire twice and issue the same request twice.
+watch([() => props.page, () => props.document?.id], ([, id], [, previousId]) => {
+  if (id !== previousId) {
+    // Rendered pages are worth keeping while the reader pages through a document,
+    // not once they have left it.
+    Object.keys(renderedPages).forEach(key => delete renderedPages[key])
+  }
+  loadPage()
+}, { immediate: true })
 watch(markedHtml, cookHtml, { immediate: true })
 watch(toRef(props, 'activeMatch'), activateMatch, { flush: 'post' })
 </script>
