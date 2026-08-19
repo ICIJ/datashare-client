@@ -6,6 +6,7 @@ import { useI18n } from 'vue-i18n'
 import DisplayRole from '@/components/Display/DisplayRole.vue'
 
 import { usePolicies } from '@/composables/usePolicies.js'
+import { useScrollParent } from '@/composables/useScrollParent'
 import { NO_ROLE, ROLE, ROLE_BIT, ROLE_HIERARCHY } from '@/enums/roles.js'
 import { BDropdown } from 'bootstrap-vue-next'
 
@@ -45,6 +46,8 @@ const emit = defineEmits(['update:modelValue'])
 const { getRoleByProject, formatRole } = usePolicies()
 const { t } = useI18n()
 
+const scrollParent = useScrollParent({ node: document.body })
+
 const currentUserRole = computed(() => getRoleByProject(props.project))
 
 const availableRoles = computed(() => [
@@ -68,7 +71,7 @@ defineExpose({ availableRoles })
       :disabled="disabled"
       no-caret
       variant="body"
-      teleport-to="body"
+      :teleport-to="scrollParent"
       toggle-class="project-users-role-dropdown__toggle  border border-subtle"
       menu-class="project-users-role-dropdown__menu"
     >
@@ -109,14 +112,5 @@ defineExpose({ availableRoles })
   :deep(.project-users-role-dropdown__content) {
     width: 10rem;
   }
-}
-
-// Teleported to <body> (teleport-to="body"), so it's no longer a DOM
-// descendant of anything carrying this component's scope attribute —
-// :deep() would never match here. Use :global() and rely on the
-// component-specific class name to avoid leaking styles elsewhere.
-:global(.project-users-role-dropdown__menu) {
-  // Must clear Bootstrap's modal z-index (1055) when opened inside AppModal.
-  z-index: 1071;
 }
 </style>

@@ -1,4 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
+import { nextTick } from 'vue'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import ProjectUsersRoleDropdown from '@/components/ProjectUsers/ProjectUsersRoleDropdown.vue'
@@ -129,6 +130,19 @@ describe('ProjectUsersRoleDropdown.vue', () => {
     const index = wrapper.vm.availableRoles.findIndex(r => r.value === 'INSTANCE_ADMIN')
     await wrapper.findAll('b-dropdown-item-stub')[index].trigger('click')
     expect(wrapper.emitted('update:modelValue')).toBeFalsy()
+  })
+
+  it('teleports the menu into the closest modal so it is not hidden behind it', async () => {
+    const modal = document.createElement('div')
+    modal.classList.add('modal')
+    document.body.appendChild(modal)
+    const wrapper = shallowMount(ProjectUsersRoleDropdown, {
+      global,
+      props: { modelValue: 'PROJECT_MEMBER', projectName, dirty: false },
+      attachTo: modal
+    })
+    await nextTick()
+    expect(wrapper.findComponent({ name: 'BDropdown' }).props('teleportTo')).toBe(modal)
   })
 
   it('defaults noRole to false', () => {

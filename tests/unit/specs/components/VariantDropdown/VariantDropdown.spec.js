@@ -1,4 +1,5 @@
 import { mount } from '@vue/test-utils'
+import { nextTick } from 'vue'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import VariantDropdown from '@/components/VariantDropdown/VariantDropdown.vue'
@@ -52,9 +53,20 @@ describe('VariantDropdown.vue', () => {
     expect(wrapper.find('.variant-dropdown__label').text()).toBe('Warning')
   })
 
-  it('teleports the menu to body', () => {
+  it('teleports the menu to body', async () => {
     const wrapper = mountComponent()
+    await nextTick()
     const dropdown = wrapper.findComponent({ name: 'BDropdown' })
-    expect(dropdown.props('teleportTo')).toBe('body')
+    expect(dropdown.props('teleportTo')).toBe(document.body)
+  })
+
+  it('teleports the menu into the closest modal so it is not hidden behind it', async () => {
+    const modal = document.createElement('div')
+    modal.classList.add('modal')
+    document.body.appendChild(modal)
+    const wrapper = mount(VariantDropdown, { global, props: { modelValue: 'info' }, attachTo: modal })
+    await nextTick()
+    const dropdown = wrapper.findComponent({ name: 'BDropdown' })
+    expect(dropdown.props('teleportTo')).toBe(modal)
   })
 })

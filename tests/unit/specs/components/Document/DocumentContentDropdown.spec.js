@@ -1,24 +1,36 @@
 import { mount } from '@vue/test-utils'
+import { nextTick } from 'vue'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import DocumentContentDropdown from '@/components/Document/DocumentContentDropdown'
 
 describe('DocumentContentDropdown.vue', () => {
-  const factory = (props = {}) => {
+  const factory = (props = {}, options = {}) => {
     const { plugins } = CoreSetup.init().useAll()
 
     return mount(DocumentContentDropdown, {
       props: { modelValue: true, ...props },
-      global: { plugins, stubs: { teleport: true } }
+      global: { plugins, stubs: { teleport: true } },
+      ...options
     })
   }
 
   const findMarkdownEntry = wrapper => wrapper.find('.document-content-dropdown__markdown')
   const findTextEntry = wrapper => wrapper.find('.document-content-dropdown__text')
 
-  it('teleports the dropdown menu to the body so it is not clipped by an ancestor stacking context', () => {
+  it('teleports the dropdown menu to the body so it is not clipped by an ancestor stacking context', async () => {
     const dropdown = factory().findComponent({ name: 'BDropdown' })
-    expect(dropdown.props('teleportTo')).toBe('body')
+    await nextTick()
+    expect(dropdown.props('teleportTo')).toBe(document.body)
+  })
+
+  it('teleports the dropdown menu into the closest modal so it is not hidden behind it', async () => {
+    const modal = document.createElement('div')
+    modal.classList.add('modal')
+    document.body.appendChild(modal)
+    const dropdown = factory({}, { attachTo: modal }).findComponent({ name: 'BDropdown' })
+    await nextTick()
+    expect(dropdown.props('teleportTo')).toBe(modal)
   })
 
   it('constrains the dropdown menu to the viewport boundary', () => {

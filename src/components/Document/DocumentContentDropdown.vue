@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { AppIcon } from '@icij/murmur'
 
 import AppDropdown from '@/components/AppDropdown/AppDropdown'
+import { useScrollParent } from '@/composables/useScrollParent'
 
 /**
  * Whether the extracted text is rendered as formatted markdown rather than plain text.
@@ -35,11 +36,13 @@ const { t } = useI18n()
 // active entry must follow what the body actually shows rather than what the
 // user picked on an earlier document.
 const isMarkdownActive = computed(() => preferMarkdown.value && !props.translation)
+
+const scrollParent = useScrollParent({ node: document.body })
 </script>
 
 <template>
   <app-dropdown
-    teleport-to="body"
+    :teleport-to="scrollParent"
     boundary="viewport"
     :aria-label="t('documentContent.view.ariaLabel')"
     class="document-content-dropdown"
