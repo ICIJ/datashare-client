@@ -46,37 +46,27 @@ function rehypeHardenLinks() {
   }
 }
 
-// The text a header cell renders, with any inline formatting collapsed to
-// its plain text. A synthesized header cell has no children at all, and a
-// literal "| |" in the source can also leave a single whitespace text node,
-// so both must be checked the same way.
-function headerCellText(cellNode) {
-  let text = ''
-  visit(cellNode, 'text', (textNode) => {
-    text += textNode.value
+// The rows and cells a header is made of; anything else inside it is content.
+const tableStructureTags = ['tr', 'th', 'td']
+
+function isEmptyHeader(node) {
+  return (node.children ?? []).every((child) => {
+    if (child.type === 'text') {
+      return child.value.trim() === ''
+    }
+    return tableStructureTags.includes(child.tagName) && isEmptyHeader(child)
   })
-  return text
 }
 
 // normalizeHeaderlessTables synthesizes a header row purely so remark-gfm's
-// grammar accepts the table; that row carries no real data and must not
-// reach the reader. Drop a <thead> only when every one of its header cells
-// is empty (or whitespace-only, which is what the synthesized row produces)
-// so a table with even partially real header text keeps its thead intact.
+// grammar accepts the table; that row carries no real data and must not reach
+// the reader. A header row the document does contain but leaves blank (authors
+// write those for column alignment) is indistinguishable from it here, and
+// renders the same either way: one empty row of cells, so it goes too.
 function rehypeDropEmptyTableHeader() {
   return (tree) => {
     visit(tree, 'element', (node, index, parent) => {
-      if (node.tagName !== 'thead' || parent === undefined || index === undefined) {
-        return
-      }
-      const headerCells = []
-      visit(node, 'element', (cellNode) => {
-        if (cellNode.tagName === 'th') {
-          headerCells.push(cellNode)
-        }
-      })
-      const allCellsEmpty = headerCells.length > 0 && headerCells.every(cell => headerCellText(cell).trim() === '')
-      if (allCellsEmpty) {
+      if (node.tagName === 'thead' && isEmptyHeader(node)) {
         parent.children.splice(index, 1)
         return index
       }
@@ -95,39 +85,57 @@ const processor = unified()
   .use(rehypeSanitize, schema)
   .use(rehypeStringify)
 
-// A line made solely of pipes, dashes, colons and whitespace, with at least
-// one pipe and one dash, is a GFM table delimiter row (e.g. "|---|---|"). A
-// bare "---" or "***" has no pipe, so it stays a thematic break, not a match.
-const delimiterRowPattern = /^[\s|:-]+$/
+// A GFM delimiter cell: one or more dashes, optionally anchored by alignment
+// colons. A bare "---" line has no pipe at all, so it stays a thematic break.
+const delimiterCellPattern = /^:?-+:?$/
+
+// A bullet or ordered list marker. "- |" satisfies the delimiter-cell grammar
+// but remark parses it as a list, so the marker is ruled out first.
+const listItemPattern = /^\s*(?:[-*+]|\d{1,9}[.)])\s/
 
 // The opening (or closing) line of a fenced code block: up to 3 leading
 // spaces, then 3+ backticks or 3+ tildes.
 const fenceLinePattern = /^\s{0,3}(`{3,}|~{3,})/
 
-function isDelimiterRow(line) {
-  return line.includes('|') && line.includes('-') && delimiterRowPattern.test(line)
-}
-
 // 4+ leading spaces (or a leading tab) make a line part of an indented code
 // block, not a table, regardless of what precedes it.
 const indentedCodePattern = /^(?: {4}|\t)/
 
-function isIndentedCode(line) {
-  return indentedCodePattern.test(line)
+function splitCells(line) {
+  const withoutEdgePipes = line.trim().replace(/^\|/, '').replace(/\|$/, '')
+  return withoutEdgePipes.split('|')
 }
 
-// Count the cells a GFM delimiter row declares, so a synthesized header can
-// match it exactly (GFM requires the header and delimiter row cell counts to
-// be equal, or the table is rejected).
-function countDelimiterCells(line) {
-  const trimmedLine = line.trim()
-  const withoutEdgePipes = trimmedLine.replace(/^\|/, '').replace(/\|$/, '')
-  return withoutEdgePipes.split('|').length
+function isDelimiterRow(line) {
+  if (!line.includes('|') || listItemPattern.test(line)) {
+    return false
+  }
+  return splitCells(line).every(cell => delimiterCellPattern.test(cell.trim()))
+}
+
+// GFM needs a row below the delimiter row as well. Without one, synthesizing a
+// header builds a table with no body, and the reader loses the line's own text.
+function isTableBodyRow(line) {
+  return line !== undefined && line.includes('|')
+}
+
+// A table block is headerless when its delimiter row is preceded by a blank line
+// (or nothing, at the very start of the document): a real header would be the
+// non-blank line right above it instead.
+function startsHeaderlessTable(lines, index) {
+  const line = lines[index]
+  const previousLine = lines[index - 1]
+  const isAtBlockStart = previousLine === undefined || previousLine.trim() === ''
+  return isAtBlockStart
+    && !indentedCodePattern.test(line)
+    && isDelimiterRow(line)
+    && isTableBodyRow(lines[index + 1])
 }
 
 // An empty-cell header row with the same cell count as the delimiter row it
 // will sit above, so the pair together forms a syntactically valid GFM table.
-function buildEmptyHeaderRow(cellCount) {
+function buildEmptyHeaderRow(delimiterLine) {
+  const cellCount = splitCells(delimiterLine).length
   return `|${new Array(cellCount).fill(' ').join('|')}|`
 }
 
@@ -139,23 +147,18 @@ function buildEmptyHeaderRow(cellCount) {
  * paragraph instead of a table.
  *
  * @param {string} source - Raw markdown text.
- * @returns {string} Markdown text with missing table headers synthesized.
+ * @returns {string} The rewritten markdown.
  */
 export function normalizeHeaderlessTables(source) {
   const lines = source.split('\n')
   const normalizedLines = []
-  // Fence state, tracked so a delimiter-looking line inside a fenced code
-  // block (a code sample, not an actual table) is never touched. The
-  // closing-fence pattern only ever changes when a new fence opens, so it is
-  // built once here rather than once per line while inside the fence.
-  let fenceChar = null
-  let fenceMinLength = 0
+  // Tracked so a delimiter-looking line inside a fenced code block (a code
+  // sample, not a table) is never touched. Non-null means "inside a fence".
   let closeFencePattern = null
 
   lines.forEach((line, index) => {
-    if (fenceChar) {
+    if (closeFencePattern) {
       if (closeFencePattern.test(line)) {
-        fenceChar = null
         closeFencePattern = null
       }
       normalizedLines.push(line)
@@ -164,22 +167,14 @@ export function normalizeHeaderlessTables(source) {
 
     const fenceOpenMatch = line.match(fenceLinePattern)
     if (fenceOpenMatch) {
-      fenceChar = fenceOpenMatch[1][0]
-      fenceMinLength = fenceOpenMatch[1].length
-      closeFencePattern = new RegExp(`^\\s{0,3}${fenceChar}{${fenceMinLength},}\\s*$`)
+      const fence = fenceOpenMatch[1]
+      closeFencePattern = new RegExp(`^\\s{0,3}${fence[0]}{${fence.length},}\\s*$`)
       normalizedLines.push(line)
       return
     }
 
-    // A table block is headerless when its delimiter row is preceded by a
-    // blank line (or nothing, at the very start of the document): a real
-    // header line would be the non-blank line right above it instead. A
-    // 4+-space indent makes the line an indented code block instead, even
-    // when the line above it is blank.
-    const previousLine = lines[index - 1]
-    const startsHeaderlessTable = !isIndentedCode(line) && isDelimiterRow(line) && (previousLine === undefined || previousLine.trim() === '')
-    if (startsHeaderlessTable) {
-      normalizedLines.push(buildEmptyHeaderRow(countDelimiterCells(line)))
+    if (startsHeaderlessTable(lines, index)) {
+      normalizedLines.push(buildEmptyHeaderRow(line))
     }
     normalizedLines.push(line)
   })
