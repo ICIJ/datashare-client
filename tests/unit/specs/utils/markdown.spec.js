@@ -91,9 +91,32 @@ describe('normalizeHeaderlessTables', () => {
     expect(normalizeHeaderlessTables(source).startsWith('| | |\n')).toBe(true)
   })
 
-  it('fires when the delimiter row is the very last line, with no data rows after it', () => {
+  it('does not fire when no table row follows the delimiter row', () => {
+    // Synthesizing a header here would build a table with no body rows, and
+    // the line's own text would vanish from the rendered output.
     const source = 'Intro.\n\n|---|---|'
-    expect(normalizeHeaderlessTables(source)).toBe('Intro.\n\n| | |\n|---|---|')
+    expect(normalizeHeaderlessTables(source)).toBe(source)
+  })
+
+  it('does not fire when the delimiter row is followed by a blank line', () => {
+    const source = 'INVOICE\n\n|-------------------|\n\nTotal: 100\n'
+    expect(normalizeHeaderlessTables(source)).toBe(source)
+  })
+
+  it('does not treat a list item made of pipes and dashes as a delimiter row', () => {
+    const source = 'intro\n\n- |\n- foo\n'
+    expect(normalizeHeaderlessTables(source)).toBe(source)
+  })
+
+  it('does not treat a row with a non-delimiter cell as a delimiter row', () => {
+    // GFM requires every delimiter cell to hold at least one dash.
+    const source = 'Intro.\n\n| --- |  | --- |\n| a | b | c |\n'
+    expect(normalizeHeaderlessTables(source)).toBe(source)
+  })
+
+  it('fires on an indented delimiter row (GFM needs no matching indentation)', () => {
+    const source = 'Intro.\n\n  |---|---|\n  | a | b |\n'
+    expect(normalizeHeaderlessTables(source)).toBe('Intro.\n\n| | |\n  |---|---|\n  | a | b |\n')
   })
 
   it('does not touch a delimiter row that already has a header above it', () => {
@@ -168,12 +191,26 @@ describe('renderMarkdown table header stripping', () => {
     expect(html).toContain('<td>d</td>')
   })
 
-  it('drops a thead whose header cells are whitespace-only, not just literally empty', async () => {
-    // A header row that is present in the source but made only of spaces must
-    // be treated the same as a fully empty one: it carries no real data.
+  it('also drops a blank thead the document itself contains', async () => {
+    // A header row an author left blank for column alignment is indistinguishable
+    // from a synthesized one, and renders the same: an empty row of cells.
     const html = await renderMarkdown('|   |   |\n|---|---|\n| a | b |\n')
     expect(html).not.toContain('<thead>')
     expect(html).toContain('<td>a</td>')
+  })
+
+  it('keeps a thead whose header cells hold no text node', async () => {
+    const html = await renderMarkdown('| ![a](https://e.org/a.png) | ![b](https://e.org/b.png) |\n|---|---|\n| 1 | 2 |\n')
+    expect(html).toContain('<thead>')
+    expect(html).toContain('<td>1</td>')
+  })
+
+  it('keeps the text of a rule-like line instead of turning it into an empty table', async () => {
+    const html = await renderMarkdown('INVOICE\n\n|-------------------|\n\nTotal: 100\n')
+    expect(html).toContain('INVOICE')
+    expect(html).toContain('|-------------------|')
+    expect(html).toContain('Total: 100')
+    expect(html).not.toContain('<table>')
   })
 
   it('keeps a thead whose header cells all have real text', async () => {
