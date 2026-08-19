@@ -13,12 +13,12 @@ describe('useSearchBreadcrumb composable', () => {
   // The "search" route lazily imports the whole Search view subtree, whose
   // setup() reads from the search store. Resolve it once here, on a
   // throwaway router/pinia, so that cost isn't paid inside a single test's
-  // timeout.
+  // timeout. icij/datashare#2337.
   beforeAll(async () => {
     setActivePinia(createPinia())
     const router = createRouter({ routes, history: createWebHashHistory() })
     await router.push({ name: 'search' })
-  })
+  }, 30000)
 
   beforeEach(() => {
     core = CoreSetup.init().useAll().useRouterWithoutGuards()
@@ -144,10 +144,6 @@ describe('useSearchBreadcrumb composable', () => {
     })
 
     it('clearFiltersEntries removes everything when there are zero locks', () => {
-      // Locks persist to localStorage (persist: true) across the jsdom-shared
-      // localStorage instance, so a fresh pinia alone doesn't guarantee zero
-      // locks here — clear explicitly.
-      lockedFiltersStore.unlockAll()
       searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
 
       const { clearFiltersEntries } = mountComposable()
@@ -193,10 +189,6 @@ describe('useSearchBreadcrumb composable', () => {
 
     beforeEach(() => {
       lockedFiltersStore = useLockedFiltersStore()
-      // Locks persist to localStorage (persist: true) across the jsdom-shared
-      // localStorage instance, so a fresh pinia alone doesn't guarantee zero
-      // locks here — clear explicitly.
-      lockedFiltersStore.unlockAll()
     })
 
     it('reflects the store getter', () => {
