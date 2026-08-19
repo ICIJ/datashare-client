@@ -19,7 +19,7 @@ const MARKDOWN_PAGE_SEPARATOR = '\n\n---\n\n'
 export function useDocumentDownload(document, { immediate = true } = {}) {
   const documentStore = useDocumentStore()
   const documentDownloadStore = useDocumentDownloadStore()
-  const { toastedPromise } = useToast()
+  const { toast } = useToast()
   const { locale, t } = useI18n()
 
   const documentRef = toRef(document)
@@ -113,8 +113,7 @@ export function useDocumentDownload(document, { immediate = true } = {}) {
   async function fetchMarkdownPages() {
     const { index, id, routing } = documentRef.value
     const requests = range(1, markdownPages.value + 1).map(page => api.getStructurePage(index, id, page, routing))
-    const errorMessage = t('documentDownloadPopover.downloadMarkdownError')
-    return toastedPromise(Promise.all(requests), { errorMessage })
+    return Promise.all(requests)
   }
 
   async function downloadMarkdown() {
@@ -129,9 +128,13 @@ export function useDocumentDownload(document, { immediate = true } = {}) {
       const pages = await fetchMarkdownPages()
       downloadBlob(pages.join(MARKDOWN_PAGE_SEPARATOR), `${title}.md`, MARKDOWN_MIME_TYPE)
     }
-    catch {
-      // toastedPromise already reported the failure; swallow the rejection so
-      // it doesn't escape the template's click handler.
+    catch (error) {
+      // An expired session already gets its own "log back in" toast from the
+      // error bus, and stacking a download failure on top of it only tells the
+      // user something they cannot act on.
+      if (error?.response?.status !== 401) {
+        toast.error(t('documentDownloadPopover.downloadMarkdownError'))
+      }
     }
     finally {
       isDownloadingMarkdown.value = false

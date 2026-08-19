@@ -29,6 +29,7 @@ const DOCUMENT_ID = Object.freeze({
   WITHOUT_MARKDOWN: 'md-absent',
   FAILING_PAGE: 'md-failing-page',
   TOASTED_PAGE: 'md-toasted-page',
+  EXPIRED_SESSION: 'md-expired-session',
   DOUBLE_CLICK: 'md-double-click',
   IDLE: 'md-idle',
   DOWNLOADING: 'md-pending-download',
@@ -422,6 +423,19 @@ describe('useDocumentDownload composable', () => {
       const toastError = vi.spyOn(wrapper.vm.$toast, 'error')
       await downloadMarkdown()
       expect(toastError).toHaveBeenCalledWith('The markdown could not be downloaded.')
+    })
+
+    it('should leave an expired session to the single log-back-in toast', async () => {
+      mockStructureManifest(1)
+      const unauthorized = Object.assign(new Error('Unauthorized'), { response: { status: 401 } })
+      apiInstance.getStructurePage = vi.fn().mockRejectedValue(unauthorized)
+      stubAnchor()
+      const doc = new Document({ _id: DOCUMENT_ID.EXPIRED_SESSION, _index: 'test-index', _source: { title: 'test' } })
+      const { downloadMarkdown } = mountComposable(doc)
+      await flushPromises()
+      const toastError = vi.spyOn(wrapper.vm.$toast, 'error')
+      await downloadMarkdown()
+      expect(toastError).not.toHaveBeenCalled()
     })
 
     it('should ignore a second call while the pages are still being fetched', async () => {
