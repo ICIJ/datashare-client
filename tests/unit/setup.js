@@ -1,4 +1,10 @@
 import 'whatwg-fetch'
+// @vueuse/components reads `window` at evaluation time, guarded by an
+// `isClient` constant imported from @vueuse/shared and resolved while the DOM
+// was still up. A component reaching it through a dynamic import that lands
+// after a test file's jsdom teardown therefore crashes the worker, so
+// evaluate it here, once per worker, while the environment is alive.
+import '@vueuse/components'
 
 // Node 22+ ships a native `localStorage` that throws on access unless the
 // runtime is launched with `--localstorage-file`. Some sandboxed CI
