@@ -144,11 +144,21 @@ async function renderPageOnce() {
   renderedPages[targetCacheKey] = await renderMarkdown(markdown)
 }
 
+let lastCook = 0
+
 // Plugins can transform the markdown body through the `markdown-text` category;
 // core registers nothing under it, so by default this resolves to the marked
 // HTML unchanged.
 async function cookHtml(html) {
-  cookedHtml.value = await pipelinesStore.applyPipelineChainByCategory('markdown-text')(html)
+  // A registered pipeline can be asynchronous, so two cooks can overlap and
+  // resolve out of order. Same counter pattern as `loadPage` above: only the
+  // newest may write, otherwise a slower cook paints over the page on screen.
+  const cook = ++lastCook
+  const cooked = await pipelinesStore.applyPipelineChainByCategory('markdown-text')(html)
+  if (cook !== lastCook) {
+    return
+  }
+  cookedHtml.value = cooked
   await nextTick()
   activateMatch()
 }
