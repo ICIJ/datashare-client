@@ -106,17 +106,13 @@ export function useDocumentDownload(document, { immediate = true } = {}) {
     availableTranslations.value = await documentDownloadStore.fetchTranslationStatus({ index, id, routing })
   }
 
-  // Shared with the download button: `useStructureArtifact` probes the
-  // structure manifest once and both this composable and the Text tab read
-  // from it.
-  const { manifest: structureManifest, hasMarkdown, fetchManifest: fetchMarkdownStatus } = useStructureArtifact(documentRef)
+  const { hasMarkdown, pages: markdownPages, fetchManifest: fetchMarkdownStatus } = useStructureArtifact(documentRef)
 
   const isDownloadingMarkdown = ref(false)
 
   async function fetchMarkdownPages() {
     const { index, id, routing } = documentRef.value
-    const { pages } = structureManifest.value
-    const requests = range(1, pages + 1).map(page => api.getStructurePage(index, id, page, routing))
+    const requests = range(1, markdownPages.value + 1).map(page => api.getStructurePage(index, id, page, routing))
     const errorMessage = t('documentDownloadPopover.downloadMarkdownError')
     return toastedPromise(Promise.all(requests), { errorMessage })
   }
