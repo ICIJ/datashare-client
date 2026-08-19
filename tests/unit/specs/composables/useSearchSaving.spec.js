@@ -39,8 +39,8 @@ describe('useSearchSaving composable', () => {
     return result
   }
 
-  describe('save (icij/datashare#2331)', () => {
-    it('persists a saved-search URI that omits a locked-only value', async () => {
+  describe('save (icij/datashare#2331 reverted)', () => {
+    it('persists a saved-search URI that keeps a locked value', async () => {
       searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
       lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
 
@@ -49,8 +49,7 @@ describe('useSearchSaving composable', () => {
 
       expect(api.addHistoryEvent).toHaveBeenCalledOnce()
       const [, , , uri] = api.addHistoryEvent.mock.calls[0]
-      expect(uri).not.toContain('f%5BcontentType%5D')
-      expect(uri).not.toContain('f[contentType]')
+      expect(decodeURIComponent(uri)).toContain('f[contentType]')
     })
 
     it('keeps a value that is ticked but not locked in the saved-search URI', async () => {
@@ -61,6 +60,33 @@ describe('useSearchSaving composable', () => {
 
       const [, , , uri] = api.addHistoryEvent.mock.calls[0]
       expect(decodeURIComponent(uri)).toContain('f[contentType]')
+    })
+
+    it('keeps both values of a multi-value filter with no locks at all', async () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.addFilterValue({ name: 'contentType', value: 'image/jpeg' })
+
+      const { save } = mountComposable()
+      await save({ name: 'My saved search' })
+
+      const [, , , uri] = api.addHistoryEvent.mock.calls[0]
+      const decoded = decodeURIComponent(uri)
+      expect(decoded).toContain('f[contentType]=application/pdf')
+      expect(decoded).toContain('f[contentType]=image/jpeg')
+    })
+
+    it('keeps both values of a multi-value filter when one of them is locked', async () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.addFilterValue({ name: 'contentType', value: 'image/jpeg' })
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      const { save } = mountComposable()
+      await save({ name: 'My saved search' })
+
+      const [, , , uri] = api.addHistoryEvent.mock.calls[0]
+      const decoded = decodeURIComponent(uri)
+      expect(decoded).toContain('f[contentType]=application/pdf')
+      expect(decoded).toContain('f[contentType]=image/jpeg')
     })
   })
 })
