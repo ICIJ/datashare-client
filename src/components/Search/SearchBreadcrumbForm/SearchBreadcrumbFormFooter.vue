@@ -55,14 +55,14 @@ const emit = defineEmits(['clear:filters', 'clear:query', 'clear:all', 'unlock:a
       -->
       <button-icon
         v-if="hasConflictingLocks"
-        :icon-left="IPhLock"
+        :icon-left="IPhLockOpen"
         @click="emit('apply:locked-filters')"
       >
         {{ t('searchBreadcrumbFormFooter.applyLockedFilters') }}
       </button-icon>
       <button-icon
         v-else-if="lockedFiltersCount > 0"
-        :icon-left="IPhLockOpen"
+        :icon-left="IPhLock"
         @click="emit('unlock:all')"
       >
         {{ t('searchBreadcrumbFormFooter.unlockFilters', { count: lockedFiltersCount }) }}
