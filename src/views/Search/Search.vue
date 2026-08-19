@@ -42,7 +42,8 @@ const {
   watchOperator,
   onAfterRouteQueryUpdate,
   onAfterRouteQueryFromUpdate,
-  onConsumeNoRefresh
+  onConsumeNoRefresh,
+  onConsumeSavedSearchOpened
 } = useSearchFilter()
 const { count: searchBreadcrumbCounter, anyFilters, lockedFiltersCount } = useSearchBreadcrumb()
 const { hasCarousel } = useSearchNav()
@@ -152,6 +153,10 @@ onAfterRouteQueryFromUpdate(refreshSearchFromRoute, { immediate: route.name === 
 // refresh guards above so it runs last and they observe the flag before it is
 // stripped from the URL.
 onConsumeNoRefresh({ immediate: route.name === 'search' })
+// Consume the one-shot `savedSearchOpened` flag. MUST be registered after
+// the two refresh guards above so it runs last and both observe the flag
+// before it is cleared here. See icij/datashare#2331.
+onConsumeSavedSearchOpened({ immediate: route.name === 'search' })
 // Auto-open the breadcrumb panel after an explicit search submission when
 // locks are active, so the user immediately sees what's locked. Gated on a
 // one-shot in-memory flag (set only by SearchBar's submit(), consumed here)

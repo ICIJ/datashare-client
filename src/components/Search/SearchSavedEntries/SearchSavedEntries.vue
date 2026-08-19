@@ -10,6 +10,7 @@ import DisplayDatetime from '@/components/Display/DisplayDatetime'
 import SearchSavedEntriesRowActions from '@/components/Search/SearchSavedEntries/SearchSavedEntriesRowActions'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import SearchBreadcrumbUri from '@/components/Search/SearchBreadcrumbUri/SearchBreadcrumbUri'
+import { markSavedSearchOpened } from '@/composables/useSearchFilter'
 
 const sort = defineModel('sort', { type: String, default: null })
 const order = defineModel('order', { type: String, default: 'desc' })
@@ -50,6 +51,16 @@ function searchParamsFromURI(uri) {
 function searchParamsQuery(uri) {
   return parseQuery(searchParamsFromURI(uri).toString())
 }
+
+// Marks the upcoming navigation as "opening a saved search" before actually
+// triggering it (router-link's `custom` slot + explicit `navigate()` call
+// guarantees this runs first) — see markSavedSearchOpened's declaration for
+// why a currently-active lock absent from this saved search must not be
+// silently re-applied. icij/datashare#2331.
+function openSavedSearch(navigate, event) {
+  markSavedSearchOpened()
+  navigate(event)
+}
 </script>
 
 <template>
@@ -64,10 +75,17 @@ function searchParamsQuery(uri) {
   >
     <template #cell(name)="{ item }">
       <router-link
+        v-slot="{ navigate, href }"
         :to="{ name: 'search', query: searchParamsQuery(item.uri) }"
-        class="fw-medium"
+        custom
       >
-        {{ item.name }}
+        <a
+          :href="href"
+          class="fw-medium"
+          @click="openSavedSearch(navigate, $event)"
+        >
+          {{ item.name }}
+        </a>
       </router-link>
     </template>
     <template #cell(creation_date)="{ item }">
