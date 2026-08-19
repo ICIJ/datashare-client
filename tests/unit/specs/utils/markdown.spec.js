@@ -53,11 +53,39 @@ describe('renderMarkdown', () => {
 
     const protocolRelative = await renderMarkdown('[x](//evil.example)')
     expect(protocolRelative).toContain('target="_blank"')
+  })
 
-    // Relative links stay untouched (no new tab, no rel).
-    const relative = await renderMarkdown('[doc](../other)')
-    expect(relative).toContain('href="../other"')
-    expect(relative).not.toContain('target="_blank"')
+  it('unlinks a query-only href, keeping the label it wrapped', async () => {
+    // What documents converted from Google Docs carry: a link resolving against
+    // whatever page shows the document, which for this app means throwing the
+    // reader out of the hash route and back to the root.
+    const html = await renderMarkdown('[**Proportionality**](?tab=t.0#heading=h.75blkms5zf8c)')
+    expect(html).not.toContain('<a')
+    expect(html).toContain('<strong>Proportionality</strong>')
+  })
+
+  it('unlinks a relative link, keeping its text', async () => {
+    const html = await renderMarkdown('[doc](../other)')
+    expect(html).not.toContain('<a')
+    expect(html).toContain('doc')
+  })
+
+  it('unlinks an absolute link back to the host serving the app', async () => {
+    const html = await renderMarkdown(`[home](${window.location.origin}/some/page)`)
+    expect(html).not.toContain('<a')
+    expect(html).toContain('home')
+  })
+
+  it('keeps a mailto link, which navigates nothing', async () => {
+    const html = await renderMarkdown('[write](mailto:someone@example.org)')
+    expect(html).toContain('href="mailto:someone@example.org"')
+  })
+
+  it('unlinks an href it cannot parse rather than failing the whole document', async () => {
+    const html = await renderMarkdown('[broken](http://%) and text after it')
+    expect(html).not.toContain('<a')
+    expect(html).toContain('broken')
+    expect(html).toContain('and text after it')
   })
 
   it('gives headings slug ids so in-document links have a target', async () => {

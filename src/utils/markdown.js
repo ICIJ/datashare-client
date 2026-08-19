@@ -14,7 +14,7 @@ const blockedTags = ['img', 'picture', 'source', 'svg', 'video', 'audio', 'ifram
 
 // Strict allowlist: a clone of rehype-sanitize's GitHub schema with the
 // resource-fetching tags removed and rel/target allowed on anchors so the
-// link-hardening plugin's attributes survive sanitization.
+// link-constraining plugin's attributes survive sanitization.
 const schema = structuredClone(defaultSchema)
 schema.tagNames = schema.tagNames.filter(tag => !blockedTags.includes(tag))
 for (const tag of blockedTags) {
@@ -26,23 +26,59 @@ schema.attributes.a = [...(schema.attributes.a || []), 'target', 'rel']
 // (which would break footnote navigation by desyncing href from id).
 schema.clobberPrefix = ''
 
-// http(s) and protocol-relative URLs are the only ones that leave the app.
-const externalHref = /^(https?:)?\/\//i
+// The schemes that navigate a page, as opposed to handing off to another
+// application (mailto:, xmpp:) the way the remaining allowed ones do.
+const webProtocols = ['http:', 'https:']
 
-// Harden only external anchors so they cannot reach back into the opener or
-// leak the referrer. Same-page (#fragment) and relative links are left intact
-// so in-document navigation (e.g. GFM footnotes) keeps working.
-function rehypeHardenLinks() {
+// An href resolved against the page showing the document, or null when the
+// document's author wrote something that is not a URL at all. Authors control
+// this string, and an unparseable one thrown from here would fail the whole
+// document's render rather than the one link.
+function resolveHref(href) {
+  const base = window.location.href
+  if (!URL.canParse(href, base)) {
+    return null
+  }
+  return new URL(href, base)
+}
+
+// Replace an anchor with the text it wrapped, and tell `visit` to carry on at
+// the position the anchor held.
+function unwrapLink(node, index, parent) {
+  parent.children.splice(index, 1, ...node.children)
+  return index
+}
+
+// A link in a document may only leave for another host, and only in a new tab
+// that cannot reach back into the opener or leak the referrer. Anything that
+// would navigate this app instead keeps its text and loses its anchor: the
+// router's state lives in the URL hash, so following such a link drops the
+// reader out of the document they were reading. Same-page (#fragment) links
+// are in-document navigation, and are left alone.
+function rehypeConstrainLinks() {
   return (tree) => {
-    visit(tree, 'element', (node) => {
+    visit(tree, 'element', (node, index, parent) => {
       if (node.tagName !== 'a') {
         return
       }
       const href = node.properties?.href
-      if (typeof href === 'string' && externalHref.test(href)) {
-        node.properties.rel = ['noopener', 'noreferrer', 'nofollow']
-        node.properties.target = '_blank'
+      if (typeof href !== 'string' || href.startsWith('#')) {
+        return
       }
+      const url = resolveHref(href)
+      // Not a URL, so not a working link either: treated like the same-host
+      // links below rather than left for the reader to click on in vain.
+      if (url === null) {
+        return unwrapLink(node, index, parent)
+      }
+      if (!webProtocols.includes(url.protocol)) {
+        return
+      }
+      if (url.host === window.location.host) {
+        return unwrapLink(node, index, parent)
+      }
+      node.properties.rel = ['noopener', 'noreferrer', 'nofollow']
+      node.properties.target = '_blank'
     })
   }
 }
@@ -84,7 +120,7 @@ const processor = unified()
   // Headings carry no id of their own, so in-document links have nothing to
   // point at until rehypeSlug gives them GitHub-compatible slugs.
   .use(rehypeSlug)
-  .use(rehypeHardenLinks)
+  .use(rehypeConstrainLinks)
   .use(rehypeDropEmptyTableHeader)
   .use(rehypeSanitize, schema)
   .use(rehypeStringify)
