@@ -139,7 +139,7 @@ describe('DocumentContent.vue', () => {
       expect(wrapper.find('.document-content--rtl').exists()).toBeFalsy()
     })
 
-    it('should display "No content extracted for this document" and disable the search input when the extracted text is empty', async () => {
+    it('should display "No content extracted for this document" when the extracted text is empty', async () => {
       const { document } = await mockDocumentContentSlice('')
       const { plugins } = core
       const props = { document }
@@ -149,9 +149,6 @@ describe('DocumentContent.vue', () => {
       const element = wrapper.find('.document-content__body--no-content')
       expect(element.exists()).toBeTruthy()
       expect(element.text()).toBe('No content extracted for this document')
-      const input = wrapper.find('document-local-search-stub')
-      expect(input.exists()).toBeTruthy()
-      expect(input.attributes('disabled')).toBe('true')
     })
   })
 
@@ -297,6 +294,30 @@ describe('DocumentContent.vue', () => {
       expect(wrapper.find('div.document-content__body').exists()).toBe(false)
     })
 
+    it('counts the occurrences it can navigate to, not the ones the backend reports', async () => {
+      // `count` can exceed `hits` when the backend scans only part of the artifact:
+      // counting the rest would leave next/previous with nowhere to go.
+      api.searchStructurePages.mockResolvedValue({ count: 120, pages: 3, scanned: 1, hits: [{ page: 1, count: 2 }] })
+      const { document } = await mockDocumentContentSlice('Hello world')
+      const { plugins } = core
+      const wrapper = shallowMount(DocumentContent, { props: { document, q: 'hello' }, global: { plugins } })
+      await flushPromises()
+      expect(wrapper.findComponent(DocumentLocalSearch).props('occurrences')).toBe(2)
+    })
+
+    it('walks the occurrences in page order whatever order the response uses', async () => {
+      const hits = [{ page: 3, count: 1 }, { page: 1, count: 1 }]
+      api.searchStructurePages.mockResolvedValue({ count: 2, pages: 3, scanned: 3, hits })
+      const { document } = await mockDocumentContentSlice('Hello world')
+      const { plugins } = core
+      const wrapper = shallowMount(DocumentContent, { props: { document, q: 'hello' }, global: { plugins } })
+      await flushPromises()
+      expect(wrapper.vm.markdownPage).toBe(1)
+      wrapper.vm.localSearchIndex = 2
+      await flushPromises()
+      expect(wrapper.vm.markdownPage).toBe(3)
+    })
+
     it('renders the plain text body when the document has no markdown', async () => {
       api.getStructureManifest.mockResolvedValue(null)
       const { document } = await mockDocumentContentSlice('Hello world')
@@ -324,16 +345,20 @@ describe('DocumentContent.vue', () => {
       expect(wrapper.findComponent(DocumentContentDropdown).exists()).toBe(false)
     })
 
-    it('never disables the local search input in markdown mode, even without extracted text', async () => {
-      const { document } = await mockDocumentContentSlice('')
+    it('re-probes the manifest and drops the markdown state when the document changes', async () => {
+      const { document } = await mockDocumentContentSlice('Hello world')
       const { plugins } = core
       const wrapper = shallowMount(DocumentContent, { props: { document }, global: { plugins } })
       await flushPromises()
-      // `disabled` is a fallthrough attribute on `DocumentLocalSearch` (not a
-      // declared prop), so it cannot be read through `.props()`; assert
-      // through the component locator instead of a raw tag/class selector.
-      const input = wrapper.findComponent(DocumentLocalSearch)
-      expect(input.attributes('disabled')).toBe('false')
+      wrapper.vm.preferMarkdown = false
+      wrapper.vm.markdownPage = 3
+      await flushPromises()
+      const other = { index: document.index, id: 'other-document-id', routing: 'other-document-id' }
+      await wrapper.setProps({ document: other })
+      await flushPromises()
+      expect(api.getStructureManifest).toHaveBeenLastCalledWith(other.index, other.id, other.routing)
+      expect(wrapper.vm.markdownPage).toBe(1)
+      expect(wrapper.findComponent({ name: 'DocumentContentMarkdown' }).exists()).toBe(true)
     })
 
     it('renders the plain text body once the toggle is set to text', async () => {
@@ -361,7 +386,8 @@ describe('DocumentContent.vue', () => {
       expect(dropdown.props('translation')).toBe(true)
     })
 
-    it('falls back to plain text and disables the formatted option when the artifact is empty', async () => {
+    it('falls back to plain text and disables the formatted option when the only page is empty', async () => {
+      api.getStructureManifest.mockResolvedValue({ pages: 1, formats: ['md'] })
       const { document } = await mockDocumentContentSlice('Hello world')
       const { plugins } = core
       const wrapper = shallowMount(DocumentContent, { props: { document }, global: { plugins } })
@@ -374,6 +400,18 @@ describe('DocumentContent.vue', () => {
       const dropdown = wrapper.findComponent(DocumentContentDropdown)
       expect(dropdown.exists()).toBe(true)
       expect(dropdown.props('markdownDisabled')).toBe(true)
+    })
+
+    it('keeps the formatted view when a single page of a multi-page artifact is empty', async () => {
+      // A blank cover page in a scanned PDF says nothing about the other pages.
+      const { document } = await mockDocumentContentSlice('Hello world')
+      const { plugins } = core
+      const wrapper = shallowMount(DocumentContent, { props: { document }, global: { plugins } })
+      await flushPromises()
+      wrapper.findComponent({ name: 'DocumentContentMarkdown' }).vm.$emit('empty')
+      await flushPromises()
+      expect(wrapper.findComponent({ name: 'DocumentContentMarkdown' }).exists()).toBe(true)
+      expect(wrapper.findComponent(DocumentContentDropdown).props('markdownDisabled')).toBe(false)
     })
 
     it('keeps the formatted option available when the user falls back from a page error', async () => {

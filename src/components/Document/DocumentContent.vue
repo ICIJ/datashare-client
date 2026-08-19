@@ -8,6 +8,7 @@ import isEmpty from 'lodash/isEmpty'
 import iteratee from 'lodash/iteratee'
 import minBy from 'lodash/minBy'
 import range from 'lodash/range'
+import sortBy from 'lodash/sortBy'
 import throttle from 'lodash/throttle'
 import { useI18n } from 'vue-i18n'
 import { PaginationTiny } from '@icij/murmur'
@@ -65,9 +66,12 @@ const preferMarkdown = ref(true)
 const isMarkdownEmpty = ref(false)
 const markdownPage = ref(1)
 const markdownMatches = ref([])
-// Set at the end of `onMounted`, so the mode watcher can tell a real, later
-// mode flip apart from the manifest probe settling `isMarkdownMode` during
-// the initial mount.
+// The term the occurrence counts were computed for. The marks a page renders
+// have to match what the backend counted, so this only moves when a search
+// actually ran, not on every keystroke.
+const markdownAppliedTerm = ref('')
+// Set at the end of `onMounted`, so the mode watcher can tell a real, later mode
+// flip apart from the manifest probe settling `isMarkdownMode` during the mount.
 const isMounted = ref(false)
 
 const isTranslation = computed(() => {
@@ -131,6 +135,13 @@ const activeTermOffset = computed(() => {
   return localSearchIndexes.value[localSearchIndex.value - 1]
 })
 
+// `indexOf` answers -1 for an offset that starts no page, which the 1-based
+// conversion turns into 0: that offset belongs to the first page.
+function pageForOffset(offset) {
+  const pageIndex = offsets.value.indexOf(offset)
+  return pageIndex + 1 || 1
+}
+
 const showPagination = computed(() => {
   return nbPages.value > 1 && (isMarkdownMode.value || loadedOnce.value)
 })
@@ -139,9 +150,7 @@ const hasLocalSearchTerms = computed(() => {
   return localSearchTerm.value && localSearchTerm.value.length > 0
 })
 
-// The structure-pages endpoint answers 400 to a blank query, and the marks
-// rendered by `DocumentContentMarkdown` must match what it counted, so both
-// the request and the template read this single, trimmed value.
+// The structure-pages endpoint answers 400 to a blank query.
 const markdownSearchTerm = computed(() => localSearchTerm.value?.trim() ?? '')
 
 const isRightToLeft = computed(() => {
@@ -152,7 +161,6 @@ const isRightToLeft = computed(() => {
 const classList = computed(() => {
   return {
     'document-content--paginated': showPagination.value,
-    'document-content--markdown': isMarkdownMode.value,
     'document-content--rtl': isRightToLeft.value
   }
 })
@@ -162,7 +170,7 @@ const page = computed({
     if (isMarkdownMode.value) {
       return markdownPage.value
     }
-    return offsets.value.indexOf(activeContentSliceOffset.value) + 1 || 1
+    return pageForOffset(activeContentSliceOffset.value)
   },
   set(value) {
     scrollToDocumentStart()
@@ -230,15 +238,23 @@ watch(page, async () => {
 
 watch(isMarkdownMode, async (markdown) => {
   await syncPagePosition(markdown)
-  // `hasMarkdown` flips during `onMounted`'s manifest probe, which fires this
-  // watcher before the mount has even chosen whether to run a search at all;
-  // gating on `isMounted` keeps that flip from duplicating the search that
-  // `onMounted`'s own `q` branch is about to issue. Real mode flips (a user
-  // toggle, or a translation forcing text mode) all happen after mount, so
-  // this gate never blocks them.
+  // `hasMarkdown` flips during `onMounted`'s manifest probe, so without this gate
+  // that flip would duplicate the search the mount is about to issue itself.
   if (isMounted.value && hasLocalSearchTerms.value) {
     await retrieveOccurrencesAndUpdateContent()
   }
+})
+
+// The manifest, the page and the matches all describe one document. The mount
+// probe cannot cover a host that swaps the prop without remounting, so the
+// document identity re-runs it and clears what belonged to the previous one.
+watch(docId, async () => {
+  preferMarkdown.value = true
+  isMarkdownEmpty.value = false
+  markdownPage.value = 1
+  markdownMatches.value = []
+  markdownAppliedTerm.value = ''
+  await fetchManifest()
 })
 
 watch(contentPipeline, async () => {
@@ -247,12 +263,8 @@ watch(contentPipeline, async () => {
 })
 
 onMounted(async () => {
-  // A rejected mount step (a transient network failure, most plausibly from
-  // `loadMaxOffset`'s or `syncPages`' own API calls) must not leave the flag
-  // stuck `false` forever: that would silently suppress every later,
-  // legitimate mode-flip search for this component instance's whole
-  // lifetime. `finally` sets it regardless of how the body finished, without
-  // swallowing the failure itself.
+  // `finally`, because a mount step rejecting must not leave the flag stuck
+  // `false` and suppress every later mode-flip search for this instance.
   try {
     await Promise.all([loadMaxOffset(), fetchManifest()])
     await syncPages()
@@ -268,7 +280,13 @@ onMounted(async () => {
   }
 })
 
+// A single-page artifact whose only page renders to nothing has no markdown
+// worth showing, so the tab goes back to plain text. With more pages, a blank
+// one (a scanned cover page) says nothing about the rest of the artifact.
 function fallbackToTextForEmptyMarkdown() {
+  if (markdownPagesCount.value > 1) {
+    return
+  }
   isMarkdownEmpty.value = true
   preferMarkdown.value = false
 }
@@ -286,7 +304,7 @@ async function syncPagePosition(markdown) {
   }
   const aligned = !!syncedPages.value?.length && syncedPages.value.length === markdownPagesCount.value
   if (markdown) {
-    markdownPage.value = aligned ? offsets.value.indexOf(activeContentSliceOffset.value) + 1 || 1 : 1
+    markdownPage.value = aligned ? pageForOffset(activeContentSliceOffset.value) : 1
     return
   }
   // The restored page needs its text slice loaded, and going through
@@ -322,7 +340,7 @@ const mustSyncPages = async function () {
   // * The server has an artifact directory configured
     && !!config.get('artifactDir')
   // * The user is not requesting a translation
-    && (!props.targetLanguage || props.targetLanguage === 'original')
+    && !isTranslation.value
   // * The Tika version used to extract the document is the same as the one used by the server
     && await sameTikaVersion()
 }
@@ -440,58 +458,67 @@ async function retrieveTotalOccurrences() {
 }
 
 async function retrieveTextOccurrences(retrieval) {
+  const { count = 0, offsets = [] } = await fetchTextOccurrences()
+  if (retrieval !== lastOccurrencesRetrieval) {
+    return
+  }
+  localSearchIndexes.value = offsets
+  localSearchOccurrences.value = count
+  localSearchIndex.value = Number(!!count)
+}
+
+async function fetchTextOccurrences() {
+  if (!hasLocalSearchTerms.value) {
+    return {}
+  }
+  const query = localSearchTerm.value
+  const targetLanguage = props.targetLanguage
   try {
-    if (!hasLocalSearchTerms.value) {
-      throw new Error('No local search terms')
-    }
-    const query = localSearchTerm.value
-    const targetLanguage = props.targetLanguage
-    const { count, offsets } = await api.searchDocument(docIndex.value, docId.value, query, targetLanguage, docRouting.value)
-    if (retrieval !== lastOccurrencesRetrieval) {
-      return
-    }
-    localSearchIndexes.value = offsets
-    localSearchOccurrences.value = count
-    localSearchIndex.value = Number(!!count)
+    return await api.searchDocument(docIndex.value, docId.value, query, targetLanguage, docRouting.value)
   }
   catch {
-    if (retrieval !== lastOccurrencesRetrieval) {
-      return
-    }
-    localSearchIndexes.value = []
-    localSearchOccurrences.value = 0
-    localSearchIndex.value = 0
+    return {}
   }
 }
 
 async function retrieveMarkdownOccurrences(retrieval) {
+  const { query, matches } = await fetchMarkdownOccurrences()
+  if (retrieval !== lastOccurrencesRetrieval) {
+    return
+  }
+  markdownMatches.value = matches
+  // The response also carries a `count`, which can exceed the hits it returns
+  // when the backend scans only part of the artifact. Counting what we can
+  // actually navigate to keeps the counter and the next/previous buttons from
+  // disagreeing about how many occurrences there are.
+  localSearchOccurrences.value = matches.length
+  // Nothing to mark when the backend found nothing; keeping the term empty also
+  // keeps a client-side fold from marking what the counter does not know about.
+  markdownAppliedTerm.value = matches.length ? query : ''
+  localSearchIndex.value = Number(!!matches.length)
+}
+
+// The query is captured and handed back so the applied term always describes the
+// counts written next to it, even when the user has typed on since.
+async function fetchMarkdownOccurrences() {
+  const query = markdownSearchTerm.value
+  if (!query) {
+    return { query, matches: [] }
+  }
   try {
-    const query = markdownSearchTerm.value
-    if (!query) {
-      throw new Error('No local search terms')
-    }
-    const { count, hits } = await api.searchStructurePages(docIndex.value, docId.value, query, docRouting.value)
-    if (retrieval !== lastOccurrencesRetrieval) {
-      return
-    }
-    markdownMatches.value = flattenPageHits(hits)
-    localSearchOccurrences.value = count
-    localSearchIndex.value = Number(!!count)
+    const { hits } = await api.searchStructurePages(docIndex.value, docId.value, query, docRouting.value)
+    return { query, matches: flattenPageHits(hits) }
   }
   catch {
-    if (retrieval !== lastOccurrencesRetrieval) {
-      return
-    }
-    markdownMatches.value = []
-    localSearchOccurrences.value = 0
-    localSearchIndex.value = 0
+    return { query, matches: [] }
   }
 }
 
-// One entry per occurrence, in page order, so the flat local search index
-// maps straight to a page and a 1-based rank within that page.
-function flattenPageHits(hits = []) {
-  return hits.flatMap(({ page, count }) => {
+// One entry per occurrence, sorted by page, so the flat local search index maps
+// straight to a page and a 1-based rank within that page. The order is imposed
+// here rather than assumed of the response, since next/previous walks this list.
+function flattenPageHits(hits) {
+  return sortBy(hits ?? [], 'page').flatMap(({ page, count }) => {
     return range(count).map(nth => ({ page, nth: nth + 1 }))
   })
 }
@@ -569,7 +596,6 @@ async function loadContentSliceAround(desiredOffset) {
           v-model:active-index="localSearchIndex"
           :compact="compact"
           :loading="isLoading"
-          :disabled="!hasExtractedContent && !isMarkdownMode"
           :occurrences="localSearchOccurrences"
           class="flex-grow-1"
         />
@@ -620,7 +646,8 @@ async function loadContentSliceAround(desiredOffset) {
         class="document-content__body document-content__body--markdown"
         :document="document"
         :page="markdownPage"
-        :term="localSearchOccurrences ? markdownSearchTerm : ''"
+        :term="markdownAppliedTerm"
+        :global-search-terms="globalSearchTerms"
         :active-match="activeMarkdownMatch"
         @fallback="preferMarkdown = false"
         @empty="fallbackToTextForEmptyMarkdown"

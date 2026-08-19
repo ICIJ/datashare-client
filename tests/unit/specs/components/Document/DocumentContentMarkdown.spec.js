@@ -93,21 +93,39 @@ describe('DocumentContentMarkdown.vue', () => {
     expect(wrapper.text()).toContain('No content extracted for this document')
   })
 
-  it('emits empty when the first page is empty, so the tab goes back to plain text', async () => {
+  it('emits empty when the page it shows is empty, so the parent can go back to plain text', async () => {
     api.getStructurePage.mockResolvedValue('')
     const wrapper = await mountComponent()
     expect(wrapper.emitted('empty')).toHaveLength(1)
   })
 
-  it('does not emit empty for an empty page in the middle of the document', async () => {
+  it('does not emit empty for a page that has content', async () => {
     api.getStructurePage.mockImplementation((index, id, page) => {
       return Promise.resolve(page === 1 ? '# Page one' : '')
     })
     const wrapper = await mountComponent()
+    expect(wrapper.emitted('empty')).toBeUndefined()
     await wrapper.setProps({ page: 2 })
     await flushPromises()
     expect(wrapper.text()).toContain('No content extracted for this document')
-    expect(wrapper.emitted('empty')).toBeUndefined()
+    expect(wrapper.emitted('empty')).toHaveLength(1)
+  })
+
+  it('drops the rendered page cache when the document changes', async () => {
+    const wrapper = await mountComponent()
+    await wrapper.setProps({ document: { index: 'foo', id: 'other-id', routing: 'other-id' } })
+    await flushPromises()
+    await wrapper.setProps({ document })
+    await flushPromises()
+    const firstDocumentCalls = api.getStructurePage.mock.calls.filter(([, id]) => id === 'doc-id')
+    expect(firstDocumentCalls).toHaveLength(2)
+  })
+
+  it('marks the global search terms inside the local ones', async () => {
+    api.getStructurePage.mockResolvedValue('lorem ipsum dolor')
+    const wrapper = await mountComponent({ term: 'ipsum dolor', globalSearchTerms: [{ label: 'dolor' }] })
+    const html = wrapper.find('.document-content-markdown__body').html()
+    expect(html).toContain('<mark class="local-search-term">ipsum <mark class="global-search-term"')
   })
 
   // An empty artifact is permanent, a failed fetch is not: the parent disables

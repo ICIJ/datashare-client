@@ -62,27 +62,47 @@ export function addLocalSearchMarksClassByOffsets({ content = '', term = '', off
   return chunks.join('')
 }
 
+const combiningMarkPattern = /\p{M}/gu
+
+function foldCharacter(character) {
+  return character.normalize('NFKD').replace(combiningMarkPattern, '').toLowerCase()
+}
+
 /**
- * Fold a string roughly the way the backend artifact search does: lowercase,
- * NFKD-decompose and strip combining marks. Returns the folded string plus, for
- * each folded char, the index of the source char it came from, so a match found
- * in folded text can be mapped back to the original string even when the fold
+ * Fold a string roughly the way the backend artifact search does: NFKD-decompose,
+ * strip combining marks and lowercase. Returns the folded string plus, for each
+ * folded char, the start and end offsets of the source it came from, so a match
+ * found in folded text maps back to the original string even when the fold
  * changes its length (a ligature expands, a combining mark disappears).
  *
  * @param {string} [value=''] - The string to fold.
- * @return {Object} - An object with the `folded` string and its `sourceIndexes` map.
+ * @return {Object} - The `folded` string with its `sourceIndexes` and `sourceEnds` maps.
  */
 export function foldWithSourceIndexes(value = '') {
   const folded = []
   const sourceIndexes = []
-  for (let index = 0; index < value.length; index++) {
-    const decomposed = value[index].toLowerCase().normalize('NFKD').replace(/\p{M}/gu, '')
-    for (const character of decomposed) {
-      folded.push(character)
+  const sourceEnds = []
+  let index = 0
+  // Iterating code points (not code units) so an astral char reaches `normalize`
+  // whole: a lone surrogate folds to nothing, and the backend folds the string.
+  for (const character of value) {
+    const end = index + character.length
+    const decomposed = foldCharacter(character)
+    for (const foldedCharacter of decomposed) {
+      folded.push(foldedCharacter)
       sourceIndexes.push(index)
+      sourceEnds.push(end)
     }
+    // A source char that folds to nothing (a combining mark standing on its own,
+    // as decomposed text writes accents) has no folded position of its own, so
+    // the letter it decorates has to own it: a match ending on that letter must
+    // cover the mark too, or the accent is left outside the highlight.
+    if (!decomposed && sourceEnds.length) {
+      sourceEnds[sourceEnds.length - 1] = end
+    }
+    index = end
   }
-  return { folded: folded.join(''), sourceIndexes }
+  return { folded: folded.join(''), sourceIndexes, sourceEnds }
 }
 
 /**
@@ -93,22 +113,18 @@ export function foldWithSourceIndexes(value = '') {
  * @return {Object[]} - A list of `{ start, end }` source ranges.
  */
 function findFoldedMatches(text, foldedTerm) {
-  const { folded, sourceIndexes } = foldWithSourceIndexes(text)
+  const { folded, sourceIndexes, sourceEnds } = foldWithSourceIndexes(text)
   const matches = []
-  // A single source character whose fold repeats the term (e.g. the 'ﬀ'
-  // ligature folding to 'ff', matched twice by the term 'f', or the 'Ⅲ'
-  // roman numeral folding to 'iii', matched twice by the term 'ii') can
-  // produce folded matches that map back to identical or overlapping source
-  // ranges. Wrapping an overlapping range would let the wider range's
-  // `surroundContents` empty the text node the narrower range still expects
-  // to address, throwing once `wrapTextNodeMatches` reaches it; each
-  // candidate's start is compared against the last kept range's end, so this
-  // also catches a narrower range nested entirely inside a wider one.
+  // A single source char whose fold repeats the term (the 'ﬀ' ligature folds to
+  // 'ff', matched twice by the term 'f') maps several folded matches back to the
+  // same source range. Wrapping one range splits the node the next one still
+  // addresses, so a candidate starting before the last kept range's end is
+  // dropped; comparing against that end also catches a nested range.
   let lastKeptEnd = -1
   let at = folded.indexOf(foldedTerm)
   while (at !== -1) {
     const start = sourceIndexes[at]
-    const end = sourceIndexes[at + foldedTerm.length - 1] + 1
+    const end = sourceEnds[at + foldedTerm.length - 1]
     if (start >= lastKeptEnd) {
       matches.push({ start, end })
       lastKeptEnd = end
@@ -118,21 +134,24 @@ function findFoldedMatches(text, foldedTerm) {
   return matches
 }
 
-/**
- * Wrap each matched range of a text node in a mark tag. Ranges are applied last
- * to first so earlier offsets stay valid while the node is being split.
- *
- * @param {Text} node - The text node to mark.
- * @param {Object[]} matches - The `{ start, end }` ranges to wrap.
- */
-function wrapTextNodeMatches(node, matches) {
+// Ranges are applied last to first so earlier offsets stay valid while the node
+// is being split.
+function wrapTextNodeMatches(node, matches, { className, style }) {
   for (const { start, end } of [...matches].reverse()) {
-    const range = node.ownerDocument.createRange()
-    range.setStart(node, start)
-    range.setEnd(node, end)
+    // splitText rather than a Range: a live Range stays attached to the document
+    // and every later mutation has to update all the earlier ones, which makes
+    // marking a page quadratic in its number of matches.
+    const match = node.splitText(start)
+    if (end - start < match.nodeValue.length) {
+      match.splitText(end - start)
+    }
     const mark = node.ownerDocument.createElement('mark')
-    mark.className = 'local-search-term'
-    range.surroundContents(mark)
+    mark.className = className
+    if (style) {
+      mark.setAttribute('style', style)
+    }
+    match.parentNode.replaceChild(mark, match)
+    mark.appendChild(match)
   }
 }
 
@@ -143,9 +162,12 @@ function wrapTextNodeMatches(node, matches) {
  *
  * @param {string} [html=''] - The HTML content to mark.
  * @param {string} [term=''] - The search term.
- * @return {string} - The HTML with `<mark class="local-search-term">` around matches.
+ * @param {Object} [options={}] - The mark options.
+ * @param {string} [options.className='local-search-term'] - Class of the mark tags.
+ * @param {string} [options.style=''] - Inline style of the mark tags.
+ * @return {string} - The HTML with `<mark>` around matches.
  */
-export function addLocalSearchMarksClassInHtml(html = '', term = '') {
+export function addSearchMarksClassInHtml(html = '', term = '', { className = 'local-search-term', style = '' } = {}) {
   const trimmedTerm = term.trim()
   if (!trimmedTerm) {
     return html
@@ -162,7 +184,7 @@ export function addLocalSearchMarksClassInHtml(html = '', term = '') {
     textNodes.push(walker.currentNode)
   }
   for (const node of textNodes) {
-    wrapTextNodeMatches(node, findFoldedMatches(node.nodeValue, foldedTerm))
+    wrapTextNodeMatches(node, findFoldedMatches(node.nodeValue, foldedTerm), { className, style })
   }
   return parsed.body.innerHTML
 }
