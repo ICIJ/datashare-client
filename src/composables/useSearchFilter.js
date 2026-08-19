@@ -70,6 +70,39 @@ export function consumeJustSubmitted() {
   return value
 }
 
+// Same rationale and idiom as justSubmitted above, for a different one-shot
+// signal: set by SearchSavedEntries.vue right before navigating into a saved
+// search, so the hydration guards below can skip the otherwise-automatic
+// locked-filter merge for that one navigation. A saved search is a frozen
+// snapshot; a lock absent from it should not be silently re-injected the way
+// it would be for an ordinary link (the "silent-merge-unless-conflicting"
+// rule is deliberately bypassed here, not just its conflict branch). A URL
+// query flag was tried first and rejected for the same reason justSubmitted
+// isn't one: stripping it back out of the URL is itself a navigation, and
+// that navigation would re-hydrate with the flag already gone, silently
+// merging the lock right back in a tick later. See icij/datashare#2331.
+//
+// Two independent guards below (refreshSearchFromRoute and
+// refreshSearchFromRouteStart) both need to read this for the same
+// navigation, so reading does not consume it — only onConsumeSavedSearchOpened
+// does, and it must be registered after both so they observe it first.
+let savedSearchOpened = false
+
+export function markSavedSearchOpened() {
+  savedSearchOpened = true
+}
+
+// Non-destructive read, called by both hydration guards below.
+export function isSavedSearchOpened() {
+  return savedSearchOpened
+}
+
+// Clears the flag. Called once, by onConsumeSavedSearchOpened's callback,
+// after both guards have already read it via isSavedSearchOpened() above.
+export function clearSavedSearchOpened() {
+  savedSearchOpened = false
+}
+
 export function useSearchFilter() {
   const appStore = useAppStore()
   const searchStore = useSearchStore.inject()
@@ -393,7 +426,7 @@ export function useSearchFilter() {
     const searchOperator = toValidSearchOperator(route.query.searchOperator ?? getSearchOperator())
     appStore.setSettings('search', { perPage, orderBy: [sort, order], searchOperator })
     // Update the search store using the route query
-    searchStore.updateFromRouteQuery(route.query)
+    searchStore.updateFromRouteQuery(route.query, { mergeLocks: !savedSearchOpened })
     // And finally, refresh the search if t
     return nextTick(refreshSearch)
   }
@@ -404,7 +437,7 @@ export function useSearchFilter() {
     const searchOperator = toValidSearchOperator(route.query.searchOperator ?? getSearchOperator())
     appStore.setSettings('search', { perPage, orderBy: [sort, order], searchOperator })
     // Update the search store using the route query and reset the `from` parameter
-    searchStore.updateFromRouteQuery({ ...route.query, from: 0 })
+    searchStore.updateFromRouteQuery({ ...route.query, from: 0 }, { mergeLocks: !savedSearchOpened })
     // And finally, refresh the search if t
     return nextTick(refreshSearch)
   }
@@ -574,6 +607,24 @@ export function useSearchFilter() {
     }, options)
   }
 
+  function onConsumeSavedSearchOpened(options) {
+    // Clears the in-memory savedSearchOpened flag (see its declaration above
+    // for why it isn't a URL param). Bare onAfterRouteUpdate, not
+    // onAfterRouteQueryUpdate: the latter's sameAppliedQuery gate could skip
+    // this callback on a rare matching navigation, leaking the flag into an
+    // unrelated future one — this must run unconditionally on every 'search'
+    // navigation.
+    //
+    // This consumer MUST be registered after refreshSearchFromRouteStart and
+    // refreshSearchFromRoute so its queued microtask runs last and both
+    // guards read the flag before it is cleared here.
+    return onAfterRouteUpdate((to) => {
+      if (to.name === 'search') {
+        savedSearchOpened = false
+      }
+    }, options)
+  }
+
   return {
     indices,
     allProjectsSelected,
@@ -626,6 +677,7 @@ export function useSearchFilter() {
     onAfterRouteQueryUpdate,
     onAfterRouteQueryFromUpdate,
     onConsumeNoRefresh,
+    onConsumeSavedSearchOpened,
     watchValues,
     whenFilterContextualized,
     isCategoryAvailable,
