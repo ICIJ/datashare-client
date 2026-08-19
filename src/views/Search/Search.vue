@@ -113,6 +113,20 @@ const page = useUrlPageFromWithStore({
 
 const documentViewFloatingId = provideDocumentViewFloatingId()
 
+/**
+ * Run an advanced search submitted from the toolbar's modal. Like the search
+ * bar, it only updates the store and pushes a route: the refresh guards below
+ * turn that navigation into the actual search. Pushing keeps the URL in sync
+ * with the store, without which the next route round-trip (pagination, sort,
+ * perPage) would re-apply the URL's previous query over this one.
+ */
+function handleAdvancedSearch({ query, field }) {
+  searchStore.setQuery(query)
+  searchStore.setField(field)
+  // Resets `from` and stamps the route, so an unchanged query still resubmits.
+  refreshRouteFromStart()
+}
+
 // Refresh route query when a filter changes (either their values or if they are excluded)
 watchFilters(refreshRouteFromStart)
 // Refresh route query when projects change
@@ -157,6 +171,7 @@ onConsumeNoRefresh({ immediate: route.name === 'search' })
           v-model:is-filters-closed="isFiltersClosed"
           :search-breadcrumb-counter="searchBreadcrumbCounter"
           :no-search-filters="!enoughFloatingSpace && !isSearchRoute"
+          @advanced-search="handleAdvancedSearch"
         />
         <search-breadcrumb
           v-model:visible="toggleSearchBreadcrumb"

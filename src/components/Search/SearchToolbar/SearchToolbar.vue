@@ -31,6 +31,13 @@ watchEffect(() => {
   }
 })
 
+// Forwarded to the parent view rather than run here: an advanced search must
+// go through the router like every other search, and only the view owns the
+// navigation. Running it from the store here would leave the URL behind, and
+// the next route round-trip (pagination, sort, perPage) would then overwrite
+// the store with the URL's stale query.
+const emit = defineEmits(['advancedSearch'])
+
 const props = defineProps({
   searchBreadcrumbCounter: {
     type: Number
@@ -54,13 +61,6 @@ const classList = computed(() => {
     'search-toolbar--no-search-filters': props.noSearchFilters
   }
 })
-
-function handleAdvancedSearch({ query, field }) {
-  // Always run the query — even an empty one — so it resubmits with a fresh
-  // stamp, matching the search bar's submit behaviour. The field is applied
-  // to the store's single search `field` rather than baked into the query.
-  searchStore.query({ query, field })
-}
 </script>
 
 <template>
@@ -110,7 +110,7 @@ function handleAdvancedSearch({ query, field }) {
       v-model="showAdvancedSearch"
       :initial-query="searchStore.q"
       :initial-field="searchStore.field"
-      @search="handleAdvancedSearch"
+      @search="emit('advancedSearch', $event)"
     />
   </div>
 </template>
