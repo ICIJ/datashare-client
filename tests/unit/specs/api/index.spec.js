@@ -762,5 +762,27 @@ describe('Datashare backend client', () => {
       EventBus.off('http::error', mockCallback)
       expect(mockCallback).not.toBeCalled()
     })
+
+    // An expired session is not "no results": the caller cannot tell them apart,
+    // so the bus has to carry the 401 to the re-login prompt.
+    it('should emit an http error when the session has expired', async () => {
+      const error = Object.assign(new Error('Unauthorized'), { response: { status: 401 } })
+      axios.request.mockRejectedValue(error)
+      const mockCallback = vi.fn()
+      EventBus.on('http::error', mockCallback)
+      await expect(api.searchStructurePages('foo', 'doc-id', 'needle', 'root-id')).rejects.toThrow('Unauthorized')
+      EventBus.off('http::error', mockCallback)
+      expect(mockCallback).toBeCalledWith(error)
+    })
+
+    it('should emit an http error when the session expires while reading a page', async () => {
+      const error = Object.assign(new Error('Unauthorized'), { response: { status: 401 } })
+      axios.request.mockRejectedValue(error)
+      const mockCallback = vi.fn()
+      EventBus.on('http::error', mockCallback)
+      await expect(api.getStructurePage('foo', 'doc-id', 3, 'root-id')).rejects.toThrow('Unauthorized')
+      EventBus.off('http::error', mockCallback)
+      expect(mockCallback).toBeCalledWith(error)
+    })
   })
 })

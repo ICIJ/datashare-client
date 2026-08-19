@@ -405,7 +405,7 @@ export class Api {
    */
   async getStructurePage(index, id, page, routing) {
     const url = Api.getFullUrl(`/api/${index}/artifacts/structure/${id}/${page}`)
-    const { data } = await this.axios.request({ url, method: Method.GET, params: { routing }, responseType: 'text' })
+    const { data } = await this.requestArtifact({ url, params: { routing }, responseType: 'text' })
     return data
   }
 
@@ -417,8 +417,25 @@ export class Api {
    */
   async searchStructurePages(index, id, query, routing) {
     const url = Api.getFullUrl(`/api/${index}/artifacts/structure/search/${id}`)
-    const { data } = await this.axios.request({ url, method: Method.GET, params: { query, routing } })
+    const { data } = await this.requestArtifact({ url, params: { query, routing } })
     return data
+  }
+
+  /**
+   * Request an artifact endpoint outside `sendAction`, while still reporting an
+   * expired session on the error bus. Without this, callers that degrade a
+   * failure to "no results" would swallow a 401 and never offer a re-login.
+   */
+  async requestArtifact(config) {
+    try {
+      return await this.axios.request({ method: Method.GET, ...config })
+    }
+    catch (error) {
+      if (error.response?.status === 401) {
+        this.eventBus?.emit('http::error', error)
+      }
+      throw error
+    }
   }
 
   login(username, password) {
