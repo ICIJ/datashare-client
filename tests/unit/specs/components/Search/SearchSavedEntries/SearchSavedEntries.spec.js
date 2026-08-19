@@ -47,4 +47,26 @@ describe('SearchSavedEntries.vue', () => {
 
     expect(isSavedSearchOpened()).toBe(true)
   })
+
+  it('does not mark the navigation on a ctrl-click, which router-link ignores (icij/datashare#2331)', async () => {
+    const wrapper = mount(SearchSavedEntries, {
+      props: { events },
+      global: { plugins }
+    })
+
+    await wrapper.find('a.fw-medium').trigger('click', { ctrlKey: true })
+
+    expect(isSavedSearchOpened()).toBe(false)
+  })
+
+  it('does not mark the navigation on a middle-click, which router-link ignores (icij/datashare#2331)', async () => {
+    const wrapper = mount(SearchSavedEntries, {
+      props: { events },
+      global: { plugins }
+    })
+
+    await wrapper.find('a.fw-medium').trigger('click', { button: 1 })
+
+    expect(isSavedSearchOpened()).toBe(false)
+  })
 })

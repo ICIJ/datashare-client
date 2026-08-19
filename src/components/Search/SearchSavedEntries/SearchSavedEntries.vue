@@ -54,11 +54,21 @@ function searchParamsQuery(uri) {
 
 // Marks the upcoming navigation as "opening a saved search" before actually
 // triggering it (router-link's `custom` slot + explicit `navigate()` call
-// guarantees this runs first) — see markSavedSearchOpened's declaration for
+// guarantees this runs first), see markSavedSearchOpened's declaration for
 // why a currently-active lock absent from this saved search must not be
 // silently re-applied. icij/datashare#2331.
+//
+// Skip the mark on any click router-link's own navigate() would itself
+// ignore (ctrl/cmd/shift/alt-click, middle-click, a non-primary button):
+// navigate() no-ops in that case, so the flag would otherwise be left set
+// with nothing left in this tab to consume it, silently starving the next
+// unrelated search's locked-filter merge.
 function openSavedSearch(navigate, event) {
-  markSavedSearchOpened()
+  const isModifiedClick = event.metaKey || event.altKey || event.ctrlKey || event.shiftKey
+  const isNonPrimaryButton = event.button != null && event.button !== 0
+  if (!isModifiedClick && !isNonPrimaryButton) {
+    markSavedSearchOpened()
+  }
   navigate(event)
 }
 </script>
