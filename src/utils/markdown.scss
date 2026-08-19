@@ -44,8 +44,17 @@
   }
 
   table {
+    // A wide table scrolls inside its own box instead of stretching the body it
+    // sits in: `max-content` sizes it to its columns, `max-width` keeps it from
+    // outgrowing the parent, and `display: block` is what lets it overflow at
+    // all. Same rule GitHub renders markdown tables with.
+    display: block;
+    width: max-content;
+    max-width: 100%;
+    overflow: auto;
     border-collapse: collapse;
     margin-bottom: $spacer;
+    font-variant: tabular-nums;
 
     th,
     td {
