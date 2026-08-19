@@ -87,7 +87,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     return instantiatedFilters.value.filter(method('hasValues'))
   })
 
-  function buildFilterValuesAsRouteQuery() {
+  const filterValuesAsRouteQuery = computed(() => {
     return Object.keys(values.value).reduce((memo, name) => {
       // We need to look for the filter's definition in order to us its `id`
       // as key for the URL params. This was we track configured filter instead
@@ -108,9 +108,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
       }
       return memo
     }, {})
-  }
-
-  const filterValuesAsRouteQuery = computed(() => buildFilterValuesAsRouteQuery())
+  })
 
   const toBaseRouteQuery = computed(() => {
     return {
