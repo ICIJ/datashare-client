@@ -79,20 +79,30 @@ describe('SearchToolbar.vue', () => {
     expect(wrapper.findComponent({ name: 'SearchAdvancedModal' }).attributes('initial-query')).toBe('+Paris')
   })
 
-  it('runs a store query with the emitted query and field', async () => {
+  it('forwards the modal query and field as an advancedSearch event', async () => {
     const wrapper = factory()
     wrapper.findComponent({ name: 'ButtonToggleAdvancedSearch' }).vm.$emit('update:active', true)
     await flushPromises()
     wrapper.findComponent({ name: 'SearchAdvancedModal' }).vm.$emit('search', { query: '+Paris +London', field: 'tags' })
-    expect(searchStore.query).toHaveBeenCalledWith({ query: '+Paris +London', field: 'tags' })
+    expect(wrapper.emitted('advancedSearch')).toEqual([[{ query: '+Paris +London', field: 'tags' }]])
   })
 
-  it('runs a store query even when the modal emits an empty search so it is always resubmitted', async () => {
+  it('forwards an empty advanced search so it is always resubmitted', async () => {
     const wrapper = factory()
     wrapper.findComponent({ name: 'ButtonToggleAdvancedSearch' }).vm.$emit('update:active', true)
     await flushPromises()
     wrapper.findComponent({ name: 'SearchAdvancedModal' }).vm.$emit('search', { query: '', field: 'all' })
-    expect(searchStore.query).toHaveBeenCalledWith({ query: '', field: 'all' })
+    expect(wrapper.emitted('advancedSearch')).toEqual([[{ query: '', field: 'all' }]])
+  })
+
+  it('does not run the search itself, so the URL stays the source of truth', async () => {
+    const wrapper = factory()
+    wrapper.findComponent({ name: 'ButtonToggleAdvancedSearch' }).vm.$emit('update:active', true)
+    await flushPromises()
+    wrapper.findComponent({ name: 'SearchAdvancedModal' }).vm.$emit('search', { query: '+Paris +London', field: 'tags' })
+    // Querying the store directly would leave the URL behind, and the next
+    // route round-trip would overwrite the advanced query with the stale one.
+    expect(searchStore.query).not.toHaveBeenCalled()
   })
 
   it('reduces the advanced-search toggle when the toolbar is compact', () => {

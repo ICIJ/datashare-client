@@ -2,6 +2,7 @@ import { shallowMount, flushPromises } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import Search from '@/views/Search/Search'
+import SearchToolbar from '@/components/Search/SearchToolbar/SearchToolbar'
 import { useSearchStore } from '@/store/modules'
 
 vi.mock('@/api/apiInstance', {
@@ -10,6 +11,13 @@ vi.mock('@/api/apiInstance', {
     removeProject: vi.fn()
   }
 })
+
+// `batchQueryParamUpdate` debounces its router push by 50ms, so pagination
+// changes only reach the route after the timer fires.
+const flushDebouncedRouterPush = async () => {
+  await new Promise(resolve => setTimeout(resolve, 60))
+  await flushPromises()
+}
 
 describe('Search.vue', () => {
   let core, wrapper
@@ -62,6 +70,43 @@ describe('Search.vue', () => {
 
     expect(wrapper.vm.selectMode).toBe(false)
     expect(wrapper.vm.selection).toEqual([])
+  })
+
+  it('pushes the advanced search query into the URL so it survives later navigations', async () => {
+    // Same active pinia as the mounted component, so this is the same store instance.
+    const searchStore = useSearchStore()
+    vi.spyOn(searchStore, 'query').mockResolvedValue(undefined)
+    // A regular search bar submit leaves the query in the URL.
+    await core.router.push({ name: 'search', query: { q: 'advancedUrlTest', from: '0' } })
+    await flushPromises()
+
+    wrapper.findComponent(SearchToolbar).vm.$emit('advancedSearch', { query: '+Paris +London', field: 'tags' })
+    await flushPromises()
+
+    const { query } = core.router.currentRoute.value
+    expect(query.q).toBe('+Paris +London')
+    expect(query.field).toBe('tags')
+    // A new search always restarts from the first page.
+    expect(query.from).toBe('0')
+  })
+
+  it('keeps the advanced search query when paginating to the next page', async () => {
+    // Same active pinia as the mounted component, so this is the same store instance.
+    const searchStore = useSearchStore()
+    vi.spyOn(searchStore, 'query').mockResolvedValue(undefined)
+    await core.router.push({ name: 'search', query: { q: 'advancedPaginationTest', from: '0' } })
+    await flushPromises()
+
+    wrapper.findComponent(SearchToolbar).vm.$emit('advancedSearch', { query: '+Berlin +Vienna', field: 'all' })
+    await flushPromises()
+
+    // Going to the next page patches the current URL: the query it carries must
+    // still be the advanced one, otherwise the route round-trip overwrites the
+    // store and page 2 shows the results of the previous search.
+    wrapper.vm.page = 2
+    await flushDebouncedRouterPush()
+
+    expect(searchStore.q).toBe('+Berlin +Vienna')
   })
 
   it('runs the initial search when a reloaded noRefresh URL is stripped', async () => {
