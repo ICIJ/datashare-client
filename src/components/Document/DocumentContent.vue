@@ -72,7 +72,7 @@ const markdownMatches = ref([])
 const markdownAppliedTerm = ref('')
 // Set at the end of `onMounted`, so the mode watcher can tell a real, later mode
 // flip apart from the manifest probe settling `isMarkdownMode` during the mount.
-const isMounted = ref(false)
+let isMounted = false
 
 const isTranslation = computed(() => {
   return !!props.targetLanguage && props.targetLanguage !== 'original'
@@ -240,7 +240,7 @@ watch(isMarkdownMode, async (markdown) => {
   await syncPagePosition(markdown)
   // `hasMarkdown` flips during `onMounted`'s manifest probe, so without this gate
   // that flip would duplicate the search the mount is about to issue itself.
-  if (isMounted.value && hasLocalSearchTerms.value) {
+  if (isMounted && hasLocalSearchTerms.value) {
     await retrieveOccurrencesAndUpdateContent()
   }
 })
@@ -254,7 +254,16 @@ watch(docId, async () => {
   markdownPage.value = 1
   markdownMatches.value = []
   markdownAppliedTerm.value = ''
-  await fetchManifest()
+  maxOffsetTranslations.value = {}
+  syncedPages.value = []
+  localSearchIndexes.value = []
+  localSearchOccurrences.value = 0
+  localSearchIndex.value = 0
+  // An occurrence fetch issued for the document being left would otherwise
+  // resolve into the state of the one arriving: no other watcher supersedes it
+  // when the search term itself is unchanged across the swap.
+  lastOccurrencesRetrieval++
+  await loadDocumentContent()
 })
 
 watch(contentPipeline, async () => {
@@ -266,19 +275,31 @@ onMounted(async () => {
   // `finally`, because a mount step rejecting must not leave the flag stuck
   // `false` and suppress every later mode-flip search for this instance.
   try {
-    await Promise.all([loadMaxOffset(), fetchManifest()])
-    await syncPages()
-    if (props.q) {
-      await retrieveOccurrencesAndUpdateContent()
-    }
-    else {
-      await activateContentSlice({ offset: 0 })
-    }
+    await loadDocumentContent()
   }
   finally {
-    isMounted.value = true
+    isMounted = true
   }
 })
+
+// Shared with the `docId` watcher: this sequence describes a document, not a
+// mount, and the host can swap the document without remounting.
+async function loadDocumentContent() {
+  await Promise.all([loadMaxOffset(), fetchManifest()])
+  await syncPages()
+  // Slices are keyed by offset alone, so a watcher woken by the reset above can
+  // have cached one sliced against the length and page map of the previous
+  // document. Only now are both of them known for this one.
+  Object.keys(contentSlices).forEach(key => delete contentSlices[key])
+  activeContentSliceOffset.value = 0
+  currentContentPage.value = ''
+  if (hasLocalSearchTerms.value) {
+    await retrieveOccurrencesAndUpdateContent()
+  }
+  else {
+    await activateContentSlice({ offset: 0 })
+  }
+}
 
 // A single-page artifact whose only page renders to nothing has no markdown
 // worth showing, so the tab goes back to plain text. With more pages, a blank

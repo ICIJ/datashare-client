@@ -261,6 +261,31 @@ describe('DocumentContent.vue', () => {
       expect(wrapper.vm.getContentSlice().content).toBe('this is a content')
     })
 
+    it('should not carry the previous document page and slices over to the next one', async () => {
+      const { document } = await mockDocumentContentSlice('a'.repeat(60))
+      // Both documents are served by the same mock, keyed by id, so the
+      // assertions below can tell whose slice ended up on screen.
+      api.getDocumentSlice.mockImplementation(async (project, documentId, offset, limit) => {
+        const content = (documentId === id ? 'a' : 'b').repeat(60)
+        return { content: content.substring(offset, offset + limit), offset, limit, maxOffset: 60 }
+      })
+      const { plugins } = core
+      const props = { document, pageSize: 10 }
+      const wrapper = shallowMount(DocumentContent, { global: { plugins }, props })
+      await flushPromises()
+      wrapper.vm.page = 3
+      await flushPromises()
+      expect(wrapper.vm.activeContentSliceOffset).toBe(20)
+      const other = { index: document.index, id: 'other-document-id', routing: 'other-document-id' }
+      await wrapper.setProps({ document: other })
+      await flushPromises()
+      expect(wrapper.vm.page).toBe(1)
+      expect(wrapper.vm.activeContentSliceOffset).toBe(0)
+      expect(wrapper.vm.currentContentPage).toContain('bbbbbbbbbb')
+      expect(wrapper.vm.currentContentPage).not.toContain('a')
+      wrapper.unmount()
+    })
+
     it('should lazy load 2 slices of 10 characters of a long text document', async () => {
       // Create a document with a small content text length
       const content = 'this is a content from Elastic Search doc which looks huge'
