@@ -5,7 +5,7 @@ describe('renderMarkdown', () => {
     const html = await renderMarkdown(
       ['# Title', '', '| a | b |', '| - | - |', '| 1 | 2 |', '', '- [x] done', '- [ ] todo', '', '~~struck~~', '', 'https://example.org/report'].join('\n')
     )
-    expect(html).toContain('<h1>Title</h1>')
+    expect(html).toContain('<h1 id="title">Title</h1>')
     expect(html).toContain('<table>')
     expect(html).toMatch(/<input[^>]*type="checkbox"/)
     expect(html).toContain('<del>struck</del>')
@@ -58,6 +58,20 @@ describe('renderMarkdown', () => {
     const relative = await renderMarkdown('[doc](../other)')
     expect(relative).toContain('href="../other"')
     expect(relative).not.toContain('target="_blank"')
+  })
+
+  it('gives headings slug ids so in-document links have a target', async () => {
+    const html = await renderMarkdown('# My Section\n\nSee [the section](#my-section).')
+    expect(html).toContain('<h1 id="my-section">My Section</h1>')
+    const linkHref = html.match(/href="(#[^"]+)"/)?.[1]
+    expect(linkHref).toBe('#my-section')
+    expect(html).toContain(`id="${linkHref.slice(1)}"`)
+  })
+
+  it('disambiguates the ids of headings sharing the same text', async () => {
+    const html = await renderMarkdown('# Notes\n\n# Notes')
+    expect(html).toContain('<h1 id="notes">Notes</h1>')
+    expect(html).toContain('<h1 id="notes-1">Notes</h1>')
   })
 
   it('returns an empty string for empty input', async () => {
@@ -230,7 +244,7 @@ describe('renderMarkdown table header stripping', () => {
 
   it('does not affect an unrelated part of the document', async () => {
     const html = await renderMarkdown(['# Title', '', '|---|---|', '| a | b |', '', 'Some prose.', ''].join('\n'))
-    expect(html).toContain('<h1>Title</h1>')
+    expect(html).toContain('<h1 id="title">Title</h1>')
     expect(html).not.toContain('<thead>')
     expect(html).toContain('<p>Some prose.</p>')
   })

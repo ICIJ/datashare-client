@@ -60,6 +60,7 @@
     "pinia": "^3.0.4",
     "pinia-plugin-persistedstate": "^4.7.1",
     "rehype-sanitize": "^6",
+    "rehype-slug": "^6",
     "rehype-stringify": "^10",
     "remark-gfm": "^4.0.1",
     "remark-parse": "^11",

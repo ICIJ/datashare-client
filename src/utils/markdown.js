@@ -3,6 +3,7 @@ import remarkParse from 'remark-parse'
 import remarkGfm from 'remark-gfm'
 import remarkRehype from 'remark-rehype'
 import rehypeSanitize, { defaultSchema } from 'rehype-sanitize'
+import rehypeSlug from 'rehype-slug'
 import rehypeStringify from 'rehype-stringify'
 import { visit } from 'unist-util-visit'
 
@@ -80,6 +81,9 @@ const processor = unified()
   .use(remarkParse)
   .use(remarkGfm)
   .use(remarkRehype)
+  // Headings carry no id of their own, so in-document links have nothing to
+  // point at until rehypeSlug gives them GitHub-compatible slugs.
+  .use(rehypeSlug)
   .use(rehypeHardenLinks)
   .use(rehypeDropEmptyTableHeader)
   .use(rehypeSanitize, schema)
