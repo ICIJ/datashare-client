@@ -33,10 +33,6 @@ describe('Search.vue', () => {
     wrapper?.unmount()
 
     core = CoreSetup.init().useAll().useRouterWithoutGuards()
-    // lockedFiltersStore is persisted to real localStorage (persist: true), which
-    // survives across tests in this file even with a fresh Pinia instance per test —
-    // clear it explicitly so lock-dependent tests below don't leak into each other.
-    useLockedFiltersStore().unlockAll()
 
     wrapper = shallowMount(Search, {
       global: {
