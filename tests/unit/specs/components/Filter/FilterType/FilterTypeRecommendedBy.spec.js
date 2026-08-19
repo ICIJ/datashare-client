@@ -7,7 +7,8 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import DisplayUser from '@/components/Display/DisplayUser'
 import FilterType from '@/components/Filter/FilterType/FilterType'
 import FilterTypeRecommendedBy from '@/components/Filter/FilterType/FilterTypeRecommendedBy'
-import { useSearchStore, useRecommendedStore } from '@/store/modules'
+import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPanelSectionFilterEntry'
+import { useLockedFiltersStore, useSearchStore, useRecommendedStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
 
 vi.mock('@/api/apiInstance', async (importOriginal) => {
@@ -98,5 +99,68 @@ describe('FilterTypeRecommendedBy.vue', () => {
     await wrapper.vm.fetch()
     expect(api.getDocumentsRecommendedBy).toBeCalledTimes(0)
     expect(recommendedStore.documents).toEqual([])
+  })
+
+  describe('locked filters', () => {
+    let lockedFiltersStore
+
+    beforeEach(async () => {
+      lockedFiltersStore = useLockedFiltersStore()
+      // searchStore/lockedFiltersStore are the app's singleton stores (the outer
+      // setActivePinia(createPinia()) above is immediately overridden back to
+      // that singleton by CoreSetup.useAll()), so they carry values over from
+      // one test in this file to the next — reset explicitly.
+      searchStore.setFilterValue({ name: 'recommendedBy', value: [] })
+      // Seed the store directly rather than through fetch(): recommendations
+      // come from the mocked ES-backed API, which this describe block doesn't
+      // need to exercise, just a stable, non-"All" entry to lock.
+      recommendedStore.byUsers = [{ user: 'jane', count: 1 }]
+      await wrapper.vm.$nextTick()
+    })
+
+    function findEntry() {
+      // Index 0 is FilterTypeAll's own "All" pseudo-row — the first real
+      // user entry is index 1.
+      return wrapper.findAllComponents(FiltersPanelSectionFilterEntry).at(1)
+    }
+
+    it('reports a ticked user as unlocked by default', () => {
+      expect(findEntry().props('locked')).toBe(false)
+    })
+
+    it('locks a user when the entry emits update:locked with true', async () => {
+      await findEntry().vm.$emit('update:locked', true)
+
+      expect(lockedFiltersStore.isLocked({ name: 'recommendedBy', value: 'jane' })).toBe(true)
+      expect(findEntry().props('locked')).toBe(true)
+    })
+
+    it('also selects an unticked user when the entry emits update:locked with true — one click both applies and locks it', async () => {
+      expect(searchStore.values.recommendedBy ?? []).not.toContain('jane')
+
+      await findEntry().vm.$emit('update:locked', true)
+
+      expect(searchStore.values.recommendedBy).toContain('jane')
+      expect(lockedFiltersStore.isLocked({ name: 'recommendedBy', value: 'jane' })).toBe(true)
+    })
+
+    it('unlocks a user when the entry emits update:locked with false', async () => {
+      searchStore.addFilterValue({ name: 'recommendedBy', value: 'jane' })
+      lockedFiltersStore.lock({ name: 'recommendedBy', value: 'jane', label: 'jane' })
+
+      await findEntry().vm.$emit('update:locked', false)
+
+      expect(lockedFiltersStore.isLocked({ name: 'recommendedBy', value: 'jane' })).toBe(false)
+    })
+
+    it('removes the lock when the user is unticked', async () => {
+      searchStore.addFilterValue({ name: 'recommendedBy', value: 'jane' })
+      lockedFiltersStore.lock({ name: 'recommendedBy', value: 'jane', label: 'jane' })
+
+      wrapper.vm.selected = []
+      await wrapper.vm.$nextTick()
+
+      expect(lockedFiltersStore.isLocked({ name: 'recommendedBy', value: 'jane' })).toBe(false)
+    })
   })
 })
