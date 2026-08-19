@@ -84,7 +84,7 @@ export function consumeJustSubmitted() {
 //
 // Two independent guards below (refreshSearchFromRoute and
 // refreshSearchFromRouteStart) both need to read this for the same
-// navigation, so reading does not consume it — only onConsumeSavedSearchOpened
+// navigation, so reading does not consume it, only onConsumeSavedSearchOpened
 // does, and it must be registered after both so they observe it first.
 let savedSearchOpened = false
 
@@ -424,7 +424,7 @@ export function useSearchFilter() {
     const searchOperator = toValidSearchOperator(route.query.searchOperator ?? getSearchOperator())
     appStore.setSettings('search', { perPage, orderBy: [sort, order], searchOperator })
     // Update the search store using the route query
-    searchStore.updateFromRouteQuery(route.query, { mergeLocks: !savedSearchOpened })
+    searchStore.updateFromRouteQuery(route.query, { mergeLocks: !isSavedSearchOpened() })
     // And finally, refresh the search if t
     return nextTick(refreshSearch)
   }
@@ -610,7 +610,7 @@ export function useSearchFilter() {
     // for why it isn't a URL param). Bare onAfterRouteUpdate, not
     // onAfterRouteQueryUpdate: the latter's sameAppliedQuery gate could skip
     // this callback on a rare matching navigation, leaking the flag into an
-    // unrelated future one — this must run unconditionally on every 'search'
+    // unrelated future one; this must run unconditionally on every 'search'
     // navigation.
     //
     // This consumer MUST be registered after refreshSearchFromRouteStart and
@@ -618,7 +618,7 @@ export function useSearchFilter() {
     // guards read the flag before it is cleared here.
     return onAfterRouteUpdate((to) => {
       if (to.name === 'search') {
-        savedSearchOpened = false
+        clearSavedSearchOpened()
       }
     }, options)
   }
