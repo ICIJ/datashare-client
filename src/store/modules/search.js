@@ -970,9 +970,9 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * overriding the live state here is exactly what the user asked for.
    */
   function applyLockedFilters() {
-    lockedFiltersStore.entries.forEach(({ name, value }) => {
-      const { name: bareName, excluded } = parseLockedName(name)
-      if (!getFilter({ name: bareName })) {
+    lockedFiltersStore.entries.forEach((entry) => {
+      const { bareName, value, excluded, exists } = getLockConflict(entry)
+      if (!exists) {
         return
       }
       addFilterValue({ name: bareName, value })
