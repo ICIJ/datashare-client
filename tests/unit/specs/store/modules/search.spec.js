@@ -686,144 +686,7 @@ describe('SearchStore', () => {
     })
   })
 
-  describe('Build route query without locks (icij/datashare#2331)', () => {
-    let lockedFiltersStore
-
-    beforeEach(() => {
-      lockedFiltersStore = useLockedFiltersStore()
-    })
-
-    it('omits a locked-only value from filterValuesAsRouteQueryWithoutLocks but keeps it in filterValuesAsRouteQuery', () => {
-      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
-      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
-
-      expect(searchStore.filterValuesAsRouteQuery).toEqual({ 'f[contentType]': ['application/pdf'] })
-      expect(searchStore.filterValuesAsRouteQueryWithoutLocks).toEqual({})
-    })
-
-    it('keeps a value that is ticked but not locked', () => {
-      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
-
-      expect(searchStore.filterValuesAsRouteQueryWithoutLocks).toEqual({ 'f[contentType]': ['application/pdf'] })
-    })
-
-    it('keeps the unlocked sibling value while stripping only the locked one from the same filter', () => {
-      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
-      searchStore.addFilterValue({ name: 'contentType', value: 'text/plain' })
-      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
-
-      expect(searchStore.filterValuesAsRouteQueryWithoutLocks).toEqual({ 'f[contentType]': ['text/plain'] })
-    })
-
-    it('strips a locked value even when it is also independently ticked as a normal filter (locked ⇒ always stripped, no exception)', () => {
-      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
-      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
-
-      // The value is ticked (present in `values`) AND locked — still stripped.
-      expect(searchStore.hasFilterValue({ name: 'contentType', value: 'application/pdf' })).toBe(true)
-      expect(searchStore.filterValuesAsRouteQueryWithoutLocks).toEqual({})
-    })
-
-    it('respects exclude mode when checking whether a value is locked', () => {
-      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
-      searchStore.excludeFilter('contentType')
-      lockedFiltersStore.lock({ name: '-contentType', value: 'application/pdf', label: 'application/pdf' })
-
-      expect(searchStore.filterValuesAsRouteQueryWithoutLocks).toEqual({})
-    })
-
-    it('strips a value even when its lock was recorded in a different exclude mode (fail-closed on mode drift)', () => {
-      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
-      // Locked while excluded; the filter is now included (e.g. the user
-      // flipped modes after locking) — still stripped, not kept.
-      lockedFiltersStore.lock({ name: '-contentType', value: 'application/pdf', label: 'application/pdf' })
-
-      expect(searchStore.filterValuesAsRouteQueryWithoutLocks).toEqual({})
-    })
-
-    it('strips a locked value even when its own exclude flag disagrees with its paired dimension', () => {
-      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
-      searchStore.excludeFilter('contentTypeCategory')
-      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
-
-      expect(searchStore.filterValuesAsRouteQueryWithoutLocks).toEqual({})
-    })
-
-    it('toBaseRouteQueryWithoutLocks omits a locked value while keeping q/indices/field', () => {
-      searchStore.setQuery('hello')
-      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
-      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
-
-      const query = searchStore.toBaseRouteQueryWithoutLocks
-      expect(query.q).toBe('hello')
-      expect(query['f[contentType]']).toBeUndefined()
-    })
-
-    it('toRouteQueryWithoutLocks omits a locked value while keeping pagination/sort fields', () => {
-      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
-      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
-
-      const query = searchStore.toRouteQueryWithoutLocks
-      expect(query.from).toBe('0')
-      expect(query.sort).toBeDefined()
-      expect(query['f[contentType]']).toBeUndefined()
-    })
-  })
-
-  describe('instantiatedFiltersWithoutLocks (icij/datashare#2331)', () => {
-    let lockedFiltersStore
-
-    beforeEach(() => {
-      lockedFiltersStore = useLockedFiltersStore()
-    })
-
-    it('strips a locked value from the matching filter instance only', () => {
-      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
-      searchStore.addFilterValue({ name: 'contentType', value: 'text/plain' })
-      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
-
-      const stripped = find(searchStore.instantiatedFiltersWithoutLocks, { name: 'contentType' })
-      expect(stripped.values).toEqual(['text/plain'])
-    })
-
-    it('leaves the live instantiatedFilters untouched', () => {
-      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
-      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
-
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      searchStore.instantiatedFiltersWithoutLocks
-      const live = find(searchStore.instantiatedFilters, { name: 'contentType' })
-      expect(live.values).toEqual(['application/pdf'])
-    })
-
-    it('returns filter instances that still expose hasValues() and applyTo()', () => {
-      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
-      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
-
-      const stripped = find(searchStore.instantiatedFiltersWithoutLocks, { name: 'contentType' })
-      expect(typeof stripped.hasValues).toBe('function')
-      expect(stripped.hasValues()).toBe(false)
-    })
-
-    it('passes through a filter unchanged when none of its values are locked', () => {
-      searchStore.addFilterValue({ name: 'contentType', value: 'text/plain' })
-
-      const stripped = find(searchStore.instantiatedFiltersWithoutLocks, { name: 'contentType' })
-      expect(stripped.values).toEqual(['text/plain'])
-      expect(typeof stripped.hasValues).toBe('function')
-    })
-
-    it('strips the entire starred filter rather than leaving a semantically-different single value, when both pseudo-values were selected and one is locked', () => {
-      searchStore.addFilterValue({ name: 'starred', value: true })
-      searchStore.addFilterValue({ name: 'starred', value: false })
-      lockedFiltersStore.lock({ name: 'starred', value: true, label: 'Starred' })
-
-      const stripped = find(searchStore.instantiatedFiltersWithoutLocks, { name: 'starred' })
-      expect(stripped.values).toEqual([])
-    })
-  })
-
-  describe('runBatchDownload strips locked values (icij/datashare#2331)', () => {
+  describe('runBatchDownload keeps locked values (icij/datashare#2331 reverted)', () => {
     let rootSearchSpy, lockedFiltersStore
 
     beforeEach(() => {
@@ -836,25 +699,25 @@ describe('SearchStore', () => {
       vi.restoreAllMocks()
     })
 
-    it('calls rootSearch with instantiatedFiltersWithoutLocks, not the live instantiatedFilters', async () => {
+    it('calls rootSearch with the live instantiatedFilters, including a locked value', async () => {
       searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
       lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
 
       await searchStore.runBatchDownload()
 
       expect(rootSearchSpy).toHaveBeenCalledWith(
-        searchStore.instantiatedFiltersWithoutLocks,
+        searchStore.instantiatedFilters,
         expect.anything(),
         expect.anything(),
         expect.anything()
       )
       const passedFilters = rootSearchSpy.mock.calls[0][0]
       const contentTypeFilter = find(passedFilters, { name: 'contentType' })
-      expect(contentTypeFilter.values).toEqual([])
+      expect(contentTypeFilter.values).toEqual(['application/pdf'])
     })
   })
 
-  describe('estimateDownloadSize strips locked values (icij/datashare#2331)', () => {
+  describe('estimateDownloadSize keeps locked values (icij/datashare#2331 reverted)', () => {
     let estimateSpy, lockedFiltersStore
 
     beforeEach(() => {
@@ -869,7 +732,7 @@ describe('SearchStore', () => {
       vi.restoreAllMocks()
     })
 
-    it('calls estimateDownloadSize with instantiatedFiltersWithoutLocks, not the live instantiatedFilters', async () => {
+    it('calls estimateDownloadSize with the live instantiatedFilters, including a locked value', async () => {
       searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
       lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
 
@@ -877,7 +740,7 @@ describe('SearchStore', () => {
 
       const passedFilters = estimateSpy.mock.calls[0][1]
       const contentTypeFilter = find(passedFilters, { name: 'contentType' })
-      expect(contentTypeFilter.values).toEqual([])
+      expect(contentTypeFilter.values).toEqual(['application/pdf'])
     })
   })
 
@@ -1548,7 +1411,7 @@ describe('SearchStore', () => {
       await searchStore.estimateDownloadSize()
       expect(estimateSpy).toHaveBeenCalledWith(
         searchStore.indices,
-        searchStore.instantiatedFiltersWithoutLocks,
+        searchStore.instantiatedFilters,
         '*',
         [],
         SEARCH_OPERATORS.OR

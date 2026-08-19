@@ -71,8 +71,8 @@ describe('TaskBatchSearchForm', () => {
     expect(wrapper.vm.$toast.success).not.toHaveBeenCalled()
   })
 
-  describe('locked filters excluded from the batch search query/uri (icij/datashare#2331)', () => {
-    it('calls rootSearch with instantiatedFiltersWithoutLocks so a locked value is excluded from the query template', async () => {
+  describe('locked filters kept in the batch search query/uri (icij/datashare#2331 reverted)', () => {
+    it('calls rootSearch with instantiatedFilters, including a locked value, in the query template', async () => {
       const { useLockedFiltersStore } = await import('@/store/modules')
       const lockedFiltersStore = useLockedFiltersStore()
 
@@ -88,10 +88,10 @@ describe('TaskBatchSearchForm', () => {
 
       const [passedFilters] = api.elasticsearch.rootSearch.mock.calls.at(-1)
       const contentTypeFilter = passedFilters.find(filter => filter.name === 'contentType')
-      expect(contentTypeFilter.values).toEqual([])
+      expect(contentTypeFilter.values).toEqual(['application/pdf'])
     })
 
-    it('excludes a locked-only value from the batch search uri', async () => {
+    it('keeps a locked value in the batch search uri', async () => {
       const { useLockedFiltersStore } = await import('@/store/modules')
       const lockedFiltersStore = useLockedFiltersStore()
 
@@ -102,7 +102,7 @@ describe('TaskBatchSearchForm', () => {
       await wrapper.vm.$nextTick()
 
       const { uri } = wrapper.vm.$.setupState
-      expect(decodeURIComponent(uri)).not.toContain('f[contentType]')
+      expect(decodeURIComponent(uri)).toContain('f[contentType]')
     })
 
     it('keeps a ticked-but-unlocked value in the batch search uri', async () => {

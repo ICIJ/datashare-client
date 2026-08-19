@@ -78,29 +78,6 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     return orderArray(validFilters.map(instantiateFilter), 'order', 'asc')
   })
 
-  // Outward/shareable variant (batch search, batch download) — icij/datashare#2331.
-  // Filter instances aren't plain objects (see instantiateFilter above), so a
-  // locked value can't be removed via object spread — {...filter, values: x}
-  // would drop every prototype method (hasValues(), applyTo(), etc.) that the
-  // Elasticsearch client calls on each filter. Instead, clone the instance
-  // (preserving its prototype and every own property) and call its own
-  // setValues() to override just the values, locally, without touching the
-  // live reactive store binding.
-  const instantiatedFiltersWithoutLocks = computed(() => {
-    return instantiatedFilters.value.map((filter) => {
-      const strippedValues = escalateStarredFullStrip(
-        filter.name,
-        filter.values,
-        filter.values.filter(value => !isValueLocked(filter.name, value))
-      )
-      if (strippedValues.length === filter.values.length) {
-        return filter
-      }
-      const clone = Object.create(Object.getPrototypeOf(filter), Object.getOwnPropertyDescriptors(filter))
-      return clone.setValues(strippedValues)
-    })
-  })
-
   // O(1) lookup map for filters by name - avoids O(n) find() calls
   const filterByName = computed(() => {
     return new Map(instantiatedFilters.value.map(f => [f.name, f]))
@@ -110,41 +87,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     return instantiatedFilters.value.filter(method('hasValues'))
   })
 
-  // Whether `value` is currently locked under `filterName`, in EITHER
-  // include or exclude mode. Deliberately mode-agnostic (unlike the lock
-  // merge/conflict logic in mergeLockedFilters, which does care about mode):
-  // this is used only to decide whether to strip a value from an outward
-  // artifact (saved search, batch search, batch download), and a privacy
-  // feature must fail closed on ambiguity — stripping a value whose lock's
-  // mode has drifted from the filter's current mode is safe (the artifact
-  // is merely narrower); silently keeping it would be a leak. See
-  // icij/datashare#2331's final review.
-  function isValueLocked(filterName, value) {
-    const stringValue = toString(value)
-    return lockedFiltersStore.entries.some(
-      entry => parseLockedName(entry.name).name === filterName && entry.value === stringValue
-    )
-  }
-
-  // FilterStarred treats having both `true` and `false` selected as a no-op
-  // ("all documents", see FilterStarred.js#addChildIncludeFilter). If one of
-  // those two values is locked and gets stripped, the filter would be left
-  // with a single value — which is NOT a no-op, it's "only starred" or "only
-  // non-starred", silently narrowing an outward artifact (batch download,
-  // saved search) relative to what the live search shows. Escalate to
-  // stripping the whole filter instead. icij/datashare#2331's final review.
-  function escalateStarredFullStrip(filterName, originalValues, strippedValues) {
-    const isPartialStrip = strippedValues.length > 0 && strippedValues.length < originalValues.length
-    if (filterName === 'starred' && isPartialStrip) {
-      return []
-    }
-    return strippedValues
-  }
-
-  // Shared by filterValuesAsRouteQuery (internal navigation, keeps locks) and
-  // filterValuesAsRouteQueryWithoutLocks (outward/shareable artifacts, strips
-  // locks) so the two never drift — icij/datashare#2331.
-  function buildFilterValuesAsRouteQuery(stripLocked) {
+  function buildFilterValuesAsRouteQuery() {
     return Object.keys(values.value).reduce((memo, name) => {
       // We need to look for the filter's definition in order to us its `id`
       // as key for the URL params. This was we track configured filter instead
@@ -158,28 +101,16 @@ export const useSearchStore = defineSuffixedStore('search', () => {
         // is excluded, both emit the `f[-name]` prefix. Protects against
         // in-store drift leaking into the URL.
         const excluded = getPairedDimensions(filter.name).some(dim => excludeFilters.value.includes(dim))
-        const filterValues = stripLocked
-          ? escalateStarredFullStrip(
-            filter.name,
-            filter.values,
-            filter.values.filter(value => !isValueLocked(filter.name, value))
-          )
-          : filter.values
-        if (filterValues.length > 0) {
+        if (filter.values.length > 0) {
           const key = excluded ? `f[-${filter.name}]` : `f[${filter.name}]`
-          memo[key] = compact(filterValues)
+          memo[key] = compact(filter.values)
         }
       }
       return memo
     }, {})
   }
 
-  const filterValuesAsRouteQuery = computed(() => buildFilterValuesAsRouteQuery(false))
-
-  // Outward/shareable variant (saved searches, share links) — icij/datashare#2331.
-  // Locked ⇒ always stripped, full stop, even if the same value is also
-  // independently ticked as a normal filter.
-  const filterValuesAsRouteQueryWithoutLocks = computed(() => buildFilterValuesAsRouteQuery(true))
+  const filterValuesAsRouteQuery = computed(() => buildFilterValuesAsRouteQuery())
 
   const toBaseRouteQuery = computed(() => {
     return {
@@ -187,15 +118,6 @@ export const useSearchStore = defineSuffixedStore('search', () => {
       indices: indices.value.join(','),
       field: field.value,
       ...filterValuesAsRouteQuery.value
-    }
-  })
-
-  const toBaseRouteQueryWithoutLocks = computed(() => {
-    return {
-      q: q.value,
-      indices: indices.value.join(','),
-      field: field.value,
-      ...filterValuesAsRouteQueryWithoutLocks.value
     }
   })
 
@@ -207,17 +129,6 @@ export const useSearchStore = defineSuffixedStore('search', () => {
       order: orderBy.value,
       searchOperator: searchOperator.value,
       ...toBaseRouteQuery.value
-    }
-  })
-
-  const toRouteQueryWithoutLocks = computed(() => {
-    return {
-      from: `${from.value}`,
-      perPage: `${perPage.value}`,
-      sort: sortBy.value,
-      order: orderBy.value,
-      searchOperator: searchOperator.value,
-      ...toBaseRouteQueryWithoutLocks.value
     }
   })
 
@@ -1275,7 +1186,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    */
   function runBatchDownload(uri = null) {
     const batchDownloadQuery = ['', null, undefined].indexOf(q.value) === -1 ? q.value : '*'
-    const { query } = api.elasticsearch.rootSearch(instantiatedFiltersWithoutLocks.value, batchDownloadQuery, fields.value, searchOperator.value).build()
+    const { query } = api.elasticsearch.rootSearch(instantiatedFilters.value, batchDownloadQuery, fields.value, searchOperator.value).build()
     return api.runBatchDownload({ projectIds: indices.value, query, uri })
   }
 
@@ -1286,7 +1197,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    */
   function estimateDownloadSize() {
     const estimateQuery = ['', null, undefined].indexOf(q.value) === -1 ? q.value : '*'
-    return api.elasticsearch.estimateDownloadSize(indices.value, instantiatedFiltersWithoutLocks.value, estimateQuery, fields.value, searchOperator.value)
+    return api.elasticsearch.estimateDownloadSize(indices.value, instantiatedFilters.value, estimateQuery, fields.value, searchOperator.value)
   }
 
   /**
@@ -1331,17 +1242,13 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     values,
     // Getters
     instantiatedFilters,
-    instantiatedFiltersWithoutLocks,
     hasConflictingLocks,
     activeFilters,
     fields,
     searchOperator,
     filterValuesAsRouteQuery,
-    filterValuesAsRouteQueryWithoutLocks,
     toBaseRouteQuery,
-    toBaseRouteQueryWithoutLocks,
     toRouteQuery,
-    toRouteQueryWithoutLocks,
     toRouteQueryWithStamp,
     toSearchParams,
     retrieveQueryTerms,
