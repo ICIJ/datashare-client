@@ -5,7 +5,7 @@ import property from 'lodash/property'
 import sortBy from 'lodash/sortBy'
 import { useConfig } from '@/composables/useConfig'
 import { useSearchFilter } from '@/composables/useSearchFilter'
-import { useRecommendedStore } from '@/store/modules'
+import { useLockedFiltersStore, useRecommendedStore } from '@/store/modules'
 import DisplayUser from '@/components/Display/DisplayUser'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 import FilterType from '@/components/Filter/FilterType/FilterType'
@@ -25,9 +25,43 @@ const query = defineModel('query', { type: String, default: '' })
 
 const recommendedStore = useRecommendedStore()
 const config = useConfig()
-const { computedFilterValues, watchIndices, indices } = useSearchFilter()
+const lockedFiltersStore = useLockedFiltersStore()
+const { computedFilterValues, setFilterValue, watchIndices, indices } = useSearchFilter()
 
-const selected = computedFilterValues(props.filter)
+// `recommendedBy` has no exclude mode (hideExclude: true in its filter def),
+// so the plain filter name is the lock store key, same as FilterTypeStarred.
+function isItemLocked(user) {
+  return lockedFiltersStore.isLocked({ name: 'recommendedBy', value: user })
+}
+
+function toggleLock(user, locked) {
+  if (locked) {
+    // Locking an unticked value also selects it — a single click both
+    // applies and locks the filter.
+    if (!selected.value.includes(user)) {
+      selected.value = [...selected.value, user]
+    }
+    lockedFiltersStore.lock({ name: 'recommendedBy', value: user, label: user })
+  }
+  else {
+    lockedFiltersStore.unlock({ name: 'recommendedBy', value: user })
+  }
+}
+
+const selected = computedFilterValues(props.filter, {
+  // computedFilterValues' default setter replaces the whole values array
+  // rather than adding/removing one value at a time, bypassing
+  // useSearchFilter's central unlock-on-remove path — unlock explicitly for
+  // any value dropped from the selection, same as FilterTypeStarred.
+  set(values) {
+    for (const user of selected.value) {
+      if (!values.includes(user)) {
+        lockedFiltersStore.unlock({ name: 'recommendedBy', value: user })
+      }
+    }
+    setFilterValue(props.filter, { key: values })
+  }
+})
 const currentUserId = computed(() => config.get('uid', 'local'))
 
 const recommendations = computed(() => {
@@ -79,6 +113,8 @@ watchIndices(fetch)
           :value="user"
           :count="count"
           :hide-count="hideCount"
+          :locked="isItemLocked(user)"
+          @update:locked="toggleLock(user, $event)"
         >
           <display-user
             :value="user"
