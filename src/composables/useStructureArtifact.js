@@ -9,7 +9,7 @@ const MARKDOWN_FORMAT = 'md'
  * markdown rendering is available for it.
  *
  * @param {Object|import('vue').Ref|Function} document - Document with `index`, `id` and `routing`.
- * @returns {Object} `{ manifest, hasMarkdown, pages, fetchManifest }`
+ * @returns {Object} `{ hasMarkdown, pages, fetchManifest }`
  */
 export function useStructureArtifact(document) {
   const documentRef = toRef(document)
@@ -27,16 +27,23 @@ export function useStructureArtifact(document) {
     return hasMarkdown.value ? manifest.value.pages : 0
   })
 
+  let lastFetch = 0
+
   async function fetchManifest() {
     const { index, id, routing } = documentRef.value ?? {}
     if (!index || !id) {
       return
     }
+    const fetch = ++lastFetch
     const fetched = await api.getStructureManifest(index, id, routing)
-    manifest.value = { ...fetched, documentId: id }
+    // A probe for a document the user has already left can resolve after the
+    // one for the document on screen, so only the newest may write.
+    if (fetch === lastFetch) {
+      manifest.value = { ...fetched, documentId: id }
+    }
   }
 
-  return { manifest, hasMarkdown, pages, fetchManifest }
+  return { hasMarkdown, pages, fetchManifest }
 }
 
 export default useStructureArtifact
