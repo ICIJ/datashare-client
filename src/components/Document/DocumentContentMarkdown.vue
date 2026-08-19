@@ -243,87 +243,8 @@ watch(toRef(props, 'activeMatch'), activateMatch, { flush: 'post' })
     <!-- eslint-disable-next-line vue/no-v-html -->
     <div
       v-else
-      class="document-content-markdown__body"
+      class="document-content-markdown__body markdown-body"
       v-html="cookedHtml"
     />
   </div>
 </template>
-
-<style lang="scss" scoped>
-.document-content-markdown {
-  &__body {
-    :deep(h1),
-    :deep(h2),
-    :deep(h3),
-    :deep(h4),
-    :deep(h5),
-    :deep(h6) {
-      margin-top: $spacer-lg;
-      margin-bottom: $spacer;
-      font-weight: $font-weight-semibold;
-      line-height: 1.25;
-    }
-
-    :deep(h1) {
-      font-size: 2rem;
-      padding-bottom: 0.3em;
-      border-bottom: 1px solid var(--bs-border-color-translucent);
-    }
-
-    :deep(h2) {
-      font-size: 1.5rem;
-      padding-bottom: 0.3em;
-      border-bottom: 1px solid var(--bs-border-color-translucent);
-    }
-
-    :deep(h3) {
-      font-size: 1.25rem;
-    }
-
-    :deep(h4) {
-      font-size: 1rem;
-    }
-
-    :deep(h5) {
-      font-size: 0.875rem;
-    }
-
-    :deep(h6) {
-      font-size: 0.85rem;
-      color: var(--bs-secondary-color);
-    }
-
-    :deep(table) {
-      border-collapse: collapse;
-      margin-bottom: $spacer;
-
-      th,
-      td {
-        border: 1px solid var(--bs-border-color);
-        padding: 6px 13px;
-      }
-
-      th {
-        font-weight: $font-weight-semibold;
-      }
-
-      tr:nth-child(2n) {
-        background-color: var(--bs-tertiary-bg);
-      }
-    }
-
-    :deep(pre) {
-      padding: $spacer;
-      overflow-x: auto;
-      background: var(--bs-tertiary-bg);
-      border-radius: var(--bs-border-radius);
-    }
-
-    :deep(blockquote) {
-      margin: 0;
-      padding-left: $spacer;
-      border-left: 4px solid var(--bs-border-color);
-    }
-  }
-}
-</style>
