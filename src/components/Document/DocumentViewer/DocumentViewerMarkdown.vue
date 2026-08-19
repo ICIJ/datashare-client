@@ -87,16 +87,57 @@ watch(() => props.document, load, { immediate: true })
     h4,
     h5,
     h6 {
-      margin-top: $spacer;
+      margin-top: $spacer-lg;
+      margin-bottom: $spacer;
+      font-weight: $font-weight-semibold;
+      line-height: 1.25;
+    }
+
+    h1 {
+      font-size: 2rem;
+      padding-bottom: 0.3em;
+      border-bottom: 1px solid var(--bs-border-color-translucent);
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      padding-bottom: 0.3em;
+      border-bottom: 1px solid var(--bs-border-color-translucent);
+    }
+
+    h3 {
+      font-size: 1.25rem;
+    }
+
+    h4 {
+      font-size: 1rem;
+    }
+
+    h5 {
+      font-size: 0.875rem;
+    }
+
+    h6 {
+      font-size: 0.85rem;
+      color: var(--bs-secondary-color);
     }
 
     table {
       border-collapse: collapse;
+      margin-bottom: $spacer;
 
       th,
       td {
         border: 1px solid var(--bs-border-color);
-        padding: $spacer-xxs $spacer-xs;
+        padding: 6px 13px;
+      }
+
+      th {
+        font-weight: $font-weight-semibold;
+      }
+
+      tr:nth-child(2n) {
+        background-color: var(--bs-tertiary-bg);
       }
     }
 
