@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 
 import { addSearchMarksClassInHtml } from '@/utils/strings'
 import { renderMarkdown } from '@/utils/markdown'
+import { useMarkdownAnchors } from '@/composables/useMarkdownAnchors'
 import { useUtils } from '@/composables/useUtils'
 import { usePipelinesStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
@@ -55,6 +56,7 @@ const { t } = useI18n()
 const { getTermIndexColor } = useUtils()
 const pipelinesStore = usePipelinesStore()
 const elementRef = useTemplateRef('element')
+const { scrollToAnchor } = useMarkdownAnchors(elementRef)
 
 const renderedPages = reactive({})
 const cookedHtml = ref('')
@@ -244,6 +246,7 @@ watch(toRef(props, 'activeMatch'), activateMatch, { flush: 'post' })
     <div
       v-else
       class="document-content-markdown__body markdown-body"
+      @click="scrollToAnchor"
       v-html="cookedHtml"
     />
   </div>

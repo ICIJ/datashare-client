@@ -44,6 +44,21 @@ describe('DocumentContentMarkdown.vue', () => {
     expect(wrapper.find('em').text()).toBe('world')
   })
 
+  it('scrolls to the target instead of navigating when an in-document link is clicked', async () => {
+    api.getStructurePage.mockResolvedValue('# My Section\n\nSee [the section](#my-section).')
+    const wrapper = await mountComponent()
+    const heading = wrapper.find('h1').element
+    heading.scrollIntoView = vi.fn()
+
+    const event = new MouseEvent('click', { bubbles: true, cancelable: true })
+    wrapper.find('a').element.dispatchEvent(event)
+
+    // This view renders the same markdown as the viewer tab, so a fragment
+    // link must not replace the route here either.
+    expect(event.defaultPrevented).toBe(true)
+    expect(heading.scrollIntoView).toHaveBeenCalled()
+  })
+
   it('fetches a page only once', async () => {
     const wrapper = await mountComponent()
     await wrapper.setProps({ page: 2 })
