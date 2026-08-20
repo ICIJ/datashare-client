@@ -43,29 +43,6 @@ const lockedFiltersStore = useLockedFiltersStore()
 const exclude = computedExcludeFilter(props.filter)
 const lockedName = computed(() => toLockedName(props.filter.name, exclude.value))
 
-function isPathLocked(value) {
-  return lockedFiltersStore.isLocked({ name: lockedName.value, value })
-}
-
-// The lock button only ever renders on an already-selected row (see
-// PathTreeViewEntry.vue), so there's no unselected-value case to handle here
-// — unlike FilterType.vue's toggleLock, locking never selects a value.
-function toggleLockPath(value, locked) {
-  if (locked) {
-    lockedFiltersStore.lock({ name: lockedName.value, value, label: value })
-  }
-  else {
-    lockedFiltersStore.unlock({ name: lockedName.value, value })
-  }
-}
-
-// Consumed by PathTreeViewEntry.vue, however deep the recursive tree goes —
-// every other PathTree consumer (document browser, batch download folder
-// picker, etc.) never provides these, so the lock button never renders there.
-provide('pathLockable', true)
-provide('isPathLocked', isPathLocked)
-provide('toggleLockPath', toggleLockPath)
-
 const tree = useTemplateRef('tree')
 const projects = computed(() => searchStore.indices)
 const nested = ref(true)
@@ -85,7 +62,38 @@ const selectedPaths = computedFilterValues(props.filter, {
     setFilterValue(props.filter, { key: values })
   }
 })
-const { getAncestorPaths } = usePath(selectedPaths)
+const { getAncestorPaths, normalizeDirectory } = usePath(selectedPaths)
+
+// A tree row's own `path` model isn't normalized (it's the raw ES bucket key
+// or browsed-to directory), but selecting one always stores its
+// normalizeDirectory()-ed form (trailing separator included, see usePath.js)
+// — locking/checking the raw form would silently record a different string
+// than what's actually applied, producing a second, duplicate-looking
+// breadcrumb chip on the next hydration. Normalize here so the lock entry's
+// value always matches the real applied filter value.
+function isPathLocked(value) {
+  return lockedFiltersStore.isLocked({ name: lockedName.value, value: normalizeDirectory(value) })
+}
+
+// The lock button only ever renders on an already-selected row (see
+// PathTreeViewEntry.vue), so there's no unselected-value case to handle here
+// — unlike FilterType.vue's toggleLock, locking never selects a value.
+function toggleLockPath(value, locked) {
+  const normalized = normalizeDirectory(value)
+  if (locked) {
+    lockedFiltersStore.lock({ name: lockedName.value, value: normalized, label: normalized })
+  }
+  else {
+    lockedFiltersStore.unlock({ name: lockedName.value, value: normalized })
+  }
+}
+
+// Consumed by PathTreeViewEntry.vue, however deep the recursive tree goes —
+// every other PathTree consumer (document browser, batch download folder
+// picker, etc.) never provides these, so the lock button never renders there.
+provide('pathLockable', true)
+provide('isPathLocked', isPathLocked)
+provide('toggleLockPath', toggleLockPath)
 
 // Pre-open ancestor directories of selected paths so the tree
 // reveals them immediately instead of requiring manual expansion.
