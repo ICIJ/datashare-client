@@ -22,8 +22,14 @@ const props = defineProps({
   },
   indeterminate: {
     type: Boolean
+  },
+  locked: {
+    type: Boolean,
+    default: false
   }
 })
+
+const emit = defineEmits(['update:locked'])
 
 const { t } = useI18n()
 const categoryLabel = useContentTypeCategoryLabel()
@@ -58,6 +64,8 @@ const collapseLabel = computed(() => t('contentTypesCategoryName.toggle', { cate
       :label="resolvedLabel"
       :count="count"
       :indeterminate="indeterminate"
+      :locked="locked"
+      @update:locked="emit('update:locked', $event)"
     />
   </div>
 </template>

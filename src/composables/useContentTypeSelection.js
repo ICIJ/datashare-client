@@ -34,6 +34,15 @@ export function useContentTypeSelection({ filter, categories }) {
     lockedFiltersStore.unlock({ name, value: contentType })
   }
 
+  // Same bypass-of-useSearchFilter reasoning as unlockContentType, for the
+  // category's own lock (a separate lock namespace under
+  // CONTENT_TYPE_CATEGORY_FILTER_NAME, since the category is stored as its
+  // own bulk value rather than as N individual contentType entries).
+  const unlockCategory = (category) => {
+    const name = toLockedName(CONTENT_TYPE_CATEGORY_FILTER_NAME, isFilterExcluded({ name: CONTENT_TYPE_CATEGORY_FILTER_NAME }))
+    lockedFiltersStore.unlock({ name, value: category })
+  }
+
   /**
    * Resolve the static {category: types[]} mapping to a plain object.
    * @returns {Record<string, string[]>}
@@ -202,6 +211,7 @@ export function useContentTypeSelection({ filter, categories }) {
     // asks to keep explicit (the clicked child on demote, the surviving
     // siblings on uncheck-with-stored-category).
     categoryTypes.filter(type => !keepFromCategory.includes(type)).forEach(unlockContentType)
+    unlockCategory(category)
     writeCategories(without(currentCategories(), category))
     writeContentTypes([...others, ...keepFromCategory])
   }
@@ -254,6 +264,7 @@ export function useContentTypeSelection({ filter, categories }) {
       return
     }
     types.forEach(unlockContentType)
+    unlockCategory(category)
     writeCategories(remainingCategories)
   }
 
