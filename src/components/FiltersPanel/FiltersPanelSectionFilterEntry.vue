@@ -1,10 +1,8 @@
 <script setup>
 import { computed, nextTick, useTemplateRef } from 'vue'
-import { EllipsisTooltip as vEllipsisTooltip, ButtonIcon } from '@icij/murmur'
-import { useI18n } from 'vue-i18n'
-import IPhLock from '~icons/ph/lock'
-import IPhLockOpen from '~icons/ph/lock-open'
+import { EllipsisTooltip as vEllipsisTooltip } from '@icij/murmur'
 
+import ButtonToggleLock from '@/components/Button/ButtonToggleLock'
 import DisplayNumber from '@/components/Display/DisplayNumber'
 
 const props = defineProps({
@@ -44,8 +42,6 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue', 'update:locked'])
 
-const { t } = useI18n()
-
 const checkboxRef = useTemplateRef('checkboxRef')
 
 // Drive the checkbox as a fully controlled component: when the parent absorbs
@@ -74,7 +70,6 @@ const classList = computed(() => {
 // inherit a dead button on every row.
 const showLockButton = computed(() => props.lockable)
 const showCount = computed(() => !props.hideCount && !isNaN(props.count))
-const lockLabel = computed(() => t(props.locked ? 'filtersPanelSectionFilterEntry.unlock' : 'filtersPanelSectionFilterEntry.lock'))
 </script>
 
 <template>
@@ -100,18 +95,11 @@ const lockLabel = computed(() => t(props.locked ? 'filtersPanelSectionFilterEntr
       </slot>
     </b-form-checkbox>
     <div class="filters-panel-section-filter-entry__end">
-      <button-icon
+      <button-toggle-lock
         v-if="showLockButton"
-        square
-        hide-label
-        variant="link"
-        size="sm"
         class="filters-panel-section-filter-entry__lock"
-        :class="{ 'filters-panel-section-filter-entry__lock--locked': locked }"
-        :icon-left="locked ? IPhLock : IPhLockOpen"
-        :pressed="locked"
-        :label="lockLabel"
-        @click="emit('update:locked', !locked)"
+        :lockable="!locked"
+        @update:locked="emit('update:locked', $event)"
       />
       <b-badge
         v-if="showCount"
@@ -168,23 +156,18 @@ const lockLabel = computed(() => t(props.locked ? 'filtersPanelSectionFilterEntr
     margin-left: auto;
   }
 
+  // Hidden until hover/focus; ButtonToggleLock itself handles the
+  // locked-state color, this only controls this row's own reveal-on-hover.
   &__lock {
     flex-shrink: 0;
     transition: opacity 0.15s ease;
-
     // Hover-reveal only where hovering exists: on touch the row never
     // matches :hover, so an opacity-0 lock stays an invisible tap target.
     @media (hover: hover) {
       opacity: 0;
     }
-
-    &--locked {
+    &.button-toggle-lock--locked {
       opacity: 1;
-
-      // Same accent as the breadcrumb chip's locked lock icon.
-      &:deep(.button-icon__icon-left) {
-        color: var(--bs-action);
-      }
     }
   }
 
