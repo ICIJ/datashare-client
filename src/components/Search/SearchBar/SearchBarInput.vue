@@ -117,10 +117,11 @@ defineExpose({ focus, blur, clear })
 }
 
 .search-bar-input__submit {
-  line-height: 0.8em;
+  --bs-btn-border-width: 0;
+  --bs-btn-padding-y: 0.5rem;
 
   &--lg {
-    line-height: 1.1em;
+    --bs-btn-padding-y: 0.75rem;
   }
 }
 </style>
