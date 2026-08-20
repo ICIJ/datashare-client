@@ -250,7 +250,7 @@ function toggleLock(value) {
       <div class="path-tree-view-entry__header__end ms-auto d-flex align-items-center">
         <button-toggle-lock
           v-if="pathLockable && (selected || locked)"
-          class="path-tree-view-entry__lock"
+          class="path-tree-view-entry__lock above-stretched-link"
           :locked="locked"
           @update:locked="toggleLock"
         />
