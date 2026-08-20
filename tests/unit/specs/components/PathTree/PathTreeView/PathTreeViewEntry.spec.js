@@ -24,9 +24,9 @@ describe('PathTreeViewEntry.vue (locked filters, icij/datashare#2336)', () => {
     expect(wrapper.findComponent(ButtonToggleLock).exists()).toBe(false)
   })
 
-  it('does not render a lock button on an unselected row, even when pathLockable is provided', () => {
+  it('renders a lock button on an unselected row when pathLockable is provided (hover-revealed via CSS)', () => {
     const wrapper = mountEntry({ pathLockable: true }, { selected: false })
-    expect(wrapper.findComponent(ButtonToggleLock).exists()).toBe(false)
+    expect(wrapper.findComponent(ButtonToggleLock).exists()).toBe(true)
   })
 
   it('renders a lock button on a selected row when pathLockable is provided', () => {

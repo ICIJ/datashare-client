@@ -75,13 +75,16 @@ function isPathLocked(value) {
   return lockedFiltersStore.isLocked({ name: lockedName.value, value: normalizeDirectory(value) })
 }
 
-// The lock button only ever renders on an already-selected row (see
-// PathTreeViewEntry.vue), so there's no unselected-value case to handle here
-// — unlike FilterType.vue's toggleLock, locking never selects a value.
+// The lock button now renders on every row, hover-revealed (see
+// PathTreeViewEntry.vue) — same select+lock convention as every other filter
+// type in this epic, so locking an unselected row selects it too.
 function toggleLockPath(value, locked) {
   const normalized = normalizeDirectory(value)
   if (locked) {
     lockedFiltersStore.lock({ name: lockedName.value, value: normalized, label: normalized })
+    if (!selectedPaths.value.includes(normalized)) {
+      selectedPaths.value = [...selectedPaths.value, normalized]
+    }
   }
   else {
     lockedFiltersStore.unlock({ name: lockedName.value, value: normalized })
