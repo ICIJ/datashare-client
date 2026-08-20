@@ -50,4 +50,16 @@ describe('PathTreeViewEntry.vue (locked filters, icij/datashare#2336)', () => {
 
     expect(toggleLockPath).toHaveBeenCalledWith('/data/foo', true)
   })
+
+  // Regression: same stretched-link overlay issue as PathTreeViewEntryName's
+  // caret (see that component's own spec) — the lock button sits in the same
+  // position:relative ancestor, so a real click on it could be swallowed by
+  // the row's stretched-link and mistaken for a click-to-expand instead of
+  // reaching the button. Confirmed live via Chrome automation: clicking the
+  // lock icon on both an expanded and a collapsed selected row toggled the
+  // lock without changing the collapse state either way.
+  it('keeps the lock button above the stretched-link overlay stack', () => {
+    const wrapper = mountEntry({ pathLockable: true }, { selected: true })
+    expect(wrapper.findComponent(ButtonToggleLock).classes()).toContain('above-stretched-link')
+  })
 })
