@@ -1,5 +1,6 @@
 <script setup>
 import { computed, useTemplateRef } from 'vue'
+import { useFocusWithin } from '@vueuse/core'
 
 import DocumentLocalSearchInput from './DocumentLocalSearchInput'
 import DocumentLocalSearchNav from './DocumentLocalSearchNav'
@@ -25,6 +26,7 @@ const props = defineProps({
 })
 
 const input = useTemplateRef('input')
+const { focused: inputFocused } = useFocusWithin(input)
 
 const disabledPrevious = computed(() => !props.modelValue || props.activeIndex <= 1)
 const disabledNext = computed(() => !props.modelValue || props.activeIndex === props.occurrences)
@@ -51,8 +53,10 @@ const findInDocumentKey = findActionKey('findInDocument')
 const findPreviousOccurrenceKey = findActionKey('findPreviousOccurrence')
 
 wheneverActionShortcut('findInDocument', focus)
-wheneverActionShortcut('findPreviousOccurrence', previous)
-wheneverActionShortcut('findNextOccurrence', () => !findPreviousOccurrenceKey.value && next())
+// Both occurrence shortcuts are bare "enter" combinations, and useMagicKeys listens on the whole
+// document: without this guard they fire from any other field, like the PDF toolbar page number.
+wheneverActionShortcut('findPreviousOccurrence', () => inputFocused.value && previous())
+wheneverActionShortcut('findNextOccurrence', () => inputFocused.value && !findPreviousOccurrenceKey.value && next())
 </script>
 
 <template>
