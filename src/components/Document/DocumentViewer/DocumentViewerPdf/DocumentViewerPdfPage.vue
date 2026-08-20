@@ -2,7 +2,7 @@
 import '@tato30/vue-pdf/style.css'
 import VueScrollTo from 'vue-scrollto'
 import { VuePDF as VuePdf } from '@tato30/vue-pdf'
-import { computed, toRef, toValue, useTemplateRef, watch } from 'vue'
+import { computed, toRef, useTemplateRef, watch } from 'vue'
 import { useElementSize, useWindowSize, whenever, useElementVisibility } from '@vueuse/core'
 
 import { useElementVisibilityOnce } from '@/composables/useElementVisibilityOnce'
@@ -29,7 +29,7 @@ const props = defineProps({
     type: Number,
     default: 0
   },
-  scrollOffset: {
+  topOffset: {
     type: Number,
     default: 0
   },
@@ -49,15 +49,23 @@ const props = defineProps({
 
 const HIGHLIGHT_CLASS = 'highlight'
 const HIGHLIGHT_ACTIVE_CLASS = 'highlight--active'
+const CURRENT_PAGE_PROBE_OFFSET = 4
 
 const emit = defineEmits(['visible'])
 
 const renderer = useTemplateRef('renderer')
 const element = useTemplateRef('element')
 const scrollParent = useScrollParent()
-const isVisible = useElementVisibility(element, { threshold: 0.5 })
 const isVisibleOnce = useElementVisibilityOnce(element)
 const { height: windowHeight } = useWindowSize()
+// Shrink the observer root to a one-pixel probe line just under the sticky toolbox, so exactly one
+// page is current whatever the window height. A ratio threshold cannot work here: pages are often
+// taller than the viewport, and vueuse reports `isIntersecting`, which ignores the threshold.
+const currentPageProbe = computed(() => {
+  const top = Math.round(props.topOffset) + CURRENT_PAGE_PROBE_OFFSET
+  return `${-top}px 0px ${top + 1 - windowHeight.value}px 0px`
+})
+const isCurrent = useElementVisibility(element, { rootMargin: currentPageProbe })
 const { width } = useElementSize(element)
 watch(width, () => renderer.value?.reload())
 
@@ -88,18 +96,16 @@ function applyHighlight() {
   const highlight = highlights[props.highlightIndex - 1]
   // Remove all classes "highlight--active" from the page and highlight the current one
   highlights.forEach(el => el.classList.toggle(HIGHLIGHT_ACTIVE_CLASS, el === highlight))
-  // Only scroll to the highlight/page if the current page has a highlight index
+  // Only scroll to the highlight if the current page has a highlight index
   if (props.highlightIndex && highlight) {
-    // If no highlight is found, offset the scroll to the center of the page
-    const offset = highlight ? windowHeight.value / -2 : props.scrollOffset
+    const offset = windowHeight.value / -2
     const container = scrollParent.value
-    const target = toValue(highlight || element)
-    VueScrollTo.scrollTo(target, 0, { container, offset })
+    VueScrollTo.scrollTo(highlight, 0, { container, offset })
   }
 }
 
 whenever(toRef(props, 'highlightIndex'), applyHighlight)
-whenever(isVisible, () => emit('visible'))
+whenever(isCurrent, () => emit('visible'))
 </script>
 
 <template>

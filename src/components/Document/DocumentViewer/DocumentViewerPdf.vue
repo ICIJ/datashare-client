@@ -1,7 +1,6 @@
 <script setup>
-import VueScrollTo from 'vue-scrollto'
 import { computed, ref, useTemplateRef, toRef, watch } from 'vue'
-import { refDebounced, whenever, useElementBounding } from '@vueuse/core'
+import { refDebounced, whenever, useDebounceFn, useElementBounding, useEventListener } from '@vueuse/core'
 import { supportsPDFs as embeddable } from 'pdfobject'
 import { useI18n } from 'vue-i18n'
 
@@ -14,7 +13,6 @@ import { SCALE_FIT, SCALE_WIDTH } from '@/enums/documentViewerPdf'
 import { useCompact } from '@/composables/useCompact'
 import { useDocumentPreview } from '@/composables/useDocumentPreview'
 import { useWait } from '@/composables/useWait'
-import { useScrollParent } from '@/composables/useScrollParent'
 import { usePDF } from '@/composables/usePDF'
 import { useDocumentViewStore } from '@/store/modules/documentView'
 import AppWait from '@/components/AppWait/AppWait'
@@ -36,8 +34,9 @@ const props = defineProps({
   }
 })
 
+const SCROLL_IDLE_DELAY = 200
+
 const documentViewStore = useDocumentViewStore()
-const scrollParent = useScrollParent()
 const src = computed(() => (documentViewStore.embeddedPdf ? null : props.document.fullUrl))
 const { pdf, numPages, sizes, findHighlights, loaderId: pdfLoaderId } = usePDF(src)
 const { waitFor, isLoading } = useWait()
@@ -45,6 +44,8 @@ const { t } = useI18n()
 const { isBlurred, getBlurredContentBanner } = useDocumentPreview()
 
 const currentPage = ref(1)
+const pendingPage = ref(null)
+const realignPendingPage = ref(false)
 const rotation = documentViewStore.computedDocumentRotation(props.document)
 const scale = ref(SCALE_FIT)
 const blurred = ref(null)
@@ -58,11 +59,18 @@ const highlightTextDebounced = refDebounced(highlightText, 300)
 const highlightIndex = ref(0)
 const highlightMatches = ref([])
 const highlightOccurrences = computed(() => highlightMatches.value.length)
+const highlightPage = computed(() => highlightMatches.value[highlightIndex.value - 1]?.page)
 const isHighlightDebouncing = computed(() => highlightTextDebounced.value !== highlightText.value)
 const isHighlightLoading = computed(() => isLoading.value || isHighlightDebouncing.value)
 
 const pageScale = computed(() => (isNaN(scale.value) ? 1 : Number(scale.value)))
 const pageFitParent = computed(() => scale.value === SCALE_FIT || scale.value === SCALE_WIDTH)
+
+const style = computed(() => {
+  return {
+    '--document-viewer-pdf-toolbox-height': `${toolboxHeight.value}px`
+  }
+})
 
 const classList = computed(() => {
   return {
@@ -71,6 +79,47 @@ const classList = computed(() => {
   }
 })
 
+const settleScroll = useDebounceFn(() => {
+  if (pendingPage.value === null) {
+    return
+  }
+  // Pages render lazily while a smooth scroll runs and each resizes by a fraction of a pixel, which
+  // is enough for a page pick to land short of its target. Highlights are centered by the page.
+  if (realignPendingPage.value) {
+    scrollPageIntoView(pendingPage.value, 'instant')
+  }
+  currentPage.value = pendingPage.value
+  pendingPage.value = null
+}, SCROLL_IDLE_DELAY)
+
+useEventListener(window, 'scroll', settleScroll, { capture: true, passive: true })
+// Scrolling by hand gives up on the pending page and hands tracking straight back to the viewport.
+useEventListener(window, ['wheel', 'touchmove'], () => (pendingPage.value = null), { passive: true })
+
+/**
+ * Holds the page tracking until the scroll we are about to start has settled, so the indicator
+ * stays on the page we are heading to instead of counting every page the scroll flies past.
+ *
+ * @param {number} value - The page that scroll is heading to.
+ * @param {boolean} realign - Whether that page must be aligned again once the scroll has settled.
+ */
+function holdPageTracking(value, realign = false) {
+  pendingPage.value = value
+  realignPendingPage.value = realign
+  settleScroll()
+}
+
+/**
+ * Tracks the page currently under the toolbox, unless one of our own scrolls is in flight.
+ *
+ * @param {number} value - The page reporting itself as current.
+ */
+function trackPage(value) {
+  if (pendingPage.value === null) {
+    currentPage.value = value
+  }
+}
+
 /**
  * Gets the highlight index for a specific page.
  *
@@ -78,9 +127,22 @@ const classList = computed(() => {
  * @returns {number} - The index of the highlight match on the page, or 0 if no matches.
  */
 function getPageHighlightIndex(value) {
-  const match = highlightMatches.value[highlightIndex.value - 1]
   const firstPageMatch = highlightMatches.value.findIndex(m => m.page === value)
-  return match && match.page === value ? highlightIndex.value - firstPageMatch : 0
+  return highlightPage.value === value ? highlightIndex.value - firstPageMatch : 0
+}
+
+/**
+ * Aligns the given page with the top of the viewport, under the sticky toolbox.
+ *
+ * @param {number} value - The page number to scroll to.
+ * @param {string} behavior - Defaults to the CSS scroll-behavior, which Bootstrap
+ *   already turns into an instant jump under prefers-reduced-motion.
+ * @returns {boolean} - Whether the page is rendered and was scrolled to.
+ */
+function scrollPageIntoView(value, behavior = 'auto') {
+  const target = pageElements.value[value - 1]?.$el
+  target?.scrollIntoView({ behavior, block: 'start' })
+  return !!target
 }
 
 /**
@@ -89,12 +151,9 @@ function getPageHighlightIndex(value) {
  * @param {number} value - The page number to scroll to.
  */
 function scrollToPage(value) {
-  const target = pageElements.value[value - 1]?.$el
   // Scroll only the target exist
-  if (target) {
-    const offset = -toolboxHeight.value
-    const container = scrollParent.value
-    VueScrollTo.scrollTo(target, 0, { container, offset })
+  if (scrollPageIntoView(value)) {
+    holdPageTracking(value, true)
     // Update the page model to reflect the current page
     currentPage.value = value
   }
@@ -104,6 +163,13 @@ whenever(highlightTextDebounced, waitFor(async (value) => {
   highlightMatches.value = await findHighlights(value)
   highlightIndex.value = highlightMatches.value.length ? 1 : 0
 }))
+
+// Picking another occurrence makes the matching page scroll its highlight into view.
+watch(highlightIndex, () => {
+  if (highlightPage.value) {
+    holdPageTracking(highlightPage.value)
+  }
+})
 
 watch(src, async () => {
   blurred.value ??= await isBlurred(props.document)
@@ -124,6 +190,7 @@ watch(src, async () => {
     v-else
     class="document-viewer-pdf"
     :class="classList"
+    :style="style"
   >
     <div
       ref="toolbox"
@@ -186,8 +253,8 @@ watch(src, async () => {
           :pdf="pdf"
           :highlight-text="highlightTextDebounced"
           :highlight-index="getPageHighlightIndex(page)"
-          :scroll-offset="-toolboxHeight"
-          @visible="currentPage = page"
+          :top-offset="toolboxHeight"
+          @visible="trackPage(page)"
         />
       </template>
       <template v-else>
@@ -232,6 +299,7 @@ watch(src, async () => {
       flex-shrink: 1;
       min-width: 0;
       width: auto;
+      scroll-margin-top: var(--document-viewer-pdf-toolbox-height, 0px);
     }
   }
 
