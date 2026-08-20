@@ -123,6 +123,13 @@ describe('FilterTypePath.vue', () => {
       expect(lockedFiltersStore.isLocked({ name: 'path', value: '/data/foo/' })).toBe(true)
     })
 
+    it('selects an unselected path when it is locked (hover-revealed lock icon, icij/datashare#2336)', () => {
+      wrapper.vm.toggleLockPath('/data/foo', true)
+
+      expect(wrapper.vm.selectedPaths).toEqual(['/data/foo/'])
+      expect(lockedFiltersStore.isLocked({ name: 'path', value: '/data/foo/' })).toBe(true)
+    })
+
     it('unlocks a path without unselecting it', () => {
       wrapper.vm.selectedPaths = ['/data/foo/']
       wrapper.vm.toggleLockPath('/data/foo', true)
