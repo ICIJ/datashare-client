@@ -3,8 +3,6 @@ import castArray from 'lodash/castArray'
 import get from 'lodash/get'
 import identity from 'lodash/identity'
 import isObject from 'lodash/isObject'
-import range from 'lodash/range'
-import random from 'lodash/random'
 import toString from 'lodash/toString'
 import without from 'lodash/without'
 import { useRouter, useRoute } from 'vue-router'
@@ -15,6 +13,7 @@ import { SEARCH_OPERATORS } from '@/enums/searchOperators'
 import { useCore } from '@/composables/useCore'
 import { useMode } from '@/composables/useMode'
 import { useContentTypeCategoryAvailability } from '@/composables/useContentTypeCategoryAvailability'
+import { useRefreshRouteFromStart } from '@/composables/useRefreshRouteFromStart'
 import { onAfterRouteUpdate } from '@/composables/onAfterRouteUpdate'
 import FilterType from '@/components/Filter/FilterType/FilterType'
 import FilterTypeFileTypes from '@/components/Filter/FilterType/FilterTypeFileTypes'
@@ -43,6 +42,7 @@ export function useSearchFilter() {
   const { t, te } = useI18n()
   const core = useCore()
   const { isServer } = useMode(core)
+  const { refreshRouteFromStart } = useRefreshRouteFromStart(searchStore)
   // Drives the read-layer degradation in getFilterPairedDimensions: when the
   // contentTypeCategory field is missing from the selected indices' mapping,
   // the contentType filter falls back to single-dimension behavior so paired
@@ -320,14 +320,6 @@ export function useSearchFilter() {
   function refreshRoute() {
     const name = 'search'
     const query = searchStore.toRouteQuery
-    return router.push({ name, query })
-  }
-
-  function refreshRouteFromStart() {
-    const name = 'search'
-    const seed = range(6).map(() => random(97, 122))
-    const stamp = String.fromCharCode.apply(null, seed)
-    const query = { ...searchStore.toRouteQuery, stamp, from: 0 }
     return router.push({ name, query })
   }
 
