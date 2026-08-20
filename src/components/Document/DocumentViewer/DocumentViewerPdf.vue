@@ -36,6 +36,7 @@ const props = defineProps({
 
 const SCROLL_IDLE_DELAY = 200
 const SCROLL_KEYS = ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' ']
+const FORM_CONTROLS = 'input, textarea, select, [contenteditable]'
 
 const documentViewStore = useDocumentViewStore()
 const src = computed(() => (documentViewStore.embeddedPdf ? null : props.document.fullUrl))
@@ -115,9 +116,20 @@ function releasePendingPage() {
   currentPage.value = currentPageBelowToolbox() ?? currentPage.value
 }
 
+/**
+ * Whether a key press scrolls the document, as opposed to moving a caret inside a form control:
+ * a space typed in the search field must not count as the reader scrolling away.
+ *
+ * @param {KeyboardEvent} event - The key press to test.
+ * @returns {boolean}
+ */
+function scrollsDocument({ key, target }) {
+  return SCROLL_KEYS.includes(key) && !target?.closest?.(FORM_CONTROLS)
+}
+
 useEventListener(window, 'scroll', settleScroll, { capture: true, passive: true })
 useEventListener(window, ['wheel', 'touchmove', 'pointerdown'], releasePendingPage, { passive: true })
-useEventListener(window, 'keydown', ({ key }) => SCROLL_KEYS.includes(key) && releasePendingPage())
+useEventListener(window, 'keydown', event => scrollsDocument(event) && releasePendingPage())
 
 /**
  * Holds the page tracking until the scroll we are about to start has settled, so the indicator
@@ -202,8 +214,13 @@ watch(highlightIndex, () => {
   }
 })
 
-// A new document swaps every page out without them reporting they stopped showing.
-watch(pdf, () => pagesBelowToolbox.clear())
+// A new document swaps every page out without them reporting they stopped showing, and a hold left
+// over from the previous one would settle against pages that are not there anymore.
+watch(pdf, () => {
+  pagesBelowToolbox.clear()
+  pendingPage.value = null
+  realignPendingPage.value = false
+})
 
 watch(src, async () => {
   blurred.value ??= await isBlurred(props.document)

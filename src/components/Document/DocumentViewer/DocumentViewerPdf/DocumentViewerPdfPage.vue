@@ -1,12 +1,10 @@
 <script setup>
 import '@tato30/vue-pdf/style.css'
-import VueScrollTo from 'vue-scrollto'
 import { VuePDF as VuePdf } from '@tato30/vue-pdf'
 import { computed, toRef, useTemplateRef, watch } from 'vue'
-import { useElementSize, useWindowSize, whenever, useElementVisibility } from '@vueuse/core'
+import { useElementSize, whenever, useElementVisibility } from '@vueuse/core'
 
 import { useElementVisibilityOnce } from '@/composables/useElementVisibilityOnce'
-import { useScrollParent } from '@/composables/useScrollParent'
 
 const props = defineProps({
   pdf: {
@@ -55,9 +53,7 @@ const emit = defineEmits(['visible'])
 
 const renderer = useTemplateRef('renderer')
 const element = useTemplateRef('element')
-const scrollParent = useScrollParent()
 const isVisibleOnce = useElementVisibilityOnce(element)
-const { height: windowHeight } = useWindowSize()
 // Shrink the observer root so it starts just under the sticky toolbox: whoever is left showing is
 // a candidate for the current page, and the parent keeps the topmost one. A ratio threshold cannot
 // work here, pages are often taller than the viewport and vueuse reports `isIntersecting` anyway.
@@ -97,9 +93,7 @@ function applyHighlight() {
   highlights.forEach(el => el.classList.toggle(HIGHLIGHT_ACTIVE_CLASS, el === highlight))
   // Only scroll to the highlight if the current page has a highlight index
   if (props.highlightIndex && highlight) {
-    const offset = windowHeight.value / -2
-    const container = scrollParent.value
-    VueScrollTo.scrollTo(highlight, 0, { container, offset })
+    highlight.scrollIntoView({ block: 'center' })
   }
 }
 
