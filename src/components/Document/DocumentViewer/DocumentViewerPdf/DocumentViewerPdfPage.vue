@@ -49,7 +49,7 @@ const props = defineProps({
 
 const HIGHLIGHT_CLASS = 'highlight'
 const HIGHLIGHT_ACTIVE_CLASS = 'highlight--active'
-const CURRENT_PAGE_PROBE_OFFSET = 4
+const BELOW_TOOLBOX_OFFSET = 4
 
 const emit = defineEmits(['visible'])
 
@@ -58,14 +58,13 @@ const element = useTemplateRef('element')
 const scrollParent = useScrollParent()
 const isVisibleOnce = useElementVisibilityOnce(element)
 const { height: windowHeight } = useWindowSize()
-// Shrink the observer root to a one-pixel probe line just under the sticky toolbox, so exactly one
-// page is current whatever the window height. A ratio threshold cannot work here: pages are often
-// taller than the viewport, and vueuse reports `isIntersecting`, which ignores the threshold.
-const currentPageProbe = computed(() => {
-  const top = Math.round(props.topOffset) + CURRENT_PAGE_PROBE_OFFSET
-  return `${-top}px 0px ${top + 1 - windowHeight.value}px 0px`
+// Shrink the observer root so it starts just under the sticky toolbox: whoever is left showing is
+// a candidate for the current page, and the parent keeps the topmost one. A ratio threshold cannot
+// work here, pages are often taller than the viewport and vueuse reports `isIntersecting` anyway.
+const belowToolbox = computed(() => {
+  return `${-(Math.round(props.topOffset) + BELOW_TOOLBOX_OFFSET)}px 0px 0px 0px`
 })
-const isCurrent = useElementVisibility(element, { rootMargin: currentPageProbe })
+const isBelowToolbox = useElementVisibility(element, { rootMargin: belowToolbox })
 const { width } = useElementSize(element)
 watch(width, () => renderer.value?.reload())
 
@@ -105,7 +104,7 @@ function applyHighlight() {
 }
 
 whenever(toRef(props, 'highlightIndex'), applyHighlight)
-whenever(isCurrent, () => emit('visible'))
+watch(isBelowToolbox, visible => emit('visible', visible), { immediate: true })
 </script>
 
 <template>

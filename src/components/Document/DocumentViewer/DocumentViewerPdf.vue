@@ -35,6 +35,7 @@ const props = defineProps({
 })
 
 const SCROLL_IDLE_DELAY = 200
+const SCROLL_KEYS = ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' ']
 
 const documentViewStore = useDocumentViewStore()
 const src = computed(() => (documentViewStore.embeddedPdf ? null : props.document.fullUrl))
@@ -46,6 +47,7 @@ const { isBlurred, getBlurredContentBanner } = useDocumentPreview()
 const currentPage = ref(1)
 const pendingPage = ref(null)
 const realignPendingPage = ref(false)
+const pagesBelowToolbox = new Set()
 const rotation = documentViewStore.computedDocumentRotation(props.document)
 const scale = ref(SCALE_FIT)
 const blurred = ref(null)
@@ -79,6 +81,15 @@ const classList = computed(() => {
   }
 })
 
+/**
+ * The page the toolbox sits on, which is the topmost of the pages still showing under it.
+ *
+ * @returns {number|null} - The current page number, or null when no page is showing.
+ */
+function currentPageBelowToolbox() {
+  return pagesBelowToolbox.size ? Math.min(...pagesBelowToolbox) : null
+}
+
 const settleScroll = useDebounceFn(() => {
   if (pendingPage.value === null) {
     return
@@ -87,14 +98,26 @@ const settleScroll = useDebounceFn(() => {
   // is enough for a page pick to land short of its target. Highlights are centered by the page.
   if (realignPendingPage.value) {
     scrollPageIntoView(pendingPage.value, 'instant')
+    currentPage.value = pendingPage.value
+    pendingPage.value = null
   }
-  currentPage.value = pendingPage.value
-  pendingPage.value = null
+  else {
+    releasePendingPage()
+  }
 }, SCROLL_IDLE_DELAY)
 
+/**
+ * Gives up on the pending page and hands the tracking straight back to the viewport, so a scroll
+ * started by hand is never undone by the pending page settling behind it.
+ */
+function releasePendingPage() {
+  pendingPage.value = null
+  currentPage.value = currentPageBelowToolbox() ?? currentPage.value
+}
+
 useEventListener(window, 'scroll', settleScroll, { capture: true, passive: true })
-// Scrolling by hand gives up on the pending page and hands tracking straight back to the viewport.
-useEventListener(window, ['wheel', 'touchmove'], () => (pendingPage.value = null), { passive: true })
+useEventListener(window, ['wheel', 'touchmove', 'pointerdown'], releasePendingPage, { passive: true })
+useEventListener(window, 'keydown', ({ key }) => SCROLL_KEYS.includes(key) && releasePendingPage())
 
 /**
  * Holds the page tracking until the scroll we are about to start has settled, so the indicator
@@ -110,13 +133,21 @@ function holdPageTracking(value, realign = false) {
 }
 
 /**
- * Tracks the page currently under the toolbox, unless one of our own scrolls is in flight.
+ * Tracks whether a page still shows under the toolbox, and follows the topmost one that does
+ * unless a scroll of ours is in flight.
  *
- * @param {number} value - The page reporting itself as current.
+ * @param {number} value - The page reporting itself.
+ * @param {boolean} below - Whether that page shows under the toolbox.
  */
-function trackPage(value) {
+function trackPage(value, below) {
+  if (below) {
+    pagesBelowToolbox.add(value)
+  }
+  else {
+    pagesBelowToolbox.delete(value)
+  }
   if (pendingPage.value === null) {
-    currentPage.value = value
+    currentPage.value = currentPageBelowToolbox() ?? currentPage.value
   }
 }
 
@@ -170,6 +201,9 @@ watch(highlightIndex, () => {
     holdPageTracking(highlightPage.value)
   }
 })
+
+// A new document swaps every page out without them reporting they stopped showing.
+watch(pdf, () => pagesBelowToolbox.clear())
 
 watch(src, async () => {
   blurred.value ??= await isBlurred(props.document)
@@ -254,7 +288,7 @@ watch(src, async () => {
           :highlight-text="highlightTextDebounced"
           :highlight-index="getPageHighlightIndex(page)"
           :top-offset="toolboxHeight"
-          @visible="trackPage(page)"
+          @visible="trackPage(page, $event)"
         />
       </template>
       <template v-else>
