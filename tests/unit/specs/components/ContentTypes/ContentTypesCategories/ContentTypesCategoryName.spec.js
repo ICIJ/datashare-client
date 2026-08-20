@@ -55,4 +55,17 @@ describe('ContentTypesCategoryName.vue', () => {
     expect(wrapper.emitted('update:modelValue')).toStrictEqual([[true]])
     expect(wrapper.emitted('update:collapse')).toBeUndefined()
   })
+
+  it('forwards locked to its inner filter entry (icij/datashare#2336)', () => {
+    const wrapper = factory({ locked: true })
+    expect(wrapper.findComponent(FiltersPanelSectionFilterEntry).props('locked')).toBe(true)
+  })
+
+  it('emits update:locked when the inner filter entry\'s lock is toggled', async () => {
+    const wrapper = factory({ locked: false })
+    const entry = wrapper.findComponent(FiltersPanelSectionFilterEntry)
+    entry.vm.$emit('update:locked', true)
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted('update:locked')).toStrictEqual([[true]])
+  })
 })
