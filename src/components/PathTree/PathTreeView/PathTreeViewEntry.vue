@@ -249,7 +249,7 @@ function toggleLock(value) {
       />
       <div class="path-tree-view-entry__header__end ms-auto d-flex align-items-center">
         <button-toggle-lock
-          v-if="pathLockable && (selected || locked)"
+          v-if="pathLockable"
           class="path-tree-view-entry__lock above-stretched-link"
           :locked="locked"
           @update:locked="toggleLock"
@@ -407,7 +407,12 @@ function toggleLock(value) {
     }
   }
 
-  &:hover &__lock,
+  // Scoped to this row's own --active class (set via @mouseenter/@mouseleave
+  // on its own header in the template), not a bare &:hover descendant
+  // selector — the tree nests entries recursively, so a plain `:hover
+  // .path-tree-view-entry__lock` descendant match would also reveal every
+  // nested child row's lock icon while hovering a parent directory.
+  &--active > &__header &__lock,
   &__lock:focus-visible {
     opacity: 1;
   }
