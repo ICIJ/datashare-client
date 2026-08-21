@@ -4,7 +4,7 @@ import { createPinia, setActivePinia } from 'pinia'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import { useSearchBreadcrumb } from '@/composables/useSearchBreadcrumb'
-import { useSearchStore } from '@/store/modules'
+import { useSearchStore, useLockedFiltersStore } from '@/store/modules'
 import { routes } from '@/router'
 
 describe('useSearchBreadcrumb composable', () => {
@@ -97,6 +97,94 @@ describe('useSearchBreadcrumb composable', () => {
 
       expect(searchStore.getFilter({ name: 'contentTypeCategory' }).values).toEqual(['Documents'])
       expect(searchStore.getFilter({ name: 'contentType' }).values).toEqual(['image/png'])
+    })
+  })
+
+  describe('clearFiltersEntries / clearAll preserve locked values (icij/datashare#2330)', () => {
+    let lockedFiltersStore
+
+    beforeEach(() => {
+      lockedFiltersStore = useLockedFiltersStore()
+    })
+
+    it('clearFiltersEntries removes an unlocked value but keeps a locked one', () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.addFilterValue({ name: 'contentType', value: 'text/plain' })
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      const { clearFiltersEntries } = mountComposable()
+      clearFiltersEntries()
+
+      expect(searchStore.getFilter({ name: 'contentType' }).values).toEqual(['application/pdf'])
+    })
+
+    it('clearAll clears the query and unlocked values but keeps locked ones', () => {
+      searchStore.setQuery('foo')
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.addFilterValue({ name: 'contentType', value: 'text/plain' })
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      const { clearAll } = mountComposable()
+      clearAll()
+
+      expect(searchStore.q).toBe('')
+      expect(searchStore.getFilter({ name: 'contentType' }).values).toEqual(['application/pdf'])
+    })
+
+    it('does not flip an included lock into excluded mode when clearing while that filter is in exclude mode', () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.excludeFilter('contentType')
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      const { clearFiltersEntries } = mountComposable()
+      clearFiltersEntries()
+
+      expect(searchStore.getFilter({ name: 'contentType' }).values).toEqual(['application/pdf'])
+      expect(searchStore.isFilterExcluded('contentType')).toBe(false)
+    })
+
+    it('clearFiltersEntries removes everything when there are zero locks', () => {
+      // Locks persist to localStorage (persist: true) across the jsdom-shared
+      // localStorage instance, so a fresh pinia alone doesn't guarantee zero
+      // locks here — clear explicitly.
+      lockedFiltersStore.unlockAll()
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+
+      const { clearFiltersEntries } = mountComposable()
+      clearFiltersEntries()
+
+      expect(searchStore.getFilter({ name: 'contentType' }).values).toEqual([])
+    })
+  })
+
+  describe('unlockAll (icij/datashare#2330)', () => {
+    let lockedFiltersStore
+
+    beforeEach(() => {
+      lockedFiltersStore = useLockedFiltersStore()
+    })
+
+    it('unlocks every locked value without touching the applied filter values', () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      const { unlockAll } = mountComposable()
+      unlockAll()
+
+      expect(lockedFiltersStore.count).toBe(0)
+      expect(searchStore.getFilter({ name: 'contentType' }).values).toEqual(['application/pdf'])
+    })
+  })
+
+  describe('lockedFiltersCount (icij/datashare#2330)', () => {
+    it('reflects the number of currently locked entries', () => {
+      const lockedFiltersStore = useLockedFiltersStore()
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+      lockedFiltersStore.lock({ name: 'contentType', value: 'text/plain', label: 'text/plain' })
+
+      const { lockedFiltersCount } = mountComposable()
+
+      expect(lockedFiltersCount.value).toBe(2)
     })
   })
 })

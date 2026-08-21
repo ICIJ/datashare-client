@@ -2028,6 +2028,7 @@
     "clearFilters": "Effacer les filtres",
     "clearQuery": "Effacer la requête",
     "clearFiltersAndQuery": "Effacer filtres et requête",
+    "unlockFilters": "Déverrouiller les filtres ({count})",
     "saveSearch": "Sauvegarder la recherche",
     "createAlert": "Créer une alerte"
   },

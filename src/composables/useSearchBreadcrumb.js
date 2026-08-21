@@ -9,7 +9,7 @@ import unset from 'lodash/unset'
 import lucene from 'lucene'
 
 import { useSearchFilter } from '@/composables/useSearchFilter'
-import { useSearchBreadcrumbStore, useSearchStore } from '@/store/modules'
+import { useLockedFiltersStore, useSearchBreadcrumbStore, useSearchStore } from '@/store/modules'
 import { getCanonicalDimension, getPairedDimension } from '@/store/filters/pairedDimensions'
 import findPath from '@/utils/findPath'
 
@@ -109,6 +109,8 @@ export function useSearchBreadcrumb() {
   const searchStore = useSearchStore.inject()
   const searchBreadcrumbStore = useSearchBreadcrumbStore()
   const { setQuery, removeIndex, removeFilterValue, refreshRoute } = useSearchFilter()
+  const lockedFiltersStore = useLockedFiltersStore()
+  const lockedFiltersCount = computed(() => lockedFiltersStore.count)
 
   const count = computed(() => entries.value.length)
 
@@ -184,8 +186,19 @@ export function useSearchBreadcrumb() {
     return refreshRoute()
   }
 
-  const clearFiltersEntries = () => {
+  const clearFilterState = () => {
     searchStore.resetFilterValues()
+    // Exclusion mode is part of "filters" too: leaving it behind would re-apply
+    // an *included* lock in exclude mode, since resetFilterValues() wipes only
+    // `values` and mergeLockedFilters()'s conflict check keys off `values`.
+    searchStore.excludeFilters.slice().forEach(name => searchStore.includeFilter(name))
+    // Locked values must survive a filter-wipe — re-merge them immediately
+    // rather than waiting for the next route hydration. See icij/datashare#2330.
+    searchStore.mergeLockedFilters()
+  }
+
+  const clearFiltersEntries = () => {
+    clearFilterState()
     return refreshRoute()
   }
 
@@ -195,9 +208,13 @@ export function useSearchBreadcrumb() {
   }
 
   const clearAll = () => {
-    searchStore.resetFilterValues()
+    clearFilterState()
     searchStore.resetQuery()
     return refreshRoute()
+  }
+
+  const unlockAll = () => {
+    lockedFiltersStore.unlockAll()
   }
 
   return {
@@ -211,6 +228,8 @@ export function useSearchBreadcrumb() {
     clearFiltersEntries,
     clearQueryEntries,
     clearAll,
+    unlockAll,
+    lockedFiltersCount,
     count,
     hasQueryEntries,
     hasFiltersEntries,
