@@ -565,7 +565,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * Remove a filter by its name.
    *
    * The filter itself is going away, so unlock it under both include and
-   * exclude mode, not just whichever it's currently in — every caller
+   * exclude mode, not just whichever it's currently in. Every caller
    * (FiltersMixin's unregisterFilter, useSearchFilter's removeFilter) routes
    * through here, so fixing it here covers them all instead of duplicating
    * the unlock in each one.
