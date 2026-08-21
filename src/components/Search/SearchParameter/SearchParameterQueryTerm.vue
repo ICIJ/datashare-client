@@ -103,6 +103,7 @@ const showOperator = computed(() => {
     :icon-left-label="iconLabel"
     :icon-right="noXIcon ? null : IPhX"
     icon-right-hover-weight="bold"
+    tag="span"
     @click:icon-right="emit('click:x')"
   >
     <template
