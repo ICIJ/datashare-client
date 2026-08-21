@@ -42,6 +42,16 @@ const applyBatchedUpdates = debounce((router, route, to) => {
 }, 50)
 
 /**
+ * Drops the queued query parameter updates without pushing them, so a push
+ * cannot land after the caller that queued it is gone.
+ */
+export function cancelBatchedQueryParamUpdates() {
+  applyBatchedUpdates.cancel()
+  batchedUpdates = {}
+  batchedUpdatesContextName = null
+}
+
+/**
  * Function to batch query parameter updates
  * Collects changes and applies them using the debounced function
  *

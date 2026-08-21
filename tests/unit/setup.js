@@ -64,3 +64,14 @@ Object.defineProperty(document, 'fonts', {
 })
 
 Object.defineProperty(window, 'scrollTo', vi.fn())
+
+// `batchQueryParamUpdate` debounces its `router.push` by 50ms. A spec ending
+// while one is still queued lets the push run after the jsdom teardown, where
+// vue-router reads a `history` global that no longer exists and fails the whole
+// run with an unhandled rejection. Import it here rather than at the top of
+// this file, so specs mocking the module (or `lodash/debounce`) still get their
+// mock applied.
+afterEach(async () => {
+  const { cancelBatchedQueryParamUpdates } = await import('@/composables/useUrlParam')
+  cancelBatchedQueryParamUpdates()
+})
