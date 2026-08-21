@@ -31,11 +31,13 @@ const FilterTypeStarred = defineAsyncComponent(() => import('@/components/Filter
 import { CONTENT_TYPE_CATEGORY_FILTER_NAME } from '@/store/filters/FilterContentTypeCategory'
 import FilterText from '@/store/filters/FilterText.js'
 import { PAIRED_DIMENSIONS, getCanonicalDimension, getPairedDimension, getPairedDimensions } from '@/store/filters/pairedDimensions'
-import { useAppStore, useRecommendedStore, useSearchStore } from '@/store/modules'
+import { useAppStore, useLockedFiltersStore, useRecommendedStore, useSearchStore } from '@/store/modules'
+import { toLockedName } from '@/store/modules/lockedFilters'
 
 export function useSearchFilter() {
   const appStore = useAppStore()
   const searchStore = useSearchStore.inject()
+  const lockedFiltersStore = useLockedFiltersStore()
   const recommendedStore = useRecommendedStore()
   const route = useRoute()
   const router = useRouter()
@@ -275,16 +277,29 @@ export function useSearchFilter() {
     return searchStore.addFilterValue({ ...instance, value })
   }
 
+  // The store key for a filter's locks: its own current include/exclude
+  // mode, never a paired dimension's — shared by every value-removal path
+  // below so unlocking never leaks across a paired filter's other side.
+  // Takes an already-cast instance (not a raw filter/name) so callers that
+  // already resolved one via castFilter don't pay for a second Map lookup.
+  function lockedNameFor(instance) {
+    return toLockedName(instance.name, isFilterExcluded(instance))
+  }
+
   const removeFilterValue = (filter, item) => {
     const instance = castFilter(filter)
     const param = instance.itemParam(castFilterItem(item))
     const value = toString(param.value)
+    lockedFiltersStore.unlock({ name: lockedNameFor(instance), value })
     return searchStore.removeFilterValue({ ...instance, value })
   }
 
   const removeFilterValues = (filter) => {
     // setFilterValue takes a single { name, value } arg; passing [] positionally writes [undefined].
-    const { name } = castFilter(filter)
+    const instance = castFilter(filter)
+    const { name } = instance
+    const lockedName = lockedNameFor(instance)
+    lockedFiltersStore.unlockWhere(entry => entry.name === lockedName)
     return searchStore.setFilterValue({ name, value: [] })
   }
 

@@ -8,7 +8,7 @@ import { SEARCH_OPERATORS } from '@/enums/searchOperators'
 import Document from '@/api/resources/Document'
 import EsDocList from '@/api/resources/EsDocList'
 import NamedEntity from '@/api/resources/NamedEntity'
-import { useAppStore, useSearchStore } from '@/store/modules'
+import { useAppStore, useLockedFiltersStore, useSearchStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
 
 describe('SearchStore', () => {
@@ -1038,6 +1038,17 @@ describe('SearchStore', () => {
       expect(searchStore.getFilter({ name: 'contentType' })).toBeUndefined()
       searchStore.resetFilters()
       expect(searchStore.getFilter({ name: 'contentType' })).toBeDefined()
+    })
+
+    it('should unlock every entry (include or exclude mode) locked on a removed filter', () => {
+      const lockedFiltersStore = useLockedFiltersStore()
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+      lockedFiltersStore.lock({ name: '-contentType', value: 'text/plain', label: 'text/plain' })
+      lockedFiltersStore.lock({ name: 'language', value: 'ENGLISH', label: 'English' })
+
+      searchStore.removeFilter('contentType')
+
+      expect(lockedFiltersStore.entries).toEqual([{ name: 'language', value: 'ENGLISH', label: 'English' }])
     })
 
     it('should define a "language" filter correctly (name, key and type)', () => {

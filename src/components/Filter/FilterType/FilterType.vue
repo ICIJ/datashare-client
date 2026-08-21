@@ -7,6 +7,7 @@ import flatten from 'lodash/flatten'
 import get from 'lodash/get'
 import noop from 'lodash/noop'
 import setWith from 'lodash/setWith'
+import toString from 'lodash/toString'
 import uniqueId from 'lodash/uniqueId'
 import InfiniteLoading from 'v3-infinite-loading'
 import { useI18n } from 'vue-i18n'
@@ -19,7 +20,8 @@ import FiltersPanelSectionFilter from '@/components/FiltersPanel/FiltersPanelSec
 import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPanelSectionFilterEntry'
 import FilterTypeAll from '@/components/Filter/FilterType/FilterTypeAll'
 import settings from '@/utils/settings'
-import { useSearchStore } from '@/store/modules'
+import { useSearchStore, useLockedFiltersStore } from '@/store/modules'
+import { toLockedName } from '@/store/modules/lockedFilters'
 import builtinFilterIcons from '@/store/filters/icons'
 
 const query = defineModel('query', { type: String, default: '' })
@@ -55,6 +57,7 @@ const expand = ref(false)
 
 const { waitFor, isLoading } = useWait({ throttle: 500 })
 const searchStore = useSearchStore.inject()
+const lockedFiltersStore = useLockedFiltersStore()
 
 const aggregateOver = () => {
   return aggregate({ clearPages: true })
@@ -143,6 +146,14 @@ const {
 } = useSearchFilter()
 
 const exclude = computedExcludeFilter(filter)
+// The store key for this filter's locks: the filter's own current
+// include/exclude mode, never a paired dimension's — locking a chip on one
+// side of a paired filter must never lock or affect the other side.
+// TODO(locked-filters): filter types overriding FilterType's default slot
+// (FilterTypeFileTypes, FilterTypePath, FilterTypeProject, FilterTypeStarred,
+// FilterTypeRecommendedBy) don't receive lock/unlock support yet — see
+// icij/datashare#2336.
+const lockedName = computed(() => toLockedName(filter.name, exclude.value))
 const sort = computedSortFilter(filter)
 const contextualize = computedContextualizeFilter(filter)
 
@@ -155,13 +166,35 @@ const hasAnyValue = computed(() => {
 })
 
 const toggleValue = async (item, checked) => {
+  // Unlocking on removal is handled centrally by useSearchFilter's
+  // removeFilterValue/removeFilterValues, so every removal path (this
+  // checkbox, the "All" toggle, breadcrumb chip removal) unlocks alike.
   await toggleFilterValue(filter, item, checked)
   if (contextualize.value) {
     await aggregateOver()
   }
 }
 
+function isItemLocked(item) {
+  return lockedFiltersStore.isLocked({ name: lockedName.value, value: item.key })
+}
+
+function toggleLock(item, locked) {
+  if (locked) {
+    lockedFiltersStore.lock({ name: lockedName.value, value: item.key, label: bucketLabel(item) })
+  }
+  else {
+    lockedFiltersStore.unlock({ name: lockedName.value, value: item.key })
+  }
+}
+
 const bucketLabel = (bucket) => {
+  // The label is frozen at lock time and intentionally does not re-translate
+  // if the UI language changes later — the bucket is gone, so there's
+  // nothing left to re-resolve the label against.
+  if (bucket?.__lockedLabel != null) {
+    return bucket.__lockedLabel
+  }
   if (noBucketTranslation.value) {
     return bucket?.key?.toString()
   }
@@ -180,8 +213,29 @@ const excludedBucketsPage = computed(() => {
   return []
 })
 
+// Synthesizes a zero-count bucket for every locked value that has no
+// matching real aggregation bucket (a deleted tag, a re-indexed path).
+// Uses the exact same shape/insertion mechanism as excludedBucketsPage
+// above so it flows through bucketsWithExcludedValues unchanged.
+// Also excludes keys already synthesized by excludedBucketsPage: a value
+// that is ticked + excluded + contextualized is already rendered by that
+// mechanism regardless of locking, and de-duping here (rather than there)
+// keeps excludedBucketsPage's own semantics untouched.
+// Like excludedBucketsPage above, this does not filter against the panel's
+// search box: a locked-but-missing value always stays visible regardless of
+// what the user is searching for. Consistent with existing behavior, not a
+// new gap.
+const missingLockedBucketsPage = computed(() => {
+  const excludedKeys = getPageBuckets(excludedBucketsPage.value).map(item => toString(item.key))
+  const realKeys = [...buckets.value.map(item => toString(item.key)), ...excludedKeys]
+  const missing = lockedFiltersStore.entries
+    .filter(entry => entry.name === lockedName.value && !realKeys.includes(entry.value))
+    .map(entry => ({ key: entry.value, doc_count: 0, __lockedLabel: entry.label }))
+  return setWith({}, pageBucketsPath.value.join('.'), missing, Object)
+})
+
 const bucketsWithExcludedValues = computed(() => {
-  return flatten(concat([excludedBucketsPage.value], pages).map(getPageBuckets))
+  return flatten(concat([excludedBucketsPage.value, missingLockedBucketsPage.value], pages).map(getPageBuckets))
 })
 
 const entries = computed(() => {
@@ -311,7 +365,9 @@ defineExpose({ entries, aggregateOver, count })
         :count="item.doc_count"
         :hide-count="hideCount"
         :model-value="hasValue(item)"
+        :locked="isItemLocked(item)"
         @update:model-value="toggleValue(item, $event)"
+        @update:locked="toggleLock(item, $event)"
       >
         <slot name="entry-label" />
         <template #count>
