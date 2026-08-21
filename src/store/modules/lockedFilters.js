@@ -126,6 +126,7 @@ export const useLockedFiltersStore = defineStore('lockedFilters', () => {
     entries.value = entries.value.filter(entry => !predicate(entry))
   }
 
+
   /**
    * Unlock every currently locked filter value.
    *
