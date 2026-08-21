@@ -1,12 +1,14 @@
 <script setup>
 import { computed } from 'vue'
 import { AppIcon } from '@icij/murmur'
+import trimStart from 'lodash/trimStart'
 import { useI18n } from 'vue-i18n'
 import IPhCaretRightFill from '~icons/ph/caret-right-fill'
 
 import SearchBreadcrumbFormEntryOccurrences from '@/components/Search/SearchBreadcrumbForm/SearchBreadcrumbFormEntryOccurrences'
 import SearchParameter from '@/components/Search/SearchParameter/SearchParameter'
-import { useLockedFiltersStore } from '@/store/modules'
+import { useSearchFilter } from '@/composables/useSearchFilter'
+import { useLockedFiltersStore, useSearchStore } from '@/store/modules'
 
 const props = defineProps({
   filter: {
@@ -59,6 +61,20 @@ const emit = defineEmits(['click:x'])
 
 const { t } = useI18n()
 const lockedFiltersStore = useLockedFiltersStore()
+const searchStore = useSearchStore.inject()
+const { labelToHuman } = useSearchFilter()
+
+// Resolves the same human-readable label FilterType.vue/FilterTypeFileTypes.vue
+// store for a lock, instead of the raw route-query value, so a value locked
+// from a breadcrumb chip shows a friendly label if its bucket later
+// disappears (see FilterType.vue's `missingLockedBucketsPage`).
+const lockValueLabel = computed(() => {
+  const filterInstance = searchStore.getFilter({ name: trimStart(props.filter, '-') })
+  if (!filterInstance || filterInstance.noBucketTranslation) {
+    return props.value
+  }
+  return labelToHuman(filterInstance.itemLabel({ key: props.value }))
+})
 
 const showOccurrences = computed(() => {
   return !props.noOccurrences && props.occurrences !== null
@@ -96,7 +112,7 @@ function toggleLock() {
     lockedFiltersStore.unlock({ name: props.filter, value: props.value })
   }
   else {
-    lockedFiltersStore.lock({ name: props.filter, value: props.value, label: props.value })
+    lockedFiltersStore.lock({ name: props.filter, value: props.value, label: lockValueLabel.value })
   }
 }
 </script>
