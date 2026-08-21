@@ -158,5 +158,15 @@ describe('FilterTypePath.vue', () => {
       expect(lockedFiltersStore.isLocked({ name: '-path', value: '/data/foo/' })).toBe(true)
       expect(lockedFiltersStore.isLocked({ name: 'path', value: '/data/foo/' })).toBe(false)
     })
+
+    it('is lockable by default', () => {
+      expect(wrapper.vm.pathLockable).toBe(true)
+    })
+
+    it('suppresses the lock button (pathLockable) when hideLock is set', async () => {
+      await wrapper.setProps({ hideLock: true })
+
+      expect(wrapper.vm.pathLockable).toBe(false)
+    })
   })
 })

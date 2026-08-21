@@ -162,5 +162,11 @@ describe('FilterTypeRecommendedBy.vue', () => {
 
       expect(lockedFiltersStore.isLocked({ name: 'recommendedBy', value: 'jane' })).toBe(false)
     })
+
+    it('hides the lock button on every entry when hideLock is set', async () => {
+      await wrapper.setProps({ hideLock: true })
+
+      expect(findEntry().props('hideLock')).toBe(true)
+    })
   })
 })

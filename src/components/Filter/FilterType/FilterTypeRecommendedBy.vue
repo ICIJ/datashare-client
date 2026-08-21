@@ -18,6 +18,12 @@ const props = defineProps({
   },
   hideCount: {
     type: Boolean
+  },
+  // Suppresses the per-value lock button entirely. See FilterType.vue's
+  // hideLock for why (disposable/unrelated screens rendering against a
+  // non-live search store).
+  hideLock: {
+    type: Boolean
   }
 })
 
@@ -113,6 +119,7 @@ watchIndices(fetch)
           :value="user"
           :count="count"
           :hide-count="hideCount"
+          :hide-lock="hideLock"
           :locked="isItemLocked(user)"
           @update:locked="toggleLock(user, $event)"
         >
