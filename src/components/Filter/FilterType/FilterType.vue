@@ -240,8 +240,15 @@ const excludedBucketsPage = computed(() => {
 // search box: a locked-but-missing value always stays visible regardless of
 // what the user is searching for. Consistent with existing behavior, not a
 // new gap.
+// Waits for reachedBucketsEnd before treating anything as "missing": with
+// pagination (bucketSize buckets per page, sorted by count/key), a locked
+// value not yet in `buckets.value` might just be ranked below the pages
+// loaded so far, not actually deleted — synthesizing a fake zero-count row
+// for it before we've loaded everything would misrepresent a real, possibly
+// high-count value as gone. Once reachedBucketsEnd is true every real
+// bucket has been loaded, so anything still missing genuinely is.
 const missingLockedBucketsPage = computed(() => {
-  if (hideLock) {
+  if (hideLock || !reachedBucketsEnd.value) {
     return []
   }
   const excludedKeys = getPageBuckets(excludedBucketsPage.value).map(item => toString(item.key))
@@ -253,7 +260,12 @@ const missingLockedBucketsPage = computed(() => {
 })
 
 const bucketsWithExcludedValues = computed(() => {
-  return flatten(concat([excludedBucketsPage.value, missingLockedBucketsPage.value], pages).map(getPageBuckets))
+  // missingLockedBucketsPage goes after the real pages, not before: it's
+  // always zero-count, so it belongs below real buckets regardless of sort
+  // order, rather than always appearing to outrank them. excludedBucketsPage
+  // keeps its existing pinned-at-top position - unrelated, pre-existing
+  // behavior this fix doesn't touch.
+  return flatten(concat([excludedBucketsPage.value], pages, [missingLockedBucketsPage.value]).map(getPageBuckets))
 })
 
 const entries = computed(() => {

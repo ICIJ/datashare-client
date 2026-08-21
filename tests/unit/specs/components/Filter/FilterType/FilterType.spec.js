@@ -452,6 +452,44 @@ describe('FilterType.vue', () => {
       expect(entry.props('locked')).toBe(true)
     })
 
+    it('does not render a locked value as missing until every real bucket has been loaded', async () => {
+      // `language` is pageless (pagelessBucketSize), so it always reaches the
+      // end in one page - use `tags` instead, which paginates with the
+      // default bucketSize (25) like most filters do.
+      await wrapper.setProps({ filter: searchStore.getFilter({ name: 'tags' }) })
+
+      // A full page (bucketSize buckets) means there might be more real
+      // buckets beyond it - a locked value not in it yet could just be
+      // ranked lower, not deleted. Simulate that directly rather than
+      // seeding 25+ real documents through ES.
+      const fullPage = {
+        aggregations: { tags: { buckets: Array.from({ length: 25 }, (_, i) => ({ key: `tag_${i}`, doc_count: 1 })) } }
+      }
+      wrapper.vm.pages.push(fullPage)
+      lockedFiltersStore.lock({ name: 'tags', value: 'removed-tag', label: 'Removed Tag' })
+      await wrapper.vm.$nextTick()
+
+      expect(wrapper.vm.reachedBucketsEnd).toBe(false)
+      expect(wrapper.vm.entries.some(({ label }) => label === 'Removed Tag')).toBe(false)
+
+      // A second, non-full page means every real bucket is now loaded.
+      wrapper.vm.pages.push({ aggregations: { tags: { buckets: [] } } })
+      await wrapper.vm.$nextTick()
+
+      expect(wrapper.vm.reachedBucketsEnd).toBe(true)
+      expect(wrapper.vm.entries.some(({ label }) => label === 'Removed Tag')).toBe(true)
+    })
+
+    it('renders the locked-but-missing entry after real buckets, not before', async () => {
+      await letData(es).have(new IndexedDocument('document_01', index).withLanguage('ENGLISH')).commit()
+      lockedFiltersStore.lock({ name: 'language', value: 'KLINGON', label: 'Removed Language' })
+
+      await wrapper.vm.aggregateOver()
+
+      const labels = wrapper.vm.entries.map(({ label }) => label)
+      expect(labels.indexOf('Removed Language')).toBeGreaterThan(labels.indexOf('English'))
+    })
+
     it('drops the synthetic locked-but-missing entry once it is unlocked', async () => {
       lockedFiltersStore.lock({ name: 'language', value: 'KLINGON', label: 'Removed Language' })
       await wrapper.vm.aggregateOver()
