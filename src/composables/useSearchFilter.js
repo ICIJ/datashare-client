@@ -54,19 +54,11 @@ export function useSearchFilter() {
     isLoading: isCategoryAvailabilityLoading
   } = useContentTypeCategoryAvailability() ?? {}
 
-  // Keep non-canonical paired dimensions in lockstep with their canonical.
-  // flush:'sync' ensures reconciliation runs within the same tick as setup,
-  // not deferred to the next render, so URL-restored drift is corrected before
-  // any computed getter or template ever reads the store.
-  watchEffect(() => {
-    for (const [canonical, paired] of Object.entries(PAIRED_DIMENSIONS)) {
-      const value = searchStore.isFilterExcluded(canonical)
-      if (searchStore.isFilterExcluded(paired) !== value) {
-        searchStore.toggleFilter(paired, value)
-      }
-    }
-  }, { flush: 'sync' })
-
+  // Note: unlike contextualize below, exclude has no dedicated sync watcher.
+  // Paired exclude updates are written one dimension at a time, so an eager
+  // watcher can observe transient half-updated states and either revert route
+  // hydration or re-apply an exclude while toggling off. Keep reconciliation
+  // lazy in isFilterExcluded, where it runs against the final written state.
   watchEffect(() => {
     for (const [canonical, paired] of Object.entries(PAIRED_DIMENSIONS)) {
       const value = searchStore.isFilterContextualized(canonical)
@@ -369,10 +361,25 @@ export function useSearchFilter() {
 
   function isFilterExcluded({ name }) {
     const dimensions = getPairedDimensions(name)
-    if (dimensions.length === 1) {
-      return searchStore.isFilterExcluded(name)
+    // Any excluded side means the pair is excluded (matches the OR semantics
+    // `filterValuesAsRouteQuery` and `reconcilePairedExcludeFilters` already
+    // use in the store), rather than trusting one dimension over the other.
+    const excluded = dimensions.some(dimension => searchStore.isFilterExcluded(dimension))
+    // Reconcile on read, additively only: propagate an exclude forward to
+    // any dimension that hasn't caught up yet (e.g. a direct store write to
+    // a single dimension that bypassed toggleExcludeFilter's own dual-write
+    // below). This only ever adds the flag, never removes it, and only runs
+    // when something actually calls this getter - unlike an eager
+    // `watchEffect` reconciler, it can't fire mid-write and observe (or
+    // act on) a transient, not-yet-finished state. See icij/datashare#2351.
+    if (excluded) {
+      dimensions.forEach((dimension) => {
+        if (!searchStore.isFilterExcluded(dimension)) {
+          searchStore.excludeFilter(dimension)
+        }
+      })
     }
-    return searchStore.isFilterExcluded(getCanonicalDimension(name))
+    return excluded
   }
 
   function computedExcludeFilter(filter, { get = null, set = null } = {}) {
