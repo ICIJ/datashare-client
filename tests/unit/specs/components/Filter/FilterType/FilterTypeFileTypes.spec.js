@@ -14,7 +14,7 @@ import FiltersPanelSectionFilterTitleSort from '@/components/FiltersPanel/Filter
 import { BCollapse } from 'bootstrap-vue-next'
 import { apiInstance as api } from '@/api/apiInstance'
 import { useContentTypeCategoryAvailability } from '@/composables/useContentTypeCategoryAvailability'
-import { useAppStore, useSearchStore } from '@/store/modules'
+import { useAppStore, useSearchStore, useLockedFiltersStore } from '@/store/modules'
 
 vi.mock('@/api/apiInstance', async (importOriginal) => {
   const { apiInstance } = await importOriginal()
@@ -1430,6 +1430,84 @@ describe('FilterTypeFileTypes.vue', () => {
       remountWithAvailability({ isAvailable: false, isLoading: false })
       const text = wrapper.find('.filter-type-file-types__legacy-index__description').text()
       expect(text).toBe('Some of these projects were indexed without file type categories.')
+    })
+  })
+
+  describe('locked filters', () => {
+    let lockedFiltersStore
+
+    beforeEach(() => {
+      lockedFiltersStore = useLockedFiltersStore()
+      // CoreSetup falls back to the app's singleton pinia (with the locked
+      // filters store's `persist: true`), so entries otherwise leak across
+      // tests in this file.
+      lockedFiltersStore.unlockAll()
+    })
+
+    it('also selects an unticked flat entry when it emits update:locked with true — one click both applies and locks it', async () => {
+      seedContentTypes(['application/pdf'])
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+      // Flip to the flat view.
+      await wrapper.findComponent(ButtonToggleContentTypesView).trigger('click')
+      await flushPromises()
+
+      const entry = wrapper.findComponent(ContentTypesEntry)
+      expect(entry.props('modelValue')).toBe(false)
+
+      await entry.vm.$emit('update:locked', true)
+      await flushPromises()
+
+      expect(searchStore.getFilter({ name: 'contentType' })).toBeDefined()
+      expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'application/pdf' })).toBe(true)
+      expect(wrapper.findComponent(ContentTypesEntry).props('modelValue')).toBe(true)
+    })
+
+    it('unlocks a flat entry when it emits update:locked with false', async () => {
+      seedContentTypes(['application/pdf'])
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+      await wrapper.findComponent(ButtonToggleContentTypesView).trigger('click')
+      await flushPromises()
+
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'PDF' })
+      await flushPromises()
+
+      await wrapper.findComponent(ContentTypesEntry).vm.$emit('update:locked', false)
+
+      expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'application/pdf' })).toBe(false)
+    })
+
+    it('hides the per-value lock button on flat entries when hideLock is set', async () => {
+      wrapper.unmount()
+      const filter = searchStore.getFilter({ name: 'contentType' })
+      wrapper = mount(FilterTypeFileTypes, {
+        global: { plugins: core.plugins },
+        props: { filter, collapse: false, hideLock: true }
+      })
+      seedContentTypes(['application/pdf'])
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+      await wrapper.findComponent(ButtonToggleContentTypesView).trigger('click')
+      await flushPromises()
+
+      expect(wrapper.findComponent(ContentTypesEntry).props('hideLock')).toBe(true)
+    })
+
+    it('unlocks a plain grouped entry when it is unticked', async () => {
+      api.getContentTypeCategories.mockResolvedValue({ DOCUMENT: ['application/pdf', 'text/html'] })
+      seedContentTypes(['application/pdf', 'text/html'])
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'PDF' })
+      await flushPromises()
+
+      const entry = wrapper.findAllComponents(ContentTypesEntry).find(e => e.props('contentType') === 'application/pdf')
+      await entry.vm.$emit('update:model-value', false)
+
+      expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'application/pdf' })).toBe(false)
     })
   })
 })

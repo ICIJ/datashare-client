@@ -18,12 +18,21 @@ import { useContentTypeCategoryCollapse } from '@/composables/useContentTypeCate
 import { useContentTypeGroupedView } from '@/composables/useContentTypeGroupedView'
 import { useContentTypeSort } from '@/composables/useContentTypeSort'
 import { useSearchFilter } from '@/composables/useSearchFilter'
-import { useSearchStore } from '@/store/modules'
+import { useSearchStore, useLockedFiltersStore } from '@/store/modules'
+import { toLockedName } from '@/store/modules/lockedFilters'
+import { getDocumentTypeLabel } from '@/utils/utils'
 
 const props = defineProps({
   filter: {
     type: Object,
     required: true
+  },
+  // Same escape hatch as FilterType.vue's own hideLock: suppresses the
+  // per-value lock button for disposable/unrelated contexts (e.g. the
+  // batch-search creation form) that shouldn't touch the user's real
+  // lock store.
+  hideLock: {
+    type: Boolean
   }
 })
 
@@ -52,10 +61,36 @@ const {
   hasFilterValue,
   computedAll,
   computedTotal,
+  computedExcludeFilter,
   getFilterPairedDimensions,
   isCategoryAvailable,
   isCategoryAvailabilityLoading
 } = useSearchFilter()
+
+const lockedFiltersStore = useLockedFiltersStore()
+// Same `-`-prefix convention as FilterType.vue's own (unused here, since this
+// component overrides its default slot) lockedName — include/exclude mode is
+// part of a lock's identity.
+const exclude = computedExcludeFilter(filterRef)
+const lockedName = computed(() => toLockedName(filterRef.value.name, exclude.value))
+
+function isItemLocked(contentType) {
+  return lockedFiltersStore.isLocked({ name: lockedName.value, value: contentType })
+}
+
+async function toggleLock(contentType, locked) {
+  if (locked) {
+    // Locking an unticked value also selects it — a single click both
+    // applies and locks the filter.
+    if (!hasFilterValue(props.filter, { key: contentType })) {
+      await toggleFilterValue(props.filter, { key: contentType }, true)
+    }
+    lockedFiltersStore.lock({ name: lockedName.value, value: contentType, label: getDocumentTypeLabel(contentType) })
+  }
+  else {
+    lockedFiltersStore.unlock({ name: lockedName.value, value: contentType })
+  }
+}
 
 // Legacy projects re-indexed before category grouping landed lack the
 // contentTypeCategory mapping — surface an overlay so the disabled grouped
@@ -122,6 +157,7 @@ const totalCount = computedTotal(filterRef)
     v-model:collapse="collapse"
     :filter="props.filter"
     :overlay-show="overlayVisible"
+    :hide-lock="hideLock"
     class="filter-type-file-types"
     flush
   >
@@ -171,7 +207,10 @@ const totalCount = computedTotal(filterRef)
                 :content-type="contentType"
                 :count="entryCount(contentType)"
                 :model-value="isEntrySelected(contentType)"
+                :locked="isItemLocked(contentType)"
+                :hide-lock="hideLock"
                 @update:model-value="toggleEntry(contentType, $event)"
+                @update:locked="toggleLock(contentType, $event)"
               />
             </b-collapse>
           </content-types-category>
@@ -183,7 +222,10 @@ const totalCount = computedTotal(filterRef)
             :content-type="entry.item.key"
             :count="entry.item.doc_count"
             :model-value="hasFilterValue(props.filter, entry.item)"
+            :locked="isItemLocked(entry.item.key)"
+            :hide-lock="hideLock"
             @update:model-value="toggleFilterValue(props.filter, entry.item, $event)"
+            @update:locked="toggleLock(entry.item.key, $event)"
           />
         </template>
       </content-types-categories>

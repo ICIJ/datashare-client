@@ -23,6 +23,7 @@ const all = computedAll(toRef(props, 'filter'))
     v-model="all"
     :disabled="all"
     hide-count
+    hide-lock
     :label="t('filterTypeAll.label')"
   />
 </template>

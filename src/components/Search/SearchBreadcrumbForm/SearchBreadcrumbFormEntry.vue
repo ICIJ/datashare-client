@@ -1,10 +1,14 @@
 <script setup>
 import { computed } from 'vue'
 import { AppIcon } from '@icij/murmur'
+import trimStart from 'lodash/trimStart'
+import { useI18n } from 'vue-i18n'
 import IPhCaretRightFill from '~icons/ph/caret-right-fill'
 
 import SearchBreadcrumbFormEntryOccurrences from '@/components/Search/SearchBreadcrumbForm/SearchBreadcrumbFormEntryOccurrences'
 import SearchParameter from '@/components/Search/SearchParameter/SearchParameter'
+import { useSearchFilter } from '@/composables/useSearchFilter'
+import { useLockedFiltersStore, useSearchStore } from '@/store/modules'
 
 const props = defineProps({
   filter: {
@@ -55,6 +59,23 @@ const props = defineProps({
 
 const emit = defineEmits(['click:x'])
 
+const { t } = useI18n()
+const lockedFiltersStore = useLockedFiltersStore()
+const searchStore = useSearchStore.inject()
+const { labelToHuman } = useSearchFilter()
+
+// Resolves the same human-readable label FilterType.vue/FilterTypeFileTypes.vue
+// store for a lock, instead of the raw route-query value, so a value locked
+// from a breadcrumb chip shows a friendly label if its bucket later
+// disappears (see FilterType.vue's `missingLockedBucketsPage`).
+const lockValueLabel = computed(() => {
+  const filterInstance = searchStore.getFilter({ name: trimStart(props.filter, '-') })
+  if (!filterInstance || filterInstance.noBucketTranslation) {
+    return props.value
+  }
+  return labelToHuman(filterInstance.itemLabel({ key: props.value }))
+})
+
 const showOccurrences = computed(() => {
   return !props.noOccurrences && props.occurrences !== null
 })
@@ -62,10 +83,42 @@ const showOccurrences = computed(() => {
 const showCaret = computed(() => {
   return !props.noCaret && props.occurrences !== null
 })
+
+// Locks only apply to filter chips, never the free-text query chip, and
+// never the project chip — projects are keyed via `indices` rather than the
+// `f[name]`/`f[-name]` scheme locked filters merge against on hydration
+// (see icij/datashare#2336 for the same project-filter carve-out on the
+// Filters panel side). Also never lockable when the chip is read-only
+// (`noXIcon`): read-only breadcrumbs render disposable/persisted queries
+// (saved searches, batch search/download overviews), and a clickable
+// padlock there would mutate the user's global lock store from a display
+// that isn't the live search. See icij/datashare#2329.
+const isLockable = computed(() => Boolean(props.filter) && props.filter !== 'project' && !props.noXIcon)
+
+// `props.filter` already carries the `-` prefix for excluded filters (it's
+// read straight off the `f[name]`/`f[-name]` route param in
+// useSearchBreadcrumb.js), which is exactly the lock store's `name` format —
+// no separate mode-derivation needed here.
+const locked = computed(() => isLockable.value && lockedFiltersStore.isLocked({ name: props.filter, value: props.value }))
+
+// `null` tells search-parameter/SearchParameterQueryTerm "not lockable, no
+// icon" — distinct from `false` ("lockable, currently unlocked").
+const lockedForDisplay = computed(() => (isLockable.value ? locked.value : null))
+
+const lockLabel = computed(() => t(locked.value ? 'searchBreadcrumbFormEntry.unlock' : 'searchBreadcrumbFormEntry.lock'))
+
+function toggleLock() {
+  if (locked.value) {
+    lockedFiltersStore.unlock({ name: props.filter, value: props.value })
+  }
+  else {
+    lockedFiltersStore.lock({ name: props.filter, value: props.value, label: lockValueLabel.value })
+  }
+}
 </script>
 
 <template>
-  <div class="search-breadcrumb-form-entry d-inline-flex flex-wrap">
+  <div class="search-breadcrumb-form-entry d-inline-flex flex-wrap align-items-center">
     <search-parameter
       :color="color"
       :icon="icon"
@@ -76,7 +129,10 @@ const showCaret = computed(() => {
       :size="size"
       :value="value"
       :no-x-icon="noXIcon"
+      :locked="lockedForDisplay"
+      :lock-label="lockLabel"
       @click:x="emit('click:x', $event)"
+      @click:lock="toggleLock"
     />
     <div class="text-nowrap">
       <search-breadcrumb-form-entry-occurrences

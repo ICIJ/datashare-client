@@ -5,7 +5,7 @@ import { useI18n } from 'vue-i18n'
 
 import { useSearchFilter } from '@/composables/useSearchFilter'
 import { useWait } from '@/composables/useWait'
-import { useStarredStore } from '@/store/modules'
+import { useLockedFiltersStore, useStarredStore } from '@/store/modules'
 import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPanelSectionFilterEntry'
 import FilterType from '@/components/Filter/FilterType/FilterType'
 
@@ -21,7 +21,34 @@ const props = defineProps({
 
 const { t } = useI18n()
 const starredStore = useStarredStore()
+const lockedFiltersStore = useLockedFiltersStore()
 const { getTotal, getFilterValues, setFilterValue, watchIndices, indices } = useSearchFilter()
+
+// `starred` has no exclude mode (hideExclude: true in its filter def), so
+// unlike FilterType.vue's bucket-based lock name there's no `-` prefix to
+// derive — the plain filter name is the lock store key. Values are the
+// filter's own true/false pseudo-bucket keys, not real ES bucket keys, so
+// this doesn't reuse FilterType.vue's isItemLocked/toggleLock/bucketLabel
+// (those synthesize missing aggregation buckets, which doesn't apply here —
+// both values always render).
+function isItemLocked(value) {
+  return lockedFiltersStore.isLocked({ name: 'starred', value })
+}
+
+function toggleLock(value, locked) {
+  if (locked) {
+    // Locking an unticked value also selects it — a single click both
+    // applies and locks the filter.
+    if (!selected.value.includes(value)) {
+      selected.value = [...selected.value, value]
+    }
+    const label = t(value ? 'filter.starred' : 'filter.notStarred')
+    lockedFiltersStore.lock({ name: 'starred', value, label })
+  }
+  else {
+    lockedFiltersStore.unlock({ name: 'starred', value })
+  }
+}
 
 const { waitFor } = useWait()
 const total = ref(0)
@@ -40,8 +67,18 @@ const selected = computed({
     return getFilterValues(props.filter).map(isTruthy)
   },
   set(values) {
-    const key = castArray(values).map(bool => isTruthy(bool).toString())
-    setFilterValue(props.filter, { key })
+    const next = castArray(values).map(isTruthy)
+    // Unlock on untick, same as every other filter's checkbox
+    // (useSearchFilter's removeFilterValue) — starred doesn't route through
+    // that shared helper since it replaces its whole value array at once
+    // rather than adding/removing one value, so the unlock has to happen
+    // here instead.
+    for (const value of selected.value) {
+      if (!next.includes(value)) {
+        lockedFiltersStore.unlock({ name: 'starred', value })
+      }
+    }
+    setFilterValue(props.filter, { key: next.map(bool => bool.toString()) })
   }
 })
 
@@ -58,6 +95,9 @@ watchIndices(fetch)
         :count="starredDocumentsCount"
         :hide-count="hideCount"
         :value="true"
+        :model-value="selected.includes(true)"
+        :locked="isItemLocked(true)"
+        @update:locked="toggleLock(true, $event)"
       />
       <filters-panel-section-filter-entry
         name="not-starred"
@@ -65,6 +105,9 @@ watchIndices(fetch)
         :count="notStarredDocumentsCount"
         :hide-count="hideCount"
         :value="false"
+        :model-value="selected.includes(false)"
+        :locked="isItemLocked(false)"
+        @update:locked="toggleLock(false, $event)"
       />
     </b-form-checkbox-group>
   </filter-type>

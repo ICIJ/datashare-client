@@ -3,6 +3,7 @@ import { mount } from '@vue/test-utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import SearchBreadcrumbFormEntry from '@/components/Search/SearchBreadcrumbForm/SearchBreadcrumbFormEntry'
 import SearchBreadcrumbUri from '@/components/Search/SearchBreadcrumbUri/SearchBreadcrumbUri'
+import { useLockedFiltersStore } from '@/store/modules'
 
 describe('SearchBreadcrumbUri.vue', () => {
   let core, global, wrapper
@@ -10,6 +11,10 @@ describe('SearchBreadcrumbUri.vue', () => {
   beforeEach(async () => {
     core = CoreSetup.init().useAll()
     global = { plugins: core.plugins }
+    // CoreSetup falls back to the app's singleton pinia (with the locked
+    // filters store's `persist: true`), so entries otherwise leak across
+    // tests in this file.
+    useLockedFiltersStore().unlockAll()
   })
 
   describe('a boolean query on one index', () => {
@@ -138,6 +143,21 @@ describe('SearchBreadcrumbUri.vue', () => {
       const entries = wrapper.findAllComponents(SearchBreadcrumbFormEntry)
       expect(entries.at(3).props('filter')).toBe('contentType')
       expect(entries.at(3).props('value')).toBe('image/png')
+    })
+  })
+
+  describe('with a locked filter value not present in the URI', () => {
+    beforeEach(() => {
+      useLockedFiltersStore().lock({ name: 'language', value: 'ENGLISH', label: 'ENGLISH' })
+      const uri = '/?q=foo&from=0&size=25&index=cherry'
+      const props = { uri }
+      wrapper = mount(SearchBreadcrumbUri, { global, props })
+    })
+
+    it('should not render the locked value as a chip', () => {
+      const entries = wrapper.findAllComponents(SearchBreadcrumbFormEntry)
+      const languageEntries = entries.filter(entry => entry.props('filter') === 'language')
+      expect(languageEntries).toHaveLength(0)
     })
   })
 })
