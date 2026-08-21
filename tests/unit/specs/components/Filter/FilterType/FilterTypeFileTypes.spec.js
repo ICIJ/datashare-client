@@ -1478,6 +1478,22 @@ describe('FilterTypeFileTypes.vue', () => {
       expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'application/pdf' })).toBe(false)
     })
 
+    it('hides the per-value lock button on flat entries when hideLock is set', async () => {
+      wrapper.unmount()
+      const filter = searchStore.getFilter({ name: 'contentType' })
+      wrapper = mount(FilterTypeFileTypes, {
+        global: { plugins: core.plugins },
+        props: { filter, collapse: false, hideLock: true }
+      })
+      seedContentTypes(['application/pdf'])
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+      await wrapper.findComponent(ButtonToggleContentTypesView).trigger('click')
+      await flushPromises()
+
+      expect(wrapper.findComponent(ContentTypesEntry).props('hideLock')).toBe(true)
+    })
+
     it('unlocks a plain grouped entry when it is unticked', async () => {
       api.getContentTypeCategories.mockResolvedValue({ DOCUMENT: ['application/pdf', 'text/html'] })
       seedContentTypes(['application/pdf', 'text/html'])
