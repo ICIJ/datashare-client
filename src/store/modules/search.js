@@ -680,10 +680,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     const filterValues = (values.value[name] ?? []).map(toString)
     lockedFiltersStore.entries
       .filter(entry => entry.name === oldName && filterValues.includes(entry.value))
-      .forEach(({ value, label }) => {
-        lockedFiltersStore.unlock({ name: oldName, value })
-        lockedFiltersStore.lock({ name: newName, value, label })
-      })
+      .forEach(({ value }) => lockedFiltersStore.retag({ name: oldName, newName, value }))
   }
 
   /**

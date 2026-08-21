@@ -80,4 +80,39 @@ describe('LockedFiltersStore', () => {
     store.lock({ name: 'contentType', value: 'application/pdf', label: 'PDF' })
     expect(store.count).toBe(2)
   })
+
+  describe('retag', () => {
+    it('renames a locked entry to a new name, keeping its label and position', () => {
+      store.lock({ name: 'tag', value: 'confidential', label: 'Confidential' })
+
+      store.retag({ name: 'tag', newName: '-tag', value: 'confidential' })
+
+      expect(store.entries).toEqual([{ name: '-tag', value: 'confidential', label: 'Confidential' }])
+      expect(store.isLocked({ name: 'tag', value: 'confidential' })).toBe(false)
+      expect(store.isLocked({ name: '-tag', value: 'confidential' })).toBe(true)
+    })
+
+    it('does nothing when the entry is not currently locked', () => {
+      store.retag({ name: 'tag', newName: '-tag', value: 'confidential' })
+      expect(store.entries).toHaveLength(0)
+    })
+
+    it('drops the old entry instead of duplicating when the new name is already locked', () => {
+      store.lock({ name: 'tag', value: 'confidential', label: 'Confidential' })
+      store.lock({ name: '-tag', value: 'confidential', label: 'CONFIDENTIAL (renamed)' })
+
+      store.retag({ name: 'tag', newName: '-tag', value: 'confidential' })
+
+      expect(store.entries).toEqual([{ name: '-tag', value: 'confidential', label: 'CONFIDENTIAL (renamed)' }])
+    })
+
+    it('leaves other entries untouched', () => {
+      store.lock({ name: 'tag', value: 'confidential', label: 'Confidential' })
+      store.lock({ name: 'contentType', value: 'application/pdf', label: 'PDF' })
+
+      store.retag({ name: 'tag', newName: '-tag', value: 'confidential' })
+
+      expect(store.isLocked({ name: 'contentType', value: 'application/pdf' })).toBe(true)
+    })
+  })
 })
