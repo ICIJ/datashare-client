@@ -6,6 +6,9 @@ import 'whatwg-fetch'
 // evaluate it here, once per worker, while the environment is alive.
 import '@vueuse/components'
 
+import { useLockedFiltersStore } from '@/store/modules'
+import { pinia } from '@/store/pinia'
+
 // Node 22+ ships a native `localStorage` that throws on access unless the
 // runtime is launched with `--localstorage-file`. Some sandboxed CI
 // environments hit this at the very first access made by `@vue/devtools-kit`
@@ -31,6 +34,20 @@ catch {
     }
   })
 }
+
+// `@/store/pinia`'s pinia instance is a true module-level singleton (CoreSetup's
+// own createPinia() is never actually called by any spec), so every store,
+// including persisted ones (`persist: true`), is shared across every test in a
+// spec file, not recreated per test. lockedFiltersStore in particular leaked
+// entries from one test into the next this way, forcing several spec files to
+// call unlockAll() themselves as a workaround. Reset it here once, globally,
+// instead of at each call site.
+beforeEach(() => {
+  // Pass the singleton explicitly: no test has necessarily called
+  // `setActivePinia` yet at this point in the hook chain (this beforeEach
+  // runs before each spec file's own beforeEach, which usually does).
+  useLockedFiltersStore(pinia).unlockAll()
+})
 
 // Save the original log method for later use
 const log = global.console.log

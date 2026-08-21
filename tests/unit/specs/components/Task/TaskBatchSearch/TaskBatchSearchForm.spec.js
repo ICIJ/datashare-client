@@ -70,4 +70,49 @@ describe('TaskBatchSearchForm', () => {
     expect(wrapper.vm.$toast.error).toHaveBeenCalledOnce()
     expect(wrapper.vm.$toast.success).not.toHaveBeenCalled()
   })
+
+  describe('locked filters kept in the batch search query/uri (icij/datashare#2331 reverted)', () => {
+    it('calls rootSearch with instantiatedFilters, including a locked value, in the query template', async () => {
+      const { useLockedFiltersStore } = await import('@/store/modules')
+      const lockedFiltersStore = useLockedFiltersStore()
+
+      const wrapper = createValidWrapper()
+      const { formSearchStore } = wrapper.vm.$.setupState
+      formSearchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+      await wrapper.vm.$nextTick()
+
+      // Access the computed to trigger evaluation.
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      wrapper.vm.$.setupState.queryTemplate
+
+      const [passedFilters] = api.elasticsearch.rootSearch.mock.calls.at(-1)
+      const contentTypeFilter = passedFilters.find(filter => filter.name === 'contentType')
+      expect(contentTypeFilter.values).toEqual(['application/pdf'])
+    })
+
+    it('keeps a locked value in the batch search uri', async () => {
+      const { useLockedFiltersStore } = await import('@/store/modules')
+      const lockedFiltersStore = useLockedFiltersStore()
+
+      const wrapper = createValidWrapper()
+      const { formSearchStore } = wrapper.vm.$.setupState
+      formSearchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+      await wrapper.vm.$nextTick()
+
+      const { uri } = wrapper.vm.$.setupState
+      expect(decodeURIComponent(uri)).toContain('f[contentType]')
+    })
+
+    it('keeps a ticked-but-unlocked value in the batch search uri', async () => {
+      const wrapper = createValidWrapper()
+      const { formSearchStore } = wrapper.vm.$.setupState
+      formSearchStore.addFilterValue({ name: 'contentType', value: 'text/plain' })
+      await wrapper.vm.$nextTick()
+
+      const { uri } = wrapper.vm.$.setupState
+      expect(decodeURIComponent(uri)).toContain('f[contentType]')
+    })
+  })
 })

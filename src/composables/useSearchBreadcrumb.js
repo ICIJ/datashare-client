@@ -1,4 +1,5 @@
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import castArray from 'lodash/castArray'
 import compact from 'lodash/compact'
 import map from 'lodash/map'
@@ -9,6 +10,7 @@ import unset from 'lodash/unset'
 import lucene from 'lucene'
 
 import { useSearchFilter } from '@/composables/useSearchFilter'
+import { useToast } from '@/composables/useToast'
 import { useLockedFiltersStore, useSearchBreadcrumbStore, useSearchStore } from '@/store/modules'
 import { getCanonicalDimension, getPairedDimension } from '@/store/filters/pairedDimensions'
 import findPath from '@/utils/findPath'
@@ -108,9 +110,12 @@ export function assembleEntries(rawEntries) {
 export function useSearchBreadcrumb() {
   const searchStore = useSearchStore.inject()
   const searchBreadcrumbStore = useSearchBreadcrumbStore()
-  const { setQuery, removeIndex, removeFilterValue, refreshRoute } = useSearchFilter()
+  const { setQuery, removeIndex, removeFilterValue, refreshRoute, refreshRouteFromStart } = useSearchFilter()
   const lockedFiltersStore = useLockedFiltersStore()
   const lockedFiltersCount = computed(() => lockedFiltersStore.count)
+  const hasConflictingLocks = computed(() => searchStore.hasConflictingLocks)
+  const { toast } = useToast()
+  const { t } = useI18n()
 
   const count = computed(() => entries.value.length)
 
@@ -217,6 +222,17 @@ export function useSearchBreadcrumb() {
     lockedFiltersStore.unlockAll()
   }
 
+  const applyLockedFilters = async () => {
+    try {
+      searchStore.applyLockedFilters()
+      await refreshRouteFromStart()
+      toast.success(t('searchBreadcrumbFormFooter.applyLockedFiltersSuccess'))
+    }
+    catch {
+      toast.error(t('searchBreadcrumbFormFooter.applyLockedFiltersError'))
+    }
+  }
+
   return {
     anyFilters,
     entries,
@@ -229,6 +245,8 @@ export function useSearchBreadcrumb() {
     clearQueryEntries,
     clearAll,
     unlockAll,
+    hasConflictingLocks,
+    applyLockedFilters,
     lockedFiltersCount,
     count,
     hasQueryEntries,

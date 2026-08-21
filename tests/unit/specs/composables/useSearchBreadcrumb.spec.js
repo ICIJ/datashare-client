@@ -13,12 +13,12 @@ describe('useSearchBreadcrumb composable', () => {
   // The "search" route lazily imports the whole Search view subtree, whose
   // setup() reads from the search store. Resolve it once here, on a
   // throwaway router/pinia, so that cost isn't paid inside a single test's
-  // timeout.
+  // timeout. icij/datashare#2337.
   beforeAll(async () => {
     setActivePinia(createPinia())
     const router = createRouter({ routes, history: createWebHashHistory() })
     await router.push({ name: 'search' })
-  })
+  }, 30000)
 
   beforeEach(() => {
     core = CoreSetup.init().useAll().useRouterWithoutGuards()
@@ -35,8 +35,8 @@ describe('useSearchBreadcrumb composable', () => {
       },
       template: '<div></div>'
     }
-    mount(TestComponent, { global: { plugins } })
-    return result
+    const wrapper = mount(TestComponent, { global: { plugins } })
+    return { ...result, wrapper }
   }
 
   describe('parseFiltersEntries (breadcrumb rendering for content type + category)', () => {
@@ -144,10 +144,6 @@ describe('useSearchBreadcrumb composable', () => {
     })
 
     it('clearFiltersEntries removes everything when there are zero locks', () => {
-      // Locks persist to localStorage (persist: true) across the jsdom-shared
-      // localStorage instance, so a fresh pinia alone doesn't guarantee zero
-      // locks here — clear explicitly.
-      lockedFiltersStore.unlockAll()
       searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
 
       const { clearFiltersEntries } = mountComposable()
@@ -185,6 +181,41 @@ describe('useSearchBreadcrumb composable', () => {
       const { lockedFiltersCount } = mountComposable()
 
       expect(lockedFiltersCount.value).toBe(2)
+    })
+  })
+
+  describe('hasConflictingLocks and applyLockedFilters (icij/datashare#2332)', () => {
+    let lockedFiltersStore
+
+    beforeEach(() => {
+      lockedFiltersStore = useLockedFiltersStore()
+    })
+
+    it('reflects the store getter', () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.excludeFilter('contentType')
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      const { hasConflictingLocks } = mountComposable()
+
+      expect(hasConflictingLocks.value).toBe(true)
+    })
+
+    it('applies conflicting locks, refreshes the route, and toasts success', async () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.excludeFilter('contentType')
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      const { applyLockedFilters, wrapper } = mountComposable()
+      vi.spyOn(wrapper.vm.$toast, 'success')
+      vi.spyOn(wrapper.vm.$toast, 'error')
+
+      await applyLockedFilters()
+
+      expect(searchStore.getFilter({ name: 'contentType' }).values).toEqual(['application/pdf'])
+      expect(searchStore.isFilterExcluded('contentType')).toBe(false)
+      expect(wrapper.vm.$toast.success).toHaveBeenCalledOnce()
+      expect(wrapper.vm.$toast.error).not.toHaveBeenCalled()
     })
   })
 })

@@ -35,6 +35,74 @@ import { PAIRED_DIMENSIONS, getCanonicalDimension, getPairedDimension, getPaired
 import { useAppStore, useLockedFiltersStore, useRecommendedStore, useSearchStore } from '@/store/modules'
 import { toLockedName } from '@/store/modules/lockedFilters'
 
+// Module-level singleton (shared across every useSearchFilter() call, not
+// per-call state): a one-shot flag set by SearchBar.vue's submit() to mark
+// "this next search was an explicit user submission (Enter/Search button),
+// not a filter/index/operator watcher". Deliberately NOT round-tripped
+// through the route query string: pushing even a *complete* route query can
+// still trigger a same-tick cascade of corrective re-navigations from
+// independently registered watchers reacting to a resulting state change
+// (e.g. a locked-filter merge triggering watchFilters(refreshRouteFromStart)
+// with a freshly regenerated stamp) — and Vue's watch(route.fullPath)
+// coalesces multiple synchronous updates into a single firing for only the
+// *latest* value, so an arbitrary custom query param can be silently
+// dropped before any consumer ever observes it. A plain JS flag has no such
+// round-trip to survive. See icij/datashare#2332.
+//
+// Standalone module exports, not returned from useSearchFilter(): neither
+// function needs any Vue/router/store context, so callers (including tests)
+// can use them without mounting a component.
+let justSubmitted = false
+
+// Set by SearchBar.vue's submit() right before it pushes the route — marks
+// the upcoming search as an explicit user submission.
+export function markJustSubmitted() {
+  justSubmitted = true
+}
+
+// Reads and clears the flag in one step, so it's consumed exactly once no
+// matter how many route updates the resulting search triggers (e.g. a
+// locked-filter merge cascading into further re-navigations) — every one of
+// those sees the flag already cleared after the first check.
+export function consumeJustSubmitted() {
+  const value = justSubmitted
+  justSubmitted = false
+  return value
+}
+
+// Same rationale and idiom as justSubmitted above, for a different one-shot
+// signal: set by SearchSavedEntries.vue right before navigating into a saved
+// search, so the hydration guards below can skip the otherwise-automatic
+// locked-filter merge for that one navigation. A saved search is a frozen
+// snapshot; a lock absent from it should not be silently re-injected the way
+// it would be for an ordinary link (the "silent-merge-unless-conflicting"
+// rule is deliberately bypassed here, not just its conflict branch). A URL
+// query flag was tried first and rejected for the same reason justSubmitted
+// isn't one: stripping it back out of the URL is itself a navigation, and
+// that navigation would re-hydrate with the flag already gone, silently
+// merging the lock right back in a tick later. See icij/datashare#2331.
+//
+// Two independent guards below (refreshSearchFromRoute and
+// refreshSearchFromRouteStart) both need to read this for the same
+// navigation, so reading does not consume it, only onConsumeSavedSearchOpened
+// does, and it must be registered after both so they observe it first.
+let savedSearchOpened = false
+
+export function markSavedSearchOpened() {
+  savedSearchOpened = true
+}
+
+// Non-destructive read, called by both hydration guards below.
+export function isSavedSearchOpened() {
+  return savedSearchOpened
+}
+
+// Clears the flag. Called once, by onConsumeSavedSearchOpened's callback,
+// after both guards have already read it via isSavedSearchOpened() above.
+export function clearSavedSearchOpened() {
+  savedSearchOpened = false
+}
+
 export function useSearchFilter() {
   const appStore = useAppStore()
   const searchStore = useSearchStore.inject()
@@ -356,7 +424,7 @@ export function useSearchFilter() {
     const searchOperator = toValidSearchOperator(route.query.searchOperator ?? getSearchOperator())
     appStore.setSettings('search', { perPage, orderBy: [sort, order], searchOperator })
     // Update the search store using the route query
-    searchStore.updateFromRouteQuery(route.query)
+    searchStore.updateFromRouteQuery(route.query, { mergeLocks: !isSavedSearchOpened() })
     // And finally, refresh the search if t
     return nextTick(refreshSearch)
   }
@@ -367,7 +435,7 @@ export function useSearchFilter() {
     const searchOperator = toValidSearchOperator(route.query.searchOperator ?? getSearchOperator())
     appStore.setSettings('search', { perPage, orderBy: [sort, order], searchOperator })
     // Update the search store using the route query and reset the `from` parameter
-    searchStore.updateFromRouteQuery({ ...route.query, from: 0 })
+    searchStore.updateFromRouteQuery({ ...route.query, from: 0 }, { mergeLocks: !savedSearchOpened })
     // And finally, refresh the search if t
     return nextTick(refreshSearch)
   }
@@ -537,6 +605,24 @@ export function useSearchFilter() {
     }, options)
   }
 
+  function onConsumeSavedSearchOpened(options) {
+    // Clears the in-memory savedSearchOpened flag (see its declaration above
+    // for why it isn't a URL param). Bare onAfterRouteUpdate, not
+    // onAfterRouteQueryUpdate: the latter's sameAppliedQuery gate could skip
+    // this callback on a rare matching navigation, leaking the flag into an
+    // unrelated future one; this must run unconditionally on every 'search'
+    // navigation.
+    //
+    // This consumer MUST be registered after refreshSearchFromRouteStart and
+    // refreshSearchFromRoute so its queued microtask runs last and both
+    // guards read the flag before it is cleared here.
+    return onAfterRouteUpdate((to) => {
+      if (to.name === 'search') {
+        clearSavedSearchOpened()
+      }
+    }, options)
+  }
+
   return {
     indices,
     allProjectsSelected,
@@ -589,6 +675,7 @@ export function useSearchFilter() {
     onAfterRouteQueryUpdate,
     onAfterRouteQueryFromUpdate,
     onConsumeNoRefresh,
+    onConsumeSavedSearchOpened,
     watchValues,
     whenFilterContextualized,
     isCategoryAvailable,

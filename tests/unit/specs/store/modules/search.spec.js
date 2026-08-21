@@ -686,6 +686,64 @@ describe('SearchStore', () => {
     })
   })
 
+  describe('runBatchDownload keeps locked values (icij/datashare#2331 reverted)', () => {
+    let rootSearchSpy, lockedFiltersStore
+
+    beforeEach(() => {
+      rootSearchSpy = vi.spyOn(api.elasticsearch, 'rootSearch')
+      vi.spyOn(api, 'runBatchDownload').mockResolvedValue({})
+      lockedFiltersStore = useLockedFiltersStore()
+    })
+
+    afterEach(() => {
+      vi.restoreAllMocks()
+    })
+
+    it('calls rootSearch with the live instantiatedFilters, including a locked value', async () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      await searchStore.runBatchDownload()
+
+      expect(rootSearchSpy).toHaveBeenCalledWith(
+        searchStore.instantiatedFilters,
+        expect.anything(),
+        expect.anything(),
+        expect.anything()
+      )
+      const passedFilters = rootSearchSpy.mock.calls[0][0]
+      const contentTypeFilter = find(passedFilters, { name: 'contentType' })
+      expect(contentTypeFilter.values).toEqual(['application/pdf'])
+    })
+  })
+
+  describe('estimateDownloadSize keeps locked values (icij/datashare#2331 reverted)', () => {
+    let estimateSpy, lockedFiltersStore
+
+    beforeEach(() => {
+      estimateSpy = vi.spyOn(api.elasticsearch, 'estimateDownloadSize').mockResolvedValue({
+        estimatedCount: 0,
+        estimatedSize: 0
+      })
+      lockedFiltersStore = useLockedFiltersStore()
+    })
+
+    afterEach(() => {
+      vi.restoreAllMocks()
+    })
+
+    it('calls estimateDownloadSize with the live instantiatedFilters, including a locked value', async () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      await searchStore.estimateDownloadSize()
+
+      const passedFilters = estimateSpy.mock.calls[0][1]
+      const contentTypeFilter = find(passedFilters, { name: 'contentType' })
+      expect(contentTypeFilter.values).toEqual(['application/pdf'])
+    })
+  })
+
   describe('Delete query terms', () => {
     it('should not delete the term from the query if it doesn\'t exist', async () => {
       searchStore.setQuery('*')
@@ -1611,6 +1669,114 @@ describe('SearchStore', () => {
       searchStore.mergeLockedFilters()
 
       expect(searchStore.getFilter({ name: 'contentType' }).values).toEqual(['application/pdf'])
+    })
+  })
+
+  describe('hasConflictingLocks and applyLockedFilters (icij/datashare#2332)', () => {
+    let lockedFiltersStore
+
+    beforeEach(() => {
+      lockedFiltersStore = useLockedFiltersStore()
+    })
+
+    it('is false when there are no locks', () => {
+      expect(searchStore.hasConflictingLocks).toBe(false)
+    })
+
+    it('is false when a lock has no conflicting live value', () => {
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      expect(searchStore.hasConflictingLocks).toBe(false)
+    })
+
+    it('is true when a locked filter is present in the opposite mode', () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.excludeFilter('contentType')
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      expect(searchStore.hasConflictingLocks).toBe(true)
+    })
+
+    it('is false again once the conflicting value/mode is applied', () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.excludeFilter('contentType')
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+      expect(searchStore.hasConflictingLocks).toBe(true)
+
+      searchStore.applyLockedFilters()
+
+      expect(searchStore.hasConflictingLocks).toBe(false)
+    })
+
+    it('applyLockedFilters overrides a conflicting mode instead of skipping it (locks win)', () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.excludeFilter('contentType')
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      searchStore.applyLockedFilters()
+
+      expect(searchStore.getFilter({ name: 'contentType' }).values).toEqual(['application/pdf'])
+      expect(searchStore.isFilterExcluded('contentType')).toBe(false)
+    })
+
+    it('applyLockedFilters adds a locked value absent from the live search', () => {
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      searchStore.applyLockedFilters()
+
+      expect(searchStore.getFilter({ name: 'contentType' }).values).toEqual(['application/pdf'])
+    })
+
+    it('applyLockedFilters ignores a lock whose filter no longer exists', () => {
+      lockedFiltersStore.lock({ name: 'notAFilter', value: 'x', label: 'x' })
+
+      expect(() => searchStore.applyLockedFilters()).not.toThrow()
+      expect(searchStore.values.notAFilter).toBeUndefined()
+    })
+  })
+
+  describe('toggleFilter re-locks values on mode flip (icij/datashare#2332)', () => {
+    let lockedFiltersStore
+
+    beforeEach(() => {
+      lockedFiltersStore = useLockedFiltersStore()
+    })
+
+    it('re-tags a locked value to the new mode when its filter is toggled to excluded', () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      searchStore.toggleFilter('contentType', true)
+
+      expect(lockedFiltersStore.entries).toEqual([{ name: '-contentType', value: 'application/pdf', label: 'application/pdf' }])
+      expect(searchStore.hasConflictingLocks).toBe(false)
+    })
+
+    it('re-tags a locked value back to included when the filter is toggled back', () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.excludeFilter('contentType')
+      lockedFiltersStore.lock({ name: '-contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      searchStore.toggleFilter('contentType', false)
+
+      expect(lockedFiltersStore.entries).toEqual([{ name: 'contentType', value: 'application/pdf', label: 'application/pdf' }])
+    })
+
+    it('does not touch a lock for a value not currently active on the filter', () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      lockedFiltersStore.lock({ name: 'contentType', value: 'text/plain', label: 'text/plain' })
+
+      searchStore.toggleFilter('contentType', true)
+
+      expect(lockedFiltersStore.entries).toEqual([{ name: 'contentType', value: 'text/plain', label: 'text/plain' }])
+    })
+
+    it('is a no-op when the filter is already in the target mode', () => {
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      searchStore.toggleFilter('contentType', false)
+
+      expect(lockedFiltersStore.entries).toEqual([{ name: 'contentType', value: 'application/pdf', label: 'application/pdf' }])
     })
   })
 })

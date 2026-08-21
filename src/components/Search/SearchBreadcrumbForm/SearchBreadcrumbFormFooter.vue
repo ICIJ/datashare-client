@@ -6,6 +6,7 @@ import IPhXCircle from '~icons/ph/x-circle'
 import IPhArrowCounterClockwise from '~icons/ph/arrow-counter-clockwise'
 import IPhFloppyDiskBack from '~icons/ph/floppy-disk-back'
 import IPhSiren from '~icons/ph/siren'
+import IPhLock from '~icons/ph/lock'
 import IPhLockOpen from '~icons/ph/lock-open'
 
 import FormActions from '@/components/Form/FormActions/FormActions'
@@ -29,10 +30,14 @@ defineProps({
   lockedFiltersCount: {
     type: Number,
     default: 0
+  },
+  hasConflictingLocks: {
+    type: Boolean,
+    default: false
   }
 })
 const { t } = useI18n()
-const emit = defineEmits(['clear:filters', 'clear:query', 'clear:all', 'unlock:all', 'save:search', 'create:alert'])
+const emit = defineEmits(['clear:filters', 'clear:query', 'clear:all', 'unlock:all', 'apply:locked-filters', 'save:search', 'create:alert'])
 </script>
 
 <template>
@@ -44,13 +49,20 @@ const emit = defineEmits(['clear:filters', 'clear:query', 'clear:all', 'unlock:a
   >
     <template #compact>
       <!--
-        Whenever Story 6 (icij/datashare#2332) lands, this button's slot is
-        replaced by "Apply locked filters" while a lock conflicts with the
-        active search — see the spec's Story 4 section for the full rule.
+        Exactly one of these two buttons ever shows (icij/datashare#2332):
+        "Apply locked filters" while a lock conflicts with the active search,
+        or "Unlock filters (N)" otherwise, whenever any lock exists.
       -->
       <button-icon
-        v-if="lockedFiltersCount > 0"
+        v-if="hasConflictingLocks"
         :icon-left="IPhLockOpen"
+        @click="emit('apply:locked-filters')"
+      >
+        {{ t('searchBreadcrumbFormFooter.applyLockedFilters') }}
+      </button-icon>
+      <button-icon
+        v-else-if="lockedFiltersCount > 0"
+        :icon-left="IPhLock"
         @click="emit('unlock:all')"
       >
         {{ t('searchBreadcrumbFormFooter.unlockFilters', { count: lockedFiltersCount }) }}
