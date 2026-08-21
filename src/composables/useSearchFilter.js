@@ -299,9 +299,7 @@ export function useSearchFilter() {
     const instance = castFilter(filter)
     const { name } = instance
     const lockedName = lockedNameFor(instance)
-    for (const entry of lockedFiltersStore.entries.filter(entry => entry.name === lockedName)) {
-      lockedFiltersStore.unlock({ name: lockedName, value: entry.value })
-    }
+    lockedFiltersStore.unlockWhere(entry => entry.name === lockedName)
     return searchStore.setFilterValue({ name, value: [] })
   }
 
