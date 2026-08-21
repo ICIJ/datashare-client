@@ -34,6 +34,12 @@ const props = defineProps({
   },
   hideCount: {
     type: Boolean
+  },
+  // Suppresses the per-row lock button entirely. See FilterType.vue's
+  // hideLock for why (disposable/unrelated screens rendering against a
+  // non-live search store).
+  hideLock: {
+    type: Boolean
   }
 })
 
@@ -94,7 +100,10 @@ function toggleLockPath(value, locked) {
 // Consumed by PathTreeViewEntry.vue, however deep the recursive tree goes —
 // every other PathTree consumer (document browser, batch download folder
 // picker, etc.) never provides these, so the lock button never renders there.
-provide('pathLockable', true)
+// hideLock suppresses it the same way for this consumer too (disposable
+// screens rendering against a non-live search store, e.g. batch search).
+const pathLockable = computed(() => !props.hideLock)
+provide('pathLockable', pathLockable)
 provide('isPathLocked', isPathLocked)
 provide('toggleLockPath', toggleLockPath)
 
