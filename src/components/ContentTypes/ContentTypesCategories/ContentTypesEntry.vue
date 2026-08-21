@@ -18,6 +18,9 @@ const props = defineProps({
   locked: {
     type: Boolean,
     default: false
+  },
+  hideLock: {
+    type: Boolean
   }
 })
 
@@ -33,6 +36,7 @@ const label = computed(() => getDocumentTypeLabel(props.contentType))
     :label="label"
     :count="count"
     :locked="locked"
+    :hide-lock="hideLock"
     @update:locked="emit('update:locked', $event)"
   />
 </template>

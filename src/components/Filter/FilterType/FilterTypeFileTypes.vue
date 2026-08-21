@@ -26,6 +26,13 @@ const props = defineProps({
   filter: {
     type: Object,
     required: true
+  },
+  // Same escape hatch as FilterType.vue's own hideLock: suppresses the
+  // per-value lock button for disposable/unrelated contexts (e.g. the
+  // batch-search creation form) that shouldn't touch the user's real
+  // lock store.
+  hideLock: {
+    type: Boolean
   }
 })
 
@@ -150,6 +157,7 @@ const totalCount = computedTotal(filterRef)
     v-model:collapse="collapse"
     :filter="props.filter"
     :overlay-show="overlayVisible"
+    :hide-lock="hideLock"
     class="filter-type-file-types"
     flush
   >
@@ -200,6 +208,7 @@ const totalCount = computedTotal(filterRef)
                 :count="entryCount(contentType)"
                 :model-value="isEntrySelected(contentType)"
                 :locked="isItemLocked(contentType)"
+                :hide-lock="hideLock"
                 @update:model-value="toggleEntry(contentType, $event)"
                 @update:locked="toggleLock(contentType, $event)"
               />
@@ -214,6 +223,7 @@ const totalCount = computedTotal(filterRef)
             :count="entry.item.doc_count"
             :model-value="hasFilterValue(props.filter, entry.item)"
             :locked="isItemLocked(entry.item.key)"
+            :hide-lock="hideLock"
             @update:model-value="toggleFilterValue(props.filter, entry.item, $event)"
             @update:locked="toggleLock(entry.item.key, $event)"
           />
