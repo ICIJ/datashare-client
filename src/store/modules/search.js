@@ -21,7 +21,8 @@ import { isOpenSearchDistribution } from '@/api/indexDistribution'
 import { runAsyncSearch } from '@/api/asyncSearch'
 import filterDefs, * as filterTypes from '@/store/filters'
 import { getPairedDimensions } from '@/store/filters/pairedDimensions'
-import { useAppStore, useSearchBreadcrumbStore } from '@/store/modules'
+import { useAppStore, useLockedFiltersStore, useSearchBreadcrumbStore } from '@/store/modules'
+import { parseLockedName } from '@/store/modules/lockedFilters'
 import { apiInstance as api } from '@/api/apiInstance'
 import { defineSuffixedStore } from '@/store/defineSuffixedStore'
 import { SEARCH_OPERATORS } from '@/enums/searchOperators'
@@ -54,6 +55,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   const lastAppliedQuery = ref({})
 
   const appStore = useAppStore()
+  const lockedFiltersStore = useLockedFiltersStore()
   const searchBreadcrumbStore = useSearchBreadcrumbStore()
 
   const index = computed({
@@ -563,6 +565,12 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   /**
    * Remove a filter by its name.
    *
+   * The filter itself is going away, so unlock it under both include and
+   * exclude mode, not just whichever it's currently in — every caller
+   * (FiltersMixin's unregisterFilter, useSearchFilter's removeFilter) routes
+   * through here, so fixing it here covers them all instead of duplicating
+   * the unlock in each one.
+   *
    * @param {string} name - The name of the filter to remove.
    */
   function removeFilter(name) {
@@ -571,6 +579,9 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     if (name in values.value) {
       delete values.value[name]
     }
+    lockedFiltersStore.entries
+      .filter(entry => parseLockedName(entry.name).name === name)
+      .forEach(entry => lockedFiltersStore.unlock(entry))
   }
 
   /**
