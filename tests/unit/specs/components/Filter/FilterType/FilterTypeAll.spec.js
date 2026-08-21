@@ -29,4 +29,9 @@ describe('FilterTypeAll.vue', () => {
     await flushPromises()
     expect(wrapper.findComponent(FiltersPanelSectionFilterEntry).props('hideCount')).toBe(true)
   })
+
+  it('always hides the lock button — the "All" pseudo-entry has no value of its own to lock', async () => {
+    await flushPromises()
+    expect(wrapper.findComponent(FiltersPanelSectionFilterEntry).props('hideLock')).toBe(true)
+  })
 })

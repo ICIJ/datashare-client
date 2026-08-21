@@ -56,6 +56,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   const appStore = useAppStore()
   const lockedFiltersStore = useLockedFiltersStore()
   const searchBreadcrumbStore = useSearchBreadcrumbStore()
+  const lockedFiltersStore = useLockedFiltersStore()
 
   const index = computed({
     get: () => indices.value[0],
@@ -828,8 +829,14 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * from the route query. It sets the index, indices, query, from, field,
    * and filters based on the provided route query.
    * @param {Object} routeQuery - The query parameters from the current route.
+   * @param {Object} [options] - Options controlling the hydration.
+   * @param {boolean} [options.mergeLocks=true] - Whether to merge the user's locked filter
+   *   values into the hydrated state. Disposable stores that hydrate from a persisted,
+   *   read-only query (e.g. SearchBreadcrumbUri.vue rendering a saved search/batch's
+   *   breadcrumbs) must pass `false` here, otherwise the user's personal locks would leak
+   *   into a display of a query that never actually had them. See icij/datashare#2329.
    */
-  function updateFromRouteQuery(routeQuery) {
+  function updateFromRouteQuery(routeQuery, { mergeLocks = true } = {}) {
     // Reset the state except for the given keys
     resetForRouteChange(routeQuery)
     // Create a helper function that call the setter only if the key exists in the routeQuery
@@ -847,7 +854,64 @@ export const useSearchStore = defineSuffixedStore('search', () => {
       withRouteQuery(`f[-${filter.name}]`, key => addFilterValue(filter.itemParam({ key })))
       withRouteQuery(`f[-${filter.name}]`, () => excludeFilter(filter.name))
     })
+    // Locks are reconciled here, on every hydration, not just once at
+    // lock-creation time: resetForRouteChange (above) wipes values and
+    // excludeFilters on every route entry, including the first search of a
+    // session — which is code-path-identical to opening an external shared
+    // link. See icij/datashare#2329.
+    if (mergeLocks) {
+      mergeLockedFilters()
+    }
     reconcilePairedExcludeFilters()
+  }
+
+  /**
+   * Silently merge every locked filter value into the live search state,
+   * unless doing so would silently override a genuine conflict.
+   *
+   * For each locked entry: if its filter is absent from the route-driven
+   * state, or present in the same include/exclude mode, the value is merged
+   * in with no user-visible signal — this covers normal in-app browsing and
+   * the first search of a session alike. If the filter is present in the
+   * opposite mode (e.g. the route carries `f[-contentType]` but the lock is
+   * for included `contentType`), the merge is skipped: surfacing that
+   * conflict via an explicit action is icij/datashare#2332's job, not this
+   * one.
+   *
+   * Writes go through this store's own addFilterValue/excludeFilter, never
+   * useSearchFilter.js's paired-dimension-aware toggleFilterValue/
+   * toggleExcludeFilter (which loop over getPairedDimensions and write both
+   * sides) — so locking one side of a paired filter (e.g. contentType /
+   * contentTypeCategory) never cascades the locked *value* onto its sibling.
+   * Sibling *mode* mirroring still happens, via the existing
+   * reconcilePairedExcludeFilters() call right after this one — that's the
+   * same invariant every other route change already goes through.
+   */
+  function mergeLockedFilters() {
+    lockedFiltersStore.entries.forEach(({ name, value }) => {
+      const { name: bareName, excluded } = parseLockedName(name)
+      // A lock for a filter that no longer exists on this project/index
+      // (e.g. a stale lock from before a filter was removed) is inert.
+      if (!getFilter({ name: bareName })) {
+        return
+      }
+      // Conflict detection must look at the whole paired-dimension group, not just the
+      // bare filter name: reconcilePairedExcludeFilters() (below) force-excludes every
+      // member of a paired group if any one of them is excluded, so a lock that looks
+      // conflict-free against the bare name alone could still get silently flipped by
+      // that reconciliation pass. See icij/datashare#2329.
+      const group = getPairedDimensions(bareName)
+      const dims = group.length > 1 ? group : [bareName]
+      const isPresent = dims.some(dim => dim in values.value)
+      const hasConflict = isPresent && dims.some(dim => excludeFilters.value.includes(dim)) !== excluded
+      if (hasConflict) {
+        return
+      }
+      addFilterValue({ name: bareName, value })
+      if (excluded) {
+        excludeFilter(bareName)
+      }
+    })
   }
 
   /**

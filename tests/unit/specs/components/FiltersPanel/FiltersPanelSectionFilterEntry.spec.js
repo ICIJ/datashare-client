@@ -15,8 +15,14 @@ describe('FiltersPanelSectionFilterEntry.vue', () => {
     return wrapper.find('.filters-panel-section-filter-entry__lock')
   }
 
-  it('does not render a lock button when the row is unticked', () => {
+  it('still renders the lock button when the row is unticked (hidden via CSS opacity, not removed)', () => {
     const props = { label: 'Confidential', modelValue: false, locked: false }
+    const wrapper = mount(FiltersPanelSectionFilterEntry, { global, props })
+    expect(findLockButton(wrapper).exists()).toBe(true)
+  })
+
+  it('does not render a lock button when hideLock is set', () => {
+    const props = { label: 'Confidential', modelValue: true, locked: false, hideLock: true }
     const wrapper = mount(FiltersPanelSectionFilterEntry, { global, props })
     expect(findLockButton(wrapper).exists()).toBe(false)
   })
@@ -72,10 +78,10 @@ describe('FiltersPanelSectionFilterEntry.vue', () => {
     expect(wrapper.emitted('update:locked')).toEqual([[false]])
   })
 
-  it('hides the count badge while the row is locked', () => {
+  it('shows the count badge while ticked and locked', () => {
     const props = { label: 'Confidential', modelValue: true, locked: true, count: 5 }
     const wrapper = mount(FiltersPanelSectionFilterEntry, { global, props })
-    expect(wrapper.find('.filters-panel-section-filter-entry__count').exists()).toBe(false)
+    expect(wrapper.find('.filters-panel-section-filter-entry__count').exists()).toBe(true)
   })
 
   it('shows the count badge while ticked but not locked', () => {
@@ -90,9 +96,9 @@ describe('FiltersPanelSectionFilterEntry.vue', () => {
     expect(wrapper.find('.filters-panel-section-filter-entry__count').exists()).toBe(true)
   })
 
-  it('hides the count badge while unticked but locked', () => {
+  it('shows the count badge while unticked but locked', () => {
     const props = { label: 'Confidential', modelValue: false, locked: true, count: 5 }
     const wrapper = mount(FiltersPanelSectionFilterEntry, { global, props })
-    expect(wrapper.find('.filters-panel-section-filter-entry__count').exists()).toBe(false)
+    expect(wrapper.find('.filters-panel-section-filter-entry__count').exists()).toBe(true)
   })
 })

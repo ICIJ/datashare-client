@@ -14,8 +14,14 @@ const props = defineProps({
   count: {
     type: Number,
     default: 0
+  },
+  locked: {
+    type: Boolean,
+    default: false
   }
 })
+
+const emit = defineEmits(['update:locked'])
 
 const label = computed(() => getDocumentTypeLabel(props.contentType))
 </script>
@@ -26,5 +32,7 @@ const label = computed(() => getDocumentTypeLabel(props.contentType))
     class="content-types-entry"
     :label="label"
     :count="count"
+    :locked="locked"
+    @update:locked="emit('update:locked', $event)"
   />
 </template>
