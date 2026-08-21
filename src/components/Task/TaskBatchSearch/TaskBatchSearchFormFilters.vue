@@ -26,6 +26,7 @@ const filterLanguage = formSearchStore.getFilter({ name: 'language' })
       :filter="filterPath"
       actions-position-title
       hide-contextualize
+      hide-lock
       class="p-3"
       content-class="pb-0"
     />
