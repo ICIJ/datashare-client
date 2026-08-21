@@ -156,13 +156,7 @@ const {
 const exclude = computedExcludeFilter(filter)
 // The store key for this filter's locks: the filter's own current
 // include/exclude mode, never a paired dimension's — locking a chip on one
-// side of a paired filter must never lock or affect the other side. Shares
-// useSearchFilter's own lockedNameFor so this and every value-removal path
-// there can never key the same row's lock differently.
-// TODO(locked-filters): filter types overriding FilterType's default slot
-// (FilterTypeFileTypes, FilterTypePath, FilterTypeProject, FilterTypeStarred,
-// FilterTypeRecommendedBy) don't receive lock/unlock support yet — see
-// icij/datashare#2336.
+// side of a paired filter must never lock or affect the other side.
 const lockedName = computed(() => lockedNameFor(filter))
 const sort = computedSortFilter(filter)
 const contextualize = computedContextualizeFilter(filter)
@@ -264,7 +258,12 @@ const missingLockedBucketsPage = computed(() => {
 })
 
 const bucketsWithExcludedValues = computed(() => {
-  return flatten(concat([excludedBucketsPage.value, missingLockedBucketsPage.value], pages).map(getPageBuckets))
+  // missingLockedBucketsPage goes after the real pages, not before: it's
+  // always zero-count, so it belongs below real buckets regardless of sort
+  // order, rather than always appearing to outrank them. excludedBucketsPage
+  // keeps its existing pinned-at-top position - unrelated, pre-existing
+  // behavior this fix doesn't touch.
+  return flatten(concat([excludedBucketsPage.value], pages, [missingLockedBucketsPage.value]).map(getPageBuckets))
 })
 
 const entries = computed(() => {
