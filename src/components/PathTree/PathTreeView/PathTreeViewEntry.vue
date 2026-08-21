@@ -1,6 +1,7 @@
 <script setup>
 import { computed, inject, ref, useSlots } from 'vue'
 
+import ButtonToggleLock from '@/components/Button/ButtonToggleLock'
 import PathTreeViewEntryName from './PathTreeViewEntryName'
 import PathTreeViewEntrySearchLink from './PathTreeViewEntrySearchLink'
 import PathTreeViewEntryPreview from './PathTreeViewEntryPreview'
@@ -192,6 +193,20 @@ const isGridView = computed(() => props.layout === LAYOUTS.GRID)
 const isRoot = computed(() => props.level === 0)
 const hasPreview = computed(() => isGridView.value && !isRoot.value)
 const hasChildren = computed(() => !!slots.default)
+
+// Only FilterTypePath.vue provides these — every other PathTree/PathTreeView
+// consumer (document browser, batch download folder picker, etc.) gets the
+// no-op defaults below and never renders the lock button. PathTreeViewDocument
+// delegates its own rendering to this same component, so this single wiring
+// point covers both directories and documents.
+const pathLockable = inject('pathLockable', false)
+const isPathLocked = inject('isPathLocked', () => false)
+const toggleLockPath = inject('toggleLockPath', () => {})
+const locked = computed(() => isPathLocked(path.value))
+
+function toggleLock(value) {
+  toggleLockPath(path.value, value)
+}
 </script>
 
 <template>
@@ -232,19 +247,26 @@ const hasChildren = computed(() => !!slots.default)
         :path="path"
         :projects="projects"
       />
-      <path-tree-view-entry-stats
-        v-if="!noStats && !isGridView"
-        :path="path"
-        class="ms-auto"
-        :projects="projects"
-        :no-search-link="noSearchLink"
-        :compact="compactOrInjected"
-        :documents="documents"
-        :directories="directories"
-        :size="size"
-        :selected="selected"
-        :active="compactOrInjected ? selected : active"
-      />
+      <div class="path-tree-view-entry__header__end ms-auto d-flex align-items-center">
+        <button-toggle-lock
+          v-if="pathLockable"
+          class="path-tree-view-entry__lock above-stretched-link"
+          :locked="locked"
+          @update:locked="toggleLock"
+        />
+        <path-tree-view-entry-stats
+          v-if="!noStats && !isGridView"
+          :path="path"
+          :projects="projects"
+          :no-search-link="noSearchLink"
+          :compact="compactOrInjected"
+          :documents="documents"
+          :directories="directories"
+          :size="size"
+          :selected="selected"
+          :active="compactOrInjected ? selected : active"
+        />
+      </div>
     </div>
     <div v-if="!noPreview && hasPreview">
       <slot name="preview">
@@ -372,6 +394,27 @@ const hasChildren = computed(() => !!slots.default)
   & > &__header > &__header__search-link {
     visibility: var(--path-tree-view-entry-header-search-link-visibility);
     margin-right: var(--path-tree-view-entry-header-search-link-offset);
+  }
+
+  // Same hidden-until-hover/focus/locked idiom as the Filters panel row's own
+  // lock button — ButtonToggleLock itself only owns the locked-state color.
+  &__lock {
+    opacity: 0;
+    transition: opacity 0.15s ease;
+
+    &.button-toggle-lock--locked {
+      opacity: 1;
+    }
+  }
+
+  // Scoped to this row's own --active class (set via @mouseenter/@mouseleave
+  // on its own header in the template), not a bare &:hover descendant
+  // selector — the tree nests entries recursively, so a plain `:hover
+  // .path-tree-view-entry__lock` descendant match would also reveal every
+  // nested child row's lock icon while hovering a parent directory.
+  &--active > &__header &__lock,
+  &__lock:focus-visible {
+    opacity: 1;
   }
 }
 </style>

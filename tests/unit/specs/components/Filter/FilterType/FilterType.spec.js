@@ -1,6 +1,6 @@
 import find from 'lodash/find'
 import { ref } from 'vue'
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount, flushPromises } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 import { vi } from 'vitest'
 
@@ -399,6 +399,10 @@ describe('FilterType.vue', () => {
       expect(searchStore.values.language ?? []).not.toContain('ENGLISH')
 
       await wrapper.findComponent(FiltersPanelSectionFilterEntry).vm.$emit('update:locked', true)
+      // toggleLock's own `await toggleValue(...)` branch (only taken here,
+      // since the value starts unticked) isn't awaited by $emit itself -
+      // flush the microtask queue so it actually completes before asserting.
+      await flushPromises()
 
       expect(searchStore.values.language).toContain('ENGLISH')
       expect(lockedFiltersStore.isLocked({ name: 'language', value: 'ENGLISH' })).toBe(true)
@@ -450,6 +454,44 @@ describe('FilterType.vue', () => {
       expect(entry).toBeTruthy()
       expect(entry.props('count')).toBe(0)
       expect(entry.props('locked')).toBe(true)
+    })
+
+    it('does not render a locked value as missing until every real bucket has been loaded', async () => {
+      // `language` is pageless (pagelessBucketSize), so it always reaches the
+      // end in one page - use `tags` instead, which paginates with the
+      // default bucketSize (25) like most filters do.
+      await wrapper.setProps({ filter: searchStore.getFilter({ name: 'tags' }) })
+
+      // A full page (bucketSize buckets) means there might be more real
+      // buckets beyond it - a locked value not in it yet could just be
+      // ranked lower, not deleted. Simulate that directly rather than
+      // seeding 25+ real documents through ES.
+      const fullPage = {
+        aggregations: { tags: { buckets: Array.from({ length: 25 }, (_, i) => ({ key: `tag_${i}`, doc_count: 1 })) } }
+      }
+      wrapper.vm.pages.push(fullPage)
+      lockedFiltersStore.lock({ name: 'tags', value: 'removed-tag', label: 'Removed Tag' })
+      await wrapper.vm.$nextTick()
+
+      expect(wrapper.vm.reachedBucketsEnd).toBe(false)
+      expect(wrapper.vm.entries.some(({ label }) => label === 'Removed Tag')).toBe(false)
+
+      // A second, non-full page means every real bucket is now loaded.
+      wrapper.vm.pages.push({ aggregations: { tags: { buckets: [] } } })
+      await wrapper.vm.$nextTick()
+
+      expect(wrapper.vm.reachedBucketsEnd).toBe(true)
+      expect(wrapper.vm.entries.some(({ label }) => label === 'Removed Tag')).toBe(true)
+    })
+
+    it('renders the locked-but-missing entry after real buckets, not before', async () => {
+      await letData(es).have(new IndexedDocument('document_01', index).withLanguage('ENGLISH')).commit()
+      lockedFiltersStore.lock({ name: 'language', value: 'KLINGON', label: 'Removed Language' })
+
+      await wrapper.vm.aggregateOver()
+
+      const labels = wrapper.vm.entries.map(({ label }) => label)
+      expect(labels.indexOf('Removed Language')).toBeGreaterThan(labels.indexOf('English'))
     })
 
     it('drops the synthetic locked-but-missing entry once it is unlocked', async () => {

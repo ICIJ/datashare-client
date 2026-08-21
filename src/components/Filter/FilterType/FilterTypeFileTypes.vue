@@ -20,6 +20,7 @@ import { useContentTypeSort } from '@/composables/useContentTypeSort'
 import { useSearchFilter } from '@/composables/useSearchFilter'
 import { useSearchStore, useLockedFiltersStore } from '@/store/modules'
 import { toLockedName } from '@/store/modules/lockedFilters'
+import { CONTENT_TYPE_CATEGORY_FILTER_NAME } from '@/store/filters/FilterContentTypeCategory'
 import { getDocumentTypeLabel } from '@/utils/utils'
 
 const props = defineProps({
@@ -102,6 +103,30 @@ const {
   toggleCategory,
   toggleEntry
 } = useContentTypeSelection({ filter: filterRef, categories })
+
+// Same `-`-prefix lock namespace as leaf content types, but under the
+// category's own contentTypeCategory dimension — a category is stored as one
+// bulk value, not N individual contentType entries, so it needs its own lock
+// identity rather than fanning out to a lock per type inside it.
+const categoryLockedName = computed(() => toLockedName(CONTENT_TYPE_CATEGORY_FILTER_NAME, exclude.value))
+
+function isCategoryLocked(category) {
+  return lockedFiltersStore.isLocked({ name: categoryLockedName.value, value: category })
+}
+
+function toggleLockCategory(category, types, locked) {
+  if (locked) {
+    // Locking an unselected category also selects it (select+lock), same as
+    // locking a leaf content type.
+    if (!categoryAllSelected(category, types)) {
+      toggleCategory(category, types, true)
+    }
+    lockedFiltersStore.lock({ name: categoryLockedName.value, value: category, label: categoryLabelFor(category) })
+  }
+  else {
+    lockedFiltersStore.unlock({ name: categoryLockedName.value, value: category })
+  }
+}
 
 const {
   query,
@@ -189,8 +214,10 @@ const totalCount = computedTotal(filterRef)
               :model-value="categoryAllSelected(category, types)"
               :indeterminate="categoryIndeterminate(category, types)"
               :collapse="!isCategoryExpanded(category)"
+              :locked="isCategoryLocked(category)"
               @update:model-value="toggleCategory(category, types, $event)"
               @update:collapse="toggleCollapse(category, $event)"
+              @update:locked="toggleLockCategory(category, types, $event)"
             />
             <b-collapse :model-value="isCategoryExpanded(category)">
               <content-types-entry

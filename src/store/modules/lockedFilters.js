@@ -110,6 +110,37 @@ export const useLockedFiltersStore = defineStore('lockedFilters', () => {
   }
 
   /**
+   * Rename a locked entry's key in place — e.g. when a filter's
+   * include/exclude mode flips and its locks need to follow, without
+   * dropping and re-adding the entry under the new key (which would
+   * otherwise mean an unlock-then-lock dance per entry, and briefly not
+   * locked in between). No-op if `name`+`value` isn't currently locked.
+   *
+   * If `newName`+`value` is already locked too (e.g. a stale lock from a
+   * previous flip nobody cleaned up), the old entry is dropped instead of
+   * renamed, since the new key is already correctly represented and
+   * `entries` never holds two entries for the same key.
+   *
+   * @public
+   * @param {Object} params
+   * @param {string} params.name - The entry's current name (may carry a `-` prefix).
+   * @param {string} params.newName - The name to rename it to.
+   * @param {string|number} params.value - The filter value identifying the entry.
+   */
+  function retag({ name, newName, value }) {
+    const index = findIndex({ name, value })
+    if (index === -1) {
+      return
+    }
+    if (findIndex({ name: newName, value }) > -1) {
+      entries.value.splice(index, 1)
+    }
+    else {
+      entries.value[index] = { ...entries.value[index], name: newName }
+    }
+  }
+
+  /**
    * Unlock every currently locked filter value.
    *
    * @public
@@ -129,6 +160,7 @@ export const useLockedFiltersStore = defineStore('lockedFilters', () => {
     isLocked,
     lock,
     unlock,
+    retag,
     unlockAll
   }
 }, {

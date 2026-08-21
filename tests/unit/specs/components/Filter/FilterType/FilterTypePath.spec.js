@@ -3,7 +3,7 @@ import { mount, flushPromises } from '@vue/test-utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import FilterPath from '@/components/Filter/FilterType/FilterTypePath'
 import CoreSetup from '~tests/unit/CoreSetup'
-import { useSearchStore } from '@/store/modules'
+import { useLockedFiltersStore, useSearchStore } from '@/store/modules'
 
 vi.mock('@/api/apiInstance', async (importOriginal) => {
   const { apiInstance } = await importOriginal()
@@ -87,5 +87,86 @@ describe('FilterTypePath.vue', () => {
     expect(wrapper.vm.openPaths).toContain('/data/other')
     expect(wrapper.vm.openPaths).toContain('/data/mail')
     expect(wrapper.vm.openPaths).toContain('/data/mail/sub')
+  })
+
+  describe('locked filters (icij/datashare#2336)', () => {
+    let lockedFiltersStore
+
+    beforeEach(() => {
+      lockedFiltersStore = useLockedFiltersStore()
+    })
+
+    it('reports an unselected path as unlocked by default', () => {
+      expect(wrapper.vm.isPathLocked('/data/foo')).toBe(false)
+    })
+
+    it('locks an already-selected path without changing the selection', () => {
+      // Seeded already normalized (trailing separator), matching what a real
+      // selection via usePath.js's selectPath() would store.
+      wrapper.vm.selectedPaths = ['/data/foo/']
+
+      wrapper.vm.toggleLockPath('/data/foo', true)
+
+      expect(wrapper.vm.selectedPaths).toEqual(['/data/foo/'])
+      expect(lockedFiltersStore.isLocked({ name: 'path', value: '/data/foo/' })).toBe(true)
+      expect(wrapper.vm.isPathLocked('/data/foo')).toBe(true)
+    })
+
+    it('normalizes the lock to the tree row\'s trailing-separator form, so it matches the applied filter value (icij/datashare#2336)', () => {
+      // A tree row's own `path` prop is the raw ES bucket key (no trailing
+      // separator) — locking it must record the *normalized* form, or the
+      // lock re-merges as a second, distinct value on the next hydration,
+      // producing a duplicate-looking breadcrumb chip.
+      wrapper.vm.toggleLockPath('/data/foo', true)
+
+      expect(lockedFiltersStore.isLocked({ name: 'path', value: '/data/foo' })).toBe(false)
+      expect(lockedFiltersStore.isLocked({ name: 'path', value: '/data/foo/' })).toBe(true)
+    })
+
+    it('selects an unselected path when it is locked (hover-revealed lock icon, icij/datashare#2336)', () => {
+      wrapper.vm.toggleLockPath('/data/foo', true)
+
+      expect(wrapper.vm.selectedPaths).toEqual(['/data/foo/'])
+      expect(lockedFiltersStore.isLocked({ name: 'path', value: '/data/foo/' })).toBe(true)
+    })
+
+    it('unlocks a path without unselecting it', () => {
+      wrapper.vm.selectedPaths = ['/data/foo/']
+      wrapper.vm.toggleLockPath('/data/foo', true)
+
+      wrapper.vm.toggleLockPath('/data/foo', false)
+
+      expect(lockedFiltersStore.isLocked({ name: 'path', value: '/data/foo/' })).toBe(false)
+      expect(wrapper.vm.selectedPaths).toContain('/data/foo/')
+    })
+
+    it('removes the lock when the path is deselected', () => {
+      wrapper.vm.selectedPaths = ['/data/foo/']
+      wrapper.vm.toggleLockPath('/data/foo', true)
+
+      wrapper.vm.selectedPaths = []
+
+      expect(lockedFiltersStore.isLocked({ name: 'path', value: '/data/foo/' })).toBe(false)
+    })
+
+    it('locks under the "-" prefixed name when the filter is currently excluded', () => {
+      searchStore.excludeFilter('path')
+      wrapper.vm.selectedPaths = ['/data/foo/']
+
+      wrapper.vm.toggleLockPath('/data/foo', true)
+
+      expect(lockedFiltersStore.isLocked({ name: '-path', value: '/data/foo/' })).toBe(true)
+      expect(lockedFiltersStore.isLocked({ name: 'path', value: '/data/foo/' })).toBe(false)
+    })
+
+    it('is lockable by default', () => {
+      expect(wrapper.vm.pathLockable).toBe(true)
+    })
+
+    it('suppresses the lock button (pathLockable) when hideLock is set', async () => {
+      await wrapper.setProps({ hideLock: true })
+
+      expect(wrapper.vm.pathLockable).toBe(false)
+    })
   })
 })
