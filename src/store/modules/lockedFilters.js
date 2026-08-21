@@ -3,6 +3,31 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
 /**
+ * Convert a bare filter name plus its current exclude state into the
+ * `-`-prefixed name convention used by locked filter entries (and by route
+ * params: `f[name]` / `f[-name]`).
+ *
+ * @param {string} name - The bare filter name (no `-` prefix).
+ * @param {boolean} excluded - Whether the filter is currently in exclude mode.
+ * @returns {string}
+ */
+export function toLockedName(name, excluded) {
+  return excluded ? `-${name}` : name
+}
+
+/**
+ * Parse a lock entry's `-`-prefixed name back into its bare name and
+ * exclude state.
+ *
+ * @param {string} lockedName - The name as stored on a lock entry.
+ * @returns {{ name: string, excluded: boolean }}
+ */
+export function parseLockedName(lockedName) {
+  const excluded = lockedName.startsWith('-')
+  return { name: excluded ? lockedName.slice(1) : lockedName, excluded }
+}
+
+/**
  * Store for managing the user's personal, cross-project locked filters.
  *
  * A lock entry is `{ name, value, label }`. `name` already carries the
@@ -20,19 +45,24 @@ export const useLockedFiltersStore = defineStore('lockedFilters', () => {
    */
   const entries = ref([])
 
+  function entryKey(name, value) {
+    return `${name}\0${toString(value)}`
+  }
+
   /**
-   * Find the index of a lock entry matching `{ name, value }`.
+   * Maps an entry's `name`+`value` key to its index in `entries`, rebuilt
+   * whenever `entries` changes. `isLocked` is called once per rendered
+   * filter row on every re-render, so this trades an O(n) rebuild per
+   * mutation (lock/unlock, infrequent) for O(1) lookups per render (frequent)
+   * instead of an O(n) `findIndex` scan on every single one.
    *
    * @private
-   * @param {Object} params
-   * @param {string} params.name - The filter name (may carry a `-` prefix).
-   * @param {string|number} params.value - The filter value.
-   * @returns {number} The entry's index, or -1 if not locked.
    */
-  function findIndex({ name, value }) {
-    const stringValue = toString(value)
-    return entries.value.findIndex(entry => entry.name === name && entry.value === stringValue)
-  }
+  const indexByKey = computed(() => {
+    const map = new Map()
+    entries.value.forEach((entry, i) => map.set(entryKey(entry.name, entry.value), i))
+    return map
+  })
 
   /**
    * Check whether a given filter value is currently locked.
@@ -44,7 +74,7 @@ export const useLockedFiltersStore = defineStore('lockedFilters', () => {
    * @returns {boolean}
    */
   function isLocked({ name, value }) {
-    return findIndex({ name, value }) > -1
+    return indexByKey.value.has(entryKey(name, value))
   }
 
   /**
@@ -59,9 +89,9 @@ export const useLockedFiltersStore = defineStore('lockedFilters', () => {
    */
   function lock({ name, value, label }) {
     const stringValue = toString(value)
-    const index = findIndex({ name, value: stringValue })
+    const index = indexByKey.value.get(entryKey(name, stringValue))
     const entry = { name, value: stringValue, label }
-    if (index > -1) {
+    if (index !== undefined) {
       entries.value[index] = entry
     }
     else {
@@ -78,10 +108,22 @@ export const useLockedFiltersStore = defineStore('lockedFilters', () => {
    * @param {string|number} params.value - The filter value.
    */
   function unlock({ name, value }) {
-    const index = findIndex({ name, value })
-    if (index > -1) {
+    const index = indexByKey.value.get(entryKey(name, value))
+    if (index !== undefined) {
       entries.value.splice(index, 1)
     }
+  }
+
+  /**
+   * Unlock every locked entry matching `predicate`, in a single pass rather
+   * than filtering then unlocking each match one at a time (which would
+   * re-scan/re-splice `entries` once per match).
+   *
+   * @public
+   * @param {(entry: { name: string, value: string, label: string }) => boolean} predicate
+   */
+  function unlockWhere(predicate) {
+    entries.value = entries.value.filter(entry => !predicate(entry))
   }
 
   /**
@@ -104,6 +146,7 @@ export const useLockedFiltersStore = defineStore('lockedFilters', () => {
     isLocked,
     lock,
     unlock,
+    unlockWhere,
     unlockAll
   }
 }, {

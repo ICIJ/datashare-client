@@ -1,6 +1,9 @@
 <script setup>
 import { computed, nextTick, useTemplateRef } from 'vue'
-import { EllipsisTooltip as vEllipsisTooltip } from '@icij/murmur'
+import { EllipsisTooltip as vEllipsisTooltip, ButtonIcon } from '@icij/murmur'
+import { useI18n } from 'vue-i18n'
+import IPhLock from '~icons/ph/lock'
+import IPhLockOpen from '~icons/ph/lock-open'
 
 import DisplayNumber from '@/components/Display/DisplayNumber'
 
@@ -28,10 +31,16 @@ const props = defineProps({
   },
   indeterminate: {
     type: Boolean
+  },
+  locked: {
+    type: Boolean,
+    default: false
   }
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'update:locked'])
+
+const { t } = useI18n()
 
 const checkboxRef = useTemplateRef('checkboxRef')
 
@@ -54,7 +63,12 @@ const classList = computed(() => {
   }
 })
 
-const showCount = computed(() => !props.hideCount && !isNaN(props.count))
+// Show the lock button when the value is ticked OR already locked: a value
+// can be locked while unticked (e.g. after "Clear filters", which preserves
+// locks but unticks the value), and the user still needs a way to unlock it.
+const showLockButton = computed(() => Boolean(props.modelValue) || props.locked)
+const showCount = computed(() => !props.hideCount && !isNaN(props.count) && !props.locked)
+const lockLabel = computed(() => t(props.locked ? 'filtersPanelSectionFilterEntry.unlock' : 'filtersPanelSectionFilterEntry.lock'))
 </script>
 
 <template>
@@ -79,6 +93,18 @@ const showCount = computed(() => !props.hideCount && !isNaN(props.count))
         </span>
       </slot>
     </b-form-checkbox>
+    <button-icon
+      v-if="showLockButton"
+      square
+      hide-label
+      variant="link"
+      size="sm"
+      class="filters-panel-section-filter-entry__lock"
+      :icon-left="locked ? IPhLock : IPhLockOpen"
+      :pressed="locked"
+      :label="lockLabel"
+      @click="emit('update:locked', !locked)"
+    />
     <b-badge
       v-if="showCount"
       class="filters-panel-section-filter-entry__count"
@@ -119,6 +145,11 @@ const showCount = computed(() => !props.hideCount && !isNaN(props.count))
         width: 100%;
       }
     }
+  }
+
+  &__lock {
+    flex-shrink: 0;
+    margin-right: $spacer-xs;
   }
 
   &__count {

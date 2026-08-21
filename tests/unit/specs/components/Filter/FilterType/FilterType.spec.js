@@ -10,7 +10,7 @@ import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPanelSectionFilterEntry'
 import FilterType from '@/components/Filter/FilterType/FilterType'
 import { useContentTypeCategoryAvailability } from '@/composables/useContentTypeCategoryAvailability'
-import { useSearchStore } from '@/store/modules'
+import { useSearchStore, useLockedFiltersStore } from '@/store/modules'
 import en from '@/lang/en.json'
 import fr from '@/lang/fr.json'
 
@@ -339,6 +339,134 @@ describe('FilterType.vue', () => {
 
         expect(wrapper.vm.count).toBe(3)
       })
+    })
+  })
+
+  // NOTE: this suite uses the `language` filter (rather than `contentType`)
+  // because `contentType` is rendered via FilterTypeFileTypes, which overrides
+  // FilterType's default slot entirely and does not (yet) receive lock/unlock
+  // bindings. `language` uses FilterType's own default slot unmodified, which
+  // is the only case lock/unlock support covers today — see the TODO above
+  // `lockedName` in FilterType.vue.
+  describe('locked filters', () => {
+    let lockedFiltersStore
+
+    beforeEach(() => {
+      const name = 'language'
+      const filter = searchStore.getFilter({ name })
+
+      wrapper = shallowMount(FilterType, {
+        global: {
+          plugins: core.plugins,
+          renderStubDefaultSlot: true
+        },
+        props: {
+          filter
+        }
+      })
+
+      searchStore.decontextualizeFilter(name)
+      searchStore.setIndex(index)
+      searchStore.reset()
+      searchStore.resetFilters()
+      lockedFiltersStore = useLockedFiltersStore()
+    })
+
+    it('reports a ticked value as unlocked by default', async () => {
+      await letData(es).have(new IndexedDocument('document_01', index).withLanguage('ENGLISH')).commit()
+      searchStore.addFilterValue({ name: 'language', value: 'ENGLISH' })
+
+      await wrapper.vm.aggregateOver()
+
+      expect(wrapper.findComponent(FiltersPanelSectionFilterEntry).props('locked')).toBe(false)
+    })
+
+    it('locks a value when the entry emits update:locked with true', async () => {
+      await letData(es).have(new IndexedDocument('document_01', index).withLanguage('ENGLISH')).commit()
+      searchStore.addFilterValue({ name: 'language', value: 'ENGLISH' })
+
+      await wrapper.vm.aggregateOver()
+      await wrapper.findComponent(FiltersPanelSectionFilterEntry).vm.$emit('update:locked', true)
+
+      expect(lockedFiltersStore.isLocked({ name: 'language', value: 'ENGLISH' })).toBe(true)
+      expect(wrapper.findComponent(FiltersPanelSectionFilterEntry).props('locked')).toBe(true)
+    })
+
+    it('unlocks a value when the entry emits update:locked with false', async () => {
+      await letData(es).have(new IndexedDocument('document_01', index).withLanguage('ENGLISH')).commit()
+      searchStore.addFilterValue({ name: 'language', value: 'ENGLISH' })
+      lockedFiltersStore.lock({ name: 'language', value: 'ENGLISH', label: 'English' })
+
+      await wrapper.vm.aggregateOver()
+      await wrapper.findComponent(FiltersPanelSectionFilterEntry).vm.$emit('update:locked', false)
+
+      expect(lockedFiltersStore.isLocked({ name: 'language', value: 'ENGLISH' })).toBe(false)
+    })
+
+    it('locks under the "-" prefixed name when the filter is currently excluded', async () => {
+      await letData(es).have(new IndexedDocument('document_01', index).withLanguage('ENGLISH')).commit()
+      searchStore.addFilterValue({ name: 'language', value: 'ENGLISH' })
+      searchStore.excludeFilter('language')
+
+      await wrapper.vm.aggregateOver()
+      await wrapper.findComponent(FiltersPanelSectionFilterEntry).vm.$emit('update:locked', true)
+
+      expect(lockedFiltersStore.isLocked({ name: '-language', value: 'ENGLISH' })).toBe(true)
+      expect(lockedFiltersStore.isLocked({ name: 'language', value: 'ENGLISH' })).toBe(false)
+    })
+
+    it('removes the lock when the value is unticked', async () => {
+      await letData(es).have(new IndexedDocument('document_01', index).withLanguage('ENGLISH')).commit()
+      searchStore.addFilterValue({ name: 'language', value: 'ENGLISH' })
+      lockedFiltersStore.lock({ name: 'language', value: 'ENGLISH', label: 'English' })
+
+      await wrapper.vm.aggregateOver()
+      await wrapper.findComponent(FiltersPanelSectionFilterEntry).vm.$emit('update:model-value', false)
+
+      expect(lockedFiltersStore.isLocked({ name: 'language', value: 'ENGLISH' })).toBe(false)
+    })
+
+    it('still renders a locked value with no matching aggregation bucket, at zero count', async () => {
+      // No document with this language exists — simulates a deleted/re-indexed value.
+      lockedFiltersStore.lock({ name: 'language', value: 'KLINGON', label: 'Removed Language' })
+
+      await wrapper.vm.aggregateOver()
+
+      const entry = wrapper.findAllComponents(FiltersPanelSectionFilterEntry).find(
+        w => w.props('label') === 'Removed Language'
+      )
+      expect(entry).toBeTruthy()
+      expect(entry.props('count')).toBe(0)
+      expect(entry.props('locked')).toBe(true)
+    })
+
+    it('drops the synthetic locked-but-missing entry once it is unlocked', async () => {
+      lockedFiltersStore.lock({ name: 'language', value: 'KLINGON', label: 'Removed Language' })
+      await wrapper.vm.aggregateOver()
+      expect(wrapper.vm.entries.some(({ label }) => label === 'Removed Language')).toBe(true)
+
+      lockedFiltersStore.unlock({ name: 'language', value: 'KLINGON' })
+      await wrapper.vm.aggregateOver()
+
+      expect(wrapper.vm.entries.some(({ label }) => label === 'Removed Language')).toBe(false)
+      expect(
+        wrapper.findAllComponents(FiltersPanelSectionFilterEntry).some(w => w.props('label') === 'Removed Language')
+      ).toBe(false)
+    })
+
+    it('renders a ticked+excluded+locked value only once, even with no matching aggregation bucket', async () => {
+      // No document indexed with this language — it is "missing" from both
+      // excludedBucketsPage (ticked+excluded synthesis) and, absent dedup,
+      // missingLockedBucketsPage (locked-but-missing synthesis) at once.
+      searchStore.contextualizeFilter('language')
+      searchStore.addFilterValue({ name: 'language', value: 'ENGLISH' })
+      searchStore.excludeFilter('language')
+      lockedFiltersStore.lock({ name: '-language', value: 'ENGLISH', label: 'English' })
+
+      await wrapper.vm.aggregateOver()
+
+      const matches = wrapper.vm.entries.filter(({ value }) => value === 'ENGLISH')
+      expect(matches).toHaveLength(1)
     })
   })
 

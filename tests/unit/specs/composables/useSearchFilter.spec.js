@@ -6,7 +6,7 @@ import { vi } from 'vitest'
 import CoreSetup from '~tests/unit/CoreSetup'
 import { useSearchFilter } from '@/composables/useSearchFilter'
 import { useContentTypeCategoryAvailability } from '@/composables/useContentTypeCategoryAvailability'
-import { useAppStore, useSearchStore, useRecommendedStore } from '@/store/modules'
+import { useAppStore, useLockedFiltersStore, useSearchStore, useRecommendedStore } from '@/store/modules'
 import { SEARCH_OPERATORS } from '@/enums/searchOperators'
 import { MODE_NAME } from '@/mode'
 
@@ -851,6 +851,58 @@ describe('useSearchFilter composable', () => {
         // category value alone must not flip the contentType "All" off.
         expect(all.value).toBe(true)
       })
+    })
+  })
+
+  describe('unlocking locked filter values on removal', () => {
+    let lockedFiltersStore
+
+    beforeEach(() => {
+      lockedFiltersStore = useLockedFiltersStore()
+    })
+
+    it('unlocks a value when removeFilterValue removes it', () => {
+      const { addFilterValue, removeFilterValue } = mountComposable()
+      addFilterValue({ name: 'language' }, { key: 'en' })
+      lockedFiltersStore.lock({ name: 'language', value: 'en', label: 'English' })
+
+      removeFilterValue({ name: 'language' }, { key: 'en' })
+
+      expect(lockedFiltersStore.isLocked({ name: 'language', value: 'en' })).toBe(false)
+    })
+
+    it('locks/unlocks under the "-" prefixed name when the filter is excluded', () => {
+      const { addFilterValue, removeFilterValue, toggleExcludeFilter } = mountComposable()
+      addFilterValue({ name: 'language' }, { key: 'en' })
+      toggleExcludeFilter({ name: 'language' }, true)
+      lockedFiltersStore.lock({ name: '-language', value: 'en', label: 'English' })
+
+      removeFilterValue({ name: 'language' }, { key: 'en' })
+
+      expect(lockedFiltersStore.isLocked({ name: '-language', value: 'en' })).toBe(false)
+    })
+
+    it('unlocks every locked value for a filter when computedAll clears it (the "All" checkbox path)', () => {
+      const { computedAll, addFilterValue } = mountComposable()
+      addFilterValue({ name: 'language' }, { key: 'en' })
+      addFilterValue({ name: 'language' }, { key: 'fr' })
+      lockedFiltersStore.lock({ name: 'language', value: 'en', label: 'English' })
+      lockedFiltersStore.lock({ name: 'language', value: 'fr', label: 'French' })
+
+      const all = computedAll({ name: 'language' })
+      all.value = true
+
+      expect(lockedFiltersStore.isLocked({ name: 'language', value: 'en' })).toBe(false)
+      expect(lockedFiltersStore.isLocked({ name: 'language', value: 'fr' })).toBe(false)
+    })
+
+    it('leaves locks untouched when the store-level resetFilterValues is used directly (Story 4 needs locks to survive "Clear filters")', () => {
+      searchStore.addFilterValue({ name: 'language', value: 'en' })
+      lockedFiltersStore.lock({ name: 'language', value: 'en', label: 'English' })
+
+      searchStore.resetFilterValues()
+
+      expect(lockedFiltersStore.isLocked({ name: 'language', value: 'en' })).toBe(true)
     })
   })
 
