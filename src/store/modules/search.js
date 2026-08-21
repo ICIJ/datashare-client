@@ -56,7 +56,6 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   const appStore = useAppStore()
   const lockedFiltersStore = useLockedFiltersStore()
   const searchBreadcrumbStore = useSearchBreadcrumbStore()
-  const lockedFiltersStore = useLockedFiltersStore()
 
   const index = computed({
     get: () => indices.value[0],
