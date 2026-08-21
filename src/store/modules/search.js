@@ -578,9 +578,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     if (name in values.value) {
       delete values.value[name]
     }
-    lockedFiltersStore.entries
-      .filter(entry => parseLockedName(entry.name).name === name)
-      .forEach(entry => lockedFiltersStore.unlock(entry))
+    lockedFiltersStore.unlockWhere(entry => parseLockedName(entry.name).name === name)
   }
 
   /**
