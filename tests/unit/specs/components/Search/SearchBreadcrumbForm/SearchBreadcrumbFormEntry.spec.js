@@ -96,6 +96,17 @@ describe('SearchBreadcrumbFormEntry.vue', () => {
       expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'application/pdf' })).toBe(true)
     })
 
+    it('stores a human-readable label rather than the raw value when locking', async () => {
+      const lockedFiltersStore = useLockedFiltersStore()
+      const props = { filter: 'contentType', value: 'application/pdf' }
+      const wrapper = mount(SearchBreadcrumbFormEntry, { global, props })
+
+      await findLockButton(wrapper).trigger('click')
+
+      const entry = lockedFiltersStore.entries.find(({ name, value }) => name === 'contentType' && value === 'application/pdf')
+      expect(entry.label).not.toBe('application/pdf')
+    })
+
     it('unlocks the value in the lock store when clicking a locked button', async () => {
       const lockedFiltersStore = useLockedFiltersStore()
       lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
