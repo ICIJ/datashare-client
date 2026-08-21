@@ -465,6 +465,19 @@ describe('useSearchFilter composable', () => {
       expect(searchStore.isFilterExcluded('contentType')).toBe(false)
       expect(searchStore.isFilterExcluded('contentTypeCategory')).toBe(false)
     })
+
+    // Regression test for icij/datashare#2351: with the composable mounted (so
+    // its sync watchers are live), hydrating a URL that only carries
+    // `f[-contentTypeCategory]` used to be silently reverted mid-hydration
+    // before the store's own reconciliation ran.
+    it('survives route hydration when only f[-contentTypeCategory] is in the URL', () => {
+      mountComposable()
+
+      searchStore.updateFromRouteQuery({ 'f[-contentTypeCategory]': ['DOCUMENT'] })
+
+      expect(searchStore.isFilterExcluded('contentType')).toBe(true)
+      expect(searchStore.isFilterExcluded('contentTypeCategory')).toBe(true)
+    })
   })
 
   describe('isFilterExcluded (unified read with reconciliation)', () => {
@@ -485,24 +498,25 @@ describe('useSearchFilter composable', () => {
       expect(isFilterExcluded({ name: 'contentTypeCategory' })).toBe(false)
     })
 
-    it('reconciles a divergent state using the canonical contentType when canonical is excluded', () => {
+    it('reads a divergent state as excluded when the canonical contentType is excluded', () => {
       searchStore.excludeFilter('contentType')
 
       const { isFilterExcluded } = mountComposable()
 
       expect(isFilterExcluded({ name: 'contentType' })).toBe(true)
       expect(isFilterExcluded({ name: 'contentTypeCategory' })).toBe(true)
-      expect(searchStore.isFilterExcluded('contentTypeCategory')).toBe(true)
     })
 
-    it('reconciles a divergent state using the canonical contentType when canonical is NOT excluded', () => {
+    // Regression test for icij/datashare#2351: excluding a whole category (only
+    // `contentTypeCategory` selected, `contentType` never set) must read as
+    // excluded rather than being silently reverted to included.
+    it('reads a divergent state as excluded when only contentTypeCategory is excluded', () => {
       searchStore.excludeFilter('contentTypeCategory')
 
       const { isFilterExcluded } = mountComposable()
 
-      expect(isFilterExcluded({ name: 'contentType' })).toBe(false)
-      expect(isFilterExcluded({ name: 'contentTypeCategory' })).toBe(false)
-      expect(searchStore.isFilterExcluded('contentTypeCategory')).toBe(false)
+      expect(isFilterExcluded({ name: 'contentType' })).toBe(true)
+      expect(isFilterExcluded({ name: 'contentTypeCategory' })).toBe(true)
     })
 
     it('still works for unpaired filters without cross-dimension writes', () => {
