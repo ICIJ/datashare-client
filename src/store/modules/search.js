@@ -1191,6 +1191,10 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     resetFilters,
     resetFilterValues,
     resetQuery,
+    // Exposed so callers outside of route hydration (e.g. "Clear filters"
+    // preserving locks, icij/datashare#2330) can re-apply locked values
+    // on demand, not just on the next updateFromRouteQuery.
+    mergeLockedFilters,
     hasFilterValue,
     isFilterContextualized,
     isFilterExcluded,
