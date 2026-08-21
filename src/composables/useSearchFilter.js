@@ -280,8 +280,9 @@ export function useSearchFilter() {
   // The store key for a filter's locks: its own current include/exclude
   // mode, never a paired dimension's — shared by every value-removal path
   // below so unlocking never leaks across a paired filter's other side.
-  function lockedNameFor(filter) {
-    const instance = castFilter(filter)
+  // Takes an already-cast instance (not a raw filter/name) so callers that
+  // already resolved one via castFilter don't pay for a second Map lookup.
+  function lockedNameFor(instance) {
     return toLockedName(instance.name, isFilterExcluded(instance))
   }
 
@@ -289,14 +290,15 @@ export function useSearchFilter() {
     const instance = castFilter(filter)
     const param = instance.itemParam(castFilterItem(item))
     const value = toString(param.value)
-    lockedFiltersStore.unlock({ name: lockedNameFor(filter), value })
+    lockedFiltersStore.unlock({ name: lockedNameFor(instance), value })
     return searchStore.removeFilterValue({ ...instance, value })
   }
 
   const removeFilterValues = (filter) => {
     // setFilterValue takes a single { name, value } arg; passing [] positionally writes [undefined].
-    const { name } = castFilter(filter)
-    const lockedName = lockedNameFor(filter)
+    const instance = castFilter(filter)
+    const { name } = instance
+    const lockedName = lockedNameFor(instance)
     for (const entry of lockedFiltersStore.entries.filter(entry => entry.name === lockedName)) {
       lockedFiltersStore.unlock({ name: lockedName, value: entry.value })
     }
