@@ -30,7 +30,6 @@ const all = computedAll(toRef(props, 'filter'), { skipUnlock: props.hideLock })
     v-model="all"
     :disabled="all"
     hide-count
-    hide-lock
     :label="t('filterTypeAll.label')"
   />
 </template>

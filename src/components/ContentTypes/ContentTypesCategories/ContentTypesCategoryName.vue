@@ -58,7 +58,6 @@ const collapseLabel = computed(() => t('contentTypesCategoryName.toggle', { cate
       :label="resolvedLabel"
       :count="count"
       :indeterminate="indeterminate"
-      hide-lock
     />
   </div>
 </template>
