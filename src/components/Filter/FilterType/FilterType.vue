@@ -213,11 +213,12 @@ const excludedBucketsPage = computed(() => {
   return []
 })
 
-// A locked value with no matching real bucket gets a synthetic zero-count row
-// so it stays visible and unlockable (a deleted tag, a re-indexed path).
-// Skipped while the panel's search box is active: real buckets are filtered
-// server-side via aggregationOptions.include, so a synthetic row would
-// outlive a query it never matched.
+// A locked value with no matching real bucket gets a synthetic row so it stays
+// visible and unlockable (a deleted tag, a re-indexed path). Skipped while the
+// panel's search box is active: real buckets are filtered server-side via
+// aggregationOptions.include, so a synthetic row would outlive a query it
+// never matched. The synthetic doc_count is NaN, not 0, so showCount's
+// isNaN guard hides only these ghost rows and not a real locked value's count.
 const bucketKey = bucket => toString(bucket.key)
 
 const renderedBucketKeys = computed(() => {
@@ -234,7 +235,7 @@ const missingLocks = computed(() => {
   return lockedFiltersStore.entries.filter(entry => isForThisFilter(entry) && isMissing(entry))
 })
 
-const toSyntheticBucket = entry => ({ key: entry.value, doc_count: 0, __lockedLabel: entry.label })
+const toSyntheticBucket = entry => ({ key: entry.value, doc_count: NaN, __lockedLabel: entry.label })
 
 const missingLockedBucketsPage = computed(() => {
   if (query.value !== '') {

@@ -426,7 +426,7 @@ describe('FilterType.vue', () => {
       expect(lockedFiltersStore.isLocked({ name: 'language', value: 'ENGLISH' })).toBe(false)
     })
 
-    it('still renders a locked value with no matching aggregation bucket, at zero count', async () => {
+    it('still renders a locked value with no matching aggregation bucket, at a NaN count', async () => {
       // No document with this language exists — simulates a deleted/re-indexed value.
       lockedFiltersStore.lock({ name: 'language', value: 'KLINGON', label: 'Removed Language' })
 
@@ -436,7 +436,7 @@ describe('FilterType.vue', () => {
         w => w.props('label') === 'Removed Language'
       )
       expect(entry).toBeTruthy()
-      expect(entry.props('count')).toBe(0)
+      expect(entry.props('count')).toBeNaN()
       expect(entry.props('locked')).toBe(true)
     })
 

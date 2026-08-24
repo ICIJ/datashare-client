@@ -73,7 +73,7 @@ const classList = computed(() => {
 // Gated behind `lockable` (opt-in) so consumers that never wire `update:locked`
 // don't inherit a dead button on every ticked row.
 const showLockButton = computed(() => props.lockable && (Boolean(props.modelValue) || props.locked))
-const showCount = computed(() => !props.hideCount && !isNaN(props.count) && !props.locked)
+const showCount = computed(() => !props.hideCount && !isNaN(props.count))
 const lockLabel = computed(() => t(props.locked ? 'filtersPanelSectionFilterEntry.unlock' : 'filtersPanelSectionFilterEntry.lock'))
 </script>
 
