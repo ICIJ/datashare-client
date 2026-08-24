@@ -35,6 +35,10 @@ const props = defineProps({
   locked: {
     type: Boolean,
     default: false
+  },
+  lockable: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -66,7 +70,9 @@ const classList = computed(() => {
 // Show the lock button when the value is ticked OR already locked: a value
 // can be locked while unticked (e.g. after "Clear filters", which preserves
 // locks but unticks the value), and the user still needs a way to unlock it.
-const showLockButton = computed(() => Boolean(props.modelValue) || props.locked)
+// Gated behind `lockable` (opt-in) so consumers that never wire `update:locked`
+// don't inherit a dead button on every ticked row.
+const showLockButton = computed(() => props.lockable && (Boolean(props.modelValue) || props.locked))
 const showCount = computed(() => !props.hideCount && !isNaN(props.count) && !props.locked)
 const lockLabel = computed(() => t(props.locked ? 'filtersPanelSectionFilterEntry.unlock' : 'filtersPanelSectionFilterEntry.lock'))
 </script>
