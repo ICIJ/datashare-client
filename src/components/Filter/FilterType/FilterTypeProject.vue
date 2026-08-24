@@ -86,6 +86,7 @@ const isProjectSelected = (id) => {
           :value="id"
           :count="count"
           :hide-count="hideCount || !isProjectSelected(id)"
+          hide-lock
         >
           <project-label
             :project="id"

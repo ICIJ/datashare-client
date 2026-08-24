@@ -79,6 +79,7 @@ watchIndices(fetch)
           :value="user"
           :count="count"
           :hide-count="hideCount"
+          hide-lock
         >
           <display-user
             :value="user"
