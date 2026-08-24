@@ -179,8 +179,10 @@ const hasAnyValue = computed(() => {
 const toggleValue = async (item, checked) => {
   // Unlocking on removal is handled centrally by useSearchFilter's
   // removeFilterValue/removeFilterValues, so every removal path (this
-  // checkbox, the "All" toggle, breadcrumb chip removal) unlocks alike.
-  await toggleFilterValue(filter, item, checked)
+  // checkbox, the "All" toggle, breadcrumb chip removal) unlocks alike —
+  // except when hideLock says this instance has no business touching the
+  // user's real lock store (e.g. the batch-search creation form).
+  await toggleFilterValue(filter, item, checked, { skipUnlock: hideLock })
   if (contextualize.value) {
     await aggregateOver()
   }
@@ -374,6 +376,7 @@ defineExpose({ entries, aggregateOver, count })
       <filter-type-all
         v-if="!filter.hideAll"
         :filter="filter"
+        :hide-lock="hideLock"
       />
     </slot>
     <template #search="{ search, searchPlaceholder }">
