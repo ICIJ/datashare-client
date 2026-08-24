@@ -366,6 +366,7 @@ defineExpose({ entries, aggregateOver, count })
         :hide-count="hideCount"
         :model-value="hasValue(item)"
         :locked="isItemLocked(item)"
+        lockable
         @update:model-value="toggleValue(item, $event)"
         @update:locked="toggleLock(item, $event)"
       >

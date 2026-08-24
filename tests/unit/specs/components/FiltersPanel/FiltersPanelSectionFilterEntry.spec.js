@@ -16,28 +16,34 @@ describe('FiltersPanelSectionFilterEntry.vue', () => {
   }
 
   it('does not render a lock button when the row is unticked', () => {
-    const props = { label: 'Confidential', modelValue: false, locked: false }
+    const props = { label: 'Confidential', modelValue: false, locked: false, lockable: true }
     const wrapper = mount(FiltersPanelSectionFilterEntry, { global, props })
     expect(findLockButton(wrapper).exists()).toBe(false)
   })
 
-  it('renders an unlocked lock button when the row is ticked', () => {
-    const props = { label: 'Confidential', modelValue: true, locked: false }
+  it('does not render a lock button when the row is not lockable, even ticked and locked', () => {
+    const props = { label: 'Confidential', modelValue: true, locked: true, lockable: false }
+    const wrapper = mount(FiltersPanelSectionFilterEntry, { global, props })
+    expect(findLockButton(wrapper).exists()).toBe(false)
+  })
+
+  it('renders an unlocked lock button when the row is ticked and lockable', () => {
+    const props = { label: 'Confidential', modelValue: true, locked: false, lockable: true }
     const wrapper = mount(FiltersPanelSectionFilterEntry, { global, props })
     const button = findLockButton(wrapper)
     expect(button.exists()).toBe(true)
     expect(button.attributes('aria-pressed')).toBe('false')
   })
 
-  it('renders a locked lock button when the row is ticked and locked', () => {
-    const props = { label: 'Confidential', modelValue: true, locked: true }
+  it('renders a locked lock button when the row is ticked, lockable and locked', () => {
+    const props = { label: 'Confidential', modelValue: true, locked: true, lockable: true }
     const wrapper = mount(FiltersPanelSectionFilterEntry, { global, props })
     const button = findLockButton(wrapper)
     expect(button.attributes('aria-pressed')).toBe('true')
   })
 
-  it('still renders a lock button when the row is unticked but locked', () => {
-    const props = { label: 'Confidential', modelValue: false, locked: true }
+  it('still renders a lock button when the row is unticked but locked and lockable', () => {
+    const props = { label: 'Confidential', modelValue: false, locked: true, lockable: true }
     const wrapper = mount(FiltersPanelSectionFilterEntry, { global, props })
     expect(findLockButton(wrapper).exists()).toBe(true)
   })
@@ -45,11 +51,11 @@ describe('FiltersPanelSectionFilterEntry.vue', () => {
   it('uses a different accessible label when unlocked vs locked', () => {
     const unlockedWrapper = mount(FiltersPanelSectionFilterEntry, {
       global,
-      props: { label: 'Confidential', modelValue: true, locked: false }
+      props: { label: 'Confidential', modelValue: true, locked: false, lockable: true }
     })
     const lockedWrapper = mount(FiltersPanelSectionFilterEntry, {
       global,
-      props: { label: 'Confidential', modelValue: true, locked: true }
+      props: { label: 'Confidential', modelValue: true, locked: true, lockable: true }
     })
     const unlockedLabel = findLockButton(unlockedWrapper).attributes('aria-label')
     const lockedLabel = findLockButton(lockedWrapper).attributes('aria-label')
@@ -59,21 +65,21 @@ describe('FiltersPanelSectionFilterEntry.vue', () => {
   })
 
   it('emits update:locked with true when clicking an unlocked button', async () => {
-    const props = { label: 'Confidential', modelValue: true, locked: false }
+    const props = { label: 'Confidential', modelValue: true, locked: false, lockable: true }
     const wrapper = mount(FiltersPanelSectionFilterEntry, { global, props })
     await findLockButton(wrapper).trigger('click')
     expect(wrapper.emitted('update:locked')).toEqual([[true]])
   })
 
   it('emits update:locked with false when clicking a locked button', async () => {
-    const props = { label: 'Confidential', modelValue: true, locked: true }
+    const props = { label: 'Confidential', modelValue: true, locked: true, lockable: true }
     const wrapper = mount(FiltersPanelSectionFilterEntry, { global, props })
     await findLockButton(wrapper).trigger('click')
     expect(wrapper.emitted('update:locked')).toEqual([[false]])
   })
 
   it('hides the count badge while the row is locked', () => {
-    const props = { label: 'Confidential', modelValue: true, locked: true, count: 5 }
+    const props = { label: 'Confidential', modelValue: true, locked: true, lockable: true, count: 5 }
     const wrapper = mount(FiltersPanelSectionFilterEntry, { global, props })
     expect(wrapper.find('.filters-panel-section-filter-entry__count').exists()).toBe(false)
   })
@@ -91,7 +97,7 @@ describe('FiltersPanelSectionFilterEntry.vue', () => {
   })
 
   it('hides the count badge while unticked but locked', () => {
-    const props = { label: 'Confidential', modelValue: false, locked: true, count: 5 }
+    const props = { label: 'Confidential', modelValue: false, locked: true, lockable: true, count: 5 }
     const wrapper = mount(FiltersPanelSectionFilterEntry, { global, props })
     expect(wrapper.find('.filters-panel-section-filter-entry__count').exists()).toBe(false)
   })
