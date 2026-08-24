@@ -99,4 +99,8 @@ describe('FilterTypeRecommendedBy.vue', () => {
     expect(api.getDocumentsRecommendedBy).toBeCalledTimes(0)
     expect(recommendedStore.documents).toEqual([])
   })
+
+  it('hides the lock button on each user row, since this filter never wires up locking', () => {
+    expect(wrapper.find('.filters-panel-section-filter-entry__lock').exists()).toBe(false)
+  })
 })

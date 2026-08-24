@@ -55,4 +55,9 @@ describe('ContentTypesCategoryName.vue', () => {
     expect(wrapper.emitted('update:modelValue')).toStrictEqual([[true]])
     expect(wrapper.emitted('update:collapse')).toBeUndefined()
   })
+
+  it('hides the lock button, since this row never wires up locking', () => {
+    const wrapper = factory({ collapse: true })
+    expect(wrapper.find('.filters-panel-section-filter-entry__lock').exists()).toBe(false)
+  })
 })
