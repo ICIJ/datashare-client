@@ -478,6 +478,17 @@ describe('useSearchFilter composable', () => {
       expect(searchStore.isFilterExcluded('contentType')).toBe(true)
       expect(searchStore.isFilterExcluded('contentTypeCategory')).toBe(true)
     })
+
+    // Symmetric coverage for the other hydration order: only the canonical
+    // dimension's URL key present, not the paired one.
+    it('survives route hydration when only f[-contentType] is in the URL', () => {
+      mountComposable()
+
+      searchStore.updateFromRouteQuery({ 'f[-contentType]': ['application/pdf'] })
+
+      expect(searchStore.isFilterExcluded('contentType')).toBe(true)
+      expect(searchStore.isFilterExcluded('contentTypeCategory')).toBe(true)
+    })
   })
 
   describe('isFilterExcluded (unified read with reconciliation)', () => {
