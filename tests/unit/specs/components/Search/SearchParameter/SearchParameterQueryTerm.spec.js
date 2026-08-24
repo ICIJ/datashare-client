@@ -32,5 +32,14 @@ describe('SearchParameterQueryTerm.vue', () => {
 
       expect(wrapper.emitted('click:lock')).toHaveLength(1)
     })
+
+    it('does not nest the lock icon inside a `role="button"` ancestor, which would hide its own aria attributes', () => {
+      const props = { term: 'foo', locked: false, lockLabel: 'Lock' }
+      const wrapper = mount(SearchParameterQueryTerm, { global, props })
+
+      const lock = wrapper.find('.search-parameter-query-term__lock')
+      expect(lock.attributes('aria-label')).toBe('Lock')
+      expect(lock.element.parentElement.closest('[role="button"]')).toBeNull()
+    })
   })
 })
