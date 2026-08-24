@@ -170,8 +170,13 @@ const lockLabel = computed(() => t(props.locked ? 'filtersPanelSectionFilterEntr
 
   &__lock {
     flex-shrink: 0;
-    opacity: 0;
     transition: opacity 0.15s ease;
+
+    // Hover-reveal only where hovering exists: on touch the row never
+    // matches :hover, so an opacity-0 lock stays an invisible tap target.
+    @media (hover: hover) {
+      opacity: 0;
+    }
 
     &--locked {
       opacity: 1;
@@ -183,9 +188,11 @@ const lockLabel = computed(() => t(props.locked ? 'filtersPanelSectionFilterEntr
     }
   }
 
-  &:hover &__lock,
-  &__lock:focus-visible {
-    opacity: 1;
+  @media (hover: hover) {
+    &:hover &__lock,
+    &__lock:focus-visible {
+      opacity: 1;
+    }
   }
 
   &__count {
