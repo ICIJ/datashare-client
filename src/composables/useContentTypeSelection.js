@@ -214,6 +214,7 @@ export function useContentTypeSelection({ filter, categories }) {
    */
   const promoteToCategory = (category) => {
     const categoryTypes = typesInCategory(category)
+    categoryTypes.forEach(unlockContentType)
     writeContentTypes(currentContentTypes().filter(value => !categoryTypes.includes(value)))
     writeCategories([...currentCategories(), category])
   }
@@ -247,13 +248,13 @@ export function useContentTypeSelection({ filter, categories }) {
    * @returns {void}
    */
   const toggleCategory = (category, types, checked) => {
+    types.forEach(unlockContentType)
     writeContentTypes(currentContentTypes().filter(value => !types.includes(value)))
     const remainingCategories = without(currentCategories(), category)
     if (checked) {
       writeCategories([...remainingCategories, category])
       return
     }
-    types.forEach(unlockContentType)
     writeCategories(remainingCategories)
   }
 

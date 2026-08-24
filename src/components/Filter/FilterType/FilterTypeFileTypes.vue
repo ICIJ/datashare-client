@@ -78,12 +78,12 @@ function isItemLocked(contentType) {
   return lockedFiltersStore.isLocked({ name: lockedName.value, value: contentType })
 }
 
-async function toggleLock(contentType, locked) {
+function toggleLock(contentType, locked) {
   if (locked) {
     // Locking an unticked value also selects it — a single click both
     // applies and locks the filter.
-    if (!hasFilterValue(props.filter, { key: contentType })) {
-      await toggleFilterValue(props.filter, { key: contentType }, true)
+    if (!isEntryRetainedDuringSearch(contentType)) {
+      toggleEntry(contentType, true)
     }
     lockedFiltersStore.lock({ name: lockedName.value, value: contentType, label: getDocumentTypeLabel(contentType) })
   }
