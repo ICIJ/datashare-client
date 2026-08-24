@@ -21,7 +21,6 @@ import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPan
 import FilterTypeAll from '@/components/Filter/FilterType/FilterTypeAll'
 import settings from '@/utils/settings'
 import { useSearchStore, useLockedFiltersStore } from '@/store/modules'
-import { toLockedName } from '@/store/modules/lockedFilters'
 import builtinFilterIcons from '@/store/filters/icons'
 
 const query = defineModel('query', { type: String, default: '' })
@@ -140,6 +139,7 @@ const {
   computedSortFilter,
   computedContextualizeFilter,
   computedExcludeFilter,
+  lockedNameFor,
   toggleFilterValue,
   getFilterPairedDimensions,
   getFilterValuesByName
@@ -148,12 +148,14 @@ const {
 const exclude = computedExcludeFilter(filter)
 // The store key for this filter's locks: the filter's own current
 // include/exclude mode, never a paired dimension's — locking a chip on one
-// side of a paired filter must never lock or affect the other side.
+// side of a paired filter must never lock or affect the other side. Shares
+// useSearchFilter's own lockedNameFor so this and every value-removal path
+// there can never key the same row's lock differently.
 // TODO(locked-filters): filter types overriding FilterType's default slot
 // (FilterTypeFileTypes, FilterTypePath, FilterTypeProject, FilterTypeStarred,
 // FilterTypeRecommendedBy) don't receive lock/unlock support yet — see
 // icij/datashare#2336.
-const lockedName = computed(() => toLockedName(filter.name, exclude.value))
+const lockedName = computed(() => lockedNameFor(filter))
 const sort = computedSortFilter(filter)
 const contextualize = computedContextualizeFilter(filter)
 
