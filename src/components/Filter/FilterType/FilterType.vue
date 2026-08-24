@@ -213,24 +213,34 @@ const excludedBucketsPage = computed(() => {
   return []
 })
 
-// Synthesizes a zero-count bucket for every locked value that has no
-// matching real aggregation bucket (a deleted tag, a re-indexed path).
-// Uses the exact same shape/insertion mechanism as excludedBucketsPage
-// above so it flows through bucketsWithExcludedValues unchanged.
-// Also excludes keys already synthesized by excludedBucketsPage: a value
-// that is ticked + excluded + contextualized is already rendered by that
-// mechanism regardless of locking, and de-duping here (rather than there)
-// keeps excludedBucketsPage's own semantics untouched.
-// Like excludedBucketsPage above, this does not filter against the panel's
-// search box: a locked-but-missing value always stays visible regardless of
-// what the user is searching for. Consistent with existing behavior, not a
-// new gap.
+// A locked value with no matching real bucket gets a synthetic zero-count row
+// so it stays visible and unlockable (a deleted tag, a re-indexed path).
+// Skipped while the panel's search box is active: real buckets are filtered
+// server-side via aggregationOptions.include, so a synthetic row would
+// outlive a query it never matched.
+const bucketKey = bucket => toString(bucket.key)
+
+const renderedBucketKeys = computed(() => {
+  const realKeys = buckets.value.map(bucketKey)
+  // excludedBucketsPage already synthesizes the ticked + excluded + contextualized
+  // case, so de-dupe here and leave that computed's own semantics untouched.
+  const excludedKeys = getPageBuckets(excludedBucketsPage.value).map(bucketKey)
+  return new Set([...realKeys, ...excludedKeys])
+})
+
+const missingLocks = computed(() => {
+  const isForThisFilter = entry => entry.name === lockedName.value
+  const isMissing = entry => !renderedBucketKeys.value.has(entry.value)
+  return lockedFiltersStore.entries.filter(entry => isForThisFilter(entry) && isMissing(entry))
+})
+
+const toSyntheticBucket = entry => ({ key: entry.value, doc_count: 0, __lockedLabel: entry.label })
+
 const missingLockedBucketsPage = computed(() => {
-  const excludedKeys = getPageBuckets(excludedBucketsPage.value).map(item => toString(item.key))
-  const realKeys = [...buckets.value.map(item => toString(item.key)), ...excludedKeys]
-  const missing = lockedFiltersStore.entries
-    .filter(entry => entry.name === lockedName.value && !realKeys.includes(entry.value))
-    .map(entry => ({ key: entry.value, doc_count: 0, __lockedLabel: entry.label }))
+  if (query.value !== '') {
+    return []
+  }
+  const missing = missingLocks.value.map(toSyntheticBucket)
   return setWith({}, pageBucketsPath.value.join('.'), missing, Object)
 })
 
