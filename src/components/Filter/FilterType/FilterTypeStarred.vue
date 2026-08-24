@@ -97,6 +97,7 @@ watchIndices(fetch)
         :value="true"
         :model-value="selected.includes(true)"
         :locked="isItemLocked(true)"
+        lockable
         @update:locked="toggleLock(true, $event)"
       />
       <filters-panel-section-filter-entry
@@ -107,6 +108,7 @@ watchIndices(fetch)
         :value="false"
         :model-value="selected.includes(false)"
         :locked="isItemLocked(false)"
+        lockable
         @update:locked="toggleLock(false, $event)"
       />
     </b-form-checkbox-group>

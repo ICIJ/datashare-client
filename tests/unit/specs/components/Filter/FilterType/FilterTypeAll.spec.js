@@ -32,7 +32,7 @@ describe('FilterTypeAll.vue', () => {
 
   it('always hides the lock button — the "All" pseudo-entry has no value of its own to lock', async () => {
     await flushPromises()
-    expect(wrapper.findComponent(FiltersPanelSectionFilterEntry).props('hideLock')).toBe(true)
+    expect(wrapper.findComponent(FiltersPanelSectionFilterEntry).props('lockable')).toBe(false)
   })
 
   it('does not wipe the user\'s real lock store when clicked with hideLock set', async () => {

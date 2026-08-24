@@ -38,6 +38,5 @@ watch(total, (value) => {
     :disabled="all"
     :hide-count="hideTotal"
     :label="t('filterTypeAll.label')"
-    hide-lock
   />
 </template>

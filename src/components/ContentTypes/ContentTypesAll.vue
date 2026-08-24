@@ -31,6 +31,5 @@ const hideCount = computed(() => props.count === null)
     :count="count ?? 0"
     :hide-count="hideCount"
     :disabled="modelValue"
-    hide-lock
   />
 </template>
