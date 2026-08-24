@@ -440,6 +440,19 @@ describe('FilterType.vue', () => {
       expect(entry.props('locked')).toBe(true)
     })
 
+    it('does not synthesize a locked-but-missing entry while the search box is active', async () => {
+      // No document with this language exists — simulates a deleted/re-indexed value.
+      lockedFiltersStore.lock({ name: 'language', value: 'KLINGON', label: 'Removed Language' })
+
+      await wrapper.vm.aggregateOver()
+      expect(wrapper.vm.entries.some(({ label }) => label === 'Removed Language')).toBe(true)
+
+      await wrapper.setProps({ query: 'engl' })
+      await wrapper.vm.aggregateOver()
+
+      expect(wrapper.vm.entries.some(({ label }) => label === 'Removed Language')).toBe(false)
+    })
+
     it('drops the synthetic locked-but-missing entry once it is unlocked', async () => {
       lockedFiltersStore.lock({ name: 'language', value: 'KLINGON', label: 'Removed Language' })
       await wrapper.vm.aggregateOver()
