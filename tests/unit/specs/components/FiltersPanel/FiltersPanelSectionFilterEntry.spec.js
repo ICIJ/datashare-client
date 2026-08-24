@@ -78,10 +78,10 @@ describe('FiltersPanelSectionFilterEntry.vue', () => {
     expect(wrapper.emitted('update:locked')).toEqual([[false]])
   })
 
-  it('hides the count badge while the row is locked', () => {
+  it('shows the count badge for a locked row with a real count', () => {
     const props = { label: 'Confidential', modelValue: true, locked: true, lockable: true, count: 5 }
     const wrapper = mount(FiltersPanelSectionFilterEntry, { global, props })
-    expect(wrapper.find('.filters-panel-section-filter-entry__count').exists()).toBe(false)
+    expect(wrapper.find('.filters-panel-section-filter-entry__count').exists()).toBe(true)
   })
 
   it('shows the count badge while ticked but not locked', () => {
@@ -96,8 +96,8 @@ describe('FiltersPanelSectionFilterEntry.vue', () => {
     expect(wrapper.find('.filters-panel-section-filter-entry__count').exists()).toBe(true)
   })
 
-  it('hides the count badge while unticked but locked', () => {
-    const props = { label: 'Confidential', modelValue: false, locked: true, lockable: true, count: 5 }
+  it('hides the count badge for a synthesized (NaN count) locked row', () => {
+    const props = { label: 'Confidential', modelValue: false, locked: true, lockable: true, count: NaN }
     const wrapper = mount(FiltersPanelSectionFilterEntry, { global, props })
     expect(wrapper.find('.filters-panel-section-filter-entry__count').exists()).toBe(false)
   })
