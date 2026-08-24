@@ -270,10 +270,7 @@ export function useSearchFilter() {
   }
 
   // The store key for a filter's locks: its own current include/exclude
-  // mode, never a paired dimension's — shared by every value-removal path
-  // below so unlocking never leaks across a paired filter's other side.
-  // Takes an already-cast instance (not a raw filter/name) so callers that
-  // already resolved one via castFilter don't pay for a second Map lookup.
+  // mode, never a paired dimension's.
   function lockedNameFor(instance) {
     return toLockedName(instance.name, isFilterExcluded(instance))
   }
@@ -558,6 +555,7 @@ export function useSearchFilter() {
     isFilterContextualized,
     isFilterExcluded,
     labelToHuman,
+    lockedNameFor,
     resetSearchResponse,
     refreshRoute,
     refreshRouteFromStart,

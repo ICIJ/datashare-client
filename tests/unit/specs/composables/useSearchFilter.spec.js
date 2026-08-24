@@ -929,6 +929,16 @@ describe('useSearchFilter composable', () => {
 
       expect(lockedFiltersStore.isLocked({ name: 'language', value: 'en' })).toBe(true)
     })
+
+    it('exposes lockedNameFor as the single source for a filter lock store key', () => {
+      const { lockedNameFor, toggleExcludeFilter } = mountComposable()
+
+      expect(lockedNameFor({ name: 'language' })).toBe('language')
+
+      toggleExcludeFilter({ name: 'language' }, true)
+
+      expect(lockedNameFor({ name: 'language' })).toBe('-language')
+    })
   })
 
   describe('refreshSearch with recommendations gated to server mode', () => {
