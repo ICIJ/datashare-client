@@ -125,7 +125,11 @@ export function useSearchFilter() {
     return isObject(value) ? value : { key: value }
   }
 
-  function computedAll(filter) {
+  // `skipUnlock` mirrors the option of the same name on removeFilterValue(s)
+  // below: components rendering against a non-live search store (e.g. the
+  // batch-search creation form via FilterType's hideLock) pass it through so
+  // "All" never writes to the user's real personal lock store.
+  function computedAll(filter, { skipUnlock = false } = {}) {
     return computed({
       get() {
         // Accept either a single filter or a list (used by paired dimensions),
@@ -137,7 +141,7 @@ export function useSearchFilter() {
         if (value) {
           const filters = castArray(toValue(filter))
           for (const eachFilter of filters) {
-            removeFilterValues(eachFilter)
+            removeFilterValues(eachFilter, { skipUnlock })
           }
         }
       }
@@ -255,11 +259,11 @@ export function useSearchFilter() {
     return getFilterValues(filter).length > 0
   }
 
-  const toggleFilterValue = (filter, item, checked) => {
+  const toggleFilterValue = (filter, item, checked, options) => {
     if (checked) {
       return addFilterValue(filter, item)
     }
-    return removeFilterValue(filter, item)
+    return removeFilterValue(filter, item, options)
   }
 
   const addFilterValue = (filter, item) => {
@@ -275,20 +279,28 @@ export function useSearchFilter() {
     return toLockedName(instance.name, isFilterExcluded(instance))
   }
 
-  const removeFilterValue = (filter, item) => {
+  // `skipUnlock` lets a component rendering against a non-live search store
+  // (e.g. the batch-search creation form via FilterType's hideLock) remove a
+  // value without touching the user's real personal lock store, which it has
+  // no visibility into.
+  const removeFilterValue = (filter, item, { skipUnlock = false } = {}) => {
     const instance = castFilter(filter)
     const param = instance.itemParam(castFilterItem(item))
     const value = toString(param.value)
-    lockedFiltersStore.unlock({ name: lockedNameFor(instance), value })
+    if (!skipUnlock) {
+      lockedFiltersStore.unlock({ name: lockedNameFor(instance), value })
+    }
     return searchStore.removeFilterValue({ ...instance, value })
   }
 
-  const removeFilterValues = (filter) => {
+  const removeFilterValues = (filter, { skipUnlock = false } = {}) => {
     // setFilterValue takes a single { name, value } arg; passing [] positionally writes [undefined].
     const instance = castFilter(filter)
     const { name } = instance
-    const lockedName = lockedNameFor(instance)
-    lockedFiltersStore.unlockWhere(entry => entry.name === lockedName)
+    if (!skipUnlock) {
+      const lockedName = lockedNameFor(instance)
+      lockedFiltersStore.unlockWhere(entry => entry.name === lockedName)
+    }
     return searchStore.setFilterValue({ name, value: [] })
   }
 

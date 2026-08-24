@@ -544,6 +544,23 @@ describe('FilterType.vue', () => {
 
       expect(wrapper.vm.entries.some(({ label }) => label === 'Removed Language')).toBe(false)
     })
+
+    it('does not unlock the user\'s real lock store when unticking a value', async () => {
+      await letData(es).have(new IndexedDocument('document_01', index).withLanguage('ENGLISH')).commit()
+      searchStore.addFilterValue({ name: 'language', value: 'ENGLISH' })
+      // A lock pre-existing outside this hideLock instance's own writes —
+      // simulates the user's real, unrelated lock on this same value.
+      lockedFiltersStore.lock({ name: 'language', value: 'ENGLISH', label: 'English' })
+
+      await wrapper.vm.aggregateOver()
+      await wrapper.findComponent(FiltersPanelSectionFilterEntry).vm.$emit('update:model-value', false)
+
+      expect(lockedFiltersStore.isLocked({ name: 'language', value: 'ENGLISH' })).toBe(true)
+    })
+
+    it('forwards hideLock to the "All" pseudo-entry', () => {
+      expect(wrapper.findComponent({ name: 'FilterTypeAll' }).props('hideLock')).toBe(true)
+    })
   })
 
   describe('language', () => {
