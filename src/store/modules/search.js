@@ -940,8 +940,8 @@ export const useSearchStore = defineSuffixedStore('search', () => {
       // member of a paired group if any one of them is excluded, so a lock that looks
       // conflict-free against the bare name alone could still get silently flipped by
       // that reconciliation pass. See icij/datashare#2329.
-      const group = getPairedDimensions(bareName)
-      const dims = group.length > 1 ? group : [bareName]
+      // getPairedDimensions already returns [bareName] when unpaired, no fallback needed
+      const dims = getPairedDimensions(bareName)
       const isPresent = dims.some(dim => presentDims.has(dim))
       const hasConflict = isPresent && dims.some(dim => excludedDims.has(dim)) !== excluded
       if (hasConflict) {
