@@ -789,24 +789,29 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   }
 
   /**
+   * Builds the search body with `api.elasticsearch.buildSearchDocsBody` and runs it
+   * through `runAsyncSearch`, which submits, polls, and cleans up the async search.
+   * @param {Object} searchParams - The search parameters to use for the query.
+   * @param {AbortSignal} [signal] - Aborts the in-flight async search.
+   * @returns {Promise<Object>} - The raw search response.
+   */
+  function searchDocsAsync(searchParams, signal) {
+    const body = api.elasticsearch.buildSearchDocsBody(searchParams)
+    return runAsyncSearch(api.elasticsearch, { index: searchParams.index, body }, { signal })
+  }
+
+  /**
    * Search for documents, through Elasticsearch async search or through a
    * synchronous `_search` on OpenSearch, which has no async search endpoint.
-   *
-   * On Elasticsearch, builds the search body with `api.elasticsearch.buildSearchDocsBody`
-   * and runs it through `runAsyncSearch`, which submits, polls, and cleans up the async search.
    * @param {Object} [searchParams=toSearchParams.value] - The search parameters to use for the query.
    * @param {AbortSignal} [signal] - Aborts the in-flight search (supersede / unmount).
    * @returns {Promise<Object>} - A promise that resolves to the raw Elasticsearch search response.
    */
   async function searchDocuments(searchParams = toSearchParams.value, signal) {
-    const syncSearch = await isOpenSearchDistribution(api)
+    const isOpenSearch = await isOpenSearchDistribution(api)
     // A run cancelled while the probe was pending must not submit anything.
     signal?.throwIfAborted()
-    if (syncSearch) {
-      return searchDocsSync(searchParams, signal)
-    }
-    const body = api.elasticsearch.buildSearchDocsBody(searchParams)
-    return runAsyncSearch(api.elasticsearch, { index: searchParams.index, body }, { signal })
+    return isOpenSearch ? searchDocsSync(searchParams, signal) : searchDocsAsync(searchParams, signal)
   }
 
   /**
