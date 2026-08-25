@@ -18,7 +18,12 @@ vi.mock('@/api/apiInstance', async (importOriginal) => {
 
 describe('FilterTypePath.vue', () => {
   const { index } = esConnectionHelper.build()
-  const { otherIndex } = esConnectionHelper.build()
+  // build() returns { index, es } — a distinct second index needs its own
+  // prefix, otherwise `otherIndex` above silently resolved to `undefined`
+  // (still enough to make the existing "switch project" test below pass,
+  // since indices=[undefined] differs from indices=[index] either way, but
+  // not a real second project to test an actual add-a-project scenario against).
+  const { index: otherIndex } = esConnectionHelper.build('other')
 
   let core, searchStore, wrapper
 
@@ -67,6 +72,16 @@ describe('FilterTypePath.vue', () => {
     searchStore.setIndex(otherIndex)
     await flushPromises()
     expect(wrapper.vm.selectedPaths).toHaveLength(0)
+  })
+
+  it('should keep the selected paths when a project is added, not removed', async () => {
+    const key = ['/data/foo', '/data/bar']
+    searchStore.setFilterValue(wrapper.vm.filter.itemParam({ key }))
+    await flushPromises()
+    expect(wrapper.vm.selectedPaths).toHaveLength(2)
+    searchStore.setIndices([index, otherIndex])
+    await flushPromises()
+    expect(wrapper.vm.selectedPaths).toHaveLength(2)
   })
 
   it('should pre-open ancestor directories of selected paths', async () => {
