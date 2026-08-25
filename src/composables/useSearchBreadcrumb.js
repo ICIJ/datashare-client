@@ -186,22 +186,8 @@ export function useSearchBreadcrumb() {
     return refreshRoute()
   }
 
-  const clearFilterState = () => {
-    searchStore.resetFilterValues()
-    // Exclusion mode is part of "filters" too: leaving it behind would re-apply
-    // an *included* lock in exclude mode, since resetFilterValues() wipes only
-    // `values` and mergeLockedFilters()'s conflict check keys off `values`.
-    searchStore.excludeFilters.slice().forEach(name => searchStore.includeFilter(name))
-    // Locked values must survive a filter-wipe — re-merge them immediately
-    // rather than waiting for the next route hydration. See icij/datashare#2330.
-    searchStore.mergeLockedFilters()
-    // mergeLockedFilters only merges values; a paired dimension's exclude mode
-    // still needs the same reconciliation updateFromRouteQuery always runs.
-    searchStore.reconcilePairedExcludeFilters()
-  }
-
   const clearFiltersEntries = () => {
-    clearFilterState()
+    searchStore.resetFilterValuesPreservingLocks()
     return refreshRoute()
   }
 
@@ -211,7 +197,7 @@ export function useSearchBreadcrumb() {
   }
 
   const clearAll = () => {
-    clearFilterState()
+    searchStore.resetFilterValuesPreservingLocks()
     searchStore.resetQuery()
     return refreshRoute()
   }
