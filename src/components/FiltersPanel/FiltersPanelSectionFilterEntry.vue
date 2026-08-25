@@ -98,7 +98,7 @@ const showCount = computed(() => !props.hideCount && !isNaN(props.count))
       <button-toggle-lock
         v-if="showLockButton"
         class="filters-panel-section-filter-entry__lock"
-        :lockable="!locked"
+        :locked="locked"
         @update:locked="emit('update:locked', $event)"
       />
       <b-badge

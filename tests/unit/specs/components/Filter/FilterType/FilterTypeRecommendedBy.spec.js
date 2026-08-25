@@ -170,7 +170,7 @@ describe('FilterTypeRecommendedBy.vue', () => {
     it('hides the lock button on every entry when hideLock is set', async () => {
       await wrapper.setProps({ hideLock: true })
 
-      expect(findEntry().props('hideLock')).toBe(true)
+      expect(findEntry().props('lockable')).toBe(false)
     })
   })
 })

@@ -115,6 +115,25 @@ export const useLockedFiltersStore = defineStore('lockedFilters', () => {
   }
 
   /**
+   * Rename a locked entry's `name` in place, e.g. on an include/exclude mode
+   * flip where `name` changes but the entry (its value and label) should
+   * survive, rather than being deleted and re-created under the new name.
+   * No-op if `{ name, value }` isn't currently locked.
+   *
+   * @public
+   * @param {Object} params
+   * @param {string} params.name - The entry's current name.
+   * @param {string} params.newName - The name to rename it to.
+   * @param {string|number} params.value - The filter value.
+   */
+  function retag({ name, newName, value }) {
+    const index = indexByKey.value.get(entryKey(name, value))
+    if (index !== undefined) {
+      entries.value[index] = { ...entries.value[index], name: newName }
+    }
+  }
+
+  /**
    * Unlock every locked entry matching `predicate`, in a single pass rather
    * than filtering then unlocking each match one at a time (which would
    * re-scan/re-splice `entries` once per match).
@@ -125,7 +144,6 @@ export const useLockedFiltersStore = defineStore('lockedFilters', () => {
   function unlockWhere(predicate) {
     entries.value = entries.value.filter(entry => !predicate(entry))
   }
-
 
   /**
    * Unlock every currently locked filter value.
@@ -147,6 +165,7 @@ export const useLockedFiltersStore = defineStore('lockedFilters', () => {
     isLocked,
     lock,
     unlock,
+    retag,
     unlockWhere,
     unlockAll
   }
