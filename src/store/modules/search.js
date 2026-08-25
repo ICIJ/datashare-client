@@ -1048,7 +1048,12 @@ export const useSearchStore = defineSuffixedStore('search', () => {
         return
       }
       const canonical = getCanonicalDimension(bareName)
-      if (canonical === bareName || !groupExcluded.has(canonical)) {
+      // Only a genuine pair's canonical side should override an
+      // already-recorded mode; for an unpaired filter canonical === bareName
+      // always holds, so without the pair check this would let the last
+      // matching lock entry win instead of the first one.
+      const isCanonicalOfPair = canonical === bareName && getPairedDimensions(bareName).length > 1
+      if (isCanonicalOfPair || !groupExcluded.has(canonical)) {
         groupExcluded.set(canonical, excluded)
       }
     })

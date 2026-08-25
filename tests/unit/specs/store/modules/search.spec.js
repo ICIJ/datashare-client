@@ -1765,6 +1765,18 @@ describe('SearchStore', () => {
       expect(searchStore.isFilterExcluded('contentType')).toBe(false)
       expect(searchStore.isFilterExcluded('contentTypeCategory')).toBe(false)
     })
+
+    it('applyLockedFilters resolves an unpaired filter mode by first lock, not last', () => {
+      // `language` has no pair, so its canonical dimension is itself: two locks
+      // on it disagreeing on mode must not let the second one silently win.
+      lockedFiltersStore.lock({ name: 'language', value: 'ENGLISH', label: 'English' })
+      lockedFiltersStore.lock({ name: '-language', value: 'FRENCH', label: 'French' })
+
+      searchStore.applyLockedFilters()
+
+      // The first lock (included) wins, regardless of entry order.
+      expect(searchStore.isFilterExcluded('language')).toBe(false)
+    })
   })
 
   describe('toggleFilter re-locks values on mode flip (icij/datashare#2332)', () => {
