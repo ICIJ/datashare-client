@@ -1236,6 +1236,9 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     // preserving locks, icij/datashare#2330) can re-apply locked values
     // on demand, not just on the next updateFromRouteQuery.
     mergeLockedFilters,
+    // Same reasoning: mergeLockedFilters alone doesn't mirror exclude mode
+    // across a paired dimension, updateFromRouteQuery always calls both.
+    reconcilePairedExcludeFilters,
     hasFilterValue,
     isFilterContextualized,
     isFilterExcluded,
