@@ -236,9 +236,10 @@ export function datasharePlugin(Client) {
    * @param {string[]} [options.fields=[]] - Fields to search in
    * @returns {Promise<Object>} Search results
    */
-  Client.prototype.searchDocs = function (options) {
+  Client.prototype.searchDocs = function (options, { signal } = {}) {
     const body = this.buildSearchDocsBody(options)
-    return this._search({ index: options.index, body })
+    const request = this.search({ index: options.index, body })
+    return abortableSearchRequest(request, signal)
   }
 
   /**
