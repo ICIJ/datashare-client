@@ -8,7 +8,7 @@ import { useSearchStore, useLockedFiltersStore } from '@/store/modules'
 import { routes } from '@/router'
 
 describe('useSearchBreadcrumb composable', () => {
-  let core, plugins, searchStore
+  let core, plugins, searchStore, lockedFiltersStore
 
   // The "search" route lazily imports the whole Search view subtree, whose
   // setup() reads from the search store. Resolve it once here, on a
@@ -24,6 +24,11 @@ describe('useSearchBreadcrumb composable', () => {
     core = CoreSetup.init().useAll().useRouterWithoutGuards()
     plugins = core.plugins
     searchStore = useSearchStore()
+    // CoreSetup.useAll() reuses the module-level pinia singleton (no fresh
+    // instance per test), so lockedFiltersStore state otherwise leaks across
+    // every test in this file.
+    lockedFiltersStore = useLockedFiltersStore()
+    lockedFiltersStore.unlockAll()
   })
 
   function mountComposable() {
@@ -101,12 +106,6 @@ describe('useSearchBreadcrumb composable', () => {
   })
 
   describe('clearFiltersEntries / clearAll preserve locked values (icij/datashare#2330)', () => {
-    let lockedFiltersStore
-
-    beforeEach(() => {
-      lockedFiltersStore = useLockedFiltersStore()
-    })
-
     it('clearFiltersEntries removes an unlocked value but keeps a locked one', () => {
       searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
       searchStore.addFilterValue({ name: 'contentType', value: 'text/plain' })
@@ -161,10 +160,6 @@ describe('useSearchBreadcrumb composable', () => {
     })
 
     it('clearFiltersEntries removes everything when there are zero locks', () => {
-      // Locks persist to localStorage (persist: true) across the jsdom-shared
-      // localStorage instance, so a fresh pinia alone doesn't guarantee zero
-      // locks here — clear explicitly.
-      lockedFiltersStore.unlockAll()
       searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
 
       const { clearFiltersEntries } = mountComposable()
@@ -175,12 +170,6 @@ describe('useSearchBreadcrumb composable', () => {
   })
 
   describe('unlockAll (icij/datashare#2330)', () => {
-    let lockedFiltersStore
-
-    beforeEach(() => {
-      lockedFiltersStore = useLockedFiltersStore()
-    })
-
     it('unlocks every locked value without touching the applied filter values', () => {
       searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
       lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
@@ -195,7 +184,6 @@ describe('useSearchBreadcrumb composable', () => {
 
   describe('lockedFiltersCount (icij/datashare#2330)', () => {
     it('reflects the number of currently locked entries', () => {
-      const lockedFiltersStore = useLockedFiltersStore()
       lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
       lockedFiltersStore.lock({ name: 'contentType', value: 'text/plain', label: 'text/plain' })
 
