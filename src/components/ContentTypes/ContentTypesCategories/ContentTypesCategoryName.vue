@@ -65,6 +65,7 @@ const collapseLabel = computed(() => t('contentTypesCategoryName.toggle', { cate
       :count="count"
       :indeterminate="indeterminate"
       :locked="locked"
+      lockable
       @update:locked="emit('update:locked', $event)"
     />
   </div>

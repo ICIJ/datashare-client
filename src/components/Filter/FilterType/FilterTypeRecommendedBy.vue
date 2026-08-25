@@ -119,7 +119,7 @@ watchIndices(fetch)
           :value="user"
           :count="count"
           :hide-count="hideCount"
-          :hide-lock="hideLock"
+          :lockable="!hideLock"
           :locked="isItemLocked(user)"
           @update:locked="toggleLock(user, $event)"
         >

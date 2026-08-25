@@ -583,7 +583,7 @@ describe('FilterType.vue', () => {
 
       expect(wrapper.vm.entries.some(({ label }) => label === 'Removed Language')).toBe(false)
     })
-
+  })
 
   describe('language', () => {
     beforeEach(() => {

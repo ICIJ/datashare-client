@@ -242,6 +242,12 @@ const renderedBucketKeys = computed(() => {
 })
 
 const missingLocks = computed(() => {
+  // Don't synthesize yet if there could still be more real pages: a locked
+  // value absent from what's loaded so far might just be ranked lower, not
+  // actually deleted/re-indexed.
+  if (!reachedBucketsEnd.value) {
+    return []
+  }
   const isForThisFilter = entry => entry.name === lockedName.value
   const isMissing = entry => !renderedBucketKeys.value.has(entry.value)
   return lockedFiltersStore.entries.filter(entry => isForThisFilter(entry) && isMissing(entry))
