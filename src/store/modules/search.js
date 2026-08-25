@@ -17,13 +17,13 @@ import lucene from 'lucene'
 import { ref, computed, toRaw } from 'vue'
 
 import EsDocList from '@/api/resources/EsDocList'
+import { isOpenSearchDistribution } from '@/api/indexDistribution'
 import { runAsyncSearch } from '@/api/asyncSearch'
 import filterDefs, * as filterTypes from '@/store/filters'
 import { getPairedDimensions } from '@/store/filters/pairedDimensions'
 import { useAppStore, useSearchBreadcrumbStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
 import { defineSuffixedStore } from '@/store/defineSuffixedStore'
-import { ES_DISTRIBUTION } from '@/enums/esDistributions'
 import { SEARCH_OPERATORS } from '@/enums/searchOperators'
 import settings from '@/utils/settings'
 
@@ -770,32 +770,6 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     }
   }
 
-  let versionPromise = null
-
-  function fetchVersionOnce() {
-    versionPromise ??= api.getVersion()
-    return versionPromise
-  }
-
-  /**
-   * Tells whether the backend index is an OpenSearch distribution, which has
-   * no `_async_search` endpoint (icij/datashare#2349). The version is fetched
-   * once and cached for the session.
-   * @returns {Promise<boolean>}
-   */
-  async function isOpenSearchDistribution() {
-    try {
-      const version = await fetchVersionOnce()
-      return version['index.distribution'] === ES_DISTRIBUTION.OPENSEARCH
-    }
-    catch {
-      // A failed version probe must not break search: fall back to the async
-      // path and drop the cached promise so the next search retries the probe.
-      versionPromise = null
-      return false
-    }
-  }
-
   /**
    * Search for documents, through Elasticsearch async search or through a
    * synchronous `_search` on OpenSearch, which has no async search endpoint.
@@ -809,7 +783,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   async function searchDocuments(searchParams = toSearchParams.value, signal) {
     // The legacy ES client takes no abort signal, so a superseded synchronous
     // search still completes; the generation guard discards its response.
-    if (await isOpenSearchDistribution()) {
+    if (await isOpenSearchDistribution(api)) {
       return api.elasticsearch.searchDocs(searchParams)
     }
     const body = api.elasticsearch.buildSearchDocsBody(searchParams)

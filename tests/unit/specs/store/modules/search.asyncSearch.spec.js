@@ -3,6 +3,7 @@ import { setActivePinia, createPinia } from 'pinia'
 
 import { useAppStore, useSearchStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
+import { resetIndexDistribution } from '@/api/indexDistribution'
 
 const runAsyncSearchMock = vi.fn()
 vi.mock('@/api/asyncSearch', () => ({
@@ -33,6 +34,7 @@ describe('SearchStore async search wiring', () => {
     searchStore.setIndex('local-index')
     appStore.setSettings('search', { perPage: 25, orderBy: ['_score', 'desc'] })
     runAsyncSearchMock.mockReset()
+    resetIndexDistribution()
     getVersionSpy = vi.spyOn(api, 'getVersion').mockResolvedValue({ 'index.distribution': 'elasticsearch' })
     searchDocsSpy = vi.spyOn(api.elasticsearch, 'searchDocs').mockResolvedValue(emptyResponse())
   })
