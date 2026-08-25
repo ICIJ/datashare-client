@@ -1478,6 +1478,20 @@ describe('FilterTypeFileTypes.vue', () => {
       expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'application/pdf' })).toBe(false)
     })
 
+    it('shows a flat entry as locked under its excluded name when the filter is in exclude mode', async () => {
+      seedContentTypes(['application/pdf'])
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+      await wrapper.findComponent(ButtonToggleContentTypesView).trigger('click')
+      await flushPromises()
+
+      searchStore.excludeFilter('contentType')
+      lockedFiltersStore.lock({ name: '-contentType', value: 'application/pdf', label: 'PDF' })
+      await flushPromises()
+
+      expect(wrapper.findComponent(ContentTypesEntry).props('locked')).toBe(true)
+    })
+
     it('hides the per-value lock button on flat entries when hideLock is set', async () => {
       wrapper.unmount()
       const filter = searchStore.getFilter({ name: 'contentType' })
