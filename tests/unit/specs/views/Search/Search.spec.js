@@ -129,6 +129,18 @@ describe('Search.vue', () => {
     expect(wrapper.vm.toggleSearchBreadcrumb).toBe(true)
   })
 
+  it('opens the breadcrumb panel after an advanced search submission when locks are active (icij/datashare#2332)', async () => {
+    const searchStore = useSearchStore()
+    vi.spyOn(searchStore, 'query').mockResolvedValue(undefined)
+    const lockedFiltersStore = useLockedFiltersStore()
+    lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+    wrapper.findComponent(SearchToolbar).vm.$emit('advancedSearch', { query: 'advancedLockedSubmitTest', field: 'all' })
+    await flushPromises()
+
+    expect(wrapper.vm.toggleSearchBreadcrumb).toBe(true)
+  })
+
   it('does not open the breadcrumb panel on a route update that was not marked as submitted (icij/datashare#2332)', async () => {
     const lockedFiltersStore = useLockedFiltersStore()
     lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })

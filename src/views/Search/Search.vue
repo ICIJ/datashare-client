@@ -20,7 +20,7 @@ import DocumentEntries from '@/components/Document/DocumentEntries/DocumentEntri
 import Hook from '@/components/Hook/Hook'
 import { useDocument } from '@/composables/useDocument'
 import { useUrlPageFromWithStore } from '@/composables/useUrlPageFromWithStore'
-import { useSearchFilter, consumeJustSubmitted } from '@/composables/useSearchFilter'
+import { useSearchFilter, consumeJustSubmitted, markJustSubmitted } from '@/composables/useSearchFilter'
 import { useSearchBreadcrumb } from '@/composables/useSearchBreadcrumb'
 import { useSearchNav } from '@/composables/useSearchNav'
 import { useSearchExecution } from '@/composables/useSearchExecution'
@@ -124,6 +124,7 @@ const documentViewFloatingId = provideDocumentViewFloatingId()
 function handleAdvancedSearch({ query, field }) {
   searchStore.setQuery(query)
   searchStore.setField(field)
+  markJustSubmitted()
   // Resets `from` and stamps the route, so an unchanged query still resubmits.
   refreshRouteFromStart()
 }
