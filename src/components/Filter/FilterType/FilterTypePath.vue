@@ -139,8 +139,17 @@ watchFilterContextualized(props.filter, reloadData)
 watchFilterExcluded(props.filter, whenFilterContextualized(props.filter, reloadData))
 // When filter values change and the filter is contextualized then reload the data
 watchValues(whenFilterContextualized(props.filter, reloadData))
-// When project changes, we reset the filter to avoid filtering by unknown paths
-watchIndices(reset)
+// Reset only when a previously selected project drops out of scope (switched
+// away or removed) — a path is still valid once the project it belongs to
+// stays selected, so adding a project must not wipe (and unlock) selections
+// that are still correct.
+watchIndices((current, previous) => {
+  const currentProjects = new Set(current ? current.split(',') : [])
+  const removedAProject = (previous ? previous.split(',') : []).some(project => !currentProjects.has(project))
+  if (removedAProject) {
+    reset()
+  }
+})
 </script>
 
 <template>
