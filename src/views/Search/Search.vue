@@ -45,7 +45,7 @@ const {
   onConsumeNoRefresh,
   onConsumeSavedSearchOpened
 } = useSearchFilter()
-const { count: searchBreadcrumbCounter, anyFilters, lockedFiltersCount } = useSearchBreadcrumb()
+const { count: searchBreadcrumbCounter, anyFilters, lockedFiltersCount, hasConflictingLocks } = useSearchBreadcrumb()
 const { hasCarousel } = useSearchNav()
 
 const { t } = useI18n()
@@ -168,6 +168,32 @@ onAfterRouteQueryUpdate(() => {
     toggleSearchBreadcrumb.value = true
   }
 })
+// Auto-open the breadcrumb panel once, the first time a locked filter
+// conflicts with the route this view loaded with — e.g. opening a shared
+// link whose query fights an active lock. This is the primary case
+// icij/datashare#2332 built "Apply locked filters" for, but it's a plain
+// navigation, not an explicit submission, so the justSubmitted-gated watcher
+// above never sees it. Route hydration can resolve the conflict either
+// synchronously (before mount) or on a tick shortly after, so this watches
+// rather than checking once at mount — but stops itself after the first
+// true value so it never repeatedly reopens a panel the user just closed on
+// a later route push (paging, filter toggles, project switches).
+
+// Initialized to null (rather than assigned in the same statement as the
+// watch() call below) so the immediate callback below — which runs
+// synchronously, before that assignment completes — reads an already
+// -initialized null instead of hitting the temporal dead zone.
+let stopConflictWatch = null
+stopConflictWatch = watch(
+  hasConflictingLocks,
+  (conflict) => {
+    if (conflict) {
+      toggleSearchBreadcrumb.value = true
+      stopConflictWatch?.()
+    }
+  },
+  { immediate: true }
+)
 </script>
 
 <template>

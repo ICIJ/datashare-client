@@ -163,6 +163,44 @@ describe('Search.vue', () => {
     expect(wrapper.vm.toggleSearchBreadcrumb).toBe(false)
   })
 
+  it('opens the breadcrumb panel on mount when a locked filter already conflicts with the route it loaded with, e.g. a shared link (icij/datashare#2332)', async () => {
+    const lockedFiltersStore = useLockedFiltersStore()
+    lockedFiltersStore.lock({ name: '-contentType', value: 'application/pdf', label: 'application/pdf' })
+    // Included, opposite mode of the lock above: a raw navigation, not an
+    // explicit submission, so markJustSubmitted() is never called here.
+    await core.router.push({ name: 'search', query: { 'f[contentType]': ['application/pdf'] } })
+    await flushPromises()
+
+    wrapper.unmount()
+    wrapper = shallowMount(Search, {
+      global: {
+        plugins: core.plugins,
+        renderStubDefaultSlot: true
+      }
+    })
+    await flushPromises()
+
+    expect(wrapper.vm.toggleSearchBreadcrumb).toBe(true)
+  })
+
+  it('does not open the breadcrumb panel on mount when locks exist but none conflict with the route (icij/datashare#2332)', async () => {
+    const lockedFiltersStore = useLockedFiltersStore()
+    lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+    await core.router.push({ name: 'search', query: { q: 'mountNoConflictTest' } })
+    await flushPromises()
+
+    wrapper.unmount()
+    wrapper = shallowMount(Search, {
+      global: {
+        plugins: core.plugins,
+        renderStubDefaultSlot: true
+      }
+    })
+    await flushPromises()
+
+    expect(wrapper.vm.toggleSearchBreadcrumb).toBe(false)
+  })
+
   it('runs the initial search when a reloaded noRefresh URL is stripped', async () => {
     // Same active pinia as the mounted component, so this is the same store instance.
     const searchStore = useSearchStore()
