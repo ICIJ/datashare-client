@@ -431,7 +431,7 @@ export function useSearchFilter() {
     const searchOperator = toValidSearchOperator(route.query.searchOperator ?? getSearchOperator())
     appStore.setSettings('search', { perPage, orderBy: [sort, order], searchOperator })
     // Update the search store using the route query and reset the `from` parameter
-    searchStore.updateFromRouteQuery({ ...route.query, from: 0 }, { mergeLocks: !savedSearchOpened })
+    searchStore.updateFromRouteQuery({ ...route.query, from: 0 }, { mergeLocks: !isSavedSearchOpened() })
     // And finally, refresh the search if t
     return nextTick(refreshSearch)
   }

@@ -35,13 +35,17 @@ catch {
   })
 }
 
-// `@/store/pinia`'s pinia instance is a true module-level singleton (CoreSetup's
-// own createPinia() is never actually called by any spec), so every store,
-// including persisted ones (`persist: true`), is shared across every test in a
-// spec file, not recreated per test. lockedFiltersStore in particular leaked
-// entries from one test into the next this way, forcing several spec files to
-// call unlockAll() themselves as a workaround. Reset it here once, globally,
-// instead of at each call site.
+// `@/store/pinia`'s pinia instance is a true module-level singleton, so every
+// store on it, including persisted ones (`persist: true`), is shared across
+// every test in a spec file that doesn't opt out, not recreated per test.
+// lockedFiltersStore in particular leaked entries from one test into the next
+// this way, forcing several spec files to call unlockAll() themselves as a
+// workaround. Reset it here once, globally, instead of at each call site.
+// A spec that does call CoreSetup's own createPinia() opts out of this: it
+// activates a fresh raw pinia() instance with no persist plugin registered
+// (see CoreSetup.js), so persist: true is inert there and that instance's
+// lockedFiltersStore never reads localStorage in the first place - nothing
+// for this reset to cover.
 beforeEach(() => {
   // Pass the singleton explicitly: no test has necessarily called
   // `setActivePinia` yet at this point in the hook chain (this beforeEach
