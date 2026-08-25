@@ -1613,15 +1613,23 @@ describe('SearchStore', () => {
       expect(searchStore.getFilter({ name: 'contentType' })?.values ?? []).toEqual([])
     })
 
-    it('exposes mergeLockedFilters so callers can re-apply locks outside of hydration', () => {
+    it('exposes resetFilterValuesPreservingLocks so callers can reset then re-apply locks outside of hydration', () => {
       lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
       searchStore.addFilterValue({ name: 'contentType', value: 'text/plain' })
 
-      searchStore.resetFilterValues()
-      expect(searchStore.getFilter({ name: 'contentType' }).values).toEqual([])
+      searchStore.resetFilterValuesPreservingLocks()
 
-      searchStore.mergeLockedFilters()
+      expect(searchStore.getFilter({ name: 'contentType' }).values).toEqual(['application/pdf'])
+    })
 
+    it('resetFilterValuesPreservingLocks also clears exclusion mode before re-applying locks', () => {
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.excludeFilter('contentType')
+
+      searchStore.resetFilterValuesPreservingLocks()
+
+      expect(searchStore.isFilterExcluded('contentType')).toBe(false)
       expect(searchStore.getFilter({ name: 'contentType' }).values).toEqual(['application/pdf'])
     })
   })

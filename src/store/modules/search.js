@@ -311,6 +311,20 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   }
 
   /**
+   * Reset the filter values and exclusion mode to an empty state, then
+   * re-apply the user's locked filters immediately rather than waiting for
+   * the next route hydration. This is "Clear filters" preserving locks
+   * (icij/datashare#2330): it mirrors the reset/merge/reconcile invariant
+   * updateFromRouteQuery always runs, without going through a route change.
+   */
+  function resetFilterValuesPreservingLocks() {
+    resetFilterValues()
+    excludeFilters.value = []
+    mergeLockedFilters()
+    reconcilePairedExcludeFilters()
+  }
+
+  /**
    * Reset the search query to its initial state.
    */
   function resetQuery() {
@@ -1231,14 +1245,11 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     reset,
     resetFilters,
     resetFilterValues,
-    resetQuery,
     // Exposed so callers outside of route hydration (e.g. "Clear filters"
     // preserving locks, icij/datashare#2330) can re-apply locked values
     // on demand, not just on the next updateFromRouteQuery.
-    mergeLockedFilters,
-    // Same reasoning: mergeLockedFilters alone doesn't mirror exclude mode
-    // across a paired dimension, updateFromRouteQuery always calls both.
-    reconcilePairedExcludeFilters,
+    resetFilterValuesPreservingLocks,
+    resetQuery,
     hasFilterValue,
     isFilterContextualized,
     isFilterExcluded,
