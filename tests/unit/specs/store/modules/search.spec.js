@@ -1777,6 +1777,22 @@ describe('SearchStore', () => {
       // The first lock (included) wins, regardless of entry order.
       expect(searchStore.isFilterExcluded('language')).toBe(false)
     })
+
+    it('applyLockedFilters clears the whole paired group when the lock is include-mode', () => {
+      // Hydrating from a shared exclude link excludes both paired dimensions;
+      // an include-mode lock on contentType must clear contentTypeCategory too,
+      // otherwise reconcilePairedExcludeFilters() re-excludes contentType from it.
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.excludeFilter('contentType')
+      searchStore.excludeFilter('contentTypeCategory')
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      searchStore.applyLockedFilters()
+
+      expect(searchStore.isFilterExcluded('contentType')).toBe(false)
+      expect(searchStore.isFilterExcluded('contentTypeCategory')).toBe(false)
+      expect(searchStore.hasConflictingLocks).toBe(false)
+    })
   })
 
   describe('toggleFilter re-locks values on mode flip (icij/datashare#2332)', () => {
