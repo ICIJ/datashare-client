@@ -16,6 +16,9 @@ const props = defineProps({
   },
   hideCount: {
     type: Boolean
+  },
+  hideLock: {
+    type: Boolean
   }
 })
 
@@ -37,7 +40,7 @@ function isItemLocked(value) {
 
 function toggleLock(value, locked) {
   if (locked) {
-    // Locking an unticked value also selects it — a single click both
+    // Locking an unticked value also selects it - a single click both
     // applies and locks the filter.
     if (!selected.value.includes(value)) {
       selected.value = [...selected.value, value]
@@ -46,6 +49,12 @@ function toggleLock(value, locked) {
     lockedFiltersStore.lock({ name: 'starred', value, label })
   }
   else {
+    lockedFiltersStore.unlock({ name: 'starred', value })
+  }
+}
+
+function unlockOnUntick(value) {
+  if (!props.hideLock) {
     lockedFiltersStore.unlock({ name: 'starred', value })
   }
 }
@@ -75,7 +84,7 @@ const selected = computed({
     // here instead.
     for (const value of selected.value) {
       if (!next.includes(value)) {
-        lockedFiltersStore.unlock({ name: 'starred', value })
+        unlockOnUntick(value)
       }
     }
     setFilterValue(props.filter, { key: next.map(bool => bool.toString()) })
@@ -97,7 +106,7 @@ watchIndices(fetch)
         :value="true"
         :model-value="selected.includes(true)"
         :locked="isItemLocked(true)"
-        lockable
+        :lockable="!hideLock"
         @update:locked="toggleLock(true, $event)"
       />
       <filters-panel-section-filter-entry
@@ -108,7 +117,7 @@ watchIndices(fetch)
         :value="false"
         :model-value="selected.includes(false)"
         :locked="isItemLocked(false)"
-        lockable
+        :lockable="!hideLock"
         @update:locked="toggleLock(false, $event)"
       />
     </b-form-checkbox-group>

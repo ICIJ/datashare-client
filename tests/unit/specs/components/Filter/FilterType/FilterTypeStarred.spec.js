@@ -129,4 +129,33 @@ describe('FilterTypeStarred.vue', () => {
       expect(lockedFiltersStore.isLocked({ name: 'starred', value: true })).toBe(false)
     })
   })
+
+  describe('hideLock prop', () => {
+    let lockedFiltersStore
+
+    beforeEach(() => {
+      lockedFiltersStore = useLockedFiltersStore()
+      lockedFiltersStore.unlockAll()
+      const props = { filter: searchStore.getFilter({ name: 'starred' }), hideLock: true }
+      wrapper = mount(FilterTypeStarred, { props, global: { plugins: core.plugins } })
+    })
+
+    it('does not forward a lock control to either the Starred or Not starred entry', () => {
+      // entries: [0] = All (inside FilterTypeAll), [1] = Starred, [2] = Not starred
+      const entries = wrapper.findAllComponents(FiltersPanelSectionFilterEntry)
+      expect(entries[1].props('lockable')).toBe(false)
+      expect(entries[2].props('lockable')).toBe(false)
+    })
+
+    it('does not unlock the user\'s real lock store when unticking a value', async () => {
+      // A lock pre-existing outside this hideLock instance's own writes —
+      // simulates the user's real, unrelated lock on this same value.
+      lockedFiltersStore.lock({ name: 'starred', value: true, label: 'Starred' })
+      await wrapper.findAll('.filters-panel-section-filter-entry .form-check-input').at(1).setChecked(true)
+
+      await wrapper.findAll('.filters-panel-section-filter-entry .form-check-input').at(1).setChecked(false)
+
+      expect(lockedFiltersStore.isLocked({ name: 'starred', value: true })).toBe(true)
+    })
+  })
 })
