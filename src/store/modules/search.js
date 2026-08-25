@@ -1067,7 +1067,11 @@ export const useSearchStore = defineSuffixedStore('search', () => {
         excludeFilter(bareName)
       }
       else {
-        includeFilter(bareName)
+        // Clear the whole paired group, not just bareName: otherwise the
+        // sibling stays excluded and the trailing reconcilePairedExcludeFilters()
+        // call re-excludes bareName from it. getPairedDimensions returns
+        // [bareName] when unpaired, so this is safe either way.
+        getPairedDimensions(bareName).forEach(includeFilter)
       }
     })
     reconcilePairedExcludeFilters()
