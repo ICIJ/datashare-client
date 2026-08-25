@@ -167,8 +167,8 @@ export class Api {
    * @returns {Promise<Object|null>} The version payload
    */
   async getVersionSilently(config = {}) {
-    const r = await this.axios?.request({ url: Api.getFullUrl('/version'), ...config })
-    return r ? r.data : null
+    const response = await this.axios?.request({ url: Api.getFullUrl('/version'), ...config })
+    return response ? response.data : null
   }
 
   getSettings() {
