@@ -1753,6 +1753,18 @@ describe('SearchStore', () => {
       expect(() => searchStore.applyLockedFilters()).not.toThrow()
       expect(searchStore.values.notAFilter).toBeUndefined()
     })
+
+    it('applyLockedFilters resolves a paired-dimension mode conflict by canonical-dimension precedence', () => {
+      // contentType (canonical) is locked included, its pair contentTypeCategory
+      // is locked excluded: the two disagree, contentType's own lock must win.
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+      lockedFiltersStore.lock({ name: '-contentTypeCategory', value: 'Documents', label: 'Documents' })
+
+      searchStore.applyLockedFilters()
+
+      expect(searchStore.isFilterExcluded('contentType')).toBe(false)
+      expect(searchStore.isFilterExcluded('contentTypeCategory')).toBe(false)
+    })
   })
 
   describe('toggleFilter re-locks values on mode flip (icij/datashare#2332)', () => {

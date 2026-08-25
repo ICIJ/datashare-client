@@ -20,7 +20,7 @@ import EsDocList from '@/api/resources/EsDocList'
 import { isOpenSearchDistribution } from '@/api/indexDistribution'
 import { runAsyncSearch } from '@/api/asyncSearch'
 import filterDefs, * as filterTypes from '@/store/filters'
-import { getPairedDimensions } from '@/store/filters/pairedDimensions'
+import { getCanonicalDimension, getPairedDimensions } from '@/store/filters/pairedDimensions'
 import { useAppStore, useLockedFiltersStore, useSearchBreadcrumbStore } from '@/store/modules'
 import { parseLockedName, toLockedName } from '@/store/modules/lockedFilters'
 import { apiInstance as api } from '@/api/apiInstance'
@@ -102,10 +102,8 @@ export const useSearchStore = defineSuffixedStore('search', () => {
         // is excluded, both emit the `f[-name]` prefix. Protects against
         // in-store drift leaking into the URL.
         const excluded = getPairedDimensions(filter.name).some(dim => excludeFilters.value.includes(dim))
-        if (filter.values.length > 0) {
-          const key = excluded ? `f[-${filter.name}]` : `f[${filter.name}]`
-          memo[key] = compact(filter.values)
-        }
+        const key = excluded ? `f[-${filter.name}]` : `f[${filter.name}]`
+        memo[key] = compact(filter.values)
       }
       return memo
     }, {})
@@ -1037,13 +1035,30 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * overriding the live state here is exactly what the user asked for.
    */
   function applyLockedFilters() {
+    // Two locks in the same paired group (e.g. contentType included,
+    // contentTypeCategory excluded) can disagree on mode: nothing stops
+    // locking each side independently. Resolve the group's mode by
+    // canonical-dimension precedence first, the same rule
+    // getCanonicalDimension documents for reads, so the canonical lock's own
+    // mode always wins instead of whichever entry happens to be excluded.
+    const groupExcluded = new Map()
     lockedFiltersStore.entries.forEach((entry) => {
-      const { bareName, value, excluded, exists } = getLockConflict(entry)
+      const { bareName, excluded, exists } = getLockConflict(entry)
+      if (!exists) {
+        return
+      }
+      const canonical = getCanonicalDimension(bareName)
+      if (canonical === bareName || !groupExcluded.has(canonical)) {
+        groupExcluded.set(canonical, excluded)
+      }
+    })
+    lockedFiltersStore.entries.forEach((entry) => {
+      const { bareName, value, exists } = getLockConflict(entry)
       if (!exists) {
         return
       }
       addFilterValue({ name: bareName, value })
-      if (excluded) {
+      if (groupExcluded.get(getCanonicalDimension(bareName))) {
         excludeFilter(bareName)
       }
       else {
