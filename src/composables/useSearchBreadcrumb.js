@@ -195,6 +195,9 @@ export function useSearchBreadcrumb() {
     // Locked values must survive a filter-wipe — re-merge them immediately
     // rather than waiting for the next route hydration. See icij/datashare#2330.
     searchStore.mergeLockedFilters()
+    // mergeLockedFilters only merges values; a paired dimension's exclude mode
+    // still needs the same reconciliation updateFromRouteQuery always runs.
+    searchStore.reconcilePairedExcludeFilters()
   }
 
   const clearFiltersEntries = () => {

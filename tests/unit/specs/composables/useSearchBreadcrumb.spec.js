@@ -143,6 +143,23 @@ describe('useSearchBreadcrumb composable', () => {
       expect(searchStore.isFilterExcluded('contentType')).toBe(false)
     })
 
+    it('reconciles a paired dimension\'s exclude mode after re-merging a locked excluded value', () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      searchStore.excludeFilter('contentType')
+      searchStore.addFilterValue({ name: 'contentTypeCategory', value: 'Documents' })
+      searchStore.excludeFilter('contentTypeCategory')
+      lockedFiltersStore.lock({ name: '-contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      const { clearFiltersEntries } = mountComposable()
+      clearFiltersEntries()
+
+      // mergeLockedFilters only re-excludes the locked filter's own bare name;
+      // without reconcilePairedExcludeFilters, its paired sibling would be
+      // left included even though the group must stay in lockstep.
+      expect(searchStore.isFilterExcluded('contentType')).toBe(true)
+      expect(searchStore.isFilterExcluded('contentTypeCategory')).toBe(true)
+    })
+
     it('clearFiltersEntries removes everything when there are zero locks', () => {
       // Locks persist to localStorage (persist: true) across the jsdom-shared
       // localStorage instance, so a fresh pinia alone doesn't guarantee zero
