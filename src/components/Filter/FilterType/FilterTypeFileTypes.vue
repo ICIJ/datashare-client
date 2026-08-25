@@ -72,7 +72,7 @@ const lockedFiltersStore = useLockedFiltersStore()
 // Same `-`-prefix convention as FilterType.vue's own (unused here, since this
 // component overrides its default slot) lockedName — include/exclude mode is
 // part of a lock's identity.
-const exclude = computedExcludeFilter(filterRef)
+const exclude = computedExcludeFilter(props.filter)
 const lockedName = computed(() => toLockedName(filterRef.value.name, exclude.value))
 
 function isItemLocked(contentType) {
