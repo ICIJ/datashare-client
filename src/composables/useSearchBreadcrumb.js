@@ -162,7 +162,12 @@ export function useSearchBreadcrumb() {
   })
 
   const hasQueryEntries = computed(() => !!queryEntries.value.length)
-  const hasFiltersEntries = computed(() => !!filtersEntries.value.length)
+  // Locked chips never go away on clear, so they must not count towards
+  // whether "Clear filters" has anything left to do.
+  const unlockedFiltersEntries = computed(() => {
+    return filtersEntries.value.filter(({ filter, value }) => !lockedFiltersStore.isLocked({ name: filter, value }))
+  })
+  const hasFiltersEntries = computed(() => !!unlockedFiltersEntries.value.length)
   // Enable the button whereas there is filters or queries even if one of them is empty
   const hasQueryAndFiltersEntries = computed(() => hasQueryEntries.value || hasFiltersEntries.value)
 

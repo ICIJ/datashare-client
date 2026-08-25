@@ -4,7 +4,7 @@ import { createPinia, setActivePinia } from 'pinia'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import { useSearchBreadcrumb } from '@/composables/useSearchBreadcrumb'
-import { useSearchStore, useLockedFiltersStore } from '@/store/modules'
+import { useSearchStore, useLockedFiltersStore, useSearchBreadcrumbStore } from '@/store/modules'
 import { routes } from '@/router'
 
 describe('useSearchBreadcrumb composable', () => {
@@ -193,6 +193,31 @@ describe('useSearchBreadcrumb composable', () => {
       await unlockAll()
 
       expect(core.router.currentRoute.value.query['f[contentType]']).toEqual(['application/pdf'])
+    })
+  })
+
+  describe('hasFiltersEntries (icij/datashare#2330)', () => {
+    it('is false when the only filter entry left is a locked one', () => {
+      const searchBreadcrumbStore = useSearchBreadcrumbStore()
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+      searchBreadcrumbStore.pushSearchQuery({ 'f[contentType]': 'application/pdf' })
+
+      const { hasFiltersEntries } = mountComposable()
+
+      expect(hasFiltersEntries.value).toBe(false)
+    })
+
+    it('is true when an unlocked filter entry remains alongside a locked one', () => {
+      const searchBreadcrumbStore = useSearchBreadcrumbStore()
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+      searchBreadcrumbStore.pushSearchQuery({
+        'f[contentType]': 'application/pdf',
+        'f[contentTypeCategory]': 'Documents'
+      })
+
+      const { hasFiltersEntries } = mountComposable()
+
+      expect(hasFiltersEntries.value).toBe(true)
     })
   })
 
