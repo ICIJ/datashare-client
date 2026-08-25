@@ -204,6 +204,7 @@ export function useSearchBreadcrumb() {
 
   const unlockAll = () => {
     lockedFiltersStore.unlockAll()
+    return refreshRoute()
   }
 
   return {
