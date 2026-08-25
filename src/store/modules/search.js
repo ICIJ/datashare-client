@@ -918,6 +918,16 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * same invariant every other route change already goes through.
    */
   function mergeLockedFilters() {
+    // Conflict must be judged against the route's own pre-merge state, not the
+    // live refs: this loop writes into `values`/`excludeFilters` as it goes, so
+    // checking the live refs makes an entry conflict with a lock this same pass
+    // already applied rather than with anything the route actually supplied
+    // (e.g. two orphaned locks on the same filter in opposite modes, from a
+    // mode flip predating icij/datashare#2332's re-tagging fix, would silently
+    // drop whichever entry is processed second even though the route had
+    // nothing for that filter at all).
+    const presentDims = new Set(Object.keys(values.value))
+    const excludedDims = new Set(excludeFilters.value)
     lockedFiltersStore.entries.forEach(({ name, value }) => {
       const { name: bareName, excluded } = parseLockedName(name)
       // A lock for a filter that no longer exists on this project/index
@@ -932,8 +942,8 @@ export const useSearchStore = defineSuffixedStore('search', () => {
       // that reconciliation pass. See icij/datashare#2329.
       const group = getPairedDimensions(bareName)
       const dims = group.length > 1 ? group : [bareName]
-      const isPresent = dims.some(dim => dim in values.value)
-      const hasConflict = isPresent && dims.some(dim => excludeFilters.value.includes(dim)) !== excluded
+      const isPresent = dims.some(dim => presentDims.has(dim))
+      const hasConflict = isPresent && dims.some(dim => excludedDims.has(dim)) !== excluded
       if (hasConflict) {
         return
       }

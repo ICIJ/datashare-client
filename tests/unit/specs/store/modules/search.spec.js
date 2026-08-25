@@ -1596,6 +1596,15 @@ describe('SearchStore', () => {
       expect(searchStore.isFilterExcluded('contentTypeCategory')).toBe(false)
     })
 
+    it('merges both locks of a same-name include/exclude pair when the route has neither', () => {
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+      lockedFiltersStore.lock({ name: '-contentType', value: 'text/plain', label: 'text/plain' })
+
+      searchStore.updateFromRouteQuery({})
+
+      expect(searchStore.getFilter({ name: 'contentType' }).values.slice().sort()).toEqual(['application/pdf', 'text/plain'])
+    })
+
     it('does not merge locked filters when mergeLocks is false', () => {
       lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
 
