@@ -1,11 +1,17 @@
+import { flushPromises } from '@vue/test-utils'
 import { setActivePinia, createPinia } from 'pinia'
 
 import { useAppStore, useSearchStore } from '@/store/modules'
+import { apiInstance as api } from '@/api/apiInstance'
 
 const runAsyncSearchMock = vi.fn()
 vi.mock('@/api/asyncSearch', () => ({
   runAsyncSearch: (...args) => runAsyncSearchMock(...args)
 }))
+
+function emptyResponse() {
+  return { hits: { hits: [], total: { value: 0 } } }
+}
 
 function deferred() {
   let resolveFn
@@ -18,7 +24,7 @@ function deferred() {
 }
 
 describe('SearchStore async search wiring', () => {
-  let searchStore, appStore
+  let searchStore, appStore, getVersionSpy, searchDocsSpy
 
   beforeEach(() => {
     setActivePinia(createPinia())
@@ -27,6 +33,12 @@ describe('SearchStore async search wiring', () => {
     searchStore.setIndex('local-index')
     appStore.setSettings('search', { perPage: 25, orderBy: ['_score', 'desc'] })
     runAsyncSearchMock.mockReset()
+    getVersionSpy = vi.spyOn(api, 'getVersion').mockResolvedValue({ 'index.distribution': 'elasticsearch' })
+    searchDocsSpy = vi.spyOn(api.elasticsearch, 'searchDocs').mockResolvedValue(emptyResponse())
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
   })
 
   it('passes an abort signal to the runner', async () => {
@@ -35,6 +47,7 @@ describe('SearchStore async search wiring', () => {
 
     searchStore.setQuery('alpha')
     const p = searchStore.refresh()
+    await flushPromises()
 
     const [, , options] = runAsyncSearchMock.mock.calls[0]
     expect(options.signal).toBeInstanceOf(AbortSignal)
@@ -51,6 +64,7 @@ describe('SearchStore async search wiring', () => {
 
     searchStore.setQuery('alpha')
     const p1 = searchStore.refresh()
+    await flushPromises()
     const firstSignal = runAsyncSearchMock.mock.calls[0][2].signal
 
     searchStore.setQuery('beta')
@@ -138,5 +152,58 @@ describe('SearchStore async search wiring', () => {
     await Promise.all([searchStore.query('bar'), searchStore.query('bar')])
 
     expect(runAsyncSearchMock).toHaveBeenCalledTimes(1)
+  })
+
+  describe('index distribution gating', () => {
+    it('searches synchronously when the backend reports an opensearch distribution', async () => {
+      getVersionSpy.mockResolvedValue({ 'index.distribution': 'opensearch' })
+      searchDocsSpy.mockResolvedValue({ hits: { hits: [], total: { value: 3 } } })
+
+      await searchStore.query('alpha')
+
+      expect(searchDocsSpy).toHaveBeenCalledTimes(1)
+      expect(runAsyncSearchMock).not.toHaveBeenCalled()
+      expect(searchStore.total).toBe(3)
+    })
+
+    it('keeps the async search on an elasticsearch distribution', async () => {
+      runAsyncSearchMock.mockResolvedValue(emptyResponse())
+
+      await searchStore.query('alpha')
+
+      expect(runAsyncSearchMock).toHaveBeenCalledTimes(1)
+      expect(searchDocsSpy).not.toHaveBeenCalled()
+    })
+
+    it('fetches the version only once across consecutive searches', async () => {
+      runAsyncSearchMock.mockResolvedValue(emptyResponse())
+
+      await searchStore.query('alpha')
+      await searchStore.query('beta')
+
+      expect(getVersionSpy).toHaveBeenCalledTimes(1)
+    })
+
+    it('falls back to the async search when the version request fails', async () => {
+      getVersionSpy.mockRejectedValue(new Error('backend unreachable'))
+      runAsyncSearchMock.mockResolvedValue(emptyResponse())
+
+      await searchStore.query('alpha')
+
+      expect(runAsyncSearchMock).toHaveBeenCalledTimes(1)
+      expect(searchStore.error).toBeNull()
+    })
+
+    it('retries the version request on the next search after a failure', async () => {
+      getVersionSpy.mockRejectedValueOnce(new Error('backend unreachable'))
+      getVersionSpy.mockResolvedValue({ 'index.distribution': 'opensearch' })
+      runAsyncSearchMock.mockResolvedValue(emptyResponse())
+
+      await searchStore.query('alpha')
+      await searchStore.query('beta')
+
+      expect(getVersionSpy).toHaveBeenCalledTimes(2)
+      expect(searchDocsSpy).toHaveBeenCalledTimes(1)
+    })
   })
 })
