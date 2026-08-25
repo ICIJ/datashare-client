@@ -3,11 +3,15 @@ import { setActivePinia, createPinia } from 'pinia'
 
 import { useAppStore, useSearchStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
-import { resetIndexDistribution } from '@/api/indexDistribution'
 
 const runAsyncSearchMock = vi.fn()
 vi.mock('@/api/asyncSearch', () => ({
   runAsyncSearch: (...args) => runAsyncSearchMock(...args)
+}))
+
+const isOpenSearchMock = vi.fn()
+vi.mock('@/api/indexDistribution', () => ({
+  isOpenSearchDistribution: (...args) => isOpenSearchMock(...args)
 }))
 
 function emptyResponse() {
@@ -25,7 +29,7 @@ function deferred() {
 }
 
 describe('SearchStore async search wiring', () => {
-  let searchStore, appStore, getVersionSpy, searchDocsSpy
+  let searchStore, appStore, searchDocsSpy
 
   beforeEach(() => {
     setActivePinia(createPinia())
@@ -34,8 +38,8 @@ describe('SearchStore async search wiring', () => {
     searchStore.setIndex('local-index')
     appStore.setSettings('search', { perPage: 25, orderBy: ['_score', 'desc'] })
     runAsyncSearchMock.mockReset()
-    resetIndexDistribution()
-    getVersionSpy = vi.spyOn(api, 'getVersion').mockResolvedValue({ 'index.distribution': 'elasticsearch' })
+    isOpenSearchMock.mockReset()
+    isOpenSearchMock.mockResolvedValue(false)
     searchDocsSpy = vi.spyOn(api.elasticsearch, 'searchDocs').mockResolvedValue(emptyResponse())
   })
 
@@ -55,7 +59,7 @@ describe('SearchStore async search wiring', () => {
     expect(options.signal).toBeInstanceOf(AbortSignal)
     expect(options.signal.aborted).toBe(false)
 
-    d.resolve({ hits: { hits: [], total: { value: 0 } } })
+    d.resolve(emptyResponse())
     await p
   })
 
@@ -74,8 +78,8 @@ describe('SearchStore async search wiring', () => {
 
     expect(firstSignal.aborted).toBe(true)
 
-    second.resolve({ hits: { hits: [], total: { value: 0 } } })
-    first.resolve({ hits: { hits: [], total: { value: 0 } } })
+    second.resolve(emptyResponse())
+    first.resolve(emptyResponse())
     await Promise.all([p1, p2])
   })
 
@@ -86,6 +90,7 @@ describe('SearchStore async search wiring', () => {
 
     searchStore.setQuery('alpha')
     const p1 = searchStore.refresh()
+    await flushPromises()
     searchStore.setQuery('beta')
     const p2 = searchStore.refresh()
 
@@ -105,6 +110,7 @@ describe('SearchStore async search wiring', () => {
 
     searchStore.setQuery('alpha')
     const p1 = searchStore.refresh()
+    await flushPromises()
     searchStore.setQuery('beta')
     const p2 = searchStore.refresh()
 
@@ -124,6 +130,7 @@ describe('SearchStore async search wiring', () => {
 
     searchStore.setQuery('alpha')
     const p = searchStore.refresh()
+    await flushPromises()
     searchStore.cancelActiveSearch()
 
     const abortError = new Error('Async search aborted')
@@ -149,7 +156,7 @@ describe('SearchStore async search wiring', () => {
   })
 
   it('runs the search only once for concurrent identical queries', async () => {
-    runAsyncSearchMock.mockResolvedValue({ hits: { hits: [], total: { value: 0 } } })
+    runAsyncSearchMock.mockResolvedValue(emptyResponse())
 
     await Promise.all([searchStore.query('bar'), searchStore.query('bar')])
 
@@ -157,8 +164,8 @@ describe('SearchStore async search wiring', () => {
   })
 
   describe('index distribution gating', () => {
-    it('searches synchronously when the backend reports an opensearch distribution', async () => {
-      getVersionSpy.mockResolvedValue({ 'index.distribution': 'opensearch' })
+    it('searches synchronously when the backend runs OpenSearch', async () => {
+      isOpenSearchMock.mockResolvedValue(true)
       searchDocsSpy.mockResolvedValue({ hits: { hits: [], total: { value: 3 } } })
 
       await searchStore.query('alpha')
@@ -168,7 +175,16 @@ describe('SearchStore async search wiring', () => {
       expect(searchStore.total).toBe(3)
     })
 
-    it('keeps the async search on an elasticsearch distribution', async () => {
+    it('passes the abort signal to the synchronous search', async () => {
+      isOpenSearchMock.mockResolvedValue(true)
+
+      await searchStore.query('alpha')
+
+      const [, options] = searchDocsSpy.mock.calls[0]
+      expect(options.signal).toBeInstanceOf(AbortSignal)
+    })
+
+    it('keeps the async search when the backend does not run OpenSearch', async () => {
       runAsyncSearchMock.mockResolvedValue(emptyResponse())
 
       await searchStore.query('alpha')
@@ -177,35 +193,38 @@ describe('SearchStore async search wiring', () => {
       expect(searchDocsSpy).not.toHaveBeenCalled()
     })
 
-    it('fetches the version only once across consecutive searches', async () => {
-      runAsyncSearchMock.mockResolvedValue(emptyResponse())
+    it('treats a cancelled synchronous search as an abort, not an error', async () => {
+      isOpenSearchMock.mockResolvedValue(true)
+      // The transport rejects with its own error on abort, never an AbortError.
+      searchDocsSpy.mockImplementation((searchParams, { signal }) => {
+        return new Promise((resolve, reject) => {
+          signal.addEventListener('abort', () => reject(new Error('Request aborted by the transport')))
+        })
+      })
 
-      await searchStore.query('alpha')
-      await searchStore.query('beta')
+      searchStore.setQuery('alpha')
+      const p = searchStore.refresh()
+      await flushPromises()
+      searchStore.cancelActiveSearch()
+      await p
 
-      expect(getVersionSpy).toHaveBeenCalledTimes(1)
-    })
-
-    it('falls back to the async search when the version request fails', async () => {
-      getVersionSpy.mockRejectedValue(new Error('backend unreachable'))
-      runAsyncSearchMock.mockResolvedValue(emptyResponse())
-
-      await searchStore.query('alpha')
-
-      expect(runAsyncSearchMock).toHaveBeenCalledTimes(1)
       expect(searchStore.error).toBeNull()
+      expect(searchStore.isReady).toBe(true)
     })
 
-    it('retries the version request on the next search after a failure', async () => {
-      getVersionSpy.mockRejectedValueOnce(new Error('backend unreachable'))
-      getVersionSpy.mockResolvedValue({ 'index.distribution': 'opensearch' })
-      runAsyncSearchMock.mockResolvedValue(emptyResponse())
+    it('does not submit a search when the run is aborted during the probe', async () => {
+      const probe = deferred()
+      isOpenSearchMock.mockReturnValue(probe.promise)
 
-      await searchStore.query('alpha')
-      await searchStore.query('beta')
+      searchStore.setQuery('alpha')
+      const p = searchStore.refresh()
+      searchStore.cancelActiveSearch()
+      probe.resolve(false)
+      await p
 
-      expect(getVersionSpy).toHaveBeenCalledTimes(2)
-      expect(searchDocsSpy).toHaveBeenCalledTimes(1)
+      expect(runAsyncSearchMock).not.toHaveBeenCalled()
+      expect(searchDocsSpy).not.toHaveBeenCalled()
+      expect(searchStore.error).toBeNull()
     })
   })
 })

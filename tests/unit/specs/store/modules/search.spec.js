@@ -11,6 +11,12 @@ import NamedEntity from '@/api/resources/NamedEntity'
 import { useAppStore, useSearchStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
 
+// This suite runs against a live Elasticsearch: pin the async route so no
+// search waits on a real /version probe against the test host.
+vi.mock('@/api/indexDistribution', () => ({
+  isOpenSearchDistribution: () => Promise.resolve(false)
+}))
+
 describe('SearchStore', () => {
   const { index, es } = esConnectionHelper.build()
   const { index: anotherIndex } = esConnectionHelper.build()
@@ -158,19 +164,16 @@ describe('SearchStore', () => {
       expect(spy).toHaveBeenCalledTimes(1)
     })
 
-    it('does not mark a cancelled query as applied, so returning to it retries the search', () => {
-      const spy = vi.spyOn(api.elasticsearch, 'submitAsyncSearch')
-
-      // Never settles, so the assertion below must hold synchronously -
-      // before any abort rejection could unwind through doRefresh.
-      spy.mockImplementationOnce(() => new Promise(() => {}))
-
-      searchStore.query('bar')
+    it('does not mark a cancelled query as applied, so returning to it retries the search', async () => {
+      // A run cancelled this early never submits anything: the abort lands
+      // while searchDocuments is still probing the index distribution.
+      const promise = searchStore.query('bar')
       searchStore.cancelActiveSearch()
 
       // Same check useSearchFilter's route guards use to decide whether to
       // refetch on route re-entry: a cancelled query must not count as applied.
       expect(searchStore.sameAppliedQuery(searchStore.toRouteQuery, ['from'])).toBe(false)
+      await promise
     })
 
     it('should return document from local project', async () => {

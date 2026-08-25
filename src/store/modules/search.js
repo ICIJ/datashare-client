@@ -771,20 +771,39 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   }
 
   /**
+   * Runs the synchronous `_search` used on OpenSearch. The transport rejects
+   * with its own error on abort, so a cancelled request is renamed to the
+   * AbortError the caller already handles, mirroring `runAsyncSearch`.
+   * @param {Object} searchParams - The search parameters to use for the query.
+   * @param {AbortSignal} [signal] - Aborts the in-flight search.
+   * @returns {Promise<Object>} - The raw search response.
+   */
+  async function searchDocsSync(searchParams, signal) {
+    try {
+      return await api.elasticsearch.searchDocs(searchParams, { signal })
+    }
+    catch (error) {
+      signal?.throwIfAborted()
+      throw error
+    }
+  }
+
+  /**
    * Search for documents, through Elasticsearch async search or through a
    * synchronous `_search` on OpenSearch, which has no async search endpoint.
    *
    * On Elasticsearch, builds the search body with `api.elasticsearch.buildSearchDocsBody`
    * and runs it through `runAsyncSearch`, which submits, polls, and cleans up the async search.
    * @param {Object} [searchParams=toSearchParams.value] - The search parameters to use for the query.
-   * @param {AbortSignal} [signal] - Aborts the in-flight async search (supersede / unmount).
+   * @param {AbortSignal} [signal] - Aborts the in-flight search (supersede / unmount).
    * @returns {Promise<Object>} - A promise that resolves to the raw Elasticsearch search response.
    */
   async function searchDocuments(searchParams = toSearchParams.value, signal) {
-    // The legacy ES client takes no abort signal, so a superseded synchronous
-    // search still completes; the generation guard discards its response.
-    if (await isOpenSearchDistribution(api)) {
-      return api.elasticsearch.searchDocs(searchParams)
+    const syncSearch = await isOpenSearchDistribution(api)
+    // A run cancelled while the probe was pending must not submit anything.
+    signal?.throwIfAborted()
+    if (syncSearch) {
+      return searchDocsSync(searchParams, signal)
     }
     const body = api.elasticsearch.buildSearchDocsBody(searchParams)
     return runAsyncSearch(api.elasticsearch, { index: searchParams.index, body }, { signal })

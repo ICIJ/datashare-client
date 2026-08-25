@@ -157,6 +157,20 @@ export class Api {
     return this.sendAction('/version')
   }
 
+  /**
+   * Same payload as `getVersion`, without `sendAction`'s `http::error` emission.
+   *
+   * This is a routing probe fired before searches: on a backend where /version
+   * fails (older version, blocking proxy, expired session), emitting would
+   * toast a global error on every search even though the search itself works.
+   * @param {Object} [config={}] - Extra axios request configuration
+   * @returns {Promise<Object|null>} The version payload
+   */
+  async getVersionSilently(config = {}) {
+    const r = await this.axios?.request({ url: Api.getFullUrl('/version'), ...config })
+    return r ? r.data : null
+  }
+
   getSettings() {
     return this.sendAction('/settings')
   }
