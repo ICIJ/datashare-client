@@ -180,6 +180,20 @@ describe('useSearchBreadcrumb composable', () => {
       expect(lockedFiltersStore.count).toBe(0)
       expect(searchStore.getFilter({ name: 'contentType' }).values).toEqual(['application/pdf'])
     })
+
+    it('refreshes the route so a value only merged in via the lock survives the next hydration', async () => {
+      // Never applied through the route: it only exists in the store because
+      // the lock merged it in. Without a route refresh, the URL would stay
+      // empty and the value would vanish silently on the next hydration
+      // (reload, or document then Back) instead of surviving the unlock.
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+      searchStore.updateFromRouteQuery({})
+
+      const { unlockAll } = mountComposable()
+      await unlockAll()
+
+      expect(core.router.currentRoute.value.query['f[contentType]']).toEqual(['application/pdf'])
+    })
   })
 
   describe('lockedFiltersCount (icij/datashare#2330)', () => {
