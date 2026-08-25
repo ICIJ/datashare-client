@@ -141,7 +141,8 @@ export function useSearchFilter() {
         if (value) {
           const filters = castArray(toValue(filter))
           for (const eachFilter of filters) {
-            removeFilterValues(eachFilter, { skipUnlock })
+            // toValue() so a reactive skipUnlock (ref/getter) isn't frozen at call time
+            removeFilterValues(eachFilter, { skipUnlock: toValue(skipUnlock) })
           }
         }
       }
@@ -261,12 +262,14 @@ export function useSearchFilter() {
 
   const toggleFilterValue = (filter, item, checked, options) => {
     if (checked) {
-      return addFilterValue(filter, item)
+      return addFilterValue(filter, item, options)
     }
     return removeFilterValue(filter, item, options)
   }
 
-  const addFilterValue = (filter, item) => {
+  // _options is unused here today (adding a value never touches locks), kept
+  // only so toggleFilterValue's forwarding is symmetric with removeFilterValue
+  const addFilterValue = (filter, item, _options) => {
     const instance = castFilter(filter)
     const param = instance.itemParam(castFilterItem(item))
     const value = toString(param.value)

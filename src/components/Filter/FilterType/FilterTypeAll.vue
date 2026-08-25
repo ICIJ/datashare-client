@@ -22,7 +22,7 @@ const props = defineProps({
 const { t } = useI18n()
 const { computedAll } = useSearchFilter()
 
-const all = computedAll(toRef(props, 'filter'), { skipUnlock: props.hideLock })
+const all = computedAll(toRef(props, 'filter'), { skipUnlock: toRef(props, 'hideLock') })
 </script>
 
 <template>
