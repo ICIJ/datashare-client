@@ -81,6 +81,13 @@ export const useLockedFiltersStore = defineStore('lockedFilters', () => {
    * Lock a filter value. Upserts: if `{ name, value }` is already locked,
    * its label is updated in place rather than adding a duplicate entry.
    *
+   * A filter dimension can only be applied in one include/exclude mode at a
+   * time, so any existing locks under the same bare dimension but the
+   * opposite mode are retagged to this mode first. Without this, two locks
+   * on the same dimension could disagree on mode forever: the search store
+   * can only satisfy one mode per dimension when applying locks, so the
+   * other would stay permanently conflicting (icij/datashare#2332).
+   *
    * @public
    * @param {Object} params
    * @param {string} params.name - The filter name.
@@ -89,6 +96,10 @@ export const useLockedFiltersStore = defineStore('lockedFilters', () => {
    */
   function lock({ name, value, label }) {
     const stringValue = toString(value)
+    const oppositeName = name.startsWith('-') ? name.slice(1) : `-${name}`
+    entries.value
+      .filter(entry => entry.name === oppositeName)
+      .forEach(entry => retag({ name: oppositeName, newName: name, value: entry.value }))
     const index = indexByKey.value.get(entryKey(name, stringValue))
     const entry = { name, value: stringValue, label }
     if (index !== undefined) {

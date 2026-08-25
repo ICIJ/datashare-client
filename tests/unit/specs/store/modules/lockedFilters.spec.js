@@ -47,12 +47,30 @@ describe('LockedFiltersStore', () => {
     expect(store.entries[0].label).toBe('CONFIDENTIAL (renamed)')
   })
 
-  it('treats included and excluded modes of the same filter as distinct locks', () => {
+  it('retags a lock to the opposite mode rather than leaving both, since a dimension can only apply in one mode at a time', () => {
     store.lock({ name: 'tag', value: 'confidential', label: 'Confidential' })
     store.lock({ name: '-tag', value: 'confidential', label: 'Confidential' })
-    expect(store.entries).toHaveLength(2)
-    expect(store.isLocked({ name: 'tag', value: 'confidential' })).toBe(true)
+    expect(store.entries).toHaveLength(1)
+    expect(store.isLocked({ name: 'tag', value: 'confidential' })).toBe(false)
     expect(store.isLocked({ name: '-tag', value: 'confidential' })).toBe(true)
+  })
+
+  it('retags every other locked value of the same dimension to the new mode, so the dimension never ends up straddling both modes', () => {
+    store.lock({ name: '-tag', value: 'confidential', label: 'Confidential' })
+    store.lock({ name: '-tag', value: 'secret', label: 'Secret' })
+    store.lock({ name: 'tag', value: 'public', label: 'Public' })
+    expect(store.entries).toEqual([
+      { name: 'tag', value: 'confidential', label: 'Confidential' },
+      { name: 'tag', value: 'secret', label: 'Secret' },
+      { name: 'tag', value: 'public', label: 'Public' }
+    ])
+  })
+
+  it('leaves other dimensions untouched when retagging', () => {
+    store.lock({ name: '-tag', value: 'confidential', label: 'Confidential' })
+    store.lock({ name: 'contentType', value: 'application/pdf', label: 'PDF' })
+    store.lock({ name: 'tag', value: 'public', label: 'Public' })
+    expect(store.isLocked({ name: 'contentType', value: 'application/pdf' })).toBe(true)
   })
 
   it('unlocks a previously locked value', () => {
@@ -85,13 +103,13 @@ describe('LockedFiltersStore', () => {
     it('unlocks every entry matching the predicate, leaving the rest', () => {
       store.lock({ name: 'tag', value: 'confidential', label: 'Confidential' })
       store.lock({ name: 'tag', value: 'secret', label: 'Secret' })
-      store.lock({ name: '-tag', value: 'confidential', label: 'Confidential' })
+      store.lock({ name: '-language', value: 'FRENCH', label: 'French' })
       store.lock({ name: 'contentType', value: 'application/pdf', label: 'PDF' })
 
       store.unlockWhere(entry => entry.name === 'tag')
 
       expect(store.entries).toEqual([
-        { name: '-tag', value: 'confidential', label: 'Confidential' },
+        { name: '-language', value: 'FRENCH', label: 'French' },
         { name: 'contentType', value: 'application/pdf', label: 'PDF' }
       ])
     })
