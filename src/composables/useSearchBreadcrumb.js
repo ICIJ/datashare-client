@@ -221,6 +221,10 @@ export function useSearchBreadcrumb() {
     try {
       searchStore.applyLockedFilters()
       await refreshRouteFromStart()
+      if (searchStore.hasConflictingLocks) {
+        toast.error(t('searchBreadcrumbFormFooter.applyLockedFiltersError'))
+        return
+      }
       toast.success(t('searchBreadcrumbFormFooter.applyLockedFiltersSuccess'))
     }
     catch {

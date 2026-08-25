@@ -265,5 +265,22 @@ describe('useSearchBreadcrumb composable', () => {
       expect(wrapper.vm.$toast.success).toHaveBeenCalledOnce()
       expect(wrapper.vm.$toast.error).not.toHaveBeenCalled()
     })
+
+    it('toasts an error instead of success when a conflict remains after applying', async () => {
+      // Two locks on the same unpaired filter disagreeing on mode can never
+      // both be satisfied: applying still leaves one of them conflicting.
+      lockedFiltersStore.lock({ name: 'language', value: 'ENGLISH', label: 'English' })
+      lockedFiltersStore.lock({ name: '-language', value: 'FRENCH', label: 'French' })
+
+      const { applyLockedFilters, wrapper } = mountComposable()
+      vi.spyOn(wrapper.vm.$toast, 'success')
+      vi.spyOn(wrapper.vm.$toast, 'error')
+
+      await applyLockedFilters()
+
+      expect(searchStore.hasConflictingLocks).toBe(true)
+      expect(wrapper.vm.$toast.error).toHaveBeenCalledOnce()
+      expect(wrapper.vm.$toast.success).not.toHaveBeenCalled()
+    })
   })
 })
