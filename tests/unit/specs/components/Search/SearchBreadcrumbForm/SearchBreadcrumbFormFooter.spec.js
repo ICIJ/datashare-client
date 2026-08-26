@@ -20,10 +20,16 @@ describe('SearchBreadcrumbFormFooter', () => {
     return wrapper.findAllComponents(ButtonIcon).find(button => button.text().includes(label))
   }
 
-  it('does not render the "Clear locks" button when there are no locked filters', () => {
+  it('shows "Clear locks" disabled when there are no locked filters, so its position never shifts', () => {
     const wrapper = mountFooter({ lockedFiltersCount: 0 })
 
-    expect(wrapper.text()).not.toContain('Clear locks')
+    expect(findButton(wrapper, 'Clear locks').find('button').element.disabled).toBe(true)
+  })
+
+  it('does not show a "0" badge on "Clear locks" when there are no locked filters', () => {
+    const wrapper = mountFooter({ lockedFiltersCount: 0 })
+
+    expect(findButton(wrapper, 'Clear locks').props('counter')).toBeNull()
   })
 
   it('renders "Clear locks" with the current lock count as a badge', () => {
@@ -31,6 +37,12 @@ describe('SearchBreadcrumbFormFooter', () => {
 
     const unlockButton = findButton(wrapper, 'Clear locks')
     expect(unlockButton.props('counter')).toBe(3)
+  })
+
+  it('enables "Clear locks" when locked filters exist', () => {
+    const wrapper = mountFooter({ lockedFiltersCount: 2 })
+
+    expect(findButton(wrapper, 'Clear locks').find('button').element.disabled).toBe(false)
   })
 
   it('emits unlock:all when the button is clicked', async () => {

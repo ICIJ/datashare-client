@@ -50,6 +50,10 @@ const applyLockedFiltersDisabledTitle = computed(() => {
     ? t('searchBreadcrumbFormFooter.applyLockedFiltersDisabled')
     : t('searchBreadcrumbFormFooter.applyLockedFiltersNoLocks')
 })
+
+// ButtonIcon's counter badge only hides on `null`, not `0` — avoid a "0" badge
+// once "Clear locks" stays visible with no locks (see below).
+const lockedFiltersCounter = computed(() => props.lockedFiltersCount || null)
 </script>
 
 <template>
@@ -86,9 +90,9 @@ const applyLockedFiltersDisabledTitle = computed(() => {
         </button-icon>
       </span>
       <button-icon
-        v-if="lockedFiltersCount > 0"
-        :counter="lockedFiltersCount"
+        :counter="lockedFiltersCounter"
         counter-variant=""
+        :disabled="lockedFiltersCount === 0"
         :icon-left="IPhLock"
         @click="emit('unlock:all')"
       >
