@@ -83,7 +83,7 @@ describe('SearchBreadcrumbFormFooter', () => {
       const wrapper = mountFooter({ lockedFiltersCount: 1, hasConflictingLocks: false })
 
       const span = wrapper.find('span.d-inline-block')
-      expect(span.attributes('title')).toBe('All locked filters are already applied')
+      expect(span.attributes('title')).toBe('No locks to apply')
     })
 
     it('has no title tooltip on the wrapping span while "Apply locked filters" is enabled', () => {

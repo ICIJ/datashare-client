@@ -2030,7 +2030,7 @@
     "clearFiltersAndQuery": "Effacer filtres et requête",
     "unlockFilters": "Déverrouiller les filtres",
     "applyLockedFilters": "Appliquer les filtres verrouillés",
-    "applyLockedFiltersDisabled": "Tous les filtres verrouillés sont déjà appliqués",
+    "applyLockedFiltersDisabled": "Aucun filtre verrouillé à appliquer",
     "applyLockedFiltersSuccess": "Filtres verrouillés appliqués avec succès",
     "applyLockedFiltersError": "Impossible d'appliquer les filtres verrouillés",
     "saveSearch": "Sauvegarder la recherche",
