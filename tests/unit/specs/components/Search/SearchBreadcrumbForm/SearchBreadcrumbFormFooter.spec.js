@@ -75,6 +75,24 @@ describe('SearchBreadcrumbFormFooter', () => {
       expect(applyButton.find('button').element.disabled).toBe(true)
     })
 
+    it('sets a native title tooltip explaining why "Apply locked filters" is disabled', () => {
+      // A disabled native <button> never fires mouse events, so a tooltip
+      // targeting the button itself never shows while disabled — the one time
+      // it's actually needed. The `title` lives on the wrapping span instead,
+      // which browsers show on hover regardless of the child's disabled state.
+      const wrapper = mountFooter({ lockedFiltersCount: 1, hasConflictingLocks: false })
+
+      const span = wrapper.find('span.d-inline-block')
+      expect(span.attributes('title')).toBe('All locked filters are already applied')
+    })
+
+    it('has no title tooltip on the wrapping span while "Apply locked filters" is enabled', () => {
+      const wrapper = mountFooter({ lockedFiltersCount: 1, hasConflictingLocks: true })
+
+      const span = wrapper.find('span.d-inline-block')
+      expect(span.attributes('title')).toBeUndefined()
+    })
+
     it('shows neither button when there are no locks at all', () => {
       const wrapper = mountFooter({ lockedFiltersCount: 0, hasConflictingLocks: false })
 

@@ -53,17 +53,28 @@ const emit = defineEmits(['clear:filters', 'clear:query', 'clear:all', 'unlock:a
         pair holds a stable position instead of popping in/out on every
         navigation — but only enabled while a lock actually conflicts with the
         active search (icij/datashare#2332).
+
+        A disabled native <button> never fires mouse events, so a tooltip
+        targeting the button itself never shows while disabled — the one time
+        it's actually needed (confirmed: bootstrap-vue-next's v-b-tooltip
+        directive stayed at opacity:0 even on a real hover of the wrapping
+        span, its documented workaround for this exact case). A native `title`
+        attribute on the wrapper sidesteps that entirely: browsers show it on
+        hover regardless of the disabled child's pointer-events:none.
       -->
-      <button-icon
+      <span
         v-if="lockedFiltersCount > 0"
-        :disabled="!hasConflictingLocks"
-        :icon-left="IPhLockOpen"
-        :show-tooltip-force="!hasConflictingLocks"
-        :tooltip-label="t('searchBreadcrumbFormFooter.applyLockedFiltersDisabled')"
-        @click="emit('apply:locked-filters')"
+        class="d-inline-block"
+        :title="hasConflictingLocks ? null : t('searchBreadcrumbFormFooter.applyLockedFiltersDisabled')"
       >
-        {{ t('searchBreadcrumbFormFooter.applyLockedFilters') }}
-      </button-icon>
+        <button-icon
+          :disabled="!hasConflictingLocks"
+          :icon-left="IPhLockOpen"
+          @click="emit('apply:locked-filters')"
+        >
+          {{ t('searchBreadcrumbFormFooter.applyLockedFilters') }}
+        </button-icon>
+      </span>
       <button-icon
         v-if="lockedFiltersCount > 0"
         :counter="lockedFiltersCount"
