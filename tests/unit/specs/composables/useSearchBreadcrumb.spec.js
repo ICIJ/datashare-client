@@ -267,10 +267,16 @@ describe('useSearchBreadcrumb composable', () => {
     })
 
     it('toasts an error instead of success when a conflict remains after applying', async () => {
-      // Two locks on the same unpaired filter disagreeing on mode can never
-      // both be satisfied: applying still leaves one of them conflicting.
-      lockedFiltersStore.lock({ name: 'language', value: 'ENGLISH', label: 'English' })
-      lockedFiltersStore.lock({ name: '-language', value: 'FRENCH', label: 'French' })
+      // Two locks on the SAME bare name in opposite modes can't be built via
+      // lock() at all - it retags any opposite-mode entry under that name to
+      // match the new one (icij/datashare#2332's own single-mode-per-dimension
+      // invariant). A real, still-possible conflict is two *paired* dimensions
+      // (contentType / contentTypeCategory) locked in opposite modes: applying
+      // resolves the pair via canonical-dimension precedence (contentType
+      // wins, included), which still leaves the contentTypeCategory lock's
+      // own excluded mode conflicting with the resulting included state.
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+      lockedFiltersStore.lock({ name: '-contentTypeCategory', value: 'DOCUMENT', label: 'Document' })
 
       const { applyLockedFilters, wrapper } = mountComposable()
       vi.spyOn(wrapper.vm.$toast, 'success')
