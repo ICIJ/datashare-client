@@ -40,6 +40,10 @@ describe('SearchBreadcrumbFormFooter', () => {
   })
 
   describe('Apply locked filters (icij/datashare#2332)', () => {
+    function findButton(wrapper, label) {
+      return wrapper.findAllComponents(ButtonIcon).find(button => button.text().includes(label))
+    }
+
     it('shows "Apply locked filters" alongside "Unlock filters" when locks conflict', () => {
       const wrapper = mountFooter({ lockedFiltersCount: 1, hasConflictingLocks: true })
 
@@ -57,34 +61,31 @@ describe('SearchBreadcrumbFormFooter', () => {
       expect(applyIndex).toBeLessThan(unlockIndex)
     })
 
-    it('shows "Apply locked filters" alone when locks conflict but none are locked yet', () => {
-      const wrapper = mountFooter({ lockedFiltersCount: 0, hasConflictingLocks: true })
+    it('enables "Apply locked filters" while a lock conflicts', () => {
+      const wrapper = mountFooter({ lockedFiltersCount: 1, hasConflictingLocks: true })
 
-      expect(wrapper.text()).toContain('Apply locked filters')
-      expect(wrapper.text()).not.toContain('Unlock filters')
+      expect(findButton(wrapper, 'Apply locked filters').find('button').element.disabled).toBe(false)
     })
 
-    it('shows "Unlock filters" with a badge when locks exist and none conflict', () => {
+    it('shows "Apply locked filters" disabled when locks exist but none conflict, so the pair holds a stable position', () => {
       const wrapper = mountFooter({ lockedFiltersCount: 2, hasConflictingLocks: false })
 
-      const unlockButton = wrapper.findAllComponents(ButtonIcon).find(button => button.text().includes('Unlock filters'))
-      expect(unlockButton.props('counter')).toBe(2)
-      expect(wrapper.text()).not.toContain('Apply locked filters')
+      const applyButton = findButton(wrapper, 'Apply locked filters')
+      expect(applyButton).toBeTruthy()
+      expect(applyButton.find('button').element.disabled).toBe(true)
     })
 
-    it('shows neither button when there are no locks and none conflict', () => {
+    it('shows neither button when there are no locks at all', () => {
       const wrapper = mountFooter({ lockedFiltersCount: 0, hasConflictingLocks: false })
 
       expect(wrapper.text()).not.toContain('Unlock filters')
       expect(wrapper.text()).not.toContain('Apply locked filters')
     })
 
-    it('emits apply:locked-filters when the button is clicked', async () => {
+    it('emits apply:locked-filters when the enabled button is clicked', async () => {
       const wrapper = mountFooter({ lockedFiltersCount: 1, hasConflictingLocks: true })
 
-      const buttons = wrapper.findAllComponents(ButtonIcon)
-      const applyButton = buttons.find(button => button.text().includes('Apply locked filters'))
-      await applyButton.trigger('click')
+      await findButton(wrapper, 'Apply locked filters').trigger('click')
 
       expect(wrapper.emitted('apply:locked-filters')).toHaveLength(1)
     })

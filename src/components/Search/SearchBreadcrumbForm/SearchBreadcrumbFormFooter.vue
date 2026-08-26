@@ -48,9 +48,18 @@ const emit = defineEmits(['clear:filters', 'clear:query', 'clear:all', 'unlock:a
     compact-auto
   >
     <template #compact>
+      <!--
+        Visible whenever any lock exists (same gate as "Unlock filters"), so the
+        pair holds a stable position instead of popping in/out on every
+        navigation — but only enabled while a lock actually conflicts with the
+        active search (icij/datashare#2332).
+      -->
       <button-icon
-        v-if="hasConflictingLocks"
+        v-if="lockedFiltersCount > 0"
+        :disabled="!hasConflictingLocks"
         :icon-left="IPhLockOpen"
+        :show-tooltip-force="!hasConflictingLocks"
+        :tooltip-label="t('searchBreadcrumbFormFooter.applyLockedFiltersDisabled')"
         @click="emit('apply:locked-filters')"
       >
         {{ t('searchBreadcrumbFormFooter.applyLockedFilters') }}
