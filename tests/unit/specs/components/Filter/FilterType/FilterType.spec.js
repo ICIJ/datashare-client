@@ -1,6 +1,6 @@
 import find from 'lodash/find'
 import { ref } from 'vue'
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount, flushPromises } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 import { vi } from 'vitest'
 
