@@ -1,6 +1,6 @@
 import find from 'lodash/find'
 import { ref } from 'vue'
-import { shallowMount } from '@vue/test-utils'
+import { flushPromises, shallowMount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 import { vi } from 'vitest'
 
@@ -399,6 +399,10 @@ describe('FilterType.vue', () => {
       expect(searchStore.values.language ?? []).not.toContain('ENGLISH')
 
       await wrapper.findComponent(FiltersPanelSectionFilterEntry).vm.$emit('update:locked', true)
+      // toggleLock's own select-then-lock chain isn't awaited by $emit: it
+      // selects the value (an async aggregateOver) before locking it, so the
+      // lock only lands after those promises settle.
+      await flushPromises()
 
       expect(searchStore.values.language).toContain('ENGLISH')
       expect(lockedFiltersStore.isLocked({ name: 'language', value: 'ENGLISH' })).toBe(true)
