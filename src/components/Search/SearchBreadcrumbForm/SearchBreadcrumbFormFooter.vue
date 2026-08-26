@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur'
 import IPhEraser from '~icons/ph/eraser'
@@ -11,7 +12,7 @@ import IPhLockOpen from '~icons/ph/lock-open-fill'
 
 import FormActions from '@/components/Form/FormActions/FormActions'
 
-defineProps({
+const props = defineProps({
   disabledClearFilters: {
     type: Boolean
   },
@@ -38,6 +39,17 @@ defineProps({
 })
 const { t } = useI18n()
 const emit = defineEmits(['clear:filters', 'clear:query', 'clear:all', 'unlock:all', 'apply:locked-filters', 'save:search', 'create:alert'])
+
+// "All locked filters are already applied" when locks exist but none conflict,
+// "No locks to apply" when there are no locks at all (icij/datashare#2332).
+const applyLockedFiltersDisabledTitle = computed(() => {
+  if (props.hasConflictingLocks) {
+    return null
+  }
+  return props.lockedFiltersCount > 0
+    ? t('searchBreadcrumbFormFooter.applyLockedFiltersDisabled')
+    : t('searchBreadcrumbFormFooter.applyLockedFiltersNoLocks')
+})
 </script>
 
 <template>
@@ -49,9 +61,8 @@ const emit = defineEmits(['clear:filters', 'clear:query', 'clear:all', 'unlock:a
   >
     <template #compact>
       <!--
-        Visible whenever any lock exists (same gate as "Unlock filters"), so the
-        pair holds a stable position instead of popping in/out on every
-        navigation — but only enabled while a lock actually conflicts with the
+        Always visible, like every other action in this footer, so its position
+        never shifts — only enabled while a lock actually conflicts with the
         active search (icij/datashare#2332).
 
         A disabled native <button> never fires mouse events, so a tooltip
@@ -63,9 +74,8 @@ const emit = defineEmits(['clear:filters', 'clear:query', 'clear:all', 'unlock:a
         hover regardless of the disabled child's pointer-events:none.
       -->
       <span
-        v-if="lockedFiltersCount > 0"
         class="d-inline-block"
-        :title="hasConflictingLocks ? null : t('searchBreadcrumbFormFooter.applyLockedFiltersDisabled')"
+        :title="applyLockedFiltersDisabledTitle"
       >
         <button-icon
           :disabled="!hasConflictingLocks"

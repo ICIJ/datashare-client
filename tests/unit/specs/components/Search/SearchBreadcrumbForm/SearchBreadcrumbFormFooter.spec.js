@@ -16,48 +16,46 @@ describe('SearchBreadcrumbFormFooter', () => {
     return mount(SearchBreadcrumbFormFooter, { global: { plugins }, props })
   }
 
-  it('does not render the "Unlock filters" button when there are no locked filters', () => {
+  function findButton(wrapper, label) {
+    return wrapper.findAllComponents(ButtonIcon).find(button => button.text().includes(label))
+  }
+
+  it('does not render the "Clear locks" button when there are no locked filters', () => {
     const wrapper = mountFooter({ lockedFiltersCount: 0 })
 
-    expect(wrapper.text()).not.toContain('Unlock filters')
+    expect(wrapper.text()).not.toContain('Clear locks')
   })
 
-  it('renders "Unlock filters" with the current lock count as a badge', () => {
+  it('renders "Clear locks" with the current lock count as a badge', () => {
     const wrapper = mountFooter({ lockedFiltersCount: 3 })
 
-    const unlockButton = wrapper.findAllComponents(ButtonIcon).find(button => button.text().includes('Unlock filters'))
+    const unlockButton = findButton(wrapper, 'Clear locks')
     expect(unlockButton.props('counter')).toBe(3)
   })
 
   it('emits unlock:all when the button is clicked', async () => {
     const wrapper = mountFooter({ lockedFiltersCount: 2 })
 
-    const buttons = wrapper.findAllComponents(ButtonIcon)
-    const unlockButton = buttons.find(button => button.text().includes('Unlock filters'))
-    await unlockButton.trigger('click')
+    await findButton(wrapper, 'Clear locks').trigger('click')
 
     expect(wrapper.emitted('unlock:all')).toHaveLength(1)
   })
 
   describe('Apply locked filters (icij/datashare#2332)', () => {
-    function findButton(wrapper, label) {
-      return wrapper.findAllComponents(ButtonIcon).find(button => button.text().includes(label))
-    }
-
-    it('shows "Apply locked filters" alongside "Unlock filters" when locks conflict', () => {
+    it('shows "Apply locked filters" alongside "Clear locks" when locks conflict', () => {
       const wrapper = mountFooter({ lockedFiltersCount: 1, hasConflictingLocks: true })
 
       expect(wrapper.text()).toContain('Apply locked filters')
-      expect(wrapper.text()).toContain('Unlock filters')
+      expect(wrapper.text()).toContain('Clear locks')
     })
 
-    it('places "Apply locked filters" before "Unlock filters"', () => {
+    it('places "Apply locked filters" before "Clear locks"', () => {
       const wrapper = mountFooter({ lockedFiltersCount: 1, hasConflictingLocks: true })
 
       const buttons = wrapper.findAllComponents(ButtonIcon)
       const labels = buttons.map(button => button.text())
       const applyIndex = labels.findIndex(label => label.includes('Apply locked filters'))
-      const unlockIndex = labels.findIndex(label => label.includes('Unlock filters'))
+      const unlockIndex = labels.findIndex(label => label.includes('Clear locks'))
       expect(applyIndex).toBeLessThan(unlockIndex)
     })
 
@@ -67,20 +65,37 @@ describe('SearchBreadcrumbFormFooter', () => {
       expect(findButton(wrapper, 'Apply locked filters').find('button').element.disabled).toBe(false)
     })
 
-    it('shows "Apply locked filters" disabled when locks exist but none conflict, so the pair holds a stable position', () => {
-      const wrapper = mountFooter({ lockedFiltersCount: 2, hasConflictingLocks: false })
+    it('shows "Apply locked filters" always, even with no locks, so its position never shifts', () => {
+      const wrapper = mountFooter({ lockedFiltersCount: 0, hasConflictingLocks: false })
 
-      const applyButton = findButton(wrapper, 'Apply locked filters')
-      expect(applyButton).toBeTruthy()
-      expect(applyButton.find('button').element.disabled).toBe(true)
+      expect(findButton(wrapper, 'Apply locked filters')).toBeTruthy()
     })
 
-    it('sets a native title tooltip explaining why "Apply locked filters" is disabled', () => {
-      // A disabled native <button> never fires mouse events, so a tooltip
-      // targeting the button itself never shows while disabled — the one time
-      // it's actually needed. The `title` lives on the wrapping span instead,
-      // which browsers show on hover regardless of the child's disabled state.
-      const wrapper = mountFooter({ lockedFiltersCount: 1, hasConflictingLocks: false })
+    it('disables "Apply locked filters" when locks exist but none conflict', () => {
+      const wrapper = mountFooter({ lockedFiltersCount: 2, hasConflictingLocks: false })
+
+      expect(findButton(wrapper, 'Apply locked filters').find('button').element.disabled).toBe(true)
+    })
+
+    it('disables "Apply locked filters" when there are no locks at all', () => {
+      const wrapper = mountFooter({ lockedFiltersCount: 0, hasConflictingLocks: false })
+
+      expect(findButton(wrapper, 'Apply locked filters').find('button').element.disabled).toBe(true)
+    })
+
+    // A disabled native <button> never fires mouse events, so a tooltip
+    // targeting the button itself never shows while disabled — the one time
+    // it's actually needed. The `title` lives on the wrapping span instead,
+    // which browsers show on hover regardless of the child's disabled state.
+    it('tooltips "All locked filters are already applied" when locks exist but none conflict', () => {
+      const wrapper = mountFooter({ lockedFiltersCount: 2, hasConflictingLocks: false })
+
+      const span = wrapper.find('span.d-inline-block')
+      expect(span.attributes('title')).toBe('All locked filters are already applied')
+    })
+
+    it('tooltips "No locks to apply" when there are no locks at all', () => {
+      const wrapper = mountFooter({ lockedFiltersCount: 0, hasConflictingLocks: false })
 
       const span = wrapper.find('span.d-inline-block')
       expect(span.attributes('title')).toBe('No locks to apply')
@@ -91,13 +106,6 @@ describe('SearchBreadcrumbFormFooter', () => {
 
       const span = wrapper.find('span.d-inline-block')
       expect(span.attributes('title')).toBeUndefined()
-    })
-
-    it('shows neither button when there are no locks at all', () => {
-      const wrapper = mountFooter({ lockedFiltersCount: 0, hasConflictingLocks: false })
-
-      expect(wrapper.text()).not.toContain('Unlock filters')
-      expect(wrapper.text()).not.toContain('Apply locked filters')
     })
 
     it('emits apply:locked-filters when the enabled button is clicked', async () => {
