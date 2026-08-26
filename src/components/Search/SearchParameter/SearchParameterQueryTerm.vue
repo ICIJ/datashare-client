@@ -3,8 +3,8 @@ import { computed } from 'vue'
 import { AppIcon, ButtonIcon } from '@icij/murmur'
 import IPhMagnifyingGlass from '~icons/ph/magnifying-glass'
 import IPhX from '~icons/ph/x'
-import IPhLock from '~icons/ph/lock'
-import IPhLockOpen from '~icons/ph/lock-open'
+import IPhLock from '~icons/ph/lock-fill'
+import IPhLockOpen from '~icons/ph/lock-open-fill'
 
 import { VARIANT, variantValidator } from '@/enums/variants'
 
@@ -190,10 +190,6 @@ const showOperator = computed(() => {
     color: var(--bs-tertiary);
     opacity: 0;
     transition: opacity 0.15s ease;
-
-    &:hover {
-      color: var(--bs-body-color);
-    }
   }
 
   &:hover &__lock,
@@ -202,12 +198,11 @@ const showOperator = computed(() => {
   }
 
   &--locked {
-    border-style: dashed;
     border-color: var(--bs-action-border-subtle);
     background: var(--bs-action-bg-subtle);
 
     .search-parameter-query-term__lock {
-      color: var(--bs-action);
+      color: var(--bs-action-text-emphasis);
       opacity: 1;
     }
   }
