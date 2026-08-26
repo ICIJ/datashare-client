@@ -2,8 +2,8 @@
 import { computed } from 'vue'
 import { ButtonIcon } from '@icij/murmur'
 import { useI18n } from 'vue-i18n'
-import IPhLock from '~icons/ph/lock'
-import IPhLockOpen from '~icons/ph/lock-open'
+import IPhLock from '~icons/ph/lock-fill'
+import IPhLockOpen from '~icons/ph/lock-open-fill'
 
 const props = defineProps({
   locked: {
@@ -38,16 +38,18 @@ const label = computed(() => t(props.locked ? 'filtersPanelSectionFilterEntry.un
 </template>
 
 <style lang="scss" scoped>
-// Visibility (hidden until hover/focus/locked) is each consumer's own call —
-// they hover-reveal their own row differently (a checkbox row, a tree row),
-// so that CSS lives in the consumer, not here. This component only owns the
-// locked-state look, consistent everywhere it's used.
 .button-toggle-lock {
   flex-shrink: 0;
 
+  // Overrides the btn-link default hover color (near-black) on the unlocked
+  // icon; the locked icon keeps its own color below regardless of hover.
+  &:not(&--locked):hover:deep(.button-icon__icon-left) {
+    color: var(--bs-tertiary);
+  }
+
   &--locked {
     &:deep(.button-icon__icon-left) {
-      color: var(--bs-action);
+      color: var(--bs-action-text-emphasis);
     }
   }
 }

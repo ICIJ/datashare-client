@@ -6,8 +6,8 @@ import IPhXCircle from '~icons/ph/x-circle'
 import IPhArrowCounterClockwise from '~icons/ph/arrow-counter-clockwise'
 import IPhFloppyDiskBack from '~icons/ph/floppy-disk-back'
 import IPhSiren from '~icons/ph/siren'
-import IPhLock from '~icons/ph/lock'
-import IPhLockOpen from '~icons/ph/lock-open'
+import IPhLock from '~icons/ph/lock-fill'
+import IPhLockOpen from '~icons/ph/lock-open-fill'
 
 import FormActions from '@/components/Form/FormActions/FormActions'
 
