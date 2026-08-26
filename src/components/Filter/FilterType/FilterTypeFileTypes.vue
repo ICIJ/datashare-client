@@ -255,7 +255,7 @@ const totalCount = computedTotal(filterRef)
             :model-value="hasFilterValue(props.filter, entry.item)"
             :locked="isItemLocked(entry.item.key)"
             :hide-lock="hideLock"
-            @update:model-value="toggleFilterValue(props.filter, entry.item, $event)"
+            @update:model-value="toggleFilterValue(props.filter, entry.item, $event, { skipUnlock: hideLock })"
             @update:locked="toggleLock(entry.item.key, $event)"
           />
         </template>

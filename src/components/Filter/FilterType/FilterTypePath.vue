@@ -146,6 +146,7 @@ watchValues(whenFilterContextualized(props.filter, reloadData))
   <filter-type
     :filter="filter"
     :modal="modal"
+    :hide-lock="hideLock"
     flush
   >
     <template #default="{ opened }">
