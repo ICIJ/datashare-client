@@ -60,7 +60,6 @@ describe('FilterTypePath.vue', () => {
   })
 
   it('should keep the selected paths when the project is switched', async () => {
-
     const key = ['/data/foo', '/data/bar']
     searchStore.setFilterValue(wrapper.vm.filter.itemParam({ key }))
     await flushPromises()
