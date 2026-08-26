@@ -144,7 +144,16 @@ const lockedFiltersCounter = computed(() => props.lockedFiltersCount || null)
 .search-breadcrumb-form-footer {
   :deep(.button-icon-counter) {
     background-color: var(--bs-action-text-emphasis);
-    color: var(--bs-body-bg) ;
+    color: var(--bs-body-bg);
+  }
+
+  // These buttons use the "link" variant, whose label switches to
+  // --bs-link-hover-color on hover — the badge stayed a fixed color instead
+  // of following it. Targets the real :hover pseudo-class rather than
+  // ButtonIcon's own currentHover tracking, which never actually sets true
+  // (a `@mousenter` typo in that component, see its own source comment).
+  :deep(.btn:hover .button-icon-counter) {
+    background-color: var(--bs-link-hover-color);
   }
 }
 </style>
