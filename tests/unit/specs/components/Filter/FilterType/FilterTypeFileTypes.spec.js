@@ -1524,27 +1524,31 @@ describe('FilterTypeFileTypes.vue', () => {
       expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'application/pdf' })).toBe(false)
     })
 
-    it('locks a grouped entry covered by a stored category without stacking it on top of that category', async () => {
+    it('locking a category-covered entry demotes the category, selecting and locking just that entry', async () => {
+      // Locking a more specific leaf value must supersede a broader category
+      // lock, not stack silently underneath it (only-the-icon-lights-up bug).
       api.getContentTypeCategories.mockResolvedValue({ DOCUMENT: ['application/pdf', 'text/html'] })
       seedContentTypes(['application/pdf', 'text/html'])
       await wrapper.findComponent(FilterType).vm.aggregateOver()
       await flushPromises()
 
-      // Store the whole category first, so `application/pdf` is only implicitly selected.
+      // Lock the whole category first, so `application/pdf` is only implicitly selected.
       const categoryName = wrapper.findAllComponents(ContentTypesCategoryName).find(n => n.props('category') === 'DOCUMENT')
-      await categoryName.vm.$emit('update:modelValue', true)
+      await categoryName.vm.$emit('update:locked', true)
       await flushPromises()
       expect(searchStore.values.contentTypeCategory).toEqual(['DOCUMENT'])
+      expect(lockedFiltersStore.isLocked({ name: 'contentTypeCategory', value: 'DOCUMENT' })).toBe(true)
 
       const entry = wrapper.findAllComponents(ContentTypesEntry).find(e => e.props('contentType') === 'application/pdf')
       await entry.vm.$emit('update:locked', true)
       await flushPromises()
 
+      // The category's own lock and value are released...
+      expect(lockedFiltersStore.isLocked({ name: 'contentTypeCategory', value: 'DOCUMENT' })).toBe(false)
+      expect(searchStore.values.contentTypeCategory ?? []).not.toContain('DOCUMENT')
+      // ...and the leaf becomes explicitly selected and locked instead.
+      expect(searchStore.values.contentType).toContain('application/pdf')
       expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'application/pdf' })).toBe(true)
-      // Locking a category-covered value must not append its explicit
-      // contentType value on top of the stored category.
-      expect(searchStore.values.contentType ?? []).not.toContain('application/pdf')
-      expect(searchStore.values.contentTypeCategory).toEqual(['DOCUMENT'])
     })
 
     it('unlocks a locked child when it gets promoted into its category by ticking the last sibling', async () => {
