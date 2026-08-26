@@ -643,14 +643,18 @@ describe('useSearchFilter composable', () => {
       expect(searchStore.isFilterExcluded('contentTypeCategory')).toBe(true)
     })
 
-    it('reconciles a divergent state using the canonical contentType when canonical is NOT excluded', () => {
+    it('reconciles a divergent state using the non-canonical contentTypeCategory when only it is excluded (icij/datashare#2351)', () => {
+      // contentType (canonical) is only ever written to the route query when
+      // it has values of its own - a category-only selection never touches
+      // it, so this divergent state is the normal, steady one whenever a
+      // category is excluded without any individual content type selected.
       searchStore.excludeFilter('contentTypeCategory')
 
       const { isFilterExcluded } = mountComposable()
 
-      expect(isFilterExcluded({ name: 'contentType' })).toBe(false)
-      expect(isFilterExcluded({ name: 'contentTypeCategory' })).toBe(false)
-      expect(searchStore.isFilterExcluded('contentTypeCategory')).toBe(false)
+      expect(isFilterExcluded({ name: 'contentType' })).toBe(true)
+      expect(isFilterExcluded({ name: 'contentTypeCategory' })).toBe(true)
+      expect(searchStore.isFilterExcluded('contentType')).toBe(true)
     })
 
     it('still works for unpaired filters without cross-dimension writes', () => {

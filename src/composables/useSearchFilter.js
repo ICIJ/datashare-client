@@ -410,21 +410,30 @@ export function useSearchFilter() {
 
   function isFilterExcluded({ name }) {
     const dimensions = getPairedDimensions(name)
-    // The canonical dimension is the source of truth on a divergent read
-    // (same rule `applyLockedFilters` documents via `getCanonicalDimension`),
-    // not an OR of both sides - otherwise a stale exclude on the non-canonical
-    // side alone would flip the pair's mode instead of getting reconciled away.
-    const excluded = searchStore.isFilterExcluded(getCanonicalDimension(name))
-    dimensions.forEach((dimension) => {
-      if (searchStore.isFilterExcluded(dimension) !== excluded) {
-        if (excluded) {
+    // Any excluded side means the pair is excluded (matches the OR semantics
+    // `filterValuesAsRouteQuery` and `reconcilePairedExcludeFilters` already
+    // use in the store), rather than trusting one dimension over the other.
+    // Canonical-only precedence looks tempting here, but the canonical
+    // dimension (contentType) is only ever written to the route query when
+    // it has values of its own - a category-only selection (icij/datashare#2336's
+    // category locking) never touches it, so a canonical-only read would
+    // silently report the pair as included even while the category is
+    // genuinely excluded. See icij/datashare#2351.
+    const excluded = dimensions.some(dimension => searchStore.isFilterExcluded(dimension))
+    // Reconcile on read, additively only: propagate an exclude forward to
+    // any dimension that hasn't caught up yet (e.g. a direct store write to
+    // a single dimension that bypassed toggleExcludeFilter's own dual-write
+    // above). This only ever adds the flag, never removes it, and only runs
+    // when something actually calls this getter - unlike an eager
+    // `watchEffect` reconciler, it can't fire mid-write and observe (or
+    // act on) a transient, not-yet-finished state. See icij/datashare#2351.
+    if (excluded) {
+      dimensions.forEach((dimension) => {
+        if (!searchStore.isFilterExcluded(dimension)) {
           searchStore.excludeFilter(dimension)
         }
-        else {
-          searchStore.includeFilter(dimension)
-        }
-      }
-    })
+      })
+    }
     return excluded
   }
 
