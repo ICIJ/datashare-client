@@ -201,6 +201,30 @@ describe('Search.vue', () => {
     expect(wrapper.vm.toggleSearchBreadcrumb).toBe(false)
   })
 
+  it('reopens the breadcrumb panel for a second, unrelated conflict later in the same session (icij/datashare#2332)', async () => {
+    // Search.vue never remounts across "search" navigations, so this exercises
+    // the live watcher (not the on-mount immediate call the two tests above cover).
+    const lockedFiltersStore = useLockedFiltersStore()
+    lockedFiltersStore.lock({ name: '-contentType', value: 'application/pdf', label: 'application/pdf' })
+    await core.router.push({ name: 'search', query: { 'f[contentType]': ['application/pdf'] } })
+    await flushPromises()
+    expect(wrapper.vm.toggleSearchBreadcrumb).toBe(true)
+
+    // User closes the panel, then resolves the first conflict.
+    wrapper.vm.toggleSearchBreadcrumb = false
+    lockedFiltersStore.unlock({ name: '-contentType', value: 'application/pdf' })
+    await core.router.push({ name: 'search', query: {} })
+    await flushPromises()
+    expect(wrapper.vm.toggleSearchBreadcrumb).toBe(false)
+
+    // A second, different lock now conflicts with a later navigation.
+    lockedFiltersStore.lock({ name: '-tags', value: 'urgent', label: 'urgent' })
+    await core.router.push({ name: 'search', query: { 'f[tags]': ['urgent'] } })
+    await flushPromises()
+
+    expect(wrapper.vm.toggleSearchBreadcrumb).toBe(true)
+  })
+
   it('runs the initial search when a reloaded noRefresh URL is stripped', async () => {
     // Same active pinia as the mounted component, so this is the same store instance.
     const searchStore = useSearchStore()
