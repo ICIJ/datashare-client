@@ -82,8 +82,12 @@ function isItemLocked(contentType) {
 function toggleLock(contentType, locked) {
   if (locked) {
     // Locking an unticked value also selects it — a single click both
-    // applies and locks the filter.
-    if (!isEntryRetainedDuringSearch(contentType)) {
+    // applies and locks the filter. isEntrySelected (explicit-only), not
+    // isEntryRetainedDuringSearch (also true when only the parent category
+    // is stored) - a category-covered type still needs toggleEntry to run
+    // so it demotes the stored category into this one explicit selection
+    // (and releases the category's own lock along with it).
+    if (!isEntrySelected(contentType)) {
       toggleEntry(contentType, true)
     }
     lockedFiltersStore.lock({ name: lockedName.value, value: contentType, label: getDocumentTypeLabel(contentType) })
