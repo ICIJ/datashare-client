@@ -312,16 +312,16 @@ export const useSearchStore = defineSuffixedStore('search', () => {
 
   /**
    * Reset the filter values and exclusion mode to an empty state, then
-   * re-apply the user's locked filters immediately rather than waiting for
-   * the next route hydration. This is "Clear filters" preserving locks
-   * (icij/datashare#2330): it mirrors the reset/merge/reconcile invariant
-   * updateFromRouteQuery always runs, without going through a route change.
+   * force-apply the user's locked filters immediately. This is "Clear
+   * filters" preserving locks (icij/datashare#2330): clicking "Clear
+   * filters" is itself an explicit user action, so — unlike route hydration —
+   * it force-applies locks straight away rather than leaving them pending
+   * behind "Apply locked filters".
    */
   function resetFilterValuesPreservingLocks() {
     resetFilterValues()
     excludeFilters.value = []
-    mergeLockedFilters()
-    reconcilePairedExcludeFilters()
+    applyLockedFilters()
   }
 
   /**
@@ -899,14 +899,8 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * from the route query. It sets the index, indices, query, from, field,
    * and filters based on the provided route query.
    * @param {Object} routeQuery - The query parameters from the current route.
-   * @param {Object} [options] - Options controlling the hydration.
-   * @param {boolean} [options.mergeLocks=true] - Whether to merge the user's locked filter
-   *   values into the hydrated state. Disposable stores that hydrate from a persisted,
-   *   read-only query (e.g. SearchBreadcrumbUri.vue rendering a saved search/batch's
-   *   breadcrumbs) must pass `false` here, otherwise the user's personal locks would leak
-   *   into a display of a query that never actually had them.
    */
-  function updateFromRouteQuery(routeQuery, { mergeLocks = true } = {}) {
+  function updateFromRouteQuery(routeQuery) {
     // Reset the state except for the given keys
     resetForRouteChange(routeQuery)
     // Create a helper function that call the setter only if the key exists in the routeQuery
@@ -924,94 +918,46 @@ export const useSearchStore = defineSuffixedStore('search', () => {
       withRouteQuery(`f[-${filter.name}]`, key => addFilterValue(filter.itemParam({ key })))
       withRouteQuery(`f[-${filter.name}]`, () => excludeFilter(filter.name))
     })
-    // Locks are reconciled here, on every hydration, not just once at
-    // lock-creation time: resetForRouteChange (above) wipes values and
-    // excludeFilters on every route entry, including the first search of a
-    // session
-    if (mergeLocks) {
-      mergeLockedFilters()
-    }
     reconcilePairedExcludeFilters()
   }
 
   /**
-   * Silently merge every locked filter value into the live search state,
-   * unless doing so would silently override a genuine conflict.
-   *
-   * For each locked entry: if its filter is absent from the route-driven
-   * state, or present in the same include/exclude mode, the value is merged
-   * in with no user-visible signal — this covers normal in-app browsing and
-   * the first search of a session alike. If the filter is present in the
-   * opposite mode (e.g. the route carries `f[-contentType]` but the lock is
-   * for included `contentType`), the merge is skipped: surfacing that
-   * conflict via an explicit action.
-   *
-   * Writes go through this store's own addFilterValue/excludeFilter, never
-   * useSearchFilter.js's paired-dimension-aware toggleFilterValue/
-   * toggleExcludeFilter (which loop over getPairedDimensions and write both
-   * sides) — so locking one side of a paired filter (e.g. contentType /
-   * contentTypeCategory) never cascades the locked *value* onto its sibling.
-   * Sibling *mode* mirroring still happens, via the existing
-   * reconcilePairedExcludeFilters() call right after this one — that's the
-   * same invariant every other route change already goes through.
+   * Whether a locked entry is not yet reflected in the live search state:
+   * either its value is simply absent from that filter's live values, or the
+   * filter is present but in the opposite include/exclude mode. Neither case
+   * is ever silently applied any more (icij/datashare#2332 follow-up) — the
+   * user must click "Apply locked filters", which uses this same definition.
    */
-  // Shared by mergeLockedFilters and hasConflictingLocks/applyLockedFilters (an
-  // explicit user action that overrides a conflict), so
-  // the two never compute "does this lock conflict" differently.
-  function getLockConflict({ name, value }, snapshot) {
+  // Shared by hasConflictingLocks and applyLockedFilters (an explicit user
+  // action that overrides a conflict), so the two never compute "does this
+  // lock need applying" differently.
+  function getLockConflict({ name, value }) {
     const { name: bareName, excluded } = parseLockedName(name)
     // A lock for a filter that no longer exists on this project/index
     // (e.g. a stale lock from before a filter was removed) is inert: it's
-    // not a conflict, but callers that write values (mergeLockedFilters,
-    // applyLockedFilters) still must not act on it, so exists:false is
-    // reported separately from hasConflict.
+    // not a conflict, but callers that write values (applyLockedFilters)
+    // still must not act on it, so exists:false is reported separately from
+    // hasConflict.
     if (!getFilter({ name: bareName })) {
       return { bareName, value, excluded, exists: false, hasConflict: false }
     }
-    // Conflict detection must look at the whole paired-dimension group, not just the
-    // bare filter name: reconcilePairedExcludeFilters() force-excludes every member
-    // of a paired group if any one of them is excluded, so a lock that looks
-    // conflict-free against the bare name alone could still get silently flipped by
-    // that reconciliation pass. See icij/datashare#2329.
+    // Mode conflict detection must look at the whole paired-dimension group, not
+    // just the bare filter name: reconcilePairedExcludeFilters() force-excludes
+    // every member of a paired group if any one of them is excluded, so a lock
+    // that looks conflict-free against the bare name alone could still get
+    // silently flipped by that reconciliation pass. See icij/datashare#2329.
     // getPairedDimensions already returns [bareName] when unpaired, no fallback needed
     const dims = getPairedDimensions(bareName)
-    // mergeLockedFilters passes a snapshot taken before its loop starts: it writes
-    // into `values`/`excludeFilters` as it goes, so checking the live refs would
-    // make an entry conflict with a lock this same pass already applied rather than
-    // with anything the route actually supplied (e.g. two orphaned locks on the
-    // same filter in opposite modes)
-    const isPresent = snapshot
-      ? dims.some(dim => snapshot.presentDims.has(dim))
-      : dims.some(dim => dim in values.value)
-    const isExcluded = snapshot
-      ? dims.some(dim => snapshot.excludedDims.has(dim))
-      : dims.some(dim => excludeFilters.value.includes(dim))
-    const hasConflict = isPresent && isExcluded !== excluded
+    const isExcluded = dims.some(dim => excludeFilters.value.includes(dim))
+    const isValuePresent = (values.value[bareName] ?? []).map(toString).includes(toString(value))
+    const hasConflict = !isValuePresent || isExcluded !== excluded
     return { bareName, value, excluded, exists: true, hasConflict }
   }
 
-  function mergeLockedFilters() {
-    const snapshot = {
-      presentDims: new Set(Object.keys(values.value)),
-      excludedDims: new Set(excludeFilters.value)
-    }
-    lockedFiltersStore.entries.forEach((entry) => {
-      const { bareName, value, excluded, exists, hasConflict } = getLockConflict(entry, snapshot)
-      if (!exists || hasConflict) {
-        return
-      }
-      addFilterValue({ name: bareName, value })
-      if (excluded) {
-        excludeFilter(bareName)
-      }
-    })
-  }
-
   /**
-   * Whether any locked entry currently conflicts with the live search state
-   * (same conflict definition mergeLockedFilters uses to decide what to
-   * silently skip). Drives the breadcrumb footer's "Apply locked filters"
-   * button.
+   * Whether any locked entry isn't yet reflected in the live search state
+   * (missing entirely, or present in the opposite mode). Drives the
+   * breadcrumb footer's "Apply locked filters" button.
    */
   const hasConflictingLocks = computed(() => {
     return lockedFiltersStore.entries.some(entry => getLockConflict(entry).hasConflict)
@@ -1019,11 +965,9 @@ export const useSearchStore = defineSuffixedStore('search', () => {
 
   /**
    * Force-apply every locked value into the live search state, overriding
-   * any conflicting mode — "locks win". Unlike mergeLockedFilters (which
-   * silently skips a conflicting entry so a shared link is never silently
-   * rewritten), this is only ever invoked by an explicit user action (
-   * "Apply locked filters"), so
-   * overriding the live state here is exactly what the user asked for.
+   * any conflicting mode — "locks win". Only ever invoked by an explicit
+   * user action ("Apply locked filters" or "Clear filters"), so overriding
+   * the live state here is exactly what the user asked for.
    */
   function applyLockedFilters() {
     // Two locks in the same paired group (e.g. contentType included,
@@ -1346,18 +1290,8 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     reset,
     resetFilters,
     resetFilterValues,
-    // Exposed so callers outside of route hydration (e.g. "Clear filters"
-    // preserving locks, icij/datashare#2330) can re-apply locked values
-    // on demand, not just on the next updateFromRouteQuery.
     resetFilterValuesPreservingLocks,
     resetQuery,
-    mergeLockedFilters,
-    // Same reasoning: mergeLockedFilters alone doesn't mirror exclude mode
-    // across a paired dimension, updateFromRouteQuery always calls both.
-    reconcilePairedExcludeFilters,
-    // "Apply locked filters" (icij/datashare#2332) - forces every lock's
-    // value/mode onto the live search, overriding conflicts. mergeLockedFilters
-    // above is for silent route hydration; this is for an explicit user click.
     applyLockedFilters,
     hasFilterValue,
     isFilterContextualized,

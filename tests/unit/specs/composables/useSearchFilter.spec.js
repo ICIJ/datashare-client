@@ -7,10 +7,7 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import {
   useSearchFilter,
   markJustSubmitted,
-  consumeJustSubmitted,
-  markSavedSearchOpened,
-  isSavedSearchOpened,
-  clearSavedSearchOpened
+  consumeJustSubmitted
 } from '@/composables/useSearchFilter'
 import { useContentTypeCategoryAvailability } from '@/composables/useContentTypeCategoryAvailability'
 import { useAppStore, useLockedFiltersStore, useSearchStore, useRecommendedStore } from '@/store/modules'
@@ -93,10 +90,6 @@ describe('useSearchFilter', () => {
   })
 
   describe('refreshSearchFromRoute', () => {
-    // Resolve the lazy-imported view components referenced by the 'search'
-    // route once up-front. Without this, the first test in this block pays
-    // ~14s of cold dynamic-import cost during router.push and intermittently
-    // exceeds the 10s testTimeout.
     beforeAll(async () => {
       await Promise.all([
         import('@/views/App'),
@@ -154,47 +147,15 @@ describe('useSearchFilter', () => {
       expect(useAppStore().getSettings('search', 'searchOperator')).toBe(SEARCH_OPERATORS.OR)
     })
 
-    describe('savedSearchOpened skips the locked-filter merge', () => {
-      beforeEach(() => {
-        // Real module-level state (see useSearchFilter.js) — drain any
-        // leftover flag before each test so tests can't leak into each other.
-        clearSavedSearchOpened()
-      })
+    it('does not merge a locked value absent from the route in refreshSearchFromRouteStart', async () => {
+      const core = CoreSetup.init().useAll().useRouterWithoutGuards()
+      useLockedFiltersStore().lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+      const { refreshSearchFromRouteStart } = withSetup(() => useSearchFilter(), core.plugins)
 
-      it('does not merge a locked value absent from the route in refreshSearchFromRouteStart when marked', async () => {
-        const core = CoreSetup.init().useAll().useRouterWithoutGuards()
-        useLockedFiltersStore().lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
-        const { refreshSearchFromRouteStart } = withSetup(() => useSearchFilter(), core.plugins)
+      await core.router.push({ name: 'search', query: { q: 'ordinaryNavigation' } })
+      await refreshSearchFromRouteStart()
 
-        markSavedSearchOpened()
-        await core.router.push({ name: 'search', query: { q: 'fromSavedSearch' } })
-        await refreshSearchFromRouteStart()
-
-        expect(useSearchStore().getFilter({ name: 'contentType' }).values).toEqual([])
-      })
-
-      it('does not merge a locked value absent from the route in refreshSearchFromRoute when marked', async () => {
-        const core = CoreSetup.init().useAll().useRouterWithoutGuards()
-        useLockedFiltersStore().lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
-        const { refreshSearchFromRoute } = withSetup(() => useSearchFilter(), core.plugins)
-
-        markSavedSearchOpened()
-        await core.router.push({ name: 'search', query: { q: 'fromSavedSearch' } })
-        await refreshSearchFromRoute()
-
-        expect(useSearchStore().getFilter({ name: 'contentType' }).values).toEqual([])
-      })
-
-      it('merges a locked value normally when not marked', async () => {
-        const core = CoreSetup.init().useAll().useRouterWithoutGuards()
-        useLockedFiltersStore().lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
-        const { refreshSearchFromRouteStart } = withSetup(() => useSearchFilter(), core.plugins)
-
-        await core.router.push({ name: 'search', query: { q: 'ordinaryNavigation' } })
-        await refreshSearchFromRouteStart()
-
-        expect(useSearchStore().getFilter({ name: 'contentType' }).values).toEqual(['application/pdf'])
-      })
+      expect(useSearchStore().getFilter({ name: 'contentType' })?.values ?? []).toEqual([])
     })
   })
 
@@ -266,65 +227,6 @@ describe('useSearchFilter', () => {
 
     it('reports false when never marked', () => {
       expect(consumeJustSubmitted()).toBe(false)
-    })
-  })
-
-  describe('onConsumeSavedSearchOpened', () => {
-    beforeEach(() => {
-      clearSavedSearchOpened()
-    })
-
-    it('clears the savedSearchOpened flag after a search navigation', async () => {
-      const core = CoreSetup.init().useAll().useRouterWithoutGuards()
-      withSetup(() => {
-        const { onConsumeSavedSearchOpened } = useSearchFilter()
-        onConsumeSavedSearchOpened()
-      }, core.plugins)
-
-      markSavedSearchOpened()
-      await core.router.push({ name: 'search', query: { q: 'foo' } })
-      await flushPromises()
-      await flushPromises()
-
-      expect(isSavedSearchOpened()).toBe(false)
-    })
-
-    it('is a no-op when the flag was never marked', async () => {
-      const core = CoreSetup.init().useAll().useRouterWithoutGuards()
-      withSetup(() => {
-        const { onConsumeSavedSearchOpened } = useSearchFilter()
-        onConsumeSavedSearchOpened()
-      }, core.plugins)
-
-      await core.router.push({ name: 'search', query: { q: 'foo' } })
-      await flushPromises()
-      await flushPromises()
-
-      expect(isSavedSearchOpened()).toBe(false)
-    })
-  })
-
-  describe('markSavedSearchOpened / isSavedSearchOpened / clearSavedSearchOpened', () => {
-    beforeEach(() => {
-      clearSavedSearchOpened()
-    })
-
-    it('reports true after being marked, without consuming it on read', () => {
-      markSavedSearchOpened()
-
-      expect(isSavedSearchOpened()).toBe(true)
-      expect(isSavedSearchOpened()).toBe(true)
-    })
-
-    it('reports false once cleared', () => {
-      markSavedSearchOpened()
-      clearSavedSearchOpened()
-
-      expect(isSavedSearchOpened()).toBe(false)
-    })
-
-    it('reports false when never marked', () => {
-      expect(isSavedSearchOpened()).toBe(false)
     })
   })
 })

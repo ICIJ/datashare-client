@@ -122,7 +122,7 @@ describe('Search.vue', () => {
     expect(searchStore.q).toBe('+Berlin +Vienna')
   })
 
-  it('opens the breadcrumb panel after an explicit submission when locks are active (icij/datashare#2332)', async () => {
+  it('opens the breadcrumb panel after an explicit submission when locks are active', async () => {
     const lockedFiltersStore = useLockedFiltersStore()
     lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
 
@@ -133,7 +133,7 @@ describe('Search.vue', () => {
     expect(wrapper.vm.toggleSearchBreadcrumb).toBe(true)
   })
 
-  it('opens the breadcrumb panel after an advanced search submission when locks are active (icij/datashare#2332)', async () => {
+  it('opens the breadcrumb panel after an advanced search submission when locks are active', async () => {
     const searchStore = useSearchStore()
     vi.spyOn(searchStore, 'query').mockResolvedValue(undefined)
     const lockedFiltersStore = useLockedFiltersStore()
@@ -145,17 +145,19 @@ describe('Search.vue', () => {
     expect(wrapper.vm.toggleSearchBreadcrumb).toBe(true)
   })
 
-  it('does not open the breadcrumb panel on a route update that was not marked as submitted (icij/datashare#2332)', async () => {
+  it('does not open the breadcrumb panel on a route update that was not marked as submitted', async () => {
+    await core.router.push({ name: 'search', query: { 'q': 'noSubmittedFlagTest', 'f[contentType]': ['application/pdf'] } })
+    await flushPromises()
     const lockedFiltersStore = useLockedFiltersStore()
     lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
 
-    await core.router.push({ name: 'search', query: { q: 'noSubmittedFlagTest' } })
+    await core.router.push({ name: 'search', query: { 'q': 'noSubmittedFlagTest2', 'f[contentType]': ['application/pdf'] } })
     await flushPromises()
 
     expect(wrapper.vm.toggleSearchBreadcrumb).toBe(false)
   })
 
-  it('does not open the breadcrumb panel on submission when no locks are active (icij/datashare#2332)', async () => {
+  it('does not open the breadcrumb panel on submission when no locks are active', async () => {
     markJustSubmitted()
     await core.router.push({ name: 'search', query: { q: 'noLocksSubmitTest' } })
     await flushPromises()
@@ -163,7 +165,7 @@ describe('Search.vue', () => {
     expect(wrapper.vm.toggleSearchBreadcrumb).toBe(false)
   })
 
-  it('opens the breadcrumb panel on mount when a locked filter already conflicts with the route it loaded with, e.g. a shared link (icij/datashare#2332)', async () => {
+  it('opens the breadcrumb panel on mount when a locked filter already conflicts with the route it loaded with, e.g. a shared link', async () => {
     const lockedFiltersStore = useLockedFiltersStore()
     lockedFiltersStore.lock({ name: '-contentType', value: 'application/pdf', label: 'application/pdf' })
     // Included, opposite mode of the lock above: a raw navigation, not an
@@ -183,10 +185,12 @@ describe('Search.vue', () => {
     expect(wrapper.vm.toggleSearchBreadcrumb).toBe(true)
   })
 
-  it('does not open the breadcrumb panel on mount when locks exist but none conflict with the route (icij/datashare#2332)', async () => {
+  it('does not open the breadcrumb panel on mount when locks exist but none conflict with the route', async () => {
     const lockedFiltersStore = useLockedFiltersStore()
+    // Locked value already present in the route's own query, in the same
+    // mode: nothing is pending, so hasConflictingLocks stays false.
     lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
-    await core.router.push({ name: 'search', query: { q: 'mountNoConflictTest' } })
+    await core.router.push({ name: 'search', query: { 'q': 'mountNoConflictTest', 'f[contentType]': ['application/pdf'] } })
     await flushPromises()
 
     wrapper.unmount()
