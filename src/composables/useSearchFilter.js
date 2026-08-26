@@ -87,7 +87,6 @@ export function useSearchFilter() {
     isLoading: isCategoryAvailabilityLoading
   } = useContentTypeCategoryAvailability() ?? {}
 
-
   watchEffect(() => {
     for (const [canonical, paired] of Object.entries(PAIRED_DIMENSIONS)) {
       const value = searchStore.isFilterContextualized(canonical)
