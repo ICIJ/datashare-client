@@ -136,7 +136,7 @@ export const useLockedFiltersStore = defineStore('lockedFilters', () => {
    * opposite mode are retagged to this mode first. Without this, two locks
    * on the same dimension could disagree on mode forever: the search store
    * can only satisfy one mode per dimension when applying locks, so the
-   * other would stay permanently conflicting (icij/datashare#2332).
+   * other would stay permanently conflicting.
    *
    * @public
    * @param {Object} params

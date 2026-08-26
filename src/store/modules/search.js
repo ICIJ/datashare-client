@@ -313,7 +313,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   /**
    * Reset the filter values and exclusion mode to an empty state, then
    * force-apply the user's locked filters immediately. This is "Clear
-   * filters" preserving locks (icij/datashare#2330): clicking "Clear
+   * filters" preserving locks: clicking "Clear
    * filters" is itself an explicit user action, so — unlike route hydration —
    * it force-applies locks straight away rather than leaving them pending
    * behind "Apply locked filters".
@@ -925,7 +925,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * Whether a locked entry is not yet reflected in the live search state:
    * either its value is simply absent from that filter's live values, or the
    * filter is present but in the opposite include/exclude mode. Neither case
-   * is ever silently applied any more (icij/datashare#2332 follow-up) — the
+   * is ever silently applied any more, the
    * user must click "Apply locked filters", which uses this same definition.
    */
   // Shared by hasConflictingLocks and applyLockedFilters (an explicit user
@@ -945,8 +945,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     // just the bare filter name: reconcilePairedExcludeFilters() force-excludes
     // every member of a paired group if any one of them is excluded, so a lock
     // that looks conflict-free against the bare name alone could still get
-    // silently flipped by that reconciliation pass. See icij/datashare#2329.
-    // getPairedDimensions already returns [bareName] when unpaired, no fallback needed
+    // silently flipped by that reconciliation pass.
     const dims = getPairedDimensions(bareName)
     const isExcluded = dims.some(dim => excludeFilters.value.includes(dim))
     const isValuePresent = (values.value[bareName] ?? []).map(toString).includes(toString(value))

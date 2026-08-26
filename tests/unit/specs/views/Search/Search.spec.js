@@ -29,7 +29,7 @@ describe('Search.vue', () => {
     // previous wrapper first, its Search instance (and the onAfterRouteUpdate
     // watchers it registered) stays alive and keeps reacting to hash changes
     // fired by later tests' router.push calls — racing the current test's
-    // instance for one-shot module state like justSubmitted. See icij/datashare#2332.
+    // instance for one-shot module state like justSubmitted.
     wrapper?.unmount()
 
     core = CoreSetup.init().useAll().useRouterWithoutGuards()

@@ -13,7 +13,7 @@ describe('useSearchBreadcrumb composable', () => {
   // The "search" route lazily imports the whole Search view subtree, whose
   // setup() reads from the search store. Resolve it once here, on a
   // throwaway router/pinia, so that cost isn't paid inside a single test's
-  // timeout. icij/datashare#2337.
+  // timeout.
   beforeAll(async () => {
     setActivePinia(createPinia())
     const router = createRouter({ routes, history: createWebHashHistory() })
