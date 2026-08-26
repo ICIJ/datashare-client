@@ -1,5 +1,4 @@
 import { shallowMount, mount } from '@vue/test-utils'
-import { setActivePinia, createPinia } from 'pinia'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import FormControlExtractingLanguage from '@/components/Form/FormControl/FormControlExtractingLanguage'
@@ -24,13 +23,9 @@ vi.mock('@/api/apiInstance', () => {
 describe('TaskDocumentsForm.vue', () => {
   let plugins
 
-  beforeEach(() => {
-    setActivePinia(createPinia())
-  })
-
   beforeEach(async () => {
     vi.clearAllMocks()
-    const core = CoreSetup.init().useAll().useRouterWithoutGuards()
+    const core = CoreSetup.init().createPinia().useAll().useRouterWithoutGuards()
     plugins = core.plugins
     await core.config.set('defaultProject', 'local-datashare')
     await core.config.set('dataDir', '/data')
@@ -94,7 +89,7 @@ describe('TaskDocumentsForm.vue', () => {
   })
 
   it('should show the project selector', async () => {
-    const wrapper = mount(TaskDocumentsForm, {
+    const wrapper = shallowMount(TaskDocumentsForm, {
       global: { plugins, renderStubDefaultSlot: true }
     })
     const projectSelector = wrapper.findComponent({ name: 'search-bar-input-dropdown-for-projects' })
