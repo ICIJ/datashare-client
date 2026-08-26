@@ -18,11 +18,6 @@ import { onAfterRouteUpdate } from '@/composables/onAfterRouteUpdate'
 import FilterType from '@/components/Filter/FilterType/FilterType'
 import FilterTypeFileTypes from '@/components/Filter/FilterType/FilterTypeFileTypes'
 
-// FilterType (the generic base, used by most filters: date, tag, entity,
-// etc.) and FilterTypeFileTypes (the always-on contentType facet) are
-// imported statically since both are on by default for every project. The
-// specialized types below are each only relevant to a project enabling that
-// specific facet, so they're loaded on demand.
 const FilterTypeDateRange = defineAsyncComponent(() => import('@/components/Filter/FilterType/FilterTypeDateRange'))
 const FilterTypePath = defineAsyncComponent(() => import('@/components/Filter/FilterType/FilterTypePath'))
 const FilterTypeProject = defineAsyncComponent(() => import('@/components/Filter/FilterType/FilterTypeProject'))
@@ -46,23 +41,6 @@ export function consumeJustSubmitted() {
   const value = justSubmitted
   justSubmitted = false
   return value
-}
-
-let savedSearchOpened = false
-
-export function markSavedSearchOpened() {
-  savedSearchOpened = true
-}
-
-// Non-destructive read, called by both hydration guards below.
-export function isSavedSearchOpened() {
-  return savedSearchOpened
-}
-
-// Clears the flag. Called once, by onConsumeSavedSearchOpened's callback,
-// after both guards have already read it via isSavedSearchOpened() above.
-export function clearSavedSearchOpened() {
-  savedSearchOpened = false
 }
 
 export function useSearchFilter() {
@@ -374,7 +352,7 @@ export function useSearchFilter() {
     const searchOperator = toValidSearchOperator(route.query.searchOperator ?? getSearchOperator())
     appStore.setSettings('search', { perPage, orderBy: [sort, order], searchOperator })
     // Update the search store using the route query
-    searchStore.updateFromRouteQuery(route.query, { mergeLocks: !isSavedSearchOpened() })
+    searchStore.updateFromRouteQuery(route.query)
     // And finally, refresh the search if t
     return nextTick(refreshSearch)
   }
@@ -385,7 +363,7 @@ export function useSearchFilter() {
     const searchOperator = toValidSearchOperator(route.query.searchOperator ?? getSearchOperator())
     appStore.setSettings('search', { perPage, orderBy: [sort, order], searchOperator })
     // Update the search store using the route query and reset the `from` parameter
-    searchStore.updateFromRouteQuery({ ...route.query, from: 0 }, { mergeLocks: !isSavedSearchOpened() })
+    searchStore.updateFromRouteQuery({ ...route.query, from: 0 })
     // And finally, refresh the search if t
     return nextTick(refreshSearch)
   }
@@ -572,19 +550,6 @@ export function useSearchFilter() {
     }, options)
   }
 
-  function onConsumeSavedSearchOpened(options) {
-    // Clears the in-memory savedSearchOpened flag
-    //
-    // This consumer MUST be registered after refreshSearchFromRouteStart and
-    // refreshSearchFromRoute so its queued microtask runs last and both
-    // guards read the flag before it is cleared here.
-    return onAfterRouteUpdate((to) => {
-      if (to.name === 'search') {
-        clearSavedSearchOpened()
-      }
-    }, options)
-  }
-
   return {
     indices,
     allProjectsSelected,
@@ -638,7 +603,6 @@ export function useSearchFilter() {
     onAfterRouteQueryUpdate,
     onAfterRouteQueryFromUpdate,
     onConsumeNoRefresh,
-    onConsumeSavedSearchOpened,
     watchValues,
     whenFilterContextualized,
     isCategoryAvailable,

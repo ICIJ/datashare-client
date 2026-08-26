@@ -152,9 +152,9 @@ describe('useSearchBreadcrumb composable', () => {
       const { clearFiltersEntries } = mountComposable()
       clearFiltersEntries()
 
-      // mergeLockedFilters only re-excludes the locked filter's own bare name;
-      // without reconcilePairedExcludeFilters, its paired sibling would be
-      // left included even though the group must stay in lockstep.
+      // applyLockedFilters only re-excludes the locked filter's own bare name;
+      // without its trailing reconcilePairedExcludeFilters() call, its paired
+      // sibling would be left included even though the group must stay in lockstep.
       expect(searchStore.isFilterExcluded('contentType')).toBe(true)
       expect(searchStore.isFilterExcluded('contentTypeCategory')).toBe(true)
     })
@@ -181,13 +181,9 @@ describe('useSearchBreadcrumb composable', () => {
       expect(searchStore.getFilter({ name: 'contentType' }).values).toEqual(['application/pdf'])
     })
 
-    it('refreshes the route so a value only merged in via the lock survives the next hydration', async () => {
-      // Never applied through the route: it only exists in the store because
-      // the lock merged it in. Without a route refresh, the URL would stay
-      // empty and the value would vanish silently on the next hydration
-      // (reload, or document then Back) instead of surviving the unlock.
+    it('refreshes the route so a value only present in the store survives the next hydration', async () => {
       lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
-      searchStore.updateFromRouteQuery({})
+      searchStore.applyLockedFilters()
 
       const { unlockAll } = mountComposable()
       await unlockAll()
@@ -232,7 +228,7 @@ describe('useSearchBreadcrumb composable', () => {
     })
   })
 
-  describe('hasConflictingLocks and applyLockedFilters (icij/datashare#2332)', () => {
+  describe('hasConflictingLocks and applyLockedFilters', () => {
     let lockedFiltersStore
 
     beforeEach(() => {
@@ -269,8 +265,7 @@ describe('useSearchBreadcrumb composable', () => {
     it('toasts an error instead of success when a conflict remains after applying', async () => {
       // Two locks on the SAME bare name in opposite modes can't be built via
       // lock() at all - it retags any opposite-mode entry under that name to
-      // match the new one (icij/datashare#2332's own single-mode-per-dimension
-      // invariant). A real, still-possible conflict is two *paired* dimensions
+      // match the new one. A real, still-possible conflict is two *paired* dimensions
       // (contentType / contentTypeCategory) locked in opposite modes: applying
       // resolves the pair via canonical-dimension precedence (contentType
       // wins, included), which still leaves the contentTypeCategory lock's

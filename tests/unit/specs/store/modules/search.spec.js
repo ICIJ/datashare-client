@@ -1507,56 +1507,48 @@ describe('SearchStore', () => {
     })
   })
 
-  describe('locked filters silent auto-apply', () => {
+  describe('locked filters are never silently applied on route hydration', () => {
     let lockedFiltersStore
 
     beforeEach(() => {
       lockedFiltersStore = useLockedFiltersStore()
     })
 
-    it('silently merges a locked value into a filter absent from the route', () => {
+    it('does not apply a locked value into a filter absent from the route', () => {
       lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
 
       searchStore.updateFromRouteQuery({})
 
-      expect(searchStore.getFilter({ name: 'contentType' }).values).toEqual(['application/pdf'])
-      expect(searchStore.isFilterExcluded('contentType')).toBe(false)
+      expect(searchStore.getFilter({ name: 'contentType' })?.values ?? []).toEqual([])
+      expect(searchStore.hasConflictingLocks).toBe(true)
     })
 
-    it('silently merges a locked value alongside route-supplied values in the same mode', () => {
-      lockedFiltersStore.lock({ name: 'contentType', value: 'text/plain', label: 'text/plain' })
-
-      searchStore.updateFromRouteQuery({ 'f[contentType]': ['application/pdf'] })
-
-      expect(searchStore.getFilter({ name: 'contentType' }).values.slice().sort()).toEqual(['application/pdf', 'text/plain'])
-    })
-
-    it('applies the excluded mode when silently merging a locked excluded value into an absent filter', () => {
+    it('does not apply a locked excluded value into a filter absent from the route', () => {
       lockedFiltersStore.lock({ name: '-contentType', value: 'application/pdf', label: 'application/pdf' })
 
       searchStore.updateFromRouteQuery({})
 
-      expect(searchStore.getFilter({ name: 'contentType' }).values).toEqual(['application/pdf'])
-      expect(searchStore.isFilterExcluded('contentType')).toBe(true)
+      expect(searchStore.getFilter({ name: 'contentType' })?.values ?? []).toEqual([])
+      expect(searchStore.hasConflictingLocks).toBe(true)
     })
 
-    it('skips merging a locked value when the route has that filter in the opposite mode', () => {
+    it('leaves route-supplied values untouched alongside an unapplied lock', () => {
       lockedFiltersStore.lock({ name: 'contentType', value: 'text/plain', label: 'text/plain' })
 
-      searchStore.updateFromRouteQuery({ 'f[-contentType]': ['application/pdf'] })
+      searchStore.updateFromRouteQuery({ 'f[contentType]': ['application/pdf'] })
 
       expect(searchStore.getFilter({ name: 'contentType' }).values).toEqual(['application/pdf'])
-      expect(searchStore.isFilterExcluded('contentType')).toBe(true)
+      expect(searchStore.hasConflictingLocks).toBe(true)
     })
 
-    it('re-applies the locked value on every hydration, not just the first', () => {
+    it('does not re-apply on a later hydration either', () => {
       lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
 
       searchStore.updateFromRouteQuery({ q: 'first' })
-      expect(searchStore.getFilter({ name: 'contentType' }).values).toEqual(['application/pdf'])
+      expect(searchStore.getFilter({ name: 'contentType' })?.values ?? []).toEqual([])
 
       searchStore.updateFromRouteQuery({ q: 'second' })
-      expect(searchStore.getFilter({ name: 'contentType' }).values).toEqual(['application/pdf'])
+      expect(searchStore.getFilter({ name: 'contentType' })?.values ?? []).toEqual([])
     })
 
     it('ignores a locked entry whose filter no longer exists', () => {
@@ -1572,45 +1564,6 @@ describe('SearchStore', () => {
       searchStore.updateFromRouteQuery({})
 
       expect(searchStore.getFilter({ name: 'contentTypeCategory' })?.values ?? []).toEqual([])
-    })
-
-    it('skips merging an included lock when the route excludes its paired dimension', () => {
-      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
-
-      searchStore.updateFromRouteQuery({ 'f[-contentTypeCategory]': ['DOCUMENT'] })
-
-      // The lock must not be silently merged in as an included value: the
-      // paired-dimension exclude mode conflicts with it, so it must simply be
-      // skipped (its value never lands in contentType's values), regardless
-      // of the fact that reconcilePairedExcludeFilters separately forces the
-      // (empty) contentType filter into excluded mode too.
-      expect(searchStore.getFilter({ name: 'contentType' })?.values ?? []).toEqual([])
-    })
-
-    it('skips merging an excluded lock when the route includes its paired dimension', () => {
-      lockedFiltersStore.lock({ name: '-contentType', value: 'application/pdf', label: 'application/pdf' })
-
-      searchStore.updateFromRouteQuery({ 'f[contentTypeCategory]': ['DOCUMENT'] })
-
-      expect(searchStore.getFilter({ name: 'contentType' })?.values ?? []).toEqual([])
-      expect(searchStore.isFilterExcluded('contentTypeCategory')).toBe(false)
-    })
-
-    it('merges both locks of a same-name include/exclude pair when the route has neither', () => {
-      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
-      lockedFiltersStore.lock({ name: '-contentType', value: 'text/plain', label: 'text/plain' })
-
-      searchStore.updateFromRouteQuery({})
-
-      expect(searchStore.getFilter({ name: 'contentType' }).values.slice().sort()).toEqual(['application/pdf', 'text/plain'])
-    })
-
-    it('does not merge locked filters when mergeLocks is false', () => {
-      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
-
-      searchStore.updateFromRouteQuery({}, { mergeLocks: false })
-
-      expect(searchStore.getFilter({ name: 'contentType' })?.values ?? []).toEqual([])
     })
 
     it('exposes resetFilterValuesPreservingLocks so callers can reset then re-apply locks outside of hydration', () => {
@@ -1634,7 +1587,7 @@ describe('SearchStore', () => {
     })
   })
 
-  describe('hasConflictingLocks and applyLockedFilters (icij/datashare#2332)', () => {
+  describe('hasConflictingLocks and applyLockedFilters', () => {
     let lockedFiltersStore
 
     beforeEach(() => {
@@ -1645,7 +1598,14 @@ describe('SearchStore', () => {
       expect(searchStore.hasConflictingLocks).toBe(false)
     })
 
-    it('is false when a lock has no conflicting live value', () => {
+    it('is true when a locked value is absent from the live search', () => {
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      expect(searchStore.hasConflictingLocks).toBe(true)
+    })
+
+    it('is false once the locked value is already present in the same mode', () => {
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
       lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
 
       expect(searchStore.hasConflictingLocks).toBe(false)
@@ -1710,7 +1670,7 @@ describe('SearchStore', () => {
 
     it('applyLockedFilters applies both values of an unpaired filter under its retagged mode', () => {
       // `language` has no pair. lock() itself retags any existing opposite-mode
-      // entry on the same bare dimension to the newly locked mode (icij/datashare#2332),
+      // entry on the same bare dimension to the newly locked mode,
       // so two locks on `language` can no longer disagree by the time
       // applyLockedFilters runs: both end up excluded here.
       lockedFiltersStore.lock({ name: 'language', value: 'ENGLISH', label: 'English' })
@@ -1738,7 +1698,7 @@ describe('SearchStore', () => {
       expect(searchStore.hasConflictingLocks).toBe(false)
     })
   })
-  describe('toggleFilter re-locks values on mode flip (icij/datashare#2332)', () => {
+  describe('toggleFilter re-locks values on mode flip', () => {
     let lockedFiltersStore
 
     beforeEach(() => {
