@@ -23,8 +23,7 @@ const {
 const { show: showSearchSavingModal } = useSearchSavingModal()
 
 // Force-open the panel when locks are applied so the diff is immediately
-// visible, independent of the post-submission auto-open trigger. See
-// icij/datashare#2332.
+// visible, independent of the post-submission auto-open trigger.
 async function onApplyLockedFilters() {
   await applyLockedFilters()
   visible.value = true

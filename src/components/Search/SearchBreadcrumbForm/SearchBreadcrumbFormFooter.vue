@@ -48,11 +48,6 @@ const emit = defineEmits(['clear:filters', 'clear:query', 'clear:all', 'unlock:a
     compact-auto
   >
     <template #compact>
-      <!--
-        "Apply locked filters" shows to the left of "Unlock filters (N)" whenever
-        a lock conflicts with the active search; "Unlock filters" shows whenever
-        any lock exists (icij/datashare#2332).
-      -->
       <button-icon
         v-if="hasConflictingLocks"
         :icon-left="IPhLockOpen"
