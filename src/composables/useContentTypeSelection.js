@@ -362,6 +362,8 @@ export function useContentTypeSelection({ filter, categories }) {
   return {
     isEntrySelected,
     isEntryRetainedDuringSearch,
+    isCategoryStored,
+    categoryForContentType,
     categoryAllSelected,
     categoryIndeterminate,
     toggleCategory,
