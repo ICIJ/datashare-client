@@ -2030,7 +2030,7 @@
     "clearFiltersAndQuery": "Clear  filters and query",
     "unlockFilters": "Unlock filters",
     "applyLockedFilters": "Apply locked filters",
-    "applyLockedFiltersDisabled": "All locked filters are already applied",
+    "applyLockedFiltersDisabled": "No locks to apply",
     "applyLockedFiltersSuccess": "Locked filters successfully applied",
     "applyLockedFiltersError": "Locked filters couldn't be applied",
     "saveSearch": "Save search",
