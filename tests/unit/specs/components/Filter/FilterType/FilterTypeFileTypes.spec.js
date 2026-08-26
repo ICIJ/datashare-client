@@ -1595,10 +1595,32 @@ describe('FilterTypeFileTypes.vue', () => {
       expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'text/html' })).toBe(false)
     })
 
+    it('locks the category, not an orphaned leaf, when locking the last unchecked sibling completes it', async () => {
+      api.getContentTypeCategories.mockResolvedValue({ OTHER: ['text/html', 'text/plain'] })
+      seedContentTypes(['text/html', 'text/plain'])
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+
+      const findItem = type => wrapper.findAllComponents(ContentTypesEntry).find(e => e.props('contentType') === type)
+
+      await findItem('text/html').vm.$emit('update:model-value', true)
+      await flushPromises()
+
+      // Lock text/plain directly, with no prior tick — the last unchecked
+      // sibling, so select+lock's toggleEntry call promotes the whole
+      // category instead of adding text/plain to contentType.
+      await findItem('text/plain').vm.$emit('update:locked', true)
+      await flushPromises()
+
+      expect(searchStore.values.contentTypeCategory).toEqual(['OTHER'])
+      expect(lockedFiltersStore.isLocked({ name: 'contentTypeCategory', value: 'OTHER' })).toBe(true)
+      expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'text/plain' })).toBe(false)
+    })
+
     // A category (e.g. "DOCUMENT") is stored as its own bulk contentTypeCategory
     // value, not as N individual contentType entries — locking it needs its own
     // lock identity under that dimension, separate from locking each type inside it.
-    describe('category-level locking (icij/datashare#2336)', () => {
+    describe('category-level locking', () => {
       const findCategoryName = (category) => {
         const names = wrapper.findAllComponents(ContentTypesCategoryName)
         return names.find(node => node.props('category') === category)
@@ -1619,6 +1641,33 @@ describe('FilterTypeFileTypes.vue', () => {
         expect(searchStore.values.contentTypeCategory).toContain('DOCUMENT')
         expect(lockedFiltersStore.isLocked({ name: 'contentTypeCategory', value: 'DOCUMENT' })).toBe(true)
         expect(findCategoryName('DOCUMENT').props('modelValue')).toBe(true)
+      })
+
+      it('consolidates into the bulk contentTypeCategory value when every leaf is individually ticked, instead of an orphaned category lock', async () => {
+        api.getContentTypeCategories.mockResolvedValue({ DOCUMENT: ['application/pdf', 'text/html'] })
+        seedContentTypes(['application/pdf', 'text/html'])
+        await wrapper.findComponent(FilterType).vm.aggregateOver()
+        await flushPromises()
+
+        // Every leaf explicitly selected without ever going through
+        // toggleEntry's own auto-promote-on-last-tick (e.g. restored from a
+        // shared link's route query) - contentTypeCategory is never written.
+        searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+        searchStore.addFilterValue({ name: 'contentType', value: 'text/html' })
+        await flushPromises()
+
+        // categoryAllSelected already reads true here via the two individual
+        // selections, with no contentTypeCategory value stored yet.
+        expect(findCategoryName('DOCUMENT').props('modelValue')).toBe(true)
+        expect(searchStore.values.contentTypeCategory ?? []).not.toContain('DOCUMENT')
+
+        await findCategoryName('DOCUMENT').vm.$emit('update:locked', true)
+        await flushPromises()
+
+        expect(searchStore.values.contentTypeCategory).toContain('DOCUMENT')
+        expect(searchStore.values.contentType ?? []).not.toContain('application/pdf')
+        expect(searchStore.values.contentType ?? []).not.toContain('text/html')
+        expect(lockedFiltersStore.isLocked({ name: 'contentTypeCategory', value: 'DOCUMENT' })).toBe(true)
       })
 
       it('unlocks a category when it emits update:locked with false, without unselecting it', async () => {

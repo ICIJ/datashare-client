@@ -87,8 +87,14 @@ function toggleLock(contentType, locked) {
     // is stored) - a category-covered type still needs toggleEntry to run
     // so it demotes the stored category into this one explicit selection
     // (and releases the category's own lock along with it).
-    if (!isEntrySelected(contentType)) {
+    const wasSelected = isEntrySelected(contentType)
+    if (!wasSelected) {
       toggleEntry(contentType, true)
+    }
+    if (!wasSelected && !isEntrySelected(contentType)) {
+      const category = categoryForContentType(contentType)
+      lockedFiltersStore.lock({ name: categoryLockedName.value, value: category, label: categoryLabelFor(category) })
+      return
     }
     lockedFiltersStore.lock({ name: lockedName.value, value: contentType, label: getDocumentTypeLabel(contentType) })
   }
@@ -109,6 +115,8 @@ const categoryLabelFor = useContentTypeCategoryLabel()
 const {
   isEntrySelected,
   isEntryRetainedDuringSearch,
+  isCategoryStored,
+  categoryForContentType,
   categoryAllSelected,
   categoryIndeterminate,
   toggleCategory,
@@ -128,8 +136,12 @@ function isCategoryLocked(category) {
 function toggleLockCategory(category, types, locked) {
   if (locked) {
     // Locking an unselected category also selects it (select+lock), same as
-    // locking a leaf content type.
-    if (!categoryAllSelected(category, types)) {
+    // locking a leaf content type. Gate on isCategoryStored, not
+    // categoryAllSelected - the latter is also true when every leaf type
+    // happens to be individually ticked, which would skip toggleCategory and
+    // leave the category lock orphaned with no contentTypeCategory value
+    // behind it. toggleCategory always consolidates into the bulk value.
+    if (!isCategoryStored(category)) {
       toggleCategory(category, types, true)
     }
     lockedFiltersStore.lock({ name: categoryLockedName.value, value: category, label: categoryLabelFor(category) })
