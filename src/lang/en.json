@@ -2028,7 +2028,7 @@
     "clearFilters": "Clear filters",
     "clearQuery": "Clear query",
     "clearFiltersAndQuery": "Clear  filters and query",
-    "unlockFilters": "Unlock filters ({count})",
+    "unlockFilters": "Unlock filters",
     "applyLockedFilters": "Apply locked filters",
     "applyLockedFiltersSuccess": "Locked filters successfully applied",
     "applyLockedFiltersError": "Locked filters couldn't be applied",

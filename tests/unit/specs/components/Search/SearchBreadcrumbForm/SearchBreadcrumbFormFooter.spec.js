@@ -22,10 +22,11 @@ describe('SearchBreadcrumbFormFooter', () => {
     expect(wrapper.text()).not.toContain('Unlock filters')
   })
 
-  it('renders "Unlock filters (N)" with the current lock count', () => {
+  it('renders "Unlock filters" with the current lock count as a badge', () => {
     const wrapper = mountFooter({ lockedFiltersCount: 3 })
 
-    expect(wrapper.text()).toContain('Unlock filters (3)')
+    const unlockButton = wrapper.findAllComponents(ButtonIcon).find(button => button.text().includes('Unlock filters'))
+    expect(unlockButton.props('counter')).toBe(3)
   })
 
   it('emits unlock:all when the button is clicked', async () => {
@@ -51,7 +52,9 @@ describe('SearchBreadcrumbFormFooter', () => {
 
       const buttons = wrapper.findAllComponents(ButtonIcon)
       const labels = buttons.map(button => button.text())
-      expect(labels.findIndex(label => label.includes('Apply locked filters'))).toBeLessThan(labels.indexOf('Unlock filters (1)'))
+      const applyIndex = labels.findIndex(label => label.includes('Apply locked filters'))
+      const unlockIndex = labels.findIndex(label => label.includes('Unlock filters'))
+      expect(applyIndex).toBeLessThan(unlockIndex)
     })
 
     it('shows "Apply locked filters" alone when locks conflict but none are locked yet', () => {
@@ -61,10 +64,11 @@ describe('SearchBreadcrumbFormFooter', () => {
       expect(wrapper.text()).not.toContain('Unlock filters')
     })
 
-    it('shows "Unlock filters (N)" when locks exist and none conflict', () => {
+    it('shows "Unlock filters" with a badge when locks exist and none conflict', () => {
       const wrapper = mountFooter({ lockedFiltersCount: 2, hasConflictingLocks: false })
 
-      expect(wrapper.text()).toContain('Unlock filters (2)')
+      const unlockButton = wrapper.findAllComponents(ButtonIcon).find(button => button.text().includes('Unlock filters'))
+      expect(unlockButton.props('counter')).toBe(2)
       expect(wrapper.text()).not.toContain('Apply locked filters')
     })
 

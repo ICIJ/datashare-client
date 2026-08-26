@@ -57,10 +57,12 @@ const emit = defineEmits(['clear:filters', 'clear:query', 'clear:all', 'unlock:a
       </button-icon>
       <button-icon
         v-if="lockedFiltersCount > 0"
+        :counter="lockedFiltersCount"
+        counter-variant=""
         :icon-left="IPhLock"
         @click="emit('unlock:all')"
       >
-        {{ t('searchBreadcrumbFormFooter.unlockFilters', { count: lockedFiltersCount }) }}
+        {{ t('searchBreadcrumbFormFooter.unlockFilters') }}
       </button-icon>
       <button-icon
         :disabled="disabledClearFilters"
@@ -103,3 +105,12 @@ const emit = defineEmits(['clear:filters', 'clear:query', 'clear:all', 'unlock:a
     </template>
   </form-actions>
 </template>
+
+<style lang="scss" scoped>
+.search-breadcrumb-form-footer {
+  :deep(.button-icon-counter) {
+    background-color: var(--bs-action-text-emphasis);
+    color: var(--bs-body-bg) ;
+  }
+}
+</style>
