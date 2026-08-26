@@ -28,6 +28,27 @@ export function parseLockedName(lockedName) {
 }
 
 /**
+ * Unlock every value dropped between two value arrays. For filter types
+ * whose `computedFilterValues({ set })` override replaces the whole values
+ * array at once rather than adding/removing one value at a time (path,
+ * recommendedBy) - that bypasses `useSearchFilter`'s own central
+ * unlock-on-remove path, so the caller has to do it explicitly.
+ *
+ * @param {ReturnType<typeof useLockedFiltersStore>} lockedFiltersStore
+ * @param {string} name - The lock's `-`-prefixed name (see `toLockedName`).
+ * @param {string[]} previousValues - The values before this write.
+ * @param {string[]} nextValues - The values being written.
+ * @returns {void}
+ */
+export function unlockRemovedValues(lockedFiltersStore, name, previousValues, nextValues) {
+  for (const value of previousValues) {
+    if (!nextValues.includes(value)) {
+      lockedFiltersStore.unlock({ name, value })
+    }
+  }
+}
+
+/**
  * Store for managing the user's personal, cross-project locked filters.
  *
  * A lock entry is `{ name, value, label }`. `name` already carries the

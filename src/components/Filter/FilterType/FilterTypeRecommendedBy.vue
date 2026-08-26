@@ -6,6 +6,7 @@ import sortBy from 'lodash/sortBy'
 import { useConfig } from '@/composables/useConfig'
 import { useSearchFilter } from '@/composables/useSearchFilter'
 import { useLockedFiltersStore, useRecommendedStore } from '@/store/modules'
+import { unlockRemovedValues } from '@/store/modules/lockedFilters'
 import DisplayUser from '@/components/Display/DisplayUser'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch'
 import FilterType from '@/components/Filter/FilterType/FilterType'
@@ -60,11 +61,7 @@ const selected = computedFilterValues(props.filter, {
   // useSearchFilter's central unlock-on-remove path — unlock explicitly for
   // any value dropped from the selection, same as FilterTypeStarred.
   set(values) {
-    for (const user of selected.value) {
-      if (!values.includes(user)) {
-        lockedFiltersStore.unlock({ name: 'recommendedBy', value: user })
-      }
-    }
+    unlockRemovedValues(lockedFiltersStore, 'recommendedBy', selected.value, values)
     setFilterValue(props.filter, { key: values })
   }
 })
