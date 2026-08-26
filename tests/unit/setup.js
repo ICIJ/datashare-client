@@ -6,7 +6,7 @@ import 'whatwg-fetch'
 // evaluate it here, once per worker, while the environment is alive.
 import '@vueuse/components'
 
-import { useLockedFiltersStore } from '@/store/modules'
+import { useLockedFiltersStore } from '@/store/modules/lockedFilters'
 import { pinia } from '@/store/pinia'
 
 // Node 22+ ships a native `localStorage` that throws on access unless the
