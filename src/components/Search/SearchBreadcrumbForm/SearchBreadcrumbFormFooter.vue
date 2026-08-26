@@ -49,9 +49,9 @@ const emit = defineEmits(['clear:filters', 'clear:query', 'clear:all', 'unlock:a
   >
     <template #compact>
       <!--
-        Exactly one of these two buttons ever shows (icij/datashare#2332):
-        "Apply locked filters" while a lock conflicts with the active search,
-        or "Unlock filters (N)" otherwise, whenever any lock exists.
+        "Apply locked filters" shows to the left of "Unlock filters (N)" whenever
+        a lock conflicts with the active search; "Unlock filters" shows whenever
+        any lock exists (icij/datashare#2332).
       -->
       <button-icon
         v-if="hasConflictingLocks"
@@ -61,7 +61,7 @@ const emit = defineEmits(['clear:filters', 'clear:query', 'clear:all', 'unlock:a
         {{ t('searchBreadcrumbFormFooter.applyLockedFilters') }}
       </button-icon>
       <button-icon
-        v-else-if="lockedFiltersCount > 0"
+        v-if="lockedFiltersCount > 0"
         :icon-left="IPhLock"
         @click="emit('unlock:all')"
       >

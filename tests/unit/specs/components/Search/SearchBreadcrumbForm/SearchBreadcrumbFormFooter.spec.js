@@ -39,8 +39,23 @@ describe('SearchBreadcrumbFormFooter', () => {
   })
 
   describe('Apply locked filters (icij/datashare#2332)', () => {
-    it('shows "Apply locked filters" instead of "Unlock filters" when locks conflict', () => {
+    it('shows "Apply locked filters" alongside "Unlock filters" when locks conflict', () => {
       const wrapper = mountFooter({ lockedFiltersCount: 1, hasConflictingLocks: true })
+
+      expect(wrapper.text()).toContain('Apply locked filters')
+      expect(wrapper.text()).toContain('Unlock filters')
+    })
+
+    it('places "Apply locked filters" before "Unlock filters"', () => {
+      const wrapper = mountFooter({ lockedFiltersCount: 1, hasConflictingLocks: true })
+
+      const buttons = wrapper.findAllComponents(ButtonIcon)
+      const labels = buttons.map(button => button.text())
+      expect(labels.findIndex(label => label.includes('Apply locked filters'))).toBeLessThan(labels.indexOf('Unlock filters (1)'))
+    })
+
+    it('shows "Apply locked filters" alone when locks conflict but none are locked yet', () => {
+      const wrapper = mountFooter({ lockedFiltersCount: 0, hasConflictingLocks: true })
 
       expect(wrapper.text()).toContain('Apply locked filters')
       expect(wrapper.text()).not.toContain('Unlock filters')
