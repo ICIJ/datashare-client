@@ -8,7 +8,7 @@ import { useSearchFilter } from '@/composables/useSearchFilter'
 import { useCore } from '@/composables/useCore'
 import { usePath } from '@/composables/usePath'
 import { useSearchStore, useLockedFiltersStore } from '@/store/modules'
-import { toLockedName } from '@/store/modules/lockedFilters'
+import { toLockedName, unlockRemovedValues } from '@/store/modules/lockedFilters'
 import { LAYOUTS } from '@/enums/pathTree'
 
 const core = useCore()
@@ -59,11 +59,7 @@ const selectedPaths = computedFilterValues(props.filter, {
   // useSearchFilter's central unlock-on-remove path — unlock explicitly for
   // any path dropped from the selection, same as FilterTypeRecommendedBy.
   set(values) {
-    for (const value of selectedPaths.value) {
-      if (!values.includes(value)) {
-        lockedFiltersStore.unlock({ name: lockedName.value, value })
-      }
-    }
+    unlockRemovedValues(lockedFiltersStore, lockedName.value, selectedPaths.value, values)
     setFilterValue(props.filter, { key: values })
   }
 })
