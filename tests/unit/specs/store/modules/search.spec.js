@@ -416,6 +416,20 @@ describe('SearchStore', () => {
 
       expect(searchStore.isReady).toBe(true)
     })
+
+    it('detects a route query with a filter key dropped entirely as different from the last applied query', async () => {
+      // sameAppliedQuery only walked the incoming query's own keys - a
+      // filter present in lastAppliedQuery but absent from the new query
+      // (e.g. navigating from a URL with a filter to one without it) was
+      // never checked at all, so the change went undetected and the route
+      // guards in useSearchFilter.js skipped the refresh entirely.
+      searchStore.addFilterValue({ name: 'contentType', value: 'pdf' })
+      await searchStore.query('bar')
+
+      const { 'f[contentType]': _dropped, ...routeQueryWithoutFilter } = searchStore.toRouteQuery
+
+      expect(searchStore.sameAppliedQuery(routeQueryWithoutFilter, ['from'])).toBe(false)
+    })
   })
 
   describe('Build route query', () => {
