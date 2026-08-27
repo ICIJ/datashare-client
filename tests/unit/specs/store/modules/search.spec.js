@@ -1697,6 +1697,21 @@ describe('SearchStore', () => {
       expect(searchStore.isFilterExcluded('contentTypeCategory')).toBe(false)
       expect(searchStore.hasConflictingLocks).toBe(false)
     })
+
+    it('applyLockedFilters also flips an unlocked value co-resident on the same filter (locks win for the whole filter, not just their own value)', () => {
+      // Mode is a per-filter setting, not per-value: `ENGLISH` is a plain,
+      // unlocked, include-mode selection on `language`. A conflicting lock on
+      // `FRENCH` under exclude mode resolves the whole filter to exclude, and
+      // that sweeps `ENGLISH` along with it. Intentional, not a gap - see the
+      // doc comment on applyLockedFilters.
+      searchStore.addFilterValue({ name: 'language', value: 'ENGLISH' })
+      lockedFiltersStore.lock({ name: '-language', value: 'FRENCH', label: 'French' })
+
+      searchStore.applyLockedFilters()
+
+      expect(searchStore.isFilterExcluded('language')).toBe(true)
+      expect(searchStore.getFilter({ name: 'language' }).values).toEqual(['ENGLISH', 'FRENCH'])
+    })
   })
   describe('toggleFilter re-locks values on mode flip', () => {
     let lockedFiltersStore

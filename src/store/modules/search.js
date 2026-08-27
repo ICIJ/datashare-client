@@ -967,6 +967,15 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * any conflicting mode - "locks win". Only ever invoked by an explicit
    * user action ("Apply locked filters" or "Clear filters"), so overriding
    * the live state here is exactly what the user asked for.
+   *
+   * Include/exclude mode is a per-filter setting, not per-value: a filter
+   * that flips mode because of one locked value also flips every other,
+   * unlocked value already selected on it (e.g. a locked, conflicting
+   * exclude-mode value coexisting with an unlocked, include-mode selection
+   * on the same filter). This is intentional, not a gap - "locks win" is
+   * meant to apply to the whole filter they live on, not just their own
+   * value, so the live state always ends up wherever the user's locks say
+   * it should be.
    */
   function applyLockedFilters() {
     // Two locks in the same paired group (e.g. contentType included,
