@@ -1054,6 +1054,19 @@ describe('SearchStore', () => {
       expect(lockedFiltersStore.entries).toEqual([{ name: 'language', value: 'ENGLISH', label: 'English' }])
     })
 
+    it('preserves locks when removeFilter is called with preserveLocks (icij/datashare#2332)', () => {
+      // A filter unregistered only because the current project doesn't
+      // support it (FiltersMixin's unregisterFilterForProject) must not
+      // purge the user's personal, cross-project locks - they're meant to
+      // survive project switches, and registerFilter never restores them.
+      const lockedFiltersStore = useLockedFiltersStore()
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+
+      searchStore.removeFilter('contentType', { preserveLocks: true })
+
+      expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'application/pdf' })).toBe(true)
+    })
+
     it('should define a "language" filter correctly (name, key and type)', () => {
       const filter = searchStore.getFilter({ name: 'language' })
 
