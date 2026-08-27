@@ -1508,6 +1508,21 @@ describe('FilterTypeFileTypes.vue', () => {
       expect(wrapper.findComponent(ContentTypesEntry).props('hideLock')).toBe(true)
     })
 
+    it('hides the category lock button in grouped view when hideLock is set', async () => {
+      wrapper.unmount()
+      api.getContentTypeCategories.mockResolvedValue({ OTHER: ['text/html', 'text/plain'] })
+      const filter = searchStore.getFilter({ name: 'contentType' })
+      wrapper = mount(FilterTypeFileTypes, {
+        global: { plugins: core.plugins },
+        props: { filter, collapse: false, hideLock: true }
+      })
+      seedContentTypes(['text/html', 'text/plain'])
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+
+      expect(wrapper.findComponent(ContentTypesCategoryName).props('hideLock')).toBe(true)
+    })
+
     it('unlocks a plain grouped entry when it is unticked', async () => {
       api.getContentTypeCategories.mockResolvedValue({ DOCUMENT: ['application/pdf', 'text/html'] })
       seedContentTypes(['application/pdf', 'text/html'])
