@@ -62,8 +62,11 @@ const teleportToOrScrollParent = computed(() => props.teleportTo || scrollParent
   }
 
   &__menu {
-    & > li > .btn,
-    & > li > .button-icon.btn {
+    // Descendant, not direct-child: a consumer occasionally wraps its button
+    // in an extra span (e.g. to carry a title tooltip on a disabled button),
+    // and a > combinator here would silently stop matching it.
+    & > li .btn,
+    & > li .button-icon.btn {
       display: flex;
       min-width: 100%;
 
