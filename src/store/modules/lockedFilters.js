@@ -160,9 +160,15 @@ export const useLockedFiltersStore = defineStore('lockedFilters', () => {
    */
   function retag({ name, newName, value }) {
     const index = indexByKey.value.get(entryKey(name, value))
-    if (index !== undefined) {
-      entries.value[index] = { ...entries.value[index], name: newName }
+    if (index === undefined) {
+      return
     }
+    // Guard against a pre-existing entry under { newName, value }
+    if (indexByKey.value.has(entryKey(newName, value))) {
+      entries.value.splice(index, 1)
+      return
+    }
+    entries.value[index] = { ...entries.value[index], name: newName }
   }
 
   /**
