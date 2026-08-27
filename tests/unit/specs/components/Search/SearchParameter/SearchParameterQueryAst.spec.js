@@ -2,6 +2,7 @@ import { mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import SearchParameterQueryAst from '@/components/Search/SearchParameter/SearchParameterQueryAst'
+import SearchParameterQueryTerm from '@/components/Search/SearchParameter/SearchParameterQueryTerm'
 import { useAppStore } from '@/store/modules'
 import { SEARCH_OPERATORS } from '@/enums/searchOperators'
 
@@ -49,6 +50,40 @@ describe('SearchParameterQueryAst.vue', () => {
       const ast = { left: term('foo'), operator: 'OR', right: term('bar') }
       const wrapper = mountAst(ast)
       expect(wrapper.text()).toContain('OR')
+    })
+  })
+
+  describe('lock click forwarding (icij/datashare#2332)', () => {
+    // Emitted directly on the nested SearchParameterQueryTerm rather than
+    // clicked through the DOM: its own click handling is already covered by
+    // SearchParameterQueryTerm.spec.js, this only tests whether the AST
+    // wiring itself re-emits click:lock up to the caller.
+    it('re-emits click:lock from a leaf filter chip', () => {
+      const ast = { field: 'contentType', term: 'application/pdf' }
+      const wrapper = mount(SearchParameterQueryAst, {
+        props: { ast, locked: true, lockLabel: 'Unlock' },
+        global: { plugins }
+      })
+
+      wrapper.findComponent(SearchParameterQueryTerm).vm.$emit('click:lock')
+
+      expect(wrapper.emitted('click:lock')).toHaveLength(1)
+    })
+
+    it('re-emits click:lock up through a nested AST (right-hand recursion)', () => {
+      const ast = { left: term('foo'), operator: '<implicit>', right: { field: 'contentType', term: 'application/pdf' } }
+      const wrapper = mount(SearchParameterQueryAst, {
+        props: { ast, locked: true, lockLabel: 'Unlock' },
+        global: { plugins }
+      })
+
+      // Two chips render here: the left, plain (never-lockable) term "foo",
+      // and the right, lockable filter chip - the lock click comes from the
+      // latter, the last SearchParameterQueryTerm in document order.
+      const termComponents = wrapper.findAllComponents(SearchParameterQueryTerm)
+      termComponents[termComponents.length - 1].vm.$emit('click:lock')
+
+      expect(wrapper.emitted('click:lock')).toHaveLength(1)
     })
   })
 })

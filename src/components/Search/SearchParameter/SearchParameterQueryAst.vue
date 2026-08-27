@@ -46,7 +46,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['click:x'])
+const emit = defineEmits(['click:x', 'click:lock'])
 
 const searchStore = useSearchStore()
 
@@ -102,6 +102,7 @@ const effectiveRightOperator = computed(() => {
       :no-x-icon="noXIcon"
       :size="size"
       @click:x="emit('click:x', ast)"
+      @click:lock="emit('click:lock', ast)"
     >
       <slot />
     </search-parameter-filter>
@@ -115,6 +116,7 @@ const effectiveRightOperator = computed(() => {
       :no-x-icon="noXIcon"
       :size="size"
       @click:x="emit('click:x', $event)"
+      @click:lock="emit('click:lock', $event)"
     >
       <slot />
     </search-parameter-query-ast>
