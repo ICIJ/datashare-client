@@ -120,6 +120,16 @@ describe('SearchBreadcrumbFormFooter', () => {
       expect(span.attributes('title')).toBeUndefined()
     })
 
+    // The wrapping span's title only reaches sighted mouse users hovering the
+    // disabled area - a title on the button itself is what a screen reader
+    // or keyboard-focus user actually gets (icij/datashare#2332).
+    it('also puts the disabled title directly on the button, for keyboard and screen reader users', () => {
+      const wrapper = mountFooter({ lockedFiltersCount: 2, hasConflictingLocks: false })
+
+      const button = findButton(wrapper, 'Apply locked filters').find('button')
+      expect(button.attributes('title')).toBe('All locked filters are already applied')
+    })
+
     it('emits apply:locked-filters when the enabled button is clicked', async () => {
       const wrapper = mountFooter({ lockedFiltersCount: 1, hasConflictingLocks: true })
 

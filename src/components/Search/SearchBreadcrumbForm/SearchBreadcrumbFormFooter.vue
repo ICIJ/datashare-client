@@ -76,6 +76,10 @@ const lockedFiltersCounter = computed(() => props.lockedFiltersCount || null)
         span, its documented workaround for this exact case). A native `title`
         attribute on the wrapper sidesteps that entirely: browsers show it on
         hover regardless of the disabled child's pointer-events:none.
+
+        The same title is also set directly on the button below: a screen
+        reader or keyboard-focus user never reaches the wrapper, only the
+        button itself, so that's the copy assistive tech actually reads.
       -->
       <span
         class="d-inline-block"
@@ -83,6 +87,7 @@ const lockedFiltersCounter = computed(() => props.lockedFiltersCount || null)
       >
         <button-icon
           :disabled="!hasConflictingLocks"
+          :title="applyLockedFiltersDisabledTitle"
           :icon-left="IPhLockOpen"
           @click="emit('apply:locked-filters')"
         >
