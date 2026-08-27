@@ -26,6 +26,9 @@ const props = defineProps({
   locked: {
     type: Boolean,
     default: false
+  },
+  hideLock: {
+    type: Boolean
   }
 })
 
@@ -65,7 +68,7 @@ const collapseLabel = computed(() => t('contentTypesCategoryName.toggle', { cate
       :count="count"
       :indeterminate="indeterminate"
       :locked="locked"
-      lockable
+      :lockable="!hideLock"
       @update:locked="emit('update:locked', $event)"
     />
   </div>

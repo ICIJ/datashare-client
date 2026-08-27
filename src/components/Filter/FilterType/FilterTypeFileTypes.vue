@@ -239,6 +239,7 @@ const totalCount = computedTotal(filterRef)
               :indeterminate="categoryIndeterminate(category, types)"
               :collapse="!isCategoryExpanded(category)"
               :locked="isCategoryLocked(category)"
+              :hide-lock="hideLock"
               @update:model-value="toggleCategory(category, types, $event)"
               @update:collapse="toggleCollapse(category, $event)"
               @update:locked="toggleLockCategory(category, types, $event)"

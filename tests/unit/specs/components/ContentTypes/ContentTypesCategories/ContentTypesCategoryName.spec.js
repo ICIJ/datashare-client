@@ -68,4 +68,14 @@ describe('ContentTypesCategoryName.vue', () => {
     await wrapper.vm.$nextTick()
     expect(wrapper.emitted('update:locked')).toStrictEqual([[true]])
   })
+
+  it('hides the lock button on its inner filter entry when hideLock is set', () => {
+    const wrapper = factory({ hideLock: true })
+    expect(wrapper.findComponent(FiltersPanelSectionFilterEntry).props('lockable')).toBe(false)
+  })
+
+  it('keeps the lock button lockable by default', () => {
+    const wrapper = factory()
+    expect(wrapper.findComponent(FiltersPanelSectionFilterEntry).props('lockable')).toBe(true)
+  })
 })
