@@ -62,7 +62,10 @@ const FiltersMixin = superclass =>
         project,
         // Conditional callbacks
         withFn: () => this.registerFilter({ type, options }),
-        withoutFn: () => this.unregisterFilter(options.name)
+        // preserveLocks: this filter is only hidden for this project
+        // selection, not permanently removed - see unregisterFilterForProject
+        // below for the same case reached the other way around.
+        withoutFn: () => this.unregisterFilter(options.name, { preserveLocks: true })
       })
     }
 

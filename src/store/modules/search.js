@@ -595,7 +595,12 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    */
   function removeFilter(name, { preserveLocks = false } = {}) {
     const i = filters.value.findIndex(({ options }) => options.name === name)
-    delete filters.value[i]
+    // splice, not delete: `delete` on an array index leaves an undefined
+    // hole in place, which crashes the next addFilter's own .find() over
+    // this same array as soon as it walks past the hole.
+    if (i !== -1) {
+      filters.value.splice(i, 1)
+    }
     if (name in values.value) {
       delete values.value[name]
     }
