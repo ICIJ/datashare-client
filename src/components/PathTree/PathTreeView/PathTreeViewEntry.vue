@@ -399,8 +399,10 @@ function toggleLock(value) {
   // Same hidden-until-hover/focus/locked idiom as the Filters panel row's own
   // lock button — ButtonToggleLock itself only owns the locked-state color.
   &__lock {
-    opacity: 0;
     transition: opacity 0.15s ease;
+    @media (hover: hover) {
+      opacity: 0;
+    }
 
     &.button-toggle-lock--locked {
       opacity: 1;
