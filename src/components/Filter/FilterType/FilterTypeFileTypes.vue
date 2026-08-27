@@ -183,7 +183,7 @@ const isCategoryExpanded = category => !isCollapsed(category) || hasQuery.value
 // "All-selected" reflects the union with the paired contentTypeCategory —
 // a selection in either dimension keeps "All" enabled.
 const pairedFilters = computed(() => getFilterPairedDimensions(filterRef))
-const allSelected = computedAll(pairedFilters)
+const allSelected = computedAll(pairedFilters, { skipUnlock: toRef(props, 'hideLock') })
 const totalCount = computedTotal(filterRef)
 </script>
 
