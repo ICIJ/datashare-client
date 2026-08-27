@@ -24,8 +24,10 @@ const label = computed(() => t(props.locked ? 'filtersPanelSectionFilterEntry.un
 
 <template>
   <button-icon
+    v-b-tooltip.top.body="{ title: label }"
     square
     hide-label
+    hide-tooltip
     variant="link"
     size="sm"
     class="button-toggle-lock"
