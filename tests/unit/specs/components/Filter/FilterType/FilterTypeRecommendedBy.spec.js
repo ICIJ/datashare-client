@@ -168,5 +168,16 @@ describe('FilterTypeRecommendedBy.vue', () => {
 
       expect(findEntry().props('lockable')).toBe(false)
     })
+
+    it('does not unlock a deselected user\'s real lock when hideLock is set', async () => {
+      searchStore.addFilterValue({ name: 'recommendedBy', value: 'jane' })
+      lockedFiltersStore.lock({ name: 'recommendedBy', value: 'jane', label: 'jane' })
+      await wrapper.setProps({ hideLock: true })
+
+      wrapper.vm.selected = []
+      await wrapper.vm.$nextTick()
+
+      expect(lockedFiltersStore.isLocked({ name: 'recommendedBy', value: 'jane' })).toBe(true)
+    })
   })
 })

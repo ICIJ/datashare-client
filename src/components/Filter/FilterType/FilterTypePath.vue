@@ -59,7 +59,9 @@ const selectedPaths = computedFilterValues(props.filter, {
   // useSearchFilter's central unlock-on-remove path — unlock explicitly for
   // any path dropped from the selection, same as FilterTypeRecommendedBy.
   set(values) {
-    unlockRemovedValues(lockedFiltersStore, lockedName.value, selectedPaths.value, values)
+    if (!props.hideLock) {
+      unlockRemovedValues(lockedFiltersStore, lockedName.value, selectedPaths.value, values)
+    }
     setFilterValue(props.filter, { key: values })
   }
 })
