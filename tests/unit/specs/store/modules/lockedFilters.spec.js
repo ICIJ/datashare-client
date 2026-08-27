@@ -99,6 +99,25 @@ describe('LockedFiltersStore', () => {
     expect(store.count).toBe(2)
   })
 
+  describe('entriesForName', () => {
+    it('returns only the entries matching the given name', () => {
+      store.lock({ name: 'tag', value: 'confidential', label: 'Confidential' })
+      store.lock({ name: 'tag', value: 'secret', label: 'Secret' })
+      store.lock({ name: 'contentType', value: 'application/pdf', label: 'PDF' })
+
+      expect(store.entriesForName('tag')).toEqual([
+        { name: 'tag', value: 'confidential', label: 'Confidential' },
+        { name: 'tag', value: 'secret', label: 'Secret' }
+      ])
+    })
+
+    it('returns an empty array when no entry matches the given name', () => {
+      store.lock({ name: 'tag', value: 'confidential', label: 'Confidential' })
+
+      expect(store.entriesForName('contentType')).toEqual([])
+    })
+  })
+
   describe('unlockWhere', () => {
     it('unlocks every entry matching the predicate, leaving the rest', () => {
       store.lock({ name: 'tag', value: 'confidential', label: 'Confidential' })

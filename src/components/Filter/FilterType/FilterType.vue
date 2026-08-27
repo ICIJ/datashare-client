@@ -248,9 +248,9 @@ const missingLocks = computed(() => {
   if (!reachedBucketsEnd.value) {
     return []
   }
-  const isForThisFilter = entry => entry.name === lockedName.value
+
   const isMissing = entry => !renderedBucketKeys.value.has(entry.value)
-  return lockedFiltersStore.entries.filter(entry => isForThisFilter(entry) && isMissing(entry))
+  return lockedFiltersStore.entriesForName(lockedName.value).filter(isMissing)
 })
 
 const toSyntheticBucket = entry => ({ key: entry.value, doc_count: NaN, __lockedLabel: entry.label })
