@@ -126,7 +126,7 @@ watch(
 function submit() {
   hideSuggestions()
   if (mustClearFilters.value) {
-    searchStore.resetFilterValues()
+    searchStore.resetFilterValuesPreservingLocks()
   }
   // Update the store before pushing the route with the new query.
   searchStore.setIndices(formIndices.value)
