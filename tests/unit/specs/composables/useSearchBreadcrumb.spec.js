@@ -283,5 +283,24 @@ describe('useSearchBreadcrumb composable', () => {
       expect(wrapper.vm.$toast.error).toHaveBeenCalledOnce()
       expect(wrapper.vm.$toast.success).not.toHaveBeenCalled()
     })
+
+    it('logs an unrelated error to the console instead of swallowing it silently (icij/datashare#2332)', async () => {
+      // The catch block covers both an expected conflict and a genuine bug
+      // elsewhere - without a console trail, the two are indistinguishable
+      // from a bug report alone.
+      const error = new Error('boom')
+      vi.spyOn(searchStore, 'applyLockedFilters').mockImplementation(() => {
+        throw error
+      })
+      vi.spyOn(console, 'error').mockImplementation(() => {})
+
+      const { applyLockedFilters, wrapper } = mountComposable()
+      vi.spyOn(wrapper.vm.$toast, 'error')
+
+      await applyLockedFilters()
+
+      expect(console.error).toHaveBeenCalledWith(expect.any(String), error)
+      expect(wrapper.vm.$toast.error).toHaveBeenCalledOnce()
+    })
   })
 })
