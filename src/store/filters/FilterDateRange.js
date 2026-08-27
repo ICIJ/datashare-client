@@ -1,4 +1,5 @@
 import isInteger from 'lodash/isInteger'
+import isString from 'lodash/isString'
 import dayjs from 'dayjs'
 
 import FilterDate from './FilterDate'
@@ -21,20 +22,29 @@ export default class FilterDateRange extends FilterDate {
   }
 
   /**
-   * Format a bucket key as a localized date string.
-   * @param {object} item - Histogram bucket.
-   * @param {number|string} item.key - Epoch milliseconds or pre-formatted string.
+   * Format a bucket key as a localized date string. A locked breadcrumb chip
+   * only has the raw route-query value, a single `"min:max"` epoch-ms string
+   * (queryBuilder's own format), not a histogram bucket - format both ends
+   * and join them, rather than falling through to the raw unformatted string.
+   * @param {object} item - Histogram bucket, or a `{ key }` shim.
+   * @param {number|string} item.key - Epoch milliseconds, a `"min:max"` string, or a pre-formatted string.
    * @returns {string} Localized date label.
    */
   itemLabel(item) {
+    // dayjs's own .locale(x) treats a falsy x as a getter call rather than a
+    // no-op setter, breaking the format() chain entirely - fall back to a
+    // concrete locale rather than the null localStorage returns before a
+    // user ever explicitly changes it.
+    const locale = localStorage.getItem('locale') ?? 'en'
     if (isInteger(item.key)) {
       const timestamp = item.key + new Date().getTimezoneOffset() * 60 * 1000
-      const locale = localStorage.getItem('locale')
       return dayjs(timestamp).locale(locale).format('L')
     }
-    else {
-      return item.key
+    if (isString(item.key) && item.key.includes(':')) {
+      const format = timestamp => dayjs(Number(timestamp)).locale(locale).format('L')
+      return item.key.split(':').map(format).join(' - ')
     }
+    return item.key
   }
 
   /**

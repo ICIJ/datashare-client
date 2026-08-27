@@ -107,6 +107,34 @@ describe('SearchBreadcrumbFormEntry.vue', () => {
       expect(entry.label).not.toBe('application/pdf')
     })
 
+    it('stores a formatted label, not undefined, when locking a FilterDate chip (icij/datashare#2332)', async () => {
+      const lockedFiltersStore = useLockedFiltersStore()
+      // 'indexingDate' buckets are epoch-ms strings; itemLabel({ key }) alone
+      // (no key_as_string, which only ES's histogram response provides)
+      // must not fall through to an undefined label.
+      const props = { filter: 'indexingDate', value: '1690000000000' }
+      const wrapper = mount(SearchBreadcrumbFormEntry, { global, props })
+
+      await findLockButton(wrapper).trigger('click')
+
+      const entry = lockedFiltersStore.entries.find(({ name, value }) => name === 'indexingDate' && value === '1690000000000')
+      expect(entry.label).toBeDefined()
+      expect(entry.label).not.toBe(props.value)
+    })
+
+    it('stores a formatted label, not the raw min:max string, when locking a FilterDateRange chip (icij/datashare#2332)', async () => {
+      const lockedFiltersStore = useLockedFiltersStore()
+      // 'creationDate' values are a single 'min:max' epoch-ms string, not a
+      // lone integer key - the isInteger(item.key) check alone misses this.
+      const props = { filter: 'creationDate', value: '1690000000000:1692592000000' }
+      const wrapper = mount(SearchBreadcrumbFormEntry, { global, props })
+
+      await findLockButton(wrapper).trigger('click')
+
+      const entry = lockedFiltersStore.entries.find(({ name, value }) => name === 'creationDate' && value === props.value)
+      expect(entry.label).not.toBe(props.value)
+    })
+
     it('unlocks the value in the lock store when clicking a locked button', async () => {
       const lockedFiltersStore = useLockedFiltersStore()
       lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
