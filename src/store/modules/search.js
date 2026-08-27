@@ -314,7 +314,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * Reset the filter values and exclusion mode to an empty state, then
    * force-apply the user's locked filters immediately. This is "Clear
    * filters" preserving locks: clicking "Clear
-   * filters" is itself an explicit user action, so — unlike route hydration —
+   * filters" is itself an explicit user action, so, unlike route hydration,
    * it force-applies locks straight away rather than leaving them pending
    * behind "Apply locked filters".
    */
@@ -580,7 +580,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * Remove a filter by its name.
    *
    * The filter itself is going away, so unlock it under both include and
-   * exclude mode, not just whichever it's currently in — every caller
+   * exclude mode, not just whichever it's currently in - every caller
    * (FiltersMixin's unregisterFilter, useSearchFilter's removeFilter) routes
    * through here, so fixing it here covers them all instead of duplicating
    * the unlock in each one.
@@ -964,7 +964,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
 
   /**
    * Force-apply every locked value into the live search state, overriding
-   * any conflicting mode — "locks win". Only ever invoked by an explicit
+   * any conflicting mode - "locks win". Only ever invoked by an explicit
    * user action ("Apply locked filters" or "Clear filters"), so overriding
    * the live state here is exactly what the user asked for.
    */

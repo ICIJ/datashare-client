@@ -96,7 +96,7 @@ describe('SearchBreadcrumbFormFooter', () => {
     })
 
     // A disabled native <button> never fires mouse events, so a tooltip
-    // targeting the button itself never shows while disabled — the one time
+    // targeting the button itself never shows while disabled - the one time
     // it's actually needed. The `title` lives on the wrapping span instead,
     // which browsers show on hover regardless of the child's disabled state.
     it('tooltips "All locked filters are already applied" when locks exist but none conflict', () => {

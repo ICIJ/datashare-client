@@ -51,7 +51,7 @@ const applyLockedFiltersDisabledTitle = computed(() => {
     : t('searchBreadcrumbFormFooter.applyLockedFiltersNoLocks')
 })
 
-// ButtonIcon's counter badge only hides on `null`, not `0` — avoid a "0" badge
+// ButtonIcon's counter badge only hides on `null`, not `0` - avoid a "0" badge
 // once "Clear locks" stays visible with no locks (see below).
 const lockedFiltersCounter = computed(() => props.lockedFiltersCount || null)
 </script>
@@ -66,11 +66,11 @@ const lockedFiltersCounter = computed(() => props.lockedFiltersCount || null)
     <template #compact>
       <!--
         Always visible, like every other action in this footer, so its position
-        never shifts — only enabled while a lock actually conflicts with the
+        never shifts - only enabled while a lock actually conflicts with the
         active search (icij/datashare#2332).
 
         A disabled native <button> never fires mouse events, so a tooltip
-        targeting the button itself never shows while disabled — the one time
+        targeting the button itself never shows while disabled - the one time
         it's actually needed (confirmed: bootstrap-vue-next's v-b-tooltip
         directive stayed at opacity:0 even on a real hover of the wrapping
         span, its documented workaround for this exact case). A native `title`
@@ -148,7 +148,7 @@ const lockedFiltersCounter = computed(() => props.lockedFiltersCount || null)
   }
 
   // These buttons use the "link" variant, whose label switches to
-  // --bs-link-hover-color on hover — the badge stayed a fixed color instead
+  // --bs-link-hover-color on hover - the badge stayed a fixed color instead
   // of following it. Targets the real :hover pseudo-class rather than
   // ButtonIcon's own currentHover tracking, which never actually sets true
   // (a `@mousenter` typo in that component, see its own source comment).
