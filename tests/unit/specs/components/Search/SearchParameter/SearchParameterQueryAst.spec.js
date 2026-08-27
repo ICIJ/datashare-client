@@ -70,6 +70,21 @@ describe('SearchParameterQueryAst.vue', () => {
       expect(wrapper.emitted('click:lock')).toHaveLength(1)
     })
 
+    it('re-emits click:lock up through a nested AST (left-hand recursion)', () => {
+      // lucene nests left-associatively, so a chain like "a AND b AND c" puts
+      // the common case on the left branch, not the right one above.
+      const ast = { left: { field: 'contentType', term: 'application/pdf' }, operator: '<implicit>', right: term('foo') }
+      const wrapper = mount(SearchParameterQueryAst, {
+        props: { ast, locked: true, lockLabel: 'Unlock' },
+        global: { plugins }
+      })
+
+      const termComponents = wrapper.findAllComponents(SearchParameterQueryTerm)
+      termComponents[0].vm.$emit('click:lock')
+
+      expect(wrapper.emitted('click:lock')).toHaveLength(1)
+    })
+
     it('re-emits click:lock up through a nested AST (right-hand recursion)', () => {
       const ast = { left: term('foo'), operator: '<implicit>', right: { field: 'contentType', term: 'application/pdf' } }
       const wrapper = mount(SearchParameterQueryAst, {

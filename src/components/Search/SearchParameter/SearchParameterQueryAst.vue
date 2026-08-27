@@ -64,6 +64,7 @@ const effectiveRightOperator = computed(() => {
   <span class="search-parameter-query-ast d-inline-flex flex-wrap column-gap-2 row-gap-2">
     <search-parameter-query-ast
       v-if="isLeft"
+      v-bind="$attrs"
       :ast="ast.left"
       :color="color"
       :counter="counter"
@@ -72,6 +73,7 @@ const effectiveRightOperator = computed(() => {
       :no-x-icon="noXIcon"
       :size="size"
       @click:x="emit('click:x', ast.left)"
+      @click:lock="emit('click:lock', $event)"
     >
       <slot />
     </search-parameter-query-ast>
