@@ -205,6 +205,35 @@ describe('Search.vue', () => {
     expect(wrapper.vm.toggleSearchBreadcrumb).toBe(false)
   })
 
+  it('does not open the breadcrumb panel on a genuine cold load whose URL already carries the locked value (icij/datashare#2332)', async () => {
+    // Unmount the default-route wrapper from beforeEach *before* pushing, so
+    // nothing has reacted to this route yet and the store is still fully
+    // empty when Search mounts fresh - a real cold load (e.g. a bookmark or
+    // a page reload) resolves its query before any component exists to
+    // hydrate the store from it.
+    //
+    // This relies on the 'search' route's own beforeEnter guard
+    // (prefillSearchStore) hydrating the store from `to.query` before Search
+    // ever mounts - the conflict watcher below runs during setup, before
+    // Search's own onMounted hooks, so without that guard it would see a
+    // still-empty store and report a conflict that isn't real. Pins the
+    // guard's existence: removing it would make this test flap or fail.
+    wrapper.unmount()
+    const lockedFiltersStore = useLockedFiltersStore()
+    lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+    await core.router.push({ name: 'search', query: { 'f[contentType]': ['application/pdf'] } })
+
+    wrapper = shallowMount(Search, {
+      global: {
+        plugins: core.plugins,
+        renderStubDefaultSlot: true
+      }
+    })
+    await flushPromises()
+
+    expect(wrapper.vm.toggleSearchBreadcrumb).toBe(false)
+  })
+
   it('reopens the breadcrumb panel for a second, unrelated conflict later in the same session (icij/datashare#2332)', async () => {
     // Search.vue never remounts across "search" navigations, so this exercises
     // the live watcher (not the on-mount immediate call the two tests above cover).
