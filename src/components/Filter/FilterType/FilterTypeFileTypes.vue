@@ -69,15 +69,9 @@ const {
 } = useSearchFilter()
 
 const lockedFiltersStore = useLockedFiltersStore()
-// Same `-`-prefix convention as FilterType.vue's own (unused here, since this
-// component overrides its default slot) lockedName — include/exclude mode is
-// part of a lock's identity.
+// Feeds categoryLockedName below (the leaf lockedName itself now comes from
+// useContentTypeSelection) — include/exclude mode is part of a lock's identity.
 const exclude = computedExcludeFilter(props.filter)
-const lockedName = computed(() => toLockedName(filterRef.value.name, exclude.value))
-
-function isItemLocked(contentType) {
-  return lockedFiltersStore.isLocked({ name: lockedName.value, value: contentType })
-}
 
 function toggleLock(contentType, locked) {
   if (locked) {
@@ -113,6 +107,8 @@ const overlayVisible = computed(() => {
 const categoryLabelFor = useContentTypeCategoryLabel()
 
 const {
+  lockedName,
+  isContentTypeLocked: isItemLocked,
   isEntrySelected,
   isEntryRetainedDuringSearch,
   isCategoryStored,

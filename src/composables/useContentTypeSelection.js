@@ -378,6 +378,8 @@ export function useContentTypeSelection({ filter, categories, hideLock }) {
   }
 
   return {
+    lockedName,
+    isContentTypeLocked,
     isEntrySelected,
     isEntryRetainedDuringSearch,
     isCategoryStored,
