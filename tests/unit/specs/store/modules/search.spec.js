@@ -1057,6 +1057,16 @@ describe('SearchStore', () => {
       expect(searchStore.getFilter({ name: 'contentType' })).toBeDefined()
     })
 
+    it('does not leave an undefined hole in filters after removeFilter (icij/datashare#2332)', () => {
+      // A hole (from `delete filters.value[i]` instead of a splice) crashes
+      // the next addFilter's own .find() over this same array as soon as it
+      // walks past it.
+      const before = searchStore.filters.length
+      searchStore.removeFilter('contentType')
+      expect(searchStore.filters.length).toBe(before - 1)
+      expect(searchStore.filters).not.toContain(undefined)
+    })
+
     it('should unlock every entry (include or exclude mode) locked on a removed filter', () => {
       const lockedFiltersStore = useLockedFiltersStore()
       lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })

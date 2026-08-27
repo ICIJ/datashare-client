@@ -86,4 +86,27 @@ describe('FiltersMixin', () => {
     expect(searchStore.getFilter({ name: 'namedEntityEmail' })).toBeUndefined()
     expect(lockedFiltersStore.isLocked({ name: 'namedEntityEmail', value: 'foo@bar.com' })).toBe(true)
   })
+
+  it('preserves the user\'s locks when a filter is registered only for another project (icij/datashare#2332)', () => {
+    // Same case as above, reached through registerFilterForProject's own
+    // withoutFn instead: the current project doesn't match the one the
+    // filter is scoped to, so it's hidden here too, not permanently removed.
+    core.registerFilter({
+      type: 'FilterEntity',
+      options: { order: 65, name: 'namedEntityEmail', key: 'byMentions', category: 'EMAIL' }
+    })
+    const lockedFiltersStore = useLockedFiltersStore()
+    lockedFiltersStore.lock({ name: 'namedEntityEmail', value: 'foo@bar.com', label: 'foo@bar.com' })
+
+    // toggleForProject fires withoutFn (unregister) when the current project
+    // doesn't match the given one.
+    searchStore.setIndex('another-project')
+    core.registerFilterForProject('target-project', {
+      type: 'FilterEntity',
+      options: { name: 'namedEntityEmail', key: 'byMentions', category: 'EMAIL' }
+    })
+
+    expect(searchStore.getFilter({ name: 'namedEntityEmail' })).toBeUndefined()
+    expect(lockedFiltersStore.isLocked({ name: 'namedEntityEmail', value: 'foo@bar.com' })).toBe(true)
+  })
 })
