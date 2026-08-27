@@ -1539,6 +1539,31 @@ describe('FilterTypeFileTypes.vue', () => {
       expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'application/pdf' })).toBe(false)
     })
 
+    it('does not unlock a grouped entry\'s real lock when it is unticked and hideLock is set (icij/datashare#2336)', async () => {
+      wrapper.unmount()
+      api.getContentTypeCategories.mockResolvedValue({ DOCUMENT: ['application/pdf', 'text/html'] })
+      const filter = searchStore.getFilter({ name: 'contentType' })
+      wrapper = mount(FilterTypeFileTypes, {
+        global: { plugins: core.plugins },
+        props: { filter, collapse: false, hideLock: true }
+      })
+      seedContentTypes(['application/pdf', 'text/html'])
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+
+      // Locking happens through the real store even under hideLock (the lock
+      // button is hidden, so it can't be reached) - seed the lock directly to
+      // simulate one that predates a disposable/non-live render.
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'PDF' })
+      await flushPromises()
+
+      const entry = wrapper.findAllComponents(ContentTypesEntry).find(e => e.props('contentType') === 'application/pdf')
+      await entry.vm.$emit('update:model-value', false)
+
+      expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'application/pdf' })).toBe(true)
+    })
+
     it('locking a category-covered entry demotes the category, selecting and locking just that entry', async () => {
       // Locking a more specific leaf value must supersede a broader category
       // lock, not stack silently underneath it (only-the-icon-lights-up bug).

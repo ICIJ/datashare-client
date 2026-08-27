@@ -121,7 +121,7 @@ const {
   categoryIndeterminate,
   toggleCategory,
   toggleEntry
-} = useContentTypeSelection({ filter: filterRef, categories })
+} = useContentTypeSelection({ filter: filterRef, categories, hideLock: toRef(props, 'hideLock') })
 
 // Same `-`-prefix lock namespace as leaf content types, but under the
 // category's own contentTypeCategory dimension — a category is stored as one

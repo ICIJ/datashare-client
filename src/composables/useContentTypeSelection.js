@@ -18,7 +18,7 @@ const without = (list, value) => list.filter(item => item !== value)
  * automatic promote/demote when a category becomes fully or partially
  * ticked.
  */
-export function useContentTypeSelection({ filter, categories }) {
+export function useContentTypeSelection({ filter, categories, hideLock }) {
   const searchStore = useSearchStore.inject()
   const { getFilterByName, getFilterValuesByName, isFilterExcluded } = useSearchFilter()
   const lockedFiltersStore = useLockedFiltersStore()
@@ -32,10 +32,14 @@ export function useContentTypeSelection({ filter, categories }) {
   const isContentTypeLocked = contentType => lockedFiltersStore.isLocked({ name: lockedName.value, value: contentType })
 
   // Unticking a content type unlocks it, same as every other filter's
-  // checkbox (useSearchFilter's removeFilterValue) — this composable writes
-  // the filter's value array directly rather than routing through that
-  // shared helper, so the unlock has to happen here instead.
+  // checkbox (useSearchFilter's removeFilterValue). Guarded by
+  // hideLock the same way removeFilterValue's own skipUnlock is, so a
+  // disposable/non-live tree (e.g. the batch-search creation form) never
+  // touches the user's real lock store.
   const unlockContentType = (contentType) => {
+    if (toValue(hideLock)) {
+      return
+    }
     lockedFiltersStore.unlock({ name: lockedName.value, value: contentType })
   }
 
@@ -44,6 +48,9 @@ export function useContentTypeSelection({ filter, categories }) {
   // CONTENT_TYPE_CATEGORY_FILTER_NAME, since the category is stored as its
   // own bulk value rather than as N individual contentType entries).
   const unlockCategory = (category) => {
+    if (toValue(hideLock)) {
+      return
+    }
     lockedFiltersStore.unlock({ name: categoryLockedName.value, value: category })
   }
 
