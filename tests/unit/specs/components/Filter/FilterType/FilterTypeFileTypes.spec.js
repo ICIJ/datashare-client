@@ -1551,7 +1551,7 @@ describe('FilterTypeFileTypes.vue', () => {
       expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'application/pdf' })).toBe(true)
     })
 
-    it('unlocks a locked child when it gets promoted into its category by ticking the last sibling', async () => {
+    it('transfers a locked child\'s lock to the category when it gets promoted by ticking the last sibling', async () => {
       api.getContentTypeCategories.mockResolvedValue({ OTHER: ['text/html', 'text/plain'] })
       seedContentTypes(['text/html', 'text/plain'])
       await wrapper.findComponent(FilterType).vm.aggregateOver()
@@ -1565,12 +1565,16 @@ describe('FilterTypeFileTypes.vue', () => {
       await flushPromises()
       expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'text/html' })).toBe(true)
 
-      // Ticking the last sibling auto-promotes to the stored category.
+      // Ticking the last sibling auto-promotes to the stored category - a
+      // plain checkbox tick, not the lock button, so the transfer has to
+      // live in promoteToCategory itself rather than in the lock-click
+      // handler alone.
       await findItem('text/plain').vm.$emit('update:model-value', true)
       await flushPromises()
 
       expect(searchStore.values.contentTypeCategory).toEqual(['OTHER'])
       expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'text/html' })).toBe(false)
+      expect(lockedFiltersStore.isLocked({ name: 'contentTypeCategory', value: 'OTHER' })).toBe(true)
     })
 
     it('unlocks a locked child when its category is ticked directly from a mixed state', async () => {

@@ -2,6 +2,7 @@ import { computed, toValue } from 'vue'
 import isEqual from 'lodash/isEqual'
 import { useSearchStore, useLockedFiltersStore } from '@/store/modules'
 import { useSearchFilter } from '@/composables/useSearchFilter'
+import { useContentTypeCategoryLabel } from '@/composables/useContentTypeCategoryLabel'
 import { toLockedName } from '@/store/modules/lockedFilters'
 import { CONTENT_TYPE_CATEGORY_FILTER_NAME } from '@/store/filters/FilterContentTypeCategory'
 
@@ -21,17 +22,21 @@ export function useContentTypeSelection({ filter, categories }) {
   const searchStore = useSearchStore.inject()
   const { getFilterByName, getFilterValuesByName, isFilterExcluded } = useSearchFilter()
   const lockedFiltersStore = useLockedFiltersStore()
+  const categoryLabelFor = useContentTypeCategoryLabel()
 
   const filterName = computed(() => toValue(filter)?.name)
   const categoryFilter = computed(() => getFilterByName(CONTENT_TYPE_CATEGORY_FILTER_NAME))
+  const lockedName = computed(() => toLockedName(filterName.value, isFilterExcluded({ name: filterName.value })))
+  const categoryLockedName = computed(() => toLockedName(CONTENT_TYPE_CATEGORY_FILTER_NAME, isFilterExcluded({ name: CONTENT_TYPE_CATEGORY_FILTER_NAME })))
+
+  const isContentTypeLocked = contentType => lockedFiltersStore.isLocked({ name: lockedName.value, value: contentType })
 
   // Unticking a content type unlocks it, same as every other filter's
   // checkbox (useSearchFilter's removeFilterValue) — this composable writes
   // the filter's value array directly rather than routing through that
   // shared helper, so the unlock has to happen here instead.
   const unlockContentType = (contentType) => {
-    const name = toLockedName(filterName.value, isFilterExcluded({ name: filterName.value }))
-    lockedFiltersStore.unlock({ name, value: contentType })
+    lockedFiltersStore.unlock({ name: lockedName.value, value: contentType })
   }
 
   // Same bypass-of-useSearchFilter reasoning as unlockContentType, for the
@@ -39,8 +44,11 @@ export function useContentTypeSelection({ filter, categories }) {
   // CONTENT_TYPE_CATEGORY_FILTER_NAME, since the category is stored as its
   // own bulk value rather than as N individual contentType entries).
   const unlockCategory = (category) => {
-    const name = toLockedName(CONTENT_TYPE_CATEGORY_FILTER_NAME, isFilterExcluded({ name: CONTENT_TYPE_CATEGORY_FILTER_NAME }))
-    lockedFiltersStore.unlock({ name, value: category })
+    lockedFiltersStore.unlock({ name: categoryLockedName.value, value: category })
+  }
+
+  const lockCategory = (category) => {
+    lockedFiltersStore.lock({ name: categoryLockedName.value, value: category, label: categoryLabelFor(category) })
   }
 
   /**
@@ -218,13 +226,20 @@ export function useContentTypeSelection({ filter, categories }) {
 
   /**
    * Promote `category` by removing its explicit children and storing the
-   * category itself.
+   * category itself. If any of those children was locked, that lock is
+   * transferred to the category rather than dropped - otherwise completing
+   * a category (whether by ticking its last sibling or by locking it
+   * directly) would silently destroy a sibling's persisted lock.
    * @param {string} category
    * @returns {void}
    */
   const promoteToCategory = (category) => {
     const categoryTypes = typesInCategory(category)
+    const wasLocked = categoryTypes.some(isContentTypeLocked)
     categoryTypes.forEach(unlockContentType)
+    if (wasLocked) {
+      lockCategory(category)
+    }
     writeContentTypes(currentContentTypes().filter(value => !categoryTypes.includes(value)))
     writeCategories([...currentCategories(), category])
   }
