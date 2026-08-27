@@ -31,28 +31,24 @@ export function useContentTypeSelection({ filter, categories, hideLock }) {
 
   const isContentTypeLocked = contentType => lockedFiltersStore.isLocked({ name: lockedName.value, value: contentType })
 
-  // Unticking a content type unlocks it, same as every other filter's
-  // checkbox (useSearchFilter's removeFilterValue). Guarded by
-  // hideLock the same way removeFilterValue's own skipUnlock is, so a
-  // disposable/non-live tree (e.g. the batch-search creation form) never
-  // touches the user's real lock store.
-  const unlockContentType = (contentType) => {
-    if (toValue(hideLock)) {
-      return
+  // Guarded by hideLock the same way removeFilterValue's own skipUnlock is,
+  // so a disposable/non-live tree (e.g. the batch-search creation form)
+  // never touches the user's real lock store.
+  const guardedUnlock = (name, value) => {
+    if (!toValue(hideLock)) {
+      lockedFiltersStore.unlock({ name, value })
     }
-    lockedFiltersStore.unlock({ name: lockedName.value, value: contentType })
   }
+
+  // Unticking a content type unlocks it, same as every other filter's
+  // checkbox (useSearchFilter's removeFilterValue).
+  const unlockContentType = contentType => guardedUnlock(lockedName.value, contentType)
 
   // Same bypass-of-useSearchFilter reasoning as unlockContentType, for the
   // category's own lock (a separate lock namespace under
   // CONTENT_TYPE_CATEGORY_FILTER_NAME, since the category is stored as its
   // own bulk value rather than as N individual contentType entries).
-  const unlockCategory = (category) => {
-    if (toValue(hideLock)) {
-      return
-    }
-    lockedFiltersStore.unlock({ name: categoryLockedName.value, value: category })
-  }
+  const unlockCategory = category => guardedUnlock(categoryLockedName.value, category)
 
   const lockCategory = (category) => {
     lockedFiltersStore.lock({ name: categoryLockedName.value, value: category, label: categoryLabelFor(category) })
