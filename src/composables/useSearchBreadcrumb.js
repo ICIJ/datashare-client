@@ -227,7 +227,11 @@ export function useSearchBreadcrumb() {
       }
       toast.success(t('searchBreadcrumbFormFooter.applyLockedFiltersSuccess'))
     }
-    catch {
+    catch (error) {
+      // Covers both an expected conflict and a genuine bug elsewhere in
+      // applyLockedFilters/refreshRouteFromStart - without this, the two are
+      // indistinguishable from a bug report alone.
+      console.error('Failed to apply locked filters:', error)
       toast.error(t('searchBreadcrumbFormFooter.applyLockedFiltersError'))
     }
   }
