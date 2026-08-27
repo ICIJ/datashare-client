@@ -27,7 +27,7 @@ import { CONTENT_TYPE_CATEGORY_FILTER_NAME } from '@/store/filters/FilterContent
 import FilterText from '@/store/filters/FilterText.js'
 import { PAIRED_DIMENSIONS, getCanonicalDimension, getPairedDimension, getPairedDimensions } from '@/store/filters/pairedDimensions'
 import { useAppStore, useLockedFiltersStore, useRecommendedStore, useSearchStore } from '@/store/modules'
-import { toLockedName } from '@/store/modules/lockedFilters'
+import { parseLockedName, toLockedName } from '@/store/modules/lockedFilters'
 
 let justSubmitted = false
 
@@ -301,8 +301,12 @@ export function useSearchFilter() {
     const instance = castFilter(filter)
     const { name } = instance
     if (!skipUnlock) {
-      const lockedName = lockedNameFor(instance)
-      lockedFiltersStore.unlockWhere(entry => entry.name === lockedName)
+      // Unlock both modes, not just the filter's current one: relockFilterValues
+      // only retags a lock whose value is presently selected, so a lock set on
+      // a value that isn't currently applied survives a mode flip under its
+      // old mode name. Clearing the filter afterwards must still sweep it, the
+      // same "both modes" rule search.js's removeFilter already applies.
+      lockedFiltersStore.unlockWhere(entry => parseLockedName(entry.name).name === name)
     }
     return searchStore.setFilterValue({ name, value: [] })
   }

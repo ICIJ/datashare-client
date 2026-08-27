@@ -950,6 +950,24 @@ describe('useSearchFilter composable', () => {
       expect(lockedFiltersStore.isLocked({ name: 'language', value: 'fr' })).toBe(false)
     })
 
+    it('removeFilterValues unlocks a stale lock left under the opposite mode after a flip', () => {
+      // A locked value that isn't currently selected doesn't get retagged when
+      // the filter's mode flips (relockFilterValues only retags values
+      // presently applied) - clearing the filter afterwards must still sweep
+      // that stale, opposite-mode entry, not just the current mode's, or the
+      // lock is orphaned forever.
+      const { addFilterValue, removeFilterValues, toggleExcludeFilter } = mountComposable()
+      lockedFiltersStore.lock({ name: 'language', value: 'fr', label: 'French' })
+      // 'fr' is never added to the live selection - only 'en' is, and only
+      // 'en' gets retagged by the flip below.
+      addFilterValue({ name: 'language' }, { key: 'en' })
+      toggleExcludeFilter({ name: 'language' }, true)
+
+      removeFilterValues({ name: 'language' })
+
+      expect(lockedFiltersStore.isLocked({ name: 'language', value: 'fr' })).toBe(false)
+    })
+
     it('leaves locks untouched when the store-level resetFilterValues is used directly (Story 4 needs locks to survive "Clear filters")', () => {
       searchStore.addFilterValue({ name: 'language', value: 'en' })
       lockedFiltersStore.lock({ name: 'language', value: 'en', label: 'English' })
