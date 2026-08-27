@@ -99,6 +99,35 @@ export const useLockedFiltersStore = defineStore('lockedFilters', () => {
   }
 
   /**
+   * Groups entries by `name`, rebuilt whenever `entries` changes. A single
+   * facet's `missingLocks` computed reads this once per facet on every
+   * lock/unlock instead of scanning the full, shared `entries` array itself
+   * every time - same O(n)-rebuild-once-per-mutation trade as `indexByKey`.
+   *
+   * @private
+   */
+  const entriesByName = computed(() => {
+    const map = new Map()
+    entries.value.forEach((entry) => {
+      const group = map.get(entry.name) ?? []
+      group.push(entry)
+      map.set(entry.name, group)
+    })
+    return map
+  })
+
+  /**
+   * The locked entries for a given filter name, in O(1).
+   *
+   * @public
+   * @param {string} name - The filter name.
+   * @returns {Array<{ name: string, value: string, label: string }>}
+   */
+  function entriesForName(name) {
+    return entriesByName.value.get(name) ?? []
+  }
+
+  /**
    * Lock a filter value. Upserts: if `{ name, value }` is already locked,
    * its label is updated in place rather than adding a duplicate entry.
    *
@@ -201,6 +230,7 @@ export const useLockedFiltersStore = defineStore('lockedFilters', () => {
     entries,
     count,
     isLocked,
+    entriesForName,
     lock,
     unlock,
     retag,
