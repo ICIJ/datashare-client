@@ -579,21 +579,29 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   /**
    * Remove a filter by its name.
    *
-   * The filter itself is going away, so unlock it under both include and
-   * exclude mode, not just whichever it's currently in - every caller
-   * (FiltersMixin's unregisterFilter, useSearchFilter's removeFilter) routes
-   * through here, so fixing it here covers them all instead of duplicating
-   * the unlock in each one.
+   * The filter itself is going away, so by default unlock it under both
+   * include and exclude mode, not just whichever it's currently in - every
+   * caller (FiltersMixin's unregisterFilter, useSearchFilter's removeFilter)
+   * routes through here, so fixing it here covers them all instead of
+   * duplicating the unlock in each one.
    *
    * @param {string} name - The name of the filter to remove.
+   * @param {object} [options]
+   * @param {boolean} [options.preserveLocks=false] - Skip unlocking. Set by
+   * FiltersMixin's unregisterFilterForProject: a filter unregistered only
+   * because the current project doesn't support it must not purge the
+   * user's personal, cross-project locks - they're meant to survive project
+   * switches, and registerFilter never restores them on re-registration.
    */
-  function removeFilter(name) {
+  function removeFilter(name, { preserveLocks = false } = {}) {
     const i = filters.value.findIndex(({ options }) => options.name === name)
     delete filters.value[i]
     if (name in values.value) {
       delete values.value[name]
     }
-    lockedFiltersStore.unlockWhere(entry => parseLockedName(entry.name).name === name)
+    if (!preserveLocks) {
+      lockedFiltersStore.unlockWhere(entry => parseLockedName(entry.name).name === name)
+    }
   }
 
   /**
