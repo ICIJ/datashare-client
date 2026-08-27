@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, useAttrs } from 'vue'
 import { AppIcon, ButtonIcon } from '@icij/murmur'
 import IPhMagnifyingGlass from '~icons/ph/magnifying-glass'
 import IPhX from '~icons/ph/x'
@@ -89,13 +89,15 @@ const showOperator = computed(() => {
   return props.operator === 'AND' || props.operator === 'OR'
 })
 
-// The lock icon is itself focusable/clickable - nesting it inside a native
-// <button> is invalid HTML and breaks its own keyboard reachability, so a
-// chip that renders one demotes its root to a plain, non-interactive <span>.
-// A chip with no lock icon (locked === null) doesn't have that problem and
-// must stay a native, keyboard-focusable <button>, the default ButtonIcon
-// already renders without any tag/role override.
-const isLockable = computed(() => props.locked !== null)
+// Gated on whether a click listener is actually attached, not on `locked`:
+// `locked` never reaches a query chip (SearchParameter's queryComponentProps
+// doesn't forward it), so a read-only breadcrumb display (saved search,
+// batch search preview) would otherwise always render as a native, focusable
+// <button> with nothing behind it to activate. A chip that does have a
+// listener (DocumentGlobalSearchTermsEntry's clickable term chips) keeps its
+// native <button>, the default ButtonIcon rendering.
+const attrs = useAttrs()
+const isClickable = computed(() => !!attrs.onClick)
 </script>
 
 <template>
@@ -111,8 +113,8 @@ const isLockable = computed(() => props.locked !== null)
     :icon-left-label="iconLabel"
     :icon-right="noXIcon ? null : IPhX"
     icon-right-hover-weight="bold"
-    :tag="isLockable ? 'span' : undefined"
-    :role="isLockable ? 'presentation' : undefined"
+    :tag="isClickable ? undefined : 'span'"
+    :role="isClickable ? undefined : 'presentation'"
     @click:icon-right="emit('click:x')"
   >
     <template

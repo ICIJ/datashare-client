@@ -44,16 +44,27 @@ describe('SearchParameterQueryTerm.vue', () => {
   })
 
   describe('a chip with no lock icon (icij/datashare#2332)', () => {
-    it('stays a native, keyboard-focusable <button> when locked is null', () => {
-      // `locked === null` is the "not lockable" state (plain query chips,
-      // DocumentGlobalSearchTerms' clickable term chips) - only a chip that
-      // actually renders the lock icon needs the span/role="presentation"
-      // workaround for the nested-interactive-element problem.
+    it('stays a native, keyboard-focusable <button> when a click listener is attached', () => {
+      // `locked` never reaches a query chip (SearchParameter's
+      // queryComponentProps doesn't forward it), so it's always null there -
+      // DocumentGlobalSearchTermsEntry's clickable term chips need to stay
+      // real buttons anyway, since a real onClick listener is attached.
       const props = { term: 'foo' }
-      const wrapper = mount(SearchParameterQueryTerm, { global, props })
+      const wrapper = mount(SearchParameterQueryTerm, { global, props, attrs: { onClick: vi.fn() } })
 
       expect(wrapper.element.tagName).toBe('BUTTON')
       expect(wrapper.attributes('role')).not.toBe('presentation')
+    })
+
+    it('is not a focusable <button> when it renders read-only, with no click listener attached', () => {
+      // A read-only breadcrumb display (saved search, batch search preview)
+      // passes neither `locked` nor a click listener - it must not end up as
+      // a focusable button with nothing behind it to activate.
+      const props = { term: 'foo' }
+      const wrapper = mount(SearchParameterQueryTerm, { global, props })
+
+      expect(wrapper.element.tagName).not.toBe('BUTTON')
+      expect(wrapper.attributes('role')).toBe('presentation')
     })
   })
 })
