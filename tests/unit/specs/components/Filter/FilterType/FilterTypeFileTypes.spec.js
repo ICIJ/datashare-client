@@ -1643,6 +1643,30 @@ describe('FilterTypeFileTypes.vue', () => {
       expect(lockedFiltersStore.isLocked({ name: 'contentTypeCategory', value: 'OTHER' })).toBe(true)
     })
 
+    it('transfers a locked category\'s lock to the surviving child when it gets demoted by ticking one of its children', async () => {
+      // Symmetric with the promote-path transfer above: demoting a locked
+      // category (a plain checkbox tick on one of its children, not the lock
+      // button) must not just drop the category's lock - it has to move onto
+      // the one child that stays explicitly selected, or the user's lock
+      // silently disappears.
+      api.getContentTypeCategories.mockResolvedValue({ DOCUMENT: ['application/pdf', 'text/html'] })
+      seedContentTypes(['application/pdf', 'text/html'])
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+
+      const categoryName = wrapper.findAllComponents(ContentTypesCategoryName).find(n => n.props('category') === 'DOCUMENT')
+      await categoryName.vm.$emit('update:locked', true)
+      await flushPromises()
+      expect(lockedFiltersStore.isLocked({ name: 'contentTypeCategory', value: 'DOCUMENT' })).toBe(true)
+
+      const entry = wrapper.findAllComponents(ContentTypesEntry).find(e => e.props('contentType') === 'application/pdf')
+      await entry.vm.$emit('update:model-value', true)
+      await flushPromises()
+
+      expect(lockedFiltersStore.isLocked({ name: 'contentTypeCategory', value: 'DOCUMENT' })).toBe(false)
+      expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'application/pdf' })).toBe(true)
+    })
+
     it('unlocks a locked child when its category is ticked directly from a mixed state', async () => {
       api.getContentTypeCategories.mockResolvedValue({ OTHER: ['text/html', 'text/plain'] })
       seedContentTypes(['text/html', 'text/plain'])

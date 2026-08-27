@@ -5,6 +5,7 @@ import { useSearchFilter } from '@/composables/useSearchFilter'
 import { useContentTypeCategoryLabel } from '@/composables/useContentTypeCategoryLabel'
 import { toLockedName } from '@/store/modules/lockedFilters'
 import { CONTENT_TYPE_CATEGORY_FILTER_NAME } from '@/store/filters/FilterContentTypeCategory'
+import { getDocumentTypeLabel } from '@/utils/utils'
 
 const sameValueSet = (a, b) => isEqual([...a].sort(), [...b].sort())
 
@@ -53,6 +54,12 @@ export function useContentTypeSelection({ filter, categories, hideLock }) {
   const lockCategory = (category) => {
     lockedFiltersStore.lock({ name: categoryLockedName.value, value: category, label: categoryLabelFor(category) })
   }
+
+  const lockContentType = (contentType) => {
+    lockedFiltersStore.lock({ name: lockedName.value, value: contentType, label: getDocumentTypeLabel(contentType) })
+  }
+
+  const isCategoryLocked = category => lockedFiltersStore.isLocked({ name: categoryLockedName.value, value: category })
 
   /**
    * Resolve the static {category: types[]} mapping to a plain object.
@@ -210,7 +217,13 @@ export function useContentTypeSelection({ filter, categories, hideLock }) {
   /**
    * Drop `category` and replace any explicit child it covered with
    * `keepFromCategory`. Shared by demote (keep just the clicked child) and
-   * uncheck-with-stored-category (keep the surviving siblings).
+   * uncheck-with-stored-category (keep the surviving siblings). If the
+   * category itself was locked and exactly one child survives, that lock
+   * transfers to the surviving child rather than being dropped - symmetric
+   * with promoteToCategory's own transfer, otherwise demoting a locked
+   * category (a plain checkbox tick) would silently destroy the user's lock.
+   * With more than one survivor there's no single unambiguous target, so the
+   * category's lock is just released.
    * @param {string} category
    * @param {string[]} keepFromCategory
    * @returns {void}
@@ -218,11 +231,15 @@ export function useContentTypeSelection({ filter, categories, hideLock }) {
   const dropCategoryAnd = (category, keepFromCategory) => {
     const categoryTypes = typesInCategory(category)
     const others = currentContentTypes().filter(value => !categoryTypes.includes(value))
+    const wasLocked = isCategoryLocked(category)
     // Unlock every type this category covered except the ones the caller
     // asks to keep explicit (the clicked child on demote, the surviving
     // siblings on uncheck-with-stored-category).
     categoryTypes.filter(type => !keepFromCategory.includes(type)).forEach(unlockContentType)
     unlockCategory(category)
+    if (wasLocked && keepFromCategory.length === 1) {
+      lockContentType(keepFromCategory[0])
+    }
     writeCategories(without(currentCategories(), category))
     writeContentTypes([...others, ...keepFromCategory])
   }
