@@ -42,4 +42,18 @@ describe('SearchParameterQueryTerm.vue', () => {
       expect(lock.element.parentElement.closest('[role="button"]')).toBeNull()
     })
   })
+
+  describe('a chip with no lock icon (icij/datashare#2332)', () => {
+    it('stays a native, keyboard-focusable <button> when locked is null', () => {
+      // `locked === null` is the "not lockable" state (plain query chips,
+      // DocumentGlobalSearchTerms' clickable term chips) - only a chip that
+      // actually renders the lock icon needs the span/role="presentation"
+      // workaround for the nested-interactive-element problem.
+      const props = { term: 'foo' }
+      const wrapper = mount(SearchParameterQueryTerm, { global, props })
+
+      expect(wrapper.element.tagName).toBe('BUTTON')
+      expect(wrapper.attributes('role')).not.toBe('presentation')
+    })
+  })
 })

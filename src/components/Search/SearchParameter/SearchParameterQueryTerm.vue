@@ -88,6 +88,14 @@ const style = computed(() => {
 const showOperator = computed(() => {
   return props.operator === 'AND' || props.operator === 'OR'
 })
+
+// The lock icon is itself focusable/clickable - nesting it inside a native
+// <button> is invalid HTML and breaks its own keyboard reachability, so a
+// chip that renders one demotes its root to a plain, non-interactive <span>.
+// A chip with no lock icon (locked === null) doesn't have that problem and
+// must stay a native, keyboard-focusable <button>, the default ButtonIcon
+// already renders without any tag/role override.
+const isLockable = computed(() => props.locked !== null)
 </script>
 
 <template>
@@ -103,8 +111,8 @@ const showOperator = computed(() => {
     :icon-left-label="iconLabel"
     :icon-right="noXIcon ? null : IPhX"
     icon-right-hover-weight="bold"
-    tag="span"
-    role="presentation"
+    :tag="isLockable ? 'span' : undefined"
+    :role="isLockable ? 'presentation' : undefined"
     @click:icon-right="emit('click:x')"
   >
     <template
