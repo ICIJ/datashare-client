@@ -159,6 +159,16 @@ describe('FilterTypePath.vue', () => {
       expect(lockedFiltersStore.isLocked({ name: 'path', value: '/data/foo/' })).toBe(false)
     })
 
+    it('does not unlock a deselected path\'s real lock when hideLock is set (icij/datashare#2336)', async () => {
+      lockedFiltersStore.lock({ name: 'path', value: '/data/foo/', label: '/data/foo' })
+      await wrapper.setProps({ hideLock: true })
+      wrapper.vm.selectedPaths = ['/data/foo/']
+
+      wrapper.vm.selectedPaths = []
+
+      expect(lockedFiltersStore.isLocked({ name: 'path', value: '/data/foo/' })).toBe(true)
+    })
+
     it('locks under the "-" prefixed name when the filter is currently excluded', () => {
       searchStore.excludeFilter('path')
       wrapper.vm.selectedPaths = ['/data/foo/']

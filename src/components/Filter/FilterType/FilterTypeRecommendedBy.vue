@@ -58,10 +58,12 @@ function toggleLock(user, locked) {
 const selected = computedFilterValues(props.filter, {
   // computedFilterValues' default setter replaces the whole values array
   // rather than adding/removing one value at a time, bypassing
-  // useSearchFilter's central unlock-on-remove path — unlock explicitly for
+  // useSearchFilter's central unlock-on-remove path - unlock explicitly for
   // any value dropped from the selection, same as FilterTypeStarred.
   set(values) {
-    unlockRemovedValues(lockedFiltersStore, 'recommendedBy', selected.value, values)
+    if (!props.hideLock) {
+      unlockRemovedValues(lockedFiltersStore, 'recommendedBy', selected.value, values)
+    }
     setFilterValue(props.filter, { key: values })
   }
 })
