@@ -1251,7 +1251,12 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * @returns {boolean} - Returns true if the queries are the same, false otherwise.
    */
   function sameAppliedQuery(query = {}, omit = []) {
-    return Object.keys(query).every((key) => {
+    // Union of both sides' keys, not just `query`'s own: a key dropped
+    // entirely from the new query (e.g. a filter removed by navigating to a
+    // different URL) must still be detected as a change, or the caller
+    // never notices the filter set actually shrank.
+    const keys = new Set([...Object.keys(query), ...Object.keys(toRaw(lastAppliedQuery.value))])
+    return [...keys].every((key) => {
       // A single-valued filter round-trips through the URL as a scalar while
       // lastAppliedQuery holds an array, so castArray both sides before
       // comparing. toRaw ensures we are not comparing a reactive proxy.
