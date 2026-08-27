@@ -80,6 +80,20 @@ describe('SearchBar.vue', function () {
     expect(consumeJustSubmitted()).toBe(true)
   })
 
+  it('clears exclude mode when submitting with clearFilters and a different index (icij/datashare#2332)', () => {
+    // mustClearFilters must route through resetFilterValuesPreservingLocks,
+    // not the plain resetFilterValues - the latter never touches
+    // excludeFilters, leaving a stale exclude mode behind after the project
+    // selection changes.
+    searchStore.excludeFilter('contentType')
+    expect(searchStore.excludeFilters).toContain('contentType')
+
+    wrapper = shallowMountFactory({ indices: [indexFoo], clearFilters: true })
+    wrapper.vm.submit()
+
+    expect(searchStore.excludeFilters).not.toContain('contentType')
+  })
+
   describe('search suggestions', () => {
     it('should retrieve suggestions in NamedEntities and tags for default search', async () => {
       wrapper = shallowMountFactory()
