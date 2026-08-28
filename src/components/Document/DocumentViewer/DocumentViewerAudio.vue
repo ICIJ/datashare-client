@@ -11,6 +11,8 @@
       :src="document.inlineFullUrl"
       :type="document.contentType"
       class="audio-viewer__player w-100 d-inline-block"
+      @error="onPlayerError"
+      @canplay="onCanPlay"
     />
     <template #footer>
       <div class="d-lg-flex">
@@ -34,7 +36,7 @@
           </b-form-checkbox>
         </div>
         <b-alert
-          :model-value="cannotPlayAudioFormat"
+          :model-value="cannotPlay"
           variant="warning"
           class="ms-auto mt-3 mb-0 my-lg-auto"
         >
@@ -56,7 +58,7 @@ import { useI18n } from 'vue-i18n'
 import { usePlayerStore } from '@/store/modules/player'
 
 /**
- * Display a preview video of the document.
+ * Display a preview audio of the document.
  */
 export default {
   name: 'DocumentViewerAudio',
@@ -75,17 +77,24 @@ export default {
     const { t } = useI18n()
     return { t }
   },
+  data() {
+    return {
+      cannotPlay: false
+    }
+  },
   computed: {
-    cannotPlayAudioFormat() {
-      return !this.canPlayAudioFormat
-    },
-    canPlayAudioFormat() {
-      return document.createElement('audio').canPlayType(this.document.contentType) !== ''
-    },
     cardVariant() {
-      return this.cannotPlayAudioFormat ? 'warning' : null
+      return this.cannotPlay ? 'warning' : null
     },
     ...mapWritableState(usePlayerStore, ['loop', 'autoplay'])
+  },
+  methods: {
+    onPlayerError(e) {
+      this.cannotPlay = e.target?.error?.code === MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED
+    },
+    onCanPlay() {
+      this.cannotPlay = false
+    }
   }
 }
 </script>
