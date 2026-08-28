@@ -112,8 +112,9 @@ const classList = computed(() => {
   font-variant-numeric: tabular-nums;
   color: var(--bs-secondary-color);
 
+  &--active:not(.path-tree-view-entry-stats--compact),
   &--selected:not(.path-tree-view-entry-stats--compact) {
-    color: var(--bs-white);
+    color: var(--bs-body-color);
   }
 
   &:not(.path-tree-view-entry-stats--compact) {

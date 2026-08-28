@@ -130,19 +130,14 @@ const classList = computed(() => {
     }
   }
 
-  &--active:not(&--no-search-link) &__link {
+  // No :not(&--no-search-link) guard here: --active now also means "selected"
+  // (see PathTreeViewEntry.vue's `active || selected`), and a row being
+  // selected has nothing to do with whether it has a clickable search link.
+  // Hovering (with a search link) is action-navy too, per design — the icon
+  // picks it up via `color: inherit` below, no separate color rule needed.
+  &--active &__link {
     background: var(--bs-action);
     color: var(--bs-white);
-  }
-
-  &--active:not(&--compact):not(&--no-search-link) &__link,
-  &:not(&--compact):not(&--no-search-link) &__link:hover {
-    background: var(--bs-body-bg);
-    color: var(--bs-body-color);
-
-    .path-tree-view-entry-stats-documents__link__icon {
-      color: var(--bs-body-color);
-    }
   }
 
   &:not(&--compact):not(&--no-search-link) &__link:hover {

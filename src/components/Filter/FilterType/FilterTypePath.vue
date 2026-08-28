@@ -165,6 +165,7 @@ watchValues(whenFilterContextualized(props.filter, reloadData))
         no-documents
         no-label
         no-search
+        no-search-link
         no-tree
         select-mode
         multiple
