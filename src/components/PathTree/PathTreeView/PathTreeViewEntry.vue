@@ -264,7 +264,7 @@ function toggleLock(value) {
           :directories="directories"
           :size="size"
           :selected="selected"
-          :active="compactOrInjected ? selected : active"
+          :active="compactOrInjected ? selected : active || selected"
         />
       </div>
     </div>
@@ -374,12 +374,6 @@ function toggleLock(value) {
   &--active.path-tree-view-entry--grid:not(&--no-link) {
     --path-tree-view-entry-bg: var(--bs-secondary-bg-subtle);
     --path-tree-view-entry-header-bg: transparent;
-  }
-
-  &--selected:not(&--compact) > &__header,
-  &--selected:not(&--compact).path-tree-view-entry--active > &__header {
-    --path-tree-view-entry-header-bg: var(--bs-action);
-    --path-tree-view-entry-header-color: var(--bs-white);
   }
 
   & > &__header {
