@@ -13,13 +13,12 @@
         controls
         :autoplay="autoplay"
         :loop="loop"
+        :src="document.inlineFullUrl"
+        :type="document.contentType"
         class="video-viewer__player w-100"
-      >
-        <source
-          :src="document.inlineFullUrl"
-          :type="document.contentType"
-        >
-      </video>
+        @error="onPlayerError"
+        @canplay="onCanPlay"
+      />
     </dismissable-content-warning>
     <template #footer>
       <div class="d-lg-flex">
@@ -43,7 +42,7 @@
           </b-form-checkbox>
         </div>
         <b-alert
-          :model-value="cannotPlayVideoFormat"
+          :model-value="cannotPlay"
           variant="warning"
           class="ms-auto mt-3 mb-0 my-lg-auto"
         >
@@ -91,18 +90,13 @@ export default {
   data() {
     return {
       blurred: true,
-      blurredContent: null
+      blurredContent: null,
+      cannotPlay: false
     }
   },
   computed: {
-    cannotPlayVideoFormat() {
-      return !this.canPlayVideoFormat
-    },
-    canPlayVideoFormat() {
-      return document.createElement('video').canPlayType(this.document.contentType) !== ''
-    },
     cardVariant() {
-      return this.cannotPlayVideoFormat ? 'warning' : null
+      return this.cannotPlay ? 'warning' : null
     },
     ...mapWritableState(usePlayerStore, ['autoplay', 'loop'])
   },
@@ -110,6 +104,14 @@ export default {
     this.blurred = await this.isBlurred(this.document)
     if (this.blurred) {
       this.blurredContent = await this.getBlurredContentBanner(this.document)
+    }
+  },
+  methods: {
+    onPlayerError(e) {
+      this.cannotPlay = e.target?.error?.code === MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED
+    },
+    onCanPlay() {
+      this.cannotPlay = false
     }
   }
 }
