@@ -79,13 +79,15 @@ describe('FilterTypePath.vue', () => {
     expect(wrapper.vm.selectedPaths).toHaveLength(2)
   })
 
-  it('should pre-open ancestor directories of selected paths', async () => {
+  it('should pre-open ancestor directories of selected paths, but not the selected path itself', async () => {
     const key = ['/data/mail/arnold-j/inbox']
     searchStore.setFilterValue(wrapper.vm.filter.itemParam({ key }))
     await flushPromises()
     expect(wrapper.vm.openPaths).toContain('/data/mail')
     expect(wrapper.vm.openPaths).toContain('/data/mail/arnold-j')
-    expect(wrapper.vm.openPaths).toContain('/data/mail/arnold-j/inbox')
+    // Selecting a directory must never auto-expand it — only its caret or
+    // name does that.
+    expect(wrapper.vm.openPaths).not.toContain('/data/mail/arnold-j/inbox')
   })
 
   it('should preserve manually opened paths when selected paths change', async () => {
@@ -96,7 +98,7 @@ describe('FilterTypePath.vue', () => {
     await flushPromises()
     expect(wrapper.vm.openPaths).toContain('/data/other')
     expect(wrapper.vm.openPaths).toContain('/data/mail')
-    expect(wrapper.vm.openPaths).toContain('/data/mail/sub')
+    expect(wrapper.vm.openPaths).not.toContain('/data/mail/sub')
   })
 
   describe('locked filters (icij/datashare#2336)', () => {
