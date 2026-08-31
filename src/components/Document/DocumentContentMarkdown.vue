@@ -323,9 +323,11 @@ watch(toRef(props, 'activeMatch'), activateMatch, { flush: 'post' })
 
 <style lang="scss">
 .document-content-markdown__body {
-  // Off-screen blocks skip layout and paint. Anchor jumps and mark
-  // scrollIntoView still work: the browser renders the target on demand.
-  > * {
+  // Tables and code blocks are the expensive blocks, so only they skip layout
+  // and paint while off screen. Paragraphs lay out normally, which keeps the
+  // scroll offsets an anchor jump or a mark's scrollIntoView lands on accurate.
+  > table,
+  > pre {
     content-visibility: auto;
     contain-intrinsic-size: auto 300px;
   }
