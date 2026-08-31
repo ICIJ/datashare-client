@@ -326,6 +326,28 @@ describe('DocumentContentMarkdown.vue', () => {
     expect(api.getStructurePage).toHaveBeenCalledTimes(1)
   })
 
+  it('leaves a sibling showing another document untouched', async () => {
+    const wrapper = await mountComponent()
+    const other = { index: 'foo', id: `${document.id}-sibling`, routing: 'root-id' }
+    const sibling = await mountComponent({ document: other })
+    expect(sibling.find('h1').exists()).toBe(true)
+    // The sibling's own load must not evict the pages this one is showing
+    expect(wrapper.find('h1').exists()).toBe(true)
+    const firstDocumentCalls = api.getStructurePage.mock.calls.filter(([, id]) => id === document.id)
+    expect(firstDocumentCalls).toHaveLength(1)
+  })
+
+  it('drops a document nobody shows any more once another one is opened', async () => {
+    const wrapper = await mountComponent()
+    wrapper.unmount()
+    const other = { index: 'foo', id: `${document.id}-other`, routing: 'root-id' }
+    const openedNext = await mountComponent({ document: other })
+    openedNext.unmount()
+    await mountComponent()
+    const firstDocumentCalls = api.getStructurePage.mock.calls.filter(([, id]) => id === document.id)
+    expect(firstDocumentCalls).toHaveLength(2)
+  })
+
   it('shows the no-content message rather than an error for a page with no payload', async () => {
     api.getStructurePage.mockResolvedValue(undefined)
     const wrapper = await mountComponent()
