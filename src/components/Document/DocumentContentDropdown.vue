@@ -91,3 +91,12 @@ const scrollParent = useScrollParent({ node: document.body })
     </b-dropdown-item-button>
   </app-dropdown>
 </template>
+
+<style lang="scss">
+// The menu sizes itself to its widest child, so a one-line reason would
+// stretch it to the sentence's full length: cap it and let the text wrap.
+.document-content-dropdown__reason {
+  max-width: 240px;
+  white-space: normal;
+}
+</style>
