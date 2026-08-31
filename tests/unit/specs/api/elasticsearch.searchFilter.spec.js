@@ -79,6 +79,19 @@ describe('elasticsearch searchFilter', () => {
     expect(findTermsClause(body.query, 'contentTypeCategory')).toEqual(['DOCUMENT'])
   })
 
+  it('applies a paired filter own selection as a must_not when excluded', async () => {
+    const values = { contentType: ['application/pdf'], contentTypeCategory: [] }
+    const contentType = bindFilter(new FilterText({ name: 'contentType', key: 'contentType' }), values, { excluded: true })
+
+    const body = await contextualizedBody(contentType, [contentType])
+
+    // Same rule as an unpaired filter (see above): dropping the paired
+    // filter's own must_not here leaves nothing to exclude the value from
+    // the real aggregation, so ES returns a genuine, non-zero bucket for it —
+    // colliding with FilterType's synthetic zero-count row for the same key.
+    expect(body.query.bool.filter.bool.must_not).toContainEqual({ terms: { contentType: ['application/pdf'] } })
+  })
+
   it('leaves the aggregation context unconstrained when not contextualized', async () => {
     const values = { tags: ['bar'] }
     const tags = bindFilter(new FilterText({ name: 'tags', key: 'tags' }), values)
