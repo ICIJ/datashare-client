@@ -84,6 +84,9 @@ export default ({ mode }) => {
       extensions: ['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json', '.vue'],
       alias: {
         'path': 'path-browserify',
+        // Its browser build decodes entities through `document`, which the
+        // markdown worker does not have; the map-based build works everywhere.
+        'decode-named-character-reference': resolve(__dirname, 'node_modules/decode-named-character-reference/index.js'),
         'vue': resolve(__dirname, 'node_modules/vue/dist/vue.esm-bundler.js'),
         '@': resolve(__dirname, './src'),
         '~storybook': resolve('.storybook'),
