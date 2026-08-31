@@ -376,6 +376,13 @@ function toggleLock(value) {
     --path-tree-view-entry-header-bg: transparent;
   }
 
+  // Same token as the hover fill above, kept
+  // deliberately light (not action-navy) since selected/hovered rows must
+  // never force white text over it
+  &--selected:not(&--compact) > &__header {
+    --path-tree-view-entry-header-bg: var(--bs-tertiary-bg-subtle);
+  }
+
   & > &__header {
     border-radius: var(--path-tree-view-entry-header-border-radius);
     padding: var(--path-tree-view-entry-header-padding);
