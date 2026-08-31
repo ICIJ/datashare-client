@@ -248,4 +248,31 @@ describe('DocumentContentMarkdown.vue', () => {
       expect(wrapper.find('h1').exists()).toBe(true)
     })
   })
+
+  it('emits oversized instead of rendering a page bigger than the threshold', async () => {
+    api.getStructurePage.mockResolvedValue('a'.repeat(100))
+    const wrapper = await mountComponent({ oversizedThreshold: 99 })
+    expect(wrapper.emitted('oversized')).toHaveLength(1)
+    expect(wrapper.find('.document-content-markdown__body').exists()).toBe(false)
+  })
+
+  it('does not report an oversized page as empty', async () => {
+    api.getStructurePage.mockResolvedValue('a'.repeat(100))
+    const wrapper = await mountComponent({ oversizedThreshold: 99 })
+    expect(wrapper.emitted('empty')).toBeUndefined()
+  })
+
+  it('renders a page at the threshold exactly', async () => {
+    api.getStructurePage.mockResolvedValue('a'.repeat(99))
+    const wrapper = await mountComponent({ oversizedThreshold: 99 })
+    expect(wrapper.emitted('oversized')).toBeUndefined()
+    expect(wrapper.find('.document-content-markdown__body').exists()).toBe(true)
+  })
+
+  it('renders an oversized page when the reader insists', async () => {
+    api.getStructurePage.mockResolvedValue('# Big page')
+    const wrapper = await mountComponent({ oversizedThreshold: 3, renderOversized: true })
+    expect(wrapper.emitted('oversized')).toBeUndefined()
+    expect(wrapper.find('h1').text()).toBe('Big page')
+  })
 })

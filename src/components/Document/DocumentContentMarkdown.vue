@@ -47,10 +47,26 @@ const props = defineProps({
   globalSearchTerms: {
     type: Array,
     default: () => []
+  },
+  /**
+   * Raw markdown size (in characters) above which a page is not rendered:
+   * the component emits `oversized` and lets the parent decide.
+   */
+  oversizedThreshold: {
+    type: Number,
+    default: 5e5
+  },
+  /**
+   * Render a page even when it exceeds the threshold — the parent sets this
+   * once the reader has explicitly asked for the formatted view again.
+   */
+  renderOversized: {
+    type: Boolean,
+    default: false
   }
 })
 
-const emit = defineEmits(['fallback', 'empty'])
+const emit = defineEmits(['fallback', 'empty', 'oversized'])
 
 const { t } = useI18n()
 const { getTermIndexColor } = useUtils()
@@ -102,8 +118,9 @@ async function loadPage() {
   error.value = null
   loading.value = true
   let loadError = null
+  let status = null
   try {
-    await renderPageOnce()
+    status = await renderPageOnce()
   }
   catch (failure) {
     loadError = failure
@@ -113,9 +130,17 @@ async function loadPage() {
   }
   error.value = loadError
   loading.value = false
-  if (!loadError) {
-    reportEmptyPage()
+  if (loadError) {
+    return
   }
+  // An oversized page is deliberately left unrendered and uncached, so it must
+  // not be mistaken for an empty one: `empty` permanently disables the
+  // formatted option, `oversized` only steers the reader to plain text.
+  if (status === 'oversized') {
+    emit('oversized')
+    return
+  }
+  reportEmptyPage()
 }
 
 // A page can legitimately be blank (a blank cover page in a scanned PDF) without
@@ -139,11 +164,15 @@ async function renderPageOnce() {
   // `in` (rather than a truthiness check) treats an already-cached empty
   // page as a hit instead of re-fetching it on every visit.
   if (targetCacheKey in renderedPages) {
-    return
+    return 'rendered'
   }
   const { index, id, routing } = props.document
   const markdown = await api.getStructurePage(index, id, targetPage, routing)
+  if (markdown.length > props.oversizedThreshold && !props.renderOversized) {
+    return 'oversized'
+  }
   renderedPages[targetCacheKey] = await renderMarkdownOffThread(markdown)
+  return 'rendered'
 }
 
 let lastCook = 0
