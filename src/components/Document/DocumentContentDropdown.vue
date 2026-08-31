@@ -55,6 +55,18 @@ const scrollParent = useScrollParent({ node: document.body })
     :aria-label="t('documentContent.view.ariaLabel')"
     class="document-content-dropdown"
   >
+    <b-dropdown-text
+      v-if="translation"
+      text-class="document-content-dropdown__reason bg-warning-subtle text-warning-emphasis small mb-1 py-2"
+    >
+      {{ t('documentContent.view.translationTooltip') }}
+    </b-dropdown-text>
+    <b-dropdown-text
+      v-else-if="markdownSlow"
+      text-class="document-content-dropdown__reason bg-warning-subtle text-warning-emphasis small mb-1 py-2"
+    >
+      {{ t('documentContent.view.oversizedTooltip') }}
+    </b-dropdown-text>
     <b-dropdown-item-button
       :active="isMarkdownActive"
       :disabled="markdownDisabled || translation"
@@ -77,17 +89,5 @@ const scrollParent = useScrollParent({ node: document.body })
         {{ t('documentContent.view.text') }}
       </span>
     </b-dropdown-item-button>
-    <b-dropdown-text
-      v-if="translation"
-      text-class="document-content-dropdown__reason"
-    >
-      {{ t('documentContent.view.translationTooltip') }}
-    </b-dropdown-text>
-    <b-dropdown-text
-      v-else-if="markdownSlow"
-      text-class="document-content-dropdown__reason"
-    >
-      {{ t('documentContent.view.oversizedTooltip') }}
-    </b-dropdown-text>
   </app-dropdown>
 </template>
