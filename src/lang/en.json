@@ -2028,7 +2028,7 @@
     "clearFilters": "Clear filters",
     "clearQuery": "Clear query",
     "clearFiltersAndQuery": "Clear  filters and query",
-    "unlockFilters": "Clear locks",
+    "unlockFilters": "Unlock filters",
     "applyLockedFilters": "Apply locked filters",
     "applyLockedFiltersDisabled": "All locked filters are already applied",
     "applyLockedFiltersNoLocks": "No locks to apply",
