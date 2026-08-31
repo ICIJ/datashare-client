@@ -460,6 +460,7 @@ describe('DocumentContent.vue', () => {
       expect(wrapper.findComponent({ name: 'DocumentContentMarkdown' }).exists()).toBe(false)
       expect(wrapper.find('div.document-content__body').exists()).toBe(true)
       expect(wrapper.findComponent(DocumentContentDropdown).props('markdownDisabled')).toBe(false)
+      expect(wrapper.findComponent(DocumentContentDropdown).props('markdownSlow')).toBe(true)
     })
 
     it('renders the oversized page for real when the reader flips back to formatted', async () => {

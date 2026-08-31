@@ -273,6 +273,7 @@ function onWorkerError(error) {
     pending.reject(new Error(message))
   })
   pendingRenders.clear()
+  worker.terminate()
   worker = null
 }
 
