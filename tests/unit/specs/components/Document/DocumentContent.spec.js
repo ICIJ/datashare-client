@@ -507,6 +507,37 @@ describe('DocumentContent.vue', () => {
       expect(markdownBody.props('renderOversized')).toBe(false)
     })
 
+    it('keeps the page and the render consent when flipping back to formatted on an unaligned document', async () => {
+      const { document } = await mockDocumentContentSlice('Hello world')
+      const { plugins } = core
+      const wrapper = shallowMount(DocumentContent, { props: { document }, global: { plugins } })
+      await flushPromises()
+      wrapper.vm.markdownPage = 3
+      await flushPromises()
+      wrapper.findComponent({ name: 'DocumentContentMarkdown' }).vm.$emit('oversized')
+      await flushPromises()
+      wrapper.vm.preferMarkdown = true
+      await flushPromises()
+      const markdownBody = wrapper.findComponent({ name: 'DocumentContentMarkdown' })
+      expect(wrapper.vm.markdownPage).toBe(3)
+      expect(markdownBody.props('renderOversized')).toBe(true)
+    })
+
+    it('clears the slow warning once the oversized page actually renders', async () => {
+      const { document } = await mockDocumentContentSlice('Hello world')
+      const { plugins } = core
+      const wrapper = shallowMount(DocumentContent, { props: { document }, global: { plugins } })
+      await flushPromises()
+      wrapper.findComponent({ name: 'DocumentContentMarkdown' }).vm.$emit('oversized')
+      await flushPromises()
+      wrapper.vm.preferMarkdown = true
+      await flushPromises()
+      wrapper.findComponent({ name: 'DocumentContentMarkdown' }).vm.$emit('rendered')
+      await flushPromises()
+      expect(wrapper.findComponent(DocumentContentDropdown).props('markdownSlow')).toBe(false)
+      expect(wrapper.findComponent({ name: 'DocumentContentMarkdown' }).exists()).toBe(true)
+    })
+
     it('paginates by the manifest page count in markdown mode', async () => {
       const { document } = await mockDocumentContentSlice('Hello world')
       const { plugins } = core
