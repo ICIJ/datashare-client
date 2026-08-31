@@ -27,21 +27,33 @@ const html = ref('')
 const error = ref(null)
 const loading = ref(false)
 
+let lastLoad = 0
+
 async function load(document) {
   if (!document) {
     return
   }
+  // Documents can swap while a slow render is in flight: only the newest load
+  // may write, so a stale render cannot overwrite the document now on screen.
+  const loadId = ++lastLoad
   loading.value = true
   error.value = null
   try {
     const source = await fetchSource(document, { responseType: 'text' })
-    html.value = await renderMarkdownOffThread(source)
+    const rendered = await renderMarkdownOffThread(source)
+    if (loadId === lastLoad) {
+      html.value = rendered
+    }
   }
   catch (e) {
-    error.value = e.message
+    if (loadId === lastLoad) {
+      error.value = e.message
+    }
   }
   finally {
-    loading.value = false
+    if (loadId === lastLoad) {
+      loading.value = false
+    }
   }
 }
 

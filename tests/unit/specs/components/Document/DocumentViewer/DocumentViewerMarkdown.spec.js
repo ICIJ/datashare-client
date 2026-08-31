@@ -139,6 +139,32 @@ describe('DocumentViewerMarkdown.vue', () => {
     expect(event.defaultPrevented).toBe(false)
   })
 
+  it('does not let a slow load of a previous document overwrite the current one', async () => {
+    let resolveSlowSource
+    apiInstance.getSource.mockImplementation((document) => {
+      if (document.url === 'slow') {
+        return new Promise((resolve) => {
+          resolveSlowSource = resolve
+        })
+      }
+      return Promise.resolve('# fast')
+    })
+    const { plugins } = CoreSetup.init().useAll()
+    const wrapper = shallowMount(DocumentViewerMarkdown, {
+      global: { plugins },
+      props: { document: { url: 'slow' } }
+    })
+    await wrapper.setProps({ document: { url: 'fast' } })
+    await flushPromises()
+    expect(wrapper.find('.markdown-viewer__content').html()).toContain('fast')
+
+    // The slow document's source resolves only now, after navigation moved on.
+    resolveSlowSource('# slow')
+    await flushPromises()
+    expect(wrapper.find('.markdown-viewer__content').html()).toContain('fast')
+    expect(wrapper.find('.markdown-viewer__content').html()).not.toContain('slow')
+  })
+
   it('shows the generic not-available message for non-404 failures', async () => {
     apiInstance.getSource.mockRejectedValue({ response: { status: 500 } })
     const { plugins } = CoreSetup.init().useAll()
