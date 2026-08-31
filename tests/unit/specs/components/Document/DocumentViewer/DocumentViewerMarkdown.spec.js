@@ -3,6 +3,9 @@ import { shallowMount, flushPromises } from '@vue/test-utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import DocumentViewerMarkdown from '@/components/Document/DocumentViewer/DocumentViewerMarkdown'
 import messages from '@/lang/en.json'
+// The off-thread renderer reaches its inline fallback through a dynamic import;
+// loading the module up front keeps that fallback within one promise flush.
+import '@/utils/markdown'
 
 vi.mock('@/api/apiInstance', () => {
   return {

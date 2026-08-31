@@ -3,7 +3,7 @@ import { ref, useTemplateRef, watch } from 'vue'
 
 import { useDocumentSource } from '@/composables/useDocumentSource'
 import { useMarkdownAnchors } from '@/composables/useMarkdownAnchors'
-import { renderMarkdown } from '@/utils/markdown'
+import { renderMarkdownOffThread } from '@/utils/markdownOffThread'
 
 /**
  * Display a Markdown document as safely-sanitized formatted HTML.
@@ -35,7 +35,7 @@ async function load(document) {
   error.value = null
   try {
     const source = await fetchSource(document, { responseType: 'text' })
-    html.value = await renderMarkdown(source)
+    html.value = await renderMarkdownOffThread(source)
   }
   catch (e) {
     error.value = e.message
