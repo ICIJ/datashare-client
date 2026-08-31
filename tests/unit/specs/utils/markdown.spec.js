@@ -119,6 +119,18 @@ describe('renderMarkdown', () => {
   it('returns an empty string for empty input', async () => {
     expect(await renderMarkdown('')).toBe('')
   })
+
+  it('unwraps links matching the injected base host instead of the window host', async () => {
+    const html = await renderMarkdown('[in-app](https://datashare.example/doc)', { base: 'https://datashare.example/' })
+    expect(html).not.toContain('<a')
+    expect(html).toContain('in-app')
+  })
+
+  it('hardens a window-host link as external when the injected base is another host', async () => {
+    const windowHostUrl = `${window.location.origin}/somewhere`
+    const html = await renderMarkdown(`[away](${windowHostUrl})`, { base: 'https://datashare.example/' })
+    expect(html).toContain('target="_blank"')
+  })
 })
 
 describe('normalizeHeaderlessTables', () => {
