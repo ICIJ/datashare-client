@@ -2,7 +2,7 @@
 import { computed, nextTick, reactive, ref, toRef, useTemplateRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import { addSearchMarksClassInHtml } from '@/utils/strings'
+import { addSearchMarksClassesInHtml } from '@/utils/strings'
 import { renderMarkdownOffThread } from '@/utils/markdownOffThread'
 import { useMarkdownAnchors } from '@/composables/useMarkdownAnchors'
 import { useUtils } from '@/composables/useUtils'
@@ -88,15 +88,18 @@ function cacheKeyFor(page) {
 
 const markedHtml = computed(() => {
   const html = renderedPages[cacheKeyFor(props.page)] ?? ''
-  const locallyMarked = addSearchMarksClassInHtml(html, props.term)
-  // Global marks go on last so they nest inside the local ones, the order the
+  const globalMarks = props.globalSearchTerms.map(({ label }, index) => {
+    const style = `border-color: ${getTermIndexColor(index)}`
+    return { term: label, className: 'global-search-term', style }
+  })
+  // Global marks come after the local one so they nest inside it, the order the
   // `extracted-text` pipeline chain produces for the plain text view. Unlike that
   // chain, a `regex` term is matched literally: this marker walks text nodes so it
-  // never marks inside an href, which a regex over rendered HTML would.
-  return props.globalSearchTerms.reduce((marked, { label }, index) => {
-    const style = `border-color: ${getTermIndexColor(index)}`
-    return addSearchMarksClassInHtml(marked, label, { className: 'global-search-term', style })
-  }, locallyMarked)
+  // never marks inside an href, which a regex over rendered HTML would. All of
+  // them share one parse, so a page the reader forced open past the size
+  // threshold does not pay a full parse per term on every keystroke.
+  const marks = [{ term: props.term, className: 'local-search-term' }, ...globalMarks]
+  return addSearchMarksClassesInHtml(html, marks)
 })
 
 // A legitimately empty structure page renders to an empty string, which is
