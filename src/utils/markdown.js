@@ -267,10 +267,20 @@ function onWorkerMessage({ data: { id, html, error } }) {
   }
 }
 
+function onWorkerError(error) {
+  const message = error?.message || 'Worker initialization failed'
+  pendingRenders.forEach(pending => {
+    pending.reject(new Error(message))
+  })
+  pendingRenders.clear()
+  worker = null
+}
+
 function getWorker() {
   if (!worker) {
     worker = new Worker(new URL('./markdown.worker.js', import.meta.url), { type: 'module' })
     worker.onmessage = onWorkerMessage
+    worker.onerror = onWorkerError
   }
   return worker
 }
