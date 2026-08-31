@@ -280,3 +280,14 @@ watch(toRef(props, 'activeMatch'), activateMatch, { flush: 'post' })
     />
   </div>
 </template>
+
+<style lang="scss">
+.document-content-markdown__body {
+  // Off-screen blocks skip layout and paint. Anchor jumps and mark
+  // scrollIntoView still work: the browser renders the target on demand.
+  > * {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 300px;
+  }
+}
+</style>
