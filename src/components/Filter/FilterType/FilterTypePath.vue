@@ -107,7 +107,7 @@ provide('toggleLockPath', toggleLockPath)
 // Pre-open ancestor directories of selected paths so the tree reveals them
 // immediately instead of requiring manual expansion. getAncestorPaths is
 // self-inclusive (the target path is its own last entry, see usePath.js) -
-// dropped here with slice(-1) since revealing a selected row is not a
+// dropped here with slice(0, -1) since revealing a selected row is not a
 // reason to also auto-expand that row's own children: ticking a directory
 // must never expand it, only its caret or name should.
 watch(selectedPaths, (paths) => {
