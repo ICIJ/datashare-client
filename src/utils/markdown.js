@@ -269,7 +269,7 @@ function onWorkerMessage({ data: { id, html, error } }) {
 
 function onWorkerError(error) {
   const message = error?.message || 'Worker initialization failed'
-  pendingRenders.forEach(pending => {
+  pendingRenders.forEach((pending) => {
     pending.reject(new Error(message))
   })
   pendingRenders.clear()
