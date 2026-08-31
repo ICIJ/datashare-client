@@ -202,20 +202,6 @@ export function addSearchMarksClassesInHtml(html = '', marks = []) {
 }
 
 /**
- * Highlight one term's occurrences inside an HTML string.
- *
- * @param {string} [html=''] - The HTML content to mark.
- * @param {string} [term=''] - The search term.
- * @param {Object} [options={}] - The mark options.
- * @param {string} [options.className='local-search-term'] - Class of the mark tags.
- * @param {string} [options.style=''] - Inline style of the mark tags.
- * @return {string} - The HTML with `<mark>` around matches.
- */
-export function addSearchMarksClassInHtml(html = '', term = '', { className = 'local-search-term', style = '' } = {}) {
-  return addSearchMarksClassesInHtml(html, [{ term, className, style }])
-}
-
-/**
  * Highlight search term occurrences in the given content.
  *
  * @param {string} [content='<div></div>'] - The HTML content to search in.

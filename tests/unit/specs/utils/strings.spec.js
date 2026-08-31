@@ -1,4 +1,6 @@
-import { addLocalSearchMarksClass, addLocalSearchMarksClassByOffsets, isUrl, getConsonants, foldWithSourceIndexes, addSearchMarksClassInHtml, addSearchMarksClassesInHtml } from '@/utils/strings'
+import { addLocalSearchMarksClass, addLocalSearchMarksClassByOffsets, isUrl, getConsonants, foldWithSourceIndexes, addSearchMarksClassesInHtml } from '@/utils/strings'
+
+const addSearchMarksClassInHtml = (html, term, options = {}) => addSearchMarksClassesInHtml(html, [{ term, ...options }])
 
 describe('strings', () => {
   describe('addLocalSearchMarksClass', () => {
@@ -217,7 +219,7 @@ describe('strings', () => {
     })
   })
 
-  describe('addSearchMarksClassInHtml', () => {
+  describe('addSearchMarksClassesInHtml with a single mark', () => {
     it('wraps a case-insensitive match in a mark tag', () => {
       const html = '<p>Hello World</p>'
       const marked = addSearchMarksClassInHtml(html, 'world')
