@@ -1,5 +1,27 @@
+<script>
+import { reactive } from 'vue'
+
+// Module scope, so a Formatted/Plain toggle, which unmounts this component,
+// does not throw away pages already downloaded and rendered. Both are cleared
+// when the document changes, so they stay bounded to one document.
+const renderedPages = reactive({})
+// The markdown of pages the threshold refused to render, kept so consenting to
+// one does not download it a second time.
+const oversizedSources = {}
+let cachedDocumentId = null
+
+function switchPageCacheTo(documentId) {
+  if (cachedDocumentId === documentId) {
+    return
+  }
+  cachedDocumentId = documentId
+  Object.keys(renderedPages).forEach(key => delete renderedPages[key])
+  Object.keys(oversizedSources).forEach(key => delete oversizedSources[key])
+}
+</script>
+
 <script setup>
-import { computed, nextTick, reactive, ref, toRef, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, ref, toRef, useTemplateRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { addSearchMarksClassesInHtml } from '@/utils/strings'
@@ -8,6 +30,7 @@ import { useMarkdownAnchors } from '@/composables/useMarkdownAnchors'
 import { useUtils } from '@/composables/useUtils'
 import { usePipelinesStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
+import settings from '@/utils/settings'
 
 /**
  * Display one markdown structure page of a document, with local search marks.
@@ -50,14 +73,15 @@ const props = defineProps({
   },
   /**
    * Raw markdown size (in characters) above which a page is not rendered:
-   * the component emits `oversized` and lets the parent decide.
+   * the component emits `oversized` and lets the parent decide. The default
+   * lives in `settings.oversizedMarkdownThreshold`.
    */
   oversizedThreshold: {
     type: Number,
-    default: 5e5
+    default: settings.oversizedMarkdownThreshold
   },
   /**
-   * Render a page even when it exceeds the threshold — the parent sets this
+   * Render a page even when it exceeds the threshold: the parent sets this
    * once the reader has explicitly asked for the formatted view again.
    */
   renderOversized: {
@@ -74,7 +98,6 @@ const pipelinesStore = usePipelinesStore()
 const elementRef = useTemplateRef('element')
 const { scrollToAnchor } = useMarkdownAnchors(elementRef)
 
-const renderedPages = reactive({})
 const cookedHtml = ref('')
 const error = ref(null)
 const loading = ref(false)
@@ -123,7 +146,7 @@ async function loadPage() {
   let loadError = null
   let status = null
   try {
-    status = await renderPageOnce()
+    status = await renderPageOnce(load)
   }
   catch (failure) {
     loadError = failure
@@ -158,7 +181,17 @@ function reportEmptyPage() {
   }
 }
 
-async function renderPageOnce() {
+async function fetchPageSource(cacheKey, page) {
+  if (cacheKey in oversizedSources) {
+    const source = oversizedSources[cacheKey]
+    delete oversizedSources[cacheKey]
+    return source
+  }
+  const { index, id, routing } = props.document
+  return api.getStructurePage(index, id, page, routing)
+}
+
+async function renderPageOnce(load) {
   // Capture the page and document once: re-reading `props` after the
   // `await` below could pick up values changed by navigation while this
   // fetch was in flight, and would write the response under the wrong key.
@@ -169,12 +202,18 @@ async function renderPageOnce() {
   if (targetCacheKey in renderedPages) {
     return 'rendered'
   }
-  const { index, id, routing } = props.document
-  const markdown = await api.getStructurePage(index, id, targetPage, routing)
-  if (markdown.length > props.oversizedThreshold && !props.renderOversized) {
+  const markdown = await fetchPageSource(targetCacheKey, targetPage)
+  if ((markdown?.length ?? 0) > props.oversizedThreshold && !props.renderOversized) {
+    oversizedSources[targetCacheKey] = markdown
     return 'oversized'
   }
-  renderedPages[targetCacheKey] = await renderMarkdownOffThread(markdown)
+  const html = await renderMarkdownOffThread(markdown)
+  // A document swap cleared the cache while this render was in flight: writing
+  // now would put an unreachable page back into it.
+  if (load !== lastPageLoad) {
+    return 'stale'
+  }
+  renderedPages[targetCacheKey] = html
   return 'rendered'
 }
 
@@ -214,12 +253,10 @@ function activateMatch() {
 // The page number can stay the same while the document itself changes (both on
 // page 1), and the page can change on its own, so the pair is watched together:
 // two watchers would fire twice and issue the same request twice.
-watch([() => props.page, () => props.document?.id], ([, id], [, previousId]) => {
-  if (id !== previousId) {
-    // Rendered pages are worth keeping while the reader pages through a document,
-    // not once they have left it.
-    Object.keys(renderedPages).forEach(key => delete renderedPages[key])
-  }
+watch([() => props.page, () => props.document?.id], ([, id]) => {
+  // Rendered pages are worth keeping while the reader pages through a document,
+  // not once they have left it.
+  switchPageCacheTo(id)
   loadPage()
 }, { immediate: true })
 watch(markedHtml, cookHtml, { immediate: true })

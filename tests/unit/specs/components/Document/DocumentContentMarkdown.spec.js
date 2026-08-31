@@ -22,13 +22,17 @@ vi.mock('@/api/apiInstance', async (importOriginal) => {
 window.HTMLElement.prototype.scrollIntoView = vi.fn()
 
 describe('DocumentContentMarkdown.vue', () => {
-  const document = { index: 'foo', id: 'doc-id', routing: 'root-id' }
-
   let core
+  let document
+  let nextDocumentId = 0
 
   beforeEach(() => {
     vi.clearAllMocks()
     core = CoreSetup.init().useAll()
+    // The rendered-page cache lives at module scope so it survives the
+    // Formatted/Plain unmount cycle: a distinct document per test keeps the
+    // tests from sharing it.
+    document = { index: 'foo', id: `doc-id-${++nextDocumentId}`, routing: 'root-id' }
     api.getStructurePage.mockResolvedValue('# Hello *world*')
   })
 
@@ -42,7 +46,7 @@ describe('DocumentContentMarkdown.vue', () => {
 
   it('fetches and renders the markdown page as sanitized html', async () => {
     const wrapper = await mountComponent()
-    expect(api.getStructurePage).toBeCalledWith('foo', 'doc-id', 1, 'root-id')
+    expect(api.getStructurePage).toBeCalledWith('foo', document.id, 1, 'root-id')
     expect(wrapper.find('h1').text()).toBe('Hello world')
     expect(wrapper.find('em').text()).toBe('world')
   })
@@ -160,7 +164,7 @@ describe('DocumentContentMarkdown.vue', () => {
     await flushPromises()
     await wrapper.setProps({ document })
     await flushPromises()
-    const firstDocumentCalls = api.getStructurePage.mock.calls.filter(([, id]) => id === 'doc-id')
+    const firstDocumentCalls = api.getStructurePage.mock.calls.filter(([, id]) => id === document.id)
     expect(firstDocumentCalls).toHaveLength(2)
   })
 
@@ -302,5 +306,30 @@ describe('DocumentContentMarkdown.vue', () => {
     const wrapper = await mountComponent({ oversizedThreshold: 3, renderOversized: true })
     expect(wrapper.emitted('oversized')).toBeUndefined()
     expect(wrapper.find('h1').text()).toBe('Big page')
+  })
+
+  it('keeps the rendered page across an unmount, so a view toggle does not refetch', async () => {
+    const wrapper = await mountComponent()
+    wrapper.unmount()
+    const remounted = await mountComponent()
+    expect(remounted.find('h1').text()).toContain('world')
+    expect(api.getStructurePage).toHaveBeenCalledTimes(1)
+  })
+
+  it('renders an oversized page from the payload it already downloaded', async () => {
+    api.getStructurePage.mockResolvedValue('# Big page')
+    const wrapper = await mountComponent({ oversizedThreshold: 3 })
+    expect(wrapper.emitted('oversized')).toHaveLength(1)
+    wrapper.unmount()
+    const remounted = await mountComponent({ oversizedThreshold: 3, renderOversized: true })
+    expect(remounted.find('h1').text()).toBe('Big page')
+    expect(api.getStructurePage).toHaveBeenCalledTimes(1)
+  })
+
+  it('shows the no-content message rather than an error for a page with no payload', async () => {
+    api.getStructurePage.mockResolvedValue(undefined)
+    const wrapper = await mountComponent()
+    expect(wrapper.find('.document-content-markdown__error').exists()).toBe(false)
+    expect(wrapper.text()).toContain('No content extracted for this document')
   })
 })
