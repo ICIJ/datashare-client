@@ -39,8 +39,7 @@ const linkableProtocols = schema.protocols.href.map(protocol => `${protocol}:`)
 // document's author wrote something that is not a URL at all. Authors control
 // this string, and an unparseable one thrown from here would fail the whole
 // document's render rather than the one link.
-function resolveHref(href) {
-  const base = window.location.href
+function resolveHref(href, base) {
   if (!URL.canParse(href, base)) {
     return null
   }
@@ -61,7 +60,9 @@ function unwrapLink(node, index, parent) {
 // reader out of the document they were reading. Same-page (#fragment) links
 // are in-document navigation, and are left alone.
 function rehypeConstrainLinks() {
-  return (tree) => {
+  return (tree, file) => {
+    const base = file.data.base
+    const baseHost = new URL(base).host
     visit(tree, 'element', (node, index, parent) => {
       if (node.tagName !== 'a') {
         return
@@ -70,7 +71,7 @@ function rehypeConstrainLinks() {
       if (typeof href !== 'string' || href.startsWith('#')) {
         return
       }
-      const url = resolveHref(href)
+      const url = resolveHref(href, base)
       // Neither a URL nor a scheme that survives sanitization is a working
       // link: both are treated like the same-host ones below rather than left
       // for the reader to click on in vain.
@@ -80,7 +81,7 @@ function rehypeConstrainLinks() {
       if (!webProtocols.includes(url.protocol)) {
         return
       }
-      if (url.host === window.location.host) {
+      if (url.host === baseHost) {
         return unwrapLink(node, index, parent)
       }
       node.properties.rel = ['noopener', 'noreferrer', 'nofollow']
@@ -231,14 +232,19 @@ export function normalizeHeaderlessTables(source) {
 /**
  * Convert Markdown source to sanitized, safe-to-render HTML.
  *
- * Processing is asynchronous so a large document never blocks the main thread.
+ * The unified pipeline runs synchronously on the calling thread; use
+ * `renderMarkdownOffThread` from a component so a large document does not
+ * freeze the page.
  *
  * @param {string} source - Raw markdown text.
+ * @param {Object} [options={}] - The render options.
+ * @param {string} [options.base=window.location.href] - Page URL that same-host links are unwrapped against.
  * @returns {Promise<string>} Sanitized HTML (empty string for empty input).
  */
-export async function renderMarkdown(source) {
+export async function renderMarkdown(source, { base = window.location.href } = {}) {
   if (!source) {
     return ''
   }
-  return String(await processor.process(normalizeHeaderlessTables(source)))
+  const value = normalizeHeaderlessTables(source)
+  return String(await processor.process({ value, data: { base } }))
 }
