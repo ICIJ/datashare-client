@@ -20,54 +20,54 @@ describe('SearchBreadcrumbFormFooter', () => {
     return wrapper.findAllComponents(ButtonIcon).find(button => button.text().includes(label))
   }
 
-  it('shows "Clear locks" disabled when there are no locked filters, so its position never shifts', () => {
+  it('shows "Unlock filters" disabled when there are no locked filters, so its position never shifts', () => {
     const wrapper = mountFooter({ lockedFiltersCount: 0 })
 
-    expect(findButton(wrapper, 'Clear locks').find('button').element.disabled).toBe(true)
+    expect(findButton(wrapper, 'Unlock filters').find('button').element.disabled).toBe(true)
   })
 
-  it('does not show a "0" badge on "Clear locks" when there are no locked filters', () => {
+  it('does not show a "0" badge on "Unlock filters" when there are no locked filters', () => {
     const wrapper = mountFooter({ lockedFiltersCount: 0 })
 
-    expect(findButton(wrapper, 'Clear locks').props('counter')).toBeNull()
+    expect(findButton(wrapper, 'Unlock filters').props('counter')).toBeNull()
   })
 
-  it('renders "Clear locks" with the current lock count as a badge', () => {
+  it('renders "Unlock filters" with the current lock count as a badge', () => {
     const wrapper = mountFooter({ lockedFiltersCount: 3 })
 
-    const unlockButton = findButton(wrapper, 'Clear locks')
+    const unlockButton = findButton(wrapper, 'Unlock filters')
     expect(unlockButton.props('counter')).toBe(3)
   })
 
-  it('enables "Clear locks" when locked filters exist', () => {
+  it('enables "Unlock filters" when locked filters exist', () => {
     const wrapper = mountFooter({ lockedFiltersCount: 2 })
 
-    expect(findButton(wrapper, 'Clear locks').find('button').element.disabled).toBe(false)
+    expect(findButton(wrapper, 'Unlock filters').find('button').element.disabled).toBe(false)
   })
 
   it('emits unlock:all when the button is clicked', async () => {
     const wrapper = mountFooter({ lockedFiltersCount: 2 })
 
-    await findButton(wrapper, 'Clear locks').trigger('click')
+    await findButton(wrapper, 'Unlock filters').trigger('click')
 
     expect(wrapper.emitted('unlock:all')).toHaveLength(1)
   })
 
   describe('Apply locked filters (icij/datashare#2332)', () => {
-    it('shows "Apply locked filters" alongside "Clear locks" when locks conflict', () => {
+    it('shows "Apply locked filters" alongside "Unlock filters" when locks conflict', () => {
       const wrapper = mountFooter({ lockedFiltersCount: 1, hasConflictingLocks: true })
 
       expect(wrapper.text()).toContain('Apply locked filters')
-      expect(wrapper.text()).toContain('Clear locks')
+      expect(wrapper.text()).toContain('Unlock filters')
     })
 
-    it('places "Apply locked filters" before "Clear locks"', () => {
+    it('places "Apply locked filters" before "Unlock filters"', () => {
       const wrapper = mountFooter({ lockedFiltersCount: 1, hasConflictingLocks: true })
 
       const buttons = wrapper.findAllComponents(ButtonIcon)
       const labels = buttons.map(button => button.text())
       const applyIndex = labels.findIndex(label => label.includes('Apply locked filters'))
-      const unlockIndex = labels.findIndex(label => label.includes('Clear locks'))
+      const unlockIndex = labels.findIndex(label => label.includes('Unlock filters'))
       expect(applyIndex).toBeLessThan(unlockIndex)
     })
 

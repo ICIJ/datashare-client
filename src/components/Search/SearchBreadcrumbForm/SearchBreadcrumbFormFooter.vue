@@ -52,7 +52,7 @@ const applyLockedFiltersDisabledTitle = computed(() => {
 })
 
 // ButtonIcon's counter badge only hides on `null`, not `0` - avoid a "0" badge
-// once "Clear locks" stays visible with no locks (see below).
+// once "Unlock filters" stays visible with no locks (see below).
 const lockedFiltersCounter = computed(() => props.lockedFiltersCount || null)
 </script>
 
