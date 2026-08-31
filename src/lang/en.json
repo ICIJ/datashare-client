@@ -450,6 +450,7 @@
       "markdown": "Formatted",
       "text": "Plain text",
       "translationTooltip": "Translations are only available as plain text",
+      "oversizedTooltip": "The formatted view of this document is very large and may be slow to display",
       "ariaLabel": "Text rendering"
     }
   },

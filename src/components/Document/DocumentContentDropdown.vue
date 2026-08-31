@@ -27,6 +27,14 @@ const props = defineProps({
   translation: {
     type: Boolean,
     default: false
+  },
+  /**
+   * The formatted view exists but is very large: the reader fell back to
+   * plain text and picking Formatted again will render it anyway, slowly.
+   */
+  markdownSlow: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -74,6 +82,12 @@ const scrollParent = useScrollParent({ node: document.body })
       text-class="document-content-dropdown__reason"
     >
       {{ t('documentContent.view.translationTooltip') }}
+    </b-dropdown-text>
+    <b-dropdown-text
+      v-else-if="markdownSlow"
+      text-class="document-content-dropdown__reason"
+    >
+      {{ t('documentContent.view.oversizedTooltip') }}
     </b-dropdown-text>
   </app-dropdown>
 </template>
