@@ -4,6 +4,9 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import DocumentContentMarkdown from '@/components/Document/DocumentContentMarkdown'
 import { usePipelinesStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
+// The off-thread renderer reaches its inline fallback through a dynamic import;
+// loading the module up front keeps that fallback within one promise flush.
+import '@/utils/markdown'
 
 vi.mock('@/api/apiInstance', async (importOriginal) => {
   const { apiInstance } = await importOriginal()

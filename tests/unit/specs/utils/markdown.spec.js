@@ -1,4 +1,4 @@
-import { renderMarkdown, renderMarkdownOffThread, normalizeHeaderlessTables } from '@/utils/markdown'
+import { renderMarkdown, normalizeHeaderlessTables } from '@/utils/markdown'
 
 describe('renderMarkdown', () => {
   it('renders GFM features', async () => {
@@ -310,67 +310,5 @@ describe('renderMarkdown table header stripping', () => {
     expect(firstTable).not.toContain('<thead>')
     expect(secondTable).toContain('<thead>')
     expect(secondTable).toContain('<th>x</th>')
-  })
-})
-
-describe('renderMarkdownOffThread', () => {
-  it('renders inline when the environment has no Worker (jsdom)', async () => {
-    expect(typeof Worker).toBe('undefined')
-    const html = await renderMarkdownOffThread('# Hello')
-    expect(html).toContain('<h1 id="hello">Hello</h1>')
-  })
-
-  // Stubbing Worker caches the fake in the module's singleton, so this test
-  // must stay after every test that relies on the inline fallback above.
-  it('resolves and rejects through the worker protocol', async () => {
-    class FakeWorker {
-      onmessage = null
-
-      postMessage({ id, source }) {
-        const reply = source === 'bad' ? { id, error: 'boom' } : { id, html: `<p>${source}</p>` }
-        queueMicrotask(() => this.onmessage({ data: reply }))
-      }
-    }
-    vi.stubGlobal('Worker', FakeWorker)
-    try {
-      await expect(renderMarkdownOffThread('good')).resolves.toBe('<p>good</p>')
-      await expect(renderMarkdownOffThread('bad')).rejects.toThrow('boom')
-    }
-    finally {
-      vi.unstubAllGlobals()
-    }
-  })
-
-  it('rejects pending renders when the worker fails to initialize', async () => {
-    // Reload the module to clear the cached worker singleton from previous tests
-    vi.resetModules()
-    const markdown = await import('@/utils/markdown')
-    const freshRenderMarkdownOffThread = markdown.renderMarkdownOffThread
-
-    let workerCount = 0
-    class FailingWorker {
-      onerror = null
-
-      constructor() {
-        workerCount++
-      }
-
-      postMessage() {
-        queueMicrotask(() => this.onerror(new Error('worker died')))
-      }
-
-      terminate() {}
-    }
-    vi.stubGlobal('Worker', FailingWorker)
-    try {
-      await expect(freshRenderMarkdownOffThread('test')).rejects.toThrow('worker died')
-      expect(workerCount).toBe(1)
-      // Next call constructs a fresh worker since the previous one was reset to null
-      await expect(freshRenderMarkdownOffThread('retry')).rejects.toThrow('worker died')
-      expect(workerCount).toBe(2)
-    }
-    finally {
-      vi.unstubAllGlobals()
-    }
   })
 })

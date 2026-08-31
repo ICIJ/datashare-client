@@ -3,7 +3,7 @@ import { computed, nextTick, reactive, ref, toRef, useTemplateRef, watch } from 
 import { useI18n } from 'vue-i18n'
 
 import { addSearchMarksClassInHtml } from '@/utils/strings'
-import { renderMarkdownOffThread } from '@/utils/markdown'
+import { renderMarkdownOffThread } from '@/utils/markdownOffThread'
 import { useMarkdownAnchors } from '@/composables/useMarkdownAnchors'
 import { useUtils } from '@/composables/useUtils'
 import { usePipelinesStore } from '@/store/modules'
