@@ -811,10 +811,10 @@
       "autoplay": "Play automatically",
       "loop": "Play in loop",
       "audio": {
-        "unknownFormat": "Unsupported audio format"
+        "unknownFormat": "The browser cannot play this audio format"
       },
       "video": {
-        "unknownFormat": "Unsupported video format"
+        "unknownFormat": "The browser cannot play this video format"
       }
     },
     "attachments": {
