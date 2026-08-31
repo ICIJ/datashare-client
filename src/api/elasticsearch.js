@@ -444,9 +444,14 @@ export function datasharePlugin(Client) {
    * The filters constraining a bucket aggregation when the filter is
    * contextualized.
    *
-   * A paired filter (contentType ↔ contentTypeCategory) drops its own
-   * selection: its buckets would otherwise collapse to the values already
-   * picked, and its sibling keeps constraining the aggregation anyway.
+   * A paired filter (contentType ↔ contentTypeCategory), when included, drops
+   * its own selection: its buckets would otherwise collapse to the values
+   * already picked, and its sibling keeps constraining the aggregation
+   * anyway. When excluded, its own must_not must stay applied instead - same
+   * rule as an unpaired filter below - otherwise its own aggregation is
+   * computed as if the exclusion weren't there, producing a real bucket for
+   * the excluded value that collides with FilterType's synthetic zero-count
+   * row for it
    *
    * Every other filter keeps its own selection, so its buckets describe the
    * current search results, which is what contextualizing is for. Without it,
@@ -457,7 +462,7 @@ export function datasharePlugin(Client) {
    * @returns {Array} The filters to apply to the aggregation body
    */
   Client.prototype._contextFilters = function (filter, filters) {
-    if (getPairedDimension(filter.name)) {
+    if (getPairedDimension(filter.name) && !isFilterExcludedWithValues(filter)) {
       return filters.filter(other => other.name !== filter.name)
     }
     return filters
