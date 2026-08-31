@@ -249,6 +249,12 @@ watch(isMarkdownMode, async (markdown) => {
   }
 })
 
+// Consent to render an oversized page is given for that page, not for the
+// document: the next page gets the size guard again.
+watch(markdownPage, () => {
+  markdownOversized.value = false
+})
+
 // The manifest, the page and the matches all describe one document. The mount
 // probe cannot cover a host that swaps the prop without remounting, so the
 // document identity re-runs it and clears what belonged to the previous one.

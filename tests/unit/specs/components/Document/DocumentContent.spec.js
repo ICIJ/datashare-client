@@ -477,6 +477,21 @@ describe('DocumentContent.vue', () => {
       expect(markdownBody.props('renderOversized')).toBe(true)
     })
 
+    it('drops the oversized state when the reader moves to another page', async () => {
+      const { document } = await mockDocumentContentSlice('Hello world')
+      const { plugins } = core
+      const wrapper = shallowMount(DocumentContent, { props: { document }, global: { plugins } })
+      await flushPromises()
+      wrapper.findComponent({ name: 'DocumentContentMarkdown' }).vm.$emit('oversized')
+      await flushPromises()
+      wrapper.vm.preferMarkdown = true
+      await flushPromises()
+      expect(wrapper.findComponent({ name: 'DocumentContentMarkdown' }).props('renderOversized')).toBe(true)
+      wrapper.vm.markdownPage = 2
+      await flushPromises()
+      expect(wrapper.findComponent({ name: 'DocumentContentMarkdown' }).props('renderOversized')).toBe(false)
+    })
+
     it('drops the oversized state when the document changes', async () => {
       const { document } = await mockDocumentContentSlice('Hello world')
       const { plugins } = core
