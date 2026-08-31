@@ -248,3 +248,48 @@ export async function renderMarkdown(source, { base = window.location.href } = {
   const value = normalizeHeaderlessTables(source)
   return String(await processor.process({ value, data: { base } }))
 }
+
+let worker = null
+let lastRenderId = 0
+const pendingRenders = new Map()
+
+function onWorkerMessage({ data: { id, html, error } }) {
+  const pending = pendingRenders.get(id)
+  pendingRenders.delete(id)
+  if (!pending) {
+    return
+  }
+  if (error === undefined) {
+    pending.resolve(html)
+  }
+  else {
+    pending.reject(new Error(error))
+  }
+}
+
+function getWorker() {
+  if (!worker) {
+    worker = new Worker(new URL('./markdown.worker.js', import.meta.url), { type: 'module' })
+    worker.onmessage = onWorkerMessage
+  }
+  return worker
+}
+
+/**
+ * Render markdown in a shared Web Worker so a large document cannot freeze
+ * the page. Falls back to an inline render where workers do not exist (jsdom).
+ *
+ * @param {string} source - Raw markdown text.
+ * @returns {Promise<string>} Sanitized HTML (empty string for empty input).
+ */
+export function renderMarkdownOffThread(source) {
+  if (typeof Worker === 'undefined') {
+    return renderMarkdown(source)
+  }
+  const id = ++lastRenderId
+  const base = window.location.href
+  return new Promise((resolve, reject) => {
+    pendingRenders.set(id, { resolve, reject })
+    getWorker().postMessage({ id, source, base })
+  })
+}
