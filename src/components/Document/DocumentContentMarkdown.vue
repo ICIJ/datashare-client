@@ -3,7 +3,7 @@ import { computed, nextTick, reactive, ref, toRef, useTemplateRef, watch } from 
 import { useI18n } from 'vue-i18n'
 
 import { addSearchMarksClassInHtml } from '@/utils/strings'
-import { renderMarkdown } from '@/utils/markdown'
+import { renderMarkdownOffThread } from '@/utils/markdown'
 import { useMarkdownAnchors } from '@/composables/useMarkdownAnchors'
 import { useUtils } from '@/composables/useUtils'
 import { usePipelinesStore } from '@/store/modules'
@@ -143,7 +143,7 @@ async function renderPageOnce() {
   }
   const { index, id, routing } = props.document
   const markdown = await api.getStructurePage(index, id, targetPage, routing)
-  renderedPages[targetCacheKey] = await renderMarkdown(markdown)
+  renderedPages[targetCacheKey] = await renderMarkdownOffThread(markdown)
 }
 
 let lastCook = 0
