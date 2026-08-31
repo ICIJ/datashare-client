@@ -62,4 +62,33 @@ describe('PathTreeViewEntry.vue (locked filters, icij/datashare#2336)', () => {
     const wrapper = mountEntry({ pathLockable: true }, { selected: true })
     expect(wrapper.findComponent(ButtonToggleLock).classes()).toContain('above-stretched-link')
   })
+
+  // icij/datashare#2365 review: `active || selected` (added so the badge
+  // reflects selection in non-compact mode) also made hovering paint the
+  // count navy on rows with no search link (the path filter), where the
+  // count is a non-clickable span — a false affordance, and hover became
+  // visually indistinguishable from selected.
+  describe('document-count badge active state (icij/datashare#2365)', () => {
+    function isBadgeActive(wrapper) {
+      return wrapper.find('.path-tree-view-entry-stats-documents').classes()
+        .includes('path-tree-view-entry-stats-documents--active')
+    }
+
+    it('does not go active on hover when there is no search link', async () => {
+      const wrapper = mountEntry(undefined, { selected: false, noStats: false, noSearchLink: true })
+      await wrapper.find('.path-tree-view-entry__header').trigger('mouseenter')
+      expect(isBadgeActive(wrapper)).toBe(false)
+    })
+
+    it('goes active on selection alone when there is no search link', () => {
+      const wrapper = mountEntry(undefined, { selected: true, noStats: false, noSearchLink: true })
+      expect(isBadgeActive(wrapper)).toBe(true)
+    })
+
+    it('still goes active on hover when there is a search link', async () => {
+      const wrapper = mountEntry(undefined, { selected: false, noStats: false, noSearchLink: false })
+      await wrapper.find('.path-tree-view-entry__header').trigger('mouseenter')
+      expect(isBadgeActive(wrapper)).toBe(true)
+    })
+  })
 })

@@ -264,7 +264,7 @@ function toggleLock(value) {
           :directories="directories"
           :size="size"
           :selected="selected"
-          :active="compactOrInjected ? selected : active || selected"
+          :active="compactOrInjected || noSearchLink ? selected : active || selected"
         />
       </div>
     </div>
