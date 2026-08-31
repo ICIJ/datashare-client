@@ -340,4 +340,35 @@ describe('renderMarkdownOffThread', () => {
       vi.unstubAllGlobals()
     }
   })
+
+  it('rejects pending renders when the worker fails to initialize', async () => {
+    // Reload the module to clear the cached worker singleton from previous tests
+    vi.resetModules()
+    const markdown = await import('@/utils/markdown')
+    const freshRenderMarkdownOffThread = markdown.renderMarkdownOffThread
+
+    let workerCount = 0
+    class FailingWorker {
+      onerror = null
+
+      constructor() {
+        workerCount++
+      }
+
+      postMessage() {
+        queueMicrotask(() => this.onerror(new Error('worker died')))
+      }
+    }
+    vi.stubGlobal('Worker', FailingWorker)
+    try {
+      await expect(freshRenderMarkdownOffThread('test')).rejects.toThrow('worker died')
+      expect(workerCount).toBe(1)
+      // Next call constructs a fresh worker since the previous one was reset to null
+      await expect(freshRenderMarkdownOffThread('retry')).rejects.toThrow('worker died')
+      expect(workerCount).toBe(2)
+    }
+    finally {
+      vi.unstubAllGlobals()
+    }
+  })
 })
