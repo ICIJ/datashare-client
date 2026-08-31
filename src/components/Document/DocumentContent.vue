@@ -64,6 +64,10 @@ const preferMarkdown = ref(true)
 // That only shows once its first page comes back empty, so the toggle is built
 // from the manifest and this runtime finding together.
 const isMarkdownEmpty = ref(false)
+// An oversized page already sent the reader to plain text once for this
+// document: the dropdown's "Formatted" entry then becomes their explicit
+// "render anyway", so the child renders it instead of re-emitting.
+const markdownOversized = ref(false)
 const markdownPage = ref(1)
 const markdownMatches = ref([])
 // The term the occurrence counts were computed for. The marks a page renders
@@ -251,6 +255,7 @@ watch(isMarkdownMode, async (markdown) => {
 watch(docId, async () => {
   preferMarkdown.value = true
   isMarkdownEmpty.value = false
+  markdownOversized.value = false
   markdownPage.value = 1
   markdownMatches.value = []
   markdownAppliedTerm.value = ''
@@ -309,6 +314,11 @@ function fallbackToTextForEmptyMarkdown() {
     return
   }
   isMarkdownEmpty.value = true
+  preferMarkdown.value = false
+}
+
+function fallbackToTextForOversizedMarkdown() {
+  markdownOversized.value = true
   preferMarkdown.value = false
 }
 
@@ -638,6 +648,7 @@ async function loadContentSliceAround(desiredOffset) {
           v-if="hasMarkdown"
           v-model="preferMarkdown"
           :markdown-disabled="isMarkdownEmpty"
+          :markdown-slow="markdownOversized"
           :translation="isTranslation"
           class="flex-shrink-0 ms-auto"
         />
@@ -670,8 +681,10 @@ async function loadContentSliceAround(desiredOffset) {
         :term="markdownAppliedTerm"
         :global-search-terms="globalSearchTerms"
         :active-match="activeMarkdownMatch"
+        :render-oversized="markdownOversized"
         @fallback="preferMarkdown = false"
         @empty="fallbackToTextForEmptyMarkdown"
+        @oversized="fallbackToTextForOversizedMarkdown"
       />
       <div
         v-else-if="hasExtractedContent"
