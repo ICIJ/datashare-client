@@ -450,6 +450,47 @@ describe('DocumentContent.vue', () => {
       expect(wrapper.findComponent(DocumentContentDropdown).props('markdownDisabled')).toBe(false)
     })
 
+    it('falls back to plain text on an oversized page, keeping the formatted option available', async () => {
+      const { document } = await mockDocumentContentSlice('Hello world')
+      const { plugins } = core
+      const wrapper = shallowMount(DocumentContent, { props: { document }, global: { plugins } })
+      await flushPromises()
+      wrapper.findComponent({ name: 'DocumentContentMarkdown' }).vm.$emit('oversized')
+      await flushPromises()
+      expect(wrapper.findComponent({ name: 'DocumentContentMarkdown' }).exists()).toBe(false)
+      expect(wrapper.find('div.document-content__body').exists()).toBe(true)
+      expect(wrapper.findComponent(DocumentContentDropdown).props('markdownDisabled')).toBe(false)
+    })
+
+    it('renders the oversized page for real when the reader flips back to formatted', async () => {
+      const { document } = await mockDocumentContentSlice('Hello world')
+      const { plugins } = core
+      const wrapper = shallowMount(DocumentContent, { props: { document }, global: { plugins } })
+      await flushPromises()
+      wrapper.findComponent({ name: 'DocumentContentMarkdown' }).vm.$emit('oversized')
+      await flushPromises()
+      wrapper.vm.preferMarkdown = true
+      await flushPromises()
+      const markdownBody = wrapper.findComponent({ name: 'DocumentContentMarkdown' })
+      expect(markdownBody.exists()).toBe(true)
+      expect(markdownBody.props('renderOversized')).toBe(true)
+    })
+
+    it('drops the oversized state when the document changes', async () => {
+      const { document } = await mockDocumentContentSlice('Hello world')
+      const { plugins } = core
+      const wrapper = shallowMount(DocumentContent, { props: { document }, global: { plugins } })
+      await flushPromises()
+      wrapper.findComponent({ name: 'DocumentContentMarkdown' }).vm.$emit('oversized')
+      await flushPromises()
+      const other = { index: document.index, id: 'other-document-id', routing: 'other-document-id' }
+      await wrapper.setProps({ document: other })
+      await flushPromises()
+      const markdownBody = wrapper.findComponent({ name: 'DocumentContentMarkdown' })
+      expect(markdownBody.exists()).toBe(true)
+      expect(markdownBody.props('renderOversized')).toBe(false)
+    })
+
     it('paginates by the manifest page count in markdown mode', async () => {
       const { document } = await mockDocumentContentSlice('Hello world')
       const { plugins } = core
