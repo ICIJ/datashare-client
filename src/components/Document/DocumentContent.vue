@@ -323,11 +323,6 @@ function fallbackToTextForEmptyMarkdown() {
   preferMarkdown.value = false
 }
 
-function fallbackToTextForOversizedMarkdown() {
-  markdownOversized.value = true
-  preferMarkdown.value = false
-}
-
 // Both paginations describe the same physical pages when their counts match,
 // so the page number survives the toggle; anything else has no page
 // correspondence and goes back to the first page.
@@ -690,7 +685,7 @@ async function loadContentSliceAround(desiredOffset) {
         :render-oversized="markdownOversized"
         @fallback="preferMarkdown = false"
         @empty="fallbackToTextForEmptyMarkdown"
-        @oversized="fallbackToTextForOversizedMarkdown"
+        @oversized="markdownOversized = true; preferMarkdown = false"
       />
       <div
         v-else-if="hasExtractedContent"

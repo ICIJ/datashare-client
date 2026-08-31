@@ -189,9 +189,9 @@ async function loadPage() {
   error.value = null
   loading.value = true
   let loadError = null
-  let status = null
+  let oversized = false
   try {
-    status = await renderPageOnce(load)
+    oversized = await renderPageOnce(load)
   }
   catch (failure) {
     loadError = failure
@@ -208,7 +208,7 @@ async function loadPage() {
   // kept, for the render-anyway path), so it must not be mistaken for an empty
   // one: `empty` permanently disables the formatted option, `oversized` only
   // steers the reader to plain text.
-  if (status === 'oversized') {
+  if (oversized) {
     emit('oversized')
     return
   }
@@ -246,21 +246,22 @@ async function renderPageOnce(load) {
   // `in` (rather than a truthiness check) treats an already-cached empty
   // page as a hit instead of re-fetching it on every visit.
   if (targetCacheKey in renderedPages) {
-    return 'rendered'
+    return false
   }
   const markdown = await fetchPageSource(targetCacheKey, targetPage)
   if ((markdown?.length ?? 0) > props.oversizedThreshold && !props.renderOversized) {
     oversizedSources[targetCacheKey] = markdown
-    return 'oversized'
+    return true
   }
   const html = await renderMarkdownOffThread(markdown)
   // A document swap cleared the cache while this render was in flight: writing
-  // now would put an unreachable page back into it.
+  // now would put an unreachable page back into it. The caller's own staleness
+  // check fires before it reads the returned value.
   if (load !== lastPageLoad) {
-    return 'stale'
+    return false
   }
   renderedPages[targetCacheKey] = html
-  return 'rendered'
+  return false
 }
 
 let lastCook = 0
