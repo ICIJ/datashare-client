@@ -99,4 +99,19 @@ describe('DocumentContentDropdown.vue', () => {
       expect(wrapper.find('.document-content-dropdown__reason').exists()).toBe(false)
     })
   })
+
+  describe('when the formatted view is oversized', () => {
+    it('warns that the formatted view may be slow, keeping both entries reachable', () => {
+      const wrapper = factory({ modelValue: false, markdownSlow: true })
+      const reason = wrapper.find('.document-content-dropdown__reason')
+      expect(reason.text()).toBe('The formatted view of this document is very large and may be slow to display')
+      expect(findMarkdownEntry(wrapper).attributes('disabled')).toBeUndefined()
+    })
+
+    it('lets the translation reason win when both apply', () => {
+      const wrapper = factory({ modelValue: false, markdownSlow: true, translation: true })
+      const reason = wrapper.find('.document-content-dropdown__reason')
+      expect(reason.text()).toBe('Translations are only available as plain text')
+    })
+  })
 })
