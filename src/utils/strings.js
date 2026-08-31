@@ -155,28 +155,7 @@ function wrapTextNodeMatches(node, matches, { className, style }) {
   }
 }
 
-/**
- * Highlight term occurrences inside an HTML string, matching text nodes only
- * (never attributes, never across element boundaries), with the same case and
- * diacritic folding as the backend artifact search.
- *
- * @param {string} [html=''] - The HTML content to mark.
- * @param {string} [term=''] - The search term.
- * @param {Object} [options={}] - The mark options.
- * @param {string} [options.className='local-search-term'] - Class of the mark tags.
- * @param {string} [options.style=''] - Inline style of the mark tags.
- * @return {string} - The HTML with `<mark>` around matches.
- */
-export function addSearchMarksClassInHtml(html = '', term = '', { className = 'local-search-term', style = '' } = {}) {
-  const trimmedTerm = term.trim()
-  if (!trimmedTerm) {
-    return html
-  }
-  const { folded: foldedTerm } = foldWithSourceIndexes(trimmedTerm)
-  if (!foldedTerm) {
-    return html
-  }
-  const parsed = new DOMParser().parseFromString(html, 'text/html')
+function markTermInDocument(parsed, foldedTerm, { className, style }) {
   const walker = parsed.createTreeWalker(parsed.body, NodeFilter.SHOW_TEXT)
   // Collect first: wrapping mutates the tree and would derail a live walker
   const textNodes = []
@@ -186,7 +165,54 @@ export function addSearchMarksClassInHtml(html = '', term = '', { className = 'l
   for (const node of textNodes) {
     wrapTextNodeMatches(node, findFoldedMatches(node.nodeValue, foldedTerm), { className, style })
   }
+}
+
+/**
+ * Highlight occurrences of several terms inside an HTML string in a single
+ * parse, matching text nodes only (never attributes, never across element
+ * boundaries), with the same case and diacritic folding as the backend
+ * artifact search.
+ *
+ * Each spec is applied in order over the same document, so a later term's
+ * marks nest inside the marks an earlier one already placed. A spec whose
+ * term is blank (or folds to nothing) is skipped.
+ *
+ * @param {string} [html=''] - The HTML content to mark.
+ * @param {Object[]} [marks=[]] - The marks to apply, in order.
+ * @param {string} marks[].term - The search term.
+ * @param {string} [marks[].className='local-search-term'] - Class of the mark tags.
+ * @param {string} [marks[].style=''] - Inline style of the mark tags.
+ * @return {string} - The HTML with `<mark>` around matches.
+ */
+export function addSearchMarksClassesInHtml(html = '', marks = []) {
+  const foldedMarks = marks
+    .map(({ term = '', className = 'local-search-term', style = '' }) => {
+      const { folded: foldedTerm } = foldWithSourceIndexes(term.trim())
+      return { foldedTerm, className, style }
+    })
+    .filter(({ foldedTerm }) => !!foldedTerm)
+  if (!foldedMarks.length) {
+    return html
+  }
+  const parsed = new DOMParser().parseFromString(html, 'text/html')
+  for (const { foldedTerm, className, style } of foldedMarks) {
+    markTermInDocument(parsed, foldedTerm, { className, style })
+  }
   return parsed.body.innerHTML
+}
+
+/**
+ * Highlight one term's occurrences inside an HTML string.
+ *
+ * @param {string} [html=''] - The HTML content to mark.
+ * @param {string} [term=''] - The search term.
+ * @param {Object} [options={}] - The mark options.
+ * @param {string} [options.className='local-search-term'] - Class of the mark tags.
+ * @param {string} [options.style=''] - Inline style of the mark tags.
+ * @return {string} - The HTML with `<mark>` around matches.
+ */
+export function addSearchMarksClassInHtml(html = '', term = '', { className = 'local-search-term', style = '' } = {}) {
+  return addSearchMarksClassesInHtml(html, [{ term, className, style }])
 }
 
 /**

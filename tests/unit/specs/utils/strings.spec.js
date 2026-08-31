@@ -1,4 +1,4 @@
-import { addLocalSearchMarksClass, addLocalSearchMarksClassByOffsets, isUrl, getConsonants, foldWithSourceIndexes, addSearchMarksClassInHtml } from '@/utils/strings'
+import { addLocalSearchMarksClass, addLocalSearchMarksClassByOffsets, isUrl, getConsonants, foldWithSourceIndexes, addSearchMarksClassInHtml, addSearchMarksClassesInHtml } from '@/utils/strings'
 
 describe('strings', () => {
   describe('addLocalSearchMarksClass', () => {
@@ -287,6 +287,29 @@ describe('strings', () => {
       expect(() => addSearchMarksClassInHtml('<p>Ⅲi</p>', 'ii')).not.toThrow()
       const marked = addSearchMarksClassInHtml('<p>Ⅲi</p>', 'ii')
       expect(marked.match(/<mark class="local-search-term">/g)).toHaveLength(1)
+    })
+  })
+
+  describe('addSearchMarksClassesInHtml', () => {
+    it('nests the later marks inside the earlier ones, as chained calls did', () => {
+      const html = '<p>lorem ipsum dolor</p>'
+      const marks = [
+        { term: 'ipsum dolor', className: 'local-search-term' },
+        { term: 'dolor', className: 'global-search-term', style: 'border-color: red' }
+      ]
+      const marked = addSearchMarksClassesInHtml(html, marks)
+      const chained = addSearchMarksClassInHtml(
+        addSearchMarksClassInHtml(html, 'ipsum dolor'),
+        'dolor',
+        { className: 'global-search-term', style: 'border-color: red' }
+      )
+      expect(marked).toBe(chained)
+      expect(marked).toContain('<mark class="local-search-term">ipsum <mark class="global-search-term"')
+    })
+
+    it('skips a mark whose term is blank instead of throwing', () => {
+      const marked = addSearchMarksClassesInHtml('<p>lorem ipsum</p>', [{ term: '  ' }, { term: 'ipsum' }])
+      expect(marked).toBe('<p>lorem <mark class="local-search-term">ipsum</mark></p>')
     })
   })
 })
