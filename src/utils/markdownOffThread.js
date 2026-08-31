@@ -34,17 +34,37 @@ function onWorkerMessage({ data: { id, html, error } }) {
   }
 }
 
-// One failure path for every way the worker can die: an error event, a
-// structured-clone failure (messageerror carries no id), or a render that never
-// answers (the browser can kill an OOM worker without any event). A wedged
-// worker blocks its whole queue, so every pending render fails, not just the
-// one that timed out.
+// One failure path for the ways the worker can die without naming a render: an
+// error event, or a structured-clone failure (messageerror carries no id).
+// Nothing says which render broke it, so every pending render fails.
 function failWorker(message) {
   pendingRenders.forEach((pending, id) => {
     settle(id)?.reject(new Error(message))
   })
   worker?.terminate()
   worker = null
+}
+
+// The worker answers in posting order, so the first timer to fire belongs to
+// the render the worker is stuck on (or the browser killed it OOM, without any
+// event). Only that render fails: the queued ones behind it never started, so
+// they are reposted to a fresh worker instead of failing along with it.
+function timeoutRender(id) {
+  settle(id)?.reject(new Error('Markdown worker timed out'))
+  worker?.terminate()
+  worker = null
+  repostPendingRenders()
+}
+
+function repostPendingRenders() {
+  try {
+    pendingRenders.forEach(({ source, base }, id) => {
+      getWorker().postMessage({ id, source, base })
+    })
+  }
+  catch {
+    failWorker('Markdown worker could not be restarted')
+  }
 }
 
 function getWorker() {
@@ -86,8 +106,8 @@ export function renderMarkdownOffThread(source) {
   const id = ++lastRenderId
   const base = window.location.href
   return new Promise((resolve, reject) => {
-    const timer = setTimeout(() => failWorker('Markdown worker timed out'), RENDER_TIMEOUT)
-    pendingRenders.set(id, { resolve, reject, timer })
+    const timer = setTimeout(() => timeoutRender(id), RENDER_TIMEOUT)
+    pendingRenders.set(id, { resolve, reject, timer, source, base })
     try {
       getWorker().postMessage({ id, source, base })
     }

@@ -115,6 +115,50 @@ describe('renderMarkdownOffThread', () => {
     }
   })
 
+  it('fails only the stuck render on timeout and moves the queued ones to a fresh worker', async () => {
+    vi.resetModules()
+    const { renderMarkdownOffThread: freshRenderMarkdownOffThread } = await import('@/utils/markdownOffThread')
+
+    vi.useFakeTimers()
+    const spawned = []
+    class StuckWorker {
+      onmessage = null
+
+      constructor() {
+        spawned.push(this)
+        this.posted = []
+      }
+
+      postMessage(message) {
+        this.posted.push(message)
+      }
+
+      terminate() {}
+    }
+    vi.stubGlobal('Worker', StuckWorker)
+    try {
+      const stuck = freshRenderMarkdownOffThread('stuck')
+      // The timer below rejects this promise before the assertion attaches its
+      // own handler, so a no-op one keeps the rejection from going unhandled.
+      stuck.catch(() => {})
+      // The queued render is requested a moment later, so only the stuck one
+      // reaches its deadline when the clock advances by the render timeout.
+      vi.advanceTimersByTime(10)
+      const queued = freshRenderMarkdownOffThread('queued')
+      vi.advanceTimersByTime(119990)
+      await expect(stuck).rejects.toThrow('Markdown worker timed out')
+      expect(spawned).toHaveLength(2)
+      const [, freshWorker] = spawned
+      const { id } = freshWorker.posted.find(({ source }) => source === 'queued')
+      freshWorker.onmessage({ data: { id, html: '<p>queued</p>' } })
+      await expect(queued).resolves.toBe('<p>queued</p>')
+    }
+    finally {
+      vi.useRealTimers()
+      vi.unstubAllGlobals()
+    }
+  })
+
   it('ignores a late error from a worker that was already replaced', async () => {
     vi.resetModules()
     const { renderMarkdownOffThread: freshRenderMarkdownOffThread } = await import('@/utils/markdownOffThread')
