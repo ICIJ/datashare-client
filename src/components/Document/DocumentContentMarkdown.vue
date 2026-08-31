@@ -122,7 +122,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['fallback', 'empty', 'oversized'])
+const emit = defineEmits(['fallback', 'empty', 'oversized', 'rendered'])
 
 const { t } = useI18n()
 const { getTermIndexColor } = useUtils()
@@ -212,6 +212,10 @@ async function loadPage() {
     emit('oversized')
     return
   }
+  // Tells the parent the page displays fine (a cache hit serves it instantly
+  // from now on), so a "may be slow" warning earned earlier can be cleared even
+  // when no page or document change ever fires the watchers that clear it.
+  emit('rendered')
   reportEmptyPage()
 }
 
@@ -229,9 +233,7 @@ function reportEmptyPage() {
 
 async function fetchPageSource(cacheKey, page) {
   if (cacheKey in oversizedSources) {
-    const source = oversizedSources[cacheKey]
-    delete oversizedSources[cacheKey]
-    return source
+    return oversizedSources[cacheKey]
   }
   const { index, id, routing } = props.document
   return api.getStructurePage(index, id, page, routing)
@@ -261,6 +263,9 @@ async function renderPageOnce(load) {
     return false
   }
   renderedPages[targetCacheKey] = html
+  // Only now has the render actually succeeded: dropping the raw markdown any
+  // earlier would force a failed render's retry to download the page again.
+  delete oversizedSources[targetCacheKey]
   return false
 }
 

@@ -4,9 +4,14 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import DocumentContentMarkdown from '@/components/Document/DocumentContentMarkdown'
 import { usePipelinesStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
+import { renderMarkdownOffThread } from '@/utils/markdownOffThread'
 // The off-thread renderer reaches its inline fallback through a dynamic import;
 // loading the module up front keeps that fallback within one promise flush.
 import '@/utils/markdown'
+
+// Spied rather than replaced: the real renderer still runs, and a single test
+// can make one render fail to exercise the retry path.
+vi.mock('@/utils/markdownOffThread', { spy: true })
 
 vi.mock('@/api/apiInstance', async (importOriginal) => {
   const { apiInstance } = await importOriginal()
@@ -324,6 +329,32 @@ describe('DocumentContentMarkdown.vue', () => {
     const remounted = await mountComponent({ oversizedThreshold: 3, renderOversized: true })
     expect(remounted.find('h1').text()).toBe('Big page')
     expect(api.getStructurePage).toHaveBeenCalledTimes(1)
+  })
+
+  it('keeps the downloaded oversized payload for retry when the forced render fails', async () => {
+    api.getStructurePage.mockResolvedValue('# Big page')
+    const wrapper = await mountComponent({ oversizedThreshold: 3 })
+    expect(wrapper.emitted('oversized')).toHaveLength(1)
+    wrapper.unmount()
+    renderMarkdownOffThread.mockRejectedValueOnce(new Error('worker died'))
+    const remounted = await mountComponent({ oversizedThreshold: 3, renderOversized: true })
+    expect(remounted.find('.document-content-markdown__error').exists()).toBe(true)
+    await remounted.find('.document-content-markdown__error__retry').trigger('click')
+    await flushPromises()
+    await flushPromises()
+    expect(remounted.find('h1').text()).toBe('Big page')
+    expect(api.getStructurePage).toHaveBeenCalledTimes(1)
+  })
+
+  it('emits rendered once the page displays, so the parent can clear its slow warning', async () => {
+    const wrapper = await mountComponent()
+    expect(wrapper.emitted('rendered')).toHaveLength(1)
+  })
+
+  it('does not emit rendered for an oversized page it refused to render', async () => {
+    api.getStructurePage.mockResolvedValue('a'.repeat(100))
+    const wrapper = await mountComponent({ oversizedThreshold: 99 })
+    expect(wrapper.emitted('rendered')).toBeUndefined()
   })
 
   it('leaves a sibling showing another document untouched', async () => {

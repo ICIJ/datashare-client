@@ -325,7 +325,7 @@ function fallbackToTextForEmptyMarkdown() {
 
 // Both paginations describe the same physical pages when their counts match,
 // so the page number survives the toggle; anything else has no page
-// correspondence and goes back to the first page.
+// correspondence, so each side keeps its own last position.
 async function syncPagePosition(markdown) {
   // A translation forces text mode through its own contract (start at offset
   // 0, handled by the targetLanguage watcher): its offsets describe another
@@ -336,7 +336,12 @@ async function syncPagePosition(markdown) {
   }
   const aligned = !!syncedPages.value?.length && syncedPages.value.length === markdownPagesCount.value
   if (markdown) {
-    markdownPage.value = aligned ? pageForOffset(activeContentSliceOffset.value) : 1
+    // An unaligned flip is a mode toggle, not a navigation: a page-1 reset here
+    // would fire the `markdownPage` watcher and silently clear the "render
+    // anyway" consent the reader just gave for the page they were on.
+    if (aligned) {
+      markdownPage.value = pageForOffset(activeContentSliceOffset.value)
+    }
     return
   }
   // The restored page needs its text slice loaded, and going through
@@ -686,6 +691,7 @@ async function loadContentSliceAround(desiredOffset) {
         @fallback="preferMarkdown = false"
         @empty="fallbackToTextForEmptyMarkdown"
         @oversized="markdownOversized = true; preferMarkdown = false"
+        @rendered="markdownOversized = false"
       />
       <div
         v-else-if="hasExtractedContent"
