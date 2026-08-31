@@ -92,6 +92,11 @@ export default ({ mode }) => {
         '~tests': resolve(__dirname, 'tests')
       }
     },
+    // The markdown worker is instantiated with `{ type: 'module' }`; Vite's
+    // default worker format is 'iife', which would disagree with that.
+    worker: {
+      format: 'es'
+    },
     css: {
       preprocessorOptions: {
         scss: {
