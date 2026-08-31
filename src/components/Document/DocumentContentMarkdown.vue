@@ -376,10 +376,12 @@ watch(toRef(props, 'activeMatch'), activateMatch, { flush: 'post' })
 <style lang="scss">
 .document-content-markdown__body {
   // Tables and code blocks are the expensive blocks, so only they skip layout
-  // and paint while off screen. Paragraphs lay out normally, which keeps the
-  // scroll offsets an anchor jump or a mark's scrollIntoView lands on accurate.
-  > table,
-  > pre {
+  // and paint while off screen, however deeply nested (a table in a blockquote
+  // costs as much as a top-level one). Paragraphs lay out normally, which keeps
+  // the scroll offsets an anchor jump or a mark's scrollIntoView lands on
+  // accurate.
+  table,
+  pre {
     content-visibility: auto;
     contain-intrinsic-size: auto 300px;
   }
