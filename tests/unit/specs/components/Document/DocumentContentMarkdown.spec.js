@@ -90,6 +90,31 @@ describe('DocumentContentMarkdown.vue', () => {
     expect(wrapper.find('h1').text()).toBe('Page two')
   })
 
+  it('does not let a superseded fetch overwrite the current page with an oversized result', async () => {
+    let resolvePageOne
+    const pageOnePromise = new Promise((resolve) => {
+      resolvePageOne = resolve
+    })
+    api.getStructurePage.mockImplementation((index, id, page) => {
+      return page === 1 ? pageOnePromise : Promise.resolve('# Page two')
+    })
+    const wrapper = mount(DocumentContentMarkdown, {
+      props: { document, page: 1, oversizedThreshold: 99 },
+      global: { plugins: core.plugins }
+    })
+    await flushPromises()
+    await wrapper.setProps({ page: 2 })
+    await flushPromises()
+    await flushPromises()
+    expect(wrapper.find('h1').text()).toBe('Page two')
+    // Page 1's oversized payload resolves only now, after navigation moved on to page 2
+    resolvePageOne('a'.repeat(100))
+    await flushPromises()
+    await flushPromises()
+    expect(wrapper.emitted('oversized')).toBeUndefined()
+    expect(wrapper.find('h1').text()).toBe('Page two')
+  })
+
   it('fetches an empty page only once across two visits', async () => {
     api.getStructurePage.mockResolvedValue('')
     const wrapper = await mountComponent()

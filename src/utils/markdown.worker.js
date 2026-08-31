@@ -8,6 +8,6 @@ self.onmessage = async ({ data: { id, source, base } }) => {
     self.postMessage({ id, html })
   }
   catch (error) {
-    self.postMessage({ id, error: error.message })
+    self.postMessage({ id, error: String(error?.message ?? error) })
   }
 }

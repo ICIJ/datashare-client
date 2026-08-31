@@ -358,6 +358,8 @@ describe('renderMarkdownOffThread', () => {
       postMessage() {
         queueMicrotask(() => this.onerror(new Error('worker died')))
       }
+
+      terminate() {}
     }
     vi.stubGlobal('Worker', FailingWorker)
     try {
