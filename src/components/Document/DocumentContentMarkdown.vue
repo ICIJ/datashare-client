@@ -2,26 +2,58 @@
 import { reactive } from 'vue'
 
 // Module scope, so a Formatted/Plain toggle, which unmounts this component,
-// does not throw away pages already downloaded and rendered. Both are cleared
-// when the document changes, so they stay bounded to one document.
+// does not throw away pages already downloaded and rendered. Every key is
+// prefixed with its document id, so the caches can hold several documents at
+// once and evict them one at a time.
 const renderedPages = reactive({})
 // The markdown of pages the threshold refused to render, kept so consenting to
 // one does not download it a second time.
 const oversizedSources = {}
-let cachedDocumentId = null
+// How many mounted instances currently show each document id. Instances share
+// these caches, so no instance may drop keys another one is still rendering.
+const shownDocumentIds = new Map()
 
-function switchPageCacheTo(documentId) {
-  if (cachedDocumentId === documentId) {
+function dropDocumentPages(documentId) {
+  const prefix = `${documentId}:`
+  const drop = (cache) => {
+    Object.keys(cache)
+      .filter(key => key.startsWith(prefix))
+      .forEach(key => delete cache[key])
+  }
+  drop(renderedPages)
+  drop(oversizedSources)
+}
+
+// Deferred rather than done on unmount: unmounting is also what a Formatted/
+// Plain toggle does, and those pages are wanted again seconds later. A document
+// nobody shows is dropped once a different one is opened, which is the point at
+// which holding on to it stops paying for itself.
+function dropUnshownDocuments() {
+  for (const [documentId, count] of shownDocumentIds) {
+    if (count > 0) {
+      continue
+    }
+    shownDocumentIds.delete(documentId)
+    dropDocumentPages(documentId)
+  }
+}
+
+function showDocument(documentId) {
+  shownDocumentIds.set(documentId, (shownDocumentIds.get(documentId) ?? 0) + 1)
+  dropUnshownDocuments()
+}
+
+function hideDocument(documentId) {
+  const count = shownDocumentIds.get(documentId)
+  if (count === undefined) {
     return
   }
-  cachedDocumentId = documentId
-  Object.keys(renderedPages).forEach(key => delete renderedPages[key])
-  Object.keys(oversizedSources).forEach(key => delete oversizedSources[key])
+  shownDocumentIds.set(documentId, count - 1)
 }
 </script>
 
 <script setup>
-import { computed, nextTick, ref, toRef, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, onUnmounted, ref, toRef, useTemplateRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { addSearchMarksClassesInHtml } from '@/utils/strings'
@@ -109,6 +141,19 @@ function cacheKeyFor(page) {
   return `${props.document.id}:${page}`
 }
 
+let shownDocumentId = null
+
+function showOnlyDocument(documentId) {
+  if (shownDocumentId === documentId) {
+    return
+  }
+  hideDocument(shownDocumentId)
+  shownDocumentId = documentId
+  showDocument(documentId)
+}
+
+onUnmounted(() => hideDocument(shownDocumentId))
+
 const markedHtml = computed(() => {
   const html = renderedPages[cacheKeyFor(props.page)] ?? ''
   const globalMarks = props.globalSearchTerms.map(({ label }, index) => {
@@ -159,9 +204,10 @@ async function loadPage() {
   if (loadError) {
     return
   }
-  // An oversized page is deliberately left unrendered and uncached, so it must
-  // not be mistaken for an empty one: `empty` permanently disables the
-  // formatted option, `oversized` only steers the reader to plain text.
+  // An oversized page is deliberately left unrendered (only its raw markdown is
+  // kept, for the render-anyway path), so it must not be mistaken for an empty
+  // one: `empty` permanently disables the formatted option, `oversized` only
+  // steers the reader to plain text.
   if (status === 'oversized') {
     emit('oversized')
     return
@@ -255,8 +301,8 @@ function activateMatch() {
 // two watchers would fire twice and issue the same request twice.
 watch([() => props.page, () => props.document?.id], ([, id]) => {
   // Rendered pages are worth keeping while the reader pages through a document,
-  // not once they have left it.
-  switchPageCacheTo(id)
+  // and while any other instance still shows it.
+  showOnlyDocument(id)
   loadPage()
 }, { immediate: true })
 watch(markedHtml, cookHtml, { immediate: true })
