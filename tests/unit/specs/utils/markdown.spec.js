@@ -70,6 +70,19 @@ describe('renderMarkdown', () => {
     expect(html).toContain('doc')
   })
 
+  it('keeps hardening external links when the base is unresolvable', async () => {
+    const html = await renderMarkdown('[x](https://other.example/a)', { base: '' })
+    expect(html).toContain('href="https://other.example/a"')
+    expect(html).toContain('rel="noopener noreferrer nofollow"')
+    expect(html).toContain('target="_blank"')
+  })
+
+  it('unwraps a relative link when the base is unresolvable', async () => {
+    const html = await renderMarkdown('[x](/relative)', { base: '' })
+    expect(html).not.toContain('<a')
+    expect(html).toContain('x')
+  })
+
   it('unlinks an absolute link back to the host serving the app', async () => {
     const html = await renderMarkdown(`[home](${window.location.origin}/some/page)`)
     expect(html).not.toContain('<a')

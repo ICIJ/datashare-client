@@ -61,8 +61,14 @@ function unwrapLink(node, index, parent) {
 // are in-document navigation, and are left alone.
 function rehypeConstrainLinks() {
   return (tree, file) => {
-    const base = file.data.base
-    const baseHost = new URL(base).host
+    // A base that does not parse degrades to "no base at all" rather than
+    // throwing and failing the whole document over one caller's mistake:
+    // absolute hrefs still resolve, relative ones lose their anchor, and a
+    // null host matches nothing so nothing is unwrapped as same-host. Passing
+    // the empty string on as a base would instead break absolute hrefs too.
+    const parsedBase = URL.canParse(file.data.base) ? new URL(file.data.base) : null
+    const base = parsedBase?.href
+    const baseHost = parsedBase?.host ?? null
     visit(tree, 'element', (node, index, parent) => {
       if (node.tagName !== 'a') {
         return
@@ -238,10 +244,10 @@ export function normalizeHeaderlessTables(source) {
  *
  * @param {string} source - Raw markdown text.
  * @param {Object} [options={}] - The render options.
- * @param {string} [options.base=window.location.href] - Page URL that same-host links are unwrapped against.
+ * @param {string} [options.base=globalThis.location?.href] - Page URL that same-host links are unwrapped against.
  * @returns {Promise<string>} Sanitized HTML (empty string for empty input).
  */
-export async function renderMarkdown(source, { base = window.location.href } = {}) {
+export async function renderMarkdown(source, { base = globalThis.location?.href } = {}) {
   if (!source) {
     return ''
   }
