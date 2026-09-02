@@ -17,8 +17,8 @@ selenium-debug.log
 package-lock.json
 
 # Generated files
-src/stories/01-api.mdx 
-src/stories/02-hooks.mdx 
+src/stories/01-api.mdx
+src/stories/02-hooks.mdx
 src/stories/03-widgets.mdx
 
 # Editor directories and files
@@ -44,6 +44,8 @@ src/stories/03-widgets.mdx
 .aider*
 graphify-out/
 docs/superpowers/
+.ralph-tui/
+tasks/
 
 # MSW service worker — regenerated on install via the `msw.workerDirectory`
 # postinstall hook (see package.json). Not edited by hand; do not commit.
