@@ -15,7 +15,7 @@ import { useUrlPageParam } from '@/composables/useUrlPageParam.js'
 import { useAppStore } from '@/store/modules'
 import { NO_ROLE, ROLE_BIT } from '@/enums/roles.js'
 import FormControlSearch from '@/components/Form/FormControl/FormControlSearch.vue'
-import ProjectViewEditUsersCreateModal from '@/views/Project/ProjectView/ProjectViewEdit/ProjectViewEditUsersCreateModal.vue'
+import ProjectViewEditUsersAddModal from '@/views/Project/ProjectView/ProjectViewEdit/ProjectViewEditUsersAddModal.vue'
 import IPhUserPlus from '~icons/ph/user-plus'
 import { apiInstance as api } from '@/api/apiInstance.js'
 import { useWait } from '@/composables/useWait.js'
@@ -79,7 +79,7 @@ function roleForCurrentProject(permissions) {
   if (!recognized.length) return NO_ROLE
   return getHighestRoleFromList(recognized.map(({ v1 }) => ({ role: v1 })))
 }
-const createUserButtonText = computed(() => t('projectViewEdit.users.create.button'))
+const addUserButtonText = computed(() => t('projectViewEdit.users.add.button'))
 const errorMessage = computed(() => t('projectViewEdit.users.fetchError'))
 
 const retrieveUsers = async () => {
@@ -135,8 +135,8 @@ watch(page, () => {
   fetchUsers()
 })
 
-const showCreateModal = ref(false)
-function onUserCreated() {
+const showAddModal = ref(false)
+function onUserAdded() {
   fetchUsers()
 }
 
@@ -174,9 +174,9 @@ onMounted(fetchUsers)
           :icon-left="IPhUserPlus"
           variant="action"
           class=" d-flex "
-          @click="showCreateModal = true"
+          @click="showAddModal = true"
         >
-          {{ createUserButtonText }}
+          {{ addUserButtonText }}
         </button-icon>
       </div>
       <div class="d-flex justify-content-between  flex-grow-1 ">
@@ -192,10 +192,10 @@ onMounted(fetchUsers)
         />
       </div>
     </div>
-    <project-view-edit-users-create-modal
-      v-model="showCreateModal"
+    <project-view-edit-users-add-modal
+      v-model="showAddModal"
       :project="name"
-      @user:created="onUserCreated"
+      @user:added="onUserAdded"
     />
     <project-users-list
       v-model:sort="sort"
