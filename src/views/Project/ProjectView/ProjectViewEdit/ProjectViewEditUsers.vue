@@ -33,7 +33,7 @@ const { isAuthWithUsersProvider } = useAuth()
 const { isInstanceAdmin, getHighestRoleFromList } = usePolicies()
 // Creating a user account is an instance-wide operation (the backend requires INSTANCE_ADMIN),
 // so only expose the control to instance admins.
-const canManageUsers = computed(() => isAuthWithUsersProvider.value && isInstanceAdmin())
+const canManageUsers = computed(() => isAuthWithUsersProvider.value && isInstanceAdmin.value)
 const appStore = useAppStore()
 const { waitFor, isLoading, start, loaderId } = useWait()
 
