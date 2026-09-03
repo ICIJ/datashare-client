@@ -562,6 +562,16 @@ export const routes = [
             }
           },
           {
+            name: 'settings.users',
+            path: 'users',
+            component: () => import('@/views/Settings/SettingsView/SettingsViewUsers'),
+            meta: {
+              title: 'settings.users.title',
+              breadcrumb: false,
+              allowedModes: [MODE_NAME.SERVER]
+            }
+          },
+          {
             name: 'settings.snapshots',
             path: 'snapshots',
             component: () => import('@/views/Settings/SettingsView/SettingsViewSnapshots'),

@@ -1,0 +1,254 @@
+<script setup>
+import { computed, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+import image from '@/assets/images/illustrations/app-modal-default-light.svg'
+import imageDark from '@/assets/images/illustrations/app-modal-default-dark.svg'
+import AppModal from '@/components/AppModal/AppModal.vue'
+import ButtonRowActionDelete from '@/components/Button/ButtonRowAction/ButtonRowActionDelete.vue'
+import DisplayRole from '@/components/Display/DisplayRole.vue'
+import PageTable from '@/components/PageTable/PageTable.vue'
+import PageTableTdActions from '@/components/PageTable/PageTableTdActions.vue'
+import PageTableTh from '@/components/PageTable/PageTableTh.vue'
+import PageTableTr from '@/components/PageTable/PageTableTr.vue'
+import ProjectDropdownSelector from '@/components/Project/ProjectDropdownSelector/ProjectDropdownSelector.vue'
+import ProjectLabel from '@/components/Project/ProjectLabel.vue'
+import ProjectUsersRoleDropdown from '@/components/ProjectUsers/ProjectUsersRoleDropdown.vue'
+
+import { usePolicies } from '@/composables/usePolicies.js'
+import { useCore } from '@/composables/useCore.js'
+import { useToast } from '@/composables/useToast.js'
+import { DEFAULT_ROLE, NO_ROLE, ROLE, ROLE_BIT, ROLE_LOWERCASE } from '@/enums/roles.js'
+
+// The wildcard project casbin uses to represent the instance-wide scope in this UI. Granting there
+// goes through the dedicated PUT/DELETE /api/users/:uid/role endpoint (grantInstanceRole/
+// revokeInstanceRole), not the project-scoped /index/:index one.
+const INSTANCE_SCOPE = '*'
+// Domain stays hardcoded here (no picker) since 'default' is the only domain that exists today;
+// only matters for DOMAIN_ADMIN grants, ignored by the backend for INSTANCE_ADMIN.
+const DEFAULT_DOMAIN = 'default'
+const PROJECT_ROLES = [ROLE.PROJECT_VISITOR, ROLE.PROJECT_MEMBER, ROLE.PROJECT_EDITOR, ROLE.PROJECT_ADMIN]
+const INSTANCE_ROLES = [ROLE.DOMAIN_ADMIN, ROLE.INSTANCE_ADMIN]
+
+const props = defineProps({
+  user: {
+    type: Object,
+    required: true
+  }
+})
+
+const modelValue = defineModel({ type: Boolean })
+const emit = defineEmits(['user:updated'])
+
+const core = useCore()
+const { toast } = useToast()
+const { t } = useI18n()
+const { isInstanceAdmin } = usePolicies()
+
+const permissions = ref([])
+
+// Sync the local permissions list from the user prop whenever the modal is opened for a user.
+watch(() => props.user, user => (permissions.value = user?.permissions ?? []), { immediate: true })
+
+// Each permission is { v1: role, v2: 'domain::project' }. Domain is kept around in the parsed
+// data for completeness, but this UI only ever renders `project` and `role`.
+// Sorted by role rank (instance admin down to visitor), then A-Z within a tier: by domain for a
+// domain-scoped row, by project name otherwise (instance rows are always alone at the top).
+const roles = computed(() =>
+  permissions.value
+    .map(({ v1: role, v2 }) => {
+      const [domain, project] = String(v2).split('::')
+      return { domain, project, role }
+    })
+    .sort((a, b) => {
+      const roleDiff = (ROLE_BIT[b.role] ?? 0) - (ROLE_BIT[a.role] ?? 0)
+      if (roleDiff !== 0) return roleDiff
+      const sortKeyOf = ({ project, domain }) => (project === INSTANCE_SCOPE ? domain : project)
+      return sortKeyOf(a).localeCompare(sortKeyOf(b))
+    })
+)
+
+const assignedProjects = computed(() => new Set(roles.value.map(({ project }) => project)))
+const availableProjects = computed(() => core.projects.filter(({ name }) => !assignedProjects.value.has(name)))
+// Only offer the instance-wide entry if the viewer can actually grant it (redundant today since
+// this whole page is already instance-admin-gated, but keeps this control safe on its own) and
+// it isn't already granted.
+const canGrantInstanceRole = computed(() => isInstanceAdmin.value && !assignedProjects.value.has(INSTANCE_SCOPE))
+// A synthetic "project" so the instance-wide scope can live in the same picker as real projects,
+// first in the list. ProjectThumbnail/ProjectLabel work off name/label alone, no real project
+// record is required.
+const instanceScopeEntry = computed(() => ({ name: INSTANCE_SCOPE, label: t('settings.users.rolesModal.scope.instance') }))
+const projectPickerOptions = computed(() =>
+  canGrantInstanceRole.value ? [instanceScopeEntry.value, ...availableProjects.value] : availableProjects.value
+)
+
+const selectedProject = ref(null)
+const selectedRole = ref(DEFAULT_ROLE)
+const selectedProjectName = computed(() => selectedProject.value?.name ?? null)
+const isInstanceScope = computed(() => selectedProjectName.value === INSTANCE_SCOPE)
+// Project and instance roles are mutually exclusive: a project grant can't be a domain/instance
+// admin (no domain concept in grantUserRole yet, see DEFAULT_DOMAIN elsewhere), and an
+// instance-wide grant can't be a project-level role.
+const hiddenRoles = computed(() => (isInstanceScope.value ? PROJECT_ROLES : INSTANCE_ROLES))
+
+// A grant needs an actual role: NO_ROLE only exists in the list so the dropdown can show the
+// full spectrum (matches ProjectUsersRoleDropdown elsewhere), not to be picked here.
+const canGrant = computed(() => !!selectedProjectName.value && selectedRole.value !== NO_ROLE)
+const saving = ref(false)
+
+// Picking a different scope (project <-> instance) changes which roles are selectable, so reset
+// to that scope's default rather than leaving a now-hidden role selected.
+watch(isInstanceScope, (value) => {
+  selectedRole.value = value ? ROLE.DOMAIN_ADMIN : DEFAULT_ROLE
+})
+
+function resetAddForm() {
+  selectedProject.value = null
+  selectedRole.value = DEFAULT_ROLE
+}
+
+async function refreshUser() {
+  const user = await core.api.getUserByUid(props.user.uid)
+  permissions.value = user?.permissions ?? []
+  emit('user:updated', { uid: props.user.uid })
+}
+
+function isInstanceOrDomainRole(role) {
+  return role === ROLE.DOMAIN_ADMIN || role === ROLE.INSTANCE_ADMIN
+}
+
+async function revokeRole(item) {
+  saving.value = true
+  try {
+    if (isInstanceOrDomainRole(item.role)) {
+      await core.api.revokeInstanceRole(props.user.uid, ROLE_LOWERCASE[item.role], item.domain)
+    }
+    else {
+      await core.api.revokeUserRole(props.user.uid, item.project, { ifExists: true })
+    }
+    toast.success(t('settings.users.rolesModal.revokeSuccess'))
+    await refreshUser()
+  }
+  catch {
+    toast.error(t('settings.users.rolesModal.revokeError'))
+  }
+  finally {
+    saving.value = false
+  }
+}
+
+async function grantRole() {
+  if (!canGrant.value) return
+  saving.value = true
+  try {
+    if (isInstanceScope.value) {
+      await core.api.grantInstanceRole(props.user.uid, ROLE_LOWERCASE[selectedRole.value], DEFAULT_DOMAIN)
+    }
+    else {
+      await core.api.grantUserRole(props.user.uid, selectedProjectName.value, ROLE_LOWERCASE[selectedRole.value])
+    }
+    toast.success(t('settings.users.rolesModal.grantSuccess'))
+    resetAddForm()
+    await refreshUser()
+  }
+  catch {
+    toast.error(t('settings.users.rolesModal.grantError'))
+  }
+  finally {
+    saving.value = false
+  }
+}
+
+defineExpose({
+  roles,
+  availableProjects,
+  projectPickerOptions,
+  canGrantInstanceRole,
+  isInstanceScope,
+  selectedProject,
+  selectedRole,
+  selectedProjectName,
+  canGrant,
+  saving,
+  revokeRole,
+  grantRole
+})
+</script>
+
+<template>
+  <app-modal
+    v-model="modelValue"
+    :image="image"
+    :image-dark="imageDark"
+    :title="t('settings.users.rolesModal.title', { uid: user.uid })"
+    :ok-title="t('settings.users.rolesModal.close')"
+    ok-only
+    ok-variant="outline-secondary"
+    size="lg"
+  >
+    <page-table class="mb-3">
+      <template #thead>
+        <page-table-th :label="t('settings.users.create.fields.project.label')" />
+        <page-table-th :label="t('settings.users.create.fields.role.label')" />
+        <th />
+      </template>
+
+      <page-table-tr>
+        <td>
+          <project-dropdown-selector
+            v-model="selectedProject"
+            :projects="projectPickerOptions"
+          />
+        </td>
+        <td>
+          <project-users-role-dropdown
+            v-model="selectedRole"
+            :project="selectedProjectName ?? ''"
+            :disabled="!selectedProjectName"
+            no-role
+            :hidden-roles="hiddenRoles"
+          />
+        </td>
+        <page-table-td-actions>
+          <button
+            type="button"
+            class="btn btn-primary btn-sm"
+            :disabled="!canGrant || saving"
+            @click.stop="grantRole"
+          >
+            {{ t('settings.users.rolesModal.add') }}
+          </button>
+        </page-table-td-actions>
+      </page-table-tr>
+
+      <page-table-tr
+        v-for="item in roles"
+        :key="`${item.role}-${item.project}`"
+      >
+        <td>
+          <span v-if="item.project === INSTANCE_SCOPE">{{ t('settings.users.rolesModal.scope.instance') }}</span>
+          <project-label
+            v-else
+            :project="item.project"
+          />
+        </td>
+        <td><display-role :value="item.role" /></td>
+        <page-table-td-actions>
+          <button-row-action-delete
+            :disabled="saving"
+            @click.stop="revokeRole(item)"
+          />
+        </page-table-td-actions>
+      </page-table-tr>
+
+      <page-table-tr v-if="!roles.length">
+        <td
+          colspan="3"
+          class="text-secondary small"
+        >
+          {{ t('settings.users.rolesModal.empty') }}
+        </td>
+      </page-table-tr>
+    </page-table>
+  </app-modal>
+</template>

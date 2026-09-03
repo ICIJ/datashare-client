@@ -1335,7 +1335,8 @@
     "stop": "Stop",
     "delete": "Delete",
     "edit": "Edit",
-    "search": "Search"
+    "search": "Search",
+    "manageRoles": "Manage roles"
   },
   "textTruncate": {
     "seeLess": "See less",
@@ -1529,37 +1530,17 @@
           "error": "Failed to remove user. Please try again."
         }
       },
-      "create": {
-        "button": "Create user",
-        "title": "Create a user",
-        "confirm": "Create",
-        "saveSuccess": "User created successfully.",
-        "saveError": "Failed to create user. Please try again.",
-        "saveErrorConflict": "A user with this username already exists.",
+      "add": {
+        "button": "Add user",
+        "title": "Add a user to project",
+        "confirm": "Add",
+        "searchPlaceholder": "Search by username, name or email",
+        "noResults": "No users match your search.",
+        "change": "Change",
+        "saveSuccess": "User added successfully.",
+        "saveError": "Failed to add user. Please try again.",
         "fields": {
-          "username": {
-            "label": "Username",
-            "placeholder": "Type username"
-          },
-          "email": {
-            "label": "Email",
-            "placeholder": "Type email address"
-          },
-          "name": {
-            "label": "Display name",
-            "placeholder": "Type display name"
-          },
-          "password": {
-            "label": "Password",
-            "placeholder": "Type password"
-          },
-          "confirmPassword": {
-            "label": "Confirm password",
-            "placeholder": "Confirm password",
-            "mismatch": "Passwords do not match."
-          },
           "role": {
-            "label": "Role",
             "inProject": "in {project}"
           }
         }
@@ -1703,6 +1684,120 @@
           "button": "Delete",
           "description": "Any applications or scripts using this key will no longer be able to access the Datashare API. You cannot undo this action."
         }
+      }
+    },
+    "users": {
+      "title": "Users",
+      "noAccess": "You do not have access to this page.",
+      "empty": "No users yet.",
+      "noResults": "No users match your search.",
+      "fetchError": "Failed to load users.",
+      "add": {
+        "button": "Create user"
+      },
+      "fields": {
+        "uid": {
+          "label": "Username"
+        },
+        "name": {
+          "label": "Name"
+        },
+        "email": {
+          "label": "Email"
+        },
+        "projects": {
+          "label": "Projects"
+        }
+      },
+      "create": {
+        "title": "Create user",
+        "confirm": "Create user",
+        "saveSuccess": "User created",
+        "saveError": "Failed to create user.",
+        "saveErrorConflict": "This username is already taken.",
+        "grantAccess": "Grant access to a project",
+        "fields": {
+          "username": {
+            "label": "Username",
+            "placeholder": "Username"
+          },
+          "email": {
+            "label": "Email",
+            "placeholder": "Email"
+          },
+          "name": {
+            "label": "Name",
+            "placeholder": "Name"
+          },
+          "password": {
+            "label": "Password",
+            "placeholder": "Password"
+          },
+          "confirmPassword": {
+            "label": "Confirm password",
+            "placeholder": "Confirm password",
+            "mismatch": "Passwords do not match."
+          },
+          "project": {
+            "label": "Project"
+          },
+          "role": {
+            "label": "Role",
+            "inProject": "in {project}"
+          }
+        }
+      },
+      "edit": {
+        "title": "Edit user",
+        "confirm": "Save changes",
+        "saveSuccess": "User updated",
+        "saveError": "Failed to update user.",
+        "resetPassword": "Reset password",
+        "fields": {
+          "name": {
+            "label": "Name",
+            "placeholder": "Name"
+          },
+          "email": {
+            "label": "Email",
+            "placeholder": "Email"
+          },
+          "password": {
+            "label": "Password",
+            "placeholder": "Password"
+          },
+          "confirmPassword": {
+            "label": "Confirm password",
+            "placeholder": "Confirm password",
+            "mismatch": "Passwords do not match."
+          }
+        }
+      },
+      "deleteModal": {
+        "title": "Delete user '{name}' ?",
+        "body": {
+          "intro": "This action cannot be undone. Deleting this account will:",
+          "rolesRevoked": "remove all of their project role grants;",
+          "dataDeleted": "delete all their personal data (stars, history, tags, saved searches etc.) across all projects;",
+          "tasksDeleted": "not delete their tasks and results."
+        },
+        "confirm": "Delete user",
+        "success": "User deleted successfully",
+        "error": "Failed to remove user. Please try again."
+      },
+      "rolesModal": {
+        "title": "Manage roles for {uid}",
+        "close": "Close",
+        "empty": "This user has no project role grants yet.",
+        "scope": {
+          "project": "Project",
+          "instance": "Instance"
+        },
+        "add": "Add",
+        "revokeSuccess": "Role revoked",
+        "revokeError": "Failed to revoke this role.",
+        "grantSuccess": "Role granted",
+        "grantError": "Failed to grant this role."
       }
     },
     "snapshots": {
@@ -1997,6 +2092,9 @@
   },
   "projectDropdownSelectorAll": {
     "label": "All projects"
+  },
+  "projectDropdownSelectorButtonContent": {
+    "placeholder": "Select a project"
   },
   "pathViewEntryMore": {
     "label": "No more directories | Show 1 more directory | Show {nextPageSize} of {directoriesLeft} more directories"
