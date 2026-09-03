@@ -150,6 +150,11 @@ describe('SettingsViewUsersRolesModal.vue', () => {
     expect(mockToast.success).toHaveBeenCalledOnce()
   })
 
+  it('defaults the role to no role, forcing an explicit pick', () => {
+    const wrapper = mountComponent()
+    expect(wrapper.vm.selectedRole).toBe('NO_ROLE')
+  })
+
   it('does not grant a role when no project is selected', async () => {
     const wrapper = mountComponent()
     await wrapper.vm.grantRole()
@@ -169,6 +174,7 @@ describe('SettingsViewUsersRolesModal.vue', () => {
     mockApi.grantUserRole.mockRejectedValue(new Error('nope'))
     const wrapper = mountComponent()
     wrapper.vm.selectedProject = { name: 'project-c' }
+    wrapper.vm.selectedRole = 'PROJECT_MEMBER'
     await wrapper.vm.grantRole()
     expect(mockApi.getUserByUid).not.toHaveBeenCalled()
     expect(wrapper.emitted('user:updated')).toBeFalsy()
@@ -217,14 +223,14 @@ describe('SettingsViewUsersRolesModal.vue', () => {
       expect(wrapper.vm.projectPickerOptions[0]).toEqual({ name: '*', label: 'Instance' })
     })
 
-    it('picking the instance entry from the project picker targets the wildcard project and defaults to domain admin', async () => {
+    it('picking the instance entry from the project picker targets the wildcard project and resets to no role', async () => {
       const wrapper = mountComponent()
       wrapper.vm.selectedProject = { name: '*' }
       await wrapper.vm.$nextTick()
       expect(wrapper.vm.selectedProjectName).toBe('*')
       expect(wrapper.vm.isInstanceScope).toBe(true)
-      expect(wrapper.vm.selectedRole).toBe('DOMAIN_ADMIN')
-      expect(wrapper.vm.canGrant).toBe(true)
+      expect(wrapper.vm.selectedRole).toBe('NO_ROLE')
+      expect(wrapper.vm.canGrant).toBe(false)
     })
 
     it('grants an instance-wide role via grantInstanceRole, not the project-scoped endpoint', async () => {

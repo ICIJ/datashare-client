@@ -18,10 +18,10 @@ import ProjectUsersRoleDropdown from '@/components/ProjectUsers/ProjectUsersRole
 import { usePolicies } from '@/composables/usePolicies.js'
 import { useCore } from '@/composables/useCore.js'
 import { useToast } from '@/composables/useToast.js'
-import { DEFAULT_ROLE, NO_ROLE, ROLE, ROLE_BIT, ROLE_LOWERCASE } from '@/enums/roles.js'
+import { NO_ROLE, ROLE, ROLE_BIT, ROLE_LOWERCASE } from '@/enums/roles.js'
 
 // The wildcard project casbin uses to represent the instance-wide scope in this UI. Granting there
-// goes through the dedicated PUT/DELETE /api/users/:uid/role endpoint (grantInstanceRole/
+// goes through the dedicated PUT/DELETE /api/users/admin/:uid/role endpoint (grantInstanceRole/
 // revokeInstanceRole), not the project-scoped /index/:index one.
 const INSTANCE_SCOPE = '*'
 // Domain stays hardcoded here (no picker) since 'default' is the only domain that exists today;
@@ -83,7 +83,9 @@ const projectPickerOptions = computed(() =>
 )
 
 const selectedProject = ref(null)
-const selectedRole = ref(DEFAULT_ROLE)
+// Default to no role: force an explicit pick rather than silently pre-selecting one, since
+// granting a role is a deliberate action.
+const selectedRole = ref(NO_ROLE)
 const selectedProjectName = computed(() => selectedProject.value?.name ?? null)
 const isInstanceScope = computed(() => selectedProjectName.value === INSTANCE_SCOPE)
 // Project and instance roles are mutually exclusive: a project grant can't be a domain/instance
@@ -91,20 +93,20 @@ const isInstanceScope = computed(() => selectedProjectName.value === INSTANCE_SC
 // instance-wide grant can't be a project-level role.
 const hiddenRoles = computed(() => (isInstanceScope.value ? PROJECT_ROLES : INSTANCE_ROLES))
 
-// A grant needs an actual role: NO_ROLE only exists in the list so the dropdown can show the
-// full spectrum (matches ProjectUsersRoleDropdown elsewhere), not to be picked here.
+// A grant needs an actual role picked; NO_ROLE is the unselected/default state.
 const canGrant = computed(() => !!selectedProjectName.value && selectedRole.value !== NO_ROLE)
 const saving = ref(false)
 
-// Picking a different scope (project <-> instance) changes which roles are selectable, so reset
-// to that scope's default rather than leaving a now-hidden role selected.
-watch(isInstanceScope, (value) => {
-  selectedRole.value = value ? ROLE.DOMAIN_ADMIN : DEFAULT_ROLE
+// Picking a different scope (project <-> instance) changes which roles are selectable, so a
+// role selected for the previous scope may no longer be valid: reset to no role rather than
+// leaving a now-hidden one selected.
+watch(isInstanceScope, () => {
+  selectedRole.value = NO_ROLE
 })
 
 function resetAddForm() {
   selectedProject.value = null
-  selectedRole.value = DEFAULT_ROLE
+  selectedRole.value = NO_ROLE
 }
 
 async function refreshUser() {
