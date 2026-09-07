@@ -193,6 +193,25 @@ describe('SearchStore async search wiring', () => {
       expect(searchDocsSpy).not.toHaveBeenCalled()
     })
 
+    it('tells the synchronous search it runs against OpenSearch', async () => {
+      isOpenSearchMock.mockResolvedValue(true)
+
+      await searchStore.query('alpha')
+
+      const [searchParams] = searchDocsSpy.mock.calls[0]
+      expect(searchParams.isOpenSearch).toBe(true)
+    })
+
+    it('builds the async search body with the Elasticsearch offset field', async () => {
+      runAsyncSearchMock.mockResolvedValue(emptyResponse())
+      const buildSpy = vi.spyOn(api.elasticsearch, 'buildSearchDocsBody')
+
+      await searchStore.query('alpha')
+
+      const [searchParams] = buildSpy.mock.calls[0]
+      expect(searchParams.isOpenSearch).toBe(false)
+    })
+
     it('treats a cancelled synchronous search as an abort, not an error', async () => {
       isOpenSearchMock.mockResolvedValue(true)
       // The transport rejects with its own error on abort, never an AbortError.

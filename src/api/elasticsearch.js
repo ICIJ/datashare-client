@@ -24,27 +24,37 @@ const PREFERENCE = Object.freeze({
   MAX_EXTRACTION_DATE: 'max-extraction-date-by-project'
 })
 
-// Highlight configuration for search results.
-// `max_analyzed_offset` caps how far into long fields the highlighter analyzes,
-// preventing shard failures on docs whose content exceeds the index's
+// Caps how far into long fields the highlighter analyzes, preventing shard
+// failures on docs whose content exceeds the index's
 // `index.highlight.max_analyzed_offset` limit (default 1,000,000).
-const HIGHLIGHT_CONFIG = Object.freeze({
-  max_analyzed_offset: 999999,
-  fields: {
-    'content': {
-      fragment_size: 280,
-      number_of_fragments: 2,
-      pre_tags: ['<mark>'],
-      post_tags: ['</mark>']
-    },
-    'content_translated.content': {
-      fragment_size: 280,
-      number_of_fragments: 2,
-      pre_tags: ['<mark>'],
-      post_tags: ['</mark>']
-    }
+const HIGHLIGHT_MAX_OFFSET = 999999
+
+const HIGHLIGHT_FIELDS = Object.freeze({
+  'content': {
+    fragment_size: 280,
+    number_of_fragments: 2,
+    pre_tags: ['<mark>'],
+    post_tags: ['</mark>']
+  },
+  'content_translated.content': {
+    fragment_size: 280,
+    number_of_fragments: 2,
+    pre_tags: ['<mark>'],
+    post_tags: ['</mark>']
   }
 })
+
+/**
+ * Highlight configuration for search results. OpenSearch names the offset
+ * option `max_analyzer_offset` and rejects the Elasticsearch spelling with a
+ * 400 (icij/datashare#2383), even though both share the index setting name.
+ * @param {boolean} [isOpenSearch=false] - Whether the index is an OpenSearch distribution
+ * @returns {Object} The highlight option for the search body
+ */
+function highlightConfig(isOpenSearch = false) {
+  const offsetField = isOpenSearch ? 'max_analyzer_offset' : 'max_analyzed_offset'
+  return { [offsetField]: HIGHLIGHT_MAX_OFFSET, fields: HIGHLIGHT_FIELDS }
+}
 
 /**
  * Normalizes a query string, returning the default query for empty values.
@@ -211,7 +221,8 @@ export function datasharePlugin(Client) {
     perPage = 25,
     sort = { _score: { order: 'desc' } },
     fields = [],
-    operator = SEARCH_OPERATORS.OR
+    operator = SEARCH_OPERATORS.OR,
+    isOpenSearch = false
   } = {}) {
     return this._buildSearchBody({
       query: normalizeQuery(query),
@@ -220,7 +231,8 @@ export function datasharePlugin(Client) {
       from,
       size: perPage,
       sort,
-      operator
+      operator,
+      isOpenSearch
     })
   }
 
@@ -234,6 +246,7 @@ export function datasharePlugin(Client) {
    * @param {number} [options.perPage=25] - Number of results per page
    * @param {Object} [options.sort] - Sort configuration
    * @param {string[]} [options.fields=[]] - Fields to search in
+   * @param {boolean} [options.isOpenSearch=false] - Whether the index is an OpenSearch distribution
    * @returns {Promise<Object>} Search results
    */
   Client.prototype.searchDocs = function (options, { signal } = {}) {
@@ -555,9 +568,10 @@ export function datasharePlugin(Client) {
    * @param {number} options.size - Number of results
    * @param {Object} options.sort - Sort configuration
    * @param {string} options.operator - Default search operator for the query string (AND or OR)
+   * @param {boolean} options.isOpenSearch - Whether the index is an OpenSearch distribution
    * @returns {Object} The built search body
    */
-  Client.prototype._buildSearchBody = function ({ query, filters, fields, from, size, sort, operator }) {
+  Client.prototype._buildSearchBody = function ({ query, filters, fields, from, size, sort, operator, isOpenSearch }) {
     const body = bodybuilder()
 
     // Apply filters (handles paired-dimension OR combine)
@@ -579,7 +593,7 @@ export function datasharePlugin(Client) {
     })
 
     // Add highlighting
-    body.rawOption('highlight', HIGHLIGHT_CONFIG)
+    body.rawOption('highlight', highlightConfig(isOpenSearch))
 
     // Ensure accurate total hits count (ES 8+ compatibility)
     body.rawOption('track_total_hits', true)
@@ -672,7 +686,7 @@ export function datasharePlugin(Client) {
     const body = this.rootSearch(filters, query, fields)
     body.from(from).size(size).sort(sort)
     body.rawOption('_source', { includes: ['*'], excludes: CONTENT_FIELDS })
-    body.rawOption('highlight', HIGHLIGHT_CONFIG)
+    body.rawOption('highlight', highlightConfig())
     return body
   }
 }
