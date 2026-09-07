@@ -17,6 +17,22 @@ describe('elasticsearch async search wrappers', () => {
       expect(body.highlight).toBeDefined()
     })
 
+    it('caps the highlighter with the Elasticsearch offset field by default', () => {
+      const body = elasticsearch.buildSearchDocsBody({ index: 'idx', query: 'foo' })
+      expect(body.highlight.max_analyzed_offset).toBe(999999)
+      expect(body.highlight.max_analyzer_offset).toBeUndefined()
+      expect(body.highlight.fields).toHaveProperty('content')
+    })
+
+    it('caps the highlighter with the OpenSearch offset field on an OpenSearch index', () => {
+      const body = elasticsearch.buildSearchDocsBody({ index: 'idx', query: 'foo', isOpenSearch: true })
+      expect(body.highlight.max_analyzer_offset).toBe(999999)
+      expect(body.highlight.max_analyzed_offset).toBeUndefined()
+      expect(body.highlight.fields).toEqual(
+        elasticsearch.buildSearchDocsBody({ index: 'idx', query: 'foo' }).highlight.fields
+      )
+    })
+
     it('normalizes an empty query to the default', () => {
       const emptyBody = elasticsearch.buildSearchDocsBody({ index: 'idx', query: '' })
       const starBody = elasticsearch.buildSearchDocsBody({ index: 'idx', query: '*' })

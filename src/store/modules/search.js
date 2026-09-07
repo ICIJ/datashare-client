@@ -873,7 +873,8 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     const isOpenSearch = await isOpenSearchDistribution(api)
     // A run cancelled while the probe was pending must not submit anything.
     signal?.throwIfAborted()
-    return isOpenSearch ? searchDocsSync(searchParams, signal) : searchDocsAsync(searchParams, signal)
+    const params = { ...searchParams, isOpenSearch }
+    return isOpenSearch ? searchDocsSync(params, signal) : searchDocsAsync(params, signal)
   }
 
   /**

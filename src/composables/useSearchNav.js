@@ -3,6 +3,7 @@ import { useRouter, useRoute } from 'vue-router'
 import clamp from 'lodash/clamp'
 import matches from 'lodash/matches'
 import EsDocList from '@/api/resources/EsDocList'
+import { isOpenSearchDistribution } from '@/api/indexDistribution'
 import { useBreakpoints } from '@/composables/useBreakpoints'
 import { useCore } from '@/composables/useCore'
 import { useDocument } from '@/composables/useDocument'
@@ -101,7 +102,8 @@ export function useSearchNav(currentDocument = null) {
     const halfCarousel = Math.floor(carouselSize / 2)
     const maxStart = Math.max(0, total.value - carouselSize)
     const from = clamp(position - halfCarousel, 0, maxStart)
-    const raw = await core.api.elasticsearch.searchDocs({ ...params, from, perPage: carouselSize })
+    const isOpenSearch = await isOpenSearchDistribution(core.api)
+    const raw = await core.api.elasticsearch.searchDocs({ ...params, from, perPage: carouselSize, isOpenSearch })
     const response = new EsDocList(raw, null, null, from)
     return response.hits
   }
