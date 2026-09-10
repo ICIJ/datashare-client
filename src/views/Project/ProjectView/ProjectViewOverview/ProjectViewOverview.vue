@@ -50,7 +50,7 @@ const lastIndexingDate = ref(null)
 
 const fetchDocumentsCount = async () => {
   const { name: index } = props
-  const { count } = await core.api.elasticsearch.count({ index })
+  const { count } = await core.api.elasticsearch.count({ index, ignore_unavailable: true })
   return count
 }
 

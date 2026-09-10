@@ -24,6 +24,11 @@ const PREFERENCE = Object.freeze({
   MAX_EXTRACTION_DATE: 'max-extraction-date-by-project'
 })
 
+// Project statistics span projects whose index may not exist yet: elasticsearch
+// rejects the whole request when any named index is missing, which would zero out
+// the figures of every other project (icij/datashare#2384).
+const IGNORE_MISSING_INDEX = Object.freeze({ ignore_unavailable: true })
+
 // Caps how far into long fields the highlighter analyzes, preventing shard
 // failures on docs whose content exceeds the index's
 // `index.highlight.max_analyzed_offset` limit (default 1,000,000).
@@ -398,7 +403,7 @@ export function datasharePlugin(Client) {
    */
   Client.prototype.countDocuments = async function (index) {
     const body = { query: { query_string: { query: 'type:Document' } } }
-    const res = await this.count({ index, body, preference: PREFERENCE.DOCUMENTS_COUNT })
+    const res = await this.count({ index, body, preference: PREFERENCE.DOCUMENTS_COUNT, ...IGNORE_MISSING_INDEX })
     return res?.count ?? 0
   }
 
@@ -412,7 +417,7 @@ export function datasharePlugin(Client) {
       size: 0,
       aggs: { count: { cardinality: { field: 'tags' } } }
     }
-    const res = await this.search({ index, body, preference: PREFERENCE.TAGS_COUNT })
+    const res = await this.search({ index, body, preference: PREFERENCE.TAGS_COUNT, ...IGNORE_MISSING_INDEX })
     return res?.aggregations?.count?.value ?? 0
   }
 
@@ -429,7 +434,7 @@ export function datasharePlugin(Client) {
       query,
       aggs: { index: { terms: { field: '_index', size } } }
     }
-    return this._search({ index, body, preference: PREFERENCE.COUNT_BY_PROJECT })
+    return this._search({ index, body, preference: PREFERENCE.COUNT_BY_PROJECT, ...IGNORE_MISSING_INDEX })
   }
 
   /**
@@ -450,7 +455,7 @@ export function datasharePlugin(Client) {
         }
       }
     }
-    return this._search({ index, body, preference: PREFERENCE.MAX_EXTRACTION_DATE })
+    return this._search({ index, body, preference: PREFERENCE.MAX_EXTRACTION_DATE, ...IGNORE_MISSING_INDEX })
   }
 
   /**
