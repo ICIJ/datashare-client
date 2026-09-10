@@ -333,6 +333,41 @@ describe('elasticsearch', () => {
     })
   })
 
+  describe('per-project statistics when an index is missing', () => {
+    // A project row can exist without its elasticsearch index, and elasticsearch
+    // rejects the whole request when any named index is missing (icij/datashare#2384).
+    const missingIndex = 'project-without-an-index'
+    const extractionDate = '2026-01-15T10:00:00.000Z'
+
+    beforeEach(async () => {
+      await letData(es)
+        .have(new IndexedDocument('document_stats_01', index).withIndexingDate(extractionDate))
+        .commit()
+    })
+
+    it('counts documents by project, skipping the missing index', async () => {
+      const query = { match: { type: 'Document' } }
+      const { aggregations } = await elasticsearch.countByProject(`${index},${missingIndex}`, query)
+      expect(aggregations.index.buckets).toHaveLength(1)
+      expect(aggregations.index.buckets[0]).toMatchObject({ key: index, doc_count: 1 })
+    })
+
+    it('gets the max extraction date by project, skipping the missing index', async () => {
+      const query = { match: { type: 'Document' } }
+      const { aggregations } = await elasticsearch.maxExtractionDateByProject(`${index},${missingIndex}`, query)
+      expect(aggregations.index.buckets).toHaveLength(1)
+      expect(aggregations.index.buckets[0].maxExtractionDate.value).toBe(Date.parse(extractionDate))
+    })
+
+    it('counts no document for a missing index', async () => {
+      await expect(elasticsearch.countDocuments(missingIndex)).resolves.toBe(0)
+    })
+
+    it('counts no tag for a missing index', async () => {
+      await expect(elasticsearch.countTags(missingIndex)).resolves.toBe(0)
+    })
+  })
+
   describe('rootSearch', () => {
     it('passes operator to default_operator in the body', () => {
       const body = elasticsearch.rootSearch([], 'foo bar', [], 'AND').build()
