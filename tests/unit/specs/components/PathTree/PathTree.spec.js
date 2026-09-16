@@ -264,6 +264,19 @@ describe('PathTree.vue', () => {
       expect(body.aggs).toHaveProperty('total_directories')
     })
 
+    it('sets size to 0 so ES does not return full document hits alongside aggregations', async () => {
+      const wrapper = mount(PathTree, {
+        props: { projects: [index], path: '/home/foo', compact: true, noDocuments: true },
+        global: { plugins: core.plugins, renderStubDefaultSlot: true }
+      })
+
+      await wrapper.vm.loadData({ clearPages: true })
+      await flushPromises()
+
+      const { body } = searchSpy.mock.calls[0][0]
+      expect(body.size).toBe(0)
+    })
+
     it('shows remaining directory count in "show more" button in compact mode', async () => {
       const wrapper = mount(PathTree, {
         props: { projects: [index], path: '/home/foo', compact: true, noDocuments: true },

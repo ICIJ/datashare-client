@@ -346,6 +346,9 @@ function getDirectoryCount(key) {
  */
 function getDirectoriesBodybuilder({ from = 0, size = PER_PAGE } = {}) {
   const bb = bodybuilder()
+  // This query only reads aggregations, never hits: skip returning documents
+  // entirely, otherwise ES includes their full "content" field in the response.
+  bb.size(0)
   // Ensure we get accurate hit counts, even if they exceed 10,000
   bb.rawOption('track_total_hits', true)
   // Only include Document-type entries
