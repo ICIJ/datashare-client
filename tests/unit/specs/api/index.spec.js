@@ -507,7 +507,7 @@ describe('Datashare backend client', () => {
       await api.getUsers({ index: 'my-project', q: 'alice' })
       expect(axios.request).toBeCalledWith(
         expect.objectContaining({
-          url: Api.getFullUrl('/api/users'),
+          url: Api.getFullUrl('/api/users/admin'),
           method: 'GET',
           params: expect.objectContaining({ q: 'alice', index: 'my-project' })
         })
@@ -522,7 +522,7 @@ describe('Datashare backend client', () => {
       await api.revokeUserRole('alice', 'my-project', { ifExists: true })
       expect(axios.request).toBeCalledWith(
         expect.objectContaining({
-          url: Api.getFullUrl('/api/users/alice/index/my-project'),
+          url: Api.getFullUrl('/api/users/admin/alice/index/my-project'),
           method: 'DELETE',
           params: expect.objectContaining({ ifExists: true })
         })
@@ -534,7 +534,7 @@ describe('Datashare backend client', () => {
     await api.grantUserRole('alice', 'my-project', 'PROJECT_ADMIN')
     expect(axios.request).toBeCalledWith(
       expect.objectContaining({
-        url: Api.getFullUrl('/api/users/alice/index/my-project?role=PROJECT_ADMIN'),
+        url: Api.getFullUrl('/api/users/admin/alice/index/my-project?role=PROJECT_ADMIN'),
         method: 'PUT',
       })
     )
