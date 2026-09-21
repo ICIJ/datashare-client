@@ -302,14 +302,15 @@ describe('SettingsViewUsersRolesModal.vue', () => {
     expect(wrapper.findComponent(InstanceUsersRoleBadge).props('project')).toBe(null)
   })
 
-  it('does not offer domain admin as a pickable role for the existing instance-wide row either', () => {
+  it('offers domain admin as a pickable role for the existing instance-wide row', () => {
     const wrapper = mountComponent({
       user: {
         uid: 'alice@example.org',
         permissions: [{ v1: 'INSTANCE_ADMIN', v2: '*::*' }]
       }
     })
-    expect(wrapper.findComponent(ProjectUsersRoleDropdown).props('hiddenRoles')).toContain('DOMAIN_ADMIN')
+    const rowDropdown = wrapper.findAllComponents(ProjectUsersRoleDropdown).at(1)
+    expect(rowDropdown.props('hiddenRoles')).not.toContain('DOMAIN_ADMIN')
   })
 
   describe('search filter', () => {
@@ -431,20 +432,12 @@ describe('SettingsViewUsersRolesModal.vue', () => {
       expect(mockApi.grantUserRole).not.toHaveBeenCalled()
     })
 
-    it('grants a domain admin role with the default domain', async () => {
-      const wrapper = mountComponent()
-      wrapper.vm.selectedProject = { name: '*' }
-      await wrapper.vm.$nextTick()
-      wrapper.vm.selectedRole = 'DOMAIN_ADMIN'
-      await wrapper.vm.grantRole()
-      expect(mockApi.grantInstanceRole).toHaveBeenCalledWith('alice@example.org', 'domain_admin', 'default')
-    })
-
-    it('does not offer domain admin as a pickable role for the instance scope, since the domain tier is not wired up in this UI yet', async () => {
+    it('only offers instance admin as a pickable role for the instance scope, since domain admin has its own scope entry', async () => {
       const wrapper = mountComponent()
       wrapper.vm.selectedProject = { name: '*' }
       await wrapper.vm.$nextTick()
       expect(wrapper.vm.hiddenRoles).toContain('DOMAIN_ADMIN')
+      expect(wrapper.vm.hiddenRoles).not.toContain('INSTANCE_ADMIN')
     })
 
     it('revokes an instance-wide role via revokeInstanceRole, not the project-scoped endpoint', async () => {
@@ -457,6 +450,76 @@ describe('SettingsViewUsersRolesModal.vue', () => {
       await wrapper.vm.revokeRole({ project: '*', role: 'INSTANCE_ADMIN', domain: '*' })
       expect(mockApi.revokeInstanceRole).toHaveBeenCalledWith('alice@example.org', 'instance_admin', null)
       expect(mockApi.revokeUserRole).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('domain scope', () => {
+    beforeEach(() => {
+      core.config.set('policies', [{ projectId: '*', domainId: '*', role: 'INSTANCE_ADMIN' }])
+    })
+
+    it('offers the domain scope for an instance admin who does not already hold it', () => {
+      const wrapper = mountComponent()
+      expect(wrapper.vm.canGrantDomainRole).toBe(true)
+    })
+
+    it('does not offer the domain scope again once already granted', () => {
+      const wrapper = mountComponent({
+        user: {
+          uid: 'alice@example.org',
+          permissions: [{ v1: 'DOMAIN_ADMIN', v2: 'default::*' }]
+        }
+      })
+      expect(wrapper.vm.canGrantDomainRole).toBe(false)
+    })
+
+    it('still offers the instance scope once only domain admin is granted, since they are separate grants', () => {
+      const wrapper = mountComponent({
+        user: {
+          uid: 'alice@example.org',
+          permissions: [{ v1: 'DOMAIN_ADMIN', v2: 'default::*' }]
+        }
+      })
+      expect(wrapper.vm.canGrantInstanceRole).toBe(true)
+    })
+
+    it('does not offer the domain scope to a non instance admin', () => {
+      core.config.set('policies', [{ projectId: 'project-a', domainId: 'default', role: 'PROJECT_ADMIN' }])
+      const wrapper = mountComponent()
+      expect(wrapper.vm.canGrantDomainRole).toBe(false)
+    })
+
+    it('lists the domain entry in the project picker, after instance', () => {
+      const wrapper = mountComponent()
+      expect(wrapper.vm.projectPickerOptions[1]).toEqual({ name: '**', label: 'Domain' })
+    })
+
+    it('picking the domain entry from the project picker targets a distinct synthetic scope and resets to no role', async () => {
+      const wrapper = mountComponent()
+      wrapper.vm.selectedProject = { name: '**' }
+      await wrapper.vm.$nextTick()
+      expect(wrapper.vm.selectedProjectName).toBe('**')
+      expect(wrapper.vm.isDomainScope).toBe(true)
+      expect(wrapper.vm.selectedRole).toBe('NO_ROLE')
+      expect(wrapper.vm.canGrant).toBe(false)
+    })
+
+    it('only offers domain admin as a pickable role for the domain scope', async () => {
+      const wrapper = mountComponent()
+      wrapper.vm.selectedProject = { name: '**' }
+      await wrapper.vm.$nextTick()
+      expect(wrapper.vm.hiddenRoles).toContain('INSTANCE_ADMIN')
+      expect(wrapper.vm.hiddenRoles).not.toContain('DOMAIN_ADMIN')
+    })
+
+    it('grants a domain admin role with the default domain via grantInstanceRole, not the project-scoped endpoint', async () => {
+      const wrapper = mountComponent()
+      wrapper.vm.selectedProject = { name: '**' }
+      await wrapper.vm.$nextTick()
+      wrapper.vm.selectedRole = 'DOMAIN_ADMIN'
+      await wrapper.vm.grantRole()
+      expect(mockApi.grantInstanceRole).toHaveBeenCalledWith('alice@example.org', 'domain_admin', 'default')
+      expect(mockApi.grantUserRole).not.toHaveBeenCalled()
     })
   })
 })

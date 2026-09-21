@@ -1795,9 +1795,10 @@
         "searchPlaceholder": "Search projects or instance",
         "noResults": "No project or role matches your search.",
         "selectScope": "Select scope",
+        "scopeColumn": "Scope",
         "scope": {
-          "project": "Project",
-          "instance": "Instance"
+          "instance": "Instance",
+          "domain": "Domain"
         },
         "add": "Grant",
         "revokeSuccess": "Role revoked",

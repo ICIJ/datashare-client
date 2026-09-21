@@ -20,12 +20,17 @@ import { useAuth } from '@/composables/useAuth.js'
 import { usePolicies } from '@/composables/usePolicies.js'
 import { useCore } from '@/composables/useCore.js'
 import { useToast } from '@/composables/useToast.js'
-import { NO_ROLE, ROLE, ROLE_BIT, ROLE_LOWERCASE } from '@/enums/roles.js'
+import { isInstanceOrDomainRole, NO_ROLE, ROLE, ROLE_BIT, ROLE_LOWERCASE } from '@/enums/roles.js'
 
 // The wildcard project casbin uses to represent the instance-wide scope in this UI. Granting there
 // goes through the dedicated PUT/DELETE /api/users/admin/:uid/role endpoint (grantInstanceRole/
 // revokeInstanceRole), not the project-scoped /index/:index one.
 const INSTANCE_SCOPE = '*'
+// A synthetic scope-picker-only value: existing domain-admin grants still parse to project '*'
+// (same as instance-admin, see `roles` below), but the add-row scope picker needs its own
+// distinct entry so a viewer can grant a domain-admin role without going through "Instance".
+// Never sent to the API directly, only used to pick which role changeRole/grantRole end up calling.
+const DOMAIN_SCOPE = '**'
 // Domain stays hardcoded here (no picker) since 'default' is the only domain that exists today;
 // only matters for DOMAIN_ADMIN grants. INSTANCE_ADMIN is domain-less: the backend rejects the
 // grant if a domain param is present at all, so it must be omitted rather than defaulted.
@@ -104,17 +109,22 @@ const filteredRoles = computed(() => {
 
 const assignedProjects = computed(() => new Set(roles.value.map(({ project }) => project)))
 const availableProjects = computed(() => core.projects.filter(({ name }) => !assignedProjects.value.has(name)))
-// Only offer the instance-wide entry if the viewer can actually grant it (redundant today since
+// Only offer each instance-wide entry if the viewer can actually grant it (redundant today since
 // this whole page is already instance-admin-gated, but keeps this control safe on its own) and
-// it isn't already granted.
-const canGrantInstanceRole = computed(() => isInstanceAdmin.value && !assignedProjects.value.has(INSTANCE_SCOPE))
-// A synthetic "project" so the instance-wide scope can live in the same picker as real projects,
-// first in the list. ProjectThumbnail/ProjectLabel work off name/label alone, no real project
-// record is required.
+// it isn't already granted. Checked by role rather than via assignedProjects, since instance and
+// domain admin share the same project ('*') there.
+const canGrantInstanceRole = computed(() => isInstanceAdmin.value && !roles.value.some(({ role }) => role === ROLE.INSTANCE_ADMIN))
+const canGrantDomainRole = computed(() => isInstanceAdmin.value && !roles.value.some(({ role }) => role === ROLE.DOMAIN_ADMIN))
+// Synthetic "projects" so the instance-wide/domain-wide scopes can live in the same picker as
+// real projects, first in the list. ProjectThumbnail/ProjectLabel work off name/label alone, no
+// real project record is required.
 const instanceScopeEntry = computed(() => ({ name: INSTANCE_SCOPE, label: t('settings.users.rolesModal.scope.instance') }))
-const projectPickerOptions = computed(() =>
-  canGrantInstanceRole.value ? [instanceScopeEntry.value, ...availableProjects.value] : availableProjects.value
-)
+const domainScopeEntry = computed(() => ({ name: DOMAIN_SCOPE, label: t('settings.users.rolesModal.scope.domain') }))
+const projectPickerOptions = computed(() => [
+  ...(canGrantInstanceRole.value ? [instanceScopeEntry.value] : []),
+  ...(canGrantDomainRole.value ? [domainScopeEntry.value] : []),
+  ...availableProjects.value
+])
 
 const selectedProject = ref(null)
 // Default to no role: force an explicit pick rather than silently pre-selecting one, since
@@ -122,22 +132,32 @@ const selectedProject = ref(null)
 const selectedRole = ref(NO_ROLE)
 const selectedProjectName = computed(() => selectedProject.value?.name ?? null)
 const isInstanceScope = computed(() => selectedProjectName.value === INSTANCE_SCOPE)
-// Project and instance roles are mutually exclusive: a project grant can't be a domain/instance
-// admin (no domain concept in grantUserRole yet, see DEFAULT_DOMAIN elsewhere), and an
-// instance-wide grant can't be a project-level role. Domain admin is also left off the picker: the
-// domain tier isn't wired up in this UI yet (single hardcoded "default" domain, no picker):
-// existing domain-admin grants still show and can be revoked, they're just not newly selectable.
-const hiddenRolesFor = isInstance => (isInstance ? [...PROJECT_ROLES, ROLE.DOMAIN_ADMIN] : INSTANCE_ROLES)
-const hiddenRoles = computed(() => hiddenRolesFor(isInstanceScope.value))
+const isDomainScope = computed(() => selectedProjectName.value === DOMAIN_SCOPE)
+// Project, instance and domain roles are mutually exclusive: a project grant can't be a
+// domain/instance admin (no domain concept in grantUserRole yet, see DEFAULT_DOMAIN elsewhere),
+// and each instance-wide scope only offers its own single role (an existing grant can still be
+// swapped between the two via the per-row picker below, see changeRole).
+const hiddenRolesFor = isInstance => (isInstance ? PROJECT_ROLES : INSTANCE_ROLES)
+const hiddenRoles = computed(() => {
+  if (isInstanceScope.value) return [...PROJECT_ROLES, ROLE.DOMAIN_ADMIN]
+  if (isDomainScope.value) return [...PROJECT_ROLES, ROLE.INSTANCE_ADMIN]
+  return INSTANCE_ROLES
+})
 
 // A grant needs an actual role picked; NO_ROLE is the unselected/default state.
 const canGrant = computed(() => !!selectedProjectName.value && selectedRole.value !== NO_ROLE)
 const saving = ref(false)
 
-// Picking a different scope (project <-> instance) changes which roles are selectable, so a
-// role selected for the previous scope may no longer be valid: reset to no role rather than
-// leaving a now-hidden one selected.
-watch(isInstanceScope, () => {
+// Picking a different scope (project <-> instance <-> domain) changes which roles are
+// selectable, so a role selected for the previous scope may no longer be valid: reset to no
+// role rather than leaving a now-hidden one selected. Grouped by kind so switching between two
+// plain projects (same allowed roles) doesn't reset an otherwise still-valid pick.
+const scopeKind = computed(() => {
+  if (isInstanceScope.value) return 'instance'
+  if (isDomainScope.value) return 'domain'
+  return 'project'
+})
+watch(scopeKind, () => {
   selectedRole.value = NO_ROLE
 })
 
@@ -150,10 +170,6 @@ async function refreshUser() {
   const user = await core.api.getUserByUid(props.user.uid)
   permissions.value = user?.permissions ?? []
   emit('user:updated', { uid: props.user.uid })
-}
-
-function isInstanceOrDomainRole(role) {
-  return role === ROLE.DOMAIN_ADMIN || role === ROLE.INSTANCE_ADMIN
 }
 
 // Only the instance/domain admin grant can be revoked under OAuth (see isAuthWithUsersProvider
@@ -216,7 +232,7 @@ async function grantRole() {
   if (!canGrant.value) return
   saving.value = true
   try {
-    if (isInstanceScope.value) {
+    if (isInstanceScope.value || isDomainScope.value) {
       const domain = selectedRole.value === ROLE.DOMAIN_ADMIN ? DEFAULT_DOMAIN : null
       await core.api.grantInstanceRole(props.user.uid, ROLE_LOWERCASE[selectedRole.value], domain)
     }
@@ -242,8 +258,10 @@ defineExpose({
   availableProjects,
   projectPickerOptions,
   canGrantInstanceRole,
+  canGrantDomainRole,
   canRevoke,
   isInstanceScope,
+  isDomainScope,
   hiddenRoles,
   selectedProject,
   selectedRole,
@@ -277,7 +295,7 @@ defineExpose({
 
     <page-table class="mb-3">
       <template #thead>
-        <page-table-th :label="t('settings.users.create.fields.project.label')" />
+        <page-table-th :label="t('settings.users.rolesModal.scopeColumn')" />
         <page-table-th :label="t('settings.users.create.fields.role.label')" />
         <th />
       </template>
