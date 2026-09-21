@@ -36,6 +36,7 @@ vi.mock('@/composables/useToast', () => ({
 }))
 
 const INSTANCE_ADMIN_POLICIES = [{ projectId: '*', domainId: '*', role: 'INSTANCE_ADMIN' }]
+const DOMAIN_ADMIN_POLICIES = [{ projectId: '*', domainId: '*', role: 'DOMAIN_ADMIN' }]
 const PROJECT_ADMIN_POLICIES = [{ projectId: 'foo', domainId: 'default', role: 'PROJECT_ADMIN' }]
 
 describe('SettingsView', () => {
@@ -55,7 +56,15 @@ describe('SettingsView', () => {
     expect(wrapper.text()).toContain('Users')
   })
 
-  it('hides the Users tab when the user is not instance admin', () => {
+  it('shows the Users tab when mode is SERVER and the user is domain admin', () => {
+    core.config.set('mode', MODE_NAME.SERVER)
+    core.config.set('policies', DOMAIN_ADMIN_POLICIES)
+    const wrapper = mount(SettingsView, { global: { plugins } })
+
+    expect(wrapper.text()).toContain('Users')
+  })
+
+  it('hides the Users tab when the user is not domain or instance admin', () => {
     core.config.set('mode', MODE_NAME.SERVER)
     core.config.set('policies', PROJECT_ADMIN_POLICIES)
     const wrapper = mount(SettingsView, { global: { plugins } })
@@ -113,6 +122,12 @@ describe('SettingsViewUsers.vue', () => {
   })
 
   it('renders an InstanceUsersList for an instance admin', () => {
+    const wrapper = shallowMountComponent()
+    expect(wrapper.findComponent(InstanceUsersList).exists()).toBe(true)
+  })
+
+  it('renders an InstanceUsersList for a domain admin', () => {
+    core.config.set('policies', DOMAIN_ADMIN_POLICIES)
     const wrapper = shallowMountComponent()
     expect(wrapper.findComponent(InstanceUsersList).exists()).toBe(true)
   })

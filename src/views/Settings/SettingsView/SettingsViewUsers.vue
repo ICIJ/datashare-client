@@ -29,14 +29,14 @@ defineOptions({ name: 'SettingsViewUsers' })
 
 const { t } = useI18n()
 const { isAuthWithUsersProvider } = useAuth()
-const { isInstanceAdmin } = usePolicies()
+const { isDomainAdmin } = usePolicies()
 const { toastedPromise } = useToast()
 const appStore = useAppStore()
 const { waitFor, isLoading } = useWait()
 
-// Defense in depth: the tab itself is hidden for non instance-admins, but the
+// Defense in depth: the tab itself is hidden for non domain/instance-admins, but the
 // route can still be reached directly, so gate the view's content too.
-const canManageUsers = computed(() => isAuthWithUsersProvider.value && isInstanceAdmin.value)
+const canManageUsers = computed(() => isAuthWithUsersProvider.value && isDomainAdmin.value)
 
 const VIEW = 'instanceUsersList'
 const DEFAULT_DOMAIN = 'default'
@@ -140,13 +140,13 @@ watch(page, () => {
 })
 
 onMounted(() => {
-  if (isInstanceAdmin.value) fetchUsers()
+  if (isDomainAdmin.value) fetchUsers()
 })
 </script>
 
 <template>
   <settings-view-layout class="settings-view-users">
-    <p v-if="!isInstanceAdmin">
+    <p v-if="!isDomainAdmin">
       {{ t('settings.users.noAccess') }}
     </p>
     <div

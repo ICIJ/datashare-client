@@ -21,7 +21,7 @@ import { usePolicies } from '@/composables/usePolicies'
 
 const { t } = useI18n()
 const { isMode } = useMode()
-const { isInstanceAdmin } = usePolicies()
+const { isDomainAdmin } = usePolicies()
 
 const tabs = computed(() => [
   {
@@ -65,7 +65,7 @@ const tabs = computed(() => [
     title: t('settings.users.title'),
     name: 'settings.users',
     modes: [MODE_NAME.SERVER],
-    hidden: !isInstanceAdmin.value
+    hidden: !isDomainAdmin.value
   },
   {
     icon: IPhCloudArrowDown,
