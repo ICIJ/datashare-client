@@ -17,10 +17,15 @@ const mockApi = {
   grantInstanceRole: vi.fn(),
   revokeInstanceRole: vi.fn()
 }
+// 'form' (the default here) matches isAuthWithUsersProvider = true, so existing behavior in
+// tests that don't care about auth mode is unaffected; the OAuth-specific tests below switch it.
+let mockAuthMode = 'form'
 vi.mock('@/composables/useCore', () => ({
   useCore: () => ({
     api: mockApi,
-    projects: [{ name: 'project-a' }, { name: 'project-b' }, { name: 'project-c' }]
+    projects: [{ name: 'project-a' }, { name: 'project-b' }, { name: 'project-c' }],
+    config: { get: key => (key === 'auth' ? mockAuthMode : undefined) },
+    auth: { getUsername: vi.fn().mockResolvedValue(null), isBasicAuth: vi.fn().mockResolvedValue(false) }
   })
 }))
 
@@ -41,6 +46,7 @@ describe('SettingsViewUsersRolesModal.vue', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
+    mockAuthMode = 'form'
     mockApi.getUserByUid.mockResolvedValue(user)
     mockApi.grantUserRole.mockResolvedValue(undefined)
     mockApi.revokeUserRole.mockResolvedValue(undefined)
@@ -180,6 +186,33 @@ describe('SettingsViewUsersRolesModal.vue', () => {
     expect(mockApi.getUserByUid).not.toHaveBeenCalled()
     expect(wrapper.emitted('user:updated')).toBeFalsy()
     expect(mockToast.error).toHaveBeenCalledOnce()
+  })
+
+  describe('canRevoke', () => {
+    it('allows revoking a project role under form/basic auth', () => {
+      const wrapper = mountComponent()
+      expect(wrapper.vm.canRevoke({ project: 'project-a', role: 'PROJECT_MEMBER' })).toBe(true)
+    })
+
+    it('allows revoking the instance-wide role even under OAuth, since it is datashare-native', () => {
+      mockAuthMode = 'oauth2'
+      const wrapper = mountComponent()
+      expect(wrapper.vm.canRevoke({ project: '*', role: 'INSTANCE_ADMIN' })).toBe(true)
+    })
+
+    it('disallows revoking a project role under OAuth, since it is IdP-managed and would not stick', () => {
+      mockAuthMode = 'oauth2'
+      const wrapper = mountComponent()
+      expect(wrapper.vm.canRevoke({ project: 'project-a', role: 'PROJECT_MEMBER' })).toBe(false)
+    })
+
+    it('does not call the API when revoking a project role is not allowed', async () => {
+      mockAuthMode = 'oauth2'
+      const wrapper = mountComponent()
+      await wrapper.vm.revokeRole({ project: 'project-a', role: 'PROJECT_MEMBER', domain: 'default' })
+      expect(mockApi.revokeUserRole).not.toHaveBeenCalled()
+      expect(mockApi.getUserByUid).not.toHaveBeenCalled()
+    })
   })
 
   describe('changeRole', () => {

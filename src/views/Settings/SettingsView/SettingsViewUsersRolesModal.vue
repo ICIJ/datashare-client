@@ -14,6 +14,7 @@ import PageTableTr from '@/components/PageTable/PageTableTr.vue'
 import ProjectDropdownSelector from '@/components/Project/ProjectDropdownSelector/ProjectDropdownSelector.vue'
 import ProjectUsersRoleDropdown from '@/components/ProjectUsers/ProjectUsersRoleDropdown.vue'
 
+import { useAuth } from '@/composables/useAuth.js'
 import { usePolicies } from '@/composables/usePolicies.js'
 import { useCore } from '@/composables/useCore.js'
 import { useToast } from '@/composables/useToast.js'
@@ -44,6 +45,10 @@ const core = useCore()
 const { toast } = useToast()
 const { t } = useI18n()
 const { isInstanceAdmin } = usePolicies()
+// Under OAuth, project roles come from the identity provider's own groups and get overwritten
+// on the next login, revoking one here wouldn't stick, so only the datashare-native
+// instance/domain admin grant can be revoked from this UI in that mode.
+const { isAuthWithUsersProvider } = useAuth()
 
 const permissions = ref([])
 
@@ -122,6 +127,12 @@ function isInstanceOrDomainRole(role) {
   return role === ROLE.DOMAIN_ADMIN || role === ROLE.INSTANCE_ADMIN
 }
 
+// Only the instance/domain admin grant can be revoked under OAuth (see isAuthWithUsersProvider
+// above); a plain project role can always be revoked when auth is form/basic.
+function canRevoke(item) {
+  return isAuthWithUsersProvider.value || isInstanceOrDomainRole(item.role)
+}
+
 // Instance/domain admin aren't a single field that can be swapped in place, they're separate
 // grants, so changing between them means grant-then-revoke (grant first, so if it fails the
 // user just keeps their old role instead of ending up with neither). A plain project role is
@@ -151,6 +162,7 @@ async function changeRole(item, newRole) {
 }
 
 async function revokeRole(item) {
+  if (!canRevoke(item)) return
   saving.value = true
   try {
     if (isInstanceOrDomainRole(item.role)) {
@@ -199,6 +211,7 @@ defineExpose({
   availableProjects,
   projectPickerOptions,
   canGrantInstanceRole,
+  canRevoke,
   isInstanceScope,
   hiddenRoles,
   selectedProject,
@@ -279,7 +292,7 @@ defineExpose({
         </td>
         <page-table-td-actions>
           <button-row-action-delete
-            :disabled="saving"
+            :disabled="saving || !canRevoke(item)"
             @click.stop="revokeRole(item)"
           />
         </page-table-td-actions>
