@@ -1795,11 +1795,12 @@
         "empty": "This user has no project role grants yet.",
         "searchPlaceholder": "Search projects or instance",
         "noResults": "No project or role matches your search.",
+        "selectScope": "Select scope",
         "scope": {
           "project": "Project",
           "instance": "Instance"
         },
-        "add": "Add",
+        "add": "Grant",
         "revokeSuccess": "Role revoked",
         "revokeError": "Failed to revoke this role.",
         "grantSuccess": "Role granted",

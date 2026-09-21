@@ -282,11 +282,14 @@ defineExpose({
         <th />
       </template>
 
-      <page-table-tr>
+      <page-table-tr style="--bs-table-bg-state: var(--bs-action-bg-subtle)">
         <td>
           <project-dropdown-selector
             v-model="selectedProject"
+            class="settings-view-users-roles-modal__scope-select"
             :projects="projectPickerOptions"
+            :disabled="!projectPickerOptions.length"
+            :placeholder="t('settings.users.rolesModal.selectScope')"
           />
         </td>
         <td>
@@ -301,7 +304,7 @@ defineExpose({
         <page-table-td-actions>
           <button
             type="button"
-            class="btn btn-primary btn-sm"
+            class="btn btn-action"
             :disabled="!canGrant || saving"
             @click.stop="grantRole"
           >
@@ -357,3 +360,13 @@ defineExpose({
     </page-table>
   </app-modal>
 </template>
+
+<style scoped lang="scss">
+// Matches ProjectUsersRoleDropdown's own fixed content width, so the scope and role pickers in
+// the add-row line up instead of the scope one shrinking to fit its shorter placeholder text.
+.settings-view-users-roles-modal__scope-select {
+  :deep(.btn.dropdown-toggle) {
+    width: 10rem;
+  }
+}
+</style>

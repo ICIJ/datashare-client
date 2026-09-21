@@ -2,6 +2,7 @@ import { shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup.js'
 import InstanceUsersRoleBadge from '@/components/InstanceUsers/InstanceUsersRoleBadge.vue'
+import ProjectDropdownSelector from '@/components/Project/ProjectDropdownSelector/ProjectDropdownSelector.vue'
 import ProjectUsersRoleDropdown from '@/components/ProjectUsers/ProjectUsersRoleDropdown.vue'
 import SettingsViewUsersRolesModal from '@/views/Settings/SettingsView/SettingsViewUsersRolesModal.vue'
 
@@ -108,6 +109,31 @@ describe('SettingsViewUsersRolesModal.vue', () => {
   it('excludes projects the user already has a role on from the picker', () => {
     const wrapper = mountComponent()
     expect(wrapper.vm.availableProjects).toEqual([{ name: 'project-c' }])
+  })
+
+  it('labels the scope picker "Select scope", since it covers both projects and the instance-wide scope', () => {
+    const wrapper = mountComponent()
+    expect(wrapper.findComponent(ProjectDropdownSelector).props('placeholder')).toBe('Select scope')
+  })
+
+  it('enables the scope picker when a project is still available to grant', () => {
+    const wrapper = mountComponent()
+    expect(wrapper.findComponent(ProjectDropdownSelector).props('disabled')).toBe(false)
+  })
+
+  it('disables the scope picker once every project is granted and there is no instance scope to offer', () => {
+    const wrapper = mountComponent({
+      user: {
+        uid: 'alice@example.org',
+        permissions: [
+          { v1: 'PROJECT_MEMBER', v2: 'default::project-a' },
+          { v1: 'PROJECT_MEMBER', v2: 'default::project-b' },
+          { v1: 'PROJECT_MEMBER', v2: 'default::project-c' }
+        ]
+      }
+    })
+    expect(wrapper.vm.projectPickerOptions).toEqual([])
+    expect(wrapper.findComponent(ProjectDropdownSelector).props('disabled')).toBe(true)
   })
 
   it('revokes a role, refetches the user and emits user:updated', async () => {
