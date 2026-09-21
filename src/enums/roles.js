@@ -59,6 +59,11 @@ export const ROLE_HIERARCHY = Object.freeze({
   INSTANCE_ADMIN: 0b111111, // 63 - all roles
 })
 
+// Instance/domain admin are instance-wide grants (project: '*'), not scoped to a single project.
+export function isInstanceOrDomainRole(role) {
+  return role === ROLE.DOMAIN_ADMIN || role === ROLE.INSTANCE_ADMIN
+}
+
 export const ROLE_ICON_DEFAULT = markRaw(IPhUserSquare)
 
 // Per-role icon/color, shared by DisplayRole and anything else that needs to badge a role

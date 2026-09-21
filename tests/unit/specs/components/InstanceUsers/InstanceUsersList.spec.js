@@ -80,7 +80,7 @@ describe('InstanceUsersList.vue', () => {
     ])
   })
 
-  it('leaves domain admin grants out of the badge list, since the domain tier is not handled here yet', () => {
+  it('badges a domain admin grant like instance admin, with no project', () => {
     const wrapper = mountComponent({
       users: [
         {
@@ -88,13 +88,14 @@ describe('InstanceUsersList.vue', () => {
           name: 'Alice A',
           email: 'alice@example.org',
           permissions: [
-            { v1: 'DOMAIN_ADMIN', v2: 'icij::*' },
+            { v1: 'DOMAIN_ADMIN', v2: 'default::*' },
             { v1: 'PROJECT_ADMIN', v2: 'default::project-a' }
           ]
         }
       ]
     })
     expect(wrapper.findComponent(InstanceUsersRoleBadges).props('roles')).toEqual([
+      { role: 'DOMAIN_ADMIN', project: null },
       { role: 'PROJECT_ADMIN', project: 'project-a' }
     ])
   })

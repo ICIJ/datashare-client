@@ -6,7 +6,7 @@ import DisplayUser from '@/components/Display/DisplayUser.vue'
 import InstanceUsersActions from '@/components/InstanceUsers/InstanceUsersActions.vue'
 import InstanceUsersRoleBadges from '@/components/InstanceUsers/InstanceUsersRoleBadges.vue'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric.vue'
-import { ROLE, ROLE_BIT } from '@/enums/roles.js'
+import { isInstanceOrDomainRole, ROLE_BIT } from '@/enums/roles.js'
 
 defineOptions({ name: 'InstanceUsersList' })
 
@@ -53,13 +53,12 @@ const emptyLabel = computed(() =>
     : t('settings.users.empty')
 )
 
-// One badge per grant, highest role first. Domain admin is left out for now: it has no single
-// project to badge (its identity is a domain), and the domain tier isn't part of this table yet.
+// One badge per grant, highest role first. Instance/domain admin have no single project to
+// badge (their identity is instance/domain-wide), so InstanceUsersRoleBadge gets project: null.
 function roleBadgesForPermissions(permissions) {
   return (permissions ?? [])
-    .filter(({ v1: role }) => role !== ROLE.DOMAIN_ADMIN)
-    .map(({ v1: role, v2 }) => ({ role, project: role === ROLE.INSTANCE_ADMIN ? null : String(v2).split('::')[1] }))
-    .filter(({ role, project }) => role === ROLE.INSTANCE_ADMIN || (project && project !== '*'))
+    .map(({ v1: role, v2 }) => ({ role, project: isInstanceOrDomainRole(role) ? null : String(v2).split('::')[1] }))
+    .filter(({ role, project }) => isInstanceOrDomainRole(role) || (project && project !== '*'))
     .sort((a, b) => (ROLE_BIT[b.role] ?? 0) - (ROLE_BIT[a.role] ?? 0))
 }
 
