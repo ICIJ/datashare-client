@@ -53,9 +53,16 @@ export function usePolicies() {
     return hasRole(getHighestRoleFromList(policies.value), ROLE.INSTANCE_ADMIN)
   })
 
+  // Domain admin or higher (instance admin included, since the hierarchy is cumulative). Used to
+  // gate access to user management, as opposed to isInstanceAdmin which gates instance-only
+  // actions like granting instance-wide roles.
+  const isDomainAdmin = computed(() => {
+    return hasRole(getHighestRoleFromList(policies.value), ROLE.DOMAIN_ADMIN)
+  })
+
   function formatRole(t, role) {
     return upperFirst(t(ROLE_KEY[role] ?? ROLE_KEY[NO_ROLE]))
   }
 
-  return { getRoleByProject, getHighestRoleFromList, getHighestRoleFromListForDomain, getHighestRoleFromListForProject, formatRole, isProjectAdmin, isInstanceAdmin, hasRole }
+  return { getRoleByProject, getHighestRoleFromList, getHighestRoleFromListForDomain, getHighestRoleFromListForProject, formatRole, isProjectAdmin, isInstanceAdmin, isDomainAdmin, hasRole }
 }
