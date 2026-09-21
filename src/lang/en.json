@@ -1709,6 +1709,10 @@
           "label": "Projects"
         }
       },
+      "roleBadges": {
+        "more": "0 more | +1 more | +{count} more",
+        "showLess": "Show less"
+      },
       "create": {
         "title": "Create user",
         "confirm": "Create user",
