@@ -1710,8 +1710,7 @@
         }
       },
       "roleBadges": {
-        "more": "0 more | +1 more | +{count} more",
-        "showLess": "Show less"
+        "more": "0 more | +1 more | +{count} more"
       },
       "create": {
         "title": "Create user",

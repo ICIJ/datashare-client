@@ -4,6 +4,7 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import InstanceUsersActions from '@/components/InstanceUsers/InstanceUsersActions.vue'
 import InstanceUsersList from '@/components/InstanceUsers/InstanceUsersList.vue'
 import InstanceUsersRoleBadges from '@/components/InstanceUsers/InstanceUsersRoleBadges.vue'
+import SettingsViewUsersRolesModal from '@/views/Settings/SettingsView/SettingsViewUsersRolesModal.vue'
 
 describe('InstanceUsersList.vue', () => {
   let core, global
@@ -120,6 +121,31 @@ describe('InstanceUsersList.vue', () => {
       'PROJECT_ADMIN',
       'PROJECT_MEMBER'
     ])
+  })
+
+  it('opens a row\'s roles modal when its role badges "more" button is clicked', async () => {
+    const wrapper = shallowMount(InstanceUsersList, {
+      global: { ...global, stubs: { ...global.stubs, InstanceUsersActions: false, InstanceUsersRoleBadges: false } },
+      props: {
+        users: [
+          {
+            uid: 'alice@example.org',
+            name: 'Alice A',
+            email: 'alice@example.org',
+            permissions: [
+              { v1: 'PROJECT_MEMBER', v2: 'default::project-a' },
+              { v1: 'PROJECT_ADMIN', v2: 'default::project-b' },
+              { v1: 'PROJECT_EDITOR', v2: 'default::project-c' },
+              { v1: 'PROJECT_VISITOR', v2: 'default::project-d' }
+            ]
+          }
+        ]
+      }
+    })
+
+    await wrapper.findComponent(InstanceUsersRoleBadges).find('button').trigger('click')
+
+    expect(wrapper.findComponent(SettingsViewUsersRolesModal).props('modelValue')).toBe(true)
   })
 
   it('forwards user:updated from a row action up to its own listeners', () => {

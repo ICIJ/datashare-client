@@ -51,7 +51,7 @@ describe('InstanceUsersRoleBadges.vue', () => {
     expect(wrapper.find('button').exists()).toBe(false)
   })
 
-  it('collapses roles beyond the limit behind a "+N more" toggle that expands on click', async () => {
+  it('collapses roles beyond the limit behind a "+N more" button', () => {
     const wrapper = mountComponent({
       roles: [
         { role: 'PROJECT_ADMIN', project: 'a' },
@@ -62,10 +62,21 @@ describe('InstanceUsersRoleBadges.vue', () => {
     })
     expect(wrapper.findAllComponents(InstanceUsersRoleBadge)).toHaveLength(3)
     expect(wrapper.text()).toContain('+1 more')
+  })
+
+  it('emits "more" instead of expanding when the "+N more" button is clicked', async () => {
+    const wrapper = mountComponent({
+      roles: [
+        { role: 'PROJECT_ADMIN', project: 'a' },
+        { role: 'PROJECT_ADMIN', project: 'b' },
+        { role: 'PROJECT_EDITOR', project: 'c' },
+        { role: 'PROJECT_MEMBER', project: 'd' }
+      ]
+    })
 
     await wrapper.find('button').trigger('click')
 
-    expect(wrapper.findAllComponents(InstanceUsersRoleBadge)).toHaveLength(4)
-    expect(wrapper.text()).toContain('Show less')
+    expect(wrapper.emitted('more')).toHaveLength(1)
+    expect(wrapper.findAllComponents(InstanceUsersRoleBadge)).toHaveLength(3)
   })
 })

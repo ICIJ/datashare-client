@@ -37,6 +37,14 @@ function onUserUpdated({ uid }) {
 function onUserDeleted({ uid }) {
   emit('user:deleted', { uid })
 }
+
+// Lets a sibling in the same row (the "+N more" button on the role badges) open this row's
+// roles modal without lifting its open/closed state out of this component.
+function openRolesModal() {
+  showRolesModal.value = true
+}
+
+defineExpose({ openRolesModal })
 </script>
 
 <template>

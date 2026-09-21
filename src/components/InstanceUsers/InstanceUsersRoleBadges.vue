@@ -1,12 +1,12 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import InstanceUsersRoleBadge from '@/components/InstanceUsers/InstanceUsersRoleBadge.vue'
 
 defineOptions({ name: 'InstanceUsersRoleBadges' })
 
-// Beyond this many grants, the rest collapse behind a "+N more" toggle so a user with many
+// Beyond this many grants, the rest collapse behind a "+N more" button so a user with many
 // project grants doesn't blow up the row height by default.
 const VISIBLE_LIMIT = 3
 
@@ -18,14 +18,15 @@ const props = defineProps({
   }
 })
 
+// "+N more" opens the manage-roles modal (see InstanceUsersActions) rather than expanding
+// inline, so the full grant list always has room to breathe.
+const emit = defineEmits(['more'])
+
 const { t } = useI18n()
-const expanded = ref(false)
 
 const hasMore = computed(() => props.roles.length > VISIBLE_LIMIT)
 const hiddenCount = computed(() => props.roles.length - VISIBLE_LIMIT)
-const visibleRoles = computed(() => (expanded.value ? props.roles : props.roles.slice(0, VISIBLE_LIMIT)))
-
-defineExpose({ expanded, visibleRoles, hasMore, hiddenCount })
+const visibleRoles = computed(() => props.roles.slice(0, VISIBLE_LIMIT))
 </script>
 
 <template>
@@ -40,9 +41,9 @@ defineExpose({ expanded, visibleRoles, hasMore, hiddenCount })
       v-if="hasMore"
       type="button"
       class="project-button btn btn-sm btn-outline-secondary"
-      @click="expanded = !expanded"
+      @click="emit('more')"
     >
-      {{ expanded ? t('settings.users.roleBadges.showLess') : t('settings.users.roleBadges.more', { count: hiddenCount }) }}
+      {{ t('settings.users.roleBadges.more', { count: hiddenCount }) }}
     </button>
     <span
       v-if="!roles.length"

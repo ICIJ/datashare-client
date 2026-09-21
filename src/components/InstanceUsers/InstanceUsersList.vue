@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, shallowReactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import DisplayUser from '@/components/Display/DisplayUser.vue'
@@ -36,6 +36,10 @@ function onUserUpdated({ uid }) {
 function onUserDeleted({ uid }) {
   emit('user:deleted', { uid })
 }
+
+// Keyed by uid, one InstanceUsersActions component instance per row: lets the roles badges'
+// "+N more" button (a sibling cell in the same row) open that row's roles modal.
+const rowActions = shallowReactive({})
 
 const sort = defineModel('sort', { type: String, default: null })
 const order = defineModel('order', { type: String, default: 'asc' })
@@ -84,10 +88,14 @@ const items = computed(() =>
         <display-user :value="item.uid" />
       </template>
       <template #cell(roles)="{ item }">
-        <instance-users-role-badges :roles="item.roles" />
+        <instance-users-role-badges
+          :roles="item.roles"
+          @more="rowActions[item.uid]?.openRolesModal()"
+        />
       </template>
       <template #row-actions="{ item }">
         <instance-users-actions
+          :ref="el => (rowActions[item.uid] = el)"
           :user="item"
           @user:updated="onUserUpdated"
           @user:deleted="onUserDeleted"
