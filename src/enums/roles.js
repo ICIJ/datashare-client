@@ -1,4 +1,10 @@
 import IPhUserSquare from '~icons/ph/user-square'
+import IPhPersonSimpleBike from '~icons/ph/person-simple-bike'
+import IPhPersonSimpleRun from '~icons/ph/person-simple-run'
+import IPhPersonSimpleWalk from '~icons/ph/person-simple-walk'
+import IPhPersonSimpleHike from '~icons/ph/person-simple-hike'
+import IPhPersonSimpleSwim from '~icons/ph/person-simple-swim'
+import IPhPersonSimpleTaiChi from '~icons/ph/person-simple-tai-chi'
 import { markRaw } from 'vue'
 
 export const ROLE = Object.freeze({
@@ -54,3 +60,24 @@ export const ROLE_HIERARCHY = Object.freeze({
 })
 
 export const ROLE_ICON_DEFAULT = markRaw(IPhUserSquare)
+
+// Per-role icon/color, shared by DisplayRole and anything else that needs to badge a role
+// (e.g. ProjectRoleThumbnail overlays ROLE_ICON on a project thumbnail).
+export const ROLE_ICON = Object.freeze({
+  [ROLE.INSTANCE_ADMIN]: markRaw(IPhPersonSimpleBike),
+  [ROLE.DOMAIN_ADMIN]: markRaw(IPhPersonSimpleRun),
+  [ROLE.PROJECT_ADMIN]: markRaw(IPhPersonSimpleWalk),
+  [ROLE.PROJECT_EDITOR]: markRaw(IPhPersonSimpleHike),
+  [ROLE.PROJECT_MEMBER]: markRaw(IPhPersonSimpleSwim),
+  [ROLE.PROJECT_VISITOR]: markRaw(IPhPersonSimpleTaiChi),
+  [NO_ROLE]: ROLE_ICON_DEFAULT
+})
+
+export const ROLE_COLOR = Object.freeze({
+  [ROLE.INSTANCE_ADMIN]: 'var(--bs-danger)',
+  [ROLE.DOMAIN_ADMIN]: 'var(--bs-success)',
+  [ROLE.PROJECT_ADMIN]: 'var(--bs-category-person)',
+  [ROLE.PROJECT_EDITOR]: 'var(--bs-warning)',
+  [ROLE.PROJECT_MEMBER]: 'var(--bs-info)',
+  [ROLE.PROJECT_VISITOR]: 'var(--bs-secondary)'
+})
