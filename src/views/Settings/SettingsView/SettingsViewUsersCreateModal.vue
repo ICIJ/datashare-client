@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { BCollapse, BFormInput } from 'bootstrap-vue-next'
 
 import IPhTextAa from '~icons/ph/text-aa'
 import IPhEnvelopeSimple from '~icons/ph/envelope-simple'
@@ -10,22 +11,14 @@ import IPhLock from '~icons/ph/lock'
 import image from '@/assets/images/illustrations/app-modal-default-light.svg'
 import imageDark from '@/assets/images/illustrations/app-modal-default-dark.svg'
 import AppModal from '@/components/AppModal/AppModal.vue'
+import FormFieldsetI18n from '@/components/Form/FormFieldset/FormFieldsetI18n.vue'
+import FormInputPassword from '@/components/Form/FormInputPassword.vue'
+import ProjectDropdownSelector from '@/components/Project/ProjectDropdownSelector/ProjectDropdownSelector.vue'
 import ProjectUsersRoleDropdown from '@/components/ProjectUsers/ProjectUsersRoleDropdown.vue'
 
 import { useCore } from '@/composables/useCore.js'
 import { useToast } from '@/composables/useToast.js'
-import { DEFAULT_ROLE, ROLE, ROLE_ICON_DEFAULT, ROLE_LOWERCASE } from '@/enums/roles.js'
-import FormFieldsetI18n from '@/components/Form/FormFieldset/FormFieldsetI18n.vue'
-import { BFormInput } from 'bootstrap-vue-next'
-import ProjectLabel from '@/components/Project/ProjectLabel.vue'
-import FormInputPassword from '@/components/Form/FormInputPassword.vue'
-
-const props = defineProps({
-  project: {
-    type: String,
-    required: true
-  }
-})
+import { DEFAULT_ROLE, ROLE, ROLE_LOWERCASE } from '@/enums/roles.js'
 
 const modelValue = defineModel({ type: Boolean })
 const emit = defineEmits(['user:created'])
@@ -39,8 +32,14 @@ const email = ref('')
 const name = ref('')
 const password = ref('')
 const confirmPassword = ref('')
-const selectedRole = ref(DEFAULT_ROLE)
 const saving = ref(false)
+
+const grantAccess = ref(false)
+const selectedProject = ref(null)
+const selectedRole = ref(DEFAULT_ROLE)
+
+const allProjects = computed(() => core.projects)
+const projectName = computed(() => selectedProject.value?.name ?? null)
 
 const passwordMismatch = computed(() =>
   confirmPassword.value.length > 0 && password.value !== confirmPassword.value
@@ -52,7 +51,9 @@ const isValid = computed(() => {
   if (!name.value.trim().length) return false
   if (!password.value.trim().length) return false
   if (!confirmPassword.value.trim().length) return false
-  return password.value.length > 0 && password.value === confirmPassword.value
+  if (password.value !== confirmPassword.value) return false
+  if (grantAccess.value && !projectName.value) return false
+  return true
 })
 
 function resetForm() {
@@ -61,6 +62,8 @@ function resetForm() {
   name.value = ''
   password.value = ''
   confirmPassword.value = ''
+  grantAccess.value = false
+  selectedProject.value = null
   selectedRole.value = DEFAULT_ROLE
 }
 
@@ -82,11 +85,12 @@ async function saveUser(bvModalEvent) {
       name: name.value.trim(),
       provider: 'external',
       password: password.value,
-      domain: DEFAULT_DOMAIN,
-      index: props.project
+      domain: DEFAULT_DOMAIN
     })
-    await core.api.grantUserRole(uid, props.project, ROLE_LOWERCASE[selectedRole.value])
-    toast.success(t('projectViewEdit.users.create.saveSuccess'))
+    if (grantAccess.value && projectName.value) {
+      await core.api.grantUserRole(uid, projectName.value, ROLE_LOWERCASE[selectedRole.value])
+    }
+    toast.success(t('settings.users.create.saveSuccess'))
     emit('user:created', { uid })
     resetForm()
     modelValue.value = false
@@ -94,10 +98,10 @@ async function saveUser(bvModalEvent) {
   catch (err) {
     const status = err?.response?.status ?? err?.request?.response?.status
     if (status === 409) {
-      toast.error(t('projectViewEdit.users.create.saveErrorConflict'))
+      toast.error(t('settings.users.create.saveErrorConflict'))
     }
     else {
-      toast.error(t('projectViewEdit.users.create.saveError'))
+      toast.error(t('settings.users.create.saveError'))
     }
   }
   finally {
@@ -105,7 +109,21 @@ async function saveUser(bvModalEvent) {
   }
 }
 const labelCol = 4
-defineExpose({ username, email, name, password, confirmPassword, selectedRole, isValid, passwordMismatch, saving, saveUser, form })
+defineExpose({
+  username,
+  email,
+  name,
+  password,
+  confirmPassword,
+  grantAccess,
+  selectedProject,
+  selectedRole,
+  isValid,
+  passwordMismatch,
+  saving,
+  saveUser,
+  form
+})
 </script>
 
 <template>
@@ -113,8 +131,8 @@ defineExpose({ username, email, name, password, confirmPassword, selectedRole, i
     v-model="modelValue"
     :image="image"
     :image-dark="imageDark"
-    :title="t('projectViewEdit.users.create.title')"
-    :ok-title="t('projectViewEdit.users.create.confirm')"
+    :title="t('settings.users.create.title')"
+    :ok-title="t('settings.users.create.confirm')"
     :ok-disabled="!isValid || saving"
     size="lg"
     @ok="saveUser"
@@ -126,12 +144,12 @@ defineExpose({ username, email, name, password, confirmPassword, selectedRole, i
         :label-cols-lg="labelCol"
         required
         name="uid"
-        translation-key="projectViewEdit.users.create.fields.username"
+        translation-key="settings.users.create.fields.username"
         :icon="IPhTextAa"
       >
         <b-form-input
           v-model="username"
-          :placeholder="t('projectViewEdit.users.create.fields.username.placeholder')"
+          :placeholder="t('settings.users.create.fields.username.placeholder')"
           :disabled="saving"
           autofocus
           name="uid"
@@ -144,12 +162,12 @@ defineExpose({ username, email, name, password, confirmPassword, selectedRole, i
         :label-cols-lg="labelCol"
         required
         name="email"
-        translation-key="projectViewEdit.users.create.fields.email"
+        translation-key="settings.users.create.fields.email"
         :icon="IPhEnvelopeSimple"
       >
         <b-form-input
           v-model="email"
-          :placeholder="t('projectViewEdit.users.create.fields.email.placeholder')"
+          :placeholder="t('settings.users.create.fields.email.placeholder')"
           :disabled="saving"
           aria-required="true"
           type="email"
@@ -163,48 +181,46 @@ defineExpose({ username, email, name, password, confirmPassword, selectedRole, i
         :label-cols-lg="labelCol"
         required
         name="name"
-        translation-key="projectViewEdit.users.create.fields.name"
+        translation-key="settings.users.create.fields.name"
         :icon="IPhUser"
       >
         <b-form-input
           v-model="name"
-          :placeholder="t('projectViewEdit.users.create.fields.name.placeholder')"
+          :placeholder="t('settings.users.create.fields.name.placeholder')"
           :disabled="saving"
           name="name"
         />
       </form-fieldset-i18n>
 
       <form-fieldset-i18n
-
         :label-cols-sm="labelCol"
         :label-cols-md="labelCol"
         :label-cols-lg="labelCol"
         required
         name="password"
-        translation-key="projectViewEdit.users.create.fields.password"
+        translation-key="settings.users.create.fields.password"
         :icon="IPhLock"
       >
         <form-input-password
           v-model="password"
-          :placeholder="t('projectViewEdit.users.create.fields.password.placeholder')"
+          :placeholder="t('settings.users.create.fields.password.placeholder')"
           :disabled="saving"
           type="password"
           name="password"
         />
       </form-fieldset-i18n>
       <form-fieldset-i18n
-
         :label-cols-sm="labelCol"
         :label-cols-md="labelCol"
         :label-cols-lg="labelCol"
         required
         name="confirmPassword"
-        translation-key="projectViewEdit.users.create.fields.confirmPassword"
+        translation-key="settings.users.create.fields.confirmPassword"
         :icon="IPhLock"
       >
         <form-input-password
           v-model="confirmPassword"
-          :placeholder="t('projectViewEdit.users.create.fields.confirmPassword.placeholder')"
+          :placeholder="t('settings.users.create.fields.confirmPassword.placeholder')"
           :disabled="saving"
           type="password"
           name="confirmPassword"
@@ -214,30 +230,50 @@ defineExpose({ username, email, name, password, confirmPassword, selectedRole, i
           v-if="passwordMismatch"
           class="text-danger ms-auto"
         >
-          {{ t('projectViewEdit.users.create.fields.confirmPassword.mismatch') }}
+          {{ t('settings.users.create.fields.confirmPassword.mismatch') }}
         </small>
       </form-fieldset-i18n>
-      <form-fieldset-i18n
-        :label-cols-sm="labelCol"
-        :label-cols-md="labelCol"
-        :label-cols-lg="labelCol"
-        :icon="ROLE_ICON_DEFAULT"
-        name="role"
-        translation-key="projectViewEdit.users.create.fields.role"
+
+      <button
+        type="button"
+        class="btn btn-link ps-0"
+        aria-controls="settings-users-create-modal-grant-access"
+        :aria-expanded="grantAccess"
+        @click="grantAccess = !grantAccess"
       >
-        <div class="d-flex align-items-center gap-2">
+        {{ t('settings.users.create.grantAccess') }}
+      </button>
+      <b-collapse
+        id="settings-users-create-modal-grant-access"
+        v-model="grantAccess"
+      >
+        <form-fieldset-i18n
+          :label-cols-sm="labelCol"
+          :label-cols-md="labelCol"
+          :label-cols-lg="labelCol"
+          name="project"
+          translation-key="settings.users.create.fields.project"
+        >
+          <project-dropdown-selector
+            v-model="selectedProject"
+            :projects="allProjects"
+          />
+        </form-fieldset-i18n>
+        <form-fieldset-i18n
+          v-if="projectName"
+          :label-cols-sm="labelCol"
+          :label-cols-md="labelCol"
+          :label-cols-lg="labelCol"
+          name="role"
+          translation-key="settings.users.create.fields.role"
+        >
           <project-users-role-dropdown
             v-model="selectedRole"
-            :project="project"
+            :project="projectName"
             :hidden-roles="[ROLE.DOMAIN_ADMIN, ROLE.INSTANCE_ADMIN]"
           />
-          <i18n-t keypath="projectViewEdit.users.create.fields.role.inProject">
-            <template #project>
-              <project-label :project="project" />
-            </template>
-          </i18n-t>
-        </div>
-      </form-fieldset-i18n>
+        </form-fieldset-i18n>
+      </b-collapse>
     </b-form>
   </app-modal>
 </template>

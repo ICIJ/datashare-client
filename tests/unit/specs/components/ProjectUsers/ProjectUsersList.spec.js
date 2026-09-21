@@ -84,22 +84,8 @@ describe('ProjectUsersList.vue', () => {
   })
 
   describe('Delete action visibility (hide-delete)', () => {
-    it('shows the delete action for an instance admin using a users-provider auth', () => {
+    it('always hides the delete action, since removal from a project only happens via the role dropdown', () => {
       core.config.set('auth', 'form')
-      core.config.set('policies', [{ projectId: '*', domainId: '*', role: 'INSTANCE_ADMIN' }])
-      const wrapper = mountComponent()
-      expect(wrapper.findAllComponents(ProjectUsersActions)[0].props('hideDelete')).toBe(false)
-    })
-
-    it('hides the delete action from a project admin who is not an instance admin', () => {
-      core.config.set('auth', 'form')
-      core.config.set('policies', [{ projectId: project, domainId: 'default', role: 'PROJECT_ADMIN' }])
-      const wrapper = mountComponent()
-      expect(wrapper.findAllComponents(ProjectUsersActions)[0].props('hideDelete')).toBe(true)
-    })
-
-    it('hides the delete action when auth is not a users-provider even for an instance admin', () => {
-      core.config.set('auth', 'oauth')
       core.config.set('policies', [{ projectId: '*', domainId: '*', role: 'INSTANCE_ADMIN' }])
       const wrapper = mountComponent()
       expect(wrapper.findAllComponents(ProjectUsersActions)[0].props('hideDelete')).toBe(true)
@@ -297,13 +283,11 @@ describe('ProjectUsersList.vue', () => {
   })
 
   describe('Username resolution race condition', () => {
-    it('disables the role dropdown and delete action for every row until the username resolves', async () => {
+    it('disables the role dropdown for every row until the username resolves', async () => {
       const wrapper = mountComponent()
       expect(wrapper.findAllComponents(ProjectUsersRoleDropdown)[0].props('disabled')).toBe(true)
-      expect(wrapper.findAllComponents(ProjectUsersActions)[0].props('disableDelete')).toBe(true)
       await flushPromises()
       expect(wrapper.findAllComponents(ProjectUsersRoleDropdown)[0].props('disabled')).toBe(false)
-      expect(wrapper.findAllComponents(ProjectUsersActions)[0].props('disableDelete')).toBe(false)
     })
   })
 

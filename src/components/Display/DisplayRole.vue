@@ -1,36 +1,10 @@
 <script setup>
-import { computed, markRaw } from 'vue'
+import { computed } from 'vue'
 import { AppIcon } from '@icij/murmur'
 import { useI18n } from 'vue-i18n'
 
-import IPhPersonSimpleBike from '~icons/ph/person-simple-bike'
-import IPhPersonSimpleRun from '~icons/ph/person-simple-run'
-import IPhPersonSimpleWalk from '~icons/ph/person-simple-walk'
-import IPhPersonSimpleHike from '~icons/ph/person-simple-hike'
-import IPhPersonSimpleSwim from '~icons/ph/person-simple-swim'
-import IPhPersonSimpleTaiChi from '~icons/ph/person-simple-tai-chi'
-
 import { usePolicies } from '@/composables/usePolicies.js'
-import { ROLE, ROLE_ICON_DEFAULT, NO_ROLE } from '@/enums/roles.js'
-
-const ROLE_ICON = {
-  [ROLE.INSTANCE_ADMIN]: markRaw(IPhPersonSimpleBike),
-  [ROLE.DOMAIN_ADMIN]: markRaw(IPhPersonSimpleRun),
-  [ROLE.PROJECT_ADMIN]: markRaw(IPhPersonSimpleWalk),
-  [ROLE.PROJECT_EDITOR]: markRaw(IPhPersonSimpleHike),
-  [ROLE.PROJECT_MEMBER]: markRaw(IPhPersonSimpleSwim),
-  [ROLE.PROJECT_VISITOR]: markRaw(IPhPersonSimpleTaiChi),
-  [NO_ROLE]: ROLE_ICON_DEFAULT,
-}
-
-const ROLE_COLOR = {
-  [ROLE.INSTANCE_ADMIN]: 'var(--bs-danger)',
-  [ROLE.DOMAIN_ADMIN]: 'var(--bs-success)',
-  [ROLE.PROJECT_ADMIN]: 'var(--bs-category-person)',
-  [ROLE.PROJECT_EDITOR]: 'var(--bs-warning)',
-  [ROLE.PROJECT_MEMBER]: 'var(--bs-info)',
-  [ROLE.PROJECT_VISITOR]: 'var(--bs-secondary)',
-}
+import { ROLE_ICON, ROLE_COLOR, ROLE_ICON_DEFAULT } from '@/enums/roles.js'
 
 const props = defineProps({
   value: {

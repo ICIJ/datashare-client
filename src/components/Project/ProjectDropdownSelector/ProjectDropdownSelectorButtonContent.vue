@@ -15,6 +15,13 @@ const props = defineProps({
   sliceSize: {
     type: Number,
     default: 3
+  },
+  /**
+   * Text shown when nothing is selected yet. Defaults to the generic "Select a project".
+   */
+  placeholder: {
+    type: String,
+    default: null
   }
 })
 
@@ -38,15 +45,16 @@ const label = computed(() => {
 <template>
   <div class="project-dropdown-selector-button-content">
     <project-thumbnail-stack
+      v-if="hasProjects"
       :projects="selectedProjects"
       :max="sliceSize"
       overflow
     />
     <span
-      v-if="hasProjects"
       class="project-dropdown-selector-button-content__label ms-2"
+      :class="{ 'text-muted': !hasProjects }"
     >
-      {{ label }}
+      {{ hasProjects ? label : (placeholder ?? t('projectDropdownSelectorButtonContent.placeholder')) }}
     </span>
   </div>
 </template>

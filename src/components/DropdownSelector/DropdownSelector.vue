@@ -371,7 +371,6 @@ defineExpose({ hide, focus })
 
 <style lang="scss">
 .dropdown-selector {
-  background: $input-bg;
   font-size: inherit;
 
   .btn {
@@ -395,7 +394,10 @@ defineExpose({ hide, focus })
   &__menu {
     max-height: 50vh;
     overflow: auto;
-    z-index: $zindex-sticky;
+    // Higher than $zindex-modal so the menu isn't hidden when teleported
+    // to <body> from inside a modal (e.g. the project picker in the
+    // create-user modal).
+    z-index: $zindex-popover;
   }
 }
 </style>
