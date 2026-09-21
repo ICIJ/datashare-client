@@ -1705,8 +1705,8 @@
         "email": {
           "label": "Email"
         },
-        "projects": {
-          "label": "Projects"
+        "role": {
+          "label": "Roles"
         }
       },
       "roleBadges": {

@@ -4,8 +4,9 @@ import { useI18n } from 'vue-i18n'
 
 import DisplayUser from '@/components/Display/DisplayUser.vue'
 import InstanceUsersActions from '@/components/InstanceUsers/InstanceUsersActions.vue'
+import InstanceUsersRoleBadges from '@/components/InstanceUsers/InstanceUsersRoleBadges.vue'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric.vue'
-import ProjectsButton from '@/components/Project/ProjectsButton.vue'
+import { ROLE, ROLE_BIT } from '@/enums/roles.js'
 
 defineOptions({ name: 'InstanceUsersList' })
 
@@ -43,7 +44,7 @@ const fields = computed(() => [
   { key: 'uid', text: t('settings.users.fields.uid.label'), sortable: true, emphasis: true },
   { key: 'name', text: t('settings.users.fields.name.label'), sortable: true },
   { key: 'email', text: t('settings.users.fields.email.label'), sortable: true },
-  { key: 'projects', text: t('settings.users.fields.projects.label') }
+  { key: 'roles', text: t('settings.users.fields.role.label'), sortable: true, sortingKey: 'role' }
 ])
 
 const emptyLabel = computed(() =>
@@ -52,17 +53,21 @@ const emptyLabel = computed(() =>
     : t('settings.users.empty')
 )
 
-// A user's permissions are "<domain>::<project>" pairs (e.g. "default::my-project").
-// Resolve the distinct non-wildcard projects they're granted a role on.
-function projectsForPermissions(permissions) {
-  const projects = (permissions ?? [])
-    .map(({ v2 }) => String(v2).split('::')[1])
-    .filter(project => project && project !== '*')
-  return [...new Set(projects)]
+// One badge per grant, highest role first. Domain admin is left out for now: it has no single
+// project to badge (its identity is a domain), and the domain tier isn't part of this table yet.
+function roleBadgesForPermissions(permissions) {
+  return (permissions ?? [])
+    .filter(({ v1: role }) => role !== ROLE.DOMAIN_ADMIN)
+    .map(({ v1: role, v2 }) => ({ role, project: role === ROLE.INSTANCE_ADMIN ? null : String(v2).split('::')[1] }))
+    .filter(({ role, project }) => role === ROLE.INSTANCE_ADMIN || (project && project !== '*'))
+    .sort((a, b) => (ROLE_BIT[b.role] ?? 0) - (ROLE_BIT[a.role] ?? 0))
 }
 
 const items = computed(() =>
-  props.users.map(user => ({ ...user, projects: projectsForPermissions(user.permissions) }))
+  props.users.map(user => ({
+    ...user,
+    roles: roleBadgesForPermissions(user.permissions)
+  }))
 )
 </script>
 
@@ -79,8 +84,8 @@ const items = computed(() =>
       <template #cell(uid)="{ item }">
         <display-user :value="item.uid" />
       </template>
-      <template #cell(projects)="{ item }">
-        <projects-button :projects="item.projects" />
+      <template #cell(roles)="{ item }">
+        <instance-users-role-badges :roles="item.roles" />
       </template>
       <template #row-actions="{ item }">
         <instance-users-actions

@@ -3,7 +3,7 @@ import { shallowMount } from '@vue/test-utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import InstanceUsersActions from '@/components/InstanceUsers/InstanceUsersActions.vue'
 import InstanceUsersList from '@/components/InstanceUsers/InstanceUsersList.vue'
-import ProjectsButton from '@/components/Project/ProjectsButton.vue'
+import InstanceUsersRoleBadges from '@/components/InstanceUsers/InstanceUsersRoleBadges.vue'
 
 describe('InstanceUsersList.vue', () => {
   let core, global
@@ -51,7 +51,55 @@ describe('InstanceUsersList.vue', () => {
     expect(wrapper.findAll('page-table-tr-stub')).toHaveLength(2)
   })
 
-  it('derives the projects summary from distinct non-wildcard projects in permissions', () => {
+  it('passes no role badges when the user has no permissions', () => {
+    const wrapper = mountComponent({
+      users: [{ uid: 'alice@example.org', name: 'Alice A', email: 'alice@example.org', permissions: [] }]
+    })
+    expect(wrapper.findComponent(InstanceUsersRoleBadges).props('roles')).toEqual([])
+  })
+
+  it('builds one badge per grant instead of grouping by role tier', () => {
+    const wrapper = mountComponent({
+      users: [
+        {
+          uid: 'alice@example.org',
+          name: 'Alice A',
+          email: 'alice@example.org',
+          permissions: [
+            { v1: 'INSTANCE_ADMIN', v2: '*::*' },
+            { v1: 'PROJECT_ADMIN', v2: 'default::project-a' },
+            { v1: 'PROJECT_ADMIN', v2: 'default::project-b' }
+          ]
+        }
+      ]
+    })
+    expect(wrapper.findComponent(InstanceUsersRoleBadges).props('roles')).toEqual([
+      { role: 'INSTANCE_ADMIN', project: null },
+      { role: 'PROJECT_ADMIN', project: 'project-a' },
+      { role: 'PROJECT_ADMIN', project: 'project-b' }
+    ])
+  })
+
+  it('leaves domain admin grants out of the badge list, since the domain tier is not handled here yet', () => {
+    const wrapper = mountComponent({
+      users: [
+        {
+          uid: 'alice@example.org',
+          name: 'Alice A',
+          email: 'alice@example.org',
+          permissions: [
+            { v1: 'DOMAIN_ADMIN', v2: 'icij::*' },
+            { v1: 'PROJECT_ADMIN', v2: 'default::project-a' }
+          ]
+        }
+      ]
+    })
+    expect(wrapper.findComponent(InstanceUsersRoleBadges).props('roles')).toEqual([
+      { role: 'PROJECT_ADMIN', project: 'project-a' }
+    ])
+  })
+
+  it('sorts badges by role rank, highest first', () => {
     const wrapper = mountComponent({
       users: [
         {
@@ -60,20 +108,17 @@ describe('InstanceUsersList.vue', () => {
           email: 'alice@example.org',
           permissions: [
             { v1: 'PROJECT_MEMBER', v2: 'default::project-a' },
-            { v1: 'PROJECT_ADMIN', v2: 'default::project-b' },
-            { v1: 'INSTANCE_ADMIN', v2: '*::*' }
+            { v1: 'INSTANCE_ADMIN', v2: '*::*' },
+            { v1: 'PROJECT_ADMIN', v2: 'default::project-b' }
           ]
         }
       ]
     })
-    expect(wrapper.findComponent(ProjectsButton).props('projects')).toEqual(['project-a', 'project-b'])
-  })
-
-  it('passes an empty projects list when permissions is empty', () => {
-    const wrapper = mountComponent({
-      users: [{ uid: 'alice@example.org', name: 'Alice A', email: 'alice@example.org', permissions: [] }]
-    })
-    expect(wrapper.findComponent(ProjectsButton).props('projects')).toEqual([])
+    expect(wrapper.findComponent(InstanceUsersRoleBadges).props('roles').map(({ role }) => role)).toEqual([
+      'INSTANCE_ADMIN',
+      'PROJECT_ADMIN',
+      'PROJECT_MEMBER'
+    ])
   })
 
   it('forwards user:updated from a row action up to its own listeners', () => {
