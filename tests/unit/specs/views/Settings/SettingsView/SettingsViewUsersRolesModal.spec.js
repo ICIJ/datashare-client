@@ -1,7 +1,7 @@
 import { shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup.js'
-import ProjectLabel from '@/components/Project/ProjectLabel.vue'
+import InstanceUsersRoleBadge from '@/components/InstanceUsers/InstanceUsersRoleBadge.vue'
 import SettingsViewUsersRolesModal from '@/views/Settings/SettingsView/SettingsViewUsersRolesModal.vue'
 
 const mockToast = { error: vi.fn(), success: vi.fn() }
@@ -92,9 +92,9 @@ describe('SettingsViewUsersRolesModal.vue', () => {
     expect(wrapper.vm.roles.map(r => r.project)).toEqual(['*', 'project-a'])
   })
 
-  it('renders a project label for each permission, in role/A-Z sort order', () => {
+  it('renders a role badge for each permission, in role/A-Z sort order', () => {
     const wrapper = mountComponent()
-    const projects = wrapper.findAllComponents(ProjectLabel).map(c => c.props('project'))
+    const projects = wrapper.findAllComponents(InstanceUsersRoleBadge).map(c => c.props('project'))
     expect(projects).toEqual(['project-b', 'project-a'])
   })
 
@@ -181,15 +181,65 @@ describe('SettingsViewUsersRolesModal.vue', () => {
     expect(mockToast.error).toHaveBeenCalledOnce()
   })
 
-  it('renders "Instance" instead of a project label for the wildcard permission', () => {
+  describe('changeRole', () => {
+    it('does nothing when the picked role is the one already granted', async () => {
+      const wrapper = mountComponent()
+      await wrapper.vm.changeRole({ project: 'project-a', role: 'PROJECT_MEMBER' }, 'PROJECT_MEMBER')
+      expect(mockApi.grantUserRole).not.toHaveBeenCalled()
+      expect(mockApi.getUserByUid).not.toHaveBeenCalled()
+    })
+
+    it('re-grants a project role with the new value, refetches and emits user:updated', async () => {
+      const updatedUser = {
+        uid: 'alice@example.org',
+        permissions: [{ v1: 'PROJECT_ADMIN', v2: 'default::project-a' }]
+      }
+      mockApi.getUserByUid.mockResolvedValue(updatedUser)
+      const wrapper = mountComponent()
+      await wrapper.vm.changeRole({ project: 'project-a', role: 'PROJECT_MEMBER' }, 'PROJECT_ADMIN')
+      expect(mockApi.grantUserRole).toHaveBeenCalledWith('alice@example.org', 'project-a', 'admin')
+      expect(mockApi.revokeUserRole).not.toHaveBeenCalled()
+      expect(wrapper.vm.roles).toContainEqual(
+        expect.objectContaining({ project: 'project-a', role: 'PROJECT_ADMIN' })
+      )
+      expect(wrapper.emitted('user:updated')).toEqual([[{ uid: 'alice@example.org' }]])
+      expect(mockToast.success).toHaveBeenCalledOnce()
+    })
+
+    it('shows an error toast and does not emit user:updated when the re-grant fails', async () => {
+      mockApi.grantUserRole.mockRejectedValue(new Error('nope'))
+      const wrapper = mountComponent()
+      await wrapper.vm.changeRole({ project: 'project-a', role: 'PROJECT_MEMBER' }, 'PROJECT_ADMIN')
+      expect(mockApi.getUserByUid).not.toHaveBeenCalled()
+      expect(wrapper.emitted('user:updated')).toBeFalsy()
+      expect(mockToast.error).toHaveBeenCalledOnce()
+    })
+
+    it('revokes the old instance-wide role then grants the new one, since they are separate grants', async () => {
+      const wrapper = mountComponent()
+      await wrapper.vm.changeRole({ project: '*', role: 'INSTANCE_ADMIN', domain: '*' }, 'DOMAIN_ADMIN')
+      expect(mockApi.revokeInstanceRole).toHaveBeenCalledWith('alice@example.org', 'instance_admin', null)
+      expect(mockApi.grantInstanceRole).toHaveBeenCalledWith('alice@example.org', 'domain_admin', 'default')
+      expect(mockApi.grantUserRole).not.toHaveBeenCalled()
+      expect(mockApi.revokeUserRole).not.toHaveBeenCalled()
+    })
+
+    it('carries the old domain when revoking a domain admin role being switched to instance admin', async () => {
+      const wrapper = mountComponent()
+      await wrapper.vm.changeRole({ project: '*', role: 'DOMAIN_ADMIN', domain: 'icij' }, 'INSTANCE_ADMIN')
+      expect(mockApi.revokeInstanceRole).toHaveBeenCalledWith('alice@example.org', 'domain_admin', 'icij')
+      expect(mockApi.grantInstanceRole).toHaveBeenCalledWith('alice@example.org', 'instance_admin', null)
+    })
+  })
+
+  it('passes a null project to the role badge for the wildcard permission', () => {
     const wrapper = mountComponent({
       user: {
         uid: 'alice@example.org',
         permissions: [{ v1: 'INSTANCE_ADMIN', v2: '*::*' }]
       }
     })
-    expect(wrapper.findComponent(ProjectLabel).exists()).toBe(false)
-    expect(wrapper.text()).toContain('Instance')
+    expect(wrapper.findComponent(InstanceUsersRoleBadge).props('project')).toBe(null)
   })
 
   describe('instance scope', () => {
@@ -239,7 +289,7 @@ describe('SettingsViewUsersRolesModal.vue', () => {
       await wrapper.vm.$nextTick()
       wrapper.vm.selectedRole = 'INSTANCE_ADMIN'
       await wrapper.vm.grantRole()
-      expect(mockApi.grantInstanceRole).toHaveBeenCalledWith('alice@example.org', 'instance_admin', 'default')
+      expect(mockApi.grantInstanceRole).toHaveBeenCalledWith('alice@example.org', 'instance_admin', null)
       expect(mockApi.grantUserRole).not.toHaveBeenCalled()
     })
 
@@ -260,7 +310,7 @@ describe('SettingsViewUsersRolesModal.vue', () => {
         }
       })
       await wrapper.vm.revokeRole({ project: '*', role: 'INSTANCE_ADMIN', domain: '*' })
-      expect(mockApi.revokeInstanceRole).toHaveBeenCalledWith('alice@example.org', 'instance_admin', '*')
+      expect(mockApi.revokeInstanceRole).toHaveBeenCalledWith('alice@example.org', 'instance_admin', null)
       expect(mockApi.revokeUserRole).not.toHaveBeenCalled()
     })
   })

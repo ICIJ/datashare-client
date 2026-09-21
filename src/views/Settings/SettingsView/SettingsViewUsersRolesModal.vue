@@ -6,13 +6,12 @@ import image from '@/assets/images/illustrations/app-modal-default-light.svg'
 import imageDark from '@/assets/images/illustrations/app-modal-default-dark.svg'
 import AppModal from '@/components/AppModal/AppModal.vue'
 import ButtonRowActionDelete from '@/components/Button/ButtonRowAction/ButtonRowActionDelete.vue'
-import DisplayRole from '@/components/Display/DisplayRole.vue'
+import InstanceUsersRoleBadge from '@/components/InstanceUsers/InstanceUsersRoleBadge.vue'
 import PageTable from '@/components/PageTable/PageTable.vue'
 import PageTableTdActions from '@/components/PageTable/PageTableTdActions.vue'
 import PageTableTh from '@/components/PageTable/PageTableTh.vue'
 import PageTableTr from '@/components/PageTable/PageTableTr.vue'
 import ProjectDropdownSelector from '@/components/Project/ProjectDropdownSelector/ProjectDropdownSelector.vue'
-import ProjectLabel from '@/components/Project/ProjectLabel.vue'
 import ProjectUsersRoleDropdown from '@/components/ProjectUsers/ProjectUsersRoleDropdown.vue'
 
 import { usePolicies } from '@/composables/usePolicies.js'
@@ -25,7 +24,8 @@ import { NO_ROLE, ROLE, ROLE_BIT, ROLE_LOWERCASE } from '@/enums/roles.js'
 // revokeInstanceRole), not the project-scoped /index/:index one.
 const INSTANCE_SCOPE = '*'
 // Domain stays hardcoded here (no picker) since 'default' is the only domain that exists today;
-// only matters for DOMAIN_ADMIN grants, ignored by the backend for INSTANCE_ADMIN.
+// only matters for DOMAIN_ADMIN grants. INSTANCE_ADMIN is domain-less: the backend rejects the
+// grant if a domain param is present at all, so it must be omitted rather than defaulted.
 const DEFAULT_DOMAIN = 'default'
 const PROJECT_ROLES = [ROLE.PROJECT_VISITOR, ROLE.PROJECT_MEMBER, ROLE.PROJECT_EDITOR, ROLE.PROJECT_ADMIN]
 const INSTANCE_ROLES = [ROLE.DOMAIN_ADMIN, ROLE.INSTANCE_ADMIN]
@@ -119,11 +119,40 @@ function isInstanceOrDomainRole(role) {
   return role === ROLE.DOMAIN_ADMIN || role === ROLE.INSTANCE_ADMIN
 }
 
+// Instance/domain admin aren't a single field that can be swapped in place, they're separate
+// grants, so changing between them means grant-then-revoke (grant first, so if it fails the
+// user just keeps their old role instead of ending up with neither). A plain project role is
+// just re-granted: grantUserRole overwrites the existing role for that user/project.
+async function changeRole(item, newRole) {
+  if (newRole === item.role) return
+  saving.value = true
+  try {
+    if (isInstanceOrDomainRole(item.role)) {
+      const newDomain = newRole === ROLE.DOMAIN_ADMIN ? DEFAULT_DOMAIN : null
+      await core.api.grantInstanceRole(props.user.uid, ROLE_LOWERCASE[newRole], newDomain)
+      const oldDomain = item.role === ROLE.DOMAIN_ADMIN ? item.domain : null
+      await core.api.revokeInstanceRole(props.user.uid, ROLE_LOWERCASE[item.role], oldDomain)
+    }
+    else {
+      await core.api.grantUserRole(props.user.uid, item.project, ROLE_LOWERCASE[newRole])
+    }
+    toast.success(t('settings.users.rolesModal.grantSuccess'))
+    await refreshUser()
+  }
+  catch {
+    toast.error(t('settings.users.rolesModal.grantError'))
+  }
+  finally {
+    saving.value = false
+  }
+}
+
 async function revokeRole(item) {
   saving.value = true
   try {
     if (isInstanceOrDomainRole(item.role)) {
-      await core.api.revokeInstanceRole(props.user.uid, ROLE_LOWERCASE[item.role], item.domain)
+      const domain = item.role === ROLE.DOMAIN_ADMIN ? item.domain : null
+      await core.api.revokeInstanceRole(props.user.uid, ROLE_LOWERCASE[item.role], domain)
     }
     else {
       await core.api.revokeUserRole(props.user.uid, item.project, { ifExists: true })
@@ -144,7 +173,8 @@ async function grantRole() {
   saving.value = true
   try {
     if (isInstanceScope.value) {
-      await core.api.grantInstanceRole(props.user.uid, ROLE_LOWERCASE[selectedRole.value], DEFAULT_DOMAIN)
+      const domain = selectedRole.value === ROLE.DOMAIN_ADMIN ? DEFAULT_DOMAIN : null
+      await core.api.grantInstanceRole(props.user.uid, ROLE_LOWERCASE[selectedRole.value], domain)
     }
     else {
       await core.api.grantUserRole(props.user.uid, selectedProjectName.value, ROLE_LOWERCASE[selectedRole.value])
@@ -167,13 +197,15 @@ defineExpose({
   projectPickerOptions,
   canGrantInstanceRole,
   isInstanceScope,
+  hiddenRoles,
   selectedProject,
   selectedRole,
   selectedProjectName,
   canGrant,
   saving,
   revokeRole,
-  grantRole
+  grantRole,
+  changeRole
 })
 </script>
 
@@ -228,13 +260,20 @@ defineExpose({
         :key="`${item.role}-${item.project}`"
       >
         <td>
-          <span v-if="item.project === INSTANCE_SCOPE">{{ t('settings.users.rolesModal.scope.instance') }}</span>
-          <project-label
-            v-else
-            :project="item.project"
+          <instance-users-role-badge
+            :role="item.role"
+            :project="item.project === INSTANCE_SCOPE ? null : item.project"
           />
         </td>
-        <td><display-role :value="item.role" /></td>
+        <td>
+          <project-users-role-dropdown
+            :model-value="item.role"
+            :project="item.project"
+            :disabled="saving"
+            :hidden-roles="item.project === INSTANCE_SCOPE ? PROJECT_ROLES : INSTANCE_ROLES"
+            @update:model-value="changeRole(item, $event)"
+          />
+        </td>
         <page-table-td-actions>
           <button-row-action-delete
             :disabled="saving"
