@@ -2,6 +2,7 @@ import { shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup.js'
 import InstanceUsersRoleBadge from '@/components/InstanceUsers/InstanceUsersRoleBadge.vue'
+import ProjectUsersRoleDropdown from '@/components/ProjectUsers/ProjectUsersRoleDropdown.vue'
 import SettingsViewUsersRolesModal from '@/views/Settings/SettingsView/SettingsViewUsersRolesModal.vue'
 
 const mockToast = { error: vi.fn(), success: vi.fn() }
@@ -242,6 +243,16 @@ describe('SettingsViewUsersRolesModal.vue', () => {
     expect(wrapper.findComponent(InstanceUsersRoleBadge).props('project')).toBe(null)
   })
 
+  it('does not offer domain admin as a pickable role for the existing instance-wide row either', () => {
+    const wrapper = mountComponent({
+      user: {
+        uid: 'alice@example.org',
+        permissions: [{ v1: 'INSTANCE_ADMIN', v2: '*::*' }]
+      }
+    })
+    expect(wrapper.findComponent(ProjectUsersRoleDropdown).props('hiddenRoles')).toContain('DOMAIN_ADMIN')
+  })
+
   describe('instance scope', () => {
     beforeEach(() => {
       core.config.set('policies', [{ projectId: '*', domainId: '*', role: 'INSTANCE_ADMIN' }])
@@ -300,6 +311,13 @@ describe('SettingsViewUsersRolesModal.vue', () => {
       wrapper.vm.selectedRole = 'DOMAIN_ADMIN'
       await wrapper.vm.grantRole()
       expect(mockApi.grantInstanceRole).toHaveBeenCalledWith('alice@example.org', 'domain_admin', 'default')
+    })
+
+    it('does not offer domain admin as a pickable role for the instance scope, since the domain tier is not wired up in this UI yet', async () => {
+      const wrapper = mountComponent()
+      wrapper.vm.selectedProject = { name: '*' }
+      await wrapper.vm.$nextTick()
+      expect(wrapper.vm.hiddenRoles).toContain('DOMAIN_ADMIN')
     })
 
     it('revokes an instance-wide role via revokeInstanceRole, not the project-scoped endpoint', async () => {

@@ -90,8 +90,11 @@ const selectedProjectName = computed(() => selectedProject.value?.name ?? null)
 const isInstanceScope = computed(() => selectedProjectName.value === INSTANCE_SCOPE)
 // Project and instance roles are mutually exclusive: a project grant can't be a domain/instance
 // admin (no domain concept in grantUserRole yet, see DEFAULT_DOMAIN elsewhere), and an
-// instance-wide grant can't be a project-level role.
-const hiddenRoles = computed(() => (isInstanceScope.value ? PROJECT_ROLES : INSTANCE_ROLES))
+// instance-wide grant can't be a project-level role. Domain admin is also left off the picker: the
+// domain tier isn't wired up in this UI yet (single hardcoded "default" domain, no picker):
+// existing domain-admin grants still show and can be revoked, they're just not newly selectable.
+const hiddenRolesFor = isInstance => (isInstance ? [...PROJECT_ROLES, ROLE.DOMAIN_ADMIN] : INSTANCE_ROLES)
+const hiddenRoles = computed(() => hiddenRolesFor(isInstanceScope.value))
 
 // A grant needs an actual role picked; NO_ROLE is the unselected/default state.
 const canGrant = computed(() => !!selectedProjectName.value && selectedRole.value !== NO_ROLE)
@@ -270,7 +273,7 @@ defineExpose({
             :model-value="item.role"
             :project="item.project"
             :disabled="saving"
-            :hidden-roles="item.project === INSTANCE_SCOPE ? PROJECT_ROLES : INSTANCE_ROLES"
+            :hidden-roles="hiddenRolesFor(item.project === INSTANCE_SCOPE)"
             @update:model-value="changeRole(item, $event)"
           />
         </td>
