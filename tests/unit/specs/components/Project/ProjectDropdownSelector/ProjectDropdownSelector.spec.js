@@ -53,6 +53,12 @@ describe('ProjectDropdownSelector.vue', function () {
     expect(wrapper.find('.dropdown-toggle').text().trim()).toBe('Select a project')
   })
 
+  it('should display a custom placeholder as button content when one is given', () => {
+    const props = { modelValue: null, projects, teleportDisabled: true, placeholder: 'Select scope' }
+    const wrapper = mount(ProjectDropdownSelector, { props, global: { plugins } })
+    expect(wrapper.find('.dropdown-toggle').text().trim()).toBe('Select scope')
+  })
+
   it('should render the selected project first in single-select mode', () => {
     const props = { modelValue: { name: 'bar' }, projects, teleportDisabled: true }
     const wrapper = mount(ProjectDropdownSelector, { props, global: { plugins } })

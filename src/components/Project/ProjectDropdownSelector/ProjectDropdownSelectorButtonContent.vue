@@ -15,6 +15,13 @@ const props = defineProps({
   sliceSize: {
     type: Number,
     default: 3
+  },
+  /**
+   * Text shown when nothing is selected yet. Defaults to the generic "Select a project".
+   */
+  placeholder: {
+    type: String,
+    default: null
   }
 })
 
@@ -47,7 +54,7 @@ const label = computed(() => {
       class="project-dropdown-selector-button-content__label ms-2"
       :class="{ 'text-muted': !hasProjects }"
     >
-      {{ hasProjects ? label : t('projectDropdownSelectorButtonContent.placeholder') }}
+      {{ hasProjects ? label : (placeholder ?? t('projectDropdownSelectorButtonContent.placeholder')) }}
     </span>
   </div>
 </template>

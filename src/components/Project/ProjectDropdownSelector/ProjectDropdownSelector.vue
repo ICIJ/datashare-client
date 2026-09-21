@@ -60,6 +60,14 @@ const props = defineProps({
    */
   teleportDisabled: {
     type: Boolean
+  },
+  /**
+   * Text shown in the toggle button when nothing is selected yet. Defaults to the generic
+   * "Select a project".
+   */
+  placeholder: {
+    type: String,
+    default: null
   }
 })
 
@@ -121,6 +129,7 @@ function filterProject(project, query) {
       <project-dropdown-selector-button-content
         :slice-size="sliceSize"
         :selected-projects="selectedOptions"
+        :placeholder="placeholder"
       />
     </template>
     <template #item="{ option: project, selected, selectionRequired, focused, toggle, toggleUnique }">
