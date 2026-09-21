@@ -1793,6 +1793,8 @@
         "title": "Manage roles for {uid}",
         "close": "Close",
         "empty": "This user has no project role grants yet.",
+        "searchPlaceholder": "Search projects or instance",
+        "noResults": "No project or role matches your search.",
         "scope": {
           "project": "Project",
           "instance": "Instance"

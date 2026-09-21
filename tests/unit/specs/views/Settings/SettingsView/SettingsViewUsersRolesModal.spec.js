@@ -286,6 +286,74 @@ describe('SettingsViewUsersRolesModal.vue', () => {
     expect(wrapper.findComponent(ProjectUsersRoleDropdown).props('hiddenRoles')).toContain('DOMAIN_ADMIN')
   })
 
+  describe('search filter', () => {
+    beforeEach(() => {
+      vi.useFakeTimers()
+    })
+
+    afterEach(() => {
+      vi.useRealTimers()
+    })
+
+    it('does not filter immediately, since the search is debounced', async () => {
+      const wrapper = mountComponent()
+      wrapper.vm.search = 'project-a'
+      await wrapper.vm.$nextTick()
+      expect(wrapper.vm.filteredRoles).toHaveLength(2)
+    })
+
+    it('filters roles by project name once the debounce settles', async () => {
+      const wrapper = mountComponent()
+      wrapper.vm.search = 'project-a'
+      await vi.runAllTimersAsync()
+      expect(wrapper.vm.filteredRoles).toMatchObject([{ project: 'project-a' }])
+    })
+
+    it('is case-insensitive', async () => {
+      const wrapper = mountComponent()
+      wrapper.vm.search = 'PROJECT-B'
+      await vi.runAllTimersAsync()
+      expect(wrapper.vm.filteredRoles).toMatchObject([{ project: 'project-b' }])
+    })
+
+    it('matches the instance-wide row by its "Instance" label', async () => {
+      const wrapper = mountComponent({
+        user: {
+          uid: 'alice@example.org',
+          permissions: [
+            { v1: 'INSTANCE_ADMIN', v2: '*::*' },
+            { v1: 'PROJECT_MEMBER', v2: 'default::project-a' }
+          ]
+        }
+      })
+      wrapper.vm.search = 'instance'
+      await vi.runAllTimersAsync()
+      expect(wrapper.vm.filteredRoles).toMatchObject([{ project: '*' }])
+    })
+
+    it('returns no rows and shows the no-results message when nothing matches', async () => {
+      const wrapper = mountComponent()
+      wrapper.vm.search = 'no-such-project'
+      await vi.runAllTimersAsync()
+      await wrapper.vm.$nextTick()
+      expect(wrapper.vm.filteredRoles).toEqual([])
+      expect(wrapper.text()).toContain(core.i18n.global.t('settings.users.rolesModal.noResults'))
+    })
+
+    it('resets the debounced search immediately when switching to a different user, without waiting for the debounce', async () => {
+      const wrapper = mountComponent()
+      wrapper.vm.search = 'project-a'
+      await vi.runAllTimersAsync()
+      expect(wrapper.vm.filteredRoles).toMatchObject([{ project: 'project-a' }])
+
+      await wrapper.setProps({
+        user: { uid: 'bob@example.org', permissions: [{ v1: 'PROJECT_ADMIN', v2: 'default::project-z' }] }
+      })
+      expect(wrapper.vm.search).toBe('')
+      expect(wrapper.vm.filteredRoles).toMatchObject([{ project: 'project-z' }])
+    })
+  })
+
   describe('instance scope', () => {
     beforeEach(() => {
       core.config.set('policies', [{ projectId: '*', domainId: '*', role: 'INSTANCE_ADMIN' }])

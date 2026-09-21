@@ -1,11 +1,13 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import debounce from 'lodash/debounce'
 
 import image from '@/assets/images/illustrations/app-modal-default-light.svg'
 import imageDark from '@/assets/images/illustrations/app-modal-default-dark.svg'
 import AppModal from '@/components/AppModal/AppModal.vue'
 import ButtonRowActionDelete from '@/components/Button/ButtonRowAction/ButtonRowActionDelete.vue'
+import FormControlSearch from '@/components/Form/FormControl/FormControlSearch.vue'
 import InstanceUsersRoleBadge from '@/components/InstanceUsers/InstanceUsersRoleBadge.vue'
 import PageTable from '@/components/PageTable/PageTable.vue'
 import PageTableTdActions from '@/components/PageTable/PageTableTdActions.vue'
@@ -51,9 +53,25 @@ const { isInstanceAdmin } = usePolicies()
 const { isAuthWithUsersProvider } = useAuth()
 
 const permissions = ref([])
+const search = ref('')
+// Filtering is a synchronous in-memory operation, but still debounced: it avoids re-filtering
+// the list on every keystroke while the user is still typing.
+const debouncedSearch = ref('')
+const setDebouncedSearch = debounce(value => (debouncedSearch.value = value), 200)
 
-// Sync the local permissions list from the user prop whenever the modal is opened for a user.
-watch(() => props.user, user => (permissions.value = user?.permissions ?? []), { immediate: true })
+// Sync the local permissions list from the user prop whenever the modal is opened for a different
+// user. Guarded on uid rather than the object reference: refreshUser() rebuilds props.user with a
+// fresh reference on every grant/revoke while the modal stays open, which would otherwise wipe the
+// search box mid-session.
+watch(() => props.user?.uid, (uid, previousUid) => {
+  if (uid === previousUid) return
+  permissions.value = props.user?.permissions ?? []
+  search.value = ''
+  setDebouncedSearch.cancel()
+  debouncedSearch.value = ''
+}, { immediate: true })
+
+watch(search, setDebouncedSearch)
 
 // Each permission is { v1: role, v2: 'domain::project' }. Domain is kept around in the parsed
 // data for completeness, but this UI only ever renders `project` and `role`.
@@ -72,6 +90,17 @@ const roles = computed(() =>
       return sortKeyOf(a).localeCompare(sortKeyOf(b))
     })
 )
+
+// Filters the granted-roles table by project name, or by the "Instance" label for the
+// instance-wide row, so a user with many project grants can find one without scrolling.
+const filteredRoles = computed(() => {
+  const query = debouncedSearch.value.trim().toLowerCase()
+  if (!query) return roles.value
+  return roles.value.filter(({ project }) => {
+    const label = project === INSTANCE_SCOPE ? t('settings.users.rolesModal.scope.instance') : project
+    return label.toLowerCase().includes(query)
+  })
+})
 
 const assignedProjects = computed(() => new Set(roles.value.map(({ project }) => project)))
 const availableProjects = computed(() => core.projects.filter(({ name }) => !assignedProjects.value.has(name)))
@@ -208,6 +237,8 @@ async function grantRole() {
 
 defineExpose({
   roles,
+  search,
+  filteredRoles,
   availableProjects,
   projectPickerOptions,
   canGrantInstanceRole,
@@ -236,6 +267,14 @@ defineExpose({
     ok-variant="outline-secondary"
     size="lg"
   >
+    <form-control-search
+      v-if="roles.length"
+      v-model="search"
+      class="mb-3"
+      clear-text
+      :placeholder="t('settings.users.rolesModal.searchPlaceholder')"
+    />
+
     <page-table class="mb-3">
       <template #thead>
         <page-table-th :label="t('settings.users.create.fields.project.label')" />
@@ -272,7 +311,7 @@ defineExpose({
       </page-table-tr>
 
       <page-table-tr
-        v-for="item in roles"
+        v-for="item in filteredRoles"
         :key="`${item.role}-${item.project}`"
       >
         <td>
@@ -304,6 +343,15 @@ defineExpose({
           class="text-secondary small"
         >
           {{ t('settings.users.rolesModal.empty') }}
+        </td>
+      </page-table-tr>
+
+      <page-table-tr v-else-if="!filteredRoles.length">
+        <td
+          colspan="3"
+          class="text-secondary small"
+        >
+          {{ t('settings.users.rolesModal.noResults') }}
         </td>
       </page-table-tr>
     </page-table>
