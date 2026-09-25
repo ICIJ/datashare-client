@@ -147,7 +147,18 @@ class Core extends Behaviors {
     // default to hover and focus triggers, and only wire click-outside dismissal when
     // the click trigger is active, so this one default makes every popover in the
     // application open on click and close on click outside.
-    this._bootstrapVue = createBootstrap({ components: { BPopover: { click: true } }, directives: true })
+    //
+    // BTooltip renders a BPopover internally and forwards its own trigger props as
+    // `undefined` when they are not set, which lets the BPopover default above leak
+    // into every tooltip and switch it to a click trigger. Restating the triggers
+    // under `BTooltip` keeps tooltips on hover and focus, where they belong.
+    this._bootstrapVue = createBootstrap({
+      components: {
+        BPopover: { click: true },
+        BTooltip: { click: false, hover: true, focus: true }
+      },
+      directives: true
+    })
     this.use(this.bootstrapVue)
     return this
   }
