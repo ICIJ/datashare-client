@@ -162,4 +162,65 @@ describe('useDocumentLocalSearch', () => {
     await settle()
     expect(matches.value).toEqual([{ page: 3 }])
   })
+  it('stops loading when the term is emptied while a search is in flight', async () => {
+    const findMatches = vi.fn(() => new Promise(() => {}))
+    const { term, isLoading } = useDocumentLocalSearch({ findMatches })
+    term.value = 'foo'
+    await settle()
+    expect(isLoading.value).toBe(true)
+    term.value = ''
+    await nextTick()
+    expect(isLoading.value).toBe(false)
+  })
+
+  it('does not search the same term twice when refreshing inside the debounce window', async () => {
+    const findMatches = vi.fn().mockResolvedValue([])
+    const { term, refresh } = useDocumentLocalSearch({ findMatches })
+    term.value = 'foo'
+    await settle(100)
+    await refresh()
+    await settle()
+    expect(findMatches.mock.calls).toEqual([['foo']])
+  })
+
+  it('reports the trimmed term the matches were found for', async () => {
+    const findMatches = vi.fn().mockResolvedValue([{ page: 1 }])
+    const { term, appliedTerm } = useDocumentLocalSearch({ findMatches })
+    term.value = ' foo '
+    await settle()
+    expect(findMatches).toHaveBeenCalledWith('foo')
+    expect(appliedTerm.value).toBe('foo')
+  })
+
+  it('keeps the applied term on the matches already found while a longer term settles', async () => {
+    const findMatches = vi.fn().mockResolvedValue([{ page: 1 }])
+    const { term, appliedTerm } = useDocumentLocalSearch({ findMatches })
+    term.value = 'foo'
+    await settle()
+    term.value = 'foobar'
+    await nextTick()
+    expect(appliedTerm.value).toBe('foo')
+  })
+
+  it('applies no term when the search finds nothing', async () => {
+    const findMatches = vi.fn().mockResolvedValue([])
+    const { term, appliedTerm } = useDocumentLocalSearch({ findMatches })
+    term.value = 'foo'
+    await settle()
+    expect(appliedTerm.value).toBe('')
+  })
+
+  it('drops an in-flight search cleared before it resolves', async () => {
+    const deferred = []
+    const findMatches = vi.fn(() => new Promise(resolve => deferred.push(resolve)))
+    const { term, matches, occurrences, isLoading, clear } = useDocumentLocalSearch({ findMatches })
+    term.value = 'foo'
+    await settle()
+    clear()
+    expect(occurrences.value).toBe(0)
+    expect(isLoading.value).toBe(false)
+    deferred[0]([{ page: 1 }, { page: 2 }])
+    await nextTick()
+    expect(matches.value).toEqual([])
+  })
 })

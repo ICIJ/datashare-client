@@ -99,7 +99,9 @@ const {
   activeIndex: localSearchIndex,
   matches: localSearchMatches,
   occurrences: localSearchOccurrences,
+  appliedTerm: localSearchAppliedTerm,
   isLoading: isLocalSearchLoading,
+  clear: clearLocalSearch,
   refresh: refreshLocalSearch
 } = useDocumentLocalSearch({ findMatches })
 const localSearchIndexes = computed(() => localSearchMatches.value.map(({ offset }) => offset))
@@ -121,7 +123,7 @@ function addLocalSearchMarks(content, { offset: delta = 0 } = {}) {
     return content
   }
   const offsets = localSearchIndexes.value
-  const term = localSearchTerm.value
+  const term = localSearchAppliedTerm.value
   return addLocalSearchMarksClassByOffsets({ content, term, offsets, delta })
 }
 
@@ -154,11 +156,6 @@ const showPagination = computed(() => {
 const hasLocalSearchTerms = computed(() => {
   return localSearchTerm.value && localSearchTerm.value.length > 0
 })
-
-// The term the matches were found for, read off the matches themselves so it
-// always describes the counts shown next to it, even when the user has typed
-// on since. Nothing to mark when the backend found nothing.
-const markdownAppliedTerm = computed(() => localSearchMatches.value[0]?.term ?? '')
 
 const isRightToLeft = computed(() => {
   const language = props.targetLanguage ?? get(props.document, 'source.language', null)
@@ -262,6 +259,7 @@ watch(markdownPage, () => {
 // probe cannot cover a host that swaps the prop without remounting, so the
 // document identity re-runs it and clears what belonged to the previous one.
 watch(docId, async () => {
+  clearLocalSearch()
   preferMarkdown.value = true
   isMarkdownEmpty.value = false
   markdownOversized.value = false
@@ -299,9 +297,9 @@ async function loadDocumentContent() {
   activeContentSliceOffset.value = 0
   currentContentPage.value = ''
   await activateContentSlice({ offset: 0 })
-  // At mount the term has just been set and the composable is already about to
-  // search it; a document swap leaves that same term describing another one.
-  if (isMounted && hasLocalSearchTerms.value) {
+  // The render mode is only settled now, and the debounce the term is sitting in
+  // would otherwise search it in whichever mode the manifest probe left behind.
+  if (hasLocalSearchTerms.value) {
     await refreshLocalSearch()
   }
 }
@@ -477,7 +475,7 @@ async function findTextMatches(term) {
 async function findMarkdownMatches(term) {
   try {
     const { hits } = await api.searchStructurePages(docIndex.value, docId.value, term, docRouting.value)
-    return flattenPageHits(hits, term)
+    return flattenPageHits(hits)
   }
   catch {
     return []
@@ -502,9 +500,9 @@ function updateMarkdownContent() {
 // One entry per occurrence, sorted by page, so the flat local search index maps
 // straight to a page and a 1-based rank within that page. The order is imposed
 // here rather than assumed of the response, since next/previous walks this list.
-function flattenPageHits(hits, term) {
+function flattenPageHits(hits) {
   return sortBy(hits ?? [], 'page').flatMap(({ page, count }) => {
-    return range(count).map(nth => ({ page, nth: nth + 1, term }))
+    return range(count).map(nth => ({ page, nth: nth + 1 }))
   })
 }
 
@@ -613,7 +611,7 @@ async function loadContentSliceAround(desiredOffset) {
         class="document-content__body document-content__body--markdown"
         :document="document"
         :page="markdownPage"
-        :term="markdownAppliedTerm"
+        :term="localSearchAppliedTerm"
         :global-search-terms="globalSearchTerms"
         :active-match="activeMarkdownMatch"
         :render-oversized="markdownOversized"

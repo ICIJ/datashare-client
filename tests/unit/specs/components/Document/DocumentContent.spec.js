@@ -865,6 +865,80 @@ describe('DocumentContent.vue', () => {
     })
   })
 
+  describe('a document swap', () => {
+    async function mountWithTwoDocuments() {
+      // `clearAllMocks` keeps the implementations earlier tests installed, and a
+      // markdown manifest left behind would route the search to the artifact.
+      api.getStructureManifest.mockResolvedValue(null)
+      api.searchDocument.mockReset()
+      const { document } = await mockDocumentContentSlice('a'.repeat(60))
+      // Both documents are served by the same mock, keyed by id, so the
+      // assertions below can tell whose content ended up on screen.
+      api.getDocumentSlice.mockImplementation(async (project, documentId, offset, limit) => {
+        const content = (documentId === id ? 'a' : 'b').repeat(60)
+        return { content: content.substring(offset, offset + limit), offset, limit, maxOffset: 60 }
+      })
+      const { plugins } = core
+      const props = { document, pageSize: 10 }
+      const wrapper = shallowMount(DocumentContent, { global: { plugins }, props })
+      await flushPromises()
+      const other = { index: document.index, id: 'other-document-id', routing: 'other-document-id' }
+      return { wrapper, other }
+    }
+
+    it('does not carry the previous document occurrences and offsets over to the next one', async () => {
+      const { wrapper, other } = await mountWithTwoDocuments()
+      api.searchDocument.mockResolvedValueOnce({ count: 1, offsets: [30] })
+      api.searchDocument.mockReturnValue(createDeferredPromise().promise)
+      wrapper.vm.localSearchTerm = 'aaa'
+      await flushLocalSearch()
+      expect(wrapper.vm.localSearchOccurrences).toBe(1)
+      await wrapper.setProps({ document: other })
+      await flushPromises()
+      expect(wrapper.vm.localSearchOccurrences).toBe(0)
+      expect(wrapper.vm.localSearchIndexes).toEqual([])
+      expect(wrapper.vm.currentContentPage).not.toContain('data-offset="30"')
+      wrapper.unmount()
+    })
+
+    it('drops a search still in flight for the document being left', async () => {
+      const { wrapper, other } = await mountWithTwoDocuments()
+      const left = createDeferredPromise()
+      api.searchDocument.mockReturnValueOnce(left.promise)
+      api.searchDocument.mockReturnValue(createDeferredPromise().promise)
+      wrapper.vm.localSearchTerm = 'aaa'
+      await flushLocalSearch()
+      // The arriving document holds its own content load open, so the swap is
+      // still inside the window the leaving document's search resolves into.
+      api.getDocumentSlice.mockReturnValue(createDeferredPromise().promise)
+      wrapper.setProps({ document: other })
+      await flushPromises()
+      left.resolve({ count: 1, offsets: [30] })
+      await flushPromises()
+      expect(wrapper.vm.localSearchOccurrences).toBe(0)
+      wrapper.unmount()
+    })
+  })
+
+  describe('the local search marks', () => {
+    it('marks the term the offsets were found for, not the untrimmed one being typed', async () => {
+      const { document } = await mockDocumentContentSlice('a needle in a haystack')
+      // `clearAllMocks` keeps the implementations earlier tests installed, and a
+      // markdown manifest left behind would route the search to the artifact.
+      api.getStructureManifest.mockResolvedValue(null)
+      api.searchDocument.mockReset()
+      api.searchDocument.mockResolvedValue({ count: 1, offsets: [2] })
+      const { plugins } = core
+      const wrapper = shallowMount(DocumentContent, { global: { plugins }, props: { document } })
+      await flushPromises()
+      wrapper.vm.localSearchTerm = 'needle '
+      await flushLocalSearch()
+      expect(api.searchDocument.mock.calls[0]).toContain('needle')
+      expect(wrapper.vm.currentContentPage).toContain('>needle</mark>')
+      wrapper.unmount()
+    })
+  })
+
   describe('the toolbox', () => {
     // `clearAllMocks` keeps the implementations the markdown describe installed,
     // so plain text mode has to be asked for again here.
