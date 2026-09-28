@@ -59,7 +59,8 @@ const {
   matches: highlightMatches,
   occurrences: highlightOccurrences,
   activePage: highlightPage,
-  isLoading: isHighlightLoading
+  isLoading: isHighlightLoading,
+  refresh: refreshHighlights
 } = useDocumentLocalSearch({ findMatches: term => findHighlights(term) })
 
 const pageScale = computed(() => (isNaN(scale.value) ? 1 : Number(scale.value)))
@@ -211,11 +212,13 @@ watch(highlightIndex, () => {
 })
 
 // A new document swaps every page out without them reporting they stopped showing, and a hold left
-// over from the previous one would settle against pages that are not there anymore.
+// over from the previous one would settle against pages that are not there anymore. The matches
+// point at the pages of that previous document too, so the term on screen has to be searched again.
 watch(pdf, () => {
   pagesBelowToolbox.clear()
   pendingPage.value = null
   realignPendingPage.value = false
+  refreshHighlights()
 })
 
 watch(src, async () => {
