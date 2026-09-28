@@ -817,21 +817,39 @@ describe('luceneQuery', () => {
       ['“test full sentence“', '"test full sentence"'],
       ['＂test＂', '"test"'],
       ['「test」', '"test"'],
-      ['content:“a b” AND path:“c”', 'content:"a b" AND path:"c"']
-    ])('turns %s into %s', (query, expected) => {
+      ['content:“a b”', 'content:"a b"'],
+      ['(“a b”)', '("a b")'],
+      ['“a” “b”', '"a" "b"'],
+      ['“a” AND path:「b」', '"a" AND path:"b"'],
+      ['“a\\\\”', '"a\\\\"']
+    ])('turns the phrase %s into %s', (query, expected) => {
       expect(straightenQuotes(query)).toBe(expected)
     })
 
     it.each([
-      ['\\“test', '\\“test'],
-      ['\\“\\”', '\\“\\”'],
-      ['a \\“ “b”', 'a \\“ "b"']
-    ])('keeps the escaped quote in %s', (query, expected) => {
-      expect(straightenQuotes(query)).toBe(expected)
+      'he said ” hello',
+      'テスト」',
+      'Mercier “x',
+      '„Berlin“'
+    ])('leaves the unpaired quote in %s alone', (query) => {
+      expect(straightenQuotes(query)).toBe(query)
     })
 
-    it('swaps a quote that follows an escaped backslash', () => {
-      expect(straightenQuotes('a\\\\“b”')).toBe('a\\\\"b"')
+    it.each([
+      '\\“test',
+      '\\“\\”',
+      'C:\\“Program Files”',
+      '“a\\”'
+    ])('leaves the escaped quote in %s alone', (query) => {
+      expect(straightenQuotes(query)).toBe(query)
+    })
+
+    it.each([
+      '彼は「はい」と言った',
+      '記録「A」',
+      '"say “hello”"'
+    ])('leaves the quote used as punctuation in %s alone', (query) => {
+      expect(straightenQuotes(query)).toBe(query)
     })
 
     it.each(['', '*', 'plain query', '"already straight"'])('leaves %s untouched', (query) => {

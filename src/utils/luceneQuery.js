@@ -12,18 +12,20 @@ import lucene from 'lucene'
 const LUCENE_RESERVED = /[+\-!(){}[\]^"~*?:\\/]/g
 
 /**
- * Quotation marks a Chinese or Japanese IME produces instead of `"`, paired
- * with the escape sequences that must survive the swap untouched (icij/datashare#2352).
+ * A phrase delimited by the quotation marks a Chinese or Japanese keyboard
+ * produces instead of `"`. Both marks must delimit a phrase: the opening one
+ * starts a token, the closing one ends a token and is not backslash-escaped.
+ * Anything else is ordinary text (`彼は「はい」と言った`), an unbalanced mark, or a mark
+ * already inside a straight-quoted phrase (icij/datashare#2352).
  */
-const SMART_QUOTES = /\\[\s\S]|[“”＂「」]/gu
+const SMART_QUOTE_PHRASE = /(^|[\s:([])[“＂「]((?:[^“”＂「」\\]|\\[\s\S])*)[”“＂」](?=$|[\s)\]~^])/gu
 
 /**
- * Replace smart quotation marks by straight ones so a phrase typed with a CJK
- * keyboard behaves like a quoted phrase. A backslash-escaped quote is left as
- * is, which Lucene reads as the literal character.
+ * Replace the quotation marks delimiting a phrase by straight ones, so a
+ * phrase typed with a CJK keyboard searches like a quoted phrase.
  */
 export function straightenQuotes(query) {
-  return String(query).replace(SMART_QUOTES, match => (match.length > 1 ? match : '"'))
+  return String(query).replace(SMART_QUOTE_PHRASE, (_match, before, phrase) => `${before}"${phrase}"`)
 }
 
 /**
