@@ -1,5 +1,6 @@
 <script setup>
 import { computed, onBeforeUnmount, ref, shallowRef, toRef, useTemplateRef, watch } from 'vue'
+import { useDebounceFn, useEventListener } from '@vueuse/core'
 import { renderAsync } from 'docx-preview'
 import { useI18n } from 'vue-i18n'
 
@@ -7,7 +8,7 @@ import { useDocumentLocalSearch } from '@/composables/useDocumentLocalSearch'
 import { useDocumentPreview } from '@/composables/useDocumentPreview'
 import { useDocumentSource } from '@/composables/useDocumentSource'
 import { useToast } from '@/composables/useToast'
-import { addSearchMarksClassesInHtml } from '@/utils/strings'
+import { addSearchMarksClassesInHtml, foldWithSourceIndexes } from '@/utils/strings'
 import DismissableContentWarningToggler from '@/components/Dismissable/DismissableContentWarningToggler'
 import DocumentToolbox from '@/components/Document/DocumentToolbox/DocumentToolbox'
 
@@ -26,6 +27,7 @@ const ACTIVE_CLASS = 'local-search-term--active'
 // A section whose top edge sits exactly on the toolbox edge rounds either way between the
 // observer's root and the element box, so it would flicker between two pages.
 const BELOW_TOOLBOX_OFFSET = 4
+const SCROLL_IDLE_DELAY = 200
 
 const { fetchSource } = useDocumentSource()
 const { isBlurred, getBlurredContentBanner } = useDocumentPreview()
@@ -38,10 +40,13 @@ const toolboxHeight = computed(() => toolbox.value?.height ?? 0)
 
 const sections = shallowRef([])
 const originalHtml = shallowRef([])
+const foldedText = shallowRef([])
+const markedSections = new Set()
 const error = ref(null)
 const blurred = ref(false)
 const blurredContent = ref(null)
 const currentPage = ref(1)
+const pendingPage = ref(null)
 const sectionsBelowToolbox = new Set()
 
 const totalPages = computed(() => Math.max(sections.value.length, 1))
@@ -63,32 +68,60 @@ const page = computed({
 
 const style = computed(() => ({ '--document-viewer-docx-toolbox-height': `${toolboxHeight.value}px` }))
 
+// Rounded here rather than where the observer reads it, so a sub-pixel drift in
+// the toolbox height does not rebuild the observer for an identical margin.
+const rootMargin = computed(() => `${-(Math.round(toolboxHeight.value) + BELOW_TOOLBOX_OFFSET)}px 0px 0px 0px`)
+
+let lastRender = 0
+
 // A library rejection carries its own English internals (jszip's "is this a zip
 // file ?"), so only the source errors, already localized, are shown as they come.
 function failRender(message) {
+  // The sections left in the container are the previous document's: still
+  // observed, they would report pages this render no longer knows about.
+  observer?.disconnect()
   error.value = message
   sections.value = []
+  markedSections.clear()
   toast.error(message)
 }
 
 async function render() {
+  // A document swapped in while this one was loading owns the container now, so
+  // neither its markup nor its failure may be written over the one on screen.
+  const id = ++lastRender
   error.value = null
   let blob
   try {
     blob = await fetchSource(props.document, { responseType: 'blob' })
   }
   catch (reason) {
-    return failRender(reason.message)
+    if (id === lastRender) {
+      failRender(reason.message)
+    }
+    return
+  }
+  if (id !== lastRender) {
+    return
   }
   try {
     await renderAsync(blob, container.value, null, { ignoreLastRenderedPageBreak: false, inWrapper: true })
   }
   catch {
-    return failRender(t('document.notAvailable'))
+    if (id === lastRender) {
+      failRender(t('document.notAvailable'))
+    }
+    return
+  }
+  if (id !== lastRender) {
+    return
   }
   sections.value = [...container.value.querySelectorAll('section.docx')]
   originalHtml.value = sections.value.map(({ innerHTML }) => innerHTML)
+  foldedText.value = sections.value.map(({ textContent }) => foldWithSourceIndexes(textContent).folded)
+  markedSections.clear()
   currentPage.value = 1
+  pendingPage.value = null
   observeSections()
   // The sections the matches point at are gone, so the term on screen has to be searched again.
   await refresh()
@@ -98,9 +131,18 @@ async function render() {
 // otherwise be marked again by the next one.
 function findMatches(value) {
   const marks = [{ term: value }]
+  const { folded } = foldWithSourceIndexes(value.trim())
   return sections.value.flatMap((section, index) => {
+    // Marking reparses and rebuilds a whole section, so a section that cannot
+    // hold the term is only touched to take the previous term's marks back off.
+    if (!foldedText.value[index].includes(folded) && !markedSections.delete(index)) {
+      return []
+    }
     section.innerHTML = addSearchMarksClassesInHtml(originalHtml.value[index], marks)
     const count = section.querySelectorAll('mark.local-search-term').length
+    if (count) {
+      markedSections.add(index)
+    }
     return Array.from({ length: count }, () => ({ page: index + 1 }))
   })
 }
@@ -109,10 +151,31 @@ function restoreOriginalHtml() {
   sections.value.forEach((section, index) => {
     section.innerHTML = originalHtml.value[index]
   })
+  markedSections.clear()
+}
+
+// Holds the page tracking until the scroll we are about to start has settled, so
+// the indicator stays on the page we are heading to instead of counting every
+// section the scroll flies past.
+function holdPageTracking(value) {
+  pendingPage.value = value
+  currentPage.value = value
+  settleScroll()
+}
+
+const settleScroll = useDebounceFn(() => {
+  pendingPage.value = null
+  trackPage()
+}, SCROLL_IDLE_DELAY)
+
+function trackPage() {
+  if (pendingPage.value === null && sectionsBelowToolbox.size) {
+    currentPage.value = Math.min(...sectionsBelowToolbox) + 1
+  }
 }
 
 function scrollToPage(value) {
-  currentPage.value = value
+  holdPageTracking(value)
   sections.value[value - 1]?.scrollIntoView({ block: 'start' })
 }
 
@@ -130,7 +193,6 @@ let observer = null
 function observeSections() {
   observer?.disconnect()
   sectionsBelowToolbox.clear()
-  const rootMargin = `${-(Math.round(toolboxHeight.value) + BELOW_TOOLBOX_OFFSET)}px 0px 0px 0px`
   observer = new IntersectionObserver((entries) => {
     for (const { target, isIntersecting } of entries) {
       const index = sections.value.indexOf(target)
@@ -141,10 +203,8 @@ function observeSections() {
         sectionsBelowToolbox.delete(index)
       }
     }
-    if (sectionsBelowToolbox.size) {
-      currentPage.value = Math.min(...sectionsBelowToolbox) + 1
-    }
-  }, { rootMargin })
+    trackPage()
+  }, { rootMargin: rootMargin.value })
   sections.value.forEach(section => observer.observe(section))
 }
 
@@ -157,12 +217,19 @@ watch(term, (value) => {
     restoreOriginalHtml()
   }
 })
+// Picking an occurrence scrolls its mark into view, so the page it sits on has
+// to be held the same way a page pick is.
 watch(activePage, (value) => {
   if (value) {
-    currentPage.value = value
+    holdPageTracking(value)
   }
 })
-watch(toolboxHeight, () => sections.value.length && observeSections())
+watch(rootMargin, () => {
+  if (sections.value.length) {
+    observeSections()
+  }
+})
+useEventListener(window, 'scroll', settleScroll, { capture: true, passive: true })
 watch(toRef(props, 'document'), render, { immediate: true, flush: 'post' })
 watch(toRef(props, 'document'), async (document) => {
   blurred.value = await isBlurred(document)
