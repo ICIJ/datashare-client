@@ -1,25 +1,22 @@
 <script setup>
-import { computed, ref, useTemplateRef, toRef, watch } from 'vue'
-import { refDebounced, whenever, useDebounceFn, useElementBounding, useEventListener } from '@vueuse/core'
+import { computed, ref, useTemplateRef, watch } from 'vue'
+import { useDebounceFn, useEventListener } from '@vueuse/core'
 import { supportsPDFs as embeddable } from 'pdfobject'
 import { useI18n } from 'vue-i18n'
 
 import DocumentViewerPdfEmbedded from './DocumentViewerPdf/DocumentViewerPdfEmbedded'
-import DocumentViewerPdfPagination from './DocumentViewerPdf/DocumentViewerPdfPagination'
 import DocumentViewerPdfDropdown from './DocumentViewerPdf/DocumentViewerPdfDropdown/DocumentViewerPdfDropdown'
 import DocumentViewerPdfPage from './DocumentViewerPdf/DocumentViewerPdfPage'
 
 import { SCALE_FIT, SCALE_WIDTH } from '@/enums/documentViewerPdf'
-import { useCompact } from '@/composables/useCompact'
+import { useDocumentLocalSearch } from '@/composables/useDocumentLocalSearch'
 import { useDocumentPreview } from '@/composables/useDocumentPreview'
-import { useWait } from '@/composables/useWait'
 import { usePDF } from '@/composables/usePDF'
 import { useDocumentViewStore } from '@/store/modules/documentView'
 import AppWait from '@/components/AppWait/AppWait'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 import DismissableContentWarningToggler from '@/components/Dismissable/DismissableContentWarningToggler'
-import DocumentLocalSearch from '@/components/Document/DocumentLocalSearch/DocumentLocalSearch'
-import DocumentGlobalSearchTerms from '@/components/Document/DocumentGlobalSearchTerms/DocumentGlobalSearchTerms'
+import DocumentToolbox from '@/components/Document/DocumentToolbox/DocumentToolbox'
 
 import IPhFilePdf from '~icons/ph/file-pdf'
 
@@ -41,7 +38,6 @@ const FORM_CONTROLS = 'input, textarea, select, [contenteditable]'
 const documentViewStore = useDocumentViewStore()
 const src = computed(() => (documentViewStore.embeddedPdf ? null : props.document.fullUrl))
 const { pdf, numPages, sizes, findHighlights, loaderId: pdfLoaderId } = usePDF(src)
-const { waitFor, isLoading } = useWait()
 const { t } = useI18n()
 const { isBlurred, getBlurredContentBanner } = useDocumentPreview()
 
@@ -55,16 +51,16 @@ const blurred = ref(null)
 const blurredContent = ref(null)
 const pageElements = useTemplateRef('pages')
 const toolboxElement = useTemplateRef('toolbox')
-const { height: toolboxHeight } = useElementBounding(toolboxElement)
-const { compact: toolboxCompact } = useCompact(toolboxElement, { threshold: toRef(props, 'compactThreshold') })
-const highlightText = ref(null)
-const highlightTextDebounced = refDebounced(highlightText, 300)
-const highlightIndex = ref(0)
-const highlightMatches = ref([])
-const highlightOccurrences = computed(() => highlightMatches.value.length)
-const highlightPage = computed(() => highlightMatches.value[highlightIndex.value - 1]?.page)
-const isHighlightDebouncing = computed(() => highlightTextDebounced.value !== highlightText.value)
-const isHighlightLoading = computed(() => isLoading.value || isHighlightDebouncing.value)
+const toolboxHeight = computed(() => toolboxElement.value?.height ?? 0)
+const {
+  term: highlightText,
+  debouncedTerm: highlightTextDebounced,
+  activeIndex: highlightIndex,
+  matches: highlightMatches,
+  occurrences: highlightOccurrences,
+  activePage: highlightPage,
+  isLoading: isHighlightLoading
+} = useDocumentLocalSearch({ findMatches: term => findHighlights(term) })
 
 const pageScale = computed(() => (isNaN(scale.value) ? 1 : Number(scale.value)))
 const pageFitParent = computed(() => scale.value === SCALE_FIT || scale.value === SCALE_WIDTH)
@@ -202,10 +198,10 @@ function scrollToPage(value) {
   }
 }
 
-whenever(highlightTextDebounced, waitFor(async (value) => {
-  highlightMatches.value = await findHighlights(value)
-  highlightIndex.value = highlightMatches.value.length ? 1 : 0
-}))
+const page = computed({
+  get: () => currentPage.value,
+  set: scrollToPage
+})
 
 // Picking another occurrence makes the matching page scroll its highlight into view.
 watch(highlightIndex, () => {
@@ -243,43 +239,28 @@ watch(src, async () => {
     :class="classList"
     :style="style"
   >
-    <div
+    <document-toolbox
       ref="toolbox"
-      class="document-viewer-pdf__toolbox d-flex flex-column gap-3"
+      v-model="highlightText"
+      v-model:active-index="highlightIndex"
+      v-model:page="page"
+      :document="document"
+      :occurrences="highlightOccurrences"
+      :total-pages="numPages"
+      :loading="isHighlightLoading"
+      :disabled="blurred"
+      :compact-threshold="compactThreshold"
+      no-count
     >
-      <div class="d-flex flex-md-nowrap flex-wrap align-items-lg-center gap-3">
-        <document-local-search
-          v-model="highlightText"
-          v-model:active-index="highlightIndex"
-          :compact="toolboxCompact"
-          :loading="isHighlightLoading"
-          :occurrences="highlightOccurrences"
-          class="flex-grow-1"
+      <template #dropdown>
+        <document-viewer-pdf-dropdown
+          v-model:rotation="rotation"
+          v-model:scale="scale"
+          v-model:embed="documentViewStore.embeddedPdf"
+          class="flex-shrink-0 ms-auto"
         />
-        <fieldset
-          :disabled="blurred"
-          class="d-flex flex-grow-1 flex-md-grow-0 flex-nowrap align-items-center gap-2"
-        >
-          <document-viewer-pdf-pagination
-            :page="currentPage"
-            :total-rows="numPages"
-            :compact="toolboxCompact"
-            @update:page="scrollToPage"
-          />
-          <document-viewer-pdf-dropdown
-            v-model:rotation="rotation"
-            v-model:scale="scale"
-            v-model:embed="documentViewStore.embeddedPdf"
-            class="flex-shrink-0 ms-auto"
-          />
-        </fieldset>
-      </div>
-      <document-global-search-terms
-        :document="document"
-        no-count
-        @select="highlightText = $event"
-      />
-    </div>
+      </template>
+    </document-toolbox>
     <dismissable-content-warning-toggler
       v-if="blurred"
       v-model="blurred"
@@ -292,20 +273,20 @@ watch(src, async () => {
     >
       <template v-if="pdf">
         <document-viewer-pdf-page
-          v-for="{ page, ...size } in sizes"
+          v-for="{ page: pageNumber, ...size } in sizes"
           ref="pages"
-          :key="page"
+          :key="pageNumber"
           class="document-viewer-pdf__pages__entry"
           :scale="pageScale"
           :rotation="rotation"
           :fit-parent="pageFitParent"
-          :page="page"
+          :page="pageNumber"
           :size="size"
           :pdf="pdf"
           :highlight-text="highlightTextDebounced"
-          :highlight-index="getPageHighlightIndex(page)"
+          :highlight-index="getPageHighlightIndex(pageNumber)"
           :top-offset="toolboxHeight"
-          @visible="trackPage(page, $event)"
+          @visible="trackPage(pageNumber, $event)"
         />
       </template>
       <template v-else>
@@ -327,14 +308,6 @@ watch(src, async () => {
 .document-viewer-pdf {
   width: 100%;
   align-items: center;
-
-  &__toolbox {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    padding: $spacer 0;
-    background: var(--bs-body-bg);
-  }
 
   &__pages {
     margin: auto;
