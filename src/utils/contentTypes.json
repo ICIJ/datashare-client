@@ -219,6 +219,16 @@
       "en": "Open using the XPS Viewer on Windows and XPSView on Mac."
     }
   },
+  "application/vnd.ms-equation": {
+    "label": "Microsoft Equation",
+    "extensions": [
+      ".eqn"
+    ],
+    "description": {
+      "en": "An embedded equation typically found in Microsoft Office documents."
+    },
+    "model": "Image"
+  },
   "application/vnd.ms-graph": {
     "label": "Graph drawing",
     "extensions": [
@@ -420,6 +430,37 @@
     },
     "model": "PlainText"
   },
+  "application/xml-dtd": {
+    "label": "XML DTD",
+    "icon": "code",
+    "extensions": [
+      ".dtd"
+    ],
+    "description": {
+      "en": "Describes the structure of an XML document - open using any text editor."
+    },
+    "model": "PlainText"
+  },
+  "application/dita+xml": {
+    "label": "DITA document",
+    "icon": "code",
+    "extensions": [
+      ".dita"
+    ],
+    "description": {
+      "en": "Structured documentation in XML - open using any text editor."
+    },
+    "model": "PlainText"
+  },
+  "application/pkcs7-signature": {
+    "label": "PKCS#7 signature",
+    "extensions": [
+      ".p7s"
+    ],
+    "description": {
+      "en": "A cryptographic signature attached to a signed message or file."
+    }
+  },
   "application/xml": {
     "label": "XML document",
     "icon": "code",
@@ -576,6 +617,17 @@
       "en": "A lightweight markup document. Rendered as formatted text in Datashare."
     },
     "preview": "yes"
+  },
+  "text/tsv": {
+    "label": "TSV file",
+    "icon": "csv",
+    "extensions": [
+      ".tsv"
+    ],
+    "description": {
+      "en": "Tab-separated values - open using any spreadsheet editor."
+    },
+    "model": "Table"
   },
   "text/csv": {
     "label": "CSV file",
@@ -1030,6 +1082,28 @@
     },
     "model": "Package"
   },
+  "application/x-tar": {
+    "label": "TAR archive",
+    "icon": "archive",
+    "extensions": [
+      ".tar"
+    ],
+    "description": {
+      "en": "Opens natively on Mac, using 7zip on Windows."
+    },
+    "model": "Package"
+  },
+  "application/java-archive": {
+    "label": "Java archive",
+    "icon": "archive",
+    "extensions": [
+      ".jar"
+    ],
+    "description": {
+      "en": "An archive of compiled Java code and resources."
+    },
+    "model": "Package"
+  },
   "application/gzip": {
     "label": "GZIP archive",
     "icon": "archive",
@@ -1062,6 +1136,58 @@
       "en": "Open using 7zip on Windows or Keka on Mac."
     },
     "model": "Package"
+  },
+  "application/x-sharedlib": {
+    "label": "Shared library",
+    "extensions": [
+      ".so"
+    ],
+    "description": {
+      "en": "A compiled software library that is part of an application."
+    },
+    "warning": {
+      "en": "Do not attempt to run this file. It is provided only for reference."
+    }
+  },
+  "application/x-dex": {
+    "label": "Android executable",
+    "extensions": [
+      ".dex"
+    ],
+    "description": {
+      "en": "Compiled code from an Android application."
+    },
+    "warning": {
+      "en": "Do not attempt to run this file. It is provided only for reference."
+    }
+  },
+  "application/x-sh": {
+    "label": "Shell script",
+    "icon": "code",
+    "extensions": [
+      ".sh"
+    ],
+    "description": {
+      "en": "A script run by a Unix shell - open using any text editor."
+    },
+    "warning": {
+      "en": "Do not attempt to run this file. It is provided only for reference."
+    },
+    "model": "PlainText"
+  },
+  "application/x-bat": {
+    "label": "Batch script",
+    "icon": "code",
+    "extensions": [
+      ".bat"
+    ],
+    "description": {
+      "en": "A script run by the Windows command prompt - open using any text editor."
+    },
+    "warning": {
+      "en": "Do not attempt to run this file. It is provided only for reference."
+    },
+    "model": "PlainText"
   },
   "application/x-msdownload": {
     "label": "Windows executable",
@@ -1150,6 +1276,17 @@
     "icon": "audio",
     "extensions": [
       ".wav"
+    ],
+    "description": {
+      "en": "Open using your usual audio player."
+    },
+    "model": "Audio"
+  },
+  "audio/mp4": {
+    "label": "MPEG-4 audio",
+    "icon": "audio",
+    "extensions": [
+      ".m4a"
     ],
     "description": {
       "en": "Open using your usual audio player."
