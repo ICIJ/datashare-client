@@ -13,6 +13,11 @@ vi.stubGlobal('IntersectionObserver', class {
 })
 
 const getSource = vi.fn()
+const toastError = vi.fn()
+
+vi.mock('@/composables/useToast', () => ({
+  useToast: () => ({ toast: { error: toastError } })
+}))
 
 vi.mock('@/api/apiInstance', async (importOriginal) => {
   const { apiInstance } = await importOriginal()
@@ -44,6 +49,11 @@ describe('DocumentViewerDocx.vue', () => {
   async function flushLocalSearch() {
     await vi.advanceTimersByTimeAsync(300)
     await flushPromises()
+  }
+
+  async function search(wrapper, value) {
+    wrapper.findComponent(DocumentToolbox).vm.$emit('update:modelValue', value)
+    await flushLocalSearch()
   }
 
   beforeEach(() => {
@@ -132,8 +142,7 @@ describe('DocumentViewerDocx.vue', () => {
     renderSections('<p>a needle</p>', '<p>another needle</p>')
     const wrapper = mountViewer()
     await flushPromises()
-    wrapper.findComponent(DocumentToolbox).vm.$emit('update:modelValue', 'needle')
-    await flushLocalSearch()
+    await search(wrapper, 'needle')
     wrapper.findComponent(DocumentToolbox).vm.$emit('update:activeIndex', 2)
     await flushPromises()
     expect(wrapper.findComponent(DocumentToolbox).props('page')).toBe(2)
@@ -144,6 +153,46 @@ describe('DocumentViewerDocx.vue', () => {
     const wrapper = mountViewer()
     await flushPromises()
     expect(wrapper.find('.document-viewer-docx__error').exists()).toBe(true)
+    expect(toastError).toHaveBeenCalledWith('corrupt')
+  })
+
+  it('falls back to the unavailable message when the rejection carries none', async () => {
+    renderAsync.mockRejectedValue(null)
+    const wrapper = mountViewer()
+    await flushPromises()
+    expect(wrapper.find('.document-viewer-docx__error').text()).toBe('Preview is not available for this document type.')
+  })
+
+  it('takes the marks down when the search field is cleared', async () => {
+    renderSections('<p>a needle</p>')
+    const wrapper = mountViewer()
+    await flushPromises()
+    await search(wrapper, 'needle')
+    expect(wrapper.findAll('mark.local-search-term')).toHaveLength(1)
+    await search(wrapper, '')
+    expect(wrapper.findAll('mark.local-search-term')).toHaveLength(0)
+  })
+
+  it('activates the first occurrence of every new term', async () => {
+    renderSections('<p>alpha</p>', '<p>beta</p>')
+    const wrapper = mountViewer()
+    await flushPromises()
+    await search(wrapper, 'alpha')
+    expect(wrapper.find('mark.local-search-term--active').text()).toBe('alpha')
+    await search(wrapper, 'beta')
+    expect(wrapper.find('mark.local-search-term--active').text()).toBe('beta')
+  })
+
+  it('searches the term again when another document is rendered', async () => {
+    renderSections('<p>a needle</p>')
+    const wrapper = mountViewer()
+    await flushPromises()
+    await search(wrapper, 'needle')
+    renderSections('<p>another needle</p>', '<p>a third needle</p>')
+    await wrapper.setProps({ document: { ...document, id: 'other-id' } })
+    await flushPromises()
+    expect(wrapper.findComponent(DocumentToolbox).props('occurrences')).toBe(2)
+    expect(wrapper.findAll('mark.local-search-term')).toHaveLength(2)
   })
 
   it('shows the not-found message when the source is gone', async () => {

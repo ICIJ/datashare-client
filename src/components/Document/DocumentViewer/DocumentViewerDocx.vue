@@ -1,6 +1,7 @@
 <script setup>
 import { computed, onBeforeUnmount, ref, shallowRef, toRef, useTemplateRef, watch } from 'vue'
 import { renderAsync } from 'docx-preview'
+import { useI18n } from 'vue-i18n'
 
 import { useDocumentLocalSearch } from '@/composables/useDocumentLocalSearch'
 import { useDocumentSource } from '@/composables/useDocumentSource'
@@ -20,10 +21,13 @@ const props = defineProps({
 })
 
 const ACTIVE_CLASS = 'local-search-term--active'
+// A section whose top edge sits exactly on the toolbox edge rounds either way between the
+// observer's root and the element box, so it would flicker between two pages.
 const BELOW_TOOLBOX_OFFSET = 4
 
 const { fetchSource } = useDocumentSource()
 const { toast } = useToast()
+const { t } = useI18n()
 
 const container = useTemplateRef('container')
 const toolbox = useTemplateRef('toolbox')
@@ -40,9 +44,11 @@ const totalPages = computed(() => Math.max(sections.value.length, 1))
 const {
   term,
   activeIndex,
+  matches,
   occurrences,
   activePage,
-  isLoading
+  isLoading,
+  refresh
 } = useDocumentLocalSearch({ findMatches })
 
 const page = computed({
@@ -58,15 +64,17 @@ async function render() {
     const blob = await fetchSource(props.document, { responseType: 'blob' })
     await renderAsync(blob, container.value, null, { ignoreLastRenderedPageBreak: false, inWrapper: true })
   }
-  catch ({ message }) {
-    error.value = message
-    toast.error(message)
+  catch (reason) {
+    error.value = reason?.message || t('document.notAvailable')
+    toast.error(error.value)
     return
   }
   sections.value = [...container.value.querySelectorAll('section.docx')]
   originalHtml.value = sections.value.map(({ innerHTML }) => innerHTML)
   currentPage.value = 1
   observeSections()
+  // The sections the matches point at are gone, so the term on screen has to be searched again.
+  await refresh()
 }
 
 // Marking replaces a section's html, so the marks of the previous term would
@@ -77,6 +85,12 @@ function findMatches(value) {
     section.innerHTML = addSearchMarksClassesInHtml(originalHtml.value[index], marks)
     const count = section.querySelectorAll('mark.local-search-term').length
     return Array.from({ length: count }, () => ({ page: index + 1 }))
+  })
+}
+
+function restoreOriginalHtml() {
+  sections.value.forEach((section, index) => {
+    section.innerHTML = originalHtml.value[index]
   })
 }
 
@@ -117,7 +131,15 @@ function observeSections() {
   sections.value.forEach(section => observer.observe(section))
 }
 
-watch(activeIndex, activateMark)
+// A new term replaces the marks of the previous one without moving `activeIndex`, so the active
+// occurrence has to be picked again whenever either the match list or the index changes.
+watch([matches, activeIndex], activateMark)
+// The composable does not search an empty term, so nothing else would take the marks down.
+watch(term, (value) => {
+  if (!value.trim()) {
+    restoreOriginalHtml()
+  }
+})
 watch(activePage, (value) => {
   if (value) {
     currentPage.value = value
