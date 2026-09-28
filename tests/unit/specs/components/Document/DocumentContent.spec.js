@@ -887,6 +887,30 @@ describe('DocumentContent.vue', () => {
       expect(names).toContain('document.content.toolbox:after')
     })
 
+    it('holds the paginator back until a content slice has landed', async () => {
+      const { document } = await mockDocumentContentSlice('a'.repeat(60))
+      const deferred = createDeferredPromise()
+      // The `maxOffset` probe asks for no content at all; every other call is a
+      // slice, and holding it pending leaves the body empty with the page count known.
+      api.getDocumentSlice.mockImplementation(async (project, documentId, offset, limit) => {
+        if (limit === 0) {
+          return { content: '', maxOffset: 60, offset, limit }
+        }
+        return deferred.promise
+      })
+      const { plugins } = core
+      const props = { document, pageSize: 10 }
+      const wrapper = mount(DocumentContent, { props, global: { plugins } })
+      await flushPromises()
+      expect(wrapper.vm.nbPages).toBe(7)
+      expect(wrapper.findComponent(PaginationTiny).exists()).toBe(false)
+      expect(wrapper.findComponent(DocumentLocalSearch).props('loading')).toBe(true)
+      deferred.resolve({ content: 'a'.repeat(10), maxOffset: 60, offset: 0, limit: 10 })
+      await flushPromises()
+      expect(wrapper.findComponent(PaginationTiny).exists()).toBe(true)
+      expect(wrapper.findComponent(DocumentLocalSearch).props('loading')).toBe(false)
+    })
+
     it('hides the paginator on a single page document', async () => {
       const { document } = await mockDocumentContentSlice('short')
       const { plugins } = core

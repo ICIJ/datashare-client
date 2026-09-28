@@ -54,7 +54,7 @@ const hasContentBodyHook = computed(() => hooksStore.filterComponentsByTarget('d
 const pipelinesStore = usePipelinesStore()
 const searchStore = useSearchStore.inject()
 const elementRef = useTemplateRef('element')
-const { waitFor } = useWait()
+const { waitFor, isLoading } = useWait()
 const { hasMarkdown, pages: markdownPagesCount, fetchManifest } = useStructureArtifact(toRef(props, 'document'))
 
 const preferMarkdown = ref(true)
@@ -579,8 +579,8 @@ async function loadContentSliceAround(desiredOffset) {
       :document="document"
       :target-language="targetLanguage"
       :occurrences="localSearchOccurrences"
-      :total-pages="nbPages"
-      :loading="isLocalSearchLoading"
+      :total-pages="showPagination ? nbPages : 0"
+      :loading="isLoading || isLocalSearchLoading"
       :compact-threshold="compactThreshold"
       hook-prefix="document.content"
     >
