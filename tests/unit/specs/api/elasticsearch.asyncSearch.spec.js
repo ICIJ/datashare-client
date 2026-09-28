@@ -9,6 +9,11 @@ describe('elasticsearch async search wrappers', () => {
   })
 
   describe('buildSearchDocsBody', () => {
+    function builtQueryString(query) {
+      const body = elasticsearch.buildSearchDocsBody({ index: 'idx', query })
+      return body.query.bool.must.find(clause => clause.bool)?.bool.should[0].query_string.query
+    }
+
     it('builds a body with pagination, highlighting and track_total_hits', () => {
       const body = elasticsearch.buildSearchDocsBody({ index: 'idx', query: 'foo', from: 25, perPage: 10 })
       expect(body.from).toBe(25)
@@ -39,16 +44,12 @@ describe('elasticsearch async search wrappers', () => {
       expect(emptyBody).toEqual(starBody)
     })
 
-    it('turns smart quotes into straight quotes so a CJK phrase stays a phrase', () => {
-      const body = elasticsearch.buildSearchDocsBody({ index: 'idx', query: '“test full sentence”' })
-      const straightBody = elasticsearch.buildSearchDocsBody({ index: 'idx', query: '"test full sentence"' })
-      expect(body).toEqual(straightBody)
+    it('turns a smart-quoted phrase into a straight-quoted one', () => {
+      expect(builtQueryString('“test full sentence”')).toBe('"test full sentence"')
     })
 
-    it('keeps an escaped smart quote escaped', () => {
-      const body = elasticsearch.buildSearchDocsBody({ index: 'idx', query: '\\“' })
-      const straightBody = elasticsearch.buildSearchDocsBody({ index: 'idx', query: '"' })
-      expect(body).not.toEqual(straightBody)
+    it('leaves an escaped smart quote untouched', () => {
+      expect(builtQueryString('\\“test full sentence”')).toBe('\\“test full sentence”')
     })
   })
 
