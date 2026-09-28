@@ -152,31 +152,78 @@ watchValues(whenFilterContextualized(props.filter, reloadData))
     flush
   >
     <template #default="{ opened }">
-      <path-tree
+      <div
         v-if="opened"
-        ref="tree"
-        v-model:selected-paths="selectedPaths"
-        v-model:open-paths="openPaths"
-        v-model:path="path"
-        include-children-documents
-        :compact="!modal"
-        :projects="projects"
-        :pre-body-build="preBodyBuild"
-        :sort-by="filter.sortBy"
-        :order-by="filter.orderBy"
-        :no-stats="hideCount"
-        :layout="layout"
-        no-documents
-        no-label
-        no-search
-        no-search-link
-        no-tree
-        select-mode
-        multiple
-      />
+        class="filter-type-path__tree"
+        :class="{ 'filter-type-path__tree--scrollable': modal }"
+      >
+        <path-tree
+          ref="tree"
+          v-model:selected-paths="selectedPaths"
+          v-model:open-paths="openPaths"
+          v-model:path="path"
+          include-children-documents
+          :compact="!modal"
+          :projects="projects"
+          :pre-body-build="preBodyBuild"
+          :sort-by="filter.sortBy"
+          :order-by="filter.orderBy"
+          :no-stats="hideCount"
+          :layout="layout"
+          no-documents
+          no-label
+          no-search
+          no-search-link
+          no-tree
+          select-mode
+          multiple
+        />
+      </div>
     </template>
     <template #actions>
       <button-toggle-path-tree-view v-model:active="nested" />
     </template>
   </filter-type>
 </template>
+
+<style lang="scss">
+.filter-type-path__tree {
+  // In the panel the filter's own content box is what clips the tree: scrolling
+  // here instead would put the horizontal scrollbar below the visible area.
+  // The modal drops that clipping, so there the tree has to scroll itself.
+  &--scrollable {
+    overflow-x: auto;
+    min-height: 100%;
+  }
+
+  .path-tree-view-entry {
+    width: max-content;
+    min-width: 100%;
+  }
+
+  .path-tree-view-entry-name {
+    width: auto !important;
+    flex: 0 0 auto;
+  }
+
+  .path-tree-view-entry-name__value {
+    overflow: visible !important;
+    text-overflow: clip !important;
+  }
+
+  // The lock and count stay put while the name scrolls under them, so they
+  // need their own opaque backdrop: the row's own background (transparent or a
+  // translucent tint depending on state) layered over the page background.
+  .path-tree-view-entry > .path-tree-view-entry__header > .path-tree-view-entry__header__end {
+    position: sticky;
+    // Bleeds over the scroll container's right padding, otherwise the names
+    // keep showing through it, past the count.
+    right: calc(-1 * var(--filters-panel-section-filter-content-padding-x, 0px));
+    padding-right: var(--filters-panel-section-filter-content-padding-x, 0px);
+    // Above the caret and checkbox sliding underneath (.above-stretched-link).
+    z-index: $stretched-link-z-index + 20;
+    background-color: var(--bs-body-bg);
+    background-image: linear-gradient(var(--path-tree-view-entry-header-bg), var(--path-tree-view-entry-header-bg));
+  }
+}
+</style>
