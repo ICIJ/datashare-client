@@ -1,3 +1,6 @@
+import { readFileSync } from 'fs'
+import { resolve } from 'path'
+
 import { flushPromises, shallowMount } from '@vue/test-utils'
 import { renderAsync } from 'docx-preview'
 
@@ -200,5 +203,52 @@ describe('DocumentViewerDocx.vue', () => {
     const wrapper = mountViewer()
     await flushPromises()
     expect(wrapper.find('.document-viewer-docx__error').text()).toBe('Your document was indexed in Datashare but the original is no longer in your Datashare folder on your computer. Preview is thus not available.')
+  })
+})
+
+// The other tests here replace `renderAsync` with a stand-in writing the sections
+// they need; these run the library itself through the same spy, so the options the
+// component passes reach the real code at least once.
+describe('DocumentViewerDocx.vue with the real docx-preview', () => {
+  const document = { index: 'foo', id: 'doc-id', routing: 'root-id', source: { metadata: {} }, tags: [] }
+  const fixture = resolve(__dirname, '../../../../resources/document.docx')
+
+  // Unzipping and parsing the file takes more ticks than `flushPromises` covers.
+  async function mountRendered() {
+    const { plugins } = CoreSetup.init().useAll()
+    const wrapper = shallowMount(DocumentViewerDocx, {
+      props: { document },
+      attachTo: window.document.body,
+      global: { plugins, renderStubDefaultSlot: true }
+    })
+    await vi.waitUntil(() => wrapper.vm.sections.length || wrapper.vm.error)
+    await flushPromises()
+    return wrapper
+  }
+
+  beforeEach(async () => {
+    vi.clearAllMocks()
+    const { renderAsync: actual } = await vi.importActual('docx-preview')
+    renderAsync.mockImplementation(actual)
+    getSource.mockResolvedValue(new Blob([readFileSync(fixture)]))
+    window.HTMLElement.prototype.scrollIntoView = vi.fn()
+  })
+
+  it('renders the text of a real docx file', async () => {
+    const wrapper = await mountRendered()
+    expect(wrapper.vm.error).toBeNull()
+    expect(wrapper.find('.document-viewer-docx__container').text()).toContain('This is a Datashare test document.')
+  })
+
+  it('counts a page for the last rendered page break of a real docx file', async () => {
+    const wrapper = await mountRendered()
+    expect(wrapper.findComponent(DocumentToolbox).props('totalPages')).toBe(2)
+  })
+
+  it('marks a term of a real docx file on the page holding it', async () => {
+    const wrapper = await mountRendered()
+    const matches = await wrapper.vm.findMatches('needle')
+    expect(matches).toEqual([{ page: 1 }])
+    expect(wrapper.find('mark.local-search-term').text()).toBe('needle')
   })
 })
