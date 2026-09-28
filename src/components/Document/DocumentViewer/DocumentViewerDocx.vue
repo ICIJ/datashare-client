@@ -28,6 +28,10 @@ const ACTIVE_CLASS = 'local-search-term--active'
 // observer's root and the element box, so it would flicker between two pages.
 const BELOW_TOOLBOX_OFFSET = 4
 const SCROLL_IDLE_DELAY = 200
+// `ignoreLastRenderedPageBreak` defaults to true, which silently collapses the
+// page count to 1: the sections the paginator and the marks are keyed by are
+// exactly the page breaks Word wrote.
+const RENDER_OPTIONS = { ignoreLastRenderedPageBreak: false, inWrapper: true }
 
 const { fetchSource } = useDocumentSource()
 const { isBlurred, getBlurredContentBanner } = useDocumentPreview()
@@ -74,8 +78,6 @@ const rootMargin = computed(() => `${-(Math.round(toolboxHeight.value) + BELOW_T
 
 let lastRender = 0
 
-// A library rejection carries its own English internals (jszip's "is this a zip
-// file ?"), so only the source errors, already localized, are shown as they come.
 function failRender(message) {
   // The sections left in the container are the previous document's: still
   // observed, they would report pages this render no longer knows about.
@@ -86,45 +88,71 @@ function failRender(message) {
   toast.error(message)
 }
 
-async function render() {
-  // A document swapped in while this one was loading owns the container now, so
-  // neither its markup nor its failure may be written over the one on screen.
-  const id = ++lastRender
-  error.value = null
-  let blob
+// A document swapped in while this one was loading owns the container now, so
+// neither this render's markup nor its failure may be written over the one on screen.
+function isCurrentRender(id) {
+  return id === lastRender
+}
+
+async function fetchDocx(id) {
   try {
-    blob = await fetchSource(props.document, { responseType: 'blob' })
+    const blob = await fetchSource(props.document, { responseType: 'blob' })
+    return isCurrentRender(id) ? blob : null
   }
   catch (reason) {
-    if (id === lastRender) {
+    if (isCurrentRender(id)) {
       failRender(reason.message)
     }
-    return
+    return null
   }
-  if (id !== lastRender) {
-    return
-  }
+}
+
+// A library rejection carries its own English internals (jszip's "is this a zip
+// file ?"), unlike the source errors, which are already localized.
+async function paintDocx(id, blob) {
   try {
-    await renderAsync(blob, container.value, null, { ignoreLastRenderedPageBreak: false, inWrapper: true })
+    await renderAsync(blob, container.value, null, RENDER_OPTIONS)
+    return isCurrentRender(id)
   }
   catch {
-    if (id === lastRender) {
+    if (isCurrentRender(id)) {
       failRender(t('document.notAvailable'))
     }
-    return
+    return false
   }
-  if (id !== lastRender) {
-    return
-  }
+}
+
+function collectSections() {
   sections.value = [...container.value.querySelectorAll('section.docx')]
   originalHtml.value = sections.value.map(({ innerHTML }) => innerHTML)
   foldedText.value = sections.value.map(({ textContent }) => foldWithSourceIndexes(textContent).folded)
   markedSections.clear()
+}
+
+function resetPage() {
   currentPage.value = 1
   pendingPage.value = null
+}
+
+async function adoptRenderedSections() {
+  collectSections()
+  resetPage()
   observeSections()
   // The sections the matches point at are gone, so the term on screen has to be searched again.
   await refresh()
+}
+
+async function render() {
+  const id = ++lastRender
+  error.value = null
+  const blob = await fetchDocx(id)
+  if (!blob) {
+    return
+  }
+  const painted = await paintDocx(id, blob)
+  if (painted) {
+    await adoptRenderedSections()
+  }
 }
 
 // Marking replaces a section's html, so the marks of the previous term would
