@@ -125,6 +125,31 @@ describe('useDocumentLocalSearch', () => {
     expect(isLoading.value).toBe(false)
   })
 
+  it('searches the unchanged term again on refresh', async () => {
+    const source = ref([{ page: 1 }])
+    const findMatches = vi.fn(async () => source.value)
+    const { term, matches, refresh } = useDocumentLocalSearch({ findMatches })
+    term.value = 'foo'
+    await settle()
+    expect(findMatches).toBeCalledTimes(1)
+    source.value = [{ page: 3 }]
+    await refresh()
+    await nextTick()
+    expect(findMatches).toBeCalledTimes(2)
+    expect(matches.value).toEqual([{ page: 3 }])
+  })
+
+  it('clears the matches when refreshing an empty term', async () => {
+    const findMatches = vi.fn(async () => [{ page: 1 }])
+    const { term, matches, refresh } = useDocumentLocalSearch({ findMatches })
+    term.value = 'foo'
+    await settle()
+    term.value = ''
+    await refresh()
+    expect(matches.value).toEqual([])
+    expect(findMatches).toBeCalledTimes(1)
+  })
+
   it('accepts a reactive-free findMatches that reads fresh state each call', async () => {
     const source = ref([{ page: 1 }])
     const findMatches = vi.fn(async () => source.value)

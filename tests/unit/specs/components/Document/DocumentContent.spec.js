@@ -1,4 +1,4 @@
-import { enableAutoUnmount, mount, shallowMount, flushPromises } from '@vue/test-utils'
+import { config, enableAutoUnmount, mount, shallowMount, flushPromises } from '@vue/test-utils'
 import { PaginationTiny } from '@icij/murmur'
 
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
@@ -11,11 +11,6 @@ import DocumentLocalSearch from '@/components/Document/DocumentLocalSearch/Docum
 import Hook from '@/components/Hook/Hook'
 import { apiInstance as api } from '@/api/apiInstance'
 import { useDocumentStore } from '@/store/modules'
-
-// Disable lodash throttle to avoid side-effect
-vi.mock('lodash/throttle', () => ({
-  default: cb => cb
-}))
 
 vi.mock('@/api/apiInstance', async (importOriginal) => {
   const { apiInstance } = await importOriginal()
@@ -44,6 +39,16 @@ window.HTMLElement.prototype.scrollIntoView = vi.fn()
 // real attachments query for a document that only existed in its own test.
 enableAutoUnmount(afterEach)
 
+// The view dropdown is passed to the toolbox as a slot, so a shallow mount has
+// to render the toolbox for real to reach it.
+config.global.stubs = { ...config.global.stubs, DocumentToolbox: false }
+
+// The local search debounces the term before it searches it.
+async function flushLocalSearch() {
+  await vi.advanceTimersByTimeAsync(300)
+  await flushPromises()
+}
+
 // A promise whose resolution is controlled from the outside, so a test can
 // resolve two competing requests in a deterministic, arbitrary order instead
 // of relying on timers.
@@ -62,6 +67,7 @@ describe('DocumentContent.vue', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
+    vi.useFakeTimers({ shouldAdvanceTime: true })
     core = CoreSetup.init().useAll()
     documentStore = useDocumentStore()
   })
@@ -92,6 +98,7 @@ describe('DocumentContent.vue', () => {
   afterEach(async () => {
     // Ensure all promise are flushed...
     await flushPromises()
+    vi.useRealTimers()
     // Remove document
     documentStore.reset()
   })
@@ -186,7 +193,7 @@ describe('DocumentContent.vue', () => {
         const { plugins } = core
         const props = { document: mockDocument.document, q: 'full' }
         wrapper = mount(DocumentContent, { props, global: { plugins } })
-        await flushPromises()
+        await flushLocalSearch()
         await wrapper.vm.loadContentSlice()
       })
 
@@ -208,7 +215,7 @@ describe('DocumentContent.vue', () => {
 
         await wrapper.setProps({ q: 'is' })
         await wrapper.vm.activateContentSliceAround()
-        await flushPromises()
+        await flushLocalSearch()
         const { innerHTML: secondSearch } = wrapper.find('.document-content__body').element
         expect(wrapper.vm.localSearchIndex).toEqual(1)
         expect(secondSearch).toEqual(
@@ -243,7 +250,7 @@ describe('DocumentContent.vue', () => {
         const { plugins } = core
         const props = { document, q: 'full' }
         wrapper = mount(DocumentContent, { global: { plugins }, props })
-        await flushPromises()
+        await flushLocalSearch()
         await wrapper.vm.loadContentSlice()
       })
 
@@ -333,7 +340,7 @@ describe('DocumentContent.vue', () => {
       const { document } = await mockDocumentContentSlice('Hello world')
       const { plugins } = core
       const wrapper = shallowMount(DocumentContent, { props: { document, q: 'hello' }, global: { plugins } })
-      await flushPromises()
+      await flushLocalSearch()
       expect(wrapper.findComponent(DocumentLocalSearch).props('occurrences')).toBe(2)
     })
 
@@ -343,7 +350,7 @@ describe('DocumentContent.vue', () => {
       const { document } = await mockDocumentContentSlice('Hello world')
       const { plugins } = core
       const wrapper = shallowMount(DocumentContent, { props: { document, q: 'hello' }, global: { plugins } })
-      await flushPromises()
+      await flushLocalSearch()
       expect(wrapper.vm.markdownPage).toBe(1)
       wrapper.vm.localSearchIndex = 2
       await flushPromises()
@@ -661,7 +668,7 @@ describe('DocumentContent.vue', () => {
         const { document } = await mockDocumentContentSlice('Hello world')
         const { plugins } = core
         const wrapper = shallowMount(DocumentContent, { props: { document, q: ' hello ' }, global: { plugins } })
-        await flushPromises()
+        await flushLocalSearch()
         // Assert on the leading arguments only: the routing value depends on how the
         // fixture document was indexed, and this test is about the trimmed query.
         const [project, documentId, query] = api.searchStructurePages.mock.calls[0]
@@ -681,7 +688,7 @@ describe('DocumentContent.vue', () => {
         const { document } = await mockDocumentContentSlice('Hello world')
         const { plugins } = core
         const wrapper = shallowMount(DocumentContent, { props: { document, q: 'hello' }, global: { plugins } })
-        await flushPromises()
+        await flushLocalSearch()
         const attachments = wrapper.findComponent({ name: 'DocumentAttachments' })
         expect(attachments.exists()).toBe(true)
         expect(attachments.attributes('style')).not.toContain('display: none')
@@ -691,7 +698,7 @@ describe('DocumentContent.vue', () => {
         const { document } = await mockDocumentContentSlice('Hello world')
         const { plugins } = core
         const wrapper = shallowMount(DocumentContent, { props: { document, q: 'hello' }, global: { plugins } })
-        await flushPromises()
+        await flushLocalSearch()
         expect(wrapper.vm.localSearchOccurrences).toBe(3)
         expect(wrapper.vm.localSearchIndex).toBe(1)
         expect(wrapper.vm.markdownPage).toBe(2)
@@ -701,7 +708,7 @@ describe('DocumentContent.vue', () => {
         const { document } = await mockDocumentContentSlice('Hello world')
         const { plugins } = core
         const wrapper = shallowMount(DocumentContent, { props: { document, q: 'hello' }, global: { plugins } })
-        await flushPromises()
+        await flushLocalSearch()
         wrapper.vm.localSearchIndex = 2
         await flushPromises()
         expect(wrapper.vm.markdownPage).toBe(3)
@@ -717,7 +724,7 @@ describe('DocumentContent.vue', () => {
         const { document } = await mockDocumentContentSlice('Hello world')
         const { plugins } = core
         const wrapper = shallowMount(DocumentContent, { props: { document, q: 'hello' }, global: { plugins } })
-        await flushPromises()
+        await flushLocalSearch()
         expect(wrapper.vm.localSearchOccurrences).toBe(0)
         expect(wrapper.vm.localSearchIndex).toBe(0)
       })
@@ -727,7 +734,7 @@ describe('DocumentContent.vue', () => {
         const { document } = await mockDocumentContentSlice('Hello world')
         const { plugins } = core
         const wrapper = shallowMount(DocumentContent, { props: { document, q: 'hello' }, global: { plugins } })
-        await flushPromises()
+        await flushLocalSearch()
         expect(wrapper.vm.localSearchOccurrences).toBe(0)
         const markdownBody = wrapper.findComponent({ name: 'DocumentContentMarkdown' })
         expect(markdownBody.props('term')).toBe('')
@@ -738,7 +745,7 @@ describe('DocumentContent.vue', () => {
         const { document } = await mockDocumentContentSlice('Hello world')
         const { plugins } = core
         const wrapper = shallowMount(DocumentContent, { props: { document, q: 'hello' }, global: { plugins } })
-        await flushPromises()
+        await flushLocalSearch()
         wrapper.vm.preferMarkdown = false
         await flushPromises()
         const [project, documentId, query] = api.searchDocument.mock.calls[0]
@@ -753,7 +760,7 @@ describe('DocumentContent.vue', () => {
         const { document } = await mockDocumentContentSlice('Hello world')
         const { plugins } = core
         const wrapper = shallowMount(DocumentContent, { props: { document, q: 'hello' }, global: { plugins } })
-        await flushPromises()
+        await flushLocalSearch()
         await wrapper.setProps({ targetLanguage: 'ENGLISH' })
         await flushPromises()
         expect(wrapper.vm.isMarkdownMode).toBe(false)
@@ -775,7 +782,7 @@ describe('DocumentContent.vue', () => {
         // Start a markdown search that stays in flight (the server-side page
         // scan is slow)...
         wrapper.vm.localSearchTerm = 'foo'
-        await flushPromises()
+        await flushLocalSearch()
         // ...then flip to plain text before it resolves: this starts a second,
         // competing retrieval through the raw-content endpoint.
         wrapper.vm.preferMarkdown = false
@@ -810,7 +817,7 @@ describe('DocumentContent.vue', () => {
         const errorHandler = vi.fn()
         const global = { plugins, config: { errorHandler } }
         const wrapper = shallowMount(DocumentContent, { props: { document, q: 'hello' }, global })
-        await flushPromises()
+        await flushLocalSearch()
         expect(errorHandler).toBeCalledWith(new Error('Network Error'), expect.anything(), expect.anything())
         // A second, unrelated Vue-dispatched error inside this test must not
         // slip by unnoticed just because the expected error also occurred.
