@@ -12,7 +12,6 @@ const { hasFeature } = useFeatures()
 
 const paginatedTypes = [
   'application/msword',
-  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
   'application/vnd.openxmlformats-officedocument.presentationml.presentation',
   'text/html'
 ]
@@ -32,6 +31,8 @@ const previewComponent = computed(() => {
       return 'DocumentViewerJson'
     case document.value.isMarkdown:
       return 'DocumentViewerMarkdown'
+    case document.value.isDocx:
+      return 'DocumentViewerDocx'
     case isPaginated.value:
       return 'DocumentViewerPaginated'
     case document.value.isTiff:
