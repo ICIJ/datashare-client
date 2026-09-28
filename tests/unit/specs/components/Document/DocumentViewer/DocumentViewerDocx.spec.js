@@ -12,9 +12,16 @@ import { useDocumentPathBannersStore } from '@/store/modules'
 
 vi.mock('docx-preview', () => ({ renderAsync: vi.fn() }))
 
+const observers = []
+
 vi.stubGlobal('IntersectionObserver', class {
+  constructor(callback) {
+    this.callback = callback
+    this.disconnect = vi.fn()
+    observers.push(this)
+  }
+
   observe() {}
-  disconnect() {}
 })
 
 const getSource = vi.fn()
@@ -75,6 +82,7 @@ describe('DocumentViewerDocx.vue', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     vi.useFakeTimers({ shouldAdvanceTime: true })
+    observers.length = 0
     getSource.mockResolvedValue(blob)
     renderSections('<p>hello world</p>')
     window.HTMLElement.prototype.scrollIntoView = vi.fn()
@@ -243,6 +251,87 @@ describe('DocumentViewerDocx.vue', () => {
     const wrapper = mountViewer()
     await flushPromises()
     expect(wrapper.find('.document-viewer-docx__error').text()).toBe('Your document was indexed in Datashare but the original is no longer in your Datashare folder on your computer. Preview is thus not available.')
+  })
+  describe('a document swapped while the previous one is still loading', () => {
+    // Holds the first document's source open so the second one renders first.
+    function mountWithPendingSource() {
+      let resolveSource
+      getSource.mockReturnValueOnce(new Promise((resolve) => {
+        resolveSource = resolve
+      }))
+      getSource.mockResolvedValue(blob)
+      return { wrapper: mountViewer(), resolveSource }
+    }
+
+    it('does not let the superseded render write over the document on screen', async () => {
+      const { wrapper, resolveSource } = mountWithPendingSource()
+      await flushPromises()
+      renderSections('<p>second</p>', '<p>second again</p>')
+      await wrapper.setProps({ document: { ...document, id: 'other-id' } })
+      await flushPromises()
+      expect(wrapper.vm.sections).toHaveLength(2)
+      renderAsync.mockClear()
+      renderSections('<p>first</p>')
+      resolveSource(blob)
+      await flushPromises()
+      expect(renderAsync).not.toHaveBeenCalled()
+      expect(wrapper.vm.sections).toHaveLength(2)
+    })
+
+    it('does not let the superseded failure blank the document on screen', async () => {
+      let rejectSource
+      getSource.mockReturnValueOnce(new Promise((resolve, reject) => {
+        rejectSource = reject
+      }))
+      getSource.mockResolvedValue(blob)
+      const wrapper = mountViewer()
+      await flushPromises()
+      renderSections('<p>second</p>')
+      await wrapper.setProps({ document: { ...document, id: 'other-id' } })
+      await flushPromises()
+      rejectSource(new Error('document.notAvailable'))
+      await flushPromises()
+      expect(wrapper.vm.error).toBeNull()
+      expect(wrapper.vm.sections).toHaveLength(1)
+    })
+  })
+
+  it('stops observing the previous document sections when a render fails', async () => {
+    const wrapper = mountViewer()
+    await flushPromises()
+    expect(observers).toHaveLength(1)
+    getSource.mockRejectedValue(new Error('document.errorNotFound'))
+    await wrapper.setProps({ document: { ...document, id: 'other-id' } })
+    await flushPromises()
+    expect(observers[0].disconnect).toHaveBeenCalled()
+  })
+
+  it('holds the page indicator on the page a scroll is heading to', async () => {
+    renderSections('<p>one</p>', '<p>two</p>', '<p>three</p>')
+    const wrapper = mountViewer()
+    await flushPromises()
+    const toolbox = wrapper.findComponent(DocumentToolbox)
+    toolbox.vm.$emit('update:page', 3)
+    await flushPromises()
+    expect(toolbox.props('page')).toBe(3)
+    // The sections the scroll flies past report themselves on the way there.
+    observers.at(-1).callback([{ target: wrapper.vm.sections[1], isIntersecting: true }])
+    await flushPromises()
+    expect(toolbox.props('page')).toBe(3)
+    // Once the scroll has settled, the viewport owns the indicator again.
+    await vi.advanceTimersByTimeAsync(200)
+    await flushPromises()
+    expect(toolbox.props('page')).toBe(2)
+  })
+
+  it('only rewrites the sections that can hold the term', async () => {
+    renderSections('<p>a needle</p>', '<p>a haystack</p>')
+    const wrapper = mountViewer()
+    await flushPromises()
+    const untouched = wrapper.vm.sections[1].firstChild
+    await search(wrapper, 'needle')
+    expect(wrapper.vm.sections[0].innerHTML).toContain('<mark')
+    expect(wrapper.vm.sections[1].firstChild).toBe(untouched)
   })
 })
 
