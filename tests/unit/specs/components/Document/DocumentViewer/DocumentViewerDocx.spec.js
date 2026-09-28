@@ -7,6 +7,8 @@ import { renderAsync } from 'docx-preview'
 import CoreSetup from '~tests/unit/CoreSetup'
 import DocumentViewerDocx from '@/components/Document/DocumentViewer/DocumentViewerDocx'
 import DocumentToolbox from '@/components/Document/DocumentToolbox/DocumentToolbox'
+import DismissableContentWarningToggler from '@/components/Dismissable/DismissableContentWarningToggler'
+import { useDocumentPathBannersStore } from '@/store/modules'
 
 vi.mock('docx-preview', () => ({ renderAsync: vi.fn() }))
 
@@ -28,7 +30,15 @@ vi.mock('@/api/apiInstance', async (importOriginal) => {
 })
 
 describe('DocumentViewerDocx.vue', () => {
-  const document = { index: 'foo', id: 'doc-id', routing: 'root-id', source: { metadata: {} }, tags: [] }
+  const document = {
+    index: 'foo',
+    id: 'doc-id',
+    routing: 'root-id',
+    project: 'foo',
+    path: '/leaks/medical/report.docx',
+    source: { metadata: {} },
+    tags: []
+  }
   const blob = new Blob(['docx'])
 
   // `renderAsync` writes into the container the component passes it; this is the
@@ -39,8 +49,11 @@ describe('DocumentViewerDocx.vue', () => {
     })
   }
 
-  function mountViewer() {
+  // The path banners are cached per project, so seeding the store keeps the blur
+  // decision out of the network and away from the other tests' cache.
+  function mountViewer(pathBanners = []) {
     const { plugins } = CoreSetup.init().useAll()
+    useDocumentPathBannersStore().set({ project: 'foo', pathBanners })
     return shallowMount(DocumentViewerDocx, {
       props: { document },
       attachTo: window.document.body,
@@ -151,19 +164,46 @@ describe('DocumentViewerDocx.vue', () => {
     expect(wrapper.findComponent(DocumentToolbox).props('page')).toBe(2)
   })
 
-  it('shows an error toast and the unavailable message when rendering fails', async () => {
-    renderAsync.mockRejectedValue(new Error('corrupt'))
-    const wrapper = mountViewer()
-    await flushPromises()
-    expect(wrapper.find('.document-viewer-docx__error').exists()).toBe(true)
-    expect(toastError).toHaveBeenCalledWith('corrupt')
-  })
-
-  it('falls back to the unavailable message when the rejection carries none', async () => {
-    renderAsync.mockRejectedValue(null)
+  it('shows the unavailable message rather than the library message when rendering fails', async () => {
+    renderAsync.mockRejectedValue(new Error('Can\'t find end of central directory : is this a zip file ?'))
     const wrapper = mountViewer()
     await flushPromises()
     expect(wrapper.find('.document-viewer-docx__error').text()).toBe('Preview is not available for this document type.')
+    expect(toastError).toHaveBeenCalledWith('Preview is not available for this document type.')
+  })
+
+  it('drops the sections of the previous render when a re-render fails', async () => {
+    renderSections('<p>one</p>', '<p>two</p>')
+    const wrapper = mountViewer()
+    await flushPromises()
+    expect(wrapper.vm.sections).toHaveLength(2)
+    renderAsync.mockRejectedValue(new Error('corrupt'))
+    await wrapper.setProps({ document: { ...document, id: 'other-id' } })
+    await flushPromises()
+    expect(wrapper.vm.sections).toHaveLength(0)
+  })
+
+  it('hides the occurrence count of the global search terms', async () => {
+    const wrapper = mountViewer()
+    await flushPromises()
+    expect(wrapper.findComponent(DocumentToolbox).props('noCount')).toBe(true)
+  })
+
+  it('leaves the document visible when no path banner blurs it', async () => {
+    const wrapper = mountViewer()
+    await flushPromises()
+    expect(wrapper.findComponent(DismissableContentWarningToggler).exists()).toBe(false)
+    expect(wrapper.findComponent(DocumentToolbox).props('disabled')).toBe(false)
+  })
+
+  it('hides the document behind a content warning under a blurring path banner', async () => {
+    const wrapper = mountViewer([{ path: '/leaks/medical/', blurSensitiveMedia: true, note: 'Sensitive' }])
+    await flushPromises()
+    const toggler = wrapper.findComponent(DismissableContentWarningToggler)
+    expect(toggler.exists()).toBe(true)
+    expect(toggler.props('description')).toBe('Sensitive')
+    expect(wrapper.findComponent(DocumentToolbox).props('disabled')).toBe(true)
+    expect(wrapper.find('.document-viewer-docx__container').attributes('style')).toContain('display: none')
   })
 
   it('takes the marks down when the search field is cleared', async () => {
@@ -210,12 +250,21 @@ describe('DocumentViewerDocx.vue', () => {
 // they need; these run the library itself through the same spy, so the options the
 // component passes reach the real code at least once.
 describe('DocumentViewerDocx.vue with the real docx-preview', () => {
-  const document = { index: 'foo', id: 'doc-id', routing: 'root-id', source: { metadata: {} }, tags: [] }
+  const document = {
+    index: 'foo',
+    id: 'doc-id',
+    routing: 'root-id',
+    project: 'foo',
+    path: '/leaks/report.docx',
+    source: { metadata: {} },
+    tags: []
+  }
   const fixture = resolve(__dirname, '../../../../resources/document.docx')
 
   // Unzipping and parsing the file takes more ticks than `flushPromises` covers.
   async function mountRendered() {
     const { plugins } = CoreSetup.init().useAll()
+    useDocumentPathBannersStore().set({ project: 'foo', pathBanners: [] })
     const wrapper = shallowMount(DocumentViewerDocx, {
       props: { document },
       attachTo: window.document.body,
