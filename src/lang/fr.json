@@ -756,7 +756,7 @@
     },
     "level": {
       "all": "Tous",
-      "level00": "Fichier sur disque",
+      "level00": "Sur disque",
       "level01": "1er",
       "level02": "2ème",
       "level03": "3ème",
