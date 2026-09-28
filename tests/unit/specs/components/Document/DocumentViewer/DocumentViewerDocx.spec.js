@@ -1,0 +1,155 @@
+import { flushPromises, shallowMount } from '@vue/test-utils'
+import { renderAsync } from 'docx-preview'
+
+import CoreSetup from '~tests/unit/CoreSetup'
+import DocumentViewerDocx from '@/components/Document/DocumentViewer/DocumentViewerDocx'
+import DocumentToolbox from '@/components/Document/DocumentToolbox/DocumentToolbox'
+
+vi.mock('docx-preview', () => ({ renderAsync: vi.fn() }))
+
+vi.stubGlobal('IntersectionObserver', class {
+  observe() {}
+  disconnect() {}
+})
+
+const getSource = vi.fn()
+
+vi.mock('@/api/apiInstance', async (importOriginal) => {
+  const { apiInstance } = await importOriginal()
+  return { apiInstance: { ...apiInstance, getSource: (...args) => getSource(...args) } }
+})
+
+describe('DocumentViewerDocx.vue', () => {
+  const document = { index: 'foo', id: 'doc-id', routing: 'root-id', source: { metadata: {} }, tags: [] }
+  const blob = new Blob(['docx'])
+
+  // `renderAsync` writes into the container the component passes it; this is the
+  // only thing the component knows about the library's output.
+  function renderSections(...contents) {
+    renderAsync.mockImplementation(async (source, container) => {
+      container.innerHTML = contents.map(html => `<section class="docx">${html}</section>`).join('')
+    })
+  }
+
+  function mountViewer() {
+    const { plugins } = CoreSetup.init().useAll()
+    return shallowMount(DocumentViewerDocx, {
+      props: { document },
+      attachTo: window.document.body,
+      global: { plugins, renderStubDefaultSlot: true }
+    })
+  }
+
+  // The local search debounces the term before it searches it.
+  async function flushLocalSearch() {
+    await vi.advanceTimersByTimeAsync(300)
+    await flushPromises()
+  }
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+    vi.useFakeTimers({ shouldAdvanceTime: true })
+    getSource.mockResolvedValue(blob)
+    renderSections('<p>hello world</p>')
+    window.HTMLElement.prototype.scrollIntoView = vi.fn()
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  it('fetches the source as a blob', async () => {
+    mountViewer()
+    await flushPromises()
+    expect(getSource).toHaveBeenCalledWith(document, { responseType: 'blob' })
+  })
+
+  it('renders the blob into its own container', async () => {
+    const wrapper = mountViewer()
+    await flushPromises()
+    const [source, container] = renderAsync.mock.calls[0]
+    expect(source).toBe(blob)
+    expect(container).toBe(wrapper.find('.document-viewer-docx__container').element)
+  })
+
+  it('asks the library not to ignore the last rendered page breaks', async () => {
+    mountViewer()
+    await flushPromises()
+    const options = renderAsync.mock.calls[0][3]
+    expect(options).toEqual({ ignoreLastRenderedPageBreak: false, inWrapper: true })
+  })
+
+  it('counts one page per rendered section', async () => {
+    renderSections('<p>one</p>', '<p>two</p>', '<p>three</p>')
+    const wrapper = mountViewer()
+    await flushPromises()
+    expect(wrapper.findComponent(DocumentToolbox).props('totalPages')).toBe(3)
+  })
+
+  it('counts one page when nothing was rendered', async () => {
+    renderAsync.mockResolvedValue(undefined)
+    const wrapper = mountViewer()
+    await flushPromises()
+    expect(wrapper.findComponent(DocumentToolbox).props('totalPages')).toBe(1)
+  })
+
+  it('marks every occurrence of the search term', async () => {
+    renderSections('<p>needle and needle</p>', '<p>a needle</p>')
+    const wrapper = mountViewer()
+    await flushPromises()
+    const matches = await wrapper.vm.findMatches('needle')
+    expect(matches).toHaveLength(3)
+    expect(wrapper.findAll('mark.local-search-term')).toHaveLength(3)
+  })
+
+  it('folds accents the way the content tab does', async () => {
+    renderSections('<p>Crème brûlée</p>')
+    const wrapper = mountViewer()
+    await flushPromises()
+    const matches = await wrapper.vm.findMatches('creme')
+    expect(matches).toHaveLength(1)
+  })
+
+  it('reports the section an occurrence belongs to as its page', async () => {
+    renderSections('<p>a needle</p>', '<p>another needle</p>')
+    const wrapper = mountViewer()
+    await flushPromises()
+    const matches = await wrapper.vm.findMatches('needle')
+    expect(matches.map(({ page }) => page)).toEqual([1, 2])
+  })
+
+  it('re-marks from the original html rather than from marked html', async () => {
+    renderSections('<p>needle</p>')
+    const wrapper = mountViewer()
+    await flushPromises()
+    await wrapper.vm.findMatches('needle')
+    await wrapper.vm.findMatches('need')
+    expect(wrapper.findAll('mark.local-search-term')).toHaveLength(1)
+    expect(wrapper.find('.document-viewer-docx__container').html()).toContain('>need</mark>le')
+  })
+
+  it('shows the page of the active occurrence', async () => {
+    renderSections('<p>a needle</p>', '<p>another needle</p>')
+    const wrapper = mountViewer()
+    await flushPromises()
+    wrapper.findComponent(DocumentToolbox).vm.$emit('update:modelValue', 'needle')
+    await flushLocalSearch()
+    wrapper.findComponent(DocumentToolbox).vm.$emit('update:activeIndex', 2)
+    await flushPromises()
+    expect(wrapper.findComponent(DocumentToolbox).props('page')).toBe(2)
+  })
+
+  it('shows an error toast and the unavailable message when rendering fails', async () => {
+    renderAsync.mockRejectedValue(new Error('corrupt'))
+    const wrapper = mountViewer()
+    await flushPromises()
+    expect(wrapper.find('.document-viewer-docx__error').exists()).toBe(true)
+  })
+
+  it('shows the not-found message when the source is gone', async () => {
+    getSource.mockRejectedValue({ response: { status: 404 } })
+    const wrapper = mountViewer()
+    await flushPromises()
+    expect(wrapper.find('.document-viewer-docx__error').text()).toBe('Your document was indexed in Datashare but the original is no longer in your Datashare folder on your computer. Preview is thus not available.')
+  })
+})
