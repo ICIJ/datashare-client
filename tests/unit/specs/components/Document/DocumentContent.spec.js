@@ -1,4 +1,5 @@
-import { mount, shallowMount, flushPromises } from '@vue/test-utils'
+import { enableAutoUnmount, mount, shallowMount, flushPromises } from '@vue/test-utils'
+import { PaginationTiny } from '@icij/murmur'
 
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
@@ -7,6 +8,7 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import DocumentContent from '@/components/Document/DocumentContent'
 import DocumentContentDropdown from '@/components/Document/DocumentContentDropdown'
 import DocumentLocalSearch from '@/components/Document/DocumentLocalSearch/DocumentLocalSearch'
+import Hook from '@/components/Hook/Hook'
 import { apiInstance as api } from '@/api/apiInstance'
 import { useDocumentStore } from '@/store/modules'
 
@@ -36,6 +38,11 @@ vi.mock('@/api/apiInstance', async (importOriginal) => {
 })
 
 window.HTMLElement.prototype.scrollIntoView = vi.fn()
+
+// A wrapper left mounted keeps re-rendering in later tests, where Vue Test
+// Utils no longer stubs its children: a shallow-mounted document then fires a
+// real attachments query for a document that only existed in its own test.
+enableAutoUnmount(afterEach)
 
 // A promise whose resolution is controlled from the outside, so a test can
 // resolve two competing requests in a deterministic, arbitrary order instead
@@ -813,6 +820,74 @@ describe('DocumentContent.vue', () => {
         const [project, documentId, query] = api.searchDocument.mock.calls[0]
         expect([project, documentId, query]).toEqual([index, 'document', 'hello'])
       })
+    })
+  })
+
+  describe('the toolbox', () => {
+    // `clearAllMocks` keeps the implementations the markdown describe installed,
+    // so plain text mode has to be asked for again here.
+    beforeEach(() => {
+      api.getStructureManifest.mockResolvedValue(null)
+      api.getStructurePage.mockResolvedValue('')
+    })
+
+    it('renders every hook position under the document.content prefix', async () => {
+      const { document } = await mockDocumentContentSlice('Hello world')
+      const { plugins } = core
+      const wrapper = mount(DocumentContent, { props: { document }, global: { plugins } })
+      await flushPromises()
+      const names = wrapper.findAllComponents(Hook).map(hook => hook.props('name'))
+      expect(names).toContain('document.content.toolbox:before')
+      expect(names).toContain('document.content.toolbox.local-search:before')
+      expect(names).toContain('document.content.toolbox.local-search:after')
+      expect(names).toContain('document.content.toolbox.before:before')
+      expect(names).toContain('document.content.toolbox.pagination:after')
+      expect(names).toContain('document.content.toolbox:after')
+    })
+
+    it('hides the paginator on a single page document', async () => {
+      const { document } = await mockDocumentContentSlice('short')
+      const { plugins } = core
+      const wrapper = mount(DocumentContent, { props: { document }, global: { plugins } })
+      await flushPromises()
+      expect(wrapper.findComponent(PaginationTiny).exists()).toBe(false)
+    })
+
+    it('pages the markdown artifact through the toolbox paginator', async () => {
+      api.getStructureManifest.mockResolvedValue({ pages: 3, formats: ['md'] })
+      api.getStructurePage.mockResolvedValue('# Hello world')
+      const { document } = await mockDocumentContentSlice('Hello world')
+      const { plugins } = core
+      const wrapper = mount(DocumentContent, { props: { document }, global: { plugins } })
+      await flushPromises()
+      expect(wrapper.findComponent(PaginationTiny).props('totalRows')).toBe(3)
+      wrapper.findComponent(PaginationTiny).vm.$emit('update:modelValue', 2)
+      await flushPromises()
+      expect(wrapper.vm.markdownPage).toBe(2)
+    })
+
+    it('pages the plain text slices through the toolbox paginator', async () => {
+      const { document } = await mockDocumentContentSlice('a'.repeat(60))
+      const { plugins } = core
+      const props = { document, pageSize: 10 }
+      const wrapper = mount(DocumentContent, { props, global: { plugins } })
+      await flushPromises()
+      // `nbPages` counts `maxOffset / pageSize + 1`, one more than the six
+      // slices `offsets` actually holds for a 60 character document.
+      expect(wrapper.findComponent(PaginationTiny).props('totalRows')).toBe(7)
+      wrapper.findComponent(PaginationTiny).vm.$emit('update:modelValue', 3)
+      await flushPromises()
+      expect(wrapper.vm.activeContentSliceOffset).toBe(20)
+    })
+
+    it('keeps the dropdown in the toolbox when the document has markdown', async () => {
+      api.getStructureManifest.mockResolvedValue({ pages: 3, formats: ['md'] })
+      api.getStructurePage.mockResolvedValue('# Hello world')
+      const { document } = await mockDocumentContentSlice('Hello world')
+      const { plugins } = core
+      const wrapper = mount(DocumentContent, { props: { document }, global: { plugins } })
+      await flushPromises()
+      expect(wrapper.findComponent(DocumentContentDropdown).exists()).toBe(true)
     })
   })
 })
