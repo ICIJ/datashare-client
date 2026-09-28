@@ -93,7 +93,7 @@ defineExpose({ height })
       />
       <fieldset
         :disabled="disabled"
-        class="document-toolbox__controls d-flex flex-grow-1 flex-md-grow-0 flex-nowrap align-items-center gap-2"
+        class="document-toolbox__controls d-flex flex-nowrap align-items-center gap-2"
       >
         <div
           v-if="showPagination"
