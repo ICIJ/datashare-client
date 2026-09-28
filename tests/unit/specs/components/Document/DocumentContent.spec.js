@@ -240,6 +240,22 @@ describe('DocumentContent.vue', () => {
       })
     })
 
+    it('activates a content slice when the search resolves before the document is loaded', async () => {
+      api.getStructureManifest.mockResolvedValue(null)
+      api.searchDocument.mockResolvedValue({ count: 1, offsets: [0] })
+      const { document, contentSlice } = await mockDocumentContentSlice('this is a full content')
+      // The mount-time `maxOffset` probe is held open past the debounce, so the
+      // matches land while the document is still loading.
+      const maxOffsetProbe = createDeferredPromise()
+      api.getDocumentSlice.mockImplementationOnce(() => maxOffsetProbe.promise)
+      const { plugins } = core
+      const wrapper = shallowMount(DocumentContent, { props: { document, q: 'full' }, global: { plugins } })
+      await flushLocalSearch()
+      maxOffsetProbe.resolve({ ...contentSlice, content: '', offset: 0, limit: 0 })
+      await flushPromises()
+      expect(wrapper.vm.currentContentPage).toContain('full content')
+    })
+
     describe('with 3 occurrences', () => {
       let wrapper
 
@@ -738,6 +754,25 @@ describe('DocumentContent.vue', () => {
         expect(wrapper.vm.localSearchOccurrences).toBe(0)
         const markdownBody = wrapper.findComponent({ name: 'DocumentContentMarkdown' })
         expect(markdownBody.props('term')).toBe('')
+      })
+
+      it('marks the term of the newest search when two responses land out of order', async () => {
+        const firstSearch = createDeferredPromise()
+        const secondSearch = createDeferredPromise()
+        api.searchStructurePages.mockReturnValueOnce(firstSearch.promise).mockReturnValueOnce(secondSearch.promise)
+        const { document } = await mockDocumentContentSlice('Hello world')
+        const { plugins } = core
+        const wrapper = shallowMount(DocumentContent, { props: { document, q: 'foo' }, global: { plugins } })
+        await flushLocalSearch()
+        wrapper.vm.localSearchTerm = 'foobar'
+        await flushLocalSearch()
+        secondSearch.resolve({ count: 1, pages: 3, scanned: 3, hits: [{ page: 1, count: 1 }] })
+        await flushPromises()
+        // The superseded response lands last: it must not describe the marks.
+        firstSearch.resolve({ count: 1, pages: 3, scanned: 3, hits: [{ page: 2, count: 1 }] })
+        await flushPromises()
+        const markdownBody = wrapper.findComponent({ name: 'DocumentContentMarkdown' })
+        expect(markdownBody.props('term')).toBe('foobar')
       })
 
       it('re-runs the search through the raw content when toggling to plain text', async () => {
