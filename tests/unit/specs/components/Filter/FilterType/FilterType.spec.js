@@ -127,8 +127,8 @@ describe('FilterType.vue', () => {
       expect(entries).toHaveLength(3)
 
       expect(entries.at(0).attributes('label')).toEqual('HTML document')
-      expect(entries.at(1).attributes('label')).toEqual('JavaScript')
-      expect(entries.at(2).attributes('label')).toEqual('Stylesheet')
+      expect(entries.at(1).attributes('label')).toEqual('JavaScript source')
+      expect(entries.at(2).attributes('label')).toEqual('CSS stylesheet')
     })
 
     it('should display X filter items after applying the relative search', async () => {
@@ -271,7 +271,7 @@ describe('FilterType.vue', () => {
       await letData(es).have(new IndexedDocument('document_02', index).withContentType('another_type')).commit()
       await letData(es).have(new IndexedDocument('document_03', index).withContentType('message/rfc822')).commit()
 
-      wrapper.vm.query = 'Internet'
+      wrapper.vm.query = 'Email'
 
       await wrapper.vm.aggregateOver()
 

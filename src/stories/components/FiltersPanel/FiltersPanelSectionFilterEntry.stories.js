@@ -8,7 +8,7 @@ export default {
   },
   argTypes: {},
   args: {
-    label: 'Portable Document Format (PDF)',
+    label: 'PDF document',
     count: 123456,
     modelValue: true
   },

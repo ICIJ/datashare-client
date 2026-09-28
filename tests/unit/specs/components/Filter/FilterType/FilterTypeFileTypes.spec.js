@@ -790,7 +790,7 @@ describe('FilterTypeFileTypes.vue', () => {
   describe('nested bucket sorting', () => {
     // Single category holding three MIME types with distinct counts and labels so
     // we can verify both _count and _key ordering within the same category.
-    //   application/pdf (3 docs, label "Portable Document Format (PDF)")
+    //   application/pdf (3 docs, label "PDF document")
     //   text/plain      (2 docs, label "Plain text document")
     //   text/html       (1 doc,  label "HTML document")
     const seedBucketsInCategory = async () => {
@@ -828,15 +828,15 @@ describe('FilterTypeFileTypes.vue', () => {
       searchStore.sortFilter({ name: 'contentType', sortBy: '_key', orderBy: 'asc' })
       await seedBucketsInCategory()
 
-      // Labels: "HTML document" < "Plain text document" < "Portable Document Format (PDF)".
-      expect(bucketOrder()).toEqual(['text/html', 'text/plain', 'application/pdf'])
+      // Labels: "HTML document" < "PDF document" < "Plain text document".
+      expect(bucketOrder()).toEqual(['text/html', 'application/pdf', 'text/plain'])
     })
 
     it('orders buckets Z→A using resolved labels when sortBy is _key and orderBy is desc', async () => {
       searchStore.sortFilter({ name: 'contentType', sortBy: '_key', orderBy: 'desc' })
       await seedBucketsInCategory()
 
-      expect(bucketOrder()).toEqual(['application/pdf', 'text/plain', 'text/html'])
+      expect(bucketOrder()).toEqual(['text/plain', 'application/pdf', 'text/html'])
     })
 
     it('updates nested bucket order immediately when the sort option changes', async () => {
@@ -846,7 +846,7 @@ describe('FilterTypeFileTypes.vue', () => {
       searchStore.sortFilter({ name: 'contentType', sortBy: '_key', orderBy: 'asc' })
       await flushPromises()
 
-      expect(bucketOrder()).toEqual(['text/html', 'text/plain', 'application/pdf'])
+      expect(bucketOrder()).toEqual(['text/html', 'application/pdf', 'text/plain'])
     })
 
     it('keeps the aggregated category total unchanged when bucket order changes', async () => {
@@ -1131,10 +1131,10 @@ describe('FilterTypeFileTypes.vue', () => {
     // Multi-category seed used to exercise structural filtering: each category
     // owns enough types to distinguish "category-label match keeps siblings"
     // from "type-label match hides siblings" in the same dataset.
-    //   DOCUMENT → application/pdf (label "Portable Document Format (PDF)")
+    //   DOCUMENT → application/pdf (label "PDF document")
     //   DOCUMENT → text/html       (label "HTML document")
     //   IMAGE    → image/jpeg      (label "JPEG image")
-    //   VIDEO    → video/mp4       (label "MP4 audio/video")
+    //   VIDEO    → video/mp4       (label "MP4 video")
     const seedStructuralCategories = async () => {
       api.getContentTypeCategories.mockResolvedValue({
         DOCUMENT: ['application/pdf', 'text/html'],
@@ -1190,7 +1190,7 @@ describe('FilterTypeFileTypes.vue', () => {
       await seedStructuralCategories()
 
       // "application" appears in the application/pdf MIME key but NOT in its
-      // label "Portable Document Format (PDF)" nor in any category label — so
+      // label "PDF document" nor in any category label — so
       // a positive match here proves the filter consults the raw key, not
       // just the resolved label.
       await setQuery('application')
