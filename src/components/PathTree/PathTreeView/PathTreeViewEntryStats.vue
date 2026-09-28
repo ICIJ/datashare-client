@@ -118,8 +118,8 @@ const classList = computed(() => {
   }
 
   &:not(.path-tree-view-entry-stats--compact) {
-    max-width: 300px;
-    flex: 300px 0 0;
+    max-width: 250px;
+    flex: 250px 0 0;
     width: 100%;
 
     @include media-breakpoint-down(md) {
