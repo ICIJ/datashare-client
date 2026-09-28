@@ -49,7 +49,7 @@ describe('utils', () => {
 
   describe('getDocumentTypeLabel', () => {
     it('should retrieve the document type for PDF', () => {
-      expect(getDocumentTypeLabel('application/pdf')).toBe('Portable Document Format (PDF)')
+      expect(getDocumentTypeLabel('application/pdf')).toBe('PDF document')
     })
 
     it('should retrieve the document type if no type (1/2)', () => {

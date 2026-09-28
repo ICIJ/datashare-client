@@ -1,6 +1,6 @@
 {
   "application/pdf": {
-    "label": "Portable Document Format (PDF)",
+    "label": "PDF document",
     "extensions": [
       ".pdf"
     ],
@@ -52,7 +52,7 @@
     "model": "Pages"
   },
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
-    "label": "Excel 2007 Workbook",
+    "label": "Excel 2007 spreadsheet",
     "icon": "excel",
     "extensions": [
       ".xlsx"
@@ -128,7 +128,7 @@
       "en": "Open using Word, OpenOffice or LibreOffice."
     },
     "warning": {
-      "en": "This file contains executable code. Ensure you have macros disabled before opening it."
+      "en": "This file may contain macros. Disable macros before opening it."
     },
     "model": "Pages"
   },
@@ -142,12 +142,12 @@
       "en": "Open using Word, OpenOffice or LibreOffice."
     },
     "warning": {
-      "en": "This file contains executable code. Ensure you have macros disabled before opening it."
+      "en": "This file may contain macros. Disable macros before opening it."
     },
     "model": "Pages"
   },
   "application/x-mach-o-bundle": {
-    "label": "Mac OS X executable",
+    "label": "macOS executable",
     "extensions": [
       ".bundle"
     ],
@@ -211,7 +211,7 @@
     "model": "Pages"
   },
   "application/vnd.ms-xpsdocument": {
-    "label": "XML Paper document",
+    "label": "XPS document",
     "extensions": [
       ".xps"
     ],
@@ -251,12 +251,12 @@
       "en": "A vector drawing document that can only be opened using Microsoft Visio."
     },
     "warning": {
-      "en": "Visio files may contain VBA macro code. Ensure macros are disabled in Visio before opening this file or it's possible that your system will be compromised."
+      "en": "This file may contain macros. Disable macros before opening it."
     },
     "model": "Image"
   },
   "application/vnd.wordperfect": {
-    "label": "Wordperfect document",
+    "label": "WordPerfect document",
     "extensions": [
       ".wpd"
     ],
@@ -276,14 +276,15 @@
     "model": "Pages"
   },
   "application/rdf+xml": {
-    "label": "RDF file",
+    "label": "RDF document",
     "extensions": [
       ".rdf"
     ],
     "description": {
       "en": "Resource Description Framework (RDF) file. Open using a plain text editor."
     },
-    "model": "PlainText"
+    "model": "PlainText",
+    "icon": "code"
   },
   "application/vnd.ms-excel": {
     "label": "Excel 95-2003 spreadsheet",
@@ -307,12 +308,12 @@
       "en": "Open using Excel, OpenOffice or LibreOffice."
     },
     "warning": {
-      "en": "This file contains executable code. Ensure you have macros disabled before opening it."
+      "en": "This file may contain macros. Disable macros before opening it."
     },
     "model": "Table"
   },
   "application/vnd.ms-excel.sheet.binary.macroenabled.12": {
-    "label": "Excel Binary Workbook",
+    "label": "Excel binary spreadsheet",
     "icon": "excel",
     "extensions": [
       ".xlsb"
@@ -321,7 +322,7 @@
       "en": "Open using Excel, OpenOffice or LibreOffice."
     },
     "warning": {
-      "en": "This file contains executable code. Ensure you have macros disabled before opening it."
+      "en": "This file may contain macros. Disable macros before opening it."
     },
     "model": "Table"
   },
@@ -369,13 +370,13 @@
     "label": "Office embedded file"
   },
   "application/x-tika-ooxml-protected": {
-    "label": "Password-protected OOXML",
+    "label": "Password-protected Office file",
     "description": {
       "en": "A password-protected Office Open XML (OOXML) file."
     }
   },
   "application/vnd.oasis.opendocument.text": {
-    "label": "OpenDocument Text document",
+    "label": "OpenDocument text document",
     "extensions": [
       ".odt"
     ],
@@ -385,7 +386,7 @@
     "model": "Pages"
   },
   "application/vnd.oasis.opendocument.spreadsheet": {
-    "label": "OpenDocument Spreadsheet document",
+    "label": "OpenDocument spreadsheet",
     "extensions": [
       ".ods"
     ],
@@ -413,7 +414,10 @@
     "description": {
       "en": "Microsoft Compiled HTML Help file, typically used to contain software documentation."
     },
-    "model": "PlainText"
+    "model": "PlainText",
+    "warning": {
+      "en": "Do not attempt to run this file. It is provided only for reference."
+    }
   },
   "application/xhtml+xml": {
     "label": "XHTML document",
@@ -426,7 +430,7 @@
       "en": "Open using whatever browser you normally use."
     },
     "warning": {
-      "en": "This file contains executable code. Ensure you have Javascript disabled before opening it in you browser."
+      "en": "This file may contain executable code. Disable JavaScript before opening it in your browser."
     },
     "model": "PlainText"
   },
@@ -481,19 +485,21 @@
     "description": {
       "en": "An Extensible Stylesheet Language (XSL) file used for styling or transforming XML documents."
     },
-    "model": "PlainText"
+    "model": "PlainText",
+    "icon": "code"
   },
   "application/rsd+xml": {
-    "label": "RSD file",
+    "label": "RSD document",
     "extensions": [
       ".rsd"
     ],
     "description": {
       "en": "Really Simple Discovery (RSD) file."
-    }
+    },
+    "icon": "code"
   },
   "application/vnd.ms-pki.seccat": {
-    "label": "Security Catalog file",
+    "label": "Security catalog",
     "extensions": [
       ".cat"
     ],
@@ -502,7 +508,7 @@
     }
   },
   "application/javascript": {
-    "label": "JavaScript",
+    "label": "JavaScript source",
     "icon": "code",
     "extensions": [
       ".js"
@@ -511,9 +517,10 @@
       "en": "Open using a plain text editor. This file is unlikely to contain any information that's useful to non-programmers."
     },
     "warning": {
-      "en": "For safety reasons, do not execute this script."
+      "en": "Do not attempt to run this file. It is provided only for reference."
     },
-    "preview": "yes"
+    "preview": "yes",
+    "model": "PlainText"
   },
   "application/vnd.ms-tnef": {
     "label": "TNEF email attachment",
@@ -526,7 +533,7 @@
     }
   },
   "message/rfc822": {
-    "label": "Internet Message Format",
+    "label": "Email message",
     "extensions": [
       ".eml"
     ],
@@ -543,20 +550,22 @@
     "description": {
       "en": "JavaScript Object Notation (JSON) file. Open using a plain text editor."
     },
-    "model": "PlainText"
+    "model": "PlainText",
+    "icon": "code"
   },
   "text/stylesheet": {
-    "label": "Stylesheet",
+    "label": "CSS stylesheet",
     "extensions": [
       ".css"
     ],
     "description": {
       "en": "A style sheet for describing the presentation of an HTML or XML document. This file can be opened using a text editor but is unlikely to contain any useful information."
     },
-    "model": "PlainText"
+    "model": "PlainText",
+    "icon": "code"
   },
   "text/javascript": {
-    "label": "JavaScript",
+    "label": "JavaScript source",
     "extensions": [
       ".js"
     ],
@@ -564,9 +573,10 @@
       "en": "Open using a plain text editor. This file is unlikely to contain any information that's useful to non-programmers."
     },
     "warning": {
-      "en": "For safety reasons, do not execute this script."
+      "en": "Do not attempt to run this file. It is provided only for reference."
     },
-    "model": "PlainText"
+    "model": "PlainText",
+    "icon": "code"
   },
   "text/html": {
     "label": "HTML document",
@@ -578,13 +588,13 @@
       "en": "Open using whatever browser you normally use."
     },
     "warning": {
-      "en": "This file contains executable code. Ensure you have Javascript disabled before opening it in you browser."
+      "en": "This file may contain executable code. Disable JavaScript before opening it in your browser."
     },
     "model": "PlainText"
   },
   "text/plain": {
     "label": "Plain text document",
-    "icon": "alt",
+    "icon": "text",
     "extensions": [
       ".txt"
     ],
@@ -641,7 +651,7 @@
     "model": "Table"
   },
   "text/css": {
-    "label": "Cascading Style Sheet (CSS)",
+    "label": "CSS stylesheet",
     "extensions": [
       ".css"
     ],
@@ -649,10 +659,11 @@
       "en": "A style sheet for describing the presentation of an HTML or XML document. This file can be opened using a text editor but is unlikely to contain any useful information."
     },
     "preview": "yes",
-    "model": "PlainText"
+    "model": "PlainText",
+    "icon": "code"
   },
   "text/aspdotnet": {
-    "label": "ASP.NET Web Form markup",
+    "label": "ASP.NET markup",
     "extensions": [
       ".aspx"
     ],
@@ -660,7 +671,8 @@
       "en": "(X)HTML-based markup for dynamically rendering a Web page using Microsoft ASP.NET 2. Open using a plain text editor."
     },
     "preview": "yes",
-    "model": "PlainText"
+    "model": "PlainText",
+    "icon": "code"
   },
   "text/asp": {
     "label": "ASP markup",
@@ -671,10 +683,11 @@
       "en": "Active Server Pages use (X)HTML-based markup to dynamically render Web pages. Open using a plain text editor."
     },
     "preview": "yes",
-    "model": "PlainText"
+    "model": "PlainText",
+    "icon": "code"
   },
   "text/x-ini": {
-    "label": "INI configuration file",
+    "label": "INI configuration",
     "extensions": [
       ".ini"
     ],
@@ -682,10 +695,11 @@
       "en": "Simple text-based configuration file. Open using a plain text editor."
     },
     "preview": "yes",
-    "model": "PlainText"
+    "model": "PlainText",
+    "icon": "code"
   },
   "text/x-php": {
-    "label": "PHP source file",
+    "label": "PHP source",
     "extensions": [
       ".php"
     ],
@@ -693,24 +707,26 @@
       "en": "A PHP script source file. Open using an IDE or plain text editor."
     },
     "warning": {
-      "en": "For safety reasons, do not execute this file."
+      "en": "Do not attempt to run this file. It is provided only for reference."
     },
     "preview": "yes",
-    "model": "PlainText"
+    "model": "PlainText",
+    "icon": "code"
   },
   "text/x-vbasic": {
-    "label": "Visual Basic for Applications",
+    "label": "VBA source",
     "description": {
       "en": "VBA script embedded in a document. Open using an IDE or plain text editor. Unlikely to contain information useful to non-programmers."
     },
     "warning": {
-      "en": "For safety reasons, do not execute this script."
+      "en": "Do not attempt to run this file. It is provided only for reference."
     },
     "preview": "yes",
-    "model": "PlainText"
+    "model": "PlainText",
+    "icon": "code"
   },
   "text/x-vbscript": {
-    "label": "VBScript source file",
+    "label": "VBScript source",
     "extensions": [
       ".vbs"
     ],
@@ -718,10 +734,11 @@
       "en": "Open using an IDE or plain text editor. Unlikely to contain information useful to non-programmers."
     },
     "warning": {
-      "en": "For safety reasons, do not execute this script."
+      "en": "Do not attempt to run this file. It is provided only for reference."
     },
     "preview": "yes",
-    "model": "PlainText"
+    "model": "PlainText",
+    "icon": "code"
   },
   "text/x-jsp": {
     "label": "JSP or ASP markup",
@@ -733,10 +750,11 @@
       "en": "Java Server Pages (JSP) or Active Server Pages (ASP) markup for a dynamic Web page. Open using a plain text editor."
     },
     "preview": "yes",
-    "model": "PlainText"
+    "model": "PlainText",
+    "icon": "code"
   },
   "text/x-vbdotnet": {
-    "label": "Visual Basic source file",
+    "label": "Visual Basic source",
     "extensions": [
       ".vb",
       ".aspx.vb"
@@ -745,10 +763,11 @@
       "en": "A Microsoft Visual Basic source code file that typically contains most of the logic for generating a dynamic Web page. Unlikely to be useful to non-programmers. Open using a plain text editor or IDE."
     },
     "warning": {
-      "en": "Do not run this program."
+      "en": "Do not attempt to run this file. It is provided only for reference."
     },
     "preview": "yes",
-    "model": "PlainText"
+    "model": "PlainText",
+    "icon": "code"
   },
   "text/x-vcard": {
     "label": "vCard",
@@ -759,7 +778,8 @@
       "en": "vCard format electronic business card."
     },
     "preview": "yes",
-    "model": "HyperText"
+    "model": "HyperText",
+    "icon": "code"
   },
   "text/x-sql": {
     "label": "SQL script",
@@ -770,7 +790,8 @@
       "en": "SQL database script file. Open using a text editor. While this file may contain useful data, understanding it will require some technical knowledge."
     },
     "preview": "yes",
-    "model": "PlainText"
+    "model": "PlainText",
+    "icon": "code"
   },
   "text/calendar": {
     "label": "iCalendar file",
@@ -783,7 +804,8 @@
     "description": {
       "en": "A digital meeting request. Can be opened in a plain text editor."
     },
-    "preview": "yes"
+    "preview": "yes",
+    "icon": "code"
   },
   "text/x-log": {
     "label": "Log file",
@@ -793,7 +815,8 @@
     "description": {
       "en": "A log file. Normally contains a record of diagnostic output from an application or service."
     },
-    "model": "PlainText"
+    "model": "PlainText",
+    "icon": "text"
   },
   "image/heic": {
     "label": "HEIC image",
@@ -850,9 +873,9 @@
       ".bmp"
     ],
     "description": {
-      "en": "Open using Preview on a Mac and Windows Picture Viewer or Paint on Windows.",
-      "model": "Image"
-    }
+      "en": "Open using Preview on a Mac and Windows Picture Viewer or Paint on Windows."
+    },
+    "model": "Image"
   },
   "image/gif": {
     "label": "GIF image",
@@ -879,7 +902,7 @@
     "model": "Image"
   },
   "image/x-adobe-dng": {
-    "label": "Digital Negative (DNG)",
+    "label": "DNG image",
     "icon": "image",
     "extensions": [
       ".dng"
@@ -890,7 +913,7 @@
     "model": "Image"
   },
   "image/vnd.adobe.photoshop": {
-    "label": "Photoshop PSD",
+    "label": "Photoshop image",
     "icon": "image",
     "extensions": [
       ".psd",
@@ -904,15 +927,13 @@
     "model": "Image"
   },
   "image/vnd.adobe.premiere": {
-    "label": "Premiere Pro Project",
-    "icon": "image",
+    "label": "Premiere Pro project",
     "extensions": [
       ".prproj"
     ],
     "description": {
       "en": "Open using Premiere Pro on a Mac or Premiere Pro on Windows."
-    },
-    "model": "Image"
+    }
   },
   "image/wmf": {
     "label": "Windows Metafile image",
@@ -937,7 +958,7 @@
     "model": "Image"
   },
   "image/vnd.microsoft.icon": {
-    "label": "Favicon",
+    "label": "Icon image",
     "icon": "image",
     "extensions": [
       ".ico"
@@ -972,7 +993,7 @@
     "model": "Image"
   },
   "image/icns": {
-    "label": "Apple Icon Image",
+    "label": "Apple icon image",
     "icon": "image",
     "extensions": [
       ".icns"
@@ -1005,18 +1026,16 @@
     "model": "Pages"
   },
   "application/vnd.adobe.aftereffects.project": {
-    "label": "After Effects Project",
-    "icon": "image",
+    "label": "After Effects project",
     "extensions": [
       ".aep"
     ],
     "description": {
       "en": "Open using After Effects on a Mac or Windows."
-    },
-    "model": "Image"
+    }
   },
   "application/illustrator": {
-    "label": "Illustrator",
+    "label": "Illustrator document",
     "icon": "image",
     "extensions": [
       ".ai"
@@ -1048,7 +1067,7 @@
       "en": "Unpack the file using an MSI extractor/unpacker."
     },
     "warning": {
-      "en": "Do not run the installer."
+      "en": "Do not attempt to run this file. It is provided only for reference."
     }
   },
   "application/x-bplist": {
@@ -1061,7 +1080,7 @@
     }
   },
   "application/x-bzip2": {
-    "label": "bzip2 archive",
+    "label": "BZIP2 archive",
     "extensions": [
       ".bz2",
       ".tbz"
@@ -1069,7 +1088,8 @@
     "description": {
       "en": "Open using 7-Zip on Windows. Opens natively on Mac."
     },
-    "model": "Package"
+    "model": "Package",
+    "icon": "archive"
   },
   "application/zip": {
     "label": "ZIP archive",
@@ -1102,7 +1122,10 @@
     "description": {
       "en": "An archive of compiled Java code and resources."
     },
-    "model": "Package"
+    "model": "Package",
+    "warning": {
+      "en": "Do not attempt to run this file. It is provided only for reference."
+    }
   },
   "application/gzip": {
     "label": "GZIP archive",
@@ -1215,13 +1238,13 @@
     }
   },
   "application/x-ms-owner": {
-    "label": "MS owner file",
+    "label": "Office owner file",
     "description": {
       "en": "This file contains metadata about who last opened a file and contains no textual content. Use it mainly for forensic purposes."
     }
   },
   "application/x-font-ttf": {
-    "label": "TrueType (TTF) font",
+    "label": "TrueType font",
     "extensions": [
       ".ttf"
     ],
@@ -1230,7 +1253,7 @@
     }
   },
   "application/vnd.ms-fontobject": {
-    "label": "Embedded OpenType (EOT) font",
+    "label": "Embedded OpenType font",
     "extensions": [
       ".eot"
     ],
@@ -1239,16 +1262,17 @@
     }
   },
   "application/wsdl+xml": {
-    "label": "WSDL file",
+    "label": "WSDL document",
     "extensions": [
       ".wsdl"
     ],
     "description": {
       "en": "Web Services Description language file."
-    }
+    },
+    "icon": "code"
   },
   "application/x-shockwave-flash": {
-    "label": "Flash SWF",
+    "label": "Flash animation",
     "extensions": [
       ".swf"
     ],
@@ -1256,7 +1280,7 @@
       "en": "A Shockwave Flash Player (SWF) file."
     },
     "warning": {
-      "en": "Do not open this file using Flash player or in your browser unless you've disabled local file access."
+      "en": "Do not attempt to run this file. It is provided only for reference."
     },
     "model": "Video"
   },
@@ -1382,7 +1406,7 @@
     "model": "Video"
   },
   "video/3gpp": {
-    "label": "3GPP audio/video",
+    "label": "3GPP video",
     "icon": "video",
     "extensions": [
       ".3gp",
@@ -1393,23 +1417,11 @@
     },
     "model": "Video"
   },
-  "vide/x-flv": {
-    "label": "Flash video",
-    "icon": "video",
-    "extensions": [
-      ".flv"
-    ],
-    "description": {
-      "en": "Flash video file. Open using VLC."
-    },
-    "model": "Video"
-  },
   "application/mp4": {
-    "label": "MP4 audio/video",
+    "label": "MP4 media",
     "icon": "video",
     "extensions": [
-      ".mp4",
-      ".mov"
+      ".mp4"
     ],
     "description": {
       "en": "MPEG-4 Part 14 audio/video file. Open using VLC."
@@ -1417,11 +1429,10 @@
     "model": "Video"
   },
   "video/mp4": {
-    "label": "MP4 audio/video",
+    "label": "MP4 video",
     "icon": "video",
     "extensions": [
-      ".mp4",
-      ".mov"
+      ".mp4"
     ],
     "description": {
       "en": "MPEG-4 Part 14 audio/video file. Open using VLC."
@@ -1452,15 +1463,16 @@
     "model": "Email"
   },
   "application/mbox": {
-    "label": "Mbox database",
+    "label": "Mbox mailbox",
     "description": {
       "en": "A database containing a collection of email messages in plain text."
     },
     "model": "Email"
   },
   "application/postscript": {
-    "label": "PostScript file",
+    "label": "PostScript document",
     "extensions": [
+      ".ps",
       ".eps",
       ".lst"
     ],
@@ -1504,7 +1516,7 @@
       "en": "Java bytecode that can be executed using the Java Virtual Machine."
     },
     "warning": {
-      "en": "Do not run this file."
+      "en": "Do not attempt to run this file. It is provided only for reference."
     }
   },
   "multipart/appledouble": {
@@ -1514,7 +1526,7 @@
     }
   },
   "chemical/x-pdb": {
-    "label": "Protein DataBank",
+    "label": "Protein Data Bank file",
     "extensions": [
       ".pdb"
     ]
@@ -1770,7 +1782,7 @@
     "model": "PlainText"
   },
   "text/x-robots": {
-    "label": "robots.txt file",
+    "label": "Robots.txt file",
     "icon": "code",
     "model": "PlainText"
   },
@@ -1800,7 +1812,7 @@
     "model": "PlainText"
   },
   "text/x-sed": {
-    "label": "sed script",
+    "label": "Sed script",
     "icon": "code",
     "model": "PlainText"
   },
@@ -1825,7 +1837,7 @@
     "model": "PlainText"
   },
   "text/x-uuencode": {
-    "label": "uuencoded file",
+    "label": "Uuencoded file",
     "icon": "code",
     "model": "PlainText"
   },
@@ -1853,5 +1865,16 @@
     "label": "YAML document",
     "icon": "code",
     "model": "PlainText"
+  },
+  "video/x-flv": {
+    "label": "Flash video",
+    "icon": "video",
+    "extensions": [
+      ".flv"
+    ],
+    "description": {
+      "en": "Flash video file. Open using VLC."
+    },
+    "model": "Video"
   }
 }

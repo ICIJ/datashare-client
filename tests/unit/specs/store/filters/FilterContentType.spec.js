@@ -12,7 +12,7 @@ describe('FilterContentType.js', () => {
     const filter = new FilterContentType({ name: 'contentType', key: 'contentType' })
 
     it('returns the human-readable label for a known MIME type', () => {
-      expect(filter.itemLabel({ key: 'application/pdf' })).toBe('Portable Document Format (PDF)')
+      expect(filter.itemLabel({ key: 'application/pdf' })).toBe('PDF document')
     })
 
     it('falls back to the raw MIME key when the type is unknown', () => {
