@@ -38,6 +38,18 @@ describe('elasticsearch async search wrappers', () => {
       const starBody = elasticsearch.buildSearchDocsBody({ index: 'idx', query: '*' })
       expect(emptyBody).toEqual(starBody)
     })
+
+    it('turns smart quotes into straight quotes so a CJK phrase stays a phrase', () => {
+      const body = elasticsearch.buildSearchDocsBody({ index: 'idx', query: '“test full sentence”' })
+      const straightBody = elasticsearch.buildSearchDocsBody({ index: 'idx', query: '"test full sentence"' })
+      expect(body).toEqual(straightBody)
+    })
+
+    it('keeps an escaped smart quote escaped', () => {
+      const body = elasticsearch.buildSearchDocsBody({ index: 'idx', query: '\\“' })
+      const straightBody = elasticsearch.buildSearchDocsBody({ index: 'idx', query: '"' })
+      expect(body).not.toEqual(straightBody)
+    })
   })
 
   describe('submitAsyncSearch', () => {

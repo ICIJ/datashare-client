@@ -8,6 +8,7 @@ import { Client, Transport } from '@/api/elasticsearchClient'
 import { getPairedDimension, getPairedDimensions } from '@/store/filters/pairedDimensions'
 import { EventBus } from '@/utils/eventBus'
 import { SEARCH_OPERATORS } from '@/enums/searchOperators'
+import { straightenQuotes } from '@/utils/luceneQuery'
 import settings from '@/utils/settings'
 
 // Content fields to exclude from search results (large text fields)
@@ -62,12 +63,14 @@ function highlightConfig(isOpenSearch = false) {
 }
 
 /**
- * Normalizes a query string, returning the default query for empty values.
+ * Normalizes a query string, returning the default query for empty values and
+ * straightening the smart quotes a CJK keyboard produces.
  * @param {string} query - The query string to normalize
  * @returns {string} The normalized query
  */
 function normalizeQuery(query) {
-  return [null, undefined, ''].includes(query) ? DEFAULT_QUERY : query
+  const nonEmptyQuery = [null, undefined, ''].includes(query) ? DEFAULT_QUERY : query
+  return straightenQuotes(nonEmptyQuery)
 }
 
 /**

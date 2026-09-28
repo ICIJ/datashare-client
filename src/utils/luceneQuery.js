@@ -12,6 +12,21 @@ import lucene from 'lucene'
 const LUCENE_RESERVED = /[+\-!(){}[\]^"~*?:\\/]/g
 
 /**
+ * Quotation marks a Chinese or Japanese IME produces instead of `"`, paired
+ * with the escape sequences that must survive the swap untouched (icij/datashare#2352).
+ */
+const SMART_QUOTES = /\\[\s\S]|[“”＂「」]/gu
+
+/**
+ * Replace smart quotation marks by straight ones so a phrase typed with a CJK
+ * keyboard behaves like a quoted phrase. A backslash-escaped quote is left as
+ * is, which Lucene reads as the literal character.
+ */
+export function straightenQuotes(query) {
+  return String(query).replace(SMART_QUOTES, match => (match.length > 1 ? match : '"'))
+}
+
+/**
  * Escape Lucene-reserved characters in a term so it is treated as plain
  * text by the query parser. Used for word-list inputs (any/all/none).
  */
