@@ -205,7 +205,6 @@ const isVisible = computed(() => props.modal || !collapse.value)
 
     padding: 0;
     max-height: none;
-    min-height: 20vh;
     overflow: visible;
     display: flex;
     flex-direction: column;
