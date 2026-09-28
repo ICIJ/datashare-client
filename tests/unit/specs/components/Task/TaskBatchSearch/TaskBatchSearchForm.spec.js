@@ -1,9 +1,9 @@
-import { flushPromises, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import TaskBatchSearchForm from '@/components/Task/TaskBatchSearch/TaskBatchSearchForm'
 import { apiInstance as api } from '@/api/apiInstance'
-import { BATCH_SEARCH_CSV_STRING } from '@/enums/batchSearch'
+import { BATCH_SEARCH_CSV_FILE, BATCH_SEARCH_CSV_STRING } from '@/enums/batchSearch'
 
 vi.mock('@/api/apiInstance', () => ({
   apiInstance: {
@@ -49,10 +49,11 @@ describe('TaskBatchSearchForm', () => {
     vi.spyOn(wrapper.vm.$toast, 'error')
 
     await wrapper.find('form-creation-stub').trigger('submit')
-    await flushPromises()
+    await vi.waitFor(() => {
+      expect(api.batchSearch).toHaveBeenCalledOnce()
+      expect(wrapper.vm.$toast.success).toHaveBeenCalledOnce()
+    })
 
-    expect(api.batchSearch).toHaveBeenCalledOnce()
-    expect(wrapper.vm.$toast.success).toHaveBeenCalledOnce()
     expect(wrapper.vm.$toast.error).not.toHaveBeenCalled()
   })
 
@@ -64,11 +65,51 @@ describe('TaskBatchSearchForm', () => {
     vi.spyOn(wrapper.vm.$toast, 'error')
 
     await wrapper.find('form-creation-stub').trigger('submit')
-    await flushPromises()
+    await vi.waitFor(() => {
+      expect(api.batchSearch).toHaveBeenCalledOnce()
+      expect(wrapper.vm.$toast.error).toHaveBeenCalledOnce()
+    })
 
-    expect(api.batchSearch).toHaveBeenCalledOnce()
-    expect(wrapper.vm.$toast.error).toHaveBeenCalledOnce()
     expect(wrapper.vm.$toast.success).not.toHaveBeenCalled()
+  })
+
+  describe('smart quotes in the uploaded queries (icij/datashare#2352)', () => {
+    async function submittedQueries(wrapper) {
+      vi.spyOn(wrapper.vm.$router, 'push').mockResolvedValue()
+      await wrapper.find('form-creation-stub').trigger('submit')
+      await vi.waitFor(() => expect(api.batchSearch).toHaveBeenCalledOnce())
+      const [, file] = api.batchSearch.mock.calls.at(-1)
+      return file.text()
+    }
+
+    beforeEach(() => {
+      api.batchSearch.mockResolvedValue('task-id-123')
+    })
+
+    it('straightens the smart-quoted phrases pasted in the textarea', async () => {
+      const wrapper = createValidWrapper()
+      wrapper.vm.$.setupState.csvString = '“test full sentence”\n「東京」'
+      expect(await submittedQueries(wrapper)).toBe('"test full sentence"\n"東京"')
+    })
+
+    it('straightens the smart-quoted phrases of an uploaded file', async () => {
+      const wrapper = createValidWrapper()
+      wrapper.vm.$.setupState.csvTab = BATCH_SEARCH_CSV_FILE
+      wrapper.vm.$.setupState.csvFile = new File(['“test full sentence”\n「東京」'], 'queries.csv', { type: 'text/csv' })
+      expect(await submittedQueries(wrapper)).toBe('"test full sentence"\n"東京"')
+    })
+
+    it('never lets a phrase span two queries', async () => {
+      const wrapper = createValidWrapper()
+      wrapper.vm.$.setupState.csvString = '“test\nsentence”'
+      expect(await submittedQueries(wrapper)).toBe('“test\nsentence”')
+    })
+
+    it('keeps the line endings and the escaped quotes as they are', async () => {
+      const wrapper = createValidWrapper()
+      wrapper.vm.$.setupState.csvString = '\\“test”\r\nplain\n'
+      expect(await submittedQueries(wrapper)).toBe('\\“test”\r\nplain\n')
+    })
   })
 
   describe('locked filters kept in the batch search query/uri (icij/datashare#2331 reverted)', () => {
