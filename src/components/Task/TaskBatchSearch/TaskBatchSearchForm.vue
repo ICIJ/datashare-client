@@ -16,6 +16,7 @@ import TaskBatchSearchFormOverview from '@/components/Task/TaskBatchSearch/TaskB
 import { useCore } from '@/composables/useCore'
 import { useToast } from '@/composables/useToast'
 import { useSearchStore } from '@/store/modules/search'
+import { straightenQuotes } from '@/utils/luceneQuery'
 
 const core = useCore()
 const { toast } = useToast()
@@ -95,10 +96,20 @@ const uri = computed(() => {
 
 const isValid = computed(() => name.value.trim(' ').length > 0 && csv.value !== null)
 
-function createBatchSearch() {
+/**
+ * Rewrite the smart quotes of every query so a phrase typed with a CJK keyboard
+ * searches like a quoted phrase, as it does in the search bar. Queries are
+ * straightened one line at a time so a phrase never spans two of them.
+ */
+async function straightenCsvQueries(file) {
+  const queries = await file.text()
+  return new File([queries.replace(/[^\r\n]+/g, straightenQuotes)], file.name, { type: file.type })
+}
+
+async function createBatchSearch() {
   return core.api.batchSearch(
     name.value,
-    csv.value,
+    await straightenCsvQueries(csv.value),
     description.value,
     formSearchStore.indices.join(','),
     phraseMatch.value,

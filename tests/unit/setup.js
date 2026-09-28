@@ -68,6 +68,16 @@ global.ResizeObserver = class {
   disconnect() {}
 }
 
+// jsdom implements neither Blob.text() nor Blob.arrayBuffer() (jsdom/jsdom#2555)
+Blob.prototype.text ??= function () {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(reader.result)
+    reader.onerror = () => reject(reader.error)
+    reader.readAsText(this)
+  })
+}
+
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
   value: vi.fn().mockImplementation(query => ({
