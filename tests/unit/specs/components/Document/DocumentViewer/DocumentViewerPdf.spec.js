@@ -1,4 +1,4 @@
-import { shallowMount } from '@vue/test-utils'
+import { flushPromises, shallowMount } from '@vue/test-utils'
 import { ref } from 'vue'
 
 import CoreSetup from '~tests/unit/CoreSetup'
@@ -6,6 +6,7 @@ import DocumentViewerPdf from '@/components/Document/DocumentViewer/DocumentView
 import DocumentToolbox from '@/components/Document/DocumentToolbox/DocumentToolbox'
 
 const findHighlights = vi.fn().mockResolvedValue([])
+const pdf = ref(null)
 
 // @tato30/vue-pdf bundles its own pdfjs-dist copy, which constructs a
 // DOMMatrix at module scope; jsdom has no DOMMatrix, so merely importing the
@@ -27,7 +28,7 @@ vi.mock('@/composables/usePDF', () => {
       load: vi.fn(),
       isLoading: { value: false },
       loaderId: 'pdf',
-      pdf: { value: null },
+      pdf,
       pdfDoc: { value: null },
       numPages: ref(3),
       sizes: { value: [] }
@@ -55,7 +56,21 @@ describe('DocumentViewerPdf.vue', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
+    vi.useFakeTimers({ shouldAdvanceTime: true })
+    pdf.value = null
+    findHighlights.mockResolvedValue([])
   })
+
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  // The local search debounces the term before it searches it.
+  async function search(wrapper, value) {
+    wrapper.findComponent(DocumentToolbox).vm.$emit('update:modelValue', value)
+    await vi.advanceTimersByTimeAsync(300)
+    await flushPromises()
+  }
 
   it('renders its header with the shared toolbox', () => {
     const wrapper = mountViewer()
@@ -80,6 +95,17 @@ describe('DocumentViewerPdf.vue', () => {
   it('puts the PDF dropdown in the toolbox dropdown slot', () => {
     const wrapper = mountViewer()
     expect(wrapper.findComponent({ name: 'DocumentViewerPdfDropdown' }).exists()).toBe(true)
+  })
+
+  it('searches the term again when another PDF is loaded', async () => {
+    const wrapper = mountViewer()
+    findHighlights.mockResolvedValue([{ page: 1 }, { page: 2 }])
+    await search(wrapper, 'invoice')
+    expect(wrapper.findComponent(DocumentToolbox).props('occurrences')).toBe(2)
+    findHighlights.mockResolvedValue([{ page: 3 }])
+    pdf.value = {}
+    await flushPromises()
+    expect(wrapper.findComponent(DocumentToolbox).props('occurrences')).toBe(1)
   })
 
   it('offsets the pages by the height the toolbox reports', async () => {
