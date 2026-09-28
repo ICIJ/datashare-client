@@ -215,6 +215,17 @@ defineExpose({ findMatches, render, sections, totalPages, error })
 .document-viewer-docx {
   width: 100%;
 
+  &__container:deep(.docx-wrapper) {
+    background: transparent;
+    padding: 0;
+  }
+
+  &__container:deep(.docx-wrapper > section.docx) {
+    max-width: 100%;
+    border: $border-width solid var(--bs-border-color);
+    box-shadow: $box-shadow-sm;
+  }
+
   &__container:deep(section.docx) {
     scroll-margin-top: var(--document-viewer-docx-toolbox-height, 0px);
   }
