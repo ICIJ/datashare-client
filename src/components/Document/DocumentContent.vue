@@ -9,21 +9,18 @@ import iteratee from 'lodash/iteratee'
 import minBy from 'lodash/minBy'
 import range from 'lodash/range'
 import sortBy from 'lodash/sortBy'
-import throttle from 'lodash/throttle'
 import { useI18n } from 'vue-i18n'
-import { PaginationTiny } from '@icij/murmur'
 
 import { addLocalSearchMarksClassByOffsets } from '@/utils/strings'
-import { useCompact } from '@/composables/useCompact'
 import { useConfig } from '@/composables/useConfig'
+import { useDocumentLocalSearch } from '@/composables/useDocumentLocalSearch'
 import { useMode } from '@/composables/useMode'
 import { useStructureArtifact } from '@/composables/useStructureArtifact'
 import { useWait } from '@/composables/useWait'
 import DocumentAttachments from '@/components/Document/DocumentAttachments'
 import DocumentContentDropdown from '@/components/Document/DocumentContentDropdown'
 import DocumentContentMarkdown from '@/components/Document/DocumentContentMarkdown'
-import DocumentGlobalSearchTerms from '@/components/Document/DocumentGlobalSearchTerms/DocumentGlobalSearchTerms'
-import DocumentLocalSearch from '@/components/Document/DocumentLocalSearch/DocumentLocalSearch'
+import DocumentToolbox from '@/components/Document/DocumentToolbox/DocumentToolbox'
 import Hook from '@/components/Hook/Hook'
 import { useHooksStore, usePipelinesStore, useSearchStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'
@@ -57,8 +54,7 @@ const hasContentBodyHook = computed(() => hooksStore.filterComponentsByTarget('d
 const pipelinesStore = usePipelinesStore()
 const searchStore = useSearchStore.inject()
 const elementRef = useTemplateRef('element')
-const { compact } = useCompact(elementRef, { threshold: toRef(props, 'compactThreshold') })
-const { waitFor, isLoading } = useWait()
+const { waitFor } = useWait()
 const { hasMarkdown, pages: markdownPagesCount, fetchManifest } = useStructureArtifact(toRef(props, 'document'))
 
 const preferMarkdown = ref(true)
@@ -71,11 +67,10 @@ const isMarkdownEmpty = ref(false)
 // "render anyway", so the child renders it instead of re-emitting.
 const markdownOversized = ref(false)
 const markdownPage = ref(1)
-const markdownMatches = ref([])
 // The term the occurrence counts were computed for. The marks a page renders
 // have to match what the backend counted, so this only moves when a search
 // actually ran, not on every keystroke.
-const markdownAppliedTerm = ref('')
+const markdownSearchedTerm = ref('')
 // Set at the end of `onMounted`, so the mode watcher can tell a real, later mode
 // flip apart from the manifest probe settling `isMarkdownMode` during the mount.
 let isMounted = false
@@ -89,7 +84,7 @@ const isMarkdownMode = computed(() => {
 })
 
 const activeMarkdownMatch = computed(() => {
-  const match = markdownMatches.value[localSearchIndex.value - 1]
+  const match = localSearchMatches.value[localSearchIndex.value - 1]
   if (match && match.page === markdownPage.value) {
     return match.nth
   }
@@ -103,10 +98,18 @@ const docRouting = computed(() => props.document?.routing)
 const contentSlices = reactive({})
 const currentContentPage = ref('')
 const activeContentSliceOffset = ref(0)
-const localSearchIndex = ref(0)
-const localSearchIndexes = ref([])
-const localSearchOccurrences = ref(0)
-const localSearchTerm = ref(props.q)
+const {
+  term: localSearchTerm,
+  activeIndex: localSearchIndex,
+  matches: localSearchMatches,
+  occurrences: localSearchOccurrences,
+  isLoading: isLocalSearchLoading,
+  refresh: refreshLocalSearch
+} = useDocumentLocalSearch({ findMatches })
+const localSearchIndexes = computed(() => localSearchMatches.value.map(({ offset }) => offset))
+
+localSearchTerm.value = props.q
+
 const rightToLeftLanguages = ['ARABIC', 'HEBREW', 'PERSIAN', 'KURDISH', 'URDU', 'FULAH', 'AZERBAIJANI']
 const maxOffsetTranslations = ref({})
 const syncedPages = ref([])
@@ -156,8 +159,9 @@ const hasLocalSearchTerms = computed(() => {
   return localSearchTerm.value && localSearchTerm.value.length > 0
 })
 
-// The structure-pages endpoint answers 400 to a blank query.
-const markdownSearchTerm = computed(() => localSearchTerm.value?.trim() ?? '')
+// Nothing to mark when the backend found nothing; keeping the term empty also
+// keeps a client-side fold from marking what the counter does not know about.
+const markdownAppliedTerm = computed(() => (localSearchOccurrences.value ? markdownSearchedTerm.value : ''))
 
 const isRightToLeft = computed(() => {
   const language = props.targetLanguage ?? get(props.document, 'source.language', null)
@@ -225,7 +229,7 @@ const loadedOnce = computed(() => {
 
 watch(toRef(props, 'q'), value => (localSearchTerm.value = value))
 
-watch(localSearchTerm, throttle(retrieveOccurrencesAndUpdateContent, 300))
+watch(localSearchMatches, () => updateContent())
 
 watch(localSearchIndex, () => updateContent())
 
@@ -247,7 +251,7 @@ watch(isMarkdownMode, async (markdown) => {
   // `hasMarkdown` flips during `onMounted`'s manifest probe, so without this gate
   // that flip would duplicate the search the mount is about to issue itself.
   if (isMounted && hasLocalSearchTerms.value) {
-    await retrieveOccurrencesAndUpdateContent()
+    await refreshLocalSearch()
   }
 })
 
@@ -265,17 +269,9 @@ watch(docId, async () => {
   isMarkdownEmpty.value = false
   markdownOversized.value = false
   markdownPage.value = 1
-  markdownMatches.value = []
-  markdownAppliedTerm.value = ''
+  markdownSearchedTerm.value = ''
   maxOffsetTranslations.value = {}
   syncedPages.value = []
-  localSearchIndexes.value = []
-  localSearchOccurrences.value = 0
-  localSearchIndex.value = 0
-  // An occurrence fetch issued for the document being left would otherwise
-  // resolve into the state of the one arriving: no other watcher supersedes it
-  // when the search term itself is unchanged across the swap.
-  lastOccurrencesRetrieval++
   await loadDocumentContent()
 })
 
@@ -306,11 +302,14 @@ async function loadDocumentContent() {
   Object.keys(contentSlices).forEach(key => delete contentSlices[key])
   activeContentSliceOffset.value = 0
   currentContentPage.value = ''
-  if (hasLocalSearchTerms.value) {
-    await retrieveOccurrencesAndUpdateContent()
-  }
-  else {
+  if (!hasLocalSearchTerms.value) {
     await activateContentSlice({ offset: 0 })
+    return
+  }
+  // At mount the term has just been set and the composable is already about to
+  // search it; a document swap leaves that same term describing another one.
+  if (isMounted) {
+    await refreshLocalSearch()
   }
 }
 
@@ -462,9 +461,36 @@ async function loadContentSliceOnce({ offset = 0, targetLanguage = props.targetL
   return getContentSlice({ offset, targetLanguage })
 }
 
-async function retrieveOccurrencesAndUpdateContent() {
-  await retrieveTotalOccurrences()
-  await updateContent()
+// One entry per occurrence. Text mode carries the byte offset the marks are
+// keyed by and no page: the slice to activate is found from the offset, not
+// from a page number. Markdown mode carries the page and the rank within it.
+async function findMatches(term) {
+  if (isMarkdownMode.value) {
+    return findMarkdownMatches(term)
+  }
+  return findTextMatches(term)
+}
+
+async function findTextMatches(term) {
+  try {
+    const { offsets = [] } = await api.searchDocument(docIndex.value, docId.value, term, props.targetLanguage, docRouting.value)
+    return offsets.map(offset => ({ offset }))
+  }
+  catch {
+    return []
+  }
+}
+
+async function findMarkdownMatches(term) {
+  try {
+    const { hits } = await api.searchStructurePages(docIndex.value, docId.value, term, docRouting.value)
+    markdownSearchedTerm.value = term
+    return flattenPageHits(hits)
+  }
+  catch {
+    markdownSearchedTerm.value = ''
+    return []
+  }
 }
 
 async function updateContent() {
@@ -476,80 +502,9 @@ async function updateContent() {
 }
 
 function updateMarkdownContent() {
-  const match = markdownMatches.value[localSearchIndex.value - 1]
+  const match = localSearchMatches.value[localSearchIndex.value - 1]
   if (match) {
     markdownPage.value = match.page
-  }
-}
-
-let lastOccurrencesRetrieval = 0
-
-async function retrieveTotalOccurrences() {
-  // A mode flip mid-flight can start the other path's retrieval before this
-  // one's response lands; this counter mirrors `lastContentSliceActivation`
-  // so only the newest retrieval is allowed to write its results, whichever
-  // response arrives last.
-  const retrieval = ++lastOccurrencesRetrieval
-  if (isMarkdownMode.value) {
-    return retrieveMarkdownOccurrences(retrieval)
-  }
-  return retrieveTextOccurrences(retrieval)
-}
-
-async function retrieveTextOccurrences(retrieval) {
-  const { count = 0, offsets = [] } = await fetchTextOccurrences()
-  if (retrieval !== lastOccurrencesRetrieval) {
-    return
-  }
-  localSearchIndexes.value = offsets
-  localSearchOccurrences.value = count
-  localSearchIndex.value = Number(!!count)
-}
-
-async function fetchTextOccurrences() {
-  if (!hasLocalSearchTerms.value) {
-    return {}
-  }
-  const query = localSearchTerm.value
-  const targetLanguage = props.targetLanguage
-  try {
-    return await api.searchDocument(docIndex.value, docId.value, query, targetLanguage, docRouting.value)
-  }
-  catch {
-    return {}
-  }
-}
-
-async function retrieveMarkdownOccurrences(retrieval) {
-  const { query, matches } = await fetchMarkdownOccurrences()
-  if (retrieval !== lastOccurrencesRetrieval) {
-    return
-  }
-  markdownMatches.value = matches
-  // The response also carries a `count`, which can exceed the hits it returns
-  // when the backend scans only part of the artifact. Counting what we can
-  // actually navigate to keeps the counter and the next/previous buttons from
-  // disagreeing about how many occurrences there are.
-  localSearchOccurrences.value = matches.length
-  // Nothing to mark when the backend found nothing; keeping the term empty also
-  // keeps a client-side fold from marking what the counter does not know about.
-  markdownAppliedTerm.value = matches.length ? query : ''
-  localSearchIndex.value = Number(!!matches.length)
-}
-
-// The query is captured and handed back so the applied term always describes the
-// counts written next to it, even when the user has typed on since.
-async function fetchMarkdownOccurrences() {
-  const query = markdownSearchTerm.value
-  if (!query) {
-    return { query, matches: [] }
-  }
-  try {
-    const { hits } = await api.searchStructurePages(docIndex.value, docId.value, query, docRouting.value)
-    return { query, matches: flattenPageHits(hits) }
-  }
-  catch {
-    return { query, matches: [] }
   }
 }
 
@@ -626,32 +581,19 @@ async function loadContentSliceAround(desiredOffset) {
     :class="classList"
   >
     <hook name="document.content:before" />
-    <div class="document-content__toolbox d-flex flex-column gap-3">
-      <hook name="document.content.toolbox:before" />
-      <div class="d-flex flex-md-nowrap flex-wrap align-items-center gap-3">
-        <hook name="document.content.toolbox.local-search:before" />
-        <document-local-search
-          v-model="localSearchTerm"
-          v-model:active-index="localSearchIndex"
-          :compact="compact"
-          :loading="isLoading"
-          :occurrences="localSearchOccurrences"
-          class="flex-grow-1"
-        />
-        <hook name="document.content.toolbox.local-search:after" />
-        <hook name="document.content.toolbox.before:before" />
-        <div
-          v-if="showPagination"
-          class="document-content__toolbox__pagination"
-        >
-          <pagination-tiny
-            v-model="page"
-            :per-page="1"
-            :total-rows="nbPages"
-            :compact="compact"
-          />
-        </div>
-        <hook name="document.content.toolbox.pagination:after" />
+    <document-toolbox
+      v-model="localSearchTerm"
+      v-model:active-index="localSearchIndex"
+      v-model:page="page"
+      :document="document"
+      :target-language="targetLanguage"
+      :occurrences="localSearchOccurrences"
+      :total-pages="nbPages"
+      :loading="isLocalSearchLoading"
+      :compact-threshold="compactThreshold"
+      hook-prefix="document.content"
+    >
+      <template #dropdown>
         <document-content-dropdown
           v-if="hasMarkdown"
           v-model="preferMarkdown"
@@ -660,14 +602,8 @@ async function loadContentSliceAround(desiredOffset) {
           :translation="isTranslation"
           class="flex-shrink-0 ms-auto"
         />
-      </div>
-      <document-global-search-terms
-        :document="document"
-        :target-language="targetLanguage"
-        @select="localSearchTerm = $event"
-      />
-      <hook name="document.content.toolbox:after" />
-    </div>
+      </template>
+    </document-toolbox>
     <div class="document-content__togglers">
       <hook
         name="document.content.togglers:before"
@@ -719,14 +655,6 @@ async function loadContentSliceAround(desiredOffset) {
 
 <style lang="scss" scoped>
 .document-content {
-  &__toolbox {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    padding: $spacer 0;
-    background: var(--bs-body-bg);
-  }
-
   &__togglers {
     display: flex;
     justify-content: flex-end;

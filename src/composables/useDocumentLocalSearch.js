@@ -70,5 +70,11 @@ export function useDocumentLocalSearch({ findMatches, debounce = 300 } = {}) {
 
   watch(debouncedTerm, search)
 
-  return { term, debouncedTerm, activeIndex, matches, occurrences, activePage, isLoading }
+  // A tab whose matches come from somewhere else now (another render mode,
+  // another document) needs the term it already holds searched again.
+  function refresh() {
+    return search(term.value)
+  }
+
+  return { term, debouncedTerm, activeIndex, matches, occurrences, activePage, isLoading, refresh }
 }
