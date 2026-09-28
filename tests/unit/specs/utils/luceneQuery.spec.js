@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest'
-import { generateLuceneQuery as generateQuery, parseLuceneQuery, queriesEquivalent, toQueryShape } from '@/utils/luceneQuery'
+import {
+  generateLuceneQuery as generateQuery,
+  parseLuceneQuery,
+  queriesEquivalent,
+  straightenQuotes,
+  toQueryShape
+} from '@/utils/luceneQuery'
 
 describe('luceneQuery', () => {
   describe('generateLuceneQuery', () => {
@@ -802,6 +808,34 @@ describe('luceneQuery', () => {
     it('returns false when either side is unparseable', () => {
       expect(queriesEquivalent('(unclosed', 'a')).toBe(false)
       expect(queriesEquivalent('a', ')stray(')).toBe(false)
+    })
+  })
+
+  describe('straightenQuotes', () => {
+    it.each([
+      ['“test full sentence”', '"test full sentence"'],
+      ['“test full sentence“', '"test full sentence"'],
+      ['＂test＂', '"test"'],
+      ['「test」', '"test"'],
+      ['content:“a b” AND path:“c”', 'content:"a b" AND path:"c"']
+    ])('turns %s into %s', (query, expected) => {
+      expect(straightenQuotes(query)).toBe(expected)
+    })
+
+    it.each([
+      ['\\“test', '\\“test'],
+      ['\\“\\”', '\\“\\”'],
+      ['a \\“ “b”', 'a \\“ "b"']
+    ])('keeps the escaped quote in %s', (query, expected) => {
+      expect(straightenQuotes(query)).toBe(expected)
+    })
+
+    it('swaps a quote that follows an escaped backslash', () => {
+      expect(straightenQuotes('a\\\\“b”')).toBe('a\\\\"b"')
+    })
+
+    it.each(['', '*', 'plain query', '"already straight"'])('leaves %s untouched', (query) => {
+      expect(straightenQuotes(query)).toBe(query)
     })
   })
 })
