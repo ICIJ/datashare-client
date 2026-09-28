@@ -49,7 +49,7 @@ const props = defineProps({
 })
 
 const element = useTemplateRef('element')
-const { height } = useElementBounding(element)
+const { height } = useElementBounding(element, { windowScroll: false, windowResize: false })
 const { compact } = useCompact(element, { threshold: toRef(props, 'compactThreshold') })
 
 const showPagination = computed(() => props.totalPages > 1)
