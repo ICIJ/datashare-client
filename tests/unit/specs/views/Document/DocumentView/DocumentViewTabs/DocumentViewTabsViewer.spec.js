@@ -74,6 +74,40 @@ describe('DocumentViewTabsViewer.vue', () => {
     expect(wrapper.vm.previewComponent).toBe('DocumentViewerPaginated')
   })
 
+  it('should call the DocumentViewerDocx component for DOCX document', async () => {
+    const contentType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    const document = await letData(es)
+      .have(new IndexedDocument(id, index).withContentType(contentType))
+      .commitAndGetLastDocument()
+    await documentStore.getDocument({ id, index })
+
+    const wrapper = shallowMount(DocumentViewTabsViewer, {
+      global: {
+        plugins: core.plugins,
+        renderStubDefaultSlot: true
+      },
+      props: { document, disabled }
+    })
+    expect(wrapper.vm.previewComponent).toBe('DocumentViewerDocx')
+  })
+
+  it('should keep the DocumentViewerPaginated component for PPTX document', async () => {
+    const contentType = 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+    const document = await letData(es)
+      .have(new IndexedDocument(id, index).withContentType(contentType))
+      .commitAndGetLastDocument()
+    await documentStore.getDocument({ id, index })
+
+    const wrapper = shallowMount(DocumentViewTabsViewer, {
+      global: {
+        plugins: core.plugins,
+        renderStubDefaultSlot: true
+      },
+      props: { document, disabled }
+    })
+    expect(wrapper.vm.previewComponent).toBe('DocumentViewerPaginated')
+  })
+
   it('should call the DocumentViewerTiff component for TIFF document', async () => {
     const document = await letData(es)
       .have(new IndexedDocument(id, index).withContentType('image/tiff'))

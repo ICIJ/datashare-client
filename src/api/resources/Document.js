@@ -433,6 +433,10 @@ export default class Document extends EsDoc {
     return spreadsheetTypes.indexOf(this.contentType) > -1
   }
 
+  get isDocx() {
+    return this.contentType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+  }
+
   get isSupportedImage() {
     const imageTypes = [
       'image/apng',
