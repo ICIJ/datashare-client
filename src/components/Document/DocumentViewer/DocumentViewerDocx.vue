@@ -4,9 +4,11 @@ import { renderAsync } from 'docx-preview'
 import { useI18n } from 'vue-i18n'
 
 import { useDocumentLocalSearch } from '@/composables/useDocumentLocalSearch'
+import { useDocumentPreview } from '@/composables/useDocumentPreview'
 import { useDocumentSource } from '@/composables/useDocumentSource'
 import { useToast } from '@/composables/useToast'
 import { addSearchMarksClassesInHtml } from '@/utils/strings'
+import DismissableContentWarningToggler from '@/components/Dismissable/DismissableContentWarningToggler'
 import DocumentToolbox from '@/components/Document/DocumentToolbox/DocumentToolbox'
 
 const props = defineProps({
@@ -26,6 +28,7 @@ const ACTIVE_CLASS = 'local-search-term--active'
 const BELOW_TOOLBOX_OFFSET = 4
 
 const { fetchSource } = useDocumentSource()
+const { isBlurred, getBlurredContentBanner } = useDocumentPreview()
 const { toast } = useToast()
 const { t } = useI18n()
 
@@ -36,6 +39,8 @@ const toolboxHeight = computed(() => toolbox.value?.height ?? 0)
 const sections = shallowRef([])
 const originalHtml = shallowRef([])
 const error = ref(null)
+const blurred = ref(false)
+const blurredContent = ref(null)
 const currentPage = ref(1)
 const sectionsBelowToolbox = new Set()
 
@@ -58,16 +63,28 @@ const page = computed({
 
 const style = computed(() => ({ '--document-viewer-docx-toolbox-height': `${toolboxHeight.value}px` }))
 
+// A library rejection carries its own English internals (jszip's "is this a zip
+// file ?"), so only the source errors, already localized, are shown as they come.
+function failRender(message) {
+  error.value = message
+  sections.value = []
+  toast.error(message)
+}
+
 async function render() {
   error.value = null
+  let blob
   try {
-    const blob = await fetchSource(props.document, { responseType: 'blob' })
-    await renderAsync(blob, container.value, null, { ignoreLastRenderedPageBreak: false, inWrapper: true })
+    blob = await fetchSource(props.document, { responseType: 'blob' })
   }
   catch (reason) {
-    error.value = reason?.message || t('document.notAvailable')
-    toast.error(error.value)
-    return
+    return failRender(reason.message)
+  }
+  try {
+    await renderAsync(blob, container.value, null, { ignoreLastRenderedPageBreak: false, inWrapper: true })
+  }
+  catch {
+    return failRender(t('document.notAvailable'))
   }
   sections.value = [...container.value.querySelectorAll('section.docx')]
   originalHtml.value = sections.value.map(({ innerHTML }) => innerHTML)
@@ -147,6 +164,10 @@ watch(activePage, (value) => {
 })
 watch(toolboxHeight, () => sections.value.length && observeSections())
 watch(toRef(props, 'document'), render, { immediate: true, flush: 'post' })
+watch(toRef(props, 'document'), async (document) => {
+  blurred.value = await isBlurred(document)
+  blurredContent.value = blurred.value ? await getBlurredContentBanner(document) : null
+}, { immediate: true })
 
 onBeforeUnmount(() => observer?.disconnect())
 
@@ -167,16 +188,23 @@ defineExpose({ findMatches, render, sections, totalPages, error })
       :occurrences="occurrences"
       :total-pages="totalPages"
       :loading="isLoading"
+      :disabled="blurred"
       :compact-threshold="compactThreshold"
+      no-count
+    />
+    <dismissable-content-warning-toggler
+      v-if="blurred"
+      v-model="blurred"
+      :description="blurredContent"
     />
     <div
-      v-if="error"
+      v-else-if="error"
       class="document-viewer-docx__error text-center p-3"
     >
       {{ error }}
     </div>
     <div
-      v-show="!error"
+      v-show="!blurred && !error"
       ref="container"
       class="document-viewer-docx__container"
     />
