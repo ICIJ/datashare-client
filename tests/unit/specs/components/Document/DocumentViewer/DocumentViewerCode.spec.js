@@ -1,14 +1,21 @@
+import { nextTick } from 'vue'
 import { flushPromises, shallowMount } from '@vue/test-utils'
 import { LanguageDescription, language } from '@codemirror/language'
 import { languages } from '@codemirror/language-data'
 import { EditorView } from '@codemirror/view'
 
 import CoreSetup from '~tests/unit/CoreSetup'
+import DismissableContentWarningToggler from '@/components/Dismissable/DismissableContentWarningToggler'
+import DocumentToolbox from '@/components/Document/DocumentToolbox/DocumentToolbox'
 import DocumentViewerCode from '@/components/Document/DocumentViewer/DocumentViewerCode'
 import { findLanguage } from '@/utils/codeLanguage'
 import { useDocumentPathBannersStore } from '@/store/modules'
 
 vi.mock('@/utils/codeLanguage', () => ({ findLanguage: vi.fn() }))
+
+// CodeMirror measures the text it renders, and jsdom has no layout to measure.
+Range.prototype.getClientRects = () => []
+Range.prototype.getBoundingClientRect = () => ({ top: 0, left: 0, right: 0, bottom: 0, width: 0, height: 0 })
 
 const getSource = vi.fn()
 
@@ -50,6 +57,20 @@ describe('DocumentViewerCode.vue', () => {
 
   function editorText(wrapper) {
     return editorView(wrapper).state.doc.toString()
+  }
+
+  // The local search debounces the term before it searches it.
+  async function search(wrapper, value) {
+    wrapper.findComponent(DocumentToolbox).vm.$emit('update:modelValue', value)
+    await vi.advanceTimersByTimeAsync(300)
+    await flushPromises()
+  }
+
+  async function mountWithSource(source, overrides) {
+    getSource.mockResolvedValue(source)
+    const wrapper = mountViewer(overrides)
+    await flushPromises()
+    return wrapper
   }
 
   beforeEach(() => {
@@ -164,5 +185,92 @@ describe('DocumentViewerCode.vue', () => {
     const destroy = vi.spyOn(editorView(wrapper), 'destroy')
     wrapper.unmount()
     expect(destroy).toHaveBeenCalled()
+  })
+
+  it('finds matches across lines, ignoring case and accents', async () => {
+    const wrapper = await mountWithSource('Cr\u00e8me\nfoo CREME cr\u00e8me')
+    expect(wrapper.vm.findMatches('creme')).toEqual([
+      { page: 1, from: 0, to: 5 },
+      { page: 1, from: 10, to: 15 },
+      { page: 1, from: 16, to: 21 }
+    ])
+  })
+
+  it('counts a Windows line break as one position', async () => {
+    const wrapper = await mountWithSource('a\r\nneedle')
+    expect(wrapper.vm.findMatches('needle')).toEqual([{ page: 1, from: 2, to: 8 }])
+  })
+
+  it('finds nothing for a term that folds to nothing', async () => {
+    const wrapper = await mountWithSource('cre\u0301me')
+    expect(wrapper.vm.findMatches('\u0301')).toEqual([])
+  })
+
+  it('marks every occurrence in the editor', async () => {
+    const wrapper = await mountWithSource('needle one\nneedle two')
+    await search(wrapper, 'needle')
+    expect(wrapper.findComponent(DocumentToolbox).props('occurrences')).toBe(2)
+    expect(wrapper.findAll('.local-search-term')).toHaveLength(2)
+  })
+
+  it('marks the active occurrence', async () => {
+    const wrapper = await mountWithSource('needle one\nneedle two')
+    await search(wrapper, 'needle')
+    wrapper.findComponent(DocumentToolbox).vm.$emit('update:activeIndex', 2)
+    await nextTick()
+    const lines = wrapper.findAll('.cm-line')
+    expect(lines[0].find('.local-search-term--active').exists()).toBe(false)
+    expect(lines[1].find('.local-search-term--active').exists()).toBe(true)
+  })
+
+  it('takes the marks down when the search field is cleared', async () => {
+    const wrapper = await mountWithSource('a needle')
+    await search(wrapper, 'needle')
+    expect(wrapper.findAll('.local-search-term')).toHaveLength(1)
+    await search(wrapper, '')
+    expect(wrapper.findAll('.local-search-term')).toHaveLength(0)
+  })
+
+  it('searches the term again when another document is shown', async () => {
+    const wrapper = await mountWithSource('a needle')
+    await search(wrapper, 'needle')
+    getSource.mockResolvedValue('needle and needle')
+    await wrapper.setProps({ document: { ...document, id: 'other-id' } })
+    await flushPromises()
+    expect(wrapper.findComponent(DocumentToolbox).props('occurrences')).toBe(2)
+    expect(wrapper.findAll('.local-search-term')).toHaveLength(2)
+  })
+
+  it('drops the matches when the next document is too large', async () => {
+    const wrapper = await mountWithSource('a needle')
+    await search(wrapper, 'needle')
+    await wrapper.setProps({ document: { ...document, id: 'other-id', contentLength: 50 * MB + 1 } })
+    await flushPromises()
+    expect(wrapper.findComponent(DocumentToolbox).props('occurrences')).toBe(0)
+    expect(wrapper.vm.findMatches('needle')).toEqual([])
+  })
+
+  it('drops the matches when the next document fails to load', async () => {
+    const wrapper = await mountWithSource('a needle')
+    await search(wrapper, 'needle')
+    getSource.mockRejectedValue({ response: { status: 404 } })
+    await wrapper.setProps({ document: { ...document, id: 'other-id' } })
+    await flushPromises()
+    expect(wrapper.findComponent(DocumentToolbox).props('occurrences')).toBe(0)
+  })
+
+  it('leaves the document visible when no path banner blurs it', async () => {
+    const wrapper = await mountWithSource('hello')
+    expect(wrapper.findComponent(DismissableContentWarningToggler).exists()).toBe(false)
+    expect(wrapper.findComponent(DocumentToolbox).props('disabled')).toBe(false)
+  })
+
+  it('hides the document behind a content warning under a blurring path banner', async () => {
+    const pathBanners = [{ path: '/leaks/code/', blurSensitiveMedia: true, note: 'Sensitive' }]
+    const wrapper = await mountWithSource('hello', { pathBanners })
+    const toggler = wrapper.findComponent(DismissableContentWarningToggler)
+    expect(toggler.props('description')).toBe('Sensitive')
+    expect(wrapper.findComponent(DocumentToolbox).props('disabled')).toBe(true)
+    expect(wrapper.find('.document-viewer-code__editor').attributes('style')).toContain('display: none')
   })
 })
