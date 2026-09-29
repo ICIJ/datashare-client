@@ -102,6 +102,18 @@ describe('DocumentViewerCode.vue', () => {
     expect(editorText(wrapper)).toBe('hello world')
   })
 
+  it.each([
+    ['a\nb\n', 'a\nb'],
+    ['a\r\nb\r\n', 'a\nb'],
+    ['a\n\n', 'a\n'],
+    ['a\nb', 'a\nb']
+  ])('drops one trailing line break of %j', async (source, shown) => {
+    getSource.mockResolvedValue(source)
+    const wrapper = mountViewer()
+    await flushPromises()
+    expect(editorText(wrapper)).toBe(shown)
+  })
+
   it('shows the source read-only', async () => {
     const wrapper = mountViewer()
     await flushPromises()
