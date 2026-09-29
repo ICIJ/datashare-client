@@ -247,9 +247,12 @@ defineExpose({ findMatches })
     background: var(--bs-body-bg);
     color: var(--bs-body-color);
     border: $border-width solid var(--bs-border-color);
+    border-radius: $border-radius-sm;
   }
 
   &__editor:deep(.cm-gutters) {
+    border-top-left-radius: $border-radius-sm;
+    border-bottom-left-radius: $border-radius-sm;
     background: var(--bs-tertiary-bg);
     color: var(--bs-secondary-color);
     border-right-color: var(--bs-border-color);
