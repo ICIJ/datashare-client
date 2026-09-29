@@ -19,20 +19,36 @@ function contentTypeLanguageName(contentType = '') {
   return LANGUAGE_NAMES[subtype] ?? subtype
 }
 
-function findLanguageDescription({ basename = '', contentType }) {
-  const byFilename = LanguageDescription.matchFilename(languages, basename)
-  if (byFilename) {
-    return byFilename
+// File name patterns are case-sensitive ("Dockerfile"), so the exact name is
+// tried before its lowercase form ("MAIN.PY").
+function matchResourceName(resourceName) {
+  return LanguageDescription.matchFilename(languages, resourceName)
+    ?? LanguageDescription.matchFilename(languages, resourceName.toLowerCase())
+}
+
+function matchStandardExtension(standardExtension) {
+  if (!standardExtension) {
+    return null
   }
+  return LanguageDescription.matchFilename(languages, `file${standardExtension}`)
+}
+
+function matchContentType(contentType) {
   return LanguageDescription.matchLanguageName(languages, contentTypeLanguageName(contentType), false)
+}
+
+function findLanguageDescription({ resourceName = '', standardExtension, contentType }) {
+  return matchResourceName(resourceName) ?? matchStandardExtension(standardExtension) ?? matchContentType(contentType)
 }
 
 /**
  * Find the CodeMirror language to highlight a document with: from its file
- * name first, then from its content type.
+ * name first, then from the standard extension of its content type, then from
+ * the content type itself.
  *
  * @param {Object} document - The document to highlight.
- * @param {string} document.basename - The document file name.
+ * @param {string} document.resourceName - The document own file name, even when embedded.
+ * @param {string} [document.standardExtension] - The first extension registered for its content type.
  * @param {string} document.contentType - The document content type.
  * @return {Promise<LanguageSupport|null>} The language, or null for plain text.
  */
