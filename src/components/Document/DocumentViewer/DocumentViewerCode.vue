@@ -1,7 +1,7 @@
 <script setup>
-import { computed, onBeforeUnmount, ref, toRef, useTemplateRef, watch } from 'vue'
+import { computed, onBeforeUnmount, ref, toRaw, toRef, useTemplateRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { EditorState, StateEffect, StateField } from '@codemirror/state'
+import { Compartment, EditorState, StateEffect, StateField } from '@codemirror/state'
 import { Decoration, EditorView, lineNumbers } from '@codemirror/view'
 import { syntaxHighlighting } from '@codemirror/language'
 import { classHighlighter } from '@lezer/highlight'
@@ -32,23 +32,31 @@ const props = defineProps({
 })
 
 const MAX_CONTENT_LENGTH = 50 * 1024 * 1024
-const TRAILING_LINE_BREAK = /\r?\n$/
+const TRAILING_LINE_BREAK = /(?:\r\n?|\n)$/
 
 const MARK = Decoration.mark({ class: 'local-search-term' })
-const ACTIVE_MARK = Decoration.mark({ class: 'local-search-term local-search-term--active' })
-
-const setMarks = StateEffect.define()
+const ACTIVE_MARK = Decoration.mark({ class: 'local-search-term--active' })
 
 // The document never changes once shown (a new document gets a new state), so
 // the marks never have to be mapped through a change.
-const marksField = StateField.define({
-  create: () => Decoration.none,
-  update: (marks, transaction) => {
-    const effect = transaction.effects.find(effect => effect.is(setMarks))
-    return effect ? effect.value : marks
-  },
-  provide: field => EditorView.decorations.from(field)
-})
+function defineMarksField(setMarks) {
+  return StateField.define({
+    create: () => Decoration.none,
+    update: (marks, transaction) => {
+      const effect = transaction.effects.find(effect => effect.is(setMarks))
+      return effect ? effect.value : marks
+    },
+    provide: field => EditorView.decorations.from(field)
+  })
+}
+
+// The active mark lives apart from the others: moving to the next occurrence
+// repaints one range instead of every match of the document.
+const setMarks = StateEffect.define()
+const setActiveMark = StateEffect.define()
+const marksField = defineMarksField(setMarks)
+const activeMarkField = defineMarksField(setActiveMark)
+const languageCompartment = new Compartment()
 
 const { fetchSource } = useDocumentSource()
 const { isBlurred, getBlurredContentBanner } = useDocumentPreview()
@@ -59,7 +67,8 @@ const error = ref(null)
 const loading = ref(false)
 const blurred = ref(false)
 const blurredContent = ref(null)
-const tooLarge = computed(() => isTooLarge(props.document))
+const downloadTooLarge = ref(false)
+const tooLarge = computed(() => isTooLarge(props.document) || downloadTooLarge.value)
 
 const {
   term,
@@ -74,9 +83,21 @@ let view = null
 let searchableDoc = null
 let searchIndex = null
 let lastLoad = 0
+let loadController = null
 
 function isTooLarge({ contentLength }) {
   return contentLength > MAX_CONTENT_LENGTH
+}
+
+// Tika reports encodings by names the browser mostly knows; the ones it does
+// not are read as UTF-8, the encoding a source without a label most likely has.
+function decodeSource(bytes, { source }) {
+  try {
+    return new TextDecoder(source?.contentEncoding ?? 'utf-8').decode(bytes)
+  }
+  catch {
+    return new TextDecoder().decode(bytes)
+  }
 }
 
 // A file ends with a line break by convention: shown as is, it would add an
@@ -85,7 +106,7 @@ function dropTrailingLineBreak(text) {
   return text.replace(TRAILING_LINE_BREAK, '')
 }
 
-function createState(text, language) {
+function createState(text) {
   return EditorState.create({
     doc: dropTrailingLineBreak(text),
     extensions: [
@@ -93,14 +114,17 @@ function createState(text, language) {
       EditorView.editable.of(false),
       lineNumbers(),
       syntaxHighlighting(classHighlighter),
+      // Listed first, the active mark wraps inside the plain one and its color
+      // shows on top.
+      activeMarkField,
       marksField,
-      language ?? []
+      languageCompartment.of([])
     ]
   })
 }
 
-function renderSource(text, language) {
-  const state = createState(text, language)
+function renderSource(text) {
+  const state = createState(text)
   if (view) {
     view.setState(state)
   }
@@ -114,27 +138,61 @@ function isCurrentLoad(id) {
   return id === lastLoad
 }
 
+// The length of an embedded document is often unknown until it is downloaded,
+// so the download itself stops once it grows past the limit.
+function fetchBoundedSource(document) {
+  const controller = loadController
+  const onDownloadProgress = ({ loaded }) => {
+    if (loaded > MAX_CONTENT_LENGTH) {
+      downloadTooLarge.value = true
+      controller.abort()
+    }
+  }
+  const config = { responseType: 'arraybuffer', signal: controller.signal, onDownloadProgress }
+  return fetchSource(document, config)
+}
+
+// The colors come in when the language pack is loaded: the text does not wait
+// for them.
+async function highlightSource(id, languagePromise) {
+  const language = await languagePromise
+  if (isCurrentLoad(id) && language) {
+    view.dispatch({ effects: languageCompartment.reconfigure(language) })
+  }
+}
+
 async function showSource(id, document) {
+  const languagePromise = findLanguage(document)
   try {
-    const [text, language] = await Promise.all([
-      fetchSource(document, { responseType: 'text' }),
-      findLanguage(document)
-    ])
+    const text = decodeSource(await fetchBoundedSource(document), document)
     if (isCurrentLoad(id)) {
-      renderSource(text, language)
+      renderSource(text)
+      highlightSource(id, languagePromise)
     }
   }
   catch (reason) {
-    if (isCurrentLoad(id)) {
+    if (isCurrentLoad(id) && !downloadTooLarge.value) {
       error.value = reason.message
     }
   }
 }
 
+function startLoad() {
+  loadController?.abort()
+  loadController = new AbortController()
+  downloadTooLarge.value = false
+  return ++lastLoad
+}
+
+function stopLoad() {
+  lastLoad++
+  loadController?.abort()
+}
+
 // A document swapped in while this one was loading owns the editor now, so
 // only the newest load may write its text, its failure or its matches.
 async function load(document) {
-  const id = ++lastLoad
+  const id = startLoad()
   searchableDoc = null
   searchIndex = null
   error.value = null
@@ -152,37 +210,47 @@ async function load(document) {
 // Indexing a 50 MB source takes a noticeable moment, so it waits for the
 // first term instead of delaying every document that is only read.
 function findMatches(value) {
-  if (!searchableDoc) {
+  // Counting the matches of a blurred source would tell what it hides.
+  if (!searchableDoc || blurred.value) {
     return []
   }
   searchIndex ??= buildSearchIndex(searchableDoc)
   return findIndexMatches(searchIndex, searchableDoc, value).map(match => ({ page: 1, ...match }))
 }
 
+// A common term in a large source has millions of matches: reading them
+// through the reactive proxy would wrap each of them on every paint.
 function paintMatches() {
+  const ranges = toRaw(matches.value).map(({ from, to }) => MARK.range(from, to))
+  view?.dispatch({ effects: setMarks.of(Decoration.set(ranges)) })
+}
+
+function paintActiveMatch() {
+  const active = toRaw(matches.value)[activeIndex.value - 1]
   if (!view) {
     return
   }
-  const active = matches.value[activeIndex.value - 1]
-  const ranges = matches.value.map((match) => {
-    const mark = match === active ? ACTIVE_MARK : MARK
-    return mark.range(match.from, match.to)
-  })
-  const effects = [setMarks.of(Decoration.set(ranges))]
+  const ranges = active ? [ACTIVE_MARK.range(active.from, active.to)] : []
+  const effects = [setActiveMark.of(Decoration.set(ranges))]
   if (active) {
     effects.push(EditorView.scrollIntoView(active.from, { y: 'center' }))
   }
   view.dispatch({ effects })
 }
 
-watch([matches, activeIndex], paintMatches)
+watch(blurred, refresh)
+watch(matches, paintMatches)
+watch([matches, activeIndex], paintActiveMatch)
 watch(toRef(props, 'document'), load, { immediate: true, flush: 'post' })
 watch(toRef(props, 'document'), async (document) => {
   blurred.value = await isBlurred(document)
   blurredContent.value = blurred.value ? await getBlurredContentBanner(document) : null
 }, { immediate: true })
 
-onBeforeUnmount(() => view?.destroy())
+onBeforeUnmount(() => {
+  stopLoad()
+  view?.destroy()
+})
 
 defineExpose({ findMatches })
 </script>
@@ -197,6 +265,7 @@ defineExpose({ findMatches })
       :loading="isLoading"
       :disabled="blurred"
       :compact-threshold="compactThreshold"
+      no-count
     />
     <dismissable-content-warning-toggler
       v-if="blurred"
