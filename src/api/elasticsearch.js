@@ -63,14 +63,12 @@ function highlightConfig(isOpenSearch = false) {
 }
 
 /**
- * Normalizes a query string, returning the default query for empty values and
- * straightening the smart quotes a CJK keyboard produces.
+ * Normalizes a query string, returning the default query for empty values.
  * @param {string} query - The query string to normalize
  * @returns {string} The normalized query
  */
 function normalizeQuery(query) {
-  const nonEmptyQuery = [null, undefined, ''].includes(query) ? DEFAULT_QUERY : query
-  return straightenQuotes(nonEmptyQuery)
+  return [null, undefined, ''].includes(query) ? DEFAULT_QUERY : query
 }
 
 /**
@@ -553,6 +551,7 @@ export function datasharePlugin(Client) {
    * @param {string} operator - Default search operator for the query string (AND or OR)
    */
   Client.prototype._applyQueryString = function (body, query, fields = [], operator = undefined) {
+    query = straightenQuotes(query)
     if (isEqual(fields, ['path'])) {
       query = replace(query, /\//g, '\\/')
     }

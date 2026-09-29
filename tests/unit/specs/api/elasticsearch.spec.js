@@ -374,5 +374,21 @@ describe('elasticsearch', () => {
       const queryString = body.query.bool.must[1].bool.should[0].query_string
       expect(queryString.default_operator).toBe('AND')
     })
+
+    it('turns a smart-quoted phrase into a straight-quoted one', () => {
+      const smartBody = elasticsearch.rootSearch([], '“a b”').build()
+      const straightBody = elasticsearch.rootSearch([], '"a b"').build()
+      expect(smartBody).toEqual(straightBody)
+    })
+  })
+
+  describe('addQueryToFilter', () => {
+    it('turns a smart-quoted phrase into a straight-quoted one', () => {
+      const smartBody = bodybuilder()
+      const straightBody = bodybuilder()
+      elasticsearch.addQueryToFilter('“a b”', smartBody)
+      elasticsearch.addQueryToFilter('"a b"', straightBody)
+      expect(smartBody.build()).toEqual(straightBody.build())
+    })
   })
 })
