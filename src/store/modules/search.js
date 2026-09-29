@@ -27,6 +27,7 @@ import { apiInstance as api } from '@/api/apiInstance'
 import { defineSuffixedStore } from '@/store/defineSuffixedStore'
 import { SEARCH_OPERATORS } from '@/enums/searchOperators'
 import settings from '@/utils/settings'
+import { straightenQuotes } from '@/utils/luceneQuery'
 
 /**
  * Assign `value` to `ref` only if it actually changed, to avoid churning the
@@ -203,7 +204,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     }
 
     try {
-      retTerms(lucene.parse(q.value.replace('\\@', '@')))
+      retTerms(lucene.parse(straightenQuotes(q.value).replace('\\@', '@')))
       return terms
     }
     catch {
