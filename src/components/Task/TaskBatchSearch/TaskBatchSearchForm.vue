@@ -142,9 +142,16 @@ async function submit() {
     await router.push({ name: 'task.batch-search.list' })
     toast.success(t('task.batch-search.form.submitSuccess'))
   }
-  catch {
-    toast.error(t('task.batch-search.form.submitError'))
+  catch (error) {
+    toast.error(submitErrorMessage(error))
   }
+}
+
+function submitErrorMessage(error) {
+  if (error instanceof DOMException) {
+    return t('task.batch-search.form.readError')
+  }
+  return t('task.batch-search.form.submitError')
 }
 </script>
 
