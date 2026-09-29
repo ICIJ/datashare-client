@@ -854,6 +854,12 @@ describe('SearchStore', () => {
       ])
     })
 
+    it('should retrieve a smart-quoted phrase as one term', () => {
+      searchStore.setQuery('“term_01 term_02”')
+
+      expect(searchStore.retrieveQueryTerms).toEqual([{ field: '', label: 'term_01 term_02', negation: false, regex: false }])
+    })
+
     it('should merge 2 identical terms', () => {
       searchStore.setQuery('term_01 term_01')
 
