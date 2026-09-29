@@ -110,6 +110,20 @@ describe('TaskBatchSearchForm', () => {
       wrapper.vm.$.setupState.csvString = '\\“test”\r\nplain\n'
       expect(await submittedQueries(wrapper)).toBe('\\“test”\r\nplain\n')
     })
+
+    it('keeps the smart quotes when phrase match is on', async () => {
+      const wrapper = createValidWrapper()
+      wrapper.vm.$.setupState.csvString = '“test full sentence”\n「東京」'
+      wrapper.vm.$.setupState.phraseMatch = true
+      expect(await submittedQueries(wrapper)).toBe('“test full sentence”\n「東京」')
+    })
+
+    it('keeps the smart quotes when spelling changes are allowed', async () => {
+      const wrapper = createValidWrapper()
+      wrapper.vm.$.setupState.csvString = '“test full sentence”\n「東京」'
+      wrapper.vm.$.setupState.spellingChanges = 1
+      expect(await submittedQueries(wrapper)).toBe('“test full sentence”\n「東京」')
+    })
   })
 
   describe('locked filters kept in the batch search query/uri (icij/datashare#2331 reverted)', () => {

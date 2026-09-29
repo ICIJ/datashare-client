@@ -106,10 +106,22 @@ async function straightenCsvQueries(file) {
   return new File([queries.replace(/[^\r\n]+/g, straightenQuotes)], file.name, { type: file.type })
 }
 
+// The backend wraps every query in its own quotes for phrase matches, and
+// appends `~N` to every word for spelling changes: a straightened phrase would
+// end up double-quoted, or with `~N` inside its quotes.
+const isRewrittenByBackend = computed(() => phraseMatch.value || +spellingChanges.value > 0)
+
+function submittedCsv() {
+  if (isRewrittenByBackend.value) {
+    return csv.value
+  }
+  return straightenCsvQueries(csv.value)
+}
+
 async function createBatchSearch() {
   return core.api.batchSearch(
     name.value,
-    await straightenCsvQueries(csv.value),
+    await submittedCsv(),
     description.value,
     formSearchStore.indices.join(','),
     phraseMatch.value,
