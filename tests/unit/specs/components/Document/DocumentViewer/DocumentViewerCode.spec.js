@@ -2,7 +2,7 @@ import { nextTick } from 'vue'
 import { flushPromises, shallowMount } from '@vue/test-utils'
 import { LanguageDescription, language } from '@codemirror/language'
 import { languages } from '@codemirror/language-data'
-import { EditorView } from '@codemirror/view'
+import { Decoration, EditorView } from '@codemirror/view'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import DismissableContentWarningToggler from '@/components/Dismissable/DismissableContentWarningToggler'
@@ -24,6 +24,10 @@ Range.prototype.getClientRects = () => []
 Range.prototype.getBoundingClientRect = () => ({ top: 0, left: 0, right: 0, bottom: 0, width: 0, height: 0 })
 
 const getSource = vi.fn()
+
+function encode(text) {
+  return new TextEncoder().encode(text).buffer
+}
 
 vi.mock('@/api/apiInstance', async (importOriginal) => {
   const { apiInstance } = await importOriginal()
@@ -73,7 +77,7 @@ describe('DocumentViewerCode.vue', () => {
   }
 
   async function mountWithSource(source, overrides) {
-    getSource.mockResolvedValue(source)
+    getSource.mockResolvedValue(encode(source))
     const wrapper = mountViewer(overrides)
     await flushPromises()
     return wrapper
@@ -82,7 +86,7 @@ describe('DocumentViewerCode.vue', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     vi.useFakeTimers({ shouldAdvanceTime: true })
-    getSource.mockResolvedValue('hello world')
+    getSource.mockResolvedValue(encode('hello world'))
     findLanguage.mockResolvedValue(null)
   })
 
@@ -90,10 +94,24 @@ describe('DocumentViewerCode.vue', () => {
     vi.useRealTimers()
   })
 
-  it('fetches the source as text', async () => {
+  it('fetches the source as bytes', async () => {
     mountViewer()
     await flushPromises()
-    expect(getSource).toHaveBeenCalledWith(expect.objectContaining({ id: 'doc-id' }), { responseType: 'text' })
+    expect(getSource).toHaveBeenCalledWith(expect.objectContaining({ id: 'doc-id' }), expect.objectContaining({ responseType: 'arraybuffer' }))
+  })
+
+  it('decodes the source with the encoding detected at indexing', async () => {
+    getSource.mockResolvedValue(new Uint8Array([0x63, 0x61, 0x66, 0xe9]).buffer)
+    const wrapper = mountViewer({ source: { metadata: {}, contentEncoding: 'windows-1252' } })
+    await flushPromises()
+    expect(editorText(wrapper)).toBe('caf\u00e9')
+  })
+
+  it('decodes the source as UTF-8 when its encoding is unknown to the browser', async () => {
+    getSource.mockResolvedValue(encode('caf\u00e9'))
+    const wrapper = mountViewer({ source: { metadata: {}, contentEncoding: 'x-unknown' } })
+    await flushPromises()
+    expect(editorText(wrapper)).toBe('caf\u00e9')
   })
 
   it('shows the fetched source', async () => {
@@ -106,9 +124,10 @@ describe('DocumentViewerCode.vue', () => {
     ['a\nb\n', 'a\nb'],
     ['a\r\nb\r\n', 'a\nb'],
     ['a\n\n', 'a\n'],
-    ['a\nb', 'a\nb']
+    ['a\nb', 'a\nb'],
+    ['a\rb\r', 'a\nb']
   ])('drops one trailing line break of %j', async (source, shown) => {
-    getSource.mockResolvedValue(source)
+    getSource.mockResolvedValue(encode(source))
     const wrapper = mountViewer()
     await flushPromises()
     expect(editorText(wrapper)).toBe(shown)
@@ -126,8 +145,16 @@ describe('DocumentViewerCode.vue', () => {
     findLanguage.mockResolvedValue(await LanguageDescription.matchLanguageName(languages, 'JSON').load())
     const wrapper = mountViewer()
     await flushPromises()
-    expect(findLanguage).toHaveBeenCalledWith(expect.objectContaining({ basename: 'Program.cs' }))
+    expect(findLanguage).toHaveBeenCalledWith(expect.objectContaining({ id: 'doc-id' }))
     expect(editorView(wrapper).state.facet(language).name).toBe('json')
+  })
+
+  it('shows the source before its language pack is loaded', async () => {
+    findLanguage.mockReturnValue(new Promise(() => {}))
+    const wrapper = mountViewer()
+    await flushPromises()
+    expect(wrapper.find('.document-viewer-code__loading').exists()).toBe(false)
+    expect(editorText(wrapper)).toBe('hello world')
   })
 
   it('does not fetch a document above 50 MB', async () => {
@@ -141,6 +168,16 @@ describe('DocumentViewerCode.vue', () => {
     mountViewer({ contentLength: 50 * MB })
     await flushPromises()
     expect(getSource).toHaveBeenCalled()
+  })
+
+  it('stops downloading a document of unknown length past 50 MB', async () => {
+    getSource.mockImplementation((document, { signal, onDownloadProgress }) => {
+      onDownloadProgress({ loaded: 50 * MB + 1 })
+      return Promise.reject(new Error(signal.aborted ? 'canceled' : 'unexpected'))
+    })
+    const wrapper = mountViewer({ contentLength: -1 })
+    await flushPromises()
+    expect(wrapper.find('.document-viewer-code__too-large').text()).toBe('This document is too large to preview.')
   })
 
   it('fetches a document of unknown length', async () => {
@@ -159,7 +196,7 @@ describe('DocumentViewerCode.vue', () => {
   it('replaces the text in the same editor when the document changes', async () => {
     const wrapper = mountViewer()
     await flushPromises()
-    getSource.mockResolvedValue('second')
+    getSource.mockResolvedValue(encode('second'))
     await wrapper.setProps({ document: { ...document, id: 'other-id' } })
     await flushPromises()
     expect(wrapper.findAll('.cm-editor')).toHaveLength(1)
@@ -171,12 +208,12 @@ describe('DocumentViewerCode.vue', () => {
     getSource.mockReturnValueOnce(new Promise((resolve) => {
       resolveFirst = resolve
     }))
-    getSource.mockResolvedValue('second')
+    getSource.mockResolvedValue(encode('second'))
     const wrapper = mountViewer()
     await flushPromises()
     await wrapper.setProps({ document: { ...document, id: 'other-id' } })
     await flushPromises()
-    resolveFirst('first')
+    resolveFirst(encode('first'))
     await flushPromises()
     expect(editorText(wrapper)).toBe('second')
   })
@@ -186,7 +223,7 @@ describe('DocumentViewerCode.vue', () => {
     getSource.mockReturnValueOnce(new Promise((resolve, reject) => {
       rejectFirst = reject
     }))
-    getSource.mockResolvedValue('second')
+    getSource.mockResolvedValue(encode('second'))
     const wrapper = mountViewer()
     await flushPromises()
     await wrapper.setProps({ document: { ...document, id: 'other-id' } })
@@ -203,6 +240,22 @@ describe('DocumentViewerCode.vue', () => {
     const destroy = vi.spyOn(editorView(wrapper), 'destroy')
     wrapper.unmount()
     expect(destroy).toHaveBeenCalled()
+  })
+
+  it('stops loading the source when unmounted before it arrives', async () => {
+    let resolveSource
+    getSource.mockReturnValue(new Promise((resolve) => {
+      resolveSource = resolve
+    }))
+    const wrapper = mountViewer()
+    await flushPromises()
+    const [, { signal }] = getSource.mock.calls[0]
+    const addEventListener = vi.spyOn(window.document, 'addEventListener')
+    wrapper.unmount()
+    resolveSource(encode('late'))
+    await flushPromises()
+    expect(signal.aborted).toBe(true)
+    expect(addEventListener).not.toHaveBeenCalledWith('selectionchange', expect.anything())
   })
 
   it('finds matches across lines, ignoring case and accents', async () => {
@@ -241,6 +294,17 @@ describe('DocumentViewerCode.vue', () => {
     expect(lines[1].find('.local-search-term--active').exists()).toBe(true)
   })
 
+  it('only repaints the active mark when moving to another occurrence', async () => {
+    const wrapper = await mountWithSource('needle one\nneedle two\nneedle three')
+    await search(wrapper, 'needle')
+    const set = vi.spyOn(Decoration, 'set')
+    wrapper.findComponent(DocumentToolbox).vm.$emit('update:activeIndex', 2)
+    await nextTick()
+    expect(set.mock.calls.every(([ranges]) => ranges.length <= 1)).toBe(true)
+    expect(wrapper.findAll('.local-search-term')).toHaveLength(3)
+    expect(wrapper.findAll('.cm-line')[1].find('.local-search-term .local-search-term--active').exists()).toBe(true)
+  })
+
   it('takes the marks down when the search field is cleared', async () => {
     const wrapper = await mountWithSource('a needle')
     await search(wrapper, 'needle')
@@ -252,7 +316,7 @@ describe('DocumentViewerCode.vue', () => {
   it('searches the term again when another document is shown', async () => {
     const wrapper = await mountWithSource('a needle')
     await search(wrapper, 'needle')
-    getSource.mockResolvedValue('needle and needle')
+    getSource.mockResolvedValue(encode('needle and needle'))
     await wrapper.setProps({ document: { ...document, id: 'other-id' } })
     await flushPromises()
     expect(wrapper.findComponent(DocumentToolbox).props('occurrences')).toBe(2)
@@ -290,6 +354,27 @@ describe('DocumentViewerCode.vue', () => {
     expect(toggler.props('description')).toBe('Sensitive')
     expect(wrapper.findComponent(DocumentToolbox).props('disabled')).toBe(true)
     expect(wrapper.find('.document-viewer-code__editor').attributes('style')).toContain('display: none')
+  })
+
+  it('does not search a blurred document', async () => {
+    const pathBanners = [{ path: '/leaks/code/', blurSensitiveMedia: true, note: 'Sensitive' }]
+    const wrapper = await mountWithSource('hello', { pathBanners })
+    await search(wrapper, 'hello')
+    expect(wrapper.findComponent(DocumentToolbox).props('occurrences')).toBe(0)
+  })
+
+  it('searches the document once its content warning is dismissed', async () => {
+    const pathBanners = [{ path: '/leaks/code/', blurSensitiveMedia: true, note: 'Sensitive' }]
+    const wrapper = await mountWithSource('hello', { pathBanners })
+    await search(wrapper, 'hello')
+    wrapper.findComponent(DismissableContentWarningToggler).vm.$emit('update:modelValue', false)
+    await flushPromises()
+    expect(wrapper.findComponent(DocumentToolbox).props('occurrences')).toBe(1)
+  })
+
+  it('does not count the query terms in the extracted text', async () => {
+    const wrapper = await mountWithSource('hello')
+    expect(wrapper.findComponent(DocumentToolbox).props('noCount')).toBe(true)
   })
 
   it('does not index the source until a term is searched', async () => {
