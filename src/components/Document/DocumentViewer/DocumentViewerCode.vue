@@ -32,6 +32,7 @@ const props = defineProps({
 })
 
 const MAX_CONTENT_LENGTH = 50 * 1024 * 1024
+const TRAILING_LINE_BREAK = /\r?\n$/
 
 const MARK = Decoration.mark({ class: 'local-search-term' })
 const ACTIVE_MARK = Decoration.mark({ class: 'local-search-term local-search-term--active' })
@@ -78,9 +79,15 @@ function isTooLarge({ contentLength }) {
   return contentLength > MAX_CONTENT_LENGTH
 }
 
+// A file ends with a line break by convention: shown as is, it would add an
+// empty numbered line after the last one, which GitHub does not show either.
+function dropTrailingLineBreak(text) {
+  return text.replace(TRAILING_LINE_BREAK, '')
+}
+
 function createState(text, language) {
   return EditorState.create({
-    doc: text,
+    doc: dropTrailingLineBreak(text),
     extensions: [
       EditorState.readOnly.of(true),
       EditorView.editable.of(false),
