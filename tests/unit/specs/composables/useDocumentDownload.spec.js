@@ -338,16 +338,6 @@ describe('useDocumentDownload composable', () => {
   })
 
   describe('downloadMarkdown', () => {
-    // jsdom's Blob doesn't implement `text()`; read it via FileReader instead.
-    function readBlob(blob) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader()
-        reader.onload = () => resolve(reader.result)
-        reader.onerror = () => reject(reader.error)
-        reader.readAsText(blob)
-      })
-    }
-
     it('should request every page of the artifact', async () => {
       mockStructureManifest(3)
       apiInstance.getStructurePage = vi.fn().mockResolvedValue('page')
@@ -373,7 +363,7 @@ describe('useDocumentDownload composable', () => {
       await downloadMarkdown()
       const [blob] = URL.createObjectURL.mock.calls.at(-1)
       expect(blob.type).toBe('text/markdown;charset=utf-8')
-      await expect(readBlob(blob)).resolves.toBe('# Page 1\n\n---\n\n# Page 2')
+      await expect(blob.text()).resolves.toBe('# Page 1\n\n---\n\n# Page 2')
     })
 
     it('should name the file after the document title', async () => {
