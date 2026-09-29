@@ -1,4 +1,4 @@
-import { addLocalSearchMarksClass, addLocalSearchMarksClassByOffsets, isUrl, getConsonants, foldWithSourceIndexes, addSearchMarksClassesInHtml } from '@/utils/strings'
+import { addLocalSearchMarksClass, addLocalSearchMarksClassByOffsets, isUrl, getConsonants, foldForFilter, foldWithSourceIndexes, addSearchMarksClassesInHtml } from '@/utils/strings'
 
 const addSearchMarksClassInHtml = (html, term, options = {}) => addSearchMarksClassesInHtml(html, [{ term, ...options }])
 
@@ -216,6 +216,22 @@ describe('strings', () => {
     it('ends a source range past a stripped combining mark', () => {
       const { sourceEnds } = foldWithSourceIndexes('e\u0301')
       expect(sourceEnds).toEqual([2])
+    })
+  })
+
+  describe('foldForFilter', () => {
+    it.each([
+      'Cr\u00e8me BR\u00dbL\u00c9E',
+      'cre\u0301me',
+      'Of\ufb00ice',
+      '\u0130stanbul',
+      '\u{1d400}lpha'
+    ])('folds %s like foldWithSourceIndexes', (value) => {
+      expect(foldForFilter(value)).toBe(foldWithSourceIndexes(value).folded)
+    })
+
+    it('folds every Greek sigma to the same letter, whatever its place in the word', () => {
+      expect(foldForFilter('\u039f\u0394\u039f\u03a3 \u03bf\u03b4\u03bf\u03c2')).toBe('\u03bf\u03b4\u03bf\u03c3 \u03bf\u03b4\u03bf\u03c3')
     })
   })
 
