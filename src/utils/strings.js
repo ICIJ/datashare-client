@@ -112,7 +112,7 @@ export function foldWithSourceIndexes(value = '') {
  * @param {string} foldedTerm - The already-folded term to search for.
  * @return {Object[]} - A list of `{ start, end }` source ranges.
  */
-function findFoldedMatches(text, foldedTerm) {
+export function findFoldedMatches(text, foldedTerm) {
   const { folded, sourceIndexes, sourceEnds } = foldWithSourceIndexes(text)
   const matches = []
   // A single source char whose fold repeats the term (the 'ﬀ' ligature folds to

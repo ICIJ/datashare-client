@@ -1,13 +1,18 @@
 <script setup>
 import { computed, onBeforeUnmount, ref, toRef, useTemplateRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { EditorState } from '@codemirror/state'
-import { EditorView, lineNumbers } from '@codemirror/view'
+import { EditorState, StateEffect, StateField } from '@codemirror/state'
+import { Decoration, EditorView, lineNumbers } from '@codemirror/view'
 import { syntaxHighlighting } from '@codemirror/language'
 import { classHighlighter } from '@lezer/highlight'
 
+import { useDocumentLocalSearch } from '@/composables/useDocumentLocalSearch'
+import { useDocumentPreview } from '@/composables/useDocumentPreview'
 import { useDocumentSource } from '@/composables/useDocumentSource'
 import { findLanguage } from '@/utils/codeLanguage'
+import { findFoldedMatches, foldWithSourceIndexes } from '@/utils/strings'
+import DismissableContentWarningToggler from '@/components/Dismissable/DismissableContentWarningToggler'
+import DocumentToolbox from '@/components/Document/DocumentToolbox/DocumentToolbox'
 
 /**
  * Display a text or code document as read-only, highlighted source.
@@ -28,15 +33,44 @@ const props = defineProps({
 
 const MAX_CONTENT_LENGTH = 50 * 1024 * 1024
 
+const MARK = Decoration.mark({ class: 'local-search-term' })
+const ACTIVE_MARK = Decoration.mark({ class: 'local-search-term local-search-term--active' })
+
+const setMarks = StateEffect.define()
+
+// The document never changes once shown (a new document gets a new state), so
+// the marks never have to be mapped through a change.
+const marksField = StateField.define({
+  create: () => Decoration.none,
+  update: (marks, transaction) => {
+    const effect = transaction.effects.find(effect => effect.is(setMarks))
+    return effect ? effect.value : marks
+  },
+  provide: field => EditorView.decorations.from(field)
+})
+
 const { fetchSource } = useDocumentSource()
+const { isBlurred, getBlurredContentBanner } = useDocumentPreview()
 const { t } = useI18n()
 
 const editor = useTemplateRef('editor')
 const error = ref(null)
 const loading = ref(false)
+const blurred = ref(false)
+const blurredContent = ref(null)
 const tooLarge = computed(() => isTooLarge(props.document))
 
+const {
+  term,
+  activeIndex,
+  matches,
+  occurrences,
+  isLoading,
+  refresh
+} = useDocumentLocalSearch({ findMatches })
+
 let view = null
+let foldedLines = []
 let lastLoad = 0
 
 function isTooLarge({ contentLength }) {
@@ -51,9 +85,17 @@ function createState(text, language) {
       EditorView.editable.of(false),
       lineNumbers(),
       syntaxHighlighting(classHighlighter),
+      marksField,
       language ?? []
     ]
   })
+}
+
+// Folding keeps two offset arrays per character, too heavy to hold for a 50 MB
+// file, so only the folded strings are kept and `findMatches` rebuilds the
+// offsets for the lines a term actually hits.
+function foldLines(doc) {
+  return Array.from(doc.iterLines(), line => foldWithSourceIndexes(line).folded)
 }
 
 function renderSource(text, language) {
@@ -64,6 +106,7 @@ function renderSource(text, language) {
   else {
     view = new EditorView({ state, parent: editor.value })
   }
+  foldedLines = foldLines(state.doc)
 }
 
 function isCurrentLoad(id) {
@@ -88,9 +131,10 @@ async function showSource(id, document) {
 }
 
 // A document swapped in while this one was loading owns the editor now, so
-// only the newest load may write its text or its failure.
+// only the newest load may write its text, its failure or its matches.
 async function load(document) {
   const id = ++lastLoad
+  foldedLines = []
   error.value = null
   loading.value = !isTooLarge(document)
   if (loading.value) {
@@ -98,18 +142,79 @@ async function load(document) {
   }
   if (isCurrentLoad(id)) {
     loading.value = false
+    // The matches on screen point into the text this load replaced.
+    await refresh()
   }
 }
 
+function findLineMatches(index, foldedTerm) {
+  const line = view.state.doc.line(index + 1)
+  return findFoldedMatches(line.text, foldedTerm).map(({ start, end }) => {
+    return { page: 1, from: line.from + start, to: line.from + end }
+  })
+}
+
+function findMatches(value) {
+  const { folded } = foldWithSourceIndexes(value)
+  // A term made only of combining marks folds to nothing, which every line
+  // contains at every position: the scan would never move forward.
+  if (!folded) {
+    return []
+  }
+  return foldedLines.flatMap((foldedLine, index) => {
+    if (!foldedLine.includes(folded)) {
+      return []
+    }
+    return findLineMatches(index, folded)
+  })
+}
+
+function paintMatches() {
+  if (!view) {
+    return
+  }
+  const active = matches.value[activeIndex.value - 1]
+  const ranges = matches.value.map((match) => {
+    const mark = match === active ? ACTIVE_MARK : MARK
+    return mark.range(match.from, match.to)
+  })
+  const effects = [setMarks.of(Decoration.set(ranges))]
+  if (active) {
+    effects.push(EditorView.scrollIntoView(active.from, { y: 'center' }))
+  }
+  view.dispatch({ effects })
+}
+
+watch([matches, activeIndex], paintMatches)
 watch(toRef(props, 'document'), load, { immediate: true, flush: 'post' })
+watch(toRef(props, 'document'), async (document) => {
+  blurred.value = await isBlurred(document)
+  blurredContent.value = blurred.value ? await getBlurredContentBanner(document) : null
+}, { immediate: true })
 
 onBeforeUnmount(() => view?.destroy())
+
+defineExpose({ findMatches })
 </script>
 
 <template>
   <div class="document-viewer-code">
+    <document-toolbox
+      v-model="term"
+      v-model:active-index="activeIndex"
+      :document="document"
+      :occurrences="occurrences"
+      :loading="isLoading"
+      :disabled="blurred"
+      :compact-threshold="compactThreshold"
+    />
+    <dismissable-content-warning-toggler
+      v-if="blurred"
+      v-model="blurred"
+      :description="blurredContent"
+    />
     <div
-      v-if="tooLarge"
+      v-else-if="tooLarge"
       class="document-viewer-code__too-large text-center p-3"
     >
       {{ t('document.tooLargeToPreview') }}
@@ -127,7 +232,7 @@ onBeforeUnmount(() => view?.destroy())
       <b-spinner />
     </div>
     <div
-      v-show="!tooLarge && !error && !loading"
+      v-show="!blurred && !tooLarge && !error && !loading"
       ref="editor"
       class="document-viewer-code__editor"
     />
