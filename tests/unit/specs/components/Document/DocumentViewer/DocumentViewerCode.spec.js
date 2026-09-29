@@ -9,9 +9,15 @@ import DismissableContentWarningToggler from '@/components/Dismissable/Dismissab
 import DocumentToolbox from '@/components/Document/DocumentToolbox/DocumentToolbox'
 import DocumentViewerCode from '@/components/Document/DocumentViewer/DocumentViewerCode'
 import { findLanguage } from '@/utils/codeLanguage'
+import { buildSearchIndex } from '@/utils/codeSearchIndex'
 import { useDocumentPathBannersStore } from '@/store/modules'
 
 vi.mock('@/utils/codeLanguage', () => ({ findLanguage: vi.fn() }))
+
+vi.mock('@/utils/codeSearchIndex', async (importOriginal) => {
+  const codeSearchIndex = await importOriginal()
+  return { ...codeSearchIndex, buildSearchIndex: vi.fn(codeSearchIndex.buildSearchIndex) }
+})
 
 // CodeMirror measures the text it renders, and jsdom has no layout to measure.
 Range.prototype.getClientRects = () => []
@@ -272,5 +278,19 @@ describe('DocumentViewerCode.vue', () => {
     expect(toggler.props('description')).toBe('Sensitive')
     expect(wrapper.findComponent(DocumentToolbox).props('disabled')).toBe(true)
     expect(wrapper.find('.document-viewer-code__editor').attributes('style')).toContain('display: none')
+  })
+
+  it('does not index the source until a term is searched', async () => {
+    const wrapper = await mountWithSource('a needle')
+    expect(buildSearchIndex).not.toHaveBeenCalled()
+    await search(wrapper, 'needle')
+    expect(buildSearchIndex).toHaveBeenCalledTimes(1)
+  })
+
+  it('indexes the source once for every term searched in it', async () => {
+    const wrapper = await mountWithSource('a needle')
+    await search(wrapper, 'needle')
+    await search(wrapper, 'nee')
+    expect(buildSearchIndex).toHaveBeenCalledTimes(1)
   })
 })

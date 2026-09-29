@@ -10,7 +10,7 @@ import { useDocumentLocalSearch } from '@/composables/useDocumentLocalSearch'
 import { useDocumentPreview } from '@/composables/useDocumentPreview'
 import { useDocumentSource } from '@/composables/useDocumentSource'
 import { findLanguage } from '@/utils/codeLanguage'
-import { findFoldedMatches, foldWithSourceIndexes } from '@/utils/strings'
+import { buildSearchIndex, findIndexMatches } from '@/utils/codeSearchIndex'
 import DismissableContentWarningToggler from '@/components/Dismissable/DismissableContentWarningToggler'
 import DocumentToolbox from '@/components/Document/DocumentToolbox/DocumentToolbox'
 
@@ -70,7 +70,8 @@ const {
 } = useDocumentLocalSearch({ findMatches })
 
 let view = null
-let foldedLines = []
+let searchableDoc = null
+let searchIndex = null
 let lastLoad = 0
 
 function isTooLarge({ contentLength }) {
@@ -91,13 +92,6 @@ function createState(text, language) {
   })
 }
 
-// Folding keeps two offset arrays per character, too heavy to hold for a 50 MB
-// file, so only the folded strings are kept and `findMatches` rebuilds the
-// offsets for the lines a term actually hits.
-function foldLines(doc) {
-  return Array.from(doc.iterLines(), line => foldWithSourceIndexes(line).folded)
-}
-
 function renderSource(text, language) {
   const state = createState(text, language)
   if (view) {
@@ -106,7 +100,7 @@ function renderSource(text, language) {
   else {
     view = new EditorView({ state, parent: editor.value })
   }
-  foldedLines = foldLines(state.doc)
+  searchableDoc = state.doc
 }
 
 function isCurrentLoad(id) {
@@ -134,7 +128,8 @@ async function showSource(id, document) {
 // only the newest load may write its text, its failure or its matches.
 async function load(document) {
   const id = ++lastLoad
-  foldedLines = []
+  searchableDoc = null
+  searchIndex = null
   error.value = null
   loading.value = !isTooLarge(document)
   if (loading.value) {
@@ -147,26 +142,14 @@ async function load(document) {
   }
 }
 
-function findLineMatches(index, foldedTerm) {
-  const line = view.state.doc.line(index + 1)
-  return findFoldedMatches(line.text, foldedTerm).map(({ start, end }) => {
-    return { page: 1, from: line.from + start, to: line.from + end }
-  })
-}
-
+// Indexing a 50 MB source takes a noticeable moment, so it waits for the
+// first term instead of delaying every document that is only read.
 function findMatches(value) {
-  const { folded } = foldWithSourceIndexes(value)
-  // A term made only of combining marks folds to nothing, which every line
-  // contains at every position: the scan would never move forward.
-  if (!folded) {
+  if (!searchableDoc) {
     return []
   }
-  return foldedLines.flatMap((foldedLine, index) => {
-    if (!foldedLine.includes(folded)) {
-      return []
-    }
-    return findLineMatches(index, folded)
-  })
+  searchIndex ??= buildSearchIndex(searchableDoc)
+  return findIndexMatches(searchIndex, searchableDoc, value).map(match => ({ page: 1, ...match }))
 }
 
 function paintMatches() {
