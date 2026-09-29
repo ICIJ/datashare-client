@@ -63,9 +63,13 @@ export function addLocalSearchMarksClassByOffsets({ content = '', term = '', off
 }
 
 const combiningMarkPattern = /\p{M}/gu
+const finalSigmaPattern = /ς/g
 
+// Lowercasing a whole string turns a word-final capital sigma into 'ς', and a
+// lone one into 'σ': every sigma folds to 'σ' so a string and its characters
+// folded one by one always agree.
 function foldCharacter(character) {
-  return character.normalize('NFKD').replace(combiningMarkPattern, '').toLowerCase()
+  return character.normalize('NFKD').replace(combiningMarkPattern, '').toLowerCase().replace(finalSigmaPattern, 'σ')
 }
 
 /**
@@ -88,11 +92,12 @@ export function foldWithSourceIndexes(value = '') {
   for (const character of value) {
     const end = index + character.length
     const decomposed = foldCharacter(character)
-    for (const foldedCharacter of decomposed) {
-      folded.push(foldedCharacter)
-      sourceIndexes.push(index)
-      sourceEnds.push(end)
-    }
+    // One entry per code unit: a match is found at a code unit index of the
+    // joined folded string, and an emoji folds to two of them.
+    const units = decomposed.length
+    sourceIndexes.push(...Array(units).fill(index))
+    sourceEnds.push(...Array(units).fill(end))
+    folded.push(decomposed)
     // A source char that folds to nothing (a combining mark standing on its own,
     // as decomposed text writes accents) has no folded position of its own, so
     // the letter it decorates has to own it: a match ending on that letter must
@@ -105,19 +110,15 @@ export function foldWithSourceIndexes(value = '') {
   return { folded: folded.join(''), sourceIndexes, sourceEnds }
 }
 
-const finalSigmaPattern = /ς/g
-
 /**
  * Fold a whole string at once, without the offset maps, to rule out quickly
- * the text a folded term cannot be found in. Lowercasing a whole string turns a
- * word-final capital sigma into 'ς' where `foldWithSourceIndexes` gives 'σ', so
- * every sigma folds to 'σ' here: fold the term the same way before comparing.
+ * the text a folded term cannot be found in.
  *
  * @param {string} [value=''] - The string to fold.
  * @return {string} - The folded string.
  */
 export function foldForFilter(value = '') {
-  return foldCharacter(value).replace(finalSigmaPattern, 'σ')
+  return foldCharacter(value)
 }
 
 /**
