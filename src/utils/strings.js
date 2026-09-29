@@ -105,6 +105,21 @@ export function foldWithSourceIndexes(value = '') {
   return { folded: folded.join(''), sourceIndexes, sourceEnds }
 }
 
+const finalSigmaPattern = /ς/g
+
+/**
+ * Fold a whole string at once, without the offset maps, to rule out quickly
+ * the text a folded term cannot be found in. Lowercasing a whole string turns a
+ * word-final capital sigma into 'ς' where `foldWithSourceIndexes` gives 'σ', so
+ * every sigma folds to 'σ' here: fold the term the same way before comparing.
+ *
+ * @param {string} [value=''] - The string to fold.
+ * @return {string} - The folded string.
+ */
+export function foldForFilter(value = '') {
+  return foldCharacter(value).replace(finalSigmaPattern, 'σ')
+}
+
 /**
  * Find every folded-term match in a text string, mapped back to source offsets.
  *
