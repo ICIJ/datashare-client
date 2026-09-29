@@ -821,7 +821,13 @@ describe('luceneQuery', () => {
       ['(“a b”)', '("a b")'],
       ['“a” “b”', '"a" "b"'],
       ['“a” AND path:「b」', '"a" AND path:"b"'],
-      ['“a\\\\”', '"a\\\\"']
+      ['“a\\\\”', '"a\\\\"'],
+      ['-“a b”', '-"a b"'],
+      ['+“a b”', '+"a b"'],
+      ['x !「a b」', 'x !"a b"'],
+      ['{“a” TO “b”}', '{"a" TO "b"}'],
+      ['"a “b” c" “d”', '"a “b” c" "d"'],
+      ['\\"a “b” c', '\\"a "b" c']
     ])('turns the phrase %s into %s', (query, expected) => {
       expect(straightenQuotes(query)).toBe(expected)
     })
@@ -847,7 +853,10 @@ describe('luceneQuery', () => {
     it.each([
       '彼は「はい」と言った',
       '記録「A」',
-      '"say “hello”"'
+      '"say “hello”"',
+      '"say “hello” now"',
+      'title:"a “b c” d"',
+      'foo-“bar”'
     ])('leaves the quote used as punctuation in %s alone', (query) => {
       expect(straightenQuotes(query)).toBe(query)
     })
