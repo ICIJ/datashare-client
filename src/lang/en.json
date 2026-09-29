@@ -1230,6 +1230,7 @@
         },
         "submit": "Create",
         "submitError": "Something went wrong, unable to run the batch search.",
+        "readError": "Unable to read the queries file. Select it again and retry.",
         "submitSuccess": "Batch search created successfully.",
         "editError": "Something went wrong, unable to update the batch search.",
         "editSuccess": "Batch search updated successfully."

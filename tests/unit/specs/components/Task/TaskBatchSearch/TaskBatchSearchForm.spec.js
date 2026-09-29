@@ -73,6 +73,21 @@ describe('TaskBatchSearchForm', () => {
     expect(wrapper.vm.$toast.success).not.toHaveBeenCalled()
   })
 
+  it('shows a specific error toast when the queries file cannot be read', async () => {
+    const wrapper = createValidWrapper()
+    const csvFile = new File(['test query'], 'queries.csv', { type: 'text/csv' })
+    csvFile.text = vi.fn().mockRejectedValue(new DOMException('File moved', 'NotReadableError'))
+    wrapper.vm.$.setupState.csvTab = BATCH_SEARCH_CSV_FILE
+    wrapper.vm.$.setupState.csvFile = csvFile
+    vi.spyOn(wrapper.vm.$toast, 'error')
+
+    await wrapper.find('form-creation-stub').trigger('submit')
+    await vi.waitFor(() => expect(wrapper.vm.$toast.error).toHaveBeenCalledOnce())
+
+    expect(wrapper.vm.$toast.error).toHaveBeenCalledWith(wrapper.vm.$t('task.batch-search.form.readError'))
+    expect(api.batchSearch).not.toHaveBeenCalled()
+  })
+
   describe('smart quotes in the uploaded queries (icij/datashare#2352)', () => {
     async function submittedQueries(wrapper) {
       vi.spyOn(wrapper.vm.$router, 'push').mockResolvedValue()
