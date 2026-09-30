@@ -11,10 +11,6 @@ const visible = defineModel('visible', {
 })
 
 const { noSort, noToggler } = defineProps({
-  tooltipDelay: {
-    type: Object,
-    default: () => ({ show: 0, hide: 0 })
-  },
   noToggler: {
     type: Boolean,
     default: false

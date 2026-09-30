@@ -42,10 +42,6 @@ const props = defineProps({
   },
   noKeyboardShortcuts: {
     type: Boolean
-  },
-  tooltipDelay: {
-    type: Object,
-    default: () => ({ show: 0, hide: 0 })
   }
 })
 

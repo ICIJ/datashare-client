@@ -20,10 +20,6 @@ defineProps({
     type: String,
     default: noop
   },
-  tooltipDelay: {
-    type: Object,
-    default: () => ({ show: 0, hide: 0 })
-  },
   hasOldest: {
     type: Boolean,
     default: false
