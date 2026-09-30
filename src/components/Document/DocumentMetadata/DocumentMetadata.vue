@@ -27,10 +27,6 @@ defineProps({
   value: {
     type: [String, Number],
     required: true
-  },
-  tooltipDelay: {
-    type: Object,
-    default: () => ({ show: 0, hide: 0 })
   }
 })
 </script>

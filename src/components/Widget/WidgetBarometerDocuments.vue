@@ -20,7 +20,7 @@
     </i18n-t>
     <span
       v-if="nbDuplicates !== null"
-      v-b-tooltip.body.top="{ delay: tooltipDelay }"
+      v-b-tooltip.body.top
       class="widget-barometer-documents__duplicates ms-1"
       :title="duplicatesTitle"
     >
@@ -65,10 +65,6 @@ const props = defineProps({
   nbDuplicates: {
     type: Number,
     default: 0
-  },
-  tooltipDelay: {
-    type: Object,
-    default: () => ({ show: 0, hide: 0 })
   }
 })
 

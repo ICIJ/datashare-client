@@ -155,7 +155,7 @@ class Core extends Behaviors {
     this._bootstrapVue = createBootstrap({
       components: {
         BPopover: { click: true },
-        BTooltip: { click: false, hover: true, focus: true }
+        BTooltip: { click: false, hover: true, focus: true, delay: { show: 500, hide: 0 } }
       },
       directives: true
     })

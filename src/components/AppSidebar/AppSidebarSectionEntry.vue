@@ -34,10 +34,6 @@ const props = defineProps({
   },
   exactMatch: {
     type: Boolean
-  },
-  tooltipDelay: {
-    type: Object,
-    default: () => ({ show: 0, hide: 0 })
   }
 })
 
@@ -73,7 +69,7 @@ const router = useRouter()
     <router-link
       v-if="actionTo"
       v-preload="{ to: actionTo, router }"
-      v-b-tooltip.body.right="{ delay: tooltipDelay }"
+      v-b-tooltip.body.right
       :to="actionTo"
       class="app-sidebar-section-entry__action ms-2 d-flex"
       :title="actionTitle"

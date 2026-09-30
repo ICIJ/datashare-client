@@ -1,7 +1,6 @@
 <template>
   <b-tooltip
     interactive
-    :delay="tooltipDelay"
     :placement="tooltipPlacement"
     teleport-to="body"
   >
@@ -67,10 +66,6 @@ defineProps({
   tooltipPlacement: {
     type: String,
     default: 'top-end'
-  },
-  tooltipDelay: {
-    type: Object,
-    default: () => ({ show: 0, hide: 0 })
   }
 })
 const { t } = useI18n()
