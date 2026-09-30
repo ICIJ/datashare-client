@@ -35,6 +35,32 @@ describe('Document', () => {
     })
   })
 
+  describe('check if document is of code type', () => {
+    it.each([
+      'text/plain',
+      'text/html',
+      'text/x-csharp',
+      'application/json',
+      'application/json; twint',
+      'application/xml',
+      'application/xhtml+xml',
+      'application/javascript',
+      'application/x-sh'
+    ])('should be code for %s', (contentType) => {
+      const doc = new Document({ _source: { contentType } })
+      expect(doc.isCode).toBe(true)
+    })
+
+    it.each([
+      'application/pdf',
+      'application/msword',
+      'image/png'
+    ])('should not be code for %s', (contentType) => {
+      const doc = new Document({ _source: { contentType } })
+      expect(doc.isCode).toBe(false)
+    })
+  })
+
   describe('check if document is of Markdown type', () => {
     it('should be a Markdown file (x-web-markdown)', () => {
       const doc = new Document({ _source: { contentType: 'text/x-web-markdown' } })

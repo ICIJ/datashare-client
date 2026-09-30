@@ -203,4 +203,27 @@ describe('DocumentViewTabsViewer.vue', () => {
     expect(wrapper.vm.previewComponent).toBe('DocumentViewerMarkdown')
     wrapper.unmount()
   })
+
+  it.each([
+    ['JSON', 'data.json', 'application/json'],
+    ['HTML', 'page.html', 'text/html'],
+    ['plain text', 'notes.txt', 'text/plain'],
+    ['C#', 'Program.cs', 'text/x-csharp']
+  ])('should call the DocumentViewerCode component for %s document', async (label, codeId, contentType) => {
+    const document = await letData(es)
+      .have(new IndexedDocument(codeId, index).withContentType(contentType))
+      .commitAndGetLastDocument()
+    await documentStore.getDocument({ id: codeId, index })
+
+    const wrapper = shallowMount(DocumentViewTabsViewer, {
+      global: {
+        plugins: core.plugins,
+        renderStubDefaultSlot: false,
+        stubs: { suspense: true }
+      },
+      props: { document, disabled }
+    })
+    expect(wrapper.vm.previewComponent).toBe('DocumentViewerCode')
+    wrapper.unmount()
+  })
 })

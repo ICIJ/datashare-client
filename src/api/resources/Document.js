@@ -466,6 +466,23 @@ export default class Document extends EsDoc {
     return this.contentType.indexOf('application/json') === 0
   }
 
+  get isCode() {
+    const codeTypes = [
+      'application/javascript',
+      'application/sql',
+      'application/x-bat',
+      'application/x-httpd-php',
+      'application/x-sh',
+      'application/x-yaml',
+      'application/xml',
+      'application/xml-dtd'
+    ]
+    return this.contentType.indexOf('text/') === 0
+      || this.contentType.endsWith('+xml')
+      || this.isJson
+      || codeTypes.includes(this.contentType)
+  }
+
   get isMarkdown() {
     if (['text/x-web-markdown', 'text/markdown'].includes(this.contentType)) {
       return true

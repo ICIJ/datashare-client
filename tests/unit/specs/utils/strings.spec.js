@@ -1,4 +1,4 @@
-import { addLocalSearchMarksClass, addLocalSearchMarksClassByOffsets, isUrl, getConsonants, foldWithSourceIndexes, addSearchMarksClassesInHtml } from '@/utils/strings'
+import { addLocalSearchMarksClass, addLocalSearchMarksClassByOffsets, isUrl, getConsonants, foldForFilter, foldWithSourceIndexes, addSearchMarksClassesInHtml } from '@/utils/strings'
 
 const addSearchMarksClassInHtml = (html, term, options = {}) => addSearchMarksClassesInHtml(html, [{ term, ...options }])
 
@@ -217,9 +217,46 @@ describe('strings', () => {
       const { sourceEnds } = foldWithSourceIndexes('e\u0301')
       expect(sourceEnds).toEqual([2])
     })
+
+    it('keeps one map entry per code unit of an astral char that stays astral', () => {
+      const { folded, sourceIndexes, sourceEnds } = foldWithSourceIndexes('a\u{1F600}b')
+      expect(folded).toBe('a\u{1F600}b')
+      expect(sourceIndexes).toEqual([0, 1, 1, 3])
+      expect(sourceEnds).toEqual([1, 3, 3, 4])
+    })
+
+    it('folds a final sigma like any other sigma', () => {
+      expect(foldWithSourceIndexes('\u03bf\u03b4\u03bf\u03c2').folded).toBe('\u03bf\u03b4\u03bf\u03c3')
+    })
+  })
+
+  describe('foldForFilter', () => {
+    it.each([
+      'Cr\u00e8me BR\u00dbL\u00c9E',
+      'cre\u0301me',
+      'Of\ufb00ice',
+      '\u0130stanbul',
+      '\u{1d400}lpha'
+    ])('folds %s like foldWithSourceIndexes', (value) => {
+      expect(foldForFilter(value)).toBe(foldWithSourceIndexes(value).folded)
+    })
+
+    it('folds every Greek sigma to the same letter, whatever its place in the word', () => {
+      expect(foldForFilter('\u039f\u0394\u039f\u03a3 \u03bf\u03b4\u03bf\u03c2')).toBe('\u03bf\u03b4\u03bf\u03c3 \u03bf\u03b4\u03bf\u03c3')
+    })
   })
 
   describe('addSearchMarksClassesInHtml with a single mark', () => {
+    it('wraps a match that follows an emoji', () => {
+      const html = '<p>\u{1F600}abc</p>'
+      expect(addSearchMarksClassInHtml(html, 'abc')).toBe('<p>\u{1F600}<mark class="local-search-term">abc</mark></p>')
+    })
+
+    it('wraps a word ending with a final sigma searched in capitals', () => {
+      const html = '<p>οδος</p>'
+      expect(addSearchMarksClassInHtml(html, 'ΟΔΟΣ')).toBe('<p><mark class="local-search-term">οδος</mark></p>')
+    })
+
     it('wraps a case-insensitive match in a mark tag', () => {
       const html = '<p>Hello World</p>'
       const marked = addSearchMarksClassInHtml(html, 'world')
