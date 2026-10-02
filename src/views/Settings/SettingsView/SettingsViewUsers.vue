@@ -88,9 +88,11 @@ async function fetchRoutedUser() {
   const uid = routedUid.value
   if (!uid) return
   try {
-    const { items } = await api.getUsers({ domain: DEFAULT_DOMAIN, noRole: true, q: uid, size: 100 })
+    // An exact uid lookup: a q search would return every user whose uid merely contains this one,
+    // and on a large instance the user we want could fall outside the page.
+    const { items } = await api.getUsers({ domain: DEFAULT_DOMAIN, noRole: true, uid })
     if (uid !== routedUid.value) return
-    routedUser.value = items?.find(user => user.uid === uid) ?? null
+    routedUser.value = items?.[0] ?? null
     routedUserUid.value = uid
   }
   catch (error) {

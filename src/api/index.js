@@ -111,8 +111,10 @@ export class Api {
     return this.sendAction(`/api/project/${project}`)
   }
 
-  getUsers({ domain = 'default', index = null, q = null, sort = null, desc = null, from = 0, size = 10, noRole = true } = {}) {
-    const params = omitBy({ domain, index, q, sort, desc, from, size, noRole }, isNull)
+  // uid is an exact match and takes precedence over q server-side: use it to resolve one known
+  // user, q to search. omitBy drops the nulls, so passing { uid } alone sends no q.
+  getUsers({ domain = 'default', index = null, uid = null, q = null, sort = null, desc = null, from = 0, size = 10, noRole = true } = {}) {
+    const params = omitBy({ domain, index, uid, q, sort, desc, from, size, noRole }, isNull)
     return this.sendAction('/api/users/admin', { method: Method.GET, params })
   }
 

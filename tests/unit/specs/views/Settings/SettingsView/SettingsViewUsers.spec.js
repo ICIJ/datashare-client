@@ -242,7 +242,7 @@ describe('SettingsViewUsers.vue', () => {
     const zoe = { uid: 'zoe@example.org', name: 'Zoe', email: 'zoe@example.org', permissions: [] }
 
     beforeEach(() => {
-      api.getUsers.mockImplementation(async ({ q }) => (q === zoe.uid ? { items: [zoe], pagination: { total: 1 } } : usersResponse))
+      api.getUsers.mockImplementation(async ({ uid }) => (uid === zoe.uid ? { items: [zoe], pagination: { total: 1 } } : usersResponse))
     })
 
     it.each([
@@ -256,11 +256,23 @@ describe('SettingsViewUsers.vue', () => {
       expect(wrapper.findComponent(modal).props()).toMatchObject({ modelValue: true, user: zoe, notFound: false })
     })
 
+    // A uid search by q only matches a substring, so a short uid could fall outside the page and
+    // the modal would claim the user does not exist (ICIJ/datashare#2434).
+    it('looks the routed user up by exact uid, not with a q search over a page of hits', async () => {
+      await core.router.push(`/settings/users/edit/${zoe.uid}`)
+      shallowMountComponent()
+      await flushPromises()
+      // noRole stays on: a user holding no role in the scope must still resolve
+      expect(api.getUsers).toHaveBeenCalledWith(expect.objectContaining({ uid: zoe.uid, noRole: true }))
+      expect(api.getUsers).not.toHaveBeenCalledWith(expect.objectContaining({ q: zoe.uid }))
+    })
+
     it.each([
       ['manage', SettingsViewUsersRolesModal],
       ['edit', SettingsViewUsersEditModal],
       ['delete', SettingsViewUsersDeleteModal]
     ])('flags the %s modal as not found when the URL names an unknown user', async (action, modal) => {
+      api.getUsers.mockImplementation(async ({ uid }) => (uid ? { items: [], pagination: { total: 0 } } : usersResponse))
       await core.router.push(`/settings/users/${action}/ghost`)
       const wrapper = shallowMountComponent()
       await flushPromises()
@@ -310,8 +322,8 @@ describe('SettingsViewUsers.vue', () => {
     })
 
     it('reports a failed lookup and goes back to the list, instead of saying the user does not exist', async () => {
-      api.getUsers.mockImplementation(async ({ q }) => {
-        if (q === zoe.uid) throw new Error('timeout')
+      api.getUsers.mockImplementation(async ({ uid }) => {
+        if (uid === zoe.uid) throw new Error('timeout')
         return usersResponse
       })
       await core.router.push(`/settings/users/manage/${zoe.uid}`)
@@ -414,13 +426,13 @@ describe('SettingsViewUsers.vue', () => {
 
       // Save then close: the refetch started by user:updated is dropped once the modal closes
       const renamed = { ...zoe, name: 'Zoe Renamed' }
-      api.getUsers.mockImplementation(async ({ q }) => (q === zoe.uid ? { items: [renamed] } : usersResponse))
+      api.getUsers.mockImplementation(async ({ uid }) => (uid === zoe.uid ? { items: [renamed] } : usersResponse))
       wrapper.findComponent(SettingsViewUsersEditModal).vm.$emit('user:updated', { uid: zoe.uid })
       wrapper.findComponent(SettingsViewUsersEditModal).vm.$emit('update:modelValue', false)
       await flushPromises()
 
       let resolveLookup
-      api.getUsers.mockImplementation(({ q }) => (q === zoe.uid
+      api.getUsers.mockImplementation(({ uid }) => (uid === zoe.uid
         ? new Promise((resolve) => {
           resolveLookup = () => resolve({ items: [renamed] })
         })
@@ -451,12 +463,12 @@ describe('SettingsViewUsers.vue', () => {
       await flushPromises()
 
       const granted = { ...zoe, permissions: [{ v1: 'PROJECT_MEMBER', v2: 'default::project-a' }] }
-      api.getUsers.mockImplementation(async ({ q }) => (q === zoe.uid ? { items: [granted] } : usersResponse))
+      api.getUsers.mockImplementation(async ({ uid }) => (uid === zoe.uid ? { items: [granted] } : usersResponse))
       api.getUsers.mockClear()
       wrapper.findComponent(SettingsViewUsersRolesModal).vm.$emit('user:updated', { uid: zoe.uid })
       await flushPromises()
 
-      expect(api.getUsers).toHaveBeenCalledWith(expect.objectContaining({ q: zoe.uid }))
+      expect(api.getUsers).toHaveBeenCalledWith(expect.objectContaining({ uid: zoe.uid }))
       expect(api.getUsers).toHaveBeenCalledWith(expect.objectContaining({ q: null }))
       expect(wrapper.findComponent(SettingsViewUsersRolesModal).props('user')).toEqual(granted)
     })
