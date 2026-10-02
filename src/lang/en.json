@@ -1710,6 +1710,11 @@
         }
       }
     },
+    "users": {
+      "roleBadges": {
+        "more": "0 more | +1 more | +{count} more"
+      }
+    },
     "snapshots": {
       "title": "Backups",
       "info": "Create and manage backups of your Datashare data. Backups can be restored in case of data loss.",
