@@ -72,42 +72,18 @@ describe('ProjectViewEditUsers.vue', () => {
     vi.resetAllMocks()
   })
 
+  it('shows that the users provider cannot list accounts on a 501, instead of the list and an error toast', async () => {
+    api.getUsers.mockRejectedValue({ response: { status: 501 } })
+    const wrapper = shallowMountComponent()
+    await flushPromises()
+    expect(wrapper.text()).toContain(core.i18n.global.t('projectViewEdit.users.listUnsupported'))
+    expect(wrapper.findComponent(ProjectUsersList).exists()).toBe(false)
+    expect(mockToast.error).not.toHaveBeenCalled()
+  })
+
   it('renders a ProjectUsersList', () => {
     const wrapper = shallowMountComponent()
     expect(wrapper.findComponent(ProjectUsersList).exists()).toBe(true)
-  })
-
-  describe('Create user control visibility', () => {
-    const INSTANCE_ADMIN_POLICIES = [{ projectId: '*', domainId: '*', role: 'INSTANCE_ADMIN' }]
-    const PROJECT_ADMIN_POLICIES = [{ projectId: 'local-datashare', domainId: 'default', role: 'PROJECT_ADMIN' }]
-
-    function mountWithSlots() {
-      return shallowMount(ProjectViewEditUsers, {
-        global: { plugins: core.plugins, renderStubDefaultSlot: true },
-        props
-      })
-    }
-
-    it('shows the create button for an instance admin using a users-provider auth', () => {
-      core.config.set('auth', 'form')
-      core.config.set('policies', INSTANCE_ADMIN_POLICIES)
-      const wrapper = mountWithSlots()
-      expect(wrapper.text()).toContain(core.i18n.global.t('projectViewEdit.users.create.button'))
-    })
-
-    it('hides the create button from a project admin who is not an instance admin', () => {
-      core.config.set('auth', 'form')
-      core.config.set('policies', PROJECT_ADMIN_POLICIES)
-      const wrapper = mountWithSlots()
-      expect(wrapper.text()).not.toContain(core.i18n.global.t('projectViewEdit.users.create.button'))
-    })
-
-    it('hides the create button when auth is not a users-provider even for an instance admin', () => {
-      core.config.set('auth', 'oauth')
-      core.config.set('policies', INSTANCE_ADMIN_POLICIES)
-      const wrapper = mountWithSlots()
-      expect(wrapper.text()).not.toContain(core.i18n.global.t('projectViewEdit.users.create.button'))
-    })
   })
 
   it('maps getUsers items to { uid, name, email } and extracts role from permissions', async () => {
@@ -116,8 +92,8 @@ describe('ProjectViewEditUsers.vue', () => {
     await flushPromises()
     const list = wrapper.findComponent(ProjectUsersList)
     expect(list.props('users')).toEqual([
-      { uid: 'alice@example.org', name: 'Alice A', email: 'alice@example.org', role: 'PROJECT_ADMIN' },
-      { uid: 'bob@example.org', name: 'Bob B', email: 'bob@example.org', role: 'PROJECT_MEMBER' }
+      { uid: 'alice@example.org', name: 'Alice A', email: 'alice@example.org', role: 'PROJECT_ADMIN', wideRoles: [] },
+      { uid: 'bob@example.org', name: 'Bob B', email: 'bob@example.org', role: 'PROJECT_MEMBER', wideRoles: [] }
     ])
   })
 
@@ -137,14 +113,14 @@ describe('ProjectViewEditUsers.vue', () => {
     await flushPromises()
     const list = wrapper.findComponent(ProjectUsersList)
     expect(list.props('users')).toEqual([
-      { uid: 'jdoe', name: 'Jane D', email: 'jdoe@example.org', role: 'NO_ROLE' }
+      { uid: 'jdoe', name: 'Jane D', email: 'jdoe@example.org', role: 'NO_ROLE', wideRoles: [] }
     ])
   })
 
   it.each([
     ['INSTANCE_ADMIN', [{ v1: 'INSTANCE_ADMIN', v2: '*::*' }]],
     ['DOMAIN_ADMIN', [{ v1: 'DOMAIN_ADMIN', v2: 'default::*' }]]
-  ])('maps a wildcard-scoped %s permission to that role', async (role, permissions) => {
+  ])('maps a wildcard-scoped %s permission to a badge, not to the project role', async (role, permissions) => {
     api.getUsers.mockResolvedValue({
       items: [{ uid: 'jdoe', name: 'Jane D', email: 'jdoe@example.org', permissions }],
       pagination: { count: 1, from: 0, size: 10, total: 1 }
@@ -152,10 +128,10 @@ describe('ProjectViewEditUsers.vue', () => {
     const wrapper = shallowMountComponent()
     await flushPromises()
     const list = wrapper.findComponent(ProjectUsersList)
-    expect(list.props('users')).toEqual([{ uid: 'jdoe', name: 'Jane D', email: 'jdoe@example.org', role }])
+    expect(list.props('users')).toEqual([{ uid: 'jdoe', name: 'Jane D', email: 'jdoe@example.org', role: 'NO_ROLE', wideRoles: [role] }])
   })
 
-  it('keeps the highest role when several permissions match the current project', async () => {
+  it('shows the role on this project over an instance-wide one', async () => {
     api.getUsers.mockResolvedValue({
       items: [
         {
@@ -173,7 +149,48 @@ describe('ProjectViewEditUsers.vue', () => {
     const wrapper = shallowMountComponent()
     await flushPromises()
     const list = wrapper.findComponent(ProjectUsersList)
-    expect(list.props('users')[0].role).toBe('INSTANCE_ADMIN')
+    expect(list.props('users')[0]).toMatchObject({ role: 'PROJECT_MEMBER', wideRoles: ['INSTANCE_ADMIN'] })
+  })
+
+  it('lists both instance and domain admin of this project\'s domain, highest first, but not another domain\'s', async () => {
+    api.getUsers.mockResolvedValue({
+      items: [
+        {
+          uid: 'jdoe',
+          name: 'Jane D',
+          email: 'jdoe@example.org',
+          permissions: [
+            { v1: 'DOMAIN_ADMIN', v2: 'default::*' },
+            { v1: 'INSTANCE_ADMIN', v2: '*::*' },
+            { v1: 'DOMAIN_ADMIN', v2: 'other-domain::*' }
+          ]
+        }
+      ],
+      pagination: { count: 1, from: 0, size: 10, total: 1 }
+    })
+    const wrapper = shallowMountComponent()
+    await flushPromises()
+    expect(wrapper.findComponent(ProjectUsersList).props('users')[0].wideRoles).toEqual(['INSTANCE_ADMIN', 'DOMAIN_ADMIN'])
+  })
+
+  it('shows no role on the project, with the domain admin role as a badge, when the user has no role on this project', async () => {
+    api.getUsers.mockResolvedValue({
+      items: [
+        {
+          uid: 'jdoe',
+          name: 'Jane D',
+          email: 'jdoe@example.org',
+          permissions: [
+            { v1: 'PROJECT_ADMIN', v2: 'default::other-project' },
+            { v1: 'DOMAIN_ADMIN', v2: 'default::*' }
+          ]
+        }
+      ],
+      pagination: { count: 1, from: 0, size: 10, total: 1 }
+    })
+    const wrapper = shallowMountComponent()
+    await flushPromises()
+    expect(wrapper.findComponent(ProjectUsersList).props('users')[0]).toMatchObject({ role: 'NO_ROLE', wideRoles: ['DOMAIN_ADMIN'] })
   })
 
   it('maps an unrecognized role value on a matching permission to NO_ROLE instead of defaulting to PROJECT_MEMBER', async () => {
@@ -333,144 +350,6 @@ describe('ProjectViewEditUsers.vue', () => {
       wrapper.findComponent(ProjectUsersList).vm.$emit('update:sort', 'email')
       await vi.runAllTimersAsync()
 
-      expect(api.getUsers).toHaveBeenCalledWith(expect.objectContaining({ from: 10 }))
-    })
-  })
-
-  describe('pagination adjustment on user:deleted', () => {
-    beforeEach(() => {
-      vi.useFakeTimers()
-    })
-
-    afterEach(() => {
-      vi.useRealTimers()
-    })
-
-    it('goes back one page when the deleted user was the only one on a page > 1', async () => {
-      api.getUsers.mockResolvedValue(usersResponse)
-      const wrapper = shallowMountComponent()
-      await vi.runAllTimersAsync()
-
-      api.getUsers.mockResolvedValueOnce({
-        items: [{ uid: 'jdoe@example.org', name: 'Jane D', email: 'jdoe@example.org', permissions: [] }],
-        pagination: { count: 1, from: 10, size: 10, total: 11 }
-      })
-      wrapper.findComponent(RowPaginationUsers).vm.$emit('update:page', 2)
-      await vi.runAllTimersAsync()
-
-      api.getUsers.mockClear()
-      api.getUsers.mockResolvedValue(usersResponse)
-      wrapper.findComponent(ProjectUsersList).vm.$emit('user:deleted', { uid: 'jdoe@example.org' })
-      await vi.runAllTimersAsync()
-
-      expect(wrapper.findComponent(RowPaginationUsers).attributes('page')).toBe('1')
-      expect(api.getUsers).toHaveBeenCalledWith(expect.objectContaining({ from: 0 }))
-    })
-
-    it('stays on page 1 when the deleted user was the only one on page 1', async () => {
-      api.getUsers.mockResolvedValue({
-        items: [{ uid: 'jdoe@example.org', name: 'Jane D', email: 'jdoe@example.org', permissions: [] }],
-        pagination: { count: 1, from: 0, size: 10, total: 1 }
-      })
-      const wrapper = shallowMountComponent()
-      await vi.runAllTimersAsync()
-
-      api.getUsers.mockClear()
-      wrapper.findComponent(ProjectUsersList).vm.$emit('user:deleted', { uid: 'jdoe@example.org' })
-      await vi.runAllTimersAsync()
-
-      expect(wrapper.findComponent(RowPaginationUsers).attributes('page')).toBe('1')
-      expect(api.getUsers).toHaveBeenCalledWith(expect.objectContaining({ from: 0 }))
-    })
-
-    it('does not change page when other users remain on the current page after deletion', async () => {
-      api.getUsers.mockResolvedValue(usersResponse)
-      const wrapper = shallowMountComponent()
-      await vi.runAllTimersAsync()
-
-      wrapper.findComponent(RowPaginationUsers).vm.$emit('update:page', 2)
-      await vi.runAllTimersAsync()
-
-      api.getUsers.mockClear()
-      wrapper.findComponent(ProjectUsersList).vm.$emit('user:deleted', { uid: 'alice@example.org' })
-      await vi.runAllTimersAsync()
-
-      expect(wrapper.findComponent(RowPaginationUsers).attributes('page')).toBe('2')
-      expect(api.getUsers).toHaveBeenCalledWith(expect.objectContaining({ from: 10 }))
-    })
-  })
-
-  describe('pagination adjustment on roles:revoked (batch revoke)', () => {
-    beforeEach(() => {
-      vi.useFakeTimers()
-    })
-
-    afterEach(() => {
-      vi.useRealTimers()
-    })
-
-    it('refetches users exactly once when several roles are revoked in a single save', async () => {
-      api.getUsers.mockResolvedValue(usersResponse)
-      const wrapper = shallowMountComponent()
-      await vi.runAllTimersAsync()
-
-      api.getUsers.mockClear()
-      wrapper.findComponent(ProjectUsersList).vm.$emit('roles:revoked', ['alice@example.org', 'bob@example.org'])
-      await vi.runAllTimersAsync()
-
-      expect(api.getUsers).toHaveBeenCalledOnce()
-    })
-
-    it('goes back one page when every user on a page > 1 was revoked in one save', async () => {
-      api.getUsers.mockResolvedValue(usersResponse)
-      const wrapper = shallowMountComponent()
-      await vi.runAllTimersAsync()
-
-      api.getUsers.mockResolvedValueOnce(usersResponse)
-      wrapper.findComponent(RowPaginationUsers).vm.$emit('update:page', 2)
-      await vi.runAllTimersAsync()
-
-      api.getUsers.mockClear()
-      api.getUsers.mockResolvedValue(usersResponse)
-      wrapper.findComponent(ProjectUsersList).vm.$emit('roles:revoked', ['alice@example.org', 'bob@example.org'])
-      await vi.runAllTimersAsync()
-
-      expect(wrapper.findComponent(RowPaginationUsers).attributes('page')).toBe('1')
-      expect(api.getUsers).toHaveBeenCalledWith(expect.objectContaining({ from: 0 }))
-    })
-
-    it('does not change page when some users remain on the current page after a batch revoke', async () => {
-      api.getUsers.mockResolvedValue(usersResponse)
-      const wrapper = shallowMountComponent()
-      await vi.runAllTimersAsync()
-
-      wrapper.findComponent(RowPaginationUsers).vm.$emit('update:page', 2)
-      await vi.runAllTimersAsync()
-
-      api.getUsers.mockClear()
-      wrapper.findComponent(ProjectUsersList).vm.$emit('roles:revoked', ['alice@example.org'])
-      await vi.runAllTimersAsync()
-
-      expect(wrapper.findComponent(RowPaginationUsers).attributes('page')).toBe('2')
-      expect(api.getUsers).toHaveBeenCalledWith(expect.objectContaining({ from: 10 }))
-    })
-
-    it('does not step back a page with a users-provider auth, since revoked users stay listed with NO_ROLE', async () => {
-      core.config.set('auth', 'form')
-      api.getUsers.mockResolvedValue(usersResponse)
-      const wrapper = shallowMountComponent()
-      await vi.runAllTimersAsync()
-
-      api.getUsers.mockResolvedValueOnce(usersResponse)
-      wrapper.findComponent(RowPaginationUsers).vm.$emit('update:page', 2)
-      await vi.runAllTimersAsync()
-
-      api.getUsers.mockClear()
-      api.getUsers.mockResolvedValue(usersResponse)
-      wrapper.findComponent(ProjectUsersList).vm.$emit('roles:revoked', ['alice@example.org', 'bob@example.org'])
-      await vi.runAllTimersAsync()
-
-      expect(wrapper.findComponent(RowPaginationUsers).attributes('page')).toBe('2')
       expect(api.getUsers).toHaveBeenCalledWith(expect.objectContaining({ from: 10 }))
     })
   })

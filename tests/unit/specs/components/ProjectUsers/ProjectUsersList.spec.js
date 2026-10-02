@@ -23,8 +23,8 @@ describe('ProjectUsersList.vue', () => {
 
   function makeUsers() {
     return [
-      { uid: 'alice@icij.org', role: 'PROJECT_EDITOR' },
-      { uid: 'bob@icij.org', role: 'DOMAIN_ADMIN' }
+      { uid: 'alice@example.org', role: 'PROJECT_EDITOR' },
+      { uid: 'bob@example.org', role: 'DOMAIN_ADMIN' }
     ]
   }
 
@@ -65,45 +65,26 @@ describe('ProjectUsersList.vue', () => {
     expect(wrapper.findAllComponents(ProjectUsersRoleDropdown)).toHaveLength(2)
   })
 
-  it('disables the domain admin and instance admin options in each role dropdown', () => {
+  it('hides the domain admin and instance admin options from each role dropdown, they are shown as badges', () => {
     const wrapper = mountComponent()
     for (const dropdown of wrapper.findAllComponents(ProjectUsersRoleDropdown)) {
-      expect(dropdown.props('disabledRoles')).toEqual(['DOMAIN_ADMIN', 'INSTANCE_ADMIN'])
+      expect(dropdown.props('hiddenRoles')).toEqual(['DOMAIN_ADMIN', 'INSTANCE_ADMIN'])
     }
+  })
+
+  it('marks the dropdown as inherited only for a user with an instance or domain admin role', () => {
+    const wrapper = mountComponent({
+      users: [
+        { uid: 'alice@example.org', role: 'NO_ROLE', wideRoles: ['DOMAIN_ADMIN'] },
+        { uid: 'bob@example.org', role: 'NO_ROLE', wideRoles: [] }
+      ]
+    })
+    expect(wrapper.findAllComponents(ProjectUsersRoleDropdown).map(d => d.props('inherited'))).toEqual([true, false])
   })
 
   it('renders a ProjectUsersActions in each row', () => {
     const wrapper = mountComponent()
     expect(wrapper.findAllComponents(ProjectUsersActions)).toHaveLength(2)
-  })
-
-  it('forwards user:deleted from ProjectUsersActions', async () => {
-    const wrapper = mountComponent()
-    await wrapper.findAllComponents(ProjectUsersActions)[0].trigger('user:deleted', { uid: 'alice@icij.org' })
-    expect(wrapper.emitted('user:deleted')).toEqual([[{ uid: 'alice@icij.org' }]])
-  })
-
-  describe('Delete action visibility (hide-delete)', () => {
-    it('shows the delete action for an instance admin using a users-provider auth', () => {
-      core.config.set('auth', 'form')
-      core.config.set('policies', [{ projectId: '*', domainId: '*', role: 'INSTANCE_ADMIN' }])
-      const wrapper = mountComponent()
-      expect(wrapper.findAllComponents(ProjectUsersActions)[0].props('hideDelete')).toBe(false)
-    })
-
-    it('hides the delete action from a project admin who is not an instance admin', () => {
-      core.config.set('auth', 'form')
-      core.config.set('policies', [{ projectId: project, domainId: 'default', role: 'PROJECT_ADMIN' }])
-      const wrapper = mountComponent()
-      expect(wrapper.findAllComponents(ProjectUsersActions)[0].props('hideDelete')).toBe(true)
-    })
-
-    it('hides the delete action when auth is not a users-provider even for an instance admin', () => {
-      core.config.set('auth', 'oauth')
-      core.config.set('policies', [{ projectId: '*', domainId: '*', role: 'INSTANCE_ADMIN' }])
-      const wrapper = mountComponent()
-      expect(wrapper.findAllComponents(ProjectUsersActions)[0].props('hideDelete')).toBe(true)
-    })
   })
 
   it('renders ProjectUsersAdminPromotionModal', () => {
@@ -249,14 +230,13 @@ describe('ProjectUsersList.vue', () => {
       expect(api.grantUserRole).not.toHaveBeenCalled()
     })
 
-    it('saveRoles emits a single roles:revoked with the revoked uid on success', async () => {
+    it('saveRoles emits roles:saved after a revocation too, so the parent refreshes', async () => {
       api.revokeUserRole.mockResolvedValue(undefined)
       const wrapper = mountComponent()
-      const { uid } = wrapper.props('users')[0]
       await wrapper.findAllComponents(ProjectUsersRoleDropdown)[0].vm.$emit('update:modelValue', 'NO_ROLE')
       await wrapper.vm.saveRoles()
       await flushPromises()
-      expect(wrapper.emitted('roles:revoked')).toEqual([[[uid]]])
+      expect(wrapper.emitted('roles:saved')).toHaveLength(1)
     })
 
     it('saveRoles handles a mix of a role change and a revocation', async () => {
@@ -270,19 +250,7 @@ describe('ProjectUsersList.vue', () => {
       await flushPromises()
       expect(api.grantUserRole).toHaveBeenCalledWith(userA.uid, project, 'member')
       expect(api.revokeUserRole).toHaveBeenCalledWith(userB.uid, project, { ifExists: true })
-      expect(wrapper.emitted('roles:revoked')).toEqual([[[userB.uid]]])
-    })
-
-    it('saveRoles emits a single roles:revoked event listing all revoked uids when multiple roles are revoked', async () => {
-      api.revokeUserRole.mockResolvedValue(undefined)
-      const wrapper = mountComponent()
-      const [userA, userB] = wrapper.props('users')
-      await wrapper.findAllComponents(ProjectUsersRoleDropdown)[0].vm.$emit('update:modelValue', 'NO_ROLE')
-      await wrapper.findAllComponents(ProjectUsersRoleDropdown)[1].vm.$emit('update:modelValue', 'NO_ROLE')
-      await wrapper.vm.saveRoles()
-      await flushPromises()
-      expect(wrapper.emitted('roles:revoked')).toEqual([[[userA.uid, userB.uid]]])
-      expect(wrapper.emitted('roles:saved')).toBeUndefined()
+      expect(wrapper.emitted('roles:saved')).toHaveLength(1)
     })
   })
 
@@ -297,13 +265,67 @@ describe('ProjectUsersList.vue', () => {
   })
 
   describe('Username resolution race condition', () => {
-    it('disables the role dropdown and delete action for every row until the username resolves', async () => {
+    it('disables the role dropdown for every row until the username resolves', async () => {
+      // As a project admin over an editor row, so only the username gates the dropdown
+      core.config.set('auth', 'form')
+      core.config.set('policies', [{ projectId: project, domainId: 'default', role: 'PROJECT_ADMIN' }])
       const wrapper = mountComponent()
       expect(wrapper.findAllComponents(ProjectUsersRoleDropdown)[0].props('disabled')).toBe(true)
-      expect(wrapper.findAllComponents(ProjectUsersActions)[0].props('disableDelete')).toBe(true)
       await flushPromises()
       expect(wrapper.findAllComponents(ProjectUsersRoleDropdown)[0].props('disabled')).toBe(false)
-      expect(wrapper.findAllComponents(ProjectUsersActions)[0].props('disableDelete')).toBe(false)
+    })
+  })
+
+  describe('Instance-wide role next to the name', () => {
+    it('flags an instance or domain admin role next to a project role', () => {
+      const wrapper = mountComponent({ users: [{ uid: 'alice@example.org', role: 'PROJECT_MEMBER', wideRoles: ['INSTANCE_ADMIN'] }] })
+      expect(wrapper.find('.project-users-list__wide-role').attributes('aria-label')).toBe('Instance admin')
+    })
+
+    it('flags it too when it is the only role the user has', () => {
+      const wrapper = mountComponent({ users: [{ uid: 'alice@example.org', role: 'DOMAIN_ADMIN', wideRoles: ['DOMAIN_ADMIN'] }] })
+      expect(wrapper.find('.project-users-list__wide-role').attributes('aria-label')).toBe('Domain admin')
+    })
+
+    it('flags both instance and domain admin, highest first', () => {
+      const wrapper = mountComponent({ users: [{ uid: 'alice@example.org', role: 'INSTANCE_ADMIN', wideRoles: ['INSTANCE_ADMIN', 'DOMAIN_ADMIN'] }] })
+      expect(wrapper.findAll('.project-users-list__wide-role').map(b => b.attributes('aria-label'))).toEqual(['Instance admin', 'Domain admin'])
+    })
+
+    it('shows no badge without an instance or domain admin role', () => {
+      const wrapper = mountComponent({ users: [{ uid: 'bob@example.org', role: 'PROJECT_EDITOR', wideRoles: [] }] })
+      expect(wrapper.find('.project-users-list__wide-role').exists()).toBe(false)
+    })
+  })
+
+  describe('The viewer\'s own row', () => {
+    const users = [{ uid: 'alice@example.org', role: 'PROJECT_ADMIN' }]
+
+    it('is read-only for a project admin, who would lose access to this tab by dropping their role', async () => {
+      vi.spyOn(core.auth, 'getUsername').mockResolvedValueOnce('alice@example.org')
+      core.config.set('auth', 'form')
+      core.config.set('policies', [{ projectId: project, domainId: 'default', role: 'PROJECT_ADMIN' }])
+      const wrapper = mountComponent({ users })
+      await flushPromises()
+      expect(wrapper.findAllComponents(ProjectUsersRoleDropdown)[0].props('disabled')).toBe(true)
+    })
+
+    it('stays editable for a domain admin, who keeps access through the domain-wide role', async () => {
+      vi.spyOn(core.auth, 'getUsername').mockResolvedValueOnce('alice@example.org')
+      core.config.set('auth', 'form')
+      core.config.set('policies', [{ projectId: '*', domainId: 'default', role: 'DOMAIN_ADMIN' }])
+      const wrapper = mountComponent({ users })
+      await flushPromises()
+      expect(wrapper.findAllComponents(ProjectUsersRoleDropdown)[0].props('disabled')).toBe(false)
+    })
+
+    it('stays editable for an instance admin, who keeps access through the instance role', async () => {
+      vi.spyOn(core.auth, 'getUsername').mockResolvedValueOnce('alice@example.org')
+      core.config.set('auth', 'form')
+      core.config.set('policies', [{ projectId: '*', domainId: '*', role: 'INSTANCE_ADMIN' }])
+      const wrapper = mountComponent({ users })
+      await flushPromises()
+      expect(wrapper.findAllComponents(ProjectUsersRoleDropdown)[0].props('disabled')).toBe(false)
     })
   })
 
@@ -323,6 +345,25 @@ describe('ProjectUsersList.vue', () => {
       expect(dropdowns[0].props('disabled')).toBe(false)
       expect(dropdowns[1].props('disabled')).toBe(true)
       expect(dropdowns[2].props('disabled')).toBe(true)
+    })
+
+    it('does not disable the dropdown for a user with no role on the project yet, so they can be added', async () => {
+      core.config.set('auth', 'form')
+      core.config.set('policies', [{ projectId: project, domainId: 'default', role: 'PROJECT_ADMIN' }])
+      const wrapper = mountComponent({ users: [{ uid: 'alice@example.org', role: 'NO_ROLE' }] })
+      await flushPromises()
+      expect(wrapper.findAllComponents(ProjectUsersRoleDropdown)[0].props('disabled')).toBe(false)
+    })
+
+    it.each([
+      ['form', true],
+      ['oauth', false]
+    ])('offers "No role" in the role dropdown under %s auth: %s', async (auth, offered) => {
+      core.config.set('auth', auth)
+      core.config.set('policies', [{ projectId: project, domainId: 'default', role: 'PROJECT_ADMIN' }])
+      const wrapper = mountComponent({ users: [{ uid: 'alice@example.org', role: 'PROJECT_MEMBER' }] })
+      await flushPromises()
+      expect(wrapper.findAllComponents(ProjectUsersRoleDropdown)[0].props('noRole')).toBe(offered)
     })
 
     it('does not disable the dropdown for a row whose current role is within the viewer own hierarchy', async () => {

@@ -295,7 +295,8 @@
     "project_editor": "Editor",
     "project_member": "Member",
     "project_visitor": "Visitor",
-    "no_role": "No role"
+    "no_role": "No role",
+    "inherited": "Inherited"
   },
   "searchFormControl": {
     "submitLabel": "Search"
@@ -1489,6 +1490,7 @@
     },
     "users": {
       "empty": "No users yet.",
+      "listUnsupported": "The users provider configured on this server can't list accounts, so they can't be shown here.",
       "fetchError": "Failed to load users for this project.",
       "noResults": "No users match your search.",
       "fields": {
@@ -1519,56 +1521,7 @@
         "cancel": "Cancel"
       },
       "actions": {
-        "copy": "Copy username",
-        "delete": "Delete user",
-        "deleteModal": {
-          "title": "Delete user '{name}' ?",
-          "body": {
-            "intro": "This action cannot be undone. Deleting this user will:",
-            "accessRevoked": "revoke their access to {allProjects};",
-            "dataDeleted": "delete all their personal data (stars, history, tags, saved searches etc.) across {allProjects};",
-            "tasksDeleted": "not delete their tasks and results.",
-            "allProjects": "all projects"
-          },
-          "confirm": "Delete user",
-          "success": "User deleted successfully",
-          "error": "Failed to remove user. Please try again."
-        }
-      },
-      "create": {
-        "button": "Create user",
-        "title": "Create a user",
-        "confirm": "Create",
-        "saveSuccess": "User created successfully.",
-        "saveError": "Failed to create user. Please try again.",
-        "saveErrorConflict": "A user with this username already exists.",
-        "fields": {
-          "username": {
-            "label": "Username",
-            "placeholder": "Type username"
-          },
-          "email": {
-            "label": "Email",
-            "placeholder": "Type email address"
-          },
-          "name": {
-            "label": "Display name",
-            "placeholder": "Type display name"
-          },
-          "password": {
-            "label": "Password",
-            "placeholder": "Type password"
-          },
-          "confirmPassword": {
-            "label": "Confirm password",
-            "placeholder": "Confirm password",
-            "mismatch": "Passwords do not match."
-          },
-          "role": {
-            "label": "Role",
-            "inProject": "in {project}"
-          }
-        }
+        "copy": "Copy username"
       }
     }
   },
