@@ -162,7 +162,7 @@ describe('DocumentContent.vue', () => {
       await wrapper.vm.loadContentSlice()
       const element = wrapper.find('.document-content__body--no-content')
       expect(element.exists()).toBeTruthy()
-      expect(element.text()).toBe('No content extracted for this document')
+      expect(element.text()).toBe('No content extracted for this document.')
     })
   })
 
