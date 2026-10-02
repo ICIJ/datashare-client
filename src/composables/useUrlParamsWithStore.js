@@ -54,7 +54,7 @@ export function useUrlParamsWithStore(queryParams, options = {}) {
   watch(
     getValue,
     whenIsRoute(to, (values) => {
-      batchQueryParamUpdate(router, route, to, queryParams, values)
+      batchQueryParamUpdate(router, route, to, queryParams, values, { replace: true })
     })
   )
 

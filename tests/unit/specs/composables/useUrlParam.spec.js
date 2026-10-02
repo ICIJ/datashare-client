@@ -579,7 +579,7 @@ describe('whenDifferentRoute', () => {
     beforeEach(() => {
       vi.useFakeTimers()
       debounceFlags.useReal = true
-      router = { push: vi.fn() }
+      router = { push: vi.fn(), replace: vi.fn() }
       route = { query: {}, name: 'current-route' }
     })
 
@@ -621,6 +621,47 @@ describe('whenDifferentRoute', () => {
       expect(pushArg.query).not.toHaveProperty('sort')
       expect(pushArg.query).not.toHaveProperty('order')
       expect(pushArg.query).toHaveProperty('perPage', '10')
+    })
+
+    it('replaces instead of pushing an update flagged as a normalization', () => {
+      route.query = { 'f[path]': '/vault/luxleaks/v1', 'indices': 'luxleaks' }
+      const to = { name: 'current-route', query: { q: '', field: 'all' } }
+
+      batchQueryParamUpdate(router, route, to, ['sort', 'order'], ['_score', 'desc'], { replace: true })
+
+      vi.advanceTimersByTime(50)
+
+      expect(router.push).not.toHaveBeenCalled()
+      expect(router.replace).toHaveBeenCalledOnce()
+    })
+
+    it('pushes a batch where a user-initiated update joins a normalization', () => {
+      const to = { name: 'current-route' }
+      batchQueryParamUpdate(router, route, to, ['sort', 'order'], ['_score', 'desc'], { replace: true })
+      batchQueryParamUpdate(router, route, to, ['from'], ['25'])
+
+      vi.advanceTimersByTime(50)
+
+      expect(router.replace).not.toHaveBeenCalled()
+      expect(router.push).toHaveBeenCalledOnce()
+    })
+
+    it('pushes a user-initiated update that adds a param absent from the URL', () => {
+      batchQueryParamUpdate(router, route, { name: 'current-route' }, ['page'], ['2'])
+
+      vi.advanceTimersByTime(50)
+
+      expect(router.replace).not.toHaveBeenCalled()
+      expect(router.push).toHaveBeenCalledOnce()
+    })
+
+    it('pushes a normalization that targets a different route', () => {
+      batchQueryParamUpdate(router, route, { name: 'search' }, ['sort', 'order'], ['_score', 'desc'], { replace: true })
+
+      vi.advanceTimersByTime(50)
+
+      expect(router.replace).not.toHaveBeenCalled()
+      expect(router.push).toHaveBeenCalledOnce()
     })
   })
 })
