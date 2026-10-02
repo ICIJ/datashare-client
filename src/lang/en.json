@@ -1743,6 +1743,18 @@
           }
         }
       },
+      "deleteModal": {
+        "title": "Delete user {name}?",
+        "body": {
+          "intro": "This action cannot be undone. Deleting this account will:",
+          "rolesRevoked": "<strong>remove</strong> all of their role grants (project, domain and instance);",
+          "dataDeleted": "<strong>delete</strong> all their personal data (stars, history, tags, saved searches etc.) across all projects;",
+          "tasksKept": "<strong>keep</strong> their tasks and task results."
+        },
+        "confirm": "Delete user",
+        "success": "User deleted successfully",
+        "error": "Failed to remove user. Please try again."
+      },
       "notFound": "User {uid} does not exist."
     },
     "snapshots": {
