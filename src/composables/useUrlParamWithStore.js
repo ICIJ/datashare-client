@@ -58,7 +58,7 @@ export function useUrlParamWithStore(queryParam, options = {}) {
     getStoreValue,
     whenIsRoute(to, (newValue) => {
       if (newValue !== getRouteValue()) {
-        batchQueryParamUpdate(router, route, to, [queryParam], [newValue])
+        batchQueryParamUpdate(router, route, to, [queryParam], [newValue], { replace: true })
       }
     })
   )

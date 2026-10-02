@@ -16,6 +16,11 @@ let batchedUpdates = {}
 // Used to detect when a new call targets a different route context so stale updates aren't carried over.
 let batchedUpdatesContextName = null
 
+// A batch only replaces while every update queued in it is a normalization: a view
+// mirroring its state into the URL must not create a history entry, or the browser's
+// back button would lead back to the very same page, see ICIJ/datashare#2431.
+let batchedUpdatesReplace = true
+
 /**
  * Debounced function to apply batched updates to the query parameters
  * Updates are only applied after a 50ms delay to group multiple updates together.
@@ -30,7 +35,8 @@ const applyBatchedUpdates = debounce((router, route, to) => {
     const newQuery = { ...query, ...route.query, ...batchedUpdates }
     // Apply the batched updates to the query
     if (!name || route.name === name) {
-      router.push({ params, query: newQuery })
+      const navigate = batchedUpdatesReplace ? router.replace : router.push
+      navigate({ params, query: newQuery })
     }
     else {
       router.push({ params, name, query: newQuery })
@@ -38,6 +44,7 @@ const applyBatchedUpdates = debounce((router, route, to) => {
     // Reset the batch after applying
     batchedUpdates = {}
     batchedUpdatesContextName = null
+    batchedUpdatesReplace = true
   }
 }, 50)
 
@@ -49,6 +56,7 @@ export function cancelBatchedQueryParamUpdates() {
   applyBatchedUpdates.cancel()
   batchedUpdates = {}
   batchedUpdatesContextName = null
+  batchedUpdatesReplace = true
 }
 
 /**
@@ -60,8 +68,10 @@ export function cancelBatchedQueryParamUpdates() {
  * @param {String} to - The target route
  * @param {String[]} queryParams - The query parameters to update
  * @param {*} value - The new values for each query parameter
+ * @param {Object} [options={}] - Additional options
+ * @param {Boolean} [options.replace=false] - Mirror state into the URL without adding a history entry
  */
-export function batchQueryParamUpdate(router, route, to = null, queryParams = [], values = {}) {
+export function batchQueryParamUpdate(router, route, to = null, queryParams = [], values = {}, { replace = false } = {}) {
   const { name } = toRoute(to)
   // Different route contexts must never share accumulated URL param updates,
   // otherwise stale params (e.g. a search page's sort=_score) can leak into
@@ -70,7 +80,9 @@ export function batchQueryParamUpdate(router, route, to = null, queryParams = []
     applyBatchedUpdates.cancel()
     batchedUpdates = {}
     batchedUpdatesContextName = name
+    batchedUpdatesReplace = true
   }
+  batchedUpdatesReplace = batchedUpdatesReplace && replace
   queryParams.forEach((param, index) => {
     batchedUpdates[param] = values[index]
   })
