@@ -562,6 +562,17 @@ export const routes = [
             }
           },
           {
+            name: 'settings.users',
+            // Opens a modal over the list: /users/create, or /users/(edit|manage|delete)/<uid>
+            path: 'users/:action(create|edit|manage|delete)?/:uid?',
+            component: () => import('@/views/Settings/SettingsView/SettingsViewUsers'),
+            meta: {
+              title: 'settings.users.title',
+              breadcrumb: false,
+              allowedModes: [MODE_NAME.SERVER]
+            }
+          },
+          {
             name: 'settings.snapshots',
             path: 'snapshots',
             component: () => import('@/views/Settings/SettingsView/SettingsViewSnapshots'),

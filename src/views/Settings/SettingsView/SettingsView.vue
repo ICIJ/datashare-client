@@ -9,6 +9,7 @@ import IPhMonitor from '~icons/ph/monitor'
 import IPhDatabase from '~icons/ph/database'
 import IPhKey from '~icons/ph/key'
 import IPhCloudArrowDown from '~icons/ph/cloud-arrow-down'
+import IPhUsers from '~icons/ph/users'
 
 import PageHeader from '@/components/PageHeader/PageHeader'
 import TabGroupNavigation from '@/components/TabGroup/TabGroupNavigation/TabGroupNavigation'
@@ -16,9 +17,11 @@ import TabGroupNavigationEntry from '@/components/TabGroup/TabGroupNavigation/Ta
 import PageContainer from '@/components/PageContainer/PageContainer'
 import { MODE_NAME } from '@/mode'
 import { useMode } from '@/composables/useMode'
+import { usePolicies } from '@/composables/usePolicies'
 
 const { t } = useI18n()
 const { isMode } = useMode()
+const { isDomainAdmin } = usePolicies()
 
 const tabs = computed(() => [
   {
@@ -58,6 +61,13 @@ const tabs = computed(() => [
     modes: [MODE_NAME.SERVER]
   },
   {
+    icon: IPhUsers,
+    title: t('settings.users.title'),
+    name: 'settings.users',
+    modes: [MODE_NAME.SERVER],
+    hidden: !isDomainAdmin.value
+  },
+  {
     icon: IPhCloudArrowDown,
     title: t('settings.snapshots.title'),
     name: 'settings.snapshots',
@@ -65,7 +75,7 @@ const tabs = computed(() => [
   }
 ])
 
-const displayTabs = computed(() => tabs.value.filter(tab => tab.modes.some(isMode)))
+const displayTabs = computed(() => tabs.value.filter(tab => !tab.hidden && tab.modes.some(isMode)))
 </script>
 
 <template>

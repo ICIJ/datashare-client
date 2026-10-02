@@ -1665,8 +1665,16 @@
       }
     },
     "users": {
+      "title": "Users",
+      "noAccess": "You do not have access to this page.",
       "empty": "No users yet.",
       "noResults": "No users match your search.",
+      "listUnsupported": "The users provider configured on this server can't list accounts, so they can't be shown here.",
+      "searchPlaceholder": "Search users",
+      "fetchError": "Failed to load users.",
+      "add": {
+        "button": "Create user"
+      },
       "fields": {
         "uid": {
           "label": "Username"
