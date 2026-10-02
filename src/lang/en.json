@@ -1755,7 +1755,30 @@
         "success": "User deleted successfully",
         "error": "Failed to remove user. Please try again."
       },
-      "notFound": "User {uid} does not exist."
+      "notFound": "User {uid} does not exist.",
+      "rolesModal": {
+        "title": "Manage roles for {uid}",
+        "close": "Close",
+        "empty": "This user has no project role grants yet.",
+        "searchPlaceholder": "Search scopes",
+        "noResults": "No project or role matches your search.",
+        "selectScope": "Select scope",
+        "scopeColumn": "Scope",
+        "roleColumn": "Role",
+        "scope": {
+          "instance": "Instance",
+          "domain": "Domain"
+        },
+        "grant": "Grant",
+        "revokeSuccess": "Revoked {role} from {uid}",
+        "revokeError": "Failed to revoke {role} from {uid}.",
+        "grantSuccess": "Granted {role} to {uid}",
+        "grantError": "Failed to grant {role} to {uid}.",
+        "revokeSuccessOnProject": "Revoked {role} on {project} from {uid}",
+        "revokeErrorOnProject": "Failed to revoke {role} on {project} from {uid}.",
+        "grantSuccessOnProject": "Granted {role} on {project} to {uid}",
+        "grantErrorOnProject": "Failed to grant {role} on {project} to {uid}."
+      }
     },
     "snapshots": {
       "title": "Backups",
