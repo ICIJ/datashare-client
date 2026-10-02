@@ -1713,7 +1713,37 @@
             "mismatch": "Passwords do not match."
           }
         }
-      }
+      },
+      "edit": {
+        "title": "Edit {uid}",
+        "confirm": "Save changes",
+        "saveSuccess": "User updated",
+        "saveError": "Failed to update user.",
+        "resetPassword": "Reset password",
+        "fields": {
+          "username": {
+            "label": "Username"
+          },
+          "name": {
+            "label": "Name",
+            "placeholder": "Name"
+          },
+          "email": {
+            "label": "Email",
+            "placeholder": "Email"
+          },
+          "password": {
+            "label": "Password",
+            "placeholder": "Password"
+          },
+          "confirmPassword": {
+            "label": "Confirm password",
+            "placeholder": "Confirm password",
+            "mismatch": "Passwords do not match."
+          }
+        }
+      },
+      "notFound": "User {uid} does not exist."
     },
     "snapshots": {
       "title": "Backups",
