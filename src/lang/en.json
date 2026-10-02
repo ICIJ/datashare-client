@@ -1683,6 +1683,36 @@
       },
       "roleBadges": {
         "more": "0 more | +1 more | +{count} more"
+      },
+      "create": {
+        "title": "Create user",
+        "confirm": "Create and manage roles",
+        "saveSuccess": "User created",
+        "saveError": "Failed to create user.",
+        "saveErrorConflict": "This username is already taken.",
+        "fields": {
+          "username": {
+            "label": "Username",
+            "placeholder": "Username"
+          },
+          "email": {
+            "label": "Email",
+            "placeholder": "Email"
+          },
+          "name": {
+            "label": "Name",
+            "placeholder": "Name"
+          },
+          "password": {
+            "label": "Password",
+            "placeholder": "Password"
+          },
+          "confirmPassword": {
+            "label": "Confirm password",
+            "placeholder": "Confirm password",
+            "mismatch": "Passwords do not match."
+          }
+        }
       }
     },
     "snapshots": {
