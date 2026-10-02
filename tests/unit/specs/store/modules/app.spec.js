@@ -57,6 +57,11 @@ describe('AppStore', () => {
     expect(store.getSettings('view1', 'name')).toBe('value')
   })
 
+  it('falls back to the default of a view missing from the saved settings', () => {
+    delete store.settings.views.instanceUsersList
+    expect(store.getSettings('instanceUsersList', 'perPage')).toBe('10')
+  })
+
   it('should reset settings to default settings', () => {
     const originalValue = store.getSettings('projectList', 'perPage')
     store.setSettings('view1', 'name', 'value')
