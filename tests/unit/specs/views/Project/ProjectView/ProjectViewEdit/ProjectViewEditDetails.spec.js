@@ -1,7 +1,7 @@
 import { mount, flushPromises } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup.js'
-import ProjectViewEdit from '@/views/Project/ProjectView/ProjectViewEdit/ProjectViewEdit.vue'
+import ProjectViewEditDetails from '@/views/Project/ProjectView/ProjectViewEdit/ProjectViewEditDetails.vue'
 import { apiInstance as api } from '@/api/apiInstance.js'
 
 vi.mock('@/api/apiInstance', () => {
@@ -28,9 +28,11 @@ describe('ProjectViewEditDetails.vue', () => {
   })
 
   it('updates values of a project when the form is submitted', async () => {
-    await core.router.push({ name: 'project.view.edit.details', params: { name: 'local-datashare' } })
+    // Mounted on its own and without navigating: resolving the lazy project routes alone can take
+    // longer than the test timeout
+    const push = vi.spyOn(core.router, 'push').mockResolvedValue()
     const props = { name: 'local-datashare' }
-    const wrapper = mount(ProjectViewEdit, { global: { plugins: core.plugins }, props })
+    const wrapper = mount(ProjectViewEditDetails, { global: { plugins: core.plugins }, props })
     await flushPromises()
     expect(wrapper.vm.$core.projects[0].label).toBe('Default')
     const projectFormValues = {
@@ -52,5 +54,6 @@ describe('ProjectViewEditDetails.vue', () => {
     // then
     expect(api.updateProject).toBeCalledWith({ ...projectFormValues, label: 'NEWLABEL' })
     expect(wrapper.vm.$core.projects[0].label).toBe('NEWLABEL')
+    expect(push).toHaveBeenCalledWith({ name: 'project.view.overview.insights', params: { name: 'local-datashare' } })
   })
 })
