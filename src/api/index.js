@@ -116,6 +116,10 @@ export class Api {
     return this.sendAction('/api/users/admin', { method: Method.GET, params })
   }
 
+  updateUser(uid, data) {
+    return this.sendAction(`/api/users/admin/${encodeURIComponent(uid)}`, { method: Method.PUT, data })
+  }
+
   grantUserRole(uid, project, role) {
     return this.sendActionAsText(
       `/api/users/admin/${encodeURIComponent(uid)}/index/${encodeURIComponent(project)}?role=${encodeURIComponent(role)}`,
@@ -131,14 +135,25 @@ export class Api {
     })
   }
 
-  createUser({ uid, email, name, provider, password, domain, index } = {}) {
-    const data = { login: uid, email, name, provider, password, domain, index }
+  // role is 'domain_admin' or 'instance_admin' (case-insensitive on the backend); domain is only
+  // meaningful for domain_admin (ignored for instance_admin) and defaults server-side to 'default'.
+  grantInstanceRole(uid, role, domain = null) {
+    const params = omitBy({ role, domain }, isNull)
+    return this.sendAction(`/api/users/admin/${encodeURIComponent(uid)}/role`, { method: Method.PUT, params })
+  }
+
+  revokeInstanceRole(uid, role, domain = null) {
+    const params = omitBy({ role, domain }, isNull)
+    return this.sendAction(`/api/users/admin/${encodeURIComponent(uid)}/role`, { method: Method.DELETE, params })
+  }
+
+  createUser({ uid, email, name, provider, password } = {}) {
+    const data = { login: uid, email, name, provider, password }
     return this.sendAction('/api/users', { method: Method.POST, data })
   }
 
-  deleteUser(uid, { domain, index } = {}) {
-    const data = { domain, index }
-    return this.sendActionAsText(`/api/users/admin/${encodeURIComponent(uid)}`, { method: Method.DELETE, data })
+  deleteUser(uid) {
+    return this.sendActionAsText(`/api/users/admin/${encodeURIComponent(uid)}`, { method: Method.DELETE })
   }
 
   getPathBanners(project) {
