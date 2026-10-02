@@ -22,6 +22,7 @@ import IPhKeyboard from '~icons/ph/keyboard'
 import { MODE_NAME } from '@/mode'
 import { checkSearchOrder } from '@/router/guards/checkSearchOrder'
 import { checkSearchSort } from '@/router/guards/checkSearchSort'
+import { fillSearchRouteQuery } from '@/router/guards/fillSearchRouteQuery'
 import { prefillSearchStore } from '@/router/guards/prefillSearchStore'
 import { replaceSizeToPerPage } from '@/router/guards/replaceSizeToPerPage'
 import { ROLE } from '@/enums/roles.js'
@@ -71,7 +72,7 @@ export const routes = [
           filters: () => import('@/views/Search/SearchFilters'),
           settings: () => import('@/views/Search/SearchSettings')
         },
-        beforeEnter: [checkSearchSort, checkSearchOrder, prefillSearchStore, replaceSizeToPerPage],
+        beforeEnter: [checkSearchSort, checkSearchOrder, prefillSearchStore, replaceSizeToPerPage, fillSearchRouteQuery],
         children: [
           {
             name: 'document',
