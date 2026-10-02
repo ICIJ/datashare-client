@@ -515,6 +515,18 @@ describe('Datashare backend client', () => {
       expect(axios.request.mock.calls[0][0].params).not.toHaveProperty('user')
       expect(axios.request.mock.calls[0][0].params).not.toHaveProperty('project')
     })
+
+    it('sends an exact "uid" and no "q" when resolving a single user', async () => {
+      await api.getUsers({ uid: 'alice' })
+      expect(axios.request).toBeCalledWith(
+        expect.objectContaining({
+          url: Api.getFullUrl('/api/users/admin'),
+          method: 'GET',
+          params: expect.objectContaining({ uid: 'alice' })
+        })
+      )
+      expect(axios.request.mock.calls[0][0].params).not.toHaveProperty('q')
+    })
   })
 
   it('should call deleteUser with userId (uid) and no body', async () => {
