@@ -30,26 +30,48 @@ const props = defineProps({
    */
   hideThumbnail: {
     type: Boolean
+  },
+  /**
+   * Remove the project caption on the thumbnail.
+   */
+  noCaption: {
+    type: Boolean
+  },
+  /**
+   * Route to link to instead of the project's insights page.
+   */
+  to: {
+    type: [Object, String],
+    default: null
   }
 })
 
-const to = computed(() => {
+const linkTo = computed(() => {
+  if (props.noLink) return undefined
   const name = props.project.name ?? props.project
-  return props.noLink ? undefined : { name: 'project.view.overview.insights', params: { name } }
+  return props.to ?? { name: 'project.view.overview.insights', params: { name } }
 })
 </script>
 
 <template>
   <b-button
-    :to="to"
+    :to="linkTo"
     class="project-button"
+    :class="{ 'project-button--no-link': noLink }"
     variant="outline-secondary"
     :disabled="disabled"
   >
     <project-label
       :project="project"
       :hide-thumbnail="hideThumbnail"
+      :no-caption="noCaption"
     >
+      <template
+        v-if="$slots.thumbnail"
+        #thumbnail
+      >
+        <slot name="thumbnail" />
+      </template>
       <slot />
     </project-label>
   </b-button>
@@ -83,6 +105,15 @@ const to = computed(() => {
 
   &[href] {
     cursor: pointer;
+  }
+
+  // Doubled up on .btn to outrank reboot's `[type="button"]:not(:disabled) { cursor: pointer }`.
+  &.btn.project-button--no-link {
+    --bs-btn-hover-border-color: var(--bs-btn-border-color);
+    --bs-btn-active-border-color: var(--bs-btn-border-color);
+    --bs-btn-active-bg: var(--bs-btn-bg);
+
+    cursor: default;
   }
 }
 </style>

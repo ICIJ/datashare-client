@@ -155,6 +155,10 @@ const hasRowDetailsSlot = computed(() => 'row-details' in slots)
       </page-table-tr-placeholder>
     </template>
 
+    <!-- A pinned first row that isn't one of `items` (an add/create row, say): it has to live
+         inside the table to line up with the columns, and above the empty row. -->
+    <slot name="top-row" />
+
     <page-table-tr v-if="!items?.length">
       <td
         :colspan="fields.length + 1"
