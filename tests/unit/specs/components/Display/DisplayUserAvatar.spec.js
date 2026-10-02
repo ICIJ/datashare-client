@@ -40,6 +40,12 @@ describe('DisplayUserAvatar.vue', () => {
     expect(wrapper.attributes('src')).toBeFalsy()
   })
 
+  it('renders without a username, e.g. while a modal\'s user is cleared on close', async () => {
+    const empty = mount(DisplayUserAvatar, { props: { value: null }, global: { plugins: core.plugins } })
+    await flushPromises()
+    expect(empty.attributes('data-abbr')).toBe('')
+  })
+
   it('should display an icon with a data-abbr attribute', async () => {
     await flushPromises()
     expect(wrapper.attributes('data-abbr')).toBe('FO')

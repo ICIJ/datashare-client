@@ -36,7 +36,7 @@ const props = defineProps({
 
 const src = ref(null)
 const alt = computed(() => `${props.value} avatar`)
-const abbr = computed(() => props.value.slice(0, 2).toUpperCase())
+const abbr = computed(() => (props.value ?? '').slice(0, 2).toUpperCase())
 const heightWithUnit = computed(() => (isNaN(props.height) ? props.height : `${props.height}px`))
 
 const style = computed(() => {
