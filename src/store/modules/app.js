@@ -35,6 +35,10 @@ export const useAppStore = defineStore(
           orderBy: ['name', 'asc'],
           perPage: '10'
         },
+        instanceUsersList: {
+          orderBy: ['name', 'asc'],
+          perPage: '10'
+        },
         search: {
           layout: LAYOUTS.LIST,
           orderBy: ['_score', 'desc'],
@@ -135,12 +139,14 @@ export const useAppStore = defineStore(
     }
 
     /**
-     * Gets the current setting value for a given view and setting name.
+     * Gets the current setting value for a given view and setting name, falling back to its
+     * default when settings persisted before that view existed don't have it, so adding a view's
+     * defaults doesn't need a SETTINGS_VERSION bump (which resets every saved preference).
      *
      * @returns {(view: string, name: string) => any}
      */
     const getSettings = (view, name) => {
-      return get(settings.views, [view, name].join('.'))
+      return get(settings.views, [view, name].join('.')) ?? getDefaultSettings(view, name)
     }
 
     /**

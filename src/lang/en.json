@@ -1340,7 +1340,8 @@
     "stop": "Stop",
     "delete": "Delete",
     "edit": "Edit",
-    "search": "Search"
+    "search": "Search",
+    "manageRoles": "Manage roles"
   },
   "textTruncate": {
     "seeLess": "See less",
@@ -1711,6 +1712,22 @@
       }
     },
     "users": {
+      "empty": "No users yet.",
+      "noResults": "No users match your search.",
+      "fields": {
+        "uid": {
+          "label": "Username"
+        },
+        "name": {
+          "label": "Name"
+        },
+        "email": {
+          "label": "Email"
+        },
+        "role": {
+          "label": "Roles"
+        }
+      },
       "roleBadges": {
         "more": "0 more | +1 more | +{count} more"
       }
