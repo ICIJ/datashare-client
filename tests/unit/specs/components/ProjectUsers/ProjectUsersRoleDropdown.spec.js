@@ -48,6 +48,18 @@ describe('ProjectUsersRoleDropdown.vue', () => {
     expect(wrapper.find('display-role-stub').attributes('value')).toBe('PROJECT_MEMBER')
   })
 
+  it.each([
+    [true, 'NO_ROLE', true],
+    [false, 'NO_ROLE', false],
+    [true, 'PROJECT_MEMBER', false]
+  ])('shows "Inherited" in the toggle when inherited=%s and the value is %s: %s', (inherited, modelValue, shown) => {
+    const wrapper = shallowMount(ProjectUsersRoleDropdown, {
+      global: { ...global, stubs: { BDropdown: { template: '<div><slot name="button-content" /></div>' } } },
+      props: { modelValue, projectName, inherited }
+    })
+    expect(wrapper.find('.project-users-role-dropdown__inherited').exists()).toBe(shown)
+  })
+
   it('emits update:modelValue with the selected role when a dropdown item is clicked', async () => {
     const wrapper = mountComponent()
     await wrapper.findAll('b-dropdown-item-stub')[0].trigger('click')
@@ -108,28 +120,6 @@ describe('ProjectUsersRoleDropdown.vue', () => {
     expect(roleValues).not.toContain('DOMAIN_ADMIN')
     expect(roleValues).not.toContain('INSTANCE_ADMIN')
     expect(roleValues).toContain('PROJECT_ADMIN')
-  })
-
-  it('keeps roles listed in disabledRoles visible but flags them as disabled', () => {
-    const wrapper = mountComponent({ disabledRoles: ['DOMAIN_ADMIN', 'INSTANCE_ADMIN'] })
-    const byValue = Object.fromEntries(wrapper.vm.availableRoles.map(r => [r.value, r.disabled]))
-    expect(byValue.DOMAIN_ADMIN).toBe(true)
-    expect(byValue.INSTANCE_ADMIN).toBe(true)
-    expect(byValue.PROJECT_ADMIN).toBe(false)
-  })
-
-  it('marks the dropdown items of disabledRoles as disabled', () => {
-    const wrapper = mountComponent({ disabledRoles: ['INSTANCE_ADMIN'] })
-    const index = wrapper.vm.availableRoles.findIndex(r => r.value === 'INSTANCE_ADMIN')
-    const item = wrapper.findAll('b-dropdown-item-stub')[index]
-    expect(item.attributes('disabled')).toBe('true')
-  })
-
-  it('does not emit update:modelValue when a disabled role is clicked', async () => {
-    const wrapper = mountComponent({ disabledRoles: ['INSTANCE_ADMIN'] })
-    const index = wrapper.vm.availableRoles.findIndex(r => r.value === 'INSTANCE_ADMIN')
-    await wrapper.findAll('b-dropdown-item-stub')[index].trigger('click')
-    expect(wrapper.emitted('update:modelValue')).toBeFalsy()
   })
 
   it('teleports the menu into the closest modal so it is not hidden behind it', async () => {

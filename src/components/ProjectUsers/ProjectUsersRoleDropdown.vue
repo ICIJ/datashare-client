@@ -31,13 +31,15 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  disabledRoles: {
-    type: Array,
-    default: () => []
-  },
   hiddenRoles: {
     type: Array,
     default: () => []
+  },
+  // Shows "Inherited" instead of "No role" when the user has no role of their own but gets access
+  // through an instance or domain admin role.
+  inherited: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -55,8 +57,8 @@ const availableRoles = computed(() => [
     .filter(role => (ROLE_HIERARCHY[currentUserRole.value] & ROLE_BIT[role]) !== 0)
     .filter(role => !props.hiddenRoles.includes(role))
     .sort((a, b) => ROLE_BIT[b] - ROLE_BIT[a])
-    .map(role => ({ value: role, text: formatRole(t, role), disabled: props.disabledRoles.includes(role) })),
-  ...(props.noRole ? [{ value: NO_ROLE, text: formatRole(t, NO_ROLE), disabled: props.disabledRoles.includes(NO_ROLE) }] : [])
+    .map(role => ({ value: role, text: formatRole(t, role) })),
+  ...(props.noRole ? [{ value: NO_ROLE, text: formatRole(t, NO_ROLE) }] : [])
 ])
 
 defineExpose({ availableRoles })
@@ -77,7 +79,16 @@ defineExpose({ availableRoles })
     >
       <template #button-content>
         <div class="project-users-role-dropdown__content d-flex justify-content-between ">
-          <display-role :value="modelValue" /><app-icon
+          <span
+            v-if="inherited && modelValue === NO_ROLE"
+            class="project-users-role-dropdown__inherited text-secondary"
+          >
+            {{ t('role.inherited') }}
+          </span>
+          <display-role
+            v-else
+            :value="modelValue"
+          /><app-icon
             v-if="dirty"
             class="ms-2"
             variant="primary"
@@ -98,8 +109,7 @@ defineExpose({ availableRoles })
         v-for="role in availableRoles"
         :key="role.value"
         :active="role.value === modelValue"
-        :disabled="role.disabled"
-        @click="role.disabled || emit('update:modelValue', role.value)"
+        @click="emit('update:modelValue', role.value)"
       >
         <display-role :value="role.value" />
       </b-dropdown-item>

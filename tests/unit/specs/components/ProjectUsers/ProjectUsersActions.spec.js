@@ -2,20 +2,17 @@ import { shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import ProjectUsersActions from '@/components/ProjectUsers/ProjectUsersActions.vue'
-import ProjectViewEditUsersDeleteModal from '@/views/Project/ProjectView/ProjectViewEdit/ProjectViewEditUsersDeleteModal.vue'
 
 describe('ProjectUsersActions.vue', () => {
   let core, global
 
-  const user = { uid: 'alice@icij.org', role: 'PROJECT_ADMIN' }
-  const project = 'local-datashare'
+  const user = { uid: 'alice@example.org', role: 'PROJECT_ADMIN' }
 
   beforeAll(() => {
     core = CoreSetup.init().useAll()
   })
 
   beforeEach(() => {
-    vi.clearAllMocks()
     core.createPinia()
     global = { plugins: core.plugins }
   })
@@ -23,72 +20,20 @@ describe('ProjectUsersActions.vue', () => {
   function mountComponent(props = {}) {
     return shallowMount(ProjectUsersActions, {
       global,
-      props: { user, project, ...props }
+      props: { user, ...props }
     })
   }
 
-  it('renders a copy button and a delete button', () => {
+  // Removing someone from a project goes through the role dropdown (no role); deleting an account
+  // lives in Settings > Users, so the only row action left here is copying the username.
+  it('only renders a copy button', () => {
     const wrapper = mountComponent()
     expect(wrapper.findAll('haptic-copy-stub')).toHaveLength(1)
-    expect(wrapper.findAll('button-row-action-stub')).toHaveLength(1)
+    expect(wrapper.findAll('button-row-action-stub')).toHaveLength(0)
   })
 
   it('copy button is a haptic-copy configured to copy the user id', () => {
     const wrapper = mountComponent()
-    const hapticCopy = wrapper.find('haptic-copy-stub')
-    expect(hapticCopy.attributes('text')).toBe(user.uid)
-  })
-
-  it('delete button opens the delete modal', async () => {
-    const wrapper = mountComponent()
-    expect(wrapper.findComponent(ProjectViewEditUsersDeleteModal).props('modelValue')).toBe(false)
-    await wrapper.find('button-row-action-stub').trigger('click')
-    expect(wrapper.findComponent(ProjectViewEditUsersDeleteModal).props('modelValue')).toBe(true)
-  })
-
-  it('forwards user:deleted from the modal', async () => {
-    const wrapper = mountComponent()
-    await wrapper.findComponent(ProjectViewEditUsersDeleteModal).trigger('user:deleted', { uid: user.uid })
-    expect(wrapper.emitted('user:deleted')).toEqual([[{ uid: user.uid }]])
-  })
-
-  it('disables the delete button when disableDelete is true', () => {
-    const wrapper = mountComponent({ disableDelete: true })
-    expect(wrapper.find('button-row-action-stub').attributes('disabled')).toBe('true')
-  })
-
-  it('does not disable the delete button when disableDelete is false', () => {
-    const wrapper = mountComponent({ disableDelete: false })
-    expect(wrapper.find('button-row-action-stub').attributes('disabled')).toBe('false')
-  })
-
-  it('does not disable the copy button when disableDelete is true', () => {
-    const wrapper = mountComponent({ disableDelete: true })
-    expect(wrapper.find('haptic-copy-stub').attributes('disabled')).toBeUndefined()
-  })
-
-  it('hides the delete button when hideDelete is true', () => {
-    const wrapper = mountComponent({ hideDelete: true })
-    expect(wrapper.findAll('button-row-action-stub')).toHaveLength(0)
-  })
-
-  it('mounts the delete modal when the delete button is neither hidden nor disabled', () => {
-    const wrapper = mountComponent({ hideDelete: false, disableDelete: false })
-    expect(wrapper.findComponent(ProjectViewEditUsersDeleteModal).exists()).toBe(true)
-  })
-
-  it('does not mount the delete modal when hideDelete is true', () => {
-    const wrapper = mountComponent({ hideDelete: true, disableDelete: false })
-    expect(wrapper.findComponent(ProjectViewEditUsersDeleteModal).exists()).toBe(false)
-  })
-
-  it('does not mount the delete modal when disableDelete is true', () => {
-    const wrapper = mountComponent({ hideDelete: false, disableDelete: true })
-    expect(wrapper.findComponent(ProjectViewEditUsersDeleteModal).exists()).toBe(false)
-  })
-
-  it('does not mount the delete modal when both hideDelete and disableDelete are true', () => {
-    const wrapper = mountComponent({ hideDelete: true, disableDelete: true })
-    expect(wrapper.findComponent(ProjectViewEditUsersDeleteModal).exists()).toBe(false)
+    expect(wrapper.find('haptic-copy-stub').attributes('text')).toBe(user.uid)
   })
 })

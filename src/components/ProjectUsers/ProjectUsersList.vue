@@ -1,7 +1,8 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ButtonIcon } from '@icij/murmur'
+import { AppIcon, ButtonIcon } from '@icij/murmur'
+import IPhCaretRight from '~icons/ph/caret-right'
 
 import DisplayUser from '@/components/Display/DisplayUser.vue'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric.vue'
@@ -12,7 +13,7 @@ import ProjectUsersRoleDropdown from '@/components/ProjectUsers/ProjectUsersRole
 import { useCore } from '@/composables/useCore.js'
 import { usePolicies } from '@/composables/usePolicies.js'
 import { useToast } from '@/composables/useToast.js'
-import { NO_ROLE, ROLE, ROLE_BIT, ROLE_LOWERCASE } from '@/enums/roles.js'
+import { NO_ROLE, ROLE, ROLE_BIT, ROLE_LOWERCASE, roleColor, roleIcon } from '@/enums/roles.js'
 import ButtonReset from '@/components/Button/ButtonReset'
 import useAuth from '@/composables/useAuth.js'
 
@@ -46,15 +47,14 @@ const saving = ref(false)
 
 const pendingChanges = ref({})
 
-const emit = defineEmits(['user:deleted', 'roles:revoked', 'roles:saved'])
-
-const ADMIN_ROLES = new Set([ROLE.PROJECT_ADMIN, ROLE.DOMAIN_ADMIN, ROLE.INSTANCE_ADMIN])
+const emit = defineEmits(['roles:saved'])
 
 const adminPromotions = computed(() =>
   Object.entries(pendingChanges.value)
     .filter(([uid, newRole]) => {
       const currentRole = props.users.find(u => u.uid === uid)?.role
-      return ADMIN_ROLES.has(newRole) && ROLE_BIT[newRole] > (ROLE_BIT[currentRole] ?? 0)
+      // Instance and domain admin can't be picked here, so project admin is the only promotion to confirm
+      return newRole === ROLE.PROJECT_ADMIN && ROLE_BIT[newRole] > (ROLE_BIT[currentRole] ?? 0)
     })
     .map(([uid, newRole]) => ({ uid, newRole }))
 )
@@ -82,8 +82,6 @@ async function saveRoles() {
     )
     const succeeded = entries.filter((_, index) => results[index].status === 'fulfilled')
     const failed = entries.filter((_, index) => results[index].status === 'rejected')
-    const revokedUids = succeeded.filter(([, role]) => role === NO_ROLE).map(([uid]) => uid)
-    const hasGranted = succeeded.some(([, role]) => role !== NO_ROLE)
 
     pendingChanges.value = Object.fromEntries(failed)
 
@@ -94,10 +92,8 @@ async function saveRoles() {
       toast.success(t('projectViewEdit.users.roleSelect.saveSuccess'))
     }
 
-    if (revokedUids.length > 0) {
-      emit('roles:revoked', revokedUids)
-    }
-    else if (hasGranted) {
+    // Grants and revocations alike: the parent refreshes the page
+    if (succeeded.length > 0) {
       emit('roles:saved')
     }
   }
@@ -135,20 +131,22 @@ const emptyLabel = computed(() =>
     : t('projectViewEdit.users.empty')
 )
 
-function onUserDeleted({ uid }) {
-  emit('user:deleted', { uid })
-}
-const { username, isUsernameResolved, isAuthWithUsersProvider } = useAuth()
-const { isInstanceAdmin, getRoleByProject, hasRole } = usePolicies()
-// Deleting a user account removes it from every project (see the delete modal's warning) and the
-// backend requires INSTANCE_ADMIN, so hide the action from project admins who are not instance admins.
-const canDeleteUsers = computed(() => isAuthWithUsersProvider.value && isInstanceAdmin.value)
+// "No role" is how someone is removed from the project (saveRoles revokes it), and the current
+// value of a user listed without one. Only offered when datashare owns the accounts (form/basic):
+// under OAuth, project roles come from the identity provider and a revoke would not stick.
+const { isCurrentUser, isAuthWithUsersProvider } = useAuth()
+const { getRoleByProject, hasRole, isDomainAdmin, formatRole } = usePolicies()
 const viewerRole = computed(() => getRoleByProject(props.project))
-function isCurrentUser(uid) {
-  return !isUsernameResolved.value || username.value === uid
+// The viewer's own row is read-only: a project admin dropping their own role would lose access to
+// this tab with nobody able to undo it. A domain or instance admin keeps access through their
+// domain-wide role, so their own row stays editable.
+function isLockedOwnRow(uid) {
+  return !isDomainAdmin.value && isCurrentUser(uid)
 }
+// A user with no role on the project (listed so they can be added) outranks nobody: NO_ROLE has
+// no ROLE_BIT, which hasRole would otherwise read as out of reach for every viewer.
 function outranksViewer(role) {
-  return !hasRole(viewerRole.value, role)
+  return role !== NO_ROLE && !hasRole(viewerRole.value, role)
 }
 
 defineExpose({ pendingChanges, saving, showAdminModal, saveRoles, cancelChanges, onSaveClicked })
@@ -173,23 +171,44 @@ defineExpose({ pendingChanges, saving, showAdminModal, saveRoles, cancelChanges,
         <display-user :value="item.uid" />
       </template>
       <template #cell(role)="{ item }">
-        <project-users-role-dropdown
-          :disabled="isCurrentUser(item.uid) || outranksViewer(item.role)"
-          :model-value="pendingChanges[item.uid] ?? item.role"
-          :dirty="!!pendingChanges[item.uid]"
-          :project="project"
-          :disabled-roles="[ROLE.DOMAIN_ADMIN, ROLE.INSTANCE_ADMIN]"
-          @update:model-value="onRoleChanged(item.uid, $event)"
-        />
+        <!-- Widest scope first: each instance or domain admin role (which gives access to every
+             project of its scope, whatever the dropdown shows) as an icon, then the project role. -->
+        <div class="d-flex align-items-center flex-nowrap gap-1">
+          <template
+            v-for="wideRole in item.wideRoles ?? []"
+            :key="wideRole"
+          >
+            <span
+              v-b-tooltip.body
+              class="project-users-list__wide-role"
+              :title="formatRole(t, wideRole)"
+              :aria-label="formatRole(t, wideRole)"
+            >
+              <app-icon
+                :name="roleIcon(wideRole)"
+                :style="{ color: roleColor(wideRole) }"
+              />
+            </span>
+            <app-icon
+              :name="IPhCaretRight"
+              class="project-users-list__wide-role-separator text-secondary"
+              aria-hidden="true"
+            />
+          </template>
+          <project-users-role-dropdown
+            :disabled="isLockedOwnRow(item.uid) || outranksViewer(item.role)"
+            :model-value="pendingChanges[item.uid] ?? item.role"
+            :dirty="!!pendingChanges[item.uid]"
+            :project="project"
+            :no-role="isAuthWithUsersProvider"
+            :hidden-roles="[ROLE.DOMAIN_ADMIN, ROLE.INSTANCE_ADMIN]"
+            :inherited="!!item.wideRoles?.length"
+            @update:model-value="onRoleChanged(item.uid, $event)"
+          />
+        </div>
       </template>
       <template #row-actions="{ item }">
-        <project-users-actions
-          :user="item"
-          :project="project"
-          :disable-delete="isCurrentUser(item.uid)"
-          :hide-delete="!canDeleteUsers"
-          @user:deleted="onUserDeleted"
-        />
+        <project-users-actions :user="item" />
       </template>
       <template #empty>
         <p class="text-secondary small m-3">
@@ -224,6 +243,17 @@ defineExpose({ pendingChanges, saving, showAdminModal, saveRoles, cancelChanges,
 
 <style scoped lang="scss">
 .project-users-list {
+  &__wide-role {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75em;
+    height: 1.75em;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--bs-tertiary-bg);
+  }
+
   &__sticky-bar {
     position: sticky;
     bottom: 0;
