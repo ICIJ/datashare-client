@@ -6,10 +6,12 @@ import VueScrollTo from 'vue-scrollto'
 import DocumentCard from '@/components/Document/DocumentCard/DocumentCard'
 import DocumentCardPlaceholder from '@/components/Document/DocumentCard/DocumentCardPlaceholder'
 import DocumentFloating from '@/components/Document/DocumentFloating'
+import Hook from '@/components/Hook/Hook'
 import { useDocument } from '@/composables/useDocument'
 import { useDocumentEntryMemo } from '@/composables/useDocumentEntryMemo'
 import { useSelection } from '@/composables/useSelection'
 import { DISPLAY, displayValidator } from '@/enums/documentFloating'
+import { useHooksStore } from '@/store/modules'
 
 const props = defineProps({
   entries: {
@@ -33,6 +35,8 @@ const props = defineProps({
   }
 })
 const { t } = useI18n()
+const hooksStore = useHooksStore()
+const hasEntriesListReplace = computed(() => hooksStore.filterComponentsByTarget('document-entries-list:replace').length > 0)
 
 const selection = defineModel('selection', { type: Array, default: () => [] })
 
@@ -78,37 +82,42 @@ watchDocument(scrollDocumentCardIntoView)
         class="document-entries-list__start"
         :class="startClassList"
       >
-        <div class="document-entries-list__start__header">
-          <slot name="header" />
-        </div>
-        <div class="document-entries-list__start__list">
-          <template v-if="loading">
-            <document-card-placeholder
-              :properties="properties"
-              :repeat="5"
-              vertical-actions
-            />
-          </template>
-          <template v-else-if="entries.length">
-            <document-card
-              v-for="entry in entries"
-              :key="entry.id"
-              v-model:selected="selectionValues[entry.id]"
-              v-memo="getMemoKey(entry, selectionValues[entry.id], isRouteActive(entry))"
-              :active="isRouteActive(entry)"
-              :document="entry"
-              :select-mode="selectMode"
-              :properties="properties"
-              :data-entry-id="entry.id"
-              :data-entry-index="entry.index"
-            />
-          </template>
-          <template v-else>
-            <p class="p-3 text-secondary text-center">
-              {{ t('documentEntries.noMatches') }}
-            </p>
-          </template>
-        </div>
+        <template v-if="hasEntriesListReplace">
+          <hook name="document-entries-list:replace" />
+        </template>
+        <template v-else>
+          <div class="document-entries-list__start__header">
+            <slot name="header" />
+          </div>
+          <div class="document-entries-list__start__list">
+            <template v-if="loading">
+              <document-card-placeholder
+                :properties="properties"
+                :repeat="5"
+                vertical-actions
+              />
+            </template>
+            <template v-else-if="entries.length">
+              <document-card
+                v-for="entry in entries"
+                :key="entry.id"
+                v-model:selected="selectionValues[entry.id]"
+                v-memo="getMemoKey(entry, selectionValues[entry.id], isRouteActive(entry))"
+                :active="isRouteActive(entry)"
+                :document="entry"
+                :select-mode="selectMode"
+                :properties="properties"
+                :data-entry-id="entry.id"
+                :data-entry-index="entry.index"
+              />
+            </template>
+            <template v-else>
+              <p class="p-3 text-secondary text-center">
+                {{ t('documentEntries.noMatches') }}
+              </p>
+            </template>
+          </div>
+        </template>
       </div>
     </template>
     <div class="document-entries-list__end py-3">

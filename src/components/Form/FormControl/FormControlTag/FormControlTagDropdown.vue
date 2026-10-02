@@ -1,7 +1,9 @@
 <script setup>
 import Fuse from 'fuse.js'
 import { computed, ref, watch } from 'vue'
-import { get, identity, isFunction } from 'lodash'
+import get from 'lodash/get'
+import identity from 'lodash/identity'
+import isFunction from 'lodash/isFunction'
 import { autoUpdate, autoPlacement, size, useFloating } from '@floating-ui/vue'
 
 import FormControlTagDropdownItem from './FormControlTagDropdownItem'

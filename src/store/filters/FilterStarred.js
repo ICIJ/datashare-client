@@ -1,5 +1,5 @@
-import { get, map } from 'lodash'
-
+import get from 'lodash/get'
+import map from 'lodash/map'
 import FilterText from './FilterText'
 
 import DisplayStarred from '@/components/Display/DisplayStarred'

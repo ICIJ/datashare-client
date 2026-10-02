@@ -65,6 +65,7 @@ export default {
     }
   ],
   previewRawMaxContentLength: 5e6,
+  oversizedMarkdownThreshold: 5e5,
   iso6392: {
     tesseract: {
       zho: 'chi_sim'

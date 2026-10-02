@@ -1,5 +1,5 @@
-import { uniqueId, cloneDeep } from 'lodash'
-
+import uniqueId from 'lodash/uniqueId'
+import cloneDeep from 'lodash/cloneDeep'
 import { useHooksStore } from '@/store/modules'
 
 /**

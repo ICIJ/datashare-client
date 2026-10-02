@@ -3,6 +3,9 @@ import { shallowMount, flushPromises } from '@vue/test-utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import DocumentViewerMarkdown from '@/components/Document/DocumentViewer/DocumentViewerMarkdown'
 import messages from '@/lang/en.json'
+// The off-thread renderer reaches its inline fallback through a dynamic import;
+// loading the module up front keeps that fallback within one promise flush.
+import '@/utils/markdown'
 
 vi.mock('@/api/apiInstance', () => {
   return {
@@ -39,7 +42,7 @@ describe('DocumentViewerMarkdown.vue', () => {
 
     const content = wrapper.find('.markdown-viewer__content')
     expect(content.exists()).toBe(true)
-    expect(content.html()).toContain('<h1>Hello</h1>')
+    expect(content.html()).toContain('<h1 id="hello">Hello</h1>')
     expect(content.html()).not.toContain('<script')
     // Rendered like the PDF view: bordered, elevated, padded card, centered.
     expect(content.classes()).toEqual(expect.arrayContaining(['shadow-sm', 'border', 'p-3', 'mx-auto']))
@@ -53,11 +56,11 @@ describe('DocumentViewerMarkdown.vue', () => {
       props: { document: { url: 'first' } }
     })
     await flushPromises()
-    expect(wrapper.find('.markdown-viewer__content').html()).toContain('<h1>first</h1>')
+    expect(wrapper.find('.markdown-viewer__content').html()).toContain('<h1 id="first">first</h1>')
 
     await wrapper.setProps({ document: { url: 'second' } })
     await flushPromises()
-    expect(wrapper.find('.markdown-viewer__content').html()).toContain('<h1>second</h1>')
+    expect(wrapper.find('.markdown-viewer__content').html()).toContain('<h1 id="second">second</h1>')
     expect(wrapper.find('.markdown-viewer__content').html()).not.toContain('first')
   })
 
@@ -76,6 +79,90 @@ describe('DocumentViewerMarkdown.vue', () => {
     // The 404 branch must select the "errorNotFound" translation, not the generic one.
     expect(error.text()).toBe(messages.document.errorNotFound)
     expect(error.text()).not.toBe(messages.document.notAvailable)
+  })
+
+  it('renders ordinary markdown, including a table with a header row, unchanged', async () => {
+    // `renderMarkdown` (and its headerless-table normalization) is shared
+    // with the Text tab's markdown page; this pins the View tab's output for
+    // a normal document so a future change to that shared normalizer cannot
+    // silently alter it here.
+    const source = ['# Title', '', '| a | b |', '| - | - |', '| 1 | 2 |', '', 'Some prose about it.'].join('\n')
+    apiInstance.getSource.mockResolvedValue(source)
+    const { plugins } = CoreSetup.init().useAll()
+    const wrapper = shallowMount(DocumentViewerMarkdown, {
+      global: { plugins },
+      props: { document: { url: 'doc.md' } }
+    })
+    await flushPromises()
+
+    const content = wrapper.find('.markdown-viewer__content')
+    expect(content.html()).toContain('<h1 id="title">Title</h1>')
+    expect(content.find('table').exists()).toBe(true)
+    expect(content.find('th').text()).toBe('a')
+    expect(content.find('td').text()).toBe('1')
+    expect(content.html()).toContain('<p>Some prose about it.</p>')
+  })
+
+  it('scrolls to the target instead of navigating when an in-document link is clicked', async () => {
+    apiInstance.getSource.mockResolvedValue('# My Section\n\nSee [the section](#my-section).')
+    const { plugins } = CoreSetup.init().useAll()
+    const wrapper = shallowMount(DocumentViewerMarkdown, {
+      global: { plugins },
+      props: { document: { url: 'doc.md' } }
+    })
+    await flushPromises()
+
+    const heading = wrapper.find('h1').element
+    heading.scrollIntoView = vi.fn()
+    const event = new MouseEvent('click', { bubbles: true, cancelable: true })
+    wrapper.find('a').element.dispatchEvent(event)
+
+    // The router lives in the URL hash, so letting the browser follow a
+    // fragment href would drop the user out of the document entirely.
+    expect(event.defaultPrevented).toBe(true)
+    expect(heading.scrollIntoView).toHaveBeenCalled()
+  })
+
+  it('leaves clicks on external links to the browser', async () => {
+    apiInstance.getSource.mockResolvedValue('[report](https://example.org/report)')
+    const { plugins } = CoreSetup.init().useAll()
+    const wrapper = shallowMount(DocumentViewerMarkdown, {
+      global: { plugins },
+      props: { document: { url: 'doc.md' } }
+    })
+    await flushPromises()
+
+    const anchor = wrapper.find('a')
+    expect(anchor.attributes('target')).toBe('_blank')
+    const event = new MouseEvent('click', { bubbles: true, cancelable: true })
+    anchor.element.dispatchEvent(event)
+    expect(event.defaultPrevented).toBe(false)
+  })
+
+  it('does not let a slow load of a previous document overwrite the current one', async () => {
+    let resolveSlowSource
+    apiInstance.getSource.mockImplementation((document) => {
+      if (document.url === 'slow') {
+        return new Promise((resolve) => {
+          resolveSlowSource = resolve
+        })
+      }
+      return Promise.resolve('# fast')
+    })
+    const { plugins } = CoreSetup.init().useAll()
+    const wrapper = shallowMount(DocumentViewerMarkdown, {
+      global: { plugins },
+      props: { document: { url: 'slow' } }
+    })
+    await wrapper.setProps({ document: { url: 'fast' } })
+    await flushPromises()
+    expect(wrapper.find('.markdown-viewer__content').html()).toContain('fast')
+
+    // The slow document's source resolves only now, after navigation moved on.
+    resolveSlowSource('# slow')
+    await flushPromises()
+    expect(wrapper.find('.markdown-viewer__content').html()).toContain('fast')
+    expect(wrapper.find('.markdown-viewer__content').html()).not.toContain('slow')
   })
 
   it('shows the generic not-available message for non-404 failures', async () => {

@@ -74,9 +74,10 @@ export default {
       return this.count(q)
     },
     async loadData() {
-      this.total = await this.countTotal()
-      this.onDisk = await this.countOnDisk()
-      this.duplicates = await this.countDuplicates()
+      const [total, onDisk, duplicates] = await Promise.all([this.countTotal(), this.countOnDisk(), this.countDuplicates()])
+      this.total = total
+      this.onDisk = onDisk
+      this.duplicates = duplicates
     }
   }
 }

@@ -12,10 +12,6 @@ const props = defineProps({
   sourceLanguage: {
     type: String,
     required: true
-  },
-  tooltipDelay: {
-    type: Object,
-    default: () => ({ show: 0, hide: 0 })
   }
 })
 
@@ -29,7 +25,7 @@ const title = computed(() => {
 <template>
   <span
     v-if="detectedLanguage === sourceLanguage"
-    v-b-tooltip.body="{ delay: tooltipDelay }"
+    v-b-tooltip.body
     :title="title"
   >
     {{ t('documentTranslationAlertSource.detected') }}

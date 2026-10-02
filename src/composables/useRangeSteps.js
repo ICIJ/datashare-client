@@ -1,4 +1,4 @@
-import { range } from 'd3'
+import { range } from 'd3-array'
 import { computed, ref, toValue, watch } from 'vue'
 
 /**

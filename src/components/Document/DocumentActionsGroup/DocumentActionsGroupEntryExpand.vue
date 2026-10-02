@@ -2,8 +2,7 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
-import { matchesProperty } from 'lodash'
-
+import matchesProperty from 'lodash/matchesProperty'
 import IPhArrowsOutSimple from '~icons/ph/arrows-out-simple'
 
 import DocumentActionsGroupEntry from './DocumentActionsGroupEntry'

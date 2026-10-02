@@ -1,6 +1,7 @@
 <script setup>
 import Fuse from 'fuse.js'
-import { orderBy as orderArrayBy, property } from 'lodash'
+import orderArrayBy from 'lodash/orderBy'
+import property from 'lodash/property'
 import { computed, ref, onBeforeMount } from 'vue'
 import { useI18n } from 'vue-i18n'
 

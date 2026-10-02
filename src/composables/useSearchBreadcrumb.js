@@ -1,9 +1,17 @@
 import { computed } from 'vue'
-import { castArray, compact, map, omit, orderBy, trimStart, unset } from 'lodash'
+import { useI18n } from 'vue-i18n'
+import castArray from 'lodash/castArray'
+import compact from 'lodash/compact'
+import map from 'lodash/map'
+import omit from 'lodash/omit'
+import orderBy from 'lodash/orderBy'
+import trimStart from 'lodash/trimStart'
+import unset from 'lodash/unset'
 import lucene from 'lucene'
 
 import { useSearchFilter } from '@/composables/useSearchFilter'
-import { useSearchBreadcrumbStore, useSearchStore } from '@/store/modules'
+import { useToast } from '@/composables/useToast'
+import { useLockedFiltersStore, useSearchBreadcrumbStore, useSearchStore } from '@/store/modules'
 import { getCanonicalDimension, getPairedDimension } from '@/store/filters/pairedDimensions'
 import findPath from '@/utils/findPath'
 
@@ -102,7 +110,12 @@ export function assembleEntries(rawEntries) {
 export function useSearchBreadcrumb() {
   const searchStore = useSearchStore.inject()
   const searchBreadcrumbStore = useSearchBreadcrumbStore()
-  const { setQuery, removeIndex, removeFilterValue, refreshRoute } = useSearchFilter()
+  const { setQuery, removeIndex, removeFilterValue, refreshRoute, refreshRouteFromStart } = useSearchFilter()
+  const lockedFiltersStore = useLockedFiltersStore()
+  const lockedFiltersCount = computed(() => lockedFiltersStore.count)
+  const hasConflictingLocks = computed(() => searchStore.hasConflictingLocks)
+  const { toast } = useToast()
+  const { t } = useI18n()
 
   const count = computed(() => entries.value.length)
 
@@ -154,7 +167,12 @@ export function useSearchBreadcrumb() {
   })
 
   const hasQueryEntries = computed(() => !!queryEntries.value.length)
-  const hasFiltersEntries = computed(() => !!filtersEntries.value.length)
+  // Locked chips never go away on clear, so they must not count towards
+  // whether "Clear filters" has anything left to do.
+  const unlockedFiltersEntries = computed(() => {
+    return filtersEntries.value.filter(({ filter, value }) => !lockedFiltersStore.isLocked({ name: filter, value }))
+  })
+  const hasFiltersEntries = computed(() => !!unlockedFiltersEntries.value.length)
   // Enable the button whereas there is filters or queries even if one of them is empty
   const hasQueryAndFiltersEntries = computed(() => hasQueryEntries.value || hasFiltersEntries.value)
 
@@ -179,7 +197,7 @@ export function useSearchBreadcrumb() {
   }
 
   const clearFiltersEntries = () => {
-    searchStore.resetFilterValues()
+    searchStore.resetFilterValuesPreservingLocks()
     return refreshRoute()
   }
 
@@ -189,9 +207,33 @@ export function useSearchBreadcrumb() {
   }
 
   const clearAll = () => {
-    searchStore.resetFilterValues()
+    searchStore.resetFilterValuesPreservingLocks()
     searchStore.resetQuery()
     return refreshRoute()
+  }
+
+  const unlockAll = () => {
+    lockedFiltersStore.unlockAll()
+    return refreshRoute()
+  }
+
+  const applyLockedFilters = async () => {
+    try {
+      searchStore.applyLockedFilters()
+      await refreshRouteFromStart()
+      if (searchStore.hasConflictingLocks) {
+        toast.error(t('searchBreadcrumbFormFooter.applyLockedFiltersError'))
+        return
+      }
+      toast.success(t('searchBreadcrumbFormFooter.applyLockedFiltersSuccess'))
+    }
+    catch (error) {
+      // Covers both an expected conflict and a genuine bug elsewhere in
+      // applyLockedFilters/refreshRouteFromStart - without this, the two are
+      // indistinguishable from a bug report alone.
+      console.error('Failed to apply locked filters:', error)
+      toast.error(t('searchBreadcrumbFormFooter.applyLockedFiltersError'))
+    }
   }
 
   return {
@@ -205,6 +247,10 @@ export function useSearchBreadcrumb() {
     clearFiltersEntries,
     clearQueryEntries,
     clearAll,
+    unlockAll,
+    hasConflictingLocks,
+    applyLockedFilters,
+    lockedFiltersCount,
     count,
     hasQueryEntries,
     hasFiltersEntries,

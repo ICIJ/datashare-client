@@ -8,10 +8,6 @@ import AppSidebarFooterKeyboardShortcutsPopover from '@/components/AppSidebar/Ap
 defineProps({
   compact: {
     type: Boolean
-  },
-  tooltipDelay: {
-    type: Object,
-    default: () => ({ show: 0, hide: 0 })
   }
 })
 const { t } = useI18n()

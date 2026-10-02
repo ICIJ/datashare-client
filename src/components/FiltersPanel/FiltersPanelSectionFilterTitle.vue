@@ -67,7 +67,7 @@ const classList = computed(() => {
           v-if="showCount"
           class="filters-panel-section-filter-title__count"
           pill
-          variant="primary-subtle"
+          variant=""
         >
           {{ count }}
         </b-badge>

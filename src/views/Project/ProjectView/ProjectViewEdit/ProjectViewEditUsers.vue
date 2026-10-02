@@ -1,8 +1,8 @@
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { debounce, isEqual } from 'lodash'
-
+import debounce from 'lodash/debounce'
+import isEqual from 'lodash/isEqual'
 import ProjectUsersList from '@/components/ProjectUsers/ProjectUsersList.vue'
 import RowPaginationUsers from '@/components/RowPagination/RowPaginationUsers.vue'
 import { useAuth } from '@/composables/useAuth.js'

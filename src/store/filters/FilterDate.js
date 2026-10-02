@@ -1,6 +1,7 @@
 import FilterDocument from './FilterDocument'
 
 import DisplayDatetimeMonth from '@/components/Display/DisplayDatetimeMonth'
+import { humanMonthDate } from '@/utils/humanDate'
 
 /**
  * Filter over a date field using a `date_histogram` aggregation. Each
@@ -15,11 +16,29 @@ export default class FilterDate extends FilterDocument {
 
   /**
    * @param {object} item - Histogram bucket.
-   * @param {string} item.key_as_string - Pre-formatted bucket key.
+   * @param {string} [item.key_as_string] - Pre-formatted bucket key, as ES's
+   * histogram response provides it. A caller with only the raw route-query
+   * value (e.g. a locked breadcrumb chip) won't have this - fall back to
+   * formatting `item.key` directly rather than returning `undefined`. Route
+   * query values arrive as strings, so this checks numeric-ness by
+   * coercion rather than `isInteger`, which only accepts an actual number.
+   * @param {number|string} item.key - Epoch milliseconds, as a number or a numeric string.
    * @returns {string} The bucket's key string used as the display label.
    */
   itemLabel(item) {
-    return item.key_as_string
+    if (item.key_as_string) {
+      return item.key_as_string
+    }
+    const key = Number(item.key)
+    if (Number.isFinite(key)) {
+      // dayjs's own .locale(x) treats a falsy x as a getter call rather than
+      // a no-op setter, breaking the format() chain entirely - fall back to
+      // a concrete locale rather than the null localStorage returns before a
+      // user ever explicitly changes it.
+      const locale = localStorage.getItem('locale') ?? 'en'
+      return humanMonthDate(key, locale)
+    }
+    return item.key
   }
 
   /**

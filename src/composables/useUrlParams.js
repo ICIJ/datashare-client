@@ -1,4 +1,6 @@
-import { isObject, identity, isUndefined } from 'lodash'
+import isObject from 'lodash/isObject'
+import identity from 'lodash/identity'
+import isUndefined from 'lodash/isUndefined'
 import { computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 

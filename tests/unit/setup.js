@@ -1,4 +1,13 @@
 import 'whatwg-fetch'
+// @vueuse/components reads `window` at evaluation time, guarded by an
+// `isClient` constant imported from @vueuse/shared and resolved while the DOM
+// was still up. A component reaching it through a dynamic import that lands
+// after a test file's jsdom teardown therefore crashes the worker, so
+// evaluate it here, once per worker, while the environment is alive.
+import '@vueuse/components'
+
+import { useLockedFiltersStore } from '@/store/modules/lockedFilters'
+import { pinia } from '@/store/pinia'
 
 // Node 22+ ships a native `localStorage` that throws on access unless the
 // runtime is launched with `--localstorage-file`. Some sandboxed CI
@@ -26,6 +35,24 @@ catch {
   })
 }
 
+// `@/store/pinia`'s pinia instance is a true module-level singleton, so every
+// store on it, including persisted ones (`persist: true`), is shared across
+// every test in a spec file that doesn't opt out, not recreated per test.
+// lockedFiltersStore in particular leaked entries from one test into the next
+// this way, forcing several spec files to call unlockAll() themselves as a
+// workaround. Reset it here once, globally, instead of at each call site.
+// A spec that does call CoreSetup's own createPinia() opts out of this: it
+// activates a fresh raw pinia() instance with no persist plugin registered
+// (see CoreSetup.js), so persist: true is inert there and that instance's
+// lockedFiltersStore never reads localStorage in the first place - nothing
+// for this reset to cover.
+beforeEach(() => {
+  // Pass the singleton explicitly: no test has necessarily called
+  // `setActivePinia` yet at this point in the hook chain (this beforeEach
+  // runs before each spec file's own beforeEach, which usually does).
+  useLockedFiltersStore(pinia).unlockAll()
+})
+
 // Save the original log method for later use
 const log = global.console.log
 
@@ -39,6 +66,16 @@ global.ResizeObserver = class {
   observe() {}
   unobserve() {}
   disconnect() {}
+}
+
+// jsdom implements neither Blob.text() nor Blob.arrayBuffer() (jsdom/jsdom#2555)
+Blob.prototype.text ??= function () {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(reader.result)
+    reader.onerror = () => reject(reader.error)
+    reader.readAsText(this)
+  })
 }
 
 Object.defineProperty(window, 'matchMedia', {
@@ -58,3 +95,14 @@ Object.defineProperty(document, 'fonts', {
 })
 
 Object.defineProperty(window, 'scrollTo', vi.fn())
+
+// `batchQueryParamUpdate` debounces its `router.push` by 50ms. A spec ending
+// while one is still queued lets the push run after the jsdom teardown, where
+// vue-router reads a `history` global that no longer exists and fails the whole
+// run with an unhandled rejection. Import it here rather than at the top of
+// this file, so specs mocking the module (or `lodash/debounce`) still get their
+// mock applied.
+afterEach(async () => {
+  const { cancelBatchedQueryParamUpdates } = await import('@/composables/useUrlParam')
+  cancelBatchedQueryParamUpdates()
+})

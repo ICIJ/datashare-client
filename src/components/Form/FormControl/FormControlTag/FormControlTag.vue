@@ -1,6 +1,12 @@
 <script setup>
 import { computed, ref, watch, useTemplateRef } from 'vue'
-import { compact, every, identity, isFunction, escapeRegExp, get, trim } from 'lodash'
+import compact from 'lodash/compact'
+import every from 'lodash/every'
+import identity from 'lodash/identity'
+import isFunction from 'lodash/isFunction'
+import escapeRegExp from 'lodash/escapeRegExp'
+import get from 'lodash/get'
+import trim from 'lodash/trim'
 import IPhHash from '~icons/ph/hash'
 
 import FormControlTagInput from './FormControlTagInput'

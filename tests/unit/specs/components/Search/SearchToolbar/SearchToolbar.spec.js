@@ -1,5 +1,5 @@
 import { nextTick } from 'vue'
-import { shallowMount } from '@vue/test-utils'
+import { flushPromises, shallowMount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import SearchToolbar from '@/components/Search/SearchToolbar/SearchToolbar'
@@ -43,34 +43,66 @@ describe('SearchToolbar.vue', () => {
     expect(wrapper.findComponent({ name: 'ButtonToggleAdvancedSearch' }).exists()).toBe(true)
   })
 
+  it('does not mount the advanced-search modal until the toggle is activated', () => {
+    const wrapper = factory()
+    expect(wrapper.findComponent({ name: 'SearchAdvancedModal' }).exists()).toBe(false)
+  })
+
   it('opens the advanced-search modal when the toggle is activated', async () => {
     const wrapper = factory()
-    const modal = wrapper.findComponent({ name: 'SearchAdvancedModal' })
-    expect(modal.props('modelValue')).toBe(false)
 
     wrapper.findComponent({ name: 'ButtonToggleAdvancedSearch' }).vm.$emit('update:active', true)
+    await flushPromises()
+
+    // The async-loaded modal is stubbed without a declared prop schema, so
+    // its passed values only surface as rendered attributes, not .props().
+    expect(wrapper.findComponent({ name: 'SearchAdvancedModal' }).attributes('modelvalue')).toBe('true')
+  })
+
+  it('keeps the advanced-search modal mounted after it has been closed', async () => {
+    const wrapper = factory()
+    const toggle = wrapper.findComponent({ name: 'ButtonToggleAdvancedSearch' })
+
+    toggle.vm.$emit('update:active', true)
+    await flushPromises()
+    toggle.vm.$emit('update:active', false)
     await nextTick()
 
-    expect(modal.props('modelValue')).toBe(true)
+    expect(wrapper.findComponent({ name: 'SearchAdvancedModal' }).exists()).toBe(true)
   })
 
   it('passes the active query to the modal as initialQuery', async () => {
     searchStore.setQuery('+Paris')
     const wrapper = factory()
-    await nextTick()
-    expect(wrapper.findComponent({ name: 'SearchAdvancedModal' }).props('initialQuery')).toBe('+Paris')
+    wrapper.findComponent({ name: 'ButtonToggleAdvancedSearch' }).vm.$emit('update:active', true)
+    await flushPromises()
+    expect(wrapper.findComponent({ name: 'SearchAdvancedModal' }).attributes('initial-query')).toBe('+Paris')
   })
 
-  it('runs a store query with the emitted query and field', () => {
+  it('forwards the modal query and field as an advancedSearch event', async () => {
     const wrapper = factory()
+    wrapper.findComponent({ name: 'ButtonToggleAdvancedSearch' }).vm.$emit('update:active', true)
+    await flushPromises()
     wrapper.findComponent({ name: 'SearchAdvancedModal' }).vm.$emit('search', { query: '+Paris +London', field: 'tags' })
-    expect(searchStore.query).toHaveBeenCalledWith({ query: '+Paris +London', field: 'tags' })
+    expect(wrapper.emitted('advancedSearch')).toEqual([[{ query: '+Paris +London', field: 'tags' }]])
   })
 
-  it('runs a store query even when the modal emits an empty search so it is always resubmitted', () => {
+  it('forwards an empty advanced search so it is always resubmitted', async () => {
     const wrapper = factory()
+    wrapper.findComponent({ name: 'ButtonToggleAdvancedSearch' }).vm.$emit('update:active', true)
+    await flushPromises()
     wrapper.findComponent({ name: 'SearchAdvancedModal' }).vm.$emit('search', { query: '', field: 'all' })
-    expect(searchStore.query).toHaveBeenCalledWith({ query: '', field: 'all' })
+    expect(wrapper.emitted('advancedSearch')).toEqual([[{ query: '', field: 'all' }]])
+  })
+
+  it('does not run the search itself, so the URL stays the source of truth', async () => {
+    const wrapper = factory()
+    wrapper.findComponent({ name: 'ButtonToggleAdvancedSearch' }).vm.$emit('update:active', true)
+    await flushPromises()
+    wrapper.findComponent({ name: 'SearchAdvancedModal' }).vm.$emit('search', { query: '+Paris +London', field: 'tags' })
+    // Querying the store directly would leave the URL behind, and the next
+    // route round-trip would overwrite the advanced query with the stale one.
+    expect(searchStore.query).not.toHaveBeenCalled()
   })
 
   it('reduces the advanced-search toggle when the toolbar is compact', () => {

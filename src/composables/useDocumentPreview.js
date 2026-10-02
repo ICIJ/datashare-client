@@ -1,5 +1,6 @@
 import { getCookie } from 'tiny-cookie'
-import { kebabCase, startCase } from 'lodash'
+import kebabCase from 'lodash/kebabCase'
+import startCase from 'lodash/startCase'
 import { computed } from 'vue'
 
 import settings from '@/utils/settings'

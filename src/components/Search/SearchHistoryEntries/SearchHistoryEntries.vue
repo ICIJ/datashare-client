@@ -1,7 +1,10 @@
 <script setup>
 import { computed, ref, toValue, watch } from 'vue'
 import bodybuilder from 'bodybuilder'
-import { groupBy, property, trimStart, uniq } from 'lodash'
+import groupBy from 'lodash/groupBy'
+import property from 'lodash/property'
+import trimStart from 'lodash/trimStart'
+import uniq from 'lodash/uniq'
 import { match } from 'path-to-regexp'
 
 import { useCore } from '@/composables/useCore'

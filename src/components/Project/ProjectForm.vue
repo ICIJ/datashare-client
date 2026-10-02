@@ -1,6 +1,8 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { cloneDeep, every, kebabCase } from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
+import every from 'lodash/every'
+import kebabCase from 'lodash/kebabCase'
 import { useI18n } from 'vue-i18n'
 
 import IPhTextAa from '~icons/ph/text-aa'

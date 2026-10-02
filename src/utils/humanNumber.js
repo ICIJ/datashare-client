@@ -1,5 +1,4 @@
-import { identity } from 'lodash'
-
+import identity from 'lodash/identity'
 export default function humanNumber(value, { K = '%K', M = '%M', B = '%B' } = {}, n = identity) {
   switch (true) {
     case value < 1e3:

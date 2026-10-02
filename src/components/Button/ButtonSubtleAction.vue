@@ -5,6 +5,10 @@ defineProps({
   hideLabel: {
     type: Boolean,
     default: true
+  },
+  hideTooltip: {
+    type: Boolean,
+    default: false
   }
 })
 </script>
@@ -14,5 +18,6 @@ defineProps({
     variant="link"
     class="bg-action-subtle text-action-emphasis-subtle p-1"
     :hide-label="hideLabel"
+    :hide-tooltip="hideTooltip"
   />
 </template>

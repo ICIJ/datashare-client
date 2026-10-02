@@ -128,7 +128,7 @@ const toggle = () => {
       v-if="props.layout === LAYOUTS.TREE"
       :collapse="collapse"
       :loading="loading"
-      class="path-tree-view-entry-name__caret flex-shrink-0"
+      class="path-tree-view-entry-name__caret flex-shrink-0 above-stretched-link"
       @click="toggle"
     />
     <path-tree-view-entry-name-checkbox

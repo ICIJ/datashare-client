@@ -103,6 +103,25 @@ describe('Document', () => {
     })
   })
 
+  describe('check if document is of DOCX type', () => {
+    it('should be a DOCX file', () => {
+      const contentType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      const doc = new Document({ _source: { contentType } })
+      expect(doc.isDocx).toBeTruthy()
+    })
+
+    it('should NOT be a DOCX file for a legacy Word document', () => {
+      const doc = new Document({ _source: { contentType: 'application/msword' } })
+      expect(doc.isDocx).toBeFalsy()
+    })
+
+    it('should NOT be a DOCX file for a presentation', () => {
+      const contentType = 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+      const doc = new Document({ _source: { contentType } })
+      expect(doc.isDocx).toBeFalsy()
+    })
+  })
+
   describe('should generate the title according to document type', () => {
     it('should return the first 10 characters of the id, for default document without any path', () => {
       const doc = new Document({ _id: '01234567890123456789' })

@@ -68,4 +68,46 @@ describe('FilterTypeDateRange.vue', () => {
 
     warnSpy.mockRestore()
   })
+
+  it('does not load the date chart chunk while the filter is collapsed, even with multiple entries', () => {
+    // FilterType is stubbed with fixed slot scope so this exercises the
+    // `opened` gate in isolation, without needing real aggregation buckets.
+    const stubbedWrapper = mount(FilterDateRange, {
+      global: {
+        plugins: CoreSetup.init().useAll().useRouterWithoutGuards().plugins,
+        stubs: {
+          FilterType: { template: '<slot :entries="[{ item: 1 }, { item: 2 }]" :opened="false" />' }
+        }
+      },
+      props: { filter: searchStore.getFilter({ name }) }
+    })
+
+    expect(stubbedWrapper.findComponent({ name: 'ColumnChartPicker' }).exists()).toBe(false)
+  })
+
+  it(
+    'loads the date chart chunk once the filter is opened with multiple entries',
+    async () => {
+      const stubbedWrapper = mount(FilterDateRange, {
+        global: {
+          plugins: CoreSetup.init().useAll().useRouterWithoutGuards().plugins,
+          stubs: {
+            FilterType: { template: '<slot :entries="[{ item: 1 }, { item: 2 }]" :opened="true" />' }
+          }
+        },
+        props: { filter: searchStore.getFilter({ name }) }
+      })
+
+      // The chart chunk's first dynamic import can take real wall-clock time
+      // to transform in the test pipeline, so poll with a generous timeout
+      // instead of a single flush or the 1s vi.waitFor default.
+      await vi.waitFor(
+        () => {
+          expect(stubbedWrapper.findComponent({ name: 'ColumnChartPicker' }).exists()).toBe(true)
+        },
+        { timeout: 20000 }
+      )
+    },
+    25000
+  )
 })

@@ -4,6 +4,7 @@ import { AppIcon } from '@icij/murmur'
 import trim from 'lodash/trim'
 import { useI18n } from 'vue-i18n'
 
+import AppPopover from '@/components/AppPopover/AppPopover'
 import { useSearchStore } from '@/store/modules'
 
 const EMAIL_REGEX = /(.+)<(.+)>/i
@@ -49,19 +50,24 @@ const qSent = computed(() => {
 </script>
 
 <template>
-  <b-popover
-    teleport-to="body"
+  <app-popover
+    hide-header
     class="display-email__popover"
     placement="bottom"
     :boundary-padding="16"
   >
-    <template #target>
-      <component
-        :is="tag"
+    <!-- The target is a real button so Enter, Space and assistive technologies
+         all raise a single native click, handled once by the click trigger. -->
+    <template #target="{ visible }">
+      <button
+        type="button"
         class="display-email"
+        :aria-expanded="visible"
       >
-        {{ nameOrRawEmail }}
-      </component>
+        <component :is="tag">
+          {{ nameOrRawEmail }}
+        </component>
+      </button>
     </template>
     <div class="display-email__popover__content">
       <div class="h6 m-0">
@@ -91,12 +97,18 @@ const qSent = computed(() => {
         </router-link>
       </div>
     </div>
-  </b-popover>
+  </app-popover>
 </template>
 
 <style lang="scss">
 .display-email {
   display: inline-block;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
 
   &__popover {
     min-width: 450px;

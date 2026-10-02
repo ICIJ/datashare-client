@@ -1,5 +1,5 @@
 <script setup>
-import { noop } from 'lodash'
+import noop from 'lodash/noop'
 import { computed, getCurrentInstance, inject, useTemplateRef, onMounted, onUnmounted } from 'vue'
 import { useElementSize } from '@vueuse/core'
 

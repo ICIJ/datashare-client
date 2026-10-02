@@ -1,8 +1,13 @@
 import { ref, unref } from 'vue'
 import bodybuilder from 'bodybuilder'
 import lucene from 'lucene'
-import { castArray, escapeRegExp, get, last, orderBy, some, throttle } from 'lodash'
-
+import castArray from 'lodash/castArray'
+import escapeRegExp from 'lodash/escapeRegExp'
+import get from 'lodash/get'
+import last from 'lodash/last'
+import orderBy from 'lodash/orderBy'
+import some from 'lodash/some'
+import throttle from 'lodash/throttle'
 import { useCore } from '@/composables/useCore'
 import settings from '@/utils/settings'
 

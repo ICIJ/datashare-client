@@ -7,7 +7,7 @@ import ButtonRowActionStop from '@/components/Button/ButtonRowAction/ButtonRowAc
 import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
 import DisplayNumber from '@/components/Display/DisplayNumber'
 import DisplayProgress from '@/components/Display/DisplayProgress'
-import DisplayProjectList from '@/components/Display/DisplayProjectList'
+import ProjectsButton from '@/components/Project/ProjectsButton'
 import DisplayStatus from '@/components/Display/DisplayStatus'
 import EmptyState from '@/components/EmptyState/EmptyState'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
@@ -93,7 +93,7 @@ function removeWithConfirmation(id, callback) {
           />
         </template>
         <template #cell(project)="{ item }">
-          <display-project-list :values="getProject(item)" />
+          <projects-button :projects="getProject(item)" />
         </template>
         <template #cell(progress)="{ item }">
           <display-progress :value="item.progress" />

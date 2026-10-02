@@ -4,7 +4,7 @@ import { setActivePinia, createPinia } from 'pinia'
 import CoreSetup from '~tests/unit/CoreSetup'
 import FilterTypeAll from '@/components/Filter/FilterType/FilterTypeAll'
 import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPanelSectionFilterEntry'
-import { useSearchStore } from '@/store/modules'
+import { useSearchStore, useLockedFiltersStore } from '@/store/modules'
 
 describe('FilterTypeAll.vue', () => {
   let core, wrapper, searchStore, filter
@@ -28,5 +28,27 @@ describe('FilterTypeAll.vue', () => {
   it('always hides the count', async () => {
     await flushPromises()
     expect(wrapper.findComponent(FiltersPanelSectionFilterEntry).props('hideCount')).toBe(true)
+  })
+
+  it('always hides the lock button — the "All" pseudo-entry has no value of its own to lock', async () => {
+    await flushPromises()
+    expect(wrapper.findComponent(FiltersPanelSectionFilterEntry).props('lockable')).toBe(false)
+  })
+
+  it('does not wipe the user\'s real lock store when clicked with hideLock set', async () => {
+    const lockedFiltersStore = useLockedFiltersStore()
+    searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+    lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'PDF' })
+
+    wrapper.unmount()
+    wrapper = mount(FilterTypeAll, {
+      global: { plugins: core.plugins },
+      props: { filter, hideLock: true }
+    })
+    await flushPromises()
+
+    await wrapper.findComponent(FiltersPanelSectionFilterEntry).vm.$emit('update:modelValue', true)
+
+    expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'application/pdf' })).toBe(true)
   })
 })

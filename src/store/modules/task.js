@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { find, property } from 'lodash'
-
+import find from 'lodash/find'
+import property from 'lodash/property'
 import { apiInstance as api } from '@/api/apiInstance'
 import { TASK_STATUS, isDoneStatus } from '@/enums/taskStatus'
 import { TASK_NAME } from '@/enums/taskNames'

@@ -46,7 +46,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['click:x'])
+const emit = defineEmits(['click:x', 'click:lock'])
 
 const searchStore = useSearchStore()
 
@@ -61,9 +61,10 @@ const effectiveRightOperator = computed(() => {
 </script>
 
 <template>
-  <span class="search-parameter-query-ast d-inline-flex flex-wrap flex-wrap column-gap-1 row-gap-2">
+  <span class="search-parameter-query-ast d-inline-flex flex-wrap column-gap-2 row-gap-2">
     <search-parameter-query-ast
       v-if="isLeft"
+      v-bind="$attrs"
       :ast="ast.left"
       :color="color"
       :counter="counter"
@@ -72,6 +73,7 @@ const effectiveRightOperator = computed(() => {
       :no-x-icon="noXIcon"
       :size="size"
       @click:x="emit('click:x', ast.left)"
+      @click:lock="emit('click:lock', $event)"
     >
       <slot />
     </search-parameter-query-ast>
@@ -102,6 +104,7 @@ const effectiveRightOperator = computed(() => {
       :no-x-icon="noXIcon"
       :size="size"
       @click:x="emit('click:x', ast)"
+      @click:lock="emit('click:lock', ast)"
     >
       <slot />
     </search-parameter-filter>
@@ -115,6 +118,7 @@ const effectiveRightOperator = computed(() => {
       :no-x-icon="noXIcon"
       :size="size"
       @click:x="emit('click:x', $event)"
+      @click:lock="emit('click:lock', $event)"
     >
       <slot />
     </search-parameter-query-ast>

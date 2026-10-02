@@ -1,6 +1,9 @@
 import { defineStore } from 'pinia'
 import { reactive, computed, toRaw } from 'vue'
-import { castArray, isEmpty, findLastIndex, sortBy } from 'lodash'
+import castArray from 'lodash/castArray'
+import isEmpty from 'lodash/isEmpty'
+import findLastIndex from 'lodash/findLastIndex'
+import sortBy from 'lodash/sortBy'
 import { parseQuery, stringifyQuery } from 'vue-router'
 
 import diff from '@/utils/diff'

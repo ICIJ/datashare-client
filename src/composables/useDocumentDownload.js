@@ -1,14 +1,25 @@
 import { computed, ref, toRef, watchEffect } from 'vue'
 import { useI18n } from 'vue-i18n'
+import range from 'lodash/range'
 
-import { useCore } from '@/composables/useCore'
+import { apiInstance as api } from '@/api/apiInstance'
 import { useDocumentDownloadStore, useDocumentStore } from '@/store/modules'
+import { useStructureArtifact } from '@/composables/useStructureArtifact'
+import { useToast } from '@/composables/useToast'
+import { downloadBlob } from '@/utils/download'
 import settings from '@/utils/settings'
+
+const TEXT_MIME_TYPE = 'text/plain;charset=UTF-8'
+const MARKDOWN_MIME_TYPE = 'text/markdown;charset=UTF-8'
+
+// Blank lines on both sides of the rule: `---` directly under a text line is a
+// setext heading underline, not a page break.
+const MARKDOWN_PAGE_SEPARATOR = '\n\n---\n\n'
 
 export function useDocumentDownload(document, { immediate = true } = {}) {
   const documentStore = useDocumentStore()
   const documentDownloadStore = useDocumentDownloadStore()
-  const core = useCore()
+  const { toast } = useToast()
   const { locale, t } = useI18n()
 
   const documentRef = toRef(document)
@@ -71,15 +82,14 @@ export function useDocumentDownload(document, { immediate = true } = {}) {
   })
 
   async function downloadTextContent() {
-    if (!hasTextContent.value) return
+    if (!hasTextContent.value) {
+      return
+    }
     if (!documentRef.value.content) {
       await documentStore.getContent()
     }
     const { content, title } = documentRef.value
-    const a = window.document.createElement('a')
-    a.href = URL.createObjectURL(new Blob([content], { type: 'text/plain;charset=UTF-8' }))
-    a.download = `${title}.txt`
-    a.click()
+    downloadBlob(content, `${title}.txt`, TEXT_MIME_TYPE)
   }
 
   const availableTranslations = ref([])
@@ -90,14 +100,44 @@ export function useDocumentDownload(document, { immediate = true } = {}) {
 
   async function fetchTranslationStatus() {
     const { index, id, routing } = documentRef.value
-    if (!index || !id) return
-    try {
-      const _source = 'content_translated.target_language'
-      const data = await core.api.elasticsearch.getSource({ index, id, routing, _source })
-      availableTranslations.value = (data.content_translated || []).filter(t => t.target_language)
+    if (!index || !id) {
+      return
     }
-    catch {
-      availableTranslations.value = []
+    availableTranslations.value = await documentDownloadStore.fetchTranslationStatus({ index, id, routing })
+  }
+
+  const { hasMarkdown, pages: markdownPages, fetchManifest: fetchMarkdownStatus } = useStructureArtifact(documentRef)
+
+  const isDownloadingMarkdown = ref(false)
+
+  async function fetchMarkdownPages() {
+    const { index, id, routing } = documentRef.value
+    const requests = range(1, markdownPages.value + 1).map(page => api.getStructurePage(index, id, page, routing))
+    return Promise.all(requests)
+  }
+
+  async function downloadMarkdown() {
+    if (!hasMarkdown.value || isDownloadingMarkdown.value) {
+      return
+    }
+    // Captured before the fetch: the pages belong to the document that was
+    // clicked, so the filename must not follow a later document.
+    const { title } = documentRef.value
+    isDownloadingMarkdown.value = true
+    try {
+      const pages = await fetchMarkdownPages()
+      downloadBlob(pages.join(MARKDOWN_PAGE_SEPARATOR), `${title}.md`, MARKDOWN_MIME_TYPE)
+    }
+    catch (error) {
+      // An expired session already gets its own "log back in" toast from the
+      // error bus, and stacking a download failure on top of it only tells the
+      // user something they cannot act on.
+      if (error?.response?.status !== 401) {
+        toast.error(t('documentDownloadPopover.downloadMarkdownError'))
+      }
+    }
+    finally {
+      isDownloadingMarkdown.value = false
     }
   }
 
@@ -109,23 +149,23 @@ export function useDocumentDownload(document, { immediate = true } = {}) {
     const { translations, title } = documentRef.value
     const targetLanguage = translations[0]?.target_language ?? availableTranslations.value[0]?.target_language
     const translatedContent = documentRef.value.translatedContentIn(targetLanguage)
-    const a = window.document.createElement('a')
-    a.href = URL.createObjectURL(new Blob([translatedContent], { type: 'text/plain;charset=UTF-8' }))
-    a.download = `${title}.txt`
-    a.click()
+    downloadBlob(translatedContent, `${title}.txt`, TEXT_MIME_TYPE)
   }
 
   async function fetchStatuses() {
-    await Promise.all([fetchDownloadStatus(), fetchTranslationStatus()])
+    await Promise.all([fetchDownloadStatus(), fetchTranslationStatus(), fetchMarkdownStatus()])
   }
 
   if (immediate) {
     watchEffect(fetchDownloadStatus)
     watchEffect(fetchTranslationStatus)
+    watchEffect(fetchMarkdownStatus)
   }
 
   return {
     fetchStatuses,
+    fetchDownloadStatus,
+    fetchTranslationStatus,
     extensionWarning,
     description,
     showExtensionWarning,
@@ -139,6 +179,9 @@ export function useDocumentDownload(document, { immediate = true } = {}) {
     downloadTextContent,
     hasTextContent,
     hasTranslations,
-    downloadTranslatedContent
+    downloadTranslatedContent,
+    hasMarkdown,
+    downloadMarkdown,
+    isDownloadingMarkdown
   }
 }

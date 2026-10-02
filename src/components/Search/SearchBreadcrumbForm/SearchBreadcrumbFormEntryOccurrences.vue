@@ -10,10 +10,6 @@ const props = defineProps({
   previousOccurrences: {
     type: Number,
     default: 0
-  },
-  tooltipDelay: {
-    type: Object,
-    default: () => ({ show: 0, hide: 0 })
   }
 })
 const { t, n } = useI18n()
@@ -24,7 +20,7 @@ const lessOccurrences = computed(() => {
 
 <template>
   <div
-    v-b-tooltip.body.top="{ offset: '0', delay: tooltipDelay }"
+    v-b-tooltip.body.top="{ offset: '0' }"
     class="search-breadcrumb-form-entry-occurrences d-inline-flex px-2"
     :title="t('searchBreadcrumbFormEntryOccurrences.title', { lessOccurrences: n(lessOccurrences) }, lessOccurrences)"
   >

@@ -52,6 +52,9 @@ const {
   hasTextContent,
   hasTranslations,
   downloadTranslatedContent,
+  hasMarkdown,
+  downloadMarkdown,
+  isDownloadingMarkdown,
   fetchStatuses
 } = useDocumentDownload(() => props.document, { immediate: !props.lazy })
 const mounted = computed(() => !props.lazy || activated.value)
@@ -118,6 +121,15 @@ defineExpose({
         class="document-download-popover__body__button"
         :disabled="!hasTextContent"
         @click="downloadTextContent"
+      />
+      <button-icon
+        v-if="hasMarkdown"
+        :icon-left="IPhDownloadSimple"
+        :label="t('documentDownloadPopover.downloadMarkdown')"
+        :loading="isDownloadingMarkdown"
+        variant="outline-action"
+        class="document-download-popover__body__button"
+        @click="downloadMarkdown"
       />
       <button-icon
         v-if="hasTranslations"

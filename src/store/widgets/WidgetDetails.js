@@ -1,6 +1,8 @@
+import { defineAsyncComponent } from 'vue'
 import WidgetEmpty from './WidgetEmpty'
 
-import Component from '@/components/Widget/WidgetDetails'
+// See WidgetEmpty.js for why this is lazy.
+const Component = defineAsyncComponent(() => import('@/components/Widget/WidgetDetails'))
 
 /**
  * Widget to display a project's details

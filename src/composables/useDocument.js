@@ -1,9 +1,12 @@
 import { computed, inject, provide, useId, watch, h } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { find, matches, overSome } from 'lodash'
+import find from 'lodash/find'
+import matches from 'lodash/matches'
+import overSome from 'lodash/overSome'
 import { useModal } from 'bootstrap-vue-next'
 
 import { useCore } from '@/composables/useCore'
+import { useMode } from '@/composables/useMode'
 import { useWait } from '@/composables/useWait'
 import DocumentViewerModal from '@/components/Document/DocumentViewerModal/DocumentViewerModal'
 import { useDocumentStore } from '@/store/modules'
@@ -15,6 +18,7 @@ export const useDocument = function (element) {
   const route = useRoute()
   const router = useRouter()
   const core = useCore()
+  const { isServer } = useMode(core)
   const { waitFor, loaderId } = useWait()
 
   const fetchDocument = waitFor(async function ({ index, id, routing } = {}) {
@@ -22,7 +26,10 @@ export const useDocument = function (element) {
     await documentStore.getParentDocument()
     await documentStore.getRootDocument()
     await documentStore.getTags()
-    await documentStore.getRecommendationsByDocuments(await core.auth.getUsername())
+    // Recommendations are a server-mode-only feature
+    if (isServer.value) {
+      await documentStore.getRecommendationsByDocuments(await core.auth.getUsername())
+    }
 
     if (document.value) {
       const { route, slicedNameToString } = document.value

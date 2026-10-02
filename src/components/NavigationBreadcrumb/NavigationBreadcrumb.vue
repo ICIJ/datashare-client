@@ -1,5 +1,5 @@
 <script setup>
-import { isString } from 'lodash'
+import isString from 'lodash/isString'
 import { computed, useSlots } from 'vue'
 import { useRouter } from 'vue-router'
 import { AppIcon } from '@icij/murmur'

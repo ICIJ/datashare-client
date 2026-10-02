@@ -143,7 +143,10 @@ const isVisible = computed(() => props.modal || !collapse.value)
               class="filters-panel-section-filter__content__search mb-3"
             />
           </slot>
-          <div :class="flush ? '' : 'px-2'">
+          <div
+            class="filters-panel-section-filter__content__body"
+            :class="flush ? '' : 'px-2'"
+          >
             <slot />
           </div>
         </div>
@@ -190,16 +193,29 @@ const isVisible = computed(() => props.modal || !collapse.value)
   }
 
   &__content {
+    --filters-panel-section-filter-content-padding-x: #{$spacer-md};
+
     max-height: 380px;
     overflow: auto;
-    padding: $spacer $spacer-md $spacer-md;
+    padding: $spacer var(--filters-panel-section-filter-content-padding-x) 0;
   }
 
   &--modal &__content {
+    --filters-panel-section-filter-content-padding-x: 0px;
+
     padding: 0;
     max-height: none;
-    min-height: 20vh;
     overflow: visible;
+    display: flex;
+    flex-direction: column;
+  }
+
+  // Lets a scrolling filter body (the path tree) fill the modal's minimum
+  // height, so its scrollbar sits at the bottom instead of floating under the
+  // last row.
+  &--modal &__content__body {
+    flex: 1;
+    min-height: 0;
   }
 
   &--modal &__content__search,

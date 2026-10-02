@@ -1,5 +1,6 @@
-import { get, isString, isFunction } from 'lodash'
-
+import get from 'lodash/get'
+import isString from 'lodash/isString'
+import isFunction from 'lodash/isFunction'
 import { useAppStore } from '@/store/modules'
 import { useNProgress } from '@/composables/useNProgress'
 import { usePolicies } from '@/composables/usePolicies.js'
@@ -38,8 +39,8 @@ export default (core) => {
   function proceedAuthenticated(to, next) {
     const appStore = useAppStore()
     const path = appStore.popRedirectAfterLogin()
-    if (to.path !== path && path !== null) {
-      next({ path })
+    if (path !== null && to.fullPath !== path) {
+      next(path)
     }
     else {
       next()
@@ -56,7 +57,7 @@ export default (core) => {
   function proceedUnauthenticated(to, from, next) {
     const appStore = useAppStore()
     if (from.name !== 'login' && to.name !== 'login') {
-      appStore.setRedirectAfterLogin(to.path)
+      appStore.setRedirectAfterLogin(to.fullPath)
       next({ name: 'login' })
     }
     else {
@@ -88,7 +89,9 @@ export default (core) => {
       }
     }
     catch (error) {
-      next({ name: 'error', state: { error } })
+      // history.state must be structured-clonable; axios errors carry
+      // non-cloneable functions on `error.config`, so forward the message only.
+      next({ name: 'error', state: { error: error?.message ?? String(error) } })
     }
   }
 
@@ -232,8 +235,8 @@ export default (core) => {
   }
 
   router.beforeEach(checkMode)
-  router.beforeEach(checkUserRole)
   router.beforeEach(checkUserAuthentication)
+  router.beforeEach(checkUserRole)
   router.beforeEach(checkUserProjects)
   router.beforeEach(preparePageContext)
   router.beforeEach(startProgress)

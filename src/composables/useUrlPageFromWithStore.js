@@ -1,4 +1,4 @@
-import { toNumber } from 'lodash'
+import toNumber from 'lodash/toNumber'
 import { computed, toValue } from 'vue'
 
 import { setNumberRef } from './useUrlParam'

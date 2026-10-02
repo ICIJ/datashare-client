@@ -17,6 +17,9 @@ defineProps({
   okDisabled: {
     type: Boolean
   },
+  okLoading: {
+    type: Boolean
+  },
   okOnly: {
     type: Boolean
   },
@@ -48,7 +51,8 @@ const { t } = useI18n()
         {{ cancelTitle || t('appModalFooter.cancelTitle') }}
       </button-icon>
       <button-icon
-        :disabled="okDisabled"
+        :disabled="okDisabled || okLoading"
+        :loading="okLoading"
         :variant="okVariant"
         @click="emit('ok')"
       >

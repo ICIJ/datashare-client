@@ -1,6 +1,8 @@
+import { defineAsyncComponent } from 'vue'
 import WidgetEmpty from './WidgetEmpty'
 
-import Component from '@/components/Widget/WidgetDiskUsage'
+// See WidgetEmpty.js for why this is lazy.
+const Component = defineAsyncComponent(() => import('@/components/Widget/WidgetDiskUsage'))
 
 /**
  * Widget to display the disk space occupied by indexed files on the insights page.

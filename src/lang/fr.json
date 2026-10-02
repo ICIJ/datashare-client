@@ -172,6 +172,8 @@
     "download": "Télécharger",
     "downloadWithoutMetadata": "Télécharger sans les métadonnées",
     "downloadExtractText": "Télécharger le texte",
+    "downloadMarkdown": "Télécharger le markdown",
+    "downloadMarkdownError": "Le markdown n'a pas pu être téléchargé.",
     "downloadTranslatedText": "Télécharger la traduction de texte",
     "downloadRoot": "Télécharger le document à la racine",
     "sectionTitle": "Quel est le titre du document ?",
@@ -219,6 +221,10 @@
     "expand": "Agrandir",
     "contextualize": "Contextualiser",
     "exclude": "Exclure"
+  },
+  "filtersPanelSectionFilterEntry": {
+    "lock": "Verrouiller cette valeur de filtre",
+    "unlock": "Déverrouiller cette valeur de filtre"
   },
   "filtersPanelSectionFilterTitleToggler": {
     "toggle": "Filtres"
@@ -439,7 +445,18 @@
     }
   },
   "documentContent": {
-    "noContent": "Aucun contenu extrait pour ce document."
+    "noContent": "Aucun contenu extrait pour ce document.",
+    "view": {
+      "markdown": "Mise en forme",
+      "text": "Texte brut",
+      "translationTooltip": "Les traductions ne sont disponibles qu'en texte brut",
+      "ariaLabel": "Rendu du texte"
+    }
+  },
+  "documentContentMarkdown": {
+    "error": "Impossible de charger la mise en forme de cette page.",
+    "retry": "Réessayer",
+    "fallback": "Afficher en texte brut"
   },
   "documentViewerImage": {
     "rotateCounterClockwise": "Tourner 90° à gauche",
@@ -739,7 +756,7 @@
     },
     "level": {
       "all": "Tous",
-      "level00": "Fichier sur disque",
+      "level00": "Sur disque",
       "level01": "1er",
       "level02": "2ème",
       "level03": "3ème",
@@ -1999,6 +2016,10 @@
   "searchBreadcrumbFormEmpty": {
     "label": "Votre recherche n'a pas commencé. Utilisez la barre de recherche ou ajoutez des filtres."
   },
+  "searchBreadcrumbFormEntry": {
+    "lock": "Verrouiller cette valeur de filtre",
+    "unlock": "Déverrouiller cette valeur de filtre"
+  },
   "searchBreadcrumbFormEntryOccurrences": {
     "label": "0 document | 1 document | {occurrences} documents",
     "title": "Pas moins de documents avec ce filtre | 1 document de moins avec ce filtre | {lessOccurrences} documents de moins avec ce filtre"
@@ -2007,6 +2028,12 @@
     "clearFilters": "Effacer les filtres",
     "clearQuery": "Effacer la requête",
     "clearFiltersAndQuery": "Effacer filtres et requête",
+    "unlockFilters": "Effacer les verrous",
+    "applyLockedFilters": "Appliquer les filtres verrouillés",
+    "applyLockedFiltersDisabled": "Tous les filtres verrouillés sont déjà appliqués",
+    "applyLockedFiltersNoLocks": "Aucun filtre verrouillé à appliquer",
+    "applyLockedFiltersSuccess": "Filtres verrouillés appliqués avec succès",
+    "applyLockedFiltersError": "Impossible d'appliquer les filtres verrouillés",
     "saveSearch": "Sauvegarder la recherche",
     "createAlert": "Créer une alerte"
   },

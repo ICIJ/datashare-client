@@ -1,8 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { camelCase } from 'lodash'
-
+import camelCase from 'lodash/camelCase'
 import { toVariant } from '@/utils/utils'
 
 const { t, te } = useI18n()

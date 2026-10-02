@@ -1,0 +1,58 @@
+<script setup>
+import { computed } from 'vue'
+import { ButtonIcon } from '@icij/murmur'
+import { useI18n } from 'vue-i18n'
+import IPhLock from '~icons/ph/lock-fill'
+import IPhLockOpen from '~icons/ph/lock-open-fill'
+
+const props = defineProps({
+  locked: {
+    type: Boolean,
+    default: false
+  }
+})
+
+const emit = defineEmits(['update:locked'])
+
+const { t } = useI18n()
+
+// Shared by every "lock this value" affordance in the app (Filters panel
+// rows, breadcrumb chips, path tree rows) — same i18n keys throughout so
+// translators only maintain one lock/unlock label pair.
+const label = computed(() => t(props.locked ? 'filtersPanelSectionFilterEntry.unlock' : 'filtersPanelSectionFilterEntry.lock'))
+</script>
+
+<template>
+  <button-icon
+    v-b-tooltip.top.body="{ title: label }"
+    square
+    hide-label
+    hide-tooltip
+    variant="link"
+    size="sm"
+    class="button-toggle-lock"
+    :class="{ 'button-toggle-lock--locked': locked }"
+    :icon-left="locked ? IPhLock : IPhLockOpen"
+    :pressed="locked"
+    :label="label"
+    @click="emit('update:locked', !locked)"
+  />
+</template>
+
+<style lang="scss" scoped>
+.button-toggle-lock {
+  flex-shrink: 0;
+
+  // Overrides the btn-link default hover color (near-black) on the unlocked
+  // icon; the locked icon keeps its own color below regardless of hover.
+  &:not(&--locked):hover:deep(.button-icon__icon-left) {
+    color: var(--bs-tertiary);
+  }
+
+  &--locked {
+    &:deep(.button-icon__icon-left) {
+      color: var(--bs-action-text-emphasis);
+    }
+  }
+}
+</style>

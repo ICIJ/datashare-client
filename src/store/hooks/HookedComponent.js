@@ -1,4 +1,5 @@
-import { isString, uniqueId } from 'lodash'
+import isString from 'lodash/isString'
+import uniqueId from 'lodash/uniqueId'
 import { defineComponent } from 'vue'
 
 export const defaultOrder = 0

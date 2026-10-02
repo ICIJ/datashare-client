@@ -5,6 +5,7 @@ import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import CoreSetup from '~tests/unit/CoreSetup'
 import SearchBar from '@/components/Search/SearchBar/SearchBar'
 import SearchBarInput from '@/components/Search/SearchBar/SearchBarInput'
+import { consumeJustSubmitted } from '@/composables/useSearchFilter'
 import { useSearchStore } from '@/store/modules'
 
 describe('SearchBar.vue', function () {
@@ -69,6 +70,28 @@ describe('SearchBar.vue', function () {
     wrapper = shallowMountFactory({ indices: [indexFoo] })
     wrapper.vm.submit()
     expect(searchStore.indices).toContain(indexFoo)
+  })
+
+  it('marks the search as an explicit submission (icij/datashare#2332)', () => {
+    wrapper = shallowMountFactory()
+
+    wrapper.vm.submit()
+
+    expect(consumeJustSubmitted()).toBe(true)
+  })
+
+  it('clears exclude mode when submitting with clearFilters and a different index (icij/datashare#2332)', () => {
+    // mustClearFilters must route through resetFilterValuesPreservingLocks,
+    // not the plain resetFilterValues - the latter never touches
+    // excludeFilters, leaving a stale exclude mode behind after the project
+    // selection changes.
+    searchStore.excludeFilter('contentType')
+    expect(searchStore.excludeFilters).toContain('contentType')
+
+    wrapper = shallowMountFactory({ indices: [indexFoo], clearFilters: true })
+    wrapper.vm.submit()
+
+    expect(searchStore.excludeFilters).not.toContain('contentType')
   })
 
   describe('search suggestions', () => {

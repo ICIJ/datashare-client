@@ -1,6 +1,9 @@
 import { computed, watch, ref, toRef } from 'vue'
 import { useRoute } from 'vue-router'
-import { castArray, compact, matches, noop } from 'lodash'
+import castArray from 'lodash/castArray'
+import compact from 'lodash/compact'
+import matches from 'lodash/matches'
+import noop from 'lodash/noop'
 import { useMagicKeys } from '@vueuse/core'
 
 import { getShortkeyOS } from '@/utils/utils'

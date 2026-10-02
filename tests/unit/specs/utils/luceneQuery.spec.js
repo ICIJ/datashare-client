@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest'
-import { generateLuceneQuery as generateQuery, parseLuceneQuery, queriesEquivalent, toQueryShape } from '@/utils/luceneQuery'
+import {
+  generateLuceneQuery as generateQuery,
+  parseLuceneQuery,
+  queriesEquivalent,
+  straightenQuotes,
+  toQueryShape
+} from '@/utils/luceneQuery'
 
 describe('luceneQuery', () => {
   describe('generateLuceneQuery', () => {
@@ -802,6 +808,61 @@ describe('luceneQuery', () => {
     it('returns false when either side is unparseable', () => {
       expect(queriesEquivalent('(unclosed', 'a')).toBe(false)
       expect(queriesEquivalent('a', ')stray(')).toBe(false)
+    })
+  })
+
+  describe('straightenQuotes', () => {
+    it.each([
+      ['“test full sentence”', '"test full sentence"'],
+      ['“test full sentence“', '"test full sentence"'],
+      ['＂test＂', '"test"'],
+      ['「test」', '"test"'],
+      ['content:“a b”', 'content:"a b"'],
+      ['(“a b”)', '("a b")'],
+      ['“a” “b”', '"a" "b"'],
+      ['“a” AND path:「b」', '"a" AND path:"b"'],
+      ['“a\\\\”', '"a\\\\"'],
+      ['-“a b”', '-"a b"'],
+      ['+“a b”', '+"a b"'],
+      ['x !「a b」', 'x !"a b"'],
+      ['{“a” TO “b”}', '{"a" TO "b"}'],
+      ['"a “b” c" “d”', '"a “b” c" "d"'],
+      ['\\"a “b” c', '\\"a "b" c']
+    ])('turns the phrase %s into %s', (query, expected) => {
+      expect(straightenQuotes(query)).toBe(expected)
+    })
+
+    it.each([
+      'he said ” hello',
+      'テスト」',
+      'Mercier “x',
+      '„Berlin“'
+    ])('leaves the unpaired quote in %s alone', (query) => {
+      expect(straightenQuotes(query)).toBe(query)
+    })
+
+    it.each([
+      '\\“test',
+      '\\“\\”',
+      'C:\\“Program Files”',
+      '“a\\”'
+    ])('leaves the escaped quote in %s alone', (query) => {
+      expect(straightenQuotes(query)).toBe(query)
+    })
+
+    it.each([
+      '彼は「はい」と言った',
+      '記録「A」',
+      '"say “hello”"',
+      '"say “hello” now"',
+      'title:"a “b c” d"',
+      'foo-“bar”'
+    ])('leaves the quote used as punctuation in %s alone', (query) => {
+      expect(straightenQuotes(query)).toBe(query)
+    })
+
+    it.each(['', '*', 'plain query', '"already straight"'])('leaves %s untouched', (query) => {
+      expect(straightenQuotes(query)).toBe(query)
     })
   })
 })

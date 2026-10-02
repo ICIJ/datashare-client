@@ -1,4 +1,6 @@
-import { addLocalSearchMarksClass, addLocalSearchMarksClassByOffsets, isUrl, getConsonants } from '@/utils/strings'
+import { addLocalSearchMarksClass, addLocalSearchMarksClassByOffsets, isUrl, getConsonants, foldWithSourceIndexes, addSearchMarksClassesInHtml } from '@/utils/strings'
+
+const addSearchMarksClassInHtml = (html, term, options = {}) => addSearchMarksClassesInHtml(html, [{ term, ...options }])
 
 describe('strings', () => {
   describe('addLocalSearchMarksClass', () => {
@@ -179,6 +181,137 @@ describe('strings', () => {
 
     it('get 0 consonants from `oui` string', () => {
       expect(getConsonants('oui')).toHaveLength(0)
+    })
+  })
+
+  describe('foldWithSourceIndexes', () => {
+    it('lowercases and strips diacritics', () => {
+      expect(foldWithSourceIndexes('Société').folded).toBe('societe')
+    })
+
+    it('maps every folded char back to its source index', () => {
+      const { folded, sourceIndexes } = foldWithSourceIndexes('Où')
+      expect(folded).toBe('ou')
+      expect(sourceIndexes).toEqual([0, 1])
+    })
+
+    it('keeps the map aligned when the fold expands a ligature', () => {
+      const { folded, sourceIndexes } = foldWithSourceIndexes('aﬀb')
+      expect(folded).toBe('affb')
+      expect(sourceIndexes).toEqual([0, 1, 1, 2])
+    })
+
+    it('folds characters outside the basic multilingual plane', () => {
+      // Iterating by code unit would hand NFKD a lone surrogate, which folds to
+      // nothing, and the backend folds the whole string.
+      expect(foldWithSourceIndexes('\u{1D400}\u{1D401}\u{1D402}').folded).toBe('abc')
+    })
+
+    it('maps an astral char back to the index of its first code unit', () => {
+      const { folded, sourceIndexes } = foldWithSourceIndexes('a\u{1D400}b')
+      expect(folded).toBe('aab')
+      expect(sourceIndexes).toEqual([0, 1, 3])
+    })
+
+    it('ends a source range past a stripped combining mark', () => {
+      const { sourceEnds } = foldWithSourceIndexes('e\u0301')
+      expect(sourceEnds).toEqual([2])
+    })
+  })
+
+  describe('addSearchMarksClassesInHtml with a single mark', () => {
+    it('wraps a case-insensitive match in a mark tag', () => {
+      const html = '<p>Hello World</p>'
+      const marked = addSearchMarksClassInHtml(html, 'world')
+      expect(marked).toBe('<p>Hello <mark class="local-search-term">World</mark></p>')
+    })
+
+    it('marks a decomposed diacritic without orphaning the accent', () => {
+      const html = '<p>La socie\u0301te\u0301 e\u0301cran</p>'
+      const marked = addSearchMarksClassInHtml(html, 'societe')
+      expect(marked).toBe('<p>La <mark class="local-search-term">socie\u0301te\u0301</mark> e\u0301cran</p>')
+    })
+
+    it('marks a term made of astral characters', () => {
+      const marked = addSearchMarksClassInHtml('<p>\u{1D400}\u{1D401}\u{1D402}</p>', 'abc')
+      expect(marked).toBe('<p><mark class="local-search-term">\u{1D400}\u{1D401}\u{1D402}</mark></p>')
+    })
+
+    it('marks a diacritic variant of the term', () => {
+      const html = '<p>La société écran</p>'
+      const marked = addSearchMarksClassInHtml(html, 'societe')
+      expect(marked).toContain('<mark class="local-search-term">société</mark>')
+    })
+
+    it('marks every occurrence across elements', () => {
+      const html = '<h1>data</h1><p>data and data</p>'
+      const marked = addSearchMarksClassInHtml(html, 'data')
+      expect(marked.match(/<mark class="local-search-term">/g)).toHaveLength(3)
+    })
+
+    it('never matches across element boundaries or inside attributes', () => {
+      const html = '<p><a href="https://data.example.org" title="data">a link</a></p>'
+      const marked = addSearchMarksClassInHtml(html, 'data')
+      expect(marked).toBe(html)
+    })
+
+    it('returns the html untouched for a blank term', () => {
+      const html = '<p>Hello</p>'
+      expect(addSearchMarksClassInHtml(html, '  ')).toBe(html)
+      expect(addSearchMarksClassInHtml(html, '')).toBe(html)
+    })
+
+    it('returns the html untouched when the search term folds to nothing', () => {
+      expect(addSearchMarksClassInHtml('<p>Hello</p>', '́')).toBe('<p>Hello</p>')
+    })
+
+    it('does not nest marks when a ligature folds to a repeated term', () => {
+      // 'ﬀ' folds to 'ff', so the term 'f' matches twice inside it, both
+      // mapping back to the same source range: that must produce one mark,
+      // not one nested inside the other.
+      const marked = addSearchMarksClassInHtml('<p>aﬀb</p>', 'f')
+      expect(marked.match(/<mark class="local-search-term">/g)).toHaveLength(1)
+      expect(marked).not.toContain('<mark class="local-search-term"><mark')
+    })
+
+    it('does not throw on overlapping (non-identical) folded ranges from a ligature', () => {
+      // 'ﬀ' folds to 'ff', so the term 'ff' matches at offsets 0 and 1 inside
+      // the single source character, producing overlapping (not identical)
+      // ranges [{0,2},{1,3}] that must not both be wrapped.
+      expect(() => addSearchMarksClassInHtml('<p>fﬀf</p>', 'ff')).not.toThrow()
+      const marked = addSearchMarksClassInHtml('<p>fﬀf</p>', 'ff')
+      expect(marked.match(/<mark class="local-search-term">/g)).toHaveLength(1)
+    })
+
+    it('does not throw on overlapping (non-identical) folded ranges from a roman numeral', () => {
+      // 'Ⅲ' folds to 'iii', so the term 'ii' matches at offsets 0 and 1 inside
+      // the single source character, producing overlapping ranges [{0,1},{0,2}].
+      expect(() => addSearchMarksClassInHtml('<p>Ⅲi</p>', 'ii')).not.toThrow()
+      const marked = addSearchMarksClassInHtml('<p>Ⅲi</p>', 'ii')
+      expect(marked.match(/<mark class="local-search-term">/g)).toHaveLength(1)
+    })
+  })
+
+  describe('addSearchMarksClassesInHtml', () => {
+    it('nests the later marks inside the earlier ones, as chained calls did', () => {
+      const html = '<p>lorem ipsum dolor</p>'
+      const marks = [
+        { term: 'ipsum dolor', className: 'local-search-term' },
+        { term: 'dolor', className: 'global-search-term', style: 'border-color: red' }
+      ]
+      const marked = addSearchMarksClassesInHtml(html, marks)
+      const chained = addSearchMarksClassInHtml(
+        addSearchMarksClassInHtml(html, 'ipsum dolor'),
+        'dolor',
+        { className: 'global-search-term', style: 'border-color: red' }
+      )
+      expect(marked).toBe(chained)
+      expect(marked).toContain('<mark class="local-search-term">ipsum <mark class="global-search-term"')
+    })
+
+    it('skips a mark whose term is blank instead of throwing', () => {
+      const marked = addSearchMarksClassesInHtml('<p>lorem ipsum</p>', [{ term: '  ' }, { term: 'ipsum' }])
+      expect(marked).toBe('<p>lorem <mark class="local-search-term">ipsum</mark></p>')
     })
   })
 })

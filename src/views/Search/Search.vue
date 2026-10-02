@@ -20,7 +20,7 @@ import DocumentEntries from '@/components/Document/DocumentEntries/DocumentEntri
 import Hook from '@/components/Hook/Hook'
 import { useDocument } from '@/composables/useDocument'
 import { useUrlPageFromWithStore } from '@/composables/useUrlPageFromWithStore'
-import { useSearchFilter } from '@/composables/useSearchFilter'
+import { useSearchFilter, consumeJustSubmitted, markJustSubmitted } from '@/composables/useSearchFilter'
 import { useSearchBreadcrumb } from '@/composables/useSearchBreadcrumb'
 import { useSearchNav } from '@/composables/useSearchNav'
 import { useSearchExecution } from '@/composables/useSearchExecution'
@@ -44,7 +44,7 @@ const {
   onAfterRouteQueryFromUpdate,
   onConsumeNoRefresh
 } = useSearchFilter()
-const { count: searchBreadcrumbCounter, anyFilters } = useSearchBreadcrumb()
+const { count: searchBreadcrumbCounter, anyFilters, lockedFiltersCount, hasConflictingLocks } = useSearchBreadcrumb()
 const { hasCarousel } = useSearchNav()
 
 const { t } = useI18n()
@@ -113,6 +113,21 @@ const page = useUrlPageFromWithStore({
 
 const documentViewFloatingId = provideDocumentViewFloatingId()
 
+/**
+ * Run an advanced search submitted from the toolbar's modal. Like the search
+ * bar, it only updates the store and pushes a route: the refresh guards below
+ * turn that navigation into the actual search. Pushing keeps the URL in sync
+ * with the store, without which the next route round-trip (pagination, sort,
+ * perPage) would re-apply the URL's previous query over this one.
+ */
+function handleAdvancedSearch({ query, field }) {
+  searchStore.setQuery(query)
+  searchStore.setField(field)
+  markJustSubmitted()
+  // Resets `from` and stamps the route, so an unchanged query still resubmits.
+  refreshRouteFromStart()
+}
+
 // Refresh route query when a filter changes (either their values or if they are excluded)
 watchFilters(refreshRouteFromStart)
 // Refresh route query when projects change
@@ -124,6 +139,11 @@ watchOperator(refreshRouteFromStart)
 // when the route query changes which mean that **only route changes** can trigger a search. This
 // particular one will also change the "from" query parameter to the first page.
 onAfterRouteQueryUpdate(refreshSearchFromRouteStart)
+// Leave selection mode when the query or the filters change: the result set is
+// different so the current selection is stale. Leaving the mode clears it.
+onAfterRouteQueryUpdate(() => {
+  selectMode.value = false
+})
 // Refresh search when route query "from" parameter changes. This is different from the previous watcher
 // because it will only trigger the search API call when the "from" parameter changes and therefore, will not
 // change the "from" query parameter to the first page. If the current route is the search route, it
@@ -133,6 +153,28 @@ onAfterRouteQueryFromUpdate(refreshSearchFromRoute, { immediate: route.name === 
 // refresh guards above so it runs last and they observe the flag before it is
 // stripped from the URL.
 onConsumeNoRefresh({ immediate: route.name === 'search' })
+// Auto-open the breadcrumb panel after an explicit search submission when
+// locks are active, so the user immediately sees what's locked. Gated on a
+// one-shot in-memory flag (set only by SearchBar's submit(), consumed here)
+// so paging, filter toggles, and project switches — which also push a
+// `search` route — never repeatedly reopen a panel the user just closed.
+onAfterRouteQueryUpdate(() => {
+  if (consumeJustSubmitted() && lockedFiltersCount.value > 0) {
+    toggleSearchBreadcrumb.value = true
+  }
+})
+// Auto-open the breadcrumb panel whenever a locked filter starts conflicting
+// with the live search state — e.g. opening a shared link whose query fights
+// an active lock.
+watch(
+  hasConflictingLocks,
+  (conflict) => {
+    if (conflict) {
+      toggleSearchBreadcrumb.value = true
+    }
+  },
+  { immediate: true }
+)
 </script>
 
 <template>
@@ -152,6 +194,7 @@ onConsumeNoRefresh({ immediate: route.name === 'search' })
           v-model:is-filters-closed="isFiltersClosed"
           :search-breadcrumb-counter="searchBreadcrumbCounter"
           :no-search-filters="!enoughFloatingSpace && !isSearchRoute"
+          @advanced-search="handleAdvancedSearch"
         />
         <search-breadcrumb
           v-model:visible="toggleSearchBreadcrumb"
@@ -207,11 +250,13 @@ onConsumeNoRefresh({ immediate: route.name === 'search' })
                   :model-value="!!Component"
                   @hide="refreshRoute"
                 >
-                  <search-carousel v-if="hasCarousel" />
-                  <component
-                    :is="Component"
-                    :compact="!enoughFloatingSpace"
-                  />
+                  <template #default="{ compact }">
+                    <search-carousel v-if="hasCarousel" />
+                    <component
+                      :is="Component"
+                      :compact="compact"
+                    />
+                  </template>
                 </document-modal>
                 <component
                   :is="Component"

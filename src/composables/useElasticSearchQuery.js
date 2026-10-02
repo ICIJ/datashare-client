@@ -1,5 +1,5 @@
 import bodybuilder from 'bodybuilder'
-import { get } from 'lodash'
+import get from 'lodash/get'
 import { apiInstance as api } from '@/api/apiInstance'
 
 export function useElasticSearchQuery() {

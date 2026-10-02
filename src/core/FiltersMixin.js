@@ -1,7 +1,6 @@
 import cloneDeep from 'lodash/cloneDeep'
 import findIndex from 'lodash/findIndex'
 import uniqueId from 'lodash/uniqueId'
-
 import { useSearchStore } from '@/store/modules'
 
 /**
@@ -40,9 +39,10 @@ const FiltersMixin = superclass =>
      * Unregister a filter
      * @memberof FiltersMixin.prototype
      * @param {String} name - Name of the filter to unregister
+     * @param {Object} [options] - Forwarded to searchStore.removeFilter (see `preserveLocks`).
      */
-    unregisterFilter(name) {
-      this.searchStore.removeFilter(name)
+    unregisterFilter(name, options) {
+      this.searchStore.removeFilter(name, options)
     }
 
     /**
@@ -62,7 +62,10 @@ const FiltersMixin = superclass =>
         project,
         // Conditional callbacks
         withFn: () => this.registerFilter({ type, options }),
-        withoutFn: () => this.unregisterFilter(options.name)
+        // preserveLocks: this filter is only hidden for this project
+        // selection, not permanently removed - see unregisterFilterForProject
+        // below for the same case reached the other way around.
+        withoutFn: () => this.unregisterFilter(options.name, { preserveLocks: true })
       })
     }
 
@@ -80,7 +83,10 @@ const FiltersMixin = superclass =>
       return this.toggleForProject({
         project,
         // Conditional callbacks
-        withFn: () => this.unregisterFilter(name),
+        // preserveLocks: this filter is only hidden for this project
+        // selection, not permanently removed - registerFilter below never
+        // restores locks, so purging them here would lose them for good.
+        withFn: () => this.unregisterFilter(name, { preserveLocks: true }),
         withoutFn: () => this.registerFilter({ type, options, position })
       })
     }

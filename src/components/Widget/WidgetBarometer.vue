@@ -32,7 +32,8 @@
 </template>
 
 <script setup>
-import { isString, isObject } from 'lodash'
+import isString from 'lodash/isString'
+import isObject from 'lodash/isObject'
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { AppIcon } from '@icij/murmur'

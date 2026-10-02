@@ -84,7 +84,8 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { vIntersectionObserver } from '@vueuse/components'
-import { get, range } from 'lodash'
+import get from 'lodash/get'
+import range from 'lodash/range'
 import axios from 'axios'
 import { useI18n } from 'vue-i18n'
 import { useConfig } from '@/composables/useConfig'

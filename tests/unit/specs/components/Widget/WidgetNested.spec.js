@@ -9,7 +9,7 @@ import { useInsightsStore } from '@/store/modules/insights'
 describe('WidgetNested.vue', () => {
   let wrapper
 
-  beforeAll(() => {
+  beforeAll(async () => {
     const { index: project } = esConnectionHelper.build()
     const { plugins } = CoreSetup.init().useAll()
     const insightsStore = useInsightsStore()
@@ -40,6 +40,13 @@ describe('WidgetNested.vue', () => {
           ]
         })
       }
+    })
+    // The nested widgets' components (WidgetText, WidgetEmpty) are now
+    // lazy-loaded — their chunk's on-demand transform can take real
+    // wall-clock time in the test transform pipeline, so poll instead of a
+    // single microtask flush.
+    await vi.waitFor(() => {
+      expect(wrapper.findAll('.widget__container .widget')).toHaveLength(2)
     })
   })
 

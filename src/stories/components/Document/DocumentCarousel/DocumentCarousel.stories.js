@@ -1,6 +1,5 @@
 import { markRaw } from 'vue'
-import { sample } from 'lodash'
-
+import sample from 'lodash/sample'
 import IPhFilePdf from '~icons/ph/file-pdf'
 import DocumentCarousel from '@/components/Document/DocumentCarousel/DocumentCarousel'
 import DocumentCarouselEntry from '@/components/Document/DocumentCarousel/DocumentCarouselEntry'

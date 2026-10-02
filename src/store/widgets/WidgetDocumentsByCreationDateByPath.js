@@ -1,6 +1,8 @@
+import { defineAsyncComponent } from 'vue'
 import WidgetDocumentsByCreationDate from './WidgetDocumentsByCreationDate'
 
-import Component from '@/components/Widget/WidgetDocumentsByCreationDateByPath'
+// See WidgetEmpty.js for why this is lazy.
+const Component = defineAsyncComponent(() => import('@/components/Widget/WidgetDocumentsByCreationDateByPath'))
 
 /**
  * Widget to display number of files by creation date by path

@@ -1,6 +1,5 @@
 <script setup>
-import { noop } from 'lodash'
-
+import noop from 'lodash/noop'
 import DocumentUserCommentsListEntry from '@/components/Document/DocumentUser/DocumentUserComments/DocumentUserCommentsListEntry'
 import DocumentUserCommentsListNewest from '@/components/Document/DocumentUser/DocumentUserComments/DocumentUserCommentsListNewest'
 import DocumentUserCommentsListOldest from '@/components/Document/DocumentUser/DocumentUserComments/DocumentUserCommentsListOldest'
@@ -20,10 +19,6 @@ defineProps({
   to: {
     type: String,
     default: noop
-  },
-  tooltipDelay: {
-    type: Object,
-    default: () => ({ show: 0, hide: 0 })
   },
   hasOldest: {
     type: Boolean,

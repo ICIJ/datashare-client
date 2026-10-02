@@ -146,6 +146,7 @@ watch(toRef(props, 'total'), total => (selectMode.value = selectMode.value && to
         <button-download-documents
           :label="batchDownloadDocumentsLabel"
           :loading="batchDownloadLoading"
+          :disabled="total === 0"
           @click="runBatchDownload"
         />
       </div>

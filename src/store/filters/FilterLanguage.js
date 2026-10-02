@@ -1,5 +1,4 @@
 import escapeRegExp from 'lodash/escapeRegExp'
-
 import FilterText from './FilterText'
 
 import DisplayLanguage from '@/components/Display/DisplayLanguage'

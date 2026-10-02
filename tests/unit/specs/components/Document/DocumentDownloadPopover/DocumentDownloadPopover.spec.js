@@ -5,6 +5,8 @@ import Document from '@/api/resources/Document'
 import DocumentDownloadPopover from '@/components/Document/DocumentDownloadPopover/DocumentDownloadPopover'
 import { apiInstance } from '@/api/apiInstance'
 
+const MARKDOWN_MANIFEST = Object.freeze({ pages: 1, formats: ['md'] })
+
 describe('DocumentDownloadPopover.vue', () => {
   let core, plugins
 
@@ -13,15 +15,16 @@ describe('DocumentDownloadPopover.vue', () => {
     core.createPinia()
     plugins = core.plugins
     URL.createObjectURL = vi.fn().mockReturnValue('blob:fake-url')
+    apiInstance.getStructureManifest = vi.fn().mockResolvedValue(null)
   })
 
   afterEach(() => {
     vi.restoreAllMocks()
   })
 
-  function createDocument(overrides = {}) {
+  function createDocument(overrides = {}, id = 'test-doc-id') {
     return new Document({
-      _id: 'test-doc-id',
+      _id: id,
       _index: 'test-index',
       _source: {
         title: 'test-doc',
@@ -55,7 +58,7 @@ describe('DocumentDownloadPopover.vue', () => {
       content_translated: [{ target_language: 'ENGLISH' }]
     })
     apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(true)
-    const doc = createDocument()
+    const doc = createDocument({}, 'test-doc-id-with-translations')
     const wrapper = mountPopover(doc)
     await flushPromises()
     const buttons = wrapper.findAll('.document-download-popover__body__button')
@@ -68,7 +71,7 @@ describe('DocumentDownloadPopover.vue', () => {
       content_translated: []
     })
     apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(true)
-    const doc = createDocument()
+    const doc = createDocument({}, 'test-doc-id-without-translations')
     const wrapper = mountPopover(doc)
     await flushPromises()
     const buttons = wrapper.findAll('.document-download-popover__body__button')
@@ -81,9 +84,10 @@ describe('DocumentDownloadPopover.vue', () => {
       content_translated: [{ target_language: 'ENGLISH' }]
     })
     apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(true)
-    const doc = createDocument({
-      content_translated: [{ content: 'translated text', target_language: 'ENGLISH' }]
-    })
+    const doc = createDocument(
+      { content_translated: [{ content: 'translated text', target_language: 'ENGLISH' }] },
+      'test-doc-id-translation-click'
+    )
 
     const fakeAnchor = { href: '', download: '', click: vi.fn() }
     const originalCreateElement = window.document.createElement.bind(window.document)
@@ -142,5 +146,69 @@ describe('DocumentDownloadPopover.vue', () => {
     const buttons = wrapper.findAll('.document-download-popover__body__button')
     const downloadButton = buttons.find(btn => btn.attributes('label') === 'Download')
     expect(downloadButton.attributes('disabled')).toBe('false')
+  })
+
+  it('should show the markdown download button when the document has a markdown artifact', async () => {
+    apiInstance.elasticsearch.getSource = vi.fn().mockResolvedValue({ content_translated: [] })
+    apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(true)
+    apiInstance.getStructureManifest = vi.fn().mockResolvedValue(MARKDOWN_MANIFEST)
+    const wrapper = mountPopover(createDocument({}, 'test-doc-id-with-markdown'))
+    await flushPromises()
+    const buttons = wrapper.findAll('.document-download-popover__body__button')
+    const labels = buttons.map(btn => btn.attributes('label'))
+    expect(labels).toContain('Download markdown')
+  })
+
+  it('should not show the markdown download button when the document has no markdown artifact', async () => {
+    apiInstance.elasticsearch.getSource = vi.fn().mockResolvedValue({ content_translated: [] })
+    apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(true)
+    apiInstance.getStructureManifest = vi.fn().mockResolvedValue(null)
+    const wrapper = mountPopover(createDocument({}, 'test-doc-id-without-markdown'))
+    await flushPromises()
+    const buttons = wrapper.findAll('.document-download-popover__body__button')
+    const labels = buttons.map(btn => btn.attributes('label'))
+    expect(labels).not.toContain('Download markdown')
+  })
+
+  it('should put the markdown button in a loading state while the pages are fetched', async () => {
+    apiInstance.elasticsearch.getSource = vi.fn().mockResolvedValue({ content_translated: [] })
+    apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(true)
+    apiInstance.getStructureManifest = vi.fn().mockResolvedValue(MARKDOWN_MANIFEST)
+    apiInstance.getStructurePage = vi.fn(() => new Promise(() => {}))
+
+    const wrapper = mountPopover(createDocument({}, 'test-doc-id-markdown-loading'))
+    await flushPromises()
+    const markdownButton = () => wrapper
+      .findAll('.document-download-popover__body__button')
+      .find(btn => btn.attributes('label') === 'Download markdown')
+
+    expect(markdownButton().attributes('loading')).toBe('false')
+    await markdownButton().trigger('click')
+    expect(markdownButton().attributes('loading')).toBe('true')
+  })
+
+  it('should trigger a download when the markdown button is clicked', async () => {
+    apiInstance.elasticsearch.getSource = vi.fn().mockResolvedValue({ content_translated: [] })
+    apiInstance.isDocumentDownloadable = vi.fn().mockResolvedValue(true)
+    apiInstance.getStructureManifest = vi.fn().mockResolvedValue(MARKDOWN_MANIFEST)
+    apiInstance.getStructurePage = vi.fn().mockResolvedValue('# Hello')
+
+    const fakeAnchor = { href: '', download: '', click: vi.fn() }
+    const originalCreateElement = window.document.createElement.bind(window.document)
+    vi.spyOn(window.document, 'createElement').mockImplementation((tag) => {
+      if (tag === 'a') {
+        return fakeAnchor
+      }
+      return originalCreateElement(tag)
+    })
+
+    const wrapper = mountPopover(createDocument({}, 'test-doc-id-markdown-click'))
+    await flushPromises()
+    const buttons = wrapper.findAll('.document-download-popover__body__button')
+    const markdownButton = buttons.find(btn => btn.attributes('label') === 'Download markdown')
+    expect(markdownButton.exists()).toBe(true)
+    await markdownButton.trigger('click')
+    await flushPromises()
+    expect(fakeAnchor.click).toHaveBeenCalled()
   })
 })

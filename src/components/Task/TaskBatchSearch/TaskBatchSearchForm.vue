@@ -1,5 +1,5 @@
 <script setup>
-import { property } from 'lodash'
+import property from 'lodash/property'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { computed, ref, toValue } from 'vue'
@@ -16,6 +16,7 @@ import TaskBatchSearchFormOverview from '@/components/Task/TaskBatchSearch/TaskB
 import { useCore } from '@/composables/useCore'
 import { useToast } from '@/composables/useToast'
 import { useSearchStore } from '@/store/modules/search'
+import { straightenQuotes } from '@/utils/luceneQuery'
 
 const core = useCore()
 const { toast } = useToast()
@@ -88,14 +89,39 @@ const queryTemplate = computed(() => {
   return JSON.stringify(query)
 })
 
-const uri = computed(() => formSearchStore.stringifyBaseRouteQuery)
+const uri = computed(() => {
+  const { href = null } = router.resolve({ name: 'search', query: formSearchStore.toBaseRouteQuery }) ?? {}
+  return href
+})
 
 const isValid = computed(() => name.value.trim(' ').length > 0 && csv.value !== null)
 
-function createBatchSearch() {
+/**
+ * Rewrite the smart quotes of every query so a phrase typed with a CJK keyboard
+ * searches like a quoted phrase, as it does in the search bar. Queries are
+ * straightened one line at a time so a phrase never spans two of them.
+ */
+async function straightenCsvQueries(file) {
+  const queries = await file.text()
+  return new File([queries.replace(/[^\r\n]+/g, straightenQuotes)], file.name, { type: file.type })
+}
+
+// The backend wraps every query in its own quotes for phrase matches, and
+// appends `~N` to every word for spelling changes: a straightened phrase would
+// end up double-quoted, or with `~N` inside its quotes.
+const isRewrittenByBackend = computed(() => phraseMatch.value || +spellingChanges.value > 0)
+
+function submittedCsv() {
+  if (isRewrittenByBackend.value) {
+    return csv.value
+  }
+  return straightenCsvQueries(csv.value)
+}
+
+async function createBatchSearch() {
   return core.api.batchSearch(
     name.value,
-    csv.value,
+    await submittedCsv(),
     description.value,
     formSearchStore.indices.join(','),
     phraseMatch.value,
@@ -116,9 +142,16 @@ async function submit() {
     await router.push({ name: 'task.batch-search.list' })
     toast.success(t('task.batch-search.form.submitSuccess'))
   }
-  catch {
-    toast.error(t('task.batch-search.form.submitError'))
+  catch (error) {
+    toast.error(submitErrorMessage(error))
   }
+}
+
+function submitErrorMessage(error) {
+  if (error instanceof DOMException) {
+    return t('task.batch-search.form.readError')
+  }
+  return t('task.batch-search.form.submitError')
 }
 </script>
 

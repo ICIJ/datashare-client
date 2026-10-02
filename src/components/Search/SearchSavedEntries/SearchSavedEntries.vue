@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { parseQuery } from 'vue-router'
 
 import IPhListChecks from '~icons/ph/list-checks'
 import IPhCalendarBlank from '~icons/ph/calendar-blank'
@@ -47,8 +48,9 @@ function searchParamsFromURI(uri) {
 }
 
 function searchParamsQuery(uri) {
-  return Object.fromEntries(searchParamsFromURI(uri))
+  return parseQuery(searchParamsFromURI(uri).toString())
 }
+
 </script>
 
 <template>
@@ -63,10 +65,17 @@ function searchParamsQuery(uri) {
   >
     <template #cell(name)="{ item }">
       <router-link
+        v-slot="{ navigate, href }"
         :to="{ name: 'search', query: searchParamsQuery(item.uri) }"
-        class="fw-medium"
+        custom
       >
-        {{ item.name }}
+        <a
+          :href="href"
+          class="fw-medium"
+          @click="navigate"
+        >
+          {{ item.name }}
+        </a>
       </router-link>
     </template>
     <template #cell(creation_date)="{ item }">

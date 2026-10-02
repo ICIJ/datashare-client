@@ -1,6 +1,13 @@
 <script setup>
 import { computed, ref, reactive, toRef, watch } from 'vue'
-import { flatten, get, identity, orderBy as sortOrderBy, property, trim, trimEnd, uniqBy } from 'lodash'
+import flatten from 'lodash/flatten'
+import get from 'lodash/get'
+import identity from 'lodash/identity'
+import sortOrderBy from 'lodash/orderBy'
+import property from 'lodash/property'
+import trim from 'lodash/trim'
+import trimEnd from 'lodash/trimEnd'
+import uniqBy from 'lodash/uniqBy'
 import bodybuilder from 'bodybuilder'
 
 import Document from '@/api/resources/Document'
@@ -90,7 +97,7 @@ const props = defineProps({
 // App services and utilities.
 const core = useCore()
 const { waitFor, isLoading } = useWait()
-const { pathSeparator, getBasename, isSelectedPath, isIndeterminateDirectory, trimDirectory, togglePath } = usePath(selectedPaths, props)
+const { pathSeparator, getBasename, isSelectedPath, isIndeterminateDirectory, normalizeDirectory, trimDirectory, togglePath } = usePath(selectedPaths, props)
 const { isServer } = useMode()
 
 // Elasticsearch response paths.
@@ -136,6 +143,8 @@ const nextLevel = computed(() => (props.flat ? 0 : props.level + 1))
 const hasQuery = computed(() => Boolean(query.value && trim(query.value)))
 // Normalized current path without trailing separator.
 const trimmedPath = computed(() => trimDirectory(path.value))
+// Whether the tree is rooted at the filesystem root, which trims down to an empty string.
+const isRootPath = computed(() => trimmedPath.value === '')
 // Wildcard version of the query (lowercased).
 const wildcardQuery = computed(() => (hasQuery.value ? `*${query.value.toLowerCase()}*` : '*'))
 // Whether the last fetched page is shorter than PER_PAGE.
@@ -236,6 +245,59 @@ const pagesDocuments = computed(() => flatFromPages(ES.DOC_HITS).map(Document.cr
 const documents = computed(() => (props.noDocuments ? [] : uniqBy([...pagesDocuments.value, ...treeAsDocuments.value], 'path')))
 
 /**
+ * Return the deepest directory path shared by every given path.
+ * @param {string[]} paths - Directory paths sharing at least their first segment.
+ * @return {string} The common prefix, without trailing separator.
+ */
+function getCommonPathPrefix(paths) {
+  const [first, ...others] = paths.map(path => path.split(pathSeparator.value))
+  let common = first.length
+  for (const segments of others) {
+    let index = 0
+    while (index < common && segments[index] === first[index]) {
+      index++
+    }
+    common = index
+  }
+  return first.slice(0, common).join(pathSeparator.value)
+}
+
+/**
+ * Fold a chain of single-child directories into the deepest directory it leads to,
+ * the way GitHub and VS Code compact folders. The chain stops as soon as a directory
+ * holds documents directly or branches into several children.
+ * @param {string} key - Directory key path, a direct child of the current path.
+ * @return {string} The deepest path of the chain, or the key itself when it doesn't fold.
+ */
+function getFoldedPath(key) {
+  const prefix = key + pathSeparator.value
+  const descendants = directoryPaths.value.filter(path => path === key || path.startsWith(prefix))
+  // Without the directory_paths aggregation (compact mode) or for directories only
+  // known from the on-disk tree, there is nothing to fold with.
+  if (!descendants.length) {
+    return key
+  }
+  return getCommonPathPrefix(descendants)
+}
+
+/**
+ * Return the label of a directory entry, relative to the current path, so a folded
+ * chain reads as `data/docs/a/b/c` instead of only its last segment.
+ * @param {string} key - Directory key path.
+ * @return {string} The path segments between the current path and the key.
+ */
+function getRelativeName(key) {
+  return trimDirectory(key).slice(normalizeDirectory(trimmedPath.value).length)
+}
+
+// Directories with their single-child chains folded into a single entry.
+const foldedDirectories = computed(() => directories.value.map((directory) => {
+  const key = getFoldedPath(directory.key)
+  const name = getRelativeName(key)
+  return { ...directory, key, name }
+}))
+
+/**
  * Return whether a directory is currently collapsed.
  * @param {string} key - Directory key path.
  * @return {boolean} True if the directory is collapsed.
@@ -284,6 +346,9 @@ function getDirectoryCount(key) {
  */
 function getDirectoriesBodybuilder({ from = 0, size = PER_PAGE } = {}) {
   const bb = bodybuilder()
+  // This query only reads aggregations, never hits: skip returning documents
+  // entirely, otherwise ES includes their full "content" field in the response.
+  bb.size(0)
   // Ensure we get accurate hit counts, even if they exceed 10,000
   bb.rawOption('track_total_hits', true)
   // Only include Document-type entries
@@ -291,7 +356,12 @@ function getDirectoriesBodybuilder({ from = 0, size = PER_PAGE } = {}) {
   // Filter to all dirname values matching our wildcard pattern (case-insensitive),
   // this include the current path and all sub-paths.
   bb.andQuery('wildcard', 'dirname', { value: wildcardQuery.value, case_insensitive: true })
-  bb.andQuery('term', 'dirname.tree', trimmedPath.value)
+  // Restrict to the descendants of the current path. The path analyzer emits no token
+  // for the filesystem root, so at the root we keep every document instead: they are
+  // all descendants of it anyway.
+  if (!isRootPath.value) {
+    bb.andQuery('term', 'dirname.tree', trimmedPath.value)
+  }
   // Aggregate by directory tree, with pagination and optional sub-aggs:
   // * "terms" is the aggregation type
   // * "dirname.tree" is the field to aggregate on
@@ -360,8 +430,10 @@ async function fetchDirectories({ clearPages = false } = {}) {
 function getDocumentsBodybuilder({ from = 0, size = PER_PAGE } = {}) {
   const bb = bodybuilder().from(from).size(size)
   bb.rawOption('sort', orderDocuments.value)
-  // Filter to the current path only
-  bb.andQuery('term', 'dirname', trimmedPath.value)
+  // Filter to the current path only. Documents sitting at the root are indexed with the
+  // separator as their dirname, which the trimmed (empty) path would never match.
+  const dirname = isRootPath.value ? pathSeparator.value : trimmedPath.value
+  bb.andQuery('term', 'dirname', dirname)
   // Only include Document-type entries on disk
   bb.andQuery('match', 'extractionLevel', 0)
   bb.andQuery('match', 'type', 'Document')
@@ -531,10 +603,10 @@ defineExpose({ isLoading, loadData, loadDataWithSpinner, reloadData })
           />
         </template>
         <path-tree-view-entry
-          v-for="directory in directories"
+          v-for="directory in foldedDirectories"
           :key="directory.key"
           :loading="!!entriesRefs[directory.key]?.isLoading"
-          :name="getBasename(directory.key)"
+          :name="directory.name"
           :path="directory.key"
           :projects="projects"
           :documents="directory.doc_count"

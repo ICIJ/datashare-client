@@ -1,7 +1,6 @@
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { camelCase } from 'lodash'
-
+import camelCase from 'lodash/camelCase'
 import { useUrlParamWithStore } from './useUrlParamWithStore'
 import { useUrlParamsWithStore } from './useUrlParamsWithStore'
 

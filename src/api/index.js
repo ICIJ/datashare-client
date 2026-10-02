@@ -1,5 +1,9 @@
-import { get, isNull, join, omitBy, toLower, trim } from 'lodash'
-
+import get from 'lodash/get'
+import isNull from 'lodash/isNull'
+import join from 'lodash/join'
+import omitBy from 'lodash/omitBy'
+import toLower from 'lodash/toLower'
+import trim from 'lodash/trim'
 import settings from '@/utils/settings'
 
 const Method = Object.freeze({
@@ -109,19 +113,19 @@ export class Api {
 
   getUsers({ domain = 'default', index = null, q = null, sort = null, desc = null, from = 0, size = 10, noRole = true } = {}) {
     const params = omitBy({ domain, index, q, sort, desc, from, size, noRole }, isNull)
-    return this.sendAction('/api/users', { method: Method.GET, params })
+    return this.sendAction('/api/users/admin', { method: Method.GET, params })
   }
 
   grantUserRole(uid, project, role) {
     return this.sendActionAsText(
-      `/api/users/${encodeURIComponent(uid)}/index/${encodeURIComponent(project)}?role=${encodeURIComponent(role)}`,
+      `/api/users/admin/${encodeURIComponent(uid)}/index/${encodeURIComponent(project)}?role=${encodeURIComponent(role)}`,
       { method: Method.PUT }
     )
   }
 
   revokeUserRole(uid, project, { ifExists = false } = {}) {
     const params = { ifExists }
-    return this.sendActionAsText(`/api/users/${encodeURIComponent(uid)}/index/${encodeURIComponent(project)}`, {
+    return this.sendActionAsText(`/api/users/admin/${encodeURIComponent(uid)}/index/${encodeURIComponent(project)}`, {
       method: Method.DELETE,
       params
     })
@@ -134,7 +138,7 @@ export class Api {
 
   deleteUser(uid, { domain, index } = {}) {
     const data = { domain, index }
-    return this.sendActionAsText(`/api/users/${encodeURIComponent(uid)}`, { method: Method.DELETE, data })
+    return this.sendActionAsText(`/api/users/admin/${encodeURIComponent(uid)}`, { method: Method.DELETE, data })
   }
 
   getPathBanners(project) {
@@ -151,6 +155,20 @@ export class Api {
 
   getVersion() {
     return this.sendAction('/version')
+  }
+
+  /**
+   * Same payload as `getVersion`, without `sendAction`'s `http::error` emission.
+   *
+   * This is a routing probe fired before searches: on a backend where /version
+   * fails (older version, blocking proxy, expired session), emitting would
+   * toast a global error on every search even though the search itself works.
+   * @param {Object} [config={}] - Extra axios request configuration
+   * @returns {Promise<Object|null>} The version payload
+   */
+  async getVersionSilently(config = {}) {
+    const response = await this.axios?.request({ url: Api.getFullUrl('/version'), ...config })
+    return response ? response.data : null
   }
 
   getSettings() {
@@ -360,6 +378,77 @@ export class Api {
     }
     catch {
       return true
+    }
+  }
+
+  /**
+   * Probe the structure artifact manifest of a document, or null when there is
+   * none.
+   *
+   * The structure endpoints bypass `sendAction`, which pushes every rejection
+   * onto the `http::error` bus: a document with no artifact answers 404, which
+   * is the common case and not an error worth a toast. Unlike
+   * `isDocumentDownloadable`, a probe we cannot read fails closed, because a
+   * button that 404s on click is worse than no button at all.
+   */
+  async getStructureManifest(index, id, routing) {
+    const url = Api.getFullUrl(`/api/${index}/artifacts/structure/${id}`)
+    const validateStatus = () => true
+    try {
+      const response = await this.axios.request({ url, method: Method.GET, params: { routing }, validateStatus })
+      const { status, data } = response
+      // An expired session says nothing about the artifact. Report it so the
+      // app can offer to log back in, and hide the button either way.
+      if (status === 401) {
+        this.eventBus?.emit('http::error', { response })
+        return null
+      }
+      return status === 200 ? data : null
+    }
+    catch {
+      return null
+    }
+  }
+
+  /**
+   * Fetch one page (1-based) of a document's structure artifact, as Markdown.
+   * Bypasses `sendAction` for the reason given on `getStructureManifest`, all
+   * the more so as a download fans out one request per page: the caller reports
+   * a failure once instead of once per page. The `format` parameter is omitted
+   * because `md` is the server-side default.
+   */
+  async getStructurePage(index, id, page, routing) {
+    const url = Api.getFullUrl(`/api/${index}/artifacts/structure/${id}/${page}`)
+    const { data } = await this.requestArtifact({ url, params: { routing }, responseType: 'text' })
+    return data
+  }
+
+  /**
+   * Count a query's occurrences in a document's markdown structure pages,
+   * per page. Bypasses `sendAction` because it runs on every (throttled)
+   * keystroke: the caller degrades a failure to zero occurrences instead of
+   * toasting it.
+   */
+  async searchStructurePages(index, id, query, routing) {
+    const url = Api.getFullUrl(`/api/${index}/artifacts/structure/search/${id}`)
+    const { data } = await this.requestArtifact({ url, params: { query, routing } })
+    return data
+  }
+
+  /**
+   * Request an artifact endpoint outside `sendAction`, while still reporting an
+   * expired session on the error bus. Without this, callers that degrade a
+   * failure to "no results" would swallow a 401 and never offer a re-login.
+   */
+  async requestArtifact(config) {
+    try {
+      return await this.axios.request({ method: Method.GET, ...config })
+    }
+    catch (error) {
+      if (error.response?.status === 401) {
+        this.eventBus?.emit('http::error', error)
+      }
+      throw error
     }
   }
 

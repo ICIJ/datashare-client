@@ -2,7 +2,9 @@
 import { ref, computed, onBeforeMount } from 'vue'
 import bodybuilder from 'bodybuilder'
 import { AppIcon } from '@icij/murmur'
-import { flatten, get, sum } from 'lodash'
+import flatten from 'lodash/flatten'
+import get from 'lodash/get'
+import sum from 'lodash/sum'
 import { useI18n } from 'vue-i18n'
 
 import EsDocList from '@/api/resources/EsDocList'

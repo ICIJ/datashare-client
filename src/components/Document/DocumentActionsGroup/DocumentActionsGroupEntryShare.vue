@@ -1,5 +1,4 @@
 <script setup>
-import { nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import IPhShareNetwork from '~icons/ph/share-network'
@@ -34,8 +33,6 @@ defineProps({
   }
 })
 const { t } = useI18n()
-
-const blur = () => nextTick(() => window.document?.activeElement.blur())
 </script>
 
 <template>
@@ -54,7 +51,6 @@ const blur = () => nextTick(() => window.document?.activeElement.blur())
         hide-tooltip
         :label="t('documentActionsGroup.share')"
         :size="size"
-        @focus="blur"
       />
     </template>
   </document-share-popover>

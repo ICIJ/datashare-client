@@ -1,6 +1,5 @@
 <script setup>
-import { random } from 'lodash'
-
+import random from 'lodash/random'
 import AppPlaceholder from '@/components/AppPlaceholder/AppPlaceholder'
 import DocumentContentPlaceholder from '@/components/Document/DocumentContentPlaceholder'
 import ModeServerOnly from '@/components/Mode/ModeServerOnly'

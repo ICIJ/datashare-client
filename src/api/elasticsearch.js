@@ -1,11 +1,14 @@
-import { isEqual, replace } from 'lodash'
+import isEqual from 'lodash/isEqual'
+import replace from 'lodash/replace'
 import bodybuilder from 'bodybuilder'
-import es from 'elasticsearch-browser'
 import { getCookie } from 'tiny-cookie'
 
-import { getPairedDimensions } from '@/store/filters/pairedDimensions'
+import { Client, Transport } from '@/api/elasticsearchClient'
+
+import { getPairedDimension, getPairedDimensions } from '@/store/filters/pairedDimensions'
 import { EventBus } from '@/utils/eventBus'
 import { SEARCH_OPERATORS } from '@/enums/searchOperators'
+import { straightenQuotes } from '@/utils/luceneQuery'
 import settings from '@/utils/settings'
 
 // Content fields to exclude from search results (large text fields)
@@ -22,27 +25,42 @@ const PREFERENCE = Object.freeze({
   MAX_EXTRACTION_DATE: 'max-extraction-date-by-project'
 })
 
-// Highlight configuration for search results.
-// `max_analyzed_offset` caps how far into long fields the highlighter analyzes,
-// preventing shard failures on docs whose content exceeds the index's
+// Project statistics span projects whose index may not exist yet: elasticsearch
+// rejects the whole request when any named index is missing, which would zero out
+// the figures of every other project (icij/datashare#2384).
+const IGNORE_MISSING_INDEX = Object.freeze({ ignore_unavailable: true })
+
+// Caps how far into long fields the highlighter analyzes, preventing shard
+// failures on docs whose content exceeds the index's
 // `index.highlight.max_analyzed_offset` limit (default 1,000,000).
-const HIGHLIGHT_CONFIG = Object.freeze({
-  max_analyzed_offset: 999999,
-  fields: {
-    'content': {
-      fragment_size: 280,
-      number_of_fragments: 2,
-      pre_tags: ['<mark>'],
-      post_tags: ['</mark>']
-    },
-    'content_translated.content': {
-      fragment_size: 280,
-      number_of_fragments: 2,
-      pre_tags: ['<mark>'],
-      post_tags: ['</mark>']
-    }
+const HIGHLIGHT_MAX_OFFSET = 999999
+
+const HIGHLIGHT_FIELDS = Object.freeze({
+  'content': {
+    fragment_size: 280,
+    number_of_fragments: 2,
+    pre_tags: ['<mark>'],
+    post_tags: ['</mark>']
+  },
+  'content_translated.content': {
+    fragment_size: 280,
+    number_of_fragments: 2,
+    pre_tags: ['<mark>'],
+    post_tags: ['</mark>']
   }
 })
+
+/**
+ * Highlight configuration for search results. OpenSearch names the offset
+ * option `max_analyzer_offset` and rejects the Elasticsearch spelling with a
+ * 400 (icij/datashare#2383), even though both share the index setting name.
+ * @param {boolean} [isOpenSearch=false] - Whether the index is an OpenSearch distribution
+ * @returns {Object} The highlight option for the search body
+ */
+function highlightConfig(isOpenSearch = false) {
+  const offsetField = isOpenSearch ? 'max_analyzer_offset' : 'max_analyzed_offset'
+  return { [offsetField]: HIGHLIGHT_MAX_OFFSET, fields: HIGHLIGHT_FIELDS }
+}
 
 /**
  * Normalizes a query string, returning the default query for empty values.
@@ -51,16 +69,6 @@ const HIGHLIGHT_CONFIG = Object.freeze({
  */
 function normalizeQuery(query) {
   return [null, undefined, ''].includes(query) ? DEFAULT_QUERY : query
-}
-
-/**
- * Drops keys whose value is undefined so the query string omits them rather
- * than serializing them as empty (the bundled client stringifies undefined as '').
- * @param {Object} params
- * @returns {Object}
- */
-function compactQuery(params) {
-  return Object.fromEntries(Object.entries(params).filter(([, value]) => value !== undefined))
 }
 
 /**
@@ -219,7 +227,8 @@ export function datasharePlugin(Client) {
     perPage = 25,
     sort = { _score: { order: 'desc' } },
     fields = [],
-    operator = SEARCH_OPERATORS.OR
+    operator = SEARCH_OPERATORS.OR,
+    isOpenSearch = false
   } = {}) {
     return this._buildSearchBody({
       query: normalizeQuery(query),
@@ -228,7 +237,8 @@ export function datasharePlugin(Client) {
       from,
       size: perPage,
       sort,
-      operator
+      operator,
+      isOpenSearch
     })
   }
 
@@ -242,11 +252,13 @@ export function datasharePlugin(Client) {
    * @param {number} [options.perPage=25] - Number of results per page
    * @param {Object} [options.sort] - Sort configuration
    * @param {string[]} [options.fields=[]] - Fields to search in
+   * @param {boolean} [options.isOpenSearch=false] - Whether the index is an OpenSearch distribution
    * @returns {Promise<Object>} Search results
    */
-  Client.prototype.searchDocs = function (options) {
+  Client.prototype.searchDocs = function (options, { signal } = {}) {
     const body = this.buildSearchDocsBody(options)
-    return this._search({ index: options.index, body })
+    const request = this.search({ index: options.index, body })
+    return abortableSearchRequest(request, signal)
   }
 
   /**
@@ -264,7 +276,7 @@ export function datasharePlugin(Client) {
     const request = this.transport.request({
       method: 'POST',
       path: `/${index}/_async_search`,
-      query: compactQuery({ wait_for_completion_timeout: waitForCompletionTimeout, keep_alive: keepAlive }),
+      query: { wait_for_completion_timeout: waitForCompletionTimeout, keep_alive: keepAlive },
       body
     })
     return abortableSearchRequest(request, signal)
@@ -282,7 +294,7 @@ export function datasharePlugin(Client) {
     const request = this.transport.request({
       method: 'GET',
       path: `/_async_search/${encodeURIComponent(id)}`,
-      query: compactQuery({ wait_for_completion_timeout: waitForCompletionTimeout })
+      query: { wait_for_completion_timeout: waitForCompletionTimeout }
     })
     return abortableSearchRequest(request, signal)
   }
@@ -329,11 +341,7 @@ export function datasharePlugin(Client) {
     let body = filter.body(bodybuilder(), options, from, size)
 
     if (contextualize) {
-      // Exclude the bucket's own filter from the agg context so the bucket
-      // selection does not constrain its own buckets and the paired-dimension
-      // OR-combine does not trigger (only one side of the pair remains here).
-      const otherFilters = filters.filter(other => other.name !== filter.name)
-      this._applyFilters(body, otherFilters)
+      this._applyFilters(body, this._contextFilters(filter, filters))
       this._applyQueryString(body, normalizeQuery(query), fields)
     }
 
@@ -396,7 +404,7 @@ export function datasharePlugin(Client) {
    */
   Client.prototype.countDocuments = async function (index) {
     const body = { query: { query_string: { query: 'type:Document' } } }
-    const res = await this.count({ index, body, preference: PREFERENCE.DOCUMENTS_COUNT })
+    const res = await this.count({ index, body, preference: PREFERENCE.DOCUMENTS_COUNT, ...IGNORE_MISSING_INDEX })
     return res?.count ?? 0
   }
 
@@ -410,7 +418,7 @@ export function datasharePlugin(Client) {
       size: 0,
       aggs: { count: { cardinality: { field: 'tags' } } }
     }
-    const res = await this.search({ index, body, preference: PREFERENCE.TAGS_COUNT })
+    const res = await this.search({ index, body, preference: PREFERENCE.TAGS_COUNT, ...IGNORE_MISSING_INDEX })
     return res?.aggregations?.count?.value ?? 0
   }
 
@@ -427,7 +435,7 @@ export function datasharePlugin(Client) {
       query,
       aggs: { index: { terms: { field: '_index', size } } }
     }
-    return this._search({ index, body, preference: PREFERENCE.COUNT_BY_PROJECT })
+    return this._search({ index, body, preference: PREFERENCE.COUNT_BY_PROJECT, ...IGNORE_MISSING_INDEX })
   }
 
   /**
@@ -448,7 +456,35 @@ export function datasharePlugin(Client) {
         }
       }
     }
-    return this._search({ index, body, preference: PREFERENCE.MAX_EXTRACTION_DATE })
+    return this._search({ index, body, preference: PREFERENCE.MAX_EXTRACTION_DATE, ...IGNORE_MISSING_INDEX })
+  }
+
+  /**
+   * The filters constraining a bucket aggregation when the filter is
+   * contextualized.
+   *
+   * A paired filter (contentType ↔ contentTypeCategory), when included, drops
+   * its own selection: its buckets would otherwise collapse to the values
+   * already picked, and its sibling keeps constraining the aggregation
+   * anyway. When excluded, its own must_not must stay applied instead - same
+   * rule as an unpaired filter below - otherwise its own aggregation is
+   * computed as if the exclusion weren't there, producing a real bucket for
+   * the excluded value that collides with FilterType's synthetic zero-count
+   * row for it
+   *
+   * Every other filter keeps its own selection, so its buckets describe the
+   * current search results, which is what contextualizing is for. Without it,
+   * contextualizing a filter that is the only active one is a no-op.
+   * @private
+   * @param {Object} filter - The filter being aggregated on
+   * @param {Array} filters - Every instantiated filter
+   * @returns {Array} The filters to apply to the aggregation body
+   */
+  Client.prototype._contextFilters = function (filter, filters) {
+    if (getPairedDimension(filter.name) && !isFilterExcludedWithValues(filter)) {
+      return filters.filter(other => other.name !== filter.name)
+    }
+    return filters
   }
 
   /**
@@ -515,6 +551,7 @@ export function datasharePlugin(Client) {
    * @param {string} operator - Default search operator for the query string (AND or OR)
    */
   Client.prototype._applyQueryString = function (body, query, fields = [], operator = undefined) {
+    query = straightenQuotes(query)
     if (isEqual(fields, ['path'])) {
       query = replace(query, /\//g, '\\/')
     }
@@ -538,9 +575,10 @@ export function datasharePlugin(Client) {
    * @param {number} options.size - Number of results
    * @param {Object} options.sort - Sort configuration
    * @param {string} options.operator - Default search operator for the query string (AND or OR)
+   * @param {boolean} options.isOpenSearch - Whether the index is an OpenSearch distribution
    * @returns {Object} The built search body
    */
-  Client.prototype._buildSearchBody = function ({ query, filters, fields, from, size, sort, operator }) {
+  Client.prototype._buildSearchBody = function ({ query, filters, fields, from, size, sort, operator, isOpenSearch }) {
     const body = bodybuilder()
 
     // Apply filters (handles paired-dimension OR combine)
@@ -562,7 +600,7 @@ export function datasharePlugin(Client) {
     })
 
     // Add highlighting
-    body.rawOption('highlight', HIGHLIGHT_CONFIG)
+    body.rawOption('highlight', highlightConfig(isOpenSearch))
 
     // Ensure accurate total hits count (ES 8+ compatibility)
     body.rawOption('track_total_hits', true)
@@ -655,7 +693,7 @@ export function datasharePlugin(Client) {
     const body = this.rootSearch(filters, query, fields)
     body.from(from).size(size).sort(sort)
     body.rawOption('_source', { includes: ['*'], excludes: CONTENT_FIELDS })
-    body.rawOption('highlight', HIGHLIGHT_CONFIG)
+    body.rawOption('highlight', highlightConfig())
     return body
   }
 }
@@ -663,6 +701,9 @@ export function datasharePlugin(Client) {
 /**
  * Plugin that injects the CSRF token from the `_ds_csrf_token` cookie
  * as an `X-DS-CSRF-TOKEN` header on every Elasticsearch request.
+ *
+ * apiInstance's axios.defaults.xsrf* already does this, but only for
+ * same-origin requests; keeps a cross-origin VITE_ES_HOST in dev covered too.
  *
  * @param {Object} Client - The Elasticsearch client constructor
  * @param {Object} config - Plugin configuration (not used)
@@ -680,9 +721,11 @@ export function csrfPlugin(Client, config, components) {
   }
 }
 
-const elasticsearch = new es.Client({
+datasharePlugin(Client)
+csrfPlugin(Client, {}, { Transport })
+
+const elasticsearch = new Client({
   host: import.meta.env.VITE_ES_HOST || `${window.location.hostname}:${window.location.port}/api/index/search`,
-  plugins: [datasharePlugin, csrfPlugin],
   requestTimeout: settings.elasticsearch.requestTimeout
 })
 

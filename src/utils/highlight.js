@@ -1,5 +1,7 @@
-import { filter, inRange, some, sortBy } from 'lodash'
-
+import filter from 'lodash/filter'
+import inRange from 'lodash/inRange'
+import some from 'lodash/some'
+import sortBy from 'lodash/sortBy'
 export class TextChunk {
   constructor({ content = '', start = 0, length = 0, previousChunk = null, ...data } = {}) {
     this.content = content

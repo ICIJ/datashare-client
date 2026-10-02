@@ -16,12 +16,11 @@ import { batchQueryParamUpdate } from '@/composables/useUrlParam'
 
 const { debounceFlags } = vi.hoisted(() => ({ debounceFlags: { useReal: false } }))
 
-vi.mock('lodash', async (importOriginal) => {
+vi.mock('lodash/debounce', async (importOriginal) => {
   const { default: actual } = await importOriginal()
   return {
-    ...actual,
-    debounce: (fn, wait) => {
-      const real = actual.debounce(fn, wait)
+    default: (fn, wait) => {
+      const real = actual(fn, wait)
       const wrapper = (...args) => (debounceFlags.useReal ? real(...args) : fn(...args))
       wrapper.cancel = (...args) => real.cancel(...args)
       return wrapper

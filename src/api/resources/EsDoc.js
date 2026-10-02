@@ -1,5 +1,7 @@
-import { cloneDeep, get, matches, set } from 'lodash'
-
+import cloneDeep from 'lodash/cloneDeep'
+import get from 'lodash/get'
+import matches from 'lodash/matches'
+import set from 'lodash/set'
 const _raw = '_RAW'
 
 export default class EsDoc {

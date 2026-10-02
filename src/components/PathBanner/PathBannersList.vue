@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue'
-import { orderBy } from 'lodash'
+import orderBy from 'lodash/orderBy'
 import { useI18n } from 'vue-i18n'
 
 import EmptyState from '@/components/EmptyState/EmptyState.vue'

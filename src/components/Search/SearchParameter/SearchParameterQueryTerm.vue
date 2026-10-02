@@ -1,8 +1,10 @@
 <script setup>
-import { computed } from 'vue'
-import { ButtonIcon } from '@icij/murmur'
+import { computed, useAttrs } from 'vue'
+import { AppIcon, ButtonIcon } from '@icij/murmur'
 import IPhMagnifyingGlass from '~icons/ph/magnifying-glass'
 import IPhX from '~icons/ph/x'
+import IPhLock from '~icons/ph/lock-fill'
+import IPhLockOpen from '~icons/ph/lock-open-fill'
 
 import { VARIANT, variantValidator } from '@/enums/variants'
 
@@ -54,14 +56,26 @@ const props = defineProps({
   },
   size: {
     type: String
+  },
+  // `null` means "not lockable" — no lock icon is rendered at all (the
+  // free-text query chip and the project chip are never lockable). `true`/
+  // `false` render the icon in its locked/unlocked state.
+  locked: {
+    type: Boolean,
+    default: null
+  },
+  lockLabel: {
+    type: String,
+    default: null
   }
 })
 
-const emit = defineEmits(['click:x'])
+const emit = defineEmits(['click:x', 'click:lock'])
 
 const classList = computed(() => {
   return {
-    'search-parameter-query-term--negative': props.prefix === '-'
+    'search-parameter-query-term--negative': props.prefix === '-',
+    'search-parameter-query-term--locked': props.locked === true
   }
 })
 
@@ -74,6 +88,16 @@ const style = computed(() => {
 const showOperator = computed(() => {
   return props.operator === 'AND' || props.operator === 'OR'
 })
+
+// Gated on whether a click listener is actually attached, not on `locked`:
+// `locked` never reaches a query chip (SearchParameter's queryComponentProps
+// doesn't forward it), so a read-only breadcrumb display (saved search,
+// batch search preview) would otherwise always render as a native, focusable
+// <button> with nothing behind it to activate. A chip that does have a
+// listener (DocumentGlobalSearchTermsEntry's clickable term chips) keeps its
+// native <button>, the default ButtonIcon rendering.
+const attrs = useAttrs()
+const isClickable = computed(() => !!attrs.onClick)
 </script>
 
 <template>
@@ -89,6 +113,8 @@ const showOperator = computed(() => {
     :icon-left-label="iconLabel"
     :icon-right="noXIcon ? null : IPhX"
     icon-right-hover-weight="bold"
+    :tag="isClickable ? undefined : 'span'"
+    :role="isClickable ? undefined : 'presentation'"
     @click:icon-right="emit('click:x')"
   >
     <template
@@ -102,6 +128,19 @@ const showOperator = computed(() => {
     <span class="search-parameter-query-term__value">
       <slot>{{ term }}</slot>
     </span>
+    <app-icon
+      v-if="locked !== null"
+      v-b-tooltip.top.body="{ title: lockLabel }"
+      role="button"
+      tabindex="0"
+      class="search-parameter-query-term__lock"
+      :aria-pressed="locked"
+      :aria-label="lockLabel"
+      :name="locked ? IPhLock : IPhLockOpen"
+      @click="emit('click:lock')"
+      @keydown.enter.prevent="emit('click:lock')"
+      @keydown.space.prevent="emit('click:lock')"
+    />
   </button-icon>
 </template>
 
@@ -153,6 +192,29 @@ const showOperator = computed(() => {
 
   &:deep(.button-icon__icon-right) {
     color: var(--bs-tertiary);
+  }
+
+  &__lock {
+    margin-left: $spacer-xs;
+    cursor: pointer;
+    color: var(--bs-tertiary);
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+
+  &:hover &__lock,
+  &__lock:focus-visible {
+    opacity: 1;
+  }
+
+  &--locked {
+    border-color: var(--bs-action-border-subtle);
+    background: var(--bs-action-bg-subtle);
+
+    .search-parameter-query-term__lock {
+      color: var(--bs-action-text-emphasis);
+      opacity: 1;
+    }
   }
 }
 </style>

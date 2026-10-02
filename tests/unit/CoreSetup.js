@@ -1,4 +1,3 @@
-import VCalendar from 'v-calendar'
 import VueScrollTo from 'vue-scrollto'
 import { createWebHashHistory, createRouter } from 'vue-router'
 
@@ -16,17 +15,12 @@ class CoreSetup extends Core {
       this.i18n,
       this.pinia,
       this.vueScrollTo,
-      this.vCalendar,
       this.router
     ]
   }
 
   get vueScrollTo() {
     return VueScrollTo
-  }
-
-  get vCalendar() {
-    return VCalendar
   }
 
   get pinia() {

@@ -1,5 +1,6 @@
-import { escapeRegExp, some, trimEnd } from 'lodash'
-
+import escapeRegExp from 'lodash/escapeRegExp'
+import some from 'lodash/some'
+import trimEnd from 'lodash/trimEnd'
 /**
  * Slugify a string value.
  *
@@ -59,6 +60,145 @@ export function addLocalSearchMarksClassByOffsets({ content = '', term = '', off
   })
   // Then merge letters again
   return chunks.join('')
+}
+
+const combiningMarkPattern = /\p{M}/gu
+
+function foldCharacter(character) {
+  return character.normalize('NFKD').replace(combiningMarkPattern, '').toLowerCase()
+}
+
+/**
+ * Fold a string roughly the way the backend artifact search does: NFKD-decompose,
+ * strip combining marks and lowercase. Returns the folded string plus, for each
+ * folded char, the start and end offsets of the source it came from, so a match
+ * found in folded text maps back to the original string even when the fold
+ * changes its length (a ligature expands, a combining mark disappears).
+ *
+ * @param {string} [value=''] - The string to fold.
+ * @return {Object} - The `folded` string with its `sourceIndexes` and `sourceEnds` maps.
+ */
+export function foldWithSourceIndexes(value = '') {
+  const folded = []
+  const sourceIndexes = []
+  const sourceEnds = []
+  let index = 0
+  // Iterating code points (not code units) so an astral char reaches `normalize`
+  // whole: a lone surrogate folds to nothing, and the backend folds the string.
+  for (const character of value) {
+    const end = index + character.length
+    const decomposed = foldCharacter(character)
+    for (const foldedCharacter of decomposed) {
+      folded.push(foldedCharacter)
+      sourceIndexes.push(index)
+      sourceEnds.push(end)
+    }
+    // A source char that folds to nothing (a combining mark standing on its own,
+    // as decomposed text writes accents) has no folded position of its own, so
+    // the letter it decorates has to own it: a match ending on that letter must
+    // cover the mark too, or the accent is left outside the highlight.
+    if (!decomposed && sourceEnds.length) {
+      sourceEnds[sourceEnds.length - 1] = end
+    }
+    index = end
+  }
+  return { folded: folded.join(''), sourceIndexes, sourceEnds }
+}
+
+/**
+ * Find every folded-term match in a text string, mapped back to source offsets.
+ *
+ * @param {string} text - The source text to search in.
+ * @param {string} foldedTerm - The already-folded term to search for.
+ * @return {Object[]} - A list of `{ start, end }` source ranges.
+ */
+function findFoldedMatches(text, foldedTerm) {
+  const { folded, sourceIndexes, sourceEnds } = foldWithSourceIndexes(text)
+  const matches = []
+  // A single source char whose fold repeats the term (the 'ﬀ' ligature folds to
+  // 'ff', matched twice by the term 'f') maps several folded matches back to the
+  // same source range. Wrapping one range splits the node the next one still
+  // addresses, so a candidate starting before the last kept range's end is
+  // dropped; comparing against that end also catches a nested range.
+  let lastKeptEnd = -1
+  let at = folded.indexOf(foldedTerm)
+  while (at !== -1) {
+    const start = sourceIndexes[at]
+    const end = sourceEnds[at + foldedTerm.length - 1]
+    if (start >= lastKeptEnd) {
+      matches.push({ start, end })
+      lastKeptEnd = end
+    }
+    at = folded.indexOf(foldedTerm, at + foldedTerm.length)
+  }
+  return matches
+}
+
+// Ranges are applied last to first so earlier offsets stay valid while the node
+// is being split.
+function wrapTextNodeMatches(node, matches, { className, style }) {
+  for (const { start, end } of [...matches].reverse()) {
+    // splitText rather than a Range: a live Range stays attached to the document
+    // and every later mutation has to update all the earlier ones, which makes
+    // marking a page quadratic in its number of matches.
+    const match = node.splitText(start)
+    if (end - start < match.nodeValue.length) {
+      match.splitText(end - start)
+    }
+    const mark = node.ownerDocument.createElement('mark')
+    mark.className = className
+    if (style) {
+      mark.setAttribute('style', style)
+    }
+    match.parentNode.replaceChild(mark, match)
+    mark.appendChild(match)
+  }
+}
+
+function markTermInDocument(parsed, foldedTerm, { className, style }) {
+  const walker = parsed.createTreeWalker(parsed.body, NodeFilter.SHOW_TEXT)
+  // Collect first: wrapping mutates the tree and would derail a live walker
+  const textNodes = []
+  while (walker.nextNode()) {
+    textNodes.push(walker.currentNode)
+  }
+  for (const node of textNodes) {
+    wrapTextNodeMatches(node, findFoldedMatches(node.nodeValue, foldedTerm), { className, style })
+  }
+}
+
+/**
+ * Highlight occurrences of several terms inside an HTML string in a single
+ * parse, matching text nodes only (never attributes, never across element
+ * boundaries), with the same case and diacritic folding as the backend
+ * artifact search.
+ *
+ * Each spec is applied in order over the same document, so a later term's
+ * marks nest inside the marks an earlier one already placed. A spec whose
+ * term is blank (or folds to nothing) is skipped.
+ *
+ * @param {string} [html=''] - The HTML content to mark.
+ * @param {Object[]} [marks=[]] - The marks to apply, in order.
+ * @param {string} marks[].term - The search term.
+ * @param {string} [marks[].className='local-search-term'] - Class of the mark tags.
+ * @param {string} [marks[].style=''] - Inline style of the mark tags.
+ * @return {string} - The HTML with `<mark>` around matches.
+ */
+export function addSearchMarksClassesInHtml(html = '', marks = []) {
+  const foldedMarks = marks
+    .map(({ term = '', className = 'local-search-term', style = '' }) => {
+      const { folded: foldedTerm } = foldWithSourceIndexes(term.trim())
+      return { foldedTerm, className, style }
+    })
+    .filter(({ foldedTerm }) => !!foldedTerm)
+  if (!foldedMarks.length) {
+    return html
+  }
+  const parsed = new DOMParser().parseFromString(html, 'text/html')
+  for (const { foldedTerm, className, style } of foldedMarks) {
+    markTermInDocument(parsed, foldedTerm, { className, style })
+  }
+  return parsed.body.innerHTML
 }
 
 /**

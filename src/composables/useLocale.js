@@ -1,5 +1,5 @@
 import { computed, watch } from 'vue'
-import { find } from 'lodash'
+import find from 'lodash/find'
 import { useI18n } from 'vue-i18n'
 
 import settings from '@/utils/settings'

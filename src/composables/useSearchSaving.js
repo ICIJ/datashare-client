@@ -1,7 +1,7 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { range, random } from 'lodash'
-
+import range from 'lodash/range'
+import random from 'lodash/random'
 import { useSearchStore } from '@/store/modules'
 import { useHistoryEvents } from '@/composables/useHistoryEvents'
 

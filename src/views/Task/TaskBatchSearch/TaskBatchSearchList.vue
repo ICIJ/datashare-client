@@ -7,7 +7,7 @@ import BatchSearchActions from '@/components/BatchSearch/BatchSearchActions/Batc
 import DisplayDatetimeFromNow from '@/components/Display/DisplayDatetimeFromNow'
 import DisplayNumber from '@/components/Display/DisplayNumber'
 import DisplayProgress from '@/components/Display/DisplayProgress'
-import DisplayProjectList from '@/components/Display/DisplayProjectList'
+import ProjectsButton from '@/components/Project/ProjectsButton'
 import DisplayUser from '@/components/Display/DisplayUser'
 import DisplayVisibility from '@/components/Display/DisplayVisibility'
 import EmptyState from '@/components/EmptyState/EmptyState'
@@ -36,8 +36,11 @@ function showError(item) {
   showBatchSearchErrorModal({ errorMessage, errorQuery })
 }
 
+// A failed task carries no result, and an older one reports the number of results as a
+// bare number, so the batch record is the last resort to know how many were saved.
 function getBatchSearchResult(item, defaultValue = 0) {
-  return get(item, 'result.value.nbResults', get(item, 'result.value', defaultValue))
+  const recordResult = getBatchSearchRecord(item, 'nbResults', defaultValue)
+  return get(item, 'result.value.nbResults', get(item, 'result.value', recordResult))
 }
 
 function getBatchSearchProjects(item) {
@@ -112,7 +115,7 @@ function canManageBatchSearch(item) {
           <display-number :value="getBatchSearchResult(item, 0)" />
         </template>
         <template #cell(projects)="{ item }">
-          <display-project-list :values="getBatchSearchProjects(item)" />
+          <projects-button :projects="getBatchSearchProjects(item)" />
         </template>
         <template #cell(author)="{ item }">
           <display-user

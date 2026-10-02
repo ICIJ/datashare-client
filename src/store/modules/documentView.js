@@ -1,5 +1,5 @@
 import { computed, ref, reactive } from 'vue'
-import { set } from 'lodash'
+import set from 'lodash/set'
 import { defineStore } from 'pinia'
 
 export const useDocumentViewStore = defineStore(

@@ -4,6 +4,7 @@ import IPhDotsThreeOutline from '~icons/ph/dots-three-outline'
 
 import AppDropdown from '@/components/AppDropdown/AppDropdown'
 import NavigationBreadcrumbDropdownEntry from '@/components/NavigationBreadcrumb/NavigationBreadcrumbDropdownEntry'
+import { useScrollParent } from '@/composables/useScrollParent'
 
 defineProps({
   routes: {
@@ -19,12 +20,14 @@ defineProps({
     default: false
   }
 })
+
+const scrollParent = useScrollParent({ node: document.body })
 </script>
 
 <template>
   <div class="navigation-breadcrumb-dropdown">
     <app-dropdown
-      teleport-to="body"
+      :teleport-to="scrollParent"
       variant="link"
       :button-icon="IPhDotsThreeOutline"
     >

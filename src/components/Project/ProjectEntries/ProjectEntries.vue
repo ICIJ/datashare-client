@@ -1,5 +1,5 @@
 <script setup>
-import { pickBy } from 'lodash'
+import pickBy from 'lodash/pickBy'
 import { computed } from 'vue'
 
 import ProjectEntriesGrid from './ProjectEntriesGrid'

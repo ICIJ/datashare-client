@@ -1,8 +1,10 @@
 <script setup>
 import { ref, computed, watch, nextTick, useTemplateRef } from 'vue'
-import { isEqual, iteratee, sortBy, uniqueId } from 'lodash'
+import isEqual from 'lodash/isEqual'
+import iteratee from 'lodash/iteratee'
+import sortBy from 'lodash/sortBy'
+import uniqueId from 'lodash/uniqueId'
 import { useI18n } from 'vue-i18n'
-import { useRouter } from 'vue-router'
 import { SelectableDropdown } from '@icij/murmur'
 
 import SearchBarInput from '@/components/Search/SearchBar/SearchBarInput'
@@ -10,6 +12,8 @@ import FieldDropdownSelector from '@/components/FieldDropdownSelector/FieldDropd
 import SearchBarInputDropdownForProjects from '@/components/Search/SearchBar/SearchBarInputDropdownForProjects'
 import { useCore } from '@/composables/useCore'
 import { useMobileDetect } from '@/composables/useMobileDetect'
+import { markJustSubmitted } from '@/composables/useSearchFilter'
+import { useRefreshRouteFromStart } from '@/composables/useRefreshRouteFromStart'
 import { useSearchSuggestions } from '@/composables/useSearchSuggestions'
 import { useSearchStore } from '@/store/modules'
 
@@ -61,10 +65,10 @@ const props = defineProps({
 defineEmits(['submit'])
 
 const core = useCore()
-const router = useRouter()
 const searchStore = useSearchStore()
 const { isMobile } = useMobileDetect()
 const { t } = useI18n()
+const { refreshRouteFromStart } = useRefreshRouteFromStart(searchStore)
 
 const searchInput = useTemplateRef('searchInput')
 
@@ -122,15 +126,17 @@ watch(
 function submit() {
   hideSuggestions()
   if (mustClearFilters.value) {
-    searchStore.resetFilterValues()
+    searchStore.resetFilterValuesPreservingLocks()
   }
   // Update the store before pushing the route with the new query.
   searchStore.setIndices(formIndices.value)
   searchStore.setField(field.value)
   searchStore.setQuery(query.value)
+  // Reset synchronously so a caller checking the store right after submit()
+  // (no route round-trip awaited) already sees page one.
   searchStore.setFrom(0)
-  searchStore.refreshStamp()
-  router.push({ name: 'search', query: searchStore.toRouteQueryWithStamp })
+  markJustSubmitted()
+  refreshRouteFromStart()
 }
 
 function onSelectTerm(term) {

@@ -44,7 +44,8 @@
 
 <script>
 import bodybuilder from 'bodybuilder'
-import { sum, values } from 'lodash'
+import sum from 'lodash/sum'
+import values from 'lodash/values'
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur'
 import { toRef } from 'vue'

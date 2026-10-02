@@ -1,4 +1,7 @@
-import { cloneDeep, get, isObject, isString } from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
+import get from 'lodash/get'
+import isObject from 'lodash/isObject'
+import isString from 'lodash/isString'
 import { ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
 
@@ -175,13 +178,22 @@ export const useAppStore = defineStore(
     }
 
     /**
-     * Sets the redirect path to be used after login.
+     * Sets the redirect path to be used after login. Only same-origin relative paths
+     * (starting with `/`, but not `//` or `/\` which are protocol-relative) are accepted,
+     * and never the login page itself. Any other value (including a falsy one) clears
+     * the stored path rather than leaving a stale one behind.
      *
      * @param {string|null} [path=null] - Redirect path.
      */
     const setRedirectAfterLogin = (path = null) => {
-      if (!path || !path.startsWith('/login')) {
+      if (!path) {
+        redirectAfterLogin.value = null
+      }
+      else if (path.startsWith('/') && !path.startsWith('//') && !path.startsWith('/\\') && !path.startsWith('/login')) {
         redirectAfterLogin.value = path
+      }
+      else {
+        redirectAfterLogin.value = null
       }
     }
 

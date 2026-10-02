@@ -4,10 +4,15 @@ import bodybuilder from 'bodybuilder'
 import { vi } from 'vitest'
 
 import CoreSetup from '~tests/unit/CoreSetup'
-import { useSearchFilter } from '@/composables/useSearchFilter'
+import {
+  useSearchFilter,
+  markJustSubmitted,
+  consumeJustSubmitted
+} from '@/composables/useSearchFilter'
 import { useContentTypeCategoryAvailability } from '@/composables/useContentTypeCategoryAvailability'
-import { useAppStore, useSearchStore } from '@/store/modules'
+import { useAppStore, useLockedFiltersStore, useSearchStore, useRecommendedStore } from '@/store/modules'
 import { SEARCH_OPERATORS } from '@/enums/searchOperators'
+import { MODE_NAME } from '@/mode'
 
 vi.mock('@/views/App', () => ({ default: { template: '<router-view />' } }))
 vi.mock('@/views/Search/Search', () => ({ default: { template: '<div />' } }))
@@ -85,10 +90,6 @@ describe('useSearchFilter', () => {
   })
 
   describe('refreshSearchFromRoute', () => {
-    // Resolve the lazy-imported view components referenced by the 'search'
-    // route once up-front. Without this, the first test in this block pays
-    // ~14s of cold dynamic-import cost during router.push and intermittently
-    // exceeds the 10s testTimeout.
     beforeAll(async () => {
       await Promise.all([
         import('@/views/App'),
@@ -145,6 +146,17 @@ describe('useSearchFilter', () => {
 
       expect(useAppStore().getSettings('search', 'searchOperator')).toBe(SEARCH_OPERATORS.OR)
     })
+
+    it('does not merge a locked value absent from the route in refreshSearchFromRouteStart', async () => {
+      const core = CoreSetup.init().useAll().useRouterWithoutGuards()
+      useLockedFiltersStore().lock({ name: 'contentType', value: 'application/pdf', label: 'application/pdf' })
+      const { refreshSearchFromRouteStart } = withSetup(() => useSearchFilter(), core.plugins)
+
+      await core.router.push({ name: 'search', query: { q: 'ordinaryNavigation' } })
+      await refreshSearchFromRouteStart()
+
+      expect(useSearchStore().getFilter({ name: 'contentType' })?.values ?? []).toEqual([])
+    })
   })
 
   describe('onConsumeNoRefresh', () => {
@@ -187,17 +199,40 @@ describe('useSearchFilter', () => {
         onConsumeNoRefresh()
       }, core.plugins)
 
+      // 'document-standalone' cold-resolves DocumentStandalone's whole component
+      // graph, which now also reaches useSearchFilter.js's async FilterType*
+      // chunks for the first time — same cold-dynamic-import cost documented in
+      // the 'refreshSearchFromRoute' beforeAll above, just via a different route.
       await core.router.push({ name: 'document-standalone', params: { index: 'test', id: 'doc1' }, query: { noRefresh: 1 } })
       await flushPromises()
       await flushPromises()
 
       expect(core.router.currentRoute.value.query.noRefresh).toBe('1')
+    }, 20000)
+  })
+
+  describe('markJustSubmitted / consumeJustSubmitted (icij/datashare#2332)', () => {
+    // Real module-level state (deliberately, see useSearchFilter.js) — drain
+    // any leftover flag before each test so tests can't leak into each other.
+    beforeEach(() => {
+      consumeJustSubmitted()
+    })
+
+    it('reports true exactly once after being marked', () => {
+      markJustSubmitted()
+
+      expect(consumeJustSubmitted()).toBe(true)
+      expect(consumeJustSubmitted()).toBe(false)
+    })
+
+    it('reports false when never marked', () => {
+      expect(consumeJustSubmitted()).toBe(false)
     })
   })
 })
 
 describe('useSearchFilter composable', () => {
-  let plugins, searchStore
+  let plugins, searchStore, core
 
   beforeEach(() => {
     // Default to "modern index" so paired-dimension tests behave as before;
@@ -208,7 +243,7 @@ describe('useSearchFilter composable', () => {
       error: ref(null)
     })
 
-    const core = CoreSetup.init().useAll().useRouterWithoutGuards()
+    core = CoreSetup.init().useAll().useRouterWithoutGuards()
     plugins = core.plugins
     searchStore = useSearchStore()
     searchStore.reset()
@@ -460,6 +495,26 @@ describe('useSearchFilter composable', () => {
       expect(searchStore.isFilterExcluded('contentType')).toBe(false)
       expect(searchStore.isFilterExcluded('contentTypeCategory')).toBe(false)
     })
+
+    it('survives route hydration when only f[-contentTypeCategory] is in the URL', () => {
+      mountComposable()
+
+      searchStore.updateFromRouteQuery({ 'f[-contentTypeCategory]': ['DOCUMENT'] })
+
+      expect(searchStore.isFilterExcluded('contentType')).toBe(true)
+      expect(searchStore.isFilterExcluded('contentTypeCategory')).toBe(true)
+    })
+
+    // Symmetric coverage for the other hydration order: only the canonical
+    // dimension's URL key present, not the paired one.
+    it('survives route hydration when only f[-contentType] is in the URL', () => {
+      mountComposable()
+
+      searchStore.updateFromRouteQuery({ 'f[-contentType]': ['application/pdf'] })
+
+      expect(searchStore.isFilterExcluded('contentType')).toBe(true)
+      expect(searchStore.isFilterExcluded('contentTypeCategory')).toBe(true)
+    })
   })
 
   describe('isFilterExcluded (unified read with reconciliation)', () => {
@@ -490,14 +545,18 @@ describe('useSearchFilter composable', () => {
       expect(searchStore.isFilterExcluded('contentTypeCategory')).toBe(true)
     })
 
-    it('reconciles a divergent state using the canonical contentType when canonical is NOT excluded', () => {
+    it('reconciles a divergent state using the non-canonical contentTypeCategory when only it is excluded (icij/datashare#2351)', () => {
+      // contentType (canonical) is only ever written to the route query when
+      // it has values of its own - a category-only selection never touches
+      // it, so this divergent state is the normal, steady one whenever a
+      // category is excluded without any individual content type selected.
       searchStore.excludeFilter('contentTypeCategory')
 
       const { isFilterExcluded } = mountComposable()
 
-      expect(isFilterExcluded({ name: 'contentType' })).toBe(false)
-      expect(isFilterExcluded({ name: 'contentTypeCategory' })).toBe(false)
-      expect(searchStore.isFilterExcluded('contentTypeCategory')).toBe(false)
+      expect(isFilterExcluded({ name: 'contentType' })).toBe(true)
+      expect(isFilterExcluded({ name: 'contentTypeCategory' })).toBe(true)
+      expect(searchStore.isFilterExcluded('contentType')).toBe(true)
     })
 
     it('still works for unpaired filters without cross-dimension writes', () => {
@@ -846,6 +905,113 @@ describe('useSearchFilter composable', () => {
         // category value alone must not flip the contentType "All" off.
         expect(all.value).toBe(true)
       })
+    })
+  })
+
+  describe('unlocking locked filter values on removal', () => {
+    let lockedFiltersStore
+
+    beforeEach(() => {
+      lockedFiltersStore = useLockedFiltersStore()
+    })
+
+    it('unlocks a value when removeFilterValue removes it', () => {
+      const { addFilterValue, removeFilterValue } = mountComposable()
+      addFilterValue({ name: 'language' }, { key: 'en' })
+      lockedFiltersStore.lock({ name: 'language', value: 'en', label: 'English' })
+
+      removeFilterValue({ name: 'language' }, { key: 'en' })
+
+      expect(lockedFiltersStore.isLocked({ name: 'language', value: 'en' })).toBe(false)
+    })
+
+    it('locks/unlocks under the "-" prefixed name when the filter is excluded', () => {
+      const { addFilterValue, removeFilterValue, toggleExcludeFilter } = mountComposable()
+      addFilterValue({ name: 'language' }, { key: 'en' })
+      toggleExcludeFilter({ name: 'language' }, true)
+      lockedFiltersStore.lock({ name: '-language', value: 'en', label: 'English' })
+
+      removeFilterValue({ name: 'language' }, { key: 'en' })
+
+      expect(lockedFiltersStore.isLocked({ name: '-language', value: 'en' })).toBe(false)
+    })
+
+    it('unlocks every locked value for a filter when computedAll clears it (the "All" checkbox path)', () => {
+      const { computedAll, addFilterValue } = mountComposable()
+      addFilterValue({ name: 'language' }, { key: 'en' })
+      addFilterValue({ name: 'language' }, { key: 'fr' })
+      lockedFiltersStore.lock({ name: 'language', value: 'en', label: 'English' })
+      lockedFiltersStore.lock({ name: 'language', value: 'fr', label: 'French' })
+
+      const all = computedAll({ name: 'language' })
+      all.value = true
+
+      expect(lockedFiltersStore.isLocked({ name: 'language', value: 'en' })).toBe(false)
+      expect(lockedFiltersStore.isLocked({ name: 'language', value: 'fr' })).toBe(false)
+    })
+
+    it('removeFilterValues unlocks a stale lock left under the opposite mode after a flip', () => {
+      // A locked value that isn't currently selected doesn't get retagged when
+      // the filter's mode flips (relockFilterValues only retags values
+      // presently applied) - clearing the filter afterwards must still sweep
+      // that stale, opposite-mode entry, not just the current mode's, or the
+      // lock is orphaned forever.
+      const { addFilterValue, removeFilterValues, toggleExcludeFilter } = mountComposable()
+      lockedFiltersStore.lock({ name: 'language', value: 'fr', label: 'French' })
+      // 'fr' is never added to the live selection - only 'en' is, and only
+      // 'en' gets retagged by the flip below.
+      addFilterValue({ name: 'language' }, { key: 'en' })
+      toggleExcludeFilter({ name: 'language' }, true)
+
+      removeFilterValues({ name: 'language' })
+
+      expect(lockedFiltersStore.isLocked({ name: 'language', value: 'fr' })).toBe(false)
+    })
+
+    it('leaves locks untouched when the store-level resetFilterValues is used directly (Story 4 needs locks to survive "Clear filters")', () => {
+      searchStore.addFilterValue({ name: 'language', value: 'en' })
+      lockedFiltersStore.lock({ name: 'language', value: 'en', label: 'English' })
+
+      searchStore.resetFilterValues()
+
+      expect(lockedFiltersStore.isLocked({ name: 'language', value: 'en' })).toBe(true)
+    })
+  })
+
+  describe('refreshSearch with recommendations gated to server mode', () => {
+    let recommendedStore
+
+    beforeEach(() => {
+      recommendedStore = useRecommendedStore()
+      vi.spyOn(searchStore, 'query').mockResolvedValue()
+      vi.spyOn(recommendedStore, 'getDocumentsRecommendedBy').mockResolvedValue()
+    })
+
+    it('does not fetch recommendations in local mode', async () => {
+      core.config.set('mode', MODE_NAME.LOCAL)
+      const { refreshSearch } = mountComposable()
+
+      await refreshSearch()
+
+      expect(recommendedStore.getDocumentsRecommendedBy).not.toHaveBeenCalled()
+    })
+
+    it('does not fetch recommendations in embedded mode', async () => {
+      core.config.set('mode', MODE_NAME.EMBEDDED)
+      const { refreshSearch } = mountComposable()
+
+      await refreshSearch()
+
+      expect(recommendedStore.getDocumentsRecommendedBy).not.toHaveBeenCalled()
+    })
+
+    it('fetches recommendations in server mode', async () => {
+      core.config.set('mode', MODE_NAME.SERVER)
+      const { refreshSearch } = mountComposable()
+
+      await refreshSearch()
+
+      expect(recommendedStore.getDocumentsRecommendedBy).toHaveBeenCalledOnce()
     })
   })
 })

@@ -1,6 +1,9 @@
 <script setup>
 import { computed } from 'vue'
-import { compact, find, isArray, trim } from 'lodash'
+import compact from 'lodash/compact'
+import find from 'lodash/find'
+import isArray from 'lodash/isArray'
+import trim from 'lodash/trim'
 import { useI18n } from 'vue-i18n'
 
 import ProjectDropdownSelectorButtonContent from './ProjectDropdownSelectorButtonContent'
@@ -118,7 +121,6 @@ function filterProject(project, query) {
       <project-dropdown-selector-button-content
         :slice-size="sliceSize"
         :selected-projects="selectedOptions"
-        :projects="projects"
       />
     </template>
     <template #item="{ option: project, selected, selectionRequired, focused, toggle, toggleUnique }">

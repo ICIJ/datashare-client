@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { get } from 'lodash'
+import get from 'lodash/get'
 import { useI18n } from 'vue-i18n'
 
 import AppOverlay from '@/components/AppOverlay/AppOverlay.vue'

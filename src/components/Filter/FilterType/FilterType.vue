@@ -1,6 +1,14 @@
 <script setup>
 import { computed, nextTick, onBeforeMount, reactive, ref, watch } from 'vue'
-import { compact, concat, escapeRegExp, flatten, get, noop, setWith, uniqueId } from 'lodash'
+import compact from 'lodash/compact'
+import concat from 'lodash/concat'
+import escapeRegExp from 'lodash/escapeRegExp'
+import flatten from 'lodash/flatten'
+import get from 'lodash/get'
+import noop from 'lodash/noop'
+import setWith from 'lodash/setWith'
+import toString from 'lodash/toString'
+import uniqueId from 'lodash/uniqueId'
 import InfiniteLoading from 'v3-infinite-loading'
 import { useI18n } from 'vue-i18n'
 
@@ -12,12 +20,13 @@ import FiltersPanelSectionFilter from '@/components/FiltersPanel/FiltersPanelSec
 import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPanelSectionFilterEntry'
 import FilterTypeAll from '@/components/Filter/FilterType/FilterTypeAll'
 import settings from '@/utils/settings'
-import { useSearchStore } from '@/store/modules'
+import { useSearchStore, useLockedFiltersStore } from '@/store/modules'
+import builtinFilterIcons from '@/store/filters/icons'
 
 const query = defineModel('query', { type: String, default: '' })
 const collapse = defineModel('collapse', { type: Boolean, default: null })
 
-const { filter, modal, hideCount, overlayShow } = defineProps({
+const { filter, modal, hideCount, hideLock, overlayShow } = defineProps({
   filter: {
     type: Object,
     required: true
@@ -26,6 +35,14 @@ const { filter, modal, hideCount, overlayShow } = defineProps({
     type: Boolean
   },
   hideCount: {
+    type: Boolean
+  },
+  // Suppresses the per-value lock button and locked-but-missing synthetic
+  // buckets entirely. Used by disposable/unrelated screens (e.g. the batch
+  // search creation form) that render this filter against a non-live search
+  // store: locking from there would write to the user's global personal lock
+  // store with no visibility into what it's actually affecting.
+  hideLock: {
     type: Boolean
   },
   // Forwarded to FiltersPanelSectionFilter to surface an informational
@@ -40,11 +57,14 @@ const { filter, modal, hideCount, overlayShow } = defineProps({
 const opened = refWhenever(collapse, value => value === false || modal === true)
 const { t } = useI18n()
 
+const icon = computed(() => filter.icon ?? builtinFilterIcons[filter.name])
+
 const pages = reactive([])
 const expand = ref(false)
 
 const { waitFor, isLoading } = useWait({ throttle: 500 })
 const searchStore = useSearchStore.inject()
+const lockedFiltersStore = useLockedFiltersStore()
 
 const aggregateOver = () => {
   return aggregate({ clearPages: true })
@@ -127,12 +147,17 @@ const {
   computedSortFilter,
   computedContextualizeFilter,
   computedExcludeFilter,
+  lockedNameFor,
   toggleFilterValue,
   getFilterPairedDimensions,
   getFilterValuesByName
 } = useSearchFilter()
 
 const exclude = computedExcludeFilter(filter)
+// The store key for this filter's locks: the filter's own current
+// include/exclude mode, never a paired dimension's — locking a chip on one
+// side of a paired filter must never lock or affect the other side.
+const lockedName = computed(() => lockedNameFor(filter))
 const sort = computedSortFilter(filter)
 const contextualize = computedContextualizeFilter(filter)
 
@@ -145,13 +170,43 @@ const hasAnyValue = computed(() => {
 })
 
 const toggleValue = async (item, checked) => {
-  await toggleFilterValue(filter, item, checked)
+  // Unlocking on removal is handled centrally by useSearchFilter's
+  // removeFilterValue/removeFilterValues, so every removal path (this
+  // checkbox, the "All" toggle, breadcrumb chip removal) unlocks alike —
+  // except when hideLock says this instance has no business touching the
+  // user's real lock store (e.g. the batch-search creation form).
+  await toggleFilterValue(filter, item, checked, { skipUnlock: hideLock })
   if (contextualize.value) {
     await aggregateOver()
   }
 }
 
+function isItemLocked(item) {
+  return lockedFiltersStore.isLocked({ name: lockedName.value, value: item.key })
+}
+
+async function toggleLock(item, locked) {
+  if (locked) {
+    // Locking an unticked value also selects it — a single click both
+    // applies and locks the filter, rather than silently locking a value
+    // that has no visible effect on the current search.
+    if (!hasValue(item)) {
+      await toggleValue(item, true)
+    }
+    lockedFiltersStore.lock({ name: lockedName.value, value: item.key, label: bucketLabel(item) })
+  }
+  else {
+    lockedFiltersStore.unlock({ name: lockedName.value, value: item.key })
+  }
+}
+
 const bucketLabel = (bucket) => {
+  // The label is frozen at lock time and intentionally does not re-translate
+  // if the UI language changes later — the bucket is gone, so there's
+  // nothing left to re-resolve the label against.
+  if (bucket?.__lockedLabel != null) {
+    return bucket.__lockedLabel
+  }
   if (noBucketTranslation.value) {
     return bucket?.key?.toString()
   }
@@ -170,8 +225,51 @@ const excludedBucketsPage = computed(() => {
   return []
 })
 
+// A locked value with no matching real bucket gets a synthetic row so it stays
+// visible and unlockable (a deleted tag, a re-indexed path). Skipped while the
+// panel's search box is active: real buckets are filtered server-side via
+// aggregationOptions.include, so a synthetic row would outlive a query it
+// never matched. The synthetic doc_count is NaN, not 0, so showCount's
+// isNaN guard hides only these ghost rows and not a real locked value's count.
+const bucketKey = bucket => toString(bucket.key)
+
+const renderedBucketKeys = computed(() => {
+  const realKeys = buckets.value.map(bucketKey)
+  // excludedBucketsPage already synthesizes the ticked + excluded + contextualized
+  // case, so de-dupe here and leave that computed's own semantics untouched.
+  const excludedKeys = getPageBuckets(excludedBucketsPage.value).map(bucketKey)
+  return new Set([...realKeys, ...excludedKeys])
+})
+
+const missingLocks = computed(() => {
+  // Don't synthesize yet if there could still be more real pages: a locked
+  // value absent from what's loaded so far might just be ranked lower, not
+  // actually deleted/re-indexed.
+  if (!reachedBucketsEnd.value) {
+    return []
+  }
+
+  const isMissing = entry => !renderedBucketKeys.value.has(entry.value)
+  return lockedFiltersStore.entriesForName(lockedName.value).filter(isMissing)
+})
+
+const toSyntheticBucket = entry => ({ key: entry.value, doc_count: NaN, __lockedLabel: entry.label })
+
+const missingLockedBucketsPage = computed(() => {
+  if (hideLock || query.value !== '') {
+    return []
+  }
+  const missing = missingLocks.value.map(toSyntheticBucket)
+  return setWith({}, pageBucketsPath.value.join('.'), missing, Object)
+})
+
 const bucketsWithExcludedValues = computed(() => {
-  return flatten(concat([excludedBucketsPage.value], pages).map(getPageBuckets))
+  // missingLockedBucketsPage goes after the real pages, not before: it's
+  // always zero-count, so it belongs below real buckets regardless of sort
+  // order, rather than always appearing to outrank them. excludedBucketsPage
+  // keeps its existing pinned-at-top position - unrelated, pre-existing
+  // behavior this fix doesn't touch.
+  return flatten(concat([excludedBucketsPage.value], pages, [missingLockedBucketsPage.value]).map(getPageBuckets))
 })
 
 const entries = computed(() => {
@@ -259,7 +357,7 @@ defineExpose({ entries, aggregateOver, count })
     :hide-exclude="filter.hideExclude"
     :hide-expand="filter.hideExpand"
     :title="t(`filter.${filter.name}`)"
-    :icon="filter.icon"
+    :icon="icon"
     :count="count"
     :loading="isLoading"
     :modal="modal"
@@ -282,6 +380,7 @@ defineExpose({ entries, aggregateOver, count })
       <filter-type-all
         v-if="!filter.hideAll"
         :filter="filter"
+        :hide-lock="hideLock"
       />
     </slot>
     <template #search="{ search, searchPlaceholder }">
@@ -301,7 +400,10 @@ defineExpose({ entries, aggregateOver, count })
         :count="item.doc_count"
         :hide-count="hideCount"
         :model-value="hasValue(item)"
+        :locked="isItemLocked(item)"
+        :lockable="!hideLock"
         @update:model-value="toggleValue(item, $event)"
+        @update:locked="toggleLock(item, $event)"
       >
         <slot name="entry-label" />
         <template #count>
@@ -327,6 +429,7 @@ defineExpose({ entries, aggregateOver, count })
       v-model:sort="sort"
       :filter="filter"
       :hide-count="hideCount"
+      :hide-lock="hideLock"
       :modal="modal"
     />
   </filters-panel-section-filter>

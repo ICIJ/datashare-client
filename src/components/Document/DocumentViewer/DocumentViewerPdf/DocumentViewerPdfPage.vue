@@ -1,12 +1,10 @@
 <script setup>
 import '@tato30/vue-pdf/style.css'
-import VueScrollTo from 'vue-scrollto'
 import { VuePDF as VuePdf } from '@tato30/vue-pdf'
-import { computed, toRef, toValue, useTemplateRef, watch } from 'vue'
-import { useElementSize, useWindowSize, whenever, useElementVisibility } from '@vueuse/core'
+import { computed, toRef, useTemplateRef, watch } from 'vue'
+import { useElementSize, whenever, useElementVisibility } from '@vueuse/core'
 
 import { useElementVisibilityOnce } from '@/composables/useElementVisibilityOnce'
-import { useScrollParent } from '@/composables/useScrollParent'
 
 const props = defineProps({
   pdf: {
@@ -29,7 +27,7 @@ const props = defineProps({
     type: Number,
     default: 0
   },
-  scrollOffset: {
+  topOffset: {
     type: Number,
     default: 0
   },
@@ -49,15 +47,20 @@ const props = defineProps({
 
 const HIGHLIGHT_CLASS = 'highlight'
 const HIGHLIGHT_ACTIVE_CLASS = 'highlight--active'
+const BELOW_TOOLBOX_OFFSET = 4
 
 const emit = defineEmits(['visible'])
 
 const renderer = useTemplateRef('renderer')
 const element = useTemplateRef('element')
-const scrollParent = useScrollParent()
-const isVisible = useElementVisibility(element, { threshold: 0.5 })
 const isVisibleOnce = useElementVisibilityOnce(element)
-const { height: windowHeight } = useWindowSize()
+// Shrink the observer root so it starts just under the sticky toolbox: whoever is left showing is
+// a candidate for the current page, and the parent keeps the topmost one. A ratio threshold cannot
+// work here, pages are often taller than the viewport and vueuse reports `isIntersecting` anyway.
+const belowToolbox = computed(() => {
+  return `${-(Math.round(props.topOffset) + BELOW_TOOLBOX_OFFSET)}px 0px 0px 0px`
+})
+const isBelowToolbox = useElementVisibility(element, { rootMargin: belowToolbox })
 const { width } = useElementSize(element)
 watch(width, () => renderer.value?.reload())
 
@@ -88,18 +91,14 @@ function applyHighlight() {
   const highlight = highlights[props.highlightIndex - 1]
   // Remove all classes "highlight--active" from the page and highlight the current one
   highlights.forEach(el => el.classList.toggle(HIGHLIGHT_ACTIVE_CLASS, el === highlight))
-  // Only scroll to the highlight/page if the current page has a highlight index
+  // Only scroll to the highlight if the current page has a highlight index
   if (props.highlightIndex && highlight) {
-    // If no highlight is found, offset the scroll to the center of the page
-    const offset = highlight ? windowHeight.value / -2 : props.scrollOffset
-    const container = scrollParent.value
-    const target = toValue(highlight || element)
-    VueScrollTo.scrollTo(target, 0, { container, offset })
+    highlight.scrollIntoView({ block: 'center' })
   }
 }
 
 whenever(toRef(props, 'highlightIndex'), applyHighlight)
-whenever(isVisible, () => emit('visible'))
+watch(isBelowToolbox, visible => emit('visible', visible), { immediate: true })
 </script>
 
 <template>

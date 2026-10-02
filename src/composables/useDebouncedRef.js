@@ -1,6 +1,5 @@
 import { customRef } from 'vue'
-import { debounce } from 'lodash'
-
+import debounce from 'lodash/debounce'
 export function useDebouncedRef(value, wait = 200) {
   return customRef((track, trigger) => {
     const debouncedTrigger = debounce(trigger, wait)

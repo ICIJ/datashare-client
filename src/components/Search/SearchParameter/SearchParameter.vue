@@ -1,7 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { pick } from 'lodash'
-
+import pick from 'lodash/pick'
 import { VARIANT, variantValidator } from '@/enums/variants'
 import SearchParameterQuery from '@/components/Search/SearchParameter/SearchParameterQuery'
 import SearchParameterFilter from '@/components/Search/SearchParameter/SearchParameterFilter'
@@ -48,6 +47,14 @@ const props = defineProps({
   },
   noXIcon: {
     type: Boolean
+  },
+  locked: {
+    type: Boolean,
+    default: null
+  },
+  lockLabel: {
+    type: String,
+    default: null
   }
 })
 
@@ -62,7 +69,7 @@ const componentProps = computed(() => {
 const filterComponentProps = computed(() => {
   return {
     name: props.filter,
-    ...pick(props, ['value', 'icon', 'color', 'counter', 'counterVariant', 'counterStyle', 'noIcon', 'noXIcon', 'operator', 'size'])
+    ...pick(props, ['value', 'icon', 'color', 'counter', 'counterVariant', 'counterStyle', 'noIcon', 'noXIcon', 'operator', 'size', 'locked', 'lockLabel'])
   }
 })
 

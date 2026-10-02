@@ -1,17 +1,16 @@
 // BootstrapVue recommends using this
 import 'mutationobserver-shim'
 
-import compose from 'lodash/fp/compose'
 import { config } from '@icij/murmur'
-import VCalendar from 'v-calendar'
 import VueScrollTo from 'vue-scrollto'
 import Vue3Toastify, { toast } from 'vue3-toastify'
 import { createBootstrap, BApp } from 'bootstrap-vue-next'
 import { createApp, defineComponent, toValue, reactive, watchEffect, h } from 'vue'
 import { createI18n } from 'vue-i18n'
 import { createRouter, createWebHashHistory } from 'vue-router'
-import { iteratee, get } from 'lodash'
-
+import iteratee from 'lodash/iteratee'
+import get from 'lodash/get'
+import flowRight from 'lodash/flowRight'
 import ComponentsMixin from './ComponentsMixin'
 import FiltersMixin from './FiltersMixin'
 import HooksMixin from './HooksMixin'
@@ -34,7 +33,7 @@ import { getTheme, setTheme } from '@/composables/useTheme'
 import * as stores from '@/store/modules'
 
 class Base {}
-const Behaviors = compose(
+const Behaviors = flowRight(
   ComponentsMixin,
   FiltersMixin,
   HooksMixin,
@@ -144,7 +143,22 @@ class Core extends Behaviors {
    * @returns {Core} the current instance of Core
    */
   useBootstrapVue() {
-    this._bootstrapVue = createBootstrap({ components: true, directives: true })
+    // `components` doubles as bootstrap-vue-next's global defaults registry. Popovers
+    // default to hover and focus triggers, and only wire click-outside dismissal when
+    // the click trigger is active, so this one default makes every popover in the
+    // application open on click and close on click outside.
+    //
+    // BTooltip renders a BPopover internally and forwards its own trigger props as
+    // `undefined` when they are not set, which lets the BPopover default above leak
+    // into every tooltip and switch it to a click trigger. Restating the triggers
+    // under `BTooltip` keeps tooltips on hover and focus, where they belong.
+    this._bootstrapVue = createBootstrap({
+      components: {
+        BPopover: { click: true },
+        BTooltip: { click: false, hover: true, focus: true, delay: { show: 500, hide: 0 } }
+      },
+      directives: true
+    })
     this.use(this.bootstrapVue)
     return this
   }
@@ -171,15 +185,17 @@ class Core extends Behaviors {
   }
 
   /**
-   * Configure most common Vue plugins (Murmur, VueScrollTo and VueCalendar)
+   * Configure most common Vue plugins (Murmur and VueScrollTo)
+   *
+   * VCalendar is deliberately NOT installed as a global plugin here: the
+   * only consumer (FormControlDateRange.vue) imports its `DatePicker`
+   * component directly and never renders the plugin's globally-registered
+   * `vc-`-prefixed components, so installing it eagerly at boot only forced
+   * v-calendar's ~245 kB into every page's bundle for no benefit.
    * @returns {Core} the current instance of Core
    */
   useCommons() {
     this.use(VueScrollTo)
-    // Set up VCalendar manually since Webpack is not compatible with
-    // dynamic chunk import with third party modules.
-    // @see https://github.com/nathanreyes/v-calendar/issues/413#issuecomment-530633437
-    this.use(VCalendar, { componentPrefix: 'vc' })
     // Vue Toastify uses as separated vue instance so we must install vue-i18n
     // separately to ensure vue-i18n's methods and components are available in the toastify plugin.
     this.use(Vue3Toastify, {

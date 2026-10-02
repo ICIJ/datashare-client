@@ -16,7 +16,10 @@ vi.mock('@/api/apiInstance', async (importOriginal) => {
     apiInstance: {
       ...apiInstance,
       getDocumentSlice: vi.fn(),
-      getPages: vi.fn().mockResolvedValue([])
+      getPages: vi.fn().mockResolvedValue([]),
+      // `DocumentContent` probes the structure artifact on mount; resolving
+      // `null` fails closed so markdown mode stays off in this file.
+      getStructureManifest: vi.fn().mockResolvedValue(null)
     }
   }
 })

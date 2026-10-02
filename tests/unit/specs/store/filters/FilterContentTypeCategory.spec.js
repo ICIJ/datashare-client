@@ -1,19 +1,24 @@
 import bodybuilder from 'bodybuilder'
 import { setActivePinia, createPinia } from 'pinia'
+import { shallowMount } from '@vue/test-utils'
+import { AppIcon } from '@icij/murmur'
 
 import IPhFiles from '~icons/ph/files'
-import filtersDefs from '@/store/filters'
-import FilterContentTypeCategory from '@/store/filters/FilterContentTypeCategory'
+import FilterContentTypeCategory, { CONTENT_TYPE_CATEGORY_FILTER_NAME } from '@/store/filters/FilterContentTypeCategory'
 import DisplayContentTypeCategory from '@/components/Display/DisplayContentTypeCategory'
+import FilterModalTitle from '@/components/Filter/FilterModal/FilterModalTitle'
 import { apiInstance as api } from '@/api/apiInstance'
 import { useSearchStore } from '@/store/modules'
 import { findBoolShould, findTermsClause } from '~tests/unit/specs/utils/esQueryBody'
+import CoreSetup from '~tests/unit/CoreSetup'
 
 describe('FilterContentTypeCategory.js', () => {
   describe('breadcrumb icon', () => {
-    it('uses the files icon so the breadcrumb chip reads as file types', () => {
-      const def = filtersDefs.find(d => d.options.name === 'contentTypeCategory')
-      expect(def.options.icon).toBe(IPhFiles)
+    it('renders the files icon on FilterModalTitle so the breadcrumb chip reads as file types', () => {
+      const { plugins } = CoreSetup.init().useAll()
+      const filter = { name: CONTENT_TYPE_CATEGORY_FILTER_NAME, hideSort: true }
+      const wrapper = shallowMount(FilterModalTitle, { global: { plugins }, props: { filter } })
+      expect(wrapper.findComponent(AppIcon).props('name')).toBe(IPhFiles)
     })
   })
 
@@ -155,11 +160,11 @@ describe('FilterContentTypeCategory.js', () => {
 
     function buildAggBody(filterName) {
       // Mirrors the body construction performed by `searchFilter`: build the
-      // bucket's own aggregation, then apply the other filters and the query.
+      // bucket's own aggregation, then apply the context filters and the query.
       const filter = searchStore.getFilter({ name: filterName })
-      const otherFilters = searchStore.instantiatedFilters.filter(other => other.name !== filter.name)
+      const contextFilters = api.elasticsearch._contextFilters(filter, searchStore.instantiatedFilters)
       const body = filter.body(bodybuilder(), {}, 0, 8)
-      api.elasticsearch._applyFilters(body, otherFilters)
+      api.elasticsearch._applyFilters(body, contextFilters)
       api.elasticsearch._applyQueryString(body, '*', [])
       return body.size(0).rawOption('track_total_hits', true).build()
     }

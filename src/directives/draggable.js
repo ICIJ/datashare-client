@@ -1,5 +1,7 @@
-import { has, get, invoke, clamp } from 'lodash'
-
+import has from 'lodash/has'
+import get from 'lodash/get'
+import invoke from 'lodash/invoke'
+import clamp from 'lodash/clamp'
 /**
  * WeakMap to store the binding values per-element.
  */

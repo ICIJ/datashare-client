@@ -85,13 +85,18 @@ async function fetchBatchSearch() {
   const batchSearchRecord = await core.api.getBatchSearch(props.uuid)
   // Set the page title according to the batch search name
   core.pageTitle = batchSearchRecord.name
+  // A task only carries counts while the task manager holds it, and never when it
+  // failed, so we fall back to the record whose counts are updated as results are
+  // saved. Older tasks report the number of results as a bare number instead of an
+  // object, which the optional chaining discards in favor of the record as well.
+  const taskResult = task.result?.value
   // Finally, we set and extend the batchSearch reactive object
   // with the task information and the batch search record to make
   // sure we have up to date information.
   batchSearch.value = {
     ...batchSearchRecord,
-    nbResults: task.result?.value.nbResults ?? 0,
-    nbQueriesWithoutResults: task.result?.value.nbQueriesWithoutResults ?? 0,
+    nbResults: taskResult?.nbResults ?? batchSearchRecord.nbResults ?? 0,
+    nbQueriesWithoutResults: taskResult?.nbQueriesWithoutResults ?? batchSearchRecord.nbQueriesWithoutResults ?? 0,
     userId: task?.args?.user?.id,
     state: task.state,
     errorMessage: batchSearchRecord.errorMessage ?? task.error?.message ?? null,

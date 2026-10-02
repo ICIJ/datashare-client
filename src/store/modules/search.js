@@ -1,33 +1,44 @@
-import {
-  castArray,
-  compact,
-  endsWith,
-  find,
-  get,
-  has,
-  isEqual,
-  isString,
-  method,
-  orderBy as orderArray,
-  property,
-  random,
-  range,
-  toString,
-  uniq
-} from 'lodash'
+import castArray from 'lodash/castArray'
+import compact from 'lodash/compact'
+import endsWith from 'lodash/endsWith'
+import find from 'lodash/find'
+import get from 'lodash/get'
+import has from 'lodash/has'
+import isEqual from 'lodash/isEqual'
+import isString from 'lodash/isString'
+import method from 'lodash/method'
+import orderArray from 'lodash/orderBy'
+import property from 'lodash/property'
+import random from 'lodash/random'
+import range from 'lodash/range'
+import toString from 'lodash/toString'
+import uniq from 'lodash/uniq'
 import lucene from 'lucene'
 import { ref, computed, toRaw } from 'vue'
-import { useRouter } from 'vue-router'
 
 import EsDocList from '@/api/resources/EsDocList'
+import { isOpenSearchDistribution } from '@/api/indexDistribution'
 import { runAsyncSearch } from '@/api/asyncSearch'
 import filterDefs, * as filterTypes from '@/store/filters'
-import { getPairedDimensions } from '@/store/filters/pairedDimensions'
-import { useAppStore, useSearchBreadcrumbStore } from '@/store/modules'
+import { getCanonicalDimension, getPairedDimensions } from '@/store/filters/pairedDimensions'
+import { useAppStore, useLockedFiltersStore, useSearchBreadcrumbStore } from '@/store/modules'
+import { parseLockedName, toLockedName } from '@/store/modules/lockedFilters'
 import { apiInstance as api } from '@/api/apiInstance'
 import { defineSuffixedStore } from '@/store/defineSuffixedStore'
 import { SEARCH_OPERATORS } from '@/enums/searchOperators'
 import settings from '@/utils/settings'
+import { straightenQuotes } from '@/utils/luceneQuery'
+
+/**
+ * Assign `value` to `ref` only if it actually changed, to avoid churning the
+ * ref's identity (and false-triggering reference-watching consumers) when
+ * called with an equivalent value.
+ */
+function assignIfChanged(target, value) {
+  if (!isEqual(target.value, value)) {
+    target.value = value
+  }
+}
 
 export const useSearchStore = defineSuffixedStore('search', () => {
   const error = ref(null)
@@ -45,14 +56,12 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   const lastAppliedQuery = ref({})
 
   const appStore = useAppStore()
-  const router = useRouter()
+  const lockedFiltersStore = useLockedFiltersStore()
   const searchBreadcrumbStore = useSearchBreadcrumbStore()
 
   const index = computed({
     get: () => indices.value[0],
-    set: (value) => {
-      indices.value = [value]
-    }
+    set: setIndex
   })
 
   const searchOperator = computed(() => appStore.getSettings('search', 'searchOperator') ?? SEARCH_OPERATORS.OR)
@@ -157,13 +166,6 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     }
   })
 
-  const stringifyBaseRouteQuery = computed(() => {
-    const name = 'search'
-    const query = toBaseRouteQuery.value
-    const { href = null } = router?.resolve({ name, query }) ?? {}
-    return href
-  })
-
   const retrieveQueryTerms = computed(() => {
     const terms = []
 
@@ -202,7 +204,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     }
 
     try {
-      retTerms(lucene.parse(q.value.replace('\\@', '@')))
+      retTerms(lucene.parse(straightenQuotes(q.value).replace('\\@', '@')))
       return terms
     }
     catch {
@@ -274,9 +276,14 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * This is useful when navigating to a new route
    * to ensure the search state is fresh.
    */
-  function resetForRouteChange() {
+  function resetForRouteChange(routeQuery = {}) {
     from.value = 0
-    isReady.value = false
+    // Only force loading state for a genuinely new query, or a same-query
+    // route re-entry (e.g. History → Documents) leaves it stuck forever.
+    const sameQuery = Object.keys(routeQuery).length && sameAppliedQuery(routeQuery, ['from', 'stamp'])
+    if (!sameQuery) {
+      isReady.value = false
+    }
     q.value = ''
     excludeFilters.value = []
     values.value = {}
@@ -302,6 +309,20 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   function resetFilterValues() {
     values.value = {}
     from.value = 0
+  }
+
+  /**
+   * Reset the filter values and exclusion mode to an empty state, then
+   * force-apply the user's locked filters immediately. This is "Clear
+   * filters" preserving locks: clicking "Clear
+   * filters" is itself an explicit user action, so, unlike route hydration,
+   * it force-applies locks straight away rather than leaving them pending
+   * behind "Apply locked filters".
+   */
+  function resetFilterValuesPreservingLocks() {
+    resetFilterValues()
+    excludeFilters.value = []
+    applyLockedFilters()
   }
 
   /**
@@ -357,7 +378,10 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * @param {string} value - The index to set for the search.
    */
   function setIndex(value) {
-    indices.value = [value]
+    // Direct assign (not setIndices) — setIndices' compact() drops falsy
+    // entries, turning setIndex('') into indices.value = [] instead of [''].
+    // Core.js relies on setIndex('') when a user has no projects.
+    assignIfChanged(indices, [value])
   }
 
   /**
@@ -371,7 +395,15 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     const cleaned = compact(castArray(value))
       .map(str => str.split(','))
       .flat()
-    indices.value = cleaned
+    // Keep the existing array reference when the value doesn't actually
+    // change. updateFromRouteQuery() calls this on every route round-trip
+    // (every filter edit re-applies `index`/`indices` from the URL), so an
+    // unconditional reassignment churns `indices.value`'s identity even
+    // when the project selection is unchanged. Consumers that watch
+    // `searchStore.indices` by reference (e.g. FilterTypePath.vue, via
+    // `projects = computed(() => searchStore.indices)`) then see a false
+    // "changed" signal and reload/flash their content for no reason.
+    assignIfChanged(indices, cleaned)
   }
 
   /**
@@ -548,13 +580,33 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   /**
    * Remove a filter by its name.
    *
+   * The filter itself is going away, so by default unlock it under both
+   * include and exclude mode, not just whichever it's currently in - every
+   * caller (FiltersMixin's unregisterFilter, useSearchFilter's removeFilter)
+   * routes through here, so fixing it here covers them all instead of
+   * duplicating the unlock in each one.
+   *
    * @param {string} name - The name of the filter to remove.
+   * @param {object} [options]
+   * @param {boolean} [options.preserveLocks=false] - Skip unlocking. Set by
+   * FiltersMixin's unregisterFilterForProject: a filter unregistered only
+   * because the current project doesn't support it must not purge the
+   * user's personal, cross-project locks - they're meant to survive project
+   * switches, and registerFilter never restores them on re-registration.
    */
-  function removeFilter(name) {
+  function removeFilter(name, { preserveLocks = false } = {}) {
     const i = filters.value.findIndex(({ options }) => options.name === name)
-    delete filters.value[i]
+    // splice, not delete: `delete` on an array index leaves an undefined
+    // hole in place, which crashes the next addFilter's own .find() over
+    // this same array as soon as it walks past the hole.
+    if (i !== -1) {
+      filters.value.splice(i, 1)
+    }
     if (name in values.value) {
       delete values.value[name]
+    }
+    if (!preserveLocks) {
+      lockedFiltersStore.unlockWhere(entry => parseLockedName(entry.name).name === name)
     }
   }
 
@@ -645,6 +697,27 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   }
 
   /**
+   * Re-tag any lock entries under `name`'s current mode to the mode it's
+   * about to switch to, for exactly the values presently active on that
+   * filter. Without this, flipping a filter's include/exclude toggle would
+   * leave its locked values behind under the old mode string, silently
+   * turning them into a conflict (and a stale-looking lock icon) instead of
+   * following the toggle the user just made.
+   *
+   * @param {string} name - The bare filter name.
+   * @param {boolean} wasExcluded - The filter's mode before the toggle.
+   * @param {boolean} excluded - The filter's mode after the toggle.
+   */
+  function relockFilterValues(name, wasExcluded, excluded) {
+    const oldName = toLockedName(name, wasExcluded)
+    const newName = toLockedName(name, excluded)
+    const filterValues = (values.value[name] ?? []).map(toString)
+    lockedFiltersStore.entries
+      .filter(entry => entry.name === oldName && filterValues.includes(entry.value))
+      .forEach(({ value }) => lockedFiltersStore.retag({ name: oldName, newName, value }))
+  }
+
+  /**
    * Toggle a filter by its name.
    * This function checks if the filter is currently excluded.
    * If it is, it will exclude the filter; otherwise, it will include it.
@@ -653,7 +726,12 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * @returns {Object} - The result of the toggle action, either excluding or including the filter.
    */
   function toggleFilter(name, toggler = null) {
-    if (toggler ?? !isFilterExcluded(name)) {
+    const wasExcluded = isFilterExcluded(name)
+    const excluded = toggler ?? !wasExcluded
+    if (excluded !== wasExcluded) {
+      relockFilterValues(name, wasExcluded, excluded)
+    }
+    if (excluded) {
       return excludeFilter(name)
     }
     return includeFilter(name)
@@ -756,24 +834,61 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   }
 
   /**
-   * Search for documents using Elasticsearch async search.
-   *
+   * Runs the synchronous `_search` used on OpenSearch. The transport rejects
+   * with its own error on abort, so a cancelled request is renamed to the
+   * AbortError the caller already handles, mirroring `runAsyncSearch`.
+   * @param {Object} searchParams - The search parameters to use for the query.
+   * @param {AbortSignal} [signal] - Aborts the in-flight search.
+   * @returns {Promise<Object>} - The raw search response.
+   */
+  async function searchDocsSync(searchParams, signal) {
+    try {
+      return await api.elasticsearch.searchDocs(searchParams, { signal })
+    }
+    catch (error) {
+      signal?.throwIfAborted()
+      throw error
+    }
+  }
+
+  /**
    * Builds the search body with `api.elasticsearch.buildSearchDocsBody` and runs it
    * through `runAsyncSearch`, which submits, polls, and cleans up the async search.
-   * @param {Object} [searchParams=toSearchParams.value] - The search parameters to use for the query.
-   * @param {AbortSignal} [signal] - Aborts the in-flight async search (supersede / unmount).
-   * @returns {Promise<Object>} - A promise that resolves to the raw Elasticsearch search response.
+   * @param {Object} searchParams - The search parameters to use for the query.
+   * @param {AbortSignal} [signal] - Aborts the in-flight async search.
+   * @returns {Promise<Object>} - The raw search response.
    */
-  function searchDocuments(searchParams = toSearchParams.value, signal) {
+  function searchDocsAsync(searchParams, signal) {
     const body = api.elasticsearch.buildSearchDocsBody(searchParams)
     return runAsyncSearch(api.elasticsearch, { index: searchParams.index, body }, { signal })
   }
 
   /**
+   * Search for documents, through Elasticsearch async search or through a
+   * synchronous `_search` on OpenSearch, which has no async search endpoint.
+   * @param {Object} [searchParams=toSearchParams.value] - The search parameters to use for the query.
+   * @param {AbortSignal} [signal] - Aborts the in-flight search (supersede / unmount).
+   * @returns {Promise<Object>} - A promise that resolves to the raw Elasticsearch search response.
+   */
+  async function searchDocuments(searchParams = toSearchParams.value, signal) {
+    const isOpenSearch = await isOpenSearchDistribution(api)
+    // A run cancelled while the probe was pending must not submit anything.
+    signal?.throwIfAborted()
+    const params = { ...searchParams, isOpenSearch }
+    return isOpenSearch ? searchDocsSync(params, signal) : searchDocsAsync(params, signal)
+  }
+
+  /**
    * Cancels the in-flight async search (if any). Called when leaving the search
    * view so the backend stops polling and frees the stored result.
+   *
+   * Also clears the optimistic "applied" mark synchronously, so a cancelled
+   * search's query isn't wrongly treated as already satisfied on return.
    */
   function cancelActiveSearch() {
+    if (!isReady.value) {
+      lastAppliedQuery.value = {}
+    }
     activeController?.abort()
   }
 
@@ -802,7 +917,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    */
   function updateFromRouteQuery(routeQuery) {
     // Reset the state except for the given keys
-    resetForRouteChange()
+    resetForRouteChange(routeQuery)
     // Create a helper function that call the setter only if the key exists in the routeQuery
     const withRouteQuery = (key, setter) => key in routeQuery && setter(routeQuery[key])
     // This is all the key that can be found in the URL (apart from filters keys)
@@ -817,6 +932,105 @@ export const useSearchStore = defineSuffixedStore('search', () => {
       withRouteQuery(`f[${filter.name}]`, key => addFilterValue(filter.itemParam({ key })))
       withRouteQuery(`f[-${filter.name}]`, key => addFilterValue(filter.itemParam({ key })))
       withRouteQuery(`f[-${filter.name}]`, () => excludeFilter(filter.name))
+    })
+    reconcilePairedExcludeFilters()
+  }
+
+  /**
+   * Whether a locked entry is not yet reflected in the live search state:
+   * either its value is simply absent from that filter's live values, or the
+   * filter is present but in the opposite include/exclude mode. Neither case
+   * is ever silently applied any more, the
+   * user must click "Apply locked filters", which uses this same definition.
+   */
+  // Shared by hasConflictingLocks and applyLockedFilters (an explicit user
+  // action that overrides a conflict), so the two never compute "does this
+  // lock need applying" differently.
+  function getLockConflict({ name, value }) {
+    const { name: bareName, excluded } = parseLockedName(name)
+    // A lock for a filter that no longer exists on this project/index
+    // (e.g. a stale lock from before a filter was removed) is inert: it's
+    // not a conflict, but callers that write values (applyLockedFilters)
+    // still must not act on it, so exists:false is reported separately from
+    // hasConflict.
+    if (!getFilter({ name: bareName })) {
+      return { bareName, value, excluded, exists: false, hasConflict: false }
+    }
+    // Mode conflict detection must look at the whole paired-dimension group, not
+    // just the bare filter name: reconcilePairedExcludeFilters() force-excludes
+    // every member of a paired group if any one of them is excluded, so a lock
+    // that looks conflict-free against the bare name alone could still get
+    // silently flipped by that reconciliation pass.
+    const dims = getPairedDimensions(bareName)
+    const isExcluded = dims.some(dim => excludeFilters.value.includes(dim))
+    const isValuePresent = (values.value[bareName] ?? []).map(toString).includes(toString(value))
+    const hasConflict = !isValuePresent || isExcluded !== excluded
+    return { bareName, value, excluded, exists: true, hasConflict }
+  }
+
+  /**
+   * Whether any locked entry isn't yet reflected in the live search state
+   * (missing entirely, or present in the opposite mode). Drives the
+   * breadcrumb footer's "Apply locked filters" button.
+   */
+  const hasConflictingLocks = computed(() => {
+    return lockedFiltersStore.entries.some(entry => getLockConflict(entry).hasConflict)
+  })
+
+  /**
+   * Force-apply every locked value into the live search state, overriding
+   * any conflicting mode - "locks win". Only ever invoked by an explicit
+   * user action ("Apply locked filters" or "Clear filters"), so overriding
+   * the live state here is exactly what the user asked for.
+   *
+   * Include/exclude mode is a per-filter setting, not per-value: a filter
+   * that flips mode because of one locked value also flips every other,
+   * unlocked value already selected on it (e.g. a locked, conflicting
+   * exclude-mode value coexisting with an unlocked, include-mode selection
+   * on the same filter). This is intentional, not a gap - "locks win" is
+   * meant to apply to the whole filter they live on, not just their own
+   * value, so the live state always ends up wherever the user's locks say
+   * it should be.
+   */
+  function applyLockedFilters() {
+    // Two locks in the same paired group (e.g. contentType included,
+    // contentTypeCategory excluded) can disagree on mode: nothing stops
+    // locking each side independently. Resolve the group's mode by
+    // canonical-dimension precedence first, the same rule
+    // getCanonicalDimension documents for reads, so the canonical lock's own
+    // mode always wins instead of whichever entry happens to be excluded.
+    const groupExcluded = new Map()
+    lockedFiltersStore.entries.forEach((entry) => {
+      const { bareName, excluded, exists } = getLockConflict(entry)
+      if (!exists) {
+        return
+      }
+      const canonical = getCanonicalDimension(bareName)
+      // Only a genuine pair's canonical side should override an
+      // already-recorded mode; for an unpaired filter canonical === bareName
+      // always holds, so without the pair check this would let the last
+      // matching lock entry win instead of the first one.
+      const isCanonicalOfPair = canonical === bareName && getPairedDimensions(bareName).length > 1
+      if (isCanonicalOfPair || !groupExcluded.has(canonical)) {
+        groupExcluded.set(canonical, excluded)
+      }
+    })
+    lockedFiltersStore.entries.forEach((entry) => {
+      const { bareName, value, exists } = getLockConflict(entry)
+      if (!exists) {
+        return
+      }
+      addFilterValue({ name: bareName, value })
+      if (groupExcluded.get(getCanonicalDimension(bareName))) {
+        excludeFilter(bareName)
+      }
+      else {
+        // Clear the whole paired group, not just bareName: otherwise the
+        // sibling stays excluded and the trailing reconcilePairedExcludeFilters()
+        // call re-excludes bareName from it. getPairedDimensions returns
+        // [bareName] when unpaired, so this is safe either way.
+        getPairedDimensions(bareName).forEach(includeFilter)
+      }
     })
     reconcilePairedExcludeFilters()
   }
@@ -1044,12 +1258,16 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * @returns {boolean} - Returns true if the queries are the same, false otherwise.
    */
   function sameAppliedQuery(query = {}, omit = []) {
-    return Object.keys(query).every((key) => {
-      // The last applied query value can be an array, so we use isEqual to compare
-      // it with the current query value. Lodash's isEqual will handle the comparison
-      // correctly, regardless of the type of the value (string or array of strings).
-      // In addition, we use toRaw to ensure we are not comparing a reactive proxy.
-      return omit.includes(key) || isEqual(query[key], toRaw(lastAppliedQuery.value[key]))
+    // Union of both sides' keys, not just `query`'s own: a key dropped
+    // entirely from the new query (e.g. a filter removed by navigating to a
+    // different URL) must still be detected as a change, or the caller
+    // never notices the filter set actually shrank.
+    const keys = new Set([...Object.keys(query), ...Object.keys(toRaw(lastAppliedQuery.value))])
+    return [...keys].every((key) => {
+      // A single-valued filter round-trips through the URL as a scalar while
+      // lastAppliedQuery holds an array, so castArray both sides before
+      // comparing. toRaw ensures we are not comparing a reactive proxy.
+      return omit.includes(key) || isEqual(castArray(query[key]), castArray(toRaw(lastAppliedQuery.value[key])))
     })
   }
 
@@ -1078,6 +1296,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     values,
     // Getters
     instantiatedFilters,
+    hasConflictingLocks,
     activeFilters,
     fields,
     searchOperator,
@@ -1086,7 +1305,6 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     toRouteQuery,
     toRouteQueryWithStamp,
     toSearchParams,
-    stringifyBaseRouteQuery,
     retrieveQueryTerms,
     retrieveContentQueryTerms,
     page,
@@ -1100,7 +1318,9 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     reset,
     resetFilters,
     resetFilterValues,
+    resetFilterValuesPreservingLocks,
     resetQuery,
+    applyLockedFilters,
     hasFilterValue,
     isFilterContextualized,
     isFilterExcluded,

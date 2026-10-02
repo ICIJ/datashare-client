@@ -26,6 +26,7 @@ const filterLanguage = formSearchStore.getFilter({ name: 'language' })
       :filter="filterPath"
       actions-position-title
       hide-contextualize
+      hide-lock
       class="p-3"
       content-class="pb-0"
     />
@@ -33,6 +34,7 @@ const filterLanguage = formSearchStore.getFilter({ name: 'language' })
       :filter="filterTags"
       actions-position-title
       hide-contextualize
+      hide-lock
       class="p-3"
       content-class="pb-0"
     />
@@ -40,6 +42,7 @@ const filterLanguage = formSearchStore.getFilter({ name: 'language' })
       :filter="filterContentType"
       actions-position-title
       hide-contextualize
+      hide-lock
       class="p-3"
       content-class="pb-0"
     />
@@ -47,6 +50,7 @@ const filterLanguage = formSearchStore.getFilter({ name: 'language' })
       :filter="filterLanguage"
       actions-position-title
       hide-contextualize
+      hide-lock
       class="p-3"
       content-class="pb-0"
     />

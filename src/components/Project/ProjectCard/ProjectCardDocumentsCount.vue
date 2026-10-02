@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { isNumber } from 'lodash'
+import isNumber from 'lodash/isNumber'
 import { AppIcon } from '@icij/murmur'
 import { useI18n } from 'vue-i18n'
 

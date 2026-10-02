@@ -1,5 +1,5 @@
-import { pickBy, toLower } from 'lodash'
-
+import pickBy from 'lodash/pickBy'
+import toLower from 'lodash/toLower'
 import FilterText from './FilterText'
 
 import DisplayContentType from '@/components/Display/DisplayContentType'

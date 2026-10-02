@@ -1,33 +1,59 @@
-import { computed, toValue, nextTick, watch, watchEffect } from 'vue'
-import { castArray, get, identity, isObject, range, random, toString, without } from 'lodash'
+import { computed, defineAsyncComponent, toValue, nextTick, watch, watchEffect } from 'vue'
+import castArray from 'lodash/castArray'
+import get from 'lodash/get'
+import identity from 'lodash/identity'
+import isObject from 'lodash/isObject'
+import toString from 'lodash/toString'
+import without from 'lodash/without'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
 import settings from '@/utils/settings'
 import { SEARCH_OPERATORS } from '@/enums/searchOperators'
 import { useCore } from '@/composables/useCore'
+import { useMode } from '@/composables/useMode'
 import { useContentTypeCategoryAvailability } from '@/composables/useContentTypeCategoryAvailability'
+import { useRefreshRouteFromStart } from '@/composables/useRefreshRouteFromStart'
 import { onAfterRouteUpdate } from '@/composables/onAfterRouteUpdate'
 import FilterType from '@/components/Filter/FilterType/FilterType'
-import FilterTypeDateRange from '@/components/Filter/FilterType/FilterTypeDateRange'
 import FilterTypeFileTypes from '@/components/Filter/FilterType/FilterTypeFileTypes'
-import FilterTypePath from '@/components/Filter/FilterType/FilterTypePath'
-import FilterTypeProject from '@/components/Filter/FilterType/FilterTypeProject'
-import FilterTypeRecommendedBy from '@/components/Filter/FilterType/FilterTypeRecommendedBy'
-import FilterTypeStarred from '@/components/Filter/FilterType/FilterTypeStarred'
+
+const FilterTypeDateRange = defineAsyncComponent(() => import('@/components/Filter/FilterType/FilterTypeDateRange'))
+const FilterTypePath = defineAsyncComponent(() => import('@/components/Filter/FilterType/FilterTypePath'))
+const FilterTypeProject = defineAsyncComponent(() => import('@/components/Filter/FilterType/FilterTypeProject'))
+const FilterTypeRecommendedBy = defineAsyncComponent(() => import('@/components/Filter/FilterType/FilterTypeRecommendedBy'))
+const FilterTypeStarred = defineAsyncComponent(() => import('@/components/Filter/FilterType/FilterTypeStarred'))
 import { CONTENT_TYPE_CATEGORY_FILTER_NAME } from '@/store/filters/FilterContentTypeCategory'
 import FilterText from '@/store/filters/FilterText.js'
 import { PAIRED_DIMENSIONS, getCanonicalDimension, getPairedDimension, getPairedDimensions } from '@/store/filters/pairedDimensions'
-import { useAppStore, useRecommendedStore, useSearchStore } from '@/store/modules'
+import { useAppStore, useLockedFiltersStore, useRecommendedStore, useSearchStore } from '@/store/modules'
+import { parseLockedName, toLockedName } from '@/store/modules/lockedFilters'
+
+let justSubmitted = false
+
+// Set by SearchBar.vue's submit() right before it pushes the route — marks
+// the upcoming search as an explicit user submission.
+export function markJustSubmitted() {
+  justSubmitted = true
+}
+
+export function consumeJustSubmitted() {
+  const value = justSubmitted
+  justSubmitted = false
+  return value
+}
 
 export function useSearchFilter() {
   const appStore = useAppStore()
   const searchStore = useSearchStore.inject()
+  const lockedFiltersStore = useLockedFiltersStore()
   const recommendedStore = useRecommendedStore()
   const route = useRoute()
   const router = useRouter()
   const { t, te } = useI18n()
   const core = useCore()
+  const { isServer } = useMode(core)
+  const { refreshRouteFromStart } = useRefreshRouteFromStart(searchStore)
   // Drives the read-layer degradation in getFilterPairedDimensions: when the
   // contentTypeCategory field is missing from the selected indices' mapping,
   // the contentType filter falls back to single-dimension behavior so paired
@@ -38,19 +64,6 @@ export function useSearchFilter() {
     isAvailable: isCategoryAvailable,
     isLoading: isCategoryAvailabilityLoading
   } = useContentTypeCategoryAvailability() ?? {}
-
-  // Keep non-canonical paired dimensions in lockstep with their canonical.
-  // flush:'sync' ensures reconciliation runs within the same tick as setup,
-  // not deferred to the next render, so URL-restored drift is corrected before
-  // any computed getter or template ever reads the store.
-  watchEffect(() => {
-    for (const [canonical, paired] of Object.entries(PAIRED_DIMENSIONS)) {
-      const value = searchStore.isFilterExcluded(canonical)
-      if (searchStore.isFilterExcluded(paired) !== value) {
-        searchStore.toggleFilter(paired, value)
-      }
-    }
-  }, { flush: 'sync' })
 
   watchEffect(() => {
     for (const [canonical, paired] of Object.entries(PAIRED_DIMENSIONS)) {
@@ -116,7 +129,7 @@ export function useSearchFilter() {
     return isObject(value) ? value : { key: value }
   }
 
-  function computedAll(filter) {
+  function computedAll(filter, { skipUnlock = false } = {}) {
     return computed({
       get() {
         // Accept either a single filter or a list (used by paired dimensions),
@@ -128,7 +141,8 @@ export function useSearchFilter() {
         if (value) {
           const filters = castArray(toValue(filter))
           for (const eachFilter of filters) {
-            removeFilterValues(eachFilter)
+            // toValue() so a reactive skipUnlock (ref/getter) isn't frozen at call time
+            removeFilterValues(eachFilter, { skipUnlock: toValue(skipUnlock) })
           }
         }
       }
@@ -246,30 +260,54 @@ export function useSearchFilter() {
     return getFilterValues(filter).length > 0
   }
 
-  const toggleFilterValue = (filter, item, checked) => {
+  const toggleFilterValue = (filter, item, checked, options) => {
     if (checked) {
-      return addFilterValue(filter, item)
+      return addFilterValue(filter, item, options)
     }
-    return removeFilterValue(filter, item)
+    return removeFilterValue(filter, item, options)
   }
 
-  const addFilterValue = (filter, item) => {
+  // _options is unused here today (adding a value never touches locks), kept
+  // only so toggleFilterValue's forwarding is symmetric with removeFilterValue
+  const addFilterValue = (filter, item, _options) => {
     const instance = castFilter(filter)
     const param = instance.itemParam(castFilterItem(item))
     const value = toString(param.value)
     return searchStore.addFilterValue({ ...instance, value })
   }
 
-  const removeFilterValue = (filter, item) => {
+  // The store key for a filter's locks: its own current include/exclude
+  // mode, never a paired dimension's.
+  function lockedNameFor(instance) {
+    return toLockedName(instance.name, isFilterExcluded(instance))
+  }
+
+  // `skipUnlock` lets a component rendering against a non-live search store
+  // (e.g. the batch-search creation form via FilterType's hideLock) remove a
+  // value without touching the user's real personal lock store, which it has
+  // no visibility into.
+  const removeFilterValue = (filter, item, { skipUnlock = false } = {}) => {
     const instance = castFilter(filter)
     const param = instance.itemParam(castFilterItem(item))
     const value = toString(param.value)
+    if (!skipUnlock) {
+      lockedFiltersStore.unlock({ name: lockedNameFor(instance), value })
+    }
     return searchStore.removeFilterValue({ ...instance, value })
   }
 
-  const removeFilterValues = (filter) => {
+  const removeFilterValues = (filter, { skipUnlock = false } = {}) => {
     // setFilterValue takes a single { name, value } arg; passing [] positionally writes [undefined].
-    const { name } = castFilter(filter)
+    const instance = castFilter(filter)
+    const { name } = instance
+    if (!skipUnlock) {
+      // Unlock both modes, not just the filter's current one: relockFilterValues
+      // only retags a lock whose value is presently selected, so a lock set on
+      // a value that isn't currently applied survives a mode flip under its
+      // old mode name. Clearing the filter afterwards must still sweep it, the
+      // same "both modes" rule search.js's removeFilter already applies.
+      lockedFiltersStore.unlockWhere(entry => parseLockedName(entry.name).name === name)
+    }
     return searchStore.setFilterValue({ name, value: [] })
   }
 
@@ -308,14 +346,6 @@ export function useSearchFilter() {
     return router.push({ name, query })
   }
 
-  function refreshRouteFromStart() {
-    const name = 'search'
-    const seed = range(6).map(() => random(97, 122))
-    const stamp = String.fromCharCode.apply(null, seed)
-    const query = { ...searchStore.toRouteQuery, stamp, from: 0 }
-    return router.push({ name, query })
-  }
-
   function toValidSearchOperator(value) {
     return Object.values(SEARCH_OPERATORS).includes(value) ? value : SEARCH_OPERATORS.OR
   }
@@ -343,6 +373,8 @@ export function useSearchFilter() {
   }
 
   function refreshRecommendedBy() {
+    // Recommendations are a server-mode-only feature
+    if (!isServer.value) return
     const users = getFilterValues({ name: 'recommendedBy' })
     return recommendedStore.getDocumentsRecommendedBy(indices.value, users)
   }
@@ -360,10 +392,31 @@ export function useSearchFilter() {
 
   function isFilterExcluded({ name }) {
     const dimensions = getPairedDimensions(name)
-    if (dimensions.length === 1) {
-      return searchStore.isFilterExcluded(name)
+    // Any excluded side means the pair is excluded (matches the OR semantics
+    // `filterValuesAsRouteQuery` and `reconcilePairedExcludeFilters` already
+    // use in the store), rather than trusting one dimension over the other.
+    // Canonical-only precedence looks tempting here, but the canonical
+    // dimension (contentType) is only ever written to the route query when
+    // it has values of its own - a category-only selection (icij/datashare#2336's
+    // category locking) never touches it, so a canonical-only read would
+    // silently report the pair as included even while the category is
+    // genuinely excluded. See icij/datashare#2351.
+    const excluded = dimensions.some(dimension => searchStore.isFilterExcluded(dimension))
+    // Reconcile on read, additively only: propagate an exclude forward to
+    // any dimension that hasn't caught up yet (e.g. a direct store write to
+    // a single dimension that bypassed toggleExcludeFilter's own dual-write
+    // above). This only ever adds the flag, never removes it, and only runs
+    // when something actually calls this getter - unlike an eager
+    // `watchEffect` reconciler, it can't fire mid-write and observe (or
+    // act on) a transient, not-yet-finished state. See icij/datashare#2351.
+    if (excluded) {
+      dimensions.forEach((dimension) => {
+        if (!searchStore.isFilterExcluded(dimension)) {
+          searchStore.excludeFilter(dimension)
+        }
+      })
     }
-    return searchStore.isFilterExcluded(getCanonicalDimension(name))
+    return excluded
   }
 
   function computedExcludeFilter(filter, { get = null, set = null } = {}) {
@@ -484,11 +537,7 @@ export function useSearchFilter() {
 
   function onConsumeNoRefresh(options) {
     // `noRefresh` is a one-shot flag set when returning to search from a
-    // document, telling the refresh guards to skip a reload. Once those guards
-    // have observed it for this navigation, strip it from the URL so it never
-    // persists into the next navigation (page/sort/perPage changes copy the
-    // current route query forward via batchQueryParamUpdate, which would
-    // otherwise keep re-applying the flag and suppress the refresh).
+    // document, telling the refresh guards to skip a reload.
     //
     // This consumer MUST be registered after the refresh guards so its
     // queued microtask runs last and the guards read `noRefresh` first.
@@ -527,6 +576,7 @@ export function useSearchFilter() {
     isFilterContextualized,
     isFilterExcluded,
     labelToHuman,
+    lockedNameFor,
     resetSearchResponse,
     refreshRoute,
     refreshRouteFromStart,

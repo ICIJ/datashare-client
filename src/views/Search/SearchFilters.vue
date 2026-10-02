@@ -1,7 +1,9 @@
 <script setup>
-import Fuse from 'fuse.js'
-import { computed, ref } from 'vue'
-import { uniq, groupBy, property } from 'lodash'
+import { computed, ref, shallowRef, toRef, watch } from 'vue'
+import { whenever } from '@vueuse/core'
+import uniq from 'lodash/uniq'
+import groupBy from 'lodash/groupBy'
+import property from 'lodash/property'
 import { useI18n } from 'vue-i18n'
 
 import { useViews } from '@/composables/useViews'
@@ -12,10 +14,26 @@ import FiltersPanelSection from '@/components/FiltersPanel/FiltersPanelSection'
 import { useSearchStore } from '@/store/modules'
 
 const searchStore = useSearchStore.inject()
-const { toggleFilters } = useViews()
+const { toggleFilters, isFiltersClosed } = useViews()
 const { isMode } = useMode()
 const { getFilterComponent } = useSearchFilter()
 const { t } = useI18n()
+
+// The filter panel can start closed (the app default). In that case, don't
+// mount — and thus don't chunk-load — the filter components until the
+// current search has finished, so their dynamic imports never compete with
+// the search fetch/render for network or main-thread time. If the panel is
+// open at mount, or the user opens it before the search finishes, render
+// right away instead of making them wait on either.
+const shouldRenderFilters = ref(!isFiltersClosed.value || searchStore.isReady)
+if (isFiltersClosed.value) {
+  whenever(toRef(searchStore, 'isReady'), () => (shouldRenderFilters.value = true), { once: true })
+}
+watch(isFiltersClosed, (closed) => {
+  if (!closed) {
+    shouldRenderFilters.value = true
+  }
+})
 
 const q = ref('')
 const filters = computed(() => {
@@ -31,8 +49,22 @@ const filters = computed(() => {
 })
 
 const filtersTitles = computed(() => filters.value.map(filter => ({ filter, title: t(`filter.${filter.name}`) })))
-const fuse = computed(() => new Fuse(filtersTitles.value, { threshold: 0.1, shouldSort: false, keys: ['title'] }))
-const fuseFilters = computed(() => fuse.value.search(q.value).map(property('item.filter')))
+
+// Fuse.js is only needed once the user actually searches the filter list, so
+// defer loading its chunk until the first keystroke instead of importing it
+// eagerly for every search-page load.
+const Fuse = shallowRef(null)
+watch(q, () => {
+  if (!Fuse.value) {
+    // A failed chunk load leaves Fuse.value null, so the next keystroke
+    // retries the import, no .catch() needed.
+    // eslint-disable-next-line promise/catch-or-return
+    import('fuse.js').then(module => (Fuse.value = module.default))
+  }
+})
+
+const fuse = computed(() => Fuse.value && new Fuse.value(filtersTitles.value, { threshold: 0.1, shouldSort: false, keys: ['title'] }))
+const fuseFilters = computed(() => (fuse.value ? fuse.value.search(q.value).map(property('item.filter')) : filters.value))
 const displayedFilters = computed(() => (q.value ? fuseFilters.value : filters.value))
 const filtersBySection = computed(() => groupBy(displayedFilters.value, 'section'))
 const sections = computed(() => uniq(displayedFilters.value.map(filter => filter.section)))
@@ -44,17 +76,19 @@ const closeFilters = () => (toggleFilters.value = false)
     v-model:q="q"
     @close="closeFilters"
   >
-    <filters-panel-section
-      v-for="section in sections"
-      :key="section"
-      :title="t(`filter.sections.${section}`)"
-    >
-      <component
-        :is="getFilterComponent(filter)"
-        v-for="filter in filtersBySection[section]"
-        :key="filter.name"
-        :filter="filter"
-      />
-    </filters-panel-section>
+    <template v-if="shouldRenderFilters">
+      <filters-panel-section
+        v-for="section in sections"
+        :key="section"
+        :title="t(`filter.sections.${section}`)"
+      >
+        <component
+          :is="getFilterComponent(filter)"
+          v-for="filter in filtersBySection[section]"
+          :key="filter.name"
+          :filter="filter"
+        />
+      </filters-panel-section>
+    </template>
   </filters-panel>
 </template>

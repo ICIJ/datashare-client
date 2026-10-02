@@ -1,5 +1,5 @@
 <script setup>
-import { has } from 'lodash'
+import has from 'lodash/has'
 import { computed, ref } from 'vue'
 
 import FormStepGroupToggler from '@/components/Form/FormStepGroup/FormStepGroupToggler'

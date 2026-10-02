@@ -739,7 +739,7 @@
     },
     "level": {
       "all": "Todos",
-      "level00": "Archivo en disco",
+      "level00": "En disco",
       "level01": "1°",
       "level02": "2°",
       "level03": "3°",

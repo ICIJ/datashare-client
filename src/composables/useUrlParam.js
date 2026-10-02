@@ -1,7 +1,9 @@
 import { computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { debounce, identity, isObject, toNumber } from 'lodash'
-
+import debounce from 'lodash/debounce'
+import identity from 'lodash/identity'
+import isObject from 'lodash/isObject'
+import toNumber from 'lodash/toNumber'
 import { whenIsRoute } from '@/composables/whenIsRoute'
 import { toRoute } from '@/utils/toRoute'
 
@@ -38,6 +40,16 @@ const applyBatchedUpdates = debounce((router, route, to) => {
     batchedUpdatesContextName = null
   }
 }, 50)
+
+/**
+ * Drops the queued query parameter updates without pushing them, so a push
+ * cannot land after the caller that queued it is gone.
+ */
+export function cancelBatchedQueryParamUpdates() {
+  applyBatchedUpdates.cancel()
+  batchedUpdates = {}
+  batchedUpdatesContextName = null
+}
 
 /**
  * Function to batch query parameter updates

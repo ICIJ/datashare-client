@@ -14,7 +14,7 @@ import FiltersPanelSectionFilterTitleSort from '@/components/FiltersPanel/Filter
 import { BCollapse } from 'bootstrap-vue-next'
 import { apiInstance as api } from '@/api/apiInstance'
 import { useContentTypeCategoryAvailability } from '@/composables/useContentTypeCategoryAvailability'
-import { useAppStore, useSearchStore } from '@/store/modules'
+import { useAppStore, useSearchStore, useLockedFiltersStore } from '@/store/modules'
 
 vi.mock('@/api/apiInstance', async (importOriginal) => {
   const { apiInstance } = await importOriginal()
@@ -790,7 +790,7 @@ describe('FilterTypeFileTypes.vue', () => {
   describe('nested bucket sorting', () => {
     // Single category holding three MIME types with distinct counts and labels so
     // we can verify both _count and _key ordering within the same category.
-    //   application/pdf (3 docs, label "Portable Document Format (PDF)")
+    //   application/pdf (3 docs, label "PDF document")
     //   text/plain      (2 docs, label "Plain text document")
     //   text/html       (1 doc,  label "HTML document")
     const seedBucketsInCategory = async () => {
@@ -828,15 +828,15 @@ describe('FilterTypeFileTypes.vue', () => {
       searchStore.sortFilter({ name: 'contentType', sortBy: '_key', orderBy: 'asc' })
       await seedBucketsInCategory()
 
-      // Labels: "HTML document" < "Plain text document" < "Portable Document Format (PDF)".
-      expect(bucketOrder()).toEqual(['text/html', 'text/plain', 'application/pdf'])
+      // Labels: "HTML document" < "PDF document" < "Plain text document".
+      expect(bucketOrder()).toEqual(['text/html', 'application/pdf', 'text/plain'])
     })
 
     it('orders buckets Z→A using resolved labels when sortBy is _key and orderBy is desc', async () => {
       searchStore.sortFilter({ name: 'contentType', sortBy: '_key', orderBy: 'desc' })
       await seedBucketsInCategory()
 
-      expect(bucketOrder()).toEqual(['application/pdf', 'text/plain', 'text/html'])
+      expect(bucketOrder()).toEqual(['text/plain', 'application/pdf', 'text/html'])
     })
 
     it('updates nested bucket order immediately when the sort option changes', async () => {
@@ -846,7 +846,7 @@ describe('FilterTypeFileTypes.vue', () => {
       searchStore.sortFilter({ name: 'contentType', sortBy: '_key', orderBy: 'asc' })
       await flushPromises()
 
-      expect(bucketOrder()).toEqual(['text/html', 'text/plain', 'application/pdf'])
+      expect(bucketOrder()).toEqual(['text/html', 'application/pdf', 'text/plain'])
     })
 
     it('keeps the aggregated category total unchanged when bucket order changes', async () => {
@@ -1131,10 +1131,10 @@ describe('FilterTypeFileTypes.vue', () => {
     // Multi-category seed used to exercise structural filtering: each category
     // owns enough types to distinguish "category-label match keeps siblings"
     // from "type-label match hides siblings" in the same dataset.
-    //   DOCUMENT → application/pdf (label "Portable Document Format (PDF)")
+    //   DOCUMENT → application/pdf (label "PDF document")
     //   DOCUMENT → text/html       (label "HTML document")
     //   IMAGE    → image/jpeg      (label "JPEG image")
-    //   VIDEO    → video/mp4       (label "MP4 audio/video")
+    //   VIDEO    → video/mp4       (label "MP4 video")
     const seedStructuralCategories = async () => {
       api.getContentTypeCategories.mockResolvedValue({
         DOCUMENT: ['application/pdf', 'text/html'],
@@ -1190,7 +1190,7 @@ describe('FilterTypeFileTypes.vue', () => {
       await seedStructuralCategories()
 
       // "application" appears in the application/pdf MIME key but NOT in its
-      // label "Portable Document Format (PDF)" nor in any category label — so
+      // label "PDF document" nor in any category label — so
       // a positive match here proves the filter consults the raw key, not
       // just the resolved label.
       await setQuery('application')
@@ -1430,6 +1430,370 @@ describe('FilterTypeFileTypes.vue', () => {
       remountWithAvailability({ isAvailable: false, isLoading: false })
       const text = wrapper.find('.filter-type-file-types__legacy-index__description').text()
       expect(text).toBe('Some of these projects were indexed without file type categories.')
+    })
+  })
+
+  describe('locked filters', () => {
+    let lockedFiltersStore
+
+    beforeEach(() => {
+      lockedFiltersStore = useLockedFiltersStore()
+      // CoreSetup falls back to the app's singleton pinia (with the locked
+      // filters store's `persist: true`), so entries otherwise leak across
+      // tests in this file.
+      lockedFiltersStore.unlockAll()
+    })
+
+    it('also selects an unticked flat entry when it emits update:locked with true — one click both applies and locks it', async () => {
+      seedContentTypes(['application/pdf'])
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+      // Flip to the flat view.
+      await wrapper.findComponent(ButtonToggleContentTypesView).trigger('click')
+      await flushPromises()
+
+      const entry = wrapper.findComponent(ContentTypesEntry)
+      expect(entry.props('modelValue')).toBe(false)
+
+      await entry.vm.$emit('update:locked', true)
+      await flushPromises()
+
+      expect(searchStore.getFilter({ name: 'contentType' })).toBeDefined()
+      expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'application/pdf' })).toBe(true)
+      expect(wrapper.findComponent(ContentTypesEntry).props('modelValue')).toBe(true)
+    })
+
+    it('unlocks a flat entry when it emits update:locked with false', async () => {
+      seedContentTypes(['application/pdf'])
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+      await wrapper.findComponent(ButtonToggleContentTypesView).trigger('click')
+      await flushPromises()
+
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'PDF' })
+      await flushPromises()
+
+      await wrapper.findComponent(ContentTypesEntry).vm.$emit('update:locked', false)
+
+      expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'application/pdf' })).toBe(false)
+    })
+
+    it('shows a flat entry as locked under its excluded name when the filter is in exclude mode', async () => {
+      seedContentTypes(['application/pdf'])
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+      await wrapper.findComponent(ButtonToggleContentTypesView).trigger('click')
+      await flushPromises()
+
+      searchStore.excludeFilter('contentType')
+      lockedFiltersStore.lock({ name: '-contentType', value: 'application/pdf', label: 'PDF' })
+      await flushPromises()
+
+      expect(wrapper.findComponent(ContentTypesEntry).props('locked')).toBe(true)
+    })
+
+    it('hides the per-value lock button on flat entries when hideLock is set', async () => {
+      wrapper.unmount()
+      const filter = searchStore.getFilter({ name: 'contentType' })
+      wrapper = mount(FilterTypeFileTypes, {
+        global: { plugins: core.plugins },
+        props: { filter, collapse: false, hideLock: true }
+      })
+      seedContentTypes(['application/pdf'])
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+      await wrapper.findComponent(ButtonToggleContentTypesView).trigger('click')
+      await flushPromises()
+
+      expect(wrapper.findComponent(ContentTypesEntry).props('hideLock')).toBe(true)
+    })
+
+    it('hides the category lock button in grouped view when hideLock is set', async () => {
+      wrapper.unmount()
+      api.getContentTypeCategories.mockResolvedValue({ OTHER: ['text/html', 'text/plain'] })
+      const filter = searchStore.getFilter({ name: 'contentType' })
+      wrapper = mount(FilterTypeFileTypes, {
+        global: { plugins: core.plugins },
+        props: { filter, collapse: false, hideLock: true }
+      })
+      seedContentTypes(['text/html', 'text/plain'])
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+
+      expect(wrapper.findComponent(ContentTypesCategoryName).props('hideLock')).toBe(true)
+    })
+
+    it('unlocks a plain grouped entry when it is unticked', async () => {
+      api.getContentTypeCategories.mockResolvedValue({ DOCUMENT: ['application/pdf', 'text/html'] })
+      seedContentTypes(['application/pdf', 'text/html'])
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'PDF' })
+      await flushPromises()
+
+      const entry = wrapper.findAllComponents(ContentTypesEntry).find(e => e.props('contentType') === 'application/pdf')
+      await entry.vm.$emit('update:model-value', false)
+
+      expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'application/pdf' })).toBe(false)
+    })
+
+    it('does not unlock a grouped entry\'s real lock when it is unticked and hideLock is set (icij/datashare#2336)', async () => {
+      wrapper.unmount()
+      api.getContentTypeCategories.mockResolvedValue({ DOCUMENT: ['application/pdf', 'text/html'] })
+      const filter = searchStore.getFilter({ name: 'contentType' })
+      wrapper = mount(FilterTypeFileTypes, {
+        global: { plugins: core.plugins },
+        props: { filter, collapse: false, hideLock: true }
+      })
+      seedContentTypes(['application/pdf', 'text/html'])
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+
+      // Locking happens through the real store even under hideLock (the lock
+      // button is hidden, so it can't be reached) - seed the lock directly to
+      // simulate one that predates a disposable/non-live render.
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'PDF' })
+      await flushPromises()
+
+      const entry = wrapper.findAllComponents(ContentTypesEntry).find(e => e.props('contentType') === 'application/pdf')
+      await entry.vm.$emit('update:model-value', false)
+
+      expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'application/pdf' })).toBe(true)
+    })
+
+    it('does not unlock real locks when "All" is clicked and hideLock is set', async () => {
+      wrapper.unmount()
+      api.getContentTypeCategories.mockResolvedValue({ DOCUMENT: ['application/pdf', 'text/html'] })
+      const filter = searchStore.getFilter({ name: 'contentType' })
+      wrapper = mount(FilterTypeFileTypes, {
+        global: { plugins: core.plugins },
+        props: { filter, collapse: false, hideLock: true }
+      })
+      seedContentTypes(['application/pdf', 'text/html'])
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+
+      // Same pattern as the entry-level hideLock test above: the lock button
+      // is hidden under hideLock, so seed the lock directly to simulate one
+      // that predates a disposable/non-live render (e.g. the batch-search
+      // creation form).
+      searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+      lockedFiltersStore.lock({ name: 'contentType', value: 'application/pdf', label: 'PDF' })
+      await flushPromises()
+
+      await wrapper.findComponent(ContentTypesAll).vm.$emit('update:modelValue', true)
+      await flushPromises()
+
+      expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'application/pdf' })).toBe(true)
+    })
+
+    it('locking a category-covered entry demotes the category, selecting and locking just that entry', async () => {
+      // Locking a more specific leaf value must supersede a broader category
+      // lock, not stack silently underneath it (only-the-icon-lights-up bug).
+      api.getContentTypeCategories.mockResolvedValue({ DOCUMENT: ['application/pdf', 'text/html'] })
+      seedContentTypes(['application/pdf', 'text/html'])
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+
+      // Lock the whole category first, so `application/pdf` is only implicitly selected.
+      const categoryName = wrapper.findAllComponents(ContentTypesCategoryName).find(n => n.props('category') === 'DOCUMENT')
+      await categoryName.vm.$emit('update:locked', true)
+      await flushPromises()
+      expect(searchStore.values.contentTypeCategory).toEqual(['DOCUMENT'])
+      expect(lockedFiltersStore.isLocked({ name: 'contentTypeCategory', value: 'DOCUMENT' })).toBe(true)
+
+      const entry = wrapper.findAllComponents(ContentTypesEntry).find(e => e.props('contentType') === 'application/pdf')
+      await entry.vm.$emit('update:locked', true)
+      await flushPromises()
+
+      // The category's own lock and value are released...
+      expect(lockedFiltersStore.isLocked({ name: 'contentTypeCategory', value: 'DOCUMENT' })).toBe(false)
+      expect(searchStore.values.contentTypeCategory ?? []).not.toContain('DOCUMENT')
+      // ...and the leaf becomes explicitly selected and locked instead.
+      expect(searchStore.values.contentType).toContain('application/pdf')
+      expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'application/pdf' })).toBe(true)
+    })
+
+    it('transfers a locked child\'s lock to the category when it gets promoted by ticking the last sibling', async () => {
+      api.getContentTypeCategories.mockResolvedValue({ OTHER: ['text/html', 'text/plain'] })
+      seedContentTypes(['text/html', 'text/plain'])
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+
+      const findItem = type => wrapper.findAllComponents(ContentTypesEntry).find(e => e.props('contentType') === type)
+
+      await findItem('text/html').vm.$emit('update:model-value', true)
+      await flushPromises()
+      await findItem('text/html').vm.$emit('update:locked', true)
+      await flushPromises()
+      expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'text/html' })).toBe(true)
+
+      // Ticking the last sibling auto-promotes to the stored category - a
+      // plain checkbox tick, not the lock button, so the transfer has to
+      // live in promoteToCategory itself rather than in the lock-click
+      // handler alone.
+      await findItem('text/plain').vm.$emit('update:model-value', true)
+      await flushPromises()
+
+      expect(searchStore.values.contentTypeCategory).toEqual(['OTHER'])
+      expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'text/html' })).toBe(false)
+      expect(lockedFiltersStore.isLocked({ name: 'contentTypeCategory', value: 'OTHER' })).toBe(true)
+    })
+
+    it('transfers a locked category\'s lock to the surviving child when it gets demoted by ticking one of its children', async () => {
+      // Symmetric with the promote-path transfer above: demoting a locked
+      // category (a plain checkbox tick on one of its children, not the lock
+      // button) must not just drop the category's lock - it has to move onto
+      // the one child that stays explicitly selected, or the user's lock
+      // silently disappears.
+      api.getContentTypeCategories.mockResolvedValue({ DOCUMENT: ['application/pdf', 'text/html'] })
+      seedContentTypes(['application/pdf', 'text/html'])
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+
+      const categoryName = wrapper.findAllComponents(ContentTypesCategoryName).find(n => n.props('category') === 'DOCUMENT')
+      await categoryName.vm.$emit('update:locked', true)
+      await flushPromises()
+      expect(lockedFiltersStore.isLocked({ name: 'contentTypeCategory', value: 'DOCUMENT' })).toBe(true)
+
+      const entry = wrapper.findAllComponents(ContentTypesEntry).find(e => e.props('contentType') === 'application/pdf')
+      await entry.vm.$emit('update:model-value', true)
+      await flushPromises()
+
+      expect(lockedFiltersStore.isLocked({ name: 'contentTypeCategory', value: 'DOCUMENT' })).toBe(false)
+      expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'application/pdf' })).toBe(true)
+    })
+
+    it('unlocks a locked child when its category is ticked directly from a mixed state', async () => {
+      api.getContentTypeCategories.mockResolvedValue({ OTHER: ['text/html', 'text/plain'] })
+      seedContentTypes(['text/html', 'text/plain'])
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+
+      const findItem = type => wrapper.findAllComponents(ContentTypesEntry).find(e => e.props('contentType') === type)
+      const categoryName = wrapper.findAllComponents(ContentTypesCategoryName).find(n => n.props('category') === 'OTHER')
+
+      await findItem('text/html').vm.$emit('update:model-value', true)
+      await flushPromises()
+      await findItem('text/html').vm.$emit('update:locked', true)
+      await flushPromises()
+      expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'text/html' })).toBe(true)
+
+      await categoryName.vm.$emit('update:modelValue', true)
+      await flushPromises()
+
+      expect(searchStore.values.contentTypeCategory).toEqual(['OTHER'])
+      expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'text/html' })).toBe(false)
+    })
+
+    it('locks the category, not an orphaned leaf, when locking the last unchecked sibling completes it', async () => {
+      api.getContentTypeCategories.mockResolvedValue({ OTHER: ['text/html', 'text/plain'] })
+      seedContentTypes(['text/html', 'text/plain'])
+      await wrapper.findComponent(FilterType).vm.aggregateOver()
+      await flushPromises()
+
+      const findItem = type => wrapper.findAllComponents(ContentTypesEntry).find(e => e.props('contentType') === type)
+
+      await findItem('text/html').vm.$emit('update:model-value', true)
+      await flushPromises()
+
+      // Lock text/plain directly, with no prior tick — the last unchecked
+      // sibling, so select+lock's toggleEntry call promotes the whole
+      // category instead of adding text/plain to contentType.
+      await findItem('text/plain').vm.$emit('update:locked', true)
+      await flushPromises()
+
+      expect(searchStore.values.contentTypeCategory).toEqual(['OTHER'])
+      expect(lockedFiltersStore.isLocked({ name: 'contentTypeCategory', value: 'OTHER' })).toBe(true)
+      expect(lockedFiltersStore.isLocked({ name: 'contentType', value: 'text/plain' })).toBe(false)
+    })
+
+    // A category (e.g. "DOCUMENT") is stored as its own bulk contentTypeCategory
+    // value, not as N individual contentType entries — locking it needs its own
+    // lock identity under that dimension, separate from locking each type inside it.
+    describe('category-level locking', () => {
+      const findCategoryName = (category) => {
+        const names = wrapper.findAllComponents(ContentTypesCategoryName)
+        return names.find(node => node.props('category') === category)
+      }
+
+      it('also selects an unticked category when it emits update:locked with true — one click both applies and locks it', async () => {
+        api.getContentTypeCategories.mockResolvedValue({ DOCUMENT: ['application/pdf', 'text/html'] })
+        seedContentTypes(['application/pdf', 'text/html'])
+        await wrapper.findComponent(FilterType).vm.aggregateOver()
+        await flushPromises()
+
+        const category = findCategoryName('DOCUMENT')
+        expect(category.props('modelValue')).toBe(false)
+
+        await category.vm.$emit('update:locked', true)
+        await flushPromises()
+
+        expect(searchStore.values.contentTypeCategory).toContain('DOCUMENT')
+        expect(lockedFiltersStore.isLocked({ name: 'contentTypeCategory', value: 'DOCUMENT' })).toBe(true)
+        expect(findCategoryName('DOCUMENT').props('modelValue')).toBe(true)
+      })
+
+      it('consolidates into the bulk contentTypeCategory value when every leaf is individually ticked, instead of an orphaned category lock', async () => {
+        api.getContentTypeCategories.mockResolvedValue({ DOCUMENT: ['application/pdf', 'text/html'] })
+        seedContentTypes(['application/pdf', 'text/html'])
+        await wrapper.findComponent(FilterType).vm.aggregateOver()
+        await flushPromises()
+
+        // Every leaf explicitly selected without ever going through
+        // toggleEntry's own auto-promote-on-last-tick (e.g. restored from a
+        // shared link's route query) - contentTypeCategory is never written.
+        searchStore.addFilterValue({ name: 'contentType', value: 'application/pdf' })
+        searchStore.addFilterValue({ name: 'contentType', value: 'text/html' })
+        await flushPromises()
+
+        // categoryAllSelected already reads true here via the two individual
+        // selections, with no contentTypeCategory value stored yet.
+        expect(findCategoryName('DOCUMENT').props('modelValue')).toBe(true)
+        expect(searchStore.values.contentTypeCategory ?? []).not.toContain('DOCUMENT')
+
+        await findCategoryName('DOCUMENT').vm.$emit('update:locked', true)
+        await flushPromises()
+
+        expect(searchStore.values.contentTypeCategory).toContain('DOCUMENT')
+        expect(searchStore.values.contentType ?? []).not.toContain('application/pdf')
+        expect(searchStore.values.contentType ?? []).not.toContain('text/html')
+        expect(lockedFiltersStore.isLocked({ name: 'contentTypeCategory', value: 'DOCUMENT' })).toBe(true)
+      })
+
+      it('unlocks a category when it emits update:locked with false, without unselecting it', async () => {
+        api.getContentTypeCategories.mockResolvedValue({ DOCUMENT: ['application/pdf', 'text/html'] })
+        seedContentTypes(['application/pdf', 'text/html'])
+        await wrapper.findComponent(FilterType).vm.aggregateOver()
+        await flushPromises()
+
+        await findCategoryName('DOCUMENT').vm.$emit('update:modelValue', true)
+        lockedFiltersStore.lock({ name: 'contentTypeCategory', value: 'DOCUMENT', label: 'Document' })
+        await flushPromises()
+
+        await findCategoryName('DOCUMENT').vm.$emit('update:locked', false)
+
+        expect(lockedFiltersStore.isLocked({ name: 'contentTypeCategory', value: 'DOCUMENT' })).toBe(false)
+        expect(findCategoryName('DOCUMENT').props('modelValue')).toBe(true)
+      })
+
+      it('unlocks the category lock when it is unticked as a whole', async () => {
+        api.getContentTypeCategories.mockResolvedValue({ DOCUMENT: ['application/pdf', 'text/html'] })
+        seedContentTypes(['application/pdf', 'text/html'])
+        await wrapper.findComponent(FilterType).vm.aggregateOver()
+        await flushPromises()
+
+        await findCategoryName('DOCUMENT').vm.$emit('update:modelValue', true)
+        lockedFiltersStore.lock({ name: 'contentTypeCategory', value: 'DOCUMENT', label: 'Document' })
+        await flushPromises()
+
+        await findCategoryName('DOCUMENT').vm.$emit('update:modelValue', false)
+
+        expect(lockedFiltersStore.isLocked({ name: 'contentTypeCategory', value: 'DOCUMENT' })).toBe(false)
+      })
     })
   })
 })

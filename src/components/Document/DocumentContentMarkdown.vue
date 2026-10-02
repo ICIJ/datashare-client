@@ -1,0 +1,389 @@
+<script>
+import { reactive } from 'vue'
+
+// Module scope, so a Formatted/Plain toggle, which unmounts this component,
+// does not throw away pages already downloaded and rendered. Every key is
+// prefixed with its document id, so the caches can hold several documents at
+// once and evict them one at a time.
+const renderedPages = reactive({})
+// The markdown of pages the threshold refused to render, kept so consenting to
+// one does not download it a second time.
+const oversizedSources = {}
+// How many mounted instances currently show each document id. Instances share
+// these caches, so no instance may drop keys another one is still rendering.
+const shownDocumentIds = new Map()
+
+function dropDocumentPages(documentId) {
+  const prefix = `${documentId}:`
+  const drop = (cache) => {
+    Object.keys(cache)
+      .filter(key => key.startsWith(prefix))
+      .forEach(key => delete cache[key])
+  }
+  drop(renderedPages)
+  drop(oversizedSources)
+}
+
+// Deferred rather than done on unmount: unmounting is also what a Formatted/
+// Plain toggle does, and those pages are wanted again seconds later. A document
+// nobody shows is dropped once a different one is opened, which is the point at
+// which holding on to it stops paying for itself.
+function dropUnshownDocuments() {
+  for (const [documentId, count] of shownDocumentIds) {
+    if (count > 0) {
+      continue
+    }
+    shownDocumentIds.delete(documentId)
+    dropDocumentPages(documentId)
+  }
+}
+
+function showDocument(documentId) {
+  shownDocumentIds.set(documentId, (shownDocumentIds.get(documentId) ?? 0) + 1)
+  dropUnshownDocuments()
+}
+
+function hideDocument(documentId) {
+  const count = shownDocumentIds.get(documentId)
+  if (count === undefined) {
+    return
+  }
+  shownDocumentIds.set(documentId, count - 1)
+}
+</script>
+
+<script setup>
+import { computed, nextTick, onUnmounted, ref, toRef, useTemplateRef, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+import { addSearchMarksClassesInHtml } from '@/utils/strings'
+import { renderMarkdownOffThread } from '@/utils/markdownOffThread'
+import { useMarkdownAnchors } from '@/composables/useMarkdownAnchors'
+import { useUtils } from '@/composables/useUtils'
+import { usePipelinesStore } from '@/store/modules'
+import { apiInstance as api } from '@/api/apiInstance'
+import settings from '@/utils/settings'
+
+/**
+ * Display one markdown structure page of a document, with local search marks.
+ */
+const props = defineProps({
+  /**
+   * The selected document
+   */
+  document: {
+    type: Object,
+    required: true
+  },
+  /**
+   * The structure page to display (1-based)
+   */
+  page: {
+    type: Number,
+    default: 1
+  },
+  /**
+   * Local search term to mark in the rendered page
+   */
+  term: {
+    type: String,
+    default: ''
+  },
+  /**
+   * 1-based index of the mark to activate in this page, 0 for none
+   */
+  activeMatch: {
+    type: Number,
+    default: 0
+  },
+  /**
+   * Terms of the global search to mark in the rendered page
+   */
+  globalSearchTerms: {
+    type: Array,
+    default: () => []
+  },
+  /**
+   * Raw markdown size (in characters) above which a page is not rendered:
+   * the component emits `oversized` and lets the parent decide. The default
+   * lives in `settings.oversizedMarkdownThreshold`.
+   */
+  oversizedThreshold: {
+    type: Number,
+    default: settings.oversizedMarkdownThreshold
+  },
+  /**
+   * Render a page even when it exceeds the threshold: the parent sets this
+   * once the reader has explicitly asked for the formatted view again.
+   */
+  renderOversized: {
+    type: Boolean,
+    default: false
+  }
+})
+
+const emit = defineEmits(['fallback', 'empty', 'oversized', 'rendered'])
+
+const { t } = useI18n()
+const { getTermIndexColor } = useUtils()
+const pipelinesStore = usePipelinesStore()
+const elementRef = useTemplateRef('element')
+const { scrollToAnchor } = useMarkdownAnchors(elementRef)
+
+const cookedHtml = ref('')
+const error = ref(null)
+const loading = ref(false)
+
+// The cache is keyed by document identity as well as page number, so a
+// document swap can never serve another document's cached page, and a
+// response for a page/document pair can never land under a different one.
+function cacheKeyFor(page) {
+  return `${props.document.id}:${page}`
+}
+
+let shownDocumentId = null
+
+function showOnlyDocument(documentId) {
+  if (shownDocumentId === documentId) {
+    return
+  }
+  hideDocument(shownDocumentId)
+  shownDocumentId = documentId
+  showDocument(documentId)
+}
+
+onUnmounted(() => hideDocument(shownDocumentId))
+
+const markedHtml = computed(() => {
+  const html = renderedPages[cacheKeyFor(props.page)] ?? ''
+  const globalMarks = props.globalSearchTerms.map(({ label }, index) => {
+    const style = `border-color: ${getTermIndexColor(index)}`
+    return { term: label, className: 'global-search-term', style }
+  })
+  // Global marks come after the local one so they nest inside it, the order the
+  // `extracted-text` pipeline chain produces for the plain text view. Unlike that
+  // chain, a `regex` term is matched literally: this marker walks text nodes so it
+  // never marks inside an href, which a regex over rendered HTML would. All of
+  // them share one parse, so a page the reader forced open past the size
+  // threshold does not pay a full parse per term on every keystroke.
+  const marks = [{ term: props.term, className: 'local-search-term' }, ...globalMarks]
+  return addSearchMarksClassesInHtml(html, marks)
+})
+
+// A legitimately empty structure page renders to an empty string, which is
+// still a cache hit: falling back to it here (rather than re-deriving
+// emptiness from `cookedHtml`, which updates only after the async pipeline
+// resolves) keeps the no-content message free of the pipeline's own timing.
+const hasPageContent = computed(() => !!renderedPages[cacheKeyFor(props.page)])
+
+let lastPageLoad = 0
+
+async function loadPage() {
+  // A page switch (or a document switch, or a retry click) can start a new
+  // `loadPage` while a previous one is still in flight. This counter mirrors
+  // `lastContentSliceActivation`/`lastOccurrencesRetrieval` in
+  // `DocumentContent.vue`: only the newest load may write the error and the
+  // loading state, so a superseded one cannot clear the spinner of the call
+  // that superseded it, nor report its failure over the page now on screen.
+  const load = ++lastPageLoad
+  error.value = null
+  loading.value = true
+  let loadError = null
+  let oversized = false
+  try {
+    oversized = await renderPageOnce(load)
+  }
+  catch (failure) {
+    loadError = failure
+  }
+  if (load !== lastPageLoad) {
+    return
+  }
+  error.value = loadError
+  loading.value = false
+  if (loadError) {
+    return
+  }
+  // An oversized page is deliberately left unrendered (only its raw markdown is
+  // kept, for the render-anyway path), so it must not be mistaken for an empty
+  // one: `empty` permanently disables the formatted option, `oversized` only
+  // steers the reader to plain text.
+  if (oversized) {
+    emit('oversized')
+    return
+  }
+  // Tells the parent the page displays fine (a cache hit serves it instantly
+  // from now on), so a "may be slow" warning earned earlier can be cleared even
+  // when no page or document change ever fires the watchers that clear it.
+  emit('rendered')
+  reportEmptyPage()
+}
+
+// A page can legitimately be blank (a blank cover page in a scanned PDF) without
+// saying anything about the artifact as a whole, so this only reports what it
+// knows: the page it shows has no content. Whether that means the artifact holds
+// no markdown at all is the parent's call, since it knows the page count.
+// This is `empty` rather than `fallback` because the two are not equivalent to
+// the parent: a fetch error can be retried, an empty artifact cannot.
+function reportEmptyPage() {
+  if (!hasPageContent.value) {
+    emit('empty')
+  }
+}
+
+async function fetchPageSource(cacheKey, page) {
+  if (cacheKey in oversizedSources) {
+    return oversizedSources[cacheKey]
+  }
+  const { index, id, routing } = props.document
+  return api.getStructurePage(index, id, page, routing)
+}
+
+async function renderPageOnce(load) {
+  // Capture the page and document once: re-reading `props` after the
+  // `await` below could pick up values changed by navigation while this
+  // fetch was in flight, and would write the response under the wrong key.
+  const targetPage = props.page
+  const targetCacheKey = cacheKeyFor(targetPage)
+  // `in` (rather than a truthiness check) treats an already-cached empty
+  // page as a hit instead of re-fetching it on every visit.
+  if (targetCacheKey in renderedPages) {
+    return false
+  }
+  const markdown = await fetchPageSource(targetCacheKey, targetPage)
+  if ((markdown?.length ?? 0) > props.oversizedThreshold && !props.renderOversized) {
+    oversizedSources[targetCacheKey] = markdown
+    return true
+  }
+  const html = await renderMarkdownOffThread(markdown)
+  // A document swap cleared the cache while this render was in flight: writing
+  // now would put an unreachable page back into it. The caller's own staleness
+  // check fires before it reads the returned value.
+  if (load !== lastPageLoad) {
+    return false
+  }
+  renderedPages[targetCacheKey] = html
+  // Only now has the render actually succeeded: dropping the raw markdown any
+  // earlier would force a failed render's retry to download the page again.
+  delete oversizedSources[targetCacheKey]
+  return false
+}
+
+let lastCook = 0
+
+// Plugins can transform the markdown body through the `markdown-text` category;
+// core registers nothing under it, so by default this resolves to the marked
+// HTML unchanged.
+async function cookHtml(html) {
+  // A registered pipeline can be asynchronous, so two cooks can overlap and
+  // resolve out of order. Same counter pattern as `loadPage` above: only the
+  // newest may write, otherwise a slower cook paints over the page on screen.
+  const cook = ++lastCook
+  const cooked = await pipelinesStore.applyPipelineChainByCategory('markdown-text')(html)
+  if (cook !== lastCook) {
+    return
+  }
+  cookedHtml.value = cooked
+  await nextTick()
+  activateMatch()
+}
+
+function activateMatch() {
+  const marks = elementRef.value?.querySelectorAll('.local-search-term') ?? []
+  marks.forEach(mark => mark.classList.remove('local-search-term--active'))
+  if (!props.activeMatch || !marks.length) {
+    return
+  }
+  // Counts come from the markdown source while marks come from the rendered
+  // DOM, so the nth match may not exist here: clamp to the last mark rather
+  // than highlighting nothing.
+  const active = marks[Math.min(props.activeMatch, marks.length) - 1]
+  active.classList.add('local-search-term--active')
+  active.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' })
+}
+
+// The page number can stay the same while the document itself changes (both on
+// page 1), and the page can change on its own, so the pair is watched together:
+// two watchers would fire twice and issue the same request twice.
+watch([() => props.page, () => props.document?.id], ([, id]) => {
+  // Rendered pages are worth keeping while the reader pages through a document,
+  // and while any other instance still shows it.
+  showOnlyDocument(id)
+  loadPage()
+}, { immediate: true })
+watch(markedHtml, cookHtml, { immediate: true })
+watch(toRef(props, 'activeMatch'), activateMatch, { flush: 'post' })
+</script>
+
+<template>
+  <div
+    ref="element"
+    class="document-content-markdown"
+  >
+    <div
+      v-if="loading"
+      class="document-content-markdown__loading p-3 text-center"
+    >
+      <b-spinner />
+    </div>
+    <b-alert
+      v-else-if="error"
+      :model-value="true"
+      variant="warning"
+      class="document-content-markdown__error"
+    >
+      {{ t('documentContentMarkdown.error') }}
+      <div class="mt-2 d-flex gap-2">
+        <b-button
+          size="sm"
+          variant="outline-secondary"
+          class="document-content-markdown__error__retry"
+          @click="loadPage"
+        >
+          {{ t('documentContentMarkdown.retry') }}
+        </b-button>
+        <b-button
+          size="sm"
+          variant="outline-secondary"
+          class="document-content-markdown__error__fallback"
+          @click="emit('fallback')"
+        >
+          {{ t('documentContentMarkdown.fallback') }}
+        </b-button>
+      </div>
+    </b-alert>
+    <div
+      v-else-if="!hasPageContent"
+      class="document-content-markdown__no-content text-center p-3"
+    >
+      {{ t('documentContent.noContent') }}
+    </div>
+    <!--
+      Safe to use v-html here: `cookedHtml` derives from renderMarkdown(), which
+      sanitizes the content (no raw HTML, no remote images, hardened links),
+      plus our own mark tags.
+    -->
+    <!-- eslint-disable-next-line vue/no-v-html -->
+    <div
+      v-else
+      class="document-content-markdown__body markdown-body"
+      @click="scrollToAnchor"
+      v-html="cookedHtml"
+    />
+  </div>
+</template>
+
+<style lang="scss">
+.document-content-markdown__body {
+  // Tables and code blocks are the expensive blocks, so only they skip layout
+  // and paint while off screen, however deeply nested (a table in a blockquote
+  // costs as much as a top-level one). Paragraphs lay out normally, which keeps
+  // the scroll offsets an anchor jump or a mark's scrollIntoView lands on
+  // accurate.
+  table,
+  pre {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 300px;
+  }
+}
+</style>

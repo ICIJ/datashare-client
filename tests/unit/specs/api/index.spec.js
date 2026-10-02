@@ -507,7 +507,7 @@ describe('Datashare backend client', () => {
       await api.getUsers({ index: 'my-project', q: 'alice' })
       expect(axios.request).toBeCalledWith(
         expect.objectContaining({
-          url: Api.getFullUrl('/api/users'),
+          url: Api.getFullUrl('/api/users/admin'),
           method: 'GET',
           params: expect.objectContaining({ q: 'alice', index: 'my-project' })
         })
@@ -522,7 +522,7 @@ describe('Datashare backend client', () => {
       await api.revokeUserRole('alice', 'my-project', { ifExists: true })
       expect(axios.request).toBeCalledWith(
         expect.objectContaining({
-          url: Api.getFullUrl('/api/users/alice/index/my-project'),
+          url: Api.getFullUrl('/api/users/admin/alice/index/my-project'),
           method: 'DELETE',
           params: expect.objectContaining({ ifExists: true })
         })
@@ -534,7 +534,7 @@ describe('Datashare backend client', () => {
     await api.grantUserRole('alice', 'my-project', 'PROJECT_ADMIN')
     expect(axios.request).toBeCalledWith(
       expect.objectContaining({
-        url: Api.getFullUrl('/api/users/alice/index/my-project?role=PROJECT_ADMIN'),
+        url: Api.getFullUrl('/api/users/admin/alice/index/my-project?role=PROJECT_ADMIN'),
         method: 'PUT',
       })
     )
@@ -639,6 +639,150 @@ describe('Datashare backend client', () => {
       await api.isDocumentDownloadable('foo', 'doc-id', 'root-id')
       EventBus.off('http::error', mockCallback)
       expect(mockCallback).not.toBeCalled()
+    })
+  })
+
+  describe('getStructureManifest', () => {
+    it('should send a GET request on the structure artifact url', async () => {
+      axios.request.mockResolvedValue({ status: 200, data: { pages: 2, formats: ['md'] } })
+      await api.getStructureManifest('foo', 'doc-id', 'root-id')
+      expect(axios.request).toBeCalledWith(
+        expect.objectContaining({
+          url: Api.getFullUrl('/api/foo/artifacts/structure/doc-id'),
+          method: 'GET',
+          params: { routing: 'root-id' },
+          validateStatus: expect.any(Function)
+        })
+      )
+    })
+
+    it('should return the manifest when the backend answers 200', async () => {
+      axios.request.mockResolvedValue({ status: 200, data: { pages: 2, formats: ['md', 'xhtml'] } })
+      const manifest = await api.getStructureManifest('foo', 'doc-id', 'root-id')
+      expect(manifest).toEqual({ pages: 2, formats: ['md', 'xhtml'] })
+    })
+
+    it('should return null when the backend answers 404', async () => {
+      axios.request.mockResolvedValue({ status: 404, data: {} })
+      expect(await api.getStructureManifest('foo', 'doc-id', 'root-id')).toBeNull()
+    })
+
+    it('should return null when the backend answers 403', async () => {
+      axios.request.mockResolvedValue({ status: 403, data: {} })
+      expect(await api.getStructureManifest('foo', 'doc-id', 'root-id')).toBeNull()
+    })
+
+    it('should return null when the backend answers 500', async () => {
+      axios.request.mockResolvedValue({ status: 500, data: {} })
+      expect(await api.getStructureManifest('foo', 'doc-id', 'root-id')).toBeNull()
+    })
+
+    it('should return null when the request fails', async () => {
+      axios.request.mockRejectedValue(new Error('Network Error'))
+      expect(await api.getStructureManifest('foo', 'doc-id', 'root-id')).toBeNull()
+    })
+
+    it('should not emit an http error when the artifact is missing', async () => {
+      axios.request.mockResolvedValue({ status: 404, data: {} })
+      const mockCallback = vi.fn()
+      EventBus.on('http::error', mockCallback)
+      await api.getStructureManifest('foo', 'doc-id', 'root-id')
+      EventBus.off('http::error', mockCallback)
+      expect(mockCallback).not.toBeCalled()
+    })
+
+    it('should return null and emit an http error when the session expired', async () => {
+      axios.request.mockResolvedValue({ status: 401, data: {} })
+      const mockCallback = vi.fn()
+      EventBus.on('http::error', mockCallback)
+      const manifest = await api.getStructureManifest('foo', 'doc-id', 'root-id')
+      EventBus.off('http::error', mockCallback)
+      expect(manifest).toBeNull()
+      expect(mockCallback).toBeCalledTimes(1)
+    })
+  })
+
+  describe('getStructurePage', () => {
+    it('should request a single page as text', async () => {
+      axios.request.mockResolvedValue({ data: '# Page three' })
+      await api.getStructurePage('foo', 'doc-id', 3, 'root-id')
+      expect(axios.request).toBeCalledWith(
+        expect.objectContaining({
+          url: Api.getFullUrl('/api/foo/artifacts/structure/doc-id/3'),
+          method: 'GET',
+          params: { routing: 'root-id' },
+          responseType: 'text'
+        })
+      )
+    })
+
+    it('should return the page content', async () => {
+      axios.request.mockResolvedValue({ data: '# Page three' })
+      expect(await api.getStructurePage('foo', 'doc-id', 3, 'root-id')).toBe('# Page three')
+    })
+
+    // A download fans out one request per page: pushing each failure onto the
+    // bus would stack one notification per page for a single failed download.
+    it('should not emit an http error when the page request fails', async () => {
+      axios.request.mockRejectedValue(new Error('Network Error'))
+      const mockCallback = vi.fn()
+      EventBus.on('http::error', mockCallback)
+      await expect(api.getStructurePage('foo', 'doc-id', 3, 'root-id')).rejects.toThrow('Network Error')
+      EventBus.off('http::error', mockCallback)
+      expect(mockCallback).not.toBeCalled()
+    })
+  })
+
+  describe('searchStructurePages', () => {
+    it('should send a GET request on the structure search url with the query', async () => {
+      axios.request.mockResolvedValue({ data: { count: 0, pages: 2, scanned: 2, hits: [] } })
+      await api.searchStructurePages('foo', 'doc-id', 'needle', 'root-id')
+      expect(axios.request).toBeCalledWith(
+        expect.objectContaining({
+          url: Api.getFullUrl('/api/foo/artifacts/structure/search/doc-id'),
+          method: 'GET',
+          params: { query: 'needle', routing: 'root-id' }
+        })
+      )
+    })
+
+    it('should return the hits payload', async () => {
+      const data = { count: 3, pages: 4, scanned: 4, hits: [{ page: 2, count: 1 }, { page: 3, count: 2 }] }
+      axios.request.mockResolvedValue({ data })
+      expect(await api.searchStructurePages('foo', 'doc-id', 'needle', 'root-id')).toEqual(data)
+    })
+
+    // The search runs on every (throttled) keystroke: a transient failure must degrade
+    // silently in the caller instead of stacking one error toast per keystroke.
+    it('should not emit an http error when the search fails', async () => {
+      axios.request.mockRejectedValue(new Error('Network Error'))
+      const mockCallback = vi.fn()
+      EventBus.on('http::error', mockCallback)
+      await expect(api.searchStructurePages('foo', 'doc-id', 'needle', 'root-id')).rejects.toThrow('Network Error')
+      EventBus.off('http::error', mockCallback)
+      expect(mockCallback).not.toBeCalled()
+    })
+
+    // An expired session is not "no results": the caller cannot tell them apart,
+    // so the bus has to carry the 401 to the re-login prompt.
+    it('should emit an http error when the session has expired', async () => {
+      const error = Object.assign(new Error('Unauthorized'), { response: { status: 401 } })
+      axios.request.mockRejectedValue(error)
+      const mockCallback = vi.fn()
+      EventBus.on('http::error', mockCallback)
+      await expect(api.searchStructurePages('foo', 'doc-id', 'needle', 'root-id')).rejects.toThrow('Unauthorized')
+      EventBus.off('http::error', mockCallback)
+      expect(mockCallback).toBeCalledWith(error)
+    })
+
+    it('should emit an http error when the session expires while reading a page', async () => {
+      const error = Object.assign(new Error('Unauthorized'), { response: { status: 401 } })
+      axios.request.mockRejectedValue(error)
+      const mockCallback = vi.fn()
+      EventBus.on('http::error', mockCallback)
+      await expect(api.getStructurePage('foo', 'doc-id', 3, 'root-id')).rejects.toThrow('Unauthorized')
+      EventBus.off('http::error', mockCallback)
+      expect(mockCallback).toBeCalledWith(error)
     })
   })
 })

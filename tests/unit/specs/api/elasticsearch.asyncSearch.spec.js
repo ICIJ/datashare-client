@@ -1,3 +1,5 @@
+import { IndexedDocument, letData } from '~tests/unit/es_utils'
+import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import { elasticsearch } from '@/api/elasticsearch'
 import { EventBus } from '@/utils/eventBus'
 
@@ -7,6 +9,11 @@ describe('elasticsearch async search wrappers', () => {
   })
 
   describe('buildSearchDocsBody', () => {
+    function builtQueryString(query) {
+      const body = elasticsearch.buildSearchDocsBody({ index: 'idx', query })
+      return body.query.bool.must.find(clause => clause.bool)?.bool.should[0].query_string.query
+    }
+
     it('builds a body with pagination, highlighting and track_total_hits', () => {
       const body = elasticsearch.buildSearchDocsBody({ index: 'idx', query: 'foo', from: 25, perPage: 10 })
       expect(body.from).toBe(25)
@@ -15,10 +22,34 @@ describe('elasticsearch async search wrappers', () => {
       expect(body.highlight).toBeDefined()
     })
 
+    it('caps the highlighter with the Elasticsearch offset field by default', () => {
+      const body = elasticsearch.buildSearchDocsBody({ index: 'idx', query: 'foo' })
+      expect(body.highlight.max_analyzed_offset).toBe(999999)
+      expect(body.highlight.max_analyzer_offset).toBeUndefined()
+      expect(body.highlight.fields).toHaveProperty('content')
+    })
+
+    it('caps the highlighter with the OpenSearch offset field on an OpenSearch index', () => {
+      const body = elasticsearch.buildSearchDocsBody({ index: 'idx', query: 'foo', isOpenSearch: true })
+      expect(body.highlight.max_analyzer_offset).toBe(999999)
+      expect(body.highlight.max_analyzed_offset).toBeUndefined()
+      expect(body.highlight.fields).toEqual(
+        elasticsearch.buildSearchDocsBody({ index: 'idx', query: 'foo' }).highlight.fields
+      )
+    })
+
     it('normalizes an empty query to the default', () => {
       const emptyBody = elasticsearch.buildSearchDocsBody({ index: 'idx', query: '' })
       const starBody = elasticsearch.buildSearchDocsBody({ index: 'idx', query: '*' })
       expect(emptyBody).toEqual(starBody)
+    })
+
+    it('turns a smart-quoted phrase into a straight-quoted one', () => {
+      expect(builtQueryString('“test full sentence”')).toBe('"test full sentence"')
+    })
+
+    it('leaves an escaped smart quote untouched', () => {
+      expect(builtQueryString('\\“test full sentence”')).toBe('\\“test full sentence”')
     })
   })
 
@@ -117,6 +148,40 @@ describe('elasticsearch async search wrappers', () => {
       await promise
 
       expect(abort).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  // Everything above mocks `elasticsearch.transport.request`, so it never
+  // touches the real Transport/axios wiring. These tests go through the real
+  // transport against a live ES, the only place a wire-format regression
+  // (e.g. a malformed query string) would actually surface.
+  describe('against a live Elasticsearch cluster', () => {
+    const { index, es } = esConnectionHelper.build()
+
+    it('round-trips a real search through submit, poll and delete', async () => {
+      await letData(es).have(new IndexedDocument('document_01', index).withContent('this is a document')).commit()
+
+      const body = { query: { match_all: {} } }
+      let envelope = await elasticsearch.submitAsyncSearch({
+        index,
+        body,
+        waitForCompletionTimeout: '5s',
+        keepAlive: '30s'
+      })
+
+      while (envelope.is_running) {
+        envelope = await elasticsearch.getAsyncSearch(envelope.id, { waitForCompletionTimeout: '5s' })
+      }
+
+      expect(envelope.response.hits.hits).toHaveLength(1)
+      expect(envelope.response.hits.hits[0]._id).toBe('document_01')
+
+      // ES only assigns an id (and stores the result) when the search outlives
+      // wait_for_completion_timeout; a search this small usually completes
+      // inline with no id, so there is nothing to delete in that case.
+      if (envelope.id) {
+        await expect(elasticsearch.deleteAsyncSearch(envelope.id)).resolves.toBeDefined()
+      }
     })
   })
 

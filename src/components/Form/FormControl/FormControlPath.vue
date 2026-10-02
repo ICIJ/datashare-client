@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, toRef, watch } from 'vue'
-import { isArray } from 'lodash'
+import isArray from 'lodash/isArray'
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur'
 

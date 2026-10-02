@@ -40,6 +40,7 @@ describe('DocumentViewTabsViewer.vue', () => {
       props: { document, disabled }
     })
     expect(wrapper.vm.previewComponent).toBe('DocumentViewerLegacySpreadsheet')
+    wrapper.unmount()
   })
 
   it('should call the DocumentViewerLegacySpreadsheet component for CSV document', async () => {
@@ -56,6 +57,7 @@ describe('DocumentViewTabsViewer.vue', () => {
       props: { document, disabled }
     })
     expect(wrapper.vm.previewComponent).toBe('DocumentViewerLegacySpreadsheet')
+    wrapper.unmount()
   })
 
   it('should call the DocumentViewerPaginated component for Word document', async () => {
@@ -72,6 +74,44 @@ describe('DocumentViewTabsViewer.vue', () => {
       props: { document, disabled }
     })
     expect(wrapper.vm.previewComponent).toBe('DocumentViewerPaginated')
+    wrapper.unmount()
+  })
+
+  it('should call the DocumentViewerDocx component for DOCX document', async () => {
+    const contentType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    const document = await letData(es)
+      .have(new IndexedDocument(id, index).withContentType(contentType))
+      .commitAndGetLastDocument()
+    await documentStore.getDocument({ id, index })
+
+    const wrapper = shallowMount(DocumentViewTabsViewer, {
+      global: {
+        plugins: core.plugins,
+        renderStubDefaultSlot: false,
+        stubs: { suspense: true }
+      },
+      props: { document, disabled }
+    })
+    expect(wrapper.vm.previewComponent).toBe('DocumentViewerDocx')
+    wrapper.unmount()
+  })
+
+  it('should keep the DocumentViewerPaginated component for PPTX document', async () => {
+    const contentType = 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+    const document = await letData(es)
+      .have(new IndexedDocument(id, index).withContentType(contentType))
+      .commitAndGetLastDocument()
+    await documentStore.getDocument({ id, index })
+
+    const wrapper = shallowMount(DocumentViewTabsViewer, {
+      global: {
+        plugins: core.plugins,
+        renderStubDefaultSlot: true
+      },
+      props: { document, disabled }
+    })
+    expect(wrapper.vm.previewComponent).toBe('DocumentViewerPaginated')
+    wrapper.unmount()
   })
 
   it('should call the DocumentViewerTiff component for TIFF document', async () => {
@@ -88,6 +128,7 @@ describe('DocumentViewTabsViewer.vue', () => {
       props: { document, disabled }
     })
     expect(wrapper.vm.previewComponent).toBe('DocumentViewerTiff')
+    wrapper.unmount()
   })
 
   it('should call the DocumentViewerAudio component for audio document', async () => {
@@ -105,6 +146,7 @@ describe('DocumentViewTabsViewer.vue', () => {
     })
 
     expect(wrapper.vm.previewComponent).toBe('DocumentViewerAudio')
+    wrapper.unmount()
   })
 
   it('should call the DocumentViewerVideo component for video document', async () => {
@@ -122,6 +164,7 @@ describe('DocumentViewTabsViewer.vue', () => {
     })
 
     expect(wrapper.vm.previewComponent).toBe('DocumentViewerVideo')
+    wrapper.unmount()
   })
 
   it('should call the DocumentViewerMarkdown component for Markdown document', async () => {
@@ -139,6 +182,7 @@ describe('DocumentViewTabsViewer.vue', () => {
     })
 
     expect(wrapper.vm.previewComponent).toBe('DocumentViewerMarkdown')
+    wrapper.unmount()
   })
 
   it('should call the DocumentViewerMarkdown component for a text/plain .md document', async () => {
@@ -157,5 +201,6 @@ describe('DocumentViewTabsViewer.vue', () => {
     })
 
     expect(wrapper.vm.previewComponent).toBe('DocumentViewerMarkdown')
+    wrapper.unmount()
   })
 })

@@ -1,5 +1,8 @@
-import { keys, some, matches, isObject, isArray } from 'lodash'
-
+import keys from 'lodash/keys'
+import some from 'lodash/some'
+import matches from 'lodash/matches'
+import isObject from 'lodash/isObject'
+import isArray from 'lodash/isArray'
 /**
  * Finds the path of a value within an object.
  *

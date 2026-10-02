@@ -42,10 +42,6 @@ const props = defineProps({
   },
   noKeyboardShortcuts: {
     type: Boolean
-  },
-  tooltipDelay: {
-    type: Object,
-    default: () => ({ show: 0, hide: 0 })
   }
 })
 
@@ -61,14 +57,16 @@ const removeAllAndRedirect = async () => {
   await router.push({ name: 'project.list' })
 }
 
+const removeAllWithToast = () => {
+  const successMessage = t('appSidebarFooter.removeAll.success')
+  const errorMessage = t('appSidebarFooter.removeAll.error')
+  return toastedPromise(removeAllAndRedirect(), { successMessage, errorMessage })
+}
+
 const confirmRemoveAll = async () => {
   const title = t('appSidebarFooter.removeAll.title')
   const description = t('appSidebarFooter.removeAll.description')
-  if (await confirm({ title, description })) {
-    const successMessage = t('appSidebarFooter.removeAll.success')
-    const errorMessage = t('appSidebarFooter.removeAll.error')
-    await toastedPromise(removeAllAndRedirect(), { successMessage, errorMessage })
-  }
+  await confirm({ title, description, okCallback: removeAllWithToast })
 }
 
 const classList = computed(() => {

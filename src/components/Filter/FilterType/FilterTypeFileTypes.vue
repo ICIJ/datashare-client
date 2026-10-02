@@ -18,12 +18,22 @@ import { useContentTypeCategoryCollapse } from '@/composables/useContentTypeCate
 import { useContentTypeGroupedView } from '@/composables/useContentTypeGroupedView'
 import { useContentTypeSort } from '@/composables/useContentTypeSort'
 import { useSearchFilter } from '@/composables/useSearchFilter'
-import { useSearchStore } from '@/store/modules'
+import { useSearchStore, useLockedFiltersStore } from '@/store/modules'
+import { toLockedName } from '@/store/modules/lockedFilters'
+import { CONTENT_TYPE_CATEGORY_FILTER_NAME } from '@/store/filters/FilterContentTypeCategory'
+import { getDocumentTypeLabel } from '@/utils/utils'
 
 const props = defineProps({
   filter: {
     type: Object,
     required: true
+  },
+  // Same escape hatch as FilterType.vue's own hideLock: suppresses the
+  // per-value lock button for disposable/unrelated contexts (e.g. the
+  // batch-search creation form) that shouldn't touch the user's real
+  // lock store.
+  hideLock: {
+    type: Boolean
   }
 })
 
@@ -52,10 +62,40 @@ const {
   hasFilterValue,
   computedAll,
   computedTotal,
+  computedExcludeFilter,
   getFilterPairedDimensions,
   isCategoryAvailable,
   isCategoryAvailabilityLoading
 } = useSearchFilter()
+
+const lockedFiltersStore = useLockedFiltersStore()
+// Feeds categoryLockedName below (the leaf lockedName itself now comes from
+// useContentTypeSelection) — include/exclude mode is part of a lock's identity.
+const exclude = computedExcludeFilter(props.filter)
+
+function toggleLock(contentType, locked) {
+  if (locked) {
+    // Locking an unticked value also selects it — a single click both
+    // applies and locks the filter. isEntrySelected (explicit-only), not
+    // isEntryRetainedDuringSearch (also true when only the parent category
+    // is stored) - a category-covered type still needs toggleEntry to run
+    // so it demotes the stored category into this one explicit selection
+    // (and releases the category's own lock along with it).
+    const wasSelected = isEntrySelected(contentType)
+    if (!wasSelected) {
+      toggleEntry(contentType, true)
+    }
+    if (!wasSelected && !isEntrySelected(contentType)) {
+      const category = categoryForContentType(contentType)
+      lockedFiltersStore.lock({ name: categoryLockedName.value, value: category, label: categoryLabelFor(category) })
+      return
+    }
+    lockedFiltersStore.lock({ name: lockedName.value, value: contentType, label: getDocumentTypeLabel(contentType) })
+  }
+  else {
+    lockedFiltersStore.unlock({ name: lockedName.value, value: contentType })
+  }
+}
 
 // Legacy projects re-indexed before category grouping landed lack the
 // contentTypeCategory mapping — surface an overlay so the disabled grouped
@@ -67,13 +107,45 @@ const overlayVisible = computed(() => {
 const categoryLabelFor = useContentTypeCategoryLabel()
 
 const {
+  lockedName,
+  isContentTypeLocked: isItemLocked,
   isEntrySelected,
   isEntryRetainedDuringSearch,
+  isCategoryStored,
+  categoryForContentType,
   categoryAllSelected,
   categoryIndeterminate,
   toggleCategory,
   toggleEntry
-} = useContentTypeSelection({ filter: filterRef, categories })
+} = useContentTypeSelection({ filter: filterRef, categories, hideLock: toRef(props, 'hideLock') })
+
+// Same `-`-prefix lock namespace as leaf content types, but under the
+// category's own contentTypeCategory dimension — a category is stored as one
+// bulk value, not N individual contentType entries, so it needs its own lock
+// identity rather than fanning out to a lock per type inside it.
+const categoryLockedName = computed(() => toLockedName(CONTENT_TYPE_CATEGORY_FILTER_NAME, exclude.value))
+
+function isCategoryLocked(category) {
+  return lockedFiltersStore.isLocked({ name: categoryLockedName.value, value: category })
+}
+
+function toggleLockCategory(category, types, locked) {
+  if (locked) {
+    // Locking an unselected category also selects it (select+lock), same as
+    // locking a leaf content type. Gate on isCategoryStored, not
+    // categoryAllSelected - the latter is also true when every leaf type
+    // happens to be individually ticked, which would skip toggleCategory and
+    // leave the category lock orphaned with no contentTypeCategory value
+    // behind it. toggleCategory always consolidates into the bulk value.
+    if (!isCategoryStored(category)) {
+      toggleCategory(category, types, true)
+    }
+    lockedFiltersStore.lock({ name: categoryLockedName.value, value: category, label: categoryLabelFor(category) })
+  }
+  else {
+    lockedFiltersStore.unlock({ name: categoryLockedName.value, value: category })
+  }
+}
 
 const {
   query,
@@ -111,7 +183,7 @@ const isCategoryExpanded = category => !isCollapsed(category) || hasQuery.value
 // "All-selected" reflects the union with the paired contentTypeCategory —
 // a selection in either dimension keeps "All" enabled.
 const pairedFilters = computed(() => getFilterPairedDimensions(filterRef))
-const allSelected = computedAll(pairedFilters)
+const allSelected = computedAll(pairedFilters, { skipUnlock: toRef(props, 'hideLock') })
 const totalCount = computedTotal(filterRef)
 </script>
 
@@ -122,6 +194,7 @@ const totalCount = computedTotal(filterRef)
     v-model:collapse="collapse"
     :filter="props.filter"
     :overlay-show="overlayVisible"
+    :hide-lock="hideLock"
     class="filter-type-file-types"
     flush
   >
@@ -161,8 +234,11 @@ const totalCount = computedTotal(filterRef)
               :model-value="categoryAllSelected(category, types)"
               :indeterminate="categoryIndeterminate(category, types)"
               :collapse="!isCategoryExpanded(category)"
+              :locked="isCategoryLocked(category)"
+              :hide-lock="hideLock"
               @update:model-value="toggleCategory(category, types, $event)"
               @update:collapse="toggleCollapse(category, $event)"
+              @update:locked="toggleLockCategory(category, types, $event)"
             />
             <b-collapse :model-value="isCategoryExpanded(category)">
               <content-types-entry
@@ -171,7 +247,10 @@ const totalCount = computedTotal(filterRef)
                 :content-type="contentType"
                 :count="entryCount(contentType)"
                 :model-value="isEntrySelected(contentType)"
+                :locked="isItemLocked(contentType)"
+                :hide-lock="hideLock"
                 @update:model-value="toggleEntry(contentType, $event)"
+                @update:locked="toggleLock(contentType, $event)"
               />
             </b-collapse>
           </content-types-category>
@@ -183,7 +262,10 @@ const totalCount = computedTotal(filterRef)
             :content-type="entry.item.key"
             :count="entry.item.doc_count"
             :model-value="hasFilterValue(props.filter, entry.item)"
-            @update:model-value="toggleFilterValue(props.filter, entry.item, $event)"
+            :locked="isItemLocked(entry.item.key)"
+            :hide-lock="hideLock"
+            @update:model-value="toggleFilterValue(props.filter, entry.item, $event, { skipUnlock: hideLock })"
+            @update:locked="toggleLock(entry.item.key, $event)"
           />
         </template>
       </content-types-categories>

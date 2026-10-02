@@ -1,7 +1,9 @@
 import { defineStore } from 'pinia'
 import { reactive } from 'vue'
-import { castArray, groupBy, findIndex, map } from 'lodash'
-
+import castArray from 'lodash/castArray'
+import groupBy from 'lodash/groupBy'
+import findIndex from 'lodash/findIndex'
+import map from 'lodash/map'
 import { apiInstance as api } from '@/api/apiInstance'
 
 export const useStarredStore = defineStore('starred', () => {

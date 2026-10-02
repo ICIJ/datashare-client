@@ -1,6 +1,7 @@
 <script setup>
 import { computed, watchEffect, ref } from 'vue'
-import { isFunction, isString } from 'lodash'
+import isFunction from 'lodash/isFunction'
+import isString from 'lodash/isString'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 

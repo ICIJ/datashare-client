@@ -1,9 +1,11 @@
 import { computed, toValue } from 'vue'
-import { isEqual } from 'lodash'
-
-import { useSearchStore } from '@/store/modules'
+import isEqual from 'lodash/isEqual'
+import { useSearchStore, useLockedFiltersStore } from '@/store/modules'
 import { useSearchFilter } from '@/composables/useSearchFilter'
+import { useContentTypeCategoryLabel } from '@/composables/useContentTypeCategoryLabel'
+import { toLockedName } from '@/store/modules/lockedFilters'
 import { CONTENT_TYPE_CATEGORY_FILTER_NAME } from '@/store/filters/FilterContentTypeCategory'
+import { getDocumentTypeLabel } from '@/utils/utils'
 
 const sameValueSet = (a, b) => isEqual([...a].sort(), [...b].sort())
 
@@ -17,12 +19,47 @@ const without = (list, value) => list.filter(item => item !== value)
  * automatic promote/demote when a category becomes fully or partially
  * ticked.
  */
-export function useContentTypeSelection({ filter, categories }) {
+export function useContentTypeSelection({ filter, categories, hideLock }) {
   const searchStore = useSearchStore.inject()
-  const { getFilterByName, getFilterValuesByName } = useSearchFilter()
+  const { getFilterByName, getFilterValuesByName, isFilterExcluded } = useSearchFilter()
+  const lockedFiltersStore = useLockedFiltersStore()
+  const categoryLabelFor = useContentTypeCategoryLabel()
 
   const filterName = computed(() => toValue(filter)?.name)
   const categoryFilter = computed(() => getFilterByName(CONTENT_TYPE_CATEGORY_FILTER_NAME))
+  const lockedName = computed(() => toLockedName(filterName.value, isFilterExcluded({ name: filterName.value })))
+  const categoryLockedName = computed(() => toLockedName(CONTENT_TYPE_CATEGORY_FILTER_NAME, isFilterExcluded({ name: CONTENT_TYPE_CATEGORY_FILTER_NAME })))
+
+  const isContentTypeLocked = contentType => lockedFiltersStore.isLocked({ name: lockedName.value, value: contentType })
+
+  // Guarded by hideLock the same way removeFilterValue's own skipUnlock is,
+  // so a disposable/non-live tree (e.g. the batch-search creation form)
+  // never touches the user's real lock store.
+  const guardedUnlock = (name, value) => {
+    if (!toValue(hideLock)) {
+      lockedFiltersStore.unlock({ name, value })
+    }
+  }
+
+  // Unticking a content type unlocks it, same as every other filter's
+  // checkbox (useSearchFilter's removeFilterValue).
+  const unlockContentType = contentType => guardedUnlock(lockedName.value, contentType)
+
+  // Same bypass-of-useSearchFilter reasoning as unlockContentType, for the
+  // category's own lock (a separate lock namespace under
+  // CONTENT_TYPE_CATEGORY_FILTER_NAME, since the category is stored as its
+  // own bulk value rather than as N individual contentType entries).
+  const unlockCategory = category => guardedUnlock(categoryLockedName.value, category)
+
+  const lockCategory = (category) => {
+    lockedFiltersStore.lock({ name: categoryLockedName.value, value: category, label: categoryLabelFor(category) })
+  }
+
+  const lockContentType = (contentType) => {
+    lockedFiltersStore.lock({ name: lockedName.value, value: contentType, label: getDocumentTypeLabel(contentType) })
+  }
+
+  const isCategoryLocked = category => lockedFiltersStore.isLocked({ name: categoryLockedName.value, value: category })
 
   /**
    * Resolve the static {category: types[]} mapping to a plain object.
@@ -180,7 +217,13 @@ export function useContentTypeSelection({ filter, categories }) {
   /**
    * Drop `category` and replace any explicit child it covered with
    * `keepFromCategory`. Shared by demote (keep just the clicked child) and
-   * uncheck-with-stored-category (keep the surviving siblings).
+   * uncheck-with-stored-category (keep the surviving siblings). If the
+   * category itself was locked and exactly one child survives, that lock
+   * transfers to the surviving child rather than being dropped - symmetric
+   * with promoteToCategory's own transfer, otherwise demoting a locked
+   * category (a plain checkbox tick) would silently destroy the user's lock.
+   * With more than one survivor there's no single unambiguous target, so the
+   * category's lock is just released.
    * @param {string} category
    * @param {string[]} keepFromCategory
    * @returns {void}
@@ -188,18 +231,35 @@ export function useContentTypeSelection({ filter, categories }) {
   const dropCategoryAnd = (category, keepFromCategory) => {
     const categoryTypes = typesInCategory(category)
     const others = currentContentTypes().filter(value => !categoryTypes.includes(value))
+    const wasLocked = isCategoryLocked(category)
+    // Unlock every type this category covered except the ones the caller
+    // asks to keep explicit (the clicked child on demote, the surviving
+    // siblings on uncheck-with-stored-category).
+    categoryTypes.filter(type => !keepFromCategory.includes(type)).forEach(unlockContentType)
+    unlockCategory(category)
+    if (wasLocked && keepFromCategory.length === 1) {
+      lockContentType(keepFromCategory[0])
+    }
     writeCategories(without(currentCategories(), category))
     writeContentTypes([...others, ...keepFromCategory])
   }
 
   /**
    * Promote `category` by removing its explicit children and storing the
-   * category itself.
+   * category itself. If any of those children was locked, that lock is
+   * transferred to the category rather than dropped - otherwise completing
+   * a category (whether by ticking its last sibling or by locking it
+   * directly) would silently destroy a sibling's persisted lock.
    * @param {string} category
    * @returns {void}
    */
   const promoteToCategory = (category) => {
     const categoryTypes = typesInCategory(category)
+    const wasLocked = categoryTypes.some(isContentTypeLocked)
+    categoryTypes.forEach(unlockContentType)
+    if (wasLocked) {
+      lockCategory(category)
+    }
     writeContentTypes(currentContentTypes().filter(value => !categoryTypes.includes(value)))
     writeCategories([...currentCategories(), category])
   }
@@ -233,12 +293,14 @@ export function useContentTypeSelection({ filter, categories }) {
    * @returns {void}
    */
   const toggleCategory = (category, types, checked) => {
+    types.forEach(unlockContentType)
     writeContentTypes(currentContentTypes().filter(value => !types.includes(value)))
     const remainingCategories = without(currentCategories(), category)
     if (checked) {
       writeCategories([...remainingCategories, category])
       return
     }
+    unlockCategory(category)
     writeCategories(remainingCategories)
   }
 
@@ -291,6 +353,7 @@ export function useContentTypeSelection({ filter, categories }) {
    * @returns {void}
    */
   const uncheckPlainChild = (contentType) => {
+    unlockContentType(contentType)
     writeContentTypes(without(currentContentTypes(), contentType))
   }
 
@@ -332,8 +395,12 @@ export function useContentTypeSelection({ filter, categories }) {
   }
 
   return {
+    lockedName,
+    isContentTypeLocked,
     isEntrySelected,
     isEntryRetainedDuringSearch,
+    isCategoryStored,
+    categoryForContentType,
     categoryAllSelected,
     categoryIndeterminate,
     toggleCategory,

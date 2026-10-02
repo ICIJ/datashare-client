@@ -1,9 +1,11 @@
 import { toValue } from 'vue'
 
 import { useCore } from '@/composables/useCore'
+import { useMode } from '@/composables/useMode'
 
 export function useProjectMetrics(project) {
   const core = useCore()
+  const { isServer } = useMode(core)
   const { name: index } = toValue(project)
 
   async function fetchDocumentsCount() {
@@ -15,6 +17,8 @@ export function useProjectMetrics(project) {
   }
 
   async function fetchRecommendationsCount() {
+    // Recommendations are a server-mode-only feature
+    if (!isServer.value) return 0
     const recommendations = await core.api.getRecommendationsByProject(index)
     return recommendations?.totalCount || 0
   }

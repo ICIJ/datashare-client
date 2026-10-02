@@ -1,5 +1,4 @@
-import { camelCase } from 'lodash'
-
+import camelCase from 'lodash/camelCase'
 import IPhListChecks from '~icons/ph/list-checks'
 import IPhCalendarBlank from '~icons/ph/calendar-blank'
 import IPhClockCountdown from '~icons/ph/clock-countdown'

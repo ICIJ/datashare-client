@@ -1,4 +1,7 @@
-import { find, findIndex, noop, isFunction } from 'lodash'
+import find from 'lodash/find'
+import findIndex from 'lodash/findIndex'
+import noop from 'lodash/noop'
+import isFunction from 'lodash/isFunction'
 import { onBeforeUnmount, reactive } from 'vue'
 
 export function usePolling() {

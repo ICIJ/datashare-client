@@ -1,5 +1,6 @@
 <script setup>
-import { matchesProperty, property } from 'lodash'
+import matchesProperty from 'lodash/matchesProperty'
+import property from 'lodash/property'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 

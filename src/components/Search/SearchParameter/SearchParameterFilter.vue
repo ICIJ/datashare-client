@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { trimStart } from 'lodash'
+import trimStart from 'lodash/trimStart'
 import { useI18n } from 'vue-i18n'
 
 import IPhMagnifyingGlass from '~icons/ph/magnifying-glass'
@@ -10,6 +10,7 @@ import SearchParameterQueryTerm from './SearchParameterQueryTerm'
 import { VARIANT, variantValidator } from '@/enums/variants'
 import * as types from '@/store/filters'
 import filtersDefs from '@/store/filters'
+import builtinFilterIcons from '@/store/filters/icons'
 
 const props = defineProps({
   name: {
@@ -58,6 +59,14 @@ const props = defineProps({
   },
   noXIcon: {
     type: Boolean
+  },
+  locked: {
+    type: Boolean,
+    default: null
+  },
+  lockLabel: {
+    type: String,
+    default: null
   }
 })
 
@@ -83,7 +92,7 @@ const term = computed(() => {
 })
 
 const icon = computed(() => {
-  return props.icon ?? filter.value?.options?.icon ?? IPhMagnifyingGlass
+  return props.icon ?? filter.value?.options?.icon ?? builtinFilterIcons[field.value] ?? IPhMagnifyingGlass
 })
 
 const iconLabel = computed(() => {
@@ -111,6 +120,8 @@ const display = computed(() => {
     :color="color"
     :no-icon="noIcon"
     :no-x-icon="noXIcon"
+    :locked="locked"
+    :lock-label="lockLabel"
   >
     <component
       :is="display"

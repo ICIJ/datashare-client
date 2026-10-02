@@ -1,7 +1,10 @@
 <script setup>
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { AppIcon } from '@icij/murmur'
 import IPhPlus from '~icons/ph/plus'
+
+import { preload as vPreload } from '@/directives/preload'
 
 const props = defineProps({
   compact: {
@@ -31,10 +34,6 @@ const props = defineProps({
   },
   exactMatch: {
     type: Boolean
-  },
-  tooltipDelay: {
-    type: Object,
-    default: () => ({ show: 0, hide: 0 })
   }
 })
 
@@ -45,6 +44,9 @@ const classList = computed(() => {
     'app-sidebar-section-entry--exact-match': props.exactMatch
   }
 })
+
+const router = useRouter()
+
 </script>
 
 <template>
@@ -53,6 +55,7 @@ const classList = computed(() => {
     :class="classList"
   >
     <router-link
+      v-preload="{ to, router }"
       :to="to"
       class="app-sidebar-section-entry__link text-truncate d-flex flex-grow-1"
     >
@@ -65,7 +68,8 @@ const classList = computed(() => {
     </router-link>
     <router-link
       v-if="actionTo"
-      v-b-tooltip.body.right="{ delay: tooltipDelay }"
+      v-preload="{ to: actionTo, router }"
+      v-b-tooltip.body.right
       :to="actionTo"
       class="app-sidebar-section-entry__action ms-2 d-flex"
       :title="actionTitle"

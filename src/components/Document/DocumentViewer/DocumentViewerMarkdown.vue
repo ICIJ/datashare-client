@@ -1,8 +1,9 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, useTemplateRef, watch } from 'vue'
 
 import { useDocumentSource } from '@/composables/useDocumentSource'
-import { renderMarkdown } from '@/utils/markdown'
+import { useMarkdownAnchors } from '@/composables/useMarkdownAnchors'
+import { renderMarkdownOffThread } from '@/utils/markdownOffThread'
 
 /**
  * Display a Markdown document as safely-sanitized formatted HTML.
@@ -19,25 +20,40 @@ const props = defineProps({
 
 const { fetchSource } = useDocumentSource()
 
+const contentRef = useTemplateRef('content')
+const { scrollToAnchor } = useMarkdownAnchors(contentRef)
+
 const html = ref('')
 const error = ref(null)
 const loading = ref(false)
+
+let lastLoad = 0
 
 async function load(document) {
   if (!document) {
     return
   }
+  // Documents can swap while a slow render is in flight: only the newest load
+  // may write, so a stale render cannot overwrite the document now on screen.
+  const loadId = ++lastLoad
   loading.value = true
   error.value = null
   try {
     const source = await fetchSource(document, { responseType: 'text' })
-    html.value = await renderMarkdown(source)
+    const rendered = await renderMarkdownOffThread(source)
+    if (loadId === lastLoad) {
+      html.value = rendered
+    }
   }
   catch (e) {
-    error.value = e.message
+    if (loadId === lastLoad) {
+      error.value = e.message
+    }
   }
   finally {
-    loading.value = false
+    if (loadId === lastLoad) {
+      loading.value = false
+    }
   }
 }
 
@@ -67,7 +83,9 @@ watch(() => props.document, load, { immediate: true })
     <!-- eslint-disable-next-line vue/no-v-html -->
     <div
       v-else
-      class="markdown-viewer__content shadow-sm border p-3 mx-auto"
+      ref="content"
+      class="markdown-viewer__content markdown-body shadow-sm border p-3 mx-auto"
+      @click="scrollToAnchor"
       v-html="html"
     />
   </div>
@@ -80,38 +98,6 @@ watch(() => props.document, load, { immediate: true })
 
   &__content {
     max-width: 1012px;
-
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-      margin-top: $spacer;
-    }
-
-    table {
-      border-collapse: collapse;
-
-      th,
-      td {
-        border: 1px solid var(--bs-border-color);
-        padding: $spacer-xxs $spacer-xs;
-      }
-    }
-
-    pre {
-      padding: $spacer;
-      overflow-x: auto;
-      background: var(--bs-tertiary-bg);
-      border-radius: var(--bs-border-radius);
-    }
-
-    blockquote {
-      margin: 0;
-      padding-left: $spacer;
-      border-left: 4px solid var(--bs-border-color);
-    }
   }
 }
 </style>

@@ -2,6 +2,7 @@
 import { computed, nextTick, useTemplateRef } from 'vue'
 import { EllipsisTooltip as vEllipsisTooltip } from '@icij/murmur'
 
+import ButtonToggleLock from '@/components/Button/ButtonToggleLock'
 import DisplayNumber from '@/components/Display/DisplayNumber'
 
 const props = defineProps({
@@ -28,10 +29,18 @@ const props = defineProps({
   },
   indeterminate: {
     type: Boolean
+  },
+  locked: {
+    type: Boolean,
+    default: false
+  },
+  lockable: {
+    type: Boolean,
+    default: false
   }
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'update:locked'])
 
 const checkboxRef = useTemplateRef('checkboxRef')
 
@@ -54,6 +63,12 @@ const classList = computed(() => {
   }
 })
 
+// The lock button's slot is always reserved (visibility handled purely via
+// CSS opacity — hidden by default, revealed on hover or when locked) so the
+// count pill's position never jitters based on tick/lock state. Gated behind
+// `lockable` (opt-in) so consumers that never wire `update:locked` don't
+// inherit a dead button on every row.
+const showLockButton = computed(() => props.lockable)
 const showCount = computed(() => !props.hideCount && !isNaN(props.count))
 </script>
 
@@ -79,19 +94,27 @@ const showCount = computed(() => !props.hideCount && !isNaN(props.count))
         </span>
       </slot>
     </b-form-checkbox>
-    <b-badge
-      v-if="showCount"
-      class="filters-panel-section-filter-entry__count"
-      pill
-      variant="link"
-    >
-      <slot
-        name="count"
-        v-bind="{ count }"
+    <div class="filters-panel-section-filter-entry__end">
+      <button-toggle-lock
+        v-if="showLockButton"
+        class="filters-panel-section-filter-entry__lock"
+        :locked="locked"
+        @update:locked="emit('update:locked', $event)"
+      />
+      <b-badge
+        v-if="showCount"
+        class="filters-panel-section-filter-entry__count"
+        pill
+        variant="link"
       >
-        <display-number :value="Number(count)" />
-      </slot>
-    </b-badge>
+        <slot
+          name="count"
+          v-bind="{ count }"
+        >
+          <display-number :value="Number(count)" />
+        </slot>
+      </b-badge>
+    </div>
   </div>
 </template>
 
@@ -103,6 +126,7 @@ const showCount = computed(() => !props.hideCount && !isNaN(props.count))
 
   &:deep(.form-check) {
     display: flex;
+    flex: 1 1 auto;
     min-width: 0;
     margin-right: $spacer-xs;
     margin-bottom: 0;
@@ -121,8 +145,40 @@ const showCount = computed(() => !props.hideCount && !isNaN(props.count))
     }
   }
 
-  &__count {
+  // Lock + count pill, pinned flush to the row's right edge regardless of
+  // label length or lock visibility — only the pill's own width (digit
+  // count) shifts its left edge.
+  &__end {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: $spacer-xs;
     margin-left: auto;
+  }
+
+  // Hidden until hover/focus; ButtonToggleLock itself handles the
+  // locked-state color, this only controls this row's own reveal-on-hover.
+  &__lock {
+    flex-shrink: 0;
+    transition: opacity 0.15s ease;
+    // Hover-reveal only where hovering exists: on touch the row never
+    // matches :hover, so an opacity-0 lock stays an invisible tap target.
+    @media (hover: hover) {
+      opacity: 0;
+    }
+    &.button-toggle-lock--locked {
+      opacity: 1;
+    }
+  }
+
+  @media (hover: hover) {
+    &:hover &__lock,
+    &__lock:focus-visible {
+      opacity: 1;
+    }
+  }
+
+  &__count {
     color: var(--bs-body-bg);
     background: var(--bs-secondary);
   }

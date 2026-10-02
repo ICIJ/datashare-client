@@ -5,6 +5,7 @@ import { BDropdown, BDropdownItem } from 'bootstrap-vue-next'
 import { computed } from 'vue'
 
 import { useI18n } from 'vue-i18n'
+import { useScrollParent } from '@/composables/useScrollParent'
 import { VARIANT, variantOptions } from '@/enums/variants.js'
 
 const modelValue = defineModel({ type: String, default: 'info' })
@@ -14,6 +15,8 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
+
+const scrollParent = useScrollParent({ node: document.body })
 
 const currentOption = computed(() => variantOptions[modelValue.value] ?? variantOptions[VARIANT.INFO])
 
@@ -25,7 +28,7 @@ const withLabel = computed(() => props.showLabel ? 'outline-tertiary' : 'link')
     :variant="withLabel"
     class="variant-dropdown"
     :class="{ 'variant-dropdown--without-label': !showLabel }"
-    teleport-to="body"
+    :teleport-to="scrollParent"
     menu-class="variant-dropdown__menu"
   >
     <template #button-content>
@@ -58,10 +61,6 @@ const withLabel = computed(() => props.showLabel ? 'outline-tertiary' : 'link')
 
 <style lang="scss">
 .variant-dropdown {
-  &__menu {
-    z-index: $zindex-modal + 1;
-  }
-
   &--without-label .btn {
     padding: 0;
     line-height: 2em;

@@ -2,8 +2,8 @@
 import Fuse from 'fuse.js'
 import { computed, onBeforeUnmount, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { property, orderBy } from 'lodash'
-
+import property from 'lodash/property'
+import orderBy from 'lodash/orderBy'
 import IPhCirclesThreePlus from '~icons/ph/circles-three-plus'
 import IPhFileText from '~icons/ph/file-text'
 import IPhTreeStructure from '~icons/ph/tree-structure'

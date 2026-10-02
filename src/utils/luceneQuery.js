@@ -11,6 +11,36 @@ import lucene from 'lucene'
  */
 const LUCENE_RESERVED = /[+\-!(){}[\]^"~*?:\\/]/g
 
+const ESCAPED_CHAR = String.raw`\\[\s\S]`
+const STRAIGHT_PHRASE = String.raw`"(?:[^"\\]|${ESCAPED_CHAR})*"`
+const TOKEN_START = String.raw`(^|[\s:([{])([+\-!]?)`
+const SMART_PHRASE_BODY = String.raw`((?:[^“”＂「」\\]|${ESCAPED_CHAR})*)`
+const TOKEN_END = String.raw`(?=$|[\s)\]}~^])`
+const SMART_PHRASE = `${TOKEN_START}[“＂「]${SMART_PHRASE_BODY}[”“＂」]${TOKEN_END}`
+
+/**
+ * A phrase delimited by the quotation marks a Chinese or Japanese keyboard
+ * produces instead of `"` (icij/datashare#2352). Escaped characters and
+ * straight-quoted phrases are matched first so the smart marks they contain
+ * are skipped, like ordinary text (`彼は「はい」と言った`) and unbalanced marks.
+ */
+const SMART_QUOTE_PHRASE = new RegExp(`(${ESCAPED_CHAR}|${STRAIGHT_PHRASE})|${SMART_PHRASE}`, 'gu')
+
+function straightenSmartPhrase(match, skipped, before, prefix, phrase) {
+  if (skipped) {
+    return match
+  }
+  return `${before}${prefix}"${phrase}"`
+}
+
+/**
+ * Replace the quotation marks delimiting a phrase by straight ones, so a
+ * phrase typed with a CJK keyboard searches like a quoted phrase.
+ */
+export function straightenQuotes(query) {
+  return String(query).replace(SMART_QUOTE_PHRASE, straightenSmartPhrase)
+}
+
 /**
  * Escape Lucene-reserved characters in a term so it is treated as plain
  * text by the query parser. Used for word-list inputs (any/all/none).

@@ -1,5 +1,4 @@
 import toLower from 'lodash/toLower'
-
 import { Core } from '@/core'
 import { useSearchStore } from '@/store/modules'
 import { apiInstance as api } from '@/api/apiInstance'

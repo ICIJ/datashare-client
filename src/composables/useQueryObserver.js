@@ -1,6 +1,6 @@
 import { computed, reactive, toRef, watch } from 'vue'
-import { first, get } from 'lodash'
-
+import first from 'lodash/first'
+import get from 'lodash/get'
 export function useQueryObserver(root = window.document, once = false) {
   const rootRef = toRef(root)
   const elements = reactive({})

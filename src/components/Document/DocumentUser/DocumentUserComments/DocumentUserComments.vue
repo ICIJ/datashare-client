@@ -1,5 +1,5 @@
 <script setup>
-import { noop } from 'lodash'
+import noop from 'lodash/noop'
 import { useI18n } from 'vue-i18n'
 
 import IPhChatsTeardrop from '~icons/ph/chats-teardrop'

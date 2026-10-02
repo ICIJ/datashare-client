@@ -1,5 +1,5 @@
 import { Core } from '@/core'
-import { useSearchStore } from '@/store/modules'
+import { useSearchStore, useLockedFiltersStore } from '@/store/modules'
 
 vi.mock('@/api/apiInstance', () => {
   return {
@@ -64,5 +64,49 @@ describe('FiltersMixin', () => {
 
       return core.configure()
     })
+  })
+
+  it('preserves the user\'s locks when a filter is unregistered because the current project doesn\'t support it (icij/datashare#2332)', () => {
+    // unregisterFilterForProject only hides the filter for the current
+    // project selection - the user's personal, cross-project locks must
+    // survive it, since registerFilter (called back when the project comes
+    // around again) never restores them.
+    core.registerFilter({
+      type: 'FilterEntity',
+      options: { order: 65, name: 'namedEntityEmail', key: 'byMentions', category: 'EMAIL' }
+    })
+    const lockedFiltersStore = useLockedFiltersStore()
+    lockedFiltersStore.lock({ name: 'namedEntityEmail', value: 'foo@bar.com', label: 'foo@bar.com' })
+
+    // toggleForProject fires withFn (unregister) when the current project
+    // matches the given one - that's the "specialized-for-this-project" case.
+    searchStore.setIndex('target-project')
+    core.unregisterFilterForProject('target-project', 'namedEntityEmail')
+
+    expect(searchStore.getFilter({ name: 'namedEntityEmail' })).toBeUndefined()
+    expect(lockedFiltersStore.isLocked({ name: 'namedEntityEmail', value: 'foo@bar.com' })).toBe(true)
+  })
+
+  it('preserves the user\'s locks when a filter is registered only for another project (icij/datashare#2332)', () => {
+    // Same case as above, reached through registerFilterForProject's own
+    // withoutFn instead: the current project doesn't match the one the
+    // filter is scoped to, so it's hidden here too, not permanently removed.
+    core.registerFilter({
+      type: 'FilterEntity',
+      options: { order: 65, name: 'namedEntityEmail', key: 'byMentions', category: 'EMAIL' }
+    })
+    const lockedFiltersStore = useLockedFiltersStore()
+    lockedFiltersStore.lock({ name: 'namedEntityEmail', value: 'foo@bar.com', label: 'foo@bar.com' })
+
+    // toggleForProject fires withoutFn (unregister) when the current project
+    // doesn't match the given one.
+    searchStore.setIndex('another-project')
+    core.registerFilterForProject('target-project', {
+      type: 'FilterEntity',
+      options: { name: 'namedEntityEmail', key: 'byMentions', category: 'EMAIL' }
+    })
+
+    expect(searchStore.getFilter({ name: 'namedEntityEmail' })).toBeUndefined()
+    expect(lockedFiltersStore.isLocked({ name: 'namedEntityEmail', value: 'foo@bar.com' })).toBe(true)
   })
 })

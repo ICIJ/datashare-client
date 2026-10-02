@@ -96,7 +96,17 @@ export default [
       // We use `require` with vite to make all components available for plugins.
       '@typescript-eslint/no-require-imports': 'off',
       // We use `v-html` in some components with vue i18n.
-      'vue/no-v-html': 'off'
+      'vue/no-v-html': 'off',
+      // Avoid bare d3 or lodash import
+      'no-restricted-imports': ['error', {
+        paths: [{
+          name: 'd3',
+          message: 'Import the specific \'d3-*\' submodule instead (e.g. \'d3-array\', \'d3-scale\') — the \'d3\' barrel defeats tree-shaking.'
+        }, {
+          name: 'lodash',
+          message: 'Import the specific function instead, e.g. \'lodash/get\' — the \'lodash\' barrel doesn\'t tree-shake through Rollup\'s CJS interop.'
+        }]
+      }]
     }
   }
 ]

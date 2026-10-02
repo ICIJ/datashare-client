@@ -1,5 +1,4 @@
-import { find } from 'lodash'
-
+import find from 'lodash/find'
 import settings from '@/utils/settings'
 
 /**

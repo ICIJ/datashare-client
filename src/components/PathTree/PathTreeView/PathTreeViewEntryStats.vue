@@ -112,13 +112,14 @@ const classList = computed(() => {
   font-variant-numeric: tabular-nums;
   color: var(--bs-secondary-color);
 
+  &--active:not(.path-tree-view-entry-stats--compact),
   &--selected:not(.path-tree-view-entry-stats--compact) {
-    color: var(--bs-white);
+    color: var(--bs-body-color);
   }
 
   &:not(.path-tree-view-entry-stats--compact) {
-    max-width: 300px;
-    flex: 300px 0 0;
+    max-width: 250px;
+    flex: 250px 0 0;
     width: 100%;
 
     @include media-breakpoint-down(md) {

@@ -1,6 +1,8 @@
 <script setup>
 import { computed, onBeforeMount } from 'vue'
-import { some, get, find } from 'lodash'
+import some from 'lodash/some'
+import get from 'lodash/get'
+import find from 'lodash/find'
 import { useI18n } from 'vue-i18n'
 
 import { useLanguagesStore } from '@/store/modules/languages'

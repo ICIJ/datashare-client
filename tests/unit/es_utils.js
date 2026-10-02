@@ -1,5 +1,8 @@
-import { castArray, find, isArray, isObject, uniqueId } from 'lodash'
-
+import castArray from 'lodash/castArray'
+import find from 'lodash/find'
+import isArray from 'lodash/isArray'
+import isObject from 'lodash/isObject'
+import uniqueId from 'lodash/uniqueId'
 import EsDocList from '@/api/resources/EsDocList'
 
 const pathUtil = require('path')

@@ -1,5 +1,4 @@
 import escapeRegExp from 'lodash/escapeRegExp'
-
 import IdentityPipeline from './IdentityPipeline'
 
 class AddGlobalSearchMarks extends IdentityPipeline {

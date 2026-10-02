@@ -35,6 +35,27 @@ describe('elasticsearch', () => {
     spy.mockRestore()
   })
 
+  it('propagates a real backend error unchanged, not re-wrapped into a different shape', async () => {
+    // No mocking here: goes through the real Transport/axios call so a genuine
+    // AxiosError (not a plain Error) is what reaches the caller and the event
+    // bus. Nothing in the app depends on this shape today, but a future change
+    // that silently re-wraps or swallows errors should fail this test.
+    const mockCallback = vi.fn()
+    EventBus.on('http::error', mockCallback)
+
+    const body = { query: { this_clause_does_not_exist: {} } }
+    const rejection = elasticsearch._search({ index, body })
+    await expect(rejection).rejects.toThrow()
+
+    const [emittedError] = mockCallback.mock.calls[0]
+    const thrownError = await rejection.catch(error => error)
+    expect(emittedError).toBe(thrownError)
+    expect(emittedError.isAxiosError).toBe(true)
+    expect(emittedError.response.status).toBe(400)
+
+    EventBus.off('http::error', mockCallback)
+  })
+
   it('should build an ES query with filters', async () => {
     const filters = [new FilterText({ name: 'contentType', key: 'contentType', isSearchable: true })]
     filters[0].values = ['value_01', 'value_02', 'value_03']
@@ -312,11 +333,62 @@ describe('elasticsearch', () => {
     })
   })
 
+  describe('per-project statistics when an index is missing', () => {
+    // A project row can exist without its elasticsearch index, and elasticsearch
+    // rejects the whole request when any named index is missing (icij/datashare#2384).
+    const missingIndex = 'project-without-an-index'
+    const extractionDate = '2026-01-15T10:00:00.000Z'
+
+    beforeEach(async () => {
+      await letData(es)
+        .have(new IndexedDocument('document_stats_01', index).withIndexingDate(extractionDate))
+        .commit()
+    })
+
+    it('counts documents by project, skipping the missing index', async () => {
+      const query = { match: { type: 'Document' } }
+      const { aggregations } = await elasticsearch.countByProject(`${index},${missingIndex}`, query)
+      expect(aggregations.index.buckets).toHaveLength(1)
+      expect(aggregations.index.buckets[0]).toMatchObject({ key: index, doc_count: 1 })
+    })
+
+    it('gets the max extraction date by project, skipping the missing index', async () => {
+      const query = { match: { type: 'Document' } }
+      const { aggregations } = await elasticsearch.maxExtractionDateByProject(`${index},${missingIndex}`, query)
+      expect(aggregations.index.buckets).toHaveLength(1)
+      expect(aggregations.index.buckets[0].maxExtractionDate.value).toBe(Date.parse(extractionDate))
+    })
+
+    it('counts no document for a missing index', async () => {
+      await expect(elasticsearch.countDocuments(missingIndex)).resolves.toBe(0)
+    })
+
+    it('counts no tag for a missing index', async () => {
+      await expect(elasticsearch.countTags(missingIndex)).resolves.toBe(0)
+    })
+  })
+
   describe('rootSearch', () => {
     it('passes operator to default_operator in the body', () => {
       const body = elasticsearch.rootSearch([], 'foo bar', [], 'AND').build()
       const queryString = body.query.bool.must[1].bool.should[0].query_string
       expect(queryString.default_operator).toBe('AND')
+    })
+
+    it('turns a smart-quoted phrase into a straight-quoted one', () => {
+      const smartBody = elasticsearch.rootSearch([], '“a b”').build()
+      const straightBody = elasticsearch.rootSearch([], '"a b"').build()
+      expect(smartBody).toEqual(straightBody)
+    })
+  })
+
+  describe('addQueryToFilter', () => {
+    it('turns a smart-quoted phrase into a straight-quoted one', () => {
+      const smartBody = bodybuilder()
+      const straightBody = bodybuilder()
+      elasticsearch.addQueryToFilter('“a b”', smartBody)
+      elasticsearch.addQueryToFilter('"a b"', straightBody)
+      expect(smartBody.build()).toEqual(straightBody.build())
     })
   })
 })

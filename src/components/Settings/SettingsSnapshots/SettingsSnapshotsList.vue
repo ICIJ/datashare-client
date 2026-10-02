@@ -6,7 +6,7 @@ import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import EmptyState from '@/components/EmptyState/EmptyState'
 import DisplayStatus from '@/components/Display/DisplayStatus'
 import DisplayDatetimeShort from '@/components/Display/DisplayDatetimeShort'
-import DisplayProjectList from '@/components/Display/DisplayProjectList'
+import ProjectsButton from '@/components/Project/ProjectsButton'
 import DisplaySnapshotName from '@/components/Display/DisplaySnapshotName'
 import DisplaySnapshotVersion from '@/components/Display/DisplaySnapshotVersion'
 import DisplaySnapshotDistribution from '@/components/Display/DisplaySnapshotDistribution'
@@ -108,11 +108,7 @@ function statusLabel(state) {
         <display-snapshot-distribution :value="item.snapshot" />
       </template>
       <template #cell(indices)="{ item }">
-        <display-project-list
-          v-if="item.indices?.length > 0"
-          :values="item.indices"
-        />
-        <span v-else>-</span>
+        <projects-button :projects="item.indices" />
       </template>
       <template #row-actions="{ item }">
         <settings-snapshots-actions

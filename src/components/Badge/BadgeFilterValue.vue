@@ -1,7 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { castArray } from 'lodash'
-
+import castArray from 'lodash/castArray'
 import filters from '@/store/filters'
 import * as filterTypes from '@/store/filters'
 

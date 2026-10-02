@@ -1,5 +1,9 @@
-import { compact, find, keys, kebabCase, iteratee, uniq } from 'lodash'
-
+import compact from 'lodash/compact'
+import find from 'lodash/find'
+import keys from 'lodash/keys'
+import kebabCase from 'lodash/kebabCase'
+import iteratee from 'lodash/iteratee'
+import uniq from 'lodash/uniq'
 import { slugger } from '@/utils/strings'
 
 /**

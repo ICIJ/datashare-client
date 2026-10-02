@@ -1,4 +1,13 @@
-import { compact, endsWith, filter, find, get, keys, last, pick, startsWith, trim } from 'lodash'
+import compact from 'lodash/compact'
+import endsWith from 'lodash/endsWith'
+import filter from 'lodash/filter'
+import find from 'lodash/find'
+import get from 'lodash/get'
+import keys from 'lodash/keys'
+import last from 'lodash/last'
+import pick from 'lodash/pick'
+import startsWith from 'lodash/startsWith'
+import trim from 'lodash/trim'
 import { markRaw } from 'vue'
 import { config } from '@icij/murmur'
 import dayjs from 'dayjs'
@@ -422,6 +431,10 @@ export default class Document extends EsDoc {
       'text/csv'
     ]
     return spreadsheetTypes.indexOf(this.contentType) > -1
+  }
+
+  get isDocx() {
+    return this.contentType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
   }
 
   get isSupportedImage() {

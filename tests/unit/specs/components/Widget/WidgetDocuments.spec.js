@@ -36,4 +36,12 @@ describe('WidgetDocuments.vue', () => {
     await wrapper.vm.loadData()
     expect(wrapper.vm.duplicates).toBe(7)
   })
+
+  it('loadData issues the three count queries in parallel, not in series', async () => {
+    const spy = vi.spyOn(wrapper.vm, 'count').mockResolvedValue(0)
+    const promise = wrapper.vm.loadData()
+    // With sequential awaits, only the first count() would have fired by now.
+    expect(spy).toHaveBeenCalledTimes(3)
+    await promise
+  })
 })
