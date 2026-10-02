@@ -38,4 +38,22 @@ describe('useAuth', () => {
     expect(wrapper.vm.isUsernameResolved).toBe(true)
     expect(wrapper.vm.username).toBe('alice@example.com')
   })
+
+  describe('isCurrentUser', () => {
+    it('treats any uid as the viewer until the username resolves', () => {
+      mockCore.auth.getUsername.mockReturnValue(new Promise(() => {}))
+      mockCore.auth.isBasicAuth.mockReturnValue(new Promise(() => {}))
+      const wrapper = factory()
+      expect(wrapper.vm.isCurrentUser('bob@example.com')).toBe(true)
+    })
+
+    it('matches only the viewer once the username has resolved', async () => {
+      mockCore.auth.getUsername.mockResolvedValue('alice@example.com')
+      mockCore.auth.isBasicAuth.mockResolvedValue(false)
+      const wrapper = factory()
+      await flushPromises()
+      expect(wrapper.vm.isCurrentUser('alice@example.com')).toBe(true)
+      expect(wrapper.vm.isCurrentUser('bob@example.com')).toBe(false)
+    })
+  })
 })

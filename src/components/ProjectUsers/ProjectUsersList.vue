@@ -142,7 +142,7 @@ const { username, isUsernameResolved, isAuthWithUsersProvider } = useAuth()
 const { isInstanceAdmin, getRoleByProject, hasRole } = usePolicies()
 // Deleting a user account removes it from every project (see the delete modal's warning) and the
 // backend requires INSTANCE_ADMIN, so hide the action from project admins who are not instance admins.
-const canDeleteUsers = computed(() => isAuthWithUsersProvider.value && isInstanceAdmin())
+const canDeleteUsers = computed(() => isAuthWithUsersProvider.value && isInstanceAdmin.value)
 const viewerRole = computed(() => getRoleByProject(props.project))
 function isCurrentUser(uid) {
   return !isUsernameResolved.value || username.value === uid
