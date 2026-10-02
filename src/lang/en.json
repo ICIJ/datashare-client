@@ -1999,6 +1999,9 @@
   "projectDropdownSelectorAll": {
     "label": "All projects"
   },
+  "projectDropdownSelectorButtonContent": {
+    "placeholder": "Select a project"
+  },
   "pathViewEntryMore": {
     "label": "No more directories | Show 1 more directory | Show {nextPageSize} of {directoriesLeft} more directories"
   },

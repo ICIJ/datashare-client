@@ -1,4 +1,4 @@
-import { toProjectList } from '@/utils/projects'
+import { projectDisplayLabel, toProjectList } from '@/utils/projects'
 
 describe('projects', () => {
   describe('toProjectList', () => {
@@ -34,6 +34,19 @@ describe('projects', () => {
     it('should drop missing entries from a list', () => {
       expect(toProjectList([undefined])).toEqual([])
       expect(toProjectList(['foo', undefined, ''])).toEqual(['foo'])
+    })
+  })
+
+  describe('projectDisplayLabel', () => {
+    const core = { findProject: name => [{ name: 'p-42', label: 'Panama Papers' }].find(p => p.name === name) }
+
+    it('uses the label of a configured project', () => {
+      expect(projectDisplayLabel('p-42', core)).toBe('Panama Papers')
+    })
+
+    it('falls back to the name in title case without a label', () => {
+      expect(projectDisplayLabel('local-datashare', core)).toBe('Local Datashare')
+      expect(projectDisplayLabel({ name: 'my-project' }, core)).toBe('My Project')
     })
   })
 })

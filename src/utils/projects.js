@@ -1,5 +1,6 @@
 import castArray from 'lodash/castArray'
 import isObject from 'lodash/isObject'
+import startCase from 'lodash/startCase'
 
 /**
  * Normalize a project prop, which may be a bare name, a project object, or a
@@ -23,4 +24,19 @@ export function resolveProject(project, core) {
   }
 
   return core?.findProject(project) ?? { name: project }
+}
+
+/**
+ * The name an already resolved project is displayed under: its label, or its name in title case
+ * when it has none.
+ */
+export function displayLabelOf(resolved) {
+  return resolved.label ?? startCase(resolved.name)
+}
+
+/**
+ * The name a project (a bare name or an object) is displayed under, see displayLabelOf.
+ */
+export function projectDisplayLabel(project, core) {
+  return displayLabelOf(resolveProject(project, core))
 }

@@ -1,9 +1,8 @@
 <script setup>
 import { computed } from 'vue'
-import startCase from 'lodash/startCase'
 import { useCore } from '@/composables/useCore'
 import ProjectThumbnail from '@/components/Project/ProjectThumbnail'
-import { resolveProject } from '@/utils/projects'
+import { displayLabelOf, resolveProject } from '@/utils/projects'
 
 const props = defineProps({
   /**
@@ -42,20 +41,24 @@ const resolvedProject = computed(() => resolveProject(props.project, core))
 
 const showThumbnail = computed(() => !props.hideThumbnail)
 
-const projectDisplay = computed(() => resolvedProject.value.label ?? startCase(resolvedProject.value.name))
+const projectDisplay = computed(() => displayLabelOf(resolvedProject.value))
 </script>
 
 <template>
   <span class="project-label">
-    <project-thumbnail
-      v-if="showThumbnail"
-      :project="resolvedProject"
-      :no-caption="noCaption"
-      :width="thumbnailWidth"
-      :rounded="1"
-      class="project-label__thumbnail me-2"
-    />
-    <span class="project-label__display">{{ projectDisplay }}</span>
+    <slot name="thumbnail">
+      <project-thumbnail
+        v-if="showThumbnail"
+        :project="resolvedProject"
+        :no-caption="noCaption"
+        :width="thumbnailWidth"
+        :rounded="1"
+        class="project-label__thumbnail me-2"
+      />
+    </slot>
+    <span class="project-label__display">
+      <slot>{{ projectDisplay }}</slot>
+    </span>
   </span>
 </template>
 
