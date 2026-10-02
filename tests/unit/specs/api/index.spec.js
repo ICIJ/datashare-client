@@ -517,6 +517,29 @@ describe('Datashare backend client', () => {
     })
   })
 
+  it('should call deleteUser with userId (uid) and no body', async () => {
+    await api.deleteUser('alice')
+    expect(axios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/users/admin/alice'),
+        method: 'DELETE'
+      })
+    )
+    expect(axios.request.mock.calls[0][0]).not.toHaveProperty('data')
+  })
+
+  it('should call updateUser with userId (uid) and data', async () => {
+    const data = { email: 'alice@example.com' }
+    await api.updateUser('alice', data)
+    expect(axios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/users/admin/alice'),
+        method: 'PUT',
+        data
+      })
+    )
+  })
+
   describe('project policies', () => {
     it('should call revokeUserRole with userId (uid), project and ifExists', async () => {
       await api.revokeUserRole('alice', 'my-project', { ifExists: true })
@@ -540,30 +563,72 @@ describe('Datashare backend client', () => {
     )
   })
 
-  it('should call createUser with data and project index', async () => {
+  describe('instance/domain admin roles', () => {
+    it('should call grantInstanceRole with userId (uid), role and no domain', async () => {
+      await api.grantInstanceRole('alice', 'instance_admin')
+      expect(axios.request).toBeCalledWith(
+        expect.objectContaining({
+          url: Api.getFullUrl('/api/users/admin/alice/role'),
+          method: 'PUT',
+          params: { role: 'instance_admin' }
+        })
+      )
+    })
+
+    it('should call grantInstanceRole with userId (uid), role and domain', async () => {
+      await api.grantInstanceRole('alice', 'domain_admin', 'default')
+      expect(axios.request).toBeCalledWith(
+        expect.objectContaining({
+          url: Api.getFullUrl('/api/users/admin/alice/role'),
+          method: 'PUT',
+          params: { role: 'domain_admin', domain: 'default' }
+        })
+      )
+    })
+
+    it('should call revokeInstanceRole with userId (uid), role and no domain', async () => {
+      await api.revokeInstanceRole('alice', 'instance_admin')
+      expect(axios.request).toBeCalledWith(
+        expect.objectContaining({
+          url: Api.getFullUrl('/api/users/admin/alice/role'),
+          method: 'DELETE',
+          params: { role: 'instance_admin' }
+        })
+      )
+    })
+
+    it('should call revokeInstanceRole with userId (uid), role and domain', async () => {
+      await api.revokeInstanceRole('alice', 'domain_admin', 'default')
+      expect(axios.request).toBeCalledWith(
+        expect.objectContaining({
+          url: Api.getFullUrl('/api/users/admin/alice/role'),
+          method: 'DELETE',
+          params: { role: 'domain_admin', domain: 'default' }
+        })
+      )
+    })
+  })
+
+  it('should call createUser with the account data', async () => {
     const userData = {
       uid: 'jdoe',
       email: 'jdoe@example.com',
       name: 'John Doe',
       password: 'secret-password',
-      provider: 'local',
-      domain: 'default',
-      index: 'my-project'
+      provider: 'local'
     }
-    await api.createUser({ ...userData, index: 'my-project' })
+    await api.createUser(userData)
     expect(axios.request).toBeCalledWith(
       expect.objectContaining({
         url: Api.getFullUrl('/api/users'),
         method: 'POST',
-        data: expect.objectContaining({
+        data: {
           login: 'jdoe',
           email: 'jdoe@example.com',
           name: 'John Doe',
           password: 'secret-password',
-          provider: 'local',
-          domain: 'default',
-          index: 'my-project'
-        })
+          provider: 'local'
+        }
       })
     )
   })
