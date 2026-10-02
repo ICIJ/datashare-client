@@ -241,8 +241,13 @@ describe('SettingsViewUsers.vue', () => {
   describe('routed user modals', () => {
     const zoe = { uid: 'zoe@example.org', name: 'Zoe', email: 'zoe@example.org', permissions: [] }
 
+    // The backend resolves uid exactly, so an unknown uid comes back as an empty page
     beforeEach(() => {
-      api.getUsers.mockImplementation(async ({ uid }) => (uid === zoe.uid ? { items: [zoe], pagination: { total: 1 } } : usersResponse))
+      api.getUsers.mockImplementation(async ({ uid }) => {
+        if (!uid) return usersResponse
+        const items = uid === zoe.uid ? [zoe] : []
+        return { items, pagination: { total: items.length } }
+      })
     })
 
     it.each([
@@ -272,7 +277,6 @@ describe('SettingsViewUsers.vue', () => {
       ['edit', SettingsViewUsersEditModal],
       ['delete', SettingsViewUsersDeleteModal]
     ])('flags the %s modal as not found when the URL names an unknown user', async (action, modal) => {
-      api.getUsers.mockImplementation(async ({ uid }) => (uid ? { items: [], pagination: { total: 0 } } : usersResponse))
       await core.router.push(`/settings/users/${action}/ghost`)
       const wrapper = shallowMountComponent()
       await flushPromises()
