@@ -1,4 +1,10 @@
 import IPhUserSquare from '~icons/ph/user-square'
+import IPhPersonSimpleBike from '~icons/ph/person-simple-bike'
+import IPhPersonSimpleRun from '~icons/ph/person-simple-run'
+import IPhPersonSimpleWalk from '~icons/ph/person-simple-walk'
+import IPhPersonSimpleHike from '~icons/ph/person-simple-hike'
+import IPhPersonSimpleSwim from '~icons/ph/person-simple-swim'
+import IPhPersonSimpleTaiChi from '~icons/ph/person-simple-tai-chi'
 import { markRaw } from 'vue'
 
 export const ROLE = Object.freeze({
@@ -53,4 +59,56 @@ export const ROLE_HIERARCHY = Object.freeze({
   INSTANCE_ADMIN: 0b111111, // 63 - all roles
 })
 
+// The only domain that exists today; there is no domain picker in the UI yet.
+export const DEFAULT_DOMAIN = 'default'
+
+// Instance and domain admin are granted on every project of their scope ('*::*' for instance admin,
+// '<domain>::*' for domain admin), not on a single project.
+export function isInstanceOrDomainRole(role) {
+  return role === ROLE.DOMAIN_ADMIN || role === ROLE.INSTANCE_ADMIN
+}
+
+// A casbin grant { v1: role, v2: 'domain::project' } as { role, domain, project }.
+export function parsePermission({ v1: role, v2 }) {
+  const [domain, project] = String(v2).split('::')
+  return { role, domain, project }
+}
+
+// Highest role first, then A-Z by project (by domain for an instance-wide '*' grant).
+export function compareGrants(a, b) {
+  const rankDiff = (ROLE_BIT[b.role] ?? 0) - (ROLE_BIT[a.role] ?? 0)
+  if (rankDiff !== 0) return rankDiff
+  const keyOf = ({ project, domain }) => (project === '*' ? domain : project)
+  return keyOf(a).localeCompare(keyOf(b))
+}
+
 export const ROLE_ICON_DEFAULT = markRaw(IPhUserSquare)
+
+// Per-role icon/color, read through roleIcon and roleColor below so every badge gets the fallbacks
+const ROLE_ICON = Object.freeze({
+  [ROLE.INSTANCE_ADMIN]: markRaw(IPhPersonSimpleBike),
+  [ROLE.DOMAIN_ADMIN]: markRaw(IPhPersonSimpleRun),
+  [ROLE.PROJECT_ADMIN]: markRaw(IPhPersonSimpleWalk),
+  [ROLE.PROJECT_EDITOR]: markRaw(IPhPersonSimpleHike),
+  [ROLE.PROJECT_MEMBER]: markRaw(IPhPersonSimpleSwim),
+  [ROLE.PROJECT_VISITOR]: markRaw(IPhPersonSimpleTaiChi),
+  [NO_ROLE]: ROLE_ICON_DEFAULT
+})
+
+const ROLE_COLOR = Object.freeze({
+  [ROLE.INSTANCE_ADMIN]: 'var(--bs-danger)',
+  [ROLE.DOMAIN_ADMIN]: 'var(--bs-success)',
+  [ROLE.PROJECT_ADMIN]: 'var(--bs-category-person)',
+  [ROLE.PROJECT_EDITOR]: 'var(--bs-warning)',
+  [ROLE.PROJECT_MEMBER]: 'var(--bs-info)',
+  [ROLE.PROJECT_VISITOR]: 'var(--bs-secondary)'
+})
+
+// The icon and color that badge a role, with the fallbacks used for an unknown role (or no role)
+export function roleIcon(role) {
+  return ROLE_ICON[role] ?? ROLE_ICON_DEFAULT
+}
+
+export function roleColor(role) {
+  return ROLE_COLOR[role] ?? 'inherit'
+}
