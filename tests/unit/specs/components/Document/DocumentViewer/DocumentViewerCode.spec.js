@@ -356,6 +356,31 @@ describe('DocumentViewerCode.vue', () => {
     expect(wrapper.find('.document-viewer-code__editor').attributes('style')).toContain('display: none')
   })
 
+  it('does not let a superseded blur decision hide the document on screen', async () => {
+    const { plugins } = CoreSetup.init().useAll()
+    const store = useDocumentPathBannersStore()
+    let resolveFirst
+    const firstBanners = new Promise((resolve) => {
+      resolveFirst = resolve
+    })
+    const blurring = [{ path: '/leaks/code/', blurSensitiveMedia: true, note: 'Sensitive' }]
+    const fetchPathBannersByPath = vi.spyOn(store, 'fetchPathBannersByPath')
+      .mockReturnValueOnce(firstBanners)
+      .mockResolvedValue([])
+    const wrapper = shallowMount(DocumentViewerCode, {
+      props: { document },
+      attachTo: window.document.body,
+      global: { plugins, renderStubDefaultSlot: true }
+    })
+    await wrapper.setProps({ document: { ...document, id: 'other-id' } })
+    await flushPromises()
+    resolveFirst(blurring)
+    await flushPromises()
+    fetchPathBannersByPath.mockRestore()
+    expect(wrapper.findComponent(DismissableContentWarningToggler).exists()).toBe(false)
+    expect(wrapper.findComponent(DocumentToolbox).props('disabled')).toBe(false)
+  })
+
   it('does not search a blurred document', async () => {
     const pathBanners = [{ path: '/leaks/code/', blurSensitiveMedia: true, note: 'Sensitive' }]
     const wrapper = await mountWithSource('hello', { pathBanners })
