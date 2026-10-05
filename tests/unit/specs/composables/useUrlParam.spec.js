@@ -1,3 +1,4 @@
+/* eslint-disable vue/one-component-per-file -- withSetup and a test that needs a resolved route each build an app */
 import { createApp } from 'vue'
 import { createRouter, createMemoryHistory } from 'vue-router'
 import { flushPromises } from '@vue/test-utils'
@@ -338,6 +339,20 @@ describe('useUrlParamsWithStore', () => {
 
     expect(router.currentRoute.value.query.sort).toBe('creationDate')
     expect(router.currentRoute.value.query.order).toBe('desc')
+  })
+
+  it('should not set the store on mount when the query parameters already match it', async () => {
+    const set = vi.fn()
+    const router = createRouter({ history: createMemoryHistory(), routes: [{ path: '/', component: {} }] })
+    await router.replace({ query: { sort: 'name', order: 'asc' } })
+    // withSetup mounts before the initial route resolves, so this test builds its own app
+    const app = createApp({
+      setup: () => useUrlParamsWithStore(['sort', 'order'], { get: () => ['name', 'asc'], set })
+    })
+    app.use(createPinia()).use(router).mount(document.createElement('div'))
+
+    expect(set).not.toHaveBeenCalled()
+    app.unmount()
   })
 })
 

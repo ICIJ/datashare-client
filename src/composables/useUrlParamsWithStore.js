@@ -1,5 +1,6 @@
 import noop from 'lodash/noop'
 import identity from 'lodash/identity'
+import isEqual from 'lodash/isEqual'
 import isUndefined from 'lodash/isUndefined'
 import { computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -59,7 +60,7 @@ export function useUrlParamsWithStore(queryParams, options = {}) {
   )
 
   // Initialize the store value with the URL value if they are different
-  if (getRouteValues() && getRouteValues() !== getValue()) {
+  if (getRouteValues() && !isEqual(getRouteValues(), getValue())) {
     setValue(...getRouteValues())
   }
 
