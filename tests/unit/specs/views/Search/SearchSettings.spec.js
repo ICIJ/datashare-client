@@ -18,10 +18,16 @@ const flushDebouncedRouterUpdate = async () => {
 }
 
 describe('SearchSettings.vue', () => {
-  let core
+  let core, wrappers
 
   beforeEach(() => {
     core = CoreSetup.init().useAll().useRouterWithoutGuards()
+    wrappers = []
+  })
+
+  // Unmount even when an assertion fails, or Search stays subscribed to the shared hash history.
+  afterEach(() => {
+    wrappers.forEach(wrapper => wrapper.unmount())
   })
 
   it('lands on a bare query with a URL the view has nothing to add to', async () => {
@@ -35,8 +41,7 @@ describe('SearchSettings.vue', () => {
     // Search.vue hydrates the stores from the route query, SearchSettings mirrors the
     // resulting settings back into the URL: any write would push a history entry.
     const global = { plugins: core.plugins, renderStubDefaultSlot: true }
-    const search = shallowMount(Search, { global })
-    const settings = shallowMount(SearchSettings, { global })
+    wrappers.push(shallowMount(Search, { global }), shallowMount(SearchSettings, { global }))
     await flushPromises()
     await flushDebouncedRouterUpdate()
 
@@ -45,8 +50,5 @@ describe('SearchSettings.vue', () => {
     expect(core.router.currentRoute.value.query).toHaveProperty('sort', '_score')
     expect(core.router.currentRoute.value.query).toHaveProperty('order', 'desc')
     expect(core.router.currentRoute.value.query).toHaveProperty('perPage', '25')
-
-    settings.unmount()
-    search.unmount()
   })
 })
