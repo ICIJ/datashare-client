@@ -67,14 +67,14 @@ export function useUrlParamWithStore(queryParam, options = {}) {
   watch(
     getRouteValue,
     whenIsRoute(to, (newValue) => {
-      if (newValue && newValue !== getStoreValue()) {
+      if (newValue !== null && newValue !== getStoreValue()) {
         setStoreValue(newValue)
       }
     })
   )
 
   // Initialize the store value with the URL value if they are different
-  if (getRouteValue() && !isEqual(getRouteValue(), getStoreValue())) {
+  if (getRouteValue() !== null && !isEqual(getRouteValue(), getStoreValue())) {
     setStoreValue(getRouteValue())
   }
 
