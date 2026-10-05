@@ -243,8 +243,14 @@ watch(matches, paintMatches)
 watch([matches, activeIndex], paintActiveMatch)
 watch(toRef(props, 'document'), load, { immediate: true, flush: 'post' })
 watch(toRef(props, 'document'), async (document) => {
-  blurred.value = await isBlurred(document)
-  blurredContent.value = blurred.value ? await getBlurredContentBanner(document) : null
+  const value = await isBlurred(document)
+  const banner = value ? await getBlurredContentBanner(document) : null
+  // A document swapped in while this one resolved owns the banner now.
+  if (document !== props.document) {
+    return
+  }
+  blurred.value = value
+  blurredContent.value = banner
 }, { immediate: true })
 
 onBeforeUnmount(() => {
