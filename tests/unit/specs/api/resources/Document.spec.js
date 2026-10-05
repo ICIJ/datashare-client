@@ -45,7 +45,9 @@ describe('Document', () => {
       'application/xml',
       'application/xhtml+xml',
       'application/javascript',
-      'application/x-sh'
+      'application/x-sh',
+      'application/xml; charset=UTF-8',
+      'application/javascript; charset=UTF-8'
     ])('should be code for %s', (contentType) => {
       const doc = new Document({ _source: { contentType } })
       expect(doc.isCode).toBe(true)

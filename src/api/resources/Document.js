@@ -477,10 +477,11 @@ export default class Document extends EsDoc {
       'application/xml',
       'application/xml-dtd'
     ]
-    return this.contentType.indexOf('text/') === 0
-      || this.contentType.endsWith('+xml')
+    const mimeType = this.contentType.split(';')[0].trim()
+    return mimeType.indexOf('text/') === 0
+      || mimeType.endsWith('+xml')
       || this.isJson
-      || codeTypes.includes(this.contentType)
+      || codeTypes.includes(mimeType)
   }
 
   get isMarkdown() {
