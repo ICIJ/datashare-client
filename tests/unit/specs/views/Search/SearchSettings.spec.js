@@ -43,6 +43,7 @@ describe('SearchSettings.vue', () => {
     expect(window.history.length).toBe(length)
     expect(core.router.currentRoute.value.query).toHaveProperty('f[path]', '/vault/luxleaks/v1')
     expect(core.router.currentRoute.value.query).toHaveProperty('sort', '_score')
+    expect(core.router.currentRoute.value.query).toHaveProperty('order', 'desc')
     expect(core.router.currentRoute.value.query).toHaveProperty('perPage', '25')
 
     settings.unmount()
