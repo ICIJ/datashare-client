@@ -1,5 +1,5 @@
 /* eslint-disable vue/one-component-per-file -- withSetup and a test that needs a resolved route each build an app */
-import { createApp } from 'vue'
+import { createApp, ref } from 'vue'
 import { createRouter, createMemoryHistory } from 'vue-router'
 import { flushPromises } from '@vue/test-utils'
 import { createPinia } from 'pinia'
@@ -281,6 +281,20 @@ describe('useUrlParamWithStore', () => {
     await flushPromises()
 
     expect(router.currentRoute.value.query.perPage).toBe('66')
+  })
+
+  it('should update the store when the query parameter changes to zero', async () => {
+    const from = ref(null)
+    const [, router] = withSetup({
+      composable: () => useUrlParamWithStore('from', { transform: Number, get: () => from.value, set: value => (from.value = value) })
+    })
+
+    await router.push({ query: { from: '25' } })
+    await flushPromises()
+    await router.push({ query: { from: '0' } })
+    await flushPromises()
+
+    expect(from.value).toBe(0)
   })
 })
 
