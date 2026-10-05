@@ -1,4 +1,4 @@
-import { findFoldedMatches, foldForFilter, foldWithSourceIndexes } from '@/utils/strings'
+import { findFoldedMatches, foldForFilter } from '@/utils/strings'
 
 // Folding with offsets keeps two arrays per character: a whole 50 MB line (a
 // minified JSON) would take gigabytes. Lines are cut into chunks so only one
@@ -70,7 +70,7 @@ function findChunkMatches({ from, ownEnd, lineEnd }, doc, foldedTerm, scanFrom) 
  * @return {Object[]} - The `{ from, to }` document ranges, in document order.
  */
 export function findIndexMatches(chunks, doc, term) {
-  const { folded } = foldWithSourceIndexes(term)
+  const folded = foldForFilter(term)
   // A term made only of combining marks folds to nothing, which every chunk
   // contains at every position: the scan would never move forward.
   if (!folded) {

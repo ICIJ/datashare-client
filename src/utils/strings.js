@@ -95,8 +95,10 @@ export function foldWithSourceIndexes(value = '') {
     // One entry per code unit: a match is found at a code unit index of the
     // joined folded string, and an emoji folds to two of them.
     const units = decomposed.length
-    sourceIndexes.push(...Array(units).fill(index))
-    sourceEnds.push(...Array(units).fill(end))
+    for (let unit = 0; unit < units; unit++) {
+      sourceIndexes.push(index)
+      sourceEnds.push(end)
+    }
     folded.push(decomposed)
     // A source char that folds to nothing (a combining mark standing on its own,
     // as decomposed text writes accents) has no folded position of its own, so
