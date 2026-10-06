@@ -1738,7 +1738,8 @@
           },
           "email": {
             "label": "Email",
-            "placeholder": "Email"
+            "placeholder": "Email",
+            "invalid": "Enter a valid email address."
           },
           "password": {
             "label": "Password",

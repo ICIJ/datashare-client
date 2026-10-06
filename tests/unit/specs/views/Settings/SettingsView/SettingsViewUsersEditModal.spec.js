@@ -69,6 +69,23 @@ describe('SettingsViewUsersEditModal.vue', () => {
     expect(wrapper.vm.email).toBe('bob@example.org')
   })
 
+  it('shows an inline error when the email is malformed, not just the native tooltip', async () => {
+    const wrapper = mountComponent()
+    wrapper.vm.email = 'not-an-email'
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.emailInvalid).toBe(true)
+    const emailInput = wrapper.findAllComponents(BFormInput).find(c => c.attributes('name') === 'email')
+    expect(emailInput.props('state')).toBe(false)
+    expect(wrapper.text()).toContain('Enter a valid email address.')
+  })
+
+  it('does not flag the email as invalid while it is empty or well-formed', () => {
+    const wrapper = mountComponent()
+    expect(wrapper.vm.emailInvalid).toBe(false)
+    wrapper.vm.email = ''
+    expect(wrapper.vm.emailInvalid).toBe(false)
+  })
+
   it('isValid is false when name is empty', async () => {
     const wrapper = mountComponent()
     wrapper.vm.name = ''
