@@ -1,6 +1,7 @@
 import { shallowMount, flushPromises } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
+import InstanceUsersRoleBadge from '@/components/InstanceUsers/InstanceUsersRoleBadge.vue'
 import ProjectUsersList from '@/components/ProjectUsers/ProjectUsersList.vue'
 import ProjectUsersActions from '@/components/ProjectUsers/ProjectUsersActions.vue'
 import ProjectUsersAdminPromotionModal from '@/components/ProjectUsers/ProjectUsersAdminPromotionModal.vue'
@@ -72,14 +73,16 @@ describe('ProjectUsersList.vue', () => {
     }
   })
 
-  it('marks the dropdown as inherited only for a user with an instance or domain admin role', () => {
+  it('replaces the dropdown with a read-only badge for a user with an instance or domain admin role', () => {
     const wrapper = mountComponent({
       users: [
         { uid: 'alice@example.org', role: 'NO_ROLE', wideRoles: ['DOMAIN_ADMIN'] },
         { uid: 'bob@example.org', role: 'NO_ROLE', wideRoles: [] }
       ]
     })
-    expect(wrapper.findAllComponents(ProjectUsersRoleDropdown).map(d => d.props('inherited'))).toEqual([true, false])
+    // Only bob (no wide role) keeps an editable dropdown; alice's row shows the badge instead.
+    expect(wrapper.findAllComponents(ProjectUsersRoleDropdown)).toHaveLength(1)
+    expect(wrapper.findComponent(InstanceUsersRoleBadge).props('role')).toBe('DOMAIN_ADMIN')
   })
 
   it('renders a ProjectUsersActions in each row', () => {
@@ -277,24 +280,26 @@ describe('ProjectUsersList.vue', () => {
   })
 
   describe('Instance-wide role next to the name', () => {
-    it('flags an instance or domain admin role next to a project role', () => {
+    it('shows a read-only instance admin badge instead of the project role', () => {
       const wrapper = mountComponent({ users: [{ uid: 'alice@example.org', role: 'PROJECT_MEMBER', wideRoles: ['INSTANCE_ADMIN'] }] })
-      expect(wrapper.find('.project-users-list__wide-role').attributes('aria-label')).toBe('Instance admin')
+      expect(wrapper.findComponent(InstanceUsersRoleBadge).props('role')).toBe('INSTANCE_ADMIN')
+      expect(wrapper.findComponent(ProjectUsersRoleDropdown).exists()).toBe(false)
     })
 
-    it('flags it too when it is the only role the user has', () => {
+    it('shows a read-only domain admin badge when it is the only role the user has', () => {
       const wrapper = mountComponent({ users: [{ uid: 'alice@example.org', role: 'DOMAIN_ADMIN', wideRoles: ['DOMAIN_ADMIN'] }] })
-      expect(wrapper.find('.project-users-list__wide-role').attributes('aria-label')).toBe('Domain admin')
+      expect(wrapper.findComponent(InstanceUsersRoleBadge).props('role')).toBe('DOMAIN_ADMIN')
     })
 
-    it('flags both instance and domain admin, highest first', () => {
+    it('shows only the highest rank when the user somehow holds both', () => {
       const wrapper = mountComponent({ users: [{ uid: 'alice@example.org', role: 'INSTANCE_ADMIN', wideRoles: ['INSTANCE_ADMIN', 'DOMAIN_ADMIN'] }] })
-      expect(wrapper.findAll('.project-users-list__wide-role').map(b => b.attributes('aria-label'))).toEqual(['Instance admin', 'Domain admin'])
+      expect(wrapper.findAllComponents(InstanceUsersRoleBadge).map(d => d.props('role'))).toEqual(['INSTANCE_ADMIN'])
     })
 
-    it('shows no badge without an instance or domain admin role', () => {
+    it('shows the editable dropdown, not a badge, without an instance or domain admin role', () => {
       const wrapper = mountComponent({ users: [{ uid: 'bob@example.org', role: 'PROJECT_EDITOR', wideRoles: [] }] })
-      expect(wrapper.find('.project-users-list__wide-role').exists()).toBe(false)
+      expect(wrapper.findComponent(InstanceUsersRoleBadge).exists()).toBe(false)
+      expect(wrapper.findComponent(ProjectUsersRoleDropdown).exists()).toBe(true)
     })
   })
 

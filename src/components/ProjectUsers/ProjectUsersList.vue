@@ -1,10 +1,10 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { AppIcon, ButtonIcon } from '@icij/murmur'
-import IPhCaretRight from '~icons/ph/caret-right'
+import { ButtonIcon } from '@icij/murmur'
 
 import DisplayUser from '@/components/Display/DisplayUser.vue'
+import InstanceUsersRoleBadge from '@/components/InstanceUsers/InstanceUsersRoleBadge.vue'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric.vue'
 import ProjectUsersActions from '@/components/ProjectUsers/ProjectUsersActions.vue'
 import ProjectUsersAdminPromotionModal from '@/components/ProjectUsers/ProjectUsersAdminPromotionModal.vue'
@@ -13,7 +13,7 @@ import ProjectUsersRoleDropdown from '@/components/ProjectUsers/ProjectUsersRole
 import { useCore } from '@/composables/useCore.js'
 import { usePolicies } from '@/composables/usePolicies.js'
 import { useToast } from '@/composables/useToast.js'
-import { NO_ROLE, ROLE, ROLE_BIT, ROLE_LOWERCASE, roleColor, roleIcon } from '@/enums/roles.js'
+import { NO_ROLE, ROLE, ROLE_BIT, ROLE_LOWERCASE } from '@/enums/roles.js'
 import ButtonReset from '@/components/Button/ButtonReset'
 import useAuth from '@/composables/useAuth.js'
 
@@ -135,7 +135,7 @@ const emptyLabel = computed(() =>
 // value of a user listed without one. Only offered when datashare owns the accounts (form/basic):
 // under OAuth, project roles come from the identity provider and a revoke would not stick.
 const { isCurrentUser, isAuthWithUsersProvider } = useAuth()
-const { getRoleByProject, hasRole, isDomainAdmin, formatRole } = usePolicies()
+const { getRoleByProject, hasRole, isDomainAdmin } = usePolicies()
 const viewerRole = computed(() => getRoleByProject(props.project))
 // The viewer's own row is read-only: a project admin dropping their own role would lose access to
 // this tab with nobody able to undo it. A domain or instance admin keeps access through their
@@ -171,41 +171,23 @@ defineExpose({ pendingChanges, saving, showAdminModal, saveRoles, cancelChanges,
         <display-user :value="item.uid" />
       </template>
       <template #cell(role)="{ item }">
-        <!-- Widest scope first: each instance or domain admin role (which gives access to every
-             project of its scope, whatever the dropdown shows) as an icon, then the project role. -->
-        <div class="d-flex align-items-center flex-nowrap gap-1">
-          <template
-            v-for="wideRole in item.wideRoles ?? []"
-            :key="wideRole"
-          >
-            <span
-              v-b-tooltip.body
-              class="project-users-list__wide-role"
-              :title="formatRole(t, wideRole)"
-              :aria-label="formatRole(t, wideRole)"
-            >
-              <app-icon
-                :name="roleIcon(wideRole)"
-                :style="{ color: roleColor(wideRole) }"
-              />
-            </span>
-            <app-icon
-              :name="IPhCaretRight"
-              class="project-users-list__wide-role-separator text-secondary"
-              aria-hidden="true"
-            />
-          </template>
-          <project-users-role-dropdown
-            :disabled="isLockedOwnRow(item.uid) || outranksViewer(item.role)"
-            :model-value="pendingChanges[item.uid] ?? item.role"
-            :dirty="!!pendingChanges[item.uid]"
-            :project="project"
-            :no-role="isAuthWithUsersProvider"
-            :hidden-roles="[ROLE.DOMAIN_ADMIN, ROLE.INSTANCE_ADMIN]"
-            :inherited="!!item.wideRoles?.length"
-            @update:model-value="onRoleChanged(item.uid, $event)"
-          />
-        </div>
+        <!-- An instance or domain admin role gives access to every project of its scope, making
+             any project-specific grant redundant: show only that highest rank, read-only, rather
+             than a dropdown that can't actually change the user's access to this project. -->
+        <instance-users-role-badge
+          v-if="item.wideRoles?.length"
+          :role="item.wideRoles[0]"
+        />
+        <project-users-role-dropdown
+          v-else
+          :disabled="isLockedOwnRow(item.uid) || outranksViewer(item.role)"
+          :model-value="pendingChanges[item.uid] ?? item.role"
+          :dirty="!!pendingChanges[item.uid]"
+          :project="project"
+          :no-role="isAuthWithUsersProvider"
+          :hidden-roles="[ROLE.DOMAIN_ADMIN, ROLE.INSTANCE_ADMIN]"
+          @update:model-value="onRoleChanged(item.uid, $event)"
+        />
       </template>
       <template #row-actions="{ item }">
         <project-users-actions :user="item" />
@@ -243,17 +225,6 @@ defineExpose({ pendingChanges, saving, showAdminModal, saveRoles, cancelChanges,
 
 <style scoped lang="scss">
 .project-users-list {
-  &__wide-role {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 1.75em;
-    height: 1.75em;
-    flex-shrink: 0;
-    border-radius: 50%;
-    background: var(--bs-tertiary-bg);
-  }
-
   &__sticky-bar {
     position: sticky;
     bottom: 0;
