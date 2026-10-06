@@ -19,6 +19,7 @@ import SettingsViewUsersNotFound from '@/views/Settings/SettingsView/SettingsVie
 import SettingsViewUsersRolesCascadeModal from '@/views/Settings/SettingsView/SettingsViewUsersRolesCascadeModal.vue'
 
 import { useAuth } from '@/composables/useAuth.js'
+import { useConfirmModal } from '@/composables/useConfirmModal.js'
 import { usePolicies } from '@/composables/usePolicies.js'
 import { useCore } from '@/composables/useCore.js'
 import { useToast } from '@/composables/useToast.js'
@@ -55,6 +56,7 @@ const core = useCore()
 const { toast } = useToast()
 const { t } = useI18n()
 const { isInstanceAdmin, formatRole } = usePolicies()
+const { confirm } = useConfirmModal()
 // Under OAuth, project membership comes from the identity provider's groups and is reconciled at
 // each login: a project role revoked here comes back, and one granted on a project the provider
 // does not list goes away. The role level on a project it does list is kept, so it can still be
@@ -70,6 +72,14 @@ const search = ref('')
 watch(() => props.user?.uid, () => {
   search.value = ''
   resetAddForm()
+})
+
+// The modal only ever shows whatever `roles` its `user` prop was given, which the parent only
+// refreshes when this modal itself grants/revokes something (`user:updated`). A role changed
+// elsewhere (another admin tab, the CLI) while this modal happened to be open would go unnoticed
+// until something inside it triggers that refresh - so ask for one on every open too.
+watch(modelValue, (visible) => {
+  if (visible) emit('user:updated', { uid: props.user.uid })
 })
 
 // Each permission is { v1: role, v2: 'domain::project' }, parsed into { role, domain, project }: the
@@ -224,8 +234,18 @@ async function changeRole(item, newRole) {
   }
 }
 
+// An instance/domain admin grant covers every project: confirm before revoking it, since it's
+// not just removing one row but immediately removing access to everything that role covered.
+// Plain project-level revokes stay a single click, like everywhere else in this table.
 async function revokeRole(item) {
   if (!canRevoke(item)) return
+  if (isInstanceOrDomainRole(item.role)) {
+    const description = t('settings.users.rolesModal.revokeWideRoleConfirm', {
+      role: formatRole(t, item.role),
+      uid: props.user.uid
+    })
+    if (!(await confirm({ description }))) return
+  }
   saving.value = true
   try {
     await revokeGrant(item)

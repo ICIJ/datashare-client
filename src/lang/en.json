@@ -1771,7 +1771,7 @@
       "rolesModal": {
         "title": "Manage roles for {uid}",
         "close": "Close",
-        "empty": "This user has no project role grants yet.",
+        "empty": "This user has no role grants yet.",
         "searchPlaceholder": "Search scopes",
         "noResults": "No project or role matches your search.",
         "selectScope": "Select scope",
@@ -1785,6 +1785,7 @@
           "domain": "Domain"
         },
         "grant": "Grant",
+        "revokeWideRoleConfirm": "Revoke {role} from {uid}? This immediately removes their access to every project it covered.",
         "revokeSuccess": "Revoked {role} from {uid}",
         "revokeError": "Failed to revoke {role} from {uid}.",
         "grantSuccess": "Granted {role} to {uid}",
