@@ -30,6 +30,12 @@ const email = ref('')
 const name = ref('')
 const { password, confirmPassword, passwordMismatch, isPasswordValid, clearPasswords } = usePasswordConfirm()
 const saving = ref(false)
+// Set on a 409 from the server; cleared as soon as the user edits the username again, since the
+// stale conflict no longer necessarily applies to whatever they're about to submit.
+const usernameConflict = ref(false)
+watch(username, () => {
+  usernameConflict.value = false
+})
 
 const isValid = computed(() => {
   if (!username.value.trim().length) return false
@@ -42,6 +48,7 @@ function resetForm() {
   username.value = ''
   email.value = ''
   name.value = ''
+  usernameConflict.value = false
   clearPasswords()
 }
 
@@ -76,6 +83,7 @@ async function saveUser(bvModalEvent) {
   catch (err) {
     const status = err?.response?.status ?? err?.request?.response?.status
     if (status === 409) {
+      usernameConflict.value = true
       toast.error(t('settings.users.create.saveErrorConflict'))
     }
     else {
@@ -95,6 +103,7 @@ defineExpose({
   confirmPassword,
   isValid,
   passwordMismatch,
+  usernameConflict,
   saving,
   saveUser,
   form
@@ -126,9 +135,16 @@ defineExpose({
           v-model="username"
           :placeholder="t('settings.users.create.fields.username.placeholder')"
           :disabled="saving"
+          :state="usernameConflict ? false : null"
           autofocus
           name="uid"
         />
+        <small
+          v-if="usernameConflict"
+          class="text-danger"
+        >
+          {{ t('settings.users.create.saveErrorConflict') }}
+        </small>
       </form-fieldset-i18n>
 
       <form-fieldset-i18n
