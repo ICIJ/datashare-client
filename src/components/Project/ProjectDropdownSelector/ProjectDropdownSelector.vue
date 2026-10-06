@@ -36,6 +36,15 @@ const props = defineProps({
     type: Boolean
   },
   /**
+   * Title applied directly to the toggle button (not just a wrapping element), so it reaches a
+   * keyboard or screen-reader user focusing the button itself - typically used to explain why the
+   * dropdown is disabled.
+   */
+  title: {
+    type: String,
+    default: null
+  },
+  /**
    * Hide the caret in the toggler.
    */
   noCaret: {
@@ -115,6 +124,7 @@ function filterProject(project, query) {
     pin-selected
     flush-items
     :disabled="disabled"
+    :toggle-attrs="title ? { title } : undefined"
     :no-caret="noCaret"
     :options="projects"
     :teleport-to="teleportTo"
