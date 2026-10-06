@@ -34,12 +34,6 @@ const props = defineProps({
   hiddenRoles: {
     type: Array,
     default: () => []
-  },
-  // Shows "Inherited" instead of "No role" when the user has no role of their own but gets access
-  // through an instance or domain admin role.
-  inherited: {
-    type: Boolean,
-    default: false
   }
 })
 
@@ -79,14 +73,7 @@ defineExpose({ availableRoles })
     >
       <template #button-content>
         <div class="project-users-role-dropdown__content d-flex justify-content-between ">
-          <span
-            v-if="inherited && modelValue === NO_ROLE"
-            class="project-users-role-dropdown__inherited text-secondary"
-          >
-            {{ t('role.inherited') }}
-          </span>
           <display-role
-            v-else
             :value="modelValue"
           /><app-icon
             v-if="dirty"
