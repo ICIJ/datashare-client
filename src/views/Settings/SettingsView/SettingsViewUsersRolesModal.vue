@@ -16,6 +16,7 @@ import ProjectButton from '@/components/Project/ProjectButton.vue'
 import ProjectDropdownSelector from '@/components/Project/ProjectDropdownSelector/ProjectDropdownSelector.vue'
 import ProjectUsersRoleDropdown from '@/components/ProjectUsers/ProjectUsersRoleDropdown.vue'
 import SettingsViewUsersNotFound from '@/views/Settings/SettingsView/SettingsViewUsersNotFound.vue'
+import SettingsViewUsersRolesCascadeModal from '@/views/Settings/SettingsView/SettingsViewUsersRolesCascadeModal.vue'
 
 import { useAuth } from '@/composables/useAuth.js'
 import { usePolicies } from '@/composables/usePolicies.js'
@@ -98,14 +99,21 @@ const emptyLabel = computed(() =>
 
 const assignedProjects = computed(() => new Set(roles.value.map(({ project }) => project)))
 
-const availableProjects = computed(() =>
-  core.projects
+// An instance or domain admin grant already covers every project: offering a project-specific
+// grant on top would be dead data (and reappear as a surprise if the wide role is later
+// revoked), so no project entry is offered while the user holds either.
+const targetHasWideRole = computed(() => roles.value.some(({ role }) => isInstanceOrDomainRole(role)))
+
+const availableProjects = computed(() => {
+  if (targetHasWideRole.value) return []
+  return core.projects
     .filter(({ name }) => !assignedProjects.value.has(name))
     .sort((a, b) => displayLabelOf(a).localeCompare(displayLabelOf(b)))
-)
+})
 
 const canGrantInstanceRole = computed(() => isInstanceAdmin.value && !roles.value.some(({ role }) => role === ROLE.INSTANCE_ADMIN))
-const canGrantDomainRole = computed(() => isInstanceAdmin.value && !roles.value.some(({ role }) => role === ROLE.DOMAIN_ADMIN))
+// Domain admin is strictly weaker than instance admin, so it's not offered on top of it either.
+const canGrantDomainRole = computed(() => isInstanceAdmin.value && !roles.value.some(({ role }) => role === ROLE.DOMAIN_ADMIN || role === ROLE.INSTANCE_ADMIN))
 
 const instanceScopeEntry = computed(() => ({ name: INSTANCE_SCOPE, label: t('settings.users.rolesModal.scope.instance') }))
 const domainScopeEntry = computed(() => ({ name: DOMAIN_SCOPE, label: t('settings.users.rolesModal.scope.domain') }))
@@ -115,6 +123,16 @@ const projectPickerOptions = computed(() => [
   // Under OAuth a new project grant would be revoked at the next login
   ...(isAuthWithUsersProvider.value ? availableProjects.value : [])
 ])
+
+// Explains the disabled scope picker: either this user already holds a role covering every
+// project, or every project already has a grant and this viewer cannot offer instance/domain
+// scope. Not shown while merely mid-save, since that disablement is unrelated and temporary.
+const scopePickerDisabledTitle = computed(() => {
+  if (saving.value || projectPickerOptions.value.length) return null
+  return targetHasWideRole.value
+    ? t('settings.users.rolesModal.scopePickerDisabledWideRole')
+    : t('settings.users.rolesModal.scopePickerDisabledNoOptions')
+})
 
 function scopeEntry({ role }) {
   return role === ROLE.DOMAIN_ADMIN ? domainScopeEntry.value : instanceScopeEntry.value
@@ -170,6 +188,14 @@ function toastMessage(key, role, project) {
   return t(`settings.users.rolesModal.${key}${isProjectScope ? 'OnProject' : ''}`, params)
 }
 
+function revokeGrant(item) {
+  if (isInstanceOrDomainRole(item.role)) {
+    const domain = item.role === ROLE.DOMAIN_ADMIN ? item.domain : null
+    return core.api.revokeInstanceRole(props.user.uid, ROLE_LOWERCASE[item.role], domain)
+  }
+  return core.api.revokeUserRole(props.user.uid, item.project, { ifExists: true })
+}
+
 // Only project rows have a role picker (instance/domain rows show a fixed badge: they're
 // separate grants, revoke and grant again to switch). grantUserRole overwrites the existing
 // role for that user/project.
@@ -193,13 +219,7 @@ async function revokeRole(item) {
   if (!canRevoke(item)) return
   saving.value = true
   try {
-    if (isInstanceOrDomainRole(item.role)) {
-      const domain = item.role === ROLE.DOMAIN_ADMIN ? item.domain : null
-      await core.api.revokeInstanceRole(props.user.uid, ROLE_LOWERCASE[item.role], domain)
-    }
-    else {
-      await core.api.revokeUserRole(props.user.uid, item.project, { ifExists: true })
-    }
+    await revokeGrant(item)
     toast.success(toastMessage('revokeSuccess', item.role, item.project))
     emit('user:updated', { uid: props.user.uid })
   }
@@ -211,14 +231,39 @@ async function revokeRole(item) {
   }
 }
 
+// An instance or domain admin role gives access to every project of its scope: any grant the
+// user already holds becomes redundant, so granting one of these roles revokes every other grant
+// after a confirmation step (see SettingsViewUsersRolesCascadeModal).
+const showCascadeModal = ref(false)
+const cascadeGrants = ref([])
+
 async function grantRole() {
   if (!canGrant.value) return
+  if ((isInstanceScope.value || isDomainScope.value) && roles.value.length) {
+    cascadeGrants.value = roles.value
+    showCascadeModal.value = true
+    return
+  }
+  await performGrant()
+}
+
+function onCascadeConfirm() {
+  return performGrant()
+}
+
+async function performGrant() {
   saving.value = true
   try {
     if (isInstanceScope.value || isDomainScope.value) {
       // The domain only matters for DOMAIN_ADMIN; the backend ignores it for INSTANCE_ADMIN.
       const domain = selectedRole.value === ROLE.DOMAIN_ADMIN ? DEFAULT_DOMAIN : null
       await core.api.grantInstanceRole(props.user.uid, ROLE_LOWERCASE[selectedRole.value], domain)
+      if (cascadeGrants.value.length) {
+        const results = await Promise.allSettled(cascadeGrants.value.map(revokeGrant))
+        if (results.some(result => result.status === 'rejected')) {
+          toast.error(t('settings.users.rolesModal.cascadeModal.cleanupError'))
+        }
+      }
     }
     else {
       await core.api.grantUserRole(props.user.uid, selectedProjectName.value, ROLE_LOWERCASE[selectedRole.value])
@@ -232,6 +277,7 @@ async function grantRole() {
   }
   finally {
     saving.value = false
+    cascadeGrants.value = []
   }
 }
 
@@ -243,6 +289,7 @@ defineExpose({
   projectPickerOptions,
   canGrantInstanceRole,
   canGrantDomainRole,
+  scopePickerDisabledTitle,
   canRevoke,
   isInstanceScope,
   isDomainScope,
@@ -251,6 +298,9 @@ defineExpose({
   selectedRole,
   selectedProjectName,
   canGrant,
+  showCascadeModal,
+  cascadeGrants,
+  onCascadeConfirm,
   revokeRole,
   grantRole,
   changeRole
@@ -309,14 +359,25 @@ defineExpose({
       <template #top-row>
         <page-table-tr style="--bs-table-bg-state: var(--bs-action-bg-subtle)">
           <td ref="scopeCell">
-            <project-dropdown-selector
-              v-model="selectedProject"
-              class="settings-view-users-roles-modal__scope-select"
-              :teleport-to="scopePickerTeleportTo"
-              :projects="projectPickerOptions"
-              :disabled="saving || !projectPickerOptions.length"
-              :placeholder="t('settings.users.rolesModal.selectScope')"
-            />
+            <!-- A disabled native control never fires mouse events, so a tooltip targeting it
+                 directly never shows; wrapping it in a span with a native `title` sidesteps that
+                 (see SearchBreadcrumbFormFooter.vue for the same pattern). The title is also set
+                 on the control itself for keyboard/screen-reader focus, which never reaches the
+                 wrapper. -->
+            <span
+              class="d-inline-block"
+              :title="scopePickerDisabledTitle"
+            >
+              <project-dropdown-selector
+                v-model="selectedProject"
+                class="settings-view-users-roles-modal__scope-select"
+                :teleport-to="scopePickerTeleportTo"
+                :projects="projectPickerOptions"
+                :disabled="saving || !projectPickerOptions.length"
+                :title="scopePickerDisabledTitle"
+                :placeholder="t('settings.users.rolesModal.selectScope')"
+              />
+            </span>
           </td>
           <td>
             <project-users-role-dropdown
@@ -381,6 +442,12 @@ defineExpose({
       </template>
     </page-table-generic>
   </app-modal>
+
+  <settings-view-users-roles-cascade-modal
+    v-model="showCascadeModal"
+    :grants="cascadeGrants"
+    @confirm="onCascadeConfirm"
+  />
 </template>
 
 <style scoped lang="scss">
