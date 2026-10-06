@@ -15,6 +15,11 @@ vi.mock('@/composables/useToast', () => ({
   useToast: () => ({ toast: mockToast })
 }))
 
+const mockConfirm = vi.fn().mockResolvedValue(true)
+vi.mock('@/composables/useConfirmModal', () => ({
+  useConfirmModal: () => ({ confirm: mockConfirm })
+}))
+
 const mockApi = {
   grantUserRole: vi.fn(),
   revokeUserRole: vi.fn(),
@@ -192,6 +197,43 @@ describe('SettingsViewUsersRolesModal.vue', () => {
         uid: 'alice@example.org'
       })
     )
+  })
+
+  it('revokes a plain project role without asking for confirmation', async () => {
+    const wrapper = await mountResolved()
+    await wrapper.vm.revokeRole({ project: 'project-a', role: 'PROJECT_MEMBER', domain: 'default' })
+    expect(mockConfirm).not.toHaveBeenCalled()
+  })
+
+  describe('revoking an instance or domain admin role', () => {
+    const wideRoleUser = {
+      uid: 'alice@example.org',
+      permissions: [{ v1: 'INSTANCE_ADMIN', v2: '*::*' }]
+    }
+
+    beforeEach(() => {
+      core.config.set('policies', [{ projectId: '*', domainId: '*', role: 'INSTANCE_ADMIN' }])
+    })
+
+    it('asks for confirmation before revoking, naming the role and the user', async () => {
+      const wrapper = await mountResolved({ user: wideRoleUser })
+      await wrapper.vm.revokeRole({ project: '*', role: 'INSTANCE_ADMIN', domain: '*' })
+      expect(mockConfirm).toHaveBeenCalledWith({
+        description: core.i18n.global.t('settings.users.rolesModal.revokeWideRoleConfirm', {
+          role: 'Instance admin',
+          uid: 'alice@example.org'
+        })
+      })
+      expect(mockApi.revokeInstanceRole).toHaveBeenCalled()
+    })
+
+    it('does not revoke when the confirmation is declined', async () => {
+      mockConfirm.mockResolvedValueOnce(false)
+      const wrapper = await mountResolved({ user: wideRoleUser })
+      await wrapper.vm.revokeRole({ project: '*', role: 'INSTANCE_ADMIN', domain: '*' })
+      expect(mockApi.revokeInstanceRole).not.toHaveBeenCalled()
+      expect(wrapper.emitted('user:updated')).toBeFalsy()
+    })
   })
 
   // The granted-roles table reads props.user, which the parent refreshes on user:updated. It used
@@ -783,6 +825,25 @@ describe('SettingsViewUsersRolesModal.vue', () => {
       wrapper.vm.selectedProject = { name: 'project-c' }
       await wrapper.setProps({ user: { ...user, permissions: [...user.permissions] } })
       expect(wrapper.vm.selectedProject).toEqual({ name: 'project-c' })
+    })
+  })
+
+  describe('opening the modal', () => {
+    // A role changed elsewhere (another admin tab, the CLI) while the modal happened to be open
+    // would otherwise sit stale until this modal itself grants/revokes something.
+    it('asks the parent to refresh the user data every time the modal opens', async () => {
+      const wrapper = shallowMount(SettingsViewUsersRolesModal, {
+        global,
+        props: { modelValue: false, user }
+      })
+      await wrapper.setProps({ modelValue: true })
+      expect(wrapper.emitted('user:updated')).toEqual([[{ uid: 'alice@example.org' }]])
+    })
+
+    it('does not emit user:updated while already open or while closing', async () => {
+      const wrapper = await mountResolved()
+      await wrapper.setProps({ modelValue: false })
+      expect(wrapper.emitted('user:updated')).toBeFalsy()
     })
   })
 
