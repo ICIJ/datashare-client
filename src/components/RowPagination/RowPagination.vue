@@ -45,6 +45,7 @@ const hasFewerRows = computed(() => props.totalRows <= page.value * +props.perPa
     :per-page="+perPage"
     :compact="compact"
     class="row-pagination"
+    :class="{ 'row-pagination--empty': !totalRows }"
   >
     <template #number-of-rows="{ lastRangeRow: to }">
       <i18n-t
@@ -85,6 +86,13 @@ const hasFewerRows = computed(() => props.totalRows <= page.value * +props.perPa
 .row-pagination {
   &:deep(.tiny-pagination__nav .app-icon) {
     font-size: 1.25em;
+  }
+
+  // With zero rows, the (disabled) row-number input still shows a literal "0" next to the
+  // "of 0 ..." label, reading as "0 of 0 users" - hide the now-meaningless input, keeping just
+  // the label.
+  &--empty:deep(.tiny-pagination__form__input--row) {
+    display: none;
   }
 }
 </style>
