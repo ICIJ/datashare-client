@@ -126,4 +126,20 @@ describe('ProjectDropdownSelector.vue', function () {
       expect(input.attributes('disabled')).toBeUndefined()
     })
   })
+
+  // A `title` attribute bound on this component would only reach b-dropdown's outer wrapper
+  // (it sets inheritAttrs: false and spreads attrs there), never the focusable toggle button a
+  // keyboard or screen-reader user actually lands on. The `title` prop goes through b-dropdown's
+  // own `toggle-attrs`, which it applies directly to the button.
+  it('applies the title prop directly to the toggle button, not just a wrapper', () => {
+    const props = { modelValue: [], projects, teleportDisabled: true, title: 'explains why disabled' }
+    const wrapper = mount(ProjectDropdownSelector, { props, global: { plugins } })
+    expect(wrapper.find('.dropdown-toggle').attributes('title')).toBe('explains why disabled')
+  })
+
+  it('does not set a title on the toggle button when none is given', () => {
+    const props = { modelValue: [], projects, teleportDisabled: true }
+    const wrapper = mount(ProjectDropdownSelector, { props, global: { plugins } })
+    expect(wrapper.find('.dropdown-toggle').attributes('title')).toBeUndefined()
+  })
 })

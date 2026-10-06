@@ -81,6 +81,16 @@ const props = defineProps({
     type: Boolean
   },
   /**
+   * Extra attributes (e.g. title, aria-label) applied directly to the toggle button. A `title`
+   * bound on this component itself would only reach b-dropdown's outer wrapper (it sets
+   * inheritAttrs: false and spreads attrs there, not on the button), never the focusable toggle -
+   * this is the one prop b-dropdown actually forwards to the button itself.
+   */
+  toggleAttrs: {
+    type: Object,
+    default: () => ({})
+  },
+  /**
    * Hide the caret in the toggler.
    */
   noCaret: {
@@ -290,6 +300,7 @@ defineExpose({ hide, focus })
     class="dropdown-selector"
     :disabled="disabled"
     :placement="placement"
+    :toggle-attrs="toggleAttrs"
     no-caret
     menu-class="dropdown-selector__menu"
     toggle-class="d-inline-flex align-items-center p-2 text-body"
