@@ -80,7 +80,7 @@ describe('SettingsViewUsersDeleteModal.vue', () => {
 
   it('bolds the key verb of each consequence, and says tasks are kept', () => {
     const wrapper = shallowMount(SettingsViewUsersDeleteModal, {
-      global: { ...global, renderStubDefaultSlot: true },
+      global: { ...global, renderStubDefaultSlot: true, stubs: { 'i18n-t': false } },
       props: { user, modelValue: true }
     })
     const verbs = wrapper.findAll('li strong').map(el => el.text())
