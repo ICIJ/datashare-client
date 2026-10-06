@@ -40,6 +40,11 @@ const { t } = useI18n()
 const name = ref('')
 const email = ref('')
 const resetPassword = ref(false)
+// Native checkValidity() already blocks the save on a malformed email (type="email"), but that
+// only surfaces as a browser tooltip - nothing in the page itself says why. This mirrors it
+// visibly, same pattern as the password-mismatch message below.
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const emailInvalid = computed(() => email.value.trim().length > 0 && !EMAIL_PATTERN.test(email.value.trim()))
 const { password, confirmPassword, passwordMismatch, isPasswordValid, clearPasswords } = usePasswordConfirm()
 const saving = ref(false)
 
@@ -105,6 +110,7 @@ defineExpose({
   confirmPassword,
   isValid,
   hasChanges,
+  emailInvalid,
   saveUser,
   form
 })
@@ -190,10 +196,17 @@ defineExpose({
           v-model="email"
           :placeholder="t('settings.users.edit.fields.email.placeholder')"
           :disabled="saving"
+          :state="emailInvalid ? false : null"
           aria-required="true"
           type="email"
           name="email"
         />
+        <small
+          v-if="emailInvalid"
+          class="text-danger"
+        >
+          {{ t('settings.users.edit.fields.email.invalid') }}
+        </small>
       </form-fieldset-i18n>
 
       <b-form-checkbox
