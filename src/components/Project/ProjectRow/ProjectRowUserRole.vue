@@ -19,7 +19,6 @@ const userRole = computed(() => getRoleByProject(props.project.name))
       <display-role
         :value="userRole"
         :project="project"
-        no-icon
       />
     </slot>
   </td>
