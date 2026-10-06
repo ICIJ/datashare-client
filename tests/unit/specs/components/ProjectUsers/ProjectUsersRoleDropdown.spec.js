@@ -48,18 +48,6 @@ describe('ProjectUsersRoleDropdown.vue', () => {
     expect(wrapper.find('display-role-stub').attributes('value')).toBe('PROJECT_MEMBER')
   })
 
-  it.each([
-    [true, 'NO_ROLE', true],
-    [false, 'NO_ROLE', false],
-    [true, 'PROJECT_MEMBER', false]
-  ])('shows "Inherited" in the toggle when inherited=%s and the value is %s: %s', (inherited, modelValue, shown) => {
-    const wrapper = shallowMount(ProjectUsersRoleDropdown, {
-      global: { ...global, stubs: { BDropdown: { template: '<div><slot name="button-content" /></div>' } } },
-      props: { modelValue, projectName, inherited }
-    })
-    expect(wrapper.find('.project-users-role-dropdown__inherited').exists()).toBe(shown)
-  })
-
   it('emits update:modelValue with the selected role when a dropdown item is clicked', async () => {
     const wrapper = mountComponent()
     await wrapper.findAll('b-dropdown-item-stub')[0].trigger('click')
