@@ -149,6 +149,27 @@ describe('SettingsViewUsersRolesModal.vue', () => {
     expect(wrapper.findComponent(ProjectDropdownSelector).props('disabled')).toBe(true)
   })
 
+  it('explains in a tooltip why the scope picker is disabled when every project is already granted', () => {
+    const wrapper = mountComponent({
+      user: {
+        uid: 'alice@example.org',
+        permissions: [
+          { v1: 'PROJECT_MEMBER', v2: 'default::project-a' },
+          { v1: 'PROJECT_MEMBER', v2: 'default::project-b' },
+          { v1: 'PROJECT_MEMBER', v2: 'default::project-c' }
+        ]
+      }
+    })
+    expect(wrapper.vm.scopePickerDisabledTitle).toBe(
+      core.i18n.global.t('settings.users.rolesModal.scopePickerDisabledNoOptions')
+    )
+  })
+
+  it('does not explain the scope picker while it is merely enabled', () => {
+    const wrapper = mountComponent()
+    expect(wrapper.vm.scopePickerDisabledTitle).toBe(null)
+  })
+
   it('revokes a role and emits user:updated', async () => {
     const wrapper = await mountResolved()
     await wrapper.vm.revokeRole({ project: 'project-a', role: 'PROJECT_MEMBER', domain: 'default' })
@@ -451,6 +472,19 @@ describe('SettingsViewUsersRolesModal.vue', () => {
       expect(wrapper.vm.canGrantInstanceRole).toBe(false)
     })
 
+    it('offers nothing at all once the user already holds instance admin, since it covers everything', () => {
+      const wrapper = mountComponent({
+        user: {
+          uid: 'alice@example.org',
+          permissions: [{ v1: 'INSTANCE_ADMIN', v2: '*::*' }]
+        }
+      })
+      expect(wrapper.vm.projectPickerOptions).toEqual([])
+      expect(wrapper.vm.scopePickerDisabledTitle).toBe(
+        core.i18n.global.t('settings.users.rolesModal.scopePickerDisabledWideRole')
+      )
+    })
+
     it('does not offer the instance scope to a non instance admin', () => {
       core.config.set('policies', [{ projectId: 'project-a', domainId: 'default', role: 'PROJECT_ADMIN' }])
       const wrapper = mountComponent()
@@ -473,7 +507,7 @@ describe('SettingsViewUsersRolesModal.vue', () => {
     })
 
     it('grants an instance-wide role via grantInstanceRole, not the project-scoped endpoint', async () => {
-      const wrapper = await mountResolved()
+      const wrapper = await mountResolved({ user: { uid: 'alice@example.org', permissions: [] } })
       wrapper.vm.selectedProject = { name: '*' }
       await wrapper.vm.$nextTick()
       wrapper.vm.selectedRole = 'INSTANCE_ADMIN'
@@ -523,6 +557,26 @@ describe('SettingsViewUsersRolesModal.vue', () => {
       expect(wrapper.vm.canGrantDomainRole).toBe(false)
     })
 
+    it('does not offer domain scope once the user already holds instance admin, since it is strictly weaker', () => {
+      const wrapper = mountComponent({
+        user: {
+          uid: 'alice@example.org',
+          permissions: [{ v1: 'INSTANCE_ADMIN', v2: '*::*' }]
+        }
+      })
+      expect(wrapper.vm.canGrantDomainRole).toBe(false)
+    })
+
+    it('does not offer a project grant once the user already holds domain admin', () => {
+      const wrapper = mountComponent({
+        user: {
+          uid: 'alice@example.org',
+          permissions: [{ v1: 'DOMAIN_ADMIN', v2: 'default::*' }]
+        }
+      })
+      expect(wrapper.vm.availableProjects).toEqual([])
+    })
+
     it('still offers the instance scope once only domain admin is granted, since they are separate grants', () => {
       const wrapper = mountComponent({
         user: {
@@ -563,13 +617,76 @@ describe('SettingsViewUsersRolesModal.vue', () => {
     })
 
     it('grants a domain admin role with the default domain via grantInstanceRole, not the project-scoped endpoint', async () => {
-      const wrapper = await mountResolved()
+      const wrapper = await mountResolved({ user: { uid: 'alice@example.org', permissions: [] } })
       wrapper.vm.selectedProject = { name: '**' }
       await wrapper.vm.$nextTick()
       wrapper.vm.selectedRole = 'DOMAIN_ADMIN'
       await wrapper.vm.grantRole()
       expect(mockApi.grantInstanceRole).toHaveBeenCalledWith('alice@example.org', 'domain_admin', 'default')
       expect(mockApi.grantUserRole).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('cascade: replacing existing grants on an instance-wide grant', () => {
+    beforeEach(() => {
+      core.config.set('policies', [{ projectId: '*', domainId: '*', role: 'INSTANCE_ADMIN' }])
+    })
+
+    async function selectInstanceScope(wrapper) {
+      wrapper.vm.selectedProject = { name: '*' }
+      await wrapper.vm.$nextTick()
+      wrapper.vm.selectedRole = 'INSTANCE_ADMIN'
+    }
+
+    it('shows a confirmation modal listing the existing grants instead of granting immediately', async () => {
+      const wrapper = await mountResolved()
+      await selectInstanceScope(wrapper)
+      await wrapper.vm.grantRole()
+      expect(mockApi.grantInstanceRole).not.toHaveBeenCalled()
+      expect(wrapper.vm.showCascadeModal).toBe(true)
+      expect(wrapper.vm.cascadeGrants).toMatchObject([
+        { project: 'project-b', role: 'PROJECT_ADMIN' },
+        { project: 'project-a', role: 'PROJECT_MEMBER' }
+      ])
+    })
+
+    it('grants the role and revokes every existing grant on confirm', async () => {
+      const wrapper = await mountResolved()
+      await selectInstanceScope(wrapper)
+      await wrapper.vm.grantRole()
+      await wrapper.vm.onCascadeConfirm()
+      expect(mockApi.grantInstanceRole).toHaveBeenCalledWith('alice@example.org', 'instance_admin', null)
+      expect(mockApi.revokeUserRole).toHaveBeenCalledWith('alice@example.org', 'project-a', { ifExists: true })
+      expect(mockApi.revokeUserRole).toHaveBeenCalledWith('alice@example.org', 'project-b', { ifExists: true })
+      expect(wrapper.emitted('user:updated')).toBeTruthy()
+    })
+
+    it('grants nothing while waiting for confirmation', async () => {
+      const wrapper = await mountResolved()
+      await selectInstanceScope(wrapper)
+      await wrapper.vm.grantRole()
+      expect(mockApi.grantInstanceRole).not.toHaveBeenCalled()
+      expect(mockApi.revokeUserRole).not.toHaveBeenCalled()
+    })
+
+    it('shows a cleanup error toast when a revoke fails, without losing the grant success toast', async () => {
+      mockApi.revokeUserRole.mockRejectedValueOnce(new Error('nope'))
+      const wrapper = await mountResolved()
+      await selectInstanceScope(wrapper)
+      await wrapper.vm.grantRole()
+      await wrapper.vm.onCascadeConfirm()
+      expect(mockToast.success).toHaveBeenCalledWith(
+        core.i18n.global.t('settings.users.rolesModal.grantSuccess', { role: 'Instance admin', uid: 'alice@example.org' })
+      )
+      expect(mockToast.error).toHaveBeenCalledWith(core.i18n.global.t('settings.users.rolesModal.cascadeModal.cleanupError'))
+    })
+
+    it('skips the confirmation modal when the user has no existing grants', async () => {
+      const wrapper = await mountResolved({ user: { uid: 'alice@example.org', permissions: [] } })
+      await selectInstanceScope(wrapper)
+      await wrapper.vm.grantRole()
+      expect(mockApi.grantInstanceRole).toHaveBeenCalledWith('alice@example.org', 'instance_admin', null)
+      expect(wrapper.vm.showCascadeModal).toBe(false)
     })
   })
 
