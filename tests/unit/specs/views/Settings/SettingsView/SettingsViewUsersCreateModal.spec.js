@@ -1,4 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
+import { BFormInput } from 'bootstrap-vue-next'
 
 import CoreSetup from '~tests/unit/CoreSetup.js'
 import SettingsViewUsersCreateModal from '@/views/Settings/SettingsView/SettingsViewUsersCreateModal.vue'
@@ -100,6 +101,29 @@ describe('SettingsViewUsersCreateModal.vue', () => {
     expect(wrapper.emitted('update:modelValue')).toBeFalsy()
     expect(mockToast.success).not.toHaveBeenCalled()
     expect(mockToast.error).toHaveBeenCalledWith('This username is already taken.')
+  })
+
+  it('flags the username field inline on a 409 conflict, not just a toast', async () => {
+    mockApi.createUser.mockRejectedValue({ response: { status: 409 } })
+    const wrapper = mountComponent()
+    stubFormValidity(wrapper, true)
+    fillRequiredFields(wrapper)
+    await wrapper.vm.saveUser()
+    expect(wrapper.vm.usernameConflict).toBe(true)
+    expect(wrapper.findComponent(BFormInput).props('state')).toBe(false)
+    expect(wrapper.text()).toContain('This username is already taken.')
+  })
+
+  it('clears the inline username conflict once the username is edited again', async () => {
+    mockApi.createUser.mockRejectedValue({ response: { status: 409 } })
+    const wrapper = mountComponent()
+    stubFormValidity(wrapper, true)
+    fillRequiredFields(wrapper)
+    await wrapper.vm.saveUser()
+    expect(wrapper.vm.usernameConflict).toBe(true)
+    wrapper.vm.username = 'someone-else'
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.usernameConflict).toBe(false)
   })
 
   it('shows the generic error toast when createUser fails with a non-conflict error', async () => {
