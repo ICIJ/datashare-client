@@ -1755,9 +1755,12 @@
         "title": "Delete user {name}?",
         "body": {
           "intro": "This action cannot be undone. Deleting this account will:",
-          "rolesRevoked": "<strong>remove</strong> all of their role grants (project, domain and instance);",
-          "dataDeleted": "<strong>delete</strong> all their personal data (stars, history, tags, saved searches etc.) across all projects;",
-          "tasksKept": "<strong>keep</strong> their tasks and task results."
+          "rolesRevoked": "{verb} all of their role grants (project, domain and instance);",
+          "rolesRevokedVerb": "remove",
+          "dataDeleted": "{verb} all their personal data (stars, history, tags, saved searches etc.) across all projects;",
+          "dataDeletedVerb": "delete",
+          "tasksKept": "{verb} their tasks and task results.",
+          "tasksKeptVerb": "keep"
         },
         "confirm": "Delete user",
         "success": "User deleted successfully",

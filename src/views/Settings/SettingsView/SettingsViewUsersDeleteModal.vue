@@ -81,9 +81,30 @@ defineExpose({ confirmDeletion })
       {{ t('settings.users.deleteModal.body.intro') }}
     </p>
     <ul v-if="!notFound">
-      <li v-html="t('settings.users.deleteModal.body.rolesRevoked')" />
-      <li v-html="t('settings.users.deleteModal.body.dataDeleted')" />
-      <li v-html="t('settings.users.deleteModal.body.tasksKept')" />
+      <i18n-t
+        keypath="settings.users.deleteModal.body.rolesRevoked"
+        tag="li"
+      >
+        <template #verb>
+          <strong>{{ t('settings.users.deleteModal.body.rolesRevokedVerb') }}</strong>
+        </template>
+      </i18n-t>
+      <i18n-t
+        keypath="settings.users.deleteModal.body.dataDeleted"
+        tag="li"
+      >
+        <template #verb>
+          <strong>{{ t('settings.users.deleteModal.body.dataDeletedVerb') }}</strong>
+        </template>
+      </i18n-t>
+      <i18n-t
+        keypath="settings.users.deleteModal.body.tasksKept"
+        tag="li"
+      >
+        <template #verb>
+          <strong>{{ t('settings.users.deleteModal.body.tasksKeptVerb') }}</strong>
+        </template>
+      </i18n-t>
     </ul>
   </app-modal>
 </template>
