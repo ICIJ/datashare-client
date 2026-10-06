@@ -172,6 +172,8 @@
     "download": "下载",
     "downloadWithoutMetadata": "下载（不包含元数据）",
     "downloadExtractText": "下载文本",
+    "downloadMarkdown": "Download markdown",
+    "downloadMarkdownError": "The markdown could not be downloaded.",
     "downloadTranslatedText": "Download text translation",
     "downloadRoot": "下载根目录",
     "sectionTitle": "文档的标题是什么？",
@@ -219,6 +221,10 @@
     "expand": "展开",
     "contextualize": "情境化",
     "exclude": "排除"
+  },
+  "filtersPanelSectionFilterEntry": {
+    "lock": "Lock this filter value",
+    "unlock": "Unlock this filter value"
   },
   "filtersPanelSectionFilterTitleToggler": {
     "toggle": "切换筛选"
@@ -289,7 +295,8 @@
     "project_editor": "Editor",
     "project_member": "Member",
     "project_visitor": "Visitor",
-    "no_role": "No role"
+    "no_role": "No role",
+    "inherited": "Inherited"
   },
   "searchFormControl": {
     "submitLabel": "搜索"
@@ -439,7 +446,19 @@
     }
   },
   "documentContent": {
-    "noContent": "No content extracted for this document"
+    "noContent": "No content extracted for this document",
+    "view": {
+      "markdown": "Formatted",
+      "text": "Plain text",
+      "translationTooltip": "Translations are only available as plain text",
+      "oversizedTooltip": "The formatted view of this document is very large and may be slow to display",
+      "ariaLabel": "Text rendering"
+    }
+  },
+  "documentContentMarkdown": {
+    "error": "The formatted view of this page could not be loaded.",
+    "retry": "Try again",
+    "fallback": "View as plain text"
   },
   "documentViewerImage": {
     "rotateCounterClockwise": "Rotate 90° to the left",
@@ -771,6 +790,7 @@
     "starred": "Documents have been starred.",
     "unstarred": "Documents have been unstarred.",
     "notAvailable": "Preview is not available for this document.",
+    "tooLargeToPreview": "This document is too large to preview.",
     "namedEntitiesNotFound": "No named entities found",
     "namedEntitiesNotSearched": "<p>Document not analyzed. To search named entities, go to <a class=\"fw-bold\" href=\"{indexingLink}\">@:{'menu.analyse'}</a> and start a new task \"@:{'indexing.findNamedEntities'}\".</p>",
     "namedEntitiesNotSearchedLink": "start a new task",
@@ -859,6 +879,10 @@
   },
   "formControlPath": {
     "browse": "Browse"
+  },
+  "formInputPassword": {
+    "show": "Show password",
+    "hide": "Hide password"
   },
   "formControlSearch": {
     "placeholder": "Search..."
@@ -1212,6 +1236,7 @@
         },
         "submit": "Create",
         "submitError": "Something went wrong, unable to run the batch search.",
+        "readError": "Unable to read the queries file. Select it again and retry.",
         "submitSuccess": "Batch search created successfully.",
         "editError": "Something went wrong, unable to update the batch search.",
         "editSuccess": "Batch search updated successfully."
@@ -1317,7 +1342,8 @@
     "stop": "Stop",
     "delete": "Delete",
     "edit": "Edit",
-    "search": "Search"
+    "search": "Search",
+    "manageRoles": "Manage roles"
   },
   "textTruncate": {
     "seeLess": "See less",
@@ -1465,6 +1491,7 @@
     },
     "users": {
       "empty": "No users yet.",
+      "listUnsupported": "The users provider configured on this server can't list accounts, so they can't be shown here.",
       "fetchError": "Failed to load users for this project.",
       "noResults": "No users match your search.",
       "fields": {
@@ -1495,56 +1522,7 @@
         "cancel": "Cancel"
       },
       "actions": {
-        "copy": "Copy username",
-        "delete": "Delete user",
-        "deleteModal": {
-          "title": "Delete user '{name}' ?",
-          "body": {
-            "intro": "This action cannot be undone. Deleting this user will:",
-            "accessRevoked": "revoke their access to {allProjects};",
-            "dataDeleted": "delete all their personal data (stars, history, tags, saved searches etc.) across {allProjects};",
-            "tasksDeleted": "not delete their tasks and results.",
-            "allProjects": "all projects"
-          },
-          "confirm": "Delete user",
-          "success": "User deleted successfully",
-          "error": "Failed to remove user. Please try again."
-        }
-      },
-      "create": {
-        "button": "Create user",
-        "title": "Create a user",
-        "confirm": "Create",
-        "saveSuccess": "User created successfully.",
-        "saveError": "Failed to create user. Please try again.",
-        "saveErrorConflict": "A user with this username already exists.",
-        "fields": {
-          "username": {
-            "label": "Username",
-            "placeholder": "Type username"
-          },
-          "email": {
-            "label": "Email",
-            "placeholder": "Type email address"
-          },
-          "name": {
-            "label": "Display name",
-            "placeholder": "Type display name"
-          },
-          "password": {
-            "label": "Password",
-            "placeholder": "Type password"
-          },
-          "confirmPassword": {
-            "label": "Confirm password",
-            "placeholder": "Confirm password",
-            "mismatch": "Passwords do not match."
-          },
-          "role": {
-            "label": "Role",
-            "inProject": "in {project}"
-          }
-        }
+        "copy": "Copy username"
       }
     }
   },
@@ -1685,6 +1663,130 @@
           "button": "Delete",
           "description": "Any applications or scripts using this key will no longer be able to access the Datashare API. You cannot undo this action."
         }
+      }
+    },
+    "users": {
+      "title": "Users",
+      "noAccess": "You do not have access to this page.",
+      "empty": "No users yet.",
+      "noResults": "No users match your search.",
+      "listUnsupported": "The users provider configured on this server can't list accounts, so they can't be shown here.",
+      "searchPlaceholder": "Search users",
+      "fetchError": "Failed to load users.",
+      "add": {
+        "button": "Create user"
+      },
+      "fields": {
+        "uid": {
+          "label": "Username"
+        },
+        "name": {
+          "label": "Name"
+        },
+        "email": {
+          "label": "Email"
+        },
+        "role": {
+          "label": "Roles"
+        }
+      },
+      "roleBadges": {
+        "more": "0 more | +1 more | +{count} more"
+      },
+      "create": {
+        "title": "Create user",
+        "confirm": "Create and manage roles",
+        "saveSuccess": "User created",
+        "saveError": "Failed to create user.",
+        "saveErrorConflict": "This username is already taken.",
+        "fields": {
+          "username": {
+            "label": "Username",
+            "placeholder": "Username"
+          },
+          "email": {
+            "label": "Email",
+            "placeholder": "Email"
+          },
+          "name": {
+            "label": "Name",
+            "placeholder": "Name"
+          },
+          "password": {
+            "label": "Password",
+            "placeholder": "Password"
+          },
+          "confirmPassword": {
+            "label": "Confirm password",
+            "placeholder": "Confirm password",
+            "mismatch": "Passwords do not match."
+          }
+        }
+      },
+      "edit": {
+        "title": "Edit {uid}",
+        "confirm": "Save changes",
+        "saveSuccess": "User updated",
+        "saveError": "Failed to update user.",
+        "resetPassword": "Reset password",
+        "fields": {
+          "username": {
+            "label": "Username"
+          },
+          "name": {
+            "label": "Name",
+            "placeholder": "Name"
+          },
+          "email": {
+            "label": "Email",
+            "placeholder": "Email"
+          },
+          "password": {
+            "label": "Password",
+            "placeholder": "Password"
+          },
+          "confirmPassword": {
+            "label": "Confirm password",
+            "placeholder": "Confirm password",
+            "mismatch": "Passwords do not match."
+          }
+        }
+      },
+      "deleteModal": {
+        "title": "Delete user {name}?",
+        "body": {
+          "intro": "This action cannot be undone. Deleting this account will:",
+          "rolesRevoked": "<strong>remove</strong> all of their role grants (project, domain and instance);",
+          "dataDeleted": "<strong>delete</strong> all their personal data (stars, history, tags, saved searches etc.) across all projects;",
+          "tasksKept": "<strong>keep</strong> their tasks and task results."
+        },
+        "confirm": "Delete user",
+        "success": "User deleted successfully",
+        "error": "Failed to remove user. Please try again."
+      },
+      "notFound": "User {uid} does not exist.",
+      "rolesModal": {
+        "title": "Manage roles for {uid}",
+        "close": "Close",
+        "empty": "This user has no project role grants yet.",
+        "searchPlaceholder": "Search scopes",
+        "noResults": "No project or role matches your search.",
+        "selectScope": "Select scope",
+        "scopeColumn": "Scope",
+        "roleColumn": "Role",
+        "scope": {
+          "instance": "Instance",
+          "domain": "Domain"
+        },
+        "grant": "Grant",
+        "revokeSuccess": "Revoked {role} from {uid}",
+        "revokeError": "Failed to revoke {role} from {uid}.",
+        "grantSuccess": "Granted {role} to {uid}",
+        "grantError": "Failed to grant {role} to {uid}.",
+        "revokeSuccessOnProject": "Revoked {role} on {project} from {uid}",
+        "revokeErrorOnProject": "Failed to revoke {role} on {project} from {uid}.",
+        "grantSuccessOnProject": "Granted {role} on {project} to {uid}",
+        "grantErrorOnProject": "Failed to grant {role} on {project} to {uid}."
       }
     },
     "snapshots": {
@@ -1980,6 +2082,9 @@
   "projectDropdownSelectorAll": {
     "label": "All projects"
   },
+  "projectDropdownSelectorButtonContent": {
+    "placeholder": "Select a project"
+  },
   "pathViewEntryMore": {
     "label": "No more directories | Show 1 more directory | Show {nextPageSize} of {directoriesLeft} more directories"
   },
@@ -1999,6 +2104,10 @@
   "searchBreadcrumbFormEmpty": {
     "label": "Your search has not started. Use the search bar or add filters."
   },
+  "searchBreadcrumbFormEntry": {
+    "lock": "Lock this filter value",
+    "unlock": "Unlock this filter value"
+  },
   "searchBreadcrumbFormEntryOccurrences": {
     "label": "0 documents | 1 document | {occurrences} documents",
     "title": "No less documents with this filter | 1 less document with this filter | {lessOccurrences} less documents with this filter"
@@ -2007,6 +2116,12 @@
     "clearFilters": "Clear filters",
     "clearQuery": "Clear query",
     "clearFiltersAndQuery": "Clear  filters and query",
+    "unlockFilters": "Unlock filters",
+    "applyLockedFilters": "Apply locked filters",
+    "applyLockedFiltersDisabled": "All locked filters are already applied",
+    "applyLockedFiltersNoLocks": "No locks to apply",
+    "applyLockedFiltersSuccess": "Locked filters successfully applied",
+    "applyLockedFiltersError": "Locked filters couldn't be applied",
     "saveSearch": "Save search",
     "createAlert": "Create alert"
   },
