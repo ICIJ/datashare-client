@@ -1796,10 +1796,9 @@
         "grantErrorOnProject": "Failed to grant {role} on {project} to {uid}.",
         "cascadeModal": {
           "title": "Replace existing grants?",
-          "body": "This role already covers every project, so these existing grants will be revoked:",
+          "body": "This role already covers every project, so these existing grants will be revoked. They will not come back if this role is revoked later:",
           "confirm": "Grant and revoke the rest",
-          "cancel": "Cancel",
-          "cleanupError": "The role was granted, but some of the previous grants could not be revoked."
+          "cancel": "Cancel"
         }
       }
     },

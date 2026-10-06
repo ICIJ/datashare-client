@@ -261,8 +261,9 @@ async function revokeRole(item) {
 }
 
 // An instance or domain admin role gives access to every project of its scope: any grant the
-// user already holds becomes redundant, so granting one of these roles revokes every other grant
-// after a confirmation step (see SettingsViewUsersRolesCascadeModal).
+// user already holds becomes redundant, so granting one of these roles replaces every other grant
+// after a confirmation step (see SettingsViewUsersRolesCascadeModal). The backend deletes the
+// replaced grants itself on a wide grant: project grants, and domain admin under instance admin.
 // TODO #DOMAIN: once multiple domains exist, a domain-admin grant should only cascade-revoke
 // grants within that domain, not every grant regardless of domain; harmless today since only one
 // domain exists.
@@ -290,16 +291,6 @@ async function performGrant() {
       // The domain only matters for DOMAIN_ADMIN; the backend ignores it for INSTANCE_ADMIN.
       const domain = selectedRole.value === ROLE.DOMAIN_ADMIN ? DEFAULT_DOMAIN : null
       await core.api.grantInstanceRole(props.user.uid, ROLE_LOWERCASE[selectedRole.value], domain)
-      // The cascade-revoke below is this component's own invariant, not enforced by the
-      // grantInstanceRole endpoint itself: any other caller (a script, another admin screen)
-      // granting a wide role would leave stale project grants behind. Moving this server-side
-      // would need backend work beyond this component.
-      if (cascadeGrants.value.length) {
-        const results = await Promise.allSettled(cascadeGrants.value.map(revokeGrant))
-        if (results.some(result => result.status === 'rejected')) {
-          toast.error(t('settings.users.rolesModal.cascadeModal.cleanupError'))
-        }
-      }
     }
     else {
       await core.api.grantUserRole(props.user.uid, selectedProjectName.value, ROLE_LOWERCASE[selectedRole.value])

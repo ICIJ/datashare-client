@@ -702,15 +702,24 @@ describe('SettingsViewUsersRolesModal.vue', () => {
       ])
     })
 
-    it('grants the role and revokes every existing grant on confirm', async () => {
+    it('grants the role on confirm and leaves the project grants to the backend', async () => {
       const wrapper = await mountResolved()
       await selectInstanceScope(wrapper)
       await wrapper.vm.grantRole()
       await wrapper.vm.onCascadeConfirm()
       expect(mockApi.grantInstanceRole).toHaveBeenCalledWith('alice@example.org', 'instance_admin', null)
-      expect(mockApi.revokeUserRole).toHaveBeenCalledWith('alice@example.org', 'project-a', { ifExists: true })
-      expect(mockApi.revokeUserRole).toHaveBeenCalledWith('alice@example.org', 'project-b', { ifExists: true })
+      expect(mockApi.revokeUserRole).not.toHaveBeenCalled()
       expect(wrapper.emitted('user:updated')).toBeTruthy()
+    })
+
+    it('leaves a domain admin grant superseded by instance admin to the backend', async () => {
+      const permissions = [{ v1: 'DOMAIN_ADMIN', v2: 'default::*' }]
+      const wrapper = await mountResolved({ user: { uid: 'alice@example.org', permissions } })
+      await selectInstanceScope(wrapper)
+      await wrapper.vm.grantRole()
+      await wrapper.vm.onCascadeConfirm()
+      expect(mockApi.grantInstanceRole).toHaveBeenCalledWith('alice@example.org', 'instance_admin', null)
+      expect(mockApi.revokeInstanceRole).not.toHaveBeenCalled()
     })
 
     it('grants nothing while waiting for confirmation', async () => {
@@ -719,18 +728,6 @@ describe('SettingsViewUsersRolesModal.vue', () => {
       await wrapper.vm.grantRole()
       expect(mockApi.grantInstanceRole).not.toHaveBeenCalled()
       expect(mockApi.revokeUserRole).not.toHaveBeenCalled()
-    })
-
-    it('shows a cleanup error toast when a revoke fails, without losing the grant success toast', async () => {
-      mockApi.revokeUserRole.mockRejectedValueOnce(new Error('nope'))
-      const wrapper = await mountResolved()
-      await selectInstanceScope(wrapper)
-      await wrapper.vm.grantRole()
-      await wrapper.vm.onCascadeConfirm()
-      expect(mockToast.success).toHaveBeenCalledWith(
-        core.i18n.global.t('settings.users.rolesModal.grantSuccess', { role: 'Instance admin', uid: 'alice@example.org' })
-      )
-      expect(mockToast.error).toHaveBeenCalledWith(core.i18n.global.t('settings.users.rolesModal.cascadeModal.cleanupError'))
     })
 
     it('skips the confirmation modal when the user has no existing grants', async () => {
