@@ -295,8 +295,7 @@
     "project_editor": "Editor",
     "project_member": "Member",
     "project_visitor": "Visitor",
-    "no_role": "No role",
-    "inherited": "Inherited"
+    "no_role": "No role"
   },
   "searchFormControl": {
     "submitLabel": "Search"
@@ -1774,6 +1773,7 @@
         "selectScope": "Select scope",
         "scopePickerDisabledWideRole": "This user already has a role covering every project. Revoke it first to grant a project-specific role.",
         "scopePickerDisabledNoOptions": "This user already has a role on every available project.",
+        "scopePickerDisabledNoViewerScope": "You need instance admin rights to grant an instance-wide or domain-wide role here, and project-specific roles aren't available under this authentication mode.",
         "scopeColumn": "Scope",
         "roleColumn": "Role",
         "scope": {

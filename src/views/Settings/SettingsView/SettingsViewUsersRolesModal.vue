@@ -124,11 +124,20 @@ const projectPickerOptions = computed(() => [
   ...(isAuthWithUsersProvider.value ? availableProjects.value : [])
 ])
 
-// Explains the disabled scope picker: either this user already holds a role covering every
-// project, or every project already has a grant and this viewer cannot offer instance/domain
-// scope. Not shown while merely mid-save, since that disablement is unrelated and temporary.
+// True when this viewer can never offer any scope here, independently of what the target
+// holds: not instance admin (so no instance/domain entry) and under OAuth (so no project entry
+// either, since a project grant there wouldn't stick past the next login). Checked first since
+// it explains an empty picker even for a target with no grants at all, which the other reasons
+// below wrongly attribute to the target.
+const viewerCanOfferNoScope = computed(() => !isInstanceAdmin.value && !isAuthWithUsersProvider.value)
+
+// Explains the disabled scope picker: the viewer themselves can't offer any scope here, this
+// user already holds a role covering every project, or every project already has a grant and
+// this viewer cannot offer instance/domain scope. Not shown while merely mid-save, since that
+// disablement is unrelated and temporary.
 const scopePickerDisabledTitle = computed(() => {
   if (saving.value || projectPickerOptions.value.length) return null
+  if (viewerCanOfferNoScope.value) return t('settings.users.rolesModal.scopePickerDisabledNoViewerScope')
   return targetHasWideRole.value
     ? t('settings.users.rolesModal.scopePickerDisabledWideRole')
     : t('settings.users.rolesModal.scopePickerDisabledNoOptions')
@@ -234,6 +243,9 @@ async function revokeRole(item) {
 // An instance or domain admin role gives access to every project of its scope: any grant the
 // user already holds becomes redundant, so granting one of these roles revokes every other grant
 // after a confirmation step (see SettingsViewUsersRolesCascadeModal).
+// TODO #DOMAIN: once multiple domains exist, a domain-admin grant should only cascade-revoke
+// grants within that domain, not every grant regardless of domain; harmless today since only one
+// domain exists.
 const showCascadeModal = ref(false)
 const cascadeGrants = ref([])
 
@@ -258,6 +270,10 @@ async function performGrant() {
       // The domain only matters for DOMAIN_ADMIN; the backend ignores it for INSTANCE_ADMIN.
       const domain = selectedRole.value === ROLE.DOMAIN_ADMIN ? DEFAULT_DOMAIN : null
       await core.api.grantInstanceRole(props.user.uid, ROLE_LOWERCASE[selectedRole.value], domain)
+      // The cascade-revoke below is this component's own invariant, not enforced by the
+      // grantInstanceRole endpoint itself: any other caller (a script, another admin screen)
+      // granting a wide role would leave stale project grants behind. Moving this server-side
+      // would need backend work beyond this component.
       if (cascadeGrants.value.length) {
         const results = await Promise.allSettled(cascadeGrants.value.map(revokeGrant))
         if (results.some(result => result.status === 'rejected')) {
@@ -290,6 +306,7 @@ defineExpose({
   canGrantInstanceRole,
   canGrantDomainRole,
   scopePickerDisabledTitle,
+  viewerCanOfferNoScope,
   canRevoke,
   isInstanceScope,
   isDomainScope,

@@ -170,6 +170,16 @@ describe('SettingsViewUsersRolesModal.vue', () => {
     expect(wrapper.vm.scopePickerDisabledTitle).toBe(null)
   })
 
+  it('explains that the viewer cannot offer any scope, rather than blaming the target, for a domain-admin-only viewer under OAuth', () => {
+    mockAuthMode = 'oauth2'
+    core.config.set('policies', [{ projectId: '*', domainId: 'default', role: 'DOMAIN_ADMIN' }])
+    const wrapper = mountComponent({ user: { uid: 'alice@example.org', permissions: [] } })
+    expect(wrapper.vm.viewerCanOfferNoScope).toBe(true)
+    expect(wrapper.vm.scopePickerDisabledTitle).toBe(
+      core.i18n.global.t('settings.users.rolesModal.scopePickerDisabledNoViewerScope')
+    )
+  })
+
   it('revokes a role and emits user:updated', async () => {
     const wrapper = await mountResolved()
     await wrapper.vm.revokeRole({ project: 'project-a', role: 'PROJECT_MEMBER', domain: 'default' })
