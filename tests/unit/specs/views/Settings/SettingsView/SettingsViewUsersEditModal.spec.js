@@ -1,4 +1,4 @@
-import { shallowMount } from '@vue/test-utils'
+import { flushPromises, shallowMount } from '@vue/test-utils'
 import { BFormInput } from 'bootstrap-vue-next'
 
 import CoreSetup from '~tests/unit/CoreSetup.js'
@@ -34,9 +34,15 @@ describe('SettingsViewUsersEditModal.vue', () => {
 
   function mountComponent(props = {}) {
     return shallowMount(SettingsViewUsersEditModal, {
-      global,
+      // BFormInput is real here (not stubbed), so email validation exercises the browser's own
+      // type="email" constraint, the same one that actually gates the save in saveUser.
+      global: { ...global, stubs: { ...global.stubs, BFormInput: false } },
       props: { modelValue: true, user, ...props }
     })
+  }
+
+  function findEmailInput(wrapper) {
+    return wrapper.findAllComponents(BFormInput).find(c => c.attributes('name') === 'email')
   }
 
   function stubFormValidity(wrapper, valid) {
@@ -72,10 +78,9 @@ describe('SettingsViewUsersEditModal.vue', () => {
   it('shows an inline error when the email is malformed, not just the native tooltip', async () => {
     const wrapper = mountComponent()
     wrapper.vm.email = 'not-an-email'
-    await wrapper.vm.$nextTick()
+    await flushPromises()
     expect(wrapper.vm.emailInvalid).toBe(true)
-    const emailInput = wrapper.findAllComponents(BFormInput).find(c => c.attributes('name') === 'email')
-    expect(emailInput.props('state')).toBe(false)
+    expect(findEmailInput(wrapper).props('state')).toBe(false)
     expect(wrapper.text()).toContain('Enter a valid email address.')
   })
 
@@ -84,6 +89,22 @@ describe('SettingsViewUsersEditModal.vue', () => {
     expect(wrapper.vm.emailInvalid).toBe(false)
     wrapper.vm.email = ''
     expect(wrapper.vm.emailInvalid).toBe(false)
+  })
+
+  it('agrees with the native email check on a dotless domain, unlike a hand-rolled regex requiring a dot', async () => {
+    const wrapper = mountComponent()
+    wrapper.vm.email = 'admin@localhost'
+    await flushPromises()
+    expect(findEmailInput(wrapper).element.validity.typeMismatch).toBe(false)
+    expect(wrapper.vm.emailInvalid).toBe(false)
+  })
+
+  it('agrees with the native email check on a comma in the local part, unlike a hand-rolled regex allowing it', async () => {
+    const wrapper = mountComponent()
+    wrapper.vm.email = 'a,b@example.org'
+    await flushPromises()
+    expect(findEmailInput(wrapper).element.validity.typeMismatch).toBe(true)
+    expect(wrapper.vm.emailInvalid).toBe(true)
   })
 
   it('isValid is false when name is empty', async () => {

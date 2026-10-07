@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { BFormCheckbox, BFormInput } from 'bootstrap-vue-next'
 
@@ -42,9 +42,18 @@ const email = ref('')
 const resetPassword = ref(false)
 // Native checkValidity() already blocks the save on a malformed email (type="email"), but that
 // only surfaces as a browser tooltip - nothing in the page itself says why. This mirrors it
-// visibly, same pattern as the password-mismatch message below.
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-const emailInvalid = computed(() => email.value.trim().length > 0 && !EMAIL_PATTERN.test(email.value.trim()))
+// visibly, same pattern as the password-mismatch message below. Reads the input's own
+// validity.typeMismatch rather than a duplicate regex, so the message always agrees with what
+// actually gates the save: a custom regex can disagree with the browser's own email constraint
+// (e.g. "admin@localhost" is a valid native email with no dot, "a,b@example.org" is not, since
+// commas aren't allowed in the local part).
+const emailInput = ref(null)
+const emailInvalid = ref(false)
+async function refreshEmailValidity() {
+  await nextTick()
+  emailInvalid.value = !!email.value.trim().length && !!emailInput.value?.element?.validity.typeMismatch
+}
+watch(email, refreshEmailValidity)
 const { password, confirmPassword, passwordMismatch, isPasswordValid, clearPasswords } = usePasswordConfirm()
 const saving = ref(false)
 
@@ -193,6 +202,7 @@ defineExpose({
         :icon="IPhEnvelopeSimple"
       >
         <b-form-input
+          ref="emailInput"
           v-model="email"
           :placeholder="t('settings.users.edit.fields.email.placeholder')"
           :disabled="saving"
