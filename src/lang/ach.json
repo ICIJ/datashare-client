@@ -295,8 +295,7 @@
     "project_editor": "crwdns10164:0crwdne10164:0",
     "project_member": "crwdns10166:0crwdne10166:0",
     "project_visitor": "crwdns10168:0crwdne10168:0",
-    "no_role": "crwdns10275:0crwdne10275:0",
-    "inherited": "crwdns10513:0crwdne10513:0"
+    "no_role": "crwdns10275:0crwdne10275:0"
   },
   "searchFormControl": {
     "submitLabel": "crwdns7874:0crwdne7874:0"
@@ -1739,7 +1738,8 @@
           },
           "email": {
             "label": "crwdns10623:0crwdne10623:0",
-            "placeholder": "crwdns10625:0crwdne10625:0"
+            "placeholder": "crwdns10625:0crwdne10625:0",
+            "invalid": "crwdns10711:0crwdne10711:0"
           },
           "password": {
             "label": "crwdns10627:0crwdne10627:0",
@@ -1756,9 +1756,12 @@
         "title": "crwdns10637:0{name}crwdne10637:0",
         "body": {
           "intro": "crwdns10639:0crwdne10639:0",
-          "rolesRevoked": "crwdns10641:0crwdne10641:0",
-          "dataDeleted": "crwdns10643:0crwdne10643:0",
-          "tasksKept": "crwdns10645:0crwdne10645:0"
+          "rolesRevoked": "crwdns10713:0{verb}crwdne10713:0",
+          "rolesRevokedVerb": "crwdns10715:0crwdne10715:0",
+          "dataDeleted": "crwdns10717:0{verb}crwdne10717:0",
+          "dataDeletedVerb": "crwdns10719:0crwdne10719:0",
+          "tasksKept": "crwdns10721:0{verb}crwdne10721:0",
+          "tasksKeptVerb": "crwdns10723:0crwdne10723:0"
         },
         "confirm": "crwdns10647:0crwdne10647:0",
         "success": "crwdns10649:0crwdne10649:0",
@@ -1768,10 +1771,14 @@
       "rolesModal": {
         "title": "crwdns10655:0{uid}crwdne10655:0",
         "close": "crwdns10657:0crwdne10657:0",
-        "empty": "crwdns10659:0crwdne10659:0",
+        "empty": "crwdns10725:0crwdne10725:0",
         "searchPlaceholder": "crwdns10661:0crwdne10661:0",
         "noResults": "crwdns10663:0crwdne10663:0",
         "selectScope": "crwdns10665:0crwdne10665:0",
+        "scopePickerDisabledWideRole": "crwdns10727:0crwdne10727:0",
+        "scopePickerDisabledWideRoleUnrevocable": "crwdns10729:0crwdne10729:0",
+        "scopePickerDisabledNoOptions": "crwdns10731:0crwdne10731:0",
+        "scopePickerDisabledNoViewerScope": "crwdns10733:0crwdne10733:0",
         "scopeColumn": "crwdns10667:0crwdne10667:0",
         "roleColumn": "crwdns10669:0crwdne10669:0",
         "scope": {
@@ -1779,6 +1786,7 @@
           "domain": "crwdns10673:0crwdne10673:0"
         },
         "grant": "crwdns10675:0crwdne10675:0",
+        "revokeWideRoleConfirm": "crwdns10735:0{role}crwdnd10735:0{uid}crwdne10735:0",
         "revokeSuccess": "crwdns10677:0{role}crwdnd10677:0{uid}crwdne10677:0",
         "revokeError": "crwdns10679:0{role}crwdnd10679:0{uid}crwdne10679:0",
         "grantSuccess": "crwdns10681:0{role}crwdnd10681:0{uid}crwdne10681:0",
@@ -1786,7 +1794,14 @@
         "revokeSuccessOnProject": "crwdns10685:0{role}crwdnd10685:0{project}crwdnd10685:0{uid}crwdne10685:0",
         "revokeErrorOnProject": "crwdns10687:0{role}crwdnd10687:0{project}crwdnd10687:0{uid}crwdne10687:0",
         "grantSuccessOnProject": "crwdns10689:0{role}crwdnd10689:0{project}crwdnd10689:0{uid}crwdne10689:0",
-        "grantErrorOnProject": "crwdns10691:0{role}crwdnd10691:0{project}crwdnd10691:0{uid}crwdne10691:0"
+        "grantErrorOnProject": "crwdns10691:0{role}crwdnd10691:0{project}crwdnd10691:0{uid}crwdne10691:0",
+        "cascadeModal": {
+          "title": "crwdns10737:0crwdne10737:0",
+          "body": "crwdns10739:0crwdne10739:0",
+          "bodyMayReturn": "crwdns10741:0crwdne10741:0",
+          "confirm": "crwdns10743:0crwdne10743:0",
+          "cancel": "crwdns10745:0crwdne10745:0"
+        }
       }
     },
     "snapshots": {
