@@ -525,8 +525,8 @@ describe('SettingsViewUsersRolesModal.vue', () => {
       expect(wrapper.vm.canGrantInstanceRole).toBe(false)
     })
 
-    it('offers nothing at all once the user already holds instance admin, since it covers everything', () => {
-      const wrapper = mountComponent({
+    it('offers nothing at all once the user already holds instance admin, since it covers everything', async () => {
+      const wrapper = await mountResolved({
         user: {
           uid: 'alice@example.org',
           permissions: [{ v1: 'INSTANCE_ADMIN', v2: '*::*' }]
@@ -535,6 +535,31 @@ describe('SettingsViewUsersRolesModal.vue', () => {
       expect(wrapper.vm.projectPickerOptions).toEqual([])
       expect(wrapper.vm.scopePickerDisabledTitle).toBe(
         core.i18n.global.t('settings.users.rolesModal.scopePickerDisabledWideRole')
+      )
+    })
+
+    it('does not suggest revoking the wide role under OAuth, since that would not unlock a project-specific one', async () => {
+      mockAuthMode = 'oauth2'
+      const wrapper = await mountResolved({
+        user: {
+          uid: 'alice@example.org',
+          permissions: [{ v1: 'INSTANCE_ADMIN', v2: '*::*' }]
+        }
+      })
+      expect(wrapper.vm.scopePickerDisabledTitle).toBe(
+        core.i18n.global.t('settings.users.rolesModal.scopePickerDisabledWideRoleUnrevocable')
+      )
+    })
+
+    it('does not suggest revoking the wide role on the viewer\'s own row, since their own instance admin grant cannot be revoked', async () => {
+      const wrapper = await mountResolved({
+        user: {
+          uid: 'viewer@example.org',
+          permissions: [{ v1: 'INSTANCE_ADMIN', v2: '*::*' }]
+        }
+      })
+      expect(wrapper.vm.scopePickerDisabledTitle).toBe(
+        core.i18n.global.t('settings.users.rolesModal.scopePickerDisabledWideRoleUnrevocable')
       )
     })
 

@@ -112,7 +112,8 @@ const assignedProjects = computed(() => new Set(roles.value.map(({ project }) =>
 // An instance or domain admin grant already covers every project: offering a project-specific
 // grant on top would be dead data (and reappear as a surprise if the wide role is later
 // revoked), so no project entry is offered while the user holds either.
-const targetHasWideRole = computed(() => roles.value.some(({ role }) => isInstanceOrDomainRole(role)))
+const targetWideGrants = computed(() => roles.value.filter(({ role }) => isInstanceOrDomainRole(role)))
+const targetHasWideRole = computed(() => targetWideGrants.value.length > 0)
 
 const availableProjects = computed(() => {
   if (targetHasWideRole.value) return []
@@ -141,16 +142,25 @@ const projectPickerOptions = computed(() => [
 // below wrongly attribute to the target.
 const viewerCanOfferNoScope = computed(() => !isInstanceAdmin.value && !isAuthWithUsersProvider.value)
 
+// "Revoke it first" is only honest advice when revoking every wide grant held would actually
+// unlock a project-specific one: never under OAuth (a project entry is never offered there
+// regardless, see projectPickerOptions), and not when one of them is the viewer's own instance
+// admin row (canRevoke refuses that one specifically, see below).
+const targetWideRoleRevocable = computed(() =>
+  isAuthWithUsersProvider.value && targetHasWideRole.value && targetWideGrants.value.every(grant => canRevoke(grant))
+)
+
 // Explains the disabled scope picker: the viewer themselves can't offer any scope here, this
-// user already holds a role covering every project, or every project already has a grant and
-// this viewer cannot offer instance/domain scope. Not shown while merely mid-save, since that
-// disablement is unrelated and temporary.
+// user already holds a role covering every project (revocable or not), or every project already
+// has a grant and this viewer cannot offer instance/domain scope. Not shown while merely
+// mid-save, since that disablement is unrelated and temporary.
 const scopePickerDisabledTitle = computed(() => {
   if (saving.value || projectPickerOptions.value.length) return null
   if (viewerCanOfferNoScope.value) return t('settings.users.rolesModal.scopePickerDisabledNoViewerScope')
-  return targetHasWideRole.value
+  if (!targetHasWideRole.value) return t('settings.users.rolesModal.scopePickerDisabledNoOptions')
+  return targetWideRoleRevocable.value
     ? t('settings.users.rolesModal.scopePickerDisabledWideRole')
-    : t('settings.users.rolesModal.scopePickerDisabledNoOptions')
+    : t('settings.users.rolesModal.scopePickerDisabledWideRoleUnrevocable')
 })
 
 function scopeEntry({ role }) {

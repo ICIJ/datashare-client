@@ -1776,6 +1776,7 @@
         "noResults": "No project or role matches your search.",
         "selectScope": "Select scope",
         "scopePickerDisabledWideRole": "This user already has a role covering every project. Revoke it first to grant a project-specific role.",
+        "scopePickerDisabledWideRoleUnrevocable": "This user already has the widest role available here.",
         "scopePickerDisabledNoOptions": "This user already has a role on every available project.",
         "scopePickerDisabledNoViewerScope": "You need instance admin rights to grant an instance-wide or domain-wide role here, and project-specific roles aren't available under this authentication mode.",
         "scopeColumn": "Scope",
