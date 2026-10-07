@@ -13,6 +13,14 @@ defineProps({
   grants: {
     type: Array,
     required: true
+  },
+  // Under OAuth, project membership is reconciled from the identity provider at each login, so a
+  // project grant revoked here can come back regardless of whether this wide role is ever
+  // revoked later (see SettingsViewUsersRolesModal.vue's own comment on isAuthWithUsersProvider).
+  // Only the datashare-native case can honestly promise these grants stay gone.
+  revokedGrantsStayRevoked: {
+    type: Boolean,
+    default: true
   }
 })
 
@@ -37,7 +45,7 @@ function onConfirm() {
     @ok="onConfirm"
   >
     <p class="mb-3">
-      {{ t('settings.users.rolesModal.cascadeModal.body') }}
+      {{ t(revokedGrantsStayRevoked ? 'settings.users.rolesModal.cascadeModal.body' : 'settings.users.rolesModal.cascadeModal.bodyMayReturn') }}
     </p>
     <ul class="list-unstyled d-flex flex-column gap-2">
       <li

@@ -52,4 +52,15 @@ describe('SettingsViewUsersRolesCascadeModal.vue', () => {
     await wrapper.findComponent(AppModal).vm.$emit('ok')
     expect(wrapper.emitted('update:modelValue')).toEqual([[false]])
   })
+
+  it('claims the revoked grants stay gone by default, since that is only false under OAuth', () => {
+    const wrapper = mountComponent()
+    expect(wrapper.text()).toContain('They will not come back if this role is revoked later')
+  })
+
+  it('does not claim the revoked grants stay gone when they are reconciled from an identity provider', () => {
+    const wrapper = mountComponent({ revokedGrantsStayRevoked: false })
+    expect(wrapper.text()).not.toContain('They will not come back if this role is revoked later')
+    expect(wrapper.text()).toContain('Some may come back on their own')
+  })
 })
