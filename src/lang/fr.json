@@ -295,8 +295,7 @@
     "project_editor": "Éditeur•ice",
     "project_member": "Membre",
     "project_visitor": "Visiteur•ice",
-    "no_role": "Aucun rôle",
-    "inherited": "Inherited"
+    "no_role": "Aucun rôle"
   },
   "searchFormControl": {
     "submitLabel": "Rechercher"
@@ -448,10 +447,10 @@
   "documentContent": {
     "noContent": "Aucun contenu extrait pour ce document.",
     "view": {
-      "markdown": "Mise en forme",
+      "markdown": "Mis en forme",
       "text": "Texte brut",
       "translationTooltip": "Les traductions ne sont disponibles qu'en texte brut",
-      "oversizedTooltip": "The formatted view of this document is very large and may be slow to display",
+      "oversizedTooltip": "La vue mise en forme de ce document étant volumineuse, elle peut être lente à afficher",
       "ariaLabel": "Rendu du texte"
     }
   },
@@ -790,7 +789,7 @@
     "starred": "Les documents ont été placés dans les favoris.",
     "unstarred": "Les documents ont été enlevés des favoris.",
     "notAvailable": "L'aperçu n'est pas disponible pour ce document.",
-    "tooLargeToPreview": "This document is too large to preview.",
+    "tooLargeToPreview": "Ce document est trop volumineux pour être prévisualisé.",
     "namedEntitiesNotFound": "Aucune entité trouvée.",
     "namedEntitiesNotSearched": "Document non analysé. Pour trouver les entités nommées, {link}.",
     "namedEntitiesNotSearchedLink": "démarrer une nouvelle tâche",
@@ -881,8 +880,8 @@
     "browse": "Parcourir"
   },
   "formInputPassword": {
-    "show": "Show password",
-    "hide": "Hide password"
+    "show": "Afficher le mot de passe",
+    "hide": "Cacher le mot de passe"
   },
   "formControlSearch": {
     "placeholder": "Rechercher..."
@@ -1236,7 +1235,7 @@
         },
         "submit": "Valider",
         "submitError": "Une erreur s'est produite, impossible d'exécuter la recherche en lot.",
-        "readError": "Unable to read the queries file. Select it again and retry.",
+        "readError": "Impossible de lire le fichier de requêtes. Sélectionnez-le à nouveau et réessayez.",
         "submitSuccess": "La recherche en lot a été créée.",
         "editError": "Une erreur s'est produite, impossible de mettre à jour la recherche en lot.",
         "editSuccess": "La recherche en lot a été mise à jour."
@@ -1343,7 +1342,7 @@
     "delete": "Supprimer",
     "edit": "Modifier",
     "search": "Rechercher",
-    "manageRoles": "Manage roles"
+    "manageRoles": "Gérer les rôles"
   },
   "textTruncate": {
     "seeLess": "Voir moins",
@@ -1491,7 +1490,7 @@
     },
     "users": {
       "empty": "Pas encore d'utilisateur•ices.",
-      "listUnsupported": "The users provider configured on this server can't list accounts, so they can't be shown here.",
+      "listUnsupported": "Le fournisseur d'utilisateuri·ces configuré sur ce serveur ne peut pas lister les comptes, donc ils ne peuvent pas être affichés ici.",
       "fetchError": "Impossible de charger les utilisateur•ices pour ce projet.",
       "noResults": "Aucun•e utilisateur•ice ne correspond à votre recherche.",
       "fields": {
@@ -1666,127 +1665,143 @@
       }
     },
     "users": {
-      "title": "Users",
-      "noAccess": "You do not have access to this page.",
-      "empty": "No users yet.",
-      "noResults": "No users match your search.",
-      "listUnsupported": "The users provider configured on this server can't list accounts, so they can't be shown here.",
-      "searchPlaceholder": "Search users",
-      "fetchError": "Failed to load users.",
+      "title": "Utilisateur•ices",
+      "noAccess": "Vous n’avez pas accès à cette page.",
+      "empty": "Pas encore d'utilisateur•ices.",
+      "noResults": "Aucun•e utilisateur•ice ne correspond à votre recherche.",
+      "listUnsupported": "Le fournisseur d'utilisateuri·ces configuré sur ce serveur ne peut pas lister les comptes, donc ils ne peuvent pas être affichés ici.",
+      "searchPlaceholder": "Rechercher des utilisateur·ices",
+      "fetchError": "Impossible de charger les utilisateur·ices.",
       "add": {
-        "button": "Create user"
+        "button": "Créer un•e utilisateur•ice"
       },
       "fields": {
         "uid": {
-          "label": "Username"
+          "label": "Nom d'utilisateur•ice"
         },
         "name": {
-          "label": "Name"
+          "label": "Nom"
         },
         "email": {
           "label": "Email"
         },
         "role": {
-          "label": "Roles"
+          "label": "Rôles"
         }
       },
       "roleBadges": {
-        "more": "0 more | +1 more | +{count} more"
+        "more": "0 de plus | +1 de plus | +{count} de plus"
       },
       "create": {
-        "title": "Create user",
-        "confirm": "Create and manage roles",
-        "saveSuccess": "User created",
-        "saveError": "Failed to create user.",
-        "saveErrorConflict": "This username is already taken.",
+        "title": "Créer un•e utilisateur•ice",
+        "confirm": "Créer et gérer des rôles",
+        "saveSuccess": "Utilisateur·ice créé·e",
+        "saveError": "Échec de la création de l'utilisateur·ice.",
+        "saveErrorConflict": "Ce nom d’utilisateur·ice est déjà pris.",
         "fields": {
           "username": {
-            "label": "Username",
-            "placeholder": "Username"
+            "label": "Nom d'utilisateur•ice",
+            "placeholder": "Nom d'utilisateur•ice"
           },
           "email": {
             "label": "Email",
             "placeholder": "Email"
           },
           "name": {
-            "label": "Name",
-            "placeholder": "Name"
+            "label": "Nom",
+            "placeholder": "Nom"
           },
           "password": {
-            "label": "Password",
-            "placeholder": "Password"
+            "label": "Mot de passe",
+            "placeholder": "Mot de passe"
           },
           "confirmPassword": {
-            "label": "Confirm password",
-            "placeholder": "Confirm password",
-            "mismatch": "Passwords do not match."
+            "label": "Confirmez le mot de passe",
+            "placeholder": "Confirmez le mot de passe",
+            "mismatch": "Le mot de passe ne correspond pas à sa confirmation."
           }
         }
       },
       "edit": {
-        "title": "Edit {uid}",
-        "confirm": "Save changes",
-        "saveSuccess": "User updated",
-        "saveError": "Failed to update user.",
-        "resetPassword": "Reset password",
+        "title": "Modifier {uid}",
+        "confirm": "Enregistrer les modifications",
+        "saveSuccess": "Utilisateur·ice mis·e à jour",
+        "saveError": "Impossible de mettre à jour l'utilisateur·ice.",
+        "resetPassword": "Réinitialiser le mot de passe",
         "fields": {
           "username": {
-            "label": "Username"
+            "label": "Nom d'utilisateur•ice"
           },
           "name": {
-            "label": "Name",
-            "placeholder": "Name"
+            "label": "Nom",
+            "placeholder": "Nom"
           },
           "email": {
             "label": "Email",
-            "placeholder": "Email"
+            "placeholder": "Email",
+            "invalid": "Merci de saisir une adresse e-mail valide."
           },
           "password": {
-            "label": "Password",
-            "placeholder": "Password"
+            "label": "Mot de passe",
+            "placeholder": "Mot de passe"
           },
           "confirmPassword": {
-            "label": "Confirm password",
-            "placeholder": "Confirm password",
-            "mismatch": "Passwords do not match."
+            "label": "Confirmez le mot de passe",
+            "placeholder": "Confirmez le mot de passe",
+            "mismatch": "Le mot de passe ne correspond pas à sa confirmation."
           }
         }
       },
       "deleteModal": {
-        "title": "Delete user {name}?",
+        "title": "Supprimer l'utilisateur•ice {name}?",
         "body": {
-          "intro": "This action cannot be undone. Deleting this account will:",
-          "rolesRevoked": "<strong>remove</strong> all of their role grants (project, domain and instance);",
-          "dataDeleted": "<strong>delete</strong> all their personal data (stars, history, tags, saved searches etc.) across all projects;",
-          "tasksKept": "<strong>keep</strong> their tasks and task results."
+          "intro": "Cette action ne peut pas être annulée. La suppression de cet utilisateur•ice va :",
+          "rolesRevoked": "{verb} tous leurs rôles (projet, domaine et instance);",
+          "rolesRevokedVerb": "supprimer",
+          "dataDeleted": "{verb} toutes leurs données personnelles (favoris, historique, tags, recherches enregistrées, etc.) dans tous les projets;",
+          "dataDeletedVerb": "supprimer",
+          "tasksKept": "{verb} leurs tâches et les résultats de leurs tâches.",
+          "tasksKeptVerb": "garder"
         },
-        "confirm": "Delete user",
-        "success": "User deleted successfully",
-        "error": "Failed to remove user. Please try again."
+        "confirm": "Supprimer l’utilisateur•ice",
+        "success": "Utilisateur•ice supprimé•e avec succès",
+        "error": "Impossible de supprimer l'utilisateur•ice. Veuillez réessayer."
       },
-      "notFound": "User {uid} does not exist.",
+      "notFound": "L'utilisateur {uid} n'existe pas.",
       "rolesModal": {
-        "title": "Manage roles for {uid}",
-        "close": "Close",
-        "empty": "This user has no project role grants yet.",
-        "searchPlaceholder": "Search scopes",
-        "noResults": "No project or role matches your search.",
-        "selectScope": "Select scope",
-        "scopeColumn": "Scope",
-        "roleColumn": "Role",
+        "title": "Gérer les rôles pour {uid}",
+        "close": "Fermer",
+        "empty": "Cet·te utilisateur·ice n'a pas encore de rôles.",
+        "searchPlaceholder": "Rechercher dans les périmètres",
+        "noResults": "Aucun projet ou rôle ne correspond à votre recherche.",
+        "selectScope": "Sélectionnez le périmètre",
+        "scopePickerDisabledWideRole": "Cet·te utilisateur·ice a déjà un rôle qui couvre tous les projets. Supprimer d'abord ceci pour attribuer ensuite un rôle spécifique à un projet.",
+        "scopePickerDisabledWideRoleUnrevocable": "Cet·te utilisateur·ice a déjà le rôle le plus important possible ici.",
+        "scopePickerDisabledNoOptions": "Cet·te utilisateur·ice a déjà un rôle pour tous les projets disponibles.",
+        "scopePickerDisabledNoViewerScope": "Vous avez besoin des droits d'administration de l'instance pour accorder un rôle à l'échelle de l'instance ou du domaine, et les rôles spécifiques au projet ne sont pas disponibles avec ce mode d'authentification.",
+        "scopeColumn": "Périmètre",
+        "roleColumn": "Rôle",
         "scope": {
           "instance": "Instance",
-          "domain": "Domain"
+          "domain": "Domaine"
         },
-        "grant": "Grant",
-        "revokeSuccess": "Revoked {role} from {uid}",
-        "revokeError": "Failed to revoke {role} from {uid}.",
-        "grantSuccess": "Granted {role} to {uid}",
-        "grantError": "Failed to grant {role} to {uid}.",
-        "revokeSuccessOnProject": "Revoked {role} on {project} from {uid}",
-        "revokeErrorOnProject": "Failed to revoke {role} on {project} from {uid}.",
-        "grantSuccessOnProject": "Granted {role} on {project} to {uid}",
-        "grantErrorOnProject": "Failed to grant {role} on {project} to {uid}."
+        "grant": "Accorder",
+        "revokeWideRoleConfirm": "Supprimer {role} de {uid}? Cela supprime immédiatement son accès à tous les projets concernés.",
+        "revokeSuccess": "Supprimer {role} de {uid}",
+        "revokeError": "Impossible de supprimer {role} de {uid}.",
+        "grantSuccess": "{role} accordée à {uid}",
+        "grantError": "Impossible d’accorder {role} à {uid}.",
+        "revokeSuccessOnProject": "{role} supprimé pour {project} de {uid}",
+        "revokeErrorOnProject": "Impossible de supprimer {role} pour {project} de {uid}.",
+        "grantSuccessOnProject": "{role} accordé pour {project} à {uid}",
+        "grantErrorOnProject": "Impossible d’accorder {role} pour {project} à {uid}.",
+        "cascadeModal": {
+          "title": "Remplacer les rôles existants ?",
+          "body": "Ce rôle couvre déjà tous les projets, donc les rôles existants seront supprimés. Ces rôles ne seront pas restaurés si ce rôle est supprimé plus tard :",
+          "bodyMayReturn": "Ce rôle couvre déjà tous les projets donc ces autorisations existantes seront révoquées. Certaines pourraient être rétablies automatiquement, après réconciliation par votre fournisseur d'identité lors de votre prochaine connexion, indépendamment de ce rôle :",
+          "confirm": "Accorder et supprimer le reste",
+          "cancel": "Annuler"
+        }
       }
     },
     "snapshots": {
@@ -2083,7 +2098,7 @@
     "label": "Tous les projets"
   },
   "projectDropdownSelectorButtonContent": {
-    "placeholder": "Select a project"
+    "placeholder": "Sélectionnez un projet"
   },
   "pathViewEntryMore": {
     "label": "Pas plus de dossiers | Afficher 1 dossier en plus | Afficher {nextPageSize} des {directoriesLeft} dossiers en plus"
