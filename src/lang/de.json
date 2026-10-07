@@ -295,8 +295,7 @@
     "project_editor": "Editor",
     "project_member": "Member",
     "project_visitor": "Visitor",
-    "no_role": "No role",
-    "inherited": "Inherited"
+    "no_role": "No role"
   },
   "searchFormControl": {
     "submitLabel": "Suche"
@@ -1739,7 +1738,8 @@
           },
           "email": {
             "label": "Email",
-            "placeholder": "Email"
+            "placeholder": "Email",
+            "invalid": "Enter a valid email address."
           },
           "password": {
             "label": "Password",
@@ -1756,9 +1756,12 @@
         "title": "Delete user {name}?",
         "body": {
           "intro": "This action cannot be undone. Deleting this account will:",
-          "rolesRevoked": "<strong>remove</strong> all of their role grants (project, domain and instance);",
-          "dataDeleted": "<strong>delete</strong> all their personal data (stars, history, tags, saved searches etc.) across all projects;",
-          "tasksKept": "<strong>keep</strong> their tasks and task results."
+          "rolesRevoked": "{verb} all of their role grants (project, domain and instance);",
+          "rolesRevokedVerb": "remove",
+          "dataDeleted": "{verb} all their personal data (stars, history, tags, saved searches etc.) across all projects;",
+          "dataDeletedVerb": "delete",
+          "tasksKept": "{verb} their tasks and task results.",
+          "tasksKeptVerb": "keep"
         },
         "confirm": "Delete user",
         "success": "User deleted successfully",
@@ -1768,10 +1771,14 @@
       "rolesModal": {
         "title": "Manage roles for {uid}",
         "close": "Close",
-        "empty": "This user has no project role grants yet.",
+        "empty": "This user has no role grants yet.",
         "searchPlaceholder": "Search scopes",
         "noResults": "No project or role matches your search.",
         "selectScope": "Select scope",
+        "scopePickerDisabledWideRole": "This user already has a role covering every project. Revoke it first to grant a project-specific role.",
+        "scopePickerDisabledWideRoleUnrevocable": "This user already has the widest role available here.",
+        "scopePickerDisabledNoOptions": "This user already has a role on every available project.",
+        "scopePickerDisabledNoViewerScope": "You need instance admin rights to grant an instance-wide or domain-wide role here, and project-specific roles aren't available under this authentication mode.",
         "scopeColumn": "Scope",
         "roleColumn": "Role",
         "scope": {
@@ -1779,6 +1786,7 @@
           "domain": "Domain"
         },
         "grant": "Grant",
+        "revokeWideRoleConfirm": "Revoke {role} from {uid}? This immediately removes their access to every project it covered.",
         "revokeSuccess": "Revoked {role} from {uid}",
         "revokeError": "Failed to revoke {role} from {uid}.",
         "grantSuccess": "Granted {role} to {uid}",
@@ -1786,7 +1794,14 @@
         "revokeSuccessOnProject": "Revoked {role} on {project} from {uid}",
         "revokeErrorOnProject": "Failed to revoke {role} on {project} from {uid}.",
         "grantSuccessOnProject": "Granted {role} on {project} to {uid}",
-        "grantErrorOnProject": "Failed to grant {role} on {project} to {uid}."
+        "grantErrorOnProject": "Failed to grant {role} on {project} to {uid}.",
+        "cascadeModal": {
+          "title": "Replace existing grants?",
+          "body": "This role already covers every project, so these existing grants will be revoked. They will not come back if this role is revoked later:",
+          "bodyMayReturn": "This role already covers every project, so these existing grants will be revoked. Some may come back on their own, reconciled from your identity provider at the next login, independently of this role:",
+          "confirm": "Grant and revoke the rest",
+          "cancel": "Cancel"
+        }
       }
     },
     "snapshots": {
