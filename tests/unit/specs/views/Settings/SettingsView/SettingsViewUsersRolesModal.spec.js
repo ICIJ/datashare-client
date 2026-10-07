@@ -6,6 +6,7 @@ import InstanceUsersRoleBadge from '@/components/InstanceUsers/InstanceUsersRole
 import ProjectButton from '@/components/Project/ProjectButton.vue'
 import ProjectDropdownSelector from '@/components/Project/ProjectDropdownSelector/ProjectDropdownSelector.vue'
 import ProjectUsersRoleDropdown from '@/components/ProjectUsers/ProjectUsersRoleDropdown.vue'
+import SettingsViewUsersRolesCascadeModal from '@/views/Settings/SettingsView/SettingsViewUsersRolesCascadeModal.vue'
 import SettingsViewUsersRolesModal from '@/views/Settings/SettingsView/SettingsViewUsersRolesModal.vue'
 import SettingsViewUsersNotFound from '@/views/Settings/SettingsView/SettingsViewUsersNotFound.vue'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric.vue'
@@ -736,6 +737,17 @@ describe('SettingsViewUsersRolesModal.vue', () => {
       await wrapper.vm.grantRole()
       expect(mockApi.grantInstanceRole).toHaveBeenCalledWith('alice@example.org', 'instance_admin', null)
       expect(wrapper.vm.showCascadeModal).toBe(false)
+    })
+
+    it('tells the cascade modal the revoked grants stay revoked under form/basic auth', async () => {
+      const wrapper = await mountResolved()
+      expect(wrapper.findComponent(SettingsViewUsersRolesCascadeModal).props('revokedGrantsStayRevoked')).toBe(true)
+    })
+
+    it('tells the cascade modal a revoked project grant may come back under OAuth, reconciled from the identity provider', async () => {
+      mockAuthMode = 'oauth2'
+      const wrapper = await mountResolved()
+      expect(wrapper.findComponent(SettingsViewUsersRolesCascadeModal).props('revokedGrantsStayRevoked')).toBe(false)
     })
   })
 

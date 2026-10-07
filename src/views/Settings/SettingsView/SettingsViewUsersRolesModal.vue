@@ -474,6 +474,7 @@ defineExpose({
   <settings-view-users-roles-cascade-modal
     v-model="showCascadeModal"
     :grants="cascadeGrants"
+    :revoked-grants-stay-revoked="isAuthWithUsersProvider"
     @confirm="onCascadeConfirm"
   />
 </template>

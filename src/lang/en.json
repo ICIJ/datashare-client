@@ -1797,6 +1797,7 @@
         "cascadeModal": {
           "title": "Replace existing grants?",
           "body": "This role already covers every project, so these existing grants will be revoked. They will not come back if this role is revoked later:",
+          "bodyMayReturn": "This role already covers every project, so these existing grants will be revoked. Some may come back on their own, reconciled from your identity provider at the next login, independently of this role:",
           "confirm": "Grant and revoke the rest",
           "cancel": "Cancel"
         }
