@@ -24,8 +24,24 @@ describe('PathTreeViewDocument.vue', () => {
   beforeEach(() => show.mockClear())
   afterEach(() => vi.restoreAllMocks())
 
-  it('leaves the name inert, so it can be highlighted instead of opening the document', async () => {
+  it('opens the document in a modal, once, when its name is clicked', async () => {
+    const push = vi.spyOn(core.router, 'push')
+
     await findName(mountDocument()).trigger('click')
+
+    expect(show).toHaveBeenCalledTimes(1)
+    expect(push).not.toHaveBeenCalled()
+  })
+
+  it('does not open the document when a highlight of its name is released', async () => {
+    const wrapper = mountDocument()
+    vi.spyOn(window, 'getSelection').mockReturnValue({
+      isCollapsed: false,
+      anchorNode: findName(wrapper).element,
+      focusNode: findName(wrapper).element
+    })
+
+    await findName(wrapper).trigger('click')
 
     expect(show).not.toHaveBeenCalled()
   })

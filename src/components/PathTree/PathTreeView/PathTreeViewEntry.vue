@@ -218,15 +218,21 @@ function isHighlighting(row) {
   return row.contains(selection.anchorNode) || row.contains(selection.focusNode)
 }
 
-// The name is text to be read and copied; the rest of the row is the button.
-// A highlight released past the end of the text still belongs to the text.
-function ignoreClickOnName(event) {
-  const row = event.currentTarget
-  const opensOnItsOwn = !!row.querySelector('.path-tree-view-entry__link')
-
-  if (isHighlighting(row) || (opensOnItsOwn && event.target.closest('[data-entry-name]'))) {
+function ignoreClickEndingAHighlight(event) {
+  if (isHighlighting(event.currentTarget)) {
     event.stopImmediatePropagation()
     event.preventDefault()
+  }
+}
+
+// The name sits outside the link overlay so it can be highlighted, which also
+// puts it out of reach of the link it names.
+function openFromName(event) {
+  const link = event.currentTarget.querySelector('.path-tree-view-entry__link')
+
+  if (link && event.target.closest('[data-entry-name]')) {
+    const { ctrlKey, metaKey, shiftKey } = event
+    link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, ctrlKey, metaKey, shiftKey }))
   }
 }
 </script>
@@ -235,13 +241,14 @@ function ignoreClickOnName(event) {
   <div
     class="path-tree-view-entry"
     :class="classList"
-    @click.capture="ignoreClickOnName"
+    @click.capture="ignoreClickEndingAHighlight"
   >
     <div
       v-if="!noHeader"
       class="path-tree-view-entry__header d-flex align-items-center"
       @mouseenter="active = true"
       @mouseleave="active = false"
+      @click="openFromName"
     >
       <!-- An overlay, not a wrapper: Chromium cannot start a text selection
       from a press landing inside an <a> (icij/datashare#2432). -->
