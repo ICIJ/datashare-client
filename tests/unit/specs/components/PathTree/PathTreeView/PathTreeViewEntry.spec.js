@@ -19,16 +19,56 @@ describe('PathTreeViewEntry.vue (locked filters, icij/datashare#2336)', () => {
     })
   }
 
-  // Browsers resolve a drag source by walking up to the nearest draggable
-  // ancestor, and an `<a>` is draggable by default, so opting the name text out
-  // is not enough: sweeping across it picks the whole link up instead of
-  // highlighting the name (icij/datashare#2432).
-  it('opts the link out of the native link drag so the name can be highlighted', () => {
-    // The router installed by CoreSetup leaves router-link as a stub here, so
-    // assert on the root the attribute falls through to rather than on an `<a>`.
-    const wrapper = mountEntry(undefined, { to: '/data/foo' })
+  // Chromium will not start a text selection from a press landing inside an
+  // `<a>`, so the link cannot wrap the name: it is an overlay beside it
+  // (icij/datashare#2432).
+  describe('link overlay', () => {
+    it('renders the row as a plain element rather than wrapping it in the link', () => {
+      const wrapper = mountEntry(undefined, { to: '/data/foo' })
 
-    expect(wrapper.attributes('draggable')).toBe('false')
+      expect(wrapper.element.tagName).toBe('DIV')
+      expect(wrapper.find('.path-tree-view-entry-name__value__label').element.closest('a')).toBeNull()
+    })
+
+    it('renders the link overlay inside the row header, named after the entry', () => {
+      const wrapper = mountEntry(undefined, { to: '/data/foo' })
+      const overlay = wrapper.find('.path-tree-view-entry__link')
+
+      expect(overlay.exists()).toBe(true)
+      expect(overlay.attributes('aria-label')).toBe('foo')
+      expect(overlay.attributes('draggable')).toBe('false')
+    })
+
+    it('renders no link overlay without a target', () => {
+      expect(mountEntry().find('.path-tree-view-entry__link').exists()).toBe(false)
+    })
+
+    it('renders no link overlay when links are disabled', () => {
+      const wrapper = mountEntry(undefined, { to: '/data/foo', noLink: true })
+
+      expect(wrapper.find('.path-tree-view-entry__link').exists()).toBe(false)
+    })
+
+    // The name sits outside the anchor now, so its plain click has to reach it.
+    it('forwards a click on the name to the link', async () => {
+      const wrapper = mountEntry(undefined, { to: '/data/foo' })
+      const overlay = wrapper.find('.path-tree-view-entry__link')
+      const click = vi.spyOn(overlay.element, 'click')
+
+      await wrapper.find('.path-tree-view-entry-name__value__label').trigger('click')
+
+      expect(click).toHaveBeenCalledTimes(1)
+    })
+
+    it('does not forward a click that landed outside the name', async () => {
+      const wrapper = mountEntry(undefined, { to: '/data/foo' })
+      const overlay = wrapper.find('.path-tree-view-entry__link')
+      const click = vi.spyOn(overlay.element, 'click')
+
+      await wrapper.find('.path-tree-view-entry__header').trigger('click')
+
+      expect(click).not.toHaveBeenCalled()
+    })
   })
 
   it('does not render a lock button when no lock context is provided (every non-FilterTypePath consumer)', () => {
