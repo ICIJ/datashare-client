@@ -31,9 +31,6 @@ describe('PathTreeViewDocument.vue', () => {
     expect(show).toHaveBeenCalledTimes(1)
   })
 
-  // PathTreeViewDocument listens in the capture phase on the entry root, which
-  // sits above the guard in PathTreeViewEntryName and would otherwise open the
-  // modal the moment a sweep across the document name is released.
   it('does not open the document modal when the click ends a selection of the name', async () => {
     const wrapper = mountDocument()
     const label = findLabel(wrapper)
