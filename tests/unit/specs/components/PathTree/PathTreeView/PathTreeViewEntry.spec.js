@@ -49,6 +49,25 @@ describe('PathTreeViewEntry.vue (locked filters, icij/datashare#2336)', () => {
       expect(mountEntry(undefined, props).find('.path-tree-view-entry__link').exists()).toBe(false)
     })
 
+    it.each([
+      ['started and released on the name', 'anchorNode'],
+      ['released past the end of the name, over the row', 'focusNode']
+    ])('does not open the row when a highlight was %s', async (_, endpoint) => {
+      const wrapper = mountLinked()
+      const clicks = clicksOnLink(wrapper)
+      const name = wrapper.find('[data-entry-name]').element
+      vi.spyOn(window, 'getSelection').mockReturnValue({
+        isCollapsed: false,
+        anchorNode: document.body,
+        focusNode: document.body,
+        [endpoint]: name
+      })
+
+      await wrapper.find('.path-tree-view-entry__header').trigger('click')
+
+      expect(clicks).toHaveLength(0)
+    })
+
     it('leaves the name inert, so clicking it neither opens nor collapses the row', async () => {
       const wrapper = mountLinked()
       const clicks = clicksOnLink(wrapper)
