@@ -6,6 +6,7 @@ import Document from '@/api/resources/Document'
 import PathTreeViewDocumentPreview from '@/components/PathTree/PathTreeView/PathTreeViewDocumentPreview'
 import PathTreeViewEntry from '@/components/PathTree/PathTreeView/PathTreeViewEntry'
 import { useDocumentModal } from '@/composables/useDocumentModal'
+import { hasSelectionWithin } from '@/utils/selection'
 import { LAYOUTS, layoutValidator } from '@/enums/pathTree'
 
 const selected = defineModel('selected', { type: Boolean })
@@ -85,6 +86,14 @@ const to = computed(() => {
 
 const handleClick = (event) => {
   const { routerParams: params } = document.value
+
+  // This listener captures on the entry root, above the guard
+  // PathTreeViewEntryName puts on the name itself, so it has to let the
+  // release of a sweep across the name through instead of opening the document.
+  if (hasSelectionWithin(event.target.closest?.('.path-tree-view-entry-name__value__label'))) {
+    return
+  }
+
   if (isLink.value) {
     event.preventDefault()
     event.stopPropagation()

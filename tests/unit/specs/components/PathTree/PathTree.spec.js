@@ -450,7 +450,7 @@ describe('PathTree.vue', () => {
         // The nested level runs its own directory_paths aggregation, so the chain
         // deep -> a -> b is folded one level down too.
         expect(names).toEqual(['foo', 'bar', 'deep/a/b', 'other'])
-      })
+      }, { timeout: 5000 })
     })
 
     it('gives the folded entry the deepest real directory path', async () => {

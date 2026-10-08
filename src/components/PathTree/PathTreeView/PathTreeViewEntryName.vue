@@ -9,6 +9,7 @@ import IPhFolderOpenFill from '~icons/ph/folder-open-fill'
 import PathTreeViewEntryNameCaret from './PathTreeViewEntryNameCaret'
 import PathTreeViewEntryNameCheckbox from './PathTreeViewEntryNameCheckbox'
 import { LAYOUTS, layoutValidator } from '@/enums/pathTree'
+import { hasSelectionWithin } from '@/utils/selection'
 
 const collapse = defineModel('collapse', { type: Boolean })
 const selected = defineModel('selected', { type: Boolean })
@@ -125,9 +126,7 @@ const label = useTemplateRef('label')
 // the highlight before it can be copied. Stopping the click in the capture
 // phase halts the bubble phase as well, so this single guard covers both.
 const guardSelection = (event) => {
-  const selection = window.getSelection()
-
-  if (!selection || selection.isCollapsed || !label.value?.contains(selection.anchorNode)) {
+  if (!hasSelectionWithin(label.value)) {
     return
   }
 
@@ -176,7 +175,7 @@ const guardSelection = (event) => {
         would otherwise start as soon as the pointer sweeps across it. -->
         <span
           ref="label"
-          class="path-tree-view-entry-name__value__label above-stretched-link"
+          class="path-tree-view-entry-name__value__label above-stretched-link ms-1"
           draggable="false"
         >{{ name }}</span>
       </div>
@@ -220,6 +219,12 @@ const guardSelection = (event) => {
 
   &__icon {
     color: var(--path-tree-view-entry-name-icon-color);
+  }
+
+  // The name is the only highlightable part of the row: the I-beam tells it
+  // apart from the link-or-toggle pointer the rest of the row carries.
+  &__value__label {
+    cursor: text;
   }
 
   &--compact.path-tree-view-entry-name--selected {
