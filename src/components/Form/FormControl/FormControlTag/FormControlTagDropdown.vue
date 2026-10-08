@@ -75,11 +75,8 @@ const availableOptions = computed(() => {
 })
 
 const filteredOptions = computed(() => {
-  // Only suggest once the user has typed at least one character; an empty input
-  // (including right after submitting a tag) has nothing to match, so the
-  // dropdown stays closed instead of listing every existing tag.
   if (!props.inputValue) {
-    return []
+    return availableOptions.value.slice(0, props.limit).map(item => ({ item }))
   }
   return fuse.value.search(props.inputValue).slice(0, props.limit)
 })
@@ -114,9 +111,15 @@ const addTag = (tag) => {
   emit('addTag', tag)
 }
 
-watch(filteredOptions, (newVal, oldVal) => {
-  if (!props.inputValue && !newVal.length && !oldVal.length) return
-  emit('update:show', !!newVal.length)
+// An empty input lists every option; only typing may open the dropdown from
+// here, otherwise clearing the input after adding a tag would reopen it.
+watch(filteredOptions, (newVal) => {
+  if (!newVal.length) {
+    emit('update:show', false)
+  }
+  else if (props.inputValue) {
+    emit('update:show', true)
+  }
 })
 
 watch(

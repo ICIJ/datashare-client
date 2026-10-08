@@ -117,10 +117,7 @@ function focus() {
   inputElement.value.focus()
 }
 
-// Suggestions only make sense once the user has typed at least one character.
-// An empty input (which is exactly the state right after submitting a tag)
-// never shows the dropdown, so it cannot pop back open on its own.
-const canSuggest = () => props.options.length > 0 && inputValueTrigger.value.length > 0
+const canSuggest = () => props.options.length > 0
 
 const onFocus = (e) => {
   hasFocus.value = true
@@ -131,8 +128,6 @@ const onFocus = (e) => {
 const inputTag = (tag) => {
   focusIndex.value = -1
   inputValueTrigger.value = tag
-  // Show the suggestions as soon as there is something to match, hide them
-  // again once the field is emptied.
   showDropdown.value = canSuggest()
   if (endWithSeparator(tag)) {
     return addTag(tag)
@@ -148,7 +143,7 @@ const addTag = (tag) => {
   }
   emit('update:modelValue', [...props.modelValue, ...tags])
   inputValueTrigger.value = ''
-  // The input is now empty, so there is nothing to suggest anymore.
+  // Keep the dropdown closed until the user types or focuses the field again.
   showDropdown.value = false
   focus()
 }
@@ -214,8 +209,12 @@ watch(useActiveElement(), async (activeElement) => {
   showDropdown.value = showDropdown.value && contained
 })
 
-watch(() => props.options, () => {
-  if (hasFocus.value && canSuggest()) showDropdown.value = true
+// Only open when options arrive late: a refresh of an existing list (e.g. after
+// adding a tag) must not reopen a dropdown that was just closed.
+watch(() => props.options, (options, previousOptions) => {
+  if (hasFocus.value && !previousOptions.length && options.length) {
+    showDropdown.value = true
+  }
 })
 
 watch(focusIndex, (value) => {
