@@ -1,5 +1,5 @@
 <script setup>
-import { computed, inject } from 'vue'
+import { computed, inject, useTemplateRef } from 'vue'
 import { AppIcon } from '@icij/murmur'
 
 import IPhFile from '~icons/ph/file'
@@ -116,6 +116,24 @@ const hasIcon = computed(() => !selectModeOrInjected.value || (selectModeOrInjec
 const toggle = () => {
   collapse.value = !collapse.value
 }
+
+const label = useTemplateRef('label')
+
+// Sweeping across the name to highlight it ends with a click, which would
+// otherwise collapse the entry here and navigate away through the router-link
+// PathTreeViewEntry wraps around us in the list and grid layouts, discarding
+// the highlight before it can be copied. Stopping the click in the capture
+// phase halts the bubble phase as well, so this single guard covers both.
+const guardSelection = (event) => {
+  const selection = window.getSelection()
+
+  if (!selection || selection.isCollapsed || !label.value?.contains(selection.anchorNode)) {
+    return
+  }
+
+  event.stopPropagation()
+  event.preventDefault()
+}
 </script>
 
 <template>
@@ -140,6 +158,7 @@ const toggle = () => {
     <slot v-bind="{ toggle, icon, name, compactOrInjected }">
       <div
         class="path-tree-view-entry-name__value text-truncate stretched-link"
+        @click.capture="guardSelection"
         @click="toggle"
       >
         <slot
@@ -152,7 +171,14 @@ const toggle = () => {
             :name="icon"
           />
         </slot>
-        {{ name }}
+        <!-- The text lives above the stretched-link overlay so the pointer can
+        reach it, and opts out of the native link drag the surrounding anchor
+        would otherwise start as soon as the pointer sweeps across it. -->
+        <span
+          ref="label"
+          class="path-tree-view-entry-name__value__label above-stretched-link"
+          draggable="false"
+        >{{ name }}</span>
       </div>
     </slot>
   </div>
