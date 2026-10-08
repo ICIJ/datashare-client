@@ -188,7 +188,7 @@ const classList = computed(() => {
 
 const selectModeOrInjected = computed(() => props.selectMode ?? inject('selectMode', false))
 const compactOrInjected = computed(() => props.compact ?? inject('compact', false))
-const tag = computed(() => (props.to && !props.noLink ? 'router-link' : 'div'))
+const hasLink = computed(() => !!props.to && !props.noLink)
 const isGridView = computed(() => props.layout === LAYOUTS.GRID)
 const isRoot = computed(() => props.level === 0)
 const hasPreview = computed(() => isGridView.value && !isRoot.value)
@@ -207,25 +207,44 @@ const locked = computed(() => isPathLocked(path.value))
 function toggleLock(value) {
   toggleLockPath(path.value, value)
 }
+
+// The link is an overlay covering the row rather than a wrapper around it,
+// because Chromium refuses to start a text selection from a press that lands
+// inside an `<a>` (icij/datashare#2432). That leaves the name outside the
+// anchor, so a plain click on it has to be forwarded to the link by hand.
+// Clicks that merely release a highlight never reach here: the guard in
+// PathTreeViewEntryName stops them first.
+function forwardNameClickToLink(event) {
+  if (!event.target.closest?.('.path-tree-view-entry-name__value__label')) {
+    return
+  }
+
+  event.currentTarget.querySelector('.path-tree-view-entry__link')?.click()
+}
 </script>
 
 <template>
-  <component
-    :is="tag"
-    :to="to"
-    draggable="false"
+  <div
     class="path-tree-view-entry"
     :class="classList"
   >
-    <!-- draggable="false" above so sweeping across the entry name highlights it
-    rather than picking up the link: browsers resolve a drag source by walking up
-    to the nearest draggable ancestor, and this `<a>` is draggable by default. -->
     <div
       v-if="!noHeader"
       class="path-tree-view-entry__header d-flex align-items-center"
       @mouseenter="active = true"
       @mouseleave="active = false"
+      @click="forwardNameClickToLink"
     >
+      <!-- Covers the row behind its contents so clicking anywhere but the name
+      opens the entry, while the name itself stays outside the anchor and can be
+      highlighted. Empty, hence the aria-label. -->
+      <router-link
+        v-if="hasLink"
+        :to="to"
+        :aria-label="name"
+        draggable="false"
+        class="path-tree-view-entry__link"
+      />
       <path-tree-view-entry-name
         v-model:collapse="collapse"
         v-model:selected="selected"
@@ -291,7 +310,7 @@ function toggleLock(value) {
     >
       <slot v-bind="{ collapse, selected, active }" />
     </b-collapse>
-  </component>
+  </div>
 </template>
 
 <style lang="scss">
@@ -330,6 +349,12 @@ function toggleLock(value) {
     --path-tree-view-entry-border-radius: 0;
     --path-tree-view-entry-header-border-radius: 0;
     --path-tree-view-entry-margin-top: 0;
+  }
+
+  &__link {
+    position: absolute;
+    inset: 0;
+    z-index: $stretched-link-z-index + 1;
   }
 
   &--stretched > &__header:after {
@@ -387,7 +412,11 @@ function toggleLock(value) {
     --path-tree-view-entry-header-bg: var(--bs-tertiary-bg-subtle);
   }
 
+  // Positioned so the link overlay and the name's own stretched-link cover this
+  // row only: before, both were anchored to the entry itself and so reached over
+  // a grid card's nested rows and a tree entry's children.
   & > &__header {
+    position: relative;
     border-radius: var(--path-tree-view-entry-header-border-radius);
     padding: var(--path-tree-view-entry-header-padding);
     background: var(--path-tree-view-entry-header-bg);
