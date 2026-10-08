@@ -210,15 +210,21 @@ function toggleLock(value) {
 
 function isHighlighting(row) {
   const selection = window.getSelection()
-  return selection?.isCollapsed === false && row.contains(selection.anchorNode)
+
+  if (selection?.isCollapsed !== false) {
+    return false
+  }
+
+  return row.contains(selection.anchorNode) || row.contains(selection.focusNode)
 }
 
 // The name is text to be read and copied; the rest of the row is the button.
+// A highlight released past the end of the text still belongs to the text.
 function ignoreClickOnName(event) {
   const row = event.currentTarget
   const opensOnItsOwn = !!row.querySelector('.path-tree-view-entry__link')
 
-  if (event.target.closest('[data-entry-name]') && (opensOnItsOwn || isHighlighting(row))) {
+  if (isHighlighting(row) || (opensOnItsOwn && event.target.closest('[data-entry-name]'))) {
     event.stopImmediatePropagation()
     event.preventDefault()
   }
