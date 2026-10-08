@@ -61,6 +61,7 @@ const count = computed(() => props.tags.length)
 <template>
   <document-user-actions-card
     action-end
+    :no-list="!count"
     :icon="IPhHash"
     :title="t('documentUserActions.tags', count)"
     :is-split="isServer"
