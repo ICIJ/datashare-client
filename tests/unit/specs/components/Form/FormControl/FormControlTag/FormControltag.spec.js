@@ -152,15 +152,14 @@ describe('FormControlTag', () => {
     expect(wrapper.vm.classList).toEqual({ 'form-control-tag--show-dropdown': true })
   })
 
-  it('does not open the dropdown on focus while the input is empty', async () => {
-    // Suggestions only appear once the user types at least one character.
+  it('opens the dropdown on focus while the input is empty', async () => {
     const wrapper = mount(FormControlTag, {
       global: { plugins },
       props: { modelValue: [], options: ['tag1', 'tag2'] }
     })
 
     await wrapper.vm.onFocus(new Event('focus'))
-    expect(wrapper.vm.showDropdown).toBe(false)
+    expect(wrapper.vm.showDropdown).toBe(true)
   })
 
   it('opens the dropdown on focus once the input has at least one character', async () => {
@@ -173,10 +172,10 @@ describe('FormControlTag', () => {
     expect(wrapper.vm.showDropdown).toBe(true)
   })
 
-  it('opens the dropdown when options arrive while the user is typing', async () => {
+  it('opens the dropdown when options arrive after focus', async () => {
     const wrapper = mount(FormControlTag, {
       global: { plugins },
-      props: { modelValue: [], options: [], inputValue: 'ta' }
+      props: { modelValue: [], options: [] }
     })
 
     wrapper.vm.hasFocus = true
@@ -225,6 +224,18 @@ describe('FormControlTag', () => {
     expect(wrapper.vm.showDropdown).toBe(false)
 
     wrapper.vm.inputTag('ta')
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.showDropdown).toBe(true)
+  })
+
+  it('keeps the dropdown open with all options when the input is emptied', async () => {
+    const wrapper = mount(FormControlTag, {
+      global: { plugins },
+      props: { modelValue: [], options: ['tag1'] }
+    })
+
+    wrapper.vm.inputTag('ta')
+    wrapper.vm.inputTag('')
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.showDropdown).toBe(true)
   })

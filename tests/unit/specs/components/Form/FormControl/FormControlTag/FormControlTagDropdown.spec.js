@@ -13,14 +13,13 @@ describe('FormControlTagDropdown', () => {
 
   const options = ['apple', 'banana', 'apricot', 'cherry']
 
-  it('shows no options when the input is empty', () => {
-    // Suggestions only appear once the user has typed at least one character.
+  it('shows all options sorted alphabetically when input is empty', () => {
     const wrapper = mount(FormControlTagDropdown, {
       global: { plugins },
       props: { options, modelValue: [], inputValue: '', show: true }
     })
 
-    expect(wrapper.vm.filteredOptions).toEqual([])
+    expect(wrapper.vm.filteredOptions.map(o => o.item)).toEqual([...options].sort())
   })
 
   it('filters options by the typed input value', async () => {
@@ -56,24 +55,25 @@ describe('FormControlTagDropdown', () => {
     expect(wrapper.emitted('update:show')?.at(-1)).toEqual([false])
   })
 
-  it('emits update:show false when the input is cleared', async () => {
-    // Clearing the field empties the suggestions, so the dropdown closes.
+  it('does not emit update:show true when the input is cleared', async () => {
+    // Adding a tag clears the input; the dropdown must not pop back open on its own.
     const wrapper = mount(FormControlTagDropdown, {
       global: { plugins },
       props: { options, modelValue: [], inputValue: 'ap', show: true }
     })
 
     await wrapper.setProps({ inputValue: '' })
-    expect(wrapper.emitted('update:show')?.at(-1)).toEqual([false])
+    expect(wrapper.emitted('update:show')?.at(-1)).not.toEqual([true])
   })
 
-  it('returns no options when the input is empty even if some are already selected', () => {
+  it('includes already-selected options in filteredOptions when input is empty', () => {
     const wrapper = mount(FormControlTagDropdown, {
       global: { plugins },
       props: { options, modelValue: ['apple'], inputValue: '', show: true, noDuplicates: true }
     })
 
-    expect(wrapper.vm.filteredOptions).toEqual([])
+    const items = wrapper.vm.filteredOptions.map(o => o.item)
+    expect(items).toContain('apple')
   })
 
   it('includes already-selected options in Fuse search results with noDuplicates', async () => {
