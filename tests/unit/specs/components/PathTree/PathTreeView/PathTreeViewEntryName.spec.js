@@ -12,6 +12,16 @@ describe('PathTreeViewEntryName.vue', () => {
     expect(wrapper.find('.path-tree-view-entry-name__caret').classes()).toContain('above-stretched-link')
   })
 
+  // Set on every entry rather than only on the ellipsed ones: telling them
+  // apart costs a layout measurement on hover, and the browser shows the
+  // tooltip the same way either way.
+  it('carries the whole name as a title, so an ellipsed one can still be read', () => {
+    const name = 'a_very_long_document_name_that_does_not_fit.xlsx'
+    const wrapper = mount(PathTreeViewEntryName, { props: { name, layout: LAYOUTS.TREE } })
+
+    expect(wrapper.find('.path-tree-view-entry-name__value').attributes('title')).toBe(name)
+  })
+
   describe('selectable name', () => {
     const mountName = () => mount(PathTreeViewEntryName, { props: { name: 'foo', layout: LAYOUTS.TREE } })
     const findLabel = wrapper => wrapper.find('.path-tree-view-entry-name__value__label')

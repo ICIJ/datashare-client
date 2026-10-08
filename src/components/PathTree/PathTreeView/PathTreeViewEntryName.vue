@@ -157,6 +157,7 @@ const guardSelection = (event) => {
     <slot v-bind="{ toggle, icon, name, compactOrInjected }">
       <div
         class="path-tree-view-entry-name__value text-truncate stretched-link"
+        :title="name"
         @click.capture="guardSelection"
         @click="toggle"
       >
