@@ -4,7 +4,7 @@ import { apiInstance as api } from '@/api/apiInstance'
 
 export function useElasticSearchQuery() {
   const fetchAllTagsByIndex = async (index) => {
-    const body = bodybuilder().size(0).agg('terms', 'tags').build()
+    const body = bodybuilder().size(0).agg('terms', 'tags', { size: 1000 }).build()
     const response = await api.elasticsearch.search({ index, body })
     const buckets = get(response, 'aggregations.agg_terms_tags.buckets', [])
     return buckets.map(({ key: label }) => ({ label }))
