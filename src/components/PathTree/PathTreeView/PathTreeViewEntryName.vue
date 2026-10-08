@@ -164,7 +164,7 @@ const measureEllipsis = () => {
         <span
           data-entry-name
           class="path-tree-view-entry-name__value__label above-stretched-link"
-          :class="{ 'ms-1': hasIcon }"
+          :class="{ 'ps-1': hasIcon }"
         >{{ name }}</span>
       </div>
     </slot>
@@ -209,8 +209,13 @@ const measureEllipsis = () => {
     color: var(--path-tree-view-entry-name-icon-color);
   }
 
+  &__value > * {
+    vertical-align: middle;
+  }
+
   &__value__label {
     cursor: text;
+    padding-inline-end: $spacer-xs;
   }
 
   &--compact.path-tree-view-entry-name--selected {

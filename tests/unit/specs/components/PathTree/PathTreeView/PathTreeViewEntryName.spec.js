@@ -49,15 +49,17 @@ describe('PathTreeViewEntryName.vue', () => {
   })
 
   describe('spacing', () => {
+    // Padding rather than margin, so the gap to the icon is part of the area a
+    // highlight can start from instead of dead background.
     it('separates the name from the icon', () => {
-      expect(mountName().find('[data-entry-name]').classes()).toContain('ms-1')
+      expect(mountName().find('[data-entry-name]').classes()).toContain('ps-1')
     })
 
     it('does not indent the name when no icon precedes it', () => {
       const wrapper = mountName({ selectMode: true, compact: true })
 
       expect(wrapper.find('.path-tree-view-entry-name__value__icon').exists()).toBe(false)
-      expect(wrapper.find('[data-entry-name]').classes()).not.toContain('ms-1')
+      expect(wrapper.find('[data-entry-name]').classes()).not.toContain('ps-1')
     })
   })
 })

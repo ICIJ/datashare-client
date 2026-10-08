@@ -68,14 +68,31 @@ describe('PathTreeViewEntry.vue (locked filters, icij/datashare#2336)', () => {
       expect(clicks).toHaveLength(0)
     })
 
-    it('leaves the name inert, so clicking it neither opens nor collapses the row', async () => {
+    it('opens the row from its name, which sits outside the link', async () => {
       const wrapper = mountLinked()
       const clicks = clicksOnLink(wrapper)
 
       await wrapper.find('[data-entry-name]').trigger('click')
 
+      expect(clicks).toHaveLength(1)
+    })
+
+    it('carries the modifier keys over, so the name opens in a new tab like the row does', async () => {
+      const wrapper = mountLinked()
+      const clicks = clicksOnLink(wrapper)
+
+      await wrapper.find('[data-entry-name]').trigger('click', { ctrlKey: true })
+
+      expect(clicks[0].ctrlKey).toBe(true)
+    })
+
+    it('does not open the row from a click elsewhere in the header', async () => {
+      const wrapper = mountLinked()
+      const clicks = clicksOnLink(wrapper)
+
+      await wrapper.find('.path-tree-view-entry__header__end').trigger('click')
+
       expect(clicks).toHaveLength(0)
-      expect(wrapper.emitted('update:collapse')).toBeUndefined()
     })
   })
 
