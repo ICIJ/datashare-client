@@ -86,6 +86,16 @@ describe('PathTreeViewEntry.vue (locked filters, icij/datashare#2336)', () => {
       expect(clicks[0].ctrlKey).toBe(true)
     })
 
+    it('opens the name in a new tab on a middle click, as the row does', async () => {
+      const wrapper = mountLinked()
+      const clicks = clicksOnLink(wrapper)
+
+      await wrapper.find('[data-entry-name]').trigger('auxclick', { button: 1 })
+
+      expect(clicks).toHaveLength(1)
+      expect(clicks[0].ctrlKey).toBe(true)
+    })
+
     it('does not open the row from a click elsewhere in the header', async () => {
       const wrapper = mountLinked()
       const clicks = clicksOnLink(wrapper)
