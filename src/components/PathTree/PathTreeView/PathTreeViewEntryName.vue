@@ -9,7 +9,6 @@ import IPhFolderOpenFill from '~icons/ph/folder-open-fill'
 import PathTreeViewEntryNameCaret from './PathTreeViewEntryNameCaret'
 import PathTreeViewEntryNameCheckbox from './PathTreeViewEntryNameCheckbox'
 import { LAYOUTS, layoutValidator } from '@/enums/pathTree'
-import { hasSelectionWithin } from '@/utils/selection'
 
 const collapse = defineModel('collapse', { type: Boolean })
 const selected = defineModel('selected', { type: Boolean })
@@ -120,18 +119,15 @@ const toggle = () => {
 
 const label = useTemplateRef('label')
 
-// Sweeping across the name to highlight it ends with a click, which would
-// otherwise collapse the entry here and navigate away through the router-link
-// PathTreeViewEntry wraps around us in the list and grid layouts, discarding
-// the highlight before it can be copied. Stopping the click in the capture
-// phase halts the bubble phase as well, so this single guard covers both.
-const guardSelection = (event) => {
-  if (!hasSelectionWithin(label.value)) {
-    return
-  }
+// Highlighting the name ends with a click: swallow it so the row neither
+// collapses nor opens, discarding the highlight.
+const ignoreClickEndingAHighlight = (event) => {
+  const selection = window.getSelection()
 
-  event.stopPropagation()
-  event.preventDefault()
+  if (!selection.isCollapsed && label.value.contains(selection.anchorNode)) {
+    event.stopPropagation()
+    event.preventDefault()
+  }
 }
 </script>
 
@@ -158,7 +154,7 @@ const guardSelection = (event) => {
       <div
         class="path-tree-view-entry-name__value text-truncate stretched-link"
         :title="name"
-        @click.capture="guardSelection"
+        @click.capture="ignoreClickEndingAHighlight"
         @click="toggle"
       >
         <slot
@@ -171,8 +167,6 @@ const guardSelection = (event) => {
             :name="icon"
           />
         </slot>
-        <!-- The text lives above the stretched-link overlay so the pointer can
-        reach it; PathTreeViewEntry opts the surrounding link out of dragging. -->
         <span
           ref="label"
           class="path-tree-view-entry-name__value__label above-stretched-link ms-1"
@@ -220,8 +214,6 @@ const guardSelection = (event) => {
     color: var(--path-tree-view-entry-name-icon-color);
   }
 
-  // The name is the only highlightable part of the row: the I-beam tells it
-  // apart from the link-or-toggle pointer the rest of the row carries.
   &__value__label {
     cursor: text;
   }

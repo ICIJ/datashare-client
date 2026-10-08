@@ -19,11 +19,8 @@ describe('PathTreeViewEntry.vue (locked filters, icij/datashare#2336)', () => {
     })
   }
 
-  // Chromium will not start a text selection from a press landing inside an
-  // `<a>`, so the link cannot wrap the name: it is an overlay beside it
-  // (icij/datashare#2432).
   describe('link overlay', () => {
-    it('renders the row as a plain element rather than wrapping it in the link', () => {
+    it('renders the row as a plain element, with the name outside the link', () => {
       const wrapper = mountEntry(undefined, { to: '/data/foo' })
 
       expect(wrapper.element.tagName).toBe('DIV')
@@ -31,29 +28,20 @@ describe('PathTreeViewEntry.vue (locked filters, icij/datashare#2336)', () => {
     })
 
     it('renders the link overlay inside the row header, named after the entry', () => {
-      const wrapper = mountEntry(undefined, { to: '/data/foo' })
-      const overlay = wrapper.find('.path-tree-view-entry__link')
+      const overlay = mountEntry(undefined, { to: '/data/foo' }).find('.path-tree-view-entry__link')
 
       expect(overlay.exists()).toBe(true)
       expect(overlay.attributes('aria-label')).toBe('foo')
       expect(overlay.attributes('draggable')).toBe('false')
     })
 
-    it('renders no link overlay without a target', () => {
-      expect(mountEntry().find('.path-tree-view-entry__link').exists()).toBe(false)
+    it.each([{}, { to: '/data/foo', noLink: true }])('renders no link overlay for %o', (props) => {
+      expect(mountEntry(undefined, props).find('.path-tree-view-entry__link').exists()).toBe(false)
     })
 
-    it('renders no link overlay when links are disabled', () => {
-      const wrapper = mountEntry(undefined, { to: '/data/foo', noLink: true })
-
-      expect(wrapper.find('.path-tree-view-entry__link').exists()).toBe(false)
-    })
-
-    // The name sits outside the anchor now, so its plain click has to reach it.
     it('forwards a click on the name to the link', async () => {
       const wrapper = mountEntry(undefined, { to: '/data/foo' })
-      const overlay = wrapper.find('.path-tree-view-entry__link')
-      const click = vi.spyOn(overlay.element, 'click')
+      const click = vi.spyOn(wrapper.find('.path-tree-view-entry__link').element, 'click')
 
       await wrapper.find('.path-tree-view-entry-name__value__label').trigger('click')
 
@@ -62,8 +50,7 @@ describe('PathTreeViewEntry.vue (locked filters, icij/datashare#2336)', () => {
 
     it('does not forward a click that landed outside the name', async () => {
       const wrapper = mountEntry(undefined, { to: '/data/foo' })
-      const overlay = wrapper.find('.path-tree-view-entry__link')
-      const click = vi.spyOn(overlay.element, 'click')
+      const click = vi.spyOn(wrapper.find('.path-tree-view-entry__link').element, 'click')
 
       await wrapper.find('.path-tree-view-entry__header').trigger('click')
 

@@ -208,18 +208,13 @@ function toggleLock(value) {
   toggleLockPath(path.value, value)
 }
 
-// The link is an overlay covering the row rather than a wrapper around it,
-// because Chromium refuses to start a text selection from a press that lands
-// inside an `<a>` (icij/datashare#2432). That leaves the name outside the
-// anchor, so a plain click on it has to be forwarded to the link by hand.
-// Clicks that merely release a highlight never reach here: the guard in
-// PathTreeViewEntryName stops them first.
 function forwardNameClickToLink(event) {
-  if (!event.target.closest?.('.path-tree-view-entry-name__value__label')) {
-    return
-  }
+  const link = event.currentTarget.querySelector('.path-tree-view-entry__link')
 
-  event.currentTarget.querySelector('.path-tree-view-entry__link')?.click()
+  if (link && event.target.closest('.path-tree-view-entry-name__value__label')) {
+    event.stopPropagation()
+    link.click()
+  }
 }
 </script>
 
@@ -235,9 +230,8 @@ function forwardNameClickToLink(event) {
       @mouseleave="active = false"
       @click="forwardNameClickToLink"
     >
-      <!-- Covers the row behind its contents so clicking anywhere but the name
-      opens the entry, while the name itself stays outside the anchor and can be
-      highlighted. Empty, hence the aria-label. -->
+      <!-- An overlay, not a wrapper: Chromium cannot start a text selection
+      from a press landing inside an <a> (icij/datashare#2432). -->
       <router-link
         v-if="hasLink"
         :to="to"
@@ -351,6 +345,7 @@ function forwardNameClickToLink(event) {
     --path-tree-view-entry-margin-top: 0;
   }
 
+  // Over the name's stretched-link, under every above-stretched-link control.
   &__link {
     position: absolute;
     inset: 0;
@@ -412,9 +407,6 @@ function forwardNameClickToLink(event) {
     --path-tree-view-entry-header-bg: var(--bs-tertiary-bg-subtle);
   }
 
-  // Positioned so the link overlay and the name's own stretched-link cover this
-  // row only: before, both were anchored to the entry itself and so reached over
-  // a grid card's nested rows and a tree entry's children.
   & > &__header {
     position: relative;
     border-radius: var(--path-tree-view-entry-header-border-radius);
