@@ -213,9 +213,13 @@ function toggleLock(value) {
   <component
     :is="tag"
     :to="to"
+    draggable="false"
     class="path-tree-view-entry"
     :class="classList"
   >
+    <!-- draggable="false" above so sweeping across the entry name highlights it
+    rather than picking up the link: browsers resolve a drag source by walking up
+    to the nearest draggable ancestor, and this `<a>` is draggable by default. -->
     <div
       v-if="!noHeader"
       class="path-tree-view-entry__header d-flex align-items-center"

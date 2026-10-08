@@ -171,12 +171,10 @@ const guardSelection = (event) => {
           />
         </slot>
         <!-- The text lives above the stretched-link overlay so the pointer can
-        reach it, and opts out of the native link drag the surrounding anchor
-        would otherwise start as soon as the pointer sweeps across it. -->
+        reach it; PathTreeViewEntry opts the surrounding link out of dragging. -->
         <span
           ref="label"
           class="path-tree-view-entry-name__value__label above-stretched-link ms-1"
-          draggable="false"
         >{{ name }}</span>
       </div>
     </slot>

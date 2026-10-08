@@ -19,6 +19,18 @@ describe('PathTreeViewEntry.vue (locked filters, icij/datashare#2336)', () => {
     })
   }
 
+  // Browsers resolve a drag source by walking up to the nearest draggable
+  // ancestor, and an `<a>` is draggable by default, so opting the name text out
+  // is not enough: sweeping across it picks the whole link up instead of
+  // highlighting the name (icij/datashare#2432).
+  it('opts the link out of the native link drag so the name can be highlighted', () => {
+    // The router installed by CoreSetup leaves router-link as a stub here, so
+    // assert on the root the attribute falls through to rather than on an `<a>`.
+    const wrapper = mountEntry(undefined, { to: '/data/foo' })
+
+    expect(wrapper.attributes('draggable')).toBe('false')
+  })
+
   it('does not render a lock button when no lock context is provided (every non-FilterTypePath consumer)', () => {
     const wrapper = mountEntry(undefined, { selected: true })
     expect(wrapper.findComponent(ButtonToggleLock).exists()).toBe(false)

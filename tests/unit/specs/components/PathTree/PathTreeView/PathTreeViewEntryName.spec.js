@@ -16,13 +16,6 @@ describe('PathTreeViewEntryName.vue', () => {
     const mountName = () => mount(PathTreeViewEntryName, { props: { name: 'foo', layout: LAYOUTS.TREE } })
     const findLabel = wrapper => wrapper.find('.path-tree-view-entry-name__value__label')
 
-    // The `<a>` rendered by PathTreeViewEntry in list and grid layouts would
-    // otherwise start a native link drag as soon as the pointer sweeps across
-    // the name, instead of highlighting it.
-    it('opts the name text out of native dragging', () => {
-      expect(findLabel(mountName()).attributes('draggable')).toBe('false')
-    })
-
     it('keeps the name text above the stretched-link overlay stack', () => {
       expect(findLabel(mountName()).classes()).toContain('above-stretched-link')
     })
