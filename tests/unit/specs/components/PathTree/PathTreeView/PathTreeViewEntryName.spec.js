@@ -11,4 +11,52 @@ describe('PathTreeViewEntryName.vue', () => {
 
     expect(wrapper.find('.path-tree-view-entry-name__caret').classes()).toContain('above-stretched-link')
   })
+
+  describe('selectable name', () => {
+    const mountName = () => mount(PathTreeViewEntryName, { props: { name: 'foo', layout: LAYOUTS.TREE } })
+    const findLabel = wrapper => wrapper.find('.path-tree-view-entry-name__value__label')
+
+    // The `<a>` rendered by PathTreeViewEntry in list and grid layouts would
+    // otherwise start a native link drag as soon as the pointer sweeps across
+    // the name, instead of highlighting it.
+    it('opts the name text out of native dragging', () => {
+      expect(findLabel(mountName()).attributes('draggable')).toBe('false')
+    })
+
+    it('keeps the name text above the stretched-link overlay stack', () => {
+      expect(findLabel(mountName()).classes()).toContain('above-stretched-link')
+    })
+
+    it('toggles the collapse when the name is clicked without a selection', async () => {
+      const wrapper = mountName()
+      await findLabel(wrapper).trigger('click')
+
+      expect(wrapper.emitted('update:collapse')).toHaveLength(1)
+    })
+
+    it('does not toggle the collapse when the click ends a selection of the name', async () => {
+      const wrapper = mountName()
+      const label = findLabel(wrapper)
+      const getSelection = vi
+        .spyOn(window, 'getSelection')
+        .mockReturnValue({ isCollapsed: false, anchorNode: label.element })
+
+      await label.trigger('click')
+
+      expect(wrapper.emitted('update:collapse')).toBeUndefined()
+      getSelection.mockRestore()
+    })
+
+    it('toggles the collapse when the selection is outside the name', async () => {
+      const wrapper = mountName()
+      const getSelection = vi
+        .spyOn(window, 'getSelection')
+        .mockReturnValue({ isCollapsed: false, anchorNode: document.body })
+
+      await findLabel(wrapper).trigger('click')
+
+      expect(wrapper.emitted('update:collapse')).toHaveLength(1)
+      getSelection.mockRestore()
+    })
+  })
 })
