@@ -151,7 +151,6 @@ const classList = computed(() => {
   }
 
   &__link {
-    z-index: $stretched-link-z-index + 1;
     border-radius: var(--bs-border-radius);
     line-height: 1;
     color: inherit;

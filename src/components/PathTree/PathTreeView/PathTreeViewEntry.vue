@@ -208,12 +208,19 @@ function toggleLock(value) {
   toggleLockPath(path.value, value)
 }
 
-function forwardNameClickToLink(event) {
-  const link = event.currentTarget.querySelector('.path-tree-view-entry__link')
+function isHighlighting(row) {
+  const selection = window.getSelection()
+  return selection?.isCollapsed === false && row.contains(selection.anchorNode)
+}
 
-  if (link && event.target.closest('.path-tree-view-entry-name__value__label')) {
-    event.stopPropagation()
-    link.click()
+// The name is text to be read and copied; the rest of the row is the button.
+function ignoreClickOnName(event) {
+  const row = event.currentTarget
+  const opensOnItsOwn = !!row.querySelector('.path-tree-view-entry__link')
+
+  if (event.target.closest('[data-entry-name]') && (opensOnItsOwn || isHighlighting(row))) {
+    event.stopImmediatePropagation()
+    event.preventDefault()
   }
 }
 </script>
@@ -222,13 +229,13 @@ function forwardNameClickToLink(event) {
   <div
     class="path-tree-view-entry"
     :class="classList"
+    @click.capture="ignoreClickOnName"
   >
     <div
       v-if="!noHeader"
       class="path-tree-view-entry__header d-flex align-items-center"
       @mouseenter="active = true"
       @mouseleave="active = false"
-      @click="forwardNameClickToLink"
     >
       <!-- An overlay, not a wrapper: Chromium cannot start a text selection
       from a press landing inside an <a> (icij/datashare#2432). -->
@@ -345,7 +352,6 @@ function forwardNameClickToLink(event) {
     --path-tree-view-entry-margin-top: 0;
   }
 
-  // Over the name's stretched-link, under every above-stretched-link control.
   &__link {
     position: absolute;
     inset: 0;
@@ -415,6 +421,10 @@ function forwardNameClickToLink(event) {
     color: var(--path-tree-view-entry-header-color);
     height: var(--path-tree-view-entry-header-height);
     line-height: var(--path-tree-view-entry-header-line-height);
+  }
+
+  &--grid > &__header {
+    position: static;
   }
 
   & > &__header > &__header__search-link {

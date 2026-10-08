@@ -9,35 +9,42 @@ vi.mock('@/composables/useDocumentModal', () => ({
 }))
 
 describe('PathTreeViewDocument.vue', () => {
-  const core = CoreSetup.init().useAll()
+  const core = CoreSetup.init().useAll().useRouterWithoutGuards()
 
-  const mountDocument = () => {
-    return mount(PathTreeViewDocument, {
-      props: {
-        entry: { _id: 'foo', _index: 'local-datashare', _source: { path: '/data/foo.txt', contentType: 'text/plain' } }
-      },
-      global: { plugins: core.plugins }
-    })
-  }
+  const mountDocument = (props = {}) => mount(PathTreeViewDocument, {
+    props: {
+      entry: { _id: 'foo', _index: 'local-datashare', _source: { path: '/data/foo.txt', contentType: 'text/plain' } },
+      ...props
+    },
+    global: { plugins: core.plugins }
+  })
 
-  const findLabel = wrapper => wrapper.find('.path-tree-view-entry-name__value__label')
+  const findName = wrapper => wrapper.find('[data-entry-name]')
 
   beforeEach(() => show.mockClear())
   afterEach(() => vi.restoreAllMocks())
 
-  it('opens the document modal when the name is clicked without a selection', async () => {
-    await findLabel(mountDocument()).trigger('click')
-
-    expect(show).toHaveBeenCalledTimes(1)
-  })
-
-  it('does not open the document modal when the click ends a selection of the name', async () => {
-    const wrapper = mountDocument()
-    const label = findLabel(wrapper)
-    vi.spyOn(window, 'getSelection').mockReturnValue({ isCollapsed: false, anchorNode: label.element })
-
-    await label.trigger('click')
+  it('leaves the name inert, so it can be highlighted instead of opening the document', async () => {
+    await findName(mountDocument()).trigger('click')
 
     expect(show).not.toHaveBeenCalled()
+  })
+
+  it('opens the document in a modal when the row is clicked', async () => {
+    const push = vi.spyOn(core.router, 'push')
+
+    await mountDocument().find('.path-tree-view-entry__link').trigger('click')
+
+    expect(show).toHaveBeenCalledTimes(1)
+    expect(push).not.toHaveBeenCalled()
+  })
+
+  it('selects the row from its name in select mode, where nothing else opens it', async () => {
+    const wrapper = mountDocument({ selectMode: true })
+
+    await findName(wrapper).trigger('click')
+
+    expect(show).not.toHaveBeenCalled()
+    expect(wrapper.emitted('update:selected')).toHaveLength(1)
   })
 })

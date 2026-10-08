@@ -114,7 +114,7 @@ const handleClick = (event) => {
     :path="document.path"
     :projects="[document.project]"
     :select-mode="selectMode"
-    @click="handleClick"
+    @click.capture="handleClick"
   >
     <template #icon>
       <display-content-type-icon

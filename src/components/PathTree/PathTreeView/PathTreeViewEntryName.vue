@@ -1,5 +1,5 @@
 <script setup>
-import { computed, inject, useTemplateRef } from 'vue'
+import { computed, inject, ref, useTemplateRef } from 'vue'
 import { AppIcon } from '@icij/murmur'
 
 import IPhFile from '~icons/ph/file'
@@ -117,17 +117,10 @@ const toggle = () => {
   collapse.value = !collapse.value
 }
 
-const label = useTemplateRef('label')
-
-// Highlighting the name ends with a click: swallow it so the row neither
-// collapses nor opens, discarding the highlight.
-const ignoreClickEndingAHighlight = (event) => {
-  const selection = window.getSelection()
-
-  if (!selection.isCollapsed && label.value.contains(selection.anchorNode)) {
-    event.stopPropagation()
-    event.preventDefault()
-  }
+const value = useTemplateRef('value')
+const isEllipsed = ref(false)
+const measureEllipsis = () => {
+  isEllipsed.value = value.value.scrollWidth > value.value.clientWidth
 }
 </script>
 
@@ -152,9 +145,10 @@ const ignoreClickEndingAHighlight = (event) => {
     />
     <slot v-bind="{ toggle, icon, name, compactOrInjected }">
       <div
+        ref="value"
         class="path-tree-view-entry-name__value text-truncate stretched-link"
-        :title="name"
-        @click.capture="ignoreClickEndingAHighlight"
+        :title="isEllipsed ? name : null"
+        @mouseenter="measureEllipsis"
         @click="toggle"
       >
         <slot
@@ -168,8 +162,9 @@ const ignoreClickEndingAHighlight = (event) => {
           />
         </slot>
         <span
-          ref="label"
-          class="path-tree-view-entry-name__value__label above-stretched-link ms-1"
+          data-entry-name
+          class="path-tree-view-entry-name__value__label above-stretched-link"
+          :class="{ 'ms-1': hasIcon }"
         >{{ name }}</span>
       </div>
     </slot>
