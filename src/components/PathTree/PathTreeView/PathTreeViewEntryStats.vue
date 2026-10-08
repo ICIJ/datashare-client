@@ -99,7 +99,6 @@ const classList = computed(() => {
       />
       <path-tree-view-entry-stats-size
         :value="size"
-        class="ms-auto"
         :active="active"
         :compact="compactOrInjected"
       />
@@ -117,9 +116,13 @@ const classList = computed(() => {
     color: var(--bs-body-color);
   }
 
+  // 290px = the documents column (115) + the directories column (60) + a size
+  // column wide enough for the longest realistic value, "360.49 MB" (99), plus
+  // the two gaps (16). At the previous 250px the size could not fit beside the
+  // other two and overflowed its column (icij/datashare#2432).
   &:not(.path-tree-view-entry-stats--compact) {
-    max-width: 250px;
-    flex: 250px 0 0;
+    max-width: 290px;
+    flex: 290px 0 0;
     width: 100%;
 
     @include media-breakpoint-down(md) {

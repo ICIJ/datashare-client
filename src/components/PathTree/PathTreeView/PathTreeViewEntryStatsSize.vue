@@ -23,6 +23,15 @@ defineProps({
   display: flex;
   align-items: center;
 
+  // Takes the row's remaining width and sits at its end, so every row's size
+  // reads against the same right edge instead of starting wherever the
+  // variable-width directory count happens to end. A value too long for the
+  // space left then overflows towards the gap on its left rather than pushing
+  // the right edge out of line (icij/datashare#2432).
+  flex: 1 1 auto;
+  min-width: 0;
+  justify-content: flex-end;
+
   @include media-breakpoint-down(sm) {
     display: none;
   }
