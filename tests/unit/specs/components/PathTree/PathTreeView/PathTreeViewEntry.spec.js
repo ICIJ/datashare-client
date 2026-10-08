@@ -5,7 +5,7 @@ import PathTreeViewEntry from '@/components/PathTree/PathTreeView/PathTreeViewEn
 import ButtonToggleLock from '@/components/Button/ButtonToggleLock'
 
 describe('PathTreeViewEntry.vue (locked filters, icij/datashare#2336)', () => {
-  const core = CoreSetup.init().useAll()
+  const core = CoreSetup.init().useAll().useRouterWithoutGuards()
 
   function mountEntry(provide = {}, props = {}) {
     return mount(PathTreeViewEntry, {
@@ -20,41 +20,66 @@ describe('PathTreeViewEntry.vue (locked filters, icij/datashare#2336)', () => {
   }
 
   describe('link overlay', () => {
+    const TO = { name: 'document-standalone', params: { index: 'local-datashare', id: 'foo' } }
+    const mountLinked = (props = {}) => mountEntry(undefined, { to: TO, ...props })
+    const clicksOnLink = (wrapper) => {
+      const clicks = []
+      wrapper.find('.path-tree-view-entry__link').element.addEventListener('click', e => clicks.push(e), true)
+      return clicks
+    }
+
+    afterEach(() => vi.restoreAllMocks())
+
     it('renders the row as a plain element, with the name outside the link', () => {
-      const wrapper = mountEntry(undefined, { to: '/data/foo' })
+      const wrapper = mountLinked()
 
       expect(wrapper.element.tagName).toBe('DIV')
-      expect(wrapper.find('.path-tree-view-entry-name__value__label').element.closest('a')).toBeNull()
+      expect(wrapper.find('a').exists()).toBe(true)
+      expect(wrapper.find('[data-entry-name]').element.closest('a')).toBeNull()
     })
 
     it('renders the link overlay inside the row header, named after the entry', () => {
-      const overlay = mountEntry(undefined, { to: '/data/foo' }).find('.path-tree-view-entry__link')
+      const overlay = mountLinked().find('.path-tree-view-entry__link')
 
-      expect(overlay.exists()).toBe(true)
       expect(overlay.attributes('aria-label')).toBe('foo')
       expect(overlay.attributes('draggable')).toBe('false')
     })
 
-    it.each([{}, { to: '/data/foo', noLink: true }])('renders no link overlay for %o', (props) => {
+    it.each([{}, { to: TO, noLink: true }])('renders no link overlay for %o', (props) => {
       expect(mountEntry(undefined, props).find('.path-tree-view-entry__link').exists()).toBe(false)
     })
 
-    it('forwards a click on the name to the link', async () => {
-      const wrapper = mountEntry(undefined, { to: '/data/foo' })
-      const click = vi.spyOn(wrapper.find('.path-tree-view-entry__link').element, 'click')
+    it('leaves the name inert, so clicking it neither opens nor collapses the row', async () => {
+      const wrapper = mountLinked()
+      const clicks = clicksOnLink(wrapper)
 
-      await wrapper.find('.path-tree-view-entry-name__value__label').trigger('click')
+      await wrapper.find('[data-entry-name]').trigger('click')
 
-      expect(click).toHaveBeenCalledTimes(1)
+      expect(clicks).toHaveLength(0)
+      expect(wrapper.emitted('update:collapse')).toBeUndefined()
+    })
+  })
+
+  describe('rows without a link', () => {
+    it('toggles on a click anywhere, including the name', async () => {
+      const wrapper = mountEntry()
+
+      await wrapper.find('[data-entry-name]').trigger('click')
+
+      expect(wrapper.emitted('update:collapse')).toHaveLength(1)
     })
 
-    it('does not forward a click that landed outside the name', async () => {
-      const wrapper = mountEntry(undefined, { to: '/data/foo' })
-      const click = vi.spyOn(wrapper.find('.path-tree-view-entry__link').element, 'click')
+    it('does not toggle when the click ends a highlight of the name', async () => {
+      const wrapper = mountEntry()
+      vi.spyOn(window, 'getSelection').mockReturnValue({
+        isCollapsed: false,
+        anchorNode: wrapper.find('[data-entry-name]').element
+      })
 
-      await wrapper.find('.path-tree-view-entry__header').trigger('click')
+      await wrapper.find('[data-entry-name]').trigger('click')
 
-      expect(click).not.toHaveBeenCalled()
+      expect(wrapper.emitted('update:collapse')).toBeUndefined()
+      vi.restoreAllMocks()
     })
   })
 

@@ -43,6 +43,5 @@ const to = computed(() => {
 
 <style lang="scss" scoped>
 .path-tree-view-entry-search-link {
-  z-index: $stretched-link-z-index + 1;
 }
 </style>

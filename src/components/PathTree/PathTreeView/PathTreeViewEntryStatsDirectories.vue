@@ -27,6 +27,7 @@ defineProps({
 .path-tree-view-entry-stats-directories {
   display: flex;
   align-items: center;
+  flex: 0 0 60px;
 
   @include media-breakpoint-down(sm) {
     display: none;
