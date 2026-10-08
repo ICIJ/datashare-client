@@ -230,10 +230,17 @@ function ignoreClickEndingAHighlight(event) {
 function openFromName(event) {
   const link = event.currentTarget.querySelector('.path-tree-view-entry__link')
 
-  if (link && event.target.closest('[data-entry-name]')) {
-    const { ctrlKey, metaKey, shiftKey } = event
-    link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, ctrlKey, metaKey, shiftKey }))
+  if (!link || !event.target.closest('[data-entry-name]')) {
+    return
   }
+
+  // A synthesized auxclick opens nothing, so a middle click asks for the new
+  // tab the way a browser lets us: as a ctrl click.
+  const openInNewTab = event.type === 'auxclick'
+  const { metaKey, shiftKey } = event
+  const ctrlKey = event.ctrlKey || openInNewTab
+
+  link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, ctrlKey, metaKey, shiftKey }))
 }
 </script>
 
@@ -249,6 +256,7 @@ function openFromName(event) {
       @mouseenter="active = true"
       @mouseleave="active = false"
       @click="openFromName"
+      @auxclick.middle="openFromName"
     >
       <!-- An overlay, not a wrapper: Chromium cannot start a text selection
       from a press landing inside an <a> (icij/datashare#2432). -->
