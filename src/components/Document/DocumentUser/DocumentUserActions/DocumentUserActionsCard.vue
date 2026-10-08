@@ -36,6 +36,10 @@ defineProps({
     type: Boolean,
     default: false
   },
+  noList: {
+    type: Boolean,
+    default: false
+  },
   listNameOthers: {
     type: String,
     required: false,
@@ -69,7 +73,10 @@ defineProps({
       </document-user-actions-card-info>
       <slot name="action" />
     </header>
-    <section class="d-flex flex-column gap-3">
+    <section
+      v-if="!noList"
+      class="d-flex flex-column gap-3"
+    >
       <slot>
         <template v-if="isSplit">
           <document-user-actions-card-list

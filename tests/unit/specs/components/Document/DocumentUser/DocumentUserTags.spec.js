@@ -27,6 +27,24 @@ describe('DocumentUserTags', () => {
     expect(list.element.compareDocumentPosition(action.element)).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
   })
 
+  it('should not render the tag lists when there are no tags yet', () => {
+    const wrapper = mount(DocumentUserTags, {
+      global: { plugins },
+      props: { tags: [], username: 'user1' }
+    })
+
+    expect(wrapper.find('.document-user-actions-card section').exists()).toBe(false)
+  })
+
+  it('should render the tag lists when there are tags', () => {
+    const wrapper = mount(DocumentUserTags, {
+      global: { plugins },
+      props: { tags, username: 'user1' }
+    })
+
+    expect(wrapper.find('.document-user-actions-card section').exists()).toBe(true)
+  })
+
   it('should emit delete when a tag is removed via the action input', async () => {
     const wrapper = mount(DocumentUserTags, {
       global: { plugins },
