@@ -11,6 +11,8 @@ import { visualizer } from 'rollup-plugin-visualizer'
 
 import { BootstrapVueNextResolver } from 'unplugin-vue-components/resolvers'
 
+import { chunkFileNames } from './src/utils/chunkFileNames.js'
+
 export default ({ mode }) => {
   const VITE_GIT_HASH = childProcess.execSync('git rev-parse HEAD').toString()
   const VITE_CWD = process.cwd()
@@ -133,6 +135,7 @@ export default ({ mode }) => {
     build: {
       rollupOptions: {
         output: {
+          chunkFileNames,
           /**
            * No vendor-chunking strategy existed before this: heavy,
            * rarely-changing dependencies got bundled into whichever route
