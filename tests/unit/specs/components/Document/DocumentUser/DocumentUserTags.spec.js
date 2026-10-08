@@ -16,6 +16,17 @@ describe('DocumentUserTags', () => {
     { label: 'tag2', user: { id: 'user1' } }
   ]
 
+  it('should render the tag input after the list of tags', () => {
+    const wrapper = mount(DocumentUserTags, {
+      global: { plugins },
+      props: { tags, username: 'user1' }
+    })
+
+    const action = wrapper.find('.document-user-tags-action')
+    const list = wrapper.find('.document-user-actions-card-list')
+    expect(list.element.compareDocumentPosition(action.element)).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
+  })
+
   it('should emit delete when a tag is removed via the action input', async () => {
     const wrapper = mount(DocumentUserTags, {
       global: { plugins },
