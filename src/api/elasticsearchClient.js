@@ -1,5 +1,4 @@
 import axios from 'axios'
-import isUndefined from 'lodash/isUndefined'
 import mapValues from 'lodash/mapValues'
 import omitBy from 'lodash/omitBy'
 
@@ -18,21 +17,15 @@ import omitBy from 'lodash/omitBy'
 
 /**
  * Joins array values into comma-separated lists (`_source=a,b`): ES keeps
- * only the last value of a repeated query param. Drops undefined values and
- * empty routing params so ES is never queried with `?routing=`.
+ * only the last value of a repeated query param. Drops an empty routing so
+ * ES is never queried with `?routing=`. Axios already drops undefined/null
+ * values from the query string.
  */
 function compactQuery(params = {}) {
-  const query = { ...params }
-
-  const isEmptyRouting = !query.routing || query.routing.trim() === ''
-  if (isEmptyRouting) {
-    delete query.routing
-  }
-
-  const stringified = mapValues(query, value => Array.isArray(value) ? value.join(',') : value)
-  const cleaned = omitBy(stringified, isUndefined)
-
-  return cleaned
+  const isEmptyRouting = (value, key) => key === 'routing' && !value
+  const joinArray = value => Array.isArray(value) ? value.join(',') : value
+  const query = omitBy(params, isEmptyRouting)
+  return mapValues(query, joinArray)
 }
 
 /**
