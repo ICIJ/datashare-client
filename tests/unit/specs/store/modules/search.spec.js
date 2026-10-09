@@ -430,6 +430,12 @@ describe('SearchStore', () => {
 
       expect(searchStore.sameAppliedQuery(routeQueryWithoutFilter, ['from'])).toBe(false)
     })
+
+    it('ignores the stamp of the last applied query when the route query has none', async () => {
+      await searchStore.query('bar')
+
+      expect(searchStore.sameAppliedQuery(searchStore.toRouteQuery, ['from'])).toBe(true)
+    })
   })
 
   describe('Build route query', () => {

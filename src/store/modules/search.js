@@ -1263,6 +1263,11 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     // different URL) must still be detected as a change, or the caller
     // never notices the filter set actually shrank.
     const keys = new Set([...Object.keys(query), ...Object.keys(toRaw(lastAppliedQuery.value))])
+    // The stamp only forces a refresh when the route carries one: routes built
+    // from `toRouteQuery` (e.g. back to search from a document) have none.
+    if (!('stamp' in query)) {
+      keys.delete('stamp')
+    }
     return [...keys].every((key) => {
       // A single-valued filter round-trips through the URL as a scalar while
       // lastAppliedQuery holds an array, so castArray both sides before
