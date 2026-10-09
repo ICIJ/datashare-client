@@ -39,4 +39,33 @@ describe('PathTreeViewEntryName.vue', () => {
       expect(wrapper.find('[data-entry-name]').classes()).not.toContain('ps-1')
     })
   })
+
+  // The directive mounts its popover in a container it inserts right next to
+  // the name, inside the `gap`-ed flex row, where it eats the room the name
+  // has to render in, and remounts it on every resize until nothing is left
+  // but an ellipsis. The `.body` modifier moves it out of the row.
+  describe('ellipsis tooltip', () => {
+    // jsdom lays nothing out, so every element measures 0: pretend each one
+    // overflows, which is what makes the directive bind its tooltip.
+    beforeEach(() => {
+      Object.defineProperty(HTMLElement.prototype, 'offsetWidth', { configurable: true, get: () => 100 })
+      Object.defineProperty(Element.prototype, 'scrollWidth', { configurable: true, get: () => 300 })
+    })
+
+    afterEach(() => {
+      delete HTMLElement.prototype.offsetWidth
+      delete Element.prototype.scrollWidth
+    })
+
+    it('keeps its container out of the name row', () => {
+      const wrapper = mount(PathTreeViewEntryName, {
+        props: { name: NAME, layout: LAYOUTS.TREE },
+        attachTo: document.body
+      })
+      const row = wrapper.find('.path-tree-view-entry-name')
+      const value = wrapper.find('.path-tree-view-entry-name__value')
+
+      expect(row.element.lastElementChild).toBe(value.element)
+    })
+  })
 })
