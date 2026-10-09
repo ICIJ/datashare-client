@@ -32,7 +32,7 @@ describe('WidgetPaths.vue', () => {
   async function build({ query = {}, projects = [{ name: project, sourcePath }] } = {}) {
     const core = CoreSetup.init().useAll().useRouterWithoutGuards()
     const { plugins, config } = core
-    config.merge({ dataDir, projects })
+    config.merge({ dataDir, projects, pathSeparator: '/' })
     useInsightsStore().setProject(project)
     await core.router.push({ name: 'project.view.overview.paths', params: { name: project }, query })
     const wrapper = mount(WidgetPaths, { global: { plugins, stubs }, props })
@@ -162,6 +162,15 @@ describe('WidgetPaths.vue', () => {
       await flushBatchedUpdates()
       expect(tree.props('layout')).toBe(LAYOUTS.GRID)
       expect(tree.props('path')).toBe(dataDir)
+    })
+
+    it('returns to the default path when the last open folder is collapsed', async () => {
+      const { tree, router } = await build({ query: { layout } })
+      tree.vm.$emit('update:openPaths', ['/home/datashare/data/Clients'])
+      await flushBatchedUpdates()
+      tree.vm.$emit('update:openPaths', [])
+      await flushBatchedUpdates()
+      expect(router.currentRoute.value.query.path).toBe(dataDir)
     })
 
     it('expands nothing when the URL folder is outside the default path', async () => {
