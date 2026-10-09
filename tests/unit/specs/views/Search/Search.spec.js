@@ -74,6 +74,21 @@ describe('Search.vue', () => {
     expect(query.q).toBe('foo')
   })
 
+  it('does not search again when returning from a document with the noRefresh flag', async () => {
+    const searchStore = useSearchStore()
+    await core.router.push({ name: 'search', query: { q: 'backFromDocumentTest' } })
+    await flushPromises()
+    const querySpy = vi.spyOn(searchStore, 'query')
+
+    await core.router.push({ name: 'document-standalone', params: { index: 'test', id: 'doc1' } })
+    await core.router.push({ name: 'search', query: { ...searchStore.toRouteQuery, noRefresh: 1 } })
+    await flushPromises()
+    await flushPromises()
+
+    expect(core.router.currentRoute.value.query.noRefresh).toBeUndefined()
+    expect(querySpy).not.toHaveBeenCalled()
+  })
+
   it('leaves select mode and clears the selection when the query changes', async () => {
     wrapper.vm.selectMode = true
     wrapper.vm.selection = ['document-id']
