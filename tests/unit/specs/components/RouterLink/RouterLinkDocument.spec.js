@@ -3,6 +3,12 @@ import { mount } from '@vue/test-utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import RouterLinkDocument from '@/components/RouterLink/RouterLinkDocument'
 
+const { showDocumentModal } = vi.hoisted(() => ({ showDocumentModal: vi.fn() }))
+
+vi.mock('@/composables/useDocumentModal', () => ({
+  useDocumentModal: () => ({ show: showDocumentModal })
+}))
+
 describe('RouterLinkDocument.vue', () => {
   let core
 
@@ -10,10 +16,10 @@ describe('RouterLinkDocument.vue', () => {
     core = CoreSetup.init().useAll().useRouterWithoutGuards()
   })
 
-  function mountLink(attrs = {}) {
+  function mountLink({ props = {}, attrs = {} } = {}) {
     return mount(RouterLinkDocument, {
       global: { plugins: core.plugins },
-      props: { index: 'local-datashare', id: 'doc-id', name: 'document' },
+      props: { index: 'local-datashare', id: 'doc-id', name: 'document', q: 'foo', ...props },
       attrs
     })
   }
@@ -24,12 +30,26 @@ describe('RouterLinkDocument.vue', () => {
 
     await wrapper.find('a').trigger('click')
 
-    expect(push).toHaveBeenCalledTimes(1)
+    expect(push).toHaveBeenCalledWith({
+      name: 'document',
+      params: { index: 'local-datashare', id: 'doc-id', routing: undefined },
+      query: { q: 'foo' }
+    })
   })
 
-  it('lets the browser open the link when it targets another window', async () => {
+  it('opens the modal without navigating when modal is set', async () => {
     const push = vi.spyOn(core.router, 'push')
-    const wrapper = mountLink({ target: '_blank' })
+    const wrapper = mountLink({ props: { modal: true } })
+
+    await wrapper.find('a').trigger('click')
+
+    expect(showDocumentModal).toHaveBeenCalledWith('local-datashare', 'doc-id', undefined, 'foo')
+    expect(push).not.toHaveBeenCalled()
+  })
+
+  it.each(['_blank', '_top', 'datashare-doc'])('lets the browser open the link when it targets %s', async (target) => {
+    const push = vi.spyOn(core.router, 'push')
+    const wrapper = mountLink({ attrs: { target } })
 
     await wrapper.find('a').trigger('click')
 
