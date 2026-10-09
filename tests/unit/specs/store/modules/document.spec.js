@@ -61,11 +61,11 @@ describe('DocumentStore', () => {
     expect(documentStore.document.id).toBe(id)
   })
 
-  it('should drop an empty routing from the stored id and routing', async () => {
+  it('should fall back to the id when the routing is empty', async () => {
     await letData(es).have(new IndexedDocument(id, index)).commit()
     await documentStore.getDocument({ id, index, routing: '' })
 
-    expect(documentStore.idAndRouting).toEqual({ id, index, routing: undefined })
+    expect(documentStore.idAndRouting).toEqual({ id, index, routing: id })
   })
 
   it('should get the parent document', async () => {
