@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref, reactive, toRef, watch } from 'vue'
+import debounce from 'lodash/debounce'
 import flatten from 'lodash/flatten'
 import get from 'lodash/get'
 import identity from 'lodash/identity'
@@ -533,8 +534,10 @@ async function loadTree() {
 watch(path, () => loadDataWithSpinner({ clearPages: true }), { immediate: true })
 // Reload when directory order changes.
 watch(orderDirectories, () => loadDataWithSpinner({ clearPages: true }))
-// Reload when query changes.
-watch(query, () => loadDataWithSpinner({ clearPages: true }))
+// Reload when query changes. Debounced so a burst of keystrokes in the search
+// box costs one aggregation instead of one per character.
+const SEARCH_DEBOUNCE = 400
+watch(query, debounce(() => loadDataWithSpinner({ clearPages: true }), SEARCH_DEBOUNCE))
 // Reload when projects change.
 watch(toRef(props, 'projects'), () => loadDataWithSpinner({ clearPages: true, deep: true }))
 // Reset open paths and restore default when toggling TREE layout.
