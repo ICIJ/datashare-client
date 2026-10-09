@@ -138,8 +138,14 @@ const toggle = () => {
       class="flex-shrink-0 above-stretched-link"
     />
     <slot v-bind="{ toggle, icon, name, compactOrInjected }">
+      <!-- `.body` so the tooltip's container mounts on the body: its default
+      spot, right next to us, is inside the `gap`-ed flex row above, where it
+      would take a gap's worth of the room the name has to render in, over and
+      over as the directive remounts it on every resize (ICIJ/datashare#2432).
+      `.interactive` so the tooltip survives the pointer landing on it and the
+      whole name can be selected there, not just the part that fits. -->
       <div
-        v-ellipsis-tooltip="{ title: name }"
+        v-ellipsis-tooltip.body.interactive="{ title: name }"
         class="path-tree-view-entry-name__value text-truncate stretched-link"
         @click="toggle"
       >
