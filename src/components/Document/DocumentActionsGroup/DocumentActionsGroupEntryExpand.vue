@@ -51,8 +51,11 @@ const href = computed(() => {
 })
 
 function handleClick(event) {
-  if (!isSearchRoute.value) {
-    event.preventDefault()
+  event.preventDefault()
+  if (isSearchRoute.value) {
+    router.push(to.value)
+  }
+  else {
     showDocumentModal(document.index, document.id, document.routing, route.query.q)
   }
 }
