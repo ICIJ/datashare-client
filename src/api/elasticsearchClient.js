@@ -1,4 +1,6 @@
 import axios from 'axios'
+import mapValues from 'lodash/mapValues'
+import omitBy from 'lodash/omitBy'
 
 /**
  * Minimal stand-in for elasticsearch-browser's `Client`/`Transport` pair,
@@ -15,12 +17,15 @@ import axios from 'axios'
 
 /**
  * Joins array values into comma-separated lists (`_source=a,b`): ES keeps
- * only the last value of a repeated query param. Axios already drops
- * undefined/null values from the query string.
+ * only the last value of a repeated query param. Drops an empty routing so
+ * ES is never queried with `?routing=`. Axios already drops undefined/null
+ * values from the query string.
  */
 function compactQuery(params = {}) {
-  const joinArrays = ([key, value]) => [key, Array.isArray(value) ? value.join(',') : value]
-  return Object.fromEntries(Object.entries(params).map(joinArrays))
+  const isEmptyRouting = (value, key) => key === 'routing' && value === ''
+  const joinArray = value => Array.isArray(value) ? value.join(',') : value
+  const query = omitBy(params, isEmptyRouting)
+  return mapValues(query, joinArray)
 }
 
 /**
