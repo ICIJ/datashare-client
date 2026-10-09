@@ -53,9 +53,9 @@ describe('router routes', () => {
       expect(router.resolve({ name, params: { name: 'foo' } }).path).toBe(path)
     })
 
-    // Unlike resolve(), push() awaits the lazy component chain of every matched
-    // record, which takes well over the default 10s timeout here. It is the only
-    // way to exercise the redirect, since resolve() does not follow one.
+    // push() is the only way to exercise the redirect, since resolve() does not
+    // follow one. The generous timeout covers a cold run, where this first
+    // resolution pays for transforming the whole lazy component chain.
     it('redirects the project root to the insights tab', async () => {
       const router = buildRouter()
       await router.push('/projects/foo')

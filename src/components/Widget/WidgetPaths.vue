@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import isEqual from 'lodash/isEqual'
 import trimEnd from 'lodash/trimEnd'
 import uniq from 'lodash/uniq'
@@ -10,7 +10,7 @@ import PathTreeLayouts from '@/components/PathTree/PathTreeLayouts/PathTreeLayou
 import { useConfig } from '@/composables/useConfig'
 import { useCore } from '@/composables/useCore'
 import { usePath } from '@/composables/usePath'
-import { useUrlParam } from '@/composables/useUrlParam'
+import { cancelBatchedQueryParamUpdates, useUrlParam } from '@/composables/useUrlParam'
 import { LAYOUTS, layoutValidator } from '@/enums/pathTree'
 
 /**
@@ -49,6 +49,10 @@ const layout = useUrlParam('layout', {
 })
 
 const query = useUrlParam('q', { initialValue: '' })
+
+// A write still sitting in the 50ms debounce would otherwise land on whichever
+// overview tab the user clicked in the meantime.
+onBeforeUnmount(cancelBatchedQueryParamUpdates)
 
 const isTree = computed(() => layout.value === LAYOUTS.TREE)
 
@@ -96,8 +100,8 @@ watch(currentFolder, (value) => {
 // never the path, so the URL tracks the last entry of that array. Collapsing
 // splices an entry out, which walks the URL back to the previous folder.
 watch(openPaths, (value) => {
-  const lastOpened = value[value.length - 1]
-  if (isTree.value && lastOpened && lastOpened !== currentFolder.value) {
+  const lastOpened = value[value.length - 1] ?? defaultPath
+  if (isTree.value && lastOpened !== currentFolder.value) {
     currentFolder.value = lastOpened
   }
 })
