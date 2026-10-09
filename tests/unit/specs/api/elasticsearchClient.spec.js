@@ -221,6 +221,13 @@ describe('elasticsearchClient', () => {
       )
     })
 
+    it('drops an empty routing from the query string on get', async () => {
+      const client = new Client({ host: 'http://elasticsearch:9200' })
+      await client.get({ index: 'my-index', id: 'doc-1', routing: '' })
+
+      expect(axios).toHaveBeenCalledWith(expect.objectContaining({ params: {} }))
+    })
+
     it('encodes the id on get', async () => {
       const client = new Client({ host: 'http://elasticsearch:9200' })
       await client.get({ index: 'my-index', id: 'a/b c' })
