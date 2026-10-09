@@ -99,4 +99,75 @@ describe('WidgetPaths.vue', () => {
     const { tree } = await build({ query: { path: '' } })
     expect(tree.props('path')).toBe(dataDir)
   })
+  describe('tree layout', () => {
+    const layout = LAYOUTS.TREE
+
+    it('keeps the tree rooted at the default path', async () => {
+      const query = { layout, path: '/home/datashare/data/Clients/2024' }
+      const { tree } = await build({ query })
+      expect(tree.props('path')).toBe(dataDir)
+    })
+
+    it('expands every ancestor down to the folder in the URL', async () => {
+      const query = { layout, path: '/home/datashare/data/Clients/2024' }
+      const { tree } = await build({ query })
+      expect(tree.props('openPaths')).toEqual([
+        '/home/datashare/data/Clients',
+        '/home/datashare/data/Clients/2024'
+      ])
+    })
+
+    it('writes the most recently expanded folder to ?path=', async () => {
+      const { tree, router } = await build({ query: { layout } })
+      tree.vm.$emit('update:openPaths', ['/home/datashare/data/Clients'])
+      await flushBatchedUpdates()
+      tree.vm.$emit('update:openPaths', [
+        '/home/datashare/data/Clients',
+        '/home/datashare/data/Mails'
+      ])
+      await flushBatchedUpdates()
+      expect(router.currentRoute.value.query.path).toBe('/home/datashare/data/Mails')
+    })
+
+    it('falls back to the previously opened folder when one is collapsed', async () => {
+      const { tree, router } = await build({ query: { layout } })
+      tree.vm.$emit('update:openPaths', [
+        '/home/datashare/data/Clients',
+        '/home/datashare/data/Mails'
+      ])
+      await flushBatchedUpdates()
+      tree.vm.$emit('update:openPaths', ['/home/datashare/data/Clients'])
+      await flushBatchedUpdates()
+      expect(router.currentRoute.value.query.path).toBe('/home/datashare/data/Clients')
+    })
+
+    it('expands nothing when the URL folder is outside the default path', async () => {
+      const query = { layout, path: '/elsewhere/on/another/machine' }
+      const { tree } = await build({ query })
+      expect(tree.props('openPaths')).toEqual([])
+    })
+
+    it('expands ancestors with a Windows path separator', async () => {
+      const core = CoreSetup.init().useAll().useRouterWithoutGuards()
+      const { plugins, config } = core
+      config.merge({
+        pathSeparator: '\\',
+        dataDir: 'C:\\Users\\dev\\Data',
+        projects: [{ name: project }]
+      })
+      useInsightsStore().setProject(project)
+      await core.router.push({
+        name: 'project.view.overview.paths',
+        params: { name: project },
+        query: { layout, path: 'C:\\Users\\dev\\Data\\Clients\\2024' }
+      })
+      const wrapper = mount(WidgetPaths, { global: { plugins, stubs }, props })
+      await flushPromises()
+      const tree = wrapper.findComponent({ name: 'PathTree' })
+      expect(tree.props('openPaths')).toEqual([
+        'C:\\Users\\dev\\Data\\Clients',
+        'C:\\Users\\dev\\Data\\Clients\\2024'
+      ])
+    })
+  })
 })
