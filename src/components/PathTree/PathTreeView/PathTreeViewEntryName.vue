@@ -1,6 +1,6 @@
 <script setup>
-import { computed, inject, ref, useTemplateRef } from 'vue'
-import { AppIcon } from '@icij/murmur'
+import { computed, inject } from 'vue'
+import { AppIcon, EllipsisTooltip as vEllipsisTooltip } from '@icij/murmur'
 
 import IPhFile from '~icons/ph/file'
 import IPhFolderFill from '~icons/ph/folder-fill'
@@ -116,12 +116,6 @@ const hasIcon = computed(() => !selectModeOrInjected.value || (selectModeOrInjec
 const toggle = () => {
   collapse.value = !collapse.value
 }
-
-const value = useTemplateRef('value')
-const isEllipsed = ref(false)
-const measureEllipsis = () => {
-  isEllipsed.value = value.value.scrollWidth > value.value.clientWidth
-}
 </script>
 
 <template>
@@ -145,10 +139,8 @@ const measureEllipsis = () => {
     />
     <slot v-bind="{ toggle, icon, name, compactOrInjected }">
       <div
-        ref="value"
+        v-ellipsis-tooltip="{ title: name }"
         class="path-tree-view-entry-name__value text-truncate stretched-link"
-        :title="isEllipsed ? name : null"
-        @mouseenter="measureEllipsis"
         @click="toggle"
       >
         <slot

@@ -10,13 +10,6 @@ describe('PathTreeViewEntryName.vue', () => {
     props: { name: NAME, layout: LAYOUTS.TREE, ...props }
   })
 
-  const findValueWithWidths = (wrapper, scrollWidth, clientWidth) => {
-    const value = wrapper.find('.path-tree-view-entry-name__value')
-    Object.defineProperty(value.element, 'scrollWidth', { value: scrollWidth, configurable: true })
-    Object.defineProperty(value.element, 'clientWidth', { value: clientWidth, configurable: true })
-    return value
-  }
-
   it('keeps the caret above the stretched-link overlay stack', () => {
     expect(mountName().find('.path-tree-view-entry-name__caret').classes()).toContain('above-stretched-link')
   })
@@ -30,22 +23,6 @@ describe('PathTreeViewEntryName.vue', () => {
     await wrapper.find('[data-entry-name]').trigger('click')
 
     expect(wrapper.emitted('update:collapse')).toHaveLength(1)
-  })
-
-  describe('title', () => {
-    it('shows the whole name on hover once it is ellipsed', async () => {
-      const value = findValueWithWidths(mountName(), 300, 100)
-      await value.trigger('mouseenter')
-
-      expect(value.attributes('title')).toBe(NAME)
-    })
-
-    it('adds no title when the name fits', async () => {
-      const value = findValueWithWidths(mountName(), 100, 100)
-      await value.trigger('mouseenter')
-
-      expect(value.attributes('title')).toBeUndefined()
-    })
   })
 
   describe('spacing', () => {
