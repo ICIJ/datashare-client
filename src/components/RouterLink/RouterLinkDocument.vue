@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { useLink } from 'vue-router'
+import { useRouter } from 'vue-router'
 
 import { useDocumentModal } from '@/composables/useDocumentModal'
 
@@ -29,6 +29,7 @@ const props = defineProps({
   }
 })
 
+const router = useRouter()
 const { show: showDocumentModal } = useDocumentModal()
 
 const to = computed(() => ({
@@ -43,15 +44,24 @@ const to = computed(() => ({
   }
 }))
 
-const { href, navigate } = useLink({ to })
+const href = computed(() => {
+  const { href } = router.resolve(to.value)
+  return href
+})
+
+const opensElsewhere = (event) => {
+  const { target } = event.currentTarget
+  return !!target && target !== '_self'
+}
 
 const handleClick = (event) => {
   if (props.modal) {
     event.preventDefault()
     showDocumentModal(props.index, props.id, props.routing, props.q)
   }
-  else {
-    navigate(event)
+  else if (!opensElsewhere(event)) {
+    event.preventDefault()
+    router.push(to.value)
   }
 }
 </script>
