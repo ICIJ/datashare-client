@@ -1,12 +1,14 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import trimEnd from 'lodash/trimEnd'
+import uniq from 'lodash/uniq'
 
 import { useInsightsStore } from '@/store/modules'
 import PathTree from '@/components/PathTree/PathTree'
 import PathTreeLayouts from '@/components/PathTree/PathTreeLayouts/PathTreeLayouts'
 import { useConfig } from '@/composables/useConfig'
 import { useCore } from '@/composables/useCore'
+import { usePath } from '@/composables/usePath'
 import { useUrlParam } from '@/composables/useUrlParam'
 import { LAYOUTS, layoutValidator } from '@/enums/pathTree'
 
@@ -56,6 +58,27 @@ const path = computed({
   set: value => (urlPath.value = value)
 })
 
+const openPaths = ref([])
+const { getAncestorPaths } = usePath()
+
+// Reveal the folder from the URL on arrival. Unlike FilterTypePath.vue, the
+// target itself stays in the chain: the URL holds a folder the sender opened,
+// so it has to be open for whoever follows the link.
+watch(urlPath, (value) => {
+  if (!isTree.value) return
+  openPaths.value = uniq([...openPaths.value, ...getAncestorPaths(value, defaultPath)])
+}, { immediate: true })
+
+// Expanding a folder in tree layout only touches openPaths (PathTree.vue:314),
+// never the path, so the URL tracks the last entry of that array. Collapsing
+// splices an entry out, which walks the URL back to the previous folder.
+watch(openPaths, (value) => {
+  const lastOpened = value[value.length - 1]
+  if (isTree.value && lastOpened && lastOpened !== urlPath.value) {
+    urlPath.value = lastOpened
+  }
+})
+
 const projects = computed(() => [insightsStore.project])
 const flush = computed(() => layout.value === LAYOUTS.GRID)
 </script>
@@ -66,6 +89,7 @@ const flush = computed(() => layout.value === LAYOUTS.GRID)
       v-model:path="path"
       v-model:layout="layout"
       v-model:query="query"
+      v-model:open-paths="openPaths"
       :default-path="defaultPath"
       :projects="projects"
       :flush="flush"
