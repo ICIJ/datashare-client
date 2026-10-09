@@ -365,6 +365,7 @@ export const routes = [
                 name: 'project.view.overview',
                 path: '',
                 props: true,
+                redirect: { name: 'project.view.overview.insights' },
                 component: () => import('@/views/Project/ProjectView/ProjectViewOverview/ProjectViewOverview'),
                 meta: {
                   breadcrumb: false
@@ -372,7 +373,7 @@ export const routes = [
                 children: [
                   {
                     name: 'project.view.overview.insights',
-                    path: '',
+                    path: 'insights',
                     props: true,
                     component: () =>
                       import('@/views/Project/ProjectView/ProjectViewOverview/ProjectViewOverviewInsights'),
@@ -385,7 +386,7 @@ export const routes = [
                   },
                   {
                     name: 'project.view.overview.paths',
-                    path: '',
+                    path: 'paths',
                     props: true,
                     component: () => import('@/views/Project/ProjectView/ProjectViewOverview/ProjectViewOverviewPaths'),
                     meta: {
@@ -397,7 +398,7 @@ export const routes = [
                   },
                   {
                     name: 'project.view.overview.graph',
-                    path: '',
+                    path: 'graph',
                     props: true,
                     component: () => import('@/views/Project/ProjectView/ProjectViewOverview/ProjectViewOverviewGraph'),
                     meta: {
@@ -409,7 +410,7 @@ export const routes = [
                   },
                   {
                     name: 'project.view.overview.details',
-                    path: '',
+                    path: 'details',
                     props: true,
                     component: () =>
                       import('@/views/Project/ProjectView/ProjectViewOverview/ProjectViewOverviewDetails'),
@@ -422,7 +423,7 @@ export const routes = [
                   },
                   {
                     name: 'project.view.overview.history',
-                    path: '',
+                    path: 'history',
                     props: true,
                     component: () =>
                       import('@/views/Project/ProjectView/ProjectViewOverview/ProjectViewOverviewHistory'),
