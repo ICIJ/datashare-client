@@ -22,7 +22,7 @@ import omitBy from 'lodash/omitBy'
  * values from the query string.
  */
 function compactQuery(params = {}) {
-  const isEmptyRouting = (value, key) => key === 'routing' && !value
+  const isEmptyRouting = (value, key) => key === 'routing' && value === ''
   const joinArray = value => Array.isArray(value) ? value.join(',') : value
   const query = omitBy(params, isEmptyRouting)
   return mapValues(query, joinArray)

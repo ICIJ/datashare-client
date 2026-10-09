@@ -228,6 +228,20 @@ describe('elasticsearchClient', () => {
       expect(axios).toHaveBeenCalledWith(expect.objectContaining({ params: {} }))
     })
 
+    it('drops an empty routing from the query string on search', async () => {
+      const client = new Client({ host: 'http://elasticsearch:9200' })
+      await client.search({ index: 'my-index', body: {}, routing: '' })
+
+      expect(axios).toHaveBeenCalledWith(expect.objectContaining({ params: {} }))
+    })
+
+    it('keeps a falsy but non-empty routing on get', async () => {
+      const client = new Client({ host: 'http://elasticsearch:9200' })
+      await client.get({ index: 'my-index', id: 'doc-1', routing: 0 })
+
+      expect(axios).toHaveBeenCalledWith(expect.objectContaining({ params: { routing: 0 } }))
+    })
+
     it('encodes the id on get', async () => {
       const client = new Client({ host: 'http://elasticsearch:9200' })
       await client.get({ index: 'my-index', id: 'a/b c' })
