@@ -365,7 +365,6 @@ export const routes = [
                 name: 'project.view.overview',
                 path: '',
                 props: true,
-                redirect: { name: 'project.view.overview.insights' },
                 component: () => import('@/views/Project/ProjectView/ProjectViewOverview/ProjectViewOverview'),
                 meta: {
                   breadcrumb: false
@@ -373,7 +372,7 @@ export const routes = [
                 children: [
                   {
                     name: 'project.view.overview.insights',
-                    path: 'insights',
+                    path: '',
                     props: true,
                     component: () =>
                       import('@/views/Project/ProjectView/ProjectViewOverview/ProjectViewOverviewInsights'),

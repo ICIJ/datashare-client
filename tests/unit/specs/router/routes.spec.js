@@ -43,7 +43,8 @@ describe('router routes', () => {
     const buildRouter = () => createRouter({ routes, history: createMemoryHistory() })
 
     it.each([
-      ['project.view.overview.insights', '/projects/foo/insights'],
+      // Insights is the project landing tab, so it stays on the bare project URL.
+      ['project.view.overview.insights', '/projects/foo'],
       ['project.view.overview.paths', '/projects/foo/paths'],
       ['project.view.overview.graph', '/projects/foo/graph'],
       ['project.view.overview.details', '/projects/foo/details'],
@@ -53,13 +54,22 @@ describe('router routes', () => {
       expect(router.resolve({ name, params: { name: 'foo' } }).path).toBe(path)
     })
 
-    // push() is the only way to exercise the redirect, since resolve() does not
-    // follow one. The generous timeout covers a cold run, where this first
-    // resolution pays for transforming the whole lazy component chain.
-    it('redirects the project root to the insights tab', async () => {
+    // The generous timeout covers a cold run, where this first push pays for
+    // transforming the whole lazy component chain it matches.
+    it('lands on the insights tab from the bare project URL', async () => {
       const router = buildRouter()
       await router.push('/projects/foo')
       expect(router.currentRoute.value.name).toBe('project.view.overview.insights')
     }, 30000)
+
+    // Insights sharing the project URL must not make its tab look active from a
+    // sibling tab, which is what the five empty paths used to do.
+    it('does not match insights when another tab is open', () => {
+      const router = buildRouter()
+      const names = router.resolve({ name: 'project.view.overview.paths', params: { name: 'foo' } })
+        .matched.map(record => record.name)
+      expect(names).toContain('project.view.overview.paths')
+      expect(names).not.toContain('project.view.overview.insights')
+    })
   })
 })
