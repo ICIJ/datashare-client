@@ -287,12 +287,12 @@ export const useDocumentStore = defineStore(
      * @param {string} data.routing - The document routing.
      * @returns {Promise<object|null>} The fetched document.
      */
-    async function getDocument({ id, index, routing: rawRouting }) {
-      // An optional `:routing?` route param resolves to an empty string when absent
-      const routing = rawRouting === '' ? undefined : rawRouting
+    async function getDocument({ id, index, routing }) {
+      // An absent `:routing?` route param is an empty string, and ES routes by id by default
+      const routingOrId = routing || id
       try {
-        const fetchedDoc = await api.elasticsearch.getDocumentWithoutContent(index, id, routing)
-        setIdAndRouting({ id, index, routing })
+        const fetchedDoc = await api.elasticsearch.getDocumentWithoutContent(index, id, routingOrId)
+        setIdAndRouting({ id, index, routing: routingOrId })
         setDocument(fetchedDoc)
       }
       catch {
