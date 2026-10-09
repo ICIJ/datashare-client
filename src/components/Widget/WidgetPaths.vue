@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
+import isEqual from 'lodash/isEqual'
 import trimEnd from 'lodash/trimEnd'
 import uniq from 'lodash/uniq'
 
@@ -51,22 +52,44 @@ const query = useUrlParam('q', { initialValue: '' })
 
 const isTree = computed(() => layout.value === LAYOUTS.TREE)
 
-// In tree layout the tree stays rooted at the default folder and the URL
-// carries the last expanded one instead, see the openPaths handling below.
-const path = computed({
-  get: () => (isTree.value ? defaultPath : urlPath.value),
-  set: value => (urlPath.value = value)
-})
+// urlPath only settles once the 50ms debounced router push lands, which is too
+// late for a render happening on the same tick as a layout change. The folder
+// therefore lives in a local ref, and the URL mirrors it in both directions.
+const currentFolder = ref(urlPath.value)
+watch(urlPath, value => (currentFolder.value = value))
+watch(currentFolder, value => (urlPath.value = value))
 
 const openPaths = ref([])
 const { getAncestorPaths } = usePath()
 
+// In tree layout the tree stays rooted at the default folder and the URL
+// carries the last expanded one instead, see the openPaths handling below.
+const path = computed({
+  get: () => (isTree.value ? defaultPath : currentFolder.value),
+  set: value => (currentFolder.value = value)
+})
+
+// Leaving tree layout must not hand PathTree the folder the tree had expanded:
+// it would aggregate that folder, then aggregate the root again once PathTree's
+// own layout watcher (PathTree.vue:541) reset it, racing the two responses
+// against each other. Resetting here keeps that reset synchronous and local.
+watch(isTree, () => {
+  currentFolder.value = defaultPath
+  openPaths.value = []
+})
+
 // Reveal the folder from the URL on arrival. Unlike FilterTypePath.vue, the
 // target itself stays in the chain: the URL holds a folder the sender opened,
 // so it has to be open for whoever follows the link.
-watch(urlPath, (value) => {
+// uniq() always returns a new array, so assigning unconditionally would retrigger
+// the writer below with a deeper, stale folder and push the URL forward again:
+// the Back button would never escape the page.
+watch(currentFolder, (value) => {
   if (!isTree.value) return
-  openPaths.value = uniq([...openPaths.value, ...getAncestorPaths(value, defaultPath)])
+  const revealed = uniq([...openPaths.value, ...getAncestorPaths(value, defaultPath)])
+  if (!isEqual(revealed, openPaths.value)) {
+    openPaths.value = revealed
+  }
 }, { immediate: true })
 
 // Expanding a folder in tree layout only touches openPaths (PathTree.vue:314),
@@ -74,8 +97,8 @@ watch(urlPath, (value) => {
 // splices an entry out, which walks the URL back to the previous folder.
 watch(openPaths, (value) => {
   const lastOpened = value[value.length - 1]
-  if (isTree.value && lastOpened && lastOpened !== urlPath.value) {
-    urlPath.value = lastOpened
+  if (isTree.value && lastOpened && lastOpened !== currentFolder.value) {
+    currentFolder.value = lastOpened
   }
 })
 

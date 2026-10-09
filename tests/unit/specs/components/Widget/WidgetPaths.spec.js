@@ -141,6 +141,29 @@ describe('WidgetPaths.vue', () => {
       expect(router.currentRoute.value.query.path).toBe('/home/datashare/data/Clients')
     })
 
+    it('leaves the URL alone when the user navigates back to a shallower folder', async () => {
+      const { router } = await build({ query: { layout, path: '/home/datashare/data/Clients/2024' } })
+      await router.push({
+        name: 'project.view.overview.paths',
+        params: { name: project },
+        query: { layout, path: '/home/datashare/data/Clients' }
+      })
+      await flushBatchedUpdates()
+      expect(router.currentRoute.value.query.path).toBe('/home/datashare/data/Clients')
+    })
+
+    // The widget must reset the folder itself rather than lean on PathTree's own
+    // layout watcher (PathTree.vue:541): that reset travels back out through a
+    // 50ms debounce, so PathTree would meanwhile load the expanded folder and
+    // then load the root again, racing two aggregations against each other.
+    it('roots back at the default path as soon as the layout leaves the tree', async () => {
+      const { tree } = await build({ query: { layout, path: '/home/datashare/data/Clients' } })
+      tree.vm.$emit('update:layout', LAYOUTS.GRID)
+      await flushBatchedUpdates()
+      expect(tree.props('layout')).toBe(LAYOUTS.GRID)
+      expect(tree.props('path')).toBe(dataDir)
+    })
+
     it('expands nothing when the URL folder is outside the default path', async () => {
       const query = { layout, path: '/elsewhere/on/another/machine' }
       const { tree } = await build({ query })
