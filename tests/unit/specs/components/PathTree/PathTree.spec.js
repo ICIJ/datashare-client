@@ -85,6 +85,23 @@ describe('PathTree.vue', () => {
       expect(wrapper).toBeTruthy()
     })
 
+    it('issues a single search for a burst of keystrokes in the search box', async () => {
+      await flushPromises()
+      const spy = vi.spyOn(api.elasticsearch, 'search')
+      const searches = () => spy.mock.calls.length
+      const before = searches()
+      for (const typed of ['b', 'ba', 'bar']) {
+        wrapper.vm.$emit('update:query', typed)
+        await wrapper.setProps({ query: typed })
+      }
+      await flushPromises()
+      expect(searches()).toBe(before)
+      await new Promise(resolve => setTimeout(resolve, 500))
+      await flushPromises()
+      expect(searches()).toBeGreaterThan(before)
+      spy.mockRestore()
+    })
+
     it('should display 4 directories including one from the tree', async () => {
       await letData(es)
         .have(new IndexedDocuments().setBaseName('/home/foo/bar/doc_01').withIndex(index).count(5))
