@@ -2,6 +2,7 @@
 import { computed, ref, watch, toRef } from 'vue'
 import get from 'lodash/get'
 import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
 
 import IPhChartBar from '~icons/ph/chart-bar'
 import IPhTreeStructure from '~icons/ph/tree-structure'
@@ -33,7 +34,13 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
+const route = useRoute()
 const core = useCore()
+
+// Insights sits on the bare project URL, so vue-router resolves its link through
+// the record shared by all five tabs and reports it active on every one of them.
+// Driving the state by route name is the same opt-out DocumentViewTabs.vue uses.
+const isInsights = computed(() => route.name === 'project.view.overview.insights')
 const { waitFor, loaderId } = useWait()
 
 const params = computed(() => {
@@ -102,6 +109,8 @@ watch(toRef(props, 'name'), fetch, { immediate: true })
         <tab-group-navigation-entry
           :icon="IPhChartBar"
           :to="{ name: 'project.view.overview.insights', params }"
+          :active="isInsights"
+          manual
         >
           {{ t('projectViewOverview.nav.insights') }}
         </tab-group-navigation-entry>
