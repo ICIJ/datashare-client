@@ -862,6 +862,10 @@
     "failedToRetrieveLanguages": "Error al recuperar idiomas",
     "nullOption": "Detectar automáticamente (por defecto)"
   },
+  "ocrVariant": {
+    "chi_sim": "Chinese (Simplified)",
+    "chi_tra": "Chinese (Traditional)"
+  },
   "taskDocumentsFormOcrAlert": {
     "useDefault": "Se utiliza el idioma OCR por defecto.",
     "isMissing": " OCR for '{language}' is not installed.",
