@@ -862,6 +862,10 @@
     "failedToRetrieveLanguages": "crwdns8598:0crwdne8598:0",
     "nullOption": "crwdns8600:0crwdne8600:0"
   },
+  "ocrVariant": {
+    "chi_sim": "crwdns10747:0crwdne10747:0",
+    "chi_tra": "crwdns10749:0crwdne10749:0"
+  },
   "taskDocumentsFormOcrAlert": {
     "useDefault": "crwdns8602:0crwdne8602:0",
     "isMissing": "crwdns8604:0{language}crwdne8604:0",
