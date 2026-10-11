@@ -1,7 +1,6 @@
 <script setup>
 import { computed, onBeforeMount } from 'vue'
 import some from 'lodash/some'
-import get from 'lodash/get'
 import find from 'lodash/find'
 import { useI18n } from 'vue-i18n'
 
@@ -25,6 +24,9 @@ const { t } = useI18n()
 const languagesStore = useLanguagesStore()
 
 const languageName = computed(() => {
+  if (Object.values(settings.ocrVariants).flat().includes(props.language)) {
+    return t(`ocrVariant.${props.language}`)
+  }
   if (props.language) {
     const language = find(languagesStore.textLanguages, ({ iso6392 }) => iso6392 === props.language)
     const { name = null } = language || {}
@@ -35,7 +37,7 @@ const languageName = computed(() => {
 
 const isLanguageAvailable = computed(() => {
   return some(languagesStore.ocrLanguages, ({ name, iso6392 }) => {
-    return sameLanguage(name) || sameLanguage(iso6392)
+    return name === props.language || iso6392 === props.language
   })
 })
 
@@ -46,14 +48,6 @@ const showTesseractMissing = computed(() => {
 const showLanguageMissing = computed(() => {
   return !props.disabled && languagesStore.fetched && languagesStore.ocrAvailable && props.language && !isLanguageAvailable.value
 })
-
-function toTesseractCode(name) {
-  return get(settings, ['iso6392', 'tesseract', name], name)
-}
-
-function sameLanguage(nameOrIso6392) {
-  return toTesseractCode(nameOrIso6392) === toTesseractCode(props.language)
-}
 
 onBeforeMount(languagesStore.fetchOnce)
 </script>

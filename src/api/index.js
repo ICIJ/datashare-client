@@ -1,4 +1,4 @@
-import get from 'lodash/get'
+import findKey from 'lodash/findKey'
 import isNull from 'lodash/isNull'
 import join from 'lodash/join'
 import omitBy from 'lodash/omitBy'
@@ -31,9 +31,12 @@ export class Api {
   }
 
   index({ ocr = false, filter = true, language = null, path = null, defaultProject = null } = {}) {
-    const ocrLanguage = get(settings, ['iso6392', 'tesseract', language], language)
+    const textLanguage = findKey(settings.ocrVariants, codes => codes.includes(language)) ?? language
     const trimedPath = trim(path, '/')
-    const options = omitBy({ ocr, path: trimedPath, filter, language, ocrLanguage, defaultProject }, isNull)
+    const options = omitBy(
+      { ocr, path: trimedPath, filter, language: textLanguage, ocrLanguage: language, defaultProject },
+      isNull
+    )
     const data = { options }
     return this.sendActionAsText(`/api/task/batchUpdate/index`, { method: Method.POST, data })
   }

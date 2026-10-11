@@ -5,7 +5,7 @@ import TaskDocumentsFormOcrAlert from '@/components/Task/TaskDocuments/TaskDocum
 
 vi.mock('@/api/apiInstance', () => {
   const OCR_LANGUAGES = [
-    { name: 'CHINESE', iso6392: 'zho' },
+    { name: 'chi_tra', iso6392: null },
     { name: 'ENGLISH', iso6392: 'eng' },
     { name: 'FRENCH', iso6392: 'fra' }
   ]
@@ -48,6 +48,26 @@ describe('TaskDocumentsFormOcrAlert.vue', () => {
 
     it('should display an alert indicating that no OCR is installed for italian', () => {
       expect(wrapper.text()).toContain('OCR for "Italian" is not installed.')
+    })
+  })
+
+  describe('OCR for simplified Chinese is not installed', () => {
+    beforeEach(async () => {
+      const { plugins } = CoreSetup.init().createPinia().useAll()
+
+      wrapper = mount(TaskDocumentsFormOcrAlert, {
+        global: {
+          plugins
+        },
+        props: {
+          language: 'chi_sim'
+        }
+      })
+      await flushPromises()
+    })
+
+    it('should display an alert indicating that no OCR is installed for simplified Chinese', () => {
+      expect(wrapper.text()).toContain('OCR for "Chinese (Simplified)" is not installed.')
     })
   })
 

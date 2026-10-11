@@ -100,6 +100,25 @@ describe('Datashare backend client', () => {
     )
   })
 
+  it('should indexPath a Chinese OCR variant as Chinese text', async () => {
+    json = await api.indexPath('file', { language: 'chi_tra' })
+    expect(axios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/task/batchUpdate/index'),
+        method: 'POST',
+        data: {
+          options: {
+            filter: true,
+            ocr: false,
+            language: 'zho',
+            ocrLanguage: 'chi_tra',
+            path: 'file'
+          }
+        }
+      })
+    )
+  })
+
   it('executes a default extract (/index) action by calling indexPath with "file" as default', async () => {
     const spy = vi.spyOn(api, 'index')
     json = await api.indexPath('file', {})

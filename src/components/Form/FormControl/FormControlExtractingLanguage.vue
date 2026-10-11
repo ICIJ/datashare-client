@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 
 import { useLanguagesStore } from '@/store/modules/languages'
 import AppOverlay from '@/components/AppOverlay/AppOverlay'
+import settings from '@/utils/settings'
 
 const modelValue = defineModel({
   type: String,
@@ -19,10 +20,13 @@ const nullOption = computed(() => ({
 }))
 
 const options = computed(() =>
-  languagesStore.textLanguages.map(language => ({
-    value: language.iso6392,
-    text: t(`filter.lang.${language.name}`)
-  }))
+  languagesStore.textLanguages.flatMap(({ iso6392, name }) => {
+    const variants = settings.ocrVariants[iso6392]
+    if (variants) {
+      return variants.map(code => ({ value: code, text: t(`ocrVariant.${code}`) }))
+    }
+    return { value: iso6392, text: t(`filter.lang.${name}`) }
+  })
 )
 
 onMounted(languagesStore.fetchOnce)
