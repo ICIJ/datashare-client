@@ -37,24 +37,32 @@ describe('FormControlExtractingLanguage.vue', () => {
       vi.resetAllMocks()
     })
 
-    it('should list text languages and default', () => {
-      expect(wrapper.findAll('option')).toHaveLength(6)
+    it('should list text languages, Chinese OCR variants and default', () => {
+      expect(wrapper.findAll('option')).toHaveLength(7)
     })
 
     it('should have default as first option', () => {
       expect(wrapper.findAll('option').at(0).text()).toBe('Detect automatically (default)')
     })
 
-    it('should use the correct label for CHINESE', () => {
-      expect(wrapper.findAll('option').at(1).text()).toBe('Chinese')
+    it('should offer simplified Chinese', () => {
+      const option = wrapper.findAll('option').at(1)
+      expect(option.text()).toBe('Chinese (Simplified)')
+      expect(option.element.value).toBe('chi_sim')
+    })
+
+    it('should offer traditional Chinese', () => {
+      const option = wrapper.findAll('option').at(2)
+      expect(option.text()).toBe('Chinese (Traditional)')
+      expect(option.element.value).toBe('chi_tra')
     })
 
     it('should use the correct label for ENGLISH', () => {
-      expect(wrapper.findAll('option').at(2).text()).toBe('English')
+      expect(wrapper.findAll('option').at(3).text()).toBe('English')
     })
 
     it('should use the correct label for FRENCH', () => {
-      expect(wrapper.findAll('option').at(3).text()).toBe('French')
+      expect(wrapper.findAll('option').at(4).text()).toBe('French')
     })
   })
 
