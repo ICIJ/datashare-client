@@ -71,6 +71,26 @@ describe('TaskDocumentsFormOcrAlert.vue', () => {
     })
   })
 
+  describe('OCR for traditional Chinese is installed', () => {
+    beforeEach(async () => {
+      const { plugins } = CoreSetup.init().createPinia().useAll()
+
+      wrapper = mount(TaskDocumentsFormOcrAlert, {
+        global: {
+          plugins
+        },
+        props: {
+          language: 'chi_tra'
+        }
+      })
+      await flushPromises()
+    })
+
+    it('should not display an alert indicating that no OCR is installed for traditional Chinese', () => {
+      expect(wrapper.find('.task-documents-form-ocr-alert--language-missing .alert').isVisible()).toBe(false)
+    })
+  })
+
   describe('OCR for french language is installed', () => {
     beforeEach(async () => {
       const { plugins } = CoreSetup.init().createPinia().useAll()
