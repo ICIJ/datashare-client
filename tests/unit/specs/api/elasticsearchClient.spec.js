@@ -237,9 +237,9 @@ describe('elasticsearchClient', () => {
 
     it('keeps a falsy but non-empty routing on get', async () => {
       const client = new Client({ host: 'http://elasticsearch:9200' })
-      await client.get({ index: 'my-index', id: 'doc-1', routing: 0 })
+      await client.get({ index: 'my-index', id: 'doc-1', routing: '0' })
 
-      expect(axios).toHaveBeenCalledWith(expect.objectContaining({ params: { routing: 0 } }))
+      expect(axios).toHaveBeenCalledWith(expect.objectContaining({ params: { routing: '0' } }))
     })
 
     it('encodes the id on get', async () => {
