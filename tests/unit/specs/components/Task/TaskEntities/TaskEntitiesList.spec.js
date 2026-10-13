@@ -6,7 +6,8 @@ import { apiInstance as api } from '@/api/apiInstance'
 
 vi.mock('@/api/apiInstance', {
   apiInstance: {
-    getTasks: vi.fn().mockResolvedValue({ items: [] })
+    getTasks: vi.fn().mockResolvedValue({ items: [] }),
+    stopTask: vi.fn().mockResolvedValue('')
   }
 })
 
@@ -80,7 +81,14 @@ describe('TaskEntitiesList.vue', () => {
     expect(columns.at(5).text()).toBe('a few seconds ago')
     expect(stopButton.exists()).toBeTruthy()
     expect(deleteButton.exists()).toBeTruthy()
-    expect(stopButton.attributes('disabled')).toBeDefined()
+    expect(stopButton.attributes('disabled')).toBeUndefined()
     expect(deleteButton.attributes('disabled')).toBeUndefined()
+  })
+
+  it('should stop the task when clicking on the stop button', async () => {
+    const wrapper = mount(TaskEntitiesList, { global: { plugins } })
+    await flushPromises()
+    await wrapper.find('.page-table-generic__row button[aria-label="Stop"]').trigger('click')
+    expect(api.stopTask).toBeCalledWith('6a32bb59-8a23-491c-a441-8447ff7517dc')
   })
 })
