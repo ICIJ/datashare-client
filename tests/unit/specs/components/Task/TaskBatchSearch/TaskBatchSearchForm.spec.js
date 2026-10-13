@@ -8,6 +8,7 @@ import { BATCH_SEARCH_CSV_FILE, BATCH_SEARCH_CSV_STRING } from '@/enums/batchSea
 vi.mock('@/api/apiInstance', () => ({
   apiInstance: {
     batchSearch: vi.fn(),
+    getDocumentsRecommendedBy: vi.fn(),
     elasticsearch: {
       rootSearch: vi.fn().mockReturnValue({
         build: vi.fn().mockReturnValue({ query: { match_all: {} } })
@@ -138,6 +139,43 @@ describe('TaskBatchSearchForm', () => {
       wrapper.vm.$.setupState.csvString = '“test full sentence”\n「東京」'
       wrapper.vm.$.setupState.spellingChanges = 1
       expect(await submittedQueries(wrapper)).toBe('“test full sentence”\n「東京」')
+    })
+  })
+
+  describe('recommended by filter', () => {
+    it('loads the documents recommended by the selected users before building the query', async () => {
+      const { useRecommendedStore } = await import('@/store/modules/recommended')
+      const recommendedStore = useRecommendedStore()
+      api.batchSearch.mockResolvedValue('task-id-123')
+      api.getDocumentsRecommendedBy.mockResolvedValue(['doc-1', 'doc-2'])
+      const documentsWhenBuilt = []
+      api.elasticsearch.rootSearch.mockImplementation(() => {
+        documentsWhenBuilt.push([...recommendedStore.documents])
+        return { build: () => ({ query: { match_all: {} } }) }
+      })
+
+      const wrapper = createValidWrapper()
+      vi.spyOn(wrapper.vm.$router, 'push').mockResolvedValue()
+      const { formSearchStore } = wrapper.vm.$.setupState
+      formSearchStore.setIndices(['local-datashare'])
+      formSearchStore.addFilterValue({ name: 'recommendedBy', value: 'alice' })
+
+      await wrapper.find('form-creation-stub').trigger('submit')
+      await vi.waitFor(() => expect(api.batchSearch).toHaveBeenCalledOnce())
+
+      expect(api.getDocumentsRecommendedBy).toHaveBeenCalledWith('local-datashare', ['alice'])
+      expect(documentsWhenBuilt.at(-1)).toEqual(['doc-1', 'doc-2'])
+    })
+
+    it('does not load recommended documents when no user is selected', async () => {
+      api.batchSearch.mockResolvedValue('task-id-123')
+      const wrapper = createValidWrapper()
+      vi.spyOn(wrapper.vm.$router, 'push').mockResolvedValue()
+
+      await wrapper.find('form-creation-stub').trigger('submit')
+      await vi.waitFor(() => expect(api.batchSearch).toHaveBeenCalledOnce())
+
+      expect(api.getDocumentsRecommendedBy).not.toHaveBeenCalled()
     })
   })
 

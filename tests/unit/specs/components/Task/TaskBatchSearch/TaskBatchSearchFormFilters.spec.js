@@ -6,15 +6,17 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import TaskBatchSearchFormFilters from '@/components/Task/TaskBatchSearch/TaskBatchSearchFormFilters'
 import { useSearchFilter } from '@/composables/useSearchFilter'
 import { useSearchStore } from '@/store/modules/search'
+import { MODE_NAME } from '@/mode'
 
 describe('TaskBatchSearchFormFilters', () => {
+  let core
   let plugins
   let mainSearchStore
   let formSearchStore
   let composable
 
   beforeEach(() => {
-    const core = CoreSetup.init().useAll().useRouterWithoutGuards()
+    core = CoreSetup.init().useAll().useRouterWithoutGuards()
     plugins = core.plugins
     mainSearchStore = useSearchStore()
     mainSearchStore.reset()
@@ -52,13 +54,45 @@ describe('TaskBatchSearchFormFilters', () => {
       global: {
         plugins,
         stubs: {
-          FormStep: true,
+          FormStep: { template: '<div><slot /></div>' },
           FilterType: true,
-          FilterTypePath: true
+          FilterTypePath: true,
+          FilterTypeStarred: true,
+          FilterTypeRecommendedBy: true,
+          FilterTypeDateRange: true
         }
       }
     })
   }
+
+  function renderedFilterNames(wrapper) {
+    const components = ['FilterType', 'FilterTypePath', 'FilterTypeStarred', 'FilterTypeRecommendedBy', 'FilterTypeDateRange']
+    return components
+      .flatMap(name => wrapper.findAllComponents({ name }))
+      .map(component => component.props('filter').name)
+  }
+
+  it('renders every filter available in server mode', () => {
+    core.config.set('mode', MODE_NAME.SERVER)
+    const wrapper = mountWithDisposable()
+    expect(renderedFilterNames(wrapper)).toEqual(expect.arrayContaining([
+      'starred',
+      'tags',
+      'recommendedBy',
+      'path',
+      'contentType',
+      'creationDate',
+      'language',
+      'extractionLevel',
+      'indexingDate'
+    ]))
+  })
+
+  it('hides the recommended by filter in local mode', () => {
+    core.config.set('mode', MODE_NAME.LOCAL)
+    const wrapper = mountWithDisposable()
+    expect(renderedFilterNames(wrapper)).not.toContain('recommendedBy')
+  })
 
   it('provides a form-scoped disposable store distinct from the main search store', () => {
     mountWithDisposable()
