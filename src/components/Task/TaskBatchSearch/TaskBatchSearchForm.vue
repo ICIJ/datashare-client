@@ -15,6 +15,7 @@ import TaskBatchSearchFormFilters from '@/components/Task/TaskBatchSearch/TaskBa
 import TaskBatchSearchFormOverview from '@/components/Task/TaskBatchSearch/TaskBatchSearchFormOverview'
 import { useCore } from '@/composables/useCore'
 import { useToast } from '@/composables/useToast'
+import { useRecommendedStore } from '@/store/modules/recommended'
 import { useSearchStore } from '@/store/modules/search'
 import { straightenQuotes } from '@/utils/luceneQuery'
 
@@ -23,6 +24,7 @@ const { toast } = useToast()
 const { t } = useI18n()
 const router = useRouter()
 const searchSearch = useSearchStore()
+const recommendedStore = useRecommendedStore()
 
 // The store created with disposable will be automatically disposed when the component is unmounted.
 // Additionaly, the id of the store is provided with `searchStoreSuffix` key so children
@@ -118,7 +120,18 @@ function submittedCsv() {
   return straightenCsvQueries(csv.value)
 }
 
+// The recommended by filter queries the documents held by the recommended
+// store, which only the search page loads.
+function loadRecommendedDocuments() {
+  const users = formSearchStore.values.recommendedBy ?? []
+  if (!users.length) {
+    return
+  }
+  return recommendedStore.getDocumentsRecommendedBy(formSearchStore.indices, users)
+}
+
 async function createBatchSearch() {
+  await loadRecommendedDocuments()
   return core.api.batchSearch(
     name.value,
     await submittedCsv(),
