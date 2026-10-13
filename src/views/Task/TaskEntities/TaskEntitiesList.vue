@@ -16,14 +16,15 @@ import TaskPage from '@/views/Task/TaskPage'
 import ButtonRowActionStop from '@/components/Button/ButtonRowAction/ButtonRowActionStop.vue'
 import ButtonRowActionDelete from '@/components/Button/ButtonRowAction/ButtonRowActionDelete.vue'
 import { apiInstance as api } from '@/api/apiInstance.js'
-import { TASK_STATUS } from '@/enums/taskStatus.js'
 import { useConfirmModal } from '@/composables/useConfirmModal.js'
 import { useToast } from '@/composables/useToast.js'
+import { useTaskStore } from '@/store/modules'
 
 const settingName = 'entities'
 const { propertiesModelValueOptions } = useTaskSettings(settingName)
 const { afterConfirmation } = useConfirmModal()
 const { toastedPromise } = useToast()
+const taskStore = useTaskStore()
 
 const { t } = useI18n()
 function isPipelineEmail(item) {
@@ -34,14 +35,14 @@ function getProject(item) {
   return item.args.defaultProject
 }
 
+async function stopTask(uuid) {
+  return taskStore.stopTask(uuid)
+}
+
 function remove(id) {
   const successMessage = t('task.removeSuccess')
   const errorMessage = t('task.removeError')
   return toastedPromise(api.removeTask(id), { successMessage, errorMessage })
-}
-
-function isRunning(item) {
-  return item.state === TASK_STATUS.RUNNING
 }
 
 function removeWithConfirmation(id, callback) {
@@ -110,8 +111,8 @@ function removeWithConfirmation(id, callback) {
         </template>
         <template #row-actions="{ item }">
           <button-row-action-stop
-            :disabled="!isRunning(item)"
-            @stop="stopTask(item.id)"
+            :disabled="!taskStore.isRunning(item.id)"
+            @click="stopTask(item.id)"
           />
           <button-row-action-delete
             @click="removeWithConfirmation(item.id, refresh)"

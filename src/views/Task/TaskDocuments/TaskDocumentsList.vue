@@ -14,7 +14,6 @@ import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import { useTaskSettings } from '@/composables/useTaskSettings'
 import { getHumanTaskName } from '@/enums/taskNames'
 import { TASK_TYPE } from '@/enums/taskTypes'
-import { TASK_STATUS } from '@/enums/taskStatus'
 import { useTaskStore } from '@/store/modules'
 import TaskPage from '@/views/Task/TaskPage'
 import { useConfirmModal } from '@/composables/useConfirmModal'
@@ -40,10 +39,6 @@ function remove(id) {
 }
 function getProject(item) {
   return item.args.defaultProject
-}
-
-function isRunning(item) {
-  return item.state === TASK_STATUS.RUNNING
 }
 
 function removeWithConfirmation(id, callback) {
@@ -103,8 +98,8 @@ function removeWithConfirmation(id, callback) {
         </template>
         <template #row-actions="{ item }">
           <button-row-action-stop
-            :disabled="!isRunning(item)"
-            @stop="stopTask(item.id)"
+            :disabled="!taskStore.isRunning(item.id)"
+            @click="stopTask(item.id)"
           />
           <button-row-action-delete
             @click="removeWithConfirmation(item.id, refresh)"
