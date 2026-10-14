@@ -1240,6 +1240,7 @@
         "submit": "Valider",
         "submitError": "Une erreur s'est produite, impossible d'exécuter la recherche en lot.",
         "readError": "Impossible de lire le fichier de requêtes. Sélectionnez-le à nouveau et réessayez.",
+        "recommendedByError": "Unable to load the documents recommended by the selected users.",
         "submitSuccess": "La recherche en lot a été créée.",
         "editError": "Une erreur s'est produite, impossible de mettre à jour la recherche en lot.",
         "editSuccess": "La recherche en lot a été mise à jour."
