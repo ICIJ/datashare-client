@@ -122,6 +122,14 @@ function submittedCsv() {
   return straightenCsvQueries(csv.value)
 }
 
+class RecommendedDocumentsError extends Error {
+  constructor(users) {
+    super(`unable to load the documents recommended by "${users.join(', ')}"`)
+    this.name = 'RecommendedDocumentsError'
+    this.users = users
+  }
+}
+
 // The recommended by filter queries the documents held by the recommended
 // store, which only the search page loads. The store swallows fetch errors, so
 // an empty result fails here instead of saving a query that matches nothing.
@@ -132,7 +140,7 @@ async function loadRecommendedDocuments() {
   }
   await recommendedStore.getDocumentsRecommendedBy(formSearchStore.indices, users)
   if (!recommendedStore.documents.length) {
-    throw new Error('Unable to load the documents recommended by the selected users')
+    throw new RecommendedDocumentsError(users)
   }
 }
 
@@ -178,6 +186,9 @@ async function submit() {
 function submitErrorMessage(error) {
   if (error instanceof DOMException) {
     return t('task.batch-search.form.readError')
+  }
+  if (error instanceof RecommendedDocumentsError) {
+    return t('task.batch-search.form.recommendedByError')
   }
   return t('task.batch-search.form.submitError')
 }
