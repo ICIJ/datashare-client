@@ -121,13 +121,17 @@ function submittedCsv() {
 }
 
 // The recommended by filter queries the documents held by the recommended
-// store, which only the search page loads.
-function loadRecommendedDocuments() {
+// store, which only the search page loads. The store swallows fetch errors, so
+// an empty result fails here instead of saving a query that matches nothing.
+async function loadRecommendedDocuments() {
   const users = formSearchStore.values.recommendedBy ?? []
   if (!users.length) {
     return
   }
-  return recommendedStore.getDocumentsRecommendedBy(formSearchStore.indices, users)
+  await recommendedStore.getDocumentsRecommendedBy(formSearchStore.indices, users)
+  if (!recommendedStore.documents.length) {
+    throw new Error('Unable to load the documents recommended by the selected users')
+  }
 }
 
 async function createBatchSearch() {

@@ -178,6 +178,22 @@ describe('TaskBatchSearchForm', () => {
 
       expect(api.getDocumentsRecommendedBy).not.toHaveBeenCalled()
     })
+
+    it('shows an error toast and creates no batch search when the recommended documents fail to load', async () => {
+      api.getDocumentsRecommendedBy.mockRejectedValue(new Error('Network error'))
+      const wrapper = createValidWrapper()
+      vi.spyOn(wrapper.vm.$toast, 'success')
+      vi.spyOn(wrapper.vm.$toast, 'error')
+      const { formSearchStore } = wrapper.vm.$.setupState
+      formSearchStore.setIndices(['local-datashare'])
+      formSearchStore.addFilterValue({ name: 'recommendedBy', value: 'alice' })
+
+      await wrapper.find('form-creation-stub').trigger('submit')
+      await vi.waitFor(() => expect(wrapper.vm.$toast.error).toHaveBeenCalledOnce())
+
+      expect(api.batchSearch).not.toHaveBeenCalled()
+      expect(wrapper.vm.$toast.success).not.toHaveBeenCalled()
+    })
   })
 
   describe('locked filters kept in the batch search query/uri (icij/datashare#2331 reverted)', () => {
