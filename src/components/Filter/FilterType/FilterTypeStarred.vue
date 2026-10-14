@@ -1,6 +1,5 @@
 <script setup>
-import { computed, onBeforeMount, ref, useTemplateRef } from 'vue'
-import { whenever } from '@vueuse/core'
+import { computed, onBeforeMount, ref, useTemplateRef, watch } from 'vue'
 import castArray from 'lodash/castArray'
 import { useI18n } from 'vue-i18n'
 
@@ -76,10 +75,13 @@ const fetchTotal = waitFor(async () => {
 // read them too, while the total only feeds the counts shown once opened.
 const fetch = waitFor(async () => {
   await starredStore.fetchIndicesStarredDocuments(indices.value)
-  if (opened.value) {
-    await fetchTotal()
-  }
 })
+
+function fetchTotalIfOpened() {
+  if (opened.value) {
+    return fetchTotal()
+  }
+}
 
 const isTruthy = value => value === true || value === 'true'
 
@@ -105,7 +107,7 @@ const selected = computed({
 
 onBeforeMount(fetch)
 watchIndices(fetch)
-whenever(opened, fetchTotal, { once: true })
+watch([opened, () => indices.value.join(',')], fetchTotalIfOpened)
 </script>
 
 <template>
