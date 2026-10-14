@@ -17,6 +17,7 @@ import { useCore } from '@/composables/useCore'
 import { useToast } from '@/composables/useToast'
 import { useRecommendedStore } from '@/store/modules/recommended'
 import { useSearchStore } from '@/store/modules/search'
+import { useStarredStore } from '@/store/modules/starred'
 import { straightenQuotes } from '@/utils/luceneQuery'
 
 const core = useCore()
@@ -25,6 +26,7 @@ const { t } = useI18n()
 const router = useRouter()
 const searchSearch = useSearchStore()
 const recommendedStore = useRecommendedStore()
+const starredStore = useStarredStore()
 
 // The store created with disposable will be automatically disposed when the component is unmounted.
 // Additionaly, the id of the store is provided with `searchStoreSuffix` key so children
@@ -134,8 +136,17 @@ async function loadRecommendedDocuments() {
   }
 }
 
+// Like the recommended by filter, the starred filter queries the documents held
+// by the starred store, which must match the projects selected in the form.
+async function loadStarredDocuments() {
+  if (!formSearchStore.values.starred?.length) {
+    return
+  }
+  await starredStore.fetchIndicesStarredDocuments(formSearchStore.indices)
+}
+
 async function createBatchSearch() {
-  await loadRecommendedDocuments()
+  await Promise.all([loadRecommendedDocuments(), loadStarredDocuments()])
   return core.api.batchSearch(
     name.value,
     await submittedCsv(),

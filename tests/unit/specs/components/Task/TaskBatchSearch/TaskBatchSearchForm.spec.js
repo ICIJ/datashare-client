@@ -9,6 +9,7 @@ vi.mock('@/api/apiInstance', () => ({
   apiInstance: {
     batchSearch: vi.fn(),
     getDocumentsRecommendedBy: vi.fn(),
+    getStarredDocuments: vi.fn(),
     elasticsearch: {
       rootSearch: vi.fn().mockReturnValue({
         build: vi.fn().mockReturnValue({ query: { match_all: {} } })
@@ -187,6 +188,60 @@ describe('TaskBatchSearchForm', () => {
       const { formSearchStore } = wrapper.vm.$.setupState
       formSearchStore.setIndices(['local-datashare'])
       formSearchStore.addFilterValue({ name: 'recommendedBy', value: 'alice' })
+
+      await wrapper.find('form-creation-stub').trigger('submit')
+      await vi.waitFor(() => expect(wrapper.vm.$toast.error).toHaveBeenCalledOnce())
+
+      expect(api.batchSearch).not.toHaveBeenCalled()
+      expect(wrapper.vm.$toast.success).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('starred filter', () => {
+    it('loads the starred documents of the selected projects before building the query', async () => {
+      const { useStarredStore } = await import('@/store/modules/starred')
+      const starredStore = useStarredStore()
+      starredStore.reset()
+      api.batchSearch.mockResolvedValue('task-id-123')
+      api.getStarredDocuments.mockResolvedValue(['doc-1', 'doc-2'])
+      const documentsWhenBuilt = []
+      api.elasticsearch.rootSearch.mockImplementation(() => {
+        documentsWhenBuilt.push(starredStore.documents.map(document => document.id))
+        return { build: () => ({ query: { match_all: {} } }) }
+      })
+
+      const wrapper = createValidWrapper()
+      vi.spyOn(wrapper.vm.$router, 'push').mockResolvedValue()
+      const { formSearchStore } = wrapper.vm.$.setupState
+      formSearchStore.setIndices(['local-datashare'])
+      formSearchStore.addFilterValue({ name: 'starred', value: 'true' })
+
+      await wrapper.find('form-creation-stub').trigger('submit')
+      await vi.waitFor(() => expect(api.batchSearch).toHaveBeenCalledOnce())
+
+      expect(api.getStarredDocuments).toHaveBeenCalledWith('local-datashare')
+      expect(documentsWhenBuilt.at(-1)).toEqual(['doc-1', 'doc-2'])
+    })
+
+    it('does not load the starred documents when the starred filter is not used', async () => {
+      api.batchSearch.mockResolvedValue('task-id-123')
+      const wrapper = createValidWrapper()
+      vi.spyOn(wrapper.vm.$router, 'push').mockResolvedValue()
+
+      await wrapper.find('form-creation-stub').trigger('submit')
+      await vi.waitFor(() => expect(api.batchSearch).toHaveBeenCalledOnce())
+
+      expect(api.getStarredDocuments).not.toHaveBeenCalled()
+    })
+
+    it('shows an error toast and creates no batch search when the starred documents fail to load', async () => {
+      api.getStarredDocuments.mockRejectedValue(new Error('Network error'))
+      const wrapper = createValidWrapper()
+      vi.spyOn(wrapper.vm.$toast, 'success')
+      vi.spyOn(wrapper.vm.$toast, 'error')
+      const { formSearchStore } = wrapper.vm.$.setupState
+      formSearchStore.setIndices(['local-datashare'])
+      formSearchStore.addFilterValue({ name: 'starred', value: 'true' })
 
       await wrapper.find('form-creation-stub').trigger('submit')
       await vi.waitFor(() => expect(wrapper.vm.$toast.error).toHaveBeenCalledOnce())
