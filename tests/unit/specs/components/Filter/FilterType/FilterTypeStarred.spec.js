@@ -157,5 +157,14 @@ describe('FilterTypeStarred.vue', () => {
 
       expect(lockedFiltersStore.isLocked({ name: 'starred', value: true })).toBe(true)
     })
+
+    it('does not unlock the user\'s real lock store when selecting "All"', async () => {
+      lockedFiltersStore.lock({ name: 'starred', value: true, label: 'Starred' })
+      await wrapper.findAll('.filters-panel-section-filter-entry .form-check-input').at(1).setChecked(true)
+
+      await wrapper.findAll('.filters-panel-section-filter-entry .form-check-input').at(0).setChecked(true)
+
+      expect(lockedFiltersStore.isLocked({ name: 'starred', value: true })).toBe(true)
+    })
   })
 })
