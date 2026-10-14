@@ -7,6 +7,7 @@ import FilterTypeDateRange from '@/components/Filter/FilterType/FilterTypeDateRa
 import FilterTypePath from '@/components/Filter/FilterType/FilterTypePath'
 import FilterTypeRecommendedBy from '@/components/Filter/FilterType/FilterTypeRecommendedBy'
 import FilterTypeStarred from '@/components/Filter/FilterType/FilterTypeStarred'
+import FiltersPanelSection from '@/components/FiltersPanel/FiltersPanelSection'
 import ModeServerOnly from '@/components/Mode/ModeServerOnly'
 import { useSearchStore } from '@/store/modules/search'
 
@@ -31,80 +32,90 @@ const filterIndexingDate = formSearchStore.getFilter({ name: 'indexingDate' })
     content-class="bg-transparent rounded-0 d-flex flex-column gap-3 px-0 m-0"
     collapse
   >
-    <filter-type-starred
-      :filter="filterStarred"
-      actions-position-title
-      hide-contextualize
-      hide-lock
-      class="p-3"
-      content-class="pb-0"
-    />
-    <filter-type
-      :filter="filterTags"
-      actions-position-title
-      hide-contextualize
-      hide-lock
-      class="p-3"
-      content-class="pb-0"
-    />
-    <mode-server-only>
-      <filter-type-recommended-by
-        :filter="filterRecommendedBy"
+    <filters-panel-section
+      :title="t('filter.sections.documentsInfo')"
+      class="d-flex flex-column gap-3"
+    >
+      <filter-type-path
+        :filter="filterPath"
         actions-position-title
         hide-contextualize
         hide-lock
         class="p-3"
         content-class="pb-0"
       />
-    </mode-server-only>
-    <filter-type-path
-      :filter="filterPath"
-      actions-position-title
-      hide-contextualize
-      hide-lock
-      class="p-3"
-      content-class="pb-0"
-    />
-    <filter-type
-      :filter="filterContentType"
-      actions-position-title
-      hide-contextualize
-      hide-lock
-      class="p-3"
-      content-class="pb-0"
-    />
-    <filter-type-date-range
-      :filter="filterCreationDate"
-      actions-position-title
-      hide-contextualize
-      hide-lock
-      class="p-3"
-      content-class="pb-0"
-    />
-    <filter-type
-      :filter="filterLanguage"
-      actions-position-title
-      hide-contextualize
-      hide-lock
-      class="p-3"
-      content-class="pb-0"
-    />
-    <filter-type
-      :filter="filterExtractionLevel"
-      actions-position-title
-      hide-contextualize
-      hide-lock
-      class="p-3"
-      content-class="pb-0"
-    />
-    <filter-type
-      :filter="filterIndexingDate"
-      actions-position-title
-      hide-contextualize
-      hide-lock
-      class="p-3"
-      content-class="pb-0"
-    />
+      <filter-type
+        :filter="filterContentType"
+        actions-position-title
+        hide-contextualize
+        hide-lock
+        class="p-3"
+        content-class="pb-0"
+      />
+      <filter-type-date-range
+        :filter="filterCreationDate"
+        actions-position-title
+        hide-contextualize
+        hide-lock
+        class="p-3"
+        content-class="pb-0"
+      />
+      <filter-type
+        :filter="filterLanguage"
+        actions-position-title
+        hide-contextualize
+        hide-lock
+        class="p-3"
+        content-class="pb-0"
+      />
+      <filter-type
+        :filter="filterExtractionLevel"
+        actions-position-title
+        hide-contextualize
+        hide-lock
+        class="p-3"
+        content-class="pb-0"
+      />
+      <filter-type
+        :filter="filterIndexingDate"
+        actions-position-title
+        hide-contextualize
+        hide-lock
+        class="p-3"
+        content-class="pb-0"
+      />
+    </filters-panel-section>
+    <filters-panel-section
+      :title="t('filter.sections.userData')"
+      class="d-flex flex-column gap-3"
+    >
+      <filter-type-starred
+        :filter="filterStarred"
+        actions-position-title
+        hide-contextualize
+        hide-lock
+        class="p-3"
+        content-class="pb-0"
+      />
+      <filter-type
+        :filter="filterTags"
+        actions-position-title
+        hide-contextualize
+        hide-lock
+        class="p-3"
+        content-class="pb-0"
+      />
+      <mode-server-only>
+        <filter-type-recommended-by
+          :filter="filterRecommendedBy"
+          actions-position-title
+          hide-contextualize
+          hide-lock
+          class="p-3"
+          content-class="pb-0"
+        />
+      </mode-server-only>
+    </filters-panel-section>
   </form-step>
 </template>
 

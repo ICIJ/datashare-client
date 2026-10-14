@@ -65,11 +65,26 @@ describe('TaskBatchSearchFormFilters', () => {
     })
   }
 
-  function renderedFilterNames(wrapper) {
+  function findFilterComponents(wrapper) {
     const components = ['FilterType', 'FilterTypePath', 'FilterTypeStarred', 'FilterTypeRecommendedBy', 'FilterTypeDateRange']
-    return components
-      .flatMap(name => wrapper.findAllComponents({ name }))
-      .map(component => component.props('filter').name)
+    return components.flatMap(name => wrapper.findAllComponents({ name }))
+  }
+
+  function renderedFilterNames(wrapper) {
+    return findFilterComponents(wrapper).map(component => component.props('filter').name)
+  }
+
+  function renderedSections(wrapper) {
+    const isBefore = (a, b) => a.element.compareDocumentPosition(b.element) & Node.DOCUMENT_POSITION_FOLLOWING
+    const byDocumentOrder = (a, b) => (isBefore(a, b) ? -1 : 1)
+    return wrapper.findAll('.filters-panel-section').map((section) => {
+      const title = section.find('.filters-panel-section-title').text()
+      const filters = findFilterComponents(wrapper)
+        .filter(component => section.element.contains(component.element))
+        .sort(byDocumentOrder)
+        .map(component => component.props('filter').name)
+      return { title, filters }
+    })
   }
 
   it('renders every filter available in server mode', () => {
@@ -86,6 +101,21 @@ describe('TaskBatchSearchFormFilters', () => {
       'extractionLevel',
       'indexingDate'
     ]))
+  })
+
+  it('groups the filters in sections ordered like the search filters', () => {
+    core.config.set('mode', MODE_NAME.SERVER)
+    const wrapper = mountWithDisposable()
+    expect(renderedSections(wrapper)).toEqual([
+      {
+        title: 'Documents info',
+        filters: ['path', 'contentType', 'creationDate', 'language', 'extractionLevel', 'indexingDate']
+      },
+      {
+        title: 'User data',
+        filters: ['starred', 'tags', 'recommendedBy']
+      }
+    ])
   })
 
   it('hides the recommended by filter in local mode', () => {
