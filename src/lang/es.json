@@ -1240,6 +1240,7 @@
         "submit": "Crear",
         "submitError": "Algo salió mal, no se puede ejecutar la búsqueda por lotes.",
         "readError": "Unable to read the queries file. Select it again and retry.",
+        "recommendedByError": "Unable to load the documents recommended by the selected users.",
         "submitSuccess": "Búsqueda por lote creada con éxito.",
         "editError": "Algo salió mal, no se puede actualizar la búsqueda por lotes.",
         "editSuccess": "Búsqueda por lote actualizada con éxito."
