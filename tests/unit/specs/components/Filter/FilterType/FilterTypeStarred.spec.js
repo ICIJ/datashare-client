@@ -1,4 +1,4 @@
-import { flushPromises, mount } from '@vue/test-utils'
+import { enableAutoUnmount, flushPromises, mount } from '@vue/test-utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import { useLockedFiltersStore, useStarredStore, useSearchStore } from '@/store/modules'
@@ -21,7 +21,10 @@ vi.mock('@/api/apiInstance', async (importOriginal) => {
 })
 
 describe('FilterTypeStarred.vue', () => {
+  enableAutoUnmount(afterEach)
+
   const { index, es } = esConnectionHelper.build()
+  const { index: otherIndex } = esConnectionHelper.build('other')
   let core, starredStore, searchStore, wrapper
 
   beforeAll(() => {
@@ -107,6 +110,25 @@ describe('FilterTypeStarred.vue', () => {
     it('counts the documents once the filter is opened', async () => {
       await wrapper.findComponent(FiltersPanelSectionFilter).vm.$emit('update:collapse', false)
       await vi.waitFor(() => expect(findTotalRequests()).toHaveLength(1), { timeout: 5000 })
+    })
+
+    it('counts the documents only once when the filter starts opened', async () => {
+      searchStore.setFilterValue({ name: 'starred', value: ['true'] })
+      vi.clearAllMocks()
+      wrapper = mount(FilterTypeStarred, { props: { filter: searchStore.getFilter({ name: 'starred' }) }, global: { plugins: core.plugins } })
+
+      await vi.waitFor(() => expect(api.getStarredDocuments).toHaveBeenCalled())
+      await flushPromises()
+
+      expect(findTotalRequests()).toHaveLength(1)
+    })
+
+    it('counts the documents again when the projects change while the filter is opened', async () => {
+      await wrapper.findComponent(FiltersPanelSectionFilter).vm.$emit('update:collapse', false)
+      await vi.waitFor(() => expect(findTotalRequests()).toHaveLength(1), { timeout: 5000 })
+
+      searchStore.setIndices([index, otherIndex])
+      await vi.waitFor(() => expect(findTotalRequests()).toHaveLength(2), { timeout: 5000 })
     })
   })
 
