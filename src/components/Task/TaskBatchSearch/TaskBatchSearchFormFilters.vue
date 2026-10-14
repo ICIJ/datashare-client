@@ -1,27 +1,30 @@
 <script setup>
+import { computed } from 'vue'
+import groupBy from 'lodash/groupBy'
+import uniq from 'lodash/uniq'
 import { useI18n } from 'vue-i18n'
 
 import FormStep from '@/components/Form/FormStep/FormStep'
-import FilterType from '@/components/Filter/FilterType/FilterType'
-import FilterTypeDateRange from '@/components/Filter/FilterType/FilterTypeDateRange'
-import FilterTypePath from '@/components/Filter/FilterType/FilterTypePath'
-import FilterTypeRecommendedBy from '@/components/Filter/FilterType/FilterTypeRecommendedBy'
-import FilterTypeStarred from '@/components/Filter/FilterType/FilterTypeStarred'
 import FiltersPanelSection from '@/components/FiltersPanel/FiltersPanelSection'
-import ModeServerOnly from '@/components/Mode/ModeServerOnly'
+import { useMode } from '@/composables/useMode'
+import { useSearchFilter } from '@/composables/useSearchFilter'
 import { useSearchStore } from '@/store/modules/search'
 
 const { t } = useI18n()
+const { isMode } = useMode()
+const { getFilterComponent } = useSearchFilter()
 const formSearchStore = useSearchStore.inject()
-const filterStarred = formSearchStore.getFilter({ name: 'starred' })
-const filterTags = formSearchStore.getFilter({ name: 'tags' })
-const filterRecommendedBy = formSearchStore.getFilter({ name: 'recommendedBy' })
-const filterPath = formSearchStore.getFilter({ name: 'path' })
-const filterContentType = formSearchStore.getFilter({ name: 'contentType' })
-const filterCreationDate = formSearchStore.getFilter({ name: 'creationDate' })
-const filterLanguage = formSearchStore.getFilter({ name: 'language' })
-const filterExtractionLevel = formSearchStore.getFilter({ name: 'extractionLevel' })
-const filterIndexingDate = formSearchStore.getFilter({ name: 'indexingDate' })
+
+const isAvailableInMode = filter => !filter.modes || filter.modes.some(isMode)
+const isDisplayed = filter => !filter.hidden && isAvailableInMode(filter)
+const searchPageFilters = computed(() => formSearchStore.instantiatedFilters.filter(isDisplayed))
+
+// The projects are picked in the form details step. The project filter still
+// orders the sections, so they follow the same order as on the search page.
+const isProjectFilter = filter => filter.name === 'project'
+const filters = computed(() => searchPageFilters.value.filter(filter => !isProjectFilter(filter)))
+const filtersBySection = computed(() => groupBy(filters.value, 'section'))
+const sections = computed(() => uniq(searchPageFilters.value.map(filter => filter.section)))
 </script>
 
 <template>
@@ -33,88 +36,22 @@ const filterIndexingDate = formSearchStore.getFilter({ name: 'indexingDate' })
     collapse
   >
     <filters-panel-section
-      :title="t('filter.sections.documentsInfo')"
+      v-for="section in sections"
+      :key="section"
+      :title="t(`filter.sections.${section}`)"
       class="d-flex flex-column gap-3"
     >
-      <filter-type-path
-        :filter="filterPath"
+      <component
+        :is="getFilterComponent(filter)"
+        v-for="filter in filtersBySection[section]"
+        :key="filter.name"
+        :filter="filter"
         actions-position-title
         hide-contextualize
         hide-lock
         class="p-3"
         content-class="pb-0"
       />
-      <filter-type
-        :filter="filterContentType"
-        actions-position-title
-        hide-contextualize
-        hide-lock
-        class="p-3"
-        content-class="pb-0"
-      />
-      <filter-type-date-range
-        :filter="filterCreationDate"
-        actions-position-title
-        hide-contextualize
-        hide-lock
-        class="p-3"
-        content-class="pb-0"
-      />
-      <filter-type
-        :filter="filterLanguage"
-        actions-position-title
-        hide-contextualize
-        hide-lock
-        class="p-3"
-        content-class="pb-0"
-      />
-      <filter-type
-        :filter="filterExtractionLevel"
-        actions-position-title
-        hide-contextualize
-        hide-lock
-        class="p-3"
-        content-class="pb-0"
-      />
-      <filter-type
-        :filter="filterIndexingDate"
-        actions-position-title
-        hide-contextualize
-        hide-lock
-        class="p-3"
-        content-class="pb-0"
-      />
-    </filters-panel-section>
-    <filters-panel-section
-      :title="t('filter.sections.userData')"
-      class="d-flex flex-column gap-3"
-    >
-      <filter-type-starred
-        :filter="filterStarred"
-        actions-position-title
-        hide-contextualize
-        hide-lock
-        class="p-3"
-        content-class="pb-0"
-      />
-      <filter-type
-        :filter="filterTags"
-        actions-position-title
-        hide-contextualize
-        hide-lock
-        class="p-3"
-        content-class="pb-0"
-      />
-      <mode-server-only>
-        <filter-type-recommended-by
-          :filter="filterRecommendedBy"
-          actions-position-title
-          hide-contextualize
-          hide-lock
-          class="p-3"
-          content-class="pb-0"
-        />
-      </mode-server-only>
     </filters-panel-section>
   </form-step>
 </template>

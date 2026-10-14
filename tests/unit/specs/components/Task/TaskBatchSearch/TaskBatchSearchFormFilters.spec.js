@@ -1,6 +1,6 @@
 /* eslint-disable vue/one-component-per-file */
 import { defineComponent } from 'vue'
-import { mount } from '@vue/test-utils'
+import { flushPromises, mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import TaskBatchSearchFormFilters from '@/components/Task/TaskBatchSearch/TaskBatchSearchFormFilters'
@@ -59,14 +59,23 @@ describe('TaskBatchSearchFormFilters', () => {
           FilterTypePath: true,
           FilterTypeStarred: true,
           FilterTypeRecommendedBy: true,
-          FilterTypeDateRange: true
+          FilterTypeDateRange: true,
+          FilterTypeFileTypes: true
         }
       }
     })
   }
 
+  // The search page loads most filter components lazily
+  async function mountWithLoadedFilters() {
+    const wrapper = mountWithDisposable()
+    await vi.dynamicImportSettled()
+    await flushPromises()
+    return wrapper
+  }
+
   function findFilterComponents(wrapper) {
-    const components = ['FilterType', 'FilterTypePath', 'FilterTypeStarred', 'FilterTypeRecommendedBy', 'FilterTypeDateRange']
+    const components = ['FilterType', 'FilterTypePath', 'FilterTypeStarred', 'FilterTypeRecommendedBy', 'FilterTypeDateRange', 'FilterTypeFileTypes']
     return components.flatMap(name => wrapper.findAllComponents({ name }))
   }
 
@@ -87,9 +96,9 @@ describe('TaskBatchSearchFormFilters', () => {
     })
   }
 
-  it('renders every filter available in server mode', () => {
+  it('renders every filter available in server mode', async () => {
     core.config.set('mode', MODE_NAME.SERVER)
-    const wrapper = mountWithDisposable()
+    const wrapper = await mountWithLoadedFilters()
     expect(renderedFilterNames(wrapper)).toEqual(expect.arrayContaining([
       'starred',
       'tags',
@@ -99,13 +108,28 @@ describe('TaskBatchSearchFormFilters', () => {
       'creationDate',
       'language',
       'extractionLevel',
-      'indexingDate'
+      'indexingDate',
+      'namedEntityPerson',
+      'namedEntityOrganization',
+      'namedEntityLocation',
+      'namedEntityEmail'
     ]))
   })
 
-  it('groups the filters in sections ordered like the search filters', () => {
-    core.config.set('mode', MODE_NAME.SERVER)
+  it('renders the content type filter with its file types component', () => {
     const wrapper = mountWithDisposable()
+    const fileTypes = wrapper.findComponent({ name: 'FilterTypeFileTypes' })
+    expect(fileTypes.props('filter').name).toBe('contentType')
+  })
+
+  it('does not render the project filter, already chosen in the form details', async () => {
+    const wrapper = await mountWithLoadedFilters()
+    expect(renderedFilterNames(wrapper)).not.toContain('project')
+  })
+
+  it('groups the filters in sections ordered like the search filters', async () => {
+    core.config.set('mode', MODE_NAME.SERVER)
+    const wrapper = await mountWithLoadedFilters()
     expect(renderedSections(wrapper)).toEqual([
       {
         title: 'Documents info',
@@ -114,13 +138,17 @@ describe('TaskBatchSearchFormFilters', () => {
       {
         title: 'User data',
         filters: ['starred', 'tags', 'recommendedBy']
+      },
+      {
+        title: 'Entities',
+        filters: ['namedEntityPerson', 'namedEntityOrganization', 'namedEntityLocation', 'namedEntityEmail']
       }
     ])
   })
 
-  it('hides the recommended by filter in local mode', () => {
+  it('hides the recommended by filter in local mode', async () => {
     core.config.set('mode', MODE_NAME.LOCAL)
-    const wrapper = mountWithDisposable()
+    const wrapper = await mountWithLoadedFilters()
     expect(renderedFilterNames(wrapper)).not.toContain('recommendedBy')
   })
 
