@@ -22,6 +22,7 @@ describe('TaskBatchSearchForm', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
+    api.elasticsearch.rootSearch.mockReturnValue({ build: () => ({ query: { match_all: {} } }) })
     const core = CoreSetup.init().useAll().useRouterWithoutGuards()
     plugins = core.plugins
     core.config.set('projects', [{ name: 'local-datashare' }])
