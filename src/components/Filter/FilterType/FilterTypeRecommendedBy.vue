@@ -1,6 +1,7 @@
 <script setup>
 import Fuse from 'fuse.js'
-import { computed, onBeforeMount } from 'vue'
+import { computed, useTemplateRef } from 'vue'
+import { whenever } from '@vueuse/core'
 import property from 'lodash/property'
 import sortBy from 'lodash/sortBy'
 import { useConfig } from '@/composables/useConfig'
@@ -91,16 +92,26 @@ const entries = computed(() => {
   return fuse.value.search(query.value).map(property('item'))
 })
 
+const filterTypeRef = useTemplateRef('filterTypeRef')
+const opened = computed(() => filterTypeRef.value?.opened ?? false)
+
 function fetch() {
   return recommendedStore.fetchIndicesRecommendations(indices.value)
 }
 
-onBeforeMount(fetch)
-watchIndices(fetch)
+function fetchIfOpened() {
+  if (opened.value) {
+    return fetch()
+  }
+}
+
+whenever(opened, fetch, { once: true })
+watchIndices(fetchIfOpened)
 </script>
 
 <template>
   <filter-type
+    ref="filterTypeRef"
     :filter="filter"
     :hide-lock="hideLock"
   >

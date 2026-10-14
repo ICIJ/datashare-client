@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils'
+import { flushPromises, mount } from '@vue/test-utils'
 import { setActivePinia, createPinia } from 'pinia'
 
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
@@ -51,6 +51,7 @@ describe('FilterTypeRecommendedBy.vue', () => {
   })
 
   beforeEach(async () => {
+    vi.clearAllMocks()
     setActivePinia(createPinia())
     core = CoreSetup.init().useAll().useRouterWithoutGuards()
     recommendedStore = useRecommendedStore()
@@ -60,7 +61,7 @@ describe('FilterTypeRecommendedBy.vue', () => {
     window.datashare = core
 
     const filter = searchStore.getFilter({ name: 'recommendedBy' })
-    const props = { filter }
+    const props = { filter, collapse: false }
     wrapper = await mount(FilterTypeRecommendedBy, { global: { plugins: core.plugins }, props })
     await wrapper.findComponent(FilterType).vm.aggregate()
   })
@@ -71,6 +72,14 @@ describe('FilterTypeRecommendedBy.vue', () => {
 
   it('should build a recommendedBy filter', () => {
     expect(wrapper.findComponent(FilterType).exists()).toBeTruthy()
+  })
+
+  it('should not load the recommendations while the filter is collapsed', async () => {
+    vi.clearAllMocks()
+    const props = { filter: searchStore.getFilter({ name: 'recommendedBy' }) }
+    await mount(FilterTypeRecommendedBy, { global: { plugins: core.plugins }, props })
+    await flushPromises()
+    expect(api.getRecommendationsByProject).not.toHaveBeenCalled()
   })
 
   it('should load users who recommended documents in this project', () => {

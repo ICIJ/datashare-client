@@ -1,10 +1,12 @@
-import { mount } from '@vue/test-utils'
+import { flushPromises, mount } from '@vue/test-utils'
 import esConnectionHelper from '~tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import { useLockedFiltersStore, useStarredStore, useSearchStore } from '@/store/modules'
 import FilterType from '@/components/Filter/FilterType/FilterType'
 import FilterTypeStarred from '@/components/Filter/FilterType/FilterTypeStarred'
+import FiltersPanelSectionFilter from '@/components/FiltersPanel/FiltersPanelSectionFilter'
 import FiltersPanelSectionFilterEntry from '@/components/FiltersPanel/FiltersPanelSectionFilterEntry'
+import { apiInstance as api } from '@/api/apiInstance'
 import CoreSetup from '~tests/unit/CoreSetup'
 
 vi.mock('@/api/apiInstance', async (importOriginal) => {
@@ -29,6 +31,8 @@ describe('FilterTypeStarred.vue', () => {
   })
 
   beforeEach(() => {
+    vi.clearAllMocks()
+    vi.spyOn(api.elasticsearch, 'search')
     const filter = searchStore.getFilter({ name: 'starred' })
     const props = { filter }
     const global = { plugins: core.plugins }
@@ -74,9 +78,8 @@ describe('FilterTypeStarred.vue', () => {
   it('should display the results count (without the "All")', async () => {
     await letData(es).have(new IndexedDocument('document_01', index)).commit()
     await letData(es).have(new IndexedDocument('document_02', index)).commit()
-    // Await fetch() directly so getTotal resolves before assert
-    await wrapper.vm.fetch()
-    // fetch() calls fetchIndicesStarredDocuments which is mocked to [], so set docs after
+    // Await fetchTotal() directly so getTotal resolves before assert
+    await wrapper.vm.fetchTotal()
     starredStore.setDocuments([{ index, id: 'document_01' }, { index, id: 'document_02' }])
 
     await wrapper.findComponent(FilterType).vm.aggregate()
@@ -85,6 +88,26 @@ describe('FilterTypeStarred.vue', () => {
     const entries = wrapper.findAllComponents(FiltersPanelSectionFilterEntry)
     expect(entries[1].props('count')).toBe(2)
     expect(entries[2].props('count')).toBe(0)
+  })
+
+  describe('fetch', () => {
+    function findTotalRequests() {
+      return api.elasticsearch.search.mock.calls.filter(([{ preference }]) => preference === 'search-filter-total')
+    }
+
+    it('loads the starred documents while the filter is collapsed', () => {
+      expect(api.getStarredDocuments).toHaveBeenCalled()
+    })
+
+    it('does not count the documents while the filter is collapsed', async () => {
+      await flushPromises()
+      expect(findTotalRequests()).toHaveLength(0)
+    })
+
+    it('counts the documents once the filter is opened', async () => {
+      await wrapper.findComponent(FiltersPanelSectionFilter).vm.$emit('update:collapse', false)
+      await vi.waitFor(() => expect(findTotalRequests()).toHaveLength(1), { timeout: 5000 })
+    })
   })
 
   describe('locking', () => {

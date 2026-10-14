@@ -340,7 +340,7 @@ onBeforeMount(async () => {
   watch(aggregationDependencies, aggregateIfVisible, { deep: false })
 })
 
-defineExpose({ entries, aggregateOver, count })
+defineExpose({ entries, aggregateOver, count, opened })
 </script>
 
 <template>

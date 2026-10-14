@@ -1,5 +1,6 @@
 <script setup>
-import { computed, onBeforeMount, ref } from 'vue'
+import { computed, onBeforeMount, ref, useTemplateRef } from 'vue'
+import { whenever } from '@vueuse/core'
 import castArray from 'lodash/castArray'
 import { useI18n } from 'vue-i18n'
 
@@ -64,9 +65,20 @@ const total = ref(0)
 const starredDocumentsCount = computed(() => props.filter.starredDocuments.length)
 const notStarredDocumentsCount = computed(() => Math.max(0, total.value - starredDocumentsCount.value))
 
+const filterTypeRef = useTemplateRef('filterTypeRef')
+const opened = computed(() => filterTypeRef.value?.opened ?? false)
+
+const fetchTotal = waitFor(async () => {
+  total.value = await getTotal()
+})
+
+// The starred documents are loaded right away because the search results
+// read them too, while the total only feeds the counts shown once opened.
 const fetch = waitFor(async () => {
   await starredStore.fetchIndicesStarredDocuments(indices.value)
-  total.value = await getTotal()
+  if (opened.value) {
+    await fetchTotal()
+  }
 })
 
 const isTruthy = value => value === true || value === 'true'
@@ -93,10 +105,12 @@ const selected = computed({
 
 onBeforeMount(fetch)
 watchIndices(fetch)
+whenever(opened, fetchTotal, { once: true })
 </script>
 
 <template>
   <filter-type
+    ref="filterTypeRef"
     :filter="filter"
     :hide-lock="hideLock"
   >
