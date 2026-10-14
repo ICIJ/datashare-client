@@ -96,7 +96,10 @@ watchIndices(fetch)
 </script>
 
 <template>
-  <filter-type :filter="filter">
+  <filter-type
+    :filter="filter"
+    :hide-lock="hideLock"
+  >
     <b-form-checkbox-group v-model="selected">
       <filters-panel-section-filter-entry
         name="starred"
