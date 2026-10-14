@@ -195,6 +195,19 @@ describe('TaskBatchSearchForm', () => {
       expect(api.batchSearch).not.toHaveBeenCalled()
       expect(wrapper.vm.$toast.success).not.toHaveBeenCalled()
     })
+    it('explains in the error toast that the recommended documents could not be loaded', async () => {
+      api.getDocumentsRecommendedBy.mockRejectedValue(new Error('Network error'))
+      const wrapper = createValidWrapper()
+      vi.spyOn(wrapper.vm.$toast, 'error')
+      const { formSearchStore } = wrapper.vm.$.setupState
+      formSearchStore.setIndices(['local-datashare'])
+      formSearchStore.addFilterValue({ name: 'recommendedBy', value: 'alice' })
+
+      await wrapper.find('form-creation-stub').trigger('submit')
+      await vi.waitFor(() => expect(wrapper.vm.$toast.error).toHaveBeenCalledOnce())
+
+      expect(wrapper.vm.$toast.error).toHaveBeenCalledWith(wrapper.vm.$t('task.batch-search.form.recommendedByError'))
+    })
   })
 
   describe('starred filter', () => {
