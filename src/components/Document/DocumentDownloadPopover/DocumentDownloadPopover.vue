@@ -150,7 +150,7 @@ defineExpose({
         download
       />
       <hook
-        name="document-download-popover.buttons:after"
+        name="document.download-popover:after"
         :bind="{ document }"
       />
       <div class="document-download-popover__body__sections">
