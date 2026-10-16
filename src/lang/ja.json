@@ -499,6 +499,7 @@
   "documentViewTabs": {
     "text": "Text",
     "viewer": "View",
+    "play": "Play",
     "metadata": "Metadata",
     "entities": "固有表現"
   },
@@ -1240,6 +1241,7 @@
         "submit": "Create",
         "submitError": "Something went wrong, unable to run the batch search.",
         "readError": "Unable to read the queries file. Select it again and retry.",
+        "recommendedByError": "Unable to load the documents recommended by the selected users.",
         "submitSuccess": "Batch search created successfully.",
         "editError": "Something went wrong, unable to update the batch search.",
         "editSuccess": "Batch search updated successfully."
