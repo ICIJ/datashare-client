@@ -138,7 +138,7 @@ const tagSelection = async (documents, labels) => {
         @click="addTagsModal"
       />
       <hook
-        name="search-selection.compact:after"
+        name="search-selection-compact:after"
         :bind="{ selectionEntries, noSelection }"
       />
     </template>
