@@ -189,6 +189,15 @@
     "formLanguage": "Document language",
     "formOcr": "Extract text from images and PDFs (OCR)"
   },
+  "entityCard": {
+    "properties": {
+      "name": "Name",
+      "entityType": "Data schema",
+      "sourceDocument": "Source document",
+      "model": "Data model",
+      "project": "Project"
+    }
+  },
   "entityPopoverInfo": {
     "content": "This entity was extracted with:",
     "label": "{extractor} in {language}"
