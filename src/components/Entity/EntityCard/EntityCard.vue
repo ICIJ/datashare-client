@@ -40,8 +40,11 @@ const props = defineProps({
   }
 })
 
+// Never undefined: `index` is a required prop downstream and feeds RouterLinkDocument's route
+// params, where undefined resolves to a broken document link rather than failing loudly.
 const index = computed(() => {
-  return props.index ?? (typeof props.project === 'string' ? props.project : props.project?.name)
+  const fromProject = typeof props.project === 'string' ? props.project : props.project?.name
+  return props.index ?? fromProject ?? ''
 })
 
 const classList = computed(() => ({
