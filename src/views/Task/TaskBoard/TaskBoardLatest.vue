@@ -45,7 +45,7 @@ function getAuthor(item) {
   if (item.args?.batchDownload) {
     return item.args?.batchDownload.user.id
   }
-  return item.args?.user.id
+  return item.args?.user?.id
 }
 
 function getProjects(item) {
@@ -63,6 +63,7 @@ function getProjects(item) {
     default: {
       const custom = getRegisteredTaskName(item.name)
       if (custom?.getProjects) return custom.getProjects(item)
+      if (!custom) console.error('Unknown task', item)
       return []
     }
   }
@@ -79,11 +80,11 @@ function getTitle(item) {
     case TASK_NAME.INDEX:
     case TASK_NAME.ENQUEUE_FROM_INDEX:
     case TASK_NAME.EXTRACT_NLP:
-      return getHumanTaskName(item.name)
+      return t(getHumanTaskName(item.name))
     default: {
       const custom = getRegisteredTaskName(item.name)
       if (custom?.getTitle) return custom.getTitle(item)
-      return getHumanTaskName(item.name)
+      return t(getHumanTaskName(item.name))
     }
   }
 }
@@ -132,9 +133,8 @@ function getTaskLinkRoute(item) {
 }
 
 function getTaskIcon(item) {
-  const custom = getRegisteredTaskName(item.name)
-  if (custom?.icon) return custom.icon
-  return TASK_NAME_ICON[item.name]
+  if (TASK_NAME_ICON[item.name]) return TASK_NAME_ICON[item.name]
+  return getRegisteredTaskName(item.name)?.icon
 }
 </script>
 
@@ -181,7 +181,7 @@ function getTaskIcon(item) {
             v-else-if="item.name === TASK_NAME.BATCH_SEARCH || item.name === TASK_NAME.BATCH_SEARCH_PROXY"
             :item="item"
           />
-          <span v-else> {{ t(getTitle(item)) }}</span>
+          <span v-else> {{ getTitle(item) }}</span>
         </template>
         <template #cell(createdAt)="{ item }">
           <display-datetime-from-now :value="item.createdAt" />
