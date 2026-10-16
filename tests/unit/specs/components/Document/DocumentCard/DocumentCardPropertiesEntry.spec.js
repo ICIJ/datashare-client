@@ -52,6 +52,6 @@ describe('DocumentCardPropertiesEntry.vue', () => {
 
   it('falls back to a dash when the document has no such property', () => {
     const wrapper = mountEntry({ document: {}, property: 'author' })
-    expect(wrapper.find('.card-properties-entry__value').text()).toBe('—')
+    expect(wrapper.find('.card-properties-entry__value').text()).toBe('\u2014')
   })
 })

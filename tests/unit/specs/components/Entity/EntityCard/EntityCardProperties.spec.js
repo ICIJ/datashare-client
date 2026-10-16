@@ -34,7 +34,9 @@ describe('EntityCardProperties.vue', () => {
   it('falls back to the generic entry for an unmapped model property', () => {
     const wrapper = mountProperties(['ftm_country'])
     expect(wrapper.findComponent(EntityCardPropertiesEntryName).exists()).toBe(false)
-    expect(wrapper.findAllComponents(EntityCardPropertiesEntry).length).toBeGreaterThan(0)
+    // Exactly one: the specific entries each wrap the generic one, so a count greater than zero
+    // would also hold if the key had routed to a specific entry.
+    expect(wrapper.findAllComponents(EntityCardPropertiesEntry)).toHaveLength(1)
     expect(wrapper.text()).toContain('tm')
   })
 
@@ -47,6 +49,7 @@ describe('EntityCardProperties.vue', () => {
 
   it('renders nothing for an empty property list', () => {
     const wrapper = mountProperties([])
+    expect(wrapper.find('.entity-card-properties').exists()).toBe(true)
     expect(wrapper.findAll('.card-properties-entry')).toHaveLength(0)
   })
 })

@@ -34,6 +34,10 @@ describe('humanizePropertyKey', () => {
   it('returns an empty string for a missing key', () => {
     expect(humanizePropertyKey()).toBe('')
   })
+
+  it('returns an empty string for a null key rather than throwing', () => {
+    expect(humanizePropertyKey(null)).toBe('')
+  })
 })
 
 describe('entityPropertyValues', () => {
@@ -55,6 +59,15 @@ describe('entityPropertyValues', () => {
 
   it('tolerates a missing entity', () => {
     expect(entityPropertyValues(undefined, 'ftm_name')).toEqual([])
+  })
+
+  it('does not expose the properties bag itself as a value', () => {
+    expect(entityPropertyValues(entity, 'properties')).toEqual([])
+  })
+
+  it('does not expose an inherited key as a value', () => {
+    expect(entityPropertyValues(entity, 'constructor')).toEqual([])
+    expect(entityPropertyValues(entity, 'toString')).toEqual([])
   })
 })
 

@@ -36,9 +36,9 @@ const NAMESPACE_SEPARATOR = '_'
  * to Java callers, with no HTTP route. Replace this with the ontology's own labels once the
  * epic's ontology endpoint lands. This function and `item` below are the only places to change.
  */
-export function humanizePropertyKey(key = '') {
-  const [, ...rest] = key.split(NAMESPACE_SEPARATOR)
-  const bare = rest.length ? rest.join(NAMESPACE_SEPARATOR) : key
+export function humanizePropertyKey(key) {
+  const [, ...rest] = (key ?? '').split(NAMESPACE_SEPARATOR)
+  const bare = rest.length ? rest.join(NAMESPACE_SEPARATOR) : (key ?? '')
   return upperFirst(startCase(bare).toLowerCase())
 }
 
@@ -50,8 +50,25 @@ export function humanizePropertyKey(key = '') {
  * three, so no component has to know which kind of key it was handed.
  */
 export function entityPropertyValues(entity, key) {
-  const values = entity?.properties?.[key] ?? entity?.[key] ?? []
-  return [].concat(values).filter(value => value !== null && value !== undefined && value !== '')
+  // Own keys only, and never the containers themselves. A bare `?? entity?.[key]` would hand back
+  // the properties bag for `properties`, the whole analyzed blob for `propertiesAll`, and
+  // Object.prototype members for `constructor` or `toString`, each of which renders as garbage in
+  // a card row. The settings list is hard-coded today but the spec plans to drive it from an
+  // index aggregation, so the key reaching here will eventually come from data.
+  const values = own(entity?.properties, key) ? entity.properties[key] : rootValues(entity, key)
+  return [].concat(values).filter(value => typeof value === 'string' && value !== '')
+}
+
+// Fields the entity carries at its root that a card may legitimately render. `properties` and
+// `propertiesAll` are containers, not values, so they are not here.
+const ROOT_KEYS = Object.freeze([...Object.values(ENTITY_FIELD), 'entityId', 'documentIds', 'modelVersions'])
+
+function own(object, key) {
+  return object !== null && typeof object === 'object' && Object.hasOwn(object, key)
+}
+
+function rootValues(entity, key) {
+  return ROOT_KEYS.includes(key) && own(entity, key) ? entity[key] : []
 }
 
 /**
