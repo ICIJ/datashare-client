@@ -645,9 +645,12 @@ class Core extends Behaviors {
    * @param {Object} config.listRoute - Vue Router route object for the task list page
    * @param {String} config.linkTitle - i18n key for the icon link tooltip
    * @param {Function} config.getProjects - Function (item) => string[] to extract projects
+   * @param {Function} config.getTitle - Function (item) => string returning the displayed title
+   * @returns {Core} the current instance of Core
    */
   registerTaskName(name, config) {
     registerTaskName(name, config)
+    return this
   }
 
   /**
