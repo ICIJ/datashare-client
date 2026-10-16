@@ -56,7 +56,7 @@
       </template>
     </b-card>
     <hook
-      name="document.viewer.video:after"
+      name="document-viewer-video:after"
       :bind="{ document }"
     />
   </div>
