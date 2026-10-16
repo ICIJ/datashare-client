@@ -499,6 +499,7 @@
   "documentViewTabs": {
     "text": "Texto",
     "viewer": "Vista previa",
+    "play": "Play",
     "metadata": "Metadatos",
     "entities": "Entidades"
   },
