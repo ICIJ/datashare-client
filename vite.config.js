@@ -28,6 +28,14 @@ export default ({ mode }) => {
   // identifiers in stories) so the prefix/collection can't drift between them.
   const iconsResolver = IconsResolver({ prefix: 'i', enabledCollections: ['ph'] })
 
+  const backendProxy = {
+    '^/(version|settings|me|api|auth).?': {
+      target: process.env.VITE_DEV_PROXY,
+      changeOrigin: true,
+      secure: false
+    }
+  }
+
   return defineConfig({
     base: process.env.VITE_BASE,
     plugins: [
@@ -124,13 +132,16 @@ export default ({ mode }) => {
       watch: {
         usePolling: true
       },
-      proxy: {
-        '^/(version|settings|me|api|auth).?': {
-          target: process.env.VITE_DEV_PROXY,
-          changeOrigin: true,
-          secure: false
-        }
-      }
+      proxy: backendProxy
+    },
+    // `vite preview` serves the production build, which boots against the same
+    // backend endpoints as the dev server, so it needs the same proxy. A plain
+    // static server (`npx serve dist`) leaves /settings and /me unproxied and
+    // the app never gets past the splashscreen.
+    preview: {
+      port: 9009,
+      host: '0.0.0.0',
+      proxy: backendProxy
     },
     build: {
       rollupOptions: {
@@ -149,6 +160,12 @@ export default ({ mode }) => {
            * chunk name here.
            */
           manualChunks(id) {
+            if (id.includes('commonjsHelpers')) {
+              return 'vendor-framework'
+            }
+            if (id.includes('/src/components/') && !id.includes('/src/components/Document/DocumentViewer/')) {
+              return 'components'
+            }
             if (!id.includes('node_modules')) return
 
             const scope = id.slice(id.lastIndexOf('node_modules/') + 'node_modules/'.length)
@@ -176,7 +193,7 @@ export default ({ mode }) => {
 
             // UI kit — bootstrap-vue-next and @icij/murmur share a large
             // amount of code and are used across nearly every view.
-            if (['bootstrap-vue-next', '@icij/murmur', 'bootstrap'].includes(pkg) || pkg.startsWith('@floating-ui')) {
+            if (['bootstrap-vue-next', '@icij/murmur', 'bootstrap', 'resize-observer-polyfill', 'vue-resize'].includes(pkg) || pkg.startsWith('@floating-ui')) {
               return 'vendor-ui'
             }
 

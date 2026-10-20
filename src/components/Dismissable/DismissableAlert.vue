@@ -168,7 +168,8 @@ const classList = {
 
   &__body {
     &__default {
-      &__button {
+      // Doubled up on .btn to outrank bootstrap's `.btn { background-color: var(--bs-btn-bg) }`.
+      &__button.btn {
         background: var(--bs-body-bg);
         color: var(--bs-body-color);
       }

@@ -86,7 +86,10 @@ const style = computed(() => {
 </template>
 
 <style lang="scss">
-.app-placeholder {
+// Scoped with `.placeholder` so this wins over bootstrap's
+// `.placeholder { background-color: currentcolor }` on specificity rather than
+// on stylesheet order, which varies with how the component is chunked.
+.placeholder.app-placeholder {
   background: var(--bs-tertiary-bg-subtle);
   animation: placeholder-glow 2s ease-in-out infinite;
   opacity: 1;
