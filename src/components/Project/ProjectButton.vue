@@ -101,6 +101,8 @@ const linkTo = computed(() => {
   fieldset:disabled &.btn,
   &.btn {
     opacity: 1;
+    // Doubled up on .btn to outrank bootstrap's `.btn { display: inline-block }`.
+    display: inline-flex;
   }
 
   &[href] {
