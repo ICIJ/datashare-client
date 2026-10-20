@@ -28,6 +28,14 @@ export default ({ mode }) => {
   // identifiers in stories) so the prefix/collection can't drift between them.
   const iconsResolver = IconsResolver({ prefix: 'i', enabledCollections: ['ph'] })
 
+  const backendProxy = {
+    '^/(version|settings|me|api|auth).?': {
+      target: process.env.VITE_DEV_PROXY,
+      changeOrigin: true,
+      secure: false
+    }
+  }
+
   return defineConfig({
     base: process.env.VITE_BASE,
     plugins: [
@@ -124,13 +132,16 @@ export default ({ mode }) => {
       watch: {
         usePolling: true
       },
-      proxy: {
-        '^/(version|settings|me|api|auth).?': {
-          target: process.env.VITE_DEV_PROXY,
-          changeOrigin: true,
-          secure: false
-        }
-      }
+      proxy: backendProxy
+    },
+    // `vite preview` serves the production build, which boots against the same
+    // backend endpoints as the dev server, so it needs the same proxy. A plain
+    // static server (`npx serve dist`) leaves /settings and /me unproxied and
+    // the app never gets past the splashscreen.
+    preview: {
+      port: 9009,
+      host: '0.0.0.0',
+      proxy: backendProxy
     },
     build: {
       rollupOptions: {
