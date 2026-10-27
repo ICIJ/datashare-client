@@ -5,6 +5,7 @@ import groupBy from 'lodash/groupBy'
 import property from 'lodash/property'
 import trimStart from 'lodash/trimStart'
 import uniq from 'lodash/uniq'
+import uniqBy from 'lodash/uniqBy'
 import { match } from 'path-to-regexp'
 
 import { useCore } from '@/composables/useCore'
@@ -48,16 +49,20 @@ const verticalDocumentActions = computed(() => breakpointDown.value[SIZE.LG])
 const loading = computed(() => toValue(loadingDocuments) || toValue(loadingEvents))
 
 const entries = computed(() => {
-  return (
-    hits.value
-      // This create a list of tuples where the first element is the document and the second is the event.
-      .map((document) => {
-        const event = events.find(event => eventParams(event).id === document.id)
-        return [document, event]
-      })
-      // This filter out the documents that don't have a corresponding event.
-      .filter(([, event]) => !!event)
-  )
+  const documentsByKey = new Map(hits.value.map(document => [`${document.index}/${document.id}`, document]))
+  // The event index can be an alias of the document index, so fall back on the id alone.
+  const documentsById = new Map(hits.value.map(document => [document.id, document]))
+  const tuples = events
+    // This create a list of tuples where the first element is the document and the second is the event.
+    // Events come sorted from the API, so iterating over them keeps the history order.
+    .map((event) => {
+      const { index, id } = eventParams(event)
+      return [documentsByKey.get(`${index}/${id}`) ?? documentsById.get(id), event]
+    })
+    // This filter out the events whose document is no longer in the index.
+    .filter(([document]) => !!document)
+  // Several events can point to the same document: only the first one in the list is displayed.
+  return uniqBy(tuples, ([document]) => `${document.index}/${document.id}`)
 })
 
 const groupedEntries = computed(() => {
@@ -85,13 +90,6 @@ function buildEventsBody() {
     .size(values.length)
     .rawOption('_source', { excludes })
     .query('ids', { values })
-    .sort('_script', {
-      type: 'number',
-      script: {
-        source: 'params.order.indexOf(doc._id.value)',
-        params: { order: values }
-      }
-    })
     .build()
 }
 
@@ -141,8 +139,8 @@ watch(() => eventsIds.value, fetch, { deep: true, immediate: true })
     </template>
     <div class="d-flex flex-column gap-3 mb-3">
       <document-card
-        v-for="([document, event], i) in entry"
-        :key="i"
+        v-for="[document, event] in entry"
+        :key="event.modificationDate"
         modal
         route-name="document-standalone"
         :document="document"
