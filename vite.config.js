@@ -12,6 +12,7 @@ import { visualizer } from 'rollup-plugin-visualizer'
 import { BootstrapVueNextResolver } from 'unplugin-vue-components/resolvers'
 
 import { chunkFileNames } from './src/utils/chunkFileNames.js'
+import { componentCssLast } from './src/utils/componentCssLast.js'
 
 export default ({ mode }) => {
   const VITE_GIT_HASH = childProcess.execSync('git rev-parse HEAD').toString()
@@ -32,6 +33,11 @@ export default ({ mode }) => {
     base: process.env.VITE_BASE,
     plugins: [
       vue(),
+      {
+        name: 'datashare:component-css-last',
+        enforce: 'post',
+        transformIndexHtml: componentCssLast
+      },
       !isStorybook && vueDevTools(),
       process.env.VITE_ANALYZE && visualizer({
         filename: 'dist/stats.html',
