@@ -24,9 +24,9 @@ const { perPageLabel } = useViewSettings()
 // unnamed one makes the second call cancel the first's queued update.
 const page = useUrlPageParam()
 
-// Sorting or resizing the page changes which results the current offset points at. Without this
-// the list keeps the old offset: on page 3 of 25, switching to 100 per page starts the list mid
-// results while the pagination control reads page 1.
+// Bound to the sections' own events rather than to the model setters: those setters also run
+// during the initial URL-to-store sync, which would throw away the page a deep link asked for.
+// The event only fires when someone actually picks a value.
 function resetPage() {
   page.value = 1
 }
@@ -38,10 +38,7 @@ const sortBy = ref({
   options: sortByOptions,
   modelValue: useUrlParamsWithStore(['sort', 'order'], {
     get: () => appStore.getSettings(VIEW, 'orderBy'),
-    set: (sort = '_score', order = 'desc') => {
-      appStore.setSettings(VIEW, { orderBy: [sort, order] })
-      resetPage()
-    }
+    set: (sort = '_score', order = 'desc') => appStore.setSettings(VIEW, { orderBy: [sort, order] })
   })
 })
 
@@ -52,10 +49,7 @@ const perPage = ref({
   modelValue: useUrlParamWithStore('perPage', {
     transform: value => Math.max(10, parseInt(value)),
     get: () => appStore.getSettings(VIEW, 'perPage'),
-    set: (perPage) => {
-      appStore.setSettings(VIEW, { perPage })
-      resetPage()
-    }
+    set: perPage => appStore.setSettings(VIEW, { perPage })
   }),
   options: [{ value: 10 }, { value: 25 }, { value: 50 }, { value: 100 }]
 })
@@ -95,6 +89,7 @@ function reset() {
       :type="sortBy.type"
       :options="sortBy.options"
       :label="sortBy.label"
+      @update:model-value="resetPage"
     />
     <page-settings-section
       v-model="perPage.modelValue"
@@ -103,6 +98,7 @@ function reset() {
       :type="perPage.type"
       :options="perPage.options"
       :label="perPage.label"
+      @update:model-value="resetPage"
     />
   </page-settings>
 </template>
