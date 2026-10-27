@@ -4,6 +4,10 @@ import { computed, toValue } from 'vue'
 import CardPropertiesEntry from '@/components/Card/CardPropertiesEntry'
 import { useEntityProperties, entityPropertyValues } from '@/composables/useEntityProperties'
 
+// A property can hold many values; a card row shows the first few and keeps the rest in the
+// tooltip, so one verbose property cannot push the other rows off the card.
+const MAX_VALUES = 3
+
 const props = defineProps({
   entity: {
     type: Object
@@ -28,6 +32,16 @@ const field = computed(() => item(props.property))
 const display = computed(() => toValue(props.title ?? field.value.text ?? props.property))
 const icon = computed(() => props.icon ?? field.value.icon)
 const values = computed(() => entityPropertyValues(props.entity, props.property))
+const capped = computed(() => values.value.length > MAX_VALUES)
+const shown = computed(() => {
+  if (!values.value.length) {
+    return null
+  }
+  const head = values.value.slice(0, MAX_VALUES).join(', ')
+  return capped.value ? `${head}\u2026` : head
+})
+// Only when something is hidden: a tooltip repeating what is already on screen is noise.
+const allValues = computed(() => (capped.value ? values.value.join(', ') : undefined))
 </script>
 
 <template>
@@ -37,6 +51,17 @@ const values = computed(() => entityPropertyValues(props.entity, props.property)
     :icon="icon"
     :hide-icon="hideIcon"
   >
-    <slot>{{ values.length ? values.join(', ') : '&#8212;' }}</slot>
+    <slot>
+      <span
+        class="entity-card-properties-entry__values"
+        :title="allValues"
+      >{{ shown ?? '&#8212;' }}</span>
+      <!-- `title` is not reliably announced on a non-interactive element, so the hidden values
+           are repeated for screen readers rather than left to the tooltip alone. -->
+      <span
+        v-if="allValues"
+        class="visually-hidden"
+      >{{ allValues }}</span>
+    </slot>
   </card-properties-entry>
 </template>

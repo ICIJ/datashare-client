@@ -17,7 +17,8 @@ const entity = {
   properties: {
     ftm_name: ['Mr Yazmurad N Seryaev', 'Y. Seryaev'],
     ftm_country: ['Turkmenistan'],
-    ftm_incorporationDate: ['1999-01-04']
+    ftm_incorporationDate: ['1999-01-04'],
+    ftm_alias: ['Y. Seryaev', 'Yazmurad Seryaev', 'M. Y. N. Seryaev', 'Seryaev Yazmurad', 'Y.N.S.']
   }
 }
 
@@ -50,4 +51,10 @@ export const UnmappedProperty = {
 // Both values of a multi-valued property have to be visible.
 export const MultiValuedProperty = {
   args: { properties: ['ftm_name'] }
+}
+
+// Past three values the row caps and keeps the rest in the title attribute, so one verbose
+// property cannot push the other rows off the card.
+export const CappedMultiValuedProperty = {
+  args: { properties: ['name', 'ftm_alias'] }
 }

@@ -27,6 +27,31 @@ describe('EntityCardPropertiesEntry.vue', () => {
     expect(wrapper.text()).toContain('J. Doe')
   })
 
+  it('renders every value when there are no more than three', () => {
+    const many = { ...entity, properties: { ftm_alias: ['a', 'b', 'c'] } }
+    const wrapper = mountWith(EntityCardPropertiesEntry, { entity: many, property: 'ftm_alias' })
+    expect(wrapper.find('.entity-card-properties-entry__values').text()).toBe('a, b, c')
+  })
+
+  it('caps the list at three values and marks the rest with an ellipsis', () => {
+    const many = { ...entity, properties: { ftm_alias: ['a', 'b', 'c', 'd', 'e'] } }
+    const wrapper = mountWith(EntityCardPropertiesEntry, { entity: many, property: 'ftm_alias' })
+    // The visible span only: the value container also holds the visually-hidden full list.
+    expect(wrapper.find('.entity-card-properties-entry__values').text()).toBe('a, b, c\u2026')
+  })
+
+  it('carries the full list as a tooltip title when it is capped', () => {
+    const many = { ...entity, properties: { ftm_alias: ['a', 'b', 'c', 'd', 'e'] } }
+    const wrapper = mountWith(EntityCardPropertiesEntry, { entity: many, property: 'ftm_alias' })
+    expect(wrapper.find('.entity-card-properties-entry__values').attributes('title')).toBe('a, b, c, d, e')
+  })
+
+  it('carries no tooltip title when nothing is hidden', () => {
+    const few = { ...entity, properties: { ftm_alias: ['a', 'b'] } }
+    const wrapper = mountWith(EntityCardPropertiesEntry, { entity: few, property: 'ftm_alias' })
+    expect(wrapper.find('.entity-card-properties-entry__values').attributes('title')).toBeUndefined()
+  })
+
   it('labels an unmapped model property with its humanized key', () => {
     const wrapper = mountWith(EntityCardPropertiesEntry, { entity, property: 'ftm_country' })
     expect(wrapper.find('.visually-hidden').text()).toBe('Country:')
