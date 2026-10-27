@@ -52,6 +52,14 @@ describe('searchEntities', () => {
     expect(lastCall().body.sort).toEqual([{ _score: { order: 'desc' } }])
   })
 
+  // Without a preference, successive pages can be served by different shard replicas, so a
+  // tie-broken ordering shifts between pages and a user paging through sees a duplicate or
+  // misses an entity entirely.
+  it('pins the shard preference so paging stays consistent', async () => {
+    await elasticsearch.searchEntities({ indices: ['banana-papers'] })
+    expect(lastCall().preference).toBeTruthy()
+  })
+
   it('sorts a named property without an explicit mode', async () => {
     await elasticsearch.searchEntities({ indices: ['banana-papers'], sort: { entityId: 'asc' } })
     const [clause] = lastCall().body.sort

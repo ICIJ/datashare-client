@@ -78,6 +78,24 @@ describe('useEntityStore', () => {
     expect(store.error).toBeNull()
   })
 
+  // Two searches overlap whenever a user paginates and then changes the sort. Without ordering,
+  // the slower first response lands last and the list shows results for a query nobody asked for.
+  it('discards a slow response that lands after a newer one', async () => {
+    const store = useEntityStore()
+    store.projects = ['banana-papers']
+    let releaseStale
+    spy.mockImplementationOnce(() => new Promise((resolve) => {
+      releaseStale = () => resolve(response([hit('ftm_STALE')]))
+    }))
+    spy.mockImplementationOnce(() => Promise.resolve(response([hit('ftm_FRESH')])))
+    const stale = store.search()
+    const fresh = store.search()
+    await fresh
+    releaseStale()
+    await stale
+    expect(store.hits.map(({ _id }) => _id)).toEqual(['ftm_FRESH'])
+  })
+
   it('clears the previous error when a later search succeeds', async () => {
     const store = useEntityStore()
     store.projects = ['banana-papers']
