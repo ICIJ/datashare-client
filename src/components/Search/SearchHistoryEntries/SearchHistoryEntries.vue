@@ -2,6 +2,7 @@
 import { computed, ref, toValue, watch } from 'vue'
 import bodybuilder from 'bodybuilder'
 import groupBy from 'lodash/groupBy'
+import isEqual from 'lodash/isEqual'
 import property from 'lodash/property'
 import trimStart from 'lodash/trimStart'
 import uniq from 'lodash/uniq'
@@ -50,14 +51,12 @@ const loading = computed(() => toValue(loadingDocuments) || toValue(loadingEvent
 
 const entries = computed(() => {
   const documentsByKey = new Map(hits.value.map(document => [`${document.index}/${document.id}`, document]))
-  // The event index can be an alias of the document index, so fall back on the id alone.
-  const documentsById = new Map(hits.value.map(document => [document.id, document]))
   const tuples = events
     // This create a list of tuples where the first element is the document and the second is the event.
     // Events come sorted from the API, so iterating over them keeps the history order.
     .map((event) => {
       const { index, id } = eventParams(event)
-      return [documentsByKey.get(`${index}/${id}`) ?? documentsById.get(id), event]
+      return [documentsByKey.get(`${index}/${id}`), event]
     })
     // This filter out the events whose document is no longer in the index.
     .filter(([document]) => !!document)
@@ -106,7 +105,7 @@ const fetch = waitFor(async () => {
   hits.value = new EsDocList(response).hits
 })
 
-watch(() => eventsIds.value, fetch, { deep: true, immediate: true })
+watch(eventsIds, (ids, previousIds) => isEqual(ids, previousIds) || fetch(), { immediate: true })
 </script>
 
 <template>
@@ -140,7 +139,7 @@ watch(() => eventsIds.value, fetch, { deep: true, immediate: true })
     <div class="d-flex flex-column gap-3 mb-3">
       <document-card
         v-for="[document, event] in entry"
-        :key="event.modificationDate"
+        :key="`${document.index}/${document.id}`"
         modal
         route-name="document-standalone"
         :document="document"

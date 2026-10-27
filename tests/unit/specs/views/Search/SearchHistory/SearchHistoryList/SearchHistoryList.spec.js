@@ -113,10 +113,38 @@ describe('SearchHistoryList.vue', () => {
   })
 
   it('should display the documents in the order of the events', async () => {
+    const { items } = await api.getHistoryEvents()
+    api.getHistoryEvents.mockResolvedValue({
+      pagination: { total: 3, page: 1, size: 10 },
+      items: [
+        ...items,
+        {
+          id: 'id_03',
+          type: 'DOCUMENT',
+          name: 'name_03',
+          uri: '/ds/local-datashare/baz/baz',
+          modificationDate: '2023-02-15T11:00:32.683+00:00'
+        }
+      ]
+    })
+    // Elasticsearch returns the hits in another order than the events, with two of them on the same day.
+    api.elasticsearch.search.mockResolvedValue({
+      hits: {
+        total: 3,
+        hits: ['baz', 'foo', 'bar'].map(id => ({ _id: id, _index: 'local-datashare', _source: { name: id } }))
+      }
+    })
     const wrapper = mount(SearchHistoryList, { global: { plugins: core.plugins } })
     await flushPromises()
     const ids = wrapper.findAllComponents(DocumentCard).map(card => card.props('document').id)
-    expect(ids).toEqual(['bar', 'foo'])
+    expect(ids).toEqual(['bar', 'foo', 'baz'])
+  })
+
+  it('should not sort the documents query', async () => {
+    mount(SearchHistoryList, { global: { plugins: core.plugins } })
+    await flushPromises()
+    const [{ body }] = api.elasticsearch.search.mock.calls.at(-1)
+    expect(body.sort).toBeUndefined()
   })
 
   it('should display a button for each day', async () => {
