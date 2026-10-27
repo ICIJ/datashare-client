@@ -11,6 +11,7 @@ import IPhMagnifyingGlass from '~icons/ph/magnifying-glass'
 import IPhFileMagnifyingGlass from '~icons/ph/file-magnifying-glass'
 import IPhClockCounterClockwise from '~icons/ph/clock-counter-clockwise'
 import IPhListChecks from '~icons/ph/list-checks'
+import IPhStack from '~icons/ph/stack'
 import IPhRocketLaunch from '~icons/ph/rocket-launch'
 import IPhListMagnifyingGlass from '~icons/ph/list-magnifying-glass'
 import IPhDownloadSimple from '~icons/ph/download-simple'
@@ -219,6 +220,12 @@ defineExpose({
               :to="{ name: 'search.saved.list' }"
             >
               {{ t('appSidebar.savedSearches') }}
+            </app-sidebar-section-entry>
+            <app-sidebar-section-entry
+              :icon="IPhStack"
+              :to="{ name: 'entity.list' }"
+            >
+              {{ t('appSidebar.entities') }}
             </app-sidebar-section-entry>
           </app-sidebar-section>
           <app-sidebar-section

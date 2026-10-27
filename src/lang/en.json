@@ -968,7 +968,8 @@
     "search": "Search",
     "searchDocuments": "Documents",
     "history": "History",
-    "savedSearches": "Saved searches"
+    "savedSearches": "Saved searches",
+    "entities": "Entities"
   },
   "appSidebarFooter": {
     "signOut": "Sign out",
