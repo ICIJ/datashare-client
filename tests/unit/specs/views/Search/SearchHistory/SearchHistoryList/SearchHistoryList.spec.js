@@ -112,6 +112,13 @@ describe('SearchHistoryList.vue', () => {
     expect(cards).toHaveLength(2)
   })
 
+  it('should display the documents in the order of the events', async () => {
+    const wrapper = mount(SearchHistoryList, { global: { plugins: core.plugins } })
+    await flushPromises()
+    const ids = wrapper.findAllComponents(DocumentCard).map(card => card.props('document').id)
+    expect(ids).toEqual(['bar', 'foo'])
+  })
+
   it('should display a button for each day', async () => {
     const wrapper = mount(SearchHistoryList, { global: { plugins: core.plugins } })
     await flushPromises()
