@@ -32,7 +32,8 @@ const PREFERENCE = Object.freeze({
   DOCUMENTS_COUNT: 'project-documents-count',
   TAGS_COUNT: 'project-tags-count',
   COUNT_BY_PROJECT: 'count-by-project',
-  MAX_EXTRACTION_DATE: 'max-extraction-date-by-project'
+  MAX_EXTRACTION_DATE: 'max-extraction-date-by-project',
+  ENTITIES: 'entities-search'
 })
 
 // Project statistics span projects whose index may not exist yet: elasticsearch
@@ -302,7 +303,15 @@ export function datasharePlugin(Client) {
     // already picks the first value ascending and the last descending, which is alphabetical.
     const [field, order] = sort ? Object.entries(sort)[0] : ['_score', 'desc']
     body.sort(field, order)
-    return this._search({ index: indices.map(entitiesIndex).join(','), body: body.build(), ...IGNORE_MISSING_INDEX })
+    // A preference pins the replica set: without it successive pages can be served by different
+    // shard copies, and a tie-broken ordering that shifts between pages shows a user the same
+    // entity twice or skips one entirely.
+    return this._search({
+      index: indices.map(entitiesIndex).join(','),
+      body: body.build(),
+      preference: PREFERENCE.ENTITIES,
+      ...IGNORE_MISSING_INDEX
+    })
   }
 
   /**

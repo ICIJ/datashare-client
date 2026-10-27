@@ -19,6 +19,10 @@ export const useEntityStore = defineStore('entity', () => {
   const error = ref(null)
   const isReady = ref(true)
 
+  // Monotonic: a search that is no longer the latest drops its response rather than overwriting a
+  // newer one. Two are in flight whenever a user paginates and then changes the sort.
+  let latestRequest = 0
+
   const hits = computed(() => response.value?.hits?.hits ?? [])
   const total = computed(() => response.value?.hits?.total?.value ?? 0)
   const isEmpty = computed(() => isReady.value && !error.value && !hits.value.length)
@@ -41,23 +45,27 @@ export const useEntityStore = defineStore('entity', () => {
       isReady.value = true
       return
     }
+    const request = ++latestRequest
     isReady.value = false
     error.value = null
     try {
-      response.value = await elasticsearch.searchEntities({
+      const result = await elasticsearch.searchEntities({
         indices: projects.value,
         query: query.value,
         from: from.value,
         perPage: perPage.value,
         sort: sort.value
       })
+      if (request !== latestRequest) return
+      response.value = result
     }
     catch (e) {
+      if (request !== latestRequest) return
       response.value = null
       error.value = e
     }
     finally {
-      isReady.value = true
+      if (request === latestRequest) isReady.value = true
     }
   }
 
