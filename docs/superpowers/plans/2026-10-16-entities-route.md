@@ -4,7 +4,7 @@
 
 **Goal:** Make `/entities` reachable in the app: a cross-project entity search backed by a Pinia store, rendering the `EntityCard` shipped in ICIJ/datashare#2506.
 
-**Architecture:** One new Elasticsearch client method queries several `<project>.entities` indices at once. A small Pinia store holds the query, projects, pagination and response, with the URL as the source of truth through `useUrlParamWithStore`. A view renders one card per hit, taking each card's project from its own hit's `_index`.
+**Architecture:** One new Elasticsearch client method queries several `<project>.entities` indices at once. A settings offcanvas carries sort and per-page. A small Pinia store holds the query, projects, pagination and response, with the URL as the source of truth through `useUrlParamWithStore`. A view renders one card per hit, taking each card's project from its own hit's `_index`.
 
 **Tech Stack:** Vue 3 (`<script setup>`), Pinia, vue-router, vue-i18n, bodybuilder, Vitest + `@vue/test-utils`.
 
@@ -20,7 +20,8 @@
 - Run `yarn lint --fix` before every commit. Run only the spec files each task names, never the full suite.
 - Do not use the app store key `entities` or the route name `task.entities`; both belong to the NER extraction task. This feature uses `entityList` and `entity`.
 - Property values in the index are always arrays. Model property keys are namespaced with `_`, never `:`.
-- The settings panel is **not** part of this story. Decision 1 in the spec removed the property-picker, and sort/per-page belong to ICIJ/datashare#2508. Declare the route without a `settings` named view.
+- The settings panel carries **pagination and sort only**. Decision 1 removed the property-picker; layout (table, grid) arrives with ICIJ/datashare#2508. Sort offers relevance (`_score`) and entity id; "date of creation" waits on ICIJ/datashare#2512, because nothing in the stack records one.
+- The `entityList` app-store key added in ICIJ/datashare#2506 still holds a dead `properties` array and an unused `layout`. Trim it to `orderBy` and `perPage` as part of Task 3.
 
 ## Review Focus
 
@@ -43,7 +44,10 @@ Five conditions the spec implies that no happy-path test covers. Each has its te
 | `src/store/modules/index.js` | **modify.** Export `useEntityStore`. |
 | `src/router/index.js` | **modify.** The `entity` / `entity.list` routes. |
 | `src/components/AppSidebar/AppSidebar.vue` | **modify.** The Entities entry in the Search section. |
-| `src/views/Entity/Entity.vue` | **new.** The page: toolbar-free list of cards, pagination, loading / empty / error states. |
+| `src/views/Entity/Entity.vue` | **new.** The page: list of cards, pagination, loading / empty / error states. |
+| `src/views/Entity/EntityListSettings.vue` | **new.** The settings offcanvas: sort and per-page. |
+| `src/composables/useEntityProperties.js` | **modify.** Add the two sortable fields so `sortByOptions` is non-empty. |
+| `src/store/modules/app.js` | **modify.** Trim `entityList` to `orderBy` and `perPage`. |
 | `src/lang/en.json` | **modify.** `entity.*` keys. |
 
 ---
@@ -196,24 +200,28 @@ git commit -m "feat(entity): add the entity store ICIJ/datashare#2507"
 - Consumes: nothing. The view it points at arrives in Task 4, so this task imports a component that does not exist yet; do Task 4 first if you prefer a green tree at every commit, the two are independent otherwise.
 - Produces: route names `entity` (path `/entities`) and `entity.list` (path `''`, `meta.breadcrumb: false`).
 
-Declare the route beside `search.saved.list` and `search.history.list` in `src/router/index.js`, with `meta.title: 'entity.title'` and `meta.icon` a `markRaw` Phosphor icon (`~icons/ph/stack` matches the schema icon the card already uses). No `settings` named view, per the Global Constraints.
+Declare the route beside `search.saved.list` and `search.history.list` in `src/router/index.js`, with `meta.title: 'entity.title'` and `meta.icon` a `markRaw` Phosphor icon (`~icons/ph/stack` matches the schema icon the card already uses), and `components: { default, settings }` as the `search` route does.
 
 The sidebar entry goes in the Search section of `src/components/AppSidebar/AppSidebar.vue`, which spans lines 197 to 222, after the "Saved searches" entry. Same `app-sidebar-section-entry` shape as its siblings, `:to="{ name: 'entity.list' }"`.
 
 i18n keys: `entity.title` ("Entities"), `entity.empty` , `entity.error`, and `appSidebar.entities`.
 
-- [ ] **Step 1: Add the route, the sidebar entry and the i18n keys**
+- [ ] **Step 1: Trim the `entityList` app-store key**
 
-- [ ] **Step 2: Verify the sidebar renders the new entry**
+In `src/store/modules/app.js`, reduce `entityList` to `orderBy: ['_score', 'desc']` and `perPage: '25'`. The `properties` array is dead (no picker) and `layout` is unused until ICIJ/datashare#2508.
+
+- [ ] **Step 2: Add the route, the sidebar entry and the i18n keys**
+
+- [ ] **Step 3: Verify the sidebar renders the new entry**
 
 Run: `yarn test:unit tests/unit/specs/components/AppSidebar`
 Expected: the existing AppSidebar specs still pass. If one asserts an exact entry count, update it as part of this task.
 
-- [ ] **Step 3: Lint and commit**
+- [ ] **Step 4: Lint and commit**
 
 ```bash
 yarn lint --fix
-git add src/router/index.js src/components/AppSidebar/AppSidebar.vue src/lang/en.json
+git add src/router/index.js src/components/AppSidebar/AppSidebar.vue src/lang/en.json src/store/modules/app.js
 git commit -m "feat(entity): add the entities route and sidebar entry ICIJ/datashare#2507"
 ```
 
@@ -288,6 +296,69 @@ Run: `yarn serve`, open `/entities`. Confirm cards render for a project that has
 yarn lint --fix
 git add src/views/Entity/Entity.vue tests/unit/specs/views/Entity/Entity.spec.js
 git commit -m "feat(entity): add the entities view ICIJ/datashare#2507"
+```
+
+---
+
+## Task 5: The settings panel
+
+**Files:**
+- Create: `src/views/Entity/EntityListSettings.vue`
+- Modify: `src/composables/useEntityProperties.js`
+- Test: `tests/unit/specs/views/Entity/EntityListSettings.spec.js`
+
+**Interfaces:**
+- Consumes: `useEntityStore` (Task 2); `useEntityProperties().sortByOptions` (ICIJ/datashare#2506, extended here); `PageSettings` and `PageSettingsSection` (existing).
+- Produces: the `settings` named-view component the Task 3 route points at.
+
+`useEntityProperties` today marks `entityType` and `model` sortable, neither of which the spec asks for. Replace that: make `name` sortable on `entityId` and add a `relevance` field keyed on `_score`, so `sortByOptions` offers exactly relevance and entity id. Follow `useSearchProperties`, which builds its `relevance` item the same way (`sortingKey: '_score'`) and keeps it out of `items` so it is a sort option but never a card row.
+
+The panel mirrors `src/views/Search/SearchSettings.vue` but with two sections only, sort and per-page, both `INPUT_RADIO`. Per-page options are 10 / 25 / 50 / 100. Bind sort through `useUrlParamsWithStore(['sort', 'order'])` and per-page through `useUrlParamWithStore('perPage')`, reading and writing `appStore.getSettings('entityList', ...)`, exactly as `SearchSettings.vue` does for the `search` view.
+
+No layout section and no properties section: layout arrives with ICIJ/datashare#2508, and the property picker was removed by the featured decision.
+
+- [ ] **Step 1: Write the failing test**
+
+Create `tests/unit/specs/views/Entity/EntityListSettings.spec.js`.
+
+```js
+describe('EntityListSettings.vue', () => {
+  it('offers relevance and entity id as the only sort options', () => {
+    // sortByOptions keys === ['relevance', 'name']
+  })
+
+  it('offers no layout section', () => {})
+
+  it('offers no property picker, because properties come from the schema', () => {})
+
+  it('writes the chosen page size into the entityList settings', () => {
+    // picking 50 -> appStore.getSettings('entityList', 'perPage') === 50
+  })
+})
+```
+
+- [ ] **Step 2: Run the test to verify it fails**
+
+Run: `yarn test:unit tests/unit/specs/views/Entity/EntityListSettings.spec.js`
+Expected: FAIL, cannot resolve `@/views/Entity/EntityListSettings`.
+
+- [ ] **Step 3: Add the sortable fields to `useEntityProperties`, then implement `src/views/Entity/EntityListSettings.vue`**
+
+Adding `relevance` changes `sortByOptions`, which `tests/unit/specs/composables/useEntityProperties.spec.js` does not currently assert on. Add one case there pinning the two options, so a later story cannot quietly widen the list.
+
+- [ ] **Step 4: Run the tests to verify they pass**
+
+Run: `yarn test:unit tests/unit/specs/views/Entity/EntityListSettings.spec.js tests/unit/specs/composables/useEntityProperties.spec.js`
+Expected: all PASS.
+
+- [ ] **Step 5: Lint and commit**
+
+```bash
+yarn lint --fix
+git add src/views/Entity/EntityListSettings.vue src/composables/useEntityProperties.js \
+        tests/unit/specs/views/Entity/EntityListSettings.spec.js \
+        tests/unit/specs/composables/useEntityProperties.spec.js
+git commit -m "feat(entity): add the entities settings panel ICIJ/datashare#2507"
 ```
 
 ---
