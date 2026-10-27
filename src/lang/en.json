@@ -189,6 +189,11 @@
     "formLanguage": "Document language",
     "formOcr": "Extract text from images and PDFs (OCR)"
   },
+  "entity": {
+    "title": "Entities",
+    "emptyStateLabel": "No entity matches your search",
+    "errorStateLabel": "We could not load the entities"
+  },
   "entityCard": {
     "properties": {
       "name": "Name",
