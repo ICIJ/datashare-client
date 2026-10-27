@@ -1,6 +1,8 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
+import iteratee from 'lodash/iteratee'
 
 import searchEmpty from '@/assets/images/illustrations/search-empty-light.svg'
 import searchEmptyDark from '@/assets/images/illustrations/search-empty-dark.svg'
@@ -12,9 +14,14 @@ import EmptyState from '@/components/EmptyState/EmptyState'
 import PageContainer from '@/components/PageContainer/PageContainer'
 import RowPagination from '@/components/RowPagination/RowPagination'
 import { entitiesIndex } from '@/api/elasticsearch'
+import { useCore } from '@/composables/useCore'
 import { useEntityStore } from '@/store/modules/entity'
+import { useAppStore } from '@/store/modules'
 
 const { t } = useI18n()
+const route = useRoute()
+const { core } = useCore()
+const appStore = useAppStore()
 const entityStore = useEntityStore()
 
 // ponytail: a flat property list, so every card renders identical rows. Featured properties are
@@ -45,6 +52,26 @@ const entries = computed(() => {
 const isLoading = computed(() => !entityStore.isReady)
 const isErrored = computed(() => !isLoading.value && !!entityStore.error)
 const isEmpty = computed(() => !isLoading.value && !isErrored.value && !entries.value.length)
+
+/**
+ * Every project the user can see. The list is cross-project by design, and an empty list makes
+ * the store skip the request rather than let elasticsearch read the whole cluster.
+ */
+const userProjects = computed(() => core.config.get('projects', []).map(iteratee('name')))
+
+function refresh() {
+  const [sort, order] = appStore.getSettings('entityList', 'orderBy') ?? ['_score', 'desc']
+  entityStore.projects = userProjects.value
+  entityStore.query = route.query.q ?? ''
+  entityStore.perPage = parseInt(appStore.getSettings('entityList', 'perPage') ?? 25)
+  entityStore.sort = sort === '_score' ? null : { [sort]: order }
+  return entityStore.search()
+}
+
+// The route renders this view and this view asks the store: nothing else triggers the first load.
+onMounted(refresh)
+// Sort, per-page and the query all travel through the URL, so one watcher covers every one of them.
+watch(() => route.query, refresh, { deep: true })
 
 // RowPagination counts pages from one; the store holds an elasticsearch offset.
 const page = computed({

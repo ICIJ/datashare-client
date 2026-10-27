@@ -27,6 +27,17 @@ const mountView = ({ hits = [], isReady = true, error = null, total = null } = {
 describe('Entity.vue', () => {
   beforeEach(() => setActivePinia(createPinia()))
 
+  // Nothing else triggers the first load: the route renders the view and the view asks the store.
+  it('searches on mount, across every project the user can see', () => {
+    const core = CoreSetup.init().useAll().useRouterWithoutGuards()
+    core.config.set('projects', [{ name: 'banana-papers' }, { name: 'flowera' }])
+    const store = useEntityStore()
+    const search = vi.spyOn(store, 'search').mockResolvedValue()
+    mount(Entity, { global: { plugins: core.plugins } })
+    expect(search).toHaveBeenCalledTimes(1)
+    expect(store.projects).toEqual(['banana-papers', 'flowera'])
+  })
+
   it('renders one card per hit', () => {
     const wrapper = mountView({ hits: [hit('ftm_NK-1'), hit('ftm_NK-2')] })
     expect(wrapper.findAllComponents(EntityCard)).toHaveLength(2)
