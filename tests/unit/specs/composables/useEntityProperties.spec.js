@@ -108,6 +108,17 @@ describe('useEntityProperties', () => {
     expect(toValue(item('sourceDocument').text)).toBe('Source document')
   })
 
+  it('offers relevance and entity id as the only sort options', () => {
+    const { sortByOptions } = mountComposable()
+    const keys = [...new Set(sortByOptions.map(({ value: [key] }) => key))]
+    expect(keys).toEqual(['_score', 'entityId'])
+  })
+
+  it('keeps relevance out of the card properties, it is a sort option only', () => {
+    const { items } = mountComposable()
+    expect(Object.keys(items)).not.toContain('relevance')
+  })
+
   it('resolves an unmapped model property to a humanized label', () => {
     const { item } = mountComposable()
     const resolved = item('ftm_incorporationDate')
