@@ -44,8 +44,10 @@ export default ({ mode }) => {
       vue(),
       {
         name: 'datashare:component-css-last',
-        enforce: 'post',
-        transformIndexHtml: componentCssLast
+        // `enforce` does not reach transformIndexHtml: Vite sorts that hook on
+        // its own `order` field and sends function-form hooks to the normal
+        // bucket regardless.
+        transformIndexHtml: { order: 'post', handler: componentCssLast }
       },
       !isStorybook && vueDevTools(),
       process.env.VITE_ANALYZE && visualizer({

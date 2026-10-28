@@ -1,11 +1,11 @@
-import { manualChunks } from '@/utils/manualChunks'
+import { manualChunks, COMPONENTS_CHUNK } from '@/utils/manualChunks'
 
 const srcId = path => `/home/user/datashare-client/src/${path}`
 const moduleId = path => `/home/user/datashare-client/node_modules/${path}`
 
 describe('manualChunks', () => {
   it('groups a regular component', () => {
-    expect(manualChunks(srcId('components/Project/ProjectRow/ProjectRow.vue'))).toBe('components')
+    expect(manualChunks(srcId('components/Project/ProjectRow/ProjectRow.vue'))).toBe(COMPONENTS_CHUNK)
   })
 
   it.each([
@@ -37,6 +37,13 @@ describe('manualChunks', () => {
     ['xlsx/xlsx.mjs', 'vendor-export'],
     ['d3-geo/src/index.js', 'vendor-charts']
   ])('puts %s in %s', (path, chunk) => {
+    expect(manualChunks(moduleId(path))).toBe(chunk)
+  })
+
+  it.each([
+    ['bootstrap-vue-next/dist/src/components/BButton/BButton.js', 'vendor-ui'],
+    ['v-calendar/dist/src/components/Calendar.js', 'vendor-calendar']
+  ])('keeps %s in its vendor chunk despite its src/components path', (path, chunk) => {
     expect(manualChunks(moduleId(path))).toBe(chunk)
   })
 

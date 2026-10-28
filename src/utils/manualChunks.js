@@ -1,39 +1,50 @@
 /**
- * No vendor-chunking strategy existed before this: heavy,
- * rarely-changing dependencies got bundled into whichever route
- * chunk first imported them. Grouping the ones that are eagerly
- * reachable anyway into their own chunks lets the browser cache
- * them independently of app-code deploys.
+ * Name of the chunk every non-async component is grouped into. Shared with
+ * componentCssLast, which has to find that chunk's stylesheet in the html.
+ */
+export const COMPONENTS_CHUNK = 'components'
+
+/**
+ * Datashare's web server speaks HTTP/1.1, so a route that pulls hundreds of
+ * small chunks pays for the round trips, not for the bytes. Grouping trades
+ * boot payload for request count: the components group costs about 173 kB
+ * gzip on first load and takes the search route from 230 requests to 10.
  *
- * This does not defer anything: a group is downloaded on first
- * paint as soon as one member is statically reachable from the
- * entry. Deferring needs a dynamic import at the call site, not a
- * chunk name here.
+ * It does not defer anything, and it is not a caching win: the group is the
+ * artifact that changes on every deploy. A group is downloaded on first paint
+ * as soon as one member is statically reachable from the entry, so deferring
+ * needs a dynamic import at the call site, not a chunk name here.
  */
 export function manualChunks(id) {
   if (id.includes('commonjsHelpers')) {
     return 'vendor-framework'
   }
-  if (id.includes('/src/components/')) {
-    // Subtrees only ever reached through a dynamic import, either a
-    // `defineAsyncComponent` call or a lazy route. A grouped module
-    // is downloaded as soon as any other member is, so grouping
-    // these would undo their laziness and drag their dependencies
-    // into the boot preload, v-calendar and the viewers included.
-    const asyncOnly = [
-      'Document/DocumentViewer/',
-      'Widget/',
-      'Filter/FilterType/',
-      'Search/SearchAdvancedModal/',
-      'Form/FormControl/FormControlDateRange/',
-      'ColumnChartPicker'
-    ]
-    if (asyncOnly.some(dir => id.includes(`/src/components/${dir}`))) {
-      return
+
+  // Tested before the app paths: several dependencies ship files under
+  // `dist/src/components/`, bootstrap-vue-next's subpath exports among them,
+  // and those must stay in their vendor chunk.
+  if (!id.includes('node_modules')) {
+    if (id.includes('/src/components/')) {
+      // Subtrees only ever reached through a dynamic import, either a
+      // `defineAsyncComponent` call or a lazy route. A grouped module
+      // is downloaded as soon as any other member is, so grouping
+      // these would undo their laziness and drag their dependencies
+      // into the boot preload, v-calendar and the viewers included.
+      const asyncOnly = [
+        'Document/DocumentViewer/',
+        'Widget/',
+        'Filter/FilterType/',
+        'Search/SearchAdvancedModal/',
+        'Form/FormControl/FormControlDateRange/',
+        'ColumnChartPicker'
+      ]
+      if (asyncOnly.some(dir => id.includes(`/src/components/${dir}`))) {
+        return
+      }
+      return COMPONENTS_CHUNK
     }
-    return 'components'
+    return
   }
-  if (!id.includes('node_modules')) return
 
   const scope = id.slice(id.lastIndexOf('node_modules/') + 'node_modules/'.length)
   const match = scope.match(/^((?:@[^/]+\/)?[^/]+)/)
