@@ -24,7 +24,7 @@ defineProps({
     <div class="entity-card-placeholder__properties d-flex flex-column gap-2 h-100 w-100">
       <app-placeholder :width="random(40, 70)" />
       <div
-        v-for="j in properties.length - 1"
+        v-for="j in Math.max(properties.length - 1, 0)"
         :key="j"
         class="d-flex flex-grow-1 gap-1 align-items-start"
       >
