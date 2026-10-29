@@ -82,6 +82,17 @@ export const SparseEntity = {
   }
 }
 
+// A common entity, a country or a large company, is cited by many documents. The row caps at
+// three and counts the rest rather than growing the card without bound.
+export const ManySourceDocuments = {
+  args: {
+    entity: {
+      ...entity,
+      documentIds: Array.from({ length: 12 }, (_, i) => `e1f2a3b4c5d${String(i).padStart(2, '0')}`)
+    }
+  }
+}
+
 // No source document, which the index does not forbid even though statements always carry one.
 export const NoSourceDocument = {
   args: {
