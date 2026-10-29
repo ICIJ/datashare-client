@@ -78,6 +78,20 @@ describe('EntityCardPropertiesEntrySourceDocument.vue', () => {
     expect(wrapper.findAllComponents(RouterLinkDocument)).toHaveLength(2)
   })
 
+  // In Datashare, routing is the ROOT document id (RouterLinkBatchSearchResult passes
+  // item.rootId, and Document.rootUrl fetches by this.routing). The entities index carries no
+  // root id, so asserting the document's own id as its routing is wrong for any embedded
+  // document. Omitting it is equivalent for root documents, because document.js falls back to
+  // `routing || id`, and it stops claiming a routing this component cannot know.
+  it('asserts no routing, which it cannot know from the entities index', () => {
+    const wrapper = mountWith(EntityCardPropertiesEntrySourceDocument, {
+      entity,
+      property: 'sourceDocument',
+      index: 'local-datashare'
+    })
+    expect(wrapper.findComponent(RouterLinkDocument).props('routing')).toBeUndefined()
+  })
+
   it('links a repeated document id only once', () => {
     const wrapper = mountWith(EntityCardPropertiesEntrySourceDocument, {
       entity: { ...entity, documentIds: ['doc-1', 'doc-1'] },
@@ -98,6 +112,40 @@ describe('EntityCardPropertiesEntrySourceDocument.vue', () => {
 
   // vue-router rejects an empty required param, so a project that resolves to no index cannot
   // produce a document route at all. The ids stay readable instead of throwing.
+  // The three-value cap lives in EntityCardPropertiesEntry's default slot, and this component
+  // replaces that slot: an entity cited by 50 documents would otherwise render 50 links in one
+  // card. A country or a large company reaches hundreds.
+  it('links at most three source documents and counts the rest', () => {
+    const many = { ...entity, documentIds: ['d1', 'd2', 'd3', 'd4', 'd5'] }
+    const wrapper = mountWith(EntityCardPropertiesEntrySourceDocument, {
+      entity: many,
+      property: 'sourceDocument',
+      index: 'local-datashare'
+    })
+    expect(wrapper.findAllComponents(RouterLinkDocument)).toHaveLength(3)
+    expect(wrapper.text()).toContain('+2')
+  })
+
+  it('caps the plain-text ids too when there is no index to link against', () => {
+    const many = { ...entity, documentIds: ['d1', 'd2', 'd3', 'd4', 'd5'] }
+    const wrapper = mountWith(EntityCardPropertiesEntrySourceDocument, {
+      entity: many,
+      property: 'sourceDocument',
+      index: ''
+    })
+    expect(wrapper.findAll('.entity-card-properties-entry-source-document__id')).toHaveLength(3)
+    expect(wrapper.text()).toContain('+2')
+  })
+
+  it('shows no overflow marker when every source document fits', () => {
+    const wrapper = mountWith(EntityCardPropertiesEntrySourceDocument, {
+      entity,
+      property: 'sourceDocument',
+      index: 'local-datashare'
+    })
+    expect(wrapper.text()).not.toContain('+')
+  })
+
   it('renders the ids as plain text when there is no index to link against', () => {
     const wrapper = mountWith(EntityCardPropertiesEntrySourceDocument, {
       entity,

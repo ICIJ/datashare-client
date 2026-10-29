@@ -31,6 +31,13 @@ export const ENTITY_FIELD = Object.freeze({
 const NAMESPACE_SEPARATOR = '_'
 
 /**
+ * How many values a card row shows before it stops and counts the rest. A property can hold any
+ * number of values and an entity can be cited by hundreds of documents; without a cap one verbose
+ * row pushes every other row off the card.
+ */
+export const MAX_VALUES = 3
+
+/**
  * ponytail: labels for model properties are humanized from the key, because the FollowTheMoney
  * ontology is server-side only: FtmTargetModel reads the bundled defaultModel.json and exposes it
  * to Java callers, with no HTTP route. Replace this with the ontology's own labels once the

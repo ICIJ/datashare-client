@@ -2,11 +2,7 @@
 import { computed, toValue } from 'vue'
 
 import CardPropertiesEntry from '@/components/Card/CardPropertiesEntry'
-import { useEntityProperties, entityPropertyValues } from '@/composables/useEntityProperties'
-
-// A property can hold many values; a card row shows the first few and keeps the rest in the
-// tooltip, so one verbose property cannot push the other rows off the card.
-const MAX_VALUES = 3
+import { useEntityProperties, entityPropertyValues, MAX_VALUES } from '@/composables/useEntityProperties'
 
 const props = defineProps({
   entity: {
