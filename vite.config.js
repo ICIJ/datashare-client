@@ -30,6 +30,8 @@ export default ({ mode }) => {
   // identifiers in stories) so the prefix/collection can't drift between them.
   const iconsResolver = IconsResolver({ prefix: 'i', enabledCollections: ['ph'] })
 
+  const devServer = { port: 9009, host: '0.0.0.0' }
+
   const backendProxy = {
     '^/(version|settings|me|api|auth).?': {
       target: process.env.VITE_DEV_PROXY,
@@ -136,8 +138,7 @@ export default ({ mode }) => {
       }
     },
     server: {
-      port: 9009,
-      host: '0.0.0.0',
+      ...devServer,
       watch: {
         usePolling: true
       },
@@ -148,8 +149,7 @@ export default ({ mode }) => {
     // static server (`npx serve dist`) leaves /settings and /me unproxied and
     // the app never gets past the splashscreen.
     preview: {
-      port: 9009,
-      host: '0.0.0.0',
+      ...devServer,
       proxy: backendProxy
     },
     build: {
