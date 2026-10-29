@@ -1,7 +1,7 @@
 import { manualChunks, COMPONENTS_CHUNK } from '@/utils/manualChunks'
 
-const srcId = path => `/home/user/datashare-client/src/${path}`
-const moduleId = path => `/home/user/datashare-client/node_modules/${path}`
+const srcId = path => `/repo/src/${path}`
+const moduleId = path => `/repo/node_modules/${path}`
 
 describe('manualChunks', () => {
   it('groups a regular component', () => {
@@ -45,6 +45,23 @@ describe('manualChunks', () => {
     ['v-calendar/dist/src/components/Calendar.js', 'vendor-calendar']
   ])('keeps %s in its vendor chunk despite its src/components path', (path, chunk) => {
     expect(manualChunks(moduleId(path))).toBe(chunk)
+  })
+
+  /**
+   * The exclusion list is a set of directory prefixes, so an async component
+   * added outside them silently becomes boot payload. That is how v-calendar
+   * came back once. Read the call sites instead of trusting the list.
+   */
+  it('excludes every component behind a defineAsyncComponent call', () => {
+    const sources = Object.values(import.meta.glob('@/**/*.{vue,js}', { query: '?raw', import: 'default', eager: true }))
+    const targets = sources
+      .filter(source => source.includes('defineAsyncComponent'))
+      .flatMap(source => [...source.matchAll(/import\('@\/components\/([^']+)'\)/g)])
+      .map(([, path]) => path)
+
+    expect(targets.length).toBeGreaterThan(0)
+    const grouped = [...new Set(targets)].filter(target => manualChunks(srcId(`components/${target}.vue`)))
+    expect(grouped).toEqual([])
   })
 
   it('leaves anything else to rollup', () => {

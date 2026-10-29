@@ -25,7 +25,11 @@ export function componentCssLast(html) {
     return html
   }
 
-  const moved = components.reduce((acc, link) => acc.replace(link, ''), html)
+  let moved = html
+  for (const link of components) {
+    moved = moved.replace(link, '')
+  }
+
   const last = links.filter(link => !components.includes(link)).at(-1)
   return moved.replace(last, last + components.join(''))
 }
