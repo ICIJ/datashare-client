@@ -13,6 +13,11 @@ defineProps({
   project: {
     type: [Object, String],
     required: true
+  },
+  // See EntityCardPropertiesEntry: declared so it does not fall through as a DOM attribute.
+  index: {
+    type: String,
+    default: undefined
   }
 })
 </script>

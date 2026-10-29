@@ -47,6 +47,27 @@ describe('EntityCardProperties.vue', () => {
     expect(rows[1].text()).toContain('tm')
   })
 
+  // Undeclared props fall through as DOM attributes, so `project` serialises to "[object Object]"
+  // on every row div when a project object is passed.
+  it('leaks neither project nor index into the rendered markup', () => {
+    const core = CoreSetup.init().useAll().useRouterWithoutGuards()
+    const wrapper = mount(EntityCardProperties, {
+      global: { plugins: core.plugins },
+      props: {
+        entity,
+        properties: ['name', 'entityType', 'sourceDocument', 'model', 'project'],
+        project: { name: 'banana-papers', label: 'Banana Papers' },
+        index: 'banana-papers'
+      }
+    })
+    const rows = wrapper.findAll('.card-properties-entry')
+    expect(rows.length).toBeGreaterThan(0)
+    rows.forEach((row) => {
+      expect(row.attributes('project')).toBeUndefined()
+      expect(row.attributes('index')).toBeUndefined()
+    })
+  })
+
   it('renders nothing for an empty property list', () => {
     const wrapper = mountProperties([])
     expect(wrapper.find('.entity-card-properties').exists()).toBe(true)

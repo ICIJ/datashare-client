@@ -20,6 +20,11 @@ const props = defineProps({
   index: {
     type: String,
     default: ''
+  },
+  // See EntityCardPropertiesEntry: declared so it does not fall through as a DOM attribute.
+  project: {
+    type: [Object, String],
+    default: undefined
   }
 })
 

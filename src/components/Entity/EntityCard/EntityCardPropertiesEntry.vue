@@ -23,6 +23,17 @@ const props = defineProps({
   },
   hideIcon: {
     type: Boolean
+  },
+  // Declared but unused: EntityCardProperties hands the same props to every row, and an
+  // undeclared one falls through onto the root div as an attribute, where a project object
+  // serialises to "[object Object]".
+  project: {
+    type: [Object, String],
+    default: undefined
+  },
+  index: {
+    type: String,
+    default: undefined
   }
 })
 
