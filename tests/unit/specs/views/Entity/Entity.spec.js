@@ -45,6 +45,11 @@ const mountView = async ({ hits = [], total = null, reject = null, query = {} } 
 }
 
 describe('Entity.vue', () => {
+  // Each case mounts the whole view: router, pinia, i18n, and a real EntityCard per hit with one
+  // child component per row. In jsdom that runs a few seconds, close enough to vitest's 10s
+  // default to flake on a loaded machine.
+  vi.setConfig({ testTimeout: 30000 })
+
   beforeEach(() => setActivePinia(createPinia()))
   afterEach(() => vi.restoreAllMocks())
 
