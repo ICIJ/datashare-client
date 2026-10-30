@@ -12,6 +12,8 @@ import { visualizer } from 'rollup-plugin-visualizer'
 import { BootstrapVueNextResolver } from 'unplugin-vue-components/resolvers'
 
 import { chunkFileNames } from './src/utils/chunkFileNames.js'
+import { componentCssLast } from './src/utils/componentCssLast.js'
+import { manualChunks } from './src/utils/manualChunks.js'
 
 export default ({ mode }) => {
   const VITE_GIT_HASH = childProcess.execSync('git rev-parse HEAD').toString()
@@ -28,10 +30,27 @@ export default ({ mode }) => {
   // identifiers in stories) so the prefix/collection can't drift between them.
   const iconsResolver = IconsResolver({ prefix: 'i', enabledCollections: ['ph'] })
 
+  const devServer = { port: 9009, host: '0.0.0.0' }
+
+  const backendProxy = {
+    '^/(version|settings|me|api|auth).?': {
+      target: process.env.VITE_DEV_PROXY,
+      changeOrigin: true,
+      secure: false
+    }
+  }
+
   return defineConfig({
     base: process.env.VITE_BASE,
     plugins: [
       vue(),
+      {
+        name: 'datashare:component-css-last',
+        // `enforce` does not reach transformIndexHtml: Vite sorts that hook on
+        // its own `order` field and sends function-form hooks to the normal
+        // bucket regardless.
+        transformIndexHtml: { order: 'post', handler: componentCssLast }
+      },
       !isStorybook && vueDevTools(),
       process.env.VITE_ANALYZE && visualizer({
         filename: 'dist/stats.html',
@@ -119,99 +138,25 @@ export default ({ mode }) => {
       }
     },
     server: {
-      port: 9009,
-      host: '0.0.0.0',
+      ...devServer,
       watch: {
         usePolling: true
       },
-      proxy: {
-        '^/(version|settings|me|api|auth).?': {
-          target: process.env.VITE_DEV_PROXY,
-          changeOrigin: true,
-          secure: false
-        }
-      }
+      proxy: backendProxy
+    },
+    // `vite preview` serves the production build, which boots against the same
+    // backend endpoints as the dev server, so it needs the same proxy. A plain
+    // static server (`npx serve dist`) leaves /settings and /me unproxied and
+    // the app never gets past the splashscreen.
+    preview: {
+      ...devServer,
+      proxy: backendProxy
     },
     build: {
       rollupOptions: {
         output: {
           chunkFileNames,
-          /**
-           * No vendor-chunking strategy existed before this: heavy,
-           * rarely-changing dependencies got bundled into whichever route
-           * chunk first imported them. Grouping the ones that are eagerly
-           * reachable anyway into their own chunks lets the browser cache
-           * them independently of app-code deploys.
-           *
-           * This does not defer anything: a group is downloaded on first
-           * paint as soon as one member is statically reachable from the
-           * entry. Deferring needs a dynamic import at the call site, not a
-           * chunk name here.
-           */
-          manualChunks(id) {
-            if (!id.includes('node_modules')) return
-
-            const scope = id.slice(id.lastIndexOf('node_modules/') + 'node_modules/'.length)
-            const match = scope.match(/^((?:@[^/]+\/)?[^/]+)/)
-            const pkg = match?.[1]
-            if (!pkg) return
-
-            // Search/ES client stack — elasticsearch-browser alone is
-            // ~1.6 MB raw, the single biggest dependency in the app.
-            if (['elasticsearch-browser', 'bodybuilder', 'lucene'].includes(pkg)) {
-              return 'vendor-search'
-            }
-
-            // Calendar, now only reachable through FormControlDateRange.vue's
-            // own import since Core.js no longer installs the plugin globally.
-            if (pkg === 'v-calendar') {
-              return 'vendor-calendar'
-            }
-
-            // Charting/geo. Not deferred: @icij/murmur (vendor-ui) statically
-            // imports d3-geo/d3-scale, so this group is preloaded everywhere.
-            if (pkg === 'd3' || pkg.startsWith('d3-') || pkg.startsWith('topojson')) {
-              return 'vendor-charts'
-            }
-
-            // UI kit — bootstrap-vue-next and @icij/murmur share a large
-            // amount of code and are used across nearly every view.
-            if (['bootstrap-vue-next', '@icij/murmur', 'bootstrap'].includes(pkg) || pkg.startsWith('@floating-ui')) {
-              return 'vendor-ui'
-            }
-
-            // Core framework — changes rarely, needed on every route.
-            if (pkg === 'vue' || pkg.startsWith('@vue/') || pkg === 'vue-router' || pkg === 'pinia' || pkg === 'vue-i18n' || pkg.startsWith('@intlify')) {
-              return 'vendor-framework'
-            }
-
-            // NOTE: pdfjs-dist/@tato30/vue-pdf/image-js/tiff/jpeg-js were
-            // tried as their own "vendor-viewer" chunk (document-viewer-only,
-            // not needed on generic app load) but that grouping produced a
-            // "Cannot access '<var>' before initialization" runtime error, a
-            // circular chunk dependency between that group and other chunks.
-            // Verified in a real browser (build succeeds either way; only
-            // runtime testing catches this). Left ungrouped below so Rollup
-            // keeps them in their existing lazy route chunks; revisit only
-            // with careful cycle analysis, not a blind re-split.
-
-            // Spreadsheet export — feature-specific, not needed app-wide.
-            if (pkg === 'xlsx') {
-              return 'vendor-export'
-            }
-
-            // lodash + the standalone lodash.* packages (885 kB raw,
-            // duplicated logic across lodash and lodash.merge/clonedeep/unset)
-            // — isolate so it caches independently of unrelated vendor code.
-            if (pkg === 'lodash' || pkg.startsWith('lodash.')) {
-              return 'vendor-lodash'
-            }
-
-            // Anything else keeps Rollup's default placement: lazily
-            // imported deps (e.g. the markdown stack, PDF/TIFF viewers) stay
-            // in their route-specific async chunks instead of being pulled
-            // into a preloaded catch-all.
-          }
+          manualChunks
         }
       }
     }
