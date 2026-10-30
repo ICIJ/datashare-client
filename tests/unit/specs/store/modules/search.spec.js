@@ -392,10 +392,11 @@ describe('SearchStore', () => {
   })
 
   describe('updateFromRouteQuery / stuck-loading regression', () => {
-    it('forces isReady false on an empty route query, instead of the vacuous match', () => {
+    it('leaves isReady alone on an empty route query', () => {
       searchStore.isReady = true
       searchStore.updateFromRouteQuery({})
-      expect(searchStore.isReady).toBe(false)
+      // Only the refresh that actually runs the search owns the loading flag.
+      expect(searchStore.isReady).toBe(true)
     })
 
     it('keeps isReady true on a same-query route re-entry despite a differing stamp', async () => {
@@ -537,12 +538,19 @@ describe('SearchStore', () => {
         expect(searchStore.isReady).toBe(true)
       })
 
-      it('still resets isReady when re-entering the route with a genuinely new query', async () => {
+      it('leaves isReady to the refresh when re-entering the route with a genuinely new query', async () => {
         await searchStore.query('bar')
         expect(searchStore.isReady).toBe(true)
 
+        // Hydrating the store from the route does not flip the flag: the
+        // refresh that follows does, and sets it back when it completes.
         searchStore.updateFromRouteQuery({ q: 'something-else' })
+        expect(searchStore.isReady).toBe(true)
+
+        const refreshing = searchStore.refresh()
         expect(searchStore.isReady).toBe(false)
+        await refreshing
+        expect(searchStore.isReady).toBe(true)
       })
     })
 
