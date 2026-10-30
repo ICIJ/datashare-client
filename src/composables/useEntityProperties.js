@@ -11,6 +11,7 @@ import IPhCirclesThreePlus from '~icons/ph/circles-three-plus'
 import IPhTag from '~icons/ph/tag'
 
 import { useViewProperties } from '@/composables/useViewProperties'
+import { useStructuredEntityModelStore } from '@/store/modules/structuredEntityModel'
 import { SORT_TYPE_KEY, useViewSettings } from '@/composables/useViewSettings'
 
 /**
@@ -38,10 +39,9 @@ const NAMESPACE_SEPARATOR = '_'
 export const MAX_VALUES = 3
 
 /**
- * ponytail: labels for model properties are humanized from the key, because the FollowTheMoney
- * ontology is server-side only: FtmTargetModel reads the bundled defaultModel.json and exposes it
- * to Java callers, with no HTTP route. Replace this with the ontology's own labels once the
- * epic's ontology endpoint lands. This function and `item` below are the only places to change.
+ * The fallback label, used when the ontology has nothing to say about a key: an older backend with
+ * no /api/models route, a failed fetch, or a type the fetched model does not carry. It mangles
+ * acronyms (`ftm_vatCode` reads "Vat code"), which is why it is the fallback and not the rule.
  */
 export function humanizePropertyKey(key) {
   const [, ...rest] = (key ?? '').split(NAMESPACE_SEPARATOR)
@@ -78,15 +78,64 @@ function rootValues(entity, key) {
   return ROOT_KEYS.includes(key) && own(entity, key) ? entity[key] : []
 }
 
+/** The index key a bare ontology property name is stored under: `birthDate` -> `ftm_birthDate`. */
+function namespaced(entity, property) {
+  return [entity?.model, property].join(NAMESPACE_SEPARATOR)
+}
+
 /**
- * ponytail: FollowTheMoney has a caption concept, resolved per schema from an ordered list of
- * candidate properties, but the index holds no caption field and the resolution rules live in the
- * ontology. First name value, else the id. Upgrade with the ontology endpoint.
+ * How an entity is named on screen.
+ *
+ * With a `type` from the ontology, the first of its ordered caption properties that actually holds
+ * a value wins, which is how FollowTheMoney defines a caption. Without one, the first `name` value
+ * stands in, then the entity id.
  */
-export function entityCaption(entity) {
-  const key = [entity?.model, 'name'].join(NAMESPACE_SEPARATOR)
-  const [name] = entityPropertyValues(entity, key)
-  return name ?? entity?.entityId ?? ''
+export function entityCaption(entity, type = null) {
+  const candidates = type?.caption?.length ? type.caption : ['name']
+  for (const property of candidates) {
+    const [value] = entityPropertyValues(entity, namespaced(entity, property))
+    if (value) {
+      return value
+    }
+  }
+  return entity?.entityId ?? ''
+}
+
+/**
+ * The label for a namespaced property key, from the ontology when it knows the type and the
+ * property, and humanized from the key when it does not.
+ */
+export function propertyLabel(entityType, key) {
+  const type = useStructuredEntityModelStore().type(entityType)
+  const [, ...rest] = (key ?? '').split(NAMESPACE_SEPARATOR)
+  const bare = rest.join(NAMESPACE_SEPARATOR)
+  return type?.properties?.[bare]?.label ?? humanizePropertyKey(key)
+}
+
+// Rows every card shows whatever its schema, appended after the featured ones. None of them is an
+// ontology property: they describe the entity's place in Datashare, not the thing it models.
+const DATASHARE_ROWS = Object.freeze([
+  ENTITY_FIELD.SOURCE_DOCUMENT,
+  ENTITY_FIELD.MODEL,
+  ENTITY_FIELD.PROJECT
+])
+
+/**
+ * The ordered row keys a card renders for this entity: the caption, then its schema's featured
+ * properties, then the Datashare-level rows.
+ *
+ * Two exclusions. A stub property is inferred from a relation rather than written, so it holds no
+ * values and would render an empty row. A featured property the caption already shows would print
+ * the same text twice, since `featured` opens with `name` for most schemata.
+ */
+export function featuredProperties(entity) {
+  const type = useStructuredEntityModelStore().type(entity?.entityType)
+  const captioned = new Set(type?.caption ?? [])
+  const featured = (type?.featured ?? [])
+    .filter(property => !captioned.has(property))
+    .filter(property => !type?.properties?.[property]?.stub)
+    .map(property => namespaced(entity, property))
+  return [ENTITY_FIELD.NAME, ...featured, ...DATASHARE_ROWS]
 }
 
 export function useEntityProperties() {
