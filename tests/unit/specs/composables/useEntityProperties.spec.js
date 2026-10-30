@@ -151,6 +151,23 @@ const ONTOLOGY = {
         agencyClient: { label: 'Clients', range: 'Representation', stub: true }
       }
     },
+    // Shaped like the live Address: featured and caption overlap on two properties, and
+    // `street` has a label `humanizePropertyKey` cannot produce.
+    Address: {
+      name: 'Address',
+      label: 'Address',
+      featured: ['full', 'city', 'street', 'country'],
+      caption: ['full', 'summary', 'city', 'remarks'],
+      edge: null,
+      properties: {
+        full: { label: 'Full address', range: null, stub: false },
+        city: { label: 'City', range: null, stub: false },
+        street: { label: 'Street address', range: null, stub: false },
+        country: { label: 'Country', range: null, stub: false },
+        summary: { label: 'Summary', range: null, stub: false },
+        remarks: { label: 'Remarks', range: null, stub: false }
+      }
+    },
     // One of the five types the real ontology ships with no featured list.
     Interest: { name: 'Interest', label: 'Interest', caption: [], edge: null, properties: {} },
     Stubby: {
@@ -205,7 +222,7 @@ describe('the ontology-backed helpers', () => {
   describe('featuredProperties', () => {
     it('returns the schema featured properties, namespaced', () => {
       withOntology()
-      expect(featuredProperties(person())).toEqual([
+      expect(featuredProperties(person({ ftm_name: ['Jane Doe'] }))).toEqual([
         'name',
         'entityType',
         'ftm_nationality',
@@ -218,7 +235,34 @@ describe('the ontology-backed helpers', () => {
 
     it('drops a featured property the caption already shows', () => {
       withOntology()
-      expect(featuredProperties(person())).not.toContain('ftm_name')
+      expect(featuredProperties(person({ ftm_name: ['Jane Doe'] }))).not.toContain('ftm_name')
+    })
+
+    // The caption fell back to the entity id, so nothing was shown twice and the empty name row
+    // is informative rather than duplicated.
+    it('keeps the name row when the caption could not use it', () => {
+      withOntology()
+      expect(featuredProperties(person())).toContain('ftm_name')
+    })
+
+    // Only the property the caption actually used is dropped. Excluding every caption CANDIDATE
+    // loses real data: on the live Address, `full` and `city` are both candidates, so a card
+    // showed neither even when `city` held the only value it had.
+    it('drops only the caption property that was actually used', () => {
+      withOntology()
+      const address = { ...person(), entityType: 'Address', properties: { ftm_full: ['1 Main St'], ftm_city: ['Luxembourg'] } }
+      const rows = featuredProperties(address)
+      expect(rows).not.toContain('ftm_full')
+      expect(rows).toContain('ftm_city')
+      expect(rows).toContain('ftm_street')
+    })
+
+    it('drops the second caption candidate when the first has no value', () => {
+      withOntology()
+      const address = { ...person(), entityType: 'Address', properties: { ftm_city: ['Luxembourg'] } }
+      const rows = featuredProperties(address)
+      expect(rows).not.toContain('ftm_city')
+      expect(rows).toContain('ftm_full')
     })
 
     it('never returns a stub property', () => {
@@ -258,6 +302,12 @@ describe('the ontology-backed helpers', () => {
     it('falls back to the entity id when no caption property has a value', () => {
       const store = withOntology()
       expect(entityCaption(person(), store.type('Person'))).toBe('NK-1')
+    })
+
+    // So no component has to reach into the ontology store to caption an entity.
+    it('resolves the type itself when the caller passes none', () => {
+      withOntology()
+      expect(entityCaption(person({ ftm_alias: ['Jane D.'] }))).toBe('Jane D.')
     })
   })
 })
