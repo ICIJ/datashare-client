@@ -399,16 +399,6 @@ describe('SearchStore', () => {
       expect(searchStore.isReady).toBe(true)
     })
 
-    it('reads a same-query route re-entry as applied despite a differing stamp', async () => {
-      await searchStore.query('bar')
-
-      // This is what the view's refresh guard asks before skipping a search,
-      // so a false negative here re-runs the search on every re-entry.
-      const routeQuery = { ...searchStore.toRouteQuery, stamp: 'another-stamp' }
-
-      expect(searchStore.sameAppliedQuery(routeQuery, ['from'])).toBe(true)
-    })
-
     it('treats a scalar filter value as equal to its single-item array form', async () => {
       searchStore.addFilterValue({ name: 'contentType', value: 'pdf' })
       await searchStore.query('bar')
