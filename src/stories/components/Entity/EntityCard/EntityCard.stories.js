@@ -1,6 +1,7 @@
 import { vueRouter } from 'storybook-vue3-router'
 
 import EntityCard from '@/components/Entity/EntityCard/EntityCard'
+import { useStructuredEntityModelStore } from '@/store/modules/structuredEntityModel'
 
 const routes = [
   { path: '/', name: 'document' },
@@ -58,7 +59,12 @@ export default {
   },
   render: args => ({
     components: { EntityCard },
-    setup: () => ({ args }),
+    // Nothing else in Storybook fetches the ontology, and without it every card falls back to
+    // the same five rows, which would make the per-schema stories below show nothing.
+    setup() {
+      useStructuredEntityModelStore().fetchOnce()
+      return { args }
+    },
     template: `<entity-card v-bind="args" />`
   })
 }
@@ -66,6 +72,21 @@ export default {
 export const Default = {}
 
 export const Active = { args: { active: true } }
+
+// The Person counterpart of CompanyEntity: same absent `properties`, different rows.
+export const PersonSchema = {
+  args: {
+    properties: undefined,
+    entity: {
+      ...entity,
+      properties: {
+        ftm_name: ['Mr Yazmurad N Seryaev'],
+        ftm_nationality: ['Turkmenistan'],
+        ftm_birthDate: ['1954-03-12']
+      }
+    }
+  }
+}
 
 // The heterogeneous case: a second entity in the same dataset carrying none of the properties the
 // first one has. Every missing row must render the dash placeholder.
@@ -83,7 +104,7 @@ export const SparseEntity = {
 }
 
 // No `properties` argument: the card asks the ontology for Company's featured list, which differs
-// from Person's. In one list the two cards show different rows, which is what the design shows.
+// from Person's. Compare with PersonSchema below, which renders Nationality and Birth date.
 export const CompanyEntity = {
   args: {
     properties: undefined,

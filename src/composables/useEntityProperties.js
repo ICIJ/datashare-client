@@ -84,21 +84,26 @@ function namespaced(entity, property) {
 }
 
 /**
- * How an entity is named on screen.
- *
- * With a `type` from the ontology, the first of its ordered caption properties that actually holds
- * a value wins, which is how FollowTheMoney defines a caption. Without one, the first `name` value
- * stands in, then the entity id.
+ * The bare property a type captions this entity on: the first of its ordered caption candidates
+ * that actually holds a value. `null` when none does.
  */
-export function entityCaption(entity, type = null) {
+function captionProperty(entity, type) {
   const candidates = type?.caption?.length ? type.caption : ['name']
-  for (const property of candidates) {
-    const [value] = entityPropertyValues(entity, namespaced(entity, property))
-    if (value) {
-      return value
-    }
-  }
-  return entity?.entityId ?? ''
+  return candidates.find(property => entityPropertyValues(entity, namespaced(entity, property)).length) ?? null
+}
+
+/**
+ * How an entity is named on screen: the value of its caption property, else the entity id.
+ *
+ * The type defaults to the ontology's own, so no component has to reach into the store to caption
+ * an entity. It is resolved per call rather than captured, which keeps a caller inside a computed
+ * reactive to the ontology arriving late.
+ */
+export function entityCaption(entity, type = undefined) {
+  const resolved = type === undefined ? useStructuredEntityModelStore().type(entity?.entityType) : type
+  const property = captionProperty(entity, resolved)
+  const [value] = property ? entityPropertyValues(entity, namespaced(entity, property)) : []
+  return value ?? entity?.entityId ?? ''
 }
 
 /**
@@ -125,14 +130,17 @@ const DATASHARE_ROWS = Object.freeze([
  * properties, then the Datashare-level rows.
  *
  * Two exclusions. A stub property is inferred from a relation rather than written, so it holds no
- * values and would render an empty row. A featured property the caption already shows would print
- * the same text twice, since `featured` opens with `name` for most schemata.
+ * values and would render an empty row. The one property the caption actually used would print
+ * the same text twice, since `featured` opens with a caption candidate for most schemata.
  */
 export function featuredProperties(entity) {
   const type = useStructuredEntityModelStore().type(entity?.entityType)
-  const captioned = new Set(type?.caption ?? [])
+  // Only the property the caption actually used, not every candidate. On the live Address,
+  // `full` and `city` are both candidates, so excluding all of them hid the city even when it
+  // held the only value the entity had.
+  const captioned = captionProperty(entity, type)
   const featured = (type?.featured ?? [])
-    .filter(property => !captioned.has(property))
+    .filter(property => property !== captioned)
     .filter(property => !type?.properties?.[property]?.stub)
     .map(property => namespaced(entity, property))
   // The schema row sits right after the caption: the featured rows below it differ per schema, so

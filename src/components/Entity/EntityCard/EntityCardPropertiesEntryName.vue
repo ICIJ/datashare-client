@@ -4,7 +4,6 @@ import { computed } from 'vue'
 import EntityCardPropertiesEntry from './EntityCardPropertiesEntry'
 
 import { entityCaption } from '@/composables/useEntityProperties'
-import { useStructuredEntityModelStore } from '@/store/modules/structuredEntityModel'
 
 const props = defineProps({
   entity: {
@@ -24,9 +23,7 @@ const props = defineProps({
   }
 })
 
-const modelStore = useStructuredEntityModelStore()
-
-const caption = computed(() => entityCaption(props.entity, modelStore.type(props.entity?.entityType)))
+const caption = computed(() => entityCaption(props.entity))
 </script>
 
 <template>

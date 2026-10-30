@@ -10,7 +10,6 @@ import EmptyState from '@/components/EmptyState/EmptyState'
 import { elasticsearch } from '@/api/elasticsearch'
 import { apiInstance as api } from '@/api/apiInstance'
 import { useEntityStore } from '@/store/modules/entity'
-import { useStructuredEntityModelStore } from '@/store/modules/structuredEntityModel'
 
 const hit = (id, index = 'banana-papers.entities') => ({
   _id: id,
@@ -25,12 +24,20 @@ const response = (hits = [], total = hits.length) => ({ hits: { hits, total: { v
  * waits for the mount-time refresh. Asserting before that settles would describe a DOM the store
  * has already moved past.
  */
-const mountView = async ({ hits = [], total = null, reject = null, query = {} } = {}) => {
-  const core = CoreSetup.init().useAll().useRouterWithoutGuards()
+const mountView = async ({ hits = [], total = null, reject = null, query = {}, ontologyFails = false } = {}) => {
+  // createPinia() before useAll(): Core.pinia is a module-level singleton, so without it the
+  // ontology store caches across cases in this file and every case after the first sees no fetch.
+  const core = CoreSetup.init().createPinia().useAll().useRouterWithoutGuards()
   core.config.set('projects', [{ name: 'banana-papers' }, { name: 'flowera' }])
   // Stubbed so the view's ontology fetch never reaches a real axios request, which never settles
   // under jsdom and times the test out rather than failing it.
-  const ontology = vi.spyOn(api, 'getStructuredEntityModel').mockResolvedValue(null)
+  // A real object, not null: a falsy result makes the store drop its cache by design, so the
+  // caching assertion below would hold even with no caching at all.
+  const ontology = vi.spyOn(api, 'getStructuredEntityModel')
+    .mockResolvedValue({ name: 'ftm', version: '4.10.2', types: {} })
+  if (ontologyFails) {
+    ontology.mockRejectedValue(new Error('404'))
+  }
   const search = vi.spyOn(elasticsearch, 'searchEntities')
   if (reject) {
     search.mockRejectedValue(reject)
@@ -132,8 +139,9 @@ describe('Entity.vue', () => {
     expect(search).toHaveBeenCalledTimes(1)
   })
 
-  // Review focus: the payload is 233 KB, so two cards must not mean two requests.
-  it('fetches the ontology once however many cards are on screen', async () => {
+  // The view is what triggers the fetch; that one request serves every card on the page. The
+  // fetch-once guarantee itself is proved in the store spec, which is where the caching lives.
+  it('asks for the ontology once, however many cards are on screen', async () => {
     const { ontology } = await mountView({ hits: [hit('ftm_NK-1'), hit('ftm_NK-2')] })
     expect(ontology).toHaveBeenCalledTimes(1)
   })
@@ -143,9 +151,9 @@ describe('Entity.vue', () => {
     expect(wrapper.findComponent(EntityCard).props('properties')).toBeUndefined()
   })
 
-  it('renders cards before the ontology arrives', async () => {
-    const { wrapper } = await mountView({ hits: [hit('ftm_NK-1')] })
-    expect(useStructuredEntityModelStore().model).toBeNull()
+  // An older backend has no /api/models at all. The list is still the point of the page.
+  it('renders cards even when the ontology never loads', async () => {
+    const { wrapper } = await mountView({ hits: [hit('ftm_NK-1')], ontologyFails: true })
     expect(wrapper.findAllComponents(EntityCard)).toHaveLength(1)
     expect(wrapper.findComponent(EmptyState).exists()).toBe(false)
   })

@@ -77,6 +77,21 @@ describe('EntityCard.vue', () => {
             jurisdiction: { label: 'Jurisdiction', range: null, stub: false },
             registrationNumber: { label: 'Registration number', range: null, stub: false }
           }
+        },
+        // `street` is the discriminating case: FtM labels it "Street address" while
+        // humanizePropertyKey produces "Street", so asserting "Street" would pass with the
+        // ontology deleted.
+        Address: {
+          name: 'Address',
+          label: 'Address',
+          featured: ['street', 'vatCode'],
+          caption: ['full'],
+          edge: null,
+          properties: {
+            full: { label: 'Full address', range: null, stub: false },
+            street: { label: 'Street address', range: null, stub: false },
+            vatCode: { label: 'VAT ID', range: null, stub: false }
+          }
         }
       }
     }
@@ -116,11 +131,19 @@ describe('EntityCard.vue', () => {
       expect(wrapper.findComponent(EntityCardProperties).props('properties')).toEqual(['name', 'model'])
     })
 
-    it('labels a row from the ontology', () => {
+    it('labels a row from the ontology, not from the humanized key', () => {
       const wrapper = mountWithOntology({
-        entity: { ...entity, properties: { ftm_name: ['Jane'], ftm_birthDate: ['1954-03-12'] } }
+        entity: {
+          entityId: 'NK-3',
+          model: 'ftm',
+          entityType: 'Address',
+          documentIds: ['doc-1'],
+          properties: { ftm_full: ['1 Main St'], ftm_street: ['Main St'], ftm_vatCode: ['LU123'] }
+        }
       })
-      expect(wrapper.text()).toContain('Birth date')
+      // humanizePropertyKey would give "Street" and "Vat code" for these two keys.
+      expect(wrapper.text()).toContain('Street address')
+      expect(wrapper.text()).toContain('VAT ID')
     })
   })
 })

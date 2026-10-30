@@ -38,13 +38,14 @@ const props = defineProps({
   }
 })
 
-const { item } = useEntityProperties()
+const { items, item } = useEntityProperties()
 
 const field = computed(() => item(props.property))
-// `item` carries the icon and the sortable-field metadata, neither of which is per-schema. The
-// label is, so it comes from the ontology via the entity's own type.
+// `item` falls back to a humanized label for any key it does not know, so reading its `text` here
+// would make the ontology unreachable. Only the Datashare-level keys in `items` own their label;
+// a model property takes the ontology's, and propertyLabel humanizes if that is absent too.
 const display = computed(() => {
-  return toValue(props.title ?? field.value.text ?? propertyLabel(props.entity?.entityType, props.property))
+  return toValue(props.title ?? items[props.property]?.text ?? propertyLabel(props.entity?.entityType, props.property))
 })
 const icon = computed(() => props.icon ?? field.value.icon)
 const values = computed(() => entityPropertyValues(props.entity, props.property))
