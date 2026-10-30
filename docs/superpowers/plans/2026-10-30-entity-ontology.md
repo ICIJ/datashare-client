@@ -41,7 +41,7 @@ Five types carry no `featured`: `Analyzable`, `Interest`, `Interval`, `Page`, `V
 - Only `src/lang/en.json` is hand-edited.
 - Run `yarn lint --fix` before every commit. Run only the spec files each task names, never the full suite.
 - The ontology is fetched **once per session**, never per card. It is a runtime fetch and must not enter a bundle chunk.
-- `src/composables/useSchema.js` already exports `getModel` and `getModelDisplay`, for content-type models. Do not add a second `getModel`. This feature uses `getEntityModel` / `useEntityModelStore`.
+- `src/composables/useSchema.js` already exports `getModel` and `getModelDisplay`, for content-type models. Do not add a second `getModel`. This feature uses `getStructuredEntityModel` / `useStructuredEntityModelStore`, matching the backend's `StructuredEntity` record.
 - `useEntityProperties` stays the only consumer of the ontology. No component reads it directly.
 
 ## Review Focus
@@ -60,9 +60,9 @@ Five conditions the spec implies that no happy-path test covers. Each has its te
 
 | File | Responsibility |
 | --- | --- |
-| `src/api/index.js` | **modify.** Add `getEntityModel(name)`. One line, beside `textLanguages`. |
-| `src/store/modules/entityModel.js` | **new.** Holds the fetched ontology and fetches it once. No formatting logic. |
-| `src/store/modules/index.js` | **modify.** Export `useEntityModelStore`. |
+| `src/api/index.js` | **modify.** Add `getStructuredEntityModel(name)`. One line, beside `textLanguages`. |
+| `src/store/modules/structuredEntityModel.js` | **new.** Holds the fetched ontology and fetches it once. No formatting logic. |
+| `src/store/modules/index.js` | **modify.** Export `useStructuredEntityModelStore`. |
 | `src/composables/useEntityProperties.js` | **modify.** The only consumer: real labels, featured lists, caption. The three `ponytail:` placeholders become documented fallbacks. |
 | `src/components/Entity/EntityCard/EntityCard.vue` | **modify.** Derives its rows from the entity's `entityType` when given no explicit list. |
 | `src/views/Entity/Entity.vue` | **modify.** Fetches the ontology on mount; stops passing the flat `PROPERTIES` list. |
@@ -74,29 +74,29 @@ Five conditions the spec implies that no happy-path test covers. Each has its te
 
 **Files:**
 - Modify: `src/api/index.js`
-- Create: `src/store/modules/entityModel.js`
+- Create: `src/store/modules/structuredEntityModel.js`
 - Modify: `src/store/modules/index.js`
-- Test: `tests/unit/specs/store/modules/entityModel.spec.js`
+- Test: `tests/unit/specs/store/modules/structuredEntityModel.spec.js`
 
 **Interfaces:**
 - Consumes: nothing from earlier tasks.
 - Produces:
-  - `Api.prototype.getEntityModel(name = 'ftm')` -> the raw ontology, via `sendAction('/api/models/' + name)`.
-  - `useEntityModelStore()` exposing `model` (ref, `null` until fetched), `types` (computed, `{}` until fetched), `fetchOnce()`, and `type(name)` returning the type entry or `undefined`.
+  - `Api.prototype.getStructuredEntityModel(name = 'ftm')` -> the raw ontology, via `sendAction('/api/models/' + name)`.
+  - `useStructuredEntityModelStore()` exposing `model` (ref, `null` until fetched), `types` (computed, `{}` until fetched), `fetchOnce()`, and `type(name)` returning the type entry or `undefined`.
 
 Follow `src/store/modules/languages.js`: setup-style `defineStore`, `useOnce` for fetch-once semantics, a `try/catch` that leaves the value empty rather than letting the rejection escape. A failed fetch must leave `model` null and allow a later retry, which is what `useOnce` already does on rejection.
 
 - [ ] **Step 1: Write the failing test**
 
-Create `tests/unit/specs/store/modules/entityModel.spec.js`, mocking `api.getEntityModel`.
+Create `tests/unit/specs/store/modules/structuredEntityModel.spec.js`, mocking `api.getStructuredEntityModel`.
 
 ```js
-describe('useEntityModelStore', () => {
+describe('useStructuredEntityModelStore', () => {
   it('requests the ftm ontology by default', async () => {})
 
   // The payload is 233 KB. A list of 25 cards must not fetch it 25 times.
   it('fetches once however many callers ask', async () => {
-    // three concurrent fetchOnce() calls -> getEntityModel called once
+    // three concurrent fetchOnce() calls -> getStructuredEntityModel called once
   })
 
   it('exposes a type by name', async () => {
@@ -118,22 +118,22 @@ describe('useEntityModelStore', () => {
 
 - [ ] **Step 2: Run the test to verify it fails**
 
-Run: `yarn test:unit tests/unit/specs/store/modules/entityModel.spec.js`
-Expected: FAIL, cannot resolve `@/store/modules/entityModel`.
+Run: `yarn test:unit tests/unit/specs/store/modules/structuredEntityModel.spec.js`
+Expected: FAIL, cannot resolve `@/store/modules/structuredEntityModel`.
 
-- [ ] **Step 3: Add `getEntityModel(name = 'ftm')` to `src/api/index.js`, then implement the store and export it from `src/store/modules/index.js`**
+- [ ] **Step 3: Add `getStructuredEntityModel(name = 'ftm')` to `src/api/index.js`, then implement the store and export it from `src/store/modules/index.js`**
 
 - [ ] **Step 4: Run the test to verify it passes**
 
-Run: `yarn test:unit tests/unit/specs/store/modules/entityModel.spec.js`
+Run: `yarn test:unit tests/unit/specs/store/modules/structuredEntityModel.spec.js`
 Expected: 6 passed.
 
 - [ ] **Step 5: Lint and commit**
 
 ```bash
 yarn lint --fix
-git add src/api/index.js src/store/modules/entityModel.js src/store/modules/index.js \
-        tests/unit/specs/store/modules/entityModel.spec.js
+git add src/api/index.js src/store/modules/structuredEntityModel.js src/store/modules/index.js \
+        tests/unit/specs/store/modules/structuredEntityModel.spec.js
 git commit -m "feat(entity): fetch and cache the FollowTheMoney ontology ICIJ/datashare#2525"
 ```
 
@@ -148,7 +148,7 @@ The heart of the change. All three `ponytail:` placeholders become fallbacks for
 - Test: `tests/unit/specs/composables/useEntityProperties.spec.js`
 
 **Interfaces:**
-- Consumes: `useEntityModelStore().type(name)` (Task 1).
+- Consumes: `useStructuredEntityModelStore().type(name)` (Task 1).
 - Produces, added to the existing return value of `useEntityProperties()`:
   - `propertyLabel(entityType, key)` -> the ontology label for a namespaced key, else `humanizePropertyKey(key)`.
   - `featuredProperties(entity)` -> the ordered list of **namespaced** property keys a card should render for that entity, excluding stubs and excluding whatever the caption already shows.
@@ -301,7 +301,7 @@ git commit -m "feat(entity): derive card rows from the entity schema ICIJ/datash
 - Test: `tests/unit/specs/views/Entity/Entity.spec.js`
 
 **Interfaces:**
-- Consumes: `useEntityModelStore().fetchOnce()` (Task 1); `EntityCard`'s optional `properties` prop (Task 3).
+- Consumes: `useStructuredEntityModelStore().fetchOnce()` (Task 1); `EntityCard`'s optional `properties` prop (Task 3).
 - Produces: nothing later tasks consume.
 
 The view fetches the ontology on mount, alongside the entity search rather than after it, and stops passing `PROPERTIES`. Delete the constant and its `ponytail:` comment.
