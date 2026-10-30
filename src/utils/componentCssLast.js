@@ -3,7 +3,7 @@ import { COMPONENTS_CHUNK } from './manualChunks.js'
 const STYLESHEET = /\s*<link rel="stylesheet"[^>]*>/g
 // Built from the chunk name rather than repeated, so renaming the chunk cannot
 // turn this transform into a silent no-op.
-const COMPONENT_CHUNK = new RegExp(`/${COMPONENTS_CHUNK}-[^."]*\\.css`)
+const COMPONENT_CHUNK = new RegExp(`/${COMPONENTS_CHUNK}-[^/"]*\\.css`)
 
 /**
  * Move the component chunk's stylesheet to the end of the head.
