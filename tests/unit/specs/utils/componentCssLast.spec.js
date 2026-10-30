@@ -39,6 +39,21 @@ describe('componentCssLast', () => {
     ])
   })
 
+  it('does not mistake a base path for the component chunk', () => {
+    // `/components-ui/` is a valid VITE_BASE: the match must stay inside one path segment,
+    // otherwise every href looks like a component one and the transform becomes a no-op
+    const html = head(
+      '/components-ui/assets/vendor-ui-aaa.css',
+      '/components-ui/assets/components-bbb.css',
+      '/components-ui/assets/index-ccc.css'
+    )
+    expect(order(componentCssLast(html))).toEqual([
+      '/components-ui/assets/vendor-ui-aaa.css',
+      '/components-ui/assets/index-ccc.css',
+      '/components-ui/assets/components-bbb.css'
+    ])
+  })
+
   it('moves several component stylesheets while keeping their order', () => {
     const html = head('./assets/components-aaa.css', './assets/components-bbb.css', './assets/index-ccc.css')
     expect(order(componentCssLast(html))).toEqual([
