@@ -1,0 +1,101 @@
+{
+  "name": "ftm",
+  "version": "4.10.2",
+  "types": {
+    "Person": {
+      "name": "Person",
+      "label": "Person",
+      "abstract": false,
+      "featured": [
+        "name",
+        "nationality",
+        "birthDate"
+      ],
+      "caption": [
+        "name",
+        "alias"
+      ],
+      "edge": null,
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "label": "Name",
+          "range": null,
+          "stub": false
+        },
+        "alias": {
+          "label": "Alias",
+          "range": null,
+          "stub": false
+        },
+        "nationality": {
+          "label": "Nationality",
+          "range": null,
+          "stub": false
+        },
+        "birthDate": {
+          "label": "Birth date",
+          "range": null,
+          "stub": false
+        },
+        "position": {
+          "label": "Position occupied",
+          "range": null,
+          "stub": false
+        },
+        "sourceUrl": {
+          "label": "Source link",
+          "range": null,
+          "stub": false
+        },
+        "country": {
+          "label": "Country",
+          "range": null,
+          "stub": false
+        }
+      }
+    },
+    "Company": {
+      "name": "Company",
+      "label": "Company",
+      "abstract": false,
+      "featured": [
+        "name",
+        "jurisdiction",
+        "registrationNumber",
+        "incorporationDate"
+      ],
+      "caption": [
+        "name"
+      ],
+      "edge": null,
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "label": "Name",
+          "range": null,
+          "stub": false
+        },
+        "jurisdiction": {
+          "label": "Jurisdiction",
+          "range": null,
+          "stub": false
+        },
+        "registrationNumber": {
+          "label": "Registration no.",
+          "range": null,
+          "stub": false
+        },
+        "incorporationDate": {
+          "label": "Incorporation date",
+          "range": null,
+          "stub": false
+        }
+      }
+    }
+  }
+}

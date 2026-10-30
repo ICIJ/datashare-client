@@ -11,6 +11,7 @@ import IPhCirclesThreePlus from '~icons/ph/circles-three-plus'
 import IPhTag from '~icons/ph/tag'
 
 import { useViewProperties } from '@/composables/useViewProperties'
+import { useStructuredEntityModelStore } from '@/store/modules/structuredEntityModel'
 import { SORT_TYPE_KEY, useViewSettings } from '@/composables/useViewSettings'
 
 /**
@@ -38,10 +39,9 @@ const NAMESPACE_SEPARATOR = '_'
 export const MAX_VALUES = 3
 
 /**
- * ponytail: labels for model properties are humanized from the key, because the FollowTheMoney
- * ontology is server-side only: FtmTargetModel reads the bundled defaultModel.json and exposes it
- * to Java callers, with no HTTP route. Replace this with the ontology's own labels once the
- * epic's ontology endpoint lands. This function and `item` below are the only places to change.
+ * The fallback label, used when the ontology has nothing to say about a key: an older backend with
+ * no /api/models route, a failed fetch, or a type the fetched model does not carry. It mangles
+ * acronyms (`ftm_vatCode` reads "Vat code"), which is why it is the fallback and not the rule.
  */
 export function humanizePropertyKey(key) {
   const [, ...rest] = (key ?? '').split(NAMESPACE_SEPARATOR)
@@ -78,15 +78,74 @@ function rootValues(entity, key) {
   return ROOT_KEYS.includes(key) && own(entity, key) ? entity[key] : []
 }
 
+/** The index key a bare ontology property name is stored under: `birthDate` -> `ftm_birthDate`. */
+function namespaced(entity, property) {
+  return [entity?.model, property].join(NAMESPACE_SEPARATOR)
+}
+
 /**
- * ponytail: FollowTheMoney has a caption concept, resolved per schema from an ordered list of
- * candidate properties, but the index holds no caption field and the resolution rules live in the
- * ontology. First name value, else the id. Upgrade with the ontology endpoint.
+ * The bare property a type captions this entity on: the first of its ordered caption candidates
+ * that actually holds a value. `null` when none does.
  */
-export function entityCaption(entity) {
-  const key = [entity?.model, 'name'].join(NAMESPACE_SEPARATOR)
-  const [name] = entityPropertyValues(entity, key)
-  return name ?? entity?.entityId ?? ''
+function captionProperty(entity, type) {
+  const candidates = type?.caption?.length ? type.caption : ['name']
+  return candidates.find(property => entityPropertyValues(entity, namespaced(entity, property)).length) ?? null
+}
+
+/**
+ * How an entity is named on screen: the value of its caption property, else the entity id.
+ *
+ * The type defaults to the ontology's own, so no component has to reach into the store to caption
+ * an entity. It is resolved per call rather than captured, which keeps a caller inside a computed
+ * reactive to the ontology arriving late.
+ */
+export function entityCaption(entity, type = undefined) {
+  const resolved = type === undefined ? useStructuredEntityModelStore().type(entity?.entityType) : type
+  const property = captionProperty(entity, resolved)
+  const [value] = property ? entityPropertyValues(entity, namespaced(entity, property)) : []
+  return value ?? entity?.entityId ?? ''
+}
+
+/**
+ * The label for a namespaced property key, from the ontology when it knows the type and the
+ * property, and humanized from the key when it does not.
+ */
+export function propertyLabel(entityType, key) {
+  const type = useStructuredEntityModelStore().type(entityType)
+  const [, ...rest] = (key ?? '').split(NAMESPACE_SEPARATOR)
+  const bare = rest.join(NAMESPACE_SEPARATOR)
+  return type?.properties?.[bare]?.label ?? humanizePropertyKey(key)
+}
+
+// Rows every card shows whatever its schema, appended after the featured ones. None of them is an
+// ontology property: they describe the entity's place in Datashare, not the thing it models.
+const DATASHARE_ROWS = Object.freeze([
+  ENTITY_FIELD.SOURCE_DOCUMENT,
+  ENTITY_FIELD.MODEL,
+  ENTITY_FIELD.PROJECT
+])
+
+/**
+ * The ordered row keys a card renders for this entity: the caption, then its schema's featured
+ * properties, then the Datashare-level rows.
+ *
+ * Two exclusions. A stub property is inferred from a relation rather than written, so it holds no
+ * values and would render an empty row. The one property the caption actually used would print
+ * the same text twice, since `featured` opens with a caption candidate for most schemata.
+ */
+export function featuredProperties(entity) {
+  const type = useStructuredEntityModelStore().type(entity?.entityType)
+  // Only the property the caption actually used, not every candidate. On the live Address,
+  // `full` and `city` are both candidates, so excluding all of them hid the city even when it
+  // held the only value the entity had.
+  const captioned = captionProperty(entity, type)
+  const featured = (type?.featured ?? [])
+    .filter(property => property !== captioned)
+    .filter(property => !type?.properties?.[property]?.stub)
+    .map(property => namespaced(entity, property))
+  // The schema row sits right after the caption: the featured rows below it differ per schema, so
+  // without it two cards in one list look different for no visible reason.
+  return [ENTITY_FIELD.NAME, ENTITY_FIELD.ENTITY_TYPE, ...featured, ...DATASHARE_ROWS]
 }
 
 export function useEntityProperties() {
@@ -142,8 +201,11 @@ export function useEntityProperties() {
 
   const items = { name, entityType, sourceDocument, model, project }
   const fields = Object.values(items)
-  const sortByOptions = fieldsToSortByOptions([relevance, ...fields])
-  const propertiesOptions = fieldsToPropertiesOptions(fields)
+  // Lazy: only the settings panel reads these, while every card row calls this composable for
+  // `item` alone. Building them eagerly made a row cost the whole options list, which a page of
+  // cards pays once per row.
+  const sortByOptions = computed(() => fieldsToSortByOptions([relevance, ...fields]))
+  const propertiesOptions = computed(() => fieldsToPropertiesOptions(fields))
 
   /**
    * Resolves any key to a property item. A key this composable does not know is a model property
