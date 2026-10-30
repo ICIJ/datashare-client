@@ -8,7 +8,9 @@ import EntityCardPlaceholder from '@/components/Entity/EntityCard/EntityCardPlac
 import EntityCardProperties from '@/components/Entity/EntityCard/EntityCardProperties'
 import EmptyState from '@/components/EmptyState/EmptyState'
 import { elasticsearch } from '@/api/elasticsearch'
+import { apiInstance as api } from '@/api/apiInstance'
 import { useEntityStore } from '@/store/modules/entity'
+import { useStructuredEntityModelStore } from '@/store/modules/structuredEntityModel'
 
 const hit = (id, index = 'banana-papers.entities') => ({
   _id: id,
@@ -26,6 +28,9 @@ const response = (hits = [], total = hits.length) => ({ hits: { hits, total: { v
 const mountView = async ({ hits = [], total = null, reject = null, query = {} } = {}) => {
   const core = CoreSetup.init().useAll().useRouterWithoutGuards()
   core.config.set('projects', [{ name: 'banana-papers' }, { name: 'flowera' }])
+  // Stubbed so the view's ontology fetch never reaches a real axios request, which never settles
+  // under jsdom and times the test out rather than failing it.
+  const ontology = vi.spyOn(api, 'getStructuredEntityModel').mockResolvedValue(null)
   const search = vi.spyOn(elasticsearch, 'searchEntities')
   if (reject) {
     search.mockRejectedValue(reject)
@@ -36,7 +41,7 @@ const mountView = async ({ hits = [], total = null, reject = null, query = {} } 
   await core.router.push({ name: 'entity.list', query })
   const wrapper = mount(Entity, { global: { plugins: core.plugins } })
   await flushPromises()
-  return { wrapper, search, core, store: useEntityStore() }
+  return { wrapper, search, ontology, core, store: useEntityStore() }
 }
 
 describe('Entity.vue', () => {
@@ -120,5 +125,23 @@ describe('Entity.vue', () => {
     await core.router.push({ name: 'entity.list', query: { modal: 'true' } })
     await flushPromises()
     expect(search).toHaveBeenCalledTimes(1)
+  })
+
+  // Review focus: the payload is 233 KB, so two cards must not mean two requests.
+  it('fetches the ontology once however many cards are on screen', async () => {
+    const { ontology } = await mountView({ hits: [hit('ftm_NK-1'), hit('ftm_NK-2')] })
+    expect(ontology).toHaveBeenCalledTimes(1)
+  })
+
+  it('passes no property list, so each card uses its own schema', async () => {
+    const { wrapper } = await mountView({ hits: [hit('ftm_NK-1')] })
+    expect(wrapper.findComponent(EntityCard).props('properties')).toBeUndefined()
+  })
+
+  it('renders cards before the ontology arrives', async () => {
+    const { wrapper } = await mountView({ hits: [hit('ftm_NK-1')] })
+    expect(useStructuredEntityModelStore().model).toBeNull()
+    expect(wrapper.findAllComponents(EntityCard)).toHaveLength(1)
+    expect(wrapper.findComponent(EmptyState).exists()).toBe(false)
   })
 })

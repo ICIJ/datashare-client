@@ -113,7 +113,7 @@ describe('useEntityProperties', () => {
 
   it('offers relevance and entity id as the only sort options', () => {
     const { sortByOptions } = mountComposable()
-    const keys = [...new Set(sortByOptions.map(({ value: [key] }) => key))]
+    const keys = [...new Set(sortByOptions.value.map(({ value: [key] }) => key))]
     expect(keys).toEqual(['_score', 'entityId'])
   })
 
@@ -207,6 +207,7 @@ describe('the ontology-backed helpers', () => {
       withOntology()
       expect(featuredProperties(person())).toEqual([
         'name',
+        'entityType',
         'ftm_nationality',
         'ftm_birthDate',
         'sourceDocument',
@@ -230,13 +231,21 @@ describe('the ontology-backed helpers', () => {
     it('returns only the datashare rows for a type with no featured list', () => {
       withOntology()
       const entity = { ...person(), entityType: 'Interest' }
-      expect(featuredProperties(entity)).toEqual(['name', 'sourceDocument', 'model', 'project'])
+      expect(featuredProperties(entity)).toEqual(['name', 'entityType', 'sourceDocument', 'model', 'project'])
     })
 
     it('returns only the datashare rows when the ontology failed to load', () => {
       withOntology(null)
-      expect(featuredProperties(person())).toEqual(['name', 'sourceDocument', 'model', 'project'])
+      expect(featuredProperties(person())).toEqual(['name', 'entityType', 'sourceDocument', 'model', 'project'])
     })
+  })
+
+  // The rows now differ per schema, so a card that never names its schema leaves a user with no
+  // way to tell why two cards in one list look different.
+  it('names the schema on every card', () => {
+    withOntology()
+    expect(featuredProperties(person())).toContain('entityType')
+    expect(featuredProperties({ ...person(), entityType: 'Interest' })).toContain('entityType')
   })
 
   describe('entityCaption with the ontology', () => {
