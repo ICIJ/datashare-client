@@ -2,7 +2,12 @@
 import { computed, toValue } from 'vue'
 
 import CardPropertiesEntry from '@/components/Card/CardPropertiesEntry'
-import { useEntityProperties, entityPropertyValues, MAX_VALUES } from '@/composables/useEntityProperties'
+import {
+  useEntityProperties,
+  entityPropertyValues,
+  propertyLabel,
+  MAX_VALUES
+} from '@/composables/useEntityProperties'
 
 const props = defineProps({
   entity: {
@@ -36,7 +41,11 @@ const props = defineProps({
 const { item } = useEntityProperties()
 
 const field = computed(() => item(props.property))
-const display = computed(() => toValue(props.title ?? field.value.text ?? props.property))
+// `item` carries the icon and the sortable-field metadata, neither of which is per-schema. The
+// label is, so it comes from the ontology via the entity's own type.
+const display = computed(() => {
+  return toValue(props.title ?? field.value.text ?? propertyLabel(props.entity?.entityType, props.property))
+})
 const icon = computed(() => props.icon ?? field.value.icon)
 const values = computed(() => entityPropertyValues(props.entity, props.property))
 const capped = computed(() => values.value.length > MAX_VALUES)
