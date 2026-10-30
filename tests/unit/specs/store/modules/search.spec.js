@@ -399,12 +399,14 @@ describe('SearchStore', () => {
       expect(searchStore.isReady).toBe(true)
     })
 
-    it('keeps isReady true on a same-query route re-entry despite a differing stamp', async () => {
+    it('reads a same-query route re-entry as applied despite a differing stamp', async () => {
       await searchStore.query('bar')
 
-      searchStore.updateFromRouteQuery({ ...searchStore.toRouteQuery, stamp: 'another-stamp' })
+      // This is what the view's refresh guard asks before skipping a search,
+      // so a false negative here re-runs the search on every re-entry.
+      const routeQuery = { ...searchStore.toRouteQuery, stamp: 'another-stamp' }
 
-      expect(searchStore.isReady).toBe(true)
+      expect(searchStore.sameAppliedQuery(routeQuery, ['from'])).toBe(true)
     })
 
     it('treats a scalar filter value as equal to its single-item array form', async () => {
@@ -413,9 +415,9 @@ describe('SearchStore', () => {
 
       // A single-valued filter round-trips through the URL as a scalar,
       // while lastAppliedQuery holds it as an array.
-      searchStore.updateFromRouteQuery({ ...searchStore.toRouteQuery, 'f[contentType]': 'pdf' })
+      const routeQuery = { ...searchStore.toRouteQuery, 'f[contentType]': 'pdf' }
 
-      expect(searchStore.isReady).toBe(true)
+      expect(searchStore.sameAppliedQuery(routeQuery, ['from'])).toBe(true)
     })
 
     it('detects a route query with a filter key dropped entirely as different from the last applied query', async () => {

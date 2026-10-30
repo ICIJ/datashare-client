@@ -53,6 +53,26 @@ describe('Search.vue loading state', () => {
     wrapper?.unmount()
   })
 
+  it('shows the loading state while a new search is in flight, and clears it when it settles', async () => {
+    const searchStore = useSearchStore()
+    await core.router.push({ name: 'search', query: { q: 'first' } })
+    await flushPromises()
+    await flushPromises()
+    expect(searchStore.isReady).toBe(true)
+
+    let resolveSearch
+    runAsyncSearchMock.mockReturnValueOnce(new Promise((resolve) => {
+      resolveSearch = resolve
+    }))
+    await core.router.push({ name: 'search', query: { ...searchStore.toRouteQuery, q: 'second' } })
+    await flushPromises()
+    expect(searchStore.isReady).toBe(false)
+
+    resolveSearch(emptyResponse())
+    await flushPromises()
+    expect(searchStore.isReady).toBe(true)
+  })
+
   it('is never left loading when a partial route query resolves to the current search', async () => {
     const searchStore = useSearchStore()
     await core.router.push({ name: 'search', query: { q: '', indices: 'foo' } })
