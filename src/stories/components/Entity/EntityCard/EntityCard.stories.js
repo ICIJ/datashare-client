@@ -82,6 +82,27 @@ export const SparseEntity = {
   }
 }
 
+// No `properties` argument: the card asks the ontology for Company's featured list, which differs
+// from Person's. In one list the two cards show different rows, which is what the design shows.
+export const CompanyEntity = {
+  args: {
+    properties: undefined,
+    entity: {
+      entityId: 'NK-00ff11',
+      model: 'ftm',
+      entityType: 'Company',
+      modelVersions: ['4.10.2'],
+      documentIds: ['e1f2a3b4c5d6'],
+      properties: {
+        ftm_name: ['Luxembourg Holdings S.a r.l.'],
+        ftm_jurisdiction: ['Luxembourg'],
+        ftm_registrationNumber: ['B 123456'],
+        ftm_incorporationDate: ['2004-11-18']
+      }
+    }
+  }
+}
+
 // A common entity, a country or a large company, is cited by many documents. The row caps at
 // three and counts the rest rather than growing the card without bound.
 export const ManySourceDocuments = {
