@@ -135,7 +135,9 @@ export function featuredProperties(entity) {
     .filter(property => !captioned.has(property))
     .filter(property => !type?.properties?.[property]?.stub)
     .map(property => namespaced(entity, property))
-  return [ENTITY_FIELD.NAME, ...featured, ...DATASHARE_ROWS]
+  // The schema row sits right after the caption: the featured rows below it differ per schema, so
+  // without it two cards in one list look different for no visible reason.
+  return [ENTITY_FIELD.NAME, ENTITY_FIELD.ENTITY_TYPE, ...featured, ...DATASHARE_ROWS]
 }
 
 export function useEntityProperties() {
@@ -191,8 +193,11 @@ export function useEntityProperties() {
 
   const items = { name, entityType, sourceDocument, model, project }
   const fields = Object.values(items)
-  const sortByOptions = fieldsToSortByOptions([relevance, ...fields])
-  const propertiesOptions = fieldsToPropertiesOptions(fields)
+  // Lazy: only the settings panel reads these, while every card row calls this composable for
+  // `item` alone. Building them eagerly made a row cost the whole options list, which a page of
+  // cards pays once per row.
+  const sortByOptions = computed(() => fieldsToSortByOptions([relevance, ...fields]))
+  const propertiesOptions = computed(() => fieldsToPropertiesOptions(fields))
 
   /**
    * Resolves any key to a property item. A key this composable does not know is a model property

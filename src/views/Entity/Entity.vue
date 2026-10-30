@@ -17,6 +17,7 @@ import { entitiesIndex } from '@/api/elasticsearch'
 import { useCore } from '@/composables/useCore'
 import { useUrlPageParam } from '@/composables/useUrlPageParam'
 import { useEntityStore } from '@/store/modules/entity'
+import { useStructuredEntityModelStore } from '@/store/modules/structuredEntityModel'
 import { useAppStore } from '@/store/modules'
 
 const { t } = useI18n()
@@ -24,13 +25,9 @@ const route = useRoute()
 const { core } = useCore()
 const appStore = useAppStore()
 const entityStore = useEntityStore()
+const modelStore = useStructuredEntityModelStore()
 
 const VIEW = 'entityList'
-
-// ponytail: a flat property list, so every card renders identical rows. Featured properties are
-// per-schema and live in the ontology (ICIJ/datashare#2510); ICIJ/datashare#2508 derives the rows
-// from each entity's own entityType once that endpoint exists.
-const PROPERTIES = ['name', 'entityType', 'sourceDocument', 'model', 'project']
 
 const INDEX_SUFFIX = entitiesIndex('')
 
@@ -80,6 +77,9 @@ function currentSort() {
 }
 
 function refresh() {
+  // Alongside the search, not after it: the ontology only changes which rows a card picks, so a
+  // card that renders before it arrives simply re-renders when the store fills.
+  modelStore.fetchOnce()
   const perPage = currentPerPage()
   entityStore.projects = userProjects.value
   entityStore.query = route.query.q ?? ''
@@ -114,7 +114,6 @@ const errorMessage = computed(() => entityStore.error?.message ?? String(entityS
     <entity-card-placeholder
       v-if="isLoading"
       class="entity__placeholder"
-      :properties="PROPERTIES"
       :repeat="3"
     />
     <empty-state
@@ -144,7 +143,6 @@ const errorMessage = computed(() => entityStore.error?.message ?? String(entityS
           :key="`${hit._index}/${hit._id}`"
           :entity="hit._source"
           :project="project"
-          :properties="PROPERTIES"
         />
       </div>
       <row-pagination
