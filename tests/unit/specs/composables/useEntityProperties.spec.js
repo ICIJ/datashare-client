@@ -2,7 +2,10 @@ import { toValue } from 'vue'
 import { mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
+import { useStructuredEntityModelStore } from '@/store/modules/structuredEntityModel'
 import {
+  featuredProperties,
+  propertyLabel,
   useEntityProperties,
   entityPropertyValues,
   entityCaption,
@@ -125,5 +128,127 @@ describe('useEntityProperties', () => {
 
     expect(toValue(resolved.text)).toBe('Incorporation date')
     expect(resolved.icon).not.toBeNull()
+  })
+})
+
+// A trimmed ontology in the shape GET /api/models/ftm returns.
+const ONTOLOGY = {
+  name: 'ftm',
+  version: '4.10.2',
+  types: {
+    Person: {
+      name: 'Person',
+      label: 'Person',
+      featured: ['name', 'nationality', 'birthDate'],
+      caption: ['name', 'alias'],
+      edge: null,
+      properties: {
+        name: { label: 'Name', range: null, stub: false },
+        alias: { label: 'Alias', range: null, stub: false },
+        nationality: { label: 'Nationality', range: null, stub: false },
+        birthDate: { label: 'Birth date', range: null, stub: false },
+        addressEntity: { label: 'Address', range: 'Address', stub: false },
+        agencyClient: { label: 'Clients', range: 'Representation', stub: true }
+      }
+    },
+    // One of the five types the real ontology ships with no featured list.
+    Interest: { name: 'Interest', label: 'Interest', caption: [], edge: null, properties: {} },
+    Stubby: {
+      name: 'Stubby',
+      label: 'Stubby',
+      featured: ['agencyClient', 'birthDate'],
+      caption: [],
+      edge: null,
+      properties: {
+        agencyClient: { label: 'Clients', range: 'Representation', stub: true },
+        birthDate: { label: 'Birth date', range: null, stub: false }
+      }
+    }
+  }
+}
+
+const person = (properties = {}) => ({
+  entityId: 'NK-1',
+  model: 'ftm',
+  entityType: 'Person',
+  documentIds: ['doc-1'],
+  properties
+})
+
+describe('the ontology-backed helpers', () => {
+  // These helpers read the store directly rather than through the composable, so they need an
+  // active pinia but no mounted component.
+  const withOntology = (ontology = ONTOLOGY) => {
+    CoreSetup.init().useAll()
+    const store = useStructuredEntityModelStore()
+    store.model = ontology
+    return store
+  }
+
+  describe('propertyLabel', () => {
+    it('uses the ontology label for a known property', () => {
+      withOntology()
+      expect(propertyLabel('Person', 'ftm_birthDate')).toBe('Birth date')
+    })
+
+    it('falls back to the humanized key when the ontology is absent', () => {
+      withOntology(null)
+      expect(propertyLabel('Person', 'ftm_vatCode')).toBe('Vat code')
+    })
+
+    it('falls back when the entity type is not in the ontology', () => {
+      withOntology()
+      expect(propertyLabel('Spaceship', 'ftm_birthDate')).toBe('Birth date')
+    })
+  })
+
+  describe('featuredProperties', () => {
+    it('returns the schema featured properties, namespaced', () => {
+      withOntology()
+      expect(featuredProperties(person())).toEqual([
+        'name',
+        'ftm_nationality',
+        'ftm_birthDate',
+        'sourceDocument',
+        'model',
+        'project'
+      ])
+    })
+
+    it('drops a featured property the caption already shows', () => {
+      withOntology()
+      expect(featuredProperties(person())).not.toContain('ftm_name')
+    })
+
+    it('never returns a stub property', () => {
+      withOntology()
+      const entity = { ...person(), entityType: 'Stubby' }
+      expect(featuredProperties(entity)).not.toContain('ftm_agencyClient')
+      expect(featuredProperties(entity)).toContain('ftm_birthDate')
+    })
+
+    it('returns only the datashare rows for a type with no featured list', () => {
+      withOntology()
+      const entity = { ...person(), entityType: 'Interest' }
+      expect(featuredProperties(entity)).toEqual(['name', 'sourceDocument', 'model', 'project'])
+    })
+
+    it('returns only the datashare rows when the ontology failed to load', () => {
+      withOntology(null)
+      expect(featuredProperties(person())).toEqual(['name', 'sourceDocument', 'model', 'project'])
+    })
+  })
+
+  describe('entityCaption with the ontology', () => {
+    it('uses the first caption property that has a value', () => {
+      const store = withOntology()
+      const entity = person({ ftm_alias: ['Jane D.'] })
+      expect(entityCaption(entity, store.type('Person'))).toBe('Jane D.')
+    })
+
+    it('falls back to the entity id when no caption property has a value', () => {
+      const store = withOntology()
+      expect(entityCaption(person(), store.type('Person'))).toBe('NK-1')
+    })
   })
 })
