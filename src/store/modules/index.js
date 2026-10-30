@@ -1,6 +1,7 @@
 export { useSearchStore } from './search' // Must be at the top to avoid circular dependenceis
 export { useAppStore } from './app'
 export { useDocumentStore } from './document'
+export { useEntityStore } from './entity'
 export { useDocumentPathBannersStore } from './documentPathBanners'
 export { useDocumentDownloadStore } from './documentDownload'
 export { useDocumentViewStore } from './documentView'
