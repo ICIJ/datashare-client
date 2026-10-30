@@ -276,14 +276,13 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    * This is useful when navigating to a new route
    * to ensure the search state is fresh.
    */
-  function resetForRouteChange(routeQuery = {}) {
+  function resetForRouteChange() {
     from.value = 0
-    // Only force loading state for a genuinely new query, or a same-query
-    // route re-entry (e.g. History → Documents) leaves it stuck forever.
-    const sameQuery = Object.keys(routeQuery).length && sameAppliedQuery(routeQuery, ['from', 'stamp'])
-    if (!sameQuery) {
-      isReady.value = false
-    }
+    // Never touch `isReady` here. This runs from a navigation guard, on a
+    // route query that `fillSearchRouteQuery` can still rewrite before the view
+    // decides whether to search: forcing the loading state from a place that
+    // cannot start a search leaves the view loading forever when that decision
+    // goes the other way. `doRefresh` owns the flag, in both directions.
     q.value = ''
     excludeFilters.value = []
     values.value = {}
@@ -917,7 +916,7 @@ export const useSearchStore = defineSuffixedStore('search', () => {
    */
   function updateFromRouteQuery(routeQuery) {
     // Reset the state except for the given keys
-    resetForRouteChange(routeQuery)
+    resetForRouteChange()
     // Create a helper function that call the setter only if the key exists in the routeQuery
     const withRouteQuery = (key, setter) => key in routeQuery && setter(routeQuery[key])
     // This is all the key that can be found in the URL (apart from filters keys)
