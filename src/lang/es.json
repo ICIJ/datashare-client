@@ -1745,7 +1745,7 @@
           "email": {
             "label": "Email",
             "placeholder": "Email",
-            "invalid": "Enter a valid email address."
+            "invalid": "Introduce una dirección de correo electrónico válida."
           },
           "password": {
             "label": "Password",
