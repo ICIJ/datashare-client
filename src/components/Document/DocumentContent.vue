@@ -410,6 +410,11 @@ function setContentSlice({
 
 async function cookContentSlice({ offset = 0, targetLanguage = props.targetLanguage, content = '' } = {}) {
   const cookedContent = await contentPipeline.value(content, { offset, ...contentPipelineParams.value })
+  // A document swap can clear or reload the slice while it cooks: writing it
+  // back would restore the previous document's text.
+  if (getContentSlice({ offset, targetLanguage })?.content !== content) {
+    return
+  }
   setContentSlice({ offset, targetLanguage, content, cookedContent })
 }
 

@@ -316,6 +316,40 @@ describe('DocumentContent.vue', () => {
       wrapper.unmount()
     })
 
+    it('should not bring the previous document slices back when they are cooked during the swap', async () => {
+      const { document } = await mockDocumentContentSlice('a'.repeat(60))
+      api.getDocumentSlice.mockImplementation(async (project, documentId, offset, limit) => {
+        const content = (documentId === id ? 'a' : 'b').repeat(60)
+        return { content: content.substring(offset, offset + limit), offset, limit, maxOffset: 60 }
+      })
+      const { plugins } = core
+      const wrapper = shallowMount(DocumentContent, { global: { plugins }, props: { document, pageSize: 10 } })
+      await flushPromises()
+      // Only the cooking woken by this pipeline is held, so it finishes after
+      // the next document has cleared and reloaded the slices.
+      const cooking = createDeferredPromise()
+      let isFirstCooking = true
+      core.registerPipeline({
+        name: 'held',
+        category: 'extracted-text',
+        type: (content) => {
+          if (!isFirstCooking) {
+            return content
+          }
+          isFirstCooking = false
+          return cooking.promise.then(() => content)
+        }
+      })
+      await flushPromises()
+      const other = { index: document.index, id: 'other-document-id', routing: 'other-document-id' }
+      await wrapper.setProps({ document: other })
+      await flushPromises()
+      cooking.resolve()
+      await flushPromises()
+      expect(wrapper.vm.getContentSlice({ offset: 0 }).content).not.toContain('a')
+      expect(wrapper.vm.currentContentPage).not.toContain('a')
+    })
+
     it('should lazy load 2 slices of 10 characters of a long text document', async () => {
       // Create a document with a small content text length
       const content = 'this is a content from Elastic Search doc which looks huge'
