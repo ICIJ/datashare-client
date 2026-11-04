@@ -446,7 +446,11 @@ async function loadContentSlice({ offset = 0, targetLanguage = props.targetLangu
 }
 
 async function loadContentSliceOnce({ offset = 0, targetLanguage = props.targetLanguage } = {}) {
-  if (!hasContentSlice({ offset, targetLanguage })) {
+  // Slicing before the length of this language is known requests an empty
+  // slice, and caching it would keep the text empty for good. The
+  // `targetLanguage` watcher activates the slice once the length is loaded.
+  const isMaxOffsetLoaded = (targetLanguage ?? 'original') in maxOffsetTranslations.value
+  if (isMaxOffsetLoaded && !hasContentSlice({ offset, targetLanguage })) {
     await loadContentSlice({ offset, targetLanguage })
   }
   return getContentSlice({ offset, targetLanguage })
