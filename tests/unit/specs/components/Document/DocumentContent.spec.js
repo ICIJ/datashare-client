@@ -441,6 +441,29 @@ describe('DocumentContent.vue', () => {
       expect(dropdown.props('translation')).toBe(true)
     })
 
+    it('shows the translated text when the translation is selected while the document is loading', async () => {
+      const { contentSlice, document } = await mockDocumentContentSlice('Bonjour le monde')
+      const translated = letTextContent().withContent('Hello world').getResponse()
+      const translatedMaxOffsetProbe = createDeferredPromise()
+      let isFirstTranslatedCall = true
+      api.getDocumentSlice.mockImplementation(async (project, documentId, offset, limit, targetLanguage) => {
+        const slice = targetLanguage === 'ENGLISH' ? translated : contentSlice
+        const response = { ...slice, content: slice.content.substring(offset, offset + limit), offset, limit }
+        if (targetLanguage === 'ENGLISH' && isFirstTranslatedCall) {
+          isFirstTranslatedCall = false
+          return translatedMaxOffsetProbe.promise.then(() => response)
+        }
+        return response
+      })
+      const { plugins } = core
+      const wrapper = shallowMount(DocumentContent, { props: { document }, global: { plugins } })
+      await wrapper.setProps({ targetLanguage: 'ENGLISH' })
+      await flushPromises()
+      translatedMaxOffsetProbe.resolve()
+      await flushPromises()
+      expect(wrapper.vm.currentContentPage).toContain('Hello world')
+    })
+
     it('falls back to plain text and disables the formatted option when the only page is empty', async () => {
       api.getStructureManifest.mockResolvedValue({ pages: 1, formats: ['md'] })
       const { document } = await mockDocumentContentSlice('Hello world')
