@@ -135,8 +135,7 @@ whenever(username, getHashedApiKey, { immediate: true })
       :title="t('settings.api.key.created')"
       :model-value="showModal"
       lazy
-      ok-only
-      ok-variant="action"
+      no-footer
       @hidden="apiKey = null"
     >
       <p>{{ t('settings.api.key.warning') }}</p>
