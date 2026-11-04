@@ -1668,6 +1668,13 @@
           "button": "Eliminar",
           "description": "Cualquier aplicación o script que utilicen esta clave ya no podrá acceder a la API de Datashare. No puede deshacer esta acción."
         }
+      },
+      "mcp": {
+        "title": "Connect an AI assistant",
+        "description": "This key also lets AI assistants search, read and tag your documents through Datashare MCP.",
+        "learnMore": "Learn more",
+        "terminal": "Run in a terminal:",
+        "codex": "Add to {path}:"
       }
     },
     "users": {
