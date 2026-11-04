@@ -11,7 +11,7 @@ import { useSearchStore } from '@/store/modules'
 describe('SearchBar.vue', function () {
   const { index, es } = esConnectionHelper.build('search-bar')
   const { index: indexFoo } = esConnectionHelper.build('search-bar-foo')
-  const { plugins, config } = CoreSetup.init().useAll().useRouterWithoutGuards()
+  const { plugins, config, router } = CoreSetup.init().useAll().useRouterWithoutGuards()
 
   let wrapper, searchStore
 
@@ -24,6 +24,9 @@ describe('SearchBar.vue', function () {
   }
 
   beforeAll(() => {
+    // The search route lazy-loads its views, so a real navigation can outlive
+    // the test environment and crash after teardown.
+    vi.spyOn(router, 'push').mockResolvedValue()
     searchStore = useSearchStore()
     config.set('projects', [
       { name: index, label: 'default' },
