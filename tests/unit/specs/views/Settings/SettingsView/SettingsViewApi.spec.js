@@ -59,6 +59,18 @@ describe('SettingsViewApi', () => {
     expect(api.createApiKey).toBeCalledTimes(1)
   })
 
+  it('should show the Claude Code command to connect Datashare MCP with the new key', async () => {
+    api.createApiKey.mockResolvedValue({ apiKey: '123456abcdef', hashedKey: 'test' })
+    api.getApiKey.mockResolvedValue({ hashedKey: 'test' })
+    const stubs = { 'app-modal': { template: '<div><slot /></div>' } }
+    const wrapper = mount(SettingsViewApi, { global: { plugins, stubs } })
+    await wrapper.vm.createApiKey()
+
+    const command = wrapper.find('.settings-view-api__mcp__snippet').text()
+    expect(command).toContain('claude mcp add --transport http datashare http://localhost:9009/api/mcp')
+    expect(command).toContain('--header "Authorization: Bearer 123456abcdef"')
+  })
+
   it('should delete the apiKey', async () => {
     api.createApiKey.mockResolvedValue({ apiKey: '123456abcdef', hashedKey: 'test' })
     api.getApiKey.mockResolvedValue({ apiKey: '123456abcdef', hashedKey: 'test' })

@@ -11,6 +11,7 @@ import IPhTrash from '~icons/ph/trash'
 import AppModal from '@/components/AppModal/AppModal'
 import DisplayHash from '@/components/Display/DisplayHash'
 import SettingsViewLayout from '@/views/Settings/SettingsView/SettingsViewLayout'
+import SettingsViewApiMcp from '@/views/Settings/SettingsView/SettingsViewApiMcp'
 import { useCore } from '@/composables/useCore'
 import { useAuth } from '@/composables/useAuth'
 import { useConfirmModal } from '@/composables/useConfirmModal'
@@ -151,6 +152,8 @@ whenever(username, getHashedApiKey, { immediate: true })
           :label="t('settings.api.key.copy')"
         />
       </div>
+      <hr class="my-4">
+      <settings-view-api-mcp :api-key="apiKey" />
     </app-modal>
   </settings-view-layout>
 </template>
