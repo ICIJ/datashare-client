@@ -271,7 +271,8 @@ watch(docId, async () => {
 
 watch(contentPipeline, async () => {
   await cookAllContentSlices()
-  currentContentPage.value = getContentSlice({ offset: activeContentSliceOffset.value }).cookedContent
+  const { cookedContent = null } = getContentSlice({ offset: activeContentSliceOffset.value }) ?? {}
+  currentContentPage.value = cookedContent
 })
 
 onMounted(async () => {
