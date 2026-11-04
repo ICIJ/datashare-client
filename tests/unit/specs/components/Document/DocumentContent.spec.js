@@ -464,6 +464,18 @@ describe('DocumentContent.vue', () => {
       expect(wrapper.vm.currentContentPage).toContain('Hello world')
     })
 
+    it('accepts a new text pipeline before any slice is loaded', async () => {
+      const { document } = await mockDocumentContentSlice('Hello world')
+      const maxOffsetProbe = createDeferredPromise()
+      api.getDocumentSlice.mockImplementationOnce(() => maxOffsetProbe.promise)
+      const errorHandler = vi.fn()
+      const { plugins } = core
+      shallowMount(DocumentContent, { props: { document }, global: { plugins, config: { errorHandler } } })
+      core.registerPipeline({ name: 'noop', category: 'extracted-text', type: content => content })
+      await flushPromises()
+      expect(errorHandler).not.toHaveBeenCalled()
+    })
+
     it('falls back to plain text and disables the formatted option when the only page is empty', async () => {
       api.getStructureManifest.mockResolvedValue({ pages: 1, formats: ['md'] })
       const { document } = await mockDocumentContentSlice('Hello world')
