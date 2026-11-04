@@ -71,6 +71,29 @@ describe('SettingsViewApi', () => {
     expect(command).toContain('--header "Authorization: Bearer 123456abcdef"')
   })
 
+  it('should open the Claude Code tab by default', async () => {
+    api.createApiKey.mockResolvedValue({ apiKey: '123456abcdef', hashedKey: 'test' })
+    api.getApiKey.mockResolvedValue({ hashedKey: 'test' })
+    const stubs = { 'app-modal': { template: '<div><slot /></div>' } }
+    const wrapper = mount(SettingsViewApi, { global: { plugins, stubs } })
+    await wrapper.vm.createApiKey()
+    await flushPromises()
+
+    expect(wrapper.find('.settings-view-api__mcp .nav-link.active').text()).toBe('Claude Code')
+  })
+
+  it('should highlight the key as a string in the Claude Code command', async () => {
+    api.createApiKey.mockResolvedValue({ apiKey: '123456abcdef', hashedKey: 'test' })
+    api.getApiKey.mockResolvedValue({ hashedKey: 'test' })
+    const stubs = { 'app-modal': { template: '<div><slot /></div>' } }
+    const wrapper = mount(SettingsViewApi, { global: { plugins, stubs } })
+    await wrapper.vm.createApiKey()
+    await vi.waitFor(() => expect(wrapper.find('.settings-view-api__mcp__snippet .tok-string').exists()).toBe(true))
+
+    const string = wrapper.find('.settings-view-api__mcp__snippet .tok-string').text()
+    expect(string).toBe('"Authorization: Bearer 123456abcdef"')
+  })
+
   it('should delete the apiKey', async () => {
     api.createApiKey.mockResolvedValue({ apiKey: '123456abcdef', hashedKey: 'test' })
     api.getApiKey.mockResolvedValue({ apiKey: '123456abcdef', hashedKey: 'test' })

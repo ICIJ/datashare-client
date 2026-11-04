@@ -1,9 +1,11 @@
 <script setup>
-import { computed } from 'vue'
-import { HapticCopy } from '@icij/murmur'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { Api } from '@/api'
+import TabGroup from '@/components/TabGroup/TabGroup'
+import TabGroupEntry from '@/components/TabGroup/TabGroupEntry'
+import SettingsViewApiMcpSnippet from '@/views/Settings/SettingsView/SettingsViewApiMcpSnippet'
 
 /**
  * Snippets to connect AI assistants to Datashare MCP with a freshly created API key.
@@ -21,6 +23,7 @@ const { apiKey } = defineProps({
 })
 
 const { t } = useI18n()
+const activeClient = ref('claude-code')
 
 const mcpUrl = Api.getFullUrl('/api/mcp')
 const authorizationHeader = computed(() => `Authorization: Bearer ${apiKey}`)
@@ -42,9 +45,9 @@ const antigravitySnippet = computed(() => {
 })
 
 const clients = computed(() => [
-  { name: 'Claude Code', snippet: claudeCodeSnippet.value, hint: t('settings.api.mcp.terminal') },
-  { name: 'Codex', snippet: codexSnippet.value, hint: t('settings.api.mcp.codex', { path: '~/.codex/config.toml' }) },
-  { name: 'Antigravity', snippet: antigravitySnippet.value, hint: t('settings.api.mcp.terminal') }
+  { id: 'claude-code', name: 'Claude Code', snippet: claudeCodeSnippet.value, language: 'shell', hint: t('settings.api.mcp.terminal') },
+  { id: 'codex', name: 'Codex', snippet: codexSnippet.value, language: 'toml', hint: t('settings.api.mcp.codex', { path: '~/.codex/config.toml' }) },
+  { id: 'antigravity', name: 'Antigravity', snippet: antigravitySnippet.value, language: 'shell', hint: t('settings.api.mcp.terminal') }
 ])
 </script>
 
@@ -60,34 +63,21 @@ const clients = computed(() => [
         target="_blank"
       >{{ t('settings.api.mcp.learnMore') }}</a>
     </p>
-    <b-tabs>
-      <b-tab
+    <tab-group v-model="activeClient">
+      <tab-group-entry
         v-for="client in clients"
-        :key="client.name"
+        :id="client.id"
+        :key="client.id"
         :title="client.name"
-        class="pt-3"
       >
         <p class="mb-2">
           {{ client.hint }}
         </p>
-        <div class="position-relative">
-          <pre class="settings-view-api__mcp__snippet bg-body-tertiary border rounded p-3 pe-5 m-0"><code>{{ client.snippet }}</code></pre>
-          <haptic-copy
-            :text="client.snippet"
-            :label="t('settings.api.key.copy')"
-            class="settings-view-api__mcp__copy btn-outline-action position-absolute top-0 end-0 m-2"
-            hide-label
-            size="sm"
-          />
-        </div>
-      </b-tab>
-    </b-tabs>
+        <settings-view-api-mcp-snippet
+          :code="client.snippet"
+          :language="client.language"
+        />
+      </tab-group-entry>
+    </tab-group>
   </div>
 </template>
-
-<style lang="scss" scoped>
-.settings-view-api__mcp__snippet {
-  white-space: pre-wrap;
-  word-break: break-all;
-}
-</style>
