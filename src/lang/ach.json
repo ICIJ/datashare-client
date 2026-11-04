@@ -1668,6 +1668,13 @@
           "button": "crwdns9412:0crwdne9412:0",
           "description": "crwdns9414:0crwdne9414:0"
         }
+      },
+      "mcp": {
+        "title": "crwdns10755:0crwdne10755:0",
+        "description": "crwdns10757:0crwdne10757:0",
+        "learnMore": "crwdns10759:0crwdne10759:0",
+        "terminal": "crwdns10761:0crwdne10761:0",
+        "codex": "crwdns10763:0{path}crwdne10763:0"
       }
     },
     "users": {
