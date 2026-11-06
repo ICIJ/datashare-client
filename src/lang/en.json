@@ -189,9 +189,18 @@
     "formLanguage": "Document language",
     "formOcr": "Extract text from images and PDFs (OCR)"
   },
+  "entity": {
+    "title": "Entities",
+    "emptyStateLabel": "No entity matches your search",
+    "errorStateLabel": "We could not load the entities",
+    "settings": {
+      "title": "Entities settings"
+    }
+  },
   "entityCard": {
     "properties": {
       "name": "Name",
+      "relevance": "Relevance",
       "entityType": "Data schema",
       "sourceDocument": "Source document",
       "model": "Data model",
@@ -917,7 +926,8 @@
     "search": "Search",
     "searchDocuments": "Documents",
     "history": "History",
-    "savedSearches": "Saved searches"
+    "savedSearches": "Saved searches",
+    "entities": "Entities"
   },
   "appSidebarFooter": {
     "signOut": "Sign out",
