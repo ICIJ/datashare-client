@@ -107,3 +107,38 @@ export function manualChunks(id) {
   // in their route-specific async chunks instead of being pulled
   // into a preloaded catch-all.
 }
+
+/**
+ * The getter that globs every component for the plugin API. It dynamically
+ * imports all 591 of them, so it is not evidence that a component is lazy.
+ */
+const COMPONENTS_GLOB = 'src/core/ComponentsMixin.js'
+
+/**
+ * Modules the group reaches only through a real dynamic import.
+ *
+ * The exclusion list above decides where a module is assigned, not where it
+ * ends up: Rollup still pulls the unassigned static dependencies of a grouped
+ * module into its chunk. An excluded path landing in the group through a
+ * static importer is fine, it was eager already. A module whose only importer
+ * is a `defineAsyncComponent` or a lazy route is not, because the group is
+ * downloaded on first paint and its laziness is lost. Reading the emitted
+ * bundle catches that whatever the exclusion list says, as long as nothing
+ * else imports the module statically. The spec that scans the
+ * `defineAsyncComponent` call sites covers the rest: `ColumnChartPicker` is
+ * lazy from `FilterTypeDateRange.vue` but static from
+ * `WidgetDocumentsByCreationDate.vue`, so only reading the call sites
+ * notices when it leaves the list.
+ *
+ * @param {object} bundle - rollup's generateBundle output
+ * @param {(id: string) => object} getModuleInfo - rollup's getModuleInfo
+ * @param {string} glob - path of the module holding the plugin API glob
+ * @returns {string[]} ids of async-only modules that leaked into the group
+ */
+export function asyncOnlyLeaks(bundle, getModuleInfo, glob = COMPONENTS_GLOB) {
+  const group = Object.values(bundle).find(({ name }) => name === COMPONENTS_CHUNK)
+  return (group?.moduleIds ?? []).filter((id) => {
+    const info = getModuleInfo(id)
+    return !info?.importers.length && !!info?.dynamicImporters.some(importer => !importer.endsWith(glob))
+  })
+}

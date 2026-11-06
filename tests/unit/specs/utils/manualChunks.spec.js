@@ -48,9 +48,10 @@ describe('manualChunks', () => {
   })
 
   /**
-   * The exclusion list is a set of directory prefixes, so an async component
-   * added outside them silently becomes boot payload. That is how v-calendar
-   * came back once. Read the call sites instead of trusting the list.
+   * The bundle guard cannot see this one: `ColumnChartPicker` is behind a
+   * `defineAsyncComponent` call but `WidgetDocumentsByCreationDate.vue` also
+   * imports it statically, so dropping it from the list leaves the emitted
+   * chunk looking legitimate. The two checks cover disjoint sets.
    */
   it('excludes every component behind a defineAsyncComponent call', () => {
     const sources = Object.values(import.meta.glob('@/**/*.{vue,js}', { query: '?raw', import: 'default', eager: true }))
