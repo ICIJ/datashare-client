@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, toValue, watch } from 'vue'
+import { computed, onMounted, ref, toValue, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
@@ -149,6 +149,16 @@ onAfterRouteQueryUpdate(() => {
 // change the "from" query parameter to the first page. If the current route is the search route, it
 // will also trigger the search API call immediately.
 onAfterRouteQueryFromUpdate(refreshSearchFromRoute, { immediate: route.name === 'search' })
+// A cold load on a document URL mounts this view on a child route, where both
+// guards above stay silent on their `search` name check: nothing would ever
+// run the search behind the document, leaving the results pane on its skeleton
+// for the whole visit. Only when the store has nothing applied yet, so opening
+// a document from a search that already ran never re-searches.
+onMounted(() => {
+  if (!isSearchRoute.value && !searchStore.isReady) {
+    refreshSearchFromRoute()
+  }
+})
 // Consume the one-shot `noRefresh` flag. MUST be registered after the two
 // refresh guards above so it runs last and they observe the flag before it is
 // stripped from the URL.
