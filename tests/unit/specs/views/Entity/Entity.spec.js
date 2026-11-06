@@ -8,6 +8,7 @@ import EntityCardPlaceholder from '@/components/Entity/EntityCard/EntityCardPlac
 import EntityCardProperties from '@/components/Entity/EntityCard/EntityCardProperties'
 import EmptyState from '@/components/EmptyState/EmptyState'
 import { elasticsearch } from '@/api/elasticsearch'
+import { apiInstance as api } from '@/api/apiInstance'
 import { useEntityStore } from '@/store/modules/entity'
 
 const hit = (id, index = 'banana-papers.entities') => ({
@@ -23,9 +24,20 @@ const response = (hits = [], total = hits.length) => ({ hits: { hits, total: { v
  * waits for the mount-time refresh. Asserting before that settles would describe a DOM the store
  * has already moved past.
  */
-const mountView = async ({ hits = [], total = null, reject = null, query = {} } = {}) => {
-  const core = CoreSetup.init().useAll().useRouterWithoutGuards()
+const mountView = async ({ hits = [], total = null, reject = null, query = {}, ontologyFails = false } = {}) => {
+  // createPinia() before useAll(): Core.pinia is a module-level singleton, so without it the
+  // ontology store caches across cases in this file and every case after the first sees no fetch.
+  const core = CoreSetup.init().createPinia().useAll().useRouterWithoutGuards()
   core.config.set('projects', [{ name: 'banana-papers' }, { name: 'flowera' }])
+  // Stubbed so the view's ontology fetch never reaches a real axios request, which never settles
+  // under jsdom and times the test out rather than failing it.
+  // A real object, not null: a falsy result makes the store drop its cache by design, so the
+  // caching assertion below would hold even with no caching at all.
+  const ontology = vi.spyOn(api, 'getStructuredEntityModel')
+    .mockResolvedValue({ name: 'ftm', version: '4.10.2', types: {} })
+  if (ontologyFails) {
+    ontology.mockRejectedValue(new Error('404'))
+  }
   const search = vi.spyOn(elasticsearch, 'searchEntities')
   if (reject) {
     search.mockRejectedValue(reject)
@@ -36,10 +48,15 @@ const mountView = async ({ hits = [], total = null, reject = null, query = {} } 
   await core.router.push({ name: 'entity.list', query })
   const wrapper = mount(Entity, { global: { plugins: core.plugins } })
   await flushPromises()
-  return { wrapper, search, core, store: useEntityStore() }
+  return { wrapper, search, ontology, core, store: useEntityStore() }
 }
 
 describe('Entity.vue', () => {
+  // Each case mounts the whole view: router, pinia, i18n, and a real EntityCard per hit with one
+  // child component per row. In jsdom that runs a few seconds, close enough to vitest's 10s
+  // default to flake on a loaded machine.
+  vi.setConfig({ testTimeout: 30000 })
+
   beforeEach(() => setActivePinia(createPinia()))
   afterEach(() => vi.restoreAllMocks())
 
@@ -120,5 +137,24 @@ describe('Entity.vue', () => {
     await core.router.push({ name: 'entity.list', query: { modal: 'true' } })
     await flushPromises()
     expect(search).toHaveBeenCalledTimes(1)
+  })
+
+  // The view is what triggers the fetch; that one request serves every card on the page. The
+  // fetch-once guarantee itself is proved in the store spec, which is where the caching lives.
+  it('asks for the ontology once, however many cards are on screen', async () => {
+    const { ontology } = await mountView({ hits: [hit('ftm_NK-1'), hit('ftm_NK-2')] })
+    expect(ontology).toHaveBeenCalledTimes(1)
+  })
+
+  it('passes no property list, so each card uses its own schema', async () => {
+    const { wrapper } = await mountView({ hits: [hit('ftm_NK-1')] })
+    expect(wrapper.findComponent(EntityCard).props('properties')).toBeUndefined()
+  })
+
+  // An older backend has no /api/models at all. The list is still the point of the page.
+  it('renders cards even when the ontology never loads', async () => {
+    const { wrapper } = await mountView({ hits: [hit('ftm_NK-1')], ontologyFails: true })
+    expect(wrapper.findAllComponents(EntityCard)).toHaveLength(1)
+    expect(wrapper.findComponent(EmptyState).exists()).toBe(false)
   })
 })

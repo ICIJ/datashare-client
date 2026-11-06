@@ -2,7 +2,12 @@
 import { computed, toValue } from 'vue'
 
 import CardPropertiesEntry from '@/components/Card/CardPropertiesEntry'
-import { useEntityProperties, entityPropertyValues, MAX_VALUES } from '@/composables/useEntityProperties'
+import {
+  useEntityProperties,
+  entityPropertyValues,
+  propertyLabel,
+  MAX_VALUES
+} from '@/composables/useEntityProperties'
 
 const props = defineProps({
   entity: {
@@ -33,10 +38,15 @@ const props = defineProps({
   }
 })
 
-const { item } = useEntityProperties()
+const { items, item } = useEntityProperties()
 
 const field = computed(() => item(props.property))
-const display = computed(() => toValue(props.title ?? field.value.text ?? props.property))
+// `item` falls back to a humanized label for any key it does not know, so reading its `text` here
+// would make the ontology unreachable. Only the Datashare-level keys in `items` own their label;
+// a model property takes the ontology's, and propertyLabel humanizes if that is absent too.
+const display = computed(() => {
+  return toValue(props.title ?? items[props.property]?.text ?? propertyLabel(props.entity?.entityType, props.property))
+})
 const icon = computed(() => props.icon ?? field.value.icon)
 const values = computed(() => entityPropertyValues(props.entity, props.property))
 const capped = computed(() => values.value.length > MAX_VALUES)
