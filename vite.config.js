@@ -13,7 +13,7 @@ import { BootstrapVueNextResolver } from 'unplugin-vue-components/resolvers'
 
 import { chunkFileNames } from './src/utils/chunkFileNames.js'
 import { componentCssLast } from './src/utils/componentCssLast.js'
-import { manualChunks } from './src/utils/manualChunks.js'
+import { asyncOnlyLeaks, COMPONENTS_CHUNK, manualChunks } from './src/utils/manualChunks.js'
 
 export default ({ mode }) => {
   const VITE_GIT_HASH = childProcess.execSync('git rev-parse HEAD').toString()
@@ -30,16 +30,6 @@ export default ({ mode }) => {
   // identifiers in stories) so the prefix/collection can't drift between them.
   const iconsResolver = IconsResolver({ prefix: 'i', enabledCollections: ['ph'] })
 
-  const devServer = { port: 9009, host: '0.0.0.0' }
-
-  const backendProxy = {
-    '^/(version|settings|me|api|auth).?': {
-      target: process.env.VITE_DEV_PROXY,
-      changeOrigin: true,
-      secure: false
-    }
-  }
-
   return defineConfig({
     base: process.env.VITE_BASE,
     plugins: [
@@ -50,6 +40,15 @@ export default ({ mode }) => {
         // its own `order` field and sends function-form hooks to the normal
         // bucket regardless.
         transformIndexHtml: { order: 'post', handler: componentCssLast }
+      },
+      {
+        name: 'datashare:async-only-stay-lazy',
+        generateBundle(options, bundle) {
+          const leaks = asyncOnlyLeaks(bundle, id => this.getModuleInfo(id))
+          if (leaks.length) {
+            this.error(`async-only modules grouped into the ${COMPONENTS_CHUNK} chunk, they would load on first paint:\n  ${leaks.join('\n  ')}`)
+          }
+        }
       },
       !isStorybook && vueDevTools(),
       process.env.VITE_ANALYZE && visualizer({
@@ -138,19 +137,18 @@ export default ({ mode }) => {
       }
     },
     server: {
-      ...devServer,
+      port: 9009,
+      host: '0.0.0.0',
       watch: {
         usePolling: true
       },
-      proxy: backendProxy
-    },
-    // `vite preview` serves the production build, which boots against the same
-    // backend endpoints as the dev server, so it needs the same proxy. A plain
-    // static server (`npx serve dist`) leaves /settings and /me unproxied and
-    // the app never gets past the splashscreen.
-    preview: {
-      ...devServer,
-      proxy: backendProxy
+      proxy: {
+        '^/(version|settings|me|api|auth).?': {
+          target: process.env.VITE_DEV_PROXY,
+          changeOrigin: true,
+          secure: false
+        }
+      }
     },
     build: {
       rollupOptions: {
