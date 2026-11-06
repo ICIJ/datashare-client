@@ -350,26 +350,29 @@ export function useSearchFilter() {
     return Object.values(SEARCH_OPERATORS).includes(value) ? value : SEARCH_OPERATORS.OR
   }
 
-  function refreshSearchFromRoute() {
+  // Both wrappers below are route-update callbacks, so they take no argument of
+  // their own: whatever they are handed by the guard must not reach the store.
+  function refreshSearchFromRouteQuery(routeQuery) {
     // Extract the query parameters that must be saved in the app state
     const { perPage = getPerPage(), sort = getSort(), order = getOrder() } = route.query
     const searchOperator = toValidSearchOperator(route.query.searchOperator ?? getSearchOperator())
     appStore.setSettings('search', { perPage, orderBy: [sort, order], searchOperator })
     // Update the search store using the route query
-    searchStore.updateFromRouteQuery(route.query)
-    // And finally, refresh the search if t
+    searchStore.updateFromRouteQuery(routeQuery)
+    // Raise the loading state with the store reset, not one tick later, so no
+    // render shows the cleared query next to the previous results.
+    searchStore.setIsReady(false)
+    // And finally, refresh the search
     return nextTick(refreshSearch)
   }
 
+  function refreshSearchFromRoute() {
+    return refreshSearchFromRouteQuery(route.query)
+  }
+
+  // Same as above, with the `from` parameter reset to the first page.
   function refreshSearchFromRouteStart() {
-    // Extract the query parameters that must be saved in the app state
-    const { perPage = getPerPage(), sort = getSort(), order = getOrder() } = route.query
-    const searchOperator = toValidSearchOperator(route.query.searchOperator ?? getSearchOperator())
-    appStore.setSettings('search', { perPage, orderBy: [sort, order], searchOperator })
-    // Update the search store using the route query and reset the `from` parameter
-    searchStore.updateFromRouteQuery({ ...route.query, from: 0 })
-    // And finally, refresh the search if t
-    return nextTick(refreshSearch)
+    return refreshSearchFromRouteQuery({ ...route.query, from: 0 })
   }
 
   function refreshRecommendedBy() {
@@ -380,8 +383,13 @@ export function useSearchFilter() {
   }
 
   async function refreshSearch() {
-    searchStore.setIsReady(false)
-    await refreshRecommendedBy()
+    try {
+      await refreshRecommendedBy()
+    }
+    catch {
+      // Recommendations are decoration: a failed fetch must never hold back
+      // the search, which would leave the view loading for good.
+    }
     return searchStore.query()
   }
 

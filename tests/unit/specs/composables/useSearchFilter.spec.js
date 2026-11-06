@@ -1021,9 +1021,9 @@ describe('useSearchFilter composable', () => {
         resolveRecommendations = resolve
       }))
       searchStore.setIsReady(true)
-      const { refreshSearch } = mountComposable()
+      const { refreshSearchFromRoute } = mountComposable()
 
-      const refreshing = refreshSearch()
+      const refreshing = refreshSearchFromRoute()
       await flushPromises()
 
       expect(searchStore.isReady).toBe(false)
@@ -1031,6 +1031,18 @@ describe('useSearchFilter composable', () => {
 
       resolveRecommendations()
       await refreshing
+
+      expect(searchStore.query).toHaveBeenCalledOnce()
+    })
+
+    it('still searches when the recommendations fetch rejects', async () => {
+      core.config.set('mode', MODE_NAME.SERVER)
+      recommendedStore.getDocumentsRecommendedBy.mockRejectedValue(new Error('recommendations are down'))
+      const { refreshSearch } = mountComposable()
+
+      // A rejected decoration must not swallow the search, which would leave
+      // the view loading with nothing in flight.
+      await expect(refreshSearch()).resolves.not.toThrow()
 
       expect(searchStore.query).toHaveBeenCalledOnce()
     })
