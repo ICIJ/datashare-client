@@ -282,7 +282,8 @@ export const useSearchStore = defineSuffixedStore('search', () => {
     // route query that `fillSearchRouteQuery` can still rewrite before the view
     // decides whether to search: forcing the loading state from a place that
     // cannot start a search leaves the view loading forever when that decision
-    // goes the other way. `doRefresh` owns the flag, in both directions.
+    // goes the other way. Only a starting search raises the flag, and only
+    // `doRefresh` clears it.
     q.value = ''
     excludeFilters.value = []
     values.value = {}
@@ -758,12 +759,6 @@ export const useSearchStore = defineSuffixedStore('search', () => {
   async function refresh(save = true) {
     // Generate a new stamp to ensure this refresh is unique
     refreshStamp()
-    // This check is to avoid unnecessary searches when the query has not changed.
-    // We compare the current route query with the last applied query, which is stored
-    // in the `lastAppliedQuery` ref. If they are the same, we skip the refresh.
-    if (sameAppliedQuery(toRouteQueryWithStamp.value)) {
-      return
-    }
     // If a refresh is already in flight for the same search parameters,
     // return the existing promise to avoid duplicate API calls. The stamp
     // is excluded because it changes on every call and would prevent
