@@ -380,6 +380,7 @@ export function useSearchFilter() {
   }
 
   async function refreshSearch() {
+    searchStore.setIsReady(false)
     await refreshRecommendedBy()
     return searchStore.query()
   }
