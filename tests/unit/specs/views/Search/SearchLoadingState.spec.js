@@ -73,6 +73,32 @@ describe('Search.vue loading state', () => {
     expect(searchStore.isReady).toBe(true)
   })
 
+  it('shows the loading state when coming back to search with a new query', async () => {
+    const searchStore = useSearchStore()
+    await core.router.push({ name: 'search', query: { q: '', indices: 'foo' } })
+    await flushPromises()
+    await flushPromises()
+
+    let resolveSearch
+    runAsyncSearchMock.mockReturnValueOnce(new Promise((resolve) => {
+      resolveSearch = resolve
+    }))
+    wrapper.unmount()
+    await core.router.push({ name: 'project.list' })
+    await flushPromises()
+    await core.router.push({ name: 'search', query: { indices: ['foo'], q: 'other' } })
+    wrapper = mount()
+    await flushPromises()
+
+    expect(runAsyncSearchMock).toHaveBeenCalled()
+    expect(searchStore.isReady).toBe(false)
+
+    resolveSearch(emptyResponse())
+    await flushPromises()
+
+    expect(searchStore.isReady).toBe(true)
+  })
+
   it('is never left loading when a partial route query resolves to the current search', async () => {
     const searchStore = useSearchStore()
     await core.router.push({ name: 'search', query: { q: '', indices: 'foo' } })
