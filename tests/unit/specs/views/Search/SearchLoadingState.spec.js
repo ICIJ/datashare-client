@@ -29,7 +29,8 @@ const routes = [
     name: 'search',
     path: '/',
     component: { template: '<div />' },
-    beforeEnter: [checkSearchSort, checkSearchOrder, prefillSearchStore, replaceSizeToPerPage, fillSearchRouteQuery]
+    beforeEnter: [checkSearchSort, checkSearchOrder, prefillSearchStore, replaceSizeToPerPage, fillSearchRouteQuery],
+    children: [{ name: 'document', path: 'd/:index/:id', component: { template: '<div />' } }]
   },
   { name: 'project.list', path: '/projects', component: { template: '<div />' } }
 ]
@@ -41,6 +42,10 @@ describe('Search.vue loading state', () => {
     return shallowMount(Search, { global: { plugins: core.plugins, renderStubDefaultSlot: true } })
   }
 
+  // Mounted here so the first test can drive route updates through an already
+  // mounted view; the others unmount and remount to exercise the mount-time
+  // path. Unlike Search.spec.js, this file keeps the real route guards, which
+  // is what makes the redirect below reachable.
   beforeEach(() => {
     wrapper?.unmount()
     runAsyncSearchMock.mockReset()
@@ -96,6 +101,25 @@ describe('Search.vue loading state', () => {
     resolveSearch(emptyResponse())
     await flushPromises()
 
+    expect(searchStore.isReady).toBe(true)
+  })
+
+  it('searches behind a document opened straight from its URL', async () => {
+    // A genuine cold load: a fresh store with nothing applied yet, unlike the
+    // shared one the mount in beforeEach has already searched with.
+    wrapper.unmount()
+    core = CoreSetup.init().createPinia().useAll().useRouter(routes)
+    const searchStore = useSearchStore()
+    expect(searchStore.isReady).toBe(false)
+
+    // A document route is a child of search, so the view mounts on a route
+    // both refresh guards ignore.
+    await core.router.push({ name: 'document', params: { index: 'foo', id: 'bar' } })
+    wrapper = mount()
+    await flushPromises()
+    await flushPromises()
+
+    expect(runAsyncSearchMock).toHaveBeenCalled()
     expect(searchStore.isReady).toBe(true)
   })
 
