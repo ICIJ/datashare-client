@@ -1013,5 +1013,26 @@ describe('useSearchFilter composable', () => {
 
       expect(recommendedStore.getDocumentsRecommendedBy).toHaveBeenCalledOnce()
     })
+
+    it('shows the loading state before awaiting the recommendations', async () => {
+      core.config.set('mode', MODE_NAME.SERVER)
+      let resolveRecommendations
+      recommendedStore.getDocumentsRecommendedBy.mockReturnValue(new Promise((resolve) => {
+        resolveRecommendations = resolve
+      }))
+      searchStore.setIsReady(true)
+      const { refreshSearch } = mountComposable()
+
+      const refreshing = refreshSearch()
+      await flushPromises()
+
+      expect(searchStore.isReady).toBe(false)
+      expect(searchStore.query).not.toHaveBeenCalled()
+
+      resolveRecommendations()
+      await refreshing
+
+      expect(searchStore.query).toHaveBeenCalledOnce()
+    })
   })
 })
