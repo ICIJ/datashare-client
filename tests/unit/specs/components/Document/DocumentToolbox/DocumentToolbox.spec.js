@@ -29,6 +29,12 @@ describe('DocumentToolbox.vue', () => {
     expect(wrapper.findComponent(DocumentLocalSearch).props('loading')).toBe(true)
   })
 
+  it('relays the local search request to reactivate the active occurrence', async () => {
+    const wrapper = mountToolbox({ occurrences: 1 })
+    await wrapper.findComponent(DocumentLocalSearch).vm.$emit('reactivate')
+    expect(wrapper.emitted('reactivate')).toHaveLength(1)
+  })
+
   it('renders the paginator with the total number of pages', () => {
     const wrapper = mountToolbox({ totalPages: 4 })
     expect(wrapper.findComponent(PaginationTiny).props('totalRows')).toBe(4)

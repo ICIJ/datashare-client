@@ -12,6 +12,8 @@ const search = defineModel({ type: String, default: '' })
 const activeIndex = defineModel('activeIndex', { type: Number, default: 0 })
 const page = defineModel('page', { type: Number, default: 1 })
 
+const emit = defineEmits(['reactivate'])
+
 const props = defineProps({
   document: {
     type: Object,
@@ -82,6 +84,7 @@ defineExpose({ height })
         :loading="loading"
         :occurrences="occurrences"
         class="flex-grow-1"
+        @reactivate="emit('reactivate')"
       />
       <hook
         v-if="hookPrefix"
