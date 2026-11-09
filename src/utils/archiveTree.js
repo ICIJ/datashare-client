@@ -18,16 +18,23 @@ function resourceFolderSegments(resourceName) {
   return endsWithSeparator(resourceName) ? segments : segments.slice(0, -1)
 }
 
-function folderSegments(document) {
-  const pstFolderPath = document.get(`_source.metadata.${PST_FOLDER_PATH}`, '')
+function getPstFolderPath(document) {
+  return document.get(`_source.metadata.${PST_FOLDER_PATH}`, '')
+}
+
+function folderSegments(document, isMailbox) {
+  const pstFolderPath = getPstFolderPath(document)
   if (pstFolderPath) {
     return splitSegments(pstFolderPath, '/')
+  }
+  if (isMailbox) {
+    return []
   }
   return resourceFolderSegments(document.resourceName)
 }
 
 function createFolder(name, path) {
-  return { name, path, folders: [], documents: [] }
+  return { name, path, folders: [], entries: [] }
 }
 
 function findOrCreateFolder(foldersByPath, parent, name) {
@@ -45,19 +52,25 @@ function compareText(a, b) {
   return collator.compare(a ?? '', b ?? '')
 }
 
-function sortFolder(folder, entryNames) {
+function sortFolder(folder) {
   folder.folders.sort((a, b) => compareText(a.name, b.name))
-  folder.documents.sort((a, b) => compareText(entryNames.get(a), entryNames.get(b)))
-  folder.folders.forEach(child => sortFolder(child, entryNames))
+  folder.entries.sort((a, b) => compareText(a.name, b.name))
+  folder.folders.forEach(sortFolder)
 }
 
 /**
  * Name of an archive entry inside its folder: the last segment of its
- * resource name when that name holds folders, its title otherwise.
+ * resource name when that name holds folders, its title otherwise. Emails
+ * from a mailbox or a PST always use their title, since their resource name
+ * is a subject that may hold slashes.
  * @param {Document} document
+ * @param {boolean} [isMailbox=false] - Whether the archive is a mailbox
  * @returns {string}
  */
-export function getEntryName(document) {
+export function getEntryName(document, isMailbox = false) {
+  if (isMailbox || getPstFolderPath(document)) {
+    return document.title
+  }
   const { resourceName } = document
   const segments = splitSegments(resourceName)
   if (segments.length < 2 || endsWithSeparator(resourceName)) {
@@ -70,18 +83,18 @@ export function getEntryName(document) {
  * Group the direct children of an archive into nested folders, based on
  * their PST folder path or on the directory of their resource name.
  * @param {Document[]} documents
- * @returns {{ name: string, path: string, folders: Array, documents: Document[] }} The root folder
+ * @param {Object} [options]
+ * @param {boolean} [options.isMailbox=false] - Whether the archive is a mailbox, whose emails have no folders
+ * @returns {{ name: string, path: string, folders: Array, entries: Array<{ document: Document, name: string }> }} The root folder
  */
-export function toArchiveTree(documents) {
+export function toArchiveTree(documents, { isMailbox = false } = {}) {
   const root = createFolder('', '')
   const foldersByPath = new Map()
-  const entryNames = new Map()
   for (const document of documents) {
-    const folder = folderSegments(document).reduce((parent, name) => findOrCreateFolder(foldersByPath, parent, name), root)
-    folder.documents.push(document)
-    entryNames.set(document, getEntryName(document))
+    const folder = folderSegments(document, isMailbox).reduce((parent, name) => findOrCreateFolder(foldersByPath, parent, name), root)
+    folder.entries.push({ document, name: getEntryName(document, isMailbox) })
   }
-  sortFolder(root, entryNames)
+  sortFolder(root)
   return root
 }
 
@@ -97,8 +110,8 @@ function collectMatches(folder, foldedTerm, ancestors) {
     }
     matches.push(...collectMatches(child, foldedTerm, [...ancestors, child.path]))
   }
-  folder.documents.forEach((document, index) => {
-    if (nameMatches(getEntryName(document), foldedTerm)) {
+  folder.entries.forEach(({ document, name }, index) => {
+    if (nameMatches(name, foldedTerm)) {
       matches.push({ type: 'document', id: document.id, folderPath: folder.path, index, ancestors })
     }
   })

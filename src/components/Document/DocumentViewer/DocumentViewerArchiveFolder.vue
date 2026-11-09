@@ -5,7 +5,7 @@ import { useI18n } from 'vue-i18n'
 import PathTreeViewDocument from '@/components/PathTree/PathTreeView/PathTreeViewDocument'
 import PathTreeViewEntry from '@/components/PathTree/PathTreeView/PathTreeViewEntry'
 import PathTreeViewEntryMore from '@/components/PathTree/PathTreeView/PathTreeViewEntryMore'
-import { ARCHIVE_PAGE_SIZE, getEntryName } from '@/utils/archiveTree'
+import { ARCHIVE_PAGE_SIZE } from '@/utils/archiveTree'
 
 const props = defineProps({
   folder: {
@@ -13,16 +13,16 @@ const props = defineProps({
     required: true
   },
   openPaths: {
-    type: Array,
+    type: Set,
     required: true
   },
   limits: {
     type: Object,
     default: () => ({})
   },
-  activeKey: {
-    type: String,
-    default: null
+  activeKeys: {
+    type: Set,
+    default: () => new Set()
   },
   level: {
     type: Number,
@@ -39,10 +39,10 @@ const { t } = useI18n()
 const isInModal = inject('modal', false)
 
 const folderKey = computed(() => `folder:${props.folder.path}`)
-const isOpen = computed(() => props.root || props.openPaths.includes(props.folder.path))
+const isOpen = computed(() => props.root || props.openPaths.has(props.folder.path))
 const limit = computed(() => props.limits[props.folder.path] ?? ARCHIVE_PAGE_SIZE)
-const visibleDocuments = computed(() => props.folder.documents.slice(0, limit.value))
-const remainingDocuments = computed(() => props.folder.documents.length - visibleDocuments.value.length)
+const visibleEntries = computed(() => props.folder.entries.slice(0, limit.value))
+const remainingDocuments = computed(() => props.folder.entries.length - visibleEntries.value.length)
 const nextPageSize = computed(() => Math.min(ARCHIVE_PAGE_SIZE, remainingDocuments.value))
 const childLevel = computed(() => (props.root ? props.level : props.level + 1))
 
@@ -56,7 +56,7 @@ function documentKey(document) {
     :name="folder.name"
     :path="folder.path"
     :collapse="!isOpen"
-    :selected="activeKey === folderKey"
+    :selected="activeKeys.has(folderKey)"
     :level="level"
     :no-header="root"
     :data-archive-entry="folderKey"
@@ -72,17 +72,17 @@ function documentKey(document) {
         :folder="child"
         :open-paths="openPaths"
         :limits="limits"
-        :active-key="activeKey"
+        :active-keys="activeKeys"
         :level="childLevel"
         @toggle="emit('toggle', $event)"
         @more="emit('more', $event)"
       />
       <path-tree-view-document
-        v-for="document in visibleDocuments"
+        v-for="{ document, name } in visibleEntries"
         :key="document.id"
         :entry="document"
-        :name="getEntryName(document)"
-        :selected="activeKey === documentKey(document)"
+        :name="name"
+        :selected="activeKeys.has(documentKey(document))"
         :level="childLevel"
         :data-archive-entry="documentKey(document)"
         :no-modal="isInModal"

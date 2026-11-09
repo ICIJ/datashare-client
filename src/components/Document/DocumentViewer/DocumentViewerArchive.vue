@@ -1,5 +1,5 @@
 <script setup>
-import { computed, nextTick, onBeforeUnmount, ref, shallowRef, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, reactive, ref, shallowRef, useTemplateRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import bodybuilder from 'bodybuilder'
 
@@ -38,12 +38,16 @@ const documents = shallowRef([])
 const total = ref(0)
 const isLoading = ref(false)
 const hasError = ref(false)
-const openPaths = ref([])
+const openPaths = reactive(new Set())
+const activeKeys = reactive(new Set())
 const limits = ref({})
 const viewer = useTemplateRef('viewer')
+let paintedRanges = []
+let stopScrollAfterExpand = () => {}
 
 const documentKey = computed(() => `${props.document.index}/${props.document.id}`)
-const tree = computed(() => toArchiveTree(documents.value))
+const isMailbox = computed(() => props.document.contentType.startsWith('application/mbox'))
+const tree = computed(() => toArchiveTree(documents.value, { isMailbox: isMailbox.value }))
 const isEmpty = computed(() => !isLoading.value && !hasError.value && total.value === 0)
 const isOverLimit = computed(() => total.value > MAX_DOCUMENTS)
 
@@ -71,11 +75,11 @@ function buildBody() {
 }
 
 function toggle(path) {
-  if (openPaths.value.includes(path)) {
-    openPaths.value = openPaths.value.filter(openPath => openPath !== path)
+  if (openPaths.has(path)) {
+    openPaths.delete(path)
   }
   else {
-    openPaths.value = [...openPaths.value, path]
+    openPaths.add(path)
   }
 }
 
@@ -85,9 +89,22 @@ function showMore(path) {
 }
 
 function openFolders(paths) {
-  const closedPaths = paths.filter(path => !openPaths.value.includes(path))
-  if (closedPaths.length) {
-    openPaths.value = [...openPaths.value, ...closedPaths]
+  const closedPaths = paths.filter(path => !openPaths.has(path))
+  closedPaths.forEach(path => openPaths.add(path))
+  return closedPaths.length > 0
+}
+
+function resetOpenFolders() {
+  openPaths.clear()
+  tree.value.folders.forEach(folder => openPaths.add(folder.path))
+}
+
+// Each folder reads only its own key, so moving the active match re-renders
+// the two folders holding the previous and the next match, not all of them.
+function moveActiveKey(key, previousKey) {
+  activeKeys.delete(previousKey)
+  if (key) {
+    activeKeys.add(key)
   }
 }
 
@@ -104,16 +121,38 @@ function findEntryElement(key) {
   return [...elements].find(element => element.dataset.archiveEntry === key)
 }
 
+function scrollToMatch(match) {
+  findEntryElement(toEntryKey(match))?.scrollIntoView?.({ block: 'center', behavior: 'instant' })
+}
+
+// Opened folders grow with a height animation that moves the match while it
+// runs, so scroll to it again once the animation ends.
+function scrollToMatchAfterExpand(match) {
+  const scrollOnExpanded = (event) => {
+    if (event.propertyName !== 'height') {
+      return
+    }
+    stopScrollAfterExpand()
+    scrollToMatch(match)
+  }
+  viewer.value?.addEventListener('transitionend', scrollOnExpanded)
+  stopScrollAfterExpand = () => viewer.value?.removeEventListener('transitionend', scrollOnExpanded)
+}
+
 async function revealMatch(match) {
+  stopScrollAfterExpand()
   if (!match) {
     return
   }
-  openFolders(match.ancestors)
+  const hasOpenedFolders = openFolders(match.ancestors)
   if (match.type === 'document') {
     showDocumentPage(match)
   }
   await nextTick()
-  findEntryElement(toEntryKey(match))?.scrollIntoView?.({ block: 'center', behavior: 'instant' })
+  scrollToMatch(match)
+  if (hasOpenedFolders) {
+    scrollToMatchAfterExpand(match)
+  }
 }
 
 function rangesOf(label, foldedTerm) {
@@ -129,27 +168,43 @@ function rangesOf(label, foldedTerm) {
   })
 }
 
+// Highlights live in a registry shared by the whole page, so each viewer adds
+// and removes only its own ranges to leave those of another viewer intact.
+function findOrCreateHighlight(name) {
+  const { highlights } = globalThis.CSS
+  if (!highlights.has(name)) {
+    highlights.set(name, new Highlight())
+  }
+  return highlights.get(name)
+}
+
+function paintRanges(name, ranges) {
+  const highlight = findOrCreateHighlight(name)
+  for (const range of ranges) {
+    highlight.add(range)
+    paintedRanges.push({ name, range })
+  }
+}
+
 function paintTerms() {
-  const highlights = globalThis.CSS?.highlights
-  if (!highlights) {
+  if (!globalThis.CSS?.highlights) {
     return
   }
+  clearTerms()
   const foldedTerm = foldForFilter(appliedTerm.value)
-  const ranges = []
-  const activeRanges = []
   const labels = foldedTerm ? viewer.value?.querySelectorAll('[data-entry-name]') ?? [] : []
   for (const label of labels) {
     const isActive = label.closest('[data-archive-entry]')?.dataset.archiveEntry === activeKey.value
-    const target = isActive ? activeRanges : ranges
-    target.push(...rangesOf(label, foldedTerm))
+    const name = isActive ? ACTIVE_TERM_HIGHLIGHT : TERM_HIGHLIGHT
+    paintRanges(name, rangesOf(label, foldedTerm))
   }
-  highlights.set(TERM_HIGHLIGHT, new Highlight(...ranges))
-  highlights.set(ACTIVE_TERM_HIGHLIGHT, new Highlight(...activeRanges))
 }
 
 function clearTerms() {
-  globalThis.CSS?.highlights?.delete(TERM_HIGHLIGHT)
-  globalThis.CSS?.highlights?.delete(ACTIVE_TERM_HIGHLIGHT)
+  for (const { name, range } of paintedRanges) {
+    globalThis.CSS.highlights.get(name)?.delete(range)
+  }
+  paintedRanges = []
 }
 
 async function load() {
@@ -159,7 +214,7 @@ async function load() {
   hasError.value = false
   isLoading.value = true
   try {
-    const response = await api.elasticsearch.search({
+    const response = await api.elasticsearch._search({
       index: props.document.index,
       routing: props.document.routing,
       body: buildBody(),
@@ -170,7 +225,7 @@ async function load() {
     }
     documents.value = response.hits.hits.map(hit => Document.create(hit))
     total.value = response.hits.total.value
-    openPaths.value = tree.value.folders.map(folder => folder.path)
+    resetOpenFolders()
     limits.value = {}
     refresh()
   }
@@ -189,6 +244,7 @@ async function load() {
 
 watch(documentKey, load, { immediate: true })
 watch(activeMatch, revealMatch)
+watch(activeKey, moveActiveKey)
 watch([appliedTerm, activeKey, openPaths, limits, tree], paintTerms, { flush: 'post' })
 onBeforeUnmount(clearTerms)
 </script>
@@ -239,7 +295,7 @@ onBeforeUnmount(clearTerms)
           :folder="tree"
           :open-paths="openPaths"
           :limits="limits"
-          :active-key="activeKey"
+          :active-keys="activeKeys"
           root
           @toggle="toggle"
           @more="showMore"

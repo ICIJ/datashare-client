@@ -5,15 +5,15 @@ function doc(id, title, metadata = {}) {
   return new Document({ _id: id, _index: 'idx', _source: { title, metadata } })
 }
 
-function ids(documents) {
-  return documents.map(({ id }) => id)
+function ids(entries) {
+  return entries.map(({ document }) => document.id)
 }
 
 describe('archiveTree', () => {
   it('puts documents without folder metadata at the root', () => {
     const tree = toArchiveTree([doc('1', 'a.txt')])
     expect(tree.folders).toEqual([])
-    expect(ids(tree.documents)).toEqual(['1'])
+    expect(ids(tree.entries)).toEqual(['1'])
   })
 
   it('nests PST mail items by folder path', () => {
@@ -23,7 +23,7 @@ describe('archiveTree', () => {
     expect(top.name).toBe('Top of Outlook data file')
     expect(top.folders[0].name).toBe('Inbox')
     expect(top.folders[0].path).toBe('Top of Outlook data file/Inbox')
-    expect(ids(top.folders[0].documents)).toEqual(['1'])
+    expect(ids(top.folders[0].entries)).toEqual(['1'])
   })
 
   it('keeps backslashes inside PST folder names', () => {
@@ -40,7 +40,7 @@ describe('archiveTree', () => {
     expect(reports.name).toBe('reports')
     expect(reports.folders[0].name).toBe('2024')
     expect(reports.folders[0].path).toBe('reports/2024')
-    expect(ids(reports.folders[0].documents)).toEqual(['1'])
+    expect(ids(reports.folders[0].entries)).toEqual(['1'])
   })
 
   it('prefers PST folder path over resource name', () => {
@@ -60,7 +60,7 @@ describe('archiveTree', () => {
     expect(tree.folders[0].name).toBe('a')
     expect(tree.folders[0].folders).toHaveLength(1)
     expect(tree.folders[0].folders[0].name).toBe('b')
-    expect(ids(tree.folders[0].folders[0].documents)).toEqual(['1', '2', '3', '4'])
+    expect(ids(tree.folders[0].folders[0].entries)).toEqual(['1', '2', '3', '4'])
   })
 
   it('keeps folders with the same name at different depths apart', () => {
@@ -81,11 +81,11 @@ describe('archiveTree', () => {
       doc('4', 'A.txt')
     ])
     expect(tree.folders.map(({ name }) => name)).toEqual(['a', 'b'])
-    expect(tree.documents.map(({ title }) => title)).toEqual(['A.txt', 'z.txt'])
+    expect(tree.entries.map(({ name }) => name)).toEqual(['A.txt', 'z.txt'])
   })
 
   it('returns an empty root for no documents', () => {
-    expect(toArchiveTree([])).toEqual({ name: '', path: '', folders: [], documents: [] })
+    expect(toArchiveTree([])).toEqual({ name: '', path: '', folders: [], entries: [] })
   })
 
   it('decodes MIME-encoded resource names before splitting them', () => {
@@ -103,7 +103,18 @@ describe('archiveTree', () => {
       doc('1', 'a/z.txt', { tika_metadata_resourcename: 'a/z.txt' }),
       doc('2', 'a/b.txt', { tika_metadata_resourcename: 'a/b.txt' })
     ])
-    expect(ids(tree.folders[0].documents)).toEqual(['2', '1'])
+    expect(ids(tree.folders[0].entries)).toEqual(['2', '1'])
+  })
+
+  it('names each entry once, in the tree', () => {
+    const tree = toArchiveTree([doc('1', 'q1.pdf', { tika_metadata_resourcename: 'reports/q1.pdf' })])
+    expect(tree.folders[0].entries[0].name).toBe('q1.pdf')
+  })
+
+  it('keeps slashes in the subjects of mailbox emails', () => {
+    const tree = toArchiveTree([doc('1', 'RE: 2024/25 budget', { tika_metadata_resourcename: 'RE: 2024/25 budget' })], { isMailbox: true })
+    expect(tree.folders).toEqual([])
+    expect(tree.entries[0].name).toBe('RE: 2024/25 budget')
   })
 
   describe('getEntryName', () => {
@@ -115,6 +126,11 @@ describe('archiveTree', () => {
     it('returns the title when the resource name has no folder', () => {
       const entry = doc('1', 'Hello', { tika_metadata_resourcename: 'message.eml', tika_metadata_pst_folderpath: '/Inbox' })
       expect(getEntryName(entry)).toBe('Hello')
+    })
+
+    it('returns the title of PST emails whose name holds a slash', () => {
+      const entry = doc('1', 'Q1/Q2 report.msg', { tika_metadata_resourcename: 'Q1/Q2 report.msg', tika_metadata_pst_folderpath: '/Inbox' })
+      expect(getEntryName(entry)).toBe('Q1/Q2 report.msg')
     })
   })
 
