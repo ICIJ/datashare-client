@@ -46,10 +46,12 @@ describe('DocumentViewerArchive.vue', () => {
 
   beforeEach(() => {
     search = vi.spyOn(api.elasticsearch, 'search')
+    globalThis.CSS = { escape: value => value.replace(/["\\]/g, '\\$&') }
   })
 
   afterEach(() => {
     vi.restoreAllMocks()
+    delete globalThis.CSS
   })
 
   it('queries direct children of the archive', async () => {
@@ -95,6 +97,24 @@ describe('DocumentViewerArchive.vue', () => {
     const folders = wrapper.findAllComponents(DocumentViewerArchiveFolder).filter(folder => !folder.props('root'))
     expect(folders).toHaveLength(0)
     expect(wrapper.text()).toContain('RE: 2024/25 budget')
+  })
+
+  it('does not split PST email subjects into folders when they have no folder path', async () => {
+    search.mockResolvedValue(createResponse([createHit('a', 'Q3/Q4 budget')]))
+    const wrapper = await mountViewer(createArchive('pst-id', 'idx', 'application/vnd.ms-outlook-pst'))
+    const folders = wrapper.findAllComponents(DocumentViewerArchiveFolder).filter(folder => !folder.props('root'))
+    expect(folders).toHaveLength(0)
+    expect(wrapper.text()).toContain('Q3/Q4 budget')
+  })
+
+  it('does not re-render other folders when more files are shown in one', async () => {
+    const hits = Array.from({ length: 60 }, (_, index) => createHit(`f${index}`, `a/f${index}.txt`))
+    search.mockResolvedValue(createResponse([...hits, createHit('b', 'b/y.txt')]))
+    const wrapper = await mountViewer()
+    const folderB = wrapper.findAllComponents(DocumentViewerArchiveFolder).find(folder => folder.props('folder').name === 'b')
+    const render = spyOnRender(folderB)
+    await wrapper.findComponent(PathTreeViewEntryMore).trigger('click')
+    expect(render).not.toHaveBeenCalled()
   })
 
   it('does not re-render other folders when one is toggled', async () => {
@@ -312,9 +332,47 @@ describe('DocumentViewerArchive.vue', () => {
       delete Element.prototype.scrollIntoView
     })
 
+    it('scrolls to the header of a matching folder, not to its content', async () => {
+      const scrollIntoView = vi.fn()
+      Element.prototype.scrollIntoView = scrollIntoView
+      search.mockResolvedValue(createResponse([createHit('a', 'reports/q1.pdf')]))
+      const wrapper = await mountViewer()
+      await searchFor(wrapper, 'reports')
+      expect(scrollIntoView.mock.contexts.at(-1).classList).toContain('path-tree-view-entry__header')
+      delete Element.prototype.scrollIntoView
+    })
+
+    it('does not scroll back to the match once a folder opened by hand finished expanding', async () => {
+      const scrollIntoView = vi.fn()
+      Element.prototype.scrollIntoView = scrollIntoView
+      search.mockResolvedValue(createResponse([createHit('a', 'a/b/deep.txt'), createHit('c', 'c/y.txt')]))
+      const wrapper = await mountViewer()
+      await searchFor(wrapper, 'deep')
+      const folderC = wrapper.findAllComponents(DocumentViewerArchiveFolder).find(folder => folder.props('folder').name === 'c')
+      folderC.findComponent(PathTreeViewEntry).vm.$emit('update:collapse', true)
+      await flushPromises()
+      scrollIntoView.mockClear()
+      const transitionEnd = new Event('transitionend', { bubbles: true })
+      transitionEnd.propertyName = 'height'
+      wrapper.element.dispatchEvent(transitionEnd)
+      expect(scrollIntoView).not.toHaveBeenCalled()
+      delete Element.prototype.scrollIntoView
+    })
+
+    it('forgets the matches of the previous archive when the next one fails to load', async () => {
+      vi.spyOn(console, 'error').mockImplementation(() => {})
+      search.mockResolvedValueOnce(createResponse([createHit('a', 'invoice.pdf')]))
+      search.mockRejectedValueOnce(new Error('boom'))
+      const wrapper = await mountViewer()
+      await searchFor(wrapper, 'invoice')
+      await wrapper.setProps({ document: createArchive('zip-2') })
+      await flushPromises()
+      expect(wrapper.findComponent(DocumentToolbox).props('occurrences')).toBe(0)
+    })
+
     describe('with the CSS highlight API', () => {
       beforeEach(() => {
-        globalThis.CSS = { highlights: new Map() }
+        globalThis.CSS = { highlights: new Map(), escape: value => value }
         globalThis.Highlight = class extends Set {}
       })
 
@@ -337,6 +395,21 @@ describe('DocumentViewerArchive.vue', () => {
         expect(highlightedTexts().sort()).toEqual(['apple', 'pear'])
         second.unmount()
         expect(highlightedTexts()).toEqual(['apple'])
+      })
+
+      it('moves the active highlight without painting the terms again', async () => {
+        search.mockResolvedValue(createResponse([createHit('a', 'x1.txt'), createHit('b', 'x2.txt')]))
+        const wrapper = await mountViewer()
+        await searchFor(wrapper, 'x')
+        const ranges = [...globalThis.CSS.highlights.values()].flatMap(highlight => [...highlight])
+        wrapper.findComponent(DocumentToolbox).vm.$emit('update:activeIndex', 2)
+        await flushPromises()
+        const active = [...globalThis.CSS.highlights.get('archive-search-term-active')]
+        const term = [...globalThis.CSS.highlights.get('archive-search-term')]
+        const repainted = [...active, ...term]
+        expect(repainted).toHaveLength(ranges.length)
+        expect(ranges.every(range => repainted.includes(range))).toBe(true)
+        expect(new Set(active.map(range => range.startContainer.data))).toEqual(new Set(['x2.txt']))
       })
     })
   })
