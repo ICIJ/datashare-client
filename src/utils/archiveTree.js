@@ -2,8 +2,8 @@ const PST_FOLDER_PATH = 'tika_metadata_pst_folderpath'
 const RESOURCE_NAME = 'tika_metadata_resourcename'
 const COLLATOR_OPTIONS = { sensitivity: 'base' }
 
-function splitSegments(path) {
-  return path.split(/[/\\]/).filter(segment => segment !== '' && segment !== '.')
+function splitSegments(path, separator = /[/\\]/) {
+  return path.split(separator).filter(segment => segment !== '' && segment !== '.')
 }
 
 function resourceFolderSegments(resourceName) {
@@ -15,7 +15,7 @@ function resourceFolderSegments(resourceName) {
 function folderSegments(document) {
   const pstFolderPath = document.get(`_source.metadata.${PST_FOLDER_PATH}`, '')
   if (pstFolderPath) {
-    return splitSegments(pstFolderPath)
+    return splitSegments(pstFolderPath, '/')
   }
   const resourceName = document.get(`_source.metadata.${RESOURCE_NAME}`, '')
   return resourceFolderSegments(resourceName)

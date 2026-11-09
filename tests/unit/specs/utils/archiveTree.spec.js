@@ -26,6 +26,14 @@ describe('archiveTree', () => {
     expect(ids(top.folders[0].documents)).toEqual(['1'])
   })
 
+  it('keeps backslashes inside PST folder names', () => {
+    const tree = toArchiveTree([doc('1', 'm', { tika_metadata_pst_folderpath: '/Inbox/a\\b' })])
+    const [inbox] = tree.folders
+    expect(inbox.name).toBe('Inbox')
+    expect(inbox.folders).toHaveLength(1)
+    expect(inbox.folders[0].name).toBe('a\\b')
+  })
+
   it('nests ZIP entries by resource name dirname', () => {
     const tree = toArchiveTree([doc('1', 'q1.pdf', { tika_metadata_resourcename: 'reports/2024/q1.pdf' })])
     const [reports] = tree.folders

@@ -5,6 +5,7 @@ import { apiInstance as api } from '@/api/apiInstance'
 import Document from '@/api/resources/Document'
 import DocumentViewerArchive from '@/components/Document/DocumentViewer/DocumentViewerArchive'
 import DocumentViewerArchiveFolder from '@/components/Document/DocumentViewer/DocumentViewerArchiveFolder'
+import PathTreeViewEntry from '@/components/PathTree/PathTreeView/PathTreeViewEntry'
 import PathTreeViewDocument from '@/components/PathTree/PathTreeView/PathTreeViewDocument'
 
 function createArchive(id = 'zip-id') {
@@ -59,6 +60,17 @@ describe('DocumentViewerArchive.vue', () => {
     expect(folders).toHaveLength(1)
     expect(folders[0].props('folder').name).toBe('reports')
     expect(wrapper.findAllComponents(PathTreeViewDocument)).toHaveLength(2)
+  })
+
+  it('mounts the documents of a collapsed folder only once it is open', async () => {
+    search.mockResolvedValue(createResponse([createHit('a', 'a/b/deep.txt')]))
+    const wrapper = await mountViewer()
+    const deepDocuments = () => wrapper.findAllComponents(PathTreeViewDocument).filter(entry => entry.props('entry').id === 'a')
+    expect(deepDocuments()).toHaveLength(0)
+    const folderB = wrapper.findAllComponents(DocumentViewerArchiveFolder).find(folder => folder.props('folder').name === 'b')
+    folderB.findComponent(PathTreeViewEntry).vm.$emit('update:collapse', false)
+    await flushPromises()
+    expect(deepDocuments()).toHaveLength(1)
   })
 
   it('shows the empty message', async () => {

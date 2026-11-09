@@ -33,20 +33,22 @@ const emit = defineEmits(['toggle'])
     no-stats
     @update:collapse="emit('toggle', folder.path)"
   >
-    <document-viewer-archive-folder
-      v-for="child in folder.folders"
-      :key="child.path"
-      :folder="child"
-      :open-paths="openPaths"
-      :level="level + 1"
-      @toggle="emit('toggle', $event)"
-    />
-    <path-tree-view-document
-      v-for="document in folder.documents"
-      :key="document.id"
-      :entry="document"
-      :level="level + 1"
-      compact
-    />
+    <template v-if="openPaths.includes(folder.path)">
+      <document-viewer-archive-folder
+        v-for="child in folder.folders"
+        :key="child.path"
+        :folder="child"
+        :open-paths="openPaths"
+        :level="level + 1"
+        @toggle="emit('toggle', $event)"
+      />
+      <path-tree-view-document
+        v-for="document in folder.documents"
+        :key="document.id"
+        :entry="document"
+        :level="level + 1"
+        compact
+      />
+    </template>
   </path-tree-view-entry>
 </template>
