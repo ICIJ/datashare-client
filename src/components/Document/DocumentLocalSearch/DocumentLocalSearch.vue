@@ -28,12 +28,24 @@ const props = defineProps({
 const input = useTemplateRef('input')
 const { focused: inputFocused } = useFocusWithin(input)
 
-const disabledPrevious = computed(() => !props.modelValue || props.activeIndex <= 1)
-const disabledNext = computed(() => !props.modelValue || props.activeIndex === props.occurrences)
+const emit = defineEmits(['reactivate'])
+
+const disabled = computed(() => !props.modelValue || !props.occurrences)
+
+// The model drops a write of the value it already holds, so landing back on the active
+// occurrence (the only one) has to say so itself for the viewer to scroll back to it.
+function goTo(index) {
+  if (index === activeIndex.value) {
+    emit('reactivate')
+  }
+  else {
+    activeIndex.value = index
+  }
+}
 
 const focus = () => input.value.focus()
-const previous = () => (activeIndex.value = Math.max(1, activeIndex.value - 1))
-const next = () => (activeIndex.value = Math.min(props.occurrences, activeIndex.value + 1))
+const previous = () => props.occurrences && goTo(activeIndex.value > 1 ? activeIndex.value - 1 : props.occurrences)
+const next = () => props.occurrences && goTo(activeIndex.value < props.occurrences ? activeIndex.value + 1 : 1)
 
 const { wheneverActionShortcut, findActionKey } = useKeyboardShortcuts({
   passive: false,
@@ -68,8 +80,8 @@ wheneverActionShortcut('findNextOccurrence', () => inputFocused.value && !findPr
       :loading="loading"
     />
     <document-local-search-nav
-      :disabled-previous="disabledPrevious"
-      :disabled-next="disabledNext"
+      :disabled-previous="disabled"
+      :disabled-next="disabled"
       class="ms-2"
       @previous="previous"
       @next="next"
