@@ -30,9 +30,9 @@ function createResponse(hits, total = hits.length) {
 describe('DocumentViewerArchive.vue', () => {
   let search
 
-  async function mountViewer(document = createArchive()) {
+  async function mountViewer(document = createArchive(), provide = {}) {
     const { plugins } = CoreSetup.init().useAll()
-    const wrapper = mount(DocumentViewerArchive, { global: { plugins }, props: { document } })
+    const wrapper = mount(DocumentViewerArchive, { global: { plugins, provide }, props: { document } })
     await flushPromises()
     return wrapper
   }
@@ -73,6 +73,18 @@ describe('DocumentViewerArchive.vue', () => {
     folderB.findComponent(PathTreeViewEntry).vm.$emit('update:collapse', false)
     await flushPromises()
     expect(deepDocuments()).toHaveLength(1)
+  })
+
+  it('opens files in a modal outside of a modal', async () => {
+    search.mockResolvedValue(createResponse([createHit('a', 'a.txt')]))
+    const wrapper = await mountViewer()
+    expect(wrapper.findComponent(PathTreeViewDocument).props('noModal')).toBe(false)
+  })
+
+  it('opens files as documents inside a modal', async () => {
+    search.mockResolvedValue(createResponse([createHit('a', 'a.txt')]))
+    const wrapper = await mountViewer(createArchive(), { modal: true })
+    expect(wrapper.findComponent(PathTreeViewDocument).props('noModal')).toBe(true)
   })
 
   it('shows the empty message', async () => {
