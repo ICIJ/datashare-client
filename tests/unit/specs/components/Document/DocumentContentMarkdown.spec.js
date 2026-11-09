@@ -241,6 +241,15 @@ describe('DocumentContentMarkdown.vue', () => {
     expect(marks[1].classes()).toContain('local-search-term--active')
   })
 
+  it('scrolls back to the active mark when asked to activate it again', async () => {
+    api.getStructurePage.mockResolvedValue('a single hello')
+    const wrapper = await mountComponent({ term: 'hello', activeMatch: 1 })
+    const mark = wrapper.find('mark.local-search-term--active').element
+    mark.scrollIntoView = vi.fn()
+    wrapper.vm.$.exposed.activateMatch()
+    expect(mark.scrollIntoView).toHaveBeenCalledTimes(1)
+  })
+
   it('clamps the active mark to the marks the dom actually shows', async () => {
     api.getStructurePage.mockResolvedValue('a single hello')
     const wrapper = await mountComponent({ term: 'hello', activeMatch: 5 })

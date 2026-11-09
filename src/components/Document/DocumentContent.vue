@@ -54,6 +54,7 @@ const hasContentBodyHook = computed(() => hooksStore.filterComponentsByTarget('d
 const pipelinesStore = usePipelinesStore()
 const searchStore = useSearchStore.inject()
 const elementRef = useTemplateRef('element')
+const markdownContent = useTemplateRef('markdownContent')
 const { waitFor, isLoading } = useWait()
 const { hasMarkdown, pages: markdownPagesCount, fetchManifest } = useStructureArtifact(toRef(props, 'document'))
 
@@ -500,6 +501,13 @@ async function updateContent() {
   await jumpToActiveLocalSearchTerm()
 }
 
+function reactivateLocalSearch() {
+  if (isMarkdownMode.value && activeMarkdownMatch.value) {
+    return markdownContent.value?.activateMatch()
+  }
+  return updateContent()
+}
+
 function updateMarkdownContent() {
   const match = localSearchMatches.value[localSearchIndex.value - 1]
   if (match) {
@@ -591,6 +599,7 @@ async function loadContentSliceAround(desiredOffset) {
       :loading="isLoading || isLocalSearchLoading"
       :compact-threshold="compactThreshold"
       hook-prefix="document.content"
+      @reactivate="reactivateLocalSearch"
     >
       <template #dropdown>
         <document-content-dropdown
@@ -618,6 +627,7 @@ async function loadContentSliceAround(desiredOffset) {
       <hook name="document.content.body:before" />
       <document-content-markdown
         v-if="isMarkdownMode"
+        ref="markdownContent"
         class="document-content__body document-content__body--markdown"
         :document="document"
         :page="markdownPage"

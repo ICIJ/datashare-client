@@ -272,6 +272,7 @@ defineExpose({ findMatches })
       :disabled="blurred"
       :compact-threshold="compactThreshold"
       no-count
+      @reactivate="paintActiveMatch"
     />
     <dismissable-content-warning-toggler
       v-if="blurred"

@@ -252,6 +252,12 @@ watch(activePage, (value) => {
     holdPageTracking(value)
   }
 })
+function reactivateMark() {
+  if (activePage.value) {
+    holdPageTracking(activePage.value)
+  }
+  activateMark()
+}
 watch(rootMargin, () => {
   if (sections.value.length) {
     observeSections()
@@ -286,6 +292,7 @@ defineExpose({ findMatches, render, sections, totalPages, error })
       :disabled="blurred"
       :compact-threshold="compactThreshold"
       no-count
+      @reactivate="reactivateMark"
     />
     <dismissable-content-warning-toggler
       v-if="blurred"

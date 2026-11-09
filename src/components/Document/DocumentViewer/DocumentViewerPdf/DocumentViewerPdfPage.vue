@@ -99,6 +99,8 @@ function applyHighlight() {
 
 whenever(toRef(props, 'highlightIndex'), applyHighlight)
 watch(isBelowToolbox, visible => emit('visible', visible), { immediate: true })
+
+defineExpose({ applyHighlight })
 </script>
 
 <template>

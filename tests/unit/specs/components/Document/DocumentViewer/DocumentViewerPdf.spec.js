@@ -1,5 +1,5 @@
 import { flushPromises, shallowMount } from '@vue/test-utils'
-import { ref } from 'vue'
+import { defineComponent, h, ref } from 'vue'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import DocumentViewerPdf from '@/components/Document/DocumentViewer/DocumentViewerPdf'
@@ -7,6 +7,7 @@ import DocumentToolbox from '@/components/Document/DocumentToolbox/DocumentToolb
 
 const findHighlights = vi.fn().mockResolvedValue([])
 const pdf = ref(null)
+const sizes = ref([])
 
 // @tato30/vue-pdf bundles its own pdfjs-dist copy, which constructs a
 // DOMMatrix at module scope; jsdom has no DOMMatrix, so merely importing the
@@ -31,7 +32,7 @@ vi.mock('@/composables/usePDF', () => {
       pdf,
       pdfDoc: { value: null },
       numPages: ref(3),
-      sizes: { value: [] }
+      sizes
     })
   }
 })
@@ -46,11 +47,11 @@ describe('DocumentViewerPdf.vue', () => {
     tags: []
   }
 
-  function mountViewer() {
+  function mountViewer(stubs = {}) {
     const { plugins } = CoreSetup.init().useAll()
     return shallowMount(DocumentViewerPdf, {
       props: { document },
-      global: { plugins, renderStubDefaultSlot: true, stubs: { DocumentToolbox: false } }
+      global: { plugins, renderStubDefaultSlot: true, stubs: { DocumentToolbox: false, ...stubs } }
     })
   }
 
@@ -58,6 +59,7 @@ describe('DocumentViewerPdf.vue', () => {
     vi.clearAllMocks()
     vi.useFakeTimers({ shouldAdvanceTime: true })
     pdf.value = null
+    sizes.value = []
     findHighlights.mockResolvedValue([])
   })
 
@@ -106,6 +108,24 @@ describe('DocumentViewerPdf.vue', () => {
     pdf.value = {}
     await flushPromises()
     expect(wrapper.findComponent(DocumentToolbox).props('occurrences')).toBe(1)
+  })
+
+  it('asks the page holding a single highlight to apply it again', async () => {
+    const applyHighlight = vi.fn()
+    const DocumentViewerPdfPage = defineComponent({
+      props: { page: { type: Number, default: 0 } },
+      setup(props, { expose }) {
+        expose({ applyHighlight: () => applyHighlight(props.page) })
+        return () => h('div')
+      }
+    })
+    sizes.value = [{ page: 1 }, { page: 2 }]
+    const wrapper = mountViewer({ DocumentViewerPdfPage })
+    findHighlights.mockResolvedValue([{ page: 2 }])
+    pdf.value = {}
+    await search(wrapper, 'invoice')
+    await wrapper.findComponent(DocumentToolbox).vm.$emit('reactivate')
+    expect(applyHighlight).toHaveBeenCalledExactlyOnceWith(2)
   })
 
   it('offsets the pages by the height the toolbox reports', async () => {

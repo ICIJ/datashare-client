@@ -211,6 +211,13 @@ watch(highlightIndex, () => {
   }
 })
 
+function reactivateHighlight() {
+  if (highlightPage.value) {
+    holdPageTracking(highlightPage.value)
+    pageElements.value[highlightPage.value - 1]?.applyHighlight()
+  }
+}
+
 // A new document swaps every page out without them reporting they stopped showing, and a hold left
 // over from the previous one would settle against pages that are not there anymore. The matches
 // point at the pages of that previous document too, so the term on screen has to be searched again.
@@ -254,6 +261,7 @@ watch(src, async () => {
       :disabled="blurred"
       :compact-threshold="compactThreshold"
       no-count
+      @reactivate="reactivateHighlight"
     >
       <template #dropdown>
         <document-viewer-pdf-dropdown

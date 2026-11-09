@@ -234,6 +234,17 @@ describe('DocumentViewerDocx.vue', () => {
     expect(wrapper.find('mark.local-search-term--active').text()).toBe('beta')
   })
 
+  it('scrolls back to a single occurrence when the toolbox asks to reactivate it', async () => {
+    renderSections('<p>a needle</p>')
+    const wrapper = mountViewer()
+    await flushPromises()
+    await search(wrapper, 'needle')
+    const mark = wrapper.find('mark.local-search-term--active').element
+    mark.scrollIntoView = vi.fn()
+    await wrapper.findComponent(DocumentToolbox).vm.$emit('reactivate')
+    expect(mark.scrollIntoView).toHaveBeenCalledTimes(1)
+  })
+
   it('searches the term again when another document is rendered', async () => {
     renderSections('<p>a needle</p>')
     const wrapper = mountViewer()
