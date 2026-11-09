@@ -73,7 +73,11 @@ describe('Document', () => {
       'application/x-bzip2',
       'application/java-archive',
       'application/vnd.ms-outlook-pst',
-      'application/mbox'
+      'application/mbox',
+      'application/x-gzip',
+      'application/x-gtar',
+      'application/x-xz',
+      'application/x-rar-compressed; version=5'
     ])('should be an archive for %s', (contentType) => {
       const doc = new Document({ _source: { contentType } })
       expect(doc.isArchive).toBe(true)
