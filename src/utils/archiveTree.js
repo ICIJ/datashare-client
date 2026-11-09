@@ -1,5 +1,5 @@
 const PST_FOLDER_PATH = 'tika_metadata_pst_folderpath'
-const COLLATOR_OPTIONS = { sensitivity: 'base' }
+const collator = new Intl.Collator(undefined, { sensitivity: 'base' })
 
 function splitSegments(path, separator = /[/\\]/) {
   return path.split(separator).filter(segment => segment !== '' && segment !== '.')
@@ -26,25 +26,25 @@ function createFolder(name, path) {
   return { name, path, folders: [], documents: [] }
 }
 
-function findOrCreateFolder(parent, name) {
-  const existing = parent.folders.find(folder => folder.name === name)
-  if (existing) {
-    return existing
-  }
+function findOrCreateFolder(foldersByPath, parent, name) {
   const path = parent.path ? `${parent.path}/${name}` : name
+  if (foldersByPath.has(path)) {
+    return foldersByPath.get(path)
+  }
   const folder = createFolder(name, path)
+  foldersByPath.set(path, folder)
   parent.folders.push(folder)
   return folder
 }
 
 function compareText(a, b) {
-  return (a ?? '').localeCompare(b ?? '', undefined, COLLATOR_OPTIONS)
+  return collator.compare(a ?? '', b ?? '')
 }
 
-function sortFolder(folder) {
+function sortFolder(folder, entryNames) {
   folder.folders.sort((a, b) => compareText(a.name, b.name))
-  folder.documents.sort((a, b) => compareText(getEntryName(a), getEntryName(b)))
-  folder.folders.forEach(sortFolder)
+  folder.documents.sort((a, b) => compareText(entryNames.get(a), entryNames.get(b)))
+  folder.folders.forEach(child => sortFolder(child, entryNames))
 }
 
 /**
@@ -70,10 +70,13 @@ export function getEntryName(document) {
  */
 export function toArchiveTree(documents) {
   const root = createFolder('', '')
+  const foldersByPath = new Map()
+  const entryNames = new Map()
   for (const document of documents) {
-    const folder = folderSegments(document).reduce(findOrCreateFolder, root)
+    const folder = folderSegments(document).reduce((parent, name) => findOrCreateFolder(foldersByPath, parent, name), root)
     folder.documents.push(document)
+    entryNames.set(document, getEntryName(document))
   }
-  sortFolder(root)
+  sortFolder(root, entryNames)
   return root
 }

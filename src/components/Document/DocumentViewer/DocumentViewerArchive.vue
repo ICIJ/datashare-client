@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, ref, shallowRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import bodybuilder from 'bodybuilder'
 
@@ -29,7 +29,7 @@ const props = defineProps({
 
 const { t } = useI18n()
 
-const documents = ref([])
+const documents = shallowRef([])
 const total = ref(0)
 const isLoading = ref(false)
 const hasError = ref(false)
