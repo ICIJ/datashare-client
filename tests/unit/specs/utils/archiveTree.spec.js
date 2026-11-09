@@ -1,5 +1,5 @@
 import Document from '@/api/resources/Document'
-import { getEntryName, toArchiveTree } from '@/utils/archiveTree'
+import { findArchiveMatches, getEntryName, toArchiveTree } from '@/utils/archiveTree'
 
 function doc(id, title, metadata = {}) {
   return new Document({ _id: id, _index: 'idx', _source: { title, metadata } })
@@ -115,6 +115,37 @@ describe('archiveTree', () => {
     it('returns the title when the resource name has no folder', () => {
       const entry = doc('1', 'Hello', { tika_metadata_resourcename: 'message.eml', tika_metadata_pst_folderpath: '/Inbox' })
       expect(getEntryName(entry)).toBe('Hello')
+    })
+  })
+
+  describe('findArchiveMatches', () => {
+    const tree = () => toArchiveTree([
+      doc('1', 'reports/q1.pdf', { tika_metadata_resourcename: 'reports/q1.pdf' }),
+      doc('2', 'reports/2024/Q1-draft.txt', { tika_metadata_resourcename: 'reports/2024/Q1-draft.txt' }),
+      doc('3', 'q1/notes.txt', { tika_metadata_resourcename: 'q1/notes.txt' }),
+      doc('4', 'élan.txt', { tika_metadata_resourcename: 'élan.txt' })
+    ])
+
+    it('finds folders and files in display order, ignoring case', () => {
+      const matches = findArchiveMatches(tree(), 'q1')
+      expect(matches.map(({ type, path, id }) => `${type}:${path ?? id}`)).toEqual([
+        'folder:q1',
+        'document:2',
+        'document:1'
+      ])
+    })
+
+    it('ignores accents', () => {
+      expect(findArchiveMatches(tree(), 'elan').map(({ id }) => id)).toEqual(['4'])
+    })
+
+    it('gives each match the folders to open and its position in its folder', () => {
+      const [draft] = findArchiveMatches(tree(), 'draft')
+      expect(draft).toEqual(expect.objectContaining({ type: 'document', id: '2', folderPath: 'reports/2024', index: 0, ancestors: ['reports', 'reports/2024'] }))
+    })
+
+    it('finds nothing for a blank term', () => {
+      expect(findArchiveMatches(tree(), '  ')).toEqual([])
     })
   })
 })

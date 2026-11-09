@@ -3,6 +3,7 @@ import { mount, flushPromises } from '@vue/test-utils'
 import CoreSetup from '~tests/unit/CoreSetup'
 import { apiInstance as api } from '@/api/apiInstance'
 import Document from '@/api/resources/Document'
+import DocumentToolbox from '@/components/Document/DocumentToolbox/DocumentToolbox'
 import DocumentViewerArchive from '@/components/Document/DocumentViewer/DocumentViewerArchive'
 import DocumentViewerArchiveFolder from '@/components/Document/DocumentViewer/DocumentViewerArchiveFolder'
 import PathTreeViewEntry from '@/components/PathTree/PathTreeView/PathTreeViewEntry'
@@ -175,5 +176,55 @@ describe('DocumentViewerArchive.vue', () => {
     expect(reports.findComponent(PathTreeViewEntry).props('level')).toBe(0)
     expect(notes.props('level')).toBe(0)
     expect(q1.props('level')).toBe(1)
+  })
+
+  describe('search', () => {
+    async function searchFor(wrapper, value) {
+      wrapper.findComponent(DocumentToolbox).vm.$emit('update:modelValue', value)
+      await new Promise(resolve => setTimeout(resolve, 350))
+      await flushPromises()
+    }
+
+    function findDocument(wrapper, id) {
+      return wrapper.findAllComponents(PathTreeViewDocument).find(entry => entry.props('entry').id === id)
+    }
+
+    it('shows the search toolbox', async () => {
+      search.mockResolvedValue(createResponse([createHit('a', 'a.txt')]))
+      const wrapper = await mountViewer()
+      expect(wrapper.findComponent(DocumentToolbox).exists()).toBe(true)
+    })
+
+    it('counts the matching folders and files', async () => {
+      search.mockResolvedValue(createResponse([createHit('a', 'reports/q1.pdf'), createHit('b', 'notes.txt'), createHit('c', 'q1/x.txt')]))
+      const wrapper = await mountViewer()
+      await searchFor(wrapper, 'q1')
+      expect(wrapper.findComponent(DocumentToolbox).props('occurrences')).toBe(2)
+    })
+
+    it('opens the folders holding the active match and highlights it', async () => {
+      search.mockResolvedValue(createResponse([createHit('a', 'a/b/deep.txt')]))
+      const wrapper = await mountViewer()
+      await searchFor(wrapper, 'deep')
+      expect(findDocument(wrapper, 'a').props('selected')).toBe(true)
+    })
+
+    it('shows the page holding the active match', async () => {
+      const hits = Array.from({ length: 60 }, (_, index) => createHit(`f${index}`, `project/f${String(index).padStart(2, '0')}.txt`))
+      search.mockResolvedValue(createResponse(hits))
+      const wrapper = await mountViewer()
+      await searchFor(wrapper, 'f55')
+      expect(findDocument(wrapper, 'f55')?.props('selected')).toBe(true)
+    })
+
+    it('moves the highlight to the next match', async () => {
+      search.mockResolvedValue(createResponse([createHit('a', 'a/x1.txt'), createHit('b', 'b/x2.txt')]))
+      const wrapper = await mountViewer()
+      await searchFor(wrapper, 'x')
+      wrapper.findComponent(DocumentToolbox).vm.$emit('update:activeIndex', 2)
+      await flushPromises()
+      expect(findDocument(wrapper, 'a').props('selected')).toBe(false)
+      expect(findDocument(wrapper, 'b').props('selected')).toBe(true)
+    })
   })
 })

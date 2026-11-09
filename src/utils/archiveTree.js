@@ -1,3 +1,7 @@
+import { foldForFilter } from '@/utils/strings'
+
+export const ARCHIVE_PAGE_SIZE = 50
+
 const PST_FOLDER_PATH = 'tika_metadata_pst_folderpath'
 const collator = new Intl.Collator(undefined, { sensitivity: 'base' })
 
@@ -79,4 +83,39 @@ export function toArchiveTree(documents) {
   }
   sortFolder(root, entryNames)
   return root
+}
+
+function nameMatches(name, foldedTerm) {
+  return foldForFilter(name ?? '').includes(foldedTerm)
+}
+
+function collectMatches(folder, foldedTerm, ancestors) {
+  const matches = []
+  for (const child of folder.folders) {
+    if (nameMatches(child.name, foldedTerm)) {
+      matches.push({ type: 'folder', path: child.path, ancestors })
+    }
+    matches.push(...collectMatches(child, foldedTerm, [...ancestors, child.path]))
+  }
+  folder.documents.forEach((document, index) => {
+    if (nameMatches(getEntryName(document), foldedTerm)) {
+      matches.push({ type: 'document', id: document.id, folderPath: folder.path, index, ancestors })
+    }
+  })
+  return matches
+}
+
+/**
+ * Find the folders and files of an archive tree whose name holds a term,
+ * ignoring case and accents, in the order the tree displays them.
+ * @param {Object} tree - The root folder returned by toArchiveTree
+ * @param {string} term
+ * @returns {Object[]} Matches, each with the folder paths to open to reveal it
+ */
+export function findArchiveMatches(tree, term) {
+  const foldedTerm = foldForFilter(term.trim())
+  if (!foldedTerm) {
+    return []
+  }
+  return collectMatches(tree, foldedTerm, [])
 }
