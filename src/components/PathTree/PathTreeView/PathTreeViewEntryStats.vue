@@ -118,9 +118,8 @@ const classList = computed(() => {
 
   // 290px = documents (115) + directories (60) + size (99) + gaps (16).
   &:not(.path-tree-view-entry-stats--compact) {
-    max-width: 290px;
-    flex: 290px 0 0;
-    width: 100%;
+    flex: 0 0 290px;
+    width: 290px;
 
     @include media-breakpoint-down(md) {
       max-width: 260px;
