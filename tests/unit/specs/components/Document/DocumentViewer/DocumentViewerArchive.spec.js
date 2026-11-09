@@ -165,4 +165,15 @@ describe('DocumentViewerArchive.vue', () => {
     const wrapper = await mountViewer()
     expect(wrapper.find('.path-tree-view-entry--compact').exists()).toBe(false)
   })
+
+  it('renders the top-level entries without indentation, like the paths tree', async () => {
+    search.mockResolvedValue(createResponse([createHit('a', 'reports/q1.pdf'), createHit('b', 'notes.txt')]))
+    const wrapper = await mountViewer()
+    const reports = wrapper.findAllComponents(DocumentViewerArchiveFolder).find(folder => folder.props('folder').name === 'reports')
+    const notes = wrapper.findAllComponents(PathTreeViewDocument).find(entry => entry.props('entry').id === 'b')
+    const q1 = wrapper.findAllComponents(PathTreeViewDocument).find(entry => entry.props('entry').id === 'a')
+    expect(reports.findComponent(PathTreeViewEntry).props('level')).toBe(0)
+    expect(notes.props('level')).toBe(0)
+    expect(q1.props('level')).toBe(1)
+  })
 })
