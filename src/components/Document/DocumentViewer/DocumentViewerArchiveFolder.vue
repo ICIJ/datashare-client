@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import PathTreeViewDocument from '@/components/PathTree/PathTreeView/PathTreeViewDocument'
@@ -36,6 +36,7 @@ const props = defineProps({
 const emit = defineEmits(['toggle', 'more'])
 
 const { t } = useI18n()
+const isInModal = inject('modal', false)
 
 const folderKey = computed(() => `folder:${props.folder.path}`)
 const isOpen = computed(() => props.root || props.openPaths.includes(props.folder.path))
@@ -84,7 +85,7 @@ function documentKey(document) {
         :selected="activeKey === documentKey(document)"
         :level="childLevel"
         :data-archive-entry="documentKey(document)"
-        no-modal
+        :no-modal="isInModal"
       />
       <path-tree-view-entry-more
         v-if="remainingDocuments > 0"
