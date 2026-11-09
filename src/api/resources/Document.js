@@ -494,9 +494,13 @@ export default class Document extends EsDoc {
       'application/x-bzip2',
       'application/java-archive',
       'application/vnd.ms-outlook-pst',
-      'application/mbox'
+      'application/mbox',
+      'application/x-gzip',
+      'application/x-gtar',
+      'application/x-xz'
     ]
-    return archiveTypes.includes(this.contentType)
+    const mimeType = this.contentType.split(';')[0].trim()
+    return archiveTypes.includes(mimeType)
   }
 
   get isMarkdown() {
