@@ -132,3 +132,13 @@ export function findArchiveMatches(tree, term) {
   }
   return collectMatches(tree, foldedTerm, [])
 }
+
+/**
+ * The key a folder or a document is rendered with in the archive tree.
+ *
+ * @param {Object} entry - A match, or any object with the same `type`, `path` and `id`
+ * @returns {string}
+ */
+export function toEntryKey({ type, path, id }) {
+  return type === 'folder' ? `folder:${path}` : `document:${id}`
+}
