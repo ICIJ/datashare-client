@@ -10,13 +10,20 @@ import { LAYOUTS, layoutValidator } from '@/enums/pathTree'
 
 const selected = defineModel('selected', { type: Boolean })
 
-const { entry, compact, layout, noLink, selectMode } = defineProps({
+const { entry, name, compact, layout, noLink, selectMode } = defineProps({
   /**
    * Document or entry object to render
    */
   entry: {
     type: Object,
     required: true
+  },
+  /**
+   * Label to display instead of the document title
+   */
+  name: {
+    type: String,
+    default: null
   },
   /**
    * Level of indentation (0 = root level)
@@ -110,7 +117,7 @@ const handleClick = (event) => {
     :layout="layout"
     :no-link="noLink"
     :squared="squared"
-    :name="document.title"
+    :name="name ?? document.title"
     :path="document.path"
     :projects="[document.project]"
     :select-mode="selectMode"

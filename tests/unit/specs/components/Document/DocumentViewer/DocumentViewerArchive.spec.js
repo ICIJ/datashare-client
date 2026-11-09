@@ -7,9 +7,10 @@ import DocumentViewerArchive from '@/components/Document/DocumentViewer/Document
 import DocumentViewerArchiveFolder from '@/components/Document/DocumentViewer/DocumentViewerArchiveFolder'
 import PathTreeViewEntry from '@/components/PathTree/PathTreeView/PathTreeViewEntry'
 import PathTreeViewDocument from '@/components/PathTree/PathTreeView/PathTreeViewDocument'
+import PathTreeViewEntryMore from '@/components/PathTree/PathTreeView/PathTreeViewEntryMore'
 
-function createArchive(id = 'zip-id') {
-  return new Document({ _id: id, _routing: id, _index: 'idx', _source: { contentType: 'application/zip' } })
+function createArchive(id = 'zip-id', index = 'idx') {
+  return new Document({ _id: id, _routing: id, _index: index, _source: { contentType: 'application/zip' } })
 }
 
 function createHit(id, resourceName) {
@@ -56,7 +57,7 @@ describe('DocumentViewerArchive.vue', () => {
   it('renders folders and documents', async () => {
     search.mockResolvedValue(createResponse([createHit('a', 'reports/q1.pdf'), createHit('b', 'notes.txt')]))
     const wrapper = await mountViewer()
-    const folders = wrapper.findAllComponents(DocumentViewerArchiveFolder)
+    const folders = wrapper.findAllComponents(DocumentViewerArchiveFolder).filter(folder => !folder.props('root'))
     expect(folders).toHaveLength(1)
     expect(folders[0].props('folder').name).toBe('reports')
     expect(wrapper.findAllComponents(PathTreeViewDocument)).toHaveLength(2)
@@ -81,6 +82,7 @@ describe('DocumentViewerArchive.vue', () => {
   })
 
   it('shows an error when the request fails', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {})
     search.mockRejectedValue(new Error('boom'))
     const wrapper = await mountViewer()
     expect(wrapper.text()).toContain('could not be loaded')
@@ -103,5 +105,58 @@ describe('DocumentViewerArchive.vue', () => {
     expect(JSON.stringify(search.mock.calls[1][0].body)).toContain('"parentDocument":"zip-2"')
     expect(wrapper.text()).toContain('b.txt')
     expect(wrapper.text()).not.toContain('a.txt')
+  })
+
+  it('sorts children by title and requests only the fields the tree needs', async () => {
+    search.mockResolvedValue(createResponse([]))
+    await mountViewer()
+    const params = search.mock.calls[0][0]
+    expect(params.body.sort).toEqual([{ title: { order: 'asc' } }])
+    expect(params._source).toEqual([
+      'title',
+      'path',
+      'contentType',
+      'contentLength',
+      'extractionLevel',
+      'metadata.tika_metadata_resourcename',
+      'metadata.tika_metadata_pst_folderpath'
+    ])
+    expect(params._source_excludes).toBeUndefined()
+  })
+
+  it('reloads when the same archive is opened from another project', async () => {
+    search.mockResolvedValueOnce(createResponse([createHit('a', 'a.txt')]))
+    search.mockResolvedValueOnce(createResponse([createHit('b', 'b.txt')]))
+    const wrapper = await mountViewer()
+    await wrapper.setProps({ document: createArchive('zip-id', 'idx-2') })
+    await flushPromises()
+    expect(search).toHaveBeenCalledTimes(2)
+    expect(search.mock.calls[1][0].index).toBe('idx-2')
+    expect(wrapper.text()).toContain('b.txt')
+  })
+
+  it('labels files with their name inside the folder', async () => {
+    search.mockResolvedValue(createResponse([createHit('a', 'reports/q1.pdf')]))
+    const wrapper = await mountViewer()
+    expect(wrapper.text()).toContain('q1.pdf')
+    expect(wrapper.text()).not.toContain('reports/q1.pdf')
+  })
+
+  it('shows 50 files per folder and more on demand', async () => {
+    const hits = Array.from({ length: 60 }, (_, index) => createHit(`f${index}`, `project/f${String(index).padStart(2, '0')}.txt`))
+    search.mockResolvedValue(createResponse(hits))
+    const wrapper = await mountViewer()
+    expect(wrapper.findAllComponents(PathTreeViewDocument)).toHaveLength(50)
+    await wrapper.findComponent(PathTreeViewEntryMore).trigger('click')
+    expect(wrapper.findAllComponents(PathTreeViewDocument)).toHaveLength(60)
+    expect(wrapper.findComponent(PathTreeViewEntryMore).exists()).toBe(false)
+  })
+
+  it('logs the error when the request fails', async () => {
+    const error = new Error('boom')
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
+    search.mockRejectedValue(error)
+    await mountViewer()
+    expect(consoleError).toHaveBeenCalledWith(expect.any(String), error)
   })
 })

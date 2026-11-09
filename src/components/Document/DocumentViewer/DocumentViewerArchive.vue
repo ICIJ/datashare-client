@@ -7,10 +7,18 @@ import { apiInstance as api } from '@/api/apiInstance'
 import Document from '@/api/resources/Document'
 import DocumentViewerArchiveFolder from '@/components/Document/DocumentViewer/DocumentViewerArchiveFolder'
 import PathTreeView from '@/components/PathTree/PathTreeView/PathTreeView'
-import PathTreeViewDocument from '@/components/PathTree/PathTreeView/PathTreeViewDocument'
 import { toArchiveTree } from '@/utils/archiveTree'
 
 const MAX_DOCUMENTS = 10000
+const SOURCE_FIELDS = [
+  'title',
+  'path',
+  'contentType',
+  'contentLength',
+  'extractionLevel',
+  'metadata.tika_metadata_resourcename',
+  'metadata.tika_metadata_pst_folderpath'
+]
 
 const props = defineProps({
   document: {
@@ -27,6 +35,7 @@ const isLoading = ref(false)
 const hasError = ref(false)
 const openPaths = ref([])
 
+const documentKey = computed(() => `${props.document.index}/${props.document.id}`)
 const tree = computed(() => toArchiveTree(documents.value))
 const isEmpty = computed(() => !isLoading.value && !hasError.value && total.value === 0)
 const isOverLimit = computed(() => total.value > MAX_DOCUMENTS)
@@ -36,6 +45,7 @@ function buildBody() {
     .size(MAX_DOCUMENTS)
     .filter('term', 'type', 'Document')
     .filter('term', 'parentDocument', props.document.id)
+    .sort('title', 'asc')
     .rawOption('track_total_hits', true)
     .build()
 }
@@ -50,7 +60,7 @@ function toggle(path) {
 }
 
 async function load() {
-  const { id } = props.document
+  const key = documentKey.value
   documents.value = []
   total.value = 0
   hasError.value = false
@@ -60,28 +70,29 @@ async function load() {
       index: props.document.index,
       routing: props.document.routing,
       body: buildBody(),
-      _source_excludes: ['content', 'content_translated']
+      _source: SOURCE_FIELDS
     })
-    if (id !== props.document.id) {
+    if (key !== documentKey.value) {
       return
     }
     documents.value = response.hits.hits.map(hit => Document.create(hit))
     total.value = response.hits.total.value
     openPaths.value = tree.value.folders.map(folder => folder.path)
   }
-  catch (_) {
-    if (id === props.document.id) {
+  catch (error) {
+    console.error('Failed to load the content of the archive:', error)
+    if (key === documentKey.value) {
       hasError.value = true
     }
   }
   finally {
-    if (id === props.document.id) {
+    if (key === documentKey.value) {
       isLoading.value = false
     }
   }
 }
 
-watch(() => props.document.id, load, { immediate: true })
+watch(documentKey, load, { immediate: true })
 </script>
 
 <template>
@@ -112,17 +123,11 @@ watch(() => props.document.id, load, { immediate: true })
         :is-loading="isLoading"
       >
         <document-viewer-archive-folder
-          v-for="folder in tree.folders"
-          :key="folder.path"
-          :folder="folder"
+          :key="documentKey"
+          :folder="tree"
           :open-paths="openPaths"
+          root
           @toggle="toggle"
-        />
-        <path-tree-view-document
-          v-for="rootDocument in tree.documents"
-          :key="rootDocument.id"
-          :entry="rootDocument"
-          compact
         />
       </path-tree-view>
     </template>

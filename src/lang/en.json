@@ -462,7 +462,8 @@
   "documentViewerArchive": {
     "empty": "This archive has no extracted files.",
     "error": "The content of this archive could not be loaded.",
-    "limit": "Showing the first {n} of {total} files."
+    "limit": "Showing the first {n} of {total} files.",
+    "more": "Show {n} of {left} more files"
   },
   "documentViewerImage": {
     "rotateCounterClockwise": "Rotate 90° to the left",

@@ -1,15 +1,17 @@
 const PST_FOLDER_PATH = 'tika_metadata_pst_folderpath'
-const RESOURCE_NAME = 'tika_metadata_resourcename'
 const COLLATOR_OPTIONS = { sensitivity: 'base' }
 
 function splitSegments(path, separator = /[/\\]/) {
   return path.split(separator).filter(segment => segment !== '' && segment !== '.')
 }
 
+function endsWithSeparator(path) {
+  return /[/\\]$/.test(path)
+}
+
 function resourceFolderSegments(resourceName) {
   const segments = splitSegments(resourceName)
-  const endsWithSeparator = /[/\\]$/.test(resourceName)
-  return endsWithSeparator ? segments : segments.slice(0, -1)
+  return endsWithSeparator(resourceName) ? segments : segments.slice(0, -1)
 }
 
 function folderSegments(document) {
@@ -17,8 +19,7 @@ function folderSegments(document) {
   if (pstFolderPath) {
     return splitSegments(pstFolderPath, '/')
   }
-  const resourceName = document.get(`_source.metadata.${RESOURCE_NAME}`, '')
-  return resourceFolderSegments(resourceName)
+  return resourceFolderSegments(document.resourceName)
 }
 
 function createFolder(name, path) {
@@ -42,8 +43,23 @@ function compareText(a, b) {
 
 function sortFolder(folder) {
   folder.folders.sort((a, b) => compareText(a.name, b.name))
-  folder.documents.sort((a, b) => compareText(a.title, b.title))
+  folder.documents.sort((a, b) => compareText(getEntryName(a), getEntryName(b)))
   folder.folders.forEach(sortFolder)
+}
+
+/**
+ * Name of an archive entry inside its folder: the last segment of its
+ * resource name when that name holds folders, its title otherwise.
+ * @param {Document} document
+ * @returns {string}
+ */
+export function getEntryName(document) {
+  const { resourceName } = document
+  const segments = splitSegments(resourceName)
+  if (segments.length < 2 || endsWithSeparator(resourceName)) {
+    return document.title
+  }
+  return segments.at(-1)
 }
 
 /**
