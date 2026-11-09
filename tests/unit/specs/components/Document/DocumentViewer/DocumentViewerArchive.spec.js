@@ -10,8 +10,8 @@ import PathTreeViewEntry from '@/components/PathTree/PathTreeView/PathTreeViewEn
 import PathTreeViewDocument from '@/components/PathTree/PathTreeView/PathTreeViewDocument'
 import PathTreeViewEntryMore from '@/components/PathTree/PathTreeView/PathTreeViewEntryMore'
 
-function createArchive(id = 'zip-id', index = 'idx') {
-  return new Document({ _id: id, _routing: id, _index: index, _source: { contentType: 'application/zip' } })
+function createArchive(id = 'zip-id', index = 'idx', contentType = 'application/zip') {
+  return new Document({ _id: id, _routing: id, _index: index, _source: { contentType } })
 }
 
 function createHit(id, resourceName) {
@@ -25,6 +25,13 @@ function createHit(id, resourceName) {
 
 function createResponse(hits, total = hits.length) {
   return { hits: { total: { value: total }, hits } }
+}
+
+function spyOnRender(wrapper) {
+  const instance = wrapper.vm.$
+  const render = vi.fn(instance.render)
+  instance.render = render
+  return render
 }
 
 describe('DocumentViewerArchive.vue', () => {
@@ -73,6 +80,31 @@ describe('DocumentViewerArchive.vue', () => {
     folderB.findComponent(PathTreeViewEntry).vm.$emit('update:collapse', false)
     await flushPromises()
     expect(deepDocuments()).toHaveLength(1)
+  })
+
+  it('goes through the client search, which reports errors', async () => {
+    const clientSearch = vi.spyOn(api.elasticsearch, '_search')
+    search.mockResolvedValue(createResponse([]))
+    await mountViewer()
+    expect(clientSearch).toHaveBeenCalledOnce()
+  })
+
+  it('does not split mailbox email subjects into folders', async () => {
+    search.mockResolvedValue(createResponse([createHit('a', 'RE: 2024/25 budget')]))
+    const wrapper = await mountViewer(createArchive('mbox-id', 'idx', 'application/mbox'))
+    const folders = wrapper.findAllComponents(DocumentViewerArchiveFolder).filter(folder => !folder.props('root'))
+    expect(folders).toHaveLength(0)
+    expect(wrapper.text()).toContain('RE: 2024/25 budget')
+  })
+
+  it('does not re-render other folders when one is toggled', async () => {
+    search.mockResolvedValue(createResponse([createHit('a', 'a/x.txt'), createHit('b', 'b/y.txt')]))
+    const wrapper = await mountViewer()
+    const findFolder = name => wrapper.findAllComponents(DocumentViewerArchiveFolder).find(folder => folder.props('folder').name === name)
+    const render = spyOnRender(findFolder('b'))
+    findFolder('a').findComponent(PathTreeViewEntry).vm.$emit('update:collapse', true)
+    await flushPromises()
+    expect(render).not.toHaveBeenCalled()
   })
 
   it('opens files in a modal outside of a modal', async () => {
@@ -237,6 +269,75 @@ describe('DocumentViewerArchive.vue', () => {
       await flushPromises()
       expect(findDocument(wrapper, 'a').props('selected')).toBe(false)
       expect(findDocument(wrapper, 'b').props('selected')).toBe(true)
+    })
+
+    it('does not re-render folders without the previous or next match', async () => {
+      search.mockResolvedValue(createResponse([createHit('a', 'a/x1.txt'), createHit('b', 'b/x2.txt'), createHit('c', 'c/z.txt')]))
+      const wrapper = await mountViewer()
+      await searchFor(wrapper, 'x')
+      const folderC = wrapper.findAllComponents(DocumentViewerArchiveFolder).find(folder => folder.props('folder').name === 'c')
+      const render = spyOnRender(folderC)
+      wrapper.findComponent(DocumentToolbox).vm.$emit('update:activeIndex', 2)
+      await flushPromises()
+      expect(render).not.toHaveBeenCalled()
+    })
+
+    it('scrolls to the match again once the opened folders finished expanding', async () => {
+      const scrollIntoView = vi.fn()
+      Element.prototype.scrollIntoView = scrollIntoView
+      search.mockResolvedValue(createResponse([createHit('a', 'a/b/deep.txt')]))
+      const wrapper = await mountViewer()
+      await searchFor(wrapper, 'deep')
+      scrollIntoView.mockClear()
+      const transitionEnd = new Event('transitionend', { bubbles: true })
+      transitionEnd.propertyName = 'height'
+      wrapper.element.dispatchEvent(transitionEnd)
+      expect(scrollIntoView).toHaveBeenCalledOnce()
+      delete Element.prototype.scrollIntoView
+    })
+
+    it('does not scroll back to a previous match once folders finished expanding', async () => {
+      const scrollIntoView = vi.fn()
+      Element.prototype.scrollIntoView = scrollIntoView
+      search.mockResolvedValue(createResponse([createHit('a', 'a/b/x1.txt'), createHit('b', 'x2.txt')]))
+      const wrapper = await mountViewer()
+      await searchFor(wrapper, 'x')
+      wrapper.findComponent(DocumentToolbox).vm.$emit('update:activeIndex', 2)
+      await flushPromises()
+      scrollIntoView.mockClear()
+      const transitionEnd = new Event('transitionend', { bubbles: true })
+      transitionEnd.propertyName = 'height'
+      wrapper.element.dispatchEvent(transitionEnd)
+      expect(scrollIntoView).not.toHaveBeenCalled()
+      delete Element.prototype.scrollIntoView
+    })
+
+    describe('with the CSS highlight API', () => {
+      beforeEach(() => {
+        globalThis.CSS = { highlights: new Map() }
+        globalThis.Highlight = class extends Set {}
+      })
+
+      afterEach(() => {
+        delete globalThis.CSS
+        delete globalThis.Highlight
+      })
+
+      function highlightedTexts() {
+        return [...globalThis.CSS.highlights.values()].flatMap(highlight => [...highlight].map(range => range.toString()))
+      }
+
+      it('keeps the highlights of another viewer when one unmounts', async () => {
+        search.mockResolvedValueOnce(createResponse([createHit('a', 'apple.txt')]))
+        search.mockResolvedValueOnce(createResponse([createHit('b', 'pear.txt')]))
+        const first = await mountViewer()
+        const second = await mountViewer(createArchive('zip-2'))
+        await searchFor(first, 'apple')
+        await searchFor(second, 'pear')
+        expect(highlightedTexts().sort()).toEqual(['apple', 'pear'])
+        second.unmount()
+        expect(highlightedTexts()).toEqual(['apple'])
+      })
     })
   })
 })
