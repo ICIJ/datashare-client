@@ -46,6 +46,8 @@ const previewComponent = computed(() => {
       return 'DocumentViewerVideo'
     case document.value.isCode:
       return 'DocumentViewerCode'
+    case document.value.isArchive:
+      return 'DocumentViewerArchive'
     default:
       return null
   }
