@@ -63,6 +63,33 @@ describe('Document', () => {
     })
   })
 
+  describe('check if document is an archive', () => {
+    it.each([
+      'application/zip',
+      'application/x-tar',
+      'application/x-7z-compressed',
+      'application/x-rar-compressed',
+      'application/gzip',
+      'application/x-bzip2',
+      'application/java-archive',
+      'application/vnd.ms-outlook-pst',
+      'application/mbox'
+    ])('should be an archive for %s', (contentType) => {
+      const doc = new Document({ _source: { contentType } })
+      expect(doc.isArchive).toBe(true)
+    })
+
+    it.each([
+      'application/vnd.ms-tnef',
+      'application/x-ms-installer',
+      'application/x-tika-pst-mail-item',
+      'application/pdf'
+    ])('should not be an archive for %s', (contentType) => {
+      const doc = new Document({ _source: { contentType } })
+      expect(doc.isArchive).toBe(false)
+    })
+  })
+
   describe('check if document is of Markdown type', () => {
     it('should be a Markdown file (x-web-markdown)', () => {
       const doc = new Document({ _source: { contentType: 'text/x-web-markdown' } })
