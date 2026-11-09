@@ -10,7 +10,7 @@ import { LAYOUTS, layoutValidator } from '@/enums/pathTree'
 
 const selected = defineModel('selected', { type: Boolean })
 
-const { entry, name, compact, layout, noLink, selectMode } = defineProps({
+const { entry, name, compact, layout, noLink, noModal, selectMode } = defineProps({
   /**
    * Document or entry object to render
    */
@@ -43,6 +43,13 @@ const { entry, name, compact, layout, noLink, selectMode } = defineProps({
    * Whether to disable the link (always render as plain text)
    */
   noLink: {
+    type: Boolean,
+    default: false
+  },
+  /**
+   * Whether to navigate to the document instead of opening it in a modal
+   */
+  noModal: {
     type: Boolean,
     default: false
   },
@@ -92,6 +99,9 @@ const to = computed(() => {
 
 const handleClick = (event) => {
   const { routerParams: params } = document.value
+  if (isLink.value && noModal) {
+    return
+  }
   if (isLink.value) {
     event.preventDefault()
     event.stopPropagation()

@@ -63,4 +63,22 @@ describe('PathTreeViewDocument.vue', () => {
     expect(show).not.toHaveBeenCalled()
     expect(wrapper.emitted('update:selected')).toHaveLength(1)
   })
+
+  it('navigates to the document instead of opening a modal when the row is clicked with noModal', async () => {
+    const push = vi.spyOn(core.router, 'push')
+
+    await mountDocument({ noModal: true }).find('.path-tree-view-entry__link').trigger('click')
+
+    expect(show).not.toHaveBeenCalled()
+    expect(push).toHaveBeenCalledWith(expect.objectContaining({ name: 'document-standalone', params: expect.objectContaining({ id: 'foo' }) }))
+  })
+
+  it('navigates to the document instead of opening a modal when its name is clicked with noModal', async () => {
+    const push = vi.spyOn(core.router, 'push')
+
+    await findName(mountDocument({ noModal: true })).trigger('click')
+
+    expect(show).not.toHaveBeenCalled()
+    expect(push).toHaveBeenCalledWith(expect.objectContaining({ name: 'document-standalone', params: expect.objectContaining({ id: 'foo' }) }))
+  })
 })
