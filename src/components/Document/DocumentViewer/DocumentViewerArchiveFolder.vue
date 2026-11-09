@@ -50,7 +50,6 @@ function showMore() {
     :collapse="!isOpen"
     :level="level"
     :no-header="root"
-    compact
     no-link
     no-search-link
     no-stats
@@ -71,13 +70,11 @@ function showMore() {
         :entry="document"
         :name="getEntryName(document)"
         :level="level + 1"
-        compact
         no-modal
       />
       <path-tree-view-entry-more
         v-if="remainingDocuments > 0"
         :level="level + 1"
-        compact
         @click="showMore"
       >
         {{ t('documentViewerArchive.more', { n: nextPageSize, left: remainingDocuments }) }}

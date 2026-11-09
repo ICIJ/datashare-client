@@ -119,7 +119,6 @@ watch(documentKey, load, { immediate: true })
       <path-tree-view
         no-label
         no-search
-        compact
         :is-loading="isLoading"
       >
         <document-viewer-archive-folder

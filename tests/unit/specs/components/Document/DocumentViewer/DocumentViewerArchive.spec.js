@@ -159,4 +159,10 @@ describe('DocumentViewerArchive.vue', () => {
     await mountViewer()
     expect(consoleError).toHaveBeenCalledWith(expect.any(String), error)
   })
+
+  it('renders regular entries, which get the hover background, instead of compact ones', async () => {
+    search.mockResolvedValue(createResponse([createHit('a', 'reports/q1.pdf'), createHit('b', 'notes.txt')]))
+    const wrapper = await mountViewer()
+    expect(wrapper.find('.path-tree-view-entry--compact').exists()).toBe(false)
+  })
 })
