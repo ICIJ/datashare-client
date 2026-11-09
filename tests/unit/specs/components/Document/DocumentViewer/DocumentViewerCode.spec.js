@@ -294,6 +294,16 @@ describe('DocumentViewerCode.vue', () => {
     expect(lines[1].find('.local-search-term--active').exists()).toBe(true)
   })
 
+  it('scrolls back to a single occurrence when the toolbox asks to reactivate it', async () => {
+    const wrapper = await mountWithSource('a needle')
+    await search(wrapper, 'needle')
+    const scrollIntoView = vi.spyOn(EditorView, 'scrollIntoView')
+    await wrapper.findComponent(DocumentToolbox).vm.$emit('reactivate')
+    const calls = scrollIntoView.mock.calls.length
+    scrollIntoView.mockRestore()
+    expect(calls).toBe(1)
+  })
+
   it('only repaints the active mark when moving to another occurrence', async () => {
     const wrapper = await mountWithSource('needle one\nneedle two\nneedle three')
     await search(wrapper, 'needle')

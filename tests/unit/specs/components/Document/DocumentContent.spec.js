@@ -1,3 +1,4 @@
+import { defineComponent, h } from 'vue'
 import { config, enableAutoUnmount, mount, shallowMount, flushPromises } from '@vue/test-utils'
 import { PaginationTiny } from '@icij/murmur'
 
@@ -8,6 +9,7 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import DocumentContent from '@/components/Document/DocumentContent'
 import DocumentContentDropdown from '@/components/Document/DocumentContentDropdown'
 import DocumentLocalSearch from '@/components/Document/DocumentLocalSearch/DocumentLocalSearch'
+import DocumentToolbox from '@/components/Document/DocumentToolbox/DocumentToolbox'
 import Hook from '@/components/Hook/Hook'
 import { apiInstance as api } from '@/api/apiInstance'
 import { useDocumentStore } from '@/store/modules'
@@ -181,6 +183,18 @@ describe('DocumentContent.vue', () => {
         const wrapper = shallowMount(DocumentContent, { props, global: { plugins } })
         await flushPromises()
         expect(wrapper.find('.document-content__toolbox--sticky').exists()).toBeFalsy()
+      })
+
+      it('scrolls back to the occurrence when the toolbox asks to reactivate it', async () => {
+        const { document } = await mockDocumentContentSlice('this is a full content')
+        const { plugins } = core
+        const wrapper = mount(DocumentContent, { props: { document, q: 'full' }, global: { plugins } })
+        await flushLocalSearch()
+        const mark = wrapper.find('.local-search-term--active').element
+        mark.scrollIntoView = vi.fn()
+        await wrapper.findComponent(DocumentToolbox).vm.$emit('reactivate')
+        await flushPromises()
+        expect(mark.scrollIntoView).toHaveBeenCalledTimes(1)
       })
     })
 
@@ -802,6 +816,43 @@ describe('DocumentContent.vue', () => {
         await flushPromises()
         expect(wrapper.vm.markdownPage).toBe(3)
         expect(wrapper.vm.activeMarkdownMatch).toBe(2)
+      })
+
+      describe('when the toolbox asks to reactivate the active occurrence', () => {
+        const activateMatch = vi.fn()
+        const DocumentContentMarkdown = defineComponent({
+          setup(_, { expose }) {
+            expose({ activateMatch })
+            return () => h('div')
+          }
+        })
+
+        async function mountReactivatable() {
+          const { document } = await mockDocumentContentSlice('Hello world')
+          const { plugins } = core
+          const global = { plugins, stubs: { DocumentContentMarkdown, DocumentToolbox: false } }
+          const wrapper = shallowMount(DocumentContent, { props: { document, q: 'hello' }, global })
+          await flushLocalSearch()
+          return wrapper
+        }
+
+        beforeEach(() => activateMatch.mockClear())
+
+        it('activates its mark again on the page holding it', async () => {
+          const wrapper = await mountReactivatable()
+          await wrapper.findComponent(DocumentToolbox).vm.$emit('reactivate')
+          expect(wrapper.vm.markdownPage).toBe(2)
+          expect(activateMatch).toHaveBeenCalledTimes(1)
+        })
+
+        it('goes back to the page holding it when the reader paged away', async () => {
+          const wrapper = await mountReactivatable()
+          wrapper.vm.markdownPage = 1
+          await flushPromises()
+          await wrapper.findComponent(DocumentToolbox).vm.$emit('reactivate')
+          expect(wrapper.vm.markdownPage).toBe(2)
+          expect(activateMatch).not.toHaveBeenCalled()
+        })
       })
 
       it('degrades to zero occurrences when the search fails', async () => {

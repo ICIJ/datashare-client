@@ -313,6 +313,8 @@ watch([() => props.page, () => props.document?.id], ([, id]) => {
 }, { immediate: true })
 watch(markedHtml, cookHtml, { immediate: true })
 watch(toRef(props, 'activeMatch'), activateMatch, { flush: 'post' })
+
+defineExpose({ activateMatch })
 </script>
 
 <template>
