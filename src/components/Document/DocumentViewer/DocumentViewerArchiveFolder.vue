@@ -72,6 +72,7 @@ function showMore() {
         :name="getEntryName(document)"
         :level="level + 1"
         compact
+        no-modal
       />
       <path-tree-view-entry-more
         v-if="remainingDocuments > 0"
