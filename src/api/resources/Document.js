@@ -484,6 +484,21 @@ export default class Document extends EsDoc {
       || codeTypes.includes(mimeType)
   }
 
+  get isArchive() {
+    const archiveTypes = [
+      'application/zip',
+      'application/x-tar',
+      'application/x-7z-compressed',
+      'application/x-rar-compressed',
+      'application/gzip',
+      'application/x-bzip2',
+      'application/java-archive',
+      'application/vnd.ms-outlook-pst',
+      'application/mbox'
+    ]
+    return archiveTypes.includes(this.contentType)
+  }
+
   get isMarkdown() {
     if (['text/x-web-markdown', 'text/markdown'].includes(this.contentType)) {
       return true
