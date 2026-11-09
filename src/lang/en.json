@@ -459,6 +459,11 @@
     "retry": "Try again",
     "fallback": "View as plain text"
   },
+  "documentViewerArchive": {
+    "empty": "This archive has no extracted files.",
+    "error": "The content of this archive could not be loaded.",
+    "limit": "Showing the first {n} of {total} files."
+  },
   "documentViewerImage": {
     "rotateCounterClockwise": "Rotate 90° to the left",
     "rotateClockwise": "Rotate 90° to the right"
