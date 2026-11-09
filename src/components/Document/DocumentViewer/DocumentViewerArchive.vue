@@ -13,6 +13,7 @@ import { ARCHIVE_PAGE_SIZE, findArchiveMatches, toArchiveTree } from '@/utils/ar
 import { findFoldedMatches, foldForFilter } from '@/utils/strings'
 
 const MAX_DOCUMENTS = 10000
+const MAILBOX_CONTENT_TYPES = ['application/mbox', 'application/vnd.ms-outlook-pst']
 const TERM_HIGHLIGHT = 'archive-search-term'
 const ACTIVE_TERM_HIGHLIGHT = 'archive-search-term-active'
 const SOURCE_FIELDS = [
@@ -40,13 +41,13 @@ const isLoading = ref(false)
 const hasError = ref(false)
 const openPaths = reactive(new Set())
 const activeKeys = reactive(new Set())
-const limits = ref({})
+const limits = reactive(new Map())
 const viewer = useTemplateRef('viewer')
-let paintedRanges = []
+let paintedRanges = new Map()
 let stopScrollAfterExpand = () => {}
 
 const documentKey = computed(() => `${props.document.index}/${props.document.id}`)
-const isMailbox = computed(() => props.document.contentType.startsWith('application/mbox'))
+const isMailbox = computed(() => MAILBOX_CONTENT_TYPES.some(type => props.document.contentType.startsWith(type)))
 const tree = computed(() => toArchiveTree(documents.value, { isMailbox: isMailbox.value }))
 const isEmpty = computed(() => !isLoading.value && !hasError.value && total.value === 0)
 const isOverLimit = computed(() => total.value > MAX_DOCUMENTS)
@@ -55,7 +56,7 @@ function findMatches(term) {
   return findArchiveMatches(tree.value, term).map(match => ({ page: 1, ...match }))
 }
 
-const { term, activeIndex, appliedTerm, matches, occurrences, isLoading: isSearching, refresh } = useDocumentLocalSearch({ findMatches })
+const { term, activeIndex, appliedTerm, matches, occurrences, isLoading: isSearching, clear, refresh } = useDocumentLocalSearch({ findMatches })
 
 const activeMatch = computed(() => matches.value[activeIndex.value - 1] ?? null)
 const activeKey = computed(() => (activeMatch.value ? toEntryKey(activeMatch.value) : null))
@@ -75,6 +76,7 @@ function buildBody() {
 }
 
 function toggle(path) {
+  stopScrollAfterExpand()
   if (openPaths.has(path)) {
     openPaths.delete(path)
   }
@@ -84,8 +86,8 @@ function toggle(path) {
 }
 
 function showMore(path) {
-  const limit = limits.value[path] ?? ARCHIVE_PAGE_SIZE
-  limits.value = { ...limits.value, [path]: limit + ARCHIVE_PAGE_SIZE }
+  const limit = limits.get(path) ?? ARCHIVE_PAGE_SIZE
+  limits.set(path, limit + ARCHIVE_PAGE_SIZE)
 }
 
 function openFolders(paths) {
@@ -109,20 +111,22 @@ function moveActiveKey(key, previousKey) {
 }
 
 function showDocumentPage({ folderPath, index }) {
-  const limit = limits.value[folderPath] ?? ARCHIVE_PAGE_SIZE
+  const limit = limits.get(folderPath) ?? ARCHIVE_PAGE_SIZE
   if (index >= limit) {
     const pages = Math.floor(index / ARCHIVE_PAGE_SIZE) + 1
-    limits.value = { ...limits.value, [folderPath]: pages * ARCHIVE_PAGE_SIZE }
+    limits.set(folderPath, pages * ARCHIVE_PAGE_SIZE)
   }
 }
 
 function findEntryElement(key) {
-  const elements = viewer.value?.querySelectorAll('[data-archive-entry]') ?? []
-  return [...elements].find(element => element.dataset.archiveEntry === key)
+  return viewer.value?.querySelector(`[data-archive-entry="${CSS.escape(key)}"]`)
 }
 
+// A folder entry also wraps its open content, so center its header row only.
 function scrollToMatch(match) {
-  findEntryElement(toEntryKey(match))?.scrollIntoView?.({ block: 'center', behavior: 'instant' })
+  const entry = findEntryElement(toEntryKey(match))
+  const header = entry?.querySelector('.path-tree-view-entry__header') ?? entry
+  header?.scrollIntoView?.({ block: 'center', behavior: 'instant' })
 }
 
 // Opened folders grow with a height animation that moves the match while it
@@ -178,11 +182,14 @@ function findOrCreateHighlight(name) {
   return highlights.get(name)
 }
 
-function paintRanges(name, ranges) {
-  const highlight = findOrCreateHighlight(name)
-  for (const range of ranges) {
-    highlight.add(range)
-    paintedRanges.push({ name, range })
+function highlightNameOf(key) {
+  return key === activeKey.value ? ACTIVE_TERM_HIGHLIGHT : TERM_HIGHLIGHT
+}
+
+function moveRanges(key, from, to) {
+  for (const range of paintedRanges.get(key) ?? []) {
+    findOrCreateHighlight(from).delete(range)
+    findOrCreateHighlight(to).add(range)
   }
 }
 
@@ -194,17 +201,28 @@ function paintTerms() {
   const foldedTerm = foldForFilter(appliedTerm.value)
   const labels = foldedTerm ? viewer.value?.querySelectorAll('[data-entry-name]') ?? [] : []
   for (const label of labels) {
-    const isActive = label.closest('[data-archive-entry]')?.dataset.archiveEntry === activeKey.value
-    const name = isActive ? ACTIVE_TERM_HIGHLIGHT : TERM_HIGHLIGHT
-    paintRanges(name, rangesOf(label, foldedTerm))
+    const key = label.closest('[data-archive-entry]')?.dataset.archiveEntry
+    const ranges = rangesOf(label, foldedTerm)
+    const highlight = findOrCreateHighlight(highlightNameOf(key))
+    ranges.forEach(range => highlight.add(range))
+    paintedRanges.set(key, [...(paintedRanges.get(key) ?? []), ...ranges])
   }
 }
 
-function clearTerms() {
-  for (const { name, range } of paintedRanges) {
-    globalThis.CSS.highlights.get(name)?.delete(range)
+function moveActiveTerms(key, previousKey) {
+  if (!globalThis.CSS?.highlights) {
+    return
   }
-  paintedRanges = []
+  moveRanges(previousKey, ACTIVE_TERM_HIGHLIGHT, TERM_HIGHLIGHT)
+  moveRanges(key, TERM_HIGHLIGHT, ACTIVE_TERM_HIGHLIGHT)
+}
+
+function clearTerms() {
+  for (const range of [...paintedRanges.values()].flat()) {
+    globalThis.CSS.highlights.get(TERM_HIGHLIGHT)?.delete(range)
+    globalThis.CSS.highlights.get(ACTIVE_TERM_HIGHLIGHT)?.delete(range)
+  }
+  paintedRanges = new Map()
 }
 
 async function load() {
@@ -226,13 +244,14 @@ async function load() {
     documents.value = response.hits.hits.map(hit => Document.create(hit))
     total.value = response.hits.total.value
     resetOpenFolders()
-    limits.value = {}
+    limits.clear()
     refresh()
   }
   catch (error) {
     console.error('Failed to load the content of the archive:', error)
     if (key === documentKey.value) {
       hasError.value = true
+      clear()
     }
   }
   finally {
@@ -245,8 +264,12 @@ async function load() {
 watch(documentKey, load, { immediate: true })
 watch(activeMatch, revealMatch)
 watch(activeKey, moveActiveKey)
-watch([appliedTerm, activeKey, openPaths, limits, tree], paintTerms, { flush: 'post' })
-onBeforeUnmount(clearTerms)
+watch(activeKey, moveActiveTerms, { flush: 'post' })
+watch([appliedTerm, openPaths, limits, tree], paintTerms, { flush: 'post' })
+onBeforeUnmount(() => {
+  stopScrollAfterExpand()
+  clearTerms()
+})
 </script>
 
 <template>

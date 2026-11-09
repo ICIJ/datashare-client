@@ -17,8 +17,8 @@ const props = defineProps({
     required: true
   },
   limits: {
-    type: Object,
-    default: () => ({})
+    type: Map,
+    default: () => new Map()
   },
   activeKeys: {
     type: Set,
@@ -40,7 +40,7 @@ const isInModal = inject('modal', false)
 
 const folderKey = computed(() => `folder:${props.folder.path}`)
 const isOpen = computed(() => props.root || props.openPaths.has(props.folder.path))
-const limit = computed(() => props.limits[props.folder.path] ?? ARCHIVE_PAGE_SIZE)
+const limit = computed(() => props.limits.get(props.folder.path) ?? ARCHIVE_PAGE_SIZE)
 const visibleEntries = computed(() => props.folder.entries.slice(0, limit.value))
 const remainingDocuments = computed(() => props.folder.entries.length - visibleEntries.value.length)
 const nextPageSize = computed(() => Math.min(ARCHIVE_PAGE_SIZE, remainingDocuments.value))
