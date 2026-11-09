@@ -96,7 +96,7 @@ watch(documentKey, load, { immediate: true })
 </script>
 
 <template>
-  <div class="document-viewer-archive p-3">
+  <div class="document-viewer-archive py-3">
     <div
       v-if="hasError"
       class="text-center"

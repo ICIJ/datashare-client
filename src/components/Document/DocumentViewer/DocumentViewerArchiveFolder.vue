@@ -37,6 +37,7 @@ const isOpen = computed(() => props.root || props.openPaths.includes(props.folde
 const visibleDocuments = computed(() => props.folder.documents.slice(0, limit.value))
 const remainingDocuments = computed(() => props.folder.documents.length - visibleDocuments.value.length)
 const nextPageSize = computed(() => Math.min(PER_PAGE, remainingDocuments.value))
+const childLevel = computed(() => (props.root ? props.level : props.level + 1))
 
 function showMore() {
   limit.value += PER_PAGE
@@ -61,7 +62,7 @@ function showMore() {
         :key="child.path"
         :folder="child"
         :open-paths="openPaths"
-        :level="level + 1"
+        :level="childLevel"
         @toggle="emit('toggle', $event)"
       />
       <path-tree-view-document
@@ -69,12 +70,12 @@ function showMore() {
         :key="document.id"
         :entry="document"
         :name="getEntryName(document)"
-        :level="level + 1"
+        :level="childLevel"
         no-modal
       />
       <path-tree-view-entry-more
         v-if="remainingDocuments > 0"
-        :level="level + 1"
+        :level="childLevel"
         @click="showMore"
       >
         {{ t('documentViewerArchive.more', { n: nextPageSize, left: remainingDocuments }) }}
