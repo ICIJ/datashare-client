@@ -1,5 +1,5 @@
 import Document from '@/api/resources/Document'
-import { toArchiveTree } from '@/utils/archiveTree'
+import { getEntryName, toArchiveTree } from '@/utils/archiveTree'
 
 function doc(id, title, metadata = {}) {
   return new Document({ _id: id, _index: 'idx', _source: { title, metadata } })
@@ -86,5 +86,35 @@ describe('archiveTree', () => {
 
   it('returns an empty root for no documents', () => {
     expect(toArchiveTree([])).toEqual({ name: '', path: '', folders: [], documents: [] })
+  })
+
+  it('decodes MIME-encoded resource names before splitting them', () => {
+    const tree = toArchiveTree([doc('1', 'file.pdf', { tika_metadata_resourcename: '=?UTF-8?Q?dir/file.pdf?=' })])
+    expect(tree.folders.map(({ name }) => name)).toEqual(['dir'])
+  })
+
+  it('trims resource names before splitting them', () => {
+    const tree = toArchiveTree([doc('1', 'f.txt', { tika_metadata_resourcename: ' a/f.txt ' })])
+    expect(tree.folders.map(({ name }) => name)).toEqual(['a'])
+  })
+
+  it('sorts documents by entry name', () => {
+    const tree = toArchiveTree([
+      doc('1', 'a/z.txt', { tika_metadata_resourcename: 'a/z.txt' }),
+      doc('2', 'a/b.txt', { tika_metadata_resourcename: 'a/b.txt' })
+    ])
+    expect(ids(tree.folders[0].documents)).toEqual(['2', '1'])
+  })
+
+  describe('getEntryName', () => {
+    it('returns the last segment of a resource name with folders', () => {
+      const entry = doc('1', 'reports/2024/q1.pdf', { tika_metadata_resourcename: 'reports/2024/q1.pdf' })
+      expect(getEntryName(entry)).toBe('q1.pdf')
+    })
+
+    it('returns the title when the resource name has no folder', () => {
+      const entry = doc('1', 'Hello', { tika_metadata_resourcename: 'message.eml', tika_metadata_pst_folderpath: '/Inbox' })
+      expect(getEntryName(entry)).toBe('Hello')
+    })
   })
 })
