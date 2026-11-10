@@ -5,7 +5,7 @@ import { useI18n } from 'vue-i18n'
 import PathTreeViewDocument from '@/components/PathTree/PathTreeView/PathTreeViewDocument'
 import PathTreeViewEntry from '@/components/PathTree/PathTreeView/PathTreeViewEntry'
 import PathTreeViewEntryMore from '@/components/PathTree/PathTreeView/PathTreeViewEntryMore'
-import { ARCHIVE_PAGE_SIZE } from '@/utils/archiveTree'
+import { ARCHIVE_PAGE_SIZE, toEntryKey } from '@/utils/archiveTree'
 
 const props = defineProps({
   folder: {
@@ -38,7 +38,7 @@ const emit = defineEmits(['toggle', 'more'])
 const { t } = useI18n()
 const isInModal = inject('modal', false)
 
-const folderKey = computed(() => `folder:${props.folder.path}`)
+const folderKey = computed(() => toEntryKey({ type: 'folder', path: props.folder.path }))
 const isOpen = computed(() => props.root || props.openPaths.has(props.folder.path))
 const limit = computed(() => props.limits.get(props.folder.path) ?? ARCHIVE_PAGE_SIZE)
 const visibleEntries = computed(() => props.folder.entries.slice(0, limit.value))
@@ -47,7 +47,7 @@ const nextPageSize = computed(() => Math.min(ARCHIVE_PAGE_SIZE, remainingDocumen
 const childLevel = computed(() => (props.root ? props.level : props.level + 1))
 
 function documentKey(document) {
-  return `document:${document.id}`
+  return toEntryKey({ type: 'document', id: document.id })
 }
 </script>
 
