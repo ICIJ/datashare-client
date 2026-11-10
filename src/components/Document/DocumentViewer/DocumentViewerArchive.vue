@@ -54,7 +54,6 @@ watch(documents, refresh)
       :document="document"
       :occurrences="occurrences"
       :loading="isSearching"
-      :disabled="!documents.length"
       no-count
     />
     <div
