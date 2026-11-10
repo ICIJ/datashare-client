@@ -316,6 +316,23 @@ describe('DocumentViewerArchive.vue', () => {
       delete Element.prototype.scrollIntoView
     })
 
+    it('scrolls to the match again each time a nested folder finished expanding', async () => {
+      const scrollIntoView = vi.fn()
+      Element.prototype.scrollIntoView = scrollIntoView
+      search.mockResolvedValue(createResponse([createHit('a', 'a/b/deep.txt')]))
+      const wrapper = await mountViewer()
+      await searchFor(wrapper, 'deep')
+      scrollIntoView.mockClear()
+      const innerTransitionEnd = new Event('transitionend', { bubbles: true })
+      innerTransitionEnd.propertyName = 'height'
+      const outerTransitionEnd = new Event('transitionend', { bubbles: true })
+      outerTransitionEnd.propertyName = 'height'
+      wrapper.element.dispatchEvent(innerTransitionEnd)
+      wrapper.element.dispatchEvent(outerTransitionEnd)
+      expect(scrollIntoView).toHaveBeenCalledTimes(2)
+      delete Element.prototype.scrollIntoView
+    })
+
     it('does not scroll back to a previous match once folders finished expanding', async () => {
       const scrollIntoView = vi.fn()
       Element.prototype.scrollIntoView = scrollIntoView
