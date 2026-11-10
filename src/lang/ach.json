@@ -459,6 +459,12 @@
     "retry": "crwdns10527:0crwdne10527:0",
     "fallback": "crwdns10529:0crwdne10529:0"
   },
+  "documentViewerArchive": {
+    "empty": "crwdns10765:0crwdne10765:0",
+    "error": "crwdns10767:0crwdne10767:0",
+    "limit": "crwdns10769:0{n}crwdnd10769:0{total}crwdne10769:0",
+    "more": "crwdns10771:0{n}crwdnd10771:0{left}crwdne10771:0"
+  },
   "documentViewerImage": {
     "rotateCounterClockwise": "crwdns9946:0crwdne9946:0",
     "rotateClockwise": "crwdns9948:0crwdne9948:0"
