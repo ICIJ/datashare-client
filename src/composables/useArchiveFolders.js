@@ -82,7 +82,6 @@ export function useArchiveFolders({ tree, activeMatch, root }) {
       if (event.propertyName !== 'height') {
         return
       }
-      stopScrollAfterExpand()
       scrollToMatch(match)
     }
     toValue(root)?.addEventListener('transitionend', scrollOnExpanded)
