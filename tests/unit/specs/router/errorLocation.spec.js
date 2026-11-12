@@ -32,4 +32,12 @@ describe('errorLocation', () => {
     const state = { error: 'Not Found', code: 404 }
     expect(errorLocation(route, state).state).toEqual(state)
   })
+
+  it('should blank the keys the state does not set', () => {
+    const route = router.resolve('/ds/project/document')
+    const { state } = errorLocation(route, { code: 500 })
+    const blank = { title: undefined, description: undefined, error: undefined, details: undefined, reason: undefined }
+    expect(state).toEqual({ ...blank, code: 500 })
+    expect(Object.keys(state)).toEqual(expect.arrayContaining(Object.keys(blank)))
+  })
 })

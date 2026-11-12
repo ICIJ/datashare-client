@@ -138,6 +138,14 @@ describe('guards', () => {
       expect(window.history.state.reason).toBe('noProjects')
     })
 
+    it('should keep the previous page in the history when redirecting to error', async () => {
+      router.addRoute({ path: '/page-a', name: 'page-a', meta: { skipsAuth: true } })
+      await router.push({ name: 'page-a' })
+      config.set('projects', [])
+      await router.push({ name: 'settings' })
+      expect(window.history.state.back).toBe('/page-a')
+    })
+
     it('should keep the requested URL on the error page', async () => {
       config.set('projects', [])
       await router.push({ name: 'settings' })
@@ -179,6 +187,13 @@ describe('guards', () => {
       await router.push({ name: 'task.documents.list' })
       expect(router.currentRoute.value.name).toBe('error')
       expect(window.history.state.reason).toBe('forbidden')
+    })
+
+    it('should keep the previous page in the history when forbidden', async () => {
+      router.addRoute({ path: '/page-a', name: 'page-a', meta: { skipsAuth: true } })
+      await router.push({ name: 'page-a' })
+      await router.push({ name: 'task.documents.list' })
+      expect(window.history.state.back).toBe('/page-a')
     })
 
     it('should not redirect task.documents.list to error in LOCAL mode', async () => {

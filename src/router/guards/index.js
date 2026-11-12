@@ -19,7 +19,8 @@ export default (core) => {
    * @param {import('vue-router').RouteLocationNormalized} to - The denied route.
    */
   function nextNotFound(next, to) {
-    next(errorLocation(to, { reason: 'forbidden' }))
+    const location = errorLocation(to, { reason: 'forbidden' })
+    next({ ...location, replace: false })
   }
 
   /**
@@ -109,7 +110,8 @@ export default (core) => {
     const projects = config.get('projects', [])
     // No project given for this user
     if (!projects.length && ['error', 'login'].indexOf(to.name) === -1) {
-      next(errorLocation(to, { reason: 'noProjects' }))
+      const location = errorLocation(to, { reason: 'noProjects' })
+      next({ ...location, replace: false })
     }
     else {
       next()

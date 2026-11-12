@@ -12,5 +12,14 @@ export function errorLocation({ path, query, hash }, state = {}) {
   // so the router does not encode it twice.
   const segments = path.substring(1).split('/')
   const pathMatch = segments.map(decodeURIComponent)
-  return { name: 'error', params: { pathMatch }, query, hash, state, replace: true }
+  const blank = {
+    title: undefined,
+    description: undefined,
+    error: undefined,
+    code: undefined,
+    details: undefined,
+    reason: undefined
+  }
+  const nextState = { ...blank, ...state }
+  return { name: 'error', params: { pathMatch }, query, hash, state: nextState, replace: true }
 }

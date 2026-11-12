@@ -85,4 +85,12 @@ describe('handleBootFailure', () => {
     expect(window.history.state).toMatchObject({ code: 500 })
     expect(window.history.state.reason).toBeUndefined()
   })
+
+  it('should not keep the previous error reason after a retry', async () => {
+    window.history.replaceState({ error: 'Network Error', reason: 'serverUnreachable' }, '', '/')
+    const error = Object.assign(new Error('Request failed with status code 500'), { response: { status: 500 } })
+    await handleBootFailure(core, error)
+    expect(window.history.state.code).toBe(500)
+    expect(window.history.state.reason).toBeUndefined()
+  })
 })
