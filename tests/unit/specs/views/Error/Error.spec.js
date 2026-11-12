@@ -15,6 +15,8 @@ vi.mock('@/api/apiInstance', () => {
   }
 })
 
+const actionsOf = wrapper => wrapper.findAll('.error__actions .btn').map(b => b.classes().find(c => c.startsWith('error__actions__item--')))
+
 describe('Error.vue', () => {
   let plugins
   let core
@@ -76,6 +78,76 @@ describe('Error.vue', () => {
       const wrapper = mount(Error, { global: { plugins: core.plugins } })
       await flushPromises()
       expect(wrapper.find('.error__container__links__item--logout').exists()).toBeFalsy()
+    })
+
+    it('shows Log out on noProjects when logged in', async () => {
+      setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'foo' }, JSON.stringify)
+      const core = CoreSetup.init().useAll()
+      core.config.set('mode', 'SERVER')
+      const wrapper = mount(Error, { props: { reason: 'noProjects' }, global: { plugins: core.plugins } })
+      await flushPromises()
+      expect(actionsOf(wrapper)).toEqual(['error__actions__item--retry', 'error__actions__item--logout'])
+    })
+
+    it('hides Log out on noProjects when logged out', async () => {
+      removeCookie(process.env.VITE_DS_COOKIE_NAME)
+      const core = CoreSetup.init().useAll()
+      core.config.set('mode', 'SERVER')
+      const wrapper = mount(Error, { props: { reason: 'noProjects' }, global: { plugins: core.plugins } })
+      await flushPromises()
+      expect(actionsOf(wrapper)).toEqual(['error__actions__item--retry'])
+    })
+  })
+
+  describe('actions', () => {
+    beforeEach(() => {
+      window.history.replaceState({}, '', '/')
+      removeCookie(process.env.VITE_DS_COOKIE_NAME)
+    })
+
+    it('hides Back when the error page is the first page', async () => {
+      core.useRouterWithoutGuards()
+      await core.router.replace('/does-not-exist')
+      const wrapper = mount(Error, { global: { plugins: core.plugins } })
+      expect(actionsOf(wrapper)).toEqual(['error__actions__item--home'])
+    })
+
+    it('shows Home then Back when there is a previous page', async () => {
+      core.useRouterWithoutGuards()
+      await core.router.replace('/')
+      await core.router.push('/does-not-exist')
+      const wrapper = mount(Error, { global: { plugins: core.plugins } })
+      expect(actionsOf(wrapper)).toEqual(['error__actions__item--home', 'error__actions__item--back'])
+      expect(wrapper.find('.error__actions__item--home').classes()).toContain('btn-primary')
+      expect(wrapper.find('.error__actions__item--back').classes()).toContain('btn-outline-light')
+    })
+
+    it('shows Try again, Back to search and Home for a document', () => {
+      const wrapper = mount(Error, { props: { reason: 'document' }, global: { plugins } })
+      expect(actionsOf(wrapper)).toEqual(['error__actions__item--retry', 'error__actions__item--search', 'error__actions__item--home'])
+      expect(wrapper.find('.error__actions__item--home').classes()).toContain('btn-link')
+    })
+
+    it('reloads the page on Try again', async () => {
+      const reload = vi.fn()
+      vi.stubGlobal('location', { ...window.location, reload })
+      const wrapper = mount(Error, { props: { reason: 'serverUnreachable' }, global: { plugins } })
+      await wrapper.find('.error__actions__item--retry').trigger('click')
+      expect(reload).toHaveBeenCalled()
+      vi.unstubAllGlobals()
+    })
+
+    it('navigates to search on Back to search', async () => {
+      core.useRouterWithoutGuards()
+      const push = vi.spyOn(core.router, 'push').mockResolvedValue()
+      const wrapper = mount(Error, { props: { reason: 'document' }, global: { plugins: core.plugins } })
+      await wrapper.find('.error__actions__item--search').trigger('click')
+      expect(push).toHaveBeenCalledWith({ name: 'search' })
+    })
+
+    it('shows only Try again for noProjects in local mode', () => {
+      const wrapper = mount(Error, { props: { reason: 'noProjects' }, global: { plugins } })
+      expect(actionsOf(wrapper)).toEqual(['error__actions__item--retry'])
     })
   })
 

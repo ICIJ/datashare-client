@@ -239,6 +239,12 @@
     "noProjects": "Your project list is empty. Please contact your administrator.",
     "notFound": "Page not found.",
     "logout": "Log out",
+    "actions": {
+      "retry": "Try again",
+      "back": "Back",
+      "search": "Back to search",
+      "home": "Home"
+    },
     "faq": "FAQ",
     "userGuides": "User guides",
     "help": "Ask for help",

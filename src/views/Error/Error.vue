@@ -2,7 +2,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { AppIcon, HapticCopy } from '@icij/murmur'
 import { useI18n } from 'vue-i18n'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 import { Api } from '@/api'
 import { apiInstance as api } from '@/api/apiInstance'
@@ -12,6 +12,9 @@ import errorReasons from '@/views/Error/errorReasons'
 import settings from '@/utils/settings'
 import { useAuth } from '@/composables/useAuth'
 import { useCore } from '@/composables/useCore'
+import { useMode } from '@/composables/useMode'
+import IPhArrowClockwise from '~icons/ph/arrow-clockwise'
+import IPhArrowLeft from '~icons/ph/arrow-left'
 import IPhSmileySad from '~icons/ph/smiley-sad'
 
 const props = defineProps({
@@ -62,7 +65,9 @@ const props = defineProps({
 const { t } = useI18n()
 const core = useCore()
 const { isAuthenticated } = useAuth()
+const { isServer } = useMode()
 const route = useRoute()
+const router = useRouter()
 
 const errorMessage = computed(() => {
   return props.error instanceof Error ? props.error.message : props.error
@@ -94,6 +99,47 @@ const caseCause = computed(() => errorCase.value ? t(`error.reasons.${resolvedRe
 
 const heading = computed(() => props.title || caseTitle.value || errorMessage.value || t('error.title'))
 const cause = computed(() => props.description || caseCause.value || t('error.description'))
+
+const fallbackActions = ['retry', 'home']
+const actionNames = computed(() => errorCase.value?.actions ?? fallbackActions)
+const variants = ['primary', 'outline-light', 'link']
+
+const actionHandlers = {
+  retry: () => window.location.reload(),
+  back: () => router.back(),
+  search: () => router.push({ name: 'search' }),
+  home: () => router.push('/')
+}
+
+const actionIcons = {
+  retry: IPhArrowClockwise,
+  back: IPhArrowLeft,
+  search: IPhArrowLeft
+}
+
+const canGoBack = computed(() => Boolean(router?.options.history.state.back))
+const canLogout = computed(() => isServer.value && isAuthenticated.value)
+
+const isActionVisible = (name) => {
+  if (name === 'back') {
+    return canGoBack.value
+  }
+  if (name === 'logout') {
+    return canLogout.value
+  }
+  return true
+}
+
+const actions = computed(() => {
+  const names = actionNames.value.filter(isActionVisible)
+  return names.map((name, index) => ({
+    name,
+    variant: variants[index],
+    icon: actionIcons[name],
+    label: name === 'logout' ? t('error.logout') : t(`error.actions.${name}`),
+    onClick: actionHandlers[name]
+  }))
+})
 
 const backgroundCode = computed(() => resolvedCode.value)
 const backgroundIcon = computed(() => errorCase.value?.icon ?? IPhSmileySad)
@@ -175,6 +221,24 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
         <p class="error__cause lead">
           {{ cause }}
         </p>
+        <div class="error__actions">
+          <b-button
+            v-for="action in actions"
+            :key="action.name"
+            :class="`error__actions__item--${action.name}`"
+            :variant="action.variant"
+            :href="action.name === 'logout' ? logoutLink : undefined"
+            @click="action.onClick"
+          >
+            <app-icon
+              v-if="action.icon"
+              class="me-1"
+            >
+              <component :is="action.icon" />
+            </app-icon>
+            {{ action.label }}
+          </b-button>
+        </div>
         <div class="error__container__troubleshooting">
           <button
             type="button"
@@ -313,6 +377,14 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
         }
       }
     }
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacer * 0.5;
+    justify-content: center;
+    margin-bottom: $spacer * 1.5;
   }
 
   &__cause {
