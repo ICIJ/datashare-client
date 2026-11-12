@@ -413,6 +413,7 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
 
     .btn-lg {
       --bs-btn-font-size: #{$font-size-base};
+      white-space: nowrap;
 
       @include media-breakpoint-down(sm) {
         flex: 1;
@@ -471,6 +472,7 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
     &__toggle {
       padding: 0;
       border: 0;
+      box-shadow: none;
       color: rgba(var(--bs-light-rgb), 0.8);
       text-decoration: none;
 
