@@ -1,19 +1,16 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue'
-import { AppIcon, HapticCopy } from '@icij/murmur'
+import { computed } from 'vue'
+import { AppIcon } from '@icij/murmur'
 import { useI18n } from 'vue-i18n'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 
 import { Api } from '@/api'
-import { apiInstance as api } from '@/api/apiInstance'
-import ModeServerOnly from '@/components/Mode/ModeServerOnly'
-import VersionNumber from '@/components/VersionNumber'
 import { ERROR_REASONS } from '@/enums/errorReasons'
-import settings from '@/utils/settings'
-import { parseUserAgent } from '@/utils/userAgent'
+import ErrorLinks from '@/views/Error/ErrorLinks'
+import ErrorTroubleshooting from '@/views/Error/ErrorTroubleshooting'
 import { useAuth } from '@/composables/useAuth'
-import { useCore } from '@/composables/useCore'
 import { useMode } from '@/composables/useMode'
+import { useTroubleshootingDetails } from '@/composables/useTroubleshootingDetails'
 import IPhArrowClockwise from '~icons/ph/arrow-clockwise'
 import IPhArrowLeft from '~icons/ph/arrow-left'
 import IPhSmileySad from '~icons/ph/smiley-sad'
@@ -64,10 +61,8 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
-const core = useCore()
-const { isAuthenticated, username } = useAuth()
+const { isAuthenticated } = useAuth()
 const { isServer } = useMode()
-const route = useRoute()
 const router = useRouter()
 
 const errorMessage = computed(() => {
@@ -113,6 +108,8 @@ const fallbackActions = ['retry', 'home']
 const actionNames = computed(() => errorCase.value?.actions ?? fallbackActions)
 const variants = ['primary', 'outline-light']
 
+const logoutLink = Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SIGNOUT)
+
 const actionHandlers = {
   retry: () => window.location.reload(),
   back: () => router.back(),
@@ -124,12 +121,13 @@ const actionIcons = {
   back: IPhArrowLeft
 }
 
-const canGoBack = computed(() => Boolean(router?.options.history.state.back))
+// history.state is not reactive: this is a snapshot taken when the error page opens.
+const canGoBack = Boolean(router?.options.history.state.back)
 const canLogout = computed(() => isServer.value && isAuthenticated.value)
 
 const isActionVisible = (name) => {
   if (name === 'back') {
-    return canGoBack.value
+    return canGoBack
   }
   if (name === 'logout') {
     return canLogout.value
@@ -144,6 +142,7 @@ const actions = computed(() => {
     variant: variants[index],
     icon: actionIcons[name],
     label: name === 'logout' ? t('error.logout') : t(`error.actions.${name}`),
+    href: name === 'logout' ? logoutLink : undefined,
     onClick: actionHandlers[name]
   }))
 })
@@ -151,69 +150,12 @@ const actions = computed(() => {
 const backgroundCode = computed(() => resolvedCode.value)
 const backgroundIcon = computed(() => errorCase.value?.icon ?? IPhSmileySad)
 
-const occurredAt = new Date().toISOString()
-const clientHash = import.meta.env.VITE_GIT_HASH ?? ''
-const { browser, os } = parseUserAgent(navigator.userAgent)
-const serverVersion = ref(null)
-
-const fullUrl = computed(() => {
-  if (!route) {
-    return null
-  }
-  const { href } = router.resolve(route.fullPath)
-  const url = new URL(href, window.location.href)
-  return url.href
+const { rows: troubleshootingRows, text: troubleshootingText } = useTroubleshootingDetails({
+  code: () => props.code,
+  message: errorMessage,
+  reason: resolvedReason,
+  details: () => props.details
 })
-
-const troubleshootingEntries = computed(() => ({
-  Code: props.code,
-  Error: errorMessage.value,
-  Reason: resolvedReason.value,
-  URL: fullUrl.value,
-  ...props.details,
-  Date: occurredAt,
-  User: username.value,
-  Browser: browser,
-  OS: os,
-  Client: clientHash.substring(0, 7),
-  Server: serverVersion.value
-}))
-
-const hasValue = ([, value]) => value !== null && value !== undefined && value !== ''
-const toLine = ([name, value]) => `${name}: ${value}`
-
-const troubleshootingRows = computed(() => {
-  const entries = Object.entries(troubleshootingEntries.value)
-  return entries.filter(hasValue)
-})
-
-const troubleshootingDetails = computed(() => {
-  const lines = troubleshootingRows.value.map(toLine)
-  return lines.join('\n')
-})
-
-const fetchServerVersion = async () => {
-  try {
-    const version = await api.getVersion()
-    serverVersion.value = version['git.tag'] || version['git.build.version']
-  }
-  catch {
-    // The backend may be the very thing that failed: the details stay useful without its version.
-  }
-}
-
-onMounted(fetchServerVersion)
-
-const showDetails = ref(false)
-
-const toggleDetails = () => {
-  showDetails.value = !showDetails.value
-}
-
-const helpLink = computed(() => core.config.get('helpLink', settings.helpLink))
-const faqLink = computed(() => core.config.get('faqLink', settings.faqLink))
-const documentationLink = computed(() => core.config.get('documentationLink', settings.documentationLink))
-const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SIGNOUT))
 </script>
 
 <template>
@@ -248,7 +190,7 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
             size="lg"
             :class="`error__actions__item--${action.name}`"
             :variant="action.variant"
-            :href="action.name === 'logout' ? logoutLink : undefined"
+            :href="action.href"
             @click="action.onClick"
           >
             <app-icon
@@ -263,97 +205,11 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
       </div>
     </div>
     <footer class="error__footer">
-      <b-collapse
-        id="error-details"
-        v-model="showDetails"
-        class="error__details__collapse"
-      >
-        <dl class="error__details__list">
-          <template
-            v-for="[name, value] in troubleshootingRows"
-            :key="name"
-          >
-            <dt class="error__details__list__name">
-              {{ name }}
-            </dt>
-            <dd class="error__details__list__value">
-              {{ value }}
-            </dd>
-          </template>
-        </dl>
-      </b-collapse>
-      <div class="error__details">
-        <button
-          type="button"
-          class="error__details__toggle btn btn-link"
-          aria-controls="error-details"
-          :aria-expanded="showDetails"
-          @click="toggleDetails"
-        >
-          <app-icon class="error__details__toggle__caret me-1">
-            <i-ph-caret-right />
-          </app-icon>
-          {{ t('error.troubleshootingDetails') }}
-        </button>
-        <haptic-copy
-          :text="troubleshootingDetails"
-          :label="t('error.copyDetails')"
-          class="error__details__copy"
-          variant="light"
-          size="sm"
-        />
-        <version-number
-          tooltip-placement="top"
-          class="error__details__version"
-        />
-      </div>
-      <ul class="error__links list-inline text-capitalize">
-        <li class="list-inline-item error__links__item">
-          <a
-            :href="faqLink"
-            target="_blank"
-          >
-            <app-icon class="error__links__item__icon me-1">
-              <i-ph-question-duotone />
-            </app-icon>
-            {{ t('error.faq') }}
-          </a>
-        </li>
-        <li class="list-inline-item error__links__item">
-          <a
-            :href="documentationLink"
-            target="_blank"
-          >
-            <app-icon class="error__links__item__icon me-1">
-              <i-ph-book-duotone />
-            </app-icon>
-            {{ t('error.userGuides') }}
-          </a>
-        </li>
-        <li class="list-inline-item error__links__item">
-          <a
-            :href="helpLink"
-            target="_blank"
-          >
-            <app-icon class="error__links__item__icon me-1">
-              <i-ph-ambulance-duotone />
-            </app-icon>
-            {{ t('error.help') }}
-          </a>
-        </li>
-        <mode-server-only v-if="isAuthenticated">
-          <li class="list-inline-item error__links__item error__links__item--logout">
-            <a
-              :href="logoutLink"
-            >
-              <app-icon class="error__links__item__icon me-1">
-                <i-ph-sign-out-duotone />
-              </app-icon>
-              {{ t('error.logout') }}
-            </a>
-          </li>
-        </mode-server-only>
-      </ul>
+      <error-troubleshooting
+        :rows="troubleshootingRows"
+        :text="troubleshootingText"
+      />
+      <error-links :is-authenticated="isAuthenticated" />
     </footer>
   </div>
 </template>
@@ -467,89 +323,6 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
 
     :deep(.error__details__collapse) {
       flex-basis: 100%;
-    }
-  }
-
-  &__details {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: $spacer;
-
-    &__version {
-      color: rgba(var(--bs-light-rgb), 0.5);
-    }
-
-    &__toggle {
-      padding: 0;
-      border: 0;
-      box-shadow: none;
-      color: rgba(var(--bs-light-rgb), 0.8);
-      text-decoration: none;
-
-      &__caret {
-        transition: transform 0.15s ease-out;
-      }
-
-      &[aria-expanded='true'] &__caret {
-        transform: rotate(90deg);
-      }
-    }
-
-    &__copy {
-      --bs-btn-bg: transparent;
-      --bs-btn-color: var(--bs-light);
-      --bs-btn-border-color: rgba(var(--bs-light-rgb), 0.35);
-    }
-
-    &__list {
-      display: grid;
-      grid-template-columns: max-content minmax(0, 1fr);
-      gap: $spacer * 0.25 $spacer;
-      margin: 0;
-      padding: $spacer;
-      background: var(--bs-black);
-      border-radius: var(--bs-border-radius-lg);
-      font-family: var(--bs-font-monospace);
-      font-size: $font-size-sm;
-      color: var(--bs-light);
-
-      &__name {
-        font-weight: normal;
-        text-transform: capitalize;
-        color: rgba(var(--bs-light-rgb), 0.5);
-      }
-
-      &__value {
-        margin: 0;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-      }
-    }
-  }
-
-  &__links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: $spacer * 0.5 $spacer * 1.5;
-    margin: 0;
-    padding: 0;
-
-    &__item {
-      margin: 0;
-
-      @include media-breakpoint-up(md) {
-        &:not(:last-of-type):after {
-          content: '|';
-          margin-left: $spacer * 1.5;
-        }
-      }
-
-      &,
-      a {
-        color: rgba(var(--bs-light-rgb), 0.5);
-      }
     }
   }
 }
