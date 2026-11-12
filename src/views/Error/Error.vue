@@ -8,9 +8,11 @@ import { Api } from '@/api'
 import { apiInstance as api } from '@/api/apiInstance'
 import ModeServerOnly from '@/components/Mode/ModeServerOnly'
 import VersionNumber from '@/components/VersionNumber'
+import errorReasons from '@/views/Error/errorReasons'
 import settings from '@/utils/settings'
 import { useAuth } from '@/composables/useAuth'
 import { useCore } from '@/composables/useCore'
+import IPhSmileySad from '~icons/ph/smiley-sad'
 
 const props = defineProps({
   /**
@@ -42,6 +44,13 @@ const props = defineProps({
     default: null
   },
   /**
+   * Known error case (e.g. notFound, forbidden, document) that sets the text and the background.
+   */
+  reason: {
+    type: String,
+    default: null
+  },
+  /**
    * Extra context (e.g. the requested document) listed in the troubleshooting details.
    */
   details: {
@@ -59,7 +68,35 @@ const errorMessage = computed(() => {
   return props.error instanceof Error ? props.error.message : props.error
 })
 
-const titleAsString = computed(() => props.title || errorMessage.value)
+const resolvedReason = computed(() => {
+  if (props.reason) {
+    return props.reason
+  }
+  return props.title || props.error ? null : 'notFound'
+})
+
+const errorCase = computed(() => errorReasons[resolvedReason.value] ?? null)
+const resolvedCode = computed(() => errorCase.value?.code ?? props.code)
+
+const label = computed(() => {
+  const parts = []
+  if (resolvedCode.value) {
+    parts.push(t('error.code', { code: resolvedCode.value }))
+  }
+  if (errorCase.value) {
+    parts.push(t(`error.reasons.${resolvedReason.value}.label`))
+  }
+  return parts.length ? parts.join(' · ') : t('error.label')
+})
+
+const caseTitle = computed(() => errorCase.value ? t(`error.reasons.${resolvedReason.value}.title`) : null)
+const caseCause = computed(() => errorCase.value ? t(`error.reasons.${resolvedReason.value}.cause`) : null)
+
+const heading = computed(() => props.title || caseTitle.value || errorMessage.value || t('error.title'))
+const cause = computed(() => props.description || caseCause.value || t('error.description'))
+
+const backgroundCode = computed(() => resolvedCode.value)
+const backgroundIcon = computed(() => errorCase.value?.icon ?? IPhSmileySad)
 
 const occurredAt = new Date().toISOString()
 const clientHash = import.meta.env.VITE_GIT_HASH ?? ''
@@ -68,6 +105,7 @@ const serverVersion = ref(null)
 const troubleshootingEntries = computed(() => ({
   Code: props.code,
   Error: errorMessage.value,
+  Reason: resolvedReason.value,
   URL: route?.fullPath,
   ...props.details,
   Date: occurredAt,
@@ -114,21 +152,28 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
 
 <template>
   <div class="error d-flex flex-column">
+    <div
+      class="error__background"
+      aria-hidden="true"
+    >
+      <template v-if="backgroundCode">
+        {{ backgroundCode }}
+      </template>
+      <component
+        :is="backgroundIcon"
+        v-else
+      />
+    </div>
     <div class="flex-grow-1 d-flex align-items-center justify-content-center">
       <div class="error__container container">
-        <h1 class="mb-3 error__container__heading">
-          <span class="error__container__heading__code me-3">
-            <app-icon class="text-primary">
-              <i-ph-smiley-sad />
-            </app-icon>
-            <span class="px-2 error__container__heading__code__value">
-              {{ code }}
-            </span>
-          </span>
-          {{ titleAsString || t('error.title') }}
+        <p class="error__label">
+          {{ label }}
+        </p>
+        <h1 class="mb-3 error__title">
+          {{ heading }}
         </h1>
-        <p class="error__container__description lead">
-          {{ description || t('error.description') }}
+        <p class="error__cause lead">
+          {{ cause }}
         </p>
         <div class="error__container__troubleshooting">
           <button
@@ -232,44 +277,13 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
 .error {
   background: var(--bs-dark) no-repeat right bottom;
   color: var(--bs-light);
+  position: relative;
   width: 100%;
   min-height: 100vh;
 
   &__container {
     margin: $spacer auto;
     text-align: center;
-
-    &__heading {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-
-      &__code {
-        display: inline-flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        background: var(--bs-black);
-        border-radius: 1em;
-
-        &__icon {
-          transform: scale(1.1);
-        }
-
-        &__value {
-          font-size: 0.6em;
-
-          &:empty {
-            display: none;
-          }
-        }
-      }
-    }
-
-    &__description {
-      margin-bottom: $spacer * 1.5;
-    }
 
     &__troubleshooting {
       margin-bottom: $spacer * 5;
@@ -299,6 +313,21 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
         }
       }
     }
+  }
+
+  &__cause {
+    margin-bottom: $spacer * 1.5;
+  }
+
+  &__background {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30vw;
+    opacity: 0.08;
+    pointer-events: none;
   }
 
   &__details {
