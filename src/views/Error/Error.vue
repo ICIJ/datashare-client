@@ -111,7 +111,16 @@ const actionsCase = computed(() => errorCase.value ?? fallbackCase)
 const logoutLink = Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SIGNOUT)
 
 // history.state is not reactive: this is a snapshot taken when the error page opens.
-const canGoBack = Boolean(router?.options.history.state.back)
+const previousPath = router?.options.history.state.back
+
+// The previous page can be a URL that redirects to the missing document (e.g. `/d/` to `/ds/`),
+// so going back would only reopen this error page.
+const reopensMissingDocument = () => {
+  const { index, id } = router.resolve(previousPath).params
+  return Boolean(id) && index === props.details?.index && id === props.details?.id
+}
+
+const canGoBack = Boolean(previousPath) && !reopensMissingDocument()
 
 const showsRetry = computed(() => Boolean(actionsCase.value.retry))
 const showsBack = computed(() => Boolean(actionsCase.value.back))

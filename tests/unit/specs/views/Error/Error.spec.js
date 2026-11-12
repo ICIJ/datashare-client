@@ -186,6 +186,20 @@ describe('Error.vue', () => {
       expect(push).toHaveBeenCalledWith({ name: 'project.list' })
     })
 
+    it('sends Back to the projects when the previous page opens the same missing document', async () => {
+      core.useRouterWithoutGuards()
+      await core.router.replace('/does-not-exist')
+      await core.router.push('/d/local-datashare/missing')
+      await core.router.push('/ds/local-datashare/missing')
+      const back = vi.spyOn(core.router, 'back')
+      const push = vi.spyOn(core.router, 'push')
+      const props = { reason: 'document', details: { index: 'local-datashare', id: 'missing' } }
+      const wrapper = mount(Error, { props, global: { plugins: core.plugins } })
+      await wrapper.find('.error__actions__item--back').trigger('click')
+      expect(back).not.toHaveBeenCalled()
+      expect(push).toHaveBeenCalledWith({ name: 'project.list' })
+    })
+
     it('shows Try again and Back for a document', () => {
       const wrapper = mount(Error, { props: { reason: 'document' }, global: { plugins } })
       expect(actionsOf(wrapper)).toEqual(['error__actions__item--retry', 'error__actions__item--back'])
