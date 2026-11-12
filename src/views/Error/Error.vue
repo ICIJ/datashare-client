@@ -147,6 +147,9 @@ const actions = computed(() => {
   }))
 })
 
+const hasLogoutAction = computed(() => actions.value.some(({ name }) => name === 'logout'))
+const showsFooterLogout = computed(() => isAuthenticated.value && !hasLogoutAction.value)
+
 const backgroundCode = computed(() => resolvedCode.value)
 const backgroundIcon = computed(() => errorCase.value?.icon ?? IPhSmileySad)
 
@@ -209,7 +212,7 @@ const { rows: troubleshootingRows, text: troubleshootingText } = useTroubleshoot
         :rows="troubleshootingRows"
         :text="troubleshootingText"
       />
-      <error-links :is-authenticated="isAuthenticated" />
+      <error-links :is-authenticated="showsFooterLogout" />
     </footer>
   </div>
 </template>

@@ -143,6 +143,7 @@ describe('Error.vue', () => {
       const wrapper = mount(Error, { props: { reason: 'noProjects' }, global: { plugins: core.plugins } })
       await flushPromises()
       expect(actionsOf(wrapper)).toEqual(['error__actions__item--retry', 'error__actions__item--logout'])
+      expect(wrapper.find('.error__links__item--logout').exists()).toBeFalsy()
     })
 
     it('hides Log out on noProjects when logged out', async () => {
