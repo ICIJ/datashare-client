@@ -239,8 +239,7 @@
     "logout": "Cerrar sesión",
     "actions": {
       "retry": "Try again",
-      "back": "Back",
-      "home": "Home"
+      "back": "Back"
     },
     "faq": "Preguntas frecuentes (FAQ)",
     "userGuides": "Guía del Usuario",
