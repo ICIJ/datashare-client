@@ -98,6 +98,19 @@ describe('Error.vue', () => {
       await flushPromises()
       expect(wrapper.find('.error__links__item--logout').exists()).toBeTruthy()
     })
+
+    it('adds the browser, the OS and the username to the troubleshooting details', async () => {
+      const userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:158.0) Gecko/20100101 Firefox/158.0'
+      vi.spyOn(navigator, 'userAgent', 'get').mockReturnValue(userAgent)
+      setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'foo' }, JSON.stringify)
+      core.config.set('mode', 'SERVER')
+      const wrapper = mount(Error, { global: { plugins } })
+      await flushPromises()
+      const details = wrapper.findComponent('.error__details__copy').props('text')
+      expect(details).toContain('Browser: Firefox 158.0')
+      expect(details).toContain('OS: macOS')
+      expect(details).toContain('User: foo')
+    })
   })
 
   describe('server mode', () => {

@@ -10,6 +10,7 @@ import ModeServerOnly from '@/components/Mode/ModeServerOnly'
 import VersionNumber from '@/components/VersionNumber'
 import errorReasons from '@/views/Error/errorReasons'
 import settings from '@/utils/settings'
+import { parseUserAgent } from '@/utils/userAgent'
 import { useAuth } from '@/composables/useAuth'
 import { useCore } from '@/composables/useCore'
 import { useMode } from '@/composables/useMode'
@@ -64,7 +65,7 @@ const props = defineProps({
 
 const { t } = useI18n()
 const core = useCore()
-const { isAuthenticated } = useAuth()
+const { isAuthenticated, username } = useAuth()
 const { isServer } = useMode()
 const route = useRoute()
 const router = useRouter()
@@ -152,6 +153,7 @@ const backgroundIcon = computed(() => errorCase.value?.icon ?? IPhSmileySad)
 
 const occurredAt = new Date().toISOString()
 const clientHash = import.meta.env.VITE_GIT_HASH ?? ''
+const { browser, os } = parseUserAgent(navigator.userAgent)
 const serverVersion = ref(null)
 
 const fullUrl = computed(() => {
@@ -170,6 +172,9 @@ const troubleshootingEntries = computed(() => ({
   URL: fullUrl.value,
   ...props.details,
   Date: occurredAt,
+  User: username.value,
+  Browser: browser,
+  OS: os,
   Client: clientHash.substring(0, 7),
   Server: serverVersion.value
 }))
