@@ -207,12 +207,46 @@
   "error": {
     "title": "Error",
     "description": "Ha ocurrido un error. Por favor, inténtelo de nuevo más tarde o póngase en contacto con su administrador si el problema persiste.",
-    "noProjects": "Tu lista de proyectos está vacía. Por favor, contacta con administración.",
-    "notFound": "Página no encontrada.",
+    "label": "Error",
+    "code": "Error {code}",
+    "reasons": {
+      "notFound": {
+        "label": "Page",
+        "title": "This page doesn't exist",
+        "cause": "The link may be broken or mistyped."
+      },
+      "forbidden": {
+        "label": "Access",
+        "title": "This page isn't available to you",
+        "cause": "Your role or Datashare's mode doesn't allow it."
+      },
+      "noProjects": {
+        "label": "Projects",
+        "title": "You don't have any project yet",
+        "cause": "Ask your administrator to give you access."
+      },
+      "serverUnreachable": {
+        "label": "Server",
+        "title": "Datashare can't reach its server",
+        "cause": "It may be restarting. Wait a moment and try again."
+      },
+      "document": {
+        "label": "Document",
+        "title": "We couldn't open this document",
+        "cause": "It may have been deleted, or the link may point to the wrong project."
+      }
+    },
     "logout": "Cerrar sesión",
+    "actions": {
+      "retry": "Try again",
+      "back": "Back",
+      "home": "Home"
+    },
     "faq": "Preguntas frecuentes (FAQ)",
     "userGuides": "Guía del Usuario",
-    "help": "Pedir ayuda"
+    "help": "Pedir ayuda",
+    "copyDetails": "Copy details",
+    "troubleshootingDetails": "Troubleshooting details"
   },
   "filtersPanelToggler": {
     "label": "Cerrar filtros"
