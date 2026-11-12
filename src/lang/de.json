@@ -207,12 +207,46 @@
   "error": {
     "title": "Es ist ein Fehler aufgetreten",
     "description": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut oder wenden Sie sich an Ihren Administrator, falls das Problem weiterhin besteht.",
-    "noProjects": "Sie haben noch keine Projekte. Bitte kontaktieren Sie Ihren Administrator.",
-    "notFound": "Seite wurde nicht gefunden.",
+    "label": "Error",
+    "code": "Error {code}",
+    "reasons": {
+      "notFound": {
+        "label": "Page",
+        "title": "This page doesn't exist",
+        "cause": "The link may be broken or mistyped."
+      },
+      "forbidden": {
+        "label": "Access",
+        "title": "This page isn't available to you",
+        "cause": "Your role or Datashare's mode doesn't allow it."
+      },
+      "noProjects": {
+        "label": "Projects",
+        "title": "You don't have any project yet",
+        "cause": "Ask your administrator to give you access."
+      },
+      "serverUnreachable": {
+        "label": "Server",
+        "title": "Datashare can't reach its server",
+        "cause": "It may be restarting. Wait a moment and try again."
+      },
+      "document": {
+        "label": "Document",
+        "title": "We couldn't open this document",
+        "cause": "It may have been deleted, or the link may point to the wrong project."
+      }
+    },
     "logout": "Log out",
+    "actions": {
+      "retry": "Try again",
+      "back": "Back",
+      "home": "Home"
+    },
     "faq": "FAQ",
     "userGuides": "Benutzeranleitung",
-    "help": "Hilfsanfrage"
+    "help": "Hilfsanfrage",
+    "copyDetails": "Copy details",
+    "troubleshootingDetails": "Troubleshooting details"
   },
   "filtersPanelToggler": {
     "label": "Close filters"
