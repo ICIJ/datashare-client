@@ -84,7 +84,12 @@ const errorCase = computed(() => {
   const key = resolvedReason.value
   return Object.hasOwn(errorReasons, key) ? errorReasons[key] : null
 })
-const resolvedCode = computed(() => errorCase.value?.code ?? props.code)
+const resolvedCode = computed(() => {
+  if (errorCase.value?.hidesCode) {
+    return null
+  }
+  return errorCase.value?.code ?? props.code
+})
 
 const label = computed(() => {
   const parts = []

@@ -184,12 +184,13 @@ describe('Error.vue', () => {
       expect(wrapper.find('.error__background').attributes('aria-hidden')).toBe('true')
     })
 
-    it('shows the document case with the real code', () => {
+    it('hides the code of a document error, since the backend answers 500 for a missing document', () => {
       const props = { reason: 'document', code: 500, error: 'Request failed with status code 500' }
       const wrapper = mount(Error, { props, global: { plugins } })
-      expect(wrapper.find('.error__label').text()).toBe('Error 500 · Document')
+      expect(wrapper.find('.error__label').text()).toBe('Document')
       expect(wrapper.find('.error__title').text()).toBe('We couldn\'t open this document')
-      expect(wrapper.find('.error__background').text()).toBe('500')
+      expect(wrapper.find('.error__background svg').exists()).toBe(true)
+      expect(wrapper.findComponent('.error__details__copy').props('text')).toContain('Code: 500')
     })
 
     it('shows an icon instead of a code for the document case without code', () => {
