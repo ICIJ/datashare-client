@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, shallowRef } from 'vue'
 import compact from 'lodash/compact'
 import findIndex from 'lodash/findIndex'
 import flattenDeep from 'lodash/flattenDeep'
@@ -26,7 +26,7 @@ export const useDocumentStore = defineStore(
     // Document identification and routing information.
     const idAndRouting = ref(null)
     // The error raised by the last failed document fetch.
-    const error = ref(null)
+    const error = shallowRef(null)
     // Indicates whether the document content is loaded.
     const isContentLoaded = ref(false)
     // Indicates whether the document is recommended.
