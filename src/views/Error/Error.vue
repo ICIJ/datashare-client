@@ -210,7 +210,7 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
         v-else
       />
     </div>
-    <div class="flex-grow-1 d-flex align-items-center justify-content-center">
+    <div class="flex-grow-1 d-flex align-items-center">
       <div class="error__container container">
         <p class="error__label">
           {{ label }}
@@ -239,37 +239,20 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
             {{ action.label }}
           </b-button>
         </div>
-        <div class="error__container__troubleshooting">
-          <button
-            type="button"
-            class="error__container__troubleshooting__toggle btn btn-link p-0"
-            aria-controls="error-details"
-            :aria-expanded="showDetails"
-            @click="toggleDetails"
-          >
-            <app-icon class="error__container__troubleshooting__toggle__caret me-1">
-              <i-ph-caret-right />
-            </app-icon>
-            {{ t('error.troubleshootingDetails') }}
-          </button>
-          <div
-            v-if="showDetails"
-            id="error-details"
-            class="error__details"
-          >
-            <dl class="error__details__list">
-              <template
-                v-for="[name, value] in troubleshootingRows"
-                :key="name"
-              >
-                <dt class="error__details__list__name">
-                  {{ name }}
-                </dt>
-                <dd class="error__details__list__value">
-                  {{ value }}
-                </dd>
-              </template>
-            </dl>
+        <div class="error__details">
+          <div class="error__details__header">
+            <button
+              type="button"
+              class="error__details__toggle btn btn-link"
+              aria-controls="error-details"
+              :aria-expanded="showDetails"
+              @click="toggleDetails"
+            >
+              <app-icon class="error__details__toggle__caret me-1">
+                <i-ph-caret-right />
+              </app-icon>
+              {{ t('error.troubleshootingDetails') }}
+            </button>
             <haptic-copy
               :text="troubleshootingDetails"
               :label="t('error.copyDetails')"
@@ -278,6 +261,23 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
               size="sm"
             />
           </div>
+          <dl
+            v-if="showDetails"
+            id="error-details"
+            class="error__details__list"
+          >
+            <template
+              v-for="[name, value] in troubleshootingRows"
+              :key="name"
+            >
+              <dt class="error__details__list__name">
+                {{ name }}
+              </dt>
+              <dd class="error__details__list__value">
+                {{ value }}
+              </dd>
+            </template>
+          </dl>
         </div>
         <ul class="error__container__links list-inline text-capitalize">
           <li class="list-inline-item error__container__links__item">
@@ -339,31 +339,29 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
 
 <style lang="scss" scoped>
 .error {
-  background: var(--bs-dark) no-repeat right bottom;
+  background: var(--bs-dark);
   color: var(--bs-light);
   position: relative;
+  overflow: hidden;
   width: 100%;
   min-height: 100vh;
 
   &__container {
-    margin: $spacer auto;
-    text-align: center;
+    position: relative;
+    width: 100%;
+    max-width: 560px;
+    margin: $spacer * 2 auto;
+    padding: 0 $spacer * 1.5;
+    text-align: left;
 
-    &__troubleshooting {
-      margin-bottom: $spacer * 5;
-
-      &__toggle {
-        &__caret {
-          transition: transform 0.15s ease-out;
-        }
-
-        &[aria-expanded='true'] &__caret {
-          transform: rotate(90deg);
-        }
-      }
+    @include media-breakpoint-up(lg) {
+      margin-left: 12vw;
     }
 
     &__links {
+      padding: 0;
+      margin: 0;
+
       &__item {
         &:not(:last-of-type):after {
           content: '|';
@@ -379,12 +377,23 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
     }
   }
 
+  &__label {
+    margin-bottom: $spacer * 0.5;
+    font-size: $font-size-sm;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(var(--bs-light-rgb), 0.5);
+  }
+
   &__actions {
     display: flex;
     flex-wrap: wrap;
     gap: $spacer * 0.5;
-    justify-content: center;
-    margin-bottom: $spacer * 1.5;
+    margin-bottom: $spacer * 2;
+
+    .btn-outline-light {
+      color: var(--bs-light);
+    }
   }
 
   &__cause {
@@ -393,28 +402,58 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
 
   &__background {
     position: absolute;
-    inset: 0;
+    top: 0;
+    right: 0;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 30vw;
-    opacity: 0.08;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: $spacer * 2;
+    font-size: clamp(8rem, 30vw, 24rem);
+    font-weight: bold;
+    line-height: 1;
+    opacity: 0.05;
     pointer-events: none;
+
+    @include media-breakpoint-down(md) {
+      display: none;
+    }
   }
 
   &__details {
-    max-width: 36rem;
-    margin: $spacer auto 0;
-    padding: $spacer;
+    margin-bottom: $spacer * 2;
     background: var(--bs-black);
     border-radius: var(--bs-border-radius-lg);
-    text-align: start;
+
+    &__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: $spacer * 0.5 $spacer;
+    }
+
+    &__toggle {
+      flex-grow: 1;
+      padding: 0;
+      text-align: left;
+      color: var(--bs-light);
+      text-decoration: none;
+
+      &__caret {
+        transition: transform 0.15s ease-out;
+      }
+
+      &[aria-expanded='true'] &__caret {
+        transform: rotate(90deg);
+      }
+    }
 
     &__list {
       display: grid;
       grid-template-columns: max-content minmax(0, 1fr);
       gap: $spacer * 0.25 $spacer;
-      margin-bottom: $spacer;
+      margin: 0;
+      padding: $spacer;
+      border-top: 1px solid rgba(var(--bs-light-rgb), 0.15);
       font-family: var(--bs-font-monospace);
       font-size: $font-size-sm;
 

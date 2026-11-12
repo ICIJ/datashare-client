@@ -37,6 +37,15 @@ describe('Error.vue', () => {
       expect(wrapper.find('.error__title').text()).toBe('This is wrong!')
     })
 
+    it('lets the user copy details without opening them', () => {
+      const wrapper = mount(Error, { props: { error: 'boom' }, global: { plugins } })
+      const toggle = wrapper.find('.error__details__toggle')
+      expect(toggle.attributes('aria-expanded')).toBe('false')
+      expect(toggle.attributes('aria-controls')).toBe('error-details')
+      expect(wrapper.find('#error-details').exists()).toBe(false)
+      expect(wrapper.findComponent('.error__details__copy').props('text')).toContain('Error: boom')
+    })
+
     it('should display troubleshooting details', async () => {
       core.useRouterWithoutGuards()
       await core.router.push('/ds/local-datashare/missing')
@@ -48,7 +57,7 @@ describe('Error.vue', () => {
       }
       const wrapper = mount(Error, { props, global: { plugins: core.plugins } })
       await flushPromises()
-      await wrapper.find('.error__container__troubleshooting__toggle').trigger('click')
+      await wrapper.find('.error__details__toggle').trigger('click')
       const details = wrapper.findComponent('.error__details__copy').props('text')
       expect(details).toContain('Code: 404')
       expect(details).toContain('Error: Not Found')
