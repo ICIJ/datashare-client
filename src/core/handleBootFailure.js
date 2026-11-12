@@ -31,7 +31,13 @@ export function handleBootFailure(core, error) {
   // the message, the status code and a reason are forwarded, not the error itself.
   const message = error?.message ?? String(error)
   const status = error?.response?.status
-  const state = status ? { error: message, code: status } : { error: message, reason: 'serverUnreachable' }
+  const state = { error: message }
+  if (status) {
+    state.code = status
+  }
+  else {
+    state.reason = 'serverUnreachable'
+  }
   const failedRoute = core.router.resolve(route)
   return core.router.push(errorLocation(failedRoute, state))
 }

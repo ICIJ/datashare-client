@@ -15,7 +15,12 @@ vi.mock('@/api/apiInstance', () => {
   }
 })
 
-const actionsOf = wrapper => wrapper.findAll('.error__actions .btn').map(b => b.classes().find(c => c.startsWith('error__actions__item--')))
+const actionOf = button => button.classes().find(c => c.startsWith('error__actions__item--'))
+
+const actionsOf = (wrapper) => {
+  const buttons = wrapper.findAll('.error__actions .btn')
+  return buttons.map(actionOf)
+}
 
 describe('Error.vue', () => {
   let plugins

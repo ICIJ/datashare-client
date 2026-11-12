@@ -80,7 +80,10 @@ const resolvedReason = computed(() => {
   return props.title || props.error ? null : 'notFound'
 })
 
-const errorCase = computed(() => errorReasons[resolvedReason.value] ?? null)
+const errorCase = computed(() => {
+  const key = resolvedReason.value
+  return Object.hasOwn(errorReasons, key) ? errorReasons[key] : null
+})
 const resolvedCode = computed(() => errorCase.value?.code ?? props.code)
 
 const label = computed(() => {
