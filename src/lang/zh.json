@@ -207,12 +207,46 @@
   "error": {
     "title": "出了点问题",
     "description": "发生错误。请稍后重试，如果问题仍然存在，请联系您的管理员。",
-    "noProjects": "您的项目列表为空。请联系您的管理员。",
-    "notFound": "未找到页面。",
+    "label": "Error",
+    "code": "Error {code}",
+    "reasons": {
+      "notFound": {
+        "label": "Page",
+        "title": "This page doesn't exist",
+        "cause": "The link may be broken or mistyped."
+      },
+      "forbidden": {
+        "label": "Access",
+        "title": "This page isn't available to you",
+        "cause": "Your role or Datashare's mode doesn't allow it."
+      },
+      "noProjects": {
+        "label": "Projects",
+        "title": "You don't have any project yet",
+        "cause": "Ask your administrator to give you access."
+      },
+      "serverUnreachable": {
+        "label": "Server",
+        "title": "Datashare can't reach its server",
+        "cause": "It may be restarting. Wait a moment and try again."
+      },
+      "document": {
+        "label": "Document",
+        "title": "We couldn't open this document",
+        "cause": "It may have been deleted, or the link may point to the wrong project."
+      }
+    },
     "logout": "退出登录",
+    "actions": {
+      "retry": "Try again",
+      "back": "Back",
+      "home": "Home"
+    },
     "faq": "常见问题",
     "userGuides": "用户指南",
-    "help": "寻求帮助"
+    "help": "寻求帮助",
+    "copyDetails": "Copy details",
+    "troubleshootingDetails": "Troubleshooting details"
   },
   "filtersPanelToggler": {
     "label": "关闭筛选"
