@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router'
 
 import { Api } from '@/api'
 import { ERROR_REASONS } from '@/enums/errorReasons'
+import { isRedirectSource } from '@/router/redirectSources'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 import ErrorLinks from '@/views/Error/ErrorLinks'
 import ErrorTroubleshooting from '@/views/Error/ErrorTroubleshooting'
@@ -112,15 +113,7 @@ const logoutLink = Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SIGNOUT)
 
 // history.state is not reactive: this is a snapshot taken when the error page opens.
 const previousPath = router?.options.history.state.back
-
-// The previous page can be a URL that redirects to the missing document (e.g. `/d/` to `/ds/`),
-// so going back would only reopen this error page.
-const reopensMissingDocument = () => {
-  const { index, id } = router.resolve(previousPath).params
-  return Boolean(id) && index === props.details?.index && id === props.details?.id
-}
-
-const canGoBack = Boolean(previousPath) && !reopensMissingDocument()
+const canGoBack = Boolean(previousPath) && !isRedirectSource(previousPath)
 
 const showsRetry = computed(() => Boolean(actionsCase.value.retry))
 const showsBack = computed(() => Boolean(actionsCase.value.back))

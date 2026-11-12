@@ -4,6 +4,7 @@ import { setCookie, removeCookie } from 'tiny-cookie'
 import CoreSetup from '~tests/unit/CoreSetup'
 import Error from '@/views/Error/Error'
 import { apiInstance as api } from '@/api/apiInstance'
+import { recordRedirectSource } from '@/router/redirectSources'
 
 vi.mock('@/api/apiInstance', () => {
   return {
@@ -186,15 +187,15 @@ describe('Error.vue', () => {
       expect(push).toHaveBeenCalledWith({ name: 'project.list' })
     })
 
-    it('sends Back to the projects when the previous page opens the same missing document', async () => {
+    it('sends Back to the projects when the previous page only redirected here', async () => {
       core.useRouterWithoutGuards()
       await core.router.replace('/does-not-exist')
-      await core.router.push('/d/local-datashare/missing')
-      await core.router.push('/ds/local-datashare/missing')
+      recordRedirectSource({ redirectedFrom: { fullPath: '/redirects-here' } })
+      await core.router.push('/redirects-here')
+      await core.router.push('/landed-here')
       const back = vi.spyOn(core.router, 'back')
       const push = vi.spyOn(core.router, 'push')
-      const props = { reason: 'document', details: { index: 'local-datashare', id: 'missing' } }
-      const wrapper = mount(Error, { props, global: { plugins: core.plugins } })
+      const wrapper = mount(Error, { global: { plugins: core.plugins } })
       await wrapper.find('.error__actions__item--back').trigger('click')
       expect(back).not.toHaveBeenCalled()
       expect(push).toHaveBeenCalledWith({ name: 'project.list' })
