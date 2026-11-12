@@ -18,7 +18,7 @@ export default (core) => {
    * @param {import('vue-router').NavigationGuardNext} next
    * @param {import('vue-router').RouteLocationNormalized} to - The denied route.
    */
-  function nextNotFound(next, to) {
+  function nextForbidden(next, to) {
     const location = errorLocation(to, { reason: 'forbidden' })
     next({ ...location, replace: false })
   }
@@ -196,7 +196,7 @@ export default (core) => {
     const projectName = getProjectFromRoute(meta, params)
     // If route requires roles but no project param is found, or user lacks required roles, deny access
     if (!projectName || !hasRequiredRole(allowedRole, projectName)) {
-      return nextNotFound(next, to)
+      return nextForbidden(next, to)
     }
 
     next()
@@ -219,7 +219,7 @@ export default (core) => {
       next()
     }
     else {
-      nextNotFound(next, to)
+      nextForbidden(next, to)
     }
   }
 
