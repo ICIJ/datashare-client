@@ -1,4 +1,5 @@
 import { shallowMount, flushPromises } from '@vue/test-utils'
+import { RouterView } from 'vue-router'
 
 import { apiInstance as api } from '@/api/apiInstance'
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
@@ -91,6 +92,35 @@ describe('DocumentView.vue', () => {
     expect(core.router.currentRoute.value.name).toBe('error')
     expect(core.router.currentRoute.value.fullPath).toBe('/document')
     expect(window.history.state).toMatchObject({ error: 'Not Found', code: 404, details, reason: 'document' })
+  })
+
+  it('should keep the page behind a modal and show the document URL on the error page', async () => {
+    await core.router.push({ name: 'index' })
+    const props = { id: 'notfound', index: project }
+    const global = { plugins: core.plugins, renderStubDefaultSlot: true }
+    api.elasticsearch.getDocumentWithoutContent.mockRejectedValue(new Error('Not found'))
+    shallowMount(DocumentView, { global, props })
+    await flushPromises()
+    expect(core.router.currentRoute.value.name).toBe('error')
+    expect(core.router.currentRoute.value.fullPath).toBe('/document-standalone')
+    expect(window.history.state.back).toBe('/')
+  })
+
+  it('should keep the previous document in the history when the next one fails', async () => {
+    const routes = [
+      { path: '/:pathMatch(.*)*', name: 'error' },
+      { path: '/ds/:index/:id', name: 'document-standalone', component: DocumentView, props: true }
+    ]
+    const core = CoreSetup.init().useAll().useRouter(routes)
+    await core.router.push({ name: 'document-standalone', params: { index: project, id } })
+    const global = { plugins: core.plugins, stubs: { RouterView: false, DocumentView: false } }
+    shallowMount(RouterView, { global })
+    await flushPromises()
+    api.elasticsearch.getDocumentWithoutContent.mockRejectedValue(new Error('Not found'))
+    await core.router.push({ name: 'document-standalone', params: { index: project, id: 'notfound' } })
+    await flushPromises()
+    expect(core.router.currentRoute.value.name).toBe('error')
+    expect(window.history.state.back).toBe(`/ds/${project}/${id}`)
   })
 
   it('should call the retrieve the document and its parent', async () => {

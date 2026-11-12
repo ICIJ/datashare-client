@@ -126,19 +126,27 @@ const tab = useUrlParamWithStore('tab', {
 
 const component = ref(null)
 
-const redirectToError = (failedRoute, details) => {
+const isDocumentRoute = ({ name }) => ['document', 'document-standalone'].includes(name)
+
+// Only the document's own route, once reached, holds a history entry worth replacing:
+// a modal shows the document over another page, and a pending navigation has no entry yet.
+const redirectToError = (failedRoute, details, { pending = false } = {}) => {
   const { message: error, status: code } = documentStore.error ?? {}
   const state = { error, code, details, reason: 'document' }
-  return router.push(errorLocation(failedRoute, state))
+  const isOwnRoute = isDocumentRoute(failedRoute)
+  const target = isOwnRoute ? failedRoute : router.resolve({ name: 'document-standalone', params: details })
+  const location = errorLocation(target, state)
+  const replace = isOwnRoute && !pending
+  return router.push({ ...location, replace })
 }
 
-const fetchRouteDocument = async (failedRoute = route) => {
+const fetchRouteDocument = async (failedRoute = route, options) => {
   const { index = props.index, id = props.id, routing = props.routing } = failedRoute.params ?? {}
   await fetchDocumentOnce({ index, id, routing })
 
   // No document found, redirect to error page
   if (!document.value) {
-    await redirectToError(failedRoute, { index, id, routing })
+    await redirectToError(failedRoute, { index, id, routing }, options)
   }
 }
 
@@ -178,7 +186,7 @@ onBeforeMount(whenSearchHasNoEntries(redirectToDocumentStandalone))
 
 // Ensure the document is always in sync with the route
 onBeforeMount(fetchRouteDocument)
-onBeforeRouteUpdate(fetchRouteDocument)
+onBeforeRouteUpdate(to => fetchRouteDocument(to, { pending: true }))
 </script>
 
 <template>
