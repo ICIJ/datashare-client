@@ -1,11 +1,11 @@
 <script setup>
 import { computed } from 'vue'
-import { AppIcon } from '@icij/murmur'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 
 import { Api } from '@/api'
 import { ERROR_REASONS } from '@/enums/errorReasons'
+import ButtonIcon from '@/components/Button/ButtonIcon'
 import ErrorLinks from '@/views/Error/ErrorLinks'
 import ErrorTroubleshooting from '@/views/Error/ErrorTroubleshooting'
 import { useAuth } from '@/composables/useAuth'
@@ -13,6 +13,7 @@ import { useMode } from '@/composables/useMode'
 import { useTroubleshootingDetails } from '@/composables/useTroubleshootingDetails'
 import IPhArrowClockwise from '~icons/ph/arrow-clockwise'
 import IPhArrowLeft from '~icons/ph/arrow-left'
+import IPhSignOut from '~icons/ph/sign-out'
 import IPhSmileySad from '~icons/ph/smiley-sad'
 
 const props = defineProps({
@@ -104,51 +105,28 @@ const caseCause = computed(() => errorCase.value ? t(`error.reasons.${resolvedRe
 const heading = computed(() => props.title || caseTitle.value || errorMessage.value || t('error.title'))
 const cause = computed(() => props.description || caseCause.value || t('error.description'))
 
-const fallbackActions = ['retry', 'home']
-const actionNames = computed(() => errorCase.value?.actions ?? fallbackActions)
-const variants = ['primary', 'outline-light']
+const fallbackCase = { retry: true, back: true }
+const actionsCase = computed(() => errorCase.value ?? fallbackCase)
 
 const logoutLink = Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SIGNOUT)
 
-const actionHandlers = {
-  retry: () => window.location.reload(),
-  back: () => router.back(),
-  home: () => router.push('/')
-}
-
-const actionIcons = {
-  retry: IPhArrowClockwise,
-  back: IPhArrowLeft
-}
-
 // history.state is not reactive: this is a snapshot taken when the error page opens.
 const canGoBack = Boolean(router?.options.history.state.back)
-const canLogout = computed(() => isServer.value && isAuthenticated.value)
 
-const isActionVisible = (name) => {
-  if (name === 'back') {
-    return canGoBack
+const showsRetry = computed(() => Boolean(actionsCase.value.retry))
+const showsBack = computed(() => Boolean(actionsCase.value.back))
+const showsLogout = computed(() => Boolean(actionsCase.value.logout) && isServer.value && isAuthenticated.value)
+const showsFooterLogout = computed(() => isAuthenticated.value && !showsLogout.value)
+const backVariant = computed(() => showsRetry.value ? 'outline-secondary' : 'outline-primary')
+
+const retry = () => window.location.reload()
+
+const goBack = () => {
+  if (canGoBack) {
+    return router.back()
   }
-  if (name === 'logout') {
-    return canLogout.value
-  }
-  return true
+  return router.push({ name: 'project.list' })
 }
-
-const actions = computed(() => {
-  const names = actionNames.value.filter(isActionVisible)
-  return names.map((name, index) => ({
-    name,
-    variant: variants[index],
-    icon: actionIcons[name],
-    label: name === 'logout' ? t('error.logout') : t(`error.actions.${name}`),
-    href: name === 'logout' ? logoutLink : undefined,
-    onClick: actionHandlers[name]
-  }))
-})
-
-const hasLogoutAction = computed(() => actions.value.some(({ name }) => name === 'logout'))
-const showsFooterLogout = computed(() => isAuthenticated.value && !hasLogoutAction.value)
 
 const backgroundCode = computed(() => resolvedCode.value)
 const backgroundIcon = computed(() => errorCase.value?.icon ?? IPhSmileySad)
@@ -187,23 +165,36 @@ const { rows: troubleshootingRows, text: troubleshootingText } = useTroubleshoot
           {{ cause }}
         </p>
         <div class="error__actions">
-          <b-button
-            v-for="action in actions"
-            :key="action.name"
+          <button-icon
+            v-if="showsRetry"
             size="lg"
-            :class="`error__actions__item--${action.name}`"
-            :variant="action.variant"
-            :href="action.href"
-            @click="action.onClick"
+            class="error__actions__item--retry"
+            variant="outline-primary"
+            :icon-left="IPhArrowClockwise"
+            @click="retry"
           >
-            <app-icon
-              v-if="action.icon"
-              class="me-1"
-            >
-              <component :is="action.icon" />
-            </app-icon>
-            {{ action.label }}
-          </b-button>
+            {{ t('error.actions.retry') }}
+          </button-icon>
+          <button-icon
+            v-if="showsBack"
+            size="lg"
+            class="error__actions__item--back"
+            :variant="backVariant"
+            :icon-left="IPhArrowLeft"
+            @click="goBack"
+          >
+            {{ t('error.actions.back') }}
+          </button-icon>
+          <button-icon
+            v-if="showsLogout"
+            size="lg"
+            class="error__actions__item--logout"
+            variant="outline-secondary"
+            :icon-left="IPhSignOut"
+            :href="logoutLink"
+          >
+            {{ t('error.logout') }}
+          </button-icon>
         </div>
       </div>
     </div>
@@ -282,10 +273,6 @@ const { rows: troubleshootingRows, text: troubleshootingText } = useTroubleshoot
       @include media-breakpoint-down(sm) {
         flex: 1;
       }
-    }
-
-    .btn-outline-light {
-      --bs-btn-color: var(--bs-light);
     }
   }
 

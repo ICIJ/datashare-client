@@ -5,9 +5,9 @@ import IPhLock from '~icons/ph/lock'
 import IPhPlug from '~icons/ph/plug'
 
 export const ERROR_REASONS = Object.freeze({
-  notFound: { code: 404, actions: ['home', 'back'] },
-  forbidden: { icon: markRaw(IPhLock), actions: ['home', 'back'] },
-  noProjects: { icon: markRaw(IPhFolder), actions: ['retry', 'logout'] },
-  serverUnreachable: { icon: markRaw(IPhPlug), actions: ['retry'] },
-  document: { icon: markRaw(IPhFile), actions: ['retry', 'home'], hidesCode: true }
+  notFound: { code: 404, back: true },
+  forbidden: { icon: markRaw(IPhLock), back: true },
+  noProjects: { icon: markRaw(IPhFolder), retry: true, logout: true },
+  serverUnreachable: { icon: markRaw(IPhPlug), retry: true },
+  document: { icon: markRaw(IPhFile), retry: true, back: true, hidesCode: true }
 })

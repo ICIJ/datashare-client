@@ -143,6 +143,7 @@ describe('Error.vue', () => {
       const wrapper = mount(Error, { props: { reason: 'noProjects' }, global: { plugins: core.plugins } })
       await flushPromises()
       expect(actionsOf(wrapper)).toEqual(['error__actions__item--retry', 'error__actions__item--logout'])
+      expect(wrapper.find('.error__actions__item--logout').classes()).toContain('btn-outline-secondary')
       expect(wrapper.find('.error__links__item--logout').exists()).toBeFalsy()
     })
 
@@ -162,27 +163,39 @@ describe('Error.vue', () => {
       removeCookie(process.env.VITE_DS_COOKIE_NAME)
     })
 
-    it('hides Back when the error page is the first page', async () => {
-      core.useRouterWithoutGuards()
-      await core.router.replace('/does-not-exist')
-      const wrapper = mount(Error, { global: { plugins: core.plugins } })
-      expect(actionsOf(wrapper)).toEqual(['error__actions__item--home'])
-    })
-
-    it('shows Home then Back when there is a previous page', async () => {
+    it('shows Back as the primary action when there is a previous page', async () => {
       core.useRouterWithoutGuards()
       await core.router.replace('/')
       await core.router.push('/does-not-exist')
+      const back = vi.spyOn(core.router, 'back')
       const wrapper = mount(Error, { global: { plugins: core.plugins } })
-      expect(actionsOf(wrapper)).toEqual(['error__actions__item--home', 'error__actions__item--back'])
-      expect(wrapper.find('.error__actions__item--home').classes()).toContain('btn-primary')
-      expect(wrapper.find('.error__actions__item--back').classes()).toContain('btn-outline-light')
+      expect(actionsOf(wrapper)).toEqual(['error__actions__item--back'])
+      expect(wrapper.findComponent({ name: 'ButtonIcon' }).exists()).toBe(true)
+      expect(wrapper.find('.error__actions__item--back').classes()).toContain('btn-outline-primary')
+      await wrapper.find('.error__actions__item--back').trigger('click')
+      expect(back).toHaveBeenCalled()
     })
 
-    it('shows Try again and Home for a document', () => {
+    it('sends Back to the projects when the error page is the first page', async () => {
+      core.useRouterWithoutGuards()
+      await core.router.replace('/does-not-exist')
+      const push = vi.spyOn(core.router, 'push')
+      const wrapper = mount(Error, { global: { plugins: core.plugins } })
+      expect(actionsOf(wrapper)).toEqual(['error__actions__item--back'])
+      await wrapper.find('.error__actions__item--back').trigger('click')
+      expect(push).toHaveBeenCalledWith({ name: 'project.list' })
+    })
+
+    it('shows Try again and Back for a document', () => {
       const wrapper = mount(Error, { props: { reason: 'document' }, global: { plugins } })
-      expect(actionsOf(wrapper)).toEqual(['error__actions__item--retry', 'error__actions__item--home'])
-      expect(wrapper.find('.error__actions__item--home').classes()).toContain('btn-outline-light')
+      expect(actionsOf(wrapper)).toEqual(['error__actions__item--retry', 'error__actions__item--back'])
+      expect(wrapper.find('.error__actions__item--retry').classes()).toContain('btn-outline-primary')
+      expect(wrapper.find('.error__actions__item--back').classes()).toContain('btn-outline-secondary')
+    })
+
+    it('shows Try again and Back for an unknown error', () => {
+      const wrapper = mount(Error, { props: { error: 'boom' }, global: { plugins } })
+      expect(actionsOf(wrapper)).toEqual(['error__actions__item--retry', 'error__actions__item--back'])
     })
 
     it('reloads the page on Try again', async () => {
