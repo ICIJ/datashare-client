@@ -1,3 +1,13 @@
+// Vue Router keeps a segment it cannot decode (e.g. a lone `%`) as is, so do the same.
+function decodeSegment(segment) {
+  try {
+    return decodeURIComponent(segment)
+  }
+  catch {
+    return segment
+  }
+}
+
 /**
  * Builds a location to the catch-all error route that keeps the URL of the
  * failed route, so reloading the page retries it instead of landing on `#/`.
@@ -11,7 +21,7 @@ export function errorLocation({ path, query, hash }, state = {}) {
   // Route params are decoded, while `path` is encoded: decode each segment
   // so the router does not encode it twice.
   const segments = path.substring(1).split('/')
-  const pathMatch = segments.map(decodeURIComponent)
+  const pathMatch = segments.map(decodeSegment)
   const blank = {
     title: undefined,
     description: undefined,

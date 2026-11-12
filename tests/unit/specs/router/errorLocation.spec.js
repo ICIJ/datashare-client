@@ -22,6 +22,13 @@ describe('errorLocation', () => {
     expect(location.fullPath).toBe('/ds/project/my%20document?tab=text#top')
   })
 
+  it('should keep a path segment that cannot be decoded', () => {
+    const route = router.resolve('/foo%zz')
+    const location = router.resolve(errorLocation(route))
+    expect(location.name).toBe('error')
+    expect(location.params.pathMatch).toEqual(['foo%zz'])
+  })
+
   it('should replace the failed route in the history', () => {
     const route = router.resolve('/ds/project/document')
     expect(errorLocation(route).replace).toBe(true)
