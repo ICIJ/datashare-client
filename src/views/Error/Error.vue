@@ -213,19 +213,19 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
 
 <template>
   <div class="error d-flex flex-column">
-    <div
-      class="error__background"
-      aria-hidden="true"
-    >
-      <template v-if="backgroundCode">
-        {{ backgroundCode }}
-      </template>
-      <component
-        :is="backgroundIcon"
-        v-else
-      />
-    </div>
     <div class="error__main">
+      <div
+        class="error__background"
+        aria-hidden="true"
+      >
+        <template v-if="backgroundCode">
+          {{ backgroundCode }}
+        </template>
+        <component
+          :is="backgroundIcon"
+          v-else
+        />
+      </div>
       <div class="error__container">
         <p class="error__label">
           {{ label }}
@@ -427,15 +427,21 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
 
   &__background {
     position: absolute;
-    top: 46%;
+    top: 0;
+    bottom: 0;
     right: var(--error-gutter);
-    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
     font-size: min(38vh, 14vw);
     font-weight: 800;
     line-height: 0.8;
     letter-spacing: -0.04em;
     opacity: 0.05;
     pointer-events: none;
+
+    svg {
+      max-height: 100%;
+    }
 
     @include media-breakpoint-down(xxl) {
       display: none;
