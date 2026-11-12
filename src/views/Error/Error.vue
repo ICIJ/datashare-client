@@ -350,7 +350,7 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
     position: relative;
     width: 100%;
     max-width: 560px;
-    margin: $spacer * 2 auto;
+    margin: $spacer * 2 auto $spacer * 2 0;
     padding: 0 $spacer * 1.5;
     text-align: left;
 
@@ -392,7 +392,7 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
     margin-bottom: $spacer * 2;
 
     .btn-outline-light {
-      color: var(--bs-light);
+      --bs-btn-color: var(--bs-light);
     }
   }
 
@@ -428,12 +428,13 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: $spacer * 0.5 $spacer;
+      gap: $spacer * 0.5;
+      padding-right: $spacer;
     }
 
     &__toggle {
       flex-grow: 1;
-      padding: 0;
+      padding: $spacer * 0.75 0 $spacer * 0.75 $spacer;
       text-align: left;
       color: var(--bs-light);
       text-decoration: none;
