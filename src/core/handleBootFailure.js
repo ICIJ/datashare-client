@@ -1,3 +1,4 @@
+import { errorLocation } from '@/router/errorLocation'
 import { useAppStore } from '@/store/modules'
 
 /**
@@ -11,12 +12,12 @@ import { useAppStore } from '@/store/modules'
  */
 export function handleBootFailure(core, error) {
   const unauthorized = error?.response?.status === 401
+  // The router uses createWebHashHistory (see Core.js), so the requested
+  // route lives entirely in the URL hash (e.g. `#/settings?foo=bar`), not
+  // in pathname/search. Slicing off the leading `#` yields the route path
+  // the router guard expects (`/settings?foo=bar`).
+  const route = window.location.hash.slice(1) || '/'
   if (unauthorized) {
-    // The router uses createWebHashHistory (see Core.js), so the requested
-    // route lives entirely in the URL hash (e.g. `#/settings?foo=bar`), not
-    // in pathname/search. Slicing off the leading `#` yields the route path
-    // the router guard expects (`/settings?foo=bar`).
-    const route = window.location.hash.slice(1) || '/'
     useAppStore(core.pinia).setRedirectAfterLogin(route)
     core.auth.reset()
   }
@@ -27,5 +28,7 @@ export function handleBootFailure(core, error) {
   // history.state must be structured-clonable; axios errors carry non-cloneable
   // functions on `error.config` (transformRequest/transformResponse), so only
   // the message (all Error.vue actually reads) is forwarded, not the error itself.
-  return core.router.push({ name: 'error', state: { error: error?.message ?? String(error) } })
+  const message = error?.message ?? String(error)
+  const failedRoute = core.router.resolve(route)
+  return core.router.push(errorLocation(failedRoute, { error: message }))
 }

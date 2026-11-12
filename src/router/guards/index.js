@@ -5,6 +5,7 @@ import { useAppStore } from '@/store/modules'
 import { useNProgress } from '@/composables/useNProgress'
 import { usePolicies } from '@/composables/usePolicies.js'
 import useMode from '@/composables/useMode.js'
+import { errorLocation } from '@/router/errorLocation'
 
 export default (core) => {
   const { router, auth, config, i18n } = core
@@ -15,10 +16,11 @@ export default (core) => {
    * Redirects to the error page with a "not found" title.
    * Shared by guards that deny access (checkMode, checkUserRole).
    * @param {import('vue-router').NavigationGuardNext} next
+   * @param {import('vue-router').RouteLocationNormalized} to - The denied route.
    */
-  function nextNotFound(next) {
+  function nextNotFound(next, to) {
     const title = i18n.global.t('error.notFound')
-    next({ name: 'error', state: { title } })
+    next(errorLocation(to, { title }))
   }
 
   /**
@@ -91,7 +93,8 @@ export default (core) => {
     catch (error) {
       // history.state must be structured-clonable; axios errors carry
       // non-cloneable functions on `error.config`, so forward the message only.
-      next({ name: 'error', state: { error: error?.message ?? String(error) } })
+      const message = error?.message ?? String(error)
+      next(errorLocation(to, { error: message }))
     }
   }
 
@@ -108,7 +111,7 @@ export default (core) => {
     // No project given for this user
     if (!projects.length && ['error', 'login'].indexOf(to.name) === -1) {
       const title = i18n.global.t('error.noProjects')
-      next({ name: 'error', state: { title } })
+      next(errorLocation(to, { title }))
     }
     else {
       next()
@@ -177,7 +180,8 @@ export default (core) => {
    * @param {import('vue-router').RouteLocationNormalized} _from
    * @param {import('vue-router').NavigationGuardNext} next
    */
-  function checkUserRole({ meta, params }, _from, next) {
+  function checkUserRole(to, _from, next) {
+    const { meta, params } = to
     // Skip role checks in non-server modes where there is no role enforcement
     if (!isServer.value) {
       return next()
@@ -192,7 +196,7 @@ export default (core) => {
     const projectName = getProjectFromRoute(meta, params)
     // If route requires roles but no project param is found, or user lacks required roles, deny access
     if (!projectName || !hasRequiredRole(allowedRole, projectName)) {
-      return nextNotFound(next)
+      return nextNotFound(next, to)
     }
 
     next()
@@ -207,14 +211,15 @@ export default (core) => {
    * @param {import('vue-router').RouteLocationNormalized} _from
    * @param {import('vue-router').NavigationGuardNext} next
    */
-  function checkMode({ meta }, _from, next) {
+  function checkMode(to, _from, next) {
+    const { meta } = to
     const currentMode = config.get('mode')
     const allowedModes = get(meta, 'allowedModes', [])
     if (allowedModes.length === 0 || allowedModes.includes(currentMode)) {
       next()
     }
     else {
-      nextNotFound(next)
+      nextNotFound(next, to)
     }
   }
 

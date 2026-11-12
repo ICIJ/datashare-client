@@ -622,8 +622,8 @@ export const routes = [
     path: '/:pathMatch(.*)*',
     component: () => import('@/views/Error/Error'),
     props: () => {
-      const { title, description, error, code } = window.history?.state ?? {}
-      return { title, description, error, code }
+      const { title, description, error, code, details } = window.history?.state ?? {}
+      return { title, description, error, code, details }
     },
     meta: {
       skipsAuth: true,

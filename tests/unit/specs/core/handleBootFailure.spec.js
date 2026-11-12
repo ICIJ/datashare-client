@@ -66,4 +66,11 @@ describe('handleBootFailure', () => {
     await handleBootFailure(core, new Error('boom'))
     expect(core.router.currentRoute.value.name).toBe('error')
   })
+
+  it('should keep the requested URL on the error page', async () => {
+    window.history.replaceState({}, '', '/#/settings?foo=bar')
+    await handleBootFailure(core, new Error('boom'))
+    expect(core.router.currentRoute.value.name).toBe('error')
+    expect(core.router.currentRoute.value.fullPath).toBe('/settings?foo=bar')
+  })
 })

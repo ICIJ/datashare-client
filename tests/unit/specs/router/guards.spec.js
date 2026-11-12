@@ -137,6 +137,13 @@ describe('guards', () => {
       expect(router.currentRoute.value.name).toBe('error')
     })
 
+    it('should keep the requested URL on the error page', async () => {
+      config.set('projects', [])
+      await router.push({ name: 'settings' })
+      expect(router.currentRoute.value.name).toBe('error')
+      expect(router.currentRoute.value.fullPath).toBe(router.resolve({ name: 'settings' }).fullPath)
+    })
+
     it('should allow navigation when user has projects', async () => {
       config.set('projects', ['local-datashare'])
       await router.push({ name: 'settings' })
