@@ -91,7 +91,8 @@ export function toArchiveTree(documents, { isMailbox = false } = {}) {
   const root = createFolder('', '')
   const foldersByPath = new Map()
   for (const document of documents) {
-    const folder = folderSegments(document, isMailbox).reduce((parent, name) => findOrCreateFolder(foldersByPath, parent, name), root)
+    const segments = folderSegments(document, isMailbox)
+    const folder = segments.reduce((parent, name) => findOrCreateFolder(foldersByPath, parent, name), root)
     folder.entries.push({ document, name: getEntryName(document, isMailbox) })
   }
   sortFolder(root)
