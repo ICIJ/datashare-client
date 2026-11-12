@@ -121,7 +121,11 @@ export class Transport {
       data: body,
       headers,
       timeout: this.requestTimeout,
-      signal: controller.signal
+      signal: controller.signal,
+      // The backend sets an ETag on every response, and Firefox sometimes
+      // hands a revalidation's bare 304 to the page instead of the cached body
+      adapter: 'fetch',
+      fetchOptions: { cache: 'no-store' }
     }
     const promise = requestWithRetries(config, this.maxRetries)
     promise.abort = () => controller.abort()

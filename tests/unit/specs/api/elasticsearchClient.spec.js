@@ -41,6 +41,13 @@ describe('elasticsearchClient', () => {
       )
     })
 
+    it('bypasses the browser cache so a revalidation never surfaces a bare 304', async () => {
+      const transport = new Transport({ host: 'http://elasticsearch:9200' })
+      await transport.request({ path: '/my-index/_doc/1' })
+
+      expect(axios.mock.calls[0][0]).toMatchObject({ adapter: 'fetch', fetchOptions: { cache: 'no-store' } })
+    })
+
     it('defaults requestTimeout to 30000 when omitted', async () => {
       const transport = new Transport({ host: 'http://elasticsearch:9200' })
       await transport.request({ path: '/my-index/_search' })
