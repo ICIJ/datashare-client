@@ -135,6 +135,7 @@ describe('guards', () => {
       config.set('projects', [])
       await router.push({ name: 'settings' })
       expect(router.currentRoute.value.name).toBe('error')
+      expect(window.history.state.reason).toBe('noProjects')
     })
 
     it('should keep the requested URL on the error page', async () => {
@@ -177,6 +178,7 @@ describe('guards', () => {
       config.set('mode', 'SERVER')
       await router.push({ name: 'task.documents.list' })
       expect(router.currentRoute.value.name).toBe('error')
+      expect(window.history.state.reason).toBe('forbidden')
     })
 
     it('should not redirect task.documents.list to error in LOCAL mode', async () => {
@@ -261,6 +263,7 @@ describe('guards', () => {
       config.set('policies', [{ projectId: 'local-datashare', role: 'PROJECT_MEMBER' }])
       await router.push({ name: 'project.view.edit', params: { name: 'local-datashare' } })
       expect(router.currentRoute.value.name).toBe('error')
+      expect(window.history.state.reason).toBe('forbidden')
     })
 
     it('should redirect to error when user has no policy for the project', async () => {

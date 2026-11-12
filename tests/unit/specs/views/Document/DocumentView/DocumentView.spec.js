@@ -90,7 +90,7 @@ describe('DocumentView.vue', () => {
     const details = { index: project, id: 'notfound', routing: undefined }
     expect(core.router.currentRoute.value.name).toBe('error')
     expect(core.router.currentRoute.value.fullPath).toBe('/document')
-    expect(window.history.state).toMatchObject({ error: 'Not Found', code: 404, details })
+    expect(window.history.state).toMatchObject({ error: 'Not Found', code: 404, details, reason: 'document' })
   })
 
   it('should call the retrieve the document and its parent', async () => {

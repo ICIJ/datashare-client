@@ -73,4 +73,16 @@ describe('handleBootFailure', () => {
     expect(core.router.currentRoute.value.name).toBe('error')
     expect(core.router.currentRoute.value.fullPath).toBe('/settings?foo=bar')
   })
+
+  it('should send serverUnreachable when the server gave no response', async () => {
+    await handleBootFailure(core, new Error('Network Error'))
+    expect(window.history.state).toMatchObject({ error: 'Network Error', reason: 'serverUnreachable' })
+  })
+
+  it('should send the status code when the server answered', async () => {
+    const error = Object.assign(new Error('Request failed with status code 500'), { response: { status: 500 } })
+    await handleBootFailure(core, error)
+    expect(window.history.state).toMatchObject({ code: 500 })
+    expect(window.history.state.reason).toBeUndefined()
+  })
 })

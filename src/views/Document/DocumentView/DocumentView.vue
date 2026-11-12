@@ -128,7 +128,7 @@ const component = ref(null)
 
 const redirectToError = (failedRoute, details) => {
   const { message: error, status: code } = documentStore.error ?? {}
-  const state = { error, code, details }
+  const state = { error, code, details, reason: 'document' }
   return router.push(errorLocation(failedRoute, state))
 }
 

@@ -236,8 +236,6 @@
         "cause": "It may have been deleted, or the link may point to the wrong project."
       }
     },
-    "noProjects": "Your project list is empty. Please contact your administrator.",
-    "notFound": "Page not found.",
     "logout": "Log out",
     "actions": {
       "retry": "Try again",

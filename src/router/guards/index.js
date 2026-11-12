@@ -13,14 +13,13 @@ export default (core) => {
   const { getRoleByProject, hasRole } = usePolicies()
 
   /**
-   * Redirects to the error page with a "not found" title.
+   * Redirects to the error page with the "forbidden" reason.
    * Shared by guards that deny access (checkMode, checkUserRole).
    * @param {import('vue-router').NavigationGuardNext} next
    * @param {import('vue-router').RouteLocationNormalized} to - The denied route.
    */
   function nextNotFound(next, to) {
-    const title = i18n.global.t('error.notFound')
-    next(errorLocation(to, { title }))
+    next(errorLocation(to, { reason: 'forbidden' }))
   }
 
   /**
@@ -94,7 +93,7 @@ export default (core) => {
       // history.state must be structured-clonable; axios errors carry
       // non-cloneable functions on `error.config`, so forward the message only.
       const message = error?.message ?? String(error)
-      next(errorLocation(to, { error: message }))
+      next(errorLocation(to, { error: message, reason: 'serverUnreachable' }))
     }
   }
 
@@ -110,8 +109,7 @@ export default (core) => {
     const projects = config.get('projects', [])
     // No project given for this user
     if (!projects.length && ['error', 'login'].indexOf(to.name) === -1) {
-      const title = i18n.global.t('error.noProjects')
-      next(errorLocation(to, { title }))
+      next(errorLocation(to, { reason: 'noProjects' }))
     }
     else {
       next()
