@@ -104,10 +104,14 @@ export function useArchiveFolders({ tree, activeMatch, root }) {
     }
   }
 
+  function revealActiveMatch() {
+    return revealMatch(activeMatch.value)
+  }
+
   watch(tree, reset, { immediate: true })
   watch(activeMatch, revealMatch)
   watch(activeKey, moveActiveKey)
   onBeforeUnmount(() => stopScrollAfterExpand())
 
-  return { openPaths, activeKeys, activeKey, limits, toggle, showMore }
+  return { openPaths, activeKeys, activeKey, limits, toggle, showMore, revealActiveMatch }
 }

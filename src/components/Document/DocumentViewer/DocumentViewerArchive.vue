@@ -37,7 +37,7 @@ function findMatches(term) {
 const { term, activeIndex, appliedTerm, matches, occurrences, isLoading: isSearching, refresh } = useDocumentLocalSearch({ findMatches })
 const activeMatch = computed(() => matches.value[activeIndex.value - 1] ?? null)
 
-const { openPaths, activeKeys, activeKey, limits, toggle, showMore } = useArchiveFolders({ tree, activeMatch, root: viewer })
+const { openPaths, activeKeys, activeKey, limits, toggle, showMore, revealActiveMatch } = useArchiveFolders({ tree, activeMatch, root: viewer })
 
 useArchiveHighlights({ root: viewer, term: appliedTerm, activeKey, repaintOn: [openPaths, limits, tree] })
 
@@ -55,6 +55,7 @@ watch(documents, refresh)
       :occurrences="occurrences"
       :loading="isSearching"
       no-count
+      @reactivate="revealActiveMatch"
     />
     <div
       v-if="hasError"

@@ -302,6 +302,19 @@ describe('DocumentViewerArchive.vue', () => {
       expect(render).not.toHaveBeenCalled()
     })
 
+    it('scrolls back to the only match when the search reactivates it', async () => {
+      const scrollIntoView = vi.fn()
+      Element.prototype.scrollIntoView = scrollIntoView
+      search.mockResolvedValue(createResponse([createHit('a', 'a/deep.txt')]))
+      const wrapper = await mountViewer()
+      await searchFor(wrapper, 'deep')
+      scrollIntoView.mockClear()
+      wrapper.findComponent(DocumentToolbox).vm.$emit('reactivate')
+      await flushPromises()
+      expect(scrollIntoView).toHaveBeenCalledOnce()
+      delete Element.prototype.scrollIntoView
+    })
+
     it('scrolls to the match again once the opened folders finished expanding', async () => {
       const scrollIntoView = vi.fn()
       Element.prototype.scrollIntoView = scrollIntoView
