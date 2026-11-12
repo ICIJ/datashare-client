@@ -239,8 +239,7 @@
     "logout": "退出登录",
     "actions": {
       "retry": "Try again",
-      "back": "Back",
-      "home": "Home"
+      "back": "Back"
     },
     "faq": "常见问题",
     "userGuides": "用户指南",
