@@ -239,8 +239,7 @@
     "logout": "ログアウト",
     "actions": {
       "retry": "Try again",
-      "back": "Back",
-      "home": "Home"
+      "back": "Back"
     },
     "faq": "よくある質問",
     "userGuides": "ユーザーガイド",
