@@ -50,7 +50,7 @@ describe('DocumentView.vue', () => {
 
     const routes = [
       { path: '/', name: 'index' },
-      { path: '/error', name: 'error' },
+      { path: '/:pathMatch(.*)*', name: 'error' },
       { path: '/document', name: 'document' },
       { path: '/document-standalone', name: 'document-standalone' }
     ]
@@ -78,6 +78,19 @@ describe('DocumentView.vue', () => {
     shallowMount(DocumentView, { global, props })
     await flushPromises()
     expect(spy).toHaveBeenCalledWith(expect.objectContaining({ name: 'error' }))
+  })
+
+  it('should pass the fetch error to the error page', async () => {
+    const props = { id: 'notfound', index: project }
+    const global = { plugins: core.plugins, renderStubDefaultSlot: true }
+    const error = Object.assign(new Error('Not Found'), { status: 404 })
+    api.elasticsearch.getDocumentWithoutContent.mockRejectedValue(error)
+    shallowMount(DocumentView, { global, props })
+    await flushPromises()
+    const details = { index: project, id: 'notfound', routing: undefined }
+    expect(core.router.currentRoute.value.name).toBe('error')
+    expect(core.router.currentRoute.value.fullPath).toBe('/document')
+    expect(window.history.state).toMatchObject({ error: 'Not Found', code: 404, details })
   })
 
   it('should call the retrieve the document and its parent', async () => {

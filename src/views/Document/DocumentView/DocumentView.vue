@@ -26,7 +26,8 @@ import { replaceUrlParamValue } from '@/composables/replaceUrlParamValue'
 import { useSearchNav } from '@/composables/useSearchNav'
 import { useDocument } from '@/composables/useDocument'
 import { useUrlParamWithStore } from '@/composables/useUrlParamWithStore'
-import { useAppStore } from '@/store/modules'
+import { useAppStore, useDocumentStore } from '@/store/modules'
+import { errorLocation } from '@/router/errorLocation'
 import { useWait } from '@/composables/useWait'
 import { useScrollParent } from '@/composables/useScrollParent'
 import { SIZE } from '@/enums/sizes'
@@ -54,6 +55,7 @@ const props = defineProps({
 const router = useRouter()
 const route = useRoute()
 const appStore = useAppStore()
+const documentStore = useDocumentStore()
 
 const containerRef = useScrollParent({ topLevelParent: window })
 const elementRef = useTemplateRef('element')
@@ -124,13 +126,19 @@ const tab = useUrlParamWithStore('tab', {
 
 const component = ref(null)
 
-const fetchRouteDocument = async ({ params } = route) => {
-  const { index = props.index, id = props.id, routing = props.routing } = params ?? {}
+const redirectToError = (failedRoute, details) => {
+  const { message: error, status: code } = documentStore.error ?? {}
+  const state = { error, code, details }
+  return router.push(errorLocation(failedRoute, state))
+}
+
+const fetchRouteDocument = async (failedRoute = route) => {
+  const { index = props.index, id = props.id, routing = props.routing } = failedRoute.params ?? {}
   await fetchDocumentOnce({ index, id, routing })
 
   // No document found, redirect to error page
   if (!document.value) {
-    await router.push({ name: 'error' })
+    await redirectToError(failedRoute, { index, id, routing })
   }
 }
 

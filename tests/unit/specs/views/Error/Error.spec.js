@@ -35,6 +35,26 @@ describe('Error.vue', () => {
       expect(wrapper.find('.error__container__heading').text()).toBe('This is wrong!')
     })
 
+    it('should display troubleshooting details', async () => {
+      core.useRouterWithoutGuards()
+      await core.router.push('/ds/local-datashare/missing')
+      const props = {
+        code: 404,
+        error: 'Not Found',
+        details: { index: 'local-datashare', id: 'missing' }
+      }
+      const wrapper = mount(Error, { props, global: { plugins: core.plugins } })
+      await flushPromises()
+      await wrapper.find('.error__container__troubleshooting__toggle').trigger('click')
+      const details = wrapper.findComponent('.error__details__copy').props('text')
+      expect(details).toContain('Code: 404')
+      expect(details).toContain('Error: Not Found')
+      expect(details).toContain('URL: /ds/local-datashare/missing')
+      expect(details).toContain('index: local-datashare')
+      expect(details).toContain('id: missing')
+      expect(details).toContain('Server: X.Y.Z')
+    })
+
     it('should display a link when user is logged in in server mode', async () => {
       // Create the user session
       setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'foo' }, JSON.stringify)

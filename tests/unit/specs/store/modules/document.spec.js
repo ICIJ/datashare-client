@@ -68,6 +68,13 @@ describe('DocumentStore', () => {
     expect(documentStore.idAndRouting).toEqual({ id, index, routing: id })
   })
 
+  it('should keep the error when the document cannot be fetched', async () => {
+    await documentStore.getDocument({ id: 'missing', index })
+
+    expect(documentStore.document).toBeNull()
+    expect(documentStore.error.status).toBe(404)
+  })
+
   it('should get the parent document', async () => {
     const routing = uniqueId('parent-')
     const id = uniqueId('child-')

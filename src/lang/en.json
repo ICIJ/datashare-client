@@ -212,7 +212,9 @@
     "logout": "Log out",
     "faq": "FAQ",
     "userGuides": "User guides",
-    "help": "Ask for help"
+    "help": "Ask for help",
+    "copyDetails": "Copy details",
+    "troubleshootingDetails": "Troubleshooting details"
   },
   "filtersPanelToggler": {
     "label": "Close filters"

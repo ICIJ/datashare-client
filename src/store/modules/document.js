@@ -25,6 +25,8 @@ export const useDocumentStore = defineStore(
     const document = ref(null)
     // Document identification and routing information.
     const idAndRouting = ref(null)
+    // The error raised by the last failed document fetch.
+    const error = ref(null)
     // Indicates whether the document content is loaded.
     const isContentLoaded = ref(false)
     // Indicates whether the document is recommended.
@@ -90,6 +92,7 @@ export const useDocumentStore = defineStore(
     function reset() {
       document.value = null
       idAndRouting.value = null
+      error.value = null
       isContentLoaded.value = false
       isRecommended.value = false
       namedEntitiesPaginatedByCategories.PERSON = []
@@ -295,8 +298,9 @@ export const useDocumentStore = defineStore(
         setIdAndRouting({ id, index, routing: routingOrId })
         setDocument(fetchedDoc)
       }
-      catch {
+      catch (fetchError) {
         setDocument(null)
+        error.value = fetchError
       }
       finally {
         toggleUserAction()
@@ -618,6 +622,7 @@ export const useDocumentStore = defineStore(
     return {
       // Expose state variables
       document,
+      error,
       idAndRouting,
       isContentLoaded,
       isRecommended,
