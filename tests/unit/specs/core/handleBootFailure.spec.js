@@ -75,8 +75,14 @@ describe('handleBootFailure', () => {
   })
 
   it('should send serverUnreachable when the server gave no response', async () => {
-    await handleBootFailure(core, new Error('Network Error'))
+    const error = Object.assign(new Error('Network Error'), { request: {} })
+    await handleBootFailure(core, error)
     expect(window.history.state).toMatchObject({ error: 'Network Error', reason: 'serverUnreachable' })
+  })
+
+  it('should not blame the server for a client error', async () => {
+    await handleBootFailure(core, new TypeError('plugin is not a function'))
+    expect(window.history.state.reason).toBeUndefined()
   })
 
   it('should send the status code when the server answered', async () => {

@@ -32,10 +32,12 @@ export function handleBootFailure(core, error) {
   const message = error?.message ?? String(error)
   const status = error?.response?.status
   const state = { error: message }
+  // Axios sets `request` once a request was sent: without a response, the server never answered.
+  const isUnanswered = !!error?.request && !status
   if (status) {
     state.code = status
   }
-  else {
+  else if (isUnanswered) {
     state.reason = 'serverUnreachable'
   }
   const failedRoute = core.router.resolve(route)
