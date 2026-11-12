@@ -8,7 +8,7 @@ import { Api } from '@/api'
 import { apiInstance as api } from '@/api/apiInstance'
 import ModeServerOnly from '@/components/Mode/ModeServerOnly'
 import VersionNumber from '@/components/VersionNumber'
-import errorReasons from '@/views/Error/errorReasons'
+import { ERROR_REASONS } from '@/enums/errorReasons'
 import settings from '@/utils/settings'
 import { parseUserAgent } from '@/utils/userAgent'
 import { useAuth } from '@/composables/useAuth'
@@ -83,7 +83,7 @@ const resolvedReason = computed(() => {
 
 const errorCase = computed(() => {
   const key = resolvedReason.value
-  return Object.hasOwn(errorReasons, key) ? errorReasons[key] : null
+  return Object.hasOwn(ERROR_REASONS, key) ? ERROR_REASONS[key] : null
 })
 const resolvedCode = computed(() => {
   if (errorCase.value?.hidesCode) {
