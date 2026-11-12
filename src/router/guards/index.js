@@ -6,7 +6,6 @@ import { useNProgress } from '@/composables/useNProgress'
 import { usePolicies } from '@/composables/usePolicies.js'
 import useMode from '@/composables/useMode.js'
 import { errorLocation } from '@/router/errorLocation'
-import { recordRedirectSource } from '@/router/redirectSources'
 
 export default (core) => {
   const { router, auth, config, i18n } = core
@@ -247,5 +246,4 @@ export default (core) => {
   router.beforeEach(preparePageContext)
   router.beforeEach(startProgress)
   router.afterEach(endProgress)
-  router.afterEach(recordRedirectSource)
 }

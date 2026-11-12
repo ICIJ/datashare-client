@@ -1,11 +1,10 @@
 <script setup>
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 import { Api } from '@/api'
 import { ERROR_REASONS } from '@/enums/errorReasons'
-import { isRedirectSource } from '@/router/redirectSources'
 import ButtonIcon from '@/components/Button/ButtonIcon'
 import ErrorLinks from '@/views/Error/ErrorLinks'
 import ErrorTroubleshooting from '@/views/Error/ErrorTroubleshooting'
@@ -66,6 +65,7 @@ const { t } = useI18n()
 const { isAuthenticated } = useAuth()
 const { isServer } = useMode()
 const router = useRouter()
+const route = useRoute()
 
 const errorMessage = computed(() => {
   return props.error instanceof Error ? props.error.message : props.error
@@ -111,9 +111,27 @@ const actionsCase = computed(() => errorCase.value ?? fallbackCase)
 
 const logoutLink = Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SIGNOUT)
 
-// history.state is not reactive: this is a snapshot taken when the error page opens.
-const previousPath = router?.options.history.state.back
-const canGoBack = Boolean(previousPath) && !isRedirectSource(previousPath)
+// A guard redirect triggered by a URL change keeps the source URL in history,
+// so going back to it would only redirect here again.
+const backRedirectsHere = (previousPath) => {
+  return route.redirectedFrom?.fullPath === previousPath
+}
+
+// The previous page can be a URL that redirects to the missing document (e.g. `/d/` to `/ds/`),
+// so going back would only reopen this error page.
+const backReopensMissingDocument = (previousPath) => {
+  const { index, id } = router.resolve(previousPath).params
+  return Boolean(id) && index === props.details?.index && id === props.details?.id
+}
+
+// history.state is not reactive: reading the route first re-evaluates it on each error URL.
+const canGoBack = computed(() => {
+  const previousPath = route.fullPath && router.options.history.state.back
+  if (!previousPath) {
+    return false
+  }
+  return !backRedirectsHere(previousPath) && !backReopensMissingDocument(previousPath)
+})
 
 const showsRetry = computed(() => Boolean(actionsCase.value.retry))
 const showsBack = computed(() => Boolean(actionsCase.value.back))
@@ -124,7 +142,7 @@ const backVariant = computed(() => showsRetry.value ? 'outline-secondary' : 'out
 const retry = () => window.location.reload()
 
 const goBack = () => {
-  if (canGoBack) {
+  if (canGoBack.value) {
     return router.back()
   }
   return router.push({ name: 'project.list' })

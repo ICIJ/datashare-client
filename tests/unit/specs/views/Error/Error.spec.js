@@ -4,7 +4,6 @@ import { setCookie, removeCookie } from 'tiny-cookie'
 import CoreSetup from '~tests/unit/CoreSetup'
 import Error from '@/views/Error/Error'
 import { apiInstance as api } from '@/api/apiInstance'
-import { recordRedirectSource } from '@/router/redirectSources'
 
 vi.mock('@/api/apiInstance', () => {
   return {
@@ -189,13 +188,43 @@ describe('Error.vue', () => {
 
     it('sends Back to the projects when the previous page only redirected here', async () => {
       core.useRouterWithoutGuards()
+      core.router.addRoute({ path: '/redirects-here', component: Error, beforeEnter: () => '/landed-here' })
       await core.router.replace('/does-not-exist')
-      recordRedirectSource({ redirectedFrom: { fullPath: '/redirects-here' } })
-      await core.router.push('/redirects-here')
-      await core.router.push('/landed-here')
+      window.history.pushState(null, '', '#/redirects-here')
+      window.dispatchEvent(new PopStateEvent('popstate', { state: null }))
+      await flushPromises()
       const back = vi.spyOn(core.router, 'back')
       const push = vi.spyOn(core.router, 'push')
       const wrapper = mount(Error, { global: { plugins: core.plugins } })
+      await wrapper.find('.error__actions__item--back').trigger('click')
+      expect(core.router.currentRoute.value.fullPath).toBe('/landed-here')
+      expect(back).not.toHaveBeenCalled()
+      expect(push).toHaveBeenCalledWith({ name: 'project.list' })
+    })
+
+    it('sends Back to the previous page once the error page moves to another URL', async () => {
+      core.useRouterWithoutGuards()
+      core.router.addRoute({ path: '/redirects-here', component: Error, beforeEnter: () => '/landed-here' })
+      await core.router.replace('/does-not-exist')
+      window.history.pushState(null, '', '#/redirects-here')
+      window.dispatchEvent(new PopStateEvent('popstate', { state: null }))
+      await flushPromises()
+      const wrapper = mount(Error, { global: { plugins: core.plugins } })
+      await core.router.push('/also-missing')
+      const back = vi.spyOn(core.router, 'back')
+      await wrapper.find('.error__actions__item--back').trigger('click')
+      expect(back).toHaveBeenCalled()
+    })
+
+    it('sends Back to the projects when the previous page opens the same missing document', async () => {
+      core.useRouterWithoutGuards()
+      await core.router.replace('/does-not-exist')
+      core.router.options.history.push('/d/local-datashare/missing')
+      core.router.options.history.push('/ds/local-datashare/missing')
+      const back = vi.spyOn(core.router, 'back')
+      const push = vi.spyOn(core.router, 'push')
+      const props = { reason: 'document', details: { index: 'local-datashare', id: 'missing' } }
+      const wrapper = mount(Error, { props, global: { plugins: core.plugins } })
       await wrapper.find('.error__actions__item--back').trigger('click')
       expect(back).not.toHaveBeenCalled()
       expect(push).toHaveBeenCalledWith({ name: 'project.list' })
