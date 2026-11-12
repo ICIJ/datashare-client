@@ -105,19 +105,17 @@ const cause = computed(() => props.description || caseCause.value || t('error.de
 
 const fallbackActions = ['retry', 'home']
 const actionNames = computed(() => errorCase.value?.actions ?? fallbackActions)
-const variants = ['primary', 'outline-light', 'link']
+const variants = ['primary', 'outline-light']
 
 const actionHandlers = {
   retry: () => window.location.reload(),
   back: () => router.back(),
-  search: () => router.push({ name: 'search' }),
   home: () => router.push('/')
 }
 
 const actionIcons = {
   retry: IPhArrowClockwise,
-  back: IPhArrowLeft,
-  search: IPhArrowLeft
+  back: IPhArrowLeft
 }
 
 const canGoBack = computed(() => Boolean(router?.options.history.state.back))
@@ -151,11 +149,20 @@ const occurredAt = new Date().toISOString()
 const clientHash = import.meta.env.VITE_GIT_HASH ?? ''
 const serverVersion = ref(null)
 
+const fullUrl = computed(() => {
+  if (!route) {
+    return null
+  }
+  const { href } = router.resolve(route.fullPath)
+  const url = new URL(href, window.location.href)
+  return url.href
+})
+
 const troubleshootingEntries = computed(() => ({
   Code: props.code,
   Error: errorMessage.value,
   Reason: resolvedReason.value,
-  URL: route?.fullPath,
+  URL: fullUrl.value,
   ...props.details,
   Date: occurredAt,
   Client: clientHash.substring(0, 7),
@@ -213,12 +220,12 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
         v-else
       />
     </div>
-    <div class="flex-grow-1 d-flex align-items-center">
-      <div class="error__container container">
+    <div class="error__main">
+      <div class="error__container">
         <p class="error__label">
           {{ label }}
         </p>
-        <h1 class="mb-3 error__title">
+        <h1 class="error__title">
           {{ heading }}
         </h1>
         <p class="error__cause lead">
@@ -228,6 +235,7 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
           <b-button
             v-for="action in actions"
             :key="action.name"
+            size="lg"
             :class="`error__actions__item--${action.name}`"
             :variant="action.variant"
             :href="action.name === 'logout' ? logoutLink : undefined"
@@ -242,204 +250,223 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
             {{ action.label }}
           </b-button>
         </div>
-        <div class="error__details">
-          <div class="error__details__header">
-            <button
-              type="button"
-              class="error__details__toggle btn btn-link"
-              aria-controls="error-details"
-              :aria-expanded="showDetails"
-              @click="toggleDetails"
-            >
-              <app-icon class="error__details__toggle__caret me-1">
-                <i-ph-caret-right />
-              </app-icon>
-              {{ t('error.troubleshootingDetails') }}
-            </button>
-            <haptic-copy
-              :text="troubleshootingDetails"
-              :label="t('error.copyDetails')"
-              class="error__details__copy"
-              variant="light"
-              size="sm"
-            />
-          </div>
-          <dl
-            v-if="showDetails"
-            id="error-details"
-            class="error__details__list"
-          >
-            <template
-              v-for="[name, value] in troubleshootingRows"
-              :key="name"
-            >
-              <dt class="error__details__list__name">
-                {{ name }}
-              </dt>
-              <dd class="error__details__list__value">
-                {{ value }}
-              </dd>
-            </template>
-          </dl>
-        </div>
-        <ul class="error__container__links list-inline text-capitalize">
-          <li class="list-inline-item error__container__links__item">
-            <a
-              :href="faqLink"
-              target="_blank"
-            >
-              <app-icon class="error__container__links__item__icon me-1">
-                <i-ph-question-duotone />
-              </app-icon>
-              {{ t('error.faq') }}
-            </a>
-          </li>
-          <li class="list-inline-item error__container__links__item">
-            <a
-              :href="documentationLink"
-              target="_blank"
-            >
-              <app-icon class="error__container__links__item__icon me-1">
-                <i-ph-book-duotone />
-              </app-icon>
-              {{ t('error.userGuides') }}
-            </a>
-          </li>
-          <li class="list-inline-item error__container__links__item">
-            <a
-              :href="helpLink"
-              target="_blank"
-            >
-              <app-icon class="error__container__links__item__icon me-1">
-                <i-ph-ambulance-duotone />
-              </app-icon>
-              {{ t('error.help') }}
-            </a>
-          </li>
-          <li class="list-inline-item error__container__links__item">
-            <version-number
-              tooltip-placement="top"
-              class="d-inline"
-            />
-          </li>
-          <mode-server-only v-if="isAuthenticated">
-            <li class="list-inline-item error__container__links__item error__container__links__item--logout">
-              <a
-                :href="logoutLink"
-              >
-                <app-icon class="error__container__links__item__icon me-1">
-                  <i-ph-sign-out-duotone />
-                </app-icon>
-                {{ t('error.logout') }}
-              </a>
-            </li>
-          </mode-server-only>
-        </ul>
       </div>
     </div>
+    <footer class="error__footer">
+      <b-collapse
+        id="error-details"
+        v-model="showDetails"
+        class="error__details__collapse"
+      >
+        <dl class="error__details__list">
+          <template
+            v-for="[name, value] in troubleshootingRows"
+            :key="name"
+          >
+            <dt class="error__details__list__name">
+              {{ name }}
+            </dt>
+            <dd class="error__details__list__value">
+              {{ value }}
+            </dd>
+          </template>
+        </dl>
+      </b-collapse>
+      <div class="error__details">
+        <button
+          type="button"
+          class="error__details__toggle btn btn-link"
+          aria-controls="error-details"
+          :aria-expanded="showDetails"
+          @click="toggleDetails"
+        >
+          <app-icon class="error__details__toggle__caret me-1">
+            <i-ph-caret-right />
+          </app-icon>
+          {{ t('error.troubleshootingDetails') }}
+        </button>
+        <haptic-copy
+          :text="troubleshootingDetails"
+          :label="t('error.copyDetails')"
+          class="error__details__copy"
+          variant="light"
+          size="sm"
+        />
+        <version-number
+          tooltip-placement="top"
+          class="error__details__version"
+        />
+      </div>
+      <ul class="error__links list-inline text-capitalize">
+        <li class="list-inline-item error__links__item">
+          <a
+            :href="faqLink"
+            target="_blank"
+          >
+            <app-icon class="error__links__item__icon me-1">
+              <i-ph-question-duotone />
+            </app-icon>
+            {{ t('error.faq') }}
+          </a>
+        </li>
+        <li class="list-inline-item error__links__item">
+          <a
+            :href="documentationLink"
+            target="_blank"
+          >
+            <app-icon class="error__links__item__icon me-1">
+              <i-ph-book-duotone />
+            </app-icon>
+            {{ t('error.userGuides') }}
+          </a>
+        </li>
+        <li class="list-inline-item error__links__item">
+          <a
+            :href="helpLink"
+            target="_blank"
+          >
+            <app-icon class="error__links__item__icon me-1">
+              <i-ph-ambulance-duotone />
+            </app-icon>
+            {{ t('error.help') }}
+          </a>
+        </li>
+        <mode-server-only v-if="isAuthenticated">
+          <li class="list-inline-item error__links__item error__links__item--logout">
+            <a
+              :href="logoutLink"
+            >
+              <app-icon class="error__links__item__icon me-1">
+                <i-ph-sign-out-duotone />
+              </app-icon>
+              {{ t('error.logout') }}
+            </a>
+          </li>
+        </mode-server-only>
+      </ul>
+    </footer>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .error {
-  background: var(--bs-dark);
-  color: var(--bs-light);
+  --error-gutter: #{$spacer * 1.5};
+
   position: relative;
   overflow: hidden;
   width: 100%;
   min-height: 100vh;
+  background: var(--bs-dark);
+  color: var(--bs-light);
 
-  &__container {
+  @include media-breakpoint-up(lg) {
+    --error-gutter: 12vw;
+  }
+
+  &__main {
     position: relative;
-    width: 100%;
-    max-width: 560px;
-    margin: $spacer * 2 auto $spacer * 2 0;
-    padding: 0 $spacer * 1.5;
-    text-align: left;
+    display: flex;
+    flex-grow: 1;
+    align-items: flex-start;
+    padding: $spacer * 3 var(--error-gutter);
 
-    @include media-breakpoint-up(lg) {
-      margin-left: 12vw;
-    }
-
-    &__links {
-      padding: 0;
-      margin: 0;
-
-      &__item {
-        &:not(:last-of-type):after {
-          content: '|';
-          margin: 0 $spacer;
-          color: rgba(var(--bs-light-rgb), 0.5);
-        }
-
-        &,
-        a {
-          color: rgba(var(--bs-light-rgb), 0.5);
-        }
-      }
+    @include media-breakpoint-up(md) {
+      align-items: center;
     }
   }
 
+  &__container {
+    max-width: 960px;
+  }
+
   &__label {
-    margin-bottom: $spacer * 0.5;
+    margin-bottom: $spacer;
     font-size: $font-size-sm;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     color: rgba(var(--bs-light-rgb), 0.5);
+  }
+
+  &__title {
+    margin-bottom: $spacer * 1.25;
+    font-size: clamp(2rem, 2.6vw, 3rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  &__cause {
+    max-width: 36em;
+    margin-bottom: $spacer * 2.5;
+    color: rgba(var(--bs-light-rgb), 0.85);
   }
 
   &__actions {
     display: flex;
     flex-wrap: wrap;
-    gap: $spacer * 0.5;
-    margin-bottom: $spacer * 2;
+    gap: $spacer * 0.75;
+
+    .btn-lg {
+      --bs-btn-font-size: #{$font-size-base};
+
+      @include media-breakpoint-down(sm) {
+        flex: 1;
+      }
+    }
 
     .btn-outline-light {
       --bs-btn-color: var(--bs-light);
     }
   }
 
-  &__cause {
-    margin-bottom: $spacer * 1.5;
-  }
-
   &__background {
     position: absolute;
-    top: 0;
-    right: 0;
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-end;
-    padding: $spacer * 2;
-    font-size: clamp(8rem, 30vw, 24rem);
-    font-weight: bold;
-    line-height: 1;
+    top: 46%;
+    right: var(--error-gutter);
+    transform: translateY(-50%);
+    font-size: min(38vh, 14vw);
+    font-weight: 800;
+    line-height: 0.8;
+    letter-spacing: -0.04em;
     opacity: 0.05;
     pointer-events: none;
 
-    @include media-breakpoint-down(md) {
+    @include media-breakpoint-down(xxl) {
       display: none;
     }
   }
 
-  &__details {
-    margin-bottom: $spacer * 2;
-    background: var(--bs-black);
-    border-radius: var(--bs-border-radius-lg);
+  &__footer {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: $spacer;
+    margin: 0 var(--error-gutter) $spacer * 3;
+    padding-top: $spacer * 1.25;
+    border-top: 1px solid rgba(var(--bs-light-rgb), 0.1);
+    color: rgba(var(--bs-light-rgb), 0.5);
 
-    &__header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: $spacer * 0.5;
-      padding-right: $spacer;
+    :deep(.error__details__collapse) {
+      flex-basis: 100%;
+    }
+  }
+
+  &__details {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: $spacer;
+
+    &__version {
+      color: rgba(var(--bs-light-rgb), 0.5);
     }
 
     &__toggle {
-      flex-grow: 1;
-      padding: $spacer * 0.75 0 $spacer * 0.75 $spacer;
-      text-align: left;
-      color: var(--bs-light);
+      padding: 0;
+      border: 0;
+      color: rgba(var(--bs-light-rgb), 0.8);
       text-decoration: none;
 
       &__caret {
@@ -451,15 +478,23 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
       }
     }
 
+    &__copy {
+      --bs-btn-bg: transparent;
+      --bs-btn-color: var(--bs-light);
+      --bs-btn-border-color: rgba(var(--bs-light-rgb), 0.35);
+    }
+
     &__list {
       display: grid;
       grid-template-columns: max-content minmax(0, 1fr);
       gap: $spacer * 0.25 $spacer;
       margin: 0;
       padding: $spacer;
-      border-top: 1px solid rgba(var(--bs-light-rgb), 0.15);
+      background: var(--bs-black);
+      border-radius: var(--bs-border-radius-lg);
       font-family: var(--bs-font-monospace);
       font-size: $font-size-sm;
+      color: var(--bs-light);
 
       &__name {
         font-weight: normal;
@@ -472,6 +507,30 @@ const logoutLink = computed(() => Api.getFullUrl(import.meta.env.VITE_DS_AUTH_SI
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
+      }
+    }
+  }
+
+  &__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacer * 0.5 $spacer * 1.5;
+    margin: 0;
+    padding: 0;
+
+    &__item {
+      margin: 0;
+
+      @include media-breakpoint-up(md) {
+        &:not(:last-of-type):after {
+          content: '|';
+          margin-left: $spacer * 1.5;
+        }
+      }
+
+      &,
+      a {
+        color: rgba(var(--bs-light-rgb), 0.5);
       }
     }
   }

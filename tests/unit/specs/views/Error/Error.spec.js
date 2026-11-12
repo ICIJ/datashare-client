@@ -47,8 +47,25 @@ describe('Error.vue', () => {
       const toggle = wrapper.find('.error__details__toggle')
       expect(toggle.attributes('aria-expanded')).toBe('false')
       expect(toggle.attributes('aria-controls')).toBe('error-details')
-      expect(wrapper.find('#error-details').exists()).toBe(false)
+      const collapse = wrapper.findComponent({ name: 'BCollapse' })
+      expect(collapse.props('modelValue')).toBe(false)
       expect(wrapper.findComponent('.error__details__copy').props('text')).toContain('Error: boom')
+    })
+
+    it('opens the troubleshooting details in a collapse', async () => {
+      const wrapper = mount(Error, { props: { error: 'boom' }, global: { plugins } })
+      await wrapper.find('.error__details__toggle').trigger('click')
+      const collapse = wrapper.findComponent({ name: 'BCollapse' })
+      expect(collapse.props('modelValue')).toBe(true)
+      expect(wrapper.find('#error-details .error__details__list').exists()).toBe(true)
+    })
+
+    it('keeps troubleshooting details and help links in the footer', () => {
+      const wrapper = mount(Error, { global: { plugins } })
+      const footer = wrapper.find('.error__footer')
+      expect(footer.find('.error__details__toggle').exists()).toBe(true)
+      expect(footer.find('.error__links').exists()).toBe(true)
+      expect(wrapper.find('.error__container .error__details').exists()).toBe(false)
     })
 
     it('should display troubleshooting details', async () => {
@@ -67,7 +84,7 @@ describe('Error.vue', () => {
       expect(details).toContain('Code: 404')
       expect(details).toContain('Error: Not Found')
       expect(details).toContain('Reason: document')
-      expect(details).toContain('URL: /ds/local-datashare/missing')
+      expect(details).toContain(`URL: ${window.location.origin}/#/ds/local-datashare/missing`)
       expect(details).toContain('index: local-datashare')
       expect(details).toContain('id: missing')
       expect(details).toContain('Server: X.Y.Z')
@@ -79,7 +96,7 @@ describe('Error.vue', () => {
       core.config.set('mode', 'SERVER')
       const wrapper = mount(Error, { global: { plugins } })
       await flushPromises()
-      expect(wrapper.find('.error__container__links__item--logout').exists()).toBeTruthy()
+      expect(wrapper.find('.error__links__item--logout').exists()).toBeTruthy()
     })
   })
 
@@ -91,7 +108,7 @@ describe('Error.vue', () => {
       core.config.set('mode', 'SERVER')
       const wrapper = mount(Error, { global: { plugins: core.plugins } })
       await flushPromises()
-      expect(wrapper.find('.error__container__links__item--logout').exists()).toBeFalsy()
+      expect(wrapper.find('.error__links__item--logout').exists()).toBeFalsy()
     })
 
     it('shows Log out on noProjects when logged in', async () => {
@@ -136,10 +153,10 @@ describe('Error.vue', () => {
       expect(wrapper.find('.error__actions__item--back').classes()).toContain('btn-outline-light')
     })
 
-    it('shows Try again, Back to search and Home for a document', () => {
+    it('shows Try again and Home for a document', () => {
       const wrapper = mount(Error, { props: { reason: 'document' }, global: { plugins } })
-      expect(actionsOf(wrapper)).toEqual(['error__actions__item--retry', 'error__actions__item--search', 'error__actions__item--home'])
-      expect(wrapper.find('.error__actions__item--home').classes()).toContain('btn-link')
+      expect(actionsOf(wrapper)).toEqual(['error__actions__item--retry', 'error__actions__item--home'])
+      expect(wrapper.find('.error__actions__item--home').classes()).toContain('btn-outline-light')
     })
 
     it('reloads the page on Try again', async () => {
@@ -149,14 +166,6 @@ describe('Error.vue', () => {
       await wrapper.find('.error__actions__item--retry').trigger('click')
       expect(reload).toHaveBeenCalled()
       vi.unstubAllGlobals()
-    })
-
-    it('navigates to search on Back to search', async () => {
-      core.useRouterWithoutGuards()
-      const push = vi.spyOn(core.router, 'push').mockResolvedValue()
-      const wrapper = mount(Error, { props: { reason: 'document' }, global: { plugins: core.plugins } })
-      await wrapper.find('.error__actions__item--search').trigger('click')
-      expect(push).toHaveBeenCalledWith({ name: 'search' })
     })
 
     it('shows only Try again for noProjects in local mode', () => {

@@ -240,7 +240,6 @@
     "actions": {
       "retry": "Try again",
       "back": "Back",
-      "search": "Back to search",
       "home": "Home"
     },
     "faq": "FAQ",

@@ -8,5 +8,5 @@ export default {
   forbidden: { icon: IPhLock, actions: ['home', 'back'] },
   noProjects: { icon: IPhFolder, actions: ['retry', 'logout'] },
   serverUnreachable: { icon: IPhPlug, actions: ['retry'] },
-  document: { icon: IPhFile, actions: ['retry', 'search', 'home'] }
+  document: { icon: IPhFile, actions: ['retry', 'home'] }
 }
