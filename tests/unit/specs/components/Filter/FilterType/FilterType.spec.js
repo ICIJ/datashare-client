@@ -12,6 +12,7 @@ import FilterType from '@/components/Filter/FilterType/FilterType'
 import { useContentTypeCategoryAvailability } from '@/composables/useContentTypeCategoryAvailability'
 import { useSearchStore, useLockedFiltersStore } from '@/store/modules'
 import en from '@/lang/en.json'
+import settings from '@/utils/settings'
 import fr from '@/lang/fr.json'
 
 vi.mock('@/composables/useContentTypeCategoryAvailability', () => ({
@@ -738,6 +739,71 @@ describe('FilterType.vue', () => {
       await filterWrapper.vm.aggregateOver()
 
       expect(filterWrapper.findComponent({ name: 'InfiniteLoading' }).exists()).toBe(false)
+    })
+  })
+
+  describe('infinite scroll in the filters panel', () => {
+    let filterWrapper, observers, queryFilterSpy
+
+    // Records every observer so the test can tell which element it watches
+    // (its root) and fire its callback to simulate a scroll.
+    class FakeIntersectionObserver {
+      constructor(callback, options = {}) {
+        this.callback = callback
+        this.root = options.root ?? null
+        observers.push(this)
+      }
+
+      observe() {}
+      disconnect() {}
+    }
+
+    beforeEach(async () => {
+      observers = []
+      vi.stubGlobal('IntersectionObserver', FakeIntersectionObserver)
+
+      searchStore.decontextualizeFilter('tags')
+      searchStore.setIndex(index)
+      searchStore.reset()
+      searchStore.resetFilters()
+      // One more tag than a page holds, so a second page exists
+      for (let i = 0; i <= settings.filter.bucketSize; i++) {
+        await letData(es).have(new IndexedDocument(`document_${i}`, index).withTags([`tag_${i}`])).commit()
+      }
+
+      queryFilterSpy = vi.spyOn(searchStore, 'queryFilter')
+      filterWrapper = shallowMount(FilterType, {
+        attachTo: document.body,
+        global: {
+          plugins: core.plugins,
+          renderStubDefaultSlot: true,
+          stubs: { FiltersPanelSectionFilter: false, InfiniteLoading: false }
+        },
+        props: { filter: searchStore.getFilter({ name: 'tags' }) }
+      })
+      await filterWrapper.vm.aggregateOver()
+      await flushPromises()
+    })
+
+    afterEach(() => {
+      filterWrapper.unmount()
+      queryFilterSpy.mockRestore()
+      vi.unstubAllGlobals()
+    })
+
+    it('loads the next page when the end of the list shows in the filter scroll box', async () => {
+      // The panel clips the filter, so only the filter's own scroll box can
+      // see the end of a list scrolled to its bottom.
+      const scrollBox = filterWrapper.find('.filters-panel-section-filter__content').element
+      const observer = observers.find(({ root }) => root === scrollBox)
+      expect(observer).toBeDefined()
+
+      observer.callback([{ isIntersecting: true }])
+      await flushPromises()
+
+      expect(queryFilterSpy).toHaveBeenLastCalledWith(
+        expect.objectContaining({ name: 'tags', from: settings.filter.bucketSize })
+      )
     })
   })
 })

@@ -281,6 +281,11 @@ const entries = computed(() => {
 })
 
 const infiniteId = ref(uniqueId('infinite-search-filter-'))
+// Observe from the filter's own scroll box: with the viewport as root, the
+// filters panel clips a sentinel at the bottom of a filter low in the panel,
+// so scrolling the filter to its end never loads the next page. The modal
+// content doesn't scroll, so it keeps the default (viewport) root.
+const infiniteTarget = computed(() => (modal ? null : `.${infiniteId.value}`))
 const reachedBucketsEnd = computed(() => pages.length && lastPageBuckets.value.length < size.value)
 
 const isPageless = computed(() => filter.pagelessBucketSize != null)
@@ -362,6 +367,7 @@ defineExpose({ entries, aggregateOver, count, opened })
     :loading="isLoading"
     :modal="modal"
     :overlay-show="overlayShow"
+    :content-class="infiniteId"
   >
     <template
       v-if="$slots.overlay"
@@ -413,6 +419,7 @@ defineExpose({ entries, aggregateOver, count, opened })
       <infinite-loading
         v-if="!noInfiniteScroll"
         :identifier="infiniteId"
+        :target="infiniteTarget"
         :distance="200"
         @infinite="nextAggregate"
       >
