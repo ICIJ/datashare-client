@@ -239,8 +239,7 @@
     "logout": "crwdns7734:0crwdne7734:0",
     "actions": {
       "retry": "crwdns10807:0crwdne10807:0",
-      "back": "crwdns10809:0crwdne10809:0",
-      "home": "crwdns10811:0crwdne10811:0"
+      "back": "crwdns10809:0crwdne10809:0"
     },
     "faq": "crwdns7736:0crwdne7736:0",
     "userGuides": "crwdns7738:0crwdne7738:0",
