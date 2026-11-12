@@ -3,11 +3,16 @@ import { setCookie, removeCookie } from 'tiny-cookie'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import Error from '@/views/Error/Error'
+import { apiInstance as api } from '@/api/apiInstance'
 
 vi.mock('@/api/apiInstance', () => {
   return {
     apiInstance: {
       getVersion: vi.fn().mockResolvedValue({
+        'git.tag': 'X.Y.Z',
+        'git.commit.id.abbrev': 'sha1_abbrev'
+      }),
+      getVersionSilently: vi.fn().mockResolvedValue({
         'git.tag': 'X.Y.Z',
         'git.commit.id.abbrev': 'sha1_abbrev'
       })
@@ -40,6 +45,13 @@ describe('Error.vue', () => {
       const props = { title: 'This is wrong!' }
       const wrapper = mount(Error, { props, global: { plugins } })
       expect(wrapper.find('.error__title').text()).toBe('This is wrong!')
+    })
+
+    it('fetches the version for the details without reporting a failure as an app error', async () => {
+      api.getVersion.mockClear()
+      mount(Error, { props: { error: 'boom' }, global: { plugins } })
+      await flushPromises()
+      expect(api.getVersion).toHaveBeenCalledOnce()
     })
 
     it('lets the user copy details without opening them', () => {

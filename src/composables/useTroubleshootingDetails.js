@@ -63,7 +63,7 @@ export function useTroubleshootingDetails({ code, message, reason, details }) {
 
   const fetchServerVersion = async () => {
     try {
-      const version = await api.getVersion()
+      const version = await api.getVersionSilently()
       serverVersion.value = version['git.tag'] || version['git.build.version']
     }
     catch {
