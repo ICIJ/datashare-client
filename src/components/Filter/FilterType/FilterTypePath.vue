@@ -155,7 +155,6 @@ watchValues(whenFilterContextualized(props.filter, reloadData))
       <div
         v-if="opened"
         class="filter-type-path__tree"
-        :class="{ 'filter-type-path__tree--scrollable': modal }"
       >
         <path-tree
           ref="tree"
@@ -188,14 +187,6 @@ watchValues(whenFilterContextualized(props.filter, reloadData))
 
 <style lang="scss">
 .filter-type-path__tree {
-  // In the panel the filter's own content box is what clips the tree: scrolling
-  // here instead would put the horizontal scrollbar below the visible area.
-  // The modal drops that clipping, so there the tree has to scroll itself.
-  &--scrollable {
-    overflow-x: auto;
-    min-height: 100%;
-  }
-
   .path-tree-view-entry {
     width: max-content;
     min-width: 100%;

@@ -39,7 +39,8 @@ const hasExpandModal = computed(() => !modal && !filter.hideExpand)
     no-footer
     header-close-class="d-none"
     title-class="flex-grow-1"
-    body-class="py-0"
+    scrollable
+    body-class="filter-modal__body py-0"
   >
     <template #title>
       <filter-modal-title
@@ -56,3 +57,11 @@ const hasExpandModal = computed(() => !modal && !filter.hideExpand)
     />
   </app-modal>
 </template>
+
+<style lang="scss">
+.modal-body.filter-modal__body {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+</style>
