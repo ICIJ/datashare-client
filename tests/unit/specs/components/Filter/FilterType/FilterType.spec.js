@@ -772,6 +772,9 @@ describe('FilterType.vue', () => {
       }
 
       queryFilterSpy = vi.spyOn(searchStore, 'queryFilter')
+    })
+
+    const mountTags = async ({ modal = false } = {}) => {
       filterWrapper = shallowMount(FilterType, {
         attachTo: document.body,
         global: {
@@ -779,27 +782,40 @@ describe('FilterType.vue', () => {
           renderStubDefaultSlot: true,
           stubs: { FiltersPanelSectionFilter: false, InfiniteLoading: false }
         },
-        props: { filter: searchStore.getFilter({ name: 'tags' }) }
+        props: { filter: searchStore.getFilter({ name: 'tags' }), modal }
       })
       await filterWrapper.vm.aggregateOver()
       await flushPromises()
-    })
+    }
+
+    const scrollToEndIn = async (scrollBox) => {
+      const observer = observers.find(({ root }) => root === scrollBox)
+      expect(observer).toBeDefined()
+      observer.callback([{ isIntersecting: true }])
+      await flushPromises()
+    }
 
     afterEach(() => {
       filterWrapper.unmount()
+      document.body.innerHTML = ''
       queryFilterSpy.mockRestore()
       vi.unstubAllGlobals()
     })
 
     it('loads the next page when the end of the list shows in the filter scroll box', async () => {
+      await mountTags()
       // The panel clips the filter, so only the filter's own scroll box can
       // see the end of a list scrolled to its bottom.
-      const scrollBox = filterWrapper.find('.filters-panel-section-filter__content').element
-      const observer = observers.find(({ root }) => root === scrollBox)
-      expect(observer).toBeDefined()
+      await scrollToEndIn(filterWrapper.find('.filters-panel-section-filter__content').element)
 
-      observer.callback([{ isIntersecting: true }])
-      await flushPromises()
+      expect(queryFilterSpy).toHaveBeenLastCalledWith(
+        expect.objectContaining({ name: 'tags', from: settings.filter.bucketSize })
+      )
+    })
+
+    it('loads the next page when the end of the list shows in the modal list scroll box', async () => {
+      await mountTags({ modal: true })
+      await scrollToEndIn(filterWrapper.find('.filters-panel-section-filter__content').element)
 
       expect(queryFilterSpy).toHaveBeenLastCalledWith(
         expect.objectContaining({ name: 'tags', from: settings.filter.bucketSize })

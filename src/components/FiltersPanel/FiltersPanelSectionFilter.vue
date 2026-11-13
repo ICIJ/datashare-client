@@ -119,8 +119,14 @@ const isVisible = computed(() => props.modal || !collapse.value)
         <slot name="actions" />
       </template>
     </filters-panel-section-filter-title>
-    <b-collapse :model-value="isVisible">
-      <filter-type-overlay :show="overlayShow">
+    <b-collapse
+      :model-value="isVisible"
+      class="filters-panel-section-filter__collapse"
+    >
+      <filter-type-overlay
+        :show="overlayShow"
+        class="filters-panel-section-filter__overlay"
+      >
         <template
           v-if="$slots.overlay"
           #overlay
@@ -200,20 +206,20 @@ const isVisible = computed(() => props.modal || !collapse.value)
     padding: $spacer var(--filters-panel-section-filter-content-padding-x) 0;
   }
 
+  &--modal,
+  &--modal :deep(.filters-panel-section-filter__collapse),
+  &--modal &__overlay {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+  }
+
   &--modal &__content {
     --filters-panel-section-filter-content-padding-x: 0px;
 
     padding: 0;
     max-height: none;
-    overflow: visible;
-    display: flex;
-    flex-direction: column;
-  }
-
-  // Lets a scrolling filter body (the path tree) fill the modal's minimum
-  // height, so its scrollbar sits at the bottom instead of floating under the
-  // last row.
-  &--modal &__content__body {
     flex: 1;
     min-height: 0;
   }
@@ -233,6 +239,7 @@ const isVisible = computed(() => props.modal || !collapse.value)
   &--modal &__footer {
     bottom: 0;
     padding: $spacer-xs 0;
+    flex-shrink: 0;
   }
 }
 </style>

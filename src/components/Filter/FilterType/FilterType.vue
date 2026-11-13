@@ -281,11 +281,8 @@ const entries = computed(() => {
 })
 
 const infiniteId = ref(uniqueId('infinite-search-filter-'))
-// Observe from the filter's own scroll box: with the viewport as root, the
-// filters panel clips a sentinel at the bottom of a filter low in the panel,
-// so scrolling the filter to its end never loads the next page. The modal
-// content doesn't scroll, so it keeps the default (viewport) root.
-const infiniteTarget = computed(() => (modal ? null : `.${infiniteId.value}`))
+// Observe from the filter's own scroll box
+const infiniteTarget = computed(() => `.${infiniteId.value}`)
 const reachedBucketsEnd = computed(() => pages.length && lastPageBuckets.value.length < size.value)
 
 const isPageless = computed(() => filter.pagelessBucketSize != null)
