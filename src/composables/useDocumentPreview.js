@@ -1,16 +1,11 @@
-import { getCookie } from 'tiny-cookie'
-import kebabCase from 'lodash/kebabCase'
-import startCase from 'lodash/startCase'
 import { computed } from 'vue'
 
 import settings from '@/utils/settings'
 import { useConfig } from '@/composables/useConfig'
-import { useImage } from '@/composables/useImage'
 import { useDocumentPathBannersStore } from '@/store/modules'
 
 export const useDocumentPreview = () => {
   const config = useConfig()
-  const { fetchImageDimensions } = useImage()
   const documentPathBannersStore = useDocumentPathBannersStore()
 
   /**
@@ -19,26 +14,6 @@ export const useDocumentPreview = () => {
    * @type {import('vue').ComputedRef<boolean>}
    */
   const isPreviewActivated = computed(() => !!config.get('previewHost'))
-
-  /**
-   * The value of the session ID header.
-   *
-   * @type {import('vue').ComputedRef<string>}
-   */
-  const sessionIdHeaderValue = computed(() => getCookie(import.meta.env.VITE_DS_COOKIE_NAME))
-
-  /**
-   * The name of the session ID header.
-   *
-   * @type {import('vue').ComputedRef<string>}
-   */
-  const sessionIdHeaderName = computed(() => {
-    const dsCookieName = kebabCase(import.meta.env.VITE_DS_COOKIE_NAME)
-      .split('-')
-      .map(startCase)
-      .join('-')
-    return `X-${dsCookieName}`
-  })
 
   /**
    * True if the preview should be blurred according
@@ -119,30 +94,15 @@ export const useDocumentPreview = () => {
     return extractionLevel < 2 && isSupportedImage && contentLength < settings.previewRawMaxContentLength
   }
 
-  /**
-   * Fetch the image dimensions and base64 string with authentication headers.
-   *
-   * @param {string} src - The URL of the image.
-   * @param {number} rotation - The rotation angle in degrees.
-   * @returns {Promise<object>} A promise that resolves to an object containing the width, height, base64 string, and source URL.
-   */
-  async function fetchImageDimensionsWithAuth(src, rotation = 0) {
-    const headers = { [sessionIdHeaderName.value]: sessionIdHeaderValue.value }
-    return fetchImageDimensions(src, { headers, rotation })
-  }
-
   return {
     // Computed
     isPreviewActivated,
-    sessionIdHeaderValue,
-    sessionIdHeaderName,
     // Methods
     isBlurred,
     getBlurredContentBanner,
     getPreviewMetaUrl,
     getPreviewUrl,
     canPreview,
-    canPreviewRaw,
-    fetchImageDimensionsWithAuth
+    canPreviewRaw
   }
 }

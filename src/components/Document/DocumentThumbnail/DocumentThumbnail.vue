@@ -8,6 +8,7 @@ import DocumentThumbnailImage from '@/components/Document/DocumentThumbnail/Docu
 import DocumentThumbnailPlaceholder from '@/components/Document/DocumentThumbnail/DocumentThumbnailPlaceholder'
 import DocumentThumbnailOverlay from '@/components/Document/DocumentThumbnail/DocumentThumbnailOverlay'
 import { useDocumentPreview } from '@/composables/useDocumentPreview'
+import { useImage } from '@/composables/useImage'
 
 const props = defineProps({
   document: {
@@ -74,7 +75,8 @@ const errored = ref(false)
 const thumbnail = ref(null)
 const blurred = defineModel('blurred', { type: Boolean, default: true })
 
-const { getPreviewUrl, fetchImageDimensionsWithAuth, canPreview, canPreviewRaw, isBlurred } = useDocumentPreview()
+const { getPreviewUrl, canPreview, canPreviewRaw, isBlurred } = useDocumentPreview()
+const { fetchImageDimensions } = useImage()
 const element = useTemplateRef('element')
 
 const classList = computed(() => {
@@ -118,7 +120,7 @@ async function fetchThumbnail() {
   try {
     if (!errored.value && activated.value && (!thumbnail.value || thumbnail.value.rotation !== props.rotation)) {
       const url = canPreviewRaw(props.document) ? props.document.inlineFullUrl : thumbnailUrl.value
-      thumbnail.value = await fetchImageDimensionsWithAuth(url, props.rotation)
+      thumbnail.value = await fetchImageDimensions(url, { rotation: props.rotation })
       emit('loaded')
     }
   }

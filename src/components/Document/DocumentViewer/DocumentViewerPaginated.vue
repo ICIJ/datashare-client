@@ -106,7 +106,7 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
-const { getPreviewMetaUrl, sessionIdHeaderName, sessionIdHeaderValue } = useDocumentPreview()
+const { getPreviewMetaUrl } = useDocumentPreview()
 const wait = useWait()
 const config = useConfig()
 
@@ -127,10 +127,7 @@ const pagesRange = computed(() => {
 const metaOptions = computed(() => {
   return {
     method: 'GET',
-    cache: 'default',
-    headers: {
-      [sessionIdHeaderName.value]: sessionIdHeaderValue.value
-    }
+    cache: 'default'
   }
 })
 
