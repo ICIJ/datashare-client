@@ -39,6 +39,9 @@ export default class Auth {
       if (!username) {
         this._resetUnlessReplaced(pending)
       }
+      else {
+        this._rememberUnlessReplaced(pending, username)
+      }
       return username
     }
     catch (error) {
@@ -74,6 +77,7 @@ export default class Auth {
   }
 
   _expireLater() {
+    clearTimeout(this._ttlTimer)
     this._ttlTimer = setTimeout(this.reset.bind(this), USERNAME_TTL_MS)
   }
 
@@ -84,11 +88,19 @@ export default class Auth {
     }
   }
 
+  _rememberUnlessReplaced(pending, username) {
+    const isReplaced = this._pendingUsername !== pending
+    const isRemembered = this.me.value === username
+    if (isReplaced || isRemembered) {
+      return
+    }
+    this.me.value = username
+    this._expireLater()
+  }
+
   async _fetchUsername() {
     try {
       const { uid } = await api.getUser()
-      this.me.value = uid
-      this._expireLater()
       return uid
     }
     catch (error) {

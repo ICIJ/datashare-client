@@ -89,6 +89,40 @@ describe('auth backend client', () => {
     })
   })
 
+  describe('with an older request that succeeds late', () => {
+    let resolveOlder
+
+    beforeEach(() => {
+      const olderRequest = new Promise((resolve) => {
+        resolveOlder = resolve
+      })
+      api.getUser.mockReturnValueOnce(olderRequest)
+      api.getUser.mockResolvedValueOnce({ uid: 'jane' })
+    })
+
+    afterEach(() => vi.useRealTimers())
+
+    it('should keep the newer username', async () => {
+      const olderCall = auth.whoAmI()
+      auth.reset()
+      await auth.getUsername()
+      resolveOlder({ uid: 'john' })
+      await olderCall
+      expect(auth.me.value).toBe('jane')
+    })
+
+    it('should leave no expiry timer behind once reset', async () => {
+      vi.useFakeTimers()
+      const olderCall = auth.whoAmI()
+      auth.reset()
+      await auth.getUsername()
+      resolveOlder({ uid: 'john' })
+      await olderCall
+      auth.reset()
+      expect(vi.getTimerCount()).toBe(0)
+    })
+  })
+
   describe('whoAmI', () => {
     it('should return the user name if user is authenticated', async () => {
       api.getUser.mockResolvedValue({ uid: 'john' })
