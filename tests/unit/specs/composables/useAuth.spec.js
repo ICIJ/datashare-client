@@ -108,4 +108,21 @@ describe('useAuth', () => {
       expect(wrapper.vm.isBasicAuth).toBe(false)
     })
   })
+
+  describe('authMode', () => {
+    it('uses the auth setting when it is set', () => {
+      mockConfig({ auth: 'yesBasic', authFilter: 'org.icij.datashare.session.FormAuthFilter' })
+      expect(factory().vm.authMode).toBe('yesBasic')
+    })
+
+    it('falls back to the mode of the form auth filter', () => {
+      mockConfig({ authFilter: 'org.icij.datashare.session.FormAuthFilter' })
+      expect(factory().vm.authMode).toBe('form')
+    })
+
+    it('falls back to the mode of the basic auth filter', () => {
+      mockConfig({ authFilter: 'org.icij.datashare.session.BasicAuthAdaptorFilter' })
+      expect(factory().vm.authMode).toBe('basic')
+    })
+  })
 })

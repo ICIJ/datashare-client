@@ -4,7 +4,10 @@ import { useCore } from './useCore'
 
 const AUTH_MODE_PWD = ['form', 'basic']
 const AUTH_MODE_BASIC = ['basic', 'yesBasic']
-const BASIC_AUTH_FILTER = 'org.icij.datashare.session.BasicAuthAdaptorFilter'
+const AUTH_MODE_BY_FILTER = {
+  'org.icij.datashare.session.BasicAuthAdaptorFilter': 'basic',
+  'org.icij.datashare.session.FormAuthFilter': 'form'
+}
 
 export function useAuth() {
   const core = useCore()
@@ -12,13 +15,12 @@ export function useAuth() {
   const username = ref(null)
   const isUsernameResolved = ref(false)
   const isAuthenticated = computed(() => !!username.value)
-  const isBasicAuthMode = computed(() => {
-    const auth = core.config.get('auth')
-    if (auth !== undefined && auth !== null) {
-      return AUTH_MODE_BASIC.includes(auth)
-    }
-    return core.config.get('authFilter') === BASIC_AUTH_FILTER
+  // The `auth` setting (e.g. `--auth form`) takes precedence over the legacy `authFilter` setting.
+  const authMode = computed(() => {
+    const authFilterMode = AUTH_MODE_BY_FILTER[core.config.get('authFilter')]
+    return core.config.get('auth') ?? authFilterMode
   })
+  const isBasicAuthMode = computed(() => AUTH_MODE_BASIC.includes(authMode.value))
   const isBasicAuth = computed(() => isAuthenticated.value && isBasicAuthMode.value)
   const isAuthWithUsersProvider = computed(() => AUTH_MODE_PWD.includes(core.config.get('auth')))
   // Whether uid is the viewer. Until the username resolves, any uid counts as the viewer, so a
@@ -30,7 +32,15 @@ export function useAuth() {
     isUsernameResolved.value = true
   })
 
-  return { username, isBasicAuth, isUsernameResolved, isAuthenticated, isAuthWithUsersProvider, isCurrentUser }
+  return {
+    username,
+    authMode,
+    isBasicAuth,
+    isUsernameResolved,
+    isAuthenticated,
+    isAuthWithUsersProvider,
+    isCurrentUser
+  }
 }
 
 export default useAuth
