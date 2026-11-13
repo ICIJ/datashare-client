@@ -1,7 +1,6 @@
 import find from 'lodash/find'
 import { ref } from 'vue'
 import { shallowMount, flushPromises } from '@vue/test-utils'
-import { removeCookie, setCookie } from 'tiny-cookie'
 import { vi } from 'vitest'
 
 import { IndexedDocument, letData } from '~tests/unit/es_utils'
@@ -25,10 +24,6 @@ describe('FilterType.vue', () => {
 
   let core, wrapper, searchStore
 
-  beforeAll(() => {
-    setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
-  })
-
   beforeEach(() => {
     // Default to "modern index" so paired-dimension tests behave as before;
     // legacy/degraded behavior is exercised in dedicated specs.
@@ -41,8 +36,6 @@ describe('FilterType.vue', () => {
     core = CoreSetup.init().useAll()
     searchStore = useSearchStore()
   })
-
-  afterAll(() => removeCookie(process.env.VITE_DS_COOKIE_NAME))
 
   describe('contentType', () => {
     beforeEach(() => {

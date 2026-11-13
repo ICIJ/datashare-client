@@ -1,6 +1,5 @@
 import { ref } from 'vue'
 import { flushPromises, mount } from '@vue/test-utils'
-import { removeCookie, setCookie } from 'tiny-cookie'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import FilterType from '@/components/Filter/FilterType/FilterType'
@@ -62,10 +61,6 @@ describe('FilterTypeFileTypes.vue', () => {
     queryFilterSpy.mockResolvedValue(aggregationPage(bucketsFromContentTypes(contentTypes)))
   }
 
-  beforeAll(() => {
-    setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
-  })
-
   beforeEach(() => {
     api.getContentTypeCategories.mockClear()
     api.getContentTypeCategories.mockResolvedValue({})
@@ -117,7 +112,6 @@ describe('FilterTypeFileTypes.vue', () => {
   })
 
   afterAll(() => {
-    removeCookie(process.env.VITE_DS_COOKIE_NAME)
     vi.resetAllMocks()
   })
 

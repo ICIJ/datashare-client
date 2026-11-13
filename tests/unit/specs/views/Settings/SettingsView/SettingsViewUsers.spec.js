@@ -14,6 +14,7 @@ import { apiInstance as api } from '@/api/apiInstance.js'
 
 vi.mock('@/api/apiInstance', () => ({
   apiInstance: {
+    getUser: vi.fn().mockResolvedValue({ uid: 'admin@example.org' }),
     getUsers: vi.fn()
   }
 }))
@@ -284,7 +285,7 @@ describe('SettingsViewUsers.vue', () => {
     })
 
     it('does not open the delete modal for the viewer\'s own account', async () => {
-      vi.spyOn(core.auth, 'getUsername').mockResolvedValue(zoe.uid)
+      vi.spyOn(core.auth, 'whoAmI').mockResolvedValue(zoe.uid)
       await core.router.push(`/settings/users/delete/${zoe.uid}`)
       const wrapper = shallowMountComponent()
       await flushPromises()
@@ -292,7 +293,7 @@ describe('SettingsViewUsers.vue', () => {
     })
 
     it('does not open the delete modal before the viewer\'s username resolves', async () => {
-      vi.spyOn(core.auth, 'getUsername').mockReturnValue(new Promise(() => {}))
+      vi.spyOn(core.auth, 'whoAmI').mockReturnValue(new Promise(() => {}))
       await core.router.push(`/settings/users/delete/${zoe.uid}`)
       const wrapper = shallowMountComponent()
       await flushPromises()

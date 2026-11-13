@@ -172,7 +172,7 @@ describe('InstanceUsersList.vue', () => {
   })
 
   it('passes whether accounts can be managed, and whether a row is the viewer, to each row\'s actions', async () => {
-    vi.spyOn(core.auth, 'getUsername').mockResolvedValueOnce('alice@example.org')
+    vi.spyOn(core.auth, 'whoAmI').mockResolvedValueOnce('alice@example.org')
     const wrapper = mountComponent({ canManageAccounts: true })
     await flushPromises()
     const actions = wrapper.findAllComponents(InstanceUsersActions)

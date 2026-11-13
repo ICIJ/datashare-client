@@ -1,5 +1,4 @@
 import { mount, flushPromises } from '@vue/test-utils'
-import { setCookie, removeCookie } from 'tiny-cookie'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import Error from '@/views/Error/Error'
@@ -8,6 +7,7 @@ import { apiInstance as api } from '@/api/apiInstance'
 vi.mock('@/api/apiInstance', () => {
   return {
     apiInstance: {
+      getUser: vi.fn(),
       getVersion: vi.fn().mockResolvedValue({
         'git.tag': 'X.Y.Z',
         'git.commit.id.abbrev': 'sha1_abbrev'
@@ -32,6 +32,7 @@ describe('Error.vue', () => {
   let core
 
   beforeEach(() => {
+    api.getUser.mockRejectedValue({ response: { status: 401 } })
     core = CoreSetup.init().useAll()
     plugins = core.plugins
   })
@@ -103,8 +104,7 @@ describe('Error.vue', () => {
     })
 
     it('should display a link when user is logged in in server mode', async () => {
-      // Create the user session
-      setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'foo' }, JSON.stringify)
+      api.getUser.mockResolvedValue({ uid: 'foo' })
       core.config.set('mode', 'SERVER')
       const wrapper = mount(Error, { global: { plugins } })
       await flushPromises()
@@ -114,7 +114,7 @@ describe('Error.vue', () => {
     it('adds the browser, the OS and the username to the troubleshooting details', async () => {
       const userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:158.0) Gecko/20100101 Firefox/158.0'
       vi.spyOn(navigator, 'userAgent', 'get').mockReturnValue(userAgent)
-      setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'foo' }, JSON.stringify)
+      api.getUser.mockResolvedValue({ uid: 'foo' })
       core.config.set('mode', 'SERVER')
       const wrapper = mount(Error, { global: { plugins } })
       await flushPromises()
@@ -126,9 +126,16 @@ describe('Error.vue', () => {
   })
 
   describe('server mode', () => {
+    it('should display a link when the server cannot tell who the user is', async () => {
+      api.getUser.mockRejectedValue({ response: { status: 503 } })
+      const core = CoreSetup.init().useAll()
+      core.config.set('mode', 'SERVER')
+      const wrapper = mount(Error, { global: { plugins: core.plugins } })
+      await flushPromises()
+      expect(wrapper.find('.error__links__item--logout').exists()).toBeTruthy()
+    })
+
     it('should not display a link when user is logged out in server mode', async () => {
-      // Delete the user session
-      removeCookie(process.env.VITE_DS_COOKIE_NAME)
       const core = CoreSetup.init().useAll()
       core.config.set('mode', 'SERVER')
       const wrapper = mount(Error, { global: { plugins: core.plugins } })
@@ -137,7 +144,7 @@ describe('Error.vue', () => {
     })
 
     it('shows Log out on noProjects when logged in', async () => {
-      setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'foo' }, JSON.stringify)
+      api.getUser.mockResolvedValue({ uid: 'foo' })
       const core = CoreSetup.init().useAll()
       core.config.set('mode', 'SERVER')
       const wrapper = mount(Error, { props: { reason: 'noProjects' }, global: { plugins: core.plugins } })
@@ -148,7 +155,6 @@ describe('Error.vue', () => {
     })
 
     it('hides Log out on noProjects when logged out', async () => {
-      removeCookie(process.env.VITE_DS_COOKIE_NAME)
       const core = CoreSetup.init().useAll()
       core.config.set('mode', 'SERVER')
       const wrapper = mount(Error, { props: { reason: 'noProjects' }, global: { plugins: core.plugins } })
@@ -160,7 +166,6 @@ describe('Error.vue', () => {
   describe('actions', () => {
     beforeEach(() => {
       window.history.replaceState({}, '', '/')
-      removeCookie(process.env.VITE_DS_COOKIE_NAME)
     })
 
     it('shows Back as the primary action when there is a previous page', async () => {

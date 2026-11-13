@@ -113,12 +113,9 @@ import debounce from 'lodash/debounce'
 import filter from 'lodash/filter'
 import first from 'lodash/first'
 import get from 'lodash/get'
-import kebabCase from 'lodash/kebabCase'
 import range from 'lodash/range'
 import sortBy from 'lodash/sortBy'
-import startCase from 'lodash/startCase'
 import Fuse from 'fuse.js'
-import { getCookie } from 'tiny-cookie'
 import { DynamicScroller, DynamicScrollerItem } from 'vue-virtual-scroller'
 import { useI18n } from 'vue-i18n'
 
@@ -172,18 +169,8 @@ export default {
       return {
         method: 'GET',
         cache: 'default',
-        headers: {
-          [this.sessionIdHeaderName]: this.sessionIdHeaderValue
-        }
+        credentials: 'include'
       }
-    },
-    sessionIdHeaderValue() {
-      return getCookie(import.meta.env.VITE_DS_COOKIE_NAME)
-    },
-    sessionIdHeaderName() {
-      let dsCookieName = kebabCase(import.meta.env.VITE_DS_COOKIE_NAME)
-      dsCookieName = dsCookieName.split('-').map(startCase).join('-')
-      return `x-${dsCookieName}`
     },
     isPreviewable() {
       return this.meta && this.meta.previewable && this.meta.content

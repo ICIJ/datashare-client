@@ -49,17 +49,19 @@ import AppSidebar from '@/components/AppSidebar/AppSidebar'
 import Hook from '@/components/Hook/Hook'
 import PageOffcanvas from '@/components/PageOffcanvas/PageOffcanvas'
 import ScrollTracker from '@/components/ScrollTracker'
+import { useAuthMode } from '@/composables/useAuth'
 import { useCore } from '@/composables/useCore'
 import { useAppStore } from '@/store/modules'
 
 const core = useCore()
+const { authMode } = useAuthMode()
 const appStore = useAppStore()
 const { t } = useI18n()
 const route = useRoute()
 const sidebar = useTemplateRef('sidebar')
 
 const signinUrl = computed(() => {
-  return core.config.get('auth') === 'form' ? '/auth/login' : import.meta.env.VITE_DS_AUTH_SIGNIN
+  return authMode.value === 'form' ? '/auth/login' : import.meta.env.VITE_DS_AUTH_SIGNIN
 })
 
 // Function to handle HTTP errors

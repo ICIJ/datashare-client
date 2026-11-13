@@ -1,5 +1,4 @@
 import { flushPromises, mount } from '@vue/test-utils'
-import { removeCookie, setCookie } from 'tiny-cookie'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import SettingsViewApi from '@/views/Settings/SettingsView/SettingsViewApi'
@@ -10,6 +9,7 @@ vi.mock('@/api/apiInstance', () => {
   return {
     apiInstance: {
       createApiKey: vi.fn(),
+      getUser: vi.fn(),
       getApiKey: vi.fn(),
       removeApiKey: vi.fn()
     }
@@ -21,15 +21,14 @@ describe('SettingsViewApi', () => {
 
   beforeEach(async () => {
     api.getApiKey.mockResolvedValue({ hashedKey: null })
+    api.getUser.mockResolvedValue({ uid: 'doe' })
     const core = CoreSetup.init().useAll()
     plugins = core.plugins
 
-    setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
     core.config.merge({ mode: MODE_NAME.SERVER })
   })
 
   afterEach(async () => {
-    removeCookie(process.env.VITE_DS_COOKIE_NAME)
     await flushPromises()
     vi.clearAllMocks()
   })

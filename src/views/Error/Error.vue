@@ -62,7 +62,7 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
-const { isAuthenticated } = useAuth()
+const { isAuthenticated, isUsernameUnavailable } = useAuth()
 const { isServer } = useMode()
 const router = useRouter()
 const route = useRoute()
@@ -135,8 +135,10 @@ const canGoBack = computed(() => {
 
 const showsRetry = computed(() => Boolean(actionsCase.value.retry))
 const showsBack = computed(() => Boolean(actionsCase.value.back))
-const showsLogout = computed(() => Boolean(actionsCase.value.logout) && isServer.value && isAuthenticated.value)
-const showsFooterLogout = computed(() => isAuthenticated.value && !showsLogout.value)
+// When the server cannot tell who the user is, offer to log out rather than hide it from a signed-in user.
+const mayBeAuthenticated = computed(() => isAuthenticated.value || isUsernameUnavailable.value)
+const showsLogout = computed(() => Boolean(actionsCase.value.logout) && isServer.value && mayBeAuthenticated.value)
+const showsFooterLogout = computed(() => mayBeAuthenticated.value && !showsLogout.value)
 const backVariant = computed(() => showsRetry.value ? 'outline-secondary' : 'outline-primary')
 
 const retry = () => window.location.reload()

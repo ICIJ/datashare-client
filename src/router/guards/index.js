@@ -5,7 +5,7 @@ import { useAppStore } from '@/store/modules'
 import { useNProgress } from '@/composables/useNProgress'
 import { usePolicies } from '@/composables/usePolicies.js'
 import useMode from '@/composables/useMode.js'
-import { errorLocation } from '@/router/errorLocation'
+import { errorLocation, errorStateFrom } from '@/router/errorLocation'
 
 export default (core) => {
   const { router, auth, config, i18n } = core
@@ -68,9 +68,10 @@ export default (core) => {
   }
 
   /**
-   * Verifies the user is authenticated via cookie. Routes with `meta.skipsAuth`
-   * bypass this check. Unauthenticated users are redirected to the login page,
-   * with their original destination stored for redirect after login.
+   * Asks the server who the user is. Routes with `meta.skipsAuth` bypass this
+   * check. Unauthenticated users are redirected to the login page, with their
+   * original destination stored for redirect after login. When the server
+   * cannot answer, the user lands on the error page instead.
    * @param {import('vue-router').RouteLocationNormalized} to
    * @param {import('vue-router').RouteLocationNormalized} from
    * @param {import('vue-router').NavigationGuardNext} next
@@ -81,7 +82,7 @@ export default (core) => {
       if (routeSkipsAuth(to)) {
         return next()
       }
-      const username = await auth.getUsername()
+      const username = await auth.whoAmI()
       // If username is returned, user is authenticated; otherwise, not authenticated
       if (username) {
         proceedAuthenticated(to, next)
@@ -91,10 +92,8 @@ export default (core) => {
       }
     }
     catch (error) {
-      // history.state must be structured-clonable; axios errors carry
-      // non-cloneable functions on `error.config`, so forward the message only.
-      const message = error?.message ?? String(error)
-      next(errorLocation(to, { error: message, reason: 'serverUnreachable' }))
+      const state = errorStateFrom(error)
+      next(errorLocation(to, state))
     }
   }
 
