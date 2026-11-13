@@ -9,7 +9,7 @@ import { useInsightsStore } from '@/store/modules/insights'
 describe('WidgetNested.vue', () => {
   let wrapper
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     const { index: project } = esConnectionHelper.build()
     const { plugins } = CoreSetup.init().useAll()
     const insightsStore = useInsightsStore()
