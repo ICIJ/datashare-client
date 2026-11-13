@@ -134,6 +134,11 @@ describe('auth backend client', () => {
       expect(await auth.whoAmI()).toBeNull()
     })
 
+    it('should return null when the server answers without a user', async () => {
+      api.getUser.mockResolvedValue(null)
+      expect(await auth.whoAmI()).toBeNull()
+    })
+
     it('should throw when the server answers with an error other than 401', async () => {
       const error = { response: { status: 503 } }
       api.getUser.mockRejectedValue(error)

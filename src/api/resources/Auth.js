@@ -100,8 +100,8 @@ export default class Auth {
 
   async _fetchUsername() {
     try {
-      const { uid } = await api.getUser()
-      return uid
+      const user = await api.getUser()
+      return user?.uid ?? null
     }
     catch (error) {
       if (error?.response?.status === 401) {
