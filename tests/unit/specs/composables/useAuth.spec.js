@@ -16,7 +16,7 @@ describe('useAuth', () => {
     return mount({ setup: () => useAuth(), template: '<div></div>' })
   }
 
-  function mockConfig({ auth = 'form', authFilter } = {}) {
+  function mockConfig({ auth, authFilter } = {}) {
     mockCore.config.get.mockImplementation(key => ({ auth, authFilter })[key])
   }
 
@@ -59,6 +59,30 @@ describe('useAuth', () => {
 
   describe('isBasicAuth', () => {
     const BASIC = 'org.icij.datashare.session.BasicAuthAdaptorFilter'
+
+    it('is true when a user is signed in with the basic auth mode', async () => {
+      mockConfig({ auth: 'basic' })
+      mockCore.auth.getUsername.mockResolvedValue('alice@example.com')
+      const wrapper = factory()
+      await flushPromises()
+      expect(wrapper.vm.isBasicAuth).toBe(true)
+    })
+
+    it('is true when a user is signed in with the yesBasic auth mode', async () => {
+      mockConfig({ auth: 'yesBasic' })
+      mockCore.auth.getUsername.mockResolvedValue('alice@example.com')
+      const wrapper = factory()
+      await flushPromises()
+      expect(wrapper.vm.isBasicAuth).toBe(true)
+    })
+
+    it('is false when the auth mode is form, whatever the auth filter', async () => {
+      mockConfig({ auth: 'form', authFilter: BASIC })
+      mockCore.auth.getUsername.mockResolvedValue('alice@example.com')
+      const wrapper = factory()
+      await flushPromises()
+      expect(wrapper.vm.isBasicAuth).toBe(false)
+    })
 
     it('is true when a user is signed in through the basic auth filter', async () => {
       mockConfig({ authFilter: BASIC })
