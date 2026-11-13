@@ -32,7 +32,9 @@ export function useImage() {
     try {
       const responseType = 'blob'
       const cache = 'default'
-      const { data: imgBlob } = await api.axios.get(src, { responseType, cache, headers })
+      // The preview server can live on another origin and reads the session from the cookie.
+      const withCredentials = true
+      const { data: imgBlob } = await api.axios.get(src, { responseType, cache, headers, withCredentials })
       return new Promise((resolve, reject) => {
         const fileReader = new FileReader()
         fileReader.readAsDataURL(imgBlob)

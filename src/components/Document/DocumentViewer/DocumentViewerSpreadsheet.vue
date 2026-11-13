@@ -168,7 +168,8 @@ export default {
     contentOptions() {
       return {
         method: 'GET',
-        cache: 'default'
+        cache: 'default',
+        credentials: 'include'
       }
     },
     isPreviewable() {

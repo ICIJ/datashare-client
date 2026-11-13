@@ -127,7 +127,8 @@ const pagesRange = computed(() => {
 const metaOptions = computed(() => {
   return {
     method: 'GET',
-    cache: 'default'
+    cache: 'default',
+    withCredentials: true
   }
 })
 
