@@ -166,6 +166,24 @@ describe('DocumentView.vue', () => {
     expect(api.getRecommendationsByDocuments).toBeCalledWith(project, id)
   })
 
+  it('should still add the document to history in server mode when the server cannot tell who the user is', async () => {
+    core.config.set('mode', MODE_NAME.SERVER)
+    const error = Object.assign(new Error('Server error'), { response: { status: 500 } })
+    api.getUser.mockRejectedValueOnce(error)
+
+    shallowMount(DocumentView, {
+      global: {
+        plugins: core.plugins,
+        renderStubDefaultSlot: true
+      },
+      props
+    })
+
+    await flushPromises()
+
+    expect(api.addHistoryEvent).toBeCalledTimes(1)
+  })
+
   it('should not call the API to retrieve document recommendations in local mode', async () => {
     core.config.set('mode', MODE_NAME.LOCAL)
 

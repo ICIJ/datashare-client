@@ -28,7 +28,8 @@ export const useDocument = function (element) {
     await documentStore.getTags()
     // Recommendations are a server-mode-only feature
     if (isServer.value) {
-      await documentStore.getRecommendationsByDocuments(await core.auth.getUsername())
+      const userId = await core.auth.getUsername().catch(() => null)
+      await documentStore.getRecommendationsByDocuments(userId)
     }
 
     if (document.value) {
