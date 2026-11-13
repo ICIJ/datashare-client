@@ -23,10 +23,6 @@ describe('useContentTypeGroupedView', () => {
 
   beforeEach(() => {
     core = CoreSetup.init().useAll()
-    // The setting persists to localStorage, which a fresh Pinia rehydrates —
-    // reset it so each test starts from the flat-view baseline regardless of
-    // execution order.
-    useAppStore().setSettings('search', 'groupedContentTypeView', false)
   })
 
   it('defaults to the flat view (false)', () => {

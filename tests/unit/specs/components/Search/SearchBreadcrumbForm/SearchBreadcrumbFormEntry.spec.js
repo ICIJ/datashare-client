@@ -10,11 +10,6 @@ describe('SearchBreadcrumbFormEntry.vue', () => {
   beforeEach(() => {
     const core = CoreSetup.init().useAll()
     global = { plugins: core.plugins }
-    // CoreSetup falls back to the app's singleton pinia (with the locked
-    // filters store's `persist: true`), so entries otherwise leak across
-    // tests in this file — reset before each test, same pattern as the
-    // explicit searchStore resets in FilterType.spec.js.
-    useLockedFiltersStore().unlockAll()
   })
 
   describe('operator prop', () => {

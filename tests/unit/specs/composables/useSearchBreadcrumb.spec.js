@@ -24,11 +24,7 @@ describe('useSearchBreadcrumb composable', () => {
     core = CoreSetup.init().useAll().useRouterWithoutGuards()
     plugins = core.plugins
     searchStore = useSearchStore()
-    // CoreSetup.useAll() reuses the module-level pinia singleton (no fresh
-    // instance per test), so lockedFiltersStore state otherwise leaks across
-    // every test in this file.
     lockedFiltersStore = useLockedFiltersStore()
-    lockedFiltersStore.unlockAll()
   })
 
   function mountComposable() {

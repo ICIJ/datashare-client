@@ -11,10 +11,6 @@ describe('SearchBreadcrumbUri.vue', () => {
   beforeEach(async () => {
     core = CoreSetup.init().useAll()
     global = { plugins: core.plugins }
-    // CoreSetup falls back to the app's singleton pinia (with the locked
-    // filters store's `persist: true`), so entries otherwise leak across
-    // tests in this file.
-    useLockedFiltersStore().unlockAll()
   })
 
   describe('a boolean query on one index', () => {
