@@ -11,12 +11,26 @@ export default class Auth {
   }
 
   /**
+   * Resolves the signed-in username, or null when nobody is signed in or the
+   * server cannot tell who the user is.
+   * @returns {Promise<string|null>}
+   */
+  async getUsername() {
+    try {
+      return await this.whoAmI()
+    }
+    catch {
+      return null
+    }
+  }
+
+  /**
    * Resolves the signed-in username, or null when nobody is signed in.
    * Concurrent calls share a single request.
    * @throws when the server cannot tell who the user is (network error, 5xx...)
    * @returns {Promise<string|null>}
    */
-  async getUsername() {
+  async whoAmI() {
     this._pendingUsername ??= this._fetchUsername()
     const pending = this._pendingUsername
     try {

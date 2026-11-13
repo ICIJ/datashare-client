@@ -41,22 +41,20 @@ describe('auth backend client', () => {
       expect(api.getUser).toBeCalledTimes(1)
     })
 
-    it('should throw when the server answers with an error other than 401', async () => {
-      const error = { response: { status: 503 } }
-      api.getUser.mockRejectedValue(error)
-      await expect(auth.getUsername()).rejects.toBe(error)
+    it('should return null when the server answers with an error other than 401', async () => {
+      api.getUser.mockRejectedValue({ response: { status: 503 } })
+      expect(await auth.getUsername()).toBeNull()
     })
 
-    it('should throw when the server cannot be reached', async () => {
-      const error = new Error('Network Error')
-      api.getUser.mockRejectedValue(error)
-      await expect(auth.getUsername()).rejects.toBe(error)
+    it('should return null when the server cannot be reached', async () => {
+      api.getUser.mockRejectedValue(new Error('Network Error'))
+      expect(await auth.getUsername()).toBeNull()
     })
 
     it('should ask the server again after a failure', async () => {
       api.getUser.mockRejectedValueOnce(new Error('Network Error'))
       api.getUser.mockResolvedValueOnce({ uid: 'john' })
-      await expect(auth.getUsername()).rejects.toThrow()
+      await auth.getUsername()
       expect(await auth.getUsername()).toBe('john')
     })
 
@@ -81,13 +79,44 @@ describe('auth backend client', () => {
       })
       api.getUser.mockReturnValueOnce(olderRequest)
       api.getUser.mockResolvedValueOnce({ uid: 'john' })
-      const olderCall = auth.getUsername()
+      const olderCall = auth.whoAmI()
       auth.reset()
       expect(await auth.getUsername()).toBe('john')
       rejectOlder(new Error('Network Error'))
       await expect(olderCall).rejects.toThrow()
       expect(await auth.getUsername()).toBe('john')
       expect(api.getUser).toBeCalledTimes(2)
+    })
+  })
+
+  describe('whoAmI', () => {
+    it('should return the user name if user is authenticated', async () => {
+      api.getUser.mockResolvedValue({ uid: 'john' })
+      expect(await auth.whoAmI()).toBe('john')
+    })
+
+    it('should return null if user is not authenticated', async () => {
+      api.getUser.mockRejectedValue({ response: { status: 401 } })
+      expect(await auth.whoAmI()).toBeNull()
+    })
+
+    it('should throw when the server answers with an error other than 401', async () => {
+      const error = { response: { status: 503 } }
+      api.getUser.mockRejectedValue(error)
+      await expect(auth.whoAmI()).rejects.toBe(error)
+    })
+
+    it('should throw when the server cannot be reached', async () => {
+      const error = new Error('Network Error')
+      api.getUser.mockRejectedValue(error)
+      await expect(auth.whoAmI()).rejects.toBe(error)
+    })
+
+    it('should ask the server again after a failure', async () => {
+      api.getUser.mockRejectedValueOnce(new Error('Network Error'))
+      api.getUser.mockResolvedValueOnce({ uid: 'john' })
+      await expect(auth.whoAmI()).rejects.toThrow()
+      expect(await auth.whoAmI()).toBe('john')
     })
   })
 

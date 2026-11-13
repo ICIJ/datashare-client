@@ -311,7 +311,7 @@ describe('ProjectUsersList.vue', () => {
     const users = [{ uid: 'alice@example.org', role: 'PROJECT_ADMIN' }]
 
     it('is read-only for a project admin, who would lose access to this tab by dropping their role', async () => {
-      vi.spyOn(core.auth, 'getUsername').mockResolvedValueOnce('alice@example.org')
+      vi.spyOn(core.auth, 'whoAmI').mockResolvedValueOnce('alice@example.org')
       core.config.set('auth', 'form')
       core.config.set('policies', [{ projectId: project, domainId: 'default', role: 'PROJECT_ADMIN' }])
       const wrapper = mountComponent({ users })
@@ -320,7 +320,7 @@ describe('ProjectUsersList.vue', () => {
     })
 
     it('stays editable for a domain admin, who keeps access through the domain-wide role', async () => {
-      vi.spyOn(core.auth, 'getUsername').mockResolvedValueOnce('alice@example.org')
+      vi.spyOn(core.auth, 'whoAmI').mockResolvedValueOnce('alice@example.org')
       core.config.set('auth', 'form')
       core.config.set('policies', [{ projectId: '*', domainId: 'default', role: 'DOMAIN_ADMIN' }])
       const wrapper = mountComponent({ users })
@@ -329,7 +329,7 @@ describe('ProjectUsersList.vue', () => {
     })
 
     it('stays editable for an instance admin, who keeps access through the instance role', async () => {
-      vi.spyOn(core.auth, 'getUsername').mockResolvedValueOnce('alice@example.org')
+      vi.spyOn(core.auth, 'whoAmI').mockResolvedValueOnce('alice@example.org')
       core.config.set('auth', 'form')
       core.config.set('policies', [{ projectId: '*', domainId: '*', role: 'INSTANCE_ADMIN' }])
       const wrapper = mountComponent({ users })

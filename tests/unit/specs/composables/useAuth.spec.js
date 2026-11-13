@@ -4,7 +4,7 @@ import useAuth from '@/composables/useAuth.js'
 
 const mockCore = {
   config: { get: vi.fn() },
-  auth: { getUsername: vi.fn() }
+  auth: { whoAmI: vi.fn() }
 }
 
 vi.mock('@/composables/useCore', () => ({
@@ -26,14 +26,14 @@ describe('useAuth', () => {
   })
 
   it('starts with isUsernameResolved false so callers stay guarded before the async auth check lands', () => {
-    mockCore.auth.getUsername.mockReturnValue(new Promise(() => {}))
+    mockCore.auth.whoAmI.mockReturnValue(new Promise(() => {}))
     const wrapper = factory()
     expect(wrapper.vm.isUsernameResolved).toBe(false)
     expect(wrapper.vm.username).toBe(null)
   })
 
   it('sets isUsernameResolved to true only after the username has resolved', async () => {
-    mockCore.auth.getUsername.mockResolvedValue('alice@example.com')
+    mockCore.auth.whoAmI.mockResolvedValue('alice@example.com')
     const wrapper = factory()
     expect(wrapper.vm.isUsernameResolved).toBe(false)
     await flushPromises()
@@ -43,13 +43,13 @@ describe('useAuth', () => {
 
   describe('isCurrentUser', () => {
     it('treats any uid as the viewer until the username resolves', () => {
-      mockCore.auth.getUsername.mockReturnValue(new Promise(() => {}))
+      mockCore.auth.whoAmI.mockReturnValue(new Promise(() => {}))
       const wrapper = factory()
       expect(wrapper.vm.isCurrentUser('bob@example.com')).toBe(true)
     })
 
     it('matches only the viewer once the username has resolved', async () => {
-      mockCore.auth.getUsername.mockResolvedValue('alice@example.com')
+      mockCore.auth.whoAmI.mockResolvedValue('alice@example.com')
       const wrapper = factory()
       await flushPromises()
       expect(wrapper.vm.isCurrentUser('alice@example.com')).toBe(true)
@@ -57,7 +57,7 @@ describe('useAuth', () => {
     })
 
     it('treats any uid as the viewer when the server cannot tell who the user is', async () => {
-      mockCore.auth.getUsername.mockRejectedValue(new Error('Network Error'))
+      mockCore.auth.whoAmI.mockRejectedValue(new Error('Network Error'))
       const wrapper = factory()
       await flushPromises()
       expect(wrapper.vm.isCurrentUser('bob@example.com')).toBe(true)
@@ -69,7 +69,7 @@ describe('useAuth', () => {
 
     it('is true when a user is signed in with the basic auth mode', async () => {
       mockConfig({ auth: 'basic' })
-      mockCore.auth.getUsername.mockResolvedValue('alice@example.com')
+      mockCore.auth.whoAmI.mockResolvedValue('alice@example.com')
       const wrapper = factory()
       await flushPromises()
       expect(wrapper.vm.isBasicAuth).toBe(true)
@@ -77,7 +77,7 @@ describe('useAuth', () => {
 
     it('is true when a user is signed in with the yesBasic auth mode', async () => {
       mockConfig({ auth: 'yesBasic' })
-      mockCore.auth.getUsername.mockResolvedValue('alice@example.com')
+      mockCore.auth.whoAmI.mockResolvedValue('alice@example.com')
       const wrapper = factory()
       await flushPromises()
       expect(wrapper.vm.isBasicAuth).toBe(true)
@@ -85,7 +85,7 @@ describe('useAuth', () => {
 
     it('is false when the auth mode is form, whatever the auth filter', async () => {
       mockConfig({ auth: 'form', authFilter: BASIC })
-      mockCore.auth.getUsername.mockResolvedValue('alice@example.com')
+      mockCore.auth.whoAmI.mockResolvedValue('alice@example.com')
       const wrapper = factory()
       await flushPromises()
       expect(wrapper.vm.isBasicAuth).toBe(false)
@@ -93,7 +93,7 @@ describe('useAuth', () => {
 
     it('is true when a user is signed in through the basic auth filter', async () => {
       mockConfig({ authFilter: BASIC })
-      mockCore.auth.getUsername.mockResolvedValue('alice@example.com')
+      mockCore.auth.whoAmI.mockResolvedValue('alice@example.com')
       const wrapper = factory()
       await flushPromises()
       expect(wrapper.vm.isBasicAuth).toBe(true)
@@ -101,7 +101,7 @@ describe('useAuth', () => {
 
     it('is false when no auth filter is set', async () => {
       mockConfig()
-      mockCore.auth.getUsername.mockResolvedValue('local')
+      mockCore.auth.whoAmI.mockResolvedValue('local')
       const wrapper = factory()
       await flushPromises()
       expect(wrapper.vm.isBasicAuth).toBe(false)
@@ -109,7 +109,7 @@ describe('useAuth', () => {
 
     it('is false when nobody is signed in', async () => {
       mockConfig({ authFilter: BASIC })
-      mockCore.auth.getUsername.mockResolvedValue(null)
+      mockCore.auth.whoAmI.mockResolvedValue(null)
       const wrapper = factory()
       await flushPromises()
       expect(wrapper.vm.isBasicAuth).toBe(false)
@@ -118,7 +118,7 @@ describe('useAuth', () => {
 
   describe('isUsernameUnavailable', () => {
     it('is true when the server cannot tell who the user is', async () => {
-      mockCore.auth.getUsername.mockRejectedValue(new Error('Network Error'))
+      mockCore.auth.whoAmI.mockRejectedValue(new Error('Network Error'))
       const wrapper = factory()
       await flushPromises()
       expect(wrapper.vm.isUsernameUnavailable).toBe(true)
@@ -126,7 +126,7 @@ describe('useAuth', () => {
     })
 
     it('is false when the server answers', async () => {
-      mockCore.auth.getUsername.mockResolvedValue(null)
+      mockCore.auth.whoAmI.mockResolvedValue(null)
       const wrapper = factory()
       await flushPromises()
       expect(wrapper.vm.isUsernameUnavailable).toBe(false)

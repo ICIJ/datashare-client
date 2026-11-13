@@ -31,7 +31,7 @@ export function useAuth() {
 
   async function resolveUsername() {
     try {
-      username.value = await core?.auth.getUsername()
+      username.value = await core?.auth.whoAmI()
     }
     catch {
       isUsernameUnavailable.value = true

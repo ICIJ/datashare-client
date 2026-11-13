@@ -82,7 +82,7 @@ export default (core) => {
       if (routeSkipsAuth(to)) {
         return next()
       }
-      const username = await auth.getUsername()
+      const username = await auth.whoAmI()
       // If username is returned, user is authenticated; otherwise, not authenticated
       if (username) {
         proceedAuthenticated(to, next)

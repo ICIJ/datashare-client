@@ -38,7 +38,7 @@ vi.mock('@/composables/useCore', () => ({
     projects: mockProjects,
     findProject: name => mockProjects.find(project => project.name === name),
     config: { get: key => (key === 'auth' ? mockAuthMode : undefined) },
-    auth: { getUsername: vi.fn().mockResolvedValue('viewer@example.org') }
+    auth: { whoAmI: vi.fn().mockResolvedValue('viewer@example.org') }
   })
 }))
 
