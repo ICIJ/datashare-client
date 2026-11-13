@@ -53,33 +53,27 @@ describe('auth backend client', () => {
     })
   })
 
-  describe('getAuthenticatedUser', () => {
-    afterEach(() => removeCookie(process.env.VITE_DS_COOKIE_NAME))
+  describe('with a script-readable session cookie', () => {
+    const cookieName = '_ds_session_id'
+    afterEach(() => removeCookie(cookieName))
 
-    it('should return null if user is not authenticated', async () => {
-      expect(await auth.getUsername()).toBeNull()
+    it('should ask the server for the username instead of reading the cookie', async () => {
+      setCookie(cookieName, { login: 'doe' }, JSON.stringify)
+      api.getUser.mockResolvedValue({ uid: 'john' })
+      expect(await auth.getUsername()).toBe('john')
+      expect(api.getUser).toBeCalledTimes(1)
     })
 
-    it('should return null if cookie has no "login" field', async () => {
-      setCookie(process.env.VITE_DS_COOKIE_NAME, 'doe', JSON.stringify)
-      expect(await auth.getUsername()).toBeNull()
-    })
-
-    it('should return user login if user is authenticated', async () => {
-      setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
-      expect(await auth.getUsername()).toBe('doe')
+    it('should leave the cookie alone on reset', () => {
+      setCookie(cookieName, { login: 'doe' }, JSON.stringify)
+      auth.reset()
+      expect(getCookie(cookieName, JSON.parse)).toEqual({ login: 'doe' })
     })
   })
 
   describe('reset', () => {
-    it('should clear the session cookie', () => {
-      setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
-      auth.reset()
-      expect(getCookie(process.env.VITE_DS_COOKIE_NAME)).toBeNull()
-    })
-
     it('should clear the cached username', async () => {
-      setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
+      api.getUser.mockResolvedValue({ uid: 'john' })
       await auth.getUsername()
       auth.reset()
       expect(auth.me.value).toBeNull()
