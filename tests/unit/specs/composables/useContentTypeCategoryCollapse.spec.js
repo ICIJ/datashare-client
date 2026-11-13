@@ -23,10 +23,6 @@ describe('useContentTypeCategoryCollapse', () => {
 
   beforeEach(() => {
     core = CoreSetup.init().useAll()
-    // The setting persists to localStorage, which a fresh Pinia rehydrates —
-    // reset it so each test starts from the collapsed-by-default baseline
-    // regardless of execution order.
-    useAppStore().setSettings('search', 'expandedContentTypeCategories', [])
   })
 
   it('reports every category as collapsed by default', () => {

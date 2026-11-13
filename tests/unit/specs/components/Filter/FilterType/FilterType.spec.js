@@ -558,14 +558,6 @@ describe('FilterType.vue', () => {
       searchStore.reset()
       searchStore.resetFilters()
       lockedFiltersStore = useLockedFiltersStore()
-      // CoreSetup falls back to the app's singleton pinia (with the locked
-      // filters store's `persist: true`), so entries otherwise leak into
-      // later describe blocks (e.g. the "language" tests below).
-      lockedFiltersStore.unlockAll()
-    })
-
-    afterEach(() => {
-      lockedFiltersStore.unlockAll()
     })
 
     it('does not forward a lock control to a ticked entry', async () => {

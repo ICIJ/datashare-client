@@ -172,7 +172,6 @@ describe('FilterTypeStarred.vue', () => {
 
     beforeEach(() => {
       lockedFiltersStore = useLockedFiltersStore()
-      lockedFiltersStore.unlockAll()
       const props = { filter: searchStore.getFilter({ name: 'starred' }), hideLock: true }
       wrapper = mount(FilterTypeStarred, { props, global: { plugins: core.plugins } })
     })

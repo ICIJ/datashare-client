@@ -1250,13 +1250,6 @@ describe('FilterTypeFileTypes.vue', () => {
   })
 
   describe('collapsible categories', () => {
-    // appStore persists `expandedContentTypeCategories` to localStorage, which a
-    // fresh Pinia rehydrates between tests. Reset it so every test starts from
-    // the collapsed-by-default baseline instead of inheriting a prior expansion.
-    beforeEach(() => {
-      useAppStore().setSettings('search', 'expandedContentTypeCategories', [])
-    })
-
     // Shared fixture: two categories so each collapse/expand test starts from a
     // consistent state without polluting other describe blocks.
     const seedCollapsibleCategories = async () => {
@@ -1438,10 +1431,6 @@ describe('FilterTypeFileTypes.vue', () => {
 
     beforeEach(() => {
       lockedFiltersStore = useLockedFiltersStore()
-      // CoreSetup falls back to the app's singleton pinia (with the locked
-      // filters store's `persist: true`), so entries otherwise leak across
-      // tests in this file.
-      lockedFiltersStore.unlockAll()
     })
 
     it('also selects an unticked flat entry when it emits update:locked with true — one click both applies and locks it', async () => {
