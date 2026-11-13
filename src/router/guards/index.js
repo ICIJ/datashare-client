@@ -68,9 +68,10 @@ export default (core) => {
   }
 
   /**
-   * Verifies the user is authenticated via cookie. Routes with `meta.skipsAuth`
-   * bypass this check. Unauthenticated users are redirected to the login page,
-   * with their original destination stored for redirect after login.
+   * Asks the server who the user is. Routes with `meta.skipsAuth` bypass this
+   * check. Unauthenticated users are redirected to the login page, with their
+   * original destination stored for redirect after login. When the server
+   * cannot answer, the user lands on the error page instead.
    * @param {import('vue-router').RouteLocationNormalized} to
    * @param {import('vue-router').RouteLocationNormalized} from
    * @param {import('vue-router').NavigationGuardNext} next

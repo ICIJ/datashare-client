@@ -126,6 +126,15 @@ describe('Error.vue', () => {
   })
 
   describe('server mode', () => {
+    it('should display a link when the server cannot tell who the user is', async () => {
+      api.getUser.mockRejectedValue({ response: { status: 503 } })
+      const core = CoreSetup.init().useAll()
+      core.config.set('mode', 'SERVER')
+      const wrapper = mount(Error, { global: { plugins: core.plugins } })
+      await flushPromises()
+      expect(wrapper.find('.error__links__item--logout').exists()).toBeTruthy()
+    })
+
     it('should not display a link when user is logged out in server mode', async () => {
       const core = CoreSetup.init().useAll()
       core.config.set('mode', 'SERVER')

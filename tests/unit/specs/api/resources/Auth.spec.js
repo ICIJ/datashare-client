@@ -41,15 +41,37 @@ describe('auth backend client', () => {
       expect(api.getUser).toBeCalledTimes(1)
     })
 
-    it('should throw error when testing basic auth and response is other than 200 or 401', async () => {
-      api.getUser.mockRejectedValue({ response: { status: 500, statusText: 'message' } })
-      expect.assertions(1)
-      try {
-        await auth._getBasicAuthUserName()
-      }
-      catch (e) {
-        expect(e).toEqual(new Error('500 message'))
-      }
+    it('should throw when the server answers with an error other than 401', async () => {
+      const error = { response: { status: 503 } }
+      api.getUser.mockRejectedValue(error)
+      await expect(auth.getUsername()).rejects.toBe(error)
+    })
+
+    it('should throw when the server cannot be reached', async () => {
+      const error = new Error('Network Error')
+      api.getUser.mockRejectedValue(error)
+      await expect(auth.getUsername()).rejects.toBe(error)
+    })
+
+    it('should ask the server again after a failure', async () => {
+      api.getUser.mockRejectedValueOnce(new Error('Network Error'))
+      api.getUser.mockResolvedValueOnce({ uid: 'john' })
+      await expect(auth.getUsername()).rejects.toThrow()
+      expect(await auth.getUsername()).toBe('john')
+    })
+
+    it('should ask the server again when nobody was signed in', async () => {
+      api.getUser.mockRejectedValueOnce({ response: { status: 401 } })
+      api.getUser.mockResolvedValueOnce({ uid: 'john' })
+      await auth.getUsername()
+      expect(await auth.getUsername()).toBe('john')
+    })
+
+    it('should send a single request for concurrent calls', async () => {
+      api.getUser.mockResolvedValue({ uid: 'john' })
+      const usernames = await Promise.all([auth.getUsername(), auth.getUsername()])
+      expect(usernames).toEqual(['john', 'john'])
+      expect(api.getUser).toBeCalledTimes(1)
     })
   })
 

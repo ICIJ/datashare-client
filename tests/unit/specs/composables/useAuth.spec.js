@@ -109,6 +109,23 @@ describe('useAuth', () => {
     })
   })
 
+  describe('isUsernameUnavailable', () => {
+    it('is true when the server cannot tell who the user is', async () => {
+      mockCore.auth.getUsername.mockRejectedValue(new Error('Network Error'))
+      const wrapper = factory()
+      await flushPromises()
+      expect(wrapper.vm.isUsernameUnavailable).toBe(true)
+      expect(wrapper.vm.isUsernameResolved).toBe(true)
+    })
+
+    it('is false when the server answers', async () => {
+      mockCore.auth.getUsername.mockResolvedValue(null)
+      const wrapper = factory()
+      await flushPromises()
+      expect(wrapper.vm.isUsernameUnavailable).toBe(false)
+    })
+  })
+
   describe('authMode', () => {
     it('uses the auth setting when it is set', () => {
       mockConfig({ auth: 'yesBasic', authFilter: 'org.icij.datashare.session.FormAuthFilter' })

@@ -1,16 +1,31 @@
 import { ref } from 'vue'
 import { apiInstance as api } from '@/api/apiInstance'
 
+const USERNAME_TTL_MS = 43200 * 1000
+
 export default class Auth {
   constructor() {
     this.me = ref(null)
+    this._pendingUsername = null
   }
 
+  /**
+   * Resolves the signed-in username, or null when nobody is signed in.
+   * Concurrent calls share a single request.
+   * @throws when the server cannot tell who the user is (network error, 5xx...)
+   * @returns {Promise<string|null>}
+   */
   async getUsername() {
-    if (!this.me.value) {
-      this.me.value = await this._checkAuthentication()
+    this._pendingUsername ??= this._fetchUsername()
+    try {
+      const username = await this._pendingUsername
+      this._forgetUsernameUnlessSignedIn(username)
+      return username
     }
-    return this.me.value
+    catch (error) {
+      this.reset()
+      throw error
+    }
   }
 
   async signOutBasicAuth() {
@@ -23,28 +38,28 @@ export default class Auth {
 
   reset() {
     this.me.value = null
+    this._pendingUsername = null
   }
 
-  async _checkAuthentication() {
-    try {
-      return await this._getBasicAuthUserName()
-    }
-    catch {
-      return null
+  // Nobody signed in yet: ask again next time, the user may sign in meanwhile.
+  _forgetUsernameUnlessSignedIn(username) {
+    if (!username) {
+      this.reset()
     }
   }
 
-  async _getBasicAuthUserName() {
+  async _fetchUsername() {
     try {
-      const response = await api.getUser()
-      setTimeout(this.reset.bind(this), 43200 * 1000)
-      return response.uid
+      const { uid } = await api.getUser()
+      this.me.value = uid
+      setTimeout(this.reset.bind(this), USERNAME_TTL_MS)
+      return uid
     }
     catch (error) {
-      if (error && error.response && error.response.status !== 401) {
-        throw new Error(`${error.response.status} ${error.response.statusText}`)
+      if (error?.response?.status === 401) {
+        return null
       }
-      return null
+      throw error
     }
   }
 }

@@ -46,7 +46,7 @@ describe('guards', () => {
     describe('when the route skips auth', () => {
       it('should allow navigation to a skipsAuth route without a session', async () => {
         auth.reset()
-        api.getUser.mockRejectedValue()
+        api.getUser.mockRejectedValue({ response: { status: 401 } })
         await router.push({ name: 'login' })
         expect(router.currentRoute.value.name).toBe('login')
       })
@@ -82,7 +82,7 @@ describe('guards', () => {
     describe('when the user is not authenticated', () => {
       beforeEach(() => {
         auth.reset()
-        api.getUser.mockRejectedValue()
+        api.getUser.mockRejectedValue({ response: { status: 401 } })
       })
 
       it('should redirect to /login if the server does not know the user', async () => {
@@ -102,6 +102,19 @@ describe('guards', () => {
         await router.push('/settings?search=test#overview')
         expect(router.currentRoute.value.name).toBe('login')
         expect(appStore.redirectAfterLogin).toBe('/settings/appearance?search=test#overview')
+      })
+    })
+
+    describe('when the server cannot tell who the user is', () => {
+      beforeEach(() => {
+        auth.reset()
+        api.getUser.mockRejectedValue({ message: 'Service Unavailable', response: { status: 503 } })
+      })
+
+      it('should redirect to the error page instead of /login', async () => {
+        await router.push({ name: 'settings' })
+        expect(router.currentRoute.value.name).toBe('error')
+        expect(window.history.state.reason).toBe('serverUnreachable')
       })
     })
   })
@@ -149,7 +162,7 @@ describe('guards', () => {
     it('should allow navigation to /login even with no projects', async () => {
       config.set('projects', [])
       auth.reset()
-      api.getUser.mockRejectedValue()
+      api.getUser.mockRejectedValue({ response: { status: 401 } })
       await router.push({ name: 'login' })
       expect(router.currentRoute.value.name).toBe('login')
     })
@@ -307,7 +320,7 @@ describe('guards', () => {
 
     it('should redirect an unauthenticated user to login instead of error', async () => {
       auth.reset()
-      api.getUser.mockRejectedValue()
+      api.getUser.mockRejectedValue({ response: { status: 401 } })
       config.set('policies', [])
       const appStore = useAppStore()
       appStore.setRedirectAfterLogin(null)

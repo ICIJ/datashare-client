@@ -15,7 +15,7 @@ vi.mock('@/api/apiInstance', async (importOriginal) => {
   return {
     apiInstance: {
       ...apiInstance,
-      getUser: vi.fn(),
+      getUser: vi.fn().mockResolvedValue({ uid: 'local' }),
       addHistoryEvent: vi.fn(),
       getRecommendationsByDocuments: vi.fn(),
       getTags: vi.fn(),

@@ -14,6 +14,7 @@ export function useAuth() {
 
   const username = ref(null)
   const isUsernameResolved = ref(false)
+  const isUsernameUnavailable = ref(false)
   const isAuthenticated = computed(() => !!username.value)
   // The `auth` setting (e.g. `--auth form`) takes precedence over the legacy `authFilter` setting.
   const authMode = computed(() => {
@@ -27,16 +28,24 @@ export function useAuth() {
   // guard on the viewer's own account can't be bypassed in the meantime.
   const isCurrentUser = uid => !isUsernameResolved.value || username.value === uid
 
-  onBeforeMount(async () => {
-    username.value = await core?.auth.getUsername()
+  async function resolveUsername() {
+    try {
+      username.value = await core?.auth.getUsername()
+    }
+    catch {
+      isUsernameUnavailable.value = true
+    }
     isUsernameResolved.value = true
-  })
+  }
+
+  onBeforeMount(resolveUsername)
 
   return {
     username,
     authMode,
     isBasicAuth,
     isUsernameResolved,
+    isUsernameUnavailable,
     isAuthenticated,
     isAuthWithUsersProvider,
     isCurrentUser
