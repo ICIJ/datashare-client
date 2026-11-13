@@ -149,4 +149,16 @@ describe('useAuth', () => {
       expect(factory().vm.authMode).toBe('basic')
     })
   })
+
+  describe('isAuthWithUsersProvider', () => {
+    it('is true with the form auth filter and no auth setting', () => {
+      mockConfig({ authFilter: 'org.icij.datashare.session.FormAuthFilter' })
+      expect(factory().vm.isAuthWithUsersProvider).toBe(true)
+    })
+
+    it('is false with the OAuth auth filter', () => {
+      mockConfig({ authFilter: 'org.icij.datashare.session.OAuth2CookieFilter' })
+      expect(factory().vm.isAuthWithUsersProvider).toBe(false)
+    })
+  })
 })

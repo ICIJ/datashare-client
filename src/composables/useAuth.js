@@ -23,7 +23,7 @@ export function useAuth() {
   })
   const isBasicAuthMode = computed(() => AUTH_MODE_BASIC.includes(authMode.value))
   const isBasicAuth = computed(() => isAuthenticated.value && isBasicAuthMode.value)
-  const isAuthWithUsersProvider = computed(() => AUTH_MODE_PWD.includes(core.config.get('auth')))
+  const isAuthWithUsersProvider = computed(() => AUTH_MODE_PWD.includes(authMode.value))
   // Whether uid is the viewer. Until the username is known, any uid counts as the viewer, so a
   // guard on the viewer's own account can't be bypassed in the meantime.
   const isUsernameKnown = computed(() => isUsernameResolved.value && !isUsernameUnavailable.value)
