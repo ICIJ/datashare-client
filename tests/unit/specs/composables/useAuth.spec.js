@@ -55,6 +55,13 @@ describe('useAuth', () => {
       expect(wrapper.vm.isCurrentUser('alice@example.com')).toBe(true)
       expect(wrapper.vm.isCurrentUser('bob@example.com')).toBe(false)
     })
+
+    it('treats any uid as the viewer when the server cannot tell who the user is', async () => {
+      mockCore.auth.getUsername.mockRejectedValue(new Error('Network Error'))
+      const wrapper = factory()
+      await flushPromises()
+      expect(wrapper.vm.isCurrentUser('bob@example.com')).toBe(true)
+    })
   })
 
   describe('isBasicAuth', () => {

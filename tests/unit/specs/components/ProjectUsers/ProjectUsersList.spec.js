@@ -9,7 +9,11 @@ import ProjectUsersRoleDropdown from '@/components/ProjectUsers/ProjectUsersRole
 import { apiInstance as api } from '@/api/apiInstance.js'
 
 vi.mock('@/api/apiInstance', () => ({
-  apiInstance: { grantUserRole: vi.fn(), revokeUserRole: vi.fn() }
+  apiInstance: {
+    getUser: vi.fn().mockResolvedValue({ uid: 'admin@example.org' }),
+    grantUserRole: vi.fn(),
+    revokeUserRole: vi.fn()
+  }
 }))
 
 const mockToast = { success: vi.fn(), error: vi.fn() }

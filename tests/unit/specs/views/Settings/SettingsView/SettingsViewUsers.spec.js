@@ -14,6 +14,7 @@ import { apiInstance as api } from '@/api/apiInstance.js'
 
 vi.mock('@/api/apiInstance', () => ({
   apiInstance: {
+    getUser: vi.fn().mockResolvedValue({ uid: 'admin@example.org' }),
     getUsers: vi.fn()
   }
 }))
