@@ -7,6 +7,7 @@ export default class Auth {
   constructor() {
     this.me = ref(null)
     this._pendingUsername = null
+    this._ttlTimer = null
   }
 
   /**
@@ -17,13 +18,17 @@ export default class Auth {
    */
   async getUsername() {
     this._pendingUsername ??= this._fetchUsername()
+    const pending = this._pendingUsername
     try {
-      const username = await this._pendingUsername
-      this._forgetUsernameUnlessSignedIn(username)
+      const username = await pending
+      // Nobody signed in yet: ask again next time, the user may sign in meanwhile.
+      if (!username) {
+        this._resetUnlessReplaced(pending)
+      }
       return username
     }
     catch (error) {
-      this.reset()
+      this._resetUnlessReplaced(pending)
       throw error
     }
   }
@@ -37,13 +42,14 @@ export default class Auth {
   }
 
   reset() {
+    clearTimeout(this._ttlTimer)
     this.me.value = null
     this._pendingUsername = null
   }
 
-  // Nobody signed in yet: ask again next time, the user may sign in meanwhile.
-  _forgetUsernameUnlessSignedIn(username) {
-    if (!username) {
+  // A caller of an older request must not drop the newer one that replaced it.
+  _resetUnlessReplaced(pending) {
+    if (this._pendingUsername === pending) {
       this.reset()
     }
   }
@@ -52,7 +58,7 @@ export default class Auth {
     try {
       const { uid } = await api.getUser()
       this.me.value = uid
-      setTimeout(this.reset.bind(this), USERNAME_TTL_MS)
+      this._ttlTimer = setTimeout(this.reset.bind(this), USERNAME_TTL_MS)
       return uid
     }
     catch (error) {

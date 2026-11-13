@@ -73,6 +73,49 @@ describe('auth backend client', () => {
       expect(usernames).toEqual(['john', 'john'])
       expect(api.getUser).toBeCalledTimes(1)
     })
+
+    it('should keep a newer username when an older request fails', async () => {
+      let rejectOlder
+      const olderRequest = new Promise((resolve, reject) => {
+        rejectOlder = reject
+      })
+      api.getUser.mockReturnValueOnce(olderRequest)
+      api.getUser.mockResolvedValueOnce({ uid: 'john' })
+      const olderCall = auth.getUsername()
+      auth.reset()
+      expect(await auth.getUsername()).toBe('john')
+      rejectOlder(new Error('Network Error'))
+      await expect(olderCall).rejects.toThrow()
+      expect(await auth.getUsername()).toBe('john')
+      expect(api.getUser).toBeCalledTimes(2)
+    })
+  })
+
+  describe('username expiry', () => {
+    const halfDay = 43200 * 1000
+
+    beforeEach(() => vi.useFakeTimers())
+    afterEach(() => vi.useRealTimers())
+
+    it('should not let the expiry of a reset username clear a newer one', async () => {
+      api.getUser.mockResolvedValueOnce({ uid: 'john' })
+      api.getUser.mockResolvedValueOnce({ uid: 'jane' })
+      await auth.getUsername()
+      auth.reset()
+      vi.advanceTimersByTime(halfDay / 2)
+      await auth.getUsername()
+      vi.advanceTimersByTime(halfDay / 2)
+      expect(await auth.getUsername()).toBe('jane')
+      expect(api.getUser).toBeCalledTimes(2)
+    })
+
+    it('should ask the server again once the username expired', async () => {
+      api.getUser.mockResolvedValueOnce({ uid: 'john' })
+      api.getUser.mockResolvedValueOnce({ uid: 'jane' })
+      await auth.getUsername()
+      vi.advanceTimersByTime(halfDay)
+      expect(await auth.getUsername()).toBe('jane')
+    })
   })
 
   describe('with a script-readable session cookie', () => {
