@@ -23,10 +23,6 @@ export default class Auth {
     })
   }
 
-  isBasicAuth() {
-    return !!this.me.value && !this._getCookieUsername()
-  }
-
   reset() {
     this._removeCookie()
     this.me.value = null

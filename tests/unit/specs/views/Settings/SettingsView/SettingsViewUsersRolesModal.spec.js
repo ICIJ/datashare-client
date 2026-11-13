@@ -38,7 +38,7 @@ vi.mock('@/composables/useCore', () => ({
     projects: mockProjects,
     findProject: name => mockProjects.find(project => project.name === name),
     config: { get: key => (key === 'auth' ? mockAuthMode : undefined) },
-    auth: { getUsername: vi.fn().mockResolvedValue('viewer@example.org'), isBasicAuth: vi.fn().mockResolvedValue(false) }
+    auth: { getUsername: vi.fn().mockResolvedValue('viewer@example.org') }
   })
 }))
 
