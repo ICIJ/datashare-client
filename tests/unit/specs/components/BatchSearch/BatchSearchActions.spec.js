@@ -29,7 +29,7 @@ vi.mock('@/api/apiInstance', () => {
 describe('BatchSearchActions.vue', () => {
   let plugins
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     const core = CoreSetup.init().useAll().useRouterWithoutGuards()
     const taskStore = useTaskStore()
     plugins = core.plugins

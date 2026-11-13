@@ -29,25 +29,17 @@ describe('FilterTypeStarred.vue', () => {
 
   beforeAll(() => {
     core = CoreSetup.init().useAll()
-    starredStore = useStarredStore()
-    searchStore = useSearchStore()
   })
 
   beforeEach(() => {
     vi.clearAllMocks()
     vi.spyOn(api.elasticsearch, 'search')
+    starredStore = useStarredStore()
+    searchStore = useSearchStore()
     const filter = searchStore.getFilter({ name: 'starred' })
     const props = { filter }
     const global = { plugins: core.plugins }
     searchStore.setIndex(index)
-    // searchStore (from beforeAll) is shared across every test in this file
-    // — reset the starred filter's ticked values so one test's checkbox
-    // clicks don't leak into the next.
-    searchStore.setFilterValue({ name: 'starred', value: [] })
-    // CoreSetup falls back to the app's singleton pinia (with the locked
-    // filters store's `persist: true`), so entries otherwise leak across
-    // tests in this file.
-    useLockedFiltersStore().unlockAll()
     wrapper = mount(FilterTypeStarred, { props, global })
   })
 
