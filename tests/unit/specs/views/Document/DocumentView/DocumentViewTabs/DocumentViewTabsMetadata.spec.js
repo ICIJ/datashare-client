@@ -25,6 +25,9 @@ describe('DocumentViewTabsMetadata.vue', () => {
 
   beforeAll(() => {
     core = CoreSetup.init().useAll()
+  })
+
+  beforeEach(() => {
     documentStore = useDocumentStore()
   })
 

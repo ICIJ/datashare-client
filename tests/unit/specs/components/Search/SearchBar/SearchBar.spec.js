@@ -27,7 +27,6 @@ describe('SearchBar.vue', function () {
     // The search route lazy-loads its views, so a real navigation can outlive
     // the test environment and crash after teardown.
     vi.spyOn(router, 'push').mockResolvedValue()
-    searchStore = useSearchStore()
     config.set('projects', [
       { name: index, label: 'default' },
       { name: indexFoo, label: 'foo' }
@@ -35,6 +34,7 @@ describe('SearchBar.vue', function () {
   })
 
   beforeEach(() => {
+    searchStore = useSearchStore()
     searchStore.setIndex(index)
     searchStore.reset()
   })
