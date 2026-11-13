@@ -1,6 +1,6 @@
 import { mount, flushPromises } from '@vue/test-utils'
 
-import useAuth from '@/composables/useAuth.js'
+import useAuth, { useAuthMode } from '@/composables/useAuth.js'
 
 const mockCore = {
   config: { get: vi.fn() },
@@ -159,6 +159,23 @@ describe('useAuth', () => {
     it('is false with the OAuth auth filter', () => {
       mockConfig({ authFilter: 'org.icij.datashare.session.OAuth2CookieFilter' })
       expect(factory().vm.isAuthWithUsersProvider).toBe(false)
+    })
+  })
+
+  describe('useAuthMode', () => {
+    function factoryAuthMode() {
+      return mount({ setup: () => useAuthMode(), template: '<div></div>' })
+    }
+
+    it('reads the auth mode from the config', () => {
+      mockConfig({ authFilter: 'org.icij.datashare.session.FormAuthFilter' })
+      expect(factoryAuthMode().vm.authMode).toBe('form')
+    })
+
+    it('does not ask the server who the user is', async () => {
+      factoryAuthMode()
+      await flushPromises()
+      expect(mockCore.auth.whoAmI).not.toBeCalled()
     })
   })
 })
