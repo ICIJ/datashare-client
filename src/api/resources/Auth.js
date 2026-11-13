@@ -47,6 +47,22 @@ export default class Auth {
     this._pendingUsername = null
   }
 
+  /**
+   * Caches a username the app already got from the server, so the next
+   * getUsername() call does not ask for it again.
+   * @param {string|null} username
+   */
+  remember(username) {
+    this.reset()
+    this.me.value = username
+    this._pendingUsername = Promise.resolve(username)
+    this._expireLater()
+  }
+
+  _expireLater() {
+    this._ttlTimer = setTimeout(this.reset.bind(this), USERNAME_TTL_MS)
+  }
+
   // A caller of an older request must not drop the newer one that replaced it.
   _resetUnlessReplaced(pending) {
     if (this._pendingUsername === pending) {
@@ -58,7 +74,7 @@ export default class Auth {
     try {
       const { uid } = await api.getUser()
       this.me.value = uid
-      this._ttlTimer = setTimeout(this.reset.bind(this), USERNAME_TTL_MS)
+      this._expireLater()
       return uid
     }
     catch (error) {

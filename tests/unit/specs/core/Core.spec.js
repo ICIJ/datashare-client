@@ -128,6 +128,16 @@ describe('Core', () => {
       ])
     })
 
+    it('should reuse the user loaded on boot to tell who the user is', async () => {
+      api.getSettings.mockResolvedValueOnce({})
+      api.getProject.mockResolvedValueOnce({ userProjects: ['first-index'] })
+      api.getUser.mockResolvedValue({ uid: 'user1' })
+      api.getUserPermissions.mockResolvedValueOnce([])
+      await core.configure()
+      expect(await core.auth.getUsername()).toBe('user1')
+      expect(api.getUser).toBeCalledTimes(1)
+    })
+
     it('should return empty string if user has no projects', () => {
       core.config.set('defaultProject', 'my_project')
       expect(core.getDefaultProject()).toEqual('')
