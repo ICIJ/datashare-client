@@ -5,7 +5,7 @@ import { useAppStore } from '@/store/modules'
 import { useNProgress } from '@/composables/useNProgress'
 import { usePolicies } from '@/composables/usePolicies.js'
 import useMode from '@/composables/useMode.js'
-import { errorLocation } from '@/router/errorLocation'
+import { errorLocation, errorStateFrom } from '@/router/errorLocation'
 
 export default (core) => {
   const { router, auth, config, i18n } = core
@@ -92,10 +92,8 @@ export default (core) => {
       }
     }
     catch (error) {
-      // history.state must be structured-clonable; axios errors carry
-      // non-cloneable functions on `error.config`, so forward the message only.
-      const message = error?.message ?? String(error)
-      next(errorLocation(to, { error: message, reason: 'serverUnreachable' }))
+      const state = errorStateFrom(error)
+      next(errorLocation(to, state))
     }
   }
 

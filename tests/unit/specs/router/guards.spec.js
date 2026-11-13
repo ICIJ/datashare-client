@@ -108,13 +108,20 @@ describe('guards', () => {
     describe('when the server cannot tell who the user is', () => {
       beforeEach(() => {
         auth.reset()
-        api.getUser.mockRejectedValue({ message: 'Service Unavailable', response: { status: 503 } })
       })
 
-      it('should redirect to the error page instead of /login', async () => {
+      it('should redirect to the error page with the status code when the server answered', async () => {
+        api.getUser.mockRejectedValue({ message: 'Service Unavailable', request: {}, response: { status: 503 } })
         await router.push({ name: 'settings' })
         expect(router.currentRoute.value.name).toBe('error')
-        expect(window.history.state.reason).toBe('serverUnreachable')
+        expect(window.history.state).toMatchObject({ code: 503, reason: undefined })
+      })
+
+      it('should redirect to the error page as unreachable when the server never answered', async () => {
+        api.getUser.mockRejectedValue({ message: 'Network Error', request: {} })
+        await router.push({ name: 'settings' })
+        expect(router.currentRoute.value.name).toBe('error')
+        expect(window.history.state).toMatchObject({ code: undefined, reason: 'serverUnreachable' })
       })
     })
   })
