@@ -3,6 +3,8 @@ import { computed } from 'vue'
 
 import EntityCardProperties from './EntityCardProperties'
 
+import { featuredProperties } from '@/composables/useEntityProperties'
+
 const props = defineProps({
   entity: {
     type: Object
@@ -20,9 +22,13 @@ const props = defineProps({
   index: {
     type: String
   },
+  /**
+   * Rows to render. Omit it and the card asks the ontology for its own schema's featured
+   * properties, so a Person card and a Company card in one list show different rows.
+   */
   properties: {
     type: Array,
-    default: () => ['name', 'entityType', 'sourceDocument', 'model', 'project']
+    default: undefined
   },
   active: {
     type: Boolean
@@ -46,6 +52,8 @@ const index = computed(() => {
   const fromProject = typeof props.project === 'string' ? props.project : props.project?.name
   return props.index ?? fromProject ?? ''
 })
+
+const properties = computed(() => props.properties ?? featuredProperties(props.entity))
 
 const classList = computed(() => ({
   'entity-card--active': props.active,
