@@ -336,18 +336,31 @@ Explicitly not in phase 1, by agreement:
 Later phases, in dependency order: list container and toolbar; route, sidebar and store;
 detail panel and tabs; the ontology issue; relations.
 
-## Deferred decisions
+## Settled decisions
 
-Recorded rather than guessed, to be settled before the phase that needs them.
+Recorded against ICIJ/datashare#2495 after the card shipped.
 
-1. **Which properties the settings page offers.** The Datashare-level keys are a fixed
-   set, but the `ftm_*` keys available depend on what a given project ingested. Either
-   the settings list is driven by an aggregation over the current project's entities
-   index, or it is a fixed list from the ontology once that is exposed. Needed before
-   the settings phase.
-2. **Sorting.** `properties.*` are keywords so they are sortable, but the sort key for a
-   multi-valued property needs a mode (`min`/`max`). Needed before the list phase.
-3. **Cross-project browsing.** Document search spans selected projects. The entities
-   index is per project and `_id` is only unique within a model, so a multi-project
-   entity list needs a tie-break on project. Phase 1 renders a project badge, which
-   assumes the answer is eventually "yes". Needed before the store phase.
+1. **Which properties a card shows.** Each card shows its own schema's **featured** properties,
+   from the FollowTheMoney ontology. There is no property-picker in the entities settings panel,
+   unlike search; the ontology is the single source of truth. The design mockup already assumed
+   this: in one list a `Person` card renders *Employer* while another renders *Family* and
+   *Relative*.
+
+   This makes the ontology endpoint (ICIJ/datashare#2510) a prerequisite for the list story, and
+   it means `EntityCard`'s flat `properties` array is provisional: the card will derive its rows
+   per entity from `entityType`.
+
+2. **Sorting a multi-valued property.** Alphabetical, which is elasticsearch's default
+   multi-value behaviour: `min` ascending, `max` descending. No explicit `mode` on the sort
+   clause.
+
+3. **How many values a card row shows.** At most three, then an ellipsis, with the full list in
+   the row's `title` and repeated in a visually-hidden span. One verbose property cannot push the
+   other rows off the card. Shipped with the card.
+
+4. **Does the list span projects.** Yes. An entity belongs to one project but can cite several
+   source documents (`documentIds` is a Set folded from every statement's provenance). The list
+   queries several `<project>.entities` indices at once. Two consequences: the ES `_id` is
+   `<model>_<entityId>` and is unique only within an index, so the list key must include the
+   project; and each card takes its project from its own hit's `_index`, not from a page-level
+   selection.
