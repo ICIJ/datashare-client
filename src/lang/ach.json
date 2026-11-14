@@ -207,12 +207,45 @@
   "error": {
     "title": "crwdns7726:0crwdne7726:0",
     "description": "crwdns7728:0crwdne7728:0",
-    "noProjects": "crwdns7730:0crwdne7730:0",
-    "notFound": "crwdns7732:0crwdne7732:0",
+    "label": "crwdns10773:0crwdne10773:0",
+    "code": "crwdns10775:0{code}crwdne10775:0",
+    "reasons": {
+      "notFound": {
+        "label": "crwdns10777:0crwdne10777:0",
+        "title": "crwdns10779:0crwdne10779:0",
+        "cause": "crwdns10781:0crwdne10781:0"
+      },
+      "forbidden": {
+        "label": "crwdns10783:0crwdne10783:0",
+        "title": "crwdns10785:0crwdne10785:0",
+        "cause": "crwdns10787:0crwdne10787:0"
+      },
+      "noProjects": {
+        "label": "crwdns10789:0crwdne10789:0",
+        "title": "crwdns10791:0crwdne10791:0",
+        "cause": "crwdns10793:0crwdne10793:0"
+      },
+      "serverUnreachable": {
+        "label": "crwdns10795:0crwdne10795:0",
+        "title": "crwdns10797:0crwdne10797:0",
+        "cause": "crwdns10799:0crwdne10799:0"
+      },
+      "document": {
+        "label": "crwdns10801:0crwdne10801:0",
+        "title": "crwdns10803:0crwdne10803:0",
+        "cause": "crwdns10805:0crwdne10805:0"
+      }
+    },
     "logout": "crwdns7734:0crwdne7734:0",
+    "actions": {
+      "retry": "crwdns10807:0crwdne10807:0",
+      "back": "crwdns10809:0crwdne10809:0"
+    },
     "faq": "crwdns7736:0crwdne7736:0",
     "userGuides": "crwdns7738:0crwdne7738:0",
-    "help": "crwdns7740:0crwdne7740:0"
+    "help": "crwdns7740:0crwdne7740:0",
+    "copyDetails": "crwdns10813:0crwdne10813:0",
+    "troubleshootingDetails": "crwdns10815:0crwdne10815:0"
   },
   "filtersPanelToggler": {
     "label": "crwdns9810:0crwdne9810:0"
@@ -458,6 +491,12 @@
     "error": "crwdns10525:0crwdne10525:0",
     "retry": "crwdns10527:0crwdne10527:0",
     "fallback": "crwdns10529:0crwdne10529:0"
+  },
+  "documentViewerArchive": {
+    "empty": "crwdns10765:0crwdne10765:0",
+    "error": "crwdns10767:0crwdne10767:0",
+    "limit": "crwdns10769:0{n}crwdnd10769:0{total}crwdne10769:0",
+    "more": "crwdns10771:0{n}crwdnd10771:0{left}crwdne10771:0"
   },
   "documentViewerImage": {
     "rotateCounterClockwise": "crwdns9946:0crwdne9946:0",
