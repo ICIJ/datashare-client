@@ -2,6 +2,28 @@ import isEmpty from 'lodash/isEmpty'
 import { i18n as murmurI18n } from '@icij/murmur'
 
 import settings from '@/utils/settings'
+
+const langLoaders = import.meta.glob('../lang/*.json', { import: 'default' })
+
+// The stored locale can be regional (e.g. "en-US", set by another app sharing
+// this origin's localStorage) but lang files only exist per language.
+function toLanguage(locale) {
+  const [language] = locale.split(/[-_]/)
+  return language
+}
+
+function findLangLoader(language) {
+  return langLoaders[`../lang/${language}.json`]
+}
+
+function resolveLanguage(locale) {
+  const language = toLanguage(locale)
+  if (findLangLoader(language)) {
+    return language
+  }
+  return settings.defaultLocale
+}
+
 /**
   Mixin class extending the core to add helpers for i18n.
   @mixin I18nMixin
@@ -50,13 +72,35 @@ const I18nMixin = superclass =>
      * @returns {Promise}
      */
     async loadI18Locale(locale) {
-      if (!this.hasI18Locale(locale)) {
-        const messages = await import(`../lang/${locale}.json`).then(m => m.default)
-        this.i18n.global.setLocaleMessage(locale, messages)
+      const language = resolveLanguage(locale)
+      await this.loadI18AppMessages(language)
+      this.mergeI18MurmurMessages(language)
+      return this.setI18nLocale(language)
+    }
+
+    /**
+     * Load the app messages for the given language (if needed).
+     * @memberof I18nMixin.prototype
+     * @param {String} language - Key of the language (fr, de, en, ja, ...)
+     * @returns {Promise}
+     */
+    async loadI18AppMessages(language) {
+      if (this.hasI18Locale(language)) {
+        return
       }
-      const murmurMessages = murmurI18n.global.getLocaleMessage(locale)
-      this.i18n.global.mergeLocaleMessage(locale, murmurMessages)
-      return this.setI18nLocale(locale)
+      const loader = findLangLoader(language)
+      const messages = await loader()
+      this.i18n.global.setLocaleMessage(language, messages)
+    }
+
+    /**
+     * Merge Murmur's messages for the given language into the app messages.
+     * @memberof I18nMixin.prototype
+     * @param {String} language - Key of the language (fr, de, en, ja, ...)
+     */
+    mergeI18MurmurMessages(language) {
+      const murmurMessages = murmurI18n.global.getLocaleMessage(language)
+      this.i18n.global.mergeLocaleMessage(language, murmurMessages)
     }
   }
 

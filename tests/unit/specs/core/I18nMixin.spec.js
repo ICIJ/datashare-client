@@ -51,6 +51,38 @@ describe('I18nMixin', () => {
     })
   })
 
+  describe('with a regional language in local storage', () => {
+    it('should use "fr" for "fr-FR"', async () => {
+      localStorage.setItem('locale', 'fr-FR')
+      core = Core.init().useAll()
+      await core.initializeI18n()
+      expect(core.i18n.global.locale.value).toBe('fr')
+    })
+
+    it('should use "fr" for "fr_CA"', async () => {
+      localStorage.setItem('locale', 'fr_CA')
+      core = Core.init().useAll()
+      await core.initializeI18n()
+      expect(core.i18n.global.locale.value).toBe('fr')
+    })
+  })
+
+  describe('with an unknown language in local storage', () => {
+    beforeEach(async () => {
+      localStorage.setItem('locale', 'xx-XX')
+      core = Core.init().useAll()
+      await core.initializeI18n()
+    })
+
+    it('should fall back to "en"', () => {
+      expect(core.i18n.global.locale.value).toBe('en')
+    })
+
+    it('should save "en" in local storage', () => {
+      expect(localStorage.getItem('locale')).toBe('en')
+    })
+  })
+
   describe('with german language in local storage', () => {
     beforeEach(async () => {
       localStorage.setItem('locale', 'de')
