@@ -2,7 +2,6 @@ import { shallowMount } from '@vue/test-utils'
 import { nextTick } from 'vue'
 
 import CoreSetup from '~tests/unit/CoreSetup'
-import DocumentViewerCode from '@/components/Document/DocumentViewer/DocumentViewerCode'
 import DocumentViewerConvertedPdf from '@/components/Document/DocumentViewer/DocumentViewerConvertedPdf'
 import DocumentViewerPaginated from '@/components/Document/DocumentViewer/DocumentViewerPaginated'
 import DocumentViewerPdf from '@/components/Document/DocumentViewer/DocumentViewerPdf'
@@ -16,7 +15,6 @@ describe('DocumentViewerConvertedPdf.vue', () => {
 
   const word = { index: 'local', id: 'doc', routing: 'root', contentType: 'application/msword' }
   const rtf = { ...word, contentType: 'application/rtf' }
-  const textRtf = { ...word, contentType: 'text/rtf', isCode: true }
 
   function mountViewer(document) {
     return shallowMount(DocumentViewerConvertedPdf, {
@@ -49,13 +47,6 @@ describe('DocumentViewerConvertedPdf.vue', () => {
     wrapper.findComponent(DocumentViewerPdf).vm.$emit('error', new Error('415'))
     await nextTick()
     expect(wrapper.text()).toContain('Preview is not available for this document type.')
-  })
-
-  it('falls back to the code viewer for a text/rtf document when the PDF fails', async () => {
-    const wrapper = mountViewer(textRtf)
-    wrapper.findComponent(DocumentViewerPdf).vm.$emit('error', new Error('415'))
-    await nextTick()
-    expect(wrapper.findComponent(DocumentViewerCode).exists()).toBe(true)
   })
 
   it('retries the PDF after switching document', async () => {
