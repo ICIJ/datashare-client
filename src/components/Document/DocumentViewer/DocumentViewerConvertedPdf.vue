@@ -2,6 +2,7 @@
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+import DocumentViewerCode from './DocumentViewerCode'
 import DocumentViewerPaginated from './DocumentViewerPaginated'
 import DocumentViewerPdf from './DocumentViewerPdf'
 
@@ -42,6 +43,10 @@ watch(() => props.document.id, () => {
   />
   <document-viewer-paginated
     v-else-if="isPaginated"
+    :document="document"
+  />
+  <document-viewer-code
+    v-else-if="document.isCode"
     :document="document"
   />
   <div
