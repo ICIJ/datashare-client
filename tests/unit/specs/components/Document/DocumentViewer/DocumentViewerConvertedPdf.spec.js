@@ -57,6 +57,14 @@ describe('DocumentViewerConvertedPdf.vue', () => {
     expect(wrapper.findComponent(DocumentViewerPdf).exists()).toBe(true)
   })
 
+  it('retries the PDF after switching to the same document in another project', async () => {
+    const wrapper = mountViewer(word)
+    wrapper.findComponent(DocumentViewerPdf).vm.$emit('error', new Error('415'))
+    await nextTick()
+    await wrapper.setProps({ document: { ...word, index: 'other' } })
+    expect(wrapper.findComponent(DocumentViewerPdf).exists()).toBe(true)
+  })
+
   it('skips the PDF when no preview host is configured', () => {
     core.config.set('previewHost', null)
     const wrapper = mountViewer(word)

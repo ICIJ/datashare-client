@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, shallowRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import DocumentViewerPaginated from './DocumentViewerPaginated'
@@ -18,12 +18,12 @@ const props = defineProps({
 const { t } = useI18n()
 const { getPdfUrl, isPreviewActivated } = useDocumentPreview()
 
-const failed = ref(false)
+const failed = shallowRef(false)
 const src = computed(() => getPdfUrl(props.document))
 const usePdf = computed(() => isPreviewActivated.value && !failed.value)
 const isPaginated = computed(() => PAGINATED_CONTENT_TYPES.includes(props.document.contentType))
 
-watch(() => props.document.id, () => {
+watch(src, () => {
   failed.value = false
 })
 </script>
