@@ -24,7 +24,7 @@ defineProps({
 })
 
 const recommendedStore = useRecommendedStore()
-const documentStore = useDocumentStore()
+const documentStore = useDocumentStore.inject()
 const { document, documentViewFloatingSelector } = useDocument()
 const { t } = useI18n()
 const { toastedPromise } = useToast()

@@ -1,5 +1,4 @@
 import { flushPromises, mount } from '@vue/test-utils'
-import { BModal } from 'bootstrap-vue-next'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import { apiInstance as api } from '@/api/apiInstance'
@@ -27,16 +26,20 @@ describe('DocumentModal.vue', () => {
     vi.restoreAllMocks()
   })
 
-  function mountModal() {
-    const stubs = { DocumentView: true, DocumentFloating: { template: '<div><slot /></div>' } }
+  it('keeps the document of the page behind while showing its own', async () => {
+    documentStore.document = new Document(createHit('archive'))
+    const stubs = {
+      DocumentFloating: { template: '<div><slot /></div>' },
+      DocumentViewActions: true,
+      DocumentViewTabs: true,
+      DocumentViewTitle: true,
+      DocumentViewUserActions: true
+    }
     const props = { index: 'idx', id: 'child', routing: 'archive', modelValue: true }
-    return mount(DocumentModal, { global: { plugins: core.plugins, stubs }, props })
-  }
-
-  it('restores the document of the page behind once hidden', async () => {
-    const wrapper = mountModal()
-    documentStore.document = new Document(createHit('child'))
-    wrapper.findComponent(BModal).vm.$emit('hidden')
+    mount(DocumentModal, { global: { plugins: core.plugins, stubs }, props })
+    await vi.waitFor(() => {
+      expect(api.elasticsearch.getDocumentWithoutContent).toHaveBeenCalledWith('idx', 'child', 'archive')
+    }, { timeout: 5000 })
     await flushPromises()
     expect(documentStore.document.id).toBe('archive')
   })

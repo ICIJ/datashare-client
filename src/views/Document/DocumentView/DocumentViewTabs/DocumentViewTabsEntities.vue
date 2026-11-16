@@ -23,7 +23,7 @@ const { t } = useI18n()
 const { document } = useDocument()
 const { isLoading, waitFor } = useWait()
 const config = useConfig()
-const documentStore = useDocumentStore()
+const documentStore = useDocumentStore.inject()
 const filterToken = ref(null)
 
 const mustExtractEntities = computed(() => canManageDocuments.value && !hasNerTags.value)

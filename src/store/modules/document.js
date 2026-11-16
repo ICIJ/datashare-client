@@ -1,4 +1,3 @@
-import { defineStore } from 'pinia'
 import { ref, reactive, computed, shallowRef } from 'vue'
 import compact from 'lodash/compact'
 import findIndex from 'lodash/findIndex'
@@ -12,13 +11,14 @@ import uniq from 'lodash/uniq'
 import uniqBy from 'lodash/uniqBy'
 import EsDocList from '@/api/resources/EsDocList'
 import { apiInstance as api } from '@/api/apiInstance'
+import { defineSuffixedStore } from '@/store/defineSuffixedStore'
 import { DOCUMENT_USER_ACTIONS } from '@/enums/documentUserActions'
 
 /**
  * Document store for managing document data, content, tags, named entities,
  * and recommendations.
  */
-export const useDocumentStore = defineStore(
+export const useDocumentStore = defineSuffixedStore(
   'document',
   () => {
     // The current document.

@@ -24,7 +24,7 @@ const props = defineProps({
 })
 
 const core = useCore()
-const documentStore = useDocumentStore()
+const documentStore = useDocumentStore.inject()
 const translations = ref([])
 
 const selectedTargetLanguage = computed(() => {

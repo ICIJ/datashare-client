@@ -14,7 +14,7 @@ import { useDocumentStore } from '@/store/modules'
 export const useDocument = function (element) {
   const DOCUMENT_VIEW_FLOATING_ID_KEY = 'documentViewFloatingId'
 
-  const documentStore = useDocumentStore()
+  const documentStore = useDocumentStore.inject()
   const route = useRoute()
   const router = useRouter()
   const core = useCore()

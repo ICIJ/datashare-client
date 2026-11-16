@@ -55,7 +55,7 @@ const props = defineProps({
 const router = useRouter()
 const route = useRoute()
 const appStore = useAppStore()
-const documentStore = useDocumentStore()
+const documentStore = useDocumentStore.inject()
 
 const containerRef = useScrollParent({ topLevelParent: window })
 const elementRef = useTemplateRef('element')

@@ -17,7 +17,7 @@ const MARKDOWN_MIME_TYPE = 'text/markdown;charset=UTF-8'
 const MARKDOWN_PAGE_SEPARATOR = '\n\n---\n\n'
 
 export function useDocumentDownload(document, { immediate = true } = {}) {
-  const documentStore = useDocumentStore()
+  const documentStore = useDocumentStore.inject()
   const documentDownloadStore = useDocumentDownloadStore()
   const { toast } = useToast()
   const { locale, t } = useI18n()

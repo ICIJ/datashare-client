@@ -20,7 +20,7 @@ const props = defineProps({
   }
 })
 
-const { getContentSlice, document } = useDocumentStore()
+const { getContentSlice, document } = useDocumentStore.inject()
 const { waitFor } = useWait()
 
 const noExcerpt = computed(() => !!props.entity.metadata)
