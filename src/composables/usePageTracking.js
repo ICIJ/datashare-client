@@ -22,7 +22,7 @@ function scrollsDocument({ key, target }) {
  *
  * @param {object} options
  * @param {Function} options.getPageElement - Returns the element of a page from its 1-based number.
- * @returns {{ page: import('vue').WritableComputedRef<number>, trackPage: Function, holdPageTracking: Function, reset: Function }}
+ * @returns {Object} `{ page, trackPage, holdPageTracking, reset }`
  */
 export function usePageTracking({ getPageElement }) {
   const currentPage = shallowRef(1)

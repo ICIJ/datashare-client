@@ -9,7 +9,7 @@ import { useDocumentPreview } from '@/composables/useDocumentPreview'
  * @param {import('vue').MaybeRefOrGetter<object>} document - The document to check.
  * @param {object} [options]
  * @param {boolean|null} [options.initial=null] - The value until the banners are fetched.
- * @returns {{ blurred: import('vue').ShallowRef<boolean|null>, blurredContent: import('vue').ShallowRef<string|null>, error: import('vue').ShallowRef<Error|null> }}
+ * @returns {Object} `{ blurred, blurredContent, error }`
  */
 export function useDocumentBlur(document, { initial = null } = {}) {
   const { isBlurred, getBlurredContentBanner } = useDocumentPreview()
