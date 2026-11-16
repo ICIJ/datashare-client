@@ -17,6 +17,7 @@ export function usePDF(src) {
   const pdf = computed(() => pdfDoc.value?.loadingTask ?? null)
   const numPages = computed(() => pdfDoc.value?.numPages ?? 0)
   const sizes = shallowRef([])
+  const error = shallowRef(null)
   const { waitFor, isLoading, loaderId } = useWait()
 
   if (!PDFJS.GlobalWorkerOptions?.workerSrc) {
@@ -40,7 +41,14 @@ export function usePDF(src) {
     const wasmUrl = `https://unpkg.com/pdfjs-dist@${PDFJS.version}/wasm/`
     const loadingTask = PDFJS.getDocument({ url: src, wasmUrl })
 
-    pdfDoc.value = await loadingTask.promise
+    error.value = null
+    try {
+      pdfDoc.value = await loadingTask.promise
+    }
+    catch (err) {
+      error.value = err
+      return
+    }
     sizes.value = []
 
     for (let page = 1; page <= numPages.value; page++) {
@@ -80,5 +88,5 @@ export function usePDF(src) {
 
   watch(srcRef, load, { immediate: true })
 
-  return { findHighlights, load, isLoading, loaderId, pdf, pdfDoc, numPages, sizes }
+  return { error, findHighlights, load, isLoading, loaderId, pdf, pdfDoc, numPages, sizes }
 }
