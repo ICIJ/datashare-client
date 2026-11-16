@@ -160,7 +160,10 @@ const { rows: troubleshootingRows, text: troubleshootingText } = useTroubleshoot
 </script>
 
 <template>
-  <div class="error d-flex flex-column">
+  <div
+    class="error d-flex flex-column"
+    data-bs-theme="dark"
+  >
     <div class="error__main">
       <div
         class="error__background"
