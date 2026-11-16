@@ -1,9 +1,11 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
-import { computed, onBeforeMount, ref } from 'vue'
+import { computed, onBeforeMount, ref, toRef } from 'vue'
+import { until } from '@vueuse/core'
 
 import { useImage } from '@/composables/useImage'
 import { useDocumentPreview } from '@/composables/useDocumentPreview'
+import { useDocumentBlur } from '@/composables/useDocumentBlur'
 import { useWait } from '@/composables/useWait'
 import { useDocumentViewStore } from '@/store/modules/documentView'
 import AppSpinner from '@/components/AppSpinner/AppSpinner'
@@ -26,18 +28,18 @@ const { t } = useI18n()
 const { rotateBase64Image } = useImage()
 const { waitFor, loaderId } = useWait()
 const { computedDocumentRotation } = useDocumentViewStore()
-const { isBlurred, getBlurredContentBanner, canPreviewRaw } = useDocumentPreview()
+const { canPreviewRaw } = useDocumentPreview()
 
-const blurred = ref(null)
-const blurredContent = ref(null)
+const currentDocument = toRef(props, 'document')
+const { blurred, blurredContent, error: blurError } = useDocumentBlur(currentDocument)
 const imageBase64 = ref(null)
 const imageRotation = computedDocumentRotation(props.document)
 const isRawImage = computed(() => canPreviewRaw(props.document))
 
 async function fetch() {
-  blurred.value = blurred.value ?? await isBlurred(props.document)
-  if (blurred.value) {
-    blurredContent.value = await getBlurredContentBanner(props.document)
+  await until(() => blurred.value !== null || blurError.value !== null).toBe(true)
+  if (blurError.value) {
+    throw blurError.value
   }
   if (isRawImage.value) {
     imageBase64.value = await rotateBase64Image(props.document.inlineFullUrl, imageRotation)

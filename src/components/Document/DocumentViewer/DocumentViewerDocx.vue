@@ -1,14 +1,16 @@
 <script setup>
 import { computed, onBeforeUnmount, ref, shallowRef, toRef, useTemplateRef, watch } from 'vue'
-import { useDebounceFn, useEventListener } from '@vueuse/core'
 import { renderAsync } from 'docx-preview'
 import { useI18n } from 'vue-i18n'
 
 import { useDocumentLocalSearch } from '@/composables/useDocumentLocalSearch'
-import { useDocumentPreview } from '@/composables/useDocumentPreview'
+import { useDocumentBlur } from '@/composables/useDocumentBlur'
 import { useDocumentSource } from '@/composables/useDocumentSource'
+import { usePageTracking } from '@/composables/usePageTracking'
+import { useToolboxOffset } from '@/composables/useToolboxOffset'
 import { useToast } from '@/composables/useToast'
 import { addSearchMarksClassesInHtml, foldWithSourceIndexes } from '@/utils/strings'
+import { belowToolboxMargin } from '@/utils/toolboxMargin'
 import DismissableContentWarningToggler from '@/components/Dismissable/DismissableContentWarningToggler'
 import DocumentToolbox from '@/components/Document/DocumentToolbox/DocumentToolbox'
 
@@ -24,34 +26,26 @@ const props = defineProps({
 })
 
 const ACTIVE_CLASS = 'local-search-term--active'
-// A section whose top edge sits exactly on the toolbox edge rounds either way between the
-// observer's root and the element box, so it would flicker between two pages.
-const BELOW_TOOLBOX_OFFSET = 4
-const SCROLL_IDLE_DELAY = 200
 // `ignoreLastRenderedPageBreak` defaults to true, which silently collapses the
 // page count to 1: the sections the paginator and the marks are keyed by are
 // exactly the page breaks Word wrote.
 const RENDER_OPTIONS = { ignoreLastRenderedPageBreak: false, inWrapper: true }
 
 const { fetchSource } = useDocumentSource()
-const { isBlurred, getBlurredContentBanner } = useDocumentPreview()
 const { toast } = useToast()
 const { t } = useI18n()
 
 const container = useTemplateRef('container')
 const toolbox = useTemplateRef('toolbox')
-const toolboxHeight = computed(() => toolbox.value?.height ?? 0)
+const { toolboxHeight, toolboxStyle } = useToolboxOffset(toolbox)
 
 const sections = shallowRef([])
 const originalHtml = shallowRef([])
 const foldedText = shallowRef([])
 const markedSections = new Set()
 const error = ref(null)
-const blurred = ref(false)
-const blurredContent = ref(null)
-const currentPage = ref(1)
-const pendingPage = ref(null)
-const sectionsBelowToolbox = new Set()
+const currentDocument = toRef(props, 'document')
+const { blurred, blurredContent } = useDocumentBlur(currentDocument)
 
 const totalPages = computed(() => Math.max(sections.value.length, 1))
 
@@ -65,16 +59,11 @@ const {
   refresh
 } = useDocumentLocalSearch({ findMatches })
 
-const page = computed({
-  get: () => currentPage.value,
-  set: scrollToPage
+const { page, trackPage, holdPageTracking, reset: resetPageTracking } = usePageTracking({
+  getPageElement: value => sections.value[value - 1]
 })
 
-const style = computed(() => ({ '--document-viewer-docx-toolbox-height': `${toolboxHeight.value}px` }))
-
-// Rounded here rather than where the observer reads it, so a sub-pixel drift in
-// the toolbox height does not rebuild the observer for an identical margin.
-const rootMargin = computed(() => `${-(Math.round(toolboxHeight.value) + BELOW_TOOLBOX_OFFSET)}px 0px 0px 0px`)
+const rootMargin = computed(() => belowToolboxMargin(toolboxHeight.value))
 
 let lastRender = 0
 
@@ -129,14 +118,9 @@ function collectSections() {
   markedSections.clear()
 }
 
-function resetPage() {
-  currentPage.value = 1
-  pendingPage.value = null
-}
-
 async function adoptRenderedSections() {
   collectSections()
-  resetPage()
+  resetPageTracking(1)
   observeSections()
   // The sections the matches point at are gone, so the term on screen has to be searched again.
   await refresh()
@@ -182,31 +166,6 @@ function restoreOriginalHtml() {
   markedSections.clear()
 }
 
-// Holds the page tracking until the scroll we are about to start has settled, so
-// the indicator stays on the page we are heading to instead of counting every
-// section the scroll flies past.
-function holdPageTracking(value) {
-  pendingPage.value = value
-  currentPage.value = value
-  settleScroll()
-}
-
-const settleScroll = useDebounceFn(() => {
-  pendingPage.value = null
-  trackPage()
-}, SCROLL_IDLE_DELAY)
-
-function trackPage() {
-  if (pendingPage.value === null && sectionsBelowToolbox.size) {
-    currentPage.value = Math.min(...sectionsBelowToolbox) + 1
-  }
-}
-
-function scrollToPage(value) {
-  holdPageTracking(value)
-  sections.value[value - 1]?.scrollIntoView({ block: 'start' })
-}
-
 function activateMark() {
   const marks = [...container.value.querySelectorAll('mark.local-search-term')]
   const active = marks[activeIndex.value - 1]
@@ -220,18 +179,13 @@ let observer = null
 // is shrunk by the toolbox height, the same rule the PDF pages follow.
 function observeSections() {
   observer?.disconnect()
-  sectionsBelowToolbox.clear()
   observer = new IntersectionObserver((entries) => {
     for (const { target, isIntersecting } of entries) {
       const index = sections.value.indexOf(target)
-      if (isIntersecting) {
-        sectionsBelowToolbox.add(index)
-      }
-      else {
-        sectionsBelowToolbox.delete(index)
+      if (index >= 0) {
+        trackPage(index + 1, isIntersecting)
       }
     }
-    trackPage()
   }, { rootMargin: rootMargin.value })
   sections.value.forEach(section => observer.observe(section))
 }
@@ -249,12 +203,12 @@ watch(term, (value) => {
 // to be held the same way a page pick is.
 watch(activePage, (value) => {
   if (value) {
-    holdPageTracking(value)
+    holdPageTracking(value, { jump: true })
   }
 })
 function reactivateMark() {
   if (activePage.value) {
-    holdPageTracking(activePage.value)
+    holdPageTracking(activePage.value, { jump: true })
   }
   activateMark()
 }
@@ -263,12 +217,7 @@ watch(rootMargin, () => {
     observeSections()
   }
 })
-useEventListener(window, 'scroll', settleScroll, { capture: true, passive: true })
-watch(toRef(props, 'document'), render, { immediate: true, flush: 'post' })
-watch(toRef(props, 'document'), async (document) => {
-  blurred.value = await isBlurred(document)
-  blurredContent.value = blurred.value ? await getBlurredContentBanner(document) : null
-}, { immediate: true })
+watch(currentDocument, render, { immediate: true, flush: 'post' })
 
 onBeforeUnmount(() => observer?.disconnect())
 
@@ -278,7 +227,7 @@ defineExpose({ findMatches, render, sections, totalPages, error })
 <template>
   <div
     class="document-viewer-docx"
-    :style="style"
+    :style="toolboxStyle"
   >
     <document-toolbox
       ref="toolbox"
@@ -329,7 +278,7 @@ defineExpose({ findMatches, render, sections, totalPages, error })
   }
 
   &__container:deep(section.docx) {
-    scroll-margin-top: var(--document-viewer-docx-toolbox-height, 0px);
+    scroll-margin-top: var(--document-toolbox-height, 0px);
   }
 
   &__container:deep(.local-search-term) {

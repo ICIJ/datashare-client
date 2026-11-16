@@ -5,6 +5,7 @@ import { computed, toRef, useTemplateRef, watch } from 'vue'
 import { useElementSize, whenever, useElementVisibility } from '@vueuse/core'
 
 import { useElementVisibilityOnce } from '@/composables/useElementVisibilityOnce'
+import { belowToolboxMargin } from '@/utils/toolboxMargin'
 
 const props = defineProps({
   pdf: {
@@ -47,7 +48,6 @@ const props = defineProps({
 
 const HIGHLIGHT_CLASS = 'highlight'
 const HIGHLIGHT_ACTIVE_CLASS = 'highlight--active'
-const BELOW_TOOLBOX_OFFSET = 4
 
 const emit = defineEmits(['visible'])
 
@@ -57,9 +57,7 @@ const isVisibleOnce = useElementVisibilityOnce(element)
 // Shrink the observer root so it starts just under the sticky toolbox: whoever is left showing is
 // a candidate for the current page, and the parent keeps the topmost one. A ratio threshold cannot
 // work here, pages are often taller than the viewport and vueuse reports `isIntersecting` anyway.
-const belowToolbox = computed(() => {
-  return `${-(Math.round(props.topOffset) + BELOW_TOOLBOX_OFFSET)}px 0px 0px 0px`
-})
+const belowToolbox = computed(() => belowToolboxMargin(props.topOffset))
 const isBelowToolbox = useElementVisibility(element, { rootMargin: belowToolbox })
 const { width } = useElementSize(element)
 watch(width, () => renderer.value?.reload())

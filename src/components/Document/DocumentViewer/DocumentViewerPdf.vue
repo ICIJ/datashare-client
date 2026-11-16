@@ -1,6 +1,5 @@
 <script setup>
-import { computed, ref, useTemplateRef, watch } from 'vue'
-import { useDebounceFn, useEventListener } from '@vueuse/core'
+import { computed, ref, toRef, useTemplateRef, watch } from 'vue'
 import { supportsPDFs as embeddable } from 'pdfobject'
 import { useI18n } from 'vue-i18n'
 
@@ -11,6 +10,9 @@ import DocumentViewerPdfPage from './DocumentViewerPdf/DocumentViewerPdfPage'
 import { SCALE_FIT, SCALE_WIDTH } from '@/enums/documentViewerPdf'
 import { useDocumentLocalSearch } from '@/composables/useDocumentLocalSearch'
 import { useDocumentPreview } from '@/composables/useDocumentPreview'
+import { useDocumentBlur } from '@/composables/useDocumentBlur'
+import { usePageTracking } from '@/composables/usePageTracking'
+import { useToolboxOffset } from '@/composables/useToolboxOffset'
 import { usePDF } from '@/composables/usePDF'
 import { useDocumentViewStore } from '@/store/modules/documentView'
 import AppWait from '@/components/AppWait/AppWait'
@@ -37,12 +39,8 @@ const props = defineProps({
 
 const emit = defineEmits(['error'])
 
-const SCROLL_IDLE_DELAY = 200
-const SCROLL_KEYS = ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' ']
-const FORM_CONTROLS = 'input, textarea, select, [contenteditable]'
-
 const documentViewStore = useDocumentViewStore()
-const { isBlurred, getBlurredContentBanner, sessionIdHeaderName, sessionIdHeaderValue } = useDocumentPreview()
+const { sessionIdHeaderName, sessionIdHeaderValue } = useDocumentPreview()
 // The preview host needs the session header, which an embedded iframe cannot send.
 const isConverted = computed(() => !!props.src)
 const canEmbed = computed(() => embeddable && !isConverted.value)
@@ -54,17 +52,16 @@ const httpHeaders = computed(() => (isConverted.value ? sessionHeaders.value : n
 const { pdf, numPages, sizes, error, findHighlights, loaderId: pdfLoaderId } = usePDF(pdfSrc, { httpHeaders })
 const { t } = useI18n()
 
-const currentPage = ref(1)
-const pendingPage = ref(null)
-const realignPendingPage = ref(false)
-const pagesBelowToolbox = new Set()
 const rotation = documentViewStore.computedDocumentRotation(props.document)
 const scale = ref(SCALE_FIT)
-const blurred = ref(null)
-const blurredContent = ref(null)
+const currentDocument = toRef(props, 'document')
+const { blurred, blurredContent } = useDocumentBlur(currentDocument)
 const pageElements = useTemplateRef('pages')
 const toolboxElement = useTemplateRef('toolbox')
-const toolboxHeight = computed(() => toolboxElement.value?.height ?? 0)
+const { toolboxHeight, toolboxStyle } = useToolboxOffset(toolboxElement)
+const { page, trackPage, holdPageTracking, reset: resetPageTracking } = usePageTracking({
+  getPageElement: value => pageElements.value[value - 1]?.$el
+})
 const {
   term: highlightText,
   debouncedTerm: highlightTextDebounced,
@@ -79,99 +76,12 @@ const {
 const pageScale = computed(() => (isNaN(scale.value) ? 1 : Number(scale.value)))
 const pageFitParent = computed(() => scale.value === SCALE_FIT || scale.value === SCALE_WIDTH)
 
-const style = computed(() => {
-  return {
-    '--document-viewer-pdf-toolbox-height': `${toolboxHeight.value}px`
-  }
-})
-
 const classList = computed(() => {
   return {
     'document-viewer-pdf--scale-fit': scale.value === SCALE_FIT,
     'document-viewer-pdf--scale-width': scale.value === SCALE_WIDTH
   }
 })
-
-/**
- * The page the toolbox sits on, which is the topmost of the pages still showing under it.
- *
- * @returns {number|null} - The current page number, or null when no page is showing.
- */
-function currentPageBelowToolbox() {
-  return pagesBelowToolbox.size ? Math.min(...pagesBelowToolbox) : null
-}
-
-const settleScroll = useDebounceFn(() => {
-  if (pendingPage.value === null) {
-    return
-  }
-  // Pages render lazily while a smooth scroll runs and each resizes by a fraction of a pixel, which
-  // is enough for a page pick to land short of its target. Highlights are centered by the page.
-  if (realignPendingPage.value) {
-    scrollPageIntoView(pendingPage.value, 'instant')
-    currentPage.value = pendingPage.value
-    pendingPage.value = null
-  }
-  else {
-    releasePendingPage()
-  }
-}, SCROLL_IDLE_DELAY)
-
-/**
- * Gives up on the pending page and hands the tracking straight back to the viewport, so a scroll
- * started by hand is never undone by the pending page settling behind it.
- */
-function releasePendingPage() {
-  pendingPage.value = null
-  currentPage.value = currentPageBelowToolbox() ?? currentPage.value
-}
-
-/**
- * Whether a key press scrolls the document, as opposed to moving a caret inside a form control:
- * a space typed in the search field must not count as the reader scrolling away.
- *
- * @param {KeyboardEvent} event - The key press to test.
- * @returns {boolean}
- */
-function scrollsDocument({ key, target }) {
-  return SCROLL_KEYS.includes(key) && !target?.closest?.(FORM_CONTROLS)
-}
-
-useEventListener(window, 'scroll', settleScroll, { capture: true, passive: true })
-useEventListener(window, ['wheel', 'touchmove', 'pointerdown'], releasePendingPage, { passive: true })
-useEventListener(window, 'keydown', event => scrollsDocument(event) && releasePendingPage())
-
-/**
- * Holds the page tracking until the scroll we are about to start has settled, so the indicator
- * stays on the page we are heading to instead of counting every page the scroll flies past.
- *
- * @param {number} value - The page that scroll is heading to.
- * @param {boolean} realign - Whether that page must be aligned again once the scroll has settled.
- */
-function holdPageTracking(value, realign = false) {
-  pendingPage.value = value
-  realignPendingPage.value = realign
-  settleScroll()
-}
-
-/**
- * Tracks whether a page still shows under the toolbox, and follows the topmost one that does
- * unless a scroll of ours is in flight.
- *
- * @param {number} value - The page reporting itself.
- * @param {boolean} below - Whether that page shows under the toolbox.
- */
-function trackPage(value, below) {
-  if (below) {
-    pagesBelowToolbox.add(value)
-  }
-  else {
-    pagesBelowToolbox.delete(value)
-  }
-  if (pendingPage.value === null) {
-    currentPage.value = currentPageBelowToolbox() ?? currentPage.value
-  }
-}
 
 /**
  * Gets the highlight index for a specific page.
@@ -183,39 +93,6 @@ function getPageHighlightIndex(value) {
   const firstPageMatch = highlightMatches.value.findIndex(m => m.page === value)
   return highlightPage.value === value ? highlightIndex.value - firstPageMatch : 0
 }
-
-/**
- * Aligns the given page with the top of the viewport, under the sticky toolbox.
- *
- * @param {number} value - The page number to scroll to.
- * @param {string} behavior - Defaults to the CSS scroll-behavior, which Bootstrap
- *   already turns into an instant jump under prefers-reduced-motion.
- * @returns {boolean} - Whether the page is rendered and was scrolled to.
- */
-function scrollPageIntoView(value, behavior = 'auto') {
-  const target = pageElements.value[value - 1]?.$el
-  target?.scrollIntoView({ behavior, block: 'start' })
-  return !!target
-}
-
-/**
- * Scrolls to the specified page in the PDF viewer.
- *
- * @param {number} value - The page number to scroll to.
- */
-function scrollToPage(value) {
-  // Scroll only the target exist
-  if (scrollPageIntoView(value)) {
-    holdPageTracking(value, true)
-    // Update the page model to reflect the current page
-    currentPage.value = value
-  }
-}
-
-const page = computed({
-  get: () => currentPage.value,
-  set: scrollToPage
-})
 
 // Picking another occurrence makes the matching page scroll its highlight into view.
 watch(highlightIndex, () => {
@@ -235,9 +112,7 @@ function reactivateHighlight() {
 // over from the previous one would settle against pages that are not there anymore. The matches
 // point at the pages of that previous document too, so the term on screen has to be searched again.
 watch(pdf, () => {
-  pagesBelowToolbox.clear()
-  pendingPage.value = null
-  realignPendingPage.value = false
+  resetPageTracking()
   refreshHighlights()
 })
 
@@ -246,13 +121,6 @@ watch(error, (value) => {
     emit('error', value)
   }
 })
-
-watch(pdfSrc, async () => {
-  blurred.value ??= await isBlurred(props.document)
-  if (blurred.value) {
-    blurredContent.value = await getBlurredContentBanner(props.document)
-  }
-}, { immediate: true })
 </script>
 
 <template>
@@ -266,7 +134,7 @@ watch(pdfSrc, async () => {
     v-else
     class="document-viewer-pdf"
     :class="classList"
-    :style="style"
+    :style="toolboxStyle"
   >
     <document-toolbox
       ref="toolbox"
@@ -354,7 +222,7 @@ watch(pdfSrc, async () => {
       flex-shrink: 1;
       min-width: 0;
       width: auto;
-      scroll-margin-top: var(--document-viewer-pdf-toolbox-height, 0px);
+      scroll-margin-top: var(--document-toolbox-height, 0px);
     }
   }
 

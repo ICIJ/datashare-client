@@ -65,11 +65,12 @@
 <script>
 import { mapWritableState } from 'pinia'
 import { AppIcon } from '@icij/murmur'
+import { toRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import Hook from '@/components/Hook/Hook'
 import { usePlayerStore } from '@/store/modules'
-import { useDocumentPreview } from '@/composables/useDocumentPreview'
+import { useDocumentBlur } from '@/composables/useDocumentBlur'
 import DismissableContentWarning from '@/components/Dismissable/DismissableContentWarning.vue'
 
 /**
@@ -90,15 +91,14 @@ export default {
       type: Object
     }
   },
-  setup() {
+  setup(props) {
     const { t } = useI18n()
-    const { isBlurred, getBlurredContentBanner } = useDocumentPreview()
-    return { t, isBlurred, getBlurredContentBanner }
+    const currentDocument = toRef(props, 'document')
+    const { blurred, blurredContent } = useDocumentBlur(currentDocument, { initial: true })
+    return { t, blurred, blurredContent }
   },
   data() {
     return {
-      blurred: true,
-      blurredContent: null,
       cannotPlay: false
     }
   },
@@ -107,12 +107,6 @@ export default {
       return this.cannotPlay ? 'warning' : null
     },
     ...mapWritableState(usePlayerStore, ['autoplay', 'loop'])
-  },
-  async mounted() {
-    this.blurred = await this.isBlurred(this.document)
-    if (this.blurred) {
-      this.blurredContent = await this.getBlurredContentBanner(this.document)
-    }
   },
   methods: {
     onPlayerError(e) {

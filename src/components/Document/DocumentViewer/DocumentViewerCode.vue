@@ -7,7 +7,7 @@ import { syntaxHighlighting } from '@codemirror/language'
 import { classHighlighter } from '@lezer/highlight'
 
 import { useDocumentLocalSearch } from '@/composables/useDocumentLocalSearch'
-import { useDocumentPreview } from '@/composables/useDocumentPreview'
+import { useDocumentBlur } from '@/composables/useDocumentBlur'
 import { useDocumentSource } from '@/composables/useDocumentSource'
 import { findLanguage } from '@/utils/codeLanguage'
 import { buildSearchIndex, findIndexMatches } from '@/utils/codeSearchIndex'
@@ -59,14 +59,13 @@ const activeMarkField = defineMarksField(setActiveMark)
 const languageCompartment = new Compartment()
 
 const { fetchSource } = useDocumentSource()
-const { isBlurred, getBlurredContentBanner } = useDocumentPreview()
 const { t } = useI18n()
 
 const editor = useTemplateRef('editor')
 const error = ref(null)
 const loading = ref(false)
-const blurred = ref(false)
-const blurredContent = ref(null)
+const currentDocument = toRef(props, 'document')
+const { blurred, blurredContent } = useDocumentBlur(currentDocument)
 const downloadTooLarge = ref(false)
 const tooLarge = computed(() => isTooLarge(props.document) || downloadTooLarge.value)
 
@@ -238,20 +237,10 @@ function paintActiveMatch() {
   view.dispatch({ effects })
 }
 
-watch(blurred, refresh)
+watch(() => !!blurred.value, refresh)
 watch(matches, paintMatches)
 watch([matches, activeIndex], paintActiveMatch)
-watch(toRef(props, 'document'), load, { immediate: true, flush: 'post' })
-watch(toRef(props, 'document'), async (document) => {
-  const value = await isBlurred(document)
-  const banner = value ? await getBlurredContentBanner(document) : null
-  // A document swapped in while this one resolved owns the banner now.
-  if (document !== props.document) {
-    return
-  }
-  blurred.value = value
-  blurredContent.value = banner
-}, { immediate: true })
+watch(currentDocument, load, { immediate: true, flush: 'post' })
 
 onBeforeUnmount(() => {
   stopLoad()

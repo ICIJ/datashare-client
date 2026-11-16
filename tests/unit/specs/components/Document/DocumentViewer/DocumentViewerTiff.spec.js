@@ -92,6 +92,12 @@ describe('DocumentViewerTiff.vue', () => {
       const wrapper = await mountViewer('blurred-project')
       expect(wrapper.findComponent(DocumentToolbox).props('disabled')).toBe(true)
     })
+
+    it('shows an error when the banners cannot be fetched', async () => {
+      api.getPathBanners.mockRejectedValueOnce(new Error('Banners unavailable'))
+      const wrapper = await mountViewer('failing-project')
+      expect(wrapper.find('.tiff-viewer__error').text()).toBe('Banners unavailable')
+    })
   })
 
   describe('with a missing file', () => {

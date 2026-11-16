@@ -19,7 +19,7 @@
         :disabled="blurred"
       />
       <dismissable-content-warning
-        v-if="!error"
+        v-if="!errorMessage"
         v-model:show="blurred"
         :description="blurredContent"
         no-center
@@ -48,7 +48,7 @@
         v-else
         class="tiff-viewer__error fw-bold text-center text-danger flex-grow-1"
       >
-        {{ error }}
+        {{ errorMessage }}
       </div>
     </div>
   </app-overlay>
@@ -56,13 +56,14 @@
 
 <script>
 import { encodeDataURL, getImageFromIFD } from 'image-js'
+import { toRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import * as tiff from 'tiff'
 
 import IPhArrowCounterClockwise from '~icons/ph/arrow-counter-clockwise'
 import IPhArrowClockwise from '~icons/ph/arrow-clockwise'
 
-import { useDocumentPreview } from '@/composables/useDocumentPreview'
+import { useDocumentBlur } from '@/composables/useDocumentBlur'
 import AppOverlay from '@/components/AppOverlay/AppOverlay'
 import ButtonRowAction from '@/components/Button/ButtonRowAction/ButtonRowAction'
 import DismissableContentWarning from '@/components/Dismissable/DismissableContentWarning'
@@ -89,24 +90,26 @@ export default {
       type: Object
     }
   },
-  setup() {
-    const { isBlurred, getBlurredContentBanner } = useDocumentPreview()
+  setup(props) {
+    const currentDocument = toRef(props, 'document')
+    const { blurred, blurredContent, error: blurError } = useDocumentBlur(currentDocument, { initial: true })
     const { t } = useI18n()
-    return { isBlurred, getBlurredContentBanner, t, IPhArrowCounterClockwise, IPhArrowClockwise }
+    return { blurred, blurredContent, blurError, t, IPhArrowCounterClockwise, IPhArrowClockwise }
   },
   data() {
     return {
       error: null,
       tiffData: null,
       active: 1,
-      pages: [],
-      blurred: true,
-      blurredContent: null
+      pages: []
     }
   },
   computed: {
     isLoading() {
       return !this.tiffData && !this.error
+    },
+    errorMessage() {
+      return this.error ?? this.blurError?.message
     },
     hasPages() {
       return this.pages.length > 1
@@ -119,10 +122,6 @@ export default {
   },
   async mounted() {
     try {
-      this.blurred = await this.isBlurred(this.document)
-      if (this.blurred) {
-        this.blurredContent = await this.getBlurredContentBanner(this.document)
-      }
       this.tiffData = tiff.decode(await this.getTiffBuffer())
       this.pages = []
       for (const index in this.tiffData) {

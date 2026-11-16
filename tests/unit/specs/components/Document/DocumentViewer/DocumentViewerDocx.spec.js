@@ -329,7 +329,24 @@ describe('DocumentViewerDocx.vue', () => {
     observers.at(-1).callback([{ target: wrapper.vm.sections[1], isIntersecting: true }])
     await flushPromises()
     expect(toolbox.props('page')).toBe(3)
-    // Once the scroll has settled, the viewport owns the indicator again.
+    // Once the scroll has settled, the picked page is aligned again and keeps the indicator.
+    const scrollIntoView = vi.spyOn(wrapper.vm.sections[2], 'scrollIntoView')
+    window.dispatchEvent(new Event('scroll'))
+    await vi.advanceTimersByTimeAsync(200)
+    await flushPromises()
+    expect(scrollIntoView).toHaveBeenLastCalledWith({ behavior: 'instant', block: 'start' })
+    expect(toolbox.props('page')).toBe(3)
+  })
+
+  it('follows the viewport again once a held occurrence page settles', async () => {
+    renderSections('<p>one</p>', '<p>two</p>', '<p>three needle</p>')
+    const wrapper = mountViewer()
+    await flushPromises()
+    await search(wrapper, 'needle')
+    const toolbox = wrapper.findComponent(DocumentToolbox)
+    expect(toolbox.props('page')).toBe(3)
+    observers.at(-1).callback([{ target: wrapper.vm.sections[1], isIntersecting: true }])
+    window.dispatchEvent(new Event('scroll'))
     await vi.advanceTimersByTimeAsync(200)
     await flushPromises()
     expect(toolbox.props('page')).toBe(2)

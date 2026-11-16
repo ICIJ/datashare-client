@@ -12,12 +12,12 @@
     <div
       v-if="isPreviewable"
       class="d-flex flex-column flex-grow-1"
-      :style="style"
+      :style="toolboxStyle"
     >
       <document-toolbox
         v-if="hasPagination"
         ref="toolbox"
-        v-model:page="currentPage"
+        v-model:page="page"
         no-search
         :document="document"
         :total-pages="meta.pages"
@@ -56,7 +56,6 @@
 <script setup>
 import { ref, computed, onMounted, useTemplateRef } from 'vue'
 import { vIntersectionObserver } from '@vueuse/components'
-import { useDebounceFn, useEventListener } from '@vueuse/core'
 import get from 'lodash/get'
 import range from 'lodash/range'
 import axios from 'axios'
@@ -65,6 +64,8 @@ import { useConfig } from '@/composables/useConfig'
 
 import { useWait } from '@/composables/useWait'
 import { useDocumentPreview } from '@/composables/useDocumentPreview'
+import { usePageTracking } from '@/composables/usePageTracking'
+import { useToolboxOffset } from '@/composables/useToolboxOffset'
 import AppWait from '@/components/AppWait/AppWait'
 import DocumentToolbox from '@/components/Document/DocumentToolbox/DocumentToolbox'
 import DocumentThumbnail from '@/components/Document/DocumentThumbnail/DocumentThumbnail'
@@ -81,10 +82,9 @@ const props = defineProps({
 
 const { t } = useI18n()
 const { getPreviewMetaUrl, sessionIdHeaderName, sessionIdHeaderValue } = useDocumentPreview()
-const wait = useWait()
+const { waitFor, loaderId } = useWait()
 const config = useConfig()
 
-const page = ref(1)
 const errored = ref(false)
 const meta = ref({
   pages: 1
@@ -108,23 +108,9 @@ const metaOptions = computed(() => {
   }
 })
 
-const loaderId = computed(() => {
-  return wait.loaderId
-})
-
 const isPreviewable = computed(() => {
   return hasPreviewHost.value && get(meta.value, 'previewable', false) && !errored.value
 })
-
-async function waitFor(callback) {
-  try {
-    wait.start(loaderId.value)
-    await callback()
-  }
-  finally {
-    wait.end(loaderId.value)
-  }
-}
 
 async function fetchMeta() {
   const url = getPreviewMetaUrl(props.document)
@@ -135,72 +121,21 @@ async function fetchMeta() {
 const hasPagination = computed(() => meta.value.pages > 1)
 
 const toolbox = useTemplateRef('toolbox')
-const toolboxHeight = computed(() => toolbox.value?.height ?? 0)
-
-const style = computed(() => {
-  return {
-    '--paginated-viewer-toolbox-height': `${toolboxHeight.value}px`
-  }
-})
-
-const SCROLL_IDLE_DELAY = 200
-
-const halfVisiblePages = new Set()
-const pendingPage = ref(null)
-
-function topmostHalfVisiblePage() {
-  return halfVisiblePages.size ? Math.min(...halfVisiblePages) : page.value
-}
-
-function onPageIntersectionObserver([entry]) {
-  const value = parseInt(entry.target.getAttribute('data-page'), 10)
-  if (entry.intersectionRatio >= 0.5) {
-    halfVisiblePages.add(value)
-  }
-  else {
-    halfVisiblePages.delete(value)
-  }
-  if (pendingPage.value === null) {
-    page.value = topmostHalfVisiblePage()
-  }
-}
+const { toolboxStyle } = useToolboxOffset(toolbox)
 
 const componentRoot = ref(null)
 
-function scrollPageIntoView(value, behavior) {
+function getPageElement(value) {
   const previews = componentRoot.value.$el.querySelectorAll('.paginated-viewer__preview__page')
-  const target = previews[value - 1]
-  target?.scrollIntoView({ behavior, block: 'start' })
+  return previews[value - 1]
 }
 
-const settleScroll = useDebounceFn(() => {
-  if (pendingPage.value === null) {
-    return
-  }
-  // Pages above the target load lazily during the smooth scroll and push it down.
-  scrollPageIntoView(pendingPage.value, 'instant')
-  pendingPage.value = null
-}, SCROLL_IDLE_DELAY)
+const { page, trackPage } = usePageTracking({ getPageElement })
 
-function releasePendingPage() {
-  pendingPage.value = null
-  page.value = topmostHalfVisiblePage()
+function onPageIntersectionObserver([entry]) {
+  const value = parseInt(entry.target.getAttribute('data-page'), 10)
+  trackPage(value, entry.intersectionRatio >= 0.5)
 }
-
-useEventListener(window, 'scroll', settleScroll, { capture: true, passive: true })
-useEventListener(window, ['wheel', 'touchmove', 'pointerdown'], releasePendingPage, { passive: true })
-
-function scrollToPage(value) {
-  page.value = value
-  pendingPage.value = value
-  scrollPageIntoView(value, 'auto')
-  settleScroll()
-}
-
-const currentPage = computed({
-  get: () => page.value,
-  set: scrollToPage
-})
 
 onMounted(async () => {
   if (hasPreviewHost.value) {
@@ -211,7 +146,7 @@ onMounted(async () => {
       catch {
         throw Error('Unable to fetch the thumbnail informations')
       }
-    })
+    })()
   }
 })
 </script>
@@ -221,7 +156,7 @@ onMounted(async () => {
   min-height: 90vh;
 
   &__preview__page {
-    scroll-margin-top: var(--paginated-viewer-toolbox-height, 0px);
+    scroll-margin-top: var(--document-toolbox-height, 0px);
   }
 }
 </style>
