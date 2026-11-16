@@ -127,10 +127,10 @@ describe('DocumentViewerArchive.vue', () => {
     expect(render).not.toHaveBeenCalled()
   })
 
-  it('opens files as documents outside of a modal', async () => {
+  it('opens files in a modal outside of a modal', async () => {
     search.mockResolvedValue(createResponse([createHit('a', 'a.txt')]))
     const wrapper = await mountViewer()
-    expect(wrapper.findComponent(PathTreeViewDocument).props('noModal')).toBe(true)
+    expect(wrapper.findComponent(PathTreeViewDocument).props('noModal')).toBe(false)
   })
 
   it('opens files as documents inside a modal', async () => {
