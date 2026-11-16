@@ -15,3 +15,16 @@ export const SCALES = [
   { value: 3, text: '300%' },
   { value: 4, text: '400%' }
 ]
+
+// Mirrors PDF_CONTENT_TYPES in datashare-preview (>= 1.7), the types its /api/v1/pdf endpoint converts.
+export const PDF_CONVERTIBLE_CONTENT_TYPES = [
+  'application/msword',
+  'application/vnd.ms-powerpoint',
+  'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  'application/vnd.ms-powerpoint.presentation.macroenabled.12',
+  'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
+  'application/vnd.oasis.opendocument.text',
+  'application/vnd.oasis.opendocument.presentation',
+  'application/rtf',
+  'text/rtf'
+]
