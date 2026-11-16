@@ -49,6 +49,10 @@ const props = defineProps({
   compact: {
     type: Boolean,
     default: false
+  },
+  noRoute: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -141,8 +145,7 @@ const redirectToError = (failedRoute, details, { pending = false } = {}) => {
 }
 
 const fetchRouteDocument = async (failedRoute = route, options) => {
-  // A modal shows its own document, not the one of the page behind it
-  const params = modal ? {} : failedRoute.params
+  const params = props.noRoute ? {} : failedRoute.params
   const { index = props.index, id = props.id, routing = props.routing } = params ?? {}
   await fetchDocumentOnce({ index, id, routing })
 

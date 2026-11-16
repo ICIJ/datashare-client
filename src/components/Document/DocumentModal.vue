@@ -8,12 +8,13 @@ import DocumentFloating from '@/components/Document/DocumentFloating'
 import { onRouteLeaveNotMatch } from '@/composables/onRouteLeaveNotMatch'
 import { onRouteUpdateNotMatch } from '@/composables/onRouteUpdateNotMatch'
 import { useCompact } from '@/composables/useCompact'
+import { useDocument } from '@/composables/useDocument'
 import { DISPLAY } from '@/enums/documentFloating'
 import { useDocumentStore } from '@/store/modules'
 
 const modelValue = defineModel({ type: Boolean, default: false })
 
-defineProps({
+const props = defineProps({
   id: {
     type: String
   },
@@ -40,9 +41,12 @@ const documentFloatingRef = useTemplateRef('document-floating')
 const { hide } = useModal(modalId)
 const { compact } = useCompact(documentFloatingRef, { threshold: 660 })
 const display = computed(() => compact.value ? DISPLAY.END : DISPLAY.BOTH)
+const { documentRoute } = useDocument()
 
-// The page behind may show a document too, so the modal keeps its own
-useDocumentStore.disposable()
+// A document opened over a document page must not replace the page's one
+if (props.id && documentRoute.value) {
+  useDocumentStore.disposable()
+}
 
 onRouteLeaveNotMatch(route.name, () => hide())
 onRouteUpdateNotMatch(route.name, () => hide())
@@ -74,6 +78,7 @@ onRouteUpdateNotMatch(route.name, () => hide())
           :index="index"
           :q="q"
           :compact="compact"
+          no-route
         />
       </slot>
       <template #nav>

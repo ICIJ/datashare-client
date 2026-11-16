@@ -1,4 +1,4 @@
-import { flushPromises, mount } from '@vue/test-utils'
+import { enableAutoUnmount, flushPromises, mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import { apiInstance as api } from '@/api/apiInstance'
@@ -11,6 +11,8 @@ function createHit(id) {
 }
 
 describe('DocumentModal.vue', () => {
+  enableAutoUnmount(afterEach)
+
   let core, documentStore
 
   beforeEach(async () => {
@@ -42,5 +44,20 @@ describe('DocumentModal.vue', () => {
     }, { timeout: 5000 })
     await flushPromises()
     expect(documentStore.document.id).toBe('archive')
+  })
+
+  it('shares the document store of the page when it shows the route document', async () => {
+    const stores = []
+    const RouteComponent = {
+      setup() {
+        stores.push(useDocumentStore.inject())
+      },
+      template: '<div />'
+    }
+    const stubs = { DocumentFloating: { template: '<div><slot /></div>' } }
+    const slots = { default: RouteComponent }
+    mount(DocumentModal, { global: { plugins: core.plugins, stubs }, props: { modelValue: true }, slots })
+    await flushPromises()
+    expect(stores[0].$id).toBe(documentStore.$id)
   })
 })

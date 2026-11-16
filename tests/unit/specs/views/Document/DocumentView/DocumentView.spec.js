@@ -137,14 +137,27 @@ describe('DocumentView.vue', () => {
     expect(api.elasticsearch.getDocumentWithoutContent).toBeCalledWith(project, parentId, null)
   })
 
-  it('should retrieve the document from its props in a modal opened over another document', async () => {
+  it('should retrieve the document from its props over the route ones with no-route', async () => {
     const routes = [{ path: '/ds/:index/:id/:routing?', name: 'document-standalone' }]
     const core = CoreSetup.init().useAll().useRouter(routes)
     await core.router.push({ name: 'document-standalone', params: { index: project, id: parentId } })
-    const global = { plugins: core.plugins, provide: { modal: true } }
-    shallowMount(DocumentView, { global, props })
+    const global = { plugins: core.plugins }
+    shallowMount(DocumentView, { global, props: { ...props, noRoute: true } })
     await flushPromises()
     expect(api.elasticsearch.getDocumentWithoutContent).toHaveBeenNthCalledWith(1, project, id, parentId)
+  })
+
+  it('should follow the route to the next document in a modal', async () => {
+    const routes = [{ path: '/ds/:index/:id/:routing?', name: 'document-standalone', component: DocumentView, props: true }]
+    const core = CoreSetup.init().useAll().useRouter(routes)
+    api.elasticsearch.getDocumentWithoutContent.mockImplementation((index, id) => ({ _id: id, _index: index, _source: {} }))
+    await core.router.push({ name: 'document-standalone', params: { index: project, id: parentId } })
+    const global = { plugins: core.plugins, provide: { modal: true }, stubs: { RouterView: false, DocumentView: false } }
+    shallowMount(RouterView, { global })
+    await flushPromises()
+    await core.router.push({ name: 'document-standalone', params: { index: project, id, routing: parentId } })
+    await flushPromises()
+    expect(api.elasticsearch.getDocumentWithoutContent).toHaveBeenCalledWith(project, id, parentId)
   })
 
   it('should call the API to retrieve document tags', async () => {
