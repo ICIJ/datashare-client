@@ -192,18 +192,5 @@ onMounted(async () => {
   &__preview__page {
     scroll-margin-top: var(--paginated-viewer-toolbox-height, 0px);
   }
-
-  &__preview__page > .document-thumbnail:before {
-    content: attr(data-page);
-    position: absolute;
-    background: $tertiary;
-    bottom: 0;
-    font-size: 0.8rem;
-    font-weight: bold;
-    padding: 0.2em 0.4em;
-    bottom: 0;
-    right: 0;
-    z-index: 100;
-  }
 }
 </style>
