@@ -35,12 +35,18 @@ catch {
 }
 
 // `@/store/pinia`'s pinia instance is a module-level singleton that CoreSetup
-// falls back to unless a spec calls createPinia(). Dispose every store on it
-// and clear localStorage (persisted stores rehydrate from it) so each test
-// starts from fresh stores. Specs must look stores up in beforeEach, not
+// falls back to unless a spec calls createPinia(). Dispose every store created
+// on it and clear localStorage (persisted stores rehydrate from it) so each
+// test starts from fresh stores. Specs must look stores up in beforeEach, not
 // beforeAll, or they keep a disposed instance.
+const stores = new Set()
+pinia.use(({ store }) => {
+  stores.add(store)
+})
+
 beforeEach(() => {
-  pinia._s.forEach(store => store.$dispose())
+  stores.forEach(store => store.$dispose())
+  stores.clear()
   pinia.state.value = {}
   localStorage.clear()
 })
