@@ -28,3 +28,9 @@ export const PDF_CONVERTIBLE_CONTENT_TYPES = [
   'application/rtf',
   'text/rtf'
 ]
+
+// Previews older than 1.7 cannot convert to PDF but still render these types as thumbnails.
+export const PAGINATED_CONTENT_TYPES = [
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+]

@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n'
 import DocumentViewerPaginated from './DocumentViewerPaginated'
 import DocumentViewerPdf from './DocumentViewerPdf'
 
+import { PAGINATED_CONTENT_TYPES } from '@/enums/documentViewerPdf'
 import { useDocumentPreview } from '@/composables/useDocumentPreview'
 
 const props = defineProps({
@@ -13,12 +14,6 @@ const props = defineProps({
     required: true
   }
 })
-
-// Previews older than 1.7 cannot convert to PDF but still render these types as thumbnails.
-const PAGINATED_CONTENT_TYPES = [
-  'application/msword',
-  'application/vnd.openxmlformats-officedocument.presentationml.presentation'
-]
 
 const { t } = useI18n()
 const { getPdfUrl, isPreviewActivated } = useDocumentPreview()
