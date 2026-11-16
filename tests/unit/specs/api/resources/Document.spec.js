@@ -162,6 +162,35 @@ describe('Document', () => {
     })
   })
 
+  describe('isPdfConvertible', () => {
+    const convertible = [
+      'application/msword',
+      'application/vnd.ms-powerpoint',
+      'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+      'application/vnd.ms-powerpoint.presentation.macroenabled.12',
+      'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
+      'application/vnd.oasis.opendocument.text',
+      'application/vnd.oasis.opendocument.presentation',
+      'application/rtf',
+      'text/rtf'
+    ]
+    const notConvertible = [
+      'application/pdf',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/vnd.ms-excel'
+    ]
+
+    it.each(convertible)('should be convertible to PDF for %s', (contentType) => {
+      const doc = new Document({ _source: { contentType } })
+      expect(doc.isPdfConvertible).toBe(true)
+    })
+
+    it.each(notConvertible)('should NOT be convertible to PDF for %s', (contentType) => {
+      const doc = new Document({ _source: { contentType } })
+      expect(doc.isPdfConvertible).toBe(false)
+    })
+  })
+
   describe('check if document is of DOCX type', () => {
     it('should be a DOCX file', () => {
       const contentType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'

@@ -23,6 +23,17 @@ const _parent = '_PARENT'
 const _root = '_ROOT'
 const _position = '_POSITION'
 const _separator = '/'
+const PDF_CONVERTIBLE_CONTENT_TYPES = [
+  'application/msword',
+  'application/vnd.ms-powerpoint',
+  'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  'application/vnd.ms-powerpoint.presentation.macroenabled.12',
+  'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
+  'application/vnd.oasis.opendocument.text',
+  'application/vnd.oasis.opendocument.presentation',
+  'application/rtf',
+  'text/rtf'
+]
 
 export default class Document extends EsDoc {
   static esName = 'Document'
@@ -415,6 +426,10 @@ export default class Document extends EsDoc {
 
   get isPdf() {
     return this.contentType === 'application/pdf'
+  }
+
+  get isPdfConvertible() {
+    return PDF_CONVERTIBLE_CONTENT_TYPES.includes(this.contentType)
   }
 
   get isTiff() {

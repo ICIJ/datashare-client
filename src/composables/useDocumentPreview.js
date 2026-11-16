@@ -96,6 +96,20 @@ export const useDocumentPreview = () => {
   }
 
   /**
+   * Get the URL of a document converted to PDF by the preview host.
+   *
+   * @param {Object} document - The document object.
+   * @param {string} document.index - The index of the document.
+   * @param {string} document.id - The ID of the document.
+   * @param {string} document.routing - The routing parameter.
+   * @returns {string} The PDF URL.
+   */
+  function getPdfUrl({ index, id, routing } = {}) {
+    const host = config.get('previewHost')
+    return `${host}/api/v1/pdf/${index}/${id}?routing=${routing}`
+  }
+
+  /**
    * Check if the document can be previewed.
    *
    * @param {Object} document - The document object.
@@ -139,6 +153,7 @@ export const useDocumentPreview = () => {
     // Methods
     isBlurred,
     getBlurredContentBanner,
+    getPdfUrl,
     getPreviewMetaUrl,
     getPreviewUrl,
     canPreview,
