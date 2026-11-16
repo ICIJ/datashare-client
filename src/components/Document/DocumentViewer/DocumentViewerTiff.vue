@@ -8,32 +8,16 @@
   >
     <div
       v-if="!isLoading"
-      class="d-flex align-items-start"
+      class="d-flex flex-column"
     >
-      <div
+      <document-toolbox
         v-if="hasPages"
-        class="tiff-viewer__thumbnails"
-      >
-        <div
-          v-for="page in pages.length"
-          :key="page"
-          class="tiff-viewer__thumbnails__item mb-3"
-          :class="{ 'tiff-viewer__thumbnails__item--active': page === active }"
-          @click="activate(page)"
-        >
-          <div class="tiff-viewer__thumbnails__item__thumbnail">
-            <img
-              class="img-responsive"
-              :width="thumbWidth"
-              :height="thumbWidth"
-              :src="getPage(page)"
-            >
-            <div class="tiff-viewer__thumbnails__item__thumbnail__page text-center small">
-              <span class="badge">{{ page }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
+        v-model:page="active"
+        no-search
+        :document="document"
+        :total-pages="pages.length"
+        :disabled="blurred"
+      />
       <dismissable-content-warning
         v-if="!error"
         v-model:show="blurred"
@@ -82,6 +66,7 @@ import { useDocumentPreview } from '@/composables/useDocumentPreview'
 import AppOverlay from '@/components/AppOverlay/AppOverlay'
 import ButtonRowAction from '@/components/Button/ButtonRowAction/ButtonRowAction'
 import DismissableContentWarning from '@/components/Dismissable/DismissableContentWarning'
+import DocumentToolbox from '@/components/Document/DocumentToolbox/DocumentToolbox'
 import datashareSourceMixin from '@/mixins/datashareSourceMixin'
 
 /**
@@ -92,7 +77,8 @@ export default {
   components: {
     AppOverlay,
     ButtonRowAction,
-    DismissableContentWarning
+    DismissableContentWarning,
+    DocumentToolbox
   },
   mixins: [datashareSourceMixin],
   props: {
@@ -111,7 +97,6 @@ export default {
   data() {
     return {
       error: null,
-      thumbWidth: 80,
       tiffData: null,
       active: 1,
       pages: [],
@@ -165,9 +150,6 @@ export default {
     async rotateActivePage(page, direction = 1) {
       const index = page - 1
       this.pages[index] = this.pages[index].rotate(direction === 1 ? 90 : -90)
-    },
-    activate(page) {
-      this.active = page
     }
   }
 }
@@ -175,54 +157,6 @@ export default {
 
 <style lang="scss">
 .tiff-viewer {
-  --tiff-viewer-thumbnails-item-filter: none;
-
-  &--blurred {
-    --tiff-viewer-thumbnails-item-filter: blur(1rem) grayscale(0.5);
-  }
-
-  &__thumbnails {
-    width: 80px;
-    flex: 80px 0 0;
-    text-align: center;
-    margin-right: $spacer;
-
-    &__item {
-      margin: auto;
-      cursor: pointer;
-
-      &--active &__thumbnail {
-        border-color: $input-focus-border-color;
-
-        &__page .badge {
-          background-color: $input-focus-border-color;
-        }
-      }
-
-      &__thumbnail {
-        display: inline-block;
-        position: relative;
-        overflow: hidden;
-        border: 2px solid transparent;
-
-        &:hover {
-          border-color: $input-focus-border-color;
-        }
-
-        &__page .badge {
-          background: $dark;
-          position: absolute;
-          bottom: 0.25rem;
-          right: 0.25rem;
-        }
-
-        & > img {
-          filter: var(--tiff-viewer-thumbnails-item-filter);
-        }
-      }
-    }
-  }
-
   &__preview {
     display: flex;
     flex-direction: column;

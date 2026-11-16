@@ -3,6 +3,7 @@ import * as tiff from 'tiff'
 
 import { responseWithArrayBuffer as mockArrayBuffer } from '~tests/unit/tests_utils'
 import CoreSetup from '~tests/unit/CoreSetup'
+import DocumentToolbox from '@/components/Document/DocumentToolbox/DocumentToolbox'
 import DocumentViewerTiff from '@/components/Document/DocumentViewer/DocumentViewerTiff'
 import { apiInstance as api } from '@/api/apiInstance'
 
@@ -35,13 +36,13 @@ describe('DocumentViewerTiff.vue', () => {
   })
 
   describe('with an existing file', () => {
-    async function mountViewer() {
+    async function mountViewer(project = 'test-project') {
       const wrapper = mount(DocumentViewerTiff, {
         global: { plugins: core.plugins },
         props: {
           document: {
             url: 'image.tiff',
-            project: 'test-project',
+            project,
             path: '/image.tiff'
           }
         }
@@ -52,6 +53,19 @@ describe('DocumentViewerTiff.vue', () => {
 
     beforeEach(() => {
       tiff.decode.mockReturnValue([greyPage(), greyPage(), greyPage()])
+    })
+
+    it('renders the toolbox without search and with the page count', async () => {
+      const wrapper = await mountViewer()
+      const toolbox = wrapper.findComponent(DocumentToolbox)
+      expect(toolbox.props('noSearch')).toBe(true)
+      expect(toolbox.props('totalPages')).toBe(3)
+    })
+
+    it('shows the page picked in the toolbox', async () => {
+      const wrapper = await mountViewer()
+      await wrapper.findComponent(DocumentToolbox).vm.$emit('update:page', 2)
+      expect(wrapper.vm.active).toBe(2)
     })
 
     it('displays an 8-bit greyscale page', async () => {
@@ -67,9 +81,16 @@ describe('DocumentViewerTiff.vue', () => {
       expect(wrapper.find('.tiff-viewer__preview__canvas').attributes('src')).toMatch(/^data:image\/png;base64,.+/)
     })
 
-    it('displays a thumbnail for each page', async () => {
+    it('renders no toolbox for a single page', async () => {
+      tiff.decode.mockReturnValue([greyPage()])
       const wrapper = await mountViewer()
-      expect(wrapper.findAll('.tiff-viewer__thumbnails__item')).toHaveLength(3)
+      expect(wrapper.findComponent(DocumentToolbox).exists()).toBe(false)
+    })
+
+    it('disables the toolbox while the page is blurred', async () => {
+      api.getPathBanners.mockResolvedValueOnce([{ path: '/', blurSensitiveMedia: true, note: 'Sensitive' }])
+      const wrapper = await mountViewer('blurred-project')
+      expect(wrapper.findComponent(DocumentToolbox).props('disabled')).toBe(true)
     })
   })
 
