@@ -1,4 +1,5 @@
 import { flushPromises, mount } from '@vue/test-utils'
+import * as tiff from 'tiff'
 
 import { responseWithArrayBuffer as mockArrayBuffer } from '~tests/unit/tests_utils'
 import CoreSetup from '~tests/unit/CoreSetup'
@@ -14,6 +15,14 @@ vi.mock('@/api/apiInstance', () => {
   }
 })
 
+vi.mock('tiff', () => ({ decode: vi.fn() }))
+
+function greyPage({ bitsPerSample = 8 } = {}) {
+  const ArrayType = bitsPerSample === 16 ? Uint16Array : Uint8Array
+  const data = new ArrayType([0, 64, 128, 255])
+  return { width: 2, height: 2, type: 1, bitsPerSample, samplesPerPixel: 1, alpha: false, data }
+}
+
 describe('DocumentViewerTiff.vue', () => {
   let core
 
@@ -25,15 +34,9 @@ describe('DocumentViewerTiff.vue', () => {
     vi.resetAllMocks()
   })
 
-  // This entire test unit is deactivated unly we can support
-  // canvas on JSDom + Node 18. Currently the `canvas` pakckage is
-  // not compatible with Node 18.
-  describe.skip('with an existing file', () => {
-    let wrapper = null
-
-    beforeEach(async () => {
-      wrapper = mount(DocumentViewerTiff, {
-
+  describe('with an existing file', () => {
+    async function mountViewer() {
+      const wrapper = mount(DocumentViewerTiff, {
         global: { plugins: core.plugins },
         props: {
           document: {
@@ -43,16 +46,29 @@ describe('DocumentViewerTiff.vue', () => {
           }
         }
       })
-
       await flushPromises()
+      return wrapper
+    }
+
+    beforeEach(() => {
+      tiff.decode.mockReturnValue([greyPage(), greyPage(), greyPage()])
     })
 
-    it('should load a tiff content file', () => {
-      expect(wrapper.find('.tiff-viewer__preview__canvas').exists()).toBeTruthy()
+    it('displays an 8-bit greyscale page', async () => {
+      const wrapper = await mountViewer()
+      expect(wrapper.find('.tiff-viewer__error').exists()).toBe(false)
+      expect(wrapper.find('.tiff-viewer__preview__canvas').attributes('src')).toMatch(/^data:image\/png;base64,.+/)
     })
 
-    it('should display a thumbnail for each page', () => {
-      expect(wrapper.find('.tiff-viewer__thumbnails').exists()).toBeTruthy()
+    it('displays a 16-bit greyscale page', async () => {
+      tiff.decode.mockReturnValue([greyPage({ bitsPerSample: 16 })])
+      const wrapper = await mountViewer()
+      expect(wrapper.find('.tiff-viewer__error').exists()).toBe(false)
+      expect(wrapper.find('.tiff-viewer__preview__canvas').attributes('src')).toMatch(/^data:image\/png;base64,.+/)
+    })
+
+    it('displays a thumbnail for each page', async () => {
+      const wrapper = await mountViewer()
       expect(wrapper.findAll('.tiff-viewer__thumbnails__item')).toHaveLength(3)
     })
   })

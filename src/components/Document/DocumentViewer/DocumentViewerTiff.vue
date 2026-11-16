@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import { Image } from 'image-js'
+import { encodeDataURL, getImageFromIFD } from 'image-js'
 import { useI18n } from 'vue-i18n'
 import * as tiff from 'tiff'
 
@@ -152,15 +152,11 @@ export default {
     getPage(page = this.active) {
       const index = page - 1
       if (this.pages[index]) {
-        return this.pages[index].toDataURL()
+        return encodeDataURL(this.pages[index])
       }
     },
     async renderPage(index = this.active - 1) {
-      const { width, height, data, alpha, samplesPerPixel: components } = this.tiffData[index]
-      // Create an Image object with image-js
-      const image = new Image(width, height, { data, components, alpha })
-      // Convert the image to a Data URL
-      return image
+      return getImageFromIFD(this.tiffData[index])
     },
     async getTiffBuffer() {
       const response = await this.$core.api.getSource(this.document, { responseType: 'blob' })
