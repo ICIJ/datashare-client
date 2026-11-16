@@ -1,4 +1,5 @@
-import { ref, reactive, computed, shallowRef } from 'vue'
+import { ref, reactive, computed, shallowRef, toRef } from 'vue'
+import { defineStore } from 'pinia'
 import compact from 'lodash/compact'
 import findIndex from 'lodash/findIndex'
 import flattenDeep from 'lodash/flattenDeep'
@@ -14,6 +15,23 @@ import { apiInstance as api } from '@/api/apiInstance'
 import { defineSuffixedStore } from '@/store/defineSuffixedStore'
 import { DOCUMENT_USER_ACTIONS } from '@/enums/documentUserActions'
 
+// Shared by every document store, disposable ones included. It keeps the
+// `document` storage key so the persisted preference outlives this split.
+const useDocumentSessionStore = defineStore(
+  'documentSession',
+  () => {
+    const showTranslatedContent = ref(true)
+    const sessionTagsByIndex = ref({})
+    return { showTranslatedContent, sessionTagsByIndex }
+  },
+  {
+    persist: {
+      key: 'document',
+      pick: ['showTranslatedContent']
+    }
+  }
+)
+
 /**
  * Document store for managing document data, content, tags, named entities,
  * and recommendations.
@@ -21,6 +39,7 @@ import { DOCUMENT_USER_ACTIONS } from '@/enums/documentUserActions'
 export const useDocumentStore = defineSuffixedStore(
   'document',
   () => {
+    const session = useDocumentSessionStore()
     // The current document.
     const document = ref(null)
     // Document identification and routing information.
@@ -45,7 +64,7 @@ export const useDocumentStore = defineSuffixedStore(
     // Array of user IDs who recommended the document.
     const recommendedBy = ref([])
     // Flag indicating whether to show translated content.
-    const showTranslatedContent = ref(true)
+    const showTranslatedContent = toRef(session, 'showTranslatedContent')
     // Array of tags.
     const tags = ref([])
     // Tag labels added during this session, keyed by index. Elasticsearch is
@@ -53,7 +72,7 @@ export const useDocumentStore = defineSuffixedStore(
     // aggregation that powers the suggestion list. Keeping the labels here lets
     // suggestions include them across document navigation until ES catches up.
     // This survives `reset()` on purpose: it is session state, not per-document.
-    const sessionTagsByIndex = ref({})
+    const sessionTagsByIndex = toRef(session, 'sessionTagsByIndex')
     // List user's actions states
     const userActions = reactive({
       [DOCUMENT_USER_ACTIONS.TAGS]: false,
@@ -674,11 +693,6 @@ export const useDocumentStore = defineSuffixedStore(
       getRecommendationsByDocuments,
       toggleUserAction,
       isUserActionVisible
-    }
-  },
-  {
-    persist: {
-      pick: ['showTranslatedContent']
     }
   }
 )

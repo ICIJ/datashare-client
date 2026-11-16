@@ -44,6 +44,11 @@ describe('DocumentStore', () => {
     expect(documentStore.document).toBeDefined()
   })
 
+  it('should share the translated content preference with suffixed stores', () => {
+    useDocumentStore.use('other').toggleTranslatedContent(false)
+    expect(documentStore.showTranslatedContent).toBe(false)
+  })
+
   it('should reset the store state', () => {
     documentStore.recommend(true)
     documentStore.reset()
@@ -204,6 +209,12 @@ describe('DocumentStore', () => {
 
       it('records added tag labels as session tags for their index', async () => {
         await documentStore.addTags({ documents: [{ id: 'doc_01', index }], labels: ['test'] })
+
+        expect(documentStore.sessionTags(index)).toEqual([{ label: 'test' }])
+      })
+
+      it('shares session tags with suffixed stores', async () => {
+        await useDocumentStore.use('other').addTags({ documents: [{ id: 'doc_01', index }], labels: ['test'] })
 
         expect(documentStore.sessionTags(index)).toEqual([{ label: 'test' }])
       })
