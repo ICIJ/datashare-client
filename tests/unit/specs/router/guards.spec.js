@@ -1,5 +1,4 @@
 import { shallowMount, flushPromises } from '@vue/test-utils'
-import { setCookie, removeCookie } from 'tiny-cookie'
 import { expect } from 'vitest'
 
 import CoreSetup from '~tests/unit/CoreSetup'
@@ -45,24 +44,25 @@ describe('guards', () => {
     })
 
     describe('when the route skips auth', () => {
-      it('should allow navigation to a skipsAuth route without a cookie', async () => {
-        removeCookie(process.env.VITE_DS_COOKIE_NAME)
+      it('should allow navigation to a skipsAuth route without a session', async () => {
         auth.reset()
-        api.getUser.mockRejectedValue()
+        api.getUser.mockRejectedValue({ response: { status: 401 } })
         await router.push({ name: 'login' })
         expect(router.currentRoute.value.name).toBe('login')
       })
     })
 
     describe('when the user is authenticated', () => {
-      it('should not redirect to /login when we have the right cookie', async () => {
-        setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'yolo' }, JSON.stringify)
+      it('should not redirect to /login when the server knows the user', async () => {
+        auth.reset()
+        api.getUser.mockResolvedValue({ uid: 'yolo' })
         await router.push({ name: 'settings' })
         expect(router.currentRoute.value.name).toBe('settings')
       })
 
       it('should redirect to stored path after login', async () => {
-        setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'yolo' }, JSON.stringify)
+        auth.reset()
+        api.getUser.mockResolvedValue({ uid: 'yolo' })
         const appStore = useAppStore()
         appStore.setRedirectAfterLogin('/settings/appearance')
         await router.push({ name: 'project.list' })
@@ -70,7 +70,8 @@ describe('guards', () => {
       })
 
       it('should restore query and hash of the stored path after login', async () => {
-        setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'yolo' }, JSON.stringify)
+        auth.reset()
+        api.getUser.mockResolvedValue({ uid: 'yolo' })
         const appStore = useAppStore()
         appStore.setRedirectAfterLogin('/settings/appearance?search=test#overview')
         await router.push({ name: 'project.list' })
@@ -81,36 +82,21 @@ describe('guards', () => {
     describe('when the user is not authenticated', () => {
       beforeEach(() => {
         auth.reset()
-        api.getUser.mockRejectedValue()
+        api.getUser.mockRejectedValue({ response: { status: 401 } })
       })
 
-      it('should redirect to /login if no cookie', async () => {
-        removeCookie(process.env.VITE_DS_COOKIE_NAME)
-        await router.push({ name: 'settings' })
-        expect(router.currentRoute.value.name).toBe('login')
-      })
-
-      it('should redirect to /login if cookie is null', async () => {
-        setCookie(process.env.VITE_DS_COOKIE_NAME, null)
-        await router.push({ name: 'settings' })
-        expect(router.currentRoute.value.name).toBe('login')
-      })
-
-      it('should redirect to /login if cookie has no login property', async () => {
-        setCookie(process.env.VITE_DS_COOKIE_NAME, 'yolo', JSON.stringify)
+      it('should redirect to /login if the server does not know the user', async () => {
         await router.push({ name: 'settings' })
         expect(router.currentRoute.value.name).toBe('login')
       })
 
       it('should not redirect to /login when already on /login', async () => {
-        removeCookie(process.env.VITE_DS_COOKIE_NAME)
         await router.replace({ name: 'login' })
         await router.push({ name: 'login' })
         expect(router.currentRoute.value.name).toBe('login')
       })
 
       it('should store the full path including query and hash before redirecting to login', async () => {
-        removeCookie(process.env.VITE_DS_COOKIE_NAME)
         const appStore = useAppStore()
         appStore.setRedirectAfterLogin(null)
         await router.push('/settings?search=test#overview')
@@ -118,11 +104,32 @@ describe('guards', () => {
         expect(appStore.redirectAfterLogin).toBe('/settings/appearance?search=test#overview')
       })
     })
+
+    describe('when the server cannot tell who the user is', () => {
+      beforeEach(() => {
+        auth.reset()
+      })
+
+      it('should redirect to the error page with the status code when the server answered', async () => {
+        api.getUser.mockRejectedValue({ message: 'Service Unavailable', request: {}, response: { status: 503 } })
+        await router.push({ name: 'settings' })
+        expect(router.currentRoute.value.name).toBe('error')
+        expect(window.history.state).toMatchObject({ code: 503, reason: undefined })
+      })
+
+      it('should redirect to the error page as unreachable when the server never answered', async () => {
+        api.getUser.mockRejectedValue({ message: 'Network Error', request: {} })
+        await router.push({ name: 'settings' })
+        expect(router.currentRoute.value.name).toBe('error')
+        expect(window.history.state).toMatchObject({ code: undefined, reason: 'serverUnreachable' })
+      })
+    })
   })
 
   describe('checkUserProjects', () => {
     beforeEach(async () => {
-      setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'yolo' }, JSON.stringify)
+      auth.reset()
+      api.getUser.mockResolvedValue({ uid: 'yolo' })
       config.set('mode', 'SERVER')
       config.set('projects', ['local-datashare'])
       router.addRoute({ path: '/pub', name: 'pub', meta: { skipsAuth: true } })
@@ -162,8 +169,7 @@ describe('guards', () => {
     it('should allow navigation to /login even with no projects', async () => {
       config.set('projects', [])
       auth.reset()
-      api.getUser.mockRejectedValue()
-      removeCookie(process.env.VITE_DS_COOKIE_NAME)
+      api.getUser.mockRejectedValue({ response: { status: 401 } })
       await router.push({ name: 'login' })
       expect(router.currentRoute.value.name).toBe('login')
     })
@@ -173,7 +179,8 @@ describe('guards', () => {
     let wrapper
 
     beforeEach(async () => {
-      setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'yolo' }, JSON.stringify)
+      auth.reset()
+      api.getUser.mockResolvedValue({ uid: 'yolo' })
       config.set('mode', 'SERVER')
       config.set('projects', ['local-datashare'])
       router.addRoute({ path: '/pub', name: 'pub', meta: { skipsAuth: true } })
@@ -259,7 +266,8 @@ describe('guards', () => {
 
   describe('checkUserRole', () => {
     beforeEach(async () => {
-      setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'yolo' }, JSON.stringify)
+      auth.reset()
+      api.getUser.mockResolvedValue({ uid: 'yolo' })
       config.set('mode', 'SERVER')
       config.set('projects', ['local-datashare'])
       router.addRoute({ path: '/pub', name: 'pub', meta: { skipsAuth: true } })
@@ -318,9 +326,8 @@ describe('guards', () => {
     })
 
     it('should redirect an unauthenticated user to login instead of error', async () => {
-      removeCookie(process.env.VITE_DS_COOKIE_NAME)
       auth.reset()
-      api.getUser.mockRejectedValue()
+      api.getUser.mockRejectedValue({ response: { status: 401 } })
       config.set('policies', [])
       const appStore = useAppStore()
       appStore.setRedirectAfterLogin(null)

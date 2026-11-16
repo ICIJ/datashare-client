@@ -5,25 +5,12 @@ import { useRouter } from 'vue-router'
 
 import LoginCard from '@/components/Login/LoginCard'
 import LoginWelcome from '@/components/Login/LoginWelcome'
-import { useCore } from '@/composables/useCore'
 import { useAuth } from '@/composables/useAuth'
 
-const FORM_AUTH_FILTER = 'org.icij.datashare.session.FormAuthFilter'
-const FORM_AUTH = 'form'
-
-const core = useCore()
-const { username } = useAuth()
+const { username, authMode } = useAuth()
 const router = useRouter()
 
-const isFormAuth = computed(() => {
-  // The `auth` setting (e.g. `--auth form`) takes precedence over the legacy
-  // `authFilter` setting. When `auth` is set, it alone decides the layout.
-  const auth = core.config.get('auth')
-  if (auth !== undefined && auth !== null) {
-    return auth === FORM_AUTH
-  }
-  return core.config.get('authFilter') === FORM_AUTH_FILTER
-})
+const isFormAuth = computed(() => authMode.value === 'form')
 
 // This ensures the login page can only be accessed by unauthenticated users
 whenever(username, () => router.push({ name: 'landing' }))

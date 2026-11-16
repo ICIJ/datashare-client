@@ -1,4 +1,4 @@
-import { errorLocation } from '@/router/errorLocation'
+import { errorLocation, errorStateFrom } from '@/router/errorLocation'
 import { useAppStore } from '@/store/modules'
 
 /**
@@ -26,20 +26,7 @@ export function handleBootFailure(core, error) {
   if (unauthorized) {
     return core.router.push({ name: 'login' })
   }
-  // history.state must be structured-clonable; axios errors carry non-cloneable
-  // functions on `error.config` (transformRequest/transformResponse), so only
-  // the message, the status code and a reason are forwarded, not the error itself.
-  const message = error?.message ?? String(error)
-  const status = error?.response?.status
-  const state = { error: message }
-  // Axios sets `request` once a request was sent: without a response, the server never answered.
-  const isUnanswered = !!error?.request && !status
-  if (status) {
-    state.code = status
-  }
-  else if (isUnanswered) {
-    state.reason = 'serverUnreachable'
-  }
+  const state = errorStateFrom(error)
   const failedRoute = core.router.resolve(route)
   return core.router.push(errorLocation(failedRoute, state))
 }

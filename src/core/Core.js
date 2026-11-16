@@ -278,7 +278,6 @@ class Core extends Behaviors {
           await this.createDefaultProject()
         }
       }
-      this._auth = new Auth(this.mode)
       // Instantiate the search store
       const searchStore = this.stores.useSearchStore()
       // Set the default project only if none is already selected
@@ -384,7 +383,9 @@ class Core extends Behaviors {
    */
   async loadUser() {
     // Load the user
-    this.config.merge(await this.getUser())
+    const user = await this.getUser()
+    this.config.merge(user)
+    this.auth.remember(user?.uid)
     // Load and store user permissions as project policies
     try {
       const rules = (await this.api.getUserPermissions?.()) ?? []

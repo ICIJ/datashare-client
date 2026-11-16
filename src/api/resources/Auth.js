@@ -1,18 +1,53 @@
-import get from 'lodash/get'
 import { ref } from 'vue'
-import { getCookie, removeCookie } from 'tiny-cookie'
 import { apiInstance as api } from '@/api/apiInstance'
+
+const USERNAME_TTL_MS = 43200 * 1000
 
 export default class Auth {
   constructor() {
     this.me = ref(null)
+    this._pendingUsername = null
+    this._ttlTimer = null
   }
 
+  /**
+   * Resolves the signed-in username, or null when nobody is signed in or the
+   * server cannot tell who the user is.
+   * @returns {Promise<string|null>}
+   */
   async getUsername() {
-    if (!this.me.value) {
-      this.me.value = await this._checkAuthentication()
+    try {
+      return await this.whoAmI()
     }
-    return this.me.value
+    catch {
+      return null
+    }
+  }
+
+  /**
+   * Resolves the signed-in username, or null when nobody is signed in.
+   * Concurrent calls share a single request.
+   * @throws when the server cannot tell who the user is (network error, 5xx...)
+   * @returns {Promise<string|null>}
+   */
+  async whoAmI() {
+    this._pendingUsername ??= this._fetchUsername()
+    const pending = this._pendingUsername
+    try {
+      const username = await pending
+      // Nobody signed in yet: ask again next time, the user may sign in meanwhile.
+      if (!username) {
+        this._resetUnlessReplaced(pending)
+      }
+      else {
+        this._rememberUnlessReplaced(pending, username)
+      }
+      return username
+    }
+    catch (error) {
+      this._resetUnlessReplaced(pending)
+      throw error
+    }
   }
 
   async signOutBasicAuth() {
@@ -23,44 +58,56 @@ export default class Auth {
     })
   }
 
-  isBasicAuth() {
-    return !!this.me.value && !this._getCookieUsername()
-  }
-
   reset() {
-    this._removeCookie()
+    clearTimeout(this._ttlTimer)
     this.me.value = null
+    this._pendingUsername = null
   }
 
-  async _checkAuthentication() {
-    try {
-      return this._getCookieUsername() || (await this._getBasicAuthUserName())
-    }
-    catch {
-      return null
+  /**
+   * Caches a username the app already got from the server, so the next
+   * getUsername() call does not ask for it again.
+   * @param {string|null} username
+   */
+  remember(username) {
+    this.reset()
+    this.me.value = username
+    this._pendingUsername = Promise.resolve(username)
+    this._expireLater()
+  }
+
+  _expireLater() {
+    clearTimeout(this._ttlTimer)
+    this._ttlTimer = setTimeout(this.reset.bind(this), USERNAME_TTL_MS)
+  }
+
+  // A caller of an older request must not drop the newer one that replaced it.
+  _resetUnlessReplaced(pending) {
+    if (this._pendingUsername === pending) {
+      this.reset()
     }
   }
 
-  async _getBasicAuthUserName() {
+  _rememberUnlessReplaced(pending, username) {
+    const isReplaced = this._pendingUsername !== pending
+    const isRemembered = this.me.value === username
+    if (isReplaced || isRemembered) {
+      return
+    }
+    this.me.value = username
+    this._expireLater()
+  }
+
+  async _fetchUsername() {
     try {
-      const response = await api.getUser()
-      setTimeout(this.reset.bind(this), 43200 * 1000)
-      return response.uid
+      const user = await api.getUser()
+      return user?.uid ?? null
     }
     catch (error) {
-      if (error && error.response && error.response.status !== 401) {
-        throw new Error(`${error.response.status} ${error.response.statusText}`)
+      if (error?.response?.status === 401) {
+        return null
       }
-      return null
+      throw error
     }
-  }
-
-  _getCookieUsername() {
-    const cookie = getCookie(import.meta.env.VITE_DS_COOKIE_NAME, JSON.parse)
-    return get(cookie, 'login', null)
-  }
-
-  _removeCookie() {
-    removeCookie(import.meta.env.VITE_DS_COOKIE_NAME)
   }
 }

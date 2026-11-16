@@ -24,15 +24,16 @@ export function useImage() {
    * Fetch the image as a base64 string.
    *
    * @param {string} src - The URL of the image.
-   * @param {object} options - Optional parameters for the request.
-   * @param {object} options.headers - Additional headers to include in the request.
    * @returns {Promise<object>} A promise that resolves to an object containing the base64 string and image dimensions.
    */
-  async function fetchImageAsBase64(src, { headers = {} } = {}) {
+  async function fetchImageAsBase64(src) {
     try {
       const responseType = 'blob'
       const cache = 'default'
-      const { data: imgBlob } = await api.axios.get(src, { responseType, cache, headers })
+      // The preview server reads the session from the cookie, which has no Domain:
+      // it only reaches a preview server on the same hostname as Datashare.
+      const withCredentials = true
+      const { data: imgBlob } = await api.axios.get(src, { responseType, cache, withCredentials })
       return new Promise((resolve, reject) => {
         const fileReader = new FileReader()
         fileReader.readAsDataURL(imgBlob)
@@ -50,13 +51,12 @@ export function useImage() {
    *
    * @param {string} src - The URL of the image.
    * @param {object} options - Optional parameters for the request.
-   * @param {object} options.headers - Additional headers to include in the request.
    * @param {number} options.rotation - The rotation angle in degrees.
    * @returns {Promise<object>} A promise that resolves to an object containing the width, height, base64 string, and source URL.
    */
-  async function fetchImageDimensions(src, { headers = {}, rotation = 0 } = {}) {
+  async function fetchImageDimensions(src, { rotation = 0 } = {}) {
     try {
-      let base64 = await fetchImageAsBase64(src, { headers })
+      let base64 = await fetchImageAsBase64(src)
       // Rotate the image only if rotation is specified
       base64 = rotation ? await rotateBase64Image(base64, rotation) : base64
       // Use fetchImage to get the dimensions. Using this function in combination

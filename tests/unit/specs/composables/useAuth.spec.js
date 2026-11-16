@@ -1,10 +1,10 @@
 import { mount, flushPromises } from '@vue/test-utils'
 
-import useAuth from '@/composables/useAuth.js'
+import useAuth, { useAuthMode } from '@/composables/useAuth.js'
 
 const mockCore = {
   config: { get: vi.fn() },
-  auth: { getUsername: vi.fn(), isBasicAuth: vi.fn() }
+  auth: { whoAmI: vi.fn() }
 }
 
 vi.mock('@/composables/useCore', () => ({
@@ -16,22 +16,24 @@ describe('useAuth', () => {
     return mount({ setup: () => useAuth(), template: '<div></div>' })
   }
 
+  function mockConfig({ auth, authFilter } = {}) {
+    mockCore.config.get.mockImplementation(key => ({ auth, authFilter })[key])
+  }
+
   beforeEach(() => {
     vi.clearAllMocks()
     mockCore.config.get.mockReturnValue('form')
   })
 
   it('starts with isUsernameResolved false so callers stay guarded before the async auth check lands', () => {
-    mockCore.auth.getUsername.mockReturnValue(new Promise(() => {}))
-    mockCore.auth.isBasicAuth.mockReturnValue(new Promise(() => {}))
+    mockCore.auth.whoAmI.mockReturnValue(new Promise(() => {}))
     const wrapper = factory()
     expect(wrapper.vm.isUsernameResolved).toBe(false)
     expect(wrapper.vm.username).toBe(null)
   })
 
-  it('sets isUsernameResolved to true only after username and isBasicAuth have resolved', async () => {
-    mockCore.auth.getUsername.mockResolvedValue('alice@example.com')
-    mockCore.auth.isBasicAuth.mockResolvedValue(false)
+  it('sets isUsernameResolved to true only after the username has resolved', async () => {
+    mockCore.auth.whoAmI.mockResolvedValue('alice@example.com')
     const wrapper = factory()
     expect(wrapper.vm.isUsernameResolved).toBe(false)
     await flushPromises()
@@ -41,19 +43,139 @@ describe('useAuth', () => {
 
   describe('isCurrentUser', () => {
     it('treats any uid as the viewer until the username resolves', () => {
-      mockCore.auth.getUsername.mockReturnValue(new Promise(() => {}))
-      mockCore.auth.isBasicAuth.mockReturnValue(new Promise(() => {}))
+      mockCore.auth.whoAmI.mockReturnValue(new Promise(() => {}))
       const wrapper = factory()
       expect(wrapper.vm.isCurrentUser('bob@example.com')).toBe(true)
     })
 
     it('matches only the viewer once the username has resolved', async () => {
-      mockCore.auth.getUsername.mockResolvedValue('alice@example.com')
-      mockCore.auth.isBasicAuth.mockResolvedValue(false)
+      mockCore.auth.whoAmI.mockResolvedValue('alice@example.com')
       const wrapper = factory()
       await flushPromises()
       expect(wrapper.vm.isCurrentUser('alice@example.com')).toBe(true)
       expect(wrapper.vm.isCurrentUser('bob@example.com')).toBe(false)
+    })
+
+    it('treats any uid as the viewer when the server cannot tell who the user is', async () => {
+      mockCore.auth.whoAmI.mockRejectedValue(new Error('Network Error'))
+      const wrapper = factory()
+      await flushPromises()
+      expect(wrapper.vm.isCurrentUser('bob@example.com')).toBe(true)
+    })
+  })
+
+  describe('isBasicAuth', () => {
+    const BASIC = 'org.icij.datashare.session.BasicAuthAdaptorFilter'
+
+    it('is true when a user is signed in with the basic auth mode', async () => {
+      mockConfig({ auth: 'basic' })
+      mockCore.auth.whoAmI.mockResolvedValue('alice@example.com')
+      const wrapper = factory()
+      await flushPromises()
+      expect(wrapper.vm.isBasicAuth).toBe(true)
+    })
+
+    it('is true when a user is signed in with the yesBasic auth mode', async () => {
+      mockConfig({ auth: 'yesBasic' })
+      mockCore.auth.whoAmI.mockResolvedValue('alice@example.com')
+      const wrapper = factory()
+      await flushPromises()
+      expect(wrapper.vm.isBasicAuth).toBe(true)
+    })
+
+    it('is false when the auth mode is form, whatever the auth filter', async () => {
+      mockConfig({ auth: 'form', authFilter: BASIC })
+      mockCore.auth.whoAmI.mockResolvedValue('alice@example.com')
+      const wrapper = factory()
+      await flushPromises()
+      expect(wrapper.vm.isBasicAuth).toBe(false)
+    })
+
+    it('is true when a user is signed in through the basic auth filter', async () => {
+      mockConfig({ authFilter: BASIC })
+      mockCore.auth.whoAmI.mockResolvedValue('alice@example.com')
+      const wrapper = factory()
+      await flushPromises()
+      expect(wrapper.vm.isBasicAuth).toBe(true)
+    })
+
+    it('is false when no auth filter is set', async () => {
+      mockConfig()
+      mockCore.auth.whoAmI.mockResolvedValue('local')
+      const wrapper = factory()
+      await flushPromises()
+      expect(wrapper.vm.isBasicAuth).toBe(false)
+    })
+
+    it('is false when nobody is signed in', async () => {
+      mockConfig({ authFilter: BASIC })
+      mockCore.auth.whoAmI.mockResolvedValue(null)
+      const wrapper = factory()
+      await flushPromises()
+      expect(wrapper.vm.isBasicAuth).toBe(false)
+    })
+  })
+
+  describe('isUsernameUnavailable', () => {
+    it('is true when the server cannot tell who the user is', async () => {
+      mockCore.auth.whoAmI.mockRejectedValue(new Error('Network Error'))
+      const wrapper = factory()
+      await flushPromises()
+      expect(wrapper.vm.isUsernameUnavailable).toBe(true)
+      expect(wrapper.vm.isUsernameResolved).toBe(true)
+    })
+
+    it('is false when the server answers', async () => {
+      mockCore.auth.whoAmI.mockResolvedValue(null)
+      const wrapper = factory()
+      await flushPromises()
+      expect(wrapper.vm.isUsernameUnavailable).toBe(false)
+    })
+  })
+
+  describe('authMode', () => {
+    it('uses the auth setting when it is set', () => {
+      mockConfig({ auth: 'yesBasic', authFilter: 'org.icij.datashare.session.FormAuthFilter' })
+      expect(factory().vm.authMode).toBe('yesBasic')
+    })
+
+    it('falls back to the mode of the form auth filter', () => {
+      mockConfig({ authFilter: 'org.icij.datashare.session.FormAuthFilter' })
+      expect(factory().vm.authMode).toBe('form')
+    })
+
+    it('falls back to the mode of the basic auth filter', () => {
+      mockConfig({ authFilter: 'org.icij.datashare.session.BasicAuthAdaptorFilter' })
+      expect(factory().vm.authMode).toBe('basic')
+    })
+  })
+
+  describe('isAuthWithUsersProvider', () => {
+    it('is true with the form auth filter and no auth setting', () => {
+      mockConfig({ authFilter: 'org.icij.datashare.session.FormAuthFilter' })
+      expect(factory().vm.isAuthWithUsersProvider).toBe(true)
+    })
+
+    it('is false with the OAuth auth filter', () => {
+      mockConfig({ authFilter: 'org.icij.datashare.session.OAuth2CookieFilter' })
+      expect(factory().vm.isAuthWithUsersProvider).toBe(false)
+    })
+  })
+
+  describe('useAuthMode', () => {
+    function factoryAuthMode() {
+      return mount({ setup: () => useAuthMode(), template: '<div></div>' })
+    }
+
+    it('reads the auth mode from the config', () => {
+      mockConfig({ authFilter: 'org.icij.datashare.session.FormAuthFilter' })
+      expect(factoryAuthMode().vm.authMode).toBe('form')
+    })
+
+    it('does not ask the server who the user is', async () => {
+      factoryAuthMode()
+      await flushPromises()
+      expect(mockCore.auth.whoAmI).not.toBeCalled()
     })
   })
 })

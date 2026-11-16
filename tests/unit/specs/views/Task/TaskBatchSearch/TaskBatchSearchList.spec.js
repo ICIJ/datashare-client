@@ -1,4 +1,3 @@
-import { setCookie } from 'tiny-cookie'
 import { flushPromises, mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
@@ -118,7 +117,6 @@ describe('TaskBatchSearchList', () => {
   })
 
   it('should not display actions if I m not the owner of the batch search', async () => {
-    setCookie(process.env.VITE_DS_COOKIE_NAME, { login: 'local' }, JSON.stringify)
     const wrapper = mount(TaskBatchSearchList, { global: { plugins } })
     await flushPromises()
     const rows = wrapper.findAll('.page-table-generic__row')

@@ -106,7 +106,7 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
-const { getPreviewMetaUrl, sessionIdHeaderName, sessionIdHeaderValue } = useDocumentPreview()
+const { getPreviewMetaUrl } = useDocumentPreview()
 const wait = useWait()
 const config = useConfig()
 
@@ -124,15 +124,11 @@ const pagesRange = computed(() => {
   return range(meta.value.pages)
 })
 
-const metaOptions = computed(() => {
-  return {
-    method: 'GET',
-    cache: 'default',
-    headers: {
-      [sessionIdHeaderName.value]: sessionIdHeaderValue.value
-    }
-  }
-})
+const metaOptions = {
+  method: 'GET',
+  cache: 'default',
+  withCredentials: true
+}
 
 const loaderId = computed(() => {
   return wait.loaderId
@@ -154,7 +150,7 @@ async function waitFor(callback) {
 
 async function fetchMeta() {
   const url = getPreviewMetaUrl(props.document)
-  const { data } = await axios({ url, ...metaOptions.value })
+  const { data } = await axios({ url, ...metaOptions })
   return data
 }
 
