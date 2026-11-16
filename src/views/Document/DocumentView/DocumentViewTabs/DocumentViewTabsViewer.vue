@@ -10,15 +10,6 @@ const { t } = useI18n()
 const { document } = useDocument()
 const { hasFeature } = useFeatures()
 
-const paginatedTypes = [
-  'application/msword',
-  'application/vnd.openxmlformats-officedocument.presentationml.presentation'
-]
-
-const isPaginated = computed(() => {
-  return paginatedTypes.includes(document.value.contentType)
-})
-
 const previewComponent = computed(() => {
   if (!document.value) {
     return null
@@ -30,8 +21,8 @@ const previewComponent = computed(() => {
       return 'DocumentViewerMarkdown'
     case document.value.isDocx:
       return 'DocumentViewerDocx'
-    case isPaginated.value:
-      return 'DocumentViewerPaginated'
+    case document.value.isPdfConvertible:
+      return 'DocumentViewerConvertedPdf'
     case document.value.isTiff:
       return 'DocumentViewerTiff'
     case document.value.isSpreadsheet && hasFeature('SERVER_RENDERING_SPREADSHEET'):

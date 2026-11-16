@@ -6,6 +6,10 @@ import { IndexedDocument, letData } from '~tests/unit/es_utils'
 import DocumentViewTabsViewer from '@/views/Document/DocumentView/DocumentViewTabs/DocumentViewTabsViewer'
 import { useDocumentStore } from '@/store/modules'
 
+// Convertible documents lazy-load the PDF viewer, whose pdfjs copies build a DOMMatrix at import (missing in jsdom).
+vi.mock('@tato30/vue-pdf', () => ({ VuePDF: {} }))
+vi.mock('@/composables/usePDF', () => ({ usePDF: vi.fn() }))
+
 describe('DocumentViewTabsViewer.vue', () => {
   const { index, es } = esConnectionHelper.build()
   const id = 'document'
@@ -60,7 +64,7 @@ describe('DocumentViewTabsViewer.vue', () => {
     wrapper.unmount()
   })
 
-  it('should call the DocumentViewerPaginated component for Word document', async () => {
+  it('should call the DocumentViewerConvertedPdf component for Word document', async () => {
     const document = await letData(es)
       .have(new IndexedDocument(id, index).withContentType('application/msword'))
       .commitAndGetLastDocument()
@@ -73,7 +77,7 @@ describe('DocumentViewTabsViewer.vue', () => {
       },
       props: { document, disabled }
     })
-    expect(wrapper.vm.previewComponent).toBe('DocumentViewerPaginated')
+    expect(wrapper.vm.previewComponent).toBe('DocumentViewerConvertedPdf')
     wrapper.unmount()
   })
 
@@ -96,7 +100,7 @@ describe('DocumentViewTabsViewer.vue', () => {
     wrapper.unmount()
   })
 
-  it('should keep the DocumentViewerPaginated component for PPTX document', async () => {
+  it('should call the DocumentViewerConvertedPdf component for PPTX document', async () => {
     const contentType = 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
     const document = await letData(es)
       .have(new IndexedDocument(id, index).withContentType(contentType))
@@ -110,7 +114,24 @@ describe('DocumentViewTabsViewer.vue', () => {
       },
       props: { document, disabled }
     })
-    expect(wrapper.vm.previewComponent).toBe('DocumentViewerPaginated')
+    expect(wrapper.vm.previewComponent).toBe('DocumentViewerConvertedPdf')
+    wrapper.unmount()
+  })
+
+  it('should call the DocumentViewerConvertedPdf component for RTF document', async () => {
+    const document = await letData(es)
+      .have(new IndexedDocument(id, index).withContentType('application/rtf'))
+      .commitAndGetLastDocument()
+    await documentStore.getDocument({ id, index })
+
+    const wrapper = shallowMount(DocumentViewTabsViewer, {
+      global: {
+        plugins: core.plugins,
+        renderStubDefaultSlot: true
+      },
+      props: { document, disabled }
+    })
+    expect(wrapper.vm.previewComponent).toBe('DocumentViewerConvertedPdf')
     wrapper.unmount()
   })
 
