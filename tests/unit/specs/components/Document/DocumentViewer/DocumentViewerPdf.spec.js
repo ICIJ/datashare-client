@@ -12,6 +12,7 @@ const pdf = ref(null)
 const sizes = ref([])
 const error = ref(null)
 let usePDFSrc = null
+let usePDFOptions = null
 
 // @tato30/vue-pdf bundles its own pdfjs-dist copy, which constructs a
 // DOMMatrix at module scope; jsdom has no DOMMatrix, so merely importing the
@@ -28,8 +29,9 @@ vi.mock('@/api/apiInstance', () => ({
 
 vi.mock('@/composables/usePDF', () => {
   return {
-    usePDF: (src) => {
+    usePDF: (src, options) => {
       usePDFSrc = src
+      usePDFOptions = options
       return {
         error,
         findHighlights,
@@ -153,6 +155,16 @@ describe('DocumentViewerPdf.vue', () => {
     expect(usePDFSrc.value).toBe('http://preview/api/v1/pdf/foo/doc-id?routing=root-id')
   })
 
+  it('sends no session header for the document URL', () => {
+    mountViewer()
+    expect(usePDFOptions.httpHeaders.value).toBeNull()
+  })
+
+  it('sends the session header with the given src', () => {
+    mountViewer({}, { src: 'http://preview/api/v1/pdf/foo/doc-id?routing=root-id' })
+    expect(Object.keys(usePDFOptions.httpHeaders.value)[0]).toMatch(/^X-/)
+  })
+
   it('emits error when the PDF fails to load', async () => {
     const wrapper = mountViewer()
     error.value = new Error('415')
@@ -165,14 +177,20 @@ describe('DocumentViewerPdf.vue', () => {
       useDocumentViewStore().embeddedPdf = false
     })
 
-    it('passes src to the embedded viewer', () => {
+    it('renders the embedded viewer for the document URL', () => {
       const { plugins } = CoreSetup.init().useAll()
       useDocumentViewStore().embeddedPdf = true
-      const wrapper = shallowMount(DocumentViewerPdf, {
-        props: { document, src: 'http://preview/api/v1/pdf/foo/doc-id?routing=root-id' },
-        global: { plugins }
-      })
-      expect(wrapper.findComponent(DocumentViewerPdfEmbedded).props('src')).toBe('http://preview/api/v1/pdf/foo/doc-id?routing=root-id')
+      const wrapper = shallowMount(DocumentViewerPdf, { props: { document }, global: { plugins } })
+      expect(wrapper.findComponent(DocumentViewerPdfEmbedded).exists()).toBe(true)
+    })
+
+    it('loads the given src with PDF.js instead of embedding it', () => {
+      const { plugins } = CoreSetup.init().useAll()
+      useDocumentViewStore().embeddedPdf = true
+      const props = { document, src: 'http://preview/api/v1/pdf/foo/doc-id?routing=root-id' }
+      const wrapper = shallowMount(DocumentViewerPdf, { props, global: { plugins } })
+      expect(wrapper.findComponent(DocumentViewerPdfEmbedded).exists()).toBe(false)
+      expect(usePDFSrc.value).toBe('http://preview/api/v1/pdf/foo/doc-id?routing=root-id')
     })
   })
 })

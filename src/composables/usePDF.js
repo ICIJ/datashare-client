@@ -1,4 +1,4 @@
-import { computed, toRef, shallowRef, watch } from 'vue'
+import { computed, toRef, toValue, shallowRef, watch } from 'vue'
 import escapeRegExp from 'lodash/escapeRegExp'
 import * as PDFJS from 'pdfjs-dist'
 import workerSrc from 'pdfjs-dist/build/pdf.worker.min?url'
@@ -11,7 +11,7 @@ function configureWorker() {
   PDFJS.GlobalWorkerOptions.workerSrc = workerSrc
 }
 
-export function usePDF(src) {
+export function usePDF(src, { httpHeaders = null } = {}) {
   const srcRef = toRef(src)
   const pdfDoc = shallowRef(null)
   const pdf = computed(() => pdfDoc.value?.loadingTask ?? null)
@@ -42,7 +42,8 @@ export function usePDF(src) {
     if (!src) return
 
     const wasmUrl = `https://unpkg.com/pdfjs-dist@${PDFJS.version}/wasm/`
-    const loadingTask = PDFJS.getDocument({ url: src, wasmUrl })
+    const headers = toValue(httpHeaders)
+    const loadingTask = PDFJS.getDocument({ url: src, wasmUrl, httpHeaders: headers })
     currentLoadingTask = loadingTask
 
     error.value = null

@@ -42,10 +42,17 @@ const SCROLL_KEYS = ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End'
 const FORM_CONTROLS = 'input, textarea, select, [contenteditable]'
 
 const documentViewStore = useDocumentViewStore()
-const pdfSrc = computed(() => (documentViewStore.embeddedPdf ? null : (props.src ?? props.document.fullUrl)))
-const { pdf, numPages, sizes, error, findHighlights, loaderId: pdfLoaderId } = usePDF(pdfSrc)
+const { isBlurred, getBlurredContentBanner, sessionIdHeaderName, sessionIdHeaderValue } = useDocumentPreview()
+// The preview host needs the session header, which an embedded iframe cannot send.
+const isConverted = computed(() => !!props.src)
+const canEmbed = computed(() => embeddable && !isConverted.value)
+const embedded = computed(() => documentViewStore.embeddedPdf && !isConverted.value)
+const viewerSrc = computed(() => props.src ?? props.document.fullUrl)
+const pdfSrc = computed(() => (embedded.value ? null : viewerSrc.value))
+const sessionHeaders = computed(() => ({ [sessionIdHeaderName.value]: sessionIdHeaderValue.value }))
+const httpHeaders = computed(() => (isConverted.value ? sessionHeaders.value : null))
+const { pdf, numPages, sizes, error, findHighlights, loaderId: pdfLoaderId } = usePDF(pdfSrc, { httpHeaders })
 const { t } = useI18n()
-const { isBlurred, getBlurredContentBanner } = useDocumentPreview()
 
 const currentPage = ref(1)
 const pendingPage = ref(null)
@@ -250,11 +257,10 @@ watch(pdfSrc, async () => {
 
 <template>
   <document-viewer-pdf-embedded
-    v-if="documentViewStore.embeddedPdf"
+    v-if="embedded"
     v-model="documentViewStore.embeddedPdf"
     v-model:blurred="blurred"
     :document="document"
-    :src="src"
   />
   <div
     v-else
@@ -281,6 +287,7 @@ watch(pdfSrc, async () => {
           v-model:rotation="rotation"
           v-model:scale="scale"
           v-model:embed="documentViewStore.embeddedPdf"
+          :no-embed="isConverted"
           class="flex-shrink-0 ms-auto"
         />
       </template>
@@ -317,7 +324,7 @@ watch(pdfSrc, async () => {
         <div class="text-center fw-medium">
           <p>{{ t('documentViewerPdf.error') }}</p>
           <button-icon
-            v-if="embeddable"
+            v-if="canEmbed"
             :label="t('documentViewerPdf.switch')"
             :icon-left="IPhFilePdf"
             @click="documentViewStore.embeddedPdf = true"

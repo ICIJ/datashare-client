@@ -14,11 +14,11 @@ vi.mock('pdfjs-dist', () => ({
 }))
 
 // useWait needs an active component instance.
-function withUsePDF(src) {
+function withUsePDF(src, options) {
   let api
   const Host = defineComponent({
     setup() {
-      api = usePDF(src)
+      api = usePDF(src, options)
       return () => null
     }
   })
@@ -95,5 +95,11 @@ describe('usePDF', () => {
     getDocument.mockReturnValue({ promise: Promise.reject(new Error('404')), destroy: vi.fn() })
     await load('http://preview/b')
     expect(pdfDoc.value).toBeNull()
+  })
+
+  it('sends the given HTTP headers', async () => {
+    getDocument.mockReturnValue({ promise: new Promise(() => {}), destroy: vi.fn() })
+    withUsePDF('http://preview/a', { httpHeaders: { 'X-Session': 'abc' } })
+    expect(getDocument).toHaveBeenCalledWith(expect.objectContaining({ httpHeaders: { 'X-Session': 'abc' } }))
   })
 })

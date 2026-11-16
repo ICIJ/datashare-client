@@ -13,6 +13,12 @@ const rotation = defineModel('rotation', { type: Number, default: 0 })
 const scale = defineModel('scale', { type: [Number, String], default: SCALE_FIT })
 const embed = defineModel('embed', { type: Boolean, default: false })
 
+defineProps({
+  noEmbed: {
+    type: Boolean
+  }
+})
+
 const scrollParent = useScrollParent({ node: document.body })
 </script>
 
@@ -25,7 +31,9 @@ const scrollParent = useScrollParent({ node: document.body })
     <document-viewer-pdf-dropdown-rotation-counter-clockwise v-model="rotation" />
     <b-dropdown-divider />
     <document-viewer-pdf-dropdown-scale v-model="scale" />
-    <b-dropdown-divider />
-    <document-viewer-pdf-dropdown-embed v-model="embed" />
+    <template v-if="!noEmbed">
+      <b-dropdown-divider />
+      <document-viewer-pdf-dropdown-embed v-model="embed" />
+    </template>
   </app-dropdown>
 </template>
