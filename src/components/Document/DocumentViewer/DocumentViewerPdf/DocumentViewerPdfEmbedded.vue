@@ -13,6 +13,10 @@ defineProps({
   document: {
     type: Object,
     required: true
+  },
+  src: {
+    type: String,
+    default: null
   }
 })
 
@@ -33,7 +37,7 @@ const { t } = useI18n()
     />
     <iframe
       v-else
-      :src="document.inlineFullUrl"
+      :src="src ?? document.inlineFullUrl"
       class="document-viewer-pdf-embedded__iframe rounded"
       frameborder="0"
       allowfullscreen

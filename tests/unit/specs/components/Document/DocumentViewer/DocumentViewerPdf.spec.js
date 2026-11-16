@@ -4,10 +4,14 @@ import { defineComponent, h, ref } from 'vue'
 import CoreSetup from '~tests/unit/CoreSetup'
 import DocumentViewerPdf from '@/components/Document/DocumentViewer/DocumentViewerPdf'
 import DocumentToolbox from '@/components/Document/DocumentToolbox/DocumentToolbox'
+import DocumentViewerPdfEmbedded from '@/components/Document/DocumentViewer/DocumentViewerPdf/DocumentViewerPdfEmbedded'
+import { useDocumentViewStore } from '@/store/modules/documentView'
 
 const findHighlights = vi.fn().mockResolvedValue([])
 const pdf = ref(null)
 const sizes = ref([])
+const error = ref(null)
+let usePDFSrc = null
 
 // @tato30/vue-pdf bundles its own pdfjs-dist copy, which constructs a
 // DOMMatrix at module scope; jsdom has no DOMMatrix, so merely importing the
@@ -24,16 +28,20 @@ vi.mock('@/api/apiInstance', () => ({
 
 vi.mock('@/composables/usePDF', () => {
   return {
-    usePDF: () => ({
-      findHighlights,
-      load: vi.fn(),
-      isLoading: { value: false },
-      loaderId: 'pdf',
-      pdf,
-      pdfDoc: { value: null },
-      numPages: ref(3),
-      sizes
-    })
+    usePDF: (src) => {
+      usePDFSrc = src
+      return {
+        error,
+        findHighlights,
+        load: vi.fn(),
+        isLoading: { value: false },
+        loaderId: 'pdf',
+        pdf,
+        pdfDoc: { value: null },
+        numPages: ref(3),
+        sizes
+      }
+    }
   }
 })
 
@@ -47,10 +55,10 @@ describe('DocumentViewerPdf.vue', () => {
     tags: []
   }
 
-  function mountViewer(stubs = {}) {
+  function mountViewer(stubs = {}, props = {}) {
     const { plugins } = CoreSetup.init().useAll()
     return shallowMount(DocumentViewerPdf, {
-      props: { document },
+      props: { document, ...props },
       global: { plugins, renderStubDefaultSlot: true, stubs: { DocumentToolbox: false, ...stubs } }
     })
   }
@@ -60,6 +68,8 @@ describe('DocumentViewerPdf.vue', () => {
     vi.useFakeTimers({ shouldAdvanceTime: true })
     pdf.value = null
     sizes.value = []
+    error.value = null
+    usePDFSrc = null
     findHighlights.mockResolvedValue([])
   })
 
@@ -131,5 +141,38 @@ describe('DocumentViewerPdf.vue', () => {
   it('offsets the pages by the height the toolbox reports', async () => {
     const wrapper = mountViewer()
     expect(wrapper.vm.toolboxHeight).toBe(0)
+  })
+
+  it('loads the document URL when no src is given', () => {
+    mountViewer()
+    expect(usePDFSrc.value).toBe('http://localhost/doc.pdf')
+  })
+
+  it('loads the given src', () => {
+    mountViewer({}, { src: 'http://preview/api/v1/pdf/foo/doc-id?routing=root-id' })
+    expect(usePDFSrc.value).toBe('http://preview/api/v1/pdf/foo/doc-id?routing=root-id')
+  })
+
+  it('emits error when the PDF fails to load', async () => {
+    const wrapper = mountViewer()
+    error.value = new Error('415')
+    await flushPromises()
+    expect(wrapper.emitted('error')[0][0].message).toBe('415')
+  })
+
+  describe('in embedded mode', () => {
+    afterEach(() => {
+      useDocumentViewStore().embeddedPdf = false
+    })
+
+    it('passes src to the embedded viewer', () => {
+      const { plugins } = CoreSetup.init().useAll()
+      useDocumentViewStore().embeddedPdf = true
+      const wrapper = shallowMount(DocumentViewerPdf, {
+        props: { document, src: 'http://preview/api/v1/pdf/foo/doc-id?routing=root-id' },
+        global: { plugins }
+      })
+      expect(wrapper.findComponent(DocumentViewerPdfEmbedded).props('src')).toBe('http://preview/api/v1/pdf/foo/doc-id?routing=root-id')
+    })
   })
 })

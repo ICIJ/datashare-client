@@ -28,16 +28,22 @@ const props = defineProps({
   compactThreshold: {
     type: Number,
     default: 770
+  },
+  src: {
+    type: String,
+    default: null
   }
 })
+
+const emit = defineEmits(['error'])
 
 const SCROLL_IDLE_DELAY = 200
 const SCROLL_KEYS = ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' ']
 const FORM_CONTROLS = 'input, textarea, select, [contenteditable]'
 
 const documentViewStore = useDocumentViewStore()
-const src = computed(() => (documentViewStore.embeddedPdf ? null : props.document.fullUrl))
-const { pdf, numPages, sizes, findHighlights, loaderId: pdfLoaderId } = usePDF(src)
+const pdfSrc = computed(() => (documentViewStore.embeddedPdf ? null : (props.src ?? props.document.fullUrl)))
+const { pdf, numPages, sizes, error, findHighlights, loaderId: pdfLoaderId } = usePDF(pdfSrc)
 const { t } = useI18n()
 const { isBlurred, getBlurredContentBanner } = useDocumentPreview()
 
@@ -228,7 +234,13 @@ watch(pdf, () => {
   refreshHighlights()
 })
 
-watch(src, async () => {
+watch(error, (value) => {
+  if (value) {
+    emit('error', value)
+  }
+})
+
+watch(pdfSrc, async () => {
   blurred.value ??= await isBlurred(props.document)
   if (blurred.value) {
     blurredContent.value = await getBlurredContentBanner(props.document)
@@ -242,6 +254,7 @@ watch(src, async () => {
     v-model="documentViewStore.embeddedPdf"
     v-model:blurred="blurred"
     :document="document"
+    :src="src"
   />
   <div
     v-else
