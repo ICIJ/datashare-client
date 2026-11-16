@@ -106,6 +106,29 @@ describe('DocumentView.vue', () => {
     expect(window.history.state.back).toBe('/')
   })
 
+  it('should keep the document page behind a no-route view when its document fails', async () => {
+    const props = { id: 'notfound', index: project, noRoute: true }
+    const global = { plugins: core.plugins, renderStubDefaultSlot: true }
+    api.elasticsearch.getDocumentWithoutContent.mockRejectedValue(new Error('Not found'))
+    shallowMount(DocumentView, { global, props })
+    await flushPromises()
+    expect(core.router.currentRoute.value.name).toBe('error')
+    expect(core.router.currentRoute.value.fullPath).toBe('/document-standalone')
+    expect(window.history.state.back).toBe('/document')
+  })
+
+  it('should not change the tab of the route with no-route', async () => {
+    await core.router.push({ name: 'document', query: { tab: 'metadata' } })
+    const global = { plugins: core.plugins, renderStubDefaultSlot: true }
+    const wrapper = shallowMount(DocumentView, { global, props: { ...props, noRoute: true } })
+    await flushPromises()
+    const tabs = wrapper.findComponent({ name: 'DocumentViewTabs' })
+    await tabs.vm.$emit('update:tab', 'entities')
+    await flushPromises()
+    expect(tabs.props('tab')).toBe('entities')
+    expect(core.router.currentRoute.value.query.tab).toBe('metadata')
+  })
+
   it('should keep the previous document in the history when the next one fails', async () => {
     const routes = [
       { path: '/:pathMatch(.*)*', name: 'error' },

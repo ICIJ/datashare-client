@@ -73,10 +73,12 @@ const { document, fetchDocumentOnce, loaderId } = useDocument(elementRef)
 const { t } = useI18n()
 
 // Ensure legacy tab names are replaced with new ones for backward compatibility
-replaceUrlParamValue({ name: 'tab', oldValue: 'extracted-text', newValue: 'text' })
-replaceUrlParamValue({ name: 'tab', oldValue: 'preview', newValue: 'view' })
-replaceUrlParamValue({ name: 'tab', oldValue: 'details', newValue: 'metadata' })
-replaceUrlParamValue({ name: 'tab', oldValue: 'named-entities', newValue: 'entities' })
+if (!props.noRoute) {
+  replaceUrlParamValue({ name: 'tab', oldValue: 'extracted-text', newValue: 'text' })
+  replaceUrlParamValue({ name: 'tab', oldValue: 'preview', newValue: 'view' })
+  replaceUrlParamValue({ name: 'tab', oldValue: 'details', newValue: 'metadata' })
+  replaceUrlParamValue({ name: 'tab', oldValue: 'named-entities', newValue: 'entities' })
+}
 
 // We cannot use a <router-view> to display the tabs because the document view must be independent of the router.
 // This independence is crucial to allow the document view to be used in various contexts, such as displaying a document
@@ -122,11 +124,20 @@ const tabs = computed(() => {
 // This synchronization ensures that when switching from one document to another, the active tab remains consistent.
 // For example, if the user is viewing the "metadata" tab of one document and navigates to another document,
 // the application will automatically display the "metadata" tab for the new document as well.
-const tab = useUrlParamWithStore('tab', {
-  initialValue: 'text',
-  get: () => appStore.getSettings('documentView', 'tab'),
-  set: tab => appStore.setSettings('documentView', { tab })
-})
+// Without a route, the tab stays local so the page behind keeps its own.
+const useTab = () => {
+  if (props.noRoute) {
+    const settingsTab = appStore.getSettings('documentView', 'tab')
+    return ref(settingsTab ?? 'text')
+  }
+  return useUrlParamWithStore('tab', {
+    initialValue: 'text',
+    get: () => appStore.getSettings('documentView', 'tab'),
+    set: tab => appStore.setSettings('documentView', { tab })
+  })
+}
+
+const tab = useTab()
 
 const component = ref(null)
 
@@ -137,7 +148,7 @@ const isDocumentRoute = ({ name }) => ['document', 'document-standalone'].includ
 const redirectToError = (failedRoute, details, { pending = false } = {}) => {
   const { message: error, status: code } = documentStore.error ?? {}
   const state = { error, code, details, reason: 'document' }
-  const isOwnRoute = isDocumentRoute(failedRoute)
+  const isOwnRoute = !props.noRoute && isDocumentRoute(failedRoute)
   const target = isOwnRoute ? failedRoute : router.resolve({ name: 'document-standalone', params: details })
   const location = errorLocation(target, state)
   const replace = isOwnRoute && !pending
@@ -255,7 +266,9 @@ onBeforeRouteUpdate(to => fetchRouteDocument(to, { pending: true }))
         </template>
       </parent-overflow>
       <document-view-tabs
+        v-model:tab="tab"
         :tabs="tabs"
+        :no-route="noRoute"
       />
       <app-wait :for="tabLoaderId">
         <component
