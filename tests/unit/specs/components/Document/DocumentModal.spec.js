@@ -18,7 +18,10 @@ describe('DocumentModal.vue', () => {
   beforeEach(async () => {
     vi.spyOn(api, 'addHistoryEvent').mockResolvedValue({})
     vi.spyOn(api.elasticsearch, 'getDocumentWithoutContent').mockImplementation((index, id) => createHit(id))
-    const routes = [{ path: '/ds/:index/:id/:routing?', name: 'document-standalone' }]
+    const routes = [
+      { path: '/ds/:index/:id/:routing?', name: 'document-standalone' },
+      { path: '/search', name: 'search' }
+    ]
     core = CoreSetup.init().useAll().useRouter(routes)
     documentStore = useDocumentStore()
     await core.router.push({ name: 'document-standalone', params: { index: 'idx', id: 'archive' } })
@@ -44,6 +47,22 @@ describe('DocumentModal.vue', () => {
     }, { timeout: 5000 })
     await flushPromises()
     expect(documentStore.document.id).toBe('archive')
+  })
+
+  it('keeps its own document store outside of a document page', async () => {
+    await core.router.push({ name: 'search' })
+    const stores = []
+    const RouteComponent = {
+      setup() {
+        stores.push(useDocumentStore.inject())
+      },
+      template: '<div />'
+    }
+    const stubs = { DocumentFloating: { template: '<div><slot /></div>' } }
+    const slots = { default: RouteComponent }
+    mount(DocumentModal, { global: { plugins: core.plugins, stubs }, props: { id: 'child', modelValue: true }, slots })
+    await flushPromises()
+    expect(stores[0].$id).not.toBe(documentStore.$id)
   })
 
   it('shares the document store of the page when it shows the route document', async () => {

@@ -8,7 +8,6 @@ import DocumentFloating from '@/components/Document/DocumentFloating'
 import { onRouteLeaveNotMatch } from '@/composables/onRouteLeaveNotMatch'
 import { onRouteUpdateNotMatch } from '@/composables/onRouteUpdateNotMatch'
 import { useCompact } from '@/composables/useCompact'
-import { useDocument } from '@/composables/useDocument'
 import { DISPLAY } from '@/enums/documentFloating'
 import { useDocumentStore } from '@/store/modules'
 
@@ -41,10 +40,8 @@ const documentFloatingRef = useTemplateRef('document-floating')
 const { hide } = useModal(modalId)
 const { compact } = useCompact(documentFloatingRef, { threshold: 660 })
 const display = computed(() => compact.value ? DISPLAY.END : DISPLAY.BOTH)
-const { documentRoute } = useDocument()
-
-// A document opened over a document page must not replace the page's one
-if (props.id && documentRoute.value) {
+// A document opened by id must not replace the page's one
+if (props.id) {
   useDocumentStore.disposable()
 }
 
