@@ -281,7 +281,6 @@ const entries = computed(() => {
 })
 
 const infiniteId = ref(uniqueId('infinite-search-filter-'))
-// Observe from the filter's own scroll box
 const infiniteTarget = computed(() => `.${infiniteId.value}`)
 const reachedBucketsEnd = computed(() => pages.length && lastPageBuckets.value.length < size.value)
 
