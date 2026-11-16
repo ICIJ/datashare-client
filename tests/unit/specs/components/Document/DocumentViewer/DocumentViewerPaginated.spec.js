@@ -1,5 +1,6 @@
 import { flushPromises, mount } from '@vue/test-utils'
 import axios from 'axios'
+import { nextTick } from 'vue'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import DocumentToolbox from '@/components/Document/DocumentToolbox/DocumentToolbox'
@@ -9,6 +10,25 @@ vi.mock('axios')
 
 describe('DocumentViewerPaginated.vue', () => {
   let core
+  let observers
+
+  class FakeIntersectionObserver {
+    constructor(callback) {
+      this.callback = callback
+    }
+
+    observe(target) {
+      observers.push({ callback: this.callback, target })
+    }
+
+    disconnect() {}
+  }
+
+  function reportVisibility(page, intersectionRatio) {
+    const { callback, target } = observers.find(({ target }) => target.dataset.page === String(page))
+    const isIntersecting = intersectionRatio > 0
+    callback([{ target, isIntersecting, intersectionRatio }])
+  }
 
   const document = { index: 'local', id: 'doc', routing: 'root', contentType: 'application/msword' }
 
@@ -26,6 +46,12 @@ describe('DocumentViewerPaginated.vue', () => {
     core = CoreSetup.init().useAll()
     core.config.set('previewHost', 'http://preview')
     Element.prototype.scrollIntoView = vi.fn()
+    observers = []
+    window.IntersectionObserver = FakeIntersectionObserver
+  })
+
+  afterEach(() => {
+    delete window.IntersectionObserver
   })
 
   it('renders the toolbox without search and with the page count', async () => {
@@ -46,6 +72,23 @@ describe('DocumentViewerPaginated.vue', () => {
     const scrollIntoView = vi.spyOn(pages[1].element, 'scrollIntoView')
     await wrapper.findComponent(DocumentToolbox).vm.$emit('update:page', 2)
     expect(scrollIntoView).toHaveBeenCalled()
+  })
+
+  it('shows the topmost page at least half visible when several are', async () => {
+    const wrapper = await mountViewer({ pages: 3, previewable: true })
+    reportVisibility(2, 1)
+    reportVisibility(3, 1)
+    await nextTick()
+    expect(wrapper.findComponent(DocumentToolbox).props('page')).toBe(2)
+  })
+
+  it('moves to the next page once the current one is less than half visible', async () => {
+    const wrapper = await mountViewer({ pages: 3, previewable: true })
+    reportVisibility(2, 1)
+    reportVisibility(3, 1)
+    reportVisibility(2, 0.4)
+    await nextTick()
+    expect(wrapper.findComponent(DocumentToolbox).props('page')).toBe(3)
   })
 
   it('renders no toolbox for a single page', async () => {

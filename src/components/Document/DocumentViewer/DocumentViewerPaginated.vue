@@ -142,9 +142,18 @@ const style = computed(() => {
   }
 })
 
+const halfVisiblePages = new Set()
+
 function onPageIntersectionObserver([entry]) {
-  if (entry.isIntersecting) {
-    page.value = parseInt(entry.target.getAttribute('data-page'), 10)
+  const value = parseInt(entry.target.getAttribute('data-page'), 10)
+  if (entry.intersectionRatio >= 0.5) {
+    halfVisiblePages.add(value)
+  }
+  else {
+    halfVisiblePages.delete(value)
+  }
+  if (halfVisiblePages.size) {
+    page.value = Math.min(...halfVisiblePages)
   }
 }
 
