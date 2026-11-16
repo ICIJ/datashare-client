@@ -71,7 +71,7 @@ watch(documents, refresh)
     </div>
     <div
       v-else
-      class="py-3"
+      class="document-viewer-archive__tree py-3"
     >
       <p
         v-if="isOverLimit"
@@ -108,5 +108,9 @@ watch(documents, refresh)
 ::highlight(archive-search-term-active) {
   background-color: #38d878;
   color: black;
+}
+
+.document-viewer-archive__tree {
+  isolation: isolate;
 }
 </style>
