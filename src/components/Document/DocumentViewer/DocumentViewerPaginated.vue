@@ -11,63 +11,35 @@
     </template>
     <div
       v-if="isPreviewable"
-      class="d-flex flex-grow-1"
+      class="d-flex flex-column flex-grow-1"
+      :style="style"
     >
-      <div class="paginated-viewer__thumbnails bg-tertiary-subtle">
-        <div class="text-center p-2 d-flex align-items-center paginated-viewer__thumbnails__select">
-          <select
-            v-model.number="active"
-            class="form-control form-control-sm"
-            @change="scrollToPageAndThumbnail(active)"
-          >
-            <option
-              v-for="page in pagesRange"
-              :key="page"
-              :value="page"
-            >
-              {{ page + 1 }}
-            </option>
-          </select>
-          <span class="w-100"> / {{ meta.pages }} </span>
-        </div>
-        <div class="paginated-viewer__thumbnails__items">
-          <div
-            v-for="page in pagesRange"
-            :key="`thumbnail-${page}`"
-            class="paginated-viewer__thumbnails__items__item m-2"
-            :class="{ 'paginated-viewer__thumbnails__items__item--active': active === page }"
-            @click="setActiveAndScrollToPage(page)"
-          >
-            <document-thumbnail
-              :document="document"
-              :page="page"
-              size="md"
-              fit
-            />
-            <span class="paginated-viewer__thumbnails__items__item__page">
-              {{ page + 1 }}
-            </span>
-          </div>
-        </div>
-      </div>
+      <document-toolbox
+        v-if="hasPagination"
+        ref="toolbox"
+        v-model:page="currentPage"
+        no-search
+        :document="document"
+        :total-pages="meta.pages"
+      />
       <div
         class="paginated-viewer__preview flex-grow-1 text-center d-flex flex-column flex-wrap align-items-center gap-5"
       >
         <div
-          v-for="page in pagesRange"
-          :key="page"
+          v-for="index in pagesRange"
+          :key="index"
           class="paginated-viewer__preview__page w-100 text-center px-3"
         >
           <document-thumbnail
             v-intersection-observer="[onPageIntersectionObserver, { threshold: 0.5 }]"
             class="border d-inline-block"
-            :data-page="page + 1"
+            :data-page="index + 1"
             :document="document"
             lazy
             fit
-            :page="page"
+            :page="index"
             size="xl"
-            @errored.once="errored = page === 0"
+            @errored.once="errored = index === 0"
           />
         </div>
       </div>
@@ -82,7 +54,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, useTemplateRef } from 'vue'
 import { vIntersectionObserver } from '@vueuse/components'
 import get from 'lodash/get'
 import range from 'lodash/range'
@@ -93,6 +65,7 @@ import { useConfig } from '@/composables/useConfig'
 import { useWait } from '@/composables/useWait'
 import { useDocumentPreview } from '@/composables/useDocumentPreview'
 import AppWait from '@/components/AppWait/AppWait'
+import DocumentToolbox from '@/components/Document/DocumentToolbox/DocumentToolbox'
 import DocumentThumbnail from '@/components/Document/DocumentThumbnail/DocumentThumbnail'
 
 /**
@@ -110,7 +83,7 @@ const { getPreviewMetaUrl, sessionIdHeaderName, sessionIdHeaderValue } = useDocu
 const wait = useWait()
 const config = useConfig()
 
-const active = ref(0)
+const page = ref(1)
 const errored = ref(false)
 const meta = ref({
   pages: 1
@@ -158,44 +131,36 @@ async function fetchMeta() {
   return data
 }
 
+const hasPagination = computed(() => meta.value.pages > 1)
+
+const toolbox = useTemplateRef('toolbox')
+const toolboxHeight = computed(() => toolbox.value?.height ?? 0)
+
+const style = computed(() => {
+  return {
+    '--paginated-viewer-toolbox-height': `${toolboxHeight.value}px`
+  }
+})
+
 function onPageIntersectionObserver([entry]) {
   if (entry.isIntersecting) {
-    const page = parseInt(entry.target.getAttribute('data-page'), 10) - 1
-    if (active.value !== page) {
-      setActiveAndScrollToThumbnail(page)
-    }
+    page.value = parseInt(entry.target.getAttribute('data-page'), 10)
   }
 }
 
-function setActiveAndScrollToThumbnail(page) {
-  active.value = page
-  scrollToThumbnail(page)
-}
-
-function setActiveAndScrollToPage(page) {
-  active.value = page
-  scrollToPage(page)
-}
-
-// Create refs for the component root element
 const componentRoot = ref(null)
 
-function scrollToThumbnail(page) {
-  const thumbnails = componentRoot.value.querySelectorAll('.paginated-viewer__thumbnails__items__item')
-  const target = thumbnails[page]
-  target.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+function scrollToPage(value) {
+  page.value = value
+  const previews = componentRoot.value.$el.querySelectorAll('.paginated-viewer__preview__page')
+  const target = previews[value - 1]
+  target?.scrollIntoView({ behavior: 'instant', block: 'start' })
 }
 
-function scrollToPage(page) {
-  const previews = componentRoot.value.querySelectorAll('.paginated-viewer__preview__page')
-  const target = previews[page]
-  target.scrollIntoView({ behavior: 'instant', block: 'nearest' })
-}
-
-function scrollToPageAndThumbnail(page) {
-  scrollToPage(page)
-  scrollToThumbnail(page)
-}
+const currentPage = computed({
+  get: () => page.value,
+  set: scrollToPage
+})
 
 onMounted(async () => {
   if (hasPreviewHost.value) {
@@ -215,50 +180,8 @@ onMounted(async () => {
 .paginated-viewer {
   min-height: 90vh;
 
-  &__thumbnails {
-    width: 150px;
-    position: sticky;
-    top: 0;
-    display: flex;
-    flex-direction: column;
-    max-height: 100vh;
-
-    &__items {
-      height: 100%;
-      overflow: auto;
-
-      &__item {
-        border: 1px solid $border-color;
-        cursor: pointer;
-        position: relative;
-        display: flex;
-
-        &:hover {
-          border-color: $action;
-          box-shadow: 0 0 0 0.1em rgba($action, 0.2);
-        }
-
-        &--active,
-        &--active:hover {
-          border-color: $primary;
-        }
-
-        &--active &__page {
-          background: $primary;
-          color: white;
-        }
-
-        &__page {
-          background: $tertiary;
-          bottom: 0;
-          font-size: 0.8rem;
-          font-weight: bold;
-          padding: 0.2em 0.4em;
-          position: absolute;
-          right: 0;
-        }
-      }
-    }
+  &__preview__page {
+    scroll-margin-top: var(--paginated-viewer-toolbox-height, 0px);
   }
 
   &__preview__page > .document-thumbnail:before {
