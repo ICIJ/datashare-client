@@ -48,4 +48,19 @@ describe('usePDF', () => {
     await load('http://preview/other')
     expect(error.value).toBeNull()
   })
+
+  it('ignores a failure from a previous source', async () => {
+    let rejectStale
+    const stale = new Promise((resolve, reject) => {
+      rejectStale = reject
+    })
+    getDocument.mockReturnValue({ promise: stale, destroy: vi.fn() })
+    const { error, load } = withUsePDF('http://preview/a')
+    const pdfDoc = { numPages: 0, destroy: vi.fn() }
+    getDocument.mockReturnValue({ promise: Promise.resolve(pdfDoc), destroy: vi.fn() })
+    await load('http://preview/b')
+    rejectStale(new Error('504'))
+    await flushPromises()
+    expect(error.value).toBeNull()
+  })
 })

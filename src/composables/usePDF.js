@@ -18,6 +18,7 @@ export function usePDF(src) {
   const numPages = computed(() => pdfDoc.value?.numPages ?? 0)
   const sizes = shallowRef([])
   const error = shallowRef(null)
+  let currentLoadingTask = null
   const { waitFor, isLoading, loaderId } = useWait()
 
   if (!PDFJS.GlobalWorkerOptions?.workerSrc) {
@@ -40,13 +41,17 @@ export function usePDF(src) {
 
     const wasmUrl = `https://unpkg.com/pdfjs-dist@${PDFJS.version}/wasm/`
     const loadingTask = PDFJS.getDocument({ url: src, wasmUrl })
+    currentLoadingTask = loadingTask
 
     error.value = null
     try {
       pdfDoc.value = await loadingTask.promise
     }
     catch (err) {
-      error.value = err
+      // A slow conversion of the previous source can fail after a newer source started loading.
+      if (loadingTask === currentLoadingTask) {
+        error.value = err
+      }
       return
     }
     sizes.value = []
