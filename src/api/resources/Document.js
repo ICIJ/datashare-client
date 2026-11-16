@@ -419,7 +419,8 @@ export default class Document extends EsDoc {
   }
 
   get isPdfConvertible() {
-    return PDF_CONVERTIBLE_CONTENT_TYPES.includes(this.contentType)
+    const mimeType = this.contentType.split(';')[0].trim()
+    return PDF_CONVERTIBLE_CONTENT_TYPES.includes(mimeType)
   }
 
   get isTiff() {

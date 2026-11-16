@@ -185,6 +185,11 @@ describe('Document', () => {
       expect(doc.isPdfConvertible).toBe(true)
     })
 
+    it('should be convertible to PDF when the content type has parameters', () => {
+      const doc = new Document({ _source: { contentType: 'text/rtf; charset=UTF-8' } })
+      expect(doc.isPdfConvertible).toBe(true)
+    })
+
     it.each(notConvertible)('should NOT be convertible to PDF for %s', (contentType) => {
       const doc = new Document({ _source: { contentType } })
       expect(doc.isPdfConvertible).toBe(false)
