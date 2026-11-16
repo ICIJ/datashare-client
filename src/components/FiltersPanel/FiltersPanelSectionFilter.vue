@@ -233,6 +233,7 @@ const isVisible = computed(() => props.modal || !collapse.value)
 
   &--modal &__content__search {
     top: 0;
+    left: 0;
     padding: $spacer-sm 0;
   }
 
