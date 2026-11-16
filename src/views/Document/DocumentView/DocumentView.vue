@@ -141,7 +141,9 @@ const redirectToError = (failedRoute, details, { pending = false } = {}) => {
 }
 
 const fetchRouteDocument = async (failedRoute = route, options) => {
-  const { index = props.index, id = props.id, routing = props.routing } = failedRoute.params ?? {}
+  // A modal shows its own document, not the one of the page behind it
+  const params = modal ? {} : failedRoute.params
+  const { index = props.index, id = props.id, routing = props.routing } = params ?? {}
   await fetchDocumentOnce({ index, id, routing })
 
   // No document found, redirect to error page

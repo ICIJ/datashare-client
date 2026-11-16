@@ -7,6 +7,7 @@ import AppModal from '@/components/AppModal/AppModal'
 import DocumentFloating from '@/components/Document/DocumentFloating'
 import { onRouteLeaveNotMatch } from '@/composables/onRouteLeaveNotMatch'
 import { onRouteUpdateNotMatch } from '@/composables/onRouteUpdateNotMatch'
+import { useDocument } from '@/composables/useDocument'
 import { useCompact } from '@/composables/useCompact'
 import { DISPLAY } from '@/enums/documentFloating'
 
@@ -39,6 +40,14 @@ const documentFloatingRef = useTemplateRef('document-floating')
 const { hide } = useModal(modalId)
 const { compact } = useCompact(documentFloatingRef, { threshold: 660 })
 const display = computed(() => compact.value ? DISPLAY.END : DISPLAY.BOTH)
+const { documentRoute, fetchDocumentOnce } = useDocument()
+
+// The modal and the page behind it share the document store
+function restorePageDocument() {
+  if (documentRoute.value) {
+    fetchDocumentOnce(route.params)
+  }
+}
 
 onRouteLeaveNotMatch(route.name, () => hide())
 onRouteUpdateNotMatch(route.name, () => hide())
@@ -55,6 +64,7 @@ onRouteUpdateNotMatch(route.name, () => hide())
     no-header-close
     fullscreen
     lazy
+    @hidden="restorePageDocument"
   >
     <document-floating
       ref="document-floating"

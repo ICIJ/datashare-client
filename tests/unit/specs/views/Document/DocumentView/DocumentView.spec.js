@@ -137,6 +137,16 @@ describe('DocumentView.vue', () => {
     expect(api.elasticsearch.getDocumentWithoutContent).toBeCalledWith(project, parentId, null)
   })
 
+  it('should retrieve the document from its props in a modal opened over another document', async () => {
+    const routes = [{ path: '/ds/:index/:id/:routing?', name: 'document-standalone' }]
+    const core = CoreSetup.init().useAll().useRouter(routes)
+    await core.router.push({ name: 'document-standalone', params: { index: project, id: parentId } })
+    const global = { plugins: core.plugins, provide: { modal: true } }
+    shallowMount(DocumentView, { global, props })
+    await flushPromises()
+    expect(api.elasticsearch.getDocumentWithoutContent).toHaveBeenNthCalledWith(1, project, id, parentId)
+  })
+
   it('should call the API to retrieve document tags', async () => {
     shallowMount(DocumentView, {
       global: {
