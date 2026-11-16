@@ -36,6 +36,9 @@ const props = defineProps({
   noCount: {
     type: Boolean
   },
+  noSearch: {
+    type: Boolean
+  },
   targetLanguage: {
     type: String,
     default: null
@@ -78,6 +81,7 @@ defineExpose({ height })
         :name="hookName('toolbox.local-search:before')"
       />
       <document-local-search
+        v-if="!noSearch"
         v-model="search"
         v-model:active-index="activeIndex"
         :compact="compact"
@@ -96,6 +100,7 @@ defineExpose({ height })
       />
       <fieldset
         :disabled="disabled"
+        :class="{ 'ms-auto': noSearch }"
         class="document-toolbox__controls d-flex flex-nowrap align-items-center gap-2"
       >
         <div
@@ -118,6 +123,7 @@ defineExpose({ height })
       </fieldset>
     </div>
     <document-global-search-terms
+      v-if="!noSearch"
       :document="document"
       :target-language="targetLanguage"
       :no-count="noCount"

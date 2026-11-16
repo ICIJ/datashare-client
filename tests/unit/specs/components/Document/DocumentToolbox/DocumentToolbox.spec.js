@@ -45,6 +45,17 @@ describe('DocumentToolbox.vue', () => {
     expect(wrapper.findComponent(PaginationTiny).exists()).toBe(false)
   })
 
+  it('hides the local search field and the global search terms with noSearch', () => {
+    const wrapper = mountToolbox({ noSearch: true, totalPages: 4 })
+    expect(wrapper.findComponent(DocumentLocalSearch).exists()).toBe(false)
+    expect(wrapper.findComponent({ name: 'DocumentGlobalSearchTerms' }).exists()).toBe(false)
+  })
+
+  it('pushes the controls to the right with noSearch', () => {
+    const wrapper = mountToolbox({ noSearch: true, totalPages: 4 })
+    expect(wrapper.find('.document-toolbox__controls').classes()).toContain('ms-auto')
+  })
+
   it('renders the dropdown slot', () => {
     const slots = { dropdown: '<span class="my-dropdown" />' }
     const wrapper = mountToolbox({}, { slots })
