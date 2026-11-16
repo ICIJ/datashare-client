@@ -32,8 +32,10 @@ export function usePDF(src) {
    * @returns {Promise<void>} - A promise that resolves when the PDF is loaded.
    */
   const load = waitFor(async (src = srcRef.value) => {
-    // If the PDF document is already loaded, destroy it before loading a new one
-    if (pdfDoc.value) pdfDoc.value.destroy()
+    // Destroying the loading task also destroys its document, or stops it if it is still loading
+    currentLoadingTask?.destroy()
+    currentLoadingTask = null
+    pdfDoc.value = null
     // If the source has not changed, do not perform unecessary change
     if (srcRef.value !== src) srcRef.value = src
     // If the source is not provided, do not load anything
@@ -44,8 +46,9 @@ export function usePDF(src) {
     currentLoadingTask = loadingTask
 
     error.value = null
+    let doc
     try {
-      pdfDoc.value = await loadingTask.promise
+      doc = await loadingTask.promise
     }
     catch (err) {
       // A slow conversion of the previous source can fail after a newer source started loading.
@@ -54,6 +57,10 @@ export function usePDF(src) {
       }
       return
     }
+    if (loadingTask !== currentLoadingTask) {
+      return
+    }
+    pdfDoc.value = doc
     sizes.value = []
 
     for (let page = 1; page <= numPages.value; page++) {

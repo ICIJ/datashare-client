@@ -33,18 +33,18 @@ describe('usePDF', () => {
   })
 
   it('sets error when the document fails to load', async () => {
-    getDocument.mockReturnValue({ promise: Promise.reject(new Error('415')) })
+    getDocument.mockReturnValue({ promise: Promise.reject(new Error('415')), destroy: vi.fn() })
     const { error } = withUsePDF('http://preview/pdf')
     await flushPromises()
     expect(error.value.message).toBe('415')
   })
 
   it('resets error on a successful load', async () => {
-    getDocument.mockReturnValue({ promise: Promise.reject(new Error('415')) })
+    getDocument.mockReturnValue({ promise: Promise.reject(new Error('415')), destroy: vi.fn() })
     const { error, load } = withUsePDF('http://preview/pdf')
     await flushPromises()
     const pdfDoc = { numPages: 0, destroy: vi.fn() }
-    getDocument.mockReturnValue({ promise: Promise.resolve(pdfDoc) })
+    getDocument.mockReturnValue({ promise: Promise.resolve(pdfDoc), destroy: vi.fn() })
     await load('http://preview/other')
     expect(error.value).toBeNull()
   })
@@ -62,5 +62,38 @@ describe('usePDF', () => {
     rejectStale(new Error('504'))
     await flushPromises()
     expect(error.value).toBeNull()
+  })
+
+  it('ignores a success from a previous source', async () => {
+    let resolveStale
+    const stale = new Promise((resolve) => {
+      resolveStale = resolve
+    })
+    getDocument.mockReturnValue({ promise: stale, destroy: vi.fn() })
+    const { pdfDoc, load } = withUsePDF('http://preview/a')
+    const fresh = { numPages: 0, destroy: vi.fn() }
+    getDocument.mockReturnValue({ promise: Promise.resolve(fresh), destroy: vi.fn() })
+    await load('http://preview/b')
+    resolveStale({ numPages: 0, destroy: vi.fn() })
+    await flushPromises()
+    expect(pdfDoc.value).toBe(fresh)
+  })
+
+  it('destroys the previous loading task when another source loads', async () => {
+    const previous = { promise: new Promise(() => {}), destroy: vi.fn() }
+    getDocument.mockReturnValue(previous)
+    const { load } = withUsePDF('http://preview/a')
+    getDocument.mockReturnValue({ promise: Promise.resolve({ numPages: 0 }), destroy: vi.fn() })
+    await load('http://preview/b')
+    expect(previous.destroy).toHaveBeenCalled()
+  })
+
+  it('forgets the previous document when the next one fails', async () => {
+    getDocument.mockReturnValue({ promise: Promise.resolve({ numPages: 0 }), destroy: vi.fn() })
+    const { pdfDoc, load } = withUsePDF('http://preview/a')
+    await flushPromises()
+    getDocument.mockReturnValue({ promise: Promise.reject(new Error('404')), destroy: vi.fn() })
+    await load('http://preview/b')
+    expect(pdfDoc.value).toBeNull()
   })
 })
