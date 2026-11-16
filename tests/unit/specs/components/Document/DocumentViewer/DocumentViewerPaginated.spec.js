@@ -74,6 +74,43 @@ describe('DocumentViewerPaginated.vue', () => {
     expect(scrollIntoView).toHaveBeenCalled()
   })
 
+  it('animates the scroll to the picked page', async () => {
+    const wrapper = await mountViewer({ pages: 3, previewable: true })
+    const pages = wrapper.findAll('.paginated-viewer__preview__page')
+    const scrollIntoView = vi.spyOn(pages[2].element, 'scrollIntoView')
+    await wrapper.findComponent(DocumentToolbox).vm.$emit('update:page', 3)
+    expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'auto', block: 'start' })
+  })
+
+  it('keeps the picked page while the scroll runs past other pages', async () => {
+    const wrapper = await mountViewer({ pages: 3, previewable: true })
+    await wrapper.findComponent(DocumentToolbox).vm.$emit('update:page', 3)
+    reportVisibility(2, 1)
+    await nextTick()
+    expect(wrapper.findComponent(DocumentToolbox).props('page')).toBe(3)
+  })
+
+  it('realigns the picked page once the scroll settles', async () => {
+    vi.useFakeTimers()
+    const wrapper = await mountViewer({ pages: 3, previewable: true })
+    const pages = wrapper.findAll('.paginated-viewer__preview__page')
+    const scrollIntoView = vi.spyOn(pages[2].element, 'scrollIntoView')
+    await wrapper.findComponent(DocumentToolbox).vm.$emit('update:page', 3)
+    window.dispatchEvent(new Event('scroll'))
+    vi.advanceTimersByTime(200)
+    expect(scrollIntoView).toHaveBeenLastCalledWith({ behavior: 'instant', block: 'start' })
+    vi.useRealTimers()
+  })
+
+  it('follows the viewport again when the reader scrolls by hand', async () => {
+    const wrapper = await mountViewer({ pages: 3, previewable: true })
+    await wrapper.findComponent(DocumentToolbox).vm.$emit('update:page', 3)
+    window.dispatchEvent(new Event('wheel'))
+    reportVisibility(2, 1)
+    await nextTick()
+    expect(wrapper.findComponent(DocumentToolbox).props('page')).toBe(2)
+  })
+
   it('shows the topmost page at least half visible when several are', async () => {
     const wrapper = await mountViewer({ pages: 3, previewable: true })
     reportVisibility(2, 1)

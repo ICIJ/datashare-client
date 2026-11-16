@@ -56,6 +56,7 @@
 <script setup>
 import { ref, computed, onMounted, useTemplateRef } from 'vue'
 import { vIntersectionObserver } from '@vueuse/components'
+import { useDebounceFn, useEventListener } from '@vueuse/core'
 import get from 'lodash/get'
 import range from 'lodash/range'
 import axios from 'axios'
@@ -142,7 +143,14 @@ const style = computed(() => {
   }
 })
 
+const SCROLL_IDLE_DELAY = 200
+
 const halfVisiblePages = new Set()
+const pendingPage = ref(null)
+
+function topmostHalfVisiblePage() {
+  return halfVisiblePages.size ? Math.min(...halfVisiblePages) : page.value
+}
 
 function onPageIntersectionObserver([entry]) {
   const value = parseInt(entry.target.getAttribute('data-page'), 10)
@@ -152,18 +160,41 @@ function onPageIntersectionObserver([entry]) {
   else {
     halfVisiblePages.delete(value)
   }
-  if (halfVisiblePages.size) {
-    page.value = Math.min(...halfVisiblePages)
+  if (pendingPage.value === null) {
+    page.value = topmostHalfVisiblePage()
   }
 }
 
 const componentRoot = ref(null)
 
-function scrollToPage(value) {
-  page.value = value
+function scrollPageIntoView(value, behavior) {
   const previews = componentRoot.value.$el.querySelectorAll('.paginated-viewer__preview__page')
   const target = previews[value - 1]
-  target?.scrollIntoView({ behavior: 'instant', block: 'start' })
+  target?.scrollIntoView({ behavior, block: 'start' })
+}
+
+const settleScroll = useDebounceFn(() => {
+  if (pendingPage.value === null) {
+    return
+  }
+  // Pages above the target load lazily during the smooth scroll and push it down.
+  scrollPageIntoView(pendingPage.value, 'instant')
+  pendingPage.value = null
+}, SCROLL_IDLE_DELAY)
+
+function releasePendingPage() {
+  pendingPage.value = null
+  page.value = topmostHalfVisiblePage()
+}
+
+useEventListener(window, 'scroll', settleScroll, { capture: true, passive: true })
+useEventListener(window, ['wheel', 'touchmove', 'pointerdown'], releasePendingPage, { passive: true })
+
+function scrollToPage(value) {
+  page.value = value
+  pendingPage.value = value
+  scrollPageIntoView(value, 'auto')
+  settleScroll()
 }
 
 const currentPage = computed({
