@@ -1,4 +1,5 @@
 import { computed, toValue, watch, onBeforeUnmount } from 'vue'
+import isEqual from 'lodash/isEqual'
 import random from 'lodash/random'
 import { usePolling } from '@/composables/usePolling'
 import { useWait } from '@/composables/useWait'
@@ -29,10 +30,10 @@ export function useTaskPolling({ types = [], sortBy = [], perPage = null, page =
     await fetchTasks()
   }
 
-  async function fetchTasks() {
+  function getParams() {
     const query = toValue(searchQuery)
-    await taskStore.fetchTasks({
-      types: toValue(types),
+    return {
+      types: [...toValue(types)],
       sort: toValue(sortBy)?.[0],
       order: toValue(sortBy)?.[1] ?? 'asc',
       // Only include the search filter when query is non-empty to avoid
@@ -41,7 +42,11 @@ export function useTaskPolling({ types = [], sortBy = [], perPage = null, page =
       // The tasks API endpoint has limited support for pagination so we get all tasks at once
       size: toValue(perPage),
       from: (toValue(page) - 1) * toValue(perPage)
-    })
+    }
+  }
+
+  async function fetchTasks() {
+    await taskStore.fetchTasks(getParams())
     // Continue to poll task if they are pending ones
     return hasPendingTasks.value || hasRunningTasks.value
   }
@@ -56,7 +61,9 @@ export function useTaskPolling({ types = [], sortBy = [], perPage = null, page =
     return (await fn()) && registerPollOnce({ fn, timeout })
   }
 
-  watch(() => [types, sortBy, searchQuery, page, perPage], startPollingTasksWithLoader, { immediate: true, deep: true })
+  // Sources such as `useUrlParamsWithStore` change identity on unrelated route updates, so
+  // only restart the polling (and show the loader) when the request itself changes.
+  watch(getParams, (params, oldParams) => isEqual(params, oldParams) || startPollingTasksWithLoader(), { immediate: true })
   onBeforeUnmount(taskStore.reset)
 
   return { tasks, noTasks, fetchTasks, hasPendingTasks, hasRunningTasks, hasDoneTasks, stopPendingTasks, removeDoneTasks, isLoading }
