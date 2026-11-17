@@ -1,6 +1,4 @@
 import find from 'lodash/find'
-import findIndex from 'lodash/findIndex'
-import noop from 'lodash/noop'
 import isFunction from 'lodash/isFunction'
 import { onBeforeUnmount, reactive } from 'vue'
 
@@ -10,17 +8,19 @@ export function usePolling() {
   onBeforeUnmount(unregisteredPolls)
 
   function unregisteredPolls() {
-    // Clear all polls
-    registeredPolls.forEach(unregisteredPoll)
+    // Clear all polls (from a copy, as unregistering removes entries from the list)
+    registeredPolls.slice().forEach(unregisteredPoll)
   }
 
-  function unregisteredPoll({ id = null, fn = noop } = {}) {
-    // Allow to find the registered poll etheir by id or by function
-    const index = findIndex(registeredPolls, { id }) ?? findIndex(registeredPolls, { fn })
-    // Clear the timeout
-    clearTimeout(id)
-    // Delete the function from the poll
-    registeredPolls.splice(index, 1)
+  function unregisteredPoll({ id = null, fn = null } = {}) {
+    // Allow to find the registered poll either by id or by function
+    const index = registeredPolls.findIndex(poll => poll.id === id || poll.fn === fn)
+    if (index > -1) {
+      // Clear the timeout
+      clearTimeout(registeredPolls[index].id)
+      // Delete the function from the poll
+      registeredPolls.splice(index, 1)
+    }
   }
 
   function registerPoll({ fn, timeout = 2000, immediate = false } = {}) {
@@ -42,18 +42,18 @@ export function usePolling() {
     return Number(
       setTimeout(async () => {
         const poll = find(registeredPolls, { fn })
-        try {
-          // Call the poll's promise, schedule it again only if it returns true
-          if (await fn()) {
-            // Update the poll id with the next one
-            poll.id = schedulePoll({ fn, timeout })
-          }
-          else {
-            unregisteredPoll(poll)
-          }
-          // Reject promise triggers unregistering of the poll
+        // Call the poll's promise, a rejected promise stops the poll
+        const again = await Promise.resolve(fn()).catch(() => false)
+        // The poll was unregistered or replaced while its function was running
+        if (!registeredPolls.includes(poll)) {
+          return
         }
-        catch {
+        // Schedule the poll again only if its function returned true
+        if (again) {
+          // Update the poll id with the next one
+          poll.id = schedulePoll({ fn, timeout })
+        }
+        else {
           unregisteredPoll(poll)
         }
       }, !immediate * callOrGetTimeout(timeout))
