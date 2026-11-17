@@ -108,6 +108,25 @@ describe('useTaskPolling', () => {
     expect(api.getTasks.mock.calls[1][0].from).toBe(10)
   })
 
+  it('should start polling again when a refresh finds a pending task', async () => {
+    vi.useFakeTimers()
+    const pagination = { total: 1, from: 0, size: 10 }
+    api.getTasks.mockResolvedValue({ items: [{ id: 'a', state: 'DONE' }], pagination })
+    const { result, wrapper } = mountComposable({ types: ['BATCH_DOWNLOAD'], sortBy: ref(['createdAt', 'desc']), perPage: ref(10), page: ref(1) })
+    await vi.advanceTimersByTimeAsync(5000)
+    // No pending task, so no polling
+    expect(api.getTasks).toHaveBeenCalledTimes(1)
+
+    // e.g. a task was relaunched
+    api.getTasks.mockResolvedValue({ items: [{ id: 'a', state: 'QUEUED' }], pagination })
+    await result.startPollingTasks()
+    expect(api.getTasks).toHaveBeenCalledTimes(2)
+    await vi.advanceTimersByTimeAsync(5000)
+    expect(api.getTasks.mock.calls.length).toBeGreaterThan(2)
+    wrapper.unmount()
+    vi.useRealTimers()
+  })
+
   it('should forward types to the store as a joined type param', async () => {
     mountComposable({
       types: ['INDEX', 'SCAN'],
