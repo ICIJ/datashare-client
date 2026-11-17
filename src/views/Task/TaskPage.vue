@@ -43,7 +43,7 @@ const { addToRoute, addLabel, searchQuery, page, perPage, sortBy, searchPlacehol
   props.pageName
 )
 
-const { noTasks, fetchTasks, hasPendingTasks, hasDoneTasks, stopPendingTasks, removeDoneTasks, isLoading }
+const { noTasks, startPollingTasks, hasPendingTasks, hasDoneTasks, stopPendingTasks, removeDoneTasks, isLoading }
   = useTaskPolling({ types: props.taskTypes, searchQuery, sortBy, page, perPage })
 
 const setSort = value => (sort.value = value)
@@ -60,8 +60,9 @@ const order = computed({
   set: value => (sortBy.value = [sort.value, value])
 })
 
+// A refresh can bring back pending tasks (e.g. a relaunch), so it must restart the polling
 function refresh() {
-  return fetchTasks()
+  return startPollingTasks()
 }
 </script>
 

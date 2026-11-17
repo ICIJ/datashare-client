@@ -66,5 +66,5 @@ export function useTaskPolling({ types = [], sortBy = [], perPage = null, page =
   watch(getParams, (params, oldParams) => isEqual(params, oldParams) || startPollingTasksWithLoader(), { immediate: true })
   onBeforeUnmount(taskStore.reset)
 
-  return { tasks, noTasks, fetchTasks, hasPendingTasks, hasRunningTasks, hasDoneTasks, stopPendingTasks, removeDoneTasks, isLoading }
+  return { tasks, noTasks, fetchTasks, startPollingTasks, hasPendingTasks, hasRunningTasks, hasDoneTasks, stopPendingTasks, removeDoneTasks, isLoading }
 }
