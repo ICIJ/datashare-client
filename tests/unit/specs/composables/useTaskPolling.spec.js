@@ -1,6 +1,6 @@
 import { flushPromises, mount } from '@vue/test-utils'
 import { createPinia } from 'pinia'
-import { ref, defineComponent, h } from 'vue'
+import { ref, defineComponent, h, nextTick } from 'vue'
 
 import { useTaskPolling } from '@/composables/useTaskPolling'
 import { apiInstance as api } from '@/api/apiInstance'
@@ -79,6 +79,33 @@ describe('useTaskPolling', () => {
     expect(api.getTasks).toHaveBeenCalled()
     const callArgs = api.getTasks.mock.calls[0][0]
     expect(callArgs['args.batchRecord.name']).toBe('my search')
+  })
+
+  it('should not reload tasks when a watched source changes identity but not value', async () => {
+    const sortBy = ref(['createdAt', 'desc'])
+    const { result } = mountComposable({ types: ['BATCH_DOWNLOAD'], sortBy, perPage: ref(10), page: ref(1) })
+    await flushPromises()
+    expect(api.getTasks).toHaveBeenCalledTimes(1)
+
+    // e.g. `useUrlParamsWithStore` rebuilds its array on any unrelated route change
+    sortBy.value = ['createdAt', 'desc']
+    await nextTick()
+    expect(result.isLoading.value).toBe(false)
+    await flushPromises()
+    expect(api.getTasks).toHaveBeenCalledTimes(1)
+  })
+
+  it('should reload tasks with a loader when a watched source changes value', async () => {
+    const page = ref(1)
+    const { result } = mountComposable({ types: ['BATCH_DOWNLOAD'], sortBy: ref(['createdAt', 'desc']), perPage: ref(10), page })
+    await flushPromises()
+
+    page.value = 2
+    await nextTick()
+    expect(result.isLoading.value).toBe(true)
+    await flushPromises()
+    expect(api.getTasks).toHaveBeenCalledTimes(2)
+    expect(api.getTasks.mock.calls[1][0].from).toBe(10)
   })
 
   it('should forward types to the store as a joined type param', async () => {
