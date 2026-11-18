@@ -385,7 +385,7 @@ class Core extends Behaviors {
     // Load the user
     const user = await this.getUser()
     this.config.merge(user)
-    this.auth.remember(user?.uid)
+    this.auth.remember(user?.uid ?? null)
     // Load and store user permissions as project policies
     try {
       const rules = (await this.api.getUserPermissions?.()) ?? []

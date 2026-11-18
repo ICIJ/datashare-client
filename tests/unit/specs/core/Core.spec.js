@@ -138,6 +138,13 @@ describe('Core', () => {
       expect(api.getUser).toBeCalledTimes(1)
     })
 
+    it('should remember nobody when the server answers without a user on boot', async () => {
+      api.getUser.mockResolvedValueOnce(null)
+      api.getUserPermissions.mockResolvedValueOnce([])
+      await core.loadUser()
+      expect(await core.auth.whoAmI()).toBeNull()
+    })
+
     it('should return empty string if user has no projects', () => {
       core.config.set('defaultProject', 'my_project')
       expect(core.getDefaultProject()).toEqual('')
