@@ -59,13 +59,14 @@ const route = useRoute()
 const sidebar = useTemplateRef('sidebar')
 
 const signinUrl = computed(() => {
-  return core.config.get('auth') === 'form' ? '/auth/login' : import.meta.env.VITE_DS_AUTH_SIGNIN
+  return core.config.get('auth') === 'form' ? '/login' : import.meta.env.VITE_DS_AUTH_SIGNIN
 })
 
 // Function to handle HTTP errors
 const handleHttpError = (err) => {
   const code = get(err, 'request.response.status') || get(err, 'response.status')
   if (code === 401) {
+    core.auth.reset()
     const body = t('login.logout')
     const linkLabel = t('login.login')
     const href = signinUrl.value
