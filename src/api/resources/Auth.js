@@ -35,6 +35,10 @@ export default class Auth {
     const pending = this._pendingUsername
     try {
       const username = await pending
+      const isReplaced = this._pendingUsername && this._pendingUsername !== pending
+      if (isReplaced) {
+        return this.whoAmI()
+      }
       // Nobody signed in yet: ask again next time, the user may sign in meanwhile.
       if (!username) {
         this._resetUnlessReplaced(pending)

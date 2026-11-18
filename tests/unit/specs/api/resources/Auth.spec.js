@@ -111,6 +111,14 @@ describe('auth backend client', () => {
       expect(auth.me.value).toBe('jane')
     })
 
+    it('should give the newer username to the older call', async () => {
+      const olderCall = auth.whoAmI()
+      auth.reset()
+      await auth.getUsername()
+      resolveOlder({ uid: 'john' })
+      expect(await olderCall).toBe('jane')
+    })
+
     it('should leave no expiry timer behind once reset', async () => {
       vi.useFakeTimers()
       const olderCall = auth.whoAmI()
