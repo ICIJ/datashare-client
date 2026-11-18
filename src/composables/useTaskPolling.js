@@ -58,7 +58,13 @@ export function useTaskPolling({ types = [], sortBy = [], perPage = null, page =
     unregisteredPoll({ fn })
     // Execute the `fetchTasks` method immediately
     // and if it's true, register a poll
-    return (await fn()) && registerPollOnce({ fn, timeout })
+    try {
+      return (await fn()) && registerPollOnce({ fn, timeout })
+    }
+    catch (error) {
+      registerPollOnce({ fn, timeout })
+      throw error
+    }
   }
 
   // Sources such as `useUrlParamsWithStore` change identity on unrelated route updates, so
