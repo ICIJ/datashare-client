@@ -11,6 +11,8 @@ vi.mock('@/api/apiInstance', () => ({
   }
 }))
 
+const wrappers = []
+
 function mountComposable(options = {}) {
   const result = {}
   const TestComponent = defineComponent({
@@ -21,12 +23,19 @@ function mountComposable(options = {}) {
   })
   const pinia = createPinia()
   const wrapper = mount(TestComponent, { global: { plugins: [pinia] } })
+  wrappers.push(wrapper)
   return { wrapper, result }
 }
 
 describe('useTaskPolling', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+  })
+
+  afterEach(() => {
+    // Unmounting stops the polls a test may have started
+    wrappers.splice(0).forEach(wrapper => wrapper.unmount())
+    vi.useRealTimers()
   })
 
   afterAll(() => {
@@ -111,27 +120,25 @@ describe('useTaskPolling', () => {
   it('should start polling again when a refresh finds a pending task', async () => {
     vi.useFakeTimers()
     const pagination = { total: 1, from: 0, size: 10 }
-    api.getTasks.mockResolvedValue({ items: [{ id: 'a', state: 'DONE' }], pagination })
-    const { result, wrapper } = mountComposable({ types: ['BATCH_DOWNLOAD'], sortBy: ref(['createdAt', 'desc']), perPage: ref(10), page: ref(1) })
+    api.getTasks.mockResolvedValueOnce({ items: [{ id: 'a', state: 'DONE' }], pagination })
+    const { result } = mountComposable({ types: ['BATCH_DOWNLOAD'], sortBy: ref(['createdAt', 'desc']), perPage: ref(10), page: ref(1) })
     await vi.advanceTimersByTimeAsync(5000)
     // No pending task, so no polling
     expect(api.getTasks).toHaveBeenCalledTimes(1)
 
     // e.g. a task was relaunched
-    api.getTasks.mockResolvedValue({ items: [{ id: 'a', state: 'QUEUED' }], pagination })
+    api.getTasks.mockResolvedValueOnce({ items: [{ id: 'a', state: 'QUEUED' }], pagination })
     await result.startPollingTasks()
     expect(api.getTasks).toHaveBeenCalledTimes(2)
     await vi.advanceTimersByTimeAsync(5000)
     expect(api.getTasks.mock.calls.length).toBeGreaterThan(2)
-    wrapper.unmount()
-    vi.useRealTimers()
   })
 
   it('should keep polling when a refresh fails', async () => {
     vi.useFakeTimers()
     const running = { items: [{ id: 'a', state: 'RUNNING' }], pagination: { total: 1, from: 0, size: 10 } }
     api.getTasks.mockResolvedValueOnce(running)
-    const { result, wrapper } = mountComposable({ types: ['BATCH_DOWNLOAD'], sortBy: ref(['createdAt', 'desc']), perPage: ref(10), page: ref(1) })
+    const { result } = mountComposable({ types: ['BATCH_DOWNLOAD'], sortBy: ref(['createdAt', 'desc']), perPage: ref(10), page: ref(1) })
     await vi.advanceTimersByTimeAsync(0)
     expect(api.getTasks).toHaveBeenCalledTimes(1)
 
@@ -140,8 +147,6 @@ describe('useTaskPolling', () => {
     expect(api.getTasks).toHaveBeenCalledTimes(2)
     await vi.advanceTimersByTimeAsync(5000)
     expect(api.getTasks.mock.calls.length).toBeGreaterThan(2)
-    wrapper.unmount()
-    vi.useRealTimers()
   })
 
   it('should forward types to the store as a joined type param', async () => {
