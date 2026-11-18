@@ -127,6 +127,23 @@ describe('useTaskPolling', () => {
     vi.useRealTimers()
   })
 
+  it('should keep polling when a refresh fails', async () => {
+    vi.useFakeTimers()
+    const running = { items: [{ id: 'a', state: 'RUNNING' }], pagination: { total: 1, from: 0, size: 10 } }
+    api.getTasks.mockResolvedValueOnce(running)
+    const { result, wrapper } = mountComposable({ types: ['BATCH_DOWNLOAD'], sortBy: ref(['createdAt', 'desc']), perPage: ref(10), page: ref(1) })
+    await vi.advanceTimersByTimeAsync(0)
+    expect(api.getTasks).toHaveBeenCalledTimes(1)
+
+    api.getTasks.mockRejectedValueOnce(new Error('Network Error')).mockResolvedValueOnce(running)
+    await expect(result.startPollingTasks()).rejects.toThrow('Network Error')
+    expect(api.getTasks).toHaveBeenCalledTimes(2)
+    await vi.advanceTimersByTimeAsync(5000)
+    expect(api.getTasks.mock.calls.length).toBeGreaterThan(2)
+    wrapper.unmount()
+    vi.useRealTimers()
+  })
+
   it('should forward types to the store as a joined type param', async () => {
     mountComposable({
       types: ['INDEX', 'SCAN'],
