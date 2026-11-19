@@ -42,7 +42,7 @@ import { computed, onMounted, onBeforeUnmount, useTemplateRef } from 'vue'
 import compact from 'lodash/compact'
 import get from 'lodash/get'
 import property from 'lodash/property'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
 import AppSidebar from '@/components/AppSidebar/AppSidebar'
@@ -50,16 +50,21 @@ import Hook from '@/components/Hook/Hook'
 import PageOffcanvas from '@/components/PageOffcanvas/PageOffcanvas'
 import ScrollTracker from '@/components/ScrollTracker'
 import { useCore } from '@/composables/useCore'
+import { useToast } from '@/composables/useToast'
 import { useAppStore } from '@/store/modules'
 
 const core = useCore()
 const appStore = useAppStore()
 const { t } = useI18n()
 const route = useRoute()
+const router = useRouter()
+const { toast } = useToast()
 const sidebar = useTemplateRef('sidebar')
 
 const signinUrl = computed(() => {
-  return core.config.get('auth') === 'form' ? '/login' : import.meta.env.VITE_DS_AUTH_SIGNIN
+  const isFormAuth = core.config.get('auth') === 'form'
+  const { href } = router.resolve({ name: 'login' })
+  return isFormAuth ? href : import.meta.env.VITE_DS_AUTH_SIGNIN
 })
 
 // Function to handle HTTP errors
@@ -67,10 +72,11 @@ const handleHttpError = (err) => {
   const code = get(err, 'request.response.status') || get(err, 'response.status')
   if (code === 401) {
     core.auth.reset()
+
     const body = t('login.logout')
     const linkLabel = t('login.login')
     const href = signinUrl.value
-    core.toast.error(body, { href, linkLabel, autoClose: false })
+    toast.error(body, { href, linkLabel, autoClose: false })
   }
 }
 
