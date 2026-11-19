@@ -14,6 +14,11 @@ describe('App.vue HTTP error handling', () => {
       .useAll()
       .useRouter([
         {
+          path: '/login',
+          name: 'login',
+          component: { template: '<div />' }
+        },
+        {
           path: '/',
           component: { template: '<div />' }
         }
@@ -22,14 +27,14 @@ describe('App.vue HTTP error handling', () => {
     core.config.set('auth', 'form')
 
     reset = vi.spyOn(core.auth, 'reset')
-    toastError = vi.fn()
-    core.toast = { error: toastError }
 
     wrapper = shallowMount(App, {
       global: {
         plugins: core.plugins
       }
     })
+
+    toastError = vi.spyOn(wrapper.vm.$toast, 'error')
   })
 
   afterEach(() => {
@@ -37,15 +42,18 @@ describe('App.vue HTTP error handling', () => {
     vi.restoreAllMocks()
   })
 
-  it('should redirect to the frontend login page on a 401 response', () => {
+  it('should redirect to the frontend login route on a 401 response', () => {
+    const expectedHref = core.router.resolve({ name: 'login' }).href
+
     core.emit('http::error', {
       response: { status: 401 }
     })
 
+    expect(reset).toHaveBeenCalledOnce()
     expect(toastError).toHaveBeenCalledWith(
       expect.any(String),
       expect.objectContaining({
-        href: '/login',
+        href: expectedHref,
         linkLabel: expect.any(String),
         autoClose: false
       })
