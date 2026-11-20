@@ -72,4 +72,24 @@ describe('router routes', () => {
       expect(names).not.toContain('project.view.overview.insights')
     })
   })
+
+  it('resolves /entities to the entity list', () => {
+    const router = createRouter({ history: createMemoryHistory(), routes })
+    const { name, matched } = router.resolve('/entities')
+    expect(name).toBe('entity.list')
+    // Exactly one entity record in the matched chain: a parent plus a child both rendering the
+    // view would mount the entities list twice.
+    expect(matched.filter(record => String(record.name).startsWith('entity'))).toHaveLength(1)
+  })
+
+  it('gives the entity list a settings named view', () => {
+    const entity = findRoute(routes, 'entity.list')
+    expect(Object.keys(entity.components)).toEqual(['default', 'settings'])
+  })
+
+  it('lazy-loads the entity route views', () => {
+    const entity = findRoute(routes, 'entity.list')
+    expect(isDynamicImport(entity.components.default)).toBe(true)
+    expect(isDynamicImport(entity.components.settings)).toBe(true)
+  })
 })

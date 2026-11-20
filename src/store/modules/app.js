@@ -49,10 +49,8 @@ export const useAppStore = defineStore(
           groupedContentTypeView: false
         },
         entityList: {
-          layout: LAYOUTS.LIST,
           orderBy: ['_score', 'desc'],
-          perPage: '25',
-          properties: ['name', 'entityType', 'sourceDocument', 'model', 'project']
+          perPage: '25'
         },
         searchSavedList: {
           orderBy: ['creation_date', 'desc'],

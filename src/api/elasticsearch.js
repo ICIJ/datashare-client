@@ -11,6 +11,16 @@ import { SEARCH_OPERATORS } from '@/enums/searchOperators'
 import { straightenQuotes } from '@/utils/luceneQuery'
 import settings from '@/utils/settings'
 
+/**
+ * The entities index of a project. The projection `EntitiesIndexRebuilder` writes lives beside
+ * the document index rather than inside it, so an entity search never touches documents.
+ * @param {string} project - The project name
+ * @returns {string} The entities index name
+ */
+export function entitiesIndex(project) {
+  return `${project}.entities`
+}
+
 // Content fields to exclude from search results (large text fields)
 const CONTENT_FIELDS = ['content', 'content_translated']
 
@@ -22,7 +32,8 @@ const PREFERENCE = Object.freeze({
   DOCUMENTS_COUNT: 'project-documents-count',
   TAGS_COUNT: 'project-tags-count',
   COUNT_BY_PROJECT: 'count-by-project',
-  MAX_EXTRACTION_DATE: 'max-extraction-date-by-project'
+  MAX_EXTRACTION_DATE: 'max-extraction-date-by-project',
+  ENTITIES: 'entities-search'
 })
 
 // Project statistics span projects whose index may not exist yet: elasticsearch
@@ -259,6 +270,48 @@ export function datasharePlugin(Client) {
     const body = this.buildSearchDocsBody(options)
     const request = this.search({ index: options.index, body })
     return abortableSearchRequest(request, signal)
+  }
+
+  /**
+   * Searches structured entities across several projects at once.
+   *
+   * `indices` holds project names, not index names: the `.entities` suffix is applied here so no
+   * caller has to know how the projection is named. Missing indices are ignored, because a project
+   * that never ingested entities has no entities index and elasticsearch would otherwise fail the
+   * whole request and zero out every other project's results.
+   *
+   * @param {Object} options - Search options
+   * @param {string[]} options.indices - Project names to search
+   * @param {string} [options.query=''] - Free-text query, matched against `propertiesAll`
+   * @param {number} [options.from=0] - Starting offset
+   * @param {number} [options.perPage=25] - Page size
+   * @param {Object} [options.sort] - A single `{ field: order }` pair
+   * @returns {Promise<Object>} The raw elasticsearch response
+   */
+  Client.prototype.searchEntities = function ({ indices = [], query = '', from = 0, perPage = 25, sort = null } = {}) {
+    const body = bodybuilder().from(from).size(perPage)
+    const trimmed = query.trim()
+    if (!trimmed || trimmed === DEFAULT_QUERY) {
+      body.query('match_all', {})
+    }
+    else {
+      // `propertiesAll` is the folding-analyzed copy of every property value, which is why the
+      // index defines it: it is the only field a free-text entity search should target.
+      body.query('query_string', { query: straightenQuotes(trimmed), default_field: 'propertiesAll' })
+    }
+    // No `mode` on the sort clause: property values are multi-valued, and elasticsearch's default
+    // already picks the first value ascending and the last descending, which is alphabetical.
+    const [field, order] = sort ? Object.entries(sort)[0] : ['_score', 'desc']
+    body.sort(field, order)
+    // A preference pins the replica set: without it successive pages can be served by different
+    // shard copies, and a tie-broken ordering that shifts between pages shows a user the same
+    // entity twice or skips one entirely.
+    return this._search({
+      index: indices.map(entitiesIndex).join(','),
+      body: body.build(),
+      preference: PREFERENCE.ENTITIES,
+      ...IGNORE_MISSING_INDEX
+    })
   }
 
   /**

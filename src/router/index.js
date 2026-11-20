@@ -3,6 +3,7 @@ import { markRaw } from 'vue'
 import IPhMagnifyingGlass from '~icons/ph/magnifying-glass'
 import IPhListChecks from '~icons/ph/list-checks'
 import IPhClockCounterClockwise from '~icons/ph/clock-counter-clockwise'
+import IPhStack from '~icons/ph/stack'
 import IPhRocketLaunch from '~icons/ph/rocket-launch'
 import IPhDotsNine from '~icons/ph/dots-nine'
 import IPhUsersThree from '~icons/ph/users-three'
@@ -122,6 +123,18 @@ export const routes = [
         components: {
           default: () => import('@/views/Search/SearchHistory/SearchHistoryList/SearchHistoryList'),
           settings: () => import('@/views/Search/SearchHistory/SearchHistoryList/SearchHistoryListSettings')
+        }
+      },
+      {
+        name: 'entity.list',
+        path: 'entities',
+        meta: {
+          icon: markRaw(IPhStack),
+          title: 'entity.title'
+        },
+        components: {
+          default: () => import('@/views/Entity/Entity'),
+          settings: () => import('@/views/Entity/EntityListSettings')
         }
       },
       {
