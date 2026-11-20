@@ -596,6 +596,21 @@ export class Api {
     return this.sendAction('/api/settings/text/languages')
   }
 
+  /**
+   * The ontology of a structured-entity data model, as the backend reads it from the bundled
+   * followthemoney resource: type labels, featured and caption property lists, edge definitions,
+   * and a label, range and stub flag per property.
+   *
+   * Named for the `StructuredEntity` record it describes, not `getModel`, which `useSchema`
+   * already uses for content-type models.
+   *
+   * @param {string} [name='ftm'] - The data model name
+   * @returns {Promise<Object>} The ontology
+   */
+  getStructuredEntityModel(name = 'ftm') {
+    return this.sendAction(`/api/models/${name}`)
+  }
+
   getMappingsByFields(projectIds, fields) {
     return this.sendActionAsText(`/api/index/search/${projectIds}/_mapping/field/${fields}`, { method: Method.GET })
   }
