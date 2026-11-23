@@ -4,6 +4,7 @@ import { ButtonIcon } from '@icij/murmur'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import PathBannerForm from '@/components/PathBanner/PathBannerForm.vue'
+import FormControlPath from '@/components/Form/FormControl/FormControlPath.vue'
 
 describe('PathBannerForm.vue', () => {
   let global
@@ -38,6 +39,13 @@ describe('PathBannerForm.vue', () => {
       props: { banner: newBanner, ...props }
     })
   }
+
+  it('lists the indexed folders of the project in the path picker', () => {
+    const wrapper = shallowMountComponent({ project: 'nested' })
+    const path = wrapper.findComponent(FormControlPath)
+    expect(path.props('projects')).toEqual(['nested'])
+    expect(path.props('indexed')).toBe(true)
+  })
 
   it('emits "save" with form data when submit() is called', async () => {
     const wrapper = shallowMountComponent({ banner: existingBanner })

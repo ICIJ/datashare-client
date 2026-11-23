@@ -145,6 +145,13 @@ describe('FormControlPath.vue', () => {
     expect(wrapper.findComponent(PathTree).exists()).toBe(false)
   })
 
+  it('shows the indexed folders in the tree when asked', async () => {
+    api.tree.mockResolvedValue({})
+    const wrapper = mountPath({ indexed: true })
+    await browse(wrapper)
+    expect(wrapper.findComponent(PathTree).props('projects')).toEqual(['foo'])
+  })
+
   it('shows only folders on disk in the tree', async () => {
     api.tree.mockResolvedValue({})
     const wrapper = mountPath()

@@ -18,11 +18,16 @@ const props = defineProps({
   banner: {
     type: Object,
     required: true
+  },
+  project: {
+    type: String,
+    default: null
   }
 })
 
 const emit = defineEmits(['save'])
 
+const projects = computed(() => (props.project ? [props.project] : []))
 const isValid = computed(() => !!form.path && !!form.note)
 
 function reset() {
@@ -58,7 +63,11 @@ watch(
       :description="t('projectViewEdit.pathBanners.fields.path.description')"
       with-description
     >
-      <form-control-path v-model="form.path" />
+      <form-control-path
+        v-model="form.path"
+        :projects="projects"
+        indexed
+      />
     </form-fieldset>
     <form-fieldset
       :compact="compact"
