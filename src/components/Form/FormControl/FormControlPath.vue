@@ -152,6 +152,7 @@ function onOk() {
         :projects="treeProjects"
         :multiple="multiple"
         nested
+        no-fold
         no-stats
         select-mode
         :no-tree="noTree"

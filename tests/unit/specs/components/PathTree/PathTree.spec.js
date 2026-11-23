@@ -415,6 +415,19 @@ describe('PathTree.vue', () => {
       expect(names).toEqual(['foo', 'data/docs/a/b/c'])
     })
 
+    it('keeps every directory level when folding is off', async () => {
+      await letData(es)
+        .have(new IndexedDocuments().setBaseName('/home/foo/data/docs/a/b/c/doc_01').withIndex(index).count(2))
+        .commit()
+
+      mountAtHome({ noFold: true })
+      await wrapper.vm.loadData({ clearPages: true })
+      await flushPromises()
+
+      const names = wrapper.findAll('.path-tree-view-entry-name__value').map(name => name.text())
+      expect(names).toEqual(['foo', 'data'])
+    })
+
     it('stops folding where the chain branches', async () => {
       await letData(es)
         .have(new IndexedDocuments().setBaseName('/home/foo/data/docs/a/doc_01').withIndex(index).count(2))

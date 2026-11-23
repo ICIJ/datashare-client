@@ -152,6 +152,13 @@ describe('FormControlPath.vue', () => {
     expect(wrapper.findComponent(PathTree).props('projects')).toEqual(['foo'])
   })
 
+  it('shows every folder level in the tree', async () => {
+    api.tree.mockResolvedValue({})
+    const wrapper = mountPath()
+    await browse(wrapper)
+    expect(wrapper.findComponent(PathTree).props('noFold')).toBe(true)
+  })
+
   it('shows only folders on disk in the tree', async () => {
     api.tree.mockResolvedValue({})
     const wrapper = mountPath()

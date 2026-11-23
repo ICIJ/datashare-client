@@ -61,6 +61,8 @@ const props = defineProps({
   defaultPath: { type: String, default: null },
   /** Deactivate the breadcrumb navigation */
   noBreadcrumb: { type: Boolean },
+  /** Show every directory level instead of folding single-child chains */
+  noFold: { type: Boolean },
   /** Deactivate the header label */
   noLabel: { type: Boolean, default: false },
   /** Deactivate the search input */
@@ -275,7 +277,7 @@ function getFoldedPath(key) {
   const descendants = directoryPaths.value.filter(path => path === key || path.startsWith(prefix))
   // Without the directory_paths aggregation (compact mode) or for directories only
   // known from the on-disk tree, there is nothing to fold with.
-  if (!descendants.length) {
+  if (props.noFold || !descendants.length) {
     return key
   }
   return getCommonPathPrefix(descendants)
@@ -663,6 +665,7 @@ defineExpose({ isLoading, loadData, loadDataWithSpinner, reloadData })
               :sort-by="sortBy"
               :order-by="orderBy"
               :no-tree="noTree"
+              :no-fold="noFold"
               :include-children-documents="includeChildrenDocuments"
             />
           </template>
