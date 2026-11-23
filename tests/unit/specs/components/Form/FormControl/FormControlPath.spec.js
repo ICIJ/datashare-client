@@ -91,6 +91,9 @@ describe('FormControlPath.vue', () => {
     api.elasticsearch.getCommonDirname.mockResolvedValue('/data/leak')
     const wrapper = mountPath()
     await browse(wrapper)
+    const modal = wrapper.findComponent({ name: 'AppModal' })
+    modal.vm.$emit('update:modelValue', false)
+    await flushPromises()
     expect(wrapper.emitted('update:modelValue')).toBeUndefined()
   })
 
