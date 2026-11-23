@@ -11,6 +11,7 @@ import AppModal from '@/components/AppModal/AppModal'
 import PathTree from '@/components/PathTree/PathTree'
 import PathTreeBreadcrumb from '@/components/PathTree/PathTreeBreadcrumb/PathTreeBreadcrumb'
 import { useCore } from '@/composables/useCore'
+import { useMode } from '@/composables/useMode'
 
 const modelValue = defineModel({ type: String })
 
@@ -36,6 +37,8 @@ const { t } = useI18n()
 const core = useCore()
 const selectedPaths = ref([])
 const showPathTree = ref(false)
+const rootPath = ref(null)
+const { isServer } = useMode()
 const sourcePath = computed(() => props.path ?? core.getDefaultDataDir())
 const display = computed(() => modelValue.value ?? sourcePath.value)
 
@@ -52,6 +55,37 @@ watch(toRef(props, 'path'), (value) => {
   }
 })
 
+async function existsOnDisk(path) {
+  try {
+    await core.api.tree(path)
+    return true
+  }
+  catch {
+    return false
+  }
+}
+
+async function resolveRootPath() {
+  if (isServer.value || !props.projects.length) {
+    return sourcePath.value
+  }
+  if (await existsOnDisk(sourcePath.value)) {
+    return sourcePath.value
+  }
+  const index = props.projects.join(',')
+  const commonDirname = await core.api.elasticsearch.getCommonDirname(index)
+  return commonDirname ?? core.getDefaultDataDir()
+}
+
+async function browse() {
+  showPathTree.value = true
+  rootPath.value = await resolveRootPath()
+  const isUnchanged = !modelValue.value || modelValue.value === props.path
+  if (isUnchanged && rootPath.value !== sourcePath.value) {
+    modelValue.value = rootPath.value
+  }
+}
+
 function onOk() {
   if (props.multiple) {
     modelValue.value = selectedPaths.value
@@ -67,7 +101,7 @@ function onOk() {
     <button-icon
       :icon-right="IPhMagnifyingGlass"
       variant="action"
-      @click="showPathTree = true"
+      @click="browse"
     >
       {{ t('formControlPath.browse') }}
     </button-icon>
@@ -75,7 +109,7 @@ function onOk() {
       :icon-left="IPhFolderOpen"
       class="flex-shrink-1"
       variant="outline-tertiary"
-      @click="showPathTree = true"
+      @click="browse"
     >
       <path-tree-breadcrumb
         class="flex-shrink-0"
@@ -93,8 +127,9 @@ function onOk() {
       @ok="onOk"
     >
       <path-tree
+        v-if="rootPath"
         v-model:selected-paths="selectedPaths"
-        :path="sourcePath"
+        :path="rootPath"
         :projects="projects"
         :multiple="multiple"
         nested
