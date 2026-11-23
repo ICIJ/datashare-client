@@ -140,6 +140,11 @@ describe('Datashare backend client', () => {
     expect(json).toEqual({})
   })
 
+  it('should encode each folder name when calling tree', async () => {
+    await api.tree('/data/a#b/c?d')
+    expect(axios.request).toBeCalledWith(expect.objectContaining({ url: Api.getFullUrl('/api/tree/data/a%23b/c%3Fd') }))
+  })
+
   it('should return backend response to stopPendingTasks', async () => {
     json = await api.stopPendingTasks()
     expect(json).toEqual({})
