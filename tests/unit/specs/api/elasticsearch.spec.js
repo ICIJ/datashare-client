@@ -368,6 +368,30 @@ describe('elasticsearch', () => {
     })
   })
 
+  describe('getCommonDirname', () => {
+    it('returns the deepest folder shared by every document', async () => {
+      await letData(es).have(new IndexedDocument('/data/leak/a/x.pdf', index)).commit()
+      await letData(es).have(new IndexedDocument('/data/leak/b/y.pdf', index)).commit()
+      expect(await elasticsearch.getCommonDirname(index)).toBe('/data/leak')
+    })
+
+    it('returns the documents folder when they all sit in the same one', async () => {
+      await letData(es).have(new IndexedDocument('/data/leak/a/x.pdf', index)).commit()
+      await letData(es).have(new IndexedDocument('/data/leak/a/y.pdf', index)).commit()
+      expect(await elasticsearch.getCommonDirname(index)).toBe('/data/leak/a')
+    })
+
+    it('returns the root when documents share no folder', async () => {
+      await letData(es).have(new IndexedDocument('/data/a/x.pdf', index)).commit()
+      await letData(es).have(new IndexedDocument('/home/me/z.pdf', index)).commit()
+      expect(await elasticsearch.getCommonDirname(index)).toBe('/')
+    })
+
+    it('returns null when the index has no documents', async () => {
+      expect(await elasticsearch.getCommonDirname(index)).toBeNull()
+    })
+  })
+
   describe('rootSearch', () => {
     it('passes operator to default_operator in the body', () => {
       const body = elasticsearch.rootSearch([], 'foo bar', [], 'AND').build()
