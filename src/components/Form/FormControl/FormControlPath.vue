@@ -74,24 +74,38 @@ async function resolveRootPath() {
   }
   const index = props.projects.join(',')
   const commonDirname = await core.api.elasticsearch.getCommonDirname(index).catch(() => null)
-  return commonDirname ?? core.getDefaultDataDir()
+  const hasCommonDirname = commonDirname && commonDirname !== '/'
+  if (hasCommonDirname && await existsOnDisk(commonDirname)) {
+    return commonDirname
+  }
+  return core.getDefaultDataDir()
 }
 
 async function browse() {
+  rootPath.value = null
   showPathTree.value = true
-  rootPath.value = await resolveRootPath()
-  const isUnchanged = !modelValue.value || modelValue.value === props.path
-  if (isUnchanged && rootPath.value !== sourcePath.value) {
-    modelValue.value = rootPath.value
+  const { path, projects } = props
+  const resolvedRootPath = await resolveRootPath()
+  const isStale = !showPathTree.value || path !== props.path || projects !== props.projects
+  if (!isStale) {
+    rootPath.value = resolvedRootPath
   }
 }
 
 function onOk() {
   if (props.multiple) {
     modelValue.value = selectedPaths.value
+    return
   }
-  else {
-    modelValue.value = selectedPaths.value[0]
+  const [selectedPath] = selectedPaths.value
+  if (selectedPath) {
+    modelValue.value = selectedPath
+    return
+  }
+  const isUnchanged = !modelValue.value || modelValue.value === props.path
+  const isResolvedElsewhere = rootPath.value && rootPath.value !== sourcePath.value
+  if (isUnchanged && isResolvedElsewhere) {
+    modelValue.value = rootPath.value
   }
 }
 </script>
@@ -130,7 +144,6 @@ function onOk() {
         v-if="rootPath"
         v-model:selected-paths="selectedPaths"
         :path="rootPath"
-        :projects="projects"
         :multiple="multiple"
         nested
         no-stats

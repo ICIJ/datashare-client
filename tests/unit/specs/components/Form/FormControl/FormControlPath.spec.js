@@ -20,7 +20,8 @@ describe('FormControlPath.vue', () => {
   let core
 
   function mountPath(props = {}) {
-    const stubs = { AppModal: { template: '<div><slot /></div>' }, PathTree: true, PathTreeBreadcrumb: true }
+    const AppModal = { name: 'AppModal', template: '<div><slot /></div>' }
+    const stubs = { AppModal, PathTree: true, PathTreeBreadcrumb: true }
     const defaults = { path: '/vault/foo', modelValue: '/vault/foo', projects: ['foo'] }
     return mount(FormControlPath, { props: { ...defaults, ...props }, global: { plugins: core.plugins, stubs } })
   }
@@ -29,6 +30,21 @@ describe('FormControlPath.vue', () => {
     const button = wrapper.findAllComponents(ButtonIcon)[0]
     await button.trigger('click')
     await flushPromises()
+  }
+
+  async function ok(wrapper) {
+    const modal = wrapper.findComponent({ name: 'AppModal' })
+    modal.vm.$emit('ok')
+    await flushPromises()
+  }
+
+  function onDisk(...paths) {
+    api.tree.mockImplementation(async (path) => {
+      if (!paths.includes(path)) {
+        throw new Error('404')
+      }
+      return {}
+    })
   }
 
   function treePath(wrapper) {
@@ -52,12 +68,88 @@ describe('FormControlPath.vue', () => {
   })
 
   it('opens on the indexed folder when the saved path is missing', async () => {
-    api.tree.mockRejectedValue(new Error('404'))
+    onDisk('/data/leak')
     api.elasticsearch.getCommonDirname.mockResolvedValue('/data/leak')
     const wrapper = mountPath()
     await browse(wrapper)
     expect(treePath(wrapper)).toBe('/data/leak')
+  })
+
+  it('keeps the value when the user closes the modal without confirming', async () => {
+    onDisk('/data/leak')
+    api.elasticsearch.getCommonDirname.mockResolvedValue('/data/leak')
+    const wrapper = mountPath()
+    await browse(wrapper)
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+  })
+
+  it('uses the indexed folder when the user confirms without a selection', async () => {
+    onDisk('/data/leak')
+    api.elasticsearch.getCommonDirname.mockResolvedValue('/data/leak')
+    const wrapper = mountPath()
+    await browse(wrapper)
+    await ok(wrapper)
     expect(wrapper.emitted('update:modelValue')).toEqual([['/data/leak']])
+  })
+
+  it('keeps the saved path when the user confirms without a selection', async () => {
+    onDisk('/vault/foo')
+    const wrapper = mountPath()
+    await browse(wrapper)
+    await ok(wrapper)
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+  })
+
+  it('keeps the value when the user confirms before the root resolves', async () => {
+    api.tree.mockReturnValue(new Promise(() => {}))
+    const wrapper = mountPath()
+    await browse(wrapper)
+    await ok(wrapper)
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+  })
+
+  it('opens on the data dir when the indexed folder is missing on disk', async () => {
+    onDisk()
+    api.elasticsearch.getCommonDirname.mockResolvedValue('/home/datashare/data/leak')
+    const wrapper = mountPath()
+    await browse(wrapper)
+    expect(treePath(wrapper)).toBe('/data')
+  })
+
+  it('opens on the data dir when the indexed documents share no folder', async () => {
+    onDisk('/')
+    api.elasticsearch.getCommonDirname.mockResolvedValue('/')
+    const wrapper = mountPath()
+    await browse(wrapper)
+    expect(treePath(wrapper)).toBe('/data')
+  })
+
+  it('ignores a lookup that ends after the path changed', async () => {
+    onDisk('/data/leak')
+    let resolveLookup
+    api.elasticsearch.getCommonDirname.mockReturnValue(new Promise(resolve => resolveLookup = resolve))
+    const wrapper = mountPath()
+    await browse(wrapper)
+    await wrapper.setProps({ path: '/vault/bar', projects: ['bar'] })
+    resolveLookup('/data/leak')
+    await flushPromises()
+    expect(wrapper.findComponent(PathTree).exists()).toBe(false)
+  })
+
+  it('hides the previous tree while the root resolves again', async () => {
+    api.tree.mockResolvedValue({})
+    const wrapper = mountPath()
+    await browse(wrapper)
+    api.tree.mockReturnValue(new Promise(() => {}))
+    await browse(wrapper)
+    expect(wrapper.findComponent(PathTree).exists()).toBe(false)
+  })
+
+  it('shows only folders on disk in the tree', async () => {
+    api.tree.mockResolvedValue({})
+    const wrapper = mountPath()
+    await browse(wrapper)
+    expect(wrapper.findComponent(PathTree).props('projects')).toEqual([])
   })
 
   it('opens on the data dir when the saved path is missing and nothing is indexed', async () => {
@@ -81,6 +173,7 @@ describe('FormControlPath.vue', () => {
     api.elasticsearch.getCommonDirname.mockResolvedValue('/data/leak')
     const wrapper = mountPath({ modelValue: '/elsewhere' })
     await browse(wrapper)
+    await ok(wrapper)
     expect(wrapper.emitted('update:modelValue')).toBeUndefined()
   })
 
