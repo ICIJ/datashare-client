@@ -65,8 +65,8 @@ async function existsOnDisk(path) {
     await core.api.tree(path)
     return true
   }
-  catch {
-    return false
+  catch (error) {
+    return error?.response?.status !== 404
   }
 }
 

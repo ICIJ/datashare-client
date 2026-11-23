@@ -38,10 +38,12 @@ describe('FormControlPath.vue', () => {
     await flushPromises()
   }
 
+  const notFound = { response: { status: 404 } }
+
   function onDisk(...paths) {
     api.tree.mockImplementation(async (path) => {
       if (!paths.includes(path)) {
-        throw new Error('404')
+        throw notFound
       }
       return {}
     })
@@ -65,6 +67,14 @@ describe('FormControlPath.vue', () => {
     expect(treePath(wrapper)).toBe('/vault/foo')
     expect(api.elasticsearch.getCommonDirname).not.toBeCalled()
     expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+  })
+
+  it('opens on the saved path when the disk check fails for another reason', async () => {
+    api.tree.mockRejectedValue({ response: { status: 500 } })
+    const wrapper = mountPath()
+    await browse(wrapper)
+    expect(treePath(wrapper)).toBe('/vault/foo')
+    expect(api.elasticsearch.getCommonDirname).not.toBeCalled()
   })
 
   it('opens on the indexed folder when the saved path is missing', async () => {
@@ -167,7 +177,7 @@ describe('FormControlPath.vue', () => {
   })
 
   it('opens on the data dir when the saved path is missing and nothing is indexed', async () => {
-    api.tree.mockRejectedValue(new Error('404'))
+    api.tree.mockRejectedValue(notFound)
     api.elasticsearch.getCommonDirname.mockResolvedValue(null)
     const wrapper = mountPath()
     await browse(wrapper)
@@ -175,7 +185,7 @@ describe('FormControlPath.vue', () => {
   })
 
   it('opens on the data dir when the saved path is missing and the indexed folder cannot be found', async () => {
-    api.tree.mockRejectedValue(new Error('404'))
+    api.tree.mockRejectedValue(notFound)
     api.elasticsearch.getCommonDirname.mockRejectedValue(new Error('401'))
     const wrapper = mountPath()
     await browse(wrapper)
@@ -183,7 +193,7 @@ describe('FormControlPath.vue', () => {
   })
 
   it('keeps a folder the user already picked', async () => {
-    api.tree.mockRejectedValue(new Error('404'))
+    api.tree.mockRejectedValue(notFound)
     api.elasticsearch.getCommonDirname.mockResolvedValue('/data/leak')
     const wrapper = mountPath({ modelValue: '/elsewhere' })
     await browse(wrapper)

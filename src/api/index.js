@@ -27,7 +27,9 @@ export class Api {
   }
 
   tree(path) {
-    return this.sendAction('/api/tree/' + trim(path, '/'), { method: Method.GET })
+    const segments = trim(path, '/').split('/')
+    const encodedPath = segments.map(encodeURIComponent).join('/')
+    return this.sendAction('/api/tree/' + encodedPath, { method: Method.GET })
   }
 
   index({ ocr = false, filter = true, language = null, path = null, defaultProject = null } = {}) {
