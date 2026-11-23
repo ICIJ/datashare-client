@@ -30,6 +30,10 @@ const props = defineProps({
   projects: {
     type: Array,
     default: () => []
+  },
+  indexed: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -41,6 +45,7 @@ const rootPath = ref(null)
 const { isServer } = useMode()
 const sourcePath = computed(() => props.path ?? core.getDefaultDataDir())
 const display = computed(() => modelValue.value ?? sourcePath.value)
+const treeProjects = computed(() => (props.indexed ? props.projects : []))
 
 watch(toRef(props, 'projects'), () => {
   selectedPaths.value = []
@@ -144,6 +149,7 @@ function onOk() {
         v-if="rootPath"
         v-model:selected-paths="selectedPaths"
         :path="rootPath"
+        :projects="treeProjects"
         :multiple="multiple"
         nested
         no-stats

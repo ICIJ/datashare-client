@@ -116,6 +116,7 @@ const saveBanner = waitFor(async (formData) => {
         v-if="activeBanner"
         ref="bannerFormRef"
         :banner="activeBanner"
+        :project="name"
         @save="onModalSave"
       />
     </app-overlay>
