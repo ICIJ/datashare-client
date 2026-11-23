@@ -109,6 +109,7 @@ watch(toRef(form, 'defaultProject'), p => form.path = getProjectSourcePath(p))
       <form-control-path
         v-model="form.path"
         :path="sourcePath"
+        :projects="[form.defaultProject]"
       />
     </form-fieldset-i18n>
     <form-fieldset-i18n
