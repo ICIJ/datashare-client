@@ -2,6 +2,7 @@ import { shallowMount, mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import DropdownSelector from '@/components/DropdownSelector/DropdownSelector'
+import FormControlPath from '@/components/Form/FormControl/FormControlPath'
 import FormControlExtractingLanguage from '@/components/Form/FormControl/FormControlExtractingLanguage'
 import TaskDocumentsForm from '@/components/Task/TaskDocuments/TaskDocumentsForm'
 import { apiInstance as api } from '@/api/apiInstance'
@@ -102,5 +103,15 @@ describe('TaskDocumentsForm.vue', () => {
     const wrapper = mount(TaskDocumentsForm, { global: { plugins } })
     const projectDropdown = wrapper.findComponent(DropdownSelector)
     expect(projectDropdown.props('placement')).toBe('right-start')
+  })
+
+  it('keeps the same projects list for the path picker when the form re-renders', async () => {
+    const wrapper = mount(TaskDocumentsForm, { global: { plugins } })
+    const pathControl = wrapper.findComponent(FormControlPath)
+    const projectsBefore = pathControl.props('projects')
+    await pathControl.vm.$emit('update:modelValue', '/data/leak')
+    await wrapper.vm.$nextTick()
+    expect(pathControl.props('modelValue')).toBe('/data/leak')
+    expect(pathControl.props('projects')).toBe(projectsBefore)
   })
 })
