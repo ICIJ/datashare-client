@@ -134,16 +134,29 @@ describe('FormControlPath.vue', () => {
     expect(treePath(wrapper)).toBe('/data')
   })
 
-  it('ignores a lookup that ends after the path changed', async () => {
-    onDisk('/data/leak')
+  it('resolves the root again when the path changes while the picker is open', async () => {
+    onDisk('/data/leak', '/vault/bar')
     let resolveLookup
     api.elasticsearch.getCommonDirname.mockReturnValue(new Promise(resolve => resolveLookup = resolve))
     const wrapper = mountPath()
     await browse(wrapper)
     await wrapper.setProps({ path: '/vault/bar', projects: ['bar'] })
+    await flushPromises()
     resolveLookup('/data/leak')
     await flushPromises()
-    expect(wrapper.findComponent(PathTree).exists()).toBe(false)
+    expect(treePath(wrapper)).toBe('/vault/bar')
+  })
+
+  it('keeps the root when the parent passes the same projects again', async () => {
+    onDisk('/data/leak')
+    let resolveLookup
+    api.elasticsearch.getCommonDirname.mockReturnValue(new Promise(resolve => resolveLookup = resolve))
+    const wrapper = mountPath()
+    await browse(wrapper)
+    await wrapper.setProps({ projects: ['foo'] })
+    resolveLookup('/data/leak')
+    await flushPromises()
+    expect(treePath(wrapper)).toBe('/data/leak')
   })
 
   it('hides the previous tree while the root resolves again', async () => {

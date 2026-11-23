@@ -86,16 +86,26 @@ async function resolveRootPath() {
   return core.getDefaultDataDir()
 }
 
+let lastLookup = 0
+
 async function browse() {
+  const lookup = ++lastLookup
   rootPath.value = null
   showPathTree.value = true
-  const { path, projects } = props
   const resolvedRootPath = await resolveRootPath()
-  const isStale = !showPathTree.value || path !== props.path || projects !== props.projects
+  const isStale = !showPathTree.value || lookup !== lastLookup
   if (!isStale) {
     rootPath.value = resolvedRootPath
   }
 }
+
+const lookupKey = computed(() => [sourcePath.value, ...props.projects].join(','))
+
+watch(lookupKey, () => {
+  if (showPathTree.value) {
+    browse()
+  }
+})
 
 function onOk() {
   if (props.multiple) {
