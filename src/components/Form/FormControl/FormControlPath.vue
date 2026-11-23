@@ -119,7 +119,8 @@ function onOk() {
   }
   const isUnchanged = !modelValue.value || modelValue.value === props.path
   const isResolvedElsewhere = rootPath.value && rootPath.value !== sourcePath.value
-  if (isUnchanged && isResolvedElsewhere) {
+  const isDataDir = rootPath.value === core.getDefaultDataDir()
+  if (isUnchanged && isResolvedElsewhere && !isDataDir) {
     modelValue.value = rootPath.value
   }
 }
