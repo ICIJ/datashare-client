@@ -102,6 +102,36 @@ describe('FormControlPath.vue', () => {
     expect(wrapper.emitted('update:modelValue')).toEqual([['/data/leak']])
   })
 
+  it('uses the indexed folder when the user confirms after a project switch', async () => {
+    onDisk('/data/leak')
+    api.elasticsearch.getCommonDirname.mockResolvedValue('/data/leak')
+    const wrapper = mountPath()
+    await wrapper.setProps({ projects: ['bar'], path: '/vault/bar', modelValue: '/vault/bar' })
+    await browse(wrapper)
+    await ok(wrapper)
+    expect(wrapper.emitted('update:modelValue')).toEqual([['/data/leak']])
+  })
+
+  it('uses the folder the user picks after a project switch', async () => {
+    onDisk('/data/leak')
+    api.elasticsearch.getCommonDirname.mockResolvedValue('/data/leak')
+    const wrapper = mountPath()
+    await wrapper.setProps({ path: '/vault/bar', modelValue: '/vault/bar', projects: ['bar'] })
+    await browse(wrapper)
+    wrapper.findComponent(PathTree).vm.$emit('update:selectedPaths', ['/data/leak/a'])
+    await ok(wrapper)
+    expect(wrapper.emitted('update:modelValue')).toEqual([['/data/leak/a']])
+  })
+
+  it('keeps the value when the user confirms and nothing is indexed', async () => {
+    onDisk()
+    api.elasticsearch.getCommonDirname.mockResolvedValue(null)
+    const wrapper = mountPath()
+    await browse(wrapper)
+    await ok(wrapper)
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+  })
+
   it('keeps the saved path when the user confirms without a selection', async () => {
     onDisk('/vault/foo')
     const wrapper = mountPath()
