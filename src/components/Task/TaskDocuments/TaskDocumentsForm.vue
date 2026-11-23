@@ -28,6 +28,8 @@ const sourcePath = computed(() => {
   return getProjectSourcePath(form.defaultProject)
 })
 
+const pathProjects = computed(() => [form.defaultProject])
+
 function initialFormValues() {
   const project = props.project ?? core.getDefaultProject()
   const { name: defaultProject } = core.findProject(project)
@@ -112,7 +114,7 @@ watch(toRef(form, 'defaultProject'), p => form.path = getProjectSourcePath(p))
       <form-control-path
         v-model="form.path"
         :path="sourcePath"
-        :projects="[form.defaultProject]"
+        :projects="pathProjects"
       />
     </form-fieldset-i18n>
     <form-fieldset-i18n
