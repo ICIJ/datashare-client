@@ -1,5 +1,6 @@
 import isEqual from 'lodash/isEqual'
 import replace from 'lodash/replace'
+import maxBy from 'lodash/maxBy'
 import bodybuilder from 'bodybuilder'
 import { getCookie } from 'tiny-cookie'
 
@@ -406,6 +407,30 @@ export function datasharePlugin(Client) {
     const body = { query: { query_string: { query: 'type:Document' } } }
     const res = await this.count({ index, body, preference: PREFERENCE.DOCUMENTS_COUNT, ...IGNORE_MISSING_INDEX })
     return res?.count ?? 0
+  }
+
+  /**
+   * Finds the deepest folder containing every document of an index.
+   * @param {string} index - The index name
+   * @returns {Promise<string|null>} The folder, '/' when documents share none, or null without documents
+   */
+  Client.prototype.getCommonDirname = async function (index) {
+    const body = {
+      size: 0,
+      track_total_hits: true,
+      query: { match: { type: 'Document' } },
+      aggs: { dirnames: { terms: { field: 'dirname.tree', size: 100 } } }
+    }
+    const res = await this.search({ index, body, ...IGNORE_MISSING_INDEX })
+    const total = res?.hits?.total?.value ?? 0
+    if (!total) {
+      return null
+    }
+    const buckets = res.aggregations.dirnames.buckets
+    const shared = buckets.filter(bucket => bucket.doc_count === total)
+    const keys = shared.map(bucket => bucket.key)
+    const deepest = maxBy(keys, 'length')
+    return deepest ?? '/'
   }
 
   /**
