@@ -68,6 +68,14 @@ describe('FormControlPath.vue', () => {
     expect(treePath(wrapper)).toBe('/data')
   })
 
+  it('opens on the data dir when the saved path is missing and the indexed folder cannot be found', async () => {
+    api.tree.mockRejectedValue(new Error('404'))
+    api.elasticsearch.getCommonDirname.mockRejectedValue(new Error('401'))
+    const wrapper = mountPath()
+    await browse(wrapper)
+    expect(treePath(wrapper)).toBe('/data')
+  })
+
   it('keeps a folder the user already picked', async () => {
     api.tree.mockRejectedValue(new Error('404'))
     api.elasticsearch.getCommonDirname.mockResolvedValue('/data/leak')

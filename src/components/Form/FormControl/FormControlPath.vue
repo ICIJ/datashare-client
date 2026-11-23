@@ -73,7 +73,7 @@ async function resolveRootPath() {
     return sourcePath.value
   }
   const index = props.projects.join(',')
-  const commonDirname = await core.api.elasticsearch.getCommonDirname(index)
+  const commonDirname = await core.api.elasticsearch.getCommonDirname(index).catch(() => null)
   return commonDirname ?? core.getDefaultDataDir()
 }
 
