@@ -1,6 +1,7 @@
 import { shallowMount, mount } from '@vue/test-utils'
 
 import CoreSetup from '~tests/unit/CoreSetup'
+import DropdownSelector from '@/components/DropdownSelector/DropdownSelector'
 import FormControlExtractingLanguage from '@/components/Form/FormControl/FormControlExtractingLanguage'
 import TaskDocumentsForm from '@/components/Task/TaskDocuments/TaskDocumentsForm'
 import { apiInstance as api } from '@/api/apiInstance'
@@ -95,5 +96,11 @@ describe('TaskDocumentsForm.vue', () => {
     const projectSelector = wrapper.findComponent({ name: 'search-bar-input-dropdown-for-projects' })
     expect(projectSelector.exists()).toBeTruthy()
     expect(projectSelector.props('modelValue')).toEqual({ name: 'local-datashare' })
+  })
+
+  it('opens the project selector beside its toggle so it does not cover the path picker', async () => {
+    const wrapper = mount(TaskDocumentsForm, { global: { plugins } })
+    const projectDropdown = wrapper.findComponent(DropdownSelector)
+    expect(projectDropdown.props('placement')).toBe('right-start')
   })
 })

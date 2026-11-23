@@ -100,7 +100,10 @@ watch(toRef(form, 'defaultProject'), p => form.path = getProjectSourcePath(p))
       name="project-selector"
       translation-key="task.documents.form.projectSelector"
     >
-      <search-bar-input-dropdown-for-projects v-model="currentProject" />
+      <search-bar-input-dropdown-for-projects
+        v-model="currentProject"
+        placement="right-start"
+      />
     </form-fieldset-i18n>
     <form-fieldset-i18n
       name="source-path"
