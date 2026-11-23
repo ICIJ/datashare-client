@@ -8,6 +8,7 @@ import IPhMagnifyingGlass from '~icons/ph/magnifying-glass'
 import IPhFolderOpen from '~icons/ph/folder-open'
 
 import AppModal from '@/components/AppModal/AppModal'
+import AppSpinner from '@/components/AppSpinner/AppSpinner'
 import PathTree from '@/components/PathTree/PathTree'
 import PathTreeBreadcrumb from '@/components/PathTree/PathTreeBreadcrumb/PathTreeBreadcrumb'
 import { useCore } from '@/composables/useCore'
@@ -167,6 +168,11 @@ function onOk() {
         no-stats
         select-mode
         :no-tree="noTree"
+      />
+      <app-spinner
+        v-else
+        class="d-flex mx-auto my-3"
+        size="2em"
       />
     </app-modal>
   </div>

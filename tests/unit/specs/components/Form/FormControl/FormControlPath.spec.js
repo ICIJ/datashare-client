@@ -4,6 +4,7 @@ import { ButtonIcon } from '@icij/murmur'
 import CoreSetup from '~tests/unit/CoreSetup'
 import FormControlPath from '@/components/Form/FormControl/FormControlPath'
 import PathTree from '@/components/PathTree/PathTree'
+import AppSpinner from '@/components/AppSpinner/AppSpinner'
 import { apiInstance as api } from '@/api/apiInstance'
 import { MODE_NAME } from '@/mode'
 
@@ -187,6 +188,13 @@ describe('FormControlPath.vue', () => {
     resolveLookup('/data/leak')
     await flushPromises()
     expect(treePath(wrapper)).toBe('/data/leak')
+  })
+
+  it('shows a spinner while the root resolves', async () => {
+    api.tree.mockReturnValue(new Promise(() => {}))
+    const wrapper = mountPath()
+    await browse(wrapper)
+    expect(wrapper.findComponent(AppSpinner).exists()).toBe(true)
   })
 
   it('hides the previous tree while the root resolves again', async () => {
