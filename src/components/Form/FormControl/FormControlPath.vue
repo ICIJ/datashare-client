@@ -114,7 +114,9 @@ watch(lookupKey, () => {
 
 function onOk() {
   if (props.multiple) {
-    modelValue.value = selectedPaths.value
+    if (selectedPaths.value.length) {
+      modelValue.value = selectedPaths.value
+    }
     return
   }
   const [selectedPath] = selectedPaths.value
