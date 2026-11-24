@@ -140,6 +140,11 @@ describe('Datashare backend client', () => {
     expect(json).toEqual({})
   })
 
+  it('should split a Windows path on backslashes when calling tree', async () => {
+    await api.tree('C:\\Users\\me\\Datashare')
+    expect(axios.request).toBeCalledWith(expect.objectContaining({ url: Api.getFullUrl('/api/tree/C%3A/Users/me/Datashare') }))
+  })
+
   it('should encode each folder name when calling tree', async () => {
     await api.tree('/data/a#b/c?d')
     expect(axios.request).toBeCalledWith(expect.objectContaining({ url: Api.getFullUrl('/api/tree/data/a%23b/c%3Fd') }))
