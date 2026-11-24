@@ -116,6 +116,16 @@ describe('FormControlPath.vue', () => {
     expect(wrapper.emitted('update:modelValue')).toEqual([['/data/leak']])
   })
 
+  it('uses the indexed folder when the user confirms after a path change', async () => {
+    onDisk('/data/leak')
+    api.elasticsearch.getCommonDirname.mockResolvedValue('/data/leak')
+    const wrapper = mountPath()
+    await wrapper.setProps({ path: '/vault/bar', modelValue: '/vault/bar' })
+    await browse(wrapper)
+    await ok(wrapper)
+    expect(wrapper.emitted('update:modelValue')).toEqual([['/data/leak']])
+  })
+
   it('uses the folder the user picks after a project switch', async () => {
     onDisk('/data/leak')
     api.elasticsearch.getCommonDirname.mockResolvedValue('/data/leak')

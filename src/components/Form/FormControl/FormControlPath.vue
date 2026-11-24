@@ -95,8 +95,12 @@ async function browse() {
   showPathTree.value = true
   const resolvedRootPath = await resolveRootPath()
   const isStale = !showPathTree.value || lookup !== lastLookup
-  if (!isStale) {
-    rootPath.value = resolvedRootPath
+  if (isStale) {
+    return
+  }
+  rootPath.value = resolvedRootPath
+  if (resolvedRootPath !== sourcePath.value) {
+    selectedPaths.value = []
   }
 }
 
