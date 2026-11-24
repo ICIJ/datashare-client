@@ -10,14 +10,15 @@
 
 **Spec:** `docs/superpowers/specs/2026-11-23-form-control-path-fixes-design.md`
 
+**Status:** done. The tasks below are the plan as written. Where the code differs (404-only disk check, value written on OK instead of on open, Bug 2 cause), the spec's Outcome section is the reference.
+
 ## Global Constraints
 
-- No change to `PathTree.vue` behavior.
+- No change to `PathTree.vue` behavior, except opt-in props.
 - Server mode: no `/tree` disk check, the given path is kept (today's behavior).
 - "Saved path missing" = `api.tree(path)` rejects. Never match on `/vault/<name>`.
 - The resolved folder replaces the form value only when `modelValue` is unset or equals the `path` prop.
 - `dirname.tree` terms aggregation size: 100.
-- Spec and plan files under `docs/superpowers/` are never committed.
 - Commit through the `icij:commit` skill. Branch: `fix/form-control-path-issues` (already checked out).
 
 ## Review Focus
@@ -98,13 +99,13 @@ Behavior on Browse click (both buttons):
 The root is resolved again on every click. No caching.
 
 - [ ] **Step 1: Write the failing tests.** Mock `@/api/apiInstance` with `tree: vi.fn()` and `elasticsearch: { getCommonDirname: vi.fn() }`. Set `dataDir` to `/data` with `CoreSetup`. Stub `AppModal` and `PathTree`. Click the first `button-icon`, then `flushPromises()`. Cases:
-  - `tree` resolves → PathTree `path` prop is `/vault/foo`, `getCommonDirname` not called, no `update:modelValue`.
-  - `tree` rejects, `getCommonDirname` → `/data/leak` → PathTree `path` is `/data/leak`, emitted `update:modelValue` is `['/data/leak']` (prop `modelValue: '/vault/foo'`, `path: '/vault/foo'`).
-  - `tree` rejects, `getCommonDirname` → `null` → PathTree `path` is `/data`.
-  - `modelValue: '/elsewhere'`, `tree` rejects, `getCommonDirname` → `/data/leak` → no `update:modelValue` emitted.
-  - Server mode (`core.config.set('mode', 'SERVER')`, check `src/mode/index.js` for the exact key) → `tree` not called, PathTree `path` is `/vault/foo`.
-  - After a first click, `setProps({ path: '/vault/bar' })` then click again → `tree` called with `/vault/bar`.
-  - `projects: []` → `tree` not called, PathTree `path` is `/vault/foo`.
+  - `tree` resolves -> PathTree `path` prop is `/vault/foo`, `getCommonDirname` not called, no `update:modelValue`.
+  - `tree` rejects, `getCommonDirname` -> `/data/leak` -> PathTree `path` is `/data/leak`, emitted `update:modelValue` is `['/data/leak']` (prop `modelValue: '/vault/foo'`, `path: '/vault/foo'`).
+  - `tree` rejects, `getCommonDirname` -> `null` -> PathTree `path` is `/data`.
+  - `modelValue: '/elsewhere'`, `tree` rejects, `getCommonDirname` -> `/data/leak` -> no `update:modelValue` emitted.
+  - Server mode (`core.config.set('mode', 'SERVER')`, check `src/mode/index.js` for the exact key) -> `tree` not called, PathTree `path` is `/vault/foo`.
+  - After a first click, `setProps({ path: '/vault/bar' })` then click again -> `tree` called with `/vault/bar`.
+  - `projects: []` -> `tree` not called, PathTree `path` is `/vault/foo`.
 
 - [ ] **Step 2: Run and show RED.** `yarn test FormControlPath`. Expected: the fallback cases FAIL (PathTree path stays `/vault/foo`, or PathTree is not rendered).
 
