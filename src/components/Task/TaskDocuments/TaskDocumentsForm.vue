@@ -86,7 +86,9 @@ const skipOptions = computed(() => [
 // Fetch available languages and OCR languages before mounting the component
 onBeforeMount(languagesStore.fetchOnce)
 // When the project prop changes, update the selected project
-watch(toRef(props, 'project'), () => (form.defaultProject = currentProject.value))
+watch(toRef(props, 'project'), (name) => {
+  form.defaultProject = core.findProject(name)?.name ?? form.defaultProject
+})
 // When a project is selected, update the path to the project's source path
 watch(toRef(form, 'defaultProject'), p => form.path = getProjectSourcePath(p))
 </script>
