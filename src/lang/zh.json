@@ -49,6 +49,9 @@
     "cancelTitle": "取消",
     "okTitle": "是"
   },
+  "appSpinner": {
+    "loading": "Loading..."
+  },
   "appPopoverHeader": {
     "close": "关闭"
   },
