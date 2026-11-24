@@ -154,6 +154,15 @@ describe('FormControlPath.vue', () => {
     expect(wrapper.emitted('update:modelValue')).toBeUndefined()
   })
 
+  it('keeps the saved paths when the user confirms without a selection in multiple mode', async () => {
+    onDisk('/data/leak')
+    api.elasticsearch.getCommonDirname.mockResolvedValue('/data/leak')
+    const wrapper = mountPath({ multiple: true, modelValue: ['/vault/foo'] })
+    await browse(wrapper)
+    await ok(wrapper)
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+  })
+
   it('keeps the value when the user confirms before the root resolves', async () => {
     api.tree.mockReturnValue(new Promise(() => {}))
     const wrapper = mountPath()
