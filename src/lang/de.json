@@ -49,6 +49,9 @@
     "cancelTitle": "Abbrechen",
     "okTitle": "Ja"
   },
+  "appSpinner": {
+    "loading": "Loading..."
+  },
   "appPopoverHeader": {
     "close": "Schließen"
   },
