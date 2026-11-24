@@ -362,6 +362,32 @@ describe('PathTree.vue', () => {
       const { body } = searchSpy.mock.calls[0][0]
       expect(body.aggs.dirname.aggs).not.toHaveProperty('directories')
     })
+
+    it('skips the directory_paths agg when neither folding nor stats need it', async () => {
+      const wrapper = mount(PathTree, {
+        props: { projects: [index], path: '/home/foo', noDocuments: true, noFold: true, noStats: true },
+        global: { plugins: core.plugins, renderStubDefaultSlot: true }
+      })
+
+      await wrapper.vm.loadData({ clearPages: true })
+      await flushPromises()
+
+      const { body } = searchSpy.mock.calls[0][0]
+      expect(body.aggs).not.toHaveProperty('directory_paths')
+    })
+
+    it('keeps the directory_paths agg for the stats when folding is off', async () => {
+      const wrapper = mount(PathTree, {
+        props: { projects: [index], path: '/home/foo', noDocuments: true, noFold: true },
+        global: { plugins: core.plugins, renderStubDefaultSlot: true }
+      })
+
+      await wrapper.vm.loadData({ clearPages: true })
+      await flushPromises()
+
+      const { body } = searchSpy.mock.calls[0][0]
+      expect(body.aggs).toHaveProperty('directory_paths')
+    })
   })
 
   describe('folded directory chains', () => {

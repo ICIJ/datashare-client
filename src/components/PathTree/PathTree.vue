@@ -392,7 +392,8 @@ function getDirectoriesBodybuilder({ from = 0, size = PER_PAGE } = {}) {
   // doc-containing directory paths under the current folder. Fetch them once
   // per level (from === 0), keys only, gated like the (removed) per-bucket
   // cardinality so compact mode stays cheap.
-  if ((!props.compact || props.noStats) && from === 0) {
+  const needsDirectoryPaths = !props.noFold || !props.noStats
+  if ((!props.compact || props.noStats) && needsDirectoryPaths && from === 0) {
     const descendantPaths = [trimmedPath.value, '*'].join(pathSeparator.value)
     bb.agg('terms', 'dirname', { include: wildcardRegExpPattern(descendantPaths), size: DIRECTORY_PATHS_LIMIT }, 'directory_paths')
   }
