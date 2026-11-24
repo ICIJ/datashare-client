@@ -49,6 +49,9 @@
     "cancelTitle": "キャンセル",
     "okTitle": "Yes"
   },
+  "appSpinner": {
+    "loading": "Loading..."
+  },
   "appPopoverHeader": {
     "close": "閉じる"
   },
