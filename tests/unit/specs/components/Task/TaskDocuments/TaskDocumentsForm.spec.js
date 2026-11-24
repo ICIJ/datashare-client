@@ -23,11 +23,11 @@ vi.mock('@/api/apiInstance', () => {
 
 // @todo file renamed but the tests have to be rewritten
 describe('TaskDocumentsForm.vue', () => {
-  let plugins
+  let core, plugins
 
   beforeEach(async () => {
     vi.clearAllMocks()
-    const core = CoreSetup.init().createPinia().useAll().useRouterWithoutGuards()
+    core = CoreSetup.init().createPinia().useAll().useRouterWithoutGuards()
     plugins = core.plugins
     await core.config.set('defaultProject', 'local-datashare')
     await core.config.set('dataDir', '/data')
@@ -103,6 +103,17 @@ describe('TaskDocumentsForm.vue', () => {
     const wrapper = mount(TaskDocumentsForm, { global: { plugins } })
     const projectDropdown = wrapper.findComponent(DropdownSelector)
     expect(projectDropdown.props('placement')).toBe('right-start')
+  })
+
+  it('selects the new project and its source path when the project prop changes', async () => {
+    await core.config.set('projects', [
+      { name: 'local-datashare' },
+      { name: 'leak', sourcePath: 'file:///data/leak' }
+    ])
+    const wrapper = shallowMount(TaskDocumentsForm, { global: { plugins } })
+    await wrapper.setProps({ project: 'leak' })
+    expect(wrapper.vm.form.defaultProject).toBe('leak')
+    expect(wrapper.vm.form.path).toBe('/data/leak')
   })
 
   it('keeps the same projects list for the path picker when the form re-renders', async () => {
