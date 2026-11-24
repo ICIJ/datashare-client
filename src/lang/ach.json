@@ -49,6 +49,9 @@
     "cancelTitle": "crwdns7596:0crwdne7596:0",
     "okTitle": "crwdns7598:0crwdne7598:0"
   },
+  "appSpinner": {
+    "loading": "crwdns10817:0crwdne10817:0"
+  },
   "appPopoverHeader": {
     "close": "crwdns7600:0crwdne7600:0"
   },
