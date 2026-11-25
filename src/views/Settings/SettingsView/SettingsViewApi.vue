@@ -10,7 +10,8 @@ import IPhTrash from '~icons/ph/trash'
 
 import AppModal from '@/components/AppModal/AppModal'
 import DisplayHash from '@/components/Display/DisplayHash'
-import DisplayDatetime from '@/components/Display/DisplayDatetime'
+import DisplayDatetimeShort from '@/components/Display/DisplayDatetimeShort'
+import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import SettingsViewLayout from '@/views/Settings/SettingsView/SettingsViewLayout'
 import SettingsViewApiMcp from '@/views/Settings/SettingsView/SettingsViewApiMcp'
 import SettingsViewApiKeyForm from '@/views/Settings/SettingsView/SettingsViewApiKeyForm'
@@ -79,6 +80,20 @@ function isExpired({ expirationDate }) {
   return new Date(expirationDate) <= new Date()
 }
 
+const fields = computed(() => [
+  { key: 'hashedKey', text: t('settings.api.key.fields.key') },
+  { key: 'projects', text: t('settings.api.key.fields.projects') },
+  { key: 'creationDate', text: t('settings.api.key.fields.created') },
+  { key: 'expirationDate', text: t('settings.api.key.fields.expires') }
+])
+
+function rowClass(key) {
+  return {
+    'settings-view-api__key': true,
+    'settings-view-api__key--expired': isExpired(key)
+  }
+}
+
 function projectLabel(name) {
   return core.findProject(name)?.label ?? name
 }
@@ -120,78 +135,58 @@ whenever(username, fetchApiKeys, { immediate: true })
       >
         {{ t('settings.api.newApiKey') }}
       </button-icon>
-      <table class="table align-middle">
-        <thead>
-          <tr>
-            <th>{{ t('settings.api.key.fields.key') }}</th>
-            <th>{{ t('settings.api.key.fields.projects') }}</th>
-            <th>{{ t('settings.api.key.fields.created') }}</th>
-            <th>{{ t('settings.api.key.fields.expires') }}</th>
-            <th />
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="key in keys"
-            :key="key.hashedKey"
-            class="settings-view-api__key"
-            :class="{ 'settings-view-api__key--expired': isExpired(key) }"
+      <page-table-generic
+        :items="keys"
+        :fields="fields"
+        :row-class="rowClass"
+        primary-key="hashedKey"
+      >
+        <template #cell(hashedKey)="{ item }">
+          <display-hash :value="item.hashedKey" />
+        </template>
+        <template #cell(projects)="{ item }">
+          <div class="d-flex flex-wrap gap-1">
+            <b-badge
+              v-for="name in item.projects"
+              :key="name"
+            >
+              {{ projectLabel(name) }}
+            </b-badge>
+            <b-badge
+              v-if="!item.projects.length"
+              variant="light"
+            >
+              {{ t('settings.api.key.allProjects') }}
+            </b-badge>
+          </div>
+        </template>
+        <template #cell(creationDate)="{ item }">
+          <display-datetime-short :value="item.creationDate" />
+        </template>
+        <template #cell(expirationDate)="{ item }">
+          <display-datetime-short :value="item.expirationDate" />
+          <b-badge
+            v-if="isExpired(item)"
+            variant="danger"
+            class="ms-2"
           >
-            <td>
-              <display-hash :value="key.hashedKey" />
-            </td>
-            <td>
-              <div class="d-flex flex-wrap gap-1">
-                <b-badge
-                  v-for="name in key.projects"
-                  :key="name"
-                >
-                  {{ projectLabel(name) }}
-                </b-badge>
-                <b-badge
-                  v-if="!key.projects.length"
-                  variant="light"
-                >
-                  {{ t('settings.api.key.allProjects') }}
-                </b-badge>
-              </div>
-            </td>
-            <td>
-              <display-datetime :value="key.creationDate" />
-            </td>
-            <td>
-              <display-datetime :value="key.expirationDate" />
-              <b-badge
-                v-if="isExpired(key)"
-                variant="danger"
-                class="ms-2"
-              >
-                {{ t('settings.api.key.expired') }}
-              </b-badge>
-              <display-datetime
-                v-else
-                :value="key.expirationDate"
-                format="fromNow"
-                no-tooltip
-                class="ms-2 text-secondary-emphasis"
-              />
-            </td>
-            <td class="text-end">
-              <button-icon
-                :icon-left="IPhTrash"
-                icon-left-hover-weight="bold"
-                hide-label
-                square
-                size="sm"
-                variant="outline-secondary"
-                class="settings-view-api__key__delete border-0"
-                :label="t('settings.api.key.delete.button')"
-                @click="confirmDeleteApiKey(key.hashedKey)"
-              />
-            </td>
-          </tr>
-        </tbody>
-      </table>
+            {{ t('settings.api.key.expired') }}
+          </b-badge>
+        </template>
+        <template #row-actions="{ item }">
+          <button-icon
+            :icon-left="IPhTrash"
+            icon-left-hover-weight="bold"
+            hide-label
+            square
+            size="sm"
+            variant="outline-secondary"
+            class="settings-view-api__key__delete border-0"
+            :label="t('settings.api.key.delete.button')"
+            @click="confirmDeleteApiKey(item.hashedKey)"
+          />
+        </template>
+      </page-table-generic>
     </div>
     <app-modal
       size="md"
@@ -230,7 +225,7 @@ whenever(username, fetchApiKeys, { immediate: true })
 </template>
 
 <style lang="scss" scoped>
-.settings-view-api__key--expired {
+.settings-view-api :deep(.settings-view-api__key--expired) {
   --bs-table-color: var(--bs-tertiary-color);
 }
 </style>
