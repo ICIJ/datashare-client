@@ -1708,6 +1708,7 @@
         },
         "allProjects": "All projects",
         "expired": "Expired",
+        "new": "New",
         "fields": {
           "key": "Key",
           "projects": "Projects",
