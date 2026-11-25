@@ -39,6 +39,9 @@ const PRESETS = [7, 30, 90]
 const DEFAULT_PRESET = 30
 const MAX = 'max'
 const DAY_IN_MS = 86400000
+// The backend rejects a date past its own now + cap, so a browser clock a few
+// seconds ahead must not turn the preset matching the cap into a 400.
+const CLOCK_SKEW_MARGIN_IN_MS = 60000
 
 const { t } = useI18n()
 
@@ -73,7 +76,10 @@ function submit() {
   if (expiresIn.value === MAX) {
     return emit('submit', { projects })
   }
-  const expiration = new Date(Date.now() + expiresIn.value * DAY_IN_MS)
+  const lifetime = expiresIn.value * DAY_IN_MS
+  const maxLifetime = maxDays.value * DAY_IN_MS - CLOCK_SKEW_MARGIN_IN_MS
+  const safeLifetime = Math.min(lifetime, maxLifetime)
+  const expiration = new Date(Date.now() + safeLifetime)
   const expirationDate = expiration.toISOString()
   emit('submit', { projects, expirationDate })
 }
