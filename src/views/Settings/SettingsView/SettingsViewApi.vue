@@ -135,7 +135,7 @@ whenever(username, fetchApiKeys, { immediate: true })
             v-for="key in keys"
             :key="key.hashedKey"
             class="settings-view-api__key"
-            :class="{ 'settings-view-api__key--expired text-body-tertiary': isExpired(key) }"
+            :class="{ 'settings-view-api__key--expired': isExpired(key) }"
           >
             <td>
               <display-hash :value="key.hashedKey" />
@@ -228,3 +228,9 @@ whenever(username, fetchApiKeys, { immediate: true })
     </app-modal>
   </settings-view-layout>
 </template>
+
+<style lang="scss" scoped>
+.settings-view-api__key--expired {
+  --bs-table-color: var(--bs-tertiary-color);
+}
+</style>
