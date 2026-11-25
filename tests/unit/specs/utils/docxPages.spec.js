@@ -1,4 +1,4 @@
-import { groupBlocksIntoPages, paginateDocx } from '@/utils/docxPages'
+import { groupBlocksIntoPages, hasRenderedPageBreaks, paginateDocx } from '@/utils/docxPages'
 
 describe('groupBlocksIntoPages', () => {
   it('keeps every block on one page when they all fit', () => {
@@ -130,12 +130,12 @@ describe('paginateDocx', () => {
     expect(first.textContent).toBe('a')
   })
 
-  it('leaves a document that already has page breaks untouched', () => {
+  it('splits every section of a document', () => {
     const page = '<section class="docx" style="min-height: 400px; padding-top: 50px; padding-bottom: 50px"><article><p data-bottom="200">a</p><p data-bottom="350">b</p></article></section>'
     const container = document.createElement('div')
     container.innerHTML = page + page
     paginateDocx(container)
-    expect(container.querySelectorAll('section.docx')).toHaveLength(2)
+    expect(container.querySelectorAll('section.docx')).toHaveLength(4)
   })
 
   it('keeps a table of images taller than a page whole', () => {
@@ -167,5 +167,25 @@ describe('paginateDocx', () => {
     const container = mountSection(`<article><p>${pictures}</p></article>`)
     paginateDocx(container)
     expect(container.querySelectorAll('p')).toHaveLength(2)
+  })
+})
+
+describe('hasRenderedPageBreaks', () => {
+  function documentWith(...children) {
+    return { documentPart: { body: { children } } }
+  }
+
+  it('finds a page break Word wrote deep in a paragraph', () => {
+    const run = { children: [{ type: 'break', break: 'lastRenderedPageBreak' }] }
+    expect(hasRenderedPageBreaks(documentWith({ children: [run] }))).toBe(true)
+  })
+
+  it('ignores the page breaks an author wrote', () => {
+    const run = { children: [{ type: 'break', break: 'page' }] }
+    expect(hasRenderedPageBreaks(documentWith({ children: [run] }))).toBe(false)
+  })
+
+  it('finds nothing in a document the library did not return', () => {
+    expect(hasRenderedPageBreaks(undefined)).toBe(false)
   })
 })

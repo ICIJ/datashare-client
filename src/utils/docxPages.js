@@ -132,11 +132,29 @@ function paginateSection(section) {
   notes.forEach(note => previous.insertBefore(note, footer))
 }
 
-// A docx with page breaks is left as Word cut it: viewed without its fonts,
-// each page can overflow by a line, which would add a near-empty page each time.
 export function paginateDocx(container) {
   const sections = container.querySelectorAll('section.docx')
-  if (sections.length === 1) {
-    paginateSection(sections[0])
+  sections.forEach(paginateSection)
+}
+
+/**
+ * Whether Word laid the document out and wrote where its pages break. Such a
+ * document is best left as Word cut it: viewed without its fonts, each page can
+ * overflow by a line, and splitting it would add a near-empty page each time.
+ *
+ * @param {object} [wordDocument] - The document `renderAsync` resolves with.
+ * @returns {boolean}
+ */
+export function hasRenderedPageBreaks(wordDocument) {
+  const body = wordDocument?.documentPart?.body
+  const stack = [...(body?.children ?? [])]
+  while (stack.length) {
+    const element = stack.pop()
+    if (element.break === 'lastRenderedPageBreak') {
+      return true
+    }
+    const children = element.children ?? []
+    stack.push(...children)
   }
+  return false
 }

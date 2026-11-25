@@ -287,6 +287,19 @@ describe('DocumentViewerDocx.vue', () => {
       expect(wrapper.findComponent(DocumentToolbox).props('totalPages')).toBe(2)
     })
 
+    it('keeps the pages of a docx Word laid out', async () => {
+      const wordDocument = {
+        documentPart: { body: { children: [{ children: [{ type: 'break', break: 'lastRenderedPageBreak' }] }] } }
+      }
+      renderAsync.mockImplementation(async (source, container) => {
+        container.innerHTML = '<section class="docx" style="min-height: 300px; padding: 0"><article><p data-bottom="200">first</p><p data-bottom="400">needle</p></article></section>'
+        return wordDocument
+      })
+      const wrapper = mountViewer()
+      await flushPromises()
+      expect(wrapper.findComponent(DocumentToolbox).props('totalPages')).toBe(1)
+    })
+
     it('reports an occurrence on a split page as that page', async () => {
       const wrapper = mountViewer()
       await flushPromises()

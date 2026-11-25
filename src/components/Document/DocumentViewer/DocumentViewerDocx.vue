@@ -9,7 +9,7 @@ import { useDocumentSource } from '@/composables/useDocumentSource'
 import { usePageTracking } from '@/composables/usePageTracking'
 import { useToolboxOffset } from '@/composables/useToolboxOffset'
 import { useToast } from '@/composables/useToast'
-import { paginateDocx } from '@/utils/docxPages'
+import { hasRenderedPageBreaks, paginateDocx } from '@/utils/docxPages'
 import { addSearchMarksClassesInHtml, foldWithSourceIndexes } from '@/utils/strings'
 import { belowToolboxMargin } from '@/utils/toolboxMargin'
 import DismissableContentWarningToggler from '@/components/Dismissable/DismissableContentWarningToggler'
@@ -104,14 +104,14 @@ async function fetchDocx(id) {
 // file ?"), unlike the source errors, which are already localized.
 async function paintDocx(id, blob) {
   try {
-    await renderAsync(blob, container.value, null, RENDER_OPTIONS)
-    return isCurrentRender(id)
+    const wordDocument = await renderAsync(blob, container.value, null, RENDER_OPTIONS)
+    return isCurrentRender(id) ? { wordDocument } : null
   }
   catch {
     if (isCurrentRender(id)) {
       failRender(t('document.notAvailable'))
     }
-    return false
+    return null
   }
 }
 
@@ -146,10 +146,11 @@ async function render() {
   if (!isCurrentRender(id)) {
     return
   }
-  if (blurred.value) {
+  const laidOutByWord = hasRenderedPageBreaks(painted.wordDocument)
+  if (!laidOutByWord && blurred.value) {
     unpaginatedRender = id
   }
-  else {
+  else if (!laidOutByWord) {
     paginateDocx(container.value)
   }
   await adoptRenderedSections()
