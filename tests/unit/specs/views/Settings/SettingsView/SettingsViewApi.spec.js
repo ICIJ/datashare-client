@@ -4,6 +4,7 @@ import { removeCookie, setCookie } from 'tiny-cookie'
 import CoreSetup from '~tests/unit/CoreSetup'
 import SettingsViewApi from '@/views/Settings/SettingsView/SettingsViewApi'
 import SettingsViewApiKeyForm from '@/views/Settings/SettingsView/SettingsViewApiKeyForm'
+import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import { MODE_NAME } from '@/mode'
 import { apiInstance as api } from '@/api/apiInstance'
 
@@ -144,13 +145,24 @@ describe('SettingsViewApi', () => {
     expect(row.text()).toContain('All projects')
   })
 
-  it('should show when an active key expires', async () => {
+  it('should render the keys in the shared page table', async () => {
+    api.getApiKeys.mockResolvedValue([active, expired])
+    const wrapper = mount(SettingsViewApi, { global: { plugins } })
+    await flushPromises()
+
+    const table = wrapper.findComponent(PageTableGeneric)
+    expect(table.findAll('.settings-view-api__key')).toHaveLength(2)
+  })
+
+  it('should show the expiration date in the same format as the creation date', async () => {
     api.getApiKeys.mockResolvedValue([active, expired])
     const wrapper = mount(SettingsViewApi, { global: { plugins } })
     await flushPromises()
 
     const [row] = wrapper.findAll('.settings-view-api__key')
-    expect(row.text()).toContain('in 7 days')
+    expect(row.text()).toContain('Nov 20, 2026')
+    expect(row.text()).toContain('Dec 2, 2026')
+    expect(row.text()).not.toContain('in 7 days')
   })
 
   it('should mute an expired key and badge it', async () => {
