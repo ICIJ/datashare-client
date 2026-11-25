@@ -141,19 +141,30 @@ async function render() {
   if (!painted) {
     return
   }
-  // docx-preview loads the embedded fonts on its own, and they change the text heights.
-  await window.document.fonts?.ready
-  if (!isCurrentRender(id)) {
+  const isStillCurrent = await waitForEmbeddedFonts(id)
+  if (!isStillCurrent) {
     return
   }
-  const laidOutByWord = hasRenderedPageBreaks(painted.wordDocument)
-  if (!laidOutByWord && blurred.value) {
+  paginateUnlessLaidOutByWord(id, painted.wordDocument)
+  await adoptRenderedSections()
+}
+
+// docx-preview loads the embedded fonts on its own, and they change the text heights.
+async function waitForEmbeddedFonts(id) {
+  await window.document.fonts?.ready
+  return isCurrentRender(id)
+}
+
+function paginateUnlessLaidOutByWord(id, wordDocument) {
+  if (hasRenderedPageBreaks(wordDocument)) {
+    return
+  }
+  if (blurred.value) {
     unpaginatedRender = id
   }
-  else if (!laidOutByWord) {
+  else {
     paginateDocx(container.value)
   }
-  await adoptRenderedSections()
 }
 
 async function paginateUnblurred(value) {

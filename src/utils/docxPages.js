@@ -1,124 +1,137 @@
+const BLOCK_SELECTOR = ':scope > article > *'
+const PARAGRAPH_SELECTOR = ':scope > article > p'
+// docx-preview draws a VML picture as an svg.
+const IMAGE_SELECTOR = 'img, svg'
+const NUMBERING_CLASS = /^docx-num-/
+const RENDERED_PAGE_BREAK = 'lastRenderedPageBreak'
+
+function isOverflowingPage(bottom, pageTop, pageHeight) {
+  const blockHeightOnPage = bottom - pageTop
+  return blockHeightOnPage > pageHeight
+}
+
 export function groupBlocksIntoPages(bottoms, pageHeight) {
   const pages = []
-  let page = []
   let pageTop = 0
   bottoms.forEach((bottom, index) => {
-    if (page.length && bottom - pageTop > pageHeight) {
-      pages.push(page)
-      page = []
-      pageTop = bottoms[index - 1]
+    const currentPage = pages.at(-1)
+    if (currentPage && !isOverflowingPage(bottom, pageTop, pageHeight)) {
+      currentPage.push(index)
+      return
     }
-    page.push(index)
+    pageTop = bottoms[index - 1] ?? 0
+    pages.push([index])
   })
-  if (page.length) {
-    pages.push(page)
-  }
   return pages
 }
 
-function contentHeight(section) {
+function measureContentHeight(section) {
   const { minHeight, paddingTop, paddingBottom } = window.getComputedStyle(section)
-  return parseFloat(minHeight) - parseFloat(paddingTop) - parseFloat(paddingBottom)
+  const pageHeight = parseFloat(minHeight)
+  const margins = parseFloat(paddingTop) + parseFloat(paddingBottom)
+  return pageHeight - margins
 }
 
 function measureBottoms(section, blocks) {
-  const article = section.querySelector(':scope > article')
-  const top = article.getBoundingClientRect().top
+  const firstArticle = section.querySelector(':scope > article')
+  const { top } = firstArticle.getBoundingClientRect()
   return blocks.map(block => block.getBoundingClientRect().bottom - top)
 }
 
-function appendClone(page, element) {
+function appendCloneOf(element, page) {
   if (element) {
-    page.appendChild(element.cloneNode(true))
+    const clone = element.cloneNode(true)
+    page.appendChild(clone)
   }
+}
+
+// Blocks moved from different articles keep an article shaped like their own (columns).
+function moveBlocksInto(page, blocks) {
+  let article = null
+  blocks.forEach((block) => {
+    const source = block.parentElement
+    if (article?.source !== source) {
+      const clone = source.cloneNode(false)
+      article = { source, clone }
+      page.appendChild(clone)
+    }
+    article.clone.appendChild(block)
+  })
 }
 
 function buildPage(section, blocks) {
   const page = section.cloneNode(false)
-  appendClone(page, section.querySelector(':scope > header'))
-  let parent = null
-  let article = null
-  blocks.forEach((block) => {
-    if (block.parentElement !== parent) {
-      parent = block.parentElement
-      article = parent.cloneNode(false)
-      page.appendChild(article)
-    }
-    article.appendChild(block)
-  })
-  appendClone(page, section.querySelector(':scope > footer'))
+  appendCloneOf(section.querySelector(':scope > header'), page)
+  moveBlocksInto(page, blocks)
+  appendCloneOf(section.querySelector(':scope > footer'), page)
   return page
 }
 
-const IMAGES = 'img, svg'
-const NUMBERING_CLASS = /^docx-num-/
+function isHoldingImage(element) {
+  return element.matches(IMAGE_SELECTOR) || element.querySelector(IMAGE_SELECTOR) !== null
+}
 
-// docx-preview draws a VML picture as an svg.
-function holdsImage(element) {
-  return element.matches(IMAGES) || element.querySelector(IMAGES) !== null
+function isNextToImage(children, index) {
+  const previous = children[index - 1]
+  const isPreviousHoldingImage = index > 0 && isHoldingImage(previous)
+  return isHoldingImage(children[index]) || isPreviousHoldingImage
 }
 
 // Scanned pages come as one paragraph holding one image per line: it is cut
 // before a child starting below everything before it, next to an image, so
 // runs sharing a line stay together and text is never cut.
-function cutIndexes(block) {
-  const children = [...block.children]
+function findCutIndexes(paragraph) {
+  const children = [...paragraph.children]
   const indexes = []
-  let bottom = -Infinity
+  let linesBottom = -Infinity
   children.forEach((child, index) => {
     const box = child.getBoundingClientRect()
-    const previous = children[index - 1]
-    const previousHoldsImage = index > 0 && holdsImage(previous)
-    const nearImage = holdsImage(child) || previousHoldsImage
-    if (index > 0 && nearImage && box.top >= bottom) {
+    const isOnNewLine = index > 0 && box.top >= linesBottom
+    if (isOnNewLine && isNextToImage(children, index)) {
       indexes.push(index)
     }
-    bottom = Math.max(bottom, box.bottom)
+    linesBottom = Math.max(linesBottom, box.bottom)
   })
   return indexes
 }
 
 // The numbering class counts a list item, so only the first piece keeps it.
-function cloneWithoutNumbering(block) {
-  const fragment = block.cloneNode(false)
-  const numberings = [...fragment.classList].filter(name => NUMBERING_CLASS.test(name))
-  fragment.classList.remove(...numberings)
-  return fragment
+function cloneWithoutNumbering(paragraph) {
+  const piece = paragraph.cloneNode(false)
+  const classes = [...piece.classList]
+  const numberings = classes.filter(name => NUMBERING_CLASS.test(name))
+  piece.classList.remove(...numberings)
+  return piece
 }
 
-function cutBlock(block, indexes) {
-  const children = [...block.children]
-  let previous = block
+function cutParagraph(paragraph, indexes) {
+  const children = [...paragraph.children]
+  let previous = paragraph
   indexes.forEach((start, position) => {
     const end = indexes[position + 1] ?? children.length
-    const fragment = cloneWithoutNumbering(block)
+    const piece = cloneWithoutNumbering(paragraph)
     const moved = children.slice(start, end)
-    fragment.append(...moved)
-    previous.after(fragment)
-    previous = fragment
+    piece.append(...moved)
+    previous.after(piece)
+    previous = piece
   })
+}
+
+function isTallerThan(element, height) {
+  const { top, bottom } = element.getBoundingClientRect()
+  return bottom - top > height
 }
 
 // Only paragraphs are cut: a cut table would lose its column widths and merged cells.
-function cutTallBlocks(section, pageHeight) {
-  const paragraphs = [...section.querySelectorAll(':scope > article > p')]
-  const tallBlocks = paragraphs.filter((block) => {
-    const { top, bottom } = block.getBoundingClientRect()
-    return bottom - top > pageHeight
-  })
-  const cuts = tallBlocks.map(block => [block, cutIndexes(block)])
-  cuts.forEach(([block, indexes]) => cutBlock(block, indexes))
+// Every cut is measured before any is made, so the cuts do not change the measures.
+function cutTallParagraphs(section, pageHeight) {
+  const paragraphs = [...section.querySelectorAll(PARAGRAPH_SELECTOR)]
+  const tallParagraphs = paragraphs.filter(paragraph => isTallerThan(paragraph, pageHeight))
+  const cuts = tallParagraphs.map(paragraph => [paragraph, findCutIndexes(paragraph)])
+  cuts.forEach(([paragraph, indexes]) => cutParagraph(paragraph, indexes))
 }
 
-function paginateSection(section) {
-  const pageHeight = contentHeight(section)
-  cutTallBlocks(section, pageHeight)
-  const blocks = [...section.querySelectorAll(':scope > article > *')]
-  if (!blocks.length) {
-    return
-  }
-  const bottoms = measureBottoms(section, blocks)
-  const groups = groupBlocksIntoPages(bottoms, pageHeight)
+function insertPages(section, blocks, groups) {
   let previous = section
   groups.slice(1).forEach((group) => {
     const pageBlocks = group.map(index => blocks[index])
@@ -126,15 +139,37 @@ function paginateSection(section) {
     previous.after(page)
     previous = page
   })
-  // docx-preview writes the page footnotes, and the endnotes, as a list after the articles.
+  return previous
+}
+
+// docx-preview writes the page footnotes, and the endnotes, as a list after the articles.
+function moveNotesToLastPage(section, lastPage) {
   const notes = section.querySelectorAll(':scope > ol')
-  const footer = previous.querySelector(':scope > footer')
-  notes.forEach(note => previous.insertBefore(note, footer))
+  const footer = lastPage.querySelector(':scope > footer')
+  notes.forEach(note => lastPage.insertBefore(note, footer))
+}
+
+function paginateSection(section) {
+  const pageHeight = measureContentHeight(section)
+  cutTallParagraphs(section, pageHeight)
+  const blocks = [...section.querySelectorAll(BLOCK_SELECTOR)]
+  if (!blocks.length) {
+    return
+  }
+  const bottoms = measureBottoms(section, blocks)
+  const groups = groupBlocksIntoPages(bottoms, pageHeight)
+  const lastPage = insertPages(section, blocks, groups)
+  moveNotesToLastPage(section, lastPage)
 }
 
 export function paginateDocx(container) {
   const sections = container.querySelectorAll('section.docx')
   sections.forEach(paginateSection)
+}
+
+function containsRenderedPageBreak(element) {
+  const children = element.children ?? []
+  return element.break === RENDERED_PAGE_BREAK || children.some(containsRenderedPageBreak)
 }
 
 /**
@@ -147,14 +182,5 @@ export function paginateDocx(container) {
  */
 export function hasRenderedPageBreaks(wordDocument) {
   const body = wordDocument?.documentPart?.body
-  const stack = [...(body?.children ?? [])]
-  while (stack.length) {
-    const element = stack.pop()
-    if (element.break === 'lastRenderedPageBreak') {
-      return true
-    }
-    const children = element.children ?? []
-    stack.push(...children)
-  }
-  return false
+  return body ? containsRenderedPageBreak(body) : false
 }
