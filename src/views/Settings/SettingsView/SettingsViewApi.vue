@@ -1,7 +1,7 @@
 <script setup>
 import { whenever } from '@vueuse/core'
 import { ref, computed } from 'vue'
-import { AppIcon, HapticCopy, ButtonIcon } from '@icij/murmur'
+import { AppIcon, ButtonIcon } from '@icij/murmur'
 import { useI18n } from 'vue-i18n'
 import get from 'lodash/get'
 
@@ -12,9 +12,10 @@ import AppModal from '@/components/AppModal/AppModal'
 import DisplayHash from '@/components/Display/DisplayHash'
 import DisplayDatetimeShort from '@/components/Display/DisplayDatetimeShort'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
+import PageTableToggleDetailsButton from '@/components/PageTable/PageTableToggleDetailsButton'
 import SettingsViewLayout from '@/views/Settings/SettingsView/SettingsViewLayout'
-import SettingsViewApiMcp from '@/views/Settings/SettingsView/SettingsViewApiMcp'
 import SettingsViewApiKeyForm from '@/views/Settings/SettingsView/SettingsViewApiKeyForm'
+import SettingsViewApiKeyCreated from '@/views/Settings/SettingsView/SettingsViewApiKeyCreated'
 import { useCore } from '@/composables/useCore'
 import { useAuth } from '@/composables/useAuth'
 import { useConfirmModal } from '@/composables/useConfirmModal'
@@ -26,7 +27,7 @@ import { useToast } from '@/composables/useToast'
 defineOptions({ name: 'SettingsViewApi' })
 
 const keys = ref([])
-const apiKey = ref(null)
+const createdKey = ref(null)
 const showModal = ref(false)
 const creating = ref(false)
 const core = useCore()
@@ -36,7 +37,8 @@ const { t } = useI18n()
 const { toast } = useToast()
 
 const hasKeys = computed(() => keys.value.length > 0)
-const modalTitle = computed(() => (apiKey.value ? t('settings.api.key.created') : t('settings.api.form.title')))
+const showForm = computed(() => !createdKey.value || !!createdKey.value.hashedKey)
+const modalTitle = computed(() => (showForm.value ? t('settings.api.form.title') : t('settings.api.key.created')))
 
 async function fetchApiKeys() {
   keys.value = await core.api.getApiKeys(username.value)
@@ -45,8 +47,20 @@ async function fetchApiKeys() {
 async function addApiKey(payload) {
   creating.value = true
   try {
-    const result = await core.api.addApiKey(username.value, payload)
-    apiKey.value = result.apiKey
+    const knownHashes = new Set(keys.value.map(key => key.hashedKey))
+    const { apiKey } = await core.api.addApiKey(username.value, payload)
+    const refreshedKeys = await core.api.getApiKeys(username.value).catch(() => keys.value)
+    const newKey = refreshedKeys.find(key => !knownHashes.has(key.hashedKey))
+    if (!newKey) {
+      createdKey.value = { hashedKey: null, apiKey }
+      keys.value = refreshedKeys
+      return
+    }
+    newKey._showDetails = true
+    createdKey.value = { hashedKey: newKey.hashedKey, apiKey }
+    keys.value = refreshedKeys
+    showModal.value = false
+    toast.success(t('settings.api.key.created'))
   }
   catch (error) {
     const message = get(error, 'response.data.error') ?? t('settings.api.form.error')
@@ -59,8 +73,14 @@ async function addApiKey(payload) {
 
 function closeModal() {
   showModal.value = false
-  apiKey.value = null
+  if (!showForm.value) {
+    createdKey.value = null
+  }
   fetchApiKeys()
+}
+
+function isCreatedKey({ hashedKey }) {
+  return hashedKey === createdKey.value?.hashedKey
 }
 
 async function removeApiKey(hashedKey) {
@@ -90,7 +110,8 @@ const fields = computed(() => [
 function rowClass(key) {
   return {
     'settings-view-api__key': true,
-    'settings-view-api__key--expired': isExpired(key)
+    'settings-view-api__key--expired': isExpired(key),
+    'settings-view-api__key--new': isCreatedKey(key)
   }
 }
 
@@ -141,6 +162,7 @@ whenever(username, fetchApiKeys, { immediate: true })
         </button-icon>
       </div>
       <page-table-generic
+        :key="createdKey?.hashedKey"
         :items="keys"
         :fields="fields"
         :row-class="rowClass"
@@ -148,6 +170,13 @@ whenever(username, fetchApiKeys, { immediate: true })
       >
         <template #cell(hashedKey)="{ item }">
           <display-hash :value="item.hashedKey" />
+          <b-badge
+            v-if="isCreatedKey(item)"
+            variant="success"
+            class="ms-2"
+          >
+            {{ t('settings.api.key.new') }}
+          </b-badge>
         </template>
         <template #cell(projects)="{ item }">
           <div class="d-flex flex-wrap gap-1">
@@ -178,7 +207,13 @@ whenever(username, fetchApiKeys, { immediate: true })
             {{ t('settings.api.key.expired') }}
           </b-badge>
         </template>
-        <template #row-actions="{ item }">
+        <template #row-actions="{ item, detailsShowing, toggleDetails }">
+          <page-table-toggle-details-button
+            v-if="isCreatedKey(item)"
+            class="settings-view-api__key__toggle"
+            :model-value="detailsShowing"
+            @update:model-value="toggleDetails"
+          />
           <button-icon
             :icon-left="IPhTrash"
             icon-left-hover-weight="bold"
@@ -189,6 +224,12 @@ whenever(username, fetchApiKeys, { immediate: true })
             class="settings-view-api__key__delete border-0"
             :label="t('settings.api.key.delete.button')"
             @click="confirmDeleteApiKey(item.hashedKey)"
+          />
+        </template>
+        <template #row-details="{ item }">
+          <settings-view-api-key-created
+            v-if="isCreatedKey(item)"
+            :api-key="createdKey.apiKey"
           />
         </template>
       </page-table-generic>
@@ -202,29 +243,16 @@ whenever(username, fetchApiKeys, { immediate: true })
       @hidden="closeModal"
     >
       <settings-view-api-key-form
-        v-if="!apiKey"
+        v-if="showForm"
         :projects="core.projects"
         :max-lifetime="core.config.get('apiKeyMaxLifetime')"
         :busy="creating"
         @submit="addApiKey"
       />
-      <template v-else>
-        <p>{{ t('settings.api.key.warning') }}</p>
-        <div class="input-group">
-          <input
-            class="form-control font-monospace."
-            readonly
-            :value="apiKey"
-          >
-          <haptic-copy
-            :text="apiKey"
-            class="btn-outline-action"
-            :label="t('settings.api.key.copy')"
-          />
-        </div>
-        <hr class="my-4">
-        <settings-view-api-mcp :api-key="apiKey" />
-      </template>
+      <settings-view-api-key-created
+        v-else
+        :api-key="createdKey.apiKey"
+      />
     </app-modal>
   </settings-view-layout>
 </template>

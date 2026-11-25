@@ -175,6 +175,117 @@ describe('SettingsViewApi', () => {
     const AppModalStub = { name: 'AppModal', props: ['modelValue'], emits: ['hidden'], template: '<div v-if="modelValue"><slot /></div>' }
     const stubs = { 'app-modal': AppModalStub }
     const payload = { projects: ['banana-papers'], expirationDate: '2026-12-25T12:00:00.000Z' }
+    const created = {
+      hashedKey: 'ccc',
+      projects: [],
+      creationDate: '2026-11-25T12:00:00Z',
+      expirationDate: '2026-12-25T12:00:00Z'
+    }
+
+    async function createKey(wrapper) {
+      await wrapper.find('.settings-view-api__create__button').trigger('click')
+      wrapper.findComponent(SettingsViewApiKeyForm).vm.$emit('submit', payload)
+      await flushPromises()
+    }
+
+    async function mountAndCreate() {
+      api.getApiKeys.mockResolvedValueOnce([active]).mockResolvedValueOnce([created, active])
+      api.addApiKey.mockResolvedValue({ apiKey: '123456abcdef' })
+      const wrapper = mount(SettingsViewApi, { global: { plugins, stubs } })
+      await flushPromises()
+      await createKey(wrapper)
+      return wrapper
+    }
+
+    it('should close the modal once the key is created', async () => {
+      const wrapper = await mountAndCreate()
+      const modal = wrapper.findComponent({ name: 'AppModal' })
+
+      expect(wrapper.find('.settings-view-api-key-form').exists()).toBeFalsy()
+      expect(modal.find('input[readonly]').exists()).toBeFalsy()
+    })
+
+    it('should toast the creation', async () => {
+      await mountAndCreate()
+      expect(mockToast.success).toBeCalledWith('API key created')
+    })
+
+    it('should badge the new key', async () => {
+      const wrapper = await mountAndCreate()
+
+      const newRows = wrapper.findAll('.settings-view-api__key--new')
+      expect(newRows).toHaveLength(1)
+      expect(newRows[0].text()).toContain('New')
+      const activeRow = wrapper.findAll('.settings-view-api__key').at(1)
+      expect(activeRow.classes()).not.toContain('settings-view-api__key--new')
+      expect(activeRow.text()).not.toContain('New')
+    })
+
+    it('should show the new key under its row', async () => {
+      const wrapper = await mountAndCreate()
+
+      const table = wrapper.findComponent(PageTableGeneric)
+      const input = table.find('.settings-view-api-key-created input[readonly]')
+      expect(input.element.value).toBe('123456abcdef')
+    })
+
+    it('should reopen the panel with the key still there', async () => {
+      const wrapper = await mountAndCreate()
+      const toggle = wrapper.find('.settings-view-api__key--new .settings-view-api__key__toggle')
+
+      await toggle.trigger('click')
+      expect(wrapper.find('.settings-view-api-key-created').exists()).toBeFalsy()
+
+      await toggle.trigger('click')
+      const input = wrapper.find('.settings-view-api-key-created input[readonly]')
+      expect(input.element.value).toBe('123456abcdef')
+    })
+
+    it('should show the key in the modal when the new row is not found', async () => {
+      api.getApiKeys.mockResolvedValueOnce([active]).mockResolvedValueOnce([active])
+      api.addApiKey.mockResolvedValue({ apiKey: '123456abcdef' })
+      const wrapper = mount(SettingsViewApi, { global: { plugins, stubs } })
+      await flushPromises()
+      await createKey(wrapper)
+
+      const modal = wrapper.findComponent({ name: 'AppModal' })
+      const input = modal.find('.settings-view-api-key-created input[readonly]')
+      expect(input.element.value).toBe('123456abcdef')
+    })
+
+    it('should show the key in the modal when the list fails to refresh', async () => {
+      api.getApiKeys.mockResolvedValueOnce([active]).mockRejectedValueOnce(new Error('network'))
+      api.addApiKey.mockResolvedValue({ apiKey: '123456abcdef' })
+      const wrapper = mount(SettingsViewApi, { global: { plugins, stubs } })
+      await flushPromises()
+      await createKey(wrapper)
+
+      const modal = wrapper.findComponent({ name: 'AppModal' })
+      const input = modal.find('.settings-view-api-key-created input[readonly]')
+      expect(input.element.value).toBe('123456abcdef')
+    })
+
+    it('should only badge the latest key', async () => {
+      const second = { ...created, hashedKey: 'ddd' }
+      api.getApiKeys
+        .mockResolvedValueOnce([active])
+        .mockResolvedValueOnce([created, active])
+        .mockResolvedValueOnce([second, created, active])
+      api.addApiKey
+        .mockResolvedValueOnce({ apiKey: '123456abcdef' })
+        .mockResolvedValueOnce({ apiKey: 'fedcba654321' })
+      const wrapper = mount(SettingsViewApi, { global: { plugins, stubs } })
+      await flushPromises()
+      await createKey(wrapper)
+      await createKey(wrapper)
+
+      const newRows = wrapper.findAll('.settings-view-api__key--new')
+      expect(newRows).toHaveLength(1)
+      expect(newRows[0].text()).toContain('ddd')
+      const inputs = wrapper.findAll('.settings-view-api-key-created input[readonly]')
+      expect(inputs).toHaveLength(1)
+      expect(inputs[0].element.value).toBe('fedcba654321')
+    })
 
     it('should open the form when clicking "New API key"', async () => {
       const wrapper = mount(SettingsViewApi, { global: { plugins, stubs } })
@@ -195,23 +306,6 @@ describe('SettingsViewApi', () => {
       await flushPromises()
 
       expect(api.addApiKey).toBeCalledWith('doe', payload)
-      expect(wrapper.find('.settings-view-api-key-form').exists()).toBeFalsy()
-      expect(wrapper.find('input[readonly]').element.value).toBe('123456abcdef')
-    })
-
-    it('should refresh the list when the modal closes', async () => {
-      api.addApiKey.mockResolvedValue({ apiKey: '123456abcdef' })
-      const wrapper = mount(SettingsViewApi, { global: { plugins, stubs } })
-      await wrapper.find('.settings-view-api__create__button').trigger('click')
-      wrapper.findComponent(SettingsViewApiKeyForm).vm.$emit('submit', payload)
-      await flushPromises()
-
-      wrapper.findComponent({ name: 'AppModal' }).vm.$emit('hidden')
-      await flushPromises()
-      expect(api.getApiKeys).toBeCalledTimes(2)
-
-      await wrapper.find('.settings-view-api__create__button').trigger('click')
-      expect(wrapper.find('.settings-view-api-key-form').exists()).toBeTruthy()
     })
 
     it('should stay on the form and toast the backend message on a 400', async () => {
@@ -225,6 +319,7 @@ describe('SettingsViewApi', () => {
 
       expect(mockToast.error).toBeCalledWith(expect.stringContaining('projects not granted: banana-papers'))
       expect(wrapper.find('.settings-view-api-key-form').exists()).toBeTruthy()
+      expect(mockToast.success).not.toBeCalled()
     })
 
     it('should create one key on a double submit', async () => {
