@@ -1721,6 +1721,18 @@
         "learnMore": "Learn more",
         "terminal": "Run in a terminal:",
         "codex": "Add to {path}:"
+      },
+      "form": {
+        "projects": {
+          "label": "Projects",
+          "description": "Leave empty to give the key access to all your projects."
+        },
+        "expiresIn": {
+          "label": "Expires in",
+          "days": "{n} days",
+          "max": "Max allowed ({n} days)"
+        },
+        "submit": "Create key"
       }
     },
     "users": {
