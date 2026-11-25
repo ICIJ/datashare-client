@@ -30,6 +30,9 @@ const showMcp = ref(false)
 
 <template>
   <div class="settings-view-api-key-created">
+    <p class="mb-2">
+      {{ t('settings.api.key.warning') }}
+    </p>
     <div class="input-group">
       <input
         class="form-control font-monospace"
@@ -42,13 +45,10 @@ const showMcp = ref(false)
         :label="t('settings.api.key.copy')"
       />
     </div>
-    <div class="form-text mb-2">
-      {{ t('settings.api.key.warning') }}
-    </div>
     <button-icon
       variant="link"
       size="sm"
-      class="settings-view-api-key-created__mcp-toggle px-0"
+      class="settings-view-api-key-created__mcp-toggle px-0 mt-2"
       :icon-left="IPhSparkle"
       :icon-right="showMcp ? IPhCaretUp : IPhCaretDown"
       @click="showMcp = !showMcp"

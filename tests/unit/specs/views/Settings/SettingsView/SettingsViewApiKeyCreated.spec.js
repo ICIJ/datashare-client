@@ -29,9 +29,10 @@ describe('SettingsViewApiKeyCreated', () => {
     expect(wrapper.find('input[readonly]').element.value).toBe('123456abcdef')
   })
 
-  it('should warn the key is shown once as the field help text', () => {
+  it('should warn the key is shown once before the key field', () => {
     const wrapper = mountPanel()
-    expect(wrapper.find('.form-text').text()).toBe('Copy it now: Datashare won\'t show it again.')
+    const [first] = wrapper.element.children
+    expect(first.textContent.trim()).toBe('Copy it now: Datashare won\'t show it again.')
   })
 
   it('should mark the AI assistant toggle with a sparkle', () => {
