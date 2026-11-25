@@ -374,6 +374,38 @@ describe('Datashare backend client', () => {
     expect(json).toEqual({})
   })
 
+  it('should call getApiKeys with GET on the keys route', async () => {
+    await api.getApiKeys('doe')
+    expect(axios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/key/doe/keys'),
+        method: 'GET'
+      })
+    )
+  })
+
+  it('should call addApiKey with POST and the scope', async () => {
+    const scope = { projects: ['banana-papers'], expirationDate: '2026-12-25T00:00:00.000Z' }
+    await api.addApiKey('doe', scope)
+    expect(axios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/key/doe/keys'),
+        method: 'POST',
+        data: scope
+      })
+    )
+  })
+
+  it('should call removeApiKeyByHash with DELETE on the key route', async () => {
+    await api.removeApiKeyByHash('doe', 'abc123')
+    expect(axios.request).toBeCalledWith(
+      expect.objectContaining({
+        url: Api.getFullUrl('/api/key/doe/keys/abc123'),
+        method: 'DELETE'
+      })
+    )
+  })
+
   it('should return backend response to getPlugins', async () => {
     json = await api.getPlugins()
     expect(json).toEqual({})

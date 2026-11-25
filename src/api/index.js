@@ -558,6 +558,18 @@ export class Api {
     return this.sendActionAsText(`/api/key/${userId}`, { method: Method.DELETE })
   }
 
+  getApiKeys(userId) {
+    return this.sendAction(`/api/key/${userId}/keys`, { method: Method.GET })
+  }
+
+  addApiKey(userId, data) {
+    return this.sendAction(`/api/key/${userId}/keys`, { method: Method.POST, data })
+  }
+
+  removeApiKeyByHash(userId, hashedKey) {
+    return this.sendActionAsText(`/api/key/${userId}/keys/${hashedKey}`, { method: Method.DELETE })
+  }
+
   getPlugins(query = '') {
     return this.sendAction(`/api/plugins?filter=.*${toLower(query)}.*`)
   }
