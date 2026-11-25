@@ -41,7 +41,6 @@ export function useDropdownSelection(modelValue, allOptions, { multiple, optionK
     return selectedKeys.value.some(selectedKey => isEqual(selectedKey, key))
   }
 
-  // A selected option in multiple mode can't be unselected if it's the last one.
   const isRequiredSelection = (option) => {
     return !toValue(allowEmpty) && multiple.value && isSelected(option) && selectedValues.value.length <= 1
   }
