@@ -1,4 +1,5 @@
 import { enableAutoUnmount, flushPromises, mount } from '@vue/test-utils'
+import { onUnmounted } from 'vue'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import { apiInstance as api } from '@/api/apiInstance'
@@ -78,5 +79,23 @@ describe('DocumentModal.vue', () => {
     mount(DocumentModal, { global: { plugins: core.plugins, stubs }, props: { modelValue: true }, slots })
     await flushPromises()
     expect(stores[0].$id).toBe(documentStore.$id)
+  })
+
+  it('unmounts its content when hidden so media players stop', async () => {
+    const onUnmount = vi.fn()
+    const RouteComponent = {
+      setup() {
+        onUnmounted(onUnmount)
+      },
+      template: '<div />'
+    }
+    const stubs = { DocumentFloating: { template: '<div><slot /></div>' }, transition: false }
+    const slots = { default: RouteComponent }
+    const wrapper = mount(DocumentModal, { global: { plugins: core.plugins, stubs }, props: { modelValue: true }, slots })
+    await flushPromises()
+    await wrapper.setProps({ modelValue: false })
+    await vi.waitFor(() => {
+      expect(onUnmount).toHaveBeenCalled()
+    }, { timeout: 2000 })
   })
 })

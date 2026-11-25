@@ -60,6 +60,7 @@ onRouteUpdateNotMatch(route.name, () => hide())
     no-header-close
     fullscreen
     lazy
+    unmount-lazy
   >
     <document-floating
       ref="document-floating"
