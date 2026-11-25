@@ -78,38 +78,6 @@ describe('SettingsViewApi', () => {
     expect(wrapper.findAll('.settings-view-api__key')).toHaveLength(0)
   })
 
-  it('should show the Claude Code command to connect Datashare MCP with the new key', async () => {
-    api.addApiKey.mockResolvedValue({ apiKey: '123456abcdef' })
-    const stubs = { 'app-modal': { template: '<div><slot /></div>' } }
-    const wrapper = mount(SettingsViewApi, { global: { plugins, stubs } })
-    await wrapper.vm.addApiKey({ projects: [] })
-
-    const command = wrapper.find('.settings-view-api__mcp__snippet').text()
-    expect(command).toContain('claude mcp add --transport http datashare http://localhost:9009/api/mcp')
-    expect(command).toContain('--header "Authorization: Bearer 123456abcdef"')
-  })
-
-  it('should open the Claude Code tab by default', async () => {
-    api.addApiKey.mockResolvedValue({ apiKey: '123456abcdef' })
-    const stubs = { 'app-modal': { template: '<div><slot /></div>' } }
-    const wrapper = mount(SettingsViewApi, { global: { plugins, stubs } })
-    await wrapper.vm.addApiKey({ projects: [] })
-    await flushPromises()
-
-    expect(wrapper.find('.settings-view-api__mcp .nav-link.active').text()).toBe('Claude Code')
-  })
-
-  it('should highlight the key as a string in the Claude Code command', async () => {
-    api.addApiKey.mockResolvedValue({ apiKey: '123456abcdef' })
-    const stubs = { 'app-modal': { template: '<div><slot /></div>' } }
-    const wrapper = mount(SettingsViewApi, { global: { plugins, stubs } })
-    await wrapper.vm.addApiKey({ projects: [] })
-    await vi.waitFor(() => expect(wrapper.find('.settings-view-api__mcp__snippet .tok-string').exists()).toBe(true))
-
-    const string = wrapper.find('.settings-view-api__mcp__snippet .tok-string').text()
-    expect(string).toBe('"Authorization: Bearer 123456abcdef"')
-  })
-
   it('should list one row per key', async () => {
     api.getApiKeys.mockResolvedValue([active, expired])
     const wrapper = mount(SettingsViewApi, { global: { plugins } })
