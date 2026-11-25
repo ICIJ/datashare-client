@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n'
 
 import IPhCaretDown from '~icons/ph/caret-down'
 import IPhCaretUp from '~icons/ph/caret-up'
+import IPhSparkle from '~icons/ph/sparkle'
 
 import SettingsViewApiMcp from '@/views/Settings/SettingsView/SettingsViewApiMcp'
 
@@ -41,13 +42,14 @@ const showMcp = ref(false)
         :label="t('settings.api.key.copy')"
       />
     </div>
-    <p class="small text-body-secondary mt-1 mb-2">
+    <div class="form-text mb-2">
       {{ t('settings.api.key.warning') }}
-    </p>
+    </div>
     <button-icon
       variant="link"
       size="sm"
       class="settings-view-api-key-created__mcp-toggle px-0"
+      :icon-left="IPhSparkle"
       :icon-right="showMcp ? IPhCaretUp : IPhCaretDown"
       @click="showMcp = !showMcp"
     >
