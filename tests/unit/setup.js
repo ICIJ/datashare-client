@@ -89,7 +89,8 @@ Object.defineProperty(window, 'matchMedia', {
 })
 
 Object.defineProperty(document, 'fonts', {
-  ready: Promise.resolve()
+  value: { ready: Promise.resolve() },
+  configurable: true
 })
 
 Object.defineProperty(window, 'scrollTo', vi.fn())
