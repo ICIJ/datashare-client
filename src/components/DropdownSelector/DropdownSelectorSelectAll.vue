@@ -10,13 +10,22 @@ defineProps({
   label: {
     type: String,
     default: null
+  },
+  /**
+   * Disable the checkbox.
+   */
+  disabled: {
+    type: Boolean
   }
 })
 </script>
 
 <template>
   <li class="dropdown-selector-select-all">
-    <b-form-checkbox v-model="modelValue">
+    <b-form-checkbox
+      v-model="modelValue"
+      :disabled="disabled"
+    >
       {{ label }}
     </b-form-checkbox>
   </li>

@@ -71,6 +71,12 @@ const props = defineProps({
     type: Boolean
   },
   /**
+   * Let the selection be emptied, an empty selection standing for every project.
+   */
+  emptyMeansAll: {
+    type: Boolean
+  },
+  /**
    * Text shown in the toggle button when nothing is selected yet. Defaults to the generic
    * "Select a project".
    */
@@ -121,6 +127,7 @@ function filterProject(project, query) {
     searchable
     :option-filter="filterProject"
     :allow-select-all="multiple"
+    :empty-means-all="emptyMeansAll"
     pin-selected
     flush-items
     :disabled="disabled"

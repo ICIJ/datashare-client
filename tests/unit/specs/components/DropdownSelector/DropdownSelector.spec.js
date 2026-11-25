@@ -30,6 +30,38 @@ describe('DropdownSelector.vue', () => {
     })
   }
 
+  describe('when empty means all', () => {
+    function selectAllCheckbox(wrapper) {
+      return wrapper.find('.dropdown-selector-select-all input[type=checkbox]')
+    }
+
+    it('checks the select-all row when nothing is selected', () => {
+      const wrapper = mountComponent({ modelValue: [], multiple: true, allowSelectAll: true, emptyMeansAll: true })
+      expect(selectAllCheckbox(wrapper).element.checked).toBe(true)
+    })
+
+    it('unchecks the select-all row when every option is selected', () => {
+      const wrapper = mountComponent({ modelValue: options, multiple: true, allowSelectAll: true, emptyMeansAll: true })
+      expect(selectAllCheckbox(wrapper).element.checked).toBe(false)
+    })
+
+    it('locks the select-all row while nothing is selected', () => {
+      const wrapper = mountComponent({ modelValue: [], multiple: true, allowSelectAll: true, emptyMeansAll: true })
+      expect(selectAllCheckbox(wrapper).element.disabled).toBe(true)
+    })
+
+    it('unlocks the select-all row once an option is selected', () => {
+      const wrapper = mountComponent({ modelValue: [{ name: 'a' }], multiple: true, allowSelectAll: true, emptyMeansAll: true })
+      expect(selectAllCheckbox(wrapper).element.disabled).toBe(false)
+    })
+
+    it('empties the selection when checking the select-all row', async () => {
+      const wrapper = mountComponent({ modelValue: [{ name: 'a' }], multiple: true, allowSelectAll: true, emptyMeansAll: true })
+      await selectAllCheckbox(wrapper).setValue(true)
+      expect(wrapper.emitted('update:modelValue').at(-1)[0]).toEqual([])
+    })
+  })
+
   it('renders one dropdown item per option', () => {
     const wrapper = mountComponent({ modelValue: { name: 'a' } })
     expect(wrapper.findAll('.dropdown-item')).toHaveLength(3)
