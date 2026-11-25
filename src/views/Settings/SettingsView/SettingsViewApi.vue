@@ -127,14 +127,16 @@ whenever(username, fetchApiKeys, { immediate: true })
       class="settings-view-api__show"
     >
       <p v-html="t('settings.api.description')" />
-      <button-icon
-        variant="action"
-        :icon-left="IPhPlus"
-        class="settings-view-api__create__button mb-3"
-        @click="showModal = true"
-      >
-        {{ t('settings.api.newApiKey') }}
-      </button-icon>
+      <div class="d-flex justify-content-end mb-3">
+        <button-icon
+          variant="action"
+          :icon-right="IPhPlus"
+          class="settings-view-api__create__button"
+          @click="showModal = true"
+        >
+          {{ t('settings.api.newApiKey') }}
+        </button-icon>
+      </div>
       <page-table-generic
         :items="keys"
         :fields="fields"
