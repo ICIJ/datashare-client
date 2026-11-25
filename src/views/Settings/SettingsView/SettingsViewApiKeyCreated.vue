@@ -41,7 +41,7 @@ const showMcp = ref(false)
       >
       <haptic-copy
         :text="apiKey"
-        class="btn-outline-action"
+        class="settings-view-api-key-created__copy btn-outline-action"
         :label="t('settings.api.key.copy')"
       />
     </div>
@@ -62,3 +62,9 @@ const showMcp = ref(false)
     />
   </div>
 </template>
+
+<style lang="scss" scoped>
+.settings-view-api-key-created__copy {
+  --bs-btn-border-color: #{$input-border-color};
+}
+</style>
