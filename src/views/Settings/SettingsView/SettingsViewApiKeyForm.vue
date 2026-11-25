@@ -105,6 +105,8 @@ function submit() {
         v-model="selectedProjects"
         :projects="projects"
         :teleport-to="projectsTeleportTo"
+        :placeholder="t('settings.api.key.allProjects')"
+        empty-means-all
       />
     </form-fieldset-i18n>
     <form-fieldset-i18n

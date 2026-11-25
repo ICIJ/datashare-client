@@ -60,6 +60,17 @@ describe('SettingsViewApiKeyForm', () => {
     expect(payload.projects).toEqual(['banana-papers'])
   })
 
+  it('should let the projects selection be empty for all projects', () => {
+    const wrapper = mountForm()
+    const selector = wrapper.findComponent(ProjectDropdownSelector)
+    expect(selector.props('emptyMeansAll')).toBe(true)
+  })
+
+  it('should show "All projects" when no project is selected', () => {
+    const wrapper = mountForm()
+    expect(wrapper.find('.project-dropdown-selector-button-content').text()).toBe('All projects')
+  })
+
   it('should hide presets longer than the cap', () => {
     const wrapper = mountForm({ maxLifetime: 'P30D' })
     expect(radioValues(wrapper)).toEqual(['7', '30'])
