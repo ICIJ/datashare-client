@@ -1,4 +1,6 @@
 import { flushPromises, mount } from '@vue/test-utils'
+import { ButtonIcon } from '@icij/murmur'
+import IPhSparkle from '~icons/ph/sparkle'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import SettingsViewApiKeyCreated from '@/views/Settings/SettingsView/SettingsViewApiKeyCreated'
@@ -27,9 +29,16 @@ describe('SettingsViewApiKeyCreated', () => {
     expect(wrapper.find('input[readonly]').element.value).toBe('123456abcdef')
   })
 
-  it('should warn the key is shown once', () => {
+  it('should warn the key is shown once as the field help text', () => {
     const wrapper = mountPanel()
-    expect(wrapper.text()).toContain('Copy it now: Datashare won\'t show it again.')
+    expect(wrapper.find('.form-text').text()).toBe('Copy it now: Datashare won\'t show it again.')
+  })
+
+  it('should mark the AI assistant toggle with a sparkle', () => {
+    const wrapper = mountPanel()
+    const buttons = wrapper.findAllComponents(ButtonIcon)
+    const toggle = buttons.find(button => button.classes('settings-view-api-key-created__mcp-toggle'))
+    expect(toggle.props('iconLeft')).toEqual(IPhSparkle)
   })
 
   it('should fold the AI assistant setup by default', () => {
