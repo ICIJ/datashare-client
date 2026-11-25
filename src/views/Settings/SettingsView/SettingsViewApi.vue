@@ -50,15 +50,15 @@ async function addApiKey(payload) {
     const knownHashes = new Set(keys.value.map(key => key.hashedKey))
     const { apiKey } = await core.api.addApiKey(username.value, payload)
     const refreshedKeys = await core.api.getApiKeys(username.value).catch(() => keys.value)
-    const newKey = refreshedKeys.find(key => !knownHashes.has(key.hashedKey))
-    if (!newKey) {
+    const newKeys = refreshedKeys.filter(key => !knownHashes.has(key.hashedKey))
+    keys.value = refreshedKeys
+    if (newKeys.length !== 1) {
       createdKey.value = { hashedKey: null, apiKey }
-      keys.value = refreshedKeys
       return
     }
+    const [newKey] = newKeys
     newKey._showDetails = true
     createdKey.value = { hashedKey: newKey.hashedKey, apiKey }
-    keys.value = refreshedKeys
     showModal.value = false
     toast.success(t('settings.api.key.created'))
   }

@@ -189,7 +189,7 @@ describe('SettingsViewApi', () => {
     }
 
     async function mountAndCreate() {
-      api.getApiKeys.mockResolvedValueOnce([active]).mockResolvedValueOnce([created, active])
+      api.getApiKeys.mockResolvedValueOnce([{ ...active }]).mockResolvedValueOnce([{ ...created }, { ...active }])
       api.addApiKey.mockResolvedValue({ apiKey: '123456abcdef' })
       const wrapper = mount(SettingsViewApi, { global: { plugins, stubs } })
       await flushPromises()
@@ -242,7 +242,7 @@ describe('SettingsViewApi', () => {
     })
 
     it('should show the key in the modal when the new row is not found', async () => {
-      api.getApiKeys.mockResolvedValueOnce([active]).mockResolvedValueOnce([active])
+      api.getApiKeys.mockResolvedValueOnce([{ ...active }]).mockResolvedValueOnce([{ ...active }])
       api.addApiKey.mockResolvedValue({ apiKey: '123456abcdef' })
       const wrapper = mount(SettingsViewApi, { global: { plugins, stubs } })
       await flushPromises()
@@ -254,7 +254,7 @@ describe('SettingsViewApi', () => {
     })
 
     it('should show the key in the modal when the list fails to refresh', async () => {
-      api.getApiKeys.mockResolvedValueOnce([active]).mockRejectedValueOnce(new Error('network'))
+      api.getApiKeys.mockResolvedValueOnce([{ ...active }]).mockRejectedValueOnce(new Error('network'))
       api.addApiKey.mockResolvedValue({ apiKey: '123456abcdef' })
       const wrapper = mount(SettingsViewApi, { global: { plugins, stubs } })
       await flushPromises()
@@ -265,12 +265,26 @@ describe('SettingsViewApi', () => {
       expect(input.element.value).toBe('123456abcdef')
     })
 
+    it('should show the key in the modal when several new rows are found', async () => {
+      const other = { ...created, hashedKey: 'eee' }
+      api.getApiKeys.mockResolvedValueOnce([{ ...active }]).mockResolvedValueOnce([{ ...other }, { ...created }, { ...active }])
+      api.addApiKey.mockResolvedValue({ apiKey: '123456abcdef' })
+      const wrapper = mount(SettingsViewApi, { global: { plugins, stubs } })
+      await flushPromises()
+      await createKey(wrapper)
+
+      expect(wrapper.findAll('.settings-view-api__key--new')).toHaveLength(0)
+      const modal = wrapper.findComponent({ name: 'AppModal' })
+      const input = modal.find('.settings-view-api-key-created input[readonly]')
+      expect(input.element.value).toBe('123456abcdef')
+    })
+
     it('should only badge the latest key', async () => {
       const second = { ...created, hashedKey: 'ddd' }
       api.getApiKeys
-        .mockResolvedValueOnce([active])
-        .mockResolvedValueOnce([created, active])
-        .mockResolvedValueOnce([second, created, active])
+        .mockResolvedValueOnce([{ ...active }])
+        .mockResolvedValueOnce([{ ...created }, { ...active }])
+        .mockResolvedValueOnce([{ ...second }, { ...created }, { ...active }])
       api.addApiKey
         .mockResolvedValueOnce({ apiKey: '123456abcdef' })
         .mockResolvedValueOnce({ apiKey: 'fedcba654321' })
@@ -285,6 +299,7 @@ describe('SettingsViewApi', () => {
       const inputs = wrapper.findAll('.settings-view-api-key-created input[readonly]')
       expect(inputs).toHaveLength(1)
       expect(inputs[0].element.value).toBe('fedcba654321')
+      expect(wrapper.findAll('.page-table-generic__row-details')).toHaveLength(1)
     })
 
     it('should open the form when clicking "New API key"', async () => {
