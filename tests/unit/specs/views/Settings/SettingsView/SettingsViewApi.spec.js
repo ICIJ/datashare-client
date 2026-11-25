@@ -123,6 +123,16 @@ describe('SettingsViewApi', () => {
     expect(row.text()).toContain('All projects')
   })
 
+  it('should show "All projects" as italic text, not a badge', async () => {
+    api.getApiKeys.mockResolvedValue([expired])
+    const wrapper = mount(SettingsViewApi, { global: { plugins } })
+    await flushPromises()
+
+    const cell = wrapper.find('.page-table-generic__row__field--projects')
+    expect(cell.find('.badge').exists()).toBe(false)
+    expect(cell.find('em').text()).toBe('All projects')
+  })
+
   it('should render the keys in the shared page table', async () => {
     api.getApiKeys.mockResolvedValue([active, expired])
     const wrapper = mount(SettingsViewApi, { global: { plugins } })
