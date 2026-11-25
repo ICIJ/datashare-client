@@ -1657,13 +1657,9 @@
       "noAccess": "crwdns9394:0crwdne9394:0",
       "description": "crwdns9396:0crwdne9396:0",
       "key": {
-        "badge": "crwdns9398:0crwdne9398:0",
         "copy": "crwdns9400:0crwdne9400:0",
-        "hash": "crwdns9402:0{hash}crwdne9402:0",
         "created": "crwdns9404:0crwdne9404:0",
         "warning": "crwdns9406:0crwdne9406:0",
-        "unavailable": "crwdns9408:0crwdne9408:0",
-        "regenerate": "crwdns9410:0crwdne9410:0",
         "delete": {
           "button": "crwdns9412:0crwdne9412:0",
           "description": "crwdns9414:0crwdne9414:0"
