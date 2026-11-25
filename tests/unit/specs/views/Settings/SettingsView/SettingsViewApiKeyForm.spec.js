@@ -82,6 +82,12 @@ describe('SettingsViewApiKeyForm', () => {
     expect(payload).not.toHaveProperty('expirationDate')
   })
 
+  it('should keep a preset equal to the cap one minute under it', async () => {
+    const wrapper = mountForm({ maxLifetime: 'P30D' })
+    const payload = await submit(wrapper)
+    expect(payload.expirationDate).toBe('2026-12-25T11:59:00.000Z')
+  })
+
   it('should show all presets for a cap it cannot parse', () => {
     const wrapper = mountForm({ maxLifetime: 'PT48H' })
     expect(radioValues(wrapper)).toEqual(['7', '30', '90'])
