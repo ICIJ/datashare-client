@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onBeforeUnmount, ref, shallowRef, toRef, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, ref, shallowRef, toRef, useTemplateRef, watch } from 'vue'
 import { renderAsync } from 'docx-preview'
 import { useI18n } from 'vue-i18n'
 
@@ -9,6 +9,7 @@ import { useDocumentSource } from '@/composables/useDocumentSource'
 import { usePageTracking } from '@/composables/usePageTracking'
 import { useToolboxOffset } from '@/composables/useToolboxOffset'
 import { useToast } from '@/composables/useToast'
+import { paginateDocx } from '@/utils/docxPages'
 import { addSearchMarksClassesInHtml, foldWithSourceIndexes } from '@/utils/strings'
 import { belowToolboxMargin } from '@/utils/toolboxMargin'
 import DismissableContentWarningToggler from '@/components/Dismissable/DismissableContentWarningToggler'
@@ -66,6 +67,9 @@ const { page, trackPage, holdPageTracking, reset: resetPageTracking } = usePageT
 const rootMargin = computed(() => belowToolboxMargin(toolboxHeight.value))
 
 let lastRender = 0
+// A hidden container measures every block at 0, so a render painted behind the
+// blur warning is split once the warning is dismissed.
+let unpaginatedRender = null
 
 function failRender(message) {
   // The sections left in the container are the previous document's: still
@@ -134,9 +138,35 @@ async function render() {
     return
   }
   const painted = await paintDocx(id, blob)
-  if (painted) {
-    await adoptRenderedSections()
+  if (!painted) {
+    return
   }
+  // docx-preview loads the embedded fonts on its own, and they change the text heights.
+  await window.document.fonts?.ready
+  if (!isCurrentRender(id)) {
+    return
+  }
+  if (blurred.value) {
+    unpaginatedRender = id
+  }
+  else {
+    paginateDocx(container.value)
+  }
+  await adoptRenderedSections()
+}
+
+async function paginateUnblurred(value) {
+  if (value) {
+    return
+  }
+  // Waits for `v-show` to show the container, and for a swapped document's render to start.
+  await nextTick()
+  if (unpaginatedRender !== lastRender) {
+    return
+  }
+  unpaginatedRender = null
+  paginateDocx(container.value)
+  await adoptRenderedSections()
 }
 
 // Marking replaces a section's html, so the marks of the previous term would
@@ -217,6 +247,7 @@ watch(rootMargin, () => {
     observeSections()
   }
 })
+watch(blurred, paginateUnblurred)
 watch(currentDocument, render, { immediate: true, flush: 'post' })
 
 onBeforeUnmount(() => observer?.disconnect())

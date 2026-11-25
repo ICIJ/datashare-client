@@ -263,6 +263,71 @@ describe('DocumentViewerDocx.vue', () => {
     await flushPromises()
     expect(wrapper.find('.document-viewer-docx__error').text()).toBe('Your document was indexed in Datashare but the original is no longer in your Datashare folder on your computer. Preview is thus not available.')
   })
+  describe('pagination', () => {
+    let boundingRect
+
+    // jsdom has no layout: each block reports the bottom written in `data-bottom`.
+    beforeEach(() => {
+      boundingRect = vi.spyOn(window.HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function () {
+        const bottom = Number(this.dataset.bottom ?? 0)
+        return { top: 0, bottom }
+      })
+      renderAsync.mockImplementation(async (source, container) => {
+        container.innerHTML = '<section class="docx" style="min-height: 300px; padding: 0"><article><p data-bottom="200">first</p><p data-bottom="400">needle</p></article></section>'
+      })
+    })
+
+    afterEach(() => {
+      boundingRect.mockRestore()
+    })
+
+    it('counts the pages the layout splits a tall section into', async () => {
+      const wrapper = mountViewer()
+      await flushPromises()
+      expect(wrapper.findComponent(DocumentToolbox).props('totalPages')).toBe(2)
+    })
+
+    it('reports an occurrence on a split page as that page', async () => {
+      const wrapper = mountViewer()
+      await flushPromises()
+      await search(wrapper, 'needle')
+      expect(wrapper.vm.findMatches('needle')).toEqual([{ page: 2 }])
+    })
+
+    it('splits a blurred document once its warning is dismissed', async () => {
+      // Holds the source until the blur is known, so the render happens behind the warning.
+      let resolveSource
+      getSource.mockReturnValueOnce(new Promise((resolve) => {
+        resolveSource = resolve
+      }))
+      const wrapper = mountViewer([{ path: '/leaks/medical/', blurSensitiveMedia: true, note: 'Sensitive' }])
+      await flushPromises()
+      resolveSource(blob)
+      await flushPromises()
+      expect(wrapper.findComponent(DocumentToolbox).props('totalPages')).toBe(1)
+      wrapper.findComponent(DismissableContentWarningToggler).vm.$emit('update:modelValue', false)
+      await flushPromises()
+      expect(wrapper.findComponent(DocumentToolbox).props('totalPages')).toBe(2)
+    })
+
+    it('does not split a document swapped while the fonts were loading', async () => {
+      let loadFonts
+      const ready = new Promise((resolve) => {
+        loadFonts = resolve
+      })
+      const fonts = window.document.fonts
+      Object.defineProperty(window.document, 'fonts', { value: { ready }, configurable: true })
+      const wrapper = mountViewer()
+      await flushPromises()
+      renderSections('<article><p>other</p></article>')
+      await wrapper.setProps({ document: { ...document, id: 'other-id' } })
+      loadFonts()
+      await flushPromises()
+      expect(wrapper.find('.document-viewer-docx__container').text()).toBe('other')
+      Object.defineProperty(window.document, 'fonts', { value: fonts, configurable: true })
+    })
+  })
+
   describe('a document swapped while the previous one is still loading', () => {
     // Holds the first document's source open so the second one renders first.
     function mountWithPendingSource() {
