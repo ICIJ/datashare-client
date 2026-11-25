@@ -126,12 +126,15 @@ whenever(username, fetchApiKeys, { immediate: true })
       v-else
       class="settings-view-api__show"
     >
-      <p v-html="t('settings.api.description')" />
-      <div class="d-flex justify-content-end mb-3">
+      <div class="d-flex align-items-start gap-3 mb-3">
+        <p
+          class="flex-grow-1 m-0"
+          v-html="t('settings.api.description')"
+        />
         <button-icon
           variant="action"
           :icon-right="IPhPlus"
-          class="settings-view-api__create__button"
+          class="settings-view-api__create__button flex-shrink-0"
           @click="showModal = true"
         >
           {{ t('settings.api.newApiKey') }}
