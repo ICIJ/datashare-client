@@ -42,6 +42,12 @@ describe('SettingsViewApiKeyCreated', () => {
     expect(wrapper.find('.settings-view-api__mcp').exists()).toBe(true)
   })
 
+  it('should title the AI assistant setup once', async () => {
+    const wrapper = await mountUnfolded()
+    const titles = wrapper.text().split('Connect an AI assistant')
+    expect(titles).toHaveLength(2)
+  })
+
   it('should show the Claude Code command to connect Datashare MCP with the new key', async () => {
     const wrapper = await mountUnfolded()
 
