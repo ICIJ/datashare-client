@@ -93,6 +93,19 @@ describe('SettingsViewApiKeyForm', () => {
     expect(radioValues(wrapper)).toEqual(['7', '30', '90'])
   })
 
+  it('should open the projects menu inside the modal holding the form', async () => {
+    const modal = document.createElement('div')
+    modal.className = 'modal'
+    document.body.appendChild(modal)
+    const wrapper = mount(SettingsViewApiKeyForm, { global: { plugins }, props: { projects }, attachTo: modal })
+    await wrapper.vm.$nextTick()
+
+    const selector = wrapper.findComponent(ProjectDropdownSelector)
+    expect(selector.props('teleportTo')).toBe(modal)
+    wrapper.unmount()
+    modal.remove()
+  })
+
   it('should disable the submit button when busy', () => {
     const wrapper = mountForm({ busy: true })
     const button = wrapper.find('.settings-view-api-key-form__submit')
