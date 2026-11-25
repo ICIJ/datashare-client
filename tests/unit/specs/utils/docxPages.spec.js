@@ -23,11 +23,23 @@ describe('groupBlocksIntoPages', () => {
 })
 
 describe('paginateDocx', () => {
-  // jsdom has no layout: each block reports the bottom written in `data-bottom`.
+  // jsdom has no layout: an element reports the box written in `data-top` and
+  // `data-bottom`, or else the box of its children, the way a paragraph wraps its runs.
+  function boxOf(element) {
+    if (element.dataset.bottom || !element.children.length) {
+      const top = Number(element.dataset.top ?? 0)
+      const bottom = Number(element.dataset.bottom ?? 0)
+      return { top, bottom }
+    }
+    const boxes = [...element.children].map(boxOf)
+    const top = Math.min(...boxes.map(box => box.top))
+    const bottom = Math.max(...boxes.map(box => box.bottom))
+    return { top, bottom }
+  }
+
   beforeEach(() => {
     vi.spyOn(window.HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function () {
-      const bottom = Number(this.dataset.bottom ?? 0)
-      return { top: 0, bottom }
+      return boxOf(this)
     })
   })
 
@@ -90,5 +102,70 @@ describe('paginateDocx', () => {
     const sections = container.querySelectorAll('section.docx')
     expect(sections[0].textContent).toBe('aF')
     expect(sections[1].textContent).toBe('bnoteF')
+  })
+
+  it('cuts a paragraph of images taller than a page between its images', () => {
+    const markup = '<span data-top="0" data-bottom="250"><img alt="1"></span><span data-top="250" data-bottom="500"><img alt="2"></span><span data-top="500" data-bottom="750"><img alt="3"></span>'
+    const container = mountSection(`<article><p>${markup}</p></article>`)
+    paginateDocx(container)
+    const images = [...container.querySelectorAll('section.docx img')]
+    const pages = images.map(image => image.closest('section.docx'))
+    const alts = images.map(image => image.alt)
+    expect(new Set(pages).size).toBe(3)
+    expect(alts).toEqual(['1', '2', '3'])
+  })
+
+  it('keeps a paragraph of text taller than a page whole', () => {
+    const container = mountSection('<article><p><span data-top="0" data-bottom="250">a</span><span data-top="250" data-bottom="500">b</span></p></article>')
+    paginateDocx(container)
+    expect(container.querySelectorAll('section.docx')).toHaveLength(1)
+    expect(container.querySelectorAll('p')).toHaveLength(1)
+  })
+
+  it('keeps an image on the line of the text before it', () => {
+    const container = mountSection('<article><p><span data-top="0" data-bottom="20">a</span><span data-top="0" data-bottom="250"><img></span><span data-top="250" data-bottom="500"><img></span></p></article>')
+    paginateDocx(container)
+    const first = container.querySelector('section.docx')
+    expect(first.querySelectorAll('img')).toHaveLength(1)
+    expect(first.textContent).toBe('a')
+  })
+
+  it('leaves a document that already has page breaks untouched', () => {
+    const page = '<section class="docx" style="min-height: 400px; padding-top: 50px; padding-bottom: 50px"><article><p data-bottom="200">a</p><p data-bottom="350">b</p></article></section>'
+    const container = document.createElement('div')
+    container.innerHTML = page + page
+    paginateDocx(container)
+    expect(container.querySelectorAll('section.docx')).toHaveLength(2)
+  })
+
+  it('keeps a table of images taller than a page whole', () => {
+    const container = mountSection('<article></article>')
+    const table = document.createElement('table')
+    const rows = [[0, 250], [250, 500], [500, 750]]
+    rows.forEach(([top, bottom]) => {
+      const row = document.createElement('tr')
+      row.dataset.top = top
+      row.dataset.bottom = bottom
+      row.innerHTML = '<td><img></td>'
+      table.appendChild(row)
+    })
+    container.querySelector('article').appendChild(table)
+    paginateDocx(container)
+    expect(container.querySelectorAll('table')).toHaveLength(1)
+  })
+
+  it('numbers a cut list paragraph once', () => {
+    const images = '<span data-top="0" data-bottom="250"><img></span><span data-top="250" data-bottom="500"><img></span>'
+    const container = mountSection(`<article><p class="docx-num-1-0 docx_listparagraph">${images}</p></article>`)
+    paginateDocx(container)
+    const classes = [...container.querySelectorAll('p')].map(paragraph => paragraph.className)
+    expect(classes).toEqual(['docx-num-1-0 docx_listparagraph', 'docx_listparagraph'])
+  })
+
+  it('cuts a paragraph of vector pictures between its pictures', () => {
+    const pictures = '<span data-top="0" data-bottom="250"><svg></svg></span><span data-top="250" data-bottom="500"><svg></svg></span>'
+    const container = mountSection(`<article><p>${pictures}</p></article>`)
+    paginateDocx(container)
+    expect(container.querySelectorAll('p')).toHaveLength(2)
   })
 })
