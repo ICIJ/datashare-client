@@ -5,6 +5,7 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import SettingsViewApi from '@/views/Settings/SettingsView/SettingsViewApi'
 import SettingsViewApiKeyForm from '@/views/Settings/SettingsView/SettingsViewApiKeyForm'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
+import ProjectsButton from '@/components/Project/ProjectsButton'
 import { MODE_NAME } from '@/mode'
 import { apiInstance as api } from '@/api/apiInstance'
 
@@ -95,13 +96,22 @@ describe('SettingsViewApi', () => {
     expect(row.text()).toContain('Banana Papers')
   })
 
-  it('should show the raw name of a project the client does not know', async () => {
+  it('should list the projects of a scoped key with the projects button', async () => {
+    api.getApiKeys.mockResolvedValue([active, expired])
+    const wrapper = mount(SettingsViewApi, { global: { plugins } })
+    await flushPromises()
+
+    const [row] = wrapper.findAll('.settings-view-api__key')
+    expect(row.findComponent(ProjectsButton).props('projects')).toEqual(['banana-papers'])
+  })
+
+  it('should show the humanized name of a project the client does not know', async () => {
     api.getApiKeys.mockResolvedValue([{ ...active, projects: ['gone-leaks'] }])
     const wrapper = mount(SettingsViewApi, { global: { plugins } })
     await flushPromises()
 
     const [row] = wrapper.findAll('.settings-view-api__key')
-    expect(row.text()).toContain('gone-leaks')
+    expect(row.text()).toContain('Gone Leaks')
   })
 
   it('should show "All projects" for an unscoped key', async () => {
