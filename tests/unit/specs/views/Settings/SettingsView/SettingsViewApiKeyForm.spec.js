@@ -99,9 +99,28 @@ describe('SettingsViewApiKeyForm', () => {
     expect(payload.expirationDate).toBe('2026-12-25T11:59:00.000Z')
   })
 
-  it('should show all presets for a cap it cannot parse', () => {
-    const wrapper = mountForm({ maxLifetime: 'PT48H' })
-    expect(radioValues(wrapper)).toEqual(['7', '30', '90'])
+  it('should cap the presets with a cap in hours', () => {
+    const wrapper = mountForm({ maxLifetime: 'PT720H' })
+    expect(radioValues(wrapper)).toEqual(['7', '30'])
+  })
+
+  it('should cap the presets with a cap mixing days and hours', () => {
+    const wrapper = mountForm({ maxLifetime: 'P1DT24H' })
+    expect(wrapper.find('.settings-view-api-key-form__expires-in').text()).toContain('Max allowed (2 days)')
+  })
+
+  it('should not count days for a cap shorter than a day', () => {
+    const wrapper = mountForm({ maxLifetime: 'PT12H' })
+    const text = wrapper.find('.settings-view-api-key-form__expires-in').text()
+    expect(text).toContain('Max allowed')
+    expect(text).not.toContain('days')
+  })
+
+  it('should only offer the max allowed for a cap it cannot parse', async () => {
+    const wrapper = mountForm({ maxLifetime: 'P1M' })
+    expect(wrapper.findAll('input[type=radio]')).toHaveLength(1)
+    const payload = await submit(wrapper)
+    expect(payload).not.toHaveProperty('expirationDate')
   })
 
   it('should open the projects menu inside the modal holding the form', async () => {

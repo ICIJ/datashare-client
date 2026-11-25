@@ -42,22 +42,58 @@ const DAY_IN_MS = 86400000
 // The backend rejects a date past its own now + cap, so a browser clock a few
 // seconds ahead must not turn the preset matching the cap into a 400.
 const CLOCK_SKEW_MARGIN_IN_MS = 60000
+// The subset of ISO-8601 durations the backend parses (java.time.Duration): days, hours,
+// minutes and seconds.
+const DURATION_PATTERN = /^P(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:[.,]\d+)?)S)?)?$/i
 
 const { t } = useI18n()
 
-const maxDays = computed(() => {
-  const match = /^P(\d+)D$/.exec(props.maxLifetime ?? '')
-  return match ? Number(match[1]) : Infinity
+function parseDurationInMs(duration) {
+  const match = DURATION_PATTERN.exec(duration)
+  if (!match) {
+    return null
+  }
+  const [, days = 0, hours = 0, minutes = 0, seconds = '0'] = match
+  const totalHours = Number(days) * 24 + Number(hours)
+  const totalMinutes = totalHours * 60 + Number(minutes)
+  const totalSeconds = totalMinutes * 60 + Number(seconds.replace(',', '.'))
+  const durationInMs = totalSeconds * 1000
+  return durationInMs > 0 ? durationInMs : null
+}
+
+// Infinity without a cap, null for a cap the client cannot read.
+const maxLifetimeInMs = computed(() => {
+  if (!props.maxLifetime) {
+    return Infinity
+  }
+  return parseDurationInMs(props.maxLifetime)
 })
 
+function presetOption(days) {
+  const text = t('settings.api.form.expiresIn.days', { n: days })
+  return { value: days, text }
+}
+
+function maxOption() {
+  const days = maxLifetimeInMs.value / DAY_IN_MS
+  if (Number.isInteger(days) && days > 0) {
+    const text = t('settings.api.form.expiresIn.max', { n: days })
+    return { value: MAX, text }
+  }
+  const text = t('settings.api.form.expiresIn.maxAllowed')
+  return { value: MAX, text }
+}
+
 const options = computed(() => {
-  const allowed = PRESETS.filter(days => days <= maxDays.value)
-  const presets = allowed.map(days => ({ value: days, text: t('settings.api.form.expiresIn.days', { n: days }) }))
+  if (maxLifetimeInMs.value === null) {
+    return [maxOption()]
+  }
+  const allowed = PRESETS.filter(days => days * DAY_IN_MS <= maxLifetimeInMs.value)
+  const presets = allowed.map(presetOption)
   if (presets.length) {
     return presets
   }
-  const text = t('settings.api.form.expiresIn.max', { n: maxDays.value })
-  return [{ value: MAX, text }]
+  return [maxOption()]
 })
 
 function defaultExpiresIn() {
@@ -82,7 +118,7 @@ function submit() {
     return emit('submit', { projects })
   }
   const lifetime = expiresIn.value * DAY_IN_MS
-  const maxLifetime = maxDays.value * DAY_IN_MS - CLOCK_SKEW_MARGIN_IN_MS
+  const maxLifetime = maxLifetimeInMs.value - CLOCK_SKEW_MARGIN_IN_MS
   const safeLifetime = Math.min(lifetime, maxLifetime)
   const expiration = new Date(Date.now() + safeLifetime)
   const expirationDate = expiration.toISOString()
