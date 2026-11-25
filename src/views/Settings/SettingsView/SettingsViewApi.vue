@@ -180,12 +180,12 @@ whenever(username, fetchApiKeys, { immediate: true })
             v-if="item.projects.length"
             :projects="item.projects"
           />
-          <b-badge
+          <em
             v-else
-            variant="light"
+            class="text-body-secondary"
           >
             {{ t('settings.api.key.allProjects') }}
-          </b-badge>
+          </em>
         </template>
         <template #cell(creationDate)="{ item }">
           <display-datetime-short :value="item.creationDate" />
