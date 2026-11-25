@@ -5,11 +5,11 @@ import { AppIcon, HapticCopy, ButtonIcon } from '@icij/murmur'
 import { useI18n } from 'vue-i18n'
 
 import IPhPlus from '~icons/ph/plus'
-import IPhArrowClockwise from '~icons/ph/arrow-clockwise'
 import IPhTrash from '~icons/ph/trash'
 
 import AppModal from '@/components/AppModal/AppModal'
 import DisplayHash from '@/components/Display/DisplayHash'
+import DisplayDatetime from '@/components/Display/DisplayDatetime'
 import SettingsViewLayout from '@/views/Settings/SettingsView/SettingsViewLayout'
 import SettingsViewApiMcp from '@/views/Settings/SettingsView/SettingsViewApiMcp'
 import { useCore } from '@/composables/useCore'
@@ -21,47 +21,54 @@ import { useConfirmModal } from '@/composables/useConfirmModal'
  */
 defineOptions({ name: 'SettingsViewApi' })
 
-const hashedKey = ref(null)
+const keys = ref([])
 const apiKey = ref(null)
 const core = useCore()
 const { username } = useAuth()
 const { confirm } = useConfirmModal()
 const { t } = useI18n()
 
-const hasHashedKey = computed(() => !!hashedKey.value)
+const hasKeys = computed(() => keys.value.length > 0)
 const showModal = computed(() => !!apiKey.value)
 
-async function getHashedApiKey() {
-  const result = await core.api.getApiKey(username.value)
-  hashedKey.value = result.hashedKey
+async function fetchApiKeys() {
+  keys.value = await core.api.getApiKeys(username.value)
 }
 
 async function createApiKey() {
-  const result = await core.api.createApiKey(username.value)
+  const result = await core.api.addApiKey(username.value, { projects: [] })
   apiKey.value = result.apiKey
-  await getHashedApiKey()
+  await fetchApiKeys()
 }
 
-async function removeApiKey() {
-  await core.api.removeApiKey(username.value)
-  hashedKey.value = null
+async function removeApiKey(hashedKey) {
+  await core.api.removeApiKeyByHash(username.value, hashedKey)
+  await fetchApiKeys()
 }
 
-async function confirmDeleteApiKey() {
+async function confirmDeleteApiKey(hashedKey) {
   const description = t('settings.api.key.delete.description')
 
   if (await confirm({ description })) {
-    removeApiKey()
+    await removeApiKey(hashedKey)
   }
 }
 
-whenever(username, getHashedApiKey, { immediate: true })
+function isExpired({ expirationDate }) {
+  return new Date(expirationDate) <= new Date()
+}
+
+function projectLabel(name) {
+  return core.findProject(name)?.label ?? name
+}
+
+whenever(username, fetchApiKeys, { immediate: true })
 </script>
 
 <template>
   <settings-view-layout class="settings-view-api">
     <div
-      v-if="!hasHashedKey"
+      v-if="!hasKeys"
       class="settings-view-api__create text-center"
     >
       <div class="mb-3">
@@ -84,51 +91,86 @@ whenever(username, getHashedApiKey, { immediate: true })
       class="settings-view-api__show"
     >
       <p v-html="t('settings.api.description')" />
-      <div class="d-flex border rounded align-items-center">
-        <div class="d-inline-flex flex-column align-items-center gap-1 p-3">
-          <app-icon><i-ph-key /></app-icon>
-          <b-badge variant="dark">
-            {{ t('settings.api.key.badge') }}
-          </b-badge>
-        </div>
-        <div class="flex-grow-1 p-3">
-          <i18n-t keypath="settings.api.key.hash">
-            <template #hash>
-              <display-hash
-                class="settings-view-api__show__hash"
-                :value="hashedKey"
+      <button-icon
+        variant="action"
+        :icon-left="IPhPlus"
+        class="settings-view-api__create__button mb-3"
+        @click="createApiKey"
+      >
+        {{ t('settings.api.newApiKey') }}
+      </button-icon>
+      <table class="table align-middle">
+        <thead>
+          <tr>
+            <th>{{ t('settings.api.key.fields.key') }}</th>
+            <th>{{ t('settings.api.key.fields.projects') }}</th>
+            <th>{{ t('settings.api.key.fields.created') }}</th>
+            <th>{{ t('settings.api.key.fields.expires') }}</th>
+            <th />
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="key in keys"
+            :key="key.hashedKey"
+            class="settings-view-api__key"
+            :class="{ 'settings-view-api__key--expired text-body-tertiary': isExpired(key) }"
+          >
+            <td>
+              <display-hash :value="key.hashedKey" />
+            </td>
+            <td>
+              <div class="d-flex flex-wrap gap-1">
+                <b-badge
+                  v-for="name in key.projects"
+                  :key="name"
+                >
+                  {{ projectLabel(name) }}
+                </b-badge>
+                <b-badge
+                  v-if="!key.projects.length"
+                  variant="light"
+                >
+                  {{ t('settings.api.key.allProjects') }}
+                </b-badge>
+              </div>
+            </td>
+            <td>
+              <display-datetime :value="key.creationDate" />
+            </td>
+            <td>
+              <display-datetime :value="key.expirationDate" />
+              <b-badge
+                v-if="isExpired(key)"
+                variant="danger"
+                class="ms-2"
+              >
+                {{ t('settings.api.key.expired') }}
+              </b-badge>
+              <display-datetime
+                v-else
+                :value="key.expirationDate"
+                format="fromNow"
+                no-tooltip
+                class="ms-2 text-secondary-emphasis"
               />
-            </template>
-          </i18n-t>
-          <p class="text-secondary-emphasis m-0">
-            {{ t('settings.api.key.unavailable') }}
-          </p>
-        </div>
-        <div class="d-flex justify-content-end gap-1 p-3">
-          <button-icon
-            :icon-left="IPhArrowClockwise"
-            icon-left-hover-weight="bold"
-            hide-label
-            square
-            size="sm"
-            variant="outline-secondary"
-            class="border-0"
-            :label="t('settings.api.key.regenerate')"
-            @click="createApiKey"
-          />
-          <button-icon
-            :icon-left="IPhTrash"
-            icon-left-hover-weight="bold"
-            hide-label
-            square
-            size="sm"
-            variant="outline-secondary"
-            class="settings-view-api__show__delete border-0"
-            :label="t('settings.api.key.delete.button')"
-            @click="confirmDeleteApiKey"
-          />
-        </div>
-      </div>
+            </td>
+            <td class="text-end">
+              <button-icon
+                :icon-left="IPhTrash"
+                icon-left-hover-weight="bold"
+                hide-label
+                square
+                size="sm"
+                variant="outline-secondary"
+                class="settings-view-api__key__delete border-0"
+                :label="t('settings.api.key.delete.button')"
+                @click="confirmDeleteApiKey(key.hashedKey)"
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <app-modal
       size="md"
@@ -156,19 +198,3 @@ whenever(username, getHashedApiKey, { immediate: true })
     </app-modal>
   </settings-view-layout>
 </template>
-
-<style lang="scss" scoped>
-.settings-view-api {
-  &__create-key {
-    text-align: center;
-    margin: auto;
-    max-width: $modal-md;
-  }
-
-  &__key {
-    &__delete {
-      margin-top: 0.5rem;
-    }
-  }
-}
-</style>

@@ -1657,13 +1657,9 @@
       "noAccess": "Sie haben keinen Zugriff auf diese Seite im lokalen Modus.",
       "description": "An API key allows you to interact with Datashare <a href=\"https://icij.gitbook.io/datashare/developers/backend/api\" target=\"_blank\">through the API</a>, using tools like <a href=\"https://github.com/ICIJ/datashare-tarentula\" target=\"_blank\">Tarentula</a> or your own scripts.",
       "key": {
-        "badge": "Key",
         "copy": "Copy",
-        "hash": "Hash: {hash}",
         "created": "API Schlüssel erstellt",
         "warning": "Please copy this key in a safe place, you won't be able to access it again on Datashare.",
-        "unavailable": "You can only access a key when creating it.",
-        "regenerate": "Regenerieren",
         "delete": {
           "button": "Löschen",
           "description": "Any applications or scripts using this key will no longer be able to access the Datashare API. You cannot undo this action."

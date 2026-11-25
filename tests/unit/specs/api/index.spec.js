@@ -364,16 +364,6 @@ describe('Datashare backend client', () => {
     expect(json).toEqual({})
   })
 
-  it('should return backend response to createApiKey', async () => {
-    json = await api.createApiKey()
-    expect(json).toEqual({})
-  })
-
-  it('should return backend response to removeApiKey', async () => {
-    json = await api.removeApiKey()
-    expect(json).toEqual({})
-  })
-
   it('should call getApiKeys with GET on the keys route', async () => {
     await api.getApiKeys('doe')
     expect(axios.request).toBeCalledWith(
