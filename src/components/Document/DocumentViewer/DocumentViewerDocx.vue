@@ -165,6 +165,8 @@ async function paginateUnblurred(value) {
     return
   }
   unpaginatedRender = null
+  // A term searched behind the warning marked the sections, and the split pages save their html as it is.
+  restoreOriginalHtml()
   paginateDocx(container.value)
   await adoptRenderedSections()
 }

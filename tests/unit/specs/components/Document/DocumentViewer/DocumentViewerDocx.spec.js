@@ -310,21 +310,45 @@ describe('DocumentViewerDocx.vue', () => {
       expect(wrapper.findComponent(DocumentToolbox).props('totalPages')).toBe(2)
     })
 
-    it('does not split a document swapped while the fonts were loading', async () => {
+    it('does not let a document swapped while the fonts were loading adopt the next one', async () => {
       let loadFonts
-      const ready = new Promise((resolve) => {
+      const pending = new Promise((resolve) => {
         loadFonts = resolve
       })
+      // Only the first render waits for the fonts, so the second one adopts its sections first.
+      const ready = [pending]
       const fonts = window.document.fonts
-      Object.defineProperty(window.document, 'fonts', { value: { ready }, configurable: true })
+      Object.defineProperty(window.document, 'fonts', {
+        get: () => ({ ready: ready.shift() }),
+        configurable: true
+      })
       const wrapper = mountViewer()
       await flushPromises()
       renderSections('<article><p>other</p></article>')
       await wrapper.setProps({ document: { ...document, id: 'other-id' } })
+      await flushPromises()
+      expect(observers).toHaveLength(1)
       loadFonts()
       await flushPromises()
-      expect(wrapper.find('.document-viewer-docx__container').text()).toBe('other')
+      expect(observers).toHaveLength(1)
       Object.defineProperty(window.document, 'fonts', { value: fonts, configurable: true })
+    })
+
+    it('clears the marks of a term searched behind the warning once it is dismissed', async () => {
+      let resolveSource
+      getSource.mockReturnValueOnce(new Promise((resolve) => {
+        resolveSource = resolve
+      }))
+      const wrapper = mountViewer([{ path: '/leaks/medical/', blurSensitiveMedia: true, note: 'Sensitive' }])
+      await flushPromises()
+      await search(wrapper, 'needle')
+      resolveSource(blob)
+      await flushPromises()
+      wrapper.findComponent(DismissableContentWarningToggler).vm.$emit('update:modelValue', false)
+      await flushLocalSearch()
+      expect(wrapper.findComponent(DocumentToolbox).props('occurrences')).toBe(1)
+      await search(wrapper, '')
+      expect(wrapper.findAll('mark.local-search-term')).toHaveLength(0)
     })
   })
 
