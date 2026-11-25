@@ -165,6 +165,35 @@ describe('SettingsViewApi', () => {
     expect(activeRow.text()).not.toContain('Expired')
   })
 
+  it('should not mark a key without an expiration date as expired', async () => {
+    api.getApiKeys.mockResolvedValue([{ ...active, expirationDate: null }])
+    const wrapper = mount(SettingsViewApi, { global: { plugins } })
+    await flushPromises()
+
+    const row = wrapper.find('.settings-view-api__key')
+    expect(row.classes()).not.toContain('settings-view-api__key--expired')
+  })
+
+  it('should toast an error when the keys cannot be loaded', async () => {
+    api.getApiKeys.mockRejectedValue(new Error('network'))
+    mount(SettingsViewApi, { global: { plugins } })
+    await flushPromises()
+
+    expect(mockToast.error).toBeCalledWith('The API keys could not be loaded.')
+  })
+
+  it('should toast an error when a key cannot be deleted', async () => {
+    api.getApiKeys.mockResolvedValue([active])
+    api.removeApiKeyByHash.mockRejectedValue(new Error('forbidden'))
+    const wrapper = mount(SettingsViewApi, { global: { plugins } })
+    await flushPromises()
+
+    await wrapper.find('.settings-view-api__key__delete').trigger('click')
+    await flushPromises()
+
+    expect(mockToast.error).toBeCalledWith('The API key could not be deleted.')
+  })
+
   it('should delete only the confirmed key', async () => {
     api.getApiKeys.mockResolvedValue([active, expired])
     api.removeApiKeyByHash.mockResolvedValue('')
@@ -294,6 +323,26 @@ describe('SettingsViewApi', () => {
       await createKey(wrapper)
 
       expect(wrapper.findAll('.settings-view-api__key--new')).toHaveLength(0)
+      const modal = wrapper.findComponent({ name: 'AppModal' })
+      const input = modal.find('.settings-view-api-key-created input[readonly]')
+      expect(input.element.value).toBe('123456abcdef')
+    })
+
+    it('should reopen the modal with the key when closed during creation and the new row is not found', async () => {
+      let resolveCreation
+      api.getApiKeys.mockResolvedValue([{ ...active }])
+      api.addApiKey.mockReturnValue(new Promise((resolve) => {
+        resolveCreation = resolve
+      }))
+      const wrapper = mount(SettingsViewApi, { global: { plugins, stubs } })
+      await flushPromises()
+      await wrapper.find('.settings-view-api__create__button').trigger('click')
+      wrapper.findComponent(SettingsViewApiKeyForm).vm.$emit('submit', payload)
+      wrapper.findComponent({ name: 'AppModal' }).vm.$emit('hidden')
+
+      resolveCreation({ apiKey: '123456abcdef' })
+      await flushPromises()
+
       const modal = wrapper.findComponent({ name: 'AppModal' })
       const input = modal.find('.settings-view-api-key-created input[readonly]')
       expect(input.element.value).toBe('123456abcdef')

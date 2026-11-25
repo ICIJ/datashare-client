@@ -1704,9 +1704,11 @@
         "warning": "Copy it now: Datashare won't show it again.",
         "delete": {
           "button": "Delete",
+          "error": "The API key could not be deleted.",
           "description": "Any applications or scripts using this key will no longer be able to access the Datashare API. You cannot undo this action."
         },
         "allProjects": "All projects",
+        "fetchError": "The API keys could not be loaded.",
         "expired": "Expired",
         "new": "New",
         "fields": {

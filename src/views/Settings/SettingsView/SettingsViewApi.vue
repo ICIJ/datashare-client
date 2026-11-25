@@ -42,7 +42,23 @@ const showForm = computed(() => !createdKey.value || !!createdKey.value.hashedKe
 const modalTitle = computed(() => (showForm.value ? t('settings.api.form.title') : t('settings.api.key.created')))
 
 async function fetchApiKeys() {
-  keys.value = await core.api.getApiKeys(username.value)
+  try {
+    keys.value = await core.api.getApiKeys(username.value)
+  }
+  catch {
+    toast.error(t('settings.api.key.fetchError'))
+  }
+}
+
+// After a key is created, a failed refresh keeps the current list: the secret is then shown
+// in the modal rather than lost behind an error.
+async function refreshedApiKeys() {
+  try {
+    return await core.api.getApiKeys(username.value)
+  }
+  catch {
+    return keys.value
+  }
 }
 
 async function addApiKey(payload) {
@@ -50,11 +66,12 @@ async function addApiKey(payload) {
   try {
     const knownHashes = new Set(keys.value.map(key => key.hashedKey))
     const { apiKey } = await core.api.addApiKey(username.value, payload)
-    const refreshedKeys = await core.api.getApiKeys(username.value).catch(() => keys.value)
+    const refreshedKeys = await refreshedApiKeys()
     const newKeys = refreshedKeys.filter(key => !knownHashes.has(key.hashedKey))
     keys.value = refreshedKeys
     if (newKeys.length !== 1) {
       createdKey.value = { hashedKey: null, apiKey }
+      showModal.value = true
       return
     }
     const [newKey] = newKeys
@@ -85,7 +102,12 @@ function isCreatedKey({ hashedKey }) {
 }
 
 async function removeApiKey(hashedKey) {
-  await core.api.removeApiKeyByHash(username.value, hashedKey)
+  try {
+    await core.api.removeApiKeyByHash(username.value, hashedKey)
+  }
+  catch {
+    toast.error(t('settings.api.key.delete.error'))
+  }
   await fetchApiKeys()
 }
 
@@ -98,6 +120,9 @@ async function confirmDeleteApiKey(hashedKey) {
 }
 
 function isExpired({ expirationDate }) {
+  if (!expirationDate) {
+    return false
+  }
   return new Date(expirationDate) <= new Date()
 }
 
