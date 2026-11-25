@@ -46,6 +46,13 @@ const props = defineProps({
     type: [Object, Array, String]
   },
   /**
+   * Class of each item's row, as a function of the item
+   */
+  rowClass: {
+    type: Function,
+    default: null
+  },
+  /**
    * Loading state of the table
    */
   loading: {
@@ -174,7 +181,10 @@ const hasRowDetailsSlot = computed(() => 'row-details' in slots)
       v-for="(item, index) in items"
       :key="primaryKey ? item[primaryKey] ?? index : index"
     >
-      <page-table-tr class="page-table-generic__row">
+      <page-table-tr
+        class="page-table-generic__row"
+        :class="rowClass?.(item)"
+      >
         <td
           v-for="(field, i) in fields"
           :key="i"
