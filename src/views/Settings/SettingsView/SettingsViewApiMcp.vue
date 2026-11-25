@@ -53,9 +53,6 @@ const clients = computed(() => [
 
 <template>
   <div class="settings-view-api__mcp">
-    <h3 class="fs-6 fw-bold mb-1">
-      {{ t('settings.api.mcp.title') }}
-    </h3>
     <p class="text-secondary-emphasis">
       {{ t('settings.api.mcp.description') }}
       <a
