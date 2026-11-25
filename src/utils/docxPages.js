@@ -10,6 +10,15 @@ function isOverflowingPage(bottom, pageTop, pageHeight) {
   return blockHeightOnPage > pageHeight
 }
 
+/**
+ * Groups blocks into pages from where each block ends. A page ends before the
+ * first block passing its bottom, and the next page starts at the bottom of the
+ * last block kept. A block taller than a page gets a page of its own.
+ *
+ * @param {number[]} bottoms - The bottom of each block, in pixels from the top of the first page.
+ * @param {number} pageHeight - The height a page holds, in pixels.
+ * @returns {number[][]} The block indexes of each page.
+ */
 export function groupBlocksIntoPages(bottoms, pageHeight) {
   const pages = []
   let pageTop = 0
@@ -162,6 +171,14 @@ function paginateSection(section) {
   moveNotesToLastPage(section, lastPage)
 }
 
+/**
+ * Splits every page docx-preview rendered taller than its paper into page-sized
+ * pages, in place. Each new page copies its source page's styles, header and footer.
+ * Measures the layout, so the container has to be visible.
+ *
+ * @param {HTMLElement} container - The element docx-preview rendered into.
+ * @returns {void}
+ */
 export function paginateDocx(container) {
   const sections = container.querySelectorAll('section.docx')
   sections.forEach(paginateSection)
