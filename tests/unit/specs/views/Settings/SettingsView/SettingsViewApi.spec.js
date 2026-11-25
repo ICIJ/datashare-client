@@ -3,6 +3,7 @@ import { removeCookie, setCookie } from 'tiny-cookie'
 
 import CoreSetup from '~tests/unit/CoreSetup'
 import SettingsViewApi from '@/views/Settings/SettingsView/SettingsViewApi'
+import SettingsViewApiKeyForm from '@/views/Settings/SettingsView/SettingsViewApiKeyForm'
 import { MODE_NAME } from '@/mode'
 import { apiInstance as api } from '@/api/apiInstance'
 
@@ -15,6 +16,11 @@ vi.mock('@/api/apiInstance', () => {
     }
   }
 })
+
+const mockToast = { error: vi.fn(), success: vi.fn() }
+vi.mock('@/composables/useToast', () => ({
+  useToast: () => ({ toast: mockToast })
+}))
 
 const mockConfirm = vi.fn().mockResolvedValue(true)
 vi.mock('@/composables/useConfirmModal', () => ({
@@ -75,7 +81,7 @@ describe('SettingsViewApi', () => {
     api.addApiKey.mockResolvedValue({ apiKey: '123456abcdef' })
     const stubs = { 'app-modal': { template: '<div><slot /></div>' } }
     const wrapper = mount(SettingsViewApi, { global: { plugins, stubs } })
-    await wrapper.vm.createApiKey()
+    await wrapper.vm.addApiKey({ projects: [] })
 
     const command = wrapper.find('.settings-view-api__mcp__snippet').text()
     expect(command).toContain('claude mcp add --transport http datashare http://localhost:9009/api/mcp')
@@ -86,7 +92,7 @@ describe('SettingsViewApi', () => {
     api.addApiKey.mockResolvedValue({ apiKey: '123456abcdef' })
     const stubs = { 'app-modal': { template: '<div><slot /></div>' } }
     const wrapper = mount(SettingsViewApi, { global: { plugins, stubs } })
-    await wrapper.vm.createApiKey()
+    await wrapper.vm.addApiKey({ projects: [] })
     await flushPromises()
 
     expect(wrapper.find('.settings-view-api__mcp .nav-link.active').text()).toBe('Claude Code')
@@ -96,7 +102,7 @@ describe('SettingsViewApi', () => {
     api.addApiKey.mockResolvedValue({ apiKey: '123456abcdef' })
     const stubs = { 'app-modal': { template: '<div><slot /></div>' } }
     const wrapper = mount(SettingsViewApi, { global: { plugins, stubs } })
-    await wrapper.vm.createApiKey()
+    await wrapper.vm.addApiKey({ projects: [] })
     await vi.waitFor(() => expect(wrapper.find('.settings-view-api__mcp__snippet .tok-string').exists()).toBe(true))
 
     const string = wrapper.find('.settings-view-api__mcp__snippet .tok-string').text()
@@ -183,5 +189,74 @@ describe('SettingsViewApi', () => {
     await flushPromises()
 
     expect(wrapper.find('.settings-view-api__create').exists()).toBeTruthy()
+  })
+
+  describe('creation modal', () => {
+    const AppModalStub = { name: 'AppModal', props: ['modelValue'], emits: ['hidden'], template: '<div v-if="modelValue"><slot /></div>' }
+    const stubs = { 'app-modal': AppModalStub }
+    const payload = { projects: ['banana-papers'], expirationDate: '2026-12-25T12:00:00.000Z' }
+
+    it('should open the form when clicking "New API key"', async () => {
+      const wrapper = mount(SettingsViewApi, { global: { plugins, stubs } })
+      await flushPromises()
+      expect(wrapper.find('.settings-view-api-key-form').exists()).toBeFalsy()
+
+      await wrapper.find('.settings-view-api__create__button').trigger('click')
+
+      expect(wrapper.find('.settings-view-api-key-form').exists()).toBeTruthy()
+    })
+
+    it('should create a key with the form payload', async () => {
+      api.addApiKey.mockResolvedValue({ apiKey: '123456abcdef' })
+      const wrapper = mount(SettingsViewApi, { global: { plugins, stubs } })
+      await wrapper.find('.settings-view-api__create__button').trigger('click')
+
+      wrapper.findComponent(SettingsViewApiKeyForm).vm.$emit('submit', payload)
+      await flushPromises()
+
+      expect(api.addApiKey).toBeCalledWith('doe', payload)
+      expect(wrapper.find('.settings-view-api-key-form').exists()).toBeFalsy()
+      expect(wrapper.find('input[readonly]').element.value).toBe('123456abcdef')
+    })
+
+    it('should refresh the list when the modal closes', async () => {
+      api.addApiKey.mockResolvedValue({ apiKey: '123456abcdef' })
+      const wrapper = mount(SettingsViewApi, { global: { plugins, stubs } })
+      await wrapper.find('.settings-view-api__create__button').trigger('click')
+      wrapper.findComponent(SettingsViewApiKeyForm).vm.$emit('submit', payload)
+      await flushPromises()
+
+      wrapper.findComponent({ name: 'AppModal' }).vm.$emit('hidden')
+      await flushPromises()
+      expect(api.getApiKeys).toBeCalledTimes(2)
+
+      await wrapper.find('.settings-view-api__create__button').trigger('click')
+      expect(wrapper.find('.settings-view-api-key-form').exists()).toBeTruthy()
+    })
+
+    it('should stay on the form and toast the backend message on a 400', async () => {
+      const error = { response: { status: 400, data: { error: 'projects not granted: banana-papers' } } }
+      api.addApiKey.mockRejectedValue(error)
+      const wrapper = mount(SettingsViewApi, { global: { plugins, stubs } })
+      await wrapper.find('.settings-view-api__create__button').trigger('click')
+
+      wrapper.findComponent(SettingsViewApiKeyForm).vm.$emit('submit', payload)
+      await flushPromises()
+
+      expect(mockToast.error).toBeCalledWith(expect.stringContaining('projects not granted: banana-papers'))
+      expect(wrapper.find('.settings-view-api-key-form').exists()).toBeTruthy()
+    })
+
+    it('should create one key on a double submit', async () => {
+      api.addApiKey.mockReturnValue(new Promise(() => {}))
+      const wrapper = mount(SettingsViewApi, { global: { plugins, stubs }, attachTo: document.body })
+      await wrapper.find('.settings-view-api__create__button').trigger('click')
+
+      await wrapper.find('.settings-view-api-key-form__submit').trigger('click')
+      await wrapper.find('.settings-view-api-key-form__submit').trigger('click')
+
+      expect(api.addApiKey).toBeCalledTimes(1)
+      wrapper.unmount()
+    })
   })
 })

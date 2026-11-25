@@ -3,6 +3,7 @@ import { whenever } from '@vueuse/core'
 import { ref, computed } from 'vue'
 import { AppIcon, HapticCopy, ButtonIcon } from '@icij/murmur'
 import { useI18n } from 'vue-i18n'
+import get from 'lodash/get'
 
 import IPhPlus from '~icons/ph/plus'
 import IPhTrash from '~icons/ph/trash'
@@ -12,9 +13,11 @@ import DisplayHash from '@/components/Display/DisplayHash'
 import DisplayDatetime from '@/components/Display/DisplayDatetime'
 import SettingsViewLayout from '@/views/Settings/SettingsView/SettingsViewLayout'
 import SettingsViewApiMcp from '@/views/Settings/SettingsView/SettingsViewApiMcp'
+import SettingsViewApiKeyForm from '@/views/Settings/SettingsView/SettingsViewApiKeyForm'
 import { useCore } from '@/composables/useCore'
 import { useAuth } from '@/composables/useAuth'
 import { useConfirmModal } from '@/composables/useConfirmModal'
+import { useToast } from '@/composables/useToast'
 
 /**
  * A page to manage user's API keys.
@@ -23,22 +26,40 @@ defineOptions({ name: 'SettingsViewApi' })
 
 const keys = ref([])
 const apiKey = ref(null)
+const showModal = ref(false)
+const creating = ref(false)
 const core = useCore()
 const { username } = useAuth()
 const { confirm } = useConfirmModal()
 const { t } = useI18n()
+const { toast } = useToast()
 
 const hasKeys = computed(() => keys.value.length > 0)
-const showModal = computed(() => !!apiKey.value)
+const modalTitle = computed(() => (apiKey.value ? t('settings.api.key.created') : t('settings.api.form.title')))
 
 async function fetchApiKeys() {
   keys.value = await core.api.getApiKeys(username.value)
 }
 
-async function createApiKey() {
-  const result = await core.api.addApiKey(username.value, { projects: [] })
-  apiKey.value = result.apiKey
-  await fetchApiKeys()
+async function addApiKey(payload) {
+  creating.value = true
+  try {
+    const result = await core.api.addApiKey(username.value, payload)
+    apiKey.value = result.apiKey
+  }
+  catch (error) {
+    const message = get(error, 'response.data.error') ?? t('settings.api.form.error')
+    toast.error(message)
+  }
+  finally {
+    creating.value = false
+  }
+}
+
+function closeModal() {
+  showModal.value = false
+  apiKey.value = null
+  fetchApiKeys()
 }
 
 async function removeApiKey(hashedKey) {
@@ -81,7 +102,7 @@ whenever(username, fetchApiKeys, { immediate: true })
         variant="action"
         :icon-left="IPhPlus"
         class="settings-view-api__create__button"
-        @click="createApiKey"
+        @click="showModal = true"
       >
         {{ t('settings.api.newApiKey') }}
       </button-icon>
@@ -95,7 +116,7 @@ whenever(username, fetchApiKeys, { immediate: true })
         variant="action"
         :icon-left="IPhPlus"
         class="settings-view-api__create__button mb-3"
-        @click="createApiKey"
+        @click="showModal = true"
       >
         {{ t('settings.api.newApiKey') }}
       </button-icon>
@@ -174,27 +195,36 @@ whenever(username, fetchApiKeys, { immediate: true })
     </div>
     <app-modal
       size="md"
-      :title="t('settings.api.key.created')"
+      :title="modalTitle"
       :model-value="showModal"
       lazy
       no-footer
-      @hidden="apiKey = null"
+      @hidden="closeModal"
     >
-      <p>{{ t('settings.api.key.warning') }}</p>
-      <div class="input-group">
-        <input
-          class="form-control font-monospace."
-          readonly
-          :value="apiKey"
-        >
-        <haptic-copy
-          :text="apiKey"
-          class="btn-outline-action"
-          :label="t('settings.api.key.copy')"
-        />
-      </div>
-      <hr class="my-4">
-      <settings-view-api-mcp :api-key="apiKey" />
+      <settings-view-api-key-form
+        v-if="!apiKey"
+        :projects="core.projects"
+        :max-lifetime="core.config.get('apiKeyMaxLifetime')"
+        :busy="creating"
+        @submit="addApiKey"
+      />
+      <template v-else>
+        <p>{{ t('settings.api.key.warning') }}</p>
+        <div class="input-group">
+          <input
+            class="form-control font-monospace."
+            readonly
+            :value="apiKey"
+          >
+          <haptic-copy
+            :text="apiKey"
+            class="btn-outline-action"
+            :label="t('settings.api.key.copy')"
+          />
+        </div>
+        <hr class="my-4">
+        <settings-view-api-mcp :api-key="apiKey" />
+      </template>
     </app-modal>
   </settings-view-layout>
 </template>

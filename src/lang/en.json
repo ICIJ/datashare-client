@@ -1732,7 +1732,9 @@
           "days": "{n} days",
           "max": "Max allowed ({n} days)"
         },
-        "submit": "Create key"
+        "submit": "Create key",
+        "title": "New API key",
+        "error": "The API key could not be created."
       }
     },
     "users": {
