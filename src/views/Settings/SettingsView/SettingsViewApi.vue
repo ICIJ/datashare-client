@@ -13,6 +13,7 @@ import DisplayHash from '@/components/Display/DisplayHash'
 import DisplayDatetimeShort from '@/components/Display/DisplayDatetimeShort'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
 import PageTableToggleDetailsButton from '@/components/PageTable/PageTableToggleDetailsButton'
+import ProjectsButton from '@/components/Project/ProjectsButton'
 import SettingsViewLayout from '@/views/Settings/SettingsView/SettingsViewLayout'
 import SettingsViewApiKeyForm from '@/views/Settings/SettingsView/SettingsViewApiKeyForm'
 import SettingsViewApiKeyCreated from '@/views/Settings/SettingsView/SettingsViewApiKeyCreated'
@@ -115,10 +116,6 @@ function rowClass(key) {
   }
 }
 
-function projectLabel(name) {
-  return core.findProject(name)?.label ?? name
-}
-
 whenever(username, fetchApiKeys, { immediate: true })
 </script>
 
@@ -179,20 +176,16 @@ whenever(username, fetchApiKeys, { immediate: true })
           </b-badge>
         </template>
         <template #cell(projects)="{ item }">
-          <div class="d-flex flex-wrap gap-1">
-            <b-badge
-              v-for="name in item.projects"
-              :key="name"
-            >
-              {{ projectLabel(name) }}
-            </b-badge>
-            <b-badge
-              v-if="!item.projects.length"
-              variant="light"
-            >
-              {{ t('settings.api.key.allProjects') }}
-            </b-badge>
-          </div>
+          <projects-button
+            v-if="item.projects.length"
+            :projects="item.projects"
+          />
+          <b-badge
+            v-else
+            variant="light"
+          >
+            {{ t('settings.api.key.allProjects') }}
+          </b-badge>
         </template>
         <template #cell(creationDate)="{ item }">
           <display-datetime-short :value="item.creationDate" />
