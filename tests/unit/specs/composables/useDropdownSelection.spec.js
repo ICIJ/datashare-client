@@ -5,13 +5,32 @@ import { useDropdownSelection } from '@/composables/useDropdownSelection'
 describe('useDropdownSelection', () => {
   const projects = [{ name: 'a', label: 'A' }, { name: 'b', label: 'B' }, { name: 'c', label: 'C' }]
 
-  function setup(modelValueInit, multipleInit) {
+  function setup(modelValueInit, multipleInit, allowEmpty = false) {
     const modelValue = ref(modelValueInit)
     const allOptions = ref(projects)
     const multiple = ref(multipleInit)
-    const api = useDropdownSelection(modelValue, allOptions, { multiple, optionKey: 'name' })
+    const api = useDropdownSelection(modelValue, allOptions, { multiple, optionKey: 'name', allowEmpty })
     return { modelValue, api }
   }
+
+  describe('when empty is allowed', () => {
+    it('removes the last value in multiple mode', () => {
+      const { modelValue, api } = setup([{ name: 'a' }], true, true)
+      api.toggleValue({ stopPropagation() {} }, { name: 'a' })
+      expect(modelValue.value).toEqual([])
+    })
+
+    it('never requires the last value', () => {
+      const { api } = setup([{ name: 'a' }], true, true)
+      expect(api.isRequiredSelection({ name: 'a' })).toBe(false)
+    })
+
+    it('unselects every value', () => {
+      const { modelValue, api } = setup([{ name: 'a' }, { name: 'b' }], true, true)
+      api.unselectAll()
+      expect(modelValue.value).toEqual([])
+    })
+  })
 
   it('reports selected keys for a multiple selection', () => {
     const { api } = setup([{ name: 'a' }, { name: 'b' }], true)

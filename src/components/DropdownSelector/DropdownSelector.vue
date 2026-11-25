@@ -62,6 +62,13 @@ const props = defineProps({
     type: Boolean
   },
   /**
+   * Let a multiple selection be emptied, an empty selection standing for every option
+   * (the select-all row is then checked when nothing is selected).
+   */
+  emptyMeansAll: {
+    type: Boolean
+  },
+  /**
    * Pin selected options to the top; re-pin on close.
    */
   pinSelected: {
@@ -171,7 +178,11 @@ const {
   toggleUniqueValue,
   selectAll,
   unselectAll
-} = useDropdownSelection(modelValue, toRef(props, 'options'), { multiple, optionKey: props.optionKey })
+} = useDropdownSelection(modelValue, toRef(props, 'options'), {
+  multiple,
+  optionKey: props.optionKey,
+  allowEmpty: toRef(props, 'emptyMeansAll')
+})
 
 /**
  * Filtering
@@ -248,10 +259,16 @@ watch(selectedKeys, () => {
  */
 const selectAllModel = computed({
   get() {
+    if (props.emptyMeansAll) {
+      return selectedKeys.value.length === 0
+    }
     return props.options.length > 0 && selectedKeys.value.length === props.options.length
   },
   set(value) {
-    if (value) {
+    if (props.emptyMeansAll) {
+      unselectAll()
+    }
+    else if (value) {
       selectAll()
     }
     else {
@@ -342,6 +359,7 @@ defineExpose({ hide, focus })
       v-if="allowSelectAll && multiple && hasMatches && !hasQuery"
       v-model="selectAllModel"
       :label="selectAllLabel"
+      :disabled="emptyMeansAll && selectAllModel"
       @click.stop
     />
 

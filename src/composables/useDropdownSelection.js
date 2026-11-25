@@ -1,4 +1,4 @@
-import { computed } from 'vue'
+import { computed, toValue } from 'vue'
 import castArray from 'lodash/castArray'
 import isEqual from 'lodash/isEqual'
 // Resolve a stable key from an option. `optionKey` is either a property
@@ -21,8 +21,9 @@ function resolveKey(option, optionKey) {
  * @param {Object} config
  * @param {import('vue').Ref<Boolean>} config.multiple whether selection is multiple
  * @param {String|Function} config.optionKey how to derive a key from an option
+ * @param {import('vue').MaybeRefOrGetter<Boolean>} [config.allowEmpty] whether a multiple selection can be emptied
  */
-export function useDropdownSelection(modelValue, allOptions, { multiple, optionKey }) {
+export function useDropdownSelection(modelValue, allOptions, { multiple, optionKey, allowEmpty = false }) {
   const keyOf = option => resolveKey(option, optionKey)
 
   // Current selection as an array, regardless of single/multiple mode.
@@ -42,7 +43,7 @@ export function useDropdownSelection(modelValue, allOptions, { multiple, optionK
 
   // A selected option in multiple mode can't be unselected if it's the last one.
   const isRequiredSelection = (option) => {
-    return multiple.value && isSelected(option) && selectedValues.value.length <= 1
+    return !toValue(allowEmpty) && multiple.value && isSelected(option) && selectedValues.value.length <= 1
   }
 
   // Replace the whole model value, honouring single vs multiple mode.
@@ -60,8 +61,9 @@ export function useDropdownSelection(modelValue, allOptions, { multiple, optionK
   }
 
   const unselectValue = (option) => {
-    // A multiple selection must always keep at least one value.
-    if (multiple.value && selectedValues.value.length > 1) {
+    // A multiple selection keeps at least one value unless it can be emptied.
+    const canRemove = toValue(allowEmpty) || selectedValues.value.length > 1
+    if (multiple.value && canRemove) {
       const remaining = selectedValues.value.filter(value => !isEqual(keyOf(value), keyOf(option)))
       setSelection(remaining)
     }
@@ -95,6 +97,9 @@ export function useDropdownSelection(modelValue, allOptions, { multiple, optionK
   }
 
   const unselectAll = () => {
+    if (toValue(allowEmpty)) {
+      return setSelection([])
+    }
     // Keep the first option so a multiple selection never becomes empty.
     setSelection(allOptions.value.slice(0, 1))
   }
