@@ -83,4 +83,12 @@ describe('paginateDocx', () => {
     paginateDocx(container)
     expect(container.querySelectorAll('section.docx')).toHaveLength(1)
   })
+
+  it('moves the notes of a split section to its last page', () => {
+    const container = mountSection('<article><p data-bottom="200">a</p><p data-bottom="350">b</p></article><ol><li>note</li></ol><footer>F</footer>')
+    paginateDocx(container)
+    const sections = container.querySelectorAll('section.docx')
+    expect(sections[0].textContent).toBe('aF')
+    expect(sections[1].textContent).toBe('bnoteF')
+  })
 })

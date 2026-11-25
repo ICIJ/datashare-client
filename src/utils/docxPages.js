@@ -65,6 +65,10 @@ function paginateSection(section) {
     previous.after(page)
     previous = page
   })
+  // docx-preview writes the page footnotes, and the endnotes, as a list after the articles.
+  const notes = section.querySelectorAll(':scope > ol')
+  const footer = previous.querySelector(':scope > footer')
+  notes.forEach(note => previous.insertBefore(note, footer))
 }
 
 export function paginateDocx(container) {
