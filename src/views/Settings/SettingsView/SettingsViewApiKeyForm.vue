@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import FormFieldsetI18n from '@/components/Form/FormFieldset/FormFieldsetI18n'
@@ -68,6 +68,11 @@ function defaultExpiresIn() {
   return values.at(-1)
 }
 
+// The projects menu is teleported into the modal rather than <body>, where it would open
+// under the modal.
+const form = useTemplateRef('form')
+const projectsTeleportTo = computed(() => form.value?.closest('.modal') ?? 'body')
+
 const selectedProjects = ref([])
 const expiresIn = ref(defaultExpiresIn())
 
@@ -87,6 +92,7 @@ function submit() {
 
 <template>
   <form
+    ref="form"
     class="settings-view-api-key-form"
     @submit.prevent="submit"
   >
@@ -98,6 +104,7 @@ function submit() {
       <project-dropdown-selector
         v-model="selectedProjects"
         :projects="projects"
+        :teleport-to="projectsTeleportTo"
       />
     </form-fieldset-i18n>
     <form-fieldset-i18n
