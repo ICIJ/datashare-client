@@ -1,5 +1,5 @@
 <script setup>
-import { whenever } from '@vueuse/core'
+import { useNow, whenever } from '@vueuse/core'
 import { ref, computed } from 'vue'
 import { AppIcon, ButtonIcon } from '@icij/murmur'
 import { useI18n } from 'vue-i18n'
@@ -39,6 +39,7 @@ const { username } = useAuth()
 const { confirm } = useConfirmModal()
 const { t } = useI18n()
 const { toast } = useToast()
+const now = useNow({ interval: 60000 })
 
 const hasKeys = computed(() => keys.value.length > 0)
 const showEmptyState = computed(() => !hasKeys.value && !loadFailed.value)
@@ -141,7 +142,7 @@ function isExpired({ expirationDate }) {
   if (!expirationDate) {
     return false
   }
-  return new Date(expirationDate) <= new Date()
+  return new Date(expirationDate) <= now.value
 }
 
 const fields = computed(() => [

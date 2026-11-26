@@ -47,7 +47,7 @@ describe('SettingsViewApi', () => {
   let plugins
 
   beforeEach(async () => {
-    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.useFakeTimers({ toFake: ['Date', 'setInterval', 'clearInterval'] })
     vi.setSystemTime(new Date('2026-11-25T12:00:00Z'))
     api.getApiKeys.mockResolvedValue([])
     const core = CoreSetup.init().useAll()
@@ -172,6 +172,21 @@ describe('SettingsViewApi', () => {
 
     const row = wrapper.find('.settings-view-api__key')
     expect(row.classes()).not.toContain('settings-view-api__key--expired')
+  })
+
+  it('should mark a key as expired once its expiration date passes', async () => {
+    vi.setSystemTime(new Date('2026-12-02T11:59:30Z'))
+    api.getApiKeys.mockResolvedValue([active])
+    const wrapper = mount(SettingsViewApi, { global: { plugins } })
+    await flushPromises()
+    const row = wrapper.find('.settings-view-api__key')
+    expect(row.classes()).not.toContain('settings-view-api__key--expired')
+
+    vi.advanceTimersByTime(60000)
+    await flushPromises()
+
+    const expiredRow = wrapper.find('.settings-view-api__key')
+    expect(expiredRow.classes()).toContain('settings-view-api__key--expired')
   })
 
   it('should toast an error when the keys cannot be loaded', async () => {
