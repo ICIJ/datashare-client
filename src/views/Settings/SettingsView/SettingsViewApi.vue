@@ -277,6 +277,7 @@ whenever(username, fetchApiKeys, { immediate: true })
       :title="modalTitle"
       :model-value="showModal"
       lazy
+      unmount-lazy
       no-footer
       @hidden="closeModal"
     >
