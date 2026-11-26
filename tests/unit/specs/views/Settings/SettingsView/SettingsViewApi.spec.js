@@ -252,6 +252,15 @@ describe('SettingsViewApi', () => {
     expect(wrapper.find('.settings-view-api__create').exists()).toBeTruthy()
   })
 
+  it('should say the keys could not be loaded in the empty table', async () => {
+    api.getApiKeys.mockRejectedValue(new Error('network'))
+    const wrapper = mount(SettingsViewApi, { global: { plugins } })
+    await flushPromises()
+
+    const table = wrapper.findComponent(PageTableGeneric)
+    expect(table.text()).toContain('The API keys could not be loaded.')
+  })
+
   describe('creation modal', () => {
     const AppModalStub = { name: 'AppModal', props: ['modelValue'], emits: ['hidden'], template: '<div v-if="modelValue"><slot /></div>' }
     const stubs = { 'app-modal': AppModalStub }
