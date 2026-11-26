@@ -31,6 +31,7 @@ const keys = ref([])
 const createdKey = ref(null)
 const showModal = ref(false)
 const creating = ref(false)
+const loadFailed = ref(false)
 const core = useCore()
 const { username } = useAuth()
 const { confirm } = useConfirmModal()
@@ -38,14 +39,26 @@ const { t } = useI18n()
 const { toast } = useToast()
 
 const hasKeys = computed(() => keys.value.length > 0)
+const showEmptyState = computed(() => !hasKeys.value && !loadFailed.value)
 const showForm = computed(() => !createdKey.value || !!createdKey.value.hashedKey)
 const modalTitle = computed(() => (showForm.value ? t('settings.api.form.title') : t('settings.api.key.created')))
 
+// Bumped on every write to the list, so a fetch started before the write cannot overwrite it.
+let keysVersion = 0
+
 async function fetchApiKeys() {
+  const version = ++keysVersion
   try {
-    keys.value = await core.api.getApiKeys(username.value)
+    const fetchedKeys = await core.api.getApiKeys(username.value)
+    if (version === keysVersion) {
+      keys.value = fetchedKeys
+      loadFailed.value = false
+    }
   }
   catch {
+    if (version === keysVersion) {
+      loadFailed.value = true
+    }
     toast.error(t('settings.api.key.fetchError'))
   }
 }
@@ -64,10 +77,12 @@ async function refreshedApiKeys() {
 async function addApiKey(payload) {
   creating.value = true
   try {
-    const knownHashes = new Set(keys.value.map(key => key.hashedKey))
+    const knownHashList = keys.value.map(key => key.hashedKey)
+    const knownHashes = new Set(knownHashList)
     const { apiKey } = await core.api.addApiKey(username.value, payload)
     const refreshedKeys = await refreshedApiKeys()
     const newKeys = refreshedKeys.filter(key => !knownHashes.has(key.hashedKey))
+    keysVersion++
     keys.value = refreshedKeys
     if (newKeys.length !== 1) {
       createdKey.value = { hashedKey: null, apiKey }
@@ -147,7 +162,7 @@ whenever(username, fetchApiKeys, { immediate: true })
 <template>
   <settings-view-layout class="settings-view-api">
     <div
-      v-if="!hasKeys"
+      v-if="showEmptyState"
       class="settings-view-api__create text-center"
     >
       <div class="mb-3">
