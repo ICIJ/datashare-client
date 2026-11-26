@@ -60,8 +60,9 @@ async function fetchApiKeys() {
   catch {
     if (version === keysVersion) {
       loadFailed.value = true
+      const message = t('settings.api.key.fetchError')
+      toast.error(message)
     }
-    toast.error(t('settings.api.key.fetchError'))
   }
 }
 
