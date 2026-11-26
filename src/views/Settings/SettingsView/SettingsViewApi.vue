@@ -235,7 +235,16 @@ whenever(username, fetchApiKeys, { immediate: true })
           <display-datetime-short :value="item.creationDate" />
         </template>
         <template #cell(expirationDate)="{ item }">
-          <display-datetime-short :value="item.expirationDate" />
+          <display-datetime-short
+            v-if="item.expirationDate"
+            :value="item.expirationDate"
+          />
+          <em
+            v-else
+            class="text-body-secondary"
+          >
+            {{ t('settings.api.key.never') }}
+          </em>
           <b-badge
             v-if="isExpired(item)"
             variant="danger"

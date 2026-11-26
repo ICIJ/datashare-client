@@ -1711,6 +1711,7 @@
         "allProjects": "All projects",
         "fetchError": "The API keys could not be loaded.",
         "expired": "Expired",
+        "never": "Never",
         "new": "New",
         "fields": {
           "key": "Key",
