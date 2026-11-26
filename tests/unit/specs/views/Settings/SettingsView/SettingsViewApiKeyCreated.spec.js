@@ -32,7 +32,14 @@ describe('SettingsViewApiKeyCreated', () => {
   it('should warn the key is shown once before the key field', () => {
     const wrapper = mountPanel()
     const [first] = wrapper.element.children
-    expect(first.textContent.trim()).toBe('Copy it now: Datashare won\'t show it again.')
+    expect(first.textContent.trim()).toMatch(/^Copy it now: Datashare won't show it again\./)
+  })
+
+  it('should link the warning to the API documentation', () => {
+    const wrapper = mountPanel()
+    const [first] = wrapper.element.children
+    const link = first.querySelector('a')
+    expect(link.getAttribute('href')).toBe('https://icij.gitbook.io/datashare/developers/backend/api')
   })
 
   it('should mark the AI assistant toggle with a sparkle', () => {
