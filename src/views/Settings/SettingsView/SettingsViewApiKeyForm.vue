@@ -57,7 +57,8 @@ function parseDurationInMs(duration) {
   const [, days = 0, hours = 0, minutes = 0, seconds = '0'] = match
   const totalHours = Number(days) * 24 + Number(hours)
   const totalMinutes = totalHours * 60 + Number(minutes)
-  const totalSeconds = totalMinutes * 60 + Number(seconds.replace(',', '.'))
+  const normalizedSeconds = seconds.replace(',', '.')
+  const totalSeconds = totalMinutes * 60 + Number(normalizedSeconds)
   const durationInMs = totalSeconds * 1000
   return durationInMs > 0 ? durationInMs : null
 }

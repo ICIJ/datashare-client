@@ -60,7 +60,6 @@ export function useDropdownSelection(modelValue, allOptions, { multiple, optionK
   }
 
   const unselectValue = (option) => {
-    // A multiple selection keeps at least one value unless it can be emptied.
     const canRemove = toValue(allowEmpty) || selectedValues.value.length > 1
     if (multiple.value && canRemove) {
       const remaining = selectedValues.value.filter(value => !isEqual(keyOf(value), keyOf(option)))

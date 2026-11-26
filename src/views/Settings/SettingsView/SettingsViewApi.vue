@@ -125,7 +125,8 @@ async function removeApiKey(hashedKey) {
     await core.api.removeApiKeyByHash(username.value, hashedKey)
   }
   catch {
-    toast.error(t('settings.api.key.delete.error'))
+    const message = t('settings.api.key.delete.error')
+    toast.error(message)
   }
   await fetchApiKeys()
 }
