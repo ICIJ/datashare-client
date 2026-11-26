@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { ButtonIcon } from '@icij/murmur'
 
 import FormFieldsetI18n from '@/components/Form/FormFieldset/FormFieldsetI18n'
 import ProjectDropdownSelector from '@/components/Project/ProjectDropdownSelector/ProjectDropdownSelector'
@@ -158,14 +159,15 @@ function submit() {
       />
     </form-fieldset-i18n>
     <div class="text-end">
-      <b-button
+      <button-icon
         type="submit"
         variant="action"
         class="settings-view-api-key-form__submit"
         :disabled="busy"
+        :loading="busy"
       >
-        {{ t('settings.api.form.submit') }}
-      </b-button>
+        {{ t('settings.api.newApiKey') }}
+      </button-icon>
     </div>
   </form>
 </template>
