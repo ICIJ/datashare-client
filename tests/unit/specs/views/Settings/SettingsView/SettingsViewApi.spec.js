@@ -379,6 +379,25 @@ describe('SettingsViewApi', () => {
       expect(wrapper.findAll('.page-table-generic__row-details')).toHaveLength(1)
     })
 
+    it('should not toast a failed fetch that a newer fetch replaced', async () => {
+      let rejectStale
+      const stale = new Promise((resolve, reject) => {
+        rejectStale = reject
+      })
+      api.getApiKeys.mockResolvedValueOnce([active]).mockReturnValueOnce(stale).mockResolvedValueOnce([active])
+      const wrapper = mount(SettingsViewApi, { global: { plugins, stubs } })
+      await flushPromises()
+      const modal = wrapper.findComponent({ name: 'AppModal' })
+
+      modal.vm.$emit('hidden')
+      modal.vm.$emit('hidden')
+      await flushPromises()
+      rejectStale(new Error('network'))
+      await flushPromises()
+
+      expect(mockToast.error).not.toBeCalled()
+    })
+
     it('should open the form when clicking "New API key"', async () => {
       const wrapper = mount(SettingsViewApi, { global: { plugins, stubs } })
       await flushPromises()
