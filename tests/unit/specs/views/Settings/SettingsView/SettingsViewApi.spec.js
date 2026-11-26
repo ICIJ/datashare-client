@@ -182,6 +182,14 @@ describe('SettingsViewApi', () => {
     expect(mockToast.error).toBeCalledWith('The API keys could not be loaded.')
   })
 
+  it('should not show the empty state when the keys cannot be loaded', async () => {
+    api.getApiKeys.mockRejectedValue(new Error('network'))
+    const wrapper = mount(SettingsViewApi, { global: { plugins } })
+    await flushPromises()
+
+    expect(wrapper.find('.settings-view-api__create').exists()).toBeFalsy()
+  })
+
   it('should toast an error when a key cannot be deleted', async () => {
     api.getApiKeys.mockResolvedValue([active])
     api.removeApiKeyByHash.mockRejectedValue(new Error('forbidden'))
@@ -404,6 +412,28 @@ describe('SettingsViewApi', () => {
       expect(mockToast.error).toBeCalledWith(expect.stringContaining('projects not granted: banana-papers'))
       expect(wrapper.find('.settings-view-api-key-form').exists()).toBeTruthy()
       expect(mockToast.success).not.toBeCalled()
+    })
+
+    it('should keep the new key when an older refresh resolves late', async () => {
+      let resolveStaleFetch
+      const staleFetch = new Promise((resolve) => {
+        resolveStaleFetch = resolve
+      })
+      api.getApiKeys
+        .mockResolvedValueOnce([{ ...active }])
+        .mockReturnValueOnce(staleFetch)
+        .mockResolvedValueOnce([{ ...created }, { ...active }])
+      api.addApiKey.mockResolvedValue({ apiKey: '123456abcdef' })
+      const wrapper = mount(SettingsViewApi, { global: { plugins, stubs } })
+      await flushPromises()
+      await wrapper.find('.settings-view-api__create__button').trigger('click')
+      wrapper.findComponent({ name: 'AppModal' }).vm.$emit('hidden')
+
+      await createKey(wrapper)
+      resolveStaleFetch([{ ...active }])
+      await flushPromises()
+
+      expect(wrapper.findAll('.settings-view-api__key--new')).toHaveLength(1)
     })
 
     it('should create one key on a double submit', async () => {
