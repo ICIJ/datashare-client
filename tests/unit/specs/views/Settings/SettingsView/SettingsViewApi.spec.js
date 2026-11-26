@@ -174,6 +174,15 @@ describe('SettingsViewApi', () => {
     expect(row.classes()).not.toContain('settings-view-api__key--expired')
   })
 
+  it('should show "Never" for a key without an expiration date', async () => {
+    api.getApiKeys.mockResolvedValue([{ ...active, expirationDate: null }])
+    const wrapper = mount(SettingsViewApi, { global: { plugins } })
+    await flushPromises()
+
+    const row = wrapper.find('.settings-view-api__key')
+    expect(row.text()).toContain('Never')
+  })
+
   it('should mark a key as expired once its expiration date passes', async () => {
     vi.setSystemTime(new Date('2026-12-02T11:59:30Z'))
     api.getApiKeys.mockResolvedValue([active])
