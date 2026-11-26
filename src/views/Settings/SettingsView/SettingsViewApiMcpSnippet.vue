@@ -91,6 +91,7 @@ const tokens = computed(() => {
   pre {
     white-space: pre;
     overflow-x: auto;
+    scrollbar-width: thin;
   }
 
   &__copy.btn {

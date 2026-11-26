@@ -262,6 +262,7 @@ whenever(username, fetchApiKeys, { immediate: true })
         <template #row-details="{ item }">
           <settings-view-api-key-created
             v-if="isCreatedKey(item)"
+            class="settings-view-api__key__created"
             :api-key="createdKey.apiKey"
           />
         </template>
@@ -293,5 +294,11 @@ whenever(username, fetchApiKeys, { immediate: true })
 <style lang="scss" scoped>
 .settings-view-api :deep(.settings-view-api__key--expired) {
   --bs-table-color: var(--bs-tertiary-color);
+}
+
+// Zero width keeps a long snippet from widening the table, so the snippet scrolls instead.
+.settings-view-api__key__created {
+  width: 0;
+  min-width: 100%;
 }
 </style>
