@@ -32,6 +32,10 @@ const showMcp = ref(false)
   <div class="settings-view-api-key-created">
     <p class="mb-2">
       {{ t('settings.api.key.warning') }}
+      <a
+        href="https://icij.gitbook.io/datashare/developers/backend/api"
+        target="_blank"
+      >{{ t('settings.api.key.docs') }}</a>
     </p>
     <div class="input-group">
       <input

@@ -1702,6 +1702,7 @@
         "copy": "Copy",
         "created": "API key created",
         "warning": "Copy it now: Datashare won't show it again.",
+        "docs": "How to use it",
         "delete": {
           "button": "Delete",
           "error": "The API key could not be deleted.",
