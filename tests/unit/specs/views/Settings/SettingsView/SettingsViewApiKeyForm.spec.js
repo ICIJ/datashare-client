@@ -141,4 +141,10 @@ describe('SettingsViewApiKeyForm', () => {
     const button = wrapper.find('.settings-view-api-key-form__submit')
     expect(button.attributes()).toHaveProperty('disabled')
   })
+
+  it('should show a spinner on the submit button when busy', () => {
+    const wrapper = mountForm({ busy: true })
+    const button = wrapper.find('.settings-view-api-key-form__submit')
+    expect(button.classes()).toContain('button-icon--loading')
+  })
 })

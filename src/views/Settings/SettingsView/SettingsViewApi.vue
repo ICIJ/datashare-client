@@ -41,7 +41,7 @@ const { toast } = useToast()
 const hasKeys = computed(() => keys.value.length > 0)
 const showEmptyState = computed(() => !hasKeys.value && !loadFailed.value)
 const showForm = computed(() => !createdKey.value || !!createdKey.value.hashedKey)
-const modalTitle = computed(() => (showForm.value ? t('settings.api.form.title') : t('settings.api.key.created')))
+const modalTitle = computed(() => (showForm.value ? t('settings.api.newApiKey') : t('settings.api.key.created')))
 
 // Bumped on every write to the list, so a fetch started before the write cannot overwrite it.
 let keysVersion = 0

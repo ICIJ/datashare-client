@@ -1737,8 +1737,6 @@
           "max": "Max allowed ({n} days)",
           "maxAllowed": "Max allowed"
         },
-        "submit": "Create key",
-        "title": "New API key",
         "error": "The API key could not be created."
       }
     },
