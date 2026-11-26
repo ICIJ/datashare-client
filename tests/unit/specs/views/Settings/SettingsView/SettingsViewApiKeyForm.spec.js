@@ -147,4 +147,16 @@ describe('SettingsViewApiKeyForm', () => {
     const button = wrapper.find('.settings-view-api-key-form__submit')
     expect(button.classes()).toContain('button-icon--loading')
   })
+
+  it('should introduce the key with a link to the API documentation', () => {
+    const wrapper = mountForm()
+    const link = wrapper.find('.settings-view-api-key-form__intro a[href="https://icij.gitbook.io/datashare/developers/backend/api"]')
+    expect(link.exists()).toBe(true)
+  })
+
+  it('should explain what happens when the key expires', () => {
+    const wrapper = mountForm()
+    const expiresIn = wrapper.find('.settings-view-api-key-form__expires-in')
+    expect(expiresIn.text()).toContain('After this, scripts using the key stop working.')
+  })
 })

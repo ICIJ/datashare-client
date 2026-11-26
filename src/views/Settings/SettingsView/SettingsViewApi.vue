@@ -9,6 +9,8 @@ import IPhPlus from '~icons/ph/plus'
 import IPhTrash from '~icons/ph/trash'
 
 import AppModal from '@/components/AppModal/AppModal'
+import image from '@/assets/images/illustrations/app-modal-default-light.svg'
+import imageDark from '@/assets/images/illustrations/app-modal-default-dark.svg'
 import DisplayHash from '@/components/Display/DisplayHash'
 import DisplayDatetimeShort from '@/components/Display/DisplayDatetimeShort'
 import PageTableGeneric from '@/components/PageTable/PageTableGeneric'
@@ -269,7 +271,9 @@ whenever(username, fetchApiKeys, { immediate: true })
       </page-table-generic>
     </div>
     <app-modal
-      size="md"
+      size="lg"
+      :image="image"
+      :image-dark="imageDark"
       :title="modalTitle"
       :model-value="showModal"
       lazy
