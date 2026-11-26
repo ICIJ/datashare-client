@@ -139,6 +139,15 @@ const labelColsLg = computed(() => {
 .form-fieldset {
   margin-bottom: $spacer;
 
+  // The label padding lines it up with a text input; a stacked option group starts at the top instead.
+  > .row:has(> .col [role='radiogroup'] > .form-check:first-child:not(.form-check-inline)),
+  > .row:has(> .col [role='group'] > .form-check:first-child:not(.form-check-inline)) {
+    > .col-form-label {
+      padding-top: 0;
+      line-height: $form-check-min-height;
+    }
+  }
+
   &--required &__label:after {
     content: ' *';
   }
