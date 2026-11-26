@@ -1727,12 +1727,14 @@
         "codex": "Add to {path}:"
       },
       "form": {
+        "intro": "Let scripts, <a href=\"https://github.com/ICIJ/datashare-tarentula\" target=\"_blank\">Tarentula</a> or an AI assistant use Datashare on your behalf. <a href=\"https://icij.gitbook.io/datashare/developers/backend/api\" target=\"_blank\">How to use the API</a>",
         "projects": {
           "label": "Projects",
-          "description": "Leave empty to give the key access to all your projects."
+          "description": "The key can reach all your projects unless you pick some."
         },
         "expiresIn": {
           "label": "Expires in",
+          "description": "After this, scripts using the key stop working. You can delete it sooner.",
           "days": "{n} days",
           "max": "Max allowed ({n} days)",
           "maxAllowed": "Max allowed"

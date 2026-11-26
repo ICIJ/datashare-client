@@ -133,6 +133,10 @@ function submit() {
     class="settings-view-api-key-form"
     @submit.prevent="submit"
   >
+    <p
+      class="settings-view-api-key-form__intro text-center text-body-secondary mx-auto mb-4"
+      v-html="t('settings.api.form.intro')"
+    />
     <form-fieldset-i18n
       name="projects"
       translation-key="settings.api.form.projects"
@@ -171,3 +175,9 @@ function submit() {
     </div>
   </form>
 </template>
+
+<style lang="scss" scoped>
+.settings-view-api-key-form__intro {
+  max-width: 34rem;
+}
+</style>
