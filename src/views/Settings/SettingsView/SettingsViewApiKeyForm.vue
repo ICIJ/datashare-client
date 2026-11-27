@@ -2,6 +2,8 @@
 import { computed, ref, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur'
+import dayjs from 'dayjs'
+import duration from 'dayjs/plugin/duration'
 
 import FormFieldsetI18n from '@/components/Form/FormFieldset/FormFieldsetI18n'
 import ProjectDropdownSelector from '@/components/Project/ProjectDropdownSelector/ProjectDropdownSelector'
@@ -43,23 +45,15 @@ const DAY_IN_MS = 86400000
 // The backend rejects a date past its own now + cap, so a browser clock a few
 // seconds ahead must not turn the preset matching the cap into a 400.
 const CLOCK_SKEW_MARGIN_IN_MS = 60000
-// The subset of ISO-8601 durations the backend parses (java.time.Duration): days, hours,
-// minutes and seconds.
-const DURATION_PATTERN = /^P(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:[.,]\d+)?)S)?)?$/i
+
+dayjs.extend(duration)
 
 const { t } = useI18n()
 
-function parseDurationInMs(duration) {
-  const match = DURATION_PATTERN.exec(duration)
-  if (!match) {
-    return null
-  }
-  const [, days = 0, hours = 0, minutes = 0, seconds = '0'] = match
-  const totalHours = Number(days) * 24 + Number(hours)
-  const totalMinutes = totalHours * 60 + Number(minutes)
-  const normalizedSeconds = seconds.replace(',', '.')
-  const totalSeconds = totalMinutes * 60 + Number(normalizedSeconds)
-  const durationInMs = totalSeconds * 1000
+function parseDurationInMs(value) {
+  // java.time.Duration accepts lowercase letters, dayjs does not
+  const uppercaseValue = value.toUpperCase()
+  const durationInMs = dayjs.duration(uppercaseValue).asMilliseconds()
   return durationInMs > 0 ? durationInMs : null
 }
 
