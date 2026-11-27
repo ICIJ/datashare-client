@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, useTemplateRef } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ButtonIcon } from '@icij/murmur'
 import dayjs from 'dayjs'
@@ -7,6 +7,7 @@ import duration from 'dayjs/plugin/duration'
 
 import FormFieldsetI18n from '@/components/Form/FormFieldset/FormFieldsetI18n'
 import ProjectDropdownSelector from '@/components/Project/ProjectDropdownSelector/ProjectDropdownSelector'
+import { useScrollParent } from '@/composables/useScrollParent'
 
 /**
  * A form to scope a new API key to some projects and an expiration.
@@ -102,8 +103,7 @@ function defaultExpiresIn() {
 
 // The projects menu is teleported into the modal rather than <body>, where it would open
 // under the modal.
-const form = useTemplateRef('form')
-const projectsTeleportTo = computed(() => form.value?.closest('.modal') ?? 'body')
+const projectsTeleportTo = useScrollParent()
 
 const selectedProjects = ref([])
 const expiresIn = ref(defaultExpiresIn())
@@ -124,7 +124,6 @@ function submit() {
 
 <template>
   <form
-    ref="form"
     class="settings-view-api-key-form"
     @submit.prevent="submit"
   >
