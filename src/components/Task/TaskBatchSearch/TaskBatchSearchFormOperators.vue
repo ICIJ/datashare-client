@@ -25,7 +25,6 @@ const { t } = useI18n()
       name="phraseMatch"
       translation-key="task.batch-search.form.phraseMatch"
       :icon="IPhQuotes"
-      label-class="pt-md-0"
     >
       <b-form-radio-group
         v-model="phraseMatch"

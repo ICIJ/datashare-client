@@ -145,7 +145,6 @@ watch(toRef(form, 'defaultProject'), p => form.path = getProjectSourcePath(p))
     <form-fieldset-i18n
       name="skip-indexed-documents"
       translation-key="task.documents.form.skipIndexedDocuments"
-      label-class="pt-md-0"
       description-class="pt-md-0"
     >
       <b-form-radio-group
