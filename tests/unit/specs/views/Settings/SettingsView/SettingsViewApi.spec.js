@@ -69,9 +69,20 @@ describe('SettingsViewApi', () => {
     vi.resetAllMocks()
   })
 
-  it('should display a panel to generate the API key by default', () => {
+  it('should display a panel to generate the API key by default', async () => {
     const wrapper = mount(SettingsViewApi, { global: { plugins } })
+    await flushPromises()
+
     expect(wrapper.find('.settings-view-api__create').exists()).toBeTruthy()
+  })
+
+  it('should not display the panel to generate a key while the keys are loading', async () => {
+    api.getApiKeys.mockReturnValue(new Promise(() => {}))
+    const wrapper = mount(SettingsViewApi, { global: { plugins } })
+    await flushPromises()
+
+    expect(wrapper.find('.settings-view-api__create').exists()).toBeFalsy()
+    expect(wrapper.findComponent(PageTableGeneric).props('loading')).toBe(true)
   })
 
   it('should display no keys by default', () => {

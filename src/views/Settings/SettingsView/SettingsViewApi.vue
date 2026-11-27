@@ -32,6 +32,7 @@ const createdKey = ref(null)
 const showModal = ref(false)
 const creating = ref(false)
 const loadFailed = ref(false)
+const loading = ref(true)
 const core = useCore()
 const { username } = useAuth()
 const { confirm } = useConfirmModal()
@@ -40,7 +41,7 @@ const { toast } = useToast()
 const now = useNow({ interval: 60000 })
 
 const hasKeys = computed(() => keys.value.length > 0)
-const showEmptyState = computed(() => !hasKeys.value && !loadFailed.value)
+const showEmptyState = computed(() => !loading.value && !hasKeys.value && !loadFailed.value)
 const showForm = computed(() => !createdKey.value || !!createdKey.value.hashedKey)
 const modalTitle = computed(() => (showForm.value ? t('settings.api.newApiKey') : t('settings.api.key.created')))
 
@@ -62,6 +63,9 @@ async function fetchApiKeys() {
       const message = t('settings.api.key.fetchError')
       toast.error(message)
     }
+  }
+  finally {
+    loading.value = false
   }
 }
 
@@ -204,6 +208,7 @@ whenever(username, fetchApiKeys, { immediate: true })
       <page-table-generic
         :key="createdKey?.hashedKey"
         :items="keys"
+        :loading="loading"
         :fields="fields"
         :row-class="rowClass"
         primary-key="hashedKey"
