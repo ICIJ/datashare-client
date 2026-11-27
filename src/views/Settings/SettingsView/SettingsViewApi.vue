@@ -239,12 +239,7 @@ whenever(username, fetchApiKeys, { immediate: true })
           <display-datetime-short :value="item.creationDate" />
         </template>
         <template #empty>
-          <template v-if="loadFailed">
-            {{ t('settings.api.key.fetchError') }}
-          </template>
-          <template v-else>
-            {{ t('task.noResults') }}
-          </template>
+          {{ t('settings.api.key.fetchError') }}
         </template>
         <template #cell(expirationDate)="{ item }">
           <display-datetime-short
