@@ -1724,7 +1724,8 @@
         "toggle": "Connect an AI assistant",
         "description": "This key also lets AI assistants search, read and tag your documents through Datashare MCP.",
         "learnMore": "Learn more",
-        "terminalApiKey": "Run in a terminal, then paste your API key when prompted:",
+        "promptApiKey": "In a terminal, run this and paste your API key when prompted:",
+        "connect": "Then run:",
         "codex": "Add to {path}:"
       },
       "form": {

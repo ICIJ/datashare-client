@@ -26,13 +26,10 @@ const { t } = useI18n()
 const activeClient = ref('claude-code')
 
 const mcpUrl = Api.getFullUrl('/api/mcp')
-const promptApiKey = 'printf \'Datashare API key: \' && read -rs DATASHARE_API_KEY && echo &&'
+const promptApiKeySnippet = 'printf \'Datashare API key: \' && read -rs DATASHARE_API_KEY && echo'
 const authorizationHeader = 'Authorization: Bearer $DATASHARE_API_KEY'
-
-const claudeCodeSnippet = computed(() => {
-  const command = `claude mcp add --transport http datashare ${mcpUrl} --header "${authorizationHeader}"`
-  return [promptApiKey, command].join('\n')
-})
+const claudeCodeSnippet = `claude mcp add --transport http datashare ${mcpUrl} --header "${authorizationHeader}"`
+const antigravitySnippet = `agy mcp add --header "${authorizationHeader}" datashare ${mcpUrl}`
 
 const codexSnippet = computed(() => {
   return [
@@ -42,15 +39,17 @@ const codexSnippet = computed(() => {
   ].join('\n')
 })
 
-const antigravitySnippet = computed(() => {
-  const command = `agy mcp add --header "${authorizationHeader}" datashare ${mcpUrl}`
-  return [promptApiKey, command].join('\n')
-})
+function shellSteps(snippet) {
+  return [
+    { hint: t('settings.api.mcp.promptApiKey'), snippet: promptApiKeySnippet, language: 'shell' },
+    { hint: t('settings.api.mcp.connect'), snippet, language: 'shell' }
+  ]
+}
 
 const clients = computed(() => [
-  { id: 'claude-code', name: 'Claude Code', snippet: claudeCodeSnippet.value, language: 'shell', hint: t('settings.api.mcp.terminalApiKey') },
-  { id: 'codex', name: 'Codex', snippet: codexSnippet.value, language: 'toml', hint: t('settings.api.mcp.codex', { path: '~/.codex/config.toml' }) },
-  { id: 'antigravity', name: 'Antigravity', snippet: antigravitySnippet.value, language: 'shell', hint: t('settings.api.mcp.terminalApiKey') }
+  { id: 'claude-code', name: 'Claude Code', steps: shellSteps(claudeCodeSnippet) },
+  { id: 'codex', name: 'Codex', steps: [{ hint: t('settings.api.mcp.codex', { path: '~/.codex/config.toml' }), snippet: codexSnippet.value, language: 'toml' }] },
+  { id: 'antigravity', name: 'Antigravity', steps: shellSteps(antigravitySnippet) }
 ])
 </script>
 
@@ -70,13 +69,21 @@ const clients = computed(() => [
         :key="client.id"
         :title="client.name"
       >
-        <p class="mb-2">
-          {{ client.hint }}
-        </p>
-        <settings-view-api-mcp-snippet
-          :code="client.snippet"
-          :language="client.language"
-        />
+        <template
+          v-for="(step, index) in client.steps"
+          :key="index"
+        >
+          <p
+            class="mb-2"
+            :class="{ 'mt-3': index > 0 }"
+          >
+            {{ step.hint }}
+          </p>
+          <settings-view-api-mcp-snippet
+            :code="step.snippet"
+            :language="step.language"
+          />
+        </template>
       </tab-group-entry>
     </tab-group>
   </div>

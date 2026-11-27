@@ -66,22 +66,20 @@ describe('SettingsViewApiKeyCreated', () => {
     expect(titles).toHaveLength(2)
   })
 
-  it('should show the Claude Code command prompting for the key', async () => {
+  it('should ask for the key in a first Claude Code command', async () => {
     const wrapper = await mountUnfolded()
 
-    const command = wrapper.find('.settings-view-api__mcp__snippet').text()
-    expect(command).toContain('read -rs DATASHARE_API_KEY')
-    expect(command).toContain('claude mcp add --transport http datashare http://localhost:9009/api/mcp')
-    expect(command).toContain('--header "Authorization: Bearer $DATASHARE_API_KEY"')
-    expect(command).not.toContain('123456abcdef')
+    const [prompt] = wrapper.findAll('.settings-view-api__mcp .tab-pane.active .settings-view-api__mcp__snippet')
+    expect(prompt.text()).toBe('printf \'Datashare API key: \' && read -rs DATASHARE_API_KEY && echo')
   })
 
-  it('should parse the whole Claude Code command before prompting for the key', async () => {
+  it('should connect Claude Code with the key variable in a second command', async () => {
     const wrapper = await mountUnfolded()
 
-    const command = wrapper.find('.settings-view-api__mcp__snippet').text()
-    const [firstLine] = command.split('\n')
-    expect(firstLine).toBe('printf \'Datashare API key: \' && read -rs DATASHARE_API_KEY && echo &&')
+    const [, connect] = wrapper.findAll('.settings-view-api__mcp .tab-pane.active .settings-view-api__mcp__snippet')
+    const command = connect.text()
+    expect(command).toBe('claude mcp add --transport http datashare http://localhost:9009/api/mcp --header "Authorization: Bearer $DATASHARE_API_KEY"')
+    expect(command).not.toContain('123456abcdef')
   })
 
   it('should tell users of an untranslated locale to paste their key', async () => {
