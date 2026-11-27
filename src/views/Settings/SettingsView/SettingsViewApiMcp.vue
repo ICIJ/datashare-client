@@ -26,7 +26,7 @@ const { t } = useI18n()
 const activeClient = ref('claude-code')
 
 const mcpUrl = Api.getFullUrl('/api/mcp')
-const promptApiKey = 'read -s DATASHARE_API_KEY'
+const promptApiKey = 'printf \'Datashare API key: \' && read -rs DATASHARE_API_KEY && echo &&'
 const authorizationHeader = 'Authorization: Bearer $DATASHARE_API_KEY'
 
 const claudeCodeSnippet = computed(() => {
@@ -48,9 +48,9 @@ const antigravitySnippet = computed(() => {
 })
 
 const clients = computed(() => [
-  { id: 'claude-code', name: 'Claude Code', snippet: claudeCodeSnippet.value, language: 'shell', hint: t('settings.api.mcp.terminal') },
+  { id: 'claude-code', name: 'Claude Code', snippet: claudeCodeSnippet.value, language: 'shell', hint: t('settings.api.mcp.terminalApiKey') },
   { id: 'codex', name: 'Codex', snippet: codexSnippet.value, language: 'toml', hint: t('settings.api.mcp.codex', { path: '~/.codex/config.toml' }) },
-  { id: 'antigravity', name: 'Antigravity', snippet: antigravitySnippet.value, language: 'shell', hint: t('settings.api.mcp.terminal') }
+  { id: 'antigravity', name: 'Antigravity', snippet: antigravitySnippet.value, language: 'shell', hint: t('settings.api.mcp.terminalApiKey') }
 ])
 </script>
 
