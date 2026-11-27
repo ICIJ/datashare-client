@@ -6,10 +6,11 @@ import CoreSetup from '~tests/unit/CoreSetup'
 import SettingsViewApiKeyCreated from '@/views/Settings/SettingsView/SettingsViewApiKeyCreated'
 
 describe('SettingsViewApiKeyCreated', () => {
+  let core
   let plugins
 
   beforeEach(() => {
-    const core = CoreSetup.init().useAll()
+    core = CoreSetup.init().useAll()
     plugins = core.plugins
   })
 
@@ -69,10 +70,28 @@ describe('SettingsViewApiKeyCreated', () => {
     const wrapper = await mountUnfolded()
 
     const command = wrapper.find('.settings-view-api__mcp__snippet').text()
-    expect(command).toContain('read -s DATASHARE_API_KEY')
+    expect(command).toContain('read -rs DATASHARE_API_KEY')
     expect(command).toContain('claude mcp add --transport http datashare http://localhost:9009/api/mcp')
     expect(command).toContain('--header "Authorization: Bearer $DATASHARE_API_KEY"')
     expect(command).not.toContain('123456abcdef')
+  })
+
+  it('should parse the whole Claude Code command before prompting for the key', async () => {
+    const wrapper = await mountUnfolded()
+
+    const command = wrapper.find('.settings-view-api__mcp__snippet').text()
+    const [firstLine] = command.split('\n')
+    expect(firstLine).toBe('printf \'Datashare API key: \' && read -rs DATASHARE_API_KEY && echo &&')
+  })
+
+  it('should tell users of an untranslated locale to paste their key', async () => {
+    await core.loadI18Locale('fr')
+    const wrapper = await mountUnfolded()
+    await flushPromises()
+
+    const hint = wrapper.find('.settings-view-api__mcp .tab-pane.active p').text()
+    expect(hint).toContain('paste your API key')
+    await core.loadI18Locale('en')
   })
 
   it('should keep the key in the Codex config', async () => {
