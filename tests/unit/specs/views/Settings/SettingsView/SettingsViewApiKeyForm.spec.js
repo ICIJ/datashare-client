@@ -116,8 +116,18 @@ describe('SettingsViewApiKeyForm', () => {
     expect(text).not.toContain('days')
   })
 
+  it('should cap the presets with a cap starting with a plus sign', () => {
+    const wrapper = mountForm({ maxLifetime: '+P30D' })
+    expect(radioValues(wrapper)).toEqual(['7', '30'])
+  })
+
+  it('should cap the presets with a lowercase cap', () => {
+    const wrapper = mountForm({ maxLifetime: 'p30d' })
+    expect(radioValues(wrapper)).toEqual(['7', '30'])
+  })
+
   it('should only offer the max allowed for a cap it cannot parse', async () => {
-    const wrapper = mountForm({ maxLifetime: 'P1M' })
+    const wrapper = mountForm({ maxLifetime: 'thirty days' })
     expect(wrapper.findAll('input[type=radio]')).toHaveLength(1)
     const payload = await submit(wrapper)
     expect(payload).not.toHaveProperty('expirationDate')
