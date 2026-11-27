@@ -114,8 +114,8 @@ function closeModal() {
   showModal.value = false
   if (!showForm.value) {
     createdKey.value = null
+    fetchApiKeys()
   }
-  fetchApiKeys()
 }
 
 function isCreatedKey({ hashedKey }) {
