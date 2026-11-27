@@ -1699,24 +1699,51 @@
       "noAccess": "Vous n'avez pas accès à cette page en mode local.",
       "description": "Une clé API vous permet d'interagir avec Datashare <a href=\"https://icij.gitbook.io/datashare/developers/backend/api\" target=\"_blank\">via l'API</a>, en utilisant des outils comme <a href=\"https://github.com/ICIJ/datashare-tarentula\" target=\"_blank\">Tarentula</a> ou vos propres scripts.",
       "key": {
-        "badge": "Clé",
         "copy": "Copier",
-        "hash": "Hachage : {hash}",
         "created": "La clé API a été créée",
         "warning": "Veuillez copier cette clé dans un endroit sûr, vous ne pourrez plus la consulter ensuite sur Datashare.",
-        "unavailable": "Vous ne pouvez consulter une clé qu'au moment de sa création.",
-        "regenerate": "Regénérer",
+        "warningOnce": "You won't be able to see it again.",
+        "security": "Keep your key out of shell history and config files.",
+        "securityLink": "Store your API key securely",
+        "docs": "How to use it",
         "delete": {
           "button": "Supprimer",
+          "error": "The API key could not be deleted.",
           "description": "Les applications ou scripts utilisant cette clé ne seront plus en mesure d'accéder à l'API Datashare. Vous ne pourrez pas annuler cette action."
+        },
+        "allProjects": "All projects",
+        "fetchError": "The API keys could not be loaded.",
+        "expired": "Expired",
+        "new": "New",
+        "fields": {
+          "key": "Key",
+          "projects": "Projects",
+          "created": "Created",
+          "expires": "Expires"
         }
       },
       "mcp": {
-        "title": "Connect an AI assistant",
+        "toggle": "Connect an AI assistant",
         "description": "This key also lets AI assistants search, read and tag your documents through Datashare MCP.",
         "learnMore": "Learn more",
-        "terminal": "Run in a terminal:",
+        "promptApiKey": "In a terminal, run this and paste your API key when prompted:",
+        "connect": "Then run:",
         "codex": "Add to {path}:"
+      },
+      "form": {
+        "intro": "Let scripts, <a href=\"https://github.com/ICIJ/datashare-tarentula\" target=\"_blank\">Tarentula</a> or an AI assistant use Datashare on your behalf. <a href=\"https://icij.gitbook.io/datashare/developers/backend/api\" target=\"_blank\">How to use the API</a>",
+        "projects": {
+          "label": "Projects",
+          "description": "The key can reach all your projects unless you pick some. Picking every project leaves out the ones added later."
+        },
+        "expiresIn": {
+          "label": "Expires in",
+          "description": "After this, scripts using the key stop working. You can delete it sooner.",
+          "days": "{n} days",
+          "max": "Max allowed ({n} days)",
+          "maxAllowed": "Max allowed"
+        },
+        "error": "The API key could not be created."
       }
     },
     "users": {
