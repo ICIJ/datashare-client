@@ -75,7 +75,7 @@ const clients = computed(() => [
         >
           <p
             class="mb-2"
-            :class="{ 'mt-3': index > 0 }"
+            :class="index > 0 ? 'mt-4' : 'mt-3'"
           >
             {{ step.hint }}
           </p>
