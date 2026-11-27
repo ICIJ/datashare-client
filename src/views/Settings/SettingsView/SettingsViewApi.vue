@@ -198,7 +198,7 @@ whenever(username, fetchApiKeys, { immediate: true })
         />
         <button-icon
           variant="action"
-          :icon-right="IPhPlus"
+          :icon-left="IPhPlus"
           class="settings-view-api__create__button flex-shrink-0"
           @click="showModal = true"
         >
