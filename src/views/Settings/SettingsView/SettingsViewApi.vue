@@ -142,9 +142,6 @@ async function confirmDeleteApiKey(hashedKey) {
 }
 
 function isExpired({ expirationDate }) {
-  if (!expirationDate) {
-    return false
-  }
   return new Date(expirationDate) <= now.value
 }
 
@@ -242,16 +239,7 @@ whenever(username, fetchApiKeys, { immediate: true })
           {{ t('settings.api.key.fetchError') }}
         </template>
         <template #cell(expirationDate)="{ item }">
-          <display-datetime-short
-            v-if="item.expirationDate"
-            :value="item.expirationDate"
-          />
-          <em
-            v-else
-            class="text-body-secondary"
-          >
-            {{ t('settings.api.key.never') }}
-          </em>
+          <display-datetime-short :value="item.expirationDate" />
           <b-badge
             v-if="isExpired(item)"
             variant="danger"
