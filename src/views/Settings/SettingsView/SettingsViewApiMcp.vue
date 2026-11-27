@@ -26,10 +26,12 @@ const { t } = useI18n()
 const activeClient = ref('claude-code')
 
 const mcpUrl = Api.getFullUrl('/api/mcp')
-const authorizationHeader = computed(() => `Authorization: Bearer ${apiKey}`)
+const promptApiKey = 'read -s DATASHARE_API_KEY'
+const authorizationHeader = 'Authorization: Bearer $DATASHARE_API_KEY'
 
 const claudeCodeSnippet = computed(() => {
-  return `claude mcp add --transport http datashare ${mcpUrl} --header "${authorizationHeader.value}"`
+  const command = `claude mcp add --transport http datashare ${mcpUrl} --header "${authorizationHeader}"`
+  return [promptApiKey, command].join('\n')
 })
 
 const codexSnippet = computed(() => {
@@ -41,7 +43,8 @@ const codexSnippet = computed(() => {
 })
 
 const antigravitySnippet = computed(() => {
-  return `agy mcp add --header "${authorizationHeader.value}" datashare ${mcpUrl}`
+  const command = `agy mcp add --header "${authorizationHeader}" datashare ${mcpUrl}`
+  return [promptApiKey, command].join('\n')
 })
 
 const clients = computed(() => [
