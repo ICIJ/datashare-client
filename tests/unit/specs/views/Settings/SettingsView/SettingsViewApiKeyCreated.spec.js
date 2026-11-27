@@ -65,12 +65,26 @@ describe('SettingsViewApiKeyCreated', () => {
     expect(titles).toHaveLength(2)
   })
 
-  it('should show the Claude Code command to connect Datashare MCP with the new key', async () => {
+  it('should show the Claude Code command prompting for the key', async () => {
     const wrapper = await mountUnfolded()
 
     const command = wrapper.find('.settings-view-api__mcp__snippet').text()
+    expect(command).toContain('read -s DATASHARE_API_KEY')
     expect(command).toContain('claude mcp add --transport http datashare http://localhost:9009/api/mcp')
-    expect(command).toContain('--header "Authorization: Bearer 123456abcdef"')
+    expect(command).toContain('--header "Authorization: Bearer $DATASHARE_API_KEY"')
+    expect(command).not.toContain('123456abcdef')
+  })
+
+  it('should keep the key in the Codex config', async () => {
+    const wrapper = await mountUnfolded()
+    await flushPromises()
+
+    const codexLink = wrapper.findAll('.settings-view-api__mcp .nav-link').find(link => link.text() === 'Codex')
+    await codexLink.trigger('click')
+    await flushPromises()
+
+    const config = wrapper.find('.settings-view-api__mcp .tab-pane.active .settings-view-api__mcp__snippet').text()
+    expect(config).toContain('Authorization = "Bearer 123456abcdef"')
   })
 
   it('should open the Claude Code tab by default', async () => {
@@ -80,11 +94,12 @@ describe('SettingsViewApiKeyCreated', () => {
     expect(wrapper.find('.settings-view-api__mcp .nav-link.active').text()).toBe('Claude Code')
   })
 
-  it('should highlight the key as a string in the Claude Code command', async () => {
+  it('should highlight the header as a string in the Claude Code command', async () => {
     const wrapper = await mountUnfolded()
     await vi.waitFor(() => expect(wrapper.find('.settings-view-api__mcp__snippet .tok-string').exists()).toBe(true))
 
-    const string = wrapper.find('.settings-view-api__mcp__snippet .tok-string').text()
-    expect(string).toBe('"Authorization: Bearer 123456abcdef"')
+    const strings = wrapper.findAll('.settings-view-api__mcp__snippet .tok-string').map(string => string.text())
+    const headerString = strings.find(string => string.includes('Authorization: Bearer'))
+    expect(headerString).toBeDefined()
   })
 })
