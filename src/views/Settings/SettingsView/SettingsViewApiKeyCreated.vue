@@ -7,6 +7,7 @@ import IPhCaretDown from '~icons/ph/caret-down'
 import IPhCaretUp from '~icons/ph/caret-up'
 import IPhSparkle from '~icons/ph/sparkle'
 
+import DismissableAlert from '@/components/Dismissable/DismissableAlert'
 import SettingsViewApiMcp from '@/views/Settings/SettingsView/SettingsViewApiMcp'
 
 /**
@@ -30,7 +31,7 @@ const showMcp = ref(false)
 
 <template>
   <div class="settings-view-api-key-created">
-    <p class="mb-2">
+    <p class="mb-3">
       {{ t('settings.api.key.warning') }}
       <strong>{{ t('settings.api.key.warningOnce') }}</strong>
     </p>
@@ -46,33 +47,32 @@ const showMcp = ref(false)
         :label="t('settings.api.key.copy')"
       />
     </div>
-    <b-alert
-      model-value
+    <dismissable-alert
       variant="info"
-      class="settings-view-api-key-created__security d-flex align-items-center gap-3 mt-3 mb-0"
+      no-close
+      no-button
+      class="settings-view-api-key-created__security mt-2 mb-4"
     >
-      <app-icon size="1.5em">
-        <i-ph-shield-check />
-      </app-icon>
-      <span>
-        {{ t('settings.api.key.security') }}
-        <a
-          href="https://icij.gitbook.io/datashare/developers/api-keys"
-          target="_blank"
-          class="alert-link"
-        >{{ t('settings.api.key.securityLink') }}</a>
-        ·
-        <a
-          href="https://icij.gitbook.io/datashare/developers/backend/api"
-          target="_blank"
-          class="alert-link"
-        >{{ t('settings.api.key.docs') }}</a>
-      </span>
-    </b-alert>
+      <template #icon="{ variant }">
+        <app-icon :variant="variant">
+          <i-ph-shield-check />
+        </app-icon>
+      </template>
+      {{ t('settings.api.key.security') }}
+      <a
+        href="https://icij.gitbook.io/datashare/developers/api-keys"
+        target="_blank"
+      >{{ t('settings.api.key.securityLink') }}</a>
+      ·
+      <a
+        href="https://icij.gitbook.io/datashare/developers/backend/api"
+        target="_blank"
+      >{{ t('settings.api.key.docs') }}</a>
+    </dismissable-alert>
     <button-icon
       variant="link"
       size="sm"
-      class="settings-view-api-key-created__mcp-toggle px-0 mt-2"
+      class="settings-view-api-key-created__mcp-toggle px-0"
       :icon-left="IPhSparkle"
       :icon-right="showMcp ? IPhCaretUp : IPhCaretDown"
       @click="showMcp = !showMcp"
@@ -82,7 +82,7 @@ const showMcp = ref(false)
     <settings-view-api-mcp
       v-if="showMcp"
       :api-key="apiKey"
-      class="mt-2"
+      class="mt-3 mb-2"
     />
   </div>
 </template>
