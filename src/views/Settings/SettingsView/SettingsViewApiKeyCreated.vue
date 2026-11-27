@@ -40,6 +40,7 @@ const showKey = ref(false)
       <form-control-secret
         v-model:visible="showKey"
         :value="apiKey"
+        :aria-label="t('settings.api.key.fields.key')"
         no-haptic-copy
         class="flex-grow-1"
       />
