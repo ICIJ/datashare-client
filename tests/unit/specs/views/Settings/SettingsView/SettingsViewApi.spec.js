@@ -306,6 +306,24 @@ describe('SettingsViewApi', () => {
       expect(modal.find('input[readonly]').exists()).toBeFalsy()
     })
 
+    it('should not fetch the keys again when the modal closes after a creation', async () => {
+      const wrapper = await mountAndCreate()
+      wrapper.findComponent({ name: 'AppModal' }).vm.$emit('hidden')
+      await flushPromises()
+
+      expect(api.getApiKeys).toHaveBeenCalledTimes(2)
+    })
+
+    it('should not fetch the keys when the form is cancelled', async () => {
+      const wrapper = mount(SettingsViewApi, { global: { plugins, stubs } })
+      await flushPromises()
+      await wrapper.find('.settings-view-api__create__button').trigger('click')
+      wrapper.findComponent({ name: 'AppModal' }).vm.$emit('hidden')
+      await flushPromises()
+
+      expect(api.getApiKeys).toHaveBeenCalledTimes(1)
+    })
+
     it('should toast the creation', async () => {
       await mountAndCreate()
       expect(mockToast.success).toBeCalledWith('API key created')
@@ -431,10 +449,10 @@ describe('SettingsViewApi', () => {
       api.getApiKeys.mockResolvedValueOnce([active]).mockReturnValueOnce(stale).mockResolvedValueOnce([active])
       const wrapper = mount(SettingsViewApi, { global: { plugins, stubs } })
       await flushPromises()
-      const modal = wrapper.findComponent({ name: 'AppModal' })
+      const deleteButton = wrapper.find('.settings-view-api__key__delete')
 
-      modal.vm.$emit('hidden')
-      modal.vm.$emit('hidden')
+      await deleteButton.trigger('click')
+      await deleteButton.trigger('click')
       await flushPromises()
       rejectStale(new Error('network'))
       await flushPromises()
@@ -489,8 +507,8 @@ describe('SettingsViewApi', () => {
       api.addApiKey.mockResolvedValue({ apiKey: '123456abcdef' })
       const wrapper = mount(SettingsViewApi, { global: { plugins, stubs } })
       await flushPromises()
-      await wrapper.find('.settings-view-api__create__button').trigger('click')
-      wrapper.findComponent({ name: 'AppModal' }).vm.$emit('hidden')
+      await wrapper.find('.settings-view-api__key__delete').trigger('click')
+      await flushPromises()
 
       await createKey(wrapper)
       resolveStaleFetch([{ ...active }])
