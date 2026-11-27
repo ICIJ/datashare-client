@@ -156,7 +156,6 @@ async function submit() {
         name="findEntities"
         translation-key="task.entities.form.findEntities"
         with-description
-        label-class="pt-md-0"
         description-class="pt-md-0"
       >
         <b-form-radio-group
@@ -170,7 +169,6 @@ async function submit() {
         v-if="isPipelineNamedEntities"
         name="pipeline"
         translation-key="task.entities.form.pipeline"
-        label-class="pt-md-0"
         description-class="pt-md-0"
       >
         <b-alert
@@ -195,7 +193,6 @@ async function submit() {
       <form-fieldset-i18n
         name="offline"
         translation-key="task.entities.form.offline"
-        label-class="pt-md-0"
         description-class="pt-md-0"
       >
         <b-form-radio-group
