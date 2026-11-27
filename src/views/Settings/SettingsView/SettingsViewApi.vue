@@ -41,7 +41,7 @@ const { toast } = useToast()
 const now = useNow({ interval: 60000 })
 
 const hasKeys = computed(() => keys.value.length > 0)
-const showEmptyState = computed(() => !loading.value && !hasKeys.value && !loadFailed.value)
+const showEmptyState = computed(() => !hasKeys.value && !loadFailed.value)
 const showForm = computed(() => !createdKey.value || !!createdKey.value.hashedKey)
 const modalTitle = computed(() => (showForm.value ? t('settings.api.newApiKey') : t('settings.api.key.created')))
 
@@ -166,7 +166,13 @@ whenever(username, fetchApiKeys, { immediate: true })
 <template>
   <settings-view-layout class="settings-view-api">
     <div
-      v-if="showEmptyState"
+      v-if="loading"
+      class="settings-view-api__loading text-center py-5"
+    >
+      <b-spinner />
+    </div>
+    <div
+      v-else-if="showEmptyState"
       class="settings-view-api__create text-center"
     >
       <div class="mb-3">
@@ -205,7 +211,6 @@ whenever(username, fetchApiKeys, { immediate: true })
       <page-table-generic
         :key="createdKey?.hashedKey"
         :items="keys"
-        :loading="loading"
         :fields="fields"
         :row-class="rowClass"
         primary-key="hashedKey"

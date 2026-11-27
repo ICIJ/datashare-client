@@ -76,13 +76,14 @@ describe('SettingsViewApi', () => {
     expect(wrapper.find('.settings-view-api__create').exists()).toBeTruthy()
   })
 
-  it('should not display the panel to generate a key while the keys are loading', async () => {
+  it('should only display a spinner while the keys are loading', async () => {
     api.getApiKeys.mockReturnValue(new Promise(() => {}))
     const wrapper = mount(SettingsViewApi, { global: { plugins } })
     await flushPromises()
 
+    expect(wrapper.find('.settings-view-api__loading .spinner-border').exists()).toBeTruthy()
     expect(wrapper.find('.settings-view-api__create').exists()).toBeFalsy()
-    expect(wrapper.findComponent(PageTableGeneric).props('loading')).toBe(true)
+    expect(wrapper.findComponent(PageTableGeneric).exists()).toBeFalsy()
   })
 
   it('should display no keys by default', () => {
@@ -455,6 +456,7 @@ describe('SettingsViewApi', () => {
     it('should create a key with the form payload', async () => {
       api.addApiKey.mockResolvedValue({ apiKey: '123456abcdef' })
       const wrapper = mount(SettingsViewApi, { global: { plugins, stubs } })
+      await flushPromises()
       await wrapper.find('.settings-view-api__create__button').trigger('click')
 
       wrapper.findComponent(SettingsViewApiKeyForm).vm.$emit('submit', payload)
@@ -467,6 +469,7 @@ describe('SettingsViewApi', () => {
       const error = { response: { status: 400, data: { error: 'projects not granted: banana-papers' } } }
       api.addApiKey.mockRejectedValue(error)
       const wrapper = mount(SettingsViewApi, { global: { plugins, stubs } })
+      await flushPromises()
       await wrapper.find('.settings-view-api__create__button').trigger('click')
 
       wrapper.findComponent(SettingsViewApiKeyForm).vm.$emit('submit', payload)
@@ -502,6 +505,7 @@ describe('SettingsViewApi', () => {
     it('should create one key on a double submit', async () => {
       api.addApiKey.mockReturnValue(new Promise(() => {}))
       const wrapper = mount(SettingsViewApi, { global: { plugins, stubs }, attachTo: document.body })
+      await flushPromises()
       await wrapper.find('.settings-view-api__create__button').trigger('click')
 
       await wrapper.find('.settings-view-api-key-form__submit').trigger('click')
