@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { AppIcon, HapticCopy, ButtonIcon } from '@icij/murmur'
+import { AppIcon, ButtonIcon, FormControlSecret, HapticCopy } from '@icij/murmur'
 import { useI18n } from 'vue-i18n'
 
 import IPhCaretDown from '~icons/ph/caret-down'
@@ -27,6 +27,7 @@ defineProps({
 
 const { t } = useI18n()
 const showMcp = ref(false)
+const showKey = ref(false)
 </script>
 
 <template>
@@ -35,15 +36,16 @@ const showMcp = ref(false)
       {{ t('settings.api.key.warning') }}
       <strong>{{ t('settings.api.key.warningOnce') }}</strong>
     </p>
-    <div class="input-group">
-      <input
-        class="form-control font-monospace"
-        readonly
+    <div class="settings-view-api-key-created__key d-flex">
+      <form-control-secret
+        v-model:visible="showKey"
         :value="apiKey"
-      >
+        no-haptic-copy
+        class="flex-grow-1"
+      />
       <haptic-copy
         :text="apiKey"
-        class="settings-view-api-key-created__copy btn-outline-action"
+        class="settings-view-api-key-created__copy btn-outline-action text-nowrap flex-shrink-0"
         :label="t('settings.api.key.copy')"
       />
     </div>
@@ -88,7 +90,17 @@ const showMcp = ref(false)
 </template>
 
 <style lang="scss" scoped>
+// FormControlSecret always hides its copy button label, so the labeled button sits next to it as if in the same input group.
+.settings-view-api-key-created__key :deep(.secret-input__input) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
 .settings-view-api-key-created__copy {
   --bs-btn-border-color: #{$input-border-color};
+  --bs-btn-hover-border-color: #{$input-border-color};
+  margin-left: calc(-1 * var(--bs-border-width));
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
 </style>

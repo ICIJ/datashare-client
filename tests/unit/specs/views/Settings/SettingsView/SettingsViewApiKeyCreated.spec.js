@@ -30,6 +30,22 @@ describe('SettingsViewApiKeyCreated', () => {
     expect(wrapper.find('input[readonly]').element.value).toBe('123456abcdef')
   })
 
+  it('should hide the key by default', () => {
+    const wrapper = mountPanel()
+    expect(wrapper.find('input[readonly]').attributes('type')).toBe('password')
+  })
+
+  it('should label the copy button', () => {
+    const wrapper = mountPanel()
+    expect(wrapper.find('.settings-view-api-key-created__copy').text()).toBe('Copy')
+  })
+
+  it('should reveal the key with the visibility toggler', async () => {
+    const wrapper = mountPanel()
+    await wrapper.find('.secret-input__toggler').trigger('click')
+    expect(wrapper.find('input[readonly]').attributes('type')).toBe('text')
+  })
+
   it('should warn the key is shown once before the key field', () => {
     const wrapper = mountPanel()
     const [first] = wrapper.element.children
