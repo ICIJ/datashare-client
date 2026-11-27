@@ -1701,7 +1701,10 @@
       "key": {
         "copy": "Copy",
         "created": "API key created",
-        "warning": "Copy it now: Datashare won't show it again.",
+        "warning": "Copy it now and keep it somewhere safe, like a password manager or an encrypted file.",
+        "warningOnce": "You won't be able to see it again.",
+        "security": "Keep your key out of shell history and config files.",
+        "securityLink": "Store your API key securely",
         "docs": "How to use it",
         "delete": {
           "button": "Delete",

@@ -33,14 +33,20 @@ describe('SettingsViewApiKeyCreated', () => {
   it('should warn the key is shown once before the key field', () => {
     const wrapper = mountPanel()
     const [first] = wrapper.element.children
-    expect(first.textContent.trim()).toMatch(/^Copy it now: Datashare won't show it again\./)
+    expect(first.textContent.trim()).toMatch(/^Copy it now and keep it somewhere safe, like a password manager or an encrypted file\. You won't be able to see it again\./)
   })
 
-  it('should link the warning to the API documentation', () => {
+  it('should put in bold that the key cannot be seen again', () => {
     const wrapper = mountPanel()
     const [first] = wrapper.element.children
-    const link = first.querySelector('a')
-    expect(link.getAttribute('href')).toBe('https://icij.gitbook.io/datashare/developers/backend/api')
+    const strong = first.querySelector('strong')
+    expect(strong.textContent.trim()).toBe('You won\'t be able to see it again.')
+  })
+
+  it('should link the security box to the API documentation', () => {
+    const wrapper = mountPanel()
+    const hrefs = wrapper.findAll('.settings-view-api-key-created__security a').map(link => link.attributes('href'))
+    expect(hrefs).toContain('https://icij.gitbook.io/datashare/developers/backend/api')
   })
 
   it('should mark the AI assistant toggle with a sparkle', () => {
@@ -80,6 +86,20 @@ describe('SettingsViewApiKeyCreated', () => {
     const command = connect.text()
     expect(command).toBe('claude mcp add --transport http datashare http://localhost:9009/api/mcp --header "Authorization: Bearer $DATASHARE_API_KEY"')
     expect(command).not.toContain('123456abcdef')
+  })
+
+  it('should link to the API key security docs while the AI assistant setup is folded', () => {
+    const wrapper = mountPanel()
+
+    const link = wrapper.find('.settings-view-api-key-created__security a')
+    expect(link.attributes('href')).toBe('https://icij.gitbook.io/datashare/developers/api-keys')
+  })
+
+  it('should keep the API key security docs out of the AI assistant setup', async () => {
+    const wrapper = await mountUnfolded()
+
+    const hrefs = wrapper.findAll('.settings-view-api__mcp a').map(link => link.attributes('href'))
+    expect(hrefs).not.toContain('https://icij.gitbook.io/datashare/developers/api-keys')
   })
 
   it('should tell users of an untranslated locale to paste their key', async () => {
