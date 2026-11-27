@@ -30,6 +30,11 @@ describe('SettingsViewApiKeyCreated', () => {
     expect(wrapper.find('input[readonly]').element.value).toBe('123456abcdef')
   })
 
+  it('should name the field holding the key', () => {
+    const wrapper = mountPanel()
+    expect(wrapper.find('input[readonly]').attributes('aria-label')).toBe('Key')
+  })
+
   it('should hide the key by default', () => {
     const wrapper = mountPanel()
     expect(wrapper.find('input[readonly]').attributes('type')).toBe('password')
