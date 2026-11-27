@@ -94,19 +94,31 @@ export function useEntityProperties() {
   const { propertyItem } = useViewProperties()
   const { fieldsToSortByOptions, fieldsToPropertiesOptions } = useViewSettings()
 
+  // Sorts on entityId, not on a name property: the caption is resolved client side from whichever
+  // property the schema captions on, so there is no single indexed field behind it.
   const name = propertyItem({
     icon: IPhIdentificationCard,
     key: ENTITY_FIELD.NAME,
     required: true,
     emphasis: true,
+    sortable: true,
+    sortingKey: 'entityId',
+    type: SORT_TYPE_KEY.ALPHA,
     text: computed(() => t('entityCard.properties.name'))
+  })
+
+  // A sort option only, never a card row, which is why it stays out of `items`.
+  const relevance = propertyItem({
+    key: 'relevance',
+    sortable: true,
+    sortingKey: '_score',
+    type: SORT_TYPE_KEY.NUMBER,
+    text: computed(() => t('entityCard.properties.relevance'))
   })
 
   const entityType = propertyItem({
     icon: IPhStack,
     key: ENTITY_FIELD.ENTITY_TYPE,
-    sortable: true,
-    type: SORT_TYPE_KEY.ALPHA,
     text: computed(() => t('entityCard.properties.entityType'))
   })
 
@@ -119,8 +131,6 @@ export function useEntityProperties() {
   const model = propertyItem({
     icon: IPhDatabase,
     key: ENTITY_FIELD.MODEL,
-    sortable: true,
-    type: SORT_TYPE_KEY.ALPHA,
     text: computed(() => t('entityCard.properties.model'))
   })
 
@@ -132,7 +142,7 @@ export function useEntityProperties() {
 
   const items = { name, entityType, sourceDocument, model, project }
   const fields = Object.values(items)
-  const sortByOptions = fieldsToSortByOptions(fields)
+  const sortByOptions = fieldsToSortByOptions([relevance, ...fields])
   const propertiesOptions = fieldsToPropertiesOptions(fields)
 
   /**
